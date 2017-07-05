@@ -74,9 +74,9 @@ class EnviarCorreos extends Command
                 ->where('tpo_correo_id', '<>', '1')
                 ->orderBy('tpo_correo_id', 'asc')
                 ->get();
-
+            
             foreach($ps as $p){
-              
+                $cuenta=0;                
                 switch ($p->tpo_correo_id) {
                     case '2': //revisar definicion
                         //dd($status_array);
@@ -87,13 +87,18 @@ class EnviarCorreos extends Command
                             //dd($clis);
                             
                             try{
-                                $m=\Mail::to("blind@blind.com", 'nombre');    
                                 foreach($clis as $cli){
-                                    $m->bcc($cli->mail, $cli->nombre);
-                                    $cantidad_enviada++;
+                                    if($cuenta==0){
+                                        $m=\Mail::to($cli->mail, $cli->nombre);    
+                                        $cantidad_enviada++;
+                                    }else{
+                                        $m->bcc($cli->mail, $cli->nombre);
+                                        $cantidad_enviada++;
+                                    }
+                                    
                                 }
                                 $m->queue(new Correo($p));
-                                dd('correo enviado');
+                                //dd('correo enviado');
                             }catch(\Exception $e){
                             dd($e);
                             }
@@ -120,10 +125,14 @@ class EnviarCorreos extends Command
                             //dd($clis);
                             
                             try{
-                                $m=\Mail::to("blind@blind.com", 'nombre');    
                                 foreach($clis as $cli){
-                                    $m->bcc($cli->mail, $cli->nombre);
-                                    $cantidad_enviada++;
+                                    if($cuenta==0){
+                                        $m=\Mail::to($cli->mail, $cli->nombre);    
+                                        $cantidad_enviada++;
+                                    }else{
+                                        $m->bcc($cli->mail, $cli->nombre);
+                                        $cantidad_enviada++;
+                                    }
                                 }
                                 $m->queue(new Correo($p));
                                 dd('correo enviado');
@@ -153,10 +162,14 @@ class EnviarCorreos extends Command
                             //dd($clis);
                             
                             try{
-                                $m=\Mail::to("blind@blind.com", 'nombre');    
                                 foreach($clis as $cli){
-                                    $m->bcc($cli->mail, $cli->nombre);
-                                    $cantidad_enviada++;
+                                    if($cuenta==0){
+                                        $m=\Mail::to($cli->mail, $cli->nombre);    
+                                        $cantidad_enviada++;
+                                    }else{
+                                        $m->bcc($cli->mail, $cli->nombre);
+                                        $cantidad_enviada++;
+                                    }
                                 }
                                 $m->queue(new Correo($p));
                                 
