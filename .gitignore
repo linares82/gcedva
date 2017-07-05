@@ -1,0 +1,15 @@
+/node_modules
+/public/storage
+/public/hot
+/storage/*.key
+/.idea
+Homestead.json
+Homestead.yaml
+CPdescarga.xls
+estados municipios.xlsx
+estados.csv
+municipios.csv
+permisos.csv
+.env
+/resources/views/emails
+
