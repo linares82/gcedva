@@ -79,104 +79,119 @@ class EnviarCorreos extends Command
                 $cuenta=0;                
                 switch ($p->tpo_correo_id) {
                     case '2': //revisar definicion
-                        //dd($status_array);
-                        $dia=date("j");
-                        if($dia==$p->dia){
-                            //dd($dia);
-                            $clis=DB::table('clientes')->whereIn('nivel_id', $p->nivel_id)->get();
-                            //dd($clis);
-                            
-                            try{
-                                foreach($clis as $cli){
-                                    if($cuenta==0){
-                                        $m=\Mail::to($cli->mail, $cli->nombre);    
-                                        $cantidad_enviada++;
-                                    }else{
-                                        $m->bcc($cli->mail, $cli->nombre);
-                                        $cantidad_enviada++;
+                        if($p->bnd_activo==1){
+                            //dd($status_array);
+                            $dia=date("j");
+                            if($dia==$p->dia){
+                                //dd($dia);
+                                $clis=DB::table('clientes')->whereIn('nivel_id', $p->nivel_id)->get();
+                                //dd($clis);
+                                if($p->bnd_mail==1){
+                                    try{
+                                        foreach($clis as $cli){
+                                            if($cuenta==0){
+                                                $m=\Mail::to($cli->mail, $cli->nombre);    
+                                                $cantidad_enviada++;
+                                            }else{
+                                                $m->bcc($cli->mail, $cli->nombre);
+                                                $cantidad_enviada++;
+                                            }
+                                            
+                                        }
+                                        $m->queue(new Correo($p));
+                                        //dd('correo enviado');
+                                    }catch(\Exception $e){
+                                    dd($e);
                                     }
-                                    
                                 }
-                                $m->queue(new Correo($p));
-                                //dd('correo enviado');
-                            }catch(\Exception $e){
-                            dd($e);
+                                if($p->bnd_sms==1){
+
+                                }    
                             }
-                                                    
                         }
                         break;
                     case '3':
-                        $status_array='';
-                        $aux=0;
-                        foreach($p->estatus as $st){
-                            //dd($st->id);
-                            if($aux==0){
-                                $status_array=$status_array.$st->id;
-                            }else{
-                                $status_array=",".$status_array.$st->id;
+                        if($p->bnd_activo==1){
+                            $status_array='';
+                            $aux=0;
+                            foreach($p->estatus as $st){
+                                //dd($st->id);
+                                if($aux==0){
+                                    $status_array=$status_array.$st->id;
+                                }else{
+                                    $status_array=",".$status_array.$st->id;
+                                }
                             }
-                        }
-                        
-                        //dd($status_array);
-                        $dia=date("j");
-                        if($p->inicio<=$dia and $p->fin>=$dia){
-                            //dd($dia);
-                            $clis=DB::table('clientes')->whereIn('st_cliente_id', [$status_array])->get();
-                            //dd($clis);
                             
-                            try{
-                                foreach($clis as $cli){
-                                    if($cuenta==0){
-                                        $m=\Mail::to($cli->mail, $cli->nombre);    
-                                        $cantidad_enviada++;
-                                    }else{
-                                        $m->bcc($cli->mail, $cli->nombre);
-                                        $cantidad_enviada++;
+                            //dd($status_array);
+                            $dia=date("j");
+                            if($p->inicio<=$dia and $p->fin>=$dia){
+                                //dd($dia);
+                                $clis=DB::table('clientes')->whereIn('st_cliente_id', [$status_array])->get();
+                                //dd($clis);
+                                if($p->bnd_mail==1){
+                                    try{
+                                        foreach($clis as $cli){
+                                            if($cuenta==0){
+                                                $m=\Mail::to($cli->mail, $cli->nombre);    
+                                                $cantidad_enviada++;
+                                            }else{
+                                                $m->bcc($cli->mail, $cli->nombre);
+                                                $cantidad_enviada++;
+                                            }
+                                        }
+                                        $m->queue(new Correo($p));
+                                        dd('correo enviado');
+                                    }catch(\Exception $e){
+                                    dd($e);
                                     }
                                 }
-                                $m->queue(new Correo($p));
-                                dd('correo enviado');
-                            }catch(\Exception $e){
-                            dd($e);
+                                if($p->bnd_sms==1){
+
+                                }                           
                             }
-                                                    
                         }
                         break;
                     case '4':
-                        $status_array='';
-                        $aux=0;
-                        foreach($p->estatus as $st){
-                            //dd($st->id);
-                            if($aux==0){
-                                $status_array=$status_array.$st->id;
-                            }else{
-                                $status_array=",".$status_array.$st->id;
+                        if($p->bnd_activo==1){
+                            $status_array='';
+                            $aux=0;
+                            foreach($p->estatus as $st){
+                                //dd($st->id);
+                                if($aux==0){
+                                    $status_array=$status_array.$st->id;
+                                }else{
+                                    $status_array=",".$status_array.$st->id;
+                                }
                             }
-                        }
-                        
-                        //dd($status_array);
-                        $dia=date("j");
-                        if($dia==$p->dia){
-                            //dd($dia);
-                            $clis=DB::table('clientes')->whereIn('st_cliente_id', [$status_array])->get();
-                            //dd($clis);
                             
-                            try{
-                                foreach($clis as $cli){
-                                    if($cuenta==0){
-                                        $m=\Mail::to($cli->mail, $cli->nombre);    
-                                        $cantidad_enviada++;
-                                    }else{
-                                        $m->bcc($cli->mail, $cli->nombre);
-                                        $cantidad_enviada++;
+                            //dd($status_array);
+                            $dia=date("j");
+                            if($dia==$p->dia){
+                                //dd($dia);
+                                $clis=DB::table('clientes')->whereIn('st_cliente_id', [$status_array])->get();
+                                //dd($clis);
+                                if($p->bnd_mail==1){
+                                    try{
+                                        foreach($clis as $cli){
+                                            if($cuenta==0){
+                                                $m=\Mail::to($cli->mail, $cli->nombre);    
+                                                $cantidad_enviada++;
+                                            }else{
+                                                $m->bcc($cli->mail, $cli->nombre);
+                                                $cantidad_enviada++;
+                                            }
+                                        }
+                                        $m->queue(new Correo($p));
+                                        
+                                    }catch(\Exception $e){
+                                    dd($e);
                                     }
                                 }
-                                $m->queue(new Correo($p));
-                                
-                            }catch(\Exception $e){
-                            dd($e);
+                                if($p->bnd_sms==1){
+
+                                }                        
                             }
-                                                    
                         }
                         break;
                 }

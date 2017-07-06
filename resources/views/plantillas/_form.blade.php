@@ -1,4 +1,17 @@
-
+                    <div class="form-group col-md-4 @if($errors->has('activo_bnd')) has-error @endif">
+                       <label for="activo_bnd-field">Activo</label>
+                       {!! Form::checkbox("activo_bnd", 1, null, [ "id" => "activo_bnd-field"]) !!}
+                       @if($errors->has("activo_bnd"))
+                        <span class="help-block">{{ $errors->first("activo_bnd") }}</span>
+                       @endif
+                    </div>
+                    <div class="form-group col-md-4 @if($errors->has('mail_bnd')) has-error @endif">
+                       <label for="mail_bnd-field">Mail</label>
+                       {!! Form::checkbox("mail_bnd", 1, null, [ "id" => "mail_bnd-field"]) !!}
+                       @if($errors->has("mail_bnd"))
+                        <span class="help-block">{{ $errors->first("mail_bnd") }}</span>
+                       @endif
+                    </div>
                     <div class="form-group col-md-6 @if($errors->has('nombre')) has-error @endif">
                        <label for="nombre-field">Nombre</label>
                        {!! Form::text("nombre", null, array("class" => "form-control", "id" => "nombre-field")) !!}
@@ -128,7 +141,20 @@
                         <span class="help-block">{{ $errors->first("plantilla") }}</span>
                        @endif
                     </div>
-                    
+                    <div class="form-group col-md-4 @if($errors->has('sms_bnd')) has-error @endif">
+                       <label for="sms_bnd-field">Sms</label>
+                       {!! Form::checkbox("sms_bnd", 1, null, [ "id" => "sms_bnd-field"]) !!}
+                       @if($errors->has("sms_bnd"))
+                        <span class="help-block">{{ $errors->first("sms_bnd") }}</span>
+                       @endif
+                    </div>
+                    <div class="form-group col-md-12 @if($errors->has('sms')) has-error @endif">
+                       <label for="sms-field">Texto del SMS(maximo 160 caracteres)</label>
+                       {!! Form::textArea("sms", null, array("class" => "form-control", "id" => "sms-field", 'rows'=>'2', 'maxlength'=>'160')) !!}
+                       @if($errors->has("sms"))
+                        <span class="help-block">{{ $errors->first("sms") }}</span>
+                       @endif
+                    </div>                    
 
 
                     
