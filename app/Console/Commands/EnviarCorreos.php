@@ -96,7 +96,7 @@ class EnviarCorreos extends Command
                                                 $m->bcc($cli->mail, $cli->nombre);
                                                 $cantidad_enviada++;
                                             }
-                                            
+                                            $cuenta++;
                                         }
                                         $m->queue(new Correo($p));
                                         //dd('correo enviado');
@@ -139,6 +139,7 @@ class EnviarCorreos extends Command
                                                 $m->bcc($cli->mail, $cli->nombre);
                                                 $cantidad_enviada++;
                                             }
+                                            $cuenta++;
                                         }
                                         $m->queue(new Correo($p));
                                         dd('correo enviado');
@@ -181,6 +182,7 @@ class EnviarCorreos extends Command
                                                 $m->bcc($cli->mail, $cli->nombre);
                                                 $cantidad_enviada++;
                                             }
+                                            $cuenta++;
                                         }
                                         $m->queue(new Correo($p));
                                         
