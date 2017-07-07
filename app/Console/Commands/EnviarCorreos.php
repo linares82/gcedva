@@ -86,7 +86,7 @@ class EnviarCorreos extends Command
                                 //dd($dia);
                                 $clis=DB::table('clientes')->whereIn('nivel_id', $p->nivel_id)->get();
                                 //dd($clis);
-                                if($p->bnd_mail==1){
+                                if($p->mail_bnd==1){
                                     try{
                                         foreach($clis as $cli){
                                             if($cuenta==0){
@@ -129,7 +129,7 @@ class EnviarCorreos extends Command
                                 //dd($dia);
                                 $clis=DB::table('clientes')->whereIn('st_cliente_id', [$status_array])->get();
                                 //dd($clis);
-                                if($p->bnd_mail==1){
+                                if($p->mail_bnd==1){
                                     try{
                                         foreach($clis as $cli){
                                             if($cuenta==0){
@@ -171,7 +171,7 @@ class EnviarCorreos extends Command
                                 //dd($dia);
                                 $clis=DB::table('clientes')->whereIn('st_cliente_id', [$status_array])->get();
                                 //dd($clis);
-                                if($p->bnd_mail==1){
+                                if($p->mail_bnd==1){
                                     try{
                                         foreach($clis as $cli){
                                             if($cuenta==0){

@@ -318,7 +318,7 @@ Route::get("banderas/bandera/{banderas}/duplicate", ['as' => 'banderas.duplicate
     })->name('down');
     Route::get('/EnviarCorreos', function () {
         Artisan::call('ian:EnviarCorreos');        
-        dd("<Correo></Correo>s Enviados");
+        dd("Correos Enviados");
     })->name('ec');
 
     //->middleware('permission:empleados.duplicate');
