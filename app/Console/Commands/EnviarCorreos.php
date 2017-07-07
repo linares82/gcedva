@@ -70,7 +70,7 @@ class EnviarCorreos extends Command
         //dd($r->valor);
         if($r->valor=='activo'){
             
-            $ps=Plantilla::select('id', 'st_cliente_id', 'dia', 'tpo_correo_id', 'para_nombre', 'asunto')
+            $ps=Plantilla::select('id', 'st_cliente_id', 'dia', 'tpo_correo_id', 'para_nombre', 'asunto', 'activo_bnd','mail_bnd', 'sms_bnd', 'sms')
                 ->where('tpo_correo_id', '<>', '1')
                 ->orderBy('tpo_correo_id', 'asc')
                 ->get();
