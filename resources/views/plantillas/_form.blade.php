@@ -5,14 +5,7 @@
                         <span class="help-block">{{ $errors->first("activo_bnd") }}</span>
                        @endif
                     </div>
-                    <div class="form-group col-md-4 @if($errors->has('mail_bnd')) has-error @endif">
-                       <label for="mail_bnd-field">Mail</label>
-                       {!! Form::checkbox("mail_bnd", 1, null, [ "id" => "mail_bnd-field"]) !!}
-                       @if($errors->has("mail_bnd"))
-                        <span class="help-block">{{ $errors->first("mail_bnd") }}</span>
-                       @endif
-                    </div>
-                    <div class="form-group col-md-6 @if($errors->has('nombre')) has-error @endif">
+                    <div class="form-group col-md-8 @if($errors->has('nombre')) has-error @endif">
                        <label for="nombre-field">Nombre</label>
                        {!! Form::text("nombre", null, array("class" => "form-control", "id" => "nombre-field")) !!}
                        @if($errors->has("nombre"))
@@ -133,7 +126,13 @@
                         </label>
                         
                     </div>
-                    
+                    <div class="form-group col-md-4 @if($errors->has('mail_bnd')) has-error @endif">
+                       <label for="mail_bnd-field">Mail</label>
+                       {!! Form::checkbox("mail_bnd", 1, null, [ "id" => "mail_bnd-field"]) !!}
+                       @if($errors->has("mail_bnd"))
+                        <span class="help-block">{{ $errors->first("mail_bnd") }}</span>
+                       @endif
+                    </div>
                     <div class="form-group col-md-12 @if($errors->has('plantilla')) has-error @endif">
                        <label for="plantilla-field">Plantilla</label>
                        {!! Form::textArea("plantilla", null, array("class" => "form-control mceEditor", "id" => "plantilla-field", 'rows'=>'8')) !!}

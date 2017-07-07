@@ -79,7 +79,7 @@ class EnviarCorreos extends Command
                 $cuenta=0;                
                 switch ($p->tpo_correo_id) {
                     case '2': //revisar definicion
-                        if($p->bnd_activo==1){
+                        if($p->activo_bnd==1){
                             //dd($status_array);
                             $dia=date("j");
                             if($dia==$p->dia){
@@ -111,7 +111,7 @@ class EnviarCorreos extends Command
                         }
                         break;
                     case '3':
-                        if($p->bnd_activo==1){
+                        if($p->activo_bnd==1){
                             $status_array='';
                             $aux=0;
                             foreach($p->estatus as $st){
@@ -153,7 +153,7 @@ class EnviarCorreos extends Command
                         }
                         break;
                     case '4':
-                        if($p->bnd_activo==1){
+                        if($p->activo_bnd==1){
                             $status_array='';
                             $aux=0;
                             foreach($p->estatus as $st){
