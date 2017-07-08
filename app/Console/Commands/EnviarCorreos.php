@@ -89,14 +89,9 @@ class EnviarCorreos extends Command
                                 if($p->mail_bnd==1){
                                     try{
                                         foreach($clis as $cli){
-                                            if($cuenta==0){
-                                                $m=\Mail::to($cli->mail, $cli->nombre);    
-                                                $cantidad_enviada++;
-                                            }else{
-                                                $m->bcc($cli->mail, $cli->nombre);
-                                                $cantidad_enviada++;
-                                            }
-                                            $cuenta++;
+                                            $m=\Mail::to($cli->mail, $cli->nombre);    
+                                            $m->queue(new Correo($p));
+                                            $cantidad_enviada++;
                                         }
                                         $m->queue(new Correo($p));
                                         //dd('correo enviado');
@@ -132,14 +127,9 @@ class EnviarCorreos extends Command
                                 if($p->mail_bnd==1){
                                     try{
                                         foreach($clis as $cli){
-                                            if($cuenta==0){
-                                                $m=\Mail::to($cli->mail, $cli->nombre);    
-                                                $cantidad_enviada++;
-                                            }else{
-                                                $m->bcc($cli->mail, $cli->nombre);
-                                                $cantidad_enviada++;
-                                            }
-                                            $cuenta++;
+                                            $m=\Mail::to($cli->mail, $cli->nombre);    
+                                            $m->queue(new Correo($p));
+                                            $cantidad_enviada++;
                                         }
                                         $m->queue(new Correo($p));
                                         dd('correo enviado');
@@ -175,16 +165,10 @@ class EnviarCorreos extends Command
                                 if($p->mail_bnd==1){
                                     try{
                                         foreach($clis as $cli){
-                                            if($cuenta==0){
-                                                $m=\Mail::to($cli->mail, $cli->nombre);    
-                                                $cantidad_enviada++;
-                                            }else{
-                                                $m->bcc($cli->mail, $cli->nombre);
-                                                $cantidad_enviada++;
-                                            }
-                                            $cuenta++;
+                                            $m=\Mail::to($cli->mail, $cli->nombre);    
+                                            $m->queue(new Correo($p));
+                                            $cantidad_enviada++;
                                         }
-                                        $m->queue(new Correo($p));
                                         
                                     }catch(\Exception $e){
                                     dd($e);
