@@ -127,7 +127,7 @@
                   <div class="box-body">
                     <div class="form-group col-md-4 @if($errors->has('especialidad')) has-error @endif">
                        <label for="especialidad-field">especialidad</label>
-                       {!! Form::text("especialidad", null, array("class" => "form-control", "id" => "especialidad-field")) !!}
+                       {!! Form::select("especialidad_id", $list["Especialidad"], null, array("class" => "form-control", "id" => "especialidad_id-field")) !!}
                        @if($errors->has("especialidad"))
                         <span class="help-block">{{ $errors->first("especialidad") }}</span>
                        @endif

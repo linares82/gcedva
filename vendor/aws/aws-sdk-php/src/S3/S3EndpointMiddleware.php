@@ -134,28 +134,4 @@ class S3EndpointMiddleware
 
     private function applyAccelerateEndpoint(
         CommandInterface $command,
-        RequestInterface $request,
-        $pattern
-    ) {
-        $request = $request->withUri(
-            $request->getUri()
-                ->withHost($this->getAccelerateHost($command, $pattern))
-                ->withPath($this->getBucketlessPath(
-                    $request->getUri()->getPath(),
-                    $command
-                ))
-        );
-        return $request;
-    }
-
-    private function getAccelerateHost(CommandInterface $command, $pattern)
-    {
-        return "{$command['Bucket']}.{$pattern}.amazonaws.com";
-    }
-
-    private function getBucketlessPath($path, CommandInterface $command)
-    {
-        $pattern = '/^\\/' . preg_quote($command['Bucket'], '/') . '/';
-        return preg_replace($pattern, '', $path) ?: '/';
-    }
-}
+  

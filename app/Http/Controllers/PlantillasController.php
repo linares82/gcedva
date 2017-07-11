@@ -67,10 +67,10 @@ class PlantillasController extends Controller {
 		$h=str_replace('http:/', 'http://', $input['plantilla']);
 		$h=str_replace('&gt;', '>', $h);
 		$input['plantilla']=$h;
-		
+		//dd($input);
 		//create data
 		$p=Plantilla::create( $input );
-		$file = fopen(app_path('resources\views\emails\\'.$p->id.'.blade.html'), "w+");
+		$file = fopen(base_path('resources\views\emails\\'.$p->id.'.blade.php'), "w+");
 		fwrite($file, $input['plantilla']);
 		fclose($file);
 
@@ -129,6 +129,8 @@ class PlantillasController extends Controller {
 		$input['periodo_id']=2;
 		$st=$input['st_cliente'];	
 		unset($input['st_cliente']);
+		$esp=$input['especialidad_id'];
+		unset($input['especialidad_id']);
 		$input['st_cliente_id']=0;
 		if(!isset($input['activo_bnd'])){
 			$input['activo_bnd']=0;
@@ -152,11 +154,17 @@ class PlantillasController extends Controller {
 		//update data
 		if($input['inicio']=="" or $input['inicio']=="0000-00-00"){$input['inicio']=date('Y-m-d');}
 		if($input['fin']=="" or $input['fin']=="0000-00-00"){$input['fin']=date('Y-m-d');}
-
+		
 		$plantilla=$plantilla->find($id);
 		$plantilla->update( $input );
+
+		//dd($input);
 		if($st<>0){
 			$plantilla->estatus()->attach($st);	
+		}
+		//dd($esp);
+		if($esp<>0){
+			$plantilla->especialidad()->attach($esp);	
 		}
 		
 		//dd($input['plantilla']);
@@ -189,6 +197,12 @@ class PlantillasController extends Controller {
 		$p=$p->find($_GET['plantilla']);
 		//dd($p);
 		$p->estatus()->detach($_GET['st']);
+		return redirect()->route('plantillas.edit', $p->id)->with('message', 'Registro Actualizado.');
+	}	
+	public function eliminarEspecialidad(Request $request, Plantilla $p){
+		$p=$p->find($_GET['plantilla']);
+		//dd($p);
+		$p->especialidad()->detach($_GET['esp']);
 		return redirect()->route('plantillas.edit', $p->id)->with('message', 'Registro Actualizado.');
 	}	
 

@@ -93,7 +93,7 @@ class EnviarCorreos extends Command
                                             $m->queue(new Correo($p));
                                             $cantidad_enviada++;
                                         }
-                                        $m->queue(new Correo($p));
+                                        //$m->queue(new Correo($p));
                                         //dd('correo enviado');
                                     }catch(\Exception $e){
                                     dd($e);
@@ -131,7 +131,7 @@ class EnviarCorreos extends Command
                                             $m->queue(new Correo($p));
                                             $cantidad_enviada++;
                                         }
-                                        $m->queue(new Correo($p));
+                                        //$m->queue(new Correo($p));
                                         dd('correo enviado');
                                     }catch(\Exception $e){
                                     dd($e);
@@ -179,7 +179,55 @@ class EnviarCorreos extends Command
                                 }                        
                             }
                         }
-                        break;
+                    break;
+                    case '5':
+                        if($p->activo_bnd==1){
+                            $status_array='';
+                            $especialidades_array();
+                            $aux_estatus=0;
+                            $aux_expecialidad=0;
+                            foreach($p->estatus as $st){
+                                //dd($st->id);
+                                if($aux_estatus==0){
+                                    $status_array=$status_array.$st->id;
+                                }else{
+                                    $status_array=",".$status_array.$st->id;
+                                }
+                            }
+                            foreach($p->especialidad as $especialidad){
+                                if($aux_especialidad==0){
+                                    $especialidad_array=$especialidad_array.$especialidad->id;
+                                }else{
+                                    $especialidad_array=",".$especialidad_array.$especialidad->id;
+                                }
+                            }
+                            
+                            //dd($status_array);
+                            $dia=date("j");
+                            if($dia==$p->dia){
+                                //dd($dia);
+                                $clis=DB::table('clientes')->whereIn('st_cliente_id', [$status_array])
+                                                           ->whereIn('especialidad_id',[$especialidad_array])
+                                                           ->get();
+                                //dd($clis);
+                                if($p->mail_bnd==1){
+                                    try{
+                                        foreach($clis as $cli){
+                                            $m=\Mail::to($cli->mail, $cli->nombre);    
+                                            $m->queue(new Correo($p));
+                                            $cantidad_enviada++;
+                                        }
+                                        
+                                    }catch(\Exception $e){
+                                    dd($e);
+                                    }
+                                }
+                                if($p->bnd_sms==1){
+
+                                }                        
+                            }
+                        }
+                    break;
                 }
             }
             $input2['usu_envio_id']=1;

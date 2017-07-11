@@ -66,6 +66,38 @@
                           </div>
                         @endif
                       </div>
+                      <div id="especialidad_div">
+                          <div class="form-group col-md-4 @if($errors->has('especialidad_id')) has-error @endif" style="clear:left;">
+                             <label for="especialidad_id-field">Especialidad</label>
+                             {!! Form::select("especialidad_id", $list["Especialidad"], null, array("class" => "form-control", "id" => "especialidad_id-field")) !!}
+                             @if($errors->has("especialidad_id"))
+                              <span class="help-block">{{ $errors->first("especialidad_id") }}</span>
+                             @endif
+                          </div>
+                        @if(isset($plantilla))  
+                          <div class="row">
+                            <div class="col-md-12">
+                              <table class="table table-condensed table-striped">
+                                <thead>
+                                  <th>Especialidad</th><th>Borrar</th>
+                                </thead>
+                                <tbody>
+                                    @foreach($plantilla->especialidad as $esp)
+                                      <tr>
+                                        <td>{!! $esp->name !!}</td>
+                                        <td> <a href="{!! route('plantillas.eliminarEspecialidad', array('plantilla'=>$plantilla->id,'esp'=>$esp->id)) !!}" class="btn btn-xs btn-danger">Eliminar</a>
+                                        </td>
+                                      </tr>
+                                    @endforeach
+                                  
+                                </tbody>
+
+                              </table>
+                            </div>  
+
+                          </div>
+                        @endif
+                      </div>
                     
                     <!--
                     <div class="form-group col-md-4 @if($errors->has('periodo_id')) has-error @endif">
@@ -233,24 +265,35 @@
           $('#nivel_div').hide();
           $('#inicio_div').hide();
           $('#fin_div').hide();
+          $('#especialidad_idv').hide();
        }else if($('#tpo_correo_id-field option:selected').val()==2){
           $('#estatus_div').hide();
           $('#dia_div').show();
           $('#nivel_div').show();
           $('#inicio_div').hide();
           $('#fin_div').hide();
+          $('#especialidad_idv').hide();
        }else if($('#tpo_correo_id-field option:selected').val()==3){
           $('#estatus_div').show();
           $('#dia_div').hide();
           $('#nivel_div').hide();
           $('#inicio_div').show();
           $('#fin_div').show();
+          $('#especialidad_idv').hide();
        }else if($('#tpo_correo_id-field option:selected').val()==4){
           $('#estatus_div').show();
           $('#dia_div').show();
           $('#nivel_div').hide();
           $('#inicio_div').hide();
           $('#fin_div').hide();
+          $('#especialidad_idv').hide();
+       }else if($('#tpo_correo_id-field option:selected').val()==5){
+          $('#estatus_div').show();
+          $('#dia_div').show();
+          $('#nivel_div').hide();
+          $('#inicio_div').hide();
+          $('#fin_div').hide();
+          $('#especialidad_idv').show();
        }
      }
 

@@ -30,7 +30,7 @@ class CreateClientesTable extends Migration {
             $table->string('cp')->nullable();
             $table->integer('municipio_id')->unsigned();
             $table->integer('estado_id')->unsigned();
-            $table->string('especialidad')->nullable();
+            $table->integer('especialidad_id')->unsigned();
             $table->integer('st_cliente_id')->unsigned();
             $table->integer('ofertum_id')->unsigned();
             $table->integer('medio_id')->unsigned();
@@ -69,6 +69,7 @@ class CreateClientesTable extends Migration {
             $table->foreign('st_cliente_id')->references('id')->on('st_clientes');
             $table->foreign('estado_id')->references('id')->on('estados');
             $table->foreign('municipio_id')->references('id')->on('municipios');
+            $table->foreign('especialidad_id')->references('id')->on('especialidads');
         });
 	}
 
