@@ -46,7 +46,8 @@ class Cliente extends Model
 						  'municipio_id','estado_id','st_cliente_id', 'especialidad','ofertum_id','medio_id',
 						  'expo','otro_medio','empleado_id','promociones','promo_cel','promo_correo', 
 						  'plantel_id', 'nivel_id','grado_id', 'curso_id', 'subcurso_id', 'diplomado_id', 
-						  'subdiplomado_id', 'otro_id', 'subotro_id','usu_alta_id','usu_mod_id'];
+						  'subdiplomado_id', 'otro_id', 'subotro_id','usu_alta_id','usu_mod_id', 'matricula', 
+						  'celular_confirmado', 'correo_confirmado'];
 
 	public function usu_alta() {
 		return $this->hasOne('App\User', 'id', 'usu_alta_id');

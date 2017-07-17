@@ -30,7 +30,7 @@
             <a class="btn btn-success pull-right" href="{{ route('clientes.create') }}"><i class="glyphicon glyphicon-plus"></i> Crear</a>
             @endpermission
             @permission('clientes.carga')
-            <a class="btn btn-success pull-right" href="{{ route('clientes.carga') }}"><i class="glyphicon glyphicon-plus"></i> Carga Archivo</a>
+            <a class="btn btn-warning pull-right" href="{{ route('clientes.carga') }}"><i class="glyphicon glyphicon-plus"></i> Carga Archivo</a>
             @endpermission
         </h3>
 
@@ -64,9 +64,9 @@
                             </div>
                             -->
                             <div class="form-group col-md-4">
-                                <label class="col-sm-12 control-label" for="q_cve_cliente_cont">CLAVE CLIENTE</label>
+                                <label class="col-sm-12 control-label" for="q_matericula_cont">MATRICULA</label>
                                 <div class="col-sm-12">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['cve_cliente_cont']) ?: '' }}" name="q[cve_cliente_cont]" id="q_cve_cliente_cont" />
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['matricula_cont']) ?: '' }}" name="q[matricula_cont]" id="q_matricula_cont" />
                                 </div>
                             </div>
                                                     <!--
@@ -82,9 +82,27 @@
                             </div>
                             -->
                             <div class="form-group col-md-4">
-                                <label class="col-sm-12 control-label" for="q_nombre_cont">NOMBRE</label>
+                                <label class="col-sm-12 control-label" for="q_nombre_cont">PRIMER NOMBRE</label>
                                 <div class="col-sm-12">
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['nombre_cont']) ?: '' }}" name="q[nombre_cont]" id="q_nombre_cont" />
+                                </div>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="col-sm-12 control-label" for="q_nombre2_cont">SEGUNDO NOMBRE</label>
+                                <div class="col-sm-12">
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['nombre2_cont']) ?: '' }}" name="q[nombre2_cont]" id="q_nombre2_cont" />
+                                </div>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="col-sm-12 control-label" for="q_ape_paterno_cont">APELLIDO PATERNO</label>
+                                <div class="col-sm-12">
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['ape_paterno_cont']) ?: '' }}" name="q[ape_paterno_cont]" id="q_ape_paterno_cont" />
+                                </div>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="col-sm-12 control-label" for="q_ape_materno_cont">APELLIDO MATERNO</label>
+                                <div class="col-sm-12">
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['ape_materno_cont']) ?: '' }}" name="q[ape_materno_cont]" id="q_ape_materno_cont" />
                                 </div>
                             </div>
                                                     <!--
@@ -99,67 +117,6 @@
                                 </div>
                             </div>
                             -->
-
-                            <div class="form-group col-md-4">
-                                <label class="col-sm-12 control-label" for="q_fec_registro_cont">FECHA REGISTRO</label>
-                                <div class="col-sm-12">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['fec_registro_cont']) ?: '' }}" name="q[fec_registro_cont]" id="q_fec_registro_cont" />
-                                </div>
-                            </div>
-                                                    <!--
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_tel_fijo_gt">TEL_FIJO</label>
-                                <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['tel_fijo_gt']) ?: '' }}" name="q[tel_fijo_gt]" id="q_tel_fijo_gt" />
-                                </div>
-                                <div class=" col-sm-1 text-center"> - </div>
-                                <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['tel_fijo_lt']) ?: '' }}" name="q[tel_fijo_lt]" id="q_tel_fijo_lt" />
-                                </div>
-                            </div>
-                            -->
-                            <div class="form-group col-md-4">
-                                <label class="col-sm-12 control-label" for="q_tel_fijo_cont">TELEFONO FIJO</label>
-                                <div class="col-sm-12">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['tel_fijo_cont']) ?: '' }}" name="q[tel_fijo_cont]" id="q_tel_fijo_cont" />
-                                </div>
-                            </div>
-                                                    <!--
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_tel_cel_gt">TEL_CEL</label>
-                                <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['tel_cel_gt']) ?: '' }}" name="q[tel_cel_gt]" id="q_tel_cel_gt" />
-                                </div>
-                                <div class=" col-sm-1 text-center"> - </div>
-                                <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['tel_cel_lt']) ?: '' }}" name="q[tel_cel_lt]" id="q_tel_cel_lt" />
-                                </div>
-                            </div>
-                            -->
-                            <div class="form-group col-md-4">
-                                <label class="col-sm-12 control-label" for="q_tel_cel_cont">TELEFONO CELULAR</label>
-                                <div class="col-sm-12">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['tel_cel_cont']) ?: '' }}" name="q[tel_cel_cont]" id="q_tel_cel_cont" />
-                                </div>
-                            </div>
-                                                    <!--
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_mail_gt">MAIL</label>
-                                <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['mail_gt']) ?: '' }}" name="q[mail_gt]" id="q_mail_gt" />
-                                </div>
-                                <div class=" col-sm-1 text-center"> - </div>
-                                <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['mail_lt']) ?: '' }}" name="q[mail_lt]" id="q_mail_lt" />
-                                </div>
-                            </div>
-                            -->
-                            <div class="form-group col-md-4">
-                                <label class="col-sm-12 control-label" for="q_mail_cont">CORREO ELECTRONICO</label>
-                                <div class="col-sm-12">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['mail_cont']) ?: '' }}" name="q[mail_cont]" id="q_mail_cont" />
-                                </div>
-                            </div>
                             
                             <div class="form-group col-md-4">
                                 <label class="col-sm-12 control-label" for="q_st_clientes.name_cont">ESTATUS</label>
@@ -167,9 +124,16 @@
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['st_clientes.name_cont']) ?: '' }}" name="q[st_clientes.name_cont]" id="q_st_clientes.name_cont" />
                                 </div>
                             </div>
+
+                            <div class="form-group col-md-4">
+                                <label class="col-sm-12 control-label" for="q_plantels.razon_cont">PLANTEL</label>
+                                <div class="col-sm-12">
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['plantels.razon_cont']) ?: '' }}" name="q[plantels.razon_cont]" id="q_plantels.razon_cont" />
+                                </div>
+                            </div>
                             
                             <div class="form-group col-md-4">
-                                <label class="col-sm-12 control-label" for="q_empleado_id_cont">EMPLEADO</label>
+                                <label class="col-sm-12 control-label" for="q_empleados.nombre_cont">EMPLEADO</label>
                                 <div class="col-sm-12">
                                     <input class="form-control input-sm" type="hiden" value="{{ @(Request::input('q')['empleados.nombre_cont']) ?: '' }}" name="q[empleados.nombre_cont]" id="q_empleados.nombre_cont" />
                                     
@@ -206,15 +170,14 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'especialidad', 'title' => 'ESPECIALIDAD'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'cve_cliente', 'title' => 'CLAVE CLIENTE'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'nombre', 'title' => 'NOMBRE'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'fec_registro', 'title' => 'FECHA REGISTRO'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'tel_fijo', 'title' => 'TEL. FIJO'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'tel_cel', 'title' => 'TEL. CEL.'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'mail', 'title' => 'CORREO'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'st_cliente_id', 'title' => 'ESTATUS'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'empleado_id', 'title' => 'EMPLEADO'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'matricula', 'title' => 'MATRICULA'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'nombre', 'title' => 'PRIMER NOMBRE'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'nombre2', 'title' => 'SEGUNDO NOMBRE'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'ape_paterno', 'title' => 'APELLIDO PATERNO'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'ape_materno', 'title' => 'APELLIDO MATERNO'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'st_clientes.name', 'title' => 'ESTATUS'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'empleados.nombre', 'title' => 'EMPLEADO'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'plantels.razon', 'title' => 'PLANTEL'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
@@ -223,15 +186,14 @@
                         @foreach($clientes as $cliente)
                             <tr>
                                 <td><a href="{{ route('clientes.show', $cliente->id) }}">{{$cliente->id}}</a></td>
-                                <td>{{$cliente->especilidad}}</td>
-                                <td>{{$cliente->cve_cliente}}</td>
+                                <td>{{$cliente->matricula}}</td>
                                 <td>{{$cliente->nombre}}</td>
-                                <td>{{$cliente->fec_registro}}</td>
-                                <td>{{$cliente->tel_fijo}}</td>
-                                <td>{{$cliente->tel_cel}}</td>
-                                <td>{{$cliente->mail}}</td>
+                                <td>{{$cliente->nombre2}}</td>
+                                <td>{{$cliente->ape_paterno}}</td>
+                                <td>{{$cliente->ape_materno}}</td>
                                 <td>{{$cliente->stCliente->name}}</td>
                                 <td>{{$cliente->empleado->nombre}}</td>
+                                <td>{{$cliente->plantel->razon}}</td>
                                 <td class="text-right">
                                     @permission('clientes.edit')
                                     <a class="btn btn-xs btn-primary" href="{{ route('clientes.duplicate', $cliente->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>

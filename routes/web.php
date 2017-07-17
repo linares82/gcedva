@@ -550,6 +550,11 @@ Route::get('medios/index', array(
         'middleware' => 'permission:clientes.update',
         'uses' => 'ClientesController@update')
     )->middleware('auth');
+    Route::get('/clientes/confirmaCorreo/{id}', array(
+        'as' => 'clientes.confirmaCorreo',
+        //'middleware' => 'permission:empleados.confirmaCorreo',
+        'uses' => 'ClientesController@confirmaCorreo')
+    )->middleware('auth');
     Route::delete('/clientes/destroy/{id}', array(
         'as' => 'clientes.destroy',
         'middleware' => 'permission:clientes.destroy',

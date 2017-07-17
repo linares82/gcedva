@@ -8,6 +8,7 @@ $baseDir = dirname($vendorDir);
 return array(
     'AddDatesLectivoTable' => $baseDir . '/database/migrations/2017_06_16_195301_Add_Dates_Lectivo_Table.php',
     'AddFieldsPlantelsTable' => $baseDir . '/database/migrations/2017_06_16_222542_Add_fields_Plantels_Table.php',
+    'AddMatriculaClientesTable' => $baseDir . '/database/migrations/2017_07_17_160208_add_matricula_clientes_table.php',
     'AddSessionUsersTable' => $baseDir . '/database/migrations/2017_03_31_153355_add_session_users_table.php',
     'CreateApplesTable' => $baseDir . '/database/migrations/2017_03_14_230217_create_apples_table.php',
     'CreateAreasTable' => $baseDir . '/database/migrations/2017_03_28_175310_create_areas_table.php',
@@ -34,7 +35,6 @@ return array(
     'CreatePeriodosTable' => $baseDir . '/database/migrations/2017_04_18_144945_create_periodos_table.php',
     'CreatePlantelsTable' => $baseDir . '/database/migrations/2017_03_24_164429_create_plantels_table.php',
     'CreatePlantillasEstatusTable' => $baseDir . '/database/migrations/2017_05_12_143816_create_plantillas_estatus_table.php',
-    'CreatePlantillasTable' => $baseDir . '/database/migrations/2017_05_11_241401_create_plantillas_table.php',
     'CreatePreguntaClientesTable' => $baseDir . '/database/migrations/2017_04_18_144933_create_pregunta_clientes_table.php',
     'CreatePreguntasTable' => $baseDir . '/database/migrations/2017_04_18_144907_create_preguntas_table.php',
     'CreatePromocionsTable' => $baseDir . '/database/migrations/2017_05_02_204052_create_promocions_table.php',

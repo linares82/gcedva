@@ -2,10 +2,17 @@
                   <div class="box-body">
                     <div class="form-group col-md-4 @if($errors->has('cve_cliente')) has-error @endif">
                        {!! Form::hidden("id", null, array("class" => "form-control", "id" => "id-field")) !!}
-                       <label for="cve_cliente-field">Clave Cliente (maximo 160 letras)</label><div id="contador"></div>
-                       {!! Form::textArea("cve_cliente", null, array("class" => "form-control", "id" => "cve_cliente-field", 'rows'=>'3', 'maxlength'=>'160')) !!}
+                       <label for="cve_cliente-field">codigo SMS(Max. 160 catacteres)</label><div id="contador"></div>
+                       {!! Form::text("cve_cliente", null, array("class" => "form-control", "id" => "cve_cliente-field")) !!}
                        @if($errors->has("cve_cliente"))
                         <span class="help-block">{{ $errors->first("cve_cliente") }}</span>
+                       @endif
+                    </div>
+                    <div class="form-group col-md-4 @if($errors->has('matricula')) has-error @endif">
+                       <label for="matricula-field">Matricula</label><div id="contador"></div>
+                       {!! Form::text("matricula", null, array("class" => "form-control", "id" => "matricula-field")) !!}
+                       @if($errors->has("matricula"))
+                        <span class="help-block">{{ $errors->first("matricula") }}</span>
                        @endif
                     </div>
                     <div class="form-group col-md-4 @if($errors->has('nombre')) has-error @endif">
@@ -36,25 +43,12 @@
                           <span class="help-block">{{ $errors->first("ape_materno") }}</span>
                          @endif
                       </div>
-                    <div class="form-group col-md-4 @if($errors->has('tel_cel')) has-error @endif">
-                       <label for="tel_cel-field">Teléfono Celular(10 dígitos)</label>
-                       {!! Form::text("tel_cel", null, array("class" => "form-control", "id" => "tel_cel-field")) !!}
-                       @if($errors->has("tel_cel"))
-                        <span class="help-block">{{ $errors->first("tel_cel") }}</span>
-                       @endif
-                    </div>
+                    
                     <div class="form-group col-md-4 @if($errors->has('tel_fijo')) has-error @endif">
                        <label for="tel_fijo-field">Teléfono Fijo</label>
                        {!! Form::text("tel_fijo", null, array("class" => "form-control", "id" => "tel_fijo-field")) !!}
                        @if($errors->has("tel_fijo"))
                         <span class="help-block">{{ $errors->first("tel_fijo") }}</span>
-                       @endif
-                    </div>
-                    <div class="form-group col-md-4 @if($errors->has('mail')) has-error @endif">
-                       <label for="mail-field">Correo Electrónico</label>
-                       {!! Form::text("mail", null, array("class" => "form-control", "id" => "mail-field")) !!}
-                       @if($errors->has("mail"))
-                        <span class="help-block">{{ $errors->first("mail") }}</span>
                        @endif
                     </div>
                     <div class="form-group col-md-4 @if($errors->has('st_cliente_id')) has-error @endif">
@@ -85,21 +79,60 @@
                         <span class="help-block">{{ $errors->first("plantel_id") }}</span>
                        @endif
                     </div>
+                  </div>
+                </div>
+                <div class="box box-default">
+                  <div class="box-body">
+                    <div class="form-group col-md-4 @if($errors->has('tel_cel')) has-error @endif">
+                       <label for="tel_cel-field">Teléfono Celular(10 dígitos)</label>
+                       {!! Form::text("tel_cel", null, array("class" => "form-control", "id" => "tel_cel-field")) !!}
+                       @if($errors->has("tel_cel"))
+                        <span class="help-block">{{ $errors->first("tel_cel") }}</span>
+                       @endif
+                    </div>
+                    <div class="form-group col-md-4 @if($errors->has('celular_confirmado')) has-error @endif">
+                       <label for="celular_confirmado-field">Celular Confirmado</label>
+                       {!! Form::checkbox("celular_confirmado", 1, null, [ "id" => "celular_confirmado-field"]) !!}
+                       @if($errors->has("celular_confirmado"))
+                        <span class="help-block">{{ $errors->first("celular_confirmado") }}</span>
+                       @endif
+                    </div>
                     @if(isset($cliente))
-                    @permission('clientes.enviaSms')
-                    <div class="form-group col-md-4">
-                      <button type="button" class="btn btn-primary" id="btn_sms">Enviar SMS Bienvenida</button>   
-                      <div class="row_1"><div id='loading1' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Loading" /></div> </div>
-                      <div id='msj'></div>
+                      @permission('clientes.enviaSms')
+                      <div class="form-group col-md-4">
+                        <button type="button" class="btn btn-primary" id="btn_sms">Enviar SMS Bienvenida</button>   
+                        <div id='loading1' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
+                        <div id='msj'></div>
+                      </div>
+                      @endpermission
+                    @endif
+                  </div>
+                </div>
+                <div class="box box-default">
+                  <div class="box-body">
+                    <div class="form-group col-md-4 @if($errors->has('mail')) has-error @endif">
+                       <label for="mail-field">Correo Electrónico</label>
+                       {!! Form::text("mail", null, array("class" => "form-control", "id" => "mail-field")) !!}
+                       @if($errors->has("mail"))
+                        <span class="help-block">{{ $errors->first("mail") }}</span>
+                       @endif
                     </div>
-                    @endpermission
-                    @permission('clientes.enviaMail')
-                    <div class="form-group col-md-4">
-                      <button type="button" class="btn btn-primary" id="btn_mail">Enviar Mail Bienvenida</button>   
-                      <div class="row_1"><div id='loading1' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Loading" /></div> </div>
-                      <div id='msj'></div>
+                    <div class="form-group col-md-4 @if($errors->has('correo_confirmado')) has-error @endif">
+                       <label for="correo_confirmado-field">Correo Confirmado</label>
+                       {!! Form::checkbox("correo_confirmado", 1, null, [ "id" => "correo_confirmado-field", 'disabled'=>"disabled"]) !!}
+                       <div id='loading2' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
+                       @if($errors->has("correo_confirmado"))
+                        <span class="help-block">{{ $errors->first("correo_confirmado") }}</span>
+                       @endif
                     </div>
-                    @endpermission
+                    @if(isset($cliente))
+                      @permission('clientes.enviaMail')
+                        <div class="form-group col-md-4">
+                          <button type="button" class="btn btn-primary" id="btn_mail">Enviar Mail Bienvenida</button>   
+                          <div class="row_1"><div id='loading1' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Loading" /></div> </div>
+                          <div id='msj'></div>
+                        </div>
+                      @endpermission
                     @endif
                   </div>
                 </div>
@@ -337,7 +370,7 @@
       $("#btn_sms").click(function(event) {
             enviaSms();
         });
-      $("#btn_sms").click(function(event) {
+      $("#btn_mail").click(function(event) {
             enviaMail();
         });
       //coloca la fecha del dia si esta vacio el campo
@@ -416,8 +449,8 @@
                 type: 'POST',
                 data: a,
                 dataType: 'json',
-                beforeSend : function(){$("#loading1").show();},
-                complete : function(){$("#loading1").hide();},
+                beforeSend : function(){$("#loading2").show();},
+                complete : function(){$("#loading2").hide();},
                 success: function(parametros){
                     if(parametros==true){
                       $('#msj').html('Sms enviado');

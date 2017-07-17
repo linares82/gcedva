@@ -19,6 +19,7 @@ use App\Http\Requests\createCliente;
 use App\Http\Requests\Carga;
 use Sms;
 use Session;
+//use App\Mail\CorreoBienvenida as Envia_mail;
 
 class ClientesController extends Controller {
 
@@ -80,6 +81,11 @@ class ClientesController extends Controller {
 			$input['promo_correo']=0;
 		}else{
 			$input['promo_correo']=1;
+		}
+		if(!isset($input['celular_confirmado'])){
+			$input['celular_confirmado']=0;
+		}else{
+			$input['celular_confirmado']=1;
 		}
 		//dd($input);
 		//create data
@@ -180,6 +186,11 @@ class ClientesController extends Controller {
 		}else{
 			$input['promo_correo']=1;
 		}
+		if(!isset($input['celular_confirmado'])){
+			$input['celular_confirmado']=0;
+		}else{
+			$input['celular_confirmado']=1;
+		}
 		//dd($input);
 		//update data
 		$cliente=$cliente->find($id);
@@ -191,6 +202,16 @@ class ClientesController extends Controller {
 			
 		
 
+		return redirect()->route('clientes.edit', $id)->with('message', 'Registro Actualizado.');
+	}
+
+	public function confirmaCorreo ($id, Cliente $cliente, Request $request)
+	{
+		$cliente=$cliente->find($id);
+		$cliente->correo_confirmado=1;
+		$cliente->save();
+		
+		dd('Agradecemos tu tiempo, tu correo fue confirmado.');
 		return redirect()->route('clientes.edit', $id)->with('message', 'Registro Actualizado.');
 	}
 
@@ -353,7 +374,7 @@ class ClientesController extends Controller {
 	        		}
 
 	        	}
-				return true;
+				//return true;
         	}catch(\Exception $e){
         		dd($e);
         		//return false;
@@ -362,25 +383,37 @@ class ClientesController extends Controller {
     	}
     }
 
-	public function enviaMail(Request $request){
+	/*public function enviaMail(Request $request){
     	//dd($_REQUEST);
     	if($request->ajax()){
         	try{
 	        	$r=Param::where('llave','=', 'correo_electronico')->first();
         		if($r->valor=='activo'){
+					//dd($r->id);
+					//$data=$r->toArray();
+					//dd($data);
 	        		\Mail::send('emails.2', array(), function($message) use ($request)
 	                 {
 	                     $message->to(e($request->mail), e($request->nombre)." ".e($request->ape_paterno)." ".e($request->ape_materno));
 	                     $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
-	                     $message->subject("Bienvenido");
+	                     $message->subject("Bienvenido");	 	 
 	                 });
-	        		$input2['usu_envio_id']=Auth::user()->id;
+					 
+					$cli=Cliente::find(e($request->id));
+					
+					$nombre=e($request->nombre)." ".e($request->ape_paterno)." ".e($request->ape_materno);
+					$mail=e($request->mail);
+					$m=\Mail::to($mail, $nombre);    
+                	$m->queue(new Envia_mail($cli));
+	        		
+					$input2['usu_envio_id']=Auth::user()->id;
 	    			$input2['cliente_id']=e($request->input('id'));
 	    			$input2['fecha_envio']=date("Y/m/d");
 	    			$input2['cantidad']=1;
 	    			$input2['usu_alta_id']=Auth::user()->id;
 	    			$input2['usu_mod_id']=Auth::user()->id;
-	    			Correo::create($input2);
+	    			//dd("f");
+					Correo::create($input2);
 	    		}
         		
         		return true;
@@ -391,7 +424,40 @@ class ClientesController extends Controller {
         	
 
     	}
+    }*/
+	public function enviaMail(Request $request){
+    	//dd($_REQUEST);
+		$cli=Cliente::find(e($request->id));
+    	if($request->ajax()){
+        	try{
+	        	$r=Param::where('llave','=', 'correo_electronico')->first();
+        		if($r->valor=='activo'){
+	        		\Mail::send('emails.2', $cli->toArray(), function($message) use ($request)
+	                 {
+	                     $message->to(e($request->mail), e($request->nombre)." ".e($request->ape_paterno)." ".e($request->ape_materno));
+	                     $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
+	                     $message->subject("Bienvenido");
+	                 });
+					
+	        		$input2['usu_envio_id']=Auth::user()->id;
+	    			$input2['cliente_id']=e($request->input('id'));
+	    			$input2['fecha_envio']=date("Y/m/d");
+	    			$input2['cantidad']=1;
+	    			$input2['usu_alta_id']=Auth::user()->id;
+	    			$input2['usu_mod_id']=Auth::user()->id;
+	    			Correo::create($input2);
+	    		}
+        		
+        		//return true;
+        	}catch(\Exception $e){
+        		dd($e);
+        		//return false;
+        	}
+        	
+
+    	}
     }
+
 
     public function cmbMClientes(){
     	$c=Cliente::select('id','nombre', 'nombre2', 'ape_paterno', 'ape_materno', 'mail')->get();
