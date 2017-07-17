@@ -236,6 +236,13 @@ class EmpleadosController extends Controller {
         }
         return response()->json($results);
     }
+	public function getPlantel($id=0){
+		//dd($_REQUEST['estado']);
+		$e = $_REQUEST['empleado'];
+        $plantel = Empleado::find($e)->plantel_id;
+        //dd($municipios);
+        return $plantel;
+	}
 
     
 

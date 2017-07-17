@@ -300,6 +300,11 @@ Route::get("banderas/bandera/{banderas}/duplicate", ['as' => 'banderas.duplicate
         //'middleware' => 'permission:clientes.edit',
         'uses' => 'EmpleadosController@usuarios')
     )->middleware('auth');
+    Route::get('/getPlantel', array(
+        'as' => 'empleados.getPlantel',
+        //'middleware' => 'permission:tareas.show',
+        'uses' => 'EmpleadosController@getPlantel')
+    )->middleware('auth');
 ///////////////////////////////////////////////////////////////////////////////////////////
     Route::get('zip/imagenes', function () {
             $files = glob(public_path('imagenes'));
@@ -575,6 +580,11 @@ Route::get('medios/index', array(
         'as' => 'clientes.enviaSms',
         'middleware' => 'permission:clientes.enviaSms',
         'uses' => 'ClientesController@enviaSms')
+    )->middleware('auth');
+    Route::post('/clientes/enviaMail', array(
+        'as' => 'clientes.enviaMail',
+        'middleware' => 'permission:clientes.enviaMail',
+        'uses' => 'ClientesController@enviaMail')
     )->middleware('auth');
     Route::get('/clientes/cmbMClientes', array(
         'as' => 'clientes.cmbMClientes',

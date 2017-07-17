@@ -3,7 +3,7 @@
                     <div class="form-group col-md-4 @if($errors->has('cve_cliente')) has-error @endif">
                        {!! Form::hidden("id", null, array("class" => "form-control", "id" => "id-field")) !!}
                        <label for="cve_cliente-field">Clave Cliente (maximo 160 letras)</label><div id="contador"></div>
-                       {!! Form::textArea("cve_cliente", null, array("class" => "form-control", "id" => "cve_cliente-field", 'rows'=>'4', 'maxlength'=>'160')) !!}
+                       {!! Form::textArea("cve_cliente", null, array("class" => "form-control", "id" => "cve_cliente-field", 'rows'=>'3', 'maxlength'=>'160')) !!}
                        @if($errors->has("cve_cliente"))
                         <span class="help-block">{{ $errors->first("cve_cliente") }}</span>
                        @endif
@@ -43,6 +43,13 @@
                         <span class="help-block">{{ $errors->first("tel_cel") }}</span>
                        @endif
                     </div>
+                    <div class="form-group col-md-4 @if($errors->has('tel_fijo')) has-error @endif">
+                       <label for="tel_fijo-field">Teléfono Fijo</label>
+                       {!! Form::text("tel_fijo", null, array("class" => "form-control", "id" => "tel_fijo-field")) !!}
+                       @if($errors->has("tel_fijo"))
+                        <span class="help-block">{{ $errors->first("tel_fijo") }}</span>
+                       @endif
+                    </div>
                     <div class="form-group col-md-4 @if($errors->has('mail')) has-error @endif">
                        <label for="mail-field">Correo Electrónico</label>
                        {!! Form::text("mail", null, array("class" => "form-control", "id" => "mail-field")) !!}
@@ -50,16 +57,111 @@
                         <span class="help-block">{{ $errors->first("mail") }}</span>
                        @endif
                     </div>
-                    
+                    <div class="form-group col-md-4 @if($errors->has('st_cliente_id')) has-error @endif">
+                       <label for="st_cliente_id-field">Estatus</label>
+                       {!! Form::select("st_cliente_id", $list["StCliente"], null, array("class" => "form-control", "id" => "st_cliente_id-field")) !!}
+                       @if($errors->has("st_cliente_id"))
+                        <span class="help-block">{{ $errors->first("st_cliente_id") }}</span>
+                       @endif
+                    </div>
+                    <div class="form-group col-md-4 @if($errors->has('especialidad')) has-error @endif">
+                       <label for="especialidad-field">especialidad</label>
+                       {!! Form::select("especialidad_id", $list["Especialidad"], null, array("class" => "form-control", "id" => "especialidad_id-field")) !!}
+                       @if($errors->has("especialidad"))
+                        <span class="help-block">{{ $errors->first("especialidad") }}</span>
+                       @endif
+                    </div>
+                    <div class="form-group col-md-4 @if($errors->has('plantel_id')) has-error @endif">
+                       <label for="plantel_id-field">Plantel</label>
+                       {!! Form::select("plantel_id", $list["Plantel"], null, array("class" => "form-control", "id" => "plantel_id-field", 'readonly'=>'readonly')) !!}
+                       @if($errors->has("plantel_id"))
+                        <span class="help-block">{{ $errors->first("plantel_id") }}</span>
+                       @endif
+                    </div>
                     @if(isset($cliente))
                     @permission('clientes.enviaSms')
                     <div class="form-group col-md-4">
-                      <button type="button" class="btn btn-primary" id="btn_sms">Enviar SMS y Bienvenida</button>   
+                      <button type="button" class="btn btn-primary" id="btn_sms">Enviar SMS Bienvenida</button>   
+                      <div class="row_1"><div id='loading1' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Loading" /></div> </div>
+                      <div id='msj'></div>
+                    </div>
+                    @endpermission
+                    @permission('clientes.enviaMail')
+                    <div class="form-group col-md-4">
+                      <button type="button" class="btn btn-primary" id="btn_mail">Enviar Mail Bienvenida</button>   
                       <div class="row_1"><div id='loading1' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Loading" /></div> </div>
                       <div id='msj'></div>
                     </div>
                     @endpermission
                     @endif
+                  </div>
+                </div>
+                <div class="box box-default">
+                  <div class="box-body">
+                    <div class="form-group col-md-4 @if($errors->has('fec_registro')) has-error @endif">
+                       <label for="fec_registro-field">Fecha Registro</label>
+                       {!! Form::text("fec_registro", null, array("class" => "form-control", "id" => "fec_registro-field")) !!}
+                       @if($errors->has("fec_registro"))
+                        <span class="help-block">{{ $errors->first("fec_registro") }}</span>
+                       @endif
+                    </div>
+                    <div class="form-group col-md-4 @if($errors->has('ofertum_id')) has-error @endif">
+                       <label for="ofertum_id-field">Oferta</label>
+                       {!! Form::select("ofertum_id", $list['Ofertum'],null, array("class" => "form-control", "id" => "ofertum_id-field")) !!}
+                       @if($errors->has("ofertum_id"))
+                        <span class="help-block">{{ $errors->first("oferta_id") }}</span>
+                       @endif
+                    </div>
+                    <div class="form-group col-md-4 @if($errors->has('medio_id')) has-error @endif">
+                       <label for="medio_id-field">Medio por el que se enteró</label>
+                       {!! Form::select("medio_id", $list["Medio"], null, array("class" => "form-control", "id" => "medio_id-field")) !!}
+                       @if($errors->has("medio_id"))
+                        <span class="help-block">{{ $errors->first("medio_id") }}</span>
+                       @endif
+                    </div>
+                    <div class="form-group col-md-4 @if($errors->has('expo')) has-error @endif" id="expo-group" style="clear:left">
+                       <label for="expo-field">Expo</label>
+                       {!! Form::text("expo",null, array("class" => "form-control", "id" => "expo-field")) !!}
+                       @if($errors->has("expo"))
+                        <span class="help-block">{{ $errors->first("expo") }}</span>
+                       @endif
+                    </div>
+                    <div class="form-group col-md-4 @if($errors->has('otro_medio')) has-error @endif" id="otro_medio-group">
+                       <label for="otro_medio-field">Otro Medio</label>
+                       {!! Form::text("otro_medio", null, array("class" => "form-control", "id" => "otro_medio-field")) !!}
+                       @if($errors->has("otro_medio"))
+                        <span class="help-block">{{ $errors->first("otro_medio") }}</span>
+                       @endif
+                    </div>
+                    <div class="form-group col-md-4 @if($errors->has('empleado_id')) has-error @endif">
+                       <label for="empleado_id-field">Empleado</label>
+                       {!! Form::select("empleado_id", $list["Empleado"], null, array("class" => "form-control", "id" => "empleado_id-field")) !!}
+                       @if($errors->has("empleado_id"))
+                        <span class="help-block">{{ $errors->first("empleado_id") }}</span>
+                       @endif
+                    </div>
+                    
+                    <div class="form-group col-md-4 @if($errors->has('promociones')) has-error @endif">
+                       <label for="promociones-field">Promociones</label>
+                       {!! Form::checkbox("promociones", 1, null, [ "id" => "promociones-field"]) !!}
+                       @if($errors->has("promociones"))
+                        <span class="help-block">{{ $errors->first("promociones") }}</span>
+                       @endif
+                    </div>
+                    <div class="form-group col-md-4 @if($errors->has('promo_cel')) has-error @endif">
+                       <label for="promo_cel-field">Promociones por Celular</label>
+                       {!! Form::checkbox("promo_cel", 1, null, [ "id" => "promo_cel-field"]) !!}
+                       @if($errors->has("promo_cel"))
+                        <span class="help-block">{{ $errors->first("promo_cel") }}</span>
+                       @endif
+                    </div>
+                    <div class="form-group col-md-4 @if($errors->has('promo_correo')) has-error @endif">
+                       <label for="promo_correo-field">Promociones por Correo</label>
+                       {!! Form::checkbox("promo_correo", 1, null, [ "id" => "promo_correo-field"]) !!}
+                       @if($errors->has("promo_correo"))
+                        <span class="help-block">{{ $errors->first("promo_correo") }}</span>
+                       @endif
+                    </div>
                   </div>
                 </div>
                 <div class="box box-default">
@@ -125,28 +227,6 @@
                 </div>
                 <div class="box box-default">
                   <div class="box-body">
-                    <div class="form-group col-md-4 @if($errors->has('especialidad')) has-error @endif">
-                       <label for="especialidad-field">especialidad</label>
-                       {!! Form::select("especialidad_id", $list["Especialidad"], null, array("class" => "form-control", "id" => "especialidad_id-field")) !!}
-                       @if($errors->has("especialidad"))
-                        <span class="help-block">{{ $errors->first("especialidad") }}</span>
-                       @endif
-                    </div>
-                    <div class="form-group col-md-4 @if($errors->has('fec_registro')) has-error @endif">
-                       <label for="fec_registro-field">Fecha Registro</label>
-                       {!! Form::text("fec_registro", null, array("class" => "form-control", "id" => "fec_registro-field")) !!}
-                       @if($errors->has("fec_registro"))
-                        <span class="help-block">{{ $errors->first("fec_registro") }}</span>
-                       @endif
-                    </div>
-                    <div class="form-group col-md-4 @if($errors->has('tel_fijo')) has-error @endif">
-                       <label for="tel_fijo-field">Teléfono Fijo</label>
-                       {!! Form::text("tel_fijo", null, array("class" => "form-control", "id" => "tel_fijo-field")) !!}
-                       @if($errors->has("tel_fijo"))
-                        <span class="help-block">{{ $errors->first("tel_fijo") }}</span>
-                       @endif
-                    </div>
-                    
                     
                     <div class="form-group col-md-4 @if($errors->has('calle')) has-error @endif">
                        <label for="calle-field">Calle</label>
@@ -199,74 +279,6 @@
                     </div>
                   </div>
                 </div>
-                <div class="box box-default">
-                  <div class="box-body">
-                    <div class="form-group col-md-4 @if($errors->has('st_cliente_id')) has-error @endif">
-                       <label for="st_cliente_id-field">Estatus</label>
-                       {!! Form::select("st_cliente_id", $list["StCliente"], null, array("class" => "form-control", "id" => "st_cliente_id-field")) !!}
-                       @if($errors->has("st_cliente_id"))
-                        <span class="help-block">{{ $errors->first("st_cliente_id") }}</span>
-                       @endif
-                    </div>
-                    <div class="form-group col-md-4 @if($errors->has('ofertum_id')) has-error @endif">
-                       <label for="ofertum_id-field">Oferta</label>
-                       {!! Form::select("ofertum_id", $list['Ofertum'],null, array("class" => "form-control", "id" => "ofertum_id-field")) !!}
-                       @if($errors->has("ofertum_id"))
-                        <span class="help-block">{{ $errors->first("oferta_id") }}</span>
-                       @endif
-                    </div>
-                    <div class="form-group col-md-4 @if($errors->has('medio_id')) has-error @endif">
-                       <label for="medio_id-field">Medio por el que se enteró</label>
-                       {!! Form::select("medio_id", $list["Medio"], null, array("class" => "form-control", "id" => "medio_id-field")) !!}
-                       @if($errors->has("medio_id"))
-                        <span class="help-block">{{ $errors->first("medio_id") }}</span>
-                       @endif
-                    </div>
-                    <div class="form-group col-md-4 @if($errors->has('expo')) has-error @endif" id="expo-group">
-                       <label for="expo-field">Expo</label>
-                       {!! Form::text("expo",null, array("class" => "form-control", "id" => "expo-field")) !!}
-                       @if($errors->has("expo"))
-                        <span class="help-block">{{ $errors->first("expo") }}</span>
-                       @endif
-                    </div>
-                    <div class="form-group col-md-4 @if($errors->has('otro_medio')) has-error @endif" id="otro_medio-group">
-                       <label for="otro_medio-field">Otro Medio</label>
-                       {!! Form::text("otro_medio", null, array("class" => "form-control", "id" => "otro_medio-field")) !!}
-                       @if($errors->has("otro_medio"))
-                        <span class="help-block">{{ $errors->first("otro_medio") }}</span>
-                       @endif
-                    </div>
-                    <div class="form-group col-md-4 @if($errors->has('empleado_id')) has-error @endif">
-                       <label for="empleado_id-field">Empleado</label>
-                       {!! Form::select("empleado_id", $list["Empleado"], null, array("class" => "form-control", "id" => "empleado_id-field")) !!}
-                       @if($errors->has("empleado_id"))
-                        <span class="help-block">{{ $errors->first("empleado_id") }}</span>
-                       @endif
-                    </div>
-                    <div class="form-group col-md-4 @if($errors->has('promociones')) has-error @endif">
-                       <label for="promociones-field">Promociones</label>
-                       {!! Form::checkbox("promociones", 1, null, [ "id" => "promociones-field"]) !!}
-                       @if($errors->has("promociones"))
-                        <span class="help-block">{{ $errors->first("promociones") }}</span>
-                       @endif
-                    </div>
-                    <div class="form-group col-md-4 @if($errors->has('promo_cel')) has-error @endif">
-                       <label for="promo_cel-field">Promociones por Celular</label>
-                       {!! Form::checkbox("promo_cel", 1, null, [ "id" => "promo_cel-field"]) !!}
-                       @if($errors->has("promo_cel"))
-                        <span class="help-block">{{ $errors->first("promo_cel") }}</span>
-                       @endif
-                    </div>
-                    <div class="form-group col-md-4 @if($errors->has('promo_correo')) has-error @endif">
-                       <label for="promo_correo-field">Promociones por Correo</label>
-                       {!! Form::checkbox("promo_correo", 1, null, [ "id" => "promo_correo-field"]) !!}
-                       @if($errors->has("promo_correo"))
-                        <span class="help-block">{{ $errors->first("promo_correo") }}</span>
-                       @endif
-                    </div>
-                  </div>
-                </div>
-                
                 @if(isset($cliente->id))
                 <div class="box box-default">
                   <div class="box-body">
@@ -323,6 +335,9 @@
       ocultaExpo();
       $("#btn_sms").click(function(event) {
             enviaSms();
+        });
+      $("#btn_sms").click(function(event) {
+            enviaMail();
         });
       //coloca la fecha del dia si esta vacio el campo
       if($.trim($("#fec_registro-field").val())==''){
@@ -386,13 +401,49 @@
                 complete : function(){$("#loading1").hide();},
                 success: function(parametros){
                     if(parametros==true){
-                      $('msj').html('Sms enviado');
+                      $('#msj').html('Sms enviado');
                     }else{
-                      $('msj').html('Envio de sms fallo');
+                      $('#msj').html('Envio de sms fallo');
                     }
                 }
             });       
     }
+    function enviaMail(){
+        var a= $('#frm_cliente').serialize();
+            $.ajax({
+                url: '{{ route("clientes.enviaMail") }}',
+                type: 'POST',
+                data: a,
+                dataType: 'json',
+                beforeSend : function(){$("#loading1").show();},
+                complete : function(){$("#loading1").hide();},
+                success: function(parametros){
+                    if(parametros==true){
+                      $('#msj').html('Sms enviado');
+                    }else{
+                      $('#msj').html('Envio de sms fallo');
+                    }
+                }
+            });       
+    }
+
+    //Asigna el plantel segun el empleado
+      $('#empleado_id-field').change(function(){
+        $.get("{{ url('getPlantel')}}",
+          { empleado: $(this).val() },
+          function(data) {
+            $('#plantel_id-field').val(data).change();
+          });
+      });
+
+      //trabaja el campo plantel 
+      @permission('Icliente.modificarPlantel')
+      $('#plantel_id-field').prop('disabled', true);
+      @endpermission
+      $( "#frm_cliente" ).submit(function() {
+          $('#plantel_id-field').prop('disabled', false);
+          return true;
+      });
 
       //Campo combos dependientes
       $('#estado_id-field').change(function(){

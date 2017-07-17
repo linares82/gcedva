@@ -31,9 +31,9 @@ class ClientesController extends Controller {
 	 */
 	public function index(Request $request)
 	{
-		//dd($_REQUEST);
+		//dd($request);
 		$clientes = Cliente::getAllData($request);
-
+		
 		return view('clientes.index', compact('clientes'))
 			->with( 'list', Cliente::getListFromAllRelationApps() );
 	}
@@ -62,8 +62,8 @@ class ClientesController extends Controller {
 	{
 
 		$input = $request->all();
-		$empleado=Empleado::find($request->input('empleado_id'));
-		$input['plantel_id']=$empleado->plantel->id;
+		//$empleado=Empleado::find($request->input('empleado_id'));
+		//$input['plantelplantel_id']=$empleado->plantel->id;
 		$input['usu_alta_id']=Auth::user()->id;
 		$input['usu_mod_id']=Auth::user()->id;
 		if(!isset($input['promociones'])){
@@ -151,10 +151,11 @@ class ClientesController extends Controller {
 	 */
 	public function update($id, Cliente $cliente, updateCliente $request)
 	{
+		
 		$input = $request->all();
 		$input['usu_mod_id']=Auth::user()->id;
-		$empleado=Empleado::find($request->input('empleado_id'));
-		$input['plantel_id']=$empleado->plantel->id;
+		//$empleado=Empleado::find($request->input('empleado_id'));
+		//$input['plantel_id']=$empleado->plantel->id;
 		$pc['cliente_id']=$id;
 		$pc['pregunta_id']=$input['pregunta_id'];
 		$pc['respuesta']=$input['respuesta'];
@@ -334,7 +335,6 @@ class ClientesController extends Controller {
     	if($request->ajax()){
         	try{
 
-
         		$to='+52'.e($request->input('tel_cel'));
         		//dd($to);
 	    		$message=e($request->input('cve_cliente'));
@@ -353,8 +353,19 @@ class ClientesController extends Controller {
 	        		}
 
 	        	}
+				return true;
+        	}catch(\Exception $e){
+        		dd($e);
+        		//return false;
+        	}
+        	
+    	}
+    }
 
-
+	public function enviaMail(Request $request){
+    	//dd($_REQUEST);
+    	if($request->ajax()){
+        	try{
 	        	$r=Param::where('llave','=', 'correo_electronico')->first();
         		if($r->valor=='activo'){
 	        		\Mail::send('emails.2', array(), function($message) use ($request)
@@ -372,7 +383,7 @@ class ClientesController extends Controller {
 	    			Correo::create($input2);
 	    		}
         		
-        		//return true;
+        		return true;
         	}catch(\Exception $e){
         		dd($e);
         		//return false;

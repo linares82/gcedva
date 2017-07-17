@@ -12,6 +12,8 @@ namespace App\Traits;
 use App\Http\Requests;
 use Illuminate\Http\Request;
 use dogears\CrudDscaffold\Traits\NameSolverTrait;
+use App\Empleado;
+use Auth;
 
 trait GetAllDataTrait {
 
@@ -108,7 +110,16 @@ trait GetAllDataTrait {
             $column = $baseTable.'.id';
             $order_dir = 'DESC';
         }
-
+        //dd(Auth::user()->can('IfiltroClientesXPlantel'));
+        
+        if($baseTable=="clientes" and Auth::user()->can('IfiltroClientesXPlantel')){
+            $myQuery=$myQuery->where('clientes.plantel_id', '=', Empleado::find(Auth::user()->id)->plantel_id);
+        }
+        if($baseTable=="empleados" and Auth::user()->can('IfiltroEmpleadosXPlantel')){
+            $myQuery=$myQuery->where('empleados.plantel_id', '=', Empleado::find(Auth::user()->id)->plantel_id);
+        }
+        
+        
         $myQuery = $myQuery->orderBy( $column, $order_dir);
 
         //(iv) get base table data
