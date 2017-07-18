@@ -554,7 +554,7 @@ Route::get('medios/index', array(
         'as' => 'clientes.confirmaCorreo',
         //'middleware' => 'permission:empleados.confirmaCorreo',
         'uses' => 'ClientesController@confirmaCorreo')
-    )->middleware('auth');
+    );
     Route::delete('/clientes/destroy/{id}', array(
         'as' => 'clientes.destroy',
         'middleware' => 'permission:clientes.destroy',
