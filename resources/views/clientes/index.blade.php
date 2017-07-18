@@ -195,6 +195,9 @@
                                 <td>{{$cliente->empleado->nombre}}</td>
                                 <td>{{$cliente->plantel->razon}}</td>
                                 <td class="text-right">
+                                    @permission('seguimientos.show')
+                                    <a class="btn btn-xs btn-default" href="{{ route('seguimientos.show', $cliente->id) }}"><i class="glyphicon glyphicon-edit"></i> Seguimiento</a>
+                                    @endpermission
                                     @permission('clientes.edit')
                                     <a class="btn btn-xs btn-primary" href="{{ route('clientes.duplicate', $cliente->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
                                     @endpermission

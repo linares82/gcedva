@@ -4,6 +4,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use File;
 use App\Cliente;
+use App\Seguimiento;
 use App\Sm;
 use App\Correo;
 use App\Empleado;
@@ -91,7 +92,12 @@ class ClientesController extends Controller {
 		//create data
 		try{
 			//dd($input);
-			Cliente::create( $input );	
+			$c=Cliente::create( $input );	
+			$input_seguimiento['cliente_id']=$c->id;
+			$input_seguimiento['estatus_id']=1;
+			$input_seguimiento['usu_alta_id']=Auth::user()->id;
+			$input_seguimiento['usu_mod_id']=Auth::user()->id;
+			Seguimiento::create($input_seguimiento);
 		}catch (\PDOException $e) {
 			//dd($e);
 			if($e->getCode()==23000){
