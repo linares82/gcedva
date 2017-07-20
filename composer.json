@@ -19,7 +19,8 @@
         "paulvl/backup": "3.*",
         "pqb/filemanager-laravel": "2.*",
         "twilio/sdk": "4.10",
-        "zizaco/entrust": "5.2.x-dev"
+        "zizaco/entrust": "5.2.x-dev",
+        "maatwebsite/excel": "~2.1.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

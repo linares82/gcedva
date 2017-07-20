@@ -114,7 +114,7 @@ class Cliente extends Model
 	public function plantel() {
 		return $this->belongsTo('App\Plantel');
 	}// end
-	public function seg()
+	public function seguimiento()
     {
         return $this->hasOne('App\Seguimiento', 'cliente_id', 'id');
     }
