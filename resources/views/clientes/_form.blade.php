@@ -360,7 +360,7 @@
   <script src="{{ asset ('/bower_components/AdminLTE/plugins/input-mask/jquery.inputmask.js') }}"></script>
 <script src="{{ asset ('/bower_components/AdminLTE/plugins/input-mask/jquery.inputmask.extensions.js') }}"></script>
 <script src="{{ asset ('/bower_components/AdminLTE/plugins/input-mask/jquery.inputmask.phone.extensions.js') }}"></script>
-  <script>
+  <script type="text/javascript">
     $(document).ready(function() {
       $('#tel_cel-field').inputmask({"mask": "(999) 999-9999"}); //specifying options
       $('#tel_fijo-field').inputmask({"mask": "(999) 999-9999"}); //specifying options

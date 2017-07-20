@@ -12,4 +12,6 @@ municipios.csv
 permisos.csv
 .env
 /resources/views/emails
+/public/filemanager
+/public/imagenes
 

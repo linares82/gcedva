@@ -135,7 +135,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script type="text/javascript" src="{{ asset ('/jquery.combogrid-1.6.3/resources/jquery/jquery-ui-1.10.1.custom.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset ('/jquery.combogrid-1.6.3/resources/plugin/jquery.ui.combogrid-1.6.3.js') }}"></script>
 <script type="text/javascript" src="{{ asset ('/jquery.combogrid-1.6.3/resources/plugin/jquery.i18n.properties-1.0.9.js') }}"></script>
-<!-- Input mask -->
+
 
 
 <script>

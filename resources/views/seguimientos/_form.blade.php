@@ -1,4 +1,4 @@
-                <div class="form-group col-md-4 @if($errors->has('cliente_id')) has-error @endif">
+                    <div class="form-group col-md-4 @if($errors->has('cliente_id')) has-error @endif">
                        <label for="cliente_id-field">Cliente_id</label>
                        {!! Form::text("cliente_id", null, array("class" => "form-control", "id" => "cliente_id-field")) !!}
                        @if($errors->has("cliente_id"))

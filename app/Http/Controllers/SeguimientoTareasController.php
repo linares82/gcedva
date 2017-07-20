@@ -43,18 +43,22 @@ class SeguimientoTareasController extends Controller {
 	 */
 	public function store(createSeguimientoTarea $request)
 	{
-
+		
 		$input = $request->all();
+		
 		$input['usu_alta_id']=Auth::user()->id;
 		$input['usu_mod_id']=Auth::user()->id;
 		//create data
-		SeguimientoTarea::create( $input );
+		
+		$s=SeguimientoTarea::create( $input );
 		$id=$input['asignacion_tarea_id'];
 		$asignacion=AsignacionTarea::find($id);
 		$asignacion->st_tarea_id=$input['estatus_id'];
+		
 		$asignacion->save();
-		//dd("hi");
-		return redirect()->route('asignacionTareas.seguimiento', ['id'=>$id])->with('message', 'Registro Creado.');
+		
+		//dd($asignacion);
+		return redirect()->route('asignacionTareas.seguimiento', $s->asignacion_tarea_id)->with('message', 'Registro Creado.');
 	}
 
 	/**

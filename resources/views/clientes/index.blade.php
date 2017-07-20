@@ -176,6 +176,7 @@
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'ape_paterno', 'title' => 'APELLIDO PATERNO'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'ape_materno', 'title' => 'APELLIDO MATERNO'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'st_clientes.name', 'title' => 'ESTATUS'])</th>
+                            <th>ESTATUS SEGUIMIENTO</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'empleados.nombre', 'title' => 'EMPLEADO'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'plantels.razon', 'title' => 'PLANTEL'])</th>
                             <th class="text-right">OPCIONES</th>
@@ -192,6 +193,19 @@
                                 <td>{{$cliente->ape_paterno}}</td>
                                 <td>{{$cliente->ape_materno}}</td>
                                 <td>{{$cliente->stCliente->name}}</td>
+                                <td>
+                                    @if($cliente->seguimiento->estatus_id==1)
+                                        <small class="label label-info"> 
+                                    @elseif($cliente->seguimiento->estatus_id==2)
+                                        <small class="label label-success"> 
+                                    @elseif($cliente->seguimiento->estatus_id==3)
+                                        <small class="label label-danger">
+                                    @elseif($cliente->seguimiento->estatus_id==4)
+                                        <small class="label label-warning"> 
+                                    @endif
+                                        {{$cliente->seguimiento->estatus->name}}
+                                    </small>
+                                </td>
                                 <td>{{$cliente->empleado->nombre}}</td>
                                 <td>{{$cliente->plantel->razon}}</td>
                                 <td class="text-right">

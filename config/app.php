@@ -175,6 +175,7 @@ return [
         Chumper\Zipper\ZipperServiceProvider::Class,
         Pqb\FilemanagerLaravel\FilemanagerLaravelServiceProvider::Class,
         Zenapply\Sms\Providers\SmsServiceProvider::class,
+        Barryvdh\DomPDF\ServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -240,6 +241,7 @@ return [
         'Zipper' => Chumper\Zipper\Zipper::class,
         'FilemanagerLaravel'=> Pqb\FilemanagerLaravel\Facades\FilemanagerLaravel::Class,
         "Sms" => Zenapply\Sms\Facades\Sms::class,
+        'PDF' => Barryvdh\DomPDF\Facade::class,
     ],
 
 ];

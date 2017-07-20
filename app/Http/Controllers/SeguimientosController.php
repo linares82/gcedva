@@ -4,10 +4,17 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\Seguimiento;
+use App\Empleado;
+use App\StSeguimiento;
+use App\AsignacionTarea;
+use App\Aviso;
 use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updateSeguimiento;
 use App\Http\Requests\createSeguimiento;
+use App\Http\Requests\updateAsignacionTarea;
+use DB;
+use PDF;
 
 class SeguimientosController extends Controller {
 
@@ -58,7 +65,7 @@ class SeguimientosController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function show($id, Seguimiento $seguimiento)
+	public function show($id, Seguimiento $seguimiento, updateAsignaciontarea $request)
 	{
 		$seguimiento=$seguimiento->where('cliente_id', '=', $id)->first();
 		//dd($seguimiento);
@@ -69,7 +76,19 @@ class SeguimientosController extends Controller {
 			$input_seguimiento['usu_mod_id']=Auth::user()->id;
 			$seguimiento=Seguimiento::create($input_seguimiento);
 		}
-		return view('seguimientos.show', compact('seguimiento'));
+		//$seguimiento->getAllData();
+		$sts=StSeguimiento::pluck('name', 'id');
+		$asignacionTareas = AsignacionTarea::where('cliente_id', '=', $seguimiento->cliente_id)->get();
+		$avisos=Aviso::select('avisos.id','a.name','avisos.detalle', 'avisos.fecha',
+							Db::Raw('DATEDIFF(avisos.fecha,CURDATE()) as dias_restantes'))
+					->join('asuntos as a', 'a.id', '=', 'avisos.asunto_id')
+					->where('seguimiento_id', '=', $seguimiento->id)
+					->where('avisos.activo', '=', '1')
+					->get();
+		//$dias=round((strtotime($a->fecha)-strtotime(date('Y-m-d')))/86400);
+		//dd($avisos);
+		return view('seguimientos.show', compact('seguimiento', 'sts', 'asignacionTareas', 'avisos'))
+					->with( 'list', AsignacionTarea::getListFromAllRelationApps() );
 	}
 
 	/**
@@ -113,6 +132,17 @@ class SeguimientosController extends Controller {
 		$seguimiento=$seguimiento->find($id);
 		$seguimiento->update( $input );
 
+		return redirect()->route('seguimientos.show', $seguimiento->cliente_id)->with('message', 'Registro Actualizado.');
+	}
+
+	public function updateEstatus($id, Seguimiento $seguimiento, updateSeguimiento $request)
+	{
+		$input = $request->all();
+		$input['usu_mod_id']=Auth::user()->id;
+		//update data
+		$seguimiento=$seguimiento->find($id);
+		$seguimiento->update( $input );
+
 		return redirect()->route('seguimientos.index')->with('message', 'Registro Actualizado.');
 	}
 
@@ -128,6 +158,37 @@ class SeguimientosController extends Controller {
 		$seguimiento->delete();
 
 		return redirect()->route('seguimientos.index')->with('message', 'Registro Borrado.');
+	}
+
+	public function reporteSeguimientosXEmpleado(){
+		$estatus=$_REQUEST['estatus'];
+		$e=Empleado::where('user_id', '=', Auth::user()->id)->first();
+		$mes=date('m');
+		$fecha=date('d-m-Y');
+		
+		$seguimientos=Seguimiento::select('c.nombre', 'c.nombre2', 'c.ape_paterno', 'c.ape_materno',
+			'c.calle', 'c.no_interior', 'c.no_exterior', 'm.name as municipio', 'e.name as estado', 
+			'c.tel_fijo', 'tel_cel', 'mail', 'sts.name as st_seguimiento', 
+			'stc.name as st_cliente')
+			->join('st_seguimientos as sts', 'sts.id', '=', 'seguimientos.estatus_id')
+			->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
+			->join('municipios as m', 'm.id', '=', 'c.municipio_id')
+			->join('estados as e', 'e.id', '=', 'c.estado_id')
+			->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
+			->join('asignacion_tareas as at', 'at.cliente_id', '=','seguimientos.cliente_id')
+			->where(Db::raw('MONTH(seguimientos.created_at)'), '=', $mes)
+			->where('c.empleado_id', '=', $e->id)
+			->where('seguimientos.estatus_id', '=', $estatus)
+			->get();
+		//dd($seguimientos);
+			PDF::setOptions(['defaultFont' => 'arial']);
+			$pdf = PDF::loadView('seguimientos.reportes.seguimientosXempleado', array('seguimientos'=>$seguimientos, 'fecha'=>$fecha, 'e'=>$e))
+						->setPaper('letter', 'landscape');
+			return $pdf->download('reporte.pdf');
+			
+		//return view('seguimientos.reportes.seguimientosXempleado', compact('seguimientos', 'fecha', 'e'));
+		
+			
 	}
 
 }

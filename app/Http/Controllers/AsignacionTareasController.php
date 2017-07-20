@@ -55,6 +55,19 @@ class AsignacionTareasController extends Controller {
 		return redirect()->route('asignacionTareas.index')->with('message', 'Registro Creado.');
 	}
 
+	public function storeModal(createAsignacionTarea $request)
+	{
+
+		$input = $request->all();
+		$input['usu_alta_id']=Auth::user()->id;
+		$input['usu_mod_id']=Auth::user()->id;
+		//dd($input);
+		//create data
+		$a=AsignacionTarea::create( $input );
+		
+		return redirect()->route('seguimientos.show', $a->cliente_id)->with('message', 'Registro Creado.');
+	}
+
 	/**
 	 * Display the specified resource.
 	 *
