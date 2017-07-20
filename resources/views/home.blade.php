@@ -117,7 +117,7 @@
             <div class="box box-warning">
                 <div class="box-header with-border">
                     <h3 class="box-title">
-                        Grafica
+                        Grafica de Estatus del Mes
                     </h3>
                 </div>
                 <div class="box-body">

@@ -24,8 +24,7 @@ body{
             <img src="" alt="Logo" height=80>
         </td>
         <td style="width:33%;text-align:center" align="center">
-            <h3> Reporte de Seguimientos por Empleado </h3>
-            <h5> {{$e->nombre.' '.$e->ape_paterno.' '.$e->ape_materno}} </h5>
+            <h3> Reporte de Seguimientos por Empleado para Planteles </h3>
         </td>
         <td style="width:33%;text-align:rigth" align="rigth">
             Fecha de Elaboración: {{$fecha}}
@@ -38,6 +37,12 @@ body{
         <tr>
             <th data-options="field:'cia_id'" style="border:1px solid #ccc;">
                 No.
+            </th>
+            <th data-options="field:'residuo'" style="border:1px solid #ccc;">
+                Plantel
+            </th>
+            <th data-options="field:'residuo'" style="border:1px solid #ccc;">
+                Empleado
             </th>
             <th data-options="field:'residuo'" style="border:1px solid #ccc;">
                 Cliente
@@ -71,25 +76,31 @@ body{
                 <?php $i++; ?>
             </td>
             <td style="border:1px solid #ccc;">
-                {{ $s->nombre." ".$s->nombre2." ".$s->ape_paterno." ".$s->ape_materno }}
+                {{$s->cliente->plantel->razon}}
             </td>
             <td style="border:1px solid #ccc;">
-                {{ $s->calle." ".$s->no_interior." ".$s->no_exterior." ".$s->colonia." ".$s->municipio->name." ".$s->estado->name }}
+                {{$s->cliente->empleado->nombre." ".$s->cliente->empleado->ape_paterno." ".$s->cliente->empleado->ape_materno}}
             </td>
             <td style="border:1px solid #ccc;">
-                {{ $s->tel_fijo }}
+                {{ $s->cliente->nombre." ".$s->cliente->nombre2." ".$s->cliente->ape_paterno." ".$s->cliente->ape_materno }}
             </td>
             <td style="border:1px solid #ccc;">
-                {{ $s->tel_cel }}
+                {{ $s->cliente->calle." ".$s->cliente->no_interior." ".$s->cliente->no_exterior." ".$s->cliente->colonia." ".$s->cliente->municipio->name." ".$s->cliente->estado->name }}
             </td>
             <td style="border:1px solid #ccc;">
-                {{ $s->mail }}
+                {{ $s->cliente->tel_fijo }}
             </td>
             <td style="border:1px solid #ccc;">
-                {{ $s->st_cliente }}
+                {{ $s->cliente->tel_cel }}
             </td>
             <td style="border:1px solid #ccc;">
-                {{ $s->st_seguimiento }}
+                {{ $s->cliente->mail }}
+            </td>
+            <td style="border:1px solid #ccc;">
+                {{ $s->cliente->stCliente->name }}
+            </td>
+            <td style="border:1px solid #ccc;">     
+                {{ $s->estatus->name }}
             </td>
         </tr>
         @endforeach

@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 
 use App\Seguimiento;
 use App\Empleado;
+use App\Cliente;
 use App\StSeguimiento;
 use App\AsignacionTarea;
 use App\Aviso;
@@ -186,9 +187,40 @@ class SeguimientosController extends Controller {
 						->setPaper('letter', 'landscape');
 			return $pdf->download('reporte.pdf');
 			
-		//return view('seguimientos.reportes.seguimientosXempleado', compact('seguimientos', 'fecha', 'e'));
-		
-			
+		//return view('seguimientos.reportes.seguimientosXempleado', compact('seguimientos', 'fecha', 'e'));			
 	}
 
+	public function seguimientosXempleadoG()
+	{
+		return view('seguimientos.reportes.seguimientosXempleadoG')
+			->with( 'list', Cliente::getListFromAllRelationApps())
+			->with( 'list1', Seguimiento::getListFromAllRelationApps());
+	}
+
+	public function seguimientosXempleadoGr(updateSeguimiento $request)
+	{
+		$input=$request->all();
+		$fecha=date('d-m-Y');
+
+		/*$clientes=Cliente::whereBetween('s.created_at', [$input['fecha_f'], $input['fecha_t']])
+			->join('seguimientos as s', 's.cliente_id', 'clientes.id')
+			->whereBetween('clientes.empleado_id', [$input['empleado_f'], $input['empleado_t']])
+			->whereBetween('clientes.plantel_id', [$input['plantel_f'], $input['plantel_t']])
+			->whereBetween('s.estatus_id', [$input['estatus_f'], $input['estatus_t']])
+			->get();
+		*/
+		$seguimientos=Seguimiento::join('clientes as c', 'c.id', 'seguimientos.cliente_id')
+				->whereBetween('c.empleado_id', [$input['empleado_f'], $input['empleado_t']])
+				->whereBetween('c.plantel_id', [$input['plantel_f'], $input['plantel_t']])
+				->whereBetween('seguimientos.estatus_id', [$input['estatus_f'], $input['estatus_t']])
+				->orderBy('c.empleado_id', 'seguimientos.estatus_id')
+				->get();
+		//$s=Seguimiento::get();
+		//dd($clientes);
+			PDF::setOptions(['defaultFont' => 'arial']);
+			$pdf = PDF::loadView('seguimientos.reportes.seguimientosXempleadoGr', array('seguimientos'=>$seguimientos, 'fecha'=>$fecha))
+						->setPaper('letter', 'landscape');
+			return $pdf->download('reporte.pdf');
+			//return view('seguimientos.reportes.seguimientosXempleadoGr', array('seguimientos'=>$seguimientos, 'fecha'=>$fecha));	
+	}
 }

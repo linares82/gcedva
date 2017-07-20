@@ -20,6 +20,7 @@ use App\Http\Requests\createCliente;
 use App\Http\Requests\Carga;
 use Sms;
 use Session;
+use Hash;
 //use App\Mail\CorreoBienvenida as Envia_mail;
 
 class ClientesController extends Controller {
@@ -62,7 +63,7 @@ class ClientesController extends Controller {
 	 */
 	public function store(createCliente $request)
 	{
-
+		$id=0;
 		$input = $request->all();
 		//$empleado=Empleado::find($request->input('empleado_id'));
 		//$input['plantelplantel_id']=$empleado->plantel->id;
@@ -93,6 +94,7 @@ class ClientesController extends Controller {
 		try{
 			//dd($input);
 			$c=Cliente::create( $input );	
+			$id=$c->id;
 			$input_seguimiento['cliente_id']=$c->id;
 			$input_seguimiento['estatus_id']=1;
 			$input_seguimiento['usu_alta_id']=Auth::user()->id;
@@ -102,12 +104,10 @@ class ClientesController extends Controller {
 			//dd($e);
 			if($e->getCode()==23000){
 				//dd($e);
-				return redirect()->route('clientes.index')->with('message', 'Registro guardado');				
+				return redirect()->route('clientes.edit', $id)->with('message', 'Registro guardado');				
 			}
 		}
-		
-
-		return redirect()->route('clientes.index')->with('message', 'Registro Creado.')->with( 'list', Cliente::getListFromAllRelationApps() );
+		return redirect()->route('clientes.edit', $id)->with('message', 'Registro Creado.')->with( 'list', Cliente::getListFromAllRelationApps() );
 	}
 
 	/**
@@ -131,6 +131,9 @@ class ClientesController extends Controller {
 	public function edit($id, Cliente $cliente)
 	{
 		$cliente=$cliente->find($id);
+		if($cliente->cve_cliente==""){
+			$cliente->cve_cliente=substr(Hash::make(rand(0, 1000)), 2, 8);
+		}
 		$preguntas=Preguntum::pluck('name','id');
 		$cp=PreguntaCliente::where('cliente_id','=', $id)->get();
 		//dd($cp);

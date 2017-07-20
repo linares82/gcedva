@@ -31,8 +31,10 @@
 
                 <div class="well well-sm">
                     <button type="submit" class="btn btn-primary">Guardar</button>
+                    <a class="btn btn-md btn-warning" href="{{ route('seguimientos.show', $cliente->id) }}"><i class="glyphicon glyphicon-new-window"></i> Seguimiento </a>
                     <a class="btn btn-link pull-right" href="{{ route('clientes.index') }}"><i class="glyphicon glyphicon-backward"></i>  Regresar</a>
                 </div>
+                
             {!! Form::close() !!}
 
         </div>

@@ -48,6 +48,7 @@
                     <div class="box-body">
                         {!!Form::model($seguimiento, array('route' => array('seguimientos.update', $seguimiento->id),'method' => 'post')) !!}
                             <label for="cliente_id">CLIENTE</label>
+                            <a class="btn btn-xs btn-warning" href="{{ route('clientes.edit', $seguimiento->cliente_id) }}"><i class="glyphicon glyphicon-edit"></i>Editar Cliente</a>
                             <p class="form-control-static"><label for="cliente_id">Nombre Completo:</label> {{$seguimiento->cliente->nombre." ".$seguimiento->cliente->nombre2." ".$seguimiento->cliente->ape_paterno." ".$seguimiento->cliente->ape_materno}}</p>
                             <p class="form-control-static"><label for="cliente_id">Tel. Fijo:</label> {{$seguimiento->cliente->tel_fijo}}</p>
                             <p class="form-control-static"><label for="cliente_id">Tel. Celular:</label> {{$seguimiento->cliente->tel_cel}}</p>
@@ -155,7 +156,6 @@
         </div>
         <div class="row">
         </div>
-
         <a class="btn btn-link" href="{{ route('clientes.index', $seguimiento->cliente_id) }}"><i class="glyphicon glyphicon-backward"></i>  Regresar</a>
 
         </div>
@@ -220,13 +220,8 @@
                 </div>
               </div>
             </div>
-            <div class="row">
-            </div>
-            <div class="row">
-                <div>
-                    <a class="btn btn-link" href="{{ route('asignacionTareas.index') }}"><i class="glyphicon glyphicon-backward"></i>  Regresar</a>
-                </div>
-            </div>
+            
+            
 <!-- Ventana para crear Aviso -->
             <div class="modal fade" id="favoritesModal1" 
                  tabindex="-1" role="dialog" 
@@ -281,13 +276,7 @@
                 </div>
               </div>
             </div>
-            <div class="row">
-            </div>
-            <div class="row">
-                <div>
-                    <a class="btn btn-link" href="{{ route('asignacionTareas.index') }}"><i class="glyphicon glyphicon-backward"></i>  Regresar</a>
-                </div>
-            </div>
+            
         
 @endsection
 @push('scripts')
