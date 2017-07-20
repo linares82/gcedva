@@ -237,10 +237,11 @@ class SeguimientosController extends Controller {
 
 		//$s=Seguimiento::get();
 		//dd($clientes);
-			PDF::setOptions(['defaultFont' => 'arial']);
+			/*PDF::setOptions(['defaultFont' => 'arial']);
 			$pdf = PDF::loadView('seguimientos.reportes.seguimientosXempleadoGr', array('seguimientos'=>$seguimientos, 'fecha'=>$fecha))
 						->setPaper('letter', 'landscape');
 			return $pdf->download('reporte.pdf');
-			//return view('seguimientos.reportes.seguimientosXempleadoGr', array('seguimientos'=>$seguimientos, 'fecha'=>$fecha));	
+			*/
+			return view('seguimientos.reportes.seguimientosXempleadoGr', array('seguimientos'=>$seguimientos, 'fecha'=>$fecha));	
 	}
 }
