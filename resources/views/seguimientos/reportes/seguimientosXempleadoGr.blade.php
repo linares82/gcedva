@@ -76,31 +76,31 @@ body{
                 <?php $i++; ?>
             </td>
             <td style="border:1px solid #ccc;">
-                {{$s->cliente->plantel->razon}}
+                {{$s->razon}}
             </td>
             <td style="border:1px solid #ccc;">
-                {{$s->cliente->empleado->nombre." ".$s->cliente->empleado->ape_paterno." ".$s->cliente->empleado->ape_materno}}
+                {{$s->nombre_e." ".$s->ape_paterno_e." ".$s->ape_materno_c}}
             </td>
             <td style="border:1px solid #ccc;">
-                {{ $s->cliente->nombre." ".$s->cliente->nombre2." ".$s->cliente->ape_paterno." ".$s->cliente->ape_materno }}
+                {{ $s->nombre_c." ".$s->nombre2_c." ".$s->ape_paterno_c." ".$s->ape_materno_c }}
             </td>
             <td style="border:1px solid #ccc;">
-                {{ $s->cliente->calle." ".$s->cliente->no_interior." ".$s->cliente->no_exterior." ".$s->cliente->colonia." ".$s->cliente->municipio->name." ".$s->cliente->estado->name }}
+                {{ $s->calle." ".$s->no_interior." ".$s->no_exterior." ".$s->colonia." ".$s->municipio." ".$s->estado }}
             </td>
             <td style="border:1px solid #ccc;">
-                {{ $s->cliente->tel_fijo }}
+                {{ $s->tel_fijo }}
             </td>
             <td style="border:1px solid #ccc;">
-                {{ $s->cliente->tel_cel }}
+                {{ $s->tel_cel }}
             </td>
             <td style="border:1px solid #ccc;">
-                {{ $s->cliente->mail }}
+                {{ $s->mail }}
             </td>
             <td style="border:1px solid #ccc;">
-                {{ $s->cliente->stCliente->name }}
+                {{ $s->estatus_cliente }}
             </td>
             <td style="border:1px solid #ccc;">     
-                {{ $s->estatus->name }}
+                {{ $s->estatus_seguimiento }}
             </td>
         </tr>
         @endforeach
