@@ -90,6 +90,7 @@
                                         <th>Detalle</th>
                                         <th>Estatus</th>
                                         <th>Fecha</th>
+                                        <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -100,6 +101,13 @@
                                         <td>{{$at->detalle}}</td>
                                         <td>{{$at->stTarea->name}}</td>
                                         <td>{{$at->created_at}}</td>
+                                        <td>
+                                        
+                                        {!! Form::model($at, array('route' => array('asignacionTareas.destroyModal', $at->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}
+                                            <button type="submit" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> Borrar</button>
+                                        {!! Form::close() !!}
+                                        
+                                        </td>
                                     </tr>
                                     @endforeach
                                 </tbody>

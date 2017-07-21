@@ -145,4 +145,13 @@ class AsignacionTareasController extends Controller {
 		return redirect()->route('asignacionTareas.index')->with('message', 'Registro Borrado.');
 	}
 
+	public function destroyModal($id,AsignacionTarea $asignacionTarea)
+	{
+		$asignacionTarea=$asignacionTarea->find($id);
+		$c=$asignacionTarea->cliente_id;
+		$asignacionTarea->delete();
+
+		return redirect()->route('seguimientos.show', $c)->with('message', 'Registro Borrado.');
+	}
+
 }
