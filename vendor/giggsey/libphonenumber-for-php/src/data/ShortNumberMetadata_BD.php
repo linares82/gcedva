@@ -27,7 +27,6 @@ return array (
   ),
   'tollFree' => 
   array (
-    'NationalNumberPattern' => 'NA',
     'PossibleLength' => 
     array (
       0 => -1,
@@ -38,7 +37,6 @@ return array (
   ),
   'premiumRate' => 
   array (
-    'NationalNumberPattern' => 'NA',
     'PossibleLength' => 
     array (
       0 => -1,
@@ -72,7 +70,6 @@ return array (
   ),
   'standardRate' => 
   array (
-    'NationalNumberPattern' => 'NA',
     'PossibleLength' => 
     array (
       0 => -1,
@@ -82,6 +79,18 @@ return array (
     ),
   ),
   'carrierSpecific' => 
+  array (
+    'NationalNumberPattern' => '9594',
+    'ExampleNumber' => '9594',
+    'PossibleLength' => 
+    array (
+      0 => 4,
+    ),
+    'PossibleLengthLocalOnly' => 
+    array (
+    ),
+  ),
+  'smsServices' => 
   array (
     'NationalNumberPattern' => '9594',
     'ExampleNumber' => '9594',

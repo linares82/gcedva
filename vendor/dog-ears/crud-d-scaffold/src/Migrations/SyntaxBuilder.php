@@ -278,7 +278,6 @@ class SyntaxBuilder
 
             // Fields to index view
             $syntax = <<<EOT
-                            <!--
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_[[columnName_small]]_gt">[[columnName_large]]</label>
                                 <div class=" col-sm-4">
@@ -289,10 +288,9 @@ class SyntaxBuilder
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['[[columnName_small]]_lt']) ?: '' }}" name="q[[[columnName_small]]_lt]" id="q_[[columnName_small]]_lt" />
                                 </div>
                             </div>
-                            -->
-                            <div class="form-group col-md-4">
-                                <label class="col-sm-12 control-label" for="q_[[columnName_small]]_cont">[[columnName_large]]</label>
-                                <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="q_[[columnName_small]]_cont">[[columnName_large]]</label>
+                                <div class=" col-sm-9">
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['[[columnName_small]]_cont']) ?: '' }}" name="q[[[columnName_small]]_cont]" id="q_[[columnName_small]]_cont" />
                                 </div>
                             </div>
@@ -304,7 +302,7 @@ EOT;
         } elseif ($type == 'view-show-content') {
 
             // Fields to show view
-            $syntax = sprintf("<div class=\"form-group col-sm-4 \">\n" .
+            $syntax = sprintf("<div class=\"form-group\">\n" .
                 str_repeat(' ', 21) . "<label for=\"%s\">%s</label>\n" .
                 str_repeat(' ', 21) . "<p class=\"form-control-static\">{{\$%s->%s}}</p>\n" .
                 str_repeat(' ', 16) . "</div>", strtolower($field['name']), strtoupper($field['name']), $meta['var_name'], strtolower($field['name']));
@@ -367,7 +365,7 @@ EOT;
                 break;
         }
 
-        $syntax[] = '<div class="form-group col-md-4 @if($errors->has('."'". $column . "'".')) has-error @endif">';
+        $syntax[] = '<div class="form-group @if($errors->has('."'". $column . "'".')) has-error @endif">';
         $syntax[] = '   <label for="' . $column . '-field">' . $title . '</label>';
 
         if($this->illuminate) {

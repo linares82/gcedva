@@ -16,6 +16,7 @@ class CreateSeguimientosTable extends Migration {
             $table->increments('id');
             $table->integer('cliente_id')->unsigned();
 			$table->integer('estatus_id')->unsigned();
+			$table->integer('mes')->unsigned();
             $table->integer('usu_alta_id')->unsigned();
             $table->integer('usu_mod_id')->unsigned();
             $table->timestamps();

@@ -250,7 +250,7 @@ class ShortNumberInfo
             && !in_array($regionCode, static::$regionsWhereEmergencyNumbersMustBeExact)
         );
 
-        return $this->matcherAPI->matchesNationalNumber($normalizedNumber, $emergencyDesc, $allowPrefixMatchForRegion);
+        return $this->matcherAPI->matchNationalNumber($normalizedNumber, $emergencyDesc, $allowPrefixMatchForRegion);
     }
 
     /**
@@ -261,8 +261,8 @@ class ShortNumberInfo
      * {@link #isValidShortNumberForRegion}.
      *
      * @param PhoneNumber $number the valid short number to check
-     * @return boolean whether the short number is carrier-specific (assuming the input was a valid short
-     *     number).
+     * @return boolean whether the short number is carrier-specific, assuming the input was a valid short
+     *     number
      */
     public function isCarrierSpecific(PhoneNumber $number)
     {
@@ -286,8 +286,8 @@ class ShortNumberInfo
      * number doesn't match the region provided.
      * @param PhoneNumber $number The valid short number to check
      * @param string $regionDialingFrom The region from which the number is dialed
-     * @return bool Whether the short number is carrier-specific (Assuming the input was a valid short
-     *  number)
+     * @return bool Whether the short number is carrier-specific in the provided region, assuming the
+     *      input was a valid short number
      */
     public function isCarrierSpecificForRegion(PhoneNumber $number, $regionDialingFrom)
     {
@@ -300,6 +300,34 @@ class ShortNumberInfo
 
         return ($phoneMetadata !== null)
             && ($this->matchesPossibleNumberAndNationalNumber($nationalNumber, $phoneMetadata->getCarrierSpecific()));
+    }
+
+    /**
+     * Given a valid short number, determines whether it is an SMS service (however, nothing is
+     * implied about its validity). An SMS service is where the primary or only intended usage is to
+     * receive and/or send text messages (SMSs). This includes MMS as MMS numbers downgrade to SMS if
+     * the other party isn't MMS-capable. If it is important that the number is valid, then its
+     * validity must first be checked using {@link #isValidShortNumber} or {@link
+     * #isValidShortNumberForRegion}. Returns false if the number doesn't match the region provided.
+     *
+     * @param PhoneNumber $number The valid short number to check
+     * @param string $regionDialingFrom The region from which the number is dialed
+     * @return bool Whether the short number is an SMS service in the provided region, assuming the input
+     *  was a valid short number.
+     */
+    public function isSmsServiceForRegion(PhoneNumber $number, $regionDialingFrom)
+    {
+        if (!$this->regionDialingFromMatchesNumber($number, $regionDialingFrom)) {
+            return false;
+        }
+
+        $phoneMetadata = $this->getMetadataForRegion($regionDialingFrom);
+
+        return ($phoneMetadata !== null)
+            && $this->matchesPossibleNumberAndNationalNumber(
+                $this->getNationalSignificantNumber($number),
+                $phoneMetadata->getSmsServices()
+            );
     }
 
     /**
@@ -617,6 +645,6 @@ class ShortNumberInfo
             return false;
         }
 
-        return $this->matcherAPI->matchesNationalNumber($number, $numberDesc, false);
+        return $this->matcherAPI->matchNationalNumber($number, $numberDesc, false);
     }
 }

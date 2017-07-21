@@ -38,7 +38,6 @@ return array (
   ),
   'premiumRate' => 
   array (
-    'NationalNumberPattern' => 'NA',
     'PossibleLength' => 
     array (
       0 => -1,
@@ -72,7 +71,6 @@ return array (
   ),
   'standardRate' => 
   array (
-    'NationalNumberPattern' => 'NA',
     'PossibleLength' => 
     array (
       0 => -1,
@@ -85,6 +83,18 @@ return array (
   array (
     'NationalNumberPattern' => '611|7(?:10|77)|888|900',
     'ExampleNumber' => '611',
+    'PossibleLength' => 
+    array (
+      0 => 3,
+    ),
+    'PossibleLengthLocalOnly' => 
+    array (
+    ),
+  ),
+  'smsServices' => 
+  array (
+    'NationalNumberPattern' => '710|900',
+    'ExampleNumber' => '900',
     'PossibleLength' => 
     array (
       0 => 3,

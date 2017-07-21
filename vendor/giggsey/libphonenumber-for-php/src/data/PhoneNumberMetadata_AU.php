@@ -135,7 +135,6 @@ return array (
   ),
   'uan' => 
   array (
-    'NationalNumberPattern' => 'NA',
     'PossibleLength' => 
     array (
       0 => -1,
@@ -146,7 +145,6 @@ return array (
   ),
   'voicemail' => 
   array (
-    'NationalNumberPattern' => 'NA',
     'PossibleLength' => 
     array (
       0 => -1,
@@ -172,7 +170,7 @@ return array (
   ),
   'id' => 'AU',
   'countryCode' => 61,
-  'internationalPrefix' => '(?:14(?:1[14]|34|4[17]|[56]6|7[47]|88))?001[14-689]',
+  'internationalPrefix' => '(?:14(?:1[14]|34|4[17]|[56]6|7[47]|88)0011)|001[14-689]',
   'preferredInternationalPrefix' => '0011',
   'nationalPrefix' => '0',
   'nationalPrefixForParsing' => '0',

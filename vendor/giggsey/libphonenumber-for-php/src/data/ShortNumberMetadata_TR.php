@@ -14,7 +14,7 @@
 return array (
   'generalDesc' => 
   array (
-    'NationalNumberPattern' => '[15]\\d{2,3}',
+    'NationalNumberPattern' => '[125]\\d{2,3}',
     'PossibleLength' => 
     array (
       0 => 3,
@@ -26,7 +26,6 @@ return array (
   ),
   'tollFree' => 
   array (
-    'NationalNumberPattern' => 'NA',
     'PossibleLength' => 
     array (
       0 => -1,
@@ -37,7 +36,6 @@ return array (
   ),
   'premiumRate' => 
   array (
-    'NationalNumberPattern' => 'NA',
     'PossibleLength' => 
     array (
       0 => -1,
@@ -60,7 +58,7 @@ return array (
   ),
   'shortCode' => 
   array (
-    'NationalNumberPattern' => '1(?:1[02]|55)|5420',
+    'NationalNumberPattern' => '1(?:1[02]|55)|(?:28|5[4-6])\\d{2}',
     'ExampleNumber' => '112',
     'PossibleLength' => 
     array (
@@ -71,7 +69,7 @@ return array (
   ),
   'standardRate' => 
   array (
-    'NationalNumberPattern' => '5420',
+    'NationalNumberPattern' => '2850|5420',
     'ExampleNumber' => '5420',
     'PossibleLength' => 
     array (
@@ -83,10 +81,21 @@ return array (
   ),
   'carrierSpecific' => 
   array (
-    'NationalNumberPattern' => 'NA',
     'PossibleLength' => 
     array (
       0 => -1,
+    ),
+    'PossibleLengthLocalOnly' => 
+    array (
+    ),
+  ),
+  'smsServices' => 
+  array (
+    'NationalNumberPattern' => '(?:28|5[4-6])\\d{2}',
+    'ExampleNumber' => '5420',
+    'PossibleLength' => 
+    array (
+      0 => 4,
     ),
     'PossibleLengthLocalOnly' => 
     array (

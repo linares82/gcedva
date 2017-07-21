@@ -57,7 +57,7 @@ trait GetAllDataTrait {
 
                 //skip if value is blank
                 if( $value === '' ){ continue; }
-                //dd($request);
+
                 if( preg_match('#(.*)_([^_]*?)$#', $key, $m) ){
                     $column = $m[1];
                     $operator = $m[2];
@@ -72,11 +72,11 @@ trait GetAllDataTrait {
 
                 if( $operator === 'cont' ){
                     $myQuery = $myQuery->where($column, 'LIKE', '%'.$value.'%');
-                } /*elseif( $operator === 'lt' ){
+                }elseif( $operator === 'lt' ){
                     $myQuery = $myQuery->where($column, '<=', $value);                
                 }elseif( $operator === 'gt' ){
                     $myQuery = $myQuery->where($column, '>=', $value);                
-                }*/
+                }
             }
         }
 
@@ -89,14 +89,10 @@ trait GetAllDataTrait {
                 $order_dir = $m[2];
 
                 if( mb_strtoupper($order_dir) !== 'ASC' && mb_strtoupper($order_dir) !== 'DESC' ){
-                    //abort(500, 'query parameter q[s] has wrong value');
-                    $column = 'id';
-                    $order_dir = 'desc';
+                    abort(500, 'query parameter q[s] has wrong value');
                 }
             }else{
-                //abort(500, 'query parameter q[s] has wrong value');
-                $column = 'id';
-                $order_dir = 'desc';
+                abort(500, 'query parameter q[s] has wrong value');
             }
 
             //if column is not relation table's column, add base table name at head.

@@ -82,7 +82,6 @@ return array (
   ),
   'sharedCost' => 
   array (
-    'NationalNumberPattern' => 'NA',
     'PossibleLength' => 
     array (
       0 => -1,
@@ -105,7 +104,6 @@ return array (
   ),
   'voip' => 
   array (
-    'NationalNumberPattern' => 'NA',
     'PossibleLength' => 
     array (
       0 => -1,
@@ -128,10 +126,11 @@ return array (
   ),
   'uan' => 
   array (
-    'NationalNumberPattern' => 'NA',
+    'NationalNumberPattern' => '30(?:0[1-9]|[15-7]\\d|2[047]|89)\\d{4}',
+    'ExampleNumber' => '30161234',
     'PossibleLength' => 
     array (
-      0 => -1,
+      0 => 8,
     ),
     'PossibleLengthLocalOnly' => 
     array (
@@ -139,7 +138,6 @@ return array (
   ),
   'voicemail' => 
   array (
-    'NationalNumberPattern' => 'NA',
     'PossibleLength' => 
     array (
       0 => -1,
@@ -150,7 +148,6 @@ return array (
   ),
   'noInternationalDialling' => 
   array (
-    'NationalNumberPattern' => 'NA',
     'PossibleLength' => 
     array (
       0 => -1,

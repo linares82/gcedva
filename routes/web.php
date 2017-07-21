@@ -10,8 +10,8 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-/*
-\Event::listen('Illuminate\Database\Events\QueryExecuted', function ($query) {
+
+/*\Event::listen('Illuminate\Database\Events\QueryExecuted', function ($query) {
     echo'<pre>';
     var_dump($query->sql);
     var_dump($query->bindings);

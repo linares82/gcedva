@@ -73,7 +73,6 @@ return array (
   ),
   'standardRate' => 
   array (
-    'NationalNumberPattern' => 'NA',
     'PossibleLength' => 
     array (
       0 => -1,
@@ -85,6 +84,18 @@ return array (
   'carrierSpecific' => 
   array (
     'NationalNumberPattern' => '0[67]\\d{3}|88000|98555',
+    'ExampleNumber' => '88000',
+    'PossibleLength' => 
+    array (
+      0 => 5,
+    ),
+    'PossibleLengthLocalOnly' => 
+    array (
+    ),
+  ),
+  'smsServices' => 
+  array (
+    'NationalNumberPattern' => '88000|98555',
     'ExampleNumber' => '88000',
     'PossibleLength' => 
     array (

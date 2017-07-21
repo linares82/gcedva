@@ -38,26 +38,29 @@ class HomeController extends Controller
                     ->where('c.empleado_id', '=', $e->id)
 					->get();
         //dd($avisos);
-        $mes=date('m');
+        $mes=(int)date('m');
         //dd($mes);
-        $a_1=Seguimiento::where('estatus_id', '=', '1')
+        $a_1=Seguimiento::select(Db::raw('count(c.nombre) as total'))
+                    ->where('estatus_id', '=', 1)
                     ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
-                    ->where(Db::raw('MONTH(seguimientos.created_at)'), '=', $mes)
+                    ->where('mes', '=', $mes)
+                    ->where('c.plantel_id', '=', $e->plantel_id)
+                    ->where('c.empleado_id', '=', $e->id)
+                    ->value('total');
+        //dd($a_1);
+        $a_2=Seguimiento::where('estatus_id', '=', 2)
+                    ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
+                    ->where('mes', '=', $mes)
                     ->where('c.empleado_id', '=', $e->id)
                     ->count();
-        $a_2=Seguimiento::where('estatus_id', '=', '2')
+        $a_3=Seguimiento::where('estatus_id', '=', 3)
                     ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
-                    ->where(Db::raw('MONTH(seguimientos.created_at)'), '=', $mes)
+                    ->where('mes', '=', $mes)
                     ->where('c.empleado_id', '=', $e->id)
                     ->count();
-        $a_3=Seguimiento::where('estatus_id', '=', '3')
+        $a_4=Seguimiento::where('estatus_id', '=', 4)
                     ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
-                    ->where(Db::raw('MONTH(seguimientos.created_at)'), '=', $mes)
-                    ->where('c.empleado_id', '=', $e->id)
-                    ->count();
-        $a_4=Seguimiento::where('estatus_id', '=', '4')
-                    ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
-                    ->where(Db::raw('MONTH(seguimientos.created_at)'), '=', $mes)
+                    ->where('mes', '=', $mes)
                     ->where('c.empleado_id', '=', $e->id)
                     ->count();
         
@@ -67,11 +70,11 @@ class HomeController extends Controller
 
     public function grfEstatusXEmpleado(){
         $e=Empleado::where('user_id', '=', Auth::user()->id)->first();
-        $mes=date('m');
+        $mes=(int)date('m');
         return $grafica=Seguimiento::select('sts.name as Estatus', DB::raw('count(sts.name) as Valor'))
                     ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
                     ->join('st_seguimientos as sts', 'sts.id','=','seguimientos.estatus_id')
-                    ->where(Db::raw('MONTH(seguimientos.created_at)'), '=', $mes)
+                    ->where('mes', '=', $mes)
                     ->where('c.empleado_id', '=', $e->id)
                     ->groupBy('sts.name')
                     ->get()->toJson();

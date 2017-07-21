@@ -16,6 +16,7 @@ use App\Http\Requests\createSeguimiento;
 use App\Http\Requests\updateAsignacionTarea;
 use DB;
 use PDF;
+use Maatwebsite\Excel\Facades\Excel;
 
 class SeguimientosController extends Controller {
 
@@ -164,30 +165,36 @@ class SeguimientosController extends Controller {
 	public function reporteSeguimientosXEmpleado(){
 		$estatus=$_REQUEST['estatus'];
 		$e=Empleado::where('user_id', '=', Auth::user()->id)->first();
-		$mes=date('m');
+		$mes=(int)date('m');
 		$fecha=date('d-m-Y');
 		
-		$seguimientos=Seguimiento::select('c.nombre', 'c.nombre2', 'c.ape_paterno', 'c.ape_materno',
-			'c.calle', 'c.no_interior', 'c.no_exterior', 'm.name as municipio', 'e.name as estado', 
-			'c.tel_fijo', 'tel_cel', 'mail', 'sts.name as st_seguimiento', 
-			'stc.name as st_cliente')
+		$seguimientos=Seguimiento::select('c.nombre as Nombre', 'c.nombre2 as Segundo Nombre', 'c.ape_paterno as Apellido_Paterno', 'c.ape_materno as Apellido_Materno',
+			'c.calle as Calle', 'c.no_interior as No_Interior', 'c.no_exterior as No_Exterior', 'm.name as Municipio', 'e.name as Estado', 
+			'c.tel_fijo as Teléfono_Fijo', 'tel_cel as Teléfono_Celular', 'mail as Correo_Electrónico', 'sts.name as Estatus_Seguimiento', 
+			'stc.name as Estatus_Cliente')
 			->join('st_seguimientos as sts', 'sts.id', '=', 'seguimientos.estatus_id')
 			->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
 			->join('municipios as m', 'm.id', '=', 'c.municipio_id')
 			->join('estados as e', 'e.id', '=', 'c.estado_id')
 			->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
-			->join('asignacion_tareas as at', 'at.cliente_id', '=','seguimientos.cliente_id')
-			->where(Db::raw('MONTH(seguimientos.created_at)'), '=', $mes)
+			//->leftJoin('asignacion_tareas as at', 'at.cliente_id', '=','seguimientos.cliente_id')
+			->where('mes', '=', $mes)
+			->where('c.plantel_id', '=', $e->plantel_id)
 			->where('c.empleado_id', '=', $e->id)
 			->where('seguimientos.estatus_id', '=', $estatus)
-			->get();
+			->get()->toArray();
 		//dd($seguimientos);
-			PDF::setOptions(['defaultFont' => 'arial']);
+			/*PDF::setOptions(['defaultFont' => 'arial']);
 			$pdf = PDF::loadView('seguimientos.reportes.seguimientosXempleado', array('seguimientos'=>$seguimientos, 'fecha'=>$fecha, 'e'=>$e))
 						->setPaper('letter', 'landscape');
 			return $pdf->download('reporte.pdf');
-			
+			*/
 		//return view('seguimientos.reportes.seguimientosXempleado', compact('seguimientos', 'fecha', 'e'));			
+		Excel::create('Laravel Excel', function($excel) use($seguimientos) {
+            $excel->sheet('Productos', function($sheet) use($seguimientos) {
+                $sheet->fromArray($seguimientos);
+            });
+        })->export('xls');
 	}
 
 	public function seguimientosXempleadoG()
@@ -232,6 +239,7 @@ class SeguimientosController extends Controller {
 				->whereBetween('cli.empleado_id', [$input['empleado_f'], $input['empleado_t']])
 				->whereBetween('cli.plantel_id', [$input['plantel_f'], $input['plantel_t']])
 				->whereBetween('seguimientos.estatus_id', [$input['estatus_f'], $input['estatus_t']])
+				->whereBetween('seguimientos.created_at', [$input['fecha_f'], $input['fecha_t']])
 				->orderBy('cli.empleado_id', 'seguimientos.estatus_id')
 				->get();
 
@@ -242,6 +250,11 @@ class SeguimientosController extends Controller {
 						->setPaper('letter', 'landscape');
 			return $pdf->download('reporte.pdf');
 			*/
-			return view('seguimientos.reportes.seguimientosXempleadoGr', array('seguimientos'=>$seguimientos, 'fecha'=>$fecha));	
+			//return view('seguimientos.reportes.seguimientosXempleadoGr', array('seguimientos'=>$seguimientos, 'fecha'=>$fecha));	
+			Excel::create('Laravel Excel', function($excel) use($seguimientos) {
+				$excel->sheet('Productos', function($sheet) use($seguimientos) {
+					$sheet->fromArray($seguimientos);
+				});
+			})->export('xls');
 	}
 }

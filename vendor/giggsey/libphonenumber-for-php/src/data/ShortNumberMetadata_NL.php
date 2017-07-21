@@ -39,7 +39,6 @@ return array (
   ),
   'premiumRate' => 
   array (
-    'NationalNumberPattern' => 'NA',
     'PossibleLength' => 
     array (
       0 => -1,
@@ -73,7 +72,6 @@ return array (
   ),
   'standardRate' => 
   array (
-    'NationalNumberPattern' => 'NA',
     'PossibleLength' => 
     array (
       0 => -1,
@@ -86,6 +84,18 @@ return array (
   array (
     'NationalNumberPattern' => '120[0-4]',
     'ExampleNumber' => '1202',
+    'PossibleLength' => 
+    array (
+      0 => 4,
+    ),
+    'PossibleLengthLocalOnly' => 
+    array (
+    ),
+  ),
+  'smsServices' => 
+  array (
+    'NationalNumberPattern' => '[34]000',
+    'ExampleNumber' => '4000',
     'PossibleLength' => 
     array (
       0 => 4,

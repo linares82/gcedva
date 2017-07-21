@@ -26,8 +26,8 @@ return array (
   ),
   'fixedLine' => 
   array (
-    'NationalNumberPattern' => '1624\\d{6}',
-    'ExampleNumber' => '1624456789',
+    'NationalNumberPattern' => '1624[5-8]\\d{5}',
+    'ExampleNumber' => '1624756789',
     'PossibleLength' => 
     array (
     ),
@@ -38,7 +38,7 @@ return array (
   ),
   'mobile' => 
   array (
-    'NationalNumberPattern' => '7(?:4576|[59]24\\d)\\d{5}',
+    'NationalNumberPattern' => '7(?:4576|[59]24\\d|624[2-4])\\d{5}',
     'ExampleNumber' => '7924123456',
     'PossibleLength' => 
     array (
@@ -104,8 +104,8 @@ return array (
   ),
   'pager' => 
   array (
-    'NationalNumberPattern' => '76242\\d{5}',
-    'ExampleNumber' => '7624212345',
+    'NationalNumberPattern' => '7624[01689]\\d{5}',
+    'ExampleNumber' => '7624012345',
     'PossibleLength' => 
     array (
     ),
@@ -126,7 +126,6 @@ return array (
   ),
   'voicemail' => 
   array (
-    'NationalNumberPattern' => 'NA',
     'PossibleLength' => 
     array (
       0 => -1,
@@ -137,7 +136,6 @@ return array (
   ),
   'noInternationalDialling' => 
   array (
-    'NationalNumberPattern' => 'NA',
     'PossibleLength' => 
     array (
       0 => -1,
@@ -150,7 +148,6 @@ return array (
   'countryCode' => 44,
   'internationalPrefix' => '00',
   'nationalPrefix' => '0',
-  'preferredExtnPrefix' => ' x',
   'nationalPrefixForParsing' => '0',
   'sameMobileAndFixedLinePattern' => false,
   'numberFormat' => 

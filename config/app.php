@@ -176,6 +176,7 @@ return [
         Pqb\FilemanagerLaravel\FilemanagerLaravelServiceProvider::Class,
         Zenapply\Sms\Providers\SmsServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::Class,
 
         /*
          * Application Service Providers...
@@ -242,6 +243,7 @@ return [
         'FilemanagerLaravel'=> Pqb\FilemanagerLaravel\Facades\FilemanagerLaravel::Class,
         "Sms" => Zenapply\Sms\Facades\Sms::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
     ],
 
 ];

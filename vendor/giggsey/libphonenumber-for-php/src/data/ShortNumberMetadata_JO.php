@@ -26,7 +26,6 @@ return array (
   ),
   'tollFree' => 
   array (
-    'NationalNumberPattern' => 'NA',
     'PossibleLength' => 
     array (
       0 => -1,
@@ -37,7 +36,6 @@ return array (
   ),
   'premiumRate' => 
   array (
-    'NationalNumberPattern' => 'NA',
     'PossibleLength' => 
     array (
       0 => -1,
@@ -71,7 +69,6 @@ return array (
   ),
   'standardRate' => 
   array (
-    'NationalNumberPattern' => 'NA',
     'PossibleLength' => 
     array (
       0 => -1,
@@ -81,6 +78,18 @@ return array (
     ),
   ),
   'carrierSpecific' => 
+  array (
+    'NationalNumberPattern' => '9(?:0903|8788)',
+    'ExampleNumber' => '90903',
+    'PossibleLength' => 
+    array (
+      0 => 5,
+    ),
+    'PossibleLengthLocalOnly' => 
+    array (
+    ),
+  ),
+  'smsServices' => 
   array (
     'NationalNumberPattern' => '9(?:0903|8788)',
     'ExampleNumber' => '90903',
