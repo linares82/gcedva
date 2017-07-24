@@ -76,6 +76,7 @@ class HomeController extends Controller
                     ->join('st_seguimientos as sts', 'sts.id','=','seguimientos.estatus_id')
                     ->where('mes', '=', $mes)
                     ->where('c.empleado_id', '=', $e->id)
+                    ->where('c.plantel_id', '=', $e->plantel_id)
                     ->groupBy('sts.name')
                     ->get()->toJson();
     }
