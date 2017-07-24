@@ -111,12 +111,14 @@ trait GetAllDataTrait {
             $order_dir = 'DESC';
         }
         //dd(Auth::user()->can('IfiltroClientesXPlantel'));
-        
+        //dd();
+        $empleado=Empleado::where('user_id', '=', Auth::user()->id)->first();
+        //dd($empleado);
         if($baseTable=="clientes" and Auth::user()->can('IfiltroClientesXPlantel')){
-            $myQuery=$myQuery->where('clientes.plantel_id', '=', Empleado::find(Auth::user()->id)->plantel_id);
+            $myQuery=$myQuery->where('clientes.plantel_id', '=', $empleado->plantel_id);
         }
         if($baseTable=="empleados" and Auth::user()->can('IfiltroEmpleadosXPlantel')){
-            $myQuery=$myQuery->where('empleados.plantel_id', '=', Empleado::find(Auth::user()->id)->plantel_id);
+            $myQuery=$myQuery->where('empleados.plantel_id', '=', $empleado->plantel_id);
         }
         
         
