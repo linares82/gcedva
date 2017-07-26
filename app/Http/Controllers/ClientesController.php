@@ -97,6 +97,7 @@ class ClientesController extends Controller {
 			$id=$c->id;
 			$input_seguimiento['cliente_id']=$c->id;
 			$input_seguimiento['estatus_id']=1;
+			$input_seguimiento['mes']=date('m');
 			$input_seguimiento['usu_alta_id']=Auth::user()->id;
 			$input_seguimiento['usu_mod_id']=Auth::user()->id;
 			Seguimiento::create($input_seguimiento);

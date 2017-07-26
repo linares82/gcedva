@@ -54,6 +54,7 @@ class SeguimientosController extends Controller {
 		$input = $request->all();
 		$input['usu_alta_id']=Auth::user()->id;
 		$input['usu_mod_id']=Auth::user()->id;
+		$input_seguimiento['mes']=date('m');
 
 		//create data
 		Seguimiento::create( $input );

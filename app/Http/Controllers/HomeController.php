@@ -53,16 +53,19 @@ class HomeController extends Controller
                     ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
                     ->where('mes', '=', $mes)
                     ->where('c.empleado_id', '=', $e->id)
+                    ->where('c.plantel_id', '=', $e->plantel_id)
                     ->count();
         $a_3=Seguimiento::where('estatus_id', '=', 3)
                     ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
                     ->where('mes', '=', $mes)
                     ->where('c.empleado_id', '=', $e->id)
+                    ->where('c.plantel_id', '=', $e->plantel_id)
                     ->count();
         $a_4=Seguimiento::where('estatus_id', '=', 4)
                     ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
                     ->where('mes', '=', $mes)
                     ->where('c.empleado_id', '=', $e->id)
+                    ->where('c.plantel_id', '=', $e->plantel_id)
                     ->count();
         $fecha=date('Y-m-d');
         $avisos_generales=AvisoGral::where('inicio','<=', $fecha)
