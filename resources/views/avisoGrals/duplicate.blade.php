@@ -1,17 +1,17 @@
 @extends('plantillas.admin_template')
 
-@include('{{app_route}}._common')
+@include('avisoGrals._common')
 
 @section('header')
 
 	<ol class="breadcrumb">
 		<li><a href="{{ route('home') }}"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></a></li>
-	    <li><a href="{{ route('{{app_route}}.index') }}">@yield('{{app_route}}AppTitle')</a></li>
+	    <li><a href="{{ route('avisoGrals.index') }}">@yield('avisoGralsAppTitle')</a></li>
 	    <li class="active">Duplicate</li>
 	</ol>
 
     <div class="page-header">
-        <h1><i class="glyphicon glyphicon-duplicate"></i> @yield('{{app_route}}AppTitle') / Duplicar {{${{app_model_var}}->id}}</h1>
+        <h1><i class="glyphicon glyphicon-duplicate"></i> @yield('avisoGralsAppTitle') / Duplicar {{$avisoGral->id}}</h1>
     </div>
 @endsection
 
@@ -21,16 +21,16 @@
     <div class="row">
         <div class="col-md-12">
 
-            {!! Form::model(${{app_model_var}}, array('route' => array('{{app_route}}.store'))) !!}
+            {!! Form::model($avisoGral, array('route' => array('avisoGrals.store'))) !!}
 
-@include('{{app_route}}._form')
+@include('avisoGrals._form')
 
                 <div class="row">
                 </div>
 
                 <div class="well well-sm">
                     <button type="submit" class="btn btn-primary">Duplicar</button>
-                    <a class="btn btn-link pull-right" href="{{ route('{{app_route}}.index') }}"><i class="glyphicon glyphicon-backward"></i> Regresar</a>
+                    <a class="btn btn-link pull-right" href="{{ route('avisoGrals.index') }}"><i class="glyphicon glyphicon-backward"></i> Regresar</a>
                 </div>
             {!! Form::close() !!}
 

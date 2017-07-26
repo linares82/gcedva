@@ -5,12 +5,12 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\GetAllDataTrait;
 use App\Traits\RelationManagerTrait;
-{{if(softdelete):}}use Illuminate\Database\Eloquent\SoftDeletes;{{endif;}}
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class {{app_model_class}} extends Model
+class AvisoGral extends Model
 {
     use RelationManagerTrait,GetAllDataTrait;
-{{if(softdelete):}}    use SoftDeletes;{{endif;}}
+    use SoftDeletes;
 
     public function __construct(array $attributes = array())
     {
@@ -18,7 +18,7 @@ class {{app_model_class}} extends Model
     } 
 
 	//Mass Assignment
-	protected $fillable = [{{schema_model}}];
+	protected $fillable = ['desc_corta','aviso','inicio','fin','usu_alta_id','usu_mod_id'];
 
 	public function usu_alta() {
 		return $this->hasOne('App\User', 'id', 'usu_alta_id');
@@ -28,6 +28,6 @@ class {{app_model_class}} extends Model
 		return $this->hasOne('App\User', 'id', 'usu_mod_id');
 	}// end
 
-{{if(softdelete):}}
-    protected $dates = ['deleted_at'];{{endif;}}
+
+    protected $dates = ['deleted_at'];
 }

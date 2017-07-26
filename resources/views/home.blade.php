@@ -13,6 +13,23 @@
 		}
     </style>
     <div class="row">
+        
+    </div>
+    <div class="row">
+        <div class="form-group col-md-6 col-sm-6 col-xs-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">
+                        Grafica de Estatus del Mes
+                    </h3>
+                </div>
+                <div class="box-body">
+                    <div class="table">
+                        <div id="myfirstchart" style="height: 150px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="col-md-3 col-sm-6 col-xs-12">
             <!-- small box -->
             <div class="info-box">
@@ -22,9 +39,9 @@
                 <div class="info-box-content">
                     <h3><span class="info-box-text"> En proceso en el mes </span></h3>
                     <a href="{{ route('seguimientos.reporteSeguimientosXEmpleado', array('estatus'=>1)) }}" class="small-box-footer">Más Información <i class="fa fa-arrow-circle-right"></i></a>
-                </div>
-                
+                </div>    
             </div>
+            
         </div><!-- ./col -->
         <div class="col-md-3 col-sm-6 col-xs-12">
             <!-- small box -->
@@ -62,14 +79,13 @@
                     <h3><span class="info-box-text"> Rechazados en el mes </span></h3>
                     <a href="{{ route('seguimientos.reporteSeguimientosXEmpleado', array('estatus'=>3)) }}" class="small-box-footer">Más Información <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
-                
             </div>
         </div><!-- ./col -->
     </div><!-- /.row -->
         
     <div class="row">
         <div class="form-group col-md-6">
-            <div class="box box-warning">
+            <div class="box box-danger">
                 <div class="box-header with-border">
                     <h3 class="box-title">
                         Avisos del dia
@@ -114,15 +130,36 @@
             </div>
         </div>
         <div class="form-group col-md-6">
-            <div class="box box-warning">
+            <div class="box box-success">
                 <div class="box-header with-border">
                     <h3 class="box-title">
-                        Grafica de Estatus del Mes
+                        Avisos Generales
                     </h3>
+                    <div class="box-tools pull-right">
+                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
+                    </div>
                 </div>
-                <div class="box-body">
+                <div class="box-body" >
                     <div class="table">
-                        <div id="myfirstchart" style="height: 250px;"></div>
+                        <table class="table table-bordered table-striped dataTable">
+                            <thead>
+                                <tr>
+                                    <th>Desc. Corta</th>
+                                    <th>Aviso</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($avisos_generales as $ag)
+                                <tr>
+                                    <td>
+                                        {{$ag->desc_corta}}
+                                    </td>
+                                    <td>{{$ag->aviso}}</td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

@@ -1,3 +1,4 @@
+@inject('menu','App\Http\Controllers\MenusController')
 <!-- Main Header -->
 <header class="main-header">
 
@@ -19,11 +20,20 @@
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
                 
+                <li class="dropdown user user-menu">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Accesos Comunes</a>
+                    <ul class="dropdown-menu" role="menu">
+                    {!! $menu->armaMenuPrincipal(43) !!} 
+                  </ul>
+                </li>
+
                 <!-- User Account Menu -->
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         
-                        <!--DB::table('entidads')->where('id', Auth::user()->entidad_id)->value('nombre') -->
+                        Plantel: {!! DB::table('plantels as p')
+                            ->join('empleados as e', 'e.plantel_id','=', 'p.id')
+                            ->where('e.user_id', Auth::user()->id)->value('razon') !!}
                         
                     </a>
                 </li>
@@ -35,16 +45,14 @@
                         @if (Auth::guest())
                             Invitado
                         @else
-                            {!!Auth::user()->name !!}
+                            Empleado: {!! DB::table('empleados')->where('user_id', Auth::user()->id)->value('nombre') !!}
                         @endif
                         </span>
                     </a>
                     <ul class="dropdown-menu">
                                                 <!-- Menu Footer-->
                         <li class="user-footer">
-                            <div class="pull-left">
-                                <a href="{!! url('users/perfil')."/".Auth::user()->id !!}" class="btn btn-default btn-flat">Perfil</a>
-                            </div>
+                            
                             <div class="pull-right">
                                 <form method="POST" src>
                                 <a href=" {!! url('logout') !!} " class="btn btn-default btn-flat">Salir</a>

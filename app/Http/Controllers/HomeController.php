@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Aviso;
+use App\AvisoGral;
 use App\Seguimiento;
 use App\Empleado;
 use DB;
@@ -63,9 +64,13 @@ class HomeController extends Controller
                     ->where('mes', '=', $mes)
                     ->where('c.empleado_id', '=', $e->id)
                     ->count();
-        
+        $fecha=date('Y-m-d');
+        $avisos_generales=AvisoGral::where('inicio','<=', $fecha)
+                                    ->where('fin', '>=', $fecha)
+                                    ->get();
         //dd($grafica);
-        return view('home', compact('avisos', 'a_1', 'a_2', 'a_3', 'a_4', 'grafica'));
+        
+        return view('home', compact('avisos', 'a_1', 'a_2', 'a_3', 'a_4', 'grafica', 'avisos_generales'));
     }
 
     public function grfEstatusXEmpleado(){

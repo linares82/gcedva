@@ -5,6 +5,9 @@ use App\Http\Controllers\Controller;
 
 use App\{{app_model_class}};
 use Illuminate\Http\Request;
+use Auth;
+use App\Http\Requests\update{{app_model_class}};
+use App\Http\Requests\create{{app_model_class}};
 
 class {{app_controller_class}}Controller extends Controller {
 
@@ -37,13 +40,17 @@ class {{app_controller_class}}Controller extends Controller {
 	 * @param Request $request
 	 * @return Response
 	 */
-	public function store(Request $request)
+	public function store(create{{app_model_class}} $request)
 	{
 
-		//create data
-		{{app_model_class}}::create( $request->all() );
+		$input = $request->all();
+		$input['usu_alta_id']=Auth::user()->id;
+		$input['usu_mod_id']=Auth::user()->id;
 
-		return redirect()->route('{{app_route}}.index')->with('message', 'Item created successfully.');
+		//create data
+		{{app_model_class}}::create( $input );
+
+		return redirect()->route('{{app_route}}.index')->with('message', 'Registro Creado.');
 	}
 
 	/**
@@ -52,8 +59,9 @@ class {{app_controller_class}}Controller extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function show({{app_model_class}} ${{app_model_var}})
+	public function show($id, {{app_model_class}} ${{app_model_var}})
 	{
+		${{app_model_var}}=${{app_model_var}}->find($id);
 		return view('{{app_route}}.show', compact('{{app_model_var}}'));
 	}
 
@@ -63,8 +71,9 @@ class {{app_controller_class}}Controller extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function edit({{app_model_class}} ${{app_model_var}})
+	public function edit($id, {{app_model_class}} ${{app_model_var}})
 	{
+		${{app_model_var}}=${{app_model_var}}->find($id);
 		return view('{{app_route}}.edit', compact('{{app_model_var}}'))
 			->with( 'list', {{app_model_class}}::getListFromAllRelationApps() );
 	}
@@ -75,8 +84,9 @@ class {{app_controller_class}}Controller extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function duplicate({{app_model_class}} ${{app_model_var}})
+	public function duplicate($id, {{app_model_class}} ${{app_model_var}})
 	{
+		${{app_model_var}}=${{app_model_var}}->find($id);
 		return view('{{app_route}}.duplicate', compact('{{app_model_var}}'))
 			->with( 'list', {{app_model_class}}::getListFromAllRelationApps() );
 	}
@@ -88,12 +98,15 @@ class {{app_controller_class}}Controller extends Controller {
 	 * @param Request $request
 	 * @return Response
 	 */
-	public function update({{app_model_class}} ${{app_model_var}}, Request $request)
+	public function update($id, {{app_model_class}} ${{app_model_var}}, update{{app_model_class}} $request)
 	{
+		$input = $request->all();
+		$input['usu_mod_id']=Auth::user()->id;
 		//update data
-		${{app_model_var}}->update($request->all());
+		${{app_model_var}}=${{app_model_var}}->find($id);
+		${{app_model_var}}->update( $input );
 
-		return redirect()->route('{{app_route}}.index')->with('message', 'Item updated successfully.');
+		return redirect()->route('{{app_route}}.index')->with('message', 'Registro Actualizado.');
 	}
 
 	/**
@@ -102,11 +115,12 @@ class {{app_controller_class}}Controller extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy({{app_model_class}} ${{app_model_var}})
+	public function destroy($id,{{app_model_class}} ${{app_model_var}})
 	{
+		${{app_model_var}}=${{app_model_var}}->find($id);
 		${{app_model_var}}->delete();
 
-		return redirect()->route('{{app_route}}.index')->with('message', 'Item deleted successfully.');
+		return redirect()->route('{{app_route}}.index')->with('message', 'Registro Borrado.');
 	}
 
 }
