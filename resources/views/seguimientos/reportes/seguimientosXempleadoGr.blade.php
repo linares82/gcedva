@@ -110,7 +110,7 @@ body{
             $suma_plantel=$suma_plantel+$s->total;
             ?>
         @elseif($suma_empleado!=0)
-            @if($s->nombre!=$nombre)
+            @if($s->razon==$plantel and $s->nombre!=$nombre)
                 <tr>
                     <td style="border:1px solid #ccc;" colspan=3>
                     </td>
@@ -123,7 +123,17 @@ body{
                 </tr>
                 <?php $suma_empleado=$s->total; ?>
             @endif
-            @if($s->razon!=$plantel)
+            @if($s->razon!=$plantel and $s->nombre!=$nombre)
+                <tr>
+                    <td style="border:1px solid #ccc;" colspan=3>
+                    </td>
+                    <td style="border:1px solid #ccc;">
+                        <strong>Suma total por empleado</strong>
+                    </td>
+                    <td style="border:1px solid #ccc;">
+                        {{ $suma_empleado }}
+                    </td>
+                </tr>
                 <tr>
                     <td style="border:1px solid #ccc;" colspan=3>
                         
@@ -136,6 +146,7 @@ body{
                     </td>
                 </tr>
                 <?php $suma_plantel=$s->total; ?>
+                <?php $suma_empleado=$s->total; ?>
             @endif
             <tr>
                 <td style="border:1px solid #ccc;">
