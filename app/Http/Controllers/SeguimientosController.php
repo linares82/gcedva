@@ -124,8 +124,9 @@ class SeguimientosController extends Controller {
 					->get();
 		//$dias=round((strtotime($a->fecha)-strtotime(date('Y-m-d')))/86400);
 		//dd($seguimiento);
+		$fecha=date('d-m-Y');
 		PDF::setOptions(['defaultFont' => 'arial']);
-			$pdf = PDF::loadView('seguimientos.showPrint', array('seguimiento'=>$seguimiento, 'sts'=>$sts, 'asignacionTareas'=>$asignacionTareas, 'avisos'=>$avisos, 'list'=>AsignacionTarea::getListFromAllRelationApps()))
+			$pdf = PDF::loadView('seguimientos.showPrint', array('seguimiento'=>$seguimiento, 'sts'=>$sts, 'asignacionTareas'=>$asignacionTareas, 'avisos'=>$avisos, 'fecha'=>$fecha))
 						->setPaper('letter', 'landscape');
 			return $pdf->download('reporte.pdf');
 		/*return view('seguimientos.show', compact('seguimiento', 'sts', 'asignacionTareas', 'avisos'))
