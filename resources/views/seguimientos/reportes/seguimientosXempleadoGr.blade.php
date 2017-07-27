@@ -123,7 +123,7 @@ body{
                 </tr>
                 <?php $suma_empleado=$s->total; ?>
             @endif
-            @if($s->razon!=$plantel and $s->nombre!=$nombre)
+            @if($s->razon!=$plantel and ($s->nombre!=$nombre or $s->nombre==$nombre))
                 <tr>
                     <td style="border:1px solid #ccc;" colspan=3>
                     </td>
