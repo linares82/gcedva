@@ -23,7 +23,7 @@
             @endif    
                 Estatus: {{$seguimiento->stSeguimiento->name}}
             </small>
-            
+            /<a href="{{route('seguimientos.showPrint', $seguimiento->cliente_id)}}">Imprimir</a>
 
             {!! Form::model($seguimiento, array('route' => array('seguimientos.destroy', $seguimiento->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? Estas seguro?')) { return true } else {return false };")) !!}
                 <div class="btn-group pull-right" role="group" aria-label="...">

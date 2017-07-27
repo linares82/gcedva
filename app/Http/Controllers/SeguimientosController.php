@@ -98,6 +98,41 @@ class SeguimientosController extends Controller {
 					->with( 'list', AsignacionTarea::getListFromAllRelationApps() );
 	}
 
+	public function showPrint($id, Seguimiento $seguimiento, updateAsignaciontarea $request)
+	{
+		/*$seguimiento=$seguimiento->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
+								->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
+								->where('cliente_id', '=', $id)->first();
+		*/
+		//dd($seguimiento);
+		$seguimiento=$seguimiento->where('cliente_id', '=', $id)->first();
+		if(!isset($seguimiento->id)){
+			$input_seguimiento['cliente_id']=$id;
+			$input_seguimiento['estatus_id']=1;
+			$input_seguimiento['usu_alta_id']=Auth::user()->id;
+			$input_seguimiento['usu_mod_id']=Auth::user()->id;
+			$seguimiento=Seguimiento::create($input_seguimiento);
+		}
+		//$seguimiento->getAllData();
+		$sts=StSeguimiento::pluck('name', 'id');
+		$asignacionTareas = AsignacionTarea::where('cliente_id', '=', $seguimiento->cliente_id)->get();
+		$avisos=Aviso::select('avisos.id','a.name','avisos.detalle', 'avisos.fecha',
+							Db::Raw('DATEDIFF(avisos.fecha,CURDATE()) as dias_restantes'))
+					->join('asuntos as a', 'a.id', '=', 'avisos.asunto_id')
+					->where('seguimiento_id', '=', $seguimiento->id)
+					->where('avisos.activo', '=', '1')
+					->get();
+		//$dias=round((strtotime($a->fecha)-strtotime(date('Y-m-d')))/86400);
+		//dd($seguimiento);
+		PDF::setOptions(['defaultFont' => 'arial']);
+			$pdf = PDF::loadView('seguimientos.showPrint', array('seguimiento'=>$seguimiento, 'sts'=>$sts, 'asignacionTareas'=>$asignacionTareas, 'avisos'=>$avisos, 'list'=>AsignacionTarea::getListFromAllRelationApps()))
+						->setPaper('letter', 'landscape');
+			return $pdf->download('reporte.pdf');
+		/*return view('seguimientos.show', compact('seguimiento', 'sts', 'asignacionTareas', 'avisos'))
+					->with( 'list', AsignacionTarea::getListFromAllRelationApps() );
+					*/
+	}
+
 	/**
 	 * Show the form for editing the specified resource.
 	 *

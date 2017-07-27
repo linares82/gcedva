@@ -97,13 +97,13 @@ class ClientesController extends Controller {
 			$c=Cliente::create( $input );	
 			$id=$c->id;
 			$input_seguimiento['cliente_id']=$c->id;
-			$input_seguimiento['estatus_id']=1;
+			$input_seguimiento['st_seguimiento_id']=1;
 			$input_seguimiento['mes']=date('m');
 			$input_seguimiento['usu_alta_id']=Auth::user()->id;
 			$input_seguimiento['usu_mod_id']=Auth::user()->id;
-			Seguimiento::create($input_seguimiento);
+			$s=Seguimiento::create($input_seguimiento);
 		}catch (\PDOException $e) {
-			//dd($e);
+			dd($e);
 			if($e->getCode()==23000){
 				//dd($e);
 				return redirect()->route('clientes.edit', $id)->with('message', 'Registro guardado');				

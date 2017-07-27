@@ -1419,6 +1419,11 @@ Route::get("tpoPlantels/tpoPlantel/{tpoPlantels}/duplicate", ['as' => 'tpoPlante
         'middleware' => 'permission:seguimientos.show',
         'uses' => 'SeguimientosController@show')
     )->middleware('auth');
+    Route::get('/seguimientos/showPrint/{id}', array(
+        'as' => 'seguimientos.showPrint',
+        'middleware' => 'permission:seguimientos.show',
+        'uses' => 'SeguimientosController@showPrint')
+    )->middleware('auth');
     Route::get('/seguimientos/edit/{id}', array(
         'as' => 'seguimientos.edit',
         'middleware' => 'permission:seguimientos.edit',
