@@ -42,26 +42,26 @@ class HomeController extends Controller
         $mes=(int)date('m');
         //dd($mes);
         $a_1=Seguimiento::select(Db::raw('count(c.nombre) as total'))
-                    ->where('estatus_id', '=', 1)
+                    ->where('st_seguimiento_id', '=', 1)
                     ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
                     ->where('mes', '=', $mes)
                     ->where('c.plantel_id', '=', $e->plantel_id)
                     ->where('c.empleado_id', '=', $e->id)
                     ->value('total');
         //dd($a_1);
-        $a_2=Seguimiento::where('estatus_id', '=', 2)
+        $a_2=Seguimiento::where('st_seguimiento_id', '=', 2)
                     ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
                     ->where('mes', '=', $mes)
                     ->where('c.empleado_id', '=', $e->id)
                     ->where('c.plantel_id', '=', $e->plantel_id)
                     ->count();
-        $a_3=Seguimiento::where('estatus_id', '=', 3)
+        $a_3=Seguimiento::where('st_seguimiento_id', '=', 3)
                     ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
                     ->where('mes', '=', $mes)
                     ->where('c.empleado_id', '=', $e->id)
                     ->where('c.plantel_id', '=', $e->plantel_id)
                     ->count();
-        $a_4=Seguimiento::where('estatus_id', '=', 4)
+        $a_4=Seguimiento::where('st_seguimiento_id', '=', 4)
                     ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
                     ->where('mes', '=', $mes)
                     ->where('c.empleado_id', '=', $e->id)
@@ -81,7 +81,7 @@ class HomeController extends Controller
         $mes=(int)date('m');
         return $grafica=Seguimiento::select('sts.name as Estatus', DB::raw('count(sts.name) as Valor'))
                     ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
-                    ->join('st_seguimientos as sts', 'sts.id','=','seguimientos.estatus_id')
+                    ->join('st_seguimientos as sts', 'sts.id','=','seguimientos.st_seguimiento_id')
                     ->where('mes', '=', $mes)
                     ->where('c.empleado_id', '=', $e->id)
                     ->where('c.plantel_id', '=', $e->plantel_id)

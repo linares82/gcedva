@@ -8,7 +8,8 @@ http://dog-ears.net/
 */
 
 namespace App\Traits;
-
+use App\empleado;
+use Auth;
 trait RelationManagerTrait {
 
     /**
@@ -50,6 +51,12 @@ trait RelationManagerTrait {
         if( $this->relationApps ){
     		foreach ( $this->relationApps as $relationAppName => $relationAppArray ){
     			$relatedObjList = $relationAppArray['app']::pluck($relationAppArray['relation_display_column'], 'id');
+          if($relationAppName=="Empleado" and Auth::user()->can('IfiltroEmpleadosXPlantel')){
+            $empleado=Empleado::where('user_id', '=', Auth::user()->id)->first();
+            $relatedObjList = $relationAppArray['app']::where('plantel_id', '=', $empleado->plantel_id)->pluck($relationAppArray['relation_display_column'], 'id');
+            //dd($relatedObjList);
+          }
+          //$relatedObjList = $relationAppArray['app']::pluck($relationAppArray['relation_display_column'], 'id');
     			$list[$relationAppName] = $relatedObjList;
     		}
         }

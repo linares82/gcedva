@@ -15,7 +15,7 @@ class CreateSeguimientosTable extends Migration {
 		Schema::create('seguimientos', function(Blueprint $table) {
             $table->increments('id');
             $table->integer('cliente_id')->unsigned();
-			$table->integer('estatus_id')->unsigned();
+			$table->integer('st_seguimiento_id')->unsigned();
 			$table->integer('mes')->unsigned();
             $table->integer('usu_alta_id')->unsigned();
             $table->integer('usu_mod_id')->unsigned();
@@ -23,7 +23,7 @@ class CreateSeguimientosTable extends Migration {
             $table->softDeletes();
             $table->foreign('usu_mod_id')->references('id')->on('users');
             $table->foreign('usu_alta_id')->references('id')->on('users');
-			$table->foreign('estatus_id')->references('id')->on('st_seguimientos');
+			$table->foreign('st_seguimiento_id')->references('id')->on('st_seguimientos');
 			$table->foreign('cliente_id')->references('id')->on('clientes');
         });
 	}

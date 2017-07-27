@@ -70,8 +70,12 @@ class SeguimientosController extends Controller {
 	 */
 	public function show($id, Seguimiento $seguimiento, updateAsignaciontarea $request)
 	{
-		$seguimiento=$seguimiento->where('cliente_id', '=', $id)->first();
+		/*$seguimiento=$seguimiento->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
+								->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
+								->where('cliente_id', '=', $id)->first();
+		*/
 		//dd($seguimiento);
+		$seguimiento=$seguimiento->where('cliente_id', '=', $id)->first();
 		if(!isset($seguimiento->id)){
 			$input_seguimiento['cliente_id']=$id;
 			$input_seguimiento['estatus_id']=1;
@@ -89,7 +93,7 @@ class SeguimientosController extends Controller {
 					->where('avisos.activo', '=', '1')
 					->get();
 		//$dias=round((strtotime($a->fecha)-strtotime(date('Y-m-d')))/86400);
-		//dd($avisos);
+		//dd($seguimiento);
 		return view('seguimientos.show', compact('seguimiento', 'sts', 'asignacionTareas', 'avisos'))
 					->with( 'list', AsignacionTarea::getListFromAllRelationApps() );
 	}
@@ -209,21 +213,8 @@ class SeguimientosController extends Controller {
 	{
 		$input=$request->all();
 		$fecha=date('d-m-Y');
-
-		/*$clientes=Cliente::whereBetween('s.created_at', [$input['fecha_f'], $input['fecha_t']])
-			->join('seguimientos as s', 's.cliente_id', 'clientes.id')
-			->whereBetween('clientes.empleado_id', [$input['empleado_f'], $input['empleado_t']])
-			->whereBetween('clientes.plantel_id', [$input['plantel_f'], $input['plantel_t']])
-			->whereBetween('s.estatus_id', [$input['estatus_f'], $input['estatus_t']])
-			->get();
-		$seguimientos=Seguimiento::join('clientes as c', 'c.id', 'seguimientos.cliente_id')
-				->whereBetween('c.empleado_id', [$input['empleado_f'], $input['empleado_t']])
-				->whereBetween('c.plantel_id', [$input['plantel_f'], $input['plantel_t']])
-				->whereBetween('seguimientos.estatus_id', [$input['estatus_f'], $input['estatus_t']])
-				->orderBy('c.empleado_id', 'seguimientos.estatus_id')
-				->get();
-		*/
-		$seguimientos=Seguimiento::select(
+		
+		/*$seguimientos=Seguimiento::select(
 				'p.razon','emp.nombre as nombre_e','emp.ape_paterno as paterno_e','emp.ape_materno as materno_e',
 				'cli.nombre as nombre_c','cli.nombre2 as nombre2_c','cli.ape_paterno as paterno_c',
 				'cli.ape_materno as materno_c','cli.calle','cli.no_interior','cli.no_exterior','cli.colonia',
@@ -243,19 +234,33 @@ class SeguimientosController extends Controller {
 				->whereBetween('seguimientos.created_at', [$input['fecha_f'], $input['fecha_t']])
 				->orderBy('cli.empleado_id', 'seguimientos.estatus_id')
 				->get();
-
+		*/
+		$seguimientos=Seguimiento::select('p.razon', DB::raw('concat(e.nombre," ", e.ape_paterno," ", e.ape_materno) as nombre'), 'sts.name', DB::raw('count(sts.name) as total'))
+								->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
+								->join('empleados as e', 'e.id', '=', 'c.empleado_id')
+								->join('plantels as p', 'p.id', '=', 'c.plantel_id')
+								->join('st_seguimientos as sts', 'sts.id', '=', 'seguimientos.st_seguimiento_id')
+								->whereBetween('c.empleado_id', [$input['empleado_f'], $input['empleado_t']])
+								->whereBetween('c.plantel_id', [$input['plantel_f'], $input['plantel_t']])
+								->whereBetween('seguimientos.st_seguimiento_id', [$input['estatus_f'], $input['estatus_t']])
+								->whereBetween('seguimientos.created_at', [$input['fecha_f'], $input['fecha_t']])
+								->groupBy('p.razon', 'e.nombre', 'e.ape_paterno', 'e.ape_materno', 'sts.name')
+								->get();
+		//dd($seguimientos);
+		
 		//$s=Seguimiento::get();
 		//dd($clientes);
-			/*PDF::setOptions(['defaultFont' => 'arial']);
+			PDF::setOptions(['defaultFont' => 'arial']);
 			$pdf = PDF::loadView('seguimientos.reportes.seguimientosXempleadoGr', array('seguimientos'=>$seguimientos, 'fecha'=>$fecha))
 						->setPaper('letter', 'landscape');
 			return $pdf->download('reporte.pdf');
-			*/
+			
 			//return view('seguimientos.reportes.seguimientosXempleadoGr', array('seguimientos'=>$seguimientos, 'fecha'=>$fecha));	
-			Excel::create('Laravel Excel', function($excel) use($seguimientos) {
+			/*Excel::create('Laravel Excel', function($excel) use($seguimientos) {
 				$excel->sheet('Productos', function($sheet) use($seguimientos) {
 					$sheet->fromArray($seguimientos);
 				});
 			})->export('xls');
+			*/
 	}
 }

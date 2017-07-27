@@ -38,7 +38,13 @@
                 </span>
                 <div class="info-box-content">
                     <h3><span class="info-box-text"> En proceso en el mes </span></h3>
-                    <a href="{{ route('seguimientos.reporteSeguimientosXEmpleado', array('estatus'=>1)) }}" class="small-box-footer">Más Información <i class="fa fa-arrow-circle-right"></i></a>
+                    <!--<a href="{{ route('seguimientos.reporteSeguimientosXEmpleado', array('estatus'=>1)) }}" class="small-box-footer">Más Información <i class="fa fa-arrow-circle-right"></i></a>-->
+                    <a href="{{ route('clientes.index').'?q[s]=&q[clientes.nombre_cont]=&q[clientes.nombre2_cont]=&q[clientes.ape_paterno_cont]=&q[clientes.ape_materno_cont]=&q[st_seguimiento_id_cont]=1&q[clientes.plantel_id_cont]='.
+                                                        DB::table('empleados')->where('user_id', Auth::user()->id)->value('plantel_id').
+                                                        '&q[clientes.empleado_id_cont]='.
+                                                        DB::table('empleados')->where('user_id', Auth::user()->id)->value('id').
+                                                        '&commit=Buscar' }}" 
+                    class="small-box-footer">Más Información <i class="fa fa-arrow-circle-right"></i></a>
                 </div>    
             </div>
             
@@ -51,7 +57,13 @@
                 </span>
                 <div class="info-box-content">
                     <h3><span class="info-box-text"> Concretados en el mes </span></h3>
-                    <a href="{{ route('seguimientos.reporteSeguimientosXEmpleado', array('estatus'=>2)) }}" class="small-box-footer">Más Información <i class="fa fa-arrow-circle-right"></i></a>
+                    <!--<a href="{{ route('seguimientos.reporteSeguimientosXEmpleado', array('estatus'=>2)) }}" class="small-box-footer">Más Información <i class="fa fa-arrow-circle-right"></i></a>-->
+                    <a href="{{ route('clientes.index').'?q[s]=&q[clientes.nombre_cont]=&q[clientes.nombre2_cont]=&q[clientes.ape_paterno_cont]=&q[clientes.ape_materno_cont]=&q[st_seguimiento_id_cont]=2&q[clientes.plantel_id_cont]='.
+                                                        DB::table('empleados')->where('user_id', Auth::user()->id)->value('plantel_id').
+                                                        '&q[clientes.empleado_id_cont]='.
+                                                        DB::table('empleados')->where('user_id', Auth::user()->id)->value('id').
+                                                        '&commit=Buscar' }}" 
+                    class="small-box-footer">Más Información <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
                 
             </div>
@@ -64,7 +76,13 @@
                 </span>
                 <div class="info-box-content">
                     <h3><span class="info-box-text"> Pendientes en el mes </span></h3>
-                    <a href="{{ route('seguimientos.reporteSeguimientosXEmpleado', array('estatus'=>4)) }}" class="small-box-footer">Más Información <i class="fa fa-arrow-circle-right"></i></a>
+                    <!--<a href="{{ route('seguimientos.reporteSeguimientosXEmpleado', array('estatus'=>4)) }}" class="small-box-footer">Más Información <i class="fa fa-arrow-circle-right"></i></a>-->
+                    <a href="{{ route('clientes.index').'?q[s]=&q[clientes.nombre_cont]=&q[clientes.nombre2_cont]=&q[clientes.ape_paterno_cont]=&q[clientes.ape_materno_cont]=&q[st_seguimiento_id_cont]=4&q[clientes.plantel_id_cont]='.
+                                                        DB::table('empleados')->where('user_id', Auth::user()->id)->value('plantel_id').
+                                                        '&q[clientes.empleado_id_cont]='.
+                                                        DB::table('empleados')->where('user_id', Auth::user()->id)->value('id').
+                                                        '&commit=Buscar' }}" 
+                    class="small-box-footer">Más Información <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
                 
             </div>
@@ -77,7 +95,13 @@
                 </span>
                 <div class="info-box-content">
                     <h3><span class="info-box-text"> Rechazados en el mes </span></h3>
-                    <a href="{{ route('seguimientos.reporteSeguimientosXEmpleado', array('estatus'=>3)) }}" class="small-box-footer">Más Información <i class="fa fa-arrow-circle-right"></i></a>
+                    <!--<a href="{{ route('seguimientos.reporteSeguimientosXEmpleado', array('estatus'=>3)) }}" class="small-box-footer">Más Información <i class="fa fa-arrow-circle-right"></i></a>-->
+                    <a href="{{ route('clientes.index').'?q[s]=&q[clientes.nombre_cont]=&q[clientes.nombre2_cont]=&q[clientes.ape_paterno_cont]=&q[clientes.ape_materno_cont]=&q[st_seguimiento_id_cont]=3&q[clientes.plantel_id_cont]='.
+                                                        DB::table('empleados')->where('user_id', Auth::user()->id)->value('plantel_id').
+                                                        '&q[clientes.empleado_id_cont]='.
+                                                        DB::table('empleados')->where('user_id', Auth::user()->id)->value('id').
+                                                        '&commit=Buscar' }}" 
+                    class="small-box-footer">Más Información <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
             </div>
         </div><!-- ./col -->
@@ -136,7 +160,7 @@
                         Avisos Generales
                     </h3>
                     <div class="box-tools pull-right">
-                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
+                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                     </div>
                 </div>
                 <div class="box-body" >

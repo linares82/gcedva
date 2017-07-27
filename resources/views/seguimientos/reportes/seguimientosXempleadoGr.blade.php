@@ -38,72 +38,147 @@ body{
             <th data-options="field:'cia_id'" style="border:1px solid #ccc;">
                 No.
             </th>
-            <th data-options="field:'residuo'" style="border:1px solid #ccc;">
+            <th data-options="field:'cia_id'" style="border:1px solid #ccc;">
                 Plantel
             </th>
             <th data-options="field:'residuo'" style="border:1px solid #ccc;">
                 Empleado
             </th>
             <th data-options="field:'residuo'" style="border:1px solid #ccc;">
-                Cliente
+                Estatus
             </th>
-            <th data-options="field:'unidad'" style="border:1px solid #ccc;">
-                Direccion
-            </th>
-            <th data-options="field:'fecha'" style="border:1px solid #ccc;">
-                Tel. Fijo
-            </th>
-            <th data-options="field:'lugar_generacion'" style="border:1px solid #ccc;">
-                Tel. Celular
-            </th>
-            <th data-options="field:'cantidad'" style="border:1px solid #ccc;">
-                Correo electronico
-            </th>
-            <th data-options="field:'peligroso'" style="border:1px solid #ccc;">
-                Estatus Cliente
-            </th>
-            <th data-options="field:'nombre'" style="border:1px solid #ccc;">
-                Estatus Seguimiento
+            <th data-options="field:'residuo'" style="border:1px solid #ccc;">
+                Total
             </th>
         </tr>
     </thead>
     <tbody>
         <?php $i=1; ?>
+        <?php $nombre=""; 
+        $suma_grupo=0;
+        $plantel="";
+        ?>
         @foreach($seguimientos as $s)
+        
+        @if($suma_grupo==0 and $s->nombre!=$nombre and $s->razon!=$plantel)
+            <tr>
+                <td style="border:1px solid #ccc;">
+                    {{ $i }}
+                    <?php $i++; ?>
+                </td>
+                <td style="border:1px solid #ccc;">
+                    {{$s->razon}}
+                </td>
+                <td style="border:1px solid #ccc;">
+                    {{$s->nombre}}
+                </td>
+                <td style="border:1px solid #ccc;">
+                    {{ $s->name }}
+                </td>
+                <td style="border:1px solid #ccc;">
+                    {{ $s->total }}
+                </td>
+            </tr>
+            <?php 
+            $nombre=$s->nombre; 
+            $suma_grupo=$suma_grupo+$s->total;
+            $plantel=$s->razon;
+            ?>
+        @elseif($suma_grupo!=0 and $s->nombre==$nombre and $s->razon==$plantel)
+            <tr>
+                <td style="border:1px solid #ccc;">
+                    {{ $i }}
+                    <?php $i++; ?>
+                </td>
+                <td style="border:1px solid #ccc;">
+                    {{$s->razon}}
+                </td>
+                <td style="border:1px solid #ccc;">
+                    {{$s->nombre}}
+                </td>
+                <td style="border:1px solid #ccc;">
+                    {{ $s->name }}
+                </td>
+                <td style="border:1px solid #ccc;">
+                    {{ $s->total }}
+                </td>
+            </tr>
+            <?php 
+            $suma_grupo=$suma_grupo+$s->total;
+            ?>
+        @elseif($suma_grupo!=0)
+            @if($s->nombre!=$nombre)
+                <tr>
+                    <td style="border:1px solid #ccc;" colspan=3>
+                        
+                    </td>
+                    <td style="border:1px solid #ccc;">
+                        <strong>Suma total por empleado</strong>
+                    </td>
+                    <td style="border:1px solid #ccc;">
+                        {{ $suma_grupo }}
+                    </td>
+                </tr>
+            @endif
+            @if($s->razon!=$plantel)
+                <tr>
+                    <td style="border:1px solid #ccc;" colspan=3>
+                        
+                    </td>
+                    <td style="border:1px solid #ccc;">
+                        <strong>Suma total por plantel</strong>
+                    </td>
+                    <td style="border:1px solid #ccc;">
+                        {{ $suma_grupo }}
+                    </td>
+                </tr>
+            @endif
+            <tr>
+                <td style="border:1px solid #ccc;">
+                    {{ $i }}
+                    <?php $i++; ?>
+                </td>
+                <td style="border:1px solid #ccc;">
+                    {{$s->razon}}
+                </td>
+                <td style="border:1px solid #ccc;">
+                    {{$s->nombre}}
+                </td>
+                <td style="border:1px solid #ccc;">
+                    {{ $s->name }}
+                </td>
+                <td style="border:1px solid #ccc;">
+                    {{ $s->total }}
+                </td>
+            </tr>
+            <?php 
+            $nombre=$s->nombre; 
+            $suma_grupo=$s->total;
+            $plantel=$s->razon;
+            ?>
+        @endif
+        @endforeach
+        
         <tr>
-            <td style="border:1px solid #ccc;">
-                {{ $i }}
-                <?php $i++; ?>
+            <td style="border:1px solid #ccc;" colspan=3>   
             </td>
             <td style="border:1px solid #ccc;">
-                {{$s->razon}}
+                <strong>Suma total por empleado</strong>
             </td>
             <td style="border:1px solid #ccc;">
-                {{$s->nombre_e." ".$s->ape_paterno_e." ".$s->ape_materno_c}}
-            </td>
-            <td style="border:1px solid #ccc;">
-                {{ $s->nombre_c." ".$s->nombre2_c." ".$s->ape_paterno_c." ".$s->ape_materno_c }}
-            </td>
-            <td style="border:1px solid #ccc;">
-                {{ $s->calle." ".$s->no_interior." ".$s->no_exterior." ".$s->colonia." ".$s->municipio." ".$s->estado }}
-            </td>
-            <td style="border:1px solid #ccc;">
-                {{ $s->tel_fijo }}
-            </td>
-            <td style="border:1px solid #ccc;">
-                {{ $s->tel_cel }}
-            </td>
-            <td style="border:1px solid #ccc;">
-                {{ $s->mail }}
-            </td>
-            <td style="border:1px solid #ccc;">
-                {{ $s->estatus_cliente }}
-            </td>
-            <td style="border:1px solid #ccc;">     
-                {{ $s->estatus_seguimiento }}
+                {{ $suma_grupo }}
             </td>
         </tr>
-        @endforeach
+        <tr>
+            <td style="border:1px solid #ccc;" colspan=3>
+            </td>
+            <td style="border:1px solid #ccc;">
+                <strong>Suma total por plantel</strong>
+            </td>
+            <td style="border:1px solid #ccc;">
+                {{ $suma_grupo }}
+            </td>
+        </tr>
     </tbody>
 </table>
 </div>

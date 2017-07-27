@@ -35,10 +35,11 @@ class ClientesController extends Controller {
 	public function index(Request $request)
 	{
 		//dd($request);
-		$clientes = Cliente::getAllData($request);
+		$clientes = Seguimiento::getAllData($request);
 		
 		return view('clientes.index', compact('clientes'))
-			->with( 'list', Cliente::getListFromAllRelationApps() );
+			->with( 'list', Seguimiento::getListFromAllRelationApps() )
+			->with( 'list1', Cliente::getListFromAllRelationApps() );;
 	}
 
 	/**

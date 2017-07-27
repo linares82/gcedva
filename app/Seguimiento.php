@@ -33,7 +33,7 @@ class Seguimiento extends Model
 	public function cliente() {
 		return $this->belongsTo('App\cliente');
 	}// end
-	public function estatus() {
+	public function stSeguimiento() {
 		return $this->belongsTo('App\StSeguimiento');
 	}// end
 

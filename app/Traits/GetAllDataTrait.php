@@ -120,6 +120,12 @@ trait GetAllDataTrait {
         if($baseTable=="empleados" and Auth::user()->can('IfiltroEmpleadosXPlantel')){
             $myQuery=$myQuery->where('empleados.plantel_id', '=', $empleado->plantel_id);
         }
+        if($baseTable=="seguimientos" and Auth::user()->can('IfiltroEmpleadosXPlantel')){
+            $myQuery=$myQuery->where('clientes.empleado_id', '=', $empleado->id);
+        }
+        if($baseTable=="seguimientos" and Auth::user()->can('IfiltroEmpleadosXPlantel')){
+            $myQuery=$myQuery->where('clientes.plantel_id', '=', $empleado->plantel_id);
+        }
         
         
         $myQuery = $myQuery->orderBy( $column, $order_dir);

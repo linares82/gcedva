@@ -12,16 +12,16 @@
 
 <div class="page-header">
         <h1>@yield('seguimientosAppTitle') / 
-            @if($seguimiento->estatus_id==1)
+            @if($seguimiento->st_seguimiento_id==1)
                 <small class="label label-info"> 
-            @elseif($seguimiento->estatus_id==2)
+            @elseif($seguimiento->st_seguimiento_id==2)
                 <small class="label label-success"> 
-            @elseif($seguimiento->estatus_id==3)
+            @elseif($seguimiento->st_seguimiento_id==3)
                 <small class="label label-danger">
-            @elseif($seguimiento->estatus_id==4)
+            @elseif($seguimiento->st_seguimiento_id==4)
                  <small class="label label-warning"> 
             @endif    
-                Estatus: {{$seguimiento->estatus->name}}
+                Estatus: {{$seguimiento->stSeguimiento->name}}
             </small>
 
             {!! Form::model($seguimiento, array('route' => array('seguimientos.destroy', $seguimiento->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? Estas seguro?')) { return true } else {return false };")) !!}
@@ -56,11 +56,11 @@
                             <p class="form-control-static"><label for="cliente_id">Dirección:</label> {{
                                 $seguimiento->cliente->calle." ".$seguimiento->cliente->no_ext." ".$seguimiento->cliente->colonia." ".$seguimiento->cliente->municipio->name}}
                             </p>
-                            <div class="form-group col-md-12 @if($errors->has('estatus_id')) has-error @endif">
-                            <label for="ofertum_id-field">Estatus del seguimiento</label>
-                            {!! Form::select("estatus_id", $sts,null, array("class" => "form-control", "id" => "estatus_id_id-field")) !!}
-                            @if($errors->has("estatus_id"))
-                                <span class="help-block">{{ $errors->first("estatus_id") }}</span>
+                            <div class="form-group col-md-12 @if($errors->has('st_seguimiento_id')) has-error @endif">
+                            <label for="st_seguimiento_id-field">Estatus del seguimiento</label>
+                            {!! Form::select("st_seguimiento_id", $sts,null, array("class" => "form-control", "id" => "st_seguimiento_id-field")) !!}
+                            @if($errors->has("st_seguimiento_id"))
+                                <span class="help-block">{{ $errors->first("st_seguimiento_id") }}</span>
                             @endif
                             </div>
                             <div class="row">
