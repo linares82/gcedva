@@ -55,12 +55,13 @@ body{
     <tbody>
         <?php $i=1; ?>
         <?php $nombre=""; 
-        $suma_grupo=0;
+        $suma_empleado=0;
+        $suma_plantel=0;
         $plantel="";
         ?>
         @foreach($seguimientos as $s)
         
-        @if($suma_grupo==0 and $s->nombre!=$nombre and $s->razon!=$plantel)
+        @if($suma_empleado==0 and $s->nombre!=$nombre and $s->razon!=$plantel)
             <tr>
                 <td style="border:1px solid #ccc;">
                     {{ $i }}
@@ -81,10 +82,11 @@ body{
             </tr>
             <?php 
             $nombre=$s->nombre; 
-            $suma_grupo=$suma_grupo+$s->total;
+            $suma_empleado=$suma_empleado+$s->total;
+            $suma_plantel=$suma_plantel+$s->total;
             $plantel=$s->razon;
             ?>
-        @elseif($suma_grupo!=0 and $s->nombre==$nombre and $s->razon==$plantel)
+        @elseif($suma_empleado!=0 and $s->nombre==$nombre and $s->razon==$plantel)
             <tr>
                 <td style="border:1px solid #ccc;">
                     {{ $i }}
@@ -104,21 +106,22 @@ body{
                 </td>
             </tr>
             <?php 
-            $suma_grupo=$suma_grupo+$s->total;
+            $suma_empleado=$suma_empleado+$s->total;
+            $suma_plantel=$suma_plantel+$s->total;
             ?>
-        @elseif($suma_grupo!=0)
+        @elseif($suma_empleado!=0)
             @if($s->nombre!=$nombre)
                 <tr>
                     <td style="border:1px solid #ccc;" colspan=3>
-                        
                     </td>
                     <td style="border:1px solid #ccc;">
                         <strong>Suma total por empleado</strong>
                     </td>
                     <td style="border:1px solid #ccc;">
-                        {{ $suma_grupo }}
+                        {{ $suma_empleado }}
                     </td>
                 </tr>
+                <?php $suma_empleado=$s->total; ?>
             @endif
             @if($s->razon!=$plantel)
                 <tr>
@@ -129,9 +132,10 @@ body{
                         <strong>Suma total por plantel</strong>
                     </td>
                     <td style="border:1px solid #ccc;">
-                        {{ $suma_grupo }}
+                        {{ $suma_plantel }}
                     </td>
                 </tr>
+                <?php $suma_plantel=$s->total; ?>
             @endif
             <tr>
                 <td style="border:1px solid #ccc;">
@@ -153,7 +157,6 @@ body{
             </tr>
             <?php 
             $nombre=$s->nombre; 
-            $suma_grupo=$s->total;
             $plantel=$s->razon;
             ?>
         @endif
@@ -166,7 +169,7 @@ body{
                 <strong>Suma total por empleado</strong>
             </td>
             <td style="border:1px solid #ccc;">
-                {{ $suma_grupo }}
+                {{ $suma_empleado }}
             </td>
         </tr>
         <tr>
@@ -176,7 +179,7 @@ body{
                 <strong>Suma total por plantel</strong>
             </td>
             <td style="border:1px solid #ccc;">
-                {{ $suma_grupo }}
+                {{ $suma_plantel }}
             </td>
         </tr>
     </tbody>
