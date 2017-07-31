@@ -26,6 +26,20 @@
                         <span class="help-block">{{ $errors->first("fin") }}</span>
                        @endif
                     </div>
+                    <div class="form-group col-md-4 @if($errors->has('puesto_id')) has-error @endif">
+                       <label for="puesto_id-field">Puesto</label>
+                       {!! Form::select("puesto_id", $list["Puesto"], null, array("class" => "form-control", "id" => "puesto_id-field")) !!}
+                       @if($errors->has("puesto_id"))
+                        <span class="help-block">{{ $errors->first("puesto_id") }}</span>
+                       @endif
+                    </div>
+                    <div class="form-group col-md-4 @if($errors->has('plantel_id')) has-error @endif">
+                       <label for="plantel_id-field">Plantel</label>
+                       {!! Form::select("plantel_id", $list["Plantel"], null, array("class" => "form-control", "id" => "plantel_id-field")) !!}
+                       @if($errors->has("plantel_id"))
+                        <span class="help-block">{{ $errors->first("st_cliente_id") }}</span>
+                       @endif
+                    </div>
                     
 @push('scripts')
   <script type="text/javascript">

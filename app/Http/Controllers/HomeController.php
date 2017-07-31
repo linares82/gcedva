@@ -70,6 +70,8 @@ class HomeController extends Controller
         $fecha=date('Y-m-d');
         $avisos_generales=AvisoGral::where('inicio','<=', $fecha)
                                     ->where('fin', '>=', $fecha)
+                                    ->where('plantel_id', '=', $e->plantel)
+                                    ->where('puesto_id', '=', $e->puesto_id)
                                     ->get();
         //dd($grafica);
         

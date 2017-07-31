@@ -18,12 +18,16 @@ class CreateAvisoGralsTable extends Migration {
 			$table->string('aviso');
             $table->date('inicio');
             $table->date('fin');
+			$table->integer('plantel_id')->unsigned();
+			$table->integer('puesto_id')->unsigned();
             $table->integer('usu_alta_id')->unsigned();
             $table->integer('usu_mod_id')->unsigned();
             $table->timestamps();
             $table->softDeletes();
 			$table->foreign('usu_mod_id')->references('id')->on('users');
             $table->foreign('usu_alta_id')->references('id')->on('users');
+			$table->foreign('plantel_id')->references('id')->on('plantels');
+			$table->foreign('puesto_id')->references('id')->on('puestos');
         });
 	}
 
