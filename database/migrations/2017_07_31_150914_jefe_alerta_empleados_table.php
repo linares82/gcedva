@@ -19,7 +19,7 @@ class JefeAlertaEmpleadosTable extends Migration
             $table->boolean('alerta_bnd');
             $table->integer('dias_alerta')->unsigned();
             $table->integer('resp_alerta_id')->unsigned();
-            $table->date('fin_contrato');
+            $table->date('fin_contrato')->nullable();
         });
     }
 
