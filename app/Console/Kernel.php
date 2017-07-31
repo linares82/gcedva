@@ -15,7 +15,8 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         Commands\CargaRemota::class,
         Commands\EnviarCorreos::class,
-        Commands\EnviarSms::class
+        Commands\EnviarSms::class,
+        Commands\AlertaFinContrato::class
     ];
 
     /**

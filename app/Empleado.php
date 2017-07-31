@@ -28,7 +28,11 @@ class Empleado extends Model
     } 
 
 	//Mass Assignment
-	protected $fillable = ['cve_empleado','nombre','ape_paterno','ape_materno','puesto_id','area_id','rfc','curp','direccion','tel_fijo','tel_cel','cel_empresa','mail','mail_empresa','foto','identificacion','contrato','evaluacion_psico','plantel_id','st_empleado_id', 'pendientes', 'user_id','usu_alta_id','usu_mod_id'];
+	protected $fillable = ['cve_empleado','nombre','ape_paterno','ape_materno','puesto_id','area_id','rfc','curp',
+						   'direccion','tel_fijo','tel_cel','cel_empresa','mail','mail_empresa','foto',
+						   'identificacion','contrato','evaluacion_psico','plantel_id','st_empleado_id', 
+						   'pendientes', 'user_id','usu_alta_id','usu_mod_id', 'jefe_bnd', 'jefe_id', 'alerta_bnd', 
+						   'dias_alerta', 'resp_alerta_id', 'fin_contrato'];
 
 	public function usu_alta() {
 		return $this->hasOne('App\User', 'id', 'usu_alta_id');
@@ -59,10 +63,22 @@ class Empleado extends Model
 		return $this->belongsTo('App\StEmpleado');
 	}// end
 
+	public function jefe() {
+		return $this->belongsTo('App\Empleado');
+	}// end
+
+	public function responsable() {
+		return $this->belongsTo('App\Empleado');
+	}// end
+
 	public function user()
     {
         return $this->hasOne('App\User', 'id', 'user_id');
     }
+
+	public function pivotDocEmpleado() {
+		return $this->hasMany('App\PivotDocEmpleado');
+	}// end
 
     /*public function cliente() {
 		return $this->belongsTo('App\Cliente');

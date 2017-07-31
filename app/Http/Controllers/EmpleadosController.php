@@ -4,12 +4,14 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use File;
 use App\Empleado;
+use App\PivotDocEmpleado;
 use App\User;
 use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updateEmpleado;
 use App\Http\Requests\createEmpleado;
-
+use DB;
+use Hash;
 
 class EmpleadosController extends Controller {
 
@@ -32,8 +34,17 @@ class EmpleadosController extends Controller {
 	 */
 	public function create()
 	{
-		return view('empleados.create')
-			->with( 'list', Empleado::getListFromAllRelationApps() );
+		//$plantel=DB::table('empleados')->where('user_id', Auth::user()->id)->value('plantel_id');
+		$jefes=Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
+						->where('jefe_bnd', '=', '1')
+						//->where('plantel_id', '=', $plantel)
+						->pluck('name', 'id');
+		$responsables=Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
+						//->where('plantel_id', '=', $plantel)
+						->pluck('name', 'id');
+		return view('empleados.create', compact('jefes', 'responsables'))
+			->with( 'list', Empleado::getListFromAllRelationApps() )
+			->with( 'list1', PivotDocEmpleado::getListFromAllRelationApps() );
 	}
 
 	/**
@@ -48,57 +59,30 @@ class EmpleadosController extends Controller {
 		$input = $request->all();
 		$input['usu_alta_id']=Auth::user()->id;
 		$input['usu_mod_id']=Auth::user()->id;
-
-		$r=$request->hasFile('foto_file');
-		if($r){
-			$foto_file = $request->file('foto_file');
-			$input['foto'] = $foto_file->getClientOriginalName();
+		if(!isset($input['jefe_bnd'])){
+			$input['jefe_bnd']=0;
+		}else{
+			$input['jefe_bnd']=1;
 		}
-		$r=$request->hasFile('identificacion_file');
-		if($r){
-			$identificacion_file = $request->file('identificacion_file');
-			$input['identificacion'] = $identificacion_file->getClientOriginalName();
+		if(!isset($input['alerta_bnd'])){
+			$input['alerta_bnd']=0;
+		}else{
+			$input['alerta_bnd']=1;
 		}
-		$r=$request->hasFile('contrato_file');
-		if($r){
-			$membrete_file = $request->file('contrato_file');
-			$input['contrato'] = $contrato_file->getClientOriginalName();	
-		}
-		$r=$request->hasFile('evaluacion_psico_file');
-		if($r){
-			$evaluacion_psico_file = $request->file('evaluacion_psico_file');
-			$input['evaluacion_psico'] = $evaluacion_psico_file->getClientOriginalName();	
-		}
-
-		//create data
 
 		//dd($input);
 		$e=Empleado::create( $input );
-		if ( $e ){
-			$ruta=public_path()."/imagenes/empleados/".$e->id."/";
-			//dd($ruta);
-			if(!file_exists($ruta)){
-				File::makeDirectory($ruta, 0777, true, true);
-			}
-			if($request->file('foto_file')){
-				//Storage::disk('img_plantels')->put($input['logo'],  File::get($logo_file));
-				$request->file('foto_file')->move($ruta, $input['foto']);
-			}
-			if($request->file('identificacion_file')){
-				//\Storage::disk('local')->put($input['slogan'],  \File::get($slogan_file));
-				$request->file('identificacion_file')->move($ruta, $input['identificacion']);
-			}
-			if($request->file('contrato_file')){
-				//\Storage::disk('local')->put($input['membrete'],  \File::get($membrete_file));
-				$request->file('contrato_file')->move($ruta, $input['contrato']);
-			}
-			if($request->file('evaluacion_psico_file')){
-				//\Storage::disk('local')->put($input['membrete'],  \File::get($membrete_file));
-				$request->file('evaluacion_psico_file')->move($ruta, $input['evaluacion_psico_file']);
-			}
+		
+		if($request->has('doc_empleado_id') and $request->has('archivo')){
+			$input2['doc_empleado_id']=$request->get('doc_empleado_id');
+			$input2['archivo']=$request->get('archivo');
+			$input2['empleado_id']=$id;
+			$input2['usu_alta_id']=Auth::user()->id;
+			$input2['usu_mod_id']=Auth::user()->id;
+			PivotDocEmpleado::create($input2);
 		}
 
-		return redirect()->route('empleados.index')->with('message', 'Registro Creado.');
+		return redirect()->route('empleados.edit', $e->id)->with('message', 'Registro Creado.');
 	}
 
 	/**
@@ -119,11 +103,23 @@ class EmpleadosController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function edit($id, Empleado $empleado)
+	public function edit($id, Empleado $empleado, PivotDocEmpleado $pivotDocEmpleado)
 	{
 		$empleado=$empleado->find($id);
-		return view('empleados.edit', compact('empleado'))
-			->with( 'list', Empleado::getListFromAllRelationApps() );
+		if($empleado->cve_empleado==""){
+			$empleado->cve_empleado=substr(Hash::make(rand(0, 1000)), 2, 8);
+		}
+		$jefes=Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
+						->where('jefe_bnd', '=', '1')
+						->where('plantel_id', '=', $empleado->plantel_id)
+						->pluck('name', 'id');
+		$responsables=Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
+						->where('plantel_id', '=', $empleado->plantel_id)
+						->pluck('name', 'id');
+		//dd($jefes);
+		return view('empleados.edit', compact('empleado', 'pivotDocEmpleado', 'jefes', 'responsables'))
+			->with( 'list', Empleado::getListFromAllRelationApps() )
+			->with( 'list1', PivotDocEmpleado::getListFromAllRelationApps() );
 	}
 
 	/**
@@ -146,7 +142,8 @@ class EmpleadosController extends Controller {
 	 * @param Request $request
 	 * @return Response
 	 */
-	public function update($id, Empleado $empleado, updateEmpleado $request)
+	 //Primera version
+	/*public function update($id, Empleado $empleado, updateEmpleado $request)
 	{
 		$input = $request->all();
 		$input['usu_mod_id']=Auth::user()->id;
@@ -206,6 +203,36 @@ class EmpleadosController extends Controller {
 		}
 
 		return redirect()->route('empleados.index')->with('message', 'Registro Actualizado.');
+	}
+	*/
+	public function update($id, Empleado $empleado, updateEmpleado $request)
+	{
+		$input = $request->except(['doc_empleado_id','archivo']);
+		$input['usu_mod_id']=Auth::user()->id;
+		if(!isset($input['jefe_bnd'])){
+			$input['jefe_bnd']=0;
+		}else{
+			$input['jefe_bnd']=1;
+		}
+		if(!isset($input['alerta_bnd'])){
+			$input['alerta_bnd']=0;
+		}else{
+			$input['alerta_bnd']=1;
+		}
+		
+		$empleado=$empleado->find($id);
+		$e=$empleado->update( $input );
+		//dd($request->all());
+		if($request->has('doc_empleado_id') and $request->has('archivo')){
+			$input2['doc_empleado_id']=$request->get('doc_empleado_id');
+			$input2['archivo']=$request->get('archivo');
+			$input2['empleado_id']=$id;
+			$input2['usu_alta_id']=Auth::user()->id;
+			$input2['usu_mod_id']=Auth::user()->id;
+			PivotDocEmpleado::create($input2);
+		}
+		
+		return redirect()->route('empleados.edit', $id)->with('message', 'Registro Actualizado.');
 	}
 
 	/**

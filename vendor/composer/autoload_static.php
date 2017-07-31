@@ -22,8 +22,8 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'f0906e6318348a765ffb6eb24e0d0938' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Foundation/helpers.php',
         '58571171fd5812e6e447dce228f52f4d' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Support/helpers.php',
         'f18cc91337d49233e5754e93f3ed9ec3' => __DIR__ . '/..' . '/laravelcollective/html/src/helpers.php',
-        'e7223560d890eab89cda23685e711e2c' => __DIR__ . '/..' . '/psy/psysh/src/Psy/functions.php',
         '017b24472353920ed42bb364f7653c43' => __DIR__ . '/..' . '/propaganistas/laravel-phone/src/helpers.php',
+        'e7223560d890eab89cda23685e711e2c' => __DIR__ . '/..' . '/psy/psysh/src/Psy/functions.php',
         '4a1f389d6ce373bda9e57857d3b61c84' => __DIR__ . '/..' . '/barryvdh/laravel-debugbar/src/helpers.php',
     );
 
@@ -500,6 +500,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'CreateCorreosTable' => __DIR__ . '/../..' . '/database/migrations/2017_05_12_155535_create_correos_table.php',
         'CreateCursosTable' => __DIR__ . '/../..' . '/database/migrations/2017_05_02_203702_create_cursos_table.php',
         'CreateDiplomadosTable' => __DIR__ . '/../..' . '/database/migrations/2017_05_02_203835_create_diplomados_table.php',
+        'CreateDocEmpleadosTable' => __DIR__ . '/../..' . '/database/migrations/2017_07_28_001232_create_doc_empleados_table.php',
         'CreateEmpleadosTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_28_180957_create_empleados_table.php',
         'CreateEspecialidadsTable' => __DIR__ . '/../..' . '/database/migrations/2017_05_03_000000_create_especialidads_table.php',
         'CreateEstadosTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_30_224317_create_estados_table.php',
@@ -514,6 +515,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'CreateParamsTable' => __DIR__ . '/../..' . '/database/migrations/2017_05_16_190353_create_params_table.php',
         'CreatePasswordResetsTable' => __DIR__ . '/../..' . '/database/migrations/2014_10_12_100000_create_password_resets_table.php',
         'CreatePeriodosTable' => __DIR__ . '/../..' . '/database/migrations/2017_04_18_144945_create_periodos_table.php',
+        'CreatePivotDocEmpleadosTable' => __DIR__ . '/../..' . '/database/migrations/2017_07_28_001608_create_pivot_doc_empleados_table.php',
         'CreatePlantelsTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_24_164429_create_plantels_table.php',
         'CreatePlantillasEstatusTable' => __DIR__ . '/../..' . '/database/migrations/2017_05_12_143816_create_plantillas_estatus_table.php',
         'CreatePreguntaClientesTable' => __DIR__ . '/../..' . '/database/migrations/2017_04_18_144933_create_pregunta_clientes_table.php',
@@ -614,6 +616,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'Hamcrest\\Type\\IsString' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Type/IsString.php',
         'Hamcrest\\Util' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Util.php',
         'Hamcrest\\Xml\\HasXPath' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Xml/HasXPath.php',
+        'JefeAlertaEmpleadosTable' => __DIR__ . '/../..' . '/database/migrations/2017_07_31_150914_jefe_alerta_empleados_table.php',
         'Maatwebsite\\Excel\\Classes\\Cache' => __DIR__ . '/..' . '/maatwebsite/excel/src/Maatwebsite/Excel/Classes/Cache.php',
         'Maatwebsite\\Excel\\Classes\\FormatIdentifier' => __DIR__ . '/..' . '/maatwebsite/excel/src/Maatwebsite/Excel/Classes/FormatIdentifier.php',
         'Maatwebsite\\Excel\\Classes\\LaravelExcelWorksheet' => __DIR__ . '/..' . '/maatwebsite/excel/src/Maatwebsite/Excel/Classes/LaravelExcelWorksheet.php',

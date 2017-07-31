@@ -17,7 +17,7 @@ body{
 }
 </style>
 
-<table style="width:100%;height:auto;border:1px solid #ccc;font-size: 1em;">
+<table style="width:100%;height:auto;border:1px solid #ccc;font-size: .75em;">
     <tr>
         <td style="width:33%;text-align:left" align="left">
             <img src="" alt="Logo" height=80>
@@ -31,7 +31,7 @@ body{
     </tr>
 </table>
 
-<table id="dg2" style="width:100%;height:auto;border-collapse:collapse;font-size: 1em;">
+<table id="dg2" style="width:100%;height:auto;border-collapse:collapse;font-size: .75em;">
     <tr>
         <td style="width:33%;text-align:center;border:1px solid #ccc;" align="center" colspan=4>
             Datos del cliente
@@ -39,51 +39,64 @@ body{
         
     </tr>
     <tr>
-        <td style="width:33%;text-align:left;border:1px solid #ccc;" align="left" bgcolor="#c1b7b5">
+        <td style="width:33%;border:1px solid #ccc;" bgcolor="#c1b7b5">
             Nombre Completo:
         </td>
-        <td style="width:33%;text-align:center;border:1px solid #ccc;" align="center">
+        <td style="width:33%;border:1px solid #ccc;">
             {{$seguimiento->cliente->nombre." ".$seguimiento->cliente->nombre2." ".$seguimiento->cliente->ape_paterno." ".$seguimiento->cliente->ape_materno}}
         </td>
-        <td style="width:33%;text-align:right;border:1px solid #ccc;" align="right" bgcolor="#c1b7b5">
+        <td style="width:33%;border:1px solid #ccc;" bgcolor="#c1b7b5">
             Tel. Fijo:
         </td>
-        <td style="width:33%;text-align:right;border:1px solid #ccc;" align="right">
+        <td style="width:33%;border:1px solid #ccc;">
             {{$seguimiento->cliente->tel_fijo}}
         </td>
     </tr>
     <tr>
-        <td style="width:33%;text-align:left;border:1px solid #ccc;" align="left" bgcolor="#c1b7b5">
+        <td style="width:33%;border:1px solid #ccc;" bgcolor="#c1b7b5">
             Tel. Celular:
         </td>
-        <td style="width:33%;text-align:center;border:1px solid #ccc;" align="center">
+        <td style="width:33%;border:1px solid #ccc;">
             {{$seguimiento->cliente->tel_cel}}
         </td>
-        <td style="width:33%;text-align:right;border:1px solid #ccc;" align="right" bgcolor="#c1b7b5">
+        <td style="width:33%;border:1px solid #ccc;" bgcolor="#c1b7b5">
             E-mail:
         </td>
-        <td style="width:33%;text-align:right;border:1px solid #ccc;" align="right">
+        <td style="width:33%;border:1px solid #ccc;">
             {{$seguimiento->cliente->mail}}
         </td>
     </tr>
     <tr>
-        <td style="width:33%;text-align:left;border:1px solid #ccc;" align="left" bgcolor="#c1b7b5">
+        <td style="width:33%;border:1px solid #ccc;" bgcolor="#c1b7b5">
             Dirección:
         </td>
-        <td style="width:33%;text-align:center;border:1px solid #ccc;" align="center">
+        <td style="width:33%;border:1px solid #ccc;">
             {{$seguimiento->cliente->calle." ".$seguimiento->cliente->no_ext." ".$seguimiento->cliente->colonia." ".$seguimiento->cliente->municipio->name}}        
         </td>
-        <td style="width:33%;text-align:right;border:1px solid #ccc;" bgcolor="#c1b7b5" align="right">
+        <td style="width:33%;border:1px solid #ccc;" bgcolor="#c1b7b5" >
             Empleado:
         </td>
-        <td style="width:33%;text-align:right;border:1px solid #ccc;" align="right">
+        <td style="width:33%;border:1px solid #ccc;" >
             {{$seguimiento->cliente->empleado->nombre." ".$seguimiento->cliente->empleado->ape_paterno." ".$seguimiento->cliente->empleado->ape_materno}}         
         </td>
     </tr>
 </table>
 
-<p><strong >TAREAS:</strong></p>
-<table id="dg" style="width:100%;height:auto;border-collapse:collapse;font-size: 1em;">
+<table style="width:100%;height:auto;border:1px solid #ccc;font-size: .75em;">
+    <tr>
+        <td style="width:33%;text-align:left" align="left">
+            
+        </td>
+        <td style="width:33%;text-align:center" align="center">
+            <h4> TAREAS </h4>
+        </td>
+        <td style="width:33%;text-align:right" align="right">
+            
+        </td>
+    </tr>
+</table>
+
+<table id="dg" style="width:100%;height:auto;border-collapse:collapse;font-size: .75em;">
     <thead>
         <tr>
             <th style="border:1px solid #ccc;" bgcolor="#c1b7b5">Tarea</th>
@@ -100,15 +113,27 @@ body{
             <td style="border:1px solid #ccc;">{{$at->asunto->name}}</td>
             <td style="border:1px solid #ccc;">{{$at->detalle}}</td>
             <td style="border:1px solid #ccc;">{{$at->stTarea->name}}</td>
-            <td style="border:1px solid #ccc;">{{$at->created_at}}</td>
+            <td style="border:1px solid #ccc;">{{ date_format($at->created_at, 'd-m-Y')}}</td>
         </tr>
         @endforeach
     </tbody>
 </table>
 
-<p><strong >AVISOS:</strong></p>
+<table style="width:100%;height:auto;border:1px solid #ccc;font-size: .75em;">
+    <tr>
+        <td style="width:33%;text-align:left" align="left">
+            
+        </td>
+        <td style="width:33%;text-align:center" align="center">
+            <h4> AVISOS </h4>
+        </td>
+        <td style="width:33%;text-align:right" align="right">
+            
+        </td>
+    </tr>
+</table>
 
-<table id="dg1" style="width:100%;height:auto;border-collapse: collapse;font-size: 1em;">
+<table id="dg1" style="width:100%;height:auto;border-collapse: collapse;font-size: .75em;">
     <thead>
         <tr>
             <th style="border:1px solid #ccc;" bgcolor="#c1b7b5">Fecha</th>
@@ -120,15 +145,7 @@ body{
         @foreach($avisos as $a)
         <tr>
             <td style="border:1px solid #ccc;">
-            @if($a->dias_restantes<=0)
-                <small class="strong strong-danger">
-            @elseif($a->dias_restantes==1)
-                <small class="strong strong-warning"> 
-            @elseif($a->dias_restantes>=2)
-                <small class="strong strong-success"> 
-            @endif
-                {{$a->fecha}}
-            </small>
+                {{ Carbon\Carbon::parse($a->fecha)->format('d-m-Y')}}
             </td>
             <td style="border:1px solid #ccc;">{{$a->name}}</td>
             <td style="border:1px solid #ccc;">{{$a->detalle}}</td>

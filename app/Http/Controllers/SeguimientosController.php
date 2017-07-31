@@ -127,7 +127,7 @@ class SeguimientosController extends Controller {
 		$fecha=date('d-m-Y');
 		PDF::setOptions(['defaultFont' => 'arial']);
 			$pdf = PDF::loadView('seguimientos.showPrint', array('seguimiento'=>$seguimiento, 'sts'=>$sts, 'asignacionTareas'=>$asignacionTareas, 'avisos'=>$avisos, 'fecha'=>$fecha))
-						->setPaper('letter', 'landscape');
+						->setPaper('letter', 'portrait');
 			return $pdf->download('reporte.pdf');
 		/*return view('seguimientos.show', compact('seguimiento', 'sts', 'asignacionTareas', 'avisos'))
 					->with( 'list', AsignacionTarea::getListFromAllRelationApps() );
