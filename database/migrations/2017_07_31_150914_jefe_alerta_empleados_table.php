@@ -14,6 +14,9 @@ class JefeAlertaEmpleadosTable extends Migration
     public function up()
     {
         Schema::table('empleados', function(Blueprint $table) {
+            $table->boolean('extranjero_bnd');
+            $table->boolean('genero');
+            $table->boolean('alimenticia_bnd');
             $table->boolean('jefe_bnd');
             $table->integer('jefe_id')->unsigned();
             $table->boolean('alerta_bnd');

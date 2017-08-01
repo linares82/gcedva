@@ -46,7 +46,11 @@ class DocEmpleadosController extends Controller {
 		$input = $request->all();
 		$input['usu_alta_id']=Auth::user()->id;
 		$input['usu_mod_id']=Auth::user()->id;
-
+		if(!isset($input['doc_obligatorio'])){
+			$input['doc_obligatorio']=0;
+		}else{
+			$input['doc_obligatorio']=1;
+		}
 		//create data
 		DocEmpleado::create( $input );
 
@@ -102,6 +106,11 @@ class DocEmpleadosController extends Controller {
 	{
 		$input = $request->all();
 		$input['usu_mod_id']=Auth::user()->id;
+		if(!isset($input['doc_obligatorio'])){
+			$input['doc_obligatorio']=0;
+		}else{
+			$input['doc_obligatorio']=1;
+		}
 		//update data
 		$docEmpleado=$docEmpleado->find($id);
 		$docEmpleado->update( $input );

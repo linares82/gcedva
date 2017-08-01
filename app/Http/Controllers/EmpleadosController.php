@@ -69,6 +69,16 @@ class EmpleadosController extends Controller {
 		}else{
 			$input['alerta_bnd']=1;
 		}
+		if(!isset($input['alimenticia_bnd'])){
+			$input['alimenticia_bnd']=0;
+		}else{
+			$input['alimenticia_bnd']=1;
+		}
+		if(!isset($input['extranjero_bnd'])){
+			$input['extranjero_bnd']=0;
+		}else{
+			$input['extranjero_bnd']=1;
+		}
 
 		//dd($input);
 		$e=Empleado::create( $input );
@@ -116,8 +126,24 @@ class EmpleadosController extends Controller {
 		$responsables=Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
 						->where('plantel_id', '=', $empleado->plantel_id)
 						->pluck('name', 'id');
-		//dd($jefes);
-		return view('empleados.edit', compact('empleado', 'pivotDocEmpleado', 'jefes', 'responsables'))
+		$doc_existentes=DB::table('pivot_doc_empleados as pde')->select('doc_empleado_id')
+							->join('empleados as e', 'e.id', '=', 'pde.empleado_id')
+							->where('e.id', '=', $id)->get();
+		$de_array=array();
+		if($doc_existentes->isNotEmpty()){
+			foreach($doc_existentes as $de){
+				array_push($de_array, $de->doc_empleado_id);
+				
+			}
+			//dd($de_array);
+		}
+		
+		$documentos_faltantes=DB::table('doc_empleados')
+									->select()
+									->whereNotIn('id', $de_array)
+									->get();
+		//dd($documentos_faltantes);
+		return view('empleados.edit', compact('empleado', 'pivotDocEmpleado', 'jefes', 'responsables', 'documentos_faltantes'))
 			->with( 'list', Empleado::getListFromAllRelationApps() )
 			->with( 'list1', PivotDocEmpleado::getListFromAllRelationApps() );
 	}

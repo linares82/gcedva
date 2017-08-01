@@ -32,7 +32,7 @@ class Empleado extends Model
 						   'direccion','tel_fijo','tel_cel','cel_empresa','mail','mail_empresa','foto',
 						   'identificacion','contrato','evaluacion_psico','plantel_id','st_empleado_id', 
 						   'pendientes', 'user_id','usu_alta_id','usu_mod_id', 'jefe_bnd', 'jefe_id', 'alerta_bnd', 
-						   'dias_alerta', 'resp_alerta_id', 'fin_contrato'];
+						   'dias_alerta', 'resp_alerta_id', 'fin_contrato','extranjero_bnd', 'genero', 'alimenticia_bnd'];
 
 	public function usu_alta() {
 		return $this->hasOne('App\User', 'id', 'usu_alta_id');

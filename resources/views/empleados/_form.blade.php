@@ -116,40 +116,65 @@
                             <span class="help-block">{{ $errors->first("resp_alerta_id") }}</span>
                           @endif
                         </div>
-                        
+                        <div class="form-group col-md-4 @if($errors->has('plantel_id')) has-error @endif">
+                          <label for="plantel_id-field">Plantel</label>
+                          {!! Form::select("plantel_id", $list["Plantel"], null, array("class" => "form-control", "id" => "plantel_id-field")) !!}
+                          @if($errors->has("plantel_id"))
+                            <span class="help-block">{{ $errors->first("plantel_id") }}</span>
+                          @endif
+                        </div>
+                      
+                        <div class="form-group col-md-4 @if($errors->has('stpuesto_id')) has-error @endif">
+                          <label for="stpuesto_id-field">Estatus</label>
+                          {!! Form::select("st_empleado_id", $list["StEmpleado"], null, array("class" => "form-control", "id" => "st_empleado_id-field")) !!}
+                          @if($errors->has("st_empleado_id"))
+                            <span class="help-block">{{ $errors->first("stpuesto_id") }}</span>
+                          @endif
+                        </div>
+                        <div class="form-group col-md-4 @if($errors->has('user_id')) has-error @endif">
+                            <label for="plantel_id-field">Usuario 
+                                @permission('entrust')
+                                <a href="{!! route('entrust-gui::users.create') !!}" target="_blank">Crear usuario</a>
+                                @endpermission
+                              </label>
+                            {!! Form::select("user_id", $list["User"], null, array("class" => "form-control", "id" => "user_id-field")) !!}
+                            @if($errors->has("user_id"))
+                              <span class="help-block">{{ $errors->first("user_id") }}</span>
+                            @endif
+                        </div>
+                        <div class="form-group col-md-2 @if($errors->has('genero')) has-error @endif">
+                          <label for="Genero-field">Género</label><br/>
+                          <div class="form-group col-md-6 @if($errors->has('genero')) has-error @endif">
+                            {!! Form::radio("genero", 1, null, [ "id" => "genero-field"]) !!}
+                            <label for="Genero-field">Masculino</label>
+                          </div>
+                          <div class="form-group col-md-6 @if($errors->has('genero')) has-error @endif">
+                            {!! Form::radio("genero", 2, null, [ "id" => "genero-field"]) !!}
+                            <label for="Genero-field">Femenino</label>
+                          </div>
+                          
+                          @if($errors->has("genero_bnd"))
+                            <span class="help-block">{{ $errors->first("genero") }}</span>
+                          @endif
+                        </div>  
+                        <div class="form-group col-md-2 @if($errors->has('extranjero_bnd')) has-error @endif">
+                          <label for="extranjero_bnd-field">Extranjero</label>
+                          {!! Form::checkbox("extranjero_bnd", 1, null, [ "id" => "extranjero_bnd-field"]) !!}
+                          @if($errors->has("extranjero_bnd"))
+                            <span class="help-block">{{ $errors->first("extranjero_bnd") }}</span>
+                          @endif
+                        </div>  
+                        <div class="form-group col-md-3 @if($errors->has('alimenticia_bnd')) has-error @endif">
+                          <label for="alimenticia_bnd-field">Proporciona pensión alimenticia</label>
+                          {!! Form::checkbox("alimenticia_bnd", 1, null, [ "id" => "alimenticia_bnd-field"]) !!}
+                          @if($errors->has("alimenticia_bnd"))
+                            <span class="help-block">{{ $errors->first("alimenticia_bnd") }}</span>
+                          @endif
+                        </div>  
                       </div>
                     </div>
                     
-                    <div class="box box-default">
-                      <div class="box-body">
-                      <div class="form-group col-md-4 @if($errors->has('plantel_id')) has-error @endif">
-                         <label for="plantel_id-field">Plantel</label>
-                         {!! Form::select("plantel_id", $list["Plantel"], null, array("class" => "form-control", "id" => "plantel_id-field")) !!}
-                         @if($errors->has("plantel_id"))
-                          <span class="help-block">{{ $errors->first("plantel_id") }}</span>
-                         @endif
-                      </div>
                     
-                      <div class="form-group col-md-4 @if($errors->has('stpuesto_id')) has-error @endif">
-                        <label for="stpuesto_id-field">Estatus</label>
-                        {!! Form::select("st_empleado_id", $list["StEmpleado"], null, array("class" => "form-control", "id" => "st_empleado_id-field")) !!}
-                        @if($errors->has("st_empleado_id"))
-                          <span class="help-block">{{ $errors->first("stpuesto_id") }}</span>
-                        @endif
-                      </div>
-                      <div class="form-group col-md-4 @if($errors->has('user_id')) has-error @endif">
-                          <label for="plantel_id-field">Usuario 
-                              @permission('entrust')
-                              <a href="{!! route('entrust-gui::users.create') !!}" target="_blank">Crear usuario</a>
-                              @endpermission
-                            </label>
-                          {!! Form::select("user_id", $list["User"], null, array("class" => "form-control", "id" => "user_id-field")) !!}
-                          @if($errors->has("user_id"))
-                            <span class="help-block">{{ $errors->first("user_id") }}</span>
-                          @endif
-                        </div>
-                      </div>
-                      </div>
                     <div class="box box-default">
                       <div class="box-body">
                         <div class="form-group col-md-1 @if($errors->has('alerta_bnd')) has-error @endif">
@@ -201,11 +226,11 @@
                             <span class="help-block">{{ $errors->first("archivo") }}</span>
                           @endif
                         </div>
-                        <div class="form-group col-md-12">
+                        <div class="form-group col-md-6">
                           <table class="table table-condensed table-striped">
                             <thead>
                               <tr>
-                                <th>Documento</th><th>Link</th><th></th>
+                                <th>Documento Agregados</th><th>Link</th><th></th>
                               </tr>
                             </thead>
                             <tbody>
@@ -220,6 +245,41 @@
                                 <td>
                                   <a class="btn btn-xs btn-danger" href="{{route('pivotDocEmpleados.destroy', $doc->id)}}">Eliminar</a>
                                 </td>
+                              </tr>
+                              @endforeach
+                            </tbody>
+                          </table>
+                        </div>
+                        <div class="form-group col-md-6">
+                          <table class="table table-condensed table-striped">
+                            <thead>
+                              <tr>
+                                <th>Documentos Faltantes</th><th>Obligatorio</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              @foreach($documentos_faltantes as $df)
+                              <tr>
+                                <td>
+                                  {{ $df->name }}
+                                </td>
+                                <td>
+                                  @if($df->doc_obligatorio == 1)
+                                    <button class="btn btn-success btn-sm"><span class="glyphicon glyphicon-ok"></span></button>
+                                  @else
+                                    @if($empleado->extranjero_bnd==1 and $df->id==18)
+                                      <button class="btn btn-success btn-sm"><span class="glyphicon glyphicon-ok"></span></button>
+                                    @elseif($empleado->alimenticia_bnd==1 and $df->id==17)
+                                      <button class="btn btn-success btn-sm"><span class="glyphicon glyphicon-ok"></span></button>
+                                    @elseif($empleado->genero==1 and $df->id==14)
+                                      <button class="btn btn-success btn-sm"><span class="glyphicon glyphicon-ok"></span></button>
+                                    @else
+                                      <button class="btn btn-danger btn-sm"><span class="glyphicon glyphicon-remove"></span></button>
+                                    @endif
+                                    
+                                  @endif
+                                </td>
+                                
                               </tr>
                               @endforeach
                             </tbody>

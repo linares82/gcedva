@@ -17,6 +17,7 @@ class CreateDocEmpleadosTable extends Migration {
             $table->string('name');
             $table->integer('usu_alta_id')->unsigned();
             $table->integer('usu_mod_id')->unsigned();
+			$table->boolean('doc_obligatorio');
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('usu_mod_id')->references('id')->on('users');
