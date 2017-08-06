@@ -57,7 +57,11 @@ class HomeController extends Controller
                     ->where('c.plantel_id', '=', $e->plantel_id)
                     ->count();
         //dd($e->plantel->meta_venta);
-        $avance=(($a_2*100)/$e->plantel->meta_venta);
+        $avance=0;
+        if($a_2>0){
+            $avance=(($a_2*100)/$e->plantel->meta_venta);
+        }
+        
         //dd($a_3."*100 / ".$e->plantel->meta_venta);
         $a_3=Seguimiento::where('st_seguimiento_id', '=', 3)
                     ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
