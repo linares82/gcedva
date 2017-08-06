@@ -1711,55 +1711,55 @@ Route::get('pivotDocEmpleados/index', array(
 Route::get('pivotAvisoGralEmpleados/index', array(
         'as' => 'pivotAvisoGralEmpleados.index',
         //'middleware' => 'permission:pivotAvisoGralEmpleados.index',
-        'uses' => 'pivotAvisoGralEmpleadosController@index')
+        'uses' => 'PivotAvisoGralEmpleadosController@index')
     )->middleware('auth');
     Route::get('/pivotAvisoGralEmpleados/create', array(
         'as' => 'pivotAvisoGralEmpleados.create',
         //'middleware' => 'permission:pivotAvisoGralEmpleados.create',
-        'uses' => 'pivotAvisoGralEmpleadosController@create')
+        'uses' => 'PivotAvisoGralEmpleadosController@create')
     )->middleware('auth');
     Route::post('pivotAvisoGralEmpleados/store', array(
         'as' => 'pivotAvisoGralEmpleados.store',
         //'middleware' => 'permission:pivotAvisoGralEmpleados.store',
-        'uses' => 'pivotAvisoGralEmpleadosController@store')
+        'uses' => 'PivotAvisoGralEmpleadosController@store')
     )->middleware('auth');
     Route::get('/pivotAvisoGralEmpleados/show/{id}', array(
         'as' => 'pivotAvisoGralEmpleados.show',
         //'middleware' => 'permission:pivotAvisoGralEmpleados.show',
-        'uses' => 'pivotAvisoGralEmpleadosController@show')
+        'uses' => 'PivotAvisoGralEmpleadosController@show')
     )->middleware('auth');
     Route::get('/pivotAvisoGralEmpleados/edit/{id}', array(
         'as' => 'pivotAvisoGralEmpleados.edit',
         //'middleware' => 'permission:pivotAvisoGralEmpleados.edit',
-        'uses' => 'pivotAvisoGralEmpleadosController@edit')
+        'uses' => 'PivotAvisoGralEmpleadosController@edit')
     )->middleware('auth');
     Route::post('/pivotAvisoGralEmpleados/update/{id}', array(
         'as' => 'pivotAvisoGralEmpleados.update',
         //'middleware' => 'permission:pivotAvisoGralEmpleados.update',
-        'uses' => 'pivotAvisoGralEmpleadosController@update')
+        'uses' => 'PivotAvisoGralEmpleadosController@update')
     )->middleware('auth');
     Route::get('/pivotAvisoGralEmpleados/enviar/{id}', array(
         'as' => 'pivotAvisoGralEmpleados.enviar',
         //'middleware' => 'permission:pivotAvisoGralEmpleados.enviar',
-        'uses' => 'pivotAvisoGralEmpleadosController@enviar')
+        'uses' => 'PivotAvisoGralEmpleadosController@enviar')
     )->middleware('auth');
     Route::get('/pivotAvisoGralEmpleados/leido/{id}', array(
         'as' => 'pivotAvisoGralEmpleados.leido',
         //'middleware' => 'permission:pivotAvisoGralEmpleados.enviar',
-        'uses' => 'pivotAvisoGralEmpleadosController@leido')
+        'uses' => 'PivotAvisoGralEmpleadosController@leido')
     )->middleware('auth');
     Route::get('/pivotAvisoGralEmpleados/inactivo', array(
         'as' => 'pivotAvisoGralEmpleados.inactivo',
         //'middleware' => 'permission:pivotAvisoGralEmpleados.inactivo',
-        'uses' => 'pivotAvisoGralEmpleadosController@inactivo')
+        'uses' => 'PivotAvisoGralEmpleadosController@inactivo')
     )->middleware('auth');
     Route::get('/pivotAvisoGralEmpleados/destroy/{id}', array(
         'as' => 'pivotAvisoGralEmpleados.destroy',
         //'middleware' => 'permission:pivotAvisoGralEmpleados.destroy',
-        'uses' => 'pivotAvisoGralEmpleadosController@destroy')
+        'uses' => 'PivotAvisoGralEmpleadosController@destroy')
     )->middleware('auth');
     Route::get('/pivotAvisoGralEmpleados/duplicate/{id}', array(
         'as' => 'pivotAvisoGralEmpleados.duplicate',
         //'middleware' => 'permission:pivotAvisoGralEmpleados.duplicate',
-        'uses' => 'pivotAvisoGralEmpleadosController@duplicate')
+        'uses' => 'PivotAvisoGralEmpleadosController@duplicate')
     )->middleware('auth');
