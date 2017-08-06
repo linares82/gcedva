@@ -42,35 +42,38 @@
                                     <span class="help-block">{{ $errors->first("empleado_id") }}</span>
                                 @endif
                         </div>
-                        <div class="form-group col-md-12">
-                            <table class="table table-condensed table-striped">
-                                <tr>
-                                    <th>Destinatario</th><th>Plantel</th><th>Puesto</th>
-                                    <th><a href="{{route('pivotAvisoGralEmpleados.enviar', $avisoGral->id)}}" class="btn btn-xs btn-info">Enviar</a></th>
-                                    <th>Leido</th>
-                                    <th></th>
-                                </tr>
-                                @foreach($avisoGral->pivotAvisoGralEmpleado as $e)
+                        @if(isset($avisoGral->pivotAvisoGralEmpleado))
+
+                            <div class="form-group col-md-12">
+                                <table class="table table-condensed table-striped">
                                     <tr>
-                                        <td>{!! $e->empleado->nombre." ".$e->empleado->ape_paterno." ".$e->empleado->ape_materno !!}</td>
-                                        <td>{!! $e->empleado->plantel->razon !!}</td>
-                                        <td>{!! $e->empleado->puesto->name !!}</td>
-                                        <td>
-                                            {!! Form::checkbox("enviado", 
-                                                                $e->enviado, 
-                                                                $e->enviado,
-                                                                array('disabled'=>'disabled')) !!}
-                                        </td>
-                                        <td>{!! Form::checkbox("enviado", 
-                                                                $e->leido, 
-                                                                $e->leido,
-                                                                array('disabled'=>'disabled')) !!}
-                                        </td>
-                                        <td><a href="{{route('pivotAvisoGralEmpleados.destroy', $e->id)}}" class="btn btn-xs btn-danger">Eliminar</a></td>
+                                        <th>Destinatario</th><th>Plantel</th><th>Puesto</th>
+                                        <th><a href="{{route('pivotAvisoGralEmpleados.enviar', $avisoGral->id)}}" class="btn btn-xs btn-info">Enviar</a></th>
+                                        <th>Leido</th>
+                                        <th></th>
                                     </tr>
-                                @endforeach
-                            </table>
-                        </div>
+                                    @foreach($avisoGral->pivotAvisoGralEmpleado as $e)
+                                        <tr>
+                                            <td>{!! $e->empleado->nombre." ".$e->empleado->ape_paterno." ".$e->empleado->ape_materno !!}</td>
+                                            <td>{!! $e->empleado->plantel->razon !!}</td>
+                                            <td>{!! $e->empleado->puesto->name !!}</td>
+                                            <td>
+                                                {!! Form::checkbox("enviado", 
+                                                                    $e->enviado, 
+                                                                    $e->enviado,
+                                                                    array('disabled'=>'disabled')) !!}
+                                            </td>
+                                            <td>{!! Form::checkbox("enviado", 
+                                                                    $e->leido, 
+                                                                    $e->leido,
+                                                                    array('disabled'=>'disabled')) !!}
+                                            </td>
+                                            <td><a href="{{route('pivotAvisoGralEmpleados.destroy', $e->id)}}" class="btn btn-xs btn-danger">Eliminar</a></td>
+                                        </tr>
+                                    @endforeach
+                                </table>
+                            </div>
+                        @endif
                     </div>
                     
                     <div class="form-group col-md-4">
