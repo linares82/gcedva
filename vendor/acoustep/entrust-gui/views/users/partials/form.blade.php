@@ -25,7 +25,7 @@
 @endif
 <div class="form-group">
     <label for="roles">Roles</label>
-    <select name="roles[]" id="roles" multiple class="form-control">
+    <select class="select_seguridad" name="roles[]" id="roles" multiple class="form-control">
         @foreach($roles as $index => $role)
             <option value="{{ $index }}" {{ ((in_array($index, old('roles', []))) || ( ! Session::has('errors') && $user->roles->contains('id', $index))) ? 'selected' : '' }}>{{ $role }}</option>
         @endforeach

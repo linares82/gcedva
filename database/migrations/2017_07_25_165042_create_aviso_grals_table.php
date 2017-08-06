@@ -15,7 +15,7 @@ class CreateAvisoGralsTable extends Migration {
 		Schema::create('aviso_grals', function(Blueprint $table) {
             $table->increments('id');
             $table->string('desc_corta');
-			$table->string('aviso');
+			$table->text('aviso');
             $table->date('inicio');
             $table->date('fin');
 			$table->integer('plantel_id')->unsigned();

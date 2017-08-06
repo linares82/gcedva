@@ -24,6 +24,7 @@ class AddFieldsPlantelsTable extends Migration
             $table->string('cp')->nullable();
             $table->string('municipio')->nullable();
             $table->string('estado')->nullable();
+            $table->integer('meta_venta')->nullable();
             $table->foreign('tpo_plantel_id')->references('id')->on('tpo_plantels');
         });
     }

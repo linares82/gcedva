@@ -50,26 +50,37 @@
 
                             
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_aviso_cont">DESC. CORTA</label>
+                                <label class="col-sm-2 control-label" for="q_aviso_grals.desc_corta_cont">DESC. CORTA</label>
                                 <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['desc_corta_cont']) ?: '' }}" name="q[aviso_cont]" id="q_aviso_cont" />
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['aviso_grals.desc_corta_cont']) ?: '' }}" name="q[aviso_grals.desc_corta_cont]" id="q_aviso_grals.desc_corta_cont" />
                                 </div>
                             </div>
-                                
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_inicio_cont">INICIO</label>
+                                <label class="col-sm-2 control-label" for="q_empleados.nombre_cont">DESTINATARIO</label>
                                 <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['inicio_cont']) ?: '' }}" name="q[inicio_cont]" id="q_inicio_cont" />
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['empleados.nombre_cont']) ?: '' }}" name="q[empleados.nombre_cont]" id="q_empleados.nombre_cont" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="q_empleados.ape_paterno_cont">APELLIDO PATERNO</label>
+                                <div class=" col-sm-9">
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['empleados.ape_paterno_cont']) ?: '' }}" name="q[empleados.ape_paterno_cont]" id="q_empleados.ape_paterno_cont" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="q_empleados.ape_materno_cont">APELLIDO MATERNO</label>
+                                <div class=" col-sm-9">
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['empleados.ape_materno_cont']) ?: '' }}" name="q[empleados.ape_materno_cont]" id="q_empleados.ape_materno_cont" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="q_created_at">FECHA</label>
+                                <div class=" col-sm-9">
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['created_at_cont']) ?: '' }}" name="q[created_at_cont]" id="q_created_at_cont" />
                                 </div>
                             </div>
                             
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_fin_cont">FIN</label>
-                                <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['fin_cont']) ?: '' }}" name="q[fin_cont]" id="q_fin_cont" />
-                                </div>
-                            </div>
-
+                            
                             <div class="form-group">
                                 <div class="col-sm-10 col-sm-offset-2">
                                     <input type="submit" name="commit" value="Buscar" class="btn btn-default btn-xs" />
@@ -92,9 +103,11 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'desc_corta', 'title' => 'DESC. CORTA'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'inicio', 'title' => 'INICIO'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'fin', 'title' => 'FIN'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'aviso_grals.desc_corta', 'title' => 'Asunto'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'empleados.nombre', 'title' => 'destinatario'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'empleados.ape_paterno', 'title' => 'destinatario'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'empleados.ape_materno', 'title' => 'destinatario'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'created_at', 'title' => 'fecha'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
@@ -102,20 +115,21 @@
                     <tbody>
                         @foreach($avisoGrals as $avisoGral)
                             <tr>
-                                <td><a href="{{ route('avisoGrals.show', $avisoGral->id) }}">{{$avisoGral->id}}</a></td>
-                                <td>{{$avisoGral->desc_corta}}</td>
-                    <td>{{$avisoGral->inicio}}</td>
-                    <td>{{$avisoGral->fin}}</td>
-                    
+                                <td><a href="{{ route('avisoGrals.show', $avisoGral->aviso_gral_id) }}">{{$avisoGral->avisoGral->id}}</a></td>
+                                <td>{{$avisoGral->avisoGral->desc_corta}}</td>
+                                <td>{{$avisoGral->empleado->nombre}}</td>
+                                <td>{{$avisoGral->empleado->ape_paterno}}</td>
+                                <td>{{$avisoGral->empleado->ape_materno}}</td>
+                                <td>{{$avisoGral->created_at}}</td>
                                 <td class="text-right">
                                     @permission('avisoGrals.edit')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('avisoGrals.duplicate', $avisoGral->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
+                                    <a class="btn btn-xs btn-primary" href="{{ route('avisoGrals.duplicate', $avisoGral->aviso_gral_id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
                                     @endpermission
                                     @permission('avisoGrals.edit')
-                                    <a class="btn btn-xs btn-warning" href="{{ route('avisoGrals.edit', $avisoGral->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
+                                    <a class="btn btn-xs btn-warning" href="{{ route('avisoGrals.edit', $avisoGral->aviso_gral_id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
                                     @endpermission
                                     @permission('avisoGrals.destroy')
-                                    {!! Form::model($avisoGral, array('route' => array('avisoGrals.destroy', $avisoGral->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}
+                                    {!! Form::model($avisoGral->avisoGral, array('route' => array('avisoGrals.destroy', $avisoGral->aviso_gral_id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}
                                         <button type="submit" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> Borrar</button>
                                     {!! Form::close() !!}
                                     @endpermission
@@ -133,3 +147,23 @@
     </div>
 
 @endsection
+@push('scripts')
+  <script>
+  
+    $(document).ready(function() {
+        // assuming the controls you want to attach the plugin to
+          // have the "datepicker" class set
+          //Campo de fecha
+          $('#q_created_at_cont').Zebra_DatePicker({
+            days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
+            months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+            readonly_element: false,
+            lang_clear_date: 'Limpiar',
+            show_select_today: 'Hoy',
+          });  
+       
+        });
+
+
+  </script>
+@endpush

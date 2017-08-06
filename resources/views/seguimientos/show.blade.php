@@ -59,7 +59,7 @@
                             </p>
                             <div class="form-group col-md-12 @if($errors->has('st_seguimiento_id')) has-error @endif">
                             <label for="st_seguimiento_id-field">Estatus del seguimiento</label>
-                            {!! Form::select("st_seguimiento_id", $sts,null, array("class" => "form-control", "id" => "st_seguimiento_id-field")) !!}
+                            {!! Form::select("st_seguimiento_id", $sts,null, array("class" => "form-control select_seguridad", "id" => "st_seguimiento_id-field")) !!}
                             @if($errors->has("st_seguimiento_id"))
                                 <span class="help-block">{{ $errors->first("st_seguimiento_id") }}</span>
                             @endif
@@ -187,7 +187,7 @@
                     {!! Form::open(array('route' => 'asignacionTareas.storeModal')) !!}
                     <div class="form-group col-md-6 @if($errors->has('tarea_id')) has-error @endif">
                        <label for="tarea_id-field">Tarea</label>
-                       {!! Form::select("tarea_id", $list["Tarea"], null, array("class" => "form-control", "id" => "tarea_id-field", 'style'=>'width:100%')) !!}
+                       {!! Form::select("tarea_id", $list["Tarea"], null, array("class" => "form-control select_seguridad", "id" => "tarea_id-field", 'style'=>'width:100%')) !!}
                        {!! Form::hidden("cliente_id", $seguimiento->cliente_id, array("class" => "form-control", "id" => "cliente_id-field")) !!}
                        {!! Form::hidden("empleado_id", $seguimiento->cliente->empleado_id, array("class" => "form-control", "id" => "empleado_id-field")) !!}
                        @if($errors->has("tarea_id"))
@@ -196,14 +196,14 @@
                     </div>
                     <div class="form-group col-md-6 @if($errors->has('asunto_id')) has-error @endif">
                        <label for="asunto_id-field">Asunto</label>
-                       {!! Form::select("asunto_id", $list["Asunto"], null, array("class" => "form-control", "id" => "asunto_id-field", 'style'=>'width:100%')) !!}
+                       {!! Form::select("asunto_id", $list["Asunto"], null, array("class" => "form-control select_seguridad", "id" => "asunto_id-field", 'style'=>'width:100%')) !!}
                        @if($errors->has("asunto_id"))
                         <span class="help-block">{{ $errors->first("asunto_id") }}</span>
                        @endif
                     </div>
                     <div class="form-group col-md-6 @if($errors->has('st_tarea_id')) has-error @endif">
                        <label for="st_tarea_id-field">Estatus</label>
-                       {!! Form::select("st_tarea_id", $list["StTarea"], null, array("class" => "form-control", "id" => "st_tarea_id-field", 'style'=>'width:100%')) !!}
+                       {!! Form::select("st_tarea_id", $list["StTarea"], null, array("class" => "form-control select_seguridad", "id" => "st_tarea_id-field", 'style'=>'width:100%')) !!}
                        @if($errors->has("st_tarea_id"))
                         <span class="help-block">{{ $errors->first("st_tarea_id") }}</span>
                        @endif
@@ -251,7 +251,7 @@
                             {!! Form::hidden("seguimiento_id", $seguimiento->id, array("class" => "form-control", "id" => "seguimiento_id-field")) !!}
                             {!! Form::hidden("cliente_id", $seguimiento->cliente_id, array("class" => "form-control", "id" => "cliente_id-field")) !!}
                             <label for="asunto_id-field">Asunto</label>
-                            {!! Form::select("asunto_id", $list["Asunto"], null, array("class" => "form-control", "id" => "asunto_id-field", 'style'=>'width:100%')) !!}
+                            {!! Form::select("asunto_id", $list["Asunto"], null, array("class" => "form-control select_seguridad", "id" => "asunto_id-field", 'style'=>'width:100%')) !!}
                             @if($errors->has("asunto_id"))
                                 <span class="help-block">{{ $errors->first("asunto_id") }}</span>
                             @endif

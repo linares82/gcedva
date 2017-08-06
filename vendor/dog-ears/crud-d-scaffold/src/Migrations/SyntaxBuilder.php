@@ -278,6 +278,7 @@ class SyntaxBuilder
 
             // Fields to index view
             $syntax = <<<EOT
+                            <!--
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_[[columnName_small]]_gt">[[columnName_large]]</label>
                                 <div class=" col-sm-4">
@@ -288,6 +289,7 @@ class SyntaxBuilder
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['[[columnName_small]]_lt']) ?: '' }}" name="q[[[columnName_small]]_lt]" id="q_[[columnName_small]]_lt" />
                                 </div>
                             </div>
+                            -->
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_[[columnName_small]]_cont">[[columnName_large]]</label>
                                 <div class=" col-sm-9">

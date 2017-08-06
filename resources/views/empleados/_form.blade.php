@@ -90,14 +90,14 @@
                       <div class="box-body">
                         <div class="form-group col-md-4 @if($errors->has('puesto_id')) has-error @endif">
                           <label for="puesto_id-field">Puesto</label>
-                          {!! Form::select("puesto_id", $list["Puesto"], null, array("class" => "form-control", "id" => "puesto_id-field")) !!}
+                          {!! Form::select("puesto_id", $list["Puesto"], null, array("class" => "form-control select_seguridad", "id" => "puesto_id-field")) !!}
                           @if($errors->has("puesto_id"))
                             <span class="help-block">{{ $errors->first("puesto_id") }}</span>
                           @endif
                         </div>
                         <div class="form-group col-md-4 @if($errors->has('area_id')) has-error @endif">
                           <label for="area_id-field">Area</label>
-                          {!! Form::select("area_id", $list["Area"], null, array("class" => "form-control", "id" => "area_id-field")) !!}
+                          {!! Form::select("area_id", $list["Area"], null, array("class" => "form-control select_seguridad", "id" => "area_id-field")) !!}
                           @if($errors->has("area_id"))
                             <span class="help-block">{{ $errors->first("area_id") }}</span>
                           @endif
@@ -111,14 +111,14 @@
                         </div>
                         <div class="form-group col-md-4 @if($errors->has('jefe_id')) has-error @endif">
                           <label for="jefe_id-field">Jefe</label>
-                          {!! Form::select("jefe_id", $jefes, null, array("class" => "form-control", "id" => "jefe_id-field")) !!}
+                          {!! Form::select("jefe_id", $jefes, null, array("class" => "form-control select_seguridad", "id" => "jefe_id-field")) !!}
                           @if($errors->has("jefe_id"))
                             <span class="help-block">{{ $errors->first("resp_alerta_id") }}</span>
                           @endif
                         </div>
                         <div class="form-group col-md-4 @if($errors->has('plantel_id')) has-error @endif">
                           <label for="plantel_id-field">Plantel</label>
-                          {!! Form::select("plantel_id", $list["Plantel"], null, array("class" => "form-control", "id" => "plantel_id-field")) !!}
+                          {!! Form::select("plantel_id", $list["Plantel"], null, array("class" => "form-control select_seguridad", "id" => "plantel_id-field")) !!}
                           @if($errors->has("plantel_id"))
                             <span class="help-block">{{ $errors->first("plantel_id") }}</span>
                           @endif
@@ -137,7 +137,7 @@
                                 <a href="{!! route('entrust-gui::users.create') !!}" target="_blank">Crear usuario</a>
                                 @endpermission
                               </label>
-                            {!! Form::select("user_id", $list["User"], null, array("class" => "form-control", "id" => "user_id-field")) !!}
+                            {!! Form::select("user_id", $list["User"], null, array("class" => "form-control select_seguridad", "id" => "user_id-field")) !!}
                             @if($errors->has("user_id"))
                               <span class="help-block">{{ $errors->first("user_id") }}</span>
                             @endif
@@ -193,7 +193,7 @@
                         </div>
                         <div class="form-group col-md-4 @if($errors->has('resp_alerta_id')) has-error @endif">
                           <label for="resp_alerta_id-field">Reponsable</label>
-                          {!! Form::select("resp_alerta_id", $responsables, null, array("class" => "form-control", "id" => "resp_alerta_id-field")) !!}
+                          {!! Form::select("resp_alerta_id", $responsables, null, array("class" => "form-control select_seguridad", "id" => "resp_alerta_id-field")) !!}
                           @if($errors->has("resp_alerta_id"))
                             <span class="help-block">{{ $errors->first("resp_alerta_id") }}</span>
                           @endif
@@ -214,7 +214,7 @@
                       <div class="box-body">
                         <div class="form-group col-md-6 @if($errors->has('doc_empleado_id')) has-error @endif">
                           <label for="doc_empleado_id-field">Documento</label>
-                          {!! Form::select("doc_empleado_id", $list1["DocEmpleado"], null, array("class" => "form-control", "id" => "doc_empleado_id-field")) !!}
+                          {!! Form::select("doc_empleado_id", $list1["DocEmpleado"], null, array("class" => "form-control select_seguridad", "id" => "doc_empleado_id-field")) !!}
                           @if($errors->has("doc_empleado_id"))
                             <span class="help-block">{{ $errors->first("doc_empleado_id") }}</span>
                           @endif
@@ -265,16 +265,16 @@
                                 </td>
                                 <td>
                                   @if($df->doc_obligatorio == 1)
-                                    <button class="btn btn-success btn-sm"><span class="glyphicon glyphicon-ok"></span></button>
+                                    <button class="btn btn-success btn-xs"><span class="glyphicon glyphicon-ok"></span></button>
                                   @else
                                     @if($empleado->extranjero_bnd==1 and $df->id==18)
-                                      <button class="btn btn-success btn-sm"><span class="glyphicon glyphicon-ok"></span></button>
+                                      <button class="btn btn-success btn-xs"><span class="glyphicon glyphicon-ok"></span></button>
                                     @elseif($empleado->alimenticia_bnd==1 and $df->id==17)
-                                      <button class="btn btn-success btn-sm"><span class="glyphicon glyphicon-ok"></span></button>
+                                      <button class="btn btn-success btn-xs"><span class="glyphicon glyphicon-ok"></span></button>
                                     @elseif($empleado->genero==1 and $df->id==14)
-                                      <button class="btn btn-success btn-sm"><span class="glyphicon glyphicon-ok"></span></button>
+                                      <button class="btn btn-success btn-xs"><span class="glyphicon glyphicon-ok"></span></button>
                                     @else
-                                      <button class="btn btn-danger btn-sm"><span class="glyphicon glyphicon-remove"></span></button>
+                                      <button class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-remove"></span></button>
                                     @endif
                                     
                                   @endif

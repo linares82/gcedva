@@ -2,7 +2,7 @@
                       <div class="box-body"> 
                       <div class="form-group col-md-4 @if($errors->has('tpo_plantel_id')) has-error @endif">
                          <label for="tpo_plantel_id-field">Tipo Plantel</label>
-                         {!! Form::select("tpo_plantel_id", $list["TpoPlantel"], null, array("class" => "form-control", "id" => "tpo_plantel_id-field")) !!}
+                         {!! Form::select("tpo_plantel_id", $list["TpoPlantel"], null, array("class" => "form-control select_seguridad", "id" => "tpo_plantel_id-field")) !!}
                          @if($errors->has("tpo_plantel_id"))
                           <span class="help-block">{{ $errors->first("tpo_plantel_id") }}</span>
                          @endif
@@ -118,9 +118,16 @@
                       </div>
                       <div class="form-group col-md-4 @if($errors->has('lectivo_id')) has-error @endif">
                          <label for="lectivo_id-field">Periodo Lectivo</label>
-                         {!! Form::select("lectivo_id", $list["Lectivo"], null, array("class" => "form-control", "id" => "lectivo_id-field")) !!}
+                         {!! Form::select("lectivo_id", $list["Lectivo"], null, array("class" => "form-control select_seguridado", "id" => "lectivo_id-field")) !!}
                          @if($errors->has("lectivo_id"))
                           <span class="help-block">{{ $errors->first("lectivo_id") }}</span>
+                         @endif
+                      </div>
+                      <div class="form-group col-md-4 @if($errors->has('meta_venta')) has-error @endif">
+                         <label for="meta_venta-field">Meta Venta</label>
+                         {!! Form::text("meta_venta", null, array("class" => "form-control", "id" => "meta_venta-field")) !!}
+                         @if($errors->has("meta_venta"))
+                          <span class="help-block">{{ $errors->first("meta_venta") }}</span>
                          @endif
                       </div>
                     </div>

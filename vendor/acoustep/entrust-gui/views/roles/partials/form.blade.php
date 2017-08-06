@@ -13,7 +13,7 @@
 </div>
 <div class="form-group">
     <label for="permissions">Permissions</label>
-    <select name="permissions[]" multiple class="form-control">
+    <select class="select_seguridad" name="permissions[]" multiple class="form-control">
       @foreach($relations as $index => $relation)
         <option value="{{ $index }}" {{ ((in_array($index, old('permissions', []))) || ( ! Session::has('errors') && $model->perms->contains('id', $index))) ? 'selected' : '' }}>{{ $relation }}</option>
       @endforeach

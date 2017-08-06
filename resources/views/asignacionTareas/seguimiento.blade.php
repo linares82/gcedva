@@ -112,7 +112,7 @@
                     </div>
                     <div class="form-group col-md-6 @if($errors->has('estatus_id')) has-error @endif">
                        <label for="estatus_id-field">Estatus</label>
-                       {!! Form::select("estatus_id", $list["StTarea"], null, array("class" => "form-control", "id" => "estatus_id-field")) !!}
+                       {!! Form::select("estatus_id", $list["StTarea"], null, array("class" => "form-control select_seguridad", "id" => "estatus_id-field")) !!}
                        @if($errors->has("estatus_id"))
                         <span class="help-block">{{ $errors->first("estatus_id") }}</span>
                        @endif

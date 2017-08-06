@@ -127,7 +127,7 @@
                                 <label for="q_st_seguimiento_id_cont">ESTATUS SEGUIMIENTO</label>
                                 
                                     <!--<input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['clientes.st_cliente_id_cont']) ?: '' }}" name="q[clientes.st_cliente_id_cont]" id="q_st_clientes.name_cont" />-->
-                                    {!! Form::select("st_seguimiento_id", $list["StSeguimiento"], "{{ @(Request::input('q')['st_seguimiento_id_cont']) ?: '' }}", array("class" => "form-control", "name"=>"q[st_seguimiento_id_cont]", "id"=>"q_st_seguimiento_id_cont", "style"=>"width:100%;" )) !!}
+                                    {!! Form::select("st_seguimiento_id", $list["StSeguimiento"], "{{ @(Request::input('q')['st_seguimiento_id_cont']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[st_seguimiento_id_cont]", "id"=>"q_st_seguimiento_id_cont", "style"=>"width:100%;" )) !!}
                                 
                             </div>
 
@@ -135,13 +135,13 @@
                             <div class="form-group col-md-4" >
                                 <label for="q_clientes.plantel_id_cont">PLANTEL</label>
                                 
-                                    {!! Form::select("clientes.plantel_id", $list1["Plantel"], "{{ @(Request::input('q')['clientes.plantel_id_cont']) ?: '' }}", array("class" => "form-control", "name"=>"q[clientes.plantel_id_cont]", "id"=>"q_clientes.plantel_id_cont", "style"=>"width:100%;")) !!}
+                                    {!! Form::select("clientes.plantel_id", $list1["Plantel"], "{{ @(Request::input('q')['clientes.plantel_id_cont']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[clientes.plantel_id_cont]", "id"=>"q_clientes.plantel_id_cont", "style"=>"width:100%;")) !!}
                                 
                             </div>
                             
                             <div class="form-group col-md-4" style="clear:left;">
                                 <label for="q_clientes.empleado_id_cont">EMPLEADO</label>
-                                    {!! Form::select("clientes.empleado_id", $list1["Empleado"], "{{ @(Request::input('q')['clientes.empleado_id_cont']) ?: '' }}", array("class" => "form-control", "name"=>"q[clientes.empleado_id_cont]", "id"=>"q_clientes.empleado_id_cont", "style"=>"width:100%;" )) !!}
+                                    {!! Form::select("clientes.empleado_id", $list1["Empleado"], "{{ @(Request::input('q')['clientes.empleado_id_cont']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[clientes.empleado_id_cont]", "id"=>"q_clientes.empleado_id_cont", "style"=>"width:100%;" )) !!}
                             </div>
                             
 

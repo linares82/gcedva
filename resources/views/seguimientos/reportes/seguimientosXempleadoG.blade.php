@@ -39,42 +39,42 @@
                 </div>
                 <div class="form-group col-md-6 @if($errors->has('plantel_f')) has-error @endif">
                     <label for="plantel_f-field">Plantel de:</label>
-                    {!! Form::select("plantel_f", $list["Plantel"], null, array("class" => "form-control", "id" => "plantel_f-field")) !!}
+                    {!! Form::select("plantel_f", $list["Plantel"], null, array("class" => "form-control select_seguridad", "id" => "plantel_f-field")) !!}
                     @if($errors->has("plantel_f"))
                     <span class="help-block">{{ $errors->first("plantel_f") }}</span>
                     @endif
                 </div>
                 <div class="form-group col-md-6 @if($errors->has('plantel_t')) has-error @endif">
                     <label for="plantel_t-field">Plantel a:</label>
-                    {!! Form::select("plantel_t", $list["Plantel"], null, array("class" => "form-control", "id" => "plantel_t-field")) !!}
+                    {!! Form::select("plantel_t", $list["Plantel"], null, array("class" => "form-control select_seguridad", "id" => "plantel_t-field")) !!}
                     @if($errors->has("plantel_t"))
                     <span class="help-block">{{ $errors->first("plantel_t") }}</span>
                     @endif
                 </div>
                 <div class="form-group col-md-6 @if($errors->has('empleado_f')) has-error @endif">
                     <label for="empleado_f-field">Empleado de:</label>
-                    {!! Form::select("empleado_f", $list["Empleado"], null, array("class" => "form-control", "id" => "empleado_f-field")) !!}
+                    {!! Form::select("empleado_f", $list["Empleado"], null, array("class" => "form-control select_seguridad", "id" => "empleado_f-field")) !!}
                     @if($errors->has("empleado_f"))
                     <span class="help-block">{{ $errors->first("empleado_f") }}</span>
                     @endif
                 </div>
                 <div class="form-group col-md-6 @if($errors->has('empleado_t')) has-error @endif">
                     <label for="empleado_t-field">Empleado a:</label>
-                    {!! Form::select("empleado_t", $list["Empleado"], null, array("class" => "form-control", "id" => "empleado_t-field")) !!}
+                    {!! Form::select("empleado_t", $list["Empleado"], null, array("class" => "form-control select_seguridad", "id" => "empleado_t-field")) !!}
                     @if($errors->has("empleado_t"))
                     <span class="help-block">{{ $errors->first("empleado_t") }}</span>
                     @endif
                 </div>
                 <div class="form-group col-md-6 @if($errors->has('estatus_f')) has-error @endif">
                     <label for="estatus_f-field">Estatus de:</label>
-                    {!! Form::select("estatus_f", $list1["StSeguimiento"], null, array("class" => "form-control", "id" => "estatus_f-field")) !!}
+                    {!! Form::select("estatus_f", $list1["StSeguimiento"], null, array("class" => "form-control select_seguridad", "id" => "estatus_f-field")) !!}
                     @if($errors->has("estatus_f"))
                     <span class="help-block">{{ $errors->first("estatus_f") }}</span>
                     @endif
                 </div>
                 <div class="form-group col-md-6 @if($errors->has('estatus_t')) has-error @endif">
                     <label for="estatus_t-field">Estatus de:</label>
-                    {!! Form::select("estatus_t", $list1["StSeguimiento"], null, array("class" => "form-control", "id" => "estatus_t-field")) !!}
+                    {!! Form::select("estatus_t", $list1["StSeguimiento"], null, array("class" => "form-control select_seguridad", "id" => "estatus_t-field")) !!}
                     @if($errors->has("estatus_t"))
                     <span class="help-block">{{ $errors->first("estatus_t") }}</span>
                     @endif

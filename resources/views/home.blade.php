@@ -16,7 +16,7 @@
         
     </div>
     <div class="row">
-        <div class="form-group col-md-6 col-sm-6 col-xs-12">
+        <div class="form-group col-md-6 col-sm-6 col-xs-12" style='display: none'>
             <div class="box box-primary">
                 <div class="box-header with-border">
                     <h3 class="box-title">
@@ -24,19 +24,52 @@
                     </h3>
                 </div>
                 <div class="box-body">
-                    <div class="table">
-                        <div id="myfirstchart" style="height: 150px;"></div>
-                    </div>
+                    
+                        <div id="myfirstchart"></div>
+                    
+                </div>
+            </div>
+        </div>
+        <div class="form-group col-md-3 col-sm-3 col-xs-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h4 class="box-title">
+                        % Avance hacia la meta: 
+                        @if($avance<=75)
+                            <div class="bg-red">Sigue esforzandote.</div>
+                        @elseif($avance>75 and $avance<=90)
+                            <div class="bg-yellow">Estas cada dia más cerca.</div>
+                        @elseif($avance>90)
+                            <div class="bg-green">Felicidades, aun falta un poco.</div>
+                        @endif
+                    </h4>
+                </div>
+                <div class="box-body">
+                        <div id="velocimetro" style="height: 330px;"></div>
+                        
+                </div>
+            </div>
+        </div>
+        <div class="form-group col-md-6 col-sm-6 col-xs-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h4 class="box-title">
+                        Avances del mes:
+                    </h4>
+                </div>
+                <div class="box-body">
+                    <div id="barras_chart" style="height: 330px;">
+                    </div>     
                 </div>
             </div>
         </div>
         <div class="col-md-3 col-sm-6 col-xs-12">
             <!-- small box -->
-            <div class="info-box">
+            <div class="info-box" >
                 <span class="info-box-icon bg-aqua">
                     <h1> {{$a_1}} </h1>
                 </span>
-                <div class="info-box-content">
+                <div class="info-box-content" >
                     <h3><span class="info-box-text"> En proceso en el mes </span></h3>
                     <!--<a href="{{ route('seguimientos.reporteSeguimientosXEmpleado', array('estatus'=>1)) }}" class="small-box-footer">Más Información <i class="fa fa-arrow-circle-right"></i></a>-->
                     <a href="{{ route('clientes.index').'?q[s]=&q[clientes.nombre_cont]=&q[clientes.nombre2_cont]=&q[clientes.ape_paterno_cont]=&q[clientes.ape_materno_cont]=&q[st_seguimiento_id_cont]=1&q[clientes.plantel_id_cont]='.
@@ -44,7 +77,7 @@
                                                         '&q[clientes.empleado_id_cont]='.
                                                         DB::table('empleados')->where('user_id', Auth::user()->id)->value('id').
                                                         '&commit=Buscar' }}" 
-                    class="small-box-footer">Más Información <i class="fa fa-arrow-circle-right"></i></a>
+                    class="small-box-footer">Ver <i class="fa fa-arrow-circle-right"></i></a>
                 </div>    
             </div>
             
@@ -63,7 +96,7 @@
                                                         '&q[clientes.empleado_id_cont]='.
                                                         DB::table('empleados')->where('user_id', Auth::user()->id)->value('id').
                                                         '&commit=Buscar' }}" 
-                    class="small-box-footer">Más Información <i class="fa fa-arrow-circle-right"></i></a>
+                    class="small-box-footer">Ver <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
                 
             </div>
@@ -82,7 +115,7 @@
                                                         '&q[clientes.empleado_id_cont]='.
                                                         DB::table('empleados')->where('user_id', Auth::user()->id)->value('id').
                                                         '&commit=Buscar' }}" 
-                    class="small-box-footer">Más Información <i class="fa fa-arrow-circle-right"></i></a>
+                    class="small-box-footer">Ver <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
                 
             </div>
@@ -101,7 +134,7 @@
                                                         '&q[clientes.empleado_id_cont]='.
                                                         DB::table('empleados')->where('user_id', Auth::user()->id)->value('id').
                                                         '&commit=Buscar' }}" 
-                    class="small-box-footer">Más Información <i class="fa fa-arrow-circle-right"></i></a>
+                    class="small-box-footer">Ver <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
             </div>
         </div><!-- ./col -->
@@ -168,18 +201,24 @@
                         <table class="table table-bordered table-striped dataTable">
                             <thead>
                                 <tr>
-                                    <th>Desc. Corta</th>
-                                    <th>Aviso</th>
-                                    <th></th>
+                                    <th>De</th>
+                                    <th>Asunto</th>
+                                    <th><a href="{{route('avisoGrals.index')}}" class="btn btn-xs btn-info">Ver todos</a></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach($avisos_generales as $ag)
                                 <tr>
                                     <td>
-                                        {{$ag->desc_corta}}
+                                        {{ $ag->usu_alta->name }}
                                     </td>
-                                    <td>{{$ag->aviso}}</td>
+                                    <td>
+                                        {{$ag->avisoGral->desc_corta}}
+                                    </td>
+                                    <td>
+                                    <input type="button" class="btn btn-xs btn-success" value="Ver" onclick="DetalleAviso('{{ $ag->aviso_gral_id }}')" />
+                                    <a href="{{route('pivotAvisoGralEmpleados.leido', $ag->id)}}" class="btn btn-xs btn-warning">leido</a>
+                                    </td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -194,7 +233,55 @@
 @push('scripts')
     <script type="text/javascript" src="{{ asset ('/bower_components/AdminLTE/plugins/morris/morris.js') }}"></script>
     <script type="text/javascript" src="{{ asset ('/bower_components/AdminLTE/plugins/morris/raphael-min.js') }}"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">    
+        google.charts.load('current', {'packages':['gauge','corechart', 'bar']});
+        google.charts.setOnLoadCallback(drawChart);
+        google.charts.setOnLoadCallback(drawVisualization);
+
+        var datos=<?php echo $datos; ?>; 
+        console.log(datos);
+        function drawVisualization() {
+                // Some raw data (not necessarily accurate)
+            var data = google.visualization.arrayToDataTable(datos);
+            
+            var options = {
+            title : 'Estatus de seguimientos en el mes',
+            vAxis: {title: 'Cantidad'},
+            hAxis: {title: 'Estatus'},
+            seriesType: 'bars',
+            colors: ['#5a81f1', '#2dca1d']
+            };
+
+            var chart = new google.visualization.ColumnChart(document.getElementById('barras_chart'));
+            //var chart = new google.charts.Bar(document.getElementById('barras_chart'));
+
+            chart.draw(data, options);
+        }
+        
+
+        //Gaugace Chart
+        function drawChart() {
+            var data = google.visualization.arrayToDataTable([
+            ['Label', 'Value'],
+            ['Concretados', {{ $avance }}],
+            ]);
+
+            var options = {
+            //width: 400, height: 250,
+            greenFrom:90, greenTo: 100,
+            yellowFrom:75, yellowTo: 90,
+            redFrom: 0, redTo: 75,
+            minorTicks: 5
+            };
+
+            var chart = new google.visualization.Gauge(document.getElementById('velocimetro'));
+
+            chart.draw(data, options);
+
+        }//End Guagace Chart
+
+        /*
         $(function() {
          var chart = new Morris.Bar({
                 // ID of the element in which to draw the chart.
@@ -227,6 +314,12 @@
                 alert( "error occured" );
             });
         });
-        
+        */
+        var popup;
+        function DetalleAviso(id) {
+            popup = window.open("{{url('avisoGrals/showModal')}}"+"?id="+id, "Popup", "width=800,height=350");
+            popup.focus();
+            return false
+        }
     </script>
 @endpush

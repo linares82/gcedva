@@ -128,7 +128,9 @@ class EmpleadosController extends Controller {
 						->pluck('name', 'id');
 		$doc_existentes=DB::table('pivot_doc_empleados as pde')->select('doc_empleado_id')
 							->join('empleados as e', 'e.id', '=', 'pde.empleado_id')
-							->where('e.id', '=', $id)->get();
+							->where('e.id', '=', $id)
+							->where('pde.deleted_at','=', NULL)->get();
+
 		$de_array=array();
 		if($doc_existentes->isNotEmpty()){
 			foreach($doc_existentes as $de){
@@ -297,6 +299,23 @@ class EmpleadosController extends Controller {
         return $plantel;
 	}
 
+	public function getEmpleadosXplantelXpuesto(Request $request){
+		
+		if($request->ajax()){
+			//dd($request->all());
+			$plantel = $request->get('plantel_id');
+			$puesto = $request->get('puesto_id');
+			
+			$final = array();
+			$r =Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as nombre'))
+				 		->where('plantel_id', '=', $plantel)
+						->where('puesto_id', '=', $puesto)
+						->get();
+			
+			return $r;	
+			
+		}
+	}
     
 
 }

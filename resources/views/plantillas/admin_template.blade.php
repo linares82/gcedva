@@ -140,7 +140,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
 <script>
 (function() {
-  $('select').select2();
+  $('.select_seguridad').select2();
 })();
 </script>
 

@@ -113,19 +113,58 @@ trait GetAllDataTrait {
         //dd(Auth::user()->can('IfiltroClientesXPlantel'));
         //dd();
         $empleado=Empleado::where('user_id', '=', Auth::user()->id)->first();
-        //dd($empleado);
-        if($baseTable=="clientes" and Auth::user()->can('IfiltroClientesXPlantel')){
-            $myQuery=$myQuery->where('clientes.plantel_id', '=', $empleado->plantel_id);
+        //dd($baseTable);
+        switch($baseTable){
+            case "clientes":
+                if($baseTable=="clientes" and (Auth::user()->can('IfiltroClientesXPlantel'))){
+                    $myQuery=$myQuery->where('clientes.plantel_id', '=', $empleado->plantel_id);
+                }
+                break;
+            case "empleados":
+                if($baseTable=="empleados" and Auth::user()->can('IfiltroEmpleadosXPlantel')){
+                    $myQuery=$myQuery->where('empleados.plantel_id', '=', $empleado->plantel_id);
+                }
+                
+                break;
+            case "seguimientos":
+                if($baseTable=="seguimientos" and Auth::user()->can('IfiltroEmpleadosXPlantel')){
+                    $myQuery=$myQuery->where('clientes.empleado_id', '=', $empleado->id);
+                }
+                if($baseTable=="seguimientos" and Auth::user()->can('IfiltroEmpleadosXPlantel')){
+                    $myQuery=$myQuery->where('clientes.plantel_id', '=', $empleado->plantel_id);
+                }
+                break;
+            case "pivot_aviso_gral_empleados":
+                if($baseTable=="pivot_aviso_gral_empleados" and Auth::user()->can('IfiltroAvisosXempleado')){
+                    $myQuery=$myQuery->where('pivot_aviso_gral_empleados.empleado_id', '=', $empleado->id);
+                }        
+                break;
+            case "nivels":
+                //dd(Auth::user()->can('IfiltroNivelXplantel'));
+                if($baseTable=="nivels" and Auth::user()->can('IfiltroNivelXplantel')){
+                    $myQuery=$myQuery->where('nivels.plantel_id', '=', $empleado->plantel_id);
+                }
+                
+                break;
+            case "grados":
+                break;
+            case "cursos":
+                break;
+            case "subcursos":
+                break;
+            case "diplomados":
+                break;
+            case "subdiplomados":
+                break;
+            case "otros":
+                break;
+            case "subotros":
+                break;
         }
-        if($baseTable=="empleados" and Auth::user()->can('IfiltroEmpleadosXPlantel')){
-            $myQuery=$myQuery->where('empleados.plantel_id', '=', $empleado->plantel_id);
-        }
-        if($baseTable=="seguimientos" and Auth::user()->can('IfiltroEmpleadosXPlantel')){
-            $myQuery=$myQuery->where('clientes.empleado_id', '=', $empleado->id);
-        }
-        if($baseTable=="seguimientos" and Auth::user()->can('IfiltroEmpleadosXPlantel')){
-            $myQuery=$myQuery->where('clientes.plantel_id', '=', $empleado->plantel_id);
-        }
+        
+        
+        
+        //dd(Auth::user()->can('IfiltroAvisosXempleado'));
         
         
         $myQuery = $myQuery->orderBy( $column, $order_dir);

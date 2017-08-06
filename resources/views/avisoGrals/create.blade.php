@@ -21,7 +21,7 @@
     <div class="row">
         <div class="col-md-12">
 
-            {!! Form::open(array('route' => 'avisoGrals.store')) !!}
+            {!! Form::open(array('route' => 'avisoGrals.store', 'id'=>'frm_avisos')) !!}
 
 @include('avisoGrals._form')
 
