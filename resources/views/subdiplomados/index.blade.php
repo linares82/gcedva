@@ -110,6 +110,7 @@
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'diplomado_id', 'title' => 'DIPLOMADO'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'name', 'title' => 'SUBDIPLOMADO'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'plantel_id', 'title' => 'PLANTEL'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
@@ -120,7 +121,7 @@
                                 <td><a href="{{ route('subdiplomados.show', $subdiplomado->id) }}">{{$subdiplomado->id}}</a></td>
                                 <td>{{$subdiplomado->diplomado_id}}</td>
                                 <td>{{$subdiplomado->name}}</td>
-                    
+                                <td>{{$subdiplomado->plantel->razon}}</td>
                                 <td class="text-right">
                                     @permission('subdiplomados.edit')
                                     <a class="btn btn-xs btn-primary" href="{{ route('subdiplomados.duplicate', $subdiplomado->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>

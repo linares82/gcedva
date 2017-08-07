@@ -90,6 +90,7 @@
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'name', 'title' => 'NIVEL'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'plantel_id', 'title' => 'PLANTEL'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
@@ -99,6 +100,7 @@
                             <tr>
                                 <td><a href="{{ route('nivels.show', $nivel->id) }}">{{$nivel->id}}</a></td>
                                 <td>{{$nivel->name}}</td>
+                                <td>{{$nivel->plantel->razon}}</td>
                                 <td class="text-right">
                                     @permission('nivels.edit')
                                     <a class="btn btn-xs btn-primary" href="{{ route('nivels.duplicate', $nivel->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
