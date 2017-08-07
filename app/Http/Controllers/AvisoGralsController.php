@@ -20,7 +20,7 @@ class AvisoGralsController extends Controller {
 	public function index(Request $request)
 	{
 		$avisoGrals = PivotAvisoGralempleado::getAllData($request);
-
+		//dd($avisoGrals);
 		return view('avisoGrals.index', compact('avisoGrals'));
 	}
 
@@ -63,7 +63,6 @@ class AvisoGralsController extends Controller {
 				$input2['usu_alta_id']=Auth::user()->id;
 				PivotAvisoGralEmpleado::create($input2);
 			}
-			
 		}
 
 		return redirect()->route('avisoGrals.index')->with('message', 'Registro Creado.');
@@ -117,11 +116,25 @@ class AvisoGralsController extends Controller {
 	 */
 	public function update($id, AvisoGral $avisoGral, updateAvisoGral $request)
 	{
-		$input = $request->all();
+		$input = $request->except('empleado_id-field');
 		$input['usu_mod_id']=Auth::user()->id;
 		//update data
 		$avisoGral=$avisoGral->find($id);
 		$avisoGral->update( $input );
+
+		$empleados=$request->get('empleado_id-field');
+		if(isset($empleados)){	
+			foreach($empleados as $e){
+				//dd($e);
+				$input2['aviso_gral_id']=$id;
+				$input2['empleado_id']=$e;
+				$input2['leido']=0;
+				$input2['enviado']=0;
+				$input2['usu_mod_id']=Auth::user()->id;
+				$input2['usu_alta_id']=Auth::user()->id;
+				PivotAvisoGralEmpleado::create($input2);
+			}
+		}
 
 		return redirect()->route('avisoGrals.index')->with('message', 'Registro Actualizado.');
 	}
