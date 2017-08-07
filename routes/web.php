@@ -27,7 +27,7 @@ Route::get('logout', 'Auth\LoginController@logout');
 Route::get('home', array(
         'as' => 'home',
         'uses' => 'HomeController@index')
-);
+)->middleware('auth');
 Route::get('home/grfEstatusXEmpleado', array(
         'as' => 'grfEstatusXEmpleado',
         'uses' => 'HomeController@grfEstatusXEmpleado')
