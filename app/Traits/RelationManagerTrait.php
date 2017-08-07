@@ -61,108 +61,110 @@ trait RelationManagerTrait {
           
           if($relationAppName=="Nivel" and Auth::user()->can('IfiltroNivelXplantel')){
             $relatedObjList = $relationAppArray['app']::where('plantel_id', '=', $e->plantel_id)
-                                                      ->join('plantels as p', 'p.id', '=', 'nivels.plantel_id')
+                                                      ->select(DB::raw('concat(name, "-",razon) as relacion, nivels.id'))
                                                       ->select(DB::raw('concat(name, "-",razon) as relacion'))
                                                       ->orderBy('p.id')
                                                       ->pluck('relacion', 'id');
             //dd($relatedObjList);
           }elseif($relationAppName=="Nivel"){
+            //dd("fil");
             $relatedObjList = $relationAppArray['app']::join('plantels as p', 'p.id', '=', 'nivels.plantel_id')
-                                                      ->select(DB::raw('concat(name, "-",razon) as relacion'))
+                                                      ->select(DB::raw('concat(name, "-",razon) as relacion, nivels.id'))
                                                       ->orderBy('p.id')
-                                                      ->pluck('relacion', 'id');
+                                                      ->pluck('relacion', 'nivels.id');
+            //dd($relatedObjList);
           }
           if($relationAppName=="Grado" and Auth::user()->can('IfiltroGradoXplantel')){
             $relatedObjList = $relationAppArray['app']::where('plantel_id', '=', $e->plantel_id)
                                                       ->join('plantels as p', 'p.id', '=', 'grados.plantel_id')
-                                                      ->select(DB::raw('concat(name, "-",razon) as relacion'))
+                                                      ->select(DB::raw('concat(name, "-",razon) as relacion, grados.id'))
                                                       ->orderBy('p.id')
-                                                      ->pluck('relacion', 'id');
+                                                      ->pluck('relacion', 'grados.id');
             //dd($relatedObjList);
           }elseif($relationAppName=="Grado"){
             $relatedObjList = $relationAppArray['app']::join('plantels as p', 'p.id', '=', 'grados.plantel_id')
-                                                      ->select(DB::raw('concat(name, "-",razon) as relacion'))
+                                                      ->select(DB::raw('concat(name, "-",razon) as relacion, grados.id'))
                                                       ->orderBy('p.id')
-                                                      ->pluck('relacion', 'id');
+                                                      ->pluck('relacion', 'grados.id');
           }
           if($relationAppName=="Curso" and Auth::user()->can('IfiltroCursoXplantel')){
             $relatedObjList = $relationAppArray['app']::where('plantel_id', '=', $e->plantel_id)
                                                       ->join('plantels as p', 'p.id', '=', 'cursos.plantel_id')
-                                                      ->select(DB::raw('concat(name, "-",razon) as relacion'))
+                                                      ->select(DB::raw('concat(name, "-",razon) as relacion, cursos.id'))
                                                       ->orderBy('p.id')
-                                                      ->pluck('relacion', 'id');
+                                                      ->pluck('relacion', 'cursos.id');
             //dd($relatedObjList);
           }elseif($relationAppName=="Curso"){
             $relatedObjList = $relationAppArray['app']::join('plantels as p', 'p.id', '=', 'cursos.plantel_id')
-                                                      ->select(DB::raw('concat(name, "-",razon) as relacion'))
+                                                      ->select(DB::raw('concat(name, "-",razon) as relacion, cursos.id'))
                                                       ->orderBy('p.id')
-                                                      ->pluck('relacion', 'id');
+                                                      ->pluck('relacion', 'cursos.id');
           }
           if($relationAppName=="Subcurso" and Auth::user()->can('IfiltroSubcursoXplantel')){
             $relatedObjList = $relationAppArray['app']::where('plantel_id', '=', $e->plantel_id)
                                                       ->join('plantels as p', 'p.id', '=', 'subcursos.plantel_id')
-                                                      ->select(DB::raw('concat(name, "-",razon) as relacion'))
+                                                      ->select(DB::raw('concat(name, "-",razon) as relacion, subcursos.id'))
                                                       ->orderBy('p.id')
-                                                      ->pluck('relacion', 'id');
+                                                      ->pluck('relacion', 'subcursos.id');
             //dd($relatedObjList);
           }elseif($relationAppName=="Subcurso"){
             $relatedObjList = $relationAppArray['app']::join('plantels as p', 'p.id', '=', 'subcursos.plantel_id')
-                                                      ->select(DB::raw('concat(name, "-",razon) as relacion'))
+                                                      ->select(DB::raw('concat(name, "-",razon) as relacion, subcursos.id'))
                                                       ->orderBy('p.id')
-                                                      ->pluck('relacion', 'id');
+                                                      ->pluck('relacion', 'subcursos.id');
           }
           if($relationAppName=="Diplomado" and Auth::user()->can('IfiltroDiplomadoXplantel')){
             $relatedObjList = $relationAppArray['app']::where('plantel_id', '=', $e->plantel_id)
                                                       ->join('plantels as p', 'p.id', '=', 'diplomados.plantel_id')
-                                                      ->select(DB::raw('concat(name, "-",razon) as relacion'))
+                                                      ->select(DB::raw('concat(name, "-",razon) as relacion, diplomados.id'))
                                                       ->orderBy('p.id')
-                                                      ->pluck('relacion', 'id');
+                                                      ->pluck('relacion', 'diplomados.id');
             //dd($relatedObjList);
           }elseif($relationAppName=="Diplomado"){
             $relatedObjList = $relationAppArray['app']::join('plantels as p', 'p.id', '=', 'diplomados.plantel_id')
-                                                      ->select(DB::raw('concat(name, "-",razon) as relacion'))
+                                                      ->select(DB::raw('concat(name, "-",razon) as relacion, diplomados.id'))
                                                       ->orderBy('p.id')
-                                                      ->pluck('relacion', 'id');
+                                                      ->pluck('relacion', 'diplomados.id');
           }
           if($relationAppName=="Subdiplomado" and Auth::user()->can('IfiltroSubdiplomadoXplantel')){
             $relatedObjList = $relationAppArray['app']::where('plantel_id', '=', $e->plantel_id)
                                                       ->join('plantels as p', 'p.id', '=', 'subdiplomados.plantel_id')
-                                                      ->select(DB::raw('concat(name, "-",razon) as relacion'))
+                                                      ->select(DB::raw('concat(name, "-",razon) as relacion, subdiplomados.id'))
                                                       ->orderBy('p.id')
-                                                      ->pluck('relacion', 'id');
+                                                      ->pluck('relacion', 'subdiplomados.id');
             //dd($relatedObjList);
           }elseif($relationAppName=="Subdiplomado"){
             $relatedObjList = $relationAppArray['app']::join('plantels as p', 'p.id', '=', 'subdiplomados.plantel_id')
-                                                      ->select(DB::raw('concat(name, "-",razon) as relacion'))
+                                                      ->select(DB::raw('concat(name, "-",razon) as relacion, subdiplomados.id'))
                                                       ->orderBy('p.id')
-                                                      ->pluck('relacion', 'id');
+                                                      ->pluck('relacion', 'subdiplomados.id');
           }
 
           if($relationAppName=="Otro" and Auth::user()->can('IfiltroOtroXplantel')){
             $relatedObjList = $relationAppArray['app']::where('plantel_id', '=', $e->plantel_id)
                                                       ->join('plantels as p', 'p.id', '=', 'otros.plantel_id')
-                                                      ->select(DB::raw('concat(name, "-",razon) as relacion'))
+                                                      ->select(DB::raw('concat(name, "-",razon) as relacion, otros.id'))
                                                       ->orderBy('p.id')
-                                                      ->pluck('relacion', 'id');
+                                                      ->pluck('relacion', 'otros.id');
             //dd($relatedObjList);
           }elseif($relationAppName=="Otro"){
             $relatedObjList = $relationAppArray['app']::join('plantels as p', 'p.id', '=', 'otros.plantel_id')
-                                                      ->select(DB::raw('concat(name, "-",razon) as relacion'))
+                                                      ->select(DB::raw('concat(name, "-",razon) as relacion, otros.id'))
                                                       ->orderBy('p.id')
-                                                      ->pluck('relacion', 'id');
+                                                      ->pluck('relacion', 'otros.id');
           }
           if($relationAppName=="Subotro" and Auth::user()->can('IfiltroSubotroXplantel')){
             $relatedObjList = $relationAppArray['app']::where('plantel_id', '=', $e->plantel_id)
                                                       ->join('plantels as p', 'p.id', '=', 'subotros.plantel_id')
-                                                      ->select(DB::raw('concat(name, "-",razon) as relacion'))
+                                                      ->select(DB::raw('concat(name, "-",razon) as relacion, subotros.id'))
                                                       ->orderBy('p.id')
-                                                      ->pluck('relacion', 'id');
+                                                      ->pluck('relacion', 'subotros.id');
             //dd($relatedObjList);
           }elseif($relationAppName=="Subotro"){
             $relatedObjList = $relationAppArray['app']::join('plantels as p', 'p.id', '=', 'subotros.plantel_id')
-                                                      ->select(DB::raw('concat(name, "-",razon) as relacion'))
+                                                      ->select(DB::raw('concat(name, "-",razon) as relacion, subotros.id'))
                                                       ->orderBy('p.id')
-                                                      ->pluck('relacion', 'id');
+                                                      ->pluck('relacion', 'subotros.id');
           }
           //$relatedObjList = $relationAppArray['app']::pluck($relationAppArray['relation_display_column'], 'id');
     			$list[$relationAppName] = $relatedObjList;

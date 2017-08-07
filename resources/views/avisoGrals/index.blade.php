@@ -105,13 +105,13 @@
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'aviso_grals.desc_corta', 'title' => 'Asunto'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'created_at', 'title' => 'fecha'])</th>
-                            <!--<th>@include('CrudDscaffold::getOrderlink', ['column' => 'empleados.nombre', 'title' => 'destinatario'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'empleados.nombre', 'title' => 'destinatario'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'empleados.ape_paterno', 'title' => 'destinatario'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'empleados.ape_materno', 'title' => 'destinatario'])</th>
                             
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'enviado', 'title' => 'Enviado'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'leido', 'title' => 'Leido'])</th>
-                            -->
+                            
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
@@ -122,7 +122,7 @@
                                 <td><a href="{{ route('avisoGrals.show', $avisoGral->aviso_gral_id) }}">{{$avisoGral->aviso_gral_id}}</a></td>
                                 <td>{{$avisoGral->avisoGral->desc_corta}}</td>
                                 <td>{{$avisoGral->created_at}}</td>
-                                <!--<td>{{$avisoGral->empleado->nombre}}</td>
+                                <td>{{$avisoGral->empleado->nombre}}</td>
                                 <td>{{$avisoGral->empleado->ape_paterno}}</td>
                                 <td>{{$avisoGral->empleado->ape_materno}}</td>
                                 
@@ -136,7 +136,7 @@
                                                         $avisoGral->leido, 
                                                         $avisoGral->leido,
                                                         array('disabled'=>'disabled')) !!}
-                                </td>-->
+                                </td>
                                 <td class="text-right">
                                     @permission('avisoGrals.edit')
                                     <a class="btn btn-xs btn-primary" href="{{ route('avisoGrals.duplicate', $avisoGral->aviso_gral_id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
