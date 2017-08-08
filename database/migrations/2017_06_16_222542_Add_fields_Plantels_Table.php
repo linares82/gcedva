@@ -26,6 +26,8 @@ class AddFieldsPlantelsTable extends Migration
             $table->string('estado')->nullable();
             $table->integer('meta_venta')->nullable();
             $table->string('cve_plantel')->nullable();
+            $table->integer('cns_empleado')->unsigned();
+            $table->integger('cns_alumno')->ubsigned();
             $table->foreign('tpo_plantel_id')->references('id')->on('tpo_plantels');
         });
     }
