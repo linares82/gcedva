@@ -49,6 +49,20 @@
                           <span class="help-block">{{ $errors->first("cct") }}</span>
                          @endif
                       </div>
+                      <div class="form-group col-md-4 @if($errors->has('cns_empleado')) has-error @endif">
+                         <label for="cns_empleado-field">Consecutivo Empleado</label>
+                         {!! Form::text("cns_empleado", null, array("class" => "form-control", "id" => "cns_empleado-field")) !!}
+                         @if($errors->has("cns_empleado"))
+                          <span class="help-block">{{ $errors->first("cns_empleado") }}</span>
+                         @endif
+                      </div>
+                      <div class="form-group col-md-4 @if($errors->has('cns_alumno')) has-error @endif">
+                         <label for="cns_alumno-field">Consecutivo Alumno</label>
+                         {!! Form::text("cns_alumno", null, array("class" => "form-control", "id" => "cns_alumno-field")) !!}
+                         @if($errors->has("cns_alumno"))
+                          <span class="help-block">{{ $errors->first("cns_alumno") }}</span>
+                         @endif
+                      </div>
                     </div>
                   </div>
                   <div class="box box-default">
