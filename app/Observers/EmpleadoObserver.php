@@ -26,8 +26,10 @@ class EmpleadoObserver
         $plantel=Plantel::find($this->empleado->plantel_id);
         $plantel->cns_empleado=$plantel->cns_empleado+1;
         $plantel->save();
+
         $str=substr($cadena0, 0, strlen($cadena0)- strlen($plantel->cns_empleado));
-        $this->empleado->cve_empleado=$mes.$year.$str.$plantel->cve_plantel.$plantel->cns_empleado;
+
+        $this->empleado->cve_empleado=$mes.$year.$plantel->cve_plantel.$str.$plantel->cns_empleado;
     }
 
     /**
