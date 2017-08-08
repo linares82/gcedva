@@ -19,7 +19,7 @@ class AvisoGralsController extends Controller {
 	 */
 	public function index(Request $request)
 	{
-		$avisoGrals = PivotAvisoGralempleado::getAllData($request);
+		$avisoGrals = AvisoGral::getAllData($request);
 		//dd($avisoGrals);
 		return view('avisoGrals.index', compact('avisoGrals'));
 	}
@@ -65,7 +65,7 @@ class AvisoGralsController extends Controller {
 			}
 		}
 
-		return redirect()->route('avisoGrals.index')->with('message', 'Registro Creado.');
+		return redirect()->route('avisoGrals.edit', $ag->id)->with('message', 'Registro Creado.');
 	}
 
 	/**
@@ -136,7 +136,7 @@ class AvisoGralsController extends Controller {
 			}
 		}
 
-		return redirect()->route('avisoGrals.index')->with('message', 'Registro Actualizado.');
+		return redirect()->route('avisoGrals.edit', $id)->with('message', 'Registro Actualizado.');
 	}
 
 	/**
