@@ -211,6 +211,7 @@
                     <div class="form-group col-md-6 @if($errors->has('grado_id')) has-error @endif">
                        <label for="grado_id-field">Grado</label>
                        {!! Form::select("grado_id", $list["Grado"], null, array("class" => "form-control select_seguridad", "id" => "grado_id-field")) !!}
+                       <div id='loading4' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                        @if($errors->has("grado_id"))
                         <span class="help-block">{{ $errors->first("grado_id") }}</span>
                        @endif
@@ -225,6 +226,7 @@
                     <div class="form-group col-md-6 @if($errors->has('subcurso_id')) has-error @endif" >
                        <label for="municipio_id-field">Subcurso</label>
                        {!! Form::select("subcurso_id", $list["Subcurso"], null, array("class" => "form-control select_seguridad", "id" => "subcurso_id-field")) !!}
+                       <div id='loading5' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                        @if($errors->has("subcurso_id"))
                         <span class="help-block">{{ $errors->first("municipio_id") }}</span>
                        @endif
@@ -239,6 +241,7 @@
                     <div class="form-group col-md-6 @if($errors->has('subdiplomado_id')) has-error @endif" >
                        <label for="subdiplomado_id-field">Subdiplomado</label>
                        {!! Form::select("subdiplomado_id", $list["Subdiplomado"], null, array("class" => "form-control select_seguridad", "id" => "subdiplomado_id-field")) !!}
+                       <div id='loading6' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                        @if($errors->has("subdiplomado_id"))
                         <span class="help-block">{{ $errors->first("subdiplomado_id") }}</span>
                        @endif
@@ -253,6 +256,7 @@
                     <div class="form-group col-md-6 @if($errors->has('subotro_id')) has-error @endif" >
                        <label for="subotro_id-field">Subotro</label>
                        {!! Form::select("subotro_id", $list["Subotro"], null, array("class" => "form-control select_seguridad", "id" => "subotro_id-field")) !!}
+                       <div id='loading7' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                        @if($errors->has("subotro_id"))
                         <span class="help-block">{{ $errors->first("subotro_id") }}</span>
                        @endif
@@ -508,6 +512,7 @@
 
       //Campo combos dependientes
       $('#nivel_id-field').change(function(){
+        $("#loading4").show();
         $.get("{{ url('getCmbGrados')}}",
           { nivel: $(this).val() },
           function(data) {
@@ -515,11 +520,13 @@
             $.each(data, function(key, element) {
               $('#grado_id-field').append("<option value='" + key + "'>" + element + "</option>");
             });
+            $("#loading4").hide();
           });
       }); 
 
       //Campo combos dependientes
       $('#curso_id-field').change(function(){
+        $("#loading5").show();
         $.get("{{ url('getCmbSubcursos')}}",
           { curso: $(this).val() },
           function(data) {
@@ -527,11 +534,13 @@
             $.each(data, function(key, element) {
               $('#subcurso_id-field').append("<option value='" + key + "'>" + element + "</option>");
             });
+            $("#loading5").hide();
           });
       }); 
 
       //Campo combos dependientes
       $('#diplomado_id-field').change(function(){
+        $("#loading6").show();
         $.get("{{ url('getCmbSubdiplomados')}}",
           { diplomado: $(this).val() },
           function(data) {
@@ -539,11 +548,13 @@
             $.each(data, function(key, element) {
               $('#subdiplomado_id-field').append("<option value='" + key + "'>" + element + "</option>");
             });
+            $("#loading6").hide();
           });
       }); 
 
       //Campo combos dependientes
       $('#otro_id-field').change(function(){
+        $("#loading7").show();
         $.get("{{ url('getCmbSubotros')}}",
           { otro: $(this).val() },
           function(data) {
@@ -551,6 +562,7 @@
             $.each(data, function(key, element) {
               $('#subotro_id-field').append("<option value='" + key + "'>" + element + "</option>");
             });
+            $("#loading7").hide();
           });
       });    
 

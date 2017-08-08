@@ -67,6 +67,8 @@ return array(
     'Barryvdh\\Debugbar\\' => array($vendorDir . '/barryvdh/laravel-debugbar/src'),
     'Backup\\' => array($vendorDir . '/paulvl/backup/src'),
     'Aws\\' => array($vendorDir . '/aws/aws-sdk-php/src'),
+    'Arcanedev\\Support\\' => array($vendorDir . '/arcanedev/support/src'),
+    'Arcanedev\\LogViewer\\' => array($vendorDir . '/arcanedev/log-viewer/src'),
     'App\\' => array($baseDir . '/app'),
     'Acoustep\\EntrustGui\\' => array($vendorDir . '/acoustep/entrust-gui/src'),
 );

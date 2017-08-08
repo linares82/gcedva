@@ -1,5 +1,12 @@
                      <div class="box box-default">
                       <div class="box-body"> 
+                      <div class="form-group col-md-4 @if($errors->has('cve_plantel')) has-error @endif">
+                         <label for="cve_plantel-field">Clave Plantel</label>
+                         {!! Form::text("cve_plantel", null, array("class" => "form-control", "id" => "cve_plantel-field")) !!}
+                         @if($errors->has("cve_plantel"))
+                          <span class="help-block">{{ $errors->first("cve_plantel") }}</span>
+                         @endif
+                      </div>
                       <div class="form-group col-md-4 @if($errors->has('tpo_plantel_id')) has-error @endif">
                          <label for="tpo_plantel_id-field">Tipo Plantel</label>
                          {!! Form::select("tpo_plantel_id", $list["TpoPlantel"], null, array("class" => "form-control select_seguridad", "id" => "tpo_plantel_id-field")) !!}
