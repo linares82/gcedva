@@ -19,7 +19,7 @@ class EmpleadoObserver
     {
         //dd("hi fil");
         $mes=date('m');
-        $year=date('Y');
+        $year=date('y');
         $cadena0="00000";
         
         $this->empleado=$empleado;
