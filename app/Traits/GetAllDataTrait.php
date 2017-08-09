@@ -26,7 +26,7 @@ trait GetAllDataTrait {
      * @return LengthAwarePaginator Class
      */
 
-    public static function getAllData( Request $request, $paginate=10 ){
+    public static function getAllData( Request $request, $paginate=20 ){
 
         $myObj = new self;
         $myQuery = $myObj;

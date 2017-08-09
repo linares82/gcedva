@@ -52,7 +52,8 @@ trait RelationManagerTrait {
 
         if( $this->relationApps ){
     		foreach ( $this->relationApps as $relationAppName => $relationAppArray ){
-    			$relatedObjList = $relationAppArray['app']::pluck($relationAppArray['relation_display_column'], 'id');
+    			$relatedObjList = $relationAppArray['app']::orderBy('id');
+          $relatedObjList = $relationAppArray['app']::pluck($relationAppArray['relation_display_column'], 'id');
           $e=Empleado::where('user_id', '=', Auth::user()->id)->first();
           if($relationAppName=="Empleado" and Auth::user()->can('IfiltroEmpleadosXPlantel')){
             $relatedObjList = $relationAppArray['app']::where('plantel_id', '=', $e->plantel_id)->pluck($relationAppArray['relation_display_column'], 'id');
