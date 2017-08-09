@@ -52,14 +52,13 @@ trait RelationManagerTrait {
 
         if( $this->relationApps ){
     		foreach ( $this->relationApps as $relationAppName => $relationAppArray ){
-    			$relatedObjList = $relationAppArray['app']::orderBy('id');
-          $relatedObjList = $relationAppArray['app']::pluck($relationAppArray['relation_display_column'], 'id');
+          
+          $relatedObjList = $relationAppArray['app']::where('id', '>', 0)->pluck($relationAppArray['relation_display_column'], 'id');
           $e=Empleado::where('user_id', '=', Auth::user()->id)->first();
           if($relationAppName=="Empleado" and Auth::user()->can('IfiltroEmpleadosXPlantel')){
             $relatedObjList = $relationAppArray['app']::where('plantel_id', '=', $e->plantel_id)->pluck($relationAppArray['relation_display_column'], 'id');
             //dd($relatedObjList);
           }
-          
           if($relationAppName=="Nivel" and Auth::user()->can('IfiltroNivelXplantel')){
             $relatedObjList = $relationAppArray['app']::where('plantel_id', '=', $e->plantel_id)
                                                       ->join('plantels as p', 'p.id', '=', 'nivels.plantel_id')
@@ -168,7 +167,15 @@ trait RelationManagerTrait {
                                                       ->pluck('relacion', 'subotros.id');
           }
           //$relatedObjList = $relationAppArray['app']::pluck($relationAppArray['relation_display_column'], 'id');
-    			$list[$relationAppName] = $relatedObjList;
+    			
+          //dd($opt0);
+          $reverse=$relatedObjList->reverse(); 
+          
+          $reverse->put(0,'Seleccionar Opción');
+          //dd($reverse->reverse());
+          //$relatedObjList
+          $list[$relationAppName] = $reverse->reverse(); 
+          //dd($list[$relationAppName]);
     		}
         }
 		return $list;
