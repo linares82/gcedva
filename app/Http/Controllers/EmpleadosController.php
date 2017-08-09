@@ -159,8 +159,34 @@ class EmpleadosController extends Controller {
 	public function duplicate($id, Empleado $empleado)
 	{
 		$empleado=$empleado->find($id);
-		return view('empleados.duplicate', compact('empleado'))
-			->with( 'list', Empleado::getListFromAllRelationApps() );
+		$jefes=Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
+						->where('jefe_bnd', '=', '1')
+						//->where('plantel_id', '=', $plantel)
+						->pluck('name', 'id');
+		$responsables=Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
+						->where('plantel_id', '=', $empleado->plantel_id)
+						->pluck('name', 'id');
+		$doc_existentes=DB::table('pivot_doc_empleados as pde')->select('doc_empleado_id')
+							->join('empleados as e', 'e.id', '=', 'pde.empleado_id')
+							->where('e.id', '=', $id)
+							->where('pde.deleted_at','=', NULL)->get();
+
+		$de_array=array();
+		if($doc_existentes->isNotEmpty()){
+			foreach($doc_existentes as $de){
+				array_push($de_array, $de->doc_empleado_id);
+				
+			}
+			//dd($de_array);
+		}
+		
+		$documentos_faltantes=DB::table('doc_empleados')
+									->select()
+									->whereNotIn('id', $de_array)
+									->get();
+		return view('empleados.duplicate', compact('empleado', 'jefes', 'responsables', 'documentos_faltantes'))
+			->with( 'list', Empleado::getListFromAllRelationApps() )
+			->with( 'list1', PivotDocEmpleado::getListFromAllRelationApps() );
 	}
 
 	/**
