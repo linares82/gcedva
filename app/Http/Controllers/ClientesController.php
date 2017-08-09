@@ -39,7 +39,7 @@ class ClientesController extends Controller {
 		
 		return view('clientes.index', compact('clientes'))
 			->with( 'list', Seguimiento::getListFromAllRelationApps() )
-			->with( 'list1', Cliente::getListFromAllRelationApps() );;
+			->with( 'list1', Cliente::getListFromAllRelationApps() );
 	}
 
 	/**
@@ -156,7 +156,8 @@ class ClientesController extends Controller {
 		$preguntas=Preguntum::pluck('name','id');
 		$cp=PreguntaCliente::where('cliente_id','=', $id)->get();
 		return view('clientes.duplicate', compact('cliente', 'preguntas', 'cp'))
-			->with( 'list', Cliente::getListFromAllRelationApps() );
+			->with( 'list', Cliente::getListFromAllRelationApps() )
+			->with( 'list1', Cliente::getListFromAllRelationApps() );
 	}
 
 	/**
