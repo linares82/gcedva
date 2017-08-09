@@ -61,6 +61,7 @@ trait RelationManagerTrait {
           
           if($relationAppName=="Nivel" and Auth::user()->can('IfiltroNivelXplantel')){
             $relatedObjList = $relationAppArray['app']::where('plantel_id', '=', $e->plantel_id)
+                                                      ->join('plantels as p', 'p.id', '=', 'nivels.plantel_id')
                                                       ->select(DB::raw('concat(name, "-",cve_plantel, "-",razon) as relacion, nivels.id'))
                                                       ->orderBy('p.id')
                                                       ->pluck('relacion', 'id');
@@ -68,7 +69,7 @@ trait RelationManagerTrait {
           }elseif($relationAppName=="Nivel"){
             //dd("fil");
             $relatedObjList = $relationAppArray['app']::join('plantels as p', 'p.id', '=', 'nivels.plantel_id')
-                                                      ->select(DB::raw('concat(name, "-",cve_plantel, "-",razon) as relacion, nivels.id'))
+                                                      ->select(DB::raw('concat(name, "-",p.cve_plantel, "-",razon) as relacion, nivels.id'))
                                                       ->orderBy('p.id')
                                                       ->pluck('relacion', 'nivels.id');
             //dd($relatedObjList);
