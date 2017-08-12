@@ -23,7 +23,7 @@
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Accesos Comunes</a>
                     <ul class="dropdown-menu" role="menu">
-                    {!! $menu->armaMenuPrincipal(43) !!} 
+                    {!! $menu->armaMenu2(43) !!} 
                   </ul>
                 </li>
 

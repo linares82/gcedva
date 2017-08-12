@@ -44,6 +44,7 @@ return array(
     'League\\Flysystem\\AwsS3v3\\' => array($vendorDir . '/league/flysystem-aws-s3-v3/src'),
     'League\\Flysystem\\' => array($vendorDir . '/league/flysystem/src'),
     'Laravel\\Tinker\\' => array($vendorDir . '/laravel/tinker/src'),
+    'Kim\\' => array($vendorDir . '/kim/activity/src/Kim'),
     'JmesPath\\' => array($vendorDir . '/mtdowling/jmespath.php/src'),
     'Iso3166\\' => array($vendorDir . '/julien-c/iso3166/src'),
     'Intervention\\Image\\' => array($vendorDir . '/intervention/image/src/Intervention/Image'),

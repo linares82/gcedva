@@ -158,6 +158,20 @@ class MenusController extends Controller {
     	}
     	
     }	
+	public function armaMenu2($padre=43){
+		if (session()->has('menu2')) {
+		    return session('menu2');
+		}
+		else{
+			$m=$this->armaMenuPrincipal($padre);	
+	    	session(['menu2' => $m]);
+
+	    	//dd($this->menuArmado);
+	    	return session('menu2');
+	    	//return $this->menuArmado;
+    	}
+    	
+    }	
 
     public function armaMenuPrincipal($padre=1){
     				
@@ -174,9 +188,11 @@ class MenusController extends Controller {
     		foreach($menu as $item){
     			//$permiso=User::find(Auth::user()->id)->can($item->permiso);
 
-    			if ($item->permiso<>"home"){
+    			if ($item->permiso<>"home" and $item->permiso<>"logout"){
     				$permiso=Auth::user()->can($item->permiso);
+					
     			}else{
+					//dd($item->permiso);
     				$permiso=true;
     			}
     			$link=route($item->link);

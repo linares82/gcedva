@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updateNivel;
 use App\Http\Requests\createNivel;
+use DB;
 
 class NivelsController extends Controller {
 
@@ -129,7 +130,40 @@ class NivelsController extends Controller {
         $grados = Nivel::find($e)->grados;
         //dd($municipios);
         return $grados->pluck('name', 'id');
+	}
 
+	public function getCmbNivels(Request $request){
+		if($request->ajax()){
+			//dd($request->get('plantel_id'));
+			$plantel=$request->get('plantel_id');
+			$especialidad=$request->get('especialidad_id');
+			$nivel=$request->get('nivel_id');
+			$final = array();
+			$r = DB::table('nivels as n')
+					->select('n.id', 'n.name')
+					->where('n.plantel_id', '=', $plantel)
+					->where('n.especialidad_id', '=', $especialidad)
+					->where('n.id', '>', '0')
+					->get();
+			//dd($r);
+			if(isset($nivel) and $nivel<>0){
+				foreach($r as $r1){
+					if($r1->id==$nivel){
+						array_push($final, array('id'=>$r1->id, 
+												 'name'=>$r1->name, 
+												 'selectec'=>'Selected'));
+					}else{
+						array_push($final, array('id'=>$r1->id, 
+												 'name'=>$r1->name, 
+												 'selectec'=>''));
+					}
+				}
+				return $final;
+			}else{
+				return $r;	
+			}
+			
+		}
 	}
 
 }

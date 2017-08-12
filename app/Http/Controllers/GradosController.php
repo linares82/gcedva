@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updateGrado;
 use App\Http\Requests\createGrado;
-
+use DB;
 class GradosController extends Controller {
 
 	/**
@@ -121,6 +121,42 @@ class GradosController extends Controller {
 		$grado->delete();
 
 		return redirect()->route('grados.index')->with('message', 'Registro Borrado.');
+	}
+
+	public function getCmbGrados(Request $request){
+		if($request->ajax()){
+			//dd($request->all());
+			$plantel=$request->get('plantel_id');
+			$especialidad=$request->get('especialidad_id');
+			$nivel=$request->get('nivel_id');
+			$grado=$request->get('grado_id');
+			$final = array();
+			$r = DB::table('grados as g')
+					->select('g.id', 'g.name')
+					->where('g.plantel_id', '=', $plantel)
+					->where('g.especialidad_id', '=', $especialidad)
+					->where('g.nivel_id', '=', $nivel)
+					->where('g.id', '>', '0')
+					->get();
+			//dd($r);
+			if(isset($grado) and $grado<>0){
+				foreach($r as $r1){
+					if($r1->id==$grado){
+						array_push($final, array('id'=>$r1->id, 
+												 'name'=>$r1->name, 
+												 'selectec'=>'Selected'));
+					}else{
+						array_push($final, array('id'=>$r1->id, 
+												 'name'=>$r1->name, 
+												 'selectec'=>''));
+					}
+				}
+				return $final;
+			}else{
+				return $r;	
+			}
+			
+		}
 	}
 
 }

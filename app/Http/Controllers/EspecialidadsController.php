@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updateEspecialidad;
 use App\Http\Requests\createEspecialidad;
+use DB;
 
 class EspecialidadsController extends Controller {
 
@@ -121,6 +122,39 @@ class EspecialidadsController extends Controller {
 		$especialidad->delete();
 
 		return redirect()->route('especialidads.index')->with('message', 'Registro Borrado.');
+	}
+
+	public function getCmbEspecialidad(Request $request){
+		if($request->ajax()){
+			//dd($request->all());
+			$plantel=$request->get('plantel_id');
+			$especialidad=$request->get('especialidad_id');
+			
+			$final = array();
+			$r = DB::table('especialidads as e')
+					->select('e.id', 'e.name')
+					->where('e.plantel_id', '=', $plantel)
+					->where('e.id', '>', '0')
+					->get();
+			//dd($r);
+			if(isset($especialidad) and $especialidad<>0){
+				foreach($r as $r1){
+					if($r1->id==$especialidad){
+						array_push($final, array('id'=>$r1->id, 
+												 'name'=>$r1->name, 
+												 'selectec'=>'Selected'));
+					}else{
+						array_push($final, array('id'=>$r1->id, 
+												 'name'=>$r1->name, 
+												 'selectec'=>''));
+					}
+				}
+				return $final;
+			}else{
+				return $r;	
+			}
+			
+		}
 	}
 
 }

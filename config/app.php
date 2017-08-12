@@ -178,6 +178,7 @@ return [
         Barryvdh\DomPDF\ServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::Class,
         Arcanedev\LogViewer\LogViewerServiceProvider::class,
+        Kim\Activity\ActivityServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -245,6 +246,7 @@ return [
         "Sms" => Zenapply\Sms\Facades\Sms::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        'Activity' => Kim\Activity\ActivityFacade::class
     ],
 
 ];

@@ -10,7 +10,7 @@ use App\Seguimiento;
 use App\Empleado;
 use DB;
 use Auth;
-
+use Activity;
 class HomeController extends Controller
 {
     /**
@@ -30,6 +30,7 @@ class HomeController extends Controller
      */
     public function index()
     {
+        
         $e=Empleado::where('user_id', '=', Auth::user()->id)->first();
         $avisos=Aviso::select('avisos.id','a.name','avisos.detalle', 'avisos.fecha', 's.cliente_id')
 					->join('asuntos as a', 'a.id', '=', 'avisos.asunto_id')
