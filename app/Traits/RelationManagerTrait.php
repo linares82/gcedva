@@ -59,7 +59,7 @@ trait RelationManagerTrait {
             $relatedObjList = $relationAppArray['app']::where('plantel_id', '=', $e->plantel_id)->pluck($relationAppArray['relation_display_column'], 'id');
             //dd($relatedObjList);
           }
-          if($relationAppName=="Nivel" and Auth::user()->can('IfiltroNivelXplantel')){
+          /*if($relationAppName=="Nivel" and Auth::user()->can('IfiltroNivelXplantel')){
             $relatedObjList = $relationAppArray['app']::where('plantel_id', '=', $e->plantel_id)
                                                       ->join('plantels as p', 'p.id', '=', 'nivels.plantel_id')
                                                       ->select(DB::raw('concat(name, "-",cve_plantel, "-",razon) as relacion, nivels.id'))
@@ -167,7 +167,7 @@ trait RelationManagerTrait {
                                                       ->pluck('relacion', 'subotros.id');
           }
           //$relatedObjList = $relationAppArray['app']::pluck($relationAppArray['relation_display_column'], 'id');
-    			
+    			*/
           //dd($opt0);
           $reverse=$relatedObjList->reverse(); 
           
