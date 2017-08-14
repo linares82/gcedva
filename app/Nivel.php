@@ -37,7 +37,7 @@ class Nivel extends Model
 		return $this->belongsTo('App\Plantel');
 	}// end
 	public function especialidad() {
-		return $this->belongsTo('App\Especialidad');
+		return $this->belongsTo('App\Especialidad', 'especialidad_id', 'id');
 	}// end
     protected $dates = ['deleted_at'];
 }

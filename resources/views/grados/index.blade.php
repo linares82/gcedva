@@ -108,9 +108,11 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'plantel_id', 'title' => 'PLANTEL'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'especialidad_id', 'title' => 'ESPECIALIDAD'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'nivel_id', 'title' => 'NIVEL'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'name', 'title' => 'GRADO'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'plantel_id', 'title' => 'PLANTEL'])</th>
+                            
                         
                             <th class="text-right">OPCIONES</th>
                         </tr>
@@ -120,9 +122,11 @@
                         @foreach($grados as $grado)
                             <tr>
                                 <td><a href="{{ route('grados.show', $grado->id) }}">{{$grado->id}}</a></td>
+                                <td>{{$grado->plantel->razon}}</td>
+                                <td>{{$grado->especialidad->name}}</td>
                                 <td>{{$grado->nivel->name}}</td>
                                 <td>{{$grado->name}}</td>
-                                <td>{{$grado->plantel->razon}}</td>
+                                
                                 <td class="text-right">
                                     @permission('grados.edit')
                                     <a class="btn btn-xs btn-primary" href="{{ route('grados.duplicate', $grado->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
