@@ -75,7 +75,7 @@ class EnviarCorreos extends Command
                 ->where('mail_bnd', '=', '1')
                 ->orderBy('tpo_correo_id', 'asc')
                 ->get();
-            dd($ps->toArray());
+            //dd($ps->toArray());
             
             foreach($ps as $p){
                 $cuenta=0;                
@@ -88,19 +88,19 @@ class EnviarCorreos extends Command
                                 //dd($dia);
                                 $clis=DB::table('clientes')->whereIn('nivel_id', $p->nivel_id)->get();
                                 //dd($clis);
-                                if($p->mail_bnd==1){
-                                    try{
-                                        foreach($clis as $cli){
-                                            $m=\Mail::to($cli->mail, $cli->nombre);    
-                                            $m->queue(new Correo($p));
-                                            $cantidad_enviada++;
-                                        }
-                                        //$m->queue(new Correo($p));
-                                        //dd('correo enviado');
-                                    }catch(\Exception $e){
-                                    dd($e);
+                                
+                                try{
+                                    foreach($clis as $cli){
+                                        $m=\Mail::to($cli->mail, $cli->nombre);    
+                                        $m->queue(new Correo($p));
+                                        $cantidad_enviada++;
                                     }
+                                    //$m->queue(new Correo($p));
+                                    //dd('correo enviado');
+                                }catch(\Exception $e){
+                                dd($e);
                                 }
+                                
                                 if($p->bnd_sms==1){
 
                                 }    
@@ -126,19 +126,19 @@ class EnviarCorreos extends Command
                                 //dd($dia);
                                 $clis=DB::table('clientes')->whereIn('st_cliente_id', [$status_array])->get();
                                 //dd($clis);
-                                if($p->mail_bnd==1){
-                                    try{
-                                        foreach($clis as $cli){
-                                            $m=\Mail::to($cli->mail, $cli->nombre);    
-                                            $m->queue(new Correo($p));
-                                            $cantidad_enviada++;
-                                        }
-                                        //$m->queue(new Correo($p));
-                                        dd('correo enviado');
-                                    }catch(\Exception $e){
-                                    dd($e);
+                                
+                                try{
+                                    foreach($clis as $cli){
+                                        $m=\Mail::to($cli->mail, $cli->nombre);    
+                                        $m->queue(new Correo($p));
+                                        $cantidad_enviada++;
                                     }
+                                    //$m->queue(new Correo($p));
+                                    dd('correo enviado');
+                                }catch(\Exception $e){
+                                dd($e);
                                 }
+                            
                                 if($p->bnd_sms==1){
 
                                 }                           
@@ -164,18 +164,18 @@ class EnviarCorreos extends Command
                                 //dd($dia);
                                 $clis=DB::table('clientes')->whereIn('st_cliente_id', [$status_array])->get();
                                 //dd($clis);
-                                if($p->mail_bnd==1){
-                                    try{
-                                        foreach($clis as $cli){
-                                            $m=\Mail::to($cli->mail, $cli->nombre);    
-                                            $m->queue(new Correo($p));
-                                            $cantidad_enviada++;
-                                        }
-                                        
-                                    }catch(\Exception $e){
-                                    dd($e);
+                                
+                                try{
+                                    foreach($clis as $cli){
+                                        $m=\Mail::to($cli->mail, $cli->nombre);    
+                                        $m->queue(new Correo($p));
+                                        $cantidad_enviada++;
                                     }
+                                    
+                                }catch(\Exception $e){
+                                dd($e);
                                 }
+                            
                                 if($p->bnd_sms==1){
 
                                 }                        
@@ -212,18 +212,18 @@ class EnviarCorreos extends Command
                                                            ->whereIn('especialidad_id',[$especialidad_array])
                                                            ->get();
                                 //dd($clis);
-                                if($p->mail_bnd==1){
-                                    try{
-                                        foreach($clis as $cli){
-                                            $m=\Mail::to($cli->mail, $cli->nombre);    
-                                            $m->queue(new Correo($p));
-                                            $cantidad_enviada++;
-                                        }
-                                        
-                                    }catch(\Exception $e){
-                                    dd($e);
+                            
+                                try{
+                                    foreach($clis as $cli){
+                                        $m=\Mail::to($cli->mail, $cli->nombre);    
+                                        $m->queue(new Correo($p));
+                                        $cantidad_enviada++;
                                     }
+                                    
+                                }catch(\Exception $e){
+                                dd($e);
                                 }
+                        
                                 if($p->bnd_sms==1){
 
                                 }                        

@@ -17,7 +17,8 @@ class CreateSmsTable extends Migration {
             $table->integer('usu_envio_id')->unsigned();
             $table->integer('cliente_id')->unsigned();
             $table->date('fecha_envio');
-            $table->integer('usu_alta_id')->unsigned();
+            $table->integer('cantidad')->unsigned();
+			$table->integer('usu_alta_id')->unsigned();
             $table->integer('usu_mod_id')->unsigned();
             $table->timestamps();
             $table->softDeletes();

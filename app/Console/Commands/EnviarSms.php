@@ -4,6 +4,9 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Sms;
+use App\Plantilla;
+use App\Cliente;
+use DB;
 use App\Param;
 
 class EnviarSms extends Command
@@ -40,7 +43,8 @@ class EnviarSms extends Command
     public function handle()
     {
         //Ejemplo deenvio de correos
-        /*$r=Param::where('llave','=', 'sms')->first();
+        /*
+        $r=Param::where('llave','=', 'sms')->first();
         if($r->value=='activo'){
             dd($r);
             $message  = "Hello Phone de prueba!";
@@ -51,27 +55,7 @@ class EnviarSms extends Command
         */
         $c=0;
         $cantidad_enviada=0;
-        //$status_array=array();
-        //$data = $request->all();
-        /*$data['email']="linares82@gmail.com";
-        $data['subject']='prb envio';
-        $data['name']='linares82';
-
-        \Mail::send('emails.1', array(), function($message) use ($data)
-                 {
-                     //remitente
-                    //dd($cli);
-                     //$message->from($cli->mail, $cli->nombre);
-                     $message->from($data['email'], $data['name']);
-           
-                     //asunto
-                     $message->subject("sin asunto");
-           
-                     //receptor
-                     $message->to(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
-           
-                 });
-        */
+        
         $r=Param::where('llave','=', 'correo_electronico')->first();
         //dd($r->valor);
         if($r->valor=='activo'){
@@ -81,7 +65,7 @@ class EnviarSms extends Command
                 ->where('sms_bnd', '=', '1')
                 ->orderBy('tpo_correo_id', 'asc')
                 ->get();
-            dd($ps->toArray());
+            //dd($ps->toArray());
             
             foreach($ps as $p){
                 $cuenta=0;                
@@ -94,22 +78,22 @@ class EnviarSms extends Command
                                 //dd($dia);
                                 $clis=DB::table('clientes')->whereIn('nivel_id', $p->nivel_id)->get();
                                 //dd($clis);
-                                if($p->mail_bnd==1){
-                                    try{
-                                        foreach($clis as $cli){
-                                            $m=\Mail::to($cli->mail, $cli->nombre);    
-                                            $m->queue(new Correo($p));
+                                
+                                try{
+                                    foreach($clis as $cli){
+                                        if($cli->celular_confirmado==1){
+                                            $to       = $cli->tel_cel;
+                                            $from     = "+13093196909";
+                                            $message  = $p->sms;
+                                            $response = Sms::send($message,$to,$from);    
                                             $cantidad_enviada++;
                                         }
-                                        //$m->queue(new Correo($p));
-                                        //dd('correo enviado');
-                                    }catch(\Exception $e){
-                                    dd($e);
                                     }
+                                    //$m->queue(new Correo($p));
+                                    //dd('correo enviado');
+                                }catch(\Exception $e){
+                                dd($e);
                                 }
-                                if($p->bnd_sms==1){
-
-                                }    
                             }
                         }
                         break;
@@ -132,22 +116,23 @@ class EnviarSms extends Command
                                 //dd($dia);
                                 $clis=DB::table('clientes')->whereIn('st_cliente_id', [$status_array])->get();
                                 //dd($clis);
-                                if($p->mail_bnd==1){
-                                    try{
-                                        foreach($clis as $cli){
-                                            $m=\Mail::to($cli->mail, $cli->nombre);    
-                                            $m->queue(new Correo($p));
+                                
+                                try{
+                                    foreach($clis as $cli){
+                                        if($cli->celular_confirmado==1){
+                                            $to       = $cli->tel_cel;
+                                            $from     = "+13093196909";
+                                            $message  = $p->sms;
+                                            $response = Sms::send($message,$to,$from);    
                                             $cantidad_enviada++;
                                         }
-                                        //$m->queue(new Correo($p));
-                                        dd('correo enviado');
-                                    }catch(\Exception $e){
-                                    dd($e);
                                     }
+                                    //$m->queue(new Correo($p));
+                                    dd('correo enviado');
+                                }catch(\Exception $e){
+                                dd($e);
                                 }
-                                if($p->bnd_sms==1){
-
-                                }                           
+                            
                             }
                         }
                         break;
@@ -170,21 +155,22 @@ class EnviarSms extends Command
                                 //dd($dia);
                                 $clis=DB::table('clientes')->whereIn('st_cliente_id', [$status_array])->get();
                                 //dd($clis);
-                                if($p->mail_bnd==1){
-                                    try{
-                                        foreach($clis as $cli){
-                                            $m=\Mail::to($cli->mail, $cli->nombre);    
-                                            $m->queue(new Correo($p));
+                                
+                                try{
+                                    foreach($clis as $cli){
+                                        if($cli->celular_confirmado==1){
+                                            $to       = $cli->tel_cel;
+                                            $from     = "+13093196909";
+                                            $message  = $p->sms;
+                                            $response = Sms::send($message,$to,$from);    
                                             $cantidad_enviada++;
                                         }
-                                        
-                                    }catch(\Exception $e){
-                                    dd($e);
                                     }
+                                    
+                                }catch(\Exception $e){
+                                dd($e);
                                 }
-                                if($p->bnd_sms==1){
-
-                                }                        
+                            
                             }
                         }
                     break;
@@ -218,21 +204,21 @@ class EnviarSms extends Command
                                                            ->whereIn('especialidad_id',[$especialidad_array])
                                                            ->get();
                                 //dd($clis);
-                                if($p->mail_bnd==1){
-                                    try{
-                                        foreach($clis as $cli){
-                                            $m=\Mail::to($cli->mail, $cli->nombre);    
-                                            $m->queue(new Correo($p));
+                                
+                                try{
+                                    foreach($clis as $cli){
+                                        if($cli->celular_confirmado==1){
+                                            $to       = $cli->tel_cel;
+                                            $from     = "+13093196909";
+                                            $message  = $p->sms;
+                                            $response = Sms::send($message,$to,$from);    
                                             $cantidad_enviada++;
                                         }
-                                        
-                                    }catch(\Exception $e){
-                                    dd($e);
                                     }
-                                }
-                                if($p->bnd_sms==1){
-
-                                }                        
+                                    
+                                }catch(\Exception $e){
+                                dd($e);
+                                }                      
                             }
                         }
                     break;
@@ -244,7 +230,8 @@ class EnviarSms extends Command
             $input2['cantidad']=$cantidad_enviada;
             $input2['usu_alta_id']=1;
             $input2['usu_mod_id']=1;
-            Corre::create($input2);
+            Sm::create($input2);
+            
         }
     }
 }

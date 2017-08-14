@@ -92,6 +92,8 @@
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'plantilla', 'title' => 'NOMBRE'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'sms_bnd', 'title' => 'SMS'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'mail_bnd', 'title' => 'MAIL'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
@@ -101,6 +103,8 @@
                             <tr>
                                 <td><a href="{{ route('plantillas.show', $plantilla->id) }}">{{$plantilla->id}}</a></td>
                                 <td>{{$plantilla->nombre}}</td>
+                                <td>{{$plantilla->sms_bnd}}</td>
+                                <td>{{$plantilla->mail_bnd}}</td>
                                 <td class="text-right">
                                     @permission('plantillas.edit')
                                     <a class="btn btn-xs btn-primary" href="{{ route('plantillas.duplicate', $plantilla->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>

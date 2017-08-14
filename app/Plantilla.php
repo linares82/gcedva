@@ -23,7 +23,7 @@ class Plantilla extends Model
     } 
 
 	//Mass Assignment
-	protected $fillable = ['nombre','asunto','para_nombre', 'tpo_correo_id','plantilla','st_cliente_id','periodo_id','dia','nivel_id', 'inicio', 'fin','usu_alta_id','usu_mod_id', 'activo_bnd', 'sms_bnd','mail_bnd', 'especialidad_id'];
+	protected $fillable = ['nombre','asunto','para_nombre', 'tpo_correo_id','plantilla','st_cliente_id','periodo_id','dia','nivel_id', 'inicio', 'fin','usu_alta_id','usu_mod_id', 'activo_bnd', 'sms_bnd','mail_bnd','sms', 'especialidad_id'];
 
 	public function usu_alta() {
 		return $this->hasOne('App\User', 'id', 'usu_alta_id');

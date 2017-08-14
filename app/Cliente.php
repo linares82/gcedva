@@ -43,7 +43,7 @@ class Cliente extends Model
 	//Mass Assignment
 	protected $fillable = ['cve_cliente','nombre', 'nombre2', 'ape_paterno', 'ape_materno','fec_registro',
 						  'tel_fijo','tel_cel','mail','calle','no_exterior','no_interior','colonia','cp',
-						  'municipio_id','estado_id','st_cliente_id', 'especialidad','ofertum_id','medio_id',
+						  'municipio_id','estado_id','st_cliente_id', 'especialidad_id','ofertum_id','medio_id',
 						  'expo','otro_medio','empleado_id','promociones','promo_cel','promo_correo', 
 						  'plantel_id', 'nivel_id','grado_id', 'curso_id', 'subcurso_id', 'diplomado_id', 
 						  'subdiplomado_id', 'otro_id', 'subotro_id','usu_alta_id','usu_mod_id', 'matricula', 
