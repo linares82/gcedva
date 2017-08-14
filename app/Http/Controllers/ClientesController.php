@@ -70,6 +70,9 @@ class ClientesController extends Controller {
 		//$input['plantelplantel_id']=$empleado->plantel->id;
 		$input['usu_alta_id']=Auth::user()->id;
 		$input['usu_mod_id']=Auth::user()->id;
+		if($input['cve_cliente']==""){
+			$input['cve_cliente']='Codigo: "'.substr(Hash::make(rand(0, 1000)), 2, 8).'". Grupo JESADI, te da la bienvenida y te felicita por dar el primer paso hacia tu futuro. Revisa tu correo y conoce los beneficios';
+		}
 		if(!isset($input['promociones'])){
 			$input['promociones']=0;
 		}else{
@@ -133,9 +136,6 @@ class ClientesController extends Controller {
 	public function edit($id, Cliente $cliente)
 	{
 		$cliente=$cliente->find($id);
-		if($cliente->cve_cliente==""){
-			$cliente->cve_cliente=substr(Hash::make(rand(0, 1000)), 2, 8);
-		}
 		$preguntas=Preguntum::pluck('name','id');
 		$cp=PreguntaCliente::where('cliente_id','=', $id)->get();
 		//dd($cp);

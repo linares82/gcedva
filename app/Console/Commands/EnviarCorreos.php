@@ -72,8 +72,10 @@ class EnviarCorreos extends Command
             
             $ps=Plantilla::select('id', 'st_cliente_id', 'dia', 'tpo_correo_id', 'para_nombre', 'asunto', 'activo_bnd','mail_bnd', 'sms_bnd', 'sms')
                 ->where('tpo_correo_id', '<>', '1')
+                ->where('mail_bnd', '=', '1')
                 ->orderBy('tpo_correo_id', 'asc')
                 ->get();
+            dd($ps->toArray());
             
             foreach($ps as $p){
                 $cuenta=0;                

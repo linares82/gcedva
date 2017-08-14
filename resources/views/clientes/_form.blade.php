@@ -503,7 +503,8 @@
           function(data) {
             $('#plantel_id-field').val(data).change();
             $("#loading3").hide();
-          });
+          }
+        );
         
       });
       /*
@@ -612,7 +613,7 @@
               $.ajax({
                   url: '{{ route("especialidads.getCmbEspecialidad") }}',
                   type: 'GET',
-                  data: a,
+                  data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad_id-field option:selected').val() + "",
                   dataType: 'json',
                   beforeSend : function(){$("#loading10").show();},
                   complete : function(){$("#loading10").hide();},
