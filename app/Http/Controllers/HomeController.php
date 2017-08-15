@@ -106,13 +106,9 @@ class HomeController extends Controller
             }
             
         }
-
-        $menu=$this->armaMenu(1);
-        $menu2=$this->armaMenu2(43);
-
         //dd($menu2);
         
-        return view('home', compact('avisos', 'a_1', 'a_2', 'a_3', 'a_4', 'grafica', 'avisos_generales', 'avance', 'e', 'menu', 'menu2'))
+        return view('home', compact('avisos', 'a_1', 'a_2', 'a_3', 'a_4', 'grafica', 'avisos_generales', 'avance'))
                     ->with('datos', json_encode($datos)) ;
     }
 
