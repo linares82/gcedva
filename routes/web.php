@@ -1440,7 +1440,7 @@ Route::get("tpoPlantels/tpoPlantel/{tpoPlantels}/duplicate", ['as' => 'tpoPlante
         'uses' => 'SeguimientosController@index')
     )->middleware('auth');
     Route::get('/seguimiento/create', array(
-        'as' => 'seguimiento.create',
+        'as' => 'seguimientos.create',
         'middleware' => 'permission:seguimientos.create',
         'uses' => 'SeguimientosController@create')
     )->middleware('auth');
