@@ -31,11 +31,11 @@
                 <!-- User Account Menu -->
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        
+                        @if(Auth::user())
                         Plantel: {!! DB::table('plantels as p')
                             ->join('empleados as e', 'e.plantel_id','=', 'p.id')
                             ->where('e.user_id', Auth::user()->id)->value('razon') !!}
-                        
+                        @endif
                     </a>
                 </li>
                 <li class="dropdown user user-menu">

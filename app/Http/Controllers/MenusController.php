@@ -177,7 +177,7 @@ class MenusController extends Controller {
     }	
 
     public function armaMenuPrincipal($padre=1){
-    				
+		$permiso=false;
     	//$menu=$this->menuRepository->search(array('padre'=>$padre));
     	//$usuario_actual=User::find(Auth::user()->id)->is('admin');
     	$menu=Menu::where('padre', $padre)
@@ -194,9 +194,9 @@ class MenusController extends Controller {
 				//Log::info($autenticado);
 
     			if ($item->permiso<>"home" and $item->permiso<>"logout"){
-    				//
-					$permiso=Auth::user()->can($item->permiso);
-					
+					if(Auth::check()){
+						$permiso=Auth::user()->can($item->permiso);
+					}
 					
     			}else{
 					//dd($item->permiso);
