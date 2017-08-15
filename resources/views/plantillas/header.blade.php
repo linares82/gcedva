@@ -32,9 +32,15 @@
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         @if(Auth::user())
-                        Plantel: {!! DB::table('plantels as p')
+                        Plantel: {!!
+                            Cache::remember('razon', 30, function(){
+                                return DB::table('plantels as p')
                             ->join('empleados as e', 'e.plantel_id','=', 'p.id')
-                            ->where('e.user_id', Auth::user()->id)->value('razon') !!}
+                            ->where('e.user_id', Auth::user()->id)->value('razon');
+                            });
+                        !!}
+                        
+                        
                         @endif
                     </a>
                 </li>
@@ -46,8 +52,12 @@
                         @if (Auth::guest())
                             Invitado
                         @else
-                            Empleado: {!! DB::table('empleados')->where('user_id', Auth::user()->id)->value('nombre') !!}
-
+                            Empleado: {!! 
+                            Cache::remember('nombre', 30, function(){
+                                return DB::table('empleados')->where('user_id', Auth::user()->id)->value('nombre'); 
+                            });
+                             
+                            !!}
                         @endif
                         </span>
                     </a>

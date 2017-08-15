@@ -223,8 +223,8 @@ class ClientesController extends Controller {
 		$cliente->correo_confirmado=1;
 		$cliente->save();
 		
-		dd('Agradecemos tu tiempo, tu correo fue confirmado.');
-		return redirect()->route('clientes.edit', $id)->with('message', 'Registro Actualizado.');
+		//dd('Agradecemos tu tiempo, tu correo fue confirmado.');
+		return view('clientes.confirmaCorreo');
 	}
 
 	/**
