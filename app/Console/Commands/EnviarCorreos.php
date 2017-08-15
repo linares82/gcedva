@@ -80,7 +80,7 @@ class EnviarCorreos extends Command
             foreach($ps as $p){
                 $cuenta=0;                
                 switch ($p->tpo_correo_id) {
-                    case '2': //revisar definicion
+                    /*case '2': //revisar definicion
                         if($p->activo_bnd==1){
                             //dd($status_array);
                             $dia=date("j");
@@ -107,6 +107,7 @@ class EnviarCorreos extends Command
                             }
                         }
                         break;
+                        */
                     case '3':
                         if($p->activo_bnd==1){
                             $status_array='';
@@ -196,20 +197,22 @@ class EnviarCorreos extends Command
                                     $status_array=",".$status_array.$st->id;
                                 }
                             }
-                            foreach($p->especialidad as $especialidad){
+                            /*foreach($p->especialidad as $especialidad){
                                 if($aux_especialidad==0){
                                     $especialidad_array=$especialidad_array.$especialidad->id;
                                 }else{
                                     $especialidad_array=",".$especialidad_array.$especialidad->id;
                                 }
-                            }
+                            }*/
                             
                             //dd($status_array);
                             $dia=date("j");
                             if($dia==$p->dia){
                                 //dd($dia);
                                 $clis=DB::table('clientes')->whereIn('st_cliente_id', [$status_array])
-                                                           ->whereIn('especialidad_id',[$especialidad_array])
+                                                            ->where('plantel_id', '=', $p->plantel_id)
+                                                           ->where('especialidad_id','=', $plantel->especialidad_id)
+                                                           ->where('nivel_id', '=', $plantel->nivel_id)
                                                            ->get();
                                 //dd($clis);
                             

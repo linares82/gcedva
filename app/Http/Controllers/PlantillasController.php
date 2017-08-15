@@ -129,8 +129,8 @@ class PlantillasController extends Controller {
 		$input['periodo_id']=2;
 		$st=$input['st_cliente'];	
 		unset($input['st_cliente']);
-		$esp=$input['especialidad_id'];
-		unset($input['especialidad_id']);
+		//$esp=$input['especialidad_id'];
+		//unset($input['especialidad_id']);
 		$input['st_cliente_id']=0;
 		if(!isset($input['activo_bnd'])){
 			$input['activo_bnd']=0;
@@ -163,9 +163,9 @@ class PlantillasController extends Controller {
 			$plantilla->estatus()->attach($st);	
 		}
 		//dd($esp);
-		if($esp<>0){
+		/*if($esp<>0){
 			$plantilla->especialidad()->attach($esp);	
-		}
+		}*/
 		
 		//dd($input['plantilla']);
 		$file = fopen(base_path('resources\views\emails\\'.$id.'.blade.php'), "w+");

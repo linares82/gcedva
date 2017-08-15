@@ -66,14 +66,8 @@
                           </div>
                         @endif
                       </div>
-                      <div id="especialidad_div">
-                          <div class="form-group col-md-4 @if($errors->has('especialidad_id')) has-error @endif" style="clear:left;">
-                             <label for="especialidad_id-field">Especialidad</label>
-                             {!! Form::select("especialidad_id", $list["Especialidad"], null, array("class" => "form-control select_seguridad", "id" => "especialidad_id-field")) !!}
-                             @if($errors->has("especialidad_id"))
-                              <span class="help-block">{{ $errors->first("especialidad_id") }}</span>
-                             @endif
-                          </div>
+                      <!--<div id="especialidad_div">
+                          
                         @if(isset($plantilla))  
                           <div class="row">
                             <div class="col-md-12">
@@ -98,7 +92,7 @@
                           </div>
                         @endif
                       </div>
-                    
+                    -->
                     <!--
                     <div class="form-group col-md-4 @if($errors->has('periodo_id')) has-error @endif">
                        <label for="periodo_id-field">Periodo:Mensual</label>
@@ -119,9 +113,25 @@
                     </div>
 
                     <div id="nivel_div">
+                      <div class="form-group col-md-4 @if($errors->has('plantel_id')) has-error @endif" style="clear:left;">
+                             <label for="plantel_id-field">Plantel</label>
+                             {!! Form::select("plantel_id", $list["Plantel"], null, array("class" => "form-control select_seguridad", "id" => "plantel_id-field")) !!}
+                             @if($errors->has("plantel_id"))
+                              <span class="help-block">{{ $errors->first("plantel_id") }}</span>
+                             @endif
+                          </div>
+                      <div class="form-group col-md-4 @if($errors->has('especialidad_id')) has-error @endif">
+                             <label for="especialidad_id-field">Especialidad</label>
+                             {!! Form::select("especialidad_id", $list["Especialidad"], null, array("class" => "form-control select_seguridad", "id" => "especialidad_id-field")) !!}
+                             <div id='loading10' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
+                             @if($errors->has("especialidad_id"))
+                              <span class="help-block">{{ $errors->first("especialidad_id") }}</span>
+                             @endif
+                          </div>
                       <div class="form-group col-md-4 @if($errors->has('nivel_id')) has-error @endif" style="">
                          <label for="nivel_id-field">Nivel</label>
                          {!! Form::select("nivel_id", $list["Nivel"], null, array("class" => "form-control select_seguridad", "id" => "nivel_id-field")) !!}
+                         <div id='loading11' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                          @if($errors->has("nivel_id"))
                           <span class="help-block">{{ $errors->first("nivel_id") }}</span>
                          @endif
@@ -229,6 +239,69 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
+      getCmbEspecialidad();
+      getCmbNivel();
+      $('#plantel_id-field').change(function(){
+          getCmbEspecialidad();
+      });
+      function getCmbEspecialidad(){
+          //var $example = $("#especialidad_id-field").select2();
+          var a= $('#frm_cliente').serialize();
+              $.ajax({
+                  url: '{{ route("especialidads.getCmbEspecialidad") }}',
+                  type: 'GET',
+                  data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad_id-field option:selected').val() + "",
+                  dataType: 'json',
+                  beforeSend : function(){$("#loading10").show();},
+                  complete : function(){$("#loading10").hide();},
+                  success: function(data){
+                      //$example.select2("destroy");
+                      $('#especialidad_id-field').html('');
+                      
+                      //$('#especialidad_id-field').empty();
+                      $('#especialidad_id-field').append($('<option></option>').text('Seleccionar').val('0'));
+                      
+                      $.each(data, function(i) {
+                          //alert(data[i].name);
+                          $('#especialidad_id-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                      });
+                      //$example.select2();
+                  }
+              });       
+      }
+      $('#especialidad_id-field').change(function(){
+          getCmbNivel();
+      });
+      function getCmbNivel(){
+          //var $example = $("#especialidad_id-field").select2();
+          var a= $('#frm_cliente').serialize();
+              $.ajax({
+                  url: '{{ route("nivels.getCmbNivels") }}',
+                  type: 'GET',
+                  data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad_id-field option:selected').val() + "&nivel_id=" + $('#nivel_id-field option:selected').val() + "",
+                  dataType: 'json',
+                  beforeSend : function(){$("#loading11").show();},
+                  complete : function(){$("#loading11").hide();},
+                  success: function(data){
+                      //alert(data);
+                      //$example.select2("destroy");
+                      $('#nivel_id-field').html('');
+                      //$('#especialidad_id-field').empty();
+                      $('#nivel_id-field').append($('<option></option>').text('Seleccionar').val('0'));
+                      
+                      $.each(data, function(i) {
+                          //alert(data[i].name);
+                          $('#nivel_id-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                      });
+                      //$example.select2();
+                  }
+              });       
+      }
+      
+      
+
+
+
       $('#inicio-field').Zebra_DatePicker({
         days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
         months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
@@ -290,7 +363,7 @@
        }else if($('#tpo_correo_id-field option:selected').val()==5){
           $('#estatus_div').show();
           $('#dia_div').show();
-          $('#nivel_div').hide();
+          $('#nivel_div').show();
           $('#inicio_div').hide();
           $('#fin_div').hide();
           $('#especialidad_div').show();

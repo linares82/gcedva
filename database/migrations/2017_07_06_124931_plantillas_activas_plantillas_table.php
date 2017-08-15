@@ -19,6 +19,7 @@ class PlantillasActivasPlantillasTable extends Migration
             $table->boolean('mail_bnd');
             $table->string('sms')->nullable();
             $table->integer('especialidad_id')->unsigned();
+            $table->integer('plantel_id')->unsigned();
         });
     }
 
