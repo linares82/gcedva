@@ -18,7 +18,7 @@ class Sm extends Model
     } 
 
 	//Mass Assignment
-	protected $fillable = ['usu_envio_id','cliente_id','fecha_envio','usu_alta_id','usu_mod_id'];
+	protected $fillable = ['usu_envio_id','cliente_id','cantidad','fecha_envio','usu_alta_id','usu_mod_id'];
 
 	public function usu_alta() {
 		return $this->hasOne('App\User', 'id', 'usu_alta_id');
