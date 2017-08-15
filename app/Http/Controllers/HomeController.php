@@ -8,11 +8,14 @@ use App\AvisoGral;
 use App\PivotAvisoGralEmpleado;
 use App\Seguimiento;
 use App\Empleado;
+use App\Menu;
 use DB;
 use Auth;
 use Activity;
+
 class HomeController extends Controller
 {
+    public $menuArmado="";
     /**
      * Create a new controller instance.
      *
@@ -30,7 +33,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-        
         $e=Empleado::where('user_id', '=', Auth::user()->id)->first();
         $avisos=Aviso::select('avisos.id','a.name','avisos.detalle', 'avisos.fecha', 's.cliente_id')
 					->join('asuntos as a', 'a.id', '=', 'avisos.asunto_id')
@@ -104,9 +106,13 @@ class HomeController extends Controller
             }
             
         }
-        //dd($datos);
+
+        $menu=$this->armaMenu(1);
+        $menu2=$this->armaMenu2(43);
+
+        //dd($menu2);
         
-        return view('home', compact('avisos', 'a_1', 'a_2', 'a_3', 'a_4', 'grafica', 'avisos_generales', 'avance'))
+        return view('home', compact('avisos', 'a_1', 'a_2', 'a_3', 'a_4', 'grafica', 'avisos_generales', 'avance', 'e', 'menu', 'menu2'))
                     ->with('datos', json_encode($datos)) ;
     }
 
@@ -121,5 +127,136 @@ class HomeController extends Controller
                     ->where('c.plantel_id', '=', $e->plantel_id)
                     ->groupBy('sts.name')
                     ->get()->toJson();
+    }
+
+    public function armaMenuPrimario($padre=1){
+    	//$menu=$this->menuRepository->search(array('padre'=>$padre));
+    	//$usuario_actual=User::find(Auth::user()->id)->is('admin');
+    	$menu=Menu::where('padre', $padre)
+                ->where('activo', true)
+                ->orderBy('prioridad', 'asc')->get();
+
+        //dd($menu);
+    	
+    	if(!empty($menu)){
+    		//dd($menu);
+    		foreach($menu as $item){
+    			//$permiso=User::find(Auth::user()->id)->can($item->permiso);
+
+    			if ($item->permiso<>"home"){
+    				$permiso=Auth::user()->can($item->permiso);
+    			}else{
+    				$permiso=true;
+    			}
+    			$link=route($item->link);
+    			//dd($permiso);
+    			if($permiso and $item->activo==1 and $item->parametros=="_blank"){
+    				$this->menuArmado=$this->menuArmado."<li class='active'><a href='".$link."' target='".$item->parametros."'><i class='".$item->imagen."'></i><span>".$item->item."</span></a></li>";
+    			}
+    		}
+    	}
+    	
+    	//dd($this->menuArmado);
+    	return $this->menuArmado;
+    }
+
+	public function armaMenu($padre=1){
+		if (session()->has('menu')) {
+		    return session('menu');
+		}
+		else{
+			$m=$this->armaMenuPrincipal();	
+	    	session(['menu' => $m]);
+
+	    	//dd($this->menuArmado);
+	    	return session('menu');
+	    	//return $this->menuArmado;
+    	}
+    	
+    }	
+	public function armaMenu2($padre=43){
+		if (session()->has('menu2')) {
+		    //Log::info(session('menu2'));
+			return session('menu2');
+			
+		}
+		else{
+			$m=$this->armaMenuPrincipal($padre);	
+	    	session(['menu2' => $m]);
+
+	    	//dd($this->menuArmado);
+	    	return session('menu2');
+	    	//return $this->menuArmado;
+    	}
+    	
+    }	
+
+    public function armaMenuPrincipal($padre=1){
+    				
+    	//$menu=$this->menuRepository->search(array('padre'=>$padre));
+    	//$usuario_actual=User::find(Auth::user()->id)->is('admin');
+    	$menu=Menu::where('padre', $padre)
+                ->where('activo', true)
+                ->orderBy('prioridad', 'asc')->get();
+
+        //dd($menu);
+    	
+    	if(!empty($menu)){
+    		//dd($menu);
+    		foreach($menu as $item){
+    			//$permiso=User::find(Auth::user()->id)->can($item->permiso);
+
+    			if ($item->permiso<>"home" and $item->permiso<>"logout"){
+    				Log::info($padre);
+					Log::info($item->permiso);
+					$permiso=Auth::user()->can($item->permiso);
+					
+    			}else{
+					//dd($item->permiso);
+    				$permiso=true;
+    			}
+    			$link=route($item->link);
+    			//dd($permiso);
+    			if($permiso and $item->activo==1){
+    				//dd($item->id);
+	    			$r=intval($this->tieneItems($item->id));
+	    			//dd(action($item->link));
+	    			
+	    			if($r==1){
+	    				$this->menuArmado=$this->menuArmado."<li class='treeview'>
+									                <a href=' ".$link." '>
+														<i class='".$item->imagen."'></i><span>".$item->item."</span> <i class='fa fa-angle-left pull-right'></i>
+													</a>
+									                <ul class='treeview-menu'>";
+						$this->menuArmado=$this->armaMenuPrincipal($item->id);
+						$this->menuArmado=$this->menuArmado."</ul></li>";
+
+	    			}else{
+	    				//dd($this->menuArmado);
+	    				$this->menuArmado=$this->menuArmado."<li class='active'><a href='".$link."'><i class='".$item->imagen."'></i><span>".$item->item."</span></a></li>";
+	    			}
+	    			//Log::info($this->menuArmado);
+    			}
+    		}
+    		return $this->menuArmado;
+    	}
+    	
+    	
+    	//dd($this->menuArmado);
+    	
+    	//return $this->menuArmado;
+    	
+    }
+
+    public function tieneItems($padre){
+    	$menu=Menu::where('padre', $padre)->where('activo', true)->count();
+
+		//dd($menu);
+    	if($menu==0){
+    		return -1;
+    	}
+    	else{
+    		return 1;
+    	}
     }
 }

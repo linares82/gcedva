@@ -265,35 +265,35 @@
           $('#nivel_div').hide();
           $('#inicio_div').hide();
           $('#fin_div').hide();
-          $('#especialidad_idv').hide();
+          $('#especialidad_div').hide();
        }else if($('#tpo_correo_id-field option:selected').val()==2){
           $('#estatus_div').hide();
           $('#dia_div').show();
           $('#nivel_div').show();
           $('#inicio_div').hide();
           $('#fin_div').hide();
-          $('#especialidad_idv').hide();
+          $('#especialidad_div').hide();
        }else if($('#tpo_correo_id-field option:selected').val()==3){
           $('#estatus_div').show();
           $('#dia_div').hide();
           $('#nivel_div').hide();
           $('#inicio_div').show();
           $('#fin_div').show();
-          $('#especialidad_idv').hide();
+          $('#especialidad_div').hide();
        }else if($('#tpo_correo_id-field option:selected').val()==4){
           $('#estatus_div').show();
           $('#dia_div').show();
           $('#nivel_div').hide();
           $('#inicio_div').hide();
           $('#fin_div').hide();
-          $('#especialidad_idv').hide();
+          $('#especialidad_div').hide();
        }else if($('#tpo_correo_id-field option:selected').val()==5){
           $('#estatus_div').show();
           $('#dia_div').show();
           $('#nivel_div').hide();
           $('#inicio_div').hide();
           $('#fin_div').hide();
-          $('#especialidad_idv').show();
+          $('#especialidad_div').show();
        }
      }
 

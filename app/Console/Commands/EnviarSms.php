@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Sms;
 use App\Plantilla;
 use App\Cliente;
+use App\Sm;
 use DB;
 use App\Param;
 
@@ -60,14 +61,15 @@ class EnviarSms extends Command
         //dd($r->valor);
         if($r->valor=='activo'){
             
-            $ps=Plantilla::select('id', 'st_cliente_id', 'dia', 'tpo_correo_id', 'para_nombre', 'asunto', 'activo_bnd','mail_bnd', 'sms_bnd', 'sms')
+            $ps=Plantilla::select('id', 'st_cliente_id', 'dia', 'tpo_correo_id', 'para_nombre', 'asunto', 'activo_bnd','mail_bnd', 'sms_bnd', 'sms', 'nivel_id')
                 ->where('tpo_correo_id', '<>', '1')
                 ->where('sms_bnd', '=', '1')
                 ->orderBy('tpo_correo_id', 'asc')
                 ->get();
-            //dd($ps->toArray());
+            //dd($ps);
             
             foreach($ps as $p){
+                //dd($p->toArray());
                 $cuenta=0;                
                 switch ($p->tpo_correo_id) {
                     case '2': //revisar definicion
@@ -75,14 +77,13 @@ class EnviarSms extends Command
                             //dd($status_array);
                             $dia=date("j");
                             if($dia==$p->dia){
-                                //dd($dia);
-                                $clis=DB::table('clientes')->whereIn('nivel_id', $p->nivel_id)->get();
+                                //dd($p->nivel_id);
+                                $clis=DB::table('clientes')->where('nivel_id', $p->nivel_id)->get();
                                 //dd($clis);
-                                
                                 try{
                                     foreach($clis as $cli){
                                         if($cli->celular_confirmado==1){
-                                            $to       = $cli->tel_cel;
+                                            $to       = '+52'.$cli->tel_cel;
                                             $from     = "+13093196909";
                                             $message  = $p->sms;
                                             $response = Sms::send($message,$to,$from);    
@@ -120,7 +121,7 @@ class EnviarSms extends Command
                                 try{
                                     foreach($clis as $cli){
                                         if($cli->celular_confirmado==1){
-                                            $to       = $cli->tel_cel;
+                                            $to       = '+52'.$cli->tel_cel;
                                             $from     = "+13093196909";
                                             $message  = $p->sms;
                                             $response = Sms::send($message,$to,$from);    
@@ -159,7 +160,7 @@ class EnviarSms extends Command
                                 try{
                                     foreach($clis as $cli){
                                         if($cli->celular_confirmado==1){
-                                            $to       = $cli->tel_cel;
+                                            $to       = '+52'.$cli->tel_cel;
                                             $from     = "+13093196909";
                                             $message  = $p->sms;
                                             $response = Sms::send($message,$to,$from);    
@@ -208,7 +209,7 @@ class EnviarSms extends Command
                                 try{
                                     foreach($clis as $cli){
                                         if($cli->celular_confirmado==1){
-                                            $to       = $cli->tel_cel;
+                                            $to       = '+52'.$cli->tel_cel;
                                             $from     = "+13093196909";
                                             $message  = $p->sms;
                                             $response = Sms::send($message,$to,$from);    

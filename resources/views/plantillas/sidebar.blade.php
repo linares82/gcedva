@@ -52,7 +52,7 @@
                 </ul>
             </li>
             -->
-             {!! $menu->armaMenu() !!} 
+             {!! $menu->armaMenu(1) !!}  
 			
             
 			

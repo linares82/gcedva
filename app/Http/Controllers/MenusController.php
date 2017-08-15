@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Menu;
 use Illuminate\Http\Request;
 use Auth;
-
+use Log;
 class MenusController extends Controller {
 
 	/**
@@ -16,6 +16,7 @@ class MenusController extends Controller {
 	 */
 
 	public $menuArmado="";
+	
 	
 	public function index(Request $request)
 	{
@@ -160,7 +161,9 @@ class MenusController extends Controller {
     }	
 	public function armaMenu2($padre=43){
 		if (session()->has('menu2')) {
-		    return session('menu2');
+		    //Log::info(session('menu2'));
+			return session('menu2');
+			
 		}
 		else{
 			$m=$this->armaMenuPrincipal($padre);	
@@ -187,9 +190,13 @@ class MenusController extends Controller {
     		//dd($menu);
     		foreach($menu as $item){
     			//$permiso=User::find(Auth::user()->id)->can($item->permiso);
+				$autenticado=Auth::user();
+				//Log::info($autenticado);
 
     			if ($item->permiso<>"home" and $item->permiso<>"logout"){
-    				$permiso=Auth::user()->can($item->permiso);
+    				//
+					$permiso=Auth::user()->can($item->permiso);
+					
 					
     			}else{
 					//dd($item->permiso);

@@ -24,6 +24,7 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Accesos Comunes</a>
                     <ul class="dropdown-menu" role="menu">
                     {!! $menu->armaMenu2(43) !!} 
+
                   </ul>
                 </li>
 
@@ -46,6 +47,7 @@
                             Invitado
                         @else
                             Empleado: {!! DB::table('empleados')->where('user_id', Auth::user()->id)->value('nombre') !!}
+
                         @endif
                         </span>
                     </a>
