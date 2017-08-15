@@ -207,8 +207,7 @@ class HomeController extends Controller
     			//$permiso=User::find(Auth::user()->id)->can($item->permiso);
 
     			if ($item->permiso<>"home" and $item->permiso<>"logout"){
-    				Log::info($padre);
-					Log::info($item->permiso);
+    				
 					$permiso=Auth::user()->can($item->permiso);
 					
     			}else{
