@@ -130,9 +130,11 @@ class EnviarCorreos extends Command
                                 
                                 try{
                                     foreach($clis as $cli){
-                                        $m=\Mail::to($cli->mail, $cli->nombre);    
-                                        $m->queue(new Correo($p));
-                                        $cantidad_enviada++;
+                                        if($cli->correo_confirmado==1){
+                                            $m=\Mail::to($cli->mail, $cli->nombre);    
+                                            $m->queue(new Correo($p));
+                                            $cantidad_enviada++;
+                                        }
                                     }
                                     //$m->queue(new Correo($p));
                                     dd('correo enviado');
@@ -168,9 +170,11 @@ class EnviarCorreos extends Command
                                 
                                 try{
                                     foreach($clis as $cli){
-                                        $m=\Mail::to($cli->mail, $cli->nombre);    
-                                        $m->queue(new Correo($p));
-                                        $cantidad_enviada++;
+                                        if($cli->correo_confirmado==1){
+                                            $m=\Mail::to($cli->mail, $cli->nombre);    
+                                            $m->queue(new Correo($p));
+                                            $cantidad_enviada++;
+                                        }
                                     }
                                     
                                 }catch(\Exception $e){
@@ -218,9 +222,11 @@ class EnviarCorreos extends Command
                             
                                 try{
                                     foreach($clis as $cli){
-                                        $m=\Mail::to($cli->mail, $cli->nombre);    
-                                        $m->queue(new Correo($p));
-                                        $cantidad_enviada++;
+                                        if($cli->correo_confirmado==1){
+                                            $m=\Mail::to($cli->mail, $cli->nombre);    
+                                            $m->queue(new Correo($p));
+                                            $cantidad_enviada++;
+                                        }
                                     }
                                     
                                 }catch(\Exception $e){
