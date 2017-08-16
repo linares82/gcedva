@@ -31,7 +31,7 @@ class Correo extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.'.$this->p->id)
+        return $this->view('emails.7')
                     ->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'))
                     ->subject($this->p->asunto);
     }
