@@ -103,11 +103,11 @@
                                         <td>{{$at->stTarea->name}}</td>
                                         <td>{{$at->created_at}}</td>
                                         <td>
-                                        
+                                        @permission('asignacionTareas.destroy')   
                                         {!! Form::model($at, array('route' => array('asignacionTareas.destroyModal', $at->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}
                                             <button type="submit" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> Borrar</button>
                                         {!! Form::close() !!}
-                                        
+                                        @endpermission
                                         </td>
                                     </tr>
                                     @endforeach
