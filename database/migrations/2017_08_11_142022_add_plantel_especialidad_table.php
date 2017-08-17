@@ -15,6 +15,7 @@ class AddPlantelEspecialidadTable extends Migration
     {
         Schema::table('especialidads', function (Blueprint $table) {
             $table->integer('plantel_id')->default(0)->unsigned();
+            $table->integer('meta')->default(0)->unsigned();
             $table->foreign('plantel_id')->references('id')->on('plantels');
         });
     }
