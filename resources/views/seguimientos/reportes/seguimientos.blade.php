@@ -89,7 +89,12 @@
         lang_clear_date: 'Limpiar',
         show_select_today: 'Hoy',
       });
-
+    
+    @permission('IreporteFiltroXplantel')
+        $("#plantel_f-field").prop("disabled", true);
+        $("#plantel_t-field").prop("disabled", true);
+    @endpermission
+        
     });
     
     </script>

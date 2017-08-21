@@ -430,8 +430,13 @@ class SeguimientosController extends Controller {
 	{
 		$input=$request->all();
 		$fecha=date('d-m-Y');
+		if(!$request->has('plantel_f') and !$request->has('plantel_t')){
+			$input['plantel_f']=DB::table('empleados as e')
+                            ->where('e.user_id', Auth::user()->id)->value('plantel_id');
+			$input['plantel_t']=$input['plantel_f'];
+		}
 		
-		$seguimientos=Seguimiento::select('razon as Plantel', 'esp.name as Especialidad','n.name as Nivel',
+		$seguimientos=Seguimiento::select('cve_plantel as Plantel', 'esp.name as Especialidad','n.name as Nivel',
 		'g.name as Grado', 'seguimientos.mes as Mes',
 		DB::raw('concat(e.nombre," ", e.ape_paterno," ", e.ape_materno) as Empleado'), 'st.name as Estatus',
 		'st.id as st_contar','esp.meta as Meta')
@@ -445,7 +450,7 @@ class SeguimientosController extends Controller {
 								->where('c.plantel_id', '>=', $input['plantel_f'])
 								->where('c.plantel_id', '<=', $input['plantel_t'])
 								//->where('c.especialidad_id', '=', $input['especialidad_f'])
-								->where('seguimientos.st_seguimiento_id', '=', '2')
+								//->where('seguimientos.st_seguimiento_id', '=', '2')
 								->whereBetween('seguimientos.created_at', [$input['fecha_f'], $input['fecha_t']])
 								->orderBy('Plantel')
 								//->groupBy('esp.meta','e.nombre', 'e.ape_paterno', 'e.ape_materno')

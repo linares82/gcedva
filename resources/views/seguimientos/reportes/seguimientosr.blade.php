@@ -4,7 +4,12 @@
 <body>
 <link rel="stylesheet" type="text/css" href="{{asset('bower_components/AdminLTE/plugins/jquery-pivot-master/jquery.pivot-1.0.1.css')}}"/>
 <link rel="stylesheet" type="text/css" href="{{asset('bower_components/AdminLTE/plugins/jquery-pivot-master/themes/smoothness/jquery-ui-1.10.4.custom.min.css')}}"/>
-
+<style>
+    { 
+    height:100%; 
+    overflow:'scroll';
+    }
+</style>
 
 <div id="printeArea">
 <table style="width:100%;height:auto;border:1px solid #ccc;font-size: 0.75em;">
@@ -59,9 +64,9 @@
                 }],
                 totals: true,
                 subtotals: true,
-                inactive: [ "Plantel", 'Estatus', 'Mes' ],
-                cols: [ "Especialidad",'Meta','Nivel','Grado' ],
-                rows: [ "Empleado" ]
+                inactive: [ 'Mes' ],
+                cols: [ "Especialidad",'Meta','Nivel','Grado','Estatus' ],
+                rows: [ "Plantel","Empleado" ]
             });
         });
         

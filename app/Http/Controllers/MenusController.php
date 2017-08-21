@@ -210,7 +210,7 @@ class MenusController extends Controller {
 	    			//dd(action($item->link));
 	    			
 	    			if($r==1){
-						if($item->parametros="_blank"){
+						if($item->parametros=="_blank"){
 							$this->menuArmado=$this->menuArmado."<li class='treeview'>
 									                <a href=' ".$link." ' target='".$item->parametros."'>
 														<i class='".$item->imagen."'></i><span>".$item->item."</span> <i class='fa fa-angle-left pull-right'></i>
@@ -229,7 +229,7 @@ class MenusController extends Controller {
 
 	    			}else{
 	    				//dd($this->menuArmado);
-						if($item->parametros="_blank"){
+						if($item->parametros=="_blank"){
 							$this->menuArmado=$this->menuArmado."<li class='active'><a href='".$link."' target='".$item->parametros."'><i class='".$item->imagen."'></i><span>".$item->item."</span></a></li>";
 						}else{
 							$this->menuArmado=$this->menuArmado."<li class='active'><a href='".$link."'><i class='".$item->imagen."'></i><span>".$item->item."</span></a></li>";
