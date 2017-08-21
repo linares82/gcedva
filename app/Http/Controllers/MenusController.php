@@ -210,17 +210,31 @@ class MenusController extends Controller {
 	    			//dd(action($item->link));
 	    			
 	    			if($r==1){
-	    				$this->menuArmado=$this->menuArmado."<li class='treeview'>
+						if($item->parametros="_blank"){
+							$this->menuArmado=$this->menuArmado."<li class='treeview'>
+									                <a href=' ".$link." ' target='".$item->parametros."'>
+														<i class='".$item->imagen."'></i><span>".$item->item."</span> <i class='fa fa-angle-left pull-right'></i>
+													</a>
+									                <ul class='treeview-menu'>";
+						}else{
+							$this->menuArmado=$this->menuArmado."<li class='treeview'>
 									                <a href=' ".$link." '>
 														<i class='".$item->imagen."'></i><span>".$item->item."</span> <i class='fa fa-angle-left pull-right'></i>
 													</a>
 									                <ul class='treeview-menu'>";
+						}
+	    				
 						$this->menuArmado=$this->armaMenuPrincipal($item->id);
 						$this->menuArmado=$this->menuArmado."</ul></li>";
 
 	    			}else{
 	    				//dd($this->menuArmado);
-	    				$this->menuArmado=$this->menuArmado."<li class='active'><a href='".$link."'><i class='".$item->imagen."'></i><span>".$item->item."</span></a></li>";
+						if($item->parametros="_blank"){
+							$this->menuArmado=$this->menuArmado."<li class='active'><a href='".$link."' target='".$item->parametros."'><i class='".$item->imagen."'></i><span>".$item->item."</span></a></li>";
+						}else{
+							$this->menuArmado=$this->menuArmado."<li class='active'><a href='".$link."'><i class='".$item->imagen."'></i><span>".$item->item."</span></a></li>";
+						}
+	    				
 	    			}
 	    			//Log::info($this->menuArmado);
     			}

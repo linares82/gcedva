@@ -127,10 +127,10 @@ trait GetAllDataTrait {
                 
                 break;
             case "seguimientos":
-                if($baseTable=="seguimientos" and Auth::user()->can('IfiltroEmpleadosXPlantel')){
+                if($baseTable=="seguimientos" and Auth::user()->can('IfiltroClientesXEmpleado')){
                     $myQuery=$myQuery->where('clientes.empleado_id', '=', $empleado->id);
                 }
-                if($baseTable=="seguimientos" and Auth::user()->can('IfiltroEmpleadosXPlantel')){
+                if($baseTable=="seguimientos" and Auth::user()->can('IfiltroClientesXPlantel')){
                     $myQuery=$myQuery->where('clientes.plantel_id', '=', $empleado->plantel_id);
                 }
                 break;

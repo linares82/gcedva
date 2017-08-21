@@ -250,7 +250,9 @@
             vAxis: {title: 'Cantidad'},
             hAxis: {title: 'Estatus'},
             seriesType: 'bars',
-            colors: ['#5a81f1', '#2dca1d']
+            series: {0: {type: 'line'}}
+
+            //colors: ['#5a81f1', '#2dca1d']
             };
 
             var chart = new google.visualization.ColumnChart(document.getElementById('barras_chart'));
