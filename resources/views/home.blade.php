@@ -250,7 +250,7 @@
             vAxis: {title: 'Cantidad'},
             hAxis: {title: 'Estatus'},
             seriesType: 'bars',
-            series: {0: {type: 'line'}}
+            //series: {0: {type: 'line'}}
 
             //colors: ['#5a81f1', '#2dca1d']
             };
