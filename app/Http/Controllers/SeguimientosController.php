@@ -472,4 +472,58 @@ class SeguimientosController extends Controller {
 			})->export('xls');
 			*/
 	}
+
+	public function seguimientosGrf()
+	{
+		return view('seguimientos.reportes.seguimientosGrf')
+			->with( 'list', Cliente::getListFromAllRelationApps())
+			->with( 'list1', Seguimiento::getListFromAllRelationApps());
+	}
+
+	public function seguimientosGrfr(updateSeguimiento $request)
+	{
+		$input=$request->all();
+		$fecha=date('d-m-Y');
+		if(!$request->has('plantel_f') and !$request->has('plantel_t')){
+			$input['plantel_f']=DB::table('empleados as e')
+                            ->where('e.user_id', Auth::user()->id)->value('plantel_id');
+			$input['plantel_t']=$input['plantel_f'];
+		}
+		
+		$seguimientos=Seguimiento::select('cve_plantel as Plantel', 'esp.name as Especialidad','n.name as Nivel',
+		'g.name as Grado', 'seguimientos.mes as Mes',
+		DB::raw('concat(e.nombre," ", e.ape_paterno," ", e.ape_materno) as Empleado'), 'st.name as Estatus',
+		'st.id as st_contar','esp.meta as Meta')
+								->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
+								->join('empleados as e', 'e.id', '=', 'c.empleado_id')
+								->join('plantels as p', 'p.id', '=', 'c.plantel_id')
+								->join('especialidads as esp', 'esp.id', '=', 'c.especialidad_id')
+								->join('nivels as n', 'n.id', '=', 'c.nivel_id')
+								->join('grados as g', 'g.id', '=', 'c.grado_id')
+								->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
+								->where('c.plantel_id', '>=', $input['plantel_f'])
+								->where('c.plantel_id', '<=', $input['plantel_t'])
+								//->where('c.especialidad_id', '=', $input['especialidad_f'])
+								//->where('seguimientos.st_seguimiento_id', '=', '2')
+								->whereBetween('seguimientos.created_at', [$input['fecha_f'], $input['fecha_t']])
+								->orderBy('Plantel')
+								//->groupBy('esp.meta','e.nombre', 'e.ape_paterno', 'e.ape_materno')
+								->get();
+		
+		//dd($seguimientos->toArray());
+			/*PDF::setOptions(['defaultFont' => 'arial']);
+			$pdf = PDF::loadView('seguimientos.reportes.seguimientosXespecialidadGr', array('seguimientos'=>$seguimientos, 'fecha'=>$fecha, 'datos'=>json_encode($datos)))
+						->setPaper('letter', 'landscape');
+			return $pdf->download('reporte.pdf');
+			*/
+			return view('seguimientos.reportes.seguimientosGrfr', array('fecha'=>$fecha))
+					->with('datos', json_encode($seguimientos));	
+					
+			/*Excel::create('Laravel Excel', function($excel) use($seguimientos) {
+				$excel->sheet('Productos', function($sheet) use($seguimientos) {
+					$sheet->fromArray($seguimientos);
+				});
+			})->export('xls');
+			*/
+	}
 }
