@@ -37,6 +37,7 @@
                         <span class="help-block">{{ $errors->first("name") }}</span>
                        @endif
                     </div>
+                    @if(isset($materias_ls))
                     <div class="form-group col-md-4 @if($errors->has('materia_id')) has-error @endif">
                         <label for="materia_id-field">Materias</label>
                         <div id="select_materia">
@@ -47,6 +48,7 @@
                             <span class="help-block">{{ $errors->first("materia_id") }}</span>
                         @endif
                     </div>
+                    
                     <div class="form-group col-md-4">
                     <table class="table table-condensed table-striped">
                         <thead>
@@ -64,6 +66,7 @@
                         </tbody>
                     </table>
                     </div>
+                    @endif
 
 @push('scripts')
   
