@@ -61,7 +61,7 @@
                             </div>
                             -->
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_name_cont">NAME</label>
+                                <label class="col-sm-2 control-label" for="q_name_cont">GRUPO</label>
                                 <div class=" col-sm-9">
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['name_cont']) ?: '' }}" name="q[name_cont]" id="q_name_cont" />
                                 </div>
@@ -77,14 +77,14 @@
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['desc_corta_lt']) ?: '' }}" name="q[desc_corta_lt]" id="q_desc_corta_lt" />
                                 </div>
                             </div>
-                            -->
+                            
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_desc_corta_cont">DESC_CORTA</label>
                                 <div class=" col-sm-9">
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['desc_corta_cont']) ?: '' }}" name="q[desc_corta_cont]" id="q_desc_corta_cont" />
                                 </div>
                             </div>
-                                                    <!--
+                            -->                        <!--
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_limite_alumnos_gt">LIMITE_ALUMNOS</label>
                                 <div class=" col-sm-4">
@@ -97,48 +97,54 @@
                             </div>
                             -->
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_limite_alumnos_cont">LIMITE_ALUMNOS</label>
+                                <label class="col-sm-2 control-label" for="q_limite_alumnos_cont">LIMITE ALUMNOS</label>
                                 <div class=" col-sm-9">
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['limite_alumnos_cont']) ?: '' }}" name="q[limite_alumnos_cont]" id="q_limite_alumnos_cont" />
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="q_minimo_alumnos_cont">MINIMO ALUMNOS</label>
+                                <div class=" col-sm-9">
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['minimo_alumnos_cont']) ?: '' }}" name="q[minimo_alumnos_cont]" id="q_minimo_alumnos_cont" />
+                                </div>
+                            </div>
                                                     <!--
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_jornada_id_gt">JORNADA_ID</label>
+                                <label class="col-sm-2 control-label" for="q_jornadas.name_gt">JORNADA_NAME</label>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['jornada_id_gt']) ?: '' }}" name="q[jornada_id_gt]" id="q_jornada_id_gt" />
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['jornadas.name_gt']) ?: '' }}" name="q[jornadas.name_gt]" id="q_jornadas.name_gt" />
                                 </div>
                                 <div class=" col-sm-1 text-center"> - </div>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['jornada_id_lt']) ?: '' }}" name="q[jornada_id_lt]" id="q_jornada_id_lt" />
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['jornadas.name_lt']) ?: '' }}" name="q[jornadas.name_lt]" id="q_jornadas.name_lt" />
                                 </div>
                             </div>
-                            -->
+                            
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_jornada_id_cont">JORNADA_ID</label>
+                                <label class="col-sm-2 control-label" for="q_jornadas.name_cont">JORNADA_NAME</label>
                                 <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['jornada_id_cont']) ?: '' }}" name="q[jornada_id_cont]" id="q_jornada_id_cont" />
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['jornadas.name_cont']) ?: '' }}" name="q[jornadas.name_cont]" id="q_jornadas.name_cont" />
                                 </div>
                             </div>
-                                                    <!--
+                            -->                        <!--
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_salon_id_gt">SALON_ID</label>
+                                <label class="col-sm-2 control-label" for="q_salons.name_gt">SALON_NAME</label>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['salon_id_gt']) ?: '' }}" name="q[salon_id_gt]" id="q_salon_id_gt" />
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['salons.name_gt']) ?: '' }}" name="q[salons.name_gt]" id="q_salons.name_gt" />
                                 </div>
                                 <div class=" col-sm-1 text-center"> - </div>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['salon_id_lt']) ?: '' }}" name="q[salon_id_lt]" id="q_salon_id_lt" />
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['salons.name_lt']) ?: '' }}" name="q[salons.name_lt]" id="q_salons.name_lt" />
                                 </div>
                             </div>
-                            -->
+                            
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_salon_id_cont">SALON_ID</label>
+                                <label class="col-sm-2 control-label" for="q_salons.name_cont">SALON_NAME</label>
                                 <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['salon_id_cont']) ?: '' }}" name="q[salon_id_cont]" id="q_salon_id_cont" />
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['salons.name_cont']) ?: '' }}" name="q[salons.name_cont]" id="q_salons.name_cont" />
                                 </div>
                             </div>
-                                                    <!--
+                            -->                        <!--
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_periodo_id_gt">PERIODO_ID</label>
                                 <div class=" col-sm-4">
@@ -149,13 +155,14 @@
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['periodo_id_lt']) ?: '' }}" name="q[periodo_id_lt]" id="q_periodo_id_lt" />
                                 </div>
                             </div>
-                            -->
+                            
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_periodo_id_cont">PERIODO_ID</label>
                                 <div class=" col-sm-9">
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['periodo_id_cont']) ?: '' }}" name="q[periodo_id_cont]" id="q_periodo_id_cont" />
                                 </div>
                             </div>
+                            -->
                                                     <!--
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_usu_alta_id_gt">USU_ALTA_ID</label>
@@ -167,13 +174,13 @@
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['usu_alta_id_lt']) ?: '' }}" name="q[usu_alta_id_lt]" id="q_usu_alta_id_lt" />
                                 </div>
                             </div>
-                            -->
+                            
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_usu_alta_id_cont">USU_ALTA_ID</label>
                                 <div class=" col-sm-9">
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['usu_alta_id_cont']) ?: '' }}" name="q[usu_alta_id_cont]" id="q_usu_alta_id_cont" />
                                 </div>
-                            </div>
+                            </div>-->
                                                     <!--
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_usu_mod_id_gt">USU_MOD_ID</label>
@@ -185,14 +192,14 @@
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['usu_mod_id_lt']) ?: '' }}" name="q[usu_mod_id_lt]" id="q_usu_mod_id_lt" />
                                 </div>
                             </div>
-                            -->
+                            
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_usu_mod_id_cont">USU_MOD_ID</label>
                                 <div class=" col-sm-9">
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['usu_mod_id_cont']) ?: '' }}" name="q[usu_mod_id_cont]" id="q_usu_mod_id_cont" />
                                 </div>
                             </div>
-
+                            -->
                             <div class="form-group">
                                 <div class="col-sm-10 col-sm-offset-2">
                                     <input type="submit" name="commit" value="Buscar" class="btn btn-default btn-xs" />
@@ -215,14 +222,9 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'name', 'title' => 'NAME'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'desc_corta', 'title' => 'DESC_CORTA'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'limite_alumnos', 'title' => 'LIMITE_ALUMNOS'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'jornada_id', 'title' => 'JORNADA_ID'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'salon_id', 'title' => 'SALON_ID'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'periodo_id', 'title' => 'PERIODO_ID'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'name', 'title' => 'GRUPO'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'limite_alumnos', 'title' => 'LIMITE ALUMNOS'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'minimo_alumnos', 'title' => 'MINIMO ALUMNOS'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
@@ -232,13 +234,8 @@
                             <tr>
                                 <td><a href="{{ route('grupos.show', $grupo->id) }}">{{$grupo->id}}</a></td>
                                 <td>{{$grupo->name}}</td>
-                    <td>{{$grupo->desc_corta}}</td>
-                    <td>{{$grupo->limite_alumnos}}</td>
-                    <td>{{$grupo->jornada_id}}</td>
-                    <td>{{$grupo->salon_id}}</td>
-                    <td>{{$grupo->periodo_id}}</td>
-                    <td>{{$grupo->usu_alta_id}}</td>
-                    <td>{{$grupo->usu_mod_id}}</td>
+                                <td>{{$grupo->limite_alumnos}}</td>
+                                <td>{{$grupo->minimo_alumnos}}</td>
                                 <td class="text-right">
                                     @permission('grupos.edit')
                                     <a class="btn btn-xs btn-primary" href="{{ route('grupos.duplicate', $grupo->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>

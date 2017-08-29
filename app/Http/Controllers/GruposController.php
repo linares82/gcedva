@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updateGrupo;
 use App\Http\Requests\createGrupo;
+use DB;
 
 class GruposController extends Controller {
 
@@ -121,6 +122,38 @@ class GruposController extends Controller {
 		$grupo->delete();
 
 		return redirect()->route('grupos.index')->with('message', 'Registro Borrado.');
+	}
+
+	public function getCmbGrupo(Request $request){
+		if($request->ajax()){
+			//dd($request->get('plantel_id'));
+			$plantel=$request->get('plantel_id');
+			$grupo=$request->get('grupo_id');			
+			$final = array();
+			$r = DB::table('grupos as g')
+					->select('g.id', 'g.name')
+					->where('g.plantel_id', '=', $plantel)					
+					->where('g.id', '>', '0')
+					->get();
+			//dd($r);
+			if(isset($grupo) and $grupo<>0){
+				foreach($r as $r1){
+					if($r1->id==$grupo){
+						array_push($final, array('id'=>$r1->id, 
+												 'name'=>$r1->name, 
+												 'selectec'=>'Selected'));
+					}else{
+						array_push($final, array('id'=>$r1->id, 
+												 'name'=>$r1->name, 
+												 'selectec'=>''));
+					}
+				}
+				return $final;
+			}else{
+				return $r;	
+			}
+			
+		}
 	}
 
 }

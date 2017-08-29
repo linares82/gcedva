@@ -61,7 +61,7 @@
                             </div>
                             -->
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_name_cont">NAME</label>
+                                <label class="col-sm-2 control-label" for="q_name_cont">Salon</label>
                                 <div class=" col-sm-9">
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['name_cont']) ?: '' }}" name="q[name_cont]" id="q_name_cont" />
                                 </div>
@@ -97,9 +97,9 @@
                             </div>
                             -->
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_usu_alta_id_cont">USU_ALTA_ID</label>
+                                <label class="col-sm-2 control-label" for="q_plantel_id_cont">PLANTEL</label>
                                 <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['usu_alta_id_cont']) ?: '' }}" name="q[usu_alta_id_cont]" id="q_usu_alta_id_cont" />
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['plantel_id_cont']) ?: '' }}" name="q[plantel_id_cont]" id="q_plantel_id_cont" />
                                 </div>
                             </div>
                                                     <!--
@@ -114,13 +114,7 @@
                                 </div>
                             </div>
                             -->
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_usu_mod_id_cont">USU_MOD_ID</label>
-                                <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['usu_mod_id_cont']) ?: '' }}" name="q[usu_mod_id_cont]" id="q_usu_mod_id_cont" />
-                                </div>
-                            </div>
-
+                   
                             <div class="form-group">
                                 <div class="col-sm-10 col-sm-offset-2">
                                     <input type="submit" name="commit" value="Buscar" class="btn btn-default btn-xs" />
@@ -143,10 +137,9 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'name', 'title' => 'NAME'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'ubicacion', 'title' => 'UBICACION'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'plantel_id', 'title' => 'PLANTEL'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'name', 'title' => 'SALON'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'ubicacion', 'title' => 'UBICACION'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
@@ -155,10 +148,10 @@
                         @foreach($salons as $salon)
                             <tr>
                                 <td><a href="{{ route('salons.show', $salon->id) }}">{{$salon->id}}</a></td>
+                                <td>{{$salon->plantel->razon}}</td>
                                 <td>{{$salon->name}}</td>
-                    <td>{{$salon->ubicacion}}</td>
-                    <td>{{$salon->usu_alta_id}}</td>
-                    <td>{{$salon->usu_mod_id}}</td>
+                                <td>{{$salon->ubicacion}}</td>
+                    
                                 <td class="text-right">
                                     @permission('salons.edit')
                                     <a class="btn btn-xs btn-primary" href="{{ route('salons.duplicate', $salon->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>

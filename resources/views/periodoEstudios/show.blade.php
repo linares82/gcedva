@@ -38,21 +38,33 @@
                     <label for="nome">ID</label>
                     <p class="form-control-static">{{$periodoEstudio->id}}</p>
                 </div>
-                <div class="form-group">
-                     <label for="name">NAME</label>
+                <div class="form-group col-sm-4">
+                     <label for="grado_name">PLANTEL</label>
+                     <p class="form-control-static">{{$periodoEstudio->plantel->razon}}</p>
+                </div>
+                <div class="form-group col-sm-4">
+                     <label for="grado_name">ESPECIALIDAD</label>
+                     <p class="form-control-static">{{$periodoEstudio->especialidad->name}}</p>
+                </div>
+                <div class="form-group col-sm-4">
+                     <label for="grado_name">NIVEL</label>
+                     <p class="form-control-static">{{$periodoEstudio->nivel->name}}</p>
+                </div>
+                <div class="form-group col-sm-4">
+                     <label for="grado_name">GRADO</label>
+                     <p class="form-control-static">{{$periodoEstudio->grado->name}}</p>
+                </div>
+                <div class="form-group col-sm-4">
+                     <label for="name">PERIODO</label>
                      <p class="form-control-static">{{$periodoEstudio->name}}</p>
                 </div>
-                    <div class="form-group">
-                     <label for="grado_id">GRADO_ID</label>
-                     <p class="form-control-static">{{$periodoEstudio->grado_id}}</p>
+                    <div class="form-group col-sm-4">
+                     <label for="usu_alta_id">ALTA</label>
+                     <p class="form-control-static">{{$periodoEstudio->usu_alta->name}}</p>
                 </div>
-                    <div class="form-group">
-                     <label for="usu_alta_id">USU_ALTA_ID</label>
-                     <p class="form-control-static">{{$periodoEstudio->usu_alta_id}}</p>
-                </div>
-                    <div class="form-group">
-                     <label for="usu_mod_id">USU_MOD_ID</label>
-                     <p class="form-control-static">{{$periodoEstudio->usu_mod_id}}</p>
+                    <div class="form-group col-sm-4">
+                     <label for="usu_mod_id">ULTIMA MODIFICACION</label>
+                     <p class="form-control-static">{{$periodoEstudio->usu_mod->name}}</p>
                 </div>
             </form>
 

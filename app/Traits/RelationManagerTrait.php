@@ -59,6 +59,7 @@ trait RelationManagerTrait {
             $relatedObjList = $relationAppArray['app']::where('plantel_id', '=', $e->plantel_id)->pluck($relationAppArray['relation_display_column'], 'id');
             //dd($relatedObjList);
           }
+          
           /*if($relationAppName=="Nivel" and Auth::user()->can('IfiltroNivelXplantel')){
             $relatedObjList = $relationAppArray['app']::where('plantel_id', '=', $e->plantel_id)
                                                       ->join('plantels as p', 'p.id', '=', 'nivels.plantel_id')

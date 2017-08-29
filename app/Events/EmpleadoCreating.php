@@ -18,7 +18,7 @@ class EmpledaoCreating
      */
     public function __construct(Empleado $empleado)
     {
-        dd("hi fil");
+        //dd("hi fil");
         $this->empleado=$empleado;
         $plantel=Plantel::find($this->empleado->plantel_id);
         $plantel->cns_empleado=$plantel->cns_empleado+1;

@@ -37,7 +37,7 @@ class CreateAlumnosTable extends Migration {
             $table->string('cp')->nullable();
             $table->integer('municipio_id')->unsigned();
             $table->integer('estado_id')->unsigned();
-            $table->integer('st_cliente_id')->unsigned();
+            $table->integer('st_alumno_id')->unsigned();
             $table->string('distancia_escuela')->nullable();
             $table->string('peso')->nullable();
             $table->string('estatura')->nullable();
@@ -73,6 +73,7 @@ class CreateAlumnosTable extends Migration {
             $table->integer('nivel_id')->unsigned();
             $table->integer('grado_id')->unsigned();
             $table->integer('grupo_id')->unsigned();
+            $table->integer('lectivo_id')->unsigned();
             $table->string('cve_alumno')->nullable();
             $table->integer('usu_alta_id')->unsigned();
             $table->integer('usu_mod_id')->unsigned();
@@ -82,10 +83,11 @@ class CreateAlumnosTable extends Migration {
             $table->foreign('usu_alta_id')->references('id')->on('users');
             $table->foreign('grado_id')->references('id')->on('grados');
             $table->foreign('grupo_id')->references('id')->on('grupos');
+            $table->foreign('lectivo_id')->references('id')->on('lectivos');
             $table->foreign('nivel_id')->references('id')->on('nivels');
             $table->foreign('especialidad_id')->references('id')->on('especialidads');
             $table->foreign('plantel_id')->references('id')->on('plantels');
-            $table->foreign('st_cliente_id')->references('id')->on('st_clientes');
+            $table->foreign('st_alumno_id')->references('id')->on('st_alumnos');
             $table->foreign('estado_id')->references('id')->on('estados');
             $table->foreign('municipio_id')->references('id')->on('municipios');
         });

@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updateSalon;
 use App\Http\Requests\createSalon;
-
+use DB;
 class SalonsController extends Controller {
 
 	/**
@@ -123,4 +123,36 @@ class SalonsController extends Controller {
 		return redirect()->route('salons.index')->with('message', 'Registro Borrado.');
 	}
 
+	public function getCmbSalon(Request $request){
+		if($request->ajax()){
+			//dd($request->get('plantel_id'));
+			$plantel=$request->get('plantel_id');
+			$salon=$request->get('salon_id');
+			
+			$final = array();
+			$r = DB::table('salons as s')
+					->select('s.id', 's.name')
+					->where('s.plantel_id', '=', $plantel)
+					->where('s.id', '>', '0')
+					->get();
+			//dd($r);
+			if(isset($salon) and $salon<>0){
+				foreach($r as $r1){
+					if($r1->id==$salon){
+						array_push($final, array('id'=>$r1->id, 
+												 'name'=>$r1->name, 
+												 'selectec'=>'Selected'));
+					}else{
+						array_push($final, array('id'=>$r1->id, 
+												 'name'=>$r1->name, 
+												 'selectec'=>''));
+					}
+				}
+				return $final;
+			}else{
+				return $r;	
+			}
+			
+		}
+	}
 }

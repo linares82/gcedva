@@ -34,41 +34,45 @@
         <div class="col-md-12">
 
             <form action="#">
-                <div class="form-group col-sm-4">
+                <div class="form-group col-sm-4 col-sm-4">
                     <label for="nome">ID</label>
                     <p class="form-control-static">{{$grupo->id}}</p>
                 </div>
-                <div class="form-group">
-                     <label for="name">NAME</label>
+                <div class="form-group col-sm-4">
+                     <label for="name">GRUPO</label>
                      <p class="form-control-static">{{$grupo->name}}</p>
                 </div>
-                    <div class="form-group">
-                     <label for="desc_corta">DESC_CORTA</label>
+                    <div class="form-group col-sm-4">
+                     <label for="desc_corta">DESCRIPCION CORTA</label>
                      <p class="form-control-static">{{$grupo->desc_corta}}</p>
                 </div>
-                    <div class="form-group">
-                     <label for="limite_alumnos">LIMITE_ALUMNOS</label>
+                    <div class="form-group col-sm-4">
+                     <label for="limite_alumnos">LIMITE ALUMNOS</label>
                      <p class="form-control-static">{{$grupo->limite_alumnos}}</p>
                 </div>
-                    <div class="form-group">
-                     <label for="jornada_id">JORNADA_ID</label>
-                     <p class="form-control-static">{{$grupo->jornada_id}}</p>
+                    <div class="form-group col-sm-4">
+                     <label for="jornada_name">JORNADA</label>
+                     <p class="form-control-static">{{$grupo->jornada->name}}</p>
                 </div>
-                    <div class="form-group">
-                     <label for="salon_id">SALON_ID</label>
-                     <p class="form-control-static">{{$grupo->salon_id}}</p>
+                    <div class="form-group col-sm-4">
+                     <label for="salon_name">SALON</label>
+                     <p class="form-control-static">{{$grupo->salon->name}}</p>
                 </div>
-                    <div class="form-group">
-                     <label for="periodo_id">PERIODO_ID</label>
-                     <p class="form-control-static">{{$grupo->periodo_id}}</p>
+                    <div class="form-group col-sm-4">
+                     <label for="periodo_id">PERIODO</label>
+                     <p class="form-control-static">{{$grupo->periodoEstudio->name}}</p>
                 </div>
-                    <div class="form-group">
-                     <label for="usu_alta_id">USU_ALTA_ID</label>
-                     <p class="form-control-static">{{$grupo->usu_alta_id}}</p>
+                    <div class="form-group col-sm-4">
+                     <label for="periodo_id">PLANTEL</label>
+                     <p class="form-control-static">{{$grupo->plantel->razon}}</p>
                 </div>
-                    <div class="form-group">
-                     <label for="usu_mod_id">USU_MOD_ID</label>
-                     <p class="form-control-static">{{$grupo->usu_mod_id}}</p>
+                    <div class="form-group col-sm-4">
+                     <label for="usu_alta_id">ALTA</label>
+                     <p class="form-control-static">{{$grupo->usu_alta->name}}</p>
+                </div>
+                    <div class="form-group col-sm-4">
+                     <label for="usu_mod_id">ULTIMA MODIFICACION</label>
+                     <p class="form-control-static">{{$grupo->usu_mod->name}}</p>
                 </div>
             </form>
 

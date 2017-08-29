@@ -38,17 +38,17 @@
                     <label for="nome">ID</label>
                     <p class="form-control-static">{{$jornada->id}}</p>
                 </div>
-                <div class="form-group">
-                     <label for="name">NAME</label>
+                <div class="form-group col-sm-4">
+                     <label for="name">JORNADA</label>
                      <p class="form-control-static">{{$jornada->name}}</p>
                 </div>
-                    <div class="form-group">
-                     <label for="usu_alta_id">USU_ALTA_ID</label>
-                     <p class="form-control-static">{{$jornada->usu_alta_id}}</p>
+                    <div class="form-group col-sm-4">
+                     <label for="usu_alta_id">ALTA</label>
+                     <p class="form-control-static">{{$jornada->usu_alta->name}}</p>
                 </div>
-                    <div class="form-group">
-                     <label for="usu_mod_id">USU_MOD_ID</label>
-                     <p class="form-control-static">{{$jornada->usu_mod_id}}</p>
+                    <div class="form-group col-sm-4">
+                     <label for="usu_mod_id">ULTIMA MODIFICACION</label>
+                     <p class="form-control-static">{{$jornada->usu_mod->name}}</p>
                 </div>
             </form>
 

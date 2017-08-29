@@ -48,9 +48,9 @@ class PeriodosController extends Controller {
 		$input['usu_mod_id']=Auth::user()->id;
 
 		//create data
-		Periodo::create( $input );
+		$p=Periodo::create( $input );
 
-		return redirect()->route('periodos.index')->with('message', 'Registro Creado.');
+		return redirect()->route('periodos.edit', $p->id)->with('message', 'Registro Creado.');
 	}
 
 	/**

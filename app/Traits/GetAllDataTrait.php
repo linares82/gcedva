@@ -121,16 +121,43 @@ trait GetAllDataTrait {
                 }
                 break;
             case "empleados":
-                if($baseTable=="empleados" and Auth::user()->can('IfiltroEmpleadosXPlantel')){
+                if($baseTable=="empleados" and Auth::user()->can('IFiltroEmpleadosXPlantel')){
                     $myQuery=$myQuery->where('empleados.plantel_id', '=', $empleado->plantel_id);
                 }
                 
                 break;
+            case "grupos":
+                if(Auth::user()->can('IFiltroEmpleadosXPlantel')){
+                    //dd("fil");
+                    $myQuery=$myQuery->where('grupos.plantel_id', '=', $empleado->plantel_id);
+                }
+                break;
+            case "materia":
+                if(Auth::user()->can('IFiltroEmpleadosXPlantel')){
+                    $myQuery=$myQuery->where('materia.plantel_id', '=', $empleado->plantel_id);
+                }
+                break;
+            case "salons":
+                if(Auth::user()->can('IFiltroEmpleadosXPlantel')){
+                    $myQuery=$myQuery->where('salons.plantel_id', '=', $empleado->plantel_id);
+                }
+                
+                break;
+            case "periodo_estudios":
+                if(Auth::user()->can('IFiltroEmpleadosXPlantel')){
+                    $myQuery=$myQuery->where('periodo_estudios.plantel_id', '=', $empleado->plantel_id);
+                }
+                break;
+            case "alumnos":
+                if(Auth::user()->can('IFiltroEmpleadosXPlantel')){
+                    $myQuery=$myQuery->where('alumnos.plantel_id', '=', $empleado->plantel_id);
+                }
+                break;
             case "seguimientos":
-                if($baseTable=="seguimientos" and Auth::user()->can('IfiltroClientesXEmpleado')){
+                if($baseTable=="seguimientos" and Auth::user()->can('IFiltroEmpleadosXPlantel')){
                     $myQuery=$myQuery->where('clientes.empleado_id', '=', $empleado->id);
                 }
-                if($baseTable=="seguimientos" and Auth::user()->can('IfiltroClientesXPlantel')){
+                if($baseTable=="seguimientos" and Auth::user()->can('IFiltroEmpleadosXPlantel')){
                     $myQuery=$myQuery->where('clientes.plantel_id', '=', $empleado->plantel_id);
                 }
                 break;

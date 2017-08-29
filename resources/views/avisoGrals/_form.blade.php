@@ -98,7 +98,6 @@
                     
 @push('scripts')
   <script type="text/javascript" src="{{ asset ('/bower_components/AdminLTE/plugins/lou-multi-select/js/jquery.multi-select.js') }}"></script>
-  <script src="../js/jquery.multi-select.js"></script>
   <script type="text/javascript">
     $('#select-all').click(function(){
         $('select#empleado_id-field').multiSelect('select_all');
@@ -130,7 +129,6 @@
             });
         }); 
     
-
     $('#inicio-field').Zebra_DatePicker({
         days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
         months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],

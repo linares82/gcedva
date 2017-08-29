@@ -50,6 +50,9 @@
                         {!!Form::model($seguimiento, array('route' => array('seguimientos.update', $seguimiento->id),'method' => 'post')) !!}
                             <label for="cliente_id">CLIENTE</label>
                             <a class="btn btn-xs btn-warning" href="{{ route('clientes.edit', $seguimiento->cliente_id) }}"><i class="glyphicon glyphicon-edit"></i>Editar Cliente</a>
+                            @if($seguimiento->st_seguimiento_id==2)
+                            <a class="btn btn-xs btn-success" href="{{ route('alumnos.inscribir', array('c'=>$seguimiento->cliente_id)) }}"><i class="glyphicon glyphicon-edit"></i>Inscribir Cliente</a>
+                            @endif
                             <p class="form-control-static"><label for="cliente_id">Nombre Completo:</label> {{$seguimiento->cliente->nombre." ".$seguimiento->cliente->nombre2." ".$seguimiento->cliente->ape_paterno." ".$seguimiento->cliente->ape_materno}}</p>
                             <p class="form-control-static"><label for="cliente_id">Tel. Fijo:</label> {{$seguimiento->cliente->tel_fijo}}</p>
                             <p class="form-control-static"><label for="cliente_id">Tel. Celular:</label> {{$seguimiento->cliente->tel_cel}}</p>
