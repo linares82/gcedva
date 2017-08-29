@@ -31,7 +31,7 @@ class Seguimiento extends Model
 	}// end
 
 	public function cliente() {
-		return $this->belongsTo('App\cliente');
+		return $this->belongsTo('App\Cliente');
 	}// end
 	public function stSeguimiento() {
 		return $this->belongsTo('App\StSeguimiento');

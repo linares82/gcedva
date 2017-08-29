@@ -121,7 +121,7 @@ trait GetAllDataTrait {
                 }
                 break;
             case "empleados":
-                if($baseTable=="empleados" and Auth::user()->can('IFiltroEmpleadosXPlantel')){
+                if($baseTable=="empleados" and Auth::user()->can('IfiltroEmpleadosXPlantel')){
                     $myQuery=$myQuery->where('empleados.plantel_id', '=', $empleado->plantel_id);
                 }
                 
@@ -154,10 +154,10 @@ trait GetAllDataTrait {
                 }
                 break;
             case "seguimientos":
-                if($baseTable=="seguimientos" and Auth::user()->can('IFiltroEmpleadosXPlantel')){
+                if($baseTable=="seguimientos" and Auth::user()->can('IfiltroClientesXEmpleado')){
                     $myQuery=$myQuery->where('clientes.empleado_id', '=', $empleado->id);
                 }
-                if($baseTable=="seguimientos" and Auth::user()->can('IFiltroEmpleadosXPlantel')){
+                if($baseTable=="seguimientos" and Auth::user()->can('IfiltroClientesXPlantel')){
                     $myQuery=$myQuery->where('clientes.plantel_id', '=', $empleado->plantel_id);
                 }
                 break;

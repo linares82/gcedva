@@ -173,7 +173,7 @@
                 <table class="table table-condensed table-striped">
                     <thead>
                         <tr>
-                            <th>@include('plantillas.getOrderLink', ['column' => 'clientes.id', 'title' => 'ID'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'cliente_id', 'title' => 'ID'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clientes.nombre', 'title' => 'PRIMER NOMBRE'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clientes.nombre2', 'title' => 'SEGUNDO NOMBRE'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clientes.ape_paterno', 'title' => 'APELLIDO PATERNO'])</th>
@@ -189,7 +189,7 @@
                     <tbody>
                         @foreach($clientes as $cliente)
                             <tr>
-                                <td><a href="{{ route('clientes.show', $cliente->cliente->id) }}">{{$cliente->cliente->id}}</a></td>
+                                <td><a href="{{ route('clientes.show', $cliente->cliente_id) }}">{{$cliente->cliente_id}}</a></td>
                                 <td>{{$cliente->cliente->nombre}}</td>
                                 <td>{{$cliente->cliente->nombre2}}</td>
                                 <td>{{$cliente->cliente->ape_paterno}}</td>

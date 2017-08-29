@@ -36,7 +36,7 @@ class ClientesController extends Controller {
 	{
 		//dd($request);
 		$clientes = Seguimiento::getAllData($request);
-		
+		//dd($clientes);
 		return view('clientes.index', compact('clientes'))
 			->with( 'list', Seguimiento::getListFromAllRelationApps() )
 			->with( 'list1', Cliente::getListFromAllRelationApps() );
@@ -233,10 +233,11 @@ class ClientesController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id,Cliente $cliente)
+	public function destroy($id,Cliente $cliente, Seguimiento $s)
 	{
 		$cliente=$cliente->find($id);
 		$cliente->delete();
+		$s->where('cliente_id', '=', $id)->delete();
 
 		return redirect()->route('clientes.index')->with('message', 'Registro Borrado.');
 	}
