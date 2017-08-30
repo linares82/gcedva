@@ -43,7 +43,8 @@
                         Empleado: element.Empleado,
                         Estatus: element.Estatus,
                         Mes: element.Mes,
-                        Meta: element.Meta
+                        Meta: element.Meta,
+                        Medio: element.medio
                     });
                 });
             };
