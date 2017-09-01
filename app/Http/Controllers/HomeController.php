@@ -48,14 +48,14 @@ class HomeController extends Controller
         $a_1=Seguimiento::select(Db::raw('count(c.nombre) as total'))
                     ->where('st_seguimiento_id', '=', 1)
                     ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
-                    ->where('mes', '=', $mes)
+                    //->where('mes', '=', $mes)
                     ->where('c.plantel_id', '=', $e->plantel_id)
                     ->where('c.empleado_id', '=', $e->id)
                     ->value('total');
         //dd($a_1);
         $a_2=Seguimiento::where('st_seguimiento_id', '=', 2)
                     ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
-                    ->where('mes', '=', $mes)
+                    //->where('mes', '=', $mes)
                     ->where('c.empleado_id', '=', $e->id)
                     ->where('c.plantel_id', '=', $e->plantel_id)
                     ->count();
@@ -68,14 +68,14 @@ class HomeController extends Controller
         //dd($a_3."*100 / ".$e->plantel->meta_venta);
         $a_3=Seguimiento::where('st_seguimiento_id', '=', 3)
                     ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
-                    ->where('mes', '=', $mes)
+                    //->where('mes', '=', $mes)
                     ->where('c.empleado_id', '=', $e->id)
                     ->where('c.plantel_id', '=', $e->plantel_id)
                     ->count();
         
         $a_4=Seguimiento::where('st_seguimiento_id', '=', 4)
                     ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
-                    ->where('mes', '=', $mes)
+                    //->where('mes', '=', $mes)
                     ->where('c.empleado_id', '=', $e->id)
                     ->where('c.plantel_id', '=', $e->plantel_id)
                     ->count();
