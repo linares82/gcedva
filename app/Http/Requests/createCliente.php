@@ -29,7 +29,7 @@ class createCliente extends FormRequest
             //'fec_registro',
             //'tel_fijo',
             //'tel_cel'=>'unique:clientes',
-            'mail'=>'email',
+            //'mail'=>'email',
             //'calle',
             //'no_exterior',
             //'no_interior',
