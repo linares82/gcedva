@@ -92,7 +92,7 @@ class HomeController extends Controller
         $grafica=Seguimiento::select('sts.name as estatus', DB::raw('count(sts.name) as valor'))
                     ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
                     ->join('st_seguimientos as sts', 'sts.id','=','seguimientos.st_seguimiento_id')
-                    ->where('mes', '=', $mes)
+                    //->where('mes', '=', $mes)
                     ->where('c.empleado_id', '=', $e->id)
                     ->where('c.plantel_id', '=', $e->plantel_id)
                     ->groupBy('sts.name')
