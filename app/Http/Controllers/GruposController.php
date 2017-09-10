@@ -156,4 +156,10 @@ class GruposController extends Controller {
 		}
 	}
 
+	public function getDisponibles(Request $request){
+		$r=DB::table('grupos as g')->find($request->input('grupo_id'));
+		//dd($r->registrados);
+		return $r->limite_alumnos-$r->registrados;
+ 	}
+	
 }

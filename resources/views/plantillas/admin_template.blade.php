@@ -51,10 +51,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 	  <link rel="stylesheet" href=" {{ asset('/zebra_datepicker/public/css/bootstrap.css') }} ">
     <!-- Select2 -->
     <link rel="stylesheet" href="{{ asset('/bower_components/AdminLTE/plugins/select2/select2.min.css')}}">
-    <!--Combogrid-->
-    <link rel="stylesheet" type="text/css" media="screen" href="{{ asset('/jquery.combogrid-1.6.3/resources/css/smoothness/jquery-ui-1.10.1.custom.css')}}"/>
-    <link rel="stylesheet" type="text/css" media="screen" href="{{ asset('/jquery.combogrid-1.6.3/resources/css/smoothness/jquery.ui.combogrid.css')}}"/>
-
+    
     
 
 	
@@ -131,12 +128,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <!-- Select2 -->
 <script src="{{ asset ('/bower_components/AdminLTE/plugins/select2/select2.min.js') }}"></script>
 <script src="{{ asset ('/bower_components/AdminLTE/plugins/select2/select2.js') }}"></script>
-<!-- Combogrid -->
-<script type="text/javascript" src="{{ asset ('/jquery.combogrid-1.6.3/resources/jquery/jquery-ui-1.10.1.custom.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset ('/jquery.combogrid-1.6.3/resources/plugin/jquery.ui.combogrid-1.6.3.js') }}"></script>
-<script type="text/javascript" src="{{ asset ('/jquery.combogrid-1.6.3/resources/plugin/jquery.i18n.properties-1.0.9.js') }}"></script>
-
-
 
 <script>
 (function() {

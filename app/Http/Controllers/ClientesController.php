@@ -11,6 +11,7 @@ use App\Empleado;
 use App\PreguntaCliente;
 use App\Estado;
 use App\Municipio;
+use App\PivotDocCliente;
 use App\Preguntum;
 use App\Param;
 use Illuminate\Http\Request;
@@ -21,6 +22,7 @@ use App\Http\Requests\Carga;
 use Sms;
 use Session;
 use Hash;
+use DB;
 //use App\Mail\CorreoBienvenida as Envia_mail;
 
 class ClientesController extends Controller {
@@ -38,6 +40,16 @@ class ClientesController extends Controller {
 		$clientes = Seguimiento::getAllData($request);
 		//dd($clientes);
 		return view('clientes.index', compact('clientes'))
+			->with( 'list', Seguimiento::getListFromAllRelationApps() )
+			->with( 'list1', Cliente::getListFromAllRelationApps() );
+	}
+
+	public function index2(Request $request)
+	{
+		//dd($request);
+		$clientes = Cliente::getAllData($request);
+		//dd($clientes);
+		return view('clientes.index2', compact('clientes'))
 			->with( 'list', Seguimiento::getListFromAllRelationApps() )
 			->with( 'list1', Cliente::getListFromAllRelationApps() );
 	}
@@ -93,6 +105,11 @@ class ClientesController extends Controller {
 		}else{
 			$input['celular_confirmado']=1;
 		}
+		if(!isset($input['extranjero'])){
+			$input['extranjero']=0;
+		}else{
+			$input['extranjero']=1;
+		}
 		//dd($input);
 		//create data
 		try{
@@ -140,8 +157,59 @@ class ClientesController extends Controller {
 		$cp=PreguntaCliente::where('cliente_id','=', $id)->get();
 		//dd($cp);
 		//dd($preguntas);
-		return view('clientes.edit', compact('cliente', 'preguntas', 'cp'))
+		$doc_existentes=DB::table('pivot_doc_clientes as pde')->select('doc_alumno_id')
+							->join('clientes as c', 'c.id', '=', 'pde.cliente_id')
+							->where('c.id', '=', $id)
+							->where('pde.deleted_at','=', NULL)->get();
+
+		$de_array=array();
+		if($doc_existentes->isNotEmpty()){
+			foreach($doc_existentes as $de){
+				array_push($de_array, $de->doc_alumno_id);
+				
+			}
+			//dd($de_array);
+		}
+		
+		$documentos_faltantes=DB::table('doc_alumnos')
+									->select()
+									->whereNotIn('id', $de_array)
+									->get();
+		return view('clientes.edit', compact('cliente', 'preguntas', 'cp','documentos_faltantes'))
+			->with( 'list', Cliente::getListFromAllRelationApps() )
+			->with( 'list1', PivotDocCliente::getListFromAllRelationApps() );
+	}
+
+	public function getReasignar()
+	{
+		return view('clientes.frm_reasignar')
 			->with( 'list', Cliente::getListFromAllRelationApps() );
+	}
+
+	public function getCuenta(Request $request)
+	{
+		//dd($request->input('plantel_id'));
+		$plantel=$request->input('plantel_id');
+		$empleado=$request->input('empleado_id');
+		$estatus=$request->input('st_cliente_id');
+		$cuenta=Cliente::where('plantel_id', '=', $plantel)
+						->where('empleado_id', '=', $empleado)
+						->where('st_cliente_id', '=', $estatus)
+						->count();
+		
+		return $cuenta;
+	}
+
+	public function postReasignar(Request $request)
+	{
+		$input = $request->all();
+		//dd($input);
+		Cliente::where('plantel_id', '=', $input['plantel_id'])
+						->where('empleado_id', '=', $input['empleado_id'])
+						->where('st_cliente_id', '=', $input['st_cliente_id'])
+						->update(['empleado_id' => $input['empleado_id2']]);
+
+		return redirect()->route('clientes.index');
 	}
 
 	/**
@@ -203,10 +271,23 @@ class ClientesController extends Controller {
 		}else{
 			$input['celular_confirmado']=1;
 		}
+		if(!isset($input['extranjero'])){
+			$input['extranjero']=0;
+		}else{
+			$input['extranjero']=1;
+		}
 		//dd($input);
 		//update data
 		$cliente=$cliente->find($id);
 		$cliente->update( $input );
+		if($request->has('doc_cliente_id') and $request->has('archivo')){
+			$input2['doc_alumno_id']=$request->get('doc_cliente_id');
+			$input2['archivo']=$request->get('archivo');
+			$input2['cliente_id']=$id;
+			$input2['usu_alta_id']=Auth::user()->id;
+			$input2['usu_mod_id']=Auth::user()->id;
+			PivotDocCliente::create($input2);
+		}
 		
 		if($pc['pregunta_id']<>0){	
 			PreguntaCliente::create($pc);	

@@ -13,7 +13,7 @@
                        @endif
                     </div>
                     <div class="form-group col-md-4 @if($errors->has('meta')) has-error @endif">
-                       <label for="meta-field">Meta</label>
+                       <label for="meta-field">Meta Empleado</label>
                        {!! Form::text("meta", null, array("class" => "form-control", "id" => "meta-field")) !!}
                        @if($errors->has("meta"))
                         <span class="help-block">{{ $errors->first("meta") }}</span>

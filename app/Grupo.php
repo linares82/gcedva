@@ -22,7 +22,7 @@ class Grupo extends Model
     } 
 
 	//Mass Assignment
-	protected $fillable = ['name','desc_corta','limite_alumnos','minimo_alumnos','jornada_id','salon_id','periodo_estudio_id', 'plantel_id','usu_alta_id','usu_mod_id'];
+	protected $fillable = ['name','desc_corta','limite_alumnos','registrados','minimo_alumnos','jornada_id','salon_id','periodo_estudio_id', 'plantel_id','usu_alta_id','usu_mod_id'];
 
 	public function usu_alta() {
 		return $this->hasOne('App\User', 'id', 'usu_alta_id');

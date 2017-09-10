@@ -145,10 +145,17 @@
                          @endif
                       </div>
                       <div class="form-group col-md-4 @if($errors->has('meta_venta')) has-error @endif">
-                         <label for="meta_venta-field">Meta Venta</label>
+                         <label for="meta_venta-field">Meta Total Empleado</label>
                          {!! Form::text("meta_venta", null, array("class" => "form-control", "id" => "meta_venta-field")) !!}
                          @if($errors->has("meta_venta"))
                           <span class="help-block">{{ $errors->first("meta_venta") }}</span>
+                         @endif
+                      </div>
+                      <div class="form-group col-md-4 @if($errors->has('meta_total')) has-error @endif">
+                         <label for="meta_total-field">Meta Total</label>
+                         {!! Form::text("meta_total", null, array("class" => "form-control", "id" => "meta_total-field")) !!}
+                         @if($errors->has("meta_total"))
+                          <span class="help-block">{{ $errors->first("meta_total") }}</span>
                          @endif
                       </div>
                     </div>

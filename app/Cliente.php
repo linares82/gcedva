@@ -129,6 +129,14 @@ class Cliente extends Model
 		return $this->belongsTo('App\Especialidad');
 	}// end
 
+	public function pivotDocCliente() {
+		return $this->hasMany('App\PivotDocCliente');
+	}// end
+
+	public function inscripciones() {
+		return $this->hasMany('App\Inscripcion');
+	}// end
+
 	//Scopes
 	public function scopePlantel($query)
     {

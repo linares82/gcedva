@@ -103,10 +103,6 @@
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['clientes.ape_materno_cont']) ?: '' }}" name="q[clientes.ape_materno_cont]" id="q_clientes.ape_materno_cont" />
                                 
                             </div>
-                            <div class="form-group col-md-4">
-                                <label for="q_clientes.matricula_cont">MATRICULA</label>
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['clientes.matricula_cont']) ?: '' }}" name="q[clientes.matricula_cont]" id="q_clientes.matricula_cont" />
-                            </div>
                                                     <!--
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_fec_registro_gt">FEC_REGISTRO</label>
@@ -118,29 +114,34 @@
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['fec_registro_lt']) ?: '' }}" name="q[fec_registro_lt]" id="q_fec_registro_lt" />
                                 </div>
                             </div>
-                            -->
+                            
                             
                             <div class="form-group col-md-4">
-                                <label for="q_clientes.st_cliente_id_lt">ESTATUS</label>
-                                    {!! Form::select("st_cliente_id", $list1["StCliente"], "{{ @(Request::input('q')['clientes.st_cliente_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[clientes.st_cliente_id_lt]", "id"=>"q_clientes.st_cliente_id_lt", "style"=>"width:100%;" )) !!}
+                                <label for="q_clientes.st_cliente_id_cont">ESTATUS</label>
+                                
+                                    {!! Form::select("st_cliente_id", $list1["StCliente"], "{{ @(Request::input('q')['clientes.st_cliente_id_cont']) ?: '' }}", array("class" => "form-control", "name"=>"q[clientes.st_cliente_id_cont]", "id"=>"q_clientes.st_cliente_id_cont", "style"=>"width:100%;" )) !!}
+                                
                             </div>
-                        
-                            <div class="form-group col-md-4" style="clear:left;">
-                                <label for="q_st_seguimiento_id_lt">ESTATUS SEGUIMIENTO</label>
-                                    {!! Form::select("st_seguimiento_id", $list["StSeguimiento"], "{{ @(Request::input('q')['st_seguimiento_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[st_seguimiento_id_lt]", "id"=>"q_st_seguimiento_id_lt", "style"=>"width:100%;" )) !!}
+                            -->
+                            <div class="form-group col-md-4">
+                                <label for="q_st_seguimiento_id_cont">ESTATUS SEGUIMIENTO</label>
+                                
+                                    <!--<input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['clientes.st_cliente_id_cont']) ?: '' }}" name="q[clientes.st_cliente_id_cont]" id="q_st_clientes.name_cont" />-->
+                                    {!! Form::select("st_seguimiento_id", $list["StSeguimiento"], "{{ @(Request::input('q')['st_seguimiento_id_cont']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[st_seguimiento_id_cont]", "id"=>"q_st_seguimiento_id_cont", "style"=>"width:100%;" )) !!}
+                                
                             </div>
 
                             
                             <div class="form-group col-md-4" >
-                                <label for="q_clientes.plantel_id_lt">PLANTEL</label>
+                                <label for="q_clientes.plantel_id_cont">PLANTEL</label>
                                 
-                                    {!! Form::select("clientes.plantel_id", $list1["Plantel"], "{{ @(Request::input('q')['clientes.plantel_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[clientes.plantel_id_lt]", "id"=>"q_clientes.plantel_id_lt", "style"=>"width:100%;")) !!}
+                                    {!! Form::select("clientes.plantel_id", $list1["Plantel"], "{{ @(Request::input('q')['clientes.plantel_id_cont']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[clientes.plantel_id_cont]", "id"=>"q_clientes.plantel_id_cont", "style"=>"width:100%;")) !!}
                                 
                             </div>
                             
                             <div class="form-group col-md-4" style="clear:left;">
-                                <label for="q_clientes.empleado_id_lt">EMPLEADO</label>
-                                    {!! Form::select("clientes.empleado_id", $list1["Empleado"], "{{ @(Request::input('q')['clientes.empleado_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[clientes.empleado_id_lt]", "id"=>"q_clientes.empleado_id_lt", "style"=>"width:100%;" )) !!}
+                                <label for="q_clientes.empleado_id_cont">EMPLEADO</label>
+                                    {!! Form::select("clientes.empleado_id", $list1["Empleado"], "{{ @(Request::input('q')['clientes.empleado_id_cont']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[clientes.empleado_id_cont]", "id"=>"q_clientes.empleado_id_cont", "style"=>"width:100%;" )) !!}
                             </div>
                             
 
@@ -178,7 +179,6 @@
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clientes.ape_paterno', 'title' => 'APELLIDO PATERNO'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clientes.ape_materno', 'title' => 'APELLIDO MATERNO'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'st_seguimiento_id', 'title' => 'ESTATUS SEGUIMIENTO'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clientes.st_cliente_id', 'title' => 'ESTATUS CLIENTE'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clientes.plantel_id', 'title' => 'PLANTEL'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clientes.empleado_id', 'title' => 'EMPLEADO'])</th>
                             
@@ -189,27 +189,26 @@
                     <tbody>
                         @foreach($clientes as $cliente)
                             <tr>
-                                <td><a href="{{ route('clientes.show', $cliente->cliente_id) }}">{{$cliente->cliente_id}}</a></td>
-                                <td>{{$cliente->cliente->nombre}}</td>
-                                <td>{{$cliente->cliente->nombre2}}</td>
-                                <td>{{$cliente->cliente->ape_paterno}}</td>
-                                <td>{{$cliente->cliente->ape_materno}}</td>
-                                <td>{{$cliente->stSeguimiento->name}}</td>
-                                <td>{{$cliente->cliente->stCliente->name}}</td>
-                                <td>{{$cliente->cliente->plantel->razon}}</td>
-                                <td>{{$cliente->cliente->empleado->nombre." ".$cliente->cliente->empleado->ape_paterno." ".$cliente->cliente->empleado->ape_materno}}</td>
+                                <td><a href="{{ route('clientes.show', $cliente->id) }}">{{$cliente->id}}</a></td>
+                                <td>{{$cliente->nombre}}</td>
+                                <td>{{$cliente->nombre2}}</td>
+                                <td>{{$cliente->ape_paterno}}</td>
+                                <td>{{$cliente->ape_materno}}</td>
+                                <td>{{$cliente->seguimiento->stSeguimiento->name}}</td>
+                                <td>{{$cliente->plantel->razon}}</td>
+                                <td>{{$cliente->empleado->nombre." ".$cliente->empleado->ape_paterno." ".$cliente->empleado->ape_materno}}</td>
                                 <td class="text-right">
                                     @permission('seguimientos.show')
-                                    <a class="btn btn-xs btn-default" href="{{ route('seguimientos.show', $cliente->cliente->id) }}"><i class="glyphicon glyphicon-edit"></i> Seguimiento</a>
+                                    <a class="btn btn-xs btn-default" href="{{ route('seguimientos.show', $cliente->id) }}"><i class="glyphicon glyphicon-edit"></i> Seguimiento</a>
                                     @endpermission
                                     @permission('clientes.edit')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('clientes.duplicate', $cliente->cliente->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
+                                    <a class="btn btn-xs btn-primary" href="{{ route('clientes.duplicate', $cliente->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
                                     @endpermission
                                     @permission('clientes.edit')
-                                    <a class="btn btn-xs btn-warning" href="{{ route('clientes.edit', $cliente->cliente->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
+                                    <a class="btn btn-xs btn-warning" href="{{ route('clientes.edit', $cliente->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
                                     @endpermission
                                     @permission('clientes.destroy')
-                                    {!! Form::model($cliente, array('route' => array('clientes.destroy', $cliente->cliente->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}
+                                    {!! Form::model($cliente, array('route' => array('clientes.destroy', $cliente->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}
                                         <button type="submit" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> Borrar</button>
                                     {!! Form::close() !!}
                                     @endpermission

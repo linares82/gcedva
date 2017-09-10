@@ -73,10 +73,10 @@ trait GetAllDataTrait {
                 }
 
                 if( $operator === 'cont' ){
-                    $myQuery = $myQuery->where($column, 'LIKE', '%'.$value.'%');
-                } /*elseif( $operator === 'lt' ){
-                    $myQuery = $myQuery->where($column, '<=', $value);                
-                }elseif( $operator === 'gt' ){
+                    $myQuery = $myQuery->Where($column, 'LIKE', '%'.$value.'%');
+                } elseif( $operator === 'lt' and $value<>0){
+                    $myQuery = $myQuery->Where($column, '=', $value);                
+                }/*elseif( $operator === 'gt' ){
                     $myQuery = $myQuery->where($column, '>=', $value);                
                 }*/
             }

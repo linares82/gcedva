@@ -17,6 +17,7 @@ class CreateGruposTable extends Migration {
             $table->string('name');
             $table->string('desc_corta');
             $table->integer('limite_alumnos')->unsigned();
+			$table->integer('registrados')->unsigned()->nullable();
 			$table->integer('minimo_alumnos')->unsigned();
             $table->integer('jornada_id')->unsigned();
             $table->integer('salon_id')->unsigned();
