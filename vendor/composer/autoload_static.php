@@ -566,6 +566,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'CreateStAlumnosTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_24_181015_create_st_alumnos_table.php',
         'CreateStClientesTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_30_224222_create_st_clientes_table.php',
         'CreateStEmpleadosTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_28_234906_create_st_empleados_table.php',
+        'CreateStPlantelsTable' => __DIR__ . '/../..' . '/database/migrations/2017_09_11_152743_create_st_plantels_table.php',
         'CreateStSeguimientosTable' => __DIR__ . '/../..' . '/database/migrations/2017_07_17_160250_create_st_seguimientos_table.php',
         'CreateStTareasTable' => __DIR__ . '/../..' . '/database/migrations/2017_05_17_210250_create_st_tareas_table.php',
         'CreateSubcursosTable' => __DIR__ . '/../..' . '/database/migrations/2017_05_02_203802_create_subcursos_table.php',

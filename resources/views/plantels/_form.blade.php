@@ -139,7 +139,7 @@
                       </div>
                       <div class="form-group col-md-4 @if($errors->has('lectivo_id')) has-error @endif">
                          <label for="lectivo_id-field">Periodo Lectivo</label>
-                         {!! Form::select("lectivo_id", $list["Lectivo"], null, array("class" => "form-control select_seguridado", "id" => "lectivo_id-field")) !!}
+                         {!! Form::select("lectivo_id", $list["Lectivo"], null, array("class" => "form-control select_seguridad", "id" => "lectivo_id-field")) !!}
                          @if($errors->has("lectivo_id"))
                           <span class="help-block">{{ $errors->first("lectivo_id") }}</span>
                          @endif
@@ -156,6 +156,13 @@
                          {!! Form::text("meta_total", null, array("class" => "form-control", "id" => "meta_total-field")) !!}
                          @if($errors->has("meta_total"))
                           <span class="help-block">{{ $errors->first("meta_total") }}</span>
+                         @endif
+                      </div>
+                      <div class="form-group col-md-4 @if($errors->has('st_plantel_id')) has-error @endif">
+                         <label for="st_plantel_id-field">Estatus</label>
+                         {!! Form::select("st_plantel_id", $list["StPlantel"], null, array("class" => "form-control select_seguridad", "id" => "st_plantel_id-field")) !!}
+                         @if($errors->has("st_plantel_id"))
+                          <span class="help-block">{{ $errors->first("st_plantel_id") }}</span>
                          @endif
                       </div>
                     </div>

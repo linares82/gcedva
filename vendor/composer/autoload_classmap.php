@@ -67,6 +67,7 @@ return array(
     'CreateStAlumnosTable' => $baseDir . '/database/migrations/2017_08_24_181015_create_st_alumnos_table.php',
     'CreateStClientesTable' => $baseDir . '/database/migrations/2017_03_30_224222_create_st_clientes_table.php',
     'CreateStEmpleadosTable' => $baseDir . '/database/migrations/2017_03_28_234906_create_st_empleados_table.php',
+    'CreateStPlantelsTable' => $baseDir . '/database/migrations/2017_09_11_152743_create_st_plantels_table.php',
     'CreateStSeguimientosTable' => $baseDir . '/database/migrations/2017_07_17_160250_create_st_seguimientos_table.php',
     'CreateStTareasTable' => $baseDir . '/database/migrations/2017_05_17_210250_create_st_tareas_table.php',
     'CreateSubcursosTable' => $baseDir . '/database/migrations/2017_05_02_203802_create_subcursos_table.php',
