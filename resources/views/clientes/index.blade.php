@@ -196,7 +196,11 @@
                                 <td>{{$cliente->cliente->ape_materno}}</td>
                                 <td>{{$cliente->stSeguimiento->name}}</td>
                                 <td>{{$cliente->cliente->stCliente->name}}</td>
-                                <td>{{$cliente->cliente->plantel->razon}}</td>
+                                <td>
+                                @if(isset($cliente->cliente->plantel))
+                                {{$cliente->cliente->plantel->razon}}
+                                @endif
+                                </td>
                                 <td>{{$cliente->cliente->empleado->nombre." ".$cliente->cliente->empleado->ape_paterno." ".$cliente->cliente->empleado->ape_materno}}</td>
                                 <td class="text-right">
                                     @permission('seguimientos.show')

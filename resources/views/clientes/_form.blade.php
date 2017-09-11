@@ -1014,7 +1014,7 @@
           data: (empleado=$('#empleado_id-field').val),
           beforeSend : function(){$("#loading3").show();},
           complete : function(){$("#loading3").hide();},
-          default: function(data){
+          success: function(data){
               $('#plantel_id-field').val(data).change();
           }
       });*/
@@ -1117,13 +1117,13 @@
                   dataType: 'json',
                   beforeSend : function(){$("#loading10").show();},
                   complete : function(){$("#loading10").hide();},
-                  default: function(data){
+                  success: function(data){
                       //$example.select2("destroy");
                       $('#especialidad_id-field').html('');
                       $('#especialidad2_id-field').html('');
                       $('#especialidad3_id-field').html('');
                       $('#especialidad4_id-field').html('');
-                      //$('#especialidad_id-field').empty();
+                      $('#especialidad_id-field').empty();
                       $('#especialidad_id-field').append($('<option></option>').text('Seleccionar').val('0'));
                       $('#especialidad2_id-field').append($('<option></option>').text('Seleccionar').val('0'));
                       $('#especialidad3_id-field').append($('<option></option>').text('Seleccionar').val('0'));
@@ -1152,7 +1152,7 @@
                   dataType: 'json',
                   beforeSend : function(){$("#loading11").show();},
                   complete : function(){$("#loading11").hide();},
-                  default: function(data){
+                  success: function(data){
                       //alert(data);
                       //$example.select2("destroy");
                       $('#nivel_id-field').html('');
@@ -1180,7 +1180,7 @@
                   dataType: 'json',
                   beforeSend : function(){$("#loading11").show();},
                   complete : function(){$("#loading11").hide();},
-                  default: function(data){
+                  success: function(data){
                       //alert(data);
                       //$example.select2("destroy");
                       $('#curso_id-field').html('');
@@ -1208,7 +1208,7 @@
                   dataType: 'json',
                   beforeSend : function(){$("#loading11").show();},
                   complete : function(){$("#loading11").hide();},
-                  default: function(data){
+                  success: function(data){
                       //alert(data);
                       //$example.select2("destroy");
                       $('#diplomado_id-field').html('');
@@ -1236,7 +1236,7 @@
                   dataType: 'json',
                   beforeSend : function(){$("#loading11").show();},
                   complete : function(){$("#loading11").hide();},
-                  default: function(data){
+                  success: function(data){
                       //alert(data);
                       //$example.select2("destroy");
                       $('#otro_id-field').html('');
@@ -1265,7 +1265,7 @@
                   dataType: 'json',
                   beforeSend : function(){$("#loading12").show();},
                   complete : function(){$("#loading12").hide();},
-                  default: function(data){
+                  success: function(data){
                       //alert(data);
                       //$example.select2("destroy");
                       $('#grado_id-field').html('');
@@ -1293,7 +1293,7 @@
                   dataType: 'json',
                   beforeSend : function(){$("#loading12").show();},
                   complete : function(){$("#loading12").hide();},
-                  default: function(data){
+                  success: function(data){
                       //alert(data);
                       //$example.select2("destroy");
                       $('#subcurso_id-field').html('');
@@ -1321,7 +1321,7 @@
                   dataType: 'json',
                   beforeSend : function(){$("#loading12").show();},
                   complete : function(){$("#loading12").hide();},
-                  default: function(data){
+                  success: function(data){
                       //alert(data);
                       //$example.select2("destroy");
                       $('#subdiplomado_id-field').html('');
@@ -1349,7 +1349,7 @@
                   dataType: 'json',
                   beforeSend : function(){$("#loading12").show();},
                   complete : function(){$("#loading12").hide();},
-                  default: function(data){
+                  success: function(data){
                       //alert(data);
                       //$example.select2("destroy");
                       $('#subotro_id-field').html('');

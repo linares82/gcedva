@@ -61,8 +61,23 @@ trait RelationManagerTrait {
             $relatedObjList = $relationAppArray['app']::where('plantel_id', '=', $e->plantel_id)->pluck($relationAppArray['relation_display_column'], 'id');
             //dd($relatedObjList);
           }
-          
-          /*if($relationAppName=="Nivel" and Auth::user()->can('IfiltroNivelXplantel')){
+          /*
+          if($relationAppName=="Especialidad" and Auth::user()->can('IfiltroEspecialidadsXPlantel')){
+            $relatedObjList = $relationAppArray['app']::where('plantel_id', '=', $e->plantel_id)
+                                                      ->join('plantels as p', 'p.id', '=', 'especialidads.plantel_id')
+                                                      ->select(DB::raw('concat(name, "-",cve_plantel, "-",razon) as relacion, especialidads.id'))
+                                                      ->orderBy('p.id')
+                                                      ->pluck('relacion', 'id');
+            //dd($relatedObjList);
+          }elseif($relationAppName=="Especialidad"){
+            //dd("fil");
+            $relatedObjList = $relationAppArray['app']::join('plantels as p', 'p.id', '=', 'especialidads.plantel_id')
+                                                      ->select(DB::raw('concat(name, "-",p.cve_plantel, "-",razon) as relacion, especialidads.id'))
+                                                      ->orderBy('p.id')
+                                                      ->pluck('relacion', 'nivels.id');
+            //dd($relatedObjList);
+          }
+          if($relationAppName=="Nivel" and Auth::user()->can('IfiltroNivelXplantel')){
             $relatedObjList = $relationAppArray['app']::where('plantel_id', '=', $e->plantel_id)
                                                       ->join('plantels as p', 'p.id', '=', 'nivels.plantel_id')
                                                       ->select(DB::raw('concat(name, "-",cve_plantel, "-",razon) as relacion, nivels.id'))
@@ -77,6 +92,7 @@ trait RelationManagerTrait {
                                                       ->pluck('relacion', 'nivels.id');
             //dd($relatedObjList);
           }
+          
           if($relationAppName=="Grado" and Auth::user()->can('IfiltroGradoXplantel')){
             $relatedObjList = $relationAppArray['app']::where('plantel_id', '=', $e->plantel_id)
                                                       ->join('plantels as p', 'p.id', '=', 'grados.plantel_id')
@@ -90,6 +106,7 @@ trait RelationManagerTrait {
                                                       ->orderBy('p.id')
                                                       ->pluck('relacion', 'grados.id');
           }
+          
           if($relationAppName=="Curso" and Auth::user()->can('IfiltroCursoXplantel')){
             $relatedObjList = $relationAppArray['app']::where('plantel_id', '=', $e->plantel_id)
                                                       ->join('plantels as p', 'p.id', '=', 'cursos.plantel_id')

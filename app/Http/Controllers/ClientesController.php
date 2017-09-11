@@ -36,7 +36,8 @@ class ClientesController extends Controller {
 	 */
 	public function index(Request $request)
 	{
-		//dd($request);
+		/*$c=Cliente::find(86);
+		dd($c);*/
 		$clientes = Seguimiento::getAllData($request);
 		//dd($clientes);
 		return view('clientes.index', compact('clientes'))
