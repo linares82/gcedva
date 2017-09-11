@@ -774,6 +774,7 @@
                                 </fieldset>
                             </div>
                             <div id="tab5" class="tab-pane">
+                                @if(isset($cliente->inscripciones))
                                 <table class="table table-condensed table-striped">
                                     <thead>
                                         <tr>
@@ -803,6 +804,7 @@
                                         @endforeach
                                     </tbody>
                                 </table>
+                                @endif
                             </div>
                             <div id="tab6" class="tab-pane">
                                 @if(isset($cliente))
