@@ -166,6 +166,7 @@
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'ape_paterno', 'title' => 'A. PATERNO'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'ape_materno', 'title' => 'A. MATERNO'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'puestos.name', 'title' => 'PUESTO'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'st_empleados.name', 'title' => 'ESTATUS'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
@@ -179,6 +180,7 @@
                                 <td>{{$empleado->ape_paterno}}</td>
                                 <td>{{$empleado->ape_materno}}</td>
                                 <td>{{$empleado->puesto->name}}</td>
+                                <td>{{$empleado->st_empleado->name}}</td>
                                 <td class="text-right">
                                     @permission('empleados.edit')
                                     <a class="btn btn-xs btn-primary" href="{{ route('empleados.duplicate', $empleado->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
