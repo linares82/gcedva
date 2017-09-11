@@ -1414,6 +1414,7 @@
      }
 
     //pantalla flotante
+    @if(isset($cliente))
     var popup;
     function InscribirCliente(numero) {
         var plantel=$('#plantel_id-field option:selected').val();
@@ -1457,7 +1458,7 @@
         popup.focus();
         return false
     }
-    
+    @endif
         
   </script>
 @endpush
