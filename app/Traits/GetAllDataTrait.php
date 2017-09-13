@@ -44,7 +44,9 @@ trait GetAllDataTrait {
                 $relationColumnInBaseTable = $myObj->solveName( $className, config('CrudDscaffold.app_name_rules.name_name') ).'_id';    //ex).apple_type_id
 
                 $myQuery = $myQuery->leftJoin( $relationTable, $baseTable.'.'.$relationColumnInBaseTable, '=', $relationTable.'.id' );  //ex).leftJoin( 'apple_types', 'apples.apple_type_id', '=', 'apple_types.id' )
-
+                
+                //Log::error("FLC: ".$relationTable);
+                
             }
         }
 
@@ -146,6 +148,11 @@ trait GetAllDataTrait {
             case "periodo_estudios":
                 if(Auth::user()->can('IFiltroEmpleadosXPlantel')){
                     $myQuery=$myQuery->where('periodo_estudios.plantel_id', '=', $empleado->plantel_id);
+                }
+                break;
+            case "asignacion_academica":
+                if(Auth::user()->can('IFiltroEmpleadosXPlantel')){
+                    $myQuery=$myQuery->where('asignacion_academicas.plantel_id', '=', $empleado->plantel_id);
                 }
                 break;
             case "alumnos":

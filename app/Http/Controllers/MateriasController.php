@@ -142,14 +142,33 @@ class MateriasController extends Controller {
 			//dd($request->all());
 			$plantel=$request->get('plantel_id');
 			
+			$materia=$request->get('materium_id');
+			//dd("FLC:".$materia);
 			$final = array();
 			$r = DB::table('materia as m')
 					->select('m.id', 'm.name')
 					->where('m.plantel_id', '=', $plantel)
 					->where('m.id', '>', '0')
 					->get();
+			
 			//dd($r);
-			return $r;	
+			if(isset($materia) and $materia<>0){
+				foreach($r as $r1){
+					if($r1->id==$materia){
+						array_push($final, array('id'=>$r1->id, 
+												 'name'=>$r1->name, 
+												 'selectec'=>'Selected'));
+					}else{
+						array_push($final, array('id'=>$r1->id, 
+												 'name'=>$r1->name, 
+												 'selectec'=>''));
+					}
+				}
+				return $final;
+			}else{
+				return $r;	
+			}
+			
 		}
 	}
 }

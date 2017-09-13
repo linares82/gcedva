@@ -326,19 +326,37 @@ class EmpleadosController extends Controller {
 	}
 
 	public function getEmpleadosXplantelXpuesto(Request $request){
-		
 		if($request->ajax()){
 			//dd($request->all());
-			$plantel = $request->get('plantel_id');
-			$puesto = $request->get('puesto_id');
+			$plantel=$request->get('plantel_id');
+			$puesto=$request->get('puesto_id');
+			$empleado=$request->get('empleado_id');
 			
 			$final = array();
-			$r =Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as nombre'))
-				 		->where('plantel_id', '=', $plantel)
-						->where('puesto_id', '=', $puesto)
-						->get();
+			$r = DB::table('empleados as e')
+					->select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as nombre'))
+					->where('e.plantel_id', '=', $plantel)
+					->where('e.puesto_id', '=', $puesto)
+					->where('e.id', '>', '0')
+					->get();
 			
-			return $r;	
+			//dd($r);
+			if(isset($empleado) and $empleado<>0){
+				foreach($r as $r1){
+					if($r1->id==$empleado){
+						array_push($final, array('id'=>$r1->id, 
+												 'nombre'=>$r1->nombre, 
+												 'selectec'=>'Selected'));
+					}else{
+						array_push($final, array('id'=>$r1->id, 
+												 'nombre'=>$r1->nombre, 
+												 'selectec'=>''));
+					}
+				}
+				return $final;
+			}else{
+				return $r;	
+			}
 			
 		}
 	}
