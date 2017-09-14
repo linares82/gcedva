@@ -94,10 +94,10 @@
 
 
 @push('scripts')
-  <script type="text/javascript" src="{{asset('bower_components/AdminLTE/plugins/masktime/jquery.js')}}"></script>	
+  
   <script type="text/javascript" src="{{asset('bower_components/AdminLTE/plugins/masktime/jquery.maskedinput.js')}}"></script>	
   <script type="text/javascript">
-    function valida(valor) 
+    /*function valida(valor) 
 		{
 		   //que no existan elementos sin escribir
 		   if(valor.indexOf("_") == -1)
@@ -109,13 +109,14 @@
 		      } 
 		   }
 		}
+        */
     $(document).ready(function() {
-        
+      /*  
         $.mask.definitions['H']='[012]';
         $.mask.definitions['N']='[012345]';
         $.mask.definitions['n']='[0123456789]';
         $("#hora-field").mask("Hn:Nn:Nn");
-
+*/
         getCmbInstructores();
         getCmbMaterias();
         getCmbGrupos();
