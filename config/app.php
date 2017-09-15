@@ -179,6 +179,7 @@ return [
         Maatwebsite\Excel\ExcelServiceProvider::Class,
         Arcanedev\LogViewer\LogViewerServiceProvider::class,
         Kim\Activity\ActivityServiceProvider::class,
+        Studio\Totem\Providers\TotemServiceProvider::class,
 
         /*
          * Application Service Providers...

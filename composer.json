@@ -21,6 +21,7 @@
         "maatwebsite/excel": "~2.1.0",
         "paulvl/backup": "3.*",
         "pqb/filemanager-laravel": "2.*",
+        "studio/laravel-totem": "1.0",
         "twilio/sdk": "4.10",
         "zizaco/entrust": "5.2.x-dev"
     },

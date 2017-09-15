@@ -11,6 +11,8 @@ use App\Cliente;
 use App\Empleado;
 use App\Alumno;
 use App\Inscripcion;
+use Studio\Totem\Totem;
+use Auth;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -26,6 +28,10 @@ class AppServiceProvider extends ServiceProvider
         Empleado::observe(EmpleadoObserver::class);
         Alumno::observe(AlumnoObserver::class);
         Inscripcion::observe(InscripcionObserver::class);
+        Totem::auth(function($request) {
+            // return true / false . For e.g.
+            return Auth::check();
+        });
     }
 
     /**

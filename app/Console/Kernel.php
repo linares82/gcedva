@@ -30,8 +30,8 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')
         //          ->hourly();
         //$schedule->command('backup:mysql-dump')->dailyAt('14:00');
+        //$schedule->command('ian:FinContratos')->dailyAt('23:00');
         
-
     }
 
     /**
