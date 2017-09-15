@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Auth;
 
-class AlumnosController extends Controller {
+class MailgunController extends Controller {
 
 	/**
 	 * Display a listing of the resource.
