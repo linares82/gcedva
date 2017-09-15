@@ -2421,3 +2421,8 @@ Route::get('horarios/index', array(
         'middleware' => 'permission:horarios.horarioGrupoR',
         'uses' => 'AsignacionAcademicasController@horarioGrupoR')
     )->middleware('auth');
+    Route::post('/mailgun/webhooks', array(
+        'as' => 'mailgun.webhooks',
+        //'middleware' => 'permission:horarios.horarioGrupoR',
+        'uses' => 'MailgunController@webhooks'));
+    //)->middleware('auth');

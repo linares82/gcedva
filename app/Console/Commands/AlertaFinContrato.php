@@ -47,7 +47,7 @@ class AlertaFinContrato extends Command
                                 ->where('empleados.alerta_bnd', '=', 1)
                                 ->whereDate('empleados.fin_contrato', '>=', date('d-m-Y'))
                                 ->get();
-        //dd($empleados);
+        //dd($empleados->toArray());
         foreach($empleados as $e){
             $alertas=Empleado::select(DB::raw("concat(empleados.nombre,' ',empleados.ape_paterno, ' ',empleados.ape_materno) as nombre"), 
                                 'empleados.dias_alerta', 'empleados.fin_contrato')

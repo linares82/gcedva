@@ -522,6 +522,7 @@ class ClientesController extends Controller {
     }*/
 	public function enviaMail(Request $request){
     	//dd($_REQUEST);
+		$r=0;
 		$cli=Cliente::find(e($request->id));
     	if($request->ajax()){
         	try{
@@ -545,8 +546,8 @@ class ClientesController extends Controller {
         		
         		//return true;
         	}catch(\Exception $e){
-        		dd($e);
-        		//return false;
+        		//dd($e);
+        		return $e;
         	}
         	
 

@@ -985,12 +985,15 @@
                 dataType: 'json',
                 beforeSend : function(){$("#loading2").show();},
                 complete : function(){$("#loading2").hide();},
-                default: function(parametros){
+                success: function(parametros){
                     if(parametros==true){
-                      $('#msj').html('Sms enviado');
+                      $('#msj').html('Email enviado');
                     }else{
-                      $('#msj').html('Envio de sms fallo');
+                      $('#msj').html('Envio de email fallo');
                     }
+                },
+                error: function(e){
+                      $('#msj').html(e);
                 }
             });       
     }
