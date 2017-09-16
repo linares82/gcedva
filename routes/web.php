@@ -2423,6 +2423,6 @@ Route::get('horarios/index', array(
     )->middleware('auth');
     Route::post('/mailgun/webhooks', array(
         'as' => 'mailgun.webhooks',
-        //'middleware' => 'permission:horarios.horarioGrupoR',
+        'middleware' => 'webhook',
         'uses' => 'MailgunController@webhooks'));
     //)->middleware('auth');

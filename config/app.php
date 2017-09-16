@@ -180,7 +180,7 @@ return [
         Arcanedev\LogViewer\LogViewerServiceProvider::class,
         Kim\Activity\ActivityServiceProvider::class,
         Studio\Totem\Providers\TotemServiceProvider::class,
-
+        Bogardo\Mailgun\MailgunServiceProvider::class,
         /*
          * Application Service Providers...
          */
@@ -247,7 +247,8 @@ return [
         "Sms" => Zenapply\Sms\Facades\Sms::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
-        'Activity' => Kim\Activity\ActivityFacade::class
+        'Activity' => Kim\Activity\ActivityFacade::class,
+        'Mailgun' => Bogardo\Mailgun\Facades\Mailgun::class
     ],
 
 ];

@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use App\Empleado;
 use DB;
 use App\Mail\AlertaFinContrato as alerta;
+use Mailgun;
 
 class AlertaFinContrato extends Command
 {
@@ -40,6 +41,7 @@ class AlertaFinContrato extends Command
      */
     public function handle()
     {
+        
         $empleados=Empleado::select(DB::raw('distinct(r.mail)'),'empleados.resp_alerta_id', 'r.mail_empresa', 
                                     'j.mail as j_mail', 'j.mail_empresa as j_mail_empresa')
                                 ->join('empleados as r', 'r.id', '=', 'empleados.resp_alerta_id')
@@ -61,9 +63,8 @@ class AlertaFinContrato extends Command
             $mail=$e->mail;
             $jefe_mail=$e->j_mail;
             //dd($alertas);
-            //$m=\Mail::to($e->mail);    
-            //$m->queue(new alerta($alertas));
-            \Mail::send('emails.alertaFinContrato', 
+            
+            /*\Mail::send('emails.alertaFinContrato', 
 				array('ps'=>$alertas), 
 				function($message) use($mail, $jefe_mail) 
                 {
@@ -72,7 +73,19 @@ class AlertaFinContrato extends Command
                         $message->cc($jefe_mail);	
                     }
                     $message->subject('Alerta Contratos Por Vencer');
-                });	
+                });
+                */
+            
+            $respuesta=Mailgun::send('emails.alertaFinContrato', 
+                array('ps'=>$alertas),  
+                function ($message) use($mail, $jefe_mail) {
+                    $message->to($mail);
+                    if(!is_null($jefe_mail)){
+                        $message->cc($jefe_mail);	
+                    }
+                    $message->subject('Alerta Contratos Por Vencer');
+            });	
+            //dd($respuesta);
         }
         
     }
