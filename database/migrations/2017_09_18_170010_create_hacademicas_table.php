@@ -39,7 +39,7 @@ class CreateHacademicasTable extends Migration {
 			$table->foreign('especialidad_id')->references('id')->on('especialidads');
 			$table->foreign('plantel_id')->references('id')->on('plantels');
 			$table->foreign('cliente_id')->references('id')->on('clientes');
-			$table->foreign('inscripcion_id')->references('id')->on('incripcions');
+			$table->foreign('inscripcion_id')->references('id')->on('inscripcions');
         });
 	}
 
