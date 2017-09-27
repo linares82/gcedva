@@ -238,7 +238,7 @@ class ClientesController extends Controller {
 	 */
 	public function update($id, Cliente $cliente, updateCliente $request)
 	{
-		
+		//dd("fil");
 		$input = $request->all();
 		$input['usu_mod_id']=Auth::user()->id;
 		//$empleado=Empleado::find($request->input('empleado_id'));
@@ -583,4 +583,45 @@ class ClientesController extends Controller {
         return view('clientes.modal_list', ['clientes' => $clientes]);
     }
 
+	public function getCmbAlumno(Request $request){
+		if($request->ajax()){
+			//dd($request->all());
+			$plantel=$request->get('plantel_id');
+			$especialidad=$request->get('especialidad_id');
+			$nivel=$request->get('nivel_id');
+			$grado=$request->get('grado_id');
+			$grupo=$request->get('grupo_id');
+			//dd($request->all());
+			$cliente=$request->get('cliente_id');			
+			$final = array();
+			$r = DB::table('inscripcions as i')
+					->select('c.id', DB::raw('concat(c.nombre," ",c.ape_paterno," ",c.ape_paterno) as name'))
+					->join('clientes as c', 'c.id', '=', 'i.cliente_id')
+					->where('i.plantel_id', '=', $plantel)					
+					->where('i.especialidad_id', '=', $especialidad)					
+					->where('i.nivel_id', '=', $nivel)					
+					->where('i.grado_id', '=', $grado)					
+					->where('i.grupo_id', '=', $grupo)										
+					->where('i.id', '>', '0')
+					->get();
+			//dd($r);
+			if(isset($cliente) and $cliente<>0){
+				foreach($r as $r1){
+					if($r1->id==$cliente){
+						array_push($final, array('id'=>$r1->id, 
+												 'name'=>$r1->name, 
+												 'selectec'=>'Selected'));
+					}else{
+						array_push($final, array('id'=>$r1->id, 
+												 'name'=>$r1->name, 
+												 'selectec'=>''));
+					}
+				}
+				return $final;
+			}else{
+				return $r;	
+			}
+			
+		}
+	}
 }

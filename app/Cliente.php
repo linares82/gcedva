@@ -47,7 +47,14 @@ class Cliente extends Model
 						  'expo','otro_medio','empleado_id','promociones','promo_cel','promo_correo', 
 						  'plantel_id', 'nivel_id','grado_id', 'curso_id', 'subcurso_id', 'diplomado_id', 
 						  'subdiplomado_id', 'otro_id', 'subotro_id','usu_alta_id','usu_mod_id', 'matricula', 
-						  'celular_confirmado', 'correo_confirmado'];
+						  'celular_confirmado', 'correo_confirmado', 'especialidad2_id', 'especialidad3_id',
+						  'especialidad4_id', 'cve_alumno', 'genero', 'curp', 'fec_nacimiento', 'lugar_nacimiento',
+						  'extranjero', 'distancia_escuela', 'peso', 'estatura', 'tipo_sangre', 'alergias', 
+						  'medicinas_contraindicadas', 'color_piel', 'color_cabello', 'senas_particulares',
+						  'nombre_padre', 'curp_padre', 'dir_padre', 'tel_padre', 'cel_padre', 'tel_ofi_padre',
+						  'mail_padre','nombre_madre', 'curp_madre', 'dir_madre', 'tel_madre', 'cel_madre', 
+						  'tel_ofi_madre','mail_madre','nombre_acudiente', 'curp_acudiente', 'dir_acudiente', 
+						  'tel_acudiente', 'cel_acudiente', 'tel_ofi_acudiente','mail_acudiente'];
 
 	public function usu_alta() {
 		return $this->hasOne('App\User', 'id', 'usu_alta_id');

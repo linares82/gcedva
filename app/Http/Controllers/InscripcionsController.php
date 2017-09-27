@@ -4,10 +4,15 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\Inscripcion;
+use App\Grupo;
+use App\Cliente;
+use App\Hacademica;
+use App\Calificacion;
 use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updateInscripcion;
 use App\Http\Requests\createInscripcion;
+use DB;
 
 class InscripcionsController extends Controller {
 
@@ -48,9 +53,48 @@ class InscripcionsController extends Controller {
 		$input['usu_mod_id']=Auth::user()->id;
 
 		//create data
-		Inscripcion::create( $input );
+		$i=Inscripcion::create( $input );
+		//dd($i);
+			
 
 		return redirect()->route('inscripcions.index')->with('message', 'Registro Creado.');
+	}
+
+	function registrarMaterias($id){
+		$i=Inscripcion::find($id);
+		$materias=Grupo::find($i->grupo_id)->periodoEstudio->materias;
+		$materias_validar=Hacademica::where('grupo_id', '=', $i->grupo_id)->where('grado_id', '=', $i->grado_id)->get();
+		
+		//dd($materias_validar->count());
+		if($materias_validar->count()==0){
+			foreach($materias as $m){
+				$h['inscripcion_id']=$i->id;
+				$h['cliente_id']=$i->cliente_id;
+				$h['plantel_id']=$i->plantel_id;
+				$h['especialidad_id']=$i->especialidad_id;
+				$h['nivel_id']=$i->nivel_id;
+				$h['grado_id']=$i->grado_id;
+				$h['grupo_id']=$i->grupo_id;
+				$h['materium_id']=$m->id;
+				$h['st_materium_id']=0;
+				$h['lectivo_id']=$i->lectivo_id;
+				$h['usu_alta_id']=Auth::user()->id;
+				$h['usu_mod_id']=Auth::user()->id;
+				$ha=Hacademica::create($h);
+				//$h=new Hacademica;
+				//$h->save($h);
+				$c['hacademica_id']=$ha->id;
+				$c['tpo_examen_id']=1;
+				$c['calificacion']=0;
+				$c['fecha']=date('Y-m-d');
+				$c['reporte_bnd']=0;
+				$c['usu_alta_id']=Auth::user()->id;
+				$c['usu_mod_id']=Auth::user()->id;
+				Calificacion::create($c);
+			}
+		}
+		
+		return redirect()->route('clientes.edit', $i->cliente_id)->with('message', 'Registro Actualizado.');
 	}
 
 	/**
@@ -132,4 +176,48 @@ class InscripcionsController extends Controller {
 		return redirect()->route('clientes.edit', $cli)->with('message', 'Registro Borrado.');
 	}
 
+	public function getReinscripcion()
+	{
+		return view('inscripcions.reinscripcion')
+			->with( 'list', Inscripcion::getListFromAllRelationApps() );
+	}
+
+	public function postReinscripcion(Request $request)
+	{
+		$input = $request->all();
+		//dd($input);
+		if(isset($input['plantel_id']) and isset($input['lectivo_id']) and isset($input['grupo_id'])){
+			$clientes=Cliente::join('inscripcions as i', 'i.cliente_id', '=', 'clientes.id')
+						->join('hacademicas as h', 'h.inscripcion_id', 'i.id')
+						->join('calificacions as c', 'c.hacademica_id', '=', 'h.id')
+						->join('materia as m', 'm.id', 'h.materium_id')
+						->join('grados as g', 'g.id', 'h.grado_id')
+						->select('i.id',
+								 DB::raw('concat(clientes.nombre," ",clientes.nombre2," ",clientes.ape_paterno," ",clientes.ape_materno) as nombre'),
+								 DB::raw('count(m.name) as materias_aprobadas'))
+						->where('i.plantel_id', '=', $input['plantel_id'])
+						->where('i.especialidad_id', '=', $input['especialidad_id'])
+						->where('i.nivel_id', '=', $input['nivel_id'])
+						->where('i.grupo_id', '=', $input['grupo_id'])
+						->where('i.lectivo_id', '=', $input['lectivo_id'])
+						->where('i.plantel_id', '=', $input['plantel_id'])
+						->where('h.st_materium_id', '=', 1)
+						->groupBy('nombre', 'i.id')
+						->get();
+		}	
+		if(isset($input['id']) and isset($input['grupo_to']) and isset($input['lectivo_to'])){
+			foreach($input['id'] as $key=>$value){
+				$id=$value;
+				$posicion=$key;
+				$i=Inscripcion::find($id);
+				$i->grupo_id=$input['grupo_to'];
+				$i->lectivo_id=$input['lectivo_to'];
+				$i->save();
+				$this->registrarMaterias($id);
+			}
+		}
+		//dd($clientes->toArray());
+		return view('inscripcions.reinscripcion', compact('clientes'))
+			->with( 'list', Hacademica::getListFromAllRelationApps() );
+	}
 }

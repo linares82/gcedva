@@ -28,7 +28,6 @@
                                         <div class="box-header">
                                             <h3 class="box-title">IDENTIFICACIÓN</h3>
                                             <div class="box-tools">
-                                                
                                                 <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                                             </div>
                                         </div>
@@ -775,17 +774,16 @@
                             </div>
                             <div id="tab5" class="tab-pane">
                                 @if(isset($cliente->inscripciones))
+                                @foreach($cliente->inscripciones as $i)
                                 <table class="table table-condensed table-striped">
-                                    <thead>
-                                        <tr>
+                                    <thead style="color: #ffffff;background: #0B0B3B;">
                                             <td>Plantel</td><td>Especialidad</td><td>Nivel</td>
                                             <td>Grado</td><td>Grupo</td><td>F. Inscripcion</td>
                                             <td>Periodo Lectivo</td><td></td>
-                                        </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($cliente->inscripciones as $i)
-                                            <tr>
+                                        
+                                            <tr style="color: #ffffff;background:#6495ED;">
                                             <td>{{$i->plantel->razon}}</td>
                                             <td>{{$i->especialidad->name}}</td>
                                             <td>{{$i->nivel->name}}</td>
@@ -794,16 +792,59 @@
                                             <td>{{$i->fec_inscripcion}}</td>
                                             <td>{{$i->lectivo->name}}</td>
                                             <td>
+                                            @permission('inscripcions.edit')
+                                            <a class="btn btn-xs btn-primary" href="#" onclick="EditarInscripcion({{ $i->id }})"><i class="glyphicon glyphicon-edit"></i>Editar</a>
+                                            @endpermission
+                                            @permission('inscripcions.registrarMaterias')
+                                            <a class="btn btn-xs btn-warning" href="{{ route('inscripcions.registrarMaterias', $i->id) }}"><i class="glyphicon glyphicon-edit"></i>Registrar Materias</a>
+                                            @endpermission
                                             @permission('inscripcions.destroy')
-                                            {!! Form::model($i, array('route' => array('inscripcions.destroyCli', $i->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}
+                                            {!! Form::model($i, array('route' => array('inscripcions.destroyCli', $i->id),'method' => 'post', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}
                                                 <button type="submit" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> Borrar</button>
                                             {!! Form::close() !!}
                                             @endpermission
                                             </td>
                                             </tr>
-                                        @endforeach
+                                            <tr>
+                                                <table class="table table-condensed table-striped">
+                                                <thead style="color: #ffffff;background: #27ae60;">
+                                                    <td>Materia</td><td>Estatus</td><td></td><td></td>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach($i->hacademicas as $a)
+                                                    <tr>
+                                                    <td>{{$a->materia->name}}</td><td>{{$a->stMateria->name}}</td>
+                                                    <td>
+                                                        <a href="{{ route('hacademicas.destroy', $a->id) }}" class="btn btn-xs btn-danger" ><i class="glyphicon glyphicon-trash"></i> Eliminar</a>
+                                                    </td>
+                                                    <td colspan="2">
+                                                    <table class="table table-condensed table-striped">
+                                                    <thead>
+                                                        <td>Examen</td><td>Calificación</td>
+                                                    </thead>
+                                                    <tbody>
+                                                    @foreach($a->calificaciones as $cali)
+                                                        <tr>
+                                                            <td>
+                                                            {{$cali->tpoExamen->name}}
+                                                            </td>
+                                                            <td>
+                                                            {{$cali->calificacion}}
+                                                            </td>
+                                                        <tr>
+                                                    @endforeach
+                                                    </tbody>
+                                                    </table>
+                                                    </td>
+                                                    </tr>
+                                                    @endforeach
+                                                </tbody>
+                                                </tbody>
+                                            </tr>
+                                        
                                     </tbody>
                                 </table>
+                                @endforeach
                                 @endif
                             </div>
                             <div id="tab6" class="tab-pane">
@@ -896,6 +937,16 @@
 <script src="{{ asset ('/bower_components/AdminLTE/plugins/input-mask/jquery.inputmask.phone.extensions.js') }}"></script>
   <script type="text/javascript">
     $(document).ready(function() {
+       collapseTable();
+       $('.header').click(function(){
+            collapseTable();
+       });
+
+       function collapseTable(){
+            $('.header').find('span').text(function(_, value){return value=='-'?'+':'-'});
+            $('.header').nextUntil('tr.header').slideToggle(100); // or just use "toggle()"
+       }
+      
       $('#tel_cel-field').inputmask({"mask": "(999) 999-9999"}); //specifying options
       $('#tel_fijo-field').inputmask({"mask": "(999) 999-9999"}); //specifying options
       $('#expo-group').hide();
@@ -934,16 +985,6 @@
      $('#medio_id-field').change(function(){
         ocultaExpo();
       });
-
-     //Cuenta caracteres del sms
-     var max_chars = 10;
-
-    $('#cve_cliente-fiel').keyup(function() {
-        var chars = $(this).val().length;
-        var diff = max_chars - chars;
-        $('#contador').html(diff);   
-        alert('hi');
-    });
 
      function ocultaExpo(){
       if($('#medio_id-field option:selected').val()==1){
@@ -1102,15 +1143,79 @@
 */
       //combos dependientes
       getCmbEspecialidad();
+      getCmbEspecialidad2();
+      /*getCmbEspecialidad3();
+      getCmbEspecialidad4();
+      */
       getCmbNivel();
       getCmbNivel2();
       getCmbNivel3();
       getCmbNivel4();
+      
       getCmbGrado();
+      getCmbGrado2();
+      getCmbGrado3();
+      getCmbGrado4();
+      
+      
       $('#plantel_id-field').change(function(){
           getCmbEspecialidad();
+          getCmbEspecialidad2();
+          getCmbEspecialidad3();
+          getCmbEspecialidad4();
+          
       });
-      function getCmbEspecialidad(){
+      
+      $('#especialidad_id-field').change(function(){
+          getCmbNivel();
+      });
+      
+      $('#especialidad2_id-field').change(function(){
+          getCmbNivel2();
+      });
+      
+      $('#especialidad3_id-field').change(function(){
+          getCmbNivel3();
+      });
+      
+      $('#especialidad4_id-field').change(function(){
+          getCmbNivel4();
+      });
+            
+      $('#nivel_id-field').change(function(){
+          getCmbGrado();
+      });
+      
+      $('#curso_id-field').change(function(){
+          getCmbGrado2();
+      });
+      
+      $('#diplomado_id-field').change(function(){
+          getCmbGrado3();
+      });
+      
+      $('#otro_id-field').change(function(){
+          getCmbGrado4();
+      });
+      
+      //fin combos dependientes
+
+      //
+      $(function() {
+          $("#expo-field").autocomplete({
+              source: "{!! route('clientes.autocomplete') !!}",
+              minLength: 2,
+              autofocus:true,
+              select: function( event, ui ) {
+                  $('#expo-field').val(ui.item.label);
+              }
+          });
+      });
+
+    });
+   
+
+    function getCmbEspecialidad(){
           //var $example = $("#especialidad_id-field").select2();
           var a= $('#frm_cliente').serialize();
               $.ajax({
@@ -1122,36 +1227,88 @@
                   complete : function(){$("#loading10").hide();},
                   success: function(data){
                       //$example.select2("destroy");
-                      $('#especialidad_id-field').html('');
-                      $('#especialidad2_id-field').html('');
-                      $('#especialidad3_id-field').html('');
-                      $('#especialidad4_id-field').html('');
                       $('#especialidad_id-field').empty();
                       $('#especialidad_id-field').append($('<option></option>').text('Seleccionar').val('0'));
-                      $('#especialidad2_id-field').append($('<option></option>').text('Seleccionar').val('0'));
-                      $('#especialidad3_id-field').append($('<option></option>').text('Seleccionar').val('0'));
-                      $('#especialidad4_id-field').append($('<option></option>').text('Seleccionar').val('0'));
                       $.each(data, function(i) {
                           //alert(data[i].name);
                           $('#especialidad_id-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                      });
+                      //$example.select2();
+                  }
+              });       
+      }
+
+      function getCmbEspecialidad2(){
+          //var $example = $("#especialidad_id-field").select2();
+          var a= $('#frm_cliente').serialize();
+              $.ajax({
+                  url: '{{ route("especialidads.getCmbEspecialidad") }}',
+                  type: 'GET',
+                  data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad2_id-field option:selected').val() + "",
+                  dataType: 'json',
+                  beforeSend : function(){$("#loading10").show();},
+                  complete : function(){$("#loading10").hide();},
+                  success: function(data){
+                      $('#especialidad2_id-field').empty();
+                      $('#especialidad2_id-field').append($('<option></option>').text('Seleccionar').val('0'));
+                      $.each(data, function(i) {
+                          //alert(data[i].name);
                           $('#especialidad2_id-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                      });
+                      //$example.select2();
+                  }
+              });       
+      }
+      function getCmbEspecialidad3(){
+          //var $example = $("#especialidad_id-field").select2();
+          var a= $('#frm_cliente').serialize();
+              $.ajax({
+                  url: '{{ route("especialidads.getCmbEspecialidad") }}',
+                  type: 'GET',
+                  data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad3_id-field option:selected').val() + "",
+                  dataType: 'json',
+                  beforeSend : function(){$("#loading10").show();},
+                  complete : function(){$("#loading10").hide();},
+                  success: function(data){
+                      $('#especialidad3_id-field').empty();
+                      $('#especialidad3_id-field').append($('<option></option>').text('Seleccionar').val('0'));
+                      $.each(data, function(i) {
+                          //alert(data[i].name);
                           $('#especialidad3_id-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                      });
+                      //$example.select2();
+                  }
+              });       
+      }
+      function getCmbEspecialidad4(){
+          //var $example = $("#especialidad_id-field").select2();
+          var a= $('#frm_cliente').serialize();
+              $.ajax({
+                  url: '{{ route("especialidads.getCmbEspecialidad") }}',
+                  type: 'GET',
+                  data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad4_id-field option:selected').val() + "",
+                  dataType: 'json',
+                  beforeSend : function(){$("#loading10").show();},
+                  complete : function(){$("#loading10").hide();},
+                  success: function(data){
+                      $('#especialidad4_id-field').empty();
+                      $('#especialidad4_id-field').append($('<option></option>').text('Seleccionar').val('0'));
+                      $.each(data, function(i) {
+                          //alert(data[i].name);
                           $('#especialidad4_id-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
                       });
                       //$example.select2();
                   }
               });       
       }
-      $('#especialidad_id-field').change(function(){
-          getCmbNivel();
-      });
       function getCmbNivel(){
           //var $example = $("#especialidad_id-field").select2();
+          //alert($('#especialidad_id-field option:selected').val());
           var a= $('#frm_cliente').serialize();
               $.ajax({
                   url: '{{ route("nivels.getCmbNivels") }}',
                   type: 'GET',
-                  data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad_id-field option:selected').val() + "&nivel_id=" + $('#nivel_id-field option:selected').val() + "",
+                  data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad_id-field option:selected').val() +  "&nivel_id=" + $('#nivel_id-field option:selected').val() +"",
                   dataType: 'json',
                   beforeSend : function(){$("#loading11").show();},
                   complete : function(){$("#loading11").hide();},
@@ -1170,9 +1327,6 @@
                   }
               });       
       }
-      $('#especialidad2_id-field').change(function(){
-          getCmbNivel2();
-      });
       function getCmbNivel2(){
           //var $example = $("#especialidad_id-field").select2();
           var a= $('#frm_cliente').serialize();
@@ -1198,9 +1352,6 @@
                   }
               });       
       }
-      $('#especialidad3_id-field').change(function(){
-          getCmbNivel3();
-      });
       function getCmbNivel3(){
           //var $example = $("#especialidad_id-field").select2();
           var a= $('#frm_cliente').serialize();
@@ -1226,9 +1377,6 @@
                   }
               });       
       }
-      $('#especialidad4_id-field').change(function(){
-          getCmbNivel4();
-      });
       function getCmbNivel4(){
           //var $example = $("#especialidad_id-field").select2();
           var a= $('#frm_cliente').serialize();
@@ -1254,10 +1402,6 @@
                   }
               });       
       }
-      
-      $('#nivel_id-field').change(function(){
-          getCmbGrado();
-      });
       function getCmbGrado(){
           //var $example = $("#especialidad_id-field").select2();
           var a= $('#frm_cliente').serialize();
@@ -1283,9 +1427,6 @@
                   }
               });       
       }
-      $('#curso_id-field').change(function(){
-          getCmbGrado2();
-      });
       function getCmbGrado2(){
           //var $example = $("#especialidad_id-field").select2();
           var a= $('#frm_cliente').serialize();
@@ -1311,9 +1452,6 @@
                   }
               });       
       }
-      $('#diplomado_id-field').change(function(){
-          getCmbGrado3();
-      });
       function getCmbGrado3(){
           //var $example = $("#especialidad_id-field").select2();
           var a= $('#frm_cliente').serialize();
@@ -1339,9 +1477,6 @@
                   }
               });       
       }
-      $('#otro_id-field').change(function(){
-          getCmbGrado4();
-      });
       function getCmbGrado4(){
           //var $example = $("#especialidad_id-field").select2();
           var a= $('#frm_cliente').serialize();
@@ -1367,23 +1502,10 @@
                   }
               });       
       }
-      //fin combos dependientes
-
-      //
-      $(function() {
-          $("#expo-field").autocomplete({
-              source: "{!! route('clientes.autocomplete') !!}",
-              minLength: 2,
-              autofocus:true,
-              select: function( event, ui ) {
-                  $('#expo-field').val(ui.item.label);
-              }
-          });
-      });
-
       
-    });
-   
+      
+      
+      
     //codigo de trabajo del cargador de imagenes
     // File Picker modification for FCK Editor v2.0 - www.fckeditor.net
      // by: Pete Forde <pete@unspace.ca> @ Unspace Interactive
@@ -1458,6 +1580,12 @@
             }
             //$('#plantel_id-field').val(plantel).change();
         }
+        popup.focus();
+        return false
+    }
+    var popup2;
+    function EditarInscripcion(numero) {
+        popup = window.open("{{ url('inscripcions/edit') }}"+"/"+numero, "Popup", "width=800,height=650");
         popup.focus();
         return false
     }

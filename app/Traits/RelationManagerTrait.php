@@ -62,6 +62,15 @@ trait RelationManagerTrait {
             //dd($relatedObjList);
           }
 
+          /*if($relationAppName=="Lectivo"){
+            //dd($relationAppName);
+            $fecha=date('Y-m-d');
+            $relatedObjList = $relationAppArray['app']::where('inicio', '<=', $fecha)
+                                                      ->where('fin', '>=', $fecha)
+                                                      ->pluck($relationAppArray['relation_display_column'], 'id');
+            
+          }*/
+
           /*
           if($relationAppName=="Especialidad" and Auth::user()->can('IfiltroEspecialidadsXPlantel')){
             $relatedObjList = $relationAppArray['app']::where('plantel_id', '=', $e->plantel_id)

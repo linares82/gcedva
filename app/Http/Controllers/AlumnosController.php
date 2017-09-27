@@ -166,4 +166,7 @@ class AlumnosController extends Controller {
 		$r=Alumno::create( $a );		
 		return redirect()->route('alumnos.edit', $r->id)->with('message', 'Registro Creado.');
 	}
+
+	
+	}
 }

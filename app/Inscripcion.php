@@ -62,6 +62,9 @@ class Inscripcion extends Model
 	public function cliente() {
 		return $this->belongsTo('App\Cliente');
 	}// end
+	public function hacademicas() {
+		return $this->hasMany('App\Hacademica');
+	}// end
 
     protected $dates = ['deleted_at'];
 }

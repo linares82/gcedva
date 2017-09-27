@@ -19,6 +19,8 @@ class CreateDiasTable extends Migration {
             $table->integer('usu_mod_id')->unsigned();
             $table->timestamps();
             $table->softDeletes();
+            $table->foreign('usu_mod_id')->references('id')->on('users');
+            $table->foreign('usu_alta_id')->references('id')->on('users');
         });
 	}
 

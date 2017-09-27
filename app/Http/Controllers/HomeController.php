@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Aviso;
+use App\Lectivo;
 use App\AvisoGral;
 use App\PivotAvisoGralEmpleado;
 use App\Seguimiento;
@@ -33,6 +34,9 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $f=date("Y-m-d");
+        $l=Lectivo::find(0)->first();
+
         $e=Empleado::where('user_id', '=', Auth::user()->id)->first();
         $avisos=Aviso::select('avisos.id','a.name','avisos.detalle', 'avisos.fecha', 's.cliente_id')
 					->join('asuntos as a', 'a.id', '=', 'avisos.asunto_id')
@@ -49,6 +53,8 @@ class HomeController extends Controller
                     ->where('st_seguimiento_id', '=', 1)
                     ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
                     //->where('mes', '=', $mes)
+                    ->where('seguimientos.created_at', '>=', $l->inicio)
+                    ->where('seguimientos.created_at', '<=', $l->fin)
                     ->where('c.plantel_id', '=', $e->plantel_id)
                     ->where('c.empleado_id', '=', $e->id)
                     ->value('total');
@@ -56,19 +62,23 @@ class HomeController extends Controller
         $a_2=Seguimiento::where('st_seguimiento_id', '=', 2)
                     ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
                     //->where('mes', '=', $mes)
+                    ->where('seguimientos.created_at', '>=', $l->inicio)
+                    ->where('seguimientos.created_at', '<=', $l->fin)
                     ->where('c.empleado_id', '=', $e->id)
                     ->where('c.plantel_id', '=', $e->plantel_id)
                     ->count();
         //dd($e->plantel->meta_venta);
         $avance=0;
         if($a_2>0){
-            $avance=(($a_2*100)/$e->plantel->meta_venta);
+            $avance=(($a_2*100)/$e->plantel->meta_total);
         }
         
         //dd($a_3."*100 / ".$e->plantel->meta_venta);
         $a_3=Seguimiento::where('st_seguimiento_id', '=', 3)
                     ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
                     //->where('mes', '=', $mes)
+                    ->where('seguimientos.created_at', '>=', $l->inicio)
+                    ->where('seguimientos.created_at', '<=', $l->fin)
                     ->where('c.empleado_id', '=', $e->id)
                     ->where('c.plantel_id', '=', $e->plantel_id)
                     ->count();
@@ -76,6 +86,8 @@ class HomeController extends Controller
         $a_4=Seguimiento::where('st_seguimiento_id', '=', 4)
                     ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
                     //->where('mes', '=', $mes)
+                    ->where('seguimientos.created_at', '>=', $l->inicio)
+                    ->where('seguimientos.created_at', '<=', $l->fin)
                     ->where('c.empleado_id', '=', $e->id)
                     ->where('c.plantel_id', '=', $e->plantel_id)
                     ->count();
@@ -93,6 +105,8 @@ class HomeController extends Controller
                     ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
                     ->join('st_seguimientos as sts', 'sts.id','=','seguimientos.st_seguimiento_id')
                     //->where('mes', '=', $mes)
+                    ->where('seguimientos.created_at', '>=', $l->inicio)
+                    ->where('seguimientos.created_at', '<=', $l->fin)
                     ->where('c.empleado_id', '=', $e->id)
                     ->where('c.plantel_id', '=', $e->plantel_id)
                     ->groupBy('sts.name')

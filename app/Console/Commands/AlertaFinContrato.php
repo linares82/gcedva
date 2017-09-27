@@ -41,23 +41,25 @@ class AlertaFinContrato extends Command
      */
     public function handle()
     {
-        
         $empleados=Empleado::select(DB::raw('distinct(r.mail)'),'empleados.resp_alerta_id', 'r.mail_empresa', 
-                                    'j.mail as j_mail', 'j.mail_empresa as j_mail_empresa')
+                                    'j.mail as j_mail', 'j.mail_empresa as j_mail_empresa', 'dias_alerta')
                                 ->join('empleados as r', 'r.id', '=', 'empleados.resp_alerta_id')
                                 ->leftJoin('empleados as j', 'j.id', '=', 'empleados.jefe_id')
                                 ->where('empleados.alerta_bnd', '=', 1)
-                                ->whereDate('empleados.fin_contrato', '>=', date('d-m-Y'))
+                                ->whereDate('empleados.fin_contrato', '>=', date('Y/m/d'))
                                 ->get();
+
         //dd($empleados->toArray());
         foreach($empleados as $e){
+            //$fecha_valida=Carbon->now()->addDays($e->dias_alerta);
+            
             $alertas=Empleado::select(DB::raw("concat(empleados.nombre,' ',empleados.ape_paterno, ' ',empleados.ape_materno) as nombre"), 
                                 'empleados.dias_alerta', 'empleados.fin_contrato')
                     ->join('empleados as r', 'r.id', '=', 'empleados.resp_alerta_id')
                     ->leftJoin('empleados as j', 'j.id', '=', 'empleados.jefe_id')
                     ->where('empleados.alerta_bnd', '=', 1)
                     ->whereBetween(DB::raw('DATEDIFF(CURDATE(),empleados.fin_contrato)'), ['0','empleados.dias_alerta'])
-                    ->whereDate('empleados.fin_contrato', '>=', date('d-m-Y'))
+                    ->whereDate('empleados.fin_contrato', '>=', date('Y/m/d'))
                     ->where('empleados.resp_alerta_id', '=', $e->resp_alerta_id)
                     ->get();
             $mail=$e->mail;
@@ -87,6 +89,5 @@ class AlertaFinContrato extends Command
             });	
             //dd($respuesta);
         }
-        
     }
 }

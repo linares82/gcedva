@@ -23,6 +23,7 @@ class JefeAlertaEmpleadosTable extends Migration
             $table->integer('dias_alerta')->unsigned();
             $table->integer('resp_alerta_id')->unsigned();
             $table->date('fin_contrato')->nullable();
+            $table->integer('regresiva')->nullable();
         });
     }
 

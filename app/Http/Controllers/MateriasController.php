@@ -171,4 +171,44 @@ class MateriasController extends Controller {
 			
 		}
 	}
+
+	public function getCmbMateriaXalumno(Request $request){
+		if($request->ajax()){
+			//dd($request->all());
+			$cve_alumno=$request->get('cve_alumno');
+			
+			$grado=$request->get('grado_id');
+			$materia=$request->get('materia_id');
+			//dd("FLC:".$materia);
+			$final = array();
+			$r = DB::table('materia as m')
+					->join('hacademicas as h', 'h.materium_id', '=', 'm.id')
+					->join('inscripcions as i', 'i.id', '=', 'h.inscripcion_id')
+					->join('clientes as c', 'c.id', '=', 'i.cliente_id')
+					->select('m.id', 'm.name')
+					->whereColumn('m.plantel_id', 'i.plantel_id')
+					->where('c.cve_alumno', '=', $cve_alumno)
+					->where('i.grado_id', '=', $grado)
+					->where('h.deleted_at', '=', null)
+					->get();
+			//dd($r);
+			if(isset($materia) and $materia<>0){
+				foreach($r as $r1){
+					if($r1->id==$materia){
+						array_push($final, array('id'=>$r1->id, 
+												 'name'=>$r1->name, 
+												 'selectec'=>'Selected'));
+					}else{
+						array_push($final, array('id'=>$r1->id, 
+												 'name'=>$r1->name, 
+												 'selectec'=>''));
+					}
+				}
+				return $final;
+			}else{
+				return $r;	
+			}
+			
+		}
+	}
 }

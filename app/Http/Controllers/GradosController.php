@@ -159,4 +159,38 @@ class GradosController extends Controller {
 		}
 	}
 
+	public function getCmbGradosXalumno(Request $request){
+		if($request->ajax()){
+			//dd($request->all());
+			$cve_alumno=$request->get('cve_alumno');
+			$grado=$request->get('grado_id');
+			
+			$final = array();
+			$r = DB::table('grados as g')
+					->join('inscripcions as i', 'i.grado_id', '=', 'g.id')
+					->join('clientes as c', 'i.cliente_id', '=', 'c.id')
+					->select('g.id', 'g.name')
+					->where('c.cve_alumno', '=', $cve_alumno)
+					->where('g.id', '>', '0')
+					->get();
+			//dd($r);
+			if(isset($grado) and $grado<>0){
+				foreach($r as $r1){
+					if($r1->id==$grado){
+						array_push($final, array('id'=>$r1->id, 
+												 'name'=>$r1->name, 
+												 'selectec'=>'Selected'));
+					}else{
+						array_push($final, array('id'=>$r1->id, 
+												 'name'=>$r1->name, 
+												 'selectec'=>''));
+					}
+				}
+				return $final;
+			}else{
+				return $r;	
+			}
+			
+		}
+	}
 }
