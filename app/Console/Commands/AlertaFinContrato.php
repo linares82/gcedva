@@ -42,7 +42,7 @@ class AlertaFinContrato extends Command
     public function handle()
     {
         $empleados=Empleado::select(DB::raw('distinct(r.mail)'),'empleados.resp_alerta_id', 'r.mail_empresa', 
-                                    'j.mail as j_mail', 'j.mail_empresa as j_mail_empresa', 'dias_alerta')
+                                    'j.mail as j_mail', 'j.mail_empresa as j_mail_empresa', 'empleados.dias_alerta')
                                 ->join('empleados as r', 'r.id', '=', 'empleados.resp_alerta_id')
                                 ->leftJoin('empleados as j', 'j.id', '=', 'empleados.jefe_id')
                                 ->where('empleados.alerta_bnd', '=', 1)
