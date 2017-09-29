@@ -169,7 +169,7 @@ class AsignacionAcademicasController extends Controller {
 								//->where('asignacion_academicas.plantel_id', '>=', $input['plantel_f'])
 								//->where('asignacion_academicas.grupo_id', '<=', $input['grupo_f'])
 								//->where('asignacion_academicas.lectivo_id', '<=', $input['lectivo_f'])
-								//->where('asignacion_academicas.deleted_at', '=', 'null')
+								->whereNull('h.deleted_at')
 								->orderBy('d.id')
 								->orderBy('Plantel')
 								//->groupBy('esp.meta','e.nombre', 'e.ape_paterno', 'e.ape_materno')
