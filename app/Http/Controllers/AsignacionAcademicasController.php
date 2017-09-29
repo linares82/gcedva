@@ -165,15 +165,15 @@ class AsignacionAcademicasController extends Controller {
 								->join('lectivos as l', 'l.id', '=', 'asignacion_academicas.lectivo_id')
 								->join('horarios as h', 'h.asignacion_academica_id', '=', 'asignacion_academicas.id')
 								->join('dias as d', 'd.id', '=', 'h.dia_id')
-								->where('asignacion_academicas.plantel_id', '>=', $input['plantel_f'])
-								->where('asignacion_academicas.grupo_id', '<=', $input['grupo_f'])
-								->where('asignacion_academicas.lectivo_id', '<=', $input['lectivo_f'])
-								->where('asignacion_academicas.deleted_at', '=', 'null')
+								//->where('asignacion_academicas.plantel_id', '>=', $input['plantel_f'])
+								//->where('asignacion_academicas.grupo_id', '<=', $input['grupo_f'])
+								//->where('asignacion_academicas.lectivo_id', '<=', $input['lectivo_f'])
+								//->where('asignacion_academicas.deleted_at', '=', 'null')
 								->orderBy('Plantel')
 								//->groupBy('esp.meta','e.nombre', 'e.ape_paterno', 'e.ape_materno')
 								->get();
 		
-		//dd($seguimientos->toArray());
+		//dd($horarios->toArray());
 			/*PDF::setOptions(['defaultFont' => 'arial']);
 			$pdf = PDF::loadView('seguimientos.reportes.seguimientosXespecialidadGr', array('seguimientos'=>$seguimientos, 'fecha'=>$fecha, 'datos'=>json_encode($datos)))
 						->setPaper('letter', 'landscape');
