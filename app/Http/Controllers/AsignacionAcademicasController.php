@@ -157,7 +157,8 @@ class AsignacionAcademicasController extends Controller {
 		
 		$horarios=AsignacionAcademica::select(DB::raw("concat(e.nombre,' ',e.ape_paterno,' ',e.ape_materno) as empleado"),
 								'p.razon as plantel', 'm.name as materia', 'g.name as grupo', 'l.name as lectivo', 
-								'd.name as dia', 'h.hora')
+								DB::raw('concat(d.id,"-",d.name) as dia'),
+								 'h.hora')
 								->join('empleados as e', 'e.id', '=', 'asignacion_academicas.empleado_id')
 								->join('plantels as p', 'p.id', '=', 'asignacion_academicas.plantel_id')
 								->join('materia as m', 'm.id', '=', 'asignacion_academicas.materium_id')
@@ -169,6 +170,7 @@ class AsignacionAcademicasController extends Controller {
 								//->where('asignacion_academicas.grupo_id', '<=', $input['grupo_f'])
 								//->where('asignacion_academicas.lectivo_id', '<=', $input['lectivo_f'])
 								//->where('asignacion_academicas.deleted_at', '=', 'null')
+								->orderBy('d.id')
 								->orderBy('Plantel')
 								//->groupBy('esp.meta','e.nombre', 'e.ape_paterno', 'e.ape_materno')
 								->get();
