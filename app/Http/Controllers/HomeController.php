@@ -123,8 +123,6 @@ class HomeController extends Controller
                     ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
                     ->join('st_seguimientos as sts', 'sts.id','=','seguimientos.st_seguimiento_id')
                     //->where('mes', '=', $mes)
-                    ->where('seguimientos.created_at', '>=', $l->inicio)
-                    ->where('seguimientos.created_at', '<=', $l->fin)
                     ->where('c.empleado_id', '=', $e->id)
                     ->where('c.plantel_id', '=', $e->plantel_id)
                     ->whereIn('sts.id', [1,3,4])
