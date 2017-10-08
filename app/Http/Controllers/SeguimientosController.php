@@ -511,7 +511,7 @@ class SeguimientosController extends Controller {
 								//->groupBy('esp.meta','e.nombre', 'e.ape_paterno', 'e.ape_materno')
 								->get();
 		
-		//dd($seguimientos->toArray());
+		dd($seguimientos->toArray());
 			/*PDF::setOptions(['defaultFont' => 'arial']);
 			$pdf = PDF::loadView('seguimientos.reportes.seguimientosXespecialidadGr', array('seguimientos'=>$seguimientos, 'fecha'=>$fecha, 'datos'=>json_encode($datos)))
 						->setPaper('letter', 'landscape');

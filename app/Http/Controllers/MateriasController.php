@@ -4,6 +4,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\Materium;
+use App\Empleado;
 use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updateMaterium;
@@ -191,6 +192,69 @@ class MateriasController extends Controller {
 					->where('i.grado_id', '=', $grado)
 					->where('h.deleted_at', '=', null)
 					->get();
+			//dd($r);
+			if(isset($materia) and $materia<>0){
+				foreach($r as $r1){
+					if($r1->id==$materia){
+						array_push($final, array('id'=>$r1->id, 
+												 'name'=>$r1->name, 
+												 'selectec'=>'Selected'));
+					}else{
+						array_push($final, array('id'=>$r1->id, 
+												 'name'=>$r1->name, 
+												 'selectec'=>''));
+					}
+				}
+				return $final;
+			}else{
+				return $r;	
+			}
+			
+		}
+	}
+
+	public function getCmbMateriaXalumno2(Request $request){
+		if($request->ajax()){
+			//dd($request->all());
+			$cve_alumno=$request->get('cve_alumno');
+			$materia=$request->get('materium_id');
+			//dd("FLC:".$materia);
+			$e=Empleado::where('user_id', '=', Auth::user()->id)->first();
+			//dd($e->id);
+			
+			$final = array();
+			
+			$filtro=Auth::user()->can('IfiltroCalificacionXProfesor');
+			//dd($filtro);
+			if($filtro){
+				$r = DB::table('materia as m')
+					->join('hacademicas as h', 'h.materium_id', '=', 'm.id')
+					->join('inscripcions as i', 'i.id', '=', 'h.inscripcion_id')
+					->join('clientes as c', 'c.id', '=', 'i.cliente_id')
+					->join('grupos as g', 'g.id', '=', 'i.grupo_id')
+					->join('asignacion_academicas as aa', 'aa.grupo_id','=', 'g.id')
+					->join('empleados as e', 'e.id', 'aa.empleado_id')
+					->select('m.id', 'm.name')
+					->whereColumn('m.plantel_id', 'i.plantel_id')
+					->where('c.cve_alumno', '=', $cve_alumno)
+					->where('e.id', '=', $e->id)
+					->where('h.deleted_at', '=', null)
+					->get();	
+			}else{
+				$r = DB::table('materia as m')
+					->join('hacademicas as h', 'h.materium_id', '=', 'm.id')
+					->join('inscripcions as i', 'i.id', '=', 'h.inscripcion_id')
+					->join('clientes as c', 'c.id', '=', 'i.cliente_id')
+					->join('grupos as g', 'g.id', '=', 'i.grupo_id')
+					->join('asignacion_academicas as aa', 'aa.grupo_id','=', 'g.id')
+					->join('empleados as e', 'e.id', 'aa.empleado_id')
+					->select('m.id', 'm.name')
+					->whereColumn('m.plantel_id', 'i.plantel_id')
+					->where('c.cve_alumno', '=', $cve_alumno)
+					->where('h.deleted_at', '=', null)
+					->get();
+			}
+					
 			//dd($r);
 			if(isset($materia) and $materia<>0){
 				foreach($r as $r1){

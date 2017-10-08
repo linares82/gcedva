@@ -80,6 +80,10 @@
                             </div>
                             -->
                             <div class="form-group col-md-4">
+                                <label for="q_clientes.id_cont">ID</label>
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['clientes.id_cont']) ?: '' }}" name="q[clientes.id_cont]" id="q_clientes.id_cont" />
+                            </div>
+                            <div class="form-group col-md-4">
                                 <label for="q_clientes.nombre_cont">PRIMER NOMBRE</label>
                                 
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['clientes.nombre_cont']) ?: '' }}" name="q[clientes.nombre_cont]" id="q_clientes.nombre_cont" />
@@ -125,7 +129,7 @@
                                     {!! Form::select("st_cliente_id", $list1["StCliente"], "{{ @(Request::input('q')['clientes.st_cliente_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[clientes.st_cliente_id_lt]", "id"=>"q_clientes.st_cliente_id_lt", "style"=>"width:100%;" )) !!}
                             </div>
                         
-                            <div class="form-group col-md-4" style="clear:left;">
+                            <div class="form-group col-md-4">
                                 <label for="q_st_seguimiento_id_lt">ESTATUS SEGUIMIENTO</label>
                                     {!! Form::select("st_seguimiento_id", $list["StSeguimiento"], "{{ @(Request::input('q')['st_seguimiento_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[st_seguimiento_id_lt]", "id"=>"q_st_seguimiento_id_lt", "style"=>"width:100%;" )) !!}
                             </div>

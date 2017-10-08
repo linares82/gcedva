@@ -61,6 +61,7 @@
                         <span class="help-block">{{ $errors->first("Examen_id") }}</span>
                        @endif
                     </div>
+                   <!--
                     <div class="form-group col-md-4 @if($errors->has('calificacion')) has-error @endif">
                        <label for="calificacion-field">Calificacion</label>
                        {!! Form::text("calificacion", null, array("class" => "form-control", "id" => "calificacion-field")) !!}
@@ -82,7 +83,7 @@
                         <span class="help-block">{{ $errors->first("reporte_bnd") }}</span>
                        @endif
                     </div>
-                    
+                    -->
 
                 <div class="row">
                 </div>

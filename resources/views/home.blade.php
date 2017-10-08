@@ -30,7 +30,7 @@
                 </div>
             </div>
         </div>
-        <div class="form-group col-md-3 col-sm-3 col-xs-12">
+        <div class="form-group col-md-2 col-sm-2 col-xs-12">
             <div class="box box-primary">
                 <div class="box-header with-border">
                     <h4 class="box-title">
@@ -45,12 +45,11 @@
                     </h4>
                 </div>
                 <div class="box-body">
-                        <div id="velocimetro" style="height: 330px;"></div>
-                        
+                        <div id="velocimetro" style="height: 180px;"></div>
                 </div>
             </div>
         </div>
-        <div class="form-group col-md-6 col-sm-6 col-xs-12">
+        <div class="form-group col-md-5 col-sm-5 col-xs-12">
             <div class="box box-primary">
                 <div class="box-header with-border">
                     <h4 class="box-title">
@@ -58,7 +57,20 @@
                     </h4>
                 </div>
                 <div class="box-body">
-                    <div id="barras_chart" style="height: 330px;">
+                    <div id="barras_chart" style="height: 240px;">
+                    </div>     
+                </div>
+            </div>
+        </div>
+        <div class="form-group col-md-5 col-sm-5 col-xs-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h4 class="box-title">
+                        Avances del mes:
+                    </h4>
+                </div>
+                <div class="box-body">
+                    <div id="barras_chart2" style="height: 240px;">
                     </div>     
                 </div>
             </div>
@@ -238,15 +250,19 @@
         google.charts.load('current', {'packages':['gauge','corechart', 'bar']});
         google.charts.setOnLoadCallback(drawChart);
         google.charts.setOnLoadCallback(drawVisualization);
+        google.charts.setOnLoadCallback(drawVisualization2);
 
         var datos=<?php echo $datos; ?>; 
         console.log(datos);
+
+        var datos2=<?php echo $datos2; ?>; 
+
         function drawVisualization() {
                 // Some raw data (not necessarily accurate)
             var data = google.visualization.arrayToDataTable(datos);
             
             var options = {
-            title : 'Estatus de seguimientos en el mes',
+            title : 'Comparativo Concretados - Meta',
             vAxis: {title: 'Cantidad'},
             hAxis: {title: 'Estatus'},
             seriesType: 'bars',
@@ -256,6 +272,26 @@
             };
 
             var chart = new google.visualization.ColumnChart(document.getElementById('barras_chart'));
+            //var chart = new google.charts.Bar(document.getElementById('barras_chart'));
+
+            chart.draw(data, options);
+        }
+
+        function drawVisualization2() {
+                // Some raw data (not necessarily accurate)
+            var data = google.visualization.arrayToDataTable(datos2);
+            
+            var options = {
+            title : 'Estatus de seguimientos en el mes',
+            vAxis: {title: 'Cantidad'},
+            hAxis: {title: 'Estatus'},
+            seriesType: 'bars',
+            //series: {0: {type: 'line'}}
+
+            colors: ['#FF8000']
+            };
+
+            var chart = new google.visualization.ColumnChart(document.getElementById('barras_chart2'));
             //var chart = new google.charts.Bar(document.getElementById('barras_chart'));
 
             chart.draw(data, options);

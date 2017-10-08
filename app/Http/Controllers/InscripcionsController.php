@@ -8,6 +8,9 @@ use App\Grupo;
 use App\Cliente;
 use App\Hacademica;
 use App\Calificacion;
+use App\Ponderacion;
+use App\CalificacionPonderacion;
+use App\CargaPonderacion;
 use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updateInscripcion;
@@ -90,7 +93,19 @@ class InscripcionsController extends Controller {
 				$c['reporte_bnd']=0;
 				$c['usu_alta_id']=Auth::user()->id;
 				$c['usu_mod_id']=Auth::user()->id;
-				Calificacion::create($c);
+				$calif=Calificacion::create($c);
+				
+				$ponderaciones=CargaPonderacion::where('ponderacion_id','=', $m->ponderacion_id)->get();
+				//dd($ponderaciones);
+				foreach($ponderaciones as $p){
+					$ponde['calificacion_id']=$calif->id;
+					$ponde['carga_ponderacion_id']=$p->id;
+					$ponde['calificacion_parcial']=0;
+					$ponde['ponderacion']=$p->porcentaje;
+					$ponde['usu_alta_id']=Auth::user()->id;
+					$ponde['usu_mod_id']=Auth::user()->id;
+					CalificacionPonderacion::create($ponde);
+				}
 			}
 		}
 		

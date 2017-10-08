@@ -33,4 +33,10 @@
                         <span class="help-block">{{ $errors->first("plantel_id") }}</span>
                        @endif
                     </div>
-                    
+                    <div class="form-group col-md-4 @if($errors->has('ponderacion_id')) has-error @endif">
+                       <label for="ponderacion_id-field">Ponderacion</label>
+                       {!! Form::select("ponderacion_id", $list["Ponderacion"], null, array("class" => "form-control select_seguridad", "id" => "ponderacion_id-field")) !!}
+                       @if($errors->has("ponderacion_id"))
+                        <span class="help-block">{{ $errors->first("ponderacion_id") }}</span>
+                       @endif
+                    </div>

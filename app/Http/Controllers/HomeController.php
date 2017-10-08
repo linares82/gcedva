@@ -53,8 +53,6 @@ class HomeController extends Controller
                     ->where('st_seguimiento_id', '=', 1)
                     ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
                     //->where('mes', '=', $mes)
-                    ->where('seguimientos.created_at', '>=', $l->inicio)
-                    ->where('seguimientos.created_at', '<=', $l->fin)
                     ->where('c.plantel_id', '=', $e->plantel_id)
                     ->where('c.empleado_id', '=', $e->id)
                     ->value('total');
@@ -77,8 +75,6 @@ class HomeController extends Controller
         $a_3=Seguimiento::where('st_seguimiento_id', '=', 3)
                     ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
                     //->where('mes', '=', $mes)
-                    ->where('seguimientos.created_at', '>=', $l->inicio)
-                    ->where('seguimientos.created_at', '<=', $l->fin)
                     ->where('c.empleado_id', '=', $e->id)
                     ->where('c.plantel_id', '=', $e->plantel_id)
                     ->count();
@@ -86,8 +82,6 @@ class HomeController extends Controller
         $a_4=Seguimiento::where('st_seguimiento_id', '=', 4)
                     ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
                     //->where('mes', '=', $mes)
-                    ->where('seguimientos.created_at', '>=', $l->inicio)
-                    ->where('seguimientos.created_at', '<=', $l->fin)
                     ->where('c.empleado_id', '=', $e->id)
                     ->where('c.plantel_id', '=', $e->plantel_id)
                     ->count();
@@ -100,6 +94,9 @@ class HomeController extends Controller
         $encabezado = ['Estatus', 'Cantidad Total', 'Meta'];
         $datos=array();
         array_push($datos,$encabezado);
+        $encabezado = ['Estatus', 'Cantidad Total'];
+        $datos2=array();
+        array_push($datos2,$encabezado);
         $mes=(int)date('m');
         $grafica=Seguimiento::select('sts.name as estatus', DB::raw('count(sts.name) as valor'))
                     ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
@@ -109,9 +106,10 @@ class HomeController extends Controller
                     ->where('seguimientos.created_at', '<=', $l->fin)
                     ->where('c.empleado_id', '=', $e->id)
                     ->where('c.plantel_id', '=', $e->plantel_id)
+                    ->where('sts.id', '=', 2)
                     ->groupBy('sts.name')
                     ->get();
-
+        
         foreach($grafica as $g){
             if($g->estatus=="Concretado"){
                 array_push($datos, array($g->estatus, $g->valor, $e->plantel->meta_venta));
@@ -120,10 +118,25 @@ class HomeController extends Controller
             }
             
         }
-        //dd($menu2);
         
-        return view('home', compact('avisos', 'a_1', 'a_2', 'a_3', 'a_4', 'grafica', 'avisos_generales', 'avance'))
-                    ->with('datos', json_encode($datos)) ;
+        $grafica2=Seguimiento::select('sts.name as estatus', DB::raw('count(sts.name) as valor'))
+                    ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
+                    ->join('st_seguimientos as sts', 'sts.id','=','seguimientos.st_seguimiento_id')
+                    //->where('mes', '=', $mes)
+                    ->where('seguimientos.created_at', '>=', $l->inicio)
+                    ->where('seguimientos.created_at', '<=', $l->fin)
+                    ->where('c.empleado_id', '=', $e->id)
+                    ->where('c.plantel_id', '=', $e->plantel_id)
+                    ->whereIn('sts.id', [1,3,4])
+                    ->groupBy('sts.name')
+                    ->get();
+        foreach($grafica2 as $g){
+            array_push($datos2, array($g->estatus, $g->valor));
+        }
+        //dd($datos2);
+        return view('home', compact('avisos', 'a_1', 'a_2', 'a_3', 'a_4', 'grafica2','grafica', 'avisos_generales', 'avance'))
+                    ->with('datos', json_encode($datos))
+                    ->with('datos2', json_encode($datos2));
     }
 
     public function grfEstatusXEmpleado(){
