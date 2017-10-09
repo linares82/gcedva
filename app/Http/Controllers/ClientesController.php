@@ -65,7 +65,7 @@ class ClientesController extends Controller {
 		
 		//dd(Municipio::get());
 		$empleados=Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
-						//->where('plantel_id', '=', $empleado->plantel_id)
+						->where('puesto_id', '=', 2)
 						->pluck('name', 'id');
 		//dd($empleados);
 		return view('clientes.create', compact('empleados'))
@@ -158,7 +158,7 @@ class ClientesController extends Controller {
 	{
 		$cliente=$cliente->find($id);
 		$empleados=Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
-						//->where('plantel_id', '=', $empleado->plantel_id)
+						->where('puesto_id', '=', 2)
 						->pluck('name', 'id');
 		$cp=PreguntaCliente::where('cliente_id','=', $id)->get();
 		$preguntas=Preguntum::pluck('name','id');
