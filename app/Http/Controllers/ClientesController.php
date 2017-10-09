@@ -168,6 +168,7 @@ class ClientesController extends Controller {
 	{
 		$cliente=$cliente->find($id);
 		$p=Auth::user()->can('IfiltroEmpleadosXPlantel');
+		//dd($p);
 		if($p){
 			$e=Empleado::where('user_id', '=', Auth::user()->id)->first();
 			$empleados=Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
