@@ -76,7 +76,9 @@ class ClientesController extends Controller {
 						->where('puesto_id', '=', 2)
 						->pluck('name', 'id');
 		}
-		
+		$empleados=$empleados->reverse();
+		$empleados->put(0,'Seleccionar Opción');
+		$empleados=$empleados->reverse();
 		//dd($empleados);
 		return view('clientes.create', compact('empleados'))
 			->with( 'list', Cliente::getListFromAllRelationApps() );
@@ -180,6 +182,9 @@ class ClientesController extends Controller {
 						->where('puesto_id', '=', 2)
 						->pluck('name', 'id');
 		}
+		$empleados=$empleados->reverse();
+		$empleados->put(0,'Seleccionar Opción');
+		$empleados=$empleados->reverse();
 		$cp=PreguntaCliente::where('cliente_id','=', $id)->get();
 		$preguntas=Preguntum::pluck('name','id');
 		//dd($cp);
