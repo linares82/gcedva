@@ -64,9 +64,19 @@ class ClientesController extends Controller {
 	{
 		
 		//dd(Municipio::get());
-		$empleados=Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
+		$p=Auth::user()->can('IfiltroEmpleadosXPlantel')
+		if($p){
+			$e=Empleado::where('user_id', '=', Auth::user()->id)->first();
+			$empleados=Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
+						->where('plantel_id', '=', $e->plantel_id)
 						->where('puesto_id', '=', 2)
 						->pluck('name', 'id');
+		}else{
+			$empleados=Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
+						->where('puesto_id', '=', 2)
+						->pluck('name', 'id');
+		}
+		
 		//dd($empleados);
 		return view('clientes.create', compact('empleados'))
 			->with( 'list', Cliente::getListFromAllRelationApps() );
@@ -157,9 +167,18 @@ class ClientesController extends Controller {
 	public function edit($id, Cliente $cliente)
 	{
 		$cliente=$cliente->find($id);
-		$empleados=Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
+		$p=Auth::user()->can('IfiltroEmpleadosXPlantel')
+		if($p){
+			$e=Empleado::where('user_id', '=', Auth::user()->id)->first();
+			$empleados=Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
+						->where('plantel_id', '=', $e->plantel_id)
 						->where('puesto_id', '=', 2)
 						->pluck('name', 'id');
+		}else{
+			$empleados=Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
+						->where('puesto_id', '=', 2)
+						->pluck('name', 'id');
+		}
 		$cp=PreguntaCliente::where('cliente_id','=', $id)->get();
 		$preguntas=Preguntum::pluck('name','id');
 		//dd($cp);
