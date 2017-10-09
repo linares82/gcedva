@@ -64,7 +64,7 @@ class ClientesController extends Controller {
 	{
 		
 		//dd(Municipio::get());
-		$p=Auth::user()->can('IfiltroEmpleadosXPlantel')
+		$p=Auth::user()->can('IfiltroEmpleadosXPlantel');
 		if($p){
 			$e=Empleado::where('user_id', '=', Auth::user()->id)->first();
 			$empleados=Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
@@ -167,7 +167,7 @@ class ClientesController extends Controller {
 	public function edit($id, Cliente $cliente)
 	{
 		$cliente=$cliente->find($id);
-		$p=Auth::user()->can('IfiltroEmpleadosXPlantel')
+		$p=Auth::user()->can('IfiltroEmpleadosXPlantel');
 		if($p){
 			$e=Empleado::where('user_id', '=', Auth::user()->id)->first();
 			$empleados=Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
