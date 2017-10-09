@@ -64,8 +64,11 @@ class ClientesController extends Controller {
 	{
 		
 		//dd(Municipio::get());
-		
-		return view('clientes.create')
+		$empleados=Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
+						//->where('plantel_id', '=', $empleado->plantel_id)
+						->pluck('name', 'id');
+		//dd($empleados);
+		return view('clientes.create', compact('empleados'))
 			->with( 'list', Cliente::getListFromAllRelationApps() );
 	}
 
@@ -154,8 +157,11 @@ class ClientesController extends Controller {
 	public function edit($id, Cliente $cliente)
 	{
 		$cliente=$cliente->find($id);
-		$preguntas=Preguntum::pluck('name','id');
+		$empleados=Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
+						//->where('plantel_id', '=', $empleado->plantel_id)
+						->pluck('name', 'id');
 		$cp=PreguntaCliente::where('cliente_id','=', $id)->get();
+		$preguntas=Preguntum::pluck('name','id');
 		//dd($cp);
 		//dd($preguntas);
 		$doc_existentes=DB::table('pivot_doc_clientes as pde')->select('doc_alumno_id')
@@ -176,7 +182,7 @@ class ClientesController extends Controller {
 									->select()
 									->whereNotIn('id', $de_array)
 									->get();
-		return view('clientes.edit', compact('cliente', 'preguntas', 'cp','documentos_faltantes'))
+		return view('clientes.edit', compact('cliente', 'preguntas', 'cp','documentos_faltantes', 'empleados'))
 			->with( 'list', Cliente::getListFromAllRelationApps() )
 			->with( 'list1', PivotDocCliente::getListFromAllRelationApps() );
 	}

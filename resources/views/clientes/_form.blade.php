@@ -92,7 +92,7 @@
                                             </div>
                                             <div class="form-group col-md-4 @if($errors->has('empleado_id')) has-error @endif" style="clear:left;">
                                             <label for="empleado_id-field">Empleado</label>
-                                            {!! Form::select("empleado_id", $list["Empleado"], null, array("class" => "form-control select_seguridad", "id" => "empleado_id-field")) !!}
+                                            {!! Form::select("empleado_id", $empleados, null, array("class" => "form-control select_seguridad", "id" => "empleado_id-field")) !!}
                                             <div id='loading3' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                                             @if($errors->has("empleado_id"))
                                                 <span class="help-block">{{ $errors->first("empleado_id") }}</span>
