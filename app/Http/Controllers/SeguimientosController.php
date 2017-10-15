@@ -483,6 +483,7 @@ class SeguimientosController extends Controller {
 	public function seguimientosGrfr(updateSeguimiento $request)
 	{
 		$input=$request->all();
+		//dd($input);
 		$fecha=date('d-m-Y');
 		if(!$request->has('plantel_f') and !$request->has('plantel_t')){
 			$input['plantel_f']=DB::table('empleados as e')

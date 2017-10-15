@@ -201,26 +201,60 @@ class HacademicasController extends Controller {
 							->get();
 		}elseif($input['plantel_id']==0 and isset($input['cve_alumno'])){
 			*/
-		if(isset($input['cve_alumno']) and isset($input['tpo_examen_id']) and isset($input['materium_id'])){
+		if(isset($input['cve_alumno']) and 
+                   isset($input['tpo_examen_id']) and 
+                   isset($input['materium_id']) and 
+                   !isset($input['excepcion'])){
 			$c=Cliente::where('cve_alumno', '=', $input['cve_alumno'])->first();
 			$hacademicas=Hacademica::select('calif.id',
-							DB::raw('concat(c.nombre, " ", c.ape_paterno," ", c.ape_materno) as nombre'),
-							'm.name as materia','te.name as examen', 'calif.calificacion', 'calif.fecha',
-							'g.name as grado', 'calif.calificacion', 'calif.fecha', 'calif.reporte_bnd',
-							'cpo.name as nombre_ponderacion','cp.ponderacion','cp.calificacion_parcial',
-							'cp.id as calificacion_parcial_id')
-							->join('clientes as c', 'c.id', 'hacademicas.cliente_id')
-							->join('calificacions as calif', 'hacademicas.id', '=', 'calif.hacademica_id')
-							->join('calificacion_ponderacions as cp', 'cp.calificacion_id', '=', 'calif.id')
-							->join('carga_ponderacions as cpo', 'cpo.id', '=', 'cp.carga_ponderacion_id')
-							->join('tpo_examens as te', 'te.id', '=', 'calif.tpo_examen_id')
-							->join('materia as m', 'm.id', '=', 'hacademicas.materium_id')
-							->join('grados as g', 'g.id', '=', 'hacademicas.grado_id')
-							->where('hacademicas.materium_id', '=', $input['materium_id'])
-							->where('calif.tpo_examen_id', '=', $input['tpo_examen_id'])
-							->where('c.cve_alumno', '=', $input['cve_alumno'])
-							->get();
-		}
+                            DB::raw('concat(c.nombre, " ", c.ape_paterno," ", c.ape_materno) as nombre'),
+                            'm.name as materia','te.name as examen', 'calif.calificacion', 'calif.fecha',
+                            'g.name as grado', 'calif.calificacion', 'calif.fecha', 'calif.reporte_bnd',
+                            'cpo.name as nombre_ponderacion','cp.ponderacion','cp.calificacion_parcial',
+                            'cp.id as calificacion_parcial_id')
+                            ->join('clientes as c', 'c.id', 'hacademicas.cliente_id')
+                            ->join('calificacions as calif', 'hacademicas.id', '=', 'calif.hacademica_id')
+                            ->join('calificacion_ponderacions as cp', 'cp.calificacion_id', '=', 'calif.id')
+                            ->join('carga_ponderacions as cpo', 'cpo.id', '=', 'cp.carga_ponderacion_id')
+                            ->join('tpo_examens as te', 'te.id', '=', 'calif.tpo_examen_id')
+                            ->join('materia as m', 'm.id', '=', 'hacademicas.materium_id')
+                            ->join('grados as g', 'g.id', '=', 'hacademicas.grado_id')
+                            ->join('lectivos as l', 'l.id', '=', 'hacademicas.lectivo_id')
+                            ->where('hacademicas.materium_id', '=', $input['materium_id'])
+                            ->where('calif.tpo_examen_id', '=', $input['tpo_examen_id'])
+                            ->where('c.cve_alumno', '=', $input['cve_alumno'])
+                            ->whereExists(function ($query) {
+                                $query->from('calendario_evaluacions as ce')
+                                      ->join('lectivos as lec', 'lec.id', '=', 'ce.lectivo_id')
+                                      ->whereRaw('curdate() between ce.v_inicio and ce.v_fin')
+                                      ->whereRaw('ce.carga_ponderacion_id = cpo.id')
+                                      ->whereRaw('lec.id = hacademicas.lectivo_id');
+                            })
+                            ->get();
+		}elseif(isset($input['cve_alumno']) and 
+                   isset($input['tpo_examen_id']) and 
+                   isset($input['materium_id']) and 
+                   isset($input['excepcion'])){
+                    $c=Cliente::where('cve_alumno', '=', $input['cve_alumno'])->first();
+			$hacademicas=Hacademica::select('calif.id',
+                            DB::raw('concat(c.nombre, " ", c.ape_paterno," ", c.ape_materno) as nombre'),
+                            'm.name as materia','te.name as examen', 'calif.calificacion', 'calif.fecha',
+                            'g.name as grado', 'calif.calificacion', 'calif.fecha', 'calif.reporte_bnd',
+                            'cpo.name as nombre_ponderacion','cp.ponderacion','cp.calificacion_parcial',
+                            'cp.id as calificacion_parcial_id')
+                            ->join('clientes as c', 'c.id', 'hacademicas.cliente_id')
+                            ->join('calificacions as calif', 'hacademicas.id', '=', 'calif.hacademica_id')
+                            ->join('calificacion_ponderacions as cp', 'cp.calificacion_id', '=', 'calif.id')
+                            ->join('carga_ponderacions as cpo', 'cpo.id', '=', 'cp.carga_ponderacion_id')
+                            ->join('tpo_examens as te', 'te.id', '=', 'calif.tpo_examen_id')
+                            ->join('materia as m', 'm.id', '=', 'hacademicas.materium_id')
+                            ->join('grados as g', 'g.id', '=', 'hacademicas.grado_id')
+                            ->join('lectivos as l', 'l.id', '=', 'hacademicas.lectivo_id')
+                            ->where('hacademicas.materium_id', '=', $input['materium_id'])
+                            ->where('calif.tpo_examen_id', '=', $input['tpo_examen_id'])
+                            ->where('c.cve_alumno', '=', $input['cve_alumno'])
+                            ->get();
+                }
 
 		//dd($hacademicas->toArray());
 		$examen=TpoExamen::pluck('name', 'id');

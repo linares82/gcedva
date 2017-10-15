@@ -80,6 +80,15 @@
                         <span class="help-block">{{ $errors->first("st_materium_id") }}</span>
                        @endif
                     </div>
+                    @permission('calificacions.excepcion')
+                    <div class="form-group col-md-4 @if($errors->has('excepcion')) has-error @endif">
+                       <label for="excepcion-field">Exepcion</label>
+                       {!! Form::checkbox("excepcion", 1, false) !!}
+                       @if($errors->has("excepcion"))
+                        <span class="help-block">{{ $errors->first("excepcion") }}</span>
+                       @endif
+                    </div>
+                    @endpermission
 <!--   
                     <div class="form-group col-md-4 @if($errors->has('st_materium_id')) has-error @endif">
                        <label for="st_materium_id-field">Estatus Materia</label>

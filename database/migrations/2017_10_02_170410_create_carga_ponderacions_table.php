@@ -5,14 +5,13 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateCargaPonderacionsTable extends Migration {
 
-	/**
-	 * Run the migrations.
-	 *
-	 * @return void
-	 */
-	public function up()
-	{
-		Schema::create('carga_ponderacions', function(Blueprint $table) {
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up() {
+        Schema::create('carga_ponderacions', function(Blueprint $table) {
             $table->increments('id');
             $table->integer('ponderacion_id')->unsigned();
             $table->string('name');
@@ -23,18 +22,17 @@ class CreateCargaPonderacionsTable extends Migration {
             $table->softDeletes();
             $table->foreign('usu_mod_id')->references('id')->on('users');
             $table->foreign('usu_alta_id')->references('id')->on('users');
-			$table->foreign('ponderacion_id')->references('id')->on('ponderacions');
+            $table->foreign('ponderacion_id')->references('id')->on('ponderacions');
         });
-	}
+    }
 
-	/**
-	 * Reverse the migrations.
-	 *
-	 * @return void
-	 */
-	public function down()
-	{
-		Schema::drop('carga_ponderacions');
-	}
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down() {
+        Schema::drop('carga_ponderacions');
+    }
 
 }

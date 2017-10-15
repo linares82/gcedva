@@ -398,69 +398,70 @@
     };
     aggregators = (function(tpl) {
       return {
-        "Count": tpl.count(usFmtInt),
-        "Count Unique Values": tpl.countUnique(usFmtInt),
-        "List Unique Values": tpl.listUnique(", "),
-        "Sum": tpl.sum(usFmt),
-        "Integer Sum": tpl.sum(usFmtInt),
-        "Average": tpl.average(usFmt),
-        "Median": tpl.median(usFmt),
-        "Sample Variance": tpl["var"](1, usFmt),
-        "Sample Standard Deviation": tpl.stdev(1, usFmt),
-        "Minimum": tpl.min(usFmt),
-        "Maximum": tpl.max(usFmt),
-        "First": tpl.first(usFmt),
-        "Last": tpl.last(usFmt),
-        "Sum over Sum": tpl.sumOverSum(usFmt),
+        "Contar": tpl.count(usFmtInt),
+        "Contar Valores Unicos": tpl.countUnique(usFmtInt),
+        "Listar Valores Unicos": tpl.listUnique(", "),
+        "Suma": tpl.sum(usFmt),
+        "Suma Enteros": tpl.sum(usFmtInt),
+        "Promedio": tpl.average(usFmt),
+        "Mediana": tpl.median(usFmt),
+        "Ejemplo de Varianza": tpl["var"](1, usFmt),
+        "Ejemplo de Desviación Estandar": tpl.stdev(1, usFmt),
+        "Minimo": tpl.min(usFmt),
+        "Maximo": tpl.max(usFmt),
+        "Primero": tpl.first(usFmt),
+        "Ultimo": tpl.last(usFmt),
+        /*"Suma sobre Suma": tpl.sumOverSum(usFmt),
         "80% Upper Bound": tpl.sumOverSumBound80(true, usFmt),
         "80% Lower Bound": tpl.sumOverSumBound80(false, usFmt),
-        "Sum as Fraction of Total": tpl.fractionOf(tpl.sum(), "total", usFmtPct),
-        "Sum as Fraction of Rows": tpl.fractionOf(tpl.sum(), "row", usFmtPct),
-        "Sum as Fraction of Columns": tpl.fractionOf(tpl.sum(), "col", usFmtPct),
-        "Count as Fraction of Total": tpl.fractionOf(tpl.count(), "total", usFmtPct),
-        "Count as Fraction of Rows": tpl.fractionOf(tpl.count(), "row", usFmtPct),
-        "Count as Fraction of Columns": tpl.fractionOf(tpl.count(), "col", usFmtPct)
+        "Suma como Fracción del Total": tpl.fractionOf(tpl.sum(), "total", usFmtPct),
+        "Suma como Fraccion de las Lineas": tpl.fractionOf(tpl.sum(), "row", usFmtPct),
+        "Suma como Fraccion de Columnas": tpl.fractionOf(tpl.sum(), "col", usFmtPct),
+        "Cuenta como Fraccion del Total": tpl.fractionOf(tpl.count(), "total", usFmtPct),
+        "Cuenta como Fracción de las Lineas": tpl.fractionOf(tpl.count(), "row", usFmtPct),
+        "Cuenta como Fracción de las Columnas": tpl.fractionOf(tpl.count(), "col", usFmtPct)
+		*/
       };
     })(aggregatorTemplates);
     renderers = {
-      "Table": function(data, opts) {
+      "Tabla": function(data, opts) {
         return pivotTableRenderer(data, opts);
       },
-      "Table Barchart": function(data, opts) {
+      "Tabla Gráfica de Barras": function(data, opts) {
         return $(pivotTableRenderer(data, opts)).barchart();
       },
-      "Heatmap": function(data, opts) {
+      "Mapa de Calor": function(data, opts) {
         return $(pivotTableRenderer(data, opts)).heatmap("heatmap", opts);
       },
-      "Row Heatmap": function(data, opts) {
+      /*"Linea Mapa de Calor": function(data, opts) {
         return $(pivotTableRenderer(data, opts)).heatmap("rowheatmap", opts);
       },
-      "Col Heatmap": function(data, opts) {
+      "Columna Mapa de Calor": function(data, opts) {
         return $(pivotTableRenderer(data, opts)).heatmap("colheatmap", opts);
-      }
+      }*/
     };
     locales = {
       en: {
         aggregators: aggregators,
         renderers: renderers,
         localeStrings: {
-          renderError: "An error occurred rendering the PivotTable results.",
-          computeError: "An error occurred computing the PivotTable results.",
-          uiRenderError: "An error occurred rendering the PivotTable UI.",
-          selectAll: "Select All",
-          selectNone: "Select None",
-          tooMany: "(too many to list)",
-          filterResults: "Filter values",
-          apply: "Apply",
-          cancel: "Cancel",
-          totals: "Totals",
+          renderError: "Un error ocurrió al mostrart los resultados.",
+          computeError: "Un error ocurrió al calcular los resultados.",
+          uiRenderError: "Un error ocurrio al mostrar la Interfaz Visual de los resultados.",
+          selectAll: "Seleccionar Todos",
+          selectNone: "Seleccionar Ninguno",
+          tooMany: "(Demasiados registros para mostrar)",
+          filterResults: "Filtrar valores",
+          apply: "Aplicar",
+          cancel: "Cancelar",
+          totals: "Totales",
           vs: "vs",
           by: "by"
         }
       }
     };
-    mthNamesEn = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    dayNamesEn = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    mthNamesEn = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+    dayNamesEn = ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"];
     zeroPad = function(number) {
       return ("0" + number).substr(-2, 2);
     };

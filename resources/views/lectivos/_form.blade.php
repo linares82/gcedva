@@ -12,6 +12,20 @@
                         <span class="help-block">{{ $errors->first("activo") }}</span>
                        @endif
                     </div>
+                    <div class="form-group col-md-4 @if($errors->has('bachillerato_bnd')) has-error @endif">
+                       <label for="bachillerato_bnd-field">bachillerato</label>
+                       {!! Form::checkbox("bachillerato_bnd", 1, null, [ "id" => "bachillerato_bnd-field"]) !!}
+                       @if($errors->has("bachillerato_bnd"))
+                        <span class="help-block">{{ $errors->first("bachillerato_bnd") }}</span>
+                       @endif
+                    </div>
+                    <div class="form-group col-md-4 @if($errors->has('carrera_bnd')) has-error @endif">
+                       <label for="activo-field">Carrera</label>
+                       {!! Form::checkbox("carrera_bnd", 1, null, [ "id" => "activo-field"]) !!}
+                       @if($errors->has("carrera_bnd"))
+                        <span class="help-block">{{ $errors->first("carrera_bnd") }}</span>
+                       @endif
+                    </div>
                     <div class="form-group col-md-4 @if($errors->has('inicio')) has-error @endif">
                        <label for="inicio-field">Inicio</label>
                        {!! Form::text("inicio", null, array("class" => "form-control", "id" => "inicio-field")) !!}

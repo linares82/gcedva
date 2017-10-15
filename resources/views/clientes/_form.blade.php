@@ -105,6 +105,13 @@
                                                 <span class="help-block">{{ $errors->first("plantel_id") }}</span>
                                             @endif
                                             </div>
+                                            <div class="form-group col-md-4 @if($errors->has('empresa_id')) has-error @endif">
+                                            <label for="empresa_id-field">Empresa</label>
+                                            {!! Form::select("empresa_id", $list["Empresa"], null, array("class" => "form-control select_seguridad", "id" => "empresa_id-field", 'readonly'=>'readonly')) !!}
+                                            @if($errors->has("empresa_id"))
+                                                <span class="help-block">{{ $errors->first("empresa_id") }}</span>
+                                            @endif
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="box box-default box-solid">

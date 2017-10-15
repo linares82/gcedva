@@ -19,7 +19,8 @@ class CreateMateriasTable extends Migration {
             $table->boolean('seriada_bnd');
             $table->integer('serie_anterior')->unsigned();
             $table->integer('plantel_id')->unsigned();
-            $table->integer('usu_alta_id')->unsigned();
+            $table->integer('ponderacion_id')->unsigned()->default(0);
+			$table->integer('usu_alta_id')->unsigned();
             $table->integer('usu_mod_id')->unsigned();
             $table->timestamps();
             $table->softDeletes();
@@ -27,6 +28,7 @@ class CreateMateriasTable extends Migration {
             $table->foreign('usu_alta_id')->references('id')->on('users');
 			$table->foreign('plantel_id')->references('id')->on('plantels');
 			//$table->foreign('serie_anterior_id')->references('id')->on('materias');
+			$table->foreign('ponderacion_id')->references('id')->on('ponderacions');
         });
 	}
 

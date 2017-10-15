@@ -71,6 +71,12 @@ trait RelationManagerTrait {
             $relatedObjList = $relationAppArray['app']::where('id', '>', 2)->pluck($relationAppArray['relation_display_column'], 'id');
             //dd($relatedObjList);
           }
+          if($relationAppName=="Empresa"){
+            //dd($relationAppName);
+            $relatedObjList = $relationAppArray['app']::where('plantel_id', '=', $e->plantel_id)->pluck($relationAppArray['relation_display_column'], 'id');
+              
+            //dd($relatedObjList);
+          }
 
           /*if($relationAppName=="Lectivo"){
             //dd($relationAppName);

@@ -51,6 +51,16 @@ class LectivosController extends Controller {
 		}else{
 			$input['activo']=1;
 		}
+                if(!isset($input['bachillerato_bnd'])){
+			$input['bachillerato_bnd']=0;
+		}else{
+			$input['bachillerato_bnd']=1;
+		}
+                if(!isset($input['carrera_bnd'])){
+			$input['carrera_bnd']=0;
+		}else{
+			$input['carrera_bnd']=1;
+		}
 		//create data
 		if (Lectivo::create( $input )){
 			return redirect()->route('lectivos.index')->with('message', 'Registro creado.');	
@@ -113,6 +123,16 @@ class LectivosController extends Controller {
 			$input['activo']=0;
 		}else{
 			$input['activo']=1;
+		}
+                if(!isset($input['bachillerato_bnd'])){
+			$input['bachillerato_bnd']=0;
+		}else{
+			$input['bachillerato_bnd']=1;
+		}
+                if(!isset($input['carrera_bnd'])){
+			$input['carrera_bnd']=0;
+		}else{
+			$input['carrera_bnd']=1;
 		}
 
 		$lectivo=$lectivo->find($id);

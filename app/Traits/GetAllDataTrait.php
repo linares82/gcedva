@@ -178,9 +178,11 @@ trait GetAllDataTrait {
                 if($baseTable=="nivels" and Auth::user()->can('IfiltroNivelXplantel')){
                     $myQuery=$myQuery->where('nivels.plantel_id', '=', $empleado->plantel_id);
                 }
-                
                 break;
-            case "grados":
+            case "calendario_evaluacions":
+                if($baseTable=="calendario_evaluacions" ){
+                    $myQuery=$myQuery->where('calendario_evaluacions.plantel_id', '=', $empleado->plantel_id);
+                }
                 break;
             case "cursos":
                 break;

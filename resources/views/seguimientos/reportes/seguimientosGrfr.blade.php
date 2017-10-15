@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
     <head>
         <title>Pivot Demo</title>
         <script type="text/javascript" src="https://www.google.com/jsapi"></script>
@@ -61,8 +61,6 @@
 
         });
         </script>
-
-        
 
         <div id="output" style="margin: 30px;"></div>
 
