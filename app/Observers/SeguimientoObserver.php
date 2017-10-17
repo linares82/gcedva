@@ -16,7 +16,7 @@ class SeguimientoObserver
      * @return void
      */
     public $Seguimiento;
-    public function creating(Seguimiento $Seguimiento)
+    public function created(Seguimiento $Seguimiento)
     {
         $this->Seguimiento=$Seguimiento;
         
