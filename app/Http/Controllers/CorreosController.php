@@ -122,5 +122,10 @@ class CorreosController extends Controller {
 
 		return redirect()->route('correos.index')->with('message', 'Registro Borrado.');
 	}
-
+        
+        public function redactar($mail, Request $request)
+	{
+		$mail=$mail;
+		return view('correos.version2.frm_envio', compact('mail'));
+	}
 }

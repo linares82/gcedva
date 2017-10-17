@@ -18,7 +18,7 @@ class SeguimientoObserver
     public $Seguimiento;
     public function created(Seguimiento $Seguimiento)
     {
-        $this->Seguimiento=$Seguimiento;
+        /*$this->Seguimiento=$Seguimiento;
         
         //dd($this->Seguimiento->st_seguimiento_id."-".$s->st_seguimiento_id);
         
@@ -34,7 +34,7 @@ class SeguimientoObserver
             $hs['deleted_at']=$this->Seguimiento->deleted_at;
             $h=new HsSeguimiento();
             $h->save($hs);
-        
+        */
     }
 
     /**
@@ -44,7 +44,7 @@ class SeguimientoObserver
      * @return void
      */
      public function deleting(Seguimiento $Seguimiento){
-        $this->Seguimiento=$Seguimiento;
+        /*$this->Seguimiento=$Seguimiento;
         $s=Seguimiento::find($this->Seguimiento->id);
         //dd($s->toArray());
         if($this->Seguimiento->st_seguimiento_id<>$s->st_seguimiento_id){
@@ -61,10 +61,13 @@ class SeguimientoObserver
             $h=new HsSeguimiento();
             $h->save($hs);
         }
+         * 
+         */
      }
 
     public function updating(Seguimiento $Seguimiento)
     {
+        /*
         $this->Seguimiento=$Seguimiento;
         $s=Seguimiento::find($this->Seguimiento->id);
         //dd($this->Seguimiento->st_seguimiento_id."-".$s->st_seguimiento_id);
@@ -82,6 +85,8 @@ class SeguimientoObserver
             $h=new HsSeguimiento();
             $h->save($hs);
         }
+         * 
+         */
     }
 
     public function updated(){
