@@ -7,7 +7,7 @@
 	<ol class="breadcrumb">
 		<li><a href="{{ route('home') }}"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></a></li>
 	    <li><a href="{{ route('grupos.index') }}">@yield('gruposAppTitle')</a></li>
-	    <li class="active">Duplicate</li>
+	    <li class="active">Duplicar</li>
 	</ol>
 
     <div class="page-header">

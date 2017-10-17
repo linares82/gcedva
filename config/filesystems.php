@@ -53,6 +53,11 @@ return [
             'driver' => 'local',
             'root' => storage_path('app'),
         ],
+        
+        'tmp_correos' => [
+            'driver' => 'local',
+            'root' => storage_path('app/tmp_correos'),
+        ],
 
         'public' => [
             'driver' => 'local',

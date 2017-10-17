@@ -103,7 +103,7 @@
                     
                                 <td class="text-right">
                                     @permission('ofertas.edit')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('ofertas.duplicate', $ofertum->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
+                                    <a class="btn btn-xs btn-primary" href="{{ route('ofertas.duplicate', $ofertum->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>
                                     @endpermission
                                     @permission('ofertas.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('ofertas.edit', $ofertum->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>

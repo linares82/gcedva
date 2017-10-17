@@ -161,7 +161,7 @@
                     <td>{{$municipio->usu_mod_id}}</td>
                                 <td class="text-right">
                                     @permission('municipios.edit')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('municipios.duplicate', $municipio->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
+                                    <a class="btn btn-xs btn-primary" href="{{ route('municipios.duplicate', $municipio->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>
                                     @endpermission
                                     @permission('municipios.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('municipios.edit', $municipio->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>

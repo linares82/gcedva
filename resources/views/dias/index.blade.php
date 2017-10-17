@@ -141,7 +141,7 @@
                     <td>{{$dium->usu_mod_id}}</td>
                                 <td class="text-right">
                                     @permission('dias.edit')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('dias.duplicate', $dium->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
+                                    <a class="btn btn-xs btn-primary" href="{{ route('dias.duplicate', $dium->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>
                                     @endpermission
                                     @permission('dias.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('dias.edit', $dium->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>

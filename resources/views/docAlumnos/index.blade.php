@@ -147,7 +147,7 @@
                     
                                 <td class="text-right">
                                     @permission('docAlumnos.edit')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('docAlumnos.duplicate', $docAlumno->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
+                                    <a class="btn btn-xs btn-primary" href="{{ route('docAlumnos.duplicate', $docAlumno->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>
                                     @endpermission
                                     @permission('docAlumnos.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('docAlumnos.edit', $docAlumno->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>

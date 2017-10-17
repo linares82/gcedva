@@ -113,7 +113,7 @@
                                 <td>{{$giro->name}}</td>
                                 <td class="text-right">
                                     @permission('giros.edit')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('giros.duplicate', $giro->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
+                                    <a class="btn btn-xs btn-primary" href="{{ route('giros.duplicate', $giro->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>
                                     @endpermission
                                     @permission('giros.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('giros.edit', $giro->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>

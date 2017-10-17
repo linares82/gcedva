@@ -114,7 +114,7 @@
                                 <td>{{$stSeguimiento->name}}</td>
                                 <td class="text-right">
                                     @permission('stSeguimientos.edit')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('stSeguimientos.duplicate', $stSeguimiento->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
+                                    <a class="btn btn-xs btn-primary" href="{{ route('stSeguimientos.duplicate', $stSeguimiento->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>
                                     @endpermission
                                     @permission('stSeguimientos.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('stSeguimientos.edit', $stSeguimiento->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>

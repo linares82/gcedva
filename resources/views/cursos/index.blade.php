@@ -102,7 +102,7 @@
                                 <td>{{$curso->plantel->razon}}</td>
                                 <td class="text-right">
                                     @permission('cursos.edit')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('cursos.duplicate', $curso->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
+                                    <a class="btn btn-xs btn-primary" href="{{ route('cursos.duplicate', $curso->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>
                                     @endpermission
                                     @permission('cursos.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('cursos.edit', $curso->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>

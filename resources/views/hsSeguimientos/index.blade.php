@@ -201,7 +201,7 @@
                     <td>{{$hsSeguimiento->usu_mod_id}}</td>
                                 <td class="text-right">
                                     @permission('hsSeguimientos.edit')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('hsSeguimientos.duplicate', $hsSeguimiento->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
+                                    <a class="btn btn-xs btn-primary" href="{{ route('hsSeguimientos.duplicate', $hsSeguimiento->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>
                                     @endpermission
                                     @permission('hsSeguimientos.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('hsSeguimientos.edit', $hsSeguimiento->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>

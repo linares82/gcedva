@@ -141,7 +141,7 @@
                     <td>{{$tpoCorreo->usu_mod_id}}</td>
                                 <td class="text-right">
                                     @permission('tpoCorreos.edit')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('tpoCorreos.duplicate', $tpoCorreo->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
+                                    <a class="btn btn-xs btn-primary" href="{{ route('tpoCorreos.duplicate', $tpoCorreo->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>
                                     @endpermission
                                     @permission('tpoCorreos.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('tpoCorreos.edit', $tpoCorreo->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>

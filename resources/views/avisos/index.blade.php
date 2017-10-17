@@ -221,7 +221,7 @@
                     <td>{{$aviso->usu_mod_id}}</td>
                                 <td class="text-right">
                                     @permission('avisos.edit')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('avisos.duplicate', $aviso->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
+                                    <a class="btn btn-xs btn-primary" href="{{ route('avisos.duplicate', $aviso->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>
                                     @endpermission
                                     @permission('avisos.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('avisos.edit', $aviso->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>

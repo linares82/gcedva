@@ -194,7 +194,7 @@
                                 <td>{{$calendarioEvaluacion->v_fin}}</td>
                                 <td class="text-right">
                                     @permission('calendarioEvaluacions.edit')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('calendarioEvaluacions.duplicate', $calendarioEvaluacion->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
+                                    <a class="btn btn-xs btn-primary" href="{{ route('calendarioEvaluacions.duplicate', $calendarioEvaluacion->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>
                                     @endpermission
                                     @permission('calendarioEvaluacions.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('calendarioEvaluacions.edit', $calendarioEvaluacion->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>

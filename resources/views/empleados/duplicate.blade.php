@@ -7,7 +7,7 @@
 	<ol class="breadcrumb">
 		<li><a href="/"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></a></li>
 	    <li><a href="{{ route('empleados.index') }}">@yield('empleadosAppTitle')</a></li>
-	    <li class="active">Duplicate</li>
+	    <li class="active">Duplicar</li>
 	</ol>
 
     <div class="page-header">

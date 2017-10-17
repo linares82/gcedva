@@ -238,7 +238,7 @@
                                 <td class="text-right">
                                     <!--
                                     @permission('hacademicas.edit')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('hacademicas.duplicate', $hacademica->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
+                                    <a class="btn btn-xs btn-primary" href="{{ route('hacademicas.duplicate', $hacademica->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>
                                     @endpermission
                                     @permission('hacademicas.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('hacademicas.edit', $hacademica->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>

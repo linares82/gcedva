@@ -186,7 +186,7 @@
                                     <a class="btn btn-xs btn-default" href="{{ route('asignacionTareas.seguimiento', $asignacionTarea->id) }}"><i class="glyphicon glyphicon-list-alt"></i> Seguimiento</a>
                                     @endpermission
                                     @permission('asignacionTareas.edit')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('asignacionTareas.duplicate', $asignacionTarea->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
+                                    <a class="btn btn-xs btn-primary" href="{{ route('asignacionTareas.duplicate', $asignacionTarea->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>
                                     @endpermission
                                     @permission('asignacionTareas.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('asignacionTareas.edit', $asignacionTarea->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>

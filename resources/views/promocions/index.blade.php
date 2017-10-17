@@ -162,7 +162,7 @@
                                 <td>{{$promocion->activa}}</td>
                                 <td class="text-right">
                                     @permission('promocions.edit')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('promocions.duplicate', $promocion->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
+                                    <a class="btn btn-xs btn-primary" href="{{ route('promocions.duplicate', $promocion->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>
                                     @endpermission
                                     @permission('promocions.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('promocions.edit', $promocion->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>

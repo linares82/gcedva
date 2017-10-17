@@ -124,7 +124,7 @@
                                 <td>{{$subdiplomado->plantel->razon}}</td>
                                 <td class="text-right">
                                     @permission('subdiplomados.edit')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('subdiplomados.duplicate', $subdiplomado->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
+                                    <a class="btn btn-xs btn-primary" href="{{ route('subdiplomados.duplicate', $subdiplomado->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>
                                     @endpermission
                                     @permission('subdiplomados.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('subdiplomados.edit', $subdiplomado->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>

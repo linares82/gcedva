@@ -128,7 +128,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <!-- Select2 -->
 <script src="{{ asset ('/bower_components/AdminLTE/plugins/select2/select2.min.js') }}"></script>
 <script src="{{ asset ('/bower_components/AdminLTE/plugins/select2/select2.js') }}"></script>
-
+<script src="{{ asset ('/bower_components/AdminLTE/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js') }}"></script>
 <script>
 (function() {
   $('.select_seguridad').select2();

@@ -202,7 +202,7 @@
                                     <a class="btn btn-xs btn-default" href="{{ route('seguimientos.show', $cliente->id) }}"><i class="glyphicon glyphicon-edit"></i> Seguimiento</a>
                                     @endpermission
                                     @permission('clientes.edit')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('clientes.duplicate', $cliente->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
+                                    <a class="btn btn-xs btn-primary" href="{{ route('clientes.duplicate', $cliente->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>
                                     @endpermission
                                     @permission('clientes.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('clientes.edit', $cliente->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>

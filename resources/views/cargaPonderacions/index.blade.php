@@ -181,7 +181,7 @@
                     <td>{{$cargaPonderacion->usu_mod_id}}</td>
                                 <td class="text-right">
                                     @permission('cargaPonderacions.edit')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('cargaPonderacions.duplicate', $cargaPonderacion->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
+                                    <a class="btn btn-xs btn-primary" href="{{ route('cargaPonderacions.duplicate', $cargaPonderacion->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>
                                     @endpermission
                                     @permission('cargaPonderacions.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('cargaPonderacions.edit', $cargaPonderacion->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>

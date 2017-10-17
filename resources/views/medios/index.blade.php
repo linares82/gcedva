@@ -104,7 +104,7 @@
                     
                                 <td class="text-right">
                                     @permission('medios.edit')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('medios.duplicate', $medio->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
+                                    <a class="btn btn-xs btn-primary" href="{{ route('medios.duplicate', $medio->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>
                                     @endpermission
                                     @permission('medios.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('medios.edit', $medio->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>

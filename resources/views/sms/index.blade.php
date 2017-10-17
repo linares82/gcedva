@@ -181,7 +181,7 @@
                     <td>{{$sm->usu_mod_id}}</td>
                                 <td class="text-right">
                                     @permission('sms.edit')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('sms.duplicate', $sm->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
+                                    <a class="btn btn-xs btn-primary" href="{{ route('sms.duplicate', $sm->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>
                                     @endpermission
                                     @permission('sms.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('sms.edit', $sm->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>

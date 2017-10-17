@@ -238,7 +238,7 @@
                                 <td>{{$grupo->minimo_alumnos}}</td>
                                 <td class="text-right">
                                     @permission('grupos.edit')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('grupos.duplicate', $grupo->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
+                                    <a class="btn btn-xs btn-primary" href="{{ route('grupos.duplicate', $grupo->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>
                                     @endpermission
                                     @permission('grupos.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('grupos.edit', $grupo->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>

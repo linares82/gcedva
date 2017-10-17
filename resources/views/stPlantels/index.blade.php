@@ -141,7 +141,7 @@
                     <td>{{$stPlantel->usu_mod_id}}</td>
                                 <td class="text-right">
                                     @permission('stPlantels.edit')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('stPlantels.duplicate', $stPlantel->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
+                                    <a class="btn btn-xs btn-primary" href="{{ route('stPlantels.duplicate', $stPlantel->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>
                                     @endpermission
                                     @permission('stPlantels.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('stPlantels.edit', $stPlantel->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>

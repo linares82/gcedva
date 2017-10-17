@@ -107,7 +107,7 @@
                                 <td>{{$plantilla->mail_bnd}}</td>
                                 <td class="text-right">
                                     @permission('plantillas.edit')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('plantillas.duplicate', $plantilla->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
+                                    <a class="btn btn-xs btn-primary" href="{{ route('plantillas.duplicate', $plantilla->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>
                                     @endpermission
                                     @permission('plantillas.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('plantillas.edit', $plantilla->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>

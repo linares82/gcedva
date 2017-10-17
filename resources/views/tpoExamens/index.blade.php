@@ -113,7 +113,7 @@
                                 <td>{{$tpoExaman->name}}</td>
                                 <td class="text-right">
                                     @permission('tpoExamens.edit')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('tpoExamens.duplicate', $tpoExaman->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
+                                    <a class="btn btn-xs btn-primary" href="{{ route('tpoExamens.duplicate', $tpoExaman->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>
                                     @endpermission
                                     @permission('tpoExamens.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('tpoExamens.edit', $tpoExaman->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>

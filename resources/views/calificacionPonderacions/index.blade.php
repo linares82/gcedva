@@ -181,7 +181,7 @@
                     <td>{{$calificacionPonderacion->usu_mod_id}}</td>
                                 <td class="text-right">
                                     @permission('calificacionPonderacions.edit')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('calificacionPonderacions.duplicate', $calificacionPonderacion->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
+                                    <a class="btn btn-xs btn-primary" href="{{ route('calificacionPonderacions.duplicate', $calificacionPonderacion->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>
                                     @endpermission
                                     @permission('calificacionPonderacions.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('calificacionPonderacions.edit', $calificacionPonderacion->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>

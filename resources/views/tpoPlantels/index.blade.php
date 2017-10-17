@@ -141,7 +141,7 @@
                     <td>{{$tpoPlantel->usu_mod_id}}</td>
                                 <td class="text-right">
                                     @permission('tpoPlantels.edit')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('tpoPlantels.duplicate', $tpoPlantel->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
+                                    <a class="btn btn-xs btn-primary" href="{{ route('tpoPlantels.duplicate', $tpoPlantel->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>
                                     @endpermission
                                     @permission('tpoPlantels.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('tpoPlantels.edit', $tpoPlantel->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>

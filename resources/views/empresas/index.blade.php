@@ -132,8 +132,11 @@
                                 <td>{{$empresa->razon_social}}</td>
                                 <td>{{$empresa->nombre_contacto}}</td>
                                 <td class="text-right">
+                                    @if(isset($empresa->correo1))
+                                    <a class="btn btn-xs btn-success" href="{{ url('correos/redactar').'/'.$empresa->correo1.'/'.$empresa->nombre_contacto }}"><i class="glyphicon glyphicon-envelope"></i> Correo </a>
+                                    @endif
                                     @permission('empresas.edit')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('empresas.duplicate', $empresa->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
+                                    <a class="btn btn-xs btn-primary" href="{{ route('empresas.duplicate', $empresa->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>
                                     @endpermission
                                     @permission('empresas.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('empresas.edit', $empresa->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>

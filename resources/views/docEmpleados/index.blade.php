@@ -89,7 +89,7 @@
                                 <td>{{$docEmpleado->name}}</td>
                                 <td class="text-right">
                                     @permission('docEmpleados.edit')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('docEmpleados.duplicate', $docEmpleado->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
+                                    <a class="btn btn-xs btn-primary" href="{{ route('docEmpleados.duplicate', $docEmpleado->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>
                                     @endpermission
                                     @permission('docEmpleados.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('docEmpleados.edit', $docEmpleado->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>

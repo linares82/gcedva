@@ -161,7 +161,7 @@
                     <td>{{$cambioStSeguimiento->usu_mod_id}}</td>
                                 <td class="text-right">
                                     @permission('cambioStSeguimientos.edit')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('cambioStSeguimientos.duplicate', $cambioStSeguimiento->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
+                                    <a class="btn btn-xs btn-primary" href="{{ route('cambioStSeguimientos.duplicate', $cambioStSeguimiento->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>
                                     @endpermission
                                     @permission('cambioStSeguimientos.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('cambioStSeguimientos.edit', $cambioStSeguimiento->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>

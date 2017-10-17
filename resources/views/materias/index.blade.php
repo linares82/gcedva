@@ -157,7 +157,7 @@
                     
                                 <td class="text-right">
                                     @permission('materias.edit')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('materias.duplicate', $materium->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
+                                    <a class="btn btn-xs btn-primary" href="{{ route('materias.duplicate', $materium->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>
                                     @endpermission
                                     @permission('materias.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('materias.edit', $materium->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>

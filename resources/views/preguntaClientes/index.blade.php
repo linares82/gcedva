@@ -181,7 +181,7 @@
                     <td>{{$preguntaCliente->usu_mod_id}}</td>
                                 <td class="text-right">
                                     @permission('preguntaClientes.edit')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('preguntaClientes.duplicate', $preguntaCliente->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
+                                    <a class="btn btn-xs btn-primary" href="{{ route('preguntaClientes.duplicate', $preguntaCliente->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>
                                     @endpermission
                                     @permission('preguntaClientes.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('preguntaClientes.edit', $preguntaCliente->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>

@@ -121,7 +121,7 @@
                     <td>{{$param->valor}}</td>
                                 <td class="text-right">
                                     @permission('params.edit')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('params.duplicate', $param->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
+                                    <a class="btn btn-xs btn-primary" href="{{ route('params.duplicate', $param->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>
                                     @endpermission
                                     @permission('params.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('params.edit', $param->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>

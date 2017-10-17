@@ -104,7 +104,7 @@
                     
                                 <td class="text-right">
                                     @permission('tareas.edit')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('tareas.duplicate', $tarea->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
+                                    <a class="btn btn-xs btn-primary" href="{{ route('tareas.duplicate', $tarea->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>
                                     @endpermission
                                     @permission('tareas.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('tareas.edit', $tarea->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>

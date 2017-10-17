@@ -253,7 +253,7 @@
                                 <td>{{$inscripcion->lectivo->name}}</td>
                                 <td class="text-right">
                                     @permission('inscripcions.edit')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('inscripcions.duplicate', $inscripcion->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
+                                    <a class="btn btn-xs btn-primary" href="{{ route('inscripcions.duplicate', $inscripcion->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>
                                     @endpermission
                                     @permission('inscripcions.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('inscripcions.edit', $inscripcion->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>

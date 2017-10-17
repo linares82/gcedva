@@ -143,7 +143,7 @@
                                 <td>{{$plantel->cve_incorporacion}}</td>
                                 <td class="text-right">
                                     @permission('lectivos.duplicate')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('plantels.duplicate', $plantel->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
+                                    <a class="btn btn-xs btn-primary" href="{{ route('plantels.duplicate', $plantel->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>
                                     @endpermission
                                     @permission('lectivos.edit')
                                         <a class="btn btn-xs btn-warning" href="{{ route('plantels.edit', $plantel->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>

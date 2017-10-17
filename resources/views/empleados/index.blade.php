@@ -183,7 +183,7 @@
                                 <td>{{$empleado->st_empleado->name}}</td>
                                 <td class="text-right">
                                     @permission('empleados.edit')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('empleados.duplicate', $empleado->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
+                                    <a class="btn btn-xs btn-primary" href="{{ route('empleados.duplicate', $empleado->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>
                                     @endpermission
                                     @permission('empleados.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('empleados.edit', $empleado->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>

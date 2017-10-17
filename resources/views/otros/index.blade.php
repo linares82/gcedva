@@ -104,7 +104,7 @@
                                 <td>{{$otro->plantel->razon}}</td>
                                 <td class="text-right">
                                     @permission('otros.edit')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('otros.duplicate', $otro->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
+                                    <a class="btn btn-xs btn-primary" href="{{ route('otros.duplicate', $otro->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>
                                     @endpermission
                                     @permission('otros.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('otros.edit', $otro->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>

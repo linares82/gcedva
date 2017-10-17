@@ -139,7 +139,7 @@
                                 <td>{{$periodoEstudio->name}}</td>
                                 <td class="text-right">
                                     @permission('periodoEstudios.edit')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('periodoEstudios.duplicate', $periodoEstudio->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
+                                    <a class="btn btn-xs btn-primary" href="{{ route('periodoEstudios.duplicate', $periodoEstudio->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>
                                     @endpermission
                                     @permission('periodoEstudios.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('periodoEstudios.edit', $periodoEstudio->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>

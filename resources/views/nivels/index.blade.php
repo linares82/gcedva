@@ -106,7 +106,7 @@
                                 <td>{{$nivel->name}}</td>
                                 <td class="text-right">
                                     @permission('nivels.edit')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('nivels.duplicate', $nivel->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
+                                    <a class="btn btn-xs btn-primary" href="{{ route('nivels.duplicate', $nivel->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>
                                     @endpermission
                                     @permission('nivels.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('nivels.edit', $nivel->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>

@@ -161,7 +161,7 @@
                     <td>{{$ponderacion->usu_mod_id}}</td>
                                 <td class="text-right">
                                     @permission('ponderacions.edit')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('ponderacions.duplicate', $ponderacion->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
+                                    <a class="btn btn-xs btn-primary" href="{{ route('ponderacions.duplicate', $ponderacion->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>
                                     @endpermission
                                     @permission('ponderacions.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('ponderacions.edit', $ponderacion->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
