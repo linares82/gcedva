@@ -19,7 +19,7 @@ class Especialidad extends Model
     } 
 
 	//Mass Assignment
-	protected $fillable = ['name','plantel_id','usu_alta_id','usu_mod_id', 'meta'];
+	protected $fillable = ['name','rvoe', 'ccte','plantel_id','usu_alta_id','usu_mod_id', 'meta'];
 
 	public function usu_alta() {
 		return $this->hasOne('App\User', 'id', 'usu_alta_id');

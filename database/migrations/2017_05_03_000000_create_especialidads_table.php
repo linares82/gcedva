@@ -15,6 +15,8 @@ class CreateEspecialidadsTable extends Migration {
 		Schema::create('especialidads', function(Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            $table->string('rvoe')->nullable();
+            $table->string('ccte')->nullable();
             $table->integer('usu_alta_id')->unsigned();
             $table->integer('usu_mod_id')->unsigned();
             $table->timestamps();
