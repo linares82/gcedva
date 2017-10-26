@@ -18,7 +18,7 @@ class Menu extends Model
     } 
 
 	//Mass Assignment
-	protected $fillable = ['item','imagen','prioridad','activo','link','parametros','permiso','padre',''];
+	protected $fillable = ['item','imagen','color','prioridad','activo','link','parametros','permiso','padre',''];
 
     protected $dates = ['deleted_at'];
 }

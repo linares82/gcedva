@@ -16,6 +16,7 @@ class CreateMenusTable extends Migration {
             $table->increments('id')->unsigned();
             $table->string('item');
             $table->string('imagen');
+            $table->string('color');
             $table->integer('prioridad')->unsigned();
             $table->integer('activo')->unsigned();
             $table->string('link');

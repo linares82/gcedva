@@ -128,7 +128,7 @@ class MenusController extends Controller {
                 $link = route($item->link);
                 //dd($permiso);
                 if ($permiso and $item->activo == 1 and $item->parametros == "_blank") {
-                    $this->menuArmado = $this->menuArmado . "<li class='active'><a href='" . $link . "' target='" . $item->parametros . "'><i class='" . $item->imagen . "'></i><span>" . $item->item . "</span></a></li>";
+                    $this->menuArmado = $this->menuArmado . "<li class='active' style='background:".$item->color."' ><a href='" . $link . "' target='" . $item->parametros . "'><i class='" . $item->imagen . "'></i><span>" . $item->item . "</span></a></li>";
                 }
             }
         }
@@ -198,13 +198,13 @@ class MenusController extends Controller {
 
                     if ($r == 1) {
                         if ($item->parametros == "_blank") {
-                            $this->menuArmado = $this->menuArmado . "<li class='treeview'>
+                            $this->menuArmado = $this->menuArmado . "<li class='treeview'  style='background:".$item->color.";'>
 									                <a href=' " . $link . " ' target='" . $item->parametros . "'>
 														<i class='" . $item->imagen . "'></i><span>" . $item->item . "</span> <i class='fa fa-angle-left pull-right'></i>
 													</a>
 									                <ul class='treeview-menu'>";
                         } else {
-                            $this->menuArmado = $this->menuArmado . "<li class='treeview'>
+                            $this->menuArmado = $this->menuArmado . "<li class='treeview' style='background:".$item->color.";'>
 									                <a href=' " . $link . " '>
 														<i class='" . $item->imagen . "'></i><span>" . $item->item . "</span> <i class='fa fa-angle-left pull-right'></i>
 													</a>
@@ -216,9 +216,9 @@ class MenusController extends Controller {
                     } else {
                         //dd($this->menuArmado);
                         if ($item->parametros == "_blank") {
-                            $this->menuArmado = $this->menuArmado . "<li class='active'><a href='" . $link . "' target='" . $item->parametros . "'><i class='" . $item->imagen . "'></i><span>" . $item->item . "</span></a></li>";
+                            $this->menuArmado = $this->menuArmado . "<li class='active' style='background:".$item->color.";'><a href='" . $link . "' target='" . $item->parametros . "'><i class='" . $item->imagen . "'></i><span>" . $item->item . "</span></a></li>";
                         } else {
-                            $this->menuArmado = $this->menuArmado . "<li class='active'><a href='" . $link . "'><i class='" . $item->imagen . "'></i><span>" . $item->item . "</span></a></li>";
+                            $this->menuArmado = $this->menuArmado . "<li class='active' style='background:".$item->color.";'><a href='" . $link . "'><i class='" . $item->imagen . "'></i><span>" . $item->item . "</span></a></li>";
                         }
                     }
                     //Log::info($this->menuArmado);
