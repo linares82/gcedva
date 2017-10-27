@@ -58,6 +58,22 @@
                                     Forgot Your Password?
                                 </a>
                             -->
+                            <?php
+                                $r=DB::table('plantels as p')
+                                    ->where('p.tpo_plantel_id', '=', 1)
+                                    ->select('id','logo')
+                                    ->first();
+                                
+                            ?>
+                            </br>
+                            @if(isset($r->id))
+                            <img src="{!! asset('/imagenes/planteles').'/'.$r->id.'/'.$r->logo
+                                 !!}" alt='img' style='border: 1px solid #ddd;
+                                                        border-radius: 4px;
+                                                        padding: 5px;
+                                                        width: 250px;
+                                                        margin: 4px;'>
+                            @endif
                             </div>
                         </div>
                     </form>
