@@ -1,6 +1,8 @@
 @extends('plantillas.admin_login')
 
 @section('content')
+
+</style>
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
@@ -68,7 +70,7 @@
                             </br>
                             @if(isset($r->id))
                             <img src="{!! asset('/imagenes/planteles').'/'.$r->id.'/'.$r->logo
-                                 !!}" alt='img' style='border: 1px solid #ddd;
+                                 !!}" alt='img' style='border: 1px solid grey;
                                                         border-radius: 4px;
                                                         padding: 5px;
                                                         width: 250px;

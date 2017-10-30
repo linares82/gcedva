@@ -48,6 +48,12 @@ return [
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
         ],
+        'plantillas_correos' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/imagenes/plantillas_correos'),
+            'url' => env('APP_URL').'/storage',
+            'visibility' => 'public',
+        ],
 
         'local' => [
             'driver' => 'local',

@@ -108,8 +108,9 @@
 @push('scripts')
 <script type="text/javascript">
     $(document).ready(function() {
+        
         //Asigna el plantel segun el empleado
-      $('#empleado_id-field').change(function(){
+      /*$('#empleado_id-field').change(function(){
         $("#loading3").show();
         $.get("{{ url('getPlantel')}}",
           { empleado: $(this).val() },
@@ -130,7 +131,7 @@
           }
         );  
       });
-
+*/
       $('#st_cliente_id-field').change(function(){
           getCuenta();
       });
@@ -149,6 +150,42 @@
                 }
             });
       }
+      $('#plantel_id-field').change(function(){
+          getCmbEmpleados();
+      });
+      
+      function getCmbEmpleados(){
+          //$('#empleado_id_field option:selected').val($('#empleado_id_campo option:selected').val()).change();
+          var a= $('#frm_reasignar').serialize();
+              $.ajax({
+                  url: '{{ route("empleados.getEmpleadosXplantel") }}',
+                  type: 'GET',
+                  data: a,
+                  dataType: 'json',
+                  beforeSend : function(){$("#loading3").show();},
+                  complete : function(){$("#loading3").hide();},
+                  success: function(data){
+                      //$example.select2("destroy");
+                      //alert($('#plantel_id-field option:selected').val());
+                      $('#empleado_id-field').html('');
+                      $('#empleado_id2-field').html('');
+                      //$('#especialidad_id-field').empty();
+                      $('#empleado_id-field').append($('<option></option>').text('Seleccionar Opción').val('0'));
+                      $('#empleado_id2-field').append($('<option></option>').text('Seleccionar Opción').val('0'));
+                      $('#plantel_id2-field').val($('#plantel_id-field option:selected').val()).change();
+                      //alert($('#plantel_id2-field option:selected').val());
+                      $.each(data, function(i) {
+                          //alert(data[i].name);
+                          $('#empleado_id-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].nombre+"<\/option>");
+                          $('#empleado_id2-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].nombre+"<\/option>");
+                          
+                      });
+                      //$('#empleado_id-field').change();
+                      //$example.select2();
+                  }
+              });       
+      }
+      
       
     });
    

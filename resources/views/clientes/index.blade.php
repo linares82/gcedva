@@ -81,7 +81,7 @@
                             -->
                             <div class="form-group col-md-4">
                                 <label for="q_clientes.id_cont">ID</label>
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['clientes.id_cont']) ?: '' }}" name="q[clientes.id_cont]" id="q_clientes.id_cont" />
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['clientes.id_lt']) ?: '' }}" name="q[clientes.id_lt]" id="q_clientes.id_lt" />
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="q_clientes.nombre_cont">PRIMER NOMBRE</label>
@@ -209,7 +209,7 @@
                                 <td class="text-right">
                                     @permission('correos.redactar')
                                     @if(isset($cliente->cliente->mail))
-                                    <a class="btn btn-xs btn-success" href="{{ url('correos/redactar').'/'.$cliente->cliente->mail.'/'.$cliente->cliente->nombre }}"><i class="glyphicon glyphicon-envelope"></i> Correo </a>
+                                    <a class="btn btn-xs btn-success" href="{{ url('correos/redactar').'/'.$cliente->cliente->mail.'/'.$cliente->cliente->nombre.'/0' }}"><i class="glyphicon glyphicon-envelope"></i> Correo </a>
                                     @endif
                                     @endpermission
                                     @permission('seguimientos.show')

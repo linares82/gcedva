@@ -41,20 +41,20 @@
                         <input class="form-control" placeholder="Asunto:" id="asunto" name="asunto">
                     </div>
                     <div class="form-group col-md-6 @if($errors->has('empresa_bnd')) has-error @endif">
-                       <label for="activo-field">Empresa</label>
-                       {!! Form::checkbox("empresa_bnd", 1, null, [ "id" => "empresa_bnd-field"]) !!}
-                       @if($errors->has("embresa_bnd"))
+                        <label for="activo-field">Empresa</label>
+                        {!! Form::checkbox("empresa_bnd", 1, $empresa, [ "id" => "empresa_bnd-field"]) !!}
+                        @if($errors->has("embresa_bnd"))
                         <span class="help-block">{{ $errors->first("empresa_bnd") }}</span>
-                       @endif
+                        @endif
                     </div>
                     <div class="form-group col-md-6 @if($errors->has('cliente_bnd')) has-error @endif">
-                       <label for="activo-field">Cliente</label>
-                       {!! Form::checkbox("cliente_bnd", 1, null, [ "id" => "cliente_bnd-field"]) !!}
-                       @if($errors->has("cliente_bnd"))
+                        <label for="activo-field">Cliente</label>
+                        {!! Form::checkbox("cliente_bnd", 1, null, [ "id" => "cliente_bnd-field"]) !!}
+                        @if($errors->has("cliente_bnd"))
                         <span class="help-block">{{ $errors->first("cliente_bnd") }}</span>
-                       @endif
+                        @endif
                     </div>
-                    
+
                     <div class="form-group">
                         <textarea id="contenido_mail" name="contenido_mail" class="form-control" style="height: 200px" placeholder="escriba aquí...">
                          
@@ -87,18 +87,16 @@
     </div><!-- /.col -->
 </div><!-- /.row -->
 <!-- cargador empresa -->
-        <div style="display: none;" id="cargador_empresa" align="center">
-            <br>
-         
+<div style="display: none;" id="cargador_empresa" align="center">
+    <br>
+    <label style="color:#FFF; background-color:#ABB6BA; text-align:center">&nbsp;&nbsp;&nbsp;Espere... &nbsp;&nbsp;&nbsp;</label>
 
-         <label style="color:#FFF; background-color:#ABB6BA; text-align:center">&nbsp;&nbsp;&nbsp;Espere... &nbsp;&nbsp;&nbsp;</label>
+    <img src="{{asset('images/ajax-loader.gif')}}" align="middle" alt="cargador"> &nbsp;<label style="color:#ABB6BA">Realizando envio de correo ...</label>
 
-         <img src="{{asset('images/ajax-loader.gif')}}" align="middle" alt="cargador"> &nbsp;<label style="color:#ABB6BA">Realizando envio de correo ...</label>
-
-          <br>
-         <hr style="color:#003" width="50%">
-         <br>
-       </div>
+    <br>
+    <hr style="color:#003" width="50%">
+    <br>
+</div>
 @endsection
 @push('scripts')
 
@@ -180,8 +178,6 @@
                 'X-CSRF-TOKEN': $('#_token').val()
             }
         });
-
-
         $.ajax({
             url: miurl,
             type: 'POST',
@@ -210,9 +206,34 @@
             }
         });
 
-
-
     })
+
+    $(document).ready(function () {
+        /*$('#empresa_bnd-field').click(function () {
+            if ($(this).is(":checked")) {
+                $.ajax({
+                    url: '{{ route("empresas.getEmpleadosXmail") }}',
+                    type: 'GET',
+                    data: "correo=" + $('#destinatario').val() + "&nombre=" + $('#nombre').val(),
+                    //dataType: 'json',
+                    beforeSend: function () {
+                        $("#loading10").show();
+                    },
+                    complete: function () {
+                        $("#loading10").hide();
+                    },
+                    success: function (data) {
+                        //alert(data);
+                        $('#destinatario').val('');
+                        $('#destinatario').val(data[0]);
+                        $('#nombre').val('');
+                        $('#nombre').val(data[1]);
+                    },
+                });
+            }
+        });
+        */
+    });
 
 </script>
 @endpush

@@ -203,6 +203,7 @@ class ClientesController extends Controller {
                 ->select()
                 ->whereNotIn('id', $de_array)
                 ->get();
+        //dd($cliente->toArray());
         return view('clientes.edit', compact('cliente', 'preguntas', 'cp', 'documentos_faltantes', 'empleados'))
                         ->with('list', Cliente::getListFromAllRelationApps())
                         ->with('list1', PivotDocCliente::getListFromAllRelationApps());

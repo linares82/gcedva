@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updatePlantilla;
 use App\Http\Requests\createPlantilla;
+use Storage;
 
 class PlantillasController extends Controller {
 
@@ -47,6 +48,11 @@ class PlantillasController extends Controller {
 		$input['usu_alta_id']=Auth::user()->id;
 		$input['usu_mod_id']=Auth::user()->id;
 		$input['periodo_id']=2;
+                /*if ($request->hasFile('file')) {
+                    $containfile = true;
+                    $file = $request->file('file');
+                    $input['img1'] = $file->getClientOriginalName();
+                }*/
 		if($input['inicio']=="" or $input['inicio']=="0000-00-00"){$input['inicio']=date('Y-m-d');}
 		if($input['fin']=="" or $input['fin']=="0000-00-00"){$input['fin']=date('Y-m-d');}
 		if(!isset($input['activo_bnd'])){
@@ -125,14 +131,21 @@ class PlantillasController extends Controller {
 	public function update($id, Plantilla $plantilla, updatePlantilla $request)
 	{
 		$input = $request->all();
+                //dd($input);
 		$input['usu_mod_id']=Auth::user()->id;
 		$input['periodo_id']=2;
 		$st=$input['st_cliente'];	
 		unset($input['st_cliente']);
+                unset($input['file']);
 		//$esp=$input['especialidad_id'];
 		//unset($input['especialidad_id']);
 		$input['st_cliente_id']=0;
-		if(!isset($input['activo_bnd'])){
+		/*if ($request->hasFile('file')) {
+                    $containfile = true;
+                    $file = $request->file('file');
+                    $input['img1'] = $file->getClientOriginalName();
+                }*/
+                if(!isset($input['activo_bnd'])){
 			$input['activo_bnd']=0;
 		}else{
 			$input['activo_bnd']=1;
@@ -156,6 +169,7 @@ class PlantillasController extends Controller {
 		if($input['fin']=="" or $input['fin']=="0000-00-00"){$input['fin']=date('Y-m-d');}
 		
 		$plantilla=$plantilla->find($id);
+                //dd($input);
 		$plantilla->update( $input );
 
 		//dd($input);
@@ -205,5 +219,23 @@ class PlantillasController extends Controller {
 		$p->especialidad()->detach($_GET['esp']);
 		return redirect()->route('plantillas.edit', $p->id)->with('message', 'Registro Actualizado.');
 	}	
+        
+    public function cargaArchivoCorreo(Request $request) {
+        if ($request->hasFile('file')) {
 
+            $file = $request->file('file');
+            $extension = $file->getClientOriginalExtension();
+            $nombre = $file->getClientOriginalName();
+            $r = Storage::disk('plantillas_correos')->put($nombre, \File::get($file));
+        } else {
+
+            return "no";
+        }
+
+        if ($r) {
+            return $nombre;
+        } else {
+            return "Error vuelva a intentarlo";
+        }
+    }
 }

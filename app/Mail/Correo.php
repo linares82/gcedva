@@ -33,6 +33,7 @@ class Correo extends Mailable
     {
         return $this->view('emails.7')
                     ->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'))
+                    ->attach(storage_path('app') . "/plantillas_correos/" . $this->p->img1)
                     ->subject($this->p->asunto);
     }
 }

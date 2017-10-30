@@ -58,7 +58,14 @@ trait RelationManagerTrait {
           
           if($relationAppName=="Empleado" and Auth::user()->can('IfiltroEmpleadosXPlantel')){
             //dd($relationAppName);
-            $relatedObjList = $relationAppArray['app']::where('plantel_id', '=', $e->plantel_id)->pluck($relationAppArray['relation_display_column'], 'id');
+            $relatedObjList = $relationAppArray['app']::where('plantel_id', '=', $e->plantel_id)
+                                                        ->pluck($relationAppArray['relation_display_column'], 'id');
+            //dd($relatedObjList);
+          }
+          if($relationAppName=="Empleado"){
+            //dd($relationAppName);
+            $relatedObjList = $relationAppArray['app']::select(DB::raw('concat(empleados.nombre, " ",empleados.ape_paterno, " ",empleados.ape_materno) as relacion, empleados.id'))
+                                                        ->pluck('relacion', 'id');
             //dd($relatedObjList);
           }
           if($relationAppName=="TpoExamen"){

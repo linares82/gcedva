@@ -111,7 +111,7 @@
             var a= $('#frm_avisos').serialize();
             $.ajax({
                 url: '{{  route("empleados.getEmpleadosXplantelXpuesto") }}',
-                type: 'POST',
+                type: 'GET',
                 data: a, 
                 dataType: 'json',
                 beforeSend : function(){$("#loading3").show();},

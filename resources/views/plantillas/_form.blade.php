@@ -1,71 +1,229 @@
-                    <div class="form-group col-md-4 @if($errors->has('activo_bnd')) has-error @endif">
-                       <label for="activo_bnd-field">Activo</label>
-                       {!! Form::checkbox("activo_bnd", 1, null, [ "id" => "activo_bnd-field"]) !!}
-                       @if($errors->has("activo_bnd"))
-                        <span class="help-block">{{ $errors->first("activo_bnd") }}</span>
-                       @endif
+            <input type="hidden" name="_token" id="_token"  value="<?= csrf_token(); ?>"> 
+            <div class="box box-default box-solid">
+                    <div class="box-header">
+                        <h3 class="box-title">IDENTIFICACIÓN</h3>
+                        <div class="box-tools">
+                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                        </div>
                     </div>
-                    <div class="form-group col-md-8 @if($errors->has('nombre')) has-error @endif">
-                       <label for="nombre-field">Nombre</label>
-                       {!! Form::text("nombre", null, array("class" => "form-control", "id" => "nombre-field")) !!}
-                       @if($errors->has("nombre"))
-                        <span class="help-block">{{ $errors->first("nombre") }}</span>
-                       @endif
+                    <div class="box-body">
+                        <div class="form-group col-md-4 @if($errors->has('activo_bnd')) has-error @endif">
+                           <label for="activo_bnd-field">Activo</label>
+                           {!! Form::checkbox("activo_bnd", 1, null, [ "id" => "activo_bnd-field"]) !!}
+                           @if($errors->has("activo_bnd"))
+                            <span class="help-block">{{ $errors->first("activo_bnd") }}</span>
+                           @endif
+                        </div>
+                        <div class="form-group col-md-8 @if($errors->has('nombre')) has-error @endif">
+                           <label for="nombre-field">Nombre</label>
+                           {!! Form::text("nombre", null, array("class" => "form-control", "id" => "nombre-field")) !!}
+                           @if($errors->has("nombre"))
+                            <span class="help-block">{{ $errors->first("nombre") }}</span>
+                           @endif
+                        </div>
+                        <div class="form-group col-md-6 @if($errors->has('tpo_correo_id')) has-error @endif">
+                            <label for="tpo_correo_id-field">Tipo Correo</label>
+                            {!! Form::select("tpo_correo_id", $list["TpoCorreo"], null, array("class" => "form-control select_seguridad", "id" => "tpo_correo_id-field")) !!}
+                            @if($errors->has("tpo_correo_id"))
+                             <span class="help-block">{{ $errors->first("tpo_correo_id") }}</span>
+                            @endif
+                         </div>
+                        </div>
                     </div>
-                    <div class="form-group col-md-6 @if($errors->has('asunto')) has-error @endif">
-                       <label for="asunto-field">Asunto</label>
-                       {!! Form::text("asunto", null, array("class" => "form-control", "id" => "asunto-field")) !!}
-                       @if($errors->has("asunto"))
-                        <span class="help-block">{{ $errors->first("asunto") }}</span>
-                       @endif
+                    <div class="box box-default box-solid">
+                    <div class="box-header">
+                        <h3 class="box-title">DESTINATARIOS</h3>
+                        <div class="box-tools">
+                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                        </div>
                     </div>
-                    <div class="form-group col-md-6 @if($errors->has('para_nombre')) has-error @endif">
-                       <label for="para_nombre-field">Para(Leyenda en lugar del nombre)</label>
-                       {!! Form::text("para_nombre", null, array("class" => "form-control", "id" => "para_nombre-field")) !!}
-                       @if($errors->has("para_nombre"))
-                        <span class="help-block">{{ $errors->first("para_nombre") }}</span>
-                       @endif
+                    <div class="box-body">
+                        <div id="estatus_div">
+                            <div class="form-group col-md-4 @if($errors->has('st_cliente_id')) has-error @endif" style="clear:left;">
+                               <label for="st_cliente_id-field">Estatus</label>
+                               {!! Form::select("st_cliente", $list["StCliente"], null, array("class" => "form-control select_seguridad", "id" => "st_cliente-field")) !!}
+                               @if($errors->has("st_cliente_id"))
+                                <span class="help-block">{{ $errors->first("st_cliente_id") }}</span>
+                               @endif
+                            </div>
+                          @if(isset($plantilla))  
+                            <div class="row">
+                              <div class="col-md-12">
+                                <table class="table table-condensed table-striped">
+                                  <thead>
+                                    <th>Estatus</th><th>Borrar</th>
+                                  </thead>
+                                  <tbody>
+                                      @foreach($plantilla->estatus as $st)
+                                        <tr>
+                                          <td>{!! $st->name !!}</td>
+                                          <td> <a href="{!! route('plantillas.eliminarEstatus', array('plantilla'=>$plantilla->id,'st'=>$st->id)) !!}" class="btn btn-xs btn-danger">Eliminar</a>
+                                          </td>
+                                        </tr>
+                                      @endforeach
+
+                                  </tbody>
+
+                                </table>
+                              </div>  
+
+                            </div>
+                          @endif
+                        </div>
+                        <div id="nivel_div">
+                        <div class="form-group col-md-4 @if($errors->has('plantel_id')) has-error @endif" style="clear:left;">
+                               <label for="plantel_id-field">Plantel</label>
+                               {!! Form::select("plantel_id", $list["Plantel"], null, array("class" => "form-control select_seguridad", "id" => "plantel_id-field")) !!}
+                               @if($errors->has("plantel_id"))
+                                <span class="help-block">{{ $errors->first("plantel_id") }}</span>
+                               @endif
+                            </div>
+                        <div class="form-group col-md-4 @if($errors->has('especialidad_id')) has-error @endif">
+                               <label for="especialidad_id-field">Especialidad</label>
+                               {!! Form::select("especialidad_id", $list["Especialidad"], null, array("class" => "form-control select_seguridad", "id" => "especialidad_id-field")) !!}
+                               <div id='loading10' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
+                               @if($errors->has("especialidad_id"))
+                                <span class="help-block">{{ $errors->first("especialidad_id") }}</span>
+                               @endif
+                            </div>
+                        <div class="form-group col-md-4 @if($errors->has('nivel_id')) has-error @endif" style="">
+                           <label for="nivel_id-field">Nivel</label>
+                           {!! Form::select("nivel_id", $list["Nivel"], null, array("class" => "form-control select_seguridad", "id" => "nivel_id-field")) !!}
+                           <div id='loading11' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
+                           @if($errors->has("nivel_id"))
+                            <span class="help-block">{{ $errors->first("nivel_id") }}</span>
+                           @endif
+                        </div>
+                      </div>
+                        </div>
                     </div>
-                    <div class="form-group col-md-6 @if($errors->has('tpo_correo_id')) has-error @endif">
-                       <label for="tpo_correo_id-field">Tipo Correo</label>
-                       {!! Form::select("tpo_correo_id", $list["TpoCorreo"], null, array("class" => "form-control select_seguridad", "id" => "tpo_correo_id-field")) !!}
-                       @if($errors->has("tpo_correo_id"))
-                        <span class="help-block">{{ $errors->first("tpo_correo_id") }}</span>
-                       @endif
+                    <div class="box box-default box-solid">
+                    <div class="box-header">
+                        <h3 class="box-title">TEMPORALIDAD</h3>
+                        <div class="box-tools">
+                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <div id="dia_div">
+                            <div class="form-group col-md-4 @if($errors->has('dia')) has-error @endif" style="clear:left;">
+                               <label for="dia-field">Dia (número entre 1 y 28)</label>
+                               {!! Form::text("dia", null, array("class" => "form-control", "id" => "dia-field")) !!}
+                               @if($errors->has("dia"))
+                                <span class="help-block">{{ $errors->first("dia") }}</span>
+                               @endif
+                            </div>
+                          </div>
+                        <div id="inicio_div">
+                            <div class="form-group col-md-4 @if($errors->has('inicio')) has-error @endif">
+                               <label for="inicio-field">Inicio</label>
+                               {!! Form::text("inicio", null, array("class" => "form-control", "id" => "inicio-field")) !!}
+                               @if($errors->has("inicio"))
+                                <span class="help-block">{{ $errors->first("inicio") }}</span>
+                               @endif
+                            </div>
+                          </div>
+
+                          <div id="fin_div">
+                            <div class="form-group col-md-4 @if($errors->has('fin')) has-error @endif">
+                               <label for="fin-field">Fin</label>
+                               {!! Form::text("fin", null, array("class" => "form-control", "id" => "fin-field")) !!}
+                               @if($errors->has("fin"))
+                                <span class="help-block">{{ $errors->first("fin") }}</span>
+                               @endif
+                            </div>
+                          </div>
+
+                        </div>
+                    </div>
+                    <div class="box box-default box-solid">
+                    <div class="box-header">
+                        <h3 class="box-title">CORREO</h3>
+                        <div class="box-tools">
+                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <div class="form-group col-md-2 @if($errors->has('mail_bnd')) has-error @endif">
+                            <label for="mail_bnd-field">Mail</label>
+                            {!! Form::checkbox("mail_bnd", 1, null, [ "id" => "mail_bnd-field"]) !!}
+                            @if($errors->has("mail_bnd"))
+                             <span class="help-block">{{ $errors->first("mail_bnd") }}</span>
+                            @endif
+                         </div>
+                        <div class="form-group col-md-10 @if($errors->has('asunto')) has-error @endif">
+                            <label for="asunto-field">Asunto</label>
+                            {!! Form::text("asunto", null, array("class" => "form-control", "id" => "asunto-field")) !!}
+                            @if($errors->has("asunto"))
+                             <span class="help-block">{{ $errors->first("asunto") }}</span>
+                            @endif
+                         </div>
+                        
+                        <div class="form-group col-md-12 @if($errors->has('plantilla')) has-error @endif">
+                            <label for="plantilla-field">Plantilla</label>
+                            {!! Form::textArea("plantilla", null, array("class" => "form-control mceEditor", "id" => "plantilla-field", 'rows'=>'8')) !!}
+                            @if($errors->has("plantilla"))
+                             <span class="help-block">{{ $errors->first("plantilla") }}</span>
+                            @endif
+                         </div>
+                        <!--<div class="form-group col-md-12 @if($errors->has('dia')) has-error @endif">
+                            <button type="button" onclick="BrowseServer('id_of_the_target_input');">Elegir imagen</button>
+                             <input type="text" id="id_of_the_target_input"/>
+                         </div>
+                        -->
+                         <div class="form-group">
+                             <div class="btn btn-default btn-file">
+                                 <i class="fa fa-paperclip"></i> Adjuntar Archivo
+                                 <input type="file"  id="file" name="file" class="email_archivo" >
+                                 {!! Form::text("img1", null, array("class" => "form-control", "id" => "img1-field")) !!}
+                             </div>
+                             <p class="help-block"  >Max. 20MB</p>
+                             <div id="texto_notificacion">
+
+                             </div>
+                         </div>
+                        <!-- cargador empresa -->
+                        <div style="display: none;" id="cargador_empresa" align="center">
+                           <br>
+                           <label style="color:#FFF; background-color:#ABB6BA; text-align:center">&nbsp;&nbsp;&nbsp;Espere... &nbsp;&nbsp;&nbsp;</label>
+
+                           <img src="{{asset('images/ajax-loader.gif')}}" align="middle" alt="cargador"> &nbsp;<label style="color:#ABB6BA">Realizando envio de correo ...</label>
+
+                           <br>
+                           <hr style="color:#003" width="50%">
+                           <br>
+                        </div>
+                        
+                        </div>
+                    </div>
+                    <div class="box box-default box-solid">
+                    <div class="box-header">
+                        <h3 class="box-title">SMS</h3>
+                        <div class="box-tools">
+                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <div class="form-group col-md-4 @if($errors->has('sms_bnd')) has-error @endif">
+                            <label for="sms_bnd-field">Sms</label>
+                            {!! Form::checkbox("sms_bnd", 1, null, [ "id" => "sms_bnd-field"]) !!}
+                            @if($errors->has("sms_bnd"))
+                             <span class="help-block">{{ $errors->first("sms_bnd") }}</span>
+                            @endif
+                         </div>
+                         <div class="form-group col-md-12 @if($errors->has('sms')) has-error @endif">
+                            <label for="sms-field">Texto del SMS(maximo 160 caracteres)</label>
+                            {!! Form::textArea("sms", null, array("class" => "form-control", "id" => "sms-field", 'rows'=>'2', 'maxlength'=>'160')) !!}
+                            @if($errors->has("sms"))
+                             <span class="help-block">{{ $errors->first("sms") }}</span>
+                            @endif
+                         </div>                    
+                        </div>
                     </div>
                     
-                      <div id="estatus_div">
-                          <div class="form-group col-md-4 @if($errors->has('st_cliente_id')) has-error @endif" style="clear:left;">
-                             <label for="st_cliente_id-field">Estatus</label>
-                             {!! Form::select("st_cliente", $list["StCliente"], null, array("class" => "form-control select_seguridad", "id" => "st_cliente-field")) !!}
-                             @if($errors->has("st_cliente_id"))
-                              <span class="help-block">{{ $errors->first("st_cliente_id") }}</span>
-                             @endif
-                          </div>
-                        @if(isset($plantilla))  
-                          <div class="row">
-                            <div class="col-md-12">
-                              <table class="table table-condensed table-striped">
-                                <thead>
-                                  <th>Estatus</th><th>Borrar</th>
-                                </thead>
-                                <tbody>
-                                    @foreach($plantilla->estatus as $st)
-                                      <tr>
-                                        <td>{!! $st->name !!}</td>
-                                        <td> <a href="{!! route('plantillas.eliminarEstatus', array('plantilla'=>$plantilla->id,'st'=>$st->id)) !!}" class="btn btn-xs btn-danger">Eliminar</a>
-                                        </td>
-                                      </tr>
-                                    @endforeach
-                                  
-                                </tbody>
-
-                              </table>
-                            </div>  
-
-                          </div>
-                        @endif
-                      </div>
+                    
+                    
+                    
                       <!--<div id="especialidad_div">
                           
                         @if(isset($plantilla))  
@@ -102,100 +260,11 @@
                        @endif
                     </div>
                     -->
-                    <div id="dia_div">
-                      <div class="form-group col-md-4 @if($errors->has('dia')) has-error @endif" style="clear:left;">
-                         <label for="dia-field">Dia (número entre 1 y 28)</label>
-                         {!! Form::text("dia", null, array("class" => "form-control", "id" => "dia-field")) !!}
-                         @if($errors->has("dia"))
-                          <span class="help-block">{{ $errors->first("dia") }}</span>
-                         @endif
-                      </div>
-                    </div>
-
-                    <div id="nivel_div">
-                      <div class="form-group col-md-4 @if($errors->has('plantel_id')) has-error @endif" style="clear:left;">
-                             <label for="plantel_id-field">Plantel</label>
-                             {!! Form::select("plantel_id", $list["Plantel"], null, array("class" => "form-control select_seguridad", "id" => "plantel_id-field")) !!}
-                             @if($errors->has("plantel_id"))
-                              <span class="help-block">{{ $errors->first("plantel_id") }}</span>
-                             @endif
-                          </div>
-                      <div class="form-group col-md-4 @if($errors->has('especialidad_id')) has-error @endif">
-                             <label for="especialidad_id-field">Especialidad</label>
-                             {!! Form::select("especialidad_id", $list["Especialidad"], null, array("class" => "form-control select_seguridad", "id" => "especialidad_id-field")) !!}
-                             <div id='loading10' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
-                             @if($errors->has("especialidad_id"))
-                              <span class="help-block">{{ $errors->first("especialidad_id") }}</span>
-                             @endif
-                          </div>
-                      <div class="form-group col-md-4 @if($errors->has('nivel_id')) has-error @endif" style="">
-                         <label for="nivel_id-field">Nivel</label>
-                         {!! Form::select("nivel_id", $list["Nivel"], null, array("class" => "form-control select_seguridad", "id" => "nivel_id-field")) !!}
-                         <div id='loading11' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
-                         @if($errors->has("nivel_id"))
-                          <span class="help-block">{{ $errors->first("nivel_id") }}</span>
-                         @endif
-                      </div>
-                    </div>
-
-                    <div id="inicio_div">
-                      <div class="form-group col-md-4 @if($errors->has('inicio')) has-error @endif" style="clear:left;">
-                         <label for="inicio-field">Inicio</label>
-                         {!! Form::text("inicio", null, array("class" => "form-control", "id" => "inicio-field")) !!}
-                         @if($errors->has("inicio"))
-                          <span class="help-block">{{ $errors->first("inicio") }}</span>
-                         @endif
-                      </div>
-                    </div>
-
-                    <div id="fin_div">
-                      <div class="form-group col-md-4 @if($errors->has('fin')) has-error @endif">
-                         <label for="fin-field">Fin</label>
-                         {!! Form::text("fin", null, array("class" => "form-control", "id" => "fin-field")) !!}
-                         @if($errors->has("fin"))
-                          <span class="help-block">{{ $errors->first("fin") }}</span>
-                         @endif
-                      </div>
-                    </div>
-
-                    <div class="form-group col-md-12 @if($errors->has('dia')) has-error @endif">
-                       <button type="button" onclick="BrowseServer('id_of_the_target_input');">Elegir imagen</button>
-                        <input type="text" id="id_of_the_target_input"/>
-                        <label for="id_of_the_target_input">
-                        {!! e('
-                              <img src="{ { $message-&gt;embed(\'http://localhost/crmscool/public/filemanager/userfiles/DSCN1838.JPG\') } }" />
-                        ') !!}
-                        </label>
-                        
-                    </div>
-                    <div class="form-group col-md-4 @if($errors->has('mail_bnd')) has-error @endif">
-                       <label for="mail_bnd-field">Mail</label>
-                       {!! Form::checkbox("mail_bnd", 1, null, [ "id" => "mail_bnd-field"]) !!}
-                       @if($errors->has("mail_bnd"))
-                        <span class="help-block">{{ $errors->first("mail_bnd") }}</span>
-                       @endif
-                    </div>
-                    <div class="form-group col-md-12 @if($errors->has('plantilla')) has-error @endif">
-                       <label for="plantilla-field">Plantilla</label>
-                       {!! Form::textArea("plantilla", null, array("class" => "form-control mceEditor", "id" => "plantilla-field", 'rows'=>'8')) !!}
-                       @if($errors->has("plantilla"))
-                        <span class="help-block">{{ $errors->first("plantilla") }}</span>
-                       @endif
-                    </div>
-                    <div class="form-group col-md-4 @if($errors->has('sms_bnd')) has-error @endif">
-                       <label for="sms_bnd-field">Sms</label>
-                       {!! Form::checkbox("sms_bnd", 1, null, [ "id" => "sms_bnd-field"]) !!}
-                       @if($errors->has("sms_bnd"))
-                        <span class="help-block">{{ $errors->first("sms_bnd") }}</span>
-                       @endif
-                    </div>
-                    <div class="form-group col-md-12 @if($errors->has('sms')) has-error @endif">
-                       <label for="sms-field">Texto del SMS(maximo 160 caracteres)</label>
-                       {!! Form::textArea("sms", null, array("class" => "form-control", "id" => "sms-field", 'rows'=>'2', 'maxlength'=>'160')) !!}
-                       @if($errors->has("sms"))
-                        <span class="help-block">{{ $errors->first("sms") }}</span>
-                       @endif
-                    </div>                    
+                    
+                    
+                    
+                    
+                    
 
 
                     
@@ -402,7 +471,48 @@
           oWindow = null;
      }
 
-     
+     $(document).on("change", ".email_archivo", function (e) {
+
+        var miurl = "/plantillas/carga_archivo_correo";
+        // var fileup=$("#file").val();
+        var divresul = "texto_notificacion";
+
+        var data = new FormData();
+        data.append('file', $('#file')[0].files[0]);
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('#_token').val()
+            }
+        });
+        $.ajax({
+            url: miurl,
+            type: 'POST',
+
+            // Form data
+            //datos del formulario
+            data: data,
+            //necesario para subir archivos via ajax
+            cache: false,
+            contentType: false,
+            processData: false,
+            //mientras enviamos el archivo
+            beforeSend: function () {
+                $("#" + divresul + "").html($("#cargador_empresa").html());
+            },
+            //una vez finalizado correctamente
+            success: function (data) {
+                var codigo = '<div class="mailbox-attachment-info"><a href="#" class="mailbox-attachment-name"><i class="fa fa-paperclip"></i>' + data + '</a><span class="mailbox-attachment-size"> </span></div>';
+                $("#" + divresul + "").html(codigo);
+                $('#img1-field').val(data);
+            },
+            //si ha ocurrido un error
+            error: function (data) {
+                $("#" + divresul + "").html(data);
+
+            }
+        });
+     })
      </script>
 
 
