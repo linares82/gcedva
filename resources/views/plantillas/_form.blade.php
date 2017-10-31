@@ -286,10 +286,10 @@
     plugins: [
       //'autolink lists  charmap print hr anchor',
       //'code',
-      'insertdatetime table contextmenu link image imagetools code',
+      'insertdatetime table contextmenu link imagetools',
       //'emoticons paste textcolor colorpicker textpattern'
     ],
-    toolbar1: 'undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
+    toolbar1: 'undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link',
     toolbar2: 'print preview media | forecolor backcolor emoticons | codesample',
     image_advtab: false,
     templates: [
