@@ -6574,5 +6574,157 @@
             "Guzzle",
             "http"
         ]
+    },
+    {
+        "name": "webklex/laravel-imap",
+        "version": "1.0.3.6",
+        "version_normalized": "1.0.3.6",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/Webklex/laravel-imap.git",
+            "reference": "b72b2edcd5c41b4de1893f5afbe26b25b46ecb0c"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/Webklex/laravel-imap/zipball/b72b2edcd5c41b4de1893f5afbe26b25b46ecb0c",
+            "reference": "b72b2edcd5c41b4de1893f5afbe26b25b46ecb0c",
+            "shasum": ""
+        },
+        "require": {
+            "laravel/framework": ">=5.0.0",
+            "php": ">=5.5.9"
+        },
+        "time": "2017-10-24T13:41:30+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.0-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Webklex\\IMAP\\": "src/IMAP"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Malte Goldenbaum",
+                "email": "github@webklex.com",
+                "role": "Developer"
+            }
+        ],
+        "description": "Laravel IMAP client",
+        "homepage": "https://github.com/webklex/laravel-imap",
+        "keywords": [
+            "imap",
+            "laravel",
+            "laravel-imap",
+            "mail",
+            "webklex"
+        ]
+    },
+    {
+        "name": "zalazdi/laravel-imap",
+        "version": "1.0.4",
+        "version_normalized": "1.0.4.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/zalazdi/laravel-imap.git",
+            "reference": "1898bf234b8e9ad176ce8503e22c851d45e2c70c"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/zalazdi/laravel-imap/zipball/1898bf234b8e9ad176ce8503e22c851d45e2c70c",
+            "reference": "1898bf234b8e9ad176ce8503e22c851d45e2c70c",
+            "shasum": ""
+        },
+        "require": {
+            "illuminate/support": "~5.1",
+            "php": ">=5.3.0"
+        },
+        "time": "2017-02-08T13:54:59+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.0.x-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Zalazdi\\LaravelImap\\": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Krzysztof Graman",
+                "email": "zalazdi@gmail.com"
+            }
+        ],
+        "description": "Laravel 5 IMAP client.",
+        "homepage": "https://github.com/Zalazdi/LaravelImap",
+        "keywords": [
+            "imap",
+            "laravel",
+            "mail"
+        ]
+    },
+    {
+        "name": "php-imap/php-imap",
+        "version": "3.0.1",
+        "version_normalized": "3.0.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/barbushin/php-imap.git",
+            "reference": "8c1d8190130b297fbaf4c8c22d7c8427660e7c1b"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/barbushin/php-imap/zipball/8c1d8190130b297fbaf4c8c22d7c8427660e7c1b",
+            "reference": "8c1d8190130b297fbaf4c8c22d7c8427660e7c1b",
+            "shasum": ""
+        },
+        "require": {
+            "ext-imap": "*",
+            "php": ">=5.5"
+        },
+        "time": "2017-10-20T06:22:43+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "PhpImap\\": "src/PhpImap/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Sergey Barbushin",
+                "email": "barbushin@gmail.com",
+                "homepage": "http://linkedin.com/in/barbushin"
+            }
+        ],
+        "description": "Manage mailboxes, filter/get/delete emails in PHP (supports IMAP/POP3/NNTP)",
+        "homepage": "https://github.com/barbushin/php-imap",
+        "keywords": [
+            "imap",
+            "mail",
+            "mailbox",
+            "php",
+            "pop3",
+            "receive emails"
+        ]
     }
 ]

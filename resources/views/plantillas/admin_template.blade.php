@@ -62,7 +62,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
 </head>
-<body class="hold-transition skin-purple sidebar-mini sidebar-collapse">
+<body class="hold-transition skin-purple-light sidebar-mini sidebar-collapse">
 <div class="wrapper">
 
     <!-- Header -->

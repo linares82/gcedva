@@ -174,7 +174,7 @@
                     <tbody>
                         @foreach($empleados as $empleado)
                             <tr>
-                                <td><a href="{{ route('empleados.show', $empleado->id) }}">{{$empleado->id}}</a></td>
+                                <td><a href="{{ route('empleados.edit', $empleado->id) }}">{{$empleado->id}}</a></td>
                                 <td>{{$empleado->cve_empleado}}</td>
                                 <td>{{$empleado->nombre}}</td>
                                 <td>{{$empleado->ape_paterno}}</td>
@@ -182,17 +182,33 @@
                                 <td>{{$empleado->puesto->name}}</td>
                                 <td>{{$empleado->st_empleado->name}}</td>
                                 <td class="text-right">
-                                    @permission('empleados.edit')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('empleados.duplicate', $empleado->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>
-                                    @endpermission
-                                    @permission('empleados.edit')
-                                    <a class="btn btn-xs btn-warning" href="{{ route('empleados.edit', $empleado->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
-                                    @endpermission
-                                    @permission('empleados.destroy')
-                                    {!! Form::model($empleado, array('route' => array('empleados.destroy', $empleado->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}
-                                        <button type="submit" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> Borrar</button>
-                                    {!! Form::close() !!}
-                                    @endpermission
+                                    <div class="btn-group open">
+                                        <button type="button" class="btn btn-info">Acciones</button>
+                                        <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                          <span class="caret"></span>
+                                          <span class="sr-only">Toggle Dropdown</span>
+                                        </button>
+                                        <ul class="dropdown-menu"  role="menu">
+                                            @permission('empleados.edit')
+                                            <li>
+                                            <a class="" href="{{ route('empleados.duplicate', $empleado->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>
+                                            </li>
+                                            @endpermission
+                                            @permission('empleados.edit')
+                                            <li>
+                                            <a class="" href="{{ route('empleados.edit', $empleado->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
+                                            </li>
+                                            @endpermission
+                                            @permission('empleados.destroy')
+                                            <li>
+                                            {!! Form::model($empleado, array('route' => array('empleados.destroy', $empleado->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}
+                                                <button type="submit" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> Borrar</button>
+                                            {!! Form::close() !!}
+                                            </li>
+                                            @endpermission
+                                        </ul>
+                                    </div>
+                                    
                                 </td>
                             </tr>
                         @endforeach

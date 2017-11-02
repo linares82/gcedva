@@ -16,7 +16,8 @@ class Kernel extends ConsoleKernel
         Commands\CargaRemota::class,
         Commands\EnviarCorreos::class,
         Commands\EnviarSms::class,
-        Commands\AlertaFinContrato::class
+        Commands\AlertaFinContrato::class,
+        Commands\Imap::class
     ];
 
     /**

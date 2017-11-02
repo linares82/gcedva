@@ -70,10 +70,7 @@
                             </br>
                             @if(isset($r->id))
                             <img src="{!! asset('/imagenes/planteles').'/'.$r->id.'/'.$r->logo
-                                 !!}" alt='img' style='border: 1px solid grey;
-                                                        border-radius: 4px;
-                                                        padding: 5px;
-                                                        width: 250px;
+                                 !!}" alt='img' style='width: 250px;
                                                         margin: 4px;'>
                             @endif
                             </div>

@@ -181,6 +181,7 @@ return [
         Kim\Activity\ActivityServiceProvider::class,
         Studio\Totem\Providers\TotemServiceProvider::class,
         Bogardo\Mailgun\MailgunServiceProvider::class,
+        
         /*
          * Application Service Providers...
          */
