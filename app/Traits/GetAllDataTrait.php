@@ -33,7 +33,10 @@ trait GetAllDataTrait {
 
         $names = explode('\\', get_class($myObj) );
         $baseTable = $myObj->solveName( end($names), config('CrudDscaffold.app_name_rules.app_migrate_tablename') );    //ex).apples
-
+        if($baseTable=='est_asistencia'){
+           $baseTable=$baseTable.'s';
+        }
+        
         //(i) join relation table
 
         if( is_array( $myObj->relationApps ) ){
@@ -184,7 +187,10 @@ trait GetAllDataTrait {
                     $myQuery=$myQuery->where('calendario_evaluacions.plantel_id', '=', $empleado->plantel_id);
                 }
                 break;
-            case "cursos":
+            case "asignacion_academicas":
+                if(Auth::user()->can('asistenciasRs.create')){
+                    $myQuery=$myQuery->where('asignacion_academicas.plantel_id', '=', $empleado->plantel_id);
+                }
                 break;
             case "subcursos":
                 break;

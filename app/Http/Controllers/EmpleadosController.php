@@ -355,8 +355,14 @@ class EmpleadosController extends Controller {
     public function getEmpleadosXplantel(Request $request) {
         if ($request->ajax()) {
             //dd($request->all());
-            $plantel = $request->get('plantel_id');
-            $empleado = $request->get('empleado_id');
+            $input=$request->all();
+            if(isset($input['asignacion_academicas.empleado_id_lt'])){
+                $plantel = $request->get('plantel_id');
+                $empleado = $input['q']['asignacion_academicas.empleado_id_lt'];
+            }else{
+                $plantel = $request->get('plantel_id');
+                $empleado = $request->get('empleado_id');
+            }
 
             $final = array();
             $r = DB::table('empleados as e')
@@ -380,7 +386,13 @@ class EmpleadosController extends Controller {
                 }
                 return $final;
             } else {
-                return $r;
+                foreach ($r as $r1) {
+                    array_push($final, array('id' => $r1->id,
+                        'nombre' => $r1->nombre,
+                        'selectec' => ''));
+                }
+                return $final;
+                
             }
         }
     }

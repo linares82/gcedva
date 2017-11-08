@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers;
 
 use App\User;
 use App\Http\Controllers\Controller;
-
 use Illuminate\Http\Request;
-
-class UserController extends Controller
+use Hash;
+class User1Controller extends Controller
 {
     /*
     |--------------------------------------------------------------------------
@@ -39,10 +38,10 @@ class UserController extends Controller
 	{
 		//update data
         $input=$request->all();
-        dd($input);
+        //dd($input);
         $user=$user->find($input['id']);
         $user->email=$input['email'];
-        $user->password=Hash::make($input['password']);
+        $user->password=Hash::make($input['password1']);
 	$user->update();
         return redirect()->route('home')->with('message', 'Item updated successfully.');
 	}

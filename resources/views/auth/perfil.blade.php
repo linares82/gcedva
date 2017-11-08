@@ -6,27 +6,34 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
-                <div class="panel-heading">Register</div>
+                <div class="panel-heading">Actualizar</div>
                 <div class="panel-body">
-                    <form class="form-horizontal" role="form" method="POST" action="{{ route('users.updatePerfil', $user->id) }}">
+                    {!! Form::model($user, array('route' => array('users.updatePerfil'),'method' => 'post')) !!}
                         {{ csrf_field() }}
-                        <div class="form-group col-md-4 @if($errors->has('name')) has-error @endif">
-                            <label for="name-field">Nombre Usuario</label>
-                            {!! Form::text("name", null, array("class" => "form-control", "id" => "name-field", 'rows'=>'3', 'maxlength'=>'255')) !!}
-                            @if($errors->has("name"))
-                                <span class="help-block">{{ $errors->first("name") }}</span>
+                        <div class="form-group col-md-6 @if($errors->has('email')) has-error @endif">
+                            <label for="email-field">Mail</label>
+                            {!! Form::text("email", null, array("class" => "form-control", "id" => "email-field")) !!}
+                            {!! Form::hidden("id", null, array("class" => "form-control", "id" => "id-field")) !!}
+                            @if($errors->has("email"))
+                                <span class="help-block">{{ $errors->first("email") }}</span>
                             @endif
                         </div>
-                        
-
+                        <div class="form-group col-md-6 @if($errors->has('password')) has-error @endif">
+                            <label for="password1-field">Password</label>
+                            {!! Form::text("password1", null, array("class" => "form-control", "id" => "password1-field")) !!}
+                            @if($errors->has("password"))
+                                <span class="help-block">{{ $errors->first("password") }}</span>
+                            @endif
+                        </div>
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
                                 <button type="submit" class="btn btn-primary">
-                                    Register
+                                    Guardar
                                 </button>
+                                <a class="btn btn-danger" href="/">Cancelar</a>
                             </div>
                         </div>
-                    </form>
+                    {!! Form::close() !!}
                 </div>
             </div>
         </div>

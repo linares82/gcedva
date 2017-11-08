@@ -13,6 +13,6 @@ return [
     "middleware-role" => 'superadmin',
     "confirmable" => false,
     "users" => [
-      'fieldSearchable' => [],
+      'fieldSearchable' => ['name', 'email'],
     ],
 ];

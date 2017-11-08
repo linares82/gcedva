@@ -4,6 +4,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\AsignacionAcademica;
+use App\Empleado;
 use App\Horario;
 use Illuminate\Http\Request;
 use Auth;
@@ -20,8 +21,9 @@ class AsignacionAcademicasController extends Controller {
 	public function index(Request $request)
 	{
 		$asignacionAcademicas = AsignacionAcademica::getAllData($request);
-		
-		return view('asignacionAcademicas.index', compact('asignacionAcademicas'));
+		$e=Empleado::where('user_id', '=', Auth::user()->id)->first();
+		return view('asignacionAcademicas.index', compact('asignacionAcademicas', 'e'))
+                        ->with( 'list', AsignacionAcademica::getListFromAllRelationApps() );
 	}
 
 	/**

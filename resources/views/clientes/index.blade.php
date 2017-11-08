@@ -125,6 +125,11 @@
                             -->
                             
                             <div class="form-group col-md-4">
+                                <label for="q_clientes.medio_id_lt">MEDIO</label>
+                                    {!! Form::select("medio_id", $list1["Medio"], "{{ @(Request::input('q')['clientes.medio_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[clientes.medio_id_lt]", "id"=>"q_clientes.medio_id_lt", "style"=>"width:100%;" )) !!}
+                            </div>
+                            
+                            <div class="form-group col-md-4">
                                 <label for="q_clientes.st_cliente_id_lt">ESTATUS</label>
                                     {!! Form::select("st_cliente_id", $list1["StCliente"], "{{ @(Request::input('q')['clientes.st_cliente_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[clientes.st_cliente_id_lt]", "id"=>"q_clientes.st_cliente_id_lt", "style"=>"width:100%;" )) !!}
                             </div>
@@ -142,7 +147,7 @@
                                 
                             </div>
                             
-                            <div class="form-group col-md-4" style="clear:left;">
+                            <div class="form-group col-md-4">
                                 <label for="q_clientes.empleado_id_lt">EMPLEADO</label>
                                     {!! Form::select("clientes.empleado_id", $list1["Empleado"], "{{ @(Request::input('q')['clientes.empleado_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[clientes.empleado_id_lt]", "id"=>"q_clientes.empleado_id_lt", "style"=>"width:100%;" )) !!}
                             </div>

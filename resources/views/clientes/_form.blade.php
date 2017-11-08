@@ -943,627 +943,627 @@
 <script src="{{ asset ('/bower_components/AdminLTE/plugins/input-mask/jquery.inputmask.extensions.js') }}"></script>
 <script src="{{ asset ('/bower_components/AdminLTE/plugins/input-mask/jquery.inputmask.phone.extensions.js') }}"></script>
 <script type="text/javascript">
-                                          $(document).ready(function() {
-                                          collapseTable();
-                                          $('.header').click(function(){
-                                          collapseTable();
-                                          });
-                                          function collapseTable(){
-                                          $('.header').find('span').text(function(_, value){return value == '-'?'+':'-'});
-                                          $('.header').nextUntil('tr.header').slideToggle(100); // or just use "toggle()"
-                                          }
+                            $(document).ready(function() {
+                            collapseTable();
+                            $('.header').click(function(){
+                            collapseTable();
+                            });
+                            function collapseTable(){
+                            $('.header').find('span').text(function(_, value){return value == '-'?'+':'-'});
+                            $('.header').nextUntil('tr.header').slideToggle(100); // or just use "toggle()"
+                            }
 
-                                          $('#tel_cel-field').inputmask({"mask": "(999) 999-9999"}); //specifying options
-                                          $('#tel_fijo-field').inputmask({"mask": "(999) 999-9999"}); //specifying options
-                                          $('#expo-group').hide();
-                                          $('#otro_medio-group').hide();
-                                          ocultaExpo();
-                                          $("#btn_sms").click(function(event) {
-                                          enviaSms();
-                                          });
-                                          $("#btn_mail").click(function(event) {
-                                          enviaMail();
-                                          });
-                                          //coloca la fecha del dia si esta vacio el campo
-                                          if ($.trim($("#fec_registro-field").val()) == ''){
-                                          var fullDate = new Date()
-                                                  //Thu May 19 2011 17:25:38 GMT+1000 {}
-                                                  //convert month to 2 digits
-                                                  var twoDigitMonth = ((fullDate.getMonth().length + 1) === 1)? (fullDate.getMonth() + 1) : '0' + (fullDate.getMonth() + 1);
-                                          var currentDate = fullDate.getFullYear() + "-" + twoDigitMonth + "-" + fullDate.getDate();
-                                          //alert(currentDate);
+                            $('#tel_cel-field').inputmask({"mask": "(999) 999-9999"}); //specifying options
+                            $('#tel_fijo-field').inputmask({"mask": "(999) 999-9999"}); //specifying options
+                            $('#expo-group').hide();
+                            $('#otro_medio-group').hide();
+                            ocultaExpo();
+                            $("#btn_sms").click(function(event) {
+                            enviaSms();
+                            });
+                            $("#btn_mail").click(function(event) {
+                            enviaMail();
+                            });
+                            //coloca la fecha del dia si esta vacio el campo
+                            if ($.trim($("#fec_registro-field").val()) == ''){
+                            var fullDate = new Date()
+                                    //Thu May 19 2011 17:25:38 GMT+1000 {}
+                                    //convert month to 2 digits
+                                    var twoDigitMonth = ((fullDate.getMonth().length + 1) === 1)? (fullDate.getMonth() + 1) : '0' + (fullDate.getMonth() + 1);
+                            var currentDate = fullDate.getFullYear() + "-" + twoDigitMonth + "-" + fullDate.getDate();
+                            //alert(currentDate);
 
-                                          $("#fec_registro-field").val(currentDate);
-                                          }
-                                          // assuming the controls you want to attach the plugin to
-                                          // have the "datepicker" class set
-                                          //Campo de fecha
-                                          $('#fec_registro-field').Zebra_DatePicker({
-                                          days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
-                                                  months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-                                                  readonly_element: false,
-                                                  lang_clear_date: 'Limpiar',
-                                                  show_select_today: 'Hoy',
-                                          });
-                                          //Ocultar expo y otro
-                                          $('#medio_id-field').change(function(){
-                                          ocultaExpo();
-                                          });
-                                          function ocultaExpo(){
-                                          if ($('#medio_id-field option:selected').val() == 1){
-                                          $('#expo-group').show();
-                                          $('#otro_medio-group').hide();
-                                          } else if ($('#medio_id-field option:selected').val() == 6){
-                                          $('#otro_medio-group').show();
-                                          $('#expo-group').hide()
-                                          } else{
-                                          $('#otro_medio-group').hide();
-                                          $('#expo-group').hide()
-                                          }
-                                          }
+                            $("#fec_registro-field").val(currentDate);
+                            }
+                            // assuming the controls you want to attach the plugin to
+                            // have the "datepicker" class set
+                            //Campo de fecha
+                            $('#fec_registro-field').Zebra_DatePicker({
+                            days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
+                                    months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                                    readonly_element: false,
+                                    lang_clear_date: 'Limpiar',
+                                    show_select_today: 'Hoy',
+                            });
+                            //Ocultar expo y otro
+                            $('#medio_id-field').change(function(){
+                            ocultaExpo();
+                            });
+                            function ocultaExpo(){
+                            if ($('#medio_id-field option:selected').val() == 1){
+                            $('#expo-group').show();
+                            $('#otro_medio-group').hide();
+                            } else if ($('#medio_id-field option:selected').val() == 6){
+                            $('#otro_medio-group').show();
+                            $('#expo-group').hide()
+                            } else{
+                            $('#otro_medio-group').hide();
+                            $('#expo-group').hide()
+                            }
+                            }
 
-                                          function enviaSms(){
-                                          var a = $('#frm_cliente').serialize();
-                                          $.ajax({
-                                          url: '{{ route("clientes.enviaSms") }}',
-                                                  type: 'POST',
-                                                  data: a,
-                                                  dataType: 'json',
-                                                  beforeSend : function(){$("#loading1").show(); },
-                                                  complete : function(){$("#loading1").hide(); },
-                                                  default: function(parametros){
-                                                  if (parametros == true){
-                                                  $('#msj').html('Sms enviado');
-                                                  } else{
-                                                  $('#msj').html('Envio de sms fallo');
-                                                  }
-                                                  }
-                                          });
-                                          }
-                                          function enviaMail(){
-                                          var a = $('#frm_cliente').serialize();
-                                          $.ajax({
-                                          url: '{{ route("clientes.enviaMail") }}',
-                                                  type: 'POST',
-                                                  data: a,
-                                                  dataType: 'json',
-                                                  beforeSend : function(){$("#loading2").show(); },
-                                                  complete : function(){$("#loading2").hide(); },
-                                                  success: function(parametros){
-                                                  if (parametros == true){
-                                                  $('#msj').html('Email enviado');
-                                                  } else{
-                                                  $('#msj').html('Envio de email fallo');
-                                                  }
-                                                  },
-                                                  error: function(e){
-                                                  $('#msj').html(e);
-                                                  }
-                                          });
-                                          }
+                            function enviaSms(){
+                            var a = $('#frm_cliente').serialize();
+                            $.ajax({
+                            url: '{{ route("clientes.enviaSms") }}',
+                                    type: 'POST',
+                                    data: a,
+                                    dataType: 'json',
+                                    beforeSend : function(){$("#loading1").show(); },
+                                    complete : function(){$("#loading1").hide(); },
+                                    default: function(parametros){
+                                    if (parametros == true){
+                                    $('#msj').html('Sms enviado');
+                                    } else{
+                                    $('#msj').html('Envio de sms fallo');
+                                    }
+                                    }
+                            });
+                            }
+                            function enviaMail(){
+                            var a = $('#frm_cliente').serialize();
+                            $.ajax({
+                            url: '{{ route("clientes.enviaMail") }}',
+                                    type: 'POST',
+                                    data: a,
+                                    dataType: 'json',
+                                    beforeSend : function(){$("#loading2").show(); },
+                                    complete : function(){$("#loading2").hide(); },
+                                    success: function(parametros){
+                                    if (parametros == true){
+                                    $('#msj').html('Email enviado');
+                                    } else{
+                                    $('#msj').html('Envio de email fallo');
+                                    }
+                                    },
+                                    error: function(e){
+                                    $('#msj').html(e);
+                                    }
+                            });
+                            }
 
-                                          //Asigna el plantel segun el empleado
-                                          $('#empleado_id-field').change(function(){
-                                          $("#loading3").show();
-                                          $.get("{{ url('getPlantel')}}",
-                                          { empleado: $(this).val() },
-                                                  function(data) {
-                                                  $('#plantel_id-field').val(data).change();
-                                                  $("#loading3").hide();
-                                                  }
-                                          );
-                                          });
-                                          /*
-                                           $.ajax({
-                                           url: '{{ url('getPlantel')}}',
-                                           type: 'GET',
-                                           data: (empleado=$('#empleado_id-field').val),
-                                           beforeSend : function(){$("#loading3").show();},
-                                           complete : function(){$("#loading3").hide();},
-                                           success: function(data){
-                                           $('#plantel_id-field').val(data).change();
-                                           }
-                                           });*/
+                            //Asigna el plantel segun el empleado
+                            $('#empleado_id-field').change(function(){
+                            $("#loading3").show();
+                            $.get("{{ url('getPlantel')}}",
+                            { empleado: $(this).val() },
+                                    function(data) {
+                                    $('#plantel_id-field').val(data).change();
+                                    $("#loading3").hide();
+                                    }
+                            );
+                            });
+                            /*
+                             $.ajax({
+                             url: '{{ url('getPlantel')}}',
+                             type: 'GET',
+                             data: (empleado=$('#empleado_id-field').val),
+                             beforeSend : function(){$("#loading3").show();},
+                             complete : function(){$("#loading3").hide();},
+                             success: function(data){
+                             $('#plantel_id-field').val(data).change();
+                             }
+                             });*/
 
-                                          //trabaja el campo plantel 
-                                          @permission('Icliente.modificarPlantel')
-                                                  $('#plantel_id-field').prop('disabled', true);
-                                          @endpermission
-                                                  $("#frm_cliente").submit(function() {
-                                          $('#plantel_id-field').prop('disabled', false);
-                                          return true;
-                                          });
-                                          //Campo combos dependientes
-                                          $('#estado_id-field').change(function(){
-                                          $.get("{{ url('getCmbMunicipios')}}",
-                                          { estado: $(this).val() },
-                                                  function(data) {
-                                                  $('#municipio_id-field').empty();
-                                                  $.each(data, function(key, element) {
-                                                  $('#municipio_id-field').append("<option value='" + key + "'>" + element + "</option>");
-                                                  });
-                                                  });
-                                          });
-                                          /*
-                                           //Campo combos dependientes
-                                           $('#nivel_id-field').change(function(){
-                                           $("#loading4").show();
-                                           $.get("{{ url('getCmbGrados')}}",
-                                           { nivel: $(this).val() },
-                                           function(data) {
-                                           $('#grado_id-field').empty();
-                                           $.each(data, function(key, element) {
-                                           $('#grado_id-field').append("<option value='" + key + "'>" + element + "</option>");
-                                           });
-                                           $("#loading4").hide();
-                                           });
-                                           }); 
-                                             
-                                           //Campo combos dependientes
-                                           $('#curso_id-field').change(function(){
-                                           $("#loading5").show();
-                                           $.get("{{ url('getCmbSubcursos')}}",
-                                           { curso: $(this).val() },
-                                           function(data) {
-                                           $('#subcurso_id-field').empty();
-                                           $.each(data, function(key, element) {
-                                           $('#subcurso_id-field').append("<option value='" + key + "'>" + element + "</option>");
-                                           });
-                                           $("#loading5").hide();
-                                           });
-                                           }); 
-                                             
-                                           //Campo combos dependientes
-                                           $('#diplomado_id-field').change(function(){
-                                           $("#loading6").show();
-                                           $.get("{{ url('getCmbSubdiplomados')}}",
-                                           { diplomado: $(this).val() },
-                                           function(data) {
-                                           $('#subdiplomado_id-field').empty();
-                                           $.each(data, function(key, element) {
-                                           $('#subdiplomado_id-field').append("<option value='" + key + "'>" + element + "</option>");
-                                           });
-                                           $("#loading6").hide();
-                                           });
-                                           }); 
-                                             
-                                           //Campo combos dependientes
-                                           $('#otro_id-field').change(function(){
-                                           $("#loading7").show();
-                                           $.get("{{ url('getCmbSubotros')}}",
-                                           { otro: $(this).val() },
-                                           function(data) {
-                                           $('#subotro_id-field').empty();
-                                           $.each(data, function(key, element) {
-                                           $('#subotro_id-field').append("<option value='" + key + "'>" + element + "</option>");
-                                           });
-                                           $("#loading7").hide();
-                                           });
-                                           });    
-                                           */
-                                          //combos dependientes
-                                          getCmbEspecialidad();
-                                          getCmbEspecialidad2();
-                                          /*getCmbEspecialidad3();
-                                           getCmbEspecialidad4();
-                                           */
-                                          getCmbNivel();
-                                          getCmbNivel2();
-                                          getCmbNivel3();
-                                          getCmbNivel4();
-                                          getCmbGrado();
-                                          getCmbGrado2();
-                                          getCmbGrado3();
-                                          getCmbGrado4();
-                                          $('#plantel_id-field').change(function(){
-                                          getCmbEspecialidad();
-                                          getCmbEspecialidad2();
-                                          getCmbEspecialidad3();
-                                          getCmbEspecialidad4();
-                                          });
-                                          $('#especialidad_id-field').change(function(){
-                                          getCmbNivel();
-                                          });
-                                          $('#especialidad2_id-field').change(function(){
-                                          getCmbNivel2();
-                                          });
-                                          $('#especialidad3_id-field').change(function(){
-                                          getCmbNivel3();
-                                          });
-                                          $('#especialidad4_id-field').change(function(){
-                                          getCmbNivel4();
-                                          });
-                                          $('#nivel_id-field').change(function(){
-                                          getCmbGrado();
-                                          });
-                                          $('#curso_id-field').change(function(){
-                                          getCmbGrado2();
-                                          });
-                                          $('#diplomado_id-field').change(function(){
-                                          getCmbGrado3();
-                                          });
-                                          $('#otro_id-field').change(function(){
-                                          getCmbGrado4();
-                                          });
-                                          //fin combos dependientes
+                            //trabaja el campo plantel 
+                            @permission('Icliente.modificarPlantel')
+                                    $('#plantel_id-field').prop('disabled', true);
+                            @endpermission
+                                    $("#frm_cliente").submit(function() {
+                            $('#plantel_id-field').prop('disabled', false);
+                            return true;
+                            });
+                            //Campo combos dependientes
+                            $('#estado_id-field').change(function(){
+                            $.get("{{ url('getCmbMunicipios')}}",
+                            { estado: $(this).val() },
+                                    function(data) {
+                                    $('#municipio_id-field').empty();
+                                    $.each(data, function(key, element) {
+                                    $('#municipio_id-field').append("<option value='" + key + "'>" + element + "</option>");
+                                    });
+                                    });
+                            });
+                            /*
+                             //Campo combos dependientes
+                             $('#nivel_id-field').change(function(){
+                             $("#loading4").show();
+                             $.get("{{ url('getCmbGrados')}}",
+                             { nivel: $(this).val() },
+                             function(data) {
+                             $('#grado_id-field').empty();
+                             $.each(data, function(key, element) {
+                             $('#grado_id-field').append("<option value='" + key + "'>" + element + "</option>");
+                             });
+                             $("#loading4").hide();
+                             });
+                             }); 
+                             
+                             //Campo combos dependientes
+                             $('#curso_id-field').change(function(){
+                             $("#loading5").show();
+                             $.get("{{ url('getCmbSubcursos')}}",
+                             { curso: $(this).val() },
+                             function(data) {
+                             $('#subcurso_id-field').empty();
+                             $.each(data, function(key, element) {
+                             $('#subcurso_id-field').append("<option value='" + key + "'>" + element + "</option>");
+                             });
+                             $("#loading5").hide();
+                             });
+                             }); 
+                             
+                             //Campo combos dependientes
+                             $('#diplomado_id-field').change(function(){
+                             $("#loading6").show();
+                             $.get("{{ url('getCmbSubdiplomados')}}",
+                             { diplomado: $(this).val() },
+                             function(data) {
+                             $('#subdiplomado_id-field').empty();
+                             $.each(data, function(key, element) {
+                             $('#subdiplomado_id-field').append("<option value='" + key + "'>" + element + "</option>");
+                             });
+                             $("#loading6").hide();
+                             });
+                             }); 
+                             
+                             //Campo combos dependientes
+                             $('#otro_id-field').change(function(){
+                             $("#loading7").show();
+                             $.get("{{ url('getCmbSubotros')}}",
+                             { otro: $(this).val() },
+                             function(data) {
+                             $('#subotro_id-field').empty();
+                             $.each(data, function(key, element) {
+                             $('#subotro_id-field').append("<option value='" + key + "'>" + element + "</option>");
+                             });
+                             $("#loading7").hide();
+                             });
+                             });    
+                             */
+                            //combos dependientes
+                            getCmbEspecialidad();
+                            getCmbEspecialidad2();
+                            /*getCmbEspecialidad3();
+                             getCmbEspecialidad4();
+                             */
+                            getCmbNivel();
+                            getCmbNivel2();
+                            getCmbNivel3();
+                            getCmbNivel4();
+                            getCmbGrado();
+                            getCmbGrado2();
+                            getCmbGrado3();
+                            getCmbGrado4();
+                            $('#plantel_id-field').change(function(){
+                            getCmbEspecialidad();
+                            getCmbEspecialidad2();
+                            getCmbEspecialidad3();
+                            getCmbEspecialidad4();
+                            });
+                            $('#especialidad_id-field').change(function(){
+                            getCmbNivel();
+                            });
+                            $('#especialidad2_id-field').change(function(){
+                            getCmbNivel2();
+                            });
+                            $('#especialidad3_id-field').change(function(){
+                            getCmbNivel3();
+                            });
+                            $('#especialidad4_id-field').change(function(){
+                            getCmbNivel4();
+                            });
+                            $('#nivel_id-field').change(function(){
+                            getCmbGrado();
+                            });
+                            $('#curso_id-field').change(function(){
+                            getCmbGrado2();
+                            });
+                            $('#diplomado_id-field').change(function(){
+                            getCmbGrado3();
+                            });
+                            $('#otro_id-field').change(function(){
+                            getCmbGrado4();
+                            });
+                            //fin combos dependientes
 
-                                          //
-                                          $(function() {
-                                          $("#expo-field").autocomplete({
-                                          source: "{!! route('clientes.autocomplete') !!}",
-                                                  minLength: 2,
-                                                  autofocus:true,
-                                                  select: function(event, ui) {
-                                                  $('#expo-field').val(ui.item.label);
-                                                  }
-                                          });
-                                          });
-                                          });
-                                          function getCmbEspecialidad(){
-                                          //var $example = $("#especialidad_id-field").select2();
-                                          var a = $('#frm_cliente').serialize();
-                                          $.ajax({
-                                          url: '{{ route("especialidads.getCmbEspecialidad") }}',
-                                                  type: 'GET',
-                                                  data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad_id-field option:selected').val() + "",
-                                                  dataType: 'json',
-                                                  beforeSend : function(){$("#loading10").show(); },
-                                                  complete : function(){$("#loading10").hide(); },
-                                                  success: function(data){
-                                                  //$example.select2("destroy");
-                                                  $('#especialidad_id-field').empty();
-                                                  $('#especialidad_id-field').append($('<option></option>').text('Seleccionar').val('0'));
-                                                  $.each(data, function(i) {
-                                                  //alert(data[i].name);
-                                                  $('#especialidad_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
-                                                  });
-                                                  //$example.select2();
-                                                  }
-                                          });
-                                          }
+                            //
+                            $(function() {
+                            $("#expo-field").autocomplete({
+                            source: "{!! route('clientes.autocomplete') !!}",
+                                    minLength: 2,
+                                    autofocus:true,
+                                    select: function(event, ui) {
+                                    $('#expo-field').val(ui.item.label);
+                                    }
+                            });
+                            });
+                            });
+                            function getCmbEspecialidad(){
+                            //var $example = $("#especialidad_id-field").select2();
+                            var a = $('#frm_cliente').serialize();
+                            $.ajax({
+                            url: '{{ route("especialidads.getCmbEspecialidad") }}',
+                                    type: 'GET',
+                                    data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad_id-field option:selected').val() + "",
+                                    dataType: 'json',
+                                    beforeSend : function(){$("#loading10").show(); },
+                                    complete : function(){$("#loading10").hide(); },
+                                    success: function(data){
+                                    //$example.select2("destroy");
+                                    $('#especialidad_id-field').empty();
+                                    $('#especialidad_id-field').append($('<option></option>').text('Seleccionar').val('0'));
+                                    $.each(data, function(i) {
+                                    //alert(data[i].name);
+                                    $('#especialidad_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
+                                    });
+                                    //$example.select2();
+                                    }
+                            });
+                            }
 
-                                          function getCmbEspecialidad2(){
-                                          //var $example = $("#especialidad_id-field").select2();
-                                          var a = $('#frm_cliente').serialize();
-                                          $.ajax({
-                                          url: '{{ route("especialidads.getCmbEspecialidad") }}',
-                                                  type: 'GET',
-                                                  data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad2_id-field option:selected').val() + "",
-                                                  dataType: 'json',
-                                                  beforeSend : function(){$("#loading10").show(); },
-                                                  complete : function(){$("#loading10").hide(); },
-                                                  success: function(data){
-                                                  $('#especialidad2_id-field').empty();
-                                                  $('#especialidad2_id-field').append($('<option></option>').text('Seleccionar').val('0'));
-                                                  $.each(data, function(i) {
-                                                  //alert(data[i].name);
-                                                  $('#especialidad2_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
-                                                  });
-                                                  //$example.select2();
-                                                  }
-                                          });
-                                          }
-                                          function getCmbEspecialidad3(){
-                                          //var $example = $("#especialidad_id-field").select2();
-                                          var a = $('#frm_cliente').serialize();
-                                          $.ajax({
-                                          url: '{{ route("especialidads.getCmbEspecialidad") }}',
-                                                  type: 'GET',
-                                                  data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad3_id-field option:selected').val() + "",
-                                                  dataType: 'json',
-                                                  beforeSend : function(){$("#loading10").show(); },
-                                                  complete : function(){$("#loading10").hide(); },
-                                                  success: function(data){
-                                                  $('#especialidad3_id-field').empty();
-                                                  $('#especialidad3_id-field').append($('<option></option>').text('Seleccionar').val('0'));
-                                                  $.each(data, function(i) {
-                                                  //alert(data[i].name);
-                                                  $('#especialidad3_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
-                                                  });
-                                                  //$example.select2();
-                                                  }
-                                          });
-                                          }
-                                          function getCmbEspecialidad4(){
-                                          //var $example = $("#especialidad_id-field").select2();
-                                          var a = $('#frm_cliente').serialize();
-                                          $.ajax({
-                                          url: '{{ route("especialidads.getCmbEspecialidad") }}',
-                                                  type: 'GET',
-                                                  data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad4_id-field option:selected').val() + "",
-                                                  dataType: 'json',
-                                                  beforeSend : function(){$("#loading10").show(); },
-                                                  complete : function(){$("#loading10").hide(); },
-                                                  success: function(data){
-                                                  $('#especialidad4_id-field').empty();
-                                                  $('#especialidad4_id-field').append($('<option></option>').text('Seleccionar').val('0'));
-                                                  $.each(data, function(i) {
-                                                  //alert(data[i].name);
-                                                  $('#especialidad4_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
-                                                  });
-                                                  //$example.select2();
-                                                  }
-                                          });
-                                          }
-                                          function getCmbNivel(){
-                                          //var $example = $("#especialidad_id-field").select2();
-                                          //alert($('#especialidad_id-field option:selected').val());
-                                          var a = $('#frm_cliente').serialize();
-                                          $.ajax({
-                                          url: '{{ route("nivels.getCmbNivels") }}',
-                                                  type: 'GET',
-                                                  data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad_id-field option:selected').val() + "&nivel_id=" + $('#nivel_id-field option:selected').val() + "",
-                                                  dataType: 'json',
-                                                  beforeSend : function(){$("#loading11").show(); },
-                                                  complete : function(){$("#loading11").hide(); },
-                                                  success: function(data){
-                                                  //alert(data);
-                                                  //$example.select2("destroy");
-                                                  $('#nivel_id-field').html('');
-                                                  //$('#especialidad_id-field').empty();
-                                                  $('#nivel_id-field').append($('<option></option>').text('Seleccionar').val('0'));
-                                                  $.each(data, function(i) {
-                                                  //alert(data[i].name);
-                                                  $('#nivel_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
-                                                  });
-                                                  //$example.select2();
-                                                  }
-                                          });
-                                          }
-                                          function getCmbNivel2(){
-                                          //var $example = $("#especialidad_id-field").select2();
-                                          var a = $('#frm_cliente').serialize();
-                                          $.ajax({
-                                          url: '{{ route("nivels.getCmbNivels") }}',
-                                                  type: 'GET',
-                                                  data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad2_id-field option:selected').val() + "&nivel_id=" + $('#curso_id-field option:selected').val() + "",
-                                                  dataType: 'json',
-                                                  beforeSend : function(){$("#loading11").show(); },
-                                                  complete : function(){$("#loading11").hide(); },
-                                                  success: function(data){
-                                                  //alert(data);
-                                                  //$example.select2("destroy");
-                                                  $('#curso_id-field').html('');
-                                                  //$('#especialidad_id-field').empty();
-                                                  $('#curso_id-field').append($('<option></option>').text('Seleccionar').val('0'));
-                                                  $.each(data, function(i) {
-                                                  //alert(data[i].name);
-                                                  $('#curso_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
-                                                  });
-                                                  //$example.select2();
-                                                  }
-                                          });
-                                          }
-                                          function getCmbNivel3(){
-                                          //var $example = $("#especialidad_id-field").select2();
-                                          var a = $('#frm_cliente').serialize();
-                                          $.ajax({
-                                          url: '{{ route("nivels.getCmbNivels") }}',
-                                                  type: 'GET',
-                                                  data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad3_id-field option:selected').val() + "&nivel_id=" + $('#diplomado_id-field option:selected').val() + "",
-                                                  dataType: 'json',
-                                                  beforeSend : function(){$("#loading11").show(); },
-                                                  complete : function(){$("#loading11").hide(); },
-                                                  success: function(data){
-                                                  //alert(data);
-                                                  //$example.select2("destroy");
-                                                  $('#diplomado_id-field').html('');
-                                                  //$('#especialidad_id-field').empty();
-                                                  $('#diplomado_id-field').append($('<option></option>').text('Seleccionar').val('0'));
-                                                  $.each(data, function(i) {
-                                                  //alert(data[i].name);
-                                                  $('#diplomado_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
-                                                  });
-                                                  //$example.select2();
-                                                  }
-                                          });
-                                          }
-                                          function getCmbNivel4(){
-                                          //var $example = $("#especialidad_id-field").select2();
-                                          var a = $('#frm_cliente').serialize();
-                                          $.ajax({
-                                          url: '{{ route("nivels.getCmbNivels") }}',
-                                                  type: 'GET',
-                                                  data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad4_id-field option:selected').val() + "&nivel_id=" + $('#otro_id-field option:selected').val() + "",
-                                                  dataType: 'json',
-                                                  beforeSend : function(){$("#loading11").show(); },
-                                                  complete : function(){$("#loading11").hide(); },
-                                                  success: function(data){
-                                                  //alert(data);
-                                                  //$example.select2("destroy");
-                                                  $('#otro_id-field').html('');
-                                                  //$('#especialidad_id-field').empty();
-                                                  $('#otro_id-field').append($('<option></option>').text('Seleccionar').val('0'));
-                                                  $.each(data, function(i) {
-                                                  //alert(data[i].name);
-                                                  $('#otro_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
-                                                  });
-                                                  //$example.select2();
-                                                  }
-                                          });
-                                          }
-                                          function getCmbGrado(){
-                                          //var $example = $("#especialidad_id-field").select2();
-                                          var a = $('#frm_cliente').serialize();
-                                          $.ajax({
-                                          url: '{{ route("grados.getCmbGrados") }}',
-                                                  type: 'GET',
-                                                  data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad_id-field option:selected').val() + "&nivel_id=" + $('#nivel_id-field option:selected').val() + "&grado_id=" + $('#grado_id-field option:selected').val() + "",
-                                                  dataType: 'json',
-                                                  beforeSend : function(){$("#loading12").show(); },
-                                                  complete : function(){$("#loading12").hide(); },
-                                                  success: function(data){
-                                                  //alert(data);
-                                                  //$example.select2("destroy");
-                                                  $('#grado_id-field').html('');
-                                                  //$('#especialidad_id-field').empty();
-                                                  $('#grado_id-field').append($('<option></option>').text('Seleccionar').val('0'));
-                                                  $.each(data, function(i) {
-                                                  //alert(data[i].name);
-                                                  $('#grado_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
-                                                  });
-                                                  //$example.select2();
-                                                  }
-                                          });
-                                          }
-                                          function getCmbGrado2(){
-                                          //var $example = $("#especialidad_id-field").select2();
-                                          var a = $('#frm_cliente').serialize();
-                                          $.ajax({
-                                          url: '{{ route("grados.getCmbGrados") }}',
-                                                  type: 'GET',
-                                                  data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad2_id-field option:selected').val() + "&nivel_id=" + $('#curso_id-field option:selected').val() + "&grado_id=" + $('#subcurso_id-field option:selected').val() + "",
-                                                  dataType: 'json',
-                                                  beforeSend : function(){$("#loading12").show(); },
-                                                  complete : function(){$("#loading12").hide(); },
-                                                  success: function(data){
-                                                  //alert(data);
-                                                  //$example.select2("destroy");
-                                                  $('#subcurso_id-field').html('');
-                                                  //$('#especialidad_id-field').empty();
-                                                  $('#subcurso_id-field').append($('<option></option>').text('Seleccionar').val('0'));
-                                                  $.each(data, function(i) {
-                                                  //alert(data[i].name);
-                                                  $('#subcurso_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
-                                                  });
-                                                  //$example.select2();
-                                                  }
-                                          });
-                                          }
-                                          function getCmbGrado3(){
-                                          //var $example = $("#especialidad_id-field").select2();
-                                          var a = $('#frm_cliente').serialize();
-                                          $.ajax({
-                                          url: '{{ route("grados.getCmbGrados") }}',
-                                                  type: 'GET',
-                                                  data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad3_id-field option:selected').val() + "&nivel_id=" + $('#diplomado_id-field option:selected').val() + "&grado_id=" + $('#subdiplomado_id-field option:selected').val() + "",
-                                                  dataType: 'json',
-                                                  beforeSend : function(){$("#loading12").show(); },
-                                                  complete : function(){$("#loading12").hide(); },
-                                                  success: function(data){
-                                                  //alert(data);
-                                                  //$example.select2("destroy");
-                                                  $('#subdiplomado_id-field').html('');
-                                                  //$('#especialidad_id-field').empty();
-                                                  $('#subdiplomado_id-field').append($('<option></option>').text('Seleccionar').val('0'));
-                                                  $.each(data, function(i) {
-                                                  //alert(data[i].name);
-                                                  $('#subdiplomado_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
-                                                  });
-                                                  //$example.select2();
-                                                  }
-                                          });
-                                          }
-                                          function getCmbGrado4(){
-                                          //var $example = $("#especialidad_id-field").select2();
-                                          var a = $('#frm_cliente').serialize();
-                                          $.ajax({
-                                          url: '{{ route("grados.getCmbGrados") }}',
-                                                  type: 'GET',
-                                                  data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad4_id-field option:selected').val() + "&nivel_id=" + $('#otro_id-field option:selected').val() + "&grado_id=" + $('#subotro_id-field option:selected').val() + "",
-                                                  dataType: 'json',
-                                                  beforeSend : function(){$("#loading12").show(); },
-                                                  complete : function(){$("#loading12").hide(); },
-                                                  success: function(data){
-                                                  //alert(data);
-                                                  //$example.select2("destroy");
-                                                  $('#subotro_id-field').html('');
-                                                  //$('#especialidad_id-field').empty();
-                                                  $('#subotro_id-field').append($('<option></option>').text('Seleccionar').val('0'));
-                                                  $.each(data, function(i) {
-                                                  //alert(data[i].name);
-                                                  $('#subotro_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
-                                                  });
-                                                  //$example.select2();
-                                                  }
-                                          });
-                                          }
-
-
+                            function getCmbEspecialidad2(){
+                            //var $example = $("#especialidad_id-field").select2();
+                            var a = $('#frm_cliente').serialize();
+                            $.ajax({
+                            url: '{{ route("especialidads.getCmbEspecialidad") }}',
+                                    type: 'GET',
+                                    data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad2_id-field option:selected').val() + "",
+                                    dataType: 'json',
+                                    beforeSend : function(){$("#loading10").show(); },
+                                    complete : function(){$("#loading10").hide(); },
+                                    success: function(data){
+                                    $('#especialidad2_id-field').empty();
+                                    $('#especialidad2_id-field').append($('<option></option>').text('Seleccionar').val('0'));
+                                    $.each(data, function(i) {
+                                    //alert(data[i].name);
+                                    $('#especialidad2_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
+                                    });
+                                    //$example.select2();
+                                    }
+                            });
+                            }
+                            function getCmbEspecialidad3(){
+                            //var $example = $("#especialidad_id-field").select2();
+                            var a = $('#frm_cliente').serialize();
+                            $.ajax({
+                            url: '{{ route("especialidads.getCmbEspecialidad") }}',
+                                    type: 'GET',
+                                    data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad3_id-field option:selected').val() + "",
+                                    dataType: 'json',
+                                    beforeSend : function(){$("#loading10").show(); },
+                                    complete : function(){$("#loading10").hide(); },
+                                    success: function(data){
+                                    $('#especialidad3_id-field').empty();
+                                    $('#especialidad3_id-field').append($('<option></option>').text('Seleccionar').val('0'));
+                                    $.each(data, function(i) {
+                                    //alert(data[i].name);
+                                    $('#especialidad3_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
+                                    });
+                                    //$example.select2();
+                                    }
+                            });
+                            }
+                            function getCmbEspecialidad4(){
+                            //var $example = $("#especialidad_id-field").select2();
+                            var a = $('#frm_cliente').serialize();
+                            $.ajax({
+                            url: '{{ route("especialidads.getCmbEspecialidad") }}',
+                                    type: 'GET',
+                                    data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad4_id-field option:selected').val() + "",
+                                    dataType: 'json',
+                                    beforeSend : function(){$("#loading10").show(); },
+                                    complete : function(){$("#loading10").hide(); },
+                                    success: function(data){
+                                    $('#especialidad4_id-field').empty();
+                                    $('#especialidad4_id-field').append($('<option></option>').text('Seleccionar').val('0'));
+                                    $.each(data, function(i) {
+                                    //alert(data[i].name);
+                                    $('#especialidad4_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
+                                    });
+                                    //$example.select2();
+                                    }
+                            });
+                            }
+                            function getCmbNivel(){
+                            //var $example = $("#especialidad_id-field").select2();
+                            //alert($('#especialidad_id-field option:selected').val());
+                            var a = $('#frm_cliente').serialize();
+                            $.ajax({
+                            url: '{{ route("nivels.getCmbNivels") }}',
+                                    type: 'GET',
+                                    data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad_id-field option:selected').val() + "&nivel_id=" + $('#nivel_id-field option:selected').val() + "",
+                                    dataType: 'json',
+                                    beforeSend : function(){$("#loading11").show(); },
+                                    complete : function(){$("#loading11").hide(); },
+                                    success: function(data){
+                                    //alert(data);
+                                    //$example.select2("destroy");
+                                    $('#nivel_id-field').html('');
+                                    //$('#especialidad_id-field').empty();
+                                    $('#nivel_id-field').append($('<option></option>').text('Seleccionar').val('0'));
+                                    $.each(data, function(i) {
+                                    //alert(data[i].name);
+                                    $('#nivel_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
+                                    });
+                                    //$example.select2();
+                                    }
+                            });
+                            }
+                            function getCmbNivel2(){
+                            //var $example = $("#especialidad_id-field").select2();
+                            var a = $('#frm_cliente').serialize();
+                            $.ajax({
+                            url: '{{ route("nivels.getCmbNivels") }}',
+                                    type: 'GET',
+                                    data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad2_id-field option:selected').val() + "&nivel_id=" + $('#curso_id-field option:selected').val() + "",
+                                    dataType: 'json',
+                                    beforeSend : function(){$("#loading11").show(); },
+                                    complete : function(){$("#loading11").hide(); },
+                                    success: function(data){
+                                    //alert(data);
+                                    //$example.select2("destroy");
+                                    $('#curso_id-field').html('');
+                                    //$('#especialidad_id-field').empty();
+                                    $('#curso_id-field').append($('<option></option>').text('Seleccionar').val('0'));
+                                    $.each(data, function(i) {
+                                    //alert(data[i].name);
+                                    $('#curso_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
+                                    });
+                                    //$example.select2();
+                                    }
+                            });
+                            }
+                            function getCmbNivel3(){
+                            //var $example = $("#especialidad_id-field").select2();
+                            var a = $('#frm_cliente').serialize();
+                            $.ajax({
+                            url: '{{ route("nivels.getCmbNivels") }}',
+                                    type: 'GET',
+                                    data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad3_id-field option:selected').val() + "&nivel_id=" + $('#diplomado_id-field option:selected').val() + "",
+                                    dataType: 'json',
+                                    beforeSend : function(){$("#loading11").show(); },
+                                    complete : function(){$("#loading11").hide(); },
+                                    success: function(data){
+                                    //alert(data);
+                                    //$example.select2("destroy");
+                                    $('#diplomado_id-field').html('');
+                                    //$('#especialidad_id-field').empty();
+                                    $('#diplomado_id-field').append($('<option></option>').text('Seleccionar').val('0'));
+                                    $.each(data, function(i) {
+                                    //alert(data[i].name);
+                                    $('#diplomado_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
+                                    });
+                                    //$example.select2();
+                                    }
+                            });
+                            }
+                            function getCmbNivel4(){
+                            //var $example = $("#especialidad_id-field").select2();
+                            var a = $('#frm_cliente').serialize();
+                            $.ajax({
+                            url: '{{ route("nivels.getCmbNivels") }}',
+                                    type: 'GET',
+                                    data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad4_id-field option:selected').val() + "&nivel_id=" + $('#otro_id-field option:selected').val() + "",
+                                    dataType: 'json',
+                                    beforeSend : function(){$("#loading11").show(); },
+                                    complete : function(){$("#loading11").hide(); },
+                                    success: function(data){
+                                    //alert(data);
+                                    //$example.select2("destroy");
+                                    $('#otro_id-field').html('');
+                                    //$('#especialidad_id-field').empty();
+                                    $('#otro_id-field').append($('<option></option>').text('Seleccionar').val('0'));
+                                    $.each(data, function(i) {
+                                    //alert(data[i].name);
+                                    $('#otro_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
+                                    });
+                                    //$example.select2();
+                                    }
+                            });
+                            }
+                            function getCmbGrado(){
+                            //var $example = $("#especialidad_id-field").select2();
+                            var a = $('#frm_cliente').serialize();
+                            $.ajax({
+                            url: '{{ route("grados.getCmbGrados") }}',
+                                    type: 'GET',
+                                    data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad_id-field option:selected').val() + "&nivel_id=" + $('#nivel_id-field option:selected').val() + "&grado_id=" + $('#grado_id-field option:selected').val() + "",
+                                    dataType: 'json',
+                                    beforeSend : function(){$("#loading12").show(); },
+                                    complete : function(){$("#loading12").hide(); },
+                                    success: function(data){
+                                    //alert(data);
+                                    //$example.select2("destroy");
+                                    $('#grado_id-field').html('');
+                                    //$('#especialidad_id-field').empty();
+                                    $('#grado_id-field').append($('<option></option>').text('Seleccionar').val('0'));
+                                    $.each(data, function(i) {
+                                    //alert(data[i].name);
+                                    $('#grado_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
+                                    });
+                                    //$example.select2();
+                                    }
+                            });
+                            }
+                            function getCmbGrado2(){
+                            //var $example = $("#especialidad_id-field").select2();
+                            var a = $('#frm_cliente').serialize();
+                            $.ajax({
+                            url: '{{ route("grados.getCmbGrados") }}',
+                                    type: 'GET',
+                                    data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad2_id-field option:selected').val() + "&nivel_id=" + $('#curso_id-field option:selected').val() + "&grado_id=" + $('#subcurso_id-field option:selected').val() + "",
+                                    dataType: 'json',
+                                    beforeSend : function(){$("#loading12").show(); },
+                                    complete : function(){$("#loading12").hide(); },
+                                    success: function(data){
+                                    //alert(data);
+                                    //$example.select2("destroy");
+                                    $('#subcurso_id-field').html('');
+                                    //$('#especialidad_id-field').empty();
+                                    $('#subcurso_id-field').append($('<option></option>').text('Seleccionar').val('0'));
+                                    $.each(data, function(i) {
+                                    //alert(data[i].name);
+                                    $('#subcurso_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
+                                    });
+                                    //$example.select2();
+                                    }
+                            });
+                            }
+                            function getCmbGrado3(){
+                            //var $example = $("#especialidad_id-field").select2();
+                            var a = $('#frm_cliente').serialize();
+                            $.ajax({
+                            url: '{{ route("grados.getCmbGrados") }}',
+                                    type: 'GET',
+                                    data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad3_id-field option:selected').val() + "&nivel_id=" + $('#diplomado_id-field option:selected').val() + "&grado_id=" + $('#subdiplomado_id-field option:selected').val() + "",
+                                    dataType: 'json',
+                                    beforeSend : function(){$("#loading12").show(); },
+                                    complete : function(){$("#loading12").hide(); },
+                                    success: function(data){
+                                    //alert(data);
+                                    //$example.select2("destroy");
+                                    $('#subdiplomado_id-field').html('');
+                                    //$('#especialidad_id-field').empty();
+                                    $('#subdiplomado_id-field').append($('<option></option>').text('Seleccionar').val('0'));
+                                    $.each(data, function(i) {
+                                    //alert(data[i].name);
+                                    $('#subdiplomado_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
+                                    });
+                                    //$example.select2();
+                                    }
+                            });
+                            }
+                            function getCmbGrado4(){
+                            //var $example = $("#especialidad_id-field").select2();
+                            var a = $('#frm_cliente').serialize();
+                            $.ajax({
+                            url: '{{ route("grados.getCmbGrados") }}',
+                                    type: 'GET',
+                                    data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad4_id-field option:selected').val() + "&nivel_id=" + $('#otro_id-field option:selected').val() + "&grado_id=" + $('#subotro_id-field option:selected').val() + "",
+                                    dataType: 'json',
+                                    beforeSend : function(){$("#loading12").show(); },
+                                    complete : function(){$("#loading12").hide(); },
+                                    success: function(data){
+                                    //alert(data);
+                                    //$example.select2("destroy");
+                                    $('#subotro_id-field').html('');
+                                    //$('#especialidad_id-field').empty();
+                                    $('#subotro_id-field').append($('<option></option>').text('Seleccionar').val('0'));
+                                    $.each(data, function(i) {
+                                    //alert(data[i].name);
+                                    $('#subotro_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
+                                    });
+                                    //$example.select2();
+                                    }
+                            });
+                            }
 
 
-                                          //codigo de trabajo del cargador de imagenes
-                                          // File Picker modification for FCK Editor v2.0 - www.fckeditor.net
-                                          // by: Pete Forde <pete@unspace.ca> @ Unspace Interactive
-                                          var urlobj;
-                                          function BrowseServer(obj)
-                                          {
-                                          urlobj = obj;
-                                          OpenServerBrowser(
-                                                  "{{ url('filemanager/show') }}",
-                                                  screen.width * 0.7,
-                                                  screen.height * 0.7);
-                                          }
 
-                                          function OpenServerBrowser(url, width, height)
-                                          {
-                                          var iLeft = (screen.width - width) / 2;
-                                          var iTop = (screen.height - height) / 2;
-                                          var sOptions = "toolbar=no,status=no,resizable=yes,dependent=yes";
-                                          sOptions += ",width=" + width;
-                                          sOptions += ",height=" + height;
-                                          sOptions += ",left=" + iLeft;
-                                          sOptions += ",top=" + iTop;
-                                          var oWindow = window.open(url, "BrowseWindow", sOptions);
-                                          }
 
-                                          function SetUrl(url, width, height, alt)
-                                          {
-                                          document.getElementById(urlobj).value = url;
-                                          oWindow = null;
-                                          }
+                            //codigo de trabajo del cargador de imagenes
+                            // File Picker modification for FCK Editor v2.0 - www.fckeditor.net
+                            // by: Pete Forde <pete@unspace.ca> @ Unspace Interactive
+                            var urlobj;
+                            function BrowseServer(obj)
+                            {
+                            urlobj = obj;
+                            OpenServerBrowser(
+                                    "{{ url('filemanager/show') }}",
+                                    screen.width * 0.7,
+                                    screen.height * 0.7);
+                            }
 
-                                          //pantalla flotante
-                                          @if (isset($cliente))
-                                                  var popup;
-                                          function InscribirCliente(numero) {
-                                          var plantel = $('#plantel_id-field option:selected').val();
-                                          var especialidad1 = $('#especialidad_id-field option:selected').val();
-                                          var nivel1 = $('#nivel_id-field option:selected').val();
-                                          var grado1 = $('#grado_id-field option:selected').val();
-                                          var especialidad2 = $('#especialidad2_id-field option:selected').val();
-                                          var nivel2 = $('#curso_id-field option:selected').val();
-                                          var grado2 = $('#subcurso_id-field option:selected').val();
-                                          var especialidad3 = $('#especialidad3_id-field option:selected').val();
-                                          var nivel3 = $('#diplomado_id-field option:selected').val();
-                                          var grado3 = $('#subdiplomado_id-field option:selected').val();
-                                          var especialidad4 = $('#especialidad4_id-field option:selected').val();
-                                          var nivel4 = $('#otro_id-field option:selected').val();
-                                          var grado4 = $('#subotro_id-field option:selected').val();
-                                          popup = window.open("{{route('inscripcions.create')}}", "Popup", "width=800,height=650");
-                                          popup.onload = function(){
-                                          popup.document.getElementById('plantel_id-field').value = plantel;
-                                          popup.document.getElementById('cliente_id-field').value = {{$cliente -> id}};
-                                          popup.location.reload();
-                                          if (numero == 1){
-                                          popup.document.getElementById('especialidad_id-field').value = especialidad1;
-                                          popup.document.getElementById('nivel_id-field').value = nivel1;
-                                          popup.document.getElementById('grado_id-field').value = grado1;
-                                          } else if (numero == 2){
-                                          popup.document.getElementById('especialidad_id-field').value = especialidad2;
-                                          popup.document.getElementById('nivel_id-field').value = nivel2;
-                                          popup.document.getElementById('grado_id-field').value = grado2;
-                                          } else if (numero == 3){
-                                          popup.document.getElementById('especialidad_id-field').value = especialidad3;
-                                          popup.document.getElementById('nivel_id-field').value = nivel3;
-                                          popup.document.getElementById('grado_id-field').value = grado3;
-                                          } else if (numero == 4){
-                                          popup.document.getElementById('especialidad_id-field').value = especialidad4;
-                                          popup.document.getElementById('nivel_id-field').value = nivel4;
-                                          popup.document.getElementById('grado_id-field').value = grado4;
-                                          }
-                                          //$('#plantel_id-field').val(plantel).change();
-                                          }
-                                          popup.focus();
-                                          return false
-                                          }
-                                          var popup2;
-                                          function EditarInscripcion(numero) {
-                                          popup = window.open("{{ url('inscripcions/edit') }}" + "/" + numero, "Popup", "width=800,height=650");
-                                          popup.focus();
-                                          return false
-                                          }
-                                          @endif
+                            function OpenServerBrowser(url, width, height)
+                            {
+                            var iLeft = (screen.width - width) / 2;
+                            var iTop = (screen.height - height) / 2;
+                            var sOptions = "toolbar=no,status=no,resizable=yes,dependent=yes";
+                            sOptions += ",width=" + width;
+                            sOptions += ",height=" + height;
+                            sOptions += ",left=" + iLeft;
+                            sOptions += ",top=" + iTop;
+                            var oWindow = window.open(url, "BrowseWindow", sOptions);
+                            }
+
+                            function SetUrl(url, width, height, alt)
+                            {
+                            document.getElementById(urlobj).value = url;
+                            oWindow = null;
+                            }
+
+                            //pantalla flotante
+                            @if (isset($cliente))
+                                    var popup;
+                            function InscribirCliente(numero) {
+                            var plantel = $('#plantel_id-field option:selected').val();
+                            var especialidad1 = $('#especialidad_id-field option:selected').val();
+                            var nivel1 = $('#nivel_id-field option:selected').val();
+                            var grado1 = $('#grado_id-field option:selected').val();
+                            var especialidad2 = $('#especialidad2_id-field option:selected').val();
+                            var nivel2 = $('#curso_id-field option:selected').val();
+                            var grado2 = $('#subcurso_id-field option:selected').val();
+                            var especialidad3 = $('#especialidad3_id-field option:selected').val();
+                            var nivel3 = $('#diplomado_id-field option:selected').val();
+                            var grado3 = $('#subdiplomado_id-field option:selected').val();
+                            var especialidad4 = $('#especialidad4_id-field option:selected').val();
+                            var nivel4 = $('#otro_id-field option:selected').val();
+                            var grado4 = $('#subotro_id-field option:selected').val();
+                            popup = window.open("{{route('inscripcions.create')}}", "Popup", "width=800,height=650");
+                            popup.onload = function(){
+                            popup.document.getElementById('plantel_id-field').value = plantel;
+                            popup.document.getElementById('cliente_id-field').value = {{$cliente - > id}};
+                            popup.location.reload();
+                            if (numero == 1){
+                            popup.document.getElementById('especialidad_id-field').value = especialidad1;
+                            popup.document.getElementById('nivel_id-field').value = nivel1;
+                            popup.document.getElementById('grado_id-field').value = grado1;
+                            } else if (numero == 2){
+                            popup.document.getElementById('especialidad_id-field').value = especialidad2;
+                            popup.document.getElementById('nivel_id-field').value = nivel2;
+                            popup.document.getElementById('grado_id-field').value = grado2;
+                            } else if (numero == 3){
+                            popup.document.getElementById('especialidad_id-field').value = especialidad3;
+                            popup.document.getElementById('nivel_id-field').value = nivel3;
+                            popup.document.getElementById('grado_id-field').value = grado3;
+                            } else if (numero == 4){
+                            popup.document.getElementById('especialidad_id-field').value = especialidad4;
+                            popup.document.getElementById('nivel_id-field').value = nivel4;
+                            popup.document.getElementById('grado_id-field').value = grado4;
+                            }
+                            //$('#plantel_id-field').val(plantel).change();
+                            }
+                            popup.focus();
+                            return false
+                            }
+                            var popup2;
+                            function EditarInscripcion(numero) {
+                            popup = window.open("{{ url('inscripcions/edit') }}" + "/" + numero, "Popup", "width=800,height=650");
+                            popup.focus();
+                            return false
+                            }
+                            @endif
 
 </script>
 @endpush

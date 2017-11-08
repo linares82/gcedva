@@ -63,7 +63,8 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_empleados.nombre_cont">EMPLEADO</label>
                                 <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['empleados.nombre_cont']) ?: '' }}" name="q[empleados.nombre_cont]" id="q_empleados.nombre_cont" />
+                                    <input class="form-control input-sm" type="hidden" value="{{ $e->plantel_id }}" name="plantel_id" id="plantel_id" />
+                                    {!! Form::select("empleado_id", $list["Empleado"], "{{ @(Request::input('q')['asignacion_academicas.empleado_id_lt']) ?: 0 }}", array("class" => "form-control select_seguridad", "name"=>"q[asignacion_academicas.empleado_id_lt]", "id"=>"q_asignacion_academicas.empleado_id_lt", "style"=>"width:100%;" )) !!}
                                 </div>
                             </div>
                                                     <!--
@@ -81,7 +82,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_materium_id_cont">MATERIA</label>
                                 <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['materium_id_cont']) ?: '' }}" name="q[materium_id_cont]" id="q_materium_id_cont" />
+                                    {!! Form::select("materium_id", $list["Materium"], "{{ @(Request::input('q')['asignacion_academicas.materium_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[asignacion_academicas.materium_id_lt]", "id"=>"q_asignacion_academicas.materium_id_lt", "style"=>"width:100%;" )) !!}
                                 </div>
                             </div>
                                                     <!--
@@ -99,7 +100,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_grupos.name_cont">GRUPO</label>
                                 <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['grupos.name_cont']) ?: '' }}" name="q[grupos.name_cont]" id="q_grupos.name_cont" />
+                                    {!! Form::select("grupo_id", $list["Grupo"], "{{ @(Request::input('q')['asignacion_academicas.grupo_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[asignacion_academicas.grupo_id_lt]", "id"=>"q_asignacion_academicas.grupo_id_lt", "style"=>"width:100%;" )) !!}
                                 </div>
                             </div>
                                                     <!--
@@ -139,6 +140,7 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'plantel.razon', 'title' => 'PLANTEL'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'empleados.nombre', 'title' => 'EMPLEADO'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'materium_id', 'title' => 'MATERIA'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'grupos.name', 'title' => 'GRUPO'])</th>
@@ -153,6 +155,7 @@
                         @foreach($asignacionAcademicas as $asignacionAcademica)
                             <tr>
                                 <td><a href="{{ route('asignacionAcademicas.show', $asignacionAcademica->id) }}">{{$asignacionAcademica->id}}</a></td>
+                                <td>{{ $asignacionAcademica->plantel->razon }}</td>
                                 <td>{{ $asignacionAcademica->empleado->nombre." ".$asignacionAcademica->empleado->ape_paterno." ".$asignacionAcademica->empleado->ape_materno }}</td>
                                 <td>{{$asignacionAcademica->materia->name}}</td>
                                 <td>{{$asignacionAcademica->grupo->name}}</td>
@@ -183,3 +186,98 @@
     </div>
 
 @endsection
+@push('scripts')
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#accordion').on('shown.bs.collapse', function () {
+            getCmbEmpleados();
+         });
+         
+        
+        getCmbMaterias();
+        getCmbGrupos();
+        
+      function getCmbEmpleados(){
+          //$('#empleado_id_field option:selected').val($('#empleado_id_campo option:selected').val()).change();
+          var a= $('#search').serialize();
+              $.ajax({
+                  url: '{{ route("empleados.getEmpleadosXplantel") }}',
+                  type: 'GET',
+                  //data: "plantel_id=" + $('#plantel_id').val() + "&empleado_id=" + $('#q_asignacion_academicas.empleado_id_lt option:selected').val() + "",
+                  data:a,
+                  dataType: 'json',
+                  beforeSend : function(){$("#loading3").show();},
+                  complete : function(){$("#loading3").hide();},
+                  success: function(data){
+                      //$example.select2("destroy");
+                      
+                      $('#search #q_asignacion_academicas.empleado_id_lt').html('');
+                      $('#search #q_asignacion_academicas.empleado_id_lt').empty();
+                      //$('#q_asignacion_academicas.empleado_id_lt').append($('<option></option>').text('Seleccionar Opción').val('0'));
+                      //alert($('#q_asignacion_academicas.empleado_id_lt option:selected').val());
+                      $.each(data, function(i) {
+                          //alert(data[i].nombre);
+                          $('#q_asignacion_academicas.empleado_id_lt').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].nombre+"<\/option>");  
+                      });
+                      //$('#q_asignacion_academicas.empleado_id_lt').change();
+                      //$example.select2();
+                  }
+              });       
+      }
+      function getCmbMaterias(){
+          //var $example = $("#especialidad_id-field").select2();
+          //$('#materia_id_field option:selected').val($('#materium_id_campo option:selected').val()).change();
+          var a= $('#frm_asistencias_c').serialize();
+              $.ajax({
+                  url: '{{ route("materias.getCmbMateria") }}',
+                  type: 'GET',
+                  data: a,
+                  dataType: 'json',
+                  beforeSend : function(){$("#loading10").show();},
+                  complete : function(){$("#loading10").hide();},
+                  success: function(data){
+                      //$example.select2("destroy");
+                      $('#materium_id-field').html('');
+                      
+                      //$('#especialidad_id-field').empty();
+                      $('#materium_id-field').append($('<option></option>').text('Seleccionar').val('0'));
+                      
+                      $.each(data, function(i) {
+                          //alert(data[i].name);
+                          $('#materium_id-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                          
+                      });
+                      //$example.select2();
+                  }
+              });       
+      }
+      function getCmbGrupos(){
+          //var $example = $("#especialidad_id-field").select2();
+          var a= $('#frm_asistencias_c').serialize();
+              $.ajax({
+                  url: '{{ route("grupos.getCmbGrupo") }}',
+                  type: 'GET',
+                  data: a,
+                  dataType: 'json',
+                  beforeSend : function(){$("#loading10").show();},
+                  complete : function(){$("#loading10").hide();},
+                  success: function(data){
+                      //$example.select2("destroy");
+                      $('#grupo_id-field').html('');
+                      
+                      //$('#especialidad_id-field').empty();
+                      $('#grupo_id-field').append($('<option></option>').text('Seleccionar').val('0'));
+                      
+                      $.each(data, function(i) {
+                          //alert(data[i].name);
+                          $('#grupo_id-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                          
+                      });
+                      //$example.select2();
+                  }
+              });       
+      }
+    });
+   
+  </script>
+@endpush

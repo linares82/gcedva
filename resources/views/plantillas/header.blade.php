@@ -64,11 +64,11 @@
                     <ul class="dropdown-menu">
                                                 <!-- Menu Footer-->
                         <li class="user-footer">
-                            
                             <div class="pull-right">
-                                <form method="POST" src>
-                                <a href=" {!! url('logout') !!} " class="btn btn-default btn-flat">Salir</a>
-                            </form>
+                                <form method="POST">
+                                    <a href=" {!! route('users.editPerfil', Auth::user()->id) !!} " class="btn btn-default btn-flat">Editar Usuario</a>
+                                    <a href=" {!! url('logout') !!} " class="btn btn-default btn-flat">Salir</a>
+                                </form>
                             </div>
                         </li>
                     </ul>
