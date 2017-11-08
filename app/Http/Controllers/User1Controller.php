@@ -41,7 +41,9 @@ class User1Controller extends Controller
         //dd($input);
         $user=$user->find($input['id']);
         $user->email=$input['email'];
-        $user->password=Hash::make($input['password1']);
+        if(isset($input['password1'])){
+            $user->password=Hash::make($input['password1']);
+        }
 	$user->update();
         return redirect()->route('home')->with('message', 'Item updated successfully.');
 	}
