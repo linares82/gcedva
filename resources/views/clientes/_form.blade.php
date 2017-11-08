@@ -1533,7 +1533,7 @@
                             popup = window.open("{{route('inscripcions.create')}}", "Popup", "width=800,height=650");
                             popup.onload = function(){
                             popup.document.getElementById('plantel_id-field').value = plantel;
-                            popup.document.getElementById('cliente_id-field').value = {{$cliente - > id}};
+                            popup.document.getElementById('cliente_id-field').value = {{$cliente->id}};
                             popup.location.reload();
                             if (numero == 1){
                             popup.document.getElementById('especialidad_id-field').value = especialidad1;

@@ -18,7 +18,7 @@ class AsistenciaR extends Model
     } 
 
 	//Mass Assignment
-	protected $fillable = ['asistencias_c_id','fecha','cliente_id','est_asistencia_id','usu_alta_id','usu_mod_id'];
+	protected $fillable = ['asignacion_academica_id','fecha','cliente_id','est_asistencia_id','usu_alta_id','usu_mod_id'];
 
 	public function usu_alta() {
 		return $this->hasOne('App\User', 'id', 'usu_alta_id');

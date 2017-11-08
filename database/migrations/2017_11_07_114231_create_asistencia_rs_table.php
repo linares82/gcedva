@@ -14,7 +14,7 @@ class CreateAsistenciaRsTable extends Migration {
 	{
 		Schema::create('asistencia_rs', function(Blueprint $table) {
             $table->increments('id');
-            $table->integer('asistencias_c_id')->unsigned();
+            $table->integer('asignacion_academica_id')->unsigned();
             $table->date('fecha');
             $table->integer('cliente_id')->unsigned();
             $table->integer('est_asistencia_id')->unsigned();
@@ -26,7 +26,7 @@ class CreateAsistenciaRsTable extends Migration {
             $table->foreign('usu_alta_id')->references('id')->on('users');
             $table->foreign('est_asistencia_id')->references('id')->on('est_asistencias');
             $table->foreign('cliente_id')->references('id')->on('clientes');
-            $table->foreign('asistencias_c_id')->references('id')->on('asistencias_cs');
+            $table->foreign('asignacion_acdemica_id')->references('id')->on('asignacion_academicas');
         });
 	}
 

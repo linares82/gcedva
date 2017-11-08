@@ -28,9 +28,10 @@ class AsistenciaRsController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function create()
+	public function create($id)
 	{
-		return view('asistenciaRs.create')
+                $asignacion_academica_id=$id;
+		return view('asistenciaRs.create', compact('asignacion_academica_id'))
 			->with( 'list', AsistenciaR::getListFromAllRelationApps() );
 	}
 

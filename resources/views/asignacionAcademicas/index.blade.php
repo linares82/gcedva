@@ -172,6 +172,9 @@
                                         <button type="submit" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> Borrar</button>
                                     {!! Form::close() !!}
                                     @endpermission
+                                    @permission('asistenciasRs.index')
+                                    <a class="btn btn-xs btn-success" href="{{ route('asistenciaRs.create', $asignacionAcademica->id) }}"><i class="glyphicon glyphicon-edit"></i>Asistencias</a>
+                                    @endpermission
                                 </td>
                             </tr>
                         @endforeach
