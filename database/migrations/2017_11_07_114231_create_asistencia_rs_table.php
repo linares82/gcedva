@@ -26,7 +26,7 @@ class CreateAsistenciaRsTable extends Migration {
             $table->foreign('usu_alta_id')->references('id')->on('users');
             $table->foreign('est_asistencia_id')->references('id')->on('est_asistencias');
             $table->foreign('cliente_id')->references('id')->on('clientes');
-            $table->foreign('asignacion_acdemica_id')->references('id')->on('asignacion_academicas');
+            $table->foreign('asignacion_academica_id')->references('id')->on('asignacion_academicas');
         });
 	}
 

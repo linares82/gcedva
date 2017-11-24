@@ -81,6 +81,10 @@ trait GetAllDataTrait {
                     $myQuery = $myQuery->Where($column, 'LIKE', '%'.$value.'%');
                 } elseif( $operator === 'lt' and $value<>0){
                     $myQuery = $myQuery->Where($column, '=', $value);                
+                }elseif( $operator === 'menorq' ){
+                    $myQuery = $myQuery->where($column, '<=', $value);                
+                }elseif( $operator === 'mayorq' ){
+                    $myQuery = $myQuery->where($column, '>=', $value);                
                 }/*elseif( $operator === 'gt' ){
                     $myQuery = $myQuery->where($column, '>=', $value);                
                 }*/
@@ -169,6 +173,10 @@ trait GetAllDataTrait {
                 }
                 if($baseTable=="seguimientos" and Auth::user()->can('IfiltroClientesXPlantel')){
                     $myQuery=$myQuery->where('clientes.plantel_id', '=', $empleado->plantel_id);
+                }
+                if($baseTable=="seguimientos" and Auth::user()->can('IfiltroClientesXPlantel')){
+                    $myQuery=$myQuery->where('clientes.plantel_id', '=', $empleado->plantel_id)
+                                     ->where('st_seguimiento_id', '<>', '3');
                 }
                 break;
             case "pivot_aviso_gral_empleados":

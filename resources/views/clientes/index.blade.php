@@ -151,7 +151,12 @@
                                 <label for="q_clientes.empleado_id_lt">EMPLEADO</label>
                                     {!! Form::select("clientes.empleado_id", $list1["Empleado"], "{{ @(Request::input('q')['clientes.empleado_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[clientes.empleado_id_lt]", "id"=>"q_clientes.empleado_id_lt", "style"=>"width:100%;" )) !!}
                             </div>
-                            
+                            <div class="form-group col-md-4">
+                                <label for="q_clientes.fec_registro_mayorq">FECHA REGISTRO ENTRE</label>
+                                    <input class="form-control input-sm fecha" type="search" value="{{ @(Request::input('q')['clientes.fec_registro_mayorq']) ?: '' }}" name="q[clientes.fec_registro_mayorq]" id="q_clientes.fec_registro_mayorq" />
+                                <label for="q_clientes.fec_registro_menorq">Y</label>
+                                    <input class="form-control input-sm fecha" type="search" value="{{ @(Request::input('q')['clientes.fec_registro_menorq']) ?: '' }}" name="q[clientes.fec_registro_menorq]" id="q_clientes.fec_registro_menorq"  />
+                            </div>
 
                             <div class="form-group">
                                 <div class="col-sm-10 col-sm-offset-2">
@@ -203,7 +208,11 @@
                                 <td>{{$cliente->cliente->nombre2}}</td>
                                 <td>{{$cliente->cliente->ape_paterno}}</td>
                                 <td>{{$cliente->cliente->ape_materno}}</td>
-                                <td>{{$cliente->stSeguimiento->name}}</td>
+                                <td>
+                                    <span class="label" style="background:{{$cliente->stSeguimiento->color}};">
+                                        {{$cliente->stSeguimiento->name}}
+                                    </span>
+                                </td>
                                 <td>{{$cliente->cliente->stCliente->name}}</td>
                                 <td>
                                 @if(isset($cliente->cliente->plantel))
@@ -253,13 +262,14 @@
         // assuming the controls you want to attach the plugin to
           // have the "datepicker" class set
           //Campo de fecha
-          $('#q_fec_registro_cont').Zebra_DatePicker({
+          $('.fecha').Zebra_DatePicker({
             days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
             months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
             readonly_element: false,
             lang_clear_date: 'Limpiar',
             show_select_today: 'Hoy',
           });  
+            
        
         });
 
