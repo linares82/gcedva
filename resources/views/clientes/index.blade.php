@@ -155,7 +155,7 @@
                                 <label for="q_clientes.fec_registro_mayorq">FECHA REGISTRO ENTRE</label>
                                     <input class="form-control input-sm fecha" type="search" value="{{ @(Request::input('q')['clientes.fec_registro_mayorq']) ?: '' }}" name="q[clientes.fec_registro_mayorq]" id="q_clientes.fec_registro_mayorq" />
                                 <label for="q_clientes.fec_registro_menorq">Y</label>
-                                    <input class="form-control input-sm fecha" type="search" value="{{ @(Request::input('q')['clientes.fec_registro_menorq']) ?: '' }}" name="q[clientes.fec_registro_menorq]" id="q_clientes.fec_registro_menorq"  />
+                                    <input class="form-control input-sm fecha1" type="search" value="{{ @(Request::input('q')['clientes.fec_registro_menorq']) ?: '' }}" name="q[clientes.fec_registro_menorq]" id="q_clientes.fec_registro_menorq"  />
                             </div>
 
                             <div class="form-group">
@@ -270,7 +270,26 @@
             show_select_today: 'Hoy',
           });  
             
-       
+          $('.fecha1').Zebra_DatePicker({
+            days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
+            months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+            readonly_element: false,
+            lang_clear_date: 'Limpiar',
+            show_select_today: 'Hoy',
+          });  
+          
+          var d = new Date();
+
+            var month = d.getMonth()+1;
+            var day = d.getDate();
+
+            var output2 = d.getFullYear() + '/' +
+                (month<10 ? '0' : '') + month + '/' +
+                (day<10 ? '0' : '') + day;
+            var output1 = d.getFullYear() + '/' +
+                (month<10 ? '0' : '') + month + '/01';
+          $('.fecha').val(output1);
+          $('.fecha1').val(output2);
         });
 
 
