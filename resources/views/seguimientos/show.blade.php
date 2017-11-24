@@ -166,6 +166,50 @@
                 </div>
             </div>
         </div>
+<!--        Inicia timeline-->
+		
+        @if(isset($actividades))
+        
+		<div class="row">
+            <div class="col-md-12">
+                <ul class="timeline">
+                    @foreach($actividades as $a)
+					
+						<li class="time-label">
+                            <span class="bg-red">
+                              {{$a->fecha }}
+                            </span>
+                        </li>
+                        <li>
+                            @if($a->tarea=='Seguimiento')
+                                <i class="fa  fa-check-square-o bg-blue"></i>
+                            @elseif($a->tarea=='Aviso')
+                                <i class="fa fa-envelope bg-green"></i>
+                            @else
+                                <i class="fa fa-tasks bg-orange"></i>
+                            @endif
+
+
+                            <div class="timeline-item">
+                              <span class="time"><i class="fa fa-clock-o"></i> {{$a->hora }}</span>
+                              <h3 class="timeline-header"><strong>Actividad:</strong> {{$a->tarea }}</h3>
+                              <div class="timeline-body">
+                                <b>{{$a->asunto}}</b> : {{$a->detalle }}
+                              </div>
+                            </div>
+                        </li>
+                    @endforeach
+
+                    <!-- END timeline item -->
+                    <li>
+                      <i class="fa fa-clock-o bg-gray"></i>
+                    </li>
+                  </ul>    
+    <!--        Termina time line-->
+            </div>
+        </div>
+        
+        @endif
         <div class="row">
         </div>
         <a class="btn btn-link" href="{{ route('clientes.index', $seguimiento->cliente_id) }}"><i class="glyphicon glyphicon-backward"></i>  Regresar</a>

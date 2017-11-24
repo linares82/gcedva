@@ -2,12 +2,12 @@
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-
 use App\Seguimiento;
 use App\Empleado;
 use App\Cliente;
 use App\StSeguimiento;
 use App\AsignacionTarea;
+use App\Hactividade;
 use App\Aviso;
 use Illuminate\Http\Request;
 use Auth;
@@ -93,9 +93,11 @@ class SeguimientosController extends Controller {
 					->where('seguimiento_id', '=', $seguimiento->id)
 					->where('avisos.activo', '=', '1')
 					->get();
-		//$dias=round((strtotime($a->fecha)-strtotime(date('Y-m-d')))/86400);
+		$actividades=Hactividade::where('seguimiento_id', '=', $seguimiento->id)->get();
+                //dd($actividades->toArray());
+                //$dias=round((strtotime($a->fecha)-strtotime(date('Y-m-d')))/86400);
 		//dd($seguimiento);
-		return view('seguimientos.show', compact('seguimiento', 'sts', 'asignacionTareas', 'avisos'))
+		return view('seguimientos.show', compact('seguimiento', 'sts', 'asignacionTareas', 'avisos', 'actividades'))
 					->with( 'list', AsignacionTarea::getListFromAllRelationApps() );
 	}
 
@@ -174,8 +176,15 @@ class SeguimientosController extends Controller {
 		$input['usu_mod_id']=Auth::user()->id;
 		//update data
 		$seguimiento=$seguimiento->find($id);
+                
 		$seguimiento->update( $input );
-
+                if($seguimiento->st_seguimiento_id==2){
+                    $c=Cliente::find($seguimiento->cliente_id);
+                    //dd($c->toArray());
+                    $st=DB::table('params')->where('llave', 'st_cliente_final')->first();
+                    $c->st_cliente_id=$st->valor;
+                    $c->save();
+                }
 		return redirect()->route('seguimientos.show', $seguimiento->cliente_id)->with('message', 'Registro Actualizado.');
 	}
 
@@ -494,24 +503,25 @@ class SeguimientosController extends Controller {
 		$seguimientos=Seguimiento::select('cve_plantel as Plantel', 'esp.name as Especialidad','n.name as Nivel',
 		'g.name as Grado', 'seguimientos.mes as Mes', 'm.name as medio',
 		DB::raw('concat(e.nombre," ", e.ape_paterno," ", e.ape_materno) as Empleado'), 'st.name as Estatus',
-		'st.id as st_contar','esp.meta as Meta')
-								->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
-								->join('empleados as e', 'e.id', '=', 'c.empleado_id')
-								->join('plantels as p', 'p.id', '=', 'c.plantel_id')
-								->join('especialidads as esp', 'esp.id', '=', 'c.especialidad_id')
-								->join('nivels as n', 'n.id', '=', 'c.nivel_id')
-								->join('grados as g', 'g.id', '=', 'c.grado_id')
-								->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
-								->join('medios as m', 'm.id', '=', 'c.medio_id')
-								->where('c.plantel_id', '>=', $input['plantel_f'])
-								->where('c.plantel_id', '<=', $input['plantel_t'])
-								//->where('c.especialidad_id', '=', $input['especialidad_f'])
-								//->where('seguimientos.st_seguimiento_id', '=', '2')
-								->whereBetween('seguimientos.created_at', [$input['fecha_f'], $input['fecha_t']])
-								->orderBy('Plantel')
-								//->groupBy('esp.meta','e.nombre', 'e.ape_paterno', 'e.ape_materno')
-								->get();
-		
+		'st.id as st_contar','esp.meta as Meta', 'u.name as Usuario')
+                ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
+                ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
+                ->join('users as u', 'u.id', '=', 'e.user_id')
+                ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
+                ->join('especialidads as esp', 'esp.id', '=', 'c.especialidad_id')
+                ->join('nivels as n', 'n.id', '=', 'c.nivel_id')
+                ->join('grados as g', 'g.id', '=', 'c.grado_id')
+                ->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
+                ->join('medios as m', 'm.id', '=', 'c.medio_id')
+                ->where('c.plantel_id', '>=', $input['plantel_f'])
+                ->where('c.plantel_id', '<=', $input['plantel_t'])
+                //->where('c.especialidad_id', '=', $input['especialidad_f'])
+                //->where('seguimientos.st_seguimiento_id', '=', '2')
+                ->whereBetween('seguimientos.created_at', [$input['fecha_f'], $input['fecha_t']])
+                ->orderBy('Plantel')
+                //->groupBy('esp.meta','e.nombre', 'e.ape_paterno', 'e.ape_materno')
+                ->get();
+		//dd($seguimientos->toArray());
 		//dd($seguimientos->toArray());
 			/*PDF::setOptions(['defaultFont' => 'arial']);
 			$pdf = PDF::loadView('seguimientos.reportes.seguimientosXespecialidadGr', array('seguimientos'=>$seguimientos, 'fecha'=>$fecha, 'datos'=>json_encode($datos)))
@@ -527,5 +537,22 @@ class SeguimientosController extends Controller {
 				});
 			})->export('xls');
 			*/
+	}
+        
+        public function analitica_actividades()
+	{   
+            $fecha_inicio= date ( 'Y-m-j' , strtotime ( '-8 day' , strtotime ( date('Y-m-j') ) ) );
+            //dd($fecha_inicio);
+            $ds_actividades=DB::table('hactividades as has')
+                        ->select('p.razon as plantel', DB::raw('concat(e.nombre,e.ape_paterno,e.ape_materno) as empleado'),
+                                DB::raw('concat(c.nombre,c.ape_paterno,c.ape_materno) as cliente'),
+                                'has.tarea', 'has.fecha', 'has.asunto', 'has.detalle')
+                        ->join('clientes as c', 'c.id', '=', 'has.cliente_id')
+                        ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
+                        ->join('plantels as p', 'p.id', '=', 'e.plantel_id')
+                        ->where('has.fecha', '>', $fecha_inicio)
+                        ->get();
+            return view('seguimientos.reportes.analitica_actividades')
+                        ->with('actividades', json_encode($ds_actividades));
 	}
 }

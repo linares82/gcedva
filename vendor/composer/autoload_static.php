@@ -13,21 +13,21 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
         'c964ee0ededf28c96ebd9db5099ef910' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
-        'b067bc7112e384b61c701452d53a14a8' => __DIR__ . '/..' . '/mtdowling/jmespath.php/src/JmesPath.php',
         'ddc0a4d7e61c0286f0f8593b1903e894' => __DIR__ . '/..' . '/clue/stream-filter/src/functions.php',
+        '8cff32064859f4559445b89279f3199c' => __DIR__ . '/..' . '/php-http/message/src/filters.php',
+        'b067bc7112e384b61c701452d53a14a8' => __DIR__ . '/..' . '/mtdowling/jmespath.php/src/JmesPath.php',
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
         '8a9dc1de0ca7e01f3e08231539562f61' => __DIR__ . '/..' . '/aws/aws-sdk-php/src/functions.php',
-        '8cff32064859f4559445b89279f3199c' => __DIR__ . '/..' . '/php-http/message/src/filters.php',
         '2c102faa651ef8ea5874edb585946bce' => __DIR__ . '/..' . '/swiftmailer/swiftmailer/lib/swift_required.php',
         'bd9634f2d41831496de0d3dfe4c94881' => __DIR__ . '/..' . '/symfony/polyfill-php56/bootstrap.php',
-        'f0906e6318348a765ffb6eb24e0d0938' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Foundation/helpers.php',
-        '58571171fd5812e6e447dce228f52f4d' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Support/helpers.php',
         'bccfaf6207f67190a92f35585e9a78b2' => __DIR__ . '/..' . '/twilio/sdk/Services/Twilio.php',
         'f18cc91337d49233e5754e93f3ed9ec3' => __DIR__ . '/..' . '/laravelcollective/html/src/helpers.php',
         '017b24472353920ed42bb364f7653c43' => __DIR__ . '/..' . '/propaganistas/laravel-phone/src/helpers.php',
         'e7223560d890eab89cda23685e711e2c' => __DIR__ . '/..' . '/psy/psysh/src/Psy/functions.php',
         'e803af0597ea9e5b518c7d090fb85601' => __DIR__ . '/..' . '/arcanedev/support/constants.php',
         '5323a5cb5bb1bab9b2f24566beed262a' => __DIR__ . '/..' . '/arcanedev/support/helpers.php',
+        'f0906e6318348a765ffb6eb24e0d0938' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Foundation/helpers.php',
+        '58571171fd5812e6e447dce228f52f4d' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Support/helpers.php',
         '4a1f389d6ce373bda9e57857d3b61c84' => __DIR__ . '/..' . '/barryvdh/laravel-debugbar/src/helpers.php',
         'd04e9322f14ab3e66b5b68c6d1e15433' => __DIR__ . '/..' . '/arcanedev/log-viewer/constants.php',
         '24be6d98d7c305f36699ba4e34b6df3c' => __DIR__ . '/..' . '/arcanedev/log-viewer/helpers.php',
@@ -50,7 +50,6 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         array (
             'Zizaco\\Entrust\\' => 15,
             'Zenapply\\Sms\\' => 13,
-            'Zalazdi\\LaravelImap\\' => 20,
         ),
         'X' => 
         array (
@@ -59,7 +58,6 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'W' => 
         array (
             'Webmozart\\Assert\\' => 17,
-            'Webklex\\IMAP\\' => 13,
             'Watson\\Validating\\' => 18,
         ),
         'T' => 
@@ -102,7 +100,6 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
             'Prettus\\Validator\\' => 18,
             'Prettus\\Repository\\' => 19,
             'PhpParser\\' => 10,
-            'PhpImap\\' => 8,
         ),
         'M' => 
         array (
@@ -209,10 +206,6 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         array (
             0 => __DIR__ . '/..' . '/leadthread/laravel-sms/src',
         ),
-        'Zalazdi\\LaravelImap\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/zalazdi/laravel-imap/src',
-        ),
         'XdgBaseDir\\' => 
         array (
             0 => __DIR__ . '/..' . '/dnoegel/php-xdg-base-dir/src',
@@ -220,10 +213,6 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'Webmozart\\Assert\\' => 
         array (
             0 => __DIR__ . '/..' . '/webmozart/assert/src',
-        ),
-        'Webklex\\IMAP\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/webklex/laravel-imap/src/IMAP',
         ),
         'Watson\\Validating\\' => 
         array (
@@ -344,10 +333,6 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'PhpParser\\' => 
         array (
             0 => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser',
-        ),
-        'PhpImap\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/php-imap/php-imap/src/PhpImap',
         ),
         'Monolog\\' => 
         array (
@@ -590,6 +575,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
     );
 
     public static $classMap = array (
+        'AddColorStSeguimientoTable' => __DIR__ . '/../..' . '/database/migrations/2017_11_14_164248_add_color_st_seguimiento_table.php',
         'AddDatesLectivoTable' => __DIR__ . '/../..' . '/database/migrations/2017_06_16_195301_Add_Dates_Lectivo_Table.php',
         'AddEspecialidadCombosClientesTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_12_134513_add_especialidad_combos_clientes_table.php',
         'AddEspecialidadNivelGradoTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_11_143725_add_especialidad_nivel_grado_table.php',
@@ -631,6 +617,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'CreateGradosTable' => __DIR__ . '/../..' . '/database/migrations/2017_05_02_203037_create_grados_table.php',
         'CreateGruposTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_17_165652_create_grupos_table.php',
         'CreateHacademicasTable' => __DIR__ . '/../..' . '/database/migrations/2017_09_18_170010_create_hacademicas_table.php',
+        'CreateHactividadesTable' => __DIR__ . '/../..' . '/database/migrations/2017_11_09_175138_create_hactividades_table.php',
         'CreateHorariosTable' => __DIR__ . '/../..' . '/database/migrations/2017_09_12_093259_create_horarios_table.php',
         'CreateHsSeguimientosTable' => __DIR__ . '/../..' . '/database/migrations/2017_10_11_090810_create_hs_seguimientos_table.php',
         'CreateInscripcionsTable' => __DIR__ . '/../..' . '/database/migrations/2017_09_06_133842_create_inscripcions_table.php',

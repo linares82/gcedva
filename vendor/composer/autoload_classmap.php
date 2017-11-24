@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'AddColorStSeguimientoTable' => $baseDir . '/database/migrations/2017_11_14_164248_add_color_st_seguimiento_table.php',
     'AddDatesLectivoTable' => $baseDir . '/database/migrations/2017_06_16_195301_Add_Dates_Lectivo_Table.php',
     'AddEspecialidadCombosClientesTable' => $baseDir . '/database/migrations/2017_08_12_134513_add_especialidad_combos_clientes_table.php',
     'AddEspecialidadNivelGradoTable' => $baseDir . '/database/migrations/2017_08_11_143725_add_especialidad_nivel_grado_table.php',
@@ -47,6 +48,7 @@ return array(
     'CreateGradosTable' => $baseDir . '/database/migrations/2017_05_02_203037_create_grados_table.php',
     'CreateGruposTable' => $baseDir . '/database/migrations/2017_08_17_165652_create_grupos_table.php',
     'CreateHacademicasTable' => $baseDir . '/database/migrations/2017_09_18_170010_create_hacademicas_table.php',
+    'CreateHactividadesTable' => $baseDir . '/database/migrations/2017_11_09_175138_create_hactividades_table.php',
     'CreateHorariosTable' => $baseDir . '/database/migrations/2017_09_12_093259_create_horarios_table.php',
     'CreateHsSeguimientosTable' => $baseDir . '/database/migrations/2017_10_11_090810_create_hs_seguimientos_table.php',
     'CreateInscripcionsTable' => $baseDir . '/database/migrations/2017_09_06_133842_create_inscripcions_table.php',

@@ -8,11 +8,15 @@ use App\Observers\EmpleadoObserver;
 use App\Observers\AlumnoObserver;
 use App\Observers\InscripcionObserver;
 use App\Observers\SeguimientoObserver;
+use App\Observers\AsignacionTareaObserver;
+use App\Observers\AvisoObserver;
 use App\Cliente;
 use App\Empleado;
 use App\Alumno;
 use App\Inscripcion;
 use App\Seguimiento;
+use App\AsignacionTarea;
+use App\Aviso;
 use Studio\Totem\Totem;
 use Auth;
 
@@ -31,6 +35,8 @@ class AppServiceProvider extends ServiceProvider
         Alumno::observe(AlumnoObserver::class);
         Inscripcion::observe(InscripcionObserver::class);
         Seguimiento::observe(SeguimientoObserver::class);
+        AsignacionTarea::observe(AsignacionTareaObserver::class);
+        Aviso::observe(AvisoObserver::class);
         Totem::auth(function($request) {
             // return true / false . For e.g.
             return Auth::check();
