@@ -22,7 +22,7 @@ class AlertaFinContrato extends Command
      *
      * @var string
      */
-    protected $description = 'Revisa fechas de fin de contrato y envia arletas si esta activa la misma';
+    protected $description = 'Revisa fechas de fin de contrato y envia alertas si esta activa la misma';
 
     /**
      * Create a new command instance.

@@ -18,7 +18,8 @@ class Kernel extends ConsoleKernel
         Commands\EnviarSms::class,
         Commands\AlertaFinContrato::class,
         Commands\Imap::class,
-        Commands\CambioEstatus::class,
+        //Commands\CambioEstatus::class,
+        Commands\CambiarEstatus::class,
     ];
 
     /**
