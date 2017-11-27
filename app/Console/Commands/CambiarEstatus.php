@@ -3,7 +3,12 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Eloquent;
 use DB;
+use App\Hactividade;
+use App\Seguimiento;
+use Auth;
+use Carbon\Carbon;
 
 class CambiarEstatus extends Command
 {
