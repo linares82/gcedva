@@ -16,6 +16,7 @@ use App\Municipio;
 use App\PivotDocCliente;
 use App\Preguntum;
 use App\Param;
+use App\Plantilla;
 use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updateCliente;
@@ -25,7 +26,7 @@ use Sms;
 use Session;
 use Hash;
 use DB;
-
+use Excel;
 //use App\Mail\CorreoBienvenida as Envia_mail;
 
 class ClientesController extends Controller {
@@ -97,8 +98,9 @@ class ClientesController extends Controller {
         //$input['plantelplantel_id']=$empleado->plantel->id;
         $input['usu_alta_id'] = Auth::user()->id;
         $input['usu_mod_id'] = Auth::user()->id;
+        $param=Param::where('llave', '=', 'msj_text')->first();
         if ($input['cve_cliente'] == "") {
-            $input['cve_cliente'] = 'Codigo: ' . substr(Hash::make(rand(0, 1000)), 2, 8) . '. Grupo JESADI, te da la bienvenida y te felicita por dar el primer paso hacia tu futuro. Revisa tu correo y conoce los beneficios';
+            $input['cve_cliente'] = 'Codigo: ' . substr(Hash::make(rand(0, 1000)), 2, 8) . $param->valor;
         }
         if (!isset($input['promociones'])) {
             $input['promociones'] = 0;
@@ -467,12 +469,13 @@ class ClientesController extends Controller {
         //dd($_REQUEST);
         if ($request->ajax()) {
             try {
-
+                $r = Param::where('llave', '=', 'sms')->first();
+                $no= Param::where('llave', '=', 'num_twilio')->first();
                 $to = '+52' . e($request->input('tel_cel'));
                 //dd($to);
                 $message = e($request->input('cve_cliente'));
-                $from = "+13093196909";
-                $r = Param::where('llave', '=', 'sms')->first();
+                $from = $no->valor;
+                
                 //dd($r->valor);
                 if ($r->valor == 'activo') {
                     if (Sms::send($message, $to, $from)) {
@@ -540,16 +543,24 @@ class ClientesController extends Controller {
         //dd($_REQUEST);
         $r = 0;
         $cli = Cliente::find(e($request->id));
+        $pla = Plantilla::find(2);
+        //dd($pla);
+        $p=array();
+        $p['img1']=$pla->img1;
+        $p['plantilla']=$pla->plantilla;
+        $p['id']=$cli->id;
+        //dd($pla);
+        
         if ($request->ajax()) {
             try {
                 $r = Param::where('llave', '=', 'correo_electronico')->first();
                 if ($r->valor == 'activo') {
-                    \Mail::send('emails.2', $cli->toArray(), function($message) use ($request) {
+                    \Mail::send('emails.7', $p, function($message) use ($request) {
                         $message->to(e($request->mail), e($request->nombre) . " " . e($request->ape_paterno) . " " . e($request->ape_materno));
                         $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
                         $message->subject("Bienvenido");
                     });
-
+                    
                     $input2['usu_envio_id'] = Auth::user()->id;
                     $input2['cliente_id'] = e($request->input('id'));
                     $input2['fecha_envio'] = date("Y/m/d");
@@ -634,6 +645,40 @@ class ClientesController extends Controller {
                 return $r;
             }
         }
+    }
+    
+    public function descargaClientes(){
+        
+        $clientes = Cliente::select('clientes.fec_registro as FechaRegistro', 'clientes.nombre as PrimerNombre', 
+                        'clientes.nombre2 as SegundoNombre', 'clientes.ape_paterno as ApellidoPaterno', 'clientes.ape_materno as ApellidoMaterno',
+                        'clientes.tel_fijo as Telefono', 'clientes.tel_cel as Celular', 'clientes.mail as Email', 
+                        'clientes.escuela_procedencia as EscuelaProcedencia', 'm.name as medio as Medio',
+                        DB::raw('concat(e.nombre, " ",e.ape_paterno, " ",e.ape_materno) as Asesor'))
+                        ->join('medios as m', 'm.id', '=', 'clientes.medio_id')
+                        ->join('empleados as e', 'e.id', '=', 'clientes.empleado_id')
+                        //->limit(20)
+                        ->get();
+        //dd($clientes);
+        /*$clientes_array=array();
+        $encabezados=array('Fecha', 'P. Nombre', 'S. Nombre', 'A. Paterno', 'A. Materno', 'Teléfono', 
+                        'Celular', 'Mail', 'Escuela Procedencia', 'Medio');
+        array_push($clientes_array, $encabezados);
+        //dd($clientes_array);
+         
+        foreach($clientes as $c){
+            //$clientes_array=$c->toArray();
+            array_push($clientes_array, $c);
+        }
+        dd($clientes_array);
+         * 
+         */
+        //dd("excel inicia");
+        Excel::create('Clientes', function($excel) use ($clientes) {
+            $excel->sheet('Clientes', function($sheet) use ($clientes) {
+                $sheet->fromArray($clientes->toArray());
+            });
+        })->download('xlsx');
+        dd("excel terminado");
     }
 
 }

@@ -541,6 +541,35 @@ class SeguimientosController extends Controller {
         
         public function analitica_actividades()
 	{   
+            	return view('seguimientos.reportes.analitica_actividades')
+			->with( 'list', Cliente::getListFromAllRelationApps());
+	}
+        
+        public function analitica_actividadesr(Request $request)
+	{
+            $input=$request->all();
+            
+            $fecha_inicio= date ( 'Y-m-j' , strtotime ( '-8 day' , strtotime ( date('Y-m-j') ) ) );
+            //dd($fecha_inicio);
+            $ds_actividades=DB::table('hactividades as has')
+                        ->select('p.razon as plantel', DB::raw('concat(e.nombre,e.ape_paterno,e.ape_materno) as empleado'),
+                                DB::raw('concat(c.nombre,c.ape_paterno,c.ape_materno) as cliente'),
+                                'has.tarea', 'has.fecha', 'has.asunto', 'has.detalle')
+                        ->join('clientes as c', 'c.id', '=', 'has.cliente_id')
+                        ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
+                        ->join('plantels as p', 'p.id', '=', 'e.plantel_id')
+                        ->where('has.fecha', '>=', $input['fecha_f'])
+                        ->where('has.fecha', '<=', $input['fecha_t'])
+                        ->where('c.plantel_id', '>=', $input['plantel_f'])
+                        ->where('c.plantel_id', '<=', $input['plantel_t'])
+                        ->get();
+            return view('seguimientos.reportes.analitica_actividadesr')
+                        ->with('actividades', json_encode($ds_actividades));
+	}
+        
+        public function analitica_actividadesf()
+	{
+            
             $fecha_inicio= date ( 'Y-m-j' , strtotime ( '-8 day' , strtotime ( date('Y-m-j') ) ) );
             //dd($fecha_inicio);
             $ds_actividades=DB::table('hactividades as has')
@@ -552,7 +581,7 @@ class SeguimientosController extends Controller {
                         ->join('plantels as p', 'p.id', '=', 'e.plantel_id')
                         ->where('has.fecha', '>', $fecha_inicio)
                         ->get();
-            return view('seguimientos.reportes.analitica_actividades')
+            return view('seguimientos.reportes.analitica_actividadesr')
                         ->with('actividades', json_encode($ds_actividades));
 	}
 }

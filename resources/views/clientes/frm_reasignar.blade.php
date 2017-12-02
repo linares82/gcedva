@@ -150,7 +150,7 @@
                 }
             });
       }
-      $('#plantel_id-field').change(function(){
+      /*$('#plantel_id-field').change(function(){
           getCmbEmpleados();
       });
       
@@ -185,7 +185,7 @@
                   }
               });       
       }
-      
+      */
       
     });
    

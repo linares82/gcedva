@@ -32,21 +32,15 @@
                         </div>
                     </div>
                     <div class="box-body">
-                        <div class="form-group col-md-4 @if($errors->has('cve_cliente')) has-error @endif">
-                            {!! Form::hidden("id", null, array("class" => "form-control", "id" => "id-field")) !!}
-                            <label for="cve_cliente-field">codigo SMS(Max. 160 catacteres)</label><div id="contador"></div>
-                            {!! Form::textArea("cve_cliente", null, array("class" => "form-control", "id" => "cve_cliente-field", 'rows'=>'3', 'maxlength'=>'160')) !!}
-                            @if($errors->has("cve_cliente"))
-                            <span class="help-block">{{ $errors->first("cve_cliente") }}</span>
+                        
+                         <div class="form-group col-md-4 @if($errors->has('escuela_procedencia')) has-error @endif">
+                            <label for="escuela_procedencia-field">Escuela Procedencia</label><div id="contador"></div>
+                            {!! Form::text("escuela_procedencia", null, array("class" => "form-control", "id" => "escuela_procedencia-field")) !!}
+                            @if($errors->has("escuela_procedencia"))
+                            <span class="help-block">{{ $errors->first("escuela_procedencia") }}</span>
                             @endif
                         </div>
-                        <div class="form-group col-md-4 @if($errors->has('matricula')) has-error @endif">
-                            <label for="matricula-field">Matricula</label><div id="contador"></div>
-                            {!! Form::text("matricula", null, array("class" => "form-control", "id" => "matricula-field")) !!}
-                            @if($errors->has("matricula"))
-                            <span class="help-block">{{ $errors->first("matricula") }}</span>
-                            @endif
-                        </div>
+                        
                         <div class="form-group col-md-4 @if($errors->has('nombre')) has-error @endif">
                             <label for="nombre-field">Primer nombre</label>
                             {!! Form::text("nombre", null, array("class" => "form-control", "id" => "nombre-field")) !!}
@@ -90,7 +84,14 @@
                             <span class="help-block">{{ $errors->first("st_cliente_id") }}</span>
                             @endif
                         </div>
-                        <div class="form-group col-md-4 @if($errors->has('empleado_id')) has-error @endif" style="clear:left;">
+                        <div class="form-group col-md-4 @if($errors->has('plantel_id')) has-error @endif">
+                            <label for="plantel_id-field">Plantel</label>
+                            {!! Form::select("plantel_id", $list["Plantel"], null, array("class" => "form-control select_seguridad", "id" => "plantel_id-field")) !!}
+                            @if($errors->has("plantel_id"))
+                            <span class="help-block">{{ $errors->first("plantel_id") }}</span>
+                            @endif
+                        </div>
+                        <div class="form-group col-md-4 @if($errors->has('empleado_id')) has-error @endif">
                             <label for="empleado_id-field">Empleado</label>
                             {!! Form::select("empleado_id", $empleados, null, array("class" => "form-control select_seguridad", "id" => "empleado_id-field")) !!}
                             <div id='loading3' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
@@ -98,18 +99,29 @@
                             <span class="help-block">{{ $errors->first("empleado_id") }}</span>
                             @endif
                         </div>
-                        <div class="form-group col-md-4 @if($errors->has('plantel_id')) has-error @endif">
-                            <label for="plantel_id-field">Plantel</label>
-                            {!! Form::select("plantel_id", $list["Plantel"], null, array("class" => "form-control select_seguridad", "id" => "plantel_id-field", 'readonly'=>'readonly')) !!}
-                            @if($errors->has("plantel_id"))
-                            <span class="help-block">{{ $errors->first("plantel_id") }}</span>
-                            @endif
-                        </div>
+
                         <div class="form-group col-md-4 @if($errors->has('empresa_id')) has-error @endif">
                             <label for="empresa_id-field">Empresa</label>
                             {!! Form::select("empresa_id", $list["Empresa"], null, array("class" => "form-control select_seguridad", "id" => "empresa_id-field", 'readonly'=>'readonly')) !!}
                             @if($errors->has("empresa_id"))
                             <span class="help-block">{{ $errors->first("empresa_id") }}</span>
+                            @endif
+                        </div>
+                        
+                        <div class="form-group col-md-4 @if($errors->has('cve_cliente')) has-error @endif">
+                            {!! Form::hidden("id", null, array("class" => "form-control", "id" => "id-field")) !!}
+                            <label for="cve_cliente-field">codigo SMS(Max. 160 catacteres)</label><div id="contador"></div>
+                            {!! Form::textArea("cve_cliente", null, array("class" => "form-control", "id" => "cve_cliente-field", 'rows'=>'3', 'maxlength'=>'160')) !!}
+                            @if($errors->has("cve_cliente"))
+                            <span class="help-block">{{ $errors->first("cve_cliente") }}</span>
+                            @endif
+                        </div>
+                        
+                        <div class="form-group col-md-4 @if($errors->has('ciclo_id')) has-error @endif">
+                            <label for="ciclo_id-field">Ciclo</label>
+                            {!! Form::select("ciclo_id", $list["Ciclo"], null, array("class" => "form-control select_seguridad", "id" => "ciclo_id-field")) !!}
+                            @if($errors->has("ciclo_id"))
+                            <span class="help-block">{{ $errors->first("ciclo_id") }}</span>
                             @endif
                         </div>
                     </div>
@@ -259,7 +271,7 @@
                             <span class="help-block">{{ $errors->first("especialidad") }}</span>
                             @endif
                         </div>
-                        <div class="form-group col-md-4 @if($errors->has('nivel_id')) has-error @endif">
+                        <div class="form-group col-md-2 @if($errors->has('nivel_id')) has-error @endif">
                             <label for="nivel_id-field">Nivel</label>
                             {!! Form::select("nivel_id", $list["Nivel"], null, array("class" => "form-control select_seguridad", "id" => "nivel_id-field")) !!}
                             <div id='loading11' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
@@ -275,6 +287,14 @@
                             <span class="help-block">{{ $errors->first("grado_id") }}</span>
                             @endif
                         </div>
+                        <div class="form-group col-md-2 @if($errors->has('turno_id')) has-error @endif">
+                            <label for="turno_id-field">Turno</label>
+                            {!! Form::select("turno_id", $list["Turno"], null, array("class" => "form-control select_seguridad", "id" => "turno_id-field")) !!}
+                            <div id='loading12' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
+                            @if($errors->has("turno_id"))
+                            <span class="help-block">{{ $errors->first("turno_id") }}</span>
+                            @endif
+                        </div>
                         @permission('inscripcions.create')
                         <div class="form-group col-md-1 @if($errors->has('grado_id')) has-error @endif">
                             <input type="button" class="btn btn-primary" value="Inscribir" onclick="InscribirCliente(1)" />
@@ -288,7 +308,7 @@
                             <span class="help-block">{{ $errors->first("especialidad") }}</span>
                             @endif
                         </div>
-                        <div class="form-group col-md-4 @if($errors->has('curso_id')) has-error @endif">
+                        <div class="form-group col-md-2 @if($errors->has('curso_id')) has-error @endif">
                             <label for="curso_id-field">Nivel 2</label>
                             {!! Form::select("curso_id", $list["Nivel"], null, array("class" => "form-control select_seguridad", "id" => "curso_id-field")) !!}
                             <div id='loading20' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
@@ -304,6 +324,14 @@
                             <span class="help-block">{{ $errors->first("municipio_id") }}</span>
                             @endif
                         </div>
+                        <div class="form-group col-md-2 @if($errors->has('turno2_id')) has-error @endif">
+                            <label for="turno2_id-field">Turno</label>
+                            {!! Form::select("turno2_id", $list["Turno"], null, array("class" => "form-control select_seguridad", "id" => "turno2_id-field")) !!}
+                            <div id='loading12' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
+                            @if($errors->has("turno2_id"))
+                            <span class="help-block">{{ $errors->first("turno2_id") }}</span>
+                            @endif
+                        </div>
                         @permission('inscripcions.create')
                         <div class="form-group col-md-1 @if($errors->has('grado_id')) has-error @endif">
                             <input type="button" class="btn btn-primary" value="Inscribir" onclick="InscribirCliente(2)" />
@@ -317,7 +345,7 @@
                             <span class="help-block">{{ $errors->first("especialidad3") }}</span>
                             @endif
                         </div>
-                        <div class="form-group col-md-4 @if($errors->has('diplomado_id')) has-error @endif">
+                        <div class="form-group col-md-2 @if($errors->has('diplomado_id')) has-error @endif">
                             <label for="estado_id-field">Nivel 3</label>
                             {!! Form::select("diplomado_id", $list["Nivel"], null, array("class" => "form-control select_seguridad", "id" => "diplomado_id-field")) !!}
                             <div id='loading22' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
@@ -333,6 +361,14 @@
                             <span class="help-block">{{ $errors->first("subdiplomado_id") }}</span>
                             @endif
                         </div>
+                        <div class="form-group col-md-2 @if($errors->has('turno3_id')) has-error @endif">
+                            <label for="turno3_id-field">Turno</label>
+                            {!! Form::select("turno3_id", $list["Turno"], null, array("class" => "form-control select_seguridad", "id" => "turno3_id-field")) !!}
+                            <div id='loading12' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
+                            @if($errors->has("turno3_id"))
+                            <span class="help-block">{{ $errors->first("turno3_id") }}</span>
+                            @endif
+                        </div>
                         @permission('inscripcions.create')
                         <div class="form-group col-md-1 @if($errors->has('grado_id')) has-error @endif">
                             <input type="button" class="btn btn-primary" value="Inscribir" onclick="InscribirCliente(3)" />
@@ -346,7 +382,7 @@
                             <span class="help-block">{{ $errors->first("especialidad4") }}</span>
                             @endif
                         </div>
-                        <div class="form-group col-md-4 @if($errors->has('otro_id')) has-error @endif">
+                        <div class="form-group col-md-2 @if($errors->has('otro_id')) has-error @endif">
                             <label for="otro_id-field">Nivel 4</label>
                             {!! Form::select("otro_id", $list["Nivel"], null, array("class" => "form-control select_seguridad", "id" => "otro_id-field")) !!}
                             <div id='loading24' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
@@ -360,6 +396,14 @@
                             <div id='loading25' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                             @if($errors->has("subotro_id"))
                             <span class="help-block">{{ $errors->first("subotro_id") }}</span>
+                            @endif
+                        </div>
+                        <div class="form-group col-md-2 @if($errors->has('turno4_id')) has-error @endif">
+                            <label for="turno4_id-field">Turno</label>
+                            {!! Form::select("turno4_id", $list["Turno"], null, array("class" => "form-control select_seguridad", "id" => "turno4_id-field")) !!}
+                            <div id='loading12' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
+                            @if($errors->has("turno4_id"))
+                            <span class="help-block">{{ $errors->first("turno4_id") }}</span>
                             @endif
                         </div>
                         @permission('inscripcions.create')
@@ -484,6 +528,13 @@
         </div>
         <div id="tab3" class="tab-pane">
             <fieldset>
+                <div class="form-group col-md-4 @if($errors->has('matricula')) has-error @endif">
+                    <label for="matricula-field">Matricula</label><div id="contador"></div>
+                    {!! Form::text("matricula", null, array("class" => "form-control", "id" => "matricula-field")) !!}
+                    @if($errors->has("matricula"))
+                    <span class="help-block">{{ $errors->first("matricula") }}</span>
+                    @endif
+                </div>
                 <div class="form-group col-md-4 @if($errors->has('cve_alumno')) has-error @endif">
                     <label for="cve_alumno-field">Clave Alumno</label>
                     {!! Form::text("cve_alumno", null, array("class" => "form-control", "id" => "cve_alumno-field")) !!}
@@ -944,6 +995,10 @@
 <script src="{{ asset ('/bower_components/AdminLTE/plugins/input-mask/jquery.inputmask.phone.extensions.js') }}"></script>
 <script type="text/javascript">
                             $(document).ready(function() {
+                            <?php 
+                            $r=DB::table('params')->where('llave', 'st_cliente_final')->first();
+                            ?>
+                            $("#st_cliente_id-field option[value*={{ $r->valor }}]").prop('disabled',true);
                             collapseTable();
                             $('.header').click(function(){
                             collapseTable();
@@ -1043,7 +1098,7 @@
                             }
 
                             //Asigna el plantel segun el empleado
-                            $('#empleado_id-field').change(function(){
+                            /*$('#empleado_id-field').change(function(){
                             $("#loading3").show();
                             $.get("{{ url('getPlantel')}}",
                             { empleado: $(this).val() },
@@ -1053,6 +1108,43 @@
                                     }
                             );
                             });
+            */
+           /*
+                            $('#plantel_id-field').change(function(){
+                                getCmbEmpleados();
+                            });
+
+                            function getCmbEmpleados(){
+                                //$('#empleado_id_field option:selected').val($('#empleado_id_campo option:selected').val()).change();
+                                var a= $('#frm_cliente').serialize();
+                                    $.ajax({
+                                        url: '{{ route("empleados.getEmpleadosXplantel") }}',
+                                        type: 'GET',
+                                        data: a,
+                                        dataType: 'json',
+                                        beforeSend : function(){$("#loading3").show();},
+                                        complete : function(){$("#loading3").hide();},
+                                        success: function(data){
+                                            //$example.select2("destroy");
+                                            //alert($('#plantel_id-field option:selected').val());
+                                            $('#empleado_id-field').html('');
+                                            //$('#especialidad_id-field').empty();
+                                            $('#empleado_id-field').append($('<option></option>').text('Seleccionar Opción').val('0'));
+                                            
+                                            //alert($('#plantel_id2-field option:selected').val());
+                                            $.each(data, function(i) {
+                                                //alert(data[i].name);
+                                                $('#empleado_id-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].nombre+"<\/option>");
+
+                                            });
+                                            //$('#empleado_id-field').change();
+                                            //$example.select2();
+                                        }
+                                    });       
+                            }
+           */
+           
+           
                             /*
                              $.ajax({
                              url: '{{ url('getPlantel')}}',
@@ -1155,6 +1247,10 @@
                             getCmbGrado2();
                             getCmbGrado3();
                             getCmbGrado4();
+                            getCmbTurno();
+                            getCmbTurno2();
+                            getCmbTurno3();
+                            getCmbTurno4();
                             $('#plantel_id-field').change(function(){
                             getCmbEspecialidad();
                             getCmbEspecialidad2();
@@ -1184,6 +1280,18 @@
                             });
                             $('#otro_id-field').change(function(){
                             getCmbGrado4();
+                            });
+                            $('#grado_id-field').change(function(){
+                            getCmbTurno();
+                            });
+                            $('#subcurso_id-field').change(function(){
+                            getCmbTurno2();
+                            });
+                            $('#subdiplomado_id-field').change(function(){
+                            getCmbTurno3();
+                            });
+                            $('#subotro_id-field').change(function(){
+                            getCmbTurno4();
                             });
                             //fin combos dependientes
 
@@ -1478,8 +1586,102 @@
                                     }
                             });
                             }
-
-
+                            function getCmbTurno(){
+                            //var $example = $("#especialidad_id-field").select2();
+                            var a = $('#frm_cliente').serialize();
+                            $.ajax({
+                            url: '{{ route("turnos.getCmbTurno") }}',
+                                    type: 'GET',
+                                    data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad_id-field option:selected').val() + "&nivel_id=" + $('#nivel_id-field option:selected').val() + "&grado_id=" + $('#grado_id-field option:selected').val() + "&turno_id=" + $('#turno_id-field option:selected').val() + "",
+                                    dataType: 'json',
+                                    beforeSend : function(){$("#loading12").show(); },
+                                    complete : function(){$("#loading12").hide(); },
+                                    success: function(data){
+                                    //alert(data);
+                                    //$example.select2("destroy");
+                                    $('#turno_id-field').html('');
+                                    //$('#especialidad_id-field').empty();
+                                    $('#turno_id-field').append($('<option></option>').text('Seleccionar').val('0'));
+                                    $.each(data, function(i) {
+                                    //alert(data[i].name);
+                                    $('#turno_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
+                                    });
+                                    //$example.select2();
+                                    }
+                            });
+                            }
+                            function getCmbTurno2(){
+                            //var $example = $("#especialidad_id-field").select2();
+                            var a = $('#frm_cliente').serialize();
+                            $.ajax({
+                            url: '{{ route("turnos.getCmbTurno") }}',
+                                    type: 'GET',
+                                    data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad_id-field option:selected').val() + "&nivel_id=" + $('#nivel_id-field option:selected').val() + "&grado_id=" + $('#subcurso_id-field option:selected').val() + "&turno_id=" + $('#turno2_id-field option:selected').val() + "",
+                                    dataType: 'json',
+                                    beforeSend : function(){$("#loading12").show(); },
+                                    complete : function(){$("#loading12").hide(); },
+                                    success: function(data){
+                                    //alert(data);
+                                    //$example.select2("destroy");
+                                    $('#turno2_id-field').html('');
+                                    //$('#especialidad_id-field').empty();
+                                    $('#turno2_id-field').append($('<option></option>').text('Seleccionar').val('0'));
+                                    $.each(data, function(i) {
+                                    //alert(data[i].name);
+                                    $('#turno2_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
+                                    });
+                                    //$example.select2();
+                                    }
+                            });
+                            }
+                            function getCmbTurno3(){
+                            //var $example = $("#especialidad_id-field").select2();
+                            var a = $('#frm_cliente').serialize();
+                            $.ajax({
+                            url: '{{ route("turnos.getCmbTurno") }}',
+                                    type: 'GET',
+                                    data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad_id-field option:selected').val() + "&nivel_id=" + $('#nivel_id-field option:selected').val() + "&grado_id=" + $('#subdiplomado_id-field option:selected').val() + "&turno_id=" + $('#turno3_id-field option:selected').val() + "",
+                                    dataType: 'json',
+                                    beforeSend : function(){$("#loading12").show(); },
+                                    complete : function(){$("#loading12").hide(); },
+                                    success: function(data){
+                                    //alert(data);
+                                    //$example.select2("destroy");
+                                    $('#turno3_id-field').html('');
+                                    //$('#especialidad_id-field').empty();
+                                    $('#turno3_id-field').append($('<option></option>').text('Seleccionar').val('0'));
+                                    $.each(data, function(i) {
+                                    //alert(data[i].name);
+                                    $('#turno3_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
+                                    });
+                                    //$example.select2();
+                                    }
+                            });
+                            }
+                            function getCmbTurno4(){
+                            //var $example = $("#especialidad_id-field").select2();
+                            var a = $('#frm_cliente').serialize();
+                            $.ajax({
+                            url: '{{ route("turnos.getCmbTurno") }}',
+                                    type: 'GET',
+                                    data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad_id-field option:selected').val() + "&nivel_id=" + $('#nivel_id-field option:selected').val() + "&grado_id=" + $('#subotro_id-field option:selected').val() + "&turno_id=" + $('#turno4_id-field option:selected').val() + "",
+                                    dataType: 'json',
+                                    beforeSend : function(){$("#loading12").show(); },
+                                    complete : function(){$("#loading12").hide(); },
+                                    success: function(data){
+                                    //alert(data);
+                                    //$example.select2("destroy");
+                                    $('#turno4_id-field').html('');
+                                    //$('#especialidad_id-field').empty();
+                                    $('#turno4_id-field').append($('<option></option>').text('Seleccionar').val('0'));
+                                    $.each(data, function(i) {
+                                    //alert(data[i].name);
+                                    $('#turno4_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
+                                    });
+                                    //$example.select2();
+                                    }
+                            });
+                            }
 
 
                             //codigo de trabajo del cargador de imagenes
