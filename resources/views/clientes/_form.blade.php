@@ -1098,7 +1098,7 @@
                             }
 
                             //Asigna el plantel segun el empleado
-                            /*$('#empleado_id-field').change(function(){
+                            $('#empleado_id-field').change(function(){
                             $("#loading3").show();
                             $.get("{{ url('getPlantel')}}",
                             { empleado: $(this).val() },
@@ -1108,13 +1108,12 @@
                                     }
                             );
                             });
-            */
-           /*
-                            $('#plantel_id-field').change(function(){
+            
+                            /*$('#plantel_id-field').change(function(){
                                 getCmbEmpleados();
                             });
-
-                            function getCmbEmpleados(){
+                            */
+                            /*function getCmbEmpleados(){
                                 //$('#empleado_id_field option:selected').val($('#empleado_id_campo option:selected').val()).change();
                                 var a= $('#frm_cliente').serialize();
                                     $.ajax({
@@ -1142,7 +1141,7 @@
                                         }
                                     });       
                             }
-           */
+                            */
            
            
                             /*
@@ -1161,7 +1160,7 @@
                             @permission('Icliente.modificarPlantel')
                                     $('#plantel_id-field').prop('disabled', true);
                             @endpermission
-                                    $("#frm_cliente").submit(function() {
+                            $("#frm_cliente").submit(function() {
                             $('#plantel_id-field').prop('disabled', false);
                             return true;
                             });
