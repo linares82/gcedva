@@ -85,6 +85,34 @@ class HomeController extends Controller
                     ->where('c.empleado_id', '=', $e->id)
                     ->where('c.plantel_id', '=', $e->plantel_id)
                     ->count();
+        
+        $plantels=DB::table('plantels as p')->where('id', '>', 0)->select('razon', 'id')->get();
+        $gauge=array();
+        foreach($plantels as $p){
+            $c=Seguimiento::select('p.id','p.razon', 'p.meta_total', 
+                    DB::raw('count(c.nombre) as avance'), DB::raw('((count(c.nombre)*100)/p.meta_total) as p_avance'))
+                    ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
+                    ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
+                    ->join('hactividades as h', 'h.cliente_id', '=', 'c.id')
+                    ->where('h.tarea', '=', 'Seguimiento')
+                    ->where('h.detalle', '=', 'Concretado')
+                    ->where('h.created_at', '>=', $l->inicio)
+                    ->where('h.created_at', '<=', $l->fin)
+                    ->where('c.st_cliente_id', '=', '4')
+                    ->where('p.id', '=', $p->id)
+                    ->groupBy('p.id')
+                    ->groupBy('p.razon')
+                    ->groupBy('p.meta_total')
+                    ->first();
+            if(is_null($c)){
+                array_push($gauge, array('id'=>$p->id,'razon'=>$p->razon,'meta_total'=>0,'avance'=>0, 'p_avance'=>0));
+            }else {
+                array_push($gauge, $c->toArray());
+            }
+        }
+        //dd($a_2);
+        //dd($gauges);
+        
         $fecha=date('Y-m-d');
         $avisos_generales=PivotAvisoGralEmpleado::where('leido','=', 0)
                                     ->where('enviado','=', 1)
@@ -132,7 +160,7 @@ class HomeController extends Controller
             array_push($datos2, array($g->estatus, $g->valor));
         }
         //dd($datos2);
-        return view('home', compact('avisos', 'a_1', 'a_2', 'a_3', 'a_4', 'grafica2','grafica', 'avisos_generales', 'avance'))
+        return view('home', compact('avisos', 'a_1', 'a_2', 'a_3', 'a_4', 'grafica2','grafica', 'avisos_generales', 'avance', 'gauge'))
                     ->with('datos', json_encode($datos))
                     ->with('datos2', json_encode($datos2));
     }

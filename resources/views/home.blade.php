@@ -15,6 +15,7 @@
     <div class="row">
     
     </div>
+        @permission('Wanalitica')
 	<div class="form-group col-md-12 col-sm-12 col-xs-12">
             <div class="box box-primary">
                 <div class="box-header with-border">
@@ -27,6 +28,7 @@
                 </div>
             </div>
         </div>
+        @endpermission
     <div class="row">
         <div class="form-group col-md-6 col-sm-6 col-xs-12" style='display: none'>
             <div class="box box-primary">
@@ -252,7 +254,27 @@
             </div>
         </div>
     </div>
-
+    <div class="row">
+        @permission('WgaugesXplantel')
+        @foreach($gauge as $grf)
+        <div class="form-group col-md-2 col-sm-2 col-xs-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h4 class="box-title">
+                        {{$grf['razon']}}: 
+                    </h4>
+                </div>
+                <div class="box-body">
+                        <div id="velocimetro_{{$grf['id']}}" style="height: 180px;"></div>
+                        Meta del plantel: {{$grf['meta_total']}}
+                        <br/>
+                        Inscritos: {{$grf['avance']}}
+                </div>
+            </div>
+        </div>
+        @endforeach
+        @endpermission
+    </div>
 @endsection
 @push('scripts')
     <script type="text/javascript" src="{{ asset ('/bower_components/AdminLTE/plugins/morris/morris.js') }}"></script>
@@ -263,6 +285,9 @@
         google.charts.setOnLoadCallback(drawChart);
         google.charts.setOnLoadCallback(drawVisualization);
         google.charts.setOnLoadCallback(drawVisualization2);
+        @foreach($gauge as $grf)
+            google.charts.setOnLoadCallback(drawChart_velocimetro{{$grf['id']}});
+        @endforeach
 
         var datos=<?php echo $datos; ?>; 
         console.log(datos);
@@ -330,6 +355,29 @@
             chart.draw(data, options);
 
         }//End Guagace Chart
+
+        //Gaugace Chart
+        @foreach($gauge as $grf)
+        function drawChart_velocimetro{{$grf['id']}}() {
+            var data = google.visualization.arrayToDataTable([
+            ['Label', 'Value'],
+            ['Concretados', {{ $grf['p_avance'] }}],
+            ]);
+
+            var options = {
+            //width: 400, height: 250,
+            greenFrom:90, greenTo: 100,
+            yellowFrom:75, yellowTo: 90,
+            redFrom: 0, redTo: 75,
+            minorTicks: 5
+            };
+
+            var chart = new google.visualization.Gauge(document.getElementById('velocimetro_{{$grf["id"]}}'));
+
+            chart.draw(data, options);
+
+        }//End Guagace Chart
+        @endforeach
 
         /*
         $(function() {
