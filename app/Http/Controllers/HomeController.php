@@ -86,7 +86,7 @@ class HomeController extends Controller
                     ->where('c.plantel_id', '=', $e->plantel_id)
                     ->count();
         
-        $plantels=DB::table('plantels as p')->where('id', '>', 0)->select('razon', 'id')->get();
+        $plantels=DB::table('plantels as p')->where('id', '>', 0)->select('razon', 'id', 'meta_total')->get();
         $gauge=array();
         foreach($plantels as $p){
             $c=Seguimiento::select('p.id','p.razon', 'p.meta_total', 
@@ -105,7 +105,7 @@ class HomeController extends Controller
                     ->groupBy('p.meta_total')
                     ->first();
             if(is_null($c)){
-                array_push($gauge, array('id'=>$p->id,'razon'=>$p->razon,'meta_total'=>0,'avance'=>0, 'p_avance'=>0));
+                array_push($gauge, array('id'=>$p->id,'razon'=>$p->razon,'meta_total'=>$p->meta_total,'avance'=>0, 'p_avance'=>0));
             }else {
                 array_push($gauge, $c->toArray());
             }
