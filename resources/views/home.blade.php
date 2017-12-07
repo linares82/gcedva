@@ -257,7 +257,7 @@
     <div class="row">
         @permission('WgaugesXplantel')
         @foreach($gauge as $grf)
-        <div class="form-group col-md-2 col-sm-2 col-xs-12">
+        <div class="form-group col-lg-2 col-md-3 col-sm-4 col-xs-12">
             <div class="box box-primary">
                 <div class="box-header with-border">
                     <h4 class="box-title">
@@ -265,7 +265,7 @@
                     </h4>
                 </div>
                 <div class="box-body">
-                        <div id="velocimetro_{{$grf['id']}}" style="height: 180px;"></div>
+                        <div id="velocimetro_{{$grf['id']}}" ></div>
                         Meta del plantel: {{$grf['meta_total']}}
                         <br/>
                         Inscritos: {{$grf['avance']}}
