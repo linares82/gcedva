@@ -66,7 +66,10 @@ class InscripcionsController extends Controller {
 	function registrarMaterias($id){
 		$i=Inscripcion::find($id);
 		$materias=Grupo::find($i->grupo_id)->periodoEstudio->materias;
-		$materias_validar=Hacademica::where('grupo_id', '=', $i->grupo_id)->where('grado_id', '=', $i->grado_id)->get();
+		$materias_validar=Hacademica::where('grupo_id', '=', $i->grupo_id)
+                                            ->where('cliente_id', '=', $i->cliente_id)
+                                            ->where('grado_id', '=', $i->grado_id)
+                                            ->get();
 		
 		//dd($materias_validar->count());
 		if($materias_validar->count()==0){
