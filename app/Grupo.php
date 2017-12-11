@@ -74,4 +74,9 @@ class Grupo extends Model
 	public function asistenciasCs() {
 		return $this->hasMany('App\AsistenciasC');
 	}// end
+        
+        public function periodosEstudio()
+        {
+            return $this->belongsToMany('App\PeriodoEstudio','grupo_periodo_estudios', 'grupo_id', 'periodo_estudio_id');
+        }
 }

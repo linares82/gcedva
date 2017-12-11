@@ -4,6 +4,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\Grupo;
+use App\PeriodoEstudio;
 use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updateGrupo;
@@ -47,9 +48,14 @@ class GruposController extends Controller {
 		$input = $request->all();
 		$input['usu_alta_id']=Auth::user()->id;
 		$input['usu_mod_id']=Auth::user()->id;
+                $periodo_estudio=$input['periodo_estudio_id'];
+                $input['periodo_estudio_id']=0;
 
 		//create data
-		Grupo::create( $input );
+		$g=Grupo::create( $input );
+                if($periodo_estudio<>0){
+                    $g->periodosEstudio()->attach($periodo_estudio);
+                }
 
 		return redirect()->route('grupos.index')->with('message', 'Registro Creado.');
 	}
@@ -101,13 +107,22 @@ class GruposController extends Controller {
 	 */
 	public function update($id, Grupo $grupo, updateGrupo $request)
 	{
+            
 		$input = $request->all();
+                //dd($input);
 		$input['usu_mod_id']=Auth::user()->id;
+                $periodo_estudio=$input['periodo_estudio_id'];
+                $input['periodo_estudio_id']=0;
+                
 		//update data
 		$grupo=$grupo->find($id);
 		$grupo->update( $input );
+                //dd($periodo_estudio);
+                if($periodo_estudio<>0){
+                    $grupo->periodosEstudio()->attach($periodo_estudio);
+                }
 
-		return redirect()->route('grupos.index')->with('message', 'Registro Actualizado.');
+		return redirect()->route('grupos.edit', $id)->with('message', 'Registro Actualizado.');
 	}
 
 	/**
@@ -161,5 +176,17 @@ class GruposController extends Controller {
 		//dd($r->registrados);
 		return $r->limite_alumnos-$r->registrados;
  	}
-	
+
+        public function destroyPeriodo(Request $request){
+            $input=$request->all();
+            //dd($input);
+            $grupo=Grupo::find($input['g']);
+            $g=$grupo->id;
+            //dd($periodo_estudio);
+            if($input['p']<>0){
+                $grupo->periodosEstudio()->detach($input['p']);
+            }
+
+            return redirect()->route('grupos.edit', $g)->with('message', 'Registro Actualizado.');
+        }
 }

@@ -45,11 +45,11 @@ class AsignacionAcademicasController extends Controller {
 	 */
 	public function store(createAsignacionAcademica $request)
 	{
-
+                
 		$input = $request->all();
 		$input['usu_alta_id']=Auth::user()->id;
 		$input['usu_mod_id']=Auth::user()->id;
-
+                //dd($input);
 		//create data
 		AsignacionAcademica::create( $input );
 

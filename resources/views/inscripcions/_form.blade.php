@@ -43,6 +43,13 @@
                         <span class="help-block">{{ $errors->first("grupo_id") }}</span>
                        @endif
                     </div>
+                    <div class="form-group col-md-3 @if($errors->has('periodo_estudio_id')) has-error @endif">
+                       <label for="grupo_id-field" id="lbl_disponibles">Perido Estudio </label>
+                       {!! Form::select("periodo_estudio_id", $list["PeriodoEstudio"], null, array("class" => "form-control select_seguridad", "id" => "periodo_estudio_id-field")) !!}
+                       @if($errors->has("periodo_estudio_id"))
+                        <span class="help-block">{{ $errors->first("periodo_estudio_id") }}</span>
+                       @endif
+                    </div>
                     <div class="form-group col-md-1 @if($errors->has('disponibles')) has-error @endif">
                        <label for="disponibles-field">Disponibles</label>
                        {!! Form::text("disponibles", null, array("class" => "form-control", "id" => "disponibles-field")) !!}
@@ -77,8 +84,10 @@
       
     $(document).ready(function() {
         getCmbGrupo();
+        getCmbPeriodosEstudio();
         $('#grupo_id-field').change(function(){
           getDisponibles();
+          getCmbPeriodosEstudio();
         });
         $('#plantel_id-field').change(function(){
           getCmbGrupo();
@@ -104,6 +113,32 @@
                       $.each(data, function(i) {
                           //alert(data[i].name);
                           $('#grupo_id-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                      });
+                      //$example.select2();
+                  }
+              });       
+      }
+
+      function getCmbPeriodosEstudio(){
+          //var $example = $("#especialidad_id-field").select2();
+          var a= $('#frm_academica').serialize();
+              $.ajax({
+                  url: '{{ route("periodoEstudios.getCmbPeriodoInscripcion") }}',
+                  type: 'GET',
+                  data: "grupo_id=" + $('#grupo_id-field option:selected').val() + "&periodo_estudio_id=" + $('#periodo_estudio_id-field option:selected').val() + "",
+                  dataType: 'json',
+                  beforeSend : function(){$("#loading13").show();},
+                  complete : function(){$("#loading13").hide();},
+                  success: function(data){
+                      //$example.select2("destroy");
+                      $('#periodo_estudio_id-field').html('');
+                      
+                      //$('#especialidad_id-field').empty();
+                      $('#periodo_estudio_id-field').append($('<option></option>').text('Seleccionar').val('0'));
+                      
+                      $.each(data, function(i) {
+                          //alert(data[i].name);
+                          $('#periodo_estudio_id-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
                       });
                       //$example.select2();
                   }
