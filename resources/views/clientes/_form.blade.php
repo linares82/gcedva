@@ -836,7 +836,7 @@
             <table class="table table-condensed table-striped">
                 <thead style="color: #ffffff;background: #0B0B3B;">
                 <td>Plantel</td><td>Especialidad</td><td>Nivel</td>
-                <td>Grado</td><td>Grupo</td><td>F. Inscripcion</td>
+                <td>Grado</td><td>Grupo</td><td>Periodo</td><td>F. Inscripcion</td>
                 <td>Periodo Lectivo</td><td></td>
                 </thead>
                 <tbody>
@@ -847,6 +847,7 @@
                         <td>{{$i->nivel->name}}</td>
                         <td>{{$i->grado->name}}</td>
                         <td>{{$i->grupo->name}}</td>
+                        <td>{{$i->periodo_estudio->name}}</td>
                         <td>{{$i->fec_inscripcion}}</td>
                         <td>{{$i->lectivo->name}}</td>
                         <td>

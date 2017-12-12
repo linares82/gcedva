@@ -924,7 +924,7 @@
             <table class="table table-condensed table-striped">
                 <thead style="color: #ffffff;background: #0B0B3B;">
                 <td>Plantel</td><td>Especialidad</td><td>Nivel</td>
-                <td>Grado</td><td>Grupo</td><td>F. Inscripcion</td>
+                <td>Grado</td><td>Grupo</td><td>Periodo</td><td>F. Inscripcion</td>
                 <td>Periodo Lectivo</td><td></td>
                 </thead>
                 <tbody>
@@ -935,6 +935,7 @@
                         <td><?php echo e($i->nivel->name); ?></td>
                         <td><?php echo e($i->grado->name); ?></td>
                         <td><?php echo e($i->grupo->name); ?></td>
+                        <td><?php echo e($i->periodo_estudio->name); ?></td>
                         <td><?php echo e($i->fec_inscripcion); ?></td>
                         <td><?php echo e($i->lectivo->name); ?></td>
                         <td>
