@@ -174,8 +174,9 @@ class HacademicasController extends Controller {
 				}	
 				$calif->save();
 				$h=Hacademica::find($calif->hacademica_id);
-				//dd($h);
-				if($c->calificacion>=$aprobatoria){
+				$calif_total=Calificacion::where('hacademica_id','=', $h->id)->first();
+                                //dd($calif_total);
+				if($calif_total->calificacion>=$aprobatoria){
 					$h->st_materium_id=1;
 				}else{
 					$h->st_materium_id=2;

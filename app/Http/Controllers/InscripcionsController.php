@@ -223,7 +223,7 @@ class InscripcionsController extends Controller {
 						->where('i.lectivo_id', '=', $input['lectivo_id'])
 						->where('i.plantel_id', '=', $input['plantel_id'])
 						->where('h.st_materium_id', '=', 1)
-						->groupBy('nombre', 'i.id')
+						->groupBy('nombre', 'nombre2', 'ape_paterno', 'ape_materno', 'i.id')
 						->get();
 		}	
 		if(isset($input['id']) and isset($input['grupo_to']) and isset($input['lectivo_to'])){
