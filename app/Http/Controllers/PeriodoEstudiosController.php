@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\PeriodoEstudio;
-use App\PeriodoMaterium;
+use App\MateriumPeriodo;
 use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updatePeriodoEstudio;
@@ -77,10 +77,11 @@ class PeriodoEstudiosController extends Controller {
                                     ->where('e.user_id', Auth::user()->id)->value('plantel_id');
                 });
         $periodoEstudio = $periodoEstudio->find($id);
+        //dd($periodoEstudio->materias->toArray());
         $list = DB::table('materia')->where('id', '>', '0')->where('plantel_id', '=', $p)->pluck('name', 'id')->toArray();
         $materias_ls = array_merge(['0' => 'Seleccionar Opción'], $list);
-        $materias = PeriodoMaterium::select('periodo_materium.id', 'm.name as materia')
-                        ->join('materia as m', 'm.id', '=', 'periodo_materium.materium_id')
+        $materias = MateriumPeriodo::select('materium_periodos.id', 'm.name as materia')
+                        ->join('materia as m', 'm.id', '=', 'materium_periodos.materium_id')
                         ->where('periodo_estudio_id', '=', $id)->get();
         //dd($materias);
         return view('periodoEstudios.edit', compact('periodoEstudio', 'materias_ls', 'materias'))
@@ -137,10 +138,10 @@ class PeriodoEstudiosController extends Controller {
         return redirect()->route('periodoEstudios.index')->with('message', 'Registro Borrado.');
     }
 
-    public function destroyMateria($id, PeriodoMaterium $periodoMaterium) {
-        $periodoMaterium = $periodoMaterium->find($id);
-        $p = $periodoMaterium->periodo_estudio_id;
-        $periodoMaterium->delete();
+    public function destroyMateria($id, MateriumPeriodo $materiumPeriodo) {
+        $materiumPeriodo = $materiumPeriodo->find($id);
+        $p = $materiumPeriodo->periodo_estudio_id;
+        $materiumPeriodo->delete();
 
         return redirect()->route('periodoEstudios.edit', $p)->with('message', 'Registro Borrado.');
     }

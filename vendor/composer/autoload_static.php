@@ -636,6 +636,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'CreateJornadasTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_17_164836_create_jornadas_table.php',
         'CreateLectivosTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_24_164332_create_lectivos_table.php',
         'CreateMateriasTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_24_143805_create_materias_table.php',
+        'CreateMateriumPeriodosTable' => __DIR__ . '/../..' . '/database/migrations/2017_12_11_134431_create_materium_periodos_table.php',
         'CreateMediosTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_30_224246_create_medios_table.php',
         'CreateMenusTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_22_171620_create_menus_table.php',
         'CreateModulosTable' => __DIR__ . '/../..' . '/database/migrations/2017_12_08_135311_create_modulos_table.php',

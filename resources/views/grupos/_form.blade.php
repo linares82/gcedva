@@ -59,17 +59,12 @@
 @if(isset($grupo->periodosEstudio))
 <table class="table table-condensed table-striped">
     <thead>
-    <td>Periodo</td><td>Materias</td><td></td>
+    <td>Periodo</td><td></td>
     </thead>
     <tbody>
         @foreach($grupo->periodosEstudio as $p)
         <tr>
         <td> {{$p->name}} </td>
-        <td>  
-            @foreach($p->materias as $m)
-                {{$m->name}}<br/> 
-            @endforeach
-        </td>
         <td>
             <a href="{{ route('grupos.destroyPeriodo', array('g'=>$grupo->id, 'p'=>$p->id)) }}" class="btn btn-xs btn-danger">Eliminar</a>
         </td>

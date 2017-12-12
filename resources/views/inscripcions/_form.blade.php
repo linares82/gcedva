@@ -50,6 +50,13 @@
                         <span class="help-block">{{ $errors->first("periodo_estudio_id") }}</span>
                        @endif
                     </div>
+                    <div class="form-group col-md-3 @if($errors->has('turno_id')) has-error @endif">
+                       <label for="grupo_id-field" id="lbl_disponibles">Turno </label>
+                       {!! Form::select("turno_id", $list["Turno"], null, array("class" => "form-control select_seguridad", "id" => "turno_id-field")) !!}
+                       @if($errors->has("turno_id"))
+                        <span class="help-block">{{ $errors->first("periodo_estudio_id") }}</span>
+                       @endif
+                    </div>
                     <div class="form-group col-md-1 @if($errors->has('disponibles')) has-error @endif">
                        <label for="disponibles-field">Disponibles</label>
                        {!! Form::text("disponibles", null, array("class" => "form-control", "id" => "disponibles-field")) !!}

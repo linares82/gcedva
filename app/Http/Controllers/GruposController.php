@@ -81,6 +81,8 @@ class GruposController extends Controller {
 	public function edit($id, Grupo $grupo)
 	{
 		$grupo=$grupo->find($id);
+                //$periodos=PeriodoEstudio::whereIn('' $i->periodo_estudio_id)->materias;
+                //$materias=PeriodoEstudio::find($i->periodo_estudio_id)->materias;
 		return view('grupos.edit', compact('grupo'))
 			->with( 'list', Grupo::getListFromAllRelationApps() );
 	}

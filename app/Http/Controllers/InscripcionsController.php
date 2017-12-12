@@ -11,6 +11,7 @@ use App\Calificacion;
 use App\Ponderacion;
 use App\CalificacionPonderacion;
 use App\CargaPonderacion;
+use App\PeriodoEstudio;
 use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updateInscripcion;
@@ -65,7 +66,9 @@ class InscripcionsController extends Controller {
 
 	function registrarMaterias($id){
 		$i=Inscripcion::find($id);
-		$materias=Grupo::find($i->grupo_id)->periodoEstudio->materias;
+                //dd($periodo);
+                $materias=PeriodoEstudio::find($i->periodo_estudio_id)->materias;
+                //dd($materias);
 		$materias_validar=Hacademica::where('grupo_id', '=', $i->grupo_id)
                                             ->where('cliente_id', '=', $i->cliente_id)
                                             ->where('grado_id', '=', $i->grado_id)

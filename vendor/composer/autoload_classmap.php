@@ -67,6 +67,7 @@ return array(
     'CreateJornadasTable' => $baseDir . '/database/migrations/2017_08_17_164836_create_jornadas_table.php',
     'CreateLectivosTable' => $baseDir . '/database/migrations/2017_03_24_164332_create_lectivos_table.php',
     'CreateMateriasTable' => $baseDir . '/database/migrations/2017_08_24_143805_create_materias_table.php',
+    'CreateMateriumPeriodosTable' => $baseDir . '/database/migrations/2017_12_11_134431_create_materium_periodos_table.php',
     'CreateMediosTable' => $baseDir . '/database/migrations/2017_03_30_224246_create_medios_table.php',
     'CreateMenusTable' => $baseDir . '/database/migrations/2017_03_22_171620_create_menus_table.php',
     'CreateModulosTable' => $baseDir . '/database/migrations/2017_12_08_135311_create_modulos_table.php',
