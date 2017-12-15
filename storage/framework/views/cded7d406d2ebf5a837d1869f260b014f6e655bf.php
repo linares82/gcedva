@@ -1,0 +1,1 @@
+<?php $__env->startSection('seguimientosAppTitle','Seguimiento'); ?>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
     <head>
-        <title>Pivot Demo</title>
+        <title>Analitica Actividades</title>
         <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
         <!-- external libs from cdnjs -->
@@ -31,18 +31,19 @@
                 $.pivotUtilities.gchart_renderers);
 
             var rawData=<?php 
-                echo $datos;
+                echo $actividades;
             ?>;
             var inputFunction = function (callback) {
                 rawData.forEach(function (element, index) {
                     callback({
                         Plantel: element.plantel,
                         Empleado: element.empleado,
-                        Grupo: element.grupo,
-                        Materia: element.materia,
-                        Lectivo: element.lectivo,
-                        Dia: element.dia,
-                        Hora: element.hora
+                        Cliente: element.cliente,
+                        Actividad: element.tarea,
+                        Fecha: element.fecha,
+                        Asunto: element.asunto,
+                        Detalle: element.detalle,
+                        EstatusCliente: element.estatus_cliente
                     });
                 });
             };
@@ -53,14 +54,12 @@
             });*/
             $("#output").pivotUI(inputFunction, {
                 renderers: renderers,
-                rows: ["Materia","Hora"], 
-                cols: ['Dia'],
+                rows: ["Plantel","Empleado"], 
+                cols: ['Fecha'],
             },false, "es");
 
         });
         </script>
-
-        
 
         <div id="output" style="margin: 30px;"></div>
 

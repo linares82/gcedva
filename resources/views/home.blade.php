@@ -20,11 +20,12 @@
             <div class="box box-primary">
                 <div class="box-header with-border">
                     <h3 class="box-title">
-                        Analitica de Vendedores <a href="{{route('seguimientos.analitica_actividadesf')}}" target="_blank">Ver</a>
+                        Analisis Gráfico global
                     </h3>
                 </div>
                 <div class="box-body">
-                    <div id="dinamica_actividades"></div>
+                    Analitica de Vendedores <a href="{{route('seguimientos.analitica_actividadesf')}}" target="_blank">Ver</a><br/>
+                    Graficas de avance por vendedor, especialidad y plantel <a href="{{route('widgets.metaXespecialidad')}}" target="_blank">Ver</a>
                 </div>
             </div>
         </div>
