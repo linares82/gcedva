@@ -104,7 +104,9 @@
         return false;
     });
     $(document).ready(function() {
-        
+        @if(isset($puesto))
+            $('#plantel_id').val({{}});
+        @endif
         var contenido_empleado=$('#select_empleado').html();
         $("#puesto_id-field").change(function(event) {
             //var id = $("select#tpo_bitacora_id option:selected").val(); 

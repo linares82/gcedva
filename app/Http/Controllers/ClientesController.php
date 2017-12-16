@@ -98,6 +98,15 @@ class ClientesController extends Controller {
         //$input['plantelplantel_id']=$empleado->plantel->id;
         $input['usu_alta_id'] = Auth::user()->id;
         $input['usu_mod_id'] = Auth::user()->id;
+        if(!isset($input['ape_materno'])){
+            $input['ape_materno']=" ";
+        }
+        if(!isset($input['nombre2'])){
+            $input['nombre2']=" ";
+        }
+        if(!isset($input['matricula'])){
+            $input['matricula']=" ";
+        }
         $param=Param::where('llave', '=', 'msj_text')->first();
         if ($input['cve_cliente'] == "") {
             $input['cve_cliente'] = 'Codigo: ' . substr(Hash::make(rand(0, 1000)), 2, 8) . $param->valor;
@@ -266,6 +275,15 @@ class ClientesController extends Controller {
         //dd("fil");
         $input = $request->all();
         $input['usu_mod_id'] = Auth::user()->id;
+        if(!isset($input['ape_materno'])){
+            $input['ape_materno']=" ";
+        }
+        if(!isset($input['nombre2'])){
+            $input['nombre2']=" ";
+        }
+        if(!isset($input['matricula'])){
+            $input['matricula']=" ";
+        }
         //$empleado=Empleado::find($request->input('empleado_id'));
         //$input['plantel_id']=$empleado->plantel->id;
         $pc['cliente_id'] = $id;
@@ -273,6 +291,7 @@ class ClientesController extends Controller {
         $pc['respuesta'] = $input['respuesta'];
         $pc['usu_alta_id'] = Auth::user()->id;
         $pc['usu_mod_id'] = Auth::user()->id;
+        
         //dd($pc);
         unset($input['pregunta_id']);
         unset($input['respuesta']);

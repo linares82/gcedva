@@ -580,6 +580,7 @@ class SeguimientosController extends Controller {
                 ->where('e.id', '=', $parametros['empleado'])
                 ->where('esp.id', '=', $parametros['especialidad'])
                 ->get();
+        //dd($ds_actividades->toArray());
         return view('seguimientos.reportes.analitica_actividadesr')
                         ->with('actividades', json_encode($ds_actividades));
     }

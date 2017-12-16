@@ -34,7 +34,7 @@
                         <div class="box-footer clearfix">
                             <a href="<?php echo e(route('seguimientos.analiticaGraficaEmpleado', array('plantel'=>$grf['plantel_id'],'especialidad'=>$grf['especialidad_id'],'empleado'=>$grf['empleado_id']))); ?>" target="_blank" class="btn btn-foursquare btn-sm pull-left">Analitica</a>
                             <a href="<?php echo e(route('seguimientos.seguimientosGraficaGrfr', array('plantel'=>$grf['plantel_id'],'especialidad'=>$grf['especialidad_id'],'empleado'=>$grf['empleado_id']))); ?>" target="_blank" class="btn btn-bitbucket btn-sm"Analitica>G. T. Seguimientos</a>
-                            <!--<a href="<?php echo e(route('seguimientos.analitica_actividadesf')); ?>" target="_blank" class="btn btn-dropbox btn-sm pull-right">Mensaje</a>-->
+                            <!--<a href="<?php echo e(route('avisoGrals.create', array('plantel'=>$grf['plantel_id'],'especialidad'=>$grf['especialidad_id'],'empleado'=>$grf['empleado_id']))); ?>" target="_blank" class="btn btn-dropbox btn-sm pull-right">Mensaje</a>                     -->
                         </div>
                             
                 </div>

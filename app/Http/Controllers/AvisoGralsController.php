@@ -29,11 +29,22 @@ class AvisoGralsController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function create()
+	public function create(Request $request)
 	{
-		return view('avisoGrals.create')
+                $parametros=$request->all();
+                $empleado=$parametros['empleado_id'];
+                $puesto=DB::table('empleados')->find($empleado)->value('puesto_id');
+                $plantel=$parametros['plantel_id'];
+                if(isset($parametros)){
+                    return view('avisoGrals.create', compact('empleado', 'plantel', 'puesto'))
 			->with( 'list', AvisoGral::getListFromAllRelationApps() )
 			->with( 'list1', PivotAvisoGralEmpleado::getListFromAllRelationApps() );
+                }else{
+                    return view('avisoGrals.create')
+			->with( 'list', AvisoGral::getListFromAllRelationApps() )
+			->with( 'list1', PivotAvisoGralEmpleado::getListFromAllRelationApps() );
+                }
+		
 	}
 
 	/**
