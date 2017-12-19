@@ -31,6 +31,8 @@
                         Meta del plantel: {{$grf['meta']}}
                         <br/>
                         Inscritos: {{$grf['avance']}}
+                        <br/>
+                        Fin Periodo: {{$grf['fin']}}
                         <div class="box-footer clearfix">
                             <a href="{{route('seguimientos.analiticaGraficaEmpleado', array('plantel'=>$grf['plantel_id'],'especialidad'=>$grf['especialidad_id'],'empleado'=>$grf['empleado_id'])) }}" target="_blank" class="btn btn-foursquare btn-sm pull-left">Analitica</a>
                             <a href="{{route('seguimientos.seguimientosGraficaGrfr', array('plantel'=>$grf['plantel_id'],'especialidad'=>$grf['especialidad_id'],'empleado'=>$grf['empleado_id'])) }}" target="_blank" class="btn btn-bitbucket btn-sm"Analitica>G. T. Seguimientos</a>

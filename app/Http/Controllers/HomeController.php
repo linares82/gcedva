@@ -345,7 +345,7 @@ class HomeController extends Controller
                 $i=0;
                 foreach($empleados as $empleado){
                     $cs=Seguimiento::select(DB::raw('concat(p.id,e.id,emp.id) as id'),
-                                'p.razon', 'e.name as especialidad', 
+                                'p.razon', 'e.name as especialidad', 'l.fin',
                             DB::raw('concat(emp.nombre, " ", emp.ape_paterno, " ", emp.ape_materno) as empleado'),
                             'e.meta', 'p.id as plantel_id', 'e.id as especialidad_id', 'emp.id as empleado_id',
                             DB::raw('count(c.nombre) as avance'), DB::raw('((count(c.nombre)*100)/e.meta) as p_avance'))
@@ -368,6 +368,7 @@ class HomeController extends Controller
                             ->groupBy('p.razon')
                             ->groupBy('e.name')
                             ->groupBy('e.meta')
+                            ->groupBy('l.fin')
                             ->groupBy('emp.nombre')
                             ->groupBy('emp.ape_paterno')
                             ->groupBy('emp.ape_materno')

@@ -31,6 +31,9 @@
                         <br/>
                         Inscritos: <?php echo e($grf['avance']); ?>
 
+                        <br/>
+                        Fin Periodo: <?php echo e($grf['fin']); ?>
+
                         <div class="box-footer clearfix">
                             <a href="<?php echo e(route('seguimientos.analiticaGraficaEmpleado', array('plantel'=>$grf['plantel_id'],'especialidad'=>$grf['especialidad_id'],'empleado'=>$grf['empleado_id']))); ?>" target="_blank" class="btn btn-foursquare btn-sm pull-left">Analitica</a>
                             <a href="<?php echo e(route('seguimientos.seguimientosGraficaGrfr', array('plantel'=>$grf['plantel_id'],'especialidad'=>$grf['especialidad_id'],'empleado'=>$grf['empleado_id']))); ?>" target="_blank" class="btn btn-bitbucket btn-sm"Analitica>G. T. Seguimientos</a>
