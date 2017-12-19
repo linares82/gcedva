@@ -351,6 +351,13 @@ Route::get("banderas/bandera/{banderas}/duplicate", ['as' => 'banderas.duplicate
             }
             return response()->download(public_path().'\\archivos_imagenes.zip');
     })->name('zip.imagenes');
+    Route::get('backup/mysql', function () {
+            $archivo='backup'.date('dmYhis');
+            $r=Artisan::call('backup:mysql-dump',['filename'=>$archivo]);
+            dd("Respaldo realizado con nombre: ".$archivo);
+            sleep(3);
+            return response()->download(Storage::disk('local')->get('backups\\'.$archivo));
+    })->name('backup.mysql');
 ///////////////////////////////////////////////////////////////////////////////////////////
     Route::get('/down', function () {
         Artisan::call('down');        

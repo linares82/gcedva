@@ -30,7 +30,7 @@ return [
         |
         */
 
-        'mysqldump_path' => 'C:\xampp2\mysql\bin\mysqldump',
+        'mysqldump_path' => 'C:\xampp71\mysql\bin\mysqldump',
 
         /*
         |--------------------------------------------------------------------------
