@@ -1,4 +1,5 @@
 @inject('menu','App\Http\Controllers\MenusController')
+@inject('msj','App\Http\Controllers\HomeController')
 <!-- Main Header -->
 <header class="main-header">
 
@@ -19,6 +20,31 @@
         <!-- Navbar Right Menu -->
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
+                
+                <!--Alertas de Avisos-->
+                <li class="dropdown messages-menu">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                  <i class="fa fa-envelope-o"></i>
+                  <span class="label label-success">{!! $msj->tieneAvisos() !!} </span>
+                </a>
+                <ul class="dropdown-menu">
+                  <li class="header">Tienes mensajes: </li>
+                  <li>
+                    <!-- inner menu: contains the actual data -->
+                    <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 200px;"><ul class="menu" style="overflow: hidden; width: 100%; height: 200px;">
+                      <li><!-- start message -->
+                        <a href="{{ route('home') }}">
+                          <h4>
+                            {!! $msj->tieneAvisos() !!} Sin leer.
+                          </h4>
+                        </a>
+                      </li><!-- end message -->
+                    </ul><div class="slimScrollBar" style="background: rgb(0, 0, 0) none repeat scroll 0% 0%; width: 3px; position: absolute; top: 0px; opacity: 0.4; display: block; border-radius: 7px; z-index: 99; right: 1px;"></div><div class="slimScrollRail" style="width: 3px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 7px; background: rgb(51, 51, 51) none repeat scroll 0% 0%; opacity: 0.2; z-index: 90; right: 1px;"></div></div>
+                  </li>
+                </ul>
+              </li>
+                <!--fin alertas de avisos-->
+                
                 
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Accesos Comunes</a>

@@ -484,5 +484,18 @@ class HomeController extends Controller
         //dd($gauge);
         return view('gauges_especialidad', compact('gauge'));
     }
+    
+    public function tieneAvisos(){
+        $e=Empleado::where('user_id', '=', Auth::user()->id)->first();
+        $avisos_generales=PivotAvisoGralEmpleado::where('leido','=', 0)
+                                    ->where('enviado','=', 1)
+                                    ->where('empleado_id', '=', $e->id)
+                                    ->get();
+        $total_msj=0;
+        foreach($avisos_generales as $ag){
+            $total_msj++;
+        }
+        return $total_msj;
+    }
         
 }

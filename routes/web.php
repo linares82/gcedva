@@ -1718,6 +1718,11 @@ Route::get('avisos/index', array(
         'middleware' => 'permission:avisoGrals.create',
         'uses' => 'AvisoGralsController@create')
     )->middleware('auth');
+    Route::get('/avisoGrals/createUno', array(
+        'as' => 'avisoGrals.createUno',
+        'middleware' => 'permission:avisoGrals.createUno',
+        'uses' => 'AvisoGralsController@createUno')
+    )->middleware('auth');
     Route::post('avisoGrals/store', array(
         'as' => 'avisoGrals.store',
         'middleware' => 'permission:avisoGrals.store',

@@ -104,10 +104,13 @@
         return false;
     });
     $(document).ready(function() {
-        @if(isset($puesto))
-            $('#plantel_id').val({{}});
-        @endif
+        
+        $("#plantel_id-field").change(function(event) {
+            $('select#empleado_id-field').val(0).trigger('change');
+        });
+        
         var contenido_empleado=$('#select_empleado').html();
+        
         $("#puesto_id-field").change(function(event) {
             //var id = $("select#tpo_bitacora_id option:selected").val(); 
             var a= $('#frm_avisos').serialize();
@@ -124,12 +127,43 @@
                     $('select#empleado_id-field').html('');
                     //$('select#empleado_id-field').append($('<option></option>').text('Seleccionar opción').val(''));
                     $.each(e, function(i) {
-                        $('select#empleado_id-field').append("<option value=\""+e[i].id+"\">"+e[i].nombre+"<\/option>");
+                        @if(isset($puesto))
+                            $('#empleado_id-field').val({{$empleado}});
+                            if(e[i].id=={{$empleado}}){
+                                $('select#empleado_id-field').append("<option selected value=\""+e[i].id+"\">"+e[i].nombre+"<\/option>");
+                            }
+                        @else
+                            $('select#empleado_id-field').append("<option value=\""+e[i].id+"\">"+e[i].nombre+"<\/option>");
+                        @endif
                     });
                     $('#empleado_id-field').multiSelect();
+                    
+                   /*$('select#empleado_id-field').empty();
+                   $('select#empleado_id-field').html('');
+                   $('select#empleado_id-field').append($('<option></option>').text('Seleccionar opción').val(''));
+                   $.each(e, function(i) {
+                        @if(isset($puesto))
+                            $('#empleado_id-field').val({{$empleado}});
+                            if(e[i].id=={{$empleado}}){
+                                $('select#empleado_id-field').append("<option selected value=\""+e[i].id+"\">"+e[i].nombre+"<\/option>");
+                            }
+                        @else
+                            $('select#empleado_id-field').append("<option value=\""+e[i].id+"\">"+e[i].nombre+"<\/option>");
+                        @endif
+                        
+                    });
+                   $('select#empleado_id-field').multiSelect();
+                   */
                 }
             });
         }); 
+    
+        @if(isset($puesto))
+            //$('#plantel_id-field').select2({{$plantel}});
+            $('#plantel_id-field').val({{$plantel}}).trigger('change');
+            $('#puesto_id-field').val({{$puesto}}).trigger('change');
+            //$('#empleado_id-field').val({{$empleado}});    
+        @endif
     
     $('#inicio-field').Zebra_DatePicker({
         days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
@@ -146,15 +180,7 @@
         show_select_today: 'Hoy',
       });
 
-      $('#search').multiselect({
-          search: {
-              left: '<input type="text" name="q" class="form-control" placeholder="Buscar..." />',
-              right: '<input type="text" name="q" class="form-control" placeholder="Buscar..." />',
-          },
-          fireSearch: function(value) {
-              return value.length > 3;
-          }
-       });
+      
     });
     </script>
 @endpush
