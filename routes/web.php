@@ -358,6 +358,7 @@ Route::get("banderas/bandera/{banderas}/duplicate", ['as' => 'banderas.duplicate
             //dd("Respaldo realizado con nombre: ".$archivo);
             //sleep(3);
             $exists= Storage::disk('local')->exists('backups\\'.$archivo.'.sql');
+            sleep(3);
             if($exists){
                 $path = storage_path('app\\backups\\'.$archivo.".sql");
                 return response()->download($path);
