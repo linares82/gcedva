@@ -352,6 +352,7 @@ Route::get("banderas/bandera/{banderas}/duplicate", ['as' => 'banderas.duplicate
             return response()->download(public_path().'\\archivos_imagenes.zip');
     })->name('zip.imagenes');
     Route::get('backup/mysql', function () {
+            
             $archivo='backup'.date('dmYhis');
             $r=Artisan::call('backup:mysql-dump',['filename'=>$archivo]);
             //dd(Storage::disk('local')->get('backups\\'.$archivo.'.sql'));
@@ -361,7 +362,7 @@ Route::get("banderas/bandera/{banderas}/duplicate", ['as' => 'banderas.duplicate
             //sleep(3);
             if($exists){
                 $path = storage_path('app/backups/'.$archivo.".sql");
-                return response()->download($path);
+                return response()->download($path)->deleteFileAfterSend(true);
             }
             dd("Respaldo no pudo ser realizado");
     })->name('backup.mysql');
