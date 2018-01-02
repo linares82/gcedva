@@ -325,12 +325,20 @@ class EmpleadosController extends Controller {
             $empleado = $request->get('empleado_id');
 
             $final = array();
-            $r = DB::table('empleados as e')
+            if($plantel<>0){
+                $r = DB::table('empleados as e')
                     ->select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as nombre'))
                     ->where('e.plantel_id', '=', $plantel)
                     ->where('e.puesto_id', '=', $puesto)
                     ->where('e.id', '>', '0')
                     ->get();
+            }else{
+                $r = DB::table('empleados as e')
+                    ->select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as nombre'))
+                    ->where('e.puesto_id', '=', $puesto)
+                    ->where('e.id', '>', '0')
+                    ->get();
+            }
 
             //dd($r);
             if (isset($empleado) and $empleado <> 0) {
