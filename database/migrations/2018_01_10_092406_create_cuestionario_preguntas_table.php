@@ -15,6 +15,7 @@ class CreateCuestionarioPreguntasTable extends Migration {
             Schema::create('cuestionario_preguntas', function(Blueprint $table) {
             $table->increments('id');
             $table->integer('cuestionario_id')->unsigned();
+            $table->integer('numero');
             $table->string('name');
             $table->integer('usu_alta_id')->unsigned();
             $table->integer('usu_mod_id')->unsigned();

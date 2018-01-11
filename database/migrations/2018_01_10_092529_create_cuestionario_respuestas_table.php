@@ -16,6 +16,7 @@ class CreateCuestionarioRespuestasTable extends Migration {
             $table->increments('id');
             $table->integer('cuestionario_id')->unsigned();
             $table->integer('cuestionario_pregunta_id')->unsigned();
+            $table->string('clave');
             $table->string('name');
             $table->integer('usu_alta_id')->unsigned();
             $table->integer('usu_mod_id')->unsigned();

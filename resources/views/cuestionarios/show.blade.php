@@ -90,6 +90,10 @@
                                         <td>{{$r->clave}}</td>
                                         <td>{{$r->name}}</td>
                                         <td>
+                                            @permission('cuestionarioRespuestas.edit')
+                                            <a class="btn btn-xs btn-warning" href="{{ route('cuestionarioRespuestas.edit', $r->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar Respuesta</a>
+                                            @endpermission
+                                            <br/>
                                             @permission('cuestionarioRespuestas.destroy')
                                                 <a href="{!! route('cuestionarioRespuestas.destroy', $r->id) !!}" class="btn btn-xs btn-danger">Eliminar Respuesta</a>
                                             @endpermission
@@ -103,6 +107,10 @@
                         <td>
                             @permission('cuestionarioRespuestas.create')
                             <a class="btn btn-success btn-xs" href="{{ route('cuestionarioRespuestas.create', array('cuestionario'=>$cuestionario->id, 'pregunta'=>$p->id)) }}"><i class="glyphicon glyphicon-plus"></i> Crear Respuesta</a>
+                            @endpermission
+                            <br/>
+                            @permission('cuestionarioPreguntas.edit')
+                            <a class="btn btn-xs btn-warning" href="{{ route('cuestionarioPreguntas.edit', $p->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar Pregunta</a>
                             @endpermission
                             <br/>
                             @permission('cuestionarioPreguntas.destroy')

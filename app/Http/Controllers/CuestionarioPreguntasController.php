@@ -77,7 +77,8 @@ class CuestionarioPreguntasController extends Controller {
 	public function edit($id, CuestionarioPregunta $cuestionarioPregunta)
 	{
 		$cuestionarioPregunta=$cuestionarioPregunta->find($id);
-		return view('cuestionarioPreguntas.edit', compact('cuestionarioPregunta'))
+                $cuestionario=$cuestionarioPregunta->cuestionario_id;
+		return view('cuestionarioPreguntas.edit', compact('cuestionarioPregunta', 'cuestionario'))
 			->with( 'list', CuestionarioPregunta::getListFromAllRelationApps() );
 	}
 
@@ -109,7 +110,7 @@ class CuestionarioPreguntasController extends Controller {
 		$cuestionarioPregunta=$cuestionarioPregunta->find($id);
 		$cuestionarioPregunta->update( $input );
 
-		return redirect()->route('cuestionarioPreguntas.index')->with('message', 'Registro Actualizado.');
+		return redirect()->route('cuestionarios.show', $input['cuestionario_id'])->with('message', 'Registro Actualizado.');
 	}
 
 	/**
