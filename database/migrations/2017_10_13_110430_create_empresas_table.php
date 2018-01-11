@@ -29,6 +29,7 @@ class CreateEmpresasTable extends Migration {
             $table->integer('giro_id')->unsigned();
             $table->integer('plantel_id')->unsigned();
             $table->integer('especialidad_id')->unsigned();
+            $table->integer('cuestionario_id')->unsigned();
             $table->integer('usu_alta_id')->unsigned();
             $table->integer('usu_mod_id')->unsigned();
             $table->timestamps();
@@ -40,6 +41,7 @@ class CreateEmpresasTable extends Migration {
             $table->foreign('especialidad_id')->references('id')->on('especialidads');
             $table->foreign('estado_id')->references('id')->on('estados');
             $table->foreign('municipio_id')->references('id')->on('municipios');
+            $table->foreign('cuestionario_id')->references('id')->on('cuestionarios');
         });
     }
 

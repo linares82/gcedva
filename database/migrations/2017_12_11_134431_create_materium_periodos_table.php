@@ -16,8 +16,8 @@ class CreateMateriumPeriodosTable extends Migration {
             $table->increments('id');
             $table->integer('materium_id')->unsigned();
             $table->integer('periodo_estudio_id')->unsigned();
-            $table->integer('usu_alta_id')->unsigned();
-            $table->integer('usu_mod_id')->unsigned();
+            $table->integer('usu_alta_id')->unsigned()->nullable();
+            $table->integer('usu_mod_id')->unsigned()->nullable();
             $table->timestamps();
             $table->foreign('materium_id')->references('id')->on('materia');
             $table->foreign('periodo_estudio_id')->references('id')->on('periodo_estudios');

@@ -120,8 +120,6 @@ class PeriodoEstudiosController extends Controller {
                 $periodoEstudio->materias()->attach($m);
             }
         }
-
-
         return redirect()->route('periodoEstudios.edit', $id)->with('message', 'Registro Actualizado.');
     }
 

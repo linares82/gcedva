@@ -6,6 +6,9 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Empleado;
 use App\Empresa;
+use App\CuestionarioDato;
+use App\Cliente;
+use App\ActividadEmpresa;
 use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updateEmpresa;
@@ -33,8 +36,10 @@ class EmpresasController extends Controller {
     public function create() {
         $p = Empleado::where('user_id', '=', Auth::user()->id)
                 ->value('plantel_id');
-
-        return view('empresas.create', compact('p'))
+        $pl=DB::table('plantels as p')
+                            ->join('empleados as e', 'e.plantel_id','=', 'p.id')
+                            ->where('e.user_id', Auth::user()->id)->value('p.id');
+        return view('empresas.create', compact('p', 'pl'))
                         ->with('list', Empresa::getListFromAllRelationApps());
     }
 
@@ -75,10 +80,21 @@ class EmpresasController extends Controller {
      */
     public function edit($id, Empresa $empresa) {
         $empresa = $empresa->find($id);
+        //dd($empresa->combinaciones->toArray());
         $p = Empleado::where('user_id', '=', Auth::user()->id)
                 ->value('plantel_id');
-        return view('empresas.edit', compact('empresa', 'p'))
-                        ->with('list', Empresa::getListFromAllRelationApps());
+        $pl=DB::table('plantels as p')
+                            ->join('empleados as e', 'e.plantel_id','=', 'p.id')
+                            ->where('e.user_id', Auth::user()->id)->value('p.id');
+        $actividadesRelacionados=array();
+        foreach($empresa->actividades as $ar){
+            $actividadesRelacionados=array_add($actividadesRelacionados, $ar->id, $ar->name);
+        }
+        $actividadesList=ActividadEmpresa::where('plantel_id','=',$pl)->pluck('name', 'id');
+        
+        return view('empresas.edit', compact('empresa', 'p', 'actividadesList','actividadesRelacionados','pl'))
+                        ->with('list', Empresa::getListFromAllRelationApps())
+                        ->with('list1', Cliente::getListFromAllRelationApps());
     }
 
     /**
@@ -101,12 +117,58 @@ class EmpresasController extends Controller {
      * @return Response
      */
     public function update($id, Empresa $empresa, updateEmpresa $request) {
-        $input = $request->all();
+        $input = $request->except(['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15',
+                                   '16','17','18','19','20','21','22','23','24','25','26','27','28',
+                                   '29','30','31','32','33','34','35','36','37','38','39','40',
+                                   'nivel_id','grado_id','from','to','q']);
+        $preguntas=$request->except(['razon_social','nombre_contacto','tel_fijo','tel_cel','correo1',
+                                    'correo2','calle','no_int','no_ex','colonia','municipio_id',
+                                    'estado_id','cp','giro_id','plantel_id','especialidad_id',
+                                    'cuestionario_id','usu_alta_id','usu_mod_id','nivel_id','grado_id',
+                                    'from','to','q']);
+        //dd($preguntas);
         $input['usu_mod_id'] = Auth::user()->id;
         //update data
         $empresa = $empresa->find($id);
+        $cantidad_preguntas=$empresa->cuestionario->preguntas->count();
+        //dd($cantidad_preguntas);
         $empresa->update($input);
-
+        foreach($preguntas as $llave=>$valor){
+            if($llave<>'_token'){
+                //dd($preguntas);
+                $dato=CuestionarioDato::where('empresa_id', '=', $id)
+                                ->where('cuestionario_id','=', $input['cuestionario_id'])
+                                ->where('cuestionario_pregunta_id','=', $llave)
+                                ->first();
+               //dd($dato);
+               if(is_null($dato)){
+                   $r=new CuestionarioDAto;
+                   $r->cuestionario_id=$input['cuestionario_id'];
+                   $r->empresa_id=$id;
+                   $r->cuestionario_id=$input['cuestionario_id'];
+                   $r->cuestionario_pregunta_id=$llave;
+                   $r->cuestionario_respuesta_id=$valor;
+                   $r->name="";
+                   $r->usu_alta_id= Auth::user()->id;
+                   $r->usu_mod_id= Auth::user()->id;
+                   //dd($r->toArray());
+                   $r->save();
+               }else{
+                   $dato->cuestionario_respuesta_id=$valor;
+                   $dato->name="";
+                   $dato->usu_alta_id= Auth::user()->id;
+                   $dato->usu_mod_id= Auth::user()->id;
+                   //dd($dato);
+                   $dato->save();
+               }
+            }
+        }
+        $cantidad_respuestas=CuestionarioDato::where('empresa_id', '=', $id)
+                                ->where('cuestionario_id','=', $input['cuestionario_id'])
+                                ->count();
+        if($cantidad_preguntas<>$cantidad_respuestas){
+            return redirect()->route('empresas.edit', $id)->with('message', 'Cuestionario incompleto.');
+        }
         return redirect()->route('empresas.index')->with('message', 'Registro Actualizado.');
     }
 
@@ -153,4 +215,22 @@ class EmpresasController extends Controller {
         }
     }
 
+    public function addactividad(Request $request){
+        if ($request->ajax()) {
+            $actividad=$request->get('actividad');
+            $empresa=$request->get('empresa');
+            $empresa=Empresa::findOrFail($empresa);
+            $empresa->actividades()->attach($actividad);
+        }
+    }
+    
+    public function lessActividad(Request $request){
+        //dd($request);
+        if ($request->ajax()) {
+            $actividad=$request->get('actividad');
+            $empresa=$request->get('empresa');
+            $empresa=Empresa::findOrFail($empresa);
+            $empresa->actividades()->detach($actividad);
+        }
+    }
 }

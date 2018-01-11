@@ -1,6 +1,7 @@
 @extends('plantillas.admin_template')
 
 @include('empresas._common')
+@include('error')
 
 @section('header')
 

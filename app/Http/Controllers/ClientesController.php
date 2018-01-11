@@ -27,6 +27,7 @@ use Session;
 use Hash;
 use DB;
 use Excel;
+use Log;
 //use App\Mail\CorreoBienvenida as Envia_mail;
 
 class ClientesController extends Controller {
@@ -41,7 +42,10 @@ class ClientesController extends Controller {
     public function index(Request $request) {
         /* $c=Cliente::find(86);
           dd($c); */
-        $clientes = Seguimiento::getAllData($request);
+        
+        
+        $clientes = Seguimiento::getAllData($request,20);
+        //dd($clientes->toArray());
         //dd($clientes);
         return view('clientes.index', compact('clientes'))
                         ->with('list', Seguimiento::getListFromAllRelationApps())
