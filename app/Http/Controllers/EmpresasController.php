@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Empleado;
 use App\Empresa;
 use App\CuestionarioDato;
+use App\Cuestionario;
 use App\Cliente;
 use App\ActividadEmpresa;
 use Illuminate\Http\Request;
@@ -39,7 +40,8 @@ class EmpresasController extends Controller {
         $pl=DB::table('plantels as p')
                             ->join('empleados as e', 'e.plantel_id','=', 'p.id')
                             ->where('e.user_id', Auth::user()->id)->value('p.id');
-        return view('empresas.create', compact('p', 'pl'))
+        $cuestionarios=Cuestionario::where('st_cuestionario_id', '=', '1')->pluck('name', 'id');
+        return view('empresas.create', compact('p', 'pl', 'cuestionarios'))
                         ->with('list', Empresa::getListFromAllRelationApps());
     }
 
@@ -91,8 +93,8 @@ class EmpresasController extends Controller {
             $actividadesRelacionados=array_add($actividadesRelacionados, $ar->id, $ar->name);
         }
         $actividadesList=ActividadEmpresa::where('plantel_id','=',$pl)->pluck('name', 'id');
-        
-        return view('empresas.edit', compact('empresa', 'p', 'actividadesList','actividadesRelacionados','pl'))
+        $cuestionarios=Cuestionario::where('st_cuestionario_id', '=', '1')->pluck('name', 'id');
+        return view('empresas.edit', compact('empresa', 'p', 'actividadesList','actividadesRelacionados','pl', 'cuestionarios'))
                         ->with('list', Empresa::getListFromAllRelationApps())
                         ->with('list1', Cliente::getListFromAllRelationApps());
     }

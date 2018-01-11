@@ -84,6 +84,12 @@ trait RelationManagerTrait {
               
             //dd($relatedObjList);
           }
+          if($relationAppName=="Cuestionario"){
+            //dd($relationAppName);
+            $relatedObjList = $relationAppArray['app']::where('st_cuestionario_id', '=', 1)->pluck($relationAppArray['relation_display_column'], 'id');
+              
+            //dd($relatedObjList);
+          }
 
           /*if($relationAppName=="Lectivo"){
             //dd($relationAppName);
