@@ -3201,7 +3201,7 @@ Route::get("materiumPeriodos/materiumPeriodo/{materiumPeriodos}/duplicate", ['as
         'middleware' => 'permission:cuestionarios.create',
         'uses' => 'CuestionariosController@create')
     )->middleware('auth');
-    Route::get('cuestionarios/store', array(
+    Route::post('cuestionarios/store', array(
         'as' => 'cuestionarios.store',
         'middleware' => 'permission:cuestionarios.store',
         'uses' => 'CuestionariosController@store')
