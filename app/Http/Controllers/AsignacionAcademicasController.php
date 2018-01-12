@@ -129,7 +129,7 @@ class AsignacionAcademicasController extends Controller {
 
 
 
-		return redirect()->route('asignacionAcademicas.index')->with('message', 'Registro Actualizado.');
+		return redirect()->route('asignacionAcademicas.edit', $id)->with('message', 'Registro Actualizado.');
 	}
 
 	/**
