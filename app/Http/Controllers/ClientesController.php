@@ -98,17 +98,18 @@ class ClientesController extends Controller {
     public function store(createCliente $request) {
         $id = 0;
         $input = $request->all();
+        //dd($input);
         //$empleado=Empleado::find($request->input('empleado_id'));
         //$input['plantelplantel_id']=$empleado->plantel->id;
         $input['usu_alta_id'] = Auth::user()->id;
         $input['usu_mod_id'] = Auth::user()->id;
-        if(!isset($input['ape_materno'])){
+        if(!isnull($input['ape_materno'])){
             $input['ape_materno']=" ";
         }
-        if(!isset($input['nombre2'])){
+        if(!isnull($input['nombre2'])){
             $input['nombre2']=" ";
         }
-        if(!isset($input['matricula'])){
+        if(!isnull($input['matricula'])){
             $input['matricula']=" ";
         }
         $param=Param::where('llave', '=', 'msj_text')->first();
@@ -279,13 +280,13 @@ class ClientesController extends Controller {
         //dd("fil");
         $input = $request->all();
         $input['usu_mod_id'] = Auth::user()->id;
-        if(!isset($input['ape_materno'])){
+        if(!isnull($input['ape_materno'])){
             $input['ape_materno']=" ";
         }
-        if(!isset($input['nombre2'])){
+        if(!isnull($input['nombre2'])){
             $input['nombre2']=" ";
         }
-        if(!isset($input['matricula'])){
+        if(!isnull($input['matricula'])){
             $input['matricula']=" ";
         }
         //$empleado=Empleado::find($request->input('empleado_id'));
