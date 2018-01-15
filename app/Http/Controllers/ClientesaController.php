@@ -30,7 +30,7 @@ use Excel;
 use Log;
 //use App\Mail\CorreoBienvenida as Envia_mail;
 
-class ClientesController extends Controller {
+class ClientesaController extends Controller {
 
     private $meta_residuo = 0;
 
@@ -43,8 +43,7 @@ class ClientesController extends Controller {
         /* $c=Cliente::find(86);
           dd($c); */
         
-        
-        $clientes = Seguimiento::getAllData($request,20);
+        $clientes = Seguimiento::getAllData($request,20,1);
         //dd($clientes->toArray());
         //dd($clientes);
         return view('clientesa.index', compact('clientes'))

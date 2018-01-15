@@ -679,6 +679,124 @@ Route::get('medios/index', array(
         //'middleware' => 'permission:clientes.descargaClientes',
         'uses' => 'ClientesController@descargaClientes')
     )->middleware('auth');
+    ////////////////////////////////////
+    Route::get('clientesa/index', array(
+        'as' => 'clientesa.index',
+        'middleware' => 'permission:clientes.index',
+        'uses' => 'ClientesaController@index')
+    )->middleware('auth');
+    Route::get('clientesa/index2', array(
+        'as' => 'clientesa.index2',
+        'middleware' => 'permission:clientes.index',
+        'uses' => 'ClientesaController@index2')
+    )->middleware('auth');
+    Route::get('clientesa/indexList', array(
+        'as' => 'clientesa.indexList',
+        //'middleware' => 'permission:clientes.indexList',
+        'uses' => 'ClientesaController@indexLista')
+    )->middleware('auth');
+    Route::get('clientesa/list', array(
+        'as' => 'clientesa.list',
+        //'middleware' => 'permission:clientes.indexList',
+        'uses' => 'ClientesaController@lista')
+    )->middleware('auth');
+    Route::get('/clientesa/create', array(
+        'as' => 'clientesa.create',
+        'middleware' => 'permission:clientes.create',
+        'uses' => 'ClientesaController@create')
+    )->middleware('auth');
+    Route::post('clientesa/store', array(
+        'as' => 'clientesa.store',
+        'middleware' => 'permission:clientes.store',
+        'uses' => 'ClientesaController@store')
+    )->middleware('auth');
+    Route::get('/clientesa/reasignar', array(
+        'as' => 'clientesa.reasignar',
+        'middleware' => 'permission:clientes.reasignar',
+        'uses' => 'ClientesaController@getReasignar')
+    )->middleware('auth');
+    Route::post('clientesa/reasignar', array(
+        'as' => 'clientesa.reasignar',
+        'middleware' => 'permission:clientes.reasignar',
+        'uses' => 'ClientesaController@postReasignar')
+    )->middleware('auth');
+    Route::get('/clientesa/show/{id}', array(
+        'as' => 'clientesa.show',
+        'middleware' => 'permission:clientes.show',
+        'uses' => 'ClientesaController@show')
+    )->middleware('auth');
+    Route::get('/clientesa/edit/{id}', array(
+        'as' => 'clientesa.edit',
+        'middleware' => 'permission:clientes.edit',
+        'uses' => 'ClientesaController@edit')
+    )->middleware('auth');
+    Route::post('/clientesa/update/{id}', array(
+        'as' => 'clientesa.update',
+        'middleware' => 'permission:clientes.update',
+        'uses' => 'ClientesaController@update')
+    )->middleware('auth');
+    Route::get('/clientesa/confirmaCorreo/{id}', array(
+        'as' => 'clientesa.confirmaCorreo',
+        //'middleware' => 'permission:empleados.confirmaCorreo',
+        'uses' => 'ClientesaController@confirmaCorreo')
+    );
+    Route::get('/clientesa/getCuenta', array(
+        'as' => 'clientesa.getCuenta',
+        //'middleware' => 'permission:empleados.confirmaCorreo',
+        'uses' => 'ClientesaController@getCuenta')
+    );
+    Route::delete('/clientesa/destroy/{id}', array(
+        'as' => 'clientesa.destroy',
+        'middleware' => 'permission:clientes.destroy',
+        'uses' => 'ClientesaController@destroy')
+    )->middleware('auth');
+    Route::get('/clientesa/duplicate/{id}', array(
+        'as' => 'clientesa.duplicate',
+        'middleware' => 'permission:clientes.duplicate',
+        'uses' => 'ClientesaController@duplicate')
+    )->middleware('auth');
+    // app/routes.php
+    Route::get('/clientesa/autocomplete', array(
+        'as' => 'clientesa.autocomplete',
+        //'middleware' => 'permission:clientes.edit',
+        'uses' => 'ClientesaController@autocomplete')
+    )->middleware('auth');
+    Route::get('/clientesa/carga', array(
+        'as' => 'clientesa.carga',
+        //'middleware' => 'permission:clientes.edit',
+        'uses' => 'ClientesaController@carga')
+    )->middleware('auth');
+    Route::post('/clientesa/carga', array(
+        'as' => 'clientesa.carga',
+        'middleware' => 'permission:clientes.carga',
+        'uses' => 'ClientesaController@cargaFile')
+    )->middleware('auth');
+    Route::post('/clientesa/enviaSms', array(
+        'as' => 'clientesa.enviaSms',
+        'middleware' => 'permission:clientes.enviaSms',
+        'uses' => 'ClientesaController@enviaSms')
+    )->middleware('auth');
+    Route::post('/clientesa/enviaMail', array(
+        'as' => 'clientesa.enviaMail',
+        'middleware' => 'permission:clientes.enviaMail',
+        'uses' => 'ClientesaController@enviaMail')
+    )->middleware('auth');
+    Route::get('/clientesa/cmbMClientes', array(
+        'as' => 'clientesa.cmbMClientes',
+        //'middleware' => 'permission:clientes.cmbMClientes',
+        'uses' => 'ClientesaController@cmbMClientes')
+    )->middleware('auth');
+    Route::get('/clientesa/getCmbAlumno', array(
+        'as' => 'clientesa.getCmbAlumno',
+        //'middleware' => 'permission:clientes.cmbMClientes',
+        'uses' => 'ClientesaController@getCmbAlumno')
+    )->middleware('auth');
+    Route::get('/clientesa/descargaClientes', array(
+        'as' => 'clientesa.descargaClientes',
+        //'middleware' => 'permission:clientes.descargaClientes',
+        'uses' => 'ClientesaController@descargaClientes')
+    )->middleware('auth');
+    
 
 //    Route::resource("preguntas","PreguntasController");// generated by scaffold - Preguntum
 //Route::get("preguntas/preguntum/{preguntas}/duplicate", ['as' => 'preguntas.duplicate', 'uses' => 'PreguntasController@duplicate']);// generated by scaffold - Preguntum

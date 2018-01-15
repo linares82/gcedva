@@ -26,7 +26,7 @@ trait GetAllDataTrait {
      * @return LengthAwarePaginator Class
      */
 
-    public static function getAllData( Request $request, $paginate=20 ){
+    public static function getAllData( Request $request, $paginate=20, $clientesa=0){
 
         $myObj = new self;
         $myQuery = $myObj;
@@ -177,6 +177,9 @@ trait GetAllDataTrait {
                 if($baseTable=="seguimientos" and Auth::user()->can('IfiltroClientesXPlantel')){
                     $myQuery=$myQuery->where('clientes.plantel_id', '=', $empleado->plantel_id)
                                      ->where('st_seguimiento_id', '<>', '3');
+                }
+                if($clientesa==1){
+                    $myQuery=$myQuery->where('seguimientos.st_seguimiento_id', '=', 2);
                 }
                 break;
             case "pivot_aviso_gral_empleados":
