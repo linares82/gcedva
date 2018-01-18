@@ -103,6 +103,26 @@ class ClientesController extends Controller {
         //$input['plantelplantel_id']=$empleado->plantel->id;
         $input['usu_alta_id'] = Auth::user()->id;
         $input['usu_mod_id'] = Auth::user()->id;
+        $input['especialidad_id']=0;
+        $input['nivel_id']=0;
+        $input['grado_id']=0;
+        $input['turno_id']=0;
+        $input['especialidad2_id']=0;
+        $input['diplomado_id']=0;
+        $input['subdiplomado_id']=0;
+        $input['turno2_id']=0;
+        $input['especialidad3_id']=0;
+        $input['curso_id']=0;
+        $input['subcurso_id']=0;
+        $input['turno3_id']=0;
+        $input['especialidad4_id']=0;
+        $input['otro_id']=0;
+        $input['subotro_id']=0;
+        $input['turno4_id']=0;
+        $input['grado_id']=0;
+        $input['turno_id']=0;
+        
+        $input['turno_id']=0;
         if(!is_null($input['ape_materno'])){
             $input['ape_materno']=" ";
         }
