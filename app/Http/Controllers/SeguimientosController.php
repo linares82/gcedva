@@ -165,11 +165,25 @@ class SeguimientosController extends Controller {
      */
     public function update($id, Seguimiento $seguimiento, updateSeguimiento $request) {
         $input = $request->all();
+        if(isset($input['combinacion-field'])){
+            $combinacion=$input['combinacion-field'];
+            unset($input['combinacion-field']);
+            $c= \App\CombinacionCliente::find($combinacion);
+            DB::table('combinacion_clientes')->where('cliente_id', '=', $c->cliente_id)
+                    ->update(['bnd_inscrito'=>0]);
+            $c->bnd_inscrito=1;
+            $c->fecha_incrito=date('Y/m/d');
+            $c->save();
+            
+        }
+        
+        //dd($input);
         $input['usu_mod_id'] = Auth::user()->id;
         //update data
         $seguimiento = $seguimiento->find($id);
 
         $seguimiento->update($input);
+        
         $stsf = DB::table('params')->where('llave', 'st_seguimiento_final')->first();
         if ($seguimiento->st_seguimiento_id == $stsf->valor) {
             $c = Cliente::find($seguimiento->cliente_id);
@@ -541,7 +555,11 @@ class SeguimientosController extends Controller {
         $fecha_inicio = date('Y-m-j', strtotime('-8 day', strtotime(date('Y-m-j'))));
         //dd($fecha_inicio);
         $ds_actividades = DB::table('hactividades as has')
-                ->select('p.razon as plantel', DB::raw('concat(e.nombre,e.ape_paterno,e.ape_materno) as empleado'), DB::raw('concat(c.nombre,c.ape_paterno,c.ape_materno) as cliente'), 'has.tarea', 'has.fecha', 'has.asunto', 'has.detalle', 'stc.name as estatus_cliente')
+                ->select('p.razon as plantel', 
+                        DB::raw('concat(e.nombre,e.ape_paterno,e.ape_materno) as empleado'), 
+                        DB::raw('concat(c.nombre,c.ape_paterno,c.ape_materno) as cliente'), 
+                        'has.tarea', 'has.fecha', 'has.asunto', 'has.detalle', 
+                        'stc.name as estatus_cliente')
                 ->join('clientes as c', 'c.id', '=', 'has.cliente_id')
                 ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
                 ->join('plantels as p', 'p.id', '=', 'e.plantel_id')

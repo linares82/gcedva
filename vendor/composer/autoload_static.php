@@ -618,6 +618,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'CreateCargaPonderacionsTable' => __DIR__ . '/../..' . '/database/migrations/2017_10_02_170410_create_carga_ponderacions_table.php',
         'CreateCiclosTable' => __DIR__ . '/../..' . '/database/migrations/2017_11_17_134015_create_ciclos_table.php',
         'CreateClientesTable' => __DIR__ . '/../..' . '/database/migrations/2017_05_03_224353_create_clientes_table.php',
+        'CreateCombinacionClientesTable' => __DIR__ . '/../..' . '/database/migrations/2018_01_16_143714_create_combinacion_clientes_table.php',
         'CreateCombinacionEmpresasTable' => __DIR__ . '/../..' . '/database/migrations/2018_01_09_163322_create_combinacion_empresas_table.php',
         'CreateCorreosTable' => __DIR__ . '/../..' . '/database/migrations/2017_05_12_155535_create_correos_table.php',
         'CreateCuestionarioDatosTable' => __DIR__ . '/../..' . '/database/migrations/2018_01_10_092658_create_cuestionario_datos_table.php',

@@ -44,22 +44,30 @@
 @section('content')
     <div class="row">
         <div class="col-md-12">
-            <div class="form-group col-md-2 ">
+            <div class="form-group col-md-7 ">
                 <div class="box box-default">
                     <div class="box-body">
-                        {!!Form::model($seguimiento, array('route' => array('seguimientos.update', $seguimiento->id),'method' => 'post')) !!}
+                        {!!Form::model($seguimiento, array('route' => array('seguimientos.update', $seguimiento->id),'method' => 'post','class'=>'form-inline')) !!}
                             <label for="cliente_id">CLIENTE</label>
-                            <a class="btn btn-xs btn-warning" href="{{ route('clientes.edit', $seguimiento->cliente_id) }}"><i class="glyphicon glyphicon-edit"></i>Editar Cliente</a>
-                            @if($seguimiento->st_seguimiento_id==2)
-                            <a class="btn btn-xs btn-success" href="{{ route('alumnos.inscribir', array('c'=>$seguimiento->cliente_id)) }}"><i class="glyphicon glyphicon-edit"></i>Inscribir Cliente</a>
-                            @endif
-                            <p class="form-control-static"><label for="cliente_id">Nombre Completo:</label> {{$seguimiento->cliente->nombre." ".$seguimiento->cliente->nombre2." ".$seguimiento->cliente->ape_paterno." ".$seguimiento->cliente->ape_materno}}</p>
-                            <p class="form-control-static"><label for="cliente_id">Tel. Fijo:</label> {{$seguimiento->cliente->tel_fijo}}</p>
-                            <p class="form-control-static"><label for="cliente_id">Tel. Celular:</label> {{$seguimiento->cliente->tel_cel}}</p>
-                            <p class="form-control-static"><label for="cliente_id">E-mail:</label> {{$seguimiento->cliente->mail}}</p>
-                            <p class="form-control-static"><label for="cliente_id">Dirección:</label> {{
+                            
+                            <label for="cliente_id">Nombre Completo:</label> {{$seguimiento->cliente->nombre." ".$seguimiento->cliente->nombre2." ".$seguimiento->cliente->ape_paterno." ".$seguimiento->cliente->ape_materno}}
+                            <label for="cliente_id">Tel. Fijo:</label> {{$seguimiento->cliente->tel_fijo}}
+                            <label for="cliente_id">Tel. Celular:</label> {{$seguimiento->cliente->tel_cel}}
+                            <label for="cliente_id">E-mail:</label> {{$seguimiento->cliente->mail}}
+                            <label for="cliente_id">Dirección:</label> {{
                                 $seguimiento->cliente->calle." ".$seguimiento->cliente->no_ext." ".$seguimiento->cliente->colonia." ".$seguimiento->cliente->municipio->name}}
-                            </p>
+                            <div class="col-md-12">
+                                <label for="combinaciones">Marcar incripción</label>
+                                <br/>
+                                @foreach($seguimiento->cliente->combinacionClientes as $com)
+                                {!!  
+                                Form::radio('combinacion-field', $com->id, $com->bnd_inscrito, array('id'=>'combinacion-field'));
+                                !!}
+                                {{$com->especialidad->name}}/{{$com->nivel->name}}/{{$com->grado->name}}/{{$com->turno->name}}
+                                
+                                <br/>
+                                @endforeach
+                            </div>
                             <div class="form-group col-md-12 @if($errors->has('st_seguimiento_id')) has-error @endif">
                             <label for="st_seguimiento_id-field">Estatus del seguimiento</label>
                             {!! Form::select("st_seguimiento_id", $sts,null, array("class" => "form-control select_seguridad", "id" => "st_seguimiento_id-field")) !!}
@@ -69,15 +77,18 @@
                             </div>
                             <div class="row">
                             </div>
-
+                            
+                            <div class="row">
+                            </div>
                             <div class="well well-sm">
-                                <button type="submit" class="btn btn-primary">Actualizar</button>
+                                <button type="submit" class="btn btn-xs btn-primary">Actualizar</button>
+                                <a class="btn btn-xs btn-warning" href="{{ route('clientes.edit', $seguimiento->cliente_id) }}"><i class="glyphicon glyphicon-edit"></i>Editar Cliente</a>
+                                
                             </div>
                         </form>
                     </div>
                 </div>
-            </div>
-            <div class="form-group col-md-6">
+                
                 <div class="box box-success">
                     <div class="box-body">
                         <div class="table-responsive">
@@ -119,8 +130,10 @@
                         </div>
                    </div>
                 </div>
+                
             </div>
-            <div class="form-group col-md-4">
+            
+            <div class="form-group col-md-5">
                 <div class="box box-warning">
                     <div class="box-body">
                         <div class="table-responsive">
@@ -165,6 +178,11 @@
                    </div>
                 </div>
             </div>
+            
+            <div class="form-group col-md-7">
+                
+            </div>
+            
         </div>
 <!--        Inicia timeline-->
 		
@@ -345,6 +363,8 @@
         lang_clear_date: 'Limpiar',
         show_select_today: 'Hoy',
       });
+      
+      
     });
     </script>
 @endpush

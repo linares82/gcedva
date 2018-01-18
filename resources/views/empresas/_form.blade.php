@@ -437,7 +437,7 @@
                                 function CrearCombinacionEmpresa() {
                                     $.ajax({
                                         url: '{{ route("combinacionEmpresas.store") }}',
-                                        type: 'GET',
+                                        type: 'POST',
                                         data: "empresa_id={{$empresa->id}}&plantel_id={{$pl}}&especialidad_id=" + $('#especialidad_id-field option:selected').val() + "&nivel_id=" + $('#nivel_id-field option:selected').val() + "&grado_id=" + $('#grado_id-field option:selected').val() + "",
                                         dataType: 'json',
                                         beforeSend: function () {

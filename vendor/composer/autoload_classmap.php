@@ -49,6 +49,7 @@ return array(
     'CreateCargaPonderacionsTable' => $baseDir . '/database/migrations/2017_10_02_170410_create_carga_ponderacions_table.php',
     'CreateCiclosTable' => $baseDir . '/database/migrations/2017_11_17_134015_create_ciclos_table.php',
     'CreateClientesTable' => $baseDir . '/database/migrations/2017_05_03_224353_create_clientes_table.php',
+    'CreateCombinacionClientesTable' => $baseDir . '/database/migrations/2018_01_16_143714_create_combinacion_clientes_table.php',
     'CreateCombinacionEmpresasTable' => $baseDir . '/database/migrations/2018_01_09_163322_create_combinacion_empresas_table.php',
     'CreateCorreosTable' => $baseDir . '/database/migrations/2017_05_12_155535_create_correos_table.php',
     'CreateCuestionarioDatosTable' => $baseDir . '/database/migrations/2018_01_10_092658_create_cuestionario_datos_table.php',
