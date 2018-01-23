@@ -113,7 +113,7 @@ class HomeController extends Controller
                 }
             }
         }else{
-            $plantels=DB::table('plantels as p')->where('id', '>', 0)->where('plantel_id', '>', $e->id)
+            $plantels=DB::table('plantels as p')->where('id', '>', 0)->where('id', '=', $e->id)
                        ->select('razon', 'id', 'meta_total')->get();
             foreach($plantels as $p){
                 $c=Seguimiento::select('p.id','p.razon', 'p.meta_total', 
