@@ -48,6 +48,7 @@ class CreateClientesTable extends Migration {
             $table->integer('subcurso_id')->unsigned();
             $table->integer('otro_id')->unsigned();
             $table->integer('subotro_id')->unsigned();
+            $table->text('observaciones')->nullable();
             $table->integer('plantel_id')->unsigned();
             $table->integer('usu_alta_id')->unsigned();
             $table->integer('usu_mod_id')->unsigned();

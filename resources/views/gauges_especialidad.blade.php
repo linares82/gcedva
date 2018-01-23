@@ -21,10 +21,10 @@
         @foreach($gauge as $grf)
         <div class="form-group col-lg-3 col-md-3 col-sm-4 col-xs-12">
             <div class="box box-primary">
-                <div class="box-header with-border">
-                    <h4 class="box-title">
+                <div class="box-header with-border" style="height:100px;">
+                    <h5 class="box-title">
                         {{$grf['razon']."-".$grf['especialidad']."-".$grf['empleado']}}: 
-                    </h4>
+                    </h5>
                 </div>
                 <div class="box-body">
                         <div id="velocimetro_{{$grf['id']}}" ></div>

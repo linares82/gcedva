@@ -45,6 +45,7 @@
                 </div>
             </div>
         </div>
+        @permission('porcentaje_avance')
         <div class="form-group col-md-2 col-sm-2 col-xs-12">
             <div class="box box-primary">
                 <div class="box-header with-border">
@@ -64,6 +65,8 @@
                 </div>
             </div>
         </div>
+        @endpermission
+        @permission('avanaces_mes1')
         <div class="form-group col-md-5 col-sm-5 col-xs-12">
             <div class="box box-primary">
                 <div class="box-header with-border">
@@ -77,6 +80,8 @@
                 </div>
             </div>
         </div>
+        @endpermission
+        @permission('avanaces_mes2')
         <div class="form-group col-md-5 col-sm-5 col-xs-12">
             <div class="box box-primary">
                 <div class="box-header with-border">
@@ -90,6 +95,8 @@
                 </div>
             </div>
         </div>
+        @endpermission
+        @permission('avances_mes_grafica')
         <div class="col-md-3 col-sm-6 col-xs-12">
             <!-- small box -->
             <div class="info-box" >
@@ -109,6 +116,7 @@
             </div>
             
         </div><!-- ./col -->
+        @endpermission
         <div class="col-md-3 col-sm-6 col-xs-12">
             <!-- small box -->
             <div class="info-box">
