@@ -113,7 +113,7 @@ class HomeController extends Controller
                 }
             }
         }else{
-            $plantels=DB::table('plantels as p')->where('id', '>', 0)->where('id', '=', $e->id)
+            $plantels=DB::table('plantels as p')->where('id', '>', 0)->where('id', '=', $e->plantel_id)
                        ->select('razon', 'id', 'meta_total')->get();
             foreach($plantels as $p){
                 $c=Seguimiento::select('p.id','p.razon', 'p.meta_total', 
@@ -339,7 +339,13 @@ class HomeController extends Controller
     }
     
     public function WidgetsMetaEspecialidad(){
-        $planteles=DB::table('plantels')->where('id', '>', 0)->get();
+        $e=Empleado::where('user_id', '=', Auth::user()->id)->first();
+        if(!Auth::user()->can('WgaugesXplantelIndividual')){
+            $planteles=DB::table('plantels')->where('id', '>', 0)->get();
+        }else{
+            $planteles=DB::table('plantels')->where('id', '>', 0)->where('id','=',$e->plantel_id)->get();
+        }
+        
         //dd($planteles);
         $gauge=array();
         foreach($planteles as $plantel){
@@ -350,21 +356,10 @@ class HomeController extends Controller
                     ->get();
             //dd($especialidades);
             
-            $e=Empleado::where('user_id', '=', Auth::user()->id)->first();
-            
-            if(!Auth::user()->can('WgaugesXplantelIndividual')){
-                $empleados=DB::table('empleados')
-                    ->where('plantel_id', '=', $plantel->id)
-                    ->where('puesto_id', '=', 2)
-                    ->get();
-            }else{
-                $empleados=DB::table('empleados')
-                    ->where('plantel_id', '=', $plantel->id)
-                    ->where('puesto_id', '=', 2)
-                    ->where('id', '=', $e->id)
-                    ->get();
-            }
-                
+            $empleados=DB::table('empleados')
+                ->where('plantel_id', '=', $plantel->id)
+                ->where('puesto_id', '=', 2)
+                ->get();
             
             //dd($empleados);
             
