@@ -40,10 +40,10 @@ class HomeController extends Controller
 
         $e=Empleado::where('user_id', '=', Auth::user()->id)->first();
         $avisos=Aviso::select('avisos.id','a.name','avisos.detalle', 'avisos.fecha', 's.cliente_id')
-					->join('asuntos as a', 'a.id', '=', 'avisos.asunto_id')
+       		->join('asuntos as a', 'a.id', '=', 'avisos.asunto_id')
                     ->join('seguimientos as s', 's.id', '=', 'avisos.seguimiento_id')
                     ->join('clientes as c', 'c.id', '=', 's.cliente_id')
-					->where('avisos.activo', '=', '1')
+		->where('avisos.activo', '=', '1')
                     ->where('avisos.fecha', '=', Db::Raw('CURDATE()'))
                     ->where('c.empleado_id', '=', $e->id)
 					->get();
@@ -86,31 +86,60 @@ class HomeController extends Controller
                     ->where('c.empleado_id', '=', $e->id)
                     ->where('c.plantel_id', '=', $e->plantel_id)
                     ->count();
-        
-        $plantels=DB::table('plantels as p')->where('id', '>', 0)->select('razon', 'id', 'meta_total')->get();
         $gauge=array();
-        foreach($plantels as $p){
-            $c=Seguimiento::select('p.id','p.razon', 'p.meta_total', 
-                    DB::raw('count(c.nombre) as avance'), DB::raw('((count(c.nombre)*100)/p.meta_total) as p_avance'))
-                    ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
-                    ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
-                    ->join('hactividades as h', 'h.cliente_id', '=', 'c.id')
-                    ->where('h.tarea', '=', 'Seguimiento')
-                    ->where('h.detalle', '=', 'Concretado')
-                    ->where('h.created_at', '>=', $l->inicio)
-                    ->where('h.created_at', '<=', $l->fin)
-                    ->where('c.st_cliente_id', '=', '4')
-                    ->where('p.id', '=', $p->id)
-                    ->groupBy('p.id')
-                    ->groupBy('p.razon')
-                    ->groupBy('p.meta_total')
-                    ->first();
-            if(is_null($c)){
-                array_push($gauge, array('id'=>$p->id,'razon'=>$p->razon,'meta_total'=>$p->meta_total,'avance'=>0, 'p_avance'=>0));
-            }else {
-                array_push($gauge, $c->toArray());
+        if(!Auth::user()->can('WgaugesXplantelIndividual')){
+            $plantels=DB::table('plantels as p')->where('id', '>', 0)
+                       ->select('razon', 'id', 'meta_total')->get();
+            foreach($plantels as $p){
+                $c=Seguimiento::select('p.id','p.razon', 'p.meta_total', 
+                        DB::raw('count(c.nombre) as avance'), DB::raw('((count(c.nombre)*100)/p.meta_total) as p_avance'))
+                        ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
+                        ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
+                        ->join('hactividades as h', 'h.cliente_id', '=', 'c.id')
+                        ->where('h.tarea', '=', 'Seguimiento')
+                        ->where('h.detalle', '=', 'Concretado')
+                        ->where('h.created_at', '>=', $l->inicio)
+                        ->where('h.created_at', '<=', $l->fin)
+                        ->where('c.st_cliente_id', '=', '4')
+                        ->where('p.id', '=', $p->id)
+                        ->groupBy('p.id')
+                        ->groupBy('p.razon')
+                        ->groupBy('p.meta_total')
+                        ->first();
+                if(is_null($c)){
+                    array_push($gauge, array('id'=>$p->id,'razon'=>$p->razon,'meta_total'=>$p->meta_total,'avance'=>0, 'p_avance'=>0));
+                }else {
+                    array_push($gauge, $c->toArray());
+                }
+            }
+        }else{
+            $plantels=DB::table('plantels as p')->where('id', '>', 0)->where('plantel_id', '>', $e->id)
+                       ->select('razon', 'id', 'meta_total')->get();
+            foreach($plantels as $p){
+                $c=Seguimiento::select('p.id','p.razon', 'p.meta_total', 
+                        DB::raw('count(c.nombre) as avance'), DB::raw('((count(c.nombre)*100)/p.meta_total) as p_avance'))
+                        ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
+                        ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
+                        ->join('hactividades as h', 'h.cliente_id', '=', 'c.id')
+                        ->where('h.tarea', '=', 'Seguimiento')
+                        ->where('h.detalle', '=', 'Concretado')
+                        ->where('h.created_at', '>=', $l->inicio)
+                        ->where('h.created_at', '<=', $l->fin)
+                        ->where('c.st_cliente_id', '=', '4')
+                        ->where('p.id', '=', $p->id)
+                        ->groupBy('p.id')
+                        ->groupBy('p.razon')
+                        ->groupBy('p.meta_total')
+                        ->first();
+                if(is_null($c)){
+                    array_push($gauge, array('id'=>$p->id,'razon'=>$p->razon,'meta_total'=>$p->meta_total,'avance'=>0, 'p_avance'=>0));
+                }else {
+                    array_push($gauge, $c->toArray());
+                }
             }
         }
+        
+        
         //dd($a_2);
         //dd($gauges);
         
@@ -344,7 +373,41 @@ class HomeController extends Controller
                 //Log::info($lectivo);
                 $i=0;
                 foreach($empleados as $empleado){
-                    $cs=Seguimiento::select(DB::raw('concat(p.id,e.id,emp.id) as id'),
+                    if(Auth::user()->can('WgaugesXplantelIndividual')){
+                        $cs=Seguimiento::select(DB::raw('concat(p.id,e.id,emp.id) as id'),
+                                'p.razon', 'e.name as especialidad', 'l.fin',
+                            DB::raw('concat(emp.nombre, " ", emp.ape_paterno, " ", emp.ape_materno) as empleado'),
+                            'e.meta', 'p.id as plantel_id', 'e.id as especialidad_id', 'emp.id as empleado_id',
+                            DB::raw('count(c.nombre) as avance'), DB::raw('((count(c.nombre)*100)/e.meta) as p_avance'))
+                            ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
+                            ->join('combinacion_clientes as cc', 'cc.cliente_id', '=', 'c.id')
+                            ->join('plantels as p', 'p.id', '=', 'cc.plantel_id')
+                            ->join('especialidads as e', 'e.id', '=', 'cc.especialidad_id')
+                            ->join('lectivos as l', 'l.id', '=', 'e.lectivo_id')
+                            ->join('empleados as emp', 'emp.id', '=', 'c.empleado_id')
+                            ->join('hactividades as h', 'h.cliente_id', '=', 'c.id')
+                            ->where('h.tarea', '=', 'Seguimiento')
+                            ->where('h.detalle', '=', 'Concretado')
+                            ->where('cc.bnd_inscrito', '=', 1)
+                            ->whereColumn('h.created_at', '>=', 'l.inicio')
+                            ->whereColumn('h.created_at', '<=', 'l.fin')
+                            ->where('e.id', '=', $especialidad->id)
+                            ->where('emp.id', '=', $empleado->id)
+                            ->where('emp.plantel_id', '=', $empleado->plantel_id)    
+                            ->where('c.st_cliente_id', '=', '4')
+                            ->groupBy('p.id')
+                            ->groupBy('e.id')
+                            ->groupBy('emp.id')
+                            ->groupBy('p.razon')
+                            ->groupBy('e.name')
+                            ->groupBy('e.meta')
+                            ->groupBy('l.fin')
+                            ->groupBy('emp.nombre')
+                            ->groupBy('emp.ape_paterno')
+                            ->groupBy('emp.ape_materno')
+                            ->first();
+                    }else{
+                        $cs=Seguimiento::select(DB::raw('concat(p.id,e.id,emp.id) as id'),
                                 'p.razon', 'e.name as especialidad', 'l.fin',
                             DB::raw('concat(emp.nombre, " ", emp.ape_paterno, " ", emp.ape_materno) as empleado'),
                             'e.meta', 'p.id as plantel_id', 'e.id as especialidad_id', 'emp.id as empleado_id',
@@ -375,6 +438,8 @@ class HomeController extends Controller
                             ->groupBy('emp.ape_paterno')
                             ->groupBy('emp.ape_materno')
                             ->first();
+                    }
+                    
                     /*$cs=Seguimiento::select(DB::raw('concat(p.id,e.id,emp.id) as id'),
                                 'p.razon', 'e.name as especialidad', 'l.fin',
                             DB::raw('concat(emp.nombre, " ", emp.ape_paterno, " ", emp.ape_materno) as empleado'),

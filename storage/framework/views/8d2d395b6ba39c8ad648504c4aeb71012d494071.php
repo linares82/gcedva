@@ -79,7 +79,7 @@
             </div>
         </div>
         <?php endif; // Entrust::can ?>
-        <?php if (\Entrust::can('avanaces_mes1')) : ?>
+        <?php if (\Entrust::can('avanaces_mes2')) : ?>
         <div class="form-group col-md-5 col-sm-5 col-xs-12">
             <div class="box box-primary">
                 <div class="box-header with-border">
@@ -94,7 +94,7 @@
             </div>
         </div>
         <?php endif; // Entrust::can ?>
-        <?php if (\Entrust::can('avanaces_mes_grafica')) : ?>
+        <?php if (\Entrust::can('avances_mes_grafica')) : ?>
         <div class="col-md-3 col-sm-6 col-xs-12">
             <!-- small box -->
             <div class="info-box" >
@@ -115,6 +115,7 @@
             
         </div><!-- ./col -->
         <?php endif; // Entrust::can ?>
+        <?php if (\Entrust::can('cifras')) : ?>
         <div class="col-md-3 col-sm-6 col-xs-12">
             <!-- small box -->
             <div class="info-box">
@@ -171,6 +172,7 @@
                 </div>
             </div>
         </div><!-- ./col -->
+        <?php endif; // Entrust::can ?>
     </div><!-- /.row -->
         
     <div class="row">

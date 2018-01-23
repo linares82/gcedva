@@ -117,6 +117,7 @@
             
         </div><!-- ./col -->
         @endpermission
+        @permission('cifras')
         <div class="col-md-3 col-sm-6 col-xs-12">
             <!-- small box -->
             <div class="info-box">
@@ -173,6 +174,7 @@
                 </div>
             </div>
         </div><!-- ./col -->
+        @endpermission
     </div><!-- /.row -->
         
     <div class="row">
