@@ -168,7 +168,7 @@ class CorreosController extends Controller {
         $n = $request->input("nombre");
         $asunto = $request->input("asunto");
         $contenido = $request->input("contenido_mail");
-        $from= Auth::user()->email;
+        $from=Auth::user()->email;
 
         $data = array('contenido' => $contenido, 'nombre' => $n);
         $r = \Mail::send('correos.version2.correo_individual', $data, function ($message)
@@ -205,7 +205,7 @@ class CorreosController extends Controller {
             }
             return view("correos.version2.msj_correcto")->with("msj", "Correo enviado correctamente");
         /*} else {
-            return view("correos.version2.msj_rechazado")->with("msj", "Se presentó un error vuelva a intentarlo");
+            return view("correos.version2.msj_rechazado")->with("msj", "Se presentÃ³ un error vuelva a intentarlo");
         }*/
     }
 

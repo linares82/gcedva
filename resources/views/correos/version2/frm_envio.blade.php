@@ -56,7 +56,7 @@
                     </div>
 
                     <div class="form-group">
-                        <textarea id="contenido_mail" name="contenido_mail" class="form-control" style="height: 200px" placeholder="escriba aquí...">
+                        <textarea id="contenido_mail" name="contenido_mail" class="form-control" style="height: 200px" placeholder="escriba aquÃ­...">
                          
                         </textarea>
                     </div>
@@ -120,14 +120,14 @@
         var rs = false; //leccion 10
         var seccion_sel = $("#seccion_seleccionada").val();
         if (nombreform == "f_enviar_correo") {
-            var miurl = "/correos/enviarCorreo";
+                var miurl = "{{url('/correos/enviarCorreo')}}";
             var divresul = "contenido_principal";
         }
 
-        //información del formulario
+        //informaciÃ³n del formulario
         var formData = new FormData($("#" + nombreform + "")[0]);
 
-        //hacemos la petición ajax   
+        //hacemos la peticiÃ³n ajax   
         $.ajax({
             url: miurl,
             type: 'POST',
