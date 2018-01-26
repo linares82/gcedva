@@ -553,8 +553,25 @@ class SeguimientosController extends Controller {
 
     public function analitica_actividadesf() {
         $fecha_inicio = date('Y-m-j', strtotime('-8 day', strtotime(date('Y-m-j'))));
+        $e = Empleado::where('user_id', '=', Auth::user()->id)->first();
+        $plantel=$e->plantel_id;
         //dd($fecha_inicio);
-        $ds_actividades = DB::table('hactividades as has')
+        if(Auth::user()->can('WgaugesXplantelIndividual')){
+            $ds_actividades = DB::table('hactividades as has')
+                ->select('p.razon as plantel', 
+                        DB::raw('concat(e.nombre,e.ape_paterno,e.ape_materno) as empleado'), 
+                        DB::raw('concat(c.nombre,c.ape_paterno,c.ape_materno) as cliente'), 
+                        'has.tarea', 'has.fecha', 'has.asunto', 'has.detalle', 
+                        'stc.name as estatus_cliente')
+                ->join('clientes as c', 'c.id', '=', 'has.cliente_id')
+                ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
+                ->join('plantels as p', 'p.id', '=', 'e.plantel_id')
+                ->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
+                ->where('has.fecha', '>', $fecha_inicio)
+                ->where('p.id', '=', $plantel)    
+                ->get();
+        }else{
+            $ds_actividades = DB::table('hactividades as has')
                 ->select('p.razon as plantel', 
                         DB::raw('concat(e.nombre,e.ape_paterno,e.ape_materno) as empleado'), 
                         DB::raw('concat(c.nombre,c.ape_paterno,c.ape_materno) as cliente'), 
@@ -566,6 +583,8 @@ class SeguimientosController extends Controller {
                 ->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
                 ->where('has.fecha', '>', $fecha_inicio)
                 ->get();
+        }
+        
         return view('seguimientos.reportes.analitica_actividadesr')
                         ->with('actividades', json_encode($ds_actividades));
     }
