@@ -179,7 +179,6 @@ class MysqlDump extends Command
 
     protected function storeDumpFile($data)
     {
-		//dd($this->getFilePath());
         if ($this->keepLocal) {
             Storage::disk($this->localDisk)->put($this->getFilePath(), $data);
         }

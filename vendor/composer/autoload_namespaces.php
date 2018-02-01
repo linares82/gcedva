@@ -7,7 +7,6 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Svg\\' => array($vendorDir . '/phenx/php-svg-lib/src'),
-    'Sendinblue' => array($vendorDir . '/mailin-api/mailin-api-php/src'),
     'Sabberworm\\CSS' => array($vendorDir . '/sabberworm/php-css-parser/lib'),
     'Prophecy\\' => array($vendorDir . '/phpspec/prophecy/src'),
     'Pqb\\FilemanagerLaravel\\' => array($vendorDir . '/pqb/filemanager-laravel/src'),
@@ -18,6 +17,4 @@ return array(
     'Maatwebsite\\Excel\\' => array($vendorDir . '/maatwebsite/excel/src'),
     'JakubOnderka\\PhpConsoleHighlighter' => array($vendorDir . '/jakub-onderka/php-console-highlighter/src'),
     'JakubOnderka\\PhpConsoleColor' => array($vendorDir . '/jakub-onderka/php-console-color/src'),
-    'Doctrine\\Common\\Inflector\\' => array($vendorDir . '/doctrine/inflector/lib'),
-    'Chumper\\Zipper' => array($vendorDir . '/chumper/zipper/src'),
 );

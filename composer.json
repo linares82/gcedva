@@ -26,7 +26,6 @@
         "pqb/filemanager-laravel": "2.*",
         "studio/laravel-totem": "1.0",
         "twilio/sdk": "4.10",
-        "webup/laravel-sendinblue": "1.0.*",
         "zizaco/entrust": "5.2.x-dev"
     },
     "require-dev": {

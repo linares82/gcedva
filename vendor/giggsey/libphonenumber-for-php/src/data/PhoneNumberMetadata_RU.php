@@ -14,7 +14,7 @@
 return array (
   'generalDesc' => 
   array (
-    'NationalNumberPattern' => '[3489]\\d{9}',
+    'NationalNumberPattern' => '[347-9]\\d{9}',
     'PossibleLength' => 
     array (
       0 => 10,
@@ -79,9 +79,10 @@ return array (
   ),
   'personalNumber' => 
   array (
+    'NationalNumberPattern' => '808\\d{7}',
+    'ExampleNumber' => '8081234567',
     'PossibleLength' => 
     array (
-      0 => -1,
     ),
     'PossibleLengthLocalOnly' => 
     array (
@@ -164,7 +165,7 @@ return array (
       'format' => '$1 $2-$3-$4',
       'leadingDigitsPatterns' => 
       array (
-        0 => '[34689]',
+        0 => '[3489]',
       ),
       'nationalPrefixFormattingRule' => '8 ($1)',
       'domesticCarrierCodeFormattingRule' => '',
@@ -191,7 +192,7 @@ return array (
       'format' => '$1 $2-$3-$4',
       'leadingDigitsPatterns' => 
       array (
-        0 => '[34689]',
+        0 => '[3489]',
       ),
       'nationalPrefixFormattingRule' => '8 ($1)',
       'domesticCarrierCodeFormattingRule' => '',

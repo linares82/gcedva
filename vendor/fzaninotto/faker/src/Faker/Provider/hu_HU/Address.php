@@ -141,4 +141,9 @@ class Address extends \Faker\Provider\Address
         'Orosháza', 'Oroszlány', 'Ózd',
         'Paks', 'Pannonhalma', 'Pápa', 'Pásztó', 'Pécsvárad', 'Pétervására', 'Pilisvörösvár', 'Polgárdi', 'Püspökladány', 'Putnok',
         'Ráckeve', 'Rétság',
-        'Sárbogárd', 'Sarkad', 'Sárospatak', 'Sárvár', 'Sásd', 'Sátoraljaújhely', 'Sellye', 'Siklós', 'Siófok', 'Sümeg', 'Szarvas', 'Szécsény', 'Szeghalom', 'Szentendre', 'Szentes', 'Szen
+        'Sárbogárd', 'Sarkad', 'Sárospatak', 'Sárvár', 'Sásd', 'Sátoraljaújhely', 'Sellye', 'Siklós', 'Siófok', 'Sümeg', 'Szarvas', 'Szécsény', 'Szeghalom', 'Szentendre', 'Szentes', 'Szentgotthárd', 'Szentlőrinc', 'Szerencs', 'Szigetszentmiklós', 'Szigetvár', 'Szikszó', 'Szob',
+        'Tab', 'Tamási', 'Tapolca', 'Tata', 'Tét', 'Tiszafüred', 'Tiszakécske', 'Tiszaújváros', 'Tiszavasvári', 'Tokaj', 'Tolna', 'Törökszentmiklós',
+        'Vác', 'Várpalota', 'Vásárosnamény', 'Vasvár', 'Vecsés',
+        'Záhony', 'Zalaszentgrót', 'Zirc'
+    );
+}

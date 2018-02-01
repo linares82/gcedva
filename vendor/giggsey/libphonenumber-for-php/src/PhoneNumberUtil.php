@@ -1653,7 +1653,10 @@ class PhoneNumberUtil
             // We require that the NSN remaining after stripping the national prefix and carrier code be
             // long enough to be a possible length for the region. Otherwise, we don't do the stripping,
             // since the original number could be a valid short number.
-            if ($this->testNumberLength($potentialNationalNumber, $regionMetadata) !== ValidationResult::TOO_SHORT) {
+            $validationResult = $this->testNumberLength($potentialNationalNumber, $regionMetadata);
+            if ($validationResult !== ValidationResult::TOO_SHORT
+                && $validationResult !== ValidationResult::IS_POSSIBLE_LOCAL_ONLY
+                && $validationResult !== ValidationResult::INVALID_LENGTH) {
                 $normalizedNationalNumber = $potentialNationalNumber;
                 if ($keepRawInput && mb_strlen($carrierCode) > 0) {
                     $phoneNumber->setPreferredDomesticCarrierCode($carrierCode);
@@ -2184,9 +2187,7 @@ class PhoneNumberUtil
 
     /**
      * Helper method to check a number against possible lengths for this number type, and determine
-     * whether it matches, or is too short or too long. Currently, if a number pattern suggests that
-     * numbers of length 7 and 10 are possible, and a number in between these possible lengths is
-     * entered, such as of length 8, this will return TOO_LONG.
+     * whether it matches, or is too short or too long.
      *
      * @param string $number
      * @param PhoneMetadata $metadata
@@ -2992,7 +2993,7 @@ class PhoneNumberUtil
      *
      * @param string $numberToParse number that we are attempting to parse. This can contain formatting
      *                          such as +, ( and -, as well as a phone number extension.
-     * @param string $defaultRegion region that we are expecting the number to be from. This is only used
+     * @param string|null $defaultRegion region that we are expecting the number to be from. This is only used
      *                          if the number being parsed is not written in international format.
      *                          The country_code for the number in this case would be stored as that
      *                          of the default region supplied. If the number is guaranteed to
@@ -3006,7 +3007,7 @@ class PhoneNumberUtil
      *                               and the number is not in international format (does not start
      *                               with +)
      */
-    public function parse($numberToParse, $defaultRegion, PhoneNumber $phoneNumber = null, $keepRawInput = false)
+    public function parse($numberToParse, $defaultRegion = null, PhoneNumber $phoneNumber = null, $keepRawInput = false)
     {
         if ($phoneNumber === null) {
             $phoneNumber = new PhoneNumber();
@@ -3511,32 +3512,32 @@ class PhoneNumberUtil
         return $this->isPossibleNumberForTypeWithReason($number, PhoneNumberType::UNKNOWN);
     }
 
-   /**
-    * Check whether a phone number is a possible number of a particular type. For types that don't
-    * exist in a particular region, this will return a result that isn't so useful; it is recommended
-    * that you use {@link #getSupportedTypesForRegion} or {@link #getSupportedTypesForNonGeoEntity}
-    * respectively before calling this method to determine whether you should call it for this number
-    * at all.
-    *
-    * This provides a more lenient check than {@link #isValidNumber} in the following sense:
-    *
-    * <ol>
-    *   <li> It only checks the length of phone numbers. In particular, it doesn't check starting
-    *        digits of the number.
-    *   <li> For some numbers (particularly fixed-line), many regions have the concept of area code,
-    *        which together with subscriber number constitute the national significant number. It is
-    *        sometimes okay to dial only the subscriber number when dialing in the same area. This
-    *        function will return IS_POSSIBLE_LOCAL_ONLY if the subscriber-number-only version is
-    *        passed in. On the other hand, because isValidNumber validates using information on both
-    *        starting digits (for fixed line numbers, that would most likely be area codes) and
-    *        length (obviously includes the length of area codes for fixed line numbers), it will
-    *        return false for the subscriber-number-only version.
-    * </ol>
-    *
-    * @param PhoneNumber $number the number that needs to be checked
-    * @param int $type the PhoneNumberType we are interested in
-    * @return int a ValidationResult object which indicates whether the number is possible
-    */
+    /**
+     * Check whether a phone number is a possible number of a particular type. For types that don't
+     * exist in a particular region, this will return a result that isn't so useful; it is recommended
+     * that you use {@link #getSupportedTypesForRegion} or {@link #getSupportedTypesForNonGeoEntity}
+     * respectively before calling this method to determine whether you should call it for this number
+     * at all.
+     *
+     * This provides a more lenient check than {@link #isValidNumber} in the following sense:
+     *
+     * <ol>
+     *   <li> It only checks the length of phone numbers. In particular, it doesn't check starting
+     *        digits of the number.
+     *   <li> For some numbers (particularly fixed-line), many regions have the concept of area code,
+     *        which together with subscriber number constitute the national significant number. It is
+     *        sometimes okay to dial only the subscriber number when dialing in the same area. This
+     *        function will return IS_POSSIBLE_LOCAL_ONLY if the subscriber-number-only version is
+     *        passed in. On the other hand, because isValidNumber validates using information on both
+     *        starting digits (for fixed line numbers, that would most likely be area codes) and
+     *        length (obviously includes the length of area codes for fixed line numbers), it will
+     *        return false for the subscriber-number-only version.
+     * </ol>
+     *
+     * @param PhoneNumber $number the number that needs to be checked
+     * @param int $type the PhoneNumberType we are interested in
+     * @return int a ValidationResult object which indicates whether the number is possible
+     */
     public function isPossibleNumberForTypeWithReason(PhoneNumber $number, $type)
     {
         $nationalNumber = $this->getNationalSignificantNumber($number);

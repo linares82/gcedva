@@ -38,7 +38,7 @@ return array (
   ),
   'mobile' => 
   array (
-    'NationalNumberPattern' => '758(?:28[4-7]|384|4(?:6[01]|8[4-9])|5(?:1[89]|20|84)|7(?:1[2-9]|2[0-8]))\\d{4}',
+    'NationalNumberPattern' => '758(?:28[4-7]|384|4(?:6[01]|8[4-9])|5(?:1[89]|20|84)|7(?:1[2-9]|2\\d|3[01]))\\d{4}',
     'ExampleNumber' => '7582845678',
     'PossibleLength' => 
     array (
@@ -82,7 +82,7 @@ return array (
   ),
   'personalNumber' => 
   array (
-    'NationalNumberPattern' => '5(?:00|22|33|44|66|77|88)[2-9]\\d{6}',
+    'NationalNumberPattern' => '5(?:(?:00|22|33|44|66|77|88)[2-9]|21[23])\\d{6}',
     'ExampleNumber' => '5002345678',
     'PossibleLength' => 
     array (
