@@ -123,13 +123,13 @@ class ClientesController extends Controller {
         $input['turno_id']=0;
         
         $input['turno_id']=0;
-        if(!is_null($input['ape_materno'])){
+        if(is_null($input['ape_materno'])){
             $input['ape_materno']=" ";
         }
-        if(!is_null($input['nombre2'])){
+        if(is_null($input['nombre2'])){
             $input['nombre2']=" ";
         }
-        if(!is_null($input['matricula'])){
+        if(is_null($input['matricula'])){
             $input['matricula']=" ";
         }
         $param=Param::where('llave', '=', 'msj_text')->first();
@@ -300,13 +300,14 @@ class ClientesController extends Controller {
         //dd("fil");
         $input = $request->all();
         $input['usu_mod_id'] = Auth::user()->id;
-        if(!is_null($input['ape_materno'])){
+        //dd($input);
+        if(is_null($input['ape_materno'])){
             $input['ape_materno']=" ";
         }
-        if(!is_null($input['nombre2'])){
+        if(is_null($input['nombre2'])){
             $input['nombre2']=" ";
         }
-        if(!is_null($input['matricula'])){
+        if(is_null($input['matricula'])){
             $input['matricula']=" ";
         }
         //$empleado=Empleado::find($request->input('empleado_id'));

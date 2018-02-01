@@ -181,7 +181,7 @@ return [
         Kim\Activity\ActivityServiceProvider::class,
         Studio\Totem\Providers\TotemServiceProvider::class,
         Bogardo\Mailgun\MailgunServiceProvider::class,
-        
+        Webup\LaravelSendinBlue\SendinBlueServiceProvider::class,
         /*
          * Application Service Providers...
          */
