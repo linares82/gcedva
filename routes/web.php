@@ -2480,7 +2480,7 @@ Route::get('grupos/index', array(
         'middleware' => 'permission:inscripcions.destroy',
         'uses' => 'InscripcionsController@destroy')
     )->middleware('auth');
-    Route::post('/inscripcions/destroyCli/{id}', array(
+    Route::get('/inscripcions/destroyCli/{id}', array(
         'as' => 'inscripcions.destroyCli',
         'middleware' => 'permission:inscripcions.destroy',
         'uses' => 'InscripcionsController@destroyCli')

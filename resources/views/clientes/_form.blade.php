@@ -785,9 +785,7 @@
                             <a class="btn btn-xs btn-warning" href="{{ route('inscripcions.registrarMaterias', $i->id) }}"><i class="glyphicon glyphicon-edit"></i>Registrar Materias</a>
                             @endpermission
                             @permission('inscripcions.destroy')
-                            {!! Form::model($i, array('route' => array('inscripcions.destroyCli', $i->id),'method' => 'post', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}
-                            <button type="submit" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> Borrar</button>
-                            {!! Form::close() !!}
+                            <a class="btn btn-xs btn-danger" href="{{ route('inscripcions.destroyCli', $i->id) }}"><i class="glyphicon glyphicon-trash"></i>Borrar</a>
                             @endpermission
                         </td>
                     </tr>

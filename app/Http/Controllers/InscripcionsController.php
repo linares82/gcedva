@@ -191,6 +191,7 @@ class InscripcionsController extends Controller {
 	public function destroyCli($id,Inscripcion $inscripcion)
 	{
 		$inscripcion=$inscripcion->find($id);
+                //dd($id);
 		$cli=$inscripcion->cliente_id;
 		$inscripcion->delete();
 

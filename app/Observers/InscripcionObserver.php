@@ -42,8 +42,6 @@ class InscripcionObserver
         $grupo=Grupo::find($inscripcion->grupo_id);
         $grupo->registrados=$grupo->registrados+1;
         $grupo->save();
-
-        
     }
 
     /**
@@ -52,9 +50,30 @@ class InscripcionObserver
      * @param  User  $user
      * @return void
      */
-    public function updating(Inscripcion $inscripcion)
+    public function updated(Inscripcion $inscripcion)
     {
-        //
+        $mes=date('m');
+        $year=date('y');
+        $cadena0="00000";
+        
+        $this->inscripcion=$inscripcion;
+        //dd($this->inscripcion);
+        $cliente=Cliente::find($inscripcion->cliente_id);
+        //dd($cliente);
+        if($cliente->cve_alumno==null){
+            $plantel=Plantel::find($cliente->plantel_id);
+            $plantel->cns_alumno=$plantel->cns_alumno+1;
+            $plantel->save();
+
+            $str=substr($cadena0, 0, strlen($cadena0)- strlen($plantel->cns_alumno));
+
+            $cliente->cve_alumno=$mes.$year.$plantel->cve_plantel.$str.$plantel->cns_alumno;
+            //dd($cliente);
+            $cliente->save();
+        }
+        $grupo=Grupo::find($inscripcion->grupo_id);
+        $grupo->registrados=$grupo->registrados+1;
+        $grupo->save();
     }
 
     public function deleted(Inscripcion $inscripcion){
