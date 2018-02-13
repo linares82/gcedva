@@ -42,6 +42,7 @@ class InscripcionObserver
         $grupo=Grupo::find($inscripcion->grupo_id);
         $grupo->registrados=$grupo->registrados+1;
         $grupo->save();
+        
     }
 
     /**
