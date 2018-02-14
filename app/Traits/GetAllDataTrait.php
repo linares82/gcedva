@@ -27,7 +27,7 @@ trait GetAllDataTrait {
      */
 
     public static function getAllData( Request $request, $paginate=20, $clientesa=0){
-
+        
         $myObj = new self;
         $myQuery = $myObj;
 
@@ -178,7 +178,9 @@ trait GetAllDataTrait {
                     $myQuery=$myQuery->where('clientes.plantel_id', '=', $empleado->plantel_id)
                                      ->where('st_seguimiento_id', '<>', '3');
                 }
+                //dd($clientesa);
                 if($clientesa==1){
+                    //dd($clientesa);
                     $myQuery=$myQuery->where('seguimientos.st_seguimiento_id', '=', 2);
                 }
                 break;

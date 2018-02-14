@@ -26,6 +26,8 @@
     <div class="">
         <h3>
             <i class="glyphicon glyphicon-align-justify"></i> @yield('clientesAppTitle')
+            <a class="btn btn-success" href="{{ route('clientesa.index', array('p'=>1)) }}"><i class="glyphicon glyphicon-plus"></i> Inscritos</a>
+            <a class="btn btn-warning" href="{{ route('clientesa.index') }}"><i class="glyphicon glyphicon-plus"></i> Clientes</a>
             @permission('clientes.create')
             <a class="btn btn-success pull-right" href="{{ route('clientes.create') }}"><i class="glyphicon glyphicon-plus"></i> Crear</a>
             @endpermission

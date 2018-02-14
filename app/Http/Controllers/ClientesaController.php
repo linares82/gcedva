@@ -40,6 +40,7 @@ class ClientesaController extends Controller {
      * @return Response
      */
     public function index(Request $request) {
+        return redirect()->route('clientes.index', array('p'=>1));
         /* $c=Cliente::find(86);
           dd($c); */
         

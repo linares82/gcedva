@@ -40,13 +40,21 @@ class ClientesController extends Controller {
      * @return Response
      */
     public function index(Request $request) {
-        /* $c=Cliente::find(86);
-          dd($c); */
         
-        
-        $clientes = Seguimiento::getAllData($request,20);
-        //dd($clientes->toArray());
-        //dd($clientes);
+        if(isset($_REQUEST["p"])){
+            if (session()->has('filtro_clientes')) {
+                session(['filtro_clientes' => 1]);
+            } else {
+                session(['filtro_clientes' => 1]);
+            }
+        }else{
+            if (session()->has('filtro_clientes')) {
+                session(['filtro_clientes' => 0]);
+            } else {
+                session(['filtro_clientes' => 0]);
+            }
+        }
+        $clientes = Seguimiento::getAllData($request,20, session('filtro_clientes'));
         return view('clientes.index', compact('clientes'))
                         ->with('list', Seguimiento::getListFromAllRelationApps())
                         ->with('list1', Cliente::getListFromAllRelationApps());

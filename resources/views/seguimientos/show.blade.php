@@ -184,6 +184,12 @@
             </div>
             
         </div>
+        <div class="row">
+        </div>
+        <div class="well well-sm">
+        <a class="btn btn-link" href="{{ route('clientes.index', $seguimiento->cliente_id) }}"><i class="glyphicon glyphicon-backward"></i>  Clientes</a>
+        <a class="btn btn-link " href="{{ route('clientes.index', array('p'=>1)) }}"><i class="glyphicon glyphicon-backward"></i> Inscritos</a>
+        </div>
 <!--        Inicia timeline-->
 		
         @if(isset($actividades))
@@ -228,11 +234,7 @@
         </div>
         
         @endif
-        <div class="row">
-        </div>
-        <a class="btn btn-link" href="{{ route('clientes.index', $seguimiento->cliente_id) }}"><i class="glyphicon glyphicon-backward"></i>  Regresar</a>
-
-        </div>
+        
     </div>
     <!-- Ventana para crear Tarea -->
             <div class="modal fade" id="favoritesModal" 
