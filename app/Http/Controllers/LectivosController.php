@@ -4,11 +4,12 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\Lectivo;
+use App\DiaNoHabil;
 use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updateLectivo;
 use App\Http\Requests\createLectivo;
-
+use Carbon\Carbon;
 class LectivosController extends Controller {
 
 	/**
@@ -62,7 +63,8 @@ class LectivosController extends Controller {
 			$input['carrera_bnd']=1;
 		}
 		//create data
-		if (Lectivo::create( $input )){
+		if ($r=Lectivo::create( $input )){
+                    $this->calculaAsistencias($r->id);
 			return redirect()->route('lectivos.index')->with('message', 'Registro creado.');	
 		}
 
@@ -137,7 +139,7 @@ class LectivosController extends Controller {
 
 		$lectivo=$lectivo->find($id);
 		//update data
-		
+		$this->calculaAsistencias($id);
 		if ($lectivo->update($input)){
 			return redirect()->route('lectivos.index')->with('message', 'Registro creado.');	
 		} 
@@ -157,5 +159,62 @@ class LectivosController extends Controller {
 
 		return redirect()->route('lectivos.index')->with('message', 'Registro borrado.');
 	}
+        
+        public function calculaAsistencias($id){
+            $lectivo=Lectivo::find($id);
+            $dia= date('Y-m-d', strtotime($lectivo->inicio));
+            $componentes=explode("-",$dia);
+            $fecarbon=Carbon::createFromDate($componentes[0],$componentes[1],$componentes[2]);
+            $dia2= date('Y-m-d', strtotime($lectivo->fin));
+            $compo=explode("-",$dia2);
+            $fincarbon=Carbon::createFromDate($compo[0],$compo[1],$compo[2]);
+            $total_lv=0;
+            $total_s=0;
+            while($fecarbon->lte($fincarbon)){    
+                $noHabil= DiaNoHabil::where('lectivo_id', '=', $id)
+                                    ->where('fecha', '=', $fecarbon->format('Y-m-d'))
+                                    ->first();
+                //dd($noHabil);
+                if(is_null($noHabil)){             
+                    switch ($fecarbon->dayOfWeek){
+                        case Carbon::MONDAY:
+                            $total_lv++;
+                            break;
+                        case Carbon::TUESDAY:
+                            $total_lv++;
+                            break;
+                        case Carbon::WEDNESDAY:
+                            $total_lv++;
+                            break;
+                        case Carbon::THURSDAY:
+                            $total_lv++;
+                            break;
+                        case Carbon::FRIDAY:
+                            $total_lv++;
+                            break;
+                        case Carbon::SATURDAY:
+                            $total_s++;
+                            break;
+                    }
+                }
+                $fecarbon->addDay(1);                
+                //echo $fecarbon."***";
+            }
+            $lectivo->total_asistencias_lv=$total_lv;
+            $lectivo->total_asistencias_s=$total_s;
+            $lectivo->save();
+            //dd($total_lv."-".$total_s."**");
+        }
+        
+        public function imprimirCalendario($id, Lectivo $lectivo){
+            $lectivo = $lectivo->find($id);
+            $fecha= date('Y-m-d', strtotime($lectivo->inicio));
+            $componentes=explode("-",$fecha);
+            $anio=$componentes[0];
 
+            $noHabiles= DiaNoHabil::whereYear('fecha', $anio)
+                                  ->get();
+            //dd($noHabiles);
+            return view('lectivos.imprimirCalendario', compact('anio','noHabiles'));
+        }
 }

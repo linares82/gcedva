@@ -52,31 +52,31 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_aviso_grals.desc_corta_cont">DESC. CORTA</label>
                                 <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['aviso_grals.desc_corta_cont']) ?: '' }}" name="q[aviso_grals.desc_corta_cont]" id="q_aviso_grals.desc_corta_cont" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['aviso_grals.desc_corta_cont']) ?: '' }}" name="q[aviso_grals.desc_corta_cont]" id="q_aviso_grals.desc_corta_cont" />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_empleados.nombre_cont">DESTINATARIO</label>
                                 <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['empleados.nombre_cont']) ?: '' }}" name="q[empleados.nombre_cont]" id="q_empleados.nombre_cont" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['empleados.nombre_cont']) ?: '' }}" name="q[empleados.nombre_cont]" id="q_empleados.nombre_cont" />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_empleados.ape_paterno_cont">APELLIDO PATERNO</label>
                                 <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['empleados.ape_paterno_cont']) ?: '' }}" name="q[empleados.ape_paterno_cont]" id="q_empleados.ape_paterno_cont" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['empleados.ape_paterno_cont']) ?: '' }}" name="q[empleados.ape_paterno_cont]" id="q_empleados.ape_paterno_cont" />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_empleados.ape_materno_cont">APELLIDO MATERNO</label>
                                 <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['empleados.ape_materno_cont']) ?: '' }}" name="q[empleados.ape_materno_cont]" id="q_empleados.ape_materno_cont" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['empleados.ape_materno_cont']) ?: '' }}" name="q[empleados.ape_materno_cont]" id="q_empleados.ape_materno_cont" />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_created_at">FECHA</label>
                                 <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['created_at_cont']) ?: '' }}" name="q[created_at_cont]" id="q_created_at_cont" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['created_at_cont']) ?: '' }}" name="q[created_at_cont]" id="q_created_at_cont" />
                                 </div>
                             </div>
                             

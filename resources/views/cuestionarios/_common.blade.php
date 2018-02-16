@@ -1,1 +1,1 @@
-@section('cuestionariosAppTitle','Cuestionario')
+@section('cuestionariosAppTitle','Cuestionario Empresa')

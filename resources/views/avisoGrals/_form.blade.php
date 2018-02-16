@@ -3,14 +3,14 @@
 <!--                    
                         <div class="form-group col-md-6 @if($errors->has('inicio')) has-error @endif">
                             <label for="inicio-field">Inicio Vigencia</label>
-                            {!! Form::text("inicio", null, array("class" => "form-control", "id" => "inicio-field")) !!}
+                            {!! Form::text("inicio", null, array("class" => "form-control input-sm", "id" => "inicio-field")) !!}
                             @if($errors->has("inicio"))
                                 <span class="help-block">{{ $errors->first("inicio") }}</span>
                             @endif
                         </div>
                         <div class="form-group col-md-6 @if($errors->has('fin')) has-error @endif">
                             <label for="fin-field">Fin Vigencia</label>
-                            {!! Form::text("fin", null, array("class" => "form-control", "id" => "fin-field")) !!}
+                            {!! Form::text("fin", null, array("class" => "form-control input-sm", "id" => "fin-field")) !!}
                             @if($errors->has("fin"))
                                 <span class="help-block">{{ $errors->first("fin") }}</span>
                             @endif
@@ -35,7 +35,7 @@
                                 <label for="empleado_id-field">Empleado</label>
                                 <a href='#' id='select-all'>Seleccionar todos</a>
                                 <div id="select_empleado">
-                                    {!! Form::select("empleado_id", $list1['Empleado'], null, array("class" => "form-control", "id" => "empleado_id-field", "name"=>"empleado_id-field[]", 'multiple'=>'multiple')) !!} 
+                                    {!! Form::select("empleado_id", $list1['Empleado'], null, array("class" => "form-control input-sm", "id" => "empleado_id-field", "name"=>"empleado_id-field[]", 'multiple'=>'multiple')) !!} 
                                 </div>
                                 <div id='loading3' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div>
                                 @if($errors->has("empleado_id"))
@@ -79,14 +79,14 @@
                     <div class="form-group col-md-4">
                         <div class="form-group col-md-12 @if($errors->has('desc_corta')) has-error @endif">
                             <label for="desc_corta-field">Asunto</label>
-                            {!! Form::text("desc_corta", null, array("class" => "form-control", "id" => "desc_corta-field", 'rows'=>'3', 'maxlength'=>'255')) !!}
+                            {!! Form::text("desc_corta", null, array("class" => "form-control input-sm", "id" => "desc_corta-field", 'rows'=>'3', 'maxlength'=>'255')) !!}
                             @if($errors->has("desc_corta"))
                                 <span class="help-block">{{ $errors->first("desc_corta") }}</span>
                             @endif
                         </div>
                         <div class="form-group col-md-12 @if($errors->has('aviso')) has-error @endif">
                             <label for="aviso-field">Aviso </label>
-                            {!! Form::textArea("aviso", null, array("class" => "form-control", "id" => "aviso-field", 'rows'=>'10')) !!}
+                            {!! Form::textArea("aviso", null, array("class" => "form-control input-sm", "id" => "aviso-field", 'rows'=>'10')) !!}
                             @if($errors->has("aviso"))
                                 <span class="help-block">{{ $errors->first("aviso") }}</span>
                             @endif

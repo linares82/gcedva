@@ -58,7 +58,7 @@
                     </div>
                     <div class="form-group col-md-1 @if($errors->has('matricula')) has-error @endif">
                     <label for="cantidad-field">Registros</label>
-                    {!! Form::text("cantidad", null, array("class" => "form-control", "id" => "cantidad-field")) !!}
+                    {!! Form::text("cantidad", null, array("class" => "form-control input-sm", "id" => "cantidad-field")) !!}
                     @if($errors->has("cantidad"))
                         <span class="help-block">{{ $errors->first("cantidad") }}</span>
                     @endif

@@ -27,7 +27,7 @@ class createPlantel extends FormRequest
             "razon" => "required",
             "rfc" => "required",
             'cve_incorporacion' => "required",
-            'direccion' => "required",
+            //'direccion' => "required",
             'tel' => "required",
             'mail' => "required|email",
             'pag_web' => "required",

@@ -30,7 +30,7 @@
                     </div>
                     <div class="form-group col-md-4 @if($errors->has('detalle')) has-error @endif">
                        <label for="detalle-field">Detalle</label>
-                       {!! Form::text("detalle", null, array("class" => "form-control", "id" => "detalle-field")) !!}
+                       {!! Form::text("detalle", null, array("class" => "form-control input-sm", "id" => "detalle-field")) !!}
                        @if($errors->has("detalle"))
                         <span class="help-block">{{ $errors->first("detalle") }}</span>
                        @endif
@@ -44,7 +44,7 @@
                     </div>
                     <div class="form-group col-md-12 @if($errors->has('observaciones')) has-error @endif">
                        <label for="observaciones-field">Observaciones</label>
-                       {!! Form::text("observaciones", null, array("class" => "form-control", "id" => "observaciones-field")) !!}
+                       {!! Form::text("observaciones", null, array("class" => "form-control input-sm", "id" => "observaciones-field")) !!}
                        
                        @if($errors->has("observaciones"))
                         <span class="help-block">{{ $errors->first("observaciones") }}</span>

@@ -52,21 +52,21 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_aviso_cont">DESC. CORTA</label>
                                 <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['desc_corta_cont']) ?: '' }}" name="q[aviso_cont]" id="q_aviso_cont" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['desc_corta_cont']) ?: '' }}" name="q[aviso_cont]" id="q_aviso_cont" />
                                 </div>
                             </div>
                                 
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_inicio_cont">INICIO</label>
                                 <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['inicio_cont']) ?: '' }}" name="q[inicio_cont]" id="q_inicio_cont" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['inicio_cont']) ?: '' }}" name="q[inicio_cont]" id="q_inicio_cont" />
                                 </div>
                             </div>
                             
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_created_at">FECHA</label>
                                 <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['created_at_cont']) ?: '' }}" name="q[created_at_cont]" id="q_created_at_cont" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['created_at_cont']) ?: '' }}" name="q[created_at_cont]" id="q_created_at_cont" />
                                 </div>
                             </div>
 

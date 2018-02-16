@@ -61,14 +61,16 @@
                 -->
                     <div class="form-group col-md-4 @if($errors->has('cve_alumno')) has-error @endif">
                        <label for="cve_alumno-field">Clave Alumno</label>
-                       {!! Form::text("cve_alumno", null, array("class" => "form-control", "id" => "cve_alumno-field")) !!}
+                       {!! Form::text("cve_alumno", null, array("class" => "form-control input-sm", "id" => "cve_alumno-field")) !!}
                        @if($errors->has("cve_alumno"))
                         <span class="help-block">{{ $errors->first("cve_alumno") }}</span>
                        @endif
                     </div>
+                    
                     <div class="form-group col-md-4 @if($errors->has('materium_id')) has-error @endif">
                        <label for="materium_id-field">Materia</label>
                        {!! Form::select("materium_id", $list["Materium"], null, array("class" => "form-control select_seguridad", "id" => "materium_id-field")) !!}
+                       <div id='loading3' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                        @if($errors->has("materium_id"))
                         <span class="help-block">{{ $errors->first("materium_id") }}</span>
                        @endif
@@ -78,6 +80,13 @@
                        {!! Form::select("tpo_examen_id", $examen, null, array("class" => "form-control select_seguridad", "id" => "tpo_examen_id-field")) !!}
                        @if($errors->has("tpo_examen_id"))
                         <span class="help-block">{{ $errors->first("st_materium_id") }}</span>
+                       @endif
+                    </div>
+                    <div class="form-group col-md-4 @if($errors->has('curp')) has-error @endif" style="clear:left;">
+                       <label for="curp-field">CURP</label>
+                       {!! Form::text("curp", null, array("class" => "form-control input-sm", "id" => "curp-field")) !!}
+                       @if($errors->has("curp"))
+                        <span class="help-block">{{ $errors->first("curp") }}</span>
                        @endif
                     </div>
                     @permission('calificacions.excepcion')
@@ -124,7 +133,7 @@
                                         </td>
                                     @else
                                     <td>
-                                        {!! Form::hidden("id", $h->id, array("class" => "form-control", "id" => "id-field")) !!}
+                                        {!! Form::hidden("id", $h->id, array("class" => "form-control input-sm", "id" => "id-field")) !!}
                                     </td>
                                     <td>
                                         {{$h->nombre}}
@@ -183,9 +192,13 @@
     
     $(document).ready(function() {
       //getCmbGrupo();
-      getCmbMateria();
+      getCmbMateriaByCve();
+      getCmbMateriaByCurp();
       $('#cve_alumno-field').focusout(function() {
-          getCmbMateria();
+          getCmbMateriaByCve();
+      });
+      $('#curp-field').focusout(function() {
+          getCmbMateriaByCurp();
       });
       /*$('#plantel_id-field').change(function(){
           getCmbGrupo();
@@ -223,13 +236,38 @@
 
     });
 
-    function getCmbMateria(){
+    function getCmbMateriaByCve(){
           var $example = $("#especialidad_id-field").select2();
           var a= $('#frm_academica').serialize();
               $.ajax({
                   url: '{{ route("materias.getCmbMateriaXalumno2") }}',
                   type: 'GET',
                   data: "cve_alumno=" + $('#cve_alumno-field').val()+"&materium_id="+ $('#materium_id-field option:selected').val(),
+                  dataType: 'json',
+                  beforeSend : function(){$("#loading3").show();},
+                  complete : function(){$("#loading3").hide();},
+                  success: function(data){
+                      //$example.select2("destroy");
+                      $('#materium_id-field').html('');
+                      
+                      //$('#especialidad_id-field').empty();
+                      $('#materium_id-field').append($('<option></option>').text('Seleccionar Opción').val('0'));
+                      
+                      $.each(data, function(i) {
+                          //alert(data[i].name);
+                          $('#materium_id-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                          
+                      });
+                      //$example.select2();
+                  }
+              });       
+      }
+      
+     function getCmbMateriaByCurp(){
+              $.ajax({
+                  url: '{{ route("materias.getCmbMateriaXalumno2") }}',
+                  type: 'GET',
+                  data: "curp=" + $('#curp-field').val()+"&materium_id="+ $('#materium_id-field option:selected').val(),
                   dataType: 'json',
                   beforeSend : function(){$("#loading3").show();},
                   complete : function(){$("#loading3").hide();},

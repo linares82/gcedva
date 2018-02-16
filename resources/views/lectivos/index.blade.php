@@ -52,36 +52,36 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_name_gt">NAME</label>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['name_gt']) ?: '' }}" name="q[name_gt]" id="q_name_gt" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['name_gt']) ?: '' }}" name="q[name_gt]" id="q_name_gt" />
                                 </div>
                                 <div class=" col-sm-1 text-center"> - </div>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['name_lt']) ?: '' }}" name="q[name_lt]" id="q_name_lt" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['name_lt']) ?: '' }}" name="q[name_lt]" id="q_name_lt" />
                                 </div>
                             </div>
                             -->
                             <div class="form-group col-md-4">
                                 <label class="col-sm-12 control-label" for="q_name_cont">Periodo Lectivo</label>
                                 <div class="col-sm-12">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['name_cont']) ?: '' }}" name="q[name_cont]" id="q_name_cont" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['name_cont']) ?: '' }}" name="q[name_cont]" id="q_name_cont" />
                                 </div>
                             </div>
                                                     <!--
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_activo_gt">ACTIVO</label>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['activo_gt']) ?: '' }}" name="q[activo_gt]" id="q_activo_gt" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['activo_gt']) ?: '' }}" name="q[activo_gt]" id="q_activo_gt" />
                                 </div>
                                 <div class=" col-sm-1 text-center"> - </div>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['activo_lt']) ?: '' }}" name="q[activo_lt]" id="q_activo_lt" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['activo_lt']) ?: '' }}" name="q[activo_lt]" id="q_activo_lt" />
                                 </div>
                             </div>
                             -->
                             <div class="form-group col-md-4">
                                 <label class="col-sm-12 control-label" for="q_activo_cont">ACTIVO</label>
                                 <div class="col-sm-12">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['activo_cont']) ?: '' }}" name="q[activo_cont]" id="q_activo_cont" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['activo_cont']) ?: '' }}" name="q[activo_cont]" id="q_activo_cont" />
                                 </div>
                             </div>
                                                     
@@ -110,7 +110,8 @@
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'name', 'title' => 'Periodo Lectivo'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'activo', 'title' => 'ACTIVO'])</th>
-                            
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'total_asistencias_lv', 'title' => 'Asistencias L-V'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'total_asistencias_s', 'title' => 'Asistencias S'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
@@ -127,6 +128,8 @@
                                     Falso
                                 @endif
                                 </td>
+                                <td>{{$lectivo->total_asistencias_lv}}</td>
+                                <td>{{$lectivo->total_asistencias_s}}</td>
                                 <!--<td>
                                     @if ($lectivo->id==1) 
                                         <SPAN CLASS="label label-success"> 

@@ -139,6 +139,7 @@ class InscripcionsController extends Controller {
 	public function edit($id, Inscripcion $inscripcion)
 	{
 		$inscripcion=$inscripcion->find($id);
+                
 		return view('inscripcions.edit', compact('inscripcion'))
 			->with( 'list', Inscripcion::getListFromAllRelationApps() );
 	}

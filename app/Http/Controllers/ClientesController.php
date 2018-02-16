@@ -6,6 +6,8 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use File;
 use App\Cliente;
+use App\Ccuestionario;
+use App\CcuestionarioDato;
 use App\Seguimiento;
 use App\Sm;
 use App\Correo;
@@ -93,7 +95,8 @@ class ClientesController extends Controller {
         $empleados->put(0, 'Seleccionar Opción');
         $empleados = $empleados->reverse();
         //dd($empleados);
-        return view('clientes.create', compact('empleados'))
+        $cuestionarios=Ccuestionario::where('st_cuestionario_id', '=', '1')->pluck('name', 'id');
+        return view('clientes.create', compact('empleados','cuestionarios'))
                         ->with('list', Cliente::getListFromAllRelationApps());
     }
 
@@ -209,7 +212,8 @@ class ClientesController extends Controller {
      * @return Response
      */
     public function edit($id, Cliente $cliente) {
-        $cliente = $cliente->find($id);
+        $cliente = $cliente->with(['ccuestionario'])->find($id);
+        //dd($cliente->ccuestionario->ccuestionarioPreguntas);
         $p = Auth::user()->can('IfiltroEmpleadosXPlantel');
         //dd($p);
         if ($p) {
@@ -248,7 +252,9 @@ class ClientesController extends Controller {
                 ->whereNotIn('id', $de_array)
                 ->get();
         //dd($cliente->toArray());
-        return view('clientes.edit', compact('cliente', 'preguntas', 'cp', 'documentos_faltantes', 'empleados'))
+        $cuestionarios=Ccuestionario::where('st_cuestionario_id', '=', '1')->pluck('name', 'id');
+        
+        return view('clientes.edit', compact('cliente', 'preguntas', 'cp', 'documentos_faltantes', 'empleados','cuestionarios'))
                         ->with('list', Cliente::getListFromAllRelationApps())
                         ->with('list1', PivotDocCliente::getListFromAllRelationApps());
     }
@@ -306,7 +312,16 @@ class ClientesController extends Controller {
      */
     public function update($id, Cliente $cliente, updateCliente $request) {
         //dd("fil");
-        $input = $request->all();
+        //$input = $request->all();
+        
+        
+        $input = $request->except(['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15',
+                                   '16','17','18','19','20','21','22','23','24','25','26','27','28',
+                                   '29','30','31','32','33','34','35','36','37','38','39','40']);
+        $preguntas = $request->only(['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15',
+                                   '16','17','18','19','20','21','22','23','24','25','26','27','28',
+                                   '29','30','31','32','33','34','35','36','37','38','39','40']);
+        //dd($preguntas);
         $input['usu_mod_id'] = Auth::user()->id;
         //dd($input);
         if(is_null($input['ape_materno'])){
@@ -320,12 +335,13 @@ class ClientesController extends Controller {
         }
         //$empleado=Empleado::find($request->input('empleado_id'));
         //$input['plantel_id']=$empleado->plantel->id;
+        /*
         $pc['cliente_id'] = $id;
         $pc['pregunta_id'] = $input['pregunta_id'];
         $pc['respuesta'] = $input['respuesta'];
         $pc['usu_alta_id'] = Auth::user()->id;
         $pc['usu_mod_id'] = Auth::user()->id;
-        
+        */
         //dd($pc);
         unset($input['pregunta_id']);
         unset($input['respuesta']);
@@ -358,6 +374,7 @@ class ClientesController extends Controller {
         //dd($input);
         //update data
         $cliente = $cliente->find($id);
+        $cantidad_preguntas=$cliente->ccuestionario->ccuestionarioPreguntas->count();
         $cliente->update($input);
         if ($request->has('doc_cliente_id') and $request->has('archivo')) {
             $input2['doc_alumno_id'] = $request->get('doc_cliente_id');
@@ -367,13 +384,45 @@ class ClientesController extends Controller {
             $input2['usu_mod_id'] = Auth::user()->id;
             PivotDocCliente::create($input2);
         }
-
-        if ($pc['pregunta_id'] <> 0) {
-            PreguntaCliente::create($pc);
+        
+        foreach($preguntas as $llave=>$valor){
+            if($llave<>'_token' and !is_null($valor)){
+                //dd($preguntas);
+                $dato=CcuestionarioDato::where('cliente_id', '=', $id)
+                                ->where('ccuestionario_id','=', $input['ccuestionario_id'])
+                                ->where('ccuestionario_pregunta_id','=', $llave)
+                                ->first();
+               //dd($dato);
+               if(is_null($dato)){
+                   $r=new CcuestionarioDato;
+                   $r->ccuestionario_id=$input['ccuestionario_id'];
+                   $r->cliente_id=$id;
+                   $r->ccuestionario_id=$input['ccuestionario_id'];
+                   $r->ccuestionario_pregunta_id=$llave;
+                   $r->ccuestionario_respuesta_id=$valor;
+                   $r->name="";
+                   $r->clave="";
+                   $r->usu_alta_id= Auth::user()->id;
+                   $r->usu_mod_id= Auth::user()->id;
+                   //dd($r->toArray());
+                   $r->save();
+               }else{
+                   $dato->ccuestionario_respuesta_id=$valor;
+                   $dato->name="";
+                   $dato->usu_alta_id= Auth::user()->id;
+                   $dato->usu_mod_id= Auth::user()->id;
+                   //dd($dato);
+                   $dato->save();
+               }
+            }
         }
-
-
-
+        $cantidad_respuestas=CcuestionarioDato::where('cliente_id', '=', $id)
+                                ->where('ccuestionario_id','=', $input['ccuestionario_id'])
+                                ->count();
+        if($cantidad_preguntas<>$cantidad_respuestas){
+            return redirect()->route('clientes.edit', $id)->with('message', 'Cuestionario incompleto.');
+        }
+        
         return redirect()->route('clientes.edit', $id)->with('message', 'Registro Actualizado.');
     }
 
@@ -697,6 +746,20 @@ class ClientesController extends Controller {
             } else {
                 return $r;
             }
+        }
+    }
+    
+    public function getNombreCliente(Request $request) {
+        if ($request->ajax()) {
+            //dd($request->all());
+            $cliente = $request->get('cliente_id');
+            
+            $r = DB::table('clientes as c')
+                    ->select('c.nombre', 'c.nombre2','c.ape_paterno','c.ape_materno')
+                    ->where('c.id', '=', $cliente)
+                    ->first();
+            //dd($r);
+            echo json_encode($r);
         }
     }
     

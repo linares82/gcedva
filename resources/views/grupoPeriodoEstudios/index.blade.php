@@ -52,36 +52,36 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_grupo_id_gt">GRUPO_ID</label>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['grupo_id_gt']) ?: '' }}" name="q[grupo_id_gt]" id="q_grupo_id_gt" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['grupo_id_gt']) ?: '' }}" name="q[grupo_id_gt]" id="q_grupo_id_gt" />
                                 </div>
                                 <div class=" col-sm-1 text-center"> - </div>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['grupo_id_lt']) ?: '' }}" name="q[grupo_id_lt]" id="q_grupo_id_lt" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['grupo_id_lt']) ?: '' }}" name="q[grupo_id_lt]" id="q_grupo_id_lt" />
                                 </div>
                             </div>
                             -->
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_grupo_id_cont">GRUPO_ID</label>
                                 <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['grupo_id_cont']) ?: '' }}" name="q[grupo_id_cont]" id="q_grupo_id_cont" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['grupo_id_cont']) ?: '' }}" name="q[grupo_id_cont]" id="q_grupo_id_cont" />
                                 </div>
                             </div>
                                                     <!--
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_periodo_estudio_id_gt">PERIODO_ESTUDIO_ID</label>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['periodo_estudio_id_gt']) ?: '' }}" name="q[periodo_estudio_id_gt]" id="q_periodo_estudio_id_gt" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['periodo_estudio_id_gt']) ?: '' }}" name="q[periodo_estudio_id_gt]" id="q_periodo_estudio_id_gt" />
                                 </div>
                                 <div class=" col-sm-1 text-center"> - </div>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['periodo_estudio_id_lt']) ?: '' }}" name="q[periodo_estudio_id_lt]" id="q_periodo_estudio_id_lt" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['periodo_estudio_id_lt']) ?: '' }}" name="q[periodo_estudio_id_lt]" id="q_periodo_estudio_id_lt" />
                                 </div>
                             </div>
                             -->
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_periodo_estudio_id_cont">PERIODO_ESTUDIO_ID</label>
                                 <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['periodo_estudio_id_cont']) ?: '' }}" name="q[periodo_estudio_id_cont]" id="q_periodo_estudio_id_cont" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['periodo_estudio_id_cont']) ?: '' }}" name="q[periodo_estudio_id_cont]" id="q_periodo_estudio_id_cont" />
                                 </div>
                             </div>
 

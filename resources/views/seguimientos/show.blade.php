@@ -255,8 +255,8 @@
                     <div class="form-group col-md-6 @if($errors->has('tarea_id')) has-error @endif">
                        <label for="tarea_id-field">Tarea</label>
                        {!! Form::select("tarea_id", $list["Tarea"], null, array("class" => "form-control select_seguridad", "id" => "tarea_id-field", 'style'=>'width:100%')) !!}
-                       {!! Form::hidden("cliente_id", $seguimiento->cliente_id, array("class" => "form-control", "id" => "cliente_id-field")) !!}
-                       {!! Form::hidden("empleado_id", $seguimiento->cliente->empleado_id, array("class" => "form-control", "id" => "empleado_id-field")) !!}
+                       {!! Form::hidden("cliente_id", $seguimiento->cliente_id, array("class" => "form-control input-sm", "id" => "cliente_id-field")) !!}
+                       {!! Form::hidden("empleado_id", $seguimiento->cliente->empleado_id, array("class" => "form-control input-sm", "id" => "empleado_id-field")) !!}
                        @if($errors->has("tarea_id"))
                         <span class="help-block">{{ $errors->first("tarea_id") }}</span>
                        @endif
@@ -277,8 +277,8 @@
                     </div>
                     <div class="form-group col-md-12 @if($errors->has('detalle')) has-error @endif">
                        <label for="detalle-field">Detalle</label>
-                       {!! Form::textArea("detalle", null, array("class" => "form-control", "id" => "detalle-field", 'rows'=>'3')) !!}
-                       {!! Form::hidden("observaciones", null, array("class" => "form-control", "id" => "observaciones-field", 'value'=>"default")) !!}
+                       {!! Form::textArea("detalle", null, array("class" => "form-control input-sm", "id" => "detalle-field", 'rows'=>'3')) !!}
+                       {!! Form::hidden("observaciones", null, array("class" => "form-control input-sm", "id" => "observaciones-field", 'value'=>"default")) !!}
                        @if($errors->has("detalle"))
                         <span class="help-block">{{ $errors->first("detalle") }}</span>
                        @endif
@@ -315,8 +315,8 @@
                   <div class="modal-body">
                     {!! Form::open(array('route' => 'avisos.store')) !!}
                         <div class="form-group col-md-6 @if($errors->has('asunto_id')) has-error @endif">
-                            {!! Form::hidden("seguimiento_id", $seguimiento->id, array("class" => "form-control", "id" => "seguimiento_id-field")) !!}
-                            {!! Form::hidden("cliente_id", $seguimiento->cliente_id, array("class" => "form-control", "id" => "cliente_id-field")) !!}
+                            {!! Form::hidden("seguimiento_id", $seguimiento->id, array("class" => "form-control input-sm", "id" => "seguimiento_id-field")) !!}
+                            {!! Form::hidden("cliente_id", $seguimiento->cliente_id, array("class" => "form-control input-sm", "id" => "cliente_id-field")) !!}
                             <label for="asunto_id-field">Asunto</label>
                             {!! Form::select("asunto_id", $list["Asunto"], null, array("class" => "form-control select_seguridad", "id" => "asunto_id-field", 'style'=>'width:100%')) !!}
                             @if($errors->has("asunto_id"))
@@ -325,14 +325,14 @@
                         </div>
                         <div class="form-group col-md-6 @if($errors->has('fecha')) has-error @endif">
                             <label for="fecha-field">Fecha</label>
-                            {!! Form::text("fecha", null, array("class" => "form-control", "id" => "fecha-field")) !!}
+                            {!! Form::text("fecha", null, array("class" => "form-control input-sm", "id" => "fecha-field")) !!}
                             @if($errors->has("fecha"))
                                 <span class="help-block">{{ $errors->first("fecha") }}</span>
                             @endif
                         </div>
                         <div class="form-group col-md-12 @if($errors->has('detalle')) has-error @endif">
                             <label for="detalle-field">Detalle</label>
-                            {!! Form::textArea("detalle", null, array("class" => "form-control", "id" => "detalle-field", 'rows'=>3)) !!}
+                            {!! Form::textArea("detalle", null, array("class" => "form-control input-sm", "id" => "detalle-field", 'rows'=>3)) !!}
                             @if($errors->has("detalle"))
                                 <span class="help-block">{{ $errors->first("detalle") }}</span>
                             @endif

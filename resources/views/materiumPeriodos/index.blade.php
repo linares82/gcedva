@@ -52,72 +52,72 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_materium_id_gt">MATERIUM_ID</label>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['materium_id_gt']) ?: '' }}" name="q[materium_id_gt]" id="q_materium_id_gt" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['materium_id_gt']) ?: '' }}" name="q[materium_id_gt]" id="q_materium_id_gt" />
                                 </div>
                                 <div class=" col-sm-1 text-center"> - </div>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['materium_id_lt']) ?: '' }}" name="q[materium_id_lt]" id="q_materium_id_lt" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['materium_id_lt']) ?: '' }}" name="q[materium_id_lt]" id="q_materium_id_lt" />
                                 </div>
                             </div>
                             -->
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_materium_id_cont">MATERIUM_ID</label>
                                 <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['materium_id_cont']) ?: '' }}" name="q[materium_id_cont]" id="q_materium_id_cont" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['materium_id_cont']) ?: '' }}" name="q[materium_id_cont]" id="q_materium_id_cont" />
                                 </div>
                             </div>
                                                     <!--
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_periodo_estudio_id_gt">PERIODO_ESTUDIO_ID</label>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['periodo_estudio_id_gt']) ?: '' }}" name="q[periodo_estudio_id_gt]" id="q_periodo_estudio_id_gt" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['periodo_estudio_id_gt']) ?: '' }}" name="q[periodo_estudio_id_gt]" id="q_periodo_estudio_id_gt" />
                                 </div>
                                 <div class=" col-sm-1 text-center"> - </div>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['periodo_estudio_id_lt']) ?: '' }}" name="q[periodo_estudio_id_lt]" id="q_periodo_estudio_id_lt" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['periodo_estudio_id_lt']) ?: '' }}" name="q[periodo_estudio_id_lt]" id="q_periodo_estudio_id_lt" />
                                 </div>
                             </div>
                             -->
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_periodo_estudio_id_cont">PERIODO_ESTUDIO_ID</label>
                                 <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['periodo_estudio_id_cont']) ?: '' }}" name="q[periodo_estudio_id_cont]" id="q_periodo_estudio_id_cont" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['periodo_estudio_id_cont']) ?: '' }}" name="q[periodo_estudio_id_cont]" id="q_periodo_estudio_id_cont" />
                                 </div>
                             </div>
                                                     <!--
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_usu_alta_id_gt">USU_ALTA_ID</label>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['usu_alta_id_gt']) ?: '' }}" name="q[usu_alta_id_gt]" id="q_usu_alta_id_gt" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['usu_alta_id_gt']) ?: '' }}" name="q[usu_alta_id_gt]" id="q_usu_alta_id_gt" />
                                 </div>
                                 <div class=" col-sm-1 text-center"> - </div>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['usu_alta_id_lt']) ?: '' }}" name="q[usu_alta_id_lt]" id="q_usu_alta_id_lt" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['usu_alta_id_lt']) ?: '' }}" name="q[usu_alta_id_lt]" id="q_usu_alta_id_lt" />
                                 </div>
                             </div>
                             -->
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_usu_alta_id_cont">USU_ALTA_ID</label>
                                 <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['usu_alta_id_cont']) ?: '' }}" name="q[usu_alta_id_cont]" id="q_usu_alta_id_cont" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['usu_alta_id_cont']) ?: '' }}" name="q[usu_alta_id_cont]" id="q_usu_alta_id_cont" />
                                 </div>
                             </div>
                                                     <!--
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_usu_mod_id_gt">USU_MOD_ID</label>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['usu_mod_id_gt']) ?: '' }}" name="q[usu_mod_id_gt]" id="q_usu_mod_id_gt" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['usu_mod_id_gt']) ?: '' }}" name="q[usu_mod_id_gt]" id="q_usu_mod_id_gt" />
                                 </div>
                                 <div class=" col-sm-1 text-center"> - </div>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['usu_mod_id_lt']) ?: '' }}" name="q[usu_mod_id_lt]" id="q_usu_mod_id_lt" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['usu_mod_id_lt']) ?: '' }}" name="q[usu_mod_id_lt]" id="q_usu_mod_id_lt" />
                                 </div>
                             </div>
                             -->
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_usu_mod_id_cont">USU_MOD_ID</label>
                                 <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['usu_mod_id_cont']) ?: '' }}" name="q[usu_mod_id_cont]" id="q_usu_mod_id_cont" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['usu_mod_id_cont']) ?: '' }}" name="q[usu_mod_id_cont]" id="q_usu_mod_id_cont" />
                                 </div>
                             </div>
 

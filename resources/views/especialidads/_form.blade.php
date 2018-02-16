@@ -15,28 +15,28 @@
                                 </div>
                             <div class="form-group col-md-4 @if($errors->has('name')) has-error @endif">
                                <label for="name-field">Especialidad</label>
-                               {!! Form::text("name", null, array("class" => "form-control", "id" => "name-field")) !!}
+                               {!! Form::text("name", null, array("class" => "form-control input-sm", "id" => "name-field")) !!}
                                @if($errors->has("name"))
                                 <span class="help-block">{{ $errors->first("name") }}</span>
                                @endif
                             </div>
                             <div class="form-group col-md-4 @if($errors->has('rvoe')) has-error @endif">
                                <label for="rvoe-field">RVOE</label>
-                               {!! Form::text("rvoe", null, array("class" => "form-control", "id" => "rvoe-field")) !!}
+                               {!! Form::text("rvoe", null, array("class" => "form-control input-sm", "id" => "rvoe-field")) !!}
                                @if($errors->has("rvoe"))
                                 <span class="help-block">{{ $errors->first("rvoe") }}</span>
                                @endif
                             </div>
                             <div class="form-group col-md-4 @if($errors->has('ccte')) has-error @endif">
                                <label for="ccte-field">CCTE</label>
-                               {!! Form::text("ccte", null, array("class" => "form-control", "id" => "ccte-field")) !!}
+                               {!! Form::text("ccte", null, array("class" => "form-control input-sm", "id" => "ccte-field")) !!}
                                @if($errors->has("ccte"))
                                 <span class="help-block">{{ $errors->first("ccte") }}</span>
                                @endif
                             </div>
                             <div class="form-group col-md-4 @if($errors->has('meta')) has-error @endif">
                                <label for="meta-field">Meta Empleado</label>
-                               {!! Form::text("meta", null, array("class" => "form-control", "id" => "meta-field")) !!}
+                               {!! Form::text("meta", null, array("class" => "form-control input-sm", "id" => "meta-field")) !!}
                                @if($errors->has("meta"))
                                 <span class="help-block">{{ $errors->first("meta") }}</span>
                                @endif
@@ -71,14 +71,14 @@
                             <!-- 
                             <div class="form-group col-md-4 @if($errors->has('f_inicio')) has-error @endif">
                                 <label for="f_inicio-field">Fecha Inicio</label>
-                                {!! Form::text("f_inicio", null, array("class" => "form-control", "id" => "f_inicio-field")) !!}
+                                {!! Form::text("f_inicio", null, array("class" => "form-control input-sm", "id" => "f_inicio-field")) !!}
                                 @if($errors->has("f_inicio"))
                                  <span class="help-block">{{ $errors->first("f_inicio") }}</span>
                                 @endif
                              </div>
                              <div class="form-group col-md-4 @if($errors->has('f_fin')) has-error @endif">
                                 <label for="f_fin-field">Fecha Fin</label>
-                                {!! Form::text("f_fin", null, array("class" => "form-control", "id" => "f_fin-field")) !!}
+                                {!! Form::text("f_fin", null, array("class" => "form-control input-sm", "id" => "f_fin-field")) !!}
                                 @if($errors->has("f_fin"))
                                  <span class="help-block">{{ $errors->first("f_fin") }}</span>
                                 @endif

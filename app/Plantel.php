@@ -22,10 +22,10 @@ class Plantel extends Model
 
 	//Mass Assignment
 	protected $fillable = ['razon','rfc','cve_incorporacion','tel','mail','pag_web','lectivo_id',
-						   'logo','slogan','membrete','usu_alta_id','usu_mod_id', 'calle', 
-						   'no_int', 'no_ext', 'colonia', 'cp', 'municipio', 'estado', 'rvoe', 'cct', 
-						   'tpo_plantel_id', 'meta_venta', 'cve_plantel', 'cns_alumno', 'cns_empleado', 
-						   'meta_total', 'st_plantel_id'];
+                                'logo','slogan','membrete','usu_alta_id','usu_mod_id', 'calle', 
+                                'no_int', 'no_ext', 'colonia', 'cp', 'municipio', 'estado', 'rvoe', 'cct', 
+                                'tpo_plantel_id', 'meta_venta', 'cve_plantel', 'cns_alumno', 'cns_empleado', 
+                                'meta_total', 'st_plantel_id'];
 
     protected $dates = ['deleted_at'];
 

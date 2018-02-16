@@ -12,15 +12,15 @@
                         {{ csrf_field() }}
                         <div class="form-group col-md-6 @if($errors->has('email')) has-error @endif">
                             <label for="email-field">Mail</label>
-                            {!! Form::text("email", null, array("class" => "form-control", "id" => "email-field")) !!}
-                            {!! Form::hidden("id", null, array("class" => "form-control", "id" => "id-field")) !!}
+                            {!! Form::text("email", null, array("class" => "form-control input-sm", "id" => "email-field")) !!}
+                            {!! Form::hidden("id", null, array("class" => "form-control input-sm", "id" => "id-field")) !!}
                             @if($errors->has("email"))
                                 <span class="help-block">{{ $errors->first("email") }}</span>
                             @endif
                         </div>
                         <div class="form-group col-md-6 @if($errors->has('password')) has-error @endif">
                             <label for="password1-field">Password</label>
-                            {!! Form::text("password1", null, array("class" => "form-control", "id" => "password1-field")) !!}
+                            {!! Form::text("password1", null, array("class" => "form-control input-sm", "id" => "password1-field")) !!}
                             @if($errors->has("password"))
                                 <span class="help-block">{{ $errors->first("password") }}</span>
                             @endif

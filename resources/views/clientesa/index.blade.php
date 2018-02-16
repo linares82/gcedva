@@ -57,11 +57,11 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_cve_cliente_gt">CVE_CLIENTE</label>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['cve_cliente_gt']) ?: '' }}" name="q[cve_cliente_gt]" id="q_cve_cliente_gt" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['cve_cliente_gt']) ?: '' }}" name="q[cve_cliente_gt]" id="q_cve_cliente_gt" />
                                 </div>
                                 <div class=" col-sm-1 text-center"> - </div>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['cve_cliente_lt']) ?: '' }}" name="q[cve_cliente_lt]" id="q_cve_cliente_lt" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['cve_cliente_lt']) ?: '' }}" name="q[cve_cliente_lt]" id="q_cve_cliente_lt" />
                                 </div>
                             </div>
                             -->
@@ -72,55 +72,55 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_nombre_gt">NOMBRE</label>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['nombre_gt']) ?: '' }}" name="q[nombre_gt]" id="q_nombre_gt" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['nombre_gt']) ?: '' }}" name="q[nombre_gt]" id="q_nombre_gt" />
                                 </div>
                                 <div class=" col-sm-1 text-center"> - </div>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['nombre_lt']) ?: '' }}" name="q[nombre_lt]" id="q_nombre_lt" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['nombre_lt']) ?: '' }}" name="q[nombre_lt]" id="q_nombre_lt" />
                                 </div>
                             </div>
                             -->
                             <div class="form-group col-md-4">
                                 <label for="q_clientes.id_cont">ID</label>
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['clientes.id_lt']) ?: '' }}" name="q[clientes.id_lt]" id="q_clientes.id_lt" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['clientes.id_lt']) ?: '' }}" name="q[clientes.id_lt]" id="q_clientes.id_lt" />
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="q_clientes.nombre_cont">PRIMER NOMBRE</label>
                                 
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['clientes.nombre_cont']) ?: '' }}" name="q[clientes.nombre_cont]" id="q_clientes.nombre_cont" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['clientes.nombre_cont']) ?: '' }}" name="q[clientes.nombre_cont]" id="q_clientes.nombre_cont" />
                                 
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="q_clientes.nombre2_cont">SEGUNDO NOMBRE</label>
                                 
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['clientes.nombre2_cont']) ?: '' }}" name="q[clientes.nombre2_cont]" id="q_clientes.nombre2_cont" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['clientes.nombre2_cont']) ?: '' }}" name="q[clientes.nombre2_cont]" id="q_clientes.nombre2_cont" />
                                 
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="q_clientes.ape_paterno_cont">APELLIDO PATERNO</label>
                                 
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['clientes.ape_paterno_cont']) ?: '' }}" name="q[clientes.ape_paterno_cont]" id="q_clientes.ape_paterno_cont" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['clientes.ape_paterno_cont']) ?: '' }}" name="q[clientes.ape_paterno_cont]" id="q_clientes.ape_paterno_cont" />
                                 
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="q_clientes.ape_materno_cont">APELLIDO MATERNO</label>
                                 
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['clientes.ape_materno_cont']) ?: '' }}" name="q[clientes.ape_materno_cont]" id="q_clientes.ape_materno_cont" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['clientes.ape_materno_cont']) ?: '' }}" name="q[clientes.ape_materno_cont]" id="q_clientes.ape_materno_cont" />
                                 
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="q_clientes.matricula_cont">MATRICULA</label>
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['clientes.matricula_cont']) ?: '' }}" name="q[clientes.matricula_cont]" id="q_clientes.matricula_cont" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['clientes.matricula_cont']) ?: '' }}" name="q[clientes.matricula_cont]" id="q_clientes.matricula_cont" />
                             </div>
                                                     <!--
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_fec_registro_gt">FEC_REGISTRO</label>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['fec_registro_gt']) ?: '' }}" name="q[fec_registro_gt]" id="q_fec_registro_gt" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['fec_registro_gt']) ?: '' }}" name="q[fec_registro_gt]" id="q_fec_registro_gt" />
                                 </div>
                                 <div class=" col-sm-1 text-center"> - </div>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['fec_registro_lt']) ?: '' }}" name="q[fec_registro_lt]" id="q_fec_registro_lt" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['fec_registro_lt']) ?: '' }}" name="q[fec_registro_lt]" id="q_fec_registro_lt" />
                                 </div>
                             </div>
                             -->

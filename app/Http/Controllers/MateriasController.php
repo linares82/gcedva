@@ -266,5 +266,67 @@ class MateriasController extends Controller {
             }
         }
     }
+    
+    public function getCmbMateriaXalumno3(Request $request) {
+        if ($request->ajax()) {
+            //dd($request->all());
+            $curp = $request->get('curp');
+            $materia = $request->get('materium_id');
+            //dd("FLC:".$materia);
+            $e = Empleado::where('user_id', '=', Auth::user()->id)->first();
+            //dd($e->id);
+
+            $final = array();
+
+            $filtro = Auth::user()->can('IfiltroCalificacionXProfesor');
+            //dd($filtro);
+            if ($filtro) {
+                $r = DB::table('materia as m')
+                        ->join('hacademicas as h', 'h.materium_id', '=', 'm.id')
+                        ->join('inscripcions as i', 'i.id', '=', 'h.inscripcion_id')
+                        ->join('clientes as c', 'c.id', '=', 'i.cliente_id')
+                        ->join('grupos as g', 'g.id', '=', 'i.grupo_id')
+                        ->join('asignacion_academicas as aa', 'aa.grupo_id', '=', 'g.id')
+                        ->join('empleados as e', 'e.id', 'aa.empleado_id')
+                        ->select(distinct('distinctrow(m.id)'), 'm.name')
+                        ->whereColumn('m.plantel_id', 'i.plantel_id')
+                        ->where('c.curp', '=', $curp)
+                        ->where('e.id', '=', $e->id)
+                        ->where('h.deleted_at', '=', null)
+                        ->get();
+            } else {
+                $r = DB::table('materia as m')
+                        ->join('hacademicas as h', 'h.materium_id', '=', 'm.id')
+                        ->join('inscripcions as i', 'i.id', '=', 'h.inscripcion_id')
+                        ->join('clientes as c', 'c.id', '=', 'i.cliente_id')
+                        ->join('grupos as g', 'g.id', '=', 'i.grupo_id')
+                        ->join('asignacion_academicas as aa', 'aa.grupo_id', '=', 'g.id')
+                        ->join('empleados as e', 'e.id', 'aa.empleado_id')
+                        ->select(DB::raw('distinctrow(m.id)'), 'm.name')
+                        ->whereColumn('m.plantel_id', 'i.plantel_id')
+                        ->where('c.curp', '=', $curp)
+                        ->where('h.deleted_at', '=', null)
+                        ->get();
+            }
+
+            //dd($r);
+            if (isset($materia) and $materia <> 0) {
+                foreach ($r as $r1) {
+                    if ($r1->id == $materia) {
+                        array_push($final, array('id' => $r1->id,
+                            'name' => $r1->name,
+                            'selectec' => 'Selected'));
+                    } else {
+                        array_push($final, array('id' => $r1->id,
+                            'name' => $r1->name,
+                            'selectec' => ''));
+                    }
+                }
+                return $final;
+            } else {
+                return $r;
+            }
+        }
+    }
 
 }

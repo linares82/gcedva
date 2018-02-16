@@ -52,36 +52,36 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_diplomado_id_gt">DIPLOMADO_ID</label>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['diplomado_id_gt']) ?: '' }}" name="q[diplomado_id_gt]" id="q_diplomado_id_gt" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['diplomado_id_gt']) ?: '' }}" name="q[diplomado_id_gt]" id="q_diplomado_id_gt" />
                                 </div>
                                 <div class=" col-sm-1 text-center"> - </div>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['diplomado_id_lt']) ?: '' }}" name="q[diplomado_id_lt]" id="q_diplomado_id_lt" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['diplomado_id_lt']) ?: '' }}" name="q[diplomado_id_lt]" id="q_diplomado_id_lt" />
                                 </div>
                             </div>
                             -->
                             <div class="form-group col-md-4">
                                 <label class="col-sm-12 control-label" for="q_diplomado_id_cont">DIPLOMADO</label>
                                 <div class="col-sm-12">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['diplomado_id_cont']) ?: '' }}" name="q[diplomado_id_cont]" id="q_diplomado_id_cont" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['diplomado_id_cont']) ?: '' }}" name="q[diplomado_id_cont]" id="q_diplomado_id_cont" />
                                 </div>
                             </div>
                                                     <!--
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_name_gt">NAME</label>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['name_gt']) ?: '' }}" name="q[name_gt]" id="q_name_gt" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['name_gt']) ?: '' }}" name="q[name_gt]" id="q_name_gt" />
                                 </div>
                                 <div class=" col-sm-1 text-center"> - </div>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['name_lt']) ?: '' }}" name="q[name_lt]" id="q_name_lt" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['name_lt']) ?: '' }}" name="q[name_lt]" id="q_name_lt" />
                                 </div>
                             </div>
                             -->
                             <div class="form-group col-md-4">
                                 <label class="col-sm-12 control-label" for="q_name_cont">SUBDIPLOMADO</label>
                                 <div class="col-sm-12">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['name_cont']) ?: '' }}" name="q[name_cont]" id="q_name_cont" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['name_cont']) ?: '' }}" name="q[name_cont]" id="q_name_cont" />
                                 </div>
                             </div>
                                                     

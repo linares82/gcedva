@@ -1,6 +1,7 @@
                     <div class="form-group col-md-4 @if($errors->has('cliente_id')) has-error @endif">
-                       <label for="cliente_id-field">Alumno</label>
-                       {!! Form::select("cliente_id", $list["Cliente"], null, array("class" => "form-control select_seguridad", "id" => "cliente_id-field")) !!}
+                       <label for="cliente_id-field">Alumno</label> 
+                       {!! Form::text("cliente_id", null, array("class" => "form-control input-sm", "id" => "cliente_id-field")) !!}
+                       {!! Form::text("cliente", null, array("class" => "form-control input-sm", "id" => "cliente")) !!}
                        @if($errors->has("cliente_id"))
                         <span class="help-block">{{ $errors->first("cliente_id") }}</span>
                        @endif
@@ -59,11 +60,11 @@
                     </div>
                     <div class="form-group col-md-1 @if($errors->has('disponibles')) has-error @endif">
                        <label for="disponibles-field">Disponibles</label>
-                       {!! Form::text("disponibles", null, array("class" => "form-control", "id" => "disponibles-field")) !!}
+                       {!! Form::text("disponibles", null, array("class" => "form-control input-sm", "id" => "disponibles-field")) !!}
                     </div>
                     <div class="form-group col-md-4 @if($errors->has('fec_inscripcion')) has-error @endif">
                        <label for="fec_inscripcion-field">F. Inscripcion</label>
-                       {!! Form::text("fec_inscripcion", null, array("class" => "form-control", "id" => "fec_inscripcion-field")) !!}
+                       {!! Form::text("fec_inscripcion", null, array("class" => "form-control input-sm", "id" => "fec_inscripcion-field")) !!}
                        @if($errors->has("fec_inscripcion"))
                         <span class="help-block">{{ $errors->first("fec_inscripcion") }}</span>
                        @endif
@@ -73,6 +74,13 @@
                        {!! Form::select("lectivo_id", $list["Lectivo"], null, array("class" => "form-control select_seguridad", "id" => "lectivo_id-field")) !!}
                        @if($errors->has("lectivo_id"))
                         <span class="help-block">{{ $errors->first("lectivo_id") }}</span>
+                       @endif
+                    </div>
+                    <div class="form-group col-md-4 @if($errors->has('matricula')) has-error @endif">
+                       <label for="matricula-field">Matricula</label>
+                       {!! Form::text("matricula", null, array("class" => "form-control input-sm", "id" => "matricula-field")) !!}
+                       @if($errors->has("matricula"))
+                        <span class="help-block">{{ $errors->first("matricula") }}</span>
                        @endif
                     </div>
 @push('scripts')
@@ -91,6 +99,7 @@
       
     $(document).ready(function() {
         getCmbGrupo();
+        getNombreCliente()
         getCmbPeriodosEstudio();
         $('#grupo_id-field').change(function(){
           getDisponibles();
@@ -122,6 +131,38 @@
                           $('#grupo_id-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
                       });
                       //$example.select2();
+                  }
+              });       
+      }
+      
+    function getNombreCliente(){
+          //var $example = $("#especialidad_id-field").select2();
+          var a= $('#frm_academica').serialize();
+              $.ajax({
+                  url: '{{ route("clientes.getNombreCliente") }}',
+                  type: 'GET',
+                  data: "cliente_id=" + $('#cliente_id-field').val(),
+                  dataType: 'json',
+                  beforeSend : function(){$("#loading13").show();},
+                  complete : function(){$("#loading13").hide();},
+                  success: function(data){
+                      //console.log(data);
+                      nombre="";
+                      for(var property in data){
+                        if(data[property]==null){
+                        }else{
+                            nombre +=  " "+data[property];
+                        }  
+                        
+                      }
+                      $('#cliente').val('');
+                      $('#cliente').val(nombre);
+                      /*$.each(data, function(i) {
+                        
+                        $('#cliente').val('');
+                        $('#cliente').val(data[i].nombre);
+                      });
+                      */
                   }
               });       
       }

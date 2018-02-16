@@ -40,7 +40,7 @@
                 </div>
                 <div class="form-group col-md-4 @if($errors->has('no_registros')) has-error @endif">
                    <label for="no_registros-field">No. Registros(Sin contar encabezados)</label>
-                   {!! Form::text("no_registros", null, array("class" => "form-control", "id" => "no_registros-field")) !!}
+                   {!! Form::text("no_registros", null, array("class" => "form-control input-sm", "id" => "no_registros-field")) !!}
                    @if($errors->has("no_registros"))
                     <span class="help-block">{{ $errors->first("no_registros") }}</span>
                    @endif

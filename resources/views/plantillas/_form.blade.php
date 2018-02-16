@@ -16,7 +16,7 @@
                         </div>
                         <div class="form-group col-md-8 @if($errors->has('nombre')) has-error @endif">
                            <label for="nombre-field">Nombre</label>
-                           {!! Form::text("nombre", null, array("class" => "form-control", "id" => "nombre-field")) !!}
+                           {!! Form::text("nombre", null, array("class" => "form-control input-sm", "id" => "nombre-field")) !!}
                            @if($errors->has("nombre"))
                             <span class="help-block">{{ $errors->first("nombre") }}</span>
                            @endif
@@ -108,7 +108,7 @@
                         <div id="dia_div">
                             <div class="form-group col-md-4 @if($errors->has('dia')) has-error @endif" style="clear:left;">
                                <label for="dia-field">Dia (número entre 1 y 28)</label>
-                               {!! Form::text("dia", null, array("class" => "form-control", "id" => "dia-field")) !!}
+                               {!! Form::text("dia", null, array("class" => "form-control input-sm", "id" => "dia-field")) !!}
                                @if($errors->has("dia"))
                                 <span class="help-block">{{ $errors->first("dia") }}</span>
                                @endif
@@ -117,7 +117,7 @@
                         <div id="inicio_div">
                             <div class="form-group col-md-4 @if($errors->has('inicio')) has-error @endif">
                                <label for="inicio-field">Inicio</label>
-                               {!! Form::text("inicio", null, array("class" => "form-control", "id" => "inicio-field")) !!}
+                               {!! Form::text("inicio", null, array("class" => "form-control input-sm", "id" => "inicio-field")) !!}
                                @if($errors->has("inicio"))
                                 <span class="help-block">{{ $errors->first("inicio") }}</span>
                                @endif
@@ -127,7 +127,7 @@
                           <div id="fin_div">
                             <div class="form-group col-md-4 @if($errors->has('fin')) has-error @endif">
                                <label for="fin-field">Fin</label>
-                               {!! Form::text("fin", null, array("class" => "form-control", "id" => "fin-field")) !!}
+                               {!! Form::text("fin", null, array("class" => "form-control input-sm", "id" => "fin-field")) !!}
                                @if($errors->has("fin"))
                                 <span class="help-block">{{ $errors->first("fin") }}</span>
                                @endif
@@ -153,7 +153,7 @@
                          </div>
                         <div class="form-group col-md-10 @if($errors->has('asunto')) has-error @endif">
                             <label for="asunto-field">Asunto</label>
-                            {!! Form::text("asunto", null, array("class" => "form-control", "id" => "asunto-field")) !!}
+                            {!! Form::text("asunto", null, array("class" => "form-control input-sm", "id" => "asunto-field")) !!}
                             @if($errors->has("asunto"))
                              <span class="help-block">{{ $errors->first("asunto") }}</span>
                             @endif
@@ -175,7 +175,7 @@
                              <div class="btn btn-default btn-file">
                                  <i class="fa fa-paperclip"></i> Adjuntar Archivo
                                  <input type="file"  id="file" name="file" class="email_archivo" >
-                                 {!! Form::text("img1", null, array("class" => "form-control", "id" => "img1-field")) !!}
+                                 {!! Form::text("img1", null, array("class" => "form-control input-sm", "id" => "img1-field")) !!}
                              </div>
                              <p class="help-block"  >Max. 20MB</p>
                              <div id="texto_notificacion">
@@ -213,7 +213,7 @@
                          </div>
                          <div class="form-group col-md-12 @if($errors->has('sms')) has-error @endif">
                             <label for="sms-field">Texto del SMS(maximo 160 caracteres)</label>
-                            {!! Form::textArea("sms", null, array("class" => "form-control", "id" => "sms-field", 'rows'=>'2', 'maxlength'=>'160')) !!}
+                            {!! Form::textArea("sms", null, array("class" => "form-control input-sm", "id" => "sms-field", 'rows'=>'2', 'maxlength'=>'160')) !!}
                             @if($errors->has("sms"))
                              <span class="help-block">{{ $errors->first("sms") }}</span>
                             @endif
@@ -254,7 +254,7 @@
                     <!--
                     <div class="form-group col-md-4 @if($errors->has('periodo_id')) has-error @endif">
                        <label for="periodo_id-field">Periodo:Mensual</label>
-                       {!! Form::select("periodo_id", $list["Periodo"], null, array("class" => "form-control", "id" => "periodo_id-field")) !!}
+                       {!! Form::select("periodo_id", $list["Periodo"], null, array("class" => "form-control input-sm", "id" => "periodo_id-field")) !!}
                        @if($errors->has("periodo_id"))
                         <span class="help-block">{{ $errors->first("periodo_id") }}</span>
                        @endif

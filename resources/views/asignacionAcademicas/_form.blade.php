@@ -2,7 +2,7 @@
                     <div class="form-group col-md-4 col-md-4 @if($errors->has('plantel_id')) has-error @endif">
                        <label for="plantel_id-field">Plantel</label>
                        {!! Form::select("plantel_id", $list["Plantel"], null, array("class" => "form-control select_seguridad", "id" => "plantel_id-field")) !!}
-                       {!! Form::hidden("puesto_id", 3, array("class" => "form-control", "id" => "puesto_id-field")) !!}
+                       {!! Form::hidden("puesto_id", 3, array("class" => "form-control input-sm", "id" => "puesto_id-field")) !!}
                        @if($errors->has("plantel_id"))
                         <span class="help-block">{{ $errors->first("plantel_id") }}</span>
                        @endif
@@ -31,7 +31,7 @@
                     </div>
                     <div class="form-group col-md-4 @if($errors->has('horas')) has-error @endif">
                        <label for="horas-field">Horas</label>
-                       {!! Form::text("horas", null, array("class" => "form-control", "id" => "horas-field")) !!}
+                       {!! Form::text("horas", null, array("class" => "form-control input-sm", "id" => "horas-field")) !!}
                        @if($errors->has("horas"))
                         <span class="help-block">{{ $errors->first("horas") }}</span>
                        @endif
@@ -66,7 +66,7 @@
                         </div>
                         <div class="form-group col-md-4 @if($errors->has('duracion_clase')) has-error @endif">
                         <label for="duracion_clase-field">Duracion Clase</label>
-                        {!! Form::text("duracion_clase", null, array("class" => "form-control", "id" => "duracion_clase-field")) !!}
+                        {!! Form::text("duracion_clase", null, array("class" => "form-control input-sm", "id" => "duracion_clase-field")) !!}
                         @if($errors->has("duracion_clase"))
                             <span class="help-block">{{ $errors->first("duracion_clase") }}</span>
                         @endif

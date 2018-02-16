@@ -144,7 +144,7 @@ class EmpresasController extends Controller {
                                 ->first();
                //dd($dato);
                if(is_null($dato)){
-                   $r=new CuestionarioDAto;
+                   $r=new CuestionarioDato;
                    $r->cuestionario_id=$input['cuestionario_id'];
                    $r->empresa_id=$id;
                    $r->cuestionario_id=$input['cuestionario_id'];

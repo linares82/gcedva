@@ -108,7 +108,7 @@
                   <div class="modal-body">
                     {!! Form::open(array('route' => 'seguimientoTareas.store')) !!}
                     <div class="form-group @if($errors->has('asignacion_tarea_id')) has-error @endif">
-                       {!! Form::hidden("asignacion_tarea_id", $asignacionTarea->id, array("class" => "form-control", "id" => "asignacion_tarea_id-field")) !!}
+                       {!! Form::hidden("asignacion_tarea_id", $asignacionTarea->id, array("class" => "form-control input-sm", "id" => "asignacion_tarea_id-field")) !!}
                     </div>
                     <div class="form-group col-md-6 @if($errors->has('estatus_id')) has-error @endif">
                        <label for="estatus_id-field">Estatus</label>
@@ -119,7 +119,7 @@
                     </div>
                     <div class="form-group col-md-6 @if($errors->has('detalle')) has-error @endif">
                        <label for="detalle-field">Detalle</label>
-                       {!! Form::textArea("detalle", null, array("class" => "form-control", "id" => "detalle-field", 'rows'=>'3')) !!}
+                       {!! Form::textArea("detalle", null, array("class" => "form-control input-sm", "id" => "detalle-field", 'rows'=>'3')) !!}
                        @if($errors->has("detalle"))
                         <span class="help-block">{{ $errors->first("detalle") }}</span>
                        @endif

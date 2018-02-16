@@ -1,20 +1,20 @@
                 <div class="form-group col-md-4 @if($errors->has('name')) has-error @endif">
                        <label for="name-field">Promoción</label>
-                       {!! Form::text("name", null, array("class" => "form-control", "id" => "name-field")) !!}
+                       {!! Form::text("name", null, array("class" => "form-control input-sm", "id" => "name-field")) !!}
                        @if($errors->has("name"))
                         <span class="help-block">{{ $errors->first("name") }}</span>
                        @endif
                     </div>
                     <div class="form-group col-md-4 @if($errors->has('inicio')) has-error @endif">
                        <label for="inicio-field">Inicio</label>
-                       {!! Form::text("inicio", null, array("class" => "form-control", "id" => "inicio-field")) !!}
+                       {!! Form::text("inicio", null, array("class" => "form-control input-sm", "id" => "inicio-field")) !!}
                        @if($errors->has("inicio"))
                         <span class="help-block">{{ $errors->first("inicio") }}</span>
                        @endif
                     </div>
                     <div class="form-group col-md-4 @if($errors->has('fin')) has-error @endif">
                        <label for="fin-field">Fin</label>
-                       {!! Form::text("fin", null, array("class" => "form-control", "id" => "fin-field")) !!}
+                       {!! Form::text("fin", null, array("class" => "form-control input-sm", "id" => "fin-field")) !!}
                        @if($errors->has("fin"))
                         <span class="help-block">{{ $errors->first("fin") }}</span>
                        @endif

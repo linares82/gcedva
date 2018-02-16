@@ -68,6 +68,10 @@ trait RelationManagerTrait {
                                                         ->pluck('relacion', 'id');
             //dd($relatedObjList);
           }
+          /*if($relationAppName=="Cliente"){
+            $relatedObjList = $relationAppArray['app']::select(DB::raw('concat(clientes.nombre, " ",clientes.ape_paterno, " ",clientes.ape_materno) as relacion, clientes.id'))
+                                                        ->pluck('relacion', 'id');
+          }*/
           if($relationAppName=="TpoExamen"){
             
             $relatedObjList = $relationAppArray['app']::where('id', '>', 1)->pluck($relationAppArray['relation_display_column'], 'id');

@@ -22,14 +22,14 @@
 </div>
 <div class="form-group col-md-4 @if($errors->has('v_inicio')) has-error @endif">
     <label for="v_inicio-field">Inicio</label>
-    {!! Form::text("v_inicio", null, array("class" => "form-control", "id" => "v_inicio-field")) !!}
+    {!! Form::text("v_inicio", null, array("class" => "form-control input-sm", "id" => "v_inicio-field")) !!}
     @if($errors->has("v_inicio"))
     <span class="help-block">{{ $errors->first("v_inicio") }}</span>
     @endif
 </div>
 <div class="form-group col-md-4 @if($errors->has('v_fin')) has-error @endif">
     <label for="v_fin-field">Fin</label>
-    {!! Form::text("v_fin", null, array("class" => "form-control", "id" => "v_fin-field")) !!}
+    {!! Form::text("v_fin", null, array("class" => "form-control input-sm", "id" => "v_fin-field")) !!}
     @if($errors->has("v_fin"))
     <span class="help-block">{{ $errors->first("v_fin") }}</span>
     @endif

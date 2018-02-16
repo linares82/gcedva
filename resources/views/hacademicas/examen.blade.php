@@ -32,7 +32,7 @@
             
                     <div class="form-group col-md-4 @if($errors->has('cve_alumno')) has-error @endif">
                        <label for="cve_alumno-field">Clave Alumno</label>
-                       {!! Form::text("cve_alumno", null, array("class" => "form-control", "id" => "cve_alumno-field")) !!}
+                       {!! Form::text("cve_alumno", null, array("class" => "form-control input-sm", "id" => "cve_alumno-field")) !!}
                        @if($errors->has("cve_alumno"))
                         <span class="help-block">{{ $errors->first("cve_alumno") }}</span>
                        @endif
@@ -64,14 +64,14 @@
                    <!--
                     <div class="form-group col-md-4 @if($errors->has('calificacion')) has-error @endif">
                        <label for="calificacion-field">Calificacion</label>
-                       {!! Form::text("calificacion", null, array("class" => "form-control", "id" => "calificacion-field")) !!}
+                       {!! Form::text("calificacion", null, array("class" => "form-control input-sm", "id" => "calificacion-field")) !!}
                        @if($errors->has("calificacion"))
                         <span class="help-block">{{ $errors->first("calificacion") }}</span>
                        @endif
                     </div>
                     <div class="form-group col-md-4 @if($errors->has('fecha')) has-error @endif">
                        <label for="fecha-field">fecha</label>
-                       {!! Form::text("fecha", null, array("class" => "form-control", "id" => "fecha-field")) !!}
+                       {!! Form::text("fecha", null, array("class" => "form-control input-sm", "id" => "fecha-field")) !!}
                        @if($errors->has("fecha"))
                         <span class="help-block">{{ $errors->first("fecha") }}</span>
                        @endif

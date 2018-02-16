@@ -1,27 +1,27 @@
                 <div class="form-group col-md-4 @if($errors->has('name')) has-error @endif">
                        <label for="name-field">Grupo</label>
-                       {!! Form::text("name", null, array("class" => "form-control", "id" => "name-field")) !!}
+                       {!! Form::text("name", null, array("class" => "form-control input-sm", "id" => "name-field")) !!}
                        @if($errors->has("name"))
                         <span class="help-block">{{ $errors->first("name") }}</span>
                        @endif
                     </div>
                     <div class="form-group col-md-4 @if($errors->has('desc_corta')) has-error @endif">
                        <label for="desc_corta-field">Descripción Corta</label>
-                       {!! Form::text("desc_corta", null, array("class" => "form-control", "id" => "desc_corta-field")) !!}
+                       {!! Form::text("desc_corta", null, array("class" => "form-control input-sm", "id" => "desc_corta-field")) !!}
                        @if($errors->has("desc_corta"))
                         <span class="help-block">{{ $errors->first("desc_corta") }}</span>
                        @endif
                     </div>
                     <div class="form-group col-md-4 @if($errors->has('limite_alumnos')) has-error @endif">
                        <label for="limite_alumnos-field">Limite Alumnos</label>
-                       {!! Form::text("limite_alumnos", null, array("class" => "form-control", "id" => "limite_alumnos-field")) !!}
+                       {!! Form::text("limite_alumnos", null, array("class" => "form-control input-sm", "id" => "limite_alumnos-field")) !!}
                        @if($errors->has("limite_alumnos"))
                         <span class="help-block">{{ $errors->first("limite_alumnos") }}</span>
                        @endif
                     </div>
                     <div class="form-group col-md-4 @if($errors->has('minimo_alumnos')) has-error @endif">
                        <label for="minimo_alumnos-field">Mínimo Alumnos</label>
-                       {!! Form::text("minimo_alumnos", null, array("class" => "form-control", "id" => "minimo_alumnos-field")) !!}
+                       {!! Form::text("minimo_alumnos", null, array("class" => "form-control input-sm", "id" => "minimo_alumnos-field")) !!}
                        @if($errors->has("minimo_alumnos"))
                         <span class="help-block">{{ $errors->first("minimo_alumnos") }}</span>
                        @endif

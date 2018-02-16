@@ -73,7 +73,7 @@
                 -->
                 <div class="form-group col-md-4 @if($errors->has('cve_alumno')) has-error @endif">
                     <label for="cve_alumno-field">Clave Alumno</label>
-                    {!! Form::text("cve_alumno", null, array("class" => "form-control", "id" => "cve_alumno-field")) !!}
+                    {!! Form::text("cve_alumno", null, array("class" => "form-control input-sm", "id" => "cve_alumno-field")) !!}
                     @if($errors->has("cve_alumno"))
                     <span class="help-block">{{ $errors->first("cve_alumno") }}</span>
                     @endif

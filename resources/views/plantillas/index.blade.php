@@ -53,18 +53,18 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_plantilla_gt">PLANTILLA</label>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['plantilla_gt']) ?: '' }}" name="q[plantilla_gt]" id="q_plantilla_gt" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['plantilla_gt']) ?: '' }}" name="q[plantilla_gt]" id="q_plantilla_gt" />
                                 </div>
                                 <div class=" col-sm-1 text-center"> - </div>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['plantilla_lt']) ?: '' }}" name="q[plantilla_lt]" id="q_plantilla_lt" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['plantilla_lt']) ?: '' }}" name="q[plantilla_lt]" id="q_plantilla_lt" />
                                 </div>
                             </div>
                             -->
                             <div class="form-group col-md-4">
                                 <label class="col-sm-12 control-label" for="q_plantilla_cont">NOMBRE</label>
                                 <div class="col-sm-12">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['nombre_cont']) ?: '' }}" name="q[nombre_cont]" id="q_nombre_cont" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['nombre_cont']) ?: '' }}" name="q[nombre_cont]" id="q_nombre_cont" />
                                 </div>
                             </div>
                             

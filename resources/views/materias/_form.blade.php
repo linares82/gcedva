@@ -1,13 +1,13 @@
                 <div class="form-group col-md-4 @if($errors->has('name')) has-error @endif">
                        <label for="name-field">Materia</label>
-                       {!! Form::text("name", null, array("class" => "form-control", "id" => "name-field")) !!}
+                       {!! Form::text("name", null, array("class" => "form-control input-sm", "id" => "name-field")) !!}
                        @if($errors->has("name"))
                         <span class="help-block">{{ $errors->first("name") }}</span>
                        @endif
                     </div>
                     <div class="form-group col-md-4 @if($errors->has('abreviatura')) has-error @endif">
                        <label for="abreviatura-field">Abreviatura</label>
-                       {!! Form::text("abreviatura", null, array("class" => "form-control", "id" => "abreviatura-field")) !!}
+                       {!! Form::text("abreviatura", null, array("class" => "form-control input-sm", "id" => "abreviatura-field")) !!}
                        @if($errors->has("abreviatura"))
                         <span class="help-block">{{ $errors->first("abreviatura") }}</span>
                        @endif
