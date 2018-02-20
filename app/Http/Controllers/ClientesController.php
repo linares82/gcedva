@@ -30,6 +30,7 @@ use Hash;
 use DB;
 use Excel;
 use Log;
+use Storage;
 //use App\Mail\CorreoBienvenida as Envia_mail;
 
 class ClientesController extends Controller {
@@ -651,13 +652,13 @@ class ClientesController extends Controller {
         $p['img1']=$pla->img1;
         $p['plantilla']=$pla->plantilla;
         $p['id']=$cli->id;
-        //dd($pla);
+        //dd();
         
         if ($request->ajax()) {
             try {
                 $r = Param::where('llave', '=', 'correo_electronico')->first();
                 if ($r->valor == 'activo') {
-                    \Mail::send('emails.2', array('img1'=>$pla->img1, 'plantilla'=>$pla->plantilla, 'id'=>$cli->id), function($message) use ($request) {
+                    \Mail::send('emails.2', array('img1'=>storage_path('app')."\public\imagenes\plantillas_correos\\".$pla->img1, 'plantilla'=>$pla->plantilla, 'id'=>$cli->id), function($message) use ($request) {
                         $message->to(e($request->mail), e($request->nombre) . " " . e($request->ape_paterno) . " " . e($request->ape_materno));
                         $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
                         $message->subject("Bienvenido");

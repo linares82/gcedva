@@ -12,10 +12,10 @@ class CreateCcuestionarioRespuestasTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('ccuestionario_respuestas', function(Blueprint $table) {
+		Schema::create('ccuestionario_respuesta', function(Blueprint $table) {
             $table->increments('id');
             $table->integer('ccuestionario_id')->unsigned();
-            $table->integer('ccuestionario_pregunta_id')->unsigned();
+            $table->integer('ccuestionario_preguntum_id')->unsigned();
             $table->string('clave');
             $table->string('name');
             $table->integer('usu_alta_id')->unsigned();
@@ -24,7 +24,7 @@ class CreateCcuestionarioRespuestasTable extends Migration {
             $table->softDeletes();
             $table->foreign('usu_mod_id')->references('id')->on('users');
             $table->foreign('usu_alta_id')->references('id')->on('users');
-            $table->foreign('ccuestionario_pregunta_id')->references('id')->on('ccuestionario_preguntas');
+            $table->foreign('ccuestionario_preguntum_id')->references('id')->on('ccuestionario_preguntas');
             $table->foreign('ccuestionario_id')->references('id')->on('ccuestionarios');
         });
 	}

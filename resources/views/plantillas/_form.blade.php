@@ -473,7 +473,7 @@
 
      $(document).on("change", ".email_archivo", function (e) {
 
-        var miurl = "/plantillas/carga_archivo_correo";
+        var miurl = "{{url('plantillas/carga_archivo_correo')}}";
         // var fileup=$("#file").val();
         var divresul = "texto_notificacion";
 

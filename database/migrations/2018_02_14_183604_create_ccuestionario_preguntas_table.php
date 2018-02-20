@@ -12,7 +12,7 @@ class CreateCcuestionarioPreguntasTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('ccuestionario_preguntas', function(Blueprint $table) {
+		Schema::create('ccuestionario_pregunta', function(Blueprint $table) {
             $table->increments('id');
             $table->integer('ccuestionario_id')->unsigned();
             $table->integer('numero')->unsigned();
