@@ -689,6 +689,26 @@ Route::get('medios/index', array(
         //'middleware' => 'permission:clientes.descargaClientes',
         'uses' => 'ClientesController@descargaClientes')
     )->middleware('auth');
+    Route::get('clientes/indexReportes', array(
+        'as' => 'clientes.indexReportes',
+        'middleware' => 'permission:clientes.indexReportes',
+        'uses' => 'ClientesController@indexReportes')
+    )->middleware('auth');
+    Route::get('clientes/reportes/ccxep', array(
+        'as' => 'clientes.reportes.ccxep',
+        'middleware' => 'permission:clientes.indexReportes',
+        'uses' => 'ClientesController@reportesCcxep')
+    )->middleware('auth');
+    Route::post('clientes/reportes/ccxep', array(
+        'as' => 'clientes.reportes.ccxep',
+        'middleware' => 'permission:clientes.indexReportes',
+        'uses' => 'ClientesController@reportesCcxepR')
+    )->middleware('auth');
+    Route::post('clientes/reportes/ccxepg', array(
+        'as' => 'clientes.reportes.ccxepg',
+        'middleware' => 'permission:clientes.indexReportes',
+        'uses' => 'ClientesController@reportesCcxepG')
+    )->middleware('auth');
     ////////////////////////////////////
     Route::get('clientesa/index', array(
         'as' => 'clientesa.index',
