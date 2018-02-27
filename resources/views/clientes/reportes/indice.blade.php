@@ -18,4 +18,5 @@
 @section('content')
     @include('error')
     <a href="{{ route('clientes.reportes.ccxep') }}" target="_blank"> <i class="fa fa-fw fa-bar-chart"></i> Clientes - Cantidades de estatus por municipio en un periodo </a><br/>
+    <a href="{{ route('clientes.reportes.ecap') }}" target="_blank"> <i class="fa fa-fw fa-bar-chart"></i> Clientes - Cantidad de Estatus de Seguimiento por Asesor </a><br/>
 @endsection

@@ -23,7 +23,7 @@ class AsignacionAcademica extends Model
     } 
 
 	//Mass Assignment
-	protected $fillable = ['lectivo_id', 'empleado_id','materium_id','grupo_id','horas','usu_alta_id','usu_mod_id', 'plantel_id'];
+	protected $fillable = ['lectivo_id', 'empleado_id','materium_id','grupo_id','horas','usu_alta_id','usu_mod_id', 'plantel_id','asistencias_max'];
 
 	public function usu_alta() {
 		return $this->hasOne('App\User', 'id', 'usu_alta_id');

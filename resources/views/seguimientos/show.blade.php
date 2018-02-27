@@ -83,7 +83,9 @@
                             <div class="well well-sm">
                                 <button type="submit" class="btn btn-xs btn-primary">Actualizar</button>
                                 <a class="btn btn-xs btn-warning" href="{{ route('clientes.edit', $seguimiento->cliente_id) }}"><i class="glyphicon glyphicon-edit"></i>Editar Cliente</a>
-                                
+                                @if(isset($seguimiento->cliente->mail))
+                                    <a class="btn btn-xs btn-success" href="{{ url('correos/redactar').'/'.$seguimiento->cliente->mail.'/'.$seguimiento->cliente->nombre.'/0' }}"><i class="glyphicon glyphicon-envelope"></i> Correo </a>
+                                @endif
                             </div>
                         </form>
                     </div>

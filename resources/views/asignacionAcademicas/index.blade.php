@@ -61,6 +61,13 @@
                             </div>
                             -->
                             <div class="form-group">
+                                <label class="col-sm-2 control-label" for="q_plantel_id_cont">PLANTEL</label>
+                                <div class=" col-sm-9">
+                                    <input class="form-control input-sm", type="hidden" value="{{ $e->plantel_id }}" name="plantel_id" id="plantel_id" />
+                                    {!! Form::select("plantel_id", $list["Plantel"], "{{ @(Request::input('q')['asignacion_academicas.plantel_id_lt']) ?: 0 }}", array("class" => "form-control select_seguridad", "name"=>"q[asignacion_academicas.plantel_id_lt]", "id"=>"q_asignacion_academicas.plantel_id_lt", "style"=>"width:100%;" )) !!}
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_empleados.nombre_cont">EMPLEADO</label>
                                 <div class=" col-sm-9">
                                     <input class="form-control input-sm", type="hidden" value="{{ $e->plantel_id }}" name="plantel_id" id="plantel_id" />
@@ -173,7 +180,7 @@
                                     {!! Form::close() !!}
                                     @endpermission
                                     @permission('asistenciasRs.index')
-                                    <a class="btn btn-xs btn-success" href="{{ route('asistenciaRs.create', $asignacionAcademica->id) }}"><i class="glyphicon glyphicon-edit"></i>Asistencias</a>
+                                    <a class="btn btn-xs btn-success" href="{{ route('asistenciaRs.buscar', $asignacionAcademica->id) }}"><i class="glyphicon glyphicon-edit"></i>Asistencias</a>
                                     @endpermission
                                 </td>
                             </tr>

@@ -22,6 +22,8 @@ return array(
     'AddIndexInscripcionTable' => $baseDir . '/database/migrations/2017_12_07_134650_addindex_inscripcion_table.php',
     'AddIndexModulo0MateriasTable' => $baseDir . '/database/migrations/2017_12_08_141343_add_index_modulo0_materias_table.php',
     'AddIndexTurnoClientesTable' => $baseDir . '/database/migrations/2017_11_13_111422_add_index_turno_clientes_table.php',
+    'AddLectAsisAsignacionAcademicasTable' => $baseDir . '/database/migrations/2018_02_21_191146_add_lect_asis_asignacion_academicas_table.php',
+    'AddLectIndexAsignacionAcademicasTable' => $baseDir . '/database/migrations/2018_02_21_191354_add_lect_index_asignacion_academicas_table.php',
     'AddLectivoGrfEspecialidadTable' => $baseDir . '/database/migrations/2017_12_14_190700_add_lectivo_grf_especialidad_table.php',
     'AddLectivoGrfiEspecialidadTable' => $baseDir . '/database/migrations/2017_12_14_190710_add_lectivo_grfi_especialidad_table.php',
     'AddMatriculaClientesTable' => $baseDir . '/database/migrations/2017_07_17_160208_add_matricula_clientes_table.php',

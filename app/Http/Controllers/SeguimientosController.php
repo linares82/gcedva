@@ -388,16 +388,17 @@ class SeguimientosController extends Controller {
                                 DB::raw('count(st.name) as total'))
                         ->join('seguimientos', 'seguimientos.cliente_id', '=', 'c.id')
                         ->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
+                        ->join('combinacion_clientes as cc', 'cc.cliente_id', '=', 'c.id')
                         //->where('c.plantel_id', '=', $input['plantel_f'])
                         //->where('c.plantel_id', '=', 1)
-                        ->where('c.especialidad_id', '=', $e->id)
+                        ->where('cc.especialidad_id', '=', $e->id)
                         ->where('c.empleado_id', '=', $emp->id)
                         //->where('seguimientos.st_seguimiento_id', '=', '2')
                         ->orderby('c.plantel_id', 'asc')
                         //->orderby('especialidad_id', 'asc')
                         ->orderby('empleado_id', 'asc')
                         //->orderBy('name', 'asc')
-                        ->groupBy('cliente_id')
+                        ->groupBy('seguimientos.cliente_id')
                         ->value('total');
                 array_push($linea, $total);
             }
@@ -442,10 +443,11 @@ class SeguimientosController extends Controller {
         $seguimientos = Seguimiento::select('cve_plantel as Plantel', 'esp.name as Especialidad', 'n.name as Nivel', 'g.name as Grado', 'seguimientos.mes as Mes', DB::raw('concat(e.nombre," ", e.ape_paterno," ", e.ape_materno) as Empleado'), 'st.name as Estatus', 'st.id as st_contar', 'esp.meta as Meta')
                 ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
                 ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
+                ->join('combinacion_clientes as cc', 'cc.cliente_id', '=', 'c.id')
                 ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
-                ->join('especialidads as esp', 'esp.id', '=', 'c.especialidad_id')
-                ->join('nivels as n', 'n.id', '=', 'c.nivel_id')
-                ->join('grados as g', 'g.id', '=', 'c.grado_id')
+                ->join('especialidads as esp', 'esp.id', '=', 'cc.especialidad_id')
+                ->join('nivels as n', 'n.id', '=', 'cc.nivel_id')
+                ->join('grados as g', 'g.id', '=', 'cc.grado_id')
                 ->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
                 ->where('c.plantel_id', '>=', $input['plantel_f'])
                 ->where('c.plantel_id', '<=', $input['plantel_t'])
@@ -491,6 +493,25 @@ class SeguimientosController extends Controller {
 
         $seguimientos = Seguimiento::select('cve_plantel as Plantel', 'esp.name as Especialidad', 'n.name as Nivel', 'g.name as Grado', 'seguimientos.mes as Mes', 'm.name as medio', DB::raw('concat(e.nombre," ", e.ape_paterno," ", e.ape_materno) as Empleado'), 'st.name as Estatus', 'st.id as st_contar', 'esp.meta as Meta', 'u.name as Usuario')
                 ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
+                ->join('combinacion_clientes as cc', 'cc.cliente_id', '=','c.id')
+                ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
+                ->join('users as u', 'u.id', '=', 'e.user_id')
+                ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
+                ->join('especialidads as esp', 'esp.id', '=', 'cc.especialidad_id')
+                ->join('nivels as n', 'n.id', '=', 'cc.nivel_id')
+                ->join('grados as g', 'g.id', '=', 'cc.grado_id')
+                ->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
+                ->join('medios as m', 'm.id', '=', 'c.medio_id')
+                ->where('c.plantel_id', '>=', $input['plantel_f'])
+                ->where('c.plantel_id', '<=', $input['plantel_t'])
+                ->where('seguimientos.created_at', '>=', $input['fecha_f'])
+                ->where('seguimientos.created_at', '<=', $input['fecha_t'])
+                ->orderBy('Plantel')
+                ->get();
+        
+        /*
+        $seguimientos = Seguimiento::select('cve_plantel as Plantel', 'esp.name as Especialidad', 'n.name as Nivel', 'g.name as Grado', 'seguimientos.mes as Mes', 'm.name as medio', DB::raw('concat(e.nombre," ", e.ape_paterno," ", e.ape_materno) as Empleado'), 'st.name as Estatus', 'st.id as st_contar', 'esp.meta as Meta', 'u.name as Usuario')
+                ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
                 ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
                 ->join('users as u', 'u.id', '=', 'e.user_id')
                 ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
@@ -507,6 +528,8 @@ class SeguimientosController extends Controller {
                 ->orderBy('Plantel')
                 //->groupBy('esp.meta','e.nombre', 'e.ape_paterno', 'e.ape_materno')
                 ->get();
+         * 
+         */
         //dd($seguimientos->toArray());
         //dd($seguimientos->toArray());
         /* PDF::setOptions(['defaultFont' => 'arial']);
@@ -642,12 +665,13 @@ class SeguimientosController extends Controller {
         $seguimientos = Seguimiento::select('cve_plantel as Plantel', 'esp.name as Especialidad', 'n.name as Nivel', 'g.name as Grado', 'seguimientos.mes as Mes', 'm.name as medio', DB::raw('concat(e.nombre," ", e.ape_paterno," ", e.ape_materno) as Empleado'), 'st.name as Estatus', 'st.id as st_contar', 'esp.meta as Meta', 'u.name as Usuario')
                 ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
                 ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
+                ->join('combinacion_clientes as cc', 'cc.cliente_id', '=', 'c.id')
                 ->join('users as u', 'u.id', '=', 'e.user_id')
                 ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
-                ->join('especialidads as esp', 'esp.id', '=', 'c.especialidad_id')
+                ->join('especialidads as esp', 'esp.id', '=', 'cc.especialidad_id')
                 ->join('lectivos as l', 'l.id', '=', 'esp.lectivo_id')
-                ->join('nivels as n', 'n.id', '=', 'c.nivel_id')
-                ->join('grados as g', 'g.id', '=', 'c.grado_id')
+                ->join('nivels as n', 'n.id', '=', 'cc.nivel_id')
+                ->join('grados as g', 'g.id', '=', 'cc.grado_id')
                 ->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
                 ->join('medios as m', 'm.id', '=', 'c.medio_id')
                 ->where('c.plantel_id', '=', $parametros['plantel'])

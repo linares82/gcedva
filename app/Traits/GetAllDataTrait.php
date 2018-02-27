@@ -201,10 +201,10 @@ trait GetAllDataTrait {
                 }
                 break;
             case "asignacion_academicas":
-                if(Auth::user()->can('asistenciasRs.create')){
+                /*if(Auth::user()->can('asistenciasRs.create')){
                     $myQuery=$myQuery->where('asignacion_academicas.plantel_id', '=', $empleado->plantel_id)
                                     ->where('empleado_id', '=', $empleado->id);
-                }
+                }*/
                 break;
             case "subcursos":
                 break;

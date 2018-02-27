@@ -4,6 +4,8 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\AsistenciaR;
+use App\AsignacionAcademica;
+use App\Inscripcion;
 use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updateAsistenciaR;
@@ -53,6 +55,57 @@ class AsistenciaRsController extends Controller {
 
 		return redirect()->route('asistenciaRs.index')->with('message', 'Registro Creado.');
 	}
+        
+        public function buscar($id)
+	{
+                $asignacion_academica_id=$id;
+                
+		return view('asistenciaRs.buscar', compact('asignacion_academica_id'))
+			->with( 'list', AsistenciaR::getListFromAllRelationApps() );
+	}
+
+	/**
+	 * Store a newly created resource in storage.
+	 *
+	 * @param Request $request
+	 * @return Response
+	 */
+	public function procesar(createAsistenciaR $request)
+	{
+		$input = $request->all();
+                
+                $asignacionAcademica= AsignacionAcademica::find($input['asignacion_academica_id']);
+                $asistencias= AsistenciaR::where('fecha','=', $input['fecha'])
+                                         ->where('asignacion_academica_id', '=', $input['asignacion_academica_id'])
+                                         ->get();
+                $inscripciones=Inscripcion::where('grupo_id','=',$asignacionAcademica->grupo_id)
+                                ->where('lectivo_id', '=', $asignacionAcademica->lectivo_id)
+                                ->get();
+                //dd($asistencias);
+                if($asistencias->isEmpty()){
+                    foreach($inscripciones as $i){
+                        $asistencia['asignacion_academica_id']=$input['asignacion_academica_id'];
+                        $asistencia['fecha']=$input['fecha'];
+                        $asistencia['cliente_id']=$i->cliente_id;
+                        $asistencia['est_asistencia_id']=1;
+                        $asistencia['usu_alta_id']=Auth::user()->id;
+                        $asistencia['usu_mod_id']=Auth::user()->id;
+                        //dd($asistencia);
+                        AsistenciaR::create( $asistencia );
+                    }
+                    $asignacion_academica_id=$input['asignacion_academica_id'];
+                    $asistencias= AsistenciaR::where('fecha','=', $input['fecha'])
+                                         ->where('asignacion_academica_id', '=', $input['asignacion_academica_id'])
+                                         ->get();
+                    return view('asistenciaRs.buscar', compact('asignacion_academica_id', 'asistencias'))
+                            ->with( 'list', AsistenciaR::getListFromAllRelationApps() );
+                }else{
+                    $asignacion_academica_id=$input['asignacion_academica_id'];
+                    return view('asistenciaRs.buscar', compact('asignacion_academica_id', 'asistencias'))
+                            ->with( 'list', AsistenciaR::getListFromAllRelationApps() );
+                }
+		
+	}
 
 	/**
 	 * Display the specified resource.
@@ -99,8 +152,28 @@ class AsistenciaRsController extends Controller {
 	 * @param Request $request
 	 * @return Response
 	 */
+        public function update(Request $request)
+	{
+                //dd($request->all());
+		$input = $request->all();
+                $input['id']=$request->get('asistencia');
+                $input['est_asistencia_id']=$request->get('estatus');
+		$input['usu_mod_id']=Auth::user()->id;
+		//update data
+		$asistenciaR=AsistenciaR::find($request->get('asistencia'));
+                $asistenciaR->est_asistencium_id=$input['est_asistencia_id'];
+                if($asistenciaR->save()){
+                    return "1";
+                }else{
+                    return "0";
+                }
+                
+		
+	}
+        /*
 	public function update($id, AsistenciaR $asistenciaR, updateAsistenciaR $request)
 	{
+                dd($request->all());
 		$input = $request->all();
 		$input['usu_mod_id']=Auth::user()->id;
 		//update data
@@ -108,7 +181,7 @@ class AsistenciaRsController extends Controller {
 		$asistenciaR->update( $input );
 
 		return redirect()->route('asistenciaRs.index')->with('message', 'Registro Actualizado.');
-	}
+	}*/
 
 	/**
 	 * Remove the specified resource from storage.

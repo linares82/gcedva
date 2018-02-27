@@ -704,11 +704,17 @@ Route::get('medios/index', array(
         'middleware' => 'permission:clientes.indexReportes',
         'uses' => 'ClientesController@reportesCcxepR')
     )->middleware('auth');
-    Route::post('clientes/reportes/ccxepg', array(
-        'as' => 'clientes.reportes.ccxepg',
+    Route::get('clientes/reportes/ecap', array(
+        'as' => 'clientes.reportes.ecap',
         'middleware' => 'permission:clientes.indexReportes',
-        'uses' => 'ClientesController@reportesCcxepG')
+        'uses' => 'ClientesController@reportesEcap')
     )->middleware('auth');
+    Route::post('clientes/reportes/ecap', array(
+        'as' => 'clientes.reportes.ecap',
+        'middleware' => 'permission:clientes.indexReportes',
+        'uses' => 'ClientesController@reportesEcapR')
+    )->middleware('auth');
+    
     ////////////////////////////////////
     Route::get('clientesa/index', array(
         'as' => 'clientesa.index',
@@ -3124,6 +3130,16 @@ Route::get("hsSeguimientos/hsSeguimiento/{hsSeguimientos}/duplicate", ['as' => '
         'middleware' => 'permission:asistenciasRs.store',
         'uses' => 'AsistenciaRsController@store')
     )->middleware('auth');
+    Route::get('/asistenciaRs/buscar/{id}', array(
+        'as' => 'asistenciaRs.buscar',
+        'middleware' => 'permission:asistenciasRs.buscar',
+        'uses' => 'AsistenciaRsController@buscar')
+    )->middleware('auth');
+    Route::post('asistenciaRs/procesar', array(
+        'as' => 'asistenciaRs.procesar',
+        'middleware' => 'permission:asistenciasRs.buscar',
+        'uses' => 'AsistenciaRsController@procesar')
+    )->middleware('auth');
     Route::get('/asistenciaRs/show/{id}', array(
         'as' => 'asistenciaRs.show',
         'middleware' => 'permission:asistenciasRs.show',
@@ -3134,7 +3150,7 @@ Route::get("hsSeguimientos/hsSeguimiento/{hsSeguimientos}/duplicate", ['as' => '
         'middleware' => 'permission:asistenciasRs.edit',
         'uses' => 'AsistenciaRsController@edit')
     )->middleware('auth');
-    Route::post('/asistenciaRs/update/{id}', array(
+    Route::get('/asistenciaRs/update/', array(
         'as' => 'asistenciaRs.update',
         'middleware' => 'permission:asistenciasRs.update',
         'uses' => 'AsistenciaRsController@update')

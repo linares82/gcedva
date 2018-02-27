@@ -874,37 +874,78 @@ class ClientesController extends Controller {
             //$graficas=$clientes->toArray();
             return view('clientes.reportes.ccxep_g', compact('tabla','p'))
                         ->with('datos_grafica', json_encode($tabla));;
-        }       
+        }
+    }
             
-        //}
-        //dd($clientes->toArray());
-        
-        
+    public function reportesEcap() {
+        return view('clientes.reportes.ecap')->with('list', Cliente::getListFromAllRelationApps());
     }
     
-    public function reportesCcxepG(Request $request) {
+    public function reportesEcapR(Request $request) {
         $filtros=$request->all();
-        $sts=StCliente::get();
-        foreach($sts as $st){
-            $clientes=Cliente::select('clientes.nombre','m.name as municipio', 'st.name as estatus', DB::raw('YEAR(s.created_at) as anio'), 's.mes')
+        //if($filtros['tipo']==1){
+            //dd($filtros);
+            $clientes=Cliente::select(DB::raw('concat(e.nombre, " ",e.ape_paterno, " ",e.ape_materno) as empleado'), 'st.name as estatus')
                             ->join('seguimientos as s', 's.cliente_id', '=', 'clientes.id')
-                            ->join('municipios as m', 'm.id', '=', 'clientes.municipio_id')
-                            ->join('plantels as p', 'p.id', '=', 'clientes.plantel_id')
                             ->join('st_seguimientos as st', 'st.id', '=', 's.st_seguimiento_id')
-                            ->where('clientes.plantel_id','>=', $filtros['plantel_f'])
-                            ->where('clientes.plantel_id','<=', $filtros['plantel_t'])
+                            ->join('empleados as e', 'e.id', '=', 'clientes.empleado_id')
+                            ->where('clientes.plantel_id','=', $filtros['plantel_f'])
                             ->where('clientes.created_at','>=', $filtros['fecha_f'])
                             ->where('clientes.created_at','<=', $filtros['fecha_t'])
-                            ->where('clientes.municipio_id','>', 0)
-                            //->groupBy('m.name')
-                            //->groupBy('st.name')
-                            //->groupBy('s.created_at')
-                            //->groupBy('s.mes')
+                            ->orderBy('clientes.empleado_id')
                             ->get();
-        }
-        dd($clientes->toArray());
-        
-        return view('clientes.reportes.ccxep_g')
+            //dd($clientes);
+            return view('clientes.reportes.ecap_r')
                 ->with('datos_grafica', json_encode($clientes->toArray()));;
+            
+        //}
+        /*elseif($filtros['tipo']==2){
+            $plantel=Plantel::find($filtros['plantel_f']);
+            $p=$plantel->razon;
+            $st=StSeguimiento::where('id', '>', 0)->get();
+            $municipios=Municipio::select('municipios.id', 'municipios.name as municipio')
+                                ->join('clientes as c', 'c.municipio_id', '=', 'municipios.id')
+                                ->where('c.plantel_id','=', $filtros['plantel_f'])
+                                ->where('c.created_at','>=', $filtros['fecha_f'])
+                                ->where('c.created_at','<=', $filtros['fecha_t'])
+                                ->distinct()
+                                ->get();
+            //dd($municipios->toArray());
+            $tabla=array();
+            $e=array();
+            array_push($e,"Municipio");
+            foreach($st as $s){
+                array_push($e,$s->name);
+            }
+            array_push($tabla,$e);
+            foreach($municipios as $m){
+                $ln=array();
+                array_push($ln, $m->municipio);
+                foreach($st as $s){
+                    $clientes=Cliente::select(DB::raw('count(st.name) as total'))
+                              ->join('seguimientos as s', 's.cliente_id', '=', 'clientes.id')
+                              ->join('municipios as m', 'm.id', '=', 'clientes.municipio_id')
+                              ->join('plantels as p', 'p.id', '=', 'clientes.plantel_id')
+                              ->join('st_seguimientos as st', 'st.id', '=', 's.st_seguimiento_id')
+                              ->where('clientes.plantel_id','=', $filtros['plantel_f'])
+                              ->where('clientes.created_at','>=', $filtros['fecha_f'])
+                              ->where('clientes.created_at','<=', $filtros['fecha_t'])
+                              ->where('s.st_seguimiento_id','=', $s->id)
+                              ->where('clientes.municipio_id','=', $m->id)
+                              //->groupBy('s.created_at')
+                              //->groupBy('s.mes')
+                              ->value('total');
+                    array_push($ln, $clientes);  
+                }
+                array_push($tabla, $ln);
+            }
+            
+            //dd($tabla);
+            //$graficas=$clientes->toArray();
+            return view('clientes.reportes.ccxep_g', compact('tabla','p'))
+                        ->with('datos_grafica', json_encode($tabla));;
+        }*/
     }
+    
+
 }

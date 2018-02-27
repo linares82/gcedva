@@ -43,6 +43,13 @@
                         <span class="help-block">{{ $errors->first("lectivo_id") }}</span>
                        @endif
                     </div>
+                    <div class="form-group col-md-4 @if($errors->has('asistencias_max')) has-error @endif">
+                       <label for="asistencias_max-field">Asistencias Maximo</label>
+                       {!! Form::text("asistencias_max", null, array("class" => "form-control input-sm", "id" => "asistencias_max-field")) !!}
+                       @if($errors->has("asistencias_max"))
+                        <span class="help-block">{{ $errors->first("asistencias_max") }}</span>
+                       @endif
+                    </div>
                     @if(isset($asignacionAcademica->horarios))
                     <div class="form-group col-md-12">
                         <div class="form-group col-md-4 @if($errors->has('dia_id')) has-error @endif">

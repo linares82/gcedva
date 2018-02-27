@@ -86,20 +86,20 @@
                             </div>
                                                     <!--
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_cliente_id_gt">CLIENTE_ID</label>
+                                <label class="col-sm-2 control-label" for="q_clientes.nombre_gt">CLIENTE_NOMBRE</label>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['cliente_id_gt']) ?: '' }}" name="q[cliente_id_gt]" id="q_cliente_id_gt" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['clientes.nombre_gt']) ?: '' }}" name="q[clientes.nombre_gt]" id="q_clientes.nombre_gt" />
                                 </div>
                                 <div class=" col-sm-1 text-center"> - </div>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['cliente_id_lt']) ?: '' }}" name="q[cliente_id_lt]" id="q_cliente_id_lt" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['clientes.nombre_lt']) ?: '' }}" name="q[clientes.nombre_lt]" id="q_clientes.nombre_lt" />
                                 </div>
                             </div>
                             -->
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_cliente_id_cont">CLIENTE_ID</label>
+                                <label class="col-sm-2 control-label" for="q_clientes.nombre_cont">CLIENTE_NOMBRE</label>
                                 <div class=" col-sm-9">
-                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['cliente_id_cont']) ?: '' }}" name="q[cliente_id_cont]" id="q_cliente_id_cont" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['clientes.nombre_cont']) ?: '' }}" name="q[clientes.nombre_cont]" id="q_clientes.nombre_cont" />
                                 </div>
                             </div>
                                                     <!--
@@ -181,7 +181,7 @@
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'asistencias_c_id', 'title' => 'ASISTENCIAS_C_ID'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'fecha', 'title' => 'FECHA'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'cliente_id', 'title' => 'CLIENTE_ID'])</th>
+                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clientes.nombre', 'title' => 'CLIENTE_NOMBRE'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'est_asistencia_id', 'title' => 'EST_ASISTENCIA_ID'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
@@ -195,7 +195,7 @@
                                 <td><a href="{{ route('asistenciaRs.show', $asistenciaR->id) }}">{{$asistenciaR->id}}</a></td>
                                 <td>{{$asistenciaR->asistencias_c_id}}</td>
                     <td>{{$asistenciaR->fecha}}</td>
-                    <td>{{$asistenciaR->cliente_id}}</td>
+                    <td>{{$asistenciaR->cliente->nombre}}</td>
                     <td>{{$asistenciaR->est_asistencia_id}}</td>
                     <td>{{$asistenciaR->usu_alta_id}}</td>
                     <td>{{$asistenciaR->usu_mod_id}}</td>

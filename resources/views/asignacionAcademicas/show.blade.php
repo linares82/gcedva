@@ -40,7 +40,10 @@
                 </div>
                 <div class="form-group col-md-4 ">
                      <label for="empleado_nombre">EMPLEADO</label>
-                     <p class="form-control-static">{{$asignacionAcademica->empleado}}</p>
+                     <p class="form-control-static">{{$asignacionAcademica->empleado->nombre." ".
+                                                      $asignacionAcademica->empleado->nombre2." ".
+                                                      $asignacionAcademica->empleado->ape_paterno." ".
+                                                      $asignacionAcademica->empleado->ape_materno}}</p>
                 </div>
                     <div class="form-group col-md-4 ">
                      <label for="materia_id">MATERIA</label>

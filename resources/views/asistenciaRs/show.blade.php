@@ -47,8 +47,8 @@
                      <p class="form-control-static">{{$asistenciaR->fecha}}</p>
                 </div>
                     <div class="form-group">
-                     <label for="cliente_id">CLIENTE_ID</label>
-                     <p class="form-control-static">{{$asistenciaR->cliente_id}}</p>
+                     <label for="cliente_nombre">CLIENTE_NOMBRE</label>
+                     <p class="form-control-static">{{$asistenciaR->cliente->nombre}}</p>
                 </div>
                     <div class="form-group">
                      <label for="est_asistencia_id">EST_ASISTENCIA_ID</label>

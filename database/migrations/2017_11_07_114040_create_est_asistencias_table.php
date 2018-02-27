@@ -12,9 +12,9 @@ class CreateEstAsistenciasTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('est_asistencias', function(Blueprint $table) {
+		Schema::create('est_asistencia', function(Blueprint $table) {
             $table->increments('id');
-            $table->string('est_asistencia');
+            $table->string('name');
             $table->integer('usu_alta_id')->unsigned();
             $table->integer('usu_mod_id')->unsigned();
             $table->timestamps();
