@@ -383,7 +383,7 @@
                                     $.ajax({
                                         url: '{{ route("actividadEmpresas.getCmbActividad") }}',
                                         type: 'GET',
-                                        data: "plantel_id={{$empresa->plantel_id}}&especialidad_id=" + $('#especialidad_id-field option:selected').val() + "",
+                                        data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad_id-field option:selected').val() + "",
                                         dataType: 'json',
                                         beforeSend: function () {
                                             $("#loading10").show();
