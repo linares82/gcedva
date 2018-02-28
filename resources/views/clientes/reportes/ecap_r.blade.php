@@ -16,7 +16,15 @@
         <style>
             body {font-family: Verdana;}
         </style>
-
+        <style>
+        h1, h5, th { text-align: center; }
+        table, #chart_div { margin: auto; font-family: Segoe UI; box-shadow: 10px 10px 5px #888; border: thin ridge grey; }
+        th { background: #0046c3; color: #fff; max-width: 400px; padding: 5px 10px; }
+        td { font-size: 11px; padding: 5px 20px; color: #000; }
+        tr { background: #b8d1f3; }
+        tr:nth-child(even) { background: #dae5f4; }
+        tr:nth-child(odd) { background: #b8d1f3; }
+        </style>
         <!-- optional: mobile support with jqueryui-touch-punch -->
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
 
@@ -31,13 +39,19 @@
                 $.pivotUtilities.gchart_renderers);
 
             var rawData=<?php 
-                echo $datos_grafica;
+                //echo $datos_grafica;
             ?>;
+
+            var sum = $.pivotUtilities.aggregatorTemplates.sum;
+            var numberFormat = $.pivotUtilities.numberFormat;
+            var intFormat = numberFormat({digitsAfterDecimal: 0});
+                
             var inputFunction = function (callback) {
                 rawData.forEach(function (element, index) {
                     callback({
                         Empleado: element.empleado,
                         Estatus: element.estatus,
+                        Total: element.total,
                     });
                 });
             };
@@ -47,15 +61,32 @@
                 cols: ['Especialidad','Meta', 'Nivel', 'Grado'],
             });*/
             $("#output").pivotUI(inputFunction, {
-                renderers: renderers,
+                //renderers: renderers,
                 rows: ["Empleado"], 
                 cols: ['Estatus'],
+                aggregator: sum(intFormat)(["Total"])
             },false, "es");
 
         });
         </script>
 
         <div id="output" style="margin: 30px;"></div>
-        
+
+        <div class="datagrid">
+        <table class="table table-condensed table-striped">
+            <thead>
+                <th>Empleado</th><th>Estatus</th><th>Cantidad</th>
+            </thead>
+            <tbody>
+                @foreach($a_2 as $r)
+                <tr>
+                    <td>{{$r->empleado}}</td>
+                    <td>{{$r->estatus}}</td>
+                    <td>{{$r->total}}</td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+        </div>
     </body>
 </html>

@@ -36,6 +36,10 @@
 <div class="titulo" > <h3>Apreciable <?= $nombre;   ?> </h3></div>
 <hr>
 <div class=".div_contenido" > <?= $contenido;   ?></div>
+<hr>
+<p>
+    Puede ponerse en contacto al siguiente correo electronico: <?= $correo ?>
+</p>
 	
 </body>
 </html>

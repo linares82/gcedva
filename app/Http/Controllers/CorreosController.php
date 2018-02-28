@@ -170,10 +170,10 @@ class CorreosController extends Controller {
         $contenido = $request->input("contenido_mail");
         $from=Auth::user()->email;
 
-        $data = array('contenido' => $contenido, 'nombre' => $n);
+        $data = array('contenido' => $contenido, 'nombre' => $n, 'correo'=>$from);
         $r = \Mail::send('correos.version2.correo_individual', $data, function ($message)
                     use ($asunto, $destinatario, $containfile, $pathToFile, $n, $from) {
-                    $message->from($from, env('MAIL_FROM_NAME'));
+                    $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
                     $message->to($destinatario, $n)->subject($asunto);
                     if ($containfile) {
                         $message->attach($pathToFile);
