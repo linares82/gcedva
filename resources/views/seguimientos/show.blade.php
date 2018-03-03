@@ -75,6 +75,14 @@
                                 <span class="help-block">{{ $errors->first("st_seguimiento_id") }}</span>
                             @endif
                             </div>
+                            <div class="form-group col-md-12 @if($errors->has('cve_cliente')) has-error @endif">
+                                {!! Form::hidden("id", null, array("class" => "form-control input-sm", "id" => "id-field")) !!}
+                                <label for="cve_cliente-field">SMS(Max. 160 catacteres)</label><div id="contador"></div>
+                                {!! Form::textArea("cve_cliente", null, array("class" => "form-control input-sm", "id" => "cve_cliente-field", 'rows'=>'3', 'maxlength'=>'160')) !!}
+                                @if($errors->has("cve_cliente"))
+                                <span class="help-block">{{ $errors->first("cve_cliente") }}</span>
+                                @endif
+                            </div>
                             <div class="row">
                             </div>
                             
@@ -86,6 +94,13 @@
                                 @if(isset($seguimiento->cliente->mail))
                                     <a class="btn btn-xs btn-success" href="{{ url('correos/redactar').'/'.$seguimiento->cliente->mail.'/'.$seguimiento->cliente->nombre.'/0' }}"><i class="glyphicon glyphicon-envelope"></i> Correo </a>
                                 @endif
+                                @permission('clientes.enviaSms')
+                                    @if($seguimiento->cliente->tel_cel<>"" and $seguimiento->cliente->celular_confirmado==1)
+                                    <button type="button" class="btn btn-xs btn-primary" id="btn_sms">Enviar SMS Bienvenida</button>   
+                                    <div id='loading1' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
+                                    <div id='msj'></div>
+                                    @endif
+                                @endpermission
                             </div>
                         </form>
                     </div>
@@ -368,7 +383,26 @@
         show_select_today: 'Hoy',
       });
       
-      
+    $("#btn_sms").click(function(event) {
+        enviaSms();
+        });  
     });
+    function enviaSms(){
+    $.ajax({
+    url: '{{ route("clientes.enviaSmsSeguimiento") }}',
+            type: 'GET',
+            data: "tel_cel={{$seguimiento->cliente->tel_cel}}&cve_cliente="+ $('#cve_cliente-field').val() + "",
+            dataType: 'json',
+            beforeSend : function(){$("#loading1").show(); },
+            complete : function(){$("#loading1").hide(); },
+            default: function(parametros){
+            if (parametros == true){
+            $('#msj').html('Sms enviado');
+            } else{
+            $('#msj').html('Envio de sms fallo');
+            }
+            }
+    });
+    }
     </script>
 @endpush

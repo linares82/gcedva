@@ -286,8 +286,143 @@
         @endforeach
         @endpermission
     </div>
+    
+    <div class="row">
+        @permission('WStPlantelAsesor')
+        <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h4 class="box-title">
+                        
+                    </h4>
+                </div>
+                <div class="box-body">
+                    <div id="chart_div" style="width: auto; height: auto;"></div>
+                    <table class="table table-condensed table-striped">
+                            <tbody>
+                                <?php $i=0; ?>
+                                @foreach($tabla as $ln)
+                                <?php $i++; ?>
+                                @if($i==1)
+                                <tr>
+                                    <th>{{$ln[0]}}</th><th>{{$ln[1]}}</th><th>{{$ln[2]}}</th><th>{{$ln[3]}}</th><th>{{$ln[4]}}</th>
+                                </tr> 
+                                @else
+                                <tr>
+                                    <td>{{$ln[0]}}</td><td>{{$ln[1]}}</td><td>{{$ln[2]}}</td><td>{{$ln[3]}}</td><td>{{$ln[4]}}</td>
+                                </tr>     
+                                @endif
+                                @endforeach
+                            </tbody>
+                        </table>
+                </div>
+            </div>
+        </div>
+        @endpermission
+        @permission('WEstatusXplantel')
+        <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h4 class="box-title">
+                        Totales de Estatus del Plantel {{$plantel}}
+                    </h4>
+                </div>
+                <div class="box-body">
+                    @foreach($estatusPlantel as $ep)
+                    @if($ep->estatus=='Pendiente') 
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <div class="info-box bg-aqua">
+                          <span class="info-box-icon"><i class="fa fa-bookmark-o"></i></span>
+                          <div class="info-box-content">
+                            <span class="info-box-text">{{$ep->estatus}}</span>
+                            <span class="info-box-number">{{$ep->total}}</span>
+                            <div class="progress">
+                              <div class="progress-bar" style="width: {{($ep->total*100)/$tsuma}}%"></div>
+                            </div>
+                            <span class="progress-description">
+                              {{round(($ep->total*100)/$tsuma,2)}}% De un total de {{$tsuma}} 
+                            </span>
+                          </div><!-- /.info-box-content -->
+                        </div><!-- /.info-box -->
+                    </div><!-- /.col -->
+                    @elseif($ep->estatus=='Concretado') 
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <div class="info-box bg-green">
+                          <span class="info-box-icon"><i class="fa fa-bookmark-o"></i></span>
+                          <div class="info-box-content">
+                            <span class="info-box-text">{{$ep->estatus}}</span>
+                            <span class="info-box-number">{{$ep->total}}</span>
+                            <div class="progress">
+                              <div class="progress-bar" style="width: {{($ep->total*100)/$tsuma}}%"></div>
+                            </div>
+                            <span class="progress-description">
+                              {{round(($ep->total*100)/$tsuma,2)}}% De un total de {{$tsuma}} 
+                            </span>
+                          </div><!-- /.info-box-content -->
+                        </div><!-- /.info-box -->
+                    </div><!-- /.col -->
+                    @elseif($ep->estatus=='Rechazado') 
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <div class="info-box bg-red">
+                          <span class="info-box-icon"><i class="fa fa-bookmark-o"></i></span>
+                          <div class="info-box-content">
+                            <span class="info-box-text">{{$ep->estatus}}</span>
+                            <span class="info-box-number">{{$ep->total}}</span>
+                            <div class="progress">
+                              <div class="progress-bar" style="width: {{($ep->total*100)/$tsuma}}%"></div>
+                            </div>
+                            <span class="progress-description">
+                              {{round(($ep->total*100)/$tsuma,2)}}% De un total de {{$tsuma}} 
+                            </span>
+                          </div><!-- /.info-box-content -->
+                        </div><!-- /.info-box -->
+                    </div><!-- /.col -->
+                    @elseif($ep->estatus=='En proceso') 
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <div class="info-box bg-yellow">
+                          <span class="info-box-icon"><i class="fa fa-bookmark-o"></i></span>
+                          <div class="info-box-content">
+                            <span class="info-box-text">{{$ep->estatus}}</span>
+                            <span class="info-box-number">{{$ep->total}}</span>
+                            <div class="progress">
+                              <div class="progress-bar" style="width: {{($ep->total*100)/$tsuma}}%"></div>
+                            </div>
+                            <span class="progress-description">
+                              {{round(($ep->total*100)/$tsuma,2)}}% De un total de {{$tsuma}} 
+                            </span>
+                          </div><!-- /.info-box-content -->
+                        </div><!-- /.info-box -->
+                    </div><!-- /.col -->
+                    @endif
+                    @endforeach
+            </div>
+        </div>
+        @endpermission
+    </div>
+    
+    
 @endsection
 @push('scripts')
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawVisualization);
+
+      function drawVisualization() {
+        // Some raw data (not necessarily accurate)
+        var data = google.visualization.arrayToDataTable(<?php echo $datos_grafica; ?>);
+
+    var options = {
+      title : 'Concretado por periodo y Totales de estatus por Empleado del plantel {{$plantel}}',
+      vAxis: {title: 'Cantidad de Clientes por Estatus'},
+      hAxis: {title: 'Empleado'},
+      seriesType: 'bars'
+    };
+
+    var chart = new google.visualization.ComboChart(document.getElementById('chart_div'));
+    chart.draw(data, options);
+  }
+    </script>
     <script type="text/javascript" src="{{ asset ('/bower_components/AdminLTE/plugins/morris/morris.js') }}"></script>
     <script type="text/javascript" src="{{ asset ('/bower_components/AdminLTE/plugins/morris/raphael-min.js') }}"></script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>

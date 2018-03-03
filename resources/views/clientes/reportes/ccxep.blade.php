@@ -45,7 +45,10 @@
                     @endif
                 </div>
                 
-                
+                <div class="form-group col-md-6 @if($errors->has('plantel_t')) has-error @endif">
+                    {!! Form::radio('tipo', 1) !!} Tabla
+                    {!! Form::radio('tipo', 2) !!} Gráfica
+                </div>
                 
                 <!--
                 <div class="form-group col-md-6 @if($errors->has('especialidad_f')) has-error @endif">

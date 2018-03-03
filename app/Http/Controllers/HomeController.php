@@ -8,7 +8,9 @@ use App\Lectivo;
 use App\AvisoGral;
 use App\PivotAvisoGralEmpleado;
 use App\Seguimiento;
+use App\StSeguimiento;
 use App\Empleado;
+use App\Plantel;
 use App\Menu;
 use DB;
 use Auth;
@@ -38,6 +40,9 @@ class HomeController extends Controller
         $f=date("Y-m-d");
         $l=Lectivo::find(0)->first();
 
+        /*Avisos del usuario
+         * 
+         */
         $e=Empleado::where('user_id', '=', Auth::user()->id)->first();
         $avisos=Aviso::select('avisos.id','a.name','avisos.detalle', 'avisos.fecha', 's.cliente_id')
        		->join('asuntos as a', 'a.id', '=', 'avisos.asunto_id')
@@ -48,8 +53,14 @@ class HomeController extends Controller
                     ->where('c.empleado_id', '=', $e->id)
 					->get();
         //dd($avisos);
+        /* Fin avisos del usuario
+         * 
+         */
         $mes=(int)date('m');
         //dd($mes);
+        /*
+         * Cuadros con numeros
+         */
         $a_1=Seguimiento::select(Db::raw('count(c.nombre) as total'))
                     ->where('st_seguimiento_id', '=', 1)
                     ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
@@ -86,6 +97,14 @@ class HomeController extends Controller
                     ->where('c.empleado_id', '=', $e->id)
                     ->where('c.plantel_id', '=', $e->plantel_id)
                     ->count();
+        
+        /*
+         * Fin cuadros con numeros
+         */
+        
+        /*graficas de velocimetro
+         * 
+         */
         $gauge=array();
         if(!Auth::user()->can('WgaugesXplantelIndividual')){
             $plantels=DB::table('plantels as p')->where('id', '>', 0)
@@ -138,7 +157,9 @@ class HomeController extends Controller
                 }
             }
         }
-        
+        /*
+         * Fin graficas e velocimetro
+         */
         
         //dd($a_2);
         //dd($gauges);
@@ -190,7 +211,99 @@ class HomeController extends Controller
             array_push($datos2, array($g->estatus, $g->valor));
         }
         //dd($datos2);
-        return view('home', compact('avisos', 'a_1', 'a_2', 'a_3', 'a_4', 'grafica2','grafica', 'avisos_generales', 'avance', 'gauge'))
+        
+        /*
+         * Graficas de valores para directores
+         */
+        $filtros['plantel_f']=$e->plantel_id;
+        //dd($e);
+        $f = date("Y-m-d");
+        $l = Lectivo::find(0)->first();
+        $tabla=array();
+        $encabezado=array();
+        $encabezado[0]='Empleado';
+        $estatus = StSeguimiento::where('id','>',0)->get();
+        $empleados = Empleado::where('plantel_id','=', $filtros['plantel_f'])
+                             ->where('puesto_id', '=', 2)
+                             ->where('id', '>', 0)
+                             ->get();
+        //dd($empleados->toArray());
+        $i=1;
+        foreach($estatus as $st){
+            if($st->id>0){
+                $encabezado[$i]=$st->name;
+                $i++;
+            }
+        }
+        array_push($tabla, $encabezado);
+        //dd($encabezado);
+        foreach($empleados as $em){
+            $linea=array();
+            $i=0;
+            $linea[$i]=$em->nombre." ".$em->ape_paterno." ".$em->ape_materno;
+            foreach($estatus as $st){
+               $i++;
+                if($st->id==2){
+                   $valor=Seguimiento::select(DB::raw('count(st.name) as total'))
+                            ->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
+                            ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
+                            ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
+                            ->where('st_seguimiento_id', '=', $st->id)
+                            ->where('e.id', '=', $em->id)
+                            ->where('c.plantel_id', '=', $filtros['plantel_f'])
+                            ->where('seguimientos.created_at', '>=', $l->inicio)
+                            ->where('seguimientos.created_at', '<=', $l->fin)
+                            ->value('total');
+                   
+               }elseif($st->id>0){
+                   $valor=Seguimiento::select(DB::raw('count(st.name) as total'))
+                            ->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
+                            ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
+                            ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
+                            ->where('st_seguimiento_id', '=', $st->id)
+                            ->where('e.id', '=', $em->id)
+                            ->where('c.plantel_id', '=', $filtros['plantel_f'])
+                            ->value('total');
+                   //dd('stop fil');
+               } 
+               $linea[$i]=$valor;
+            }
+            array_push($tabla, $linea);
+        }
+        //dd($tabla);
+        $p=Plantel::find($filtros['plantel_f']);
+        $plantel=$p->razon;
+        //dd($plantel);
+        
+        /*
+         * Fin Graficas de valores para directores
+         */
+        
+        /* tabla de estatus por plantel
+         * 
+         */
+        $estatusPlantel=Seguimiento::select('st.name as estatus', DB::raw('count(st.name) as total'))
+                            ->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
+                            ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
+                            ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
+                            ->where('c.plantel_id', '=', $filtros['plantel_f'])
+                            ->where('e.id', '>', 0)
+                            ->where('e.puesto_id', '=', 2)
+                            ->where('st.id', '>', 0)
+                            ->groupBy('st.name')
+                            ->get();
+        //dd($estatusPlantel->toArray());
+        $tsuma=0;
+        foreach($estatusPlantel as $ep){
+            $tsuma=$tsuma+$ep->total;
+        }
+        /* Fin tabla de estatus por plantel
+         * 
+         */
+        //dd($estatusPlantel->toArray());
+        return view('home', compact('avisos', 'a_1', 'a_2', 'a_3', 'a_4', 'grafica2','grafica', 
+                                    'avisos_generales', 'avance', 'gauge', 'tabla', 'plantel','estatusPlantel', 'tsuma'))
+                    ->with('datos_grafica', json_encode($tabla))
                     ->with('datos', json_encode($datos))
                     ->with('datos2', json_encode($datos2));
     }

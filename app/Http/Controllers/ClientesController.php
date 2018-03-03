@@ -603,6 +603,28 @@ class ClientesController extends Controller {
             }
         }
     }
+    
+    public function enviaSmsSeguimiento(Request $request) {
+        //dd($_REQUEST);
+        if ($request->ajax()) {
+            try {
+                $r = Param::where('llave', '=', 'sms')->first();
+                $no = Param::where('llave', '=', 'num_twilio')->first();
+                $to = '+52' . e($request->input('tel_cel'));
+                //dd($to);
+                $message = e($request->input('cve_cliente'));
+                $from = $no->valor;
+
+                //dd($r->valor);
+                if ($r->valor == 'activo') {
+                    Sms::send($message, $to, $from);
+                }
+            } catch (\Exception $e) {
+                dd($e);
+                //return false;
+            }
+        }
+    }
 
     /* public function enviaMail(Request $request){
       //dd($_REQUEST);
@@ -884,7 +906,62 @@ class ClientesController extends Controller {
         $filtros = $request->all();
         $f = date("Y-m-d");
         $l = Lectivo::find(0)->first();
-        $a_1 = Seguimiento::select(DB::raw('concat(e.nombre, " ",e.ape_paterno," ",e.ape_materno) as empleado'),'st.name as estatus',
+        $tabla=array();
+        $encabezado=array();
+        $encabezado[0]='Empleado';
+        $estatus = StSeguimiento::where('id','>',0)->get();
+        $empleados = Empleado::where('plantel_id','=', $filtros['plantel_f'])
+                             ->where('puesto_id', '=', 2)->get();
+        
+        //dd($empleados->toArray());
+        $i=1;
+        foreach($estatus as $st){
+            if($st->id>0){
+                $encabezado[$i]=$st->name;
+                $i++;
+            }
+        }
+        array_push($tabla, $encabezado);
+        //dd($encabezado);
+        foreach($empleados as $e){
+            $linea=array();
+            $i=0;
+            $linea[$i]=$e->nombre." ".$e->ape_paterno." ".$e->ape_materno;
+            foreach($estatus as $st){
+               $i++;
+                if($st->id==2){
+                   $valor=Seguimiento::select(DB::raw('count(st.name) as total'))
+                            ->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
+                            ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
+                            ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
+                            ->where('st_seguimiento_id', '=', $st->id)
+                            ->where('e.id', '=', $e->id)
+                            ->where('c.plantel_id', '=', $filtros['plantel_f'])
+                            ->where('seguimientos.created_at', '>=', $l->inicio)
+                            ->where('seguimientos.created_at', '<=', $l->fin)
+                            ->value('total');
+               }elseif($st->id>0){
+                   $valor=Seguimiento::select(DB::raw('count(st.name) as total'))
+                            ->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
+                            ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
+                            ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
+                            ->where('st_seguimiento_id', '<>', $st->id)
+                            ->where('e.id', '=', $e->id)
+                            ->where('c.plantel_id', '=', $filtros['plantel_f'])
+                            ->value('total');
+               } 
+               $linea[$i]=$valor;
+            }
+            array_push($tabla, $linea);
+        }
+        //dd($tabla);
+        $p=Plantel::find($filtros['plantel_f']);
+        $plantel=$p->razon;
+        //dd($plantel);
+        
+        return view('clientes.reportes.ecap_r', compact('tabla', 'plantel'))
+                ->with('datos_grafica', json_encode($tabla));
+        /*$a_1 = Seguimiento::select(DB::raw('concat(e.nombre, " ",e.ape_paterno," ",e.ape_materno) as empleado'),'st.name as estatus',
                                    DB::raw('count(st.name) as total'))
                             ->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
                             ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
@@ -909,57 +986,11 @@ class ClientesController extends Controller {
                             ->groupBy('st.name')
                             ->unionAll($a_1)
                             ->get();
-        //dd($a_2->toArray());
+        dd($a_2->toArray());
+         * 
+         */
         //$registros=$a_2->toArray();
         //dd($registros);
-        return view('clientes.reportes.ecap_r', compact('a_2'));
-                        //->with('datos_grafica', json_encode($a_2->toArray()));
-        //dd($a_2->toArray());
-        /*$estatus = StSeguimiento::where('id', '>', '0')->get();
-        $tabla = array();
-        $encabezado = array();
-        array_push($encabezado, 'nombre');
-        foreach ($estatus as $st) {
-            array_push($encabezado, $st->name);
-        }
-        array_push($tabla, $encabezado);
-        $empleados = Empleado::where('puesto_id', '=', 2)->where('plantel_id', '=', $filtros['plantel_f'])->get();
-        //dd($empleados->toArray());
-        foreach ($empleados as $e) {
-            $linea = array();
-            array_push($linea, $e->nombre);
-            foreach ($estatus as $st) {
-                if ($st->id == 2) {
-                    $a_1 = Seguimiento::select('st.name', Db::raw('count(c.nombre) as total'))
-                            ->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
-                            ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
-                            ->where('st_seguimiento_id', '=', $st->id)
-                            ->where('c.plantel_id', '=', $filtros['plantel_f'])
-                            ->where('seguimientos.created_at', '>=', $l->inicio)
-                            ->where('seguimientos.created_at', '<=', $l->fin)
-                            ->where('c.empleado_id', '=', $e->id)
-                            ->groupBy('st.name')
-                            ->first();
-                    //dd($a_1);
-                    array_push($linea, $a_1->total);
-                } else {
-                    $a_1 = Seguimiento::select('st.name', Db::raw('count(c.nombre) as total'))
-                            ->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
-                            ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
-                            ->where('st_seguimiento_id', '=', $st->id)
-                            ->where('c.plantel_id', '=', $filtros['plantel_f'])
-                            ->where('c.empleado_id', '=', $e->id)
-                            ->groupBy('st.name')
-                            ->first();
-                    array_push($linea, $a_1->total);
-                }
-            }
-            array_push($tabla, $linea);
-        }
-         * */
-         
-        //dd($tabla);
-
         
         
     }
