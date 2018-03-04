@@ -94,7 +94,7 @@
                                 @if(isset($seguimiento->cliente->mail))
                                     <a class="btn btn-xs btn-success" href="{{ url('correos/redactar').'/'.$seguimiento->cliente->mail.'/'.$seguimiento->cliente->nombre.'/0' }}"><i class="glyphicon glyphicon-envelope"></i> Correo </a>
                                 @endif
-                                @permission('clientes.enviaSms')
+                                @permission('clientes.enviaSmsSeguimiento')
                                     @if($seguimiento->cliente->tel_cel<>"" and $seguimiento->cliente->celular_confirmado==1)
                                     <button type="button" class="btn btn-xs btn-primary" id="btn_sms">Enviar SMS Bienvenida</button>   
                                     <div id='loading1' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 

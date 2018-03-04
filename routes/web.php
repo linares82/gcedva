@@ -666,7 +666,7 @@ Route::get('medios/index', array(
     )->middleware('auth');
     Route::get('/clientes/enviaSmsSeguimiento', array(
         'as' => 'clientes.enviaSmsSeguimiento',
-        'middleware' => 'permission:clientes.enviaSms',
+        'middleware' => 'permission:clientes.enviaSmsSeguimiento',
         'uses' => 'ClientesController@enviaSmsSeguimiento')
     )->middleware('auth');
     Route::post('/clientes/enviaMail', array(
