@@ -38,6 +38,57 @@
                         </div>
                     </div>
                     <div class="box-body">
+                        <div class="form-group col-md-3 @if($errors->has('plan_campo_filtro_id')) has-error @endif">
+                            <label for="plan_campo_filtro_id-field">Campo</label>
+                            {!! Form::select("plan_campo_filtro_id", $list1["PlanCampoFiltro"], null, array("class" => "form-control select_seguridad", "id" => "plan_campo_filtro_id-field")) !!}
+                            @if($errors->has("plan_campo_filtro_id"))
+                             <span class="help-block">{{ $errors->first("plan_campo_filtro_id") }}</span>
+                            @endif
+                         </div>
+                        <div class="form-group col-md-3 @if($errors->has('signo_comparacion_filtro')) has-error @endif">
+                            <label for="signo_comparacion_filtro-field">Signo de comparacion</label>
+                            {!! Form::select("signo_comparacion_filtro", array('Seleccionar Opción','>=','>', '=', 'like', '<>', '<', '<='), null, array("class" => "form-control select_seguridad", "id" => "signo_comparacion_filtro-field")) !!}
+                            @if($errors->has("signo_comparacion_filtro"))
+                             <span class="help-block">{{ $errors->first("signo_comparacion_filtro") }}</span>
+                            @endif
+                         </div>
+                        <div class="form-group col-md-3 @if($errors->has('valor_condicion')) has-error @endif" id="div_valor">
+                            <label for="valor_condicion-field">Valor condicion</label>
+                            {!! Form::text("valor_condicion", null, array("class" => "form-control input-sm", "id" => "valor_condicion-field")) !!}
+                            @if($errors->has("valor_condicion"))
+                             <span class="help-block">{{ $errors->first("valor_condicion") }}</span>
+                            @endif
+                         </div>
+                        <div class="form-group col-md-3 @if($errors->has('valor_condicion')) has-error @endif" id="div_especialidad"></div>
+                        <div class="form-group col-md-3 @if($errors->has('valor_condicion')) has-error @endif" style="clear:left;" id="div_nivel"></div>
+                        <div class="form-group col-md-3 @if($errors->has('valor_condicion')) has-error @endif" id="div_grado"></div>
+                        <div class="form-group col-md-3 @if($errors->has('valor_condicion')) has-error @endif" id="div_comprobar">
+                            <div id='loading10' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
+                        </div>
+                        <div class="form-group col-md-3 @if($errors->has('valor_condicion')) has-error @endif" >
+                            <input type="button" class="btn btn-xs btn-block btn-success" value="Agregar" onclick="AgregarCondicion()" />
+                            <input type="button" class="btn btn-xs btn-block btn-info" value="Comprobar" onclick="ComprobarCantidad()" />
+                        </div>
+                        <div class="form-group col-md-12">
+                            <table class="table table-condensed table-striped">
+                                <thead>
+                                <th>Campo</th><th>Signo</th><th>Valor</th><th></th><th></th>
+                                </thead>
+                                <tbody>
+                                    @foreach($plantilla->condiciones as $c)
+                                    <tr>
+                                        <td>{{$c->campo->campo}}</td>
+                                        <td>{{$c->signo_comparacion}}</td>
+                                        <td>{{$c->interpretacion}}</td>
+                                        <td>
+                                            <a class="btn btn-xs btn-danger" href="{{ route('planCondicionFiltros.destroy', $c->id) }}"><i class="glyphicon glyphicon-trash"></i>Borrar</a>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        <!--
                         <div id="estatus_div">
                             <div class="form-group col-md-4 @if($errors->has('st_cliente_id')) has-error @endif" style="clear:left;">
                                <label for="st_cliente_id-field">Estatus</label>
@@ -95,6 +146,7 @@
                            @endif
                         </div>
                       </div>
+                        -->
                         </div>
                     </div>
                     <div class="box box-default box-solid">
@@ -105,7 +157,7 @@
                         </div>
                     </div>
                     <div class="box-body">
-                        <div id="dia_div">
+                        <!--<div id="dia_div">-->
                             <div class="form-group col-md-4 @if($errors->has('dia')) has-error @endif" style="clear:left;">
                                <label for="dia-field">Dia (número entre 1 y 28)</label>
                                {!! Form::text("dia", null, array("class" => "form-control input-sm", "id" => "dia-field")) !!}
@@ -113,8 +165,8 @@
                                 <span class="help-block">{{ $errors->first("dia") }}</span>
                                @endif
                             </div>
-                          </div>
-                        <div id="inicio_div">
+                          <!--</div>-->
+                        <!--<div id="inicio_div">-->
                             <div class="form-group col-md-4 @if($errors->has('inicio')) has-error @endif">
                                <label for="inicio-field">Inicio</label>
                                {!! Form::text("inicio", null, array("class" => "form-control input-sm", "id" => "inicio-field")) !!}
@@ -122,9 +174,9 @@
                                 <span class="help-block">{{ $errors->first("inicio") }}</span>
                                @endif
                             </div>
-                          </div>
+                          <!--</div>-->
 
-                          <div id="fin_div">
+                          <!--<div id="fin_div">-->
                             <div class="form-group col-md-4 @if($errors->has('fin')) has-error @endif">
                                <label for="fin-field">Fin</label>
                                {!! Form::text("fin", null, array("class" => "form-control input-sm", "id" => "fin-field")) !!}
@@ -134,7 +186,7 @@
                             </div>
                           </div>
 
-                        </div>
+                        <!--</div>-->
                     </div>
                     <div class="box box-default box-solid">
                     <div class="box-header">
@@ -307,12 +359,369 @@
 
 
 <script type="text/javascript">
+    function ComprobarCantidad(){
+        var sms=0;
+        var mail=0;
+        if ($('#sms_bnd-field').is(":checked"))
+        {
+          sms=1;
+        }
+        if ($('#mail_bnd-field').is(":checked"))
+        {
+          mail=1;
+        }
+        $.ajax({
+                  url: '{{ route("plantillas.comprobarCantidad") }}',
+                  type: 'GET',
+                  data: "plantilla={{ $plantilla->id }}" +
+                        "&mail_bnd=" + mail + 
+                        "&sms_bnd=" + sms + "",
+                  dataType: 'json',
+                  beforeSend : function(){$("#loading10").show();},
+                  complete : function(){$("#loading10").hide();},
+                  success: function(data){
+                      //$example.select2("destroy");
+                      $('#div_comprobar').html('');
+                      
+                      //$('#especialidad_id-field').empty();
+                      $('#div_comprobar').append('<label>Registros afectados: '+data+'</label>');
+                      
+                      
+                      //$example.select2();
+                  }
+              });
+    }
+    
+    function AgregarCondicion(){
+        var opcion=$('#plan_campo_filtro_id-field option:selected').val();
+        var todas;
+        if ($('#todas_condiciones').is(":checked"))
+        {
+          todas=1;
+        }else{
+          todas=0;
+        }
+        //alert(opcion);
+        switch(opcion){
+            case "1":
+                $.ajax({
+                    url: '{{ route("plantillas.crearCondicion") }}',
+                    type: 'GET',
+                    data: "plantilla={{ $plantilla->id }}" + 
+                          "&campo=" + $('#plan_campo_filtro_id-field option:selected').val() + 
+                          "&signo=" + $('#signo_comparacion_filtro-field option:selected').val() + 
+                          "&valor=" + $('#valor_condicion-field option:selected').val() +
+                          "&interpretacion=" + $('#valor_condicion-field option:selected').text() + "",
+                    dataType: 'json',
+                    beforeSend : function(){$("#loading10").show();},
+                    complete : function(){location.reload(true);},
+                    success: function(data){
+                    }
+                });
+                break;
+            case "2":
+                $.ajax({
+                    url: '{{ route("plantillas.crearCondicion") }}',
+                    type: 'GET',
+                    data: "plantilla={{ $plantilla->id }}" + 
+                          "&campo=" + $('#plan_campo_filtro_id-field option:selected').val() + 
+                          "&signo=" + $('#signo_comparacion_filtro-field option:selected').val() + 
+                          "&valor=" + $('#valor_condicion-field option:selected').val() +
+                          "&interpretacion=" + $('#valor_condicion-field option:selected').text() + "",
+                    dataType: 'json',
+                    beforeSend : function(){$("#loading10").show();},
+                    complete : function(){location.reload(true);},
+                    success: function(data){
+                     }
+                });
+                break;
+            case "3":
+                $.ajax({
+                    url: '{{ route("plantillas.crearCondicion") }}',
+                    type: 'GET',
+                    data: "plantilla={{ $plantilla->id }}" + 
+                          "&campo=" + $('#plan_campo_filtro_id-field option:selected').val() + 
+                          "&signo=" + $('#signo_comparacion_filtro-field option:selected').val() + 
+                          "&valor=" + $('#valor_especialidad-field option:selected').val() +
+                          "&interpretacion=" + $('#valor_especialidad-field option:selected').text() + 
+                          "&valor_plantel=" + $('#valor_plantel-field option:selected').val() +
+                          "&interpretacion_plantel=" + $('#valor_plantel-field option:selected').text() + 
+                          "&todas_condiciones=" + todas + "",
+                    dataType: 'json',
+                    beforeSend : function(){$("#loading10").show();},
+                    //complete: function(){$("#loading10").hide();},
+                    complete : function(){location.reload(true);},
+                    success: function(data){
+                     }
+                });
+                break;
+            case "4":
+                $.ajax({
+                    url: '{{ route("plantillas.crearCondicion") }}',
+                    type: 'GET',
+                    data: "plantilla={{ $plantilla->id }}" + 
+                          "&campo=" + $('#plan_campo_filtro_id-field option:selected').val() + 
+                          "&signo=" + $('#signo_comparacion_filtro-field option:selected').val() + 
+                          "&valor=" + $('#valor_nivel-field option:selected').val() +
+                          "&interpretacion=" + $('#valor_nivel-field option:selected').text() + 
+                          "&valor_especialidad=" + $('#valor_especialidad-field option:selected').val() +
+                          "&interpretacion_especialidad=" + $('#valor_especialidad-field option:selected').text() + 
+                          "&valor_plantel=" + $('#valor_plantel-field option:selected').val() +
+                          "&interpretacion_plantel=" + $('#valor_plantel-field option:selected').text() + 
+                          "&todas_condiciones=" + todas + "",
+                    dataType: 'json',
+                    beforeSend : function(){$("#loading10").show();},
+                    //complete: function(){$("#loading10").hide();},
+                    complete : function(){location.reload(true);},
+                    success: function(data){
+                     }
+                });
+                break;
+            case "5":
+                $.ajax({
+                    url: '{{ route("plantillas.crearCondicion") }}',
+                    type: 'GET',
+                    data: "plantilla={{ $plantilla->id }}" + 
+                          "&campo=" + $('#plan_campo_filtro_id-field option:selected').val() + 
+                          "&signo=" + $('#signo_comparacion_filtro-field option:selected').val() + 
+                          "&valor=" + $('#valor_grado-field option:selected').val() +
+                          "&interpretacion=" + $('#valor_grado-field option:selected').text() + 
+                          "&valor_nivel=" + $('#valor_nivel-field option:selected').val() +
+                          "&interpretacion_nivel=" + $('#valor_nivel-field option:selected').text() + 
+                          "&valor_especialidad=" + $('#valor_especialidad-field option:selected').val() +
+                          "&interpretacion_especialidad=" + $('#valor_especialidad-field option:selected').text() + 
+                          "&valor_plantel=" + $('#valor_plantel-field option:selected').val() +
+                          "&interpretacion_plantel=" + $('#valor_plantel-field option:selected').text() + 
+                          "&todas_condiciones=" + todas + "",
+                    dataType: 'json',
+                    beforeSend : function(){$("#loading10").show();},
+                    //complete: function(){$("#loading10").hide();},
+                    complete : function(){location.reload(true);},
+                    success: function(data){
+                     }
+                });
+                break;
+        }
+        
+        
+    }
     $(document).ready(function() {
       getCmbEspecialidad();
       getCmbNivel();
       $('#plantel_id-field').change(function(){
           getCmbEspecialidad();
       });
+      
+      $('#plan_campo_filtro_id-field').change(function(){
+        var campo=$('#plan_campo_filtro_id-field option:selected').val();
+        //alert(campo);
+        switch(campo){
+            case "1":
+                $.ajax({
+                    url: '{{ route("stSeguimientos.getCmbEstatus") }}',
+                    type: 'GET',
+                    data: campo,
+                    dataType: 'json',
+                    beforeSend : function(){$("#loading10").show();},
+                    complete : function(){$("#loading10").hide();},
+                    success: function(data){     
+                        //$example.select2("destroy");
+                        $('#div_valor').html('');
+                        //$('#especialidad_id-field').empty();
+                        //$('#div_valor').append('<select id="valor_condicion-field" class="form-control select_seguridad"></select>').append($('<option></option>').text('Seleccionar').val('0'));
+                        $('#div_valor').append('<label for="valor_condicion-field">Valor condicion</label>');
+                        $('#div_valor').append('<select id="valor_condicion-field" class="form-control select_seguridad"></select>');
+                        $.each(data, function(i) {
+                            $('#valor_condicion-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                        });
+                        $('#valor_condicion-field').select2();     
+                    }
+                });                
+                break;
+            case "2":
+                $.ajax({
+                    url: '{{ route("plantels.getCmbPlantels") }}',
+                    type: 'GET',
+                    data: campo,
+                    dataType: 'json',
+                    beforeSend : function(){$("#loading10").show();},
+                    complete : function(){$("#loading10").hide();},
+                    success: function(data){     
+                        //$example.select2("destroy");
+                        $('#div_valor').html('');
+                        //$('#especialidad_id-field').empty();
+                        //$('#div_valor').append('<select id="valor_condicion-field" class="form-control select_seguridad"></select>').append($('<option></option>').text('Seleccionar').val('0'));
+                        $('#div_valor').append('<label for="valor_condicion-field">Valor condicion</label>');
+                        $('#div_valor').append('<select id="valor_condicion-field" class="form-control select_seguridad"></select>');
+                        $.each(data, function(i) {
+                            $('#valor_condicion-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                        });
+                        $('#valor_condicion-field').select2();     
+                    }
+                });                
+                break;
+            case "3":
+                $.ajax({
+                    url: '{{ route("plantels.getCmbPlantels") }}',
+                    type: 'GET',
+                    data: campo,
+                    dataType: 'json',
+                    beforeSend : function(){$("#loading10").show();},
+                    complete : function(){$("#loading10").hide();},
+                    success: function(data){     
+                        //$example.select2("destroy");
+                        $('#div_valor').html('');
+                        //$('#especialidad_id-field').empty();
+                        //$('#div_valor').append('<select id="valor_condicion-field" class="form-control select_seguridad"></select>').append($('<option></option>').text('Seleccionar').val('0'));
+                        $('#div_valor').append('<label for="valor_condicion-field">Plantel condicion</label>');
+                        $('#div_valor').append('<select id="valor_plantel-field" class="form-control select_seguridad"></select>');
+                        $.each(data, function(i) {
+                            $('#valor_plantel-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                        });
+                        $('#valor_plantel-field').select2();     
+                        $('#div_valor').append('<input type="checkbox" name="todas_condiciones" id="todas_condiciones" value="1"> Todas las condiciones<br>');
+                        
+                        $('#valor_plantel-field').change(function(){
+                            getCmbEspecialidadAjax(false, false);
+                        });
+                        
+                    }
+                });                
+                break;
+            case "4":
+                $.ajax({
+                    url: '{{ route("plantels.getCmbPlantels") }}',
+                    type: 'GET',
+                    data: campo,
+                    dataType: 'json',
+                    beforeSend : function(){$("#loading10").show();},
+                    complete : function(){$("#loading10").hide();},
+                    success: function(data){     
+                        //$example.select2("destroy");
+                        $('#div_valor').html('');
+                        //$('#especialidad_id-field').empty();
+                        //$('#div_valor').append('<select id="valor_condicion-field" class="form-control select_seguridad"></select>').append($('<option></option>').text('Seleccionar').val('0'));
+                        $('#div_valor').append('<label for="valor_condicion-field">Plantel condicion</label>');
+                        $('#div_valor').append('<select id="valor_plantel-field" class="form-control select_seguridad"></select>');
+                        $.each(data, function(i) {
+                            $('#valor_plantel-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                        });
+                        $('#valor_plantel-field').select2();     
+                        $('#div_valor').append('<input type="checkbox" name="todas_condiciones" id="todas_condiciones" value="1"> Todas las condiciones<br>');
+                        
+                        $('#valor_plantel-field').change(function(){
+                            getCmbEspecialidadAjax(true, false);
+                        });
+                    }
+                });                
+                break;
+            case "5":
+                $.ajax({
+                    url: '{{ route("plantels.getCmbPlantels") }}',
+                    type: 'GET',
+                    data: campo,
+                    dataType: 'json',
+                    beforeSend : function(){$("#loading10").show();},
+                    complete : function(){$("#loading10").hide();},
+                    success: function(data){     
+                        $('#div_valor').html('');
+                        $('#div_valor').append('<label for="valor_condicion-field">Plantel condicion</label>');
+                        $('#div_valor').append('<select id="valor_plantel-field" class="form-control select_seguridad"></select>');
+                        $.each(data, function(i) {
+                            $('#valor_plantel-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                        });
+                        $('#valor_plantel-field').select2(); 
+                        $('#div_valor').append('<input type="checkbox" name="todas_condiciones" id="todas_condiciones" value="1"> Todas las condiciones<br>');
+                        
+                        $('#valor_plantel-field').change(function(){
+                            getCmbEspecialidadAjax(true, true);
+                        });
+                    }
+                });                
+                break;
+        } 
+      });
+    
+    function getCmbEspecialidadAjax(nivel, grado){
+        $.ajax({
+            url: '{{ route("especialidads.getCmbEspecialidad") }}',
+            type: 'GET',
+            data: "plantel_id=" + $('#valor_plantel-field option:selected').val() + 
+                  "&especialidad_id=0" + "",
+            dataType: 'json',
+            beforeSend : function(){$("#loading10").show();},
+            complete : function(){$("#loading10").hide();},
+            success: function(data){     
+                $('#div_especialidad').html('');
+                $('#div_especialidad').append('<label for="valor_especialidad-field">Especialidad condicion</label>');
+                $('#div_especialidad').append('<select id="valor_especialidad-field" class="form-control select_seguridad"></select>');
+                $.each(data, function(i) {
+                    $('#valor_especialidad-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                });
+                $('#valor_especialidad-field').select2();     
+
+                $('#valor_especialidad-field').change(function(){
+                    if(nivel){
+                        getCmbNivelAjax(grado);
+                    }
+                });
+                
+                
+            }
+        });
+    }
+    
+    function getCmbNivelAjax(grado){
+        $.ajax({
+            url: '{{ route("nivels.getCmbNivels") }}',
+            type: 'GET',
+            data: "plantel_id=" + $('#valor_plantel-field option:selected').val() + 
+                  "&especialidad_id=" + $('#valor_especialidad-field option:selected').val() + 
+                  "&nivel_id=0" + "",
+            dataType: 'json',
+            beforeSend : function(){$("#loading10").show();},
+            complete : function(){$("#loading10").hide();},
+            success: function(data){     
+                $('#div_nivel').html('');
+                $('#div_nivel').append('<label for="valor_nivel-field">Nivel condicion</label>');
+                $('#div_nivel').append('<select id="valor_nivel-field" class="form-control select_seguridad"></select>');
+                $.each(data, function(i) {
+                    $('#valor_nivel-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                });
+                $('#valor_nivel-field').select2();     
+
+                $('#valor_nivel-field').change(function(){
+                    if(grado){
+                        getCmbGradoAjax();
+                    }
+                });
+            }
+        });
+    }
+    
+    function getCmbGradoAjax(){
+        $.ajax({
+            url: '{{ route("grados.getCmbGrados") }}',
+            type: 'GET',
+            data: "plantel_id=" + $('#valor_plantel-field option:selected').val() + 
+                  "&especialidad_id=" + $('#valor_especialidad-field option:selected').val() + 
+                  "&nivel_id=" + $('#valor_nivel-field option:selected').val() + 
+                  "&grado_id=0" + "",
+            dataType: 'json',
+            beforeSend : function(){$("#loading10").show();},
+            complete : function(){$("#loading10").hide();},
+            success: function(data){     
+                $('#div_grado').html('');
+                $('#div_grado').append('<label for="valor_grado-field">Grado condicion</label>');
+                $('#div_grado').append('<select id="valor_grado-field" class="form-control select_seguridad"></select>');
+                $.each(data, function(i) {
+                    $('#valor_grado-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                });
+                $('#valor_grado-field').select2();     
+            }
+        });
+    }
+      
       function getCmbEspecialidad(){
           //var $example = $("#especialidad_id-field").select2();
           var a= $('#frm_cliente').serialize();
@@ -472,7 +881,6 @@
      }
 
      $(document).on("change", ".email_archivo", function (e) {
-
         var miurl = "{{url('plantillas/carga_archivo_correo')}}";
         // var fileup=$("#file").val();
         var divresul = "texto_notificacion";

@@ -200,4 +200,14 @@ class PlantelsController extends Controller {
 		return redirect()->route('plantels.index')->with('message', 'Registro borrado.');
 	}
 
+    public function getCmbPlantels(){
+        $r=Plantel::select('razon', 'id')->get();
+        $final=array();
+        foreach ($r as $r1) {
+            array_push($final, array('id' => $r1->id,
+                'name' => $r1->razon,
+                'selectec' => ''));
+        }
+        return $final;
+    }
 }

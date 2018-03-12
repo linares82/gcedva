@@ -144,6 +144,7 @@ class NivelsController extends Controller {
 					->where('n.plantel_id', '=', $plantel)
 					->where('n.especialidad_id', '=', $especialidad)
 					->where('n.id', '>', '0')
+                                        ->whereNull('deleted_at')
 					->get();
 			//dd($r);
 			if(isset($nivel) and $nivel<>0){
@@ -166,4 +167,5 @@ class NivelsController extends Controller {
 		}
 	}
 
+    
 }

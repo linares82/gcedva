@@ -62,6 +62,10 @@ class Plantilla extends Model
 	public function especialidad(){
 		return $this->belongsToMany('App\Especialidad', 'plantillas_especialidad', 'plantilla_id', 'especialidad_id');
 	}
+        
+        public function condiciones(){
+		return $this->hasMany('App\PlanCondicionFiltro', 'plantilla_id', 'id');
+	}
 
     protected $dates = ['deleted_at'];
 

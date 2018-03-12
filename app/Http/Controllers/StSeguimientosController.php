@@ -123,4 +123,16 @@ class StSeguimientosController extends Controller {
 		return redirect()->route('stSeguimientos.index')->with('message', 'Registro Borrado.');
 	}
 
+    public function getCmbEstatus(){
+        $r=StSeguimiento::select('name', 'id')->get();
+        $final=array();
+        foreach ($r as $r1) {
+            array_push($final, array('id' => $r1->id,
+                'name' => $r1->name,
+                'selectec' => ''));
+        }
+        return $final;
+    }
+    
+        
 }

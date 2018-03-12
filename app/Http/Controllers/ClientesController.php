@@ -594,6 +594,9 @@ class ClientesController extends Controller {
                         $input['usu_mod_id'] = Auth::user()->id;
                         Sm::create($input);
                         //dd("msj");
+                        $c=Cliente::find($input['cliente_id']);
+                        $c->contador_sms=$c->contador_sms+1;
+                        $c->save();
                     }
                 }
                 //return true;
@@ -698,6 +701,10 @@ class ClientesController extends Controller {
                     $input2['usu_alta_id'] = Auth::user()->id;
                     $input2['usu_mod_id'] = Auth::user()->id;
                     Correo::create($input2);
+                    
+                    $c=Cliente::find($input2['cliente_id']);
+                    $c->contador_mail=$c->contador_mail+1;
+                    $c->save();
                 }
 
                 //return true;

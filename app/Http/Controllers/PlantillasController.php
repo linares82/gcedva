@@ -4,6 +4,9 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\Plantilla;
+use App\Cliente;
+use App\PlanCondicionFiltro;
+use App\PlanCampoFiltro;
 use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updatePlantilla;
@@ -32,7 +35,8 @@ class PlantillasController extends Controller {
 	public function create()
 	{
 		return view('plantillas.create')
-			->with( 'list', Plantilla::getListFromAllRelationApps() );
+			->with( 'list', Plantilla::getListFromAllRelationApps() )
+                        ->with( 'list1', PlanCondicionFiltro::getListFromAllRelationApps() );
 	}
 
 	/**
@@ -70,13 +74,26 @@ class PlantillasController extends Controller {
 		}else{
 			$input['mail_bnd']=1;
 		}
+                if(!isset($input['plantel_id'])){
+			$input['plantel_id']=0;
+		}
+                if(!isset($input['especialidad_id'])){
+			$input['especialidad_id']=0;
+		}
+                if(!isset($input['nivel_id'])){
+			$input['nivel_id']=0;
+		}
+                if(!isset($input['asunto'])){
+			$input['asunto']="";
+		}
+                
 		$h=str_replace('http:/', 'http://', $input['plantilla']);
 		$h=str_replace('&gt;', '>', $h);
 		$input['plantilla']=$h;
 		//dd($input);
 		//create data
-		/*$p=Plantilla::create( $input );
-		$file = fopen(base_path('resources\views\emails\\'.$p->id.'.blade.php'), "w+");
+		$p=Plantilla::create( $input );
+		/*$file = fopen(base_path('resources\views\emails\\'.$p->id.'.blade.php'), "w+");
 		fwrite($file, $input['plantilla']);
 		fclose($file);
                 */
@@ -104,8 +121,10 @@ class PlantillasController extends Controller {
 	public function edit($id, Plantilla $plantilla)
 	{
 		$plantilla=$plantilla->find($id);
+                //dd($plantilla->condiciones->toArray());
 		return view('plantillas.edit', compact('plantilla'))
-			->with( 'list', Plantilla::getListFromAllRelationApps() );
+			->with( 'list', Plantilla::getListFromAllRelationApps() )
+                        ->with( 'list1', PlanCondicionFiltro::getListFromAllRelationApps() );
 	}
 
 	/**
@@ -134,8 +153,11 @@ class PlantillasController extends Controller {
                 //dd($input);
 		$input['usu_mod_id']=Auth::user()->id;
 		$input['periodo_id']=2;
-		$st=$input['st_cliente'];	
-		unset($input['st_cliente']);
+                $st="";
+                if(isset($input['st_cliente'])){
+                    $st=$input['st_cliente'];	
+                    unset($input['st_cliente']);
+                }
                 unset($input['file']);
 		//$esp=$input['especialidad_id'];
 		//unset($input['especialidad_id']);
@@ -159,6 +181,9 @@ class PlantillasController extends Controller {
 			$input['mail_bnd']=0;
 		}else{
 			$input['mail_bnd']=1;
+		}
+                if(!isset($input['asunto'])){
+			$input['asunto']="";
 		}
 		$h=str_replace('http:/', 'http://', $input['plantilla']);
 		$h=str_replace('&gt;', '>', $h);
@@ -236,6 +261,160 @@ class PlantillasController extends Controller {
             return $nombre;
         } else {
             return "Error vuelva a intentarlo";
+        }
+    }
+    
+    public function comprobarCantidad(Request $request){
+        if($request->ajax()){
+            $p=$request->all();
+            $condiciones= PlanCondicionFiltro::where('plantilla_id', '=', $p['plantilla'])->get();
+            $resultado=Cliente::join('seguimientos as s', 's.cliente_id', '=', 'clientes.id')
+                               ->join('st_seguimientos as st', 'st.id', '=', 's.st_seguimiento_id')
+                               ->join('combinacion_clientes as cc', 'cc.cliente_id', '=','clientes.id')
+                               ->join('especialidads as e', 'e.id', '=', 'cc.especialidad_id')
+                               ->join('nivels as n', 'n.id', '=', 'cc.nivel_id')
+                               ->join('grados as g', 'e.id', '=', 'cc.grado_id');
+            if($p['sms_bnd']==1){
+                $resultado->where('clientes.celular_confirmado', "=", 1);
+            }
+            if($p['mail_bnd']==1){
+                $resultado->where('clientes.correo_confirmado', "=", 1);
+            }
+            foreach($condiciones as $c){
+                switch($c->campo->campo){
+                    case 'Estatus':
+                        $resultado->where('st.id', $c->signo_comparacion, $c->valor_condicion);
+                        break;
+                    case 'Plantel':
+                        $resultado->where('cc.plantel_id', $c->signo_comparacion, $c->valor_condicion);
+                        break;
+                    case 'Especialidad':
+                        if($c->signo_comparacion=="like"){
+                            $resultado->where('e.name', $c->signo_comparacion, $c->interpretacion);
+                        }else{
+                            $resultado->where('cc.especialidad_id', $c->signo_comparacion, $c->valor_condicion);
+                        }                        
+                        break;
+                    case 'Nivel':
+                        if($c->signo_comparacion=="like"){
+                            $resultado->where('n.name', $c->signo_comparacion, $c->interpretacion);
+                        }else{
+                            $resultado->where('cc.nivel_id', $c->signo_comparacion, $c->valor_condicion);
+                        }
+                        break;
+                    case 'Grado':
+                        if($c->signo_comparacion=="like"){
+                            $resultado->where('g.name', $c->signo_comparacion, $c->interpretacion);
+                        }else{
+                            $resultado->where('cc.grado_id', $c->signo_comparacion, $c->valor_condicion);
+                        }
+                        break;
+                } 
+            }
+            return $resultado->count();
+            dd($resultado);
+        }
+        
+    }
+    
+    public function crearCondicion(Request $request){
+        if($request->ajax()){
+            $p=$request->all();
+            //dd($p);
+            $condicion= new PlanCondicionFiltro();
+            $condicion->plantilla_id=$p['plantilla'];
+            $condicion->plan_campo_filtro_id=$p['campo'];
+            $condicion->interpretacion=$p['interpretacion'];
+            switch($p['signo']){
+                case 1:
+                    $condicion->signo_comparacion='>=';
+                    break;
+                case 2:
+                    $condicion->signo_comparacion='>';
+                    break;
+                case 3:
+                    $condicion->signo_comparacion='=';
+                    break;
+                case 4:
+                    $condicion->signo_comparacion='<>';
+                    break;
+                case 5:
+                    $condicion->signo_comparacion='<=';
+                    break;
+                case 6:
+                    $condicion->signo_comparacion='<';
+                    break;
+            }
+            $condicion->valor_condicion=$p['valor'];
+            $condicion->usu_alta_id=1;
+            $condicion->usu_mod_id=1;
+            $condicion->save();
+            if($p['todas_condiciones']==1){
+                switch($p['campo']){
+                    case 3:
+                        $condicion2= new PlanCondicionFiltro();
+                        $condicion2->plantilla_id=$p['plantilla'];
+                        $condicion2->plan_campo_filtro_id=2;
+                        $condicion2->interpretacion=$p['interpretacion_plantel'];
+                        $condicion2->signo_comparacion='=';
+                        $condicion2->valor_condicion=$p['valor_plantel'];
+                        $condicion2->usu_alta_id=1;
+                        $condicion2->usu_mod_id=1;
+                        $condicion2->save();
+                        break;
+                    case 4:
+                        $condicion2= new PlanCondicionFiltro();
+                        $condicion2->plantilla_id=$p['plantilla'];
+                        $condicion2->plan_campo_filtro_id=2;
+                        $condicion2->interpretacion=$p['interpretacion_plantel'];
+                        $condicion2->signo_comparacion='=';
+                        $condicion2->valor_condicion=$p['valor_plantel'];
+                        $condicion2->usu_alta_id=1;
+                        $condicion2->usu_mod_id=1;
+                        $condicion2->save();
+                        $condicion3= new PlanCondicionFiltro();
+                        $condicion3->plantilla_id=$p['plantilla'];
+                        $condicion3->plan_campo_filtro_id=3;
+                        $condicion3->interpretacion=$p['interpretacion_especialidad'];
+                        $condicion3->signo_comparacion='=';
+                        $condicion3->valor_condicion=$p['valor_especialidad'];
+                        $condicion3->usu_alta_id=1;
+                        $condicion3->usu_mod_id=1;
+                        $condicion3->save();
+                        break;
+                    case 5:
+                        $condicion2= new PlanCondicionFiltro();
+                        $condicion2->plantilla_id=$p['plantilla'];
+                        $condicion2->plan_campo_filtro_id=2;
+                        $condicion2->interpretacion=$p['interpretacion_plantel'];
+                        $condicion2->signo_comparacion='=';
+                        $condicion2->valor_condicion=$p['valor_plantel'];
+                        $condicion2->usu_alta_id=1;
+                        $condicion2->usu_mod_id=1;
+                        $condicion2->save();
+                        $condicion3= new PlanCondicionFiltro();
+                        $condicion3->plantilla_id=$p['plantilla'];
+                        $condicion3->plan_campo_filtro_id=3;
+                        $condicion3->interpretacion=$p['interpretacion_especialidad'];
+                        $condicion3->signo_comparacion='=';
+                        $condicion3->valor_condicion=$p['valor_especialidad'];
+                        $condicion3->usu_alta_id=1;
+                        $condicion3->usu_mod_id=1;
+                        $condicion3->save();
+                        $condicion4= new PlanCondicionFiltro();
+                        $condicion4->plantilla_id=$p['plantilla'];
+                        $condicion4->plan_campo_filtro_id=4;
+                        $condicion4->interpretacion=$p['interpretacion_nivel'];
+                        $condicion4->signo_comparacion='=';
+                        $condicion4->valor_condicion=$p['valor_nivel'];
+                        $condicion4->usu_alta_id=1;
+                        $condicion4->usu_mod_id=1;
+                        $condicion4->save();
+                        break;
+                    
+                }
+            }
+            
         }
     }
 }

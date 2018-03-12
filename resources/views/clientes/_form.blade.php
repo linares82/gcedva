@@ -150,16 +150,22 @@
                             <span class="help-block">{{ $errors->first("tel_cel") }}</span>
                             @endif
                         </div>
-                        <div class="form-group col-md-4 @if($errors->has('celular_confirmado')) has-error @endif">
+                        <div class="form-group col-md-3 @if($errors->has('celular_confirmado')) has-error @endif">
                             <label for="celular_confirmado-field">Celular Confirmado</label>
                             {!! Form::checkbox("celular_confirmado", 1, null, [ "id" => "celular_confirmado-field", 'class'=>'minimal']) !!}
                             @if($errors->has("celular_confirmado"))
                             <span class="help-block">{{ $errors->first("celular_confirmado") }}</span>
                             @endif
                         </div>
+                        <div class="form-group col-md-2">
+                            <label for="celular_confirmado-field">Enviados:</label>
+                            {!! $cliente->contador_sms !!}
+                            
+                            
+                        </div>
                         @if(isset($cliente))
                         @permission('clientes.enviaSms')
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md-3">
                             <button type="button" class="btn btn-primary" id="btn_sms">Enviar SMS Bienvenida</button>   
                             <div id='loading1' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                             <div id='msj'></div>
@@ -174,7 +180,7 @@
                             <span class="help-block">{{ $errors->first("mail") }}</span>
                             @endif
                         </div>
-                        <div class="form-group col-md-4 @if($errors->has('correo_confirmado')) has-error @endif">
+                        <div class="form-group col-md-3 @if($errors->has('correo_confirmado')) has-error @endif">
                             <label for="correo_confirmado-field">Correo Confirmado</label>
                             {!! Form::checkbox("correo_confirmado", 1, null, [ "id" => "correo_confirmado-field", 'disabled'=>"disabled", 'class'=>'minimal']) !!}
                             <div id='loading2' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
@@ -182,9 +188,15 @@
                             <span class="help-block">{{ $errors->first("correo_confirmado") }}</span>
                             @endif
                         </div>
+                        <div class="form-group col-md-2">
+                            <label for="celular_confirmado-field">Enviados:</label>
+                            {!! $cliente->contador_mail !!}
+                            
+                            
+                        </div>
                         @if(isset($cliente))
                         @permission('clientes.enviaMail')
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md-3">
                             <button type="button" class="btn btn-primary" id="btn_mail">Enviar Mail Bienvenida</button>   
                             <div class="row_1"><div id='loading1' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Loading" /></div> </div>
                             <div id='msj'></div>
@@ -217,14 +229,21 @@
                             <span class="help-block">{{ $errors->first("oferta_id") }}</span>
                             @endif
                         </div>
-                        <div class="form-group col-md-4 @if($errors->has('medio_id')) has-error @endif">
+                        <div class="form-group col-md-4 @if($errors->has('tpo_informe_id')) has-error @endif" >
+                            <label for="tpo_informe-field">Tipo Informe</label>
+                            {!! Form::select("tpo_informe_id", $list["TpoInforme"], null, array("class" => "form-control select_seguridad", "id" => "tpo_informe_id-field")) !!}
+                            @if($errors->has("tpo_informe_id"))
+                            <span class="help-block">{{ $errors->first("tpo_informe_id") }}</span>
+                            @endif
+                        </div>
+                        <div class="form-group col-md-4 @if($errors->has('medio_id')) has-error @endif" style="clear:left;">
                             <label for="medio_id-field">Medio por el que se enteró</label>
                             {!! Form::select("medio_id", $list["Medio"], null, array("class" => "form-control select_seguridad", "id" => "medio_id-field")) !!}
                             @if($errors->has("medio_id"))
                             <span class="help-block">{{ $errors->first("medio_id") }}</span>
                             @endif
                         </div>
-                        <div class="form-group col-md-4 @if($errors->has('expo')) has-error @endif" id="expo-group" style="clear:left">
+                        <div class="form-group col-md-4 @if($errors->has('expo')) has-error @endif" id="expo-group" >
                             <label for="expo-field">Expo</label>
                             {!! Form::text("expo",null, array("class" => "form-control input-sm", "id" => "expo-field")) !!}
                             @if($errors->has("expo"))

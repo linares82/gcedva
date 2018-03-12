@@ -1,0 +1,1 @@
+@section('tpoInformesAppTitle','Tipo Informe')

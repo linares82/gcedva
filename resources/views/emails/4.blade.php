@@ -1,4 +1,10 @@
-<p>Bienvenido</p>
-<p><img src="{{ $message->embed('http://localhost/crmscool/public/filemanager/userfiles/chofer.jpg') }}" alt="prb foto" width="100" height="75" /></p>
-<p>Atte: Nosotros</p>
-<p>&nbsp;</p>
+<html>
+<head>
+</head>
+<body>
+    {!! $plantilla !!}
+    @if(!is_null($img1))
+    <img src="{{ $message->embed($img1) }}">
+    @endif
+</body>
+</html>
