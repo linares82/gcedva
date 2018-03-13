@@ -279,7 +279,7 @@ class PlantillasController extends Controller {
                                ->join('combinacion_clientes as cc', 'cc.cliente_id', '=','clientes.id')
                                ->join('especialidads as e', 'e.id', '=', 'cc.especialidad_id')
                                ->join('nivels as n', 'n.id', '=', 'cc.nivel_id')
-                               ->join('grados as g', 'e.id', '=', 'cc.grado_id');
+                               ->join('grados as g', 'g.id', '=', 'cc.grado_id');
             if($p['sms_bnd']==1){
                 $resultado->where('clientes.celular_confirmado', "=", 1);
             }

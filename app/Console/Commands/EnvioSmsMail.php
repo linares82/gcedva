@@ -66,7 +66,10 @@ class EnvioSmsMail extends Command
                                           ->join('seguimientos as s', 's.cliente_id', '=', 'clientes.id')
                                           ->join('st_seguimientos as st', 'st.id', '=', 's.st_seguimiento_id')
                                           ->join('combinacion_clientes as cc', 'cc.cliente_id', '=','clientes.id')
-                                          ->where('clientes.correo_confirmado', "=", 1);
+                                          ->where('clientes.correo_confirmado', "=", 1)
+                                          ->join('especialidads as e', 'e.id', '=', 'cc.especialidad_id')
+                                          ->join('nivels as n', 'n.id', '=', 'cc.nivel_id')
+                                          ->join('grados as g', 'g.id', '=', 'cc.grado_id');
                         foreach($condiciones as $c){
                             switch($c->campo->campo){
                                 case 'Estatus':
@@ -159,7 +162,10 @@ class EnvioSmsMail extends Command
                         $resultado=Cliente::join('seguimientos as s', 's.cliente_id', '=', 'clientes.id')
                                           ->join('st_seguimientos as st', 'st.id', '=', 's.st_seguimiento_id')
                                           ->join('combinacion_clientes as cc', 'cc.cliente_id', '=','clientes.id')
-                                          ->where('clientes.correo_confirmado', "=", 1);
+                                          ->where('clientes.correo_confirmado', "=", 1)
+                                          ->join('especialidads as e', 'e.id', '=', 'cc.especialidad_id')
+                                          ->join('nivels as n', 'n.id', '=', 'cc.nivel_id')
+                                          ->join('grados as g', 'g.id', '=', 'cc.grado_id');
                         foreach($condiciones as $c){
                             switch($c->campo->campo){
                                 case 'Estatus':
@@ -265,7 +271,10 @@ class EnvioSmsMail extends Command
                                        ->join('seguimientos as s', 's.cliente_id', '=', 'clientes.id')
                                        ->join('st_seguimientos as st', 'st.id', '=', 's.st_seguimiento_id')
                                        ->join('combinacion_clientes as cc', 'cc.cliente_id', '=','clientes.id')
-                                       ->where('clientes.celular_confirmado', "=", 1);
+                                       ->where('clientes.celular_confirmado', "=", 1)
+                                       ->join('especialidads as e', 'e.id', '=', 'cc.especialidad_id')
+                                       ->join('nivels as n', 'n.id', '=', 'cc.nivel_id')
+                                       ->join('grados as g', 'g.id', '=', 'cc.grado_id');
                         foreach($condiciones as $c){
                             switch($c->campo->campo){
                                 case 'Estatus':
@@ -354,7 +363,10 @@ class EnvioSmsMail extends Command
                                        ->join('seguimientos as s', 's.cliente_id', '=', 'clientes.id')
                                        ->join('st_seguimientos as st', 'st.id', '=', 's.st_seguimiento_id')
                                        ->join('combinacion_clientes as cc', 'cc.cliente_id', '=','clientes.id')
-                                       ->where('clientes.celular_confirmado', "=", 1);
+                                       ->where('clientes.celular_confirmado', "=", 1)
+                                       ->join('especialidads as e', 'e.id', '=', 'cc.especialidad_id')
+                                       ->join('nivels as n', 'n.id', '=', 'cc.nivel_id')
+                                       ->join('grados as g', 'g.id', '=', 'cc.grado_id');
                         foreach($condiciones as $c){
                             switch($c->campo->campo){
                                 case 'Estatus':
