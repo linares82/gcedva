@@ -342,12 +342,15 @@ class PlantillasController extends Controller {
                     $condicion->signo_comparacion='=';
                     break;
                 case 4:
-                    $condicion->signo_comparacion='<>';
+                    $condicion->signo_comparacion='like';
                     break;
                 case 5:
-                    $condicion->signo_comparacion='<=';
+                    $condicion->signo_comparacion='<>';
                     break;
                 case 6:
+                    $condicion->signo_comparacion='<=';
+                    break;
+                case 7:
                     $condicion->signo_comparacion='<';
                     break;
             }
