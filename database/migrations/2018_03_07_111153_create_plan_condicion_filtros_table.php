@@ -15,6 +15,7 @@ class CreatePlanCondicionFiltrosTable extends Migration {
 		Schema::create('plan_condicion_filtros', function(Blueprint $table) {
             $table->increments('id');
             $table->integer('plantilla_id')->unsigned();
+            $table->string('operador_condicion');
             $table->integer('plan_campo_filtro_id')->unsigned();
             $table->string('signo_comparacion');
             $table->string('valor_condicion');

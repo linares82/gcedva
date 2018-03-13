@@ -38,16 +38,24 @@
                         </div>
                     </div>
                     <div class="box-body">
-                        <div class="form-group col-md-3 @if($errors->has('plan_campo_filtro_id')) has-error @endif">
+                        <div class="form-group col-md-2 @if($errors->has('operador_condicion')) has-error @endif">
+                            <label for="operador_condicion-field">Operador Condicion</label>
+                            {!! Form::select("operador_condicion", array('Primera Condición','Y','O'), null, array("class" => "form-control select_seguridad", "id" => "operador_condicion-field")) !!}
+                            @if($errors->has("operador_condicion"))
+                             <span class="help-block">{{ $errors->first("operador_condicion") }}</span>
+                            @endif
+                         </div>
+                        <div class="form-group col-md-2 @if($errors->has('plan_campo_filtro_id')) has-error @endif">
                             <label for="plan_campo_filtro_id-field">Campo</label>
                             {!! Form::select("plan_campo_filtro_id", $list1["PlanCampoFiltro"], null, array("class" => "form-control select_seguridad", "id" => "plan_campo_filtro_id-field")) !!}
                             @if($errors->has("plan_campo_filtro_id"))
                              <span class="help-block">{{ $errors->first("plan_campo_filtro_id") }}</span>
                             @endif
                          </div>
-                        <div class="form-group col-md-3 @if($errors->has('signo_comparacion_filtro')) has-error @endif">
+                        
+                        <div class="form-group col-md-2 @if($errors->has('signo_comparacion_filtro')) has-error @endif">
                             <label for="signo_comparacion_filtro-field">Signo de comparacion</label>
-                            {!! Form::select("signo_comparacion_filtro", array('Seleccionar Opción','>=','>', '=', 'like', '<>', '<', '<='), null, array("class" => "form-control select_seguridad", "id" => "signo_comparacion_filtro-field")) !!}
+                            {!! Form::select("signo_comparacion_filtro", array('Seleccionar Opción','>=','>', '=', 'Parecido', '<>', '<', '<='), null, array("class" => "form-control select_seguridad", "id" => "signo_comparacion_filtro-field")) !!}
                             @if($errors->has("signo_comparacion_filtro"))
                              <span class="help-block">{{ $errors->first("signo_comparacion_filtro") }}</span>
                             @endif
@@ -73,14 +81,16 @@
                         <div class="form-group col-md-12">
                             <table class="table table-condensed table-striped">
                                 <thead>
-                                <th>Campo</th><th>Signo</th><th>Valor</th><th></th><th></th>
+                                <th>Operador Union Condiciones</th><th>Campo</th><th>Signo</th><th>Valor</th><th></th>
                                 </thead>
                                 <tbody>
                                     @foreach($plantilla->condiciones as $c)
                                     <tr>
+                                        <td>{{$c->operador_condicion}}</td>
                                         <td>{{$c->campo->campo}}</td>
                                         <td>{{$c->signo_comparacion}}</td>
                                         <td>{{$c->interpretacion}}</td>
+                                        
                                         <td>
                                             <a class="btn btn-xs btn-danger" href="{{ route('planCondicionFiltros.destroy', $c->id) }}"><i class="glyphicon glyphicon-trash"></i>Borrar</a>
                                         </td>
@@ -413,6 +423,7 @@
                     url: '{{ route("plantillas.crearCondicion") }}',
                     type: 'GET',
                     data: "plantilla={{ $plantilla->id }}" + 
+                          "&operador_condicion=" + $('#operador_condicion-field option:selected').val() + 
                           "&campo=" + $('#plan_campo_filtro_id-field option:selected').val() + 
                           "&signo=" + $('#signo_comparacion_filtro-field option:selected').val() + 
                           "&valor=" + $('#valor_condicion-field option:selected').val() +
@@ -429,6 +440,7 @@
                     url: '{{ route("plantillas.crearCondicion") }}',
                     type: 'GET',
                     data: "plantilla={{ $plantilla->id }}" + 
+                          "&operador_condicion=" + $('#operador_condicion-field option:selected').val() + 
                           "&campo=" + $('#plan_campo_filtro_id-field option:selected').val() + 
                           "&signo=" + $('#signo_comparacion_filtro-field option:selected').val() + 
                           "&valor=" + $('#valor_condicion-field option:selected').val() +
@@ -445,6 +457,7 @@
                     url: '{{ route("plantillas.crearCondicion") }}',
                     type: 'GET',
                     data: "plantilla={{ $plantilla->id }}" + 
+                          "&operador_condicion=" + $('#operador_condicion-field option:selected').val() + 
                           "&campo=" + $('#plan_campo_filtro_id-field option:selected').val() + 
                           "&signo=" + $('#signo_comparacion_filtro-field option:selected').val() + 
                           "&valor=" + $('#valor_especialidad-field option:selected').val() +
@@ -465,6 +478,7 @@
                     url: '{{ route("plantillas.crearCondicion") }}',
                     type: 'GET',
                     data: "plantilla={{ $plantilla->id }}" + 
+                          "&operador_condicion=" + $('#operador_condicion-field option:selected').val() + 
                           "&campo=" + $('#plan_campo_filtro_id-field option:selected').val() + 
                           "&signo=" + $('#signo_comparacion_filtro-field option:selected').val() + 
                           "&valor=" + $('#valor_nivel-field option:selected').val() +
@@ -487,6 +501,7 @@
                     url: '{{ route("plantillas.crearCondicion") }}',
                     type: 'GET',
                     data: "plantilla={{ $plantilla->id }}" + 
+                          "&operador_condicion=" + $('#operador_condicion-field option:selected').val() + 
                           "&campo=" + $('#plan_campo_filtro_id-field option:selected').val() + 
                           "&signo=" + $('#signo_comparacion_filtro-field option:selected').val() + 
                           "&valor=" + $('#valor_grado-field option:selected').val() +
@@ -584,7 +599,7 @@
                             $('#valor_plantel-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
                         });
                         $('#valor_plantel-field').select2();     
-                        $('#div_valor').append('<input type="checkbox" name="todas_condiciones" id="todas_condiciones" value="1"> Todas las condiciones<br>');
+                        //$('#div_valor').append('<input type="checkbox" name="todas_condiciones" id="todas_condiciones" value="1"> Todas las condiciones<br>');
                         
                         $('#valor_plantel-field').change(function(){
                             getCmbEspecialidadAjax(false, false);
@@ -612,7 +627,7 @@
                             $('#valor_plantel-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
                         });
                         $('#valor_plantel-field').select2();     
-                        $('#div_valor').append('<input type="checkbox" name="todas_condiciones" id="todas_condiciones" value="1"> Todas las condiciones<br>');
+                        //$('#div_valor').append('<input type="checkbox" name="todas_condiciones" id="todas_condiciones" value="1"> Todas las condiciones<br>');
                         
                         $('#valor_plantel-field').change(function(){
                             getCmbEspecialidadAjax(true, false);
@@ -636,7 +651,7 @@
                             $('#valor_plantel-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
                         });
                         $('#valor_plantel-field').select2(); 
-                        $('#div_valor').append('<input type="checkbox" name="todas_condiciones" id="todas_condiciones" value="1"> Todas las condiciones<br>');
+                        //$('#div_valor').append('<input type="checkbox" name="todas_condiciones" id="todas_condiciones" value="1"> Todas las condiciones<br>');
                         
                         $('#valor_plantel-field').change(function(){
                             getCmbEspecialidadAjax(true, true);

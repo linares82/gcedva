@@ -20,7 +20,7 @@ class PlanCondicionFiltro extends Model
     } 
 
 	//Mass Assignment
-	protected $fillable = ['plantilla_id','campo_id','signo_comparacion','valor_condicion','interpretacion','usu_alta_id','usu_mod_id'];
+	protected $fillable = ['plantilla_id','campo_id','operador_condicion','signo_comparacion','valor_condicion','interpretacion','usu_alta_id','usu_mod_id'];
 
 	public function usu_alta() {
 		return $this->hasOne('App\User', 'id', 'usu_alta_id');

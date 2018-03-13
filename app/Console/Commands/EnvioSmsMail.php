@@ -70,31 +70,67 @@ class EnvioSmsMail extends Command
                         foreach($condiciones as $c){
                             switch($c->campo->campo){
                                 case 'Estatus':
-                                    $resultado->where('st.id', $c->signo_comparacion, $c->valor_condicion);
+                                    if($c->operador_condicion=="and" or $c->operador_condicion=="Primera Condición"){
+                                        $resultado->where('st.id', $c->signo_comparacion, $c->valor_condicion);
+                                    }else{
+                                        $resultado->orWhere('st.id', $c->signo_comparacion, $c->valor_condicion);
+                                    }
+
                                     break;
                                 case 'Plantel':
-                                    $resultado->where('cc.plantel_id', $c->signo_comparacion, $c->valor_condicion);
+                                    if($c->operador_condicion=="and" or $c->operador_condicion=="Primera Condición"){
+                                        $resultado->where('cc.plantel_id', $c->signo_comparacion, $c->valor_condicion);
+                                    }else{
+                                        $resultado->orWhere('cc.plantel_id', $c->signo_comparacion, $c->valor_condicion);
+                                    }
                                     break;
                                 case 'Especialidad':
-                                    if($c->signo_comparacion=="like"){
-                                        $resultado->where('e.name', $c->signo_comparacion, $c->interpretacion);
+                                    if($c->operador_condicion=="and" or $c->operador_condicion=="Primera Condición"){
+                                        if($c->signo_comparacion=="like"){
+                                            $resultado->where('e.name', $c->signo_comparacion, $c->interpretacion);
+                                        }else{
+                                            $resultado->where('cc.especialidad_id', $c->signo_comparacion, $c->valor_condicion);
+                                        }
                                     }else{
-                                        $resultado->where('cc.especialidad_id', $c->signo_comparacion, $c->valor_condicion);
-                                    }                        
+                                        if($c->signo_comparacion=="like"){
+                                            $resultado->orWhere('e.name', $c->signo_comparacion, $c->interpretacion);
+                                        }else{
+                                            $resultado->orWhere('cc.especialidad_id', $c->signo_comparacion, $c->valor_condicion);
+                                        }
+                                    }
+
                                     break;
                                 case 'Nivel':
-                                    if($c->signo_comparacion=="like"){
-                                        $resultado->where('n.name', $c->signo_comparacion, $c->interpretacion);
+                                    if($c->operador_condicion=="and" or $c->operador_condicion=="Primera Condición"){
+                                        if($c->signo_comparacion=="like"){
+                                            $resultado->where('n.name', $c->signo_comparacion, $c->interpretacion);
+                                        }else{
+                                            $resultado->where('cc.nivel_id', $c->signo_comparacion, $c->valor_condicion);
+                                        }
                                     }else{
-                                        $resultado->where('cc.nivel_id', $c->signo_comparacion, $c->valor_condicion);
+                                        if($c->signo_comparacion=="like"){
+                                            $resultado->orWhere('n.name', $c->signo_comparacion, $c->interpretacion);
+                                        }else{
+                                            $resultado->orWhere('cc.nivel_id', $c->signo_comparacion, $c->valor_condicion);
+                                        }
                                     }
+
                                     break;
                                 case 'Grado':
-                                    if($c->signo_comparacion=="like"){
-                                        $resultado->where('g.name', $c->signo_comparacion, $c->interpretacion);
+                                    if($c->operador_condicion=="and" or $c->operador_condicion=="Primera Condición"){
+                                        if($c->signo_comparacion=="like"){
+                                            $resultado->where('g.name', $c->signo_comparacion, $c->interpretacion);
+                                        }else{
+                                            $resultado->where('cc.grado_id', $c->signo_comparacion, $c->valor_condicion);
+                                        }
                                     }else{
-                                        $resultado->where('cc.grado_id', $c->signo_comparacion, $c->valor_condicion);
+                                        if($c->signo_comparacion=="like"){
+                                            $resultado->orWhere('g.name', $c->signo_comparacion, $c->interpretacion);
+                                        }else{
+                                            $resultado->orWhere('cc.grado_id', $c->signo_comparacion, $c->valor_condicion);
+                                        }
                                     }
+
                                     break;
                             } 
                         }
@@ -127,31 +163,67 @@ class EnvioSmsMail extends Command
                         foreach($condiciones as $c){
                             switch($c->campo->campo){
                                 case 'Estatus':
-                                    $resultado->where('st.id', $c->signo_comparacion, $c->valor_condicion);
+                                    if($c->operador_condicion=="and" or $c->operador_condicion=="Primera Condición"){
+                                        $resultado->where('st.id', $c->signo_comparacion, $c->valor_condicion);
+                                    }else{
+                                        $resultado->orWhere('st.id', $c->signo_comparacion, $c->valor_condicion);
+                                    }
+
                                     break;
                                 case 'Plantel':
-                                    $resultado->where('cc.plantel_id', $c->signo_comparacion, $c->valor_condicion);
+                                    if($c->operador_condicion=="and" or $c->operador_condicion=="Primera Condición"){
+                                        $resultado->where('cc.plantel_id', $c->signo_comparacion, $c->valor_condicion);
+                                    }else{
+                                        $resultado->orWhere('cc.plantel_id', $c->signo_comparacion, $c->valor_condicion);
+                                    }
                                     break;
                                 case 'Especialidad':
-                                    if($c->signo_comparacion=="like"){
-                                        $resultado->where('e.name', $c->signo_comparacion, $c->interpretacion);
+                                    if($c->operador_condicion=="and" or $c->operador_condicion=="Primera Condición"){
+                                        if($c->signo_comparacion=="like"){
+                                            $resultado->where('e.name', $c->signo_comparacion, $c->interpretacion);
+                                        }else{
+                                            $resultado->where('cc.especialidad_id', $c->signo_comparacion, $c->valor_condicion);
+                                        }
                                     }else{
-                                        $resultado->where('cc.especialidad_id', $c->signo_comparacion, $c->valor_condicion);
-                                    }                        
+                                        if($c->signo_comparacion=="like"){
+                                            $resultado->orWhere('e.name', $c->signo_comparacion, $c->interpretacion);
+                                        }else{
+                                            $resultado->orWhere('cc.especialidad_id', $c->signo_comparacion, $c->valor_condicion);
+                                        }
+                                    }
+
                                     break;
                                 case 'Nivel':
-                                    if($c->signo_comparacion=="like"){
-                                        $resultado->where('n.name', $c->signo_comparacion, $c->interpretacion);
+                                    if($c->operador_condicion=="and" or $c->operador_condicion=="Primera Condición"){
+                                        if($c->signo_comparacion=="like"){
+                                            $resultado->where('n.name', $c->signo_comparacion, $c->interpretacion);
+                                        }else{
+                                            $resultado->where('cc.nivel_id', $c->signo_comparacion, $c->valor_condicion);
+                                        }
                                     }else{
-                                        $resultado->where('cc.nivel_id', $c->signo_comparacion, $c->valor_condicion);
+                                        if($c->signo_comparacion=="like"){
+                                            $resultado->orWhere('n.name', $c->signo_comparacion, $c->interpretacion);
+                                        }else{
+                                            $resultado->orWhere('cc.nivel_id', $c->signo_comparacion, $c->valor_condicion);
+                                        }
                                     }
+
                                     break;
                                 case 'Grado':
-                                    if($c->signo_comparacion=="like"){
-                                        $resultado->where('g.name', $c->signo_comparacion, $c->interpretacion);
+                                    if($c->operador_condicion=="and" or $c->operador_condicion=="Primera Condición"){
+                                        if($c->signo_comparacion=="like"){
+                                            $resultado->where('g.name', $c->signo_comparacion, $c->interpretacion);
+                                        }else{
+                                            $resultado->where('cc.grado_id', $c->signo_comparacion, $c->valor_condicion);
+                                        }
                                     }else{
-                                        $resultado->where('cc.grado_id', $c->signo_comparacion, $c->valor_condicion);
+                                        if($c->signo_comparacion=="like"){
+                                            $resultado->orWhere('g.name', $c->signo_comparacion, $c->interpretacion);
+                                        }else{
+                                            $resultado->orWhere('cc.grado_id', $c->signo_comparacion, $c->valor_condicion);
+                                        }
                                     }
+
                                     break;
                             } 
                         }
@@ -197,31 +269,67 @@ class EnvioSmsMail extends Command
                         foreach($condiciones as $c){
                             switch($c->campo->campo){
                                 case 'Estatus':
-                                    $resultado->where('st.id', $c->signo_comparacion, $c->valor_condicion);
+                                    if($c->operador_condicion=="and" or $c->operador_condicion=="Primera Condición"){
+                                        $resultado->where('st.id', $c->signo_comparacion, $c->valor_condicion);
+                                    }else{
+                                        $resultado->orWhere('st.id', $c->signo_comparacion, $c->valor_condicion);
+                                    }
+
                                     break;
                                 case 'Plantel':
-                                    $resultado->where('cc.plantel_id', $c->signo_comparacion, $c->valor_condicion);
+                                    if($c->operador_condicion=="and" or $c->operador_condicion=="Primera Condición"){
+                                        $resultado->where('cc.plantel_id', $c->signo_comparacion, $c->valor_condicion);
+                                    }else{
+                                        $resultado->orWhere('cc.plantel_id', $c->signo_comparacion, $c->valor_condicion);
+                                    }
                                     break;
                                 case 'Especialidad':
-                                    if($c->signo_comparacion=="like"){
-                                        $resultado->where('e.name', $c->signo_comparacion, $c->interpretacion);
+                                    if($c->operador_condicion=="and" or $c->operador_condicion=="Primera Condición"){
+                                        if($c->signo_comparacion=="like"){
+                                            $resultado->where('e.name', $c->signo_comparacion, $c->interpretacion);
+                                        }else{
+                                            $resultado->where('cc.especialidad_id', $c->signo_comparacion, $c->valor_condicion);
+                                        }
                                     }else{
-                                        $resultado->where('cc.especialidad_id', $c->signo_comparacion, $c->valor_condicion);
-                                    }                        
+                                        if($c->signo_comparacion=="like"){
+                                            $resultado->orWhere('e.name', $c->signo_comparacion, $c->interpretacion);
+                                        }else{
+                                            $resultado->orWhere('cc.especialidad_id', $c->signo_comparacion, $c->valor_condicion);
+                                        }
+                                    }
+
                                     break;
                                 case 'Nivel':
-                                    if($c->signo_comparacion=="like"){
-                                        $resultado->where('n.name', $c->signo_comparacion, $c->interpretacion);
+                                    if($c->operador_condicion=="and" or $c->operador_condicion=="Primera Condición"){
+                                        if($c->signo_comparacion=="like"){
+                                            $resultado->where('n.name', $c->signo_comparacion, $c->interpretacion);
+                                        }else{
+                                            $resultado->where('cc.nivel_id', $c->signo_comparacion, $c->valor_condicion);
+                                        }
                                     }else{
-                                        $resultado->where('cc.nivel_id', $c->signo_comparacion, $c->valor_condicion);
+                                        if($c->signo_comparacion=="like"){
+                                            $resultado->orWhere('n.name', $c->signo_comparacion, $c->interpretacion);
+                                        }else{
+                                            $resultado->orWhere('cc.nivel_id', $c->signo_comparacion, $c->valor_condicion);
+                                        }
                                     }
+
                                     break;
                                 case 'Grado':
-                                    if($c->signo_comparacion=="like"){
-                                        $resultado->where('g.name', $c->signo_comparacion, $c->interpretacion);
+                                    if($c->operador_condicion=="and" or $c->operador_condicion=="Primera Condición"){
+                                        if($c->signo_comparacion=="like"){
+                                            $resultado->where('g.name', $c->signo_comparacion, $c->interpretacion);
+                                        }else{
+                                            $resultado->where('cc.grado_id', $c->signo_comparacion, $c->valor_condicion);
+                                        }
                                     }else{
-                                        $resultado->where('cc.grado_id', $c->signo_comparacion, $c->valor_condicion);
+                                        if($c->signo_comparacion=="like"){
+                                            $resultado->orWhere('g.name', $c->signo_comparacion, $c->interpretacion);
+                                        }else{
+                                            $resultado->orWhere('cc.grado_id', $c->signo_comparacion, $c->valor_condicion);
+                                        }
                                     }
+
                                     break;
                             } 
                         }
@@ -250,31 +358,67 @@ class EnvioSmsMail extends Command
                         foreach($condiciones as $c){
                             switch($c->campo->campo){
                                 case 'Estatus':
-                                    $resultado->where('st.id', $c->signo_comparacion, $c->valor_condicion);
+                                    if($c->operador_condicion=="and" or $c->operador_condicion=="Primera Condición"){
+                                        $resultado->where('st.id', $c->signo_comparacion, $c->valor_condicion);
+                                    }else{
+                                        $resultado->orWhere('st.id', $c->signo_comparacion, $c->valor_condicion);
+                                    }
+
                                     break;
                                 case 'Plantel':
-                                    $resultado->where('cc.plantel_id', $c->signo_comparacion, $c->valor_condicion);
+                                    if($c->operador_condicion=="and" or $c->operador_condicion=="Primera Condición"){
+                                        $resultado->where('cc.plantel_id', $c->signo_comparacion, $c->valor_condicion);
+                                    }else{
+                                        $resultado->orWhere('cc.plantel_id', $c->signo_comparacion, $c->valor_condicion);
+                                    }
                                     break;
                                 case 'Especialidad':
-                                    if($c->signo_comparacion=="like"){
-                                        $resultado->where('e.name', $c->signo_comparacion, $c->interpretacion);
+                                    if($c->operador_condicion=="and" or $c->operador_condicion=="Primera Condición"){
+                                        if($c->signo_comparacion=="like"){
+                                            $resultado->where('e.name', $c->signo_comparacion, $c->interpretacion);
+                                        }else{
+                                            $resultado->where('cc.especialidad_id', $c->signo_comparacion, $c->valor_condicion);
+                                        }
                                     }else{
-                                        $resultado->where('cc.especialidad_id', $c->signo_comparacion, $c->valor_condicion);
-                                    }                        
+                                        if($c->signo_comparacion=="like"){
+                                            $resultado->orWhere('e.name', $c->signo_comparacion, $c->interpretacion);
+                                        }else{
+                                            $resultado->orWhere('cc.especialidad_id', $c->signo_comparacion, $c->valor_condicion);
+                                        }
+                                    }
+
                                     break;
                                 case 'Nivel':
-                                    if($c->signo_comparacion=="like"){
-                                        $resultado->where('n.name', $c->signo_comparacion, $c->interpretacion);
+                                    if($c->operador_condicion=="and" or $c->operador_condicion=="Primera Condición"){
+                                        if($c->signo_comparacion=="like"){
+                                            $resultado->where('n.name', $c->signo_comparacion, $c->interpretacion);
+                                        }else{
+                                            $resultado->where('cc.nivel_id', $c->signo_comparacion, $c->valor_condicion);
+                                        }
                                     }else{
-                                        $resultado->where('cc.nivel_id', $c->signo_comparacion, $c->valor_condicion);
+                                        if($c->signo_comparacion=="like"){
+                                            $resultado->orWhere('n.name', $c->signo_comparacion, $c->interpretacion);
+                                        }else{
+                                            $resultado->orWhere('cc.nivel_id', $c->signo_comparacion, $c->valor_condicion);
+                                        }
                                     }
+
                                     break;
                                 case 'Grado':
-                                    if($c->signo_comparacion=="like"){
-                                        $resultado->where('g.name', $c->signo_comparacion, $c->interpretacion);
+                                    if($c->operador_condicion=="and" or $c->operador_condicion=="Primera Condición"){
+                                        if($c->signo_comparacion=="like"){
+                                            $resultado->where('g.name', $c->signo_comparacion, $c->interpretacion);
+                                        }else{
+                                            $resultado->where('cc.grado_id', $c->signo_comparacion, $c->valor_condicion);
+                                        }
                                     }else{
-                                        $resultado->where('cc.grado_id', $c->signo_comparacion, $c->valor_condicion);
+                                        if($c->signo_comparacion=="like"){
+                                            $resultado->orWhere('g.name', $c->signo_comparacion, $c->interpretacion);
+                                        }else{
+                                            $resultado->orWhere('cc.grado_id', $c->signo_comparacion, $c->valor_condicion);
+                                        }
                                     }
+
                                     break;
                             } 
                         }
