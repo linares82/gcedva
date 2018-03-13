@@ -86,6 +86,9 @@ class PlantillasController extends Controller {
                 if(!isset($input['asunto'])){
 			$input['asunto']="";
 		}
+                if(!isset($input['tpo_correo_id'])){
+			$input['tpo_correo_id']="";
+		}
                 
 		$h=str_replace('http:/', 'http://', $input['plantilla']);
 		$h=str_replace('&gt;', '>', $h);
@@ -184,6 +187,9 @@ class PlantillasController extends Controller {
 		}
                 if(!isset($input['asunto'])){
 			$input['asunto']="";
+		}
+                if(!isset($input['tpo_correo_id'])){
+			$input['tpo_correo_id']="";
 		}
 		$h=str_replace('http:/', 'http://', $input['plantilla']);
 		$h=str_replace('&gt;', '>', $h);
