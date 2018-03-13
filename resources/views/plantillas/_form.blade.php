@@ -69,6 +69,7 @@
                             <input type="button" class="btn btn-xs btn-block btn-success" value="Agregar" onclick="AgregarCondicion()" />
                             <input type="button" class="btn btn-xs btn-block btn-info" value="Comprobar" onclick="ComprobarCantidad()" />
                         </div>
+                        @if(isset($plantilla))
                         <div class="form-group col-md-12">
                             <table class="table table-condensed table-striped">
                                 <thead>
@@ -88,6 +89,7 @@
                                 </tbody>
                             </table>
                         </div>
+                        @endif
                         <!--
                         <div id="estatus_div">
                             <div class="form-group col-md-4 @if($errors->has('st_cliente_id')) has-error @endif" style="clear:left;">
@@ -370,6 +372,7 @@
         {
           mail=1;
         }
+        @if(isset($plantilla))
         $.ajax({
                   url: '{{ route("plantillas.comprobarCantidad") }}',
                   type: 'GET',
@@ -390,6 +393,7 @@
                       //$example.select2();
                   }
               });
+        @endif
     }
     
     function AgregarCondicion(){
@@ -402,6 +406,7 @@
           todas=0;
         }
         //alert(opcion);
+        @if(isset($plantilla))
         switch(opcion){
             case "1":
                 $.ajax({
@@ -502,7 +507,7 @@
                 });
                 break;
         }
-        
+        @endif
         
     }
     $(document).ready(function() {
