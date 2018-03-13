@@ -157,12 +157,12 @@
                             <span class="help-block">{{ $errors->first("celular_confirmado") }}</span>
                             @endif
                         </div>
+                        @if(isset($cliente))
                         <div class="form-group col-md-2">
                             <label for="celular_confirmado-field">Enviados:</label>
                             {!! $cliente->contador_sms !!}
-                            
-                            
                         </div>
+                        @endif
                         @if(isset($cliente))
                         @permission('clientes.enviaSms')
                         <div class="form-group col-md-3">
@@ -188,12 +188,14 @@
                             <span class="help-block">{{ $errors->first("correo_confirmado") }}</span>
                             @endif
                         </div>
+                        @if(isset($cliente))
                         <div class="form-group col-md-2">
                             <label for="celular_confirmado-field">Enviados:</label>
                             {!! $cliente->contador_mail !!}
                             
                             
                         </div>
+                        @endif
                         @if(isset($cliente))
                         @permission('clientes.enviaMail')
                         <div class="form-group col-md-3">

@@ -372,6 +372,7 @@
 
 <script type="text/javascript">
     function ComprobarCantidad(){
+        
         var sms=0;
         var mail=0;
         if ($('#sms_bnd-field').is(":checked"))
@@ -407,6 +408,7 @@
     }
     
     function AgregarCondicion(){
+        
         var opcion=$('#plan_campo_filtro_id-field option:selected').val();
         var todas;
         if ($('#todas_condiciones').is(":checked"))
