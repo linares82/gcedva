@@ -155,6 +155,10 @@
                                     {!! Form::select("clientes.empleado_id", $list1["Empleado"], "{{ @(Request::input('q')['clientes.empleado_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[clientes.empleado_id_lt]", "id"=>"q_clientes.empleado_id_lt", "style"=>"width:100%;" )) !!}
                             </div>
                             
+                            <div class="form-group col-md-4">
+                                <label for="q_clientes.tpo_informe_id_lt">TIPO INFORME</label>
+                                    {!! Form::select("clientes.tpo_informe_id", $list1["TpoInforme"], "{{ @(Request::input('q')['clientes.tpo_informe_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[clientes.tpo_informeid_lt]", "id"=>"q_clientes.tpo_informe_id_lt", "style"=>"width:100%;" )) !!}
+                            </div>
 
                             <div class="form-group">
                                 <div class="col-sm-10 col-sm-offset-2">
