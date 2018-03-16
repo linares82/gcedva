@@ -6,7 +6,10 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Seguimiento;
 use App\Empleado;
+use App\Especialidad;
 use App\Cliente;
+use App\Plantel;
+use App\Lectivo;
 use App\StSeguimiento;
 use App\AsignacionTarea;
 use App\Hactividade;
@@ -702,4 +705,98 @@ class SeguimientosController extends Controller {
          */
     }
 
-}
+    public function dEstatusPlantelEspecialidad(){
+        return view('seguimientos.reportes.dEstatusPlantelEspecialidad')
+             ->with('list', Cliente::getListFromAllRelationApps());
+    }
+    
+    public function dEstatusPlantelEspecialidadR(Request $request){
+        $parametros = $request->all();
+        //dd($parametros);
+        $especialidades=Especialidad::where('plantel_id', '=', $parametros['plantel_f'])->where('id', '>', 0)->get();
+        $estatus=StSeguimiento::where('id', '>', 0)->get();
+        $encabezado=array();
+        $tabla=array();
+        $i=1;
+        $encabezado[0]="Especialidad";
+        foreach($estatus as $st){
+            $encabezado[$i]=$st->name;
+            $i++;
+            //array_push($encabezado, $st->name);
+        }
+        array_push($tabla, $encabezado);
+        foreach($especialidades as $e){
+            $linea=array();
+            $i=0;
+            $linea[$i]=$e->name;
+            //array_push($linea,$e->name);
+            foreach($estatus as $st){
+                $i++;
+                $resultado=Cliente::join('seguimientos as s', 's.cliente_id', '=', 'clientes.id')
+                                  ->join('combinacion_clientes as cc', 'cc.cliente_id', '=', 'clientes.id')
+                                  ->where('cc.especialidad_id', '=', $e->id)
+                                  ->where('s.st_seguimiento_id', '=', $st->id)
+                                  ->count();
+                $linea[$i]=$resultado;
+                //array_push($linea, $resultado);
+            }
+            array_push($tabla, $linea);
+        }
+        $p=Plantel::find($parametros['plantel_f']);
+        $plantel=$p->razon;
+        //dd($tabla);
+//        foreach($tabla as $ln){
+//            echo $ln[1];
+//        }
+//        dd('fil');
+        return view('seguimientos.reportes.dEstatusPlantelEspecialidadR', compact('tabla','plantel'))
+                    ->with('datos_grafica', json_encode($tabla));
+    }
+    
+    public function concretadosEspecialidadPlantel(){
+        $lectivos=Lectivo::pluck('name', 'id');
+        return view('seguimientos.reportes.concretadosEspecialidadPlantel', compact('lectivos'))
+             ->with('list', Cliente::getListFromAllRelationApps());
+    }
+    
+    public function concretadosEspecialidadPlantelR(Request $request){
+        $parametros = $request->all();
+        //dd($parametros);
+        $especialidades=Especialidad::where('plantel_id', '=', $parametros['plantel_f'])->where('id', '>', 0)->get();
+        $lectivos=Lectivo::whereIn('id', $parametros['to'])->get();
+        //dd($lectivos->toArray());
+        $encabezado=array();
+        $encabezado[0]='Especialidades';
+        $i=0;
+        $columnas=0;
+        foreach($lectivos as $l){
+            $i++;
+            $encabezado[$i]=$l->name;
+            $columnas=$i;
+        }
+        $tabla=array();
+        array_push($tabla, $encabezado);
+        foreach($especialidades as $e){
+            $i=0;
+            $linea=array();
+            $linea[$i]=$e->name;
+            foreach($lectivos as $l){
+                $i++;
+                $resultado=Cliente::join('seguimientos as s', 's.cliente_id', '=', 'clientes.id')
+                                  ->join('combinacion_clientes as cc', 'cc.cliente_id', '=', 'clientes.id')
+                                  ->where('cc.especialidad_id', '=', $e->id)
+                                  ->where('s.st_seguimiento_id', '=', 2)
+                                  ->where('cc.fecha_incrito', '>=', $l->inicio)
+                                  ->where('cc.fecha_incrito', '<=', $l->fin)
+                                  ->count();
+                $linea[$i]=$resultado;
+            }
+            array_push($tabla, $linea);
+        }
+        $p=Plantel::find($parametros['plantel_f']);
+        $plantel=$p->razon;
+        //dd($tabla);
+        return view('seguimientos.reportes.concretadosEspecialidadPlantelR', compact('tabla','plantel', 'columnas'))
+                    ->with('datos_grafica', json_encode($tabla));
+    }
+}    

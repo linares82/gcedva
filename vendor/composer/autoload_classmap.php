@@ -51,6 +51,7 @@ return array(
     'CreateAsistenciasCsTable' => $baseDir . '/database/migrations/2017_11_07_113845_create_asistencias_cs_table.php',
     'CreateAsuntosTable' => $baseDir . '/database/migrations/2017_05_17_211600_create_asuntos_table.php',
     'CreateAvisoGralsTable' => $baseDir . '/database/migrations/2017_07_25_165042_create_aviso_grals_table.php',
+    'CreateAvisosIniciosTable' => $baseDir . '/database/migrations/2018_03_15_080242_create_avisos_inicios_table.php',
     'CreateAvisosTable' => $baseDir . '/database/migrations/2017_07_18_215044_create_avisos_table.php',
     'CreateBanderasTable' => $baseDir . '/database/migrations/2017_03_24_164248_create_banderas_table.php',
     'CreateCalendarioEvaluacionsTable' => $baseDir . '/database/migrations/2017_10_12_140337_create_calendario_evaluacions_table.php',

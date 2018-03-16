@@ -65,8 +65,8 @@
                 totals: true,
                 subtotals: false,
                 inactive: [ 'Mes' ],
-                cols: [ "Especialidad",'Meta','Nivel','Grado','Estatus' ],
-                rows: [ "Plantel","Empleado" ]
+                cols: [ "Plantel","Especialidad",'Meta','Nivel','Grado','Estatus' ],
+                rows: [ "Empleado" ]
             });
         });
         

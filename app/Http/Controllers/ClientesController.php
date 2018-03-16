@@ -6,6 +6,8 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use File;
 use App\Cliente;
+use App\AvisosInicio;
+use App\Aviso;
 use App\Ccuestionario;
 use App\CcuestionarioDato;
 use App\Seguimiento;
@@ -190,6 +192,18 @@ class ClientesController extends Controller {
             $input_seguimiento['usu_alta_id'] = Auth::user()->id;
             $input_seguimiento['usu_mod_id'] = Auth::user()->id;
             $s = Seguimiento::create($input_seguimiento);
+            $avisos=AvisosInicio::get();
+            foreach($avisos as $a){
+                $aviso=new Aviso;
+                $aviso->seguimiento_id=$s->id;
+                $aviso->asunto_id=$a->asunto_id;
+                $aviso->detalle=$a->detalle;
+                $aviso->fecha=date('Y-m-j', strtotime('+'.$a->dias_despues.' day', strtotime(date('Y-m-j'))));
+                $aviso->activo=1;
+                $aviso->usu_alta_id=Auth::user()->id;
+                $aviso->usu_mod_id=Auth::user()->id;
+                $aviso->save();
+            }
         } catch (\PDOException $e) {
             dd($e);
             if ($e->getCode() == 23000) {
