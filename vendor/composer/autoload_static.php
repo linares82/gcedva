@@ -705,6 +705,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'CreateSeguimientoTareasTable' => __DIR__ . '/../..' . '/database/migrations/2017_05_17_212428_create_seguimiento_tareas_table.php',
         'CreateSeguimientosTable' => __DIR__ . '/../..' . '/database/migrations/2017_07_17_160300_create_seguimientos_table.php',
         'CreateSessionsTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_31_232619_create_sessions_table.php',
+        'CreateSmsPredefinidosTable' => __DIR__ . '/../..' . '/database/migrations/2018_03_22_082751_create_sms_predefinidos_table.php',
         'CreateSmsTable' => __DIR__ . '/../..' . '/database/migrations/2017_05_12_155453_create_sms_table.php',
         'CreateStAlumnosTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_24_181015_create_st_alumnos_table.php',
         'CreateStClientesTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_30_224222_create_st_clientes_table.php',

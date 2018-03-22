@@ -68,12 +68,16 @@
                                 <br/>
                                 @endforeach
                             </div>
-                            <div class="form-group col-md-12 @if($errors->has('st_seguimiento_id')) has-error @endif">
+                            <div class="form-group col-md-6 @if($errors->has('st_seguimiento_id')) has-error @endif">
                             <label for="st_seguimiento_id-field">Estatus del seguimiento</label>
                             {!! Form::select("st_seguimiento_id", $sts,null, array("class" => "form-control select_seguridad", "id" => "st_seguimiento_id-field")) !!}
                             @if($errors->has("st_seguimiento_id"))
                                 <span class="help-block">{{ $errors->first("st_seguimiento_id") }}</span>
                             @endif
+                            </div>
+                            <div class="form-group col-md-6 @if($errors->has('st_seguimiento_id')) has-error @endif">
+                            <label for="st_seguimiento_id-field">SMS predefinido</label>
+                            {!! Form::select("sms_predefinido", $smss, null, array("class" => "form-control select_seguridad", "id" => "sms_predefinido-field")) !!}
                             </div>
                             <div class="form-group col-md-12 @if($errors->has('cve_cliente')) has-error @endif">
                                 {!! Form::hidden("id", null, array("class" => "form-control input-sm", "id" => "id-field")) !!}
@@ -386,7 +390,24 @@
     $("#btn_sms").click(function(event) {
         enviaSms();
         });  
+        
+    $('#sms_predefinido-field').change(function(){
+        
+        $.ajax({
+        url: '{{ route("smsPredefinidos.getDetalleSms") }}',
+                type: 'GET',
+                data: "sms="+ $('#sms_predefinido-field option:selected').val(),
+                dataType: 'json',
+                beforeSend : function(){$("#loading1").show(); },
+                complete : function(){ $("#loading1").hide(); },
+                success: function(sms){
+                    $('#cve_cliente-field').val(sms);
+                }
+        });
     });
+    
+    });
+    
     function enviaSms(){
     $.ajax({
     url: '{{ route("clientes.enviaSmsSeguimiento") }}',
@@ -397,9 +418,9 @@
             complete : function(){$("#loading1").hide(); },
             default: function(parametros){
             if (parametros == true){
-            $('#msj').html('Sms enviado');
+                $('#msj').html('Sms enviado');
             } else{
-            $('#msj').html('Envio de sms fallo');
+                $('#msj').html('Envio de sms fallo');
             }
             }
     });

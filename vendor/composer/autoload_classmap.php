@@ -128,6 +128,7 @@ return array(
     'CreateSeguimientoTareasTable' => $baseDir . '/database/migrations/2017_05_17_212428_create_seguimiento_tareas_table.php',
     'CreateSeguimientosTable' => $baseDir . '/database/migrations/2017_07_17_160300_create_seguimientos_table.php',
     'CreateSessionsTable' => $baseDir . '/database/migrations/2017_03_31_232619_create_sessions_table.php',
+    'CreateSmsPredefinidosTable' => $baseDir . '/database/migrations/2018_03_22_082751_create_sms_predefinidos_table.php',
     'CreateSmsTable' => $baseDir . '/database/migrations/2017_05_12_155453_create_sms_table.php',
     'CreateStAlumnosTable' => $baseDir . '/database/migrations/2017_08_24_181015_create_st_alumnos_table.php',
     'CreateStClientesTable' => $baseDir . '/database/migrations/2017_03_30_224222_create_st_clientes_table.php',

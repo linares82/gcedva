@@ -26,7 +26,7 @@ class EmpresasController extends Controller {
     public function index(Request $request) {
         $empresas = Empresa::getAllData($request);
 
-        return view('empresas.index', compact('empresas'));
+        return view('empresas.index', compact('empresas'))->with('list', Empresa::getListFromAllRelationApps());
     }
 
     /**

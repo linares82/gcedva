@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Seguimiento;
 use App\Empleado;
 use App\Especialidad;
+use App\SmsPredefinido;
 use App\Cliente;
 use App\Plantel;
 use App\Lectivo;
@@ -94,10 +95,11 @@ class SeguimientosController extends Controller {
                 ->where('avisos.activo', '=', '1')
                 ->get();
         $actividades = Hactividade::where('seguimiento_id', '=', $seguimiento->id)->get();
+        $smss = SmsPredefinido::pluck('name', 'id');
         //dd($actividades->toArray());
         //$dias=round((strtotime($a->fecha)-strtotime(date('Y-m-d')))/86400);
         //dd($seguimiento);
-        return view('seguimientos.show', compact('seguimiento', 'sts', 'asignacionTareas', 'avisos', 'actividades'))
+        return view('seguimientos.show', compact('seguimiento', 'sts', 'asignacionTareas', 'avisos', 'actividades', 'smss'))
                         ->with('list', AsignacionTarea::getListFromAllRelationApps());
     }
 

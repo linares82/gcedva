@@ -46,7 +46,7 @@
                 <div class="panel-body">
                     <form class="Empresa_search" id="search" action="{{ route('empresas.index') }}" accept-charset="UTF-8" method="get">
                         <input type="hidden" name="q[s]" value="{{ @(Request::input('q')['s']) ?: '' }}" />
-                        <div class="form-horizontal">
+                        <div >
 
                             <!--
                             <div class="form-group">
@@ -60,11 +60,9 @@
                                 </div>
                             </div>
                             -->
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_razon_social_cont">RAZON_SOCIAL</label>
-                                <div class=" col-sm-9">
+                            <div class="form-group col-md-4">
+                                <label class="control-label" for="q_razon_social_cont">RAZON SOCIAL</label>
                                     <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['razon_social_cont']) ?: '' }}" name="q[razon_social_cont]" id="q_razon_social_cont" />
-                                </div>
                             </div>
                                                     <!--
                             <div class="form-group">
@@ -78,11 +76,14 @@
                                 </div>
                             </div>
                             -->
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_nombre_contacto_cont">NOMBRE_CONTACTO</label>
-                                <div class=" col-sm-9">
+                            <div class="form-group col-md-4">
+                                <label class="control-label" for="q_nombre_contacto_cont">CONTACTO</label>
                                     <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['nombre_contacto_cont']) ?: '' }}" name="q[nombre_contacto_cont]" id="q_nombre_contacto_cont" />
-                                </div>
+                            </div>
+                            
+                            <div class="form-group col-md-4" style="">
+                                <label for="q_empresas.estado_id_lt">ESTADO</label>
+                                    {!! Form::select("estado_id", $list["Estado"], "{{ @(Request::input('q')['empresas.estado_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[empresas.estado_id_lt]", "id"=>"q_empresas.estado_id_lt", "style"=>"width:100%;" )) !!}
                             </div>
                                                     <!--
                             <div class="form-group">
@@ -121,6 +122,7 @@
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'razon_social', 'title' => 'RAZON SOCIAL'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'nombre_contacto', 'title' => 'NOMBRE CONTACTO'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'estado_id', 'title' => 'ESTADO'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
@@ -131,6 +133,7 @@
                                 <td><a href="{{ route('empresas.show', $empresa->id) }}">{{$empresa->id}}</a></td>
                                 <td>{{$empresa->razon_social}}</td>
                                 <td>{{$empresa->nombre_contacto}}</td>
+                                <td>{{$empresa->estado->name}}</td>
                                 <td class="text-right">
                                     @if(isset($empresa->correo1))
                                     <a class="btn btn-xs btn-success" href="{{ url('correos/redactar').'/'.$empresa->correo1.'/'.$empresa->nombre_contacto.'/1' }}"><i class="glyphicon glyphicon-envelope"></i> Correo </a>
