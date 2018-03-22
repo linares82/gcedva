@@ -46,9 +46,9 @@ class AsignacionTareaObserver
      * @param  User  $user
      * @return void
      */
-     public function deleting(Seguimiento $Seguimiento){
+     //public function deleting(Seguimiento $Seguimiento){
         
-     }
+     //}
 
     /*public function updated(Seguimiento $Seguimiento)
     {
