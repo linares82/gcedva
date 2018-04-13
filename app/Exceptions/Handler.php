@@ -44,6 +44,14 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        //if ($exception instanceof TokenMismatchException){
+        $tipoInstancia=get_class($exception);
+        if($tipoInstancia=='Illuminate\Session\TokenMismatchException'){
+            // Redirect to a form. Here is an example of how I handle mine
+            
+            return redirect(route('home'))->with('csrf_error',"Oops! Seems you couldn't submit form for a long time. Please try again.");
+        }
+        
         return parent::render($request, $exception);
     }
 

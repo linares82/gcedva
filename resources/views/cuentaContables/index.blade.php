@@ -68,20 +68,38 @@
                             </div>
                                                     <!--
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_cuenta_gt">CUENTA</label>
+                                <label class="col-sm-2 control-label" for="q_name_gt">NAME</label>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['cuenta_gt']) ?: '' }}" name="q[cuenta_gt]" id="q_cuenta_gt" />
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['name_gt']) ?: '' }}" name="q[name_gt]" id="q_name_gt" />
                                 </div>
                                 <div class=" col-sm-1 text-center"> - </div>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['cuenta_lt']) ?: '' }}" name="q[cuenta_lt]" id="q_cuenta_lt" />
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['name_lt']) ?: '' }}" name="q[name_lt]" id="q_name_lt" />
                                 </div>
                             </div>
                             -->
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_cuenta_cont">CUENTA</label>
+                                <label class="col-sm-2 control-label" for="q_name_cont">NOMBRE</label>
                                 <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['cuenta_cont']) ?: '' }}" name="q[cuenta_cont]" id="q_cuenta_cont" />
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['name_cont']) ?: '' }}" name="q[name_cont]" id="q_name_cont" />
+                                </div>
+                            </div>
+                                                    <!--
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="q_activo_gt">ACTIVO</label>
+                                <div class=" col-sm-4">
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['activo_gt']) ?: '' }}" name="q[activo_gt]" id="q_activo_gt" />
+                                </div>
+                                <div class=" col-sm-1 text-center"> - </div>
+                                <div class=" col-sm-4">
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['activo_lt']) ?: '' }}" name="q[activo_lt]" id="q_activo_lt" />
+                                </div>
+                            </div>
+                            -->
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="q_activo_cont">ACTIVO</label>
+                                <div class=" col-sm-9">
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['activo_cont']) ?: '' }}" name="q[activo_cont]" id="q_activo_cont" />
                                 </div>
                             </div>
                                                     <!--
@@ -96,31 +114,6 @@
                                 </div>
                             </div>
                             -->
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_usu_alta_id_cont">USU_ALTA_ID</label>
-                                <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['usu_alta_id_cont']) ?: '' }}" name="q[usu_alta_id_cont]" id="q_usu_alta_id_cont" />
-                                </div>
-                            </div>
-                                                    <!--
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_usu_mod_id_gt">USU_MOD_ID</label>
-                                <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['usu_mod_id_gt']) ?: '' }}" name="q[usu_mod_id_gt]" id="q_usu_mod_id_gt" />
-                                </div>
-                                <div class=" col-sm-1 text-center"> - </div>
-                                <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['usu_mod_id_lt']) ?: '' }}" name="q[usu_mod_id_lt]" id="q_usu_mod_id_lt" />
-                                </div>
-                            </div>
-                            -->
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_usu_mod_id_cont">USU_MOD_ID</label>
-                                <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['usu_mod_id_cont']) ?: '' }}" name="q[usu_mod_id_cont]" id="q_usu_mod_id_cont" />
-                                </div>
-                            </div>
-
                             <div class="form-group">
                                 <div class="col-sm-10 col-sm-offset-2">
                                     <input type="submit" name="commit" value="Buscar" class="btn btn-default btn-xs" />
@@ -144,9 +137,8 @@
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clave', 'title' => 'CLAVE'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'cuenta', 'title' => 'CUENTA'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'name', 'title' => 'NOMBRE'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'activo', 'title' => 'ACTIVO'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
@@ -156,9 +148,13 @@
                             <tr>
                                 <td><a href="{{ route('cuentaContables.show', $cuentaContable->id) }}">{{$cuentaContable->id}}</a></td>
                                 <td>{{$cuentaContable->clave}}</td>
-                    <td>{{$cuentaContable->cuenta}}</td>
-                    <td>{{$cuentaContable->usu_alta_id}}</td>
-                    <td>{{$cuentaContable->usu_mod_id}}</td>
+                                <td>{{$cuentaContable->name}}</td>
+                                <td>@if($cuentaContable->activo==1)
+                                    SI
+                                    @else
+                                    NO
+                                    @endif
+                                </td>
                                 <td class="text-right">
                                     @permission('cuentaContables.edit')
                                     <a class="btn btn-xs btn-primary" href="{{ route('cuentaContables.duplicate', $cuentaContable->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>

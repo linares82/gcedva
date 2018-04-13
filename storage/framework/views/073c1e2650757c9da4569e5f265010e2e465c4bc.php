@@ -52,8 +52,23 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- Select2 -->
     <link rel="stylesheet" href="<?php echo e(asset('/bower_components/AdminLTE/plugins/select2/select2.min.css')); ?>">
     
-    
-
+    <style>
+        .spinner {
+            position: fixed;
+            left: 0px;
+            top: 0px;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            background: url("<?php echo e(asset('/images/spinner.gif')); ?>") 50% 50% no-repeat #FFF;
+          }
+        
+    </style>
+    <script>
+        $(window).load(function() {
+            $('#loading').hide();
+        });
+    </script>
 	
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -64,7 +79,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 </head>
 <body class="hold-transition skin-purple-light sidebar-mini sidebar-collapse">
 <div class="wrapper">
-
+    <div class="spinner"></div>
+    
     <!-- Header -->
     <?php echo $__env->make('plantillas/header', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 
@@ -131,6 +147,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="<?php echo e(asset ('/bower_components/AdminLTE/plugins/select2/select2.js')); ?>"></script>
 <script src="<?php echo e(asset ('/bower_components/AdminLTE/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js')); ?>"></script>
 <script>
+ jQuery(window).load(function() {				
+       jQuery('.spinner').animate({
+               'opacity':0},1000,'easeOutCubic',function (){jQuery(this).css('display','none')
+               });	
+       });
+
 (function() {
   $('.select_seguridad').select2();
 })();

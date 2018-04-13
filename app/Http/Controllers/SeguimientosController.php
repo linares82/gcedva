@@ -92,7 +92,6 @@ class SeguimientosController extends Controller {
         $avisos = Aviso::select('avisos.id', 'a.name', 'avisos.detalle', 'avisos.fecha', Db::Raw('DATEDIFF(avisos.fecha,CURDATE()) as dias_restantes'))
                 ->join('asuntos as a', 'a.id', '=', 'avisos.asunto_id')
                 ->where('seguimiento_id', '=', $seguimiento->id)
-                ->where('avisos.activo', '=', '1')
                 ->get();
         $actividades = Hactividade::where('seguimiento_id', '=', $seguimiento->id)->get();
         $smss = SmsPredefinido::pluck('name', 'id');

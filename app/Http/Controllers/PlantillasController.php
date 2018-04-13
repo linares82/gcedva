@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 
 use App\Plantilla;
 use App\Cliente;
+use App\SmsPredefinido;
 use App\PlanCondicionFiltro;
 use App\PlanCampoFiltro;
 use Illuminate\Http\Request;
@@ -34,7 +35,8 @@ class PlantillasController extends Controller {
 	 */
 	public function create()
 	{
-		return view('plantillas.create')
+            $smss = SmsPredefinido::pluck('name', 'id');
+		return view('plantillas.create', compact('smss'))
 			->with( 'list', Plantilla::getListFromAllRelationApps() )
                         ->with( 'list1', PlanCondicionFiltro::getListFromAllRelationApps() );
 	}
@@ -124,8 +126,9 @@ class PlantillasController extends Controller {
 	public function edit($id, Plantilla $plantilla)
 	{
 		$plantilla=$plantilla->find($id);
+                $smss = SmsPredefinido::pluck('name', 'id');
                 //dd($plantilla->condiciones->toArray());
-		return view('plantillas.edit', compact('plantilla'))
+		return view('plantillas.edit', compact('plantilla','smss'))
 			->with( 'list', Plantilla::getListFromAllRelationApps() )
                         ->with( 'list1', PlanCondicionFiltro::getListFromAllRelationApps() );
 	}

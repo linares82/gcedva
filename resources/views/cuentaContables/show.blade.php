@@ -38,21 +38,25 @@
                     <label for="nome">ID</label>
                     <p class="form-control-static">{{$cuentaContable->id}}</p>
                 </div>
-                <div class="form-group">
+                <div class="form-group col-sm-4">
                      <label for="clave">CLAVE</label>
                      <p class="form-control-static">{{$cuentaContable->clave}}</p>
                 </div>
-                    <div class="form-group">
-                     <label for="cuenta">CUENTA</label>
-                     <p class="form-control-static">{{$cuentaContable->cuenta}}</p>
+                    <div class="form-group col-sm-4">
+                     <label for="name">CUENTA</label>
+                     <p class="form-control-static">{{$cuentaContable->name}}</p>
                 </div>
-                    <div class="form-group">
-                     <label for="usu_alta_id">USU_ALTA_ID</label>
-                     <p class="form-control-static">{{$cuentaContable->usu_alta_id}}</p>
+                    <div class="form-group col-sm-4">
+                     <label for="activo">ACTIVO</label>
+                     <p class="form-control-static">{{$cuentaContable->activo}}</p>
                 </div>
-                    <div class="form-group">
-                     <label for="usu_mod_id">USU_MOD_ID</label>
-                     <p class="form-control-static">{{$cuentaContable->usu_mod_id}}</p>
+                    <div class="form-group col-sm-4">
+                     <label for="usu_alta_id">ALTA</label>
+                     <p class="form-control-static">{{$cuentaContable->usu_alta->name}}</p>
+                </div>
+                    <div class="form-group col-sm-4">
+                     <label for="usu_mod_id">ULTIMA MODDIFICACION</label>
+                     <p class="form-control-static">{{$cuentaContable->usu_mod->name}}</p>
                 </div>
             </form>
 

@@ -46,7 +46,12 @@ class CuentaContablesController extends Controller {
 		$input = $request->all();
 		$input['usu_alta_id']=Auth::user()->id;
 		$input['usu_mod_id']=Auth::user()->id;
-
+                if(!isset($input['activo'])){
+			$input['activo']=0;
+		}else{
+			$input['activo']=1;
+		}
+                
 		//create data
 		CuentaContable::create( $input );
 
@@ -102,7 +107,12 @@ class CuentaContablesController extends Controller {
 	{
 		$input = $request->all();
 		$input['usu_mod_id']=Auth::user()->id;
-		//update data
+		if(!isset($input['activo'])){
+			$input['activo']=0;
+		}else{
+			$input['activo']=1;
+		}
+                //update data
 		$cuentaContable=$cuentaContable->find($id);
 		$cuentaContable->update( $input );
 

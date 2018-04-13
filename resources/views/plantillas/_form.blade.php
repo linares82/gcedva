@@ -275,6 +275,10 @@
                              <span class="help-block">{{ $errors->first("sms_bnd") }}</span>
                             @endif
                          </div>
+                        <div class="form-group col-md-4 @if($errors->has('st_seguimiento_id')) has-error @endif">
+                            <label for="st_seguimiento_id-field">SMS predefinido</label>
+                            {!! Form::select("sms_predefinido", $smss, null, array("class" => "form-control select_seguridad", "id" => "sms_predefinido-field")) !!}
+                            </div>
                          <div class="form-group col-md-12 @if($errors->has('sms')) has-error @endif">
                             <label for="sms-field">Texto del SMS(maximo 160 caracteres)</label>
                             {!! Form::textArea("sms", null, array("class" => "form-control input-sm", "id" => "sms-field", 'rows'=>'2', 'maxlength'=>'160')) !!}
@@ -371,6 +375,7 @@
 
 
 <script type="text/javascript">
+    
     function ComprobarCantidad(){
         
         var sms=0;
@@ -523,11 +528,41 @@
                      }
                 });
                 break;
+            case "6":
+                $.ajax({
+                    url: '{{ route("plantillas.crearCondicion") }}',
+                    type: 'GET',
+                    data: "plantilla={{ $plantilla->id }}" + 
+                          "&operador_condicion=" + $('#operador_condicion-field option:selected').val() + 
+                          "&campo=" + $('#plan_campo_filtro_id-field option:selected').val() + 
+                          "&signo=" + $('#signo_comparacion_filtro-field option:selected').val() + 
+                          "&valor=" + $('#valor_condicion-field option:selected').val() +
+                          "&interpretacion=" + $('#valor_condicion-field option:selected').text() + "",
+                    dataType: 'json',
+                    beforeSend : function(){$("#loading10").show();},
+                    complete : function(){location.reload(true);},
+                    success: function(data){
+                    }
+                });
+                break;
         }
         @endif
         
     }
     $(document).ready(function() {
+      $('#sms_predefinido-field').change(function(){ 
+        $.ajax({
+        url: '{{ route("smsPredefinidos.getDetalleSms") }}',
+                type: 'GET',
+                data: "sms="+ $('#sms_predefinido-field option:selected').val(),
+                dataType: 'json',
+                beforeSend : function(){$("#loading1").show(); },
+                complete : function(){ $("#loading1").hide(); },
+                success: function(sms){
+                    $('#sms-field').val(sms);
+                }
+        });
+    });
       getCmbEspecialidad();
       getCmbNivel();
       $('#plantel_id-field').change(function(){
@@ -658,6 +693,28 @@
                         $('#valor_plantel-field').change(function(){
                             getCmbEspecialidadAjax(true, true);
                         });
+                    }
+                });                
+                break;
+            case "6":
+                $.ajax({
+                    url: '{{ route("segmentoMercados.getCmbSegmento") }}',
+                    type: 'GET',
+                    data: campo,
+                    dataType: 'json',
+                    beforeSend : function(){$("#loading10").show();},
+                    complete : function(){$("#loading10").hide();},
+                    success: function(data){     
+                        //$example.select2("destroy");
+                        $('#div_valor').html('');
+                        //$('#especialidad_id-field').empty();
+                        //$('#div_valor').append('<select id="valor_condicion-field" class="form-control select_seguridad"></select>').append($('<option></option>').text('Seleccionar').val('0'));
+                        $('#div_valor').append('<label for="valor_condicion-field">Valor condicion</label>');
+                        $('#div_valor').append('<select id="valor_condicion-field" class="form-control select_seguridad"></select>');
+                        $.each(data, function(i) {
+                            $('#valor_condicion-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                        });
+                        $('#valor_condicion-field').select2();     
                     }
                 });                
                 break;

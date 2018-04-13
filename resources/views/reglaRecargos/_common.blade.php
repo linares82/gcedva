@@ -1,1 +1,1 @@
-@section('reglaRecargosAppTitle','ReglaRecargo')
+@section('reglaRecargosAppTitle','Regla Recargo')

@@ -50,38 +50,56 @@
 
                             <!--
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_nombre_gt">NOMBRE</label>
+                                <label class="col-sm-2 control-label" for="q_name_gt">NAME</label>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['nombre_gt']) ?: '' }}" name="q[nombre_gt]" id="q_nombre_gt" />
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['name_gt']) ?: '' }}" name="q[name_gt]" id="q_name_gt" />
                                 </div>
                                 <div class=" col-sm-1 text-center"> - </div>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['nombre_lt']) ?: '' }}" name="q[nombre_lt]" id="q_nombre_lt" />
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['name_lt']) ?: '' }}" name="q[name_lt]" id="q_name_lt" />
                                 </div>
                             </div>
                             -->
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_nombre_cont">NOMBRE</label>
+                                <label class="col-sm-2 control-label" for="q_name_cont">NAME</label>
                                 <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['nombre_cont']) ?: '' }}" name="q[nombre_cont]" id="q_nombre_cont" />
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['name_cont']) ?: '' }}" name="q[name_cont]" id="q_name_cont" />
                                 </div>
                             </div>
                                                     <!--
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_dias_gt">DIAS</label>
+                                <label class="col-sm-2 control-label" for="q_dia_inicio_gt">DIA_INICIO</label>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['dias_gt']) ?: '' }}" name="q[dias_gt]" id="q_dias_gt" />
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['dia_inicio_gt']) ?: '' }}" name="q[dia_inicio_gt]" id="q_dia_inicio_gt" />
                                 </div>
                                 <div class=" col-sm-1 text-center"> - </div>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['dias_lt']) ?: '' }}" name="q[dias_lt]" id="q_dias_lt" />
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['dia_inicio_lt']) ?: '' }}" name="q[dia_inicio_lt]" id="q_dia_inicio_lt" />
                                 </div>
                             </div>
                             -->
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_dias_cont">DIAS</label>
+                                <label class="col-sm-2 control-label" for="q_dia_inicio_cont">DIA_INICIO</label>
                                 <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['dias_cont']) ?: '' }}" name="q[dias_cont]" id="q_dias_cont" />
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['dia_inicio_cont']) ?: '' }}" name="q[dia_inicio_cont]" id="q_dia_inicio_cont" />
+                                </div>
+                            </div>
+                                                    <!--
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="q_dia_fin_gt">DIA_FIN</label>
+                                <div class=" col-sm-4">
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['dia_fin_gt']) ?: '' }}" name="q[dia_fin_gt]" id="q_dia_fin_gt" />
+                                </div>
+                                <div class=" col-sm-1 text-center"> - </div>
+                                <div class=" col-sm-4">
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['dia_fin_lt']) ?: '' }}" name="q[dia_fin_lt]" id="q_dia_fin_lt" />
+                                </div>
+                            </div>
+                            -->
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="q_dia_fin_cont">DIA_FIN</label>
+                                <div class=" col-sm-9">
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['dia_fin_cont']) ?: '' }}" name="q[dia_fin_cont]" id="q_dia_fin_cont" />
                                 </div>
                             </div>
                                                     <!--
@@ -114,31 +132,7 @@
                                 </div>
                             </div>
                             -->
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_usu_alta_id_cont">USU_ALTA_ID</label>
-                                <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['usu_alta_id_cont']) ?: '' }}" name="q[usu_alta_id_cont]" id="q_usu_alta_id_cont" />
-                                </div>
-                            </div>
-                                                    <!--
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_usu_mod_id_gt">USU_MOD_ID</label>
-                                <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['usu_mod_id_gt']) ?: '' }}" name="q[usu_mod_id_gt]" id="q_usu_mod_id_gt" />
-                                </div>
-                                <div class=" col-sm-1 text-center"> - </div>
-                                <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['usu_mod_id_lt']) ?: '' }}" name="q[usu_mod_id_lt]" id="q_usu_mod_id_lt" />
-                                </div>
-                            </div>
-                            -->
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_usu_mod_id_cont">USU_MOD_ID</label>
-                                <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['usu_mod_id_cont']) ?: '' }}" name="q[usu_mod_id_cont]" id="q_usu_mod_id_cont" />
-                                </div>
-                            </div>
-
+                            
                             <div class="form-group">
                                 <div class="col-sm-10 col-sm-offset-2">
                                     <input type="submit" name="commit" value="Buscar" class="btn btn-default btn-xs" />
@@ -161,11 +155,12 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'nombre', 'title' => 'NOMBRE'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'dias', 'title' => 'DIAS'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'porcentaje', 'title' => 'PORCENTAJE'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'name', 'title' => 'REGLA RECARGO'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'dia_inicio', 'title' => 'DIA INICIO'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'dia_fin', 'title' => 'DIA FIN'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'tipo_regla_id', 'title' => 'TIPO REGLA'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'porcentaje', 'title' => 'PORCENTAJE'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'monto', 'title' => 'MONTO'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
@@ -174,11 +169,13 @@
                         @foreach($reglaRecargos as $reglaRecargo)
                             <tr>
                                 <td><a href="{{ route('reglaRecargos.show', $reglaRecargo->id) }}">{{$reglaRecargo->id}}</a></td>
-                                <td>{{$reglaRecargo->nombre}}</td>
-                    <td>{{$reglaRecargo->dias}}</td>
-                    <td>{{$reglaRecargo->porcentaje}}</td>
-                    <td>{{$reglaRecargo->usu_alta_id}}</td>
-                    <td>{{$reglaRecargo->usu_mod_id}}</td>
+                                <td>{{$reglaRecargo->name}}</td>
+                                <td>{{$reglaRecargo->dia_inicio}}</td>
+                                <td>{{$reglaRecargo->dia_fin}}</td>
+                                <td>{{$reglaRecargo->tipoRegla->name}}</td>
+                                <td>{{$reglaRecargo->porcentaje}}</td>
+                                <td>{{$reglaRecargo->monto}}</td>
+                                
                                 <td class="text-right">
                                     @permission('reglaRecargos.edit')
                                     <a class="btn btn-xs btn-primary" href="{{ route('reglaRecargos.duplicate', $reglaRecargo->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>

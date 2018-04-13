@@ -245,6 +245,13 @@
                             <span class="help-block">{{ $errors->first("medio_id") }}</span>
                             @endif
                         </div>
+                        <div class="form-group col-md-4 @if($errors->has('segmento_mercado_id')) has-error @endif" >
+                            <label for="segmento_mercado_id-field">Segmento Mercado</label>
+                            {!! Form::select("segmento_mercado_id", $list["SegmentoMercado"], null, array("class" => "form-control select_seguridad", "id" => "segmento_mercado_id-field")) !!}
+                            @if($errors->has("segmento_mercado_id"))
+                            <span class="help-block">{{ $errors->first("segmento_mercado_id") }}</span>
+                            @endif
+                        </div>
                         <div class="form-group col-md-4 @if($errors->has('expo')) has-error @endif" id="expo-group" >
                             <label for="expo-field">Expo</label>
                             {!! Form::text("expo",null, array("class" => "form-control input-sm", "id" => "expo-field")) !!}
@@ -367,6 +374,29 @@
                                 </tbody>
                             </table>
                         </div>
+                    </div>
+                </div>
+                <div class="box box-default box-solid">
+                    <div class="box-header">
+                        <h3 class="box-title">PLAN DE PAGOS</h3>
+                        <div class="box-tools">
+                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                        </div>
+                    </div>
+                    
+                    <div class="box-body">   
+                        <div class="form-group col-md-3 @if($errors->has('plan_pago_id')) has-error @endif">
+                            <label for="especialidad-field">Plan Pago</label>
+                            {!! Form::select("plan_pago_id", $list["PlanPago"], null, array("class" => "form-control select_seguridad", "id" => "plan_pago_id-field")) !!}
+                            <div id='loading10' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
+                            @if($errors->has("plan_pago_id"))
+                            <span class="help-block">{{ $errors->first("plan_pago_id") }}</span>
+                            @endif
+                        </div>
+                        <div class="form-group col-md-3">
+                            <a href="{{route('adeudos.imprimirInicial', array('cliente'=>$cliente->id))}}" class="btn btn-md btn-block btn-primary" target="_blank" >Imprimir Pago Inicial</a>
+                        </div>
+                        
                     </div>
                 </div>
                 @endif

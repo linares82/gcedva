@@ -49,7 +49,7 @@ trait RelationManagerTrait {
     protected function getListFromAllRelationApps()
     {
     	$list = [];
-
+        
         if( $this->relationApps ){
     		foreach ( $this->relationApps as $relationAppName => $relationAppArray ){
           

@@ -66,6 +66,7 @@ class EnvioSmsMail extends Command
                                           ->join('seguimientos as s', 's.cliente_id', '=', 'clientes.id')
                                           ->join('st_seguimientos as st', 'st.id', '=', 's.st_seguimiento_id')
                                           ->join('combinacion_clientes as cc', 'cc.cliente_id', '=','clientes.id')
+                                          ->join('segmento_mercados as sm', 'sm.id', '=', 'clientes.segmento_mercado_id')
                                           ->where('clientes.correo_confirmado', "=", 1)
                                           ->join('especialidads as e', 'e.id', '=', 'cc.especialidad_id')
                                           ->join('nivels as n', 'n.id', '=', 'cc.nivel_id')
@@ -132,6 +133,13 @@ class EnvioSmsMail extends Command
                                         }else{
                                             $resultado->orWhere('cc.grado_id', $c->signo_comparacion, $c->valor_condicion);
                                         }
+                                    }
+                                    break;
+                                case 'Segmento Mercado':
+                                    if($c->operador_condicion=="and" or $c->operador_condicion=="Primera Condición"){
+                                        $resultado->where('sm.id', $c->signo_comparacion, $c->valor_condicion);
+                                    }else{
+                                        $resultado->orWhere('sm.id', $c->signo_comparacion, $c->valor_condicion);
                                     }
 
                                     break;

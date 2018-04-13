@@ -1,1 +1,1 @@
-@section('cuentaContablesAppTitle','CuentaContable')
+@section('cuentaContablesAppTitle','Cuenta Contable')

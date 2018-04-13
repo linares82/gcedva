@@ -38,25 +38,29 @@
                     <label for="nome">ID</label>
                     <p class="form-control-static">{{$reglaRecargo->id}}</p>
                 </div>
-                <div class="form-group">
-                     <label for="nombre">NOMBRE</label>
-                     <p class="form-control-static">{{$reglaRecargo->nombre}}</p>
+                <div class="form-group col-sm-4">
+                     <label for="name">REGLA RECARGO</label>
+                     <p class="form-control-static">{{$reglaRecargo->name}}</p>
                 </div>
-                    <div class="form-group">
-                     <label for="dias">DIAS</label>
-                     <p class="form-control-static">{{$reglaRecargo->dias}}</p>
+                    <div class="form-group col-sm-4">
+                     <label for="dia_inicio">DIA INICIO</label>
+                     <p class="form-control-static">{{$reglaRecargo->dia_inicio}}</p>
                 </div>
-                    <div class="form-group">
+                    <div class="form-group col-sm-4">
+                     <label for="dia_fin">DIA FIN</label>
+                     <p class="form-control-static">{{$reglaRecargo->dia_fin}}</p>
+                </div>
+                    <div class="form-group col-sm-4">
                      <label for="porcentaje">PORCENTAJE</label>
                      <p class="form-control-static">{{$reglaRecargo->porcentaje}}</p>
                 </div>
-                    <div class="form-group">
-                     <label for="usu_alta_id">USU_ALTA_ID</label>
-                     <p class="form-control-static">{{$reglaRecargo->usu_alta_id}}</p>
+                    <div class="form-group col-sm-4">
+                     <label for="usu_alta_id">ALTA</label>
+                     <p class="form-control-static">{{$reglaRecargo->usu_alta->name}}</p>
                 </div>
-                    <div class="form-group">
-                     <label for="usu_mod_id">USU_MOD_ID</label>
-                     <p class="form-control-static">{{$reglaRecargo->usu_mod_id}}</p>
+                    <div class="form-group col-sm-4">
+                     <label for="usu_mod_id">ULTIMA MODIFICACION</label>
+                     <p class="form-control-static">{{$reglaRecargo->usu_mod->name}}</p>
                 </div>
             </form>
 

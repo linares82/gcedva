@@ -289,8 +289,144 @@
         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         <?php endif; // Entrust::can ?>
     </div>
+    
+    <div class="row">
+        <?php if (\Entrust::can('WStPlantelAsesor')) : ?>
+        <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h4 class="box-title">
+                        
+                    </h4>
+                </div>
+                <div class="box-body">
+                    <div id="chart_div" style="width: auto; height: auto;"></div>
+                    <table class="table table-condensed table-striped">
+                            <tbody>
+                                <?php $i=0; ?>
+                                <?php $__currentLoopData = $tabla; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $ln): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <?php $i++; ?>
+                                <?php if($i==1): ?>
+                                <tr>
+                                    <th><?php echo e($ln[0]); ?></th><th><?php echo e($ln[1]); ?></th><th><?php echo e($ln[2]); ?></th><th><?php echo e($ln[3]); ?></th><th><?php echo e($ln[4]); ?></th>
+                                </tr> 
+                                <?php else: ?>
+                                <tr>
+                                    <td><?php echo e($ln[0]); ?></td><td><?php echo e($ln[1]); ?></td><td><?php echo e($ln[2]); ?></td><td><?php echo e($ln[3]); ?></td><td><?php echo e($ln[4]); ?></td>
+                                </tr>     
+                                <?php endif; ?>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                            </tbody>
+                        </table>
+                </div>
+            </div>
+        </div>
+        <?php endif; // Entrust::can ?>
+        <?php if (\Entrust::can('WEstatusXplantel')) : ?>
+        <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h4 class="box-title">
+                        Totales de Estatus del Plantel <?php echo e($plantel); ?>
+
+                    </h4>
+                </div>
+                <div class="box-body">
+                    <?php $__currentLoopData = $estatusPlantel; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $ep): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <?php if($ep->estatus=='Pendiente'): ?> 
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <div class="info-box bg-aqua">
+                          <span class="info-box-icon"><i class="fa fa-bookmark-o"></i></span>
+                          <div class="info-box-content">
+                            <span class="info-box-text"><?php echo e($ep->estatus); ?></span>
+                            <span class="info-box-number"><?php echo e($ep->total); ?></span>
+                            <div class="progress">
+                              <div class="progress-bar" style="width: <?php echo e(($ep->total*100)/$tsuma); ?>%"></div>
+                            </div>
+                            <span class="progress-description">
+                              <?php echo e(round(($ep->total*100)/$tsuma,2)); ?>% De un total de <?php echo e($tsuma); ?> 
+                            </span>
+                          </div><!-- /.info-box-content -->
+                        </div><!-- /.info-box -->
+                    </div><!-- /.col -->
+                    <?php elseif($ep->estatus=='Concretado'): ?> 
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <div class="info-box bg-green">
+                          <span class="info-box-icon"><i class="fa fa-bookmark-o"></i></span>
+                          <div class="info-box-content">
+                            <span class="info-box-text"><?php echo e($ep->estatus); ?></span>
+                            <span class="info-box-number"><?php echo e($ep->total); ?></span>
+                            <div class="progress">
+                              <div class="progress-bar" style="width: <?php echo e(($ep->total*100)/$tsuma); ?>%"></div>
+                            </div>
+                            <span class="progress-description">
+                              <?php echo e(round(($ep->total*100)/$tsuma,2)); ?>% De un total de <?php echo e($tsuma); ?> 
+                            </span>
+                          </div><!-- /.info-box-content -->
+                        </div><!-- /.info-box -->
+                    </div><!-- /.col -->
+                    <?php elseif($ep->estatus=='Rechazado'): ?> 
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <div class="info-box bg-red">
+                          <span class="info-box-icon"><i class="fa fa-bookmark-o"></i></span>
+                          <div class="info-box-content">
+                            <span class="info-box-text"><?php echo e($ep->estatus); ?></span>
+                            <span class="info-box-number"><?php echo e($ep->total); ?></span>
+                            <div class="progress">
+                              <div class="progress-bar" style="width: <?php echo e(($ep->total*100)/$tsuma); ?>%"></div>
+                            </div>
+                            <span class="progress-description">
+                              <?php echo e(round(($ep->total*100)/$tsuma,2)); ?>% De un total de <?php echo e($tsuma); ?> 
+                            </span>
+                          </div><!-- /.info-box-content -->
+                        </div><!-- /.info-box -->
+                    </div><!-- /.col -->
+                    <?php elseif($ep->estatus=='En proceso'): ?> 
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <div class="info-box bg-yellow">
+                          <span class="info-box-icon"><i class="fa fa-bookmark-o"></i></span>
+                          <div class="info-box-content">
+                            <span class="info-box-text"><?php echo e($ep->estatus); ?></span>
+                            <span class="info-box-number"><?php echo e($ep->total); ?></span>
+                            <div class="progress">
+                              <div class="progress-bar" style="width: <?php echo e(($ep->total*100)/$tsuma); ?>%"></div>
+                            </div>
+                            <span class="progress-description">
+                              <?php echo e(round(($ep->total*100)/$tsuma,2)); ?>% De un total de <?php echo e($tsuma); ?> 
+                            </span>
+                          </div><!-- /.info-box-content -->
+                        </div><!-- /.info-box -->
+                    </div><!-- /.col -->
+                    <?php endif; ?>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+            </div>
+        </div>
+        <?php endif; // Entrust::can ?>
+    </div>
+    
+    
 <?php $__env->stopSection(); ?>
 <?php $__env->startPush('scripts'); ?>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawVisualization);
+
+      function drawVisualization() {
+        // Some raw data (not necessarily accurate)
+        var data = google.visualization.arrayToDataTable(<?php echo $datos_grafica; ?>);
+
+    var options = {
+      title : 'Concretado por periodo y Totales de estatus por Empleado del plantel <?php echo e($plantel); ?>',
+      vAxis: {title: 'Cantidad de Clientes por Estatus'},
+      hAxis: {title: 'Empleado'},
+      seriesType: 'bars'
+    };
+
+    var chart = new google.visualization.ComboChart(document.getElementById('chart_div'));
+    chart.draw(data, options);
+  }
+    </script>
     <script type="text/javascript" src="<?php echo e(asset ('/bower_components/AdminLTE/plugins/morris/morris.js')); ?>"></script>
     <script type="text/javascript" src="<?php echo e(asset ('/bower_components/AdminLTE/plugins/morris/raphael-min.js')); ?>"></script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
