@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 
 use App\Adeudo;
 use App\Cliente;
+use App\CombinacionCliente;
 use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updateAdeudo;
@@ -127,10 +128,14 @@ class AdeudosController extends Controller {
         
         public function imprimirInicial(Request $request){
             $data=$request->all();
+            //dd($data);
             $cliente=Cliente::find($data['cliente']);
-            if($cliente->cuenta_ticket_pago==0){
-                foreach($cliente->planPago->Lineas as $adeudo){
+            $combinacion=CombinacionCliente::find($data['combinacion']);
+            if($combinacion->cuenta_ticket_pago==0){
+                foreach($combinacion->planPago->Lineas as $adeudo){
                     $registro['cliente_id']=$cliente->id;
+                    $registro['caja_id']=0;
+                    $registro['combinacion_cliente_id']=$combinacion->id;
                     $registro['caja_concepto_id']=$adeudo->caja_concepto_id;
                     $registro['cuenta_contable_id']=$adeudo->cuenta_contable_id;
                     $registro['cuenta_recargo_id']=$adeudo->cuenta_recargo_id;
@@ -145,13 +150,14 @@ class AdeudosController extends Controller {
                     Adeudo::create( $registro );
                 }
             }
-            $cliente->cuenta_ticket_pago=$cliente->cuenta_ticket_pago+1;
-            $cliente->save();
+            $combinacion->cuenta_ticket_pago=$combinacion->cuenta_ticket_pago+1;
+            $combinacion->save();
             
-            $adeudo=Adeudo::where('cliente_id', '=', $cliente->id)->get();
-            return view('adeudos.ticket_adeudo_inicial', array('cliente'=>$cliente));
+            $adeudos=Adeudo::where('cliente_id', '=', $cliente->id)->where('combinacion_cliente_id', '=', $combinacion->id)->get();
+            //dd($adeudo->toArray());
+            return view('adeudos.ticket_adeudo_inicial', array('cliente'=>$cliente, 'adeudos'=>$adeudos));
             /*PDF::setOptions(['defaultFont' => 'arial']);
-            $pdf = PDF::loadView('adeudos.ticket_adeudo_inicial', array('cliente'=>$cliente))
+            $pdf = PDF::loadView('adeudos.ticket_adeudo_inicial', array('cliente'=>$cliente, 'adeudos'=>$adeudos))
                     ->setPaper('A8', 'portrait');
             return $pdf->download('reporte.pdf');*/
         }

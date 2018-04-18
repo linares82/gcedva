@@ -47,6 +47,7 @@ class CombinacionClientesController extends Controller {
                 //dd($input);
 		$input['usu_alta_id']=Auth::user()->id;
 		$input['usu_mod_id']=Auth::user()->id;
+                $input['plan_pago_id']=0;
 
 		//create data
 		CombinacionCliente::create( $input );
@@ -125,4 +126,15 @@ class CombinacionClientesController extends Controller {
 		return redirect()->route('clientes.edit', $c)->with('message', 'Registro Borrado.');
 	}
 
+        public function savePlanPago(Request $request){
+            //dd($request);
+            if($request->ajax()){
+                $data=$request->all();
+                //dd($data);
+                $combinacion=CombinacionCliente::find($data['combinacion']);
+                $combinacion->plan_pago_id=$data['plan_pago'];
+                $combinacion->save();
+                echo json_encode($combinacion);
+            }
+        }
 }

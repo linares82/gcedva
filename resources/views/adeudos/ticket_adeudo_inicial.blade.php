@@ -27,7 +27,7 @@ body{
         </td>
     </tr>
     <?php $total=0; ?>
-    @foreach($cliente->adeudos as $adeudo)
+    @foreach($adeudos as $adeudo)
     @if($adeudo->inicial_bnd==1)
     <tr>
         <td>

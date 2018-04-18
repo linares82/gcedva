@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddPlanPagoClientesTable extends Migration
+class AddIndexCombinacionIdAdeudosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class AddPlanPagoClientesTable extends Migration
      */
     public function up()
     {
-        Schema::table('clientes', function(Blueprint $table) {
-            $table->integer('plan_pago_id')->unsigned()->default(0);
-            $table->integer('cuenta_ticket_pago')->unsigned()->default(0);
+        Schema::table('adeudos', function(Blueprint $table) {
+            $table->foreign('combinacion_cliente_id')->references('id')->on('combinacion_clientes');
+            $table->foreign('caja_id')->references('id')->on('cajas');
         });
     }
 

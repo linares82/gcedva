@@ -78,21 +78,26 @@
                     
                     
                     @if(isset($cliente))
-                    <div class="form-group col-md-2">
-                        <div class='text-center'>
+                    
+                    {!! Form::open(array('route' => 'cajas.store')) !!}
+                    
                             
-                            {!! Form::open(array('route' => 'cajas.store')) !!}
-                                {!! Form::hidden("cliente_id", $cliente->id, array("class" => "form-control", "id" => "cliente_id-field")) !!}
-                                <button type="submit" class="btn btn-warning btn-sm"><i class="glyphicon glyphicon-plus-sign"></i> Crear Venta</button>
-                            {!! Form::close() !!}
-                            
+                        <div class="input-group form-group col-md-3 @if($errors->has('cliente_id')) has-error @endif">
+                            <div class="input-group-btn">
+                                <button type="submit" class="btn btn-warning" data-toggle="tooltip" title="Crear Venta"><i class='glyphicon glyphicon-plus-sign'></i></button>
+                            </div>
+                            {!! Form::text("fecha", null, array("class" => "form-control", "id" => "fecha-field", 'placeholder'=>'Fecha de Venta')) !!}
                         </div>
-                    </div>
+                        {!! Form::hidden("cliente_id", $cliente->id, array("class" => "form-control", "id" => "cliente_id-field")) !!}
+                            
+                    
+                    {!! Form::close() !!}
                     @if(isset($caja) and $caja->st_caja_id==0)
                     <div class="form-group col-md-2">
                         <div class='text-center'>
                             
                             {!! Form::open(array('route' => 'cajas.pagar')) !!}
+                                
                                 {!! Form::hidden("caja", $caja->id, array("class" => "form-control", "id" => "caja_id-field")) !!}
                                 <button type="submit" class="btn btn-success btn-sm "><i class="fa fa-money"></i> Pagar Venta</button>
                             {!! Form::close() !!}
@@ -195,36 +200,42 @@
                 <div class="box-body no-padding">
                     
                     <table class='table table-striped table-condensed'>
-                        <thead>
-                            
-                            <td></td><td>Concepto</td><td>Monto</td><td>Fecha</td><td>Inicial</td><td>Pagado</td> 
-                            
-                        </thead>
+                        
                         <tbody>
-                            @foreach($cliente->adeudos as $adeudo)
-                            
+                            @foreach($combinaciones as $combinacion)
                             <tr>
-                                <td>
-                                    @if($adeudo->pagado_bnd==0)
-                                    @if(isset($caja) and $caja->st_caja_id==0)
-                                    {!! Form::open(array('route' => 'cajas.guardaAdeudoPredefinido','method' => 'post')) !!}
-                                        <input class="form-control" id="adeudo-field" name="adeudo" value="{{$adeudo->id}}" type="hidden">
-                                        <input class="form-control" id="inicial_bnd-field" name="inicial_bnd" value="{{$adeudo->inicial_bnd}}" type="hidden">
-                                        <input class="form-control" id="cliente_id-field" name="cliente_id" value="{{$adeudo->cliente_id}}" type="hidden">
-                                        <input class="form-control" id="fecha_pago-field" name="fecha_pago" value="{{$adeudo->fecha_pago}}" type="hidden">
-                                        <input class="form-control" id="caja-field" name="caja" value="{{$caja->id}}" type="hidden">
-                                        <button type="submit" class="btn btn-xs btn-info"><i class="glyphicon glyphicon-plus-sign"></i> Agregar</button>
-                                    {!! Form::close() !!}
-                                    @endif
-                                    @endif
-                                <td>{{$adeudo->cajaConcepto->name}}</td>
-                                <td>{{$adeudo->monto}}</td>
-                                <td>{{$adeudo->fecha_pago}}</td>
-                                <td>@if($adeudo->inicial_bnd==1) SI @else NO @endif</td>
-                                <td>@if($adeudo->pagado_bnd==1) SI @else NO @endif</td>
+                                <td colspan='6'><strong>Grado:</strong>{{$combinacion->grado->name}}</td>
                             </tr>
-                            
+                            <tr>
+                                <td></td><td>Concepto</td><td>Monto</td><td>Fecha</td><td>Inicial</td><td>Ticket Pago</td> 
+                            </tr>
+                                @foreach($combinacion->adeudos as $adeudo)
+                                    
+                                    <tr>
+                                        <td>
+                                            @if($adeudo->pagado_bnd==0)
+                                            @if(isset($caja) and $caja->st_caja_id==0)
+                                            {!! Form::open(array('route' => 'cajas.guardaAdeudoPredefinido','method' => 'post')) !!}
+                                                <input class="form-control" id="combinacion-field" name="combinacion" value="{{$combinacion->id}}" type="hidden">
+                                                <input class="form-control" id="adeudo-field" name="adeudo" value="{{$adeudo->id}}" type="hidden">
+                                                <input class="form-control" id="inicial_bnd-field" name="inicial_bnd" value="{{$adeudo->inicial_bnd}}" type="hidden">
+                                                <input class="form-control" id="cliente_id-field" name="cliente_id" value="{{$adeudo->cliente_id}}" type="hidden">
+                                                <input class="form-control" id="fecha_pago-field" name="fecha_pago" value="{{$adeudo->fecha_pago}}" type="hidden">
+                                                <input class="form-control" id="caja-field" name="caja" value="{{$caja->id}}" type="hidden">
+                                                <button type="submit" class="btn btn-xs btn-info"><i class="glyphicon glyphicon-plus-sign"></i> Agregar</button>
+                                            {!! Form::close() !!}
+                                            @endif
+                                            @endif
+                                        <td>{{$adeudo->cajaConcepto->name}}</td>
+                                        <td>{{$adeudo->monto}}</td>
+                                        <td>{{$adeudo->fecha_pago}}</td>
+                                        <td>@if($adeudo->inicial_bnd==1) SI @else NO @endif</td>
+                                        <td>{{$adeudo->caja_id}}</td>
+                                    </tr>
+                                    
+                                @endforeach
                             @endforeach
+                            
                         </tbody>
                     </table>
                 </div><!-- /.box-body -->
@@ -272,6 +283,13 @@
 @endsection
 @push('scripts')
 <script>
+    $('#fecha-field').Zebra_DatePicker({
+    days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
+            months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+            readonly_element: false,
+            lang_clear_date: 'Limpiar',
+            show_select_today: 'Hoy',
+    });
 $(document).ready(function(){
     $('[data-toggle="tooltip"]').tooltip();   
 });

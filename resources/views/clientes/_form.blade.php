@@ -349,6 +349,7 @@
                                         <th>Grado</th>
                                         <th>Turno</th>
                                         <th>Inscribir</th>
+                                        <th>Plan Pago</th>
                                         <th></th>
                                 </thead>
                                 <tbody>
@@ -364,6 +365,15 @@
                                         @endif
                                         </td>
                                         <td>
+                                            {!! Form::select("plan_pago_id", $list2["PlanPago"], $c->plan_pago_id, array("class" => "form-control select_seguridad plan_pago", "id" => "plan_pago_id-field", "style"=>"width:75%;", 'data-combinacion'=>$c->id)) !!}
+                                            <div id='loading120' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
+                                            Impresiones:{{$c->cuenta_ticket_pago}}
+                                            @if($c->plan_pago_id<>0)
+                                            <a href="{{route('adeudos.imprimirInicial', array('cliente'=>$cliente->id, 'combinacion'=>$c->id))}}" class="btn btn-xs btn-primary" target="_blank" >Imprimir Pago Inicial y Generar Adeudos</a>
+                                            @endif
+                                            
+                                        </td>
+                                        <td>
                                             @permission('inscripcions.create')
                                             <td> <a href="{!! route('combinacionClientes.destroy', $c->id) !!}" class="btn btn-xs btn-block btn-danger">Eliminar</a>
                                             <input type="button" class="btn btn-xs btn-block btn-primary" value="Inscribir" onclick="Inscribir({{$c->cliente_id}},{{$c->plantel_id}},{{$c->especialidad_id}},{{$c->nivel_id}},{{$c->grado_id}},{{$c->turno_id}})" />
@@ -376,29 +386,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="box box-default box-solid">
-                    <div class="box-header">
-                        <h3 class="box-title">PLAN DE PAGOS</h3>
-                        <div class="box-tools">
-                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                        </div>
-                    </div>
-                    
-                    <div class="box-body">   
-                        <div class="form-group col-md-3 @if($errors->has('plan_pago_id')) has-error @endif">
-                            <label for="especialidad-field">Plan Pago</label>
-                            {!! Form::select("plan_pago_id", $list["PlanPago"], null, array("class" => "form-control select_seguridad", "id" => "plan_pago_id-field")) !!}
-                            <div id='loading10' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
-                            @if($errors->has("plan_pago_id"))
-                            <span class="help-block">{{ $errors->first("plan_pago_id") }}</span>
-                            @endif
-                        </div>
-                        <div class="form-group col-md-3">
-                            <a href="{{route('adeudos.imprimirInicial', array('cliente'=>$cliente->id))}}" class="btn btn-md btn-block btn-primary" target="_blank" >Imprimir Pago Inicial</a>
-                        </div>
-                        
-                    </div>
-                </div>
+                
                 @endif
 
                 <div class="box box-default box-solid">
@@ -1654,6 +1642,21 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                                 }
                         });
                         }
+                        
+                        $('.plan_pago').change(function(){
+                            $.ajax({
+                            url: '{{ route("combinacionClientes.savePlanPago") }}',
+                                    type: 'GET',
+                                    data: "plan_pago=" + $(this).val() + "&combinacion=" + $(this).data('combinacion'),
+                                    dataType: 'json',
+                                    beforeSend : function(){$("#loading12").show(); },
+                                    complete : function(){$("#loading12").hide(); },
+                                    success: function(data){
+                                        location.reload();
+                                    }
+                            });
+                        });
+                        
 
 
                         //codigo de trabajo del cargador de imagenes

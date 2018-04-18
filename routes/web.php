@@ -3568,6 +3568,11 @@ Route::get("materiumPeriodos/materiumPeriodo/{materiumPeriodos}/duplicate", ['as
         'middleware' => 'permission:combinacionClientes.destroy',
         'uses' => 'CombinacionClientesController@destroy')
     )->middleware('auth');
+    Route::get('/combinacionClientes/savePlanPago', array(
+        'as' => 'combinacionClientes.savePlanPago',
+        //'middleware' => 'permission:combinacionClientes.savePlanPago',
+        'uses' => 'CombinacionClientesController@savePlanPago')
+    )->middleware('auth');
     Route::get('/combinacionClientes/duplicate/{id}', array(
         'as' => 'combinacionClientes.duplicate',
         'middleware' => 'permission:combinacionClientes.duplicate',

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class IndexAddPlanPagoClientesTable extends Migration
+class IndexAddPlanPagoCombinacionTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class IndexAddPlanPagoClientesTable extends Migration
      */
     public function up()
     {
-        Schema::table('clientes', function(Blueprint $table) {
+        Schema::table('combinacion_clientes', function(Blueprint $table) {
             $table->foreign('plan_pago_id')->references('id')->on('plan_pagos');
         });
     }

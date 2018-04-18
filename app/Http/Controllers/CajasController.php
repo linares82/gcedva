@@ -7,6 +7,7 @@ use App\Caja;
 use App\CajaLn;
 use App\Adeudo;
 use App\Cliente;
+use App\CombinacionCliente;
 use App\CajaConcepto;
 use Illuminate\Http\Request;
 use Auth;
@@ -51,7 +52,7 @@ class CajasController extends Controller {
                 $caja_r['cliente_id']=$cliente->id;
                 $caja_r['plantel_id']=$cliente->plantel_id;
                 $caja_r['forma_pago_id']=0;
-                $caja_r['fecha']=date('Y/m/d');
+                $caja_r['fecha']=$input['fecha'];
                 $caja_r['subtotal']=0;
                 $caja_r['descuento']=0;
                 $caja_r['recargo']=0;
@@ -61,8 +62,10 @@ class CajasController extends Controller {
                 $caja_r['usu_alta_id']=Auth::user()->id;
                 $caja_r['usu_mod_id']=Auth::user()->id;
                 $caja=Caja::create($caja_r);
+                
+                $combinaciones=CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
 		
-		return view('cajas.caja', compact('cliente', 'caja'))
+		return view('cajas.caja', compact('cliente', 'caja','combinaciones'))
                         ->with( 'list', Caja::getListFromAllRelationApps() )
                         ->with( 'list1', CajaLn::getListFromAllRelationApps() );
 	}
@@ -145,8 +148,16 @@ class CajasController extends Controller {
         
         public function buscarCliente(Request $request){
             $cliente=Cliente::find($request->cliente_id);
-            if(is_object($cliente)){
-                return view('cajas.caja', compact('cliente'))->with( 'list', Caja::getListFromAllRelationApps() )->with( 'list1', CajaLn::getListFromAllRelationApps() );           
+            //$adeudos=Adeudo::where('cliente_id', '=', $cliente->id)->get();
+            $combinaciones=CombinacionCliente::where('cliente_id', '=', $cliente->id)->get();
+            /*foreach($combinaciones as $c){
+                dd($c->adeudos);
+            }*/
+            //dd($combinaciones);
+            if(is_object($cliente) and count($combinaciones)>0){
+                return view('cajas.caja', compact('cliente', 'combinaciones'))
+                        ->with( 'list', Caja::getListFromAllRelationApps() )
+                        ->with( 'list1', CajaLn::getListFromAllRelationApps() );           
             }
             return view('cajas.caja')->with('message','Sin coincidencias');           
         }
@@ -154,9 +165,10 @@ class CajasController extends Controller {
         public function buscarVenta(Request $request){
             $data=$request->all();
             $caja=Caja::find($data['caja_id']);
+            $combinaciones=CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
             if(is_object($caja)){
                 $cliente=Cliente::find($caja->cliente_id);
-                return view('cajas.caja', compact('cliente', 'caja'))
+                return view('cajas.caja', compact('cliente', 'caja', 'combinaciones'))
                         ->with( 'list', Caja::getListFromAllRelationApps() )
                         ->with( 'list1', CajaLn::getListFromAllRelationApps() );           
             }
@@ -175,6 +187,7 @@ class CajasController extends Controller {
                 $adeudos=Adeudo::where('cliente_id', '=', $data['cliente_id'])
                               ->where('fecha_pago', '=', $data['fecha_pago'])
                               ->where('inicial_bnd', '=', 1)
+                              ->where('combinacion_cliente_id', '=', $data['combinacion'])
                               ->get();
             }else{
                 //dd('2');
@@ -198,8 +211,8 @@ class CajasController extends Controller {
                     $caja_ln['recargo']=0;
                     $caja_ln['descuento']=0;
                     foreach($adeudo->planPagoLn->reglaRecargos as $regla){
-                        $fecha_actual=date('Y/m/d');
-                        $dias=date_diff(date_create(date('Y/m/d')), date_create($adeudo->fecha_pago));
+                        
+                        $dias=date_diff(date_create($caja->fecha), date_create($adeudo->fecha_pago));
                         //dd($dias);
                         $dia=$dias->format('%R%a')*-1;
                         
@@ -246,7 +259,9 @@ class CajasController extends Controller {
                 $caja->save();
             }
             
-            return view('cajas.caja', compact('cliente', 'caja'))
+            $combinaciones=CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
+            
+            return view('cajas.caja', compact('cliente', 'caja', 'combinaciones'))
                     ->with( 'list', Caja::getListFromAllRelationApps() )
                     ->with( 'list1', CajaLn::getListFromAllRelationApps() );           
         }
@@ -284,13 +299,15 @@ class CajasController extends Controller {
             $caja->st_caja_id=1;
             $caja->save();
             $cliente=Cliente::find($caja->cliente_id);
+            $combinaciones=CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
             
             foreach($caja->cajaLns as $linea){
                 $adeudo=Adeudo::find($linea->adeudo_id);
                 $adeudo->pagado_bnd=1;
+                $adeudo->caja_id=$caja->id;
                 $adeudo->save();
             }
-            return view('cajas.caja', compact('cliente', 'caja'))
+            return view('cajas.caja', compact('cliente', 'caja','combinaciones'))
                     ->with( 'list', Caja::getListFromAllRelationApps() )
                     ->with( 'list1', CajaLn::getListFromAllRelationApps() );           
         }

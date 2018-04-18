@@ -6,6 +6,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use File;
 use App\Cliente;
+use App\CombinacionCliente;
 use App\AvisosInicio;
 use App\Aviso;
 use App\Ccuestionario;
@@ -276,7 +277,8 @@ class ClientesController extends Controller {
 
         return view('clientes.edit', compact('cliente', 'preguntas', 'cp', 'documentos_faltantes', 'empleados', 'cuestionarios'))
                         ->with('list', Cliente::getListFromAllRelationApps())
-                        ->with('list1', PivotDocCliente::getListFromAllRelationApps());
+                        ->with('list1', PivotDocCliente::getListFromAllRelationApps())
+                        ->with('list2', CombinacionCliente::getListFromAllRelationApps());
     }
 
     public function getReasignar() {
