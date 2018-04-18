@@ -129,8 +129,9 @@ class CajaLnsController extends Controller {
                 $caja->save();
                 $cliente=Cliente::find($caja->cliente_id);
 		$cajaLn->delete();
+                $combinaciones=CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
 
-		return view('cajas.caja', compact('cliente', 'caja'))
+		return view('cajas.caja', compact('cliente', 'caja', 'combinaciones'))
                         ->with( 'list', Caja::getListFromAllRelationApps() )
                         ->with( 'list1', CajaLn::getListFromAllRelationApps() );
 	}
