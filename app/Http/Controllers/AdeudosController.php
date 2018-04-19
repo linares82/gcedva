@@ -130,6 +130,8 @@ class AdeudosController extends Controller {
             $data=$request->all();
             //dd($data);
             $cliente=Cliente::find($data['cliente']);
+            $cliente->st_cliente_id=22;
+            $cliente->save();
             $combinacion=CombinacionCliente::find($data['combinacion']);
             if($combinacion->cuenta_ticket_pago==0){
                 foreach($combinacion->planPago->Lineas as $adeudo){

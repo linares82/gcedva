@@ -150,7 +150,7 @@
                                 <button class="reglas-modal btn btn-warning btn-xs" data-id="{{$linea->id}}" 
                                                                                data-plan_pago_id="{{$linea->plan_pago_id}}" 
                                                                                >
-                                <span class="glyphicon glyphicon-edit"></span> Reglas Descuento Regargo </button>
+                                <span class="glyphicon glyphicon-edit"></span> Reglas Descuento Recargo </button>
                                 <button class="delete-modal btn btn-danger btn-xs" data-id="{{$linea->id}}" 
                                                                                data-plan_pago_id="{{$linea->plan_pago_id}}" 
                                                                                data-caja_concepto_id="{{$linea->caja_concepto_id}}" 
@@ -611,9 +611,9 @@
                                                                                        "' data-fecha_pago='" + data.fecha_pago +
                                                                                        "' data-monto='" + data.monto +
                                                                                        "' data-inicial_bnd='" + data.inicial_bnd +
-                                               "'><span class='glyphicon glyphicon-edit'></span> Editar</button><button class='reglas-modal btn btn-warning btn-xs' data-id='" + data.id + 
+                                                "'><span class='glyphicon glyphicon-edit'></span> Editar</button><button class='reglas-modal btn btn-warning btn-xs' data-id='" + data.id + 
                                                                                        "' data-plan_pago_id='" + data.plan_pago_id + 
-                                               "'><span class='glyphicon glyphicon-edit'></span> Editar</button> <button class='delete-modal btn btn-danger btn-xs' data-id='" + data.id + 
+                                               "'><span class='glyphicon glyphicon-edit'></span> Reglas Descuento Recargo</button> <button class='delete-modal btn btn-danger btn-xs' data-id='" + data.id + 
                                                                                        "' data-plan_pago_id='" + data.plan_pago_id + 
                                                                                        "' data-caja_concepto_id='" + data.caja_concepto_id +
                                                                                        "' data-cuenta_contable_id='" + data.cuenta_contable_id +
@@ -621,7 +621,7 @@
                                                                                        "' data-fecha_pago='" + data.fecha_pago +
                                                                                        "' data-monto='" + data.monto +
                                                                                        "' data-inicial_bnd='" + data.inicial_bnd +
-                                               "'><span class='glyphicon glyphicon-trash'></span> Eliminar</button></td></tr>");
+                                               "'><span class='glyphicon glyphicon-trash'></span> Borrar </button></td></tr>");
 
                 }
             }

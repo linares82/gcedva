@@ -1,6 +1,6 @@
                     <div class="box box-default box-solid">
                         <div class="box-header">
-                            <h3 class="box-title">DATOS ESPECILIDAD</h3>
+                            <h3 class="box-title">DATOS ESPECIALIDAD</h3>
                             <div class="box-tools">
                                 <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                             </div>

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\CajaLn;
 use App\Caja;
 use App\Cliente;
+use App\CombinacionCliente;
 use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updateCajaLn;
