@@ -391,6 +391,38 @@
 
                 <div class="box box-default box-solid">
                     <div class="box-header">
+                        <h3 class="box-title">BECA</h3>
+                        <div class="box-tools">
+                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                        </div>
+                    </div>
+                    <div class="box-body">    
+                        <div class="form-group col-md-3 @if($errors->has('beca_bnd')) has-error @endif">
+                            <label for="beca_bnd-field">Becado</label>
+                            {!! Form::checkbox("beca_bnd", 1, null, [ "id" => "beca_bnd-field", 'class'=>'minimal']) !!}
+                            @if($errors->has("beca_bnd"))
+                            <span class="help-block">{{ $errors->first("beca_bnd") }}</span>
+                            @endif
+                        </div>
+                        <div class="form-group col-md-4 @if($errors->has('beca_porcentaje')) has-error @endif">
+                            <label for="beca_porcentaje-field">Porcentaje Beca(0.00)</label>
+                            {!! Form::text("beca_porcentaje", null, array("class" => "form-control input-sm", "id" => "beca_porcentaje-field")) !!}
+                            @if($errors->has("beca_porcentaje"))
+                            <span class="help-block">{{ $errors->first("beca_porcentaje") }}</span>
+                            @endif
+                        </div>
+                        
+                        @if(isset($cliente))
+                        <div class="form-group col-md-4 @if($errors->has('beca_nota')) has-error @endif">
+                            <label > {{ $cliente->beca_nota }}</label>
+                        </div>
+                        @endif
+                    
+                    </div>
+                </div>
+                
+                <div class="box box-default box-solid">
+                    <div class="box-header">
                         <h3 class="box-title">DIRECCIÓN DEL CLIENTE</h3>
                         <div class="box-tools">
                             <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>

@@ -181,6 +181,11 @@ class ClientesController extends Controller {
         } else {
             $input['extranjero'] = 1;
         }
+        if (!isset($input['beca_bnd'])) {
+            $input['beca_bnd'] = 0;
+        } else {
+            $input['beca_bnd'] = 1;
+        }
         //dd($input);
         //create data
         try {
@@ -340,6 +345,7 @@ class ClientesController extends Controller {
         $input = $request->except(['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15',
             '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28',
             '29', '30', '31', '32', '33', '34', '35', '36', '37', '38', '39', '40']);
+        //dd($input);
         $preguntas = $request->only(['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15',
             '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28',
             '29', '30', '31', '32', '33', '34', '35', '36', '37', '38', '39', '40']);
@@ -393,10 +399,16 @@ class ClientesController extends Controller {
         } else {
             $input['extranjero'] = 1;
         }
+        if (!isset($input['beca_bnd'])) {
+            $input['beca_bnd'] = 0;
+        } else {
+            $input['beca_bnd'] = 1;
+        }
         //dd($input);
         //update data
         $cliente = $cliente->find($id);
         $cantidad_preguntas = $cliente->ccuestionario->ccuestionarioPreguntas->count();
+        //dd($input);
         $cliente->update($input);
         if ($request->has('doc_cliente_id') and $request->has('archivo')) {
             $input2['doc_alumno_id'] = $request->get('doc_cliente_id');

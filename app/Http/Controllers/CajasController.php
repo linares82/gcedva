@@ -243,6 +243,10 @@ class CajasController extends Controller {
                     $caja_ln['adeudo_id']=$adeudo->id;
                     $caja_ln['usu_alta_id']=Auth::user()->id;
                     $caja_ln['usu_mod_id']=Auth::user()->id;
+                    if($cliente->beca_bnd==1 and $caja_ln['caja_concepto_id']==1){
+                        $caja_ln['descuento']=$caja_ln['descuento']+($caja_ln['subtotal']*$cliente->beca_porcentaje);
+                        $caja_ln['total']=$caja_ln['total']-($caja_ln['subtotal']-$caja_ln['descuento']);
+                    }
                     //dd($caja_ln);
                     $caja_linea=CajaLn::create($caja_ln);
                     $subtotal=$subtotal+$caja_ln['subtotal'];

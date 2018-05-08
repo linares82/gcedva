@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'AddBecaPorcentajeClientesTable' => $baseDir . '/database/migrations/2018_05_07_114940_add_beca_porcentaje_clientes_table.php',
     'AddCicloClientesTable' => $baseDir . '/database/migrations/2017_11_17_134515_add_ciclo_clientes_table.php',
     'AddColorStSeguimientoTable' => $baseDir . '/database/migrations/2017_11_14_164248_add_color_st_seguimiento_table.php',
     'AddCombinacionIdAdeudosTable' => $baseDir . '/database/migrations/2018_04_17_133551_add_combinacion_id_adeudos_table.php',
@@ -142,7 +143,7 @@ return array(
     'CreateSmsPredefinidosTable' => $baseDir . '/database/migrations/2018_03_22_082751_create_sms_predefinidos_table.php',
     'CreateSmsTable' => $baseDir . '/database/migrations/2017_05_12_155453_create_sms_table.php',
     'CreateStAlumnosTable' => $baseDir . '/database/migrations/2017_08_24_181015_create_st_alumnos_table.php',
-    'CreateStCajasTable' => $baseDir . '/database/migrations/2018_04_12_073056_create_st_cajas_table.php',
+    'CreateStCajasTable' => $baseDir . '/database/migrations/2018_04_10_134536_create_st_cajas_table.php',
     'CreateStClientesTable' => $baseDir . '/database/migrations/2017_03_30_224222_create_st_clientes_table.php',
     'CreateStCuestionariosTable' => $baseDir . '/database/migrations/2018_01_10_092133_create_st_cuestionarios_table.php',
     'CreateStEmpleadosTable' => $baseDir . '/database/migrations/2017_03_28_234906_create_st_empleados_table.php',

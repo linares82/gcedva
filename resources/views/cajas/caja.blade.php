@@ -196,7 +196,11 @@
             <div class="box box-danger">
                 <div class="box-header">
                   <a href="{{route('clientes.edit', $cliente->id)}}" class="btn btn-md btn-success" target="_blank">
-                  <h3 class="box-title">Adeudos-{{$cliente->nombre." ".$cliente->nombre2." ".$cliente->ape_paterno." ".$cliente->ape_materno}}
+                  <h3 class="box-title">
+                      Adeudos-{{$cliente->nombre." ".$cliente->nombre2." ".$cliente->ape_paterno." ".$cliente->ape_materno}}
+                      @if($cliente->beca_bnd==1)
+                        -Becado
+                      @endif
                   </h3></a>
                 </div>
                 <div class="box-body no-padding">
@@ -209,11 +213,21 @@
                                 <td colspan='6'><strong>Grado:</strong>{{$combinacion->grado->name}}</td>
                             </tr>
                             <tr>
-                                <td></td><td>Concepto</td><td>Monto</td><td>Fecha</td><td>Inicial</td><td>Ticket Pago</td> 
+                                <td></td><td>Concepto</td><td>Monto</td><td>Fecha</td><td>Inicial</td><td>Ticket Pago</td><td>dias</td> 
                             </tr>
                                 @foreach($combinacion->adeudos as $adeudo)
-                                    
-                                    <tr>
+                                    <?php
+                                    $dias=date_diff(date_create(), date_create($adeudo->fecha_pago));
+                                    //dd($dias);
+                                    $dia=$dias->format('%R%a')*-1;
+                                    ?>
+                                    <tr class="
+                                        @if($dia>15)
+                                            bg-red
+                                        @else
+                                            bg-green
+                                        @endif
+                                        ">
                                         <td>
                                             @if($adeudo->pagado_bnd==0)
                                             @if(isset($caja) and $caja->st_caja_id==0)
@@ -233,6 +247,7 @@
                                         <td>{{$adeudo->fecha_pago}}</td>
                                         <td>@if($adeudo->inicial_bnd==1) SI @else NO @endif</td>
                                         <td>{{$adeudo->caja_id}}</td>
+                                        <td>{{$dia}}</td>
                                     </tr>
                                     
                                 @endforeach
@@ -292,6 +307,18 @@
             lang_clear_date: 'Limpiar',
             show_select_today: 'Hoy',
     });
+    
+    var fullDate = new Date()
+    
+    //convert month to 2 digits
+    var twoDigitMonth = ((fullDate.getMonth().length+1) === 1)? (fullDate.getMonth()+1) : '0' + (fullDate.getMonth()+1);
+    var twoDigitDay   = ((fullDate.getDate().length) === 1)? (fullDate.getDate()) : '0' + (fullDate.getDate());
+    //console.log(twoDigitDay);
+    var currentDate = fullDate.getFullYear() + "/" + twoDigitMonth + "/" + twoDigitDay;
+    
+    $('#fecha-field').val(currentDate);
+    
+    
 $(document).ready(function(){
     $('[data-toggle="tooltip"]').tooltip();   
 });
@@ -322,5 +349,7 @@ $(document).ready(function(){
         });
     });
     @endif
+    
+    
 </script>
 @endpush

@@ -583,6 +583,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
     );
 
     public static $classMap = array (
+        'AddBecaPorcentajeClientesTable' => __DIR__ . '/../..' . '/database/migrations/2018_05_07_114940_add_beca_porcentaje_clientes_table.php',
         'AddCicloClientesTable' => __DIR__ . '/../..' . '/database/migrations/2017_11_17_134515_add_ciclo_clientes_table.php',
         'AddColorStSeguimientoTable' => __DIR__ . '/../..' . '/database/migrations/2017_11_14_164248_add_color_st_seguimiento_table.php',
         'AddCombinacionIdAdeudosTable' => __DIR__ . '/../..' . '/database/migrations/2018_04_17_133551_add_combinacion_id_adeudos_table.php',
@@ -719,7 +720,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'CreateSmsPredefinidosTable' => __DIR__ . '/../..' . '/database/migrations/2018_03_22_082751_create_sms_predefinidos_table.php',
         'CreateSmsTable' => __DIR__ . '/../..' . '/database/migrations/2017_05_12_155453_create_sms_table.php',
         'CreateStAlumnosTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_24_181015_create_st_alumnos_table.php',
-        'CreateStCajasTable' => __DIR__ . '/../..' . '/database/migrations/2018_04_12_073056_create_st_cajas_table.php',
+        'CreateStCajasTable' => __DIR__ . '/../..' . '/database/migrations/2018_04_10_134536_create_st_cajas_table.php',
         'CreateStClientesTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_30_224222_create_st_clientes_table.php',
         'CreateStCuestionariosTable' => __DIR__ . '/../..' . '/database/migrations/2018_01_10_092133_create_st_cuestionarios_table.php',
         'CreateStEmpleadosTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_28_234906_create_st_empleados_table.php',

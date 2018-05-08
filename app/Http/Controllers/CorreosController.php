@@ -175,6 +175,7 @@ class CorreosController extends Controller {
                     use ($asunto, $destinatario, $containfile, $pathToFile, $n, $from) {
                     $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
                     $message->to($destinatario, $n)->subject($asunto);
+                    $message->replyTo($from);
                     if ($containfile) {
                         $message->attach($pathToFile);
                     }
@@ -192,6 +193,7 @@ class CorreosController extends Controller {
                     use ($asunto, $containfile, $pathToFile, $c) {
                     $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
                     $message->to($c->mail, $c->nombre)->subject($asunto);
+                    $message->replyTo($from);
                     if ($containfile) {
                         $message->attach($pathToFile);
                     }
