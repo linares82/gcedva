@@ -15,6 +15,7 @@
 @section('content')
     @include('error')
 
+    
     <div class="row">
         <div class="col-md-12">
             <div class="box box-info">
@@ -93,11 +94,17 @@
                     
                     {!! Form::close() !!}
                     @if(isset($caja) and $caja->st_caja_id==0)
-                    <div class="form-group col-md-2">
+                    <div class="form-group col-md-3">
                         <div class='text-center'>
                             
                             {!! Form::open(array('route' => 'cajas.pagar')) !!}
-                                
+                                <div class="form-group @if($errors->has('forma_pago_id')) has-error @endif">
+                                    <label for="forma_pago_id-field">Forma Pago</label>
+                                    {!! Form::select("forma_pago_id", $list["FormaPago"], null, array("class" => "form-control", "id" => "forma_pago_id-field")) !!}
+                                    @if($errors->has("forma_pago_id"))
+                                    <span class="help-block">{{ $errors->first("forma_pago_id") }}</span>
+                                    @endif
+                                </div>
                                 {!! Form::hidden("caja", $caja->id, array("class" => "form-control", "id" => "caja_id-field")) !!}
                                 <button type="submit" class="btn btn-success btn-sm "><i class="fa fa-money"></i> Pagar Venta</button>
                             {!! Form::close() !!}
@@ -106,6 +113,13 @@
                     </div>
                     @endif
                     @if(isset($caja))
+                    <div class="form-group col-md-2">
+                        <div class='text-center'>
+                            <a href="{{route('cajas.imprimir', array('caja_id'=>$caja->id))}}" class="btn btn-info btn-sm " target="_blank"><i class="fa fa-print"></i> Imprimir ticket</a>
+                        </div>
+                    </div>
+                    @endif
+                    @if(isset($caja) and $caja->st_caja_id<>2)
                     <div class="form-group col-md-2">
                         <div class='text-center'>
                             
@@ -118,7 +132,7 @@
                     </div>
                     @endif
                     @endif
-                    @if(isset($caja))
+                    @if(isset($caja) and $caja->st_caja_id==0)
                     <div class="form-group col-md-2">
                         <div class='text-center'>
                             <a href="#" class="add-modal btn btn-success btn-sm"><i class="glyphicon glyphicon-plus-sign"></i>Agregar Linea</a> 
@@ -192,7 +206,7 @@
             
         </div>
         @if(isset($cliente))
-        <div class="col-md-5">
+        <div class="col-md-5" id="adeudos-lista">
             <div class="box box-danger">
                 <div class="box-header">
                   <a href="{{route('clientes.edit', $cliente->id)}}" class="btn btn-md btn-success" target="_blank">
@@ -201,6 +215,7 @@
                       @if($cliente->beca_bnd==1)
                         -Becado
                       @endif
+                      
                   </h3></a>
                 </div>
                 <div class="box-body no-padding">
@@ -224,7 +239,7 @@
                                     <tr class="
                                         @if($dia>15)
                                             bg-red
-                                        @else
+                                        @elseif($dia<=15)
                                             bg-green
                                         @endif
                                         ">
@@ -352,4 +367,5 @@ $(document).ready(function(){
     
     
 </script>
+   
 @endpush

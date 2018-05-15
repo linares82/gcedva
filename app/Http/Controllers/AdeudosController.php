@@ -5,6 +5,8 @@ use App\Http\Controllers\Controller;
 
 use App\Adeudo;
 use App\Cliente;
+use App\Empleado;
+use App\Plantel;
 use App\CombinacionCliente;
 use Illuminate\Http\Request;
 use Auth;
@@ -156,12 +158,46 @@ class AdeudosController extends Controller {
             $combinacion->save();
             
             $adeudos=Adeudo::where('cliente_id', '=', $cliente->id)->where('combinacion_cliente_id', '=', $combinacion->id)->get();
+            $empleado=Empleado::where('user_id', '=', Auth::user()->id)->first();
+            $carbon = new \Carbon\Carbon();
+            $date = $carbon->now();
+            $date = $date->format('d-m-Y h:i:s');
+            
             //dd($adeudo->toArray());
-            return view('adeudos.ticket_adeudo_inicial', array('cliente'=>$cliente, 'adeudos'=>$adeudos));
+            return view('adeudos.ticket_adeudo_inicial', array('cliente'=>$cliente, 
+                                                               'adeudos'=>$adeudos, 
+                                                               'empleado'=>$empleado, 
+                                                               'fecha'=>$date,
+                                                               'combinacion'=>$combinacion));
+            
             /*PDF::setOptions(['defaultFont' => 'arial']);
+            $paper58mm100 = array(0,0,164.4,283.46);
+            
             $pdf = PDF::loadView('adeudos.ticket_adeudo_inicial', array('cliente'=>$cliente, 'adeudos'=>$adeudos))
-                    ->setPaper('A8', 'portrait');
-            return $pdf->download('reporte.pdf');*/
+                    //->setPaper('A8', 'portrait');
+                    ->setPaper($paper58mm100, 'portrait');
+            return $pdf->download('reporte.pdf');
+            */
         }
 
+        public function reporteAdeudosPendientes(){
+            $fecha=date('Y/m/d');
+            //dd($fecha);
+            $empleado=Empleado::where('user_id', '=', Auth::user()->id)->first();
+            $plantel=Plantel::find($empleado->plantel_id);
+            $adeudosPendientes=Adeudo::where('pagado_bnd', '=', 0)  
+                                     ->join('clientes', 'clientes.id', '=', 'adeudos.cliente_id')
+                                     ->whereDate('fecha_pago', '<', $fecha)
+                                     ->where('clientes.plantel_id', '=', $empleado->plantel_id)
+                                     ->orderBy('clientes.id', 'asc')
+                                     ->orderBy('adeudos.combinacion_cliente_id', 'asc')
+                                     ->get();
+            //dd($adeudosPendientes->toArray());
+            return view('adeudos.adeudos_pendientes', array('adeudos'=>$adeudosPendientes, 'plantel'=>$plantel));
+            
+            /*$pdf = PDF::loadView('adeudos.adeudos_pendientes', array('adeudos'=>$adeudosPendientes, 'plantel'=>$plantel))
+                    ->setPaper('Letter', 'portrait');
+            return $pdf->download('AdeudosPendientes.pdf');
+            */
+        }
 }
