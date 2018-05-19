@@ -25,7 +25,7 @@ class Plantel extends Model
                                 'logo','slogan','membrete','usu_alta_id','usu_mod_id', 'calle', 
                                 'no_int', 'no_ext', 'colonia', 'cp', 'municipio', 'estado', 'rvoe', 'cct', 
                                 'tpo_plantel_id', 'meta_venta', 'cve_plantel', 'cns_alumno', 'cns_empleado', 
-                                'meta_total', 'st_plantel_id'];
+                                'meta_total', 'st_plantel_id','consecutivo'];
 
     protected $dates = ['deleted_at'];
 

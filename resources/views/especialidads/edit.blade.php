@@ -22,7 +22,7 @@
     <div class="row">
         <div class="col-md-12">
 
-            {!! Form::model($especialidad, array('route' => array('especialidads.update', $especialidad->id),'method' => 'post')) !!}
+            {!! Form::model($especialidad, array('route' => array('especialidads.update', $especialidad->id),'method' => 'post', 'files'=>true)) !!}
 
 @include('especialidads._form')
 

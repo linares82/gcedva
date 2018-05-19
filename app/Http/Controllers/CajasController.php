@@ -7,6 +7,7 @@ use App\Caja;
 use App\CajaLn;
 use App\Adeudo;
 use App\Cliente;
+use App\Plantel;
 use App\Empleado;
 use App\CombinacionCliente;
 use App\CajaConcepto;
@@ -49,7 +50,11 @@ class CajasController extends Controller {
 	public function store(createCaja $request)
 	{
 		$input = $request->all();
+                
+                $empleado=Empleado::where('user_id', '=', Auth::user()->id)->first();
+                $plantel=Plantel::find($empleado->plantel_id);
                 $cliente=Cliente::find($input['cliente_id']);
+                
                 $caja_r['cliente_id']=$cliente->id;
                 $caja_r['plantel_id']=$cliente->plantel_id;
                 $caja_r['forma_pago_id']=0;
@@ -62,7 +67,13 @@ class CajasController extends Controller {
                 $caja_r['st_caja_id']=0;
                 $caja_r['usu_alta_id']=Auth::user()->id;
                 $caja_r['usu_mod_id']=Auth::user()->id;
+                $caja_r['consecutivo']=$plantel->consecutivo+1;
+                
                 $caja=Caja::create($caja_r);
+                
+                $plantel->consecutivo=$plantel->consecutivo+1;
+                $plantel->save();
+            
                 
                 $combinaciones=CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
 		
@@ -166,7 +177,9 @@ class CajasController extends Controller {
         
         public function buscarVenta(Request $request){
             $data=$request->all();
-            $caja=Caja::find($data['caja_id']);
+            $empleado=Empleado::where('user_id', '=', Auth::user()->id)->first();
+            $caja=Caja::where('consecutivo', '=', $data['consecutivo'])->where('plantel_id', '=', $empleado->plantel_id)->first();
+            //dd($caja);
             $combinaciones=CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
             if(is_object($caja)){
                 $cliente=Cliente::find($caja->cliente_id);
@@ -276,6 +289,8 @@ class CajasController extends Controller {
         public function guardaAdeudo(Request $request){
             $data=$request->all();
             
+            //$plantel=Plantel::find(Auth::user()->id);
+            
             $cliente=Cliente::find($data['cliente']);
             $caja=Caja::find($data['caja']);
             $concepto=CajaConcepto::find($data['concepto']);
@@ -295,6 +310,7 @@ class CajasController extends Controller {
             $caja->recargo=$caja->recargo+$linea->recargo;
             $caja->descuento=$caja->descuento+$linea->descuento;
             $caja->total=$caja->subtotal+$caja->recargo-$caja->descuento;
+            
             $caja->save();
             
             echo json_encode($linea);
@@ -334,8 +350,27 @@ class CajasController extends Controller {
             $data=$request->all();
             
             $caja=Caja::find($data['caja_id']);
+            
             $adeudo=Adeudo::where('caja_id', '=', $caja->id)->first();
-            $combinacion=CombinacionCliente::find($adeudo->combinacion_cliente_id);
+            
+            if(!is_null($adeudo)){
+                $combinacion=CombinacionCliente::find($adeudo->combinacion_cliente_id);
+                
+                $cliente=Cliente::find($caja->cliente_id);
+                $empleado=Empleado::where('user_id', '=', Auth::user()->id)->first();
+
+                $carbon = new \Carbon\Carbon();
+                $date = $carbon->now();
+                $date = $date->format('d-m-Y h:i:s');
+
+                //dd($adeudo->toArray());
+                return view('cajas.imprimirTicket', array('cliente'=>$cliente, 
+                                                                   'caja'=>$caja, 
+                                                                   'empleado'=>$empleado, 
+                                                                   'fecha'=>$date,
+                                                                   'combinacion'=>$combinacion));
+            }else{
+                $combinacion=0;
             $cliente=Cliente::find($caja->cliente_id);
             $empleado=Empleado::where('user_id', '=', Auth::user()->id)->first();
             
@@ -348,6 +383,8 @@ class CajasController extends Controller {
                                                                'caja'=>$caja, 
                                                                'empleado'=>$empleado, 
                                                                'fecha'=>$date,
-                                                               'combinacion'=>$combinacion));
+                                                               'combinacion'=>$combinacion));    
+            }
+            
         }
 }

@@ -36,14 +36,14 @@
                          @endif
                       </div>
                       <div class="form-group col-md-4 @if($errors->has('rvoe')) has-error @endif">
-                         <label for="rvoe-field">RVOE</label>
+                         <label for="rvoe-field">Banco y cuenta </label>
                          {!! Form::text("rvoe", null, array("class" => "form-control input-sm", "id" => "cve_incorporacion-field")) !!}
                          @if($errors->has("rvoe"))
                           <span class="help-block">{{ $errors->first("rvoe") }}</span>
                          @endif
                       </div>
                       <div class="form-group col-md-4 @if($errors->has('cct')) has-error @endif">
-                         <label for="cct-field">CCT</label>
+                         <label for="cct-field">Cuenta CLABE</label>
                          {!! Form::text("cct", null, array("class" => "form-control input-sm", "id" => "cct-field")) !!}
                          @if($errors->has("cct"))
                           <span class="help-block">{{ $errors->first("cct") }}</span>
@@ -63,6 +63,13 @@
                           <span class="help-block">{{ $errors->first("cns_alumno") }}</span>
                          @endif
                       </div>
+                      <div class="form-group col-md-4 @if($errors->has('consecutivo')) has-error @endif">
+                         <label for="consecutivo-field">Consecutivo Ticket</label>
+                         {!! Form::text("consecutivo", null, array("class" => "form-control input-sm", "id" => "consecutivo-field")) !!}
+                         @if($errors->has("consecutivo"))
+                          <span class="help-block">{{ $errors->first("consecutivo") }}</span>
+                         @endif
+                      </div>    
                     </div>
                   </div>
                   <div class="box box-default">

@@ -27,9 +27,9 @@
                                 <button type="submit" class="btn btn-info" data-toggle="tooltip" title="Buscar Venta"><i class='fa fa-search'></i></button>
                             </div>
                             @if(isset($caja))
-                                {!! Form::text("caja_id", ($caja)?$caja->id:"", array("class" => "form-control ", 'placeholder'=>'No. de Venta',"id" => "caja_id-field")) !!}
+                                {!! Form::text("consecutivo", ($caja)?$caja->consecutivo:"", array("class" => "form-control ", 'placeholder'=>'No. de Venta',"id" => "consecutivo-field")) !!}
                             @else
-                                {!! Form::text("caja_id", null, array("class" => "form-control ", 'placeholder'=>'No. de Venta', "id" => "caja_id-field")) !!}
+                                {!! Form::text("consecutivo", null, array("class" => "form-control ", 'placeholder'=>'No. de Venta', "id" => "consecutivo-field")) !!}
                             @endif
                             
                             @if($errors->has("cliente_id"))
@@ -145,7 +145,7 @@
                 <div class="box-body no-padding">
                     <div class="box-header with-border">
                         @if(isset($caja))
-                        <h5 class="box-title"><lable><strong>No. Ticket:</strong>{{$caja->id}}</lable>
+                        <h5 class="box-title"><lable><strong>No. Ticket:</strong>{{$caja->consecutivo}}</lable>
                         <lable><strong>Fecha:</strong>{{$caja->fecha}}</lable>
                         <lable><strong>Estatus:</strong>{{$caja->stCaja->name}}</lable>
                         </h5>
@@ -223,6 +223,7 @@
                     <table class='table table-striped table-condensed'>
                         
                         <tbody>
+                            
                             @foreach($combinaciones as $combinacion)
                             <tr>
                                 <td colspan='6'><strong>Grado:</strong>{{$combinacion->grado->name}}</td>

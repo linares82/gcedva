@@ -20,7 +20,8 @@ class Especialidad extends Model
     } 
 
 	//Mass Assignment
-	protected $fillable = ['name','rvoe', 'ccte','plantel_id','usu_alta_id','usu_mod_id', 'meta', 'bnd_usar_lectivo', 'f_inicio', 'f_fin', 'lectivo_id'];
+	protected $fillable = ['name','rvoe', 'ccte','plantel_id','usu_alta_id','usu_mod_id', 'meta', 
+                               'bnd_usar_lectivo', 'f_inicio', 'f_fin', 'lectivo_id', 'imagen', 'imagen_anterior'];
 
 	public function usu_alta() {
 		return $this->hasOne('App\User', 'id', 'usu_alta_id');

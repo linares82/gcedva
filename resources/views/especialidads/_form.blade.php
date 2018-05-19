@@ -41,6 +41,19 @@
                                 <span class="help-block">{{ $errors->first("meta") }}</span>
                                @endif
                             </div>
+                            @if(isset($especialidad))
+                            <input type="hidden" name="_token" id="_token"  value="<?= csrf_token(); ?>"> 
+                            <div class="form-group">
+                                <div class="btn btn-default btn-file">
+                                    <i class="fa fa-paperclip"></i> Adjuntar Archivo
+                                    <input type="file"  id="file" name="file" class="email_archivo" >
+                                </div>
+                                <p class="help-block"  >Max. 20MB</p>
+                                <div id="texto_notificacion">
+
+                                </div>
+                            </div>
+                            @endif
                         </div>
                     </div>
 
@@ -106,6 +119,53 @@
       });
     
     });
+    
+    @if(isset($especialidad))
+    $(document).on("change", ".email_archivo", function (e) {
+
+        var miurl = "{{route('especialidads.cargaArchivo')}}";
+        // var fileup=$("#file").val();
+        var divresul = "texto_notificacion";
+
+        var data = new FormData();
+        data.append('file', $('#file')[0].files[0]);
+        data.append('especialidad', {{$especialidad->id}});
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('#_token').val()
+            }
+        });
+        $.ajax({
+            url: miurl,
+            type: 'POST',
+
+            // Form data
+            //datos del formulario
+            data: data,
+            //necesario para subir archivos via ajax
+            cache: false,
+            contentType: false,
+            processData: false,
+            //mientras enviamos el archivo
+            beforeSend: function () {
+                $("#" + divresul + "").html($("#cargador_empresa").html());
+            },
+            //una vez finalizado correctamente
+            success: function (data) {
+                var codigo = '<div class="mailbox-attachment-info"><a href="#" class="mailbox-attachment-name"><i class="fa fa-paperclip"></i>' + data + '</a><span class="mailbox-attachment-size"> </span></div>';
+                $("#" + divresul + "").html(codigo);
+
+            },
+            //si ha ocurrido un error
+            error: function (data) {
+                $("#" + divresul + "").html(data);
+
+            }
+        });
+
+    })
+    @endif
     
     </script>
 @endpush                

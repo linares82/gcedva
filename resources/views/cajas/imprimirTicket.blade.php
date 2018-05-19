@@ -24,39 +24,46 @@ body{
 <table style="width:100%;height:auto;border:1px solid #ccc;font-size: 0.70em;">
     <tr>
         <td align="center" colspan="2">
-            <?php
-                                $r=DB::table('plantels as p')
-                                    ->where('p.tpo_plantel_id', '=', 1)
-                                    ->select('id','logo')
-                                    ->first();
-                                
-                            ?>
-
-                            @if(isset($r->id))
-                            <img src="{!! asset('/imagenes/planteles').'/'.$r->id.'/'.$r->logo
-                                 !!}" alt='img' style='width: 100px;
-                                                        margin: 4px;'>
-                            @endif
+            
+            <img src="{{asset('storage/especialidads/'.$combinacion->especialidad->imagen)}}" 
+                    alt='img' style='width: 100px;
+                    margin: 4px;'>
+            
+                            
         </td>
     </tr>
     <tr><td colspan="2" align="center" height="30px">{{$cliente->plantel->razon}}</td></tr>
+    <tr>
+        <td colspan="2" align="center" height="30px">
+            {{
+                $cliente->plantel->calle." ".
+                $cliente->plantel->no_int.", ".
+                $cliente->plantel->no_ext.", colonia ".
+                $cliente->plantel->colonia.", ".
+                $cliente->plantel->municipio.", ".
+                $cliente->plantel->estado.", México"
+            }}
+        </td>
+    </tr>
     
     <tr>
         <td colspan="2" height="30px">
+            
             Estudios:{{$combinacion->especialidad->name." / ".
                        $combinacion->nivel->name." / ".
                        $combinacion->grado->name}}
+            
         </td>
     </tr>
     
     <tr>
         <td colspan="2" height="30px">
             @if($caja->st_caja_id==1)
-                Ticket {{$caja->id}} pagado el {{$caja->fecha}}
+                Ticket {{$caja->consecutivo}} pagado el {{$caja->fecha}}
             @elseif($caja->st_caja_id==2)
-                Ticket {{$caja->id}} cancelado el {{$caja->fecha}}
+                Ticket {{$caja->consecutivo}} cancelado el {{$caja->fecha}}
             @else
-                Ticket {{$caja->id}} en espera de su pago
+                Ticket {{$caja->consecutivo}} en espera de su pago
             @endif
         </td>
     </tr>
@@ -117,10 +124,13 @@ body{
         </td>
         <td align="right"> {{ number_format($caja->total, 2) }} </td>
     </tr>
+    <tr>
+        <tr><td colspan="2">Fecha Impresion: {{$fecha}}</td></tr>
+    </tr>
     
-    <tr><td>--</td></tr>
-    <tr><td>--</td></tr>
-    <tr><td>--</td></tr>
+    <tr><td>-</td></tr>
+    <tr><td>-</td></tr>
+    <tr><td>--------------------------------------------</td></tr>
 </table>
 
 </div>

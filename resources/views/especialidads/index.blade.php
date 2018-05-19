@@ -90,6 +90,7 @@
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'plantel_id', 'title' => 'PLANTEL'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'name', 'title' => 'ESPECIALIDAD'])</th>
+                            <th class="text-right"></th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
@@ -100,6 +101,9 @@
                                 <td><a href="{{ route('especialidads.show', $especialidad->id) }}">{{$especialidad->id}}</a></td>
                                 <td>{{$especialidad->plantel->razon}}</td>
                                 <td>{{$especialidad->name}}</td>
+                                <td>
+                                    <img src="{{asset('storage/especialidads/'.$especialidad->imagen)}}" alt="Logo" height="42" width="42" > </td>
+                                </td>
                                 <td class="text-right">
                                     @permission('especialidads.edit')
                                     <a class="btn btn-xs btn-primary" href="{{ route('especialidads.duplicate', $especialidad->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>

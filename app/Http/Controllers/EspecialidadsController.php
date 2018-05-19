@@ -9,6 +9,7 @@ use Auth;
 use App\Http\Requests\updateEspecialidad;
 use App\Http\Requests\createEspecialidad;
 use DB;
+use Storage;
 
 class EspecialidadsController extends Controller {
 
@@ -157,4 +158,31 @@ class EspecialidadsController extends Controller {
 		}
 	}
 
+        public function cargaArchivo(Request $request) {
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $extension = $file->getClientOriginalExtension();
+            $nombre = date('dmYhmi').$file->getClientOriginalName();
+            $r = Storage::disk('img_especialidads')->put($nombre, \File::get($file));
+            $especialidad=Especialidad::find($request->get('especialidad'));
+            if($especialidad->imagen<>""){
+                Storage::disk('img_especialidads')->delete($especialidad->imagen);
+                $especialidad->imagen=$nombre;
+            }else{
+                $especialidad->imagen=$nombre;
+            }
+            $especialidad->save();
+                
+            
+        } else {
+
+            return "no";
+        }
+
+        if ($r) {
+            return $nombre;
+        } else {
+            return "Error vuelva a intentarlo";
+        }
+    }
 }
