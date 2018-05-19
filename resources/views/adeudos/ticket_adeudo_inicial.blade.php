@@ -23,6 +23,8 @@ body{
 <div id="printeArea">
 <table style="width:100%;height:auto;border:1px solid #ccc;font-size: 0.70em;">
     <tr><td colspan="2" align="center" height="30px">{{$cliente->plantel->razon}}</td></tr>
+    <tr><td colspan="2" align="center" height="30px">Banco y cuenta {{$plantel->rvoe}}</td></tr>
+    <tr><td colspan="2" align="center" height="30px">Cuenta CLABE {{$plantel->cct}}</td></tr>
     <tr>
         <td colspan="2" height="30px">
             Estudios:{{$combinacion->especialidad->name." / ".

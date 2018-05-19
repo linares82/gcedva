@@ -134,6 +134,7 @@ class AdeudosController extends Controller {
             $cliente=Cliente::find($data['cliente']);
             $cliente->st_cliente_id=22;
             $cliente->save();
+            $plantel=Plantel::find($cliente->plantel_id);
             $combinacion=CombinacionCliente::find($data['combinacion']);
             if($combinacion->cuenta_ticket_pago==0){
                 foreach($combinacion->planPago->Lineas as $adeudo){
@@ -168,7 +169,8 @@ class AdeudosController extends Controller {
                                                                'adeudos'=>$adeudos, 
                                                                'empleado'=>$empleado, 
                                                                'fecha'=>$date,
-                                                               'combinacion'=>$combinacion));
+                                                               'combinacion'=>$combinacion,
+                                                               'plantel'=>$plantel ));
             
             /*PDF::setOptions(['defaultFont' => 'arial']);
             $paper58mm100 = array(0,0,164.4,283.46);
