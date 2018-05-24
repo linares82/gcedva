@@ -153,7 +153,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
        });
 
 (function() {
-  $('.select_seguridad').select2();
+  $('.select_seguridad').select2({ width: '100%' });
 })();
 </script>
 
