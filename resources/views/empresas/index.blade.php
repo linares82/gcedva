@@ -123,6 +123,7 @@
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'razon_social', 'title' => 'RAZON SOCIAL'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'nombre_contacto', 'title' => 'NOMBRE CONTACTO'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'estado_id', 'title' => 'ESTADO'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'created_at', 'title' => 'ALTA'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
@@ -134,6 +135,7 @@
                                 <td>{{$empresa->razon_social}}</td>
                                 <td>{{$empresa->nombre_contacto}}</td>
                                 <td>{{$empresa->estado->name}}</td>
+                                <td>{{$empresa->created_at}}</td>
                                 <td class="text-right">
                                     @if(isset($empresa->correo1))
                                     <a class="btn btn-xs btn-success" href="{{ url('correos/redactar').'/'.$empresa->correo1.'/'.$empresa->nombre_contacto.'/1' }}"><i class="glyphicon glyphicon-envelope"></i> Correo </a>
