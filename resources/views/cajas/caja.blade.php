@@ -20,9 +20,10 @@
         <div class="col-md-12">
             <div class="box box-info">
                 <div class="box-body">
+                    
                   {!! Form::open(array('route' => 'cajas.buscarVenta')) !!}
                         
-                        <div class="input-group form-group col-md-3 @if($errors->has('cliente_id')) has-error @endif">
+                        <div class="input-group form-group col-md-3">
                             <div class="input-group-btn">
                                 <button type="submit" class="btn btn-info" data-toggle="tooltip" title="Buscar Venta"><i class='fa fa-search'></i></button>
                             </div>
@@ -31,12 +32,14 @@
                             @else
                                 {!! Form::text("consecutivo", null, array("class" => "form-control ", 'placeholder'=>'No. de Venta', "id" => "consecutivo-field")) !!}
                             @endif
-                            
-                            @if($errors->has("cliente_id"))
-                             <span class="help-block">{{ $errors->first("caja_id") }}</span>
-                            @endif
                          </div>
-                        
+                        <div class="input-group col-md-4">
+                            @if(isset($caja))
+                                {!! Form::select("plantel_id", $list["Plantel"], ($caja)?$caja->plantel_id:"", array("class" => "form-control select_seguridad", "id" => "plantel_id-field")) !!}
+                            @else
+                                {!! Form::select("plantel_id", $list["Plantel"], null, array("class" => "form-control select_seguridad", "id" => "plantel_id-field")) !!}
+                            @endif
+                        </div>
                         @if(isset($message))
                             <div class="alert alert-danger alert-dismissable">
                                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>

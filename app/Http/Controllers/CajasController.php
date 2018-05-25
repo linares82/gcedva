@@ -177,8 +177,10 @@ class CajasController extends Controller {
         
         public function buscarVenta(Request $request){
             $data=$request->all();
+            
             $empleado=Empleado::where('user_id', '=', Auth::user()->id)->first();
-            $caja=Caja::where('consecutivo', '=', $data['consecutivo'])->where('plantel_id', '=', $empleado->plantel_id)->first();
+            //dd($empleado);
+            $caja=Caja::where('consecutivo', '=', $data['consecutivo'])->where('plantel_id', '=', $data['plantel_id'])->first();
             //dd($caja);
             $combinaciones=CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
             if(is_object($caja)){

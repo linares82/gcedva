@@ -21,7 +21,7 @@ class CreateAdeudosTable extends Migration {
             $table->date('fecha_pago');
             $table->float('monto');
             $table->boolean('inicial_bnd');
-            $table->boolean('pagado_bnd')->defaul(0);
+            $table->boolean('pagado_bnd')->default(0);
             $table->integer('plan_pago_ln_id')->unsigned();
             $table->integer('usu_alta_id')->unsigned();
             $table->integer('usu_mod_id')->unsigned();
