@@ -104,6 +104,7 @@
                                 <div class="form-group @if($errors->has('forma_pago_id')) has-error @endif">
                                     <label for="forma_pago_id-field">Forma Pago</label>
                                     {!! Form::select("forma_pago_id", $list["FormaPago"], null, array("class" => "form-control", "id" => "forma_pago_id-field")) !!}
+                                    {!! Form::text("referencia", $caja->referencia, array("class" => "form-control", "id" => "referencia_id-field", 'placeholder'=>'Referencia')) !!}
                                     @if($errors->has("forma_pago_id"))
                                     <span class="help-block">{{ $errors->first("forma_pago_id") }}</span>
                                     @endif

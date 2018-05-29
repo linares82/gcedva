@@ -65,9 +65,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
         
     </style>
     <script>
-        $(window).load(function() {
+        /*$(window).load(function() {
             $('#loading').hide();
-        });
+        });*/
     </script>
 	
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->

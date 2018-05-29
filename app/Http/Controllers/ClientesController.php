@@ -38,6 +38,7 @@ use DB;
 use Excel;
 use Log;
 use Storage;
+use PDF;
 
 //use App\Mail\CorreoBienvenida as Envia_mail;
 
@@ -66,6 +67,7 @@ class ClientesController extends Controller {
             }
         }
         $clientes = Seguimiento::getAllData($request, 20, session('filtro_clientes'));
+        
         return view('clientes.index', compact('clientes'))
                         ->with('list', Seguimiento::getListFromAllRelationApps())
                         ->with('list1', Cliente::getListFromAllRelationApps());
@@ -280,10 +282,12 @@ class ClientesController extends Controller {
         //dd($cliente->toArray());
         $cuestionarios = Ccuestionario::where('st_cuestionario_id', '=', '1')->pluck('name', 'id');
 
+        //count($cliente->adeudos));
         return view('clientes.edit', compact('cliente', 'preguntas', 'cp', 'documentos_faltantes', 'empleados', 'cuestionarios'))
                         ->with('list', Cliente::getListFromAllRelationApps())
                         ->with('list1', PivotDocCliente::getListFromAllRelationApps())
-                        ->with('list2', CombinacionCliente::getListFromAllRelationApps());
+                        ->with('list2', CombinacionCliente::getListFromAllRelationApps())
+                        ->with('');
     }
 
     public function getReasignar() {
@@ -1030,4 +1034,27 @@ class ClientesController extends Controller {
         
     }
 
+    public function cuentaEstatusClientes() {
+        $resultado=Cliente::select(DB::raw('count(st.name) as total, concat(e.nombre," ",e.ape_paterno," ",e.ape_materno) as empleado, p.razon,st.name'))
+                          ->join('seguimientos as s', 's.cliente_id','=','clientes.id')
+                          ->join('st_seguimientos as st', 'st.id', '=', 's.st_seguimiento_id')
+                          ->join('plantels as p', 'p.id', '=', 'clientes.plantel_id')
+                          ->join('empleados as e', 'e.id', '=','clientes.empleado_id')
+                          ->orderBy('p.razon')
+                          ->orderBy('empleado')
+                          ->orderBy('st.name')
+                          ->orderBy('clientes.id')
+                          ->groupBy('p.razon')
+                          ->groupBy('empleado')
+                          ->groupBy('st.name')
+                          ->get();
+        //dd($resultado);
+        //return view('clientes.reportes.cuentaEstatusClientes', compact('resultado'));
+        PDF::setOptions(['defaultFont' => 'arial']);
+        $pdf = PDF::loadView('clientes.reportes.cuentaEstatusClientes', array('resultado' => $resultado))
+                ->setPaper('letter', 'portrait');
+        return $pdf->download('reporte.pdf');
+    }
+    
+    
 }

@@ -83,4 +83,7 @@
   'fontawesome' => array(
     'normal' => $fontDir . '/335747aa8aa9e42b4209a761ca5c24fb',
   ),
+  'ionicons' => array(
+    'normal' => $fontDir . '\9af347239d026b73b74a4c2b919a03b1',
+  ),
 ) ?>

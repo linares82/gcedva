@@ -48,10 +48,11 @@ class HomeController extends Controller
        		->join('asuntos as a', 'a.id', '=', 'avisos.asunto_id')
                     ->join('seguimientos as s', 's.id', '=', 'avisos.seguimiento_id')
                     ->join('clientes as c', 'c.id', '=', 's.cliente_id')
-		->where('avisos.activo', '=', '1')
-                    ->where('avisos.fecha', '<=', Db::Raw('CURDATE()'))
+                    ->where('avisos.activo', '=', '1')
+                    ->where('avisos.fecha', '>=', Db::Raw('CURDATE()'))
                     ->where('c.empleado_id', '=', $e->id)
-					->get();
+                    ->orderBy('avisos.fecha')
+                    ->get();
         //dd($avisos);
         /* Fin avisos del usuario
          * 

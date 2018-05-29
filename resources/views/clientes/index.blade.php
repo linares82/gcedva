@@ -146,7 +146,14 @@
                             <div class="form-group col-md-4" >
                                 <label for="q_clientes.plantel_id_lt">PLANTEL</label>
                                 
-                                    {!! Form::select("clientes.plantel_id", $list1["Plantel"], "{{ @(Request::input('q')['clientes.plantel_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[clientes.plantel_id_lt]", "id"=>"q_clientes.plantel_id_lt", "style"=>"width:100%;")) !!}
+                                    {!! Form::select("clientes.plantel_id", $list1["Plantel"], "{{ @(Request::input('q')['clientes.plantel_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[clientes.plantel_id_lt]", "id"=>"q_clientes.plantel_id_lt", "style"=>"width:100%;", "onchange"=>"cambioOpcion()")) !!}
+                                    <div id='loading10' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
+                            </div>
+                            
+                            <div class="form-group col-md-4" >
+                                <label for="q_clientes.especialidad_id_lt">ESPECIALIDAD</label>
+                                
+                                    {!! Form::select("clientes.especialidad_id", $list1["Especialidad"], "{{ @(Request::input('q')['clientes.especialidad_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[clientes.especialidad_id_lt]", "id"=>"q_clientes.especialidad_id_lt", "style"=>"width:100%;")) !!}
                                 
                             </div>
                             
@@ -196,6 +203,7 @@
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'st_seguimiento_id', 'title' => 'ESTATUS SEGUIMIENTO'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clientes.st_cliente_id', 'title' => 'ESTATUS CLIENTE'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clientes.plantel_id', 'title' => 'PLANTEL'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clientes.especialidad_id', 'title' => 'ESPECIALIDAD'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clientes.empleado_id', 'title' => 'EMPLEADO'])</th>
                             
                             <th class="text-right">OPCIONES</th>
@@ -222,6 +230,13 @@
                                 {{$cliente->cliente->plantel->razon}}
                                 @endif
                                 </td>
+                                
+                                <td>
+                                @if(isset($cliente->cliente->especialidad))
+                                {{$cliente->cliente->especialidad->name}}
+                                @endif
+                                </td>
+                                
                                 <td>{{$cliente->cliente->empleado->nombre." ".$cliente->cliente->empleado->ape_paterno." ".$cliente->cliente->empleado->ape_materno}}</td>
                                 <td class="text-right">
                                     @permission('correos.redactar')
@@ -243,6 +258,15 @@
                                         <button type="submit" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> Borrar</button>
                                     {!! Form::close() !!}
                                     @endpermission
+                                    @permission('cajas.buscarVenta')
+                                    
+                                    @if(count($cliente->cliente->adeudos)>0)
+                                    {!! Form::model($cliente, array('route' => array('cajas.buscarCliente'),'method' => 'post', 'style' => 'display: inline;')) !!}
+                                        {!! Form::hidden("cliente_id", null, array("class" => "form-control input-sm", "id" => "cliente_id-field")) !!}
+                                        <button type="submit" class="btn btn-xs btn-info"><i class="glyphicon glyphicon-trash"></i> Caja</button>
+                                    {!! Form::close() !!}
+                                    @endif
+                                    @endpermission
                                 </td>
                             </tr>
                         @endforeach
@@ -261,19 +285,55 @@
 @push('scripts')
   <script>
   
-    $(document).ready(function() {
+ 
         // assuming the controls you want to attach the plugin to
           // have the "datepicker" class set
           //Campo de fecha
-          $('#q_fec_registro_cont').Zebra_DatePicker({
-            days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
-            months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-            readonly_element: false,
-            lang_clear_date: 'Limpiar',
-            show_select_today: 'Hoy',
-          });  
+//          $('#q_fec_registro_cont').Zebra_DatePicker({
+//            days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
+//            months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+//            readonly_element: false,
+//            lang_clear_date: 'Limpiar',
+//            show_select_today: 'Hoy',
+//          });  
+//       
+        function cambioOpcion(){
+            getCmbEspecialidad();
+        }
        
-        });
+        function removeOptions(selectbox)
+        {
+            var i;
+            for(i = selectbox.options.length - 1 ; i >= 0 ; i--)
+            {
+                selectbox.remove(i);
+            }
+        }
+        
+        function getCmbEspecialidad(){
+                var plantel=document.getElementById('q_clientes.plantel_id_lt');
+                var especialidad=document.getElementById('q_clientes.especialidad_id_lt');
+                
+                $.ajax({
+                url: '{{ route("especialidads.getCmbEspecialidad") }}',
+                        type: 'GET',
+                        data: "plantel_id=" + plantel.options[plantel.selectedIndex].value + "&especialidad_id=" + especialidad.options[especialidad.selectedIndex].value + "",
+                        dataType: 'json',
+                        beforeSend : function(){$("#loading10").show(); },
+                        complete : function(){$("#loading10").hide(); },
+                        success: function(data){
+                        removeOptions(document.getElementById("q_clientes.especialidad_id_lt"));
+                        $.each(data, function(i) {
+                        //$('#q_clientes.especialidad_id_lt-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
+                            var opt = document.createElement('option');
+                            opt.value = data[i].id;
+                            opt.innerHTML = data[i].name;
+                            especialidad.appendChild(opt);
+                        });
+                        
+                        }
+                });
+                }
 
 
   </script>

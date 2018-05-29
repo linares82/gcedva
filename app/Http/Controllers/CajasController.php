@@ -167,6 +167,7 @@ class CajasController extends Controller {
                 dd($c->adeudos);
             }*/
             //dd($combinaciones);
+            //dd(Caja::getListFromAllRelationApps());
             if(is_object($cliente) and count($combinaciones)>0){
                 return view('cajas.caja', compact('cliente', 'combinaciones'))
                         ->with( 'list', Caja::getListFromAllRelationApps() )
@@ -321,6 +322,7 @@ class CajasController extends Controller {
         public function pagar(Request $request){
             $caja=Caja::find($request->get('caja'));
             $caja->st_caja_id=1;
+            $caja->referencia=$request->get('referencia');
             $caja->forma_pago_id=$request->get('forma_pago_id');
             $caja->save();
             $cliente=Cliente::find($caja->cliente_id);

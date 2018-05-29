@@ -620,6 +620,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'AddPeriodoEstudioIInscricionsTable' => __DIR__ . '/../..' . '/database/migrations/2017_12_11_084742_add_periodo_estudio_i_inscricions_table.php',
         'AddPlanPagoCombinacionTable' => __DIR__ . '/../..' . '/database/migrations/2018_04_09_085152_add_plan_pago_combinacion_table.php',
         'AddPlantelEspecialidadTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_11_142022_add_plantel_especialidad_table.php',
+        'AddReferenciaCajasTable' => __DIR__ . '/../..' . '/database/migrations/2018_05_25_171049_add_referencia_cajas_table.php',
         'AddSegmentoMercadoClientesTable' => __DIR__ . '/../..' . '/database/migrations/2018_04_12_143415_add_segmento_mercado_clientes_table.php',
         'AddSessionUsersTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_31_153355_add_session_users_table.php',
         'AddTpoInformeClientesTable' => __DIR__ . '/../..' . '/database/migrations/2018_03_12_111837_add_tpo_informe_clientes_table.php',

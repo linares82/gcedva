@@ -22,7 +22,7 @@ class Caja extends Model
     } 
 
 	//Mass Assignment
-	protected $fillable = ['consecutivo','cliente_id','plantel_id','subtotal','descuento','recargo','total',
+	protected $fillable = ['consecutivo','cliente_id','plantel_id','subtotal','descuento','recargo','total', 'referencia',
                                'forma_pago_id','autorizacion_descuento','fecha','st_caja_id','usu_alta_id','usu_mod_id'];
 
 	public function usu_alta() {

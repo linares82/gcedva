@@ -4,10 +4,12 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\Aviso;
+use App\Cliente;
 use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updateAviso;
 use App\Http\Requests\createAviso;
+use DB;
 
 class AvisosController extends Controller {
 
@@ -135,4 +137,31 @@ class AvisosController extends Controller {
 		return redirect()->route('avisos.index')->with('message', 'Registro Borrado.');
 	}
 
+        
+        public function avisosPlantelEmpleadoFecha(){
+            
+            return view('avisos.consultas.avisosPlantelEmpleadoFecha')
+			->with( 'list', Cliente::getListFromAllRelationApps() );
+        }
+        
+        public function avisosPlantelEmpleadoFechaR(Request $request){
+            $data=$request->all();
+            //dd($data);
+            $avisos=Aviso::select('avisos.id','a.name','avisos.detalle', 'avisos.fecha', 's.cliente_id','avisos.activo',
+                                DB::raw('concat(e.nombre," ",e.ape_paterno," ",e.ape_materno) as empleado'),'p.razon')
+       		         ->join('asuntos as a', 'a.id', '=', 'avisos.asunto_id')
+                         ->join('seguimientos as s', 's.id', '=', 'avisos.seguimiento_id')
+                         ->join('clientes as c', 'c.id', '=', 's.cliente_id')
+                         ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
+                         ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
+		         //->where('avisos.activo', '=', '1')
+                         ->where('avisos.fecha', '>=', $data['fecha_f'])
+                         ->where('avisos.fecha', '<=', $data['fecha_t'])
+                         ->where('c.empleado_id', '>=', $data['empleado_f'])
+                         ->where('c.empleado_id', '<=', $data['empleado_t'])
+                         ->where('c.plantel_id', '>=', $data['plantel_f'])
+                         ->where('c.plantel_id', '<=', $data['plantel_t'])
+			 ->get();
+            return view('avisos.consultas.avisosPlantelEmpleadoFechaR', compact('avisos'));                    
+        }
 }

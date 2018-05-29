@@ -104,6 +104,9 @@ trait RelationManagerTrait {
             
           }*/
 
+          
+            //dd($relatedObjList);
+          
           /*
           if($relationAppName=="Especialidad" and Auth::user()->can('IfiltroEspecialidadsXPlantel')){
             $relatedObjList = $relationAppArray['app']::where('plantel_id', '=', $e->plantel_id)
