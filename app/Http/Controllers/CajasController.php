@@ -15,6 +15,8 @@ use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updateCaja;
 use App\Http\Requests\createCaja;
+use DB;
+use PDF;
 
 class CajasController extends Controller {
 
@@ -391,4 +393,31 @@ class CajasController extends Controller {
             }
             
         }
+        
+    public function ingresosPlantelFormaPago(){
+        
+        return view('cajas.reportes.ingresosPlantelFormaPago')
+             ->with('list', Cliente::getListFromAllRelationApps());
+    }
+    
+    public function ingresosPlantelFormaPagoR(Request $request){
+        $data = $request->all();
+        
+        $resultado=Caja::select(DB::raw('sum(cajas.total) as total_cajas, p.razon ,fm.name as forma_pago'))
+                       ->join('forma_pagos as fm', 'fm.id', '=', 'cajas.forma_pago_id')
+                       ->join('plantels as p', 'p.id', '=', 'cajas.plantel_id')
+                       ->where('fecha','>=', $data['fecha_f'])
+                       ->where('fecha','<=', $data['fecha_t'])
+                       ->where('p.id','>=', $data['plantel_f'])
+                       ->where('p.id','<=', $data['plantel_t'])
+                       ->groupBy('p.razon')
+                       ->groupBy('forma_pago')
+                       ->get();
+        //dd($resultado->toArray());
+        
+        PDF::setOptions(['defaultFont' => 'arial']);
+        $pdf = PDF::loadView('cajas.reportes.ingresosPlantelFormaPagoR', array('resultado' => $resultado))
+                ->setPaper('letter', 'portrait');
+        return $pdf->download('reporte.pdf');
+    }
 }
