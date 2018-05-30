@@ -1043,7 +1043,6 @@ class ClientesController extends Controller {
                           ->orderBy('p.razon')
                           ->orderBy('empleado')
                           ->orderBy('st.name')
-                          ->orderBy('clientes.id')
                           ->groupBy('p.razon')
                           ->groupBy('empleado')
                           ->groupBy('st.name')
