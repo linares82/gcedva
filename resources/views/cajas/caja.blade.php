@@ -266,7 +266,7 @@
                                         <td>{{$adeudo->monto}}</td>
                                         <td>{{$adeudo->fecha_pago}}</td>
                                         <td>@if($adeudo->inicial_bnd==1) SI @else NO @endif</td>
-                                        <td>{{$adeudo->caja_id}}</td>
+                                        <td>{{$adeudo->caja->consecutivo}}</td>
                                         <td>{{$dia}}</td>
                                     </tr>
                                     
