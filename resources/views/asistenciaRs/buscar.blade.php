@@ -23,8 +23,14 @@
 
             {!! Form::open(array('route' => 'asistenciaRs.procesar')) !!}
 
+                <div class="form-group col-md-4 @if($errors->has('fecha')) has-error @endif">
+                    <label >Empleado: {{$as->empleado->nombre." ".$as->empleado->ape_paterno." ".$as->empleado->ape_materno}}</label><br/>
+                       <label >Materia: {{$as->materia->name}}</label>
+                    </div>
                     <div class="form-group col-md-4 @if($errors->has('fecha')) has-error @endif">
                        <label for="fecha-field">Fecha</label>
+                       <label for="fecha-field">Fecha</label>
+                        <label for="fecha-field">Fecha</label>
                        {!! Form::hidden("asignacion_academica_id", $asignacion_academica_id, array("class" => "form-control input-sm", "id" => "asignacion_academica_id-field")) !!}
                        {!! Form::text("fecha", null, array("class" => "form-control input-sm", "id" => "fecha-field")) !!}
                        @if($errors->has("fecha"))

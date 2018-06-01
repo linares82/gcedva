@@ -60,8 +60,9 @@ class AsistenciaRsController extends Controller {
 	{
             
                 $asignacion_academica_id=$id;
+                $as= AsignacionAcademica::find($id);
                 
-		return view('asistenciaRs.buscar', compact('asignacion_academica_id'))
+		return view('asistenciaRs.buscar', compact('asignacion_academica_id','as'))
 			->with( 'list', AsistenciaR::getListFromAllRelationApps() );
 	}
 
