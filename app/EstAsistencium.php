@@ -11,7 +11,7 @@ class EstAsistencium extends Model
 {
     use RelationManagerTrait,GetAllDataTrait;
     use SoftDeletes;
-    public $table="est_asistencia";
+    public $table="est_asistencias";
 
     public function __construct(array $attributes = array())
     {

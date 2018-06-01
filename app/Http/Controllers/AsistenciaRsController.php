@@ -58,6 +58,7 @@ class AsistenciaRsController extends Controller {
         
         public function buscar($id)
 	{
+            
                 $asignacion_academica_id=$id;
                 
 		return view('asistenciaRs.buscar', compact('asignacion_academica_id'))
