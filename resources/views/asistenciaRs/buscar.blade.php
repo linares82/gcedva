@@ -43,10 +43,11 @@
                             <td>{{ $s->cliente->nombre." ".$s->cliente->nombre2." ".$s->cliente->ape_paterno." ".$s->cliente->ape_materno." " }}</td>
                             <td>{{ $s->fecha }}</td>
                             <td>
-                                <div class="form-group col-md-4 @if($errors->has('est_asistencium_id')) has-error @endif">
-                                    {!! Form::select("est_asistencium_id", $list["EstAsistencium"], $s->est_asistencium_id, array("class" => "form-control select_seguridad", "id" => "est_asistencium_id".$s->id."-field")) !!}
-                                    @if($errors->has("est_asistencium_id"))
-                                     <span class="help-block">{{ $errors->first("est_asistencium_id") }}</span>
+                                <div class="form-group col-md-4 @if($errors->has('est_asistencia_id')) has-error @endif">
+                                    
+                                    {!! Form::select("est_asistencia_id", $list["EstAsistencium"], $s->est_asistencia_id, array("class" => "form-control select_seguridad", "id" => "est_asistencia_id".$s->id."-field")) !!}
+                                    @if($errors->has("est_asistencia_id"))
+                                     <span class="help-block">{{ $errors->first("est_asistencia_id") }}</span>
                                     @endif
                                  </div> 
                             </td>
@@ -95,7 +96,7 @@
             $.ajax({
             url: '{{ route("asistenciaRs.update") }}',
                     type: 'GET',
-                    data: "asistencia=" + a + "&estatus=" + $('#est_asistencium_id'+id+'-field option:selected').val(),
+                    data: "asistencia=" + a + "&estatus=" + $('#est_asistencia_id'+id+'-field option:selected').val(),
                     dataType: 'json',
                     beforeSend : function(){$("#loading3").show(); },
                     complete : function(){$("#loading3").hide(); },

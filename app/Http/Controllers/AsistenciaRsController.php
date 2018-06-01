@@ -76,13 +76,16 @@ class AsistenciaRsController extends Controller {
 		$input = $request->all();
                 
                 $asignacionAcademica= AsignacionAcademica::find($input['asignacion_academica_id']);
-                $asistencias= AsistenciaR::where('fecha','=', $input['fecha'])
+                $asistencias = AsistenciaR::where('fecha','=', $input['fecha'])
                                          ->where('asignacion_academica_id', '=', $input['asignacion_academica_id'])
+                                         ->orderBy('cliente_id')
                                          ->get();
                 $inscripciones=Inscripcion::where('grupo_id','=',$asignacionAcademica->grupo_id)
                                 ->where('lectivo_id', '=', $asignacionAcademica->lectivo_id)
+                                ->orderBy('cliente_id')
                                 ->get();
                 //dd($asistencias);
+        
                 if($asistencias->isEmpty()){
                     foreach($inscripciones as $i){
                         $asistencia['asignacion_academica_id']=$input['asignacion_academica_id'];
@@ -100,6 +103,33 @@ class AsistenciaRsController extends Controller {
                                          ->get();
                     return view('asistenciaRs.buscar', compact('asignacion_academica_id', 'asistencias'))
                             ->with( 'list', AsistenciaR::getListFromAllRelationApps() );
+                }elseif(count($asistencias)<>count($inscripciones)){
+                    foreach($inscripciones as $i){
+                        $encontrado=0;
+                        foreach($asistencias as $a){
+                            if($a->cliente_id==$i->cliente_id){
+                                $encontrado=1;
+                            }         
+                        }
+                        if($encontrado==0){
+                            $asistencia['asignacion_academica_id']=$input['asignacion_academica_id'];
+                            $asistencia['fecha']=$input['fecha'];
+                            $asistencia['cliente_id']=$i->cliente_id;
+                            $asistencia['est_asistencia_id']=1;
+                            $asistencia['usu_alta_id']=Auth::user()->id;
+                            $asistencia['usu_mod_id']=Auth::user()->id;
+                            //dd($asistencia);
+                            AsistenciaR::create( $asistencia );
+                        }
+                        
+                    }
+                    $asignacion_academica_id=$input['asignacion_academica_id'];
+                    $asistencias= AsistenciaR::where('fecha','=', $input['fecha'])
+                                         ->where('asignacion_academica_id', '=', $input['asignacion_academica_id'])
+                                         ->get();
+                    return view('asistenciaRs.buscar', compact('asignacion_academica_id', 'asistencias'))
+                            ->with( 'list', AsistenciaR::getListFromAllRelationApps() );
+                    
                 }else{
                     $asignacion_academica_id=$input['asignacion_academica_id'];
                     return view('asistenciaRs.buscar', compact('asignacion_academica_id', 'asistencias'))
