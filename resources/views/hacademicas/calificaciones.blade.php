@@ -192,7 +192,7 @@
     
     $(document).ready(function() {
       //getCmbGrupo();
-      getCmbMateriaByCve();
+      getCmbMateriaById();
       getCmbMateriaByCurp();
       $('#alumno_id-field').focusout(function() {
           getCmbMateriaById();
@@ -237,7 +237,7 @@
     });
 
     function getCmbMateriaById(){
-          var $example = $("#especialidad_id-field").select2();
+          
           var a= $('#frm_academica').serialize();
               $.ajax({
                   url: '{{ route("materias.getCmbMateriaXalumno2") }}',
