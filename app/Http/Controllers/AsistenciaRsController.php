@@ -77,6 +77,7 @@ class AsistenciaRsController extends Controller {
 		$input = $request->all();
                 
                 $asignacionAcademica= AsignacionAcademica::find($input['asignacion_academica_id']);
+                $as=$asignacionAcademica;
                 $asistencias = AsistenciaR::where('fecha','=', $input['fecha'])
                                          ->where('asignacion_academica_id', '=', $input['asignacion_academica_id'])
                                          ->orderBy('cliente_id')
@@ -102,7 +103,7 @@ class AsistenciaRsController extends Controller {
                     $asistencias= AsistenciaR::where('fecha','=', $input['fecha'])
                                          ->where('asignacion_academica_id', '=', $input['asignacion_academica_id'])
                                          ->get();
-                    return view('asistenciaRs.buscar', compact('asignacion_academica_id', 'asistencias'))
+                    return view('asistenciaRs.buscar', compact('asignacion_academica_id', 'asistencias','as'))
                             ->with( 'list', AsistenciaR::getListFromAllRelationApps() );
                 }elseif(count($asistencias)<>count($inscripciones)){
                     foreach($inscripciones as $i){
@@ -128,12 +129,12 @@ class AsistenciaRsController extends Controller {
                     $asistencias= AsistenciaR::where('fecha','=', $input['fecha'])
                                          ->where('asignacion_academica_id', '=', $input['asignacion_academica_id'])
                                          ->get();
-                    return view('asistenciaRs.buscar', compact('asignacion_academica_id', 'asistencias'))
+                    return view('asistenciaRs.buscar', compact('asignacion_academica_id', 'asistencias','as'))
                             ->with( 'list', AsistenciaR::getListFromAllRelationApps() );
                     
                 }else{
                     $asignacion_academica_id=$input['asignacion_academica_id'];
-                    return view('asistenciaRs.buscar', compact('asignacion_academica_id', 'asistencias'))
+                    return view('asistenciaRs.buscar', compact('asignacion_academica_id', 'asistencias','as'))
                             ->with( 'list', AsistenciaR::getListFromAllRelationApps() );
                 }
 		

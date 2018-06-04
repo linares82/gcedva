@@ -59,11 +59,11 @@
                        @endif
                     </div>
                 -->
-                    <div class="form-group col-md-4 @if($errors->has('cve_alumno')) has-error @endif">
-                       <label for="cve_alumno-field">Clave Alumno</label>
-                       {!! Form::text("cve_alumno", null, array("class" => "form-control input-sm", "id" => "cve_alumno-field")) !!}
-                       @if($errors->has("cve_alumno"))
-                        <span class="help-block">{{ $errors->first("cve_alumno") }}</span>
+                    <div class="form-group col-md-4 @if($errors->has('alumno_id')) has-error @endif">
+                       <label for="alumno_id-field">Alumno</label>
+                       {!! Form::text("alumno_id", null, array("class" => "form-control input-sm", "id" => "alumno_id-field")) !!}
+                       @if($errors->has("alumno_id"))
+                        <span class="help-block">{{ $errors->first("alumno_id") }}</span>
                        @endif
                     </div>
                     
@@ -194,8 +194,8 @@
       //getCmbGrupo();
       getCmbMateriaByCve();
       getCmbMateriaByCurp();
-      $('#cve_alumno-field').focusout(function() {
-          getCmbMateriaByCve();
+      $('#alumno_id-field').focusout(function() {
+          getCmbMateriaById();
       });
       $('#curp-field').focusout(function() {
           getCmbMateriaByCurp();
@@ -236,13 +236,13 @@
 
     });
 
-    function getCmbMateriaByCve(){
+    function getCmbMateriaById(){
           var $example = $("#especialidad_id-field").select2();
           var a= $('#frm_academica').serialize();
               $.ajax({
                   url: '{{ route("materias.getCmbMateriaXalumno2") }}',
                   type: 'GET',
-                  data: "cve_alumno=" + $('#cve_alumno-field').val()+"&materium_id="+ $('#materium_id-field option:selected').val(),
+                  data: "alumno_id=" + $('#alumno_id-field').val()+"&materium_id="+ $('#materium_id-field option:selected').val(),
                   dataType: 'json',
                   beforeSend : function(){$("#loading3").show();},
                   complete : function(){$("#loading3").hide();},

@@ -202,11 +202,11 @@ class HacademicasController extends Controller {
 							->get();
 		}elseif($input['plantel_id']==0 and isset($input['cve_alumno'])){
 			*/
-		if(isset($input['cve_alumno']) and 
+		if(isset($input['alumno_id']) and 
                    isset($input['tpo_examen_id']) and 
                    isset($input['materium_id']) and 
                    !isset($input['excepcion'])){
-			$c=Cliente::where('cve_alumno', '=', $input['cve_alumno'])->first();
+			$c=Cliente::where('id', '=', $input['alumno_id'])->first();
 			$hacademicas=Hacademica::select('calif.id',
                             DB::raw('concat(c.nombre, " ", c.ape_paterno," ", c.ape_materno) as nombre'),
                             'm.name as materia','te.name as examen', 'calif.calificacion', 'calif.fecha',
@@ -223,7 +223,7 @@ class HacademicasController extends Controller {
                             ->join('lectivos as l', 'l.id', '=', 'hacademicas.lectivo_id')
                             ->where('hacademicas.materium_id', '=', $input['materium_id'])
                             ->where('calif.tpo_examen_id', '=', $input['tpo_examen_id'])
-                            ->where('c.cve_alumno', '=', $input['cve_alumno'])
+                            ->where('c.id', '=', $input['alumno_id'])
                             ->whereExists(function ($query) {
                                 $query->from('calendario_evaluacions as ce')
                                       ->join('lectivos as lec', 'lec.id', '=', 'ce.lectivo_id')
@@ -232,11 +232,11 @@ class HacademicasController extends Controller {
                                       ->whereRaw('lec.id = hacademicas.lectivo_id');
                             })
                             ->get();
-		}elseif(isset($input['cve_alumno']) and 
+		}elseif(isset($input['alumno_id']) and 
                    isset($input['tpo_examen_id']) and 
                    isset($input['materium_id']) and 
                    isset($input['excepcion'])){
-                    $c=Cliente::where('cve_alumno', '=', $input['cve_alumno'])->first();
+                    $c=Cliente::where('id', '=', $input['alumno_id'])->first();
 			$hacademicas=Hacademica::select('calif.id',
                             DB::raw('concat(c.nombre, " ", c.ape_paterno," ", c.ape_materno) as nombre'),
                             'm.name as materia','te.name as examen', 'calif.calificacion', 'calif.fecha',
@@ -253,7 +253,7 @@ class HacademicasController extends Controller {
                             ->join('lectivos as l', 'l.id', '=', 'hacademicas.lectivo_id')
                             ->where('hacademicas.materium_id', '=', $input['materium_id'])
                             ->where('calif.tpo_examen_id', '=', $input['tpo_examen_id'])
-                            ->where('c.cve_alumno', '=', $input['cve_alumno'])
+                            ->where('c.id', '=', $input['alumno_id'])
                             ->get();
                 }
 

@@ -208,7 +208,7 @@ class MateriasController extends Controller {
     public function getCmbMateriaXalumno2(Request $request) {
         if ($request->ajax()) {
             //dd($request->all());
-            $cve_alumno = $request->get('cve_alumno');
+            $alumno_id = $request->get('alumno_id');
             $materia = $request->get('materium_id');
             //dd("FLC:".$materia);
             $e = Empleado::where('user_id', '=', Auth::user()->id)->first();
@@ -228,7 +228,7 @@ class MateriasController extends Controller {
                         ->join('empleados as e', 'e.id', 'aa.empleado_id')
                         ->select(distinct('distinctrow(m.id)'), 'm.name')
                         ->whereColumn('m.plantel_id', 'i.plantel_id')
-                        ->where('c.cve_alumno', '=', $cve_alumno)
+                        ->where('c.id', '=', $alumno_id)
                         ->where('e.id', '=', $e->id)
                         ->where('h.deleted_at', '=', null)
                         ->get();
@@ -242,7 +242,7 @@ class MateriasController extends Controller {
                         ->join('empleados as e', 'e.id', 'aa.empleado_id')
                         ->select(DB::raw('distinctrow(m.id)'), 'm.name')
                         ->whereColumn('m.plantel_id', 'i.plantel_id')
-                        ->where('c.cve_alumno', '=', $cve_alumno)
+                        ->where('c.id', '=', $alumno_id)
                         ->where('h.deleted_at', '=', null)
                         ->get();
             }
