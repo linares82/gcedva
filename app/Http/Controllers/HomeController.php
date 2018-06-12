@@ -249,11 +249,14 @@ class HomeController extends Controller
                             ->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
                             ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
                             ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
+                            ->join('hactividades as h', 'h.cliente_id','=','c.id')
                             ->where('st_seguimiento_id', '=', $st->id)
                             ->where('e.id', '=', $em->id)
                             ->where('c.plantel_id', '=', $filtros['plantel_f'])
-                            ->where('seguimientos.created_at', '>=', $l->inicio)
-                            ->where('seguimientos.created_at', '<=', $l->fin)
+                            ->where('h.fecha', '>=', $l->inicio)
+                            ->where('h.fecha', '<=', $l->fin)
+                            ->where('h.detalle','=','Concretado')
+                            ->where('h.asunto','=','Cambio estatus ')
                             ->value('total');
                    
                }elseif($st->id>0){
@@ -261,9 +264,12 @@ class HomeController extends Controller
                             ->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
                             ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
                             ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
+                            ->join('hactividades as h', 'h.cliente_id','=','c.id')
                             ->where('st_seguimiento_id', '=', $st->id)
                             ->where('e.id', '=', $em->id)
                             ->where('c.plantel_id', '=', $filtros['plantel_f'])
+                            ->where('h.detalle','<>','Concretado')
+                            ->where('h.asunto','=','Cambio estatus ')
                             ->value('total');
                    //dd('stop fil');
                } 

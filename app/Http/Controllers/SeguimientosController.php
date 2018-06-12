@@ -495,7 +495,10 @@ class SeguimientosController extends Controller {
             $input['plantel_t'] = $input['plantel_f'];
         }
 
-        $seguimientos = Seguimiento::select('cve_plantel as Plantel', 'esp.name as Especialidad', 'n.name as Nivel', 'g.name as Grado', 'seguimientos.mes as Mes', 'm.name as medio', DB::raw('concat(e.nombre," ", e.ape_paterno," ", e.ape_materno) as Empleado'), 'st.name as Estatus', 'st.id as st_contar', 'esp.meta as Meta', 'u.name as Usuario')
+        $seguimientos = Seguimiento::select('cve_plantel as Plantel', 'esp.name as Especialidad', 'n.name as Nivel', 'g.name as Grado', 
+                'seguimientos.mes as Mes', 'm.name as medio', 
+                DB::raw('concat(e.nombre," ", e.ape_paterno," ", e.ape_materno) as Empleado'), 
+                'h.detalle as Estatus', 'st.id as st_contar', 'esp.meta as Meta', 'u.name as Usuario')
                 ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
                 ->join('combinacion_clientes as cc', 'cc.cliente_id', '=','c.id')
                 ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
@@ -506,10 +509,12 @@ class SeguimientosController extends Controller {
                 ->join('grados as g', 'g.id', '=', 'cc.grado_id')
                 ->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
                 ->join('medios as m', 'm.id', '=', 'c.medio_id')
+                ->join('hactividades as h', 'h.cliente_id','=','c.id')
+                ->where('h.asunto','=','Cambio estatus ')
                 ->where('c.plantel_id', '>=', $input['plantel_f'])
                 ->where('c.plantel_id', '<=', $input['plantel_t'])
-                ->where('seguimientos.created_at', '>=', $input['fecha_f'])
-                ->where('seguimientos.created_at', '<=', $input['fecha_t'])
+                ->where('h.fecha', '>=', $input['fecha_f'])
+                ->where('h.fecha', '<=', $input['fecha_t'])
                 ->orderBy('Plantel')
                 ->get();
         
