@@ -63,7 +63,7 @@ class AlertaFinContrato extends Command
                     ->where('empleados.resp_alerta_id', '=', $e->resp_alerta_id)
                     ->get();
             $mail=$e->mail;
-            $jefe_mail=$e->j_mail;
+            $jefe_mail=$r->mail;
             //dd($alertas);
             
             /*\Mail::send('emails.alertaFinContrato', 
@@ -77,16 +77,18 @@ class AlertaFinContrato extends Command
                     $message->subject('Alerta Contratos Por Vencer');
                 });
                 */
-            
-            $respuesta=Mailgun::send('emails.alertaFinContrato', 
-                array('ps'=>$alertas),  
-                function ($message) use($mail, $jefe_mail) {
-                    $message->to($mail);
-                    if(!is_null($jefe_mail)){
-                        $message->cc($jefe_mail);	
-                    }
-                    $message->subject('Alerta Contratos Por Vencer');
-            });	
+            if(count($alertas)>0){
+                $respuesta=Mailgun::send('emails.alertaFinContrato', 
+                    array('ps'=>$alertas),  
+                    function ($message) use($mail, $jefe_mail) {
+                        $message->to($mail);
+                        if(!is_null($jefe_mail)){
+                            $message->cc($jefe_mail);	
+                        }
+                        $message->subject('Alerta Contratos Por Vencer');
+                });
+            }
+            	
             //dd($respuesta);
         }
     }
