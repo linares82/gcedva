@@ -120,10 +120,10 @@ class EmpleadosController extends Controller {
                 ->where('jefe_bnd', '=', '1')
                 ->where('plantel_id', '=', $empleado->plantel_id)
                 ->pluck('name', 'id');
-        $responsables = Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
-                //->where('plantel_id', '=', $empleado->plantel_id)
-                ->where('puesto_id','=', 13)
-                ->pluck('name', 'id');
+        $responsables = Empleado::select('empleados.id', DB::raw('concat(empleados.nombre," ",empleados.ape_paterno," ",empleados.ape_materno) as name'))
+                ->join('puestos as p', 'p.id', '=', 'empleados.puesto_id')
+                ->where('p.name','=', 'RH')
+                ->pluck('empleados.name', 'empleados.id');
         $doc_existentes = DB::table('pivot_doc_empleados as pde')->select('doc_empleado_id')
                         ->join('empleados as e', 'e.id', '=', 'pde.empleado_id')
                         ->where('e.id', '=', $id)
