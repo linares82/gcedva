@@ -297,7 +297,7 @@
                     </h4>
                 </div>
                 <div class="box-body">
-                    <div id="chart_div" style="width: auto; height: auto;"></div>
+                    <div id="chart_div" style="width: auto; height: 300px;"></div>
                     <table class="table table-condensed table-striped">
                             <tbody>
                                 <?php $i=0; ?>
@@ -305,11 +305,11 @@
                                 <?php $i++; ?>
                                 @if($i==1)
                                 <tr>
-                                    <th>{{$ln[0]}}</th><th>{{$ln[1]}}</th><th>{{$ln[2]}}</th><th>{{$ln[3]}}</th><th>{{$ln[4]}}</th>
+                                    <th>{{$ln[0]}}</th><th>{{$ln[1]}}</th><th>{{$ln[2]}}</th><th>{{$ln[3]}}</th><th>{{$ln[4]}}</th><th>{{$ln[5]}}</th><th>{{$ln[6]}}</th>
                                 </tr> 
                                 @else
                                 <tr>
-                                    <td>{{$ln[0]}}</td><td>{{$ln[1]}}</td><td>{{$ln[2]}}</td><td>{{$ln[3]}}</td><td>{{$ln[4]}}</td>
+                                    <td>{{$ln[0]}}</td><td>{{$ln[1]}}</td><td>{{$ln[2]}}</td><td>{{$ln[3]}}</td><td>{{$ln[4]}}</td><td>{{$ln[5]}}</td><td>{{$ln[6]}}</td>
                                 </tr>     
                                 @endif
                                 @endforeach
