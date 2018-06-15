@@ -1794,5 +1794,10 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                         }
                         @endif
 
+                        $(':input[type="submit"]').click(function(){
+                            //$('input.submitForm').read
+                            $(':input[type="submit"]').prop('disabled', true);
+                            $('form#frm_cliente').submit();
+                        });
 </script>
 @endpush

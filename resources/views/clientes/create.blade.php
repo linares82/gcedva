@@ -29,7 +29,7 @@
                 <div class="row">
                 </div>
                 <div class="well well-sm">
-                    <button type="submit" class="btn btn-primary">Crear</button>
+                    <button type="submit" class="btn btn-primary submitForm">Crear</button>
                     <a class="btn btn-link pull-right" href="{{ route('clientes.index') }}"><i class="glyphicon glyphicon-backward"></i> Clientes</a>
                     <a class="btn btn-link pull-right" href="{{ route('clientes.index', array('p'=>1)) }}"><i class="glyphicon glyphicon-backward"></i> Inscritos</a>
                 </div>
