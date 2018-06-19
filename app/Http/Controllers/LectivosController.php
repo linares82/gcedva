@@ -62,6 +62,11 @@ class LectivosController extends Controller {
 		}else{
 			$input['carrera_bnd']=1;
 		}
+                if(!isset($input['grafica_bnd'])){
+			$input['grafica_bnd']=0;
+		}else{
+			$input['grafica_bnd']=1;
+		}
 		//create data
 		if ($r=Lectivo::create( $input )){
                     $this->calculaAsistencias($r->id);
@@ -136,7 +141,11 @@ class LectivosController extends Controller {
 		}else{
 			$input['carrera_bnd']=1;
 		}
-
+                if(!isset($input['grafica_bnd'])){
+			$input['grafica_bnd']=0;
+		}else{
+			$input['grafica_bnd']=1;
+		}
 		$lectivo=$lectivo->find($id);
 		//update data
 		$this->calculaAsistencias($id);

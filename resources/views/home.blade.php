@@ -118,11 +118,12 @@
             
         </div><!-- ./col -->
         
+        @foreach($a_2 as $a)
         <div class="col-md-3 col-sm-6 col-xs-12">
             <!-- small box -->
             <div class="info-box">
                 <span class="info-box-icon bg-green">
-                    <h1> {{$a_2}} </h1>
+                    <h1> {{$a}} </h1>
                 </span>
                 <div class="info-box-content">
                     <h3><span class="info-box-text"> Concretados en el mes </span></h3>
@@ -137,6 +138,8 @@
                 
             </div>
         </div><!-- ./col -->
+        @endforeach
+        
         <div class="col-md-3 col-sm-6 col-xs-12">
             <!-- small box -->
             <div class="info-box">
@@ -485,7 +488,7 @@
         function drawChart() {
             var data = google.visualization.arrayToDataTable([
             ['Label', 'Value'],
-            ['Concretados', {{ $avance }}],
+            ['Concretados', {{ $avance[0] }}],
             ]);
 
             var options = {

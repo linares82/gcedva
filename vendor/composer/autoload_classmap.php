@@ -7,6 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'AddBecaPorcentajeClientesTable' => $baseDir . '/database/migrations/2018_05_07_114940_add_beca_porcentaje_clientes_table.php',
+    'AddBndGraficaLectivosTable' => $baseDir . '/database/migrations/2018_06_19_145551_add_bnd_grafica_lectivos_table.php',
     'AddCicloClientesTable' => $baseDir . '/database/migrations/2017_11_17_134515_add_ciclo_clientes_table.php',
     'AddColorStSeguimientoTable' => $baseDir . '/database/migrations/2017_11_14_164248_add_color_st_seguimiento_table.php',
     'AddCombinacionIdAdeudosTable' => $baseDir . '/database/migrations/2018_04_17_133551_add_combinacion_id_adeudos_table.php',

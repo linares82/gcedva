@@ -26,6 +26,13 @@
                         <span class="help-block">{{ $errors->first("carrera_bnd") }}</span>
                        @endif
                     </div>
+                    <div class="form-group col-md-4 @if($errors->has('grafica_bnd')) has-error @endif">
+                       <label for="grafica_bnd-field">Grafica</label>
+                       {!! Form::checkbox("grafica_bnd", 1, null, [ "id" => "grafica_bnd-field"]) !!}
+                       @if($errors->has("grafica_bnd"))
+                        <span class="help-block">{{ $errors->first("grafica_bnd") }}</span>
+                       @endif
+                    </div>
                     <div class="form-group col-md-4 @if($errors->has('inicio')) has-error @endif">
                        <label for="inicio-field">Inicio</label>
                        {!! Form::text("inicio", null, array("class" => "form-control input-sm", "id" => "inicio-field")) !!}

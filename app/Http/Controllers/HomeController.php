@@ -70,20 +70,47 @@ class HomeController extends Controller
                     ->where('c.empleado_id', '=', $e->id)
                     ->value('total');
         //dd($a_1);
-        $a_2=Seguimiento::where('st_seguimiento_id', '=', 2)
+        $lectivosSt2=Lectivo::where('grafica_bnd','=','1')->get();
+        $a_2=array();
+        $avance=array();
+        $i=0;
+        foreach($lectivosSt2 as $lSt2){
+            $a_2[$i]=Seguimiento::join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
+                    ->join('hactividades as h', 'h.cliente_id','=','c.id')
+                    ->join('combinacion_clientes as cc', 'cc.cliente_id','=','c.id')
+                    ->join('especialidads as esp', 'esp.id','=','cc.especialidad_id')
+                    ->where('esp.lectivo_id', '=', $lSt2->id)
+                    ->where('seguimientos.created_at', '>=', $l->inicio)
+                    ->where('seguimientos.created_at', '<=', $l->fin)
+                    ->where('c.empleado_id', '=', $e->id)
+                    ->where('c.plantel_id', '=', $e->plantel_id)
+                    ->where('h.fecha', '>=', $lSt2->inicio)
+                    ->where('h.fecha', '<=', $lSt2->fin)
+                    ->where('h.detalle','=','Concretado')
+                    ->where('h.asunto','=','Cambio estatus ')
+                    ->count();
+            $avance[$i]=0;
+            if($a_2[$i]>0){
+                $avance[$i]=(($a_2[$i]*100)/$e->plantel->meta_total);
+            }
+            $i++;
+        }
+        //dd($avance);
+        /*$a_2=Seguimiento::where('st_seguimiento_id', '=', 2)
                     ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
-                    //->where('mes', '=', $mes)
                     ->where('seguimientos.created_at', '>=', $l->inicio)
                     ->where('seguimientos.created_at', '<=', $l->fin)
                     ->where('c.empleado_id', '=', $e->id)
                     ->where('c.plantel_id', '=', $e->plantel_id)
                     ->count();
+         
+         
         //dd($e->plantel->meta_venta);
         $avance=0;
         if($a_2>0){
             $avance=(($a_2*100)/$e->plantel->meta_total);
         }
-        
+        */
         //dd($a_3."*100 / ".$e->plantel->meta_venta);
         $a_3=Seguimiento::where('st_seguimiento_id', '=', 3)
                     ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
@@ -255,62 +282,28 @@ class HomeController extends Controller
             foreach($estatus as $st){
                $i++;
                 if($st->id==2){
-                    $lectivo=Lectivo::where('id','=','0')->first();
-                    $valor=Seguimiento::select(DB::raw('count(st.name) as total'))
+                    $lectivosSt2=Lectivo::where('grafica_bnd','=','1')->get();
+                    foreach($lectivosSt2 as $lSt2){
+                        $valor=Seguimiento::select(DB::raw('count(st.name) as total'))
                         ->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
                         ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
                         ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
                         ->join('hactividades as h', 'h.cliente_id','=','c.id')
                         ->join('combinacion_clientes as cc', 'cc.cliente_id','=','c.id')
                         ->join('especialidads as esp', 'esp.id','=','cc.especialidad_id')
-                        ->where('esp.lectivo_id', '=', $lectivo->id)
+                        ->where('esp.lectivo_id', '=', $lSt2->id)
                         ->where('st_seguimiento_id', '=', $st->id)
                         ->where('e.id', '=', $em->id)
                         ->where('c.plantel_id', '=', $filtros['plantel_f'])
-                        ->where('h.fecha', '>=', $lectivo->inicio)
-                        ->where('h.fecha', '<=', $lectivo->fin)
+                        ->where('h.fecha', '>=', $lSt2->inicio)
+                        ->where('h.fecha', '<=', $lSt2->fin)
                         ->where('h.detalle','=','Concretado')
                         ->where('h.asunto','=','Cambio estatus ')
                         ->value('total');
-                    $linea[$i]=$valor;
-                    $i++;
-                    $lectivo=Lectivo::where('id','=','1')->first();
-                    $valor=Seguimiento::select(DB::raw('count(st.name) as total'))
-                        ->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
-                        ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
-                        ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
-                        ->join('hactividades as h', 'h.cliente_id','=','c.id')
-                        ->join('combinacion_clientes as cc', 'cc.cliente_id','=','c.id')
-                        ->join('especialidads as esp', 'esp.id','=','cc.especialidad_id')
-                        ->where('esp.lectivo_id', '=', $lectivo->id)
-                        ->where('st_seguimiento_id', '=', $st->id)
-                        ->where('e.id', '=', $em->id)
-                        ->where('c.plantel_id', '=', $filtros['plantel_f'])
-                        ->where('h.fecha', '>=', $lectivo->inicio)
-                        ->where('h.fecha', '<=', $lectivo->fin)
-                        ->where('h.detalle','=','Concretado')
-                        ->where('h.asunto','=','Cambio estatus ')
-                        ->value('total');
-                    $linea[$i]=$valor;
-                    $i++;
-                    $lectivo=Lectivo::where('id','=','2')->first();
-                    $valor=Seguimiento::select(DB::raw('count(st.name) as total'))
-                        ->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
-                        ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
-                        ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
-                        ->join('hactividades as h', 'h.cliente_id','=','c.id')
-                        ->join('combinacion_clientes as cc', 'cc.cliente_id','=','c.id')
-                        ->join('especialidads as esp', 'esp.id','=','cc.especialidad_id')
-                        ->where('esp.lectivo_id', '=', $lectivo->id)    
-                        ->where('st_seguimiento_id', '=', $st->id)
-                        ->where('e.id', '=', $em->id)
-                        ->where('c.plantel_id', '=', $filtros['plantel_f'])
-                        ->where('h.fecha', '>=', $lectivo->inicio)
-                        ->where('h.fecha', '<=', $lectivo->fin)
-                        ->where('h.detalle','=','Concretado')
-                        ->where('h.asunto','=','Cambio estatus ')
-                        ->value('total');
-                    $linea[$i]=$valor;
+                        $linea[$i]=$valor;
+                        $i++;
+                    }
+                    $i--;
                }elseif($st->id>0){
                    $valor=Seguimiento::select(DB::raw('count(st.name) as total'))
                             ->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
