@@ -74,14 +74,16 @@ class HomeController extends Controller
         $a_2=array();
         $avance=array();
         $i=0;
+        $j=0;
         foreach($lectivosSt2 as $lSt2){
-            $a_2[$i]=Seguimiento::join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
+            
+            $a=Seguimiento::join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
                     ->join('hactividades as h', 'h.cliente_id','=','c.id')
                     ->join('combinacion_clientes as cc', 'cc.cliente_id','=','c.id')
                     ->join('especialidads as esp', 'esp.id','=','cc.especialidad_id')
                     ->where('esp.lectivo_id', '=', $lSt2->id)
-                    ->where('seguimientos.created_at', '>=', $l->inicio)
-                    ->where('seguimientos.created_at', '<=', $l->fin)
+                    //->where('seguimientos.created_at', '>=', $l->inicio)
+                    //->where('seguimientos.created_at', '<=', $l->fin)
                     ->where('c.empleado_id', '=', $e->id)
                     ->where('c.plantel_id', '=', $e->plantel_id)
                     ->where('h.fecha', '>=', $lSt2->inicio)
@@ -89,12 +91,15 @@ class HomeController extends Controller
                     ->where('h.detalle','=','Concretado')
                     ->where('h.asunto','=','Cambio estatus ')
                     ->count();
+            array_push($a_2, array($a, $lSt2->name));
+            //dd($a_2);
             $avance[$i]=0;
-            if($a_2[$i]>0){
-                $avance[$i]=(($a_2[$i]*100)/$e->plantel->meta_total);
+            if($a>0){
+                $avance[$i]=(($a*100)/$e->plantel->meta_total);
             }
             $i++;
         }
+        
         //dd($avance);
         /*$a_2=Seguimiento::where('st_seguimiento_id', '=', 2)
                     ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
@@ -198,33 +203,49 @@ class HomeController extends Controller
                                     ->where('empleado_id', '=', $e->id)
                                     ->get();
         //dd($avisos_generales);
-        $encabezado = ['Estatus', 'Cantidad Total', 'Meta'];
-        $datos=array();
-        array_push($datos,$encabezado);
-        $encabezado = ['Estatus', 'Cantidad Total'];
-        $datos2=array();
-        array_push($datos2,$encabezado);
-        $mes=(int)date('m');
-        $grafica=Seguimiento::select('sts.name as estatus', DB::raw('count(sts.name) as valor'))
-                    ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
-                    ->join('st_seguimientos as sts', 'sts.id','=','seguimientos.st_seguimiento_id')
-                    //->where('mes', '=', $mes)
-                    ->where('seguimientos.created_at', '>=', $l->inicio)
-                    ->where('seguimientos.created_at', '<=', $l->fin)
-                    ->where('c.empleado_id', '=', $e->id)
-                    ->where('c.plantel_id', '=', $e->plantel_id)
-                    ->where('sts.id', '=', 2)
-                    ->groupBy('sts.name')
-                    ->get();
+        $fil=array();
         
-        foreach($grafica as $g){
-            if($g->estatus=="Concretado"){
-                array_push($datos, array($g->estatus, $g->valor, $e->plantel->meta_venta));
-            }else{
-                array_push($datos, array($g->estatus, $g->valor, 0));
+        foreach($lectivosSt2 as $lSt2){
+            $encabezado = ['Estatus', 'Cantidad Total', 'Meta'];
+            $datos=array();
+            array_push($datos,$encabezado);
+            $encabezado = ['Estatus', 'Cantidad Total'];
+            $datos2=array();
+            array_push($datos2,$encabezado);
+            $mes=(int)date('m');
+            $grafica=Seguimiento::select('sts.name as estatus', DB::raw('count(sts.name) as valor'))
+                        ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
+                        ->join('st_seguimientos as sts', 'sts.id','=','seguimientos.st_seguimiento_id')
+                        //->where('mes', '=', $mes)
+                        ->join('hactividades as h', 'h.cliente_id','=','c.id')
+                        ->join('combinacion_clientes as cc', 'cc.cliente_id','=','c.id')
+                        ->join('especialidads as esp', 'esp.id','=','cc.especialidad_id')
+                        ->where('esp.lectivo_id', '=', $lSt2->id)
+                        ->where('h.fecha', '>=', $lSt2->inicio)
+                        ->where('h.fecha', '<=', $lSt2->fin)
+                        ->where('h.detalle','=','Concretado')
+                        ->where('h.asunto','=','Cambio estatus ')
+                        ->where('c.empleado_id', '=', $e->id)
+                        ->where('c.plantel_id', '=', $e->plantel_id)
+                        ->where('sts.id', '=', 2)
+                        ->groupBy('sts.name')
+                        ->get();
+            //dd($grafica);
+            foreach($grafica as $g){
+                if($g->estatus=="Concretado" and $g->valor>0){
+                    array_push($datos, array($g->estatus, $g->valor, $e->plantel->meta_venta));
+                }else{
+                    array_push($datos, array($g->estatus, $g->valor, 0));
+                }
+
+            }
+            if(count($datos)>1){
+                array_push($fil,$datos);
             }
             
         }
+        
+        //dd($fil);
         
         $grafica2=Seguimiento::select('sts.name as estatus', DB::raw('count(sts.name) as valor'))
                     ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
@@ -247,6 +268,9 @@ class HomeController extends Controller
         //dd($e);
         $f = date("Y-m-d");
         $l = Lectivo::find(0)->first();
+        
+        //$lectivosSt2=Lectivo::where('grafica_bnd','=','1')->get();
+        
         $tabla=array();
         $encabezado=array();
         $encabezado[0]='Empleado';
@@ -282,7 +306,7 @@ class HomeController extends Controller
             foreach($estatus as $st){
                $i++;
                 if($st->id==2){
-                    $lectivosSt2=Lectivo::where('grafica_bnd','=','1')->get();
+                    
                     foreach($lectivosSt2 as $lSt2){
                         $valor=Seguimiento::select(DB::raw('count(st.name) as total'))
                         ->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
@@ -350,7 +374,8 @@ class HomeController extends Controller
          * 
          */
         //dd($estatusPlantel->toArray());
-        return view('home', compact('avisos', 'a_1', 'a_2', 'a_3', 'a_4', 'grafica2','grafica', 
+        //dd(count($fil));
+        return view('home', compact('avisos', 'a_1', 'a_2', 'a_3', 'a_4', 'grafica2','grafica', 'fil',
                                     'avisos_generales', 'avance', 'gauge', 'tabla', 'plantel','estatusPlantel', 'tsuma'))
                     ->with('datos_grafica', json_encode($tabla))
                     ->with('datos', json_encode($datos))

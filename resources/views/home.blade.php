@@ -6,15 +6,13 @@
 @section('content')
 
     <link rel="stylesheet" src="{{ asset ('/bower_components/AdminLTE/plugins/morris/morris.css') }}" />
-    <style type="text/css">
+<!--    <style type="text/css">
         #target {
 			width: 600px;
 			height: 400px;
 		}
-    </style>
-    <div class="row">
+    </style>-->
     
-    </div>
         @permission('Wanalitica')
 	<div class="form-group col-md-12 col-sm-12 col-xs-12">
             <div class="box box-primary">
@@ -30,6 +28,7 @@
             </div>
         </div>
         @endpermission
+    
     <div class="row">
         <div class="form-group col-md-6 col-sm-6 col-xs-12" style='display: none'>
             <div class="box box-primary">
@@ -67,26 +66,60 @@
         </div>
         @endpermission
         @permission('avances_mes1')
-        <div class="form-group col-md-5 col-sm-5 col-xs-12">
-            <div class="box box-primary">
-                <div class="box-header with-border">
-                    <h4 class="box-title">
-                        Avances del mes:
-                    </h4>
-                </div>
-                <div class="box-body">
-                    <div id="barras_chart" style="height: 240px;">
+        @if(count($fil)>0)
+        <?php $i=0; ?>
+        @foreach($fil as $f)
+            <div class="form-group col-md-5 col-sm-5 col-xs-12">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h4 class="box-title" id=''>
+    <!--                        Avances del mes:-->
+                        </h4>
+                    </div>
+                    <div class="box-body">    
+                            <div id="barras_chart_{{$i}}" style="height: 238px;">
+                            </div>
+
                     </div>     
                 </div>
             </div>
-        </div>
+            <?php $i++;?>
+        @endforeach
+        @endif
+        <!--</div>-->
+        
+        @foreach($a_2 as $a)
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <!-- small box -->
+            <div class="info-box">
+                <span class="info-box-icon bg-green">
+                    <h1> {{$a[0]}} </h1>
+                </span>
+                <div class="info-box-content">
+                     CONCRETADOS EN  {{ $a[1] }} <br/>
+                    <!--<a href="{{ route('seguimientos.reporteSeguimientosXEmpleado', array('estatus'=>2)) }}" class="small-box-footer">Más Información <i class="fa fa-arrow-circle-right"></i></a>-->
+                    <a href="{{ route('clientes.index').'?q[s]=&q[clientes.nombre_cont]=&q[st_seguimiento_id_cont]=2&q[clientes.plantel_id_cont]='.
+                                                        DB::table('empleados')->where('user_id', Auth::user()->id)->value('plantel_id').
+                                                        '&q[clientes.empleado_id_cont]='.
+                                                        DB::table('empleados')->where('user_id', Auth::user()->id)->value('id').
+                                                        '&commit=Buscar' }}" 
+                    class="small-box-footer">Ver <i class="fa fa-arrow-circle-right"></i></a>
+                </div>
+                
+            </div>
+        </div><!-- ./col -->
+        @endforeach
+        
         @endpermission
+    </div>    
+    <div class='row'>
         @permission('avances_mes2')
-        <div class="form-group col-md-5 col-sm-5 col-xs-12">
+    
+        <div class="form-group col-md-6 col-sm-6 col-xs-12">
             <div class="box box-primary">
                 <div class="box-header with-border">
                     <h4 class="box-title">
-                        Avances del mes:
+                        Estatus Totales:
                     </h4>
                 </div>
                 <div class="box-body">
@@ -105,7 +138,7 @@
                     <h1> {{$a_1}} </h1>
                 </span>
                 <div class="info-box-content" >
-                    <h3><span class="info-box-text"> Pendientes en el mes </span></h3>
+                    <h3><span class="info-box-text"> Pendientes totales </span></h3>
                     <!--<a href="{{ route('seguimientos.reporteSeguimientosXEmpleado', array('estatus'=>1)) }}" class="small-box-footer">Más Información <i class="fa fa-arrow-circle-right"></i></a>-->
                     <a href="{{ route('clientes.index').'?q[s]=&q[clientes.nombre_cont]=&q[st_seguimiento_id_cont]=1&q[clientes.plantel_id_cont]='.
                                                         DB::table('empleados')->where('user_id', Auth::user()->id)->value('plantel_id').
@@ -118,28 +151,6 @@
             
         </div><!-- ./col -->
         
-        @foreach($a_2 as $a)
-        <div class="col-md-3 col-sm-6 col-xs-12">
-            <!-- small box -->
-            <div class="info-box">
-                <span class="info-box-icon bg-green">
-                    <h1> {{$a}} </h1>
-                </span>
-                <div class="info-box-content">
-                    <h3><span class="info-box-text"> Concretados en el mes </span></h3>
-                    <!--<a href="{{ route('seguimientos.reporteSeguimientosXEmpleado', array('estatus'=>2)) }}" class="small-box-footer">Más Información <i class="fa fa-arrow-circle-right"></i></a>-->
-                    <a href="{{ route('clientes.index').'?q[s]=&q[clientes.nombre_cont]=&q[st_seguimiento_id_cont]=2&q[clientes.plantel_id_cont]='.
-                                                        DB::table('empleados')->where('user_id', Auth::user()->id)->value('plantel_id').
-                                                        '&q[clientes.empleado_id_cont]='.
-                                                        DB::table('empleados')->where('user_id', Auth::user()->id)->value('id').
-                                                        '&commit=Buscar' }}" 
-                    class="small-box-footer">Ver <i class="fa fa-arrow-circle-right"></i></a>
-                </div>
-                
-            </div>
-        </div><!-- ./col -->
-        @endforeach
-        
         <div class="col-md-3 col-sm-6 col-xs-12">
             <!-- small box -->
             <div class="info-box">
@@ -147,7 +158,7 @@
                     <h1> {{$a_4}} </h1>
                 </span>
                 <div class="info-box-content">
-                    <h3><span class="info-box-text"> En proceso en el mes </span></h3>
+                    <h3><span class="info-box-text"> En proceso totales </span></h3>
                     <!--<a href="{{ route('seguimientos.reporteSeguimientosXEmpleado', array('estatus'=>4)) }}" class="small-box-footer">Más Información <i class="fa fa-arrow-circle-right"></i></a>-->
                     <a href="{{ route('clientes.index').'?q[s]=&q[clientes.nombre_cont]=&q[st_seguimiento_id_cont]=4&q[clientes.plantel_id_cont]='.
                                                         DB::table('empleados')->where('user_id', Auth::user()->id)->value('plantel_id').
@@ -166,7 +177,7 @@
                     <h1> {{$a_3}} </h1>
                 </span>
                 <div class="info-box-content">
-                    <h3><span class="info-box-text"> Rechazados en el mes </span></h3>
+                    <h3><span class="info-box-text"> Rechazados totales </span></h3>
                     <!--<a href="{{ route('seguimientos.reporteSeguimientosXEmpleado', array('estatus'=>3)) }}" class="small-box-footer">Más Información <i class="fa fa-arrow-circle-right"></i></a>-->
                     <a href="{{ route('clientes.index').'?q[s]=&q[clientes.nombre_cont]=&q[st_seguimiento_id_cont]=3&q[clientes.plantel_id_cont]='.
                                                         DB::table('empleados')->where('user_id', Auth::user()->id)->value('plantel_id').
@@ -179,9 +190,10 @@
         </div><!-- ./col -->
         @endpermission
     </div><!-- /.row -->
-        
+    
+    
     <div class="row">
-        <div class="form-group col-md-6">
+        <div class="form-group col-md-6 col-sm-6 col-xs-12">
             <div class="box box-danger">
                 <div class="box-header with-border">
                     <h3 class="box-title">
@@ -428,40 +440,48 @@
     </script>
     <script type="text/javascript" src="{{ asset ('/bower_components/AdminLTE/plugins/morris/morris.js') }}"></script>
     <script type="text/javascript" src="{{ asset ('/bower_components/AdminLTE/plugins/morris/raphael-min.js') }}"></script>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    
     <script type="text/javascript">    
         google.charts.load('current', {'packages':['gauge','corechart', 'bar']});
         google.charts.setOnLoadCallback(drawChart);
-        google.charts.setOnLoadCallback(drawVisualization);
         google.charts.setOnLoadCallback(drawVisualization2);
         @foreach($gauge as $grf)
             google.charts.setOnLoadCallback(drawChart_velocimetro{{$grf['id']}});
         @endforeach
 
-        var datos=<?php echo $datos; ?>; 
-        console.log(datos);
+        <?php $i=0; ?>
+        @if(count($fil)>0)
+            @foreach($fil as $f)
+                var datos_{{$i}}=<?php echo json_encode($fil[$i]); ?>; 
+                
+                google.charts.setOnLoadCallback(drawVisualization_{{$i}});
+                
+                function drawVisualization_{{$i}}() {
+                // Some raw data (not necessarily accurate)
+                    var data = google.visualization.arrayToDataTable(datos_{{$i}});
+
+                    var options = {
+                    title : 'Comparativo Concretados - Meta',
+                    vAxis: {title: 'Cantidad'},
+                    hAxis: {title: 'Estatus'},
+                    seriesType: 'bars',
+                    //series: {0: {type: 'line'}}
+
+                    //colors: ['#5a81f1', '#2dca1d']
+                    };
+
+                    var chart = new google.visualization.ColumnChart(document.getElementById('barras_chart_{{$i}}'));
+                    //var chart = new google.charts.Bar(document.getElementById('barras_chart'));
+
+                    chart.draw(data, options);
+                }
+                <?php $i++; ?>
+            @endforeach
+        @endif
+        
+        
 
         var datos2=<?php echo $datos2; ?>; 
-
-        function drawVisualization() {
-                // Some raw data (not necessarily accurate)
-            var data = google.visualization.arrayToDataTable(datos);
-            
-            var options = {
-            title : 'Comparativo Concretados - Meta',
-            vAxis: {title: 'Cantidad'},
-            hAxis: {title: 'Estatus'},
-            seriesType: 'bars',
-            //series: {0: {type: 'line'}}
-
-            //colors: ['#5a81f1', '#2dca1d']
-            };
-
-            var chart = new google.visualization.ColumnChart(document.getElementById('barras_chart'));
-            //var chart = new google.charts.Bar(document.getElementById('barras_chart'));
-
-            chart.draw(data, options);
-        }
 
         function drawVisualization2() {
                 // Some raw data (not necessarily accurate)

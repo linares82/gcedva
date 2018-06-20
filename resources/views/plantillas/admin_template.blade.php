@@ -88,7 +88,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     @include('plantillas/sidebar')
 
     <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper">
+    <div class="content-wrapper" style='heigth:auto;'>
         <!-- Content Header (Page header) -->
         <!--<section class="content-header">
             <h1>
