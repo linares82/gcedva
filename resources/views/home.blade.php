@@ -73,7 +73,7 @@
                 <div class="box box-primary">
                     <div class="box-header with-border">
                         <h4 class="box-title" id=''>
-    <!--                        Avances del mes:-->
+                            CONCRETADOS
                         </h4>
                     </div>
                     <div class="box-body">    
@@ -461,7 +461,7 @@
                     var data = google.visualization.arrayToDataTable(datos_{{$i}});
 
                     var options = {
-                    title : 'Comparativo Concretados - Meta {{$lectivosSt2[$i]->name}}',
+                    title : 'Comparativo Concretados - Meta ',
                     vAxis: {title: 'Cantidad'},
                     hAxis: {title: 'Estatus'},
                     seriesType: 'bars',
