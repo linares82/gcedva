@@ -374,8 +374,8 @@ class HomeController extends Controller
          * 
          */
         //dd($estatusPlantel->toArray());
-        //dd(count($fil));
-        return view('home', compact('avisos', 'a_1', 'a_2', 'a_3', 'a_4', 'grafica2','grafica', 'fil',
+        //dd($lectivosSt2[0]);
+        return view('home', compact('avisos', 'a_1', 'a_2', 'a_3', 'a_4', 'grafica2','grafica', 'fil', 'lectivosSt2',
                                     'avisos_generales', 'avance', 'gauge', 'tabla', 'plantel','estatusPlantel', 'tsuma'))
                     ->with('datos_grafica', json_encode($tabla))
                     ->with('datos', json_encode($datos))

@@ -461,7 +461,7 @@
                     var data = google.visualization.arrayToDataTable(datos_{{$i}});
 
                     var options = {
-                    title : 'Comparativo Concretados - Meta',
+                    title : 'Comparativo Concretados - Meta {{$lectivosSt2[$i]->name}}',
                     vAxis: {title: 'Cantidad'},
                     hAxis: {title: 'Estatus'},
                     seriesType: 'bars',
