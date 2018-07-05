@@ -1055,21 +1055,32 @@ class ClientesController extends Controller {
             $i=0;
             $linea[$i]=$e->nombre." ".$e->ape_paterno." ".$e->ape_materno;
             foreach($estatus as $st){
-               $i++; 
+               $i++;
+                if($st->id==2){
                    $valor=Seguimiento::select(DB::raw('count(st.name) as total'))
                             ->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
                             ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
                             ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
-                            ->join('hactividades as h', 'h.cliente_id','=','c.id')
+                           ->join('hactividades as h', 'h.cliente_id','=','c.id')
                             ->where('st_seguimiento_id', '=', $st->id)
                             ->where('e.id', '=', $e->id)
                             ->where('c.plantel_id', '=', $filtros['plantel_f'])
                             ->where('h.fecha', '>=', $filtros['fecha_f'])
                             ->where('h.fecha', '<=', $filtros['fecha_t'])
-                            //->where('h.detalle','=','Concretado')
-                            ->where('h.asunto','=','Cambio estatus ')
+                           ->where('h.asunto','=','Cambio estatus ')
+                            //->where('seguimientos.created_at', '>=', $l->inicio)
+                            //->where('seguimientos.created_at', '<=', $l->fin)
                             ->value('total');
-                
+               }elseif($st->id>0){
+                   $valor=Seguimiento::select(DB::raw('count(st.name) as total'))
+                            ->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
+                            ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
+                            ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
+                            ->where('st_seguimiento_id', '<>', $st->id)
+                            ->where('e.id', '=', $e->id)
+                            ->where('c.plantel_id', '=', $filtros['plantel_f'])
+                            ->value('total');
+               } 
                $linea[$i]=$valor;
             }
             array_push($tabla, $linea);
