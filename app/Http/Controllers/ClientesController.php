@@ -948,6 +948,9 @@ class ClientesController extends Controller {
         $tabla=array();
         $encabezado=array();
         $encabezado[0]='Empleado';
+        if(!isset($filtros['plantel_f'])){
+            $filtros['plantel_f']=Auth::user()->plantel_id;
+        }
         $estatus = StSeguimiento::where('id','>',0)->get();
         $empleados = Empleado::where('plantel_id','=', $filtros['plantel_f'])
                              ->where('puesto_id', '=', 2)->get();
@@ -1036,6 +1039,9 @@ class ClientesController extends Controller {
         $tabla=array();
         $encabezado=array();
         $encabezado[0]='Empleado';
+        if(!isset($filtros['plantel_f'])){
+            $filtros['plantel_f']=Auth::user()->plantel_id;
+        }
         $estatus = StSeguimiento::where('id','>',0)->get();
         $empleados = Empleado::where('plantel_id','=', $filtros['plantel_f'])
                              ->where('puesto_id', '=', 2)->get();
