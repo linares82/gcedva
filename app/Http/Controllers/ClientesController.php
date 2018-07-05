@@ -1000,36 +1000,6 @@ class ClientesController extends Controller {
         
         return view('clientes.reportes.ecap_r', compact('tabla', 'plantel'))
                 ->with('datos_grafica', json_encode($tabla));
-        /*$a_1 = Seguimiento::select(DB::raw('concat(e.nombre, " ",e.ape_paterno," ",e.ape_materno) as empleado'),'st.name as estatus',
-                                   DB::raw('count(st.name) as total'))
-                            ->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
-                            ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
-                            ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
-                            ->where('st_seguimiento_id', '=', 2)
-                            ->where('c.plantel_id', '=', $filtros['plantel_f'])
-                            ->where('seguimientos.created_at', '>=', $l->inicio)
-                            ->where('seguimientos.created_at', '<=', $l->fin)
-                            ->where('e.puesto_id', '=', 2)
-                            ->groupBy('empleado')
-                            ->groupBy('st.name');
-                            //->get();
-        $a_2 = Seguimiento::select(DB::raw('concat(e.nombre, " ",e.ape_paterno," ",e.ape_materno) as empleado'),'st.name as estatus',
-                                   DB::raw('count(st.name) as total'))
-                            ->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
-                            ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
-                            ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
-                            ->where('st_seguimiento_id', '<>', 2)
-                            ->where('c.plantel_id', '=', $filtros['plantel_f'])
-                            ->where('e.puesto_id', '=', 2)
-                            ->groupBy('empleado')
-                            ->groupBy('st.name')
-                            ->unionAll($a_1)
-                            ->get();
-        dd($a_2->toArray());
-         * 
-         */
-        //$registros=$a_2->toArray();
-        //dd($registros);
         
         
     }
@@ -1055,5 +1025,63 @@ class ClientesController extends Controller {
         return $pdf->download('reporte.pdf');
     }
     
-    
+    public function reportesEppa() {
+        return view('clientes.reportes.eppa')->with('list', Cliente::getListFromAllRelationApps());
+    }
+
+    public function reportesEppaR(Request $request) {
+        $filtros = $request->all();
+        $f = date("Y-m-d");
+        
+        $tabla=array();
+        $encabezado=array();
+        $encabezado[0]='Empleado';
+        $estatus = StSeguimiento::where('id','>',0)->get();
+        $empleados = Empleado::where('plantel_id','=', $filtros['plantel_f'])
+                             ->where('puesto_id', '=', 2)->get();
+        
+        //dd($empleados->toArray());
+        $i=1;
+        foreach($estatus as $st){
+            if($st->id>0){
+                $encabezado[$i]=$st->name;
+                $i++;
+            }
+        }
+        array_push($tabla, $encabezado);
+        //dd($encabezado);
+        foreach($empleados as $e){
+            $linea=array();
+            $i=0;
+            $linea[$i]=$e->nombre." ".$e->ape_paterno." ".$e->ape_materno;
+            foreach($estatus as $st){
+               $i++; 
+                   $valor=Seguimiento::select(DB::raw('count(st.name) as total'))
+                            ->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
+                            ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
+                            ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
+                            ->join('hactividades as h', 'h.cliente_id','=','c.id')
+                            ->where('st_seguimiento_id', '=', $st->id)
+                            ->where('e.id', '=', $e->id)
+                            ->where('c.plantel_id', '=', $filtros['plantel_f'])
+                            ->where('h.fecha', '>=', $filtros['fecha_f'])
+                            ->where('h.fecha', '<=', $filtros['fecha_t'])
+                            ->where('h.detalle','=','Concretado')
+                            ->where('h.asunto','=','Cambio estatus ')
+                            ->value('total');
+                
+               $linea[$i]=$valor;
+            }
+            array_push($tabla, $linea);
+        }
+        //dd($tabla);
+        $p=Plantel::find($filtros['plantel_f']);
+        $plantel=$p->razon;
+        //dd($plantel);
+        
+        return view('clientes.reportes.eppa_r', compact('tabla', 'plantel'))
+                ->with('datos_grafica', json_encode($tabla));
+        
+        
+    }
 }

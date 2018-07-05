@@ -729,7 +729,16 @@ Route::get('medios/index', array(
         'middleware' => 'permission:clientes.cuentaEstatusClientes',
         'uses' => 'ClientesController@cuentaEstatusClientes')
     )->middleware('auth');
-    
+    Route::get('clientes/reportes/eppa', array(
+        'as' => 'clientes.reportes.eppa',
+        'middleware' => 'permission:clientes.indexReportes',
+        'uses' => 'ClientesController@reportesEppa')
+    )->middleware('auth');
+    Route::post('clientes/reportes/eppa', array(
+        'as' => 'clientes.reportes.eppa',
+        'middleware' => 'permission:clientes.indexReportes',
+        'uses' => 'ClientesController@reportesEppaR')
+    )->middleware('auth');
     ////////////////////////////////////
     Route::get('clientesa/index', array(
         'as' => 'clientesa.index',
