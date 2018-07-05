@@ -14,8 +14,8 @@ class AddImagenEspecialidadTable extends Migration
     public function up()
     {
         Schema::table('especialidads', function(Blueprint $table) {
-            $table->string('imagen');
-            $table->string('imagen_anterior');
+            $table->string('imagen')->nullable();
+            $table->string('imagen_anterior')->nullable();
         });
     }
 

@@ -127,7 +127,7 @@
                                     <a class="btn btn-xs btn-warning" href="{{ route('turnos.edit', $turno->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
                                     @endpermission
                                     @permission('turnos.destroy')
-                                    {!! Form::model($turno, array('route' => array('turnos.destroy', $turno->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}
+                                    {!! Form::model($turno, array('route' => array('turnos.destroy', $turno->id),'method' => 'get', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}
                                         <button type="submit" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> Borrar</button>
                                     {!! Form::close() !!}
                                     @endpermission
