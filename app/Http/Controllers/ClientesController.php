@@ -1066,7 +1066,7 @@ class ClientesController extends Controller {
                             ->where('c.plantel_id', '=', $filtros['plantel_f'])
                             ->where('h.fecha', '>=', $filtros['fecha_f'])
                             ->where('h.fecha', '<=', $filtros['fecha_t'])
-                            ->where('h.detalle','=','Concretado')
+                            //->where('h.detalle','=','Concretado')
                             ->where('h.asunto','=','Cambio estatus ')
                             ->value('total');
                 
