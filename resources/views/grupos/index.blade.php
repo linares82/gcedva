@@ -222,6 +222,7 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'plantels.razon', 'title' => 'Plantel'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'name', 'title' => 'GRUPO'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'limite_alumnos', 'title' => 'LIMITE ALUMNOS'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'minimo_alumnos', 'title' => 'MINIMO ALUMNOS'])</th>
@@ -233,6 +234,7 @@
                         @foreach($grupos as $grupo)
                             <tr>
                                 <td><a href="{{ route('grupos.show', $grupo->id) }}">{{$grupo->id}}</a></td>
+                                <td>{{$grupo->plantel->razon}}</td>
                                 <td>{{$grupo->name}}</td>
                                 <td>{{$grupo->limite_alumnos}}</td>
                                 <td>{{$grupo->minimo_alumnos}}</td>

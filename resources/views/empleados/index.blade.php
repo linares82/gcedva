@@ -48,7 +48,12 @@
                     <form class="Empleado_search" id="search" action="{{ route('empleados.index') }}" accept-charset="UTF-8" method="get">
                         <input type="hidden" name="q[s]" value="{{ @(Request::input('q')['s']) ?: '' }}" />
                         <div class="form-horizontal">
-
+                            <div class="form-group col-md-4">
+                                <label class="col-sm-12 control-label" for="q_cve_empleado_lt">ID</label>
+                                <div class="col-sm-12">
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['id_lt']) ?: '' }}" name="q[id_lt]" id="q_id_lt" />
+                                </div>
+                            </div>
                             <!--
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_cve_empleado_gt">CVE_EMPLEADO</label>
@@ -61,6 +66,7 @@
                                 </div>
                             </div>
                             -->
+                            
                             <div class="form-group col-md-4">
                                 <label class="col-sm-12 control-label" for="q_cve_empleado_cont">CLAVE EMPLEADO</label>
                                 <div class="col-sm-12">
