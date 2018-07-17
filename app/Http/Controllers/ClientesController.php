@@ -156,7 +156,8 @@ class ClientesController extends Controller {
         }
         $param = Param::where('llave', '=', 'msj_text')->first();
         if ($input['cve_cliente'] == "") {
-            $input['cve_cliente'] = 'Codigo: ' . substr(Hash::make(rand(0, 1000)), 2, 8) . $param->valor;
+            //$input['cve_cliente'] = 'Codigo: ' . substr(Hash::make(rand(0, 1000)), 2, 8) . $param->valor;
+            $input['cve_cliente'] = $param->valor;
         }
         if (!isset($input['promociones'])) {
             $input['promociones'] = 0;
