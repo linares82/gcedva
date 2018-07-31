@@ -941,13 +941,6 @@
                                         @if($df->doc_obligatorio == 1)
                                         <button class="btn btn-success btn-xs"><span class="glyphicon glyphicon-ok"></span></button>
                                         @else
-                                        @if($empleado->extranjero_bnd==1 and $df->id==18)
-                                        <button class="btn btn-success btn-xs"><span class="glyphicon glyphicon-ok"></span></button>
-                                        @elseif($empleado->alimenticia_bnd==1 and $df->id==17)
-                                        <button class="btn btn-success btn-xs"><span class="glyphicon glyphicon-ok"></span></button>
-                                        @elseif($empleado->genero==1 and $df->id==14)
-                                        <button class="btn btn-success btn-xs"><span class="glyphicon glyphicon-ok"></span></button>
-                                        @else
                                         <button class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-remove"></span></button>
                                         @endif
 
