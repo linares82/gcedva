@@ -942,7 +942,7 @@
                                         <button class="btn btn-success btn-xs"><span class="glyphicon glyphicon-ok"></span></button>
                                         @else
                                         <button class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-remove"></span></button>
-                                        @endif
+                                        
 
                                         @endif
                                     </td>
