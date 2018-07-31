@@ -1102,4 +1102,38 @@ class ClientesController extends Controller {
         
         
     }
+    
+    public function rpt_sms_mail() {
+        
+        return view('clientes.reportes.sms_mail')->with('list', Cliente::getListFromAllRelationApps());
+    }
+    
+    public function rpt_sms_mailr(Request $request) {
+        $data=$request->all();
+        //dd($data);
+        $registros=Cliente::select('clientes.id','clientes.nombre','clientes.nombre2','clientes.ape_paterno','clientes.ape_materno',
+                                   'p.razon as plantel', DB::raw('concat(e.nombre," ",e.ape_paterno," ",e.ape_materno) as empleado'),
+                                   'clientes.tel_cel',
+                                   DB::raw('if(clientes.celular_confirmado=1,"SI","NO") as celular_confirmado'),'clientes.mail',
+                                   DB::raw('if(clientes.correo_confirmado=1,"SI","NO") as correo_confirmado'))
+                          ->join('plantels as p','p.id','=','clientes.plantel_id')
+                          ->join('empleados as e','e.id','=','clientes.empleado_id')
+                          ->whereBetween('clientes.plantel_id',[$data['plantel_f'],$data['plantel_t']])
+                          ->whereDate('clientes.created_at', '>',date_format(date_create($data['fecha_f']),'Y/m/d H:i:s'))
+                          ->whereDate('clientes.created_at', '<',date_format(date_create($data['fecha_t']),'Y/m/d H:i:s'))
+                          ->get();
+        //dd($registros->toArray());
+        $csvExporter = new \Laracsv\Export();
+        $csvExporter->build($registros, ['id'=>'ID','nombre'=>'PRIMER NOMBRE',
+                                                    'nombre2'=>'SEGUNDO NOMBRE',
+                                                    'ape_paterno'=>'A. PATERNO',
+                                                    'ape_materno'=>'A. MATERNO',
+                                                    'plantel'=>'PLANTEL',
+                                                    'empleado'=>'EMPLEADO',
+                                                    'tel_cel'=>'CELULAR',
+                                                    'celular_confirmado'=>'CELULAR CONFIRMADO',
+                                                    'mail'=>'MAIL',
+                                                    'correo_confirmado'=>'CORREO CONFIRMADO'])->download();
+        
+    }
 }

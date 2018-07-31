@@ -26,6 +26,7 @@
         "pqb/filemanager-laravel": "2.*",
         "studio/laravel-totem": "1.0",
         "twilio/sdk": "4.10",
+        "usmanhalalit/laracsv": "1.*@dev",
         "zizaco/entrust": "5.2.x-dev"
     },
     "require-dev": {

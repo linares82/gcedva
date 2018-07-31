@@ -17,6 +17,7 @@ use Auth;
 use App\Http\Requests\updateInscripcion;
 use App\Http\Requests\createInscripcion;
 use DB;
+use PDF;
 
 class InscripcionsController extends Controller {
 
@@ -242,5 +243,47 @@ class InscripcionsController extends Controller {
 		//dd($clientes->toArray());
 		return view('inscripcions.reinscripcion', compact('clientes'))
 			->with( 'list', Hacademica::getListFromAllRelationApps() );
+	}
+        
+        public function lista()
+	{
+		return view('inscripcions.reportes.lista_alumnos')
+			->with( 'list', Inscripcion::getListFromAllRelationApps() );
+	}
+        
+        public function listar(Request $request)
+	{
+                $data=$request->all();
+                //dd($data);
+                $registros= Inscripcion::select('c.nombre','c.nombre2','c.ape_paterno','c.ape_materno', 'g.name as grupo','g.name as lectivo',
+                                               DB::raw('concat(e.nombre," ",e.ape_paterno," ",e.ape_materno) as maestro'),'gra.name as grado',
+                                               'p.razon as plantel')
+                                       ->join('clientes as c', 'c.id', '=', 'inscripcions.cliente_id')
+                                       ->join('grupos as g', 'g.id', '=', 'inscripcions.grupo_id')
+                                       ->join('lectivos as l','l.id', '=', 'inscripcions.lectivo_id')
+                                       ->join('asignacion_academicas as aa', 'aa.grupo_id','=','g.id')
+                                       ->join('empleados as e','e.id','=','aa.empleado_id')
+                                       ->join('grados as gra','gra.id','=','inscripcions.grado_id')
+                                       ->join('plantels as p','p.id','=','c.plantel_id')
+                                       ->where('inscripcions.plantel_id', $data['plantel_f'])
+                                       ->where('inscripcions.lectivo_id',$data['lectivo_f'])
+                                       ->whereBetween('inscripcions.grupo_id',[$data['grupo_f'],$data['grupo_t']])
+                                       ->whereBetween('inscripcions.grado_id',[$data['grado_f'],$data['grado_t']])
+                                       ->orderBy('inscripcions.plantel_id')
+                                       ->orderBy('inscripcions.lectivo_id')
+                                       ->orderBy('inscripcions.grupo_id')
+                                       ->orderBy('inscripcions.grado_id')
+                                       ->get();
+                //dd($registros->toArray());
+                                         
+		/*return view('inscripcions.reportes.lista_alumnosr',compact('registros'))
+			->with( 'list', Inscripcion::getListFromAllRelationApps() );
+                 * */
+                
+                PDF::setOptions(['defaultFont' => 'arial']);
+
+                $pdf = PDF::loadView('inscripcions.reportes.lista_alumnosr', array('registros'=>$registros))
+                        ->setPaper('letter', 'portrait');
+                return $pdf->download('reporte.pdf');
 	}
 }

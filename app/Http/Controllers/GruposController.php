@@ -191,4 +191,5 @@ class GruposController extends Controller {
 
             return redirect()->route('grupos.edit', $g)->with('message', 'Registro Actualizado.');
         }
+      
 }
