@@ -180,18 +180,62 @@ class CajasController extends Controller {
         
         public function buscarVenta(Request $request){
             $data=$request->all();
-            
+            //dd($data);
             $empleado=Empleado::where('user_id', '=', Auth::user()->id)->first();
-            //dd($empleado);
+            //dd($empleado->toArray());
             $caja=Caja::where('consecutivo', '=', $data['consecutivo'])->where('plantel_id', '=', $data['plantel_id'])->first();
             //dd($caja);
             $combinaciones=CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
             if(is_object($caja)){
+                //Apliacion de recargos
+                if($caja->st_caja_id==0){
+                    //dd($caja->st_caja_id);
+                    $recargo=0;
+                    foreach($caja->cajaLns as $ln){
+                        //dd($ln->adeudo->planPagoLn->reglaRecargos);
+                        if(isset($ln->adeudo->planPagoLn->reglaRecargos) and count($ln->adeudo->planPagoLn->reglaRecargos)>0){
+                            foreach($ln->adeudo->planPagoLn->reglaRecargos as $regla){
+                                $dias=date_diff(date_create(date_format(date_create(date('Y/m/d')),'Y/m/d')), date_create($ln->adeudo->fecha_pago));
+                                $dia=$dias->format('%R%a')*-1;
+                                //dd($dia);
+                                if($dia >= $regla->dia_inicio and $dia <= $regla->dia_fin){
+                                    
+                                    if($regla->tipo_regla_id==1){
+                                        //dd($regla->porcentaje);
+                                        if($regla->porcentaje>0){
+                                            //dd($regla->porcentaje);
+                                            $ln['recargo']=$ln->adeudo->monto*$regla->porcentaje;
+                                            //echo $caja_ln['recargo'];
+                                        }else{
+                                            $ln['descuento']=$ln->adeudo->monto*$regla->porcentaje*-1;
+                                            //echo $caja_ln['descuento'];
+                                        }
+
+                                    }elseif($regla->tipo_regla_id==2){
+                                        if($regla->monto>0){
+                                            $ln['recargo']=$regla->monto;
+                                        }else{
+                                            $ln['descuento']=$regla->monto*-1;
+                                        }
+
+                                    }
+                                }
+                                $ln->save();
+                            }
+                        }
+                        $recargo=$recargo+$ln['recargo'];
+                    }
+                    $caja->recargo=$recargo;
+                    $caja->total=$caja->subtotal+$caja->recargo;
+                    $caja->save();
+                }
+                
                 $cliente=Cliente::find($caja->cliente_id);
                 return view('cajas.caja', compact('cliente', 'caja', 'combinaciones'))
                         ->with( 'list', Caja::getListFromAllRelationApps() )
                         ->with( 'list1', CajaLn::getListFromAllRelationApps() );           
             }
+            
             return view('cajas.caja')->with('message','Sin coincidencias');           
         }
         
@@ -236,7 +280,7 @@ class CajasController extends Controller {
                         //dd($dias);
                         $dia=$dias->format('%R%a')*-1;
                         
-                        if($dia>$regla->dia_inicio and $dia<$regla->dia_fin){
+                        if($dia>=$regla->dia_inicio and $dia<=$regla->dia_fin){
                             if($regla->tipo_regla_id==1){
                                 //dd($regla->porcentaje);
                                 if($regla->porcentaje>0){
@@ -420,4 +464,24 @@ class CajasController extends Controller {
                 ->setPaper('letter', 'portrait');
         return $pdf->download('reporte.pdf');
     }
-}
+    
+    public function eliminarRecargo(Request $request){
+        $data=$request->all();
+        
+        $caja=Caja::find($data['caja_id']);
+        if($caja->st_caja_id==0){
+            $caja->recargo=0;
+            $caja->total=$caja->recargo+$caja->subtotal;
+            $caja->save();
+        }
+        
+        $cliente=Cliente::find($caja->cliente_id);
+        $combinaciones=CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
+        
+        return view('cajas.caja', compact('cliente', 'caja','combinaciones'))
+                    ->with( 'list', Caja::getListFromAllRelationApps() )
+                    ->with( 'list1', CajaLn::getListFromAllRelationApps() );           
+        
+    }
+            
+ }

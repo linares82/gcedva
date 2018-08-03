@@ -49,7 +49,7 @@
                             <td>
                                 <div class="form-group col-md-4 @if($errors->has('est_asistencia_id')) has-error @endif">
                                     
-                                    {!! Form::select("est_asistencia_id", $list["EstAsistencium"], $s->est_asistencia_id, array("class" => "form-control select_seguridad", "id" => "est_asistencia_id".$s->id."-field")) !!}
+                                    {!! Form::select("est_asistencia_id", $list["EstAsistencium"], $s->est_asistencia_id, array("class" => "form-control select_seguridad1", "id" => "est_asistencia_id".$s->id."-field")) !!}
                                     @if($errors->has("est_asistencia_id"))
                                      <span class="help-block">{{ $errors->first("est_asistencia_id") }}</span>
                                     @endif
@@ -86,6 +86,7 @@
       // assuming the controls you want to attach the plugin to
       // have the "datepicker" class set
       //Campo de fecha
+      
       $('#fecha-field').Zebra_DatePicker({
         days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
         months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
@@ -116,6 +117,7 @@
                     }
             });
         }
+        
 </script>
 
 @endpush

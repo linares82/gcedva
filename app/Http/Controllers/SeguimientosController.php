@@ -584,7 +584,7 @@ class SeguimientosController extends Controller {
     }
 
     public function analitica_actividadesf() {
-        $fecha_inicio = date('Y-m-j', strtotime('-8 day', strtotime(date('Y-m-j'))));
+        $fecha_inicio = date('Y-m-j', strtotime('-15 day', strtotime(date('Y-m-j'))));
         $e = Empleado::where('user_id', '=', Auth::user()->id)->first();
         $plantel=$e->plantel_id;
         //dd($fecha_inicio);
