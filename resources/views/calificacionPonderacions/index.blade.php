@@ -50,20 +50,20 @@
 
                             <!--
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_calificacion_id_gt">CALIFICACION_ID</label>
+                                <label class="col-sm-2 control-label" for="q_calificacions.calificacion_gt">CALIFICACION_CALIFICACION</label>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['calificacion_id_gt']) ?: '' }}" name="q[calificacion_id_gt]" id="q_calificacion_id_gt" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['calificacions.calificacion_gt']) ?: '' }}" name="q[calificacions.calificacion_gt]" id="q_calificacions.calificacion_gt" />
                                 </div>
                                 <div class=" col-sm-1 text-center"> - </div>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['calificacion_id_lt']) ?: '' }}" name="q[calificacion_id_lt]" id="q_calificacion_id_lt" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['calificacions.calificacion_lt']) ?: '' }}" name="q[calificacions.calificacion_lt]" id="q_calificacions.calificacion_lt" />
                                 </div>
                             </div>
                             -->
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_calificacion_id_cont">CALIFICACION_ID</label>
+                                <label class="col-sm-2 control-label" for="q_calificacions.calificacion_cont">CALIFICACION_CALIFICACION</label>
                                 <div class=" col-sm-9">
-                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['calificacion_id_cont']) ?: '' }}" name="q[calificacion_id_cont]" id="q_calificacion_id_cont" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['calificacions.calificacion_cont']) ?: '' }}" name="q[calificacions.calificacion_cont]" id="q_calificacions.calificacion_cont" />
                                 </div>
                             </div>
                                                     <!--
@@ -161,7 +161,7 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'calificacion_id', 'title' => 'CALIFICACION_ID'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'calificacions.calificacion', 'title' => 'CALIFICACION_CALIFICACION'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'ponderacion_id', 'title' => 'PONDERACION_ID'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'calificacion_parcial', 'title' => 'CALIFICACION_PARCIAL'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
@@ -174,7 +174,7 @@
                         @foreach($calificacionPonderacions as $calificacionPonderacion)
                             <tr>
                                 <td><a href="{{ route('calificacionPonderacions.show', $calificacionPonderacion->id) }}">{{$calificacionPonderacion->id}}</a></td>
-                                <td>{{$calificacionPonderacion->calificacion_id}}</td>
+                                <td>{{$calificacionPonderacion->calificacion->calificacion}}</td>
                     <td>{{$calificacionPonderacion->ponderacion_id}}</td>
                     <td>{{$calificacionPonderacion->calificacion_parcial}}</td>
                     <td>{{$calificacionPonderacion->usu_alta_id}}</td>

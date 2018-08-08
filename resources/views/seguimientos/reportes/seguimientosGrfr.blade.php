@@ -45,7 +45,8 @@
                         Mes: element.Mes,
                         Meta: element.Meta,
                         Medio: element.medio,
-                        Usuario: element.Usuario
+                        Usuario: element.Usuario,
+                        Lectivo: element.lectivo
                     });
                 });
             };

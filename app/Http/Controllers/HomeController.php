@@ -643,16 +643,22 @@ class HomeController extends Controller
     }
     
     public function tieneAvisos(){
-        $e=Empleado::where('user_id', '=', Auth::user()->id)->first();
-        $avisos_generales=PivotAvisoGralEmpleado::where('leido','=', 0)
-                                    ->where('enviado','=', 1)
-                                    ->where('empleado_id', '=', $e->id)
-                                    ->get();
         $total_msj=0;
-        foreach($avisos_generales as $ag){
-            $total_msj++;
+        $id=Auth::user()->id;
+        if(isset($id)){
+            $e=Empleado::where('user_id', '=', Auth::user()->id)->first();
+            $avisos_generales=PivotAvisoGralEmpleado::where('leido','=', 0)
+                                        ->where('enviado','=', 1)
+                                        ->where('empleado_id', '=', $e->id)
+                                        ->get();
+
+            foreach($avisos_generales as $ag){
+                $total_msj++;
+            }
+        
         }
         return $total_msj;
+        
     }
         
 }

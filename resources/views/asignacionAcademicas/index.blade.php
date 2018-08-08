@@ -182,6 +182,10 @@
                                     @permission('asistenciasRs.index')
                                     <a class="btn btn-xs btn-success" href="{{ route('asistenciaRs.buscar', $asignacionAcademica->id) }}"><i class="glyphicon glyphicon-edit"></i>Asistencias</a>
                                     @endpermission
+                                    @permission('hacademicas.calificacionGrupo')
+                                    <a class="btn btn-xs btn-info" href="{{ route('hacademicas.calificacionGrupo', ['asignacion'=>$asignacionAcademica->id]) }}"><i class="glyphicon glyphicon-edit"></i>Calificaciones</a>
+                                    @endpermission
+                                    
                                 </td>
                             </tr>
                         @endforeach

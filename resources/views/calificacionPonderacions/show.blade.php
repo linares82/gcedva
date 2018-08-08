@@ -39,8 +39,8 @@
                     <p class="form-control-static">{{$calificacionPonderacion->id}}</p>
                 </div>
                 <div class="form-group">
-                     <label for="calificacion_id">CALIFICACION_ID</label>
-                     <p class="form-control-static">{{$calificacionPonderacion->calificacion_id}}</p>
+                     <label for="calificacion_calificacion">CALIFICACION_CALIFICACION</label>
+                     <p class="form-control-static">{{$calificacionPonderacion->calificacion->calificacion}}</p>
                 </div>
                     <div class="form-group">
                      <label for="ponderacion_id">PONDERACION_ID</label>

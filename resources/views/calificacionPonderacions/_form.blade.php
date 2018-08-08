@@ -1,6 +1,6 @@
                 <div class="form-group @if($errors->has('calificacion_id')) has-error @endif">
-                       <label for="calificacion_id-field">Calificacion_id</label>
-                       {!! Form::text("calificacion_id", null, array("class" => "form-control input-sm", "id" => "calificacion_id-field")) !!}
+                       <label for="calificacion_id-field">Calificacion_calificacion</label>
+                       {!! Form::select("calificacion_id", $list["Calificacion"], null, array("class" => "form-control input-sm", "id" => "calificacion_id-field")) !!}
                        @if($errors->has("calificacion_id"))
                         <span class="help-block">{{ $errors->first("calificacion_id") }}</span>
                        @endif
