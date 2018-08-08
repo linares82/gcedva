@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use App\HAcademica;
+use App\Hacademica;
 use App\Materium;
 use App\AsignacionAcademica;
 use App\Calificacion;
