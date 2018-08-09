@@ -373,13 +373,78 @@ class HomeController extends Controller
         /* Fin tabla de estatus por plantel
          * 
          */
+        
+        /////////////////////////Grficas direccion////////////////////////////
+        
+        $lectivoss = Lectivo::where('id','<',3)->get();
+        $tablass=array();
+        $encabezados=array();
+        
+        $estatuss = StSeguimiento::where('id','>',0)->get();
+        //dd($estatuss->toArray());
+        /*$is=0;
+        foreach($estatuss as $sts){
+            if($sts->id>0){
+                $encabezados[$is]=$sts->name;
+                $is++;
+            }
+        }*/
+        //array_push($encabezados,array('Estatus','Total'));
+        //dd($encabezados);
+        $lineas=array();
+        $is=0;
+        foreach($lectivoss as $ls){
+            
+            unset($tablas);
+            $tablas=array();
+            
+            
+            $lineas=array();
+            array_push($lineas, array('Estatus','Total'));
+            foreach($estatuss as $sts){  
+                 if($sts->id==2){
+                    $valors=Seguimiento::select(DB::raw('count(st.name) as total'))
+                             ->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
+                             ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
+                             ->join('inscripcions as i','i.cliente_id','=','c.id')
+                             ->where('st_seguimiento_id', '=', $st->id)
+                             ->where('i.lectivo_id', '=', $l->id)
+                             ->value('total');
+                }elseif($sts->id>0){
+                    $valors=Seguimiento::select(DB::raw('count(st.name) as total'))
+                             ->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
+                             ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
+                             ->where('st_seguimiento_id', '=', $st->id)
+                             ->value('total');
+                } 
+                //$lineas[$is]=$valors;
+                array_push($lineas, array($sts->name,$valors));
+                $is++;
+             }
+             //dd($lineas);
+             array_push($tablas, $lineas);
+             //dd($tablas);
+             array_push($tablass, $tablas);
+        }
+        //dd($tablass[1][0]);
+        
+        /////////////////////////Fin Grficas direccion////////////////////////////
+        
+        
         //dd($estatusPlantel->toArray());
         //dd($lectivosSt2[0]);
+        //$lectivos=Lectivo::where('id','<',3)->get();
+        //dd($lectivos);
         return view('home', compact('avisos', 'a_1', 'a_2', 'a_3', 'a_4', 'grafica2','grafica', 'fil', 'lectivosSt2',
-                                    'avisos_generales', 'avance', 'gauge', 'tabla', 'plantel','estatusPlantel', 'tsuma'))
+                                    'avisos_generales', 'avance', 'gauge', 'tabla', 'plantel','estatusPlantel', 'tsuma','lectivoss'))
                     ->with('datos_grafica', json_encode($tabla))
                     ->with('datos', json_encode($datos))
-                    ->with('datos2', json_encode($datos2));
+                    ->with('datos2', json_encode($datos2))
+                    ->with('grfDir1', json_encode($tablass[0][0]))
+                    ->with('grfDir2', json_encode($tablass[1][0]))
+                    ->with('grfDir3', json_encode($tablass[2][0]));
+
+                     
     }
 
     public function grfEstatusXEmpleado(){

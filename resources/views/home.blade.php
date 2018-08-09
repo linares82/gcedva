@@ -28,7 +28,27 @@
             </div>
         </div>
         @endpermission
-    
+        
+    @permission('repDireccion')
+        @foreach($lectivoss as $l)
+	<div class="form-group col-md-4 col-sm-4 col-xs-4">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">
+                        {{$l->name}}
+                    </h3>
+                </div>
+                <div class="box-body">
+                    <div id="grfDir{{$l->id+1}}" style="width: auto; height: auto;">
+                    </div>
+                    <a href="{{route('direccion.grfr', array('lectivo'=>$l->id))}}" class="btn btn-xs btn-primary">Análisis Concretados</a>
+                </div>
+            </div>
+        </div>
+        @endforeach
+        
+        @endpermission   
+        
     <div class="row">
         <div class="form-group col-md-6 col-sm-6 col-xs-12" style='display: none'>
             <div class="box box-primary">
@@ -420,23 +440,81 @@
 @push('scripts')
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
-      google.charts.load('current', {'packages':['corechart']});
+      google.charts.load('current', {'packages':['corechart','bar']});
       google.charts.setOnLoadCallback(drawVisualization);
+      google.charts.setOnLoadCallback(drawgrfDir1);
+      google.charts.setOnLoadCallback(drawgrfDir2);
+      google.charts.setOnLoadCallback(drawgrfDir3);
 
-      function drawVisualization() {
+    function drawVisualization() {
         // Some raw data (not necessarily accurate)
         var data = google.visualization.arrayToDataTable(<?php echo $datos_grafica; ?>);
 
-    var options = {
-      title : 'Concretado por periodo y Totales de estatus por Empleado del plantel {{$plantel}}',
-      vAxis: {title: 'Cantidad de Clientes por Estatus'},
-      hAxis: {title: 'Empleado'},
-      seriesType: 'bars'
-    };
+        var options = {
+          title : 'Concretado por periodo y Totales de estatus por Empleado del plantel {{$plantel}}',
+          vAxis: {title: 'Cantidad de Clientes por Estatus'},
+          hAxis: {title: 'Empleado'},
+          seriesType: 'bars'
+        };
 
-    var chart = new google.visualization.ComboChart(document.getElementById('chart_div'));
-    chart.draw(data, options);
-  }
+        var chart = new google.visualization.ComboChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+    }
+    
+    function drawgrfDir1() {
+        // Some raw data (not necessarily accurate)
+        var dataA = google.visualization.arrayToDataTable(<?php echo $grfDir1; ?>);
+
+        var optionsA = {
+          title : '',
+          vAxis: {title: 'Cantidad Clientes Por Estatus'},
+          hAxis: {title: 'Estatus'},
+          seriesType: 'bars',
+          series: {
+                0:{color: 'red'},
+          }
+        };
+        
+        var chartA = new google.visualization.ComboChart(document.getElementById('grfDir1'));
+        chartA.draw(dataA, optionsA);
+    }
+    
+    function drawgrfDir2() {
+        // Some raw data (not necessarily accurate)
+        var dataA = google.visualization.arrayToDataTable(<?php echo $grfDir2; ?>);
+
+        var optionsA = {
+          title : '',
+          vAxis: {title: 'Cantidad Clientes Por Estatus'},
+          hAxis: {title: 'Estatus'},
+          seriesType: 'bars',
+          series: {
+                0:{color: 'orange'},
+          }
+        };
+        
+        var chartA = new google.visualization.ComboChart(document.getElementById('grfDir2'));
+        chartA.draw(dataA, optionsA);
+    }
+    
+    function drawgrfDir3() {
+        // Some raw data (not necessarily accurate)
+        var dataA = google.visualization.arrayToDataTable(<?php echo $grfDir3; ?>);
+
+        var optionsA = {
+          title : '',
+          vAxis: {title: 'Cantidad Clientes Por Estatus'},
+          hAxis: {title: 'Estatus'},
+          seriesType: 'bars',
+          series: {
+                0:{color: 'purple'},
+          }
+        };
+        
+        var chartA = new google.visualization.ComboChart(document.getElementById('grfDir3'));
+        chartA.draw(dataA, optionsA);
+    }
+    
     </script>
     <script type="text/javascript" src="{{ asset ('/bower_components/AdminLTE/plugins/morris/morris.js') }}"></script>
     <script type="text/javascript" src="{{ asset ('/bower_components/AdminLTE/plugins/morris/raphael-min.js') }}"></script>
@@ -466,7 +544,7 @@
                     hAxis: {title: 'Estatus'},
                     seriesType: 'bars',
                     //series: {0: {type: 'line'}}
-
+                    
                     //colors: ['#5a81f1', '#2dca1d']
                     };
 
@@ -548,45 +626,15 @@
         }//End Guagace Chart
         @endforeach
 
-        /*
-        $(function() {
-         var chart = new Morris.Bar({
-                // ID of the element in which to draw the chart.
-                element: 'myfirstchart',
-                // Chart data records -- each entry in this array corresponds to a point on
-                // the chart.
-                data: [0, 0],
-                // The name of the data record attribute that contains x-values.
-                xkey: 'Estatus',
-                // A list of names of data record attributes that contain y-values.
-                ykeys: ['Valor'],
-                // Labels for the ykeys -- will be displayed when you hover over the
-                // chart.
-                labels: ['Valor']
-                });
-        // Fire off an AJAX request to load the data
-        $.ajax({
-            type: "GET",
-            dataType: 'json',
-            url: "{{route('grfEstatusXEmpleado')}}", // This is the URL to the API
-            //data: { days: 7 } // Passing a parameter to the API to specify number of days
-            })
-            .done(function( data ) {
-            // When the response to the AJAX request comes back render the chart with new data
-                //alert(data);
-                chart.setData(data);
-            })
-            .fail(function() {
-            // If there is no communication between the server, show an error
-                alert( "error occured" );
-            });
-        });
-        */
         var popup;
         function DetalleAviso(id) {
             popup = window.open("{{url('avisoGrals/showModal')}}"+"?id="+id, "Popup", "width=800,height=350");
             popup.focus();
             return false
+        }
+        
+        function analisisEstatus(){
+            
         }
     </script>
 @endpush

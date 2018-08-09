@@ -32,7 +32,8 @@ class EspecialidadsController extends Controller {
 	 */
 	public function create()
 	{
-		return view('especialidads.create')
+                $lectivos=Lectivo::where('id','<', 3)->pluck('name', 'id');
+		return view('especialidads.create', compact('lectivos'))
 			->with( 'list', Especialidad::getListFromAllRelationApps() );
 	}
 
@@ -76,7 +77,8 @@ class EspecialidadsController extends Controller {
 	public function edit($id, Especialidad $especialidad)
 	{
 		$especialidad=$especialidad->find($id);
-		return view('especialidads.edit', compact('especialidad'))
+                $lectivos=Lectivo::where('id','<', 3)->pluck('name', 'id');
+		return view('especialidads.edit', compact('especialidad', 'lectivos'))
 			->with( 'list', Especialidad::getListFromAllRelationApps() );
 	}
 

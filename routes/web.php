@@ -4534,3 +4534,7 @@ Route::get("tipoReglas/tipoRegla/{tipoReglas}/duplicate", ['as' => 'tipoReglas.d
         'uses' => 'PagosController@imprimir')
     )->middleware('auth');
     
+    Route::get('direccion/grfr', array(
+            'as' => 'direccion.grfr',
+            'uses' => 'DireccionController@grfr')
+    );

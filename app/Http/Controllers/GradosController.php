@@ -131,6 +131,7 @@ class GradosController extends Controller {
                     ->where('g.especialidad_id', '=', $especialidad)
                     ->where('g.nivel_id', '=', $nivel)
                     ->where('g.id', '>', '0')
+                    ->whereNull('g.deleted_at')
                     ->get();
             //dd($r);
             if (isset($grado) and $grado <> 0) {

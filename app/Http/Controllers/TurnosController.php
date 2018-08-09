@@ -139,6 +139,7 @@ class TurnosController extends Controller {
                     ->where('t.grado_id', '=', $grado)
                     ->where('t.nivel_id', '=', $nivel)
                     ->where('t.id', '>', '0')
+                    ->whereNull('deleted_at')
                     ->get();
             //dd($r);
             if (isset($turno) and $turno <> 0) {
