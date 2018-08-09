@@ -156,7 +156,7 @@ class GradosController extends Controller {
     public function getCmbGradosXalumno(Request $request) {
         if ($request->ajax()) {
             //dd($request->all());
-            $cve_alumno = $request->get('cve_alumno');
+            $cliente = $request->get('cliente_id');
             $grado = $request->get('grado_id');
 
             $final = array();
@@ -164,7 +164,7 @@ class GradosController extends Controller {
                     ->join('inscripcions as i', 'i.grado_id', '=', 'g.id')
                     ->join('clientes as c', 'i.cliente_id', '=', 'c.id')
                     ->select('g.id', 'g.name')
-                    ->where('c.cve_alumno', '=', $cve_alumno)
+                    ->where('c.id', '=', $cliente)
                     ->where('g.id', '>', '0')
                     ->get();
             //dd($r);

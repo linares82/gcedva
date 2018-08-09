@@ -256,7 +256,7 @@ class HacademicasController extends Controller {
         //dd($input['calificacion'][0]);
         //dd($hacademicas);
 
-        if (isset($input['cve_alumno']) and
+        if (isset($input['cliente_id']) and
                 isset($input['grado_id']) and
                 isset($input['materium_id']) and
                 isset($input['examen_id'])) {
@@ -265,7 +265,7 @@ class HacademicasController extends Controller {
             $h = Inscripcion::select('h.id')
                     ->join('clientes as c', 'c.id', '=', 'inscripcions.cliente_id')
                     ->join('hacademicas as h', 'h.inscripcion_id', '=', 'inscripcions.id')
-                    ->where('c.cve_alumno', '=', $input['cve_alumno'])
+                    ->where('c.id', '=', $input['cliente_id'])
                     ->where('inscripcions.grado_id', '=', $input['grado_id'])
                     ->where('h.materium_id', '=', $input['materium_id'])
                     ->where('h.deleted_at', '=', null)

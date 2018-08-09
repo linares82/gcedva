@@ -31,10 +31,10 @@
             {!! Form::open(array('route' => 'hacademicas.examenes', "id"=>"frm_academica")) !!}
             
                     <div class="form-group col-md-4 @if($errors->has('cve_alumno')) has-error @endif">
-                       <label for="cve_alumno-field">Clave Alumno</label>
-                       {!! Form::text("cve_alumno", null, array("class" => "form-control input-sm", "id" => "cve_alumno-field")) !!}
-                       @if($errors->has("cve_alumno"))
-                        <span class="help-block">{{ $errors->first("cve_alumno") }}</span>
+                       <label for="cliente_id-field">id</label>
+                       {!! Form::text("cliente_id", null, array("class" => "form-control input-sm", "id" => "cliente_id-field")) !!}
+                       @if($errors->has("cliente_id"))
+                        <span class="help-block">{{ $errors->first("cliente_id") }}</span>
                        @endif
                     </div>
 
@@ -149,7 +149,7 @@
       CmbGrado();
       CmbMateria();
 
-      $('#cve_alumno-field').focusout(function() {
+      $('#cliente_id-field').focusout(function() {
         CmbGrado();
       });
 
@@ -189,7 +189,7 @@
               $.ajax({
                   url: '{{ route("grados.getCmbGradosXalumno") }}',
                   type: 'GET',
-                  data: "cve_alumno=" + $('#cve_alumno-field').val() + "&grado_id=" + $('#grado_id-field option:selected').val() + "",
+                  data: "cliente_id=" + $('#cliente_id-field').val() + "&grado_id=" + $('#grado_id-field option:selected').val() + "",
                   dataType: 'json',
                   beforeSend : function(){$("#loading13").show();},
                   complete : function(){$("#loading13").hide();},
@@ -215,7 +215,7 @@
               $.ajax({
                   url: '{{ route("materias.getCmbMateriaXalumno") }}',
                   type: 'GET',
-                  data: "cve_alumno=" + $('#cve_alumno-field').val()+"&grado_id="+ $('#grado_id-field option:selected').val()+"&materia_id="+ $('#materia_id-field option:selected').val(),
+                  data: "cliente_id=" + $('#cliente_id-field').val()+"&grado_id="+ $('#grado_id-field option:selected').val()+"&materia_id="+ $('#materia_id-field option:selected').val(),
                   dataType: 'json',
                   beforeSend : function(){$("#loading3").show();},
                   complete : function(){$("#loading3").hide();},

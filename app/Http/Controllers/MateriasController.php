@@ -169,7 +169,7 @@ class MateriasController extends Controller {
     public function getCmbMateriaXalumno(Request $request) {
         if ($request->ajax()) {
             //dd($request->all());
-            $cve_alumno = $request->get('cve_alumno');
+            $cliente_id = $request->get('cliente_id');
 
             $grado = $request->get('grado_id');
             $materia = $request->get('materia_id');
@@ -181,7 +181,7 @@ class MateriasController extends Controller {
                     ->join('clientes as c', 'c.id', '=', 'i.cliente_id')
                     ->select('m.id', 'm.name')
                     ->whereColumn('m.plantel_id', 'i.plantel_id')
-                    ->where('c.cve_alumno', '=', $cve_alumno)
+                    ->where('c.id', '=', $cliente_id)
                     ->where('i.grado_id', '=', $grado)
                     ->where('h.deleted_at', '=', null)
                     ->get();
