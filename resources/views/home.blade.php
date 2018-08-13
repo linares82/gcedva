@@ -41,7 +41,7 @@
                 <div class="box-body">
                     <div id="estatus_totales" style="width: auto; height: auto;">
                     </div>
-                    <a href="#" class="btn btn-xs btn-primary">Análisis Concretados</a>
+                    
                 </div>
             </div>
         </div>
@@ -56,7 +56,9 @@
                 <div class="box-body">
                     <div id="estatus_concretados" style="width: auto; height: auto;">
                     </div>
-                    <a href="#" class="btn btn-xs btn-primary">Análisis Concretados</a>
+                    @foreach($lectivoss as $l)
+                        <a href="{{route('direccion.grfr', array('lectivo'=>$l->id))}}" class="btn btn-xs btn-primary">Análisis Concretados {{$l->name}}</a>
+                    @endforeach
                 </div>
             </div>
         </div>
