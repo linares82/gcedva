@@ -67,9 +67,10 @@ class DireccionController extends Controller {
                 ->join('hactividades as h','h.cliente_id','=','c.id')
                 ->where('h.asunto','=','Cambio estatus ')
                 ->where('h.detalle','=','Concretado')
-                ->where('h.fecha','<=',$lectivo->inicio)
+                ->where('h.fecha','>=',$lectivo->inicio)
                 ->where('h.fecha','<=',$lectivo->fin)
                 ->where('esp.lectivo_id','=',$lectivo->id)
+                ->where('st_seguimiento_id', '=', 2)
                 ->orderBy('p.id')
                 ->get();
         

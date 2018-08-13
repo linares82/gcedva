@@ -404,24 +404,22 @@ class HomeController extends Controller
             array_push($lineas, array('Estatus','Total'));
             foreach($estatuss as $sts){  
                  if($sts->id==2){
-                    $valors=Seguimiento::select(DB::raw('count(st.name) as total'))
+                    
+                     $valors=Seguimiento::select(DB::raw('count(st.name) as total'))
                              ->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
                              ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
                              ->join('especialidads as es', 'es.id', '=', 'c.especialidad_id')
                              ->join('hactividades as h','h.cliente_id','=','c.id')
-                             ->join('lectivos as l','l.id','=','es.id')
+                             ->join('lectivos as l','l.id','=','es.lectivo_id')
                              ->where('h.asunto','=','Cambio estatus ')
                              ->where('h.detalle','=','Concretado')
-                             ->where('h.fecha','<=',$l->inicio)
-                             ->where('h.fecha','<=',$l->fin)
+                             ->where('h.fecha','>=',$ls->inicio)
+                             ->where('h.fecha','<=',$ls->fin)
                              ->where('st_seguimiento_id', '=', $sts->id)
                              ->where('es.lectivo_id', '=', $ls->id)
-                             //->where('i.lectivo_id', '=', $l->id)
                              ->value('total');
                     array_push($tabla_estatus, array($ls->name, $valors));
-                    /*if($ls->id==1){
-                        dd($tabla_estatus);
-                    }*/
+                    
                 }elseif($sts->id>0){
                     $valors=Seguimiento::select(DB::raw('count(st.name) as total'))
                              ->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
