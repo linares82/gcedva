@@ -30,22 +30,37 @@
         @endpermission
         
     @permission('repDireccion')
-        @foreach($lectivoss as $l)
+        
 	<div class="form-group col-md-4 col-sm-4 col-xs-4">
             <div class="box box-primary">
                 <div class="box-header with-border">
                     <h3 class="box-title">
-                        {{$l->name}}
+                        
                     </h3>
                 </div>
                 <div class="box-body">
-                    <div id="grfDir{{$l->id+1}}" style="width: auto; height: auto;">
+                    <div id="estatus_totales" style="width: auto; height: auto;">
                     </div>
-                    <a href="{{route('direccion.grfr', array('lectivo'=>$l->id))}}" class="btn btn-xs btn-primary">Análisis Concretados</a>
+                    <a href="#" class="btn btn-xs btn-primary">Análisis Concretados</a>
                 </div>
             </div>
         </div>
-        @endforeach
+    
+        <div class="form-group col-md-4 col-sm-4 col-xs-4">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">
+                        
+                    </h3>
+                </div>
+                <div class="box-body">
+                    <div id="estatus_concretados" style="width: auto; height: auto;">
+                    </div>
+                    <a href="#" class="btn btn-xs btn-primary">Análisis Concretados</a>
+                </div>
+            </div>
+        </div>
+        
         
         @endpermission   
         
@@ -475,7 +490,7 @@
           }
         };
         
-        var chartA = new google.visualization.ComboChart(document.getElementById('grfDir1'));
+        var chartA = new google.visualization.ComboChart(document.getElementById('estatus_totales'));
         chartA.draw(dataA, optionsA);
     }
     
@@ -493,13 +508,13 @@
           }
         };
         
-        var chartA = new google.visualization.ComboChart(document.getElementById('grfDir2'));
+        var chartA = new google.visualization.ComboChart(document.getElementById('estatus_concretados'));
         chartA.draw(dataA, optionsA);
     }
     
-    function drawgrfDir3() {
+    /*function drawgrfDir3() {
         // Some raw data (not necessarily accurate)
-        var dataA = google.visualization.arrayToDataTable(<?php echo $grfDir3; ?>);
+        var dataA = google.visualization.arrayToDataTable();
 
         var optionsA = {
           title : '',
@@ -514,7 +529,7 @@
         var chartA = new google.visualization.ComboChart(document.getElementById('grfDir3'));
         chartA.draw(dataA, optionsA);
     }
-    
+    */
     </script>
     <script type="text/javascript" src="{{ asset ('/bower_components/AdminLTE/plugins/morris/morris.js') }}"></script>
     <script type="text/javascript" src="{{ asset ('/bower_components/AdminLTE/plugins/morris/raphael-min.js') }}"></script>

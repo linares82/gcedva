@@ -397,7 +397,8 @@ class HomeController extends Controller
             
             unset($tablas);
             $tablas=array();
-            
+            $tabla_estatus=array();
+            array_push($tabla_estatus, array('Lectivo','Total'));
             
             $lineas=array();
             array_push($lineas, array('Estatus','Total'));
@@ -406,28 +407,31 @@ class HomeController extends Controller
                     $valors=Seguimiento::select(DB::raw('count(st.name) as total'))
                              ->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
                              ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
-                             ->join('inscripcions as i','i.cliente_id','=','c.id')
-                             ->where('st_seguimiento_id', '=', $st->id)
-                             ->where('i.lectivo_id', '=', $l->id)
+                             ->join('especialidads as es', 'es.id', '=', 'c.especialidad_id')
+                             //->join('inscripcions as i','i.cliente_id','=','c.id')
+                             ->where('st_seguimiento_id', '=', $sts->id)
+                             ->where('es.lectivo_id', '=', $l->id)
+                             //->where('i.lectivo_id', '=', $l->id)
                              ->value('total');
+                    array_push($tabla_estatus, array($l->name, $valors));
                 }elseif($sts->id>0){
                     $valors=Seguimiento::select(DB::raw('count(st.name) as total'))
                              ->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
-                             ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
-                             ->where('st_seguimiento_id', '=', $st->id)
+                             ->where('st_seguimiento_id', '=', $sts->id)
                              ->value('total');
+                    array_push($lineas, array($sts->name,$valors));
                 } 
                 //$lineas[$is]=$valors;
-                array_push($lineas, array($sts->name,$valors));
+                
                 $is++;
              }
              //dd($lineas);
              array_push($tablas, $lineas);
              //dd($tablas);
-             array_push($tablass, $tablas);
+             //array_push($tablass, $tablas);
         }
         //dd($tablass[1][0]);
-        
+        //dd($lineas);
         /////////////////////////Fin Grficas direccion////////////////////////////
         
         
@@ -440,9 +444,8 @@ class HomeController extends Controller
                     ->with('datos_grafica', json_encode($tabla))
                     ->with('datos', json_encode($datos))
                     ->with('datos2', json_encode($datos2))
-                    ->with('grfDir1', json_encode($tablass[0][0]))
-                    ->with('grfDir2', json_encode($tablass[1][0]))
-                    ->with('grfDir3', json_encode($tablass[2][0]));
+                    ->with('grfDir1', json_encode($lineas))
+                    ->with('grfDir2', json_encode($tabla_estatus));
 
                      
     }
