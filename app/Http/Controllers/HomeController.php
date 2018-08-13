@@ -393,12 +393,12 @@ class HomeController extends Controller
         //dd($encabezados);
         $lineas=array();
         $is=0;
+        $tabla_estatus=array();
+        array_push($tabla_estatus, array('Lectivo','Total'));
         foreach($lectivoss as $ls){
             
             unset($tablas);
             $tablas=array();
-            $tabla_estatus=array();
-            array_push($tabla_estatus, array('Lectivo','Total'));
             
             $lineas=array();
             array_push($lineas, array('Estatus','Total'));
@@ -408,12 +408,20 @@ class HomeController extends Controller
                              ->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
                              ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
                              ->join('especialidads as es', 'es.id', '=', 'c.especialidad_id')
-                             //->join('inscripcions as i','i.cliente_id','=','c.id')
+                             ->join('hactividades as h','h.cliente_id','=','c.id')
+                             ->join('lectivos as l','l.id','=','es.id')
+                             ->where('h.asunto','=','Cambio estatus ')
+                             ->where('h.detalle','=','Concretado')
+                             ->where('h.fecha','<=',$l->inicio)
+                             ->where('h.fecha','<=',$l->fin)
                              ->where('st_seguimiento_id', '=', $sts->id)
-                             ->where('es.lectivo_id', '=', $l->id)
+                             ->where('es.lectivo_id', '=', $ls->id)
                              //->where('i.lectivo_id', '=', $l->id)
                              ->value('total');
-                    array_push($tabla_estatus, array($l->name, $valors));
+                    array_push($tabla_estatus, array($ls->name, $valors));
+                    /*if($ls->id==1){
+                        dd($tabla_estatus);
+                    }*/
                 }elseif($sts->id>0){
                     $valors=Seguimiento::select(DB::raw('count(st.name) as total'))
                              ->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
@@ -431,7 +439,7 @@ class HomeController extends Controller
              //array_push($tablass, $tablas);
         }
         //dd($tablass[1][0]);
-        //dd($lineas);
+        //dd($tabla_estatus);
         /////////////////////////Fin Grficas direccion////////////////////////////
         
         
