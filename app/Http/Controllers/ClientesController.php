@@ -1105,7 +1105,6 @@ class ClientesController extends Controller {
     }
     
     public function rpt_sms_mail() {
-        
         return view('clientes.reportes.sms_mail')->with('list', Cliente::getListFromAllRelationApps());
     }
     

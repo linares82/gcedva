@@ -235,4 +235,30 @@ class EmpresasController extends Controller {
             $empresa->actividades()->detach($actividad);
         }
     }
+    
+    public function getEmpresasCsv(){
+        return view('empresas.reportes.empresas_csv')->with('list', Empresa::getListFromAllRelationApps());
+    }
+    
+    public function postEmpresasCsv(Request $request){
+        
+        config(['APP_DEBUG' => false]);
+        $data=$request->all();
+        //dd($data);
+        $registros=Empresa::select('empresas.id', 'empresas.razon_social','empresas.created_at', 'p.razon as plantel',
+                          DB::raw('concat(e.nombre," ",e.ape_paterno," ",e.ape_materno) as empleado'))
+                          ->join('plantels as p','p.id','=','empresas.plantel_id')
+                          ->join('empleados as e','e.user_id','=','empresas.usu_alta_id')
+                          ->whereBetween('empresas.plantel_id',[$data['plantel_f'],$data['plantel_t']])
+                          ->whereDate('empresas.created_at', '>',date_format(date_create($data['fecha_f']),'Y/m/d H:i:s'))
+                          ->whereDate('empresas.created_at', '<',date_format(date_create($data['fecha_t']),'Y/m/d H:i:s'))
+                          ->get();
+        //dd($registros->toArray());
+        $csvExporter = new \Laracsv\Export();
+        $csvExporter->build($registros, ['id'=>'ID','razon_social'=>'RAZON SOCIAL',
+                                                    'created_at'=>'CREADO EL',
+                                                    'empleado'=>'CREADO POR',
+                                                    'plantel'=>'PLANTEL'])->download();
+        config(['APP_DEBUG' => true]);
+    }
 }

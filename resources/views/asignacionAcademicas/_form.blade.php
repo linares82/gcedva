@@ -43,13 +43,27 @@
                         <span class="help-block">{{ $errors->first("lectivo_id") }}</span>
                        @endif
                     </div>
-                    <div class="form-group col-md-4 @if($errors->has('asistencias_max')) has-error @endif">
+                    <div class="form-group col-md-4 @if($errors->has('asistencias_max')) has-error @endif" style="clear:left;">
                        <label for="asistencias_max-field">Asistencias Maximo</label>
                        {!! Form::text("asistencias_max", null, array("class" => "form-control input-sm", "id" => "asistencias_max-field")) !!}
                        @if($errors->has("asistencias_max"))
                         <span class="help-block">{{ $errors->first("asistencias_max") }}</span>
                        @endif
                     </div>
+                    <div class="form-group col-md-4 @if($errors->has('fec_inicio')) has-error @endif">
+                            <label for="fec_inicio-field">Fecha Inicio Planeado</label>
+                            {!! Form::text("fec_inicio", null, array("class" => "form-control input-sm", "id" => "fec_inicio-field")) !!}
+                            @if($errors->has("fec_inicio"))
+                            <span class="help-block">{{ $errors->first("fec_inicio") }}</span>
+                            @endif
+                        </div>
+                    <div class="form-group col-md-4 @if($errors->has('fec_fin')) has-error @endif">
+                            <label for="fec_fin-field">Fecha Fin Planeado</label>
+                            {!! Form::text("fec_fin", null, array("class" => "form-control input-sm", "id" => "fec_fin-field")) !!}
+                            @if($errors->has("fec_fin"))
+                            <span class="help-block">{{ $errors->first("fec_fin") }}</span>
+                            @endif
+                        </div>
                     @if(isset($asignacionAcademica->horarios))
                     <div class="form-group col-md-12">
                         <div class="form-group col-md-4 @if($errors->has('dia_id')) has-error @endif">
@@ -216,6 +230,22 @@
 
       
 
+    });
+    
+    $('#fec_inicio-field').Zebra_DatePicker({
+    days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
+            months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+            readonly_element: false,
+            lang_clear_date: 'Limpiar',
+            show_select_today: 'Hoy',
+    });
+    
+    $('#fec_fin-field').Zebra_DatePicker({
+    days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
+            months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+            readonly_element: false,
+            lang_clear_date: 'Limpiar',
+            show_select_today: 'Hoy',
     });
     
 </script>

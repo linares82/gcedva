@@ -35,6 +35,15 @@
                         <span class="help-block">{{ $errors->first("fecha") }}</span>
                        @endif
                     </div>
+                    @permission('asistencias.excepcion')
+                    <div class="form-group col-md-4 @if($errors->has('excepcion')) has-error @endif">
+                       <label for="excepcion-field">Exepcion</label>
+                       {!! Form::checkbox("excepcion", 1, false) !!}
+                       @if($errors->has("excepcion"))
+                        <span class="help-block">{{ $errors->first("excepcion") }}</span>
+                       @endif
+                    </div>
+                    @endpermission
                 <div class="row">
                 </div>
                 @if(isset($asistencias))

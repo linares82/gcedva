@@ -192,8 +192,8 @@ class ShortNumbersRegionCodeSet {
   172 => 'PK',
   173 => 'PL',
   174 => 'PM',
-  175 => 'PS',
-  176 => 'PR',
+  175 => 'PR',
+  176 => 'PS',
   177 => 'PT',
   178 => 'PW',
   179 => 'PY',
@@ -251,11 +251,12 @@ class ShortNumbersRegionCodeSet {
   231 => 'VU',
   232 => 'WF',
   233 => 'WS',
-  234 => 'YE',
-  235 => 'YT',
-  236 => 'ZA',
-  237 => 'ZM',
-  238 => 'ZW',
+  234 => 'XK',
+  235 => 'YE',
+  236 => 'YT',
+  237 => 'ZA',
+  238 => 'ZM',
+  239 => 'ZW',
 );
 
 }

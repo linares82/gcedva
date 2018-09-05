@@ -14,7 +14,7 @@
 return array (
   'generalDesc' => 
   array (
-    'NationalNumberPattern' => '[027]\\d{2}|1\\d{2,7}',
+    'NationalNumberPattern' => '[0-27]\\d{2,7}',
     'PossibleLength' => 
     array (
       0 => 3,
@@ -70,7 +70,7 @@ return array (
   ),
   'shortCode' => 
   array (
-    'NationalNumberPattern' => '000|1(?:06|1(?:00|2|9[46])|2(?:[23]\\d|4\\d{2,3}|5\\d{3,4}|8(?:2|[013-9]\\d))|555|9[13-5]\\d{3})|225|7(?:33|67)',
+    'NationalNumberPattern' => '000|1(?:06|1(?:00|2|9[46])|2(?:[23]\\d|4\\d{2,3}|5\\d{3,4}|8(?:2|[013-9]\\d))|555|9\\d{4,6})|225|7(?:33|67)',
     'ExampleNumber' => '112',
     'PossibleLength' => 
     array (

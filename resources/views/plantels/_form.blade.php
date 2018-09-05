@@ -70,6 +70,13 @@
                           <span class="help-block">{{ $errors->first("consecutivo") }}</span>
                          @endif
                       </div>    
+                      <div class="form-group col-md-4 @if($errors->has('consecutivo_pago')) has-error @endif">
+                         <label for="consecutivo_pago-field">Consecutivo Pago</label>
+                         {!! Form::text("consecutivo_pago", null, array("class" => "form-control input-sm", "id" => "consecutivo_pago-field")) !!}
+                         @if($errors->has("consecutivo_pago"))
+                          <span class="help-block">{{ $errors->first("consecutivo") }}</span>
+                         @endif
+                      </div>    
                     </div>
                   </div>
                   <div class="box box-default">

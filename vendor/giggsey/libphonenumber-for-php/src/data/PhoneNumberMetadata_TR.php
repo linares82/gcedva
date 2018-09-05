@@ -14,7 +14,7 @@
 return array (
   'generalDesc' => 
   array (
-    'NationalNumberPattern' => '[2-589]\\d{9}|444\\d{4}',
+    'NationalNumberPattern' => '(?:[2-58]\\d\\d|900)\\d{7}|4\\d{6}',
     'PossibleLength' => 
     array (
       0 => 7,
@@ -38,7 +38,7 @@ return array (
   ),
   'mobile' => 
   array (
-    'NationalNumberPattern' => '5(?:(?:0[1-7]|22|[34]\\d|5[1-59]|9[246])\\d{2}|6161)\\d{5}',
+    'NationalNumberPattern' => '5(?:(?:0[15-7]|1[06]|24|[34]\\d|5[1-59]|9[46])\\d{2}|6161)\\d{5}',
     'ExampleNumber' => '5012345678',
     'PossibleLength' => 
     array (
@@ -62,7 +62,7 @@ return array (
   ),
   'premiumRate' => 
   array (
-    'NationalNumberPattern' => '900\\d{7}',
+    'NationalNumberPattern' => '(?:8[89]8|900)\\d{7}',
     'ExampleNumber' => '9001234567',
     'PossibleLength' => 
     array (
@@ -84,9 +84,11 @@ return array (
   ),
   'personalNumber' => 
   array (
+    'NationalNumberPattern' => '592(?:21[12]|461)\\d{4}',
+    'ExampleNumber' => '5922121234',
     'PossibleLength' => 
     array (
-      0 => -1,
+      0 => 10,
     ),
     'PossibleLengthLocalOnly' => 
     array (
@@ -138,7 +140,6 @@ return array (
   'noInternationalDialling' => 
   array (
     'NationalNumberPattern' => '444\\d{4}',
-    'ExampleNumber' => '4441444',
     'PossibleLength' => 
     array (
       0 => 7,
@@ -173,7 +174,7 @@ return array (
       'format' => '$1 $2 $3 $4',
       'leadingDigitsPatterns' => 
       array (
-        0 => '5[02-69]',
+        0 => '5(?:[02-69]|1[06])',
       ),
       'nationalPrefixFormattingRule' => '0$1',
       'domesticCarrierCodeFormattingRule' => '',

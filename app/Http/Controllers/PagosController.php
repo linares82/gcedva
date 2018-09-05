@@ -4,6 +4,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\Pago;
+use App\Plantel;
 use App\Caja;
 use App\Adeudo;
 use App\Cliente;
@@ -54,7 +55,10 @@ class PagosController extends Controller {
                 
 		$input['usu_alta_id']=Auth::user()->id;
 		$input['usu_mod_id']=Auth::user()->id;
-
+                $plantel=Plantel::find(Auth::user()->plantel_id);
+                $plantel->consecutivo_pago=$plantel->consecutivo_pago+1;
+                $plantel->save();
+                $input['consecutivo']=$plantel->consecutivo_pago;
 		//create data
 		$pago=Pago::create( $input );
                 $caja=Caja::find($pago->caja_id);

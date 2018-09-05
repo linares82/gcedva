@@ -14,7 +14,7 @@
 return array (
   'generalDesc' => 
   array (
-    'NationalNumberPattern' => '[56]\\d{8}',
+    'NationalNumberPattern' => '(?:590|69\\d)\\d{6}',
     'PossibleLength' => 
     array (
       0 => 9,
@@ -145,8 +145,8 @@ return array (
   array (
     0 => 
     array (
-      'pattern' => '([56]\\d{2})(\\d{2})(\\d{4})',
-      'format' => '$1 $2-$3',
+      'pattern' => '([56]\\d{2})(\\d{2})(\\d{2})(\\d{2})',
+      'format' => '$1 $2 $3 $4',
       'leadingDigitsPatterns' => 
       array (
         0 => '590|69[01]',
@@ -161,5 +161,5 @@ return array (
   ),
   'mainCountryForCode' => true,
   'leadingZeroPossible' => false,
-  'mobileNumberPortableRegion' => false,
+  'mobileNumberPortableRegion' => true,
 );

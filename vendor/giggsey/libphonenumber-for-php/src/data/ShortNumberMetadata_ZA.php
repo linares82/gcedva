@@ -49,7 +49,7 @@ return array (
   ),
   'emergency' => 
   array (
-    'NationalNumberPattern' => '1(?:0(?:1(?:11|77)|7)|12)',
+    'NationalNumberPattern' => '1(?:0(?:1(?:11|77))|12)',
     'ExampleNumber' => '10111',
     'PossibleLength' => 
     array (
@@ -73,7 +73,7 @@ return array (
   ),
   'standardRate' => 
   array (
-    'NationalNumberPattern' => '3(?:078[23]|7(?:064|567)|8126)|4(?:3(?:699|946)|7751)',
+    'NationalNumberPattern' => '3(?:078[23]|7(?:064|567)|8126)|4(?:2699|3(?:699|94[16])|7751|8837)',
     'ExampleNumber' => '47751',
     'PossibleLength' => 
     array (
@@ -85,7 +85,7 @@ return array (
   ),
   'carrierSpecific' => 
   array (
-    'NationalNumberPattern' => '1(?:07|11)',
+    'NationalNumberPattern' => '111',
     'ExampleNumber' => '111',
     'PossibleLength' => 
     array (

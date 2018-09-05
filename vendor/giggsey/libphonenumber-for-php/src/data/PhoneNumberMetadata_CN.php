@@ -14,7 +14,7 @@
 return array (
   'generalDesc' => 
   array (
-    'NationalNumberPattern' => '[1-7]\\d{6,11}|8[0-357-9]\\d{6,9}|9\\d{7,10}',
+    'NationalNumberPattern' => '(?:(?:(?:1[03-68]|2\\d)\\d\\d|[3-79])\\d|8[0-57-9])\\d{7}|[1-579]\\d{10}|8[0-57-9]\\d{8,9}|[1-79]\\d{9}|[1-9]\\d{7}|[12]\\d{6}',
     'PossibleLength' => 
     array (
       0 => 7,
@@ -151,7 +151,6 @@ return array (
   'noInternationalDialling' => 
   array (
     'NationalNumberPattern' => '(?:4|(?:10)?8)00\\d{7}|950\\d{7,8}',
-    'ExampleNumber' => '4001234567',
     'PossibleLength' => 
     array (
       0 => 10,
@@ -164,10 +163,10 @@ return array (
   ),
   'id' => 'CN',
   'countryCode' => 86,
-  'internationalPrefix' => '(1(?:[129]\\d{3}|79\\d{2}))?00',
+  'internationalPrefix' => '(?:1(?:[12]\\d{3}|79\\d{2}|9[0-7]\\d{2}))?00',
   'preferredInternationalPrefix' => '00',
   'nationalPrefix' => '0',
-  'nationalPrefixForParsing' => '(1(?:[129]\\d{3}|79\\d{2}))|0',
+  'nationalPrefixForParsing' => '(1(?:[12]\\d{3}|79\\d{2}|9[0-7]\\d{2}))|0',
   'sameMobileAndFixedLinePattern' => false,
   'numberFormat' => 
   array (
