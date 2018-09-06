@@ -246,9 +246,12 @@ class EmpresasController extends Controller {
         $data=$request->all();
         //dd($data);
         $registros=Empresa::select('empresas.id', 'empresas.razon_social','empresas.created_at', 'p.razon as plantel',
-                          DB::raw('concat(e.nombre," ",e.ape_paterno," ",e.ape_materno) as empleado'))
+                          DB::raw('concat(e.nombre," ",e.ape_paterno," ",e.ape_materno) as empleado'),'empresas.tel_fijo', 
+                          'empresas.tel_cel', 'empresas.correo1','empresas.correo2','est.name as estado','mun.name as municipio')
                           ->join('plantels as p','p.id','=','empresas.plantel_id')
                           ->join('empleados as e','e.user_id','=','empresas.usu_alta_id')
+                          ->join('estados as est', 'est.id','=','empresas.estado_id')
+                          ->join('municipios as mun', 'mun.id','=','empresas.municipio_id')
                           ->whereBetween('empresas.plantel_id',[$data['plantel_f'],$data['plantel_t']])
                           ->whereDate('empresas.created_at', '>',date_format(date_create($data['fecha_f']),'Y/m/d H:i:s'))
                           ->whereDate('empresas.created_at', '<',date_format(date_create($data['fecha_t']),'Y/m/d H:i:s'))
@@ -258,7 +261,13 @@ class EmpresasController extends Controller {
         $csvExporter->build($registros, ['id'=>'ID','razon_social'=>'RAZON SOCIAL',
                                                     'created_at'=>'CREADO EL',
                                                     'empleado'=>'CREADO POR',
-                                                    'plantel'=>'PLANTEL'])->download();
+                                                    'plantel'=>'PLANTEL',
+                                                    'tel_fijo' => 'TELEFONO FIJO',
+                                                    'tel_cel' => 'CELULAR',
+                                                    'correo1' => 'CORREO 1',
+                                                    'correo2' => 'CORREO 2',
+                                                    'estado' => 'ESTADO',
+                                                    'municipio' => 'MUNICIPIO'])->download();
         config(['APP_DEBUG' => true]);
     }
 }
