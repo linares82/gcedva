@@ -109,7 +109,7 @@
                             
                             <div class="form-group col-md-4">
                                 <label class="control-label" for="q_empresas.created_at_date">Creado el</label>
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['empresas.created_at_date']) ?: '' }}" name="q[empresas.created_at_date]" id="q_empresas.created_at_date" />
+                                    <input class="form-control input-sm fec_busqueda" type="search" value="{{ @(Request::input('q')['empresas.created_at_date']) ?: '' }}" name="q[empresas.created_at_date]" id="q_empresas.created_at_date" />
                             </div>
                             
                             <div class="form-group">
@@ -179,3 +179,19 @@
     </div>
 
 @endsection
+
+@push('scripts')
+<script type="text/javascript">
+    $(document).ready(function() {
+        
+        $('.fec_busqueda').Zebra_DatePicker({
+                        days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
+                                months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                                readonly_element: false,
+                                lang_clear_date: 'Limpiar',
+                                show_select_today: 'Hoy',
+                        });
+    });
+
+</script>
+@endpush
