@@ -47,6 +47,7 @@ class UsersController extends Controller
      */
     public function index()
     {
+        
         $users = $this->gateway->paginate($this->config->get('entrust-gui.pagination.users'));
 
         return view(

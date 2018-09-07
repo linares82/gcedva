@@ -8,7 +8,7 @@
 </div>
 <table class="table table-striped">
   <tr>
-    <th>Email</th>
+    <th>Email -fil</th>
     <th>Actions</th>
   </tr>
   @foreach($users as $user)

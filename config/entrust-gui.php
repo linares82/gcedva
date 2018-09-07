@@ -4,7 +4,7 @@ return [
     "layout" => "plantillas.admin_template",
     "route-prefix" => "seguridad",
     "pagination" => [
-        "users" => 15,
+        "users" => 200,
         "roles" => 15,
         "permissions" => 15,
     ],
@@ -13,6 +13,6 @@ return [
     "middleware-role" => 'superadmin',
     "confirmable" => false,
     "users" => [
-      'fieldSearchable' => ['name', 'email'],
+      'fieldSearchable' => ['name'],
     ],
 ];

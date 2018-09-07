@@ -60,9 +60,13 @@
                                 </div>
                             </div>
                             -->
+                            <div class="form-group col-md-4" style="">
+                                <label for="q_empresas.id_lt">ID</label>
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['empresas.id_lt']) ?: '' }}" name="q[empresas.id_lt]" id="q_empresas.id_lt" />
+                            </div>
                             <div class="form-group col-md-4">
                                 <label class="control-label" for="q_razon_social_cont">RAZON SOCIAL</label>
-                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['razon_social_cont']) ?: '' }}" name="q[razon_social_cont]" id="q_razon_social_cont" />
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['razon_social_cont']) ?: '' }}" name="q[razon_social_cont]" id="q_razon_social_cont" />
                             </div>
                                                     <!--
                             <div class="form-group">
@@ -97,6 +101,16 @@
                                 </div>
                             </div>
                             -->
+                            
+                            <div class="form-group col-md-4" style="">
+                                <label for="q_empresas.usu_alta_id_lt">Usuario Alta</label>
+                                    {!! Form::select("usu_alta_id", $usuarios, "{{ @(Request::input('q')['empresas.usu_alta_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[empresas.usu_alta_id_lt]", "id"=>"q_empresas.usu_alta_id_lt", "style"=>"width:100%;" )) !!}
+                            </div>
+                            
+                            <div class="form-group col-md-4">
+                                <label class="control-label" for="q_empresas.created_at_date">Creado el</label>
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['empresas.created_at_date']) ?: '' }}" name="q[empresas.created_at_date]" id="q_empresas.created_at_date" />
+                            </div>
                             
                             <div class="form-group">
                                 <div class="col-sm-10 col-sm-offset-2">

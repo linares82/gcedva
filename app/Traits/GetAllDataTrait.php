@@ -77,15 +77,19 @@ trait GetAllDataTrait {
                     $column = $baseTable.'.'.$column;
                 }
 
-                if( $operator === 'cont' ){
+                if( $operator === 'cont' and $value<>""){
                     $myQuery = $myQuery->Where($column, 'LIKE', '%'.$value.'%');
+                //dd("cont");
                 } elseif( $operator === 'lt' and $value<>0){
                     $myQuery = $myQuery->Where($column, '=', $value);                
-                }elseif( $operator === 'menorq' ){
+                }elseif( $operator === 'menorq' and $value<>""){
                     $myQuery = $myQuery->where($column, '<=', $value);                
-                }elseif( $operator === 'mayorq' ){
+                }elseif( $operator === 'mayorq' and $value<>""){
                     $myQuery = $myQuery->where($column, '>=', $value);                
-                }/*elseif( $operator === 'gt' ){
+                } elseif( $operator === 'date' and $value<>""){
+                    $myQuery = $myQuery->WhereDate($column, $value);                
+                }
+                /*elseif( $operator === 'gt' ){
                     $myQuery = $myQuery->where($column, '>=', $value);                
                 }*/
             }
@@ -230,7 +234,7 @@ trait GetAllDataTrait {
         $myQuery = $myQuery->select([ $baseTable.'.*' ]);
 
         //(v) pagenate
-
+        
         return $myQuery->paginate($paginate);
 
     }

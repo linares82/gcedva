@@ -19,6 +19,7 @@
         "laravel/tinker": "~1.0",
         "laravelcollective/html": "^5.4",
         "leadthread/laravel-sms": "^2.1",
+        "league/csv": "^9.1",
         "maatwebsite/excel": "~2.1.0",
         "paulvl/backup": "3.*",
         "php-http/guzzle6-adapter": "^1.1",
