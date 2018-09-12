@@ -89,6 +89,12 @@ trait GetAllDataTrait {
                 } elseif( $operator === 'date' and $value<>""){
                     $myQuery = $myQuery->WhereDate($column, $value);                
                 }
+                elseif( $operator === 'dateF' and $value<>""){
+                    $myQuery = $myQuery->WhereDate($column, ">=",$value);                
+                }
+                elseif( $operator === 'dateT' and $value<>""){
+                    $myQuery = $myQuery->WhereDate($column, "<=",$value);                
+                }
                 /*elseif( $operator === 'gt' ){
                     $myQuery = $myQuery->where($column, '>=', $value);                
                 }*/

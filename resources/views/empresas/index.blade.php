@@ -108,8 +108,13 @@
                             </div>
                             
                             <div class="form-group col-md-4">
-                                <label class="control-label" for="q_empresas.created_at_date">Creado el</label>
-                                    <input class="form-control input-sm fec_busqueda" type="search" value="{{ @(Request::input('q')['empresas.created_at_date']) ?: '' }}" name="q[empresas.created_at_date]" id="q_empresas.created_at_date" />
+                                <label class="control-label" for="q_empresas.created_at_date">Creado a partir del</label>
+                                    <input class="form-control input-sm fec_busqueda" type="search" value="{{ @(Request::input('q')['empresas.created_at_dateF']) ?: '' }}" name="q[empresas.created_at_dateF]" id="q_empresas.created_at_dateF" />
+                            </div>
+                            
+                            <div class="form-group col-md-4">
+                                <label class="control-label" for="q_empresas.created_at_date">Hasta el</label>
+                                    <input class="form-control input-sm fec_busqueda" type="search" value="{{ @(Request::input('q')['empresas.created_at_dateT']) ?: '' }}" name="q[empresas.created_at_dateT]" id="q_empresas.created_at_dateT" />
                             </div>
                             
                             <div class="form-group">
