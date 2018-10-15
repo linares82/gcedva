@@ -20,7 +20,7 @@ class Pago extends Model
     } 
 
 	//Mass Assignment
-	protected $fillable = ['caja_id','monto','fecha','forma_pago_id','referencia','usu_alta_id','usu_mod_id'];
+	protected $fillable = ['caja_id','monto','fecha','forma_pago_id','referencia','usu_alta_id','usu_mod_id','consecutivo'];
 
 	public function usu_alta() {
 		return $this->hasOne('App\User', 'id', 'usu_alta_id');

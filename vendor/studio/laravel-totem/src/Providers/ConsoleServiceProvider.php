@@ -16,6 +16,7 @@ class ConsoleServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        // TODO: refactor this to resolving callback while 5.5 branching
         $this->app->booted(function () {
             if ($this->app->runningInConsole()) {
                 $this->schedule($this->app->make(Schedule::class));

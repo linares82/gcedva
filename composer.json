@@ -15,7 +15,7 @@
         "dog-ears/crud-d-scaffold": "1.*",
         "guzzlehttp/guzzle": "^6.2",
         "kim/activity": "^1.1",
-        "laravel/framework": "5.4.*",
+        "laravel/framework": "5.5.*",
         "laravel/tinker": "~1.0",
         "laravelcollective/html": "^5.4",
         "leadthread/laravel-sms": "^2.1",
@@ -25,15 +25,17 @@
         "php-http/guzzle6-adapter": "^1.1",
         "php-imap/php-imap": "^3.0",
         "pqb/filemanager-laravel": "2.*",
-        "studio/laravel-totem": "1.0",
+        "studio/laravel-totem": "2.0",
         "twilio/sdk": "4.10",
         "usmanhalalit/laracsv": "1.*@dev",
-        "zizaco/entrust": "5.2.x-dev"
+        "zizaco/entrust": "5.2.x-dev",
+        "fideloper/proxy": "~3.3"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
         "mockery/mockery": "0.9.*",
-        "phpunit/phpunit": "~5.7"
+        "phpunit/phpunit": "~6.0",
+        "filp/whoops": "~2.0"
     },
     "autoload": {
         "classmap": [
@@ -56,12 +58,14 @@
             "php artisan key:generate"
         ],
         "post-install-cmd": [
-            "Illuminate\\Foundation\\ComposerScripts::postInstall",
-            "php artisan optimize"
+            "Illuminate\\Foundation\\ComposerScripts::postInstall"
         ],
         "post-update-cmd": [
-            "Illuminate\\Foundation\\ComposerScripts::postUpdate",
-            "php artisan optimize"
+            "Illuminate\\Foundation\\ComposerScripts::postUpdate"
+        ],
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php artisan package:discover"
         ]
     },
     "config": {

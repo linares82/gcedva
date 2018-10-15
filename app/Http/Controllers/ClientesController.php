@@ -1136,4 +1136,12 @@ class ClientesController extends Controller {
                                                     'correo_confirmado'=>'CORREO CONFIRMADO'])->download();
         
     }
+    
+    //Funciones para la API
+    public function findBy(Request $request){
+        $datos=$request->all();
+        //dd($datos);
+        $clientes=Cliente::where($datos['campo'], '=', $datos['valor'])->get();
+        return response()->json($clientes);
+    }
 }
