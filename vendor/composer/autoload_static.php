@@ -129,6 +129,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'J' => 
         array (
             'JmesPath\\' => 9,
+            'JakubOnderka\\PhpConsoleHighlighter\\' => 35,
             'JakubOnderka\\PhpConsoleColor\\' => 29,
         ),
         'I' => 
@@ -157,6 +158,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'F' => 
         array (
             'FontLib\\' => 8,
+            'Fideloper\\Proxy\\' => 16,
             'Faker\\' => 6,
         ),
         'E' => 
@@ -400,6 +402,10 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         array (
             0 => __DIR__ . '/..' . '/mtdowling/jmespath.php/src',
         ),
+        'JakubOnderka\\PhpConsoleHighlighter\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/jakub-onderka/php-console-highlighter/src',
+        ),
         'JakubOnderka\\PhpConsoleColor\\' => 
         array (
             0 => __DIR__ . '/..' . '/jakub-onderka/php-console-color/src',
@@ -464,6 +470,10 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'FontLib\\' => 
         array (
             0 => __DIR__ . '/..' . '/phenx/php-font-lib/src/FontLib',
+        ),
+        'Fideloper\\Proxy\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/fideloper/proxy/src',
         ),
         'Faker\\' => 
         array (
@@ -603,13 +613,6 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
             'Maatwebsite\\Excel\\' => 
             array (
                 0 => __DIR__ . '/..' . '/maatwebsite/excel/src',
-            ),
-        ),
-        'J' => 
-        array (
-            'JakubOnderka\\PhpConsoleHighlighter' => 
-            array (
-                0 => __DIR__ . '/..' . '/jakub-onderka/php-console-highlighter/src',
             ),
         ),
         'D' => 

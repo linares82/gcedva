@@ -27,7 +27,7 @@ This packages fills that gap and supports most of the mail features offered by M
 Mailgun::send('emails.invoice', $data, function ($message) {
     $message
         ->subject('Your Invoice')
-        ->to('john.doe@example.com', 'John Doe');
+        ->to('john.doe@example.com', 'John Doe')
         ->bcc('sales@company.com')
         ->attach(storage_path('invoices/12345.pdf'))
         ->trackClicks(true)
@@ -50,7 +50,7 @@ Install the package via composer
 composer require bogardo/mailgun
 ```
 
-Register the ServiceProvider and (optionally) the Facade
+If using Laravel 5.1 to 5.4, Register the ServiceProvider and (optionally) the Facade
 
 ```php
 // config/app.php
@@ -75,8 +75,66 @@ Next, publish the config file with the following `artisan` command.<br />
 php artisan vendor:publish --provider="Bogardo\Mailgun\MailgunServiceProvider" --tag="config"
 ```
 
-After publishing, configure the package in `config/mailgun.php`.
+or if using Laravel 5.5 <br />
 
+```bash
+php artisan vendor:publish
+```
+
+After publishing, add and fill the next values to your [`.env` file](https://laravel.com/docs/configuration#environment-configuration)
+
+```bash
+# Domain name registered with Mailgun
+MAILGUN_DOMAIN=
+
+# Mailgun (private) API key
+MAILGUN_PRIVATE=
+
+# Mailgun public API key
+MAILGUN_PUBLIC=
+
+# You may wish for all e-mails sent with Mailgun to be sent from
+# the same address. Here, you may specify a name and address that is
+# used globally for all e-mails that are sent by this application through Mailgun.
+MAILGUN_FROM_ADDRESS=
+MAILGUN_FROM_NAME=
+
+# Global reply-to e-mail address
+MAILGUN_REPLY_TO=
+
+# Force the from address
+#
+# When your `from` e-mail address is not from the domain specified some
+# e-mail clients (Outlook) tend to display the from address incorrectly
+# By enabling this setting, Mailgun will force the `from` address so the
+# from address will be displayed correctly in all e-mail clients.
+#
+# WARNING:
+# This parameter is not documented in the Mailgun documentation
+# because if enabled, Mailgun is not able to handle soft bounces
+MAILGUN_FORCE_FROM_ADDRESS=
+
+# Testing
+# 
+# Catch All address
+#
+# Specify an email address that receives all emails send with Mailgun
+# This email address will overwrite all email addresses within messages
+MAILGUN_CATCH_ALL=
+
+# Testing
+# 
+# Mailgun's testmode
+#
+# Send messages in test mode by setting this setting to true.
+# When you do this, Mailgun will accept the message but will
+# not send it. This is useful for testing purposes.
+#
+# Note: Mailgun DOES charge your account for messages sent in test mode.
+MAILGUN_TESTMODE=
+```
+
+You can also configure the package in your `config/mailgun.php`.
 
 ### HTTP Client Dependency
 
@@ -100,11 +158,9 @@ Add the following to your `AppServiceProvider` `register()` method.
 
 ```php
 $this->app->bind('mailgun.client', function() {
-	$client = new \GuzzleHttp\Client([
-		// your configuration
+	return \Http\Adapter\Guzzle6\Client::createWithConfig([
+		// your Guzzle6 configuration
 	]);
-	
-	return new \Http\Adapter\Guzzle6\Client($client);
 });
 ```
 ---
@@ -119,7 +175,7 @@ The `Mailgun::send()` method may be used to send an e-mail message:
 
 ```php
 Mailgun::send('emails.welcome', $data, function ($message) {
-    $message->to('foo@example.com', 'John Smith')->subject('Welcome!');
+    $message->to('foo@example.com', 'John Doe')->subject('Welcome!');
 });
 ```
 ---
@@ -174,12 +230,12 @@ Example:
 
 ```php	
 $data = [
-	'customer' => 'John Smith',
+	'customer' => 'John Doe',
 	'url' => 'http://laravel.com'
 ];
 
 Mailgun::send('emails.welcome', $data, function ($message) {
-	$message->to('foo@example.com', 'John Smith')->subject('Welcome!');
+	$message->to('foo@example.com', 'John Doe')->subject('Welcome!');
 });
 ```
 
@@ -390,7 +446,7 @@ To send an email in 60 seconds from now you can do the following:
 
 ```php
 Mailgun::later(60, 'emails.welcome', $data, function ($message) {
-    $message->to('foo@example.com', 'John Smith')->subject('Welcome!');
+    $message->to('foo@example.com', 'John Doe')->subject('Welcome!');
 });
 ```
 
@@ -399,7 +455,7 @@ For example, sending in 5 hours from now:
 
 ```php
 Mailgun::later(['hours' => 5], 'emails.welcome', $data, function($message) {
-    $message->to('foo@example.com', 'John Smith')->subject('Welcome!');
+    $message->to('foo@example.com', 'John Doe')->subject('Welcome!');
 });
 ```
 
