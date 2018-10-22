@@ -130,6 +130,13 @@
                           <span class="help-block">{{ $errors->first("estado") }}</span>
                          @endif
                       </div>
+                      <div class="form-group col-md-4 @if($errors->has('estado_id')) has-error @endif">
+                         <label for="estado_id-field">Estado</label>
+                         {!! Form::select("estado_id", $list["Estado"], null, array("class" => "form-control select_seguridad", "id" => "estado_id-field")) !!}
+                         @if($errors->has("estado_id"))
+                          <span class="help-block">{{ $errors->first("estado_id") }}</span>
+                         @endif
+                      </div>
                       <div class="form-group col-md-4 @if($errors->has('tel')) has-error @endif">
                          <label for="tel-field">Teléfono</label>
                          {!! Form::text("tel", null, array("class" => "form-control input-sm", "id" => "tel-field")) !!}

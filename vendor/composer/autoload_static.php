@@ -719,6 +719,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'CreateEmpresasTable' => __DIR__ . '/../..' . '/database/migrations/2017_10_13_110430_create_empresas_table.php',
         'CreateEspecialidadsTable' => __DIR__ . '/../..' . '/database/migrations/2017_05_03_000000_create_especialidads_table.php',
         'CreateEstAsistenciasTable' => __DIR__ . '/../..' . '/database/migrations/2017_11_07_114040_create_est_asistencias_table.php',
+        'CreateEstadoIdPlantelsTable' => __DIR__ . '/../..' . '/database/migrations/2018_10_22_105406_create_estado_id_plantels_table.php',
         'CreateEstadosTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_30_224317_create_estados_table.php',
         'CreateFormaPagosTable' => __DIR__ . '/../..' . '/database/migrations/2018_04_05_122906_create_forma_pagos_table.php',
         'CreateGirosTable' => __DIR__ . '/../..' . '/database/migrations/2017_10_13_110200_create_giros_table.php',
