@@ -239,7 +239,7 @@
                                 </td>
                                 
                                 <td>{{$cliente->cliente->empleado->nombre." ".$cliente->cliente->empleado->ape_paterno." ".$cliente->cliente->empleado->ape_materno}}</td>
-                                <td>{{$cliente->cliente->paise->name}}</td>
+                                <td> {{$cliente->cliente->paise->name}} </td>
                                 <td class="text-right">
                                     @permission('correos.redactar')
                                     @if(isset($cliente->cliente->mail))
