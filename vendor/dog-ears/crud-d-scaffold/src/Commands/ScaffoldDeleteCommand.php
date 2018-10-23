@@ -62,7 +62,7 @@ class ScaffoldDeleteCommand extends Command
      *
      * @return mixed
      */
-    public function fire()
+    public function handle()
     {
         // Start Scaffold
         $this->info('Deleting ' . $this->solveName( $this->argument('name'), 'NameName' ) . '...');

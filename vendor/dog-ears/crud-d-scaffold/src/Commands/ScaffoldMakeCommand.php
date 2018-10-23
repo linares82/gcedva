@@ -94,7 +94,7 @@ class ScaffoldMakeCommand extends Command
      *
      * @return mixed
      */
-    public function fire()
+    public function handle()
     {
         //set meta data for schema
         $this->meta['action'] = 'create';

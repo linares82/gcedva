@@ -143,6 +143,7 @@ class ClientesController extends Controller {
         $input['turno4_id'] = 0;
         $input['grado_id'] = 0;
         $input['turno_id'] = 0;
+        $input['paise_id'] = 22;
 
         $input['turno_id'] = 0;
         if (is_null($input['ape_materno'])) {
