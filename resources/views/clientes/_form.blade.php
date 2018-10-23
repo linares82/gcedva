@@ -132,6 +132,11 @@
                             @endif
                         </div>
 
+                        @if(isset($cliente))
+                        <div class="form-group col-md-4 @if($errors->has('paise_id')) has-error @endif">
+                            <label for="paise_id-field">Pais:{{$cliente->paise->name}}</label>
+                        </div>
+                        @endif
                         
                     </div>
                 </div>

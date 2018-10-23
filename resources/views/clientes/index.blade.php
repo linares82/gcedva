@@ -205,6 +205,7 @@
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clientes.plantel_id', 'title' => 'PLANTEL'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clientes.especialidad_id', 'title' => 'ESPECIALIDAD'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clientes.empleado_id', 'title' => 'EMPLEADO'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clientes.paise_id', 'title' => 'PAIS'])</th>
                             
                             <th class="text-right">OPCIONES</th>
                         </tr>
@@ -238,6 +239,7 @@
                                 </td>
                                 
                                 <td>{{$cliente->cliente->empleado->nombre." ".$cliente->cliente->empleado->ape_paterno." ".$cliente->cliente->empleado->ape_materno}}</td>
+                                <td>{{$cliente->cliente->paise->name}}</td>
                                 <td class="text-right">
                                     @permission('correos.redactar')
                                     @if(isset($cliente->cliente->mail))
