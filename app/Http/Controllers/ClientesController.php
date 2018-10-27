@@ -416,7 +416,8 @@ class ClientesController extends Controller {
         $cantidad_preguntas = $cliente->ccuestionario->ccuestionarioPreguntas->count();
         //dd($input);
         $cliente->update($input);
-        if ($request->has('doc_cliente_id') and $request->has('archivo')) {
+        //dd($request->all());
+        if ($request->has('doc_cliente_id') and $request->input('doc_cliente_id')!='0' and $request->has('archivo')) {
             $input2['doc_alumno_id'] = $request->get('doc_cliente_id');
             $input2['archivo'] = $request->get('archivo');
             $input2['cliente_id'] = $id;
