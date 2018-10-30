@@ -267,6 +267,8 @@ class CajasController extends Controller {
             foreach($adeudos as $adeudo){
                 $existe_linea=CajaLn::where('adeudo_id','=',$adeudo->id)->first();
                 if(!is_object($existe_linea)){
+                    $adeudo->$caja_id=$caja->id;
+                    $adeudo->save();
                     $caja_ln['caja_id']=$caja->id;
                     $caja_ln['caja_concepto_id']=$adeudo->caja_concepto_id;
                     $caja_ln['subtotal']=$adeudo->monto;
