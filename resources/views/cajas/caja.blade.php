@@ -54,12 +54,12 @@
         </div>
     </div>
     <div class="col-md-7">
-    <div class="col-md-6">
+    <div class="col-md-4">
         <div class="box box-info">
             <div class="box-body">
                 {!! Form::open(array('route' => 'cajas.buscarCliente')) !!}
 
-                <div class="input-group form-group col-md-6 @if($errors->has('cliente_id')) has-error @endif">
+                <div class="input-group form-group col-md-12 @if($errors->has('cliente_id')) has-error @endif">
                     <div class="input-group-btn">
                         <button type="submit" class="btn btn-info" data-toggle="tooltip" title="Buscar Cliente"><i class='fa fa-search'></i></button>
                     </div>
@@ -87,11 +87,11 @@
                 @if(isset($cliente))
 
                 {!! Form::open(array('route' => 'cajas.store')) !!} 
-                <div class="input-group form-group col-md-6 @if($errors->has('cliente_id')) has-error @endif">
+                <div class="input-group form-group col-md-12 @if($errors->has('cliente_id')) has-error @endif">
                     <div class="input-group-btn">
                         <button type="submit" class="btn btn-warning" data-toggle="tooltip" title="Crear Venta"><i class='glyphicon glyphicon-plus-sign'></i></button>
                     </div>
-                    {!! Form::text("fecha", null, array("class" => "form-control fecha", "id" => "fecha-field", 'placeholder'=>'Fecha de Venta')) !!}
+                    {!! Form::text("fecha", null, array("class" => "form-control fecha", "id" => "fecha-field", 'placeholder'=>'Fecha de Venta', 'style'=>"100%")) !!}
                 </div>
                 {!! Form::hidden("cliente_id", $cliente->id, array("class" => "form-control", "id" => "cliente_id-field")) !!}
                 {!! Form::close() !!}
@@ -118,11 +118,11 @@
             </div><!-- /.box-body -->
         </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-8">
         <div class="box box-info">
             <div class="box-body">
                 @if(isset($caja))
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-4">
                     <div class='text-center'>
                     @permission('cajas.eliminarRecargo')
                         <a href="{{route('cajas.eliminarRecargo', array('caja_id'=>$caja->id))}}" class="btn btn-info btn-sm "><i class=""></i> Eliminar Recargo</a>
@@ -130,8 +130,8 @@
                     </div>
                 </div>
                 @endif
-                @if(isset($caja) and $caja->st_caja_id==2)
-                <div class="form-group col-md-6">
+                @if(isset($caja))
+                <div class="form-group col-md-4">
                     <div class='text-center'>
 
                         {!! Form::open(array('route' => 'cajas.cancelar')) !!}
@@ -141,16 +141,32 @@
 
                     </div>
                 </div>
+                @if($cliente->beca_bnd==1)
+                <div class="form-group col-md-4">
+                    <div class='text-center'>
+                    
+                        <a href="{{route('cajas.becaInscripcion', array('caja_id'=>$caja->id))}}" class="btn btn-warning btn-sm "><i class=""></i> Beca Inscripcion</a>
+                    
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    <div class='text-center'>
+                    
+                        <a href="{{route('cajas.becaMensualidad', array('caja_id'=>$caja->id))}}" class="btn btn-warning btn-sm "><i class=""></i> Beca Mensualidad</a>
+                    
+                    </div>
+                </div>
+                @endif
                 @endif
                 @endif
                 @if(isset($caja) and $caja->st_caja_id==0)
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-4">
                     <div class='text-center'>
                         <a href="#" class="add-modal btn btn-success btn-sm"><i class="glyphicon glyphicon-plus-sign"></i>Agregar Linea</a> 
                     </div>
                 </div>
                 
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-4">
                     <div class='text-center'>
                         <a href="#" class="add-pago btn btn-success btn-sm"><i class="glyphicon glyphicon-plus-sign"></i>Agregar Pago</a> 
                     </div>
@@ -300,9 +316,10 @@
                         @foreach($combinaciones as $combinacion)
                         <tr>
                             <td colspan='6'><strong>Grado:</strong>{{$combinacion->grado->name}}</td>
+                            <td colspan='6'><strong>Beca:</strong>@if($cliente->beca_bnd==1) SI @else NO @endif</td>
                         </tr>
                         <tr>
-                            <td></td><td>Concepto</td><td>Monto</td><td>Fecha</td><td>Inicial</td><td>Ticket</td><td>Pagado</td><td>dias</td> 
+                            <td></td><td>Concepto</td><td>Monto</td><td>Fecha</td><td>Ticket</td><td>Pagado</td><td>dias</td> 
                         </tr>
                         <?php $regla_pago_seriado=0; ?>
                         @foreach($combinacion->adeudos as $adeudo)
@@ -321,6 +338,12 @@
                             ">
                             <td>
                                 @if($adeudo->pagado_bnd==0)
+                                @if($adeudo->inicial_bnd==1)
+                                    <?php 
+                                    $regla_pago_seriado=0;
+                                    ?>
+                                    
+                                @endif
                                 @if(isset($caja) and $adeudo->caja->consecutivo==0 and $regla_pago_seriado==0 and $caja->st_caja_id==0)
                                 {!! Form::open(array('route' => 'cajas.guardaAdeudoPredefinido','method' => 'post')) !!}
                                 <input class="form-control" id="combinacion-field" name="combinacion" value="{{$combinacion->id}}" type="hidden">
@@ -336,7 +359,7 @@
                             <td>{{$adeudo->cajaConcepto->name}}</td>
                             <td>{{$adeudo->monto}}</td>
                             <td>{{$adeudo->fecha_pago}}</td>
-                            <td>@if($adeudo->inicial_bnd==1) SI @else NO @endif</td>
+                            
                             <td class="bg-gray">
                                 @if($adeudo->caja->consecutivo==0)
                                 {{$adeudo->caja->consecutivo}}

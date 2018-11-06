@@ -46,6 +46,7 @@ class updateCliente extends FormRequest
             //'promociones',
             //'promo_cel',
             //'promo_correo'
+            'archivo'=>'requiredif:doc_cliente_id,1,2,3,4,5,6,7,8,9'
         ];
     }
 

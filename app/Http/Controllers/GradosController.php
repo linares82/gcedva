@@ -186,5 +186,44 @@ class GradosController extends Controller {
             }
         }
     }
+    
+    public function getCmbGradosXAsignacion(Request $request) {
+        if ($request->ajax()) {
+            //dd($request->all());
+            $plantel = $request->get('plantel');
+            $lectivo = $request->get('lectivo');
+            $grupo = $request->get('grupo');
+
+            $final = array();
+            $r = DB::table('grados as g')
+                    ->join('inscripcions as i', 'i.grado_id', '=', 'g.id')
+                    ->join('clientes as c', 'i.cliente_id', '=', 'c.id')
+                    ->select('g.id', 'g.name')
+                    ->where('i.plantel_id', '=', $plantel)
+                    ->where('i.lectivo_id', '=', $lectivo)
+                    ->where('i.grupo_id', '=', $grupo)
+                    ->where('g.id', '>', '0')
+                    ->distinct()
+                    ->get();
+            //dd($r);
+            if (isset($grado) and $grado <> 0) {
+                foreach ($r as $r1) {
+                    if ($r1->id == $grado) {
+                        array_push($final, array('id' => $r1->id,
+                            'name' => $r1->name,
+                            'selectec' => 'Selected'));
+                    } else {
+                        array_push($final, array('id' => $r1->id,
+                            'name' => $r1->name,
+                            'selectec' => ''));
+                    }
+                }
+                return $final;
+            } else {
+                return $r;
+            }
+        }
+    }
+    
 
 }

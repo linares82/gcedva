@@ -376,7 +376,9 @@
                                             @if($c->plan_pago_id<>0)
                                             <a href="{{route('adeudos.imprimirInicial', array('cliente'=>$cliente->id, 'combinacion'=>$c->id))}}" class="btn btn-xs btn-primary" target="_blank" >Imprimir Pago Inicial y Generar Adeudos</a>
                                             @endif
-                                            
+                                            @if(count($cliente->cajas)==0 and count($cliente->adeudos)>0)
+                                                <a href="{{route('adeudos.destroyAll', array('cliente'=>$cliente->id, 'combinacion'=>$c->id))}}" class="btn btn-xs btn-primary" >Eliminar Adeudos(Sin Inf. en Caja)</a>
+                                            @endif
                                         </td>
                                         <td>
                                             @permission('inscripcions.create')
@@ -410,10 +412,17 @@
                             @endif
                         </div>
                         <div class="form-group col-md-4 @if($errors->has('beca_porcentaje')) has-error @endif">
-                            <label for="beca_porcentaje-field">Porcentaje Beca(0.00)</label>
+                            <label for="beca_porcentaje-field">Monto Inscripcion(0.00)</label>
                             {!! Form::text("beca_porcentaje", null, array("class" => "form-control input-sm", "id" => "beca_porcentaje-field")) !!}
                             @if($errors->has("beca_porcentaje"))
                             <span class="help-block">{{ $errors->first("beca_porcentaje") }}</span>
+                            @endif
+                        </div>
+                        <div class="form-group col-md-4 @if($errors->has('monto_mensualidad')) has-error @endif">
+                            <label for="monto_mensualidad-field">Monto Mensualidad(0.00)</label>
+                            {!! Form::text("monto_mensualidad", null, array("class" => "form-control input-sm", "id" => "monto_mensualidad-field")) !!}
+                            @if($errors->has("monto_mensualidad"))
+                            <span class="help-block">{{ $errors->first("monto_mensualidad") }}</span>
                             @endif
                         </div>
                         

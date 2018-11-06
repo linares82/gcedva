@@ -37,6 +37,13 @@
                         <span class="help-block">{{ $errors->first("grado_id") }}</span>
                     @endif
                     </div>
+                    <div class="form-group col-md-4 @if($errors->has('lectivo_id')) has-error @endif">
+                       <label for="lectivo_id-field">Periodo Lectivo</label>
+                       {!! Form::select("lectivo_id", $list["Lectivo"], null, array("class" => "form-control select_seguridad", "id" => "lectivo_id-field")) !!}
+                       @if($errors->has("lectivo_id"))
+                        <span class="help-block">{{ $errors->first("lectivo_id") }}</span>
+                       @endif
+                    </div>
                     <div class="form-group col-md-3 @if($errors->has('grupo_id')) has-error @endif">
                        <label for="grupo_id-field" id="lbl_disponibles">Grupo </label>
                        {!! Form::select("grupo_id", $list["Grupo"], null, array("class" => "form-control select_seguridad", "id" => "grupo_id-field")) !!}
@@ -44,23 +51,24 @@
                         <span class="help-block">{{ $errors->first("grupo_id") }}</span>
                        @endif
                     </div>
+                    <div class="form-group col-md-1 @if($errors->has('disponibles')) has-error @endif">
+                       <label for="disponibles-field">Disponibles</label>
+                       {!! Form::text("disponibles", null, array("class" => "form-control input-sm", "id" => "disponibles-field")) !!}
+                    </div>
                     <div class="form-group col-md-3 @if($errors->has('periodo_estudio_id')) has-error @endif">
-                       <label for="grupo_id-field" id="lbl_disponibles">Perido Estudio </label>
+                       <label for="periodo_estudio_id-field" id="lbl_disponibles">Perido Estudio </label>
                        {!! Form::select("periodo_estudio_id", $list["PeriodoEstudio"], null, array("class" => "form-control select_seguridad", "id" => "periodo_estudio_id-field")) !!}
                        @if($errors->has("periodo_estudio_id"))
                         <span class="help-block">{{ $errors->first("periodo_estudio_id") }}</span>
                        @endif
                     </div>
+                    
                     <div class="form-group col-md-3 @if($errors->has('turno_id')) has-error @endif">
-                       <label for="grupo_id-field" id="lbl_disponibles">Turno </label>
+                       <label for="turno_id-field" id="lbl_disponibles">Turno </label>
                        {!! Form::select("turno_id", $list["Turno"], null, array("class" => "form-control select_seguridad", "id" => "turno_id-field")) !!}
                        @if($errors->has("turno_id"))
                         <span class="help-block">{{ $errors->first("periodo_estudio_id") }}</span>
                        @endif
-                    </div>
-                    <div class="form-group col-md-1 @if($errors->has('disponibles')) has-error @endif">
-                       <label for="disponibles-field">Disponibles</label>
-                       {!! Form::text("disponibles", null, array("class" => "form-control input-sm", "id" => "disponibles-field")) !!}
                     </div>
                     <div class="form-group col-md-4 @if($errors->has('fec_inscripcion')) has-error @endif">
                        <label for="fec_inscripcion-field">F. Inscripcion</label>
@@ -69,13 +77,7 @@
                         <span class="help-block">{{ $errors->first("fec_inscripcion") }}</span>
                        @endif
                     </div>
-                    <div class="form-group col-md-4 @if($errors->has('lectivo_id')) has-error @endif">
-                       <label for="lectivo_id-field">Periodo Lectivo</label>
-                       {!! Form::select("lectivo_id", $list["Lectivo"], null, array("class" => "form-control select_seguridad", "id" => "lectivo_id-field")) !!}
-                       @if($errors->has("lectivo_id"))
-                        <span class="help-block">{{ $errors->first("lectivo_id") }}</span>
-                       @endif
-                    </div>
+                    
                     <div class="form-group col-md-4 @if($errors->has('matricula')) has-error @endif">
                        <label for="matricula-field">Matricula</label>
                        {!! Form::text("matricula", null, array("class" => "form-control input-sm", "id" => "matricula-field")) !!}
@@ -108,14 +110,19 @@
         $('#plantel_id-field').change(function(){
           getCmbGrupo();
         });
+        $('#lectivo_id-field').change(function(){
+          getCmbGrupo();
+        });
 
     function getCmbGrupo(){
           //var $example = $("#especialidad_id-field").select2();
           var a= $('#frm_academica').serialize();
               $.ajax({
-                  url: '{{ route("grupos.getCmbGrupo") }}',
+                  url: '{{ route("asignacionAcademica.getCmbGrupo") }}',
                   type: 'GET',
-                  data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&grupo_id=" + $('#grupo_id-field option:selected').val() + "",
+                  data: "plantel_id=" + $('#plantel_id-field option:selected').val() + 
+                        "&grupo_id=" + $('#grupo_id-field option:selected').val() + 
+                        "&lectivo_id=" + $('#lectivo_id-field option:selected').val() + "",
                   dataType: 'json',
                   beforeSend : function(){$("#loading13").show();},
                   complete : function(){$("#loading13").hide();},

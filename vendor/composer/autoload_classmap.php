@@ -7,6 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'AddBecaPorcentajeClientesTable' => $baseDir . '/database/migrations/2018_05_07_114940_add_beca_porcentaje_clientes_table.php',
+    'AddBecadoBndCajasTable' => $baseDir . '/database/migrations/2018_11_01_133610_add_becado_bnd_cajas_table.php',
     'AddBndGraficaLectivosTable' => $baseDir . '/database/migrations/2018_06_19_145551_add_bnd_grafica_lectivos_table.php',
     'AddCicloClientesTable' => $baseDir . '/database/migrations/2017_11_17_134515_add_ciclo_clientes_table.php',
     'AddColorStSeguimientoTable' => $baseDir . '/database/migrations/2017_11_14_164248_add_color_st_seguimiento_table.php',
@@ -42,6 +43,7 @@ return array(
     'AddLectivoGrfiEspecialidadTable' => $baseDir . '/database/migrations/2017_12_14_190710_add_lectivo_grfi_especialidad_table.php',
     'AddMatriculaClientesTable' => $baseDir . '/database/migrations/2017_07_17_160208_add_matricula_clientes_table.php',
     'AddMatriculaInscripcionsTable' => $baseDir . '/database/migrations/2018_02_14_122022_add_matricula_inscripcions_table.php',
+    'AddMontoMensualidadClientesTable' => $baseDir . '/database/migrations/2018_11_01_123717_add_monto_mensualidad_clientes_table.php',
     'AddPaiseIdFieldClientesTable' => $baseDir . '/database/migrations/2018_10_23_103201_add_paise_id_field_clientes_table.php',
     'AddPeriodoEstudioFInscricionsTable' => $baseDir . '/database/migrations/2017_12_11_084732_add_periodo_estudio_f_inscricions_table.php',
     'AddPeriodoEstudioIInscricionsTable' => $baseDir . '/database/migrations/2017_12_11_084742_add_periodo_estudio_i_inscricions_table.php',
@@ -113,6 +115,8 @@ return array(
     'CreateGruposTable' => $baseDir . '/database/migrations/2017_08_17_165652_create_grupos_table.php',
     'CreateHacademicasTable' => $baseDir . '/database/migrations/2017_09_18_170010_create_hacademicas_table.php',
     'CreateHactividadesTable' => $baseDir . '/database/migrations/2017_11_09_175138_create_hactividades_table.php',
+    'CreateHistoriaEventosTable' => $baseDir . '/database/migrations/2018_11_01_135642_create_historia_eventos_table.php',
+    'CreateHistorialsTable' => $baseDir . '/database/migrations/2018_11_01_135826_create_historials_table.php',
     'CreateHorariosTable' => $baseDir . '/database/migrations/2017_09_12_093259_create_horarios_table.php',
     'CreateHsSeguimientosTable' => $baseDir . '/database/migrations/2017_10_11_090810_create_hs_seguimientos_table.php',
     'CreateInscripcionsTable' => $baseDir . '/database/migrations/2017_09_06_133842_create_inscripcions_table.php',

@@ -3,10 +3,13 @@
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
+use App\AsistenciaR;
+use App\AsignacionAcademica;
 use App\Inscripcion;
 use App\Grupo;
 use App\Cliente;
 use App\Hacademica;
+use App\Lectivo;
 use App\Calificacion;
 use App\Ponderacion;
 use App\CalificacionPonderacion;
@@ -18,6 +21,7 @@ use App\Http\Requests\updateInscripcion;
 use App\Http\Requests\createInscripcion;
 use DB;
 use PDF;
+use Carbon\Carbon;
 
 class InscripcionsController extends Controller {
 
@@ -202,8 +206,8 @@ class InscripcionsController extends Controller {
 
 	public function getReinscripcion()
 	{
-		return view('inscripcions.reinscripcion')
-			->with( 'list', Inscripcion::getListFromAllRelationApps() );
+            return view('inscripcions.reinscripcion')
+                ->with( 'list', Inscripcion::getListFromAllRelationApps() );
 	}
 
 	public function postReinscripcion(Request $request)
@@ -257,24 +261,80 @@ class InscripcionsController extends Controller {
                 //dd($data);
                 $registros= Inscripcion::select('c.nombre','c.nombre2','c.ape_paterno','c.ape_materno', 'g.name as grupo','g.name as lectivo',
                                                DB::raw('concat(e.nombre," ",e.ape_paterno," ",e.ape_materno) as maestro'),'gra.name as grado',
-                                               'p.razon as plantel')
+                                               'p.razon as plantel','aa.id as asignacion','c.id as cliente')
                                        ->join('clientes as c', 'c.id', '=', 'inscripcions.cliente_id')
                                        ->join('grupos as g', 'g.id', '=', 'inscripcions.grupo_id')
                                        ->join('lectivos as l','l.id', '=', 'inscripcions.lectivo_id')
                                        ->join('asignacion_academicas as aa', 'aa.grupo_id','=','g.id')
+                                       //->join('asistencia_rs as asis', 'asis.asignacion_academica_id','=','aa.id')
                                        ->join('empleados as e','e.id','=','aa.empleado_id')
                                        ->join('grados as gra','gra.id','=','inscripcions.grado_id')
                                        ->join('plantels as p','p.id','=','c.plantel_id')
                                        ->where('inscripcions.plantel_id', $data['plantel_f'])
                                        ->where('inscripcions.lectivo_id',$data['lectivo_f'])
-                                       ->whereBetween('inscripcions.grupo_id',[$data['grupo_f'],$data['grupo_t']])
-                                       ->whereBetween('inscripcions.grado_id',[$data['grado_f'],$data['grado_t']])
+                                       ->where('inscripcions.grupo_id',$data['grupo_f'])
+                                       ->where('inscripcions.grado_id',$data['grado_f'])
                                        ->orderBy('inscripcions.plantel_id')
                                        ->orderBy('inscripcions.lectivo_id')
                                        ->orderBy('inscripcions.grupo_id')
                                        ->orderBy('inscripcions.grado_id')
                                        ->get();
-                //dd($registros->toArray());
+                //Agregar fechas
+                $asignacion=collect();
+                foreach($registros as $registro){
+                    $asignacion= AsignacionAcademica::find($registro->asignacion);
+                    break;
+                }
+                $dias=array();
+                foreach($asignacion->horarios as $horario){
+                    array_push($dias,$horario->dia->name);
+                }
+                //dd($dias);
+                
+                
+                $fechas=array();
+                $lectivo=Lectivo::find($data['lectivo_f']);
+                
+                $no_habiles=array();
+                foreach($lectivo->diasNoHabiles as $no_habil){
+                    array_push($no_habiles, Carbon::createFromFormat('Y-m-d', $no_habil->fecha));
+                }
+                //dd($no_habiles);    
+                $inicio=Carbon::createFromFormat('Y-m-d', $lectivo->inicio);
+                $fin=Carbon::createFromFormat('Y-m-d', $lectivo->fin);
+                //dd($fin->toDateString());
+                array_push($fechas,$inicio);
+                $fecha=Carbon::createFromFormat('Y-m-d', $lectivo->inicio);
+                while($fin->greaterThanOrEqualTo($fecha)){
+                    if(in_array('Lunes',$dias)){
+                        if($fecha->isMonday() and !in_array($fecha,$no_habiles)){
+                            array_push($fechas,$fecha->toDateString());
+                        }
+                    }elseif(in_array('Martes',$dias)){
+                        if($fecha->isTuesday() and !in_array($fecha,$no_habiles)){
+                            array_push($fechas,$fecha->toDateString());
+                        }
+                    }elseif(in_array('Miercoles',$dias)){
+                        if($fecha->isWensday() and !in_array($fecha,$no_habiles)){
+                            array_push($fechas,$fecha->toDateString());
+                        }
+                    }elseif(in_array('Jueves',$dias)){
+                        if($fecha->isThursday() and !in_array($fecha,$no_habiles)){
+                            array_push($fechas,$fecha->toDateString());
+                        }
+                    }elseif(in_array('Viernes',$dias)){
+                        if($fecha->isFriday() and !in_array($fecha,$no_habiles)){
+                            array_push($fechas,$fecha->toDateString());
+                        }
+                    }elseif(in_array('Sabado',$dias)){
+                        if($fecha->isSaturday()  and !in_array($fecha,$no_habiles)){
+                            array_push($fechas,$fecha->toDateString());
+                        }
+                    }
+                    $fecha->addDay();
+                }
+                //dd($fechas);
+                //dd($registros->grupo);
                                          
 		/*return view('inscripcions.reportes.lista_alumnosr',compact('registros'))
 			->with( 'list', Inscripcion::getListFromAllRelationApps() );
@@ -282,8 +342,10 @@ class InscripcionsController extends Controller {
                 
                 PDF::setOptions(['defaultFont' => 'arial']);
 
-                $pdf = PDF::loadView('inscripcions.reportes.lista_alumnosr', array('registros'=>$registros))
-                        ->setPaper('letter', 'portrait');
+                $pdf = PDF::loadView('inscripcions.reportes.lista_alumnosr', array('registros'=>$registros,'fechas_enc'=>$fechas))
+                        ->setPaper('legal', 'landscape');
                 return $pdf->download('reporte.pdf');
+                
+                //return view('inscripcions.reportes.lista_alumnosr', array('registros'=>$registros,'fechas_enc'=>$fechas));
 	}
 }

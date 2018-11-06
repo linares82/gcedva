@@ -170,12 +170,16 @@ class CajasController extends Controller {
             }*/
             //dd($combinaciones);
             //dd(Caja::getListFromAllRelationApps());
+            //dd("fil");
             if(is_object($cliente) and count($combinaciones)>0){
+                
                 return view('cajas.caja', compact('cliente', 'combinaciones'))
                         ->with( 'list', Caja::getListFromAllRelationApps() )
                         ->with( 'list1', CajaLn::getListFromAllRelationApps() );           
             }
-            return view('cajas.caja')->with('message','Sin coincidencias');           
+            
+            return redirect()->route('cajas.caja')->with('message', 'Sin coincidencias');
+                  
         }
         
         public function buscarVenta(Request $request){
@@ -246,7 +250,7 @@ class CajasController extends Controller {
             //dd($request->get('adeudo'));
             $data=$request->all();
             //dd($data['inicial_bnd']);
-            if($data['inicial_bnd']==1){
+            /*if($data['inicial_bnd']==1){
                 //dd('1');
                 $adeudos=Adeudo::where('cliente_id', '=', $data['cliente_id'])
                               ->where('fecha_pago', '=', $data['fecha_pago'])
@@ -254,9 +258,10 @@ class CajasController extends Controller {
                               ->where('combinacion_cliente_id', '=', $data['combinacion'])
                               ->get();
             }else{
-                //dd('2');
+                
                 $adeudos=Adeudo::where('id', '=', $data['adeudo'])->get();
-            }
+            }*/
+            $adeudos=Adeudo::where('id', '=', $data['adeudo'])->get();
             $caja=Caja::find($data['caja']);
             $cliente=Cliente::find($data['cliente_id']);
             //dd($adeudos->toArray());
@@ -267,7 +272,7 @@ class CajasController extends Controller {
             foreach($adeudos as $adeudo){
                 $existe_linea=CajaLn::where('adeudo_id','=',$adeudo->id)->first();
                 if(!is_object($existe_linea)){
-                    $adeudo->$caja_id=$caja->id;
+                    $adeudo->caja_id=$caja->id;
                     $adeudo->save();
                     $caja_ln['caja_id']=$caja->id;
                     $caja_ln['caja_concepto_id']=$adeudo->caja_concepto_id;
@@ -309,10 +314,10 @@ class CajasController extends Controller {
                     $caja_ln['adeudo_id']=$adeudo->id;
                     $caja_ln['usu_alta_id']=Auth::user()->id;
                     $caja_ln['usu_mod_id']=Auth::user()->id;
-                    if($cliente->beca_bnd==1 and $caja_ln['caja_concepto_id']==1){
+                    /*if($cliente->beca_bnd==1 and $caja_ln['caja_concepto_id']==1){
                         $caja_ln['descuento']=$caja_ln['descuento']+($caja_ln['subtotal']*$cliente->beca_porcentaje);
                         $caja_ln['total']=$caja_ln['total']-($caja_ln['subtotal']-$caja_ln['descuento']);
-                    }
+                    }*/
                     //dd($caja_ln);
                     $caja_linea=CajaLn::create($caja_ln);
                     $subtotal=$subtotal+$caja_ln['subtotal'];
@@ -485,5 +490,44 @@ class CajasController extends Controller {
                     ->with( 'list1', CajaLn::getListFromAllRelationApps() );           
         
     }
-            
+
+    public function becaInscripcion(Request $request){
+        $datos=$request->all();
+        
+        $caja=Caja::find($datos['caja_id']);
+        $cliente=Cliente::find($caja->cliente_id);
+        if($caja->becado_bnd==0){
+            $caja->descuento=$caja->descuento+$cliente->beca_porcentaje;//monto para inscripcion
+            $caja->total=$caja->total - $cliente->beca_porcentaje;
+            $caja->becado_bnd=1;
+            $caja->save();
+        }
+        $combinaciones=CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
+        
+        return view('cajas.caja', compact('cliente', 'caja', 'combinaciones'))
+                    ->with( 'list', Caja::getListFromAllRelationApps() )
+                    ->with( 'list1', CajaLn::getListFromAllRelationApps() );           
+        
+    }
+    
+    public function becaMensualidad(Request $request){
+        $datos=$request->all();
+        
+        $caja=Caja::find($datos['caja_id']);
+        $cliente=Cliente::find($caja->cliente_id);
+        if($caja->becado_bnd==0){
+            $caja->descuento=$caja->descuento+$cliente->monto_mensualidad;//monto para inscripcion
+            $caja->total=$caja->total - $cliente->monto_mensualidad;
+            $caja->becado_bnd=1;
+            $caja->save();
+
+        }
+        
+        $combinaciones=CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
+        
+        return view('cajas.caja', compact('cliente', 'caja', 'combinaciones'))
+                    ->with( 'list', Caja::getListFromAllRelationApps() )
+                    ->with( 'list1', CajaLn::getListFromAllRelationApps() );           
+    }
+    
  }

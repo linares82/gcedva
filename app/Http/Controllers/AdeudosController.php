@@ -202,4 +202,21 @@ class AdeudosController extends Controller {
             return $pdf->download('AdeudosPendientes.pdf');
             */
         }
+        
+        public function destroyAll(Request $request)
+	{
+                $datos=$request->all();
+                $combinacion= CombinacionCliente::find($datos['combinacion']);
+                $combinacion->cuenta_ticket_pago=0;
+                $combinacion->save();
+		$adeudos=Adeudo::where('cliente_id',$datos['cliente'])
+                               ->where('combinacion_cliente_id', $datos['combinacion'])
+                               ->get();
+                if(count($adeudos)>0){
+                    foreach($adeudos as $adeudo){
+                        $adeudo->delete();
+                    }
+                }
+		return redirect()->route('clientes.edit',array('id'=>$datos['cliente']))->with('message', 'Registro Borrado.');
+	}
 }

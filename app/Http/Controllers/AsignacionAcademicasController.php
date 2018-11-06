@@ -193,5 +193,40 @@ class AsignacionAcademicasController extends Controller {
 			})->export('xls');
 			*/
 	}
-
+        
+        
+        public function getCmbGrupo(Request $request){
+		if($request->ajax()){
+			//dd($request->get('plantel_id'));
+			$plantel=$request->get('plantel_id');
+			$grupo=$request->get('grupo_id');			
+                        $lectivo=$request->get('lectivo_id');			
+			$final = array();
+			$r = DB::table('grupos as g')
+					->select('g.id', 'g.name')
+                                        ->join('asignacion_academicas as aa','aa.plantel_id','=','g.plantel_id')
+					->where('g.plantel_id', '=', $plantel)
+                                        ->where('aa.lectivo_id', '=', $lectivo)
+					->where('g.id', '>', '0')
+					->get();
+			//dd($r);
+			if(isset($grupo) and $grupo<>0){
+				foreach($r as $r1){
+					if($r1->id==$grupo){
+						array_push($final, array('id'=>$r1->id, 
+												 'name'=>$r1->name, 
+												 'selectec'=>'Selected'));
+					}else{
+						array_push($final, array('id'=>$r1->id, 
+												 'name'=>$r1->name, 
+												 'selectec'=>''));
+					}
+				}
+				return $final;
+			}else{
+				return $r;	
+			}
+			
+		}
+	}
 }

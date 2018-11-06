@@ -8,6 +8,7 @@ use File;
 use App\Empleado;
 use App\PivotDocEmpleado;
 use App\User;
+use App\Historial;
 use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updateEmpleado;
@@ -24,8 +25,9 @@ class EmpleadosController extends Controller {
      */
     public function index(Request $request) {
         $empleados = Empleado::getAllData($request);
+        $historials = Historial::getAllData($request);
 
-        return view('empleados.index', compact('empleados'));
+        return view('empleados.index', compact('empleados','historials'));
     }
 
     /**

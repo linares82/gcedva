@@ -122,20 +122,20 @@
                             </div>
                             
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_grupo_id_gt">GRUPO_ID</label>
+                                <label class="col-sm-2 control-label" for="q_grupos.name_gt">GRUPO_NAME</label>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['grupo_id_gt']) ?: '' }}" name="q[grupo_id_gt]" id="q_grupo_id_gt" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['grupos.name_gt']) ?: '' }}" name="q[grupos.name_gt]" id="q_grupos.name_gt" />
                                 </div>
                                 <div class=" col-sm-1 text-center"> - </div>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['grupo_id_lt']) ?: '' }}" name="q[grupo_id_lt]" id="q_grupo_id_lt" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['grupos.name_lt']) ?: '' }}" name="q[grupos.name_lt]" id="q_grupos.name_lt" />
                                 </div>
                             </div>
                             
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_grupo_id_cont">GRUPO</label>
+                                <label class="col-sm-2 control-label" for="q_grupos.name_cont">GRUPO</label>
                                 <div class=" col-sm-9">
-                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['grupo_id_cont']) ?: '' }}" name="q[grupo_id_cont]" id="q_grupo_id_cont" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['grupos.name_cont']) ?: '' }}" name="q[grupos.name_cont]" id="q_grupos.name_cont" />
                                 </div>
                             </div>
                             
@@ -231,7 +231,7 @@
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'especialidad_id', 'title' => 'ESPECIALIDAD'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'nivel_id', 'title' => 'NIVEL'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'grado_id', 'title' => 'GRADO'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'grupo_id', 'title' => 'GRUPO'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'grupos.name', 'title' => 'GRUPO'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'cliente.curp', 'title' => 'CURP'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'fec_inscripcion', 'title' => 'F. INSCRIPCION'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'periodo_lectivo_id', 'title' => 'PERIODO LECTIVO'])</th>

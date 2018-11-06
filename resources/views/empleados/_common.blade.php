@@ -1,1 +1,1 @@
-@section('empleadosAppTitle','Empleado')
+@section('empleadosAppTitle','Colaborador')

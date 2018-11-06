@@ -60,27 +60,15 @@
                     <span class="help-block">{{ $errors->first("grupo_f") }}</span>
                     @endif
                 </div>
-                <div class="form-group col-md-6 @if($errors->has('grupo_t')) has-error @endif">
-                    <label for="grupo_t-field">Grupo a:</label>
-                    {!! Form::select("grupo_t", $list["Grupo"], null, array("class" => "form-control select_seguridad", "id" => "grupo_t-field")) !!}
-                    @if($errors->has("grupo_t"))
-                    <span class="help-block">{{ $errors->first("grupo_t") }}</span>
-                    @endif
-                </div>
+                
                 <div class="form-group col-md-6 @if($errors->has('grado_f')) has-error @endif">
                     <label for="grado_f-field">Grado de:</label>
-                    {!! Form::select("grado_f", $list["Grado"], null, array("class" => "form-control select_seguridad", "id" => "Grupo_f-field")) !!}
+                    {!! Form::select("grado_f", $list["Grado"], null, array("class" => "form-control select_seguridad", "id" => "grado_f-field")) !!}
                     @if($errors->has("grado_f"))
                     <span class="help-block">{{ $errors->first("grado_f") }}</span>
                     @endif
                 </div>
-                <div class="form-group col-md-6 @if($errors->has('grado_t')) has-error @endif">
-                    <label for="grado_t-field">Grado a:</label>
-                    {!! Form::select("grado_t", $list["Grado"], null, array("class" => "form-control select_seguridad", "id" => "grado_t-field")) !!}
-                    @if($errors->has("grado_t"))
-                    <span class="help-block">{{ $errors->first("grado_t") }}</span>
-                    @endif
-                </div>
+                
                 <!--
                 <div class="form-group col-md-6 @if($errors->has('especialidad_f')) has-error @endif">
                     <label for="especialidad_f-field">Especialidad de:</label>
@@ -119,6 +107,68 @@
         lang_clear_date: 'Limpiar',
         show_select_today: 'Hoy',
       });
+      
+      $('#lectivo_f-field').change(function(){
+        getCmbGrupo();
+        });
+    $('#grupo_f-field').change(function(){
+        getCmbGrado();    
+        });
+      
+    function getCmbGrupo(){
+          //var $example = $("#especialidad_id-field").select2();
+              $.ajax({
+                  url: '{{ route("asignacionAcademica.getCmbGrupo") }}',
+                  type: 'GET',
+                  data: "plantel_id=" + $('#plantel_f-field option:selected').val() + 
+                        "&grupo_id=" + $('#grupo_f-field option:selected').val() + 
+                        "&lectivo_id=" + $('#lectivo_f-field option:selected').val() + "",
+                  dataType: 'json',
+                  beforeSend : function(){$("#loading13").show();},
+                  complete : function(){$("#loading13").hide();},
+                  success: function(data){
+                      //$example.select2("destroy");
+                      $('#grupo_f-field').html('');
+                      
+                      //$('#especialidad_id-field').empty();
+                      $('#grupo_f-field').append($('<option></option>').text('Seleccionar').val('0'));
+                      
+                      $.each(data, function(i) {
+                          //alert(data[i].name);
+                          $('#grupo_f-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                      });
+                      //$example.select2();
+                  }
+              });
+          }
+              
+    function getCmbGrado(){
+            //var $example = $("#especialidad_id-field").select2();
+
+            $.ajax({
+            url: '{{ route("grados.getCmbGradosXAsignacion") }}',
+                    type: 'GET',
+                    data: "plantel=" + $('#plantel_f-field option:selected').val() + 
+                          "&grupo=" + $('#grupo_f-field option:selected').val() +
+                          "&lectivo=" + $('#lectivo_f-field option:selected').val() + "",
+                    dataType: 'json',
+                    beforeSend : function(){$("#loading12").show(); },
+                    complete : function(){$("#loading12").hide(); },
+                    success: function(data){
+                    //alert(data);
+                    //$example.select2("destroy");
+                    $('#grado_f-field').html('');
+                    //$('#especialidad_id-field').empty();
+                    $('#grado_f-field').append($('<option></option>').text('Seleccionar').val('0'));
+                    $.each(data, function(i) {
+                    //alert(data[i].name);
+                    $('#grado_f-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
+                    });
+                    //$example.select2();
+                    }
+            });
+        }
+      
     
     @permission('IreporteFiltroXplantel')
         $("#plantel_f-field").prop("disabled", true);
