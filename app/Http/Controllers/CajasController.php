@@ -496,7 +496,7 @@ class CajasController extends Controller {
         
         $caja=Caja::find($datos['caja_id']);
         $cliente=Cliente::find($caja->cliente_id);
-        if($caja->becado_bnd==0){
+        if($caja->becado_bnd==0 and $cliente->beca_porcentaje>0){
             $caja->descuento=$caja->descuento+$cliente->beca_porcentaje;//monto para inscripcion
             $caja->total=$caja->total - $cliente->beca_porcentaje;
             $caja->becado_bnd=1;
@@ -515,7 +515,7 @@ class CajasController extends Controller {
         
         $caja=Caja::find($datos['caja_id']);
         $cliente=Cliente::find($caja->cliente_id);
-        if($caja->becado_bnd==0){
+        if($caja->becado_bnd==0 and $cliente->monto_mensualidad>0){
             $caja->descuento=$caja->descuento+$cliente->monto_mensualidad;//monto para inscripcion
             $caja->total=$caja->total - $cliente->monto_mensualidad;
             $caja->becado_bnd=1;

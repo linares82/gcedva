@@ -213,7 +213,8 @@
                                 <td>{{$historial->historiaEvento->name}}</td>
                     <td>{{$historial->descripcion}}</td>
                     <td>{{$historial->fecha}}</td>
-                    <td>{{$historial->archivo}}</td>
+                    
+                    <td><a href='{!! asset("/imagenes/historial_eventos/".$historial->id."/".$historial->archivo) !!}' target='_blank'>Ver</h></td>
                     <td>{{$historial->empleado->nombre." ".$historial->empleado->ape_paterno." ".$historial->empleado->ape_materno}}</td>
                                 <td class="text-right">
                                     
