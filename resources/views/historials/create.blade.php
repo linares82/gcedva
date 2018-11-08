@@ -29,7 +29,7 @@
                 </div>
                 <div class="well well-sm">
                     <button type="submit" class="btn btn-primary">Crear</button>
-                    <a class="btn btn-link pull-right" href="{{ route('historials.index') }}"><i class="glyphicon glyphicon-backward"></i> Regresar</a>
+                    <a class="btn btn-link pull-right" href="{{ route('empleados.index') }}"><i class="glyphicon glyphicon-backward"></i> Regresar</a>
                 </div>
             {!! Form::close() !!}
 

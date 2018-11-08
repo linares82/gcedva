@@ -60,12 +60,14 @@
                                 <label for="combinaciones">Marcar incripción</label>
                                 <br/>
                                 @foreach($seguimiento->cliente->combinacionClientes as $com)
+                                @if($com->especialidad_id<>0 and $com->nivel_id<>0 and $com->grado_id<>0 and $com->turno<>0)
                                 {!!  
                                 Form::radio('combinacion-field', $com->id, $com->bnd_inscrito, array('id'=>'combinacion-field'));
                                 !!}
                                 {{$com->especialidad->name}}/{{$com->nivel->name}}/{{$com->grado->name}}/{{$com->turno->name}}
                                 
                                 <br/>
+                                @endif
                                 @endforeach
                             </div>
                             <div class="form-group col-md-6 @if($errors->has('st_seguimiento_id')) has-error @endif">
