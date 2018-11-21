@@ -359,7 +359,7 @@
                                 </thead>
                                 <tbody>
                                     @foreach($cliente->combinaciones as $c)
-                                    @if($c->especialidad_id<>0 and $c->nivel_id<>0 and $c->grado_id<>0 and $c->turno<>0)
+                                    @if($c->especialidad_id<>0 and $c->nivel_id<>0 and $c->grado_id<>0 and $c->turno_id<>0)
                                     <tr>
                                         <td>{{$c->especialidad->name}}</td>
                                         <td>{{$c->nivel->name}}</td>

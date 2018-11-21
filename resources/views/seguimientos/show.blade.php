@@ -60,7 +60,7 @@
                                 <label for="combinaciones">Marcar incripción</label>
                                 <br/>
                                 @foreach($seguimiento->cliente->combinacionClientes as $com)
-                                @if($com->especialidad_id<>0 and $com->nivel_id<>0 and $com->grado_id<>0 and $com->turno<>0)
+                                @if($com->especialidad_id<>0 and $com->nivel_id<>0 and $com->grado_id<>0 and $com->turno_id<>0)
                                 {!!  
                                 Form::radio('combinacion-field', $com->id, $com->bnd_inscrito, array('id'=>'combinacion-field'));
                                 !!}

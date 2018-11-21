@@ -28,7 +28,7 @@ class EmpresasController extends Controller {
     public function index(Request $request) {
         $empresas = Empresa::getAllData($request);
         $union = collect(["Seleccionar Opción"]);
-        $plantel=Empleado::find(Auth::user()->id)->value('plantel_id');
+        $plantel=Empleado::where('user_id', Auth::user()->id)->value('plantel_id');
         $usuarios = $union->union(User::join('empleados as e','e.user_id','=','users.id')
                         ->where('e.plantel_id','=', $plantel)
                         ->pluck('users.name','users.id'));

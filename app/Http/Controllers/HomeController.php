@@ -66,7 +66,7 @@ class HomeController extends Controller
                     ->where('st_seguimiento_id', '=', 1)
                     ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
                     //->where('mes', '=', $mes)
-                    ->where('c.plantel_id', '=', $e->plantel_id)
+                    //->where('c.plantel_id', '=', $e->plantel_id)
                     ->where('c.empleado_id', '=', $e->id)
                     ->value('total');
         //dd($a_1);
@@ -85,7 +85,7 @@ class HomeController extends Controller
                     //->where('seguimientos.created_at', '>=', $l->inicio)
                     //->where('seguimientos.created_at', '<=', $l->fin)
                     ->where('c.empleado_id', '=', $e->id)
-                    ->where('c.plantel_id', '=', $e->plantel_id)
+                    //->where('c.plantel_id', '=', $e->plantel_id)
                     ->where('h.fecha', '>=', $lSt2->inicio)
                     ->where('h.fecha', '<=', $lSt2->fin)
                     ->where('h.detalle','=','Concretado')
@@ -121,14 +121,14 @@ class HomeController extends Controller
                     ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
                     //->where('mes', '=', $mes)
                     ->where('c.empleado_id', '=', $e->id)
-                    ->where('c.plantel_id', '=', $e->plantel_id)
+                    //->where('c.plantel_id', '=', $e->plantel_id)
                     ->count();
         
         $a_4=Seguimiento::where('st_seguimiento_id', '=', 4)
                     ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
                     //->where('mes', '=', $mes)
                     ->where('c.empleado_id', '=', $e->id)
-                    ->where('c.plantel_id', '=', $e->plantel_id)
+                    //->where('c.plantel_id', '=', $e->plantel_id)
                     ->count();
         
         /*
@@ -226,7 +226,7 @@ class HomeController extends Controller
                         ->where('h.detalle','=','Concretado')
                         ->where('h.asunto','=','Cambio estatus ')
                         ->where('c.empleado_id', '=', $e->id)
-                        ->where('c.plantel_id', '=', $e->plantel_id)
+                        //->where('c.plantel_id', '=', $e->plantel_id)
                         ->where('sts.id', '=', 2)
                         ->groupBy('sts.name')
                         ->get();
@@ -252,7 +252,7 @@ class HomeController extends Controller
                     ->join('st_seguimientos as sts', 'sts.id','=','seguimientos.st_seguimiento_id')
                     //->where('mes', '=', $mes)
                     ->where('c.empleado_id', '=', $e->id)
-                    ->where('c.plantel_id', '=', $e->plantel_id)
+                    //->where('c.plantel_id', '=', $e->plantel_id)
                     ->whereIn('sts.id', [1,3,4])
                     ->groupBy('sts.name')
                     ->get();

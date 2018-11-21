@@ -273,7 +273,7 @@ class EmpleadosController extends Controller {
         $empleado = $empleado->find($id);
         $e = $empleado->update($input);
         //dd($request->all());
-        if ($request->has('doc_empleado_id') and $request->has('archivo')) {
+        if ($request->has('doc_empleado_id') and $request->get('doc_empleado_id')>0 and $request->has('archivo')) {
             $input2['doc_empleado_id'] = $request->get('doc_empleado_id');
             $input2['archivo'] = $request->get('archivo');
             $input2['empleado_id'] = $id;
