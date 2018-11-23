@@ -213,89 +213,6 @@
                     </div>
                 </div>
 
-                <div class="box box-default box-solid">
-                    <div class="box-header">
-                        <h3 class="box-title">INFORMACIÓN DE PUBLICIDAD Y PROPAGANDA</h3>
-                        <div class="box-tools">
-
-                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                        </div>
-                    </div>
-                    <div class="box-body">
-                        <div class="form-group col-md-4 @if($errors->has('fec_registro')) has-error @endif">
-                            <label for="fec_registro-field">Fecha Registro</label>
-                            {!! Form::text("fec_registro", null, array("class" => "form-control input-sm", "id" => "fec_registro-field")) !!}
-                            @if($errors->has("fec_registro"))
-                            <span class="help-block">{{ $errors->first("fec_registro") }}</span>
-                            @endif
-                        </div>
-                        <div class="form-group col-md-4 @if($errors->has('ofertum_id')) has-error @endif">
-                            <label for="ofertum_id-field">Oferta</label>
-                            {!! Form::select("ofertum_id", $list['Ofertum'],null, array("class" => "form-control select_seguridad", "id" => "ofertum_id-field")) !!}
-                            @if($errors->has("ofertum_id"))
-                            <span class="help-block">{{ $errors->first("oferta_id") }}</span>
-                            @endif
-                        </div>
-                        <div class="form-group col-md-4 @if($errors->has('tpo_informe_id')) has-error @endif" >
-                            <label for="tpo_informe-field">Tipo Informe</label>
-                            {!! Form::select("tpo_informe_id", $list["TpoInforme"], null, array("class" => "form-control select_seguridad", "id" => "tpo_informe_id-field")) !!}
-                            @if($errors->has("tpo_informe_id"))
-                            <span class="help-block">{{ $errors->first("tpo_informe_id") }}</span>
-                            @endif
-                        </div>
-                        <div class="form-group col-md-4 @if($errors->has('medio_id')) has-error @endif" style="clear:left;">
-                            <label for="medio_id-field">Medio por el que se enteró</label>
-                            {!! Form::select("medio_id", $list["Medio"], null, array("class" => "form-control select_seguridad", "id" => "medio_id-field")) !!}
-                            @if($errors->has("medio_id"))
-                            <span class="help-block">{{ $errors->first("medio_id") }}</span>
-                            @endif
-                        </div>
-                        <div class="form-group col-md-4 @if($errors->has('segmento_mercado_id')) has-error @endif" >
-                            <label for="segmento_mercado_id-field">Segmento Mercado</label>
-                            {!! Form::select("segmento_mercado_id", $list["SegmentoMercado"], null, array("class" => "form-control select_seguridad", "id" => "segmento_mercado_id-field")) !!}
-                            @if($errors->has("segmento_mercado_id"))
-                            <span class="help-block">{{ $errors->first("segmento_mercado_id") }}</span>
-                            @endif
-                        </div>
-                        <div class="form-group col-md-4 @if($errors->has('expo')) has-error @endif" id="expo-group" >
-                            <label for="expo-field">Expo</label>
-                            {!! Form::text("expo",null, array("class" => "form-control input-sm", "id" => "expo-field")) !!}
-                            @if($errors->has("expo"))
-                            <span class="help-block">{{ $errors->first("expo") }}</span>
-                            @endif
-                        </div>
-                        <div class="form-group col-md-4 @if($errors->has('otro_medio')) has-error @endif" id="otro_medio-group">
-                            <label for="otro_medio-field">Otro Medio</label>
-                            {!! Form::text("otro_medio", null, array("class" => "form-control input-sm", "id" => "otro_medio-field")) !!}
-                            @if($errors->has("otro_medio"))
-                            <span class="help-block">{{ $errors->first("otro_medio") }}</span>
-                            @endif
-                        </div>
-
-
-                        <div class="form-group col-md-4 @if($errors->has('promociones')) has-error @endif">
-                            <label for="promociones-field">Promociones</label>
-                            {!! Form::checkbox("promociones", 1, null, [ "id" => "promociones-field"]) !!}
-                            @if($errors->has("promociones"))
-                            <span class="help-block">{{ $errors->first("promociones") }}</span>
-                            @endif
-                        </div>
-                        <div class="form-group col-md-4 @if($errors->has('promo_cel')) has-error @endif">
-                            <label for="promo_cel-field">Promociones por Celular</label>
-                            {!! Form::checkbox("promo_cel", 1, null, [ "id" => "promo_cel-field"]) !!}
-                            @if($errors->has("promo_cel"))
-                            <span class="help-block">{{ $errors->first("promo_cel") }}</span>
-                            @endif
-                        </div>
-                        <div class="form-group col-md-4 @if($errors->has('promo_correo')) has-error @endif">
-                            <label for="promo_correo-field">Promociones por Correo</label>
-                            {!! Form::checkbox("promo_correo", 1, null, [ "id" => "promo_correo-field"]) !!}
-                            @if($errors->has("promo_correo"))
-                            <span class="help-block">{{ $errors->first("promo_correo") }}</span>
-                            @endif
-                        </div>
-                    </div>
-                </div>
                 @if(isset($cliente))
                 <div class="box box-default box-solid">
                     <div class="box-header">
@@ -397,6 +314,91 @@
                 </div>
                 
                 @endif
+                
+                <div class="box box-default box-solid">
+                    <div class="box-header">
+                        <h3 class="box-title">INFORMACIÓN DE PUBLICIDAD Y PROPAGANDA</h3>
+                        <div class="box-tools">
+
+                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <div class="form-group col-md-4 @if($errors->has('fec_registro')) has-error @endif">
+                            <label for="fec_registro-field">Fecha Registro</label>
+                            {!! Form::text("fec_registro", null, array("class" => "form-control input-sm", "id" => "fec_registro-field")) !!}
+                            @if($errors->has("fec_registro"))
+                            <span class="help-block">{{ $errors->first("fec_registro") }}</span>
+                            @endif
+                        </div>
+                        <div class="form-group col-md-4 @if($errors->has('ofertum_id')) has-error @endif">
+                            <label for="ofertum_id-field">Oferta</label>
+                            {!! Form::select("ofertum_id", $list['Ofertum'],null, array("class" => "form-control select_seguridad", "id" => "ofertum_id-field")) !!}
+                            @if($errors->has("ofertum_id"))
+                            <span class="help-block">{{ $errors->first("oferta_id") }}</span>
+                            @endif
+                        </div>
+                        <div class="form-group col-md-4 @if($errors->has('tpo_informe_id')) has-error @endif" >
+                            <label for="tpo_informe-field">Tipo Informe</label>
+                            {!! Form::select("tpo_informe_id", $list["TpoInforme"], null, array("class" => "form-control select_seguridad", "id" => "tpo_informe_id-field")) !!}
+                            @if($errors->has("tpo_informe_id"))
+                            <span class="help-block">{{ $errors->first("tpo_informe_id") }}</span>
+                            @endif
+                        </div>
+                        <div class="form-group col-md-4 @if($errors->has('medio_id')) has-error @endif" style="clear:left;">
+                            <label for="medio_id-field">Medio por el que se enteró</label>
+                            {!! Form::select("medio_id", $list["Medio"], null, array("class" => "form-control select_seguridad", "id" => "medio_id-field")) !!}
+                            @if($errors->has("medio_id"))
+                            <span class="help-block">{{ $errors->first("medio_id") }}</span>
+                            @endif
+                        </div>
+                        <div class="form-group col-md-4 @if($errors->has('segmento_mercado_id')) has-error @endif" >
+                            <label for="segmento_mercado_id-field">Segmento Mercado</label>
+                            {!! Form::select("segmento_mercado_id", $list["SegmentoMercado"], null, array("class" => "form-control select_seguridad", "id" => "segmento_mercado_id-field")) !!}
+                            @if($errors->has("segmento_mercado_id"))
+                            <span class="help-block">{{ $errors->first("segmento_mercado_id") }}</span>
+                            @endif
+                        </div>
+                        <div class="form-group col-md-4 @if($errors->has('expo')) has-error @endif" id="expo-group" >
+                            <label for="expo-field">Expo</label>
+                            {!! Form::text("expo",null, array("class" => "form-control input-sm", "id" => "expo-field")) !!}
+                            @if($errors->has("expo"))
+                            <span class="help-block">{{ $errors->first("expo") }}</span>
+                            @endif
+                        </div>
+                        <div class="form-group col-md-4 @if($errors->has('otro_medio')) has-error @endif" id="otro_medio-group">
+                            <label for="otro_medio-field">Otro Medio</label>
+                            {!! Form::text("otro_medio", null, array("class" => "form-control input-sm", "id" => "otro_medio-field")) !!}
+                            @if($errors->has("otro_medio"))
+                            <span class="help-block">{{ $errors->first("otro_medio") }}</span>
+                            @endif
+                        </div>
+
+
+                        <div class="form-group col-md-4 @if($errors->has('promociones')) has-error @endif">
+                            <label for="promociones-field">Promociones</label>
+                            {!! Form::checkbox("promociones", 1, null, [ "id" => "promociones-field"]) !!}
+                            @if($errors->has("promociones"))
+                            <span class="help-block">{{ $errors->first("promociones") }}</span>
+                            @endif
+                        </div>
+                        <div class="form-group col-md-4 @if($errors->has('promo_cel')) has-error @endif">
+                            <label for="promo_cel-field">Promociones por Celular</label>
+                            {!! Form::checkbox("promo_cel", 1, null, [ "id" => "promo_cel-field"]) !!}
+                            @if($errors->has("promo_cel"))
+                            <span class="help-block">{{ $errors->first("promo_cel") }}</span>
+                            @endif
+                        </div>
+                        <div class="form-group col-md-4 @if($errors->has('promo_correo')) has-error @endif">
+                            <label for="promo_correo-field">Promociones por Correo</label>
+                            {!! Form::checkbox("promo_correo", 1, null, [ "id" => "promo_correo-field"]) !!}
+                            @if($errors->has("promo_correo"))
+                            <span class="help-block">{{ $errors->first("promo_correo") }}</span>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+                
 
                 <div class="box box-default box-solid">
                     <div class="box-header">
