@@ -354,11 +354,11 @@
     plugins: [
       //'autolink lists  charmap print hr anchor',
       //'code',
-      'insertdatetime table contextmenu link imagetools',
+      'insertdatetime table contextmenu link imagetools code',
       //'emoticons paste textcolor colorpicker textpattern'
     ],
     toolbar1: 'undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link',
-    toolbar2: 'print preview media | forecolor backcolor emoticons | codesample',
+    toolbar2: 'print preview media | forecolor backcolor emoticons | codesample | html' ,
     image_advtab: false,
     templates: [
       { title: 'Test template 1', content: 'Test 1' },

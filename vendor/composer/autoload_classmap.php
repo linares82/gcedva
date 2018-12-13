@@ -102,6 +102,7 @@ return array(
     'CreateDiplomadosTable' => $baseDir . '/database/migrations/2017_05_02_203835_create_diplomados_table.php',
     'CreateDocAlumnosTable' => $baseDir . '/database/migrations/2017_09_06_134026_create_doc_alumnos_table.php',
     'CreateDocEmpleadosTable' => $baseDir . '/database/migrations/2017_07_28_001232_create_doc_empleados_table.php',
+    'CreateEbanxesTable' => $baseDir . '/database/migrations/2018_12_13_132318_create_ebanxes_table.php',
     'CreateEmpleadosTable' => $baseDir . '/database/migrations/2017_03_28_180957_create_empleados_table.php',
     'CreateEmpresasTable' => $baseDir . '/database/migrations/2017_10_13_110430_create_empresas_table.php',
     'CreateEspecialidadsTable' => $baseDir . '/database/migrations/2017_05_03_000000_create_especialidads_table.php',

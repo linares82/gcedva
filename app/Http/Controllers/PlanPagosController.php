@@ -127,9 +127,13 @@ class PlanPagosController extends Controller {
 		$planPago=$planPago->find($id);
 		$planPago->update( $input );
                 //dd($request->all());
-                if($generar_pagos['inscripcion']<>null and $generar_pagos['uniforme']<>null and $generar_pagos['tramites']<>null and 
-                   $generar_pagos['mensualidad']<>null and $generar_pagos['cuantas_mensualidad']<>null and $generar_pagos['fecha_pago']<>null and 
-                   $generar_pagos['seguro']<>null){
+                if(isset($generar_pagos['inscripcion']) and $generar_pagos['inscripcion']<>null and 
+                   isset($generar_pagos['uniforme']) and $generar_pagos['uniforme']<>null and 
+                   isset($generar_pagos['tramites']) and $generar_pagos['tramites']<>null and 
+                   isset($generar_pagos['mensualidad']) and $generar_pagos['mensualidad']<>null and 
+                   isset($generar_pagos['cuantas_mensualidad']) and $generar_pagos['cuantas_mensualidad']<>null and 
+                   isset($generar_pagos['fecha_pago']) and $generar_pagos['fecha_pago']<>null and 
+                   isset($generar_pagos['seguro']) and $generar_pagos['seguro']<>null){
                    
                     $inscripcion=new PlanPagoLn;
                     $inscripcion->plan_pago_id=$planPago->id;
