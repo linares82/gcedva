@@ -28,6 +28,13 @@
                         <span class="help-block">{{ $errors->first("name") }}</span>
                        @endif
                     </div>
+                    <div class="form-group col-md-4 @if($errors->has('precio_online')) has-error @endif">
+                       <label for="precio_online-field">Precio Online</label>
+                       {!! Form::text("precio_online", null, array("class" => "form-control input-sm", "id" => "precio_online-field")) !!}
+                       @if($errors->has("precio_online"))
+                        <span class="help-block">{{ $errors->first("precio_online") }}</span>
+                       @endif
+                    </div>
 @push('scripts')                    
 <script>
   $(document).ready(function() {

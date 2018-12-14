@@ -37,6 +37,7 @@ class CreateEbanxesTable extends Migration {
             $table->integer('otro_id')->unsigned();
             $table->integer('grado_id')->unsigned();
             $table->integer('subdiplomado_id')->unsigned();
+            $table->integer('subcurso_id')->unsigned();
             $table->integer('subotro_id')->unsigned();
             $table->integer('turno_id')->unsigned();
             $table->integer('turno2_id')->unsigned();
