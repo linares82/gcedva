@@ -646,6 +646,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'AddEspecialidadNivelGradoTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_11_143725_add_especialidad_nivel_grado_table.php',
         'AddEspecialidadNivelTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_11_143659_add_especialidad_nivel_table.php',
         'AddFechasGraficaEspecialidadTable' => __DIR__ . '/../..' . '/database/migrations/2017_12_13_102850_add_fechas_grafica_especialidad_table.php',
+        'AddFieldIndexClienteIdEbanxesTable' => __DIR__ . '/../..' . '/database/migrations/2018_12_17_153737_add_field_index_cliente_id_ebanxes_table.php',
         'AddFieldModuloMateriasTable' => __DIR__ . '/../..' . '/database/migrations/2017_12_08_141207_add_field_modulo_materias_table.php',
         'AddFieldsLectivosTable' => __DIR__ . '/../..' . '/database/migrations/2018_02_14_150006_add_fields_lectivos_table.php',
         'AddFieldsPlantelsTable' => __DIR__ . '/../..' . '/database/migrations/2017_06_16_222542_Add_fields_Plantels_Table.php',

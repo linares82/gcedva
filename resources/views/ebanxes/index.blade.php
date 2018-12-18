@@ -226,23 +226,55 @@
                     <tbody>
                         @foreach($ebanxes as $ebanx)
                             <tr>
-                                <td>{{$ebanx->id}}</td>
+                                @if($ebanx->cliente_id>0)
+                                    <td><a href="{{route('clientes.edit', $ebanx->cliente_id)}}">{{$ebanx->id}}</a></td>
+                                @else
+                                    <td>{{$ebanx->id}}</td>
+                                @endif
                                 <td>{{$ebanx->nombre}}</td>
                                 <td>{{$ebanx->nombre2}}</td>
                                 <td>{{$ebanx->ape_paterno}}</td>
                                 <td>{{$ebanx->ape_materno}}</td>
-                                <td>{{$ebanx->fel_fijo}}</td>
+                                <td>{{$ebanx->tel_fijo}}</td>
                                 <td>{{$ebanx->mail}}</td>
                                 <td>{{$ebanx->grado->name}}</td>
-                                <td>{{$ebanx->tel_cel}}</td>
+                                <td>{{$ebanx->pais->marcado."-".$ebanx->tel_cel}}</td>
                                 <td>{{$ebanx->pais->name}}</td>
-                                <td>{{$ebanx->bnd_pagado}}</td>
-                                <td>{{$ebanx->fecha_pagado}}</td>
-                                <td>{{$ebanx->bnd_procesado}}</td>
-                                <td>{{$ebanx->fecha_procesado}}</td>
+                                <td>
+                                    @if($ebanx->bnd_pagado==1)
+                                    SI
+                                    @else
+                                    NO
+                                    @endif
+                                    
+                                </td>
+                                <td>
+                                    @if($ebanx->bnd_pagado==1)
+                                    {{$ebanx->fecha_pago}}
+                                    @else
+                                    
+                                    @endif
+                                </td>
+                                <td>@if($ebanx->bnd_procesado==1)
+                                    SI
+                                    @else
+                                    NO
+                                    @endif
+                                </td>
+                                <td>
+                                    @if($ebanx->bnd_procesado==1)
+                                    {{$ebanx->fecha_procesado}}
+                                    @else
+                                    
+                                    @endif
+                                </td>
                                 <td class="text-right">
-                                    @permission('ebanxes.edit')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('ebanxes.duplicate', $ebanx->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
+                                    
+                                    @permission('ebanxes.pagar')
+                                    <a class="btn btn-xs btn-primary" href="{{ route('ebanxes.pagar', array('id'=>$ebanx->id)) }}" data-toggle="tooltip" title="Pagar" data-placement="top"><i class="fa fa-fw fa-money"></i> </a>
+                                    @endpermission
+                                    @permission('ebanxes.procesar')
+                                    <a class="btn btn-xs btn-success" href="{{ route('ebanxes.procesar', array('id'=>$ebanx->id)) }}" data-toggle="tooltip" title="Procesar" data-placement="top"><i class="fa fa-fw fa-upload"></i></a>
                                     @endpermission
                                     @permission('ebanxes.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('ebanxes.edit', $ebanx->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
@@ -264,5 +296,13 @@
 
         </div>
     </div>
-
 @endsection
+@push('scripts')
+<script type="text/javascript">
+
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();
+});
+
+</script>
+@endpush

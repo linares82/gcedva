@@ -22,6 +22,7 @@ use App\Municipio;
 use App\PivotDocCliente;
 use App\Preguntum;
 use App\Param;
+use App\Paise;
 use App\Lectivo;
 use App\Plantilla;
 use App\Plantel;
@@ -612,32 +613,39 @@ class ClientesController extends Controller {
         //dd($_REQUEST);
         if ($request->ajax()) {
             try {
-                $r = Param::where('llave', '=', 'sms')->first();
-                $no = Param::where('llave', '=', 'num_twilio')->first();
-                $to = '+52' . e($request->input('tel_cel'));
-                //dd($to);
-                $message = e($request->input('cve_cliente'));
-                $from = $no->valor;
+                $pais=Paise::find($request->input('pais_id'));
+                //dd($pais);
+                if($pais->marcado<>""){
+                    $r = Param::where('llave', '=', 'sms')->first();
+                    $no = Param::where('llave', '=', 'num_twilio')->first();
 
-                //dd($r->valor);
-                if ($r->valor == 'activo') {
-                    if (Sms::send($message, $to, $from)) {
-                        $input['usu_envio_id'] = Auth::user()->id;
-                        $input['cliente_id'] = e($request->input('id'));
-                        $input['fecha_envio'] = date("Y/m/d");
-                        $input['usu_alta_id'] = Auth::user()->id;
-                        $input['usu_mod_id'] = Auth::user()->id;
-                        Sm::create($input);
-                        //dd("msj");
-                        $c=Cliente::find($input['cliente_id']);
-                        $c->contador_sms=$c->contador_sms+1;
-                        $c->save();
+                    $codigo_marcado=$pais->marcado;
+                    $to = $codigo_marcado . e($request->input('tel_cel'));
+                    //dd($to);
+                    $message = e($request->input('cve_cliente'));
+                    $from = $no->valor;
+
+                    //dd($r->valor);
+                    if ($r->valor == 'activo') {
+                        if (Sms::send($message, $to, $from)) {
+                            $input['usu_envio_id'] = Auth::user()->id;
+                            $input['cliente_id'] = e($request->input('id'));
+                            $input['cantidad'] = 1;
+                            $input['fecha_envio'] = date("Y/m/d");
+                            $input['usu_alta_id'] = Auth::user()->id;
+                            $input['usu_mod_id'] = Auth::user()->id;
+                            Sm::create($input);
+                            //dd("msj");
+                            $c=Cliente::find($input['cliente_id']);
+                            $c->contador_sms=$c->contador_sms+1;
+                            $c->save();
+                        }
                     }
                 }
-                //return true;
+                return json_encode(true);
             } catch (\Exception $e) {
                 dd($e);
-                //return false;
+                return json_encode(false);
             }
         }
     }

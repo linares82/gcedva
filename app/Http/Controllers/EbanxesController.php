@@ -4,6 +4,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\Ebanx;
+use App\Cliente;
 use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updateEbanx;
@@ -123,4 +124,69 @@ class EbanxesController extends Controller {
 		return redirect()->route('ebanxes.index')->with('message', 'Registro Borrado.');
 	}
 
+        public function pagar($id, Ebanx $ebanx)
+	{
+		$ebanx=$ebanx->find($id);
+                $ebanx->bnd_pagado=1;
+                $ebanx->fecha_pago=date('Y-m-d');
+                $ebanx->save();
+                
+		return redirect()->route('ebanxes.index')->with('message', 'Registro Actualizado.');
+	}
+        
+        public function procesar($id, Ebanx $ebanx)
+	{
+		$ebanx=$ebanx->find($id);
+                //dd($ebanx);
+                if($ebanx->bnd_pagado==1 and $ebanx->bnd_procesado==0){
+                    
+                    $cliente['nombre']=$ebanx->nombre;
+                    $cliente['nombre2']=$ebanx->nombre2;
+                    $cliente['ape_paterno']=$ebanx->ape_paterno;
+                    $cliente['ape_materno']=$ebanx->ape_materno;
+                    $cliente['tel_fijo']=$ebanx->tel_fijo;
+                    $cliente['mail']=$ebanx->mail;
+                    $cliente['plantel_id']=$ebanx->plantel_id;
+                    $cliente['medio_id']=$ebanx->medio_id;
+                    $cliente['empleado_id']=$ebanx->empleado_id;
+                    $cliente['observaciones']=$ebanx->observaciones;
+                    $cliente['estado_id']=$ebanx->estado_id;
+                    $cliente['municipio_id']=$ebanx->municipio_id;
+                    $cliente['st_cliente_id']=$ebanx->st_cliente_id;
+                    $cliente['especialidad_id']=$ebanx->especialidad_id;
+                    $cliente['especialidad2_id']=$ebanx->especialidad2_id;
+                    $cliente['especialidad3_id']=$ebanx->especialidad3_id;
+                    $cliente['especialidad4_id']=$ebanx->especialidad4_id;
+                    $cliente['nivel_id']=$ebanx->nivel_id;
+                    $cliente['diplomado_id']=$ebanx->diplomado_id;
+                    $cliente['curso_id']=$ebanx->curso_id;
+                    $cliente['otro_id']=$ebanx->otro_id;
+                    $cliente['grado_id']=$ebanx->grado_id;
+                    $cliente['subdiplomado_id']=$ebanx->subdiplomado_id;
+                    $cliente['subcurso_id']=$ebanx->subcurso_id;
+                    $cliente['subotro_id']=$ebanx->subotro_id;
+                    $cliente['turno_id']=$ebanx->turno_id;
+                    $cliente['turno2_id']=$ebanx->turno2_id;
+                    $cliente['turno3_id']=$ebanx->turno3_id;
+                    $cliente['turno4_id']=$ebanx->turno4_id;
+                    $cliente['ofertum_id']=$ebanx->ofertum_id;
+                    $cliente['matricula']=$ebanx->matricula;
+                    $cliente['ciclo_id']=$ebanx->ciclo_id;
+                    $cliente['empresa_id']=$ebanx->empresa_id;
+                    $cliente['cve_cliente']=$ebanx->cve_cliente;
+                    $cliente['tel_cel']=$ebanx->tel_cel;
+                    $cliente['paise_id']=$ebanx->paise_id;
+                    $cliente['usu_alta_id']=Auth::user()->id;
+                    $cliente['usu_mod_id']=Auth::user()->id;
+                    
+                    $c=Cliente::create( $cliente );
+                    
+                    $ebanx->bnd_procesado=1;
+                    $ebanx->cliente_id=$c->id;
+                    $ebanx->fecha_procesado=date('Y-m-d');
+                    $ebanx->save();
+                }
+                
+		return redirect()->route('ebanxes.index')->with('message', 'Registro Actualizado.');
+	}
 }

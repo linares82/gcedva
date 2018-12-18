@@ -135,6 +135,7 @@
                         @if(isset($cliente))
                         <div class="form-group col-md-4 @if($errors->has('paise_id')) has-error @endif">
                             <label for="paise_id-field">Pais:{{$cliente->paise->name}}</label>
+                            {!! Form::hidden("pais_id", $cliente->paise_id, array("class" => "form-control input-sm", "id" => "pais_id-field")) !!}
                         </div>
                         @endif
                         

@@ -43,6 +43,7 @@ class HomeController extends Controller
         /*Avisos del usuario
          * 
          */
+        //dd(Auth::user()->id);
         $e=Empleado::where('user_id', '=', Auth::user()->id)->first();
         $avisos=Aviso::select('avisos.id','a.name','avisos.detalle', 'avisos.fecha', 's.cliente_id')
        		->join('asuntos as a', 'a.id', '=', 'avisos.asunto_id')
