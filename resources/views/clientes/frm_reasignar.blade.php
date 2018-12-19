@@ -49,11 +49,11 @@
                     @endif
                     </div>
 
-                    <div class="form-group col-md-4 @if($errors->has('st_cliente_id')) has-error @endif">
-                    <label for="st_cliente_id-field">Estatus</label>
-                    {!! Form::select("st_cliente_id", $list["StCliente"], null, array("class" => "form-control select_seguridad", "id" => "st_cliente_id-field", 'style'=>'width:100%;')) !!}
-                    @if($errors->has("st_cliente_id"))
-                        <span class="help-block">{{ $errors->first("st_cliente_id") }}</span>
+                    <div class="form-group col-md-4 @if($errors->has('st_seguimiento_id')) has-error @endif">
+                    <label for="st_cliente_id-field">Estatus Seguimiento</label>
+                    {!! Form::select("st_seguimiento_id", $list2["StSeguimiento"], null, array("class" => "form-control select_seguridad", "id" => "st_seguimiento_id-field", 'style'=>'width:100%;')) !!}
+                    @if($errors->has("st_seguimiento_id"))
+                        <span class="help-block">{{ $errors->first("st_seguimiento_id") }}</span>
                     @endif
                     </div>
                     <div class="form-group col-md-1 @if($errors->has('matricula')) has-error @endif">
@@ -132,7 +132,7 @@
         );  
       });
 */
-      $('#st_cliente_id-field').change(function(){
+      $('#st_seguimiento_id-field').change(function(){
           getCuenta();
       });
       function getCuenta(){

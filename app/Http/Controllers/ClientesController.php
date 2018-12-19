@@ -40,6 +40,7 @@ use Excel;
 use Log;
 use Storage;
 use PDF;
+use Carbon\Carbon;
 
 //use App\Mail\CorreoBienvenida as Envia_mail;
 
@@ -295,17 +296,19 @@ class ClientesController extends Controller {
 
     public function getReasignar() {
         return view('clientes.frm_reasignar')
-                        ->with('list', Cliente::getListFromAllRelationApps());
+                ->with('list', Cliente::getListFromAllRelationApps())
+                ->with('list2', Seguimiento::getListFromAllRelationApps());
     }
 
     public function getCuenta(Request $request) {
         //dd($request->input('plantel_id'));
         $plantel = $request->input('plantel_id');
         $empleado = $request->input('empleado_id');
-        $estatus = $request->input('st_cliente_id');
+        $estatus = $request->input('st_seguimiento_id');
         $cuenta = Cliente::where('plantel_id', '=', $plantel)
+                ->join('seguimientos as s','s.cliente_id','=','clientes.id')
                 ->where('empleado_id', '=', $empleado)
-                ->where('st_cliente_id', '=', $estatus)
+                ->where('s.st_seguimiento_id', '=', $estatus)
                 ->count();
 
         return $cuenta;
@@ -314,11 +317,23 @@ class ClientesController extends Controller {
     public function postReasignar(Request $request) {
         $input = $request->all();
         //dd($input);
-        Cliente::where('plantel_id', '=', $input['plantel_id'])
-                ->where('empleado_id', '=', $input['empleado_id'])
-                ->where('st_cliente_id', '=', $input['st_cliente_id'])
-                ->update(['empleado_id' => $input['empleado_id2']]);
-
+        
+        $clis=Cliente::select('clientes.id')
+                ->join('seguimientos as s','s.cliente_id','=','clientes.id')
+                ->where('clientes.plantel_id', '=', $input['plantel_id'])
+                ->where('clientes.empleado_id', '=', $input['empleado_id'])
+                ->where('s.st_seguimiento_id', '=', $input['st_seguimiento_id'])
+                ->get();
+        foreach($clis as $cli){
+            $cliente=Cliente::find($cli->id);
+            $cliente->empleado_id=$input['empleado_id2']    ;
+            $cliente->save();
+        }
+        
+                /*->update(['clientes.empleado_id' => $input['empleado_id2'],
+                          'clientes.updated_at'=>Carbon::now(),
+                          's.updated_at'=>Carbon::now()]);
+        */
         return redirect()->route('clientes.index');
     }
 

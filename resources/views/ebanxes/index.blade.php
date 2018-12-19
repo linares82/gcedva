@@ -269,13 +269,22 @@
                                     @endif
                                 </td>
                                 <td class="text-right">
+                                    <?php
+                                    $hoy=\Carbon\Carbon::now();
+                                    $fecha_creacion= \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $ebanx->created_at);
                                     
+                                    //echo $ebanx->created_at;
+                                    $dias=$hoy->diffInDays($fecha_creacion);
+                                    
+                                    ?>
+                                    @if($dias<15)
                                     @permission('ebanxes.pagar')
                                     <a class="btn btn-xs btn-primary" href="{{ route('ebanxes.pagar', array('id'=>$ebanx->id)) }}" data-toggle="tooltip" title="Pagar" data-placement="top"><i class="fa fa-fw fa-money"></i> </a>
                                     @endpermission
                                     @permission('ebanxes.procesar')
                                     <a class="btn btn-xs btn-success" href="{{ route('ebanxes.procesar', array('id'=>$ebanx->id)) }}" data-toggle="tooltip" title="Procesar" data-placement="top"><i class="fa fa-fw fa-upload"></i></a>
                                     @endpermission
+                                    @endif
                                     @permission('ebanxes.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('ebanxes.edit', $ebanx->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
                                     @endpermission
