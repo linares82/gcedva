@@ -25,7 +25,7 @@ class EmpleadosController extends Controller {
      */
     public function index(Request $request) {
         $empleados = Empleado::getAllData($request);
-        $historials = Historial::getAllData($request);
+        //$historials = Historial::getAllData($request);
 
         return view('empleados.index', compact('empleados','historials'));
     }

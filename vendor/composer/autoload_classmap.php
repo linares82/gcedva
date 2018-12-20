@@ -46,6 +46,7 @@ return array(
     'AddMatriculaClientesTable' => $baseDir . '/database/migrations/2017_07_17_160208_add_matricula_clientes_table.php',
     'AddMatriculaInscripcionsTable' => $baseDir . '/database/migrations/2018_02_14_122022_add_matricula_inscripcions_table.php',
     'AddMontoMensualidadClientesTable' => $baseDir . '/database/migrations/2018_11_01_123717_add_monto_mensualidad_clientes_table.php',
+    'AddOrigenEbanxesTable' => $baseDir . '/database/migrations/2018_12_20_142232_add_origen_ebanxes_table.php',
     'AddPaiseIdFieldClientesTable' => $baseDir . '/database/migrations/2018_10_23_103201_add_paise_id_field_clientes_table.php',
     'AddPeriodoEstudioFInscricionsTable' => $baseDir . '/database/migrations/2017_12_11_084732_add_periodo_estudio_f_inscricions_table.php',
     'AddPeriodoEstudioIInscricionsTable' => $baseDir . '/database/migrations/2017_12_11_084742_add_periodo_estudio_i_inscricions_table.php',
