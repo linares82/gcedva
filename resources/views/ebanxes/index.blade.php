@@ -206,6 +206,7 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'origen', 'title' => 'ORIGEN'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'nombre', 'title' => 'PRIMER NOMBRE'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'nombre2', 'title' => 'SEGUNDO NOMBRE'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'ape_paterno', 'title' => 'A. PATERNO'])</th>
@@ -231,6 +232,7 @@
                                 @else
                                     <td>{{$ebanx->id}}</td>
                                 @endif
+                                <td>{{$ebanx->origen}}</td>
                                 <td>{{$ebanx->nombre}}</td>
                                 <td>{{$ebanx->nombre2}}</td>
                                 <td>{{$ebanx->ape_paterno}}</td>
