@@ -31,6 +31,7 @@ return array(
     'AddFieldModuloMateriasTable' => $baseDir . '/database/migrations/2017_12_08_141207_add_field_modulo_materias_table.php',
     'AddFieldsLectivosTable' => $baseDir . '/database/migrations/2018_02_14_150006_add_fields_lectivos_table.php',
     'AddFieldsPlantelsTable' => $baseDir . '/database/migrations/2017_06_16_222542_Add_fields_Plantels_Table.php',
+    'AddHashEbanxesTable' => $baseDir . '/database/migrations/2019_01_14_154325_add_hash_ebanxes_table.php',
     'AddImagenEspecialidadTable' => $baseDir . '/database/migrations/2018_05_17_142252_add_imagen_especialidad_table.php',
     'AddIndexCombinacionIdAdeudosTable' => $baseDir . '/database/migrations/2018_04_17_133606_add_index_combinacion_id_adeudos_table.php',
     'AddIndexCuentaFormaPagoTable' => $baseDir . '/database/migrations/2018_05_14_182431_add_index_cuenta_forma_pago_table.php',

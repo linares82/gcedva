@@ -650,6 +650,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'AddFieldModuloMateriasTable' => __DIR__ . '/../..' . '/database/migrations/2017_12_08_141207_add_field_modulo_materias_table.php',
         'AddFieldsLectivosTable' => __DIR__ . '/../..' . '/database/migrations/2018_02_14_150006_add_fields_lectivos_table.php',
         'AddFieldsPlantelsTable' => __DIR__ . '/../..' . '/database/migrations/2017_06_16_222542_Add_fields_Plantels_Table.php',
+        'AddHashEbanxesTable' => __DIR__ . '/../..' . '/database/migrations/2019_01_14_154325_add_hash_ebanxes_table.php',
         'AddImagenEspecialidadTable' => __DIR__ . '/../..' . '/database/migrations/2018_05_17_142252_add_imagen_especialidad_table.php',
         'AddIndexCombinacionIdAdeudosTable' => __DIR__ . '/../..' . '/database/migrations/2018_04_17_133606_add_index_combinacion_id_adeudos_table.php',
         'AddIndexCuentaFormaPagoTable' => __DIR__ . '/../..' . '/database/migrations/2018_05_14_182431_add_index_cuenta_forma_pago_table.php',
