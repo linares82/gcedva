@@ -168,5 +168,5 @@ class AlumnosController extends Controller {
 	}
 
 	
-	}
+	
 }

@@ -16,7 +16,25 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
 Route::get('/cliente/findBy', array(
         'as' => 'cliente.findBy',
         'uses' => 'ClientesController@findBy')
+    );
+
+Route::post('/ebanxes/notificacion',array(
+    'as'=>'ebanxes.notificacion',
+    'uses'=>'EbanxesController@notificacion')
+    );
+
+Route::get('/ebanxes/paisesWeb','EbanxesController@paisesWeb');
+
+Route::get('/ebanxes/ofertaEmm',array(
+    'as'=>'ebanxes.ofertaEmm',
+    'uses'=>'EbanxesController@ofertaEmm')
+    );
+
+Route::get('/ebanxes/ofertaCedva',array(
+    'as'=>'ebanxes.ofertaCedva',
+    'uses'=>'EbanxesController@ofertaCedva')
     );

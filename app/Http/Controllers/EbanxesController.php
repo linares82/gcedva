@@ -5,6 +5,8 @@ use App\Http\Controllers\Controller;
 
 use App\Ebanx;
 use App\Cliente;
+use App\Paise;
+use App\Grado;
 use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updateEbanx;
@@ -189,4 +191,54 @@ class EbanxesController extends Controller {
                 
 		return redirect()->route('ebanxes.index')->with('message', 'Registro Actualizado.');
 	}
+        
+    public function notificacion(){
+        $hashes=$_REQUEST['hash_codes'];
+        $es_arreglo=is_array($hashes);
+        if($es_arreglo){
+            foreach($hashes as $hash){
+                $registro= Ebanx::where('hash',$hash)->firts();
+                if($registro->count>1){
+                    //https://api.ebanxpay.com/ws/query?integration_key=YOUR_KEY&hash=1998bff11bf7b3185e8f2af113ee3fb1fa4c9
+                    //https://api.ebanxpay.com/ws/query
+                }
+            }
+        }else{
+
+        }
+        http_response_code(200);
+    }
+    
+    public function paisesWeb(){
+        $paises=Paise::select('id', 'name as pais')->where('marcado',"<>","")->get();
+        echo json_encode($paises, JSON_UNESCAPED_UNICODE);
+    }
+    
+    public function ofertaEmm(){
+        $plantel=14;
+        $especialidad=69;
+        $nivel=97;
+        $oferta=Grado::select('grados.id','grados.name as oferta')
+                     ->join('especialidads as e','e.id','=','grados.especialidad_id')
+                     ->where('grados.plantel_id','=',$plantel)
+                     ->where('e.id','=',$especialidad)
+                     ->where('grados.nivel_id','=',$nivel)
+                     ->where('grados.id','>',0)
+                     ->get();
+        echo json_encode($oferta,JSON_UNESCAPED_UNICODE);
+    }
+    
+    public function ofertaCedva(){
+        $plantel=14;
+        $especialidad=70;
+        $nivel=96;
+        $oferta=Grado::select('grados.id','grados.name as oferta')
+                     ->join('especialidads as e','e.id','=','grados.especialidad_id')
+                     ->where('grados.plantel_id','=',$plantel)
+                     ->where('e.id','=',$especialidad)
+                     ->where('grados.nivel_id','=',$nivel)
+                     ->where('grados.id','>',0)
+                     ->get();
+        echo json_encode($oferta,JSON_UNESCAPED_UNICODE);
+    }
 }
