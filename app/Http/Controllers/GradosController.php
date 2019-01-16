@@ -43,6 +43,11 @@ class GradosController extends Controller {
     public function store(createGrado $request) {
 
         $input = $request->all();
+        if(isset($input['mexico_bnd'])){
+            $input['mexico_bnd']=1;
+        }else{
+            $input['mexico_bnd']=0;
+        }
         $input['usu_alta_id'] = Auth::user()->id;
         $input['usu_mod_id'] = Auth::user()->id;
 
@@ -96,7 +101,13 @@ class GradosController extends Controller {
      */
     public function update($id, Grado $grado, updateGrado $request) {
         $input = $request->all();
+        //dd($input);
         $input['usu_mod_id'] = Auth::user()->id;
+        if(isset($input['mexico_bnd'])){
+            $input['mexico_bnd']=1;
+        }else{
+            $input['mexico_bnd']=0;
+        }
         //update data
         $grado = $grado->find($id);
         $grado->update($input);

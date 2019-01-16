@@ -35,6 +35,13 @@
                         <span class="help-block">{{ $errors->first("precio_online") }}</span>
                        @endif
                     </div>
+                    <div class="form-group col-md-2 @if($errors->has('mexico_bnd')) has-error @endif">
+                        <label for="mexico_bnd-field">Mexico(Solo para pagina)</label>
+                        {!! Form::checkbox("mexico_bnd", 1, null, [ "id" => "mexico_bnd-field"]) !!}
+                        @if($errors->has("mexico_bnd"))
+                         <span class="help-block">{{ $errors->first("mexico_bnd") }}</span>
+                        @endif
+                     </div>
 @push('scripts')                    
 <script>
   $(document).ready(function() {
