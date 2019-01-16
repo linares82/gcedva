@@ -367,26 +367,36 @@ class EbanxesController extends Controller {
 			//dd($request->get('plantel_id'));
                     $pais=$request->input('pais');
                     //dd($pais);
-                    $r=Grado::select('grados.id','grados.name as oferta')
+                    
+                    if($pais==22){
+                        $r=Grado::select('grados.id','grados.name as oferta')
                         ->join('especialidads as e','e.id','=','grados.especialidad_id')
                         ->where('grados.plantel_id','=',$plantel)
                         ->where('e.id','=',$especialidad)
                         ->where('grados.nivel_id','=',$nivel)
-                        ->where('grados.id','>',0);
-                    if($pais==22){
-                        $r->where('grados.mexico_bnd','=',1);
+                        ->where('grados.id','>',0)
+                        ->where('grados.mexico_bnd','=',1)
+                        ->get();
                     }else{
-                        $r->where('grados.mexico_bnd','<>',1);
+                        $r=Grado::select('grados.id','grados.name as oferta')
+                        ->join('especialidads as e','e.id','=','grados.especialidad_id')
+                        ->where('grados.plantel_id','=',$plantel)
+                        ->where('e.id','=',$especialidad)
+                        ->where('grados.nivel_id','=',$nivel)
+                        ->where('grados.id','>',0)
+                        ->where('grados.mexico_bnd','<>',1)
+                        ->get();
                     }
-                    $r->get();
+                    
                     
                     $final = array();
 			
                     foreach($r as $r1){
+                        //dd($r1);
                         array_push($final, array('id'=>$r1->id, 'oferta'=>$r1->oferta));        
                     }
                     app('debugbar')->disable();
-                    echo json_encode($final);
+                    echo json_encode($final,JSON_UNESCAPED_UNICODE);
 
 		//}
 	}
@@ -400,18 +410,26 @@ class EbanxesController extends Controller {
 			//dd($request->get('plantel_id'));
                     $pais=$request->input('pais');
                     //dd($pais);
-                    $r=Grado::select('grados.id','grados.name as oferta')
+                    if($pais==22){
+                        $r=Grado::select('grados.id','grados.name as oferta')
                         ->join('especialidads as e','e.id','=','grados.especialidad_id')
                         ->where('grados.plantel_id','=',$plantel)
                         ->where('e.id','=',$especialidad)
                         ->where('grados.nivel_id','=',$nivel)
-                        ->where('grados.id','>',0);
-                    if($pais==22){
-                        $r->where('grados.mexico_bnd','=',1);
+                        ->where('grados.id','>',0)
+                        ->where('grados.mexico_bnd','=',1)
+                        ->get();
                     }else{
-                        $r->where('grados.mexico_bnd','<>',1);
+                        $r=Grado::select('grados.id','grados.name as oferta')
+                        ->join('especialidads as e','e.id','=','grados.especialidad_id')
+                        ->where('grados.plantel_id','=',$plantel)
+                        ->where('e.id','=',$especialidad)
+                        ->where('grados.nivel_id','=',$nivel)
+                        ->where('grados.id','>',0)
+                        ->where('grados.mexico_bnd','<>',1)
+                        ->get();
                     }
-                    $r->get();
+                    
                     
                     $final = array();
 			
@@ -419,7 +437,7 @@ class EbanxesController extends Controller {
                         array_push($final, array('id'=>$r1->id, 'oferta'=>$r1->oferta));        
                     }
                     app('debugbar')->disable();
-                    echo json_encode($final);
+                    echo json_encode($final,JSON_UNESCAPED_UNICODE);
 
 		//}
 	}

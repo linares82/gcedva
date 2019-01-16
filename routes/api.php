@@ -44,6 +44,11 @@ Route::get('/ebanxes/ofertaCedva',array(
     'uses'=>'EbanxesController@ofertaCedva')
     );
 
+Route::get('/ebanxes/cmbOfertaCedva',array(
+    'as'=>'ebanxes.cmbOfertaCedva',
+    'uses'=>'EbanxesController@cmbOfertaCedva')
+    );
+
 Route::post('/ebanxes/cargaCliente',array(
     'as'=>'ebanxes.cargaCliente',
     'uses'=>'EbanxesController@cargaCliente')
