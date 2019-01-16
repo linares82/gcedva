@@ -34,6 +34,11 @@ Route::get('/ebanxes/ofertaEmm',array(
     'uses'=>'EbanxesController@ofertaEmm')
     );
 
+Route::get('/ebanxes/cmbOfertaEmm',array(
+    'as'=>'ebanxes.cmbOfertaEmm',
+    'uses'=>'EbanxesController@cmbOfertaEmm')
+    );
+
 Route::get('/ebanxes/ofertaCedva',array(
     'as'=>'ebanxes.ofertaCedva',
     'uses'=>'EbanxesController@ofertaCedva')
