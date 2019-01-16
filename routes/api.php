@@ -38,3 +38,8 @@ Route::get('/ebanxes/ofertaCedva',array(
     'as'=>'ebanxes.ofertaCedva',
     'uses'=>'EbanxesController@ofertaCedva')
     );
+
+Route::post('/ebanxes/cargaCliente',array(
+    'as'=>'ebanxes.cargaCliente',
+    'uses'=>'EbanxesController@cargaCliente')
+    );

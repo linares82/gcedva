@@ -5,12 +5,15 @@ use App\Http\Controllers\Controller;
 
 use App\Ebanx;
 use App\Cliente;
+use App\Empleado;
+use App\Param;
 use App\Paise;
 use App\Grado;
 use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updateEbanx;
 use App\Http\Requests\createEbanx;
+use Log;
 
 class EbanxesController extends Controller {
 
@@ -240,5 +243,118 @@ class EbanxesController extends Controller {
                      ->where('grados.id','>',0)
                      ->get();
         echo json_encode($oferta,JSON_UNESCAPED_UNICODE);
+    }
+    
+    public function cargaCliente(Request $request){
+        $input=$request->all();
+        //dd($input);
+        try {
+            $token_base=Param::where('llave','=','token_app_cel')->first();
+            Log::info('flc');
+            Log::info(array_key_exists('nombre', $input));
+            
+            if($request->input('token')<>$token_base->valor or
+            !array_key_exists('nombre', $input) or
+                   !array_key_exists('tel_cel', $input) or 
+                   !array_key_exists('mail', $input) or 
+                   !array_key_exists('grado_id', $input) or
+                   !array_key_exists('paise_id', $input) or
+                   !array_key_exists('fuente', $input)){
+                app('debugbar')->disable();
+                echo json_encode(array('msj'=>'Token no existe o falta un valor obligatorio'));
+            }else{
+                $fuente=$request->input('fuente');
+                $plantel=0;
+                $especialidad=0;
+                $nivel=0;
+                if($fuente=="emm"){
+                    $plantel=14;
+                    $especialidad=69;
+                    $nivel=97;
+                }elseif($fuente=="cedva"){
+                    $plantel=14;
+                    $especialidad=70;
+                    $nivel=96;
+                }
+
+                $medio=7;
+                $st_cliente=1;
+                $cve='Codigo: ' . substr(md5(rand(0, 1000)), 2, 8) . ". Grupo JESADI, te da la bienvenida y te felicita por dar el primer paso hacia tu futuro. Revisa tu correo y conoce los beneficios.";
+                $empleado=0;/*Empleado::where('plantel_id','=',$plantel)
+                                  ->whereIn('st_empleado_id', ['1','9'])
+                                  ->first();*/
+                $nombre2="";
+                $ape_paterno="";
+                $ape_materno="";
+                $tel_fijo="";
+                $paise_id=0;
+                if(isset($input->nombre2)){
+                    $nombre2=$input->nombre2;
+                }
+                if(isset($input->ape_paterno)){
+                    $ape_paterno=$request->input('ape_paterno');
+                }
+                if(isset($input->ape_materno)){
+                    $ape_materno=$request->input('ape_materno');
+                }
+                if(isset($input->tel_fijo)){
+                    $tel_fijo=$request->input('tel_fijo');
+                }
+                if(isset($input->paise_id)){
+                    $paise_id=$request->input('paise_id');
+                }
+                
+                $cliente['nombre']=$request->input('nombre');
+                $cliente['nombre2']=$nombre2;
+                $cliente['ape_paterno']=$ape_paterno;
+                $cliente['ape_materno']=$ape_materno;
+                $cliente['tel_fijo']=$tel_fijo;
+                $cliente['tel_cel']=$request->input('tel_cel');
+                $cliente['mail']=$request->input('mail');
+                $cliente['plantel_id']=$plantel;
+                $cliente['medio_id']=$medio;
+                $cliente['empleado_id']=$empleado;
+                $cliente['observaciones']='';
+                $cliente['paise_id']=$paise_id;
+                $cliente['estado_id']=0;
+                $cliente['municipio_id']=0;
+                $cliente['st_cliente_id']=$st_cliente;
+                $cliente['especialidad_id']=$especialidad;
+                $cliente['especialidad2_id']=0;
+                $cliente['especialidad3_id']=0;
+                $cliente['especialidad4_id']=0;
+                $cliente['nivel_id']=$nivel;
+                $cliente['diplomado_id']=0;
+                $cliente['curso_id']=0;
+                $cliente['otro_id']=0;
+                $cliente['grado_id']=$request->input('grado_id');
+                $cliente['subdiplomado_id']=0;
+                $cliente['subcurso_id']=0;
+                $cliente['subotro_id']=0;
+                $cliente['turno_id']=0;
+                $cliente['turno2_id']=0;
+                $cliente['turno3_id']=0;
+                $cliente['turno4_id']=0;
+                $cliente['ofertum_id']=0;
+                $cliente['matricula']="";
+                $cliente['ciclo_id']=0;
+                $cliente['empresa_id']=0;
+                $cliente['cve_cliente']=$cve;
+                $cliente['usu_alta_id']=1;
+                $cliente['usu_mod_id']=1;
+
+                $c=Cliente::create( $cliente );
+
+                if(isset($c->id) and $c->id>0){
+                    app('debugbar')->disable();
+                    echo json_encode(array('id'=>$c->id));
+                }
+            }
+            
+        }catch (Exception $exception) {
+            Log::info('android');
+            Log::info($exception);
+        }
+        
     }
 }
