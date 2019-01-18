@@ -1750,6 +1750,7 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                             }
                         }
                         function InscribirCliente(numero) {
+                            
                         var plantel = $('#plantel_id-field option:selected').val();
                         var especialidad1 = $('#especialidad_id-field option:selected').val();
                         var nivel1 = $('#nivel_id-field option:selected').val();

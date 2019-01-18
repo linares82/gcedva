@@ -158,7 +158,10 @@
                                     </td>
                                     @endif
                                     <td>
+                                        
+                                        @if($h->tiene_detalle==0)
                                         {!! Form::checkbox("calificacion_parcial_id[]", $h->calificacion_parcial_id, true, array('class'=>'checkbox')) !!}
+                                        @endif
                                     </td>
                                     <td>
                                         {{ $h->nombre_ponderacion }}
@@ -167,7 +170,11 @@
                                         {{ $h->ponderacion }}
                                     </td>
                                     <td>
+                                        @if($h->tiene_detalle==0)
                                         <input type="text" name="calificacion_parcial[]" value={{ $h->calificacion_parcial }} class="from-control">
+                                        @else
+                                        {{ $h->calificacion_parcial }}
+                                        @endif
                                     </td>
                                 </tr>
                                 <?php 

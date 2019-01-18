@@ -115,6 +115,8 @@ class InscripcionsController extends Controller {
 					$ponde['ponderacion']=$p->porcentaje;
 					$ponde['usu_alta_id']=Auth::user()->id;
 					$ponde['usu_mod_id']=Auth::user()->id;
+                                        $ponde['tiene_detalle']=$p->tiene_detalle;
+                                        $ponde['padre_id']=$p->padre_id;
 					CalificacionPonderacion::create($ponde);
 				}
 			}

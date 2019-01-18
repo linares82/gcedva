@@ -19,7 +19,7 @@ class CalificacionPonderacion extends Model
     } 
 
 	//Mass Assignment
-	protected $fillable = ['ponderacion','calificacion_id','carga_ponderacion_id','calificacion_parcial','calificacion_parcial_calculada','usu_alta_id','usu_mod_id'];
+	protected $fillable = ['ponderacion','calificacion_id','carga_ponderacion_id','calificacion_parcial','calificacion_parcial_calculada','usu_alta_id','usu_mod_id','tiene_detalle','padre_id'];
 
 	public function usu_alta() {
 		return $this->hasOne('App\User', 'id', 'usu_alta_id');

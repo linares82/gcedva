@@ -149,14 +149,33 @@ class HacademicasController extends Controller {
                 //dd($key . "->" . $value);
                 $id = $value;
                 $posicion = $key;
+                //dd($input);
                 $c = CalificacionPonderacion::find($id);
 
                 //dd($input['calificacion_parcial'][$posicion]);
-
+                
+                //calculo de la calificacion en la linea de acuerdo a su ponderacion en la misma linea
                 $c->calificacion_parcial = $input['calificacion_parcial'][$posicion];
-                $c->calificacion_parcial_calculada = $input['calificacion_parcial'][$posicion] * $c->ponderacion;
+                $c->calificacion_parcial_calculada = round(($input['calificacion_parcial'][$posicion] * $c->ponderacion),2);
                 $c->save();
+                
+                
+                
+                //calculo de la calificacion padre de acuerdo a todos los hijos que tenga
+                if($c->padre_id>0){
+                    //dd($c->padre_id);
+                    $suma_calificacion_padre = $this->calculoCalificacionPadre($c->padre_id);
+                    $calif_padre= CalificacionPonderacion::where('carga_ponderacion_id',$c->padre_id)->where('calificacion_id',$c->calificacion_id)->first();
+                    //dd($calif_padre->toArray());
+                    $calif_padre->calificacion_parcial=$suma_calificacion_padre;
+                    $calif_padre->calificacion_parcial_calculada=round(($suma_calificacion_padre*$calif_padre->ponderacion),2);
+                    $calif_padre->save();
+                }
+                
+                //dd("fil");
+                
                 //dd($c->toArray());
+                //Calculo de la calificacion en la tabla de calificaciones
                 $suma_calificacion = $this->calculoCalificacionTotal($c->calificacion_id);
 
                 $calif = Calificacion::find($c->calificacion_id);
@@ -185,7 +204,10 @@ class HacademicasController extends Controller {
                 isset($input['tpo_examen_id']) and
                 isset($input['materium_id']) and ! isset($input['excepcion'])) {
             $c = Cliente::where('id', '=', $input['alumno_id'])->first();
-            $hacademicas = Hacademica::select('calif.id', DB::raw('concat(c.nombre, " ", c.ape_paterno," ", c.ape_materno) as nombre'), 'm.name as materia', 'te.name as examen', 'calif.calificacion', 'calif.fecha', 'g.name as grado', 'calif.calificacion', 'calif.fecha', 'calif.reporte_bnd', 'cpo.name as nombre_ponderacion', 'cp.ponderacion', 'cp.calificacion_parcial', 'cp.id as calificacion_parcial_id')
+            $hacademicas = Hacademica::select('calif.id', DB::raw('concat(c.nombre, " ", c.ape_paterno," ", c.ape_materno) as nombre'), 'm.name as materia', 
+                                              'te.name as examen', 'calif.calificacion', 'calif.fecha', 'g.name as grado', 'calif.calificacion', 
+                                              'calif.fecha', 'calif.reporte_bnd', 'cpo.name as nombre_ponderacion', 'cp.ponderacion', 
+                                              'cp.calificacion_parcial', 'cp.id as calificacion_parcial_id', 'cp.tiene_detalle','cp.padre_id')
                     ->join('clientes as c', 'c.id', 'hacademicas.cliente_id')
                     ->join('calificacions as calif', 'hacademicas.id', '=', 'calif.hacademica_id')
                     ->join('calificacion_ponderacions as cp', 'cp.calificacion_id', '=', 'calif.id')
@@ -210,7 +232,10 @@ class HacademicasController extends Controller {
                 isset($input['materium_id']) and
                 isset($input['excepcion'])) {
             $c = Cliente::where('id', '=', $input['alumno_id'])->first();
-            $hacademicas = Hacademica::select('calif.id', DB::raw('concat(c.nombre, " ", c.ape_paterno," ", c.ape_materno) as nombre'), 'm.name as materia', 'te.name as examen', 'calif.calificacion', 'calif.fecha', 'g.name as grado', 'calif.calificacion', 'calif.fecha', 'calif.reporte_bnd', 'cpo.name as nombre_ponderacion', 'cp.ponderacion', 'cp.calificacion_parcial', 'cp.id as calificacion_parcial_id')
+            $hacademicas = Hacademica::select('calif.id', DB::raw('concat(c.nombre, " ", c.ape_paterno," ", c.ape_materno) as nombre'), 'm.name as materia', 
+                                              'te.name as examen', 'calif.calificacion', 'calif.fecha', 'g.name as grado', 'calif.calificacion', 
+                                              'calif.fecha', 'calif.reporte_bnd', 'cpo.name as nombre_ponderacion', 'cp.ponderacion', 
+                                              'cp.calificacion_parcial', 'cp.id as calificacion_parcial_id', 'cp.tiene_detalle','cp.padre_id')
                     ->join('clientes as c', 'c.id', 'hacademicas.cliente_id')
                     ->join('calificacions as calif', 'hacademicas.id', '=', 'calif.hacademica_id')
                     ->join('calificacion_ponderacions as cp', 'cp.calificacion_id', '=', 'calif.id')
@@ -232,7 +257,17 @@ class HacademicasController extends Controller {
     }
 
     public function calculoCalificacionTotal($calificacion_id) {
-        $calificacion_ponderacion = CalificacionPonderacion::where('calificacion_id', '=', $calificacion_id)->get();
+        $calificacion_ponderacion = CalificacionPonderacion::where('calificacion_id', '=', $calificacion_id)->where('padre_id','=', 0)->get(); 
+        //dd($calificacion_ponderacion->toArray());
+        $suma = 0;
+        foreach ($calificacion_ponderacion as $cp) {
+            $suma = $suma + $cp->calificacion_parcial_calculada;
+        }
+        return round($suma,2);
+    }
+    
+    public function calculoCalificacionPadre($padre_id) {
+        $calificacion_ponderacion = CalificacionPonderacion::where('padre_id', '=', $padre_id)->get();
         //dd($calificacion_ponderacion->toArray());
         $suma = 0;
         foreach ($calificacion_ponderacion as $cp) {
@@ -471,16 +506,32 @@ class HacademicasController extends Controller {
     
     public function actualizarCalificacion(Request $request){
         $data=$request->all();
+        //calcula calificacion de la linea
         $calificacion_ponderacion= CalificacionPonderacion::find($data['calificacion_ponderacion']);
         $calificacion_ponderacion->calificacion_parcial=$data['calificacion_parcial'];
         $calificacion_ponderacion->calificacion_parcial_calculada=$data['calificacion_parcial']*$calificacion_ponderacion->ponderacion;
         $calificacion_ponderacion->save();
-        $ponderaciones= CalificacionPonderacion::where('calificacion_id',$calificacion_ponderacion->calificacion_id)->get();
+        
+        //Calula calificacion del padre
+        if($calificacion_ponderacion->padre_id>0){
+            //dd($c->padre_id);
+            $suma_calificacion_padre = $this->calculoCalificacionPadre($calificacion_ponderacion->padre_id);
+            $calif_padre= CalificacionPonderacion::where('carga_ponderacion_id',$calificacion_ponderacion->padre_id)->where('calificacion_id',$calificacion_ponderacion->calificacion_id)->first();
+            //dd($calif_padre->toArray());
+            $calif_padre->calificacion_parcial=$suma_calificacion_padre;
+            $calif_padre->calificacion_parcial_calculada=round(($suma_calificacion_padre*$calif_padre->ponderacion),2);
+            $calif_padre->save();
+        }
+        
+        //Calcula la calificacion en la tabla de calificaciones
+        $suma=$this->calculoCalificacionTotal($calificacion_ponderacion->calificacion_id);
+        /*$ponderaciones= CalificacionPonderacion::where('calificacion_id',$calificacion_ponderacion->calificacion_id)->get();
         $suma=0;
+        
         //dd($ponderaciones->toArray());
         foreach($ponderaciones as $ponderacion){
             $suma=$suma+$ponderacion->calificacion_parcial_calculada;
-        }
+        }*/
         //dd($suma);
         //dd($calificacion_ponderacion->calificacion_id);
         $calificacion=Calificacion::find($calificacion_ponderacion->calificacion_id);
@@ -517,11 +568,11 @@ class HacademicasController extends Controller {
             $g = Grado::find($hacademica->grado_id)->first();
            //dd($g->toArray());
             if ($tpo_examen_id == 2 and $g->name == "BACHILLERATO") {
-                $carga_ponderaciones = CargaPonderacion::where('ponderacion_id', '=', 1)->get();
+                $carga_ponderaciones = CargaPonderacion::where('ponderacion_id', '=', 1)->where('tiene_detalle', '=', 0)->get();
             } elseif ($tpo_examen_id == 2 and $g->name <> "BACHILLERATO") {
-                $carga_ponderaciones = CargaPonderacion::where('ponderacion_id', '=', 2)->get();
+                $carga_ponderaciones = CargaPonderacion::where('ponderacion_id', '=', 2)->where('tiene_detalle', '=', 0)->get();
             } elseif($tpo_examen_id == 1){
-                $carga_ponderaciones=CargaPonderacion::where('ponderacion_id','=',$materia->ponderacion_id)->get();
+                $carga_ponderaciones=CargaPonderacion::where('ponderacion_id','=',$materia->ponderacion_id)->where('tiene_detalle', '=', 0)->get();
             }
             
             //dd($carga_ponderaciones->toArray());
