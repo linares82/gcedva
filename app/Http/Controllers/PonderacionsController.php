@@ -4,6 +4,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\Ponderacion;
+use App\TpoExamen;
 use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updatePonderacion;
@@ -18,9 +19,10 @@ class PonderacionsController extends Controller {
 	 */
 	public function index(Request $request)
 	{
+                $tpoExamen= TpoExamen::pluck('name','id');
 		$ponderacions = Ponderacion::getAllData($request);
-
-		return view('ponderacions.index', compact('ponderacions'));
+                
+		return view('ponderacions.index', compact('ponderacions','tpoExamen'));
 	}
 
 	/**
@@ -30,7 +32,8 @@ class PonderacionsController extends Controller {
 	 */
 	public function create()
 	{
-		return view('ponderacions.create')
+                $tpoExamen= TpoExamen::pluck('name','id');
+		return view('ponderacions.create', compact('tpoExamen'))
 			->with( 'list', Ponderacion::getListFromAllRelationApps() );
 	}
 
@@ -74,7 +77,8 @@ class PonderacionsController extends Controller {
 	public function edit($id, Ponderacion $ponderacion)
 	{
 		$ponderacion=$ponderacion->find($id);
-		return view('ponderacions.edit', compact('ponderacion'))
+                $tpoExamen= TpoExamen::pluck('name','id');
+		return view('ponderacions.edit', compact('ponderacion','tpoExamen'))
 			->with( 'list', Ponderacion::getListFromAllRelationApps() );
 	}
 

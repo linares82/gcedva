@@ -40,14 +40,14 @@ trait GetAllDataTrait {
         //(i) join relation table
 
         if( is_array( $myObj->relationApps ) ){
-
+            //dd($myObj->relationApps);
             foreach( $myObj->relationApps as $className => $classObj ){
     
                 $relationTable = $myObj->solveName( $className, config('CrudDscaffold.app_name_rules.app_migrate_tablename') );    //ex).apple_types
                 $relationColumnInBaseTable = $myObj->solveName( $className, config('CrudDscaffold.app_name_rules.name_name') ).'_id';    //ex).apple_type_id
-
+                //dd($relationTable);
                 $myQuery = $myQuery->leftJoin( $relationTable, $baseTable.'.'.$relationColumnInBaseTable, '=', $relationTable.'.id' );  //ex).leftJoin( 'apple_types', 'apples.apple_type_id', '=', 'apple_types.id' )
-                
+                //dd($myQuery);
                 //Log::error("FLC: ".$relationTable);
                 
             }

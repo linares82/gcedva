@@ -161,11 +161,11 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'ponderacion_id', 'title' => 'PONDERACION_ID'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'name', 'title' => 'NAME'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'ponderacion_id', 'title' => 'PONDERACION'])</th>
+                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'name', 'title' => 'NOMBRE'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'porcentaje', 'title' => 'PORCENTAJE'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
+                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'tiene_detalle', 'title' => 'TIENE DETALLE'])</th>
+                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'tiene_detalle', 'title' => 'PADRE'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
@@ -174,11 +174,22 @@
                         @foreach($cargaPonderacions as $cargaPonderacion)
                             <tr>
                                 <td><a href="{{ route('cargaPonderacions.show', $cargaPonderacion->id) }}">{{$cargaPonderacion->id}}</a></td>
-                                <td>{{$cargaPonderacion->ponderacion_id}}</td>
-                    <td>{{$cargaPonderacion->name}}</td>
-                    <td>{{$cargaPonderacion->porcentaje}}</td>
-                    <td>{{$cargaPonderacion->usu_alta_id}}</td>
-                    <td>{{$cargaPonderacion->usu_mod_id}}</td>
+                                <td>{{$cargaPonderacion->ponderacion->name}}</td>
+                                <td>{{$cargaPonderacion->name}}</td>
+                                <td>{{$cargaPonderacion->porcentaje}}</td>
+                                <td>
+                                    @if($cargaPonderacion->tiene_detalle==1)
+                                    SI
+                                    @else
+                                    NO
+                                    @endif
+                                </td>
+                                <td>
+                                    @if($cargaPonderacion->padre_id>0)
+                                    {{$cargaPonderacion->padre->name}}
+                                    
+                                    @endif
+                                </td>
                                 <td class="text-right">
                                     @permission('cargaPonderacions.edit')
                                     <a class="btn btn-xs btn-primary" href="{{ route('cargaPonderacions.duplicate', $cargaPonderacion->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>

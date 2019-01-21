@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\CargaPonderacion;
+use App\Ponderacion;
 use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updateCargaPonderacion;
@@ -20,8 +21,8 @@ class CargaPonderacionsController extends Controller {
      */
     public function index(Request $request) {
         $cargaPonderacions = CargaPonderacion::getAllData($request);
-
-        return view('cargaPonderacions.index', compact('cargaPonderacions'));
+        $ponderaciones= Ponderacion::pluck('name','id');
+        return view('cargaPonderacions.index', compact('cargaPonderacions','ponderaciones'));
     }
 
     /**
@@ -30,7 +31,9 @@ class CargaPonderacionsController extends Controller {
      * @return Response
      */
     public function create() {
-        return view('cargaPonderacions.create')
+        $padre= CargaPonderacion::where('tiene_detalle',1)->pluck('name','id');
+        $ponderaciones=Ponderacion::pluck('name','id');
+        return view('cargaPonderacions.create', compact('ponderaciones','padre'))
                         ->with('list', CargaPonderacion::getListFromAllRelationApps());
     }
 
@@ -45,7 +48,12 @@ class CargaPonderacionsController extends Controller {
         $input = $request->all();
         $input['usu_alta_id'] = Auth::user()->id;
         $input['usu_mod_id'] = Auth::user()->id;
-
+        if(isset($input['tiene_detalle'])){
+            $input['tiene_detalle']=1;
+        }else{
+            $input['tiene_detalle']=0;
+        }
+        
         //create data
         CargaPonderacion::create($input);
 
@@ -71,7 +79,9 @@ class CargaPonderacionsController extends Controller {
      */
     public function edit($id, CargaPonderacion $cargaPonderacion) {
         $cargaPonderacion = $cargaPonderacion->find($id);
-        return view('cargaPonderacions.edit', compact('cargaPonderacion'))
+        $padre= CargaPonderacion::where('tiene_detalle',1)->pluck('name','id');
+        $ponderaciones=Ponderacion::pluck('name','id');
+        return view('cargaPonderacions.edit', compact('cargaPonderacion','ponderaciones','padre'))
                         ->with('list', CargaPonderacion::getListFromAllRelationApps());
     }
 
@@ -97,6 +107,11 @@ class CargaPonderacionsController extends Controller {
     public function update($id, CargaPonderacion $cargaPonderacion, updateCargaPonderacion $request) {
         $input = $request->all();
         $input['usu_mod_id'] = Auth::user()->id;
+        if(isset($input['tiene_detalle'])){
+            $input['tiene_detalle']=1;
+        }else{
+            $input['tiene_detalle']=0;
+        }
         //update data
         $cargaPonderacion = $cargaPonderacion->find($id);
         $cargaPonderacion->update($input);

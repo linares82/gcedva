@@ -34,25 +34,25 @@
         <div class="col-md-12">
 
             <form action="#">
-                <div class="form-group col-sm-4">
+                <div class="form-group col-md-4">
                     <label for="nome">ID</label>
                     <p class="form-control-static">{{$ponderacion->id}}</p>
                 </div>
-                <div class="form-group">
-                     <label for="name">NAME</label>
+                <div class="form-group col-md-4">
+                     <label for="name">NOMBRE</label>
                      <p class="form-control-static">{{$ponderacion->name}}</p>
                 </div>
-                    <div class="form-group">
-                     <label for="tpo_examen_id">TPO_EXAMEN_ID</label>
-                     <p class="form-control-static">{{$ponderacion->tpo_examen_id}}</p>
+                    <div class="form-group col-md-4">
+                     <label for="tpo_examen_id">TIPO EXAMEN</label>
+                     <p class="form-control-static">{{$ponderacion->tpoExamen->name}}</p>
                 </div>
-                    <div class="form-group">
-                     <label for="usu_alta_id">USU_ALTA_ID</label>
-                     <p class="form-control-static">{{$ponderacion->usu_alta_id}}</p>
+                    <div class="form-group col-md-4">
+                     <label for="usu_alta_id">ALTA</label>
+                     <p class="form-control-static">{{$ponderacion->usu_alta->name}}</p>
                 </div>
-                    <div class="form-group">
-                     <label for="usu_mod_id">USU_MOD_ID</label>
-                     <p class="form-control-static">{{$ponderacion->usu_mod_id}}</p>
+                    <div class="form-group col-md-4">
+                     <label for="usu_mod_id">ULTIMA MODIFICACION</label>
+                     <p class="form-control-static">{{$ponderacion->usu_mod->name}}</p>
                 </div>
             </form>
 
@@ -65,3 +65,4 @@
     </div>
 
 @endsection
+

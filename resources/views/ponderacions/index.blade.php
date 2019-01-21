@@ -143,10 +143,8 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'name', 'title' => 'NAME'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'tpo_examen_id', 'title' => 'TPO_EXAMEN_ID'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'name', 'title' => 'NOMBRE'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'tpo_examen_id', 'title' => 'TIPO EXAMEN'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
@@ -156,9 +154,7 @@
                             <tr>
                                 <td><a href="{{ route('ponderacions.show', $ponderacion->id) }}">{{$ponderacion->id}}</a></td>
                                 <td>{{$ponderacion->name}}</td>
-                    <td>{{$ponderacion->tpo_examen_id}}</td>
-                    <td>{{$ponderacion->usu_alta_id}}</td>
-                    <td>{{$ponderacion->usu_mod_id}}</td>
+                                <td>{{$ponderacion->tpoExamen->name}}</td>
                                 <td class="text-right">
                                     @permission('ponderacions.edit')
                                     <a class="btn btn-xs btn-primary" href="{{ route('ponderacions.duplicate', $ponderacion->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>
