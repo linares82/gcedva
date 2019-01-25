@@ -33,6 +33,7 @@ class CargaPonderacionsController extends Controller {
     public function create() {
         $padre= CargaPonderacion::where('tiene_detalle',1)->pluck('name','id');
         $ponderaciones=Ponderacion::pluck('name','id');
+        $padre->prepend('Seleccionar opcion','0');
         return view('cargaPonderacions.create', compact('ponderaciones','padre'))
                         ->with('list', CargaPonderacion::getListFromAllRelationApps());
     }
@@ -81,6 +82,8 @@ class CargaPonderacionsController extends Controller {
         $cargaPonderacion = $cargaPonderacion->find($id);
         $padre= CargaPonderacion::where('tiene_detalle',1)->pluck('name','id');
         $ponderaciones=Ponderacion::pluck('name','id');
+        
+        $padre->prepend('Seleccionar opcion','0');
         return view('cargaPonderacions.edit', compact('cargaPonderacion','ponderaciones','padre'))
                         ->with('list', CargaPonderacion::getListFromAllRelationApps());
     }
