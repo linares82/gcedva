@@ -114,11 +114,12 @@
                 <thead>
                     <tr>
                         <th>Concepto</th>
-                        <th>Cuenta Contable</th>
-                        <th>Cuenta Recargo</th>
+                        <!--<th>Cuenta Contable</th>
+                        <th>Cuenta Recargo</th>-->
                         <th>Fecha Pago</th>
                         <th>Monto</th>
                         <th>Inicial</th>
+                        <th>Promocion</th>
                         <th></th>
                     </tr>
                     {{ csrf_field() }}
@@ -127,8 +128,8 @@
                     @foreach($planPago->lineas as $linea)
                         <tr class="item{{$linea->id}}">
                             <td>{{$linea->cajaConcepto->name}}</td>
-                            <td>{{$linea->cuentaContable->name}}</td>
-                            <td>{{$linea->cuentaRecargo->name}}</td>
+                            <!--<td>{{$linea->cuentaContable->name}}</td>
+                            <td>{{$linea->cuentaRecargo->name}}</td>-->
                             <td>{{$linea->fecha_pago}}</td>
                             <td>{{$linea->monto}}</td>
                             <td>@if($linea->inicial_bnd==1)
@@ -136,6 +137,17 @@
                                 @else
                                 NO
                                 @endif
+                            </td>
+                            <td>
+                                
+                                @foreach($linea->promoPlanLns as $promoPlanLn)
+                                    {{$promoPlanLn->fec_inicio." / ".$promoPlanLn->fec_fin." / ".$promoPlanLn->descuento}} 
+                                    <button class="edit-promo-modal btn btn-default btn-xs" data-promo_plan_pago_id="{{$promoPlanLn->id}}" 
+                                                                                          data-fec_inicio="{{$promoPlanLn->fec_inicio}}"
+                                                                                          data-fec_fin="{{$promoPlanLn->fec_fin}}"
+                                                                                          data-descuento="{{$promoPlanLn->descuento}}">
+                                <span class="glyphicon glyphicon-star"></span> Editar </button><br/>
+                                @endforeach
                             </td>
                             <td>
                                 <button class="edit-modal btn btn-info btn-xs" data-id="{{$linea->id}}" 
@@ -151,6 +163,13 @@
                                                                                data-plan_pago_id="{{$linea->plan_pago_id}}" 
                                                                                >
                                 <span class="glyphicon glyphicon-edit"></span> Reglas Descuento Recargo </button>
+                                
+                                <button class="promo-modal btn btn-success btn-xs" data-plan_pago_ln_id="{{$linea->id}}" >
+                                <span class="glyphicon glyphicon-star"></span> Crear Promoción </button>
+                                
+                                
+                                
+                                
                                 <button class="delete-modal btn btn-danger btn-xs" data-id="{{$linea->id}}" 
                                                                                data-plan_pago_id="{{$linea->plan_pago_id}}" 
                                                                                data-caja_concepto_id="{{$linea->caja_concepto_id}}" 
@@ -300,7 +319,7 @@
                         <div class="row_reglas_relacionadas">
                             <div class="form-group col-md-6 @if($errors->has('caja_concepto_id')) has-error @endif">
                                 <label for="caja_concepto_id-field">Reglas Descuentos y Recargos</label><br/>
-                                {!! Form::hidden("plan_pago_id", null, array("class" => "form-control", "id" => "plan_pago_id-editar")) !!}
+                                {!! Form::hidden("plan_pago_ln_id", null, array("class" => "form-control", "id" => "plan_pago_ln_id-editar")) !!}
                              </div>
                             <div class="row"></div>
                             <div class="col-xs-5">
@@ -331,7 +350,96 @@
             </div>
         </div>
     </div>
+    
+    <!-- Modal form to edit a Promocion -->
+    <div id="promoModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                    <h4 class="modal-title"></h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" role="form">
+                        <div class="row_reglas_relacionadas">
+                            <div class="form-group col-md-6 @if($errors->has('plan_pago_ln_id')) has-error @endif">
+                                {!! Form::hidden("plan_pago_ln_id", null, array("class" => "form-control", "id" => "plan_pago_ln_id-crear")) !!}
+                             </div>
+                            <div class="row"></div>
+                            <div class="form-group col-sm-6 @if($errors->has('inicial_bnd')) has-error @endif">
+                            <label for="inicial_bnd-field">Inicial</label>
+                                {!! Form::text("fec_inicio", null, array("class" => "fec_calendario form-control", "id" => "fec_inicio-crear")) !!}
+                            </div>
+                            
+                            <div class="form-group col-sm-6 @if($errors->has('fec_fin')) has-error @endif">
+                            <label for="fec_fin-field">Fecha Fin</label>
+                                {!! Form::text("fec_fin", null, array("class" => "fec_calendario form-control", "id" => "fec_fin-crear")) !!}
+                            </div>
 
+                            <div class="form-group col-sm-6 @if($errors->has('fec_fin')) has-error @endif">
+                            <label for="descuento-editar">Porcentaje de descuento en decimales</label>
+                                {!! Form::text("descuento", null, array("class" => "form-control", "id" => "descuento-crear")) !!}
+                            </div>
+                            <div class="row"></div>
+                        </div> 
+                    </form>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="Promo-crear" data-dismiss="modal">
+                            <span class='glyphicon glyphicon-check'></span> Crear
+                        </button>
+                        <button type="button" class="btn btn-warning" data-dismiss="modal">
+                            <span class='glyphicon glyphicon-remove'></span> Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal form to edit a Promocion -->
+    <div id="editPromoModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                    <h4 class="modal-title"></h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" role="form">
+                        <div class="row_reglas_relacionadas">
+                            <div class="form-group col-md-6 @if($errors->has('plan_pago_ln_id')) has-error @endif">
+                                {!! Form::hidden("promo_plan_pago_id", null, array("class" => "form-control", "id" => "promo_plan_pago_id-editar")) !!}
+                             </div>
+                            <div class="row"></div>
+                            <div class="form-group col-sm-6 @if($errors->has('inicial_bnd')) has-error @endif">
+                            <label for="inicial_bnd-field">Inicial</label>
+                                {!! Form::text("fec_inicio", null, array("class" => "fec_calendario form-control", "id" => "fec_inicio-editar")) !!}
+                            </div>
+                            
+                            <div class="form-group col-sm-6 @if($errors->has('fec_fin')) has-error @endif">
+                            <label for="fec_fin-field">Fecha Fin</label>
+                                {!! Form::text("fec_fin", null, array("class" => "fec_calendario form-control", "id" => "fec_fin-editar")) !!}
+                            </div>
+
+                            <div class="form-group col-sm-6 @if($errors->has('fec_fin')) has-error @endif">
+                            <label for="descuento-editar">Porcentaje de descuento en decimales</label>
+                                {!! Form::text("descuento", null, array("class" => "form-control", "id" => "descuento-editar")) !!}
+                            </div>
+                            <div class="row"></div>
+                        </div> 
+                    </form>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="Promo-editar" data-dismiss="modal">
+                            <span class='glyphicon glyphicon-check'></span> Crear
+                        </button>
+                        <button type="button" class="btn btn-warning" data-dismiss="modal">
+                            <span class='glyphicon glyphicon-remove'></span> Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Modal form to delete a form -->
     <div id="deleteModal" class="modal fade" role="dialog">
@@ -417,6 +525,15 @@
             lang_clear_date: 'Limpiar',
             show_select_today: 'Hoy',
     });
+    
+    $('.fec_calendario').Zebra_DatePicker({
+                        days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
+                                months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                                readonly_element: false,
+                                lang_clear_date: 'Limpiar',
+                                show_select_today: 'Hoy',
+                        });
+    
     //crear registro
     $(document).on('click', '.add-modal', function() {
         $('.modal-title').text('Agregar Pago');
@@ -683,6 +800,85 @@
         //alert(id);
     });
     
+    // Crear una Promocion
+    $(document).on('click', '.promo-modal', function() {
+        $('.modal-title').text('Promocion');
+        $('#plan_pago_ln_id-crear').val($(this).data('plan_pago_ln_id'));
+        $('#fec_inicio-crear').val("").change();
+        $('#fec_fin-crear').val("").change();
+        $('#descuento-crear').val("").change();
+        id=$('#plan_pago_ln_id-crear').val()
+        
+        $('#promoModal').modal('show');
+        
+        //alert(id);
+    });
+    
+    //Botones para crear promocion
+    $('.modal-footer').on('click', '#Promo-crear', function() {
+        var ruta='{{url("promoPlanLns/store")}}';
+        //alert(ruta);
+        
+        //alert(bnd);
+        $.ajax({
+            type: 'POST',
+            url: ruta,
+            data: {
+                '_token': $('input[name=_token]').val(),
+                'plan_pago_ln_id': $('#plan_pago_ln_id-crear').val(),
+                'fec_inicio': $('#fec_inicio-crear').val(),
+                'fec_fin': $('#fec_fin-crear').val(),
+                'descuento': $('#descuento-crear').val()
+            },
+            dataType:'json',
+            beforeSend : function(){$("#loading3").show(); },
+            complete : function(){$("#loading3").hide(); },
+            success: function(data) {
+                
+                location.reload(); 
+            }
+        });
+    });
+    
+    // Editar una promocion
+    
+    $(document).on('click', '.edit-promo-modal', function() {
+        $('.modal-title').text('Editar Promoción');
+        $('#promo_plan_pago_id-editar').val($(this).data('promo_plan_pago_id'));
+        $('#fec_inicio-editar').val($(this).data('fec_inicio')).change();
+        $('#fec_fin-editar').val($(this).data('fec_fin')).change();
+        $('#descuento-editar').val($(this).data('descuento'));
+        
+        //alert($('#descuento-editar').val());
+        //console.log($(this).data('descuento'));
+        id=$(this).data('promo_plan_pago_id');
+        
+        $('#editPromoModal').modal('show');
+    });
+    
+    //botones para editar una promocion
+    $('.modal-footer').on('click', '#Promo-editar', function() {
+        var ruta='{{url("/promoPlanLns/update")}}' + '/' + id;
+        //alert(ruta);
+        
+        //alert(bnd);
+        $.ajax({
+            type: 'POST',
+            url: ruta,
+            data: {
+                '_token': $('input[name=_token]').val(),
+                'id': id,
+                'fec_inicio': $('#fec_inicio-editar').val(),
+                'fec_fin': $('#fec_fin-editar').val(),
+                'descuento': $('#descuento-editar').val()
+            },
+            beforeSend : function(){$("#loading3").show(); },
+            complete : function(){$("#loading3").hide(); },
+            success: function(data) {
+                location.reload(); 
+            }
+        });
+    });
     
     // delete a post
     $(document).on('click', '.delete-modal', '#Eliminar', function() {

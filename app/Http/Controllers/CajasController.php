@@ -8,6 +8,7 @@ use App\CajaLn;
 use App\Adeudo;
 use App\Cliente;
 use App\Plantel;
+use App\PromoPlanLn;
 use App\Empleado;
 use App\CombinacionCliente;
 use App\CajaConcepto;
@@ -17,6 +18,7 @@ use App\Http\Requests\updateCaja;
 use App\Http\Requests\createCaja;
 use DB;
 use PDF;
+use Carbon\Carbon;
 
 class CajasController extends Controller {
 
@@ -287,6 +289,7 @@ class CajasController extends Controller {
                         //dd($dias);
                         $dia=$dias->format('%R%a')*-1;
                         
+                        //calcula recargo o descuento segun regla y aplica
                         if($dia>=$regla->dia_inicio and $dia<=$regla->dia_fin){
                             if($regla->tipo_regla_id==1){
                                 //dd($regla->porcentaje);
@@ -308,9 +311,41 @@ class CajasController extends Controller {
                                 
                             }
                         }
+                        
                     }
                     $caja_ln['total']=0;
                     $caja_ln['total']=$caja_ln['subtotal']+$caja_ln['recargo']-$caja_ln['descuento'];
+                    
+                    //calcula descuento segun promocion ligada a la linea del plan
+                    //dd($adeudo);
+                    try{
+                        $promociones= PromoPlanLn::where('plan_pago_ln_id',$adeudo->plan_pago_ln_id)->get();
+                        $caja_ln['promo_plan_ln_id']=0;
+                        foreach($promociones as $promocion){
+                            $inicio=Carbon::createFromFormat('Y-m-d', $promocion->fec_inicio);
+                            $fin=Carbon::createFromFormat('Y-m-d', $promocion->fec_fin);
+                            //$hoy=date('Y-m-d');
+                            $hoy=Carbon::now();
+                            $monto_promocion=0;
+                            //dd($hoy);
+                            if($inicio->lessThanOrEqualTo($hoy) and $fin->greaterThanOrEqualTo($hoy) and $caja_ln['promo_plan_ln_id']==0){
+
+                                $monto_promocion=$promocion->descuento*$caja_ln['total'];
+                                $caja_ln['descuento']=$caja_ln['descuento']+$monto_promocion;
+                                $caja_ln['promo_plan_ln_id']=$promocion->id;
+                            }
+                        }
+                        //dd($promocion);
+                        //if(is_object($promocion)){
+                        
+                        //dd($monto_promocion);
+                        //dd($caja_ln);
+                    }catch(Exception $e){
+                        dd($e);
+                    }
+                    $caja_ln['total']=$caja_ln['subtotal']+$caja_ln['recargo']-$caja_ln['descuento'];
+                    
+                    
                     $caja_ln['adeudo_id']=$adeudo->id;
                     $caja_ln['usu_alta_id']=Auth::user()->id;
                     $caja_ln['usu_mod_id']=Auth::user()->id;

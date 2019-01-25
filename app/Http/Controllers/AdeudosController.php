@@ -219,4 +219,13 @@ class AdeudosController extends Controller {
                 }
 		return redirect()->route('clientes.edit',array('id'=>$datos['cliente']))->with('message', 'Registro Borrado.');
 	}
+        
+        public function editMonto(Request $request){
+            $datos=$request->all();
+            //dd($datos);
+            $adeudo=Adeudo::find($datos['id']);
+            $adeudo->monto=$datos['monto'];
+            $adeudo->save();
+            echo json_encode(array('monto'=>$datos['monto']));
+        }
 }

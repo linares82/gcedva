@@ -20,7 +20,7 @@ class CargaPonderacion extends Model
     } 
 
 	//Mass Assignment
-	protected $fillable = ['ponderacion_id','name','porcentaje','usu_alta_id','usu_mod_id'];
+	protected $fillable = ['ponderacion_id','name','porcentaje','usu_alta_id','usu_mod_id','tiene_detalle','padre_id'];
 
 	public function usu_alta() {
 		return $this->hasOne('App\User', 'id', 'usu_alta_id');

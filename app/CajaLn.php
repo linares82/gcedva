@@ -21,7 +21,8 @@ class CajaLn extends Model
     } 
 
 	//Mass Assignment
-	protected $fillable = ['caja_id','caja_concepto_id','subtotal','descuento','recargo','total','autorizacion_descuento','adeudo_id','usu_alta_id','usu_mod_id'];
+	protected $fillable = ['caja_id','caja_concepto_id','subtotal','descuento','recargo','total','autorizacion_descuento','adeudo_id',
+                               'usu_alta_id','usu_mod_id','promo_plan_ln_id'];
 
 	public function usu_alta() {
 		return $this->hasOne('App\User', 'id', 'usu_alta_id');

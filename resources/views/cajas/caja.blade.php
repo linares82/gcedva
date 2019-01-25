@@ -309,7 +309,7 @@
             </div>
             <div class="box-body no-padding">
 
-                <table class='table table-striped table-condensed'>
+                <table class='table table-striped table-condensed' >
 
                     <tbody>
 
@@ -319,8 +319,13 @@
                             <td colspan='6'><strong>Beca:</strong>@if($cliente->beca_bnd==1) SI @else NO @endif</td>
                         </tr>
                         <tr>
-                            <td></td><td>Concepto</td><td>Monto</td><td>Fecha</td><td>Ticket</td><td>Pagado</td><td>dias</td> 
-                        </tr>
+                        <table id='conceptos_predefinidos' class='table table-striped table-condensed'>
+                            <thead>
+                                <tr>
+                                    <th></th><th>Concepto</th><th>Monto</th><th>Fecha</th><th>Ticket</th><th>Pagado</th><th>dias</th> 
+                                </tr>
+                            </thead>
+                            <tbody>
                         <?php $regla_pago_seriado=0; ?>
                         @foreach($combinacion->adeudos as $adeudo)
                         <?php
@@ -336,6 +341,7 @@
                             bg-green
                             @endif
                             ">
+                            
                             <td>
                                 @if($adeudo->pagado_bnd==0)
                                 @if($adeudo->inicial_bnd==1)
@@ -357,7 +363,10 @@
                                 @endif
                                 @endif
                             <td>{{$adeudo->cajaConcepto->name}}</td>
-                            <td>{{$adeudo->monto}}</td>
+                            <td class='editable'>
+                                {{$adeudo->monto}}
+                                <input class='monto_editable form-control' value='{{$adeudo->monto}}' data-id="{{$adeudo->id}}"></input>
+                            </td>
                             <td>{{$adeudo->fecha_pago}}</td>
                             
                             <td class="bg-gray">
@@ -379,7 +388,9 @@
 
                         @endforeach
                         @endforeach
-
+                        </tr>
+                        </tbody>
+                        </table>
                     </tbody>
                 </table>
             </div><!-- /.box-body -->
@@ -481,7 +492,12 @@ Agregar nuevo registro
 
 @endsection
 @push('scripts')
+
+
+
 <script>
+    
+    
     $('.fecha').Zebra_DatePicker({
     days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
             months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
@@ -498,7 +514,38 @@ Agregar nuevo registro
     var currentDate = fullDate.getFullYear() + "/" + twoDigitMonth + "/" + twoDigitDay;
     $('#fecha-field').val(currentDate);
     $(document).ready(function(){
-    $('[data-toggle="tooltip"]').tooltip();
+         $('.monto_editable').hide();
+         
+         @permission('adeudos.editMonto')
+        $('.editable').dblclick(function(){
+            @if(!isset($caja->id))
+                captura=$(this).children("input");
+                captura.show();
+            @endif
+            
+        });
+        @endpermission
+        $('.monto_editable').on('keypress', function (e) {
+         if(e.which === 13){
+             captura=$(this);
+           $.ajax({
+                type: 'GET',
+                        url: '{{route("adeudos.editMonto")}}',
+                        data: {
+                            'id': captura.attr('data-id'),
+                            'monto': captura.val(),
+                        },
+                        dataType:"json",
+                        //beforeSend : function(){$("#loading3").show(); },
+                        //complete : function(){$("#loading3").hide(); },
+                        success: function(data) {
+                            location.reload(); 
+                           
+                        }
+                }); 
+            }
+        });
+        $('[data-toggle="tooltip"]').tooltip();
     });
 //crear registro
     $(document).on('click', '.add-modal', function() {
