@@ -61,6 +61,13 @@
                             </div>
                             -->
                             <div class="form-group">
+                                <label class="col-sm-2 control-label" for="q_lectivo_id_cont">LECTIVO</label>
+                                <div class=" col-sm-9">
+                                    <input class="form-control input-sm", type="hidden" value="{{ $e->lectivo_id }}" name="lectivo_id" id="lectivo_id" />
+                                    {!! Form::select("lectivo_id", $list["Lectivo"], "{{ @(Request::input('q')['asignacion_academicas.lectivo_id_lt']) ?: 0 }}", array("class" => "form-control select_seguridad", "name"=>"q[asignacion_academicas.lectivo_id_lt]", "id"=>"q_asignacion_academicas.lectivo_id_lt", "style"=>"width:100%;" )) !!}
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_plantel_id_cont">PLANTEL</label>
                                 <div class=" col-sm-9">
                                     <input class="form-control input-sm", type="hidden" value="{{ $e->plantel_id }}" name="plantel_id" id="plantel_id" />

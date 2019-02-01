@@ -77,7 +77,7 @@ trait GetAllDataTrait {
                     $column = $baseTable.'.'.$column;
                 }
 
-                if( $operator === 'cont' and $value<>""){
+                if( $operator === 'cont' and ($value<>"" or $value<>0)){
                     $myQuery = $myQuery->Where($column, 'LIKE', '%'.$value.'%');
                 //dd("cont");
                 } elseif( $operator === 'lt' and $value<>0){
