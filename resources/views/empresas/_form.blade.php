@@ -117,6 +117,20 @@
                         <span class="help-block">{{ $errors->first("giro_id") }}</span>
                         @endif
                     </div>
+                    <div class="form-group col-md-4 @if($errors->has('st_empresa_id')) has-error @endif">
+                        <label for="st_empresa_id-field">Estatus</label>
+                        {!! Form::select("st_empresa_id", $list["StEmpresa"], null, array("class" => "form-control select_seguridad", "id" => "st_empresa_id-field")) !!}
+                        @if($errors->has("st_empresa_id"))
+                        <span class="help-block">{{ $errors->first("st_empresa_id") }}</span>
+                        @endif
+                    </div>
+                    <div class="form-group col-md-4 @if($errors->has('empleado_id')) has-error @endif">
+                          <label for="empleado_id-field">Empleado</label>
+                          {!! Form::select("empleado_id", $empleados, null, array("class" => "form-control select_seguridad", "id" => "empleado_id-field")) !!}
+                          @if($errors->has("empleado_id"))
+                            <span class="help-block">{{ $errors->first("empleado_id") }}</span>
+                          @endif
+                        </div>
                     <div class="form-group col-md-4 @if($errors->has('cuestionario_id')) has-error @endif">
                         <label for="cuestionario_id-field">Cuestionario</label>
                         {!! Form::select("cuestionario_id", $list["Cuestionario"], null, array("class" => "form-control select_seguridad", "id" => "cuestionario_id-field")) !!}
@@ -437,7 +451,7 @@
                                 function CrearCombinacionEmpresa() {
                                     $.ajax({
                                         url: '{{ route("combinacionEmpresas.store") }}',
-                                        type: 'POST',
+                                        type: 'GET',
                                         data: "empresa_id={{$empresa->id}}&plantel_id={{$pl}}&especialidad_id=" + $('#especialidad_id-field option:selected').val() + "&nivel_id=" + $('#nivel_id-field option:selected').val() + "&grado_id=" + $('#grado_id-field option:selected').val() + "",
                                         dataType: 'json',
                                         beforeSend: function () {

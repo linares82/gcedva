@@ -46,7 +46,11 @@ class TareasController extends Controller {
 		$input = $request->all();
 		$input['usu_alta_id']=Auth::user()->id;
 		$input['usu_mod_id']=Auth::user()->id;
-
+                if(isset($input['bnd_empresa'])){
+                    $input['bnd_empresa']=1;
+                }else{
+                    $input['bnd_empresa']=0;
+                }
 		//create data
 		Tarea::create( $input );
 
@@ -102,7 +106,12 @@ class TareasController extends Controller {
 	{
 		$input = $request->all();
 		$input['usu_mod_id']=Auth::user()->id;
-		//update data
+		if(isset($input['bnd_empresa'])){
+                    $input['bnd_empresa']=1;
+                }else{
+                    $input['bnd_empresa']=0;
+                }
+                //update data
 		$tarea=$tarea->find($id);
 		$tarea->update( $input );
 

@@ -142,6 +142,7 @@
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'razon_social', 'title' => 'RAZON SOCIAL'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'nombre_contacto', 'title' => 'NOMBRE CONTACTO'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'estado_id', 'title' => 'ESTADO'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'st_empresa_id', 'title' => 'ESTATUS'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'created_at', 'title' => 'ALTA'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
@@ -154,6 +155,7 @@
                                 <td>{{$empresa->razon_social}}</td>
                                 <td>{{$empresa->nombre_contacto}}</td>
                                 <td>{{$empresa->estado->name}}</td>
+                                <td>{{$empresa->stEmpresa->name}}</td>
                                 <td>{{$empresa->created_at}}</td>
                                 <td class="text-right">
                                     @if(isset($empresa->correo1))
@@ -164,6 +166,9 @@
                                     @endpermission
                                     @permission('empresas.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('empresas.edit', $empresa->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
+                                    @endpermission
+                                    @permission('empresas.edit')
+                                    <a class="btn btn-xs btn-default" href="{{ route('empresas.seguimiento', $empresa->id) }}"><i class="glyphicon glyphicon-edit"></i> Seguimiento</a>
                                     @endpermission
                                     @permission('empresas.destroy')
                                     {!! Form::model($empresa, array('route' => array('empresas.destroy', $empresa->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}

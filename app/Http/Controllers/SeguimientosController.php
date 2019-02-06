@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Asunto;
 use App\Seguimiento;
 use App\Empleado;
 use App\Especialidad;
@@ -12,6 +13,8 @@ use App\Cliente;
 use App\Plantel;
 use App\Lectivo;
 use App\StSeguimiento;
+use App\StTarea;
+use App\Tarea;
 use App\AsignacionTarea;
 use App\Hactividade;
 use App\Aviso;
@@ -95,10 +98,13 @@ class SeguimientosController extends Controller {
                 ->get();
         $actividades = Hactividade::where('seguimiento_id', '=', $seguimiento->id)->get();
         $smss = SmsPredefinido::pluck('name', 'id');
+        $asuntos= Asunto::where('bnd_empresa',0)->pluck('name','id');
+        $tareas= Tarea::where('bnd_empresa',0)->pluck('name','id');
+        $estatusTareas=StTarea::where('bnd_empresa',0)->pluck('name','id');
         //dd($actividades->toArray());
         //$dias=round((strtotime($a->fecha)-strtotime(date('Y-m-d')))/86400);
         //dd($seguimiento);
-        return view('seguimientos.show', compact('seguimiento', 'sts', 'asignacionTareas', 'avisos', 'actividades', 'smss'))
+        return view('seguimientos.show', compact('seguimiento', 'sts', 'asignacionTareas', 'avisos', 'actividades', 'smss','asuntos','tareas','estatusTareas'))
                         ->with('list', AsignacionTarea::getListFromAllRelationApps());
     }
 

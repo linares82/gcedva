@@ -316,7 +316,8 @@ class CajasController extends Controller {
                     $caja_ln['total']=0;
                     $caja_ln['total']=$caja_ln['subtotal']+$caja_ln['recargo']-$caja_ln['descuento'];
                     
-                    //calcula descuento segun promocion ligada a la linea del plan
+                    //calcula descuento segun promocion ligada a la linea del plan considerando la fecha de pago de la
+                    //inscripcion del cliente
                     //dd($adeudo);
                     try{
                         $promociones= PromoPlanLn::where('plan_pago_ln_id',$adeudo->plan_pago_ln_id)->get();
@@ -324,8 +325,17 @@ class CajasController extends Controller {
                         foreach($promociones as $promocion){
                             $inicio=Carbon::createFromFormat('Y-m-d', $promocion->fec_inicio);
                             $fin=Carbon::createFromFormat('Y-m-d', $promocion->fec_fin);
+                            $inscripcion=Adeudo::where('plan_pago_id',$adeudo->plan_pago_id)
+                                                ->where('cliente_id',$adeudo->cliente_id)
+                                                ->where('concepto_id',1)
+                                                ->where('combinacion_cliente_id',$adeudo->combinacion_cliente_id)
+                                                ->where('pagado_bnd',1)
+                                                ->first();
                             //$hoy=date('Y-m-d');
-                            $hoy=Carbon::now();
+                            //$hoy=Carbon::now();
+                            //La caja tiene la fecha de pago de un solo concepto que debe ser la inscripcion
+                            $caja=Caja::where('caja_id',$inscripcion->caja_id)->first();
+                            $hoy=Carbon::createFromFormat('Y-m-d', $caja->fecha);
                             $monto_promocion=0;
                             //dd($hoy);
                             if($inicio->lessThanOrEqualTo($hoy) and $fin->greaterThanOrEqualTo($hoy) and $caja_ln['promo_plan_ln_id']==0){

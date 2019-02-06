@@ -4,13 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Asunto;
 use App\Empleado;
+use App\AvisosEmpresa;
+use App\TareasEmpresa;
 use App\Empresa;
 use App\CuestionarioDato;
 use App\Cuestionario;
 use App\Cliente;
 use App\ActividadEmpresa;
 use App\User;
+use App\Tarea;
+use App\StTarea;
 use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updateEmpresa;
@@ -46,8 +51,11 @@ class EmpresasController extends Controller {
         $pl = DB::table('plantels as p')
                         ->join('empleados as e', 'e.plantel_id', '=', 'p.id')
                         ->where('e.user_id', Auth::user()->id)->value('p.id');
+        $empleados=Empleado::select(DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as nombre'),'id')
+                           ->where('plantel_id',$p)
+                           ->pluck('nombre','id');
         $cuestionarios = Cuestionario::where('st_cuestionario_id', '=', '1')->pluck('name', 'id');
-        return view('empresas.create', compact('p', 'pl', 'cuestionarios'))
+        return view('empresas.create', compact('p', 'pl', 'cuestionarios','empleados'))
                         ->with('list', Empresa::getListFromAllRelationApps());
     }
 
@@ -99,8 +107,12 @@ class EmpresasController extends Controller {
             $actividadesRelacionados = array_add($actividadesRelacionados, $ar->id, $ar->name);
         }
         $actividadesList = ActividadEmpresa::where('plantel_id', '=', $pl)->pluck('name', 'id');
+        $empleados=Empleado::select(DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as nombre'),'id')
+                           ->where('plantel_id',$p)
+                           ->pluck('nombre','id');
+        //dd($empleados->toArray());
         $cuestionarios = Cuestionario::where('st_cuestionario_id', '=', '1')->pluck('name', 'id');
-        return view('empresas.edit', compact('empresa', 'p', 'actividadesList', 'actividadesRelacionados', 'pl', 'cuestionarios'))
+        return view('empresas.edit', compact('empresa', 'p', 'actividadesList', 'actividadesRelacionados', 'pl', 'cuestionarios','empleados'))
                         ->with('list', Empresa::getListFromAllRelationApps())
                         ->with('list1', Cliente::getListFromAllRelationApps());
     }
@@ -132,7 +144,7 @@ class EmpresasController extends Controller {
         $preguntas = $request->except(['razon_social', 'nombre_contacto', 'tel_fijo', 'tel_cel', 'correo1',
             'correo2', 'calle', 'no_int', 'no_ex', 'colonia', 'municipio_id',
             'estado_id', 'cp', 'giro_id', 'plantel_id', 'especialidad_id',
-            'cuestionario_id', 'usu_alta_id', 'usu_mod_id', 'nivel_id', 'grado_id',
+            'cuestionario_id', 'usu_alta_id', 'usu_mod_id', 'nivel_id', 'grado_id','st_empresa_id','empleado_id',
             'from', 'to', 'q']);
         //dd($preguntas);
         $input['usu_mod_id'] = Auth::user()->id;
@@ -297,5 +309,22 @@ class EmpresasController extends Controller {
 // output the file to be downloaded
         fpassthru($temp_memory);
     }
-
+    
+    public function seguimiento($id, Empresa $empresa) {
+        $empresa = $empresa->find($id);
+        $avisos = AvisosEmpresa::select('avisos_empresas.id', 'a.name', 'avisos_empresas.detalle', 'avisos_empresas.fecha', 
+                Db::Raw('DATEDIFF(avisos_empresas.fecha,CURDATE()) as dias_restantes'))
+                ->join('asuntos as a', 'a.id', '=', 'avisos_empresas.asunto_id')
+                ->where('empresa_id', '=', $empresa->id)
+                ->get();
+        $asignacionTareas = TareasEmpresa::where('empresa_id', '=', $empresa->id)->get();
+        $asuntos= Asunto::where('bnd_empresa',1)->pluck('name','id');
+        $tareas= Tarea::where('bnd_empresa',1)->pluck('name','id');
+        $asuntos->prepend('Seleccionar Valor',0);
+        $tareas->prepend('Seleccionar Valor',0);
+        $estatusTareas=StTarea::where('bnd_empresa',1)->pluck('name','id');
+        return view('empresas.seguimiento', compact('empresa','avisos','asignacionTareas','asuntos','tareas','estatusTareas'));
+    }
+    
+    
 }

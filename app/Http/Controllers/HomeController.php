@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Aviso;
+use App\AvisosEmpresa;
 use App\Lectivo;
 use App\AvisoGral;
 use App\PivotAvisoGralEmpleado;
@@ -45,6 +46,7 @@ class HomeController extends Controller
          */
         //dd(Auth::user()->id);
         $e=Empleado::where('user_id', '=', Auth::user()->id)->first();
+        //dd($e);
         $avisos=Aviso::select('avisos.id','a.name','avisos.detalle', 'avisos.fecha', 's.cliente_id')
        		->join('asuntos as a', 'a.id', '=', 'avisos.asunto_id')
                     ->join('seguimientos as s', 's.id', '=', 'avisos.seguimiento_id')
@@ -446,7 +448,19 @@ class HomeController extends Controller
         //dd($lectivosSt2[0]);
         //$lectivos=Lectivo::where('id','<',3)->get();
         //dd($lectivos);
-        return view('home', compact('avisos', 'a_1', 'a_2', 'a_3', 'a_4', 'grafica2','grafica', 'fil', 'lectivosSt2',
+        //Avisos y tareas de empresas
+        $avisosEmpresas = AvisosEmpresa::select('avisos_empresas.empresa_id', 'a.name', 'avisos_empresas.detalle', 'avisos_empresas.fecha', 
+                Db::Raw('DATEDIFF(avisos_empresas.fecha,CURDATE()) as dias_restantes'))
+                ->join('asuntos as a', 'a.id', '=', 'avisos_empresas.asunto_id')
+                ->join('empresas as e','e.id','=','avisos_empresas.empresa_id')
+                ->where('avisos_empresas.fecha', '>=', Db::Raw('CURDATE()'))
+                ->where('e.empleado_id', '=', $e->id)
+                ->get();
+        //dd($e);
+       //dd($avisosEmpresas->toArray());
+        //$tareasEmpresas = TareasEmpresa::where('empresa_id', '=', $empresa->id)->get();
+        
+        return view('home', compact('avisos', 'a_1', 'a_2', 'a_3', 'a_4', 'grafica2','grafica', 'fil', 'lectivosSt2','avisosEmpresas',
                                     'avisos_generales', 'avance', 'gauge', 'tabla', 'plantel','estatusPlantel', 'tsuma','lectivoss'))
                     ->with('datos_grafica', json_encode($tabla))
                     ->with('datos', json_encode($datos))
