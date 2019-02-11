@@ -71,7 +71,7 @@
                                 <label class="col-sm-2 control-label" for="q_plantel_id_cont">PLANTEL</label>
                                 <div class=" col-sm-9">
                                     <input class="form-control input-sm", type="hidden" value="{{ $e->plantel_id }}" name="plantel_id" id="plantel_id" />
-                                    {!! Form::select("plantel_id", $list["Plantel"], "{{ @(Request::input('q')['asignacion_academicas.plantel_id_lt']) ?: 0 }}", array("class" => "form-control select_seguridad", "name"=>"q[asignacion_academicas.plantel_id_lt]", "id"=>"q_asignacion_academicas.plantel_id_lt", "style"=>"width:100%;" )) !!}
+                                    {!! Form::select("q_asignacion_academicas.plantel_id_lt", $list["Plantel"], "{{ @(Request::input('q')['asignacion_academicas.plantel_id_lt']) ?: 0 }}", array("class" => "form-control select_seguridad", "name"=>"q[asignacion_academicas.plantel_id_lt]", "id"=>"q_asignacion_academicas.plantel_id_lt", "style"=>"width:100%;" )) !!}
                                 </div>
                             </div>
                             <div class="form-group">
@@ -211,39 +211,85 @@
 <script type="text/javascript">
     $(document).ready(function() {
         $('#accordion').on('shown.bs.collapse', function () {
-            getCmbEmpleados();
+            //getCmbEmpleados();
          });
-         
+         //p=document.getElementById('q_asignacion_academicas.plantel_id_lt');
+         //alert(p.options[p.selectedIndex].value);
+             
         
         getCmbMaterias();
         getCmbGrupos();
         
-      function getCmbEmpleados(){
-          //$('#empleado_id_field option:selected').val($('#empleado_id_campo option:selected').val()).change();
+      p=document.getElementById('q_asignacion_academicas.plantel_id_lt');  
+      p.onchange=function (){
           var a= $('#search').serialize();
               $.ajax({
                   url: '{{ route("empleados.getEmpleadosXplantel") }}',
                   type: 'GET',
                   //data: "plantel_id=" + $('#plantel_id').val() + "&empleado_id=" + $('#q_asignacion_academicas.empleado_id_lt option:selected').val() + "",
-                  data:a,
+                  data: "plantel_id=" + p.options[p.selectedIndex].value + "",
+                  //data:a,
                   dataType: 'json',
                   beforeSend : function(){$("#loading3").show();},
                   complete : function(){$("#loading3").hide();},
                   success: function(data){
-                      //$example.select2("destroy");
-                      
-                      $('#search #q_asignacion_academicas.empleado_id_lt').html('');
-                      $('#search #q_asignacion_academicas.empleado_id_lt').empty();
-                      //$('#q_asignacion_academicas.empleado_id_lt').append($('<option></option>').text('Seleccionar Opción').val('0'));
-                      //alert($('#q_asignacion_academicas.empleado_id_lt option:selected').val());
+                    empleados=document.getElementById('q_asignacion_academicas.empleado_id_lt');  
+                    while (empleados.length > 0) {
+                            empleados.remove(empleados.length-1);
+                        }
                       $.each(data, function(i) {
-                          //alert(data[i].nombre);
-                          $('#q_asignacion_academicas.empleado_id_lt').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].nombre+"<\/option>");  
+                          var option=document.createElement("option");
+                            option.value=data[i].id;
+                            option.text=data[i].nombre; 
+                            empleados.appendChild(option) 
                       });
-                      //$('#q_asignacion_academicas.empleado_id_lt').change();
+                      
+                  }
+              });
+              $.ajax({
+                  url: '{{ route("grupos.getCmbGrupo") }}',
+                  type: 'GET',
+                  data: "plantel_id=" + p.options[p.selectedIndex].value + "",
+                  dataType: 'json',
+                  beforeSend : function(){$("#loading10").show();},
+                  complete : function(){$("#loading10").hide();},
+                  success: function(data){
+                      grupos=document.getElementById('q_asignacion_academicas.grupo_id_lt');  
+                        while (grupos.length > 0) {
+                            grupos.remove(grupos.length-1);
+                        }
+                      $.each(data, function(i) {
+                          var option=document.createElement("option");
+                            option.value=data[i].id;
+                            option.text=data[i].name; 
+                            grupos.appendChild(option) 
+                      });
                       //$example.select2();
                   }
-              });       
+              });
+              $.ajax({
+                  url: '{{ route("materias.getCmbMateria") }}',
+                  type: 'GET',
+                  data: "plantel_id=" + p.options[p.selectedIndex].value + "",
+                  dataType: 'json',
+                  beforeSend : function(){$("#loading10").show();},
+                  complete : function(){$("#loading10").hide();},
+                  success: function(data){
+                      materias=document.getElementById('q_asignacion_academicas.materium_id_lt');  
+                        while (materias.length > 0) {
+                            materias.remove(materias.length-1);
+                        }
+                      
+                      $.each(data, function(i) {
+                          var option=document.createElement("option");
+                            option.value=data[i].id;
+                            option.text=data[i].name; 
+                            materias.appendChild(option) 
+                          
+                      });
+                      //$example.select2();
+                  }
+              });
       }
       function getCmbMaterias(){
           //var $example = $("#especialidad_id-field").select2();

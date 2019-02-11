@@ -20,6 +20,7 @@ class AsistenciaRsController extends Controller {
 	 */
 	public function index(Request $request)
 	{
+            
 		$asistenciaRs = AsistenciaR::getAllData($request);
 
 		return view('asistenciaRs.index', compact('asistenciaRs'));
@@ -81,7 +82,8 @@ class AsistenciaRsController extends Controller {
                 
                 if(isset($input['fecha'])){
                     $hoy=strtotime(date('Y-m-d'));
-                    if((strtotime($as->fec_inicio) <= $hoy && strtotime($as->fec_fin) >= $hoy) or isset($input['excepcion'])){
+                    if((strtotime($input['fecha'])==$hoy && strtotime($as->fec_inicio) <= strtotime($input['fecha']) && strtotime($as->fec_fin) >= strtotime($input['fecha'])) 
+                        or isset($input['excepcion'])){
                         $asistencias = AsistenciaR::where('fecha','=', $input['fecha'])
                                          ->where('asignacion_academica_id', '=', $input['asignacion_academica_id'])
                                          ->orderBy('cliente_id')
@@ -208,7 +210,7 @@ class AsistenciaRsController extends Controller {
 		$input['usu_mod_id']=Auth::user()->id;
 		//update data
 		$asistenciaR=AsistenciaR::find($request->get('asistencia'));
-                $asistenciaR->est_asistencium_id=$input['est_asistencia_id'];
+                $asistenciaR->est_asistencia_id=$input['est_asistencia_id'];
                 if($asistenciaR->save()){
                     return "1";
                 }else{

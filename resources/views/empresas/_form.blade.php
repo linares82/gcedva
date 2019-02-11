@@ -32,6 +32,13 @@
                         <span class="help-block">{{ $errors->first("nombre_contacto") }}</span>
                         @endif
                     </div>
+                    <div class="form-group col-md-4 @if($errors->has('puesto')) has-error @endif">
+                        <label for="puesto-field">Puesto</label>
+                        {!! Form::text("puesto", null, array("class" => "form-control input-sm", "id" => "puesto-field")) !!}
+                        @if($errors->has("puesto"))
+                        <span class="help-block">{{ $errors->first("puesto") }}</span>
+                        @endif
+                    </div>
                     <div class="form-group col-md-4 @if($errors->has('tel_fijo')) has-error @endif">
                         <label for="tel_fijo-field">Tel. Fijo</label>
                         {!! Form::text("tel_fijo", null, array("class" => "form-control input-sm", "id" => "tel_fijo-field")) !!}

@@ -56,7 +56,7 @@ trait GetAllDataTrait {
         //(ii) add Constrain
 
         if( is_array($request->input('q')) ){
-
+            
             foreach( $request->input('q') as $key => $value){
     
                 //skip s value that is for ordering
@@ -167,10 +167,16 @@ trait GetAllDataTrait {
                     $myQuery=$myQuery->where('periodo_estudios.plantel_id', '=', $empleado->plantel_id);
                 }
                 break;
-            case "asignacion_academica":
+            case "asignacion_academicas":
                 if(Auth::user()->can('IFiltroEmpleadosXPlantel')){
                     $myQuery=$myQuery->where('asignacion_academicas.plantel_id', '=', $empleado->plantel_id);
                 }
+                $user=Auth::user()->id;
+                $empleado=Empleado::where('user_id',$user)->first();
+                if($empleado->puesto_id==3){
+                    $myQuery=$myQuery->where('asignacion_academicas.empleado_id', '=', $empleado->id);
+                }
+                //dd($request);
                 break;
             case "alumnos":
                 if(Auth::user()->can('IFiltroEmpleadosXPlantel')){

@@ -138,6 +138,7 @@
         $.mask.definitions['n']='[0123456789]';
         $("#hora-field").mask("Hn:Nn:Nn");
 */
+
         getCmbInstructores();
         getCmbMaterias();
         getCmbGrupos();

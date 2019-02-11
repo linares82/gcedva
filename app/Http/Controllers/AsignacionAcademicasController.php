@@ -20,6 +20,7 @@ class AsignacionAcademicasController extends Controller {
 	 */
 	public function index(Request $request)
 	{
+            
 		$asignacionAcademicas = AsignacionAcademica::getAllData($request);
 		$e=Empleado::where('user_id', '=', Auth::user()->id)->first();
 		return view('asignacionAcademicas.index', compact('asignacionAcademicas', 'e'))
