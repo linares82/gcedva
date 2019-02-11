@@ -12,7 +12,7 @@
                 td, th {
                     border: 1px solid #dddddd;
                     text-align: left;
-                    padding: 8px;
+                    padding: 10px;
                 }
 
                 tr:nth-child(even) {
@@ -33,15 +33,16 @@
             }
             
             .altura {
-                height: 90px;
+                height: 100px;
             }
             
             .girar_texto {
                 
                 text-align: center;
-                padding: 8px;
+                /*padding: 8px;*/
                 transform: rotate(270deg);
-                height: 90px;
+                height: auto;
+                
             }
             
             .centrar_texto {
@@ -60,7 +61,7 @@
                 <?php $grupo0=""; ?>
                 @foreach($registros as $r)
                 @if($grupo0<>$r->grupo)
-                    <div style="page-break-after:always;"></div>
+                    <!--<div style="page-break-after:always;"></div>-->
                         <tr>
                             <td colspan="28">
                                 {{"Plantel: ".$r->plantel }} <br/>
@@ -77,7 +78,7 @@
                         <?php $i=0 ?>
                         @foreach($fechas_enc as $fecha_enc)
                             @if($i>0)
-                            <th class="girar_texto"><strong >{{$fecha_enc}}</strong></th>
+                            <th class=""><strong >{{$fecha_enc}}</strong></th>
                             @endif
                             <?php $i=1 ?>
                         @endforeach
@@ -97,8 +98,10 @@
                                     @if($i>0)
                                         @foreach($fechas as $fecha)      
                                             @if($fecha_enc==$fecha->fecha)
-                                            <td class="centrar_texto">X</td>
+                                            <td class="centrar_texto"> X </td>
+                                            
                                             @endif
+                                            
                                         @endforeach    
                                     @endif
                                     <?php $i=1; ?>

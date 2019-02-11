@@ -145,6 +145,7 @@ return array(
     'CreateMateriumPeriodosTable' => $baseDir . '/database/migrations/2017_12_11_134431_create_materium_periodos_table.php',
     'CreateMediosTable' => $baseDir . '/database/migrations/2017_03_30_224246_create_medios_table.php',
     'CreateMenusTable' => $baseDir . '/database/migrations/2017_03_22_171620_create_menus_table.php',
+    'CreateMeseTable' => $baseDir . '/database/migrations/2019_02_11_134316_create_mese_table.php',
     'CreateModulosTable' => $baseDir . '/database/migrations/2017_12_08_135311_create_modulos_table.php',
     'CreateMunicipiosTable' => $baseDir . '/database/migrations/2017_03_30_224335_create_municipios_table.php',
     'CreateNivelsTable' => $baseDir . '/database/migrations/2017_05_02_202927_create_nivels_table.php',

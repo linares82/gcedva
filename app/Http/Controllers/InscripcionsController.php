@@ -10,6 +10,7 @@ use App\Grupo;
 use App\Cliente;
 use App\Hacademica;
 use App\Lectivo;
+use App\Mese;
 use App\Calificacion;
 use App\Ponderacion;
 use App\CalificacionPonderacion;
@@ -253,7 +254,8 @@ class InscripcionsController extends Controller {
         
         public function lista()
 	{
-		return view('inscripcions.reportes.lista_alumnos')
+            $meses=Mese::pluck('name','id');
+		return view('inscripcions.reportes.lista_alumnos',compact('meses'))
 			->with( 'list', Inscripcion::getListFromAllRelationApps() );
 	}
         
@@ -274,6 +276,8 @@ class InscripcionsController extends Controller {
                                        ->join('plantels as p','p.id','=','c.plantel_id')
                                        ->where('inscripcions.plantel_id', $data['plantel_f'])
                                        ->where('inscripcions.lectivo_id',$data['lectivo_f'])
+                                       ->where('aa.plantel_id', $data['plantel_f'])
+                                       ->where('aa.lectivo_id',$data['lectivo_f'])
                                        ->where('inscripcions.grupo_id',$data['grupo_f'])
                                        ->where('inscripcions.grado_id',$data['grado_f'])
                                        ->orderBy('inscripcions.plantel_id')
@@ -288,6 +292,7 @@ class InscripcionsController extends Controller {
                     break;
                 }
                 $dias=array();
+                
                 foreach($asignacion->horarios as $horario){
                     array_push($dias,$horario->dia->name);
                 }
@@ -296,7 +301,7 @@ class InscripcionsController extends Controller {
                 
                 $fechas=array();
                 $lectivo=Lectivo::find($data['lectivo_f']);
-                
+                //dd($lectivo);
                 $no_habiles=array();
                 foreach($lectivo->diasNoHabiles as $no_habil){
                     array_push($no_habiles, Carbon::createFromFormat('Y-m-d', $no_habil->fecha));
@@ -307,33 +312,46 @@ class InscripcionsController extends Controller {
                 //dd($fin->toDateString());
                 array_push($fechas,$inicio);
                 $fecha=Carbon::createFromFormat('Y-m-d', $lectivo->inicio);
-                while($fin->greaterThanOrEqualTo($fecha)){
+                while($fin->greaterThanOrEqualTo($fecha) and $fecha->month==$data['mes']){
+                    
                     if(in_array('Lunes',$dias)){
+                        //dd("hay lunes");
                         if($fecha->isMonday() and !in_array($fecha,$no_habiles)){
                             array_push($fechas,$fecha->toDateString());
                         }
-                    }elseif(in_array('Martes',$dias)){
+                        //dd($fechas);
+                    }
+                    if(in_array('Martes',$dias)){
+                        //dd("hay martes");
                         if($fecha->isTuesday() and !in_array($fecha,$no_habiles)){
                             array_push($fechas,$fecha->toDateString());
                         }
-                    }elseif(in_array('Miercoles',$dias)){
-                        if($fecha->isWensday() and !in_array($fecha,$no_habiles)){
+                    }
+                    if(in_array('Miercoles',$dias)){
+                        //dd("hay miercoles");
+                        if($fecha->isWednesday() and !in_array($fecha,$no_habiles)){
                             array_push($fechas,$fecha->toDateString());
                         }
-                    }elseif(in_array('Jueves',$dias)){
+                    }
+                    if(in_array('Jueves',$dias)){
+                        //dd("hay jueves");
                         if($fecha->isThursday() and !in_array($fecha,$no_habiles)){
                             array_push($fechas,$fecha->toDateString());
                         }
-                    }elseif(in_array('Viernes',$dias)){
+                    }
+                    if(in_array('Viernes',$dias)){
+                        //dd("hay viernes");
                         if($fecha->isFriday() and !in_array($fecha,$no_habiles)){
                             array_push($fechas,$fecha->toDateString());
                         }
-                    }elseif(in_array('Sabado',$dias)){
+                    }if(in_array('Sabado',$dias)){
+                        
                         if($fecha->isSaturday()  and !in_array($fecha,$no_habiles)){
                             array_push($fechas,$fecha->toDateString());
                         }
                     }
                     $fecha->addDay();
+                    //dd($fechas);
                 }
                 //dd($fechas);
                 //dd($registros->grupo);

@@ -52,6 +52,14 @@
                     <span class="help-block">{{ $errors->first("lectivo_f") }}</span>
                     @endif
                 </div>
+
+                <div class="form-group col-md-6 @if($errors->has('mes')) has-error @endif">
+                    <label for="mes-field">Mes:</label>
+                    {!! Form::select("mes", $meses, null, array("class" => "form-control select_seguridad", "id" => "mes")) !!}
+                    @if($errors->has("mes"))
+                    <span class="help-block">{{ $errors->first("mes") }}</span>
+                    @endif
+                </div>
                 
                 <div class="form-group col-md-6 @if($errors->has('grupo_f')) has-error @endif">
                     <label for="grupo_f-field">Grupo de:</label>

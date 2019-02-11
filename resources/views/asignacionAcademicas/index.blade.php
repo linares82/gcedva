@@ -63,21 +63,21 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_lectivo_id_cont">LECTIVO</label>
                                 <div class=" col-sm-9">
-                                    <input class="form-control input-sm", type="hidden" value="{{ $e->lectivo_id }}" name="lectivo_id" id="lectivo_id" />
-                                    {!! Form::select("lectivo_id", $list["Lectivo"], "{{ @(Request::input('q')['asignacion_academicas.lectivo_id_lt']) ?: 0 }}", array("class" => "form-control select_seguridad", "name"=>"q[asignacion_academicas.lectivo_id_lt]", "id"=>"q_asignacion_academicas.lectivo_id_lt", "style"=>"width:100%;" )) !!}
+                                    
+                                    {!! Form::select("q_asignacion_academicas.lectivo_id_lt", $list["Lectivo"], "{{ @(Request::input('q')['asignacion_academicas.lectivo_id_lt']) ?: 0 }}", array("class" => "form-control select_seguridad", "name"=>"q[asignacion_academicas.lectivo_id_lt]", "id"=>"q_asignacion_academicas.lectivo_id_lt", "style"=>"width:100%;" )) !!}
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_plantel_id_cont">PLANTEL</label>
                                 <div class=" col-sm-9">
-                                    <input class="form-control input-sm", type="hidden" value="{{ $e->plantel_id }}" name="plantel_id" id="plantel_id" />
+                                    
                                     {!! Form::select("q_asignacion_academicas.plantel_id_lt", $list["Plantel"], "{{ @(Request::input('q')['asignacion_academicas.plantel_id_lt']) ?: 0 }}", array("class" => "form-control select_seguridad", "name"=>"q[asignacion_academicas.plantel_id_lt]", "id"=>"q_asignacion_academicas.plantel_id_lt", "style"=>"width:100%;" )) !!}
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_empleados.nombre_cont">EMPLEADO</label>
                                 <div class=" col-sm-9">
-                                    <input class="form-control input-sm", type="hidden" value="{{ $e->plantel_id }}" name="plantel_id" id="plantel_id" />
+                                    
                                     {!! Form::select("empleado_id", $list["Empleado"], "{{ @(Request::input('q')['asignacion_academicas.empleado_id_lt']) ?: 0 }}", array("class" => "form-control select_seguridad", "name"=>"q[asignacion_academicas.empleado_id_lt]", "id"=>"q_asignacion_academicas.empleado_id_lt", "style"=>"width:100%;" )) !!}
                                 </div>
                             </div>
@@ -237,6 +237,10 @@
                     while (empleados.length > 0) {
                             empleados.remove(empleados.length-1);
                         }
+                        var option=document.createElement("option");
+                            option.value=0;
+                            option.text="Seleccionar Opci+on"; 
+                            empleados.appendChild(option)
                       $.each(data, function(i) {
                           var option=document.createElement("option");
                             option.value=data[i].id;
@@ -258,6 +262,10 @@
                         while (grupos.length > 0) {
                             grupos.remove(grupos.length-1);
                         }
+                        var option=document.createElement("option");
+                            option.value=0;
+                            option.text="Seleccionar Opci+on"; 
+                            grupos.appendChild(option)
                       $.each(data, function(i) {
                           var option=document.createElement("option");
                             option.value=data[i].id;
@@ -279,7 +287,10 @@
                         while (materias.length > 0) {
                             materias.remove(materias.length-1);
                         }
-                      
+                      var option=document.createElement("option");
+                            option.value=0;
+                            option.text="Seleccionar Opci+on"; 
+                            materias.appendChild(option)
                       $.each(data, function(i) {
                           var option=document.createElement("option");
                             option.value=data[i].id;
