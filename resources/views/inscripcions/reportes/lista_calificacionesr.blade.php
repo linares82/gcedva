@@ -84,6 +84,7 @@
                             <th class=""><strong >{{$carga_ponderacion_enc->name}}<br/>{{$carga_ponderacion_enc->porcentaje}}</strong></th>
                             
                         @endforeach
+                        <th class="altura"><strong>Final</strong></th>
                         </tr>
                         <?php $grupo0=$r->grupo; ?>
                 @endif
@@ -107,6 +108,7 @@
                                         @endif
                                     @endforeach
                                 @endforeach         
+                                <td class="centrar_texto">{{$calificacion->calificacion}}</td>
                             </tr>
                 
                     
