@@ -143,7 +143,7 @@ class EmpresasController extends Controller {
             'nivel_id', 'grado_id', 'from', 'to', 'q']);
         $preguntas = $request->except(['razon_social', 'nombre_contacto', 'tel_fijo', 'tel_cel', 'correo1',
             'correo2', 'calle', 'no_int', 'no_ex', 'colonia', 'municipio_id',
-            'estado_id', 'cp', 'giro_id', 'plantel_id', 'especialidad_id',
+            'estado_id', 'cp', 'giro_id', 'plantel_id', 'especialidad_id','puesto',
             'cuestionario_id', 'usu_alta_id', 'usu_mod_id', 'nivel_id', 'grado_id','st_empresa_id','empleado_id',
             'from', 'to', 'q']);
         //dd($preguntas);

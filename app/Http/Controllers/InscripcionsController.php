@@ -10,7 +10,7 @@ use App\Grupo;
 use App\Cliente;
 use App\Hacademica;
 use App\Lectivo;
-use App\Mese;
+use App\Materium;
 use App\Calificacion;
 use App\Ponderacion;
 use App\CalificacionPonderacion;
@@ -367,5 +367,60 @@ class InscripcionsController extends Controller {
                 return $pdf->download('reporte.pdf');
                 
                 //return view('inscripcions.reportes.lista_alumnosr', array('registros'=>$registros,'fechas_enc'=>$fechas));
+	}
+        
+        public function listaCalificaciones()
+	{
+                $materias=Materium::pluck('name','id');
+		return view('inscripcions.reportes.lista_calificaciones',compact('materias'))
+			->with( 'list', Inscripcion::getListFromAllRelationApps() );
+	}
+        
+        public function listarCalificaciones(Request $request)
+	{
+                $data=$request->all();
+                //dd($data);
+                $registros= Inscripcion::select('c.nombre','c.nombre2','c.ape_paterno','c.ape_materno', 'g.name as grupo','g.name as lectivo',
+                                               DB::raw('concat(e.nombre," ",e.ape_paterno," ",e.ape_materno) as maestro'),'gra.name as grado',
+                                               'p.razon as plantel','aa.id as asignacion','c.id as cliente','mate.name as materia',
+                                               'mate.ponderacion_id as ponderacion','h.id as hacademica')
+                                       ->join('clientes as c', 'c.id', '=', 'inscripcions.cliente_id')
+                                       ->join('grupos as g', 'g.id', '=', 'inscripcions.grupo_id')
+                                       ->join('lectivos as l','l.id', '=', 'inscripcions.lectivo_id')
+                                       ->join('asignacion_academicas as aa', 'aa.grupo_id','=','g.id')
+                                       ->join('materia as mate','mate.id','=','aa.materium_id')
+                                       ->join('empleados as e','e.id','=','aa.empleado_id')
+                                       ->join('grados as gra','gra.id','=','inscripcions.grado_id')
+                                       ->join('plantels as p','p.id','=','c.plantel_id')
+                                       ->join('hacademicas as h','h.inscripcion_id','=','inscripcions.id')
+                                       ->where('inscripcions.plantel_id', $data['plantel_f'])
+                                       ->where('inscripcions.lectivo_id',$data['lectivo_f'])
+                                       ->where('aa.plantel_id', $data['plantel_f'])
+                                       ->where('aa.lectivo_id',$data['lectivo_f'])
+                                       ->where('inscripcions.grupo_id',$data['grupo_f'])
+                                       ->where('inscripcions.grado_id',$data['grado_f'])
+                                       ->where('mate.id',$data['materia'])
+                                       ->orderBy('inscripcions.plantel_id')
+                                       ->orderBy('inscripcions.lectivo_id')
+                                       ->orderBy('inscripcions.grupo_id')
+                                       ->orderBy('inscripcions.grado_id')
+                                       ->get();
+                //Agregar fechas
+                //dd($registros->toArray());
+                $carga_ponderacion=collect();
+                foreach($registros as $registro){
+                    $carga_ponderacion= CargaPonderacion::where('ponderacion_id',$registro->ponderacion)->get();
+                    break;
+                }
+                
+                //dd($carga_ponderacion->toArray());
+                
+                PDF::setOptions(['defaultFont' => 'arial']);
+
+                $pdf = PDF::loadView('inscripcions.reportes.lista_calificacionesr', array('registros'=>$registros,'carga_ponderacions_enc'=>$carga_ponderacion))
+                        ->setPaper('legal', 'landscape');
+                return $pdf->download('reporte.pdf');
+                
+                //return view('inscripcions.reportes.lista_calificacionesr', array('registros'=>$registros,'carga_ponderacions_enc'=>$carga_ponderacion));
 	}
 }

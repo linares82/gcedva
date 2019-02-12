@@ -71,18 +71,18 @@
                                 {{"Periodo Lectivo: ".$r->lectivo}}<br/>
                                 {{"Profesor: ".$r->maestro}}<br/>
                                 {{"Grado: ".$r->grado}}<br/>
+                                {{"Materia: ".$r->materia}}<br/>
                             </td>
                         </tr>
                         <tr>
                         <th class="altura"><strong>Nombre(s)</strong></th>
                         <th class="altura"><strong>A. Paterno</strong></th>
                         <th class="altura"><strong>A. Materno</strong></th>
-                        <?php $i=0 ?>
-                        @foreach($fechas_enc as $fecha_enc)
-                            @if($i>0)
-                            <th class=""><strong >{{$fecha_enc}}</strong></th>
-                            @endif
-                            <?php $i=1 ?>
+                        
+                        @foreach($carga_ponderacions_enc as $carga_ponderacion_enc)
+                            
+                            <th class=""><strong >{{$carga_ponderacion_enc->name}}<br/>{{$carga_ponderacion_enc->porcentaje}}</strong></th>
+                            
                         @endforeach
                         </tr>
                         <?php $grupo0=$r->grupo; ?>
@@ -90,24 +90,22 @@
                             <tr>
                                 <td>{{$r->nombre." ".$r->nombre2}}</td><td>{{$r->ape_paterno}}</td><td>{{$r->ape_materno}}</td>
                                 <?php
-                                    $fechas=\App\AsistenciaR::select('fecha')
+                                    /*$fechas=\App\AsistenciaR::select('fecha')
                                             ->where('asignacion_academica_id',$r->asignacion)
                                             ->where('cliente_id',$r->cliente)
                                             ->whereNotIn('cliente_id',[0,2])
                                             ->get();
-                                    $i=0;
+                                     * */
+                                     $calificacion=\App\Calificacion::where('hacademica_id',$r->hacademica)->first();
+                          
                                 ?>
-                                @foreach($fechas_enc as $fecha_enc)
-                                    @if($i>0)
-                                        @foreach($fechas as $fecha)      
-                                            @if($fecha_enc==$fecha->fecha)
-                                            <td class="centrar_texto"> X </td>
-                                            
-                                            @endif
-                                            
-                                        @endforeach    
-                                    @endif
-                                    <?php $i=1; ?>
+                                
+                                @foreach($carga_ponderacions_enc as $carga_ponderacion_enc)
+                                    @foreach($calificacion->calificacionPonderacions as $calificacionPonderacion)
+                                        @if($carga_ponderacion_enc->id == $calificacionPonderacion->carga_ponderacion_id)
+                                        <td class="centrar_texto">{{$calificacionPonderacion->calificacion_parcial}}</td>
+                                        @endif
+                                    @endforeach
                                 @endforeach         
                             </tr>
                 
