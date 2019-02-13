@@ -416,6 +416,13 @@
                             <span class="help-block">{{ $errors->first("beca_bnd") }}</span>
                             @endif
                         </div>
+                        <div class="form-group col-md-8 @if($errors->has('justificacion_beca')) has-error @endif">
+                            <label for="justificacion_beca-field">Justificacion</label>
+                            {!! Form::text("justificacion_beca", null, array("class" => "form-control input-sm", "id" => "justificacion_beca-field")) !!}
+                            @if($errors->has("justificacion_beca"))
+                            <span class="help-block">{{ $errors->first("justificacion_beca") }}</span>
+                            @endif
+                        </div>
                         <div class="form-group col-md-4 @if($errors->has('beca_porcentaje')) has-error @endif">
                             <label for="beca_porcentaje-field">Monto Inscripcion(0.00)</label>
                             {!! Form::text("beca_porcentaje", null, array("class" => "form-control input-sm", "id" => "beca_porcentaje-field")) !!}

@@ -22,12 +22,13 @@
  
             table {
                 font-family: arial, sans-serif;
-                border-collapse: collapse;
+                /*border-collapse: collapse;*/
                 width: 100%;
                 font-size: 8px;
             }
 
             td th {
+                border: 1px solid #dddddd;
                 text-align: left;
                 padding: 8px;
             }

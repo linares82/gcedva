@@ -22,12 +22,13 @@
  
             table {
                 font-family: arial, sans-serif;
-                border-collapse: collapse;
+                /*border-collapse: collapse;*/
                 width: 100%;
                 font-size: 8px;
             }
 
             td th {
+                border: 1px solid #dddddd;
                 text-align: left;
                 padding: 8px;
             }
@@ -90,8 +91,7 @@
                             <tr>
                                 <td>{{$r->nombre." ".$r->nombre2}}</td><td>{{$r->ape_paterno}}</td><td>{{$r->ape_materno}}</td>
                                 <?php
-                                    $fechas=\App\AsistenciaR::select('fecha')
-                                            ->where('asignacion_academica_id',$r->asignacion)
+                                    $fechas=\App\AsistenciaR::where('asignacion_academica_id',$r->asignacion)
                                             ->where('cliente_id',$r->cliente)
                                             ->whereNotIn('cliente_id',[0,2])
                                             ->get();
@@ -101,8 +101,10 @@
                                     @if($i>0)
                                         @foreach($fechas as $fecha)      
                                             @if($fecha_enc==$fecha->fecha)
-                                            <td class="centrar_texto"> X </td>
-                                            
+                                            <?php 
+                                            $st_asistencia= \App\EstAsistencium::find($fecha->est_asistencia_id)    
+                                            ?>
+                                            <td class="centrar_texto"> {{$st_asistencia->name}} </td>
                                             @endif
                                             
                                         @endforeach    

@@ -11,6 +11,7 @@ use App\Cliente;
 use App\Hacademica;
 use App\Lectivo;
 use App\Materium;
+use App\Mese;
 use App\Calificacion;
 use App\Ponderacion;
 use App\CalificacionPonderacion;
@@ -360,13 +361,13 @@ class InscripcionsController extends Controller {
 			->with( 'list', Inscripcion::getListFromAllRelationApps() );
                  * */
                 
-                PDF::setOptions(['defaultFont' => 'arial']);
+/*                PDF::setOptions(['defaultFont' => 'arial']);
 
                 $pdf = PDF::loadView('inscripcions.reportes.lista_alumnosr', array('registros'=>$registros,'fechas_enc'=>$fechas))
                         ->setPaper('legal', 'landscape');
                 return $pdf->download('reporte.pdf');
-                
-                //return view('inscripcions.reportes.lista_alumnosr', array('registros'=>$registros,'fechas_enc'=>$fechas));
+  */              
+                return view('inscripcions.reportes.lista_alumnosr', array('registros'=>$registros,'fechas_enc'=>$fechas));
 	}
         
         public function listaCalificaciones()
@@ -414,13 +415,13 @@ class InscripcionsController extends Controller {
                 }
                 
                 //dd($carga_ponderacion->toArray());
-                
+                /*
                 PDF::setOptions(['defaultFont' => 'arial']);
 
                 $pdf = PDF::loadView('inscripcions.reportes.lista_calificacionesr', array('registros'=>$registros,'carga_ponderacions_enc'=>$carga_ponderacion))
                         ->setPaper('legal', 'landscape');
                 return $pdf->download('reporte.pdf');
-                
-                //return view('inscripcions.reportes.lista_calificacionesr', array('registros'=>$registros,'carga_ponderacions_enc'=>$carga_ponderacion));
+                */
+                return view('inscripcions.reportes.lista_calificacionesr', array('registros'=>$registros,'carga_ponderacions_enc'=>$carga_ponderacion));
 	}
 }
