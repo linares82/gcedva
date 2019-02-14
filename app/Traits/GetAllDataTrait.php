@@ -83,13 +83,16 @@ trait GetAllDataTrait {
                 } elseif( $operator === 'lt' and $value<>0){
                     $myQuery = $myQuery->Where($column, '=', $value);                
                 }elseif( $operator === 'menorq' and $value<>""){
+                    str_replace("%3A",":",$value);
+                    str_replace("+"," ",$value);
                     $myQuery = $myQuery->where($column, '<=', $value);                
                 }elseif( $operator === 'mayorq' and $value<>""){
+                    str_replace("%3A",":",$value);
+                    str_replace("+"," ",$value);
                     $myQuery = $myQuery->where($column, '>=', $value);                
                 } elseif( $operator === 'date' and $value<>""){
                     $myQuery = $myQuery->WhereDate($column, $value);                
-                }
-                elseif( $operator === 'dateF' and $value<>""){
+                }elseif( $operator === 'dateF' and $value<>""){
                     $myQuery = $myQuery->WhereDate($column, ">=",$value);                
                 }
                 elseif( $operator === 'dateT' and $value<>""){

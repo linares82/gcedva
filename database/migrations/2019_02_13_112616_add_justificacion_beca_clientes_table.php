@@ -14,7 +14,7 @@ class AddJustificacionBecaClientesTable extends Migration
     public function up()
     {
         Schema::table('clientes', function(Blueprint $table) {
-            $table->string('justificacion_beca')->default("");
+            $table->string('justificacion_beca')->default("")->nullable();
         });
     }
 

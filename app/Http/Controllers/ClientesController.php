@@ -27,6 +27,7 @@ use App\Lectivo;
 use App\Plantilla;
 use App\Plantel;
 use App\StCliente;
+use App\User;
 use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updateCliente;
@@ -54,7 +55,8 @@ class ClientesController extends Controller {
      * @return Response
      */
     public function index(Request $request) {
-
+        $users=User::pluck('name','id');
+        $users->prepend('Seleccionar opción',0);
         if (isset($_REQUEST["p"])) {
             if (session()->has('filtro_clientes')) {
                 session(['filtro_clientes' => 1]);
@@ -70,7 +72,7 @@ class ClientesController extends Controller {
         }
         $clientes = Seguimiento::getAllData($request, 20, session('filtro_clientes'));
         
-        return view('clientes.index', compact('clientes'))
+        return view('clientes.index', compact('clientes','users'))
                         ->with('list', Seguimiento::getListFromAllRelationApps())
                         ->with('list1', Cliente::getListFromAllRelationApps());
     }

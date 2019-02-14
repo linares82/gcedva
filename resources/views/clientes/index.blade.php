@@ -86,6 +86,7 @@
                                 <label for="q_clientes.id_cont">ID</label>
                                     <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['clientes.id_lt']) ?: '' }}" name="q[clientes.id_lt]" id="q_clientes.id_lt" />
                             </div>
+                            
                             <div class="form-group col-md-4">
                                 <label for="q_clientes.nombre_cont">PRIMER NOMBRE</label>
                                 
@@ -166,13 +167,29 @@
                                 <label for="q_clientes.tpo_informe_id_lt">TIPO INFORME</label>
                                     {!! Form::select("clientes.tpo_informe_id", $list1["TpoInforme"], "{{ @(Request::input('q')['clientes.tpo_informe_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[clientes.tpo_informe_id_lt]", "id"=>"q_clientes.tpo_informe_id_lt", "style"=>"width:100%;" )) !!}
                             </div>
+                            
+                            <div class="form-group col-md-4">
+                                <label for="q_clientes.usu_alta_id_cont">Alta</label>
+                                {!! Form::select("usu_alta_id", $users, "{{ @(Request::input('q')['clientes.usu_alta_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[clientes.usu_alta_id_lt]", "id"=>"q_clientes.usu_alta_id_lt", "style"=>"width:100%;" )) !!}    
+                            </div>
+                            
+                            <div class="form-group col-md-4 fec @if($errors->has('created_at_mayorq')) has-error @endif">
+                            <label for="fec_alta-field">Fecha Alta Mayor Que(aaaa-aa-aa hh:mm:ss)</label>
+                            <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['clientes.created_at_mayorq']) ?: '' }}" name="q[clientes.created_at_mayorq]" id="q_clientes.created_at_mayorq" />
+                            </div>
+                            
+                            <div class="form-group col-md-4 fec @if($errors->has('created_at_menorq')) has-error @endif">
+                            <label for="fec_alta-field">Fecha Alta Menor Que(aaaa-aa-aa hh:mm:ss)</label>
+                            <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['clientes.created_at_menorq']) ?: '' }}" name="q[clientes.created_at_menorq]" id="q_clientes.created_at_menorq" />
+                            </div>
 
-                            <div class="form-group">
+                            <div class="form-group" id='ultimo'>
                                 <div class="col-sm-10 col-sm-offset-2">
                                     <input type="submit" name="commit" value="Buscar" class="btn btn-default btn-xs" />
                                 </div>
                             </div>
-                        </div></div>
+                        </div>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -285,20 +302,26 @@
 @endsection
 
 @push('scripts')
+<script src="{{ asset ('/bower_components/AdminLTE/plugins/input-mask/jquery.inputmask.js') }}"></script>
+<script src="{{ asset ('/bower_components/AdminLTE/plugins/input-mask/jquery.inputmask.extensions.js') }}"></script>
+<script src="{{ asset ('/bower_components/AdminLTE/plugins/input-mask/jquery.inputmask.phone.extensions.js') }}"></script>
   <script>
   
  
         // assuming the controls you want to attach the plugin to
           // have the "datepicker" class set
           //Campo de fecha
-//          $('#q_fec_registro_cont').Zebra_DatePicker({
-//            days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
-//            months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-//            readonly_element: false,
-//            lang_clear_date: 'Limpiar',
-//            show_select_today: 'Hoy',
-//          });  
-//       
+          
+          /*$('#search').children().last().children().children('.fec').children('input').Zebra_DatePicker({
+          //$('#q_fec_registro_mayorq').Zebra_DatePicker({
+            days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
+            months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+            readonly_element: false,
+            lang_clear_date: 'Limpiar',
+            show_select_today: 'Hoy',
+          });  
+       */
+      $('#search').children().last().children().children('.fec').children('input').inputmask({ mask: "9999-99-99 99:99:99"}); //specifying options
         function cambioOpcion(){
             getCmbEspecialidad();
         }
