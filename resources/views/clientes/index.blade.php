@@ -169,12 +169,12 @@
                             </div>
                             
                             <div class="form-group col-md-4">
-                                <label for="q_clientes.usu_alta_id_cont">Alta</label>
+                                <label for="q_clientes.usu_alta_id_cont">Usuario Alta</label>
                                 {!! Form::select("usu_alta_id", $users, "{{ @(Request::input('q')['clientes.usu_alta_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[clientes.usu_alta_id_lt]", "id"=>"q_clientes.usu_alta_id_lt", "style"=>"width:100%;" )) !!}    
                             </div>
                             
                             <div class="form-group col-md-4 fec @if($errors->has('created_at_mayorq')) has-error @endif">
-                            <label for="fec_alta-field">Fecha Alta Mayor Que(aaaa-aa-aa hh:mm:ss)</label>
+                            <label for="fec_alta-field">Fecha Alta Mayor Que(aaaa-mm-dd hh:mm:ss)</label>
                             <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['clientes.created_at_mayorq']) ?: '' }}" name="q[clientes.created_at_mayorq]" id="q_clientes.created_at_mayorq" />
                             </div>
                             
