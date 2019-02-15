@@ -1,7 +1,7 @@
 <html>
     <head>
         <style>
-            @media print {
+/*            @media print {
                 table {
                     font-family: arial, sans-serif;
                     border-collapse: collapse;
@@ -22,7 +22,7 @@
  
             table {
                 font-family: arial, sans-serif;
-                /*border-collapse: collapse;*/
+                border-collapse: collapse;
                 width: 100%;
                 font-size: 8px;
             }
@@ -40,7 +40,7 @@
             .girar_texto {
                 
                 text-align: center;
-                /*padding: 8px;*/
+                padding: 8px;
                 transform: rotate(270deg);
                 height: auto;
                 
@@ -52,12 +52,21 @@
             }
             tr:nth-child(even) {
                 background-color: #dddddd;
-            }
+            }*/
+              h1, h3, h5, th { text-align: center; }
+        table, #chart_div { margin: auto; font-family: Segoe UI; box-shadow: 10px 10px 5px #888; border: thin ridge gray; }
+        th { font-size: 11px; background: #0046c3; color: #fff; max-width: 400px; padding: 2px 5px; }
+        td { font-size: 10px; padding: 2px 10px; color: #000; }
+        tr { background: #b8d1f3; }
+        tr:nth-child(even) { background: #dae5f4; }
+        tr:nth-child(odd) { background: #fff; }
+      
         </style>
 
     </head>
     <body>
         <div id="printeArea">
+            <h3>Lista de Asistencia del {{$parametros['fecha_f']}} al {{$parametros['fecha_t']}} </h3>
             <table>
                 <?php $grupo0=""; ?>
                 @foreach($registros as $r)
@@ -72,21 +81,26 @@
                                 {{"Periodo Lectivo: ".$r->lectivo}}<br/>
                                 {{"Profesor: ".$r->maestro}}<br/>
                                 {{"Grado: ".$r->grado}}<br/>
+                                
                             </td>
                         </tr>
                         <tr>
                         <th class="altura"><strong>Nombre(s)</strong></th>
                         <th class="altura"><strong>A. Paterno</strong></th>
                         <th class="altura"><strong>A. Materno</strong></th>
-                        <?php $i=0 ?>
+                        
                         @foreach($fechas_enc as $fecha_enc)
-                            @if($i>0)
+                            
                             <th class=""><strong >{{$fecha_enc}}</strong></th>
-                            @endif
-                            <?php $i=1 ?>
+                            
                         @endforeach
+                        <th>Asistencias - % </th>
                         </tr>
-                        <?php $grupo0=$r->grupo; ?>
+                        <?php 
+                        $grupo0=$r->grupo; 
+                        $asistencias=0;
+                        ?>
+                        
                 @endif
                             <tr>
                                 <td>{{$r->nombre." ".$r->nombre2}}</td><td>{{$r->ape_paterno}}</td><td>{{$r->ape_materno}}</td>
@@ -95,22 +109,39 @@
                                             ->where('cliente_id',$r->cliente)
                                             ->whereNotIn('cliente_id',[0,2])
                                             ->get();
-                                    $i=0;
+                                 
                                 ?>
                                 @foreach($fechas_enc as $fecha_enc)
-                                    @if($i>0)
+                                    <?php $marcador=0; ?>
+                                    
                                         @foreach($fechas as $fecha)      
                                             @if($fecha_enc==$fecha->fecha)
                                             <?php 
-                                            $st_asistencia= \App\EstAsistencium::find($fecha->est_asistencia_id)    
+                                            $st_asistencia= \App\EstAsistencium::find($fecha->est_asistencia_id);
+                                            if($st_asistencia->id==1){
+                                                $asistencias++;
+                                            }
+                                            
+                                            $marcador=1;
                                             ?>
-                                            <td class="centrar_texto"> {{$st_asistencia->name}} </td>
+                                            <td class="centrar_texto"> {{$st_asistencia->name}} </td>                                            
                                             @endif
                                             
                                         @endforeach    
-                                    @endif
+                                        
+                                    
                                     <?php $i=1; ?>
-                                @endforeach         
+                                    @if($marcador==0)
+                                        <td></td>
+                                    @endif
+                                @endforeach
+                                <?php 
+                                $porcentaje = round((($asistencias*100)/$total_asistencias),2);
+                                ?>
+                                <td>{{$asistencias." - ".$porcentaje}}</td>
+                                <?php 
+                                $asistencias=0;
+                                ?>
                             </tr>
                 
                     

@@ -226,4 +226,9 @@ class LectivosController extends Controller {
             //dd($noHabiles);
             return view('lectivos.imprimirCalendario', compact('anio','noHabiles'));
         }
+        
+        public function getLectivo(Request $request){
+            $lectivo=Lectivo::find($request['lectivo']);
+            echo json_encode($lectivo->toArray());
+        }
 }

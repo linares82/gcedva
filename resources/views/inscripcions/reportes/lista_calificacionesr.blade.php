@@ -1,7 +1,7 @@
 <html>
     <head>
         <style>
-            @media print {
+/*            @media print {
                 table {
                     font-family: arial, sans-serif;
                     border-collapse: collapse;
@@ -22,7 +22,7 @@
  
             table {
                 font-family: arial, sans-serif;
-                /*border-collapse: collapse;*/
+                border-collapse: collapse;
                 width: 100%;
                 font-size: 8px;
             }
@@ -40,7 +40,7 @@
             .girar_texto {
                 
                 text-align: center;
-                /*padding: 8px;*/
+                padding: 8px;
                 transform: rotate(270deg);
                 height: auto;
                 
@@ -52,13 +52,22 @@
             }
             tr:nth-child(even) {
                 background-color: #dddddd;
-            }
+            }*/
+      
+        h1, h3, h5, th { text-align: center; }
+        table, #chart_div { margin: auto; font-family: Segoe UI; box-shadow: 10px 10px 5px #888; border: thin ridge grey; }
+        th { background: #0046c3; color: #fff; max-width: 400px; padding: 5px 10px; }
+        td { font-size: 11px; padding: 5px 20px; color: #000; }
+        tr { background: #b8d1f3; }
+        tr:nth-child(even) { background: #dae5f4; }
+        tr:nth-child(odd) { background: #b8d1f3; }
+      
         </style>
 
     </head>
     <body>
         <div id="printeArea">
-            <table>
+            <table class="table table-condensed table-striped">
                 <?php $grupo0=""; ?>
                 @foreach($registros as $r)
                 

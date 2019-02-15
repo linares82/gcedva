@@ -70,6 +70,8 @@ class ClientesController extends Controller {
                 session(['filtro_clientes' => 0]);
             }
         }
+        
+        //dd($request);
         $clientes = Seguimiento::getAllData($request, 20, session('filtro_clientes'));
         
         return view('clientes.index', compact('clientes','users'))
@@ -1170,5 +1172,32 @@ class ClientesController extends Controller {
         //dd($datos);
         $clientes=Cliente::where($datos['campo'], '=', $datos['valor'])->get();
         return response()->json($clientes);
+    }
+    
+    public function altasXUsuario() {
+        
+        return view('clientes.reportes.altasXUsuario')->with('list', Cliente::getListFromAllRelationApps());
+    }
+
+    public function altasXUsuarioR(Request $request) {
+        $filtros = $request->all();
+        
+        $resultados=Cliente::select(DB::raw('p.razon, e.id, count(clientes.nombre) as total_usuario'))
+                           ->join('users as u', 'u.id','=','clientes.usu_alta_id')
+                           ->join('empleados as e','e.user_id','=','u.id')
+                           ->join('plantels as p','p.id','=','clientes.plantel_id')
+                           ->where('clientes.plantel_id','>=', $filtros['plantel_f'])
+                           ->where('clientes.plantel_id','<=', $filtros['plantel_t'])
+                           ->where('clientes.usu_alta_id','>=', $filtros['usuario_f'])
+                           ->where('clientes.usu_alta_id','<=', $filtros['usuario_t'])
+                           ->where('clientes.created_at','>=', $filtros['fecha_f']." 00:00:00")
+                           ->where('clientes.created_at','<=', $filtros['fecha_t']." 23:00:00")
+                           ->groupBy('p.razon','e.id')
+                           ->get();
+        //dd($resultados->toArray());
+        
+        return view('clientes.reportes.altasXUsuarioR', compact('resultados','filtros'));
+        
+        
     }
 }

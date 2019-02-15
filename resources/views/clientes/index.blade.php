@@ -179,7 +179,7 @@
                             </div>
                             
                             <div class="form-group col-md-4 fec @if($errors->has('created_at_menorq')) has-error @endif">
-                            <label for="fec_alta-field">Fecha Alta Menor Que(aaaa-aa-aa hh:mm:ss)</label>
+                            <label for="fec_alta-field">Fecha Alta Menor Que(aaaa-mm-dd hh:mm:ss)</label>
                             <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['clientes.created_at_menorq']) ?: '' }}" name="q[clientes.created_at_menorq]" id="q_clientes.created_at_menorq" />
                             </div>
 
@@ -322,6 +322,7 @@
           });  
        */
       $('#search').children().last().children().children('.fec').children('input').inputmask({ mask: "9999-99-99 99:99:99"}); //specifying options
+      
         function cambioOpcion(){
             getCmbEspecialidad();
         }

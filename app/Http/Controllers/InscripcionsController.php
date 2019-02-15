@@ -308,50 +308,59 @@ class InscripcionsController extends Controller {
                     array_push($no_habiles, Carbon::createFromFormat('Y-m-d', $no_habil->fecha));
                 }
                 //dd($no_habiles);    
-                $inicio=Carbon::createFromFormat('Y-m-d', $lectivo->inicio);
-                $fin=Carbon::createFromFormat('Y-m-d', $lectivo->fin);
-                //dd($fin->toDateString());
-                array_push($fechas,$inicio);
-                $fecha=Carbon::createFromFormat('Y-m-d', $lectivo->inicio);
-                while($fin->greaterThanOrEqualTo($fecha) and $fecha->month==$data['mes']){
+                //$inicio=Carbon::createFromFormat('Y-m-d', $lectivo->inicio);
+                //$fin=Carbon::createFromFormat('Y-m-d', $lectivo->fin);
+                $pinicio=Carbon::createFromFormat('Y-m-d', $data['fecha_f']);
+                $pfin=Carbon::createFromFormat('Y-m-d', $data['fecha_t']);
+                //dd($pfin->toDateString());
+                //array_push($fechas,$pinicio);
+                //$fecha=Carbon::createFromFormat('Y-m-d', $lectivo->inicio);
+                $total_asistencias=0;
+                while($pfin->greaterThanOrEqualTo($pinicio) ){
                     
                     if(in_array('Lunes',$dias)){
                         //dd("hay lunes");
-                        if($fecha->isMonday() and !in_array($fecha,$no_habiles)){
-                            array_push($fechas,$fecha->toDateString());
+                        if($pinicio->isMonday() and !in_array($pinicio,$no_habiles)){
+                            array_push($fechas,$pinicio->toDateString());
+                            $total_asistencias++;
                         }
                         //dd($fechas);
                     }
                     if(in_array('Martes',$dias)){
                         //dd("hay martes");
-                        if($fecha->isTuesday() and !in_array($fecha,$no_habiles)){
-                            array_push($fechas,$fecha->toDateString());
+                        if($pinicio->isTuesday() and !in_array($pinicio,$no_habiles)){
+                            array_push($fechas,$pinicio->toDateString());
+                            $total_asistencias++;
                         }
                     }
                     if(in_array('Miercoles',$dias)){
                         //dd("hay miercoles");
-                        if($fecha->isWednesday() and !in_array($fecha,$no_habiles)){
-                            array_push($fechas,$fecha->toDateString());
+                        if($pinicio->isWednesday() and !in_array($pinicio,$no_habiles)){
+                            array_push($fechas,$pinicio->toDateString());
+                            $total_asistencias++;
                         }
                     }
                     if(in_array('Jueves',$dias)){
                         //dd("hay jueves");
-                        if($fecha->isThursday() and !in_array($fecha,$no_habiles)){
-                            array_push($fechas,$fecha->toDateString());
+                        if($pinicio->isThursday() and !in_array($pinicio,$no_habiles)){
+                            array_push($fechas,$pinicio->toDateString());
+                            $total_asistencias++;
                         }
                     }
                     if(in_array('Viernes',$dias)){
                         //dd("hay viernes");
-                        if($fecha->isFriday() and !in_array($fecha,$no_habiles)){
-                            array_push($fechas,$fecha->toDateString());
+                        if($pinicio->isFriday() and !in_array($pinicio,$no_habiles)){
+                            array_push($fechas,$pinicio->toDateString());
+                            $total_asistencias++;
                         }
                     }if(in_array('Sabado',$dias)){
                         
-                        if($fecha->isSaturday()  and !in_array($fecha,$no_habiles)){
-                            array_push($fechas,$fecha->toDateString());
+                        if($pinicio->isSaturday()  and !in_array($pinicio,$no_habiles)){
+                            array_push($fechas,$pinicio->toDateString());
+                            $total_asistencias++;
                         }
                     }
-                    $fecha->addDay();
+                    $pinicio->addDay();
                     //dd($fechas);
                 }
                 //dd($fechas);
@@ -367,7 +376,10 @@ class InscripcionsController extends Controller {
                         ->setPaper('legal', 'landscape');
                 return $pdf->download('reporte.pdf');
   */              
-                return view('inscripcions.reportes.lista_alumnosr', array('registros'=>$registros,'fechas_enc'=>$fechas));
+                return view('inscripcions.reportes.lista_alumnosr', array('registros'=>$registros,
+                                                                          'fechas_enc'=>$fechas,
+                                                                          'parametros'=>$data,
+                                                                          'total_asistencias'=>$total_asistencias));
 	}
         
         public function listaCalificaciones()
@@ -422,6 +434,7 @@ class InscripcionsController extends Controller {
                         ->setPaper('legal', 'landscape');
                 return $pdf->download('reporte.pdf');
                 */
-                return view('inscripcions.reportes.lista_calificacionesr', array('registros'=>$registros,'carga_ponderacions_enc'=>$carga_ponderacion));
+                return view('inscripcions.reportes.lista_calificacionesr', array('registros'=>$registros,
+                                                                                 'carga_ponderacions_enc'=>$carga_ponderacion));
 	}
 }
