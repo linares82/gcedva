@@ -34,7 +34,7 @@
                 <div class="box-body">
                     <div class="form-group col-md-4 @if($errors->has('plantel_id')) has-error @endif">
                     <label for="plantel_id-field">Plantel</label>
-                    {!! Form::select("plantel_id", $list["Plantel"], null, array("class" => "form-control select_seguridad", "id" => "plantel_id-field", 'readonly'=>'readonly')) !!}
+                    {!! Form::select("plantel_id", $list["Plantel"], null, array("class" => "form-control select_seguridad", "id" => "plantel_id-field")) !!}
                     @if($errors->has("plantel_id"))
                         <span class="help-block">{{ $errors->first("plantel_id") }}</span>
                     @endif
@@ -75,7 +75,7 @@
                 <div class="box-body">
                     <div class="form-group col-md-4 @if($errors->has('plantel_id2')) has-error @endif">
                     <label for="plantel_id2-field">Plantel</label>
-                    {!! Form::select("plantel_id2", $list["Plantel"], null, array("class" => "form-control select_seguridad", "id" => "plantel_id2-field", 'readonly'=>'readonly')) !!}
+                    {!! Form::select("plantel_id2", $list["Plantel"], null, array("class" => "form-control select_seguridad", "id" => "plantel_id2-field")) !!}
                     @if($errors->has("plantel_id2"))
                         <span class="help-block">{{ $errors->first("plantel_id2") }}</span>
                     @endif
@@ -150,8 +150,12 @@
                 }
             });
       }
-      /*$('#plantel_id-field').change(function(){
-          getCmbEmpleados();
+      $('#plantel_id-field').change(function(){
+        getCmbEmpleados();
+      });
+      
+      $('#plantel_id2-field').change(function(){
+        getCmbEmpleados2();
       });
       
       function getCmbEmpleados(){
@@ -165,27 +169,35 @@
                   beforeSend : function(){$("#loading3").show();},
                   complete : function(){$("#loading3").hide();},
                   success: function(data){
-                      //$example.select2("destroy");
-                      //alert($('#plantel_id-field option:selected').val());
                       $('#empleado_id-field').html('');
-                      $('#empleado_id2-field').html('');
-                      //$('#especialidad_id-field').empty();
                       $('#empleado_id-field').append($('<option></option>').text('Seleccionar Opción').val('0'));
-                      $('#empleado_id2-field').append($('<option></option>').text('Seleccionar Opción').val('0'));
-                      $('#plantel_id2-field').val($('#plantel_id-field option:selected').val()).change();
-                      //alert($('#plantel_id2-field option:selected').val());
                       $.each(data, function(i) {
-                          //alert(data[i].name);
                           $('#empleado_id-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].nombre+"<\/option>");
-                          $('#empleado_id2-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].nombre+"<\/option>");
-                          
                       });
-                      //$('#empleado_id-field').change();
-                      //$example.select2();
                   }
               });       
       }
-      */
+      
+      function getCmbEmpleados2(){
+          //$('#empleado_id_field option:selected').val($('#empleado_id_campo option:selected').val()).change();
+          var a= $('#frm_reasignar').serialize();
+              $.ajax({
+                  url: '{{ route("empleados.getEmpleadosXplantel") }}',
+                  type: 'GET',
+                  data: {"plantel_id":$("#plantel_id2-field option:selected").val()},
+                  dataType: 'json',
+                  beforeSend : function(){$("#loading3").show();},
+                  complete : function(){$("#loading3").hide();},
+                  success: function(data){
+                      $('#empleado_id2-field').html('');
+                      $('#empleado_id2-field').append($('<option></option>').text('Seleccionar Opción').val('0'));
+                      $.each(data, function(i) {
+                          $('#empleado_id2-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].nombre+"<\/option>");
+                      });
+                  }
+              });       
+      }
+      
       
     });
    

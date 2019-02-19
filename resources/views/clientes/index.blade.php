@@ -258,6 +258,7 @@
                                 <td>{{$cliente->cliente->empleado->nombre." ".$cliente->cliente->empleado->ape_paterno." ".$cliente->cliente->empleado->ape_materno}}</td>
                                 <td> {{$cliente->cliente->paise->name}} </td>
                                 <td class="text-right">
+                                    <a class="btn btn-xs bg-maroon" href="{{ route('clientes.boleta', array('id'=>$cliente->cliente->id)) }}"><i class="glyphicon glyphicon-calendar"></i> Boleta</a>
                                     @permission('correos.redactar')
                                     @if(isset($cliente->cliente->mail))
                                     <a class="btn btn-xs btn-success" href="{{ url('correos/redactar').'/'.$cliente->cliente->mail.'/'.$cliente->cliente->nombre.'/0' }}"><i class="glyphicon glyphicon-envelope"></i> Correo </a>

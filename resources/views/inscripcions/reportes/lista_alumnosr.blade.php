@@ -66,7 +66,7 @@
     </head>
     <body>
         <div id="printeArea">
-            <h3>Lista de Asistencia del {{$parametros['fecha_f']}} al {{$parametros['fecha_t']}} </h3>
+            <h3>Lista de Asistencia del {{$asignacion->fec_inicio}} al {{$asignacion->fec_fin}} </h3>
             <table>
                 <?php $grupo0=""; ?>
                 @foreach($registros as $r)
@@ -75,7 +75,7 @@
                     
                     <!--<div style="page-break-after:always;"></div>-->
                         <tr>
-                            <td colspan="28">
+                            <td colspan="5">
                                 {{"Plantel: ".$r->plantel }} <br/>
                                 {{"Grupo: ".$r->grupo}}<br/>
                                 {{"Periodo Lectivo: ".$r->lectivo}}<br/>
@@ -83,8 +83,12 @@
                                 {{"Grado: ".$r->grado}}<br/>
                                 
                             </td>
+                            <td colspan="{{$contador-1}}">
+                                <img src="{{ asset('/imagenes/planteles/'.$r->p_id."/".$r->logo) }}" alt="Sin logo" height="80px" ></img>
+                            </td>
                         </tr>
                         <tr>
+                        <th class="altura"><strong>NO.</strong></th>
                         <th class="altura"><strong>Nombre(s)</strong></th>
                         <th class="altura"><strong>A. Paterno</strong></th>
                         <th class="altura"><strong>A. Materno</strong></th>
@@ -95,6 +99,7 @@
                             
                         @endforeach
                         <th>Asistencias - % </th>
+                        <th>Ultimo Pago Colegiatura</th>
                         </tr>
                         <?php 
                         $grupo0=$r->grupo; 
@@ -103,6 +108,8 @@
                         
                 @endif
                             <tr>
+                                
+                                <td>{{ $r->cliente }}</td>
                                 <td>{{$r->nombre." ".$r->nombre2}}</td><td>{{$r->ape_paterno}}</td><td>{{$r->ape_materno}}</td>
                                 <?php
                                     $fechas=\App\AsistenciaR::where('asignacion_academica_id',$r->asignacion)
@@ -139,6 +146,12 @@
                                 $porcentaje = round((($asistencias*100)/$total_asistencias),2);
                                 ?>
                                 <td>{{$asistencias." - ".$porcentaje}}</td>
+                                <?php 
+                                $caja=\App\Caja::where('cliente_id',$r->id)->latest()->first();
+                                ?>
+                                @if(is_object($caja))
+                                <td>{{$caja->id."-".$caja->stCaja->name." - ".$caja->total." - ".$caja->fecha}}</td>
+                                @endif
                                 <?php 
                                 $asistencias=0;
                                 ?>

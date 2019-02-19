@@ -5,11 +5,13 @@ use App\Http\Controllers\Controller;
 
 use App\AsistenciaR;
 use App\AsignacionAcademica;
+use App\Caja;
 use App\Inscripcion;
 use App\Grupo;
 use App\Cliente;
 use App\Hacademica;
 use App\Lectivo;
+use App\Empleado;
 use App\Materium;
 use App\Mese;
 use App\Calificacion;
@@ -256,17 +258,19 @@ class InscripcionsController extends Controller {
         public function lista()
 	{
             $meses=Mese::pluck('name','id');
-		return view('inscripcions.reportes.lista_alumnos',compact('meses'))
+            $materias=Materium::pluck('name','id');
+            $instructores=Empleado::where('puesto_id',3)->pluck('nombre','id');
+		return view('inscripcions.reportes.lista_alumnos',compact('meses','materias','instructores'))
 			->with( 'list', Inscripcion::getListFromAllRelationApps() );
 	}
         
         public function listar(Request $request)
 	{
                 $data=$request->all();
-                //dd($data);
-                $registros= Inscripcion::select('c.nombre','c.nombre2','c.ape_paterno','c.ape_materno', 'g.name as grupo','g.name as lectivo',
+//                dd($data);
+                $registros= Inscripcion::select('c.nombre','c.nombre2','c.ape_paterno','c.ape_materno', 'g.name as grupo','l.name as lectivo',
                                                DB::raw('concat(e.nombre," ",e.ape_paterno," ",e.ape_materno) as maestro'),'gra.name as grado',
-                                               'p.razon as plantel','aa.id as asignacion','c.id as cliente')
+                                               'p.razon as plantel', 'p.logo','aa.id as asignacion','c.id as cliente','p.id as p_id')
                                        ->join('clientes as c', 'c.id', '=', 'inscripcions.cliente_id')
                                        ->join('grupos as g', 'g.id', '=', 'inscripcions.grupo_id')
                                        ->join('lectivos as l','l.id', '=', 'inscripcions.lectivo_id')
@@ -277,23 +281,31 @@ class InscripcionsController extends Controller {
                                        ->join('plantels as p','p.id','=','c.plantel_id')
                                        ->where('inscripcions.plantel_id', $data['plantel_f'])
                                        ->where('inscripcions.lectivo_id',$data['lectivo_f'])
+                                       //->where('inscripcions.grado_id',$data['grado_f'])
                                        ->where('aa.plantel_id', $data['plantel_f'])
                                        ->where('aa.lectivo_id',$data['lectivo_f'])
-                                       ->where('inscripcions.grupo_id',$data['grupo_f'])
-                                       ->where('inscripcions.grado_id',$data['grado_f'])
+                                       ->where('aa.grupo_id',$data['grupo_f'])
+                                       ->where('aa.empleado_id',$data['instructor_f'])
+                                       ->where('aa.materium_id',$data['materia_f'])
                                        ->orderBy('inscripcions.plantel_id')
                                        ->orderBy('inscripcions.lectivo_id')
                                        ->orderBy('inscripcions.grupo_id')
                                        ->orderBy('inscripcions.grado_id')
                                        ->get();
+                
+                //dd($registros->toArray());
+                
+                
                 //Agregar fechas
                 $asignacion=collect();
                 foreach($registros as $registro){
                     $asignacion= AsignacionAcademica::find($registro->asignacion);
                     break;
                 }
-                $dias=array();
                 
+                
+                
+                $dias=array();
                 foreach($asignacion->horarios as $horario){
                     array_push($dias,$horario->dia->name);
                 }
@@ -310,8 +322,8 @@ class InscripcionsController extends Controller {
                 //dd($no_habiles);    
                 //$inicio=Carbon::createFromFormat('Y-m-d', $lectivo->inicio);
                 //$fin=Carbon::createFromFormat('Y-m-d', $lectivo->fin);
-                $pinicio=Carbon::createFromFormat('Y-m-d', $data['fecha_f']);
-                $pfin=Carbon::createFromFormat('Y-m-d', $data['fecha_t']);
+                $pinicio=Carbon::createFromFormat('Y-m-d', $asignacion->fec_inicio);
+                $pfin=Carbon::createFromFormat('Y-m-d', $asignacion->fec_fin);
                 //dd($pfin->toDateString());
                 //array_push($fechas,$pinicio);
                 //$fecha=Carbon::createFromFormat('Y-m-d', $lectivo->inicio);
@@ -363,6 +375,11 @@ class InscripcionsController extends Controller {
                     $pinicio->addDay();
                     //dd($fechas);
                 }
+                
+                $contador=0;
+                foreach($fechas as $fecha){
+                    $contador++;
+                }
                 //dd($fechas);
                 //dd($registros->grupo);
                                          
@@ -378,14 +395,16 @@ class InscripcionsController extends Controller {
   */              
                 return view('inscripcions.reportes.lista_alumnosr', array('registros'=>$registros,
                                                                           'fechas_enc'=>$fechas,
-                                                                          'parametros'=>$data,
-                                                                          'total_asistencias'=>$total_asistencias));
+                                                                          'asignacion'=>$asignacion,
+                                                                          'total_asistencias'=>$total_asistencias,
+                                                                          'contador'=>$contador));
 	}
         
         public function listaCalificaciones()
 	{
                 $materias=Materium::pluck('name','id');
-		return view('inscripcions.reportes.lista_calificaciones',compact('materias'))
+                $instructores=Empleado::where('puesto_id',3)->pluck('nombre','id');
+		return view('inscripcions.reportes.lista_calificaciones',compact('materias','instructores'))
 			->with( 'list', Inscripcion::getListFromAllRelationApps() );
 	}
         
@@ -393,10 +412,10 @@ class InscripcionsController extends Controller {
 	{
                 $data=$request->all();
                 //dd($data);
-                $registros= Inscripcion::select('c.nombre','c.nombre2','c.ape_paterno','c.ape_materno', 'g.name as grupo','g.name as lectivo',
+                $registros= Inscripcion::select('c.nombre','c.nombre2','c.ape_paterno','c.ape_materno', 'g.name as grupo','l.name as lectivo',
                                                DB::raw('concat(e.nombre," ",e.ape_paterno," ",e.ape_materno) as maestro'),'gra.name as grado',
-                                               'p.razon as plantel','aa.id as asignacion','c.id as cliente','mate.name as materia',
-                                               'mate.ponderacion_id as ponderacion','h.id as hacademica')
+                                               'p.razon as plantel', 'p.logo','aa.id as asignacion','c.id as cliente','mate.name as materia',
+                                               'mate.ponderacion_id as ponderacion','h.id as hacademica','p.id as p_id','c.matricula')
                                        ->join('clientes as c', 'c.id', '=', 'inscripcions.cliente_id')
                                        ->join('grupos as g', 'g.id', '=', 'inscripcions.grupo_id')
                                        ->join('lectivos as l','l.id', '=', 'inscripcions.lectivo_id')
@@ -410,9 +429,10 @@ class InscripcionsController extends Controller {
                                        ->where('inscripcions.lectivo_id',$data['lectivo_f'])
                                        ->where('aa.plantel_id', $data['plantel_f'])
                                        ->where('aa.lectivo_id',$data['lectivo_f'])
-                                       ->where('inscripcions.grupo_id',$data['grupo_f'])
-                                       ->where('inscripcions.grado_id',$data['grado_f'])
-                                       ->where('mate.id',$data['materia'])
+                                       ->where('aa.grupo_id',$data['grupo_f'])
+                                       ->where('aa.empleado_id',$data['instructor_f'])
+                                       ->where('aa.materium_id',$data['materia_f'])
+                                       //->where('inscripcions.grado_id',$data['grado_f'])
                                        ->orderBy('inscripcions.plantel_id')
                                        ->orderBy('inscripcions.lectivo_id')
                                        ->orderBy('inscripcions.grupo_id')
@@ -421,9 +441,16 @@ class InscripcionsController extends Controller {
                 //Agregar fechas
                 //dd($registros->toArray());
                 $carga_ponderacion=collect();
+                $asignacion=collect();
                 foreach($registros as $registro){
                     $carga_ponderacion= CargaPonderacion::where('ponderacion_id',$registro->ponderacion)->get();
+                    $asignacion = AsignacionAcademica::find($registro->asignacion);
                     break;
+                }
+                
+                $contador=0;
+                foreach($carga_ponderacion as $carga){
+                    $contador++;
                 }
                 
                 //dd($carga_ponderacion->toArray());
@@ -435,6 +462,77 @@ class InscripcionsController extends Controller {
                 return $pdf->download('reporte.pdf');
                 */
                 return view('inscripcions.reportes.lista_calificacionesr', array('registros'=>$registros,
-                                                                                 'carga_ponderacions_enc'=>$carga_ponderacion));
+                                                                                 'carga_ponderacions_enc'=>$carga_ponderacion,
+                                                                                 'asignacion'=>$asignacion,
+                                                                                 'contador'=>$contador,
+                                                                                 'data'=>$data));
+	}
+        
+        public function boletas()
+	{
+                $materias=Materium::pluck('name','id');
+                $instructores=Empleado::where('puesto_id',3)->pluck('nombre','id');
+		return view('inscripcions.reportes.boletas',compact('materias','instructores'))
+			->with( 'list', Inscripcion::getListFromAllRelationApps() );
+	}
+        
+        public function boletasr(Request $request)
+	{
+                $data=$request->all();
+                //dd($data);
+                $registros= Inscripcion::select('c.nombre','c.nombre2','c.ape_paterno','c.ape_materno', 'g.name as grupo','l.name as lectivo',
+                                               DB::raw('concat(e.nombre," ",e.ape_paterno," ",e.ape_materno) as maestro'),'gra.name as grado',
+                                               'p.razon as plantel', 'p.logo','aa.id as asignacion','c.id as cliente','mate.name as materia',
+                                               'mate.ponderacion_id as ponderacion','h.id as hacademica','p.id as p_id','c.matricula')
+                                       ->join('clientes as c', 'c.id', '=', 'inscripcions.cliente_id')
+                                       ->join('grupos as g', 'g.id', '=', 'inscripcions.grupo_id')
+                                       ->join('lectivos as l','l.id', '=', 'inscripcions.lectivo_id')
+                                       ->join('asignacion_academicas as aa', 'aa.grupo_id','=','g.id')
+                                       ->join('materia as mate','mate.id','=','aa.materium_id')
+                                       ->join('empleados as e','e.id','=','aa.empleado_id')
+                                       ->join('grados as gra','gra.id','=','inscripcions.grado_id')
+                                       ->join('plantels as p','p.id','=','c.plantel_id')
+                                       ->join('hacademicas as h','h.inscripcion_id','=','inscripcions.id')
+                                       ->where('inscripcions.plantel_id', $data['plantel_f'])
+                                       ->where('inscripcions.lectivo_id',$data['lectivo_f'])
+                                       ->where('aa.plantel_id', $data['plantel_f'])
+                                       ->where('aa.lectivo_id',$data['lectivo_f'])
+                                       ->where('aa.grupo_id',$data['grupo_f'])
+                                       ->where('aa.empleado_id',$data['instructor_f'])
+                                       //->where('inscripcions.grado_id',$data['grado_f'])
+                                       ->orderBy('inscripcions.plantel_id')
+                                       ->orderBy('inscripcions.lectivo_id')
+                                       ->orderBy('inscripcions.grupo_id')
+                                       ->orderBy('inscripcions.grado_id')
+                                       ->orderBy('inscripcions.cliente_id')
+                                       ->get();
+                //Agregar fechas
+                //dd($registros->toArray());
+                $carga_ponderacion=collect();
+                $asignacion=collect();
+                foreach($registros as $registro){
+                    $carga_ponderacion= CargaPonderacion::where('ponderacion_id',$registro->ponderacion)->get();
+                    $asignacion = AsignacionAcademica::find($registro->asignacion);
+                    break;
+                }
+                
+                $contador=0;
+                foreach($carga_ponderacion as $carga){
+                    $contador++;
+                }
+                
+                //dd($carga_ponderacion->toArray());
+                /*
+                PDF::setOptions(['defaultFont' => 'arial']);
+
+                $pdf = PDF::loadView('inscripcions.reportes.lista_calificacionesr', array('registros'=>$registros,'carga_ponderacions_enc'=>$carga_ponderacion))
+                        ->setPaper('legal', 'landscape');
+                return $pdf->download('reporte.pdf');
+                */
+                return view('inscripcions.reportes.boletasr', array('registros'=>$registros,
+                                                                                 'carga_ponderacions_enc'=>$carga_ponderacion,
+                                                                                 'asignacion'=>$asignacion,
+                                                                                 'contador'=>$contador,
+                                                                                 'data'=>$data));
 	}
 }

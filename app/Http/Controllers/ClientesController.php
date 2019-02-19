@@ -1200,4 +1200,11 @@ class ClientesController extends Controller {
         
         
     }
+    
+    public function Boleta(Request $request){
+        
+        $cliente=Cliente::find($request['id']);
+        return view('clientes.reportes.boleta', compact('cliente'))
+                        ->with('');
+    }
 }

@@ -22,7 +22,6 @@
         <div class="col-md-12">
 
             {!! Form::open(array('route' => 'inscripcions.listaCalificaciones', 'id'=>'frm')) !!}
-
 <!--                <div class="form-group col-md-6 @if($errors->has('fecha_f')) has-error @endif">
                     <label for="fecha_f-field">Fecha de:</label>
                     {!! Form::text("fecha_f", null, array("class" => "form-control input-sm", "id" => "fecha_f-field")) !!}
@@ -52,6 +51,24 @@
                     <span class="help-block">{{ $errors->first("lectivo_f") }}</span>
                     @endif
                 </div>
+
+                
+
+<!--                <div class="form-group col-md-6 @if($errors->has('fecha_f')) has-error @endif">
+                    <label for="fecha_f-field">Fecha de:</label>
+                    {!! Form::text("fecha_f", null, array("class" => "form-control input-sm", "id" => "fecha_f-field")) !!}
+                    @if($errors->has("fecha_f"))
+                    <span class="help-block">{{ $errors->first("fecha_f") }}</span>
+                    @endif
+                </div>
+                <div class="form-group col-md-6 @if($errors->has('fecha_t')) has-error @endif">
+                    <label for="fecha_t-field">Fecha a:</label>
+                    {!! Form::text("fecha_t", null, array("class" => "form-control input-sm", "id" => "fecha_t-field")) !!}
+                    @if($errors->has("fecha_t"))
+                    <span class="help-block">{{ $errors->first("fecha_t") }}</span>
+                    @endif
+                </div>-->
+                
                 
                 <div class="form-group col-md-6 @if($errors->has('grupo_f')) has-error @endif">
                     <label for="grupo_f-field">Grupo de:</label>
@@ -61,22 +78,32 @@
                     @endif
                 </div>
                 
-                <div class="form-group col-md-6 @if($errors->has('grado_f')) has-error @endif">
+                <div class="form-group col-md-6 @if($errors->has('instructor_f')) has-error @endif">
+                    <label for="instructor_f-field">Instructor de:</label>
+                    {!! Form::select("instructor_f", $instructores, null, array("class" => "form-control select_seguridad", "id" => "instructor_f-field")) !!}
+                    @if($errors->has("instructor_f"))
+                    <span class="help-block">{{ $errors->first("instructor_f") }}</span>
+                    @endif
+                </div>
+
+                <div class="form-group col-md-6 @if($errors->has('materia_f')) has-error @endif">
+                    <label for="materia_f-field">Materia de:</label>
+                    {!! Form::select("materia_f", $materias, null, array("class" => "form-control select_seguridad", "id" => "materia_f-field")) !!}
+                    @if($errors->has("materia_f"))
+                    <span class="help-block">{{ $errors->first("materia_f") }}</span>
+                    @endif
+                </div>
+
+                
+                
+<!--                <div class="form-group col-md-6 @if($errors->has('grado_f')) has-error @endif">
                     <label for="grado_f-field">Grado de:</label>
                     {!! Form::select("grado_f", $list["Grado"], null, array("class" => "form-control select_seguridad", "id" => "grado_f-field")) !!}
                     @if($errors->has("grado_f"))
                     <span class="help-block">{{ $errors->first("grado_f") }}</span>
                     @endif
-                </div>
+                </div>-->
 
-                <div class="form-group col-md-6 @if($errors->has('materias')) has-error @endif">
-                    <label for="materias-field">Materias:</label>
-                    {!! Form::select("materia", $materias, null, array("class" => "form-control select_seguridad", "id" => "materia")) !!}
-                    @if($errors->has("materia"))
-                    <span class="help-block">{{ $errors->first("materia") }}</span>
-                    @endif
-                </div>
-                
                 <!--
                 <div class="form-group col-md-6 @if($errors->has('especialidad_f')) has-error @endif">
                     <label for="especialidad_f-field">Especialidad de:</label>
@@ -101,7 +128,7 @@
 @push('scripts')
   <script type="text/javascript">
     $(document).ready(function() {
-    $('#fecha_f-field').Zebra_DatePicker({
+    /*$('#fecha_f-field').Zebra_DatePicker({
         days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
         months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
         readonly_element: false,
@@ -115,12 +142,52 @@
         lang_clear_date: 'Limpiar',
         show_select_today: 'Hoy',
       });
+      */
+      $('#lectivo_f-field').change(function(){
+         lectivo=$('#lectivo_f-field option:selected').val();
+         
+            $.ajax({
+                  url: '{{ route("lectivos.getLectivo") }}',
+                  type: 'GET',
+                  data: "lectivo=" + lectivo,
+                  dataType: 'json',
+                  beforeSend : function(){$("#loading13").show();},
+                  complete : function(){$("#loading13").hide();},
+                  success: function(data){
+                      $('#fecha_f-field').Zebra_DatePicker({
+                            // remember that the way you write down dates
+                            // depends on the value of the "format" property!
+                            direction: [data.inicio, data.fin],
+                            days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
+                            months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                            readonly_element: false,
+                            lang_clear_date: 'Limpiar',
+                            show_select_today: 'Hoy',
+                        });
+                        $('#fecha_t-field').Zebra_DatePicker({
+                            // remember that the way you write down dates
+                            // depends on the value of the "format" property!
+                            direction: [data.inicio, data.fin],
+                            days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
+                            months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                            readonly_element: false,
+                            lang_clear_date: 'Limpiar',
+                            show_select_today: 'Hoy',
+                        });
+                  }  
+            });        
+      });
+      
+      $('#plantel_f-field').change(function(){
+        getCmbInstructor();
+        });
       
       $('#lectivo_f-field').change(function(){
         getCmbGrupo();
         });
     $('#grupo_f-field').change(function(){
-        getCmbGrado();    
+        getCmbGrado();
+        getCmbMateria();
         });
       
     function getCmbGrupo(){
@@ -177,6 +244,66 @@
             });
         }
       
+      function getCmbMateria(){
+            //var $example = $("#especialidad_id-field").select2();
+            var plantel=$('#plantel_f-field option:selected').val();
+            var grupo = $('#grupo_f-field option:selected').val();
+            var lectivo= $('#lectivo_f-field option:selected').val();
+            if(plantel>0 && grupo>0 && lectivo>0){
+                $.ajax({
+                url: '{{ route("materias.getCmbMateriaXAsignacionAcademica") }}',
+                        type: 'GET',
+                        data: "plantel=" + plantel + 
+                              "&grupo=" + grupo +
+                              "&lectivo=" + lectivo + "",
+                        dataType: 'json',
+                        beforeSend : function(){$("#loading12").show(); },
+                        complete : function(){$("#loading12").hide(); },
+                        success: function(data){
+                        //alert(data);
+                        //$example.select2("destroy");
+                        $('#materia_f-field').html('');
+                        //$('#especialidad_id-field').empty();
+                        $('#materia_f-field').append($('<option></option>').text('Seleccionar').val('0'));
+                        $.each(data, function(i) {
+                        //alert(data[i].name);
+                        $('#materia_f-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
+                        });
+                        
+                        }
+                });
+            }
+            
+        }
+        
+        function getCmbInstructor(){
+            //var $example = $("#especialidad_id-field").select2();
+            var plantel=$('#plantel_f-field option:selected').val();
+            
+            
+                $.ajax({
+                url: '{{ route("empleados.getEmpleadosXplantel") }}',
+                        type: 'GET',
+                        data: "plantel_id=" + plantel ,
+                        dataType: 'json',
+                        beforeSend : function(){$("#loading12").show(); },
+                        complete : function(){$("#loading12").hide(); },
+                        success: function(data){
+                        //alert(data);
+                        //$example.select2("destroy");
+                        $('#instructor_f-field').html('');
+                        //$('#especialidad_id-field').empty();
+                        $('#instructor_f-field').append($('<option></option>').text('Seleccionar').val('0'));
+                        $.each(data, function(i) {
+                        //alert(data[i].name);
+                        $('#instructor_f-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].nombre + "<\/option>");
+                        });
+                        
+                        }
+                });
+            
+            
+        }
     
     @permission('IreporteFiltroXplantel')
         $("#plantel_f-field").prop("disabled", true);

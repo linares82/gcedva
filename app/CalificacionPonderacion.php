@@ -36,4 +36,8 @@ class CalificacionPonderacion extends Model
 	public function calificacion() {
 		return $this->belongsTo('App\Calificacion');
 	}// end
+        
+        public function cargaPonderacion() {
+		return $this->belongsTo('App\CargaPonderacion');
+	}// end
 }

@@ -55,36 +55,68 @@
             }*/
       
         h1, h3, h5, th { text-align: center; }
-        table, #chart_div { margin: auto; font-family: Segoe UI; box-shadow: 10px 10px 5px #888; border: thin ridge grey; }
-        th { background: #0046c3; color: #fff; max-width: 400px; padding: 5px 10px; }
-        td { font-size: 11px; padding: 5px 20px; color: #000; }
-        tr { background: #b8d1f3; }
-        tr:nth-child(even) { background: #dae5f4; }
-        tr:nth-child(odd) { background: #b8d1f3; }
+        table, #chart_div { margin: auto; font-family: Segoe UI; border: thin ridge grey; }
+        .tbl1 th { background: #0046c3; color: #fff; max-width: 400px; padding: 5px 10px; font-size: 11px;}
+        .tbl1 td { font-size: 10px; padding: 5px 20px; color: #000; }
+        .tbl1 tr { background: #b8d1f3; }
+        .tbl1 tr:nth-child(even) { background: #dae5f4; }
+        .tbl1 tr:nth-child(odd) { background: #b8d1f3; }
       
+        table.blueTable {
+            width: 60%;
+            text-align: center;
+            border-collapse: collapse;
+          }
+          table.blueTable .td1{
+            height: 100px;
+          }
+          table.blueTable .tdw{
+            width: 33%;
+          }
+          table.blueTable td, table.blueTable th {
+            border: 1px solid #AAAAAA;
+          }
+          
+          table.blueTable thead th {
+            font-weight: bold;
+            text-align: center;
+          }
+        
         </style>
 
     </head>
     <body>
-        <div id="printeArea">
-            <table class="table table-condensed table-striped">
-                <?php $grupo0=""; ?>
+        
+        <div id="printeAreaLista">
+            <h3>Lista de Calificaciones del {{$asignacion->fec_inicio}} al {{$asignacion->fec_fin}} </h3>
+            <table class="tbl1">
+                <?php 
+                    $grupo0=""; 
+                    $instructor="";
+                ?>
                 @foreach($registros as $r)
                 
                 @if($grupo0<>$r->grupo)
                     
                     <!--<div style="page-break-after:always;"></div>-->
                         <tr>
-                            <td colspan="28">
+                            <td colspan="5">
                                 {{"Plantel: ".$r->plantel }} <br/>
                                 {{"Grupo: ".$r->grupo}}<br/>
                                 {{"Periodo Lectivo: ".$r->lectivo}}<br/>
                                 {{"Profesor: ".$r->maestro}}<br/>
                                 {{"Grado: ".$r->grado}}<br/>
                                 {{"Materia: ".$r->materia}}<br/>
+                                <?php
+                                $instructor=$r->maestro;
+                                ?>
+                            </td>
+                            <td colspan="{{$contador}}">
+                                <img src="{{ asset('/imagenes/planteles/'.$r->p_id."/".$r->logo) }}" alt="Sin logo" height="80px" ></img>
                             </td>
                         </tr>
                         <tr>
+                        <th class="altura"><strong>NO.</strong></th>    
                         <th class="altura"><strong>Nombre(s)</strong></th>
                         <th class="altura"><strong>A. Paterno</strong></th>
                         <th class="altura"><strong>A. Materno</strong></th>
@@ -99,6 +131,7 @@
                         <?php $grupo0=$r->grupo; ?>
                 @endif
                             <tr>
+                                <td>{{ $r->cliente }}</td>
                                 <td>{{$r->nombre." ".$r->nombre2}}</td><td>{{$r->ape_paterno}}</td><td>{{$r->ape_materno}}</td>
                                 <?php
                                     /*$fechas=\App\AsistenciaR::select('fecha')
@@ -123,10 +156,17 @@
                 
                     
                 @endforeach
-                    
+            </table>
+            <br/>
+            <br/>
+            <br/>
+            <table class='blueTable'>
+                <tr class='td1'><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><td class='tdw'>{{$instructor}}</td><td></td><td class='tdw'>Sello del Plantel</td><td></td><td></td></tr>
+                <tr><td>Instructor Titular</td><td></td><td></td><td></td><td class='tdw'>Firma de Director</td></tr>
             </table>
         </div>
-
+        
         <script type="text/php">
             /*if (isset($pdf))
             {

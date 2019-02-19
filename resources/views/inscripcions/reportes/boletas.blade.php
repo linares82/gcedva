@@ -21,8 +21,7 @@
     <div class="row">
         <div class="col-md-12">
 
-            {!! Form::open(array('route' => 'inscripcions.lista', 'id'=>'frm')) !!}
-
+            {!! Form::open(array('route' => 'inscripcions.boletasr', 'id'=>'frm')) !!}
 <!--                <div class="form-group col-md-6 @if($errors->has('fecha_f')) has-error @endif">
                     <label for="fecha_f-field">Fecha de:</label>
                     {!! Form::text("fecha_f", null, array("class" => "form-control input-sm", "id" => "fecha_f-field")) !!}
@@ -53,13 +52,8 @@
                     @endif
                 </div>
 
-<!--                <div class="form-group col-md-6 @if($errors->has('mes')) has-error @endif">
-                    <label for="mes-field">Mes:</label>
-                    {!! Form::select("mes", $meses, null, array("class" => "form-control select_seguridad", "id" => "mes")) !!}
-                    @if($errors->has("mes"))
-                    <span class="help-block">{{ $errors->first("mes") }}</span>
-                    @endif
-                </div>-->
+                
+
 <!--                <div class="form-group col-md-6 @if($errors->has('fecha_f')) has-error @endif">
                     <label for="fecha_f-field">Fecha de:</label>
                     {!! Form::text("fecha_f", null, array("class" => "form-control input-sm", "id" => "fecha_f-field")) !!}
@@ -92,13 +86,6 @@
                     @endif
                 </div>
 
-                <div class="form-group col-md-6 @if($errors->has('materia_f')) has-error @endif">
-                    <label for="materia_f-field">Materia de:</label>
-                    {!! Form::select("materia_f", $materias, null, array("class" => "form-control select_seguridad", "id" => "materia_f-field")) !!}
-                    @if($errors->has("materia_f"))
-                    <span class="help-block">{{ $errors->first("materia_f") }}</span>
-                    @endif
-                </div>
                 
 <!--                <div class="form-group col-md-6 @if($errors->has('grado_f')) has-error @endif">
                     <label for="grado_f-field">Grado de:</label>

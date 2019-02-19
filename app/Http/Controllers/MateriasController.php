@@ -328,5 +328,41 @@ class MateriasController extends Controller {
             }
         }
     }
+    
+    public function getCmbMateriaXAsignacionAcademica(Request $request) {
+        if ($request->ajax()) {
+            //dd($request->all());
+            $grupo = $request->get('grupo');
+            $lectivo = $request->get('lectivo');
+            $plantel = $request->get('plantel');
+            $materia=0;
+            
+            $final = array();
+
+            $r = DB::table('materia as m')
+                    ->join('asignacion_academicas as aa', 'aa.materium_id', '=', 'm.id')
+                    ->select('m.id','m.name')
+                    ->where('aa.plantel_id', '=', $plantel)
+                    ->where('aa.lectivo_id', '=', $lectivo)
+                    ->where('aa.grupo_id', '=', $grupo)
+                    ->get();
+
+            //dd($r);
+            
+            foreach ($r as $r1) {
+                if ($r1->id == $materia) {
+                    array_push($final, array('id' => $r1->id,
+                        'name' => $r1->name,
+                        'selectec' => 'Selected'));
+                } else {
+                    array_push($final, array('id' => $r1->id,
+                        'name' => $r1->name,
+                        'selectec' => ''));
+                }
+            }
+            return $final;
+
+        }
+    }
 
 }
