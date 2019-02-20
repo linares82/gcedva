@@ -125,7 +125,7 @@
                                             @if($fecha_enc==$fecha->fecha)
                                             <?php 
                                             $st_asistencia= \App\EstAsistencium::find($fecha->est_asistencia_id);
-                                            if($st_asistencia->id==1){
+                                            if($st_asistencia->id<>2){
                                                 $asistencias++;
                                             }
                                             

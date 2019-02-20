@@ -21,7 +21,7 @@
         <table width="100%">
             <tr>
                 <td>Matricula:{{$cliente->matricula}}</td>
-                <td> Nombre: {{$cliente->nombre." ".$cliente->nombre2." ".$cliente->ape_paterno." ".$cliente->materno}}</td>
+                <td> Nombre: {{$cliente->nombre." ".$cliente->nombre2." ".$cliente->ape_paterno." ".$cliente->ape_materno}}</td>
                 <td>Fecha:</td>
             </tr>
             <tr>

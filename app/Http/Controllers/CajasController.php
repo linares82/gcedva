@@ -510,11 +510,12 @@ class CajasController extends Controller {
                        ->groupBy('forma_pago')
                        ->get();
         //dd($resultado->toArray());
-        
+        /*
         PDF::setOptions(['defaultFont' => 'arial']);
         $pdf = PDF::loadView('cajas.reportes.ingresosPlantelFormaPagoR', array('resultado' => $resultado))
                 ->setPaper('letter', 'portrait');
-        return $pdf->download('reporte.pdf');
+        return $pdf->download('reporte.pdf');*/
+        return view('cajas.reportes.ingresosPlantelFormaPagoR', array('resultado' => $resultado));
     }
     
     public function eliminarRecargo(Request $request){
