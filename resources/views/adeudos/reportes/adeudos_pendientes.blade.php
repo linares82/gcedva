@@ -72,7 +72,7 @@
             ?>
             @foreach($adeudos as $adeudo)
 
-            @if($cliente_id<>$adeudo->cliente->id)
+            @if($cliente_id<>$adeudo->cliente)
             @if($aux>0)
             <tr class="alt"><td></td><td></td><td><strong>Total Cliente</strong></td><td><strong>{{$totalCliente}}</strong></td></tr>
             @endif
@@ -80,8 +80,8 @@
             $aux++;
             ?>
             <tr>
-                <td>{{$adeudo->combinacionCliente->especialidad->name." / ".$adeudo->combinacionCliente->nivel->name." / ".$adeudo->combinacionCliente->grado->name}}</td>
-                <td>{{$adeudo->cliente->id." - ".$adeudo->cliente->nombre." ".$adeudo->cliente->nombre2." ".$adeudo->cliente->ape_paterno." ".$adeudo->cliente->ape_materno}}</td>
+                <td>{{$adeudo->especialidad." / ".$adeudo->nivel." / ".$adeudo->grado}}</td>
+                <td>{{$adeudo->cliente." - ".$adeudo->nombre." ".$adeudo->nombre2." ".$adeudo->ape_paterno." ".$adeudo->ape_materno}}</td>
                 <td>{{$adeudo->fecha_pago}}</td>
                 <td>{{$adeudo->monto}}</td>
             </tr>
@@ -90,8 +90,8 @@
             ?>
             @else
             <tr>
-                <td>{{$adeudo->combinacionCliente->especialidad->name." / ".$adeudo->combinacionCliente->nivel->name." / ".$adeudo->combinacionCliente->grado->name}}</td>
-                <td>{{$adeudo->cliente->id." - ".$adeudo->cliente->nombre." ".$adeudo->cliente->nombre2." ".$adeudo->cliente->ape_paterno." ".$adeudo->cliente->ape_materno}}</td>
+                <td>{{$adeudo->especialidad." / ".$adeudo->nivel." / ".$adeudo->grado}}</td>
+                <td>{{$adeudo->cliente." - ".$adeudo->nombre." ".$adeudo->nombre2." ".$adeudo->ape_paterno." ".$adeudo->ape_materno}}</td>
                 <td>{{$adeudo->fecha_pago}}</td>
                 <td>{{$adeudo->monto}}</td>
             </tr>
@@ -101,7 +101,7 @@
             ?>    
             @endif
             <?php
-            $cliente_id = $adeudo->cliente->id;
+            $cliente_id = $adeudo->cliente;
             ?>
             @endforeach
             <tr class="alt"><td></td><td></td><td><strong>Total Cliente</strong></td><td><strong>{{$totalCliente}}</strong></td></tr>

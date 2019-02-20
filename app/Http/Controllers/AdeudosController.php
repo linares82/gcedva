@@ -183,19 +183,35 @@ class AdeudosController extends Controller {
         }
 
         public function reporteAdeudosPendientes(){
+            
+            $planteles=Plantel::pluck('razon','id');
+            return view('adeudos.reportes.adeudosXPlantel',compact('planteles'));
+        }
+        
+        public function reporteAdeudosPendientesr(Request $request){
+            $datos=$request->all();
+            //dd($datos);
             $fecha=date('Y/m/d');
             //dd($fecha);
             $empleado=Empleado::where('user_id', '=', Auth::user()->id)->first();
+            
             $plantel=Plantel::find($empleado->plantel_id);
-            $adeudosPendientes=Adeudo::where('pagado_bnd', '=', 0)  
-                                     ->join('clientes', 'clientes.id', '=', 'adeudos.cliente_id')
+            //dd($plantel);
+            $adeudosPendientes=Adeudo::select('esp.name as especialidad','n.name as nivel','g.name as grado','c.id as cliente','c.nombre','c.nombre2',
+                                              'c.ape_paterno','c.ape_materno','adeudos.fecha_pago','adeudos.monto')
+                                     ->join('combinacion_clientes as cc','cc.id',"=",'adeudos.combinacion_cliente_id')
+                                     ->join('especialidads as esp','esp.id','=','cc.especialidad_id')
+                                     ->join('nivels as n','n.id','=','cc.nivel_id')
+                                     ->join('grados as g','g.id','=','cc.grado_id')
+                                     ->join('clientes as c', 'c.id', '=', 'adeudos.cliente_id')
+                                     ->where('pagado_bnd', '=', 0)  
                                      ->whereDate('fecha_pago', '<', $fecha)
-                                     ->where('clientes.plantel_id', '=', $empleado->plantel_id)
-                                     ->orderBy('clientes.id', 'asc')
+                                     ->where('c.plantel_id', '=', $datos['plantel_f'])
+                                     ->orderBy('c.id', 'asc')
                                      ->orderBy('adeudos.combinacion_cliente_id', 'asc')
                                      ->get();
             //dd($adeudosPendientes->toArray());
-            return view('adeudos.adeudos_pendientes', array('adeudos'=>$adeudosPendientes, 'plantel'=>$plantel));
+            return view('adeudos.reportes.adeudos_pendientes', array('adeudos'=>$adeudosPendientes, 'plantel'=>$plantel));
             
             /*$pdf = PDF::loadView('adeudos.adeudos_pendientes', array('adeudos'=>$adeudosPendientes, 'plantel'=>$plantel))
                     ->setPaper('Letter', 'portrait');
