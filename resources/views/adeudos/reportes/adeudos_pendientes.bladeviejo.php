@@ -45,7 +45,7 @@
     }
 </style>
 
-<table width='100%'>
+<table>
     <tr>
             <td align="center"  >
                 <h3>
@@ -56,32 +56,57 @@
 </table>
 
 <div class="datagrid">
-    <table width='100%'>
+    <table>
         <thead>
         <th><strong>Estudios</strong></th>    
         <th><strong>Cliente</strong></th>
+        <th><strong>Fecha planeada de pago</strong></th>
         <th><strong>Monto</strong></th>
         </thead>
         <tbody>
             <?php
-            $suma = 0;
+            $total = 0;
             $totalCliente = 0;
             $cliente_id = 0;
             $aux = 0;
             ?>
             @foreach($adeudos as $adeudo)
 
+            @if($cliente_id<>$adeudo->cliente)
+            @if($aux>0)
+<!--            <tr class="alt"><td></td><td></td><td><strong>Total Cliente</strong></td><td><strong>{{$totalCliente}}</strong></td></tr>-->
+            @endif
+            <?php
+            $aux++;
+            ?>
             <tr>
                 <td>{{$adeudo->especialidad." / ".$adeudo->nivel." / ".$adeudo->grado}}</td>
                 <td>{{$adeudo->cliente." - ".$adeudo->nombre." ".$adeudo->nombre2." ".$adeudo->ape_paterno." ".$adeudo->ape_materno}}</td>
-                <td>{{number_format($adeudo->monto,2)}}</td>
+                <td>{{$adeudo->fecha_pago}}</td>
+                <td>{{$adeudo->monto}}</td>
             </tr>
-            <?php 
-            $suma=$suma+$adeudo->monto;
+            <?php
+            $totalCliente = $adeudo->monto;
+            ?>
+            @else
+            <tr>
+                <td>{{$adeudo->especialidad." / ".$adeudo->nivel." / ".$adeudo->grado}}</td>
+                <td>{{$adeudo->cliente." - ".$adeudo->nombre." ".$adeudo->nombre2." ".$adeudo->ape_paterno." ".$adeudo->ape_materno}}</td>
+                <td>{{$adeudo->fecha_pago}}</td>
+                <td>{{$adeudo->monto}}</td>
+            </tr>
+            <?php
+            $totalCliente = $totalCliente + $adeudo->monto;
+            $total = $total + $adeudo->monto;
+            ?>    
+            @endif
+            <?php
+            $cliente_id = $adeudo->cliente;
             ?>
             @endforeach
-            <tr class="alt"><td></td><td><strong>Total </strong></td><td><strong>{{number_format($suma,2)}}</strong></td></tr>
             
+            <tr class="alt"><td></td><td></td><td><strong>Total </strong></td><td><strong>{{$totalCliente}}</strong></td></tr>
+<!--            <tr class="alt"><td></td><td></td><td><strong>Total General</strong></td><td><strong>{{$total}}</strong></td></tr>-->
         </tbody>
     </table>
     

@@ -21,7 +21,7 @@
     <div class="row">
         <div class="col-md-12">
 
-            {!! Form::open(array('route' => 'adeudos.reporteAdeudosPendientesr', 'id'=>'frm')) !!}
+            {!! Form::open(array('route' => 'adeudos.reporteAdeudosPendientesr', 'id'=>'frm', 'method'=>'get')) !!}
 
 <!--                <div class="form-group col-md-6 @if($errors->has('fecha_f')) has-error @endif">
                     <label for="fecha_f-field">Fecha de:</label>

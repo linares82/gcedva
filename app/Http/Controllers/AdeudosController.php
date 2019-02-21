@@ -13,9 +13,11 @@ use Auth;
 use App\Http\Requests\updateAdeudo;
 use App\Http\Requests\createAdeudo;
 use PDF;
+use Illuminate\Support\Facades\Cache;
+use DB;
 
 class AdeudosController extends Controller {
-
+        public $plantel=0;
 	/**
 	 * Display a listing of the resource.
 	 *
@@ -190,14 +192,15 @@ class AdeudosController extends Controller {
         
         public function reporteAdeudosPendientesr(Request $request){
             $datos=$request->all();
-            //dd($datos);
+            
+            
             $fecha=date('Y/m/d');
             //dd($fecha);
-            $empleado=Empleado::where('user_id', '=', Auth::user()->id)->first();
+            //$empleado=Empleado::where('user_id', '=', Auth::user()->id)->first();
             
-            $plantel=Plantel::find($empleado->plantel_id);
+            $plantel=Plantel::find($datos['plantel_f']);
             //dd($plantel);
-            $adeudosPendientes=Adeudo::select('esp.name as especialidad','n.name as nivel','g.name as grado','c.id as cliente','c.nombre','c.nombre2',
+            /*$adeudosPendientes=Adeudo::select('esp.name as especialidad','n.name as nivel','g.name as grado','c.id as cliente','c.nombre','c.nombre2',
                                               'c.ape_paterno','c.ape_materno','adeudos.fecha_pago','adeudos.monto')
                                      ->join('combinacion_clientes as cc','cc.id',"=",'adeudos.combinacion_cliente_id')
                                      ->join('especialidads as esp','esp.id','=','cc.especialidad_id')
@@ -206,11 +209,32 @@ class AdeudosController extends Controller {
                                      ->join('clientes as c', 'c.id', '=', 'adeudos.cliente_id')
                                      ->where('pagado_bnd', '=', 0)  
                                      ->whereDate('fecha_pago', '<', $fecha)
+                                     ->where('c.plantel_id', '=', session('plantel'))
+                                     ->orderBy('c.id', 'asc')
+                                     ->orderBy('adeudos.combinacion_cliente_id', 'asc')
+                                     //->get();
+                                     ->paginate(100);
+             * 
+             */
+            
+            $adeudosPendientes=Adeudo::select('esp.name as especialidad','n.name as nivel','g.name as grado','c.id as cliente','c.nombre','c.nombre2',
+                                              'c.ape_paterno','c.ape_materno',DB::raw('sum(adeudos.monto) as monto'))
+                                     ->join('combinacion_clientes as cc','cc.id',"=",'adeudos.combinacion_cliente_id')
+                                     ->join('especialidads as esp','esp.id','=','cc.especialidad_id')
+                                     ->join('nivels as n','n.id','=','cc.nivel_id')
+                                     ->join('grados as g','g.id','=','cc.grado_id')
+                                     ->join('clientes as c', 'c.id', '=', 'adeudos.cliente_id')
+                                     ->where('pagado_bnd', '=', 0)  
+                                     ->whereDate('fecha_pago', '<', $fecha)
                                      ->where('c.plantel_id', '=', $datos['plantel_f'])
+                                     ->groupBy('esp.name')->groupBy('n.name')->groupBy('g.name')->groupBy('c.id')
+                                     ->groupBy('c.nombre')->groupBy('c.nombre2')->groupBy('c.ape_paterno')->groupBy('c.ape_materno')
                                      ->orderBy('c.id', 'asc')
                                      ->orderBy('adeudos.combinacion_cliente_id', 'asc')
                                      ->get();
-            //dd($adeudosPendientes->toArray());
+                                     //->paginate(100);
+            
+            //dd($adeudosPendientes);
             return view('adeudos.reportes.adeudos_pendientes', array('adeudos'=>$adeudosPendientes, 'plantel'=>$plantel));
             
             /*$pdf = PDF::loadView('adeudos.adeudos_pendientes', array('adeudos'=>$adeudosPendientes, 'plantel'=>$plantel))

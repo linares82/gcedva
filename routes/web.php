@@ -4451,7 +4451,7 @@ Route::get("tipoReglas/tipoRegla/{tipoReglas}/duplicate", ['as' => 'tipoReglas.d
         'middleware' => 'permission:adeudos.reporteAdeudosPendientes',
         'uses' => 'AdeudosController@reporteAdeudosPendientes')
     )->middleware('auth');
-    Route::post('/adeudos/reporteAdeudosPendientesr', array(
+    Route::get('/adeudos/reporteAdeudosPendientesr', array(
         'as' => 'adeudos.reporteAdeudosPendientesr',
         'middleware' => 'permission:adeudos.reporteAdeudosPendientes',
         'uses' => 'AdeudosController@reporteAdeudosPendientesr')
