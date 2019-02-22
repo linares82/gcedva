@@ -230,9 +230,7 @@ class AdeudosController extends Controller {
                                      ->groupBy('esp.name')->groupBy('n.name')->groupBy('g.name')->groupBy('c.id')
                                      ->groupBy('c.nombre')->groupBy('c.nombre2')->groupBy('c.ape_paterno')->groupBy('c.ape_materno')
                                      ->orderBy('c.id', 'asc')
-                                     ->orderBy('adeudos.combinacion_cliente_id', 'asc')
                                      ->get();
-                                     //->paginate(100);
             
             //dd($adeudosPendientes);
             return view('adeudos.reportes.adeudos_pendientes', array('adeudos'=>$adeudosPendientes, 'plantel'=>$plantel));

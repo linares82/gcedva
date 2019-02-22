@@ -994,7 +994,7 @@
 <?php
 $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
 ?>
-                        $("#st_cliente_id-field option[value*={{ $r->valor }}]").prop('disabled', true);
+                        $("#st_cliente_id-field option[value*={{ $r->valor }}]").prop('readonly', true);
                         collapseTable();
                         $('.header').click(function(){
                         collapseTable();
