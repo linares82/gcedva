@@ -564,10 +564,13 @@ class CajasController extends Controller {
         if($caja->becado_bnd==0 and $cliente->monto_mensualidad>0){
             $descuento_total=0;
             foreach($caja->cajaLns as $linea){
-                $linea->descuento=$linea->descuento+$cliente->monto_mensualidad;
-                $linea->total=$cliente->monto_mensualidad-$cliente->monto_mensualidad;
-                $linea->save();
-                $descuento_total=$descuento_total+$cliente->monto_mensualidad;
+                if($linea->cajaConcepto->bnd_aplicar_beca==1){
+                    $linea->descuento=$linea->descuento+$cliente->monto_mensualidad;
+                    $linea->total=$linea->total-$cliente->monto_mensualidad;
+                    $linea->save();
+                    $descuento_total=$descuento_total+$cliente->monto_mensualidad;
+                }
+                
             }
             $caja->descuento=$caja->descuento+$descuento_total;//monto para inscripcion
             $caja->total=$caja->total - $descuento_total;

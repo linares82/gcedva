@@ -18,7 +18,7 @@ class CajaConcepto extends Model
     } 
 
 	//Mass Assignment
-	protected $fillable = ['name','monto','activo','usu_alta_id','usu_mod_id'];
+	protected $fillable = ['name','monto','activo','bnd_aplicar_beca','usu_alta_id','usu_mod_id'];
 
 	public function usu_alta() {
 		return $this->hasOne('App\User', 'id', 'usu_alta_id');

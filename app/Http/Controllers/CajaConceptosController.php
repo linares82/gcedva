@@ -51,6 +51,11 @@ class CajaConceptosController extends Controller {
 		}else{
 			$input['activo']=1;
 		}
+                if(!isset($input['bnd_aplicar_beca'])){
+			$input['bnd_aplicar_beca']=0;
+		}else{
+			$input['bnd_aplicar_beca']=1;
+		}
                 
 		//create data
 		CajaConcepto::create( $input );
@@ -111,6 +116,11 @@ class CajaConceptosController extends Controller {
 			$input['activo']=0;
 		}else{
 			$input['activo']=1;
+		}
+                if(!isset($input['bnd_aplicar_beca'])){
+			$input['bnd_aplicar_beca']=0;
+		}else{
+			$input['bnd_aplicar_beca']=1;
 		}
                 //update data
 		$cajaConcepto=$cajaConcepto->find($id);

@@ -139,6 +139,7 @@
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'name', 'title' => 'CONCEPTO'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'monto', 'title' => 'MONTO'])</th>
+                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'bnd_aplicar_beca', 'title' => 'APLICAR BECA'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'activo', 'title' => 'ACTIVO'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
@@ -150,6 +151,12 @@
                                 <td><a href="{{ route('cajaConceptos.show', $cajaConcepto->id) }}">{{$cajaConcepto->id}}</a></td>
                                 <td>{{$cajaConcepto->name}}</td>
                                 <td>{{$cajaConcepto->monto}}</td>
+                                <td>@if($cajaConcepto->bnd_aplicar_beca==1)
+                                    SI
+                                    @else
+                                    NO
+                                    @endif
+                                </td>
                                 <td>@if($cajaConcepto->activo==1)
                                     SI
                                     @else

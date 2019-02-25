@@ -8,6 +8,7 @@ $baseDir = dirname($vendorDir);
 return array(
     'AddBecaPorcentajeClientesTable' => $baseDir . '/database/migrations/2018_05_07_114940_add_beca_porcentaje_clientes_table.php',
     'AddBecadoBndCajasTable' => $baseDir . '/database/migrations/2018_11_01_133610_add_becado_bnd_cajas_table.php',
+    'AddBndAplicarBecaCajaConceptoTable' => $baseDir . '/database/migrations/2019_02_25_115155_add_bnd_aplicar_beca_caja_concepto_table.php',
     'AddBndGraficaLectivosTable' => $baseDir . '/database/migrations/2018_06_19_145551_add_bnd_grafica_lectivos_table.php',
     'AddBndMexicoGradosTable' => $baseDir . '/database/migrations/2019_01_16_142539_add_bnd_mexico_grados_table.php',
     'AddBndPromoCajaLnsTable' => $baseDir . '/database/migrations/2019_01_25_125534_add_bnd_promo_caja_lns_table.php',
