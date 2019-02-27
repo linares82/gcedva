@@ -56,8 +56,9 @@ class CajasController extends Controller {
 		$input = $request->all();
                 
                 $empleado=Empleado::where('user_id', '=', Auth::user()->id)->first();
-                $plantel=Plantel::find($empleado->plantel_id);
+                
                 $cliente=Cliente::find($input['cliente_id']);
+                $plantel=Plantel::find($cliente->plantel_id);
                 
                 $caja_r['cliente_id']=$cliente->id;
                 $caja_r['plantel_id']=$cliente->plantel_id;
@@ -194,7 +195,7 @@ class CajasController extends Controller {
             $combinaciones=CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
             if(is_object($caja)){
                 //Apliacion de recargos
-                if($caja->st_caja_id==0){
+                if($caja->st_caja_id==0 and $caja->descuento==0){
                     //dd($caja->st_caja_id);
                     $recargo=0;
                     foreach($caja->cajaLns as $ln){
@@ -444,6 +445,11 @@ class CajasController extends Controller {
             $caja->save();
             foreach($caja->cajaLns as $ln){
                 $ln->delete();
+            }
+            $adeudos=Adeudo::where('caja_id',$caja->id)->get();
+            foreach($adeudos as $adeudo){
+                $adeudo->caja_id=0;
+                $adeudo->save();
             }
             return view('cajas.caja')->with( 'list', Caja::getListFromAllRelationApps() )->with( 'list1', CajaLn::getListFromAllRelationApps() );           
         }

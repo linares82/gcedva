@@ -180,7 +180,7 @@ class CorreosController extends Controller {
                         $message->attach($pathToFile);
                     }
                 });
-        
+        /*
         if(isset($f['empresa_bnd']) and $f['empresa_bnd']==1){
             $e=Empresa::where('correo1', '=', $destinatario)->first();
             //dd($e->toArray());
@@ -199,7 +199,7 @@ class CorreosController extends Controller {
                     }
                 });
             }
-        }
+        }*/
         //dd($r);
         //if ($r) {
             if ($containfile) {

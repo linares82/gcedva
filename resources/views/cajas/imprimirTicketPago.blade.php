@@ -101,7 +101,12 @@ body{
             @endif
         </td>
         <td>
+            @if (isset($caja_linea->adeudo->fecha_pago))
             {{$caja_linea->adeudo->fecha_pago}}
+            @else
+            {{$caja_linea->caja->fecha}}
+            @endif        </td>
+
         </td>
         <td align="right"> {{ number_format($caja_linea->subtotal, 2) }} </td>
     </tr>
