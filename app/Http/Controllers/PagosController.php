@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updatePago;
 use App\Http\Requests\createPago;
+use DB;
 
 class PagosController extends Controller {
 
@@ -82,6 +83,14 @@ class PagosController extends Controller {
                             Adeudo::where('id', '=', $ln->adeudo_id)->update(['pagado_bnd'=>1]);
                         }
                     }  
+                }elseif($suma_pagos>0 and $suma_pagos<$caja->total){
+                    $caja->st_caja_id=3;
+                    $caja->save();
+                    foreach($caja->cajaLns as $ln){
+                        if($ln->adeudo_id>0){
+                            Adeudo::where('id', '=', $ln->adeudo_id)->update(['pagado_bnd'=>0]);
+                        }
+                    }
                 }else{
                     $caja->st_caja_id=0;
                     $caja->save();
@@ -251,5 +260,47 @@ class PagosController extends Controller {
                                                            'acumulado'=>$acumulado));    
         }
 
+    }
+    
+    public function pagosXPeriodoXPlantelXConcepto(){
+        return view('pagos.reportes.pagosXplantelXPeriodoXConcepto')
+                ->with( 'list', Pago::getListFromAllRelationApps())
+                ->with( 'list2', Caja::getListFromAllRelationApps());
+    }
+    
+    public function pagosXPeriodoXPlantelXConceptoR(Request $request){
+        $datos=$request->all();
+        $plantel=Plantel::find($datos['plantel_f']);
+        
+        $registros_pagados = Caja::select('cc.name as concepto',DB::raw('sum(cln.total) as total'))
+                         ->join('pagos as p','p.caja_id','=','cajas.id')
+                         ->join('caja_lns as cln','cln.caja_id','=','cajas.id')
+                         ->join('caja_conceptos as cc','cc.id','=','cln.caja_concepto_id')
+                         ->where('cajas.st_caja_id',1)
+                         ->where('p.fecha','>=',$datos['fecha_f'])
+                         ->where('p.fecha','<=',$datos['fecha_t'])
+                         ->where('cajas.plantel_id','>=',$datos['plantel_f'])
+                         //->where('cajas.plantel_id','<=',$datos['plantel_t'])
+                         ->groupBy('cc.name')
+                         ->get();
+        //dd($registros_pagados->toArray());
+        
+        $registros_parciales = Caja::select(DB::raw('sum(p.monto) as total'))
+                         ->join('pagos as p','p.caja_id','=','cajas.id')
+                         ->join('caja_lns as cln','cln.caja_id','=','cajas.id')
+                         ->join('caja_conceptos as cc','cc.id','=','cln.caja_concepto_id')
+                         ->where('cajas.st_caja_id',3)
+                         ->where('p.fecha','>=',$datos['fecha_f'])
+                         ->where('p.fecha','<=',$datos['fecha_t'])
+                         ->where('cajas.plantel_id','>=',$datos['plantel_f'])
+                         //->where('cajas.plantel_id','<=',$datos['plantel_t'])
+                         ->groupBy('cc.name')
+                         ->value('total');
+        //dd($registros_parciales->toArray());
+        
+        return view('pagos.reportes.pagosXplantelXPeriodoXConceptoR', array('registros_pagados'=>$registros_pagados, 
+                                                                            'registros_parciales'=>$registros_parciales,
+                                                                            'plantel'=>$plantel,
+                                                                            'datos'=>$datos));
     }
 }

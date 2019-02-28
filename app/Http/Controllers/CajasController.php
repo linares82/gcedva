@@ -7,6 +7,7 @@ use App\Caja;
 use App\CajaLn;
 use App\Adeudo;
 use App\Cliente;
+use App\Pago;
 use App\Plantel;
 use App\PromoPlanLn;
 use App\Empleado;
@@ -591,5 +592,41 @@ class CajasController extends Controller {
                     ->with( 'list', Caja::getListFromAllRelationApps() )
                     ->with( 'list1', CajaLn::getListFromAllRelationApps() );           
     }
+    
+        public function IngresosAdedudosXPeriodoXPlantel(){
+            return view('cajas.reportes.IngresosAdedudosXPeriodoXPlantel')
+                ->with( 'list', Pago::getListFromAllRelationApps())
+                ->with( 'list2', Caja::getListFromAllRelationApps());
+        }
+        
+        public function IngresosAdedudosXPeriodoXPlantelR(Request $request){
+            $datos=$request->all();
+            $plantel=Plantel::find($datos['plantel_f']);
+            
+            $resultado=array();
+            
+            $adeudosPendientes=Adeudo::select('esp.name as especialidad','n.name as nivel','g.name as grado','c.id as cliente','c.nombre','c.nombre2',
+                                              'c.ape_paterno','c.ape_materno',DB::raw('sum(adeudos.monto) as deuda'))
+                                     ->join('combinacion_clientes as cc','cc.id',"=",'adeudos.combinacion_cliente_id')
+                                     ->join('especialidads as esp','esp.id','=','cc.especialidad_id')
+                                     ->join('nivels as n','n.id','=','cc.nivel_id')
+                                     ->join('grados as g','g.id','=','cc.grado_id')
+                                     ->join('clientes as c', 'c.id', '=', 'adeudos.cliente_id')
+                                     //->where('pagado_bnd', '=', 0)  
+                                     ->whereDate('adeudos.fecha_pago', '>=', $datos['fecha_f'])
+                                     ->whereDate('adeudos.fecha_pago', '<=', $datos['fecha_t'])
+                                     ->where('c.plantel_id', '=', $datos['plantel_f'])
+                                     ->groupBy('esp.name')->groupBy('n.name')->groupBy('g.name')->groupBy('c.id')
+                                     ->groupBy('c.nombre')->groupBy('c.nombre2')->groupBy('c.ape_paterno')->groupBy('c.ape_materno')
+                                     ->orderBy('c.id', 'asc')
+                                     ->get();
+            
+            //dd($registros->toArray());
+            
+            return view('cajas.reportes.IngresosAdedudosXPeriodoXPlantelR', 
+                    array('adeudos'=>$adeudosPendientes, 
+                          'plantel'=>$plantel,
+                          'datos'=>$datos));
+        }
     
  }

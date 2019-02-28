@@ -218,14 +218,14 @@ class AdeudosController extends Controller {
              */
             
             $adeudosPendientes=Adeudo::select('esp.name as especialidad','n.name as nivel','g.name as grado','c.id as cliente','c.nombre','c.nombre2',
-                                              'c.ape_paterno','c.ape_materno',DB::raw('sum(adeudos.monto) as monto'))
+                                              'c.ape_paterno','c.ape_materno',DB::raw('sum(adeudos.monto) as deuda'))
                                      ->join('combinacion_clientes as cc','cc.id',"=",'adeudos.combinacion_cliente_id')
                                      ->join('especialidads as esp','esp.id','=','cc.especialidad_id')
                                      ->join('nivels as n','n.id','=','cc.nivel_id')
                                      ->join('grados as g','g.id','=','cc.grado_id')
                                      ->join('clientes as c', 'c.id', '=', 'adeudos.cliente_id')
-                                     ->where('pagado_bnd', '=', 0)  
-                                     ->whereDate('fecha_pago', '<', $fecha)
+                                     //->where('pagado_bnd', '=', 0)  
+                                     ->whereDate('adeudos.fecha_pago', '<=', $fecha)
                                      ->where('c.plantel_id', '=', $datos['plantel_f'])
                                      ->groupBy('esp.name')->groupBy('n.name')->groupBy('g.name')->groupBy('c.id')
                                      ->groupBy('c.nombre')->groupBy('c.nombre2')->groupBy('c.ape_paterno')->groupBy('c.ape_materno')

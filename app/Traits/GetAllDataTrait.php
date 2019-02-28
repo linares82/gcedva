@@ -146,6 +146,9 @@ trait GetAllDataTrait {
                 if($baseTable=="empleados" and Auth::user()->can('IfiltroEmpleadosXPlantel')){
                     $myQuery=$myQuery->where('empleados.plantel_id', '=', $empleado->plantel_id);
                 }
+                if($baseTable=="empleados" and Auth::user()->can('empleados.bajas')){
+                    $myQuery=$myQuery->where('empleados.st_empleado_id', '<>', 3);
+                }
                 
                 break;
             case "grupos":
