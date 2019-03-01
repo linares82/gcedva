@@ -321,18 +321,21 @@ class ClientesController extends Controller {
     public function postReasignar(Request $request) {
         $input = $request->all();
         //dd($input);
-        
-        $clis=Cliente::select('clientes.id')
+        do{
+            $clis=Cliente::select('clientes.id')
                 ->join('seguimientos as s','s.cliente_id','=','clientes.id')
                 ->where('clientes.plantel_id', '=', $input['plantel_id'])
                 ->where('clientes.empleado_id', '=', $input['empleado_id'])
                 ->where('s.st_seguimiento_id', '=', $input['st_seguimiento_id'])
+                ->take(50)
                 ->get();
-        foreach($clis as $cli){
-            $cliente=Cliente::find($cli->id);
-            $cliente->empleado_id=$input['empleado_id2']    ;
-            $cliente->save();
-        }
+            foreach($clis as $cli){
+                $cliente=Cliente::find($cli->id);
+                $cliente->empleado_id=$input['empleado_id2']    ;
+                $cliente->save();
+            }
+        }while(count($clis) > 0);
+        
         
                 /*->update(['clientes.empleado_id' => $input['empleado_id2'],
                           'clientes.updated_at'=>Carbon::now(),
