@@ -362,6 +362,56 @@
                 </div>
             </div>
         </div>
+        <div class="form-group col-md-6">
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    <h3 class="box-title">
+                        Comentarios de becas
+                    </h3>
+                    <div class="box-tools pull-right">
+                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    </div>
+                </div>
+                <div class="box-body" >
+                    <div class="table">
+                        <table class="table table-bordered table-striped dataTable">
+                            <thead>
+                                <tr>
+                                    <th>Cliente</th>
+                                    <th>Solicitud</th>
+                                    <th>Comentario</th>
+                                    <th>Fecha</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($becas as $beca)
+                                <tr>
+                                    <td>
+                                        {{ $beca->nombre." ".$beca->nombre2." ".$beca->ape_paterno." ".$beca->ape_materno }}
+                                    </td>
+                                    <td>
+                                        {{$beca->solicitud}}
+                                    </td>
+                                    <td>
+                                        {{$beca->comentario}}
+                                    </td>
+                                    <td>
+                                        {{$beca->created_at}}
+                                    </td>
+                                    <td>
+                                    <a class="btn btn-xs bg-purple" href="{{ route('autorizacionBecas.findByClienteId', array('cliente_id'=>$beca->cliente)) }}">
+                                        <i class="fa fa-eye"></i> S. Becas
+                                    </a>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="row">
         @permission('WgaugesXplantel')

@@ -93,9 +93,12 @@
                 <?php 
                     $grupo0=""; 
                     $instructor="";
+                    $cantidad_registros=0;
+                    $promedios=array();
+                    $promedio_totales=0;
                 ?>
                 @foreach($registros as $r)
-                
+                    <?php $cantidad_registros++; ?>
                 @if($grupo0<>$r->grupo)
                     
                     <!--<div style="page-break-after:always;"></div>-->
@@ -141,21 +144,38 @@
                                             ->get();
                                      * */
                                      $calificacion=\App\Calificacion::where('hacademica_id',$r->hacademica)->first();
-                          
+                                     
+                                     
+                                     
                                 ?>
                                 
                                 @foreach($carga_ponderacions_enc as $carga_ponderacion_enc)
                                     @foreach($calificacion->calificacionPonderacions as $calificacionPonderacion)
                                         @if($carga_ponderacion_enc->id == $calificacionPonderacion->carga_ponderacion_id)
                                         <td class="centrar_texto">{{$calificacionPonderacion->calificacion_parcial}}</td>
+                                        <?php 
+                                        if(!isset($promedios[$calificacionPonderacion->carga_ponderacion_id])){
+                                            $promedios[$calificacionPonderacion->carga_ponderacion_id]=0;                                            
+                                        }
+                                        $promedios[$calificacionPonderacion->carga_ponderacion_id] = $promedios[$calificacionPonderacion->carga_ponderacion_id]+$calificacionPonderacion->calificacion_parcial;                                         
+                                        
+                                        ?>
                                         @endif
                                     @endforeach
                                 @endforeach         
                                 <td class="centrar_texto">{{$calificacion->calificacion}}</td>
+                                <?php $promedio_totales=$promedio_totales+$calificacion->calificacion;?>
                             </tr>
-                
-                    
+                            
                 @endforeach
+                
+                <tr>
+                    <td></td><td></td><td></td><td> <?php //dd($promedios); ?> </td>
+                    @foreach($promedios as $promedio)
+                    <td> {{ $promedio/$cantidad_registros }}</td>
+                    @endforeach
+                    <td>{{$promedio_totales/$cantidad_registros}}</td>
+                </tr>
             </table>
             <br/>
             <br/>

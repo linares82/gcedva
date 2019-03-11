@@ -411,28 +411,28 @@
                     <div class="box-body">    
                         <div class="form-group col-md-3 @if($errors->has('beca_bnd')) has-error @endif">
                             <label for="beca_bnd-field">Becado</label>
-                            {!! Form::checkbox("beca_bnd", 1, null, [ "id" => "beca_bnd-field", 'class'=>'minimal']) !!}
+                            {!! Form::checkbox("beca_bnd", 1, null, [ "id" => "beca_bnd-field", 'class'=>'minimal', 'disabled'=>'disabled']) !!}
                             @if($errors->has("beca_bnd"))
                             <span class="help-block">{{ $errors->first("beca_bnd") }}</span>
                             @endif
                         </div>
                         <div class="form-group col-md-8 @if($errors->has('justificacion_beca')) has-error @endif">
                             <label for="justificacion_beca-field">Justificacion</label>
-                            {!! Form::text("justificacion_beca", null, array("class" => "form-control input-sm", "id" => "justificacion_beca-field")) !!}
+                            {!! Form::text("justificacion_beca", null, array("class" => "form-control input-sm", "id" => "justificacion_beca-field", 'readonly'=>'readonly')) !!}
                             @if($errors->has("justificacion_beca"))
                             <span class="help-block">{{ $errors->first("justificacion_beca") }}</span>
                             @endif
                         </div>
                         <div class="form-group col-md-4 @if($errors->has('beca_porcentaje')) has-error @endif">
                             <label for="beca_porcentaje-field">Monto Inscripcion(0.00)</label>
-                            {!! Form::text("beca_porcentaje", null, array("class" => "form-control input-sm", "id" => "beca_porcentaje-field")) !!}
+                            {!! Form::text("beca_porcentaje", null, array("class" => "form-control input-sm", "id" => "beca_porcentaje-field", 'readonly'=>'readonly')) !!}
                             @if($errors->has("beca_porcentaje"))
                             <span class="help-block">{{ $errors->first("beca_porcentaje") }}</span>
                             @endif
                         </div>
                         <div class="form-group col-md-4 @if($errors->has('monto_mensualidad')) has-error @endif">
                             <label for="monto_mensualidad-field">Monto Mensualidad(0.00)</label>
-                            {!! Form::text("monto_mensualidad", null, array("class" => "form-control input-sm", "id" => "monto_mensualidad-field")) !!}
+                            {!! Form::text("monto_mensualidad", null, array("class" => "form-control input-sm", "id" => "monto_mensualidad-field", 'readonly'=>'readonly')) !!}
                             @if($errors->has("monto_mensualidad"))
                             <span class="help-block">{{ $errors->first("monto_mensualidad") }}</span>
                             @endif

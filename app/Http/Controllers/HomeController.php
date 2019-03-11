@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\AutorizacionBeca;
 use App\Aviso;
 use App\AvisosEmpresa;
 use App\Lectivo;
@@ -460,8 +461,19 @@ class HomeController extends Controller
        //dd($avisosEmpresas->toArray());
         //$tareasEmpresas = TareasEmpresa::where('empresa_id', '=', $empresa->id)->get();
         
+        //Procesos de Beca
+        $becas= AutorizacionBeca::select('autorizacion_becas.id','cli.id as cliente','cli.nombre','cli.nombre2','cli.ape_paterno','cli.ape_materno',
+                                         'autorizacion_becas.solicitud','c.comentario','st.name as estatus','c.created_at')
+                                ->where('autorizacion_becas.usu_alta_id',Auth::user()->id)
+                                ->join('autorizacion_beca_comentarios as c','c.autorizacion_beca_id','=','autorizacion_becas.id')
+                                ->join('clientes as cli','cli.id','=','autorizacion_becas.cliente_id')
+                                ->join('st_becas as st','st.id','=','c.st_beca_id')
+                                ->whereNull('c.bnd_visto')
+                                ->get();
+        //dd($becas);
+        
         return view('home', compact('avisos', 'a_1', 'a_2', 'a_3', 'a_4', 'grafica2','grafica', 'fil', 'lectivosSt2','avisosEmpresas',
-                                    'avisos_generales', 'avance', 'gauge', 'tabla', 'plantel','estatusPlantel', 'tsuma','lectivoss'))
+                                    'avisos_generales', 'avance', 'gauge', 'tabla', 'plantel','estatusPlantel', 'tsuma','lectivoss','becas'))
                     ->with('datos_grafica', json_encode($tabla))
                     ->with('datos', json_encode($datos))
                     ->with('datos2', json_encode($datos2))

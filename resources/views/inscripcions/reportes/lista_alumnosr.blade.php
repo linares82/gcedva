@@ -68,7 +68,11 @@
         <div id="printeArea">
             <h3>Lista de Asistencia del {{$asignacion->fec_inicio}} al {{$asignacion->fec_fin}} </h3>
             <table>
-                <?php $grupo0=""; ?>
+                <?php 
+                $grupo0="";
+                $asistencias_acumuladas=0;
+                $total_registros=0;
+                ?>
                 @foreach($registros as $r)
                 
                 @if($grupo0<>$r->grupo)
@@ -144,6 +148,8 @@
                                 @endforeach
                                 <?php 
                                 $porcentaje = round((($asistencias*100)/$total_asistencias),2);
+                                $asistencias_acumuladas=$asistencias+$asistencias_acumuladas;
+                                $total_registros++;
                                 ?>
                                 <td>{{$asistencias." - ".$porcentaje}}</td>
                                 <?php 
@@ -159,7 +165,10 @@
                 
                     
                 @endforeach
-                    
+                <tr>
+                    <td colspan='{{4+$total_asistencias}}'>Promedio de asistencias</td>
+                    <td>{{$asistencias_acumuladas/$total_registros}}</td>
+                </tr>    
             </table>
         </div>
 
