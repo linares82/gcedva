@@ -21,6 +21,7 @@
     ?>
     
     <div class="alert alert-error">
+        Tickets con estatus Invalido: 
         @foreach($ids as $id)
         {{ $id['consecutivo'].", " }}
         @endforeach
