@@ -23,7 +23,7 @@
     <div class="alert alert-error">
         Tickets con estatus Invalido: 
         @foreach($ids as $id)
-        {{ $id['consecutivo'] }} en {{ $id['cve_plantel'] }} <br/>
+        {{ $id['consecutivo'] }} en {{ $id['cve_plantel'] }} con cliente {{ $id['ciente_id'] }} <br/>
         @endforeach
     </div>
 @endif
