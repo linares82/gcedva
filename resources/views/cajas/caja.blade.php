@@ -14,13 +14,26 @@
 
 @section('content')
 @include('error')
-
+@if (session('ids_invalidos'))
+    <?php 
+    $ids=session('ids_invalidos'); 
+    //dd($ids);
+    ?>
+    
+    <div class="alert alert-error">
+        @foreach($ids as $id)
+        {{ $id['consecutivo'].", " }}
+        @endforeach
+    </div>
+@endif
 
 <div class="row">
     <div class="col-md-12">
         <div class="box box-info">
             <div class="box-body">
 
+                
+                
                 {!! Form::open(array('route' => 'cajas.buscarVenta','id'=>'form-buscarVenta')) !!}
                 
                 <div class="input-group col-md-6">
@@ -94,6 +107,7 @@
                     {!! Form::text("fecha", null, array("class" => "form-control fecha", "id" => "fecha-field", 'placeholder'=>'Fecha de Venta', 'style'=>"100%")) !!}
                 </div>
                 {!! Form::hidden("cliente_id", $cliente->id, array("class" => "form-control", "id" => "cliente_id-field")) !!}
+                {!! Form::hidden("st_caja_id", 0, array("class" => "form-control", "id" => "st_caja_id_id-field")) !!}
                 {!! Form::close() !!}
                 <!--                    @if(isset($caja) and $caja->st_caja_id==0)
                                     <div class="form-group col-md-3">

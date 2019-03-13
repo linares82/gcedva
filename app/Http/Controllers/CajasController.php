@@ -20,6 +20,8 @@ use App\Http\Requests\createCaja;
 use DB;
 use PDF;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Validator;
+use Session;
 
 class CajasController extends Controller {
 
@@ -55,6 +57,27 @@ class CajasController extends Controller {
 	public function store(createCaja $request)
 	{
 		$input = $request->all();
+                //dd($input);
+                
+                
+                 $validator = Validator::make($request->all(), [
+                        'st_caja_id' => 'unique:cajas',
+                    ],
+                    [
+                        'st_caja_id.unique' => 'Estatus de caja exitente e invalido, se debe pagar parcialmente, cancelar o pagar',
+                    ]);
+                 
+                 
+                 
+                 if ($validator->fails()) {
+                    $ids_invalidos=Caja::select('consecutivo')->where('st_caja_id',0)->where('id','>',0)->get(); 
+                    //dd($ids_invalidos);
+                    Session::flash('ids_invalidos', $ids_invalidos->toArray());
+                    //dd(session('ids_invalidos'));
+                    return redirect()->route('cajas.caja')
+                        ->withErrors($validator)
+                        ->withInput();
+                }
                 
                 $empleado=Empleado::where('user_id', '=', Auth::user()->id)->first();
                 
