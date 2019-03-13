@@ -70,7 +70,9 @@ class CajasController extends Controller {
                  
                  
                  if ($validator->fails()) {
-                    $ids_invalidos=Caja::select('consecutivo')->where('st_caja_id',0)->where('id','>',0)->get(); 
+                    $ids_invalidos=Caja::select('cajas.consecutivo','p.cve_plantel')
+                                       ->join('plantels as p','p.id','=','cajas.plantel_id')
+                                       ->where('st_caja_id',0)->where('cajas.id','>',0)->get(); 
                     //dd($ids_invalidos);
                     Session::flash('ids_invalidos', $ids_invalidos->toArray());
                     //dd(session('ids_invalidos'));
