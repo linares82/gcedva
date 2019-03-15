@@ -22,6 +22,7 @@ use Auth;
 use App\Http\Requests\updateHacademica;
 use App\Http\Requests\createHacademica;
 use DB;
+use Session;
 
 class HacademicasController extends Controller {
 
@@ -133,7 +134,7 @@ class HacademicasController extends Controller {
     }
 
     public function getCalificaciones() {
-        $examen = TpoExamen::where('id', '=', 1)->pluck('name', 'id');
+        $examen = TpoExamen::pluck('name', 'id');
         return view('hacademicas.calificaciones', compact('examen'))
                         ->with('list', Hacademica::getListFromAllRelationApps());
     }
@@ -252,6 +253,8 @@ class HacademicasController extends Controller {
 
         //dd($hacademicas->toArray());
         $examen = TpoExamen::pluck('name', 'id');
+        
+        
         return view('hacademicas.calificaciones', compact('hacademicas', 'examen'))
                         ->with('list', Hacademica::getListFromAllRelationApps());
     }
@@ -358,6 +361,7 @@ class HacademicasController extends Controller {
         //$examen->reverse(); 
         //$examen->put(0,'Seleccionar Opción');
         //$examen->reverse(); 
+        Session::flash('msj', 'Registro Creado');
         return view('hacademicas.examen', compact('examen'))
                         ->with('list', Hacademica::getListFromAllRelationApps());
     }
