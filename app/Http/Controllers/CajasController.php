@@ -138,7 +138,8 @@ class CajasController extends Controller {
 	{
 		$caja=$caja->find($id);
                 $cliente=Cliente::find($caja->cliente_id);
-		return view('cajas.caja', compact('caja', 'cliente'))
+                $combinaciones=CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
+		return view('cajas.caja', compact('caja', 'cliente','combinaciones'))
 			->with( 'list', Caja::getListFromAllRelationApps() )
                         ->with( 'list1', CajaLn::getListFromAllRelationApps() );
 	}
