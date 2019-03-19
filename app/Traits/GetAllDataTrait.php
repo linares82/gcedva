@@ -193,9 +193,9 @@ trait GetAllDataTrait {
                 if($baseTable=="seguimientos" and Auth::user()->can('IfiltroClientesXEmpleado')){
                     $myQuery=$myQuery->where('clientes.empleado_id', '=', $empleado->id);
                 }
-                if($baseTable=="seguimientos" and Auth::user()->can('IfiltroClientesXPlantel')){
+                /*if($baseTable=="seguimientos" and Auth::user()->can('IfiltroClientesXPlantel')){
                     $myQuery=$myQuery->where('clientes.plantel_id', '=', $empleado->plantel_id);
-                }
+                }*/
                 if($baseTable=="seguimientos" and Auth::user()->can('IfiltroClientesXPlantel')){
                     $myQuery=$myQuery->where('clientes.plantel_id', '=', $empleado->plantel_id)
                                      ->where('st_seguimiento_id', '<>', '3');
