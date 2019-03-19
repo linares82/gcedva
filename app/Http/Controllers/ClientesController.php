@@ -73,7 +73,7 @@ class ClientesController extends Controller {
         
         //dd($request);
         $clientes = Seguimiento::getAllData($request, 20, session('filtro_clientes'));
-        $eempleado = Empleado::where('user_id', '=', Auth::user()->id)->first();
+        $empleado = Empleado::where('user_id', '=', Auth::user()->id)->first();
         
         return view('clientes.index', compact('clientes','users','empleado'))
                         ->with('list', Seguimiento::getListFromAllRelationApps())
