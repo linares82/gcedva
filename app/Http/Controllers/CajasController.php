@@ -58,9 +58,9 @@ class CajasController extends Controller {
 	{
 		$input = $request->all();
                 //dd($input);
+                $caja=Caja::where('st_caja_id',0)->get();
                 
-                
-                 $validator = Validator::make($request->all(), [
+                 /*$validator = Validator::make($request->all(), [
                         'st_caja_id' => 'unique:cajas',
                     ],
                     [
@@ -69,17 +69,20 @@ class CajasController extends Controller {
                  
                  
                  
-                 if ($validator->fails()) {
+                 if ($validator->fails()) {*/
+                //dd($caja);
+                if(count($caja)>1){
                     $ids_invalidos=Caja::select('cajas.consecutivo','p.cve_plantel','cajas.cliente_id')
                                        ->join('plantels as p','p.id','=','cajas.plantel_id')
-                                       ->where('st_caja_id',0)->where('cajas.id','>',0)->get(); 
+                                       ->where('cajas.st_caja_id','=',0)->where('cajas.id','>',0)->get(); 
                     //dd($ids_invalidos);
                     Session::flash('ids_invalidos', $ids_invalidos->toArray());
                     //dd(session('ids_invalidos'));
                     return redirect()->route('cajas.caja')
-                        ->withErrors($validator)
+                        //->withErrors($validator)
                         ->withInput();
                 }
+                //}
                 
                 $empleado=Empleado::where('user_id', '=', Auth::user()->id)->first();
                 
