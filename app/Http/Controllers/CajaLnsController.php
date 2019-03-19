@@ -123,9 +123,11 @@ class CajaLnsController extends Controller {
 	{
                 
 		$cajaLn=$cajaLn->find($id);
-                $adeudo=Adeudo::find($cajaLn->adeudo_id);
-                $adeudo->caja_id=0;
-                $adeudo->save();
+                if($cajaLn->adeudo_id<>0){
+                    $adeudo=Adeudo::find($cajaLn->adeudo_id);
+                    $adeudo->caja_id=0;
+                    $adeudo->save();
+                }
                 $caja=Caja::find($cajaLn->caja_id);
                 $caja->subtotal=$caja->subtotal-$cajaLn->subtotal;
                 $caja->recargo=$caja->recargo-$cajaLn->recargo;
