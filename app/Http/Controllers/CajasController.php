@@ -446,6 +446,23 @@ class CajasController extends Controller {
                                     $caja_ln['descuento']=$caja_ln['descuento']+$monto_promocion;
                                     $caja_ln['promo_plan_ln_id']=$promocion->id;
                                 }
+                            }else{
+                                $inicio=Carbon::createFromFormat('Y-m-d', $promocion->fec_inicio);
+                                $fin=Carbon::createFromFormat('Y-m-d', $promocion->fec_fin);
+
+                                //$hoy=date('Y-m-d');
+                                //$hoy=Carbon::now();
+                                //La caja tiene la fecha de pago de un solo concepto que debe ser la inscripcion
+                                $caja=Caja::where('caja_id',$inscripcion->caja_id)->first();
+                                $hoy=Carbon::now();;
+                                $monto_promocion=0;
+                                //dd($hoy);
+                                if($inicio->lessThanOrEqualTo($hoy) and $fin->greaterThanOrEqualTo($hoy) and $caja_ln['promo_plan_ln_id']==0){
+
+                                    $monto_promocion=$promocion->descuento*$caja_ln['total'];
+                                    $caja_ln['descuento']=$caja_ln['descuento']+$monto_promocion;
+                                    $caja_ln['promo_plan_ln_id']=$promocion->id;
+                                }
                             }
                             
                         }
