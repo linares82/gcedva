@@ -1,4 +1,11 @@
-                <div class="form-group col-md-4 @if($errors->has('name')) has-error @endif">
+                    <div class="form-group col-md-4 @if($errors->has('plantel_id')) has-error @endif">
+                       <label for="plantel_id-field">Plantel</label>
+                       {!! Form::select("plantel_id", $list["Plantel"], null, array("class" => "form-control select_seguridad", "id" => "plantel_id-field")) !!}
+                       @if($errors->has("plantel_id"))
+                        <span class="help-block">{{ $errors->first("plantel_id") }}</span>
+                       @endif
+                    </div>
+                    <div class="form-group col-md-4 @if($errors->has('name')) has-error @endif">
                        <label for="name-field">Materia</label>
                        {!! Form::text("name", null, array("class" => "form-control input-sm", "id" => "name-field")) !!}
                        @if($errors->has("name"))
@@ -33,13 +40,7 @@
                         <span class="help-block">{{ $errors->first("modulo_id") }}</span>
                        @endif
                     </div>
-                    <div class="form-group col-md-4 @if($errors->has('plantel_id')) has-error @endif">
-                       <label for="plantel_id-field">Plantel</label>
-                       {!! Form::select("plantel_id", $list["Plantel"], null, array("class" => "form-control select_seguridad", "id" => "plantel_id-field")) !!}
-                       @if($errors->has("plantel_id"))
-                        <span class="help-block">{{ $errors->first("plantel_id") }}</span>
-                       @endif
-                    </div>
+                    
                     <div class="form-group col-md-4 @if($errors->has('ponderacion_id')) has-error @endif">
                        <label for="ponderacion_id-field">Ponderacion</label>
                        {!! Form::select("ponderacion_id", $list["Ponderacion"], null, array("class" => "form-control select_seguridad", "id" => "ponderacion_id-field")) !!}
@@ -47,3 +48,41 @@
                         <span class="help-block">{{ $errors->first("ponderacion_id") }}</span>
                        @endif
                     </div>
+@push('scripts')
+  
+  <script type="text/javascript">
+    
+    $(document).ready(function() {
+        $('#plantel_id-field').change(function(){
+          getCmbMateria();
+      });
+    });
+    
+    function getCmbMateria(){
+          
+              $.ajax({
+                  url: '{{ route("materias.getCmbMateria") }}',
+                  type: 'GET',
+                  data: "plantel_id=" + $('#plantel_id-field option:selected').val(),
+                  dataType: 'json',
+                  beforeSend : function(){$("#loading3").show();},
+                  complete : function(){$("#loading3").hide();},
+                  success: function(data){
+                      //$example.select2("destroy");
+                      $('#serie_anterior-field').html('');
+                      
+                      //$('#especialidad_id-field').empty();
+                      $('#serie_anterior').append($('<option></option>').text('Seleccionar Opción').val('0'));
+                      
+                      $.each(data, function(i) {
+                          //alert(data[i].name);
+                          $('#serie_anterior-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                          
+                      });
+                      //$example.select2();
+                  }
+              });       
+      }
+    
+</script>
+@endpush

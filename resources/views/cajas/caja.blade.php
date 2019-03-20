@@ -27,6 +27,12 @@
         @endforeach
     </div>
 @endif
+@if (session('msj'))
+    
+    <div class="alert alert-error">
+        {{ session('msj') }}
+    </div>
+@endif
 
 <div class="row">
     <div class="col-md-12">
