@@ -154,14 +154,14 @@ class HacademicasController extends Controller {
                 $c = CalificacionPonderacion::find($id);
 
                 //dd($input['calificacion_parcial'][$posicion]);
-                
+
                 //calculo de la calificacion en la linea de acuerdo a su ponderacion en la misma linea
                 $c->calificacion_parcial = $input['calificacion_parcial'][$posicion];
                 $c->calificacion_parcial_calculada = round(($input['calificacion_parcial'][$posicion] * $c->ponderacion),2);
                 $c->save();
-                
-                
-                
+
+
+
                 //calculo de la calificacion padre de acuerdo a todos los hijos que tenga
                 if($c->padre_id>0){
                     //dd($c->padre_id);
@@ -172,9 +172,9 @@ class HacademicasController extends Controller {
                     $calif_padre->calificacion_parcial_calculada=round(($suma_calificacion_padre*$calif_padre->ponderacion),2);
                     $calif_padre->save();
                 }
-                
+
                 //dd("fil");
-                
+
                 //dd($c->toArray());
                 //Calculo de la calificacion en la tabla de calificaciones
                 $suma_calificacion = $this->calculoCalificacionTotal($c->calificacion_id);
@@ -189,9 +189,9 @@ class HacademicasController extends Controller {
                 }
                 $calif->save();
                 $h = Hacademica::find($calif->hacademica_id);
-                $calif_total = Calificacion::where('hacademica_id', '=', $h->id)->first();
-                //dd($calif_total);
-                if ($calif_total->calificacion >= $aprobatoria) {
+                //$calif_total = Calificacion::where('hacademica_id', '=', $h->id)->first();
+                //dd($h);
+                if ($calif->calificacion >= $aprobatoria) {
                     $h->st_materium_id = 1;
                 } else {
                     $h->st_materium_id = 2;
@@ -205,9 +205,9 @@ class HacademicasController extends Controller {
                 isset($input['tpo_examen_id']) and
                 isset($input['materium_id']) and ! isset($input['excepcion'])) {
             $c = Cliente::where('id', '=', $input['alumno_id'])->first();
-            $hacademicas = Hacademica::select('calif.id', DB::raw('concat(c.nombre, " ", c.ape_paterno," ", c.ape_materno) as nombre'), 'm.name as materia', 
-                                              'te.name as examen', 'calif.calificacion', 'calif.fecha', 'g.name as grado', 'calif.calificacion', 
-                                              'calif.fecha', 'calif.reporte_bnd', 'cpo.name as nombre_ponderacion', 'cp.ponderacion', 
+            $hacademicas = Hacademica::select('calif.id', DB::raw('concat(c.nombre, " ", c.ape_paterno," ", c.ape_materno) as nombre'), 'm.name as materia',
+                                              'te.name as examen', 'calif.calificacion', 'calif.fecha', 'g.name as grado', 'calif.calificacion',
+                                              'calif.fecha', 'calif.reporte_bnd', 'cpo.name as nombre_ponderacion', 'cp.ponderacion',
                                               'cp.calificacion_parcial', 'cp.id as calificacion_parcial_id', 'cp.tiene_detalle','cp.padre_id')
                     ->join('clientes as c', 'c.id', 'hacademicas.cliente_id')
                     ->join('calificacions as calif', 'hacademicas.id', '=', 'calif.hacademica_id')
@@ -233,9 +233,9 @@ class HacademicasController extends Controller {
                 isset($input['materium_id']) and
                 isset($input['excepcion'])) {
             $c = Cliente::where('id', '=', $input['alumno_id'])->first();
-            $hacademicas = Hacademica::select('calif.id', DB::raw('concat(c.nombre, " ", c.ape_paterno," ", c.ape_materno) as nombre'), 'm.name as materia', 
-                                              'te.name as examen', 'calif.calificacion', 'calif.fecha', 'g.name as grado', 'calif.calificacion', 
-                                              'calif.fecha', 'calif.reporte_bnd', 'cpo.name as nombre_ponderacion', 'cp.ponderacion', 
+            $hacademicas = Hacademica::select('calif.id', DB::raw('concat(c.nombre, " ", c.ape_paterno," ", c.ape_materno) as nombre'), 'm.name as materia',
+                                              'te.name as examen', 'calif.calificacion', 'calif.fecha', 'g.name as grado', 'calif.calificacion',
+                                              'calif.fecha', 'calif.reporte_bnd', 'cpo.name as nombre_ponderacion', 'cp.ponderacion',
                                               'cp.calificacion_parcial', 'cp.id as calificacion_parcial_id', 'cp.tiene_detalle','cp.padre_id')
                     ->join('clientes as c', 'c.id', 'hacademicas.cliente_id')
                     ->join('calificacions as calif', 'hacademicas.id', '=', 'calif.hacademica_id')
@@ -253,14 +253,14 @@ class HacademicasController extends Controller {
 
         //dd($hacademicas->toArray());
         $examen = TpoExamen::pluck('name', 'id');
-        
-        
+
+
         return view('hacademicas.calificaciones', compact('hacademicas', 'examen'))
                         ->with('list', Hacademica::getListFromAllRelationApps());
     }
 
     public function calculoCalificacionTotal($calificacion_id) {
-        $calificacion_ponderacion = CalificacionPonderacion::where('calificacion_id', '=', $calificacion_id)->where('padre_id','=', 0)->get(); 
+        $calificacion_ponderacion = CalificacionPonderacion::where('calificacion_id', '=', $calificacion_id)->where('padre_id','=', 0)->get();
         //dd($calificacion_ponderacion->toArray());
         $suma = 0;
         foreach ($calificacion_ponderacion as $cp) {
@@ -268,7 +268,7 @@ class HacademicasController extends Controller {
         }
         return round($suma,2);
     }
-    
+
     public function calculoCalificacionPadre($padre_id) {
         $calificacion_ponderacion = CalificacionPonderacion::where('padre_id', '=', $padre_id)->get();
         //dd($calificacion_ponderacion->toArray());
@@ -281,9 +281,9 @@ class HacademicasController extends Controller {
 
     public function getExamenes() {
         $examen = TpoExamen::where('id', '>', 1)->pluck('name', 'id');
-        //$examen->reverse(); 
+        //$examen->reverse();
         //$examen->put(0,'Seleccionar Opción');
-        //$examen->reverse(); 
+        //$examen->reverse();
         return view('hacademicas.examen', compact('examen'))
                         ->with('list', Hacademica::getListFromAllRelationApps());
     }
@@ -298,7 +298,7 @@ class HacademicasController extends Controller {
                 isset($input['grado_id']) and
                 isset($input['materium_id']) and
                 isset($input['examen_id'])) {
-        //isset($input['calificacion']) and 
+        //isset($input['calificacion']) and
         //isset($input['fecha']) )
             $h = Inscripcion::select('h.id')
                     ->join('clientes as c', 'c.id', '=', 'inscripcions.cliente_id')
@@ -358,9 +358,9 @@ class HacademicasController extends Controller {
 
         //dd($hacademicas->toArray());
         $examen = TpoExamen::where('id', '>', 1)->pluck('name', 'id');
-        //$examen->reverse(); 
+        //$examen->reverse();
         //$examen->put(0,'Seleccionar Opción');
-        //$examen->reverse(); 
+        //$examen->reverse();
         Session::flash('msj', 'Registro Creado');
         return view('hacademicas.examen', compact('examen'))
                         ->with('list', Hacademica::getListFromAllRelationApps());
@@ -410,7 +410,7 @@ class HacademicasController extends Controller {
                 ->setPaper('letter', 'landscape');
         return $pdf->download('reporte.pdf');
 
-        //return view('hacademicas.rhacademicar', compact('fecha', 'hacademicas'));	
+        //return view('hacademicas.rhacademicar', compact('fecha', 'hacademicas'));
 
         /* Excel::create('Laravel Excel', function($excel) use($seguimientos) {
           $excel->sheet('Productos', function($sheet) use($seguimientos) {
@@ -424,12 +424,12 @@ class HacademicasController extends Controller {
         $data=$request->all();
         $asignacion=$data['asignacion'];
         $examen=TpoExamen::pluck('name','id');
-        
+
         $asignacionAcademica = AsignacionAcademica::find($data['asignacion']);
         $materia=Materium::find($asignacionAcademica->materium_id);
         //dd($asignacionAcademica);
         $carga_ponderaciones=CargaPonderacion::where('ponderacion_id','=',$materia->ponderacion_id)->pluck('name','id');
-        
+
 
         return view('hacademicas.calificacionGrupos', compact('asignacion','examen','carga_ponderaciones'))
                         ->with('list', Hacademica::getListFromAllRelationApps());
@@ -440,7 +440,7 @@ class HacademicasController extends Controller {
         $asignacion=$data['asignacion'];
         $examen=TpoExamen::pluck('name','id');
         $asignacionAcademica = AsignacionAcademica::find($data['asignacion']);
-        
+
         $materia=Materium::find($asignacionAcademica->materium_id);
         //dd($asignacionAcademica);
         //$carga_ponderaciones=CargaPonderacion::where('ponderacion_id','=',$materia->ponderacion_id)->pluck('name','id');
@@ -482,12 +482,12 @@ class HacademicasController extends Controller {
                                 })
                                 ->get();
         }
-        
+
         $hacademica=HAcademica::where('grupo_id','=',$asignacionAcademica->grupo_id)
                                 ->where('lectivo_id', '=', $asignacionAcademica->lectivo_id)
                                 ->where('materium_id', '=', $asignacionAcademica->materium_id)
                                 ->first();
-        
+
         $g = Grado::find($hacademica->grado_id)->first();
            //dd($g->toArray());
         if(isset($data['tpo_examen_id'])){
@@ -501,13 +501,13 @@ class HacademicasController extends Controller {
         }else{
             $carga_ponderaciones=CargaPonderacion::where('ponderacion_id','=',$materia->ponderacion_id)->pluck('name','id');
         }
-            
-            
+
+
         //dd($hacademicas->toArray());
         return view('hacademicas.calificacionGrupos', compact('asignacion','examen','carga_ponderaciones','hacademicas'))
                         ->with('list', Hacademica::getListFromAllRelationApps());
     }
-    
+
     public function actualizarCalificacion(Request $request){
         $data=$request->all();
         //calcula calificacion de la linea
@@ -515,7 +515,7 @@ class HacademicasController extends Controller {
         $calificacion_ponderacion->calificacion_parcial=$data['calificacion_parcial'];
         $calificacion_ponderacion->calificacion_parcial_calculada=$data['calificacion_parcial']*$calificacion_ponderacion->ponderacion;
         $calificacion_ponderacion->save();
-        
+
         //Calula calificacion del padre
         if($calificacion_ponderacion->padre_id>0){
             //dd($c->padre_id);
@@ -526,12 +526,12 @@ class HacademicasController extends Controller {
             $calif_padre->calificacion_parcial_calculada=round(($suma_calificacion_padre*$calif_padre->ponderacion),2);
             $calif_padre->save();
         }
-        
+
         //Calcula la calificacion en la tabla de calificaciones
         $suma=$this->calculoCalificacionTotal($calificacion_ponderacion->calificacion_id);
         /*$ponderaciones= CalificacionPonderacion::where('calificacion_id',$calificacion_ponderacion->calificacion_id)->get();
         $suma=0;
-        
+
         //dd($ponderaciones->toArray());
         foreach($ponderaciones as $ponderacion){
             $suma=$suma+$ponderacion->calificacion_parcial_calculada;
@@ -561,14 +561,14 @@ class HacademicasController extends Controller {
             $tpo_examen_id = $request->get('tpo_examen_id');
             $asignacion_id = $request->get('asignacion_id');
             $carga_ponderacion_id = $request->get('carga_ponderacion_id');
-            
+
             $asignacion=AsignacionAcademica::find($asignacion_id);
             $materia=Materium::find($asignacion->materium_id);
             $hacademica=HAcademica::where('grupo_id','=',$asignacion->grupo_id)
                                 ->where('lectivo_id', '=', $asignacion->lectivo_id)
                                 ->where('materium_id', '=', $asignacion->materium_id)
                                 ->first();
-            
+
             $g = Grado::find($hacademica->grado_id)->first();
            //dd($g->toArray());
             if ($tpo_examen_id == 2 and $g->name == "BACHILLERATO") {
@@ -578,11 +578,11 @@ class HacademicasController extends Controller {
             } elseif($tpo_examen_id == 1){
                 $carga_ponderaciones=CargaPonderacion::where('ponderacion_id','=',$materia->ponderacion_id)->where('tiene_detalle', '=', 0)->get();
             }
-            
+
             //dd($carga_ponderaciones->toArray());
-            
+
             $final = array();
-            
+
             //dd($r);
             if (isset($carga_ponderacion_id) and $carga_ponderacion_id <> 0) {
                 foreach ($carga_ponderaciones as $r1) {

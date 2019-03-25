@@ -453,8 +453,8 @@ class CajasController extends Controller {
                                 //$hoy=date('Y-m-d');
                                 //$hoy=Carbon::now();
                                 //La caja tiene la fecha de pago de un solo concepto que debe ser la inscripcion
-                                $caja=Caja::where('caja_id',$inscripcion->caja_id)->first();
-                                $hoy=Carbon::now();;
+                                $caja=Caja::find($data['caja']);
+                                $hoy=Carbon::createFromFormat('Y-m-d', $caja->fecha);
                                 $monto_promocion=0;
                                 //dd($hoy);
                                 if($inicio->lessThanOrEqualTo($hoy) and $fin->greaterThanOrEqualTo($hoy) and $caja_ln['promo_plan_ln_id']==0){

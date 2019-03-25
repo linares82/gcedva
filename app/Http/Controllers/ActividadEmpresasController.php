@@ -1,5 +1,5 @@
 <?php
- 
+
 namespace App\Http\Controllers;
 
 use App\Http\Requests;
@@ -165,5 +165,4 @@ class ActividadEmpresasController extends Controller {
             }
         }
     }
-
 }
