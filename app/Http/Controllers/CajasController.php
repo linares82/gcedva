@@ -371,6 +371,7 @@ class CajasController extends Controller {
             $recargo=0;
             $descuento=0;
             //dd($adeudos->toArray());
+            
             foreach($adeudos as $adeudo){
                 $existe_linea=CajaLn::where('adeudo_id','=',$adeudo->id)->first();
                 if(!is_object($existe_linea)){
@@ -422,49 +423,51 @@ class CajasController extends Controller {
                     try{
                         $promociones= PromoPlanLn::where('plan_pago_ln_id',$adeudo->plan_pago_ln_id)->get();
                         $caja_ln['promo_plan_ln_id']=0;
-                        foreach($promociones as $promocion){
-                            $inscripcion=Adeudo::where('plan_pago_ln_id',$adeudo->plan_pago_ln_id)
-                                                ->where('cliente_id',$adeudo->cliente_id)
-                                                ->where('caja_concepto_id',1)
-                                                ->where('combinacion_cliente_id',$adeudo->combinacion_cliente_id)
-                                                ->where('pagado_bnd',1)
-                                                ->first();
-                            if(is_object($inscripcion)){
-                                $inicio=Carbon::createFromFormat('Y-m-d', $promocion->fec_inicio);
-                                $fin=Carbon::createFromFormat('Y-m-d', $promocion->fec_fin);
+                        if($caja->beca_bnd<>1){
+                            foreach($promociones as $promocion){
+                                $inscripcion=Adeudo::where('plan_pago_ln_id',$adeudo->plan_pago_ln_id)
+                                                    ->where('cliente_id',$adeudo->cliente_id)
+                                                    ->where('caja_concepto_id',1)
+                                                    ->where('combinacion_cliente_id',$adeudo->combinacion_cliente_id)
+                                                    ->where('pagado_bnd',1)
+                                                    ->first();
+                                if(is_object($inscripcion)){
+                                    $inicio=Carbon::createFromFormat('Y-m-d', $promocion->fec_inicio);
+                                    $fin=Carbon::createFromFormat('Y-m-d', $promocion->fec_fin);
 
-                                //$hoy=date('Y-m-d');
-                                //$hoy=Carbon::now();
-                                //La caja tiene la fecha de pago de un solo concepto que debe ser la inscripcion
-                                $caja=Caja::where('caja_id',$inscripcion->caja_id)->first();
-                                $hoy=Carbon::createFromFormat('Y-m-d', $caja->fecha);
-                                $monto_promocion=0;
-                                //dd($hoy);
-                                if($inicio->lessThanOrEqualTo($hoy) and $fin->greaterThanOrEqualTo($hoy) and $caja_ln['promo_plan_ln_id']==0){
+                                    //$hoy=date('Y-m-d');
+                                    //$hoy=Carbon::now();
+                                    //La caja tiene la fecha de pago de un solo concepto que debe ser la inscripcion
+                                    $caja=Caja::where('caja_id',$inscripcion->caja_id)->first();
+                                    $hoy=Carbon::createFromFormat('Y-m-d', $caja->fecha);
+                                    $monto_promocion=0;
+                                    //dd($hoy);
+                                    if($inicio->lessThanOrEqualTo($hoy) and $fin->greaterThanOrEqualTo($hoy) and $caja_ln['promo_plan_ln_id']==0){
 
-                                    $monto_promocion=$promocion->descuento*$caja_ln['total'];
-                                    $caja_ln['descuento']=$caja_ln['descuento']+$monto_promocion;
-                                    $caja_ln['promo_plan_ln_id']=$promocion->id;
+                                        $monto_promocion=$promocion->descuento*$caja_ln['total'];
+                                        $caja_ln['descuento']=$caja_ln['descuento']+$monto_promocion;
+                                        $caja_ln['promo_plan_ln_id']=$promocion->id;
+                                    }
+                                }else{
+                                    $inicio=Carbon::createFromFormat('Y-m-d', $promocion->fec_inicio);
+                                    $fin=Carbon::createFromFormat('Y-m-d', $promocion->fec_fin);
+
+                                    //$hoy=date('Y-m-d');
+                                    //$hoy=Carbon::now();
+                                    //La caja tiene la fecha de pago de un solo concepto que debe ser la inscripcion
+                                    $caja=Caja::find($data['caja']);
+                                    $hoy=Carbon::createFromFormat('Y-m-d', $caja->fecha);
+                                    $monto_promocion=0;
+                                    //dd($hoy);
+                                    if($inicio->lessThanOrEqualTo($hoy) and $fin->greaterThanOrEqualTo($hoy) and $caja_ln['promo_plan_ln_id']==0){
+
+                                        $monto_promocion=$promocion->descuento*$caja_ln['total'];
+                                        $caja_ln['descuento']=$caja_ln['descuento']+$monto_promocion;
+                                        $caja_ln['promo_plan_ln_id']=$promocion->id;
+                                    }
                                 }
-                            }else{
-                                $inicio=Carbon::createFromFormat('Y-m-d', $promocion->fec_inicio);
-                                $fin=Carbon::createFromFormat('Y-m-d', $promocion->fec_fin);
 
-                                //$hoy=date('Y-m-d');
-                                //$hoy=Carbon::now();
-                                //La caja tiene la fecha de pago de un solo concepto que debe ser la inscripcion
-                                $caja=Caja::find($data['caja']);
-                                $hoy=Carbon::createFromFormat('Y-m-d', $caja->fecha);
-                                $monto_promocion=0;
-                                //dd($hoy);
-                                if($inicio->lessThanOrEqualTo($hoy) and $fin->greaterThanOrEqualTo($hoy) and $caja_ln['promo_plan_ln_id']==0){
-
-                                    $monto_promocion=$promocion->descuento*$caja_ln['total'];
-                                    $caja_ln['descuento']=$caja_ln['descuento']+$monto_promocion;
-                                    $caja_ln['promo_plan_ln_id']=$promocion->id;
-                                }
                             }
-                            
                         }
                         //dd($promocion);
                         //if(is_object($promocion)){
