@@ -423,7 +423,7 @@ class CajasController extends Controller {
                     try{
                         $promociones= PromoPlanLn::where('plan_pago_ln_id',$adeudo->plan_pago_ln_id)->get();
                         $caja_ln['promo_plan_ln_id']=0;
-                        if($caja->beca_bnd<>1){
+                        if($cliente->beca_bnd<>1){
                             foreach($promociones as $promocion){
                                 $inscripcion=Adeudo::where('plan_pago_ln_id',$adeudo->plan_pago_ln_id)
                                                     ->where('cliente_id',$adeudo->cliente_id)
