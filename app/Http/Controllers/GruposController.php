@@ -197,6 +197,7 @@ class GruposController extends Controller {
         if($request->ajax()){
 			//dd($request->get('plantel_id'));
 			$grupo=$request->get('grupo');			
+                        $periodo=$request->get('periodo');			
 			$final = array();
 			$r = DB::table('grupos as g')
                                         ->join('grupo_periodo_estudios as gp','gp.grupo_id','=','g.id')
@@ -206,9 +207,9 @@ class GruposController extends Controller {
 					->where('g.id', '>', '0')
 					->get();
 			//dd($r);
-			if(isset($grupo) and $grupo<>0){
+			if(isset($periodo) and $periodo<>0){
 				foreach($r as $r1){
-					if($r1->id==$grupo){
+					if($r1->id==$periodo){
 						array_push($final, array('id'=>$r1->id, 
 												 'name'=>$r1->name, 
 												 'selectec'=>'Selected'));

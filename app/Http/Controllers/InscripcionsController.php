@@ -220,42 +220,108 @@ class InscripcionsController extends Controller {
 	{
 		$input = $request->all();
 		//dd($input);
+                if(isset($input['id']) and isset($input['grupo_to']) and isset($input['lectivo_to'])){                                
+			foreach($input['id'] as $key=>$value){
+				$id=$value;
+				$posicion=$key;
+				$i=Inscripcion::find($id);
+                                if($i->grupo_id<>$input['grupo_to'] and $i->lectivo_id<>$input['lectivo_to'] and $i->periodo_estudio_id<>$input['periodo_estudios_to']){
+                                    $i->grupo_id=$input['grupo_to'];
+                                    $i->lectivo_id=$input['lectivo_to'];
+                                    $i->periodo_estudio_id=$input['periodo_estudios_to'];
+                                    $i->save();
+                                    $this->registrarMaterias($id);
+                                }
+			}
+		}
 		if(isset($input['plantel_id']) and isset($input['lectivo_id']) and isset($input['grupo_id'])){
-			$clientes=Cliente::join('inscripcions as i', 'i.cliente_id', '=', 'clientes.id')
-                                                ->join('periodo_estudios as p','p.id','=','i.periodo_estudio_id')
+//			$clientes=Cliente::join('inscripcions as i', 'i.cliente_id', '=', 'clientes.id')
+//                                                ->join('periodo_estudios as p','p.id','=','i.periodo_estudio_id')
+//						->join('hacademicas as h', 'h.inscripcion_id', 'i.id')
+//						//->join('calificacions as c', 'c.hacademica_id', '=', 'h.id')
+//						->join('materia as m', 'm.id', 'h.materium_id')
+//						->join('grados as g', 'g.id', 'h.grado_id')
+//						->select('i.id','p.name as periodo_estudio', 
+//                                                        DB::raw('concat(clientes.nombre," ",clientes.nombre2," ",clientes.ape_paterno," ",clientes.ape_materno) as nombre'),
+//                                                        DB::raw('count(h.materium_id) as materias_aprobadas'))
+//                                                //->whereColumn('h.lectivo_id','i.lectivo_id')
+//						->where('i.plantel_id', '=', $input['plantel_id'])
+//						->where('i.especialidad_id', '=', $input['especialidad_id'])
+//						->where('i.nivel_id', '=', $input['nivel_id'])
+//						->where('i.grupo_id', '=', $input['grupo_id'])
+//						->where('i.lectivo_id', '=', $input['lectivo_id'])
+//						->where('i.plantel_id', '=', $input['plantel_id'])
+//						->where('h.st_materium_id', '=', 1)
+//						->groupBy('nombre', 'nombre2', 'ape_paterno', 'ape_materno', 'i.id','p.name')
+//						->get();
+                    $clientes=Cliente::join('inscripcions as i', 'i.cliente_id', '=', 'clientes.id')
 						->join('hacademicas as h', 'h.inscripcion_id', 'i.id')
-						//->join('calificacions as c', 'c.hacademica_id', '=', 'h.id')
-						->join('materia as m', 'm.id', 'h.materium_id')
-						->join('grados as g', 'g.id', 'h.grado_id')
-						->select('i.id','p.name as periodo_estudio', 
-                                                        DB::raw('concat(clientes.nombre," ",clientes.nombre2," ",clientes.ape_paterno," ",clientes.ape_materno) as nombre'),
-                                                        DB::raw('count(h.materium_id) as materias_aprobadas'))
+                                                ->join('periodo_estudios as p','p.id','=','i.periodo_estudio_id')                            
+						->select('i.id','clientes.id as cliente','p.name as periodo_estudio', 
+                                                        DB::raw('concat(clientes.nombre," ",clientes.nombre2," ",clientes.ape_paterno," ",clientes.ape_materno) as nombre'))
+                                                //->whereColumn('h.lectivo_id','i.lectivo_id')
 						->where('i.plantel_id', '=', $input['plantel_id'])
 						->where('i.especialidad_id', '=', $input['especialidad_id'])
 						->where('i.nivel_id', '=', $input['nivel_id'])
 						->where('i.grupo_id', '=', $input['grupo_id'])
 						->where('i.lectivo_id', '=', $input['lectivo_id'])
 						->where('i.plantel_id', '=', $input['plantel_id'])
-						->where('h.st_materium_id', '=', 1)
-						->groupBy('nombre', 'nombre2', 'ape_paterno', 'ape_materno', 'i.id','p.name')
+                                                ->distinct()
 						->get();
-		}	
-		if(isset($input['id']) and isset($input['grupo_to']) and isset($input['lectivo_to'])){
+                    //dd($clientes);
+                    $resultado=collect();
+                    $resultados=collect();
+                    foreach($clientes as $c){
+                        //dd($c);
+                        $aprobadas=Cliente::join('inscripcions as i', 'i.cliente_id', '=', 'clientes.id')
+                        ->join('periodo_estudios as p','p.id','=','i.periodo_estudio_id')
+                        ->join('hacademicas as h', 'h.inscripcion_id', 'i.id')
+                        ->select(DB::raw('count(h.materium_id) as aprobadas'))
+                        //->whereColumn('h.lectivo_id','i.lectivo_id')
+                        ->where('i.plantel_id', '=', $input['plantel_id'])
+                        ->where('i.especialidad_id', '=', $input['especialidad_id'])
+                        ->where('i.nivel_id', '=', $input['nivel_id'])
+                        ->where('i.grupo_id', '=', $input['grupo_id'])
+                        ->where('i.lectivo_id', '=', $input['lectivo_id'])
+                        ->where('i.plantel_id', '=', $input['plantel_id'])
+                        ->where('clientes.id', '=', $c->cliente)        
+                        ->where('h.st_materium_id', '=', 1)
+                        ->first('aprobadas');
+                        //dd($aprobadas);
                         
-                                
-			foreach($input['id'] as $key=>$value){
-				$id=$value;
-				$posicion=$key;
-				$i=Inscripcion::find($id);
-				$i->grupo_id=$input['grupo_to'];
-				$i->lectivo_id=$input['lectivo_to'];
-                                $i->periodo_estudio_id=$input['periodo_estudios_to'];
-				$i->save();
-				$this->registrarMaterias($id);
-			}
-		}
+                        
+                        $no_aprobadas=Cliente::join('inscripcions as i', 'i.cliente_id', '=', 'clientes.id')
+                        ->join('periodo_estudios as p','p.id','=','i.periodo_estudio_id')
+                        ->join('hacademicas as h', 'h.inscripcion_id', 'i.id')
+                        ->select(DB::raw('count(h.materium_id) as no_aprobadas'))
+                        //->whereColumn('h.lectivo_id','i.lectivo_id')
+                        ->where('i.plantel_id', '=', $input['plantel_id'])
+                        ->where('i.especialidad_id', '=', $input['especialidad_id'])
+                        ->where('i.nivel_id', '=', $input['nivel_id'])
+                        ->where('i.grupo_id', '=', $input['grupo_id'])
+                        ->where('i.lectivo_id', '=', $input['lectivo_id'])
+                        ->where('i.plantel_id', '=', $input['plantel_id'])
+                        ->where('clientes.id', '=', $c->cliente)        
+                        ->where('h.st_materium_id', '<>', 1)
+                        ->first('no_aprobadas');
+//                        $resultado->put('id',$c->id);
+//                        $resultado->put('nombre',$c->nombre);
+//                        $resultado->put('periodo_estudio',$c->periodo_estudio);
+//                        $resultado->put('aprobadas',$aprobadas->aprobadas);
+//                        $resultado->put('no_aprobadas',$no_aprobadas->no_aprobadas);
+                        $resultados->push(['id'=>$c->id,
+                                           'nombre'=>$c->nombre,
+                                           'periodo_estudio'=>$c->periodo_estudio,
+                                           'aprobadas'=>$aprobadas->aprobadas,
+                                           'no_aprobadas'=>$no_aprobadas->no_aprobadas]);
+                    }
+                    
+                    
+		}	
+		
 		//dd($clientes->toArray());
-		return view('inscripcions.reinscripcion', compact('clientes'))
+                //dd($resultados);
+		return view('inscripcions.reinscripcion', compact('resultados'))
 			->with( 'list', Hacademica::getListFromAllRelationApps() );
 	}
         

@@ -79,21 +79,23 @@
                     </div>
                 </div>
                 
-                @if(isset($clientes))
+                @if(isset($resultados))
                 <table class="table table-condensed table-striped">
                     <thead>
                         <tr>
                             <td><input type="checkbox" id="select-all" /> Todos<br/></td>
-                            <td>Cliente</td><td>Periodo Estudios</td><td>Aprobadas</td>
+                            <td>Cliente</td><td>Periodo Estudios</td><td>Aprobadas</td><td>No Aprobadas</td>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($clientes as $c)
+                        
+                        @foreach($resultados as $c)
                         <tr>
-                            <td>{{ Form::checkbox("id[]", $c->id) }}</td>
-                            <td>{{ $c->nombre }}</td>
-                            <td>{{ $c->periodo_estudio }}</td>
-                            <td> {{ $c->materias_aprobadas }} </td>
+                            <td>{{ Form::checkbox("id[]", $c['id']) }}</td>
+                            <td>{{ $c['nombre'] }}</td>
+                            <td>{{ $c['periodo_estudio'] }}</td>
+                            <td> {{ $c['aprobadas'] }} </td>
+                            <td> {{ $c['no_aprobadas'] }} </td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -154,10 +156,13 @@
       getCmbNivel();
       getCmbGrado();
       getCmbGrupo();
-
+      getCmbGrupoTo();
+      getCmbPeriodoEstudios();
+      peri=$('#periodo_estudios_to-field option:selected').val();
 
       $('#plantel_id-field').change(function(){
           getCmbGrupo();
+          getCmbGrupoTo();
       });
       
       $('#grupo_to-field').change(function(){
@@ -195,7 +200,8 @@
               $.ajax({
                   url: '{{ route("grupos.cbmPeriodosEstudio") }}',
                   type: 'GET',
-                  data: "grupo=" + $('#grupo_to-field option:selected').val(),
+                  data: "grupo=" + $('#grupo_to-field option:selected').val()+
+                        "&periodo=" + $('#periodo_estudios_to-field option:selected').val(),
                   dataType: 'json',
                   beforeSend : function(){$("#loading13").show();},
                   complete : function(){$("#loading13").hide();},
@@ -227,13 +233,39 @@
                   success: function(data){
                       //$example.select2("destroy");
                       $('#grupo_id-field').html('');
-                      $('#grupo_to-field').html('');
+                      
                       //$('#especialidad_id-field').empty();
                       $('#grupo_id-field').append($('<option></option>').text('Seleccionar').val('0'));
-                      $('#grupo_to-field').append($('<option></option>').text('Seleccionar').val('0'));
+                      
                       $.each(data, function(i) {
                           //alert(data[i].name);
                           $('#grupo_id-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                      
+                      });
+                      //$example.select2();
+                  }
+              });       
+      }
+      function getCmbGrupoTo(){
+          //var $example = $("#especialidad_id-field").select2();
+          var a= $('#frm_academica').serialize();
+              $.ajax({
+                  url: '{{ route("grupos.getCmbGrupo") }}',
+                  type: 'GET',
+                  data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&grupo_id=" + $('#grupo_to-field option:selected').val() + "",
+                  dataType: 'json',
+                  beforeSend : function(){$("#loading13").show();},
+                  complete : function(){$("#loading13").hide();},
+                  success: function(data){
+                      //$example.select2("destroy");
+                      
+                      $('#grupo_to-field').html('');
+                      //$('#especialidad_id-field').empty();
+                      
+                      $('#grupo_to-field').append($('<option></option>').text('Seleccionar').val('0'));
+                      $.each(data, function(i) {
+                          //alert(data[i].name);
+                       
                           $('#grupo_to-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
                       });
                       //$example.select2();
