@@ -53,6 +53,7 @@
   <script type="text/javascript">
     
     $(document).ready(function() {
+        getCmbMateria();
         $('#plantel_id-field').change(function(){
           getCmbMateria();
       });
@@ -63,23 +64,24 @@
               $.ajax({
                   url: '{{ route("materias.getCmbMateria") }}',
                   type: 'GET',
-                  data: "plantel_id=" + $('#plantel_id-field option:selected').val(),
+                  data: "plantel_id=" + $('#plantel_id-field option:selected').val()+
+                  "&materium_id="+$('#serie_anterior-field option:selected').val(),
                   dataType: 'json',
                   beforeSend : function(){$("#loading3").show();},
                   complete : function(){$("#loading3").hide();},
                   success: function(data){
                       //$example.select2("destroy");
-                      $('#serie_anterior-field').html('');
-                      
+                      //$('#serie_anterior-field').html('');
+                      $('#serie_anterior-field').empty();
                       //$('#especialidad_id-field').empty();
-                      $('#serie_anterior').append($('<option></option>').text('Seleccionar Opción').val('0'));
+                      $('#serie_anterior-field').append($('<option></option>').text('Seleccionar Opción').val('0'));
                       
                       $.each(data, function(i) {
                           //alert(data[i].name);
                           $('#serie_anterior-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
                           
                       });
-                      //$example.select2();
+                      $('#serie_anterior-field').change();
                   }
               });       
       }

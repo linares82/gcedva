@@ -388,6 +388,13 @@
                                 {{$adeudo->monto}}
                                 <input class='monto_editable form-control' value='{{$adeudo->monto}}' data-id="{{$adeudo->id}}"></input>
                             </td>
+                            <td>
+                                @permission('adeudos.destroy')
+                                    {!! Form::model($adeudo, array('route' => array('adeudos.destroy', $adeudo->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}
+                                        <button type="submit" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> Borrar</button>
+                                    {!! Form::close() !!}
+                                    @endpermission
+                            </td>
                             <td>{{$adeudo->fecha_pago}}</td>
                             
                             <td class="bg-gray">

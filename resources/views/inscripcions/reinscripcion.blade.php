@@ -79,6 +79,26 @@
                     </div>
                 </div>
                 
+                @if(isset($clientes))
+                <table class="table table-condensed table-striped">
+                    <thead>
+                        <tr>
+                            <td><input type="checkbox" id="select-all" /> Todos<br/></td>
+                            <td>Cliente</td><td>Periodo Estudios</td><td>Aprobadas</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($clientes as $c)
+                        <tr>
+                            <td>{{ Form::checkbox("id[]", $c->id) }}</td>
+                            <td>{{ $c->nombre }}</td>
+                            <td>{{ $c->periodo_estudio }}</td>
+                            <td> {{ $c->materias_aprobadas }} </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+                
                 <div class="box box-warning box-solid">
                 <div class="box-header">
                     <h3 class="box-title">A</h3>
@@ -94,6 +114,13 @@
                             <span class="help-block">{{ $errors->first("grupo_to") }}</span>
                             @endif
                         </div>
+                        <div class="form-group col-md-4 @if($errors->has('periodo_estudios_to')) has-error @endif">
+                            <label for="periodo_estudios_to-field" id="lbl_disponibles">Perido Estudios </label>
+                            {!! Form::select("periodo_estudios_to", array(), null, array("class" => "form-control select_seguridad", "id" => "periodo_estudios_to-field")) !!}
+                            @if($errors->has("periodo_estudios_to"))
+                            <span class="help-block">{{ $errors->first("periodo_estudios_to") }}</span>
+                            @endif
+                        </div>
                         <div class="form-group col-md-4 @if($errors->has('lectivo_to')) has-error @endif">
                             <label for="lectivo_to-field">A Periodo Lectivo</label>
                             {!! Form::select("lectivo_to", $list["Lectivo"], null, array("class" => "form-control select_seguridad", "id" => "lectivo_to-field")) !!}
@@ -101,33 +128,19 @@
                             <span class="help-block">{{ $errors->first("lectivo_to") }}</span>
                             @endif
                         </div>
-                        <div class="row">
+                        
+                    </div>
+                </div>
+                @endif
+            
+                <div class="row">
                         </div>
                         <div class="well well-sm">
                             <button type="submit" class="btn btn-primary">Procesar</button>
                             <a class="btn btn-link pull-right" href="{{ route('inscripcions.index') }}"><i class="glyphicon glyphicon-backward"></i> Regresar</a>
                         </div>
-                    </div>
-                </div>
-                @if(isset($clientes))
-                <table class="table table-condensed table-striped">
-                    <thead>
-                        <tr>
-                            <td><input type="checkbox" id="select-all" /> Todos<br/></td>
-                            <td>Cliente</td><td>Aprobadas</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($clientes as $c)
-                        <tr>
-                            <td>{{ Form::checkbox("id[]", $c->id) }}</td>
-                            <td>{{ $c->nombre }}</td>
-                            <td> {{ $c->materias_aprobadas }} </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-                @endif
+                
+                
             {!! Form::close() !!}
         </div>
     </div>
@@ -145,6 +158,10 @@
 
       $('#plantel_id-field').change(function(){
           getCmbGrupo();
+      });
+      
+      $('#grupo_to-field').change(function(){
+          getCmbPeriodoEstudios();
       });
 
       //$("tr td").parent().addClass('has-sub');
@@ -172,6 +189,31 @@
         });
 
     });
+    function getCmbPeriodoEstudios(){
+          //var $example = $("#especialidad_id-field").select2();
+          
+              $.ajax({
+                  url: '{{ route("grupos.cbmPeriodosEstudio") }}',
+                  type: 'GET',
+                  data: "grupo=" + $('#grupo_to-field option:selected').val(),
+                  dataType: 'json',
+                  beforeSend : function(){$("#loading13").show();},
+                  complete : function(){$("#loading13").hide();},
+                  success: function(data){
+                      //$example.select2("destroy");
+                      $('#periodo_estudios_to-field').empty('');
+                      
+                      //$('#especialidad_id-field').empty();
+                      $('#periodo_estudios_to-field').append($('<option></option>').text('Seleccionar').val('0'));
+                      $.each(data, function(i) {
+                          //alert(data[i].name);
+                          $('#periodo_estudios_to-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                          
+                      });
+                      //$example.select2();
+                  }
+              });       
+      }
     function getCmbGrupo(){
           //var $example = $("#especialidad_id-field").select2();
           var a= $('#frm_academica').serialize();

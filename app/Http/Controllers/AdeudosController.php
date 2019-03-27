@@ -5,6 +5,8 @@ use App\Http\Controllers\Controller;
 
 use App\Adeudo;
 use App\Cliente;
+use App\Caja;
+use App\CajaLn;
 use App\Empleado;
 use App\Plantel;
 use App\CombinacionCliente;
@@ -127,7 +129,12 @@ class AdeudosController extends Controller {
 		$adeudo=$adeudo->find($id);
 		$adeudo->delete();
 
-		return redirect()->route('adeudos.index')->with('message', 'Registro Borrado.');
+                $cliente=Cliente::find($adeudo->cliente_id);
+                $combinaciones=CombinacionCliente::where('cliente_id', '=', $cliente->id)->get();
+                
+		return view('cajas.caja', compact('cliente', 'combinaciones'))
+                        ->with( 'list', Caja::getListFromAllRelationApps() )
+                        ->with( 'list1', CajaLn::getListFromAllRelationApps() );           
 	}
         
         public function imprimirInicial(Request $request){
@@ -265,5 +272,85 @@ class AdeudosController extends Controller {
             $adeudo->monto=$datos['monto'];
             $adeudo->save();
             echo json_encode(array('monto'=>$datos['monto']));
+        }
+        
+        public function cambiarPlanPagos(Request $request){
+            $data=$request->all();
+            $adeudos_sin_pagar=Adeudo::where('cliente_id',$data['cliente'])
+                                     ->where('pagado_bnd',0)
+                                     ->delete();
+            $mensualidades_pagadas=Adeudo::where('cliente_id',$data['cliente'])
+                                         ->where('pagado_bnd',1)
+                                         ->join('caja_conceptos as cc','cc.id','=','adeudos.caja_concepto_id')
+                                         ->where('cc.bnd_mensualidad',1)
+                                         ->get();
+            
+            $cliente=Cliente::find($data['cliente']);
+            //$cliente->st_cliente_id=22;
+            //$cliente->save();
+            $plantel=Plantel::find($cliente->plantel_id);
+            $combinacion=CombinacionCliente::find($data['combinacion']);
+            $combinacion->cuenta_ticket_pago=1;
+            $combinacion->save();
+            $i=0;
+            $descarte_inicial=0;
+            foreach($combinacion->planPago->Lineas as $adeudo){
+                //conceptos diferentes de mensualidad, se ignoran los ´primeros 3
+                //if($adeudo->cajaConcepto->bnd_mensualidad<>1 and $descarte_inicial>3){
+                    $registro['cliente_id']=$cliente->id;
+                    $registro['caja_id']=0;
+                    $registro['combinacion_cliente_id']=$combinacion->id;
+                    $registro['caja_concepto_id']=$adeudo->caja_concepto_id;
+                    $registro['cuenta_contable_id']=$adeudo->cuenta_contable_id;
+                    $registro['cuenta_recargo_id']=$adeudo->cuenta_recargo_id;
+                    $registro['fecha_pago']=$adeudo->fecha_pago;
+                    $registro['monto']=$adeudo->monto;
+                    $registro['inicial_bnd']=$adeudo->inicial_bnd;
+                    $registro['pagado_bnd']=0;
+                    $registro['plan_pago_ln_id']=$adeudo->id;
+                    $registro['usu_alta_id']=Auth::user()->id;
+                    $registro['usu_mod_id']=Auth::user()->id;
+                    //dd($registro);
+                    Adeudo::create( $registro );
+                    //$descarte_inicial++;
+                    //Mensualidadaes se descarta la misma cantidad que ya se haya pagado en el plan anterior
+                /*}elseif($adeudo->cajaConcepto->bnd_mensualidad==1 and $i>count($mensualidades_pagadas)){
+                    $registro['cliente_id']=$cliente->id;
+                    $registro['caja_id']=0;
+                    $registro['combinacion_cliente_id']=$combinacion->id;
+                    $registro['caja_concepto_id']=$adeudo->caja_concepto_id;
+                    $registro['cuenta_contable_id']=$adeudo->cuenta_contable_id;
+                    $registro['cuenta_recargo_id']=$adeudo->cuenta_recargo_id;
+                    $registro['fecha_pago']=$adeudo->fecha_pago;
+                    $registro['monto']=$adeudo->monto;
+                    $registro['inicial_bnd']=$adeudo->inicial_bnd;
+                    $registro['pagado_bnd']=0;
+                    $registro['plan_pago_ln_id']=$adeudo->id;
+                    $registro['usu_alta_id']=Auth::user()->id;
+                    $registro['usu_mod_id']=Auth::user()->id;
+                    //dd($registro);
+                    Adeudo::create( $registro );
+                    $i++;
+                } */                   
+            }
+            
+            //$combinacion->cuenta_ticket_pago=$combinacion->cuenta_ticket_pago+1;
+            $combinacion->save();
+            
+            //$adeudos=Adeudo::where('cliente_id', '=', $cliente->id)->where('combinacion_cliente_id', '=', $combinacion->id)->get();
+            //$empleado=Empleado::where('user_id', '=', Auth::user()->id)->first();
+            //$carbon = new \Carbon\Carbon();
+            //$date = $carbon->now();
+            //$date = $date->format('d-m-Y h:i:s');
+            
+            //dd($adeudo->toArray());
+            /*return view('adeudos.ticket_adeudo_inicial', array('cliente'=>$cliente, 
+                                                               'adeudos'=>$adeudos, 
+                                                               'empleado'=>$empleado, 
+                                                               'fecha'=>$date,
+                                                               'combinacion'=>$combinacion,
+                                                               'plantel'=>$plantel ));
+            */
+            return redirect()->route('clientes.edit', $cliente->id)->with('message', 'Registro Creado.')->with('list', Cliente::getListFromAllRelationApps());
         }
 }

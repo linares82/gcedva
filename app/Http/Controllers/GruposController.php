@@ -191,5 +191,38 @@ class GruposController extends Controller {
 
             return redirect()->route('grupos.edit', $g)->with('message', 'Registro Actualizado.');
         }
-      
+
+    public function cbmPeriodosEstudio(Request $request){
+        $datos=$request->all();
+        if($request->ajax()){
+			//dd($request->get('plantel_id'));
+			$grupo=$request->get('grupo');			
+			$final = array();
+			$r = DB::table('grupos as g')
+                                        ->join('grupo_periodo_estudios as gp','gp.grupo_id','=','g.id')
+                                        ->join('periodo_estudios as p','p.id','=','gp.periodo_estudio_id')
+					->select('p.id', 'p.name')
+					->where('g.id', '=', $grupo)					
+					->where('g.id', '>', '0')
+					->get();
+			//dd($r);
+			if(isset($grupo) and $grupo<>0){
+				foreach($r as $r1){
+					if($r1->id==$grupo){
+						array_push($final, array('id'=>$r1->id, 
+												 'name'=>$r1->name, 
+												 'selectec'=>'Selected'));
+					}else{
+						array_push($final, array('id'=>$r1->id, 
+												 'name'=>$r1->name, 
+												 'selectec'=>''));
+					}
+				}
+				return $final;
+			}else{
+				return $r;	
+			}
+			
+		}
+    }
 }

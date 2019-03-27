@@ -222,13 +222,14 @@ class InscripcionsController extends Controller {
 		//dd($input);
 		if(isset($input['plantel_id']) and isset($input['lectivo_id']) and isset($input['grupo_id'])){
 			$clientes=Cliente::join('inscripcions as i', 'i.cliente_id', '=', 'clientes.id')
+                                                ->join('periodo_estudios as p','p.id','=','i.periodo_estudio_id')
 						->join('hacademicas as h', 'h.inscripcion_id', 'i.id')
-						->join('calificacions as c', 'c.hacademica_id', '=', 'h.id')
+						//->join('calificacions as c', 'c.hacademica_id', '=', 'h.id')
 						->join('materia as m', 'm.id', 'h.materium_id')
 						->join('grados as g', 'g.id', 'h.grado_id')
-						->select('i.id',
-								 DB::raw('concat(clientes.nombre," ",clientes.nombre2," ",clientes.ape_paterno," ",clientes.ape_materno) as nombre'),
-								 DB::raw('count(m.name) as materias_aprobadas'))
+						->select('i.id','p.name as periodo_estudio', 
+                                                        DB::raw('concat(clientes.nombre," ",clientes.nombre2," ",clientes.ape_paterno," ",clientes.ape_materno) as nombre'),
+                                                        DB::raw('count(h.materium_id) as materias_aprobadas'))
 						->where('i.plantel_id', '=', $input['plantel_id'])
 						->where('i.especialidad_id', '=', $input['especialidad_id'])
 						->where('i.nivel_id', '=', $input['nivel_id'])
@@ -236,16 +237,19 @@ class InscripcionsController extends Controller {
 						->where('i.lectivo_id', '=', $input['lectivo_id'])
 						->where('i.plantel_id', '=', $input['plantel_id'])
 						->where('h.st_materium_id', '=', 1)
-						->groupBy('nombre', 'nombre2', 'ape_paterno', 'ape_materno', 'i.id')
+						->groupBy('nombre', 'nombre2', 'ape_paterno', 'ape_materno', 'i.id','p.name')
 						->get();
 		}	
 		if(isset($input['id']) and isset($input['grupo_to']) and isset($input['lectivo_to'])){
+                        
+                                
 			foreach($input['id'] as $key=>$value){
 				$id=$value;
 				$posicion=$key;
 				$i=Inscripcion::find($id);
 				$i->grupo_id=$input['grupo_to'];
 				$i->lectivo_id=$input['lectivo_to'];
+                                $i->periodo_estudio_id=$input['periodo_estudios_to'];
 				$i->save();
 				$this->registrarMaterias($id);
 			}

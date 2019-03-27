@@ -298,12 +298,16 @@
                                             @if(count($cliente->cajas)==0 and count($cliente->adeudos)>0)
                                                 <a href="{{route('adeudos.destroyAll', array('cliente'=>$cliente->id, 'combinacion'=>$c->id))}}" class="btn btn-xs btn-primary" >Eliminar Adeudos(Sin Inf. en Caja)</a>
                                             @endif
+                                            @permission('adeudos.cambiarPlanPagos') 
+                                            <a href="{!! route('adeudos.cambiarPlanPagos', array('cliente'=>$cliente->id, 'combinacion'=>$c->id)) !!}" class="btn btn-xs btn-warning">Ajustar Adeudos segun Plan</a>
+                                            @endpermission
                                         </td>
                                         <td>
-                                            @permission('inscripcions.create')
-                                            <td> <a href="{!! route('combinacionClientes.destroy', $c->id) !!}" class="btn btn-xs btn-block btn-danger">Eliminar</a>
-                                            <input type="button" class="btn btn-xs btn-block btn-primary" value="Inscribir" onclick="Inscribir({{$c->cliente_id}},{{$c->plantel_id}},{{$c->especialidad_id}},{{$c->nivel_id}},{{$c->grado_id}},{{$c->turno_id}})" />
+                                            @permission('inscripcions.create') 
+                                                <a href="{!! route('combinacionClientes.destroy', $c->id) !!}" class="btn btn-xs btn-block btn-danger">Eliminar</a>
+                                                <input type="button" class="btn btn-xs btn-block btn-primary" value="Inscribir" onclick="Inscribir({{$c->cliente_id}},{{$c->plantel_id}},{{$c->especialidad_id}},{{$c->nivel_id}},{{$c->grado_id}},{{$c->turno_id}})" />
                                             @endpermission
+                                            
                                         </td>
                                     </tr>
                                     @endif

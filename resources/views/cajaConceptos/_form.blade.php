@@ -26,3 +26,10 @@
                         <span class="help-block">{{ $errors->first("activo") }}</span>
                        @endif
                     </div>
+                    <div class="form-group col-md-4 @if($errors->has('bnd_mensualidad')) has-error @endif">
+                       <label for="bnd_mensualidad-field">Mensualidad</label>
+                       {!! Form::checkbox("bnd_mensualidad", 1, null, [ "id" => "bnd_mensualidad-field"]) !!}
+                       @if($errors->has("bnd_mensualidad"))
+                        <span class="help-block">{{ $errors->first("bnd_mensualidad") }}</span>
+                       @endif
+                    </div>

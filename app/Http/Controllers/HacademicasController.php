@@ -308,35 +308,39 @@ class HacademicasController extends Controller {
                     ->where('h.materium_id', '=', $input['materium_id'])
                     ->where('h.deleted_at', '=', null)
                     ->first();
+            $calificacion_extraordinaria=Calificacion::where('hacademica_id',$h->id)->where('tpo_examen_id',2)->first();
+                    
 
             //dd($h->id);
-            $c = new Calificacion;
-            $c->hacademica_id = $h->id;
-            $c->tpo_examen_id = $input['examen_id'];
-            $c->calificacion = 0;
-            $c->fecha = date('Y-m-d');
-            $c->reporte_bnd = 0;
-            if (isset($input['reporte_bnd'])) {
-                $c->reporte_bnd = 1;
-            }
-            $c->usu_alta_id = Auth::user()->id;
-            $c->usu_mod_id = Auth::user()->id;
-            $c->save();
+            if(!is_object($calificacion_extraordinaria)){
+                $c = new Calificacion;
+                $c->hacademica_id = $h->id;
+                $c->tpo_examen_id = $input['examen_id'];
+                $c->calificacion = 0;
+                $c->fecha = date('Y-m-d');
+                $c->reporte_bnd = 0;
+                if (isset($input['reporte_bnd'])) {
+                    $c->reporte_bnd = 1;
+                }
+                $c->usu_alta_id = Auth::user()->id;
+                $c->usu_mod_id = Auth::user()->id;
+                $c->save();
 
-            $g = Grado::find($input['grado_id'])->first();
-            if ($input['examen_id'] == 2 and $g->name == "BACHILLERATO") {
-                $ponderaciones = CargaPonderacion::where('ponderacion_id', '=', 1)->get();
-            } elseif ($input['examen_id'] == 2 and $g->name <> "BACHILLERATO") {
-                $ponderaciones = CargaPonderacion::where('ponderacion_id', '=', 2)->get();
-            }
-            foreach ($ponderaciones as $p) {
-                $ponde['calificacion_id'] = $c->id;
-                $ponde['carga_ponderacion_id'] = $p->id;
-                $ponde['calificacion_parcial'] = 0;
-                $ponde['ponderacion'] = $p->porcentaje;
-                $ponde['usu_alta_id'] = Auth::user()->id;
-                $ponde['usu_mod_id'] = Auth::user()->id;
-                CalificacionPonderacion::create($ponde);
+                $g = Grado::find($input['grado_id'])->first();
+                if ($input['examen_id'] == 2 and $g->name == "BACHILLERATO") {
+                    $ponderaciones = CargaPonderacion::where('ponderacion_id', '=', 1)->get();
+                } elseif ($input['examen_id'] == 2 and $g->name <> "BACHILLERATO") {
+                    $ponderaciones = CargaPonderacion::where('ponderacion_id', '=', 2)->get();
+                }
+                foreach ($ponderaciones as $p) {
+                    $ponde['calificacion_id'] = $c->id;
+                    $ponde['carga_ponderacion_id'] = $p->id;
+                    $ponde['calificacion_parcial'] = 0;
+                    $ponde['ponderacion'] = $p->porcentaje;
+                    $ponde['usu_alta_id'] = Auth::user()->id;
+                    $ponde['usu_mod_id'] = Auth::user()->id;
+                    CalificacionPonderacion::create($ponde);
+                }
             }
         }
         /* if(isset($input['cve_alumno']) and isset($input['grado_id']) and isset($input['materium_id'])){
