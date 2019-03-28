@@ -62,6 +62,7 @@ return array(
     'AddPeriodoEstudioFInscricionsTable' => $baseDir . '/database/migrations/2017_12_11_084732_add_periodo_estudio_f_inscricions_table.php',
     'AddPeriodoEstudioIInscricionsTable' => $baseDir . '/database/migrations/2017_12_11_084742_add_periodo_estudio_i_inscricions_table.php',
     'AddPeriodoFechasAsignacionAcademicasTable' => $baseDir . '/database/migrations/2018_09_03_121715_add_periodo_fechas_asignacion_academicas_table.php',
+    'AddPlanInscripcionsTable' => $baseDir . '/database/migrations/2019_03_28_131419_add_plan_inscripcions_table.php',
     'AddPlanPagoCombinacionTable' => $baseDir . '/database/migrations/2018_04_09_085152_add_plan_pago_combinacion_table.php',
     'AddPlantelEspecialidadTable' => $baseDir . '/database/migrations/2017_08_11_142022_add_plantel_especialidad_table.php',
     'AddPrecioOnlineGradosTable' => $baseDir . '/database/migrations/2018_12_14_113731_add_precio_online_grados_table.php',

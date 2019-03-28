@@ -681,6 +681,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'AddPeriodoEstudioFInscricionsTable' => __DIR__ . '/../..' . '/database/migrations/2017_12_11_084732_add_periodo_estudio_f_inscricions_table.php',
         'AddPeriodoEstudioIInscricionsTable' => __DIR__ . '/../..' . '/database/migrations/2017_12_11_084742_add_periodo_estudio_i_inscricions_table.php',
         'AddPeriodoFechasAsignacionAcademicasTable' => __DIR__ . '/../..' . '/database/migrations/2018_09_03_121715_add_periodo_fechas_asignacion_academicas_table.php',
+        'AddPlanInscripcionsTable' => __DIR__ . '/../..' . '/database/migrations/2019_03_28_131419_add_plan_inscripcions_table.php',
         'AddPlanPagoCombinacionTable' => __DIR__ . '/../..' . '/database/migrations/2018_04_09_085152_add_plan_pago_combinacion_table.php',
         'AddPlantelEspecialidadTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_11_142022_add_plantel_especialidad_table.php',
         'AddPrecioOnlineGradosTable' => __DIR__ . '/../..' . '/database/migrations/2018_12_14_113731_add_precio_online_grados_table.php',

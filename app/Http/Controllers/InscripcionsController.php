@@ -16,6 +16,8 @@ use App\Materium;
 use App\Mese;
 use App\Calificacion;
 use App\Ponderacion;
+use App\Pago;
+use App\Plantel;
 use App\CalificacionPonderacion;
 use App\CargaPonderacion;
 use App\PeriodoEstudio;
@@ -603,6 +605,54 @@ class InscripcionsController extends Controller {
                                                                                  'carga_ponderacions_enc'=>$carga_ponderacion,
                                                                                  'asignacion'=>$asignacion,
                                                                                  'contador'=>$contador,
+                                                                                 'data'=>$data));
+	}
+        
+        public function InscritosUnPago()
+	{
+                
+		return view('inscripcions.reportes.inscritosUnPago')
+			->with( 'list', Inscripcion::getListFromAllRelationApps() );
+	}
+        
+        public function InscritosUnPagoR(Request $request)
+	{
+                $data=$request->all();
+                $plantel=Plantel::find($data['plantel_f']);
+                //dd($data);
+                $registros= Inscripcion::select(DB::raw('concat(e.nombre, " ",e.ape_paterno, " ",e.ape_materno) as colaborador, '
+                        . 'concat(c.nombre," ",c.nombre2," ",c.ape_paterno," ",c.ape_materno) as cliente, caj.id as caja'))
+                            ->join('clientes as c', 'c.id', '=', 'inscripcions.cliente_id')
+                            ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
+                            ->join('cajas as caj','caj.cliente_id','=','c.id')
+                            ->join('caja_lns as clns','clns.caja_id','=','caj.id')
+                            ->join('caja_conceptos as cc','cc.id','=','clns.caja_concepto_id')
+                            ->join('pagos as p','p.caja_id','=','caj.id')
+                            ->where('inscripcions.plantel_id', $data['plantel_f'])
+                            ->where('p.fecha','>=',$data['fecha_f'])
+                            ->where('p.fecha','<=',$data['fecha_t'])
+                            //->where('c.empleado_id', $data['empleado_f'])
+                            ->whereIn('caj.st_caja_id',[1,3])
+                            ->where(function ($query) {
+                                 $query->orWhere('cc.name','LIKE','INSCRIP%')
+                                       ->orWhere('cc.name','LIKE','SEGUR%')
+                                       ->orWhere('cc.name','LIKE','UNIFORM%');  
+                             })
+                            ->orderBy('colaborador')
+                            ->distinct()
+                            ->get();
+                //dd($registros->toArray());
+                                        
+                                        
+                /*
+                PDF::setOptions(['defaultFont' => 'arial']);
+
+                $pdf = PDF::loadView('inscripcions.reportes.lista_calificacionesr', array('registros'=>$registros,'carga_ponderacions_enc'=>$carga_ponderacion))
+                        ->setPaper('legal', 'landscape');
+                return $pdf->download('reporte.pdf');
+                */
+                return view('inscripcions.reportes.inscritosUnPagoR', array('registros'=>$registros,
+                                                                                 'plantel'=>$plantel,
                                                                                  'data'=>$data));
 	}
 }

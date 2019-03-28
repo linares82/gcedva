@@ -407,5 +407,51 @@ class EmpleadosController extends Controller {
             }
         }
     }
+    
+    public function getAsesoresXplantel(Request $request) {
+        if ($request->ajax()) {
+            //dd($request->all());
+            $input=$request->all();
+            if(isset($input['asignacion_academicas.empleado_id_lt'])){
+                $plantel = $request->get('plantel_id');
+                $empleado = $input['q']['asignacion_academicas.empleado_id_lt'];
+            }else{
+                $plantel = $request->get('plantel_id');
+                $empleado = $request->get('empleado_id');
+            }
+
+            $final = array();
+            $r = DB::table('empleados as e')
+                    ->select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as nombre'))
+                    ->where('e.plantel_id', '=', $plantel)
+                    ->where('puesto_id',2)
+                    ->where('e.id', '>', '0')
+                    ->get();
+
+            //dd($r);
+            if (isset($empleado) and $empleado <> 0) {
+                foreach ($r as $r1) {
+                    if ($r1->id == $empleado) {
+                        array_push($final, array('id' => $r1->id,
+                            'nombre' => $r1->nombre,
+                            'selectec' => 'Selected'));
+                    } else {
+                        array_push($final, array('id' => $r1->id,
+                            'nombre' => $r1->nombre,
+                            'selectec' => ''));
+                    }
+                }
+                return $final;
+            } else {
+                foreach ($r as $r1) {
+                    array_push($final, array('id' => $r1->id,
+                        'nombre' => $r1->nombre,
+                        'selectec' => ''));
+                }
+                return $final;
+                
+            }
+        }
+    }
 
 }
