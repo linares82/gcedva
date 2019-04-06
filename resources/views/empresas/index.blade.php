@@ -165,6 +165,9 @@
                                     <a class="btn btn-xs btn-primary" href="{{ route('empresas.duplicate', $empresa->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>
                                     @endpermission
                                     @permission('empresas.edit')
+                                    <a class="btn btn-xs btn-info" href="{{ route('cotizacionCursos.cotizacionesEmpresa', array('empresa'=>$empresa->id)) }}"><i class="glyphicon glyphicon-duplicate"></i> Cotizaciones</a>
+                                    @endpermission
+                                    @permission('empresas.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('empresas.edit', $empresa->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
                                     @endpermission
                                     @permission('empresas.edit')
