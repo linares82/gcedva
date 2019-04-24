@@ -264,7 +264,7 @@
             <div class="box-body no-padding">
                 <div class="box-header with-border">
                     @if(isset($caja))
-                    <lable><strong>Ticket Parcial</strong></label>
+                    <lable><strong>Pagos</strong></label>
                     <div class="box-tools pull-right">
                         <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
                     </div><!-- /.box-tools -->

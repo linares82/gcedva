@@ -631,8 +631,9 @@ class CajasController extends Controller {
         $resultado=Caja::select(DB::raw('sum(cajas.total) as total_cajas, p.razon ,fm.name as forma_pago'))
                        ->join('forma_pagos as fm', 'fm.id', '=', 'cajas.forma_pago_id')
                        ->join('plantels as p', 'p.id', '=', 'cajas.plantel_id')
-                       ->where('fecha','>=', $data['fecha_f'])
-                       ->where('fecha','<=', $data['fecha_t'])
+                       ->join('pagos as pag','pag.caja_id','=','cajas.id')
+                       ->where('pag.fecha','>=', $data['fecha_f'])
+                       ->where('pag.fecha','<=', $data['fecha_t'])
                        ->where('p.id','>=', $data['plantel_f'])
                        ->where('p.id','<=', $data['plantel_t'])
                        ->groupBy('p.razon')
@@ -644,7 +645,7 @@ class CajasController extends Controller {
         $pdf = PDF::loadView('cajas.reportes.ingresosPlantelFormaPagoR', array('resultado' => $resultado))
                 ->setPaper('letter', 'portrait');
         return $pdf->download('reporte.pdf');*/
-        return view('cajas.reportes.ingresosPlantelFormaPagoR', array('resultado' => $resultado));
+        return view('cajas.reportes.ingresosPlantelFormaPagoR', array('resultado' => $resultado, 'datos'=>$data));
     }
     
     public function eliminarRecargo(Request $request){

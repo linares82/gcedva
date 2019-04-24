@@ -60,6 +60,12 @@ return [
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
         ],
+        'cotizaciones' => [
+            'driver' => 'local',
+            'root' => storage_path('pdf/cotizaciones'),
+            'url' => env('APP_URL').'/storage/pdf/cotizaciones',
+            'visibility' => 'public',
+        ],
 
         'local' => [
             'driver' => 'local',

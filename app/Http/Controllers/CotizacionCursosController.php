@@ -13,6 +13,7 @@ use Auth;
 use App\Http\Requests\updateCotizacionCurso;
 use App\Http\Requests\createCotizacionCurso;
 use PDF;
+use DB;
 class CotizacionCursosController extends Controller {
 
 	/**
@@ -159,7 +160,6 @@ class CotizacionCursosController extends Controller {
         public function verCotizacion(Request $request ){
             
             $datos=$request->all();
-            //dd($datos);
             
             $cotizacion=CotizacionCurso::find($datos['cotizacion']);
             $plantel=$cotizacion->empresa->plantel;
@@ -167,18 +167,12 @@ class CotizacionCursosController extends Controller {
                 return view('cotizacionCursos.reportes.cotizacion', array('cotizacion'=>$cotizacion,
                                                                           'plantel'=>$plantel));
             
-            /*
-            PDF::setOptions(['defaultFont' => 'arial']);
-            $pdf = PDF::loadView('inscripcions.reportes.lista_alumnosr', array('registros'=>$registros,'fechas_enc'=>$fechas))
-                    ->setPaper('legal', 'landscape');
-            return $pdf->download('reporte.pdf');
-             * */
             }else{
                 return view('cotizacionCursos.reportes.cotizacion2', array('cotizacion'=>$cotizacion,
                                                                           'plantel'=>$plantel));
             }
             
-             
+            
         }
         
         public function verCotizacionPdf(Request $request){
@@ -188,7 +182,8 @@ class CotizacionCursosController extends Controller {
             $cotizacion=CotizacionCurso::find($datos['cotizacion']);
             $plantel=$cotizacion->empresa->plantel;
             
-            
+            //$ruta=storage_path('pdf\cotizaciones');
+            //return redirect('correos/redactar'.'/'.$cotizacion->empresa->correo1.'/'.$cotizacion->empresa->nombre_contacto.'/1');
             if($datos['vista']==1){
                 /*return view('cotizacionCursos.reportes.cotizacion', array('cotizacion'=>$cotizacion,
                                                                           'plantel'=>$plantel));
@@ -198,6 +193,7 @@ class CotizacionCursosController extends Controller {
                                                                           'plantel'=>$plantel))
                     ->setPaper('letter', 'portrait');
             return $pdf->download('reporte.pdf');
+              
             }else{
                 PDF::setOptions(['defaultFont' => 'arial']);
             $pdf = PDF::loadView('cotizacionCursos.reportes.cotizacion2', array('cotizacion'=>$cotizacion,
@@ -209,5 +205,32 @@ class CotizacionCursosController extends Controller {
             
         }
         
+        public function comisiones(){
+            
+		return view('cotizacionCursos.reportes.comisiones',compact(''))
+			->with( 'list', Empresa::getListFromAllRelationApps() );
+        }
         
+        public function comisionesR(Request $request){
+            $data=$request->all();
+                //dd($data);
+                
+                $comisiones=Empresa::select(DB::raw('concat(e.nombre," ",e.ape_paterno," ",e.ape_materno) as empleado'),'empresas.razon_social','g.name as giro',
+                                            'cu.name as curso','ln.total as precio_cotizado','ln.descuento as porcentaje_autorizado',
+                                            DB::raw('(ln.total-(ln.total*ln.descuento)+(ln.descuento*.16)) as precio_total'),
+                                            DB::raw('concat(capacitador.nombre," ",capacitador.ape_paterno," ",capacitador.ape_materno) as capacitador'),
+                                            'fc.no_factura','fc.fecha','fc.monto')
+                                    ->join('cotizacion_cursos as cc','cc.empresa_id','=','empresas.id')
+                                    ->join('factura_cotizacions as fc','fc.cotizacion_curso_id','=','cc.id')
+                                    ->join('cotizacion_lns as ln','ln.cotizacion_curso_id','=','cc.id')
+                                    ->join('cursos_empresas as cu','cu.id','=','ln.cursos_empresa_id')
+                                    ->join('empleados as e','e.id','=','empresas.empleado_id')
+                                    ->join('empleados as capacitador','capacitador.id','=','ln.empleado_id')
+                                    ->join('giros as g','g.id','=','empresas.giro_id')
+                                    ->where('empresas.plantel_id',$data['plantel_f'])
+                                    ->where('fc.fecha','>=',$data['fecha_f'])
+                                    ->where('fc.fecha','<=',$data['fecha_t'])
+                                    ->get();
+                dd($comisiones->toArray());
+        }
 }

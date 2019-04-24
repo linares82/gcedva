@@ -57,7 +57,7 @@
 
                     <div class="form-group">
                         <textarea id="contenido_mail" name="contenido_mail" class="form-control" style="height: 200px" placeholder="escriba aquÃ­...">
-                         
+                         {{$msj}}
                         </textarea>
                     </div>
                     <div class="form-group">
@@ -166,7 +166,7 @@
 
     $(document).on("change", ".email_archivo", function (e) {
 
-        var miurl = "/correos/carga_archivo_correo";
+        var miurl = '{{url("/correos/carga_archivo_correo")}}';
         // var fileup=$("#file").val();
         var divresul = "texto_notificacion";
 

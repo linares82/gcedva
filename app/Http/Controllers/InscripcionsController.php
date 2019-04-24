@@ -83,6 +83,7 @@ class InscripcionsController extends Controller {
 		$materias_validar=Hacademica::where('grupo_id', '=', $i->grupo_id)
                                             ->where('cliente_id', '=', $i->cliente_id)
                                             ->where('grado_id', '=', $i->grado_id)
+                                            ->whereNull('deleted_at')
                                             ->get();
 		
 		//dd($materias_validar->count());
@@ -208,6 +209,13 @@ class InscripcionsController extends Controller {
                 //dd($id);
 		$cli=$inscripcion->cliente_id;
 		$inscripcion->delete();
+                $hacademicas=Hacademica::where('inscripcion_id', $inscripcion->id)->get();
+                if($hacademicas>0){
+                    foreach($hacademicas as $h){
+                        $h->delete();
+                    }
+                }
+                $hacademica->delete();
 
 		return redirect()->route('clientes.edit', $cli)->with('message', 'Registro Borrado.');
 	}
@@ -268,6 +276,7 @@ class InscripcionsController extends Controller {
 						->where('i.grupo_id', '=', $input['grupo_id'])
 						->where('i.lectivo_id', '=', $input['lectivo_id'])
 						->where('i.plantel_id', '=', $input['plantel_id'])
+                                                ->whereNull('i.deleted_at')
                                                 ->distinct()
 						->get();
                     //dd($clientes);
@@ -620,9 +629,12 @@ class InscripcionsController extends Controller {
                 $data=$request->all();
                 $plantel=Plantel::find($data['plantel_f']);
                 //dd($data);
-                $registros= Inscripcion::select(DB::raw('concat(e.nombre, " ",e.ape_paterno, " ",e.ape_materno) as colaborador, '
-                        . 'concat(c.nombre," ",c.nombre2," ",c.ape_paterno," ",c.ape_materno) as cliente, caj.id as caja'))
+                $registros= Inscripcion::select('c.id',DB::raw('concat(e.nombre, " ",e.ape_paterno, " ",e.ape_materno) as colaborador, '
+                        . 'concat(c.nombre," ",c.nombre2," ",c.ape_paterno," ",c.ape_materno) as cliente, caj.id as caja, p.fecha, m.name as medio, '
+                        . 'c.beca_bnd, esp.name as especialidad'))
                             ->join('clientes as c', 'c.id', '=', 'inscripcions.cliente_id')
+                            ->join('medios as m','m.id','=','c.medio_id')
+                            ->join('especialidads as esp','esp.id','=','inscripcions.especialidad_id')
                             ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
                             ->join('cajas as caj','caj.cliente_id','=','c.id')
                             ->join('caja_lns as clns','clns.caja_id','=','caj.id')

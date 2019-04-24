@@ -17,7 +17,7 @@
         <table class="table table-condensed table-striped">
             <thead>
                 <tr>
-                    <th>Asesor</th><th>Cliente</th>
+                    <th>Asesor</th><th>Cliente</th><th>Especialidad</th><th>Fecha</th><th>Becado</th><th>Medio</th>
                 </tr> 
             </thead>
             <tbody>
@@ -29,7 +29,7 @@
                 @foreach($registros as $registro)
                     @if($colaborador<>$registro->colaborador and $i<>0)
                     <tr>
-                        <td><strong>Suma Asesor</strong></td><td><strong>{{$i}}<strong></td>
+                        <td><strong>Suma Asesor</strong></td><td colspan="5"><strong>{{$i}}<strong></td>
                     </tr>
                     <?php 
                     $j=$i+$j;
@@ -37,7 +37,18 @@
                     ?>
                     @endif
                     <tr>
-                        <td>{{$registro->colaborador}}</td><td>{{$registro->cliente}}</td>
+                        <td>{{$registro->colaborador}}</td>
+                        <td>{{$registro->id}} - {{$registro->cliente}}</td>
+                        <td>{{$registro->especialidad}}</td>
+                        <td>{{$registro->fecha}}</td>
+                        <td>
+                            @if($registro->beca_bnd==1)
+                                SI
+                            @else
+                                NO
+                            @endif
+                        </td>
+                        <td>{{$registro->medio}}</td>
                     </tr>
                     
                     <?php 
@@ -49,10 +60,10 @@
                     $j=$i+$j;
                     ?>
                     <tr>
-                        <td><strong>Suma Asesor</strong></td><td><strong>{{$i}}<strong></td>
+                        <td><strong>Suma Asesor</strong></td><td colspan="5"><strong>{{$i}}<strong></td>
                     </tr>
                     <tr>
-                        <td><strong>Total</strong></td><td><strong>{{$j}}<strong></td>
+                        <td><strong>Total</strong></td><td colspan="5"><strong>{{$j}}<strong></td>
                     </tr>
             </tbody>
         </table>

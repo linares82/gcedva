@@ -51,6 +51,11 @@ body{
         font: normal 12px Arial, Helvetica, sans-serif; 
         border: solid 1px #2E64FE;
     }
+    
+    .titulo {
+        text-align: center;
+        
+    }
 
     tr:nth-child(even){background-color: #f2f2f2}
 
@@ -66,7 +71,8 @@ body{
 
     <div class="row">
         <div class="col-md-12">
-
+            <h2 class="titulo">Ingresos</h2>
+            <h3 class="titulo">De {{$datos['fecha_f']}} a {{$datos['fecha_t']}}</h3>
             <table class="table table-bordered table-striped dataTable">
                 <thead>
                     <tr>

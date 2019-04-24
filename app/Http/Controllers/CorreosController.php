@@ -120,11 +120,12 @@ class CorreosController extends Controller {
         return redirect()->route('correos.index')->with('message', 'Registro Borrado.');
     }
 
-    public function redactar($mail="Sin correo", $nombre="", $empresa=0) {
+    public function redactar($mail="Sin correo", $nombre="", $empresa=0, $msj="") {
         $mail = $mail;
         $nombre = $nombre;
         $empresa=$empresa;
-        return view('correos.version2.frm_envio', compact('mail', 'nombre', 'empresa'));
+        $msj=$msj;
+        return view('correos.version2.frm_envio', compact('mail', 'nombre', 'empresa','msj'));
     }
 
     public function cargaArchivoCorreo(Request $request) {

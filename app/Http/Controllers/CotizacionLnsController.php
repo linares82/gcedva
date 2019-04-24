@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updateCotizacionLn;
 use App\Http\Requests\createCotizacionLn;
+use DB;
 
 class CotizacionLnsController extends Controller {
 
@@ -142,6 +143,7 @@ class CotizacionLnsController extends Controller {
                 }
                 
                 $input['total']=($input['precio']*$input['cantidad']);
+                //dd($input);
 		$cotizacionLn->update( $input );
                 $this->calcularTotales($cotizacionLn->cotizacion_curso_id);
 		//return redirect()->route('cotizacionLns.index')->with('message', 'Registro Actualizado.');
@@ -167,10 +169,12 @@ class CotizacionLnsController extends Controller {
             $datos=$request->all();
             $lineas=CotizacionLn::select('cotizacion_lns.id','cotizacion_lns.cotizacion_curso_id','consecutivo','st.name as estatus','cotizacion_lns.st_curso_empresa_id','ce.name as curso',
                                          'cotizacion_lns.cursos_empresa_id','tp.name as tipo_precio','tipo_precio_coti_id','cotizacion_lns.cantidad',
-                                          'cotizacion_lns.precio','cotizacion_lns.total','cotizacion_lns.descuento')
+                                          'cotizacion_lns.precio','cotizacion_lns.total','cotizacion_lns.descuento','cotizacion_lns.empleado_id',
+                                         DB::raw('concat(e.nombre," ",e.ape_paterno," ", e.ape_materno) as empleado'))
                                  ->join('cursos_empresas as ce','ce.id','=','cotizacion_lns.cursos_empresa_id')
                                  ->join('st_curso_empresas as st','st.id','=','cotizacion_lns.st_curso_empresa_id')
                                  ->join('tipo_precio_cotis as tp','tp.id','=','cotizacion_lns.tipo_precio_coti_id')
+                                 ->join('empleados as e','e.id','=','cotizacion_lns.empleado_id')
                                  ->where('cotizacion_curso_id', $datos['cotizacion_curso'])->get();
             //dd($lineas->toArray());
             echo $lineas->toJson();

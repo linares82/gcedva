@@ -341,9 +341,12 @@
                                 <td>{{$cotizacionCurso->stCursoEmpresa->name}}</td>
                                 
                                 <td class="text-right">
-                                    <a class="btn btn-xs btn-info" href="{{ route('cotizacionCursos.verCotizacion', array('cotizacion'=>$cotizacionCurso->id,'vista'=>1)) }}" target="_blank"><i class="fa fa-eye"></i> Ver </a>
+                                    @if(isset($cotizacionCurso->empresa->correo1))
+                                    <a class="btn btn-xs btn-success" href="{{ url('correos/redactar').'/'.$cotizacionCurso->empresa->correo1.'/'.$cotizacionCurso->empresa->nombre_contacto.'/1' }}"><i class="glyphicon glyphicon-envelope"></i> Correo </a>
+                                    @endif
+<!--                                    <a class="btn btn-xs btn-info" href="{{ route('cotizacionCursos.verCotizacion', array('cotizacion'=>$cotizacionCurso->id,'vista'=>1)) }}" target="_blank"><i class="fa fa-eye"></i> Ver </a>-->
                                     <a class="btn btn-xs btn-info" href="{{ route('cotizacionCursos.verCotizacionPdf', array('cotizacion'=>$cotizacionCurso->id,'vista'=>1)) }}"><i class="fa fa-file-pdf-o"></i> Ver </a>
-                                    <a class="btn btn-xs bg-navy" href="{{ route('cotizacionCursos.verCotizacion', array('cotizacion'=>$cotizacionCurso->id,'vista'=>2)) }}" target="_blank"><i class="fa fa-eye"></i> Ver </a>
+<!--                                    <a class="btn btn-xs bg-navy" href="{{ route('cotizacionCursos.verCotizacion', array('cotizacion'=>$cotizacionCurso->id,'vista'=>2)) }}" target="_blank"><i class="fa fa-eye"></i> Ver </a>-->
                                     <a class="btn btn-xs bg-navy" href="{{ route('cotizacionCursos.verCotizacionPdf', array('cotizacion'=>$cotizacionCurso->id,'vista'=>2)) }}"><i class="fa fa-file-pdf-o"></i> Ver </a>
                                     @permission('cotizacionCursos.edit')
                                     <a class="btn btn-xs btn-primary" href="{{ route('cotizacionCursos.duplicate', $cotizacionCurso->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
@@ -388,6 +391,13 @@
                                 {!! Form::select("cursos_empresa_id", $list["CursosEmpresa"], null, array("class" => "form-control select_seguridad", "id" => "cursos_empresa_id-crear")) !!}
                                 @if($errors->has("cursos_empresa_id"))
                                 <span class="help-block">{{ $errors->first("cursos_empresa_id") }}</span>
+                                @endif
+                            </div>
+                            <div class="form-group col-md-12 @if($errors->has('empleado_id')) has-error @endif">
+                                <label for="empleado_id-field">capacitador</label>
+                                {!! Form::select("empleado_id", $list["Empleado"], null, array("class" => "form-control select_seguridad", "id" => "empleado_id-crear")) !!}
+                                @if($errors->has("empleado_id"))
+                                <span class="help-block">{{ $errors->first("empleado_id") }}</span>
                                 @endif
                             </div>
                             <div class="form-group col-md-12 @if($errors->has('tipo_precio_coti_id')) has-error @endif">
@@ -448,6 +458,13 @@
                                 <div id='curso'></div>
                                 @if($errors->has("cursos_empresa_id"))
                                 <span class="help-block">{{ $errors->first("cursos_empresa_id") }}</span>
+                                @endif
+                            </div>
+                            <div class="form-group col-md-12 @if($errors->has('empleado_id')) has-error @endif">
+                                <label for="empleado_id-field">capacitador</label>
+                                {!! Form::select("empleado_id", $list["Empleado"], null, array("class" => "form-control select_seguridad", "id" => "empleado_id-editar")) !!}
+                                @if($errors->has("empleado_id"))
+                                <span class="help-block">{{ $errors->first("empleado_id") }}</span>
                                 @endif
                             </div>
                             <div class="form-group col-md-12 @if($errors->has('tipo_precio_coti_id')) has-error @endif">
@@ -630,6 +647,7 @@
             data: {
                 '_token': $('input[name=_token]').val(),
                 'cotizacion_curso_id': $('#cotizacion_curso_id-crear').val(),
+                'empleado_id': $('#empleado_id-crear').val(),
                 'st_curso_empresa_id': $('#st_curso_empresa_id-crear').val(),
                 'cursos_empresa_id': $('#cursos_empresa_id-crear option:selected').val(),
                 'tipo_precio_coti_id': $('#tipo_precio_coti_id-crear option:selected').val(),
@@ -690,6 +708,7 @@
                     '<th>Consecutivo</th>' +
                     '<th>Estatus</th>' +
                     '<th>Curso</th>' +
+                    '<th>Capacitador</th>' +
                     '<th>Tipo Precio</th>' +
                     '<th>Cantidad</th>' +
                     '<th>Precio</th>' +
@@ -711,6 +730,7 @@
                                                                                                    ' data-cotizacion_curso_id=' + anaVeri[i].cotizacion_curso_id +
                                                                                                    ' data-st_curso_empresa_id=' + anaVeri[i].st_curso_empresa_id +
                                                                                                    ' data-cursos_empresa_id=' + anaVeri[i].cursos_empresa_id +
+                                                                                                   ' data-empleado_id=' + anaVeri[i].empleado_id +
                                                                                                    ' data-curso="' + anaVeri[i].curso + '"'+
                                                                                                    ' data-tipo_precio_coti_id=' + anaVeri[i].tipo_precio_coti_id +
                                                                                                    ' data-cantidad=' + anaVeri[i].cantidad +
@@ -730,6 +750,7 @@
                     '<td>' + anaVeri[i].consecutivo + '</td>' +
                     '<td>' + anaVeri[i].estatus + '</td>' +
                     '<td>' + anaVeri[i].curso + '</td>' +
+                    '<td>' + anaVeri[i].empleado + '</td>' +
                     '<td>' + anaVeri[i].tipo_precio + '</td>' +
                     '<td>' + anaVeri[i].cantidad + '</td>' +
                     '<td>' + anaVeri[i].precio + '</td>' +
@@ -756,6 +777,8 @@
                 id=$(this).data('id');
                 $('#cotizacion_curso_id-editar').val($(this).data('cotizacion_curso_id'));
                 $('#st_curso_empresa_id-editar').val($(this).data('st_curso_empresa_id'));
+                $('#empleado_id-editar').val($(this).data('empleado_id'));
+                $('#empleado_id-editar').change();
                 //$('#cursos_empresa_id-editar').val($(this).data('cursos_empresa_id'));
                 //$('#cursos_empresa_id-editar').change();
                 $('#curso').html($(this).data('curso'));
@@ -798,7 +821,8 @@
             data: {
                 '_token': $('input[name=_token]').val(),
                 'cotizacion_curso_id':$('#cotizacion_curso-editar').val(),
-                'st_curso_empresa_id': $('#st_curso_empresa_id-editar').val(),
+                'st_curso_empresa_id': $('#st_curso_empresa_id-editar option:selected').val(),
+                'empleado_id': $('#empleado_id-editar option:selected').val(),
                 'tipo_precio_coti_id': $('#tipo_precio_coti_id-editar option:selected').val(),
                 'cantidad': $('#cantidad-editar').val(),
                 'descuento': $('#descuento-editar').val(),
