@@ -681,7 +681,7 @@ class InscripcionsController extends Controller {
                 $registros= Inscripcion::select('c.id',DB::raw('concat(e.nombre, " ",e.ape_paterno, " ",e.ape_materno) as colaborador, '
                         . 'concat(c.nombre," ",c.nombre2," ",c.ape_paterno," ",c.ape_materno) as cliente, m.name as medio, '
                         . 'c.beca_bnd, esp.name as especialidad, inscripcions.fec_inscripcion, n.name as nivel, g.name as grado,'
-                        . 'gru.name as grupo, gru.id as gru'))
+                        . 'gru.name as grupo, gru.id as gru','esp.id','n.id','g.id','gru.id'))
                             ->join('clientes as c', 'c.id', '=', 'inscripcions.cliente_id')
                             ->join('medios as m','m.id','=','c.medio_id')
                             ->join('especialidads as esp','esp.id','=','inscripcions.especialidad_id')
