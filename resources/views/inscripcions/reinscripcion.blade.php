@@ -109,6 +109,39 @@
                     </div>
                 </div>
                 <div class="box-body">
+                        <div class="form-group col-md-1 @if($errors->has('activar')) has-error @endif">
+                            <label for="Activar-field">Activar</label>
+                            {!! Form::checkbox("activar", 1, null, [ "id" => "activar-field", 'class'=>'minimal']) !!}
+                            @if($errors->has("activar"))
+                            <span class="help-block">{{ $errors->first("activar") }}</span>
+                            @endif
+                        </div>
+                        <div class="form-group col-md-4 @if($errors->has('especialidad_to')) has-error @endif">
+                        <label for="especialidad_to-field">Especialidad</label>
+                        {!! Form::select("especialidad_to", $list["Especialidad"], null, array("class" => "form-control select_seguridad", "id" => "especialidad_to-field")) !!}
+                        <div id='loading10' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
+                        @if($errors->has("especialidad_to"))
+                            <span class="help-block">{{ $errors->first("especialidad_to") }}</span>
+                        @endif
+                        </div>
+                        <div class="form-group col-md-4 @if($errors->has('nivel_to')) has-error @endif">
+                        <label for="nivel_to-field">Nivel</label>
+                        {!! Form::select("nivel_to", $list["Nivel"], null, array("class" => "form-control select_seguridad", "id" => "nivel_to-field")) !!}
+                        <div id='loading11' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
+                        @if($errors->has("nivel_to"))
+                            <span class="help-block">{{ $errors->first("nivel_to") }}</span>
+                        @endif
+                        </div>
+                        <div class="form-group col-md-3 @if($errors->has('grado_to')) has-error @endif">
+                        <label for="grado_to-field">Grado</label>
+                        {!! Form::select("grado_to", $list["Grado"], null, array("class" => "form-control select_seguridad", "id" => "grado_to-field")) !!}
+                        <div id='loading12' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
+                        @if($errors->has("grado_to"))
+                            <span class="help-block">{{ $errors->first("grado_id") }}</span>
+                        @endif
+                        </div>
+                    <div class="row"></div>
+                    <hr>
                         <div class="form-group col-md-4 @if($errors->has('grupo_to')) has-error @endif">
                             <label for="grupo_to-field" id="lbl_disponibles">A Grupo </label>
                             {!! Form::select("grupo_to", $list["Grupo"], null, array("class" => "form-control select_seguridad", "id" => "grupo_to-field")) !!}
@@ -130,7 +163,13 @@
                             <span class="help-block">{{ $errors->first("lectivo_to") }}</span>
                             @endif
                         </div>
-                        
+                        <div class="form-group col-md-2 @if($errors->has('registrar_materias')) has-error @endif">
+                            <label for="registrar_materias-field">Registrar Materias</label>
+                            {!! Form::checkbox("registrar_materias", 1, 1, [ "id" => "registrar_materias-field", 'class'=>'minimal']) !!}
+                            @if($errors->has("registrar_materias"))
+                            <span class="help-block">{{ $errors->first("registrar_materias") }}</span>
+                            @endif
+                        </div>
                     </div>
                 </div>
                 @endif
@@ -152,12 +191,39 @@
   <script type="text/javascript">
     
     $(document).ready(function() {
+        
+       Desactivar();  
+      $('#activar-field').change(function() {
+        if($(this).is(":checked")) {
+            Activar();
+        }else{
+            Desactivar();
+            
+        }
+    });
+      
+      function Desactivar(){
+          $('#especialidad_to-field').prop("disabled", true);
+          $('#nivel_to-field').prop("disabled", true);
+          $('#grado_to-field').prop("disabled", true);
+          //console.log("desactivado");
+      }
+      
+      function Activar(){
+          $('#especialidad_to-field').prop("disabled", false);
+          $('#nivel_to-field').prop("disabled", false);
+          $('#grado_to-field').prop("disabled", false);
+      }
+      
       getCmbEspecialidad();
+      getCmbEspecialidadTo();
       getCmbNivel();
+      getCmbNivelTo();
       getCmbGrado();
+      getCmbGradoTo();
       getCmbGrupo();
       getCmbGrupoTo();
-      getCmbPeriodoEstudios();
+      getCmbPeriodoEstudios($('#grupo_to-field option:selected').val(), $('#periodo_estudios_to-field option:selected').val());
       peri=$('#periodo_estudios_to-field option:selected').val();
 
       $('#plantel_id-field').change(function(){
@@ -166,7 +232,7 @@
       });
       
       $('#grupo_to-field').change(function(){
-          getCmbPeriodoEstudios();
+          getCmbPeriodoEstudios($('#grupo_to-field option:selected').val(), $('#periodo_estudios_to-field option:selected').val());
       });
 
       //$("tr td").parent().addClass('has-sub');
@@ -194,14 +260,14 @@
         });
 
     });
-    function getCmbPeriodoEstudios(){
+    function getCmbPeriodoEstudios(grupo, periodo){
           //var $example = $("#especialidad_id-field").select2();
           
               $.ajax({
                   url: '{{ route("grupos.cbmPeriodosEstudio") }}',
                   type: 'GET',
-                  data: "grupo=" + $('#grupo_to-field option:selected').val()+
-                        "&periodo=" + $('#periodo_estudios_to-field option:selected').val(),
+                  data: "grupo=" + grupo +
+                        "&periodo=" + periodo,
                   dataType: 'json',
                   beforeSend : function(){$("#loading13").show();},
                   complete : function(){$("#loading13").hide();},
@@ -274,6 +340,7 @@
       }
       $('#plantel_id-field').change(function(){
           getCmbEspecialidad();
+          getCmbEspecialidadTo();
       });
       function getCmbEspecialidad(){
           //var $example = $("#especialidad_id-field").select2();
@@ -295,6 +362,32 @@
                       $.each(data, function(i) {
                           //alert(data[i].name);
                           $('#especialidad_id-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                          
+                      });
+                      //$example.select2();
+                  }
+              });       
+      }
+      function getCmbEspecialidadTo(){
+          //var $example = $("#especialidad_id-field").select2();
+          var a= $('#frm_academica').serialize();
+              $.ajax({
+                  url: '{{ route("especialidads.getCmbEspecialidad") }}',
+                  type: 'GET',
+                  data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad_to-field option:selected').val() + "",
+                  dataType: 'json',
+                  beforeSend : function(){$("#loading10").show();},
+                  complete : function(){$("#loading10").hide();},
+                  success: function(data){
+                      //$example.select2("destroy");
+                      $('#especialidad_to-field').html('');
+                      
+                      //$('#especialidad_id-field').empty();
+                      $('#especialidad_to-field').append($('<option></option>').text('Seleccionar').val('0'));
+                      
+                      $.each(data, function(i) {
+                          //alert(data[i].name);
+                          $('#especialidad_to-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
                           
                       });
                       //$example.select2();
@@ -329,6 +422,34 @@
                   }
               });       
       }
+      $('#especialidad_to-field').change(function(){
+          getCmbNivelTo();
+      });
+      function getCmbNivelTo(){
+          //var $example = $("#especialidad_id-field").select2();
+          var a= $('#frm_academica').serialize();
+              $.ajax({
+                  url: '{{ route("nivels.getCmbNivels") }}',
+                  type: 'GET',
+                  data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad_to-field option:selected').val() + "&nivel_id=" + $('#nivel_to-field option:selected').val() + "",
+                  dataType: 'json',
+                  beforeSend : function(){$("#loading11").show();},
+                  complete : function(){$("#loading11").hide();},
+                  success: function(data){
+                      //alert(data);
+                      //$example.select2("destroy");
+                      $('#nivel_to-field').html('');
+                      //$('#especialidad_id-field').empty();
+                      $('#nivel_to-field').append($('<option></option>').text('Seleccionar').val('0'));
+                      
+                      $.each(data, function(i) {
+                          //alert(data[i].name);
+                          $('#nivel_to-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                      });
+                      //$example.select2();
+                  }
+              });       
+      }
       
       $('#nivel_id-field').change(function(){
           getCmbGrado();
@@ -358,6 +479,38 @@
                   }
               });       
       }
+      
+      $('#nivel_to-field').change(function(){
+          getCmbGradoTo();
+      });
+      
+      function getCmbGradoTo(){
+          //var $example = $("#especialidad_id-field").select2();
+          var a= $('#frm_academica').serialize();
+              $.ajax({
+                  url: '{{ route("grados.getCmbGrados") }}',
+                  type: 'GET',
+                  data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad_to-field option:selected').val() + "&nivel_id=" + $('#nivel_to-field option:selected').val() + "&grado_id=" + $('#grado_to-field option:selected').val() +"",
+                  dataType: 'json',
+                  beforeSend : function(){$("#loading12").show();},
+                  complete : function(){$("#loading12").hide();},
+                  success: function(data){
+                      //alert(data);
+                      //$example.select2("destroy");
+                      $('#grado_to-field').html('');
+                      //$('#especialidad_id-field').empty();
+                      $('#grado_to-field').append($('<option></option>').text('Seleccionar').val('0'));
+                      
+                      $.each(data, function(i) {
+                          //alert(data[i].name);
+                          $('#grado_to-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                      });
+                      //$example.select2();
+                  }
+              });       
+      }
+      
+      
       
 </script>
 @endpush

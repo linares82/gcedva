@@ -501,7 +501,7 @@ class SeguimientosController extends Controller {
             $input['plantel_t'] = $input['plantel_f'];
         }
 
-        $seguimientos = Seguimiento::select('cve_plantel as Plantel', 'esp.name as Especialidad', 'n.name as Nivel', 'g.name as Grado', 
+        $seguimientos = Seguimiento::select(DB::raw('concat(c.nombre," ", c.ape_paterno," ", c.ape_materno) as cliente'),'cve_plantel as Plantel', 'esp.name as Especialidad', 'n.name as Nivel', 'g.name as Grado', 
                 'seguimientos.mes as Mes', 'm.name as medio','lec.name as lectivo', 
                 DB::raw('concat(e.nombre," ", e.ape_paterno," ", e.ape_materno) as Empleado'), 
                 'h.detalle as Estatus', 'st.id as st_contar', 'esp.meta as Meta', 'u.name as Usuario')
@@ -523,6 +523,7 @@ class SeguimientosController extends Controller {
                     $q->orWhere('h.asunto','=','Cambio estatus ');
                     $q->orWhere('h.asunto','=','Creacion');
                 })
+		->where('h.detalle','Concretado')
                 ->where('c.plantel_id', '>=', $input['plantel_f'])
                 ->where('c.plantel_id', '<=', $input['plantel_t'])
                 ->where('h.fecha', '>=', $input['fecha_f'])

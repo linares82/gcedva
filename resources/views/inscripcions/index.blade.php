@@ -235,6 +235,7 @@
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'cliente.curp', 'title' => 'CURP'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'fec_inscripcion', 'title' => 'F. INSCRIPCION'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'periodo_lectivo_id', 'title' => 'PERIODO LECTIVO'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'cliente_id', 'title' => 'ALUMNO'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
@@ -251,6 +252,7 @@
                                 <td>{{$inscripcion->cliente->curp}}</td>
                                 <td>{{$inscripcion->fec_inscripcion}}</td>
                                 <td>{{$inscripcion->lectivo->name}}</td>
+                                <td>{{$inscripcion->cliente->nombre}} {{$inscripcion->cliente->nombre2}} {{$inscripcion->cliente->ape_paterno}} {{$inscripcion->cliente->ape_materno}}</td>
                                 <td class="text-right">
                                     @permission('inscripcions.edit')
                                     <!--<a class="btn btn-xs btn-primary" href="{{ route('inscripcions.duplicate', $inscripcion->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>-->
