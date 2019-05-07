@@ -5,28 +5,30 @@ namespace App\Http\Controllers;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use File;
-use App\Cliente;
-use App\CombinacionCliente;
+
 use App\AvisosInicio;
 use App\Aviso;
+use App\Cliente;
+use App\CombinacionCliente;
 use App\Ccuestionario;
 use App\CcuestionarioDato;
-use App\Seguimiento;
-use App\StSeguimiento;
-use App\Sm;
 use App\Correo;
 use App\Empleado;
-use App\PreguntaCliente;
 use App\Estado;
+use App\Inscripcion;
+use App\Lectivo;
 use App\Municipio;
 use App\PivotDocCliente;
 use App\Preguntum;
 use App\Param;
 use App\Paise;
-use App\Lectivo;
+use App\PreguntaCliente;
 use App\Plantilla;
 use App\Plantel;
 use App\StCliente;
+use App\Seguimiento;
+use App\StSeguimiento;
+use App\Sm;
 use App\User;
 use Illuminate\Http\Request;
 use Auth;
@@ -115,7 +117,8 @@ class ClientesController extends Controller {
         //dd($empleados);
         $cuestionarios = Ccuestionario::where('st_cuestionario_id', '=', '1')->pluck('name', 'id');
         return view('clientes.create', compact('empleados', 'cuestionarios'))
-                        ->with('list', Cliente::getListFromAllRelationApps());
+                        ->with('list', Cliente::getListFromAllRelationApps())
+                        ->with('list3', Inscripcion::getListFromAllRelationApps());
     }
 
     /**
@@ -132,10 +135,10 @@ class ClientesController extends Controller {
         //$input['plantelplantel_id']=$empleado->plantel->id;
         $input['usu_alta_id'] = Auth::user()->id;
         $input['usu_mod_id'] = Auth::user()->id;
-        $input['especialidad_id'] = 0;
-        $input['nivel_id'] = 0;
-        $input['grado_id'] = 0;
-        $input['turno_id'] = 0;
+        //$input['especialidad_id'] = 0;
+        //$input['nivel_id'] = 0;
+        //$input['grado_id'] = 0;
+        //$input['turno_id'] = 0;
         $input['especialidad2_id'] = 0;
         $input['diplomado_id'] = 0;
         $input['subdiplomado_id'] = 0;
@@ -148,7 +151,7 @@ class ClientesController extends Controller {
         $input['otro_id'] = 0;
         $input['subotro_id'] = 0;
         $input['turno4_id'] = 0;
-        $input['grado_id'] = 0;
+        //$input['grado_id'] = 0;
         $input['turno_id'] = 0;
         $input['paise_id'] = 22;
 
@@ -296,7 +299,7 @@ class ClientesController extends Controller {
                         ->with('list', Cliente::getListFromAllRelationApps())
                         ->with('list1', PivotDocCliente::getListFromAllRelationApps())
                         ->with('list2', CombinacionCliente::getListFromAllRelationApps())
-                        ->with('');
+                        ->with('list3', Inscripcion::getListFromAllRelationApps());
     }
 
     public function getReasignar() {

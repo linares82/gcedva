@@ -112,7 +112,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_plantels.razon_cont">PLANTEL_RAZON</label>
                                 <div class=" col-sm-9">
-                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['plantels.razon_cont']) ?: '' }}" name="q[plantels.razon_cont]" id="q_plantels.razon_cont" />
+                                    {!! Form::select("plantel_id", $list["Plantel"], "{{ @(Request::input('q')['materia.plantel_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[materia.plantel_id_lt]", "id"=>"q_materia.plantel_id_lt", "style"=>"width:100%;" )) !!}
                                 </div>
                             </div>
                                  

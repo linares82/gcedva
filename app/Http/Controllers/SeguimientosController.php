@@ -234,7 +234,7 @@ class SeguimientosController extends Controller {
         $mes = (int) date('m');
         $fecha = date('d-m-Y');
 
-        $seguimientos = Seguimiento::select('c.nombre as Nombre', 'c.nombre2 as Segundo Nombre', 'c.ape_paterno as Apellido_Paterno', 'c.ape_materno as Apellido_Materno', 'c.calle as Calle', 'c.no_interior as No_Interior', 'c.no_exterior as No_Exterior', 'm.name as Municipio', 'e.name as Estado', 'c.tel_fijo as Teléfono_Fijo', 'tel_cel as Teléfono_Celular', 'mail as Correo_Electrónico', 'sts.name as Estatus_Seguimiento', 'stc.name as Estatus_Cliente')
+        $seguimientos = Seguimiento::select('c.nombre as Nombre', 'c.nombre2 as Segundo Nombre', 'c.ape_paterno as Apellido_Paterno', 'c.ape_materno as Apellido_Materno', 'c.calle as Calle', 'c.no_interior as No_Interior', 'c.no_exterior as No_Exterior', 'm.name as Municipio', 'e.name as Estado', 'c.tel_fijo as TelÃ©fono_Fijo', 'tel_cel as TelÃ©fono_Celular', 'mail as Correo_ElectrÃ³nico', 'sts.name as Estatus_Seguimiento', 'stc.name as Estatus_Cliente')
                         ->join('st_seguimientos as sts', 'sts.id', '=', 'seguimientos.estatus_id')
                         ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
                         ->join('municipios as m', 'm.id', '=', 'c.municipio_id')
@@ -501,7 +501,7 @@ class SeguimientosController extends Controller {
             $input['plantel_t'] = $input['plantel_f'];
         }
 
-        $seguimientos = Seguimiento::select(DB::raw('concat(c.nombre," ", c.ape_paterno," ", c.ape_materno) as cliente'),'cve_plantel as Plantel', 'esp.name as Especialidad', 'n.name as Nivel', 'g.name as Grado', 
+        $seguimientos = Seguimiento::select('c.id',DB::raw('concat(c.nombre," ", c.ape_paterno," ", c.ape_materno) as cliente'),'cve_plantel as Plantel', 'esp.name as Especialidad', 'n.name as Nivel', 'g.name as Grado', 
                 'seguimientos.mes as Mes', 'm.name as medio','lec.name as lectivo', 
                 DB::raw('concat(e.nombre," ", e.ape_paterno," ", e.ape_materno) as Empleado'), 
                 'h.detalle as Estatus', 'st.id as st_contar', 'esp.meta as Meta', 'u.name as Usuario')
@@ -521,7 +521,7 @@ class SeguimientosController extends Controller {
                 //->orWhere('h.asunto','=','Creacion')
                 ->orWhere(function($q){
                     $q->orWhere('h.asunto','=','Cambio estatus ');
-                    $q->orWhere('h.asunto','=','Creacion');
+                    $q->orWhere('h.asunto','=','Concretado');
                 })
 		->where('h.detalle','Concretado')
                 ->where('c.plantel_id', '>=', $input['plantel_f'])
@@ -684,7 +684,10 @@ class SeguimientosController extends Controller {
         //dd($input);
         $fecha = date('d-m-Y');
         
-        $seguimientos = Seguimiento::select('cve_plantel as Plantel', 'esp.name as Especialidad', 'n.name as Nivel', 'g.name as Grado', 'seguimientos.mes as Mes', 'm.name as medio', DB::raw('concat(e.nombre," ", e.ape_paterno," ", e.ape_materno) as Empleado'), 'st.name as Estatus', 'st.id as st_contar', 'esp.meta as Meta', 'u.name as Usuario')
+        $seguimientos = Seguimiento::select('cve_plantel as Plantel', 'esp.name as Especialidad', 'n.name as Nivel', 'g.name as Grado', 
+                                            'seguimientos.mes as Mes', 'm.name as medio', DB::raw('concat(e.nombre," ", e.ape_paterno," ", e.ape_materno) as Empleado'), 
+                                            DB::raw('concat(c.nombre," ",c.nombre2," ",c.ape_paterno," ", c.ape_materno) as cliente'), 
+                                            'st.name as Estatus', 'st.id as st_contar', 'esp.meta as Meta', 'u.name as Usuario')
                 ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
                 ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
                 ->join('combinacion_clientes as cc', 'cc.cliente_id', '=', 'c.id')

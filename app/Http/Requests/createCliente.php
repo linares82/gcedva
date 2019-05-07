@@ -23,12 +23,20 @@ class createCliente extends FormRequest
      */
     public function rules()
     {
+        //dd($this->request);
         return [
             //'cve_cliente',
             'nombre'=>'required',
+            'ape_paterno'=>'required',
+            'ape_materno'=>'required',
             //'fec_registro',
-            //'tel_fijo',
-            //'tel_cel'=>'unique:clientes',
+            'tel_fijo'=>'required',
+            'tel_cel'=>'required',
+            'mail'=>'required',
+            'plantel_id'=>'between:0,1000',
+            'especialidad_id'=>'between:0,1000',
+            'nivel_id'=>'between:0,1000',
+            'grado_id'=>'between:0,1000',
             //'mail'=>'email',
             //'calle',
             //'no_exterior',
@@ -52,6 +60,15 @@ class createCliente extends FormRequest
     public function messages(){
         return [
         'nombre.required' => 'El campo es requerido!',
+        'ape_paterno.required' => 'El campo es requerido!',
+        'ape_materno.required' => 'El campo es requerido!',
+        'tel_fijo.required' => 'El campo es requerido!',
+        'tel_cel.required' => 'El campo es requerido!',
+        'mailrequired' => 'El campo es requerido!',
+        'plantel_id.between' => 'El campo es requerido!',
+        'especialidad_id.between' => 'El campo es requerido!',
+        'nivel_id.between' => 'El campo es requerido!',    
+        'grado_id.between' => 'El campo es requerido!',
         'st_cliente_id.required'=>'El campo es requerido!',
         'empleado_id.required'=>'El campo es requerido!',
         'tel_cel.unique'=>'Valor ya existe en otro registro',

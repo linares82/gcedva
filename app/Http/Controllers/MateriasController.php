@@ -22,7 +22,8 @@ class MateriasController extends Controller {
     public function index(Request $request) {
         $materias = Materium::getAllData($request);
 
-        return view('materias.index', compact('materias'));
+        return view('materias.index', compact('materias'))
+                ->with('list', Materium::getListFromAllRelationApps());;
     }
 
     /**

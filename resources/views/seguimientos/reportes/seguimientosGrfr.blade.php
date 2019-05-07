@@ -46,7 +46,9 @@
                         Meta: element.Meta,
                         Medio: element.medio,
                         Usuario: element.Usuario,
-                        Lectivo: element.lectivo
+                        Lectivo: element.lectivo,
+                        Cliente: element.cliente,
+                        Id_cliente: element.id
                     });
                 });
             };

@@ -22,7 +22,8 @@ class CargaPonderacionsController extends Controller {
     public function index(Request $request) {
         $cargaPonderacions = CargaPonderacion::getAllData($request);
         $ponderaciones= Ponderacion::pluck('name','id');
-        return view('cargaPonderacions.index', compact('cargaPonderacions','ponderaciones'));
+        return view('cargaPonderacions.index', compact('cargaPonderacions','ponderaciones'))
+                ->with('list', CargaPonderacion::getListFromAllRelationApps());
     }
 
     /**

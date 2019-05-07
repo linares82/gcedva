@@ -92,7 +92,7 @@
                         @foreach($resultados as $c)
                         <tr>
                             <td>{{ Form::checkbox("id[]", $c['id']) }}</td>
-                            <td>{{ $c['nombre'] }}</td>
+                            <td>{{ $c['cliente'] }} - {{ $c['nombre'] }}</td>
                             <td>{{ $c['periodo_estudio'] }}</td>
                             <td> {{ $c['aprobadas'] }} </td>
                             <td> {{ $c['no_aprobadas'] }} </td>

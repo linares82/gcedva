@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\Observers\CajaObserver;
 use App\Observers\ClienteObserver;
 use App\Observers\EmpleadoObserver;
 use App\Observers\AlumnoObserver;
@@ -10,6 +11,7 @@ use App\Observers\InscripcionObserver;
 use App\Observers\SeguimientoObserver;
 use App\Observers\AsignacionTareaObserver;
 use App\Observers\AvisoObserver;
+use App\Caja;
 use App\Cliente;
 use App\Empleado;
 use App\Alumno;
@@ -30,6 +32,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         //
+        Caja::observe(CajaObserver::class);
         Cliente::observe(ClienteObserver::class);
         Empleado::observe(EmpleadoObserver::class);
         Alumno::observe(AlumnoObserver::class);
