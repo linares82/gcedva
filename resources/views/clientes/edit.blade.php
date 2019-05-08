@@ -114,6 +114,7 @@
                     <div class="form-group col-md-6 @if($errors->has('grupo_id')) has-error @endif">
                        <label for="grupo_id-crear" id="lbl_disponibles">Grupo </label>
                        {!! Form::select("grupo_id", $list3["Grupo"], null, array("class" => "form-control select_seguridad", "id" => "grupo_id-crear")) !!}
+                       <div class='loading3' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                        @if($errors->has("grupo_id"))
                         <span class="help-block">{{ $errors->first("grupo_id") }}</span>
                        @endif
@@ -240,6 +241,7 @@
                     <div class="form-group col-md-6 @if($errors->has('grupo_id')) has-error @endif">
                        <label for="grupo_id-field" id="lbl_disponibles">Grupo </label>
                        {!! Form::select("grupo_id", $list3["Grupo"], null, array("class" => "form-control select_seguridad", "id" => "grupo_id-editar")) !!}
+                       <div class='loading3' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                        @if($errors->has("grupo_id"))
                         <span class="help-block">{{ $errors->first("grupo_id") }}</span>
                        @endif

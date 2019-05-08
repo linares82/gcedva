@@ -1035,8 +1035,8 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                   type: 'GET',
                   data: "grupo_id=" + $('#grupo_id-crear option:selected').val() + "&periodo_estudio_id=" + $('#periodo_estudio_id-crear option:selected').val() + "",
                   dataType: 'json',
-                  beforeSend : function(){$("#loading13").show();},
-                  complete : function(){$("#loading13").hide();},
+                  beforeSend : function(){$(".loading3").show();},
+                  complete : function(){$(".loading3").hide();},
                   success: function(data){
                       //$example.select2("destroy");
                       $('#periodo_estudio_id-crear').html('');
@@ -1061,8 +1061,8 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                   type: 'GET',
                   data: "grupo_id=" + $('#grupo_id-crear option:selected').val() ,
                   dataType: 'json',
-                  beforeSend : function(){$("#loading12").show();},
-                  complete : function(){$("#loading12").hide();},
+                  beforeSend : function(){$(".loading3").show();},
+                  complete : function(){$(".loading3").hide();},
                   success: function(data){
                       $('#disponibles-crear').val('');
                       $('#disponibles-crear').val(data);
