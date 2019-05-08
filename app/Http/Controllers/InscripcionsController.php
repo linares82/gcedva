@@ -275,7 +275,7 @@ class InscripcionsController extends Controller {
 						->where('i.lectivo_id', '=', $input['lectivo_id'])
                                                 ->where('h.lectivo_id', '=', $input['lectivo_id'])
 						->where('i.plantel_id', '=', $input['plantel_id'])
-                                                ->where('h.st_materium_id',1)
+                                                //->where('h.st_materium_id',1)
                                                 ->whereNull('i.deleted_at')
                                                 ->distinct()
 						->get();
