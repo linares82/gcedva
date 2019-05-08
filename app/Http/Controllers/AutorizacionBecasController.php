@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 
 use App\AutorizacionBeca;
 use App\Cliente;
+use App\Plantel;
 use App\StBeca;
 use Illuminate\Http\Request;
 use Auth;
@@ -22,13 +23,15 @@ class AutorizacionBecasController extends Controller {
 	{
 		$autorizacionBecas = AutorizacionBeca::getAllData($request);
                 $estatus= StBeca::pluck('name','id');
-		return view('autorizacionBecas.index', compact('autorizacionBecas','estatus'));
+                $plantels=Plantel::pluck('razon','id');
+		return view('autorizacionBecas.index', compact('autorizacionBecas','estatus','plantels'));
 	}
         
         public function findByClienteId(Request $request)
 	{
 		$autorizacionBecas = AutorizacionBeca::where('cliente_id',$request->input('cliente_id'))->paginate(25);
                 $cliente=$request->input('cliente_id');
+                
 		return view('autorizacionBecas.findByClienteId', compact('autorizacionBecas','cliente'));
 	}
 

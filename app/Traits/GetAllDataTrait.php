@@ -137,6 +137,8 @@ trait GetAllDataTrait {
         $empleado=Empleado::where('user_id', '=', Auth::user()->id)->first();
         //dd($baseTable);
         switch($baseTable){
+            case "autorizacion_becas":
+                $myQuery=$myQuery->orderBy('autorizacion_becas.st_beca_id');
             case "clientes":
                 if($baseTable=="clientes" and (Auth::user()->can('IfiltroClientesXPlantel'))){
                     $myQuery=$myQuery->where('clientes.plantel_id', '=', $empleado->plantel_id);

@@ -4491,6 +4491,16 @@ Route::get("tipoReglas/tipoRegla/{tipoReglas}/duplicate", ['as' => 'tipoReglas.d
         'middleware' => 'permission:adeudos.reporteAdeudosPendientes',
         'uses' => 'AdeudosController@reporteAdeudosPendientesr')
     )->middleware('auth');
+    Route::get('/adeudos/reporteAdeudosPlan', array(
+        'as' => 'adeudos.reporteAdeudosPlan',
+        'middleware' => 'permission:adeudos.reporteAdeudosPlan',
+        'uses' => 'AdeudosController@reporteAdeudosPlan')
+    )->middleware('auth');
+    Route::get('/adeudos/reporteAdeudosPlanr', array(
+        'as' => 'adeudos.reporteAdeudosPlanr',
+        'middleware' => 'permission:adeudos.reporteAdeudosPlan',
+        'uses' => 'AdeudosController@reporteAdeudosPlanr')
+    )->middleware('auth');
     Route::get('/adeudos/destroyAll', array(
         'as' => 'adeudos.destroyAll',
         'middleware' => 'permission:adeudos.destroyAll',

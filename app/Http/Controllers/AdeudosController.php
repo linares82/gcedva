@@ -9,6 +9,7 @@ use App\Caja;
 use App\CajaLn;
 use App\Empleado;
 use App\Plantel;
+use App\PlanPago;
 use App\CombinacionCliente;
 use Illuminate\Http\Request;
 use Auth;
@@ -241,6 +242,51 @@ class AdeudosController extends Controller {
             
             //dd($adeudosPendientes);
             return view('adeudos.reportes.adeudos_pendientes', array('adeudos'=>$adeudosPendientes, 'plantel'=>$plantel));
+            
+            /*$pdf = PDF::loadView('adeudos.adeudos_pendientes', array('adeudos'=>$adeudosPendientes, 'plantel'=>$plantel))
+                    ->setPaper('Letter', 'portrait');
+            return $pdf->download('AdeudosPendientes.pdf');
+            */
+        }
+        
+        public function reporteAdeudosPlan(){
+            
+            $planteles=Plantel::pluck('razon','id');
+            $planes= PlanPago::pluck('name','id');
+            return view('adeudos.reportes.adeudosXPlan',compact('planteles','planes'));
+        }
+        
+        public function reporteAdeudosPlanr(Request $request){
+            $datos=$request->all();
+            
+            
+            $fecha=date('Y/m/d');
+            //dd($fecha);
+            //$empleado=Empleado::where('user_id', '=', Auth::user()->id)->first();
+            
+            $plantel=Plantel::find($datos['plantel_f']);
+            
+            
+            $adeudosPendientes=Adeudo::select('c.id as cliente','c.nombre','c.nombre2',
+                                              'c.ape_paterno','c.ape_materno','pg.name as plan',DB::raw('sum(adeudos.monto) as deuda'))
+                                     //->join('combinacion_clientes as cc','cc.id',"=",'adeudos.combinacion_cliente_id')
+                                     //->join('especialidads as esp','esp.id','=','cc.especialidad_id')
+                                     //->join('nivels as n','n.id','=','cc.nivel_id')
+                                     //->join('grados as g','g.id','=','cc.grado_id')
+                                     ->join('clientes as c', 'c.id', '=', 'adeudos.cliente_id')
+                                     ->join('plan_pago_lns as ln','ln.id','=','adeudos.plan_pago_ln_id')
+                                     ->join('plan_pagos as pg','pg.id','=','ln.plan_pago_id')
+                                     //->where('pagado_bnd', '=', 0)  
+                                     //->whereDate('adeudos.fecha_pago', '<=', $fecha)
+                                     ->where('pg.id',$datos['plan_f'])
+                                     ->where('c.plantel_id', '=', $datos['plantel_f'])
+                                     ->groupBy('pg.name')->groupBy('c.id')
+                                     ->groupBy('c.nombre')->groupBy('c.nombre2')->groupBy('c.ape_paterno')->groupBy('c.ape_materno')
+                                     ->orderBy('c.id', 'asc')
+                                     ->get();
+            
+            //dd($adeudosPendientes);
+            return view('adeudos.reportes.adeudosPlanr', array('adeudos'=>$adeudosPendientes, 'plantel'=>$plantel, 'plan'=>$datos['plan_f']));
             
             /*$pdf = PDF::loadView('adeudos.adeudos_pendientes', array('adeudos'=>$adeudosPendientes, 'plantel'=>$plantel))
                     ->setPaper('Letter', 'portrait');
