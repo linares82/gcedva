@@ -297,6 +297,7 @@ class InscripcionsController extends Controller {
                         ->where('i.plantel_id', '=', $input['plantel_id'])
                         ->where('clientes.id', '=', $c->cliente)        
                         ->where('h.st_materium_id', '=', 1)
+                        ->whereNull('h.deleted_at')
                         ->first('aprobadas');
                         //dd($aprobadas);
                         
@@ -314,6 +315,7 @@ class InscripcionsController extends Controller {
                         ->where('i.plantel_id', '=', $input['plantel_id'])
                         ->where('clientes.id', '=', $c->cliente)        
                         ->where('h.st_materium_id', '<>', 1)
+                        ->whereNull('h.deleted_at')
                         ->first('no_aprobadas');
 //                        $resultado->put('id',$c->id);
 //                        $resultado->put('nombre',$c->nombre);

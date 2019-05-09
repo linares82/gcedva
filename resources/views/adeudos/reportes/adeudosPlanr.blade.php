@@ -60,51 +60,50 @@
         <thead>
         <th><strong>Plan</strong></th>    
         <th><strong>Cliente</strong></th>
-        <th><strong>Adeudo Acumulado</strong></th>
-        <th><strong>Pago Acumulado</strong></th>
+        <th><strong>Caja</strong></th>
+        <th><strong>Estatus</strong></th>
+        <th><strong>Conceptos</strong></th>
+        <th><strong>Pagos</strong></th>
         </thead>
         <tbody>
             <?php
-            $deuda_total = 0;
-            $pago_total=0;
-            $totalCliente = 0;
-            $cliente_id = 0;
-            $aux = 0;
-            $diferencia=0;
+            $sumatoria=0;
             ?>
-            @foreach($adeudos as $adeudo)
+            @foreach($cajas as $caja)
 
             <tr>
-                <td>{{$adeudo->plan}}</td>
-                <td>{{$adeudo->cliente." - ".$adeudo->nombre." ".$adeudo->nombre2." ".$adeudo->ape_paterno." ".$adeudo->ape_materno}}</td>
-                <td>{{number_format($adeudo->deuda,2)}}</td>
-                <?php 
-                
-                $pago=\App\Caja::select(DB::raw('sum(p.monto) as pago'))
-                               ->where('cliente_id',$adeudo->cliente) 
-                               ->join('pagos as p','p.caja_id','=','cajas.id')
-                               //->whereDate('p.fecha', '<=', $fecha)
-                               ->where('cajas.st_caja_id','<>','2')
-                               ->value('pago');
+                <td>{{$caja->plan}}</td>
+                <td>{{$caja->cliente." - ".$caja->nombre." ".$caja->nombre2." ".$caja->ape_paterno." ".$caja->ape_materno}}</td>
+                <td> {{$caja->consecutivo}}</td>
+                <td> {{$caja->estatus}}
+                </td>
+                <?php
+                $caja=\App\Caja::find($caja->caja);    
                 ?>
-                <td>{{number_format($pago,2)}}</td>
+                <td>
+                    @foreach($caja->cajaLns as $linea)
+                        {{$linea->cajaConcepto->name}}<br/>
+                    @endforeach
+                </td>
+                <td>
+                    <?php 
+                    $suma_pagos=0;
+                    ?>
+                    @foreach($caja->pagos as $pago)
+                        <?php 
+                        $suma_pagos=$suma_pagos+$pago->monto; 
+                        $sumatoria=$suma_pagos+$sumatoria;        
+                        ?>
+                    @endforeach
+                    {{$suma_pagos}}
+                </td>
             </tr>
-            <?php 
-            $deuda_total=$deuda_total+$adeudo->deuda;
-            $pago_total=$pago_total+$pago;
-            $diferencia=$pago_total-$deuda_total;
-            ?>
+            
             @endforeach
-            <tr class="alt"><td></td><td><strong>Total </strong></td><td><strong>{{number_format($deuda_total,2)}}</strong></td><td><strong>{{number_format($pago_total,2)}}</strong></td></tr>
-            <tr class="alt"><td></td><td><strong>Diferencia </strong></td>
-                            @if($diferencia<0)
-                            <td><strong>{{number_format($diferencia,2)}}</strong></td>
-                            <td><strong></strong></td>    
-                            @else
-                            <td><strong></strong></td>
-                            <td><strong>{{number_format($diferencia,2)}}</strong></td>
-                            @endif
-                            
+            <tr>
+                <td colspan='4'></td>
+                <td>Total</td>
+                <td>{{$sumatoria}}</td>
             </tr>
             
         </tbody>

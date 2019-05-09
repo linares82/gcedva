@@ -209,6 +209,7 @@ class AsignacionAcademicasController extends Controller {
 					->where('g.plantel_id', '=', $plantel)
                                         ->where('aa.lectivo_id', '=', $lectivo)
 					->where('g.id', '>', '0')
+                                        ->distinct()
 					->get();
 			//dd($r);
 			if(isset($grupo) and $grupo<>0){

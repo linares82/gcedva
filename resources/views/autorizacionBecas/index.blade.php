@@ -82,7 +82,7 @@
                             </div>
                             
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_clientes.nombre_cont">CLIENTE_NOMBRE</label>
+                                <label class="col-sm-2 control-label" for="q_clientes.nombre_cont">NOMBRE</label>
                                 <div class=" col-sm-9">
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['clientes.nombre_cont']) ?: '' }}" name="q[clientes.nombre_cont]" id="q_clientes.nombre_cont" />
                                 </div>
@@ -113,7 +113,7 @@
                             </div>
                             -->
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_autorizacion_becas.st_beca_id_cont">ST_BECA_NAME</label>
+                                <label class="col-sm-2 control-label" for="q_autorizacion_becas.st_beca_id_cont">ESTATUS</label>
                                 <div class=" col-sm-9">
                                     {!! Form::select("st_cliente_id", $estatus, "{{ @(Request::input('q')['autorizacion_becas.st_beca_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[autorizacion_becas.st_beca_id_lt]", "id"=>"q_autorizacion_becas.st_beca_id_lt", "style"=>"width:100%;" )) !!}
                                 </div>
