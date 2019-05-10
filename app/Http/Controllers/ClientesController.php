@@ -81,6 +81,39 @@ class ClientesController extends Controller {
                         ->with('list', Seguimiento::getListFromAllRelationApps())
                         ->with('list1', Cliente::getListFromAllRelationApps());
     }
+    
+    public function busqueda(Request $request){
+        $data=$request->all();
+        
+        //dd($data);
+        $r= Cliente::where('id', '<>', '0');
+        if(isset($data['nombre'])){
+            $r->where('nombre','like','%'.$data['nombre'].'%');
+            $nombre="busqueda realizada";
+        }
+        if(isset($data['nombre'])){
+            $r->where('nombre','like','%'.$data['nombre'].'%');
+        }
+        if(isset($data['nombre2'])){
+            $r->where('nombre2','like','%'.$data['nombre2'].'%');
+        }
+        if(isset($data['ape_paterno'])){
+            $r->where('ape_paterno','like','%'.$data['ape_paterno'].'%');
+        }
+        if(isset($data['ape_materno'])){
+            $r->where('ape_materno','like','%'.$data['ape_materno'].'%');
+        }
+        if(isset($data['curp'])){
+            $r->where('curp','like','%'.$data['curp'].'%');
+        }
+        if(isset($data['calle'])){
+            $r->where('calle','like','%'.$data['calle'].'%');
+        }
+        
+        $clientes=$r->paginate(10);
+        //dd($clientes);
+        return view('clientes.busqueda', compact('clientes','nombre'));
+    }
 
     public function index2(Request $request) {
         //dd($request);

@@ -590,6 +590,11 @@ Route::get('medios/index', array(
         'middleware' => 'permission:clientes.index',
         'uses' => 'ClientesController@index')
     )->middleware('auth');
+    Route::get('clientes/busqueda', array(
+        'as' => 'clientes.busqueda',
+        'middleware' => 'permission:clientes.create',
+        'uses' => 'ClientesController@busqueda')
+    )->middleware('auth');
     Route::get('clientes/index2', array(
         'as' => 'clientes.index2',
         'middleware' => 'permission:clientes.index',

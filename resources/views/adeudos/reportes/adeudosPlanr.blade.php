@@ -94,8 +94,9 @@
                         $suma_pagos=$suma_pagos+$pago->monto; 
                         $sumatoria=$suma_pagos+$sumatoria;        
                         ?>
+                        {{$pago->fecha}} - {{$pago->monto}}
                     @endforeach
-                    {{$suma_pagos}}
+                    
                 </td>
             </tr>
             
