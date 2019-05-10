@@ -214,6 +214,41 @@
                     </div>
                 </div>
 
+                <div class="box box-default box-solid">
+                    <div class="box-header">
+                        <h3 class="box-title">CUESTIONARIO</h3>
+                        <div class="box-tools bg-white">
+                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <div class="form-group col-md-4 @if($errors->has('ccuestionario_id')) has-error @endif">
+                    <label for="ccuestionario_id-field">Cuestionario</label>
+                    {!! Form::select("ccuestionario_id", $cuestionarios, null, array("class" => "form-control select_seguridad", "id" => "ccuestionario_id-field", "style"=>"width:100%")) !!}
+                    @if($errors->has("ccuestionario_id"))
+                    <span class="help-block">{{ $errors->first("ccuestionario_id") }}</span>
+                    @endif
+                </div>
+                <div class="form-group col-md-8 @if($errors->has('ccuestionario_id')) has-error @endif">
+                    <label for="ccuestionario_id-field">Solo despues de elegir y guardar un cuestionario puede proceder a visualizar las preguntas</label>
+                </div>
+                @if(isset($cliente->ccuestionario) and $cliente->ccuestionario->id<>0)
+                <div id="tab2" class="tab-pane">
+                        @foreach($cliente->ccuestionario->ccuestionarioPreguntas as $p)
+                        <div class="form-group col-md-12 @if($errors->has('especialidad_id')) has-error @endif">
+                            <label>{{ $p->numero.". ".$p->name }}</label>
+                            <div class="row">
+                            @foreach($p->ccuestionarioRespuesta as $r)
+                            {!! Form::radio($p->id, $r->id, $respuestasVisibles->visible($cliente->id,$cliente->ccuestionario->id,$p->id,$r->id)) !!} {{$r->clave.". ".$r->name }} <br/>
+                            @endforeach
+                            </div>
+                        </div>
+                        @endforeach
+                </div>
+                @endif
+                    </div>
+                </div>
+                
                 
                 <div class="box box-default box-solid">
                     <div class="box-header">
@@ -524,30 +559,7 @@
         </div>
         <div id="tab2" class="tab-pane">
             <fieldset>
-                <div class="form-group col-md-4 @if($errors->has('ccuestionario_id')) has-error @endif">
-                    <label for="ccuestionario_id-field">Cuestionario</label>
-                    {!! Form::select("ccuestionario_id", $cuestionarios, null, array("class" => "form-control select_seguridad", "id" => "ccuestionario_id-field", "style"=>"width:100%")) !!}
-                    @if($errors->has("ccuestionario_id"))
-                    <span class="help-block">{{ $errors->first("ccuestionario_id") }}</span>
-                    @endif
-                </div>
-                <div class="form-group col-md-8 @if($errors->has('ccuestionario_id')) has-error @endif">
-                    <label for="ccuestionario_id-field">Solo despues de elegir y guardar un cuestionario puede proceder a visualizar las preguntas</label>
-                </div>
-                @if(isset($cliente->ccuestionario) and $cliente->ccuestionario->id<>0)
-                <div id="tab2" class="tab-pane">
-                        @foreach($cliente->ccuestionario->ccuestionarioPreguntas as $p)
-                        <div class="form-group col-md-12 @if($errors->has('especialidad_id')) has-error @endif">
-                            <label>{{ $p->numero.". ".$p->name }}</label>
-                            <div class="row">
-                            @foreach($p->ccuestionarioRespuesta as $r)
-                            {!! Form::radio($p->id, $r->id, $respuestasVisibles->visible($cliente->id,$cliente->ccuestionario->id,$p->id,$r->id)) !!} {{$r->clave.". ".$r->name }} <br/>
-                            @endforeach
-                            </div>
-                        </div>
-                        @endforeach
-                </div>
-                @endif
+                
             </fieldset>
         </div>
         <div id="tab3" class="tab-pane">
@@ -1028,7 +1040,7 @@ $(document).ready(function() {
 $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
 ?>
         
-    $('#plantel_id-crear').change(function(){
+        $('#plantel_id-crear').change(function(){
           getCmbGrupo();
         });
         $('#lectivo_id-crear').change(function(){
@@ -1353,27 +1365,12 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                         //combos dependientes
                         getCmbEspecialidad();
                         getCmbEspecialidad2();
-                        /*getCmbEspecialidad3();
-                         getCmbEspecialidad4();
-                         */
                         getCmbNivel();
-                        /*getCmbNivel2();
-                         getCmbNivel3();
-                         getCmbNivel4();
-                         */getCmbGrado();
-                        /*getCmbGrado2();
-                         getCmbGrado3();
-                         getCmbGrado4();
-                         */getCmbTurno();
-                        /*getCmbTurno2();
-                         getCmbTurno3();
-                         getCmbTurno4();
-                         */$('#plantel_id-field').change(function(){
+                        getCmbGrado();
+                        getCmbTurno();
+                        $('#plantel_id-field').change(function(){
                         getCmbEspecialidad();
-                        /*getCmbEspecialidad2();
-                         getCmbEspecialidad3();
-                         getCmbEspecialidad4();
-                         */});
+                        });
                         $('#especialidad_id-field').change(function(){
                         getCmbNivel();
                         });
@@ -1382,6 +1379,32 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                         });
                         $('#grado_id-field').change(function(){
                         getCmbTurno();
+                        });
+                        
+                        
+                        /*getCmbEspecialidadCrear();
+                        getCmbNivelCrear();
+                        getCmbGradoCrear();
+                        getCmbTurnoCrear();
+                        */
+                        $('#plantel_id-crear').change(function(){
+                        getCmbEspecialidadCrear();
+                        });
+                        $('#especialidad_id-crear').change(function(){
+                        getCmbNivelCrear();
+                        });
+                        $('#nivel_id-crear').change(function(){
+                        getCmbGradoCrear();
+                        });
+                        
+                        $('#plantel_id-editar').change(function(){
+                        getCmbEspecialidadEditar();
+                        });
+                        $('#especialidad_id-editar').change(function(){
+                        getCmbNivelEditar();
+                        });
+                        $('#nivel_id-editar').change(function(){
+                        getCmbGradoEditar();
                         });
                         
                         $(function() {
@@ -1417,6 +1440,53 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                                 }
                         });
                         }
+                        
+                        function getCmbEspecialidadCrear(){
+                        //var $example = $("#especialidad_id-field").select2();
+                        
+                        $.ajax({
+                        url: '{{ route("especialidads.getCmbEspecialidad") }}',
+                                type: 'GET',
+                                data: "plantel_id=" + $('#plantel_id-crear option:selected').val() + "&especialidad_id=" + $('#especialidad_id-crear option:selected').val() + "",
+                                dataType: 'json',
+                                beforeSend : function(){$("#loading10").show(); },
+                                complete : function(){$("#loading10").hide(); },
+                                success: function(data){
+                                //$example.select2("destroy");
+                                $('#especialidad_id-crear').empty();
+                                $('#especialidad_id-crear').append($('<option></option>').text('Seleccionar').val('0'));
+                                $.each(data, function(i) {
+                                //alert(data[i].name);
+                                $('#especialidad_id-crear').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
+                                });
+                                //$example.select2();
+                                }
+                        });
+                        }
+                        
+                        function getCmbEspecialidadEditar(){
+                        //var $example = $("#especialidad_id-field").select2();
+                        
+                        $.ajax({
+                        url: '{{ route("especialidads.getCmbEspecialidad") }}',
+                                type: 'GET',
+                                data: "plantel_id=" + $('#plantel_id-editar option:selected').val() + "&especialidad_id=" + $('#especialidad_id-editar option:selected').val() + "",
+                                dataType: 'json',
+                                beforeSend : function(){$("#loading10").show(); },
+                                complete : function(){$("#loading10").hide(); },
+                                success: function(data){
+                                //$example.select2("destroy");
+                                $('#especialidad_id-editar').empty();
+                                $('#especialidad_id-editar').append($('<option></option>').text('Seleccionar').val('0'));
+                                $.each(data, function(i) {
+                                //alert(data[i].name);
+                                $('#especialidad_id-editar').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
+                                });
+                                //$example.select2();
+                                }
+                        });
+                        }
+
 
                         @if(isset($cliente))
                         function CrearCombinacionCliente() {
@@ -1456,48 +1526,7 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                                 }
                         });
                         }
-                        function getCmbEspecialidad3(){
-                        //var $example = $("#especialidad_id-field").select2();
-                        var a = $('#frm_cliente').serialize();
-                        $.ajax({
-                        url: '{{ route("especialidads.getCmbEspecialidad") }}',
-                                type: 'GET',
-                                data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad3_id-field option:selected').val() + "",
-                                dataType: 'json',
-                                beforeSend : function(){$("#loading10").show(); },
-                                complete : function(){$("#loading10").hide(); },
-                                success: function(data){
-                                $('#especialidad3_id-field').empty();
-                                $('#especialidad3_id-field').append($('<option></option>').text('Seleccionar').val('0'));
-                                $.each(data, function(i) {
-                                //alert(data[i].name);
-                                $('#especialidad3_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
-                                });
-                                //$example.select2();
-                                }
-                        });
-                        }
-                        function getCmbEspecialidad4(){
-                        //var $example = $("#especialidad_id-field").select2();
-                        var a = $('#frm_cliente').serialize();
-                        $.ajax({
-                        url: '{{ route("especialidads.getCmbEspecialidad") }}',
-                                type: 'GET',
-                                data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad4_id-field option:selected').val() + "",
-                                dataType: 'json',
-                                beforeSend : function(){$("#loading10").show(); },
-                                complete : function(){$("#loading10").hide(); },
-                                success: function(data){
-                                $('#especialidad4_id-field').empty();
-                                $('#especialidad4_id-field').append($('<option></option>').text('Seleccionar').val('0'));
-                                $.each(data, function(i) {
-                                //alert(data[i].name);
-                                $('#especialidad4_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
-                                });
-                                //$example.select2();
-                                }
-                        });
-                        }
+                        
                         function getCmbNivel(){
                         //var $example = $("#especialidad_id-field").select2();
                         //alert($('#especialidad_id-field option:selected').val());
@@ -1523,78 +1552,59 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                                 }
                         });
                         }
-                        function getCmbNivel2(){
+                        
+                        function getCmbNivelCrear(){
                         //var $example = $("#especialidad_id-field").select2();
-                        var a = $('#frm_cliente').serialize();
+                        //alert($('#especialidad_id-field option:selected').val());
+                        
                         $.ajax({
                         url: '{{ route("nivels.getCmbNivels") }}',
                                 type: 'GET',
-                                data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad2_id-field option:selected').val() + "&nivel_id=" + $('#curso_id-field option:selected').val() + "",
+                                data: "plantel_id=" + $('#plantel_id-crear option:selected').val() + "&especialidad_id=" + $('#especialidad_id-crear option:selected').val() + "&nivel_id=" + $('#nivel_id-crear option:selected').val() + "",
                                 dataType: 'json',
                                 beforeSend : function(){$("#loading11").show(); },
                                 complete : function(){$("#loading11").hide(); },
                                 success: function(data){
                                 //alert(data);
                                 //$example.select2("destroy");
-                                $('#curso_id-field').html('');
+                                $('#nivel_id-crear').html('');
                                 //$('#especialidad_id-field').empty();
-                                $('#curso_id-field').append($('<option></option>').text('Seleccionar').val('0'));
+                                $('#nivel_id-crear').append($('<option></option>').text('Seleccionar').val('0'));
                                 $.each(data, function(i) {
                                 //alert(data[i].name);
-                                $('#curso_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
+                                $('#nivel_id-crear').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
                                 });
                                 //$example.select2();
                                 }
                         });
                         }
-                        function getCmbNivel3(){
+                        
+                        function getCmbNivelEditar(){
                         //var $example = $("#especialidad_id-field").select2();
-                        var a = $('#frm_cliente').serialize();
+                        //alert($('#especialidad_id-field option:selected').val());
+                        
                         $.ajax({
                         url: '{{ route("nivels.getCmbNivels") }}',
                                 type: 'GET',
-                                data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad3_id-field option:selected').val() + "&nivel_id=" + $('#diplomado_id-field option:selected').val() + "",
+                                data: "plantel_id=" + $('#plantel_id-editar option:selected').val() + "&especialidad_id=" + $('#especialidad_id-editar option:selected').val() + "&nivel_id=" + $('#nivel_id-editar option:selected').val() + "",
                                 dataType: 'json',
                                 beforeSend : function(){$("#loading11").show(); },
                                 complete : function(){$("#loading11").hide(); },
                                 success: function(data){
                                 //alert(data);
                                 //$example.select2("destroy");
-                                $('#diplomado_id-field').html('');
+                                $('#nivel_id-editar').html('');
                                 //$('#especialidad_id-field').empty();
-                                $('#diplomado_id-field').append($('<option></option>').text('Seleccionar').val('0'));
+                                $('#nivel_id-editar').append($('<option></option>').text('Seleccionar').val('0'));
                                 $.each(data, function(i) {
                                 //alert(data[i].name);
-                                $('#diplomado_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
+                                $('#nivel_id-editar').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
                                 });
                                 //$example.select2();
                                 }
                         });
                         }
-                        function getCmbNivel4(){
-                        //var $example = $("#especialidad_id-field").select2();
-                        var a = $('#frm_cliente').serialize();
-                        $.ajax({
-                        url: '{{ route("nivels.getCmbNivels") }}',
-                                type: 'GET',
-                                data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad4_id-field option:selected').val() + "&nivel_id=" + $('#otro_id-field option:selected').val() + "",
-                                dataType: 'json',
-                                beforeSend : function(){$("#loading11").show(); },
-                                complete : function(){$("#loading11").hide(); },
-                                success: function(data){
-                                //alert(data);
-                                //$example.select2("destroy");
-                                $('#otro_id-field').html('');
-                                //$('#especialidad_id-field').empty();
-                                $('#otro_id-field').append($('<option></option>').text('Seleccionar').val('0'));
-                                $.each(data, function(i) {
-                                //alert(data[i].name);
-                                $('#otro_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
-                                });
-                                //$example.select2();
-                                }
-                        });
-                        }
+                        
                         function getCmbGrado(){
                         //var $example = $("#especialidad_id-field").select2();
                         var a = $('#frm_cliente').serialize();
@@ -1619,78 +1629,57 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                                 }
                         });
                         }
-                        function getCmbGrado2(){
+                        
+                        function getCmbGradoCrear(){
                         //var $example = $("#especialidad_id-field").select2();
-                        var a = $('#frm_cliente').serialize();
+                        
                         $.ajax({
                         url: '{{ route("grados.getCmbGrados") }}',
                                 type: 'GET',
-                                data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad2_id-field option:selected').val() + "&nivel_id=" + $('#curso_id-field option:selected').val() + "&grado_id=" + $('#subcurso_id-field option:selected').val() + "",
+                                data: "plantel_id=" + $('#plantel_id-crear option:selected').val() + "&especialidad_id=" + $('#especialidad_id-crear option:selected').val() + "&nivel_id=" + $('#nivel_id-crear option:selected').val() + "&grado_id=" + $('#grado_id-crear option:selected').val() + "",
                                 dataType: 'json',
                                 beforeSend : function(){$("#loading12").show(); },
                                 complete : function(){$("#loading12").hide(); },
                                 success: function(data){
                                 //alert(data);
                                 //$example.select2("destroy");
-                                $('#subcurso_id-field').html('');
+                                $('#grado_id-crear').html('');
                                 //$('#especialidad_id-field').empty();
-                                $('#subcurso_id-field').append($('<option></option>').text('Seleccionar').val('0'));
+                                $('#grado_id-crear').append($('<option></option>').text('Seleccionar').val('0'));
                                 $.each(data, function(i) {
                                 //alert(data[i].name);
-                                $('#subcurso_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
+                                $('#grado_id-crear').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
                                 });
                                 //$example.select2();
                                 }
                         });
                         }
-                        function getCmbGrado3(){
+                        
+                        function getCmbGradoEditar(){
                         //var $example = $("#especialidad_id-field").select2();
-                        var a = $('#frm_cliente').serialize();
+                        
                         $.ajax({
                         url: '{{ route("grados.getCmbGrados") }}',
                                 type: 'GET',
-                                data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad3_id-field option:selected').val() + "&nivel_id=" + $('#diplomado_id-field option:selected').val() + "&grado_id=" + $('#subdiplomado_id-field option:selected').val() + "",
+                                data: "plantel_id=" + $('#plantel_id-editar option:selected').val() + "&especialidad_id=" + $('#especialidad_id-editar option:selected').val() + "&nivel_id=" + $('#nivel_id-editar option:selected').val() + "&grado_id=" + $('#grado_id-editar option:selected').val() + "",
                                 dataType: 'json',
                                 beforeSend : function(){$("#loading12").show(); },
                                 complete : function(){$("#loading12").hide(); },
                                 success: function(data){
                                 //alert(data);
                                 //$example.select2("destroy");
-                                $('#subdiplomado_id-field').html('');
+                                $('#grado_id-editar').html('');
                                 //$('#especialidad_id-field').empty();
-                                $('#subdiplomado_id-field').append($('<option></option>').text('Seleccionar').val('0'));
+                                $('#grado_id-editar').append($('<option></option>').text('Seleccionar').val('0'));
                                 $.each(data, function(i) {
                                 //alert(data[i].name);
-                                $('#subdiplomado_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
+                                $('#grado_id-editar').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
                                 });
                                 //$example.select2();
                                 }
                         });
                         }
-                        function getCmbGrado4(){
-                        //var $example = $("#especialidad_id-field").select2();
-                        var a = $('#frm_cliente').serialize();
-                        $.ajax({
-                        url: '{{ route("grados.getCmbGrados") }}',
-                                type: 'GET',
-                                data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad4_id-field option:selected').val() + "&nivel_id=" + $('#otro_id-field option:selected').val() + "&grado_id=" + $('#subotro_id-field option:selected').val() + "",
-                                dataType: 'json',
-                                beforeSend : function(){$("#loading12").show(); },
-                                complete : function(){$("#loading12").hide(); },
-                                success: function(data){
-                                //alert(data);
-                                //$example.select2("destroy");
-                                $('#subotro_id-field').html('');
-                                //$('#especialidad_id-field').empty();
-                                $('#subotro_id-field').append($('<option></option>').text('Seleccionar').val('0'));
-                                $.each(data, function(i) {
-                                //alert(data[i].name);
-                                $('#subotro_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
-                                });
-                                //$example.select2();
-                                }
-                        });
-                        }
+                        
                         function getCmbTurno(){
                         //var $example = $("#especialidad_id-field").select2();
                         var a = $('#frm_cliente').serialize();
