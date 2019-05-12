@@ -71,6 +71,14 @@ class InscripcionsController extends Controller {
 
 		//create data
 		$i=Inscripcion::create( $input );
+                $combinacion= \App\CombinacionCliente::find($i->combinacion_cliente_id);
+                if(count($combinacion)>0){
+                    $combinacion->plantel_id=$i->plantel_id;
+                    $combinacion->especialidad_id=$i->especialidad_id;
+                    $combinacion->nivel_id=$i->nivel_id;
+                    $combinacion->grado_id=$i->grado_id;
+                    $combinacion->save();
+                }
 		//dd($i);
 			
 
@@ -191,7 +199,14 @@ class InscripcionsController extends Controller {
 		//update data
 		$inscripcion=$inscripcion->find($id);
 		$inscripcion->update( $input );
-
+                $combinacion= \App\CombinacionCliente::find($i->combinacion_cliente_id);
+                if(count($combinacion)>0){
+                    $combinacion->plantel_id=$inscripcion->plantel_id;
+                    $combinacion->especialidad_id=$inscripcion->especialidad_id;
+                    $combinacion->nivel_id=$inscripcion->nivel_id;
+                    $combinacion->grado_id=$inscripcion->grado_id;
+                    $combinacion->save();
+                }
 		return redirect()->route('inscripcions.index')->with('message', 'Registro Actualizado.');
 	}
 

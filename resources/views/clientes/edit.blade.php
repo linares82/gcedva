@@ -59,7 +59,7 @@
                                 <div class="form-group col-md-6 @if($errors->has('cliente_id')) has-error @endif">
                                     <label for="cliente_id-field">Id Alumno</label> 
                                     {!! Form::text("cliente_id", null, array("class" => "form-control input-sm", "id" => "cliente_id-crear")) !!}
-                                    
+                                    {!! Form::hidden("combinacion_cliente_id", null, array("class" => "form-control input-sm", "id" => "combinacion_cliente_id-crear")) !!}
                                     @if($errors->has("cliente_id"))
                                      <span class="help-block">{{ $errors->first("cliente_id") }}</span>
                                     @endif

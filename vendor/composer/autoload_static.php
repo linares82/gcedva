@@ -635,6 +635,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'AddCicloClientesTable' => __DIR__ . '/../..' . '/database/migrations/2017_11_17_134515_add_ciclo_clientes_table.php',
         'AddColorStSeguimientoTable' => __DIR__ . '/../..' . '/database/migrations/2017_11_14_164248_add_color_st_seguimiento_table.php',
         'AddCombinacionIdAdeudosTable' => __DIR__ . '/../..' . '/database/migrations/2018_04_17_133551_add_combinacion_id_adeudos_table.php',
+        'AddCombinacionInscripcionsTable' => __DIR__ . '/../..' . '/database/migrations/2019_05_12_075247_add_combinacion_inscripcions_table.php',
         'AddConsecutivoCajasTable' => __DIR__ . '/../..' . '/database/migrations/2018_05_17_085014_add_consecutivo_cajas_table.php',
         'AddConsecutivoPagoPlantelsTable' => __DIR__ . '/../..' . '/database/migrations/2018_08_14_154039_add_consecutivo_pago_plantels_table.php',
         'AddConsecutivoPagosTable' => __DIR__ . '/../..' . '/database/migrations/2018_08_14_160010_add_consecutivo_pagos_table.php',

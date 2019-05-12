@@ -98,15 +98,19 @@
                             <span class="help-block">{{ $errors->first("plantel_id") }}</span>
                             @endif
                         </div>
+                        
                         <div class="form-group col-md-4 @if($errors->has('empleado_id')) has-error @endif" style="clear:left;">
                             <label for="empleado_id-field">Empleado</label>
-                            {!! Form::select("empleado_id", $empleados, null, array("class" => "form-control select_seguridad", "id" => "empleado_id-field")) !!}
+                            
+                                {!! Form::select("empleado_id", $empleados, null, array("class" => "form-control select_seguridad", "id" => "empleado_id-field")) !!}
+                            
+                            
                             <div id='loading3' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                             @if($errors->has("empleado_id"))
                             <span class="help-block">{{ $errors->first("empleado_id") }}</span>
                             @endif
                         </div>
-
+                        
                         <div class="form-group col-md-4 @if($errors->has('empresa_id')) has-error @endif">
                             <label for="empresa_id-field">Empresa</label>
                             {!! Form::select("empresa_id", $list["Empresa"], null, array("class" => "form-control select_seguridad", "id" => "empresa_id-field", 'readonly'=>'readonly')) !!}
@@ -347,7 +351,8 @@
                                                                                                    data-especialidad="{{$c->especialidad_id}}"
                                                                                                    data-nivel="{{$c->nivel_id}}"
                                                                                                    data-grado="{{$c->grado_id}}"
-                                                                                                   data-turno="{{$c->turno_id}}">
+                                                                                                   data-turno="{{$c->turno_id}}"
+                                                                                                   data-combinacion="{{$c->id}}">
                                                 <span class="glyphicon glyphicon-star"></span> Inscribir </button>
                                                 
                                             @endpermission
@@ -1126,16 +1131,23 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
         $('.modal-title').text('Inscribir');
         
         //Limpiar valores
-        
         $('#cliente_id-crear').val($(this).data('cliente_id')).change();
         $('#cliente-crear').val($(this).data('cliente_nombre')).change();
-        $('#plantel_id-crear').val($(this).data('plantel')).change();
-        $('#especialidad_id-crear').val($(this).data('especialidad')).change();
-        $('#nivel_id-crear').val($(this).data('nivel')).change();
-        $('#grado_id-crear').val($(this).data('grado')).change();
+        $('#plantel_id-crear').val($(this).data('plantel'));
+        $('#especialidad_id-crear').val($(this).data('especialidad'));
+        $('#nivel_id-crear').val($(this).data('nivel'));
+        $('#grado_id-crear').val($(this).data('grado'));
         $('#turno_id-crear').val($(this).data('turno')).change();
+        $('#combinacion_cliente_id-crear').val($(this).data('combinacion')).change();
+        
         
         $('#crearInscripcionModal').modal('show');
+        
+        $('#plantel_id-crear').change();
+        $('#especialidad_id-crear').change();
+        $('#nivel_id-crear').change();
+        $('#grado_id-crear').change();
+        
         
     });
     
@@ -1157,6 +1169,7 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                 'turno_id': $('#turno_id-crear option:selected').val(),
                 'fec_inscripcion': $('#fec_inscripcion-crear').val(),
                 'matricula': $('#matricula-crear').val(),
+                'combinacion_cliente_id': $('#combinacion_cliente_id-crear').val(),
             },
             beforeSend : function(){$("#loading3").show(); },
             complete : function(){$("#loading3").hide(); },
@@ -1174,10 +1187,10 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
         
         $('#cliente_id-editar').val($(this).data('cliente_id')).change();
         $('#cliente-editar').val($(this).data('cliente_nombre')).change();
-        $('#plantel_id-editar').val($(this).data('plantel')).change();
-        $('#especialidad_id-editar').val($(this).data('especialidad')).change();
-        $('#nivel_id-editar').val($(this).data('nivel')).change();
-        $('#grado_id-editar').val($(this).data('grado')).change();
+        $('#plantel_id-editar').val($(this).data('plantel'));
+        $('#especialidad_id-editar').val($(this).data('especialidad'));
+        $('#nivel_id-editar').val($(this).data('nivel'));
+        $('#grado_id-editar').val($(this).data('grado'));
         $('#lectivo_id-editar').val($(this).data('lectivo')).change();
         $('#grupo_id-editar').val($(this).data('grupo')).change();
         $('#periodo_estudio_id-editar').val($(this).data('periodo_estudio')).change();
@@ -1187,6 +1200,11 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
         
         $('#editarInscripcionModal').modal('show');
         inscripcion=$(this).data('inscripcion')
+        
+        $('#plantel_id-editar').change();
+        $('#especialidad_id-editar').change();
+        $('#nivel_id-editar').change();
+        $('#grado_id-editar').change();
     });
     
     $('.modal-footer').on('click', '#inscripcion-editar', function() {
@@ -1462,6 +1480,7 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                                 //$example.select2();
                                 }
                         });
+                        //console.log("fil");
                         }
                         
                         function getCmbEspecialidadEditar(){
