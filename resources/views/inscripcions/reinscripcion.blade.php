@@ -94,8 +94,21 @@
                             <td>{{ Form::checkbox("id[]", $c['id']) }}</td>
                             <td>{{ $c['cliente'] }} - {{ $c['nombre'] }}</td>
                             <td>{{ $c['periodo_estudio'] }}</td>
-                            <td> {{ $c['aprobadas'] }} </td>
-                            <td> {{ $c['no_aprobadas'] }} </td>
+                            <td> {{ $c['aprobadas'] }} 
+                                <table id='aprobadas_modulo' style='display: none;'>
+                                    <thead>
+                                    <th>Materia</th>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                            <td> {{ $c['no_aprobadas'] }} 
+                            
+                            </td>
                         </tr>
                         @endforeach
                     </tbody>

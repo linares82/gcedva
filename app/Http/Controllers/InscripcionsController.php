@@ -314,10 +314,27 @@ class InscripcionsController extends Controller {
                         ->where('h.st_materium_id', '=', 1)
                         ->whereNull('h.deleted_at')
                         ->first('aprobadas');
-                        //dd($aprobadas);
+                        
+                        $aprobadas_modulo=Cliente::join('inscripcions as i', 'i.cliente_id', '=', 'clientes.id')
+                        ->join('periodo_estudios as p','p.id','=','i.periodo_estudio_id')
+                        ->join('hacademicas as h', 'h.inscripcion_id', 'i.id')
+                        ->join('materia as m','m.id','=','h.materium_id')
+                        ->select('m.id', 'm.name as materia','m.modulo_id','m.seriada_bnd')
+                        //->whereColumn('h.lectivo_id','i.lectivo_id')
+                        ->where('i.plantel_id', '=', $input['plantel_id'])
+                        ->where('i.especialidad_id', '=', $input['especialidad_id'])
+                        ->where('i.nivel_id', '=', $input['nivel_id'])
+                        ->where('i.grupo_id', '=', $input['grupo_id'])
+                        ->where('i.lectivo_id', '=', $input['lectivo_id'])
+                        ->where('i.plantel_id', '=', $input['plantel_id'])
+                        ->where('clientes.id', '=', $c->cliente)        
+                        ->where('h.st_materium_id', '=', 1)
+                        ->whereNull('h.deleted_at')
+                        ->get();
+                        //dd($aprobadas_modulo);
                         
                         
-                        $no_aprobadas=Cliente::join('inscripcions as i', 'i.cliente_id', '=', 'clientes.id')
+                        /*$no_aprobadas=Cliente::join('inscripcions as i', 'i.cliente_id', '=', 'clientes.id')
                         ->join('periodo_estudios as p','p.id','=','i.periodo_estudio_id')
                         ->join('hacademicas as h', 'h.inscripcion_id', 'i.id')
                         ->select(DB::raw('count(h.materium_id) as no_aprobadas'))
@@ -332,17 +349,59 @@ class InscripcionsController extends Controller {
                         ->where('h.st_materium_id', '<>', 1)
                         ->whereNull('h.deleted_at')
                         ->first('no_aprobadas');
+                        */
+                        
+                        $no_aprobadas_modulo=Cliente::join('inscripcions as i', 'i.cliente_id', '=', 'clientes.id')
+                        ->join('periodo_estudios as p','p.id','=','i.periodo_estudio_id')
+                        ->join('hacademicas as h', 'h.inscripcion_id', 'i.id')
+                        ->join('materia as m','m.id','=','h.materium_id')
+                        ->select('m.id', 'm.name as materia','m.modulo_id','m.seriada_bnd')
+                        //->whereColumn('h.lectivo_id','i.lectivo_id')
+                        ->where('i.plantel_id', '=', $input['plantel_id'])
+                        ->where('i.especialidad_id', '=', $input['especialidad_id'])
+                        ->where('i.nivel_id', '=', $input['nivel_id'])
+                        ->where('i.grupo_id', '=', $input['grupo_id'])
+                        ->where('i.lectivo_id', '=', $input['lectivo_id'])
+                        ->where('i.plantel_id', '=', $input['plantel_id'])
+                        ->where('clientes.id', '=', $c->cliente)        
+                        ->where('h.st_materium_id', '<>', 1)
+                        ->whereNull('h.deleted_at')
+                        ->get();
 //                        $resultado->put('id',$c->id);
 //                        $resultado->put('nombre',$c->nombre);
 //                        $resultado->put('periodo_estudio',$c->periodo_estudio);
 //                        $resultado->put('aprobadas',$aprobadas->aprobadas);
 //                        $resultado->put('no_aprobadas',$no_aprobadas->no_aprobadas);
+                        $contar_materias_no_aprobadas=0;
+                        foreach($no_aprobadas_modulo as $no_aprobada){
+                            if($no_aprobada->seriada_bnd==1){
+                                $marcador=0;
+                                foreach($aprobadas_modulo as $aprobada){
+                                    if($aprobada->seriada_bnd==1 and $aprobada->modulo_id==$no_aprobada->modulo_id){
+                                        $marcador=1;
+                                    }else{
+                                        //$contar_materias++;
+                                    }
+                                }
+                                if($marcador==0){
+                                    $contar_materias_no_aprobadas++;
+                                }
+                        }else{
+                            $contar_materias_no_aprobadas++;
+                        }
+                            
+                        }
+                        //dd($aprobadas_modulo->toArray());
+                        
+                        //dd($contar_materias);
                         $resultados->push(['id'=>$c->id,
                                            'nombre'=>$c->nombre,
                                            'cliente'=>$c->cliente,
                                            'periodo_estudio'=>$c->periodo_estudio,
                                            'aprobadas'=>$aprobadas->aprobadas,
-                                           'no_aprobadas'=>$no_aprobadas->no_aprobadas]);
+                                           'no_aprobadas'=>$contar_materias_no_aprobadas,
+                                           'aprobadas_modulo'=>$aprobadas_modulo,
+                                           'no_aprobadas_modulo'=>$no_aprobadas_modulo]);
                     }
                     
                     

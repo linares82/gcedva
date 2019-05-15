@@ -154,6 +154,7 @@
                         <div class="row_reglas_relacionadas">
                             <div >
                                 {!! Form::hidden("autorizacion_beca_id", null, array("class" => "form-control", "id" => "autorizacion_beca_id-crear")) !!}
+                                <input type="hidden" name="_token" id="_token"  value="<?= csrf_token(); ?>"> 
                              </div>
                             <div class="form-group col-sm-12 @if($errors->has('fec_fin')) has-error @endif">
                                 <label for="inicial_bnd-field">Comentario</label>

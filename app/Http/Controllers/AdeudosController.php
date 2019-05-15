@@ -7,10 +7,11 @@ use App\Adeudo;
 use App\Cliente;
 use App\Caja;
 use App\CajaLn;
+use App\CombinacionCliente;
 use App\Empleado;
 use App\Plantel;
 use App\PlanPago;
-use App\CombinacionCliente;
+use App\StCaja;
 use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updateAdeudo;
@@ -253,7 +254,8 @@ class AdeudosController extends Controller {
             
             $planteles=Plantel::pluck('razon','id');
             $planes= PlanPago::pluck('name','id');
-            return view('adeudos.reportes.adeudosXPlan',compact('planteles','planes'));
+            $estatus=StCaja::pluck('name','id');
+            return view('adeudos.reportes.adeudosXPlan',compact('planteles','planes','estatus'));
         }
         
         public function reporteAdeudosPlanr(Request $request){
@@ -266,44 +268,20 @@ class AdeudosController extends Controller {
             
             $plantel=Plantel::find($datos['plantel_f']);
             
-            /*
-            $adeudosPendientes=Adeudo::select('c.id as cliente','c.nombre','c.nombre2',
-                                              'c.ape_paterno','c.ape_materno','pg.name as plan',DB::raw('sum(adeudos.monto) as deuda'))
-                                     ->join('clientes as c', 'c.id', '=', 'adeudos.cliente_id')
-                                     ->join('plan_pago_lns as ln','ln.id','=','adeudos.plan_pago_ln_id')
-                                     ->join('plan_pagos as pg','pg.id','=','ln.plan_pago_id')
-                                     ->where('pg.id',$datos['plan_f'])
-                                     ->where('c.plantel_id', '=', $datos['plantel_f'])
-                                     ->groupBy('pg.name')->groupBy('c.id')
-                                     ->groupBy('c.nombre')->groupBy('c.nombre2')->groupBy('c.ape_paterno')->groupBy('c.ape_materno')
-                                     ->orderBy('c.id', 'asc')
-                                     ->get();*/
-            /*$cajas=Adeudo::select('c.id as cliente','pg.name as plan','c.nombre','c.nombre2','c.ape_paterno','c.ape_materno',
-                                              'adeudos.pagado_bnd','con.name as concepto','adeudos.monto','caj.consecutivo','adeudos.id as ln')
-                                     ->join('clientes as c', 'c.id', '=', 'adeudos.cliente_id')
-                                     ->join('caja_conceptos as con','con.id','=','adeudos.caja_concepto_id')
-                                     ->join('cajas as caj','caj.id','=','adeudos.caja_id')
-                                     ->join('plan_pago_lns as ln','ln.id','=','adeudos.plan_pago_ln_id')
-                                     ->join('plan_pagos as pg','pg.id','=','ln.plan_pago_id')
-                                     ->where('pg.id',$datos['plan_f'])
-                                     //->where('adeudos.pagado_bnd',1)
-                                     ->where('c.plantel_id', '=', $datos['plantel_f'])
-                                     ->orderBy('c.id', 'asc')
-                                     ->orderBy('adeudos.id')
-                                     ->get();
-            */
             $cajas= PlanPago::select('plan_pagos.name as plan','caj.id as caja','caj.consecutivo','c.id as cliente','c.nombre','c.nombre2',
-                                     'c.ape_paterno','c.ape_materno','st.name as estatus')
+                                     'c.ape_paterno','c.ape_materno','st.name as estatus', 'st.id as estatus_caja')
                               ->join('combinacion_clientes as cc','cc.plan_pago_id','=','plan_pagos.id')
                               ->join('clientes as c','c.id','=','cc.cliente_id')
                               ->join('cajas as caj','caj.cliente_id','=','c.id')
                               ->join('st_cajas as st','st.id','=','caj.st_caja_id')
                               ->where('plan_pagos.id',$datos['plan_f'])
                               ->where('c.plantel_id', '=', $datos['plantel_f'])
-                              ->where('st.id','<>',2)
+                              ->where('caj.st_caja_id', '=', $datos['estatus_f'])
+                              //->where('st.id','<>',2)
                               ->get();
-            //dd($adeudosPendientes);
-            return view('adeudos.reportes.adeudosPlanr', array('cajas'=>$cajas, 'plantel'=>$plantel, 'plan'=>$datos['plan_f']));
+            //dd($cajas->toArray());
+            return view('adeudos.reportes.adeudosPlanr', 
+                    array('cajas'=>$cajas, 'plantel'=>$plantel, 'plan'=>$datos['plan_f'],'datos'=>$datos));
             
             /*$pdf = PDF::loadView('adeudos.adeudos_pendientes', array('adeudos'=>$adeudosPendientes, 'plantel'=>$plantel))
                     ->setPaper('Letter', 'portrait');

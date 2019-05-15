@@ -51,6 +51,21 @@
                     <span class="help-block">{{ $errors->first("plan_f") }}</span>
                     @endif
                 </div>
+                <div class="form-group col-md-6 @if($errors->has('concepto_f')) has-error @endif">
+                    <label for="concepto_f-field">Concepto de:</label>
+                    {!! Form::select("concepto_f", array(), null, array("class" => "form-control select_seguridad", "id" => "concepto_f-field")) !!}
+                    <div id='loading1' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
+                    @if($errors->has("concepto_f"))
+                    <span class="help-block">{{ $errors->first("concepto_f") }}</span>
+                    @endif
+                </div>
+                <div class="form-group col-md-6 @if($errors->has('estatus_f')) has-error @endif">
+                    <label for="estatus_f-field">Estatus Caja de:</label>
+                    {!! Form::select("estatus_f", $estatus, null, array("class" => "form-control select_seguridad", "id" => "estatus_f-field")) !!}
+                    @if($errors->has("estatus_f"))
+                    <span class="help-block">{{ $errors->first("estatus_f") }}</span>
+                    @endif
+                </div>
                 
                 
                 
@@ -81,7 +96,32 @@
         show_select_today: 'Hoy',
       });
       */
-        
+     cmbConceptos();
+     $('#plan_f-field').change(function(){
+         cmbConceptos();
+     });
+    function cmbConceptos(){
+                        var a = $('#frm').serialize();
+                        $.ajax({
+                        url: '{{ route("planPagoLns.getCmbConceptosPlan") }}',
+                                type: 'GET',
+                                data: a,
+                                dataType: 'json',
+                                beforeSend : function(){$("#loading1").show(); },
+                                complete : function(){$("#loading1").hide(); },
+                                success: function(data){
+                                    $('#concepto_f-field').html('');
+
+                                    //$('#especialidad_id-field').empty();
+                                    $('#concepto_f-field').append($('<option></option>').text('Seleccionar').val('0'));
+
+                                    $.each(data, function(i) {
+                                        //alert(data[i].name);
+                                        $('#concepto_f-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                                    });
+                                }
+                        });
+                        }    
     });
     
     </script>

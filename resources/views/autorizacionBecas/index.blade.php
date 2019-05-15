@@ -236,6 +236,8 @@
                         <div class="row_reglas_relacionadas">
                             <div >
                                 {!! Form::hidden("autorizacion_beca_id", null, array("class" => "form-control", "id" => "autorizacion_beca_id-crear")) !!}
+                                <meta name="csrf-token" content="{{ csrf_token() }}">
+                                <input type="hidden" name="_token" id="_token"  value="<?= csrf_token(); ?>"> 
                              </div>
                             <div class="form-group col-sm-12 @if($errors->has('fec_fin')) has-error @endif">
                                 <label for="inicial_bnd-field">Comentario</label>
@@ -302,6 +304,12 @@
         
         
         //alert(bnd);
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        
         $.ajax({
             type: 'POST',
             url: ruta,

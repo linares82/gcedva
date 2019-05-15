@@ -10,6 +10,7 @@ use Auth;
 use Validator;
 use App\Http\Requests\updatePlanPagoLn;
 use App\Http\Requests\createPlanPagoLn;
+use DB;
 
 class PlanPagoLnsController extends Controller {
         protected $rules =
@@ -222,4 +223,33 @@ class PlanPagoLnsController extends Controller {
                 $planPagoLinea->reglaRecargos()->detach($regla);
         }
     }
+    
+    public function getCmbConceptosPlan(Request $request) {
+        if ($request->ajax()) {
+            //dd($request->all());
+            $plan = $request->get('plan_f');
+
+            $final = array();
+            $r = DB::table('plan_pagos as p')
+                    ->join('plan_pago_lns as pl', 'pl.plan_pago_id', '=', 'p.id')
+                    ->join('caja_conceptos as c', 'c.id', '=', 'pl.caja_concepto_id')
+                    ->select('c.id', 'c.name')
+                    ->where('p.id', '=', $plan)
+                    ->where('p.id', '>', '0')
+                    ->distinct()
+                    ->get();
+            //dd($r);
+            
+                foreach ($r as $r1) {
+                    
+                        array_push($final, array('id' => $r1->id,
+                            'name' => $r1->name,
+                            'selectec' => ''));
+                    
+                }
+                return $final;
+            
+        }
+    }
+    
 }

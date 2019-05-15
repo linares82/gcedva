@@ -196,7 +196,7 @@
             </div><!-- /.box-body -->
         </div>
     </div>
-    <div class="col-md-4" style="clear:left;">    
+    <div class="col-md-5" style="clear:left;">    
         <div class="box box-success">
             <div class="box-body no-padding">
                 <div class="box-header with-border">
@@ -222,6 +222,7 @@
                         <tr>
                             <th>Concepto</th>
                             <th>Monto</th>
+                            <th>Desc.</th>
                             <th></th>
                         </tr>
                         {{ csrf_field() }}
@@ -229,7 +230,7 @@
                     <tbody>
                         @foreach($caja->cajaLns as $linea)
                         <tr>
-                            <td> {{$linea->cajaConcepto->name}} </td><td>{{ $linea->subtotal }}</td>
+                            <td> {{$linea->cajaConcepto->name}} </td><td>{{ $linea->subtotal }}</td><td>{{ $linea->descuento }}</td>
                             <td>
                                 @if(isset($caja) and $caja->st_caja_id==0)
                                 @permission('cajaLns.destroy')
@@ -259,7 +260,7 @@
             </div><!-- /.box-body -->
         </div>
     </div>
-    <div class="col-md-8">    
+    <div class="col-md-7">    
         <div class="box box-success">
             <div class="box-body no-padding">
                 <div class="box-header with-border">
@@ -343,7 +344,7 @@
                         <table id='conceptos_predefinidos' class='table table-striped table-condensed'>
                             <thead>
                                 <tr>
-                                    <th></th><th>Concepto</th><th>Monto</th><th>Fecha</th><th>Ticket</th><th>Pagado</th><th>dias</th> 
+                                    <th></th><th>Concepto</th><th>Monto<th>Pagado</></th><th></th><th>Fecha</th><th>Ticket</th><th>Pagado</th><th>dias</th> 
                                 </tr>
                             </thead>
                             <tbody>
@@ -387,6 +388,15 @@
                             <td class='editable'>
                                 {{$adeudo->monto}}
                                 <input class='monto_editable form-control' value='{{$adeudo->monto}}' data-id="{{$adeudo->id}}"></input>
+                            </td>
+                            <td>
+                                <?php
+                                
+                                $linea_caja= \App\CajaLn::where('adeudo_id',$adeudo->id)->whereNull('deleted_at')->first();    
+                                ?>
+                                @if(count($linea_caja)>0)
+                                {{$linea_caja->total}}
+                                @endif
                             </td>
                             <td>
                                 @permission('adeudos.destroy')

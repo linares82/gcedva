@@ -75,7 +75,7 @@ class AutorizacionBecaComentariosController extends Controller {
                 }
                 
 
-		return redirect()->route('autorizacionBecaComentarios.index')->with('message', 'Registro Creado.');
+		//return redirect()->route('autorizacionBecaComentarios.index')->with('message', 'Registro Creado.');
 	}
 
 	/**

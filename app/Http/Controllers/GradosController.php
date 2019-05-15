@@ -21,7 +21,7 @@ class GradosController extends Controller {
     public function index(Request $request) {
         $grados = Grado::getAllData($request);
 
-        return view('grados.index', compact('grados'));
+        return view('grados.index', compact('grados'))->with('list', Grado::getListFromAllRelationApps());
     }
 
     /**

@@ -60,11 +60,24 @@
                                 </div>
                             </div>
                             -->
+                            <div class="form-group col-md-4" >
+                                <label for="q_grados.plantel_id_lt">PLANTEL</label>
+                                
+                                    {!! Form::select("grados.plantel_id", $list["Plantel"], "{{ @(Request::input('q')['grados.plantel_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[grados.plantel_id_lt]", "id"=>"q_grados.plantel_id_lt", "style"=>"width:100%;", "onchange"=>"cambioOpcion()")) !!}
+                                    <div id='loading10' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
+                            </div>
+                            
+                            <div class="form-group col-md-4" >
+                                <label for="q_grados.especialidad_id_lt">ESPECIALIDAD</label>
+                                
+                                    {!! Form::select("grados.especialidad_id", $list["Especialidad"], "{{ @(Request::input('q')['grados.especialidad_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[grados.especialidad_id_lt]", "id"=>"q_grados.especialidad_id_lt", "style"=>"width:100%;")) !!}
+                                
+                            </div>
                             <div class="form-group col-md-4">
-                                <label class="col-sm-12 control-label" for="q_nivel_id_cont">NIVEL</label>
-                                <div class="col-sm-12">
-                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['nivel_id_cont']) ?: '' }}" name="q[nivel_id_cont]" id="q_nivel_id_cont" />
-                                </div>
+                                <label for="q_nivel_id_cont">NIVEL</label>
+                                
+                                    {!! Form::select("grados.nivel_id", $list["Nivel"], "{{ @(Request::input('q')['grados.nivel_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[grados.nivel_id_lt]", "id"=>"q_grados.nivel_id_lt", "style"=>"width:100%;")) !!}
+                                
                             </div>
                                                     <!--
                             <div class="form-group">
@@ -79,10 +92,10 @@
                             </div>
                             -->
                             <div class="form-group col-md-4">
-                                <label class="col-sm-12 control-label" for="q_name_cont">GRADO</label>
-                                <div class="col-sm-12">
+                                <label for="q_name_cont">GRADO</label>
+                                
                                     <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['name_cont']) ?: '' }}" name="q[name_cont]" id="q_name_cont" />
-                                </div>
+                                
                             </div>
                             
 

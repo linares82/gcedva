@@ -581,11 +581,12 @@ class SeguimientosController extends Controller {
         $fecha_inicio = date('Y-m-j', strtotime('-8 day', strtotime(date('Y-m-j'))));
         //dd($fecha_inicio);
         $ds_actividades = DB::table('hactividades as has')
-                ->select('p.razon as plantel', DB::raw('concat(e.nombre,e.ape_paterno,e.ape_materno) as empleado'), DB::raw('concat(c.nombre,c.ape_paterno,c.ape_materno) as cliente'), 'has.tarea', 'has.fecha', 'has.asunto', 'has.detalle', 'stc.name as estatus_cliente')
+                ->select('p.razon as plantel', DB::raw('concat(e.nombre," ",e.ape_paterno," ",e.ape_materno) as empleado'), 
+                        "c.id as cli" ,DB::raw('concat(c.nombre," ",c.ape_paterno," ",c.ape_materno) as cliente'), 'has.tarea', 'has.fecha', 'has.detalle')
                 ->join('clientes as c', 'c.id', '=', 'has.cliente_id')
                 ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
                 ->join('plantels as p', 'p.id', '=', 'e.plantel_id')
-                ->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
+                ->where('has.asunto','=','Cambio estatus ')
                 ->where('has.fecha', '>=', $input['fecha_f'])
                 ->where('has.fecha', '<=', $input['fecha_t'])
                 ->where('c.plantel_id', '>=', $input['plantel_f'])
