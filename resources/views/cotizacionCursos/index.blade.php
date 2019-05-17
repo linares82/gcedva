@@ -300,9 +300,9 @@
                             <tr>
                                 <td><a href="{{ route('cotizacionCursos.show', $cotizacionCurso->id) }}">{{$cotizacionCurso->id}}</a></td>
                                 <td>{{$cotizacionCurso->no_coti}}</td>
-                    <td>{{$cotizacionCurso->empresa->}}</td>
-                    <td>{{$cotizacionCurso->fecha}}</td>
-                    <td>{{$cotizacionCurso->usu_alta_id}}</td>
+                                <td>{{$cotizacionCurso->empresa->}}</td>
+                                <td>{{$cotizacionCurso->fecha}}</td>
+                                <td>{{$cotizacionCurso->usu_alta_id}}</td>
                     
                                 <td class="text-right">
                                     @permission('cotizacionCursos.edit')

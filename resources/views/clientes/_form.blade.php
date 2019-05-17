@@ -900,7 +900,8 @@
                                                                                                    data-fec_inscripcion="{{$i->fec_inscripcion}}"
                                                                                                    data-matricula="{{$i->matricula}}"
                                                                                                    data-lectivo="{{$i->lectivo_id}}"
-                                                                                                   data-turno="{{$i->turno_id}}">
+                                                                                                   data-turno="{{$i->turno_id}}"
+                                                                                                   data-st_inscripcion="{{$i->st_inscripcion_id}}">
                                                 <span class="glyphicon glyphicon-star"></span> Editar </button>
                             @endpermission
                             @permission('inscripcions.registrarMaterias')
@@ -1197,6 +1198,7 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
         $('#turno_id-editar').val($(this).data('turno')).change();
         $('#fec_inscripcion-editar').val($(this).data('fec_inscripcion'));
         $('#matricula-editar').val($(this).data('matricula'));
+        $('#st_inscripcion_id-editar').val($(this).data('st_inscripcion')).change();
         
         $('#editarInscripcionModal').modal('show');
         inscripcion=$(this).data('inscripcion')
@@ -1225,6 +1227,7 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                 'turno_id': $('#turno_id-editar option:selected').val(),
                 'fec_inscripcion': $('#fec_inscripcion-editar').val(),
                 'matricula': $('#matricula-editar').val(),
+                'st_inscripcion_id': $('#st_inscripcion_id-editar option:selected').val(),
             },
             beforeSend : function(){$("#loading3").show(); },
             complete : function(){$("#loading3").hide(); },

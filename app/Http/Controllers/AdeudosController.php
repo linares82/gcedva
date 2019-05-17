@@ -278,6 +278,7 @@ class AdeudosController extends Controller {
                               ->where('c.plantel_id', '=', $datos['plantel_f'])
                               ->where('caj.st_caja_id', '=', $datos['estatus_f'])
                               //->where('st.id','<>',2)
+                              ->whereNull('cc.deleted_at')
                               ->get();
             //dd($cajas->toArray());
             return view('adeudos.reportes.adeudosPlanr', 

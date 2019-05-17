@@ -1,0 +1,1 @@
+@section('stInscripcionsAppTitle','Estatus Inscripcion')

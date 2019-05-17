@@ -504,26 +504,29 @@ class SeguimientosController extends Controller {
         $seguimientos = Seguimiento::select('c.id',DB::raw('concat(c.nombre," ", c.ape_paterno," ", c.ape_materno) as cliente'),'cve_plantel as Plantel', 'esp.name as Especialidad', 'n.name as Nivel', 'g.name as Grado', 
                 'seguimientos.mes as Mes', 'm.name as medio','lec.name as lectivo', 
                 DB::raw('concat(e.nombre," ", e.ape_paterno," ", e.ape_materno) as Empleado'), 
-                'h.detalle as Estatus', 'st.id as st_contar', 'esp.meta as Meta', 'u.name as Usuario')
+                'h.detalle as Estatus', 'esp.meta as Meta', 'u.name as Usuario')
                 ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
-                ->leftJoin('combinacion_clientes as cc', 'cc.cliente_id', '=','c.id')
+                ->join('combinacion_clientes as cc', 'cc.cliente_id', '=','c.id')
+                //->join('inscripcions as i','i.cliente_id','=','c.id')
                 ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
-                ->join('users as u', 'u.id', '=', 'e.user_id')
                 ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
-                ->leftJoin('especialidads as esp', 'esp.id', '=', 'cc.especialidad_id')
-                ->leftJoin('lectivos as lec', 'lec.id','=', 'esp.lectivo_id')
-                ->leftJoin('nivels as n', 'n.id', '=', 'cc.nivel_id')
-                ->leftJoin('grados as g', 'g.id', '=', 'cc.grado_id')
-                ->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
+                ->join('especialidads as esp', 'esp.id', '=', 'cc.especialidad_id')
+                ->join('lectivos as lec', 'lec.id','=', 'esp.lectivo_id')
+                ->join('nivels as n', 'n.id', '=', 'cc.nivel_id')
+                ->join('grados as g', 'g.id', '=', 'cc.grado_id')
+                //->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
                 ->join('medios as m', 'm.id', '=', 'c.medio_id')
                 ->join('hactividades as h', 'h.cliente_id','=','c.id')
-                //->where('h.asunto','=','Cambio estatus ')
+                ->join('users as u', 'u.id', '=', 'h.usu_alta_id')
+                ->where('h.asunto','=','Cambio estatus ')
                 //->orWhere('h.asunto','=','Creacion')
-                ->orWhere(function($q){
+                /*->orWhere(function($q){
                     $q->orWhere('h.asunto','=','Cambio estatus ');
                     $q->orWhere('h.asunto','=','Concretado');
-                })
+                })*/
 		->where('h.detalle','Concretado')
+                ->whereNull('cc.deleted_at')
+                ->whereNull('h.deleted_at')
                 ->where('c.plantel_id', '>=', $input['plantel_f'])
                 ->where('c.plantel_id', '<=', $input['plantel_t'])
                 ->where('h.fecha', '>=', $input['fecha_f'])

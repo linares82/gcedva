@@ -257,7 +257,7 @@
                         <span class="help-block">{{ $errors->first("periodo_estudio_id") }}</span>
                        @endif
                     </div>
-                    <div class="form-group col-md-6 @if($errors->has('turno_id')) has-error @endif">
+                    <div class="form-group col-md-6 @if($errors->has('turno_id')) has-error @endif" style="clear:left;">
                        <label for="turno_id-field" id="lbl_disponibles">Turno </label>
                        {!! Form::select("turno_id", $list3["Turno"], null, array("class" => "form-control select_seguridad", "id" => "turno_id-editar")) !!}
                        @if($errors->has("turno_id"))
@@ -278,6 +278,13 @@
                        @if($errors->has("matricula"))
                         <span class="help-block">{{ $errors->first("matricula") }}</span>
                        @endif
+                    </div>
+                    <div class="form-group col-md-6 @if($errors->has('st_inscripcion_id')) has-error @endif">
+                    <label for="st_inscripcion_id-field">Estatus</label>
+                    {!! Form::select("st_inscripcion_id", $list3["StInscripcion"], null, array("class" => "form-control select_seguridad", "id" => "st_inscripcion_id-editar", 'readonly'=>'readonly')) !!}
+                    @if($errors->has("st_inscripcion_id"))
+                        <span class="help-block">{{ $errors->first("st_inscripcion_id") }}</span>
+                    @endif
                     </div>
                             <div class="row"></div>
                         </div> 

@@ -68,6 +68,7 @@ class InscripcionsController extends Controller {
                 
 		$input['usu_alta_id']=Auth::user()->id;
 		$input['usu_mod_id']=Auth::user()->id;
+                $input['st_inscripcion_id']=1;
 
 		//create data
 		$i=Inscripcion::create( $input );
@@ -199,7 +200,7 @@ class InscripcionsController extends Controller {
 		//update data
 		$inscripcion=$inscripcion->find($id);
 		$inscripcion->update( $input );
-                $combinacion= \App\CombinacionCliente::find($i->combinacion_cliente_id);
+                $combinacion= \App\CombinacionCliente::find($inscripcion->combinacion_cliente_id);
                 if(count($combinacion)>0){
                     $combinacion->plantel_id=$inscripcion->plantel_id;
                     $combinacion->especialidad_id=$inscripcion->especialidad_id;

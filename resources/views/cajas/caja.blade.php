@@ -344,7 +344,17 @@
                         <table id='conceptos_predefinidos' class='table table-striped table-condensed'>
                             <thead>
                                 <tr>
-                                    <th></th><th>Concepto</th><th>Monto<th>Pagado</></th><th></th><th>Fecha</th><th>Ticket</th><th>Pagado</th><th>dias</th> 
+                                    <th>
+                                        <div class="procesar">
+                                            @if(isset($caja))
+                                            <button class="procesarAdeudos btn btn-primary btn-xs" data-cliente_id="{{ $caja->cliente_id }}"
+                                                                                                   data-caja="{{ $caja->id }}">
+                                            <i class="glyphicon glyphicon-plus-sign"></i></button>    
+                                            @endif
+                                        </div>
+                                        
+                                    </th>
+                                    <th>Concepto</th><th>Monto<th>Pagado</></th><th></th><th>Fecha</th><th>Ticket</th><th>Pagado</th><th>dias</th> 
                                 </tr>
                             </thead>
                             <tbody>
@@ -374,14 +384,12 @@
                                 @endif
                                 @if(isset($caja) and $adeudo->caja->consecutivo==0 and $regla_pago_seriado==0 and $caja->st_caja_id==0)
                                 {!! Form::open(array('route' => 'cajas.guardaAdeudoPredefinido','method' => 'post')) !!}
-                                <input class="form-control" id="combinacion-field" name="combinacion" value="{{$combinacion->id}}" type="hidden">
                                 <input class="form-control" id="adeudo-field" name="adeudo" value="{{$adeudo->id}}" type="hidden">
-                                <input class="form-control" id="inicial_bnd-field" name="inicial_bnd" value="{{$adeudo->inicial_bnd}}" type="hidden">
                                 <input class="form-control" id="cliente_id-field" name="cliente_id" value="{{$adeudo->cliente_id}}" type="hidden">
-                                <input class="form-control" id="fecha_pago-field" name="fecha_pago" value="{{$adeudo->fecha_pago}}" type="hidden">
                                 <input class="form-control" id="caja-field" name="caja" value="{{$caja->id}}" type="hidden">
                                 <button type="submit" class="btn btn-xs btn-info" data-toggle="tooltip" title="Agregar"><i class="glyphicon glyphicon-plus-sign"></i></button>
                                 {!! Form::close() !!}
+                                <input type="checkbox" class="adeudos_tomados" value="{{$adeudo->id}}" />
                                 @endif
                                 @endif
                             <td>{{$adeudo->cajaConcepto->name}}</td>
@@ -403,7 +411,7 @@
                                     {!! Form::model($adeudo, array('route' => array('adeudos.destroy', $adeudo->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}
                                         <button type="submit" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> Borrar</button>
                                     {!! Form::close() !!}
-                                    @endpermission
+                                @endpermission
                             </td>
                             <td>{{$adeudo->fecha_pago}}</td>
                             
@@ -551,6 +559,30 @@ Agregar nuevo registro
     //console.log(twoDigitDay);
     var currentDate = fullDate.getFullYear() + "/" + twoDigitMonth + "/" + twoDigitDay;
     $('#fecha-field').val(currentDate);
+    
+    $('.procesar').on('click', '.procesarAdeudos', function() {
+        var cb = [];
+            $.each($('.adeudos_tomados:checked'), function() {
+            cb.push($(this).val()); 
+        });
+        //console.log(cb);
+        $.ajax({
+            type: 'POST',
+            url: '{{route("cajas.guardaAdeudoPredefinido")}}',
+            data: {
+                '_token': $('input[name=_token]').val(),
+                'cliente_id': $(this).data('cliente_id'),
+                'caja': $(this).data('caja'),
+                'adeudos_tomados': cb
+            },
+            beforeSend : function(){$("#loading3").show(); },
+            complete : function(){$("#loading3").hide(); },
+            success: function(data) {
+                location.reload();
+            },
+        });
+    });
+    
     $(document).ready(function(){
          $('.monto_editable').hide();
          
