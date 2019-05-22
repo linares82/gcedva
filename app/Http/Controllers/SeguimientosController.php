@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Asunto;
+use App\CombinacionCliente;
 use App\Seguimiento;
 use App\Empleado;
 use App\Especialidad;
 use App\SmsPredefinido;
 use App\Cliente;
+use App\Inscripcion;
 use App\Plantel;
 use App\Lectivo;
 use App\StSeguimiento;
@@ -825,4 +827,56 @@ class SeguimientosController extends Controller {
         return view('seguimientos.reportes.concretadosEspecialidadPlantelR', compact('tabla','plantel', 'columnas'))
                     ->with('datos_grafica', json_encode($tabla));
     }
+    
+    public function InscritosUnPago()
+	{
+                
+		return view('seguimientos.reportes.inscritosUnPago')
+			->with( 'list', Inscripcion::getListFromAllRelationApps() );
+	}
+        
+        public function InscritosUnPagoR(Request $request)
+	{
+                $data=$request->all();
+                $plantel=Plantel::find($data['plantel_f']);
+                //dd($data);
+                $registros= CombinacionCliente::select('c.id',DB::raw('concat(e.nombre, " ",e.ape_paterno, " ",e.ape_materno) as colaborador, '
+                        . 'concat(c.nombre," ",c.nombre2," ",c.ape_paterno," ",c.ape_materno) as cliente, caj.id as caja, p.fecha, m.name as medio, '
+                        . 'c.beca_bnd, esp.name as especialidad'))
+                            ->join('clientes as c', 'c.id', '=', 'combinacion_clientes.cliente_id')
+                            ->join('medios as m','m.id','=','c.medio_id')
+                            ->join('especialidads as esp','esp.id','=','combinacion_clientes.especialidad_id')
+                            ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
+                            ->join('cajas as caj','caj.cliente_id','=','c.id')
+                            ->join('caja_lns as clns','clns.caja_id','=','caj.id')
+                            ->join('caja_conceptos as cc','cc.id','=','clns.caja_concepto_id')
+                            ->join('pagos as p','p.caja_id','=','caj.id')
+                            ->where('combinacion_clientes.plantel_id', '>=', $data['plantel_f'])
+                            ->where('combinacion_clientes.plantel_id', '<=',$data['plantel_t'])
+                            ->where('p.fecha','>=',$data['fecha_f'])
+                            ->where('p.fecha','<=',$data['fecha_t'])
+                            //->where('c.empleado_id', $data['empleado_f'])
+                            ->whereIn('caj.st_caja_id',[1,3])
+                            ->where(function ($query) {
+                                 $query->orWhere('cc.name','LIKE','INSCRIP%')
+                                       ->orWhere('cc.name','LIKE','SEGUR%')
+                                       ->orWhere('cc.name','LIKE','UNIFORM%');  
+                             })
+                            ->orderBy('colaborador')
+                            ->distinct()
+                            ->get();
+                //dd($registros->toArray());
+                                        
+                                        
+                /*
+                PDF::setOptions(['defaultFont' => 'arial']);
+
+                $pdf = PDF::loadView('inscripcions.reportes.lista_calificacionesr', array('registros'=>$registros,'carga_ponderacions_enc'=>$carga_ponderacion))
+                        ->setPaper('legal', 'landscape');
+                return $pdf->download('reporte.pdf');
+                */
+                return view('seguimientos.reportes.inscritosUnPagoR', array('registros'=>$registros,
+                                                                                 'plantel'=>$plantel,
+                                                                                 'data'=>$data));
+	}
 }    

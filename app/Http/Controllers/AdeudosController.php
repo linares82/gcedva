@@ -8,6 +8,7 @@ use App\Cliente;
 use App\Caja;
 use App\CajaLn;
 use App\CombinacionCliente;
+use App\CajaConcepto;
 use App\Empleado;
 use App\Plantel;
 use App\PlanPago;
@@ -254,13 +255,15 @@ class AdeudosController extends Controller {
             
             $planteles=Plantel::pluck('razon','id');
             $planes= PlanPago::pluck('name','id');
+            $conceptos=CajaConcepto::pluck('name','id');
+            //dd($conceptos);
             $estatus=StCaja::pluck('name','id');
-            return view('adeudos.reportes.adeudosXPlan',compact('planteles','planes','estatus'));
+            return view('adeudos.reportes.adeudosXPlan',compact('planteles','planes','estatus','conceptos'));
         }
         
         public function reporteAdeudosPlanr(Request $request){
             $datos=$request->all();
-            
+            //dd($datos);
             
             $fecha=date('Y/m/d');
             //dd($fecha);
@@ -269,16 +272,19 @@ class AdeudosController extends Controller {
             $plantel=Plantel::find($datos['plantel_f']);
             
             $cajas= PlanPago::select('plan_pagos.name as plan','caj.id as caja','caj.consecutivo','c.id as cliente','c.nombre','c.nombre2',
-                                     'c.ape_paterno','c.ape_materno','st.name as estatus', 'st.id as estatus_caja')
+                                     'c.ape_paterno','c.ape_materno','st.name as estatus', 'st.id as estatus_caja','p.razon')
                               ->join('combinacion_clientes as cc','cc.plan_pago_id','=','plan_pagos.id')
                               ->join('clientes as c','c.id','=','cc.cliente_id')
                               ->join('cajas as caj','caj.cliente_id','=','c.id')
+                              ->join('plantels as p','p.id','=','c.plantel_id')
                               ->join('st_cajas as st','st.id','=','caj.st_caja_id')
-                              ->where('plan_pagos.id',$datos['plan_f'])
+                              ->whereIn('plan_pagos.id',$datos['plan_f'])
+                              //->where('plan_pagos.id','<=',$datos['plan_t'])
                               ->where('c.plantel_id', '=', $datos['plantel_f'])
                               ->where('caj.st_caja_id', '=', $datos['estatus_f'])
                               //->where('st.id','<>',2)
                               ->whereNull('cc.deleted_at')
+                              ->orderBy('c.plantel_id','plan_pagos.id','c.id')
                               ->get();
             //dd($cajas->toArray());
             return view('adeudos.reportes.adeudosPlanr', 

@@ -737,6 +737,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'CreateClientesTable' => __DIR__ . '/../..' . '/database/migrations/2017_05_03_224353_create_clientes_table.php',
         'CreateCombinacionClientesTable' => __DIR__ . '/../..' . '/database/migrations/2018_01_16_143714_create_combinacion_clientes_table.php',
         'CreateCombinacionEmpresasTable' => __DIR__ . '/../..' . '/database/migrations/2018_01_09_163322_create_combinacion_empresas_table.php',
+        'CreateConsultaCalificacionsTable' => __DIR__ . '/../..' . '/database/migrations/2019_05_21_115331_create_consulta_calificacions_table.php',
         'CreateCorreosTable' => __DIR__ . '/../..' . '/database/migrations/2017_05_12_155535_create_correos_table.php',
         'CreateCotizacionCursosTable' => __DIR__ . '/../..' . '/database/migrations/2019_04_01_115103_create_cotizacion_cursos_table.php',
         'CreateCotizacionLnsTable' => __DIR__ . '/../..' . '/database/migrations/2019_04_01_123834_create_cotizacion_lns_table.php',

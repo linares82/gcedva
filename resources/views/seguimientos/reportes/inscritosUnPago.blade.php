@@ -21,7 +21,7 @@
     <div class="row">
         <div class="col-md-12">
 
-            {!! Form::open(array('route' => 'inscripcions.inscritosUnPagoR', 'id'=>'frm_analitica')) !!}
+            {!! Form::open(array('route' => 'seguimientos.inscritosUnPagoR', 'id'=>'frm_analitica')) !!}
 
                 <div class="form-group col-md-6 @if($errors->has('plantel_f')) has-error @endif">
                     <label for="plantel_f-field">Plantel de:</label>

@@ -46,17 +46,25 @@
                 </div>
                 <div class="form-group col-md-6 @if($errors->has('plan_f')) has-error @endif">
                     <label for="plan_f-field">Plan de:</label>
-                    {!! Form::select("plan_f", $planes, null, array("class" => "form-control select_seguridad", "id" => "plan_f-field")) !!}
+                    {!! Form::select("plan_f", $planes, null, array("class" => "form-control select_seguridad", "id" => "plan_f", 'multiple'=>'multiple','name'=>'plan_f[]')) !!}
                     @if($errors->has("plan_f"))
                     <span class="help-block">{{ $errors->first("plan_f") }}</span>
                     @endif
                 </div>
                 <div class="form-group col-md-6 @if($errors->has('concepto_f')) has-error @endif">
                     <label for="concepto_f-field">Concepto de:</label>
-                    {!! Form::select("concepto_f", array(), null, array("class" => "form-control select_seguridad", "id" => "concepto_f-field")) !!}
+                    {!! Form::select("concepto_f", $conceptos, null, array("class" => "form-control select_seguridad", "id" => "concepto_f-field")) !!}
                     <div id='loading1' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                     @if($errors->has("concepto_f"))
                     <span class="help-block">{{ $errors->first("concepto_f") }}</span>
+                    @endif
+                </div>
+                <div class="form-group col-md-6 @if($errors->has('concepto_t')) has-error @endif">
+                    <label for="concepto_t-field">Concepto de:</label>
+                    {!! Form::select("concepto_t", $conceptos, null, array("class" => "form-control select_seguridad", "id" => "concepto_t-field")) !!}
+                    <div id='loading1' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
+                    @if($errors->has("concepto_t"))
+                    <span class="help-block">{{ $errors->first("concepto_t") }}</span>
                     @endif
                 </div>
                 <div class="form-group col-md-6 @if($errors->has('estatus_f')) has-error @endif">
@@ -96,9 +104,9 @@
         show_select_today: 'Hoy',
       });
       */
-     cmbConceptos();
+     //cmbConceptos();
      $('#plan_f-field').change(function(){
-         cmbConceptos();
+         //cmbConceptos();
      });
     function cmbConceptos(){
                         var a = $('#frm').serialize();

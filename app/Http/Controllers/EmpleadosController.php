@@ -6,6 +6,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use File;
 use App\Empleado;
+
 use App\PivotDocEmpleado;
 use App\User;
 use App\Historial;
@@ -454,4 +455,33 @@ class EmpleadosController extends Controller {
         }
     }
 
+    public function cargarImg(Request $request){
+        
+        $r=$request->hasFile('file');
+        $datos=$request->all();
+        //dd($request->all());
+        if ($r) {
+            $logo_file = $request->file('file');
+            $input['file'] = $logo_file->getClientOriginalName();
+            $ruta_web=asset("/imagenes/empleados/".$datos['empleado']);
+            //dd($ruta_web);
+            $ruta= public_path()."/imagenes/empleados/".$datos['empleado']."/";
+            if(!file_exists($ruta)){
+                File::makedirectory($ruta, 0777, true, true);
+            }
+            if($request->file('file')->move($ruta, $input['file'])){
+                $documento= new PivotDocEmpleado();
+                $documento->empleado_id=$datos['empleado'];
+                $documento->doc_empleado_id=$datos['doc_empleado_id'];
+                $documento->archivo=$ruta_web."/".$input['file'];
+                $documento->usu_alta_id=Auth::user()->id;
+                $documento->usu_mod_id=Auth::user()->id;
+                $documento->save();
+                echo json_encode($ruta_web."/".$input['file']);
+            }else{
+                echo json_encode(0);
+            }
+         }
+        //echo json_encode(0);
+    }
 }

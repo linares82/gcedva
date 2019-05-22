@@ -49,7 +49,7 @@
     <tr>
             <td align="center"  >
                 <h3>
-                    Adeudos Pendientes {{$plantel->razon}}
+                    Adeudos Pendientes
                 </h3>
             </td>
         </tr>
@@ -58,6 +58,7 @@
 <div class="datagrid">
     <table width='100%'>
         <thead>
+        <th><strong>Plantel</strong></th>    
         <th><strong>Plan</strong></th>    
         <th><strong>Cliente</strong></th>
         <th><strong>Caja</strong></th>
@@ -74,13 +75,14 @@
             $caja2=\App\Caja::find($caja->caja);    
             $marcador=0;
             foreach($caja2->cajaLns as $linea){
-                if($linea->caja_concepto_id==$datos['concepto_f']){
+                if($linea->caja_concepto_id>=$datos['concepto_f'] and $linea->caja_concepto_id<=$datos['concepto_f']){
                     $marcador=1;
                 }
             }
             ?>
             @if($marcador==1)
             <tr>
+                <td>{{$caja->razon}}</td>
                 <td>{{$caja->plan}}</td>
                 <td>{{$caja->cliente." - ".$caja->nombre." ".$caja->nombre2." ".$caja->ape_paterno." ".$caja->ape_materno}}</td>
                 <td> {{$caja->consecutivo}}</td>
@@ -89,7 +91,7 @@
                 
                 <td>
                     @foreach($caja2->cajaLns as $linea)
-                        @if($linea->caja_concepto_id==$datos['concepto_f'])
+                        @if($linea->caja_concepto_id>=$datos['concepto_f'] and $linea->caja_concepto_id<=$datos['concepto_t'])
                             {{$linea->cajaConcepto->name}} / {{$linea->total}}<br/>
                         @endif
                     @endforeach

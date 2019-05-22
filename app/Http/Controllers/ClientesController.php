@@ -12,6 +12,7 @@ use App\Cliente;
 use App\CombinacionCliente;
 use App\Ccuestionario;
 use App\CcuestionarioDato;
+use App\ConsultaCalificacion;
 use App\Correo;
 use App\Empleado;
 use App\Estado;
@@ -327,8 +328,10 @@ class ClientesController extends Controller {
         //dd($cliente->toArray());
         $cuestionarios = Ccuestionario::where('st_cuestionario_id', '=', '1')->pluck('name', 'id');
 
+        $historia=ConsultaCalificacion::where('cliente_id',$cliente->id)->get();
+        //dd($historia->toArray());
         //count($cliente->adeudos));
-        return view('clientes.edit', compact('cliente', 'preguntas', 'cp', 'documentos_faltantes', 'empleados', 'cuestionarios'))
+        return view('clientes.edit', compact('cliente', 'preguntas', 'cp', 'documentos_faltantes', 'empleados', 'cuestionarios','historia'))
                         ->with('list', Cliente::getListFromAllRelationApps())
                         ->with('list1', PivotDocCliente::getListFromAllRelationApps())
                         ->with('list2', CombinacionCliente::getListFromAllRelationApps())
@@ -1246,5 +1249,35 @@ class ClientesController extends Controller {
         $cliente=Cliente::find($request['id']);
         return view('clientes.reportes.boleta', compact('cliente'))
                         ->with('');
+    }
+    
+    public function cargarImg(Request $request){
+        
+        $r=$request->hasFile('file');
+        $datos=$request->all();
+        //dd($request->all());
+        if ($r) {
+            $logo_file = $request->file('file');
+            $input['file'] = $logo_file->getClientOriginalName();
+            $ruta_web=asset("/imagenes/clientes/".$datos['cliente']);
+            //dd($ruta_web);
+            $ruta= public_path()."/imagenes/clientes/".$datos['cliente']."/";
+            if(!file_exists($ruta)){
+                File::makedirectory($ruta, 0777, true, true);
+            }
+            if($request->file('file')->move($ruta, $input['file'])){
+                $documento= new PivotDocCliente();
+                $documento->cliente_id=$datos['cliente'];
+                $documento->doc_alumno_id=$datos['doc_cliente_id'];
+                $documento->archivo=$ruta_web."/".$input['file'];
+                $documento->usu_alta_id=Auth::user()->id;
+                $documento->usu_mod_id=Auth::user()->id;
+                $documento->save();
+                echo json_encode($ruta_web."/".$input['file']);
+            }else{
+                echo json_encode(0);
+            }
+         }
+        //echo json_encode(0);
     }
 }

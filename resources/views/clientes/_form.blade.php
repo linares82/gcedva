@@ -298,9 +298,11 @@
                         </div>
                         
                         @permission('combinacionClientes.store')
+                        @if(isset($cliente))
                         <div class="form-group col-md-1 @if($errors->has('grado_id')) has-error @endif">
                             <br/><input type="button" class="btn btn-xs btn-block btn-success" value="Crear" onclick="CrearCombinacionCliente()" />
                         </div>
+                        @endif
                         @endpermission    
                         
                         <div class="row col-md-12">
@@ -866,6 +868,45 @@
             </fieldset>
         </div>
         <div id="tab5" class="tab-pane">
+            @if(count($historia)>0)
+                <div aria-multiselectable="true" role="tablist" id="accordion" class="panel-group">
+                    <div class="panel panel-default">
+                        <div id="headingOne" role="tab" class="panel-heading">
+                            <h4 class="panel-title">
+                            <a aria-controls="collapseOne" aria-expanded="true" href="#collapseOne" data-parent="#accordion" data-toggle="collapse" role="button">
+                                <span aria-hidden="true" class="glyphicon glyphicon-search"></span> Historia Sistema Anterior
+                            </a>
+                            </h4>
+                        </div>
+                        <div aria-labelledby="headingOne" role="tabpanel" class="panel-collapse collapse" id="collapseOne">
+                            <div class="panel-body">
+                                <table class="table table-condensed table-striped">
+                                    <head>
+                                    <th>Horario</th><th>Materia</th><th>Modulo</th><th>Instructor</th><th>Clave</th>
+                                    <th>A. Paterno</th><th>A. Materno</th><th>Nombre(s)</th><th>Calificación final</th>
+                                    </head>
+                                    <body>
+                                    @foreach($historia as $registro)
+                                        <tr>
+                                            <td>{{$registro->horario}}</td>
+                                            <td>{{$registro->materia}}</td>
+                                            <td>{{$registro->modulo}}</td>
+                                            <td>{{$registro->instructor}}</td>
+                                            <td>{{$registro->clave}}</td>
+                                            <td>{{$registro->apellido_paterno}}</td>
+                                            <td>{{$registro->apellido_materno}}</td>
+                                            <td>{{$registro->nombre}}</td>
+                                            <td>{{$registro->calif_final}}</td>
+                                        </tr>
+                                    @endforeach
+                                    </body>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+            
             @if(isset($cliente->inscripciones))
             @foreach($cliente->inscripciones as $i)
             <table class="table table-condensed table-striped">
@@ -965,12 +1006,26 @@
                         <span class="help-block">{{ $errors->first("doc_cliente_id") }}</span>
                         @endif
                     </div>
-                    <div class="form-group col-md-6 @if($errors->has('archivo')) has-error @endif">
+<!--                    <div class="form-group col-md-6 @if($errors->has('archivo')) has-error @endif">
                         <button type="button" onclick="BrowseServer('archivo-field');">Elegir Archivo</button>
                         {!! Form::text("archivo", null, array("class" => "form-control input-sm", "id" => "archivo-field")) !!}
                         @if($errors->has("archivo"))
                         <span class="help-block">{{ $errors->first("archivo") }}</span>
                         @endif
+                    </div>-->
+                    <div class="form-group col-md-6">
+                        <div class="btn btn-default btn-file">
+                            <i class="fa fa-paperclip"></i> Adjuntar Archivo
+                            <input type="file"  id="file" name="file" class="cliente_archivo" >
+                            <input type="hidden" name="_token" id="_token"  value="<?= csrf_token(); ?>"> 
+                            <input type="hidden"  id="file_hidden" name="file_hidden" >
+                        </div>
+                        <button class="btn btn-success btn-xs" id="btn_archivo"> <span class="glyphicon glyphicon-ok">Cargar</span> </btn>
+                        <br/>
+                        <p class="help-block"  >Max. 20MB</p>
+                        <div id="texto_notificacion">
+
+                        </div>
                     </div>
                     <div class="form-group col-md-6">
                         <table class="table table-condensed table-striped">
@@ -1037,6 +1092,55 @@
 <script src="{{ asset ('/bower_components/AdminLTE/plugins/input-mask/jquery.inputmask.extensions.js') }}"></script>
 <script src="{{ asset ('/bower_components/AdminLTE/plugins/input-mask/jquery.inputmask.phone.extensions.js') }}"></script>
 <script type="text/javascript">
+$(document).on("click", "#btn_archivo", function (e) {
+    e.preventDefault();
+    if($('#doc_cliente_id-field option:selected').val()==0){
+        alert("Elegir Documento para Cargar");
+    }
+    var miurl = "{{route('clientes.cargarImg')}}";
+    // var fileup=$("#file").val();
+    var divresul = "texto_notificacion";
+
+    var data = new FormData();
+    data.append('file', $('#file')[0].files[0]);
+    data.append('doc_cliente_id', $('#doc_cliente_id-field option:selected').val());
+    data.append('cliente', {{$cliente->id}});
+
+
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('#_token').val()
+        }
+    });
+    $.ajax({
+        url: miurl,
+        type: 'POST',
+        // Form data
+        //datos del formulario
+        data: data,
+        //dataType: "json",
+        //necesario para subir archivos via ajax
+        cache: false,
+        contentType: false,
+        processData: false,
+        //mientras enviamos el archivo
+        beforeSend: function () {
+            $("#" + divresul + "").html($("#cargador_empresa").html());
+        },
+        //una vez finalizado correctamente
+        success: function (data) {
+            if (confirm('¿Deseas Actualizar la Página?')){
+                location.reload();
+            }
+
+        },
+        //si ha ocurrido un error
+        error: function (data) {
+
+
+        }
+    });
+})    
 $(document).ready(function() {
     $('#grupo_id-crear').change(function(){
           getDisponibles();
@@ -1813,7 +1917,6 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                             });
                         });
                         
-
 
                         //codigo de trabajo del cargador de imagenes
                         // File Picker modification for FCK Editor v2.0 - www.fckeditor.net

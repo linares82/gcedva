@@ -219,13 +219,28 @@
                             <span class="help-block">{{ $errors->first("doc_empleado_id") }}</span>
                           @endif
                         </div>
-                        <div class="form-group col-md-6 @if($errors->has('archivo')) has-error @endif">
+<!--                        <div class="form-group col-md-6 @if($errors->has('archivo')) has-error @endif">
                           <button type="button" onclick="BrowseServer('archivo-field');">Elegir Archivo</button>
                           {!! Form::text("archivo", null, array("class" => "form-control input-sm", "id" => "archivo-field")) !!}
                           @if($errors->has("archivo"))
                             <span class="help-block">{{ $errors->first("archivo") }}</span>
                           @endif
-                        </div>
+                        </div>-->
+                        <div class="form-group col-md-6">
+                                <div class="btn btn-default btn-file">
+                                    <i class="fa fa-paperclip"></i> Adjuntar Archivo
+                                    <input type="file"  id="file" name="file" class="empleado_archivo" >
+                                    <input type="hidden" name="_token" id="_token"  value="<?= csrf_token(); ?>"> 
+                                    <input type="hidden"  id="file_hidden" name="file_hidden" >
+                                </div>
+                                <button class="btn btn-success btn-xs" id="btn_archivo"> <span class="glyphicon glyphicon-ok">Cargar</span> </btn>
+                                <br/>
+                                <p class="help-block"  >Max. 20MB</p>
+                                <div id="texto_notificacion">
+                                    
+                                </div>
+                            </div>
+                        
                         <div class="form-group col-md-6">
                           <table class="table table-condensed table-striped">
                             <thead>
@@ -350,7 +365,58 @@
           document.getElementById(urlobj).value = url ;
           oWindow = null;
      }
+     
+     
+     $(document).on("click", "#btn_archivo", function (e) {
+        e.preventDefault();
+        if($('#doc_empleado_id-field option:selected').val()==0){
+            alert("Elegir Documento para Cargar");
+        }
+        var miurl = "{{route('empleados.cargarImg')}}";
+        // var fileup=$("#file").val();
+        var divresul = "texto_notificacion";
 
+        var data = new FormData();
+        data.append('file', $('#file')[0].files[0]);
+        data.append('doc_empleado_id', $('#doc_empleado_id-field option:selected').val());
+        data.append('empleado', {{$empleado->id}});
+        
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('#_token').val()
+            }
+        });
+        $.ajax({
+            url: miurl,
+            type: 'POST',
+            // Form data
+            //datos del formulario
+            data: data,
+            //dataType: "json",
+            //necesario para subir archivos via ajax
+            cache: false,
+            contentType: false,
+            processData: false,
+            //mientras enviamos el archivo
+            beforeSend: function () {
+                $("#" + divresul + "").html($("#cargador_empresa").html());
+            },
+            //una vez finalizado correctamente
+            success: function (data) {
+                if (confirm('¿Deseas Actualizar la Página?')){
+                    location.reload();
+                }
+                
+            },
+            //si ha ocurrido un error
+            error: function (data) {
+                
+
+            }
+        });
+    }) 
+    
 </script>
 
 @endpush

@@ -118,6 +118,7 @@ return array(
     'CreateClientesTable' => $baseDir . '/database/migrations/2017_05_03_224353_create_clientes_table.php',
     'CreateCombinacionClientesTable' => $baseDir . '/database/migrations/2018_01_16_143714_create_combinacion_clientes_table.php',
     'CreateCombinacionEmpresasTable' => $baseDir . '/database/migrations/2018_01_09_163322_create_combinacion_empresas_table.php',
+    'CreateConsultaCalificacionsTable' => $baseDir . '/database/migrations/2019_05_21_115331_create_consulta_calificacions_table.php',
     'CreateCorreosTable' => $baseDir . '/database/migrations/2017_05_12_155535_create_correos_table.php',
     'CreateCotizacionCursosTable' => $baseDir . '/database/migrations/2019_04_01_115103_create_cotizacion_cursos_table.php',
     'CreateCotizacionLnsTable' => $baseDir . '/database/migrations/2019_04_01_123834_create_cotizacion_lns_table.php',

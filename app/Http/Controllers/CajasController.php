@@ -207,6 +207,12 @@ class CajasController extends Controller {
             //$adeudos=Adeudo::where('cliente_id', '=', $cliente->id)->get();
             //dd($cliente);
             $combinaciones=CombinacionCliente::where('cliente_id', '=', $cliente->id)->get();
+            $cajas=Caja::select('cajas.consecutivo as caja','ln.caja_concepto_id as concepto_id','cc.name as concepto', 'ln.total','st.name as estatus')
+                    ->join('caja_lns as ln','ln.caja_id','=','cajas.id')
+                    ->join('caja_conceptos as cc','cc.id','=','ln.caja_concepto_id')
+                    ->join('st_cajas as st','st.id','=','cajas.st_caja_id')
+                    ->where('cliente_id',$cliente->id)
+                    ->get();
             /*foreach($combinaciones as $c){
                 dd($c->adeudos);
             }*/
@@ -216,11 +222,11 @@ class CajasController extends Controller {
             $permiso_caja_buscarCliente=Auth::user()->can('permiso_caja_buscarCliente');
             if(is_object($cliente) and count($combinaciones)>0 and $cliente->plantel_id==$empleado->plantel_id){
                 
-                return view('cajas.caja', compact('cliente', 'combinaciones'))
+                return view('cajas.caja', compact('cliente', 'combinaciones','cajas'))
                         ->with( 'list', Caja::getListFromAllRelationApps() )
                         ->with( 'list1', CajaLn::getListFromAllRelationApps() );           
             }elseif(is_object($cliente) and count($combinaciones)>0 and $cliente->plantel_id<>$empleado->plantel_id and $permiso_caja_buscarCliente){
-                return view('cajas.caja', compact('cliente', 'combinaciones'))
+                return view('cajas.caja', compact('cliente', 'combinaciones','cajas'))
                         ->with( 'list', Caja::getListFromAllRelationApps() )
                         ->with( 'list1', CajaLn::getListFromAllRelationApps() );           
             }
@@ -241,6 +247,13 @@ class CajasController extends Controller {
             }
             //dd($caja);
             $combinaciones=CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
+            $cajas=Caja::select('cajas.consecutivo as caja','ln.caja_concepto_id as concepto_id','cc.name as concepto', 'ln.total','st.name as estatus')
+                    ->join('caja_lns as ln','ln.caja_id','=','cajas.id')
+                    ->join('caja_conceptos as cc','cc.id','=','ln.caja_concepto_id')
+                    ->join('st_cajas as st','st.id','=','cajas.st_caja_id')
+                    ->where('cliente_id',$caja->cliente->id)
+                    ->get();
+            //dd($cajas->toArray());
             $permiso_caja_buscarVenta=Auth::user()->can('permiso_caja_buscarVenta');
             //dd($permiso_caja_buscarVenta);
             if(is_object($caja) and $caja->plantel_id==$empleado->plantel_id){
@@ -288,7 +301,7 @@ class CajasController extends Controller {
                 }
                 
                 $cliente=Cliente::find($caja->cliente_id);
-                return view('cajas.caja', compact('cliente', 'caja', 'combinaciones'))
+                return view('cajas.caja', compact('cliente', 'caja', 'combinaciones','cajas'))
                         ->with( 'list', Caja::getListFromAllRelationApps() )
                         ->with( 'list1', CajaLn::getListFromAllRelationApps() );           
             }elseif(is_object($caja) and $caja->plantel_id<>$empleado->plantel_id and $permiso_caja_buscarVenta){
@@ -336,7 +349,7 @@ class CajasController extends Controller {
                 }
                 
                 $cliente=Cliente::find($caja->cliente_id);
-                return view('cajas.caja', compact('cliente', 'caja', 'combinaciones'))
+                return view('cajas.caja', compact('cliente', 'caja', 'combinaciones','cajas'))
                         ->with( 'list', Caja::getListFromAllRelationApps() )
                         ->with( 'list1', CajaLn::getListFromAllRelationApps() );           
             }

@@ -165,7 +165,7 @@
                           <span class="help-block">{{ $errors->first("lectivo_id") }}</span>
                          @endif
                       </div>
-                      <div class="form-group col-md-4 @if($errors->has('meta_venta')) has-error @endif">
+                      <div class="form-group col-md-4 @if($errors->has('meta_venta')) has-error @endif" style="clear:left;">
                          <label for="meta_venta-field">Meta Total Empleado</label>
                          {!! Form::text("meta_venta", null, array("class" => "form-control input-sm", "id" => "meta_venta-field")) !!}
                          @if($errors->has("meta_venta"))
@@ -218,7 +218,15 @@
                          <label for="rep_legal_mail-field">Representante Legal Correo Eletrónico</label>
                          
                       </div>
+                      <div class="form-group col-md-12 @if($errors->has('clausulas_cotizacion')) has-error @endif">
+                         <label for="clausulas_cotizacion-field">Clausulas Cotizacion</label>
+                         {!! Form::textArea("clausulas_cotizacion", null, array("class" => "form-control input-sm", "id" => "clausulas_cotizacion-field", 'rows'=>5)) !!}
+                         @if($errors->has("clausulas_cotizacion"))
+                          <span class="help-block">{{ $errors->first('clausulas_cotizacion') }}</span>
+                         @endif
+                      </div>      
                       </div>
+                      
                     </div>
                     <div class="form-group col-md-4 @if($errors->has('logo')) has-error @endif">
                        <label for="logo-field">Logo</label>
@@ -253,3 +261,17 @@
                         <span class="help-block">{{ $errors->first("membrete") }}</span>
                        @endif
                     </div>
+@push('scripts')
+<!-- CK Editor -->
+    <script src="https://cdn.ckeditor.com/4.4.3/standard/ckeditor.js"></script>
+<script type="text/javascript">
+    $(function () {
+        // Replace the <textarea id="detalle-field"> with a CKEditor
+        // instance, using default configuration.
+        CKEDITOR.replace('clausulas_cotizacion-field');
+        //bootstrap WYSIHTML5 - text editor
+        $(".textarea").wysihtml5();
+      });
+    
+    </script>
+@endpush

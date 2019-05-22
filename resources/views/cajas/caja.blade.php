@@ -180,7 +180,7 @@
                 @endif
                 @endif
                 @endif
-                @if(isset($caja) and $caja->st_caja_id==0)
+                @if(isset($caja) and ($caja->st_caja_id==0 or $caja->st_caja_id==3))
                 <div class="form-group col-md-4">
                     <div class='text-center'>
                         <a href="#" class="add-modal btn btn-success btn-sm"><i class="glyphicon glyphicon-plus-sign"></i>Agregar Linea</a> 
@@ -436,6 +436,38 @@
                         @endforeach
                         </tr>
                         </tbody>
+                        </table>
+                    
+                        <table id='conceptos_predefinidos' class='table table-striped table-condensed'>
+                            <thead>
+                                <tr>
+                                    
+                                    <th>Concepto</th><th>Monto</th><th>Caja</th><th>Estatus</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $valores= collect();
+                                foreach($combinacion->adeudos as $adeudo){
+                                    //if($adeudo->caja_concepto_id==$ln->caja_concepto_id){
+                                        $valores->push(intval($adeudo->caja_concepto_id));
+                                    //}
+                                }
+                                //dd($valores);
+                                ?>
+                                @foreach($cajas as $ln)
+                                    @if(!is_int($valores->search(intval($ln->concepto_id),true)))
+                                    <tr>
+                                        {{$valores->search(intval($ln->concepto_id))}}
+                                        
+                                        <td> {{$ln->concepto}}</td><td>{{$ln->total}}</td><td>{{$ln->caja}}</td><td>{{$ln->estatus}}</td>
+                                    </tr>
+                                    
+                                    @endif
+                                @endforeach
+                                
+                                
+                            </tbody>
                         </table>
                     </tbody>
                 </table>
