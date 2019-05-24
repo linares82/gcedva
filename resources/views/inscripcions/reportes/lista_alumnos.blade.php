@@ -132,21 +132,7 @@
 @push('scripts')
   <script type="text/javascript">
     $(document).ready(function() {
-    /*$('#fecha_f-field').Zebra_DatePicker({
-        days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
-        months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-        readonly_element: false,
-        lang_clear_date: 'Limpiar',
-        show_select_today: 'Hoy',
-      });
-      $('#fecha_t-field').Zebra_DatePicker({
-        days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
-        months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-        readonly_element: false,
-        lang_clear_date: 'Limpiar',
-        show_select_today: 'Hoy',
-      });
-      */
+    /*
       $('#lectivo_f-field').change(function(){
          lectivo=$('#lectivo_f-field option:selected').val();
          
@@ -181,18 +167,45 @@
                   }  
             });        
       });
-      
+      */
       $('#plantel_f-field').change(function(){
-        getCmbInstructor();
+        getCmbLectivoAsignacionAcademica()
         });
       
       $('#lectivo_f-field').change(function(){
         getCmbGrupo();
         });
     $('#grupo_f-field').change(function(){
-        getCmbGrado();
+        //getCmbGrado();
         getCmbMateria();
+        getCmbInstructor();
         });
+    
+      
+    function getCmbLectivoAsignacionAcademica(){
+        $.ajax({
+                  url: '{{ route("asignacionAcademica.getCmbLectivo") }}',
+                  type: 'GET',
+                  data: "plantel_id=" + $('#plantel_f-field option:selected').val() + 
+                        "&lectivo_id=" + $('#lectivo_f-field option:selected').val() + "",
+                  dataType: 'json',
+                  beforeSend : function(){$("#loading13").show();},
+                  complete : function(){$("#loading13").hide();},
+                  success: function(data){
+                      //$example.select2("destroy");
+                      $('#lectivo_f-field').html('');
+                      
+                      //$('#especialidad_id-field').empty();
+                      $('#lectivo_f-field').append($('<option></option>').text('Seleccionar').val('0'));
+                      
+                      $.each(data, function(i) {
+                          //alert(data[i].name);
+                          $('#lectivo_f-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                      });
+                      //$example.select2();
+                  }
+              });
+    }  
       
     function getCmbGrupo(){
           //var $example = $("#especialidad_id-field").select2();
@@ -253,13 +266,15 @@
             var plantel=$('#plantel_f-field option:selected').val();
             var grupo = $('#grupo_f-field option:selected').val();
             var lectivo= $('#lectivo_f-field option:selected').val();
+            var instructor= $('#instructor_f-field option:selected').val();
             if(plantel>0 && grupo>0 && lectivo>0){
                 $.ajax({
                 url: '{{ route("materias.getCmbMateriaXAsignacionAcademica") }}',
                         type: 'GET',
                         data: "plantel=" + plantel + 
                               "&grupo=" + grupo +
-                              "&lectivo=" + lectivo + "",
+                              "&lectivo=" + lectivo +
+                              "&instructor=" + instructor + "",
                         dataType: 'json',
                         beforeSend : function(){$("#loading12").show(); },
                         complete : function(){$("#loading12").hide(); },
@@ -283,12 +298,17 @@
         function getCmbInstructor(){
             //var $example = $("#especialidad_id-field").select2();
             var plantel=$('#plantel_f-field option:selected').val();
-            
+            var grupo = $('#grupo_f-field option:selected').val();
+            var lectivo= $('#lectivo_f-field option:selected').val();
+            var instructor= $('#instructor_f-field option:selected').val();
             
                 $.ajax({
-                url: '{{ route("empleados.getEmpleadosXplantel") }}',
+                url: '{{ route("asignacionAcademica.getCmbInstructor") }}',
                         type: 'GET',
-                        data: "plantel_id=" + plantel ,
+                        data: "plantel=" + plantel + 
+                              "&grupo=" + grupo +
+                              "&lectivo=" + lectivo + 
+                              "&instructor=" + instructor + "",
                         dataType: 'json',
                         beforeSend : function(){$("#loading12").show(); },
                         complete : function(){$("#loading12").hide(); },

@@ -231,4 +231,77 @@ class AsignacionAcademicasController extends Controller {
 			
 		}
 	}
+        
+        public function getCmbLectivo(Request $request){
+		if($request->ajax()){
+			//dd($request->get('plantel_id'));
+			$plantel=$request->get('plantel_id');
+                        $lectivo=$request->get('lectivo_id');			
+			$final = array();
+			$r = DB::table('lectivos as l')
+					->select('l.id', 'l.name')
+                                        ->join('asignacion_academicas as aa','aa.lectivo_id','=','l.id')
+					->where('aa.plantel_id', '=', $plantel)
+                                        //->where('aa.lectivo_i', '=', $lectivo)
+					->where('l.id', '>', '0')
+                                        ->distinct()
+					->get();
+			//dd($r);
+			if(isset($lectivo) and $lectivo<>0){
+				foreach($r as $r1){
+					if($r1->id==$lectivo){
+						array_push($final, array('id'=>$r1->id, 
+												 'name'=>$r1->name, 
+												 'selectec'=>'Selected'));
+					}else{
+						array_push($final, array('id'=>$r1->id, 
+												 'name'=>$r1->name, 
+												 'selectec'=>''));
+					}
+				}
+				return $final;
+			}else{
+				return $r;	
+			}
+			
+		}
+	}
+        
+        public function getCmbInstructor(Request $request){
+		if($request->ajax()){
+			//dd($request->get('plantel_id'));
+			$plantel=$request->get('plantel');
+                        $lectivo=$request->get('lectivo');			
+                        $grupo=$request->get('grupo');			
+                        $instructor=$request->get('instructor');			
+			$final = array();
+			$r = DB::table('empleados as e')
+					->select('e.id', DB::Raw('concat(e.nombre,ape_paterno,ape_materno) as name'))
+                                        ->join('asignacion_academicas as aa','aa.empleado_id','=','e.id')
+					->where('aa.plantel_id', '=', $plantel)
+                                        ->where('aa.lectivo_id', '=', $lectivo)
+                                        ->where('aa.grupo_id', '=', $grupo)
+					->where('e.id', '>', '0')
+                                        ->distinct()
+					->get();
+			//dd($r);
+			if(isset($instructor) and $instructor<>0){
+				foreach($r as $r1){
+					if($r1->id==$instructor){
+						array_push($final, array('id'=>$r1->id, 
+												 'name'=>$r1->name, 
+												 'selectec'=>'Selected'));
+					}else{
+						array_push($final, array('id'=>$r1->id, 
+												 'name'=>$r1->name, 
+												 'selectec'=>''));
+					}
+				}
+				return $final;
+			}else{
+				return $r;	
+			}
+			
+		}
+	}
 }

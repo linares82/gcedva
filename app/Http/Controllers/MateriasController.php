@@ -336,6 +336,7 @@ class MateriasController extends Controller {
             $grupo = $request->get('grupo');
             $lectivo = $request->get('lectivo');
             $plantel = $request->get('plantel');
+            $instructor = $request->get('instructor');
             $materia=0;
             
             $final = array();
@@ -345,6 +346,7 @@ class MateriasController extends Controller {
                     ->select('m.id','m.name')
                     ->where('aa.plantel_id', '=', $plantel)
                     ->where('aa.lectivo_id', '=', $lectivo)
+                    ->where('aa.empleado_id', '=', $instructor)
                     ->where('aa.grupo_id', '=', $grupo)
                     ->get();
 
