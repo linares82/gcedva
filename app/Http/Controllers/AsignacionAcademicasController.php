@@ -276,7 +276,7 @@ class AsignacionAcademicasController extends Controller {
                         $instructor=$request->get('instructor');			
 			$final = array();
 			$r = DB::table('empleados as e')
-					->select('e.id', DB::Raw('concat(e.nombre,ape_paterno,ape_materno) as name'))
+					->select('e.id', DB::Raw('concat(e.nombre," ",ape_paterno," ",ape_materno) as name'))
                                         ->join('asignacion_academicas as aa','aa.empleado_id','=','e.id')
 					->where('aa.plantel_id', '=', $plantel)
                                         ->where('aa.lectivo_id', '=', $lectivo)

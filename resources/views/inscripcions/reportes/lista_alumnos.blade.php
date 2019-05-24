@@ -132,6 +132,8 @@
 @push('scripts')
   <script type="text/javascript">
     $(document).ready(function() {
+        $plantel_activo='{{DB::table("empleados")->where("user_id", Auth::user()->id)->value("plantel_id")}}';
+        $('#plantel_f-field').val($plantel_activo).change();
     /*
       $('#lectivo_f-field').change(function(){
          lectivo=$('#lectivo_f-field option:selected').val();
@@ -168,6 +170,9 @@
             });        
       });
       */
+     
+     
+     
       $('#plantel_f-field').change(function(){
         getCmbLectivoAsignacionAcademica()
         });
@@ -320,7 +325,7 @@
                         $('#instructor_f-field').append($('<option></option>').text('Seleccionar').val('0'));
                         $.each(data, function(i) {
                         //alert(data[i].name);
-                        $('#instructor_f-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].nombre + "<\/option>");
+                        $('#instructor_f-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
                         });
                         
                         }
