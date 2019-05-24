@@ -4,6 +4,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\PromoPlanLn;
+use App\PlanPagoLn;
 use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updatePromoPlanLn;
@@ -118,9 +119,11 @@ class PromoPlanLnsController extends Controller {
 	public function destroy($id,PromoPlanLn $promoPlanLn)
 	{
 		$promoPlanLn=$promoPlanLn->find($id);
+                $plan_pago_ln=PlanPagoLn::find($promoPlanLn->plan_pago_ln_id);
+                
 		$promoPlanLn->delete();
 
-		return redirect()->route('promoPlanLns.index')->with('message', 'Registro Borrado.');
+		return redirect()->route('planPagos.show',$plan_pago_ln->plan_pago_id)->with('message', 'Registro Borrado.');
 	}
 
 }

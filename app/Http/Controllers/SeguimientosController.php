@@ -855,12 +855,20 @@ class SeguimientosController extends Controller {
                             ->where('combinacion_clientes.plantel_id', '<=',$data['plantel_t'])
                             ->where('p.fecha','>=',$data['fecha_f'])
                             ->where('p.fecha','<=',$data['fecha_t'])
+                            ->where('combinacion_clientes.especialidad_id','<>',0)
+                            ->where('combinacion_clientes.nivel_id','<>',0)
+                            ->where('combinacion_clientes.grado_id','<>',0)
+                            ->where('combinacion_clientes.turno_id','<>',0)
+                            ->whereNull('combinacion_cliente.deleted_at','<>',0)
+                            ->where('combinacion_clientes.plan_pago_id','>',0)
+                            ->whereNull('p.deleted_at')
+                            ->whereNull('clns.deleted_at')
                             //->where('c.empleado_id', $data['empleado_f'])
                             ->whereIn('caj.st_caja_id',[1,3])
                             ->where(function ($query) {
-                                 $query->orWhere('cc.name','LIKE','INSCRIP%')
-                                       ->orWhere('cc.name','LIKE','SEGUR%')
-                                       ->orWhere('cc.name','LIKE','UNIFORM%');  
+                                 $query->orWhere('cc.name','LIKE','INSCRIP%');
+                                       //->orWhere('cc.name','LIKE','SEGUR%')
+                                       //->orWhere('cc.name','LIKE','UNIFORM%');  
                              })
                             ->orderBy('colaborador')
                             ->distinct()

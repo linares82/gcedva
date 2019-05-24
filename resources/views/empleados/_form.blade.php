@@ -379,8 +379,9 @@
         var data = new FormData();
         data.append('file', $('#file')[0].files[0]);
         data.append('doc_empleado_id', $('#doc_empleado_id-field option:selected').val());
+        @if(isset($empleado))
         data.append('empleado', {{$empleado->id}});
-        
+        @endif
 
         $.ajaxSetup({
             headers: {

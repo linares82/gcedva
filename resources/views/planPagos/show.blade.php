@@ -147,8 +147,10 @@
                                                                                           data-fec_fin="{{$promoPlanLn->fec_fin}}"
                                                                                           data-descuento="{{$promoPlanLn->descuento}}">
                                 <span class="glyphicon glyphicon-star"></span> Editar </button><br/>
+                                <a class="btn btn-danger btn-xs" href="{{route('promoPlanLns.destroy',$promoPlanLn->id)}}">Borrar</a>
                                 @endforeach
                             </td>
+                            
                             <td>
                                 <button class="edit-modal btn btn-info btn-xs" data-id="{{$linea->id}}" 
                                                                                data-plan_pago_id="{{$linea->plan_pago_id}}" 
