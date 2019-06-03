@@ -4,7 +4,7 @@ return [
     "layout" => "plantillas.admin_template",
     "route-prefix" => "seguridad",
     "pagination" => [
-        "users" => 200,
+        "users" => 250,
         "roles" => 15,
         "permissions" => 15,
     ],

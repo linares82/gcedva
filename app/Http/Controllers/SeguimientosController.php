@@ -5,15 +5,19 @@ namespace App\Http\Controllers;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Asunto;
+use App\Adeudo;
 use App\CombinacionCliente;
+use App\Cliente;
+use App\CajaLn;
+use App\Caja;
 use App\Seguimiento;
 use App\Empleado;
 use App\Especialidad;
 use App\SmsPredefinido;
-use App\Cliente;
 use App\Inscripcion;
-use App\Plantel;
 use App\Lectivo;
+use App\Plantel;
+use App\PromoPlanLn;
 use App\StSeguimiento;
 use App\StTarea;
 use App\Tarea;
@@ -29,6 +33,7 @@ use DB;
 use PDF;
 use Maatwebsite\Excel\Facades\Excel;
 use Log;
+use Carbon\Carbon;
 
 class SeguimientosController extends Controller {
 
@@ -859,16 +864,13 @@ class SeguimientosController extends Controller {
                             ->where('combinacion_clientes.nivel_id','<>',0)
                             ->where('combinacion_clientes.grado_id','<>',0)
                             ->where('combinacion_clientes.turno_id','<>',0)
-                            ->whereNull('combinacion_cliente.deleted_at','<>',0)
+                            ->whereNull('combinacion_clientes.deleted_at','<>',0)
                             ->where('combinacion_clientes.plan_pago_id','>',0)
                             ->whereNull('p.deleted_at')
                             ->whereNull('clns.deleted_at')
-                            //->where('c.empleado_id', $data['empleado_f'])
                             ->whereIn('caj.st_caja_id',[1,3])
                             ->where(function ($query) {
                                  $query->orWhere('cc.name','LIKE','INSCRIP%');
-                                       //->orWhere('cc.name','LIKE','SEGUR%')
-                                       //->orWhere('cc.name','LIKE','UNIFORM%');  
                              })
                             ->orderBy('colaborador')
                             ->distinct()
@@ -885,6 +887,297 @@ class SeguimientosController extends Controller {
                 */
                 return view('seguimientos.reportes.inscritosUnPagoR', array('registros'=>$registros,
                                                                                  'plantel'=>$plantel,
+                                                                                 'data'=>$data));
+	}
+        
+        public function InscritosPagos()
+	{
+                
+		return view('seguimientos.reportes.inscritosPagos')
+			->with( 'list', Inscripcion::getListFromAllRelationApps() );
+	}
+        
+        public function InscritosPagosR(Request $request)
+	{
+                $data=$request->all();
+                $plantel=Plantel::find($data['plantel_f']);
+                //dd($data);
+                $registros_pagados= CombinacionCliente::select('pla.razon','c.id',DB::raw('concat(e.nombre, " ",e.ape_paterno, " ",e.ape_materno) as colaborador, '
+                        . 'concat(c.nombre," ",c.nombre2," ",c.ape_paterno," ",c.ape_materno) as cliente, caj.id as caja, p.fecha as fecha_pago,'
+                        . 'c.beca_bnd, p.monto as pago, st.name as estatus_caja'))
+                            ->join('clientes as c', 'c.id', '=', 'combinacion_clientes.cliente_id')
+                            ->join('plantels as pla','pla.id','=','c.plantel_id')
+                            ->join('medios as m','m.id','=','c.medio_id')
+                            //->join('especialidads as esp','esp.id','=','combinacion_clientes.especialidad_id')
+                            ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
+                            ->join('cajas as caj','caj.cliente_id','=','c.id')
+                            ->join('st_cajas as st','st.id','=','caj.st_caja_id')
+                            //->join('caja_lns as clns','clns.caja_id','=','caj.id')
+                            //->join('caja_conceptos as cc','cc.id','=','clns.caja_concepto_id')
+                            ->join('pagos as p','p.caja_id','=','caj.id')
+                            ->where('combinacion_clientes.plantel_id', '>=', $data['plantel_f'])
+                            ->where('combinacion_clientes.plantel_id', '<=',$data['plantel_t'])
+                            ->where('p.fecha','>=',$data['fecha_f'])
+                            ->where('p.fecha','<=',$data['fecha_t'])
+                            ->where('combinacion_clientes.especialidad_id','<>',0)
+                            ->where('combinacion_clientes.nivel_id','<>',0)
+                            ->where('combinacion_clientes.grado_id','<>',0)
+                            ->where('combinacion_clientes.turno_id','<>',0)
+                            ->whereNull('combinacion_clientes.deleted_at','<>',0)
+                            ->where('combinacion_clientes.plan_pago_id','>',0)
+                            ->where('caj.st_caja_id','=',1)
+                            ->whereNull('p.deleted_at')
+                            //->whereNull('clns.deleted_at')
+                            ->whereIn('caj.st_caja_id',[1,3])
+                            ->orderBy('colaborador','caja.st_caja_id')
+                            ->distinct()
+                            ->get();
+                $registros_parciales= CombinacionCliente::select('pla.razon','c.id',DB::raw('concat(e.nombre, " ",e.ape_paterno, " ",e.ape_materno) as colaborador, '
+                        . 'concat(c.nombre," ",c.nombre2," ",c.ape_paterno," ",c.ape_materno) as cliente, caj.id as caja, p.fecha as fecha_pago,'
+                        . 'c.beca_bnd, p.monto as pago, st.name as estatus_caja'))
+                            ->join('clientes as c', 'c.id', '=', 'combinacion_clientes.cliente_id')
+                            ->join('plantels as pla','pla.id','=','c.plantel_id')
+                            ->join('medios as m','m.id','=','c.medio_id')
+                            //->join('especialidads as esp','esp.id','=','combinacion_clientes.especialidad_id')
+                            ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
+                            ->join('cajas as caj','caj.cliente_id','=','c.id')
+                            ->join('st_cajas as st','st.id','=','caj.st_caja_id')
+                            //->join('caja_lns as clns','clns.caja_id','=','caj.id')
+                            //->join('caja_conceptos as cc','cc.id','=','clns.caja_concepto_id')
+                            ->join('pagos as p','p.caja_id','=','caj.id')
+                            ->where('combinacion_clientes.plantel_id', '>=', $data['plantel_f'])
+                            ->where('combinacion_clientes.plantel_id', '<=',$data['plantel_t'])
+                            ->where('p.fecha','>=',$data['fecha_f'])
+                            ->where('p.fecha','<=',$data['fecha_t'])
+                            ->where('combinacion_clientes.especialidad_id','<>',0)
+                            ->where('combinacion_clientes.nivel_id','<>',0)
+                            ->where('combinacion_clientes.grado_id','<>',0)
+                            ->where('combinacion_clientes.turno_id','<>',0)
+                            ->whereNull('combinacion_clientes.deleted_at','<>',0)
+                            ->where('combinacion_clientes.plan_pago_id','>',0)
+                            ->where('caj.st_caja_id','=',3)
+                            ->whereNull('p.deleted_at')
+                            //->whereNull('clns.deleted_at')
+                            ->whereIn('caj.st_caja_id',[1,3])
+                            ->orderBy('colaborador','caja.st_caja_id')
+                            ->distinct()
+                            ->get();
+                $registros= CombinacionCliente::select('pla.razon','c.id',DB::raw('concat(e.nombre, " ",e.ape_paterno, " ",e.ape_materno) as colaborador, '
+                        . 'concat(c.nombre," ",c.nombre2," ",c.ape_paterno," ",c.ape_materno) as cliente, caj.id as caja, p.fecha as fecha_pago,'
+                        . 'c.beca_bnd, p.monto as pago, st.name as estatus_caja'))
+                            ->join('clientes as c', 'c.id', '=', 'combinacion_clientes.cliente_id')
+                            ->join('plantels as pla','pla.id','=','c.plantel_id')
+                            ->join('medios as m','m.id','=','c.medio_id')
+                            //->join('especialidads as esp','esp.id','=','combinacion_clientes.especialidad_id')
+                            ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
+                            ->join('cajas as caj','caj.cliente_id','=','c.id')
+                            ->join('st_cajas as st','st.id','=','caj.st_caja_id')
+                            //->join('caja_lns as clns','clns.caja_id','=','caj.id')
+                            //->join('caja_conceptos as cc','cc.id','=','clns.caja_concepto_id')
+                            ->join('pagos as p','p.caja_id','=','caj.id')
+                            ->where('combinacion_clientes.plantel_id', '>=', $data['plantel_f'])
+                            ->where('combinacion_clientes.plantel_id', '<=',$data['plantel_t'])
+                            ->where('p.fecha','>=',$data['fecha_f'])
+                            ->where('p.fecha','<=',$data['fecha_t'])
+                            ->where('combinacion_clientes.especialidad_id','<>',0)
+                            ->where('combinacion_clientes.nivel_id','<>',0)
+                            ->where('combinacion_clientes.grado_id','<>',0)
+                            ->where('combinacion_clientes.turno_id','<>',0)
+                            ->whereNull('combinacion_clientes.deleted_at','<>',0)
+                            ->where('combinacion_clientes.plan_pago_id','>',0)
+                            ->whereNull('p.deleted_at')
+                            //->whereNull('clns.deleted_at')
+                            ->whereIn('caj.st_caja_id',[1,3])
+                            ->orderBy('colaborador','caja.st_caja_id')
+                            ->distinct()
+                            ->get();
+                //dd($registros);
+                                        
+                                        
+                /*
+                PDF::setOptions(['defaultFont' => 'arial']);
+
+                $pdf = PDF::loadView('inscripcions.reportes.lista_calificacionesr', array('registros'=>$registros,'carga_ponderacions_enc'=>$carga_ponderacion))
+                        ->setPaper('legal', 'landscape');
+                return $pdf->download('reporte.pdf');
+                */
+                return view('seguimientos.reportes.inscritosPagosR', array('registros_pagados'=>$registros_pagados,
+                                                                           'registros_parciales'=>$registros_parciales,
+                                                                           'registros'=>$registros,
+                                                                                 'plantel'=>$plantel,
+                                                                                 'data'=>$data));
+	}
+        
+        public function InscritosAdeudos()
+	{
+		return view('seguimientos.reportes.inscritosAdeudos')
+			->with( 'list', Inscripcion::getListFromAllRelationApps() );
+	}
+        
+        public function InscritosAdeudosR(Request $request)
+	{
+            $data=$request->all();
+            $plantel=Plantel::find($data['plantel_f']);
+            //dd($data);
+
+            $hoy=date('Y-m-d');
+            //dd($hoy);
+
+            $adeudos_tomados=Adeudo::where('fecha_pago','>=',$data['fecha_f'])
+                           ->where('fecha_pago','<=',$data['fecha_t'])
+                           ->join('clientes as c','c.id','=','adeudos.cliente_id')
+                           ->where('plantel_id',$plantel->id)
+                           ->where('caja_id','<>',0)
+                           ->get();
+            $registros=array();
+            foreach($adeudos_tomados as $adeudo_tomado){
+                //$adeudos=Adeudo::where('id', '=', $adeudo_tomado)->get();
+                
+                $cliente=Cliente::find($adeudo_tomado->cliente_id);
+                
+                //dd($adeudos->toArray());
+                $subtotal=0;
+                $recargo=0;
+                $descuento=0;
+                //dd($adeudos->toArray());
+
+                //foreach($adeudos as $adeudo){
+                    $existe_linea=CajaLn::where('adeudo_id','=',$adeudo_tomado->id)->first();
+                    if(!is_object($existe_linea)){
+                        
+                        $caja_ln['razon']=$plantel->razon;
+                        $caja_ln['concepto']=$adeudo_tomado->cajaConcepto->name;
+                        $caja_ln['cliente']=$cliente->id.'-'.$cliente->nombre.' '.$cliente->nombre2." ".$cliente->ape_paterno.' '.$cliente->ape_materno;
+                        $caja_ln['caja_concepto_id']=$adeudo_tomado->caja_concepto_id;
+                        $caja_ln['subtotal']=$adeudo_tomado->monto;
+                        $caja_ln['bnd_pagado']=$adeudo_tomado->bnd_pagado;
+                        $caja_ln['fecha_pago']=$adeudo_tomado->fecha_pago;
+    //                    dd($adeudo->planPagoLn->reglaRecargos);
+                        $caja_ln['total']=0;
+                        $caja_ln['recargo']=0;
+                        $caja_ln['descuento']=0;
+                        foreach($adeudo_tomado->planPagoLn->reglaRecargos as $regla){
+
+                            $dias=date_diff(date_create($hoy), date_create($adeudo_tomado->fecha_pago));
+                            //dd($dias);
+                            $dia=$dias->format('%R%a')*-1;
+
+                            //calcula recargo o descuento segun regla y aplica
+                            if($dia>=$regla->dia_inicio and $dia<=$regla->dia_fin){
+                                if($regla->tipo_regla_id==1){
+                                    //dd($regla->porcentaje);
+                                    if($regla->porcentaje>0){
+                                        //dd($regla->porcentaje);
+                                        $caja_ln['recargo']=$adeudo->monto*$regla->porcentaje;
+                                        //echo $caja_ln['recargo'];
+                                    }else{
+                                        $caja_ln['descuento']=$adeudo->monto*$regla->porcentaje*-1;
+                                        //echo $caja_ln['descuento'];
+                                    }
+
+                                }elseif($regla->tipo_regla_id==2){
+                                    if($regla->monto>0){
+                                        $caja_ln['recargo']=$regla->monto;
+                                    }else{
+                                        $caja_ln['descuento']=$regla->monto*-1;
+                                    }
+
+                                }
+                            }
+
+                        }
+                        $caja_ln['total']=0;
+                        $caja_ln['total']=$caja_ln['subtotal']+$caja_ln['recargo']-$caja_ln['descuento'];
+
+                        //calcula descuento segun promocion ligada a la linea del plan considerando la fecha de pago de la
+                        //inscripcion del cliente
+                        //dd($adeudo);
+                        try{
+                            $promociones= PromoPlanLn::where('plan_pago_ln_id',$adeudo_tomado->plan_pago_ln_id)->get();
+                            $caja_ln['promo_plan_ln_id']=0;
+                            if($cliente->beca_bnd<>1){
+                                foreach($promociones as $promocion){
+                                    $inscripcion=Adeudo::where('cliente_id',$adeudo_tomado->cliente_id)
+                                                        //->where('plan_pago_ln_id',$adeudo->plan_pago_ln_id)
+                                                        ->where('caja_concepto_id',1)
+                                                        ->where('combinacion_cliente_id',$adeudo_tomado->combinacion_cliente_id)
+                                                        ->where('pagado_bnd',1)
+                                                        ->first();
+//dd($inscripcion);
+                                    if(is_object($inscripcion)){
+                                        $inicio=Carbon::createFromFormat('Y-m-d', $promocion->fec_inicio);
+                                        $fin=Carbon::createFromFormat('Y-m-d', $promocion->fec_fin);
+
+                                        //$hoy=date('Y-m-d');
+                                        //$hoy=Carbon::now();
+                                        //La caja tiene la fecha de pago de un solo concepto que debe ser la inscripcion
+                                        $caja_inscripcion=Caja::find($inscripcion->caja_id);
+//dd($caja);
+                                        $hoy=Carbon::createFromFormat('Y-m-d', $caja_inscripcion->fecha);
+					//$hoy=Carbon::createFromFormat('Y-m-d', $adeudo->caja->fecha);  
+//dd($hoy);
+                                        $monto_promocion=0;
+                                        //dd($hoy);
+                                        if($inicio->lessThanOrEqualTo($hoy) and $fin->greaterThanOrEqualTo($hoy) and $caja_ln['promo_plan_ln_id']==0){
+
+                                            $monto_promocion=$promocion->descuento*$caja_ln['total'];
+                                            $caja_ln['descuento']=$caja_ln['descuento']+$monto_promocion;
+                                            $caja_ln['promo_plan_ln_id']=$promocion->id;
+                                        }
+                                    }else{
+                                        $inicio=Carbon::createFromFormat('Y-m-d', $promocion->fec_inicio);
+                                        $fin=Carbon::createFromFormat('Y-m-d', $promocion->fec_fin);
+
+                                        //$hoy=date('Y-m-d');
+                                        //$hoy=Carbon::now();
+                                        //La caja tiene la fecha de pago de un solo concepto que debe ser la inscripcion
+                                        $caja_inscripcion=Caja::find($inscripcion->caja_id);
+                                        $hoy=Carbon::createFromFormat('Y-m-d', $caja_inscripcion->fecha);
+                                        $monto_promocion=0;
+                                        //dd($hoy);
+                                        if($inicio->lessThanOrEqualTo($hoy) and $fin->greaterThanOrEqualTo($hoy) and $caja_ln['promo_plan_ln_id']==0){
+
+                                            $monto_promocion=$promocion->descuento*$caja_ln['total'];
+                                            $caja_ln['descuento']=$caja_ln['descuento']+$monto_promocion;
+                                            $caja_ln['promo_plan_ln_id']=$promocion->id;
+                                        }
+                                    }
+
+                                }
+                            }
+                        }catch(Exception $e){
+                            dd($e);
+                        }
+                        $caja_ln['total']=$caja_ln['subtotal']+$caja_ln['recargo']-$caja_ln['descuento'];
+
+
+                        $caja_ln['adeudo_id']=$adeudo_tomado->id;
+                        $caja_ln['usu_alta_id']=Auth::user()->id;
+                        $caja_ln['usu_mod_id']=Auth::user()->id;
+                        
+                        
+                        
+                        
+                //    }
+                        array_push($registros, $caja_ln);
+                }
+            }
+            $fecha=date('d-m-Y');
+                
+                //dd($registros);
+                                        
+                                        
+                /*
+                PDF::setOptions(['defaultFont' => 'arial']);
+
+                $pdf = PDF::loadView('inscripcions.reportes.lista_calificacionesr', array('registros'=>$registros,'carga_ponderacions_enc'=>$carga_ponderacion))
+                        ->setPaper('legal', 'landscape');
+                return $pdf->download('reporte.pdf');
+                */
+                return view('seguimientos.reportes.inscritosAdeudosR', array(
+                                                                           'registros'=>$registros,
+                                                                                 'plantel'=>$plantel,
+                                                                                 'fecha'=>$fecha,
                                                                                  'data'=>$data));
 	}
 }    

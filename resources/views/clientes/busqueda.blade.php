@@ -154,8 +154,8 @@
 @endsection
 
 @section('content')
-<div class="row">@permission('clientes.create')
-            @if(isset($nombre))
+    <div class="row">@permission('clientes.create')
+            @if(isset($clientes))
             <a class="btn btn-success pull-right" href="{{ route('clientes.create') }}"><i class="glyphicon glyphicon-plus"></i> Crear</a>
             @endif
             @endpermission

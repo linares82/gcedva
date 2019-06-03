@@ -4,6 +4,8 @@
 
 @section('header')
 
+
+
 	<ol class="breadcrumb">
 		<li><a href="{{ route('home') }}"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></a></li>
 	    <li><a href="{{ route('seguimientos.index') }}">@yield('seguimientosAppTitle')</a></li>
@@ -17,7 +19,19 @@
 
 @section('content')
     @include('error')
-
+    <style>
+    .disabled-select {
+        background-color:#d5d5d5;
+        opacity:0.5;
+        border-radius:3px;
+        cursor:not-allowed;
+        position:absolute;
+        top:0;
+        bottom:0;
+        right:0;
+        left:0;
+     }
+     </style>
     <div class="row">
         <div class="col-md-12">
 
@@ -37,9 +51,12 @@
                     <span class="help-block">{{ $errors->first("fecha_t") }}</span>
                     @endif
                 </div>-->
-                <div class="form-group col-md-6 @if($errors->has('plantel_f')) has-error @endif">
+                
+                <div class="form-group col-md-6 @if($errors->has('plantel_f')) has-error @endif" id="div_plantel">
                     <label for="plantel_f-field">Plantel de:</label>
+                    
                     {!! Form::select("plantel_f", $list["Plantel"], null, array("class" => "form-control select_seguridad", "id" => "plantel_f-field")) !!}
+                    
                     @if($errors->has("plantel_f"))
                     <span class="help-block">{{ $errors->first("plantel_f") }}</span>
                     @endif
@@ -182,8 +199,13 @@
         });
     $('#grupo_f-field').change(function(){
         //getCmbGrado();
-        getCmbMateria();
+        
         getCmbInstructor();
+        });
+       $('#instructor_f-field').change(function(){
+        
+        getCmbMateria();
+        
         });
     
       
@@ -334,9 +356,11 @@
             
         }
     
+    
+    
     @permission('IreporteFiltroXplantel')
-        $("#plantel_f-field").prop("disabled", true);
-        $("#plantel_t-field").prop("disabled", true);
+        //$("#plantel_f-field").prop("disabled", true);
+        $("#div_plantel").append('<div class="disabled-select"></div>');
     @endpermission
         
     });

@@ -214,9 +214,9 @@
                 <div class="info-box-content">
                     <h3><span class="info-box-text"> Rechazados totales </span></h3>
                     <!--<a href="{{ route('seguimientos.reporteSeguimientosXEmpleado', array('estatus'=>3)) }}" class="small-box-footer">Más Información <i class="fa fa-arrow-circle-right"></i></a>-->
-                    <a href="{{ route('clientes.index').'?q[s]=&q[clientes.nombre_cont]=&q[st_seguimiento_id_cont]=3'.
+                    <a href="{{ route('clientes.index').'?q[s]=&q[clientes.nombre_cont]=&q[st_seguimiento_id_lt]=3'.
                                                         //DB::table('empleados')->where('user_id', Auth::user()->id)->value('plantel_id').
-                                                        '&q[clientes.empleado_id_cont]='.
+                                                        '&q[clientes.empleado_id_lt]='.
                                                         DB::table('empleados')->where('user_id', Auth::user()->id)->value('id').
                                                         '&commit=Buscar' }}" 
                     class="small-box-footer">Ver <i class="fa fa-arrow-circle-right"></i></a>

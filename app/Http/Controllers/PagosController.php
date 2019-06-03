@@ -178,6 +178,12 @@ class PagosController extends Controller {
                 $combinaciones=CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
                 //dd($combinaciones->toArray());
                 $cliente=Cliente::find($caja->cliente_id);
+                $cajas=Caja::select('cajas.consecutivo as caja','ln.caja_concepto_id as concepto_id','cc.name as concepto', 'ln.total','st.name as estatus')
+                    ->join('caja_lns as ln','ln.caja_id','=','cajas.id')
+                    ->join('caja_conceptos as cc','cc.id','=','ln.caja_concepto_id')
+                    ->join('st_cajas as st','st.id','=','cajas.st_caja_id')
+                    ->where('cliente_id',$cliente->id)
+                    ->get();
                 
                 $suma_pagos=Pago::select('monto')->where('caja_id','=',$pago->caja_id)->sum('monto');
                 if($suma_pagos==$caja->total){
@@ -207,7 +213,7 @@ class PagosController extends Controller {
                     }
                 }
                 
-		return view('cajas.caja', compact('cliente', 'caja', 'combinaciones'))
+		return view('cajas.caja', compact('cliente', 'caja', 'combinaciones','cajas'))
                         ->with( 'list', Caja::getListFromAllRelationApps() )
                         ->with( 'list1', CajaLn::getListFromAllRelationApps() );           
 	}

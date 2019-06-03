@@ -8,11 +8,15 @@
 </div>
 <table class="table table-striped">
   <tr>
+    <th>Id</th>
+    <th>Nombre</th>
     <th>Email</th>
     <th>Actions</th>
   </tr>
   @foreach($users as $user)
     <tr>
+      <td>{{ $user->id }}</th>
+      <td>{{ $user->name }}</th>
       <td>{{ $user->email }}</th>
       <td class="col-xs-3">
         <form action="{{ route('entrust-gui::users.destroy', $user->id) }}" method="post">

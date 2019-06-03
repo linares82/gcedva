@@ -62,6 +62,12 @@ class CajasController extends Controller {
                 
                 $caja=Caja::where('st_caja_id',0)->where('plantel_id',$cliente->plantel_id)->get();
                 
+                $cajas=Caja::select('cajas.consecutivo as caja','ln.caja_concepto_id as concepto_id','cc.name as concepto', 'ln.total','st.name as estatus')
+                    ->join('caja_lns as ln','ln.caja_id','=','cajas.id')
+                    ->join('caja_conceptos as cc','cc.id','=','ln.caja_concepto_id')
+                    ->join('st_cajas as st','st.id','=','cajas.st_caja_id')
+                    ->where('cliente_id',$cliente->id)
+                    ->get();
                  /*$validator = Validator::make($request->all(), [
                         'st_caja_id' => 'unique:cajas',
                     ],
@@ -115,7 +121,7 @@ class CajasController extends Controller {
                 
                 $combinaciones=CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
 		
-		return view('cajas.caja', compact('cliente', 'caja','combinaciones'))
+		return view('cajas.caja', compact('cliente', 'caja','combinaciones','cajas'))
                         ->with( 'list', Caja::getListFromAllRelationApps() )
                         ->with( 'list1', CajaLn::getListFromAllRelationApps() );
 	}
@@ -142,8 +148,14 @@ class CajasController extends Controller {
 	{
 		$caja=$caja->find($id);
                 $cliente=Cliente::find($caja->cliente_id);
+                $cajas=Caja::select('cajas.consecutivo as caja','ln.caja_concepto_id as concepto_id','cc.name as concepto', 'ln.total','st.name as estatus')
+                    ->join('caja_lns as ln','ln.caja_id','=','cajas.id')
+                    ->join('caja_conceptos as cc','cc.id','=','ln.caja_concepto_id')
+                    ->join('st_cajas as st','st.id','=','cajas.st_caja_id')
+                    ->where('cliente_id',$cliente->id)
+                    ->get();
                 $combinaciones=CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
-		return view('cajas.caja', compact('caja', 'cliente','combinaciones'))
+		return view('cajas.caja', compact('caja', 'cliente','combinaciones','cajas'))
 			->with( 'list', Caja::getListFromAllRelationApps() )
                         ->with( 'list1', CajaLn::getListFromAllRelationApps() );
 	}
@@ -377,10 +389,17 @@ class CajasController extends Controller {
                 $adeudos=Adeudo::where('id', '=', $data['adeudo'])->get();
             }*/
             //dd($data[]);
+	    $caja=Caja::find($data['caja']); 
             foreach($data['adeudos_tomados'] as $adeudo_tomado){
                 $adeudos=Adeudo::where('id', '=', $adeudo_tomado)->get();
-                $caja=Caja::find($data['caja']);
+                
                 $cliente=Cliente::find($data['cliente_id']);
+                $cajas=Caja::select('cajas.consecutivo as caja','ln.caja_concepto_id as concepto_id','cc.name as concepto', 'ln.total','st.name as estatus')
+                    ->join('caja_lns as ln','ln.caja_id','=','cajas.id')
+                    ->join('caja_conceptos as cc','cc.id','=','ln.caja_concepto_id')
+                    ->join('st_cajas as st','st.id','=','cajas.st_caja_id')
+                    ->where('cliente_id',$cliente->id)
+                    ->get();
                 //dd($adeudos->toArray());
                 $subtotal=0;
                 $recargo=0;
@@ -440,12 +459,13 @@ class CajasController extends Controller {
                             $caja_ln['promo_plan_ln_id']=0;
                             if($cliente->beca_bnd<>1){
                                 foreach($promociones as $promocion){
-                                    $inscripcion=Adeudo::where('plan_pago_ln_id',$adeudo->plan_pago_ln_id)
-                                                        ->where('cliente_id',$adeudo->cliente_id)
+                                    $inscripcion=Adeudo::where('cliente_id',$adeudo->cliente_id)
+                                                        //->where('plan_pago_ln_id',$adeudo->plan_pago_ln_id)
                                                         ->where('caja_concepto_id',1)
                                                         ->where('combinacion_cliente_id',$adeudo->combinacion_cliente_id)
                                                         ->where('pagado_bnd',1)
                                                         ->first();
+//dd($inscripcion);
                                     if(is_object($inscripcion)){
                                         $inicio=Carbon::createFromFormat('Y-m-d', $promocion->fec_inicio);
                                         $fin=Carbon::createFromFormat('Y-m-d', $promocion->fec_fin);
@@ -453,8 +473,11 @@ class CajasController extends Controller {
                                         //$hoy=date('Y-m-d');
                                         //$hoy=Carbon::now();
                                         //La caja tiene la fecha de pago de un solo concepto que debe ser la inscripcion
-                                        $caja=Caja::where('caja_id',$inscripcion->caja_id)->first();
-                                        $hoy=Carbon::createFromFormat('Y-m-d', $caja->fecha);
+                                        $caja_inscripcion=Caja::find($inscripcion->caja_id);
+//dd($caja);
+                                        $hoy=Carbon::createFromFormat('Y-m-d', $caja_inscripcion->fecha);
+					//$hoy=Carbon::createFromFormat('Y-m-d', $adeudo->caja->fecha);  
+//dd($hoy);
                                         $monto_promocion=0;
                                         //dd($hoy);
                                         if($inicio->lessThanOrEqualTo($hoy) and $fin->greaterThanOrEqualTo($hoy) and $caja_ln['promo_plan_ln_id']==0){
@@ -470,8 +493,8 @@ class CajasController extends Controller {
                                         //$hoy=date('Y-m-d');
                                         //$hoy=Carbon::now();
                                         //La caja tiene la fecha de pago de un solo concepto que debe ser la inscripcion
-                                        $caja=Caja::find($data['caja']);
-                                        $hoy=Carbon::createFromFormat('Y-m-d', $caja->fecha);
+                                        $caja_inscripcion=Caja::find($inscripcion->caja_id);
+                                        $hoy=Carbon::createFromFormat('Y-m-d', $caja_inscripcion->fecha);
                                         $monto_promocion=0;
                                         //dd($hoy);
                                         if($inicio->lessThanOrEqualTo($hoy) and $fin->greaterThanOrEqualTo($hoy) and $caja_ln['promo_plan_ln_id']==0){
@@ -511,10 +534,12 @@ class CajasController extends Controller {
 
                 }
                 if($subtotal>0){
+//dd($subtotal);
                     $caja->subtotal=$caja->subtotal+$subtotal;
                     $caja->recargo=$caja->recargo+$recargo;
                     $caja->descuento=$caja->descuento+$descuento;
                     $caja->total=$caja->subtotal+$caja->recargo-$caja->descuento;
+//dd($caja); 
                     $caja->save();
                 }
             }
@@ -522,7 +547,7 @@ class CajasController extends Controller {
             
             $combinaciones=CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
             
-            return view('cajas.caja', compact('cliente', 'caja', 'combinaciones'))
+            return view('cajas.caja', compact('cliente', 'caja', 'combinaciones','cajas'))
                     ->with( 'list', Caja::getListFromAllRelationApps() )
                     ->with( 'list1', CajaLn::getListFromAllRelationApps() );           
         }
@@ -565,6 +590,13 @@ class CajasController extends Controller {
             $caja->forma_pago_id=$request->get('forma_pago_id');
             $caja->save();
             $cliente=Cliente::find($caja->cliente_id);
+            $cajas=Caja::select('cajas.consecutivo as caja','ln.caja_concepto_id as concepto_id','cc.name as concepto', 'ln.total','st.name as estatus')
+                    ->join('caja_lns as ln','ln.caja_id','=','cajas.id')
+                    ->join('caja_conceptos as cc','cc.id','=','ln.caja_concepto_id')
+                    ->join('st_cajas as st','st.id','=','cajas.st_caja_id')
+                    ->where('cliente_id',$cliente->id)
+                    ->get();
+            
             $combinaciones=CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
             
             foreach($caja->cajaLns as $linea){
@@ -573,7 +605,7 @@ class CajasController extends Controller {
                 $adeudo->caja_id=$caja->id;
                 $adeudo->save();
             }
-            return view('cajas.caja', compact('cliente', 'caja','combinaciones'))
+            return view('cajas.caja', compact('cliente', 'caja','combinaciones','cajas'))
                     ->with( 'list', Caja::getListFromAllRelationApps() )
                     ->with( 'list1', CajaLn::getListFromAllRelationApps() );           
         }
@@ -677,8 +709,14 @@ class CajasController extends Controller {
         
         $cliente=Cliente::find($caja->cliente_id);
         $combinaciones=CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
+        $cajas=Caja::select('cajas.consecutivo as caja','ln.caja_concepto_id as concepto_id','cc.name as concepto', 'ln.total','st.name as estatus')
+                    ->join('caja_lns as ln','ln.caja_id','=','cajas.id')
+                    ->join('caja_conceptos as cc','cc.id','=','ln.caja_concepto_id')
+                    ->join('st_cajas as st','st.id','=','cajas.st_caja_id')
+                    ->where('cliente_id',$cliente->id)
+                    ->get();
         
-        return view('cajas.caja', compact('cliente', 'caja','combinaciones'))
+        return view('cajas.caja', compact('cliente', 'caja','combinaciones','cajas'))
                     ->with( 'list', Caja::getListFromAllRelationApps() )
                     ->with( 'list1', CajaLn::getListFromAllRelationApps() );           
         
@@ -696,8 +734,13 @@ class CajasController extends Controller {
             $caja->save();
         }
         $combinaciones=CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
-        
-        return view('cajas.caja', compact('cliente', 'caja', 'combinaciones'))
+        $cajas=Caja::select('cajas.consecutivo as caja','ln.caja_concepto_id as concepto_id','cc.name as concepto', 'ln.total','st.name as estatus')
+                    ->join('caja_lns as ln','ln.caja_id','=','cajas.id')
+                    ->join('caja_conceptos as cc','cc.id','=','ln.caja_concepto_id')
+                    ->join('st_cajas as st','st.id','=','cajas.st_caja_id')
+                    ->where('cliente_id',$caja->cliente_id)
+                    ->get();
+        return view('cajas.caja', compact('cliente', 'caja', 'combinaciones','cajas'))
                     ->with( 'list', Caja::getListFromAllRelationApps() )
                     ->with( 'list1', CajaLn::getListFromAllRelationApps() );           
         
@@ -727,8 +770,14 @@ class CajasController extends Controller {
         }
         
         $combinaciones=CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
+        $cajas=Caja::select('cajas.consecutivo as caja','ln.caja_concepto_id as concepto_id','cc.name as concepto', 'ln.total','st.name as estatus')
+                    ->join('caja_lns as ln','ln.caja_id','=','cajas.id')
+                    ->join('caja_conceptos as cc','cc.id','=','ln.caja_concepto_id')
+                    ->join('st_cajas as st','st.id','=','cajas.st_caja_id')
+                    ->where('cliente_id',$caja->cliente_id)
+                    ->get();
         
-        return view('cajas.caja', compact('cliente', 'caja', 'combinaciones'))
+        return view('cajas.caja', compact('cliente', 'caja', 'combinaciones','cajas'))
                     ->with( 'list', Caja::getListFromAllRelationApps() )
                     ->with( 'list1', CajaLn::getListFromAllRelationApps() );           
     }

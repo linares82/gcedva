@@ -162,7 +162,7 @@
 
                     </div>
                 </div>
-                @if($cliente->beca_bnd==1)
+                @if($cliente->beca_bnd==-1)
                 <div class="form-group col-md-4">
                     <div class='text-center'>
                     
@@ -338,7 +338,7 @@
                         @foreach($combinaciones as $combinacion)
                         <tr>
                             <td colspan='6'><strong>Grado:</strong>{{$combinacion->grado->name}}</td>
-                            <td colspan='6'><strong>Beca:</strong>@if($cliente->beca_bnd==1) SI @else NO @endif</td>
+                            <td colspan='6'><strong>Beca:</strong>@if($combinacion->bnd_beca==1) SI @else NO @endif</td>
                         </tr>
                         <tr>
                         <table id='conceptos_predefinidos' class='table table-striped table-condensed'>

@@ -72,7 +72,7 @@
                             </div>
                             <div class="form-group col-md-6 @if($errors->has('st_seguimiento_id')) has-error @endif">
                             <label for="st_seguimiento_id-field">Estatus del seguimiento</label>
-                            @if($seguimiento->st_seguimiento_id==2)
+                            @if($seguimiento->st_seguimiento_id==2 and Entrust::can('seguimientos.activarEstatus'))
                                 {!! Form::select("st_seguimiento_id", $sts,null, array("class" => "form-control select_seguridad", "id" => "st_seguimiento_id-field", "disabled"=>true)) !!}
                             @else
                                 {!! Form::select("st_seguimiento_id", $sts,null, array("class" => "form-control select_seguridad", "id" => "st_seguimiento_id-field", "disabled"=>false)) !!}

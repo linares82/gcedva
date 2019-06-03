@@ -137,4 +137,16 @@ class CombinacionClientesController extends Controller {
                 echo json_encode($combinacion);
             }
         }
+        
+        public function saveBndBeca(Request $request){
+            //dd($request);
+            if($request->ajax()){
+                $data=$request->all();
+                //dd($data);
+                $combinacion=CombinacionCliente::find($data['combinacion']);
+                $combinacion->bnd_beca=$data['bnd_beca'];
+                $combinacion->save();
+                echo json_encode($combinacion);
+            }
+        }
 }

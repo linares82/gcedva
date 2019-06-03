@@ -202,6 +202,9 @@ trait GetAllDataTrait {
                     $myQuery=$myQuery->where('clientes.plantel_id', '=', $empleado->plantel_id)
                                      ->where('st_seguimiento_id', '<>', '3');
                 }
+                if($baseTable=="seguimientos" and Auth::user()->can('IfiltroRechazados')){
+                    $myQuery=$myQuery->where('st_seguimiento_id', '<>', '3');
+                }
                 //dd($clientesa);
                 if($clientesa==1){
                     //dd($clientesa);

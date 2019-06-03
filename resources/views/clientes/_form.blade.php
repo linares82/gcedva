@@ -315,6 +315,7 @@
                                         <th>Turno</th>
                                         <th>Inscribir</th>
                                         <th>Plan Pago</th>
+                                        <th>beca</th>
                                         <th></th>
                                 </thead>
                                 <tbody>
@@ -343,6 +344,10 @@
                                             @permission('adeudos.cambiarPlanPagos') 
                                             <a href="{!! route('adeudos.cambiarPlanPagos', array('cliente'=>$cliente->id, 'combinacion'=>$c->id)) !!}" class="btn btn-xs btn-warning">Ajustar Adeudos segun Plan</a>
                                             @endpermission
+                                        </td>
+                                        <td>
+                                            {!! Form::checkbox("bnd_beca", 1, $c->bnd_beca, [ "class" => "bnd_beca-field", 'data-combinacion'=>$c->id]) !!}
+                                            <div id='loading33' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                                         </td>
                                         <td>
                                             @permission('inscripcions.create') 
@@ -1914,6 +1919,25 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                                     complete : function(){$("#loading12").hide(); },
                                     success: function(data){
                                         location.reload();
+                                    }
+                            });
+                        });
+                        
+                        $('.bnd_beca-field').click(function(){
+                            
+                            bnd_beca=0;
+                            if($(this).is(':checked')){
+                                bnd_beca=1;
+                            }
+                            $.ajax({
+                            url: '{{ route("combinacionClientes.saveBndBeca") }}',
+                                    type: 'GET',
+                                    data: "bnd_beca=" + bnd_beca + "&combinacion=" + $(this).data('combinacion'),
+                                    dataType: 'json',
+                                    beforeSend : function(){$("#loading33").show(); },
+                                    complete : function(){$("#loading33").hide(); },
+                                    success: function(data){
+                                        //location.reload();
                                     }
                             });
                         });

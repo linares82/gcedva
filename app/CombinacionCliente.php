@@ -21,7 +21,7 @@ class CombinacionCliente extends Model
     } 
 
 	//Mass Assignment
-	protected $fillable = ['cliente_id','plantel_id','especialidad_id','nivel_id','grado_id','turno_id','bnd_inscrito','fecha_inscrito','plan_pago_id'];
+	protected $fillable = ['cliente_id','plantel_id','especialidad_id','nivel_id','grado_id','turno_id','bnd_inscrito','fecha_inscrito','plan_pago_id','bnd_beca'];
 
 	public function usu_alta() {
 		return $this->hasOne('App\User', 'id', 'usu_alta_id');

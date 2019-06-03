@@ -17,7 +17,19 @@
 
 @section('content')
     @include('error')
-
+    <style>
+    .disabled-select {
+        background-color:#d5d5d5;
+        opacity:0.5;
+        border-radius:3px;
+        cursor:not-allowed;
+        position:absolute;
+        top:0;
+        bottom:0;
+        right:0;
+        left:0;
+     }
+     </style>
     <div class="row">
         <div class="col-md-12">
 
@@ -36,7 +48,7 @@
                     <span class="help-block">{{ $errors->first("fecha_t") }}</span>
                     @endif
                 </div>-->
-                <div class="form-group col-md-6 @if($errors->has('plantel_f')) has-error @endif">
+                <div class="form-group col-md-6 @if($errors->has('plantel_f')) has-error @endif" id="div_plantel">
                     <label for="plantel_f-field">Plantel de:</label>
                     {!! Form::select("plantel_f", $list["Plantel"], null, array("class" => "form-control select_seguridad", "id" => "plantel_f-field")) !!}
                     @if($errors->has("plantel_f"))
@@ -128,21 +140,9 @@
 @push('scripts')
   <script type="text/javascript">
     $(document).ready(function() {
-    /*$('#fecha_f-field').Zebra_DatePicker({
-        days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
-        months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-        readonly_element: false,
-        lang_clear_date: 'Limpiar',
-        show_select_today: 'Hoy',
-      });
-      $('#fecha_t-field').Zebra_DatePicker({
-        days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
-        months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-        readonly_element: false,
-        lang_clear_date: 'Limpiar',
-        show_select_today: 'Hoy',
-      });
-      */
+        $plantel_activo='{{DB::table("empleados")->where("user_id", Auth::user()->id)->value("plantel_id")}}';
+        $('#plantel_f-field').val($plantel_activo).change();
+    /*
       $('#lectivo_f-field').change(function(){
          lectivo=$('#lectivo_f-field option:selected').val();
          
@@ -177,18 +177,53 @@
                   }  
             });        
       });
-      
+      */
+     
+     
+     
       $('#plantel_f-field').change(function(){
-        getCmbInstructor();
+        getCmbLectivoAsignacionAcademica()
         });
       
       $('#lectivo_f-field').change(function(){
         getCmbGrupo();
         });
     $('#grupo_f-field').change(function(){
-        getCmbGrado();
-        getCmbMateria();
+        //getCmbGrado();
+        
+        getCmbInstructor();
         });
+       $('#instructor_f-field').change(function(){
+        
+        getCmbMateria();
+        
+        });
+    
+      
+    function getCmbLectivoAsignacionAcademica(){
+        $.ajax({
+                  url: '{{ route("asignacionAcademica.getCmbLectivo") }}',
+                  type: 'GET',
+                  data: "plantel_id=" + $('#plantel_f-field option:selected').val() + 
+                        "&lectivo_id=" + $('#lectivo_f-field option:selected').val() + "",
+                  dataType: 'json',
+                  beforeSend : function(){$("#loading13").show();},
+                  complete : function(){$("#loading13").hide();},
+                  success: function(data){
+                      //$example.select2("destroy");
+                      $('#lectivo_f-field').html('');
+                      
+                      //$('#especialidad_id-field').empty();
+                      $('#lectivo_f-field').append($('<option></option>').text('Seleccionar').val('0'));
+                      
+                      $.each(data, function(i) {
+                          //alert(data[i].name);
+                          $('#lectivo_f-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                      });
+                      //$example.select2();
+                  }
+              });
+    }  
       
     function getCmbGrupo(){
           //var $example = $("#especialidad_id-field").select2();
@@ -249,13 +284,15 @@
             var plantel=$('#plantel_f-field option:selected').val();
             var grupo = $('#grupo_f-field option:selected').val();
             var lectivo= $('#lectivo_f-field option:selected').val();
+            var instructor= $('#instructor_f-field option:selected').val();
             if(plantel>0 && grupo>0 && lectivo>0){
                 $.ajax({
                 url: '{{ route("materias.getCmbMateriaXAsignacionAcademica") }}',
                         type: 'GET',
                         data: "plantel=" + plantel + 
                               "&grupo=" + grupo +
-                              "&lectivo=" + lectivo + "",
+                              "&lectivo=" + lectivo +
+                              "&instructor=" + instructor + "",
                         dataType: 'json',
                         beforeSend : function(){$("#loading12").show(); },
                         complete : function(){$("#loading12").hide(); },
@@ -279,12 +316,17 @@
         function getCmbInstructor(){
             //var $example = $("#especialidad_id-field").select2();
             var plantel=$('#plantel_f-field option:selected').val();
-            
+            var grupo = $('#grupo_f-field option:selected').val();
+            var lectivo= $('#lectivo_f-field option:selected').val();
+            var instructor= $('#instructor_f-field option:selected').val();
             
                 $.ajax({
-                url: '{{ route("empleados.getEmpleadosXplantel") }}',
+                url: '{{ route("asignacionAcademica.getCmbInstructor") }}',
                         type: 'GET',
-                        data: "plantel_id=" + plantel ,
+                        data: "plantel=" + plantel + 
+                              "&grupo=" + grupo +
+                              "&lectivo=" + lectivo + 
+                              "&instructor=" + instructor + "",
                         dataType: 'json',
                         beforeSend : function(){$("#loading12").show(); },
                         complete : function(){$("#loading12").hide(); },
@@ -296,7 +338,7 @@
                         $('#instructor_f-field').append($('<option></option>').text('Seleccionar').val('0'));
                         $.each(data, function(i) {
                         //alert(data[i].name);
-                        $('#instructor_f-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].nombre + "<\/option>");
+                        $('#instructor_f-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
                         });
                         
                         }
@@ -305,9 +347,11 @@
             
         }
     
+    
+    
     @permission('IreporteFiltroXplantel')
-        $("#plantel_f-field").prop("disabled", true);
-        $("#plantel_t-field").prop("disabled", true);
+        //$("#plantel_f-field").prop("disabled", true);
+        $("#div_plantel").append('<div class="disabled-select"></div>');
     @endpermission
         
     });
