@@ -425,7 +425,7 @@ class EmpleadosController extends Controller {
             $r = DB::table('empleados as e')
                     ->select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as nombre'))
                     ->where('e.plantel_id', '=', $plantel)
-                    ->where('puesto_id',2)
+                    //->where('puesto_id',2)
                     ->where('e.id', '>', '0')
                     ->get();
 

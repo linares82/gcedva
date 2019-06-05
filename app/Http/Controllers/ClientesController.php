@@ -83,6 +83,32 @@ class ClientesController extends Controller {
                         ->with('list1', Cliente::getListFromAllRelationApps());
     }
     
+    public function indexEventos(Request $request) {
+        $users=User::pluck('name','id');
+        $users->prepend('Seleccionar opción',0);
+        if (isset($_REQUEST["p"])) {
+            if (session()->has('filtro_clientes')) {
+                session(['filtro_clientes' => 1]);
+            } else {
+                session(['filtro_clientes' => 1]);
+            }
+        } else {
+            if (session()->has('filtro_clientes')) {
+                session(['filtro_clientes' => 0]);
+            } else {
+                session(['filtro_clientes' => 0]);
+            }
+        }
+        
+        //dd($request);
+        $clientes = Seguimiento::getAllData($request, 20, session('filtro_clientes'));
+        $empleado = Empleado::where('user_id', '=', Auth::user()->id)->first();
+        
+        return view('clientes.indexEventos', compact('clientes','users','empleado'))
+                        ->with('list', Seguimiento::getListFromAllRelationApps())
+                        ->with('list1', Cliente::getListFromAllRelationApps());
+    }
+    
     public function busqueda(Request $request){
         $data=$request->all();
         
@@ -138,11 +164,11 @@ class ClientesController extends Controller {
             $e = Empleado::where('user_id', '=', Auth::user()->id)->first();
             $empleados = Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
                     ->where('plantel_id', '=', $e->plantel_id)
-                    ->where('puesto_id', '=', 2)
+                    //->where('puesto_id', '=', 2)
                     ->pluck('name', 'id');
         } else {
             $empleados = Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
-                    ->where('puesto_id', '=', 2)
+                    //->where('puesto_id', '=', 2)
                     ->pluck('name', 'id');
         }
         $empleados = $empleados->reverse();

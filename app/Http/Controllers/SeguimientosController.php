@@ -1023,11 +1023,15 @@ class SeguimientosController extends Controller {
             $hoy=date('Y-m-d');
             //dd($hoy);
 
-            $adeudos_tomados=Adeudo::where('fecha_pago','>=',$data['fecha_f'])
+            $adeudos_tomados=Adeudo::join('combinacion_clientes as cc','cc.id','=','adeudos.combinacion_cliente_id')
+                           ->where('fecha_pago','>=',$data['fecha_f'])        
                            ->where('fecha_pago','<=',$data['fecha_t'])
                            ->join('clientes as c','c.id','=','adeudos.cliente_id')
-                           ->where('plantel_id',$plantel->id)
+                           ->where('c.plantel_id','>=',$data['plantel_f'])
+                           ->where('c.plantel_id','<=',$data['plantel_t'])
+                           //->where('i.st_inscripcion_id',1)
                            ->where('caja_id','<>',0)
+                           ->whereNull('cc.deleted_at')
                            ->get();
             $registros=array();
             foreach($adeudos_tomados as $adeudo_tomado){
@@ -1045,7 +1049,7 @@ class SeguimientosController extends Controller {
                     $existe_linea=CajaLn::where('adeudo_id','=',$adeudo_tomado->id)->first();
                     if(!is_object($existe_linea)){
                         
-                        $caja_ln['razon']=$plantel->razon;
+                        $caja_ln['razon']=$adeudo_tomado->cliente->plantel->razon;
                         $caja_ln['concepto']=$adeudo_tomado->cajaConcepto->name;
                         $caja_ln['cliente']=$cliente->id.'-'.$cliente->nombre.' '.$cliente->nombre2." ".$cliente->ape_paterno.' '.$cliente->ape_materno;
                         $caja_ln['caja_concepto_id']=$adeudo_tomado->caja_concepto_id;
@@ -1068,10 +1072,10 @@ class SeguimientosController extends Controller {
                                     //dd($regla->porcentaje);
                                     if($regla->porcentaje>0){
                                         //dd($regla->porcentaje);
-                                        $caja_ln['recargo']=$adeudo->monto*$regla->porcentaje;
+                                        $caja_ln['recargo']=$adeudo_tomado->monto*$regla->porcentaje;
                                         //echo $caja_ln['recargo'];
                                     }else{
-                                        $caja_ln['descuento']=$adeudo->monto*$regla->porcentaje*-1;
+                                        $caja_ln['descuento']=$adeudo_tomado->monto*$regla->porcentaje*-1;
                                         //echo $caja_ln['descuento'];
                                     }
 
@@ -1131,8 +1135,8 @@ class SeguimientosController extends Controller {
                                         //$hoy=date('Y-m-d');
                                         //$hoy=Carbon::now();
                                         //La caja tiene la fecha de pago de un solo concepto que debe ser la inscripcion
-                                        $caja_inscripcion=Caja::find($inscripcion->caja_id);
-                                        $hoy=Carbon::createFromFormat('Y-m-d', $caja_inscripcion->fecha);
+                                        //$caja_inscripcion=Caja::find($inscripcion->caja_id);
+                                        $hoy=Carbon::createFromFormat('Y-m-d', date('Y-m-d'));
                                         $monto_promocion=0;
                                         //dd($hoy);
                                         if($inicio->lessThanOrEqualTo($hoy) and $fin->greaterThanOrEqualTo($hoy) and $caja_ln['promo_plan_ln_id']==0){

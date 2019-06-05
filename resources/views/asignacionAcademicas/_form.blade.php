@@ -152,7 +152,7 @@
           //$('#empleado_id_field option:selected').val($('#empleado_id_campo option:selected').val()).change();
           var a= $('#frm_asignacion_academica').serialize();
               $.ajax({
-                  url: '{{ route("empleados.getEmpleadosXplantelXpuesto") }}',
+                  url: '{{ route("empleados.getEmpleadosXplantel") }}',
                   type: 'GET',
                   data: a,
                   dataType: 'json',

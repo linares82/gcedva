@@ -135,6 +135,19 @@ class CajaLnsController extends Controller {
                 $caja->descuento=$caja->descuento-$cajaLn->descuento;
                 $caja->total=$caja->total-$cajaLn->total;
                 $caja->save();
+                
+                $pagos=0;
+                foreach($caja->pagos as $pago){
+                    $pagos=$pagos->monto+$pagos;
+                }
+                if($caja->total>$pagos and $pagos>0){
+                    $caja->st_caja_id=3;
+                }elseif($caja->total>=$pagos){
+                    $caja->st_caja_id=1;
+                }
+                $caja->save();
+                
+                
                 $cliente=Cliente::find($caja->cliente_id);
 		$cajaLn->delete();
                 $cajas=Caja::select('cajas.consecutivo as caja','ln.caja_concepto_id as concepto_id','cc.name as concepto', 'ln.total','st.name as estatus')

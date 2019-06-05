@@ -465,6 +465,14 @@ class CajasController extends Controller {
                                                         ->where('combinacion_cliente_id',$adeudo->combinacion_cliente_id)
                                                         ->where('pagado_bnd',1)
                                                         ->first();
+                                    if(!is_object($inscripcion)){
+                                        $inscripcion=Caja::join('caja_lns as ln','ln.caja_id','=','cajas.id')
+                                                         ->join('adeudos as a','a.caja_concepto_id','=','ln.caja_concepto_id')
+                                                         ->where('ln.caja_concepto_id','=',1)
+                                                         ->where('cajas.cliente_id',$adeudo->cliente_id)
+                                                         ->orderBy('ln.id','DESC')
+                                                         ->first();
+                                    }
 //dd($inscripcion);
                                     if(is_object($inscripcion)){
                                         $inicio=Carbon::createFromFormat('Y-m-d', $promocion->fec_inicio);
@@ -493,8 +501,9 @@ class CajasController extends Controller {
                                         //$hoy=date('Y-m-d');
                                         //$hoy=Carbon::now();
                                         //La caja tiene la fecha de pago de un solo concepto que debe ser la inscripcion
-                                        $caja_inscripcion=Caja::find($inscripcion->caja_id);
-                                        $hoy=Carbon::createFromFormat('Y-m-d', $caja_inscripcion->fecha);
+                                        //dd($inscripcion);
+                                        //$caja_inscripcion=Caja::find($caja->id);
+                                        $hoy=Carbon::createFromFormat('Y-m-d', $caja->fecha);
                                         $monto_promocion=0;
                                         //dd($hoy);
                                         if($inicio->lessThanOrEqualTo($hoy) and $fin->greaterThanOrEqualTo($hoy) and $caja_ln['promo_plan_ln_id']==0){
@@ -544,6 +553,17 @@ class CajasController extends Controller {
                 }
             }
             
+            //Valida pagos y adeudos para establecer estatus en caja
+            $pagos=0;
+            foreach($caja->pagos as $pago){
+                $pagos=$pagos->monto+$pagos;
+            }
+            if($caja->total>$pagos and $pagos>0){
+                $caja->st_caja_id=3;
+            }elseif($caja->total>=$pagos){
+                $caja->st_caja_id=1;
+            }
+            $caja->save();
             
             $combinaciones=CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
             

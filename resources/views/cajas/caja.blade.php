@@ -387,7 +387,7 @@
                                 <input class="form-control" id="adeudo-field" name="adeudo" value="{{$adeudo->id}}" type="hidden">
                                 <input class="form-control" id="cliente_id-field" name="cliente_id" value="{{$adeudo->cliente_id}}" type="hidden">
                                 <input class="form-control" id="caja-field" name="caja" value="{{$caja->id}}" type="hidden">
-                                <button type="submit" class="btn btn-xs btn-info" data-toggle="tooltip" title="Agregar"><i class="glyphicon glyphicon-plus-sign"></i></button>
+<!--                                <button type="submit" class="btn btn-xs btn-info" data-toggle="tooltip" title="Agregar"><i class="glyphicon glyphicon-plus-sign"></i></button>-->
                                 {!! Form::close() !!}
                                 <input type="checkbox" class="adeudos_tomados" value="{{$adeudo->id}}" />
                                 @endif
