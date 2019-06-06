@@ -4548,6 +4548,11 @@ Route::get("tipoReglas/tipoRegla/{tipoReglas}/duplicate", ['as' => 'tipoReglas.d
         'middleware' => 'permission:adeudos.cambiarPlanPagos',
         'uses' => 'AdeudosController@cambiarPlanPagos')
     )->middleware('auth');
+    Route::get('/adeudos/ajustarAdeudosSegunPlan', array(
+        'as' => 'adeudos.ajustarAdeudosSegunPlan',
+        //'middleware' => 'permission:adeudos.cambiarPlanPagos',
+        'uses' => 'AdeudosController@ajustarAdeudosSegunPlan')
+    )->middleware('auth');
     Route::get('/adeudos/reporteAdeudosPendientes', array(
         'as' => 'adeudos.reporteAdeudosPendientes',
         'middleware' => 'permission:adeudos.reporteAdeudosPendientes',
@@ -4589,6 +4594,11 @@ Route::get("tipoReglas/tipoRegla/{tipoReglas}/duplicate", ['as' => 'tipoReglas.d
         'as' => 'cajas.caja',
         'middleware' => 'permission:cajas.caja',
         'uses' => 'CajasController@getCaja')
+    )->middleware('auth');
+    Route::get('/cajas/editFecha', array(
+        'as' => 'cajas.editFecha',
+        //'middleware' => 'permission:cajas.caja',
+        'uses' => 'CajasController@editFecha')
     )->middleware('auth');
     Route::get('/cajas/becaInscripcion', array(
         'as' => 'cajas.becaInscripcion',

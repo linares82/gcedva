@@ -444,6 +444,7 @@ class InscripcionsController extends Controller {
                 $registros= Inscripcion::select('c.nombre','c.nombre2','c.ape_paterno','c.ape_materno', 'g.name as grupo','l.name as lectivo',
                                                DB::raw('concat(e.nombre," ",e.ape_paterno," ",e.ape_materno) as maestro'),'gra.name as grado',
                                                'p.razon as plantel', 'p.logo','aa.id as asignacion','c.id as cliente','p.id as p_id')
+                                       ->join('hacademicas as h','h.inscripcion_id','=','inscripcions.id')
                                        ->join('clientes as c', 'c.id', '=', 'inscripcions.cliente_id')
                                        ->join('grupos as g', 'g.id', '=', 'inscripcions.grupo_id')
                                        ->join('lectivos as l','l.id', '=', 'inscripcions.lectivo_id')
@@ -460,6 +461,7 @@ class InscripcionsController extends Controller {
                                        ->where('aa.grupo_id',$data['grupo_f'])
                                        ->where('aa.empleado_id',$data['instructor_f'])
                                        ->where('aa.materium_id',$data['materia_f'])
+                                       ->where('h.materium_id',$data['materia_f'])
                                        ->orderBy('inscripcions.plantel_id')
                                        ->orderBy('inscripcions.lectivo_id')
                                        ->orderBy('inscripcions.grupo_id')
@@ -779,20 +781,24 @@ class InscripcionsController extends Controller {
                 $plantel=Plantel::find($data['plantel_f']);
                 //dd($data);
                 $lectivo=Lectivo::find($data['lectivo_f']);
-                $registros= Inscripcion::select('c.id',DB::raw('concat(e.nombre, " ",e.ape_paterno, " ",e.ape_materno) as colaborador, '
+                $registros= Inscripcion::select('c.id',DB::raw('concat(e.nombre, " ",e.ape_paterno, " ",e.ape_materno) as instructor, '
                         . 'concat(c.nombre," ",c.nombre2," ",c.ape_paterno," ",c.ape_materno) as cliente, m.name as medio, '
-                        . 'c.beca_bnd, esp.name as especialidad, inscripcions.fec_inscripcion, n.name as nivel, g.name as grado,'
-                        . 'gru.name as grupo, gru.id as gru'))
+                        . 'c.beca_bnd, esp.name as especialidad, inscripcions.fec_inscripcion, aa.id as asignacion,'
+                        . 'gru.name as grupo, gru.id as gru, mat.name as materi'))
                             ->join('clientes as c', 'c.id', '=', 'inscripcions.cliente_id')
                             ->join('medios as m','m.id','=','c.medio_id')
                             ->join('especialidads as esp','esp.id','=','inscripcions.especialidad_id')
-                            ->join('nivels as n','n.id','=','inscripcions.nivel_id')
-                            ->join('grados as g','g.id','=','inscripcions.grado_id')
                             ->join('grupos as gru','gru.id','=','inscripcions.grupo_id')
-                            ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
+                            ->join('hacademicas as h','h.inscripcion_id','=','inscripcions.id')
+                            ->join('materia as mat','mat.id','=','h.materium_id')
+                            ->join('asignacion_academicas as aa','aa.materium_id','=','h.materium_id')
+                            ->whereColumn('aa.grupo_id','h.grupo_id')
+                            ->whereColumn('aa.plantel_id','inscripcions.plantel_id')
+                            ->whereColumn('aa.lectivo_id','inscripcions.lectivo_id')
+                            ->join('empleados as e', 'e.id', '=', 'aa.empleado_id')
                             ->where('inscripcions.plantel_id', $data['plantel_f'])
                             ->where('inscripcions.lectivo_id', $data['lectivo_f'])
-                            ->orderBy('esp.name','n.name','g.name','gru.name')
+                            ->orderBy('aa.id','esp.name','gru.id')
                             ->distinct()
                             ->get();
                 //dd($registros->toArray());

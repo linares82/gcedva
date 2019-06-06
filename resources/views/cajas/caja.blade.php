@@ -199,11 +199,12 @@
     <div class="col-md-5" style="clear:left;">    
         <div class="box box-success">
             <div class="box-body no-padding">
-                <div class="box-header with-border">
+                <div class="box-header with-border editable_fecha">
                     @if(isset($caja))
                     <lable><strong>No. Ticket:</strong>{{$caja->consecutivo}}</lable>
                         <lable><strong>Fecha:</strong>{{$caja->fecha}}</lable>
                         <lable><strong>Estatus:</strong>{{$caja->stCaja->name}}</lable>
+                        <input class='fecha_editable form-control' value='{{$caja->fecha}}' data-id="{{$caja->id}}"></input>
                     <div class="box-tools pull-right">
                         <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
                     </div><!-- /.box-tools -->
@@ -336,6 +337,7 @@
                     <tbody>
 
                         @foreach($combinaciones as $combinacion)
+                        @if($combinacion->especialidad_id<>0 and $combinacion->nivel_id<>0 and $combinacion->grado_id<>0 and $combinacion->turno_id<>0)
                         <tr>
                             <td colspan='6'><strong>Grado:</strong>{{$combinacion->grado->name}}</td>
                             <td colspan='6'><strong>Beca:</strong>@if($combinacion->bnd_beca==1) SI @else NO @endif</td>
@@ -433,6 +435,7 @@
                         </tr>
 
                         @endforeach
+                        @endif
                         @endforeach
                         </tr>
                         </tbody>
@@ -610,13 +613,15 @@ Agregar nuevo registro
             beforeSend : function(){$("#loading3").show(); },
             complete : function(){$("#loading3").hide(); },
             success: function(data) {
-                location.reload();
+                //location.reload();
+                $('#form-buscarVenta').submit();
             },
         });
     });
     
     $(document).ready(function(){
          $('.monto_editable').hide();
+         $('.fecha_editable').hide();
          
          @permission('adeudos.editMonto')
         $('.editable').dblclick(function(){
@@ -625,6 +630,12 @@ Agregar nuevo registro
                 captura.show();
             @endif
             
+        });
+        @endpermission
+        @permission('cajas.editFecha')
+        $('.editable_fecha').dblclick(function(){
+            captura=$(this).children("input");
+            captura.show();
         });
         @endpermission
         $('.monto_editable').on('keypress', function (e) {
@@ -642,6 +653,28 @@ Agregar nuevo registro
                         //complete : function(){$("#loading3").hide(); },
                         success: function(data) {
                             location.reload(); 
+                           
+                        }
+                }); 
+            }
+        });
+        $('.fecha_editable').on('keypress', function (e) {
+            
+         if(e.which === 13){
+             
+             captura=$(this);
+           $.ajax({
+                type: 'GET',
+                        url: '{{route("cajas.editFecha")}}',
+                        data: {
+                            'caja': captura.attr('data-id'),
+                            'fecha': captura.val(),
+                        },
+                        dataType:"json",
+                        //beforeSend : function(){$("#loading3").show(); },
+                        //complete : function(){$("#loading3").hide(); },
+                        success: function(data) {
+                            $('#form-buscarVenta').submit(); 
                            
                         }
                 }); 

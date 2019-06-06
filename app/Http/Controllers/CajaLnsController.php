@@ -124,9 +124,14 @@ class CajaLnsController extends Controller {
                 
 		$cajaLn=$cajaLn->find($id);
                 if($cajaLn->adeudo_id<>0){
-                    $adeudo=Adeudo::find($cajaLn->adeudo_id);
-                    $adeudo->caja_id=0;
-                    $adeudo->save();
+                    try{
+                        $adeudo=Adeudo::find($cajaLn->adeudo_id);
+                        $adeudo->caja_id=0;
+                        $adeudo->save();
+                    }catch(Exception $e){
+                        
+                    }
+                    
                 }
                 $caja=Caja::find($cajaLn->caja_id);
                 
@@ -137,15 +142,17 @@ class CajaLnsController extends Controller {
                 $caja->save();
                 
                 $pagos=0;
-                foreach($caja->pagos as $pago){
+                if(isset($caja->pagos)){
+                    foreach($caja->pagos as $pago){
                     $pagos=$pagos->monto+$pagos;
                 }
                 if($caja->total>$pagos and $pagos>0){
                     $caja->st_caja_id=3;
-                }elseif($caja->total>=$pagos){
+                }elseif($caja->total>=$pagos and $pagos>0){
                     $caja->st_caja_id=1;
                 }
                 $caja->save();
+                }
                 
                 
                 $cliente=Cliente::find($caja->cliente_id);

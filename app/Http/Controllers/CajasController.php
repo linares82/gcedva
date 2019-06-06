@@ -273,6 +273,7 @@ class CajasController extends Controller {
                 if($caja->st_caja_id==0 and $caja->descuento==0){
                     //dd($caja->st_caja_id);
                     $recargo=0;
+                    /*
                     foreach($caja->cajaLns as $ln){
                         //dd($ln->adeudo->planPagoLn->reglaRecargos);
                         if(isset($ln->adeudo->planPagoLn->reglaRecargos) and count($ln->adeudo->planPagoLn->reglaRecargos)>0){
@@ -310,6 +311,7 @@ class CajasController extends Controller {
                     $caja->recargo=$recargo;
                     $caja->total=$caja->subtotal+$caja->recargo;
                     $caja->save();
+                    **/
                 }
                 
                 $cliente=Cliente::find($caja->cliente_id);
@@ -321,6 +323,7 @@ class CajasController extends Controller {
                 if($caja->st_caja_id==0 and $caja->descuento==0){
                     //dd($caja->st_caja_id);
                     $recargo=0;
+                    /*
                     foreach($caja->cajaLns as $ln){
                         //dd($ln->adeudo->planPagoLn->reglaRecargos);
                         if(isset($ln->adeudo->planPagoLn->reglaRecargos) and count($ln->adeudo->planPagoLn->reglaRecargos)>0){
@@ -358,6 +361,8 @@ class CajasController extends Controller {
                     $caja->recargo=$recargo;
                     $caja->total=$caja->subtotal+$caja->recargo;
                     $caja->save();
+                     * 
+                     */
                 }
                 
                 $cliente=Cliente::find($caja->cliente_id);
@@ -419,13 +424,14 @@ class CajasController extends Controller {
                         $caja_ln['recargo']=0;
                         $caja_ln['descuento']=0;
                         foreach($adeudo->planPagoLn->reglaRecargos as $regla){
-
-                            $dias=date_diff(date_create($caja->fecha), date_create($adeudo->fecha_pago));
+                            $fecha_caja=Carbon::createFromFormat('Y-m-d', $caja->fecha);
+                            $fecha_adeudo=Carbon::createFromFormat('Y-m-d', $adeudo->fecha_pago);
+                            $dias=$fecha_caja->diffInDays($fecha_adeudo);
                             //dd($dias);
-                            $dia=$dias->format('%R%a')*-1;
+                            //$dia=$dias->format('%R%a')*-1;
 
                             //calcula recargo o descuento segun regla y aplica
-                            if($dia>=$regla->dia_inicio and $dia<=$regla->dia_fin){
+                            if($dias>=$regla->dia_inicio and $dias<=$regla->dia_fin){
                                 if($regla->tipo_regla_id==1){
                                     //dd($regla->porcentaje);
                                     if($regla->porcentaje>0){
@@ -465,14 +471,7 @@ class CajasController extends Controller {
                                                         ->where('combinacion_cliente_id',$adeudo->combinacion_cliente_id)
                                                         ->where('pagado_bnd',1)
                                                         ->first();
-                                    if(!is_object($inscripcion)){
-                                        $inscripcion=Caja::join('caja_lns as ln','ln.caja_id','=','cajas.id')
-                                                         ->join('adeudos as a','a.caja_concepto_id','=','ln.caja_concepto_id')
-                                                         ->where('ln.caja_concepto_id','=',1)
-                                                         ->where('cajas.cliente_id',$adeudo->cliente_id)
-                                                         ->orderBy('ln.id','DESC')
-                                                         ->first();
-                                    }
+                                    
 //dd($inscripcion);
                                     if(is_object($inscripcion)){
                                         $inicio=Carbon::createFromFormat('Y-m-d', $promocion->fec_inicio);
@@ -555,15 +554,18 @@ class CajasController extends Controller {
             
             //Valida pagos y adeudos para establecer estatus en caja
             $pagos=0;
-            foreach($caja->pagos as $pago){
+            if(isset($caja->pagos)){
+                foreach($caja->pagos as $pago){
                 $pagos=$pagos->monto+$pagos;
             }
             if($caja->total>$pagos and $pagos>0){
                 $caja->st_caja_id=3;
-            }elseif($caja->total>=$pagos){
+            }elseif($caja->total>=$pagos and $pagos>0){
                 $caja->st_caja_id=1;
             }
             $caja->save();
+            }
+            
             
             $combinaciones=CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
             
@@ -837,5 +839,14 @@ class CajasController extends Controller {
                           'plantel'=>$plantel,
                           'datos'=>$datos));
         }
+        
+        public function editFecha(Request $request){
+            $data=$request->all();
+            $caja=Caja::find($data['caja']);
+            $caja->fecha=$data['fecha'];
+            $caja->save();
+            echo json_encode(true);
+        }
+                
     
  }

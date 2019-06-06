@@ -12,6 +12,7 @@ use App\CajaConcepto;
 use App\Empleado;
 use App\Plantel;
 use App\PlanPago;
+use App\PlanPagoLn;
 use App\StCaja;
 use Illuminate\Http\Request;
 use Auth;
@@ -400,5 +401,44 @@ class AdeudosController extends Controller {
                                                                'plantel'=>$plantel ));
             */
             return redirect()->route('clientes.edit', $cliente->id)->with('message', 'Registro Creado.')->with('list', Cliente::getListFromAllRelationApps());
+        }
+        
+        public function ajustarAdeudosSegunPlan(){
+            $planes=PlanPagoLn::whereIn('plan_pago_id',array(2,3,5,8,23,24,29))
+                    ->where('caja_concepto_id',46)
+                    ->get();
+            $csvDatos=array('cliente_id, caja_concepto_id, cuenta_contable_id, cuenta_recargo_id, fecha_pago, monto, inicial_bnd, pagado_bnd, '
+                        . 'plan_pago_ln_id, usu_alta_id, usu_mod_id, created_at, update_at, deleted_at, combinacion_cliente_id, caja_id');
+            foreach($planes as $plan){
+                $combinaciones=CombinacionCliente::where('plan_pago_id',$plan->id)
+                               ->where('combinacion_clientes.especialidad_id','<>',0)
+                                ->where('combinacion_clientes.nivel_id','<>',0)
+                                ->where('combinacion_clientes.grado_id','<>',0)
+                                ->where('combinacion_clientes.turno_id','<>',0)
+                                ->whereNull('combinacion_clientes.deleted_at')
+                                ->get();
+                foreach($combinaciones as $combinacion){
+                    $adeudos=Adeudo::where('cliente_id',$combinacion->cliente_id)
+                            ->where('caja_concepto_id',46)
+                            ->first();
+                    
+                    if(!is_object($adeudo)){
+                        $csvDatos[]=$combinacion->cliente_id.','.$plan->caja_concepto_id.','.$plan->cuenta_contable_id.','.$plan_cuenta_recargo_id.','.
+                                $plan->fecha_pago.','.$plan->monto.','.$plan->inicial_bnd.','.'0'.','.$plan->id.','.'1'.','.'1'.','.'NULL'.','.'NULL'.','.
+                                'NULL'.','.$combinacion->id.','.'0';
+                    }
+                    
+                }
+            }
+            $filename=date('Y-m-d').".csv";
+            $file_path=base_path().'/'.$filename;   
+            $file = fopen($file_path,"w+");
+            foreach ($csvDatos as $exp_data){
+              fputcsv($file,explode(',',$exp_data));
+            }   
+            fclose($file);          
+
+            $headers = ['Content-Type' => 'application/csv'];
+            return response()->download($file_path,$filename,$headers );
         }
 }

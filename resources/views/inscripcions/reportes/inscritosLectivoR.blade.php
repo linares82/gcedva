@@ -17,7 +17,7 @@
         <table class="table table-condensed table-striped">
             <thead>
                 <tr>
-                    <th>Plantel</th><th>Especialidad</th><th>Nivel</th><th>Grado</th><th>Grupo</th>><th>Cliente</th><th>Fecha Inscripción</th>
+                    <th>Plantel</th><th>Especialidad</th><th>Grupo</th><th>Instructor</th><th>Materia</th><th>Cliente</th><th>Fecha Inscripción</th>
                 </tr> 
             </thead>
             <tbody>
@@ -37,8 +37,8 @@
                     ?>
                     @endif
                     <tr>
-                        <td>{{$plantel->razon}}</td>
-                        <td>{{$registro->especialidad}}</td><td>{{$registro->nivel}}</td><td>{{$registro->grado}}</td> <td>{{$registro->grupo}}</td>
+                        <td>{{$plantel->razon}} </td>
+                        <td>{{$registro->especialidad}}</td><td>{{$registro->grupo}} {{$registro->asignacion}}</td><td>{{$registro->instructor}}</td><td>{{$registro->materi}}</td> 
                         <td>{{$registro->id}} - {{$registro->cliente}}</td>
                         <td>{{$registro->fec_inscripcion}}</td>
                         
