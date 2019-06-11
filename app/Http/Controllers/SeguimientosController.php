@@ -902,96 +902,91 @@ class SeguimientosController extends Controller {
                 $data=$request->all();
                 $plantel=Plantel::find($data['plantel_f']);
                 //dd($data);
-                $registros_pagados= CombinacionCliente::select('pla.razon','c.id',DB::raw('concat(e.nombre, " ",e.ape_paterno, " ",e.ape_materno) as colaborador, '
-                        . 'concat(c.nombre," ",c.nombre2," ",c.ape_paterno," ",c.ape_materno) as cliente, caj.id as caja, p.fecha as fecha_pago,'
-                        . 'c.beca_bnd, p.monto as pago, st.name as estatus_caja'))
-                            ->join('clientes as c', 'c.id', '=', 'combinacion_clientes.cliente_id')
+                $registros_pagados= Caja::select('pla.razon','c.id',
+                        DB::raw('concat(e.nombre, " ",e.ape_paterno, " ",e.ape_materno) as colaborador, '
+                        . 'concat(c.nombre," ",c.nombre2," ",c.ape_paterno," ",c.ape_materno) as cliente, caj.id as caja, caj.consecutivo,'
+                        . 'c.beca_bnd, st.name as estatus_caja, conce.name as concepto, ln.total as monto_linea, a.monto as monto_adeudo,'
+                        . 'pag.monto as monto_pago, ln.total as monto_caja, fp.name as forma_pago, pag.fecha as fecha_pago, cajas.fecha as fecha_caja'))
+                            ->join('clientes as c', 'c.id', '=', 'cajas.cliente_id')
                             ->join('plantels as pla','pla.id','=','c.plantel_id')
-                            ->join('medios as m','m.id','=','c.medio_id')
-                            //->join('especialidads as esp','esp.id','=','combinacion_clientes.especialidad_id')
                             ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
                             ->join('cajas as caj','caj.cliente_id','=','c.id')
+                            ->join('caja_lns as ln','ln.caja_id','=','caj.id')
+                            ->join('caja_conceptos as conce','conce.id','=','ln.caja_concepto_id')
                             ->join('st_cajas as st','st.id','=','caj.st_caja_id')
-                            //->join('caja_lns as clns','clns.caja_id','=','caj.id')
-                            //->join('caja_conceptos as cc','cc.id','=','clns.caja_concepto_id')
-                            ->join('pagos as p','p.caja_id','=','caj.id')
-                            ->where('combinacion_clientes.plantel_id', '>=', $data['plantel_f'])
-                            ->where('combinacion_clientes.plantel_id', '<=',$data['plantel_t'])
-                            ->where('p.fecha','>=',$data['fecha_f'])
-                            ->where('p.fecha','<=',$data['fecha_t'])
-                            ->where('combinacion_clientes.especialidad_id','<>',0)
-                            ->where('combinacion_clientes.nivel_id','<>',0)
-                            ->where('combinacion_clientes.grado_id','<>',0)
-                            ->where('combinacion_clientes.turno_id','<>',0)
-                            ->whereNull('combinacion_clientes.deleted_at','<>',0)
-                            ->where('combinacion_clientes.plan_pago_id','>',0)
+                            ->join('adeudos as a','a.id','=','ln.adeudo_id')
+                            ->join('pagos as pag','pag.caja_id','=','cajas.id')
+                            ->join('forma_pagos as fp','fp.id','=','pag.forma_pago_id')
+                            ->where('cajas.plantel_id', '>=', $data['plantel_f'])
+                            ->where('cajas.plantel_id', '<=',$data['plantel_t'])
+                            ->where('caj.fecha','>=',$data['fecha_f'])
+                            ->where('caj.fecha','<=',$data['fecha_t'])
+                            ->whereNull('ln.deleted_at')
+                            ->whereNull('a.deleted_at')
+                            ->whereNull('pag.deleted_at')
                             ->where('caj.st_caja_id','=',1)
-                            ->whereNull('p.deleted_at')
-                            //->whereNull('clns.deleted_at')
-                            ->whereIn('caj.st_caja_id',[1,3])
                             ->orderBy('colaborador','caja.st_caja_id')
                             ->distinct()
                             ->get();
-                $registros_parciales= CombinacionCliente::select('pla.razon','c.id',DB::raw('concat(e.nombre, " ",e.ape_paterno, " ",e.ape_materno) as colaborador, '
-                        . 'concat(c.nombre," ",c.nombre2," ",c.ape_paterno," ",c.ape_materno) as cliente, caj.id as caja, p.fecha as fecha_pago,'
-                        . 'c.beca_bnd, p.monto as pago, st.name as estatus_caja'))
-                            ->join('clientes as c', 'c.id', '=', 'combinacion_clientes.cliente_id')
+                
+                $registros_pagados1= Caja::select('pla.razon','c.id',
+                        DB::raw('concat(e.nombre, " ",e.ape_paterno, " ",e.ape_materno) as colaborador, '
+                        . 'concat(c.nombre," ",c.nombre2," ",c.ape_paterno," ",c.ape_materno) as cliente, caj.id as caja, caj.consecutivo,'
+                        . 'c.beca_bnd, st.name as estatus_caja,'
+                        . 'pag.monto as monto_pago, fp.name as forma_pago, pag.fecha as fecha_pago, cajas.fecha as fecha_caja'))
+                            ->join('clientes as c', 'c.id', '=', 'cajas.cliente_id')
                             ->join('plantels as pla','pla.id','=','c.plantel_id')
-                            ->join('medios as m','m.id','=','c.medio_id')
-                            //->join('especialidads as esp','esp.id','=','combinacion_clientes.especialidad_id')
                             ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
                             ->join('cajas as caj','caj.cliente_id','=','c.id')
+                            //->join('caja_lns as ln','ln.caja_id','=','caj.id')
+                            //->join('caja_conceptos as conce','conce.id','=','ln.caja_concepto_id')
                             ->join('st_cajas as st','st.id','=','caj.st_caja_id')
-                            //->join('caja_lns as clns','clns.caja_id','=','caj.id')
-                            //->join('caja_conceptos as cc','cc.id','=','clns.caja_concepto_id')
-                            ->join('pagos as p','p.caja_id','=','caj.id')
-                            ->where('combinacion_clientes.plantel_id', '>=', $data['plantel_f'])
-                            ->where('combinacion_clientes.plantel_id', '<=',$data['plantel_t'])
-                            ->where('p.fecha','>=',$data['fecha_f'])
-                            ->where('p.fecha','<=',$data['fecha_t'])
-                            ->where('combinacion_clientes.especialidad_id','<>',0)
-                            ->where('combinacion_clientes.nivel_id','<>',0)
-                            ->where('combinacion_clientes.grado_id','<>',0)
-                            ->where('combinacion_clientes.turno_id','<>',0)
-                            ->whereNull('combinacion_clientes.deleted_at','<>',0)
-                            ->where('combinacion_clientes.plan_pago_id','>',0)
+                            //->join('adeudos as a','a.id','=','ln.adeudo_id')
+                            ->join('pagos as pag','pag.caja_id','=','cajas.id')
+                            ->join('forma_pagos as fp','fp.id','=','pag.forma_pago_id')
+                            ->where('cajas.plantel_id', '>=', $data['plantel_f'])
+                            ->where('cajas.plantel_id', '<=',$data['plantel_t'])
+                            ->where('caj.fecha','>=',$data['fecha_f'])
+                            ->where('caj.fecha','<=',$data['fecha_t'])
+                            ->whereNull('pag.deleted_at')
+                            ->where('caj.st_caja_id','=',1)
+                            ->orderBy('colaborador','caja.st_caja_id')
+                            ->distinct()
+                            ->get();
+                
+                //dd($registros_pagados->toArray());
+                foreach($registros_pagados as $registro){
+                    
+                }
+                
+                $registros_parciales= Caja::select('pla.razon','c.id',
+                        DB::raw('concat(e.nombre, " ",e.ape_paterno, " ",e.ape_materno) as colaborador, '
+                        . 'concat(c.nombre," ",c.nombre2," ",c.ape_paterno," ",c.ape_materno) as cliente, caj.id as caja, caj.consecutivo,'
+                        . 'c.beca_bnd, st.name as estatus_caja, conce.name as concepto, ln.total as monto_linea, a.monto as monto_adeudo,'
+                        . 'pag.monto as monto_pago, ln.total as monto_caja, fp.name as forma_pago, pag.fecha as fecha_pago, cajas.fecha as fecha_caja'))
+                            ->join('clientes as c', 'c.id', '=', 'cajas.cliente_id')
+                            ->join('plantels as pla','pla.id','=','c.plantel_id')
+                            ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
+                            ->join('cajas as caj','caj.cliente_id','=','c.id')
+                            ->join('caja_lns as ln','ln.caja_id','=','caj.id')
+                            ->join('caja_conceptos as conce','conce.id','=','ln.caja_concepto_id')
+                            ->join('st_cajas as st','st.id','=','caj.st_caja_id')
+                            ->join('adeudos as a','a.id','=','ln.adeudo_id')
+                            ->join('pagos as pag','pag.caja_id','=','cajas.id')
+                            ->join('forma_pagos as fp','fp.id','=','pag.forma_pago_id')
+                            ->where('cajas.plantel_id', '>=', $data['plantel_f'])
+                            ->where('cajas.plantel_id', '<=',$data['plantel_t'])
+                            ->where('caj.fecha','>=',$data['fecha_f'])
+                            ->where('caj.fecha','<=',$data['fecha_t'])
+                            ->whereNull('ln.deleted_at')
+                            ->whereNull('a.deleted_at')
+                            ->whereNull('pag.deleted_at')
                             ->where('caj.st_caja_id','=',3)
-                            ->whereNull('p.deleted_at')
-                            //->whereNull('clns.deleted_at')
-                            ->whereIn('caj.st_caja_id',[1,3])
                             ->orderBy('colaborador','caja.st_caja_id')
                             ->distinct()
                             ->get();
-                $registros= CombinacionCliente::select('pla.razon','c.id',DB::raw('concat(e.nombre, " ",e.ape_paterno, " ",e.ape_materno) as colaborador, '
-                        . 'concat(c.nombre," ",c.nombre2," ",c.ape_paterno," ",c.ape_materno) as cliente, caj.id as caja, p.fecha as fecha_pago,'
-                        . 'c.beca_bnd, p.monto as pago, st.name as estatus_caja'))
-                            ->join('clientes as c', 'c.id', '=', 'combinacion_clientes.cliente_id')
-                            ->join('plantels as pla','pla.id','=','c.plantel_id')
-                            ->join('medios as m','m.id','=','c.medio_id')
-                            //->join('especialidads as esp','esp.id','=','combinacion_clientes.especialidad_id')
-                            ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
-                            ->join('cajas as caj','caj.cliente_id','=','c.id')
-                            ->join('st_cajas as st','st.id','=','caj.st_caja_id')
-                            //->join('caja_lns as clns','clns.caja_id','=','caj.id')
-                            //->join('caja_conceptos as cc','cc.id','=','clns.caja_concepto_id')
-                            ->join('pagos as p','p.caja_id','=','caj.id')
-                            ->where('combinacion_clientes.plantel_id', '>=', $data['plantel_f'])
-                            ->where('combinacion_clientes.plantel_id', '<=',$data['plantel_t'])
-                            ->where('p.fecha','>=',$data['fecha_f'])
-                            ->where('p.fecha','<=',$data['fecha_t'])
-                            ->where('combinacion_clientes.especialidad_id','<>',0)
-                            ->where('combinacion_clientes.nivel_id','<>',0)
-                            ->where('combinacion_clientes.grado_id','<>',0)
-                            ->where('combinacion_clientes.turno_id','<>',0)
-                            ->whereNull('combinacion_clientes.deleted_at','<>',0)
-                            ->where('combinacion_clientes.plan_pago_id','>',0)
-                            ->whereNull('p.deleted_at')
-                            //->whereNull('clns.deleted_at')
-                            ->whereIn('caj.st_caja_id',[1,3])
-                            ->orderBy('colaborador','caja.st_caja_id')
-                            ->distinct()
-                            ->get();
-                //dd($registros);
+                
+                //dd($registros_parciales->toArray());
                                         
                                         
                 /*
@@ -1003,7 +998,7 @@ class SeguimientosController extends Controller {
                 */
                 return view('seguimientos.reportes.inscritosPagosR', array('registros_pagados'=>$registros_pagados,
                                                                            'registros_parciales'=>$registros_parciales,
-                                                                           'registros'=>$registros,
+                                                                           'registros_pagados1'=>'registros_pagados1',
                                                                                  'plantel'=>$plantel,
                                                                                  'data'=>$data));
 	}

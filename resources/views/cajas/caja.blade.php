@@ -433,14 +433,24 @@
                                 @if($adeudo->pagado_bnd==1) SI @else NO @endif</td>
                             <td>{{$dia}}</td>
                         </tr>
-
+                        
                         @endforeach
                         @endif
+                        <?php
+                        $valores= collect();
+                        foreach($combinacion->adeudos as $adeudo){
+                            //if($adeudo->caja_concepto_id==$ln->caja_concepto_id){
+                                $valores->push($adeudo->caja_concepto_id);
+                            //}
+                        }
+                        //dd($valores);
+                        ?>
+                        
                         @endforeach
                         </tr>
                         </tbody>
                         </table>
-                    
+                        
                         <table id='conceptos_predefinidos' class='table table-striped table-condensed'>
                             <thead>
                                 <tr>
@@ -449,19 +459,12 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php
-                                $valores= collect();
-                                foreach($combinacion->adeudos as $adeudo){
-                                    //if($adeudo->caja_concepto_id==$ln->caja_concepto_id){
-                                        $valores->push(intval($adeudo->caja_concepto_id));
-                                    //}
-                                }
-                                //dd($valores);
-                                ?>
+                                
                                 @foreach($cajas as $ln)
-                                    @if(!is_int($valores->search(intval($ln->concepto_id),true)))
+                                    {{$ln->concepto_id}}-{{$valores->search($ln->concepto_id)}}
+                                    @if(!is_int($valores->search($ln->concepto_id)))
                                     <tr>
-                                        {{$valores->search(intval($ln->concepto_id))}}
+                                        {{$valores->search($ln->concepto_id)}}
                                         
                                         <td> {{$ln->concepto}}</td><td>{{$ln->total}}</td><td>{{$ln->caja}}</td><td>{{$ln->estatus}}</td>
                                     </tr>

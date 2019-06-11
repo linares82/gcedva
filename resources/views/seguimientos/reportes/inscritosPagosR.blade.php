@@ -20,7 +20,7 @@
         <table class="table table-condensed table-striped">
             <thead>
                 <tr>
-                    <th>Plantel</th><th>Asesor</th><th>Cliente</th><th>Fecha Pago</th><th>Becado</th><th>Caja</th><th>Estatus</th><th>Pago</th>
+                    <th>Plantel</th><th>Asesor</th><th>Cliente</th><th>Becado</th><th>Caja</th><th>Estatus</th><th>Fecha Pago/Caja</th><th>Concepto</th><th>Monto Caja/Adeudo/Pago</th><th>Forma Pago</th>
                 </tr> 
             </thead>
             <tbody>
@@ -46,8 +46,6 @@
                         <td>{{$registro->razon}}</td>
                         <td>{{$registro->colaborador}}</td>
                         <td>{{$registro->id}} - {{$registro->cliente}}</td>
-                        
-                        <td>{{$registro->fecha_pago}}</td>
                         <td>
                             @if($registro->beca_bnd==1)
                                 SI
@@ -55,10 +53,12 @@
                                 NO
                             @endif
                         </td>
-                        <td>{{$registro->caja}}</td>
+                        <td>{{$registro->consecutivo}}</td>
                         <td>{{$registro->estatus_caja}}</td>
-                        
-                        <td>{{$registro->pago}}</td>
+                        <td>{{$registro->fecha_pago}} {{$registro->fecha_caja}}</td>
+                        <td>{{$registro->concepto}}</td>
+                        <td>{{$registro->monto_caja}} / {{$registro->monto_adeudo}} / {{$registro->monto_pago}}</td>
+                        <td>{{$registro->forma_pago}}</td>
                     </tr>
                     
                     <?php 
@@ -85,7 +85,7 @@
         <table class="table table-condensed table-striped">
             <thead>
                 <tr>
-                    <th>Plantel</th><th>Asesor</th><th>Cliente</th><th>Fecha Pago</th><th>Becado</th><th>Caja</th><th>Estatus</th><th>Pago</th>
+                    <th>Plantel</th><th>Asesor</th><th>Cliente</th><th>Becado</th><th>Caja</th><th>Estatus</th><th>Fecha Pago/Caja</th><th>Concepto</th><th>Monto Caja/Adeudo/Pago</th><th>Forma Pago</th>
                 </tr> 
             </thead>
             <tbody>
@@ -111,7 +111,6 @@
                         <td>{{$registro->razon}}</td>
                         <td>{{$registro->colaborador}}</td>
                         <td>{{$registro->id}} - {{$registro->cliente}}</td>
-                        <td>{{$registro->fecha_pago}}</td>
                         <td>
                             @if($registro->beca_bnd==1)
                                 SI
@@ -119,9 +118,12 @@
                                 NO
                             @endif
                         </td>
-                        <td>{{$registro->caja}}</td>
+                        <td>{{$registro->consecutivo}}</td>
                         <td>{{$registro->estatus_caja}}</td>
-                        <td>{{$registro->pago}}</td>
+                        <td>{{$registro->fecha_pago}} {{$registro->fecha_caja}}</td>
+                        <td>{{$registro->concepto}}</td>
+                        <td>{{$registro->monto_caja}} / {{$registro->monto_adeudo}} / {{$registro->monto_pago}}</td>
+                        <td>{{$registro->forma_pago}}</td>
                     </tr>
                     
                     <?php 
@@ -146,6 +148,8 @@
         @endif
     </div>
     <div id="wdr-component"></div>
+    
+    <div id="wdr-component1"></div>
     <script src="{{asset('bower_components\AdminLTE\plugins\webdatarocks\webdatarocks.toolbar.min.js')}}"></script>
     <script src="{{asset('bower_components\AdminLTE\plugins\webdatarocks\webdatarocks.js')}}"></script>
     <script>
@@ -165,7 +169,7 @@
         toolbar: true,
         report: {
             dataSource: {
-                data: <?php echo json_encode($registros); ?>,
+                data: <?php echo json_encode($registros_pagados); ?>,
             },
             "slice": {
             "reportFilters": [
@@ -649,6 +653,8 @@
           }
 	}
     });
+    
+        
     </script>
   </body>
 </html>

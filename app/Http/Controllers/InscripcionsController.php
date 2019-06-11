@@ -462,6 +462,8 @@ class InscripcionsController extends Controller {
                                        ->where('aa.empleado_id',$data['instructor_f'])
                                        ->where('aa.materium_id',$data['materia_f'])
                                        ->where('h.materium_id',$data['materia_f'])
+                                       ->whereNull('h.deleted_at')
+                                       ->whereNull('inscripcions.deleted_at')
                                        ->orderBy('inscripcions.plantel_id')
                                        ->orderBy('inscripcions.lectivo_id')
                                        ->orderBy('inscripcions.grupo_id')
