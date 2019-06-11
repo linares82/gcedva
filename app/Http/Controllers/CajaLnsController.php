@@ -144,14 +144,14 @@ class CajaLnsController extends Controller {
                 $pagos=0;
                 if(isset($caja->pagos)){
                     foreach($caja->pagos as $pago){
-                    $pagos=$pagos->monto+$pagos;
-                }
-                if($caja->total>$pagos and $pagos>0){
-                    $caja->st_caja_id=3;
-                }elseif($caja->total>=$pagos and $pagos>0){
-                    $caja->st_caja_id=1;
-                }
-                $caja->save();
+                        $pagos=$pago->monto+$pagos;
+                    }
+                    if($caja->total>$pagos and $pagos>0){
+                        $caja->st_caja_id=3;
+                    }elseif($caja->total>=$pagos and $pagos>0){
+                        $caja->st_caja_id=1;
+                    }
+                    $caja->save();
                 }
                 
                 

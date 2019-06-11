@@ -467,6 +467,7 @@ class CajasController extends Controller {
                             }
 
                         }
+                        //dd($caja_ln);
                         $caja_ln['total']=0;
                         $caja_ln['total']=$caja_ln['subtotal']+$caja_ln['recargo']-$caja_ln['descuento'];
 
@@ -576,7 +577,7 @@ class CajasController extends Controller {
             $pagos=0;
             if(isset($caja->pagos)){
                 foreach($caja->pagos as $pago){
-                $pagos=$pagos->monto+$pagos;
+                $pagos=$pago->monto+$pagos;
             }
             if($caja->total>$pagos and $pagos>0){
                 $caja->st_caja_id=3;

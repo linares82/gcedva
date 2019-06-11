@@ -483,8 +483,8 @@ class AdeudosController extends Controller {
             $reglas=ReglaRecargo::where('porcentaje','>',0)->get();
             $adeudos=Adeudo::select(DB::raw('adeudos.id, p.razon, concat(c.nombre," ",c.nombre2," ",c.ape_paterno," ",c.ape_materno) as nombre_cliente, '
                     . 'c.id as cliente, pp.name as plan_pago, adeudos.monto as monto_planeado, adeudos.fecha_pago as fecha_pago_planeada,'
-                    . 'con.name as concepto, caj.fecha as fecha_caja, adeudos.pagado_bnd, adeudos.caja_id, adeudos.caja_concepto_id, caj.consecutivo'
-                    . ''))
+                    . 'con.name as concepto, caj.fecha as fecha_caja, adeudos.pagado_bnd, adeudos.caja_id, adeudos.caja_concepto_id, caj.consecutivo,'
+                    . 'adeudos.plan_pago_ln_id'))
                             ->join('clientes as c','c.id','=','adeudos.cliente_id')
                             ->join('plantels as p','p.id','=','c.plantel_id')
                             ->join('plan_pago_lns as ppln','ppln.id','=','adeudos.plan_pago_ln_id')
@@ -540,7 +540,8 @@ class AdeudosController extends Controller {
                               'adeudo'=>$adeudo_monto,
                               'caja_id'=>$adeudo->caja_id,
                               'st_caja'=>$linea_caja->estatus,
-                              'consecutivo'=>$adeudo->consecutivo
+                              'consecutivo'=>$adeudo->consecutivo,
+                              'plan_pago_ln'=>$adeudo->plan_pago_ln_id
                                );
                     array_push($registros,$row);
                 }else{
@@ -558,7 +559,8 @@ class AdeudosController extends Controller {
                               'monto_recargo'=>$caja_ln_calculada['recargo'],
                               'pago'=>0,
                               'adeudo'=>$caja_ln_calculada['total'],
-                              'caja_id'=>$adeudo->caja_id
+                              'caja_id'=>$adeudo->caja_id,
+                              'plan_pago_ln'=>$adeudo->plan_pago_ln_id
                                );
                     array_push($registros,$row);
                 }

@@ -66,7 +66,13 @@
         <th><strong>Recargo</strong></th><th><strong>Adeudo</strong></th><th><strong>Pago</strong></th>
         </thead>
         <tbody>
-            <?php $cont=0; ?>
+            <?php 
+            $cont=0; 
+            $total_adeudos=0;
+            $total_pagos=0;
+            $total_descuentos=0;
+            $total_recargos=0;
+            ?>
             @foreach($registros as $registro)
             @if($cont==8)
             <tr>
@@ -87,9 +93,18 @@
                 <td> {{$registro['monto_planeado']}}</td>
                 <td>{{$fecha_reporte}}</td>
                 <td>{{$registro['fecha_pago_planeada']}}</td>
-                @foreach($reglas as $regla)
-                <td>{{\Carbon\Carbon::createFromFormat('Y-m-d', $registro['fecha_pago_planeada'])->addDays($regla['dia_inicio'])->toDateString()}}</td>
+                <?php $reglas_relacionadas=DB::table('plan_pago_ln_regla_recargo as ln')
+                        ->join('regla_recargos as r','r.id','=','ln.regla_recargo_id')
+                        ->where('ln.plan_pago_ln_id',$registro['plan_pago_ln'])
+                        ->get();
+                        ?>
+                @if(count($reglas_relacionadas)>0)
+                @foreach($reglas_relacionadas as $regla)
+                <td>{{\Carbon\Carbon::createFromFormat('Y-m-d', $registro['fecha_pago_planeada'])->addDays($regla->dia_inicio)->toDateString()}}</td>
                 @endforeach
+                @else
+                <td></td><td></td>
+                @endif
                 <td>{{$registro['concepto']}}</td>
                 <td>@if(isset($registro['consecutivo']))
                     {{$registro['consecutivo']}}
@@ -108,12 +123,21 @@
                 <td>{{$registro['adeudo']}}</td>
                 <td>{{$registro['pago']}}</td>
             </tr>
-            <?php $cont++;?>
+            <?php 
+            $cont++;
+            $total_pagos=$total_pagos+$registro['pago'];
+            $total_adeudos=$total_adeudos+$registro['adeudo'];
+            $total_descuentos=$total_descuentos+$registro['monto_descuento'];
+            $total_recargos=$total_recargos+$registro['monto_recargo'];
+            ?>
             @endforeach
             <tr>
-                <td colspan='4'></td>
+                <td colspan='13'></td>
                 <td>Total</td>
-                <td></td>
+                <td>{{$total_descuentos}}</td>
+                <td>{{$total_recargos}}</td>
+                <td>{{$total_adeudos}}</td>
+                <td>{{$total_pagos}}</td>
             </tr>
             
         </tbody>
