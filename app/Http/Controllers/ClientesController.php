@@ -1147,8 +1147,15 @@ class ClientesController extends Controller {
         
         //dd($empleados->toArray());
         $i=1;
+        $lectivosSt2=Lectivo::where('grafica_bnd','=','1')->get();
         foreach($estatus as $st){
-            if($st->id>0){
+            if($st->id==2){
+                foreach($lectivosSt2 as $lSt2){
+                    $encabezado[$i]=$lSt2->name;
+                    $i++;
+                }
+            }
+            elseif($st->id>0){
                 $encabezado[$i]=$st->name;
                 $i++;
             }
@@ -1159,24 +1166,69 @@ class ClientesController extends Controller {
             $linea=array();
             $i=0;
             $linea[$i]=$e->nombre." ".$e->ape_paterno." ".$e->ape_materno;
+            //$i++;
+            
             foreach($estatus as $st){
                $i++;
+               
                 if($st->id==2){
+                   
+                    $a_2=array();
+                    $avance=array();
+                    //$i=0;
+                    $j=0;
+                    foreach($lectivosSt2 as $lSt2){
+                        $valor=Seguimiento::join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
+                                ->join('hactividades as h', 'h.cliente_id','=','c.id')
+                                ->join('combinacion_clientes as cc', 'cc.cliente_id','=','c.id')
+                                ->join('especialidads as esp', 'esp.id','=','cc.especialidad_id')
+                                ->where('esp.lectivo_id', '=', $lSt2->id)
+                                //->where('seguimientos.created_at', '>=', $l->inicio)
+                                //->where('seguimientos.created_at', '<=', $l->fin)
+                                ->where('c.empleado_id', '=', $e->id)
+                                //->where('c.plantel_id', '=', $e->plantel_id)
+                                ->where('h.fecha', '>=', $lSt2->inicio)
+                                ->where('h.fecha', '<=', $lSt2->fin)
+                                ->where('h.detalle','=','Concretado')
+                                ->where('h.asunto','=','Cambio estatus ')
+                                ->count();
+                        
+                        $linea[$i]=$valor;
+                        $j++;
+                        if($j<3){
+                            $i++;
+                        }
+                        
+                        
+                        /*
+                        array_push($a_2, array($a, $lSt2->name));
+                        $avance[$i]=0;
+                        if($a>0){
+                            $avance[$i]=(($a*100)/$e->plantel->meta_total);
+                        }
+                        $i++;*/
+                    } 
+                   /*$lectivosSt2=Lectivo::where('grafica_bnd','=','1')->get();
                    $valor=Seguimiento::select(DB::raw('count(st.name) as total'))
                             ->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
                             ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
                             ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
-                           ->join('hactividades as h', 'h.cliente_id','=','c.id')
+                            ->join('combinacion_clientes as cc', 'cc.cliente_id','=','c.id')
+                            ->join('especialidads as esp', 'esp.id','=','cc.especialidad_id')
+                            ->join('hactividades as h', 'h.cliente_id','=','c.id')
+                            ->where('esp.lectivo_id', '=', $lSt2->id)
                             ->where('st_seguimiento_id', '=', $st->id)
                             ->where('e.id', '=', $e->id)
                             ->where('c.plantel_id', '=', $filtros['plantel_f'])
                             ->where('h.fecha', '>=', $filtros['fecha_f'])
                             ->where('h.fecha', '<=', $filtros['fecha_t'])
-                           ->where('h.asunto','=','Cambio estatus ')
+                            ->where('h.asunto','=','Cambio estatus ')
                             ->where('h.detalle', '=','Concretado')
                             //->where('seguimientos.created_at', '>=', $l->inicio)
                             //->where('seguimientos.created_at', '<=', $l->fin)
                             ->value('total');
+                    * 
+                    */
                }elseif($st->id>0){
                    $valor=Seguimiento::select(DB::raw('count(st.name) as total'))
                             ->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
@@ -1186,9 +1238,11 @@ class ClientesController extends Controller {
                             ->where('e.id', '=', $e->id)
                             ->where('c.plantel_id', '=', $filtros['plantel_f'])
                             ->value('total');
+                   $linea[$i]=$valor;
                } 
-               $linea[$i]=$valor;
+               
             }
+            //dd($linea);
             array_push($tabla, $linea);
         }
         //dd($tabla);

@@ -69,7 +69,7 @@ class AlertaFinContrato extends Command
             
             
             $alertas=Empleado::select(DB::raw("concat(empleados.nombre,' ',empleados.ape_paterno, ' ',empleados.ape_materno) as nombre"), 
-                                'empleados.dias_alerta', 'empleados.fin_contrato')
+                                'empleados.dias_alerta', 'empleados.fin_contrato','empleados.id')
                     ->join('empleados as r', 'r.id', '=', 'empleados.resp_alerta_id')
                     ->leftJoin('empleados as j', 'j.id', '=', 'empleados.jefe_id')
                     ->where('empleados.alerta_bnd', '=', 1)

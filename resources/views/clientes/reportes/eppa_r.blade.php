@@ -40,11 +40,11 @@
                 <?php $i++; ?>
                 @if($i==1)
                 <tr>
-                    <th>{{$ln[0]}}</th><th>{{$ln[1]}}</th><th>{{$ln[2]}}</th><th>{{$ln[3]}}</th><th>{{$ln[4]}}</th>
+                    <th>{{$ln[0]}}</th><th>{{$ln[1]}}</th><th>{{$ln[2]}}</th><th>{{$ln[3]}}</th><th>{{$ln[4]}}</th><th>{{$ln[5]}}</th><th>{{$ln[6]}}</th><th>{{$ln[7]}}</th>
                 </tr> 
                 @else
                 <tr>
-                    <td>{{$ln[0]}}</td><td>{{$ln[1]}}</td><td>{{$ln[2]}}</td><td>{{$ln[3]}}</td><td>{{$ln[4]}}</td>
+                    <td>{{$ln[0]}}</td><td>{{$ln[1]}}</td><td>{{$ln[2]}}</td><td>{{$ln[3]}}</td><td>{{$ln[4]}}</td><td>{{$ln[5]}}</td><td>{{$ln[6]}}</td><td>{{$ln[7]}}</td>
                 </tr>     
                 @endif
                 @endforeach

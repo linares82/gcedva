@@ -20,6 +20,7 @@
             
     		@foreach($ps as $p)       
     		    <tr bgcolor="#A9BCF5"> 
+                    <td> {{{ $p->id }}} </td>
                     <td> {{{ $p->nombre }}} </td>
                     <td> {{{ $p->fin_contrato }}} </td>
     			</tr>

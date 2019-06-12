@@ -473,12 +473,14 @@ class AdeudosController extends Controller {
         
         public function adeudosPagos(){
             $planteles=Plantel::pluck('razon','id');
-            
-            return view('adeudos.reportes.adeudosPagos', compact('planteles'));
+            $conceptos=CajaConcepto::pluck('name','id');
+            $st_cajas=StCaja::pluck('name','id');
+            return view('adeudos.reportes.adeudosPagos', compact('planteles','conceptos','st_cajas'));
         }
         
         public function adeudosPagosR(Request $request){
-            $datos=$request->all();
+            
+            $datos=$request->all();            
             $fecha_reporte=date('Y-m-d');
             $reglas=ReglaRecargo::where('porcentaje','>',0)->get();
             $adeudos=Adeudo::select(DB::raw('adeudos.id, p.razon, concat(c.nombre," ",c.nombre2," ",c.ape_paterno," ",c.ape_materno) as nombre_cliente, '
@@ -490,6 +492,7 @@ class AdeudosController extends Controller {
                             ->join('plan_pago_lns as ppln','ppln.id','=','adeudos.plan_pago_ln_id')
                             ->join('plan_pagos as pp','pp.id','=','ppln.plan_pago_id')
                             ->leftJoin('cajas as caj','caj.id','=','adeudos.caja_id')
+                            //->leftJoin('pagos as pag','pag.caja_id','=','caj.id')
                             ->join('caja_conceptos as con','con.id','=','adeudos.caja_concepto_id')
                             ->join('combinacion_clientes as cc','cc.id','=','adeudos.combinacion_cliente_id')
                             ->where('cc.especialidad_id','<>',0)
@@ -500,6 +503,7 @@ class AdeudosController extends Controller {
                             ->where('adeudos.fecha_pago','<=',$datos['fecha_t'])
                             ->where('c.plantel_id','>=',$datos['plantel_f'])
                             ->where('c.plantel_id','<=',$datos['plantel_t'])
+                            //->whereIn('adeudos.caja_concepto_id',$datos['concepto_f'])
                             //->whereColumn('adeudos.caja_concepto_id','ln.caja_concepto_id')
                             ->whereNull('adeudos.deleted_at')
                             ->whereNull('cc.deleted_at')
@@ -509,6 +513,7 @@ class AdeudosController extends Controller {
                             ->orderBy('p.razon')
                             ->orderBy('c.id')
                             ->orderBy('adeudos.id')
+                            ->orderBy('caj.st_caja_id')
                             ->get();
             //dd($adeudos->toArray());
             
