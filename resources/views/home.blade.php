@@ -223,6 +223,24 @@
                 </div>
             </div>
         </div><!-- ./col -->
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <!-- small box -->
+            <div class="info-box">
+                <span class="info-box-icon bg-yellow">
+                    <h1> {{$a_5}} </h1>
+                </span>
+                <div class="info-box-content">
+                    <h3><span class="info-box-text"> En proceso totales </span></h3>
+                    <!--<a href="{{ route('seguimientos.reporteSeguimientosXEmpleado', array('estatus'=>4)) }}" class="small-box-footer">Más Información <i class="fa fa-arrow-circle-right"></i></a>-->
+                    <a href="{{ route('clientes.index').'?q[s]=&q[clientes.nombre_cont]=&q[st_seguimiento_id_cont]=5&'.
+                                                        '&q[clientes.empleado_id_cont]='.
+                                                        DB::table('empleados')->where('user_id', Auth::user()->id)->value('id').
+                                                        '&commit=Buscar' }}" 
+                    class="small-box-footer">Ver <i class="fa fa-arrow-circle-right"></i></a>
+                </div>
+                
+            </div>
+        </div><!-- ./col -->
         @endpermission
     </div><!-- /.row -->
     

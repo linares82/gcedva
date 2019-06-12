@@ -134,6 +134,12 @@ class HomeController extends Controller
                     ->where('c.empleado_id', '=', $e->id)
                     //->where('c.plantel_id', '=', $e->plantel_id)
                     ->count();
+        $a_4=Seguimiento::where('st_seguimiento_id', '=', 5)
+                    ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
+                    //->where('mes', '=', $mes)
+                    ->where('c.empleado_id', '=', $e->id)
+                    //->where('c.plantel_id', '=', $e->plantel_id)
+                    ->count();
         
         /*
          * Fin cuadros con numeros
@@ -472,7 +478,7 @@ class HomeController extends Controller
                                 ->get();
         //dd($becas);
         
-        return view('home', compact('avisos', 'a_1', 'a_2', 'a_3', 'a_4', 'grafica2','grafica', 'fil', 'lectivosSt2','avisosEmpresas',
+        return view('home', compact('avisos', 'a_1', 'a_2', 'a_3', 'a_4','a_5', 'grafica2','grafica', 'fil', 'lectivosSt2','avisosEmpresas',
                                     'avisos_generales', 'avance', 'gauge', 'tabla', 'plantel','estatusPlantel', 'tsuma','lectivoss','becas'))
                     ->with('datos_grafica', json_encode($tabla))
                     ->with('datos', json_encode($datos))

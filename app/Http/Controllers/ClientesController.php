@@ -1143,7 +1143,9 @@ class ClientesController extends Controller {
         }
         $estatus = StSeguimiento::where('id','>',0)->get();
         $empleados = Empleado::where('plantel_id','=', $filtros['plantel_f'])
-                             ->where('puesto_id', '=', 2)->get();
+                             ->where('puesto_id', '=', 2)
+                             ->where('st_empleado_id','<>',3)
+                             ->get();
         
         //dd($empleados->toArray());
         $i=1;
@@ -1230,7 +1232,14 @@ class ClientesController extends Controller {
                     * 
                     */
                }elseif($st->id>0){
-                   $valor=Seguimiento::select(DB::raw('count(st.name) as total'))
+                   
+                   $valor=Seguimiento::where('st_seguimiento_id', '=', $st->id)
+                    ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
+                    //->where('mes', '=', $mes)
+                    ->where('c.empleado_id', '=', $e->id)
+                    //->where('c.plantel_id', '=', $e->plantel_id)
+                    ->count();
+                           /*Seguimiento::select(DB::raw('count(st.name) as total'))
                             ->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
                             ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
                             ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
@@ -1238,6 +1247,8 @@ class ClientesController extends Controller {
                             ->where('e.id', '=', $e->id)
                             ->where('c.plantel_id', '=', $filtros['plantel_f'])
                             ->value('total');
+                            * 
+                            */
                    $linea[$i]=$valor;
                } 
                
