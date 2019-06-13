@@ -15,7 +15,7 @@
   </head>
   <body>
       <h3>Adeudos por Plantel al {{$fecha}}</h3>
-    <div id="wdr-component"></div>
+    
     <div class="datagrid">
         @if(isset($registros) and count($registros)>0)
         <table class="table table-condensed table-striped">
@@ -82,6 +82,7 @@
         </table>
         @endif
     </div>
+    <div id="wdr-component"></div>  
     <script src="{{asset('bower_components\AdminLTE\plugins\webdatarocks\webdatarocks.toolbar.min.js')}}"></script>
     <script src="{{asset('bower_components\AdminLTE\plugins\webdatarocks\webdatarocks.js')}}"></script>
     <script>

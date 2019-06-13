@@ -54,7 +54,7 @@
 
                 <div class="form-group col-md-6 @if($errors->has('concepto_f')) has-error @endif">
                     <label for="concepto_f-field">Concepto de:</label>
-                    {!! Form::select("concepto_f[]", $conceptos, null, array("class" => "form-control select_seguridad", "id" => "concepto_f-field","multiple"=>"multiple")) !!}
+                    {!! Form::select("concepto_f[]", $conceptos, null, array("class" => "form-control select_seguridad", "id" => "concepto_f-field", "multiple"=>"multiple")) !!}
                     <div id='loading1' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                     @if($errors->has("concepto_f"))
                     <span class="help-block">{{ $errors->first("concepto_f") }}</span>

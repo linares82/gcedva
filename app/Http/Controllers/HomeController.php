@@ -134,7 +134,7 @@ class HomeController extends Controller
                     ->where('c.empleado_id', '=', $e->id)
                     //->where('c.plantel_id', '=', $e->plantel_id)
                     ->count();
-        $a_4=Seguimiento::where('st_seguimiento_id', '=', 5)
+        $a_5=Seguimiento::where('st_seguimiento_id', '=', 5)
                     ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
                     //->where('mes', '=', $mes)
                     ->where('c.empleado_id', '=', $e->id)

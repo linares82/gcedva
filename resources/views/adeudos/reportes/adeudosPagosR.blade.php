@@ -1,3 +1,7 @@
+<html>
+  <head>
+      <link href="{{asset('bower_components\AdminLTE\plugins\webdatarocks\webdatarocks.min.css')}}" rel="stylesheet" />
+
 <style>
     @media print {
         table {
@@ -46,15 +50,16 @@
 
 </style>
 
+</head>
+  <body>
 
-
-
+<table border="1" width="100%" >
             <td align="center"  >
                 <h3>
                     Pagos y Adeudos
                 </h3>
             </td>
-
+</table>
 
 <div class="datagrid">
     <table border="1" width="100%" >
@@ -63,7 +68,7 @@
         <th><strong>Plan</strong></th><th><strong>Monto Planeado</strong></th><th><strong>Fecha Reporte</strong></th><th><strong>Fecha Sin Recargos</strong></th>
         <th><strong>Fecha 5% Recargos</strong></th><th><strong>Fecha 10% Recargos</strong></th><th><strong>Concepto </strong></th>
         <th><strong>consecutivo Caja</strong></th><th><strong>Estatus Caja</strong></th><th><strong>Fecha Caja</strong></th><th><strong>Descuento</strong></th>
-        <th><strong>Recargo</strong></th><th><strong>Adeudo</strong></th><th><strong>Pago</strong></th>
+        <th><strong>Recargo</strong></th><th><strong>Adeudo</strong></th><th><strong>Pago</strong></th><th><strong>Pagos</strong></th>
         </thead>
         <tbody>
             <?php 
@@ -78,9 +83,9 @@
             <tr>
                 <th><strong>Id Adeudo</strong></th><th><strong>Plantel</strong></th><th><strong>Id Cliente</strong></th><th><strong>Cliente</strong></th>
                 <th><strong>Plan</strong></th><th><strong>Monto Planeado</strong></th><th><strong>Fecha Reporte</strong></th><th><strong>Fecha Sin Recargos</strong></th>
-                <th><strong>Fecha 5% Recargos</strong></th><th><strong>Fecha 10% Recargos</strong></th><th><strong>Concepto </strong></th>
+                <th><strong>Fecha 10% Recargos</strong></th><th><strong>Fecha 15% Recargos</strong></th><th><strong>Concepto </strong></th>
                 <th><strong>consecutivo Caja</strong></th><th><strong>Estatus Caja</strong></th><th><strong>Fecha Caja</strong></th><th><strong>Descuento</strong></th>
-                <th><strong>Recargo</strong></th><th><strong>Adeudo</strong></th><th><strong>Pago</strong></th>
+                <th><strong>Recargo</strong></th><th><strong>Adeudo</strong></th><th><strong>Pago</strong></th><th><strong>Pagos</strong></th>
             </tr>
             <?php $cont=0; ?>
             @endif
@@ -120,8 +125,25 @@
                 </td>
                 <td>{{$registro['monto_descuento']}}</td>
                 <td>{{$registro['monto_recargo']}}</td>
-                <td>{{$registro['adeudo']}}</td>
-                <td>{{$registro['pago']}}</td>
+                <td>
+                    
+                        {{$registro['adeudo']}}
+                    
+                    
+                </td>
+                <td>
+                        {{$registro['pago']}}
+
+                    
+                </td>
+                <td>@if(isset($registro['monto_pago_suma']))
+                    {{$registro['monto_pago_suma']}}
+                    @endif
+                    <?php $pagos=App\Pago::where('caja_id',$registro['caja_id'])->get(); ?>
+                    @foreach($pagos as $pago)
+                        {{$pago->monto}} {{$pago->fecha}} {{$pago->formaPago->name}}
+                    @endforeach
+                </td>
             </tr>
             <?php 
             $cont++;
@@ -139,65 +161,14 @@
                 <td>{{$total_adeudos}}</td>
                 <td>{{$total_pagos}}</td>
             </tr>
-            
+            <div id="wdr-component"></div>
+            <div id="wdr-component2"></div>
         </tbody>
     </table>
     
 </div>
 
-
- <script   
-   src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js">
-    </script>
-    <script>
-
-    function scrolify(tblAsJQueryObject, height){
-        var oTbl = tblAsJQueryObject;
-
-        // for very large tables you can remove the four lines below
-        // and wrap the table with <div> in the mark-up and assign
-        // height and overflow property  
-        var oTblDiv = $("<div/>");
-        oTblDiv.css('height', height);
-        oTblDiv.css('overflow','scroll');               
-        oTbl.wrap(oTblDiv);
-
-        // save original width
-        oTbl.attr("data-item-original-width", oTbl.width());
-        oTbl.find('thead tr td').each(function(){
-            $(this).attr("data-item-original-width",$(this).width());
-        }); 
-        oTbl.find('tbody tr:eq(0) td').each(function(){
-            $(this).attr("data-item-original-width",$(this).width());
-        });                 
+  </body>
+</html>
 
 
-        // clone the original table
-        var newTbl = oTbl.clone();
-
-        // remove table header from original table
-        oTbl.find('thead tr').remove();                 
-        // remove table body from new table
-        newTbl.find('tbody tr').remove();   
-
-        oTbl.parent().parent().prepend(newTbl);
-        newTbl.wrap("<div/>");
-
-        // replace ORIGINAL COLUMN width                
-        newTbl.width(newTbl.attr('data-item-original-width'));
-        newTbl.find('thead tr td').each(function(){
-            $(this).width($(this).attr("data-item-original-width"));
-        });     
-        oTbl.width(oTbl.attr('data-item-original-width'));      
-        oTbl.find('tbody tr:eq(0) td').each(function(){
-            $(this).width($(this).attr("data-item-original-width"));
-        });                 
-    }
-
-    $(document).ready(function(){
-        scrolify($('#tblNeedsScrolling'), 500); // 160 is height
-    });
-
-
-    </script>            
-            
