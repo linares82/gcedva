@@ -66,7 +66,7 @@
         <thead >
         <th><strong>Id Adeudo</strong></th><th><strong>Plantel</strong></th><th><strong>Id Cliente</strong></th><th><strong>Cliente</strong></th>
         <th><strong>Plan</strong></th><th><strong>Monto Planeado</strong></th><th><strong>Fecha Reporte</strong></th><th><strong>Fecha Sin Recargos</strong></th>
-        <th><strong>Fecha 5% Recargos</strong></th><th><strong>Fecha 10% Recargos</strong></th><th><strong>Concepto </strong></th>
+        <th><strong>Fecha 10% Recargos</strong></th><th><strong>Fecha 15% Recargos</strong></th><th><strong>Concepto </strong></th>
         <th><strong>consecutivo Caja</strong></th><th><strong>Estatus Caja</strong></th><th><strong>Fecha Caja</strong></th><th><strong>Descuento</strong></th>
         <th><strong>Recargo</strong></th><th><strong>Adeudo</strong></th><th><strong>Pago</strong></th><th><strong>Pagos</strong></th>
         </thead>

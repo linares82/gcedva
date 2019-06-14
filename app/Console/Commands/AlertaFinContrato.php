@@ -49,6 +49,7 @@ class AlertaFinContrato extends Command
                                 ->join('empleados as r', 'r.id', '=', 'empleados.resp_alerta_id')
                                 ->leftJoin('empleados as j', 'j.id', '=', 'empleados.jefe_id')
                                 ->where('empleados.alerta_bnd', '=', 1)
+                                ->where('empleados.st_empleado_id','<>',2) 
                                 ->whereDate('empleados.fin_contrato', '>=', date('Y/m/d'))
                                 ->get();
 
@@ -56,10 +57,11 @@ class AlertaFinContrato extends Command
         foreach($empleados as $e){
             //$fecha_valida=Carbon->now()->addDays($e->dias_alerta);
             //dd($e->fin_contrato);
-            $hoy=Carbon::now();
+            $hoy=Carbon::today();
             $dias_restantes=0;
-            if (!is_null($e->fin_contrato)){
-                $fin_contrato=Carbon::createFromFormat('Y-m-d', $e->fin_contrato)->toDateTimeString();
+            //dd($hoy<=Carbon::createFromFormat('Y-m-d', $e->fin_contrato));
+            if (!is_null($e->fin_contrato) and $hoy<=Carbon::createFromFormat('Y-m-d', $e->fin_contrato)){
+                $fin_contrato=Carbon::createFromFormat('Y-m-d', $e->fin_contrato);
                 $dias_restantes=$hoy->diffInDays($fin_contrato);
                 //dd("dias - ".$dias_restantes);
                 //Log::info("fin contrato - ".$fin_contrato);
@@ -73,14 +75,16 @@ class AlertaFinContrato extends Command
                     ->join('empleados as r', 'r.id', '=', 'empleados.resp_alerta_id')
                     ->leftJoin('empleados as j', 'j.id', '=', 'empleados.jefe_id')
                     ->where('empleados.alerta_bnd', '=', 1)
-                    ->whereBetween('empleados.dias_alerta', ['0',$dias_restantes])
-                    ->whereDate('empleados.fin_contrato','>',$hoy)
+                    ->where('empleados.dias_alerta','>=',$dias_restantes)
+                    //->whereBetween('empleados.dias_alerta', ['0',$dias_restantes])
+                    //->whereDate('empleados.fin_contrato','>',$hoy)
                     ->where('empleados.resp_alerta_id', '=', $e->resp_alerta_id)
                     ->get();
             //Log::info($alertas);
-            //dd($alertas);
+            //dd($alertas->toArray());
             $mail=$e->mail;
-            $jefe_mail=$e->j_mail;
+            $jefe_mail=$e->j_mail_empresa;
+            $responsable_mail=$e->r_mail_empresa;
             
             //dd($alertas);
             
@@ -98,13 +102,18 @@ class AlertaFinContrato extends Command
             if(count($alertas)>0){
                 $respuesta=Mailgun::send('emails.alertaFinContrato', 
                     array('ps'=>$alertas),  
-                    function ($message) use($mail, $jefe_mail) {
+                    function ($message) use($mail, $jefe_mail, $responsable_mail) {
                         $message->to($mail);
                         if(!is_null($jefe_mail)){
                             $message->cc($jefe_mail);	
                         }
+                        if(!is_null($responsable_mail)){
+                            $message->cc($responsable_mail);	
+                        }
                         $message->subject('Alerta Contratos Por Vencer');
                 });
+//                dd('mensaje enviado');
+                Log::info($jefe_mail);
             }
             	
             //dd($respuesta);

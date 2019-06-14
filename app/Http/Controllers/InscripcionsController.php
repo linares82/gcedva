@@ -440,7 +440,7 @@ class InscripcionsController extends Controller {
         public function listar(Request $request)
 	{
                 $data=$request->all();
-//                dd($data);
+                //dd($data);
                 $registros= Inscripcion::select('c.nombre','c.nombre2','c.ape_paterno','c.ape_materno', 'g.name as grupo','l.name as lectivo',
                                                DB::raw('concat(e.nombre," ",e.ape_paterno," ",e.ape_materno) as maestro'),'gra.name as grado',
                                                'p.razon as plantel', 'p.logo','aa.id as asignacion','c.id as cliente','p.id as p_id')
@@ -470,7 +470,7 @@ class InscripcionsController extends Controller {
                                        ->orderBy('inscripcions.grado_id')
                                        ->get();
                 
-                //dd($registros->toArray());
+                dd($registros->toArray());
                 
                 
                 //Agregar fechas
@@ -483,6 +483,7 @@ class InscripcionsController extends Controller {
                 
                 
                 $dias=array();
+                //dd($asignacion);
                 foreach($asignacion->horarios as $horario){
                     array_push($dias,$horario->dia->name);
                 }
