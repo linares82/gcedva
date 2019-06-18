@@ -42,7 +42,7 @@
             </div>
             <div aria-labelledby="headingOne" role="tabpanel" class="panel-collapse collapse" id="collapseOne">
                 <div class="panel-body">
-                    <form class="Cliente_search" id="search" action="{{ route('clientes.index') }}" accept-charset="UTF-8" method="get">
+                    <form class="Cliente_search" id="search" action="{{ route('clientes.indexEventos') }}" accept-charset="UTF-8" method="get">
                         <input type="hidden" name="q[s]" value="{{ @(Request::input('q')['s']) ?: '' }}" />
                         <div class="row">
                             <div class="col-md-12">
@@ -211,6 +211,7 @@
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clientes.ape_materno', 'title' => 'APELLIDO MATERNO'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clientes.plantel_id', 'title' => 'PLANTEL'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clientes.pais_id', 'title' => 'PAIS'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clientes.st_cliente_id', 'title' => 'ESTATUS CLIENTE'])</th>
                             <th>Eventos</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
@@ -226,6 +227,7 @@
                                 <td>{{$cliente->cliente->ape_materno}}</td>
                                 <td>{{$cliente->cliente->empleado->nombre." ".$cliente->cliente->empleado->ape_paterno." ".$cliente->cliente->empleado->ape_materno}}</td>
                                 <td> {{$cliente->cliente->paise->name}} </td>
+                                <td>{{$cliente->cliente->stCliente->name}}</td>
                                 <td class="text-right">
                                     @permission('historiaClientes.create')
                                     <a class="btn btn-xs btn-success" href="{{ route('historiaClientes.create',array('cliente'=>$cliente->cliente->id)) }}"><i class="glyphicon glyphicon-plus"></i> Crear</a>

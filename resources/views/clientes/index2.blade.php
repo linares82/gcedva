@@ -47,7 +47,7 @@
             </div>
             <div aria-labelledby="headingOne" role="tabpanel" class="panel-collapse collapse" id="collapseOne">
                 <div class="panel-body">
-                    <form class="Cliente_search" id="search" action="{{ route('clientes.index') }}" accept-charset="UTF-8" method="get">
+                    <form class="Cliente_search" id="search" action="{{ route('clientes.indexEventos') }}" accept-charset="UTF-8" method="get">
                         <input type="hidden" name="q[s]" value="{{ @(Request::input('q')['s']) ?: '' }}" />
                         <div class="row">
                             <div class="col-md-12">

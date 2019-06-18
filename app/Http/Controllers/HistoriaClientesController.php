@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use File as Archi;
 
 use App\HistoriaCliente;
+use App\Cliente;
 use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updateHistoriaCliente;
@@ -59,6 +60,16 @@ class HistoriaClientesController extends Controller {
                 
 		//create data
 		$e=HistoriaCliente::create( $input );
+                
+                if($e->evento_cliente_id==4){
+                    $cliente=Cliente::find($e->cliente_id);
+                    $cliente->st_cliente_id=24;
+                    $cliente->save();
+                }elseif($e->evento_cliente_id==2){
+                    $cliente=Cliente::find($e->cliente_id);
+                    $cliente->st_cliente_id=3;
+                    $cliente->save();
+                }
 
                 if ( $e ){
                     $ruta=public_path()."/imagenes/historia_clientes/".$e->id."/";
@@ -72,7 +83,7 @@ class HistoriaClientesController extends Controller {
 			}
                 }
                 
-		return redirect()->route('clientes.index')->with('message', 'Registro Creado.');
+		return redirect()->route('clientes.indexEventos')->with('message', 'Registro Creado.');
 	}
 
 	/**
@@ -136,8 +147,19 @@ class HistoriaClientesController extends Controller {
 		//update data
 		$historiaCliente=$historiaCliente->find($id);
 		$historiaCliente->update( $input );
-
+                
                 $e=$historiaCliente;
+                
+                if($e->evento_cliente_id==4){
+                    $cliente=Cliente::find($e->cliente_id);
+                    $cliente->st_cliente_id=24;
+                    $cliente->save();
+                }elseif($e->evento_cliente_id==2){
+                    $cliente=Cliente::find($e->cliente_id);
+                    $cliente->st_cliente_id=3;
+                    $cliente->save();
+                }
+                
                 if ( $e ){
                     $ruta=public_path()."/imagenes/historia_clientes/".$e->id."/";
                     

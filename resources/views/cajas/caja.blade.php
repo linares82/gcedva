@@ -64,7 +64,7 @@
                 
                 @if(isset($message))
                 <div class="alert alert-danger alert-dismissable">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">Ã—</button>
                     {{$message}}
                 </div>
                 @endif
@@ -96,7 +96,7 @@
 
                 @if(isset($message))
                 <div class="alert alert-danger alert-dismissable">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">Ã—</button>
                     {{$message}}
                 </div>
                 @endif
@@ -235,7 +235,7 @@
                             <td>
                                 @if(isset($caja) and $caja->st_caja_id==0)
                                 @permission('cajaLns.destroy')
-                                {!! Form::model($linea, array('route' => array('cajaLns.destroy', $linea->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}
+                                {!! Form::model($linea, array('route' => array('cajaLns.destroy', $linea->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('Â¿Borrar? Â¿Esta seguro?')) { return true } else {return false };")) !!}
                                 <button type="submit" class="btn btn-xs btn-danger" data-toggle="tooltip" title="Eliminar"><i class="glyphicon glyphicon-trash"></i></button>
                                 {!! Form::close() !!}
                                 @endpermission
@@ -298,7 +298,7 @@
                         <tr>
                             <td> {{$pago->consecutivo}} </td><td>{{ $pago->monto }}</td><td>{{ $pago->fecha }}</td><td>{{ $pago->formaPago->name }}</td><td>{{ $pago->referencia }}</td>
                             <td>
-                                {!! Form::model($pago, array('route' => array('pagos.destroy', $pago->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}
+                                {!! Form::model($pago, array('route' => array('pagos.destroy', $pago->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('Â¿Borrar? Â¿Esta seguro?')) { return true } else {return false };")) !!}
                                     <button type="submit" class="btn btn-xs btn-danger" data-toggle="tooltip" title="Eliminar"><i class="glyphicon glyphicon-trash"></i> </button>
                                 {!! Form::close() !!}
                                 <a href="{{route('pagos.imprimir', array('pago'=>$pago->id))}}" data-toggle="tooltip" title="Imprimir" class="btn btn-info btn-xs " target="_blank"><i class="fa fa-print"></i></a>
@@ -410,7 +410,7 @@
                             </td>
                             <td>
                                 @permission('adeudos.destroy')
-                                    {!! Form::model($adeudo, array('route' => array('adeudos.destroy', $adeudo->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}
+                                    {!! Form::model($adeudo, array('route' => array('adeudos.destroy', $adeudo->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('Â¿Borrar? Â¿Esta seguro?')) { return true } else {return false };")) !!}
                                         <button type="submit" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> Borrar</button>
                                     {!! Form::close() !!}
                                 @endpermission
@@ -432,19 +432,18 @@
                             @endif
                                 @if($adeudo->pagado_bnd==1) SI @else NO @endif</td>
                             <td>{{$dia}}</td>
+	
                         </tr>
-                        
-                        @endforeach
-                        @endif
-                        <?php
+        		<?php
                         $valores= collect();
                         foreach($combinacion->adeudos as $adeudo){
                             //if($adeudo->caja_concepto_id==$ln->caja_concepto_id){
                                 $valores->push($adeudo->caja_concepto_id);
                             //}
                         }
-                        //dd($valores);
-                        ?>
+                        ?>                
+                        @endforeach
+                        @endif
                         
                         @endforeach
                         </tr>
@@ -461,10 +460,9 @@
                             <tbody>
                                 
                                 @foreach($cajas as $ln)
-                                    {{$ln->concepto_id}}-{{$valores->search($ln->concepto_id)}}
+                                    
                                     @if(!is_int($valores->search($ln->concepto_id)))
                                     <tr>
-                                        {{$valores->search($ln->concepto_id)}}
                                         
                                         <td> {{$ln->concepto}}</td><td>{{$ln->total}}</td><td>{{$ln->caja}}</td><td>{{$ln->estatus}}</td>
                                     </tr>
@@ -492,7 +490,7 @@ Agregar nuevo registro
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">×</button>
+                <button type="button" class="close" data-dismiss="modal">Ã—</button>
                 <h4 class="modal-title"></h4>
             </div>
             <div class="modal-body">
@@ -523,7 +521,7 @@ Agregar nuevo registro
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">×</button>
+                <button type="button" class="close" data-dismiss="modal">Ã—</button>
                 <h4 class="modal-title"></h4>
             </div>
             <div class="modal-body">

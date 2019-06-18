@@ -470,7 +470,7 @@ class InscripcionsController extends Controller {
                                        ->orderBy('inscripcions.grado_id')
                                        ->get();
                 
-                dd($registros->toArray());
+                //dd($registros->toArray());
                 
                 
                 //Agregar fechas
@@ -817,5 +817,155 @@ class InscripcionsController extends Controller {
                 return view('inscripcions.reportes.inscritosLectivoR', array('registros'=>$registros,
                                                                                  'plantel'=>$plantel,
                                                                                  'lectivo'=>$lectivo));
+	}
+        
+        public function listaMes()
+	{
+            $meses=Mese::pluck('name','id');
+            $materias=Materium::pluck('name','id');
+            $instructores=Empleado::where('puesto_id',3)->pluck('nombre','id');
+		return view('inscripcions.reportes.lista_mes',compact('meses','materias','instructores'))
+			->with( 'list', Inscripcion::getListFromAllRelationApps() );
+	}
+        
+        public function listaMesR(Request $request)
+	{
+                $data=$request->all();
+                //dd($data);
+                $registros= Inscripcion::select('c.nombre','c.nombre2','c.ape_paterno','c.ape_materno', 'g.name as grupo','l.name as lectivo',
+                                               DB::raw('concat(e.nombre," ",e.ape_paterno," ",e.ape_materno) as maestro'),'gra.name as grado',
+                                               'p.razon as plantel', 'p.logo','aa.id as asignacion','c.id as cliente','p.id as p_id')
+                                       ->join('hacademicas as h','h.inscripcion_id','=','inscripcions.id')
+                                       ->join('clientes as c', 'c.id', '=', 'inscripcions.cliente_id')
+                                       ->join('grupos as g', 'g.id', '=', 'inscripcions.grupo_id')
+                                       ->join('lectivos as l','l.id', '=', 'inscripcions.lectivo_id')
+                                       ->join('asignacion_academicas as aa', 'aa.grupo_id','=','g.id')
+                                       //->join('asistencia_rs as asis', 'asis.asignacion_academica_id','=','aa.id')
+                                       ->join('empleados as e','e.id','=','aa.empleado_id')
+                                       ->join('grados as gra','gra.id','=','inscripcions.grado_id')
+                                       ->join('plantels as p','p.id','=','c.plantel_id')
+                                       ->where('inscripcions.plantel_id', $data['plantel_f'])
+                                       ->where('inscripcions.lectivo_id',$data['lectivo_f'])
+                                       //->where('inscripcions.grado_id',$data['grado_f'])
+                                       ->where('aa.plantel_id', $data['plantel_f'])
+                                       ->where('aa.lectivo_id',$data['lectivo_f'])
+                                       ->where('aa.grupo_id',$data['grupo_f'])
+                                       ->where('aa.empleado_id',$data['instructor_f'])
+                                       ->where('aa.materium_id',$data['materia_f'])
+                                       ->where('h.materium_id',$data['materia_f'])
+                                       ->whereNull('h.deleted_at')
+                                       ->whereNull('inscripcions.deleted_at')
+                                       ->orderBy('inscripcions.plantel_id')
+                                       ->orderBy('inscripcions.lectivo_id')
+                                       ->orderBy('inscripcions.grupo_id')
+                                       ->orderBy('inscripcions.grado_id')
+                                       ->get();
+                
+                //dd($registros->toArray());
+                
+                
+                //Agregar fechas
+                $asignacion=collect();
+                foreach($registros as $registro){
+                    $asignacion= AsignacionAcademica::find($registro->asignacion);
+                    break;
+                }
+                
+                
+                
+                $dias=array();
+                //dd($asignacion);
+                foreach($asignacion->horarios as $horario){
+                    array_push($dias,$horario->dia->name);
+                }
+                //dd($dias);
+                
+                
+                $fechas=array();
+                $lectivo=Lectivo::find($data['lectivo_f']);
+                //dd($lectivo);
+                $no_habiles=array();
+                foreach($lectivo->diasNoHabiles as $no_habil){
+                    array_push($no_habiles, Carbon::createFromFormat('Y-m-d', $no_habil->fecha));
+                }
+                //dd($no_habiles);    
+                //$inicio=Carbon::createFromFormat('Y-m-d', $lectivo->inicio);
+                //$fin=Carbon::createFromFormat('Y-m-d', $lectivo->fin);
+                $pinicio=Carbon::createFromFormat('Y-m-d', $asignacion->fec_inicio);
+                $pfin=Carbon::createFromFormat('Y-m-d', $asignacion->fec_fin);
+                //dd($pfin->toDateString());
+                //array_push($fechas,$pinicio);
+                //$fecha=Carbon::createFromFormat('Y-m-d', $lectivo->inicio);
+                $total_asistencias=0;
+                while($pfin->greaterThanOrEqualTo($pinicio) ){
+                    
+                    if(in_array('Lunes',$dias)){
+                        //dd("hay lunes");
+                        if($pinicio->isMonday() and !in_array($pinicio,$no_habiles) and $pinicio->month==$data['mes']){
+                            array_push($fechas,$pinicio->toDateString());
+                            $total_asistencias++;
+                        }
+                        //dd($fechas);
+                    }
+                    if(in_array('Martes',$dias)){
+                        //dd("hay martes");
+                        if($pinicio->isTuesday() and !in_array($pinicio,$no_habiles) and $pinicio->month==$data['mes']){
+                            array_push($fechas,$pinicio->toDateString());
+                            $total_asistencias++;
+                        }
+                    }
+                    if(in_array('Miercoles',$dias)){
+                        //dd("hay miercoles");
+                        if($pinicio->isWednesday() and !in_array($pinicio,$no_habiles) and $pinicio->month==$data['mes']){
+                            array_push($fechas,$pinicio->toDateString());
+                            $total_asistencias++;
+                        }
+                    }
+                    if(in_array('Jueves',$dias)){
+                        //dd("hay jueves");
+                        if($pinicio->isThursday() and !in_array($pinicio,$no_habiles) and $pinicio->month==$data['mes']){
+                            array_push($fechas,$pinicio->toDateString());
+                            $total_asistencias++;
+                        }
+                    }
+                    if(in_array('Viernes',$dias)){
+                        //dd("hay viernes");
+                        if($pinicio->isFriday() and !in_array($pinicio,$no_habiles) and $pinicio->month==$data['mes']){
+                            array_push($fechas,$pinicio->toDateString());
+                            $total_asistencias++;
+                        }
+                    }if(in_array('Sabado',$dias)){
+                        
+                        if($pinicio->isSaturday()  and !in_array($pinicio,$no_habiles) and $pinicio->month==$data['mes']){
+                            array_push($fechas,$pinicio->toDateString());
+                            $total_asistencias++;
+                        }
+                    }
+                    $pinicio->addDay();
+                    //dd($fechas);
+                }
+                
+                $contador=0;
+                foreach($fechas as $fecha){
+                    $contador++;
+                }
+                //dd($fechas);
+                //dd($registros->grupo);
+                                         
+		/*return view('inscripcions.reportes.lista_alumnosr',compact('registros'))
+			->with( 'list', Inscripcion::getListFromAllRelationApps() );
+                 * */
+                
+/*                PDF::setOptions(['defaultFont' => 'arial']);
+
+                $pdf = PDF::loadView('inscripcions.reportes.lista_alumnosr', array('registros'=>$registros,'fechas_enc'=>$fechas))
+                        ->setPaper('legal', 'landscape');
+                return $pdf->download('reporte.pdf');
+  */              
+                return view('inscripcions.reportes.lista_mesr', array('registros'=>$registros,
+                                                                          'fechas_enc'=>$fechas,
+                                                                          'asignacion'=>$asignacion,
+                                                                          'total_asistencias'=>$total_asistencias,
+                                                                          'contador'=>$contador));
 	}
 }

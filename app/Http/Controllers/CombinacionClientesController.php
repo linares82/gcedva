@@ -120,8 +120,12 @@ class CombinacionClientesController extends Controller {
 	public function destroy($id,CombinacionCliente $combinacionCliente)
 	{
 		$combinacionCliente=$combinacionCliente->find($id);
+                $adeudos=Adeudo::where('cliente_id',$combinacionCliente->cliente_id)->get();
 		$c=$combinacionCliente->cliente_id;
                 $combinacionCliente->delete();
+                foreach($adeudos as $adeudos){
+                    $adeudo->delete();
+                }
 
 		return redirect()->route('clientes.edit', $c)->with('message', 'Registro Borrado.');
 	}

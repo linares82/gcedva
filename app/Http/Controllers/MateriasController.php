@@ -348,6 +348,7 @@ class MateriasController extends Controller {
                     ->where('aa.lectivo_id', '=', $lectivo)
                     ->where('aa.empleado_id', '=', $instructor)
                     ->where('aa.grupo_id', '=', $grupo)
+                    ->whereNull('aa.deleted_at')
                     ->get();
 
             //dd($r);
