@@ -819,12 +819,29 @@ class InscripcionsController extends Controller {
                                                                                  'lectivo'=>$lectivo));
 	}
         
-        public function listaMes()
+        public function listaMes(Request $request)
 	{
+            $datos=$request->all();
+            $asignacion= AsignacionAcademica::find($datos['asignacion']);
             $meses=Mese::pluck('name','id');
+            $pinicio=Carbon::createFromFormat('Y-m-d', $asignacion->fec_inicio);
+            $pfin=Carbon::createFromFormat('Y-m-d', $asignacion->fec_fin);
+            //dd($meses);
+            $i=1;
+            foreach($meses as $mes){
+                //dd($meses[$i]);
+                if($i>=$pinicio->month and $i<=$pfin->month){
+                    
+                }else{
+                    $meses->forget($i);
+                }
+                $i++;
+            }
+            //dd($meses);
+            
             $materias=Materium::pluck('name','id');
             $instructores=Empleado::where('puesto_id',3)->pluck('nombre','id');
-		return view('inscripcions.reportes.lista_mes',compact('meses','materias','instructores'))
+		return view('inscripcions.reportes.lista_mes',compact('meses','materias','instructores','asignacion'))
 			->with( 'list', Inscripcion::getListFromAllRelationApps() );
 	}
         
@@ -949,6 +966,8 @@ class InscripcionsController extends Controller {
                 foreach($fechas as $fecha){
                     $contador++;
                 }
+                
+                $mes=Mese::find($data['mes']);
                 //dd($fechas);
                 //dd($registros->grupo);
                                          
@@ -966,6 +985,7 @@ class InscripcionsController extends Controller {
                                                                           'fechas_enc'=>$fechas,
                                                                           'asignacion'=>$asignacion,
                                                                           'total_asistencias'=>$total_asistencias,
-                                                                          'contador'=>$contador));
+                                                                          'contador'=>$contador,
+                                                                          'mes'=>$mes));
 	}
 }

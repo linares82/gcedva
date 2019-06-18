@@ -1,7 +1,7 @@
 <html>
     <head>
         <style>
-/*            @media print {
+            @media print {
                 table {
                     font-family: arial, sans-serif;
                     border-collapse: collapse;
@@ -19,7 +19,7 @@
                     background-color: #dddddd;
                 }
             }
- 
+/* 
             table {
                 font-family: arial, sans-serif;
                 border-collapse: collapse;
@@ -66,7 +66,7 @@
     </head>
     <body>
         <div id="printeArea">
-            <h3>Lista de Asistencia del {{$asignacion->fec_inicio}} al {{$asignacion->fec_fin}} </h3>
+            <h3>Lista de Asistencia del Mes {{$mes->name}} </h3>
             <table>
                 <?php 
                 $grupo0="";
@@ -87,7 +87,7 @@
                                 {{"Grado: ".$r->grado}}<br/>
                                 
                             </td>
-                            <td colspan="{{$contador-1}}">
+                            <td colspan="{{$contador}}">
                                 <img src="{{ asset('/imagenes/planteles/'.$r->p_id."/".$r->logo) }}" alt="Sin logo" height="80px" ></img>
                             </td>
                         </tr>
@@ -102,8 +102,7 @@
                             <th class=""><strong >{{$fecha_enc}}</strong></th>
                             
                         @endforeach
-                        <th>Asistencias - % </th>
-                        <th>Ultimo Pago Colegiatura</th>
+                        <td>Total</td>
                         </tr>
                         <?php 
                         $grupo0=$r->grupo; 
@@ -151,7 +150,7 @@
                                 $asistencias_acumuladas=$asistencias+$asistencias_acumuladas;
                                 $total_registros++;
                                 ?>
-                                <td>{{$asistencias." - ".$porcentaje}}</td>
+                                <td></td>
                                 <?php 
                                 $caja=\App\Caja::where('cliente_id',$r->id)->latest()->first();
                                 ?>
@@ -165,10 +164,7 @@
                 
                     
                 @endforeach
-                <tr>
-                    <td colspan='{{4+$total_asistencias}}'>Promedio de asistencias</td>
-                    <td>{{$asistencias_acumuladas/$total_registros}}</td>
-                </tr>    
+                
             </table>
         </div>
 
