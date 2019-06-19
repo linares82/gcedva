@@ -29,10 +29,13 @@ class CajaObserver
         $this->caja=$caja;
         $cajas=Caja::where('cliente_id',$this->caja->cliente_id)->where('id','<>',$this->caja->id)->get();
         //dd($this->caja);
-        if(count($cajas)==0 and ($this->caja->st_caja_id==1 or $this->caja->st_caja_id==3)){
+        if($this->caja->st_caja_id==1 or $this->caja->st_caja_id==3){
             $seguimiento=Seguimiento::where('cliente_id',$this->caja->cliente_id)->first();
             $seguimiento->st_seguimiento_id=2;
             $seguimiento->save();
+            $cliente=Cliente::find($this->caja->cliente_id);
+            $cliente->st_cliente_id=4;
+            $cliente->save();
         }
     }
 }

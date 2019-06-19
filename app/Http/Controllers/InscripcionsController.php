@@ -428,12 +428,15 @@ class InscripcionsController extends Controller {
 			->with( 'list', Hacademica::getListFromAllRelationApps() );
 	}
         
-        public function lista()
+        public function lista(Request $request)
 	{
+            $datos=$request->all();
+            $asignacion= AsignacionAcademica::find($datos['asignacion']);
+            //dd($asignacion->toArray());
             $meses=Mese::pluck('name','id');
             $materias=Materium::pluck('name','id');
             $instructores=Empleado::where('puesto_id',3)->pluck('nombre','id');
-		return view('inscripcions.reportes.lista_alumnos',compact('meses','materias','instructores'))
+		return view('inscripcions.reportes.lista_alumnos',compact('meses','materias','instructores','asignacion'))
 			->with( 'list', Inscripcion::getListFromAllRelationApps() );
 	}
         
@@ -578,11 +581,13 @@ class InscripcionsController extends Controller {
                                                                           'contador'=>$contador));
 	}
         
-        public function listaCalificaciones()
+        public function listaCalificaciones(Request $request)
 	{
+                $datos=$request->all();
+                $asignacion= AsignacionAcademica::find($datos['asignacion']);
                 $materias=Materium::pluck('name','id');
                 $instructores=Empleado::where('puesto_id',3)->pluck('nombre','id');
-		return view('inscripcions.reportes.lista_calificaciones',compact('materias','instructores'))
+		return view('inscripcions.reportes.lista_calificaciones',compact('materias','instructores','asignacion'))
 			->with( 'list', Inscripcion::getListFromAllRelationApps() );
 	}
         

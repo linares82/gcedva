@@ -48,7 +48,7 @@
                     <span class="help-block">{{ $errors->first("fecha_t") }}</span>
                     @endif
                 </div>-->
-                <div class="form-group col-md-6 @if($errors->has('plantel_f')) has-error @endif" id="div_plantel">
+<!--                <div class="form-group col-md-6 @if($errors->has('plantel_f')) has-error @endif" id="div_plantel">
                     <label for="plantel_f-field">Plantel de:</label>
                     {!! Form::select("plantel_f", $list["Plantel"], null, array("class" => "form-control select_seguridad", "id" => "plantel_f-field")) !!}
                     @if($errors->has("plantel_f"))
@@ -62,7 +62,7 @@
                     @if($errors->has("lectivo_f"))
                     <span class="help-block">{{ $errors->first("lectivo_f") }}</span>
                     @endif
-                </div>
+                </div>-->
 
                 
 
@@ -81,8 +81,13 @@
                     @endif
                 </div>-->
                 
+                {!! Form::hidden("plantel_f", $asignacion->plantel_id, array("class" => "form-control input-sm", "id" => "plantel_f-field")) !!}
+                    {!! Form::hidden("lectivo_f", $asignacion->lectivo_id, array("class" => "form-control input-sm", "id" => "lectivo_f-field")) !!}
+                    {!! Form::hidden("grupo_f", $asignacion->grupo_id, array("class" => "form-control input-sm", "id" => "grupo_f-field")) !!}
+                    {!! Form::hidden("instructor_f", $asignacion->empleado_id, array("class" => "form-control input-sm", "id" => "instructor_f-field")) !!}
+                    {!! Form::hidden("materia_f", $asignacion->materium_id, array("class" => "form-control input-sm", "id" => "materia_f-field")) !!}
                 
-                <div class="form-group col-md-6 @if($errors->has('grupo_f')) has-error @endif">
+<!--                <div class="form-group col-md-6 @if($errors->has('grupo_f')) has-error @endif">
                     <label for="grupo_f-field">Grupo de:</label>
                     {!! Form::select("grupo_f", $list["Grupo"], null, array("class" => "form-control select_seguridad", "id" => "grupo_f-field")) !!}
                     @if($errors->has("grupo_f"))
@@ -104,7 +109,7 @@
                     @if($errors->has("materia_f"))
                     <span class="help-block">{{ $errors->first("materia_f") }}</span>
                     @endif
-                </div>
+                </div>-->
 
                 
                 
@@ -140,6 +145,7 @@
 @push('scripts')
   <script type="text/javascript">
     $(document).ready(function() {
+        $('#frm').submit();
         $plantel_activo='{{DB::table("empleados")->where("user_id", Auth::user()->id)->value("plantel_id")}}';
         $('#plantel_f-field').val($plantel_activo).change();
     /*

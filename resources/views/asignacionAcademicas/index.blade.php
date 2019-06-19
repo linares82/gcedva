@@ -188,11 +188,13 @@
                                     @endpermission
                                     @permission('asistenciasRs.index')
                                     <a class="btn btn-xs btn-success" href="{{ route('asistenciaRs.buscar', $asignacionAcademica->id) }}"><i class="glyphicon glyphicon-edit"></i>Asistencias</a>
-                                    <a class="btn btn-xs btn-success" href="{{ route('inscripcions.listaMes', array('asignacion'=>$asignacionAcademica->id)) }}"><i class="glyphicon glyphicon-edit"></i>Lista A.</a>
+                                    <a class="btn btn-xs btn-success" href="{{ route('inscripcions.listaMes', array('asignacion'=>$asignacionAcademica->id)) }}" target='_blank'><i class="glyphicon glyphicon-edit"></i>Lista A.</a>
+                                    <a class="btn btn-xs btn-success" href="{{ route('inscripcions.lista', array('asignacion'=>$asignacionAcademica->id)) }}" target='_blank'><i class="glyphicon glyphicon-edit"></i>Lista Grupo</a>
                                     
                                     @endpermission
                                     @permission('hacademicas.calificacionGrupo')
                                     <a class="btn btn-xs btn-info" href="{{ route('hacademicas.calificacionGrupo', ['asignacion'=>$asignacionAcademica->id]) }}"><i class="glyphicon glyphicon-edit"></i>Calificaciones</a>
+                                    <a class="btn btn-xs btn-success" href="{{ route('inscripcions.listaCalificaciones', array('asignacion'=>$asignacionAcademica->id)) }}" target='_blank'><i class="glyphicon glyphicon-edit"></i>Lista Calificaciones</a>
                                     @endpermission
                                     
                                 </td>

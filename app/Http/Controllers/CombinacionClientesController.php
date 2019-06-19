@@ -4,6 +4,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\CombinacionCliente;
+use App\Adeudo;
 use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updateCombinacionCliente;
@@ -123,9 +124,12 @@ class CombinacionClientesController extends Controller {
                 $adeudos=Adeudo::where('cliente_id',$combinacionCliente->cliente_id)->get();
 		$c=$combinacionCliente->cliente_id;
                 $combinacionCliente->delete();
-                foreach($adeudos as $adeudos){
+                if(count($adeudos)>0){
+                    foreach($adeudos as $adeudo){
                     $adeudo->delete();
+                    }
                 }
+                
 
 		return redirect()->route('clientes.edit', $c)->with('message', 'Registro Borrado.');
 	}

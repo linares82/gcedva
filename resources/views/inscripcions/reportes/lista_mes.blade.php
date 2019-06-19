@@ -141,12 +141,7 @@
     $(document).ready(function() {
         $plantel_activo='{{DB::table("empleados")->where("user_id", Auth::user()->id)->value("plantel_id")}}';
         $('#plantel_f-field').val($plantel_activo).change();
-        $('#plantel_f-field').val($asignacion->plantel_id).change();
-        $('#lectivo_f-field').val($asignacion->lectivo_id).change();
-        $('#grupo_f-field').val($asignacion->grupo_id).change();
-        $('#plantel_f-field').val($asignacion->plantel_id).change();
-        $('#instructor_f-field').val($asignacion->empleado_id).change();
-        $('#materia_f-field').val($asignacion->materium_id).change();
+        
     /*
       $('#lectivo_f-field').change(function(){
          lectivo=$('#lectivo_f-field option:selected').val();

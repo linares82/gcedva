@@ -134,7 +134,7 @@
                                             
                                             $marcador=1;
                                             ?>
-                                            <td class="centrar_texto"> {{$st_asistencia->name}} </td>                                            
+                                            <td class="centrar_texto">  </td>                                            
                                             @endif
                                             
                                         @endforeach    
