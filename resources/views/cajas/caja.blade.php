@@ -288,6 +288,7 @@
                             <th>Fecha</th>
                             <th>Forma Pago</th>
                             <th>Ref.</th>
+                            <th>C. Efectivo</th>
                             <th></th>
                         </tr>
                         {{ csrf_field() }}
@@ -297,6 +298,10 @@
                         @foreach($caja->pagos as $pago)
                         <tr>
                             <td> {{$pago->consecutivo}} </td><td>{{ $pago->monto }}</td><td>{{ $pago->fecha }}</td><td>{{ $pago->formaPago->name }}</td><td>{{ $pago->referencia }}</td>
+                            <td>@if($pago->cuenta_efectivo_id<>0)
+                                {{ App\CuentasEfectivo::find($pago->cuenta_efectivo_id)->value('name')}}
+                                @endif
+                            </td>
                             <td>
                                 {!! Form::model($pago, array('route' => array('pagos.destroy', $pago->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('Â¿Borrar? Â¿Esta seguro?')) { return true } else {return false };")) !!}
                                     <button type="submit" class="btn btn-xs btn-danger" data-toggle="tooltip" title="Eliminar"><i class="glyphicon glyphicon-trash"></i> </button>
@@ -548,6 +553,13 @@ Agregar nuevo registro
                         <span class="help-block">{{ $errors->first("forma_pago_id") }}</span>
                        @endif
                     </div>
+                    <div class="form-group col-md-6 @if($errors->has('cuenta_efectivo_id')) has-error @endif">
+                       <label for="cuenta_efectivo_id-field">Cuenta Efectivo</label>
+                       {!! Form::select("cuenta_efectivo_id", App\CuentasEfectivo::pluck('name','id'), null, array("class" => "form-control", "id" => "cuenta_efectivo_id-field")) !!}
+                       @if($errors->has("cuenta_efectivo_id"))
+                        <span class="help-block">{{ $errors->first("cuenta_efectivo_id") }}</span>
+                       @endif
+                    </div>
                     <div class="form-group col-md-6 @if($errors->has('referencia')) has-error @endif">
                        <label for="referencia-field">Referencia</label>
                        {!! Form::text("referencia", null, array("class" => "form-control", "id" => "referencia-field")) !!}
@@ -728,7 +740,8 @@ Agregar nuevo registro
                 'monto': $('#monto-field').val(),
                 'fecha': $('#fecha_ln-field').val(),
                 'forma_pago_id': $('#forma_pago_id-field option:selected').val(),
-                'referencia':$('#referencia-field').val()
+                'referencia':$('#referencia-field').val(),
+                'cuenta_efectivo_id': $('#cuenta_efectivo_id-field').val(),
             },
             beforeSend : function(){$("#loading3").show(); },
             complete : function(){$("#loading3").hide(); },

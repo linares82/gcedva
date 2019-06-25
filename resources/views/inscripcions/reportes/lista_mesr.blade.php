@@ -72,6 +72,7 @@
                 $grupo0="";
                 $asistencias_acumuladas=0;
                 $total_registros=0;
+                 
                 ?>
                 @foreach($registros as $r)
                 
@@ -105,8 +106,10 @@
                         <td>Total</td>
                         </tr>
                         <?php 
+                        
                         $grupo0=$r->grupo; 
                         $asistencias=0;
+                        
                         ?>
                         
                 @endif
@@ -146,9 +149,11 @@
                                     @endif
                                 @endforeach
                                 <?php 
-                                $porcentaje = round((($asistencias*100)/$total_asistencias),2);
-                                $asistencias_acumuladas=$asistencias+$asistencias_acumuladas;
-                                $total_registros++;
+                                //$porcentaje = round((($asistencias*100)/$total_asistencias),2);
+                                //$asistencias_acumuladas=$asistencias+$asistencias_acumuladas;
+                                //$total_registros++;
+                                 
+                                 
                                 ?>
                                 <td></td>
                                 <?php 

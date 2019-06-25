@@ -72,6 +72,7 @@
 
                 <div class="form-group col-md-6 @if($errors->has('mes')) has-error @endif">
                     <label for="mes-field">Mes:</label>
+                    {!! Form::hidden("asignacion", $asignacion->id, array("class" => "form-control input-sm", "id" => "asignacion-field")) !!}
                     {!! Form::select("mes", $meses, null, array("class" => "form-control select_seguridad", "id" => "mes")) !!}
                     {!! Form::hidden("plantel_f", $asignacion->plantel_id, array("class" => "form-control input-sm", "id" => "plantel_f-field")) !!}
                     {!! Form::hidden("lectivo_f", $asignacion->lectivo_id, array("class" => "form-control input-sm", "id" => "lectivo_f-field")) !!}
@@ -140,7 +141,7 @@
   <script type="text/javascript">
     $(document).ready(function() {
         $plantel_activo='{{DB::table("empleados")->where("user_id", Auth::user()->id)->value("plantel_id")}}';
-        $('#plantel_f-field').val($plantel_activo).change();
+        //$('#plantel_f-field').val($plantel_activo).change();
         
     /*
       $('#lectivo_f-field').change(function(){

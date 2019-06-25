@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 
 use App\Caja;
 use App\CajaLn;
+use App\CuentasEfectivo;
 use App\Adeudo;
 use App\Cliente;
 use App\Pago;
@@ -273,6 +274,7 @@ class CajasController extends Controller {
                     ->whereNull('cajas.deleted_at')
                     ->whereNull('ln.deleted_at')
                     ->get();
+            $cuentasEfectivo=CuentasEfectivo::pluck('name','id');
             //dd($cajas->toArray());
             $permiso_caja_buscarVenta=Auth::user()->can('permiso_caja_buscarVenta');
             //dd($permiso_caja_buscarVenta);
@@ -323,7 +325,8 @@ class CajasController extends Controller {
                 }
                 
                 $cliente=Cliente::find($caja->cliente_id);
-                return view('cajas.caja', compact('cliente', 'caja', 'combinaciones','cajas'))
+                
+                return view('cajas.caja', compact('cliente', 'caja', 'combinaciones','cajas','cuentasEfectivo'))
                         ->with( 'list', Caja::getListFromAllRelationApps() )
                         ->with( 'list1', CajaLn::getListFromAllRelationApps() );           
             }elseif(is_object($caja) and $caja->plantel_id<>$empleado->plantel_id and $permiso_caja_buscarVenta){
@@ -373,14 +376,15 @@ class CajasController extends Controller {
                      */
                 }
                 
+                //dd($cuentasEfectivo);
                 $cliente=Cliente::find($caja->cliente_id);
-                return view('cajas.caja', compact('cliente', 'caja', 'combinaciones','cajas'))
+                return view('cajas.caja', compact('cliente', 'caja', 'combinaciones','cajas','cuentasEfectivo'))
                         ->with( 'list', Caja::getListFromAllRelationApps() )
                         ->with( 'list1', CajaLn::getListFromAllRelationApps() );           
             }
             Session::flash('msj', 'Informacion buscada pertenece a otro plantel');
             
-            return view('cajas.caja')->with( 'list', Caja::getListFromAllRelationApps() )->with( 'list1', CajaLn::getListFromAllRelationApps() );           
+            return view('cajas.caja', compact('cuentasEfectivo'))->with( 'list', Caja::getListFromAllRelationApps() )->with( 'list1', CajaLn::getListFromAllRelationApps() );           
         }
         
         

@@ -61,6 +61,7 @@ class PagosController extends Controller {
                 $plantel->save();
                 $input['consecutivo']=$plantel->consecutivo_pago;
 		//create data
+                //dd($input);
 		$pago=Pago::create( $input );
                 
                 
@@ -73,9 +74,9 @@ class PagosController extends Controller {
                 }
                 
                 $suma_pagos=Pago::select('monto')->where('caja_id','=',$pago->caja_id)->sum('monto');
-                if($suma_pagos==$caja->total){
+                if($suma_pagos>=$caja->total){
                     $caja->st_caja_id=1;
-                    $caja->fecha=date_create(date_format(date_create(date('Y/m/d')),'Y/m/d'));
+                    //$caja->fecha=date_create(date_format(date_create(date('Y/m/d')),'Y/m/d'));
                     $caja->save();
                     
                     foreach($caja->cajaLns as $ln){

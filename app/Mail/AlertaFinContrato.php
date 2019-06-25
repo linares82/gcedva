@@ -33,8 +33,15 @@ class AlertaFinContrato extends Mailable
     public function build()
     {
         //dd($this->p);
-        return $this->view('emails.alertaFinContrato', array('ps'=>$this->p))
+        $i=0;
+        foreach($this->p as $p){
+            $i++;
+        }
+        if($i>0){
+            return $this->view('emails.alertaFinContrato', array('ps'=>$this->p))
                     ->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'))
                     ->subject('Contratos con vencimiento próximo');
+        }
+        
     }
 }

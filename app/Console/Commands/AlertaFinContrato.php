@@ -99,7 +99,9 @@ class AlertaFinContrato extends Command
                     $message->subject('Alerta Contratos Por Vencer');
                 });
                 */
+            //Log::info('fil'.count($alertas));
             if(count($alertas)>0){
+                //dd($alertas);
                 $respuesta=Mailgun::send('emails.alertaFinContrato', 
                     array('ps'=>$alertas),  
                     function ($message) use($mail, $jefe_mail, $responsable_mail) {
@@ -113,7 +115,7 @@ class AlertaFinContrato extends Command
                         $message->subject('Alerta Contratos Por Vencer');
                 });
 //                dd('mensaje enviado');
-                Log::info($jefe_mail);
+                //Log::info($jefe_mail);
             }
             	
             //dd($respuesta);

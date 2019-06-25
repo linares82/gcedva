@@ -459,6 +459,7 @@ class InscripcionsController extends Controller {
                                        ->where('inscripcions.plantel_id', $data['plantel_f'])
                                        ->where('inscripcions.lectivo_id',$data['lectivo_f'])
                                        //->where('inscripcions.grado_id',$data['grado_f'])
+                                       ->where('aa.id',$data['asignacion'])
                                        ->where('aa.plantel_id', $data['plantel_f'])
                                        ->where('aa.lectivo_id',$data['lectivo_f'])
                                        ->where('aa.grupo_id',$data['grupo_f'])
@@ -610,6 +611,7 @@ class InscripcionsController extends Controller {
                                        ->join('empleados as e','e.id','=','aa.empleado_id')
                                        ->join('grados as gra','gra.id','=','inscripcions.grado_id')
                                        ->join('plantels as p','p.id','=','c.plantel_id')
+                                       ->where('aa.id',$data['asignacion'])
                                        ->where('inscripcions.plantel_id', $data['plantel_f'])
                                        ->where('inscripcions.lectivo_id',$data['lectivo_f'])
                                        ->where('aa.plantel_id', $data['plantel_f'])
@@ -790,7 +792,7 @@ class InscripcionsController extends Controller {
                 //dd($data);
                 $lectivo=Lectivo::find($data['lectivo_f']);
                 $registros= Inscripcion::select('c.id',DB::raw('concat(e.nombre, " ",e.ape_paterno, " ",e.ape_materno) as instructor, '
-                        . 'concat(c.nombre," ",c.nombre2," ",c.ape_paterno," ",c.ape_materno) as cliente, m.name as medio, '
+                        . 'concat(c.nombre," ",c.nombre2," ",c.ape_paterno," ",c.ape_materno) as cliente,'
                         . 'c.beca_bnd, esp.name as especialidad, inscripcions.fec_inscripcion, aa.id as asignacion,'
                         . 'gru.name as grupo, gru.id as gru, mat.name as materi'))
                             ->join('clientes as c', 'c.id', '=', 'inscripcions.cliente_id')
@@ -866,6 +868,7 @@ class InscripcionsController extends Controller {
                                        ->join('empleados as e','e.id','=','aa.empleado_id')
                                        ->join('grados as gra','gra.id','=','inscripcions.grado_id')
                                        ->join('plantels as p','p.id','=','c.plantel_id')
+                                       ->where('aa.id',$data['asignacion'])
                                        ->where('inscripcions.plantel_id', $data['plantel_f'])
                                        ->where('inscripcions.lectivo_id',$data['lectivo_f'])
                                        //->where('inscripcions.grado_id',$data['grado_f'])

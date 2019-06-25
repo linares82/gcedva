@@ -48,7 +48,7 @@ class PlantelsController extends Controller {
 		$input = $request->all();
 		$input['usu_alta_id']=Auth::user()->id;
 		$input['usu_mod_id']=Auth::user()->id;
-		$input['logo']="";
+		//$input['logo']="";
 		$r=$request->hasFile('logo_file');
 		if($r){
 			$logo_file = $request->file('logo_file');
@@ -141,7 +141,7 @@ class PlantelsController extends Controller {
 		$input = $request->all();
 		$input['usu_mod_id']=Auth::user()->id;
 
-		$input['logo']="";
+		//$input['logo']="";
 		$r=$request->hasFile('logo_file');
 		if($r){
 			$logo_file = $request->file('logo_file');

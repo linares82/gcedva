@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Caja;
+use App\Cliente;
 use App\Seguimiento;
 use App\Plantel;
 

@@ -147,7 +147,11 @@
                                     @endif
                                 @endforeach
                                 <?php 
-                                $porcentaje = round((($asistencias*100)/$total_asistencias),2);
+                                if($total_asistencias==0){
+                                    $porcentaje=0;
+                                }else{
+                                    $porcentaje = round((($asistencias*100)/$total_asistencias),2);
+                                }
                                 $asistencias_acumuladas=$asistencias+$asistencias_acumuladas;
                                 $total_registros++;
                                 ?>

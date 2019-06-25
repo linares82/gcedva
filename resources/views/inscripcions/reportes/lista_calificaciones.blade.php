@@ -80,7 +80,7 @@
                     <span class="help-block">{{ $errors->first("fecha_t") }}</span>
                     @endif
                 </div>-->
-                
+                {!! Form::hidden("asignacion", $asignacion->id, array("class" => "form-control input-sm", "id" => "asignacion-field")) !!}
                 {!! Form::hidden("plantel_f", $asignacion->plantel_id, array("class" => "form-control input-sm", "id" => "plantel_f-field")) !!}
                     {!! Form::hidden("lectivo_f", $asignacion->lectivo_id, array("class" => "form-control input-sm", "id" => "lectivo_f-field")) !!}
                     {!! Form::hidden("grupo_f", $asignacion->grupo_id, array("class" => "form-control input-sm", "id" => "grupo_f-field")) !!}
@@ -147,7 +147,7 @@
     $(document).ready(function() {
         $('#frm').submit();
         $plantel_activo='{{DB::table("empleados")->where("user_id", Auth::user()->id)->value("plantel_id")}}';
-        $('#plantel_f-field').val($plantel_activo).change();
+        //$('#plantel_f-field').val($plantel_activo).change();
     /*
       $('#lectivo_f-field').change(function(){
          lectivo=$('#lectivo_f-field option:selected').val();
