@@ -234,7 +234,9 @@ class PlanPagosController extends Controller {
                         $mensualidad->reglaRecargos()->attach(1);
                         $mensualidad->reglaRecargos()->attach(2);
                         
-                        if($i==12 or $i==24){
+                        //identifica la cantidad de meses y recrea conceptos de inscricion
+                        //y seguro
+                        if($i==12 or $i==24 or $i==36){
                             $inscripcion=new PlanPagoLn;
                             $inscripcion->plan_pago_id=$planPago->id;
                             $inscripcion->caja_concepto_id=4;
@@ -247,6 +249,9 @@ class PlanPagosController extends Controller {
                             $inscripcion->usu_mod_id=Auth::user()->id;
                             $inscripcion->save();
                             
+                        }
+                        
+                        if($i==6 or $i==12 or $i==18 or $i==24 or $i==30 or $i==36){
                             $seguro=new PlanPagoLn;
                             $seguro->plan_pago_id=$planPago->id;
                             $seguro->caja_concepto_id=2;

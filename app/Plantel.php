@@ -103,5 +103,9 @@ class Plantel extends Model
 	public function egresos() {
 		return $this->hasMany('App\Egreso');
 	}// end
+        
+        public function cuentasEfectivo() {
+		return $this->belongsToMany('App\CuentasEfectivo','cuentas_efectivo_plantels','plantel_id','cuentas_efectivo_id');
+	}// end
 
 }

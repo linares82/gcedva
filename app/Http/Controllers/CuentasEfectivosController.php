@@ -4,10 +4,12 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\CuentasEfectivo;
+use App\Plantel;
 use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updateCuentasEfectivo;
 use App\Http\Requests\createCuentasEfectivo;
+use DB;
 
 class CuentasEfectivosController extends Controller {
 
@@ -19,7 +21,7 @@ class CuentasEfectivosController extends Controller {
 	public function index(Request $request)
 	{
 		$cuentasEfectivos = CuentasEfectivo::getAllData($request);
-
+                
 		return view('cuentasEfectivos.index', compact('cuentasEfectivos'));
 	}
 
@@ -30,7 +32,10 @@ class CuentasEfectivosController extends Controller {
 	 */
 	public function create()
 	{
-		return view('cuentasEfectivos.create')
+            $plantels=Plantel::pluck('razon','id');
+            $plantels=Plantel::pluck('razon','id');
+                $plantels_selected=$cuentasEfectivo->plantels;
+		return view('cuentasEfectivos.create', campact('plantels','plantels','plantels_selected'))
 			->with( 'list', CuentasEfectivo::getListFromAllRelationApps() );
 	}
 
@@ -43,12 +48,16 @@ class CuentasEfectivosController extends Controller {
 	public function store(createCuentasEfectivo $request)
 	{
 
-		$input = $request->all();
+		$input = $request->except('plantel_id');
+                $plantels=$request->only('plantel_id');
+               
 		$input['usu_alta_id']=Auth::user()->id;
 		$input['usu_mod_id']=Auth::user()->id;
 
 		//create data
-		CuentasEfectivo::create( $input );
+		$cuentasEfectivo=CuentasEfectivo::create( $input );
+                
+                $cuentasEfectivo->plantels()->sync($plantels[0]);
 
 		return redirect()->route('cuentasEfectivos.index')->with('message', 'Registro Creado.');
 	}
@@ -62,6 +71,7 @@ class CuentasEfectivosController extends Controller {
 	public function show($id, CuentasEfectivo $cuentasEfectivo)
 	{
 		$cuentasEfectivo=$cuentasEfectivo->find($id);
+                
 		return view('cuentasEfectivos.show', compact('cuentasEfectivo'));
 	}
 
@@ -74,7 +84,16 @@ class CuentasEfectivosController extends Controller {
 	public function edit($id, CuentasEfectivo $cuentasEfectivo)
 	{
 		$cuentasEfectivo=$cuentasEfectivo->find($id);
-		return view('cuentasEfectivos.edit', compact('cuentasEfectivo'))
+                //dd($cuentasEfectivo->plantels->toArray());
+                $plantels=Plantel::pluck('razon','id');
+                //dd($plantels);
+                $selected=$cuentasEfectivo->plantels;
+                $plantels_selected=collect();
+                foreach($selected as $ps){
+                    $plantels_selected->prepend($ps->id);
+                }
+                //  dd(optional($plantels_selected)->search(4));
+		return view('cuentasEfectivos.edit', compact('cuentasEfectivo','plantels','plantels_selected'))
 			->with( 'list', CuentasEfectivo::getListFromAllRelationApps() );
 	}
 
@@ -100,11 +119,16 @@ class CuentasEfectivosController extends Controller {
 	 */
 	public function update($id, CuentasEfectivo $cuentasEfectivo, updateCuentasEfectivo $request)
 	{
-		$input = $request->all();
+		$input = $request->except('plantel_id');
 		$input['usu_mod_id']=Auth::user()->id;
+                $plantels=$request->only('plantel_id');
+                
+                
 		//update data
 		$cuentasEfectivo=$cuentasEfectivo->find($id);
 		$cuentasEfectivo->update( $input );
+                //dd($plantels['plantel_id']);
+                $cuentasEfectivo->plantels()->sync($plantels['plantel_id']);
 
 		return redirect()->route('cuentasEfectivos.index')->with('message', 'Registro Actualizado.');
 	}
@@ -123,4 +147,22 @@ class CuentasEfectivosController extends Controller {
 		return redirect()->route('cuentasEfectivos.index')->with('message', 'Registro Borrado.');
 	}
 
+        public function getCuentasPlantel(Request $request)
+        {
+            if($request->ajax()){
+                $data=$request->all();
+                $plantel=$data['plantel'];
+                
+                $final = array();
+                $r = DB::table('cuentas_efectivos as ce')
+                                ->select('ce.id', 'ce.name')
+                                ->join('cuentas_efectivo_plantels as cep','cep.cuentas_efectivo_id','=','ce.id')
+                                ->where('cep.plantel_id', '=', $plantel)
+                                ->where('ce.id', '>', '0')
+                                ->get();
+                
+                return $r;
+                
+            }
+        }
 }

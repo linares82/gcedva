@@ -258,8 +258,14 @@
                     <td>{{$egreso->monto}}</td>
                     <td>{{$egreso->empleado->nombre}} {{$egreso->empleado->ape_paterno}} {{$egreso->empleado->ape_materno}}</td>
                     <td>
-                        @if ($egreso->archivo<>"")
+                        @if (!is_null($egreso->archivo))
                        <a href="{!! asset('imagenes/egresos/'.$egreso->id.'/'.$egreso->archivo) !!}"  target="_blank"> VER </a>
+                       @else
+                       <form action="{{ route('egresos.update',$egreso->id) }}" method="post" style="display: none" id="avatarForm">
+                            <input type="hidden" name="_token" id="_token"  value="<?= csrf_token(); ?>"> 
+                            <input type="file" id="comprobante_file" name="comprobante_file">
+                        </form>
+                        <a href='#' id="avatarImage">Cargar</a>
                        @endif
                         
                     </td>
@@ -268,7 +274,7 @@
                                     <a class="btn btn-xs btn-primary" href="{{ route('egresos.duplicate', $egreso->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
                                     @endpermission
                                     @permission('egresos.edit')
-                                    <a class="btn btn-xs btn-warning" href="{{ route('egresos.edit', $egreso->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
+<!--                                    <a class="btn btn-xs btn-warning" href="{{ route('egresos.edit', $egreso->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>-->
                                     @endpermission
                                     @permission('egresos.destroy')
                                     {!! Form::model($egreso, array('route' => array('egresos.destroy', $egreso->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}
@@ -289,3 +295,48 @@
     </div>
 
 @endsection
+
+@push('scripts')
+<script type="text/javascript">
+    $(function () {
+    var $avatarImage, $avatarInput, $avatarForm;
+
+    $avatarImage = $('#avatarImage');
+    $avatarInput = $('#comprobante_file');
+    $avatarForm = $('#avatarForm');
+
+    $avatarImage.on('click', function () {
+        $avatarInput.click();
+    });
+
+    $avatarInput.on('change', function () {
+        var formData = new FormData();
+            formData.append('comprobante_file', $avatarInput[0].files[0]);
+            
+            
+            $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('#_token').val()
+                }
+            });
+            $.ajax({
+                url: $avatarForm.attr('action'),
+                method: $avatarForm.attr('method'),
+                cache: false,
+                data: formData,
+                processData: false,
+                contentType: false
+            }).done(function (data) {
+                //if (data.success)
+                    //$avatarImage.attr('src', data.path);
+                    location.reload();
+            }).fail(function () {
+                alert('La imagen subida no tiene un formato correcto');
+            });
+    });
+});
+      
+      
+</script>
+@endpush
+                    

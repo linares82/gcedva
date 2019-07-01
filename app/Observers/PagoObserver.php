@@ -1,0 +1,60 @@
+<?php
+
+namespace App\Observers;
+
+use App\Pago;
+use App\CuentasEfectivo;
+use App\IngresoEgreso;
+
+class PagoObserver
+{
+    /**
+     * Listen to the User created event.
+     *
+     * @param  User  $user
+     * @return void
+     */
+     public $pago;
+    public function created(Pago $pago)
+    {
+        $this->pago=$pago;
+        if($this->pago->cuenta_efectivo_id>0){
+            $cuentas_efectivo=CuentasEfectivo::where('id',$this->pago->cuenta_efectivo_id)->first();
+            if($cuentas_efectivo->saldo_inicial>0 and $this->pago->fecha>=$cuentas_efectivo->fecha_saldo_inicial){
+                $cuentas_efectivo->saldo_actualizado=$cuentas_efectivo->saldo_actualizado+$this->pago->monto;
+                $cuentas_efectivo->save();
+                
+                $ingreso=array();
+                $ingreso['plantel_id']=$this->pago->caja->plantel_id;
+                $ingreso['cuenta_efectivo_id']=$this->pago->cuenta_efectivo_id;
+                $ingreso['pago_id']=$this->pago->id;
+                $ingreso['consecutivo_caja']=$this->pago->caja->consecutivo;
+                $ingreso['egreso_id']=0;
+                $egreso['concepto']="";
+                $ingreso['fecha']=$this->pago->fecha;
+                $ingreso['monto']=$this->pago->monto;
+                $ingreso['usu_alta_id']=$this->pago->usu_alta_id;
+                $ingreso['usu_mod_id']=$this->pago->usu_mod_id;
+                IngresoEgreso::create($ingreso);
+                
+            }
+        }
+        
+    }
+    
+    public function deleting(Pago $pago){
+        $this->pago=$pago;
+        if($this->pago->cuenta_efectivo_id>0){
+            $cuentas_efectivo=CuentasEfectivo::where('id',$this->pago->cuenta_efectivo_id)->first();
+            if($cuentas_efectivo->saldo_inicial>0 and $this->pago->fecha>=$cuentas_efectivo->fecha_saldo_inicial){
+                $cuentas_efectivo->saldo_actualizado=$cuentas_efectivo->saldo_actualizado-$this->pago->monto;
+                $cuentas_efectivo->save();
+                
+                $pago= IngresoEgreso::where('pago_id',$this->pago->id)->where('egreso_id',0)->first();
+                $pago->delete();
+            }
+        }
+    }
+
+    
+}

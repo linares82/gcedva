@@ -121,7 +121,7 @@ class CombinacionClientesController extends Controller {
 	public function destroy($id,CombinacionCliente $combinacionCliente)
 	{
 		$combinacionCliente=$combinacionCliente->find($id);
-                $adeudos=Adeudo::where('cliente_id',$combinacionCliente->cliente_id)->get();
+                $adeudos=Adeudo::where('combinacion_cliente_id',$combinacionCliente->id)->get();
 		$c=$combinacionCliente->cliente_id;
                 $combinacionCliente->delete();
                 if(count($adeudos)>0){

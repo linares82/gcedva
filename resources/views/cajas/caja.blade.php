@@ -299,7 +299,7 @@
                         <tr>
                             <td> {{$pago->consecutivo}} </td><td>{{ $pago->monto }}</td><td>{{ $pago->fecha }}</td><td>{{ $pago->formaPago->name }}</td><td>{{ $pago->referencia }}</td>
                             <td>@if($pago->cuenta_efectivo_id<>0)
-                                {{ App\CuentasEfectivo::find($pago->cuenta_efectivo_id)->value('name')}}
+                                {{ App\CuentasEfectivo::where('id', $pago->cuenta_efectivo_id)->value('name')}}
                                 @endif
                             </td>
                             <td>
@@ -555,7 +555,7 @@ Agregar nuevo registro
                     </div>
                     <div class="form-group col-md-6 @if($errors->has('cuenta_efectivo_id')) has-error @endif">
                        <label for="cuenta_efectivo_id-field">Cuenta Efectivo</label>
-                       {!! Form::select("cuenta_efectivo_id", App\CuentasEfectivo::pluck('name','id'), null, array("class" => "form-control", "id" => "cuenta_efectivo_id-field")) !!}
+                       {!! Form::select("cuenta_efectivo_id-field", App\CuentasEfectivo::pluck('name','id'), null, array("class" => "form-control", "id" => "cuenta_efectivo_id-field")) !!}
                        @if($errors->has("cuenta_efectivo_id"))
                         <span class="help-block">{{ $errors->first("cuenta_efectivo_id") }}</span>
                        @endif
@@ -568,6 +568,7 @@ Agregar nuevo registro
                        @endif
                     </div>
 
+                
                 {!! Form::close() !!}
                 <div class="row"></div>
                 <div class="modal-footer">
@@ -697,6 +698,8 @@ Agregar nuevo registro
     });
 //crear registro
     $(document).on('click', '.add-modal', function() {
+    
+        
     $('.modal-title').text('Agregar Linea');
     //Limpiar valores
     $('#addModal').modal('show');
@@ -725,7 +728,39 @@ Agregar nuevo registro
     $('.modal-title').text('Agregar Pago');
     //Limpiar valores
     $('#addPago').modal('show');
+    //Cargar cuentas de efectivo
+    @if(isset($caja))
+    $.ajax({
+    type: 'GET',
+            url: '{{route("cuentasEfectivos.getCuentasPlantel")}}',
+            data: {
+            //'_token': $('input[name=_token]').val(),
+                    'plantel': {{$caja->plantel_id}},
+                  
+            },
+            beforeSend : function(){$("#loading3").show(); },
+            complete : function(){$("#loading3").hide(); },
+            success: function(data) {
+            //window.location.href = "{{route('cajas.edit', $caja->id)}}";
+            //$example.select2("destroy");
+                $('#cuenta_efectivo_id-field').empty();
+
+                //$('#especialidad_id-field').empty();
+                //$('#cuentas_efectivo_id-field').append($('<option></option>').text('Seleccionar').val('0'));
+                //alert(data);
+                
+                $.each(data, function(i) {  
+                    //alert(data[i].name);
+                    $('#cuenta_efectivo_id-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                });
+                //$('#cuenta_efectivo_id-field').change();
+            }
     });
+    @endif
+    //Fin cargar cuentas de efectivo
+    });
+    
+    
     
     @if (isset($caja) and isset($cliente))
         //$('.modal-footer1').on('click', 'addPagoB','#AgregarPago', function() {
@@ -746,7 +781,8 @@ Agregar nuevo registro
             beforeSend : function(){$("#loading3").show(); },
             complete : function(){$("#loading3").hide(); },
             success: function(data) {
-                location.reload(); 
+                //location.reload(); 
+                $('#form-buscarVenta').submit();
             }
         });
         });

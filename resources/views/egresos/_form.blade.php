@@ -61,8 +61,7 @@
                        {!! Form::file('comprobante_file') !!}
                        @if (isset($egreso))
                        <img src="{!! asset('imagenes/egresos/'.$egreso->id.'/'.$egreso->archivo) !!}" alt="Logo" height="100"> </img>
-                       @endif
-                       
+                       @endif                       
                     </div>
 @push('scripts')
 <script type="text/javascript">
@@ -73,6 +72,29 @@
         readonly_element: false,
         lang_clear_date: 'Limpiar',
         show_select_today: 'Hoy',
+      });
+      
+      $('#plantel_id-field').change(function(){
+         $.ajax({
+            type: 'GET',
+                    url: '{{route("cuentasEfectivos.getCuentasPlantel")}}',
+                    data: {
+                    //'_token': $('input[name=_token]').val(),
+                            'plantel': $('#plantel_id-field option:selected').val(),
+
+                    },
+                    beforeSend : function(){$("#loading3").show(); },
+                    complete : function(){$("#loading3").hide(); },
+                    success: function(data) {
+                    
+                        $('#cuentas_efectivo_id-field').empty();
+
+                        $.each(data, function(i) {  
+                            $('#cuentas_efectivo_id-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                        });
+                        //$('#cuenta_efectivo_id-field').change();
+                    }
+            }); 
       });
       
 </script>

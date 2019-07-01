@@ -3,7 +3,11 @@
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
+use App\CuentasEfectivo;
 use App\Egreso;
+use App\IngresoEgreso;
+use App\Plantel;
+use App\Pago;
 use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updateEgreso;
@@ -118,6 +122,7 @@ class EgresosController extends Controller {
 	public function update($id, Egreso $egreso, updateEgreso $request)
 	{
 		$input = $request->all();
+                //dd($request->all());
 		$input['usu_mod_id']=Auth::user()->id;
                 
                 $r=$request->hasFile('comprobante_file');
@@ -158,4 +163,34 @@ class EgresosController extends Controller {
 		return redirect()->route('egresos.index')->with('message', 'Registro Borrado.');
 	}
 
+        public function egresosIngresos(){
+            $plantels=Plantel::pluck('razon','id');
+            return view('egresos.reportes.ingresosEgresos', array('plantels'=>$plantels));
+        }
+        
+        public function egresosIngresosR(Request $request){
+            $datos=$request->all();
+            
+            $registros= IngresoEgreso::select('ce.id','ce.name as cuenta','ce.saldo_inicial','ce.fecha_saldo_inicial','ce.saldo_actualizado',
+                                              'ingreso_egresos.consecutivo_caja','ingreso_egresos.egreso_id','ingreso_egresos.fecha',
+                                              'p.razon','ingreso_egresos.monto','ingreso_egresos.concepto')
+                                       ->join('cuentas_efectivos as ce','ce.id','=','ingreso_egresos.cuenta_efectivo_id')
+                                       ->join('plantels as p','p.id','=','ingreso_egresos.plantel_id')
+                                       ->where('p.id','>=',$datos['plantel_f'])
+                                       ->where('p.id','<=',$datos['plantel_t'])
+                                       ->where('ingreso_egresos.cuenta_efectivo_id','>',0)
+                                       ->whereNull('ingreso_egresos.deleted_at')
+                                       ->whereDate('ingreso_egresos.fecha','>=',$datos['fecha_f'])
+                                       ->whereDate('ingreso_egresos.fecha','<=',$datos['fecha_t'])
+                                       ->orderBy('ce.id')
+                                       ->orderBy('p.id')
+                                       ->orderBy('ingreso_egresos.fecha')
+                                       ->get();
+            
+            //dd($registros->ToArray());
+            
+            return view('egresos.reportes.ingresosEgresosR', array('registros'=>$registros));
+        }
+        
+        
 }

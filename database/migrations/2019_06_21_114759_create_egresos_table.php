@@ -19,6 +19,7 @@ class CreateEgresosTable extends Migration {
             $table->integer('egresos_concepto_id')->unsigned();
             $table->string('detalle')->nullable();
             $table->string('archivo')->nullable();
+            $table->string('saldo_inicial', 8, 2);
             $table->integer('forma_pago_id')->unsigned();
             $table->integer('cuentas_efectivo_id')->unsigned();
             $table->double('monto', 8, 2);

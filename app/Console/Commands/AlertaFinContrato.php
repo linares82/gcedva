@@ -75,7 +75,7 @@ class AlertaFinContrato extends Command
                     ->join('empleados as r', 'r.id', '=', 'empleados.resp_alerta_id')
                     ->leftJoin('empleados as j', 'j.id', '=', 'empleados.jefe_id')
                     ->where('empleados.alerta_bnd', '=', 1)
-                    ->where('empleados.dias_alerta','>=',$dias_restantes)
+                    ->where('empleados.dias_alerta','<=',$dias_restantes)
                     //->whereBetween('empleados.dias_alerta', ['0',$dias_restantes])
                     //->whereDate('empleados.fin_contrato','>',$hoy)
                     ->where('empleados.resp_alerta_id', '=', $e->resp_alerta_id)

@@ -38,25 +38,25 @@
                     <label for="nome">ID</label>
                     <p class="form-control-static">{{$cuentasEfectivo->id}}</p>
                 </div>
-                <div class="form-group">
-                     <label for="name">NAME</label>
+                <div class="form-group col-sm-4">
+                     <label for="name">NOMBRE</label>
                      <p class="form-control-static">{{$cuentasEfectivo->name}}</p>
                 </div>
-                    <div class="form-group">
+                    <div class="form-group col-sm-4">
                      <label for="clabe">CLABE</label>
                      <p class="form-control-static">{{$cuentasEfectivo->clabe}}</p>
                 </div>
-                    <div class="form-group">
-                     <label for="no_cuenta">NO_CUENTA</label>
+                    <div class="form-group col-sm-4">
+                     <label for="no_cuenta">NO. CUENTA</label>
                      <p class="form-control-static">{{$cuentasEfectivo->no_cuenta}}</p>
                 </div>
-                    <div class="form-group">
-                     <label for="usu_alta_id">USU_ALTA_ID</label>
-                     <p class="form-control-static">{{$cuentasEfectivo->usu_alta_id}}</p>
+                    <div class="form-group col-sm-4">
+                     <label for="usu_alta_id">ALTA</label>
+                     <p class="form-control-static">{{$cuentasEfectivo->usu_alta->name}}</p>
                 </div>
-                    <div class="form-group">
-                     <label for="usu_mod_id">USU_MOD_ID</label>
-                     <p class="form-control-static">{{$cuentasEfectivo->usu_mod_id}}</p>
+                    <div class="form-group col-sm-4">
+                     <label for="usu_mod_id">ULTIMA MODIFICACION</label>
+                     <p class="form-control-static">{{$cuentasEfectivo->usu_mod->name}}</p>
                 </div>
             </form>
 
@@ -65,6 +65,32 @@
 
             <a class="btn btn-link" href="{{ route('cuentasEfectivos.index') }}"><i class="glyphicon glyphicon-backward"></i>  Regresar</a>
 
+            @if($cuentasEfectivo->hCuentasEfectivos->count())
+                <table class="table table-condensed table-striped">
+                    <thead>
+                        <tr>
+                        <th>SALDO INICIAL</th>
+                        <th>SALDO ACTUALIZADO</th>
+                        <th>FECHA SALDO INICIAL</th>
+                        <th>ALTA</th>
+                            
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach($cuentasEfectivo->hCuentasEfectivos as $hCuentasEfectivo)
+                            <tr>
+                    <td>{{$hCuentasEfectivo->saldo_inicial}}</td>
+                    <td>{{$hCuentasEfectivo->saldo_actualizado}}</td>
+                    <td>{{$hCuentasEfectivo->fecha_saldo_inicial}}</td>
+                    <td>{{$hCuentasEfectivo->usu_alta_id}}</td>
+                    
+                        
+                           </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            @endif
         </div>
     </div>
 
