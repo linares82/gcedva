@@ -53,8 +53,8 @@
 </head>
   <body>
 
-<table border="1" width="100%" >
-            <td align="center"  >
+<table border="0" width="100%" >
+            <td border="0" align="center"  >
                 <h3>
                     Pagos y Adeudos
                 </h3>
@@ -139,10 +139,23 @@
                 <td>@if(isset($registro['monto_pago_suma']))
                     {{$registro['monto_pago_suma']}}
                     @endif
-                    <?php $pagos=App\Pago::where('caja_id',$registro['caja_id'])->get(); ?>
-                    @foreach($pagos as $pago)
-                        {{$pago->monto}} {{$pago->fecha}} {{$pago->formaPago->name}}
-                    @endforeach
+                    <table>
+                        @if($registro['monto_pago_suma']<>0)
+                        <thead><th>Monto</th><th>Fecha</th><th>F. pago</th><th>Creacion</th></thead>
+                        @endif
+                        <tbody>
+                            <?php $pagos=App\Pago::where('caja_id',$registro['caja_id'])->get(); ?>
+                            @if(count($pagos)>0)
+                            @foreach($pagos as $pago)
+                                <tr>
+                                <td>{{$pago->monto}}</td><td> {{$pago->fecha}} </td><td>{{$pago->formaPago->name}}</td><td> {{$pago->created_at}}</td>
+                                </tr>
+                            @endforeach
+                            @endif
+                        </tbody>
+                    </table>
+                    
+                    
                 </td>
             </tr>
             <?php 

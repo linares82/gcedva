@@ -462,6 +462,7 @@ class HacademicasController extends Controller {
                                 ->where('materium_id', '=', $asignacionAcademica->materium_id)
                                 ->where('c.tpo_examen_id', '=', $data['tpo_examen_id'])
                                 ->where('cp.carga_ponderacion_id', '=', $data['carga_ponderacion_id'])
+                                ->whereNull('hacademicas.deleted_at')
                                 ->orderBy('cliente_id')
                                 ->get();
         }else{
@@ -484,6 +485,7 @@ class HacademicasController extends Controller {
                                     ->whereRaw('ce.carga_ponderacion_id = cpo.id')
                                     ->whereRaw('lec.id = hacademicas.lectivo_id');
                                 })
+                                ->whereNull('hacademicas.deleted_at')
                                 ->get();
         }
 

@@ -5,8 +5,10 @@ namespace App\Observers;
 use App\Inscripcion;
 use App\Alumno;
 use App\Cliente;
-use App\Plantel;
 use App\Grupo;
+use App\Lectivo;
+use App\Plantel;
+
 
 class InscripcionObserver
 {
@@ -19,6 +21,7 @@ class InscripcionObserver
     public $inscripcion;
     public function created(Inscripcion $inscripcion)
     {
+        //Crear Clave del cliente
         //dd("hi fil");
         $mes=date('m');
         $year=date('y');
@@ -39,9 +42,13 @@ class InscripcionObserver
             //dd($cliente);
             $cliente->save();
         }
+        //Control de inscritos en grupo
         $grupo=Grupo::find($inscripcion->grupo_id);
         $grupo->registrados=$grupo->registrados+1;
         $grupo->save();
+        
+        //Creacion de matricula
+        $lectivo=Lectivo::find($this->inscripcion->lectivo_id);
         
     }
 

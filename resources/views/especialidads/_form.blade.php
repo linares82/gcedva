@@ -41,6 +41,13 @@
                                 <span class="help-block">{{ $errors->first("meta") }}</span>
                                @endif
                             </div>
+                            <div class="form-group col-md-4 @if($errors->has('abreviatura')) has-error @endif">
+                               <label for="abreviatura-field">Abreviatura</label>
+                               {!! Form::text("abreviatura", null, array("class" => "form-control input-sm", "id" => "abreviatura-field")) !!}
+                               @if($errors->has("abreviatura"))
+                                <span class="help-block">{{ $errors->first("abreviatura") }}</span>
+                               @endif
+                            </div>
                             @if(isset($especialidad))
                             <input type="hidden" name="_token" id="_token"  value="<?= csrf_token(); ?>"> 
                             <div class="form-group">

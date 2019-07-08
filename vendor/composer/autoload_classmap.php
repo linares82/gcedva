@@ -42,6 +42,7 @@ return array(
     'AddEspecialidadNivelGradoTable' => $baseDir . '/database/migrations/2017_08_11_143725_add_especialidad_nivel_grado_table.php',
     'AddEspecialidadNivelTable' => $baseDir . '/database/migrations/2017_08_11_143659_add_especialidad_nivel_table.php',
     'AddFechasGraficaEspecialidadTable' => $baseDir . '/database/migrations/2017_12_13_102850_add_fechas_grafica_especialidad_table.php',
+    'AddFieldAbreviaturaEspecialidadsTable' => $baseDir . '/database/migrations/2019_07_08_130330_add_field_abreviatura_especialidads_table.php',
     'AddFieldIndexClienteIdEbanxesTable' => $baseDir . '/database/migrations/2018_12_17_153737_add_field_index_cliente_id_ebanxes_table.php',
     'AddFieldModuloMateriasTable' => $baseDir . '/database/migrations/2017_12_08_141207_add_field_modulo_materias_table.php',
     'AddFieldsLectivosTable' => $baseDir . '/database/migrations/2018_02_14_150006_add_fields_lectivos_table.php',

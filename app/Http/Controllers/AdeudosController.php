@@ -475,6 +475,7 @@ class AdeudosController extends Controller {
         }
         
         public function adeudosPagos(){
+            
             $planteles=Plantel::pluck('razon','id');
             $conceptos=CajaConcepto::pluck('name','id');
             $stCajas=StCaja::pluck('name','id');
