@@ -77,7 +77,7 @@
     <div class="col-md-4">
         <div class="box box-info">
             <div class="box-body">
-                {!! Form::open(array('route' => 'cajas.buscarCliente')) !!}
+                {!! Form::open(array('route' => 'cajas.buscarCliente', 'id'=>'frmBuscarCliente')) !!}
 
                 <div class="input-group form-group col-md-12 @if($errors->has('cliente_id')) has-error @endif">
                     <div class="input-group-btn">
@@ -399,7 +399,11 @@
                                 <input type="checkbox" class="adeudos_tomados" value="{{$adeudo->id}}" />
                                 @endif
                                 @endif
-                            <td>{{$adeudo->cajaConcepto->name}}</td>
+                            <td class='editarAdeudo' data-adeudo='{{$adeudo->id}}' 
+                                                     data-caja_concepto='{{$adeudo->caja_concepto_id}}' 
+                                                     data-fecha_pago='{{$adeudo->fecha_pago}}' 
+                                                     data-monto='{{$adeudo->monto}}'
+                                                     >{{$adeudo->cajaConcepto->name}}</td>
                             <td class='editable'>
                                 {{$adeudo->monto}}
                                 <input class='monto_editable form-control' value='{{$adeudo->monto}}' data-id="{{$adeudo->id}}"></input>
@@ -465,13 +469,13 @@
                             <tbody>
                                 
                                 @foreach($cajas as $ln)
-                                    
+                                    @if(isset($valores))
                                     @if(!is_int($valores->search($ln->concepto_id)))
                                     <tr>
                                         
                                         <td> {{$ln->concepto}}</td><td>{{$ln->total}}</td><td>{{$ln->caja}}</td><td>{{$ln->estatus}}</td>
                                     </tr>
-                                    
+                                    @endif
                                     @endif
                                 @endforeach
                                 
@@ -495,7 +499,7 @@ Agregar nuevo registro
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">Ã—</button>
+                <button type="button" class="close" data-dismiss="modal">X</button>
                 <h4 class="modal-title"></h4>
             </div>
             <div class="modal-body">
@@ -526,7 +530,7 @@ Agregar nuevo registro
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">Ã—</button>
+                <button type="button" class="close" data-dismiss="modal">X</button>
                 <h4 class="modal-title"></h4>
             </div>
             <div class="modal-body">
@@ -567,13 +571,60 @@ Agregar nuevo registro
                         <span class="help-block">{{ $errors->first("referencia") }}</span>
                        @endif
                     </div>
-
-                
+                    
+                    <div class="form-group col-md-6 @if($errors->has('referencia')) has-error @endif">
+                        <button type="button" class="btn btn-warning validarReferencia" id="validarReferencia">
+                            <span id="" class='glyphicon glyphicon-check'></span> Validar
+                        </button>
+                        <div id='resVal'></div>
+                    </div>
+                    
                 {!! Form::close() !!}
                 <div class="row"></div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-success addPagoB" id="AgregarPago" data-dismiss="modal">
                         <span id="" class='glyphicon glyphicon-check'></span> Crear
+                    </button>
+                    <button type="button" class="btn btn-warning" data-dismiss="modal">
+                        <span class='glyphicon glyphicon-remove'></span> Cerrar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
+
+@if(isset($cliente))
+<div id="modalEditAdeudo" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">X</button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+                {!! Form::open(array('route' => 'adeudos.store')) !!}
+                <div class="form-group col-md-12 @if($errors->has('caja_concepto_id')) has-error @endif">
+                    <label for="caja_concepto_id-field">Caja Concepto</label><br/>
+                    {!! Form::select("caja_concepto_id", $list1["CajaConcepto"], null, array("class" => "form-control select_seguridad", "id" => "caja_concepto_id-adeudo")) !!}
+                    <p class="errorCajaConcepto text-center alert alert-danger hidden"></p>
+                </div>
+                <div class="form-group col-md-12 @if($errors->has('fecha_pago')) has-error @endif">
+                    <label for="fecha_pago-field">Fecha Pago</label><br/>
+                    {!! Form::text("fecha_pago", null, array("class" => "form-control fecha", "id" => "fecha_pago-adeudo")) !!}
+                    <p class="errorCajaConcepto text-center alert alert-danger hidden"></p>
+                </div>
+                <div class="form-group col-md-12 @if($errors->has('monto')) has-error @endif">
+                    <label for="monto-field">Monto</label><br/>
+                    {!! Form::text("monto", null, array("class" => "form-control", "id" => "monto-adeudo")) !!}
+                    <p class="errorCajaConcepto text-center alert alert-danger hidden"></p>
+                </div>
+                {!! Form::close() !!}
+                <div class="row"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success btnEditarAdeudo" id="btnEditarAdeudo" data-dismiss="modal">
+                        <span id="" class='glyphicon glyphicon-check'></span> Guardar
                     </button>
                     <button type="button" class="btn btn-warning" data-dismiss="modal">
                         <span class='glyphicon glyphicon-remove'></span> Cerrar
@@ -699,13 +750,13 @@ Agregar nuevo registro
 //crear registro
     $(document).on('click', '.add-modal', function() {
     
-        
     $('.modal-title').text('Agregar Linea');
     //Limpiar valores
     $('#addModal').modal('show');
     });
+    
     @if (isset($caja) and isset($cliente))
-            $('.modal-footer').on('click', '.add', '#Agregar', function() {
+    $('.modal-footer').on('click', '.add', '#Agregar', function() {
     $.ajax({
     type: 'POST',
             url: '{{route("cajas.guardaAdeudo")}}',
@@ -796,6 +847,76 @@ Agregar nuevo registro
         $('#form-buscarVenta').submit();
     }
     @endif
+    
+    $(document).on('click', '.validarReferencia', function() {
+    
+    $.ajax({
+        type: 'GET',
+            url: '{{route("pagos.validarReferencia")}}',
+            data: {
+            '_token': $('input[name=_token]').val(),
+                    'referencia': $('#referencia-field').val(),
+                    'cuenta_efectivo_id': $('#cuenta_efectivo_id-field option:selected').val()
+            },
+            dataType:"json",
+            beforeSend : function(){$("#loading3").show(); },
+            complete : function(){$("#loading3").hide(); },
+            success: function(data) {
+                $('#resVal').html('')
+                if(Object.keys(data).length==0){
+                    $('#resVal').html('OK')
+                }else{
+                    $('#resVal').append('<table class="table table-condensed table-striped">');
+                    $('#resVal').append('<tr><th>Plantel</th><th>Consecutivo</th><th>Ver</th></tr>');
+                    $.each(data, function(i) {  
+                    //alert(data[i].name);
+                    //$('#cuenta_efectivo_id-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                    $('#resVal').append('<tr><td>'+data[i].cve_plantel+'</td><td>'+data[i].consecutivo+'</td><td><a href="'+'{{route("cajas.caja")}}'+"?plantel="+data[i].plantel_id+"&consecutivo="+data[i].consecutivo+'" target=_blank >Ver</a></td></tr>');
+                });
+                   $('#resVal').append('</table>');
+                }
+            }
+    });
+    });
+    
+    @if(isset($vplantel) and isset($vconsecutivo))
+        $('#plantel_id-field option:selected').val({{$vplantel}});    
+        $('#consecutivo_id-field selected:option').val({{$vconsecutivo}});        
+        $('#form-buscarVenta').submit();
+    @endif
+
+    $(document).on('dblclick', '.editarAdeudo', function() {
+    
+    $('.modal-title').text('Editar Adeudo');
+    //Limpiar valores
+    $('#modalEditAdeudo').modal('show');
+    $('#caja_concepto_id-adeudo').val($(this).data('caja_concepto')).change();
+    $('#fecha_pago-adeudo').val($(this).data('fecha_pago'));
+    $('#monto-adeudo').val($(this).data('monto'));
+    vadeudo=$(this).data('adeudo');
+    });
+    
+    @if (isset($cliente))
+    $('.modal-footer').on('click', '#btnEditarAdeudo', function() {
+    vurl='{{url("adeudos/update")}}'+'/'+vadeudo;    
+    $.ajax({
+    type: 'POST',
+            url: vurl,
+            data: {
+                '_token': $('input[name=_token]').val(),
+                'caja_concepto_id': $('#caja_concepto_id-adeudo option:selected').val(),
+                'fecha_pago': $('#fecha_pago-adeudo').val(),
+                'monto': $('#monto-adeudo').val()
+            },
+            beforeSend : function(){$("#loading3").show(); },
+            complete : function(){$("#loading3").hide(); },
+            success: function(data) {
+                $('#frmBuscarCliente').submit();
+            }
+    });
+    });
+    @endif
+
 </script>
 
 @endpush

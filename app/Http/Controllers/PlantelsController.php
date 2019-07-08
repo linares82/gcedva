@@ -4,6 +4,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use File as Archi;
 use App\Plantel;
+use App\Empleado;
 use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updatePlantel;
@@ -11,6 +12,7 @@ use App\Http\Requests\createPlantel;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use Illuminate\Http\Response;
+use DB;
 
 class PlantelsController extends Controller {
 	/**
@@ -33,7 +35,14 @@ class PlantelsController extends Controller {
 	 */
 	public function create()
 	{
-		return view('plantels.create')
+            //dd("fil");
+            $directores=Empleado::select(DB::raw("CONCAT(nombre,' ',ape_paterno,' ',ape_materno) AS name"),'id')
+                                ->where('puesto_id',4)->pluck('name','id');
+            //dd($directores);
+            $responsables=Empleado::select(DB::raw("CONCAT(nombre,' ',ape_paterno,' ',ape_materno) AS name"),'id')
+                                ->where('puesto_id',23)->pluck('name','id');            
+            
+		return view('plantels.create', compact('directores','responsables'))
 			->with( 'list', Plantel::getListFromAllRelationApps() );
 	}
 
@@ -110,8 +119,13 @@ class PlantelsController extends Controller {
 	public function edit($id, Plantel $plantel)
 	{
 		$plantel=$plantel->find($id);
+                $directores=Empleado::select(DB::raw("CONCAT(nombre,' ',ape_paterno,' ',ape_materno) AS name"),'id')
+                                ->where('puesto_id',4)->pluck('name','id');
+            //dd($directores);
+                $responsables=Empleado::select(DB::raw("CONCAT(nombre,' ',ape_paterno,' ',ape_materno) AS name"),'id')
+                                ->where('puesto_id',23)->pluck('name','id');            
 		$ruta=public_path()."\\imagenes\\planteles\\".$id."\\";
-		return view('plantels.edit', compact('plantel', 'ruta'))
+		return view('plantels.edit', compact('plantel', 'ruta','directores','responsables'))
 			->with( 'list', Plantel::getListFromAllRelationApps() );
 	}
 

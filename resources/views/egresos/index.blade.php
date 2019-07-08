@@ -271,7 +271,7 @@
                     </td>
                                 <td class="text-right">
                                     @permission('egresos.edit')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('egresos.duplicate', $egreso->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
+<!--                                    <a class="btn btn-xs btn-primary" href="{{ route('egresos.duplicate', $egreso->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>-->
                                     @endpermission
                                     @permission('egresos.edit')
 <!--                                    <a class="btn btn-xs btn-warning" href="{{ route('egresos.edit', $egreso->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>-->

@@ -173,11 +173,11 @@ class EgresosController extends Controller {
             
             $registros= IngresoEgreso::select('ce.id','ce.name as cuenta','ce.saldo_inicial','ce.fecha_saldo_inicial','ce.saldo_actualizado',
                                               'ingreso_egresos.consecutivo_caja','ingreso_egresos.egreso_id','ingreso_egresos.fecha',
-                                              'p.razon','ingreso_egresos.monto','ingreso_egresos.concepto')
+                                              'p.razon','ingreso_egresos.monto','ingreso_egresos.concepto','ingreso_egresos.transference_id')
                                        ->join('cuentas_efectivos as ce','ce.id','=','ingreso_egresos.cuenta_efectivo_id')
                                        ->join('plantels as p','p.id','=','ingreso_egresos.plantel_id')
-                                       ->where('p.id','>=',$datos['plantel_f'])
-                                       ->where('p.id','<=',$datos['plantel_t'])
+                                       ->whereIn('p.id',$datos['plantel_f'])
+                                       //->where('p.id','<=',$datos['plantel_t'])
                                        ->where('ingreso_egresos.cuenta_efectivo_id','>',0)
                                        ->whereNull('ingreso_egresos.deleted_at')
                                        ->whereDate('ingreso_egresos.fecha','>=',$datos['fecha_f'])

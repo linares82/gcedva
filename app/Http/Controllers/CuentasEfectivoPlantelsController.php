@@ -19,7 +19,7 @@ class CuentasEfectivoPlantelsController extends Controller {
 	public function index(Request $request)
 	{
 		$cuentasEfectivoPlantels = CuentasEfectivoPlantel::getAllData($request);
-
+                //dd($cuentasEfectivoPlantels);
 		return view('cuentasEfectivoPlantels.index', compact('cuentasEfectivoPlantels'));
 	}
 
@@ -129,4 +129,5 @@ class CuentasEfectivoPlantelsController extends Controller {
 		return redirect()->route('cuentasEfectivoPlantels.index')->with('message', 'Registro Borrado.');
 	}
 
+        
 }

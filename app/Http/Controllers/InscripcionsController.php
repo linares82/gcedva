@@ -478,11 +478,11 @@ class InscripcionsController extends Controller {
                 
                 
                 //Agregar fechas
-                $asignacion=collect();
-                foreach($registros as $registro){
+                $asignacion=AsignacionAcademica::find($data['asignacion']);
+                /*foreach($registros as $registro){
                     $asignacion= AsignacionAcademica::find($registro->asignacion);
                     break;
-                }
+                }*/
                 
                 
                 
@@ -890,11 +890,11 @@ class InscripcionsController extends Controller {
                 
                 
                 //Agregar fechas
-                $asignacion=collect();
-                foreach($registros as $registro){
+                $asignacion=AsignacionAcademica::find($data['asignacion']);
+                /*foreach($registros as $registro){
                     $asignacion= AsignacionAcademica::find($registro->asignacion);
                     break;
-                }
+                }*/
                 
                 
                 

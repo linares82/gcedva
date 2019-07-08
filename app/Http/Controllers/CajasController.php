@@ -210,8 +210,16 @@ class CajasController extends Controller {
 		return redirect()->route('cajas.index')->with('message', 'Registro Borrado.');
 	}
 
-        public function getCaja(){
-            return view('cajas.caja')->with( 'list', Caja::getListFromAllRelationApps() )->with( 'list1', CajaLn::getListFromAllRelationApps() );           
+        public function getCaja(Request $request){
+            $datos=$request->all();
+            if(isset($datos['plantel']) and isset($datos['consecutivo'])){
+                $vplantel=$datos['plantel'];
+                $vconsecutivo=$datos['consecutivo'];
+                return view('cajas.caja', compact('vplantel','vconsecutivo'))->with( 'list', Caja::getListFromAllRelationApps() )->with( 'list1', CajaLn::getListFromAllRelationApps() );           
+            }else{
+                return view('cajas.caja')->with( 'list', Caja::getListFromAllRelationApps() )->with( 'list1', CajaLn::getListFromAllRelationApps() );           
+            }
+            
         }
         
         public function buscarCliente(Request $request){
@@ -278,6 +286,7 @@ class CajasController extends Controller {
             //dd($cajas->toArray());
             $permiso_caja_buscarVenta=Auth::user()->can('permiso_caja_buscarVenta');
             //dd($permiso_caja_buscarVenta);
+            
             if(is_object($caja) and $caja->plantel_id==$empleado->plantel_id){
                 //Apliacion de recargos
                 if($caja->st_caja_id==0 and $caja->descuento==0){
@@ -663,6 +672,10 @@ class CajasController extends Controller {
             //dd($request->get('caja'));
             $caja=Caja::find($request->get('caja'));
             $caja->st_caja_id=2;
+            $caja->subtotal=0;
+            $caja->descuento=0;
+            $caja->recargo=0;
+            $caja->total=0;
             $caja->save();
             foreach($caja->cajaLns as $ln){
                 $ln->delete();
@@ -670,6 +683,7 @@ class CajasController extends Controller {
             $adeudos=Adeudo::where('caja_id',$caja->id)->get();
             foreach($adeudos as $adeudo){
                 $adeudo->caja_id=0;
+                $adeudo->pagado_bnd=0;
                 $adeudo->save();
             }
             return view('cajas.caja')->with( 'list', Caja::getListFromAllRelationApps() )->with( 'list1', CajaLn::getListFromAllRelationApps() );           

@@ -61,9 +61,14 @@
                             </div>
                             -->
                             <div class="form-group">
+                                <label class="col-sm-2 control-label" for="q_id_cont">ID</label>
+                                <div class="col-sm-9">
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['id_cont']) ?: '' }}" name="q[id_cont]" id="q_id_cont" />
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_lectivo_id_cont">LECTIVO</label>
                                 <div class=" col-sm-9">
-                                    
                                     {!! Form::select("q_asignacion_academicas.lectivo_id_lt", $list["Lectivo"], "{{ @(Request::input('q')['asignacion_academicas.lectivo_id_lt']) ?: 0 }}", array("class" => "form-control select_seguridad", "name"=>"q[asignacion_academicas.lectivo_id_lt]", "id"=>"q_asignacion_academicas.lectivo_id_lt", "style"=>"width:100%;" )) !!}
                                 </div>
                             </div>

@@ -127,6 +127,7 @@ class CajaLnsController extends Controller {
                     try{
                         $adeudo=Adeudo::find($cajaLn->adeudo_id);
                         $adeudo->caja_id=0;
+                        $adeudo->pagado_bnd=0;
                         $adeudo->save();
                     }catch(Exception $e){
                         

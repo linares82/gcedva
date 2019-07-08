@@ -13,6 +13,7 @@ use App\Http\Requests;
 use Illuminate\Http\Request;
 use dogears\CrudDscaffold\Traits\NameSolverTrait;
 use App\Empleado;
+use App\Plantel;
 use Auth;
 
 trait GetAllDataTrait {
@@ -144,6 +145,29 @@ trait GetAllDataTrait {
                     $myQuery=$myQuery->where('clientes.plantel_id', '=', $empleado->plantel_id);
                 }
                 break;
+            /*
+            case "cuentas_efectivos":
+                $empleado=Empleado::where('user_id', Auth::user()->id)->first();
+                //dd($empleado);
+                $plantels=Plantel::where('director_id',$empleado->id)->orWhere('responsable_id',$empleado->id)->get();
+                //dd($plantels->toArray());
+                $p=array();
+                if(count($plantels)>0){
+                    
+                    foreach($plantels as $plantel){
+                        array_push($p,$plantel->id);
+                    }
+                    //dd($p);
+                    
+                    $myQuery=$myQuery->join('cuentas_efectivo_plantels as cuentas_efectivo_plantels','cuentas_efectivo_plantels.ceuentas_efectivo_id','=','cuentas_efectivo.id')
+                                     ->whereIn('cuentas_efectivo_plantels.plantel_id', '=', $p);
+                     
+                    
+                }
+                
+                break;
+             * */
+            
             case "empleados":
                 if($baseTable=="empleados" and Auth::user()->can('IfiltroEmpleadosXPlantel')){
                     $myQuery=$myQuery->where('empleados.plantel_id', '=', $empleado->plantel_id);

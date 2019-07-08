@@ -310,4 +310,30 @@ class PagosController extends Controller {
                                                                             'plantel'=>$plantel,
                                                                             'datos'=>$datos));
     }
+    
+    public function validarReferencia(Request $request){
+        if($request->ajax()){
+            $datos=$request->all();
+            //dd($datos);
+            $registros=Pago::select('caja_id','plantel_id','p.cve_plantel','c.consecutivo')
+                           ->join('cajas as c','c.id','=','pagos.caja_id')
+                           ->join('plantels as p','p.id','=','c.plantel_id')
+                           ->where('pagos.referencia',$datos['referencia'])
+                           ->where('cuenta_efectivo_id',$datos['cuenta_efectivo_id'])
+                           ->get();
+            return $registros;
+            /*$resultado=array();
+            if(count($registros)>0){
+                array_push($resultado, array('total_coincidencias'=>count($registros)));
+                array_push($resultado,array('pagos_coincidentes'=>$registros->toArray()));
+                
+            }else{
+                array_push($resultado, array('total_coincidencias'=>0));
+                
+            }
+            return response()->json($resultado);
+            */
+        }
+        
+    }
 }

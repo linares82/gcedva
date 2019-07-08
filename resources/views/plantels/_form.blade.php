@@ -190,34 +190,26 @@
                   </div>
                     <div class="box box-default" style>
                       <div class="box-body">
-                      <div class="form-group col-md-4 @if($errors->has('director')) has-error @endif">
-                         <label for="director-field">Director</label>
-                         
-                      </div>
-                      <div class="form-group col-md-4 @if($errors->has('director_tel')) has-error @endif">
-                         <label for="director_tel-field">Director Teléfono</label>
-                         
-                      </div>
-                      <div class="form-group col-md-4 @if($errors->has('director_mail')) has-error @endif">
-                         <label for="director_mail-field">Director Correo Electrónico</label>
-                         
-                      </div>
+                      <div class="form-group col-md-4 @if($errors->has('director_id')) has-error @endif">
+                        <label for="director_id-field">Director</label>
+                        {!! Form::select("director_id", $directores, null, array("class" => "form-control select_seguridad", "id" => "director_id-field")) !!}
+                        @if($errors->has("director_id"))
+                         <span class="help-block">{{ $errors->first("director_id") }}</span>
+                        @endif
+                     </div>
+                      <div class="form-group col-md-4 @if($errors->has('responsable_id')) has-error @endif">
+                            <label for="responsable_id-field">Responsable</label>
+                            {!! Form::select("responsable_id", $responsables, null, array("class" => "form-control select_seguridad", "id" => "responsable_id-field")) !!}
+                            @if($errors->has("responsable_id"))
+                             <span class="help-block">{{ $errors->first("responsable_id") }}</span>
+                            @endif
+                         </div>
+                      
                     </div>
                     </div>
                     <div class="box box-default">
                       <div class="box-body">
-                      <div class="form-group col-md-4 @if($errors->has('rep_legal')) has-error @endif">
-                         <label for="rep_legal-field">Representante Legal</label>
-                         
-                      </div>
-                      <div class="form-group col-md-4 @if($errors->has('rep_legal_tel')) has-error @endif">
-                         <label for="rep_legal_tel-field">Representante Legal Teléfono</label>
-                         
-                      </div>
-                      <div class="form-group col-md-4 @if($errors->has('rep_legal_mail')) has-error @endif">
-                         <label for="rep_legal_mail-field">Representante Legal Correo Eletrónico</label>
-                         
-                      </div>
+                      
                       <div class="form-group col-md-12 @if($errors->has('clausulas_cotizacion')) has-error @endif">
                          <label for="clausulas_cotizacion-field">Clausulas Cotizacion</label>
                          {!! Form::textArea("clausulas_cotizacion", null, array("class" => "form-control input-sm", "id" => "clausulas_cotizacion-field", 'rows'=>5)) !!}

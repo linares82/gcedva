@@ -120,12 +120,13 @@ class AdeudosController extends Controller {
 	public function update($id, Adeudo $adeudo, updateAdeudo $request)
 	{
 		$input = $request->all();
+                //dd($input);
 		$input['usu_mod_id']=Auth::user()->id;
 		//update data
 		$adeudo=$adeudo->find($id);
 		$adeudo->update( $input );
-
-		return redirect()->route('adeudos.index')->with('message', 'Registro Actualizado.');
+                
+		//return redirect()->route('adeudos.index')->with('message', 'Registro Actualizado.');
 	}
 
 	/**
@@ -204,7 +205,8 @@ class AdeudosController extends Controller {
         public function reporteAdeudosPendientes(){
             
             $planteles=Plantel::pluck('razon','id');
-            return view('adeudos.reportes.adeudosXPlantel',compact('planteles'));
+            $conceptos= CajaConcepto::pluck('name','id');
+            return view('adeudos.reportes.adeudosXPlantel',compact('planteles','concepto'));
         }
         
         public function reporteAdeudosPendientesr(Request $request){

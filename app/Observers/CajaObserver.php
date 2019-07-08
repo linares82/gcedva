@@ -28,7 +28,7 @@ class CajaObserver
     public function updated(Caja $caja)
     {
         $this->caja=$caja;
-        $cajas=Caja::where('cliente_id',$this->caja->cliente_id)->where('id','<>',$this->caja->id)->get();
+        //$cajas=Caja::where('cliente_id',$this->caja->cliente_id)->where('id','<>',$this->caja->id)->get();
         //dd($this->caja);
         if($this->caja->st_caja_id==1 or $this->caja->st_caja_id==3){
             $seguimiento=Seguimiento::where('cliente_id',$this->caja->cliente_id)->first();

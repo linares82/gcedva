@@ -33,9 +33,8 @@ class CuentasEfectivosController extends Controller {
 	public function create()
 	{
             $plantels=Plantel::pluck('razon','id');
-            $plantels=Plantel::pluck('razon','id');
-                $plantels_selected=$cuentasEfectivo->plantels;
-		return view('cuentasEfectivos.create', campact('plantels','plantels','plantels_selected'))
+                $plantels_selected=array();
+		return view('cuentasEfectivos.create', compact('plantels','plantels_selected'))
 			->with( 'list', CuentasEfectivo::getListFromAllRelationApps() );
 	}
 
@@ -57,7 +56,7 @@ class CuentasEfectivosController extends Controller {
 		//create data
 		$cuentasEfectivo=CuentasEfectivo::create( $input );
                 
-                $cuentasEfectivo->plantels()->sync($plantels[0]);
+                $cuentasEfectivo->plantels()->sync($plantels['plantel_id']);
 
 		return redirect()->route('cuentasEfectivos.index')->with('message', 'Registro Creado.');
 	}
@@ -163,6 +162,15 @@ class CuentasEfectivosController extends Controller {
                 
                 return $r;
                 
+            }
+        }
+        
+        public function getSaldo(Request $request){
+            if($request->ajax()){
+                $data=$request->all();
+                //dd($data);
+                $saldo= CuentasEfectivo::find($data['cuenta']);
+                return $saldo->saldo_actualizado;
             }
         }
 }

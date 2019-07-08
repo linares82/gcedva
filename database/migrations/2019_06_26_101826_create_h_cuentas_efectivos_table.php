@@ -24,7 +24,7 @@ class CreateHCuentasEfectivosTable extends Migration {
             $table->softDeletes();
             $table->foreign('usu_mod_id')->references('id')->on('users');
             $table->foreign('usu_alta_id')->references('id')->on('users');
-            $table->foreign('cuenta_efectivo_id')->references('id')->on('cuentas_efectivos');
+            $table->foreign('cuentas_efectivo_id')->references('id')->on('cuentas_efectivos');
         });
 	}
 

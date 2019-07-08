@@ -30,11 +30,12 @@ class PagoObserver
                 $ingreso['pago_id']=$this->pago->id;
                 $ingreso['consecutivo_caja']=$this->pago->caja->consecutivo;
                 $ingreso['egreso_id']=0;
-                $egreso['concepto']="";
+                $ingreso['concepto']="Pago";
                 $ingreso['fecha']=$this->pago->fecha;
                 $ingreso['monto']=$this->pago->monto;
                 $ingreso['usu_alta_id']=$this->pago->usu_alta_id;
                 $ingreso['usu_mod_id']=$this->pago->usu_mod_id;
+                $ingreso['transference_id']=0;
                 IngresoEgreso::create($ingreso);
                 
             }

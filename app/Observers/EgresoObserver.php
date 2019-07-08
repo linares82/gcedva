@@ -35,6 +35,7 @@ class EgresoObserver
                 $egreso['monto']=$this->egreso->monto;
                 $egreso['usu_alta_id']=$this->egreso->usu_alta_id;
                 $egreso['usu_mod_id']=$this->egreso->usu_mod_id;
+                $egreso['transference_id']=0;
                 IngresoEgreso::create($egreso);
             }
             

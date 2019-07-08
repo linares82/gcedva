@@ -173,14 +173,34 @@
 
                     <tbody>
                         @foreach($cuentasEfectivos as $cuentasEfectivo)
+                            <?php 
+                            $empleado=App\Empleado::where('user_id',Auth::user()->id)->first();
+                            
+                            $plantels=App\Plantel::where('director_id',$empleado->id)->orWhere('responsable_id',$empleado->id)->get();
+                            $marcador=0;
+                            if(count($plantels)>0){
+                                foreach($plantels as $plantel){
+                                    foreach($cuentasEfectivo->plantels as $plantel_cuentas){
+                                        if($plantel_cuentas->id==$plantel->id){
+                                            $marcador++;
+                                        }
+                                    }
+
+                                }
+                            }elseif(Auth::user()->id==1 or Auth::user()->id==3){
+                                $marcador=1;
+                            }
+
+                            ?>
+                            @if($marcador>0)
                             <tr>
                                 <td><a href="{{ route('cuentasEfectivos.show', $cuentasEfectivo->id) }}">{{$cuentasEfectivo->id}}</a></td>
                                 <td>{{$cuentasEfectivo->name}}</td>
-                    <td>{{$cuentasEfectivo->clabe}}</td>
-                    <td>{{$cuentasEfectivo->no_cuenta}}</td>
-                    <td>{{$cuentasEfectivo->saldo_inicial}}</td>
-                    <td>{{$cuentasEfectivo->fecha_saldo_inicial}}</td>
-                    <td>{{$cuentasEfectivo->saldo_calculado}}</td>
+                                <td>{{$cuentasEfectivo->clabe}}</td>
+                                <td>{{$cuentasEfectivo->no_cuenta}}</td>
+                                <td>{{$cuentasEfectivo->saldo_inicial}}</td>
+                                <td>{{$cuentasEfectivo->fecha_saldo_inicial}}</td>
+                                <td>{{$cuentasEfectivo->saldo_actualizado}}</td>
                                 <td class="text-right">
                                     @permission('cuentasEfectivos.edit')
                                     <a class="btn btn-xs btn-primary" href="{{ route('cuentasEfectivos.duplicate', $cuentasEfectivo->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
@@ -195,6 +215,7 @@
                                     @endpermission
                                 </td>
                             </tr>
+                            @endif
                         @endforeach
                     </tbody>
                 </table>

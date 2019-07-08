@@ -14,6 +14,7 @@ use App\Observers\AvisoObserver;
 use App\Observers\CuentasEfectivoObserver;
 use App\Observers\PagoObserver;
 use App\Observers\EgresoObserver;
+use App\Observers\TransferenceObserver;
 use App\Caja;
 use App\Cliente;
 use App\Empleado;
@@ -25,6 +26,7 @@ use App\Aviso;
 use App\CuentasEfectivo;
 use App\Egreso;
 use App\Pago;
+use App\Transference;
 use Studio\Totem\Totem;
 use Auth;
 
@@ -49,6 +51,7 @@ class AppServiceProvider extends ServiceProvider
         CuentasEfectivo::observe(CuentasEfectivoObserver::class);
         Pago::observe(PagoObserver::class);
         Egreso::observe(EgresoObserver::class);
+        Transference::observe(TransferenceObserver::class);
         Totem::auth(function($request) {
             // return true / false . For e.g.
             return Auth::check();

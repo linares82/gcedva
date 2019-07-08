@@ -89,12 +89,13 @@ class AsistenciaRsController extends Controller {
                                          ->orderBy('cliente_id')
                                          ->get();
                         $inscripciones=Inscripcion::where('inscripcions.grupo_id','=',$asignacionAcademica->grupo_id)
-                                        //->join('hacademicas as h','h.inscripcion_id','=','inscripcions.id')
+                                        ->join('hacademicas as h','h.inscripcion_id','=','inscripcions.id')
                                         ->where('inscripcions.lectivo_id', '=', $asignacionAcademica->lectivo_id)
                                         ->where('inscripcions.plantel_id', '=', $asignacionAcademica->plantel_id)
-                                        //->where('h.materium_id',$asignacionAcademica->materium_id)
+                                        ->where('h.materium_id',$asignacionAcademica->materium_id)
                                         ->orderBy('inscripcions.cliente_id')
                                         ->whereNull('inscripcions.deleted_at')
+                                        ->whereNull('h.deleted_at')
                                         ->get();
                         //dd($asistencias);
 
