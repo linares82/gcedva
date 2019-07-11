@@ -63,6 +63,7 @@
                      <thead>
                          <th>id</th>
                          <th>Alumno</th>
+                         <th>Estatus Cliente</th>
                          <th>Ponderacion</th>
                          <th>Calificacion Total</th>
                          <th>Calificacion</th>
@@ -76,6 +77,7 @@
                          <tr>
                          <td>{{$r->id}}</td>
                          <td>{{$r->nombre." ".$r->nombre2." ".$r->ape_paterno.$r->ape_materno}}</td>
+                         <td>{{$r->estatus_cliente}}</td>
                          <td>{{$r->ponderacion}}</td>
                          <td><div id="div_c{{$r->id}}">{{$r->calificacion}}</div></td>
                          <td><div id="div_par{{$r->id}}">{{ $r->calificacion_parcial }}</div></td>

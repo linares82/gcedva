@@ -352,6 +352,8 @@
                                         <td>
                                             @permission('inscripcions.create') 
                                                 <a href="{!! route('combinacionClientes.destroy', $c->id) !!}" class="btn btn-xs btn-block btn-danger">Eliminar</a>
+                                                
+                                                @if($cliente->seguimiento->st_seguimiento_id==2)
                                                 <button class="inscribir-create btn btn-primary btn-xs" data-cliente_id="{{$c->cliente_id}}"
                                                                                                    data-cliente_nombre="{{$cliente->nombre.' '.$cliente->nombre2.' '.$cliente->ape_paterno.' '.$cliente->ape_materno}}"
                                                                                                    data-plantel="{{$c->plantel_id}}"
@@ -361,7 +363,7 @@
                                                                                                    data-turno="{{$c->turno_id}}"
                                                                                                    data-combinacion="{{$c->id}}">
                                                 <span class="glyphicon glyphicon-star"></span> Inscribir </button>
-                                                
+                                                @endif
                                             @endpermission
                                             
                                         </td>
@@ -953,6 +955,7 @@
                             @permission('inscripcions.registrarMaterias')
                             <a class="btn btn-xs btn-warning" href="{{ route('inscripcions.registrarMaterias', $i->id) }}"><i class="glyphicon glyphicon-edit"></i>Registrar Materias</a>
                             @endpermission
+                            <a class="btn btn-xs btn-default" href='{{route("inscripcions.historial", array('inscripcion'=>$i))}}' target="_blank">Historial</a>
                             @permission('inscripcions.destroy')
                             <a class="btn btn-xs btn-danger" href="{{ route('inscripcions.destroyCli', $i->id) }}"><i class="glyphicon glyphicon-trash"></i>Borrar</a>
                             @endpermission
@@ -966,7 +969,7 @@
                     <tbody>
                         @foreach($i->hacademicas as $a)
                         <tr>
-                            <td>{{$a->materia->name}}</td><td>{{$a->stMateria->name}}</td>
+                            <td><a href='http://localhost/crmscool_jesadi/public/asignacionAcademicas/index?&q%5Basignacion_academicas.lectivo_id_lt%5D={{$a->lectivo_id}}&q%5Basignacion_academicas.plantel_id_lt%5D={{$a->plantel_id}}&q%5Basignacion_academicas.empleado_id_lt%5D={{$a->empleado_id}}&q%5Basignacion_academicas.materium_id_lt%5D={{$a->materium_id}}&q%5Basignacion_academicas.grupo_id_lt%5D={{$a->grupo_id}}' target='_blank'>{{$a->materia->name}}</a></td><td>{{$a->stMateria->name}}</td>
                             <td>
                                 <a href="{{ route('hacademicas.destroy', $a->id) }}" class="btn btn-xs btn-danger" ><i class="glyphicon glyphicon-trash"></i> Eliminar</a>
                             </td>

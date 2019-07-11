@@ -192,5 +192,20 @@ class EgresosController extends Controller {
             return view('egresos.reportes.ingresosEgresosR', array('registros'=>$registros));
         }
         
-        
+        public function recibo(Request $request){
+            $datos=$request->all();
+            //dd($datos);
+            $egreso=Egreso::find($datos['egreso']);
+            /*return view('inscripcions.reportes.lista_alumnosr',compact('registros'))
+			->with( 'list', Inscripcion::getListFromAllRelationApps() );
+                 * */
+                
+/*                PDF::setOptions(['defaultFont' => 'arial']);
+
+                $pdf = PDF::loadView('inscripcions.reportes.lista_alumnosr', array('registros'=>$registros,'fechas_enc'=>$fechas))
+                        ->setPaper('legal', 'landscape');
+                return $pdf->download('reporte.pdf');
+  */              
+                return view('egresos.reportes.recibo', array('egreso'=>$egreso));
+        }
 }

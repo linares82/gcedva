@@ -452,12 +452,13 @@ class HacademicasController extends Controller {
         if(isset($data['excepcion'])){
             $hacademicas=HAcademica::select('cli.id', 'cli.nombre','cli.nombre2','cli.ape_paterno','cli.ape_materno','c.calificacion',
                                         'cp.calificacion_parcial_calculada','cp.id as calificacion_ponderacion_id','cp.calificacion_parcial',
-                                        'cpo.name as ponderacion')
+                                        'cpo.name as ponderacion','stc.name as estatus_cliente')
                                 ->where('grupo_id','=',$asignacionAcademica->grupo_id)
                                 ->join('calificacions as c','c.hacademica_id','=','hacademicas.id')
                                 ->join('calificacion_ponderacions as cp','cp.calificacion_id','=','c.id')
                                 ->join('carga_ponderacions as cpo', 'cpo.id', '=', 'cp.carga_ponderacion_id')
                                 ->join('clientes as cli','cli.id','=','hacademicas.cliente_id')
+                                ->join('st_clientes as stc','stc.id','=','cli.st_cliente_id')
                                 ->where('lectivo_id', '=', $asignacionAcademica->lectivo_id)
                                 ->where('materium_id', '=', $asignacionAcademica->materium_id)
                                 ->where('c.tpo_examen_id', '=', $data['tpo_examen_id'])
@@ -467,12 +468,14 @@ class HacademicasController extends Controller {
                                 ->get();
         }else{
             $hacademicas=HAcademica::select('cli.id', 'cli.nombre','cli.nombre2','cli.ape_paterno','cli.ape_materno','c.calificacion',
-                                        'cp.calificacion_parcial_calculada','cp.id as calificacion_ponderacion_id','cp.calificacion_parcial')
+                                        'cp.calificacion_parcial_calculada','cp.id as calificacion_ponderacion_id','cp.calificacion_parcial',
+                                        'stc.name as estatus_cliente')
                                 ->where('grupo_id','=',$asignacionAcademica->grupo_id)
                                 ->join('calificacions as c','c.hacademica_id','=','hacademicas.id')
                                 ->join('calificacion_ponderacions as cp','cp.calificacion_id','=','c.id')
                                 ->join('carga_ponderacions as cpo', 'cpo.id', '=', 'cp.carga_ponderacion_id')
                                 ->join('clientes as cli','cli.id','=','hacademicas.cliente_id')
+                                ->join('st_clientes as stc','stc.id','=','cli.st_cliente_id')
                                 ->where('lectivo_id', '=', $asignacionAcademica->lectivo_id)
                                 ->where('materium_id', '=', $asignacionAcademica->materium_id)
                                 ->where('c.tpo_examen_id', '=', $data['tpo_examen_id'])

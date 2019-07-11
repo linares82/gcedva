@@ -794,8 +794,9 @@ class InscripcionsController extends Controller {
                 $registros= Inscripcion::select('c.id',DB::raw('concat(e.nombre, " ",e.ape_paterno, " ",e.ape_materno) as instructor, '
                         . 'concat(c.nombre," ",c.nombre2," ",c.ape_paterno," ",c.ape_materno) as cliente,'
                         . 'c.beca_bnd, esp.name as especialidad, inscripcions.fec_inscripcion, aa.id as asignacion,'
-                        . 'gru.name as grupo, gru.id as gru, mat.name as materi'))
+                        . 'gru.name as grupo, gru.id as gru, mat.name as materi, stc.name as estatus_cliente'))
                             ->join('clientes as c', 'c.id', '=', 'inscripcions.cliente_id')
+                            ->join('st_clientes as stc','stc.id','=','c.st_cliente_id')
                             ->join('medios as m','m.id','=','c.medio_id')
                             ->join('especialidads as esp','esp.id','=','inscripcions.especialidad_id')
                             ->join('grupos as gru','gru.id','=','inscripcions.grupo_id')
@@ -860,7 +861,7 @@ class InscripcionsController extends Controller {
                 //dd($data);
                 $registros= Inscripcion::select('c.nombre','c.nombre2','c.ape_paterno','c.ape_materno', 'g.name as grupo','l.name as lectivo',
                                                DB::raw('concat(e.nombre," ",e.ape_paterno," ",e.ape_materno) as maestro'),'gra.name as grado',
-                                               'p.razon as plantel', 'p.logo','aa.id as asignacion','c.id as cliente','p.id as p_id')
+                                               'p.razon as plantel', 'p.logo','aa.id as asignacion','c.id as cliente','p.id as p_id','c.tel_fijo')
                                        ->join('hacademicas as h','h.inscripcion_id','=','inscripcions.id')
                                        ->join('clientes as c', 'c.id', '=', 'inscripcions.cliente_id')
                                        ->join('grupos as g', 'g.id', '=', 'inscripcions.grupo_id')
@@ -998,4 +999,21 @@ class InscripcionsController extends Controller {
                                                                           'contador'=>$contador,
                                                                           'mes'=>$mes));
 	}
+        
+        public function historial(Request $request){
+            $datos=$request->all();
+            $inscripcion=Inscripcion::find($datos['inscripcion']);
+            //dd($inscripcion);
+            /*return view('inscripcions.reportes.lista_alumnosr',compact('registros'))
+			->with( 'list', Inscripcion::getListFromAllRelationApps() );
+                 * */
+                
+/*                PDF::setOptions(['defaultFont' => 'arial']);
+
+                $pdf = PDF::loadView('inscripcions.reportes.lista_alumnosr', array('registros'=>$registros,'fechas_enc'=>$fechas))
+                        ->setPaper('legal', 'landscape');
+                return $pdf->download('reporte.pdf');
+  */              
+                return view('inscripcions.reportes.historial', array('inscripcion'=>$inscripcion));
+        }
 }

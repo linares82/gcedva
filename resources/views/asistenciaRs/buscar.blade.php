@@ -49,11 +49,14 @@
                 @if(isset($asistencias))
                 <table class="table table-condensed table-striped">
                     <thead>
-                        <th>Alumno</th><th>Fecha</th><th>Asistencia</th><th></th>
+                        <th>Alumno</th><th>Estatus Cliente</th><th>Fecha</th><th>Asistencia</th><th></th>
                     </thead>
                         @foreach($asistencias as $s)
                         <tr>
-                            <td>{{ $s->cliente->nombre." ".$s->cliente->nombre2." ".$s->cliente->ape_paterno." ".$s->cliente->ape_materno." " }}</td>
+                            <td>
+                                {{$s->cliente_id}} - {{ $s->cliente->nombre." ".$s->cliente->nombre2." ".$s->cliente->ape_paterno." ".$s->cliente->ape_materno." " }}
+                            </td>
+                            <td>{{ $s->cliente->stCliente->name }}</td>
                             <td>{{ $s->fecha }}</td>
                             <td>
                                 <div class="form-group col-md-4 @if($errors->has('est_asistencia_id')) has-error @endif">

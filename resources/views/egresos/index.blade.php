@@ -275,6 +275,7 @@
                                     @endpermission
                                     @permission('egresos.edit')
 <!--                                    <a class="btn btn-xs btn-warning" href="{{ route('egresos.edit', $egreso->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>-->
+                                        <a class="btn btn-xs btn-warning" href="{{ route('egresos.recibo', array('egreso'=>$egreso->id)) }}" target='_blank'><i class="glyphicon glyphicon-print"></i> Imprimir Recibo</a>
                                     @endpermission
                                     @permission('egresos.destroy')
                                     {!! Form::model($egreso, array('route' => array('egresos.destroy', $egreso->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}

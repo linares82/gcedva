@@ -97,6 +97,7 @@
                         <th class="altura"><strong>Nombre(s)</strong></th>
                         <th class="altura"><strong>A. Paterno</strong></th>
                         <th class="altura"><strong>A. Materno</strong></th>
+                        <th class="altura"><strong>Tel. Fijo</strong></th>
                         
                         @foreach($fechas_enc as $fecha_enc)
                             
@@ -116,7 +117,7 @@
                             <tr>
                                 
                                 <td>{{ $r->cliente }}</td>
-                                <td>{{$r->nombre." ".$r->nombre2}}</td><td>{{$r->ape_paterno}}</td><td>{{$r->ape_materno}}</td>
+                                <td>{{$r->nombre." ".$r->nombre2}}</td><td>{{$r->ape_paterno}}</td><td>{{$r->ape_materno}}</td><td>{{$r->tel_fijo}}</td>
                                 <?php
                                     $fechas=\App\AsistenciaR::where('asignacion_academica_id',$r->asignacion)
                                             ->where('cliente_id',$r->cliente)

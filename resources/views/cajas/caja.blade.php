@@ -296,6 +296,7 @@
                     <tbody>
                         <?php $suma_pagos=0; ?>
                         @foreach($caja->pagos as $pago)
+                        @if(is_null($pago->deleted_at))
                         <tr>
                             <td> {{$pago->consecutivo}} </td><td>{{ $pago->monto }}</td><td>{{ $pago->fecha }}</td><td>{{ $pago->formaPago->name }}</td><td>{{ $pago->referencia }}</td>
                             <td>@if($pago->cuenta_efectivo_id<>0)
@@ -310,6 +311,7 @@
                             </td>
                             
                         </tr>
+                        @endif
                         <?php $suma_pagos=$suma_pagos+$pago->monto; ?>
                         @endforeach
                         <tr>
@@ -779,6 +781,7 @@ Agregar nuevo registro
     $('.modal-title').text('Agregar Pago');
     //Limpiar valores
     $('#addPago').modal('show');
+    $('#AgregarPago').prop('disabled',true);
     //Cargar cuentas de efectivo
     @if(isset($caja))
     $.ajax({
@@ -875,6 +878,17 @@ Agregar nuevo registro
                 });
                    $('#resVal').append('</table>');
                 }
+                
+                monto=$('#monto-field').val().toString();
+                fecha=$('#fecha-field').val().toString();
+                forma_pago_id=$('#forma_pago_id-field option:selected').val().valueOf();
+                cuenta_efectivo_id=$('#cuenta_efectivo_id-field option:selected').val().valueOf();
+                referencia=$('#referencia-field').val().toString();
+                
+                if(monto!='' & fecha!='' & forma_pago_id!=0 & referencia!=''){
+                    $('#AgregarPago').prop('disabled',false);
+                }
+                
             }
     });
     });
@@ -916,6 +930,9 @@ Agregar nuevo registro
     });
     });
     @endif
+
+    
+    
 
 </script>
 

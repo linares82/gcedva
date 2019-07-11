@@ -17,7 +17,7 @@
         <table class="table table-condensed table-striped">
             <thead>
                 <tr>
-                    <th>Plantel</th><th>Especialidad</th><th>Grupo</th><th>Instructor</th><th>Materia</th><th>Cliente</th><th>Fecha Inscripción</th>
+                    <th>Plantel</th><th>Especialidad</th><th>Grupo</th><th>Instructor</th><th>Materia</th><th>Cliente</th><th>Fecha Inscripción</th><th>Estatus Cliente</th>
                 </tr> 
             </thead>
             <tbody>
@@ -29,7 +29,7 @@
                 @foreach($registros as $registro)
                     @if($grupo<>$registro->grupo and $i<>0)
                     <tr>
-                        <td><strong>Suma Grupo</strong></td><td colspan="6"><strong>{{$i}}<strong></td>
+                        <td><strong>Suma Grupo</strong></td><td colspan="7"><strong>{{$i}}<strong></td>
                     </tr>
                     <?php 
                     $j=$i+$j;
@@ -41,6 +41,7 @@
                         <td>{{$registro->especialidad}}</td><td>{{$registro->grupo}} {{$registro->asignacion}}</td><td>{{$registro->instructor}}</td><td>{{$registro->materi}}</td> 
                         <td>{{$registro->id}} - {{$registro->cliente}}</td>
                         <td>{{$registro->fec_inscripcion}}</td>
+                        <td>{{$registro->estatus_cliente}}</td>
                         
                     </tr>
                     
@@ -53,10 +54,10 @@
                     $j=$i+$j;
                     ?>
                     <tr>
-                        <td><strong>Suma Grupo</strong></td><td colspan="6"><strong>{{$i}}<strong></td>
+                        <td><strong>Suma Grupo</strong></td><td colspan="7"><strong>{{$i}}<strong></td>
                     </tr>
                     <tr>
-                        <td><strong>Total</strong></td><td colspan="6"><strong>{{$j}}<strong></td>
+                        <td><strong>Total</strong></td><td colspan="7"><strong>{{$j}}<strong></td>
                     </tr>
             </tbody>
         </table>
