@@ -45,6 +45,7 @@ return array(
     'AddFieldAbreviaturaEspecialidadsTable' => $baseDir . '/database/migrations/2019_07_08_130330_add_field_abreviatura_especialidads_table.php',
     'AddFieldIndexClienteIdEbanxesTable' => $baseDir . '/database/migrations/2018_12_17_153737_add_field_index_cliente_id_ebanxes_table.php',
     'AddFieldModuloMateriasTable' => $baseDir . '/database/migrations/2017_12_08_141207_add_field_modulo_materias_table.php',
+    'AddFieldsCuentasEfectivosTable' => $baseDir . '/database/migrations/2019_07_11_125550_add_fields_cuentas_efectivos_table.php',
     'AddFieldsLectivosTable' => $baseDir . '/database/migrations/2018_02_14_150006_add_fields_lectivos_table.php',
     'AddFieldsPlantelsTable' => $baseDir . '/database/migrations/2017_06_16_222542_Add_fields_Plantels_Table.php',
     'AddHashEbanxesTable' => $baseDir . '/database/migrations/2019_01_14_154325_add_hash_ebanxes_table.php',

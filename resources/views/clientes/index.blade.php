@@ -29,7 +29,9 @@
             <a class="btn btn-success" href="{{ route('clientesa.index', array('p'=>1)) }}"><i class="glyphicon glyphicon-plus"></i> Inscritos</a>
             <a class="btn btn-warning" href="{{ route('clientesa.index') }}"><i class="glyphicon glyphicon-plus"></i> Clientes</a>
             @permission('clientes.create')
+            @if($fecha_superada==0)
             <a class="btn btn-success pull-right" href="{{ route('clientes.busqueda') }}"><i class="glyphicon glyphicon-plus"></i> Crear</a>
+            @endif
             @endpermission
             @permission('clientes.carga')
             <a class="btn btn-warning pull-right" href="{{ route('clientes.carga') }}"><i class="glyphicon glyphicon-plus"></i> Carga Archivo</a>
@@ -199,6 +201,11 @@
         @if(session('message'))
             <div class="alert alert-danger">
                 {!! session('message') !!}
+            </div>
+        @endif
+        @if($fecha_superada)
+            <div class="alert alert-danger">
+                Bloqueo de creacion, hay una fecha de fin de periodo lectivo de graficas que necesita ser actualizada.
             </div>
         @endif
         

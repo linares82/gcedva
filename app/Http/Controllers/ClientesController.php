@@ -58,6 +58,16 @@ class ClientesController extends Controller {
      * @return Response
      */
     public function index(Request $request) {
+        $lectivos_graficas=Lectivo::where('id','<=',2)->get();
+        $hoy=Carbon::today();
+        $fecha_superada=0;
+        foreach($lectivos_graficas as $lg){
+            $fin=Carbon::createFromFormat('Y-m-d', $lg->fin);
+            if($fin<$hoy){
+                $fecha_superada=1;
+            }
+        }
+        
         $users=User::pluck('name','id');
         $users->prepend('Seleccionar opción',0);
         if (isset($_REQUEST["p"])) {
@@ -78,9 +88,11 @@ class ClientesController extends Controller {
         $clientes = Seguimiento::getAllData($request, 20, session('filtro_clientes'));
         $empleado = Empleado::where('user_id', '=', Auth::user()->id)->first();
         
-        return view('clientes.index', compact('clientes','users','empleado'))
+        
+            return view('clientes.index', compact('clientes','users','empleado','fecha_superada'))
                         ->with('list', Seguimiento::getListFromAllRelationApps())
                         ->with('list1', Cliente::getListFromAllRelationApps());
+        
     }
     
     public function indexEventos(Request $request) {

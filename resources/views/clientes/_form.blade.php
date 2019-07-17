@@ -78,7 +78,7 @@
                         </div>
 
                         <div class="form-group col-md-4 @if($errors->has('tel_fijo')) has-error @endif">
-                            <label for="tel_fijo-field">TelÃ©fono Fijo</label>
+                            <label for="tel_fijo-field">Teléfono Fijo</label>
                             {!! Form::text("tel_fijo", null, array("class" => "form-control input-sm", "id" => "tel_fijo-field")) !!}
                             @if($errors->has("tel_fijo"))
                             <span class="help-block">{{ $errors->first("tel_fijo") }}</span>
@@ -969,7 +969,8 @@
                     <tbody>
                         @foreach($i->hacademicas as $a)
                         <tr>
-                            <td><a href='http://localhost/crmscool_jesadi/public/asignacionAcademicas/index?&q%5Basignacion_academicas.lectivo_id_lt%5D={{$a->lectivo_id}}&q%5Basignacion_academicas.plantel_id_lt%5D={{$a->plantel_id}}&q%5Basignacion_academicas.empleado_id_lt%5D={{$a->empleado_id}}&q%5Basignacion_academicas.materium_id_lt%5D={{$a->materium_id}}&q%5Basignacion_academicas.grupo_id_lt%5D={{$a->grupo_id}}' target='_blank'>{{$a->materia->name}}</a></td><td>{{$a->stMateria->name}}</td>
+                            <td><a href='{{url("asignacionAcademicas/index")}}?&q%5Basignacion_academicas.lectivo_id_lt%5D={{$a->lectivo_id}}&q%5Basignacion_academicas.plantel_id_lt%5D={{$a->plantel_id}}&q%5Basignacion_academicas.empleado_id_lt%5D={{$a->empleado_id}}&q%5Basignacion_academicas.materium_id_lt%5D={{$a->materium_id}}&q%5Basignacion_academicas.grupo_id_lt%5D={{$a->grupo_id}}' target='_blank'>{{$a->materia->name}}</a></td><td>{{$a->stMateria->name}}</td>
+
                             <td>
                                 <a href="{{ route('hacademicas.destroy', $a->id) }}" class="btn btn-xs btn-danger" ><i class="glyphicon glyphicon-trash"></i> Eliminar</a>
                             </td>

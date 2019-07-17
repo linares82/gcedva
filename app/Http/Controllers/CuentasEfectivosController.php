@@ -53,6 +53,10 @@ class CuentasEfectivosController extends Controller {
 		$input['usu_alta_id']=Auth::user()->id;
 		$input['usu_mod_id']=Auth::user()->id;
 
+                if(!isset($input['bnd_banco'])){
+                    $input['bnd_banco']=0;
+                }
+                
 		//create data
 		$cuentasEfectivo=CuentasEfectivo::create( $input );
                 
@@ -121,7 +125,9 @@ class CuentasEfectivosController extends Controller {
 		$input = $request->except('plantel_id');
 		$input['usu_mod_id']=Auth::user()->id;
                 $plantels=$request->only('plantel_id');
-                
+                if(!isset($input['bnd_banco'])){
+                    $input['bnd_banco']=0;
+                }
                 
 		//update data
 		$cuentasEfectivo=$cuentasEfectivo->find($id);
@@ -146,21 +152,36 @@ class CuentasEfectivosController extends Controller {
 		return redirect()->route('cuentasEfectivos.index')->with('message', 'Registro Borrado.');
 	}
 
-        public function getCuentasPlantel(Request $request)
+        public function getCuentasPlantelFormaPago(Request $request)
         {
             if($request->ajax()){
                 $data=$request->all();
                 $plantel=$data['plantel'];
+                $forma_pago=$data['forma_pago'];
                 
                 $final = array();
-                $r = DB::table('cuentas_efectivos as ce')
+                if($forma_pago==1){
+                    $r = DB::table('cuentas_efectivos as ce')
                                 ->select('ce.id', 'ce.name')
                                 ->join('cuentas_efectivo_plantels as cep','cep.cuentas_efectivo_id','=','ce.id')
                                 ->where('cep.plantel_id', '=', $plantel)
+                                ->where('ce.bnd_banco', 0)
                                 ->where('ce.id', '>', '0')
                                 ->get();
                 
-                return $r;
+                    return $r;
+                }else{
+                    $r = DB::table('cuentas_efectivos as ce')
+                                ->select('ce.id', 'ce.name')
+                                ->join('cuentas_efectivo_plantels as cep','cep.cuentas_efectivo_id','=','ce.id')
+                                ->where('cep.plantel_id', '=', $plantel)
+                                ->where('ce.bnd_banco', 1)
+                                ->where('ce.id', '>', '0')
+                                ->get();
+                
+                    return $r;
+                }
+                
                 
             }
         }

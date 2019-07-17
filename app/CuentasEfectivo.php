@@ -18,7 +18,7 @@ class CuentasEfectivo extends Model
     } 
 
 	//Mass Assignment
-	protected $fillable = ['name','clabe','no_cuenta','saldo_inicial','saldo_actualizado','fecha_saldo_inicial','usu_alta_id','usu_mod_id'];
+	protected $fillable = ['name','clabe','no_cuenta','saldo_inicial','saldo_actualizado','fecha_saldo_inicial','usu_alta_id','usu_mod_id', 'bnd_banco','csc_efectivo'];
 
 	public function usu_alta() {
 		return $this->hasOne('App\User', 'id', 'usu_alta_id');

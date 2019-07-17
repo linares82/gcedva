@@ -40,6 +40,23 @@
                         <span class="help-block">{{ $errors->first("saldo_inicial") }}</span>
                        @endif
                     </div>
+
+                    <div class="form-group col-md-4 @if($errors->has('bnd_banco')) has-error @endif">
+                        <label for="bnd_banco-field">Cuenta Bancaria?</label>
+                        {!! Form::checkbox("bnd_banco", 1, null, [ "id" => "bnd_banco-field", 'class'=>'minimal']) !!}
+                        @if($errors->has("bnd_banco"))
+                        <span class="help-block">{{ $errors->first("bnd_banco") }}</span>
+                        @endif
+                    </div>
+
+                    <div class="form-group col-md-4 @if($errors->has('csc_efectivo')) has-error @endif">
+                       <label for="csc_efectivo-field">Consecutivo para Cuenta de Efectivo</label>
+                       {!! Form::number("csc_efectivo", null, array("class" => "form-control", "id" => "csc_efectivo-field")) !!}
+                       @if($errors->has("csc_efectivo"))
+                        <span class="help-block">{{ $errors->first("csc_efectivo") }}</span>
+                       @endif
+                    </div>
+
                     <div class="form-group col-md-12 {{ $errors->has('plantel_id') ? 'has-error' : '' }}">
                         <label for="plantel_id" class="control-label">Plantel</label>
                         <!--<div class="col-md-10">-->

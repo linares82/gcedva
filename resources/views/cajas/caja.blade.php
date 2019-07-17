@@ -568,7 +568,7 @@ Agregar nuevo registro
                     </div>
                     <div class="form-group col-md-6 @if($errors->has('referencia')) has-error @endif">
                        <label for="referencia-field">Referencia</label>
-                       {!! Form::text("referencia", null, array("class" => "form-control", "id" => "referencia-field")) !!}
+                       {!! Form::text("referencia", 0, array("class" => "form-control", "id" => "referencia-field")) !!}
                        @if($errors->has("referencia"))
                         <span class="help-block">{{ $errors->first("referencia") }}</span>
                        @endif
@@ -783,34 +783,6 @@ Agregar nuevo registro
     $('#addPago').modal('show');
     $('#AgregarPago').prop('disabled',true);
     //Cargar cuentas de efectivo
-    @if(isset($caja))
-    $.ajax({
-    type: 'GET',
-            url: '{{route("cuentasEfectivos.getCuentasPlantel")}}',
-            data: {
-            //'_token': $('input[name=_token]').val(),
-                    'plantel': {{$caja->plantel_id}},
-                  
-            },
-            beforeSend : function(){$("#loading3").show(); },
-            complete : function(){$("#loading3").hide(); },
-            success: function(data) {
-            //window.location.href = "{{route('cajas.edit', $caja->id)}}";
-            //$example.select2("destroy");
-                $('#cuenta_efectivo_id-field').empty();
-
-                //$('#especialidad_id-field').empty();
-                //$('#cuentas_efectivo_id-field').append($('<option></option>').text('Seleccionar').val('0'));
-                //alert(data);
-                
-                $.each(data, function(i) {  
-                    //alert(data[i].name);
-                    $('#cuenta_efectivo_id-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
-                });
-                //$('#cuenta_efectivo_id-field').change();
-            }
-    });
-    @endif
     //Fin cargar cuentas de efectivo
     });
     
@@ -841,6 +813,49 @@ Agregar nuevo registro
         });
         });
     @endif
+
+    $('#forma_pago_id-field').change(function(){
+        forma_pago=$(this).val();
+       @if(isset($caja))
+        $.ajax({
+        type: 'GET',
+                url: '{{route("cuentasEfectivos.getCuentasPlantelFormaPago")}}',
+                data: {
+                //'_token': $('input[name=_token]').val(),
+                        'plantel': {{$caja->plantel_id}},
+                        'forma_pago': forma_pago,
+
+                },
+                beforeSend : function(){$("#loading3").show(); },
+                complete : function(){$("#loading3").hide(); },
+                success: function(data) {
+                //window.location.href = "{{route('cajas.edit', $caja->id)}}";
+                //$example.select2("destroy");
+                    $('#cuenta_efectivo_id-field').empty();
+
+                    //$('#especialidad_id-field').empty();
+                    //$('#cuentas_efectivo_id-field').append($('<option></option>').text('Seleccionar').val('0'));
+                    //alert(data);
+
+                    $.each(data, function(i) {  
+                        //alert(data[i].name);
+                        $('#cuenta_efectivo_id-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                        
+                    });
+                    console.log(forma_pago);
+                    if(forma_pago==1){
+                        $('#referencia-field').prop('readonly',true);
+                    }else{
+                        $('#referencia-field').prop('readonly',false);
+                    }
+                    //$('#cuenta_efectivo_id-field').change();
+                }
+        });
+    
+        @endif 
+        
+    });
+
 
     @if (isset($cliente))
     function abrirTicket(csc){
@@ -883,9 +898,8 @@ Agregar nuevo registro
                 fecha=$('#fecha-field').val().toString();
                 forma_pago_id=$('#forma_pago_id-field option:selected').val().valueOf();
                 cuenta_efectivo_id=$('#cuenta_efectivo_id-field option:selected').val().valueOf();
-                referencia=$('#referencia-field').val().toString();
-                
-                if(monto!='' & fecha!='' & forma_pago_id!=0 & referencia!=''){
+                ref0=$('#referencia-field').val().toString();
+                if(monto!='' & fecha!='' & forma_pago_id!=0 & ref0!=''){
                     $('#AgregarPago').prop('disabled',false);
                 }
                 
