@@ -186,6 +186,49 @@ class CuentasEfectivosController extends Controller {
             }
         }
         
+        public function getCuentasPlantel(Request $request)
+        {
+            if($request->ajax()){
+                $data=$request->all();
+                $plantel=$data['plantel'];
+                //$forma_pago=$data['forma_pago'];
+                
+                $final = array();
+                $r = DB::table('cuentas_efectivos as ce')
+                                ->select('ce.id', 'ce.name')
+                                ->join('cuentas_efectivo_plantels as cep','cep.cuentas_efectivo_id','=','ce.id')
+                                ->where('cep.plantel_id', '=', $plantel)
+                                //->where('ce.bnd_banco', 0)
+                                ->where('ce.id', '>', '0')
+                                ->get();
+                
+                    return $r;
+//                if($forma_pago==1){
+//                    $r = DB::table('cuentas_efectivos as ce')
+//                                ->select('ce.id', 'ce.name')
+//                                ->join('cuentas_efectivo_plantels as cep','cep.cuentas_efectivo_id','=','ce.id')
+//                                ->where('cep.plantel_id', '=', $plantel)
+//                                ->where('ce.bnd_banco', 0)
+//                                ->where('ce.id', '>', '0')
+//                                ->get();
+//                
+//                    return $r;
+//                }else{
+//                    $r = DB::table('cuentas_efectivos as ce')
+//                                ->select('ce.id', 'ce.name')
+//                                ->join('cuentas_efectivo_plantels as cep','cep.cuentas_efectivo_id','=','ce.id')
+//                                ->where('cep.plantel_id', '=', $plantel)
+//                                ->where('ce.bnd_banco', 1)
+//                                ->where('ce.id', '>', '0')
+//                                ->get();
+//                
+//                    return $r;
+//                }
+                
+                
+            }
+        }
+        
         public function getSaldo(Request $request){
             if($request->ajax()){
                 $data=$request->all();

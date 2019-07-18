@@ -75,6 +75,7 @@
       });
       
       $('#plantel_id-field').change(function(){
+          //alert('hola');
          $.ajax({
             type: 'GET',
                     url: '{{route("cuentasEfectivos.getCuentasPlantel")}}',

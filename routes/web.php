@@ -5732,6 +5732,11 @@ Route::get('facturaCotizacions/index', array(
         //'middleware' => 'permission:cuentasEfectivos.duplicate',
         'uses' => 'CuentasEfectivosController@getCuentasPlantelFormaPago')
     )->middleware('auth');
+    Route::get('/cuentasEfectivos/getCuentasPlantel', array(
+        'as' => 'cuentasEfectivos.getCuentasPlantel',
+        //'middleware' => 'permission:cuentasEfectivos.duplicate',
+        'uses' => 'CuentasEfectivosController@getCuentasPlantel')
+    )->middleware('auth');
     Route::get('/cuentasEfectivos/getSaldo', array(
         'as' => 'cuentasEfectivos.getSaldo',
         //'middleware' => 'permission:cuentasEfectivos.duplicate',
