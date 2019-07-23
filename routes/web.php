@@ -599,6 +599,16 @@ Route::get('medios/index', array(
         'middleware' => 'permission:clientes.index',
         'uses' => 'ClientesController@indexEventos')
     )->middleware('auth');
+    Route::get('clientes/credencial_anverso', array(
+        'as' => 'clientes.credencial_anverso',
+        //'middleware' => 'permission:clientes.index',
+        'uses' => 'ClientesController@credencialAnverso')
+    )->middleware('auth');
+    Route::get('clientes/credencial_reverso', array(
+        'as' => 'clientes.credencial_reverso',
+        //'middleware' => 'permission:clientes.index',
+        'uses' => 'ClientesController@credencialReverso')
+    )->middleware('auth');
     Route::get('clientes/busqueda', array(
         'as' => 'clientes.busqueda',
         'middleware' => 'permission:clientes.create',

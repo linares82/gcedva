@@ -1383,4 +1383,21 @@ class ClientesController extends Controller {
          }
         //echo json_encode(0);
     }
+    
+    public function credencialAnverso(Request $request){
+        $datos=$request->all();
+        $cliente=Cliente::find($datos['id']);
+        $inscripcion=Inscripcion::find($datos['inscripcion']);
+        $img= PivotDocCliente::where('cliente_id',$datos['id'])->where('doc_alumno_id',11)->first();
+        return view('clientes.reportes.credencial_anverso', compact('cliente', 'inscripcion', 'img'))
+                        ->with('');
+    }
+    
+    public function credencialReverso(Request $request){
+        $datos=$request->all();
+        $cliente=Cliente::find($datos['id']);
+        $inscripcion=Inscripcion::find($datos['inscripcion']);
+        return view('clientes.reportes.credencial_reverso', compact('cliente', 'inscripcion'))
+                        ->with('');
+    }
 }

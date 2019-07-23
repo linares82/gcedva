@@ -30,7 +30,9 @@
                     <h3 class="box-title">Crear Nuevo Correo</h3>
                 </div><!-- /.box-header -->
                 <div class="box-body">
-
+                    <div class="form-group">
+                        <input class="form-control" placeholder="De:" id="destinatario" name="from" value="{!! $from !!}">
+                    </div>
                     <div class="form-group">
                         <input class="form-control" placeholder="Para:" id="destinatario" name="destinatario" value="{!! $mail !!}">
                     </div>
@@ -55,18 +57,38 @@
                         @endif
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group col-md-8">
                         <textarea id="contenido_mail" name="contenido_mail" class="form-control" style="height: 200px" placeholder="escriba aquÃ­...">
                          {{$msj}}
                         </textarea>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group col-md-4">
                         <div class="btn btn-default btn-file">
                             <i class="fa fa-paperclip"></i> Adjuntar Archivo
-                            <input type="file"  id="file" name="file" class="email_archivo" >
+                            <input type="file"  id="file1" name="file1" class="email_archivo" data-class_resultado="texto_notificacion1">
                         </div>
                         <p class="help-block"  >Max. 20MB</p>
-                        <div id="texto_notificacion">
+                        <div id="texto_notificacion1">
+
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <div class="btn btn-default btn-file">
+                            <i class="fa fa-paperclip"></i> Adjuntar Archivo
+                            <input type="file"  id="file2" name="file2" class="email_archivo" data-class_resultado="texto_notificacion2">
+                        </div>
+                        <p class="help-block"  >Max. 20MB</p>
+                        <div id="texto_notificacion2">
+
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <div class="btn btn-default btn-file">
+                            <i class="fa fa-paperclip"></i> Adjuntar Archivo
+                            <input type="file"  id="file3" name="file3" class="email_archivo" data-class_resultado="texto_notificacion3">
+                        </div>
+                        <p class="help-block"  >Max. 20MB</p>
+                        <div id="texto_notificacion3">
 
                         </div>
                     </div>
@@ -76,7 +98,6 @@
                 </div><!-- /.box-body -->
                 <div class="box-footer">
                     <div class="pull-right">
-
                         <button type="submit" class="btn btn-primary"><i class="fa fa-envelope-o"></i> ENVIAR</button>
                     </div>
                     <br/>
@@ -168,11 +189,15 @@
 
         var miurl = '{{url("/correos/carga_archivo_correo")}}';
         // var fileup=$("#file").val();
-        var divresul = "texto_notificacion";
+        var divresul = $(this).data('class_resultado');
 
         var data = new FormData();
-        data.append('file', $('#file')[0].files[0]);
-
+        //console.log($(this)[0].files[0]);
+        data.append('file1', $(this)[0].files[0]);
+        /*data.append('file1', $('#file1')[0].files[0]);
+        data.append('file2', $('#file2')[0].files[0]);
+        data.append('file3', $('#file3')[0].files[0]);
+*/
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('#_token').val()
@@ -195,6 +220,7 @@
             },
             //una vez finalizado correctamente
             success: function (data) {
+                
                 var codigo = '<div class="mailbox-attachment-info"><a href="#" class="mailbox-attachment-name"><i class="fa fa-paperclip"></i>' + data + '</a><span class="mailbox-attachment-size"> </span></div>';
                 $("#" + divresul + "").html(codigo);
 

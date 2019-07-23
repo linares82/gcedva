@@ -920,7 +920,7 @@
                 <thead style="color: #ffffff;background: #0B0B3B;">
                 <td>Plantel</td><td>Especialidad</td><td>Nivel</td>
                 <td>Grado</td><td>Grupo</td><td>Periodo</td><td>F. Inscripcion</td>
-                <td>Periodo Lectivo</td><td></td>
+                <td>Periodo Lectivo</td><td>Matricula</td><td></td>
                 </thead>
                 <tbody>
 
@@ -933,6 +933,7 @@
                         <td>{{$i->periodo_estudio->name}}</td>
                         <td>{{$i->fec_inscripcion}}</td>
                         <td>{{$i->lectivo->name}}</td>
+                        <td>{{$i->matricula}}</td>
                         <td>
                             @permission('inscripcions.edit')
                             
@@ -959,6 +960,8 @@
                             @permission('inscripcions.destroy')
                             <a class="btn btn-xs btn-danger" href="{{ route('inscripcions.destroyCli', $i->id) }}"><i class="glyphicon glyphicon-trash"></i>Borrar</a>
                             @endpermission
+                            <a class="btn btn-xs btn-default" href="{{ route('clientes.credencial_anverso', array('id'=>$cliente->id, 'inscripcion'=>$i)) }}" target="_blank"><i class="fa fa-newspaper-o"></i> C. Anverso</a>
+                            <a class="btn btn-xs btn-default" href="{{ route('clientes.credencial_reverso', array('id'=>$cliente->id, 'inscripcion'=>$i)) }}" target="_blank"><i class="fa fa-newspaper-o"></i> C. Reverso</a>
                         </td>
                     </tr>
                     <tr>

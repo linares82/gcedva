@@ -14,7 +14,7 @@
     
   </head>
   <body>
-      <h3>Pagos del Plantel {{$plantel->razon}} el dia {{$data['fecha_f']}}</h3>
+      <h3>Pagos del Plantel {{$plantel->razon}} del dia {{$data['fecha_f']}} al {{$data['fecha_t']}}</h3>
     <div class="datagrid">
         @if(isset($registros_pagados) and count($registros_pagados)>0)
         <table class="table table-condensed table-striped">
@@ -61,7 +61,10 @@
                     $colaborador=$registro->colaborador; 
                     $i++;
                     $total_monto=$total_monto+$registro->pago;
-                    $suma_total=$suma_total+$registro->monto_pago;
+                    if($registro->forma_pago_id==1){
+                        $suma_total=$suma_total+$registro->monto_pago;
+                    }
+                    
                     ?>
                 @endforeach
                     <?php 
@@ -120,7 +123,9 @@
                     $colaborador=$registro->colaborador; 
                     $i++;
                     $total_monto=$total_monto+$registro->pago;
-                    $suma_total=$suma_total+$registro->monto_pago;
+                    if($registro->forma_pago_id==1){
+                        $suma_total=$suma_total+$registro->monto_pago;
+                    }
                     ?>
                 @endforeach
                     <?php 
@@ -140,7 +145,7 @@
     <div id="wdr-component1"></div>-->
     <script src="{{asset('bower_components\AdminLTE\plugins\webdatarocks\webdatarocks.toolbar.min.js')}}"></script>
     <script src="{{asset('bower_components\AdminLTE\plugins\webdatarocks\webdatarocks.js')}}"></script>
-    <script>
+<!--    <script>
 	function customizeToolbar(toolbar) {
 		var tabs = toolbar.getTabs(); // get all tabs from the toolbar
 		toolbar.getTabs = function() {
@@ -643,7 +648,7 @@
     });
     
         
-    </script>
+    </script>-->
   </body>
 </html>
 

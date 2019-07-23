@@ -125,18 +125,18 @@ class CorreosController extends Controller {
         $nombre = $nombre;
         $empresa=$empresa;
         $msj=$msj;
-        return view('correos.version2.frm_envio', compact('mail', 'nombre', 'empresa','msj'));
+        $from=Auth::user()->email;
+        return view('correos.version2.frm_envio', compact('mail', 'nombre', 'empresa','msj','from'));
     }
 
     public function cargaArchivoCorreo(Request $request) {
-        if ($request->hasFile('file')) {
-
-            $file = $request->file('file');
+        $nombre="";
+        if($request->hasFile('file1')) {
+            $file = $request->file('file1');
             $extension = $file->getClientOriginalExtension();
             $nombre = $file->getClientOriginalName();
             $r = Storage::disk('tmp_correos')->put($nombre, \File::get($file));
-        } else {
-
+        }else {
             return "no";
         }
 
@@ -149,13 +149,29 @@ class CorreosController extends Controller {
 
     public function enviarCorreo(Request $request) {
         //dd($request->all());
-        $pathToFile = "";
+        $pathToFile = array();
         $containfile = false;
-        if ($request->hasFile('file')) {
+        $paths=array();
+        if ($request->hasFile('file1')) {
             $containfile = true;
-            $file = $request->file('file');
+            $file = $request->file('file1');
             $nombre = $file->getClientOriginalName();
             $pathToFile = storage_path('app') . "/tmp_correos/" . $nombre;
+            array_push($paths,$pathToFile);
+        }
+        if ($request->hasFile('file2')) {
+            $containfile = true;
+            $file = $request->file('file2');
+            $nombre = $file->getClientOriginalName();
+            $pathToFile = storage_path('app') . "/tmp_correos/" . $nombre;
+            array_push($paths,$pathToFile);
+        }
+        if ($request->hasFile('file3')) {
+            $containfile = true;
+            $file = $request->file('file3');
+            $nombre = $file->getClientOriginalName();
+            $pathToFile = storage_path('app') . "/tmp_correos/" . $nombre;
+            array_push($paths,$pathToFile);
         }
         /*
         
@@ -169,16 +185,20 @@ class CorreosController extends Controller {
         $n = $request->input("nombre");
         $asunto = $request->input("asunto");
         $contenido = $request->input("contenido_mail");
-        $from=Auth::user()->email;
+        $from=$request->input("from");
 
         $data = array('contenido' => $contenido, 'nombre' => $n, 'correo'=>$from);
         $r = \Mail::send('correos.version2.correo_individual', $data, function ($message)
-                    use ($asunto, $destinatario, $containfile, $pathToFile, $n, $from) {
+                    use ($asunto, $destinatario, $containfile, $paths, $n, $from) {
                     $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
                     $message->to($destinatario, $n)->subject($asunto);
                     $message->replyTo($from);
                     if ($containfile) {
-                        $message->attach($pathToFile);
+                        foreach($paths as $path){
+                            //dd($path);
+                            $message->attach($path);
+                        }
+                        
                     }
                 });
         /*

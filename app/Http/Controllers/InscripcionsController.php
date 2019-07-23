@@ -12,6 +12,7 @@ use App\Cliente;
 use App\Hacademica;
 use App\Lectivo;
 use App\Empleado;
+use App\Especialidad;
 use App\Materium;
 use App\Mese;
 use App\Calificacion;
@@ -72,6 +73,19 @@ class InscripcionsController extends Controller {
 
 		//create data
 		$i=Inscripcion::create( $input );
+                
+                $lectivo=Lectivo::find($i->lectivo_id);
+                $fecha=Carbon::createFromFormat('Y-m-d', $lectivo->inicio)->format('y-m-d');
+                $especialidad=Especialidad::find($i->especialidad_id);
+                //dd($especialidad);
+                $relleno="0000000";
+                $consecutivo=substr($relleno, 0, 7-strlen($i->cliente_id)).$i->cliente_id;
+                //dd($consecutivo);
+                if($especialidad->abreviatura<>""){
+                    $entrada['matricula']=date('m',strtotime($fecha)).date('y',strtotime($fecha)).$especialidad->abreviatura.$consecutivo;
+                    $i->update($entrada);
+                }
+                
                 
                 $combinacion= \App\CombinacionCliente::find($i->combinacion_cliente_id);
                 if(count($combinacion)>0){
@@ -208,19 +222,36 @@ class InscripcionsController extends Controller {
 		//update data
 		$inscripcion=$inscripcion->find($id);
 		$inscripcion->update( $input );
-                $combinacion= \App\CombinacionCliente::find($inscripcion->combinacion_cliente_id);
-                if($combinacion->plantel_id<>$inscripcion->plantel_id){
-                    $cliente=Cliente::find($combinacion->cliente_id);
-                    $cliente->plantel_id=$inscripcion->plantel_id;
-                    $cliente->save();
+                
+                $lectivo=Lectivo::find($inscripcion->lectivo_id);
+                $fecha=Carbon::createFromFormat('Y-m-d', $lectivo->inicio)->format('y-m-d');
+                $especialidad=Especialidad::find($inscripcion->especialidad_id);
+                //dd($especialidad);
+                $relleno="0000000";
+                $consecutivo=substr($relleno, 0, 7-strlen($inscripcion->cliente_id)).$inscripcion->cliente_id;
+                //dd($consecutivo);
+                if($especialidad->abreviatura<>""){
+                    $entrada['matricula']=date('m',strtotime($fecha)).date('y',strtotime($fecha)).$especialidad->abreviatura.$consecutivo;
+                $inscripcion->update($entrada);
                 }
-                if(count($combinacion)>0){
-                    $combinacion->plantel_id=$inscripcion->plantel_id;
-                    $combinacion->especialidad_id=$inscripcion->especialidad_id;
-                    $combinacion->nivel_id=$inscripcion->nivel_id;
-                    $combinacion->grado_id=$inscripcion->grado_id;
-                    $combinacion->save();
+                
+                
+                if($inscripcion->combinacion_cliente_id<>0){
+                    $combinacion= \App\CombinacionCliente::find($inscripcion->combinacion_cliente_id);
+                    if($combinacion->plantel_id<>$inscripcion->plantel_id){
+                        $cliente=Cliente::find($combinacion->cliente_id);
+                        $cliente->plantel_id=$inscripcion->plantel_id;
+                        $cliente->save();
+                    }
+                    if(count($combinacion)>0){
+                        $combinacion->plantel_id=$inscripcion->plantel_id;
+                        $combinacion->especialidad_id=$inscripcion->especialidad_id;
+                        $combinacion->nivel_id=$inscripcion->nivel_id;
+                        $combinacion->grado_id=$inscripcion->grado_id;
+                        $combinacion->save();
+                    }
                 }
+                
                 
 		return redirect()->route('inscripcions.index')->with('message', 'Registro Actualizado.');
 	}

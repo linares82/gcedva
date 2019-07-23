@@ -82,7 +82,8 @@ class AlertaFinContrato extends Command
                     ->get();
             //Log::info($alertas);
             //dd($dias_restantes);
-            //dd($alertas->toArray());
+            dd($alertas->toArray());
+            
             $mail=$e->mail;
             $jefe_mail=$e->j_mail_empresa;
             $responsable_mail=$e->r_mail_empresa;

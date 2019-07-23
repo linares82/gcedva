@@ -89,6 +89,10 @@
                                 <label for="q_empresas.estado_id_lt">ESTADO</label>
                                     {!! Form::select("estado_id", $list["Estado"], "{{ @(Request::input('q')['empresas.estado_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[empresas.estado_id_lt]", "id"=>"q_empresas.estado_id_lt", "style"=>"width:100%;" )) !!}
                             </div>
+                            <div class="form-group col-md-4" style="">
+                                <label for="q_empresas.giro_id_lt">giro</label>
+                                    {!! Form::select("giro_id", $list["Giro"], "{{ @(Request::input('q')['empresas.giro_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[empresas.giro_id_lt]", "id"=>"q_empresas.giro_id_lt", "style"=>"width:100%;" )) !!}
+                            </div>
                                                     <!--
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_tel_fijo_gt">TEL_FIJO</label>
@@ -141,6 +145,7 @@
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'razon_social', 'title' => 'RAZON SOCIAL'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'nombre_contacto', 'title' => 'NOMBRE CONTACTO'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'giro_id', 'title' => 'GIRO'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'estado_id', 'title' => 'ESTADO'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'st_empresa_id', 'title' => 'ESTATUS'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'created_at', 'title' => 'ALTA'])</th>
@@ -154,6 +159,7 @@
                                 <td><a href="{{ route('empresas.show', $empresa->id) }}">{{$empresa->id}}</a></td>
                                 <td>{{$empresa->razon_social}}</td>
                                 <td>{{$empresa->nombre_contacto}}</td>
+                                <td>{{$empresa->giro->name}}</td>
                                 <td>{{$empresa->estado->name}}</td>
                                 <td>{{$empresa->stEmpresa->name}}</td>
                                 <td>{{$empresa->created_at}}</td>

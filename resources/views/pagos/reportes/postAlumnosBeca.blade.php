@@ -20,7 +20,7 @@
         <table class="table table-condensed table-striped">
             <thead>
                 <tr>
-                    <th>Cliente</th><th>Becado</th><th>Justificacion</th><th>monto inscripcion</th><th>monto mensualidad</th><th></th>
+                    <th>Cliente</th><th>Estatus Cliente</th><th>Estatus Seguimiento</th><th>Becado</th><th>Justificacion</th><th>monto inscripcion</th><th>monto mensualidad</th><th></th>
                 </tr> 
             </thead>
             <tbody>
@@ -35,6 +35,7 @@
                     
                     <tr>
                         <td>{{$registro->cliente}} - {{$registro->cliente_nombre}}</td>
+                        <td>{{$registro->estatus_cliente}}</td><td>{{$registro->estatus_seguimiento}}</td>
                         <td>
                             @if($registro->beca_bnd==1)
                                 SI
@@ -46,12 +47,13 @@
                         <td>{{$registro->monto_inscripcion}}</td>
                         <td>{{$registro->monto_mensualidad}}</td>
                         <td>
-                            <?php $cajas=App\Caja::select('cajas.consecutivo','cc.name as concepto','ln.subtotal','ln.descuento','ln.recargo','ln.total')
-                                                ->where('cliente_id',$registro->cliente)
+                            <?php $cajas=App\Caja::select('cajas.consecutivo','cc.name as concepto','ln.subtotal','ln.descuento','ln.recargo','ln.total','a.fecha_pago')
+                                                ->where('cajas.cliente_id',$registro->cliente)
                                                  ->join('caja_lns as ln','ln.caja_id','=','cajas.id')
                                                  ->join('caja_conceptos as cc','cc.id','=','ln.caja_concepto_id')
-                                                 ->where('cajas.fecha','>=',$data['fecha_f'])
-                                                 ->where('cajas.fecha','<=',$data['fecha_t'])
+                                                 ->join('adeudos as a', 'a.id','=','ln.adeudo_id')
+                                                 ->where('a.fecha_pago','>=',$data['fecha_f'])
+                                                 ->where('a.fecha_pago','<=',$data['fecha_t'])
                                                  ->where('ln.promo_plan_ln_id',0)
                                                  ->where('ln.descuento','>',0)
                                                  ->get();
@@ -59,12 +61,12 @@
                             @if(count($cajas)>0)
                             <table>
                                 <thead>
-                                    <tr><th>Caja</th><th>Concepto</th><th>Subtotal</th><th>Descuento</th><th>Recargo</th><th>Total</th></tr>
+                                    <tr><th>Caja</th><th>Fecha Planeada</th><th>Concepto</th><th>Subtotal</th><th>Descuento</th><th>Recargo</th><th>Total</th></tr>
                                 </thead>
                                 <tbody>
                                     @foreach($cajas as $ln)
                                     <tr>
-                                        <td>{{$ln->consecutivo}}</td><td>{{$ln->concepto}}</td><td>{{$ln->subtotal}}</td><td>{{$ln->descuento}}</td>
+                                        <td>{{$ln->consecutivo}}</td><td>{{$ln->fecha_pago}}</td><td>{{$ln->concepto}}</td><td>{{$ln->subtotal}}</td><td>{{$ln->descuento}}</td>
                                         <td>{{$ln->recargo}}</td><td>{{$ln->total}}</td>
                                     </tr>
                                         
@@ -83,9 +85,9 @@
                     
                 @endforeach
                     
-                    <tr>
+<!--                    <tr>
                         <td><strong>Total</strong></td><td colspan="5"><strong><strong></td><td colspan="2"><strong>{{number_format(0)}}</strong></td>
-                    </tr>
+                    </tr>-->
             </tbody>
         </table>
         @endif
@@ -96,7 +98,7 @@
     <div id="wdr-component1"></div>-->
     <script src="{{asset('bower_components\AdminLTE\plugins\webdatarocks\webdatarocks.toolbar.min.js')}}"></script>
     <script src="{{asset('bower_components\AdminLTE\plugins\webdatarocks\webdatarocks.js')}}"></script>
-    <script>
+<!--    <script>
 	function customizeToolbar(toolbar) {
 		var tabs = toolbar.getTabs(); // get all tabs from the toolbar
 		toolbar.getTabs = function() {
@@ -599,7 +601,7 @@
     });
     
         
-    </script>
+    </script>-->
   </body>
 </html>
 

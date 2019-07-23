@@ -35,7 +35,7 @@ class CajaObserver
             $seguimiento->st_seguimiento_id=2;
             $seguimiento->save();
             $cliente=Cliente::find($this->caja->cliente_id);
-            $cliente->st_cliente_id=4;
+            $cliente->st_cliente_id=22;
             $cliente->save();
         }
     }
