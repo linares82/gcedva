@@ -272,6 +272,11 @@ class ClientesController extends Controller {
         } else {
             $input['beca_bnd'] = 1;
         }
+        if (!isset($input['bnd_reingreso'])) {
+            $input['beca_bnd'] = 0;
+        } else {
+            $input['beca_bnd'] = 1;
+        }
         //dd($input);
         //create data
         try {
@@ -507,6 +512,11 @@ class ClientesController extends Controller {
             $input['extranjero'] = 1;
         }
         if (!isset($input['beca_bnd'])) {
+            $input['beca_bnd'] = 0;
+        } else {
+            $input['beca_bnd'] = 1;
+        }
+        if (!isset($input['bnd_reingreso'])) {
             $input['beca_bnd'] = 0;
         } else {
             $input['beca_bnd'] = 1;

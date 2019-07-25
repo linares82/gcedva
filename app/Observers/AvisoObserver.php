@@ -37,8 +37,19 @@ class AvisoObserver
         $h->usu_mod_id=$this->Aviso->usu_mod_id;
 
         //dd($h);
-        
         $h->save();
+        
+        //cambio de estatus
+        //cambio de estatus de cliente y seguimiento
+        $seguimiento->st_seguimiento_id=4;
+        $seguimiento->save();
+        
+        $cliente=Cliente::find($seguimiento->cliente_id);
+        $cliente->st_cliente_id=1;
+        $cliente->save();
+        
+        
+        
     }
 
     /**

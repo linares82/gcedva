@@ -840,6 +840,7 @@ class InscripcionsController extends Controller {
                             ->join('empleados as e', 'e.id', '=', 'aa.empleado_id')
                             ->where('inscripcions.plantel_id', $data['plantel_f'])
                             ->where('inscripcions.lectivo_id', $data['lectivo_f'])
+                            ->where('h.lectivo_id', $data['lectivo_f'])
                             ->whereNull('inscripcions.deleted_at')
                             ->whereNull('h.deleted_at')
                             ->orderBy('aa.id','esp.name','gru.id')

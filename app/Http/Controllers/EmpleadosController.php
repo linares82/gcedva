@@ -28,7 +28,8 @@ class EmpleadosController extends Controller {
         $empleados = Empleado::getAllData($request);
         //$historials = Historial::getAllData($request);
 
-        return view('empleados.index', compact('empleados','historials'));
+        return view('empleados.index', compact('empleados','historials'))
+                ->with('list', Empleado::getListFromAllRelationApps());
     }
 
     /**

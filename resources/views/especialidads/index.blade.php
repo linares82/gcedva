@@ -90,6 +90,7 @@
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'plantel_id', 'title' => 'PLANTEL'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'name', 'title' => 'ESPECIALIDAD'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'vencimiento_rvoe', 'title' => 'VENCIMIENTO RVOE'])</th>
                             <th class="text-right"></th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
@@ -101,6 +102,26 @@
                                 <td><a href="{{ route('especialidads.show', $especialidad->id) }}">{{$especialidad->id}}</a></td>
                                 <td>{{$especialidad->plantel->razon}}</td>
                                 <td>{{$especialidad->name}}</td>
+                                <td>
+                                    <?php 
+                                    if(!is_null($especialidad->vencimiento_rvoe)){
+                                        $vencimiento=\Carbon\Carbon::createFromFormat('Y-m-d', $especialidad->vencimiento_rvoe); 
+                                        $vencimiento_minus30=\Carbon\Carbon::createFromFormat('Y-m-d', $especialidad->vencimiento_rvoe)->subMonth();
+                                        $hoy=\Carbon\Carbon::createFromFormat('Y-m-d', Date('Y-m-d'));
+                                    }
+                                          ?>
+                                    <span
+                                        @if(!is_null($especialidad->vencimiento_rvoe))
+                                          @if($vencimiento<=$hoy and !is_null($especialidad->vencimiento_rvoe))
+                                           class="text-red"
+                                          @elseif($hoy<$vencimiento and $hoy>$vencimiento_minus30 and !is_null($especialidad->vencimiento_rvoe))
+                                           class="text-yellow"
+                                          @else
+                                           class="text-green"
+                                          @endif
+                                        @endif
+                                           >{{$especialidad->vencimiento_rvoe}}</span>
+                                </td>
                                 <td>
                                     <img src="{{asset('storage/especialidads/'.$especialidad->imagen)}}" alt="Logo" height="42" width="42" > </td>
                                 </td>

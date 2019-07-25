@@ -83,15 +83,25 @@
                          <td><div id="div_par{{$r->id}}">{{ $r->calificacion_parcial }}</div></td>
                          <td><div id="div_cp{{$r->id}}">{{ $r->calificacion_parcial_calculada }}</div></td>
                          <td>
-                             {!! Form::text("calificacion", null, array("class" => "form-control input-sm col-md-6", 
+                             @if($r->estatus_cliente_id==25)
+                             
+                             @else
+                                {!! Form::text("calificacion", null, array("class" => "form-control input-sm col-md-6", 
                                                                         "id" => "calificacion_parcial".$r->id)) !!}
+                             @endif
+                             
                          </td>
                          <td>
-                             <button type="button"  
+                             @if($r->estatus_cliente_id==25)
+                             
+                             @else
+                                <button type="button"  
                                      class="btn btn-primary btn-xs btn-guardar_caificacion" 
                                      data-calificacion_ponderacion_id="{{ $r->calificacion_ponderacion_id }}"
                                      data-cliente_id="{{$r->id}}"
                                  >Actualizar</button>
+                             @endif
+                             
                          </td>
                          <td>
                              <div id='loading{{$r->id}}}' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 

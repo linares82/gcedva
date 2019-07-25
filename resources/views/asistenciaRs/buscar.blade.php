@@ -60,8 +60,11 @@
                             <td>{{ $s->fecha }}</td>
                             <td>
                                 <div class="form-group col-md-4 @if($errors->has('est_asistencia_id')) has-error @endif">
+                                    @if($s->cliente->st_cliente_id==25)                                    
+                                    @else
+                                        {!! Form::select("est_asistencia_id", $list["EstAsistencium"], $s->est_asistencia_id, array("class" => "form-control select_seguridad1", "id" => "est_asistencia_id".$s->id."-field", "name" => "est_asistencia_id".$s->id."-field")) !!}
+                                    @endif
                                     
-                                    {!! Form::select("est_asistencia_id", $list["EstAsistencium"], $s->est_asistencia_id, array("class" => "form-control select_seguridad1", "id" => "est_asistencia_id".$s->id."-field", "name" => "est_asistencia_id".$s->id."-field")) !!}
                                     @if($errors->has("est_asistencia_id"))
                                      <span class="help-block">{{ $errors->first("est_asistencia_id") }}</span>
                                     @endif

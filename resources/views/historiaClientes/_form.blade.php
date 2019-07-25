@@ -20,6 +20,13 @@
                         <span class="help-block">{{ $errors->first("fecha") }}</span>
                        @endif
                     </div>
+                    <div class="form-group col-md-4 @if($errors->has('fec_vigencia')) has-error @endif">
+                       <label for="fec_vigencia-field">Fecha Vigencia</label>
+                       {!! Form::text("fec_vigencia", null, array("class" => "form-control", "id" => "fec_vigencia-field")) !!}
+                       @if($errors->has("fec_vigencia"))
+                        <span class="help-block">{{ $errors->first("fec_vigencia") }}</span>
+                       @endif
+                    </div>
                     <div class="form-group col-md-4 @if($errors->has('archivo')) has-error @endif">
                        <label for="archivo-field">Archivo</label>
                        {!! Form::text("archivo", null, array("class" => "form-control input-sm", "id" => "archivo-field", 'readonly'=>'readonly')) !!}
@@ -33,6 +40,13 @@
 <script type="text/javascript">
     $(document).ready(function() {
     $('#fecha-field').Zebra_DatePicker({
+                        days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
+                                months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                                readonly_element: false,
+                                lang_clear_date: 'Limpiar',
+                                show_select_today: 'Hoy',
+    });
+    $('#fec_vigencia-field').Zebra_DatePicker({
                         days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
                                 months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
                                 readonly_element: false,

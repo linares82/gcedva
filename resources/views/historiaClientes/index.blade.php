@@ -200,6 +200,7 @@
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'evento_clientes.name', 'title' => 'EVENTO'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'descripcion', 'title' => 'DESCRIPCION'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'fecha', 'title' => 'FECHA'])</th>
+                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'fec_vigencia', 'title' => 'FECHA VIGENCIA'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'archivo', 'title' => 'ARCHIVO'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clientes.nombre', 'title' => 'CLIENTE_NOMBRE'])</th>
                         
@@ -214,6 +215,7 @@
                                 <td>{{$historiaCliente->eventoCliente->name}}</td>
                     <td>{{$historiaCliente->descripcion}}</td>
                     <td>{{$historiaCliente->fecha}}</td>
+                    <td>{{$historiaCliente->fec_vigencia}}</td>
                     <td><a href='{!! asset("/imagenes/historia_clientes/".$historiaCliente->id."/".$historiaCliente->archivo) !!}' target='_blank'>Ver</h></td>
                     <td>{{$historiaCliente->cliente->nombre}} {{$historiaCliente->cliente->nombre2}} {{$historiaCliente->cliente->ape_paterno}} {{$historiaCliente->cliente->ape_materno}}</td>
                     

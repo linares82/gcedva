@@ -27,6 +27,13 @@
                                 <span class="help-block">{{ $errors->first("rvoe") }}</span>
                                @endif
                             </div>
+                            <div class="form-group col-md-4 @if($errors->has('vencimiento_rvoe')) has-error @endif">
+                               <label for="vencimiento_rvoe-field">Vencimiento RVOE</label>
+                               {!! Form::text("vencimiento_rvoe", null, array("class" => "form-control input-sm", "id" => "vencimiento_rvoe-field")) !!}
+                               @if($errors->has("vencimiento_rvoe"))
+                                <span class="help-block">{{ $errors->first("rvoe") }}</span>
+                               @endif
+                            </div>
                             <div class="form-group col-md-4 @if($errors->has('ccte')) has-error @endif">
                                <label for="ccte-field">CCTE</label>
                                {!! Form::text("ccte", null, array("class" => "form-control input-sm", "id" => "ccte-field")) !!}
@@ -110,6 +117,13 @@
 @push('scripts')
   <script type="text/javascript">
     $(document).ready(function() {
+    $('#vencimiento_rvoe-field').Zebra_DatePicker({
+        days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
+        months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+        readonly_element: false,
+        lang_clear_date: 'Limpiar',
+        show_select_today: 'Hoy',
+    });
     $('#f_fin-field').Zebra_DatePicker({
         days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
         months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],

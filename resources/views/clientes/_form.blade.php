@@ -961,7 +961,6 @@
                             <a class="btn btn-xs btn-danger" href="{{ route('inscripcions.destroyCli', $i->id) }}"><i class="glyphicon glyphicon-trash"></i>Borrar</a>
                             @endpermission
                             <a class="btn btn-xs btn-default" href="{{ route('clientes.credencial_anverso', array('id'=>$cliente->id, 'inscripcion'=>$i)) }}" target="_blank"><i class="fa fa-newspaper-o"></i> C. Anverso</a>
-                            <a class="btn btn-xs btn-default" href="{{ route('clientes.credencial_reverso', array('id'=>$cliente->id, 'inscripcion'=>$i)) }}" target="_blank"><i class="fa fa-newspaper-o"></i> C. Reverso</a>
                         </td>
                     </tr>
                     <tr>

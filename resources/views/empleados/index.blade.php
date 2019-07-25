@@ -47,10 +47,10 @@
                 <div class="panel-body">
                     <form class="Empleado_search" id="search" action="{{ route('empleados.index') }}" accept-charset="UTF-8" method="get">
                         <input type="hidden" name="q[s]" value="{{ @(Request::input('q')['s']) ?: '' }}" />
-                        <div class="form-horizontal">
+                        <div class="">
                             <div class="form-group col-md-4">
-                                <label class="col-sm-12 control-label" for="q_cve_empleado_lt">ID</label>
-                                <div class="col-sm-12">
+                                <label class="" for="q_cve_empleado_lt">ID</label>
+                                <div class="">
                                     <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['id_lt']) ?: '' }}" name="q[id_lt]" id="q_id_lt" />
                                 </div>
                             </div>
@@ -68,9 +68,9 @@
                             -->
                             
                             <div class="form-group col-md-4">
-                                <label class="col-sm-12 control-label" for="q_cve_empleado_cont">CLAVE EMPLEADO</label>
-                                <div class="col-sm-12">
-                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['cve_empleado_cont']) ?: '' }}" name="q[cve_empleado_cont]" id="q_cve_empleado_cont" />
+                                <label class="control-label" for="q_cve_empleado_cont">CLAVE EMPLEADO</label>
+                                <div class="">
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['cve_empleado_cont']) ?: '' }}" name="q[cve_empleado_cont]" id="q_cve_empleado_cont" />
                                 </div>
                             </div>
                                                     <!--
@@ -86,8 +86,8 @@
                             </div>
                             -->
                             <div class="form-group col-md-4">
-                                <label class="col-sm-12 control-label" for="q_nombre_cont">NOMBRE</label>
-                                <div class="col-sm-12">
+                                <label class="control-label" for="q_nombre_cont">NOMBRE</label>
+                                <div class="">
                                     <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['nombre_cont']) ?: '' }}" name="q[nombre_cont]" id="q_nombre_cont" />
                                 </div>
                             </div>
@@ -104,8 +104,8 @@
                             </div>
                             -->
                             <div class="form-group col-md-4">
-                                <label class="col-sm-12 control-label" for="q_ape_paterno_cont">A. PATERNO</label>
-                                <div class="col-sm-12">
+                                <label class="control-label" for="q_ape_paterno_cont">A. PATERNO</label>
+                                <div class="">
                                     <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['ape_paterno_cont']) ?: '' }}" name="q[ape_paterno_cont]" id="q_ape_paterno_cont" />
                                 </div>
                             </div>
@@ -122,8 +122,8 @@
                             </div>
                             -->
                             <div class="form-group col-md-4">
-                                <label class="col-sm-12 control-label" for="q_ape_materno_cont">A. MATERNO</label>
-                                <div class="col-sm-12">
+                                <label class="control-label" for="q_ape_materno_cont">A. MATERNO</label>
+                                <div class="">
                                     <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['ape_materno_cont']) ?: '' }}" name="q[ape_materno_cont]" id="q_ape_materno_cont" />
                                 </div>
                             </div>
@@ -140,11 +140,19 @@
                             </div>
                             -->
                             <div class="form-group col-md-4">
-                                <label class="col-sm-12 control-label" for="q_puestos.name_cont">PUESTO</label>
-                                <div class="col-sm-12">
-                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['puestos.name_cont']) ?: '' }}" name="q[puestos.name_cont]" id="q_puestos.name_cont" />
+                                <label class="control-label" for="q_empleados.puesto_id_cont">PUESTO</label>
+                                <div class="">
+                                    {!! Form::select("puesto_id", $list["Puesto"], "{{ @(Request::input('q')['empleados.puesto_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[empleados.puesto_id_lt]", "id"=>"q_empleados.puesto_id_lt", "style"=>"width:100%;" )) !!}
                                 </div>
                             </div>
+                            
+                            <div class="form-group col-md-4">
+                                <label class="control-label" for="q_empleados.st_empleado_id_cont">ESTATUS</label>
+                                <div class="">
+                                    {!! Form::select("st_empleado_id", $list["StEmpleado"], "{{ @(Request::input('q')['empleados.st_empleado_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[empleados.st_empleado_id_lt]", "id"=>"q_empleados.st_empleado_id_lt", "style"=>"width:100%;" )) !!}
+                                </div>
+                            </div>
+                            
                             <div class="form-group">
                                 <div class="col-sm-10 col-sm-offset-2">
                                     <input type="submit" name="commit" value="Search" class="btn btn-default btn-xs" />

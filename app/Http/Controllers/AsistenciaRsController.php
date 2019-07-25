@@ -109,6 +109,9 @@ class AsistenciaRsController extends Controller {
                                 $asistencia['usu_mod_id']=Auth::user()->id;
                                 //dd($asistencia);
                                 AsistenciaR::create( $asistencia );
+                                
+                                //verifica adeudos y cambia estatus 
+                                
                             }
                             $asignacion_academica_id=$input['asignacion_academica_id'];
                             $asistencias= AsistenciaR::where('fecha','=', $input['fecha'])
@@ -128,7 +131,12 @@ class AsistenciaRsController extends Controller {
                                     $asistencia['asignacion_academica_id']=$input['asignacion_academica_id'];
                                     $asistencia['fecha']=$input['fecha'];
                                     $asistencia['cliente_id']=$i->cliente_id;
-                                    $asistencia['est_asistencia_id']=1;
+                                    if($i->cliente->st_cliente_id==25){
+                                        $asistencia['est_asistencia_id']=2;
+                                    }else{
+                                        $asistencia['est_asistencia_id']=1;
+                                    }
+                                    
                                     $asistencia['usu_alta_id']=Auth::user()->id;
                                     $asistencia['usu_mod_id']=Auth::user()->id;
                                     //dd($asistencia);

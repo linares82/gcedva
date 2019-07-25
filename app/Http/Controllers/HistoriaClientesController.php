@@ -6,6 +6,7 @@ use File as Archi;
 
 use App\HistoriaCliente;
 use App\Cliente;
+use App\Seguimiento;
 use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updateHistoriaCliente;
@@ -60,7 +61,7 @@ class HistoriaClientesController extends Controller {
                 
 		//create data
 		$e=HistoriaCliente::create( $input );
-                
+                //dd($e->toArray());
                 if($e->evento_cliente_id==4){
                     $cliente=Cliente::find($e->cliente_id);
                     $cliente->st_cliente_id=24;
@@ -69,6 +70,19 @@ class HistoriaClientesController extends Controller {
                     $cliente=Cliente::find($e->cliente_id);
                     $cliente->st_cliente_id=3;
                     $cliente->save();
+                    
+                    $seguimiento=Seguimiento::where('cliente_id',$cliente->id)->first();
+                    $seguimiento->st_seguimiento_id=6;
+                    $seguimiento->save();
+                     //dd("echo");     
+                }elseif($e->evento_cliente_id==6){
+                    $cliente=Cliente::find($e->cliente_id);
+                    $cliente->st_cliente_id=4;
+                    $cliente->save();
+                    
+                    $seguimiento=Seguimiento::where('cliente_id',$cliente->id)->first();
+                    $seguimiento->st_seguimiento_id=2;
+                    $seguimiento->save();
                 }
 
                 if ( $e ){
@@ -138,7 +152,7 @@ class HistoriaClientesController extends Controller {
 		$input['usu_mod_id']=Auth::user()->id;
                 
                 $r=$request->hasFile('archivo_file');
-                //dd($r);
+                //dd($input);
 		if($r){
 			$archivo_file = $request->file('archivo_file');
 			$input['archivo'] = $archivo_file->getClientOriginalName();

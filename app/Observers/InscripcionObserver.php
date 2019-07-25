@@ -5,6 +5,7 @@ namespace App\Observers;
 use App\Inscripcion;
 use App\Alumno;
 use App\Cliente;
+use App\Seguimiento;
 use App\Grupo;
 use App\Lectivo;
 use App\Plantel;
@@ -30,6 +31,13 @@ class InscripcionObserver
         $this->inscripcion=$inscripcion;
         //dd($this->inscripcion);
         $cliente=Cliente::find($inscripcion->cliente_id);
+        $cliente->st_cliente_id=4;
+        $cliente->save();
+        
+        $seguimiento=Seguimiento::where('cliente_id',$cliente->id)->first();
+        $seguimiento->st_seguimiento_id=2;
+        $seguimiento->save();
+        
         //dd($cliente);
         if($cliente->cve_alumno==null){
             $plantel=Plantel::find($cliente->plantel_id);

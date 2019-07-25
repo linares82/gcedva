@@ -82,8 +82,14 @@ class SeguimientoObserver
         $h->usu_mod_id=$this->Seguimiento->usu_mod_id;
 
         //dd($hactividad);
-        
+           
         $h->save();
+        
+        if($this->Seguimiento->st_seguimiento_id==3){
+            $cliente=Cliente::find($this->Seguimiento->cliente_id);
+            $cliente->st_cliente_id=19;
+            $cliente->save();
+        }
     }
 
 }

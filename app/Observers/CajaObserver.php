@@ -6,6 +6,7 @@ use App\Caja;
 use App\Cliente;
 use App\Seguimiento;
 use App\Plantel;
+use App\Inscripcion;
 
 class CajaObserver
 {
@@ -34,9 +35,17 @@ class CajaObserver
             $seguimiento=Seguimiento::where('cliente_id',$this->caja->cliente_id)->first();
             $seguimiento->st_seguimiento_id=2;
             $seguimiento->save();
+            
             $cliente=Cliente::find($this->caja->cliente_id);
-            $cliente->st_cliente_id=22;
-            $cliente->save();
+            $inscripcions=Inscripcion::where('cliente_id',$cliente->id)->whereNull('inscripcions.deleted_at')->get();
+            if(count($inscripcions)==0){
+                $cliente->st_cliente_id=22;
+                $cliente->save();
+            }else{
+                $cliente->st_cliente_id=4;
+                $cliente->save();
+            }
+            
         }
     }
 }

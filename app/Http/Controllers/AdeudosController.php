@@ -18,6 +18,7 @@ use App\PlanPago;
 use App\PlanPagoLn;
 use App\PromoPlanLn;
 use App\ReglaRecargo;
+use App\Seguimiento;
 use App\StCaja;
 use Illuminate\Http\Request;
 use Auth;
@@ -152,8 +153,13 @@ class AdeudosController extends Controller {
             $data=$request->all();
             //dd($data);
             $cliente=Cliente::find($data['cliente']);
-            $cliente->st_cliente_id=22;
+            $cliente->st_cliente_id=1;
             $cliente->save();
+            
+            $seguimiento=Seguimiento::where('cliente_id',$cliente->id)->first();
+            $seguimiento->st_seguimiento_id=5;
+            $seguimiento->save();
+            
             $plantel=Plantel::find($cliente->plantel_id);
             $combinacion=CombinacionCliente::find($data['combinacion']);
             if($combinacion->cuenta_ticket_pago==0){

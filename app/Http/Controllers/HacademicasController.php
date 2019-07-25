@@ -452,7 +452,7 @@ class HacademicasController extends Controller {
         if(isset($data['excepcion'])){
             $hacademicas=HAcademica::select('cli.id', 'cli.nombre','cli.nombre2','cli.ape_paterno','cli.ape_materno','c.calificacion',
                                         'cp.calificacion_parcial_calculada','cp.id as calificacion_ponderacion_id','cp.calificacion_parcial',
-                                        'cpo.name as ponderacion','stc.name as estatus_cliente')
+                                        'cpo.name as ponderacion','stc.name as estatus_cliente','stc.id as estatus_cliente_id')
                                 ->where('grupo_id','=',$asignacionAcademica->grupo_id)
                                 ->join('calificacions as c','c.hacademica_id','=','hacademicas.id')
                                 ->join('calificacion_ponderacions as cp','cp.calificacion_id','=','c.id')
@@ -469,7 +469,7 @@ class HacademicasController extends Controller {
         }else{
             $hacademicas=HAcademica::select('cli.id', 'cli.nombre','cli.nombre2','cli.ape_paterno','cli.ape_materno','c.calificacion',
                                         'cp.calificacion_parcial_calculada','cp.id as calificacion_ponderacion_id','cp.calificacion_parcial',
-                                        'stc.name as estatus_cliente')
+                                        'stc.name as estatus_cliente, stc.id as estatus_cliente_id')
                                 ->where('grupo_id','=',$asignacionAcademica->grupo_id)
                                 ->join('calificacions as c','c.hacademica_id','=','hacademicas.id')
                                 ->join('calificacion_ponderacions as cp','cp.calificacion_id','=','c.id')

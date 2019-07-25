@@ -30,6 +30,59 @@
               <td >{{$cliente->nombre}} {{$cliente->nombre2}} {{$cliente->ape_paterno}} {{$cliente->ape_materno}}</td>
           </tr>
       </table>
+      <br/><br/><br/><br/><br/>
+      <br/><br/><br/><br/><br/>
+      <br/><br/><br/><br/><br/>
+      <br/><br/><br/><br/>
+      <table>
+          <tr>
+              <td>En Caso de Emergencia llamar: </td>
+          </tr>
+            @if($cliente->nombre_padre<>"")
+            <tr>
+                <td>
+                    {{$cliente->nombre_padre}}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Tel. Fijo:{{$cliente->tel_padre}}<br/>
+                    Cel. :{{$cliente->cel_padre}}
+                </td>
+            </tr>
+            @elseif($cliente->nombre_madre<>"")
+            <tr>
+                <td>
+                    {{$cliente->nombre_madre}}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Tel. Fijo:{{$cliente->tel_madre}}<br/>
+                    Cel. :{{$cliente->cel_madre}}
+                </td>
+            </tr>
+            @else
+            <tr>
+                <td>
+                    {{$cliente->nombre_acudiente}}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    {{$cliente->nombre_acudiente}}
+                </td>
+                <td>
+                    Tel. Fijo:{{$cliente->tel_acudiente}}<br/>
+                    Cel. :{{$cliente->cel_acudiente}}
+                </td>
+            </tr>  
+            @endif
+                  
+              </td>
+          </tr>
+          
+      </table>
   </td>
   </body>
 </html>
