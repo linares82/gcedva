@@ -287,22 +287,11 @@
 <script src="{{ asset ('/bower_components/AdminLTE/plugins/input-mask/jquery.inputmask.extensions.js') }}"></script>
 <script src="{{ asset ('/bower_components/AdminLTE/plugins/input-mask/jquery.inputmask.phone.extensions.js') }}"></script>
   <script>
-  
- 
-        // assuming the controls you want to attach the plugin to
-          // have the "datepicker" class set
-          //Campo de fecha
-          
-          /*$('#search').children().last().children().children('.fec').children('input').Zebra_DatePicker({
-          //$('#q_fec_registro_mayorq').Zebra_DatePicker({
-            days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
-            months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-            readonly_element: false,
-            lang_clear_date: 'Limpiar',
-            show_select_today: 'Hoy',
-          });  
-       */
+
       $('#search').children().last().children().children('.fec').children('input').inputmask({ mask: "9999-99-99 99:99:99"}); //specifying options
+      //ale=$('#q_clientes.st_cliente_id_lt option:selected').val();
+      document.getElementById('q_clientes.st_cliente_id_lt').value=4;
+      //$('#search').submit();
       
         function cambioOpcion(){
             getCmbEspecialidad();
@@ -341,125 +330,6 @@
                         }
                 });
                 }
-/*
-    $(document).ready(function() {
-        var $table = $('.tblEnc');
-        $table.find('.btnVerLineas').on('click', function(e) {
-            //console.log("hola");
-    // click button
 
-        //e.preventDefault();
-        var $btn = $(e.target), $tablosatir = $btn.closest('tr'), $tablosonrakisatir = $tablosatir.next('tr.expand-child');
-        if ($btn.attr("lang") === "mesaj") {
-    ///////////// mesajlar butonuna tıklandığında olan olaylar.
-
-        if ($tablosonrakisatir.css("display") === 'none') {
-        // if panel close !
-        $tablosonrakisatir.slideDown(100);
-        //console.log("abre");
-        } else {
-        // if panel open !
-        //console.log("cierra");
-        $tablosonrakisatir.slideUp(100);
-        }
-
-        //$("#kullanicihebir").html($tablosatir.find("tr").length);	
-
-
-        if ($tablosonrakisatir.length) {
-        // sonraki satır yok ise 	
-
-
-
-        } else
-        {
-
-        // sonraki satır var ise	
-        $.ajax({
-        url: "{{route('autorizacionBecas.findByCliente')}}",
-                dataType: "json",
-                type: 'get',
-                data: "check=" + $(this).data('check'),
-                success: function (anaVeri) {
-
-                var yenitablosatir = '<tr class="expand-child" id="collapse' + $btn.data('id') + '">' +
-                        '<td colspan="12">' +
-                        '<table class="table table-condensed altTablo table-hover" width=100% >' +
-                        '<thead>' +
-                        '<tr>' +
-                        '<th>Id</th>' +
-                        '<th>Solicitud</th>' +
-                        '<th>Monto Inscripcion</th>' +
-                        '<th>Monto Mensualidad</th>' +
-                        '<th>Estatus</th>' +
-                        '<th>Creada</th>' +
-                        '<th>Comentarios</th>' +
-                        '<th></th>' +
-                        '</tr>' +
-                        '</thead>' +
-                        '<tbody>';
-                //if (anaVeri.kullanici) {
-                if (anaVeri) {
-                //$.each(anaVeri.kullanici, function(i, kullaniciTomar) {
-
-                var j = 1;
-                $.each(anaVeri, function(i) {
-                var btnEditarLn = "";
-                @permission('ln_impactos.ln_impacto.edit')
-                        btnEditarLn = '<button type="button" class="btn btn-xs btn-primary btnEditLinea" data-linea=' + anaVeri[i].id + '>' +
-                        '<i class="glyphicon glyphicon-pencil"></i> Editar' +
-                        '</button>'
-                @endpermission
-                        var btnEliminarLn = "";
-                @permission('ln_impactos.ln_impacto.destroy')
-                        btnEliminarLn = '<button type="submit" class="btn btn-danger btn-xs" title="Eliminar" onclick="return confirm(&quot; Eliminar &quot;)">' +
-                        '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>Eliminar' +
-                        '</button>';
-                @endpermission
-                        yenitablosatir += '<tr>' +
-                        //kullaniciTomar.Surname      
-                        '<td>' + anaVeri[i].id + '</td>' +
-                        '<td>' + anaVeri[i].solicitud + '</td>' +
-                        '<td>' + anaVeri[i].monto_inscripcion + '</td>' +
-                        '<td>' + anaVeri[i].monto_mensualidad + '</td>' +
-                        '<td>' + anaVeri[i].estatus + '</td>' +
-                        '<td>' + anaVeri[i].created_at + '</td>' +
-                        '<td>' +  + '</td>' +
-                        '<td>' +
-                        '<form method="POST" action="' + '{!! url('check_ls / check_l / ') !!}' + '/' + anaVeri[i].id + '" accept-charset="UTF-8">' +
-                        '<input name="_method" value="DELETE" type="hidden">' +
-                        '{{ csrf_field() }}' +
-                        btnEditarLn +
-                        btnEliminarLn +
-                        '</td>' +
-                        '</tr>';
-                j++;
-                });
-                }
-                yenitablosatir += '</tbody></table></td></tr>';
-                // set next row
-                $tablosonrakisatir = $(yenitablosatir).insertAfter($tablosatir);
-                $(".btnEditLinea").click(function(){
-                //window.location = '{{url("/ln_impactos/edit/")}}'+'/'+$(this).data('linea');
-                window.open('{{url("/check_ls/edit/")}}' + '/' + $(this).data('linea'), '_blank');
-                });
-                }
-        });
-        
-        }
-
-
-
-        } // if click mesaj buton!
-
-
-
-        if ($btn.attr("lang") === "yorum") {
-        //////// yorum butonuna tıklandığında olan olaylar. (if clicked command buton)
-        $table.find('.btnVerLineas').trigger('click');
-        }
-        }); // on click .btnVerLineas end
-    });
-*/
   </script>
 @endpush

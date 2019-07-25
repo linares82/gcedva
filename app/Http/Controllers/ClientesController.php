@@ -98,17 +98,29 @@ class ClientesController extends Controller {
     public function indexEventos(Request $request) {
         $users=User::pluck('name','id');
         $users->prepend('Seleccionar opción',0);
+        //dd($request);
         if (isset($_REQUEST["p"])) {
             if (session()->has('filtro_clientes')) {
                 session(['filtro_clientes' => 1]);
             } else {
                 session(['filtro_clientes' => 1]);
             }
+            if (session()->has('clientes_activos')) {
+                session(['clientes_activos' => 1]);
+            } else {
+                session(['clientes_activos' => 1]);
+            }
         } else {
             if (session()->has('filtro_clientes')) {
                 session(['filtro_clientes' => 0]);
             } else {
                 session(['filtro_clientes' => 0]);
+            }
+            
+            if (session()->has('clientes_activos')) {
+                session(['clientes_activos' => 0]);
+            } else {
+                session(['clientes_activos' => 0]);
             }
         }
         

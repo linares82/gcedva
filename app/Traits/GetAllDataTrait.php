@@ -234,6 +234,9 @@ trait GetAllDataTrait {
                     //dd($clientesa);
                     $myQuery=$myQuery->where('seguimientos.st_seguimiento_id', '=', 2);
                 }
+                if (session()->has('clientes_activos') and session('filtro_clientes')==1) {
+                    $myQuery=$myQuery->where('clientes.st_cliente_id', '=', 4);
+                }
                 break;
             case "pivot_aviso_gral_empleados":
                 if($baseTable=="pivot_aviso_gral_empleados" and Auth::user()->can('IfiltroAvisosXempleado')){
