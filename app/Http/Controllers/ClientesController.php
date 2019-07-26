@@ -118,9 +118,9 @@ class ClientesController extends Controller {
             }
             
             if (session()->has('clientes_activos')) {
-                session(['clientes_activos' => 0]);
+                session(['clientes_activos' => 1]);
             } else {
-                session(['clientes_activos' => 0]);
+                session(['clientes_activos' => 1]);
             }
         }
         

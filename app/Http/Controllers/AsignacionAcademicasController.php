@@ -4,7 +4,9 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\AsignacionAcademica;
+use App\Cliente;
 use App\Empleado;
+use App\Hacademica;
 use App\Horario;
 use Illuminate\Http\Request;
 use Auth;
@@ -304,4 +306,38 @@ class AsignacionAcademicasController extends Controller {
 			
 		}
 	}
+        
+        /*public function boletasGrupo(Request $request){
+            $datos=$request->all();
+            $asignacion= AsignacionAcademica::find($datos['asignacion']);
+            $clientes=Cliente::select('p.razon as plantel','i.matricula', 'clientes.id', 'clientes.nombre','clientes.nombre2','clientes.ape_paterno',
+                             'clientes.ape_materno','i.fec_inscripcion','t.name as turno',
+                             'g.name as grado', 'l.id as lectivo')
+                             ->join('plantels as p','p.id','=','clientes.plantel_id')
+                             ->join('inscripcions as i','i.cliente_id','=','clientes.id')
+                             ->join('grados as g','g.id','=','i.grado_id')
+                             ->join('lectivos as l','l.id','=','i.lectivo_id')
+                             ->join('turnos as t','t.id','=','i.turno_id')
+                             ->where('i.lectivo_id','=',$asignacion->lectivo_id)
+                             ->where('i.grupo_id','=',$asignacion->grupo_id)
+                             ->where('i.plantel_id','=',$asignacion->plantel_id)
+                             ->get();
+            return view('asignacionAcademicas.reportes.boletasr', array('clientes'=>$clientes,'datos'=>$datos));
+        }*/
+        
+        public function boletasGrupo(Request $request){
+            $datos=$request->all();
+            $asignacion= AsignacionAcademica::find($datos['asignacion']);
+            
+            $clientes=Cliente::select('clientes.id','e.imagen')
+                             ->join('inscripcions as i','i.cliente_id','=','clientes.id')
+                             ->join('especialidads as e','e.id','=','i.especialidad_id')
+                             ->where('i.lectivo_id','=',$asignacion->lectivo_id)
+                             ->where('i.grupo_id','=',$asignacion->grupo_id)
+                             ->where('i.plantel_id','=',$asignacion->plantel_id)
+                             ->get();
+            //dd($clientes->toArray());
+            return view('asignacionAcademicas.reportes.boleta', compact('clientes'))
+                            ->with('');
+        }
 }

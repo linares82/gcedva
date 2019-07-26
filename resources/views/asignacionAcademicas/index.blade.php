@@ -180,6 +180,7 @@
                                 <td>{{$asignacionAcademica->grupo->name}}</td>
                                 <td>{{$asignacionAcademica->lectivo->name}}</td>
                                 <td class="text-right">
+                                    <a class="btn btn-xs btn-default" href="{{ route('asignacionAcademica.boletasGrupo', array('asignacion'=>$asignacionAcademica->id)) }}"><i class=' fa fa-list-alt'></i> Boletas</a>
                                     @permission('asignacionAcademicas.edit')
                                     <a class="btn btn-xs btn-primary" href="{{ route('asignacionAcademicas.duplicate', $asignacionAcademica->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>
                                     @endpermission
