@@ -123,6 +123,8 @@ class CajaLnsController extends Controller {
 	{
                 
 		$cajaLn=$cajaLn->find($id);
+                $vcaja=$cajaLn->caja_id;
+                $vcliente=$cajaLn->cliente_id;
                 if($cajaLn->adeudo_id<>0){
                     try{
                         $adeudo=Adeudo::find($cajaLn->adeudo_id);
@@ -134,13 +136,6 @@ class CajaLnsController extends Controller {
                     }
                     
                 }
-                $caja=Caja::find($cajaLn->caja_id);
-                
-                $caja->subtotal=$caja->subtotal-$cajaLn->subtotal;
-                $caja->recargo=$caja->recargo-$cajaLn->recargo;
-                $caja->descuento=$caja->descuento-$cajaLn->descuento;
-                $caja->total=$caja->total-$cajaLn->total;
-                $caja->save();
                 
                 $pagos=0;
                 if(isset($caja->pagos)){
@@ -156,19 +151,46 @@ class CajaLnsController extends Controller {
                 }
                 
                 
-                $cliente=Cliente::find($caja->cliente_id);
+                $cliente=Cliente::find($vcliente);
 		$cajaLn->delete();
+                
+                $caja=Caja::find($vcaja);
+                
+                $subtotal=0;
+                $recargo=0;
+                $descuento=0;
+                $total=0;
+                foreach($caja->cajaLns as $ln){
+                    if(is_null($ln->deleted_at)){
+                        $subtotal=$ln->subtotal+$subtotal;
+                        $recargo=$ln->recargo+$recargo;
+                        $descuento=$ln->descuento+$descuento;
+                        $total=$ln->total+$total;
+                    }
+                    
+                }
+                
+                $caja->subtotal=$subtotal;
+                $caja->recargo=$recargo;
+                $caja->descuento=$descuento;
+                $caja->total=$total;
+                $caja->save();
+                
                 $cajas=Caja::select('cajas.consecutivo as caja','ln.caja_concepto_id as concepto_id','cc.name as concepto', 'ln.total','st.name as estatus')
                     ->join('caja_lns as ln','ln.caja_id','=','cajas.id')
                     ->join('caja_conceptos as cc','cc.id','=','ln.caja_concepto_id')
                     ->join('st_cajas as st','st.id','=','cajas.st_caja_id')
-                    ->where('cliente_id',$cliente->id)
+                    ->where('cliente_id',$vcliente)
                     ->get();
                 $combinaciones=CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
 
-		return view('cajas.caja', compact('cliente', 'caja', 'combinaciones','cajas'))
+                 return redirect('/cajas/caja?plantel='.$caja->plantel_id."&consecutivo=".$caja->consecutivo);
+                
+		/*return view('cajas.caja', compact('cliente', 'caja', 'combinaciones','cajas'))
                         ->with( 'list', Caja::getListFromAllRelationApps() )
                         ->with( 'list1', CajaLn::getListFromAllRelationApps() );
+                 * 
+                 */
 	}
 
 }
