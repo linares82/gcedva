@@ -3,6 +3,7 @@
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use File as Archi;
+use App\DocPlantelPlantel;
 use App\Plantel;
 use App\Empleado;
 use Illuminate\Http\Request;
@@ -125,8 +126,28 @@ class PlantelsController extends Controller {
                 $responsables=Empleado::select(DB::raw("CONCAT(nombre,' ',ape_paterno,' ',ape_materno) AS name"),'id')
                                 ->where('puesto_id',23)->pluck('name','id');            
 		$ruta=public_path()."\\imagenes\\planteles\\".$id."\\";
-		return view('plantels.edit', compact('plantel', 'ruta','directores','responsables'))
-			->with( 'list', Plantel::getListFromAllRelationApps() );
+                
+                $doc_existentes = DB::table('doc_plantel_plantels as dpp')->select('doc_plantel_id')
+                        ->join('plantels as p', 'p.id', '=', 'dpp.plantel_id')
+                        ->where('p.id', '=', $id)
+                        ->get();
+
+                $de_array = array();
+                if ($doc_existentes->isNotEmpty()) {
+                    foreach ($doc_existentes as $de) {
+                        array_push($de_array, $de->doc_plantel_id);
+                    }
+                    //dd($de_array);
+                }
+
+                $documentos_faltantes = DB::table('doc_plantels')
+                        ->select()
+                        ->whereNotIn('id', $de_array)
+                        ->get();
+                
+		return view('plantels.edit', compact('plantel', 'ruta','directores','responsables', 'documentos_faltantes'))
+			->with( 'list', Plantel::getListFromAllRelationApps() )
+                        ->with( 'list1', DocPlantelPlantel::getListFromAllRelationApps() );
 	}
 
 	/**
@@ -224,4 +245,36 @@ class PlantelsController extends Controller {
         }
         return $final;
     }
+    
+    public function cargarImg(Request $request){
+        
+        $r=$request->hasFile('file');
+        $datos=$request->all();
+        //dd($request->all());
+        if ($r) {
+            $logo_file = $request->file('file');
+            $input['file'] = $logo_file->getClientOriginalName();
+            $ruta_web=asset("/imagenes/plantels/".$datos['plantel']);
+            //dd($ruta_web);
+            $ruta= public_path()."/imagenes/plantels/".$datos['plantel']."/";
+            if(!file_exists($ruta)){
+                File::makedirectory($ruta, 0777, true, true);
+            }
+            if($request->file('file')->move($ruta, $input['file'])){
+                $documento= new DocPlantelPlantel();
+                $documento->plantel_id=$datos['plantel'];
+                $documento->doc_plantel_id=$datos['doc_plantel_id'];
+                $documento->archivo=$input['file'];
+                $documento->fec_vigencia=$datos['fec_vigencia'];
+                $documento->usu_alta_id=Auth::user()->id;
+                $documento->usu_mod_id=Auth::user()->id;
+                $documento->save();
+                echo json_encode($ruta_web."/".$input['file']);
+            }else{
+                echo json_encode(0);
+            }
+         }
+        //echo json_encode(0);
+    }
+    
 }

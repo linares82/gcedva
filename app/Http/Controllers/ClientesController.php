@@ -16,6 +16,7 @@ use App\ConsultaCalificacion;
 use App\Correo;
 use App\Empleado;
 use App\Estado;
+use App\HistoriaCliente;
 use App\Inscripcion;
 use App\Lectivo;
 use App\Municipio;
@@ -1421,5 +1422,40 @@ class ClientesController extends Controller {
         $inscripcion=Inscripcion::find($datos['inscripcion']);
         return view('clientes.reportes.credencial_reverso', compact('cliente', 'inscripcion'))
                         ->with('');
+    }
+    
+    public function clientesEstatus(){
+        
+        return view('clientes.reportes.clientesEstatus')
+                        ->with('list', Cliente::getListFromAllRelationApps());;
+    }
+    
+    public function clientesEstatusR(Request $request){
+        $datos=$request->all();
+        
+//        $clientes=Cliente::select('clientes.id as cliente','clientes.nombre','clientes.nombre2','clientes.ape_paterno','clientes.ape_materno',
+//                                  'p.razon','stc.name as estatus')
+//                        ->join('plantes as p','p.id','=','clientes.plantel_id')          
+//                        ->join('st_clientes as stc','stc.id','=','clientes.st_cliente_id')
+//                        ->where('stc.id','>=',$datos['estatus_f'])
+//                        ->where('stc.id','<=',$datos['estatus_t'])
+//                        ->get();
+        $historia_clientes= HistoriaCliente::select('c.id as cliente','c.nombre','c.nombre2','c.ape_paterno',
+                                                    'c.ape_materno','p.razon','stc.name as estatus','historia_clientes.fecha')
+                                           ->join('clientes as c','c.id','=','historia_clientes.cliente_id')
+                                           ->join('plantels as p','p.id','=','c.plantel_id')      
+                                           ->join('st_clientes as stc','stc.id','=','c.st_cliente_id')
+                                           ->whereDate('fecha','>=',$datos['fecha_f'])
+                                           ->whereDate('fecha','<=',$datos['fecha_t'])
+                                           ->where('evento_cliente_id',2)
+                                           ->where('p.id','>=',$datos['plantel_f'])
+                                           ->where('p.id','<=',$datos['plantel_t'])
+                                           ->orderBy('p.id')
+                                           ->orderBy('c.id')
+                                           ->get();
+        
+        return view('clientes.reportes.clientesEstatusR', array('registros'=>$historia_clientes,
+                                                                'datos'=>$datos))
+                        ->with('list', Cliente::getListFromAllRelationApps());;
     }
 }

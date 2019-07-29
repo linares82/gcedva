@@ -5,8 +5,11 @@ namespace App\Observers;
 use App\Seguimiento;
 use App\HsSeguimiento;
 use App\Hactividade;
+use App\HEstatus;
 use App\Cliente;
 use App\Plantel;
+use App\StSeguimiento;
+use Auth;
 use Carbon\Carbon;
 
 class SeguimientoObserver
@@ -65,6 +68,23 @@ class SeguimientoObserver
          * 
          */
      }
+     
+    public function updating(Seguimiento $seguimiento){
+        $this->seguimiento=$seguimiento;
+        $vseguimiento=Seguimiento::find($seguimiento->id);
+        if($vseguimiento->st_seguimiento_id<>$this->seguimiento->st_seguimiento_id){
+           $st_seguimiento= StSeguimiento::find($this->seguimiento->st_seguimiento_id); 
+           $input['tabla']='seguimientos';
+           $input['cliente_id']=0;
+           $input['seguimiento_id']=$vseguimiento->id;
+           $input['estatus']=$st_seguimiento->name;
+           $input['estatus_id']=$st_seguimiento->id;
+           $input['fecha']=Date('Y-m-d');
+           $input['usu_alta_id']=Auth::user()->id;
+           $input['usu_mod_id']=Auth::user()->id;
+           HEstatus::create($input);
+        }
+    } 
 
     public function updated(Seguimiento $Seguimiento)
     {

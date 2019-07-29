@@ -1,0 +1,1 @@
+@section('docPlantelsAppTitle','Docs. Planteles')

@@ -1,4 +1,17 @@
-                     <div class="box box-default">
+<div class="nav-tabs-custom">
+    <ul class="nav nav-tabs">
+        <li class="active">
+            <a data-toggle="tab" href="#tab1">Plantel</a>
+        </li>
+        <li class="">
+            <a data-toggle="tab" href="#tab2">Documentos</a>
+        </li>
+        
+    </ul>
+    <div class="tab-content">
+        <div id="tab1" class="tab-pane active">
+            <fieldset>
+                    <div class="box box-default">
                       <div class="box-body"> 
                       <div class="form-group col-md-4 @if($errors->has('cve_plantel')) has-error @endif">
                          <label for="cve_plantel-field">Clave Plantel</label>
@@ -253,6 +266,99 @@
                         <span class="help-block">{{ $errors->first("membrete") }}</span>
                        @endif
                     </div>
+            </fieldset> 
+        </div>
+        <div id="tab2" class="tab-pane">
+            @if(isset($plantel))
+            <fieldset>
+                <div class="form-group col-md-4 @if($errors->has('doc_plantel_id')) has-error @endif">
+                    <label for="doc_plantel_id-field">Documento</label>
+                    {!! Form::select("doc_plantel_id", $list1["DocPlantel"], null, array("class" => "form-control select_seguridad", "id" => "doc_plantel_id-field", 'style'=>'width:100%')) !!}
+                    @if($errors->has("doc_plantel_id"))
+                    <span class="help-block">{{ $errors->first("doc_plantel_id") }}</span>
+                    @endif
+                </div>
+                <div class="form-group col-md-4 @if($errors->has('fec_vigencia')) has-error @endif">
+                    <label for="fec_vigencia-field">Fecha Vigencia</label>
+                    {!! Form::text("fec_vigencia", null, array("class" => "form-control input-sm", "id" => "fec_vigencia-field")) !!}
+                    @if($errors->has("fec_vigencia"))
+                    <span class="help-block">{{ $errors->first("fec_vigencia") }}</span>
+                    @endif
+                </div>
+                <div class="form-group col-md-4">
+                        <div class="btn btn-default btn-file">
+                            <i class="fa fa-paperclip"></i> Adjuntar Archivo
+                            <input type="file"  id="file" name="file" class="cliente_archivo" >
+                            <input type="hidden" name="_token" id="_token"  value="<?= csrf_token(); ?>"> 
+                            <input type="hidden"  id="file_hidden" name="file_hidden" >
+                        </div>
+                        <button class="btn btn-success btn-xs" id="btn_archivo"> <span class="glyphicon glyphicon-ok">Cargar</span> </btn>
+                        <br/>
+                        <p class="help-block"  >Max. 20MB</p>
+                        <div id="texto_notificacion">
+                        </div>
+                </div>
+                <div class="form-group col-md-6">
+                        <table class="table table-condensed table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Documento Agregados</th><th>Link</th><th>Vigencia</th><th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($plantel->docPlantelPlantels as $doc)
+                                <tr>
+                                    <td>
+                                        {{$doc->docPlantel->name}}
+                                    </td>
+                                    <td>
+                                        <a href="{{ asset('/imagenes/plantels/'.$plantel->id."/".$doc->archivo) }}" target="_blank">Ver</a>
+                                    </td>
+                                    <td>
+                                        {{$doc->fec_vigencia}}
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-xs btn-danger" href="{{route('pivotDocClientes.destroy', $doc->id)}}">Eliminar</a>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <table class="table table-condensed table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Documentos Faltantes</th><th>Obligatorio</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($documentos_faltantes as $df)
+                                <tr>
+                                    <td>
+                                        {{ $df->name }}
+                                    </td>
+                                    <td>
+                                        @if($df->bnd_obligatorio == 1)
+                                        <button class="btn btn-success btn-xs"><span class="glyphicon glyphicon-ok"></span></button>
+                                        @else
+                                        <button class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-remove"></span></button>
+                                        
+
+                                        @endif
+                                    </td>
+
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+            </fieldset>
+            @endif
+            
+            
+        </div>
+    </div>
 @push('scripts')
 <!-- CK Editor -->
     <script src="https://cdn.ckeditor.com/4.4.3/standard/ckeditor.js"></script>
@@ -264,6 +370,64 @@
         //bootstrap WYSIHTML5 - text editor
         $(".textarea").wysihtml5();
       });
-    
+    $('#fec_vigencia-field').Zebra_DatePicker({
+                        days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
+                                months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                                readonly_element: false,
+                                lang_clear_date: 'Limpiar',
+                                show_select_today: 'Hoy',
+                        });
+                        
+    $(document).on("click", "#btn_archivo", function (e) {
+        e.preventDefault();
+        if($('#doc_plantel_id-field option:selected').val()==0){
+            alert("Elegir Documento para Cargar");
+        }
+        var miurl = "{{route('plantels.cargarImg')}}";
+        // var fileup=$("#file").val();
+        var divresul = "texto_notificacion";
+
+        var data = new FormData();
+        data.append('file', $('#file')[0].files[0]);
+        data.append('doc_plantel_id', $('#doc_plantel_id-field option:selected').val());
+        data.append('fec_vigencia', $('#fec_vigencia-field').val());
+        @if(isset($plantel))
+            data.append('plantel', {{$plantel->id}});
+        @endif
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('#_token').val()
+            }
+        });
+        $.ajax({
+            url: miurl,
+            type: 'POST',
+            // Form data
+            //datos del formulario
+            data: data,
+            //dataType: "json",
+            //necesario para subir archivos via ajax
+            cache: false,
+            contentType: false,
+            processData: false,
+            //mientras enviamos el archivo
+            beforeSend: function () {
+                $("#" + divresul + "").html($("#cargador_empresa").html());
+            },
+            //una vez finalizado correctamente
+            success: function (data) {
+                if (confirm('¿Deseas Actualizar la Página?')){
+                    location.reload();
+                }
+
+            },
+            //si ha ocurrido un error
+            error: function (data) {
+
+
+            }
+        });
+    })
     </script>
 @endpush
