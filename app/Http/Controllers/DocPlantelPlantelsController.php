@@ -118,9 +118,10 @@ class DocPlantelPlantelsController extends Controller {
 	public function destroy($id,DocPlantelPlantel $docPlantelPlantel)
 	{
 		$docPlantelPlantel=$docPlantelPlantel->find($id);
+                $plantel=$docPlantelPlantel->plantel_id;
 		$docPlantelPlantel->delete();
 
-		return redirect()->route('docPlantelPlantels.index')->with('message', 'Registro Borrado.');
+		return redirect()->route('plantels.edit',$plantel)->with('message', 'Registro Borrado.');
 	}
 
 }

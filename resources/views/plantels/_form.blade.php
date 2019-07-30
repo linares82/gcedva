@@ -318,7 +318,7 @@
                                         {{$doc->fec_vigencia}}
                                     </td>
                                     <td>
-                                        <a class="btn btn-xs btn-danger" href="{{route('pivotDocClientes.destroy', $doc->id)}}">Eliminar</a>
+                                        <a class="btn btn-xs btn-danger" href="{{url('docPlantelPlantels/destroy', $doc->id)}}">Eliminar</a>
                                     </td>
                                 </tr>
                                 @endforeach
