@@ -116,7 +116,7 @@ return array (
   ),
   'uan' => 
   array (
-    'NationalNumberPattern' => '246(?:292|367|4(?:1[7-9]|3[01]|44|67)|736)\\d{4}',
+    'NationalNumberPattern' => '246(?:292|367|4(?:1[7-9]|3[01]|44|67)|7(?:36|53))\\d{4}',
     'ExampleNumber' => '2464301234',
     'PossibleLength' => 
     array (
@@ -150,7 +150,8 @@ return array (
   'countryCode' => 1,
   'internationalPrefix' => '011',
   'nationalPrefix' => '1',
-  'nationalPrefixForParsing' => '1',
+  'nationalPrefixForParsing' => '1|([2-9]\\d{6})$',
+  'nationalPrefixTransformRule' => '246$1',
   'sameMobileAndFixedLinePattern' => false,
   'numberFormat' => 
   array (

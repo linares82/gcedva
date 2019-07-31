@@ -107,7 +107,7 @@ class PhoneNumberMatcher implements \Iterator
 
         static::$innerMatches = array(
             // Breaks on the slash - e.g. "651-234-2345/332-445-1234"
-            "/+(.*)",
+            '/+(.*)',
             // Note that the bracket here is inside the capturing group, since we consider it part of the
             // phone number. Will match a pattern like "(650) 223 3345 (754) 223 3321".
             "(\\([^(]*)",
@@ -131,7 +131,7 @@ class PhoneNumberMatcher implements \Iterator
 
         $openingParens = "(\\[\xEF\xBC\x88\xEF\xBC\xBB";
         $closingParens = ")\\]\xEF\xBC\x89\xEF\xBC\xBD";
-        $nonParens = "[^" . $openingParens . $closingParens . "]";
+        $nonParens = '[^' . $openingParens . $closingParens . ']';
 
         // Limit on the number of pairs of brackets in a phone number.
         $bracketPairLimit = static::limit(0, 3);
@@ -142,10 +142,10 @@ class PhoneNumberMatcher implements \Iterator
          * closing bracket first. We limit the sets of brackets in a phone number to four.
          */
         static::$matchingBrackets =
-            "(?:[" . $openingParens . "])?" . "(?:" . $nonParens . "+" . "[" . $closingParens . "])?"
-            . $nonParens . "+"
-            . "(?:[" . $openingParens . "]" . $nonParens . "+[" . $closingParens . "])" . $bracketPairLimit
-            . $nonParens . "*";
+            '(?:[' . $openingParens . '])?' . '(?:' . $nonParens . '+' . '[' . $closingParens . '])?'
+            . $nonParens . '+'
+            . '(?:[' . $openingParens . ']' . $nonParens . '+[' . $closingParens . '])' . $bracketPairLimit
+            . $nonParens . '*';
 
         // Limit on the number of leading (plus) characters.
         $leadLimit = static::limit(0, 2);
@@ -183,9 +183,9 @@ class PhoneNumberMatcher implements \Iterator
 
 
         // Phone number pattern allowing optional punctuation.
-        static::$pattern = "(?:" . $leadClass . $punctuation . ")" . $leadLimit
-            . $digitSequence . "(?:" . $punctuation . $digitSequence . ")" . $blockLimit
-            . "(?:" . PhoneNumberUtil::$EXTN_PATTERNS_FOR_MATCHING . ")?";
+        static::$pattern = '(?:' . $leadClass . $punctuation . ')' . $leadLimit
+            . $digitSequence . '(?:' . $punctuation . $digitSequence . ')' . $blockLimit
+            . '(?:' . PhoneNumberUtil::$EXTN_PATTERNS_FOR_MATCHING . ')?';
 
         static::$initialized = true;
     }
@@ -280,7 +280,7 @@ class PhoneNumberMatcher implements \Iterator
         }
 
         $this->phoneUtil = $util;
-        $this->text = ($text !== null) ? $text : "";
+        $this->text = ($text !== null) ? $text : '';
         $this->preferredRegion = $country;
         $this->leniency = $leniency;
         $this->maxTries = $maxTries;
@@ -640,12 +640,12 @@ class PhoneNumberMatcher implements \Iterator
             // The country-code will have a '-' following it.
             $startIndex = mb_strpos($rfc3966Format, '-') + 1;
             return explode('-', mb_substr($rfc3966Format, $startIndex, $endIndex - $startIndex));
-        } else {
-            // We format the NSN only, and split that according to the separator.
-            $nationalSignificantNumber = $util->getNationalSignificantNumber($number);
-            return explode('-', $util->formatNsnUsingPattern($nationalSignificantNumber, $formattingPattern,
-                PhoneNumberFormat::RFC3966));
         }
+
+        // If a format is provided, we format the NSN only, and split that according to the separator.
+        $nationalSignificantNumber = $util->getNationalSignificantNumber($number);
+        return explode('-', $util->formatNsnUsingPattern($nationalSignificantNumber, $formattingPattern,
+            PhoneNumberFormat::RFC3966));
     }
 
     /**
@@ -661,19 +661,29 @@ class PhoneNumberMatcher implements \Iterator
         PhoneNumberUtil $util,
         \Closure $checker
     ) {
-        // TODO: Evaluate how this works for other locales (testing has been limited to NANPA regions)
-        // and optimise if necessary.
         $normalizedCandidate = PhoneNumberUtil::normalizeDigits($candidate, true /* keep non-digits */);
-        $formattedNumberGroups = static::getNationalNumberGroups($util, $number, null);
+        $formattedNumberGroups = static::getNationalNumberGroups($util, $number);
         if ($checker($util, $number, $normalizedCandidate, $formattedNumberGroups)) {
             return true;
         }
 
-        // If this didn't pass, see if there are any alternative formats, and try them instead.
+        // If this didn't pass, see if there are any alternative formats that match, and try them instead.
         $alternateFormats = static::getAlternateFormatsForCountry($number->getCountryCode());
 
+        $nationalSignificantNumber = $util->getNationalSignificantNumber($number);
         if ($alternateFormats !== null) {
             foreach ($alternateFormats->numberFormats() as $alternateFormat) {
+                if ($alternateFormat->leadingDigitsPatternSize() > 0) {
+                    // There is only one leading digits pattern for alternate formats.
+                    $pattern = $alternateFormat->getLeadingDigitsPattern(0);
+
+                    $nationalSignificantNumberMatcher = new Matcher($pattern, $nationalSignificantNumber);
+                    if (!$nationalSignificantNumberMatcher->lookingAt()) {
+                        // Leading digits don't match; try another one.
+                        continue;
+                    }
+                }
+
                 $formattedNumberGroups = static::getNationalNumberGroups($util, $number, $alternateFormat);
                 if ($checker($util, $number, $normalizedCandidate, $formattedNumberGroups)) {
                     return true;

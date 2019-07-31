@@ -213,6 +213,7 @@
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clientes.pais_id', 'title' => 'PAIS'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clientes.st_cliente_id', 'title' => 'ESTATUS CLIENTE'])</th>
                             <th>Eventos</th>
+                            <th>Vinculacion</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
@@ -228,10 +229,16 @@
                                 <td>{{$cliente->cliente->empleado->nombre." ".$cliente->cliente->empleado->ape_paterno." ".$cliente->cliente->empleado->ape_materno}}</td>
                                 <td> {{$cliente->cliente->paise->name}} </td>
                                 <td>{{$cliente->cliente->stCliente->name}}</td>
-                                <td class="text-right">
+                                <td>
                                     @permission('historiaClientes.create')
                                     <a class="btn btn-xs btn-success" href="{{ route('historiaClientes.create',array('cliente'=>$cliente->cliente->id)) }}"><i class="glyphicon glyphicon-plus"></i> Crear</a>
                                     <a class="btn btn-xs btn-warning" href="{{ route('historiaClientes.index',array('q[cliente_id_lt]'=>$cliente->cliente->id)) }}" target='_blank'><i class="glyphicon glyphicon-plus"></i> Ver</a>
+                                    @endpermission
+                                </td>
+                                <td>
+                                    @permission('vinculacions.create')
+                                    <a class="btn btn-xs btn-success" href="{{ route('vinculacions.create',array('cliente'=>$cliente->cliente->id)) }}"><i class="glyphicon glyphicon-plus"></i> Crear</a>
+                                    <a class="btn btn-xs btn-warning" href="{{ route('vinculacions.index',array('q[cliente_id_lt]'=>$cliente->cliente->id)) }}" target='_blank'><i class="glyphicon glyphicon-plus"></i> Ver</a>
                                     @endpermission
                                 </td>
                                 <td class="text-right">

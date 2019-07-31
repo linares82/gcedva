@@ -14,7 +14,7 @@
 return array (
   'generalDesc' => 
   array (
-    'NationalNumberPattern' => '(?:(?:34|90)0|[58]\\d\\d)\\d{7}',
+    'NationalNumberPattern' => '[58]\\d{9}|(?:34|90)0\\d{7}',
     'PossibleLength' => 
     array (
       0 => 10,
@@ -145,7 +145,8 @@ return array (
   'countryCode' => 1,
   'internationalPrefix' => '011',
   'nationalPrefix' => '1',
-  'nationalPrefixForParsing' => '1',
+  'nationalPrefixForParsing' => '1|([2-9]\\d{6})$',
+  'nationalPrefixTransformRule' => '340$1',
   'sameMobileAndFixedLinePattern' => true,
   'numberFormat' => 
   array (

@@ -52,7 +52,7 @@ return array (
   ),
   'emergency' => 
   array (
-    'NationalNumberPattern' => '1(?:01\\d\\d|12)',
+    'NationalNumberPattern' => '1(?:01(?:11|77)|12)',
     'ExampleNumber' => '112',
     'PossibleLength' => 
     array (
@@ -76,7 +76,7 @@ return array (
   ),
   'standardRate' => 
   array (
-    'NationalNumberPattern' => '3(?:078[23]|7(?:064|567)|8126)|4(?:2699|3(?:699|94[16])|7751|8837)',
+    'NationalNumberPattern' => '3(?:078[23]|7(?:064|567)|8126)|4(?:394[16]|7751|8837)|4[23]699',
     'ExampleNumber' => '30782',
     'PossibleLength' => 
     array (

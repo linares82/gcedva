@@ -65,8 +65,8 @@ class AlertaFinContrato extends Command
         
             
             
-        if(count($empleados)>0){
-            //dd($alertas);
+        if($empleados->isNotEmpty()){
+            //Log::info('fil envio');
             
             $respuesta=Mail::send('emails.alertaFinContrato', 
 				array('ps'=>$empleados), 
@@ -78,7 +78,7 @@ class AlertaFinContrato extends Command
                     }*/
                     $message->subject('Alerta Contratos Por Vencer');
                 });
-             
+            //dd($respuesta); 
            
             /*
             $respuesta=Mailgun::send('emails.alertaFinContrato', 

@@ -7,6 +7,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Plantilla;
+use Log;
 
 class AlertaFinContrato extends Mailable
 {
@@ -19,10 +20,10 @@ class AlertaFinContrato extends Mailable
      *
      * @return void
      */
-    public function __construct($alertas)
+    public function __construct($ps)
     {
-        $this->p=$alertas;
-        
+        $this->p=$ps;
+        //dd($ps);
     }
 
     /**
@@ -37,6 +38,7 @@ class AlertaFinContrato extends Mailable
         foreach($this->p as $p){
             $i++;
         }
+        
         if($i>0){
             return $this->view('emails.alertaFinContrato', array('ps'=>$this->p))
                     ->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'))
