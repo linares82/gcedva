@@ -38,7 +38,7 @@ class CajaObserver
             
             $cliente=Cliente::find($this->caja->cliente_id);
             $inscripcions=Inscripcion::where('cliente_id',$cliente->id)->whereNull('inscripcions.deleted_at')->get();
-            if(count($inscripcions)==0){
+            if($inscripcions->isEmpty()){
                 $cliente->st_cliente_id=22;
                 $cliente->save();
             }else{

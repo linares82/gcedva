@@ -1440,8 +1440,8 @@ class ClientesController extends Controller {
 //                        ->where('stc.id','>=',$datos['estatus_f'])
 //                        ->where('stc.id','<=',$datos['estatus_t'])
 //                        ->get();
-        $historia_clientes= HistoriaCliente::select('c.id as cliente','c.nombre','c.nombre2','c.ape_paterno',
-                                                    'c.ape_materno','p.razon','stc.name as estatus','historia_clientes.fecha')
+        $historia_clientes= HistoriaCliente::select('c.id as cliente','c.nombre','c.nombre2','c.ape_paterno','historia_clientes.descripcion',
+                                                    'c.ape_materno','p.razon','stc.name as estatus','historia_clientes.fecha','c.tel_fijo')
                                            ->join('clientes as c','c.id','=','historia_clientes.cliente_id')
                                            ->join('plantels as p','p.id','=','c.plantel_id')      
                                            ->join('st_clientes as stc','stc.id','=','c.st_cliente_id')
