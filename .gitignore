@@ -5,6 +5,7 @@
 /storage
 /storage/framework/views
 /.idea
+/vendor
 Homestead.json
 Homestead.yaml
 CPdescarga.xls
