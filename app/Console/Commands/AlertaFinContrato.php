@@ -51,14 +51,13 @@ class AlertaFinContrato extends Command
                                 ->leftJoin('empleados as j', 'j.id', '=', 'empleados.jefe_id')
                                 ->where('empleados.alerta_bnd', '=', 1)
                                 ->where('empleados.st_empleado_id','<>',2) 
-                                ->whereDate('empleados.fin_contrato', '>=', date('Y/m/d'))
+                                ->whereDate('empleados.fin_contrato', '>=', date('Y-m-d'))
                                 ->whereRaw('empleados.dias_alerta >= datediff(empleados.fin_contrato, curdate())')
                                 ->get();
 
         //dd($empleados->toArray());
         foreach($empleados as $empleado){
-            //$mail=$empleado->mail;
-            //$jefe_mail=$e->j_mail_empresa;
+            
             $responsable_mail=$empleado->mail_empresa;
         }
         //dd($responsable_mail);
@@ -73,26 +72,12 @@ class AlertaFinContrato extends Command
 				function($message) use($responsable_mail) 
                 {
                     $message->to($responsable_mail);
-                    /*if(!is_null($jefe_mail)){
-                        $message->cc($jefe_mail);	
-                    }*/
+            
                     $message->subject('Alerta Contratos Por Vencer');
                 });
             //dd($respuesta); 
            
-            /*
-            $respuesta=Mailgun::send('emails.alertaFinContrato', 
-                array('ps'=>$empleados),  
-                function ($message) use($responsable_mail) {
-                    $message->to($responsable_mail);
-                    if(!is_null($jefe_mail)){
-                        $message->cc($jefe_mail);	
-                    }
-                    if(!is_null($responsable_mail)){
-                        $message->cc($responsable_mail);	
-                    }
-                    $message->subject('Alerta Contratos Por Vencer');
-            });*/
+           
         }
             	
         

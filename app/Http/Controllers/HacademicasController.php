@@ -127,8 +127,14 @@ class HacademicasController extends Controller {
      */
     public function destroy($id, Hacademica $hacademica) {
         $hacademica = $hacademica->find($id);
+        $vhacademica=$hacademica->id;
         $c = $hacademica->cliente_id;
         $hacademica->delete();
+        
+        $calificacions=Calificacion::where('hacademica_id',$vhacademica)->get();
+        foreach($calificacions as $c){
+            $d->delete();
+        }
 
         return redirect()->route('clientes.edit', $c)->with('message', 'Registro Borrado.');
     }
@@ -165,7 +171,7 @@ class HacademicasController extends Controller {
                 //calculo de la calificacion padre de acuerdo a todos los hijos que tenga
                 if($c->padre_id>0){
                     //dd($c->padre_id);
-                    $suma_calificacion_padre = $this->calculoCalificacionPadre($c->padre_id);
+                    $suma_calificacion_padre = $this->calculoCalificacionPadre($c->padre_id, $c->calificacion_id);
                     $calif_padre= CalificacionPonderacion::where('carga_ponderacion_id',$c->padre_id)->where('calificacion_id',$c->calificacion_id)->first();
                     //dd($calif_padre->toArray());
                     $calif_padre->calificacion_parcial=$suma_calificacion_padre;
@@ -264,13 +270,13 @@ class HacademicasController extends Controller {
         //dd($calificacion_ponderacion->toArray());
         $suma = 0;
         foreach ($calificacion_ponderacion as $cp) {
-            $suma = $suma + $cp->calificacion_parcial_calculada;
+                $suma = $suma + $cp->calificacion_parcial_calculada;
         }
         return round($suma,2);
     }
 
-    public function calculoCalificacionPadre($padre_id) {
-        $calificacion_ponderacion = CalificacionPonderacion::where('padre_id', '=', $padre_id)->get();
+    public function calculoCalificacionPadre($padre_id, $calificacion_id) {
+        $calificacion_ponderacion = CalificacionPonderacion::where('padre_id', '=', $padre_id)->where('calificacion_id',$calificacion_id)->get();
         //dd($calificacion_ponderacion->toArray());
         $suma = 0;
         foreach ($calificacion_ponderacion as $cp) {
@@ -528,7 +534,7 @@ class HacademicasController extends Controller {
         //Calula calificacion del padre
         if($calificacion_ponderacion->padre_id>0){
             //dd($c->padre_id);
-            $suma_calificacion_padre = $this->calculoCalificacionPadre($calificacion_ponderacion->padre_id);
+            $suma_calificacion_padre = $this->calculoCalificacionPadre($calificacion_ponderacion->padre_id,$calificacion_ponderacion->calificacion_id);
             $calif_padre= CalificacionPonderacion::where('carga_ponderacion_id',$calificacion_ponderacion->padre_id)->where('calificacion_id',$calificacion_ponderacion->calificacion_id)->first();
             //dd($calif_padre->toArray());
             $calif_padre->calificacion_parcial=$suma_calificacion_padre;

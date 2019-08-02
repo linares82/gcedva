@@ -86,8 +86,8 @@
                              @if($r->estatus_cliente_id==25)
                              
                              @else
-                                {!! Form::text("calificacion", null, array("class" => "form-control input-sm col-md-6", 
-                                                                        "id" => "calificacion_parcial".$r->id)) !!}
+                                {!! Form::number("calificacion", null, array("class" => "form-control input-sm col-md-6", 
+                                                                        "id" => "calificacion_parcial".$r->id, 'min' => 0, 'max' =>10)) !!}
                              @endif
                              
                          </td>

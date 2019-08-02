@@ -39,8 +39,6 @@
         <div class="box box-info">
             <div class="box-body">
 
-                
-                
                 {!! Form::open(array('route' => 'cajas.buscarVenta','id'=>'form-buscarVenta')) !!}
                 
                 <div class="input-group col-md-6">
@@ -804,7 +802,10 @@ Agregar nuevo registro
                 'referencia':$('#referencia-field').val(),
                 'cuenta_efectivo_id': $('#cuenta_efectivo_id-field').val(),
             },
-            beforeSend : function(){$("#loading3").show(); },
+            beforeSend : function(){
+                $("#loading3").show(); 
+                $('#AgregarPago').prop('disabled',true);
+            },
             complete : function(){$("#loading3").hide(); },
             success: function(data) {
                 //location.reload(); 
