@@ -235,7 +235,6 @@ trait GetAllDataTrait {
                     $myQuery=$myQuery->where('seguimientos.st_seguimiento_id', '=', 2);
                 }
                 
-                
                 break;
             case "pivot_aviso_gral_empleados":
                 if($baseTable=="pivot_aviso_gral_empleados" and Auth::user()->can('IfiltroAvisosXempleado')){

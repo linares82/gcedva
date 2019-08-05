@@ -19,7 +19,7 @@ class Vinculacion extends Model
     } 
 
 	//Mass Assignment
-	protected $fillable = ['cliente_id','lugar_practica','tel_fijo','nombre_contacto','mail_contacto','fec_inicio','fec_fin','bnd_constancia_entregada','usu_alta_id','usu_mod_id'];
+	protected $fillable = ['cliente_id','lugar_practica','tel_fijo','tel_cel','nombre_contacto','mail_contacto','fec_inicio','fec_fin','bnd_constancia_entregada','usu_alta_id','usu_mod_id'];
 
 	public function usu_alta() {
 		return $this->hasOne('App\User', 'id', 'usu_alta_id');

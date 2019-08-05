@@ -66,7 +66,7 @@
                             </div>
                                                     <!--
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_lugar_practica_gt">LUGAR_PRACTICA</label>
+                                <label class="col-sm-2 control-label" for="q_lugar_practica_gt">EMPRESA</label>
                                 <div class=" col-sm-4">
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['lugar_practica_gt']) ?: '' }}" name="q[lugar_practica_gt]" id="q_lugar_practica_gt" />
                                 </div>
@@ -77,7 +77,7 @@
                             </div>
                             -->
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_lugar_practica_cont">LUGAR_PRACTICA</label>
+                                <label class="col-sm-2 control-label" for="q_lugar_practica_cont">EMPRESA</label>
                                 <div class=" col-sm-9">
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['lugar_practica_cont']) ?: '' }}" name="q[lugar_practica_cont]" id="q_lugar_practica_cont" />
                                 </div>
@@ -250,7 +250,7 @@
                         <tr>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clientes.id', 'title' => 'id'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clientes.nombre', 'title' => 'CLIENTE'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'lugar_practica', 'title' => 'LUGAR PRACTICA'])</th>
+                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'lugar_practica', 'title' => 'EMPRESA'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'tel_fijo', 'title' => 'TEL. FIJO'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'nombre_contacto', 'title' => 'NOMBRE CONTACTO'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'mail_contacto', 'title' => 'MAIL CONTACTO'])</th>

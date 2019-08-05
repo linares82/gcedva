@@ -1,7 +1,7 @@
 <div class="box box-default">
                 <div class="box-body"> 
                     <div class="form-group col-md-4 @if($errors->has('lugar_practica')) has-error @endif">
-                       <label for="lugar_practica-field">Lugar Practica</label>
+                       <label for="lugar_practica-field">Empresa</label>
                        {!! Form::text("lugar_practica", null, array("class" => "form-control", "id" => "lugar_practica-field")) !!}
                        {!! Form::hidden("cliente_id", $cliente, array("class" => "form-control", "id" => "cliente_id-field")) !!}
                        @if($errors->has("lugar_practica"))
@@ -13,6 +13,13 @@
                        {!! Form::text("tel_fijo", null, array("class" => "form-control", "id" => "tel_fijo-field")) !!}
                        @if($errors->has("tel_fijo"))
                         <span class="help-block">{{ $errors->first("tel_fijo") }}</span>
+                       @endif
+                    </div>
+                    <div class="form-group col-md-4 @if($errors->has('tel_cel')) has-error @endif">
+                       <label for="tel_cel-field">Tel. Celular</label>
+                       {!! Form::text("tel_cel", null, array("class" => "form-control", "id" => "tel_cel-field")) !!}
+                       @if($errors->has("tel_cel"))
+                        <span class="help-block">{{ $errors->first("tel_cel") }}</span>
                        @endif
                     </div>
                     <div class="form-group col-md-4 @if($errors->has('nombre_contacto')) has-error @endif">
@@ -44,7 +51,7 @@
                        @endif
                     </div>
                     <div class="form-group col-md-4 @if($errors->has('bnd_constancia_entregada')) has-error @endif">
-                       <label for="bnd_constancia_entregada-field">Constancia Entregada</label>
+                       <label for="bnd_constancia_entregada-field">DV4 Entregada</label>
                        {!! Form::checkbox("bnd_constancia_entregada", 1, null, [ "id" => "bnd_constancia_entregada-field", 'class'=>'minimal']) !!}
                        @if($errors->has("bnd_constancia_entregada"))
                         <span class="help-block">{{ $errors->first("bnd_constancia_entregada") }}</span>
@@ -105,6 +112,7 @@
                 </tr>
             </thead>
             <tbody>
+                <?php $total_horas=0; ?>
                 @foreach($vinculacion->vinculacionHoras as $vh)
                 <tr>
                     <td>
@@ -125,7 +133,11 @@
                         <a class="btn btn-xs btn-danger" href="{{url('vinculacionHoras/destroy', $vh->id)}}">Eliminar</a>
                     </td>
                 </tr>
+                <?php $total_horas=$total_horas+$vh->horas ?>
                 @endforeach
+                <tr>
+                    <td colspan='2'><strong>Horas Sumadas</strong></td><td><strong>{{$total_horas}}</strong></td><td></td><td></td>
+                </tr>
             </tbody>
         </table>
      </div>

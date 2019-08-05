@@ -699,6 +699,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'AddFechaVigenciaHistoriaClientesTable' => __DIR__ . '/../..' . '/database/migrations/2019_07_24_113703_add_fecha_vigencia_historia_clientes_table.php',
         'AddFechasGraficaEspecialidadTable' => __DIR__ . '/../..' . '/database/migrations/2017_12_13_102850_add_fechas_grafica_especialidad_table.php',
         'AddFieldAbreviaturaEspecialidadsTable' => __DIR__ . '/../..' . '/database/migrations/2019_07_08_130330_add_field_abreviatura_especialidads_table.php',
+        'AddFieldFecCelVinculacionsTable' => __DIR__ . '/../..' . '/database/migrations/2019_08_05_092805_add_field_fec_cel_vinculacions_table.php',
         'AddFieldIndexClienteIdEbanxesTable' => __DIR__ . '/../..' . '/database/migrations/2018_12_17_153737_add_field_index_cliente_id_ebanxes_table.php',
         'AddFieldModuloMateriasTable' => __DIR__ . '/../..' . '/database/migrations/2017_12_08_141207_add_field_modulo_materias_table.php',
         'AddFieldsCuentasEfectivosTable' => __DIR__ . '/../..' . '/database/migrations/2019_07_11_125550_add_fields_cuentas_efectivos_table.php',

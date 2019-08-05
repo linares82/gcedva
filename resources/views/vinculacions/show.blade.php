@@ -43,40 +43,40 @@
                      <p class="form-control-static">{{$vinculacion->cliente->nombre}}</p>
                 </div>
                     <div class="form-group">
-                     <label for="lugar_practica">LUGAR_PRACTICA</label>
+                     <label for="lugar_practica">EMPRESA</label>
                      <p class="form-control-static">{{$vinculacion->lugar_practica}}</p>
                 </div>
                     <div class="form-group">
-                     <label for="tel_fijo">TEL_FIJO</label>
+                     <label for="tel_fijo">TEL. FIJO</label>
                      <p class="form-control-static">{{$vinculacion->tel_fijo}}</p>
                 </div>
                     <div class="form-group">
-                     <label for="nombre_contacto">NOMBRE_CONTACTO</label>
+                     <label for="nombre_contacto">NOMBRE CONTACTO</label>
                      <p class="form-control-static">{{$vinculacion->nombre_contacto}}</p>
                 </div>
                     <div class="form-group">
-                     <label for="mail_contacto">MAIL_CONTACTO</label>
+                     <label for="mail_contacto">MAIL CONTACTO</label>
                      <p class="form-control-static">{{$vinculacion->mail_contacto}}</p>
                 </div>
                     <div class="form-group">
-                     <label for="fec_inicio">FEC_INICIO</label>
+                     <label for="fec_inicio">FEC. INICIO</label>
                      <p class="form-control-static">{{$vinculacion->fec_inicio}}</p>
                 </div>
                     <div class="form-group">
-                     <label for="fec_fin">FEC_FIN</label>
+                     <label for="fec_fin">FEC. FIN</label>
                      <p class="form-control-static">{{$vinculacion->fec_fin}}</p>
                 </div>
                     <div class="form-group">
-                     <label for="bnd_constancia_entregada">BND_CONSTANCIA_ENTREGADA</label>
+                     <label for="bnd_constancia_entregada">DV4 ENTREGADA</label>
                      <p class="form-control-static">{{$vinculacion->bnd_constancia_entregada}}</p>
                 </div>
                     <div class="form-group">
-                     <label for="usu_alta_id">USU_ALTA_ID</label>
-                     <p class="form-control-static">{{$vinculacion->usu_alta_id}}</p>
+                     <label for="usu_alta_id">ALTA</label>
+                     <p class="form-control-static">{{$vinculacion->usu_alta->name}}</p>
                 </div>
                     <div class="form-group">
-                     <label for="usu_mod_id">USU_MOD_ID</label>
-                     <p class="form-control-static">{{$vinculacion->usu_mod_id}}</p>
+                     <label for="usu_mod_id">ULTIMA MODIFICACION</label>
+                     <p class="form-control-static">{{$vinculacion->usu_mod->name}}</p>
                 </div>
             </form>
 
