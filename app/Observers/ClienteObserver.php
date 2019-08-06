@@ -5,7 +5,7 @@ namespace App\Observers;
 use App\Empleado;
 use App\Cliente;
 use App\HEstatus;
-use App\StCaja;
+use App\StCliente;
 use Auth;
 
 class ClienteObserver
@@ -37,12 +37,12 @@ class ClienteObserver
         $this->cliente=$cliente;
         $vcliente=Cliente::find($cliente->id);
         if($vcliente->st_cliente_id<>$this->cliente->st_cliente_id){
-           $st_caja= StCaja::find($this->cliente->st_cliente_id); 
+           $st_cliente= StCliente::find($this->cliente->st_cliente_id); 
            $input['tabla']='clientes';
            $input['cliente_id']=$vcliente->id;
            $input['seguimiento_id']=0;
-           $input['estatus']=$st_caja->name;
-           $input['estatus_id']=$st_caja->id;
+           $input['estatus']=$st_cliente->name;
+           $input['estatus_id']=$st_cliente->id;
            $input['fecha']=Date('Y-m-d');
            $input['usu_alta_id']=Auth::user()->id;
            $input['usu_mod_id']=Auth::user()->id;

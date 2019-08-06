@@ -30,6 +30,13 @@
                     <span class="help-block">{{ $errors->first("plantel_f") }}</span>
                     @endif
                 </div>
+                <div class="form-group col-md-6 @if($errors->has('empleado_f')) has-error @endif">
+                    <label for="empleado_f-field">Colaborador de:</label>
+                    {!! Form::select("empleado_f", $empleados, null, array("class" => "form-control select_seguridad", "id" => "empleado_f-field")) !!}
+                    @if($errors->has("empleado_f"))
+                    <span class="help-block">{{ $errors->first("empleado_f") }}</span>
+                    @endif
+                </div>
 <!--                <div class="form-group col-md-6 @if($errors->has('plantel_t')) has-error @endif">
                     <label for="plantel_t-field">Plantel a:</label>
                     {!! Form::select("plantel_t", $list["Plantel"], null, array("class" => "form-control select_seguridad", "id" => "plantel_t-field")) !!}

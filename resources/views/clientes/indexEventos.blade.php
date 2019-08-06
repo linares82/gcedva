@@ -297,7 +297,7 @@
 
       $('#search').children().last().children().children('.fec').children('input').inputmask({ mask: "9999-99-99 99:99:99"}); //specifying options
       //ale=$('#q_clientes.st_cliente_id_lt option:selected').val();
-      document.getElementById('q_clientes.st_cliente_id_lt').value=4;
+      //document.getElementById('q_clientes.st_cliente_id_lt').value=4;
       //$('#search').submit();
       
         function cambioOpcion(){

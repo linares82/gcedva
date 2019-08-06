@@ -350,7 +350,8 @@ class PagosController extends Controller {
     }
     
     public function getRptPagos(){
-        return view('pagos.reportes.inscritosPagos')
+        $empleados=Empleado::select(DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name, id'))->pluck('name','id');
+        return view('pagos.reportes.inscritosPagos', compact('empleados'))
 			->with( 'list', Inscripcion::getListFromAllRelationApps() );
     }
     
@@ -358,12 +359,12 @@ class PagosController extends Controller {
         $data=$request->all();
                 $plantel=Plantel::find($data['plantel_f']);
                 //dd($data);
-                
+                $usuario=Empleado::find($data['empleado_f']);
                 
                 $registros_pagados= Caja::select('pla.razon','c.id',
                         DB::raw(''
                         . 'concat(c.nombre," ",c.nombre2," ",c.ape_paterno," ",c.ape_materno) as cliente, cajas.id as caja, cajas.consecutivo,'
-                        . 'c.beca_bnd, st.name as estatus_caja, fp.id as forma_pago_id,'
+                        . 'c.beca_bnd, st.name as estatus_caja, fp.id as forma_pago_id, cajas.st_caja_id,'
                         . 'pag.monto as monto_pago, fp.name as forma_pago, pag.fecha as fecha_pago, cajas.fecha as fecha_caja'))
                             ->join('clientes as c', 'c.id', '=', 'cajas.cliente_id')
                             ->join('plantels as pla','pla.id','=','c.plantel_id')
@@ -373,6 +374,7 @@ class PagosController extends Controller {
                             ->where('cajas.plantel_id', '=', $data['plantel_f'])
                             ->where('pag.fecha','>=',$data['fecha_f'])
                             ->where('pag.fecha','<=',$data['fecha_t'])
+                            ->where('cajas.usu_alta_id','<=',$usuario->user_id)
                             ->whereNull('pag.deleted_at')
                             ->where('cajas.st_caja_id','=',1)
                             ->orderBy('cajas.st_caja_id')
@@ -382,7 +384,7 @@ class PagosController extends Controller {
                 $registros_pagados1= Caja::select('pla.razon','c.id',
                         DB::raw('concat(e.nombre, " ",e.ape_paterno, " ",e.ape_materno) as colaborador, '
                         . 'concat(c.nombre," ",c.nombre2," ",c.ape_paterno," ",c.ape_materno) as cliente, cajas.id as caja, cajas.consecutivo,'
-                        . 'c.beca_bnd, st.name as estatus_caja,'
+                        . 'c.beca_bnd, st.name as estatus_caja, cajas.st_caja_id,'
                         . 'pag.monto as monto_pago, fp.name as forma_pago, pag.fecha as fecha_pago, cajas.fecha as fecha_caja'))
                             ->join('clientes as c', 'c.id', '=', 'cajas.cliente_id')
                             ->join('plantels as pla','pla.id','=','c.plantel_id')
@@ -394,7 +396,9 @@ class PagosController extends Controller {
                             ->join('pagos as pag','pag.caja_id','=','cajas.id')
                             ->join('forma_pagos as fp','fp.id','=','pag.forma_pago_id')
                             ->where('cajas.plantel_id', '=', $data['plantel_f'])
-                            ->where('cajas.fecha','=',$data['fecha_f'])
+                            ->where('pag.fecha','>=',$data['fecha_f'])
+                            ->where('pag.fecha','<=',$data['fecha_t'])
+                            ->where('cajas.usu_alta_id','<=',$usuario->user_id)
                             ->whereNull('pag.deleted_at')
                             ->where('cajas.st_caja_id','=',1)
                             ->orderBy('colaborador','cajas.st_caja_id')
@@ -406,7 +410,7 @@ class PagosController extends Controller {
                 $registros_parciales= Caja::select('pla.razon','c.id',
                         DB::raw(''
                         . 'concat(c.nombre," ",c.nombre2," ",c.ape_paterno," ",c.ape_materno) as cliente, cajas.id as caja, cajas.consecutivo,'
-                        . 'c.beca_bnd, st.name as estatus_caja, cajas.total as total_caja, fp.id as forma_pago_id, '
+                        . 'c.beca_bnd, st.name as estatus_caja, cajas.total as total_caja, fp.id as forma_pago_id, cajas.st_caja_id,'
                         . 'pag.monto as monto_pago, fp.name as forma_pago, pag.fecha as fecha_pago, cajas.fecha as fecha_caja'))
                             ->join('clientes as c', 'c.id', '=', 'cajas.cliente_id')
                             ->join('plantels as pla','pla.id','=','c.plantel_id')
@@ -416,6 +420,7 @@ class PagosController extends Controller {
                             ->where('cajas.plantel_id', '=', $data['plantel_f'])
                             ->where('pag.fecha','>=',$data['fecha_f'])
                             ->where('pag.fecha','<=',$data['fecha_t'])
+                            ->where('cajas.usu_alta_id','<=',$usuario->user_id)
                             ->whereNull('pag.deleted_at')
                             ->where('cajas.st_caja_id','=',3)
                             ->orderBy('cajas.st_caja_id')
@@ -459,6 +464,7 @@ class PagosController extends Controller {
                 ->where('clientes.st_cliente_id',4)
                 ->where('s.st_seguimiento_id',2)
                 ->where('clientes.plantel_id',$data['plantel_f'])
+                ->where('cajas.usu_alta_id','<=',$usuario->user_id)
                 ->get();
         return view('pagos.reportes.postAlumnosBeca', array('registros'=>$registros,
                                                                   'plantel'=>$plantel,

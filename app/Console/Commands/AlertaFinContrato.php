@@ -17,7 +17,7 @@ class AlertaFinContrato extends Command
      *
      * @var string
      */
-    protected $signature = 'ian:FinContratos';
+    protected $signature = 'ian:AlertaFinContratos';
 
     /**
      * The console command description.
@@ -73,7 +73,7 @@ class AlertaFinContrato extends Command
                 {
                     $message->to($responsable_mail);
             
-                    $message->subject('Alerta Contratos Por Vencer');
+                    $message->subject('Alerta Contratos Por Vencer S/J');
                 });
             //dd($respuesta); 
            
