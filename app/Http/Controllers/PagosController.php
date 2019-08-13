@@ -3,16 +3,18 @@
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-use App\Pago;
-use App\Plantel;
+use App\Adeudo;
+
 use App\Caja;
 use App\CuentasEfectivo;
-use App\Adeudo;
 use App\Cliente;
 use App\CajaLn;
 use App\CombinacionCliente;
 use App\Empleado;
+use App\Egreso;
 use App\Inscripcion;
+use App\Pago;
+use App\Plantel;
 use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updatePago;
@@ -198,7 +200,7 @@ class PagosController extends Controller {
                     ->where('cliente_id',$cliente->id)
                     ->get();
                 
-                $suma_pagos=Pago::select('monto')->where('caja_id','=',$pago->caja_id)->sum('monto');
+                $suma_pagos=Pago::select('monto')->where('caja_id','=',$pago->caja_id)->whereNull('deleted_at')->sum('monto');
                 if($suma_pagos==$caja->total){
                     $caja->st_caja_id=1;
                     $caja->save();
@@ -208,6 +210,15 @@ class PagosController extends Controller {
                             Adeudo::where('id', '=', $ln->adeudo_id)->update(['pagado_bnd'=>1]);
                         }
                     }  
+                }elseif($suma_pagos==0){
+                    $caja->st_caja_id=0;
+                    $caja->save();
+                    
+                    foreach($caja->cajaLns as $ln){
+                        if($ln->adeudo_id>0){
+                            Adeudo::where('id', '=', $ln->adeudo_id)->update(['pagado_bnd'=>0]);
+                        }
+                    }
                 }elseif($caja->st_caja_id==1){
                     $caja->st_caja_id=0;
                     $caja->save();
@@ -377,33 +388,11 @@ class PagosController extends Controller {
                             ->where('cajas.usu_alta_id','<=',$usuario->user_id)
                             ->whereNull('pag.deleted_at')
                             ->where('cajas.st_caja_id','=',1)
-                            ->orderBy('cajas.st_caja_id')
+                            ->orderBy('fp.id')
+                            ->orderBy('pag.fecha')
                             ->distinct()
                             ->get();
                 
-                $registros_pagados1= Caja::select('pla.razon','c.id',
-                        DB::raw('concat(e.nombre, " ",e.ape_paterno, " ",e.ape_materno) as colaborador, '
-                        . 'concat(c.nombre," ",c.nombre2," ",c.ape_paterno," ",c.ape_materno) as cliente, cajas.id as caja, cajas.consecutivo,'
-                        . 'c.beca_bnd, st.name as estatus_caja, cajas.st_caja_id,'
-                        . 'pag.monto as monto_pago, fp.name as forma_pago, pag.fecha as fecha_pago, cajas.fecha as fecha_caja'))
-                            ->join('clientes as c', 'c.id', '=', 'cajas.cliente_id')
-                            ->join('plantels as pla','pla.id','=','c.plantel_id')
-                            ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
-                            //->join('caja_lns as ln','ln.caja_id','=','caj.id')
-                            //->join('caja_conceptos as conce','conce.id','=','ln.caja_concepto_id')
-                            ->join('st_cajas as st','st.id','=','cajas.st_caja_id')
-                            //->join('adeudos as a','a.id','=','ln.adeudo_id')
-                            ->join('pagos as pag','pag.caja_id','=','cajas.id')
-                            ->join('forma_pagos as fp','fp.id','=','pag.forma_pago_id')
-                            ->where('cajas.plantel_id', '=', $data['plantel_f'])
-                            ->where('pag.fecha','>=',$data['fecha_f'])
-                            ->where('pag.fecha','<=',$data['fecha_t'])
-                            ->where('cajas.usu_alta_id','<=',$usuario->user_id)
-                            ->whereNull('pag.deleted_at')
-                            ->where('cajas.st_caja_id','=',1)
-                            ->orderBy('colaborador','cajas.st_caja_id')
-                            ->distinct()
-                            ->get();
                 
                 //dd($registros_pagados->toArray());
                 
@@ -423,9 +412,21 @@ class PagosController extends Controller {
                             ->where('cajas.usu_alta_id','<=',$usuario->user_id)
                             ->whereNull('pag.deleted_at')
                             ->where('cajas.st_caja_id','=',3)
-                            ->orderBy('cajas.st_caja_id')
+                            ->orderBy('fp.id')
+                            ->orderBy('pag.fecha')
                             ->distinct()
                             ->get();
+                
+                $egresos=Egreso::select('egresos.id','fecha','ec.name as concepto','fp.name as forma_pago','ce.name as cuenta_efectivo','monto')
+                        ->join('egresos_conceptos as ec','ec.id','=','egresos.egresos_concepto_id')
+                        ->join('cuentas_efectivos as ce','ce.id','=','egresos.cuentas_efectivo_id')
+                        ->join('forma_pagos as fp','fp.id','egresos.forma_pago_id')
+                        ->where('egresos.fecha','>=',$data['fecha_f'])
+                        ->where('egresos.fecha','<=',$data['fecha_t'])
+                        ->where('egresos.plantel_id', '=', $data['plantel_f'])
+                        ->whereNull('egresos.deleted_at')
+                        ->orderBy('ce.id')
+                        ->get();
                 
                 //dd($registros_parciales->toArray());
                                         
@@ -440,8 +441,9 @@ class PagosController extends Controller {
                 return view('pagos.reportes.inscritosPagosR', array('registros_pagados'=>$registros_pagados,
                                                                            'registros_parciales'=>$registros_parciales,
                                                                            'registros_pagados1'=>'registros_pagados1',
-                                                                                 'plantel'=>$plantel,
-                                                                                 'data'=>$data));
+                                                                           'plantel'=>$plantel,
+                                                                           'data'=>$data,
+                                                                           'egresos'=>$egresos));
     }
     
     public function getAlumnoBeca(){

@@ -477,7 +477,8 @@ class InscripcionsController extends Controller {
                 //dd($data);
                 $registros= Inscripcion::select('c.nombre','c.nombre2','c.ape_paterno','c.ape_materno', 'g.name as grupo','l.name as lectivo',
                                                DB::raw('concat(e.nombre," ",e.ape_paterno," ",e.ape_materno) as maestro'),'gra.name as grado',
-                                               'p.razon as plantel', 'p.logo','aa.id as asignacion','c.id as cliente','p.id as p_id')
+                                               'p.razon as plantel', 'p.logo','aa.id as asignacion','c.id as cliente','p.id as p_id','inscripcions.plantel_id',
+					       'inscripcions.lectivo_id','inscripcions.grupo_id','inscripcions.grado_id')
                                        ->join('hacademicas as h','h.inscripcion_id','=','inscripcions.id')
                                        ->join('clientes as c', 'c.id', '=', 'inscripcions.cliente_id')
                                        ->join('grupos as g', 'g.id', '=', 'inscripcions.grupo_id')
@@ -503,7 +504,9 @@ class InscripcionsController extends Controller {
                                        ->orderBy('inscripcions.lectivo_id')
                                        ->orderBy('inscripcions.grupo_id')
                                        ->orderBy('inscripcions.grado_id')
+				       ->distinct()
                                        ->get();
+
                 
                 //dd($registros->toArray());
                 
@@ -906,6 +909,7 @@ class InscripcionsController extends Controller {
                                        ->where('aa.id',$data['asignacion'])
                                        ->where('inscripcions.plantel_id', $data['plantel_f'])
                                        ->where('inscripcions.lectivo_id',$data['lectivo_f'])
+				       ->where('inscripcions.grupo_id',$data['grupo_f'])
                                        //->where('inscripcions.grado_id',$data['grado_f'])
                                        ->where('aa.plantel_id', $data['plantel_f'])
                                        ->where('aa.lectivo_id',$data['lectivo_f'])
@@ -919,6 +923,7 @@ class InscripcionsController extends Controller {
                                        ->orderBy('inscripcions.lectivo_id')
                                        ->orderBy('inscripcions.grupo_id')
                                        ->orderBy('inscripcions.grado_id')
+				       ->distinct()
                                        ->get();
                 
                 //dd($registros->toArray());

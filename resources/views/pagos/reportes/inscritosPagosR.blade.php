@@ -17,6 +17,7 @@
       <h3>Pagos del Plantel {{$plantel->razon}} del dia {{$data['fecha_f']}} al {{$data['fecha_t']}}</h3>
     <div class="datagrid">
         @if(isset($registros_pagados) and count($registros_pagados)>0)
+        <h3>Pagos completos</h3>
         <table class="table table-condensed table-striped">
             <thead>
                 <tr>
@@ -27,12 +28,20 @@
                 <?php 
                 $i=0; 
                 $j=0;
-                $total_monto=0;
-                $suma_total=0
+                $total=0;
+                $suma_total=0;
+                $forma_pago=0;
+                $total_forma_pago=0;
                 ?>
                 <?php $colaborador="" ?>
+                
                 @foreach($registros_pagados as $registro)
-                    
+                    @if($forma_pago<>$registro->forma_pago_id and $total_forma_pago>0)
+                    <tr>
+                        <td colspan="6"><strong>Total Forma de Pago</strong></td><td style="text-align:right;"><strong>{{number_format($total_forma_pago)}}</strong></td><td></td>
+                    </tr>
+                    <?php $total_forma_pago=0; ?>
+                    @endif
                     <tr>
                         <td>{{$registro->id}} - {{$registro->cliente}}</td>
                         <td>
@@ -53,32 +62,35 @@
                                 {{$ln->cajaConcepto->name}}<br/>
                             @endforeach  
                         </td>
-                        <td>{{$registro->monto_pago}}</td>
+                        <td style="text-align:right;">{{number_format($registro->monto_pago)}}</td>
                         <td>{{$registro->forma_pago}}</td>
                     </tr>
                     
                     <?php 
                     $colaborador=$registro->colaborador; 
                     $i++;
-                    $total_monto=$total_monto+$registro->pago;
-                    if($registro->forma_pago_id==1){
-                        $suma_total=$suma_total+$registro->monto_pago;
-                    }
+                    $forma_pago=$registro->forma_pago_id;
+                    $total_forma_pago=$total_forma_pago+$registro->monto_pago;
+                    $suma_total=$suma_total+$registro->monto_pago;
                     
                     ?>
                 @endforeach
                     <?php 
                     $j=$i+$j;
                     ?>
-                    
                     <tr>
-                        <td><strong>Total</strong></td><td colspan="5"><strong><strong></td><td colspan="2"><strong>{{number_format($suma_total)}}</strong></td>
+                        <td><strong>Total Forma de Pago</strong></td><td colspan="5"><strong><strong></td><td style="text-align:right;"><strong>{{number_format($total_forma_pago)}}</strong></td><td></td>
                     </tr>
+                    <tr>
+                        <td><strong>Total</strong></td><td colspan="5"><strong><strong></td><td style="text-align:right;"><strong>{{number_format($suma_total)}}</strong></td><td></td>
+                    </tr>
+                    <?php $total=$suma_total ?>
             </tbody>
         </table>
         @endif
         
         @if(isset($registros_parciales) and count($registros_parciales)>0)
+        <h3>Pagos parciales</h3>
         <table class="table table-condensed table-striped">
             <thead>
                 <tr>
@@ -91,9 +103,17 @@
                 $j=0;
                 $total_monto=0;
                 $suma_total=0;
+                $forma_pago=0;
+                $total_forma_pago=0;
                 ?>
                 <?php $colaborador="" ?>
                 @foreach($registros_parciales as $registro)
+                    @if($forma_pago<>$registro->forma_pago_id and $total_forma_pago>0)
+                    <tr>
+                        <td colspan="7"><strong>Total Forma de Pago</strong></td><td style="text-align:right;"><strong>{{number_format($total_forma_pago)}}</strong></td><td></td>
+                    </tr>
+                    <?php $total_forma_pago=0; ?>
+                    @endif
                     <tr>
                         <td>{{$registro->id}} - {{$registro->cliente}}</td>
                         <td>
@@ -115,31 +135,79 @@
                                 {{$ln->cajaConcepto->name}}<br/>
                             @endforeach  
                         </td>
-                        <td>{{$registro->monto_pago}}</td>
+                        <td style="text-align:right;">{{number_format($registro->monto_pago)}}</td>
                         <td>{{$registro->forma_pago}}</td>
                     </tr>
                     
                     <?php 
                     $colaborador=$registro->colaborador; 
                     $i++;
-                    $total_monto=$total_monto+$registro->pago;
-                    if($registro->forma_pago_id==1){
-                        $suma_total=$suma_total+$registro->monto_pago;
-                    }
+                    $forma_pago=$registro->forma_pago_id;
+                    $total_forma_pago=$total_forma_pago+$registro->monto_pago;
+                    $suma_total=$suma_total+$registro->monto_pago;
                     ?>
                 @endforeach
                     <?php 
                     $j=$i+$j;
                     ?>
-                    
                     <tr>
-                        <td><strong>Total</strong></td><td colspan="6"><strong><strong></td><td colspan="2"><strong>{{number_format($suma_total)}}</strong></td>
+                        <td><strong>Total Forma de Pago</strong></td><td colspan="6"><strong><strong></td><td style="text-align:right;"><strong>{{number_format($total_forma_pago)}}</strong></td><td></td>
                     </tr>
-
+                    <tr>
+                        <td><strong>Total</strong></td><td colspan="6"><strong><strong></td><td style="text-align:right;"><strong>{{number_format($suma_total)}}</strong></td><td></td>
+                    </tr>
+                    <?php $total=$total+$suma_total ?>
             </tbody>
         </table>
         @endif
+        
+        
+        <h3>Egresos</h3>
+        <table>
+            <thead>
+            <th>Id</th><th>Fecha</th><th>Concepto</th><th>Forma Pago</th><th>Cuenta Efectivo</th><th>Monto</th>
+            </thead>
+            <tbody>
+                <?php 
+                $total_cuenta=0;
+                $total_suma=0;
+                $cuenta="";
+                ?>
+                @foreach($egresos as $egreso)
+                @if($cuenta<>$egreso->cuenta_efectivo and $total_cuenta>0)
+                <tr>
+                    <td colspan="5"><strong>Total Cuenta</strong></td><td><strong>{{$total_cuenta}}</strong></td>
+                </tr>
+                <?php $total_cuenta=0; ?>    
+                @endif
+                <tr>
+                    <td>{{$egreso->id}}</td><td>{{$egreso->fecha}}</td><td>{{$egreso->concepto}}</td><td>{{$egreso->forma_pago}}</td><td>{{$egreso->cuenta_efectivo}}</td><td>{{$egreso->monto}}</td>
+                </tr>
+                <?php
+                $total_cuenta=$total_cuenta+$egreso->monto;
+                $total_suma=$total_suma+$egreso->monto;
+                $cuenta=$egreso->cuenta_efectivo;
+                ?>
+                @endforeach
+                <tr>
+                    <td colspan="5"><strong>Total Cuenta</strong></td><td><strong>{{$total_cuenta}}</strong></td>
+                </tr>
+                <tr>
+                    <td colspan="5"><strong>Total</strong></td><td><strong>{{$total_suma}}</strong></td>
+                </tr>
+            </tbody>
+        </table>
+        <h3>Pagos menos Egresos</h3>
+        <table>
+            <thead>
+            <th>Pagos en Caja</th><th>Egresos</th><th>Diferencia</th>
+            </thead>
+            <td>{{$total}}</td><td>{{$total_suma}}</td><td>{{$total-$total_suma}}</td>
+        </table>
+            
     </div>
+      
+      
 <!--    <div id="wdr-component"></div>
     
     <div id="wdr-component1"></div>-->

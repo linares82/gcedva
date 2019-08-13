@@ -1008,10 +1008,12 @@ class SeguimientosController extends Controller {
             $hoy=date('Y-m-d');
             //dd($hoy);
 
-            $adeudos_tomados=Adeudo::join('combinacion_clientes as cc','cc.id','=','adeudos.combinacion_cliente_id')
-                           ->where('fecha_pago','>=',$data['fecha_f'])        
-                           ->where('fecha_pago','<=',$data['fecha_t'])
+            //$adeudos_tomados=Adeudo::join('combinacion_clientes as cc','cc.id','=','adeudos.combinacion_cliente_id')
+            $adeudos_tomados=Adeudo::select('adeudos.id as adeudo','adeudos.*','cc.*','c.*')
+                           ->join('combinacion_clientes as cc','cc.id','=','adeudos.combinacion_cliente_id')
                            ->join('clientes as c','c.id','=','adeudos.cliente_id')
+                           ->where('fecha_pago','>=',$data['fecha_f'])        
+                           ->where('fecha_pago','<=',$data['fecha_t']) 
                            ->where('c.plantel_id','>=',$data['plantel_f'])
                            ->where('c.plantel_id','<=',$data['plantel_t'])
                            //->where('i.st_inscripcion_id',1)
@@ -1031,7 +1033,8 @@ class SeguimientosController extends Controller {
                 //dd($adeudos->toArray());
 
                 //foreach($adeudos as $adeudo){
-                    $existe_linea=CajaLn::where('adeudo_id','=',$adeudo_tomado->id)->first();
+                    $existe_linea=CajaLn::where('adeudo_id','=',$adeudo_tomado->adeudo)->whereNull('caja_lns.deleted_at')->first();
+                    //dd($existe_linea);
                     if(!is_object($existe_linea)){
                         
                         $caja_ln['razon']=$adeudo_tomado->cliente->plantel->razon;
@@ -1149,10 +1152,27 @@ class SeguimientosController extends Controller {
                         
                 //    }
                         array_push($registros, $caja_ln);
+                }else{
+                    //dd($adeudo_tomado->toArray());
+                    $caja_ln['razon']=$adeudo_tomado->cliente->plantel->razon;
+                    $caja_ln['concepto']=$adeudo_tomado->cajaConcepto->name;
+                    $caja_ln['cliente']=$cliente->id.'-'.$cliente->nombre.' '.$cliente->nombre2." ".$cliente->ape_paterno.' '.$cliente->ape_materno;
+                    $caja_ln['caja_concepto_id']=$adeudo_tomado->caja_concepto_id;
+                    //$caja_ln['subtotal']=$adeudo_tomado->monto;
+                    $caja_ln['bnd_pagado']=$adeudo_tomado->pagado_bnd;
+                    $caja_ln['fecha_pago']=$adeudo_tomado->fecha_pago;
+//                    dd($adeudo->planPagoLn->reglaRecargos);
+                    $caja_ln['subtotal']=$existe_linea->subtotal;
+                    $caja_ln['total']=$existe_linea->total;
+                    $caja_ln['recargo']=$existe_linea->recargo;
+                    $caja_ln['descuento']=$existe_linea->descuento;
+                    array_push($registros, $caja_ln);
                 }
-            }
-            $fecha=date('d-m-Y');
                 
+            }
+            
+            $fecha=date('d-m-Y');
+            //dd($registros);    
                 //dd($registros);
                                         
                                         
