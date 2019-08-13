@@ -372,8 +372,11 @@ class HacademicasController extends Controller {
         //$examen->put(0,'Seleccionar Opción');
         //$examen->reverse();
         Session::flash('msj', 'Registro Creado');
-        return view('hacademicas.examen', compact('examen'))
+        /*return view('hacademicas.examen', compact('examen'))
                         ->with('list', Hacademica::getListFromAllRelationApps());
+         * 
+         */
+        return redirect()->route('hacademicas.examenes',compact('examen'))->with('message', 'Registro Creado.');
     }
 
     public function getRacademicas() {

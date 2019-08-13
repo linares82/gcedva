@@ -91,7 +91,7 @@
                 <div class="row">
                 </div>
                 <div class="well well-sm">
-                    <button type="submit" class="btn btn-primary">Procesar</button>
+                    <button type="submit" class="btn btn-primary">Procesar y Crear nuevo</button>
                 </div>
                 @if(isset($hacademicas))
                     <table class="table table-condensed table-striped">
