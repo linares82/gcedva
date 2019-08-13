@@ -16,6 +16,7 @@
   <body>
       <h3>Pagos del Plantel {{$plantel->razon}} del dia {{$data['fecha_f']}} al {{$data['fecha_t']}}</h3>
     <div class="datagrid">
+        <?php $total=0; ?>
         @if(isset($registros_pagados) and count($registros_pagados)>0)
         <h3>Pagos completos</h3>
         <table class="table table-condensed table-striped">
@@ -28,7 +29,7 @@
                 <?php 
                 $i=0; 
                 $j=0;
-                $total=0;
+                
                 $suma_total=0;
                 $forma_pago=0;
                 $total_forma_pago=0;
@@ -176,12 +177,12 @@
                 @foreach($egresos as $egreso)
                 @if($cuenta<>$egreso->cuenta_efectivo and $total_cuenta>0)
                 <tr>
-                    <td colspan="5"><strong>Total Cuenta</strong></td><td><strong>{{$total_cuenta}}</strong></td>
+                    <td colspan="5"><strong>Total Cuenta</strong></td><td style="text-align:right;"><strong>{{number_format($total_cuenta)}}</strong></td>
                 </tr>
                 <?php $total_cuenta=0; ?>    
                 @endif
                 <tr>
-                    <td>{{$egreso->id}}</td><td>{{$egreso->fecha}}</td><td>{{$egreso->concepto}}</td><td>{{$egreso->forma_pago}}</td><td>{{$egreso->cuenta_efectivo}}</td><td>{{$egreso->monto}}</td>
+                    <td>{{$egreso->id}}</td><td>{{$egreso->fecha}}</td><td>{{$egreso->concepto}}</td><td>{{$egreso->forma_pago}}</td><td>{{$egreso->cuenta_efectivo}}</td><td style="text-align:right;">{{number_format($egreso->monto)}}</td>
                 </tr>
                 <?php
                 $total_cuenta=$total_cuenta+$egreso->monto;
@@ -190,10 +191,10 @@
                 ?>
                 @endforeach
                 <tr>
-                    <td colspan="5"><strong>Total Cuenta</strong></td><td><strong>{{$total_cuenta}}</strong></td>
+                    <td colspan="5"><strong>Total Cuenta</strong></td><td style="text-align:right;"><strong>{{number_format($total_cuenta)}}</strong></td>
                 </tr>
                 <tr>
-                    <td colspan="5"><strong>Total</strong></td><td><strong>{{$total_suma}}</strong></td>
+                    <td colspan="5"><strong>Total</strong></td><td style="text-align:right;"><strong>{{number_format($total_suma)}}</strong></td>
                 </tr>
             </tbody>
         </table>
@@ -202,7 +203,7 @@
             <thead>
             <th>Pagos en Caja</th><th>Egresos</th><th>Diferencia</th>
             </thead>
-            <td>{{$total}}</td><td>{{$total_suma}}</td><td>{{$total-$total_suma}}</td>
+            <td style="text-align:right;">{{number_format($total)}}</td><td style="text-align:right;">{{number_format($total_suma)}}</td><td style="text-align:right;">{{number_format($total-$total_suma)}}</td>
         </table>
             
     </div>

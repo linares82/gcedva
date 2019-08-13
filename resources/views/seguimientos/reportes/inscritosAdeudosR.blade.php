@@ -21,7 +21,7 @@
         <table class="table table-condensed table-striped">
             <thead>
                 <tr>
-                    <th>Plantel</th><th>Cliente</th><th>Concepto</th><th>Fecha Pago</th><th>Pagado</th><th>Fecha Pago</th><th>Monto</th>
+                    <th>Plantel</th><th>Grupo</th><th>Cliente</th><th>Concepto</th><th>Fecha Pago</th><th>Pagado</th><th>Fecha Pago</th><th>Monto</th>
                 </tr> 
             </thead>
             <tbody>
@@ -46,6 +46,7 @@
                     @endif
                     <tr>
                         <td>{{$registro['razon']}}</td>
+                        <td>{{$registro['grupo']}}</td>
                         <td>{{$registro['cliente']}}</td>
                         <td>{{$registro['concepto']}}</td>
                         
