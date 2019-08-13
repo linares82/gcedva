@@ -1020,6 +1020,7 @@ class SeguimientosController extends Controller {
                            ->where('c.plantel_id','<=',$data['plantel_t'])
                            //->where('i.st_inscripcion_id',1)
                            ->where('caja_id','<>',0)
+                           ->where('i.grupo_id','>',0)
                            ->whereNull('cc.deleted_at')
                            ->distinct()
                            ->orderBy('g.id')
