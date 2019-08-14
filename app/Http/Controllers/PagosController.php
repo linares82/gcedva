@@ -303,15 +303,19 @@ class PagosController extends Controller {
         $plantel=Plantel::find($datos['plantel_f']);
         
         $registros_pagados = Caja::select('cc.name as concepto',DB::raw('sum(cln.total) as total'))
-                         ->join('pagos as p','p.caja_id','=','cajas.id')
-                         ->join('caja_lns as cln','cln.caja_id','=','cajas.id')
+                        ->join('caja_lns as cln','cln.caja_id','=','cajas.id') 
+                        ->join('pagos as p','p.caja_id','=','cajas.id') 
                          ->join('caja_conceptos as cc','cc.id','=','cln.caja_concepto_id')
                          ->where('cajas.st_caja_id',1)
                          ->where('p.fecha','>=',$datos['fecha_f'])
                          ->where('p.fecha','<=',$datos['fecha_t'])
-                         ->where('cajas.plantel_id','>=',$datos['plantel_f'])
+                         ->where('cajas.plantel_id','=',$datos['plantel_f'])
                          //->where('cajas.plantel_id','<=',$datos['plantel_t'])
+                         ->whereNull('cajas.deleted_at')
+                         ->whereNull('cln.deleted_at')
+                         ->whereNull('p.deleted_at')
                          ->groupBy('cc.name')
+                         ->distinct()
                          ->get();
         //dd($registros_pagados->toArray());
         
@@ -322,11 +326,14 @@ class PagosController extends Controller {
                          ->where('cajas.st_caja_id',3)
                          ->where('p.fecha','>=',$datos['fecha_f'])
                          ->where('p.fecha','<=',$datos['fecha_t'])
-                         ->where('cajas.plantel_id','>=',$datos['plantel_f'])
+                         ->where('cajas.plantel_id','=',$datos['plantel_f'])
+                         ->whereNull('cajas.deleted_at')
+                         ->whereNull('cln.deleted_at')
+                         ->whereNull('p.deleted_at')
                          //->where('cajas.plantel_id','<=',$datos['plantel_t'])
                          ->groupBy('cc.name')
                          ->value('total');
-        //dd($registros_parciales->toArray());
+        //dd($registros_pagados->toArray());
         
         return view('pagos.reportes.pagosXplantelXPeriodoXConceptoR', array('registros_pagados'=>$registros_pagados, 
                                                                             'registros_parciales'=>$registros_parciales,

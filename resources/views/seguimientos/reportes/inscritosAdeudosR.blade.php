@@ -5,7 +5,7 @@
       <style>
         h1, h5, th { text-align: center; }
         table, #chart_div { margin: auto; font-family: Segoe UI; box-shadow: 10px 10px 5px #888; border: thin ridge grey; }
-        th { background: #0046c3; color: #fff; max-width: 400px; padding: 5px 10px; }
+        th { font-size: 11px;background: #0046c3; color: #fff; max-width: 400px; padding: 5px 10px; }
         td { font-size: 11px; padding: 5px 20px; color: #000; }
         tr { background: #b8d1f3; }
         tr:nth-child(even) { background: #dae5f4; }
@@ -21,7 +21,7 @@
         <table class="table table-condensed table-striped">
             <thead>
                 <tr>
-                    <th>Plantel</th><th>Grupo</th><th>Cliente</th><th>Concepto</th><th>Fecha Pago</th><th>Pagado</th><th>Fecha Pago</th><th>Monto</th>
+                    <th>Plantel</th><th>Especialidad</th><th>Grupo</th><th>Cliente</th><th>St Cliente</th><th>St Seguimiento</th><th>Concepto</th><th>Fecha Pago</th><th>Pagado</th><th>Fecha Pago</th><th>Monto</th>
                 </tr> 
             </thead>
             <tbody>
@@ -30,13 +30,13 @@
                 $j=0;
                 $total_monto=0;
                 $suma_total=0;
-                $cliente="";        
+                $grupo="";        
                 ?>
                 <?php $colaborador="" ?>
                 @foreach($registros as $registro)
-                    @if($cliente<>$registro['cliente'] and $i<>0)
+                    @if($grupo<>$registro['grupo'] and $i<>0)
                     <tr>
-                        <td><strong>Suma Cliente</strong></td><td colspan="5"><strong>{{$i}}<strong></td><td colspan="2"><strong>{{number_format($total_monto)}}</strong></td>
+                        <td><strong>Suma Grupo</strong></td><td colspan="9"><strong>{{$i}}<strong></td><td style="align:right;"><strong>{{number_format($total_monto,2)}}</strong></td>
                     </tr>
                     <?php 
                     $j=$i+$j;
@@ -46,8 +46,11 @@
                     @endif
                     <tr>
                         <td>{{$registro['razon']}}</td>
+                        <td>{{$registro['especialidad']}}</td>
                         <td>{{$registro['grupo']}}</td>
                         <td>{{$registro['cliente']}}</td>
+                        <td>{{$registro['st_cliente']}}</td>
+                        <td>{{$registro['st_seguimiento']}}</td>
                         <td>{{$registro['concepto']}}</td>
                         
                         <td>{{$registro['fecha_pago']}}</td>
@@ -59,12 +62,12 @@
                             @endif
                         </td>
                         <td>{{$registro['fecha_pago']}}</td>
-                        <td>{{$registro['total']}}</td>
+                        <td style="align:right;">{{number_format($registro['total'],2)}}</td>
                         
                     </tr>
                     
                     <?php 
-                    $cliente=$registro['cliente']; 
+                    $grupo=$registro['grupo']; 
                     $i++;
                     $total_monto=$total_monto+$registro['total'];
                     $suma_total=$suma_total+$registro['total'];
@@ -74,10 +77,10 @@
                     $j=$i+$j;
                     ?>
                     <tr>
-                        <td><strong>Suma Cliente</strong></td><td colspan="5"><strong>{{$i}}<strong></td><td colspan="2"><strong>{{number_format($total_monto)}}</strong></td>
+                        <td><strong>Suma Cliente</strong></td><td colspan="9"><strong>{{$i}}<strong></td><td style="align:right;"><strong>{{number_format($total_monto,2)}}</strong></td>
                     </tr>
                     <tr>
-                        <td><strong>Total</strong></td><td colspan="5"><strong>{{$j}}<strong></td><td colspan="2"><strong>{{number_format($suma_total)}}</strong></td>
+                        <td><strong>Total</strong></td><td colspan="9"><strong>{{$j}}<strong></td><td style="align:right;"><strong>{{number_format($suma_total,2)}}</strong></td>
                     </tr>
             </tbody>
         </table>

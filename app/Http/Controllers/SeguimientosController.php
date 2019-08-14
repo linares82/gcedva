@@ -1009,10 +1009,15 @@ class SeguimientosController extends Controller {
             //dd($hoy);
 
             //$adeudos_tomados=Adeudo::join('combinacion_clientes as cc','cc.id','=','adeudos.combinacion_cliente_id')
-            $adeudos_tomados=Adeudo::select('adeudos.id as adeudo','adeudos.*','cc.*','c.*','g.id as grupo_id','g.name as grupo')
+            $adeudos_tomados=Adeudo::select('adeudos.id as adeudo','adeudos.*','cc.*','c.*','g.id as grupo_id','g.name as grupo','stc.name as st_cliente',
+                                            'stc.name as st_seguimiento','e.name as especialidad')
                            ->join('combinacion_clientes as cc','cc.id','=','adeudos.combinacion_cliente_id')
                            ->join('clientes as c','c.id','=','adeudos.cliente_id')
+                           ->join('st_clientes as stc','stc.id','=','c.st_cliente_id')
+                           ->join('seguimientos as s','s.cliente_id','=','c.id')
+                           ->join('st_seguimientos as sts','sts.id','=','s.st_seguimiento_id')
                            ->join('inscripcions as i','i.cliente_id','=','c.id')
+                           ->join('especialidads as e','e.id','=','i.especialidad_id')
                            ->join('grupos as g','g.id','=','i.grupo_id')
                            ->where('fecha_pago','>=',$data['fecha_f'])        
                            ->where('fecha_pago','<=',$data['fecha_t']) 
@@ -1023,6 +1028,7 @@ class SeguimientosController extends Controller {
                            ->where('i.grupo_id','>',0)
                            ->whereNull('cc.deleted_at')
                            ->distinct()
+                           ->orderBy('stc.id','desc')
                            ->orderBy('g.id')
                            ->get();
             $registros=array();
@@ -1050,6 +1056,9 @@ class SeguimientosController extends Controller {
                         $caja_ln['subtotal']=$adeudo_tomado->monto;
                         $caja_ln['bnd_pagado']=$adeudo_tomado->bnd_pagado;
                         $caja_ln['fecha_pago']=$adeudo_tomado->fecha_pago;
+                        $caja_ln['especialidad']=$adeudo_tomado->especialidad;
+                        $caja_ln['st_cliente']=$adeudo_tomado->st_cliente;
+                        $caja_ln['st_seguimiento']=$adeudo_tomado->st_seguimiento;
     //                    dd($adeudo->planPagoLn->reglaRecargos);
                         $caja_ln['total']=0;
                         $caja_ln['recargo']=0;
@@ -1173,6 +1182,9 @@ class SeguimientosController extends Controller {
                     $caja_ln['total']=$existe_linea->total;
                     $caja_ln['recargo']=$existe_linea->recargo;
                     $caja_ln['descuento']=$existe_linea->descuento;
+                    $caja_ln['especialidad']=$adeudo_tomado->especialidad;
+                    $caja_ln['st_cliente']=$adeudo_tomado->st_cliente;
+                    $caja_ln['st_seguimiento']=$adeudo_tomado->st_seguimiento;
                     array_push($registros, $caja_ln);
                 }
                 

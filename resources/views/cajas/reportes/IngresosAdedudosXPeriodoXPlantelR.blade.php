@@ -62,6 +62,7 @@
         <th><strong>Cliente</strong></th>
         <th><strong>Adeudo Acumulado</strong></th>
         <th><strong>Pago Acumulado</strong></th>
+        <th><strong>Pago-Adeudo Acumulado</strong></th>
         </thead>
         <tbody>
             <?php
@@ -71,6 +72,7 @@
             $cliente_id = 0;
             $aux = 0;
             $diferencia=0;
+            $total_diferencia=0;
             ?>
             @foreach($adeudos as $adeudo)
 
@@ -89,14 +91,16 @@
                                ->value('pago');
                 ?>
                 <td>{{number_format($pago,2)}}</td>
+                <td>{{number_format($adeudo->deuda-$pago,2)}}</td>
             </tr>
             <?php 
             $deuda_total=$deuda_total+$adeudo->deuda;
             $pago_total=$pago_total+$pago;
             $diferencia=$pago_total-$deuda_total;
+            $total_diferencia=$total_diferencia+($adeudo->deuda-$pago)
             ?>
             @endforeach
-            <tr class="alt"><td></td><td><strong>Total </strong></td><td><strong>{{number_format($deuda_total,2)}}</strong></td><td><strong>{{number_format($pago_total,2)}}</strong></td></tr>
+            <tr class="alt"><td></td><td><strong>Total </strong></td><td><strong>{{number_format($deuda_total,2)}}</strong></td><td><strong>{{number_format($pago_total,2)}}</strong></td><td><strong>{{number_format($total_diferencia,2)}}</strong></td></tr>
             <tr class="alt"><td></td><td><strong>Diferencia </strong></td>
                             @if($diferencia<0)
                             <td><strong>{{number_format($diferencia,2)}}</strong></td>
@@ -105,7 +109,7 @@
                             <td><strong></strong></td>
                             <td><strong>{{number_format($diferencia,2)}}</strong></td>
                             @endif
-                            
+                            <td></td>
             </tr>
             
         </tbody>

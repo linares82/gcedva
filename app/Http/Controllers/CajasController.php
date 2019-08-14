@@ -672,6 +672,7 @@ class CajasController extends Controller {
                        ->where('p.id','>=', $data['plantel_f'])
                        ->where('p.id','<=', $data['plantel_t'])
                        ->groupBy('p.razon')
+                       ->whereNull('cajas.deleted_at')
                        ->groupBy('forma_pago')
                        ->get();
         //dd($resultado->toArray());
@@ -800,6 +801,7 @@ class CajasController extends Controller {
                                      ->groupBy('esp.name')->groupBy('n.name')->groupBy('g.name')->groupBy('c.id')
                                      ->groupBy('c.nombre')->groupBy('c.nombre2')->groupBy('c.ape_paterno')->groupBy('c.ape_materno')
                                      ->orderBy('c.id', 'asc')
+                                     ->whereNull('cc.deleted_at')
                                      ->get();
             
             //dd($registros->toArray());

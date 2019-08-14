@@ -53,7 +53,7 @@ class AtrazoPagos extends Command
                             ->where('c.st_cliente_id','<>',3)
                             ->groupBy('cliente_id')
                             ->having('adeudos_cantidad','>',0)
-                            ->having('adeudos_cantidad','<',3)
+                            ->having('adeudos_cantidad','<=',3)
                             ->get();
            //dd($registros->toArray());
 
@@ -81,6 +81,14 @@ class AtrazoPagos extends Command
 
                         $seguimiento=Seguimiento::where('cliente_id',$cliente->id)->first();
                         $seguimiento->st_seguimiento_id=2;
+                        $seguimiento->save();
+                    }elseif($registro->adeudos_cantidad==3){
+                        $cliente=Cliente::find($registro->cliente_id);
+                        $cliente->st_cliente_id=3;
+                        $cliente->save();
+
+                        $seguimiento=Seguimiento::where('cliente_id',$cliente->id)->first();
+                        $seguimiento->st_seguimiento_id=6;
                         $seguimiento->save();
                     }
                }

@@ -45,13 +45,13 @@
                     @endif
                 </div>
 
-                <div class="form-group col-md-6 @if($errors->has('concepto_f')) has-error @endif">
+<!--                <div class="form-group col-md-6 @if($errors->has('concepto_f')) has-error @endif">
                     <label for="concepto_f-field">Concepto de:</label>
                     {!! Form::select("concepto_f", $conceptos, null, array("class" => "form-control select_seguridad", "id" => "concepto_f-field")) !!}
                     @if($errors->has("concepto_f"))
                     <span class="help-block">{{ $errors->first("concepto_f") }}</span>
                     @endif
-                </div>
+                </div>-->
                 
                 
                 
