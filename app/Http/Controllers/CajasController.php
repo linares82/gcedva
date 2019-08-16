@@ -662,6 +662,12 @@ class CajasController extends Controller {
     
     public function ingresosPlantelFormaPagoR(Request $request){
         $data = $request->all();
+        //dd($data);
+        $empleado=Empleado::where('user_id',Auth::user()->id)->first();
+        if(!isset($data['plantel_f'])){
+            $data['plantel_f']=$empleado->plantel_id;
+            $data['plantel_t']=$empleado->plantel_id;
+        }
         
         $resultado=Caja::select(DB::raw('sum(cajas.total) as total_cajas, p.razon ,fm.name as forma_pago'))
                        ->join('forma_pagos as fm', 'fm.id', '=', 'cajas.forma_pago_id')
@@ -819,6 +825,223 @@ class CajasController extends Controller {
             $caja->save();
             echo json_encode(true);
         }
+
+        public function adeudosXplantel()
+	{
+            //$data=$request->all();
+            
+            //$user=Auth::user()->id;
+            $empleado=Empleado::where('user_id',Auth::user()->id)->first();
+            
+            $plantel=Plantel::find($empleado->plantel_id);
+            //dd($data);
+
+            $hoy=date('Y-m-d');
+            $tresMesesAntes = strtotime ( '-3 month' , strtotime ( $hoy ) ) ;
+            $tresMesesAntes = date ( 'Y-m-d' , $tresMesesAntes );
+            //dd($hoy);
+
+            //$adeudos_tomados=Adeudo::join('combinacion_clientes as cc','cc.id','=','adeudos.combinacion_cliente_id')
+            $adeudos_tomados=Adeudo::select('adeudos.id as adeudo','adeudos.*','cc.*','c.*','g.id as grupo_id','g.name as grupo','stc.name as st_cliente',
+                                            'stc.name as st_seguimiento','e.name as especialidad','s.id as seguimiento')
+                           ->join('combinacion_clientes as cc','cc.id','=','adeudos.combinacion_cliente_id')
+                           ->join('clientes as c','c.id','=','adeudos.cliente_id')
+                           ->join('st_clientes as stc','stc.id','=','c.st_cliente_id')
+                           ->join('seguimientos as s','s.cliente_id','=','c.id')
+                           ->join('st_seguimientos as sts','sts.id','=','s.st_seguimiento_id')
+                           ->join('inscripcions as i','i.cliente_id','=','c.id')
+                           ->join('especialidads as e','e.id','=','i.especialidad_id')
+                           ->join('grupos as g','g.id','=','i.grupo_id')
+                           ->where('fecha_pago','>=',$tresMesesAntes)        
+                           ->where('fecha_pago','<=',$hoy) 
+                           ->where('c.plantel_id','=',$plantel->id)
+                           //->where('i.st_inscripcion_id',1)
+                           ->where('caja_id','<>',0)
+                           ->where('i.grupo_id','>',0)
+                           ->whereNull('cc.deleted_at')
+                           ->distinct()
+                           ->orderBy('stc.id','desc')
+                           ->orderBy('g.id')
+                           ->get();
+            //dd($adeudos_tomados->toArray());
+            $registros=array();
+            foreach($adeudos_tomados as $adeudo_tomado){
+                //$adeudos=Adeudo::where('id', '=', $adeudo_tomado)->get();
+                //dd($adeudo_tomado);
+                $cliente=Cliente::find($adeudo_tomado->cliente_id);
                 
+                //dd($adeudos->toArray());
+                $subtotal=0;
+                $recargo=0;
+                $descuento=0;
+                //dd($adeudos->toArray());
+
+                //foreach($adeudos as $adeudo){
+                    $existe_linea=CajaLn::where('adeudo_id','=',$adeudo_tomado->adeudo)->whereNull('caja_lns.deleted_at')->first();
+                    //dd($adeudo_tomado->adeudo);
+                    if(!is_object($existe_linea)){
+                        //dd($existe_linea->toArray());
+                        $caja_ln['razon']=$adeudo_tomado->cliente->plantel->razon;
+                        $caja_ln['grupo']=$adeudo_tomado->grupo;
+                        $caja_ln['concepto']=$adeudo_tomado->cajaConcepto->name;
+                        $caja_ln['cliente']=$cliente->id.'-'.$cliente->nombre.' '.$cliente->nombre2." ".$cliente->ape_paterno.' '.$cliente->ape_materno;
+                        $caja_ln['seguimiento']=$cliente->seguimiento;
+                        $caja_ln['estatus_caja']="";
+                        $caja_ln['caja_concepto_id']=$adeudo_tomado->caja_concepto_id;
+                        $caja_ln['subtotal']=$adeudo_tomado->monto;
+                        $caja_ln['bnd_pagado']=$adeudo_tomado->bnd_pagado;
+                        $caja_ln['fecha_pago']=$adeudo_tomado->fecha_pago;
+                        $caja_ln['especialidad']=$adeudo_tomado->especialidad;
+                        $caja_ln['st_cliente']=$adeudo_tomado->st_cliente;
+                        $caja_ln['st_seguimiento']=$adeudo_tomado->st_seguimiento;
+    //                    dd($adeudo->planPagoLn->reglaRecargos);
+                        $caja_ln['total']=0;
+                        $caja_ln['recargo']=0;
+                        $caja_ln['descuento']=0;
+                        foreach($adeudo_tomado->planPagoLn->reglaRecargos as $regla){
+
+                            $dias=date_diff(date_create($hoy), date_create($adeudo_tomado->fecha_pago));
+                            //dd($dias);
+                            $dia=$dias->format('%R%a')*-1;
+
+                            //calcula recargo o descuento segun regla y aplica
+                            if($dia>=$regla->dia_inicio and $dia<=$regla->dia_fin){
+                                if($regla->tipo_regla_id==1){
+                                    //dd($regla->porcentaje);
+                                    if($regla->porcentaje>0){
+                                        //dd($regla->porcentaje);
+                                        $caja_ln['recargo']=$adeudo_tomado->monto*$regla->porcentaje;
+                                        //echo $caja_ln['recargo'];
+                                    }else{
+                                        $caja_ln['descuento']=$adeudo_tomado->monto*$regla->porcentaje*-1;
+                                        //echo $caja_ln['descuento'];
+                                    }
+
+                                }elseif($regla->tipo_regla_id==2){
+                                    if($regla->monto>0){
+                                        $caja_ln['recargo']=$regla->monto;
+                                    }else{
+                                        $caja_ln['descuento']=$regla->monto*-1;
+                                    }
+
+                                }
+                            }
+
+                        }
+                        $caja_ln['total']=0;
+                        $caja_ln['total']=$caja_ln['subtotal']+$caja_ln['recargo']-$caja_ln['descuento'];
+
+                        //calcula descuento segun promocion ligada a la linea del plan considerando la fecha de pago de la
+                        //inscripcion del cliente
+                        //dd($adeudo);
+                        try{
+                            $promociones= PromoPlanLn::where('plan_pago_ln_id',$adeudo_tomado->plan_pago_ln_id)->get();
+                            $caja_ln['promo_plan_ln_id']=0;
+                            if($cliente->beca_bnd<>1){
+                                foreach($promociones as $promocion){
+                                    $inscripcion=Adeudo::where('cliente_id',$adeudo_tomado->cliente_id)
+                                                        //->where('plan_pago_ln_id',$adeudo->plan_pago_ln_id)
+                                                        ->where('caja_concepto_id',1)
+                                                        ->where('combinacion_cliente_id',$adeudo_tomado->combinacion_cliente_id)
+                                                        ->where('pagado_bnd',1)
+                                                        ->first();
+//dd($inscripcion);
+                                    if(is_object($inscripcion)){
+                                        $inicio=Carbon::createFromFormat('Y-m-d', $promocion->fec_inicio);
+                                        $fin=Carbon::createFromFormat('Y-m-d', $promocion->fec_fin);
+
+                                        //$hoy=date('Y-m-d');
+                                        //$hoy=Carbon::now();
+                                        //La caja tiene la fecha de pago de un solo concepto que debe ser la inscripcion
+                                        $caja_inscripcion=Caja::find($inscripcion->caja_id);
+//dd($caja);
+                                        $hoy=Carbon::createFromFormat('Y-m-d', $caja_inscripcion->fecha);
+					//$hoy=Carbon::createFromFormat('Y-m-d', $adeudo->caja->fecha);  
+//dd($hoy);
+                                        $monto_promocion=0;
+                                        //dd($hoy);
+                                        if($inicio->lessThanOrEqualTo($hoy) and $fin->greaterThanOrEqualTo($hoy) and $caja_ln['promo_plan_ln_id']==0){
+
+                                            $monto_promocion=$promocion->descuento*$caja_ln['total'];
+                                            $caja_ln['descuento']=$caja_ln['descuento']+$monto_promocion;
+                                            $caja_ln['promo_plan_ln_id']=$promocion->id;
+                                        }
+                                    }else{
+                                        $inicio=Carbon::createFromFormat('Y-m-d', $promocion->fec_inicio);
+                                        $fin=Carbon::createFromFormat('Y-m-d', $promocion->fec_fin);
+
+                                        //$hoy=date('Y-m-d');
+                                        //$hoy=Carbon::now();
+                                        //La caja tiene la fecha de pago de un solo concepto que debe ser la inscripcion
+                                        //$caja_inscripcion=Caja::find($inscripcion->caja_id);
+                                        $hoy=Carbon::createFromFormat('Y-m-d', date('Y-m-d'));
+                                        $monto_promocion=0;
+                                        //dd($hoy);
+                                        if($inicio->lessThanOrEqualTo($hoy) and $fin->greaterThanOrEqualTo($hoy) and $caja_ln['promo_plan_ln_id']==0){
+
+                                            $monto_promocion=$promocion->descuento*$caja_ln['total'];
+                                            $caja_ln['descuento']=$caja_ln['descuento']+$monto_promocion;
+                                            $caja_ln['promo_plan_ln_id']=$promocion->id;
+                                        }
+                                    }
+
+                                }
+                            }
+                        }catch(Exception $e){
+                            dd($e);
+                        }
+                        $caja_ln['total']=$caja_ln['subtotal']+$caja_ln['recargo']-$caja_ln['descuento'];
+
+
+                        $caja_ln['adeudo_id']=$adeudo_tomado->id;
+                        $caja_ln['usu_alta_id']=Auth::user()->id;
+                        $caja_ln['usu_mod_id']=Auth::user()->id;
+                        
+                        
+                        
+                        
+                //    }
+                        array_push($registros, $caja_ln);
+                }elseif(is_object($existe_linea) and $existe_linea->caja->st_caja_id==3){
+                    //dd($adeudo_tomado->toArray());
+                    $caja_ln['razon']=$adeudo_tomado->cliente->plantel->razon;
+                    $caja_ln['grupo']=$adeudo_tomado->grupo;
+                    $caja_ln['concepto']=$adeudo_tomado->cajaConcepto->name;
+                    $caja_ln['cliente']=$cliente->id.'-'.$cliente->nombre.' '.$cliente->nombre2." ".$cliente->ape_paterno.' '.$cliente->ape_materno;
+                    $caja_ln['seguimiento']=$cliente->seguimiento;
+                    $caja_ln['estatus_caja']=$existe_linea->caja->stCaja->name;
+                    $caja_ln['caja_concepto_id']=$adeudo_tomado->caja_concepto_id;
+                    //$caja_ln['subtotal']=$adeudo_tomado->monto;
+                    $caja_ln['bnd_pagado']=$adeudo_tomado->pagado_bnd;
+                    $caja_ln['fecha_pago']=$adeudo_tomado->fecha_pago;
+//                    dd($adeudo->planPagoLn->reglaRecargos);
+                    $caja_ln['subtotal']=$existe_linea->subtotal;
+                    $caja_ln['total']=$existe_linea->total;
+                    $caja_ln['recargo']=$existe_linea->recargo;
+                    $caja_ln['descuento']=$existe_linea->descuento;
+                    $caja_ln['especialidad']=$adeudo_tomado->especialidad;
+                    $caja_ln['st_cliente']=$adeudo_tomado->st_cliente;
+                    $caja_ln['st_seguimiento']=$adeudo_tomado->st_seguimiento;
+                    array_push($registros, $caja_ln);
+                }
+                
+            }
+            
+            $fecha=date('d-m-Y');
+            //dd($registros);    
+                //dd($registros);
+                                        
+                                        
+                /*
+                PDF::setOptions(['defaultFont' => 'arial']);
+
+                $pdf = PDF::loadView('inscripcions.reportes.lista_calificacionesr', array('registros'=>$registros,'carga_ponderacions_enc'=>$carga_ponderacion))
+                        ->setPaper('legal', 'landscape');
+                return $pdf->download('reporte.pdf');
+                */
+                return view('cajas.adeudosXplantel', array('registros'=>$registros,
+                                                           'plantel'=>$plantel,
+                                                           'fecha'=>$fecha));
+	}    
     
  }

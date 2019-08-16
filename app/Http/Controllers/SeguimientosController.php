@@ -1052,6 +1052,7 @@ class SeguimientosController extends Controller {
                         $caja_ln['grupo']=$adeudo_tomado->grupo;
                         $caja_ln['concepto']=$adeudo_tomado->cajaConcepto->name;
                         $caja_ln['cliente']=$cliente->id.'-'.$cliente->nombre.' '.$cliente->nombre2." ".$cliente->ape_paterno.' '.$cliente->ape_materno;
+                        $caja_ln['estatus_caja']="";
                         $caja_ln['caja_concepto_id']=$adeudo_tomado->caja_concepto_id;
                         $caja_ln['subtotal']=$adeudo_tomado->monto;
                         $caja_ln['bnd_pagado']=$adeudo_tomado->bnd_pagado;
@@ -1167,12 +1168,33 @@ class SeguimientosController extends Controller {
                         
                 //    }
                         array_push($registros, $caja_ln);
+                }elseif(is_object($existe_linea) and $existe_linea->caja->st_caja_id==3){
+                    //dd($adeudo_tomado->toArray());
+                    $caja_ln['razon']=$adeudo_tomado->cliente->plantel->razon;
+                    $caja_ln['grupo']=$adeudo_tomado->grupo;
+                    $caja_ln['concepto']=$adeudo_tomado->cajaConcepto->name;
+                    $caja_ln['cliente']=$cliente->id.'-'.$cliente->nombre.' '.$cliente->nombre2." ".$cliente->ape_paterno.' '.$cliente->ape_materno;
+                    $caja_ln['estatus_caja']=$existe_linea->caja->stCaja->name;
+                    $caja_ln['caja_concepto_id']=$adeudo_tomado->caja_concepto_id;
+                    //$caja_ln['subtotal']=$adeudo_tomado->monto;
+                    $caja_ln['bnd_pagado']=$adeudo_tomado->pagado_bnd;
+                    $caja_ln['fecha_pago']=$adeudo_tomado->fecha_pago;
+//                    dd($adeudo->planPagoLn->reglaRecargos);
+                    $caja_ln['subtotal']=$existe_linea->subtotal;
+                    $caja_ln['total']=$existe_linea->total;
+                    $caja_ln['recargo']=$existe_linea->recargo;
+                    $caja_ln['descuento']=$existe_linea->descuento;
+                    $caja_ln['especialidad']=$adeudo_tomado->especialidad;
+                    $caja_ln['st_cliente']=$adeudo_tomado->st_cliente;
+                    $caja_ln['st_seguimiento']=$adeudo_tomado->st_seguimiento;
+                    array_push($registros, $caja_ln);
                 }else{
                     //dd($adeudo_tomado->toArray());
                     $caja_ln['razon']=$adeudo_tomado->cliente->plantel->razon;
                     $caja_ln['grupo']=$adeudo_tomado->grupo;
                     $caja_ln['concepto']=$adeudo_tomado->cajaConcepto->name;
                     $caja_ln['cliente']=$cliente->id.'-'.$cliente->nombre.' '.$cliente->nombre2." ".$cliente->ape_paterno.' '.$cliente->ape_materno;
+                    $caja_ln['estatus_caja']=$existe_linea->caja->stCaja->name;
                     $caja_ln['caja_concepto_id']=$adeudo_tomado->caja_concepto_id;
                     //$caja_ln['subtotal']=$adeudo_tomado->monto;
                     $caja_ln['bnd_pagado']=$adeudo_tomado->pagado_bnd;

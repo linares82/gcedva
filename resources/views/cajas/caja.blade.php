@@ -38,7 +38,7 @@
     <div class="col-md-12">
         <div class="box box-info">
             <div class="box-body">
-
+                
                 {!! Form::open(array('route' => 'cajas.buscarVenta','id'=>'form-buscarVenta')) !!}
                 
                 <div class="input-group col-md-6">
@@ -68,6 +68,9 @@
                 @endif
 
                 {!! Form::close() !!}
+                <div class="col-md-6">
+                    <a class='btn btn-sm btn-warning' target='_blank' href="{{route('cajas.adeudosXplantel')}}"> Ver Adeudos</a>
+                </div>
             </div>
         </div>
     </div>

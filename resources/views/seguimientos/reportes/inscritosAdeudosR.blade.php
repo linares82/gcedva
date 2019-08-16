@@ -21,7 +21,7 @@
         <table class="table table-condensed table-striped">
             <thead>
                 <tr>
-                    <th>Plantel</th><th>Especialidad</th><th>Grupo</th><th>Cliente</th><th>St Cliente</th><th>St Seguimiento</th><th>Concepto</th><th>Fecha Pago</th><th>Pagado</th><th>Fecha Pago</th><th>Monto</th>
+                    <th>Plantel</th><th>Especialidad</th><th>Grupo</th><th>Cliente</th><th>St Cliente</th><th>St Seguimiento</th><th>Concepto</th><th>Fecha Pago</th><th>Pagado</th><th>St Caja</th><th>Fecha Pago</th><th>Monto</th>
                 </tr> 
             </thead>
             <tbody>
@@ -36,7 +36,7 @@
                 @foreach($registros as $registro)
                     @if($grupo<>$registro['grupo'] and $i<>0)
                     <tr>
-                        <td><strong>Suma Grupo</strong></td><td colspan="9"><strong>{{$i}}<strong></td><td style="align:right;"><strong>{{number_format($total_monto,2)}}</strong></td>
+                        <td><strong>Suma Grupo</strong></td><td colspan="10"><strong>{{$i}}<strong></td><td style="align:right;"><strong>{{number_format($total_monto,2)}}</strong></td>
                     </tr>
                     <?php 
                     $j=$i+$j;
@@ -61,6 +61,7 @@
                                 NO
                             @endif
                         </td>
+                        <td>{{$registro['estatus_caja']}}</td>
                         <td>{{$registro['fecha_pago']}}</td>
                         <td style="align:right;">{{number_format($registro['total'],2)}}</td>
                         
@@ -77,10 +78,10 @@
                     $j=$i+$j;
                     ?>
                     <tr>
-                        <td><strong>Suma Cliente</strong></td><td colspan="9"><strong>{{$i}}<strong></td><td style="align:right;"><strong>{{number_format($total_monto,2)}}</strong></td>
+                        <td><strong>Suma Grupo</strong></td><td colspan="10"><strong>{{$i}}<strong></td><td style="align:right;"><strong>{{number_format($total_monto,2)}}</strong></td>
                     </tr>
                     <tr>
-                        <td><strong>Total</strong></td><td colspan="9"><strong>{{$j}}<strong></td><td style="align:right;"><strong>{{number_format($suma_total,2)}}</strong></td>
+                        <td><strong>Total</strong></td><td colspan="10"><strong>{{$j}}<strong></td><td style="align:right;"><strong>{{number_format($suma_total,2)}}</strong></td>
                     </tr>
             </tbody>
         </table>
