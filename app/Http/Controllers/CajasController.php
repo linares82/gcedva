@@ -842,7 +842,7 @@ class CajasController extends Controller {
             //dd($hoy);
 
             //$adeudos_tomados=Adeudo::join('combinacion_clientes as cc','cc.id','=','adeudos.combinacion_cliente_id')
-            $adeudos_tomados=Adeudo::select('adeudos.id as adeudo','adeudos.*','cc.*','c.*','g.id as grupo_id','g.name as grupo','stc.name as st_cliente',
+            $adeudos_tomados=Adeudo::select('stc.id','adeudos.id as adeudo','adeudos.*','cc.*','c.*','g.id as grupo_id','g.name as grupo','stc.name as st_cliente',
                                             'stc.name as st_seguimiento','e.name as especialidad','s.id as seguimiento')
                            ->join('combinacion_clientes as cc','cc.id','=','adeudos.combinacion_cliente_id')
                            ->join('clientes as c','c.id','=','adeudos.cliente_id')

@@ -28,7 +28,7 @@ class Plantel extends Model
                                 'no_int', 'no_ext', 'colonia', 'cp', 'municipio', 'estado', 'rvoe', 'cct', 
                                 'tpo_plantel_id', 'meta_venta', 'cve_plantel', 'cns_alumno', 'cns_empleado', 
                                 'meta_total', 'st_plantel_id','consecutivo','estado_id','csc_cotizacion','clausulas_cotizacion',
-                                'director_id','responsable_id'];
+                                'director_id','responsable_id','enlace_id'];
 
     protected $dates = ['deleted_at'];
 
@@ -119,5 +119,13 @@ class Plantel extends Model
 	public function docPlantelPlantels() {
 		return $this->hasMany('App\DocPlantelPlantel');
 	}// end
+        
+        public function director(){
+            return $this->hasOne('App\Empleado','id','director_id');
+        }
+        
+        public function enlace(){
+            return $this->hasOne('App\Empleado','id','enlace_id');
+        }
 
 }

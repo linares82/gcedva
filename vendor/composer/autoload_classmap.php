@@ -38,6 +38,7 @@ return array(
     'AddEmpresaBndAsuntosTable' => $baseDir . '/database/migrations/2019_02_01_130811_add_empresa_bnd_asuntos_table.php',
     'AddEmpresaBndStTareasTable' => $baseDir . '/database/migrations/2019_02_01_140028_add_empresa_bnd_st_tareas_table.php',
     'AddEmpresaBndTareasTable' => $baseDir . '/database/migrations/2019_02_01_130800_add_empresa_bnd_tareas_table.php',
+    'AddEnlaceIdPlantelsTable' => $baseDir . '/database/migrations/2019_08_20_123110_add_enlace_id_plantels_table.php',
     'AddEscuelaProcedenciaClientesTable' => $baseDir . '/database/migrations/2017_11_14_150558_add_escuela_procedencia_clientes_table.php',
     'AddEspecialidadCombosClientesTable' => $baseDir . '/database/migrations/2017_08_12_134513_add_especialidad_combos_clientes_table.php',
     'AddEspecialidadNivelGradoTable' => $baseDir . '/database/migrations/2017_08_11_143725_add_especialidad_nivel_grado_table.php',

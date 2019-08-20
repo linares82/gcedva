@@ -217,7 +217,13 @@
                              <span class="help-block">{{ $errors->first("responsable_id") }}</span>
                             @endif
                          </div>
-                      
+                      <div class="form-group col-md-4 @if($errors->has('enlace_id')) has-error @endif">
+                            <label for="Enlace_id-field">Enlace</label>
+                            {!! Form::select("enlace_id", $enlaces, null, array("class" => "form-control select_seguridad", "id" => "enlace_id-field")) !!}
+                            @if($errors->has("enlace_id"))
+                             <span class="help-block">{{ $errors->first("enlace_id") }}</span>
+                            @endif
+                         </div>
                     </div>
                     </div>
                     <div class="box box-default">

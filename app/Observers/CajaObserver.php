@@ -49,7 +49,7 @@ class CajaObserver
             }
             
         }
-        if($this->st_caja_id==1){
+        if($this->caja->st_caja_id==1){
             $adeudos=Adeudo::where('cliente_id',$this->caja->cliente_id)->where('pagado_bnd',0)->count();
             if($adeudos==0){
                 $cliente->st_cliente_id=20;

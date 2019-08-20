@@ -42,8 +42,9 @@ class PlantelsController extends Controller {
             //dd($directores);
             $responsables=Empleado::select(DB::raw("CONCAT(nombre,' ',ape_paterno,' ',ape_materno) AS name"),'id')
                                 ->where('puesto_id',23)->pluck('name','id');            
-            
-		return view('plantels.create', compact('directores','responsables'))
+            $enlaces=Empleado::select(DB::raw("CONCAT(nombre,' ',ape_paterno,' ',ape_materno) AS name"),'id')
+                                ->where('puesto_id',15)->pluck('name','id');            
+		return view('plantels.create', compact('directores','responsables','enlaces'))
 			->with( 'list', Plantel::getListFromAllRelationApps() );
 	}
 
@@ -124,7 +125,9 @@ class PlantelsController extends Controller {
                                 ->where('puesto_id',4)->pluck('name','id');
             //dd($directores);
                 $responsables=Empleado::select(DB::raw("CONCAT(nombre,' ',ape_paterno,' ',ape_materno) AS name"),'id')
-                                ->where('puesto_id',23)->pluck('name','id');            
+                                ->where('puesto_id',23)->pluck('name','id');
+                $enlaces=Empleado::select(DB::raw("CONCAT(nombre,' ',ape_paterno,' ',ape_materno) AS name"),'id')
+                                ->where('puesto_id',15)->pluck('name','id');            
 		$ruta=public_path()."\\imagenes\\planteles\\".$id."\\";
                 
                 $doc_existentes = DB::table('doc_plantel_plantels as dpp')->select('doc_plantel_id')
@@ -145,7 +148,7 @@ class PlantelsController extends Controller {
                         ->whereNotIn('id', $de_array)
                         ->get();
                 
-		return view('plantels.edit', compact('plantel', 'ruta','directores','responsables', 'documentos_faltantes'))
+		return view('plantels.edit', compact('plantel', 'ruta','directores','responsables', 'documentos_faltantes','enlaces'))
 			->with( 'list', Plantel::getListFromAllRelationApps() )
                         ->with( 'list1', DocPlantelPlantel::getListFromAllRelationApps() );
 	}

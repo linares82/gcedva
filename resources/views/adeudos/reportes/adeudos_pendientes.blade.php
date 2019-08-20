@@ -69,6 +69,7 @@
             $pago_total=0;
             $totalCliente = 0;
             $cliente_id = 0;
+            $diferencia=0;
             $aux = 0;
             ?>
             @foreach($adeudos as $adeudo)

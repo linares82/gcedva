@@ -661,7 +661,7 @@ class InscripcionsController extends Controller {
                                        ->orderBy('inscripcions.plantel_id','inscripcions.lectivo_id','inscripcions.grupo_id','inscripcions.grado_id')
 				       ->distinct()
                                        ->get(); 
-
+        
                 //Agregar fechas
                 //dd($registros->toArray());
                 $carga_ponderacion=collect();
@@ -894,7 +894,8 @@ class InscripcionsController extends Controller {
 	{
                 $data=$request->all();
                 //dd($data);
-                $registros= Inscripcion::select('c.nombre','c.nombre2','c.ape_paterno','c.ape_materno', 'g.name as grupo','l.name as lectivo',
+                $registros= Inscripcion::select('inscripcions.grupo_id','inscripcions.grado_id','inscripcions.lectivo_id','inscripcions.plantel_id',
+                                                'c.nombre','c.nombre2','c.ape_paterno','c.ape_materno', 'g.name as grupo','l.name as lectivo',
                                                DB::raw('concat(e.nombre," ",e.ape_paterno," ",e.ape_materno) as maestro'),'gra.name as grado',
                                                'p.razon as plantel', 'p.logo','aa.id as asignacion','c.id as cliente','p.id as p_id','c.tel_fijo')
                                        ->join('hacademicas as h','h.inscripcion_id','=','inscripcions.id')
@@ -1052,5 +1053,66 @@ class InscripcionsController extends Controller {
                 return $pdf->download('reporte.pdf');
   */              
                 return view('inscripcions.reportes.historial', array('inscripcion'=>$inscripcion));
+        }
+        
+        public function sepICP08Boletas(){
+            return view('inscripcions.reportes.sepICP08Boletas')
+			->with( 'list', Inscripcion::getListFromAllRelationApps() );
+        }
+        
+        public function sepICP08BoletasR(Request $request){
+            $data=$request->all();
+                //dd($data);
+            $plantel=Plantel::find($data['plantel_f']);
+                $registros= Inscripcion::select('c.id as cliente_id','c.nombre','c.nombre2','c.ape_paterno','c.ape_materno','l.name as lectivo',
+                                               'gra.name as grado','aa.id as asignacion','c.curp',
+                                               'p.razon as plantel', 'e.name as especialidad','e.ccte', 'p.logo','c.id as cliente',
+                                               'p.id as p_id','c.matricula',
+					       'inscripcions.plantel_id','inscripcions.lectivo_id','inscripcions.grupo_id','inscripcions.grado_id')
+                                       ->join('clientes as c', 'c.id', '=', 'inscripcions.cliente_id')
+                                       ->join('seguimientos as s','s.cliente_id','=','c.id')
+                                       ->join('grupos as g', 'g.id', '=', 'inscripcions.grupo_id')
+                                       ->join('lectivos as l','l.id', '=', 'inscripcions.lectivo_id')
+                                       ->join('grados as gra','gra.id','=','inscripcions.grado_id')
+                                       ->join('plantels as p','p.id','=','c.plantel_id')
+                                       ->join('asignacion_academicas as aa', 'aa.plantel_id','=','p.id')
+                                       ->join('especialidads as e','e.id','=','inscripcions.especialidad_id')
+                                       ->where('inscripcions.plantel_id', $data['plantel_f'])
+                                       ->where('inscripcions.especialidad_id', $data['especialidad_f'])
+                                       ->where('inscripcions.nivel_id', $data['nivel_f'])
+                                       ->where('inscripcions.grado_id', $data['grado_f'])
+                                       ->where('inscripcions.lectivo_id',$data['lectivo_f'])
+                                        ->where('aa.lectivo_id',$data['lectivo_f'])
+                                        ->whereColumn('aa.grupo_id','inscripcions.grupo_id')
+				       ->whereNull('inscripcions.deleted_at')
+                                       //->where('inscripcions.grado_id',$data['grado_f'])
+                                       ->orderBy('inscripcions.plantel_id','inscripcions.lectivo_id','inscripcions.grupo_id','inscripcions.grado_id')
+				       ->distinct()
+                                       ->get(); 
+
+                //Agregar fechas
+                //dd($registros->toArray());
+                
+                $asignacion=collect();
+                foreach($registros as $registro){
+                    
+                    $asignacion = AsignacionAcademica::find($registro->asignacion);
+                    break;
+                }
+                
+                
+                
+                //dd($carga_ponderacion->toArray());
+                /*
+                PDF::setOptions(['defaultFont' => 'arial']);
+
+                $pdf = PDF::loadView('inscripcions.reportes.lista_calificacionesr', array('registros'=>$registros,'carga_ponderacions_enc'=>$carga_ponderacion))
+                        ->setPaper('legal', 'landscape');
+                return $pdf->download('reporte.pdf');
+                */
+                return view('inscripcions.reportes.sepICP08BoletasR', array('registros'=>$registros,
+                                                                                 'asignacion'=>$asignacion,
+                                                                                 'plantel'=>$plantel,
+                                                                                 'data'=>$data));
         }
 }

@@ -85,13 +85,13 @@
             <br/>
             <table width="95%">
                 <tr>
-                    <td> EL PLANTEL PARTICULAR:{{$plantel->razon}}</td><td>CLAVE CCT: {{$registro->ccte}}</td>
+                    <td> EL PLANTEL PARTICULAR:<strong>{{$plantel->razon}}</strong></td><td>CLAVE CCT: <strong>{{$registro->ccte}}</strong></td>
                 </tr>
                 <tr>
-                    <td> HACE CONSTAR QUE EL ALUMNO:{{$registro->nombre_cliente}}</td><td>CON NÚMERO DE CONTROL:</td>
+                    <td> HACE CONSTAR QUE EL ALUMNO:<strong>{{$registro->nombre}} {{$registro->nombre2}} {{$registro->ape_paterno}} {{$registro->ape_materno}}</strong> </td><td>CON NÚMERO DE CONTROL: <strong>{{$registro->cliente_id}}</strong></td>
                 </tr>
                 <tr>
-                    <td colspan='2'>  Y CLAVE CURP {{$registro->curp}} OBTUVO LAS SIGUIENTES  CALIFICACIONES EN LA ESPECIALIDAD DE: {{$registro->grado}}</td>
+                    <td colspan='2'>  Y CLAVE CURP <strong>{{$registro->curp}}</strong> OBTUVO LAS SIGUIENTES  CALIFICACIONES EN LA ESPECIALIDAD DE: <strong>{{$registro->grado}}</strong></td>
                 </tr>
             </table>
             <br/>
@@ -108,12 +108,14 @@
                         ->where('c.calificacion','>=',$param->valor)
                         ->get();
                 //dd($materias);
+                $cantidad_materias=0;
                 ?>
                 
                 @foreach($materias as $materia)
                 <tr>
                     <td>{{$materia->materia->name}}</td><td>{{$materia->calificacion}}</td>
                 </tr>
+                <?php $cantidad_materias++; ?>
                 @endforeach
             </table>
             <br/>
@@ -125,7 +127,7 @@
                 </tr>
                 <tr>
                     <td>
-                        SE EXTIENDE EL PRESENTE CON                                                  ACREDITADOS.
+                        SE EXTIENDE EL PRESENTE CON <strong>{{$cantidad_materias}} CURSOS </strong> ACREDITADOS.
                     </td>
                 </tr>
                 <tr>
@@ -134,17 +136,28 @@
                         $monthNum=Date('m');
                         $mes=\App\Mese::find($monthNum);
                         ?>
-                        {{$plantel->municipio}}, {{$plantel->estado}} A {{ Date('d')}} DE {{ $mes->name }} DE {{ Date('Y')}}
+                        <strong>{{$plantel->municipio}}, {{$plantel->estado}} A {{ Date('d')}} DE {{ $mes->name }} DE {{ Date('Y')}}</strong>
                     </td>
                 </tr>
             </table>
             <br/>
             <table width="95%" border="0" cellpadding="10" cellspacing="0" bordercolor="#FFFFFF" class="Texto1" align="center">
                 <tbody><tr>
-                      <th align="center" valign="bottom" height="100"><span style="font-weight: bold">______________________________________</span><br>
+                        <th align="center" valign="bottom" height="150"><span style="font-weight: bold"><u>{{$plantel->director->nombre}} {{$plantel->director->ape_paterno}} {{$plantel->director->ape_materno}}</u></span><br>
                               NOMBRE Y FIRMA DEL DIRECTOR</th> 
-                      <th align="center" valign="bottom" height="100">&nbsp;</th> 
-                      <th align="center" valign="bottom" height="100"><span style="font-weight: bold">______________________________________</span><br>
+                      <th align="center" valign="bottom" height="150">&nbsp;</th> 
+                      <th align="center" valign="bottom" height="150"><span style="font-weight: bold">______________________________________</span><br>
+                              SELLO</th> 
+                </tr>
+                </tbody>
+            </table>    
+            <br/>
+            <table width="95%" border="0" cellpadding="10" cellspacing="0" bordercolor="#FFFFFF" class="Texto1" align="center">
+                <tbody><tr>
+                        <th align="center" valign="bottom" height="150"><span style="font-weight: bold"><u>{{$plantel->enlace->nombre}} {{$plantel->enlace->ape_paterno}} {{$plantel->enlace->ape_materno}}</u></span><br>
+                              NOMBRE Y FIRMA DEL ENLACE OPERATIVO</th> 
+                      <th align="center" valign="bottom" height="150">&nbsp;</th> 
+                      <th align="center" valign="bottom" height="150"><span style="font-weight: bold">______________________________________</span><br>
                               SELLO</th> 
                 </tr>
                 </tbody>

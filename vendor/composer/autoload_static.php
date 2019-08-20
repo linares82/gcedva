@@ -692,6 +692,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'AddEmpresaBndAsuntosTable' => __DIR__ . '/../..' . '/database/migrations/2019_02_01_130811_add_empresa_bnd_asuntos_table.php',
         'AddEmpresaBndStTareasTable' => __DIR__ . '/../..' . '/database/migrations/2019_02_01_140028_add_empresa_bnd_st_tareas_table.php',
         'AddEmpresaBndTareasTable' => __DIR__ . '/../..' . '/database/migrations/2019_02_01_130800_add_empresa_bnd_tareas_table.php',
+        'AddEnlaceIdPlantelsTable' => __DIR__ . '/../..' . '/database/migrations/2019_08_20_123110_add_enlace_id_plantels_table.php',
         'AddEscuelaProcedenciaClientesTable' => __DIR__ . '/../..' . '/database/migrations/2017_11_14_150558_add_escuela_procedencia_clientes_table.php',
         'AddEspecialidadCombosClientesTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_12_134513_add_especialidad_combos_clientes_table.php',
         'AddEspecialidadNivelGradoTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_11_143725_add_especialidad_nivel_grado_table.php',

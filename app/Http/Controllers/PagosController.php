@@ -96,6 +96,9 @@ class PagosController extends Controller {
                     foreach($caja->cajaLns as $ln){
                         if($ln->adeudo_id>0){
                             Adeudo::where('id', '=', $ln->adeudo_id)->update(['pagado_bnd'=>1]);
+                            $adeudo=Adeudo::find($ln->adeudo_id);
+                            $adeudo->pagado_bnd=1;
+                            $adeudo->save();
                         }
                     }  
                 }elseif($suma_pagos>0 and $suma_pagos<$caja->total){
