@@ -1115,4 +1115,60 @@ class InscripcionsController extends Controller {
                                                                                  'plantel'=>$plantel,
                                                                                  'data'=>$data));
         }
+        
+        public function sepEstadistico(){
+            return view('inscripcions.reportes.sepEstadistico')
+			->with( 'list', Inscripcion::getListFromAllRelationApps() );
+        }
+        
+        public function sepEstadisticoR(Request $request){
+            $data=$request->all();
+                //dd($data);
+            $plantel=Plantel::find($data['plantel_f']);
+                $registros= Inscripcion::select()
+                                       ->join('lectivos as l','l.id', '=', 'inscripcions.lectivo_id')
+                                       ->join('plantels as p','p.id','=','c.plantel_id')
+                                       ->join('especialidads as e','e.id','=','inscripcions.especialidad_id')
+                                       ->join('nivels as n','n.id','=','inscripcions.nivel_id')
+                                       ->join('grados as gra','gra.id','=','inscripcions.grado_id')
+                                       ->join('grupos as g', 'g.id', '=', 'inscripcions.grupo_id')
+                                       ->join('asignacion_academicas as aa', 'aa.plantel_id','=','p.id')
+                                       ->where('inscripcions.plantel_id', $data['plantel_f'])
+                                       ->where('inscripcions.especialidad_id', $data['especialidad_f'])
+                                       ->where('inscripcions.nivel_id', $data['nivel_f'])
+                                       ->where('inscripcions.grado_id', $data['grado_f'])
+                                       ->where('inscripcions.lectivo_id',$data['lectivo_f'])
+                                        ->where('aa.lectivo_id',$data['lectivo_f'])
+                                        ->whereColumn('aa.grupo_id','inscripcions.grupo_id')
+				       ->whereNull('inscripcions.deleted_at')
+                                       //->where('inscripcions.grado_id',$data['grado_f'])
+                                       ->orderBy('inscripcions.plantel_id','inscripcions.lectivo_id','inscripcions.grupo_id','inscripcions.grado_id')
+				       ->distinct()
+                                       ->get(); 
+
+                //Agregar fechas
+                //dd($registros->toArray());
+                
+                $asignacion=collect();
+                foreach($registros as $registro){
+                    
+                    $asignacion = AsignacionAcademica::find($registro->asignacion);
+                    break;
+                }
+                
+                
+                
+                //dd($carga_ponderacion->toArray());
+                /*
+                PDF::setOptions(['defaultFont' => 'arial']);
+
+                $pdf = PDF::loadView('inscripcions.reportes.lista_calificacionesr', array('registros'=>$registros,'carga_ponderacions_enc'=>$carga_ponderacion))
+                        ->setPaper('legal', 'landscape');
+                return $pdf->download('reporte.pdf');
+                */
+                return view('inscripcions.reportes.sepEstadisticoR', array('registros'=>$registros,
+                                                                                 'asignacion'=>$asignacion,
+                                                                                 'plantel'=>$plantel,
+                                                                                 'data'=>$data));
+        }
 }

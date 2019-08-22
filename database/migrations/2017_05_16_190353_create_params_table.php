@@ -14,7 +14,7 @@ class CreateParamsTable extends Migration {
 	{
 		Schema::create('params', function(Blueprint $table) {
             $table->increments('id');
-            $table->string('llave')->unsigned()->unique();
+            $table->string('llave')->unique();
             $table->string('valor');
             $table->timestamps();
             $table->softDeletes();

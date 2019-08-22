@@ -23,7 +23,7 @@ class CreatePreguntaClientesTable extends Migration {
             $table->softDeletes();
             $table->foreign('usu_mod_id')->references('id')->on('users');
             $table->foreign('usu_alta_id')->references('id')->on('users');
-            $table->foreign('pregunta_id')->references('id')->on('preguntas');
+            $table->foreign('pregunta_id')->references('id')->on('pregunta');
             $table->foreign('cliente_id')->references('id')->on('clientes');
         });
 	}

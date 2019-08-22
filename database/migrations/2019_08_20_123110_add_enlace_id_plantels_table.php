@@ -14,8 +14,8 @@ class AddEnlaceIdPlantelsTable extends Migration
     public function up()
     {
         Schema::table('plantels', function(Blueprint $table) {
-            $table->integer('enlace_id')->unsigned()->default(0);
-            $table->index('enlace_id');
+            $table->string('enlace_lugar')->default("");
+            $table->string('enlace')->default("");;
         });
     }
 
