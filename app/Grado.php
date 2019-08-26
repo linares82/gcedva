@@ -21,7 +21,7 @@ class Grado extends Model
     } 
 
 	//Mass Assignment
-	protected $fillable = ['nivel_id','name','especialidad_id', 'plantel_id','usu_alta_id','usu_mod_id','precio_online','mexico_bnd'];
+	protected $fillable = ['nivel_id','name','especialidad_id', 'plantel_id','usu_alta_id','usu_mod_id','precio_online','mexico_bnd','nombre2','modulo_final_id'];
 
 	public function usu_alta() {
 		return $this->hasOne('App\User', 'id', 'usu_alta_id');

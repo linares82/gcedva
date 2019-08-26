@@ -142,7 +142,13 @@
                             {!! Form::hidden("pais_id", $cliente->paise_id, array("class" => "form-control input-sm", "id" => "pais_id-field")) !!}
                         </div>
                         @endif
-                        
+                        <div class="form-group col-md-4 @if($errors->has('escolaridad_id')) has-error @endif">
+                            <label for="escolaridad_id-field">Escolaridad</label>
+                            {!! Form::select("escolaridad_id", $list["Escolaridad"], null, array("class" => "form-control select_seguridad", "id" => "escolaridad_id-field")) !!}
+                            @if($errors->has("escolaridad_id"))
+                            <span class="help-block">{{ $errors->first("escolaridad_id") }}</span>
+                            @endif
+                        </div>
                     </div>
                 </div>
                 <div class="box box-default box-solid">
@@ -920,7 +926,7 @@
                 <thead style="color: #ffffff;background: #0B0B3B;">
                 <td>Plantel</td><td>Especialidad</td><td>Nivel</td>
                 <td>Grado</td><td>Grupo</td><td>Periodo</td><td>F. Inscripcion</td>
-                <td>Periodo Lectivo</td><td>Matricula</td><td></td>
+                <td>Periodo Lectivo</td><td>Matricula</td><td>Control</td><td></td>
                 </thead>
                 <tbody>
 
@@ -934,6 +940,7 @@
                         <td>{{$i->fec_inscripcion}}</td>
                         <td>{{$i->lectivo->name}}</td>
                         <td>{{$i->matricula}}</td>
+                        <td>{{$i->control}}</td>
                         <td>
                             @permission('inscripcions.edit')
                             

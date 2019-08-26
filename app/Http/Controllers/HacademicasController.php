@@ -132,7 +132,7 @@ class HacademicasController extends Controller {
         $hacademica->delete();
         
         $calificacions=Calificacion::where('hacademica_id',$vhacademica)->get();
-        foreach($calificacions as $c){
+        foreach($calificacions as $d){
             $d->delete();
         }
 

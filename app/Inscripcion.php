@@ -31,7 +31,7 @@ class Inscripcion extends Model
 
 	//Mass Assignment
 	protected $fillable = ['plantel_id','especialidad_id','nivel_id','grado_id','grupo_id', 'turno_id', 'periodo_estudio_id','cliente_id',
-                                'fec_inscripcion','lectivo_id','usu_alta_id','usu_mod_id','matricula','combinacion_cliente_id','st_inscripcion_id'];
+                                'fec_inscripcion','lectivo_id','usu_alta_id','usu_mod_id','matricula','combinacion_cliente_id','st_inscripcion_id','control'];
 
 	public function usu_alta() {
 		return $this->hasOne('App\User', 'id', 'usu_alta_id');

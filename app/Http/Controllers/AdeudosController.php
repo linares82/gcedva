@@ -249,7 +249,7 @@ class AdeudosController extends Controller {
                                      ->join('nivels as n','n.id','=','cc.nivel_id')
                                      ->join('grados as g','g.id','=','cc.grado_id')
                                      ->join('clientes as c', 'c.id', '=', 'adeudos.cliente_id')
-                                     ->join('st_clientes as stc','stc.id','=','c.id')
+                                     ->join('st_clientes as stc','stc.id','=','c.st_cliente_id')
                                      ->join('seguimientos as s','s.cliente_id','=','c.id')
                                      ->join('st_seguimientos as sts','sts.id','=','s.st_seguimiento_id')
                                      //->where('pagado_bnd', '=', 0)  

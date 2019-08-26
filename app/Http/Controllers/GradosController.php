@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Grado;
+use App\Modulo;
 use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updateGrado;
@@ -30,7 +31,8 @@ class GradosController extends Controller {
      * @return Response
      */
     public function create() {
-        return view('grados.create')
+        $modulos=Modulo::pluck('name','id');
+        return view('grados.create',compact('modulos'))
                         ->with('list', Grado::getListFromAllRelationApps());
     }
 
@@ -76,7 +78,8 @@ class GradosController extends Controller {
      */
     public function edit($id, Grado $grado) {
         $grado = $grado->find($id);
-        return view('grados.edit', compact('grado'))
+        $modulos=Modulo::pluck('name','id');
+        return view('grados.edit', compact('grado','modulos'))
                         ->with('list', Grado::getListFromAllRelationApps());
     }
 

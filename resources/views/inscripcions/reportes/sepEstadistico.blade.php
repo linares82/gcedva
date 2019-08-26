@@ -21,7 +21,7 @@
 <div class="row">
     <div class="col-md-12">
 
-        {!! Form::open(array('route' => 'inscripcions.sepCP08BoletasR', 'id'=>'frm_analitica')) !!}
+        {!! Form::open(array('route' => 'inscripcions.sepEstadisticoR', 'id'=>'frm_analitica')) !!}
 
         <div class="form-group col-md-6 @if($errors->has('plantel_f')) has-error @endif">
             <label for="plantel_f-field">Plantel de:</label>
@@ -66,7 +66,57 @@
             <span class="help-block">{{ $errors->first("lectivo_f") }}</span>
             @endif
         </div>
+        
+        <div class="row"></div>
 
+        <div class="form-group col-md-4 @if($errors->has('grupo')) has-error @endif"
+            <label for="grupo-field">Grupo</label> 
+            {!! Form::text("grupo", null, array("class" => "form-control input-sm", "id" => "grupo")) !!}
+            @if($errors->has("grupo"))
+             <span class="help-block">{{ $errors->first("grupo") }}</span>
+            @endif
+         </div>
+        
+        <div class="form-group col-md-4 @if($errors->has('fecha')) has-error @endif"
+            <label for="fecha-field">Fecha</label> 
+            {!! Form::text("fecha", null, array("class" => "form-control input-sm", "id" => "fecha")) !!}
+            @if($errors->has("fecha"))
+             <span class="help-block">{{ $errors->first("fecha") }}</span>
+            @endif
+         </div>
+        
+        <div class="form-group col-md-4 @if($errors->has('fecha_inicio')) has-error @endif"
+            <label for="fecha_inicio-field">Fecha de Inicio</label> 
+            {!! Form::text("fecha_inicio", null, array("class" => "form-control input-sm", "id" => "fecha_inicio")) !!}
+            @if($errors->has("fecha_inicio"))
+             <span class="help-block">{{ $errors->first("fecha_inicio") }}</span>
+            @endif
+         </div>
+        
+        <div class="form-group col-md-4 @if($errors->has('fecha_termino')) has-error @endif"
+            <label for="fecha_termino-field">Fecha de Termino</label> 
+            {!! Form::text("fecha_termino", null, array("class" => "form-control input-sm", "id" => "fecha_termino")) !!}
+            @if($errors->has("fecha_termino"))
+             <span class="help-block">{{ $errors->first("fecha_termino") }}</span>
+            @endif
+         </div>
+        
+        <div class="form-group col-md-4 @if($errors->has('duracion_horas')) has-error @endif"
+            <label for="duracion_horas-field">Duracion en Horas</label> 
+            {!! Form::text("duracion_horas", null, array("class" => "form-control input-sm", "id" => "duracion_horas")) !!}
+            @if($errors->has("duracion_horas"))
+             <span class="help-block">{{ $errors->first("duracion_horas") }}</span>
+            @endif
+         </div>
+        
+        <div class="form-group col-md-4 @if($errors->has('horario')) has-error @endif"
+            <label for="horario-field">Horario</label> 
+            {!! Form::text("horario", null, array("class" => "form-control input-sm", "id" => "horario")) !!}
+            @if($errors->has("horario"))
+             <span class="help-block">{{ $errors->first("horario") }}</span>
+            @endif
+         </div>
+        
         <div class="row">
         </div>
         <div class="well well-sm">

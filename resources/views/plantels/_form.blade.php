@@ -217,11 +217,32 @@
                              <span class="help-block">{{ $errors->first("responsable_id") }}</span>
                             @endif
                          </div>
-                      <div class="form-group col-md-4 @if($errors->has('enlace_id')) has-error @endif">
-                            <label for="Enlace_id-field">Enlace</label>
-                            {!! Form::select("enlace_id", $enlaces, null, array("class" => "form-control select_seguridad", "id" => "enlace_id-field")) !!}
-                            @if($errors->has("enlace_id"))
-                             <span class="help-block">{{ $errors->first("enlace_id") }}</span>
+                      <div class="form-group col-md-4 @if($errors->has('enlace_lugar')) has-error @endif">
+                            <label for="enlace_lugar-field">Enlace Lugar</label>
+                            {!! Form::text("enlace_lugar", null, array("class" => "form-control input-sm", "id" => "enlace_lugar-field")) !!}
+                            @if($errors->has("enlace_lugar"))
+                             <span class="help-block">{{ $errors->first("enlace_lugar") }}</span>
+                            @endif
+                         </div>
+                          <div class="form-group col-md-4 @if($errors->has('enlace')) has-error @endif">
+                            <label for="enlace-field">Enlace</label>
+                            {!! Form::text("enlace", null, array("class" => "form-control input-sm", "id" => "enlace-field")) !!}
+                            @if($errors->has("enlace"))
+                             <span class="help-block">{{ $errors->first("enlace") }}</span>
+                            @endif
+                         </div>
+                         <div class="form-group col-md-4 @if($errors->has('cve_estatal')) has-error @endif">
+                            <label for="cve_estatal-field">Clave Estatal</label>
+                            {!! Form::text("cve_estatal", null, array("class" => "form-control input-sm", "id" => "cve_estatal-field")) !!}
+                            @if($errors->has("cve_estatal"))
+                             <span class="help-block">{{ $errors->first("cve_estatal") }}</span>
+                            @endif
+                         </div>
+                          <div class="form-group col-md-4 @if($errors->has('cve_centro')) has-error @endif">
+                            <label for="cve_centro-field">Clave Centro Trabajo</label>
+                            {!! Form::text("cve_centro", null, array("class" => "form-control input-sm", "id" => "cve_centro-field")) !!}
+                            @if($errors->has("cve_centro"))
+                             <span class="help-block">{{ $errors->first("cve_centro") }}</span>
                             @endif
                          </div>
                     </div>

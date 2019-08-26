@@ -28,7 +28,7 @@ class Plantel extends Model
                                 'no_int', 'no_ext', 'colonia', 'cp', 'municipio', 'estado', 'rvoe', 'cct', 
                                 'tpo_plantel_id', 'meta_venta', 'cve_plantel', 'cns_alumno', 'cns_empleado', 
                                 'meta_total', 'st_plantel_id','consecutivo','estado_id','csc_cotizacion','clausulas_cotizacion',
-                                'director_id','responsable_id','enlace_lugar','enlace'];
+                                'director_id','responsable_id','enlace_lugar','enlace','cve_estatal','cve_centro'];
 
     protected $dates = ['deleted_at'];
 

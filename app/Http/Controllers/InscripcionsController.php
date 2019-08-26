@@ -8,6 +8,7 @@ use App\AsignacionAcademica;
 use App\Caja;
 use App\Inscripcion;
 use App\Grupo;
+use App\Grado;
 use App\Cliente;
 use App\Hacademica;
 use App\Lectivo;
@@ -70,6 +71,9 @@ class InscripcionsController extends Controller {
 		$input['usu_alta_id']=Auth::user()->id;
 		$input['usu_mod_id']=Auth::user()->id;
                 $input['st_inscripcion_id']=1;
+                
+                $plantel=Plantel::find($input['plantel_id']);
+                $input['control']=
 
 		//create data
 		$i=Inscripcion::create( $input );
@@ -1064,8 +1068,29 @@ class InscripcionsController extends Controller {
             $data=$request->all();
                 //dd($data);
             $plantel=Plantel::find($data['plantel_f']);
+                $egresados= Cliente::select('clientes.id')
+                                   ->join('inscripcions as i','i.cliente_id','=','clientes.id')
+                                   ->join('hacademicas as h','h.inscripcion_id','=','i.id')
+                                   ->join('materia as m','m.id','=','h.materium_id')
+                                   ->join('grados as g','g.id','=','i.grado_id')
+                                   ->whereColumn('g.modulo_final_id','m.modulo_id')
+                                   ->where('h.lectivo_id',$data['lectivo_f'])
+                                   ->where('i.plantel_id',$data['plantel_f'])
+                                   ->where('i.especialidad_id',$data['especialidad_f'])
+                                   ->where('i.nivel_id',$data['nivel_f'])
+                                   ->where('g.id',$data['grado_f'])
+                                   ->where('h.st_materium_id',1)
+                                   ->distinct()
+                                   ->orderBy('i.created_at')
+                                   ->get();
+                //dd($egresados->toArray());
+                $arreglo_egresados=array();
+                foreach($egresados as $egresado){
+                    array_push($arreglo_egresados,$egresado->id);
+                }
+                //dd($arreglo_egresados);
                 $registros= Inscripcion::select('c.id as cliente_id','c.nombre','c.nombre2','c.ape_paterno','c.ape_materno','l.name as lectivo',
-                                               'gra.name as grado','aa.id as asignacion','c.curp',
+                                               'gra.name as grado','c.curp',
                                                'p.razon as plantel', 'e.name as especialidad','e.ccte', 'p.logo','c.id as cliente',
                                                'p.id as p_id','c.matricula',
 					       'inscripcions.plantel_id','inscripcions.lectivo_id','inscripcions.grupo_id','inscripcions.grado_id')
@@ -1075,15 +1100,8 @@ class InscripcionsController extends Controller {
                                        ->join('lectivos as l','l.id', '=', 'inscripcions.lectivo_id')
                                        ->join('grados as gra','gra.id','=','inscripcions.grado_id')
                                        ->join('plantels as p','p.id','=','c.plantel_id')
-                                       ->join('asignacion_academicas as aa', 'aa.plantel_id','=','p.id')
                                        ->join('especialidads as e','e.id','=','inscripcions.especialidad_id')
-                                       ->where('inscripcions.plantel_id', $data['plantel_f'])
-                                       ->where('inscripcions.especialidad_id', $data['especialidad_f'])
-                                       ->where('inscripcions.nivel_id', $data['nivel_f'])
-                                       ->where('inscripcions.grado_id', $data['grado_f'])
-                                       ->where('inscripcions.lectivo_id',$data['lectivo_f'])
-                                        ->where('aa.lectivo_id',$data['lectivo_f'])
-                                        ->whereColumn('aa.grupo_id','inscripcions.grupo_id')
+                                       ->whereIn('c.id', $arreglo_egresados)
 				       ->whereNull('inscripcions.deleted_at')
                                        //->where('inscripcions.grado_id',$data['grado_f'])
                                        ->orderBy('inscripcions.plantel_id','inscripcions.lectivo_id','inscripcions.grupo_id','inscripcions.grado_id')
@@ -1123,23 +1141,36 @@ class InscripcionsController extends Controller {
         
         public function sepEstadisticoR(Request $request){
             $data=$request->all();
-                //dd($data);
+//            dd($data);
             $plantel=Plantel::find($data['plantel_f']);
-                $registros= Inscripcion::select()
-                                       ->join('lectivos as l','l.id', '=', 'inscripcions.lectivo_id')
-                                       ->join('plantels as p','p.id','=','c.plantel_id')
-                                       ->join('especialidads as e','e.id','=','inscripcions.especialidad_id')
-                                       ->join('nivels as n','n.id','=','inscripcions.nivel_id')
-                                       ->join('grados as gra','gra.id','=','inscripcions.grado_id')
-                                       ->join('grupos as g', 'g.id', '=', 'inscripcions.grupo_id')
-                                       ->join('asignacion_academicas as aa', 'aa.plantel_id','=','p.id')
-                                       ->where('inscripcions.plantel_id', $data['plantel_f'])
-                                       ->where('inscripcions.especialidad_id', $data['especialidad_f'])
-                                       ->where('inscripcions.nivel_id', $data['nivel_f'])
-                                       ->where('inscripcions.grado_id', $data['grado_f'])
-                                       ->where('inscripcions.lectivo_id',$data['lectivo_f'])
-                                        ->where('aa.lectivo_id',$data['lectivo_f'])
-                                        ->whereColumn('aa.grupo_id','inscripcions.grupo_id')
+            $especialidad=Especialidad::find($data['especialidad_f']);
+            $grado=Grado::find($data['grado_f']);
+                $egresados= Cliente::select('clientes.id','g.nombre2 as grado','e.ccte')
+                                   ->join('inscripcions as i','i.cliente_id','=','clientes.id')
+                                   ->join('hacademicas as h','h.inscripcion_id','=','i.id')
+                                   ->join('materia as m','m.id','=','h.materium_id')
+                                   ->join('grados as g','g.id','=','i.grado_id')
+                                   ->join('especialidads as e','e.id','=','i.especialidad_id')
+                                   ->whereColumn('g.modulo_final_id','m.modulo_id')
+                                   ->where('h.lectivo_id',$data['lectivo_f'])
+                                   ->where('i.plantel_id',$data['plantel_f'])
+                                   ->where('i.especialidad_id',$data['especialidad_f'])
+                                   ->where('i.nivel_id',$data['nivel_f'])
+                                   ->where('g.id',$data['grado_f'])
+                                   ->where('h.st_materium_id',1)
+                                   ->distinct()
+                                   ->orderBy('i.created_at')
+                                   ->get();
+                //dd($egresados->toArray());
+                $arreglo_egresados=array();
+                foreach($egresados as $egresado){
+                    array_push($arreglo_egresados,$egresado->id);
+                }
+                $registros= Inscripcion::select('c.id as cliente', 'g.nombre2 as grado','c.nombre','c.nombre2','c.ape_paterno','c.ape_materno','inscripcions.control',
+                                                'c.fec_nacimiento','c.genero','c.escolaridad_id')
+                                       ->join('clientes as c','c.id', '=', 'inscripcions.cliente_id')
+                                       ->join('grados as g','g.id','=','inscripcions.grado_id')
+                                       ->whereIn('c.id', $arreglo_egresados)
 				       ->whereNull('inscripcions.deleted_at')
                                        //->where('inscripcions.grado_id',$data['grado_f'])
                                        ->orderBy('inscripcions.plantel_id','inscripcions.lectivo_id','inscripcions.grupo_id','inscripcions.grado_id')
@@ -1149,12 +1180,6 @@ class InscripcionsController extends Controller {
                 //Agregar fechas
                 //dd($registros->toArray());
                 
-                $asignacion=collect();
-                foreach($registros as $registro){
-                    
-                    $asignacion = AsignacionAcademica::find($registro->asignacion);
-                    break;
-                }
                 
                 
                 
@@ -1167,8 +1192,9 @@ class InscripcionsController extends Controller {
                 return $pdf->download('reporte.pdf');
                 */
                 return view('inscripcions.reportes.sepEstadisticoR', array('registros'=>$registros,
-                                                                                 'asignacion'=>$asignacion,
                                                                                  'plantel'=>$plantel,
-                                                                                 'data'=>$data));
+                                                                                 'data'=>$data,
+                                                                                 'especialidad'=>$especialidad,
+                                                                                 'grado'=>$grado));
         }
 }

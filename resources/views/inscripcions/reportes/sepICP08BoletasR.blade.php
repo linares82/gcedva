@@ -154,7 +154,7 @@
             <br/>
             <table width="95%" border="0" cellpadding="10" cellspacing="0" bordercolor="#FFFFFF" class="Texto1" align="center">
                 <tbody><tr>
-                        <th align="center" valign="bottom" height="150"><span style="font-weight: bold"><u>{{$plantel->enlace->nombre}} {{$plantel->enlace->ape_paterno}} {{$plantel->enlace->ape_materno}}</u></span><br>
+                        <th align="center" valign="bottom" height="150"><span style="font-weight: bold"><u>{{$plantel->enlace}} </u></span><br>
                               NOMBRE Y FIRMA DEL ENLACE OPERATIVO</th> 
                       <th align="center" valign="bottom" height="150">&nbsp;</th> 
                       <th align="center" valign="bottom" height="150"><span style="font-weight: bold">______________________________________</span><br>

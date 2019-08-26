@@ -28,11 +28,25 @@
                         <span class="help-block">{{ $errors->first("name") }}</span>
                        @endif
                     </div>
+                    <div class="form-group col-md-4 @if($errors->has('nombre2')) has-error @endif">
+                       <label for="nombre2-field">Nombre 2</label>
+                       {!! Form::text("nombre2", null, array("class" => "form-control input-sm", "id" => "nombre2-field")) !!}
+                       @if($errors->has("nombre2"))
+                        <span class="help-block">{{ $errors->first("nombre2") }}</span>
+                       @endif
+                    </div>
                     <div class="form-group col-md-4 @if($errors->has('precio_online')) has-error @endif">
                        <label for="precio_online-field">Precio Online</label>
                        {!! Form::text("precio_online", null, array("class" => "form-control input-sm", "id" => "precio_online-field")) !!}
                        @if($errors->has("precio_online"))
                         <span class="help-block">{{ $errors->first("precio_online") }}</span>
+                       @endif
+                    </div>
+                    <div class="form-group col-md-4 @if($errors->has('modulo_final_id')) has-error @endif">
+                       <label for="modulo_final_id-field">Modulo final</label>
+                       {!! Form::select("modulo_final_id", $modulos, null, array("class" => "form-control select_seguridad", "id" => "modulo_final_id-field")) !!}
+                       @if($errors->has("modulo_final_id"))
+                        <span class="help-block">{{ $errors->first("modulo_final_id") }}</span>
                        @endif
                     </div>
                     <div class="form-group col-md-2 @if($errors->has('mexico_bnd')) has-error @endif">
