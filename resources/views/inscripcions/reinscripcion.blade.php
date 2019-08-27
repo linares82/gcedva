@@ -190,7 +190,7 @@
                 <div class="row">
                         </div>
                         <div class="well well-sm">
-                            <button type="submit" class="btn btn-primary">Procesar</button>
+                            <button type="submit" class="btn btn-primary" id="btnSubmitId">Procesar</button>
                             <a class="btn btn-link pull-right" href="{{ route('inscripcions.index') }}"><i class="glyphicon glyphicon-backward"></i> Regresar</a>
                         </div>
                 
@@ -204,7 +204,44 @@
   <script type="text/javascript">
     
     $(document).ready(function() {
-        
+       
+       $('#btnSubmitId').prop("disabled", true);
+       $('#especialidad_to-field').change(function(){
+           activarSubmit();
+       });
+       $('#nivel_to-field').change(function(){
+           activarSubmit();
+       });
+       $('#grado_to-field').change(function(){
+           activarSubmit();
+       });
+       $('#grupo_to-field').change(function(){
+           activarSubmit();
+       });
+       $('#periodo_estudios_to-field').change(function(){
+           activarSubmit();
+       });
+       $('#lectivo_to-field').change(function(){
+           activarSubmit();
+       });
+       
+       function activarSubmit(){
+           if($('#activar-field').is(':checked') && $('#especialidad_to-field').val()>0 && 
+                                                 $('#nivel_to-field').val()>0 && 
+                                                 $('#grado_to-field').val()>0 &&
+                                                 $('#grupo_to-field').val()>0 &&
+                                                 $('#periodo_estudios_to-field').val()>0 &&
+                                                 $('#lectivo_to-field').val()>0){
+                $('#btnSubmitId').prop("disabled", false);
+           }else if( ! $('#activar-field').is(':checked') && $('#grupo_to-field').val()>0 &&
+                                                     $('#periodo_estudios_to-field').val()>0 &&
+                                                     $('#lectivo_to-field').val()>0){
+               $('#btnSubmitId').prop("disabled", false);
+           }else{
+               $('#btnSubmitId').prop("disabled", true);
+           }
+       }
+       
        Desactivar();  
       $('#activar-field').change(function() {
         if($(this).is(":checked")) {
@@ -522,7 +559,7 @@
                   }
               });       
       }
-      
+    
       
       
 </script>

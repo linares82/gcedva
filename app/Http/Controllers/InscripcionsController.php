@@ -1166,7 +1166,8 @@ class InscripcionsController extends Controller {
                 foreach($egresados as $egresado){
                     array_push($arreglo_egresados,$egresado->id);
                 }
-                $registros= Inscripcion::select('c.id as cliente', 'g.nombre2 as grado','c.nombre','c.nombre2','c.ape_paterno','c.ape_materno','inscripcions.control',
+                $registros= Inscripcion::select('inscripcions.plantel_id','inscripcions.lectivo_id','inscripcions.grupo_id','inscripcions.grado_id',
+                                                'c.id as cliente', 'g.nombre2 as grado','c.nombre','c.nombre2','c.ape_paterno','c.ape_materno','inscripcions.control',
                                                 'c.fec_nacimiento','c.genero','c.escolaridad_id')
                                        ->join('clientes as c','c.id', '=', 'inscripcions.cliente_id')
                                        ->join('grados as g','g.id','=','inscripcions.grado_id')

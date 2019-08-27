@@ -127,6 +127,7 @@
                 <?php 
                 foreach($registros as $registro){
                     $cliente=$registro->cliente;
+                    break;
                 }
                 $materias=\App\Hacademica::select('m.name as materia','m.id')->where('cliente_id',$cliente)
                                      ->join('materia as m','m.id','=','hacademicas.materium_id')
@@ -161,7 +162,7 @@
                         {{$hoy->DiffInYears($nacimiento) }}
                         @endif
                     </td>
-                    <td>@if($registro->genero==1) M @elseif($registro->genero==2) F @endif</td><td>{{$registro->escolaridad_id}}</td><td>--</td>
+                    <td>@if($registro->genero==1) M @elseif($registro->genero==2) F @endif</td><td>{{$registro->escolaridad_id}}</td><td>-</td>
                     @foreach($materias as $materia)
                         <?php 
                         $materia_calificacion=\App\Hacademica::select('m.name as materia','calif.calificacion')->where('cliente_id',$registro->cliente)

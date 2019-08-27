@@ -476,7 +476,7 @@ class PagosController extends Controller {
                 ->where('clientes.st_cliente_id',4)
                 ->where('s.st_seguimiento_id',2)
                 ->where('clientes.plantel_id',$data['plantel_f'])
-                ->where('cajas.usu_alta_id','<=',$usuario->user_id)
+                //->where('cajas.usu_alta_id','<=',Auth::user()->id)
                 ->get();
         return view('pagos.reportes.postAlumnosBeca', array('registros'=>$registros,
                                                                   'plantel'=>$plantel,
