@@ -64,34 +64,51 @@
                 
             </tr>
         </table>
-        @foreach($cliente->inscripciones as $i)
+            <?php 
+            $inscripcion= \App\Inscripcion::where('plantel_id',$c->plantel_id)
+                                          ->where('especialidad_id',$c->especialidad_id)
+                                          ->where('nivel_id',$c->nivel_id)
+                                          ->where('grado_id',$c->grado_id)
+                                          ->where('grupo_id',$c->grupo_id)
+                                          ->where('lectivo_id',$c->lectivo_id)
+                                          ->first();
+            ?>
             <table width="100%" class='table_format'>
                 <thead>
                 <th>Especialidad</th><th>Nivel</th>
-                <th>Grado</th><th>Grupo</th><th>Periodo</th><th>F. Inscripcion</th>
+                <th>Grado</th><th>Grupo</th><th>F. Inscripcion</th>
                 <th>Periodo Lectivo</th>
                 <th>Matricula</th>
                 </thead>
                 <tbody>
 
                     <tr>
-                        <td>{{$i->especialidad->name}}</td>
-                        <td>{{$i->nivel->name}}</td>
-                        <td>{{$i->grado->name}}</td>
-                        <td>{{$i->grupo->name}}</td>
-                        <td>{{$i->periodo_estudio->name}}</td>
-                        <td>{{$i->fec_inscripcion}}</td>
-                        <td>{{$i->lectivo->name}}</td>
-                        <td>{{$i->matricula}}</td>
+                        <td>{{$c->especialidad}}</td>
+                        <td>{{$c->nivel}}</td>
+                        <td>{{$c->grado}}</td>
+                        <td>{{$c->grupo}}</td>
+                        <td>{{date_format($inscripcion->created_at,'d-m-Y')}}</td>
+                        <td>{{$c->lectivo}}</td>
+                        <td>{{$inscripcion->matricula}}</td>
                     </tr>
                     <tr>
                         <td colspan='8'>
+                    <?php 
+                        $hacademicas= \App\Hacademica::where('plantel_id',$c->plantel_id)
+                                          ->where('especialidad_id',$c->especialidad_id)
+                                          ->where('nivel_id',$c->nivel_id)
+                                          ->where('grado_id',$c->grado_id)
+                                          ->where('grupo_id',$c->grupo_id)
+                                          ->where('lectivo_id',$c->lectivo_id)
+                                          ->where('cliente_id',$c->id)
+                                          ->get();
+                    ?>        
                     <table class='table_format' width='100%'>
                         <thead>
                         <th colspan='8'>Materias</th>
                         </thead>
                         <tbody>
-                            @foreach($i->hacademicas as $a)
+                            @foreach($hacademicas as $a)
                             <tr>
                                 <td colspan='3'>{{$a->materia->name}}</td>
 
@@ -128,7 +145,7 @@
                         </tbody>
                     </table>
                             </td>
-                @endforeach
+                
                 
                 <table width='500px' class='table_format table_format2'>
                     <tr><td><br/><br/><br/><br/><br/><br/><br/><br/><br/></td><td ></td></tr>
@@ -142,12 +159,12 @@
                      <td width="32%" bordercolor="#FFFFFF"><div align="center"><span style="font-weight: bold"></span></div></td>
                     </tr>
                     <tr>
-                      <td colspan="2" bordercolor="#FFFFFF"><p>Promedio  general evaluatorio entregado a: <span style="font-weight: bold">{{$cliente->nombre." ".$cliente->nombre2." ".$cliente->ape_paterno." ".$cliente->ape_materno}}</span>, que acredita  tanto su conocimiento, habilidades y destrezas adquiridas en <u>{{$i->grado->name}}</u> 
+                      <td colspan="2" bordercolor="#FFFFFF"><p>Promedio  general evaluatorio entregado a: <span style="font-weight: bold">{{$cliente->nombre." ".$cliente->nombre2." ".$cliente->ape_paterno." ".$cliente->ape_materno}}</span>, que acredita  tanto su conocimiento, habilidades y destrezas adquiridas en <u>{{$c->grado}}</u> 
                         
                        </p></td>
                       </tr>
                     <tr>
-                      <td colspan="2" bordercolor="#FFFFFF">Del ciclo escolar correspondiente: {{$i->lectivo->name}}.</td>
+                      <td colspan="2" bordercolor="#FFFFFF">Del ciclo escolar correspondiente: {{$c->lectivo}}.</td>
                       </tr>
                     <tr>
                       <td height="70" align="center" valign="bottom" bordercolor="#FFFFFF"><strong>____________________________________________________</strong><br>

@@ -1167,6 +1167,12 @@ $(document).ready(function() {
           getDisponibles();
           getCmbPeriodosEstudio();
         });
+        
+    $('#grupo_id-editar').change(function(){
+          //getDisponibles();
+          getCmbPeriodosEstudioEditar();
+        });
+    
 <?php
 $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
 ?>
@@ -1231,6 +1237,33 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                   }
               });       
       }    
+      
+    function getCmbPeriodosEstudioEditar(){
+          //var $example = $("#especialidad_id-field").select2();
+          var a= $('#frm_academica').serialize();
+              $.ajax({
+                  url: '{{ route("periodoEstudios.getCmbPeriodoInscripcion") }}',
+                  type: 'GET',
+                  data: "grupo_id=" + $('#grupo_id-editar option:selected').val() + "&periodo_estudio_id=" + $('#periodo_estudio_id-editar option:selected').val() + "",
+                  dataType: 'json',
+                  beforeSend : function(){$(".loading3").show();},
+                  complete : function(){$(".loading3").hide();},
+                  success: function(data){
+                      //$example.select2("destroy");
+                      $('#periodo_estudio_id-editar').html('');
+                      
+                      //$('#especialidad_id-field').empty();
+                      $('#periodo_estudio_id-editar').append($('<option></option>').text('Seleccionar').val('0'));
+                      
+                      $.each(data, function(i) {
+                          //alert(data[i].name);
+                          $('#periodo_estudio_id-editar').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                      });
+                      //$example.select2();
+                  }
+              });       
+      }      
+    
         
     function getDisponibles(){
           
@@ -1308,6 +1341,7 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
     $(document).on('click', '.inscribir-edit', function(e) {
         e.preventDefault();
         $('.modal-title').text('Editar Inscripción');
+        
         
         //Limpiar valores
         
