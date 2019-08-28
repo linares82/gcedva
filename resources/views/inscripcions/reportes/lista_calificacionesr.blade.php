@@ -103,7 +103,7 @@
                     
                     <!--<div style="page-break-after:always;"></div>-->
                         <tr>
-                            <td colspan="5">
+                            <td colspan="6">
                                 {{"Plantel: ".$r->plantel }} <br/>
                                 {{"Grupo: ".$r->grupo}}<br/>
                                 {{"Periodo Lectivo: ".$r->lectivo}}<br/>
@@ -119,6 +119,7 @@
                             </td>
                         </tr>
                         <tr>
+                            <th></th>
                         <th class="altura"><strong>NO.</strong></th>    
                         <th class="altura"><strong>Nombre(s)</strong></th>
                         <th class="altura"><strong>A. Paterno</strong></th>
@@ -133,7 +134,9 @@
                         </tr>
                         <?php $grupo0=$r->grupo; ?>
                 @endif
+                        <?php $contador_linea=1; ?>
                             <tr>
+                                <td>{{$contador_linea++}}</td>
                                 <td>{{ $r->cliente }}</td>
                                 <td>{{$r->nombre." ".$r->nombre2}}</td><td>{{$r->ape_paterno}}</td><td>{{$r->ape_materno}}</td>
                                 <?php

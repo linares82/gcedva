@@ -190,7 +190,12 @@
                 <div class="row">
                         </div>
                         <div class="well well-sm">
+                            @if(!isset($resultados))
+                            <button type="submit" class="btn btn-primary" >Buscar</button>
+                            @endif
+                            @if(isset($resultados))
                             <button type="submit" class="btn btn-primary" id="btnSubmitId">Procesar</button>
+                            @endif
                             <a class="btn btn-link pull-right" href="{{ route('inscripcions.index') }}"><i class="glyphicon glyphicon-backward"></i> Regresar</a>
                         </div>
                 

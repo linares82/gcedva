@@ -17,7 +17,7 @@
         <table class="table table-condensed table-striped">
             <thead>
                 <tr>
-                    <th>Asesor</th><th>Cliente</th><th>Especialidad</th><th>Fecha</th><th>Becado</th><th>Medio</th>
+                    <th></th><th>Asesor</th><th>Cliente</th><th>Especialidad</th><th>Fecha</th><th>Becado</th><th>Medio</th>
                 </tr> 
             </thead>
             <tbody>
@@ -26,17 +26,20 @@
                 $j=0;
                 ?>
                 <?php $colaborador="" ?>
+                <?php $contador_linea=1; ?>
                 @foreach($registros as $registro)
                     @if($colaborador<>$registro->colaborador and $i<>0)
                     <tr>
-                        <td><strong>Suma Asesor</strong></td><td colspan="5"><strong>{{$i}}<strong></td>
+                        <td><strong>Suma Asesor</strong></td><td colspan="6"><strong>{{$i}}<strong></td>
                     </tr>
                     <?php 
                     $j=$i+$j;
                     $i=0;
                     ?>
                     @endif
+                    
                     <tr>
+                        <td>{{$contador_linea++}}</td>
                         <td>{{$registro->colaborador}}</td>
                         <td>{{$registro->id}} - {{$registro->cliente}}</td>
                         <td>{{$registro->especialidad}}</td>
@@ -60,10 +63,10 @@
                     $j=$i+$j;
                     ?>
                     <tr>
-                        <td><strong>Suma Asesor</strong></td><td colspan="5"><strong>{{$i}}<strong></td>
+                        <td><strong>Suma Asesor</strong></td><td colspan="6"><strong>{{$i}}<strong></td>
                     </tr>
                     <tr>
-                        <td><strong>Total</strong></td><td colspan="5"><strong>{{$j}}<strong></td>
+                        <td><strong>Total</strong></td><td colspan="6"><strong>{{$j}}<strong></td>
                     </tr>
             </tbody>
         </table>

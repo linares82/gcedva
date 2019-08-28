@@ -13,22 +13,38 @@
 		}
     </style>-->
     
-        @permission('Wanalitica')
-	<div class="form-group col-md-12 col-sm-12 col-xs-12">
-            <div class="box box-primary">
-                <div class="box-header with-border">
-                    <h3 class="box-title">
-                        Analisis Gráfico global
-                    </h3>
-                </div>
-                <div class="box-body">
-                    Analitica de Vendedores <a href="{{route('seguimientos.analitica_actividadesf')}}" target="_blank">Ver</a><br/>
-                    Graficas de avance por vendedor, especialidad y plantel <a href="{{route('widgets.metaXespecialidad')}}" target="_blank">Ver</a>
-                </div>
+    @permission('Wanalitica')
+    <div class="form-group col-md-10 col-sm-10 col-xs-10">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">
+                    Analisis Gráfico global
+                </h3>
+            </div>
+            <div class="box-body">
+                Analitica de Vendedores <a href="{{route('seguimientos.analitica_actividadesf')}}" target="_blank">Ver</a><br/>
+                Graficas de avance por vendedor, especialidad y plantel <a href="{{route('widgets.metaXespecialidad')}}" target="_blank">Ver</a>
             </div>
         </div>
-        @endpermission
-        
+    </div>
+    @endpermission
+    
+    @role('CAJA')
+    <div class="form-group col-md-2 col-sm-2 col-xs-2">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">
+                    Adeudos
+                </h3>
+            </div>
+            <div class="box-body">
+                <div id='loading3' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
+                <span id='adeudos_cantidad'></span>
+            </div>
+        </div>
+    </div>
+    @endrole
+    
     @permission('repDireccion')
         
 	<div class="form-group col-md-4 col-sm-4 col-xs-4">
@@ -571,6 +587,20 @@
 @push('scripts')
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
+      $(document).ready(function(){
+         $.ajax({
+            type: 'GET',
+                    url: '{{route("cajas.adeudosXplantelWidget")}}',
+                    beforeSend : function(){$("#loading3").show(); },
+                    complete : function(){$("#loading3").hide(); },
+                    success: function(data) {
+                        href="{{route('cajas.adeudosXplantel')}}";
+                        $('#adeudos_cantidad').html('<a class="btn btn-sm btn-warning" target="_blank" href="'+href+'">'+data+' Adeudos<a>');
+                    }
+            }); 
+      });  
+        
+        
       google.charts.load('current', {'packages':['corechart','bar']});
       google.charts.setOnLoadCallback(drawVisualization);
       google.charts.setOnLoadCallback(drawgrfDir1);

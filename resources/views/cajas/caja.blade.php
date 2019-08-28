@@ -326,6 +326,7 @@
     </div>
     </div>
     @if(isset($cliente))
+    <?php $valores= collect(); ?>
     <div class="col-md-5" id="adeudos-lista">
         <div class="box box-danger">
             <div class="box-header">
@@ -447,7 +448,7 @@
 	
                         </tr>
         		<?php
-                        $valores= collect();
+                        
                         foreach($combinacion->adeudos as $adeudo){
                             //if($adeudo->caja_concepto_id==$ln->caja_concepto_id){
                                 $valores->push($adeudo->caja_concepto_id);

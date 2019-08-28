@@ -92,6 +92,7 @@
                             </td>
                         </tr>
                         <tr>
+                            <th></th>
                         <th class="altura"><strong>NO.</strong></th>
                         <th class="altura"><strong>Nombre(s)</strong></th>
                         <th class="altura"><strong>A. Paterno</strong></th>
@@ -108,11 +109,12 @@
                         <?php 
                         $grupo0=$r->grupo; 
                         $asistencias=0;
+                        $contador_linea=1;
                         ?>
                         
                 @endif
                             <tr>
-                                
+                                <td>{{$contador_linea++}}</td>
                                 <td>{{ $r->cliente }}</td>
                                 <td>{{$r->nombre." ".$r->nombre2}}</td><td>{{$r->ape_paterno}}</td><td>{{$r->ape_materno}}</td>
                                 <?php

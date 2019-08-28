@@ -145,10 +145,10 @@
             var divresul = "contenido_principal";
         }
 
-        //informaciÃ³n del formulario
+        //información del formulario
         var formData = new FormData($("#" + nombreform + "")[0]);
 
-        //hacemos la peticiÃ³n ajax   
+        //hacemos la petición ajax   
         $.ajax({
             url: miurl,
             type: 'POST',
