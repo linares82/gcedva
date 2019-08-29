@@ -84,7 +84,7 @@
                     <thead>
                         <tr>
                             <td><input type="checkbox" id="select-all" /> Todos<br/></td>
-                            <td>Cliente</td><td>Periodo Estudios</td><td>Aprobadas</td><td>No Aprobadas</td>
+                            <td>Cliente</td><td>Estatus Cliente</td><td>Periodo Estudios</td><td>Aprobadas</td><td>No Aprobadas</td>
                         </tr>
                     </thead>
                     <tbody>
@@ -93,6 +93,7 @@
                         <tr>
                             <td>{{ Form::checkbox("id[]", $c['id']) }}</td>
                             <td>{{ $c['cliente'] }} - {{ $c['nombre'] }}</td>
+                            <td>{{$c['st_cliente']}}</td>
                             <td>{{ $c['periodo_estudio'] }}</td>
                             <td> {{ $c['aprobadas'] }} 
                                 <table id='aprobadas_modulo' style='display: none;'>

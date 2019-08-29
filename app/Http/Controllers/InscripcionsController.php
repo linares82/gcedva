@@ -18,6 +18,7 @@ use App\Materium;
 use App\Mese;
 use App\Calificacion;
 use App\Ponderacion;
+use App\StCliente;
 use App\Pago;
 use App\Plantel;
 use App\CalificacionPonderacion;
@@ -330,7 +331,7 @@ class InscripcionsController extends Controller {
                     $clientes=Cliente::join('inscripcions as i', 'i.cliente_id', '=', 'clientes.id')
 						->join('hacademicas as h', 'h.inscripcion_id', 'i.id')
                                                 ->join('periodo_estudios as p','p.id','=','i.periodo_estudio_id')                            
-						->select('i.id','clientes.id as cliente','p.name as periodo_estudio', 
+						->select('i.id','clientes.id as cliente','p.name as periodo_estudio', 'st_cliente_id',
                                                         DB::raw('concat(clientes.nombre," ",clientes.nombre2," ",clientes.ape_paterno," ",clientes.ape_materno) as nombre'))
                                                 //->whereColumn('h.lectivo_id','i.lectivo_id')
 						->where('i.plantel_id', '=', $input['plantel_id'])
@@ -340,7 +341,7 @@ class InscripcionsController extends Controller {
 						->where('i.lectivo_id', '=', $input['lectivo_id'])
                                                 ->where('h.lectivo_id', '=', $input['lectivo_id'])
 						->where('i.plantel_id', '=', $input['plantel_id'])
-                                                //->where('h.st_materium_id',1)
+                                                ->where('clientes.st_cliente_id','<>',3)
                                                 ->whereNull('i.deleted_at')
                                                 ->distinct()
 						->get();
@@ -348,7 +349,7 @@ class InscripcionsController extends Controller {
                     $resultado=collect();
                     $resultados=collect();
                     foreach($clientes as $c){
-                        //dd($c);
+                        
                         $aprobadas=Cliente::join('inscripcions as i', 'i.cliente_id', '=', 'clientes.id')
                         ->join('periodo_estudios as p','p.id','=','i.periodo_estudio_id')
                         ->join('hacademicas as h', 'h.inscripcion_id', 'i.id')
@@ -444,9 +445,11 @@ class InscripcionsController extends Controller {
                         //dd($aprobadas_modulo->toArray());
                         
                         //dd($contar_materias);
+                        $st=StCliente::find($c->st_cliente_id);
                         $resultados->push(['id'=>$c->id,
                                            'nombre'=>$c->nombre,
                                            'cliente'=>$c->cliente,
+                                           'st_cliente'=>$st->name,
                                            'periodo_estudio'=>$c->periodo_estudio,
                                            'aprobadas'=>$aprobadas->aprobadas,
                                            'no_aprobadas'=>$contar_materias_no_aprobadas,

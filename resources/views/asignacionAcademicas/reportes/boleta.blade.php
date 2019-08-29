@@ -81,7 +81,6 @@
                 <th>Matricula</th>
                 </thead>
                 <tbody>
-
                     <tr>
                         <td>{{$c->especialidad}}</td>
                         <td>{{$c->nivel}}</td>
