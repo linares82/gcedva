@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\AsistenciaR;
 use App\AsignacionAcademica;
 use App\Inscripcion;
+use App\Hacademica;
 use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updateAsistenciaR;
@@ -88,7 +89,7 @@ class AsistenciaRsController extends Controller {
                                          ->where('asignacion_academica_id', '=', $input['asignacion_academica_id'])
                                          ->orderBy('cliente_id')
                                          ->get();
-                        $inscripciones=Inscripcion::where('inscripcions.grupo_id','=',$asignacionAcademica->grupo_id)
+                        /*$inscripciones=Inscripcion::where('inscripcions.grupo_id','=',$asignacionAcademica->grupo_id)
                                         ->join('hacademicas as h','h.inscripcion_id','=','inscripcions.id')
                                         ->where('inscripcions.lectivo_id', '=', $asignacionAcademica->lectivo_id)
                                         ->where('inscripcions.plantel_id', '=', $asignacionAcademica->plantel_id)
@@ -96,19 +97,29 @@ class AsistenciaRsController extends Controller {
                                         ->orderBy('inscripcions.cliente_id')
                                         ->whereNull('inscripcions.deleted_at')
                                         ->whereNull('h.deleted_at')
+                                        ->get();*/
+                        $inscripciones=Hacademica::where('hacademicas.grupo_id','=',$asignacionAcademica->grupo_id)
+                                        ->where('hacademicas.lectivo_id', '=', $asignacionAcademica->lectivo_id)
+                                        ->where('hacademicas.plantel_id', '=', $asignacionAcademica->plantel_id)
+                                        ->where('hacademicas.materium_id',$asignacionAcademica->materium_id)
+                                        ->orderBy('hacademicas.cliente_id')
+                                        ->whereNull('hacademicas.deleted_at')
                                         ->get();
                         //dd($asistencias);
 
                         if($asistencias->isEmpty()){
                             foreach($inscripciones as $i){
-                                $asistencia['asignacion_academica_id']=$input['asignacion_academica_id'];
-                                $asistencia['fecha']=$input['fecha'];
-                                $asistencia['cliente_id']=$i->cliente_id;
-                                $asistencia['est_asistencia_id']=1;
-                                $asistencia['usu_alta_id']=Auth::user()->id;
-                                $asistencia['usu_mod_id']=Auth::user()->id;
-                                //dd($asistencia);
-                                AsistenciaR::create( $asistencia );
+                                if($i->cliente->st_cliente_id<>3){
+                                    $asistencia['asignacion_academica_id']=$input['asignacion_academica_id'];
+                                    $asistencia['fecha']=$input['fecha'];
+                                    $asistencia['cliente_id']=$i->cliente_id;
+                                    $asistencia['est_asistencia_id']=1;
+                                    $asistencia['usu_alta_id']=Auth::user()->id;
+                                    $asistencia['usu_mod_id']=Auth::user()->id;
+                                    //dd($asistencia);
+                                    AsistenciaR::create( $asistencia );
+                                }
+                                
                                 
                                 //verifica adeudos y cambia estatus 
                                 
