@@ -242,8 +242,8 @@ class AdeudosController extends Controller {
              * 
              */
             
-            $adeudosPendientes=Adeudo::select('esp.name as especialidad','n.name as nivel','g.name as grado','c.id as cliente','c.nombre','c.nombre2',
-                                              'c.ape_paterno','c.ape_materno',DB::raw('sum(adeudos.monto) as deuda'))
+            $adeudosPendientes=Adeudo::select('esp.name as especialidad','n.name as nivel','g.name as grado','cc.id as combinacion',
+                                              'c.id as cliente','c.nombre','c.nombre2','c.ape_paterno','c.ape_materno',DB::raw('sum(adeudos.monto) as deuda'))
                                      ->join('combinacion_clientes as cc','cc.id',"=",'adeudos.combinacion_cliente_id')
                                      ->join('especialidads as esp','esp.id','=','cc.especialidad_id')
                                      ->join('nivels as n','n.id','=','cc.nivel_id')
@@ -257,7 +257,7 @@ class AdeudosController extends Controller {
                                      ->where('c.plantel_id', '=', $datos['plantel_f'])
                                      ->whereIn('stc.id',array(4,25))
                                      ->where('sts.id',2)
-                                     ->groupBy('esp.name')->groupBy('n.name')->groupBy('g.name')->groupBy('c.id')
+                                     ->groupBy('esp.name')->groupBy('n.name')->groupBy('g.name')->groupBy('c.id')->groupBy('cc.id')
                                      ->groupBy('c.nombre')->groupBy('c.nombre2')->groupBy('c.ape_paterno')->groupBy('c.ape_materno')
                                      ->orderBy('c.id', 'asc')
                                      ->get();

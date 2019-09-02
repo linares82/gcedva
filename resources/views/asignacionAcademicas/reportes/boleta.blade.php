@@ -64,15 +64,18 @@
                 
             </tr>
         </table>
-            <?php 
-            $inscripcion= \App\Inscripcion::where('plantel_id',$c->plantel_id)
+            <?php
+		$inscripcion= \App\Inscripcion::find($c->inscripcion_id);
+		 
+/*            $inscripcion= \App\Inscripcion::where('plantel_id',$c->plantel_id)
                                           ->where('especialidad_id',$c->especialidad_id)
                                           ->where('nivel_id',$c->nivel_id)
                                           ->where('grado_id',$c->grado_id)
                                           ->where('grupo_id',$c->grupo_id)
                                           ->where('lectivo_id',$c->lectivo_id)
-                                          ->first();
+                                          ->first()*/
             ?>
+
             <table width="100%" class='table_format'>
                 <thead>
                 <th>Especialidad</th><th>Nivel</th>
@@ -125,7 +128,7 @@
                                                     @endforeach
                                                 </tr>
                                                 <tr>
-                                                    <strong>Calificación: {{$cali->calificacion}}</strong>
+                                                    <strong>CalificaciÃ³n: {{$cali->calificacion}}</strong>
                                                     @foreach($cali->calificacionPonderacions as $calificacionPonderacion)
                                                         <td class="centrar_texto">{{$calificacionPonderacion->calificacion_parcial}}</td>
                                                     @endforeach

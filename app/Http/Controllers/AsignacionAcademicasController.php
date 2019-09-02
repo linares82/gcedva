@@ -337,7 +337,7 @@ class AsignacionAcademicasController extends Controller {
                              ->where('i.plantel_id','=',$asignacion->plantel_id)
                              ->get();
             */
-            $clientes=Cliente::select('clientes.id','e.imagen','e.name as especialidad','h.especialidad_id','n.name as nivel','h.nivel_id',
+            $clientes=Cliente::select('clientes.id','h.inscripcion_id','e.imagen','e.name as especialidad','h.especialidad_id','n.name as nivel','h.nivel_id',
                                       'g.name as grado','h.grado_id','p.razon as plantel','h.plantel_id','gr.name as grupo','h.grupo_id',
                                       'h.lectivo_id','l.name as lectivo')
                              ->join('hacademicas as h','h.cliente_id','=','clientes.id')
@@ -350,6 +350,7 @@ class AsignacionAcademicasController extends Controller {
                              ->where('h.lectivo_id','=',$asignacion->lectivo_id)
                              ->where('h.grupo_id','=',$asignacion->grupo_id)
                              ->where('h.plantel_id','=',$asignacion->plantel_id)
+			     ->whereNull('h.deleted_at')
                              ->distinct()
                              ->get();
             //dd($clientes->toArray());

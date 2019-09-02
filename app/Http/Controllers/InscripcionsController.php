@@ -699,7 +699,7 @@ class InscripcionsController extends Controller {
                                        ->where('aa.empleado_id',$data['instructor_f'])
                                        ->where('hacademicas.materium_id',$data['materia_f'])
 				       ->where('aa.materium_id',$data['materia_f'])
-				       ->where('s.st_seguimiento_id',2)
+				       ->where('s.st_seguimiento_id',20)
 				       ->whereNull('hacademicas.deleted_at')
                                        //->where('inscripcions.grado_id',$data['grado_f'])
                                        ->orderBy('hacademicas.plantel_id','hacademicas.lectivo_id','hacademicas.grupo_id','hacademicas.grado_id')
@@ -915,7 +915,7 @@ class InscripcionsController extends Controller {
             $pinicio=Carbon::createFromFormat('Y-m-d', $asignacion->fec_inicio);
             $pfin=Carbon::createFromFormat('Y-m-d', $asignacion->fec_fin);
             //dd($meses);
-            $i=1;
+            /*$i=1;
             foreach($meses as $mes){
                 //dd($meses[$i]);
                 if($i>=$pinicio->month and $i<=$pfin->month){
@@ -924,7 +924,7 @@ class InscripcionsController extends Controller {
                     $meses->forget($i);
                 }
                 $i++;
-            }
+            }*/
             //dd($meses);
             
             $materias=Materium::pluck('name','id');

@@ -60,8 +60,10 @@
         <thead>
         <th><strong>Estudios</strong></th>    
         <th><strong>Cliente</strong></th>
+        <th><strong>Costo Total</strong></th>
         <th><strong>Adeudo Acumulado</strong></th>
         <th><strong>Pago Acumulado</strong></th>
+        <th><strong>Diferencia</strong></th>
         </thead>
         <tbody>
             <?php
@@ -77,6 +79,14 @@
             <tr>
                 <td>{{$adeudo->especialidad." / ".$adeudo->nivel." / ".$adeudo->grado}}</td>
                 <td>{{$adeudo->cliente." - ".$adeudo->nombre." ".$adeudo->nombre2." ".$adeudo->ape_paterno." ".$adeudo->ape_materno}}</td>
+                <?php 
+                    $adeudo_total=\App\Adeudo::where('cliente_id',$adeudo->cliente)
+                                             ->where('combinacion_cliente_id',$adeudo->combinacion)
+                                             ->whereNull('deleted_at')
+                                             ->sum('monto')
+                                             
+                ?>
+                <td>{{number_format($adeudo_total,2)}}</td>
                 <td>{{number_format($adeudo->deuda,2)}}</td>
                 <?php 
                 $fecha=date('Y/m/d');
@@ -88,6 +98,7 @@
                                ->value('pago');
                 ?>
                 <td>{{number_format($pago,2)}}</td>
+                <td>{{number_format($pago-$adeudo->deuda,2)}}</td>
             </tr>
             <?php 
             $deuda_total=$deuda_total+$adeudo->deuda;
