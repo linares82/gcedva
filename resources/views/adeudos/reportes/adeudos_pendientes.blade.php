@@ -58,6 +58,7 @@
 <div class="datagrid">
     <table width='100%'>
         <thead>
+	<th></th>
         <th><strong>Estudios</strong></th>    
         <th><strong>Cliente</strong></th>
         <th><strong>Costo Total</strong></th>
@@ -74,9 +75,11 @@
             $diferencia=0;
             $aux = 0;
             ?>
+	    <?php $contador_linea=1; ?>
             @foreach($adeudos as $adeudo)
-
+	    
             <tr>
+                <td>{{$contador_linea++}}</td>
                 <td>{{$adeudo->especialidad." / ".$adeudo->nivel." / ".$adeudo->grado}}</td>
                 <td>{{$adeudo->cliente." - ".$adeudo->nombre." ".$adeudo->nombre2." ".$adeudo->ape_paterno." ".$adeudo->ape_materno}}</td>
                 <?php 
@@ -106,8 +109,8 @@
             $diferencia=$pago_total-$deuda_total;
             ?>
             @endforeach
-            <tr class="alt"><td></td><td><strong>Total </strong></td><td><strong>{{number_format($deuda_total,2)}}</strong></td><td><strong>{{number_format($pago_total,2)}}</strong></td></tr>
-            <tr class="alt"><td></td><td><strong>Diferencia </strong></td>
+            <tr class="alt"><td colspan='4'><strong>Total </strong></td><td><strong>{{number_format($deuda_total,2)}}</strong></td><td><strong>{{number_format($pago_total,2)}}</strong></td></tr>
+            <tr class="alt"><td colspan='4'><strong>Diferencia </strong></td>
                             @if($diferencia<0)
                             <td><strong>{{number_format($diferencia,2)}}</strong></td>
                             <td><strong></strong></td>    

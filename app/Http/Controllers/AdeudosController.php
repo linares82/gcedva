@@ -346,9 +346,11 @@ class AdeudosController extends Controller {
             $data=$request->all();
             $adeudos_sin_pagar=Adeudo::where('cliente_id',$data['cliente'])
                                      ->where('pagado_bnd',0)
+                                     ->where('caja_id',0)
                                      ->delete();
             $mensualidades_pagadas=Adeudo::where('cliente_id',$data['cliente'])
                                          ->where('pagado_bnd',1)
+                                         ->orWhere('caja_id','>',0)
                                          ->join('caja_conceptos as cc','cc.id','=','adeudos.caja_concepto_id')
                                          ->where('cc.bnd_mensualidad',1)
                                          ->get();

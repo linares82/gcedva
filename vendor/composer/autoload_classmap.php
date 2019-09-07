@@ -57,6 +57,7 @@ return array(
     'AddFieldsPlantelsTable' => $baseDir . '/database/migrations/2017_06_16_222542_Add_fields_Plantels_Table.php',
     'AddHashEbanxesTable' => $baseDir . '/database/migrations/2019_01_14_154325_add_hash_ebanxes_table.php',
     'AddImagenEspecialidadTable' => $baseDir . '/database/migrations/2018_05_17_142252_add_imagen_especialidad_table.php',
+    'AddIndexClientesTable' => $baseDir . '/database/migrations/2019_09_05_113945_add_index_clientes_table.php',
     'AddIndexCombinacionIdAdeudosTable' => $baseDir . '/database/migrations/2018_04_17_133606_add_index_combinacion_id_adeudos_table.php',
     'AddIndexCuentaFormaPagoTable' => $baseDir . '/database/migrations/2018_05_14_182431_add_index_cuenta_forma_pago_table.php',
     'AddIndexInscripcionTable' => $baseDir . '/database/migrations/2017_12_07_134650_addindex_inscripcion_table.php',

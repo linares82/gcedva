@@ -97,6 +97,7 @@
                     $promedios=array();
                     $promedio_totales=0;
                 ?>
+                <?php $contador_linea=1; ?>
                 @foreach($registros as $r)
                     <?php $cantidad_registros++; ?>
                 @if($grupo0<>$r->grupo)
@@ -134,7 +135,7 @@
                         </tr>
                         <?php $grupo0=$r->grupo; ?>
                 @endif
-                        <?php $contador_linea=1; ?>
+                        
                             <tr>
                                 <td>{{$contador_linea++}}</td>
                                 <td>{{ $r->cliente }}</td>
@@ -173,11 +174,13 @@
                 @endforeach
                 
                 <tr>
-                    <td></td><td></td><td></td><td> <?php //dd($promedios); ?> </td>
+                    <td></td><td></td><td></td><td></td><td> <?php //dd($promedios); ?> </td>
                     @foreach($promedios as $promedio)
                     <td> {{ $promedio/$cantidad_registros }}</td>
                     @endforeach
+                    @if($promedio_totales>0)
                     <td>{{$promedio_totales/$cantidad_registros}}</td>
+                    @endif
                 </tr>
             </table>
             <br/>

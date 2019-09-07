@@ -711,6 +711,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'AddFieldsPlantelsTable' => __DIR__ . '/../..' . '/database/migrations/2017_06_16_222542_Add_fields_Plantels_Table.php',
         'AddHashEbanxesTable' => __DIR__ . '/../..' . '/database/migrations/2019_01_14_154325_add_hash_ebanxes_table.php',
         'AddImagenEspecialidadTable' => __DIR__ . '/../..' . '/database/migrations/2018_05_17_142252_add_imagen_especialidad_table.php',
+        'AddIndexClientesTable' => __DIR__ . '/../..' . '/database/migrations/2019_09_05_113945_add_index_clientes_table.php',
         'AddIndexCombinacionIdAdeudosTable' => __DIR__ . '/../..' . '/database/migrations/2018_04_17_133606_add_index_combinacion_id_adeudos_table.php',
         'AddIndexCuentaFormaPagoTable' => __DIR__ . '/../..' . '/database/migrations/2018_05_14_182431_add_index_cuenta_forma_pago_table.php',
         'AddIndexInscripcionTable' => __DIR__ . '/../..' . '/database/migrations/2017_12_07_134650_addindex_inscripcion_table.php',

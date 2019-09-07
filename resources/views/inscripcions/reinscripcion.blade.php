@@ -197,7 +197,7 @@
                             @if(isset($resultados))
                             <button type="submit" class="btn btn-primary" id="btnSubmitId">Procesar</button>
                             @endif
-                            <a class="btn btn-link pull-right" href="{{ route('inscripcions.index') }}"><i class="glyphicon glyphicon-backward"></i> Regresar</a>
+                            <a class="btn btn-link pull-right" href="{{ route('inscripcions.reinscripcion') }}"><i class="glyphicon glyphicon-backward"></i> Nuevo</a>
                         </div>
                 
                 

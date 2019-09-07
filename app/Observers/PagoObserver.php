@@ -51,8 +51,11 @@ class PagoObserver
                 $cuentas_efectivo->saldo_actualizado=$cuentas_efectivo->saldo_actualizado-$this->pago->monto;
                 $cuentas_efectivo->save();
                 
-                $pago= IngresoEgreso::where('pago_id',$this->pago->id)->where('egreso_id',0)->first();
-                $pago->delete();
+                $pago= IngresoEgreso::where('pago_id',$this->pago->id)->where('egreso_id',0)->whereNull('deleted_at')->first();
+                if(count($pago)>0){
+                    $pago->delete();
+                }
+                
             }
         }
     }

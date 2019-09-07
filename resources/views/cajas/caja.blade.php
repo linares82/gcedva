@@ -62,7 +62,7 @@
                 
                 @if(isset($message))
                 <div class="alert alert-danger alert-dismissable">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">Ã—</button>
+<!--                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">Ã—</button>-->
                     {{$message}}
                 </div>
                 @endif
@@ -97,7 +97,7 @@
 
                 @if(isset($message))
                 <div class="alert alert-danger alert-dismissable">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">Ã—</button>
+<!--                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">Ã—</button>-->
                     {{$message}}
                 </div>
                 @endif
@@ -503,7 +503,7 @@ Agregar nuevo registro
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">X</button>
+<!--                <button type="button" class="close" data-dismiss="modal">X</button>-->
                 <h4 class="modal-title"></h4>
             </div>
             <div class="modal-body">
@@ -534,8 +534,9 @@ Agregar nuevo registro
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">X</button>
-                <h4 class="modal-title"></h4>
+                    
+<!--                <button type="button" class="close" data-dismiss="modal">X</button>-->
+                <h4 class="modal-title">Agregar Pago</h4>
             </div>
             <div class="modal-body">
                 {!! Form::open(array('route' => 'cajaLns.store')) !!}
@@ -589,7 +590,7 @@ Agregar nuevo registro
                     <button type="button" class="btn btn-success addPagoB" id="AgregarPago" data-dismiss="modal">
                         <span id="" class='glyphicon glyphicon-check'></span> Crear
                     </button>
-                    <button type="button" class="btn btn-warning" data-dismiss="modal">
+                    <button type="button" class="btn btn-warning" data-dismiss="modal" id='cerrarAgregarPago'>
                         <span class='glyphicon glyphicon-remove'></span> Cerrar
                     </button>
                 </div>
@@ -604,7 +605,7 @@ Agregar nuevo registro
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">X</button>
+<!--                <button type="button" class="close" data-dismiss="modal">X</button>-->
                 <h4 class="modal-title"></h4>
             </div>
             <div class="modal-body">
@@ -689,6 +690,7 @@ Agregar nuevo registro
     });
     
     $(document).ready(function(){
+        
          $('.monto_editable').hide();
          $('.fecha_editable').hide();
          
@@ -779,11 +781,16 @@ Agregar nuevo registro
     });
     @endif
 
+    
+
     $(document).on('click', '.add-pago', function() {
     $('.modal-title').text('Agregar Pago');
     //Limpiar valores
+    $('#addPago').modal({backdrop: 'static', keyboard: false});
     $('#addPago').modal('show');
+    
     $('#AgregarPago').prop('disabled',true);
+    
     //Cargar cuentas de efectivo
     //Fin cargar cuentas de efectivo
     });
@@ -809,6 +816,7 @@ Agregar nuevo registro
             beforeSend : function(){
                 $("#loading3").show(); 
                 $('#AgregarPago').prop('disabled',true);
+                $('#cerrarAgregarPago').prop('disabled',true);
             },
             complete : function(){$("#loading3").hide(); },
             success: function(data) {
@@ -950,7 +958,6 @@ Agregar nuevo registro
     });
     @endif
 
-    
     
 
 </script>
