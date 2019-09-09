@@ -581,6 +581,7 @@ Agregar nuevo registro
                         <button type="button" class="btn btn-warning validarReferencia" id="validarReferencia">
                             <span id="" class='glyphicon glyphicon-check'></span> Validar
                         </button>
+                        <div id='loadingValidar' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                         <div id='resVal'></div>
                     </div>
                     
@@ -890,8 +891,8 @@ Agregar nuevo registro
                     'cuenta_efectivo_id': $('#cuenta_efectivo_id-field option:selected').val()
             },
             dataType:"json",
-            beforeSend : function(){$("#loading3").show(); },
-            complete : function(){$("#loading3").hide(); },
+            beforeSend : function(){$("#loadingValidar").show(); },
+            complete : function(){$("#loadingValidar").hide(); },
             success: function(data) {
                 $('#resVal').html('')
                 if(Object.keys(data).length==0){

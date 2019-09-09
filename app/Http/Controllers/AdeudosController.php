@@ -348,13 +348,13 @@ class AdeudosController extends Controller {
                                      ->where('pagado_bnd',0)
                                      ->where('caja_id',0)
                                      ->delete();
-            $mensualidades_pagadas=Adeudo::where('cliente_id',$data['cliente'])
+            /*$mensualidades_pagadas=Adeudo::where('cliente_id',$data['cliente'])
                                          ->where('pagado_bnd',1)
                                          ->orWhere('caja_id','>',0)
                                          ->join('caja_conceptos as cc','cc.id','=','adeudos.caja_concepto_id')
                                          ->where('cc.bnd_mensualidad',1)
                                          ->get();
-            
+            */
             $cliente=Cliente::find($data['cliente']);
             //$cliente->st_cliente_id=22;
             //$cliente->save();
@@ -362,9 +362,11 @@ class AdeudosController extends Controller {
             $combinacion=CombinacionCliente::find($data['combinacion']);
             $combinacion->cuenta_ticket_pago=1;
             $combinacion->save();
+            $lineas= PlanPagoLn::where('plan_pago_id',$combinacion->plan_pago_id)->get();
+            //$combinacion->planPago->Lineas;
             $i=0;
             $descarte_inicial=0;
-            foreach($combinacion->planPago->Lineas as $adeudo){
+            foreach($lineas as $adeudo){
                 //conceptos diferentes de mensualidad, se ignoran los ´primeros 3
                 //if($adeudo->cajaConcepto->bnd_mensualidad<>1 and $descarte_inicial>3){
                     $registro['cliente_id']=$cliente->id;

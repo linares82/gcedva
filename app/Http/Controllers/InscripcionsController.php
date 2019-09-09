@@ -928,6 +928,7 @@ class InscripcionsController extends Controller {
                             ->where('h.lectivo_id', $data['lectivo_f'])
                             ->whereNull('inscripcions.deleted_at')
                             ->whereNull('h.deleted_at')
+                            ->whereNull('aa.deleted_at')
                             ->orderBy('aa.id','esp.name','gru.id')
                             ->distinct()
                             ->get();
