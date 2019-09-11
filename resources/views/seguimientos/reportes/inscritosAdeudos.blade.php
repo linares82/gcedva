@@ -11,7 +11,7 @@
 	</ol>
 
     <div class="page-header">
-        <h3><i class="glyphicon glyphicon-plus"></i> @yield('seguimientosAppTitle') / Inscritos por Plantel y Asesor </h3>
+        <h3><i class="glyphicon glyphicon-plus"></i> @yield('seguimientosAppTitle') / Grupo Horario </h3>
     </div>
 @endsection
 

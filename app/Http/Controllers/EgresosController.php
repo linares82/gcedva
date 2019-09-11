@@ -208,4 +208,19 @@ class EgresosController extends Controller {
   */              
                 return view('egresos.reportes.recibo', array('egreso'=>$egreso));
         }
+        
+        public function rptEgresos(){
+            $plantels=Plantel::pluck('razon','id');
+            return view('egresos.reportes.egresos',array('plantels'=>$plantels));
+        }
+        
+        public function rptEgresosR(Request $request){
+            $data=$request->all();
+            $egresos=Egreso::whereIn('egresos.plantel_id',$data['plantel_f'])
+                           ->whereDate('egresos.fecha','>=',$data['fecha_f'])
+                           ->whereDate('egresos.fecha','<=',$data['fecha_t'])
+                           ->whereNull('deleted_at')
+                           ->get();
+            return view('egresos.reportes.egresosR',array('egresos'=>$egresos));
+        }
 }

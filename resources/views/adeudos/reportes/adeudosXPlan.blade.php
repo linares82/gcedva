@@ -11,7 +11,7 @@
 	</ol>
 
     <div class="page-header">
-        <h3><i class="glyphicon glyphicon-plus"></i> Lista </h3>
+        <h3><i class="glyphicon glyphicon-plus"></i> Pagos Plan </h3>
     </div>
 @endsection
 
