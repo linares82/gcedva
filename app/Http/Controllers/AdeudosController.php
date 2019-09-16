@@ -156,12 +156,15 @@ class AdeudosController extends Controller {
             $cliente->st_cliente_id=1;
             $cliente->save();
             
-            $seguimiento=Seguimiento::where('cliente_id',$cliente->id)->first();
-            $seguimiento->st_seguimiento_id=5;
-            $seguimiento->save();
-            
             $plantel=Plantel::find($cliente->plantel_id);
             $combinacion=CombinacionCliente::find($data['combinacion']);
+            
+            if($combinacion->cuenta_ticket_pago>0){
+                $seguimiento=Seguimiento::where('cliente_id',$cliente->id)->first();
+                $seguimiento->st_seguimiento_id=5;
+                $seguimiento->save();
+            }
+            
             if($combinacion->cuenta_ticket_pago==0){
                 foreach($combinacion->planPago->Lineas as $adeudo){
                     $registro['cliente_id']=$cliente->id;

@@ -1,0 +1,1 @@
+@section('categoriaArticulosAppTitle','CategoriaArticulo')

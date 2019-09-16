@@ -67,6 +67,14 @@
                     @endif
                 </div>
             
+                <div class="form-group col-md-6 @if($errors->has('lectivo_f')) has-error @endif">
+                    <label for="lectivo_f-field">lectivo de:</label>
+                    {!! Form::select("lectivo_f[]", $list["Lectivo"], null, array("class" => "form-control select_seguridad", "id" => "lectivo_f-field",'multiple'=>'true')) !!}
+                    @if($errors->has("lectivo_f"))
+                    <span class="help-block">{{ $errors->first("lectivo_f") }}</span>
+                    @endif
+                </div>
+                
                 <div class="row">
                 </div>
                 <div class="well well-sm">

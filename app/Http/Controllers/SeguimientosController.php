@@ -1002,6 +1002,7 @@ class SeguimientosController extends Controller {
         public function InscritosAdeudosR(Request $request)
 	{
             $data=$request->all();
+            //dd($data);
             $plantel=Plantel::find($data['plantel_f']);
             //dd($data);
 
@@ -1009,8 +1010,8 @@ class SeguimientosController extends Controller {
             //dd($hoy);
 
             //$adeudos_tomados=Adeudo::join('combinacion_clientes as cc','cc.id','=','adeudos.combinacion_cliente_id')
-            $adeudos_tomados=Adeudo::select('stc.id', 'adeudos.id as adeudo','adeudos.*','cc.*','c.*','g.id as grupo_id','g.name as grupo','stc.name as st_cliente',
-                                            'stc.name as st_seguimiento','e.name as especialidad')
+            $adeudos_tomados=Adeudo::select('stc.id', 'adeudos.id as adeudo','adeudos.*','cc.*','g.id as grupo_id','g.name as grupo','stc.name as st_cliente',
+                                            'sts.name as st_seguimiento','e.name as especialidad')
                            ->join('combinacion_clientes as cc','cc.id','=','adeudos.combinacion_cliente_id')
                            ->join('clientes as c','c.id','=','adeudos.cliente_id')
                            ->join('st_clientes as stc','stc.id','=','c.st_cliente_id')
@@ -1026,6 +1027,9 @@ class SeguimientosController extends Controller {
                            //->where('i.st_inscripcion_id',1)
                            //->where('caja_id','<>',0)
                            ->where('i.grupo_id','>',0)
+                           ->whereIn('stc.id', array(4,25))
+                           ->where('sts.id', 2)
+                           ->whereIn('i.lectivo_id', $data['lectivo_f'])
                            ->whereNull('cc.deleted_at')
                            ->whereNull('s.deleted_at')
                            ->whereNull('i.deleted_at')
@@ -1039,7 +1043,7 @@ class SeguimientosController extends Controller {
                 //$adeudos=Adeudo::where('id', '=', $adeudo_tomado)->get();
                 //dd($adeudo_tomado);
                 $cliente=Cliente::find($adeudo_tomado->cliente_id);
-                
+                $caja_ln['fecha_real_pago']="";
                 //dd($adeudos->toArray());
                 $subtotal=0;
                 $recargo=0;
@@ -1051,10 +1055,12 @@ class SeguimientosController extends Controller {
                     //dd($existe_linea);
                     if(!is_object($existe_linea)){
                         
-                        $caja_ln['razon']=$adeudo_tomado->cliente->plantel->razon;
                         $caja_ln['grupo']=$adeudo_tomado->grupo;
                         $caja_ln['concepto']=$adeudo_tomado->cajaConcepto->name;
                         $caja_ln['cliente']=$cliente->id.'-'.$cliente->nombre.' '.$cliente->nombre2." ".$cliente->ape_paterno.' '.$cliente->ape_materno;
+                        $caja_ln['tel_fijo']=$cliente->tel_fijo;
+                        $caja_ln['tel_cel']= $cliente->tel_cel;       
+                        $caja_ln['cliente_id']=$cliente->id;
                         $caja_ln['estatus_caja']="";
                         $caja_ln['caja_concepto_id']=$adeudo_tomado->caja_concepto_id;
                         $caja_ln['subtotal']=$adeudo_tomado->monto;
@@ -1063,6 +1069,7 @@ class SeguimientosController extends Controller {
                         $caja_ln['especialidad']=$adeudo_tomado->especialidad;
                         $caja_ln['st_cliente']=$adeudo_tomado->st_cliente;
                         $caja_ln['st_seguimiento']=$adeudo_tomado->st_seguimiento;
+                        $caja_ln['fecha_real_pago']="";
     //                    dd($adeudo->planPagoLn->reglaRecargos);
                         $caja_ln['total']=0;
                         $caja_ln['recargo']=0;
@@ -1173,10 +1180,12 @@ class SeguimientosController extends Controller {
                         array_push($registros, $caja_ln);
                 }elseif(is_object($existe_linea) and $existe_linea->caja->st_caja_id==3){
                     //dd($adeudo_tomado->toArray());
-                    $caja_ln['razon']=$adeudo_tomado->cliente->plantel->razon;
                     $caja_ln['grupo']=$adeudo_tomado->grupo;
                     $caja_ln['concepto']=$adeudo_tomado->cajaConcepto->name;
                     $caja_ln['cliente']=$cliente->id.'-'.$cliente->nombre.' '.$cliente->nombre2." ".$cliente->ape_paterno.' '.$cliente->ape_materno;
+                    $caja_ln['tel_fijo']=$cliente->tel_fijo;
+                    $caja_ln['tel_cel']= $cliente->tel_cel;
+                    $caja_ln['cliente_id']=$cliente->id;
                     $caja_ln['estatus_caja']=$existe_linea->caja->stCaja->name;
                     $caja_ln['caja_concepto_id']=$adeudo_tomado->caja_concepto_id;
                     //$caja_ln['subtotal']=$adeudo_tomado->monto;
@@ -1190,13 +1199,22 @@ class SeguimientosController extends Controller {
                     $caja_ln['especialidad']=$adeudo_tomado->especialidad;
                     $caja_ln['st_cliente']=$adeudo_tomado->st_cliente;
                     $caja_ln['st_seguimiento']=$adeudo_tomado->st_seguimiento;
+                    foreach($existe_linea->caja->pagos as $pago){
+                        if(is_null($pago->deleted_at)){
+                            $caja_ln['fecha_real_pago']=$caja_ln['fecha_real_pago']." ".$pago->fecha;
+                        }
+                    }
+                    
                     array_push($registros, $caja_ln);
                 }else{
                     //dd($adeudo_tomado->toArray());
-                    $caja_ln['razon']=$adeudo_tomado->cliente->plantel->razon;
+                    $caja_ln['razon']=$adeudo_tomado->razon;
                     $caja_ln['grupo']=$adeudo_tomado->grupo;
                     $caja_ln['concepto']=$adeudo_tomado->cajaConcepto->name;
                     $caja_ln['cliente']=$cliente->id.'-'.$cliente->nombre.' '.$cliente->nombre2." ".$cliente->ape_paterno.' '.$cliente->ape_materno;
+                    $caja_ln['tel_fijo']=$cliente->tel_fijo;
+                    $caja_ln['tel_cel']= $cliente->tel_cel;
+                    $caja_ln['cliente_id']=$cliente->id;
                     $caja_ln['estatus_caja']=$existe_linea->caja->stCaja->name;
                     $caja_ln['caja_concepto_id']=$adeudo_tomado->caja_concepto_id;
                     //$caja_ln['subtotal']=$adeudo_tomado->monto;
@@ -1210,6 +1228,11 @@ class SeguimientosController extends Controller {
                     $caja_ln['especialidad']=$adeudo_tomado->especialidad;
                     $caja_ln['st_cliente']=$adeudo_tomado->st_cliente;
                     $caja_ln['st_seguimiento']=$adeudo_tomado->st_seguimiento;
+                    foreach($existe_linea->caja->pagos as $pago){
+                        if(is_null($pago->deleted_at)){
+                            $caja_ln['fecha_real_pago']=$caja_ln['fecha_real_pago']." ".$pago->fecha;
+                        }
+                    }
                     array_push($registros, $caja_ln);
                 }
                 
