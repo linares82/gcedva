@@ -139,4 +139,24 @@ class ArticulosController extends Controller {
 		return redirect()->route('articulos.index')->with('message', 'Registro Borrado.');
 	}
 
+	public function existenciasActuales(){
+		$articulos=Articulo::pluck('name','id');
+		$plantels=Plantel::pluck('razon','id');
+		return view('articulos.reportes.existenciasActuales',compact('articulos','plantels'))
+			->with('list', Articulo::getListFromAllRelationApps());
+	}
+
+	public function existenciasActualesR(Request $request){
+		$datos=$request->all();
+		//dd($datos);
+		$registros=Articulo::select('articulos.name as articulo','articulos.unidad_uso','ca.name as categoria','p.razon as plantel','e.existencia')
+								   ->join('existencia as e','e.articulo_id','=','articulos.id')
+								   ->join('categoria_articulos as ca','ca.id','=','articulos.categoria_articulo_id')
+								   ->join('plantels as p','p.id','=','e.plantel_id')
+								   ->whereIn('e.plantel_id', $datos['plantel_f'])
+								   ->whereIn('e.articulo_id', $datos['articulo_t'])
+								   ->get();
+		//						   dd($registros);
+		return view('articulos.reportes.existenciasActualesR', compact('registros'));
+	}
 }

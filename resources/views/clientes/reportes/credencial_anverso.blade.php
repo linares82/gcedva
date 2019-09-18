@@ -21,7 +21,11 @@
   <td>
       <table>
           <tr>
-              <td ><img src="{{$img->archivo}}" alt="Sin foto" width="100px"></img> </td>
+              <td >		
+                @if(isset($img->archivo))
+                    <img src="{{$img->archivo}}" alt="Sin foto" width="100px"></img> 
+                @endif
+            </td>
           </tr>
           <tr>
               <td >{{$inscripcion->matricula}}</td>

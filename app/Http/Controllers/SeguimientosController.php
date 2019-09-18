@@ -1034,6 +1034,7 @@ class SeguimientosController extends Controller {
                            ->whereNull('s.deleted_at')
                            ->whereNull('i.deleted_at')
                            ->whereNull('g.deleted_at')
+                           ->whereNull('adeudos.deleted_at')
                            ->distinct()
                            ->orderBy('stc.id','desc')
                            ->orderBy('g.id')

@@ -133,7 +133,7 @@ class MovimientosController extends Controller {
 
         public function actualizarExistencia($plantel, $articulo, $existencia, $es){
             $existencium=Existencium::where('plantel_id',$plantel)->where('articulo_id',$articulo)->first();
-            if(count($existencium)>0){
+            if(is_object($existencium)){
                 if($es==1){
                     $existencium->existencia=$existencium->existencia+$existencia;
                 }else{
