@@ -53,7 +53,7 @@
       
       <table>
           <tbody>
-          <tr><td><h3>{{$cliente->plantel->razon}}</h3></td></tr>
+          <tr><td><h4>{{$cliente->plantel->razon}}</h4></td></tr>
           <tr><td>Acuerdo: <strong></strong>  CCT: <strong>{{$inscripcion->especialidad->ccte}}</strong></td></tr>
           <tr><td><u>Plantel: <strong>{{$cliente->plantel->municipio}}</strong></u></td></tr>
           <tr><td>{{$cliente->plantel->calle}} # {{$cliente->plantel->no_int}}, COL. {{$cliente->plantel->colonia}}, {{$cliente->plantel->municipio}},
@@ -110,7 +110,7 @@
             @endif
               </td>
           </tr>
-          <tr><td>ESTA CREDENCIAS ES ÚNICA E INSTRANSFERIBLE YA QUE ACREDITA AL PORTADOR COMO ALUMNO DE ÉSTA
+          <tr><td>ESTA CREDENCIAL ES ÚNICA E INSTRANSFERIBLE YA QUE ACREDITA AL PORTADOR COMO ALUMNO DE ÉSTA
                        INSTITUCIÓN, EL TITULAR ES RESPONSABLE DEL BUEN USO DE LA MISMA.</td></tr>
           </tbody>
       </table>
