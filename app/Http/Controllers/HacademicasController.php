@@ -21,7 +21,9 @@ use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updateHacademica;
 use App\Http\Requests\createHacademica;
+use App\Lectivo;
 use DB;
+use Carbon\Carbon;
 use Session;
 
 class HacademicasController extends Controller {
@@ -453,11 +455,17 @@ class HacademicasController extends Controller {
         $asignacion=$data['asignacion'];
         $examen=TpoExamen::pluck('name','id');
         $asignacionAcademica = AsignacionAcademica::find($data['asignacion']);
+        $lectivo=Lectivo::find($asignacionAcademica->lectivo_id);
+        //dd($lectivo);
+        $calificacion_inicio=Carbon::createFromFormat('Y-m-d',$lectivo->calificacion_inicio);
+        $calificacion_fin = Carbon::createFromFormat('Y-m-d', $lectivo->calificacion_fin);
+        $hoy=Carbon::createFromFormat('Y-m-d', Date('Y-m-d'));
 
         $materia=Materium::find($asignacionAcademica->materium_id);
         //dd($asignacionAcademica);
         //$carga_ponderaciones=CargaPonderacion::where('ponderacion_id','=',$materia->ponderacion_id)->pluck('name','id');
         //dd($carga_ponderaciones->toArray());
+        $msj="";
         if(isset($data['excepcion'])){
             $hacademicas=HAcademica::select('cli.id', 'cli.nombre','cli.nombre2','cli.ape_paterno','cli.ape_materno','c.calificacion',
                                         'cp.calificacion_parcial_calculada','cp.id as calificacion_ponderacion_id','cp.calificacion_parcial',
@@ -476,7 +484,8 @@ class HacademicasController extends Controller {
                                 ->orderBy('cliente_id')
                                 ->get();
         }else{
-            $hacademicas=HAcademica::select('cli.id', 'cli.nombre','cli.nombre2','cli.ape_paterno','cli.ape_materno','c.calificacion',
+            if($calificacion_inicio<=$hoy and $calificacion_fin>=$hoy){
+                $hacademicas=HAcademica::select('cli.id', 'cli.nombre','cli.nombre2','cli.ape_paterno','cli.ape_materno','c.calificacion',
                                         'cp.calificacion_parcial_calculada','cp.id as calificacion_ponderacion_id','cp.calificacion_parcial',
                                         'stc.name as estatus_cliente, stc.id as estatus_cliente_id')
                                 ->where('grupo_id','=',$asignacionAcademica->grupo_id)
@@ -499,7 +508,12 @@ class HacademicasController extends Controller {
                                 })
                                 ->whereNull('hacademicas.deleted_at')
                                 ->get();
+            }
         }
+
+            if(!is_object($hacademicas)){
+                $msj= "Lo sentimos usted no es el profesor de la materia o la fecha limite del perido lectivo ha finalizado en la fecha: " . $calificacion_fin->toDateString();
+            }
 
         $hacademica=HAcademica::where('grupo_id','=',$asignacionAcademica->grupo_id)
                                 ->where('lectivo_id', '=', $asignacionAcademica->lectivo_id)
@@ -521,9 +535,11 @@ class HacademicasController extends Controller {
         }
 
 
+
         //dd($hacademicas->toArray());
         return view('hacademicas.calificacionGrupos', compact('asignacion','examen','carga_ponderaciones','hacademicas'))
-                        ->with('list', Hacademica::getListFromAllRelationApps());
+                        ->with('list', Hacademica::getListFromAllRelationApps())
+                        ->with('msj', $msj);
     }
 
     public function actualizarCalificacion(Request $request){

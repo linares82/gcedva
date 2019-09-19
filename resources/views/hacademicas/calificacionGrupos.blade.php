@@ -27,7 +27,13 @@
 
     <div class="row">
         <div class="col-md-12">
-            
+            @if(isset($msj) and $msj<>"")
+                <div class="alert alert-danger">
+                    <ul>
+                            <li><i class="glyphicon glyphicon-remove"></i> {{ $msj }}</li>
+                    </ul>
+                </div>
+            @endif
             {!! Form::open(array('route' => 'hacademicas.calificacionGrupo', "id"=>"frm_academica")) !!}
                 <div class="form-group col-md-4 @if($errors->has('tpo_examen_id')) has-error @endif">
                    <label for="tpo_examen_id-field">Examen</label>

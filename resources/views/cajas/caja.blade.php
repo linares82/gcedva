@@ -38,7 +38,7 @@
     <div class="col-md-12">
         <div class="box box-info">
             <div class="box-body">
-                
+                @permission('cajas.buscarVenta')
                 {!! Form::open(array('route' => 'cajas.buscarVenta','id'=>'form-buscarVenta')) !!}
                 
                 <div class="input-group col-md-6">
@@ -53,13 +53,14 @@
                     <div class="input-group-btn">
                         <button type="submit" class="btn btn-info" data-toggle="tooltip" title="Buscar Venta"><i class='fa fa-search'></i></button>
                     </div>
+
                     @if(isset($caja))
                     {!! Form::text("consecutivo", ($caja)?$caja->consecutivo:"", array("class" => "form-control ", 'placeholder'=>'No. de Venta',"id" => "consecutivo-field")) !!}
                     @else
                     {!! Form::text("consecutivo", null, array("class" => "form-control ", 'placeholder'=>'No. de Venta', "id" => "consecutivo-field")) !!}
                     @endif
                 </div>
-                
+                                
                 @if(isset($message))
                 <div class="alert alert-danger alert-dismissable">
 <!--                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">Ã—</button>-->
@@ -68,9 +69,12 @@
                 @endif
 
                 {!! Form::close() !!}
+                @endpermission
+                
                 <div class="col-md-6">
                     <a class='btn btn-sm btn-warning' target='_blank' href="{{route('cajas.adeudosXplantel')}}"> Ver Adeudos</a>
                 </div>
+
             </div>
         </div>
     </div>
