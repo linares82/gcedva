@@ -99,7 +99,9 @@
                 ?>
                 <?php $contador_linea=1; ?>
                 @foreach($registros as $r)
-                    <?php $cantidad_registros++; ?>
+                    <?php $cantidad_registros++; 
+                    $plantel_id=$r->plantel_id;
+                    ?>
                 @if($grupo0<>$r->grupo)
                     
                     <!--<div style="page-break-after:always;"></div>-->
@@ -118,6 +120,7 @@
                             <td colspan="{{$contador}}">
                                 <img src="{{ asset('/imagenes/planteles/'.$r->p_id."/".$r->logo) }}" alt="Sin logo" height="80px" ></img>
                             </td>
+                            <td></td>
                         </tr>
                         <tr>
                             <th></th>
@@ -132,6 +135,7 @@
                             
                         @endforeach
                         <th class="altura"><strong>Final</strong></th>
+                        <th class="altura" width=150px><strong>Firma</strong></th>
                         </tr>
                         <?php $grupo0=$r->grupo; ?>
                 @endif
@@ -168,6 +172,7 @@
                                     @endforeach
                                 @endforeach         
                                 <td class="centrar_texto">{{$calificacion->calificacion}}</td>
+                                <td height=40px></td>
                                 <?php $promedio_totales=$promedio_totales+$calificacion->calificacion;?>
                             </tr>
                             
@@ -176,11 +181,12 @@
                 <tr>
                     <td></td><td></td><td></td><td></td><td> <?php //dd($promedios); ?> </td>
                     @foreach($promedios as $promedio)
-                    <td> {{ $promedio/$cantidad_registros }}</td>
+                    <td> {{ round($promedio/$cantidad_registros,2) }}</td>
                     @endforeach
                     @if($promedio_totales>0)
-                    <td>{{$promedio_totales/$cantidad_registros}}</td>
+                    <td>{{round($promedio_totales/$cantidad_registros,2)}}</td>
                     @endif
+                    <td></td>
                 </tr>
             </table>
             <br/>
@@ -188,8 +194,11 @@
             <br/>
             <table class='blueTable'>
                 <tr class='td1'><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr><td class='tdw'>{{$instructor}}</td><td></td><td class='tdw'>Sello del Plantel</td><td></td><td></td></tr>
-                <tr><td>Instructor Titular</td><td></td><td></td><td></td><td class='tdw'>Firma de Director</td></tr>
+                <?php 
+                $plantel=App\Plantel::find($plantel_id);
+                ?>
+                <tr><td class='tdw'>{{$instructor}}</td><td></td><td class='tdw'>Sello del Plantel</td><td></td><td>{{$plantel->director->nombre}} {{$plantel->director->ape_paterno}} {{$plantel->director->ape_materno}}</td></tr>
+                <tr><td>Instructor Titular</td><td></td><td></td><td></td><td class='tdw'>Firma de Director:</td></tr>
             </table>
         </div>
         

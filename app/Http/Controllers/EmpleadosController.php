@@ -382,6 +382,7 @@ class EmpleadosController extends Controller {
                     ->select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as nombre'))
                     ->where('e.plantel_id', '=', $plantel)
                     ->where('e.id', '>', '0')
+                    ->whereNotIn('st_empleado_id', array(3, 2, 10))
                     ->get();
 
             //dd($r);
@@ -428,6 +429,7 @@ class EmpleadosController extends Controller {
                     ->where('e.plantel_id', '=', $plantel)
                     //->where('puesto_id',2)
                     ->where('e.id', '>', '0')
+                    ->whereNotIn('st_empleado_id', array(3,2,10))
                     ->get();
 
             //dd($r);
@@ -485,4 +487,5 @@ class EmpleadosController extends Controller {
          }
         //echo json_encode(0);
     }
+
 }

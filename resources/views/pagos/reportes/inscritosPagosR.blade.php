@@ -22,7 +22,7 @@
         <table class="table table-condensed table-striped">
             <thead>
                 <tr>
-                    <th>Cliente</th><th>Becado</th><th>Caja</th><th>Estatus</th><th>Fecha Pago</th><th>Concepto</th><th>Monto Pago</th><th>Forma Pago</th>
+                    <th>Cliente</th><th>Becado</th><th>Caja</th><th>Estatus</th><th>Fecha Pago</th><th>Creacion</th><th>Concepto</th><th>Monto Pago</th><th>Forma Pago</th>
                 </tr> 
             </thead>
             <tbody>
@@ -55,6 +55,7 @@
                         <td>{{$registro->consecutivo}}</td>
                         <td>{{$registro->estatus_caja}}</td>
                         <td>{{$registro->fecha_pago}}</td>
+                        <td>{{$registro->created_at}}</td>
                         <td>
                         <?php $rcaja=App\Caja::find($registro->caja);
                         //dd($rcaja->cajaLns);

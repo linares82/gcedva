@@ -386,7 +386,7 @@ class PagosController extends Controller {
                         DB::raw(''
                         . 'concat(c.nombre," ",c.nombre2," ",c.ape_paterno," ",c.ape_materno) as cliente, cajas.id as caja, cajas.consecutivo,'
                         . 'c.beca_bnd, st.name as estatus_caja, fp.id as forma_pago_id, cajas.st_caja_id,'
-                        . 'pag.monto as monto_pago, fp.name as forma_pago, pag.fecha as fecha_pago, cajas.fecha as fecha_caja'))
+                        . 'pag.monto as monto_pago, fp.name as forma_pago, pag.fecha as fecha_pago, pag.created_at, cajas.fecha as fecha_caja'))
                             ->join('clientes as c', 'c.id', '=', 'cajas.cliente_id')
                             ->join('plantels as pla','pla.id','=','c.plantel_id')
                             ->join('st_cajas as st','st.id','=','cajas.st_caja_id')
@@ -410,7 +410,7 @@ class PagosController extends Controller {
                         DB::raw(''
                         . 'concat(c.nombre," ",c.nombre2," ",c.ape_paterno," ",c.ape_materno) as cliente, cajas.id as caja, cajas.consecutivo,'
                         . 'c.beca_bnd, st.name as estatus_caja, cajas.total as total_caja, fp.id as forma_pago_id, cajas.st_caja_id,'
-                        . 'pag.monto as monto_pago, fp.name as forma_pago, pag.fecha as fecha_pago, cajas.fecha as fecha_caja'))
+                        . 'pag.monto as monto_pago, fp.name as forma_pago, pag.fecha as fecha_pago,pag.created_at, cajas.fecha as fecha_caja'))
                             ->join('clientes as c', 'c.id', '=', 'cajas.cliente_id')
                             ->join('plantels as pla','pla.id','=','c.plantel_id')
                             ->join('st_cajas as st','st.id','=','cajas.st_caja_id')

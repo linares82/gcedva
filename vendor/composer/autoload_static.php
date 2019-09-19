@@ -708,6 +708,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'AddFieldFecCelVinculacionsTable' => __DIR__ . '/../..' . '/database/migrations/2019_08_05_092805_add_field_fec_cel_vinculacions_table.php',
         'AddFieldIndexClienteIdEbanxesTable' => __DIR__ . '/../..' . '/database/migrations/2018_12_17_153737_add_field_index_cliente_id_ebanxes_table.php',
         'AddFieldModuloMateriasTable' => __DIR__ . '/../..' . '/database/migrations/2017_12_08_141207_add_field_modulo_materias_table.php',
+        'AddFieldsCalificacionLectivosTable' => __DIR__ . '/../..' . '/database/migrations/2019_09_18_152904_add_fields_calificacion_lectivos_table.php',
         'AddFieldsCuentasEfectivosTable' => __DIR__ . '/../..' . '/database/migrations/2019_07_11_125550_add_fields_cuentas_efectivos_table.php',
         'AddFieldsLectivosTable' => __DIR__ . '/../..' . '/database/migrations/2018_02_14_150006_add_fields_lectivos_table.php',
         'AddFieldsPlantelsTable' => __DIR__ . '/../..' . '/database/migrations/2017_06_16_222542_Add_fields_Plantels_Table.php',

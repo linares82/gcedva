@@ -47,6 +47,21 @@
                         <span class="help-block">{{ $errors->first("fin") }}</span>
                        @endif
                     </div>
+                    <div class="row"></div>
+                    <div class="form-group col-md-4 @if($errors->has('calificacion_inicio')) has-error @endif">
+                       <label for="calificacion_inicio-field">Calificacion Apertura</label>
+                       {!! Form::text("calificacion_inicio", null, array("class" => "form-control input-sm", "id" => "calificacion_inicio-field")) !!}
+                       @if($errors->has("calificacion_inicio"))
+                        <span class="help-block">{{ $errors->first("calificacion_inicio") }}</span>
+                       @endif
+                    </div>
+                    <div class="form-group col-md-4 @if($errors->has('calificacion_fin')) has-error @endif">
+                       <label for="calificacion_fin-field">Calificacion Cierre</label>
+                       {!! Form::text("calificacion_fin", null, array("class" => "form-control input-sm", "id" => "calificacion_fin-field")) !!}
+                       @if($errors->has("calificacion_fin"))
+                        <span class="help-block">{{ $errors->first("calificacion_fin") }}</span>
+                       @endif
+                    </div>
 
 @push('scripts')
 <script>
@@ -64,6 +79,22 @@
       });
 
       $('#fin-field').Zebra_DatePicker({
+        days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
+        months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+        readonly_element: false,
+        lang_clear_date: 'Limpiar',
+        show_select_today: 'Hoy',
+      });
+
+      $('#calificacion_inicio-field').Zebra_DatePicker({
+        days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
+        months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+        readonly_element: false,
+        lang_clear_date: 'Limpiar',
+        show_select_today: 'Hoy',
+      });
+
+      $('#calificacion_fin-field').Zebra_DatePicker({
         days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
         months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
         readonly_element: false,

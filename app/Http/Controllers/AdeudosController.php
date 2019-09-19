@@ -304,7 +304,7 @@ class AdeudosController extends Controller {
                               ->whereIn('plan_pagos.id',$datos['plan_f'])
                               //->where('plan_pagos.id','<=',$datos['plan_t'])
                               ->where('c.plantel_id', '=', $datos['plantel_f'])
-                              ->where('caj.st_caja_id', '=', $datos['estatus_f'])
+                              ->whereIn('caj.st_caja_id', $datos['estatus_f'])
                               //->where('st.id','<>',2)
                               ->whereNull('cc.deleted_at')
                               ->orderBy('c.plantel_id','plan_pagos.id','c.id')

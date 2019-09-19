@@ -18,7 +18,7 @@ class Lectivo extends Model
     } 
 
 	//Mass Assignment
-	protected $fillable = ['name','activo', 'bachillerato_bnd','carrera_bnd','usu_alta_id','usu_mod_id', 'inicio', 'fin','grafica_bnd'];
+	protected $fillable = ['name','activo', 'bachillerato_bnd','carrera_bnd','usu_alta_id','usu_mod_id', 'inicio', 'fin','grafica_bnd', 'calificacion_inicio', 'calificacion_fin'];
 
     protected $dates = ['deleted_at'];
 

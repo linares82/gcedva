@@ -714,7 +714,7 @@ class InscripcionsController extends Controller {
                                                DB::raw('concat(e.nombre," ",e.ape_paterno," ",e.ape_materno) as maestro'),'gra.name as grado',
                                                'p.razon as plantel', 'p.logo','aa.id as asignacion','c.id as cliente','mate.name as materia',
                                                'mate.ponderacion_id as ponderacion','hacademicas.id as hacademica','p.id as p_id','c.matricula',
-						'hacademicas.plantel_id','hacademicas.lectivo_id','hacademicas.grupo_id','hacademicas.grado_id')
+						'hacademicas.plantel_id','hacademicas.lectivo_id','hacademicas.grupo_id','hacademicas.grado_id','p.id as plantel_id')
                                        ->join('clientes as c', 'c.id', '=', 'hacademicas.cliente_id')
                                        //->join('hacademicas as h','h.inscripcion_id','=','inscripcions.id')
                                        ->join('seguimientos as s','s.cliente_id','=','c.id')
