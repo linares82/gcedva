@@ -54,8 +54,7 @@
       <table>
           <tbody>
           <tr><td><h4>{{$cliente->plantel->razon}}</h4></td></tr>
-          <tr><td>Acuerdo: <strong></strong>  CCT: <strong>{{$inscripcion->especialidad->ccte}}</strong></td></tr>
-          <tr><td><u>Plantel: <strong>{{$cliente->plantel->municipio}}</strong></u></td></tr>
+          <tr><td>Acuerdo: <strong>{{$inscripcion->especialidad->rvoe}}</strong>  CCT: <strong>{{$inscripcion->especialidad->ccte}}</strong></td></tr>
           <tr><td>{{$cliente->plantel->calle}} # {{$cliente->plantel->no_int}}, COL. {{$cliente->plantel->colonia}}, {{$cliente->plantel->municipio}},
                        {{$cliente->plantel->estado}}, C.P. {{$cliente->plantel->cp}} 
           </td></tr>

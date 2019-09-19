@@ -999,7 +999,7 @@ class SeguimientosController extends Controller {
 			->with( 'list', Inscripcion::getListFromAllRelationApps() );
 	}
         
-        public function InscritosAdeudosR(Request $request)
+    public function InscritosAdeudosR(Request $request)
 	{
             $data=$request->all();
             //dd($data);
