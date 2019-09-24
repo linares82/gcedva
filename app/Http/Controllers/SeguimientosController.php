@@ -1020,6 +1020,9 @@ class SeguimientosController extends Controller {
                            ->join('inscripcions as i','i.cliente_id','=','c.id')
                            ->join('especialidads as e','e.id','=','i.especialidad_id')
                            ->join('grupos as g','g.id','=','i.grupo_id')
+                           /*->join('asignacion_academicas as aa','aa.grupo_id','=','i.grupo_id')
+                           ->whereColumn('aa.lectivo_id','i.lectivo_id')
+                           ->whereColumn('aa.lectivo_id', 'i.lectivo_id')*/
                            ->where('fecha_pago','>=',$data['fecha_f'])        
                            ->where('fecha_pago','<=',$data['fecha_t']) 
                            ->where('c.plantel_id','>=',$data['plantel_f'])
@@ -1037,6 +1040,7 @@ class SeguimientosController extends Controller {
                            ->whereNull('adeudos.deleted_at')
                            ->distinct()
                            ->orderBy('stc.id','desc')
+                           ->orderBy('e.name')
                            ->orderBy('g.id')
                            ->get();
             $registros=array();

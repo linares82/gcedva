@@ -2802,6 +2802,22 @@ Route::get('grupos/index', array(
         'middleware' => 'permission:inscripcions.inscritosLectivo',
         'uses' => 'InscripcionsController@inscritosLectivoR')
     )->middleware('auth');
+Route::get(
+    '/inscripcions/inscritosLectivosAsistencias',
+    array(
+        'as' => 'inscripcions.inscritosLectivosAsistencias',
+        'middleware' => 'permission:inscripcions.inscritosLectivosAsistencias',
+        'uses' => 'InscripcionsController@inscritosLectivosAsistencias'
+    )
+)->middleware('auth');
+Route::post(
+    '/inscripcions/inscritosLectivosAsistenciasR',
+    array(
+        'as' => 'inscripcions.inscritosLectivosAsistenciasR',
+        'middleware' => 'permission:inscripcions.inscritosLectivosAsistencias',
+        'uses' => 'InscripcionsController@inscritosLectivosAsistenciasR'
+    )
+)->middleware('auth');
     Route::get('/inscripcions/listaMes', array(
         'as' => 'inscripcions.listaMes',
         'middleware' => 'permission:inscripcions.listaMes',

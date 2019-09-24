@@ -122,7 +122,7 @@
                     complete : function(){$("#loading3").hide(); },
                     success: function(data){
                         if(data==1){
-                            $("#etq_msj").text("Actualizacion exisosa");
+                            $("#etq_msj").text("Actualizacion exitosa");
                             $("#etq_msj").addClass('bg-green')
                         }else{
                             $("#etq_msj").text("Fallo, intentar nuevamente");
