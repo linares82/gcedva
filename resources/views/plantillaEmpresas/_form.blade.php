@@ -348,8 +348,8 @@
                           "&operador_condicion=" + $('#operador_condicion-field option:selected').text() + 
                           "&campo=" + $('#plan_campo_filtro_id-field option:selected').val() + 
                           "&signo=" + $('#signo_comparacion_filtro-field option:selected').text() + 
-                          "&valor=" + $('#valor_especialidad-field option:selected').val() +
-                          "&interpretacion=" + $('#valor_especialidad-field option:selected').text(),
+                          "&valor=" + $('#valor_condicion-field option:selected').val() +
+                          "&interpretacion=" + $('#valor_condicion-field option:selected').text(),
                     dataType: 'json',
                     beforeSend : function(){$("#loading10").show();},
                     //complete: function(){$("#loading10").hide();},
