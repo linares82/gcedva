@@ -20,7 +20,8 @@ class Kernel extends ConsoleKernel
         Commands\Imap::class,
         Commands\CambiarEstatus::class,
         Commands\EnvioSmsMail::class,
-        Commands\AtrazoPagos::class    
+        Commands\AtrazoPagos::class,
+        Commands\PrbEmail::class    
     ];
 
     /**

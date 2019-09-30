@@ -137,7 +137,7 @@ class EnviarCorreos extends Command
                                         }
                                     }
                                     //$m->queue(new Correo($p));
-                                    dd('correo enviado');
+                                    //dd('correo enviado');
                                 }catch(\Exception $e){
                                 dd($e);
                                 }

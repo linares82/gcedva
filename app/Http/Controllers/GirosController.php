@@ -123,4 +123,18 @@ class GirosController extends Controller {
 		return redirect()->route('giros.index')->with('message', 'Registro Borrado.');
 	}
 
+	public function getCmbGiros()
+	{
+		$r = Giro::select('name', 'id')->get();
+		$final = array();
+		foreach ($r as $r1) {
+			array_push($final, array(
+				'id' => $r1->id,
+				'name' => $r1->name,
+				'selectec' => ''
+			));
+		}
+		return $final;
+	}
+
 }

@@ -60,6 +60,12 @@ return [
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
         ],
+        'plantillas_correos_empresas' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/imagenes/plantillas_correos_empresas'),
+            'url' => env('APP_URL') . '/storage',
+            'visibility' => 'public',
+        ],
         'cotizaciones' => [
             'driver' => 'local',
             'root' => storage_path('pdf/cotizaciones'),

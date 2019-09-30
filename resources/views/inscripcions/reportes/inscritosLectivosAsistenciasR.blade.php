@@ -123,7 +123,7 @@
                             $asistencias_registradas=0;
                             $fechas=\App\AsistenciaR::where('asignacion_academica_id',$asignacion->id)
                                             ->where('cliente_id',$registro->cliente_id)
-                                            ->whereIn(fecha,$fechas)
+                                            ->whereIn('fecha',$fechas)
                                             ->get();
                             foreach($fechas as $fecha){
                                 $asistencias_registradas++;

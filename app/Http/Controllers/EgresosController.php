@@ -158,6 +158,8 @@ class EgresosController extends Controller {
 	public function destroy($id,Egreso $egreso)
 	{
 		$egreso=$egreso->find($id);
+		$egreso->usu_mod_id=Auth::user()->id;
+		$egreso->save();
 		$egreso->delete();
 
 		return redirect()->route('egresos.index')->with('message', 'Registro Borrado.');

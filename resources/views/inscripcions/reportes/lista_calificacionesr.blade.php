@@ -120,7 +120,7 @@
                             <td colspan="{{$contador}}">
                                 <img src="{{ asset('/imagenes/planteles/'.$r->p_id."/".$r->logo) }}" alt="Sin logo" height="80px" ></img>
                             </td>
-                            <td></td>
+                            <td></td><td></td>
                         </tr>
                         <tr>
                             <th></th>
@@ -135,6 +135,7 @@
                             
                         @endforeach
                         <th class="altura"><strong>Final</strong></th>
+                        <th class="altura"><strong>Extraordinario</strong></th>
                         <th class="altura" width=150px><strong>Firma</strong></th>
                         </tr>
                         <?php $grupo0=$r->grupo; ?>
@@ -151,27 +152,36 @@
                                             ->whereNotIn('cliente_id',[0,2])
                                             ->get();
                                      * */
-                                     $calificacion=\App\Calificacion::where('hacademica_id',$r->hacademica)->first();
-                                     
+                                     $calificacion=\App\Calificacion::where('hacademica_id',$r->hacademica)
+                                                                                    ->where('tpo_examen_id',1)
+                                                                                    ->first();
+                                     $extra=\App\Calificacion::where('hacademica_id',$r->hacademica)
+                                                                                    ->where('tpo_examen_id',2)
+                                                                                    ->first();                                               
+                                     $marcador_extra_impreso=0;
                                      
                                      
                                 ?>
                                 
                                 @foreach($carga_ponderacions_enc as $carga_ponderacion_enc)
-                                    @foreach($calificacion->calificacionPonderacions as $calificacionPonderacion)
-                                        @if($carga_ponderacion_enc->id == $calificacionPonderacion->carga_ponderacion_id)
-                                        <td class="centrar_texto">{{$calificacionPonderacion->calificacion_parcial}}</td>
-                                        <?php 
-                                        if(!isset($promedios[$calificacionPonderacion->carga_ponderacion_id])){
-                                            $promedios[$calificacionPonderacion->carga_ponderacion_id]=0;                                            
-                                        }
-                                        $promedios[$calificacionPonderacion->carga_ponderacion_id] = $promedios[$calificacionPonderacion->carga_ponderacion_id]+$calificacionPonderacion->calificacion_parcial;                                         
-                                        
-                                        ?>
-                                        @endif
-                                    @endforeach
-                                @endforeach         
+                                            @foreach($calificacion->calificacionPonderacions as $calificacionPonderacion)
+                                                @if($carga_ponderacion_enc->id == $calificacionPonderacion->carga_ponderacion_id)
+                                                <td class="centrar_texto">{{$calificacionPonderacion->calificacion_parcial}}</td>
+                                                <?php 
+                                                if(!isset($promedios[$calificacionPonderacion->carga_ponderacion_id])){
+                                                    $promedios[$calificacionPonderacion->carga_ponderacion_id]=0;                                            
+                                                }
+                                                $promedios[$calificacionPonderacion->carga_ponderacion_id] = $promedios[$calificacionPonderacion->carga_ponderacion_id]+$calificacionPonderacion->calificacion_parcial;                                         
+                                                ?>
+                                                @endif
+                                            @endforeach
+                                @endforeach
                                 <td class="centrar_texto">{{$calificacion->calificacion}}</td>
+                                @if(is_object($extra))
+                                    <td class="centrar_texto">{{$extra->calificacion}}</td>                    
+                                @else
+                                    <td class="centrar_texto">N/A</td>
+                                @endif
                                 <td height=40px></td>
                                 <?php $promedio_totales=$promedio_totales+$calificacion->calificacion;?>
                             </tr>
@@ -186,7 +196,7 @@
                     @if($promedio_totales>0)
                     <td>{{round($promedio_totales/$cantidad_registros,2)}}</td>
                     @endif
-                    <td></td>
+                    <td></td><td></td>
                 </tr>
             </table>
             <br/>
