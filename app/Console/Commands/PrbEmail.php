@@ -85,7 +85,7 @@ class PrbEmail extends Command
                 /**SEgundo metodo con colas */
                 foreach ($empresas as $empresa) {
                     $data = [
-                        'nombre' => $empresa->nombre_contacto,
+                        'nombre_contacto' => $empresa->nombre_contacto,
                         'razon_social' => $empresa->razon_social
                     ];
                     //dd($data);
@@ -134,7 +134,7 @@ class PrbEmail extends Command
 
                     foreach ($empresas as $empresa) {
                         $data = [
-                            'nombre' => $empresa->nombre_contacto,
+                            'nombre_contacto' => $empresa->nombre_contacto,
                             'razon_social' => $empresa->razon_social
                         ];
                         //dd($data);
@@ -195,7 +195,7 @@ class PrbEmail extends Command
                 /**SEgundo metodo con colas */
                 foreach ($empresas as $empresa) {
                     $data = [
-                        'nombre' => $empresa->nombre_contacto,
+                        'nombre_contacto' => $empresa->nombre_contacto,
                         'razon_social' => $empresa->razon_social
                     ];
                     //dd($data);

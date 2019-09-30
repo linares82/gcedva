@@ -33,12 +33,13 @@
                     </div>
                     <div class="box box-default box-solid">
                     <div class="box-header">
-                        <h3 class="box-title">DESTINATARIOS</h3>
+                        <h3 class="box-title">DESTINATARIOS: Crear plantilla para poder agregar condiciones</h3>
                         <div class="box-tools">
                             <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                         </div>
                     </div>
                     <div class="box-body">
+                        @if(isset($plantillaEmpresa))
                         <div class="form-group col-md-2 @if($errors->has('operador_condicion')) has-error @endif">
                             <label for="operador_condicion-field">Operador Condicion</label>
                             {!! Form::select("operador_condicion", array('Primera Condición','Y','O'), null, array("class" => "form-control select_seguridad", "id" => "operador_condicion-field")) !!}
@@ -101,20 +102,21 @@
                             </table>
                         </div>
                         @endif
-                        
+                        @endif
                         </div>
                     </div>
                     <div class="box box-default box-solid">
                     <div class="box-header">
-                        <h3 class="box-title">TEMPORALIDAD</h3>
+                        <h3 class="box-title">TEMPORALIDAD: Argumentos opcionales</h3>
                         <div class="box-tools">
                             <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                         </div>
                     </div>
                     <div class="box-body">
                         <!--<div id="dia_div">-->
+                            
                             <div class="form-group col-md-4 @if($errors->has('dia')) has-error @endif" style="clear:left;">
-                               <label for="dia-field">Dia (número entre 1 y 28)</label>
+                               <label for="dia-field">Dia (número entre 1 y 28, 0 para inhabilitar)</label>
                                {!! Form::text("dia", null, array("class" => "form-control input-sm", "id" => "dia-field")) !!}
                                @if($errors->has("dia"))
                                 <span class="help-block">{{ $errors->first("dia") }}</span>
@@ -123,7 +125,7 @@
                           <!--</div>-->
                         <!--<div id="inicio_div">-->
                             <div class="form-group col-md-4 @if($errors->has('inicio')) has-error @endif">
-                               <label for="inicio-field">Inicio</label>
+                               <label for="inicio-field">Inicio(Usa fecha de hace un año para inhabilitar)</label>
                                {!! Form::text("inicio", null, array("class" => "form-control input-sm", "id" => "inicio-field")) !!}
                                @if($errors->has("inicio"))
                                 <span class="help-block">{{ $errors->first("inicio") }}</span>
@@ -133,7 +135,7 @@
 
                           <!--<div id="fin_div">-->
                             <div class="form-group col-md-4 @if($errors->has('fin')) has-error @endif">
-                               <label for="fin-field">Fin</label>
+                               <label for="fin-field">Fin (Usa fecha de hace un año para inhabilitar)</label>
                                {!! Form::text("fin", null, array("class" => "form-control input-sm", "id" => "fin-field")) !!}
                                @if($errors->has("fin"))
                                 <span class="help-block">{{ $errors->first("fin") }}</span>
@@ -178,7 +180,7 @@
                             <label for="plantilla-field">Campos disponibles: </label>
                             <ul>
                                <li>razon_social</li>
-                               <li>contacto</li>
+                               <li>nombre_contacto</li>
                             </ul>
                              Ejemplo: <p>"Apreciable @{{nombre_contacto}}, representante de @{{razon_social}} por la presente..."</p>
                          </div>
@@ -213,34 +215,7 @@
                         
                         </div>
                     </div>
-                    <div class="box box-default box-solid">
-                    <div class="box-header">
-                        <h3 class="box-title">SMS</h3>
-                        <div class="box-tools">
-                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                        </div>
-                    </div>
-                    <div class="box-body">
-                        <div class="form-group col-md-4 @if($errors->has('sms_bnd')) has-error @endif">
-                            <label for="sms_bnd-field">Sms</label>
-                            {!! Form::checkbox("sms_bnd", 1, null, [ "id" => "sms_bnd-field"]) !!}
-                            @if($errors->has("sms_bnd"))
-                             <span class="help-block">{{ $errors->first("sms_bnd") }}</span>
-                            @endif
-                         </div>
-                        <div class="form-group col-md-4 @if($errors->has('st_seguimiento_id')) has-error @endif">
-                            <label for="st_seguimiento_id-field">SMS predefinido</label>
-                            {!! Form::select("sms_predefinido", $smss, null, array("class" => "form-control select_seguridad", "id" => "sms_predefinido-field")) !!}
-                            </div>
-                         <div class="form-group col-md-12 @if($errors->has('sms')) has-error @endif">
-                            <label for="sms-field">Texto del SMS(maximo 160 caracteres)</label>
-                            {!! Form::textArea("sms", null, array("class" => "form-control input-sm", "id" => "sms-field", 'rows'=>'2', 'maxlength'=>'160')) !!}
-                            @if($errors->has("sms"))
-                             <span class="help-block">{{ $errors->first("sms") }}</span>
-                            @endif
-                         </div>                    
-                        </div>
-                    </div>
+                    
                     
 @push('scripts')
   
@@ -383,92 +358,6 @@
                      }
                 });
                 break;
-            /*case "3":
-                $.ajax({
-                    url: '{{ route("plantillaEmpresas.crearCondicion") }}',
-                    type: 'GET',
-                    data: "plantilla={{ $plantilla->id }}" + 
-                          "&operador_condicion=" + $('#operador_condicion-field option:selected').val() + 
-                          "&campo=" + $('#plan_campo_filtro_id-field option:selected').val() + 
-                          "&signo=" + $('#signo_comparacion_filtro-field option:selected').val() + 
-                          "&valor=" + $('#valor_especialidad-field option:selected').val() +
-                          "&interpretacion=" + $('#valor_especialidad-field option:selected').text() + 
-                          "&valor_plantel=" + $('#valor_plantel-field option:selected').val() +
-                          "&interpretacion_plantel=" + $('#valor_plantel-field option:selected').text() + 
-                          "&todas_condiciones=" + todas + "",
-                    dataType: 'json',
-                    beforeSend : function(){$("#loading10").show();},
-                    //complete: function(){$("#loading10").hide();},
-                    complete : function(){location.reload(true);},
-                    success: function(data){
-                     }
-                });
-                break;*/
-            case "4":
-                $.ajax({
-                    url: '{{ route("plantillas.crearCondicion") }}',
-                    type: 'GET',
-                    data: "plantilla={{ $plantilla->id }}" + 
-                          "&operador_condicion=" + $('#operador_condicion-field option:selected').val() + 
-                          "&campo=" + $('#plan_campo_filtro_id-field option:selected').val() + 
-                          "&signo=" + $('#signo_comparacion_filtro-field option:selected').val() + 
-                          "&valor=" + $('#valor_nivel-field option:selected').val() +
-                          "&interpretacion=" + $('#valor_nivel-field option:selected').text() + 
-                          "&valor_especialidad=" + $('#valor_especialidad-field option:selected').val() +
-                          "&interpretacion_especialidad=" + $('#valor_especialidad-field option:selected').text() + 
-                          "&valor_plantel=" + $('#valor_plantel-field option:selected').val() +
-                          "&interpretacion_plantel=" + $('#valor_plantel-field option:selected').text() + 
-                          "&todas_condiciones=" + todas + "",
-                    dataType: 'json',
-                    beforeSend : function(){$("#loading10").show();},
-                    //complete: function(){$("#loading10").hide();},
-                    complete : function(){location.reload(true);},
-                    success: function(data){
-                     }
-                });
-                break;
-            case "5":
-                $.ajax({
-                    url: '{{ route("plantillas.crearCondicion") }}',
-                    type: 'GET',
-                    data: "plantilla={{ $plantilla->id }}" + 
-                          "&operador_condicion=" + $('#operador_condicion-field option:selected').val() + 
-                          "&campo=" + $('#plan_campo_filtro_id-field option:selected').val() + 
-                          "&signo=" + $('#signo_comparacion_filtro-field option:selected').val() + 
-                          "&valor=" + $('#valor_grado-field option:selected').val() +
-                          "&interpretacion=" + $('#valor_grado-field option:selected').text() + 
-                          "&valor_nivel=" + $('#valor_nivel-field option:selected').val() +
-                          "&interpretacion_nivel=" + $('#valor_nivel-field option:selected').text() + 
-                          "&valor_especialidad=" + $('#valor_especialidad-field option:selected').val() +
-                          "&interpretacion_especialidad=" + $('#valor_especialidad-field option:selected').text() + 
-                          "&valor_plantel=" + $('#valor_plantel-field option:selected').val() +
-                          "&interpretacion_plantel=" + $('#valor_plantel-field option:selected').text() + 
-                          "&todas_condiciones=" + todas + "",
-                    dataType: 'json',
-                    beforeSend : function(){$("#loading10").show();},
-                    //complete: function(){$("#loading10").hide();},
-                    complete : function(){location.reload(true);},
-                    success: function(data){
-                     }
-                });
-                break;
-            case "6":
-                $.ajax({
-                    url: '{{ route("plantillas.crearCondicion") }}',
-                    type: 'GET',
-                    data: "plantilla={{ $plantilla->id }}" + 
-                          "&operador_condicion=" + $('#operador_condicion-field option:selected').val() + 
-                          "&campo=" + $('#plan_campo_filtro_id-field option:selected').val() + 
-                          "&signo=" + $('#signo_comparacion_filtro-field option:selected').val() + 
-                          "&valor=" + $('#valor_condicion-field option:selected').val() +
-                          "&interpretacion=" + $('#valor_condicion-field option:selected').text() + "",
-                    dataType: 'json',
-                    beforeSend : function(){$("#loading10").show();},
-                    complete : function(){location.reload(true);},
-                    success: function(data){
-                    }
-                });
-                break;
         }
         @endif
         
@@ -554,94 +443,17 @@
                         $('#div_valor').html('');
                         //$('#especialidad_id-field').empty();
                         //$('#div_valor').append('<select id="valor_condicion-field" class="form-control select_seguridad"></select>').append($('<option></option>').text('Seleccionar').val('0'));
-                        $('#div_valor').append('<label for="valor_condicion-field">Plantel condicion</label>');
-                        $('#div_valor').append('<select id="valor_plantel-field" class="form-control select_seguridad"></select>');
-                        $.each(data, function(i) {
-                            $('#valor_plantel-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
-                        });
-                        $('#valor_plantel-field').select2();     
-                        //$('#div_valor').append('<input type="checkbox" name="todas_condiciones" id="todas_condiciones" value="1"> Todas las condiciones<br>');
-                        
-                        $('#valor_plantel-field').change(function(){
-                            getCmbEspecialidadAjax(false, false);
-                        });
-                        
-                    }
-                });                
-                break;
-            case "4":
-                $.ajax({
-                    url: '{{ route("plantels.getCmbPlantels") }}',
-                    type: 'GET',
-                    data: campo,
-                    dataType: 'json',
-                    beforeSend : function(){$("#loading10").show();},
-                    complete : function(){$("#loading10").hide();},
-                    success: function(data){     
-                        //$example.select2("destroy");
-                        $('#div_valor').html('');
-                        //$('#especialidad_id-field').empty();
-                        //$('#div_valor').append('<select id="valor_condicion-field" class="form-control select_seguridad"></select>').append($('<option></option>').text('Seleccionar').val('0'));
-                        $('#div_valor').append('<label for="valor_condicion-field">Plantel condicion</label>');
-                        $('#div_valor').append('<select id="valor_plantel-field" class="form-control select_seguridad"></select>');
-                        $.each(data, function(i) {
-                            $('#valor_plantel-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
-                        });
-                        $('#valor_plantel-field').select2();     
-                        //$('#div_valor').append('<input type="checkbox" name="todas_condiciones" id="todas_condiciones" value="1"> Todas las condiciones<br>');
-                        
-                        $('#valor_plantel-field').change(function(){
-                            getCmbEspecialidadAjax(true, false);
-                        });
-                    }
-                });                
-                break;
-            case "5":
-                $.ajax({
-                    url: '{{ route("plantels.getCmbPlantels") }}',
-                    type: 'GET',
-                    data: campo,
-                    dataType: 'json',
-                    beforeSend : function(){$("#loading10").show();},
-                    complete : function(){$("#loading10").hide();},
-                    success: function(data){     
-                        $('#div_valor').html('');
-                        $('#div_valor').append('<label for="valor_condicion-field">Plantel condicion</label>');
-                        $('#div_valor').append('<select id="valor_plantel-field" class="form-control select_seguridad"></select>');
-                        $.each(data, function(i) {
-                            $('#valor_plantel-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
-                        });
-                        $('#valor_plantel-field').select2(); 
-                        //$('#div_valor').append('<input type="checkbox" name="todas_condiciones" id="todas_condiciones" value="1"> Todas las condiciones<br>');
-                        
-                        $('#valor_plantel-field').change(function(){
-                            getCmbEspecialidadAjax(true, true);
-                        });
-                    }
-                });                
-                break;
-            case "6":
-                $.ajax({
-                    url: '{{ route("segmentoMercados.getCmbSegmento") }}',
-                    type: 'GET',
-                    data: campo,
-                    dataType: 'json',
-                    beforeSend : function(){$("#loading10").show();},
-                    complete : function(){$("#loading10").hide();},
-                    success: function(data){     
-                        //$example.select2("destroy");
-                        $('#div_valor').html('');
-                        //$('#especialidad_id-field').empty();
-                        //$('#div_valor').append('<select id="valor_condicion-field" class="form-control select_seguridad"></select>').append($('<option></option>').text('Seleccionar').val('0'));
                         $('#div_valor').append('<label for="valor_condicion-field">Valor condicion</label>');
                         $('#div_valor').append('<select id="valor_condicion-field" class="form-control select_seguridad"></select>');
                         $.each(data, function(i) {
                             $('#valor_condicion-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
                         });
                         $('#valor_condicion-field').select2();     
+                        
                     }
                 });                
                 break;
+            
         } 
       });
     
