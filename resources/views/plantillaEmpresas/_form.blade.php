@@ -116,7 +116,7 @@
                         <!--<div id="dia_div">-->
                             
                             <div class="form-group col-md-4 @if($errors->has('dia')) has-error @endif" style="clear:left;">
-                               <label for="dia-field">Dia (número entre 1 y 28, 0 para inhabilitar)</label>
+                               <label for="dia-field">Dia (número entre 1 y 28)</label>
                                {!! Form::text("dia", null, array("class" => "form-control input-sm", "id" => "dia-field")) !!}
                                @if($errors->has("dia"))
                                 <span class="help-block">{{ $errors->first("dia") }}</span>
@@ -125,7 +125,7 @@
                           <!--</div>-->
                         <!--<div id="inicio_div">-->
                             <div class="form-group col-md-4 @if($errors->has('inicio')) has-error @endif">
-                               <label for="inicio-field">Inicio(Usa fecha de hace un año para inhabilitar)</label>
+                               <label for="inicio-field">Inicio</label>
                                {!! Form::text("inicio", null, array("class" => "form-control input-sm", "id" => "inicio-field")) !!}
                                @if($errors->has("inicio"))
                                 <span class="help-block">{{ $errors->first("inicio") }}</span>
@@ -135,7 +135,7 @@
 
                           <!--<div id="fin_div">-->
                             <div class="form-group col-md-4 @if($errors->has('fin')) has-error @endif">
-                               <label for="fin-field">Fin (Usa fecha de hace un año para inhabilitar)</label>
+                               <label for="fin-field">Fin</label>
                                {!! Form::text("fin", null, array("class" => "form-control input-sm", "id" => "fin-field")) !!}
                                @if($errors->has("fin"))
                                 <span class="help-block">{{ $errors->first("fin") }}</span>

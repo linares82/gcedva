@@ -2803,6 +2803,22 @@ Route::get('grupos/index', array(
         'uses' => 'InscripcionsController@inscritosLectivoR')
     )->middleware('auth');
 Route::get(
+    '/inscripcions/inscritosLectivosCalif',
+    array(
+        'as' => 'inscripcions.inscritosLectivosCalif',
+        'middleware' => 'permission:inscripcions.inscritosLectivosCalif',
+        'uses' => 'InscripcionsController@inscritosLectivosCalif'
+    )
+)->middleware('auth');
+Route::post(
+    '/inscripcions/inscritosLectivosCalifR',
+    array(
+        'as' => 'inscripcions.inscritosLectivosCalifR',
+        'middleware' => 'permission:inscripcions.inscritosLectivosCalif',
+        'uses' => 'InscripcionsController@inscritosLectivosCalifR'
+    )
+)->middleware('auth'); 
+Route::get(
     '/inscripcions/inscritosLectivosAsistencias',
     array(
         'as' => 'inscripcions.inscritosLectivosAsistencias',

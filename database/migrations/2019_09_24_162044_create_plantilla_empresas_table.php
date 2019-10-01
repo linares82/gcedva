@@ -17,8 +17,8 @@ class CreatePlantillaEmpresasTable extends Migration {
             $table->text('plantilla');
             $table->string('nombre');
             $table->string('detalle');
-            $table->string('asunto');
-            $table->integer('dia')->unsigned();
+            $table->string('asunto')->nullable();
+            $table->integer('dia')->unsigned()->nullable();
             $table->string('img1')->nullable();
             $table->string('img2')->nullable();
             $table->boolean('activo_bnd');

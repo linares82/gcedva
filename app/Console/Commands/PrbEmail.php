@@ -18,7 +18,7 @@ class PrbEmail extends Command
      *
      * @var string
      */
-    protected $signature = 'command:prbEmail';
+    protected $signature = 'prbEmail';
 
     /**
      * The console command description.
@@ -45,19 +45,17 @@ class PrbEmail extends Command
     public function handle()
     {
         $plantilla_empresas = PlantillaEmpresa::where('activo_bnd', 1)->where('mail_bnd', 1)->get();
+        //	dd($plantilla_empresas->toArray());
 
         foreach ($plantilla_empresas as $plantilla_empresa) {
             $dia_hoy = Carbon::createFromFormat('Y-m-d', Date('Y-m-d'))->day;
-            $hoy = Carbon::createFromFormat('Y-m-d', Date('Y-m-d'));
-            $inicio = Carbon::createFromFormat('Y-m-d', $plantilla_empresa->inicio);
-            $fin = Carbon::createFromFormat('Y-m-d', $plantilla_empresa->fin);
-            if ($plantilla_empresa->dia > 0 and $plantilla_empresa->dia == $dia_hoy) {
+            if (!is_null($plantilla_empresa->dia) and $plantilla_empresa->dia == $dia_hoy) {
                 $condiciones = PlantillaEmpresaCond::where('plantilla_empresa_id', $plantilla_empresa->id)->get();
                 $resultado = Empresa::select('razon_social', 'nombre_contacto', 'correo1')->whereNotNull('empresas.correo1');
                 foreach ($condiciones as $c) {
                     switch ($c->plantillaEmpresaCampo->campo) {
                         case 'Estatus':
-                            if ($c->operador_condicion == "and" or $c->operador_condicion == "Primera Condición") {
+                            if ($c->operador_condicion == "Y" or $c->operador_condicion == "Primera Condición") {
                                 $resultado->where('empresas.id', $c->signo_comparacion, $c->valor_condicion);
                             } else {
                                 $resultado->orWhere('empresas.id', $c->signo_comparacion, $c->valor_condicion);
@@ -65,14 +63,14 @@ class PrbEmail extends Command
 
                             break;
                         case 'Plantel':
-                            if ($c->operador_condicion == "and" or $c->operador_condicion == "Primera Condición") {
+                            if ($c->operador_condicion == "Y" or $c->operador_condicion == "Primera Condición") {
                                 $resultado->where('empresas.plantel_id', $c->signo_comparacion, $c->valor_condicion);
                             } else {
                                 $resultado->orWhere('empresas.plantel_id', $c->signo_comparacion, $c->valor_condicion);
                             }
                             break;
                         case 'Giro':
-                            if ($c->operador_condicion == "and" or $c->operador_condicion == "Primera Condición") {
+                            if ($c->operador_condicion == "Y" or $c->operador_condicion == "Primera Condición") {
                                 $resultado->where('empresas.plantel_id', $c->signo_comparacion, $c->valor_condicion);
                             } else {
                                 $resultado->orWhere('empresas.plantel_id', $c->signo_comparacion, $c->valor_condicion);
@@ -81,6 +79,7 @@ class PrbEmail extends Command
                     }
                 }
                 $empresas = $resultado->get();
+
 
                 /**SEgundo metodo con colas */
                 foreach ($empresas as $empresa) {
@@ -94,20 +93,23 @@ class PrbEmail extends Command
                     $obj->asunto = $plantilla_empresa->asunto;
                     $obj->img1 = $plantilla_empresa->img1;
 
-                    Mail::to($empresa->correo1)->send(new MailingEmpresas($obj));
+                    Mail::to($empresa->correo1)->queue(new MailingEmpresas($obj));
                 }
-            } elseif ($plantilla_empresa->inicio <> "" and $plantilla_empresa->fin <> "") {
+            } elseif (!is_null($plantilla_empresa->inicio) and !is_null($plantilla_empresa->fin)) {
                 $anio_hoy = Carbon::createFromFormat('Y-m-d', Date('Y-m-d'))->year;
                 $anio_inicio = Carbon::createFromFormat('Y-m-d', $plantilla_empresa->inicio)->year;
                 $anio_fin = Carbon::createFromFormat('Y-m-d', $plantilla_empresa->fin)->year;
-                if ($anio_inicio > $anio_hoy and $anio_hoy > $anio_fin) {
+                $hoy = Carbon::createFromFormat('Y-m-d', Date('Y-m-d'));
+                $inicio = Carbon::createFromFormat('Y-m-d', $plantilla_empresa->inicio);
+                $fin = Carbon::createFromFormat('Y-m-d', $plantilla_empresa->fin);
+                if ($anio_inicio > $anio_hoy and $anio_hoy > $anio_fin and $inicio < $hoy and $fin > $hoy) {
                     $condiciones = PlantillaEmpresaCond::where('plantilla_empresa_id', $plantilla_empresa->id)->get();
 
                     $resultado = Empresa::select('razon_social', 'nombre_contacto', 'correo1')->whereNotNull('empresas.correo1');
                     foreach ($condiciones as $c) {
                         switch ($c->plantillaEmpresaCampo->campo) {
                             case 'Estatus':
-                                if ($c->operador_condicion == "and" or $c->operador_condicion == "Primera Condición") {
+                                if ($c->operador_condicion == "Y" or $c->operador_condicion == "Primera Condición") {
                                     $resultado->where('empresas.id', $c->signo_comparacion, $c->valor_condicion);
                                 } else {
                                     $resultado->orWhere('empresas.id', $c->signo_comparacion, $c->valor_condicion);
@@ -115,14 +117,14 @@ class PrbEmail extends Command
 
                                 break;
                             case 'Plantel':
-                                if ($c->operador_condicion == "and" or $c->operador_condicion == "Primera Condición") {
+                                if ($c->operador_condicion == "Y" or $c->operador_condicion == "Primera Condición") {
                                     $resultado->where('empresas.plantel_id', $c->signo_comparacion, $c->valor_condicion);
                                 } else {
                                     $resultado->orWhere('empresas.plantel_id', $c->signo_comparacion, $c->valor_condicion);
                                 }
                                 break;
                             case 'Giro':
-                                if ($c->operador_condicion == "and" or $c->operador_condicion == "Primera Condición") {
+                                if ($c->operador_condicion == "Y" or $c->operador_condicion == "Primera Condición") {
                                     $resultado->where('empresas.plantel_id', $c->signo_comparacion, $c->valor_condicion);
                                 } else {
                                     $resultado->orWhere('empresas.plantel_id', $c->signo_comparacion, $c->valor_condicion);
@@ -131,6 +133,7 @@ class PrbEmail extends Command
                         }
                     }
                     $empresas = $resultado->get();
+
 
                     foreach ($empresas as $empresa) {
                         $data = [
@@ -143,17 +146,23 @@ class PrbEmail extends Command
                         $obj->asunto = $plantilla_empresa->asunto;
                         $obj->img1 = $plantilla_empresa->img1;
 
-                        Mail::to($empresa->correo1)->send(new MailingEmpresas($obj));
+                        Mail::to($empresa->correo1)->queue(new MailingEmpresas($obj));
                     }
                 }
-            } elseif (($plantilla_empresa->dia <> 0 or $plantilla_empresa->dia <> "") and $plantilla_empresa->inicio<>"" and $plantilla_empresa->fin<>"") {
+            } elseif (
+                ((is_null($plantilla_empresa->dia)) and
+                (is_null($plantilla_empresa->inicio)) and 
+                is_null($plantilla_empresa->fin))
+            ) {
                 $condiciones = PlantillaEmpresaCond::where('plantilla_empresa_id', $plantilla_empresa->id)->get();
+                //dd($condiciones->toArray());
 
                 $resultado = Empresa::select('razon_social', 'nombre_contacto', 'correo1')->whereNotNull('empresas.correo1');
                 foreach ($condiciones as $c) {
+
                     switch ($c->plantillaEmpresaCampo->campo) {
                         case 'Estatus':
-                            if ($c->operador_condicion == "and" or $c->operador_condicion == "Primera Condición") {
+                            if ($c->operador_condicion == "Y" or $c->operador_condicion == "Primera Condición") {
                                 $resultado->where('empresas.id', $c->signo_comparacion, $c->valor_condicion);
                             } else {
                                 $resultado->orWhere('empresas.id', $c->signo_comparacion, $c->valor_condicion);
@@ -161,14 +170,14 @@ class PrbEmail extends Command
 
                             break;
                         case 'Plantel':
-                            if ($c->operador_condicion == "and" or $c->operador_condicion == "Primera Condición") {
+                            if ($c->operador_condicion == "Y" or $c->operador_condicion == "Primera Condición") {
                                 $resultado->where('empresas.plantel_id', $c->signo_comparacion, $c->valor_condicion);
                             } else {
                                 $resultado->orWhere('empresas.plantel_id', $c->signo_comparacion, $c->valor_condicion);
                             }
                             break;
                         case 'Giro':
-                            if ($c->operador_condicion == "and" or $c->operador_condicion == "Primera Condición") {
+                            if ($c->operador_condicion == "Y" or $c->operador_condicion == "Primera Condición") {
                                 $resultado->where('empresas.plantel_id', $c->signo_comparacion, $c->valor_condicion);
                             } else {
                                 $resultado->orWhere('empresas.plantel_id', $c->signo_comparacion, $c->valor_condicion);
@@ -177,6 +186,9 @@ class PrbEmail extends Command
                     }
                 }
                 $empresas = $resultado->get();
+                //dd($empresas->toArray());
+
+
                 /*Primer metodo de envio sin colas*/
                 /*foreach($empresas as $empresa){
                 Mail::send([], [], function ($message) use ($plantilla_empresa, $empresa) {
@@ -204,7 +216,7 @@ class PrbEmail extends Command
                     $obj->asunto = $plantilla_empresa->asunto;
                     $obj->img1 = $plantilla_empresa->img1;
 
-                    Mail::to($empresa->correo1)->send(new MailingEmpresas($obj));
+                    Mail::to($empresa->correo1)->queue(new MailingEmpresas($obj));
                 }
             }
         }

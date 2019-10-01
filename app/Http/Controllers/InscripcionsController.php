@@ -984,6 +984,61 @@ class InscripcionsController extends Controller
         ));
     }
 
+    public function InscritosLectivosCalif()
+    {
+
+        return view('inscripcions.reportes.inscritosLectivosCalif')
+            ->with('list', Inscripcion::getListFromAllRelationApps());
+    }
+
+    public function InscritosLectivosCalifR(Request $request)
+    {
+        $data = $request->all();
+        $plantel = Plantel::find($data['plantel_f']);
+        //dd($data);
+        $lectivo = Lectivo::find($data['lectivo_f']);
+        $registros = Inscripcion::select('c.id', DB::raw('concat(e.nombre, " ",e.ape_paterno, " ",e.ape_materno) as instructor, '
+            . 'concat(c.nombre," ",c.nombre2," ",c.ape_paterno," ",c.ape_materno) as cliente,'
+            . 'c.beca_bnd, esp.name as especialidad, inscripcions.fec_inscripcion, aa.id as asignacion,'
+            . 'gru.name as grupo, gru.id as gru, mat.name as materi, stc.name as estatus_cliente, h.id as hacademica'))
+            ->join('clientes as c', 'c.id', '=', 'inscripcions.cliente_id')
+            ->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
+            ->join('medios as m', 'm.id', '=', 'c.medio_id')
+            ->join('especialidads as esp', 'esp.id', '=', 'inscripcions.especialidad_id')
+            ->join('grupos as gru', 'gru.id', '=', 'inscripcions.grupo_id')
+            ->join('hacademicas as h', 'h.inscripcion_id', '=', 'inscripcions.id')
+            ->join('materia as mat', 'mat.id', '=', 'h.materium_id')
+            ->join('asignacion_academicas as aa', 'aa.materium_id', '=', 'h.materium_id')
+            ->whereColumn('aa.grupo_id', 'h.grupo_id')
+            ->whereColumn('aa.plantel_id', 'inscripcions.plantel_id')
+            ->whereColumn('aa.lectivo_id', 'inscripcions.lectivo_id')
+            ->join('empleados as e', 'e.id', '=', 'aa.empleado_id')
+            ->where('inscripcions.plantel_id', $data['plantel_f'])
+            ->where('inscripcions.lectivo_id', $data['lectivo_f'])
+            ->where('h.lectivo_id', $data['lectivo_f'])
+            ->whereNull('inscripcions.deleted_at')
+            ->whereNull('h.deleted_at')
+            ->whereNull('aa.deleted_at')
+            ->orderBy('aa.id', 'esp.name', 'gru.id')
+            ->distinct()
+            ->get();
+        //dd($registros->toArray());
+
+
+        /*
+                PDF::setOptions(['defaultFont' => 'arial']);
+
+                $pdf = PDF::loadView('inscripcions.reportes.lista_calificacionesr', array('registros'=>$registros,'carga_ponderacions_enc'=>$carga_ponderacion))
+                        ->setPaper('legal', 'landscape');
+                return $pdf->download('reporte.pdf');
+                */
+        return view('inscripcions.reportes.inscritosLectivosCalifR', array(
+            'registros' => $registros,
+            'plantel' => $plantel,
+            'lectivo' => $lectivo
+        ));
+    }
+
     public function InscritosLectivosAsistencias()
     {
 

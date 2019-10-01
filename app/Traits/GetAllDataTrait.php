@@ -177,6 +177,12 @@ trait GetAllDataTrait {
                 }
                 
                 break;
+            case "egresos":
+                if ($baseTable == "egresos" and Auth::user()->can('IfiltroEgresosCreador')) {
+                    $myQuery = $myQuery->where('egresos.usu_alta_id', '=', Auth::user()->id);
+                }
+
+                break;
             case "grupos":
                 if(Auth::user()->can('IFiltroEmpleadosXPlantel')){
                     //dd("fil");
