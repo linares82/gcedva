@@ -271,15 +271,15 @@ class ClientesController extends Controller {
         } else {
             $input['extranjero'] = 1;
         }
-        if (!isset($input['beca_bnd'])) {
-            $input['beca_bnd'] = 0;
+        if (!isset($input['bnd_beca'])) {
+            $input['bnd_beca'] = 0;
         } else {
-            $input['beca_bnd'] = 1;
+            $input['bnd_beca'] = 1;
         }
-        if (!isset($input['bnd_reingreso'])) {
-            $input['beca_bnd'] = 0;
+        if (!isset($input['bnd_regingreso'])) {
+            $input['bnd_regingreso'] = 0;
         } else {
-            $input['beca_bnd'] = 1;
+            $input['bnd_reingreso'] = 1;
         }
         //dd($input);
         //create data
@@ -515,15 +515,17 @@ class ClientesController extends Controller {
         } else {
             $input['extranjero'] = 1;
         }
-        if (!isset($input['beca_bnd'])) {
-            $input['beca_bnd'] = 0;
+        
+        if (!isset($input['bnd_beca'])) {
+            $input['bnd_beca'] = 0;
         } else {
-            $input['beca_bnd'] = 1;
+            $input['bnd_beca'] = 1;
         }
-        if (!isset($input['bnd_reingreso'])) {
-            $input['beca_bnd'] = 0;
+        
+        if (!isset($input['bnd_regingreso'])) {
+            $input['bnd_regingreso'] = 0;
         } else {
-            $input['beca_bnd'] = 1;
+            $input['bnd_regingreso'] = 1;
         }
         //dd($input);
         //update data

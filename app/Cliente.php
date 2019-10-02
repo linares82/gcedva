@@ -67,7 +67,7 @@ class Cliente extends Model
                                 'turno_id', 'turno2_id', 'turno3_id', 'turno4_id', 'escuela_procedencia', 'ciclo_id',
                                 'ccuestionario_id', 'contador_sms', 'contador_mail', 'tpo_informe_id',
                                 'segmento_mercado_id','beca_bnd', 'beca_porcentaje', 'beca_nota','paise_id','monto_mensualidad',
-                                'justificacion_beca','bnd_reingreso','escolaridad_id'];
+                                'justificacion_beca','bnd_regingreso','escolaridad_id'];
 
 	public function usu_alta() {
 		return $this->hasOne('App\User', 'id', 'usu_alta_id');
