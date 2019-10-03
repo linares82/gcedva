@@ -1,0 +1,1 @@
+@section('ubicacionArtsAppTitle','Ubicacion Articulos')

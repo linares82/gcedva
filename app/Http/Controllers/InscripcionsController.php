@@ -559,6 +559,7 @@ class InscripcionsController extends Controller
             ->join('empleados as e', 'e.id', '=', 'aa.empleado_id')
             ->join('grados as gra', 'gra.id', '=', 'hacademicas.grado_id')
             ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
+            ->where('c.st_cliente_id', '<>', 3)
             ->where('aa.id', $data['asignacion'])
             ->where('hacademicas.plantel_id', $data['plantel_f'])
             ->where('hacademicas.lectivo_id', $data['lectivo_f'])
@@ -1124,41 +1125,7 @@ class InscripcionsController extends Controller
     public function listaMesR(Request $request)
     {
         $data = $request->all();
-        //dd($data);
-        /*$registros= Inscripcion::select('inscripcions.grupo_id','inscripcions.grado_id','inscripcions.lectivo_id','inscripcions.plantel_id',
-                                                'c.nombre','c.nombre2','c.ape_paterno','c.ape_materno', 'g.name as grupo','l.name as lectivo',
-                                               DB::raw('concat(e.nombre," ",e.ape_paterno," ",e.ape_materno) as maestro'),'gra.name as grado',
-                                               'p.razon as plantel', 'p.logo','aa.id as asignacion','c.id as cliente','p.id as p_id','c.tel_fijo')
-                                       ->join('hacademicas as h','h.inscripcion_id','=','inscripcions.id')
-                                       ->join('clientes as c', 'c.id', '=', 'inscripcions.cliente_id')
-                                       ->join('grupos as g', 'g.id', '=', 'inscripcions.grupo_id')
-                                       ->join('lectivos as l','l.id', '=', 'inscripcions.lectivo_id')
-                                       ->join('asignacion_academicas as aa', 'aa.grupo_id','=','g.id')
-                                       //->join('asistencia_rs as asis', 'asis.asignacion_academica_id','=','aa.id')
-                                       ->join('empleados as e','e.id','=','aa.empleado_id')
-                                       ->join('grados as gra','gra.id','=','inscripcions.grado_id')
-                                       ->join('plantels as p','p.id','=','c.plantel_id')
-                                       ->where('aa.id',$data['asignacion'])
-                                       ->where('inscripcions.plantel_id', $data['plantel_f'])
-                                       ->where('inscripcions.lectivo_id',$data['lectivo_f'])
-				       ->where('inscripcions.grupo_id',$data['grupo_f'])
-                                       //->where('inscripcions.grado_id',$data['grado_f'])
-                                       ->where('aa.plantel_id', $data['plantel_f'])
-                                       ->where('aa.lectivo_id',$data['lectivo_f'])
-                                       ->where('aa.grupo_id',$data['grupo_f'])
-                                       ->where('aa.empleado_id',$data['instructor_f'])
-                                       ->where('aa.materium_id',$data['materia_f'])
-                                       ->where('h.materium_id',$data['materia_f'])
-                                       ->whereNull('h.deleted_at')
-                                       ->whereNull('inscripcions.deleted_at')
-                                       ->orderBy('inscripcions.plantel_id')
-                                       ->orderBy('inscripcions.lectivo_id')
-                                       ->orderBy('inscripcions.grupo_id')
-                                       ->orderBy('inscripcions.grado_id')
-				       ->distinct()
-                                       ->get();
-                 * 
-                 */
+        
         $registros = Hacademica::select(
             'hacademicas.grupo_id',
             'hacademicas.grado_id',
@@ -1188,6 +1155,7 @@ class InscripcionsController extends Controller
             ->join('empleados as e', 'e.id', '=', 'aa.empleado_id')
             ->join('grados as gra', 'gra.id', '=', 'hacademicas.grado_id')
             ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
+            ->where('c.st_cliente_id','<>', 3)
             ->where('aa.id', $data['asignacion'])
             ->where('hacademicas.plantel_id', $data['plantel_f'])
             ->where('hacademicas.lectivo_id', $data['lectivo_f'])

@@ -159,4 +159,11 @@ class ArticulosController extends Controller {
 		//						   dd($registros);
 		return view('articulos.reportes.existenciasActualesR', compact('registros'));
 	}
+
+	public function getUnidad(Request $request){
+		if($request->ajax()){
+			$datos=$request->all();
+			return Articulo::find($datos['articulo'])->value('unidad_uso');
+		}
+	}
 }

@@ -15,7 +15,8 @@ class CreateMovimientosTable extends Migration {
 		Schema::create('movimientos', function(Blueprint $table) {
             $table->increments('id');
             $table->integer('plantel_id')->unsigned();
-            $table->integer('articulo_id')->unsigned();
+			$table->integer('articulo_id')->unsigned();
+			$table->string('unidad');
             $table->integer('cantidad');
             $table->date('fecha');
             $table->integer('entrada_salida_id')->unsigned();
