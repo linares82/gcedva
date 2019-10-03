@@ -20,4 +20,11 @@
                         <span class="help-block">{{ $errors->first("categoria_id") }}</span>
                        @endif
                     </div>
+                    <div class="form-group col-md-4 @if($errors->has('tpo_articulo_id')) has-error @endif">
+                       <label for="tpo_articulo_id-field">Tipo</label>
+                       {!! Form::select("tpo_articulo_id", $list["TpoArticulo"], null, array("class" => "form-control select_seguridad", "id" => "categoria_articulo_id-field")) !!}
+                       @if($errors->has("tpo_articulo_id"))
+                        <span class="help-block">{{ $errors->first("tpo_articulo_id") }}</span>
+                       @endif
+                    </div>
                     

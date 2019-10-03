@@ -32,7 +32,7 @@ class MovimientosController extends Controller {
 	 */
 	public function create()
 	{
-		$articulos=Articulo::where('categoria_articulo_id',1)->pluck('name','id');
+		$articulos=Articulo::where('tpo_articulo_id',1)->pluck('name','id');
 		return view('movimientos.create', compact('articulos'))
 			->with( 'list', Movimiento::getListFromAllRelationApps() );
 	}
@@ -80,7 +80,7 @@ class MovimientosController extends Controller {
 	public function edit($id, Movimiento $movimiento)
 	{
 		$movimiento=$movimiento->find($id);
-		$articulos = Articulo::where('categoria_articulo_id', 1)->pluck('name', 'id');
+		$articulos = Articulo::where('tpo_articulo_id', 1)->pluck('name', 'id');
 		return view('movimientos.edit', compact('movimiento','articulos'))
 			->with( 'list', Movimiento::getListFromAllRelationApps() );
 	}
