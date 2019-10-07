@@ -28,6 +28,13 @@
                         <span class="help-block">{{ $errors->first("cantidad") }}</span>
                        @endif
                     </div>
+                    <div class="form-group col-md-4 @if($errors->has('costo')) has-error @endif">
+                       <label for="costo-field">Costo Referencia</label>
+                       {!! Form::text("costo", null, array("class" => "form-control", "id" => "costo-field")) !!}
+                       @if($errors->has("costo"))
+                        <span class="help-block">{{ $errors->first("costo") }}</span>
+                       @endif
+                    </div>
                     <div class="form-group col-md-4 @if($errors->has('marca')) has-error @endif">
                        <label for="marca-field">Marca</label>
                        {!! Form::text("marca", null, array("class" => "form-control", "id" => "marca-field")) !!}

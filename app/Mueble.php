@@ -24,7 +24,7 @@ class Mueble extends Model
     } 
 
 	//Mass Assignment
-	protected $fillable = ['plantel_id','articulo_id','fecha_alta','ubicacion_art_id','empleado_id','marca','modelo','no_serie','observaciones','st_mueble_id','st_mueble_uso_id','no_inv','usu_alta_id','usu_mod_id'];
+	protected $fillable = ['plantel_id','articulo_id','fecha_alta','ubicacion_art_id','empleado_id','marca','modelo','no_serie','observaciones','st_mueble_id','st_mueble_uso_id','no_inv','usu_alta_id','usu_mod_id', 'costo'];
 
 	public function usu_alta() {
 		return $this->hasOne('App\User', 'id', 'usu_alta_id');

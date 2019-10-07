@@ -86,7 +86,7 @@ class ClientesController extends Controller {
         }
         
         //dd($request);
-        $clientes = Seguimiento::getAllData($request, 20, session('filtro_clientes'));
+        $clientes = Seguimiento::getAllData($request, 10, session('filtro_clientes'));
         $empleado = Empleado::where('user_id', '=', Auth::user()->id)->first();
         
         
@@ -117,7 +117,7 @@ class ClientesController extends Controller {
         }
         
         //dd($request);
-        $clientes = Seguimiento::getAllData($request, 20, session('filtro_clientes'));
+        $clientes = Seguimiento::getAllData($request, 10, session('filtro_clientes'));
         $empleado = Empleado::where('user_id', '=', Auth::user()->id)->first();
         
         return view('clientes.indexEventos', compact('clientes','users','empleado'))

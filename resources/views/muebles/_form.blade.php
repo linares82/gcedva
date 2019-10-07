@@ -13,6 +13,13 @@
                         <span class="help-block">{{ $errors->first("articulo_id") }}</span>
                        @endif
                     </div>
+                    <div class="form-group col-md-4 @if($errors->has('costo')) has-error @endif">
+                       <label for="costo-field">Costo Referencia</label>
+                       {!! Form::text("costo", null, array("class" => "form-control", "id" => "costo-field")) !!}
+                       @if($errors->has("costo"))
+                        <span class="help-block">{{ $errors->first("costo") }}</span>
+                       @endif
+                    </div>
                     <div class="form-group col-md-4 @if($errors->has('fecha_alta')) has-error @endif">
                        <label for="fecha_alta-field">Fecha Alta</label>
                        {!! Form::text("fecha_alta", null, array("class" => "form-control", "id" => "fecha_alta-field")) !!}

@@ -22,7 +22,7 @@ class Movimiento extends Model
 
 	//Mass Assignment
 	protected $fillable = ['plantel_id','articulo_id','unidad','cantidad','fecha','entrada_salida_id','usu_alta_id','usu_mod_id',
-								  'ubicacion_art_id','empleado_id','marca','modelo','no_serie','caducidad','observaciones'];
+								  'ubicacion_art_id','empleado_id','marca','modelo','no_serie','caducidad','observaciones','costo'];
 
 	public function usu_alta() {
 		return $this->hasOne('App\User', 'id', 'usu_alta_id');

@@ -741,6 +741,8 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'AddPlanInscripcionsTable' => __DIR__ . '/../..' . '/database/migrations/2019_03_28_131419_add_plan_inscripcions_table.php',
         'AddPlanPagoCombinacionTable' => __DIR__ . '/../..' . '/database/migrations/2018_04_09_085152_add_plan_pago_combinacion_table.php',
         'AddPlantelEspecialidadTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_11_142022_add_plantel_especialidad_table.php',
+        'AddPrecioMovimientosTable' => __DIR__ . '/../..' . '/database/migrations/2019_10_07_093218_add_precio_movimientos_table.php',
+        'AddPrecioMueblesTable' => __DIR__ . '/../..' . '/database/migrations/2019_10_07_093232_add_precio_muebles_table.php',
         'AddPrecioOnlineGradosTable' => __DIR__ . '/../..' . '/database/migrations/2018_12_14_113731_add_precio_online_grados_table.php',
         'AddPuestoEmpresasTable' => __DIR__ . '/../..' . '/database/migrations/2019_02_07_110533_add_puesto_empresas_table.php',
         'AddRecursivoCalificacionPonderacionsTable' => __DIR__ . '/../..' . '/database/migrations/2019_01_17_114733_add_recursivo_calificacion_ponderacions_table.php',
