@@ -72,14 +72,14 @@
                     </div>
                     <div class="form-group col-md-4 @if($errors->has('ubicacion_art_id')) has-error @endif">
                        <label for="ubicacion_art_id-field">Ubicacion</label>
-                       {!! Form::select("ubicacion_art_id", null, null, array("class" => "form-control select_seguridad", "id" => "ubicacion_art_id-field")) !!}
+                       {!! Form::select("ubicacion_art_id", array(), null, array("class" => "form-control select_seguridad", "id" => "ubicacion_art_id-field")) !!}
                        @if($errors->has("ubicacion_art_id"))
                         <span class="help-block">{{ $errors->first("ubicacion_art_id") }}</span>
                        @endif
                     </div>
                     <div class="form-group col-md-4 @if($errors->has('empleado_id')) has-error @endif">
                        <label for="empleado_id-field">Resposanble</label>
-                       {!! Form::select("empleado_id", null, null, array("class" => "form-control select_seguridad", "id" => "empleado_id-field")) !!}
+                       {!! Form::select("empleado_id", array(), null, array("class" => "form-control select_seguridad", "id" => "empleado_id-field")) !!}
                        @if($errors->has("empleado_id"))
                         <span class="help-block">{{ $errors->first("empleado_id") }}</span>
                        @endif

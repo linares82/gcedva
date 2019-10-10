@@ -1453,6 +1453,14 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                             lang_clear_date: 'Limpiar',
                             show_select_today: 'Hoy',
                           });
+                          $('#fec_nacimiento-field').Zebra_DatePicker({
+                            days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
+                            months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                            readonly_element: false,
+                            lang_clear_date: 'Limpiar',
+                            show_select_today: 'Hoy',
+                          });
+                          
                         //Ocultar expo y otro
                         $('#medio_id-field').change(function(){
                         ocultaExpo();
