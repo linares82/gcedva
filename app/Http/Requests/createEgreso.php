@@ -24,7 +24,7 @@ class createEgreso extends FormRequest
     public function rules()
     {
         return [
-            'egreso_concepto_id'=>'required'
+            'egresos_concepto_id'=>'required'
         ];
     }
 }

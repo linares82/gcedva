@@ -943,6 +943,7 @@ class InscripcionsController extends Controller
         $plantel = Plantel::find($data['plantel_f']);
         //dd($data);
         $lectivo = Lectivo::find($data['lectivo_f']);
+        /*
         $registros = Inscripcion::select('c.id', DB::raw('concat(e.nombre, " ",e.ape_paterno, " ",e.ape_materno) as instructor, '
             . 'concat(c.nombre," ",c.nombre2," ",c.ape_paterno," ",c.ape_materno) as cliente,'
             . 'c.beca_bnd, esp.name as especialidad, inscripcions.fec_inscripcion, aa.id as asignacion,'
@@ -968,6 +969,34 @@ class InscripcionsController extends Controller
             ->orderBy('aa.id', 'esp.name', 'gru.id')
             ->distinct()
             ->get();
+            */
+        $registros = Hacademica::select('c.id', DB::raw('concat(e.nombre, " ",e.ape_paterno, " ",e.ape_materno) as instructor, '
+            . 'concat(c.nombre," ",c.nombre2," ",c.ape_paterno," ",c.ape_materno) as cliente,'
+            . 'c.beca_bnd, esp.name as especialidad, i.fec_inscripcion, aa.id as asignacion,'
+            . 'gru.name as grupo, gru.id as gru, mat.name as materi, stc.name as estatus_cliente'))
+            ->join('clientes as c', 'c.id', '=', 'hacademicas.cliente_id')
+            ->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
+            ->join('medios as m', 'm.id', '=', 'c.medio_id')
+            ->join('especialidads as esp', 'esp.id', '=', 'hacademicas.especialidad_id')
+            ->join('grupos as gru', 'gru.id', '=', 'hacademicas.grupo_id')
+            ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
+            ->join('materia as mat', 'mat.id', '=', 'hacademicas.materium_id')
+            ->join('asignacion_academicas as aa', 'aa.materium_id', '=', 'hacademicas.materium_id')
+            ->whereColumn('aa.grupo_id', 'hacademicas.grupo_id')
+            ->whereColumn('aa.plantel_id', 'hacademicas.plantel_id')
+            ->whereColumn('aa.lectivo_id', 'hacademicas.lectivo_id')
+            ->join('empleados as e', 'e.id', '=', 'aa.empleado_id')
+            ->where('hacademicas.plantel_id', $data['plantel_f'])
+            ->where('hacademicas.lectivo_id', $data['lectivo_f'])
+            ->whereNull('hacademicas.deleted_at')
+            ->whereNull('i.deleted_at')
+            ->whereNull('hacademicas.deleted_at')
+            ->whereNull('aa.deleted_at')
+            ->orderBy('aa.id', 'esp.name', 'gru.id')
+            ->distinct()
+            ->get();  
+
+            
         //dd($registros->toArray());
 
 
@@ -998,7 +1027,7 @@ class InscripcionsController extends Controller
         $plantel = Plantel::find($data['plantel_f']);
         //dd($data);
         $lectivo = Lectivo::find($data['lectivo_f']);
-        $registros = Inscripcion::select('c.id', DB::raw('concat(e.nombre, " ",e.ape_paterno, " ",e.ape_materno) as instructor, '
+        /*$registros = Inscripcion::select('c.id', DB::raw('concat(e.nombre, " ",e.ape_paterno, " ",e.ape_materno) as instructor, '
             . 'concat(c.nombre," ",c.nombre2," ",c.ape_paterno," ",c.ape_materno) as cliente,'
             . 'c.beca_bnd, esp.name as especialidad, inscripcions.fec_inscripcion, aa.id as asignacion,'
             . 'gru.name as grupo, gru.id as gru, mat.name as materi, stc.name as estatus_cliente, h.id as hacademica'))
@@ -1019,6 +1048,32 @@ class InscripcionsController extends Controller
             ->where('h.lectivo_id', $data['lectivo_f'])
             ->whereNull('inscripcions.deleted_at')
             ->whereNull('h.deleted_at')
+            ->whereNull('aa.deleted_at')
+            ->orderBy('aa.id', 'esp.name', 'gru.id')
+            ->distinct()
+            ->get();
+            */
+        $registros = Hacademica::select('c.id', DB::raw('concat(e.nombre, " ",e.ape_paterno, " ",e.ape_materno) as instructor, '
+            . 'concat(c.nombre," ",c.nombre2," ",c.ape_paterno," ",c.ape_materno) as cliente,'
+            . 'c.beca_bnd, esp.name as especialidad, i.fec_inscripcion, aa.id as asignacion,'
+            . 'gru.name as grupo, gru.id as gru, mat.name as materi, stc.name as estatus_cliente, h.id as hacademica'))
+            ->join('clientes as c', 'c.id', '=', 'hacademicas.cliente_id')
+            ->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
+            ->join('medios as m', 'm.id', '=', 'c.medio_id')
+            ->join('especialidads as esp', 'esp.id', '=', 'hacademicas.especialidad_id')
+            ->join('grupos as gru', 'gru.id', '=', 'hacademicas.grupo_id')
+            ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
+            ->join('materia as mat', 'mat.id', '=', 'hacademicas.materium_id')
+            ->join('asignacion_academicas as aa', 'aa.materium_id', '=', 'h.materium_id')
+            ->whereColumn('aa.grupo_id', 'hacademicas.grupo_id')
+            ->whereColumn('aa.plantel_id', 'hacademicas.plantel_id')
+            ->whereColumn('aa.lectivo_id', 'hacademicas.lectivo_id')
+            ->join('empleados as e', 'e.id', '=', 'aa.empleado_id')
+            ->where('hacademicas.plantel_id', $data['plantel_f'])
+            ->where('hacademicas.lectivo_id', $data['lectivo_f'])
+            ->where('hacademicas.lectivo_id', $data['lectivo_f'])
+            ->whereNull('hacademicas.deleted_at')
+            ->whereNull('i.deleted_at')
             ->whereNull('aa.deleted_at')
             ->orderBy('aa.id', 'esp.name', 'gru.id')
             ->distinct()
@@ -1053,27 +1108,27 @@ class InscripcionsController extends Controller
         $plantel = Plantel::find($data['plantel_f']);
         //dd($data);
         $lectivo = Lectivo::find($data['lectivo_f']);
-        $registros = Inscripcion::select('c.id', DB::raw('concat(e.nombre, " ",e.ape_paterno, " ",e.ape_materno) as instructor, '
+        $registros = Hacademica::select('c.id', DB::raw('concat(e.nombre, " ",e.ape_paterno, " ",e.ape_materno) as instructor, '
             . 'concat(c.nombre," ",c.nombre2," ",c.ape_paterno," ",c.ape_materno) as cliente,'
-            . 'c.beca_bnd, esp.name as especialidad, inscripcions.fec_inscripcion, aa.id as asignacion,'
+            . 'c.beca_bnd, esp.name as especialidad, i.fec_inscripcion, aa.id as asignacion,'
             . 'gru.name as grupo, gru.id as gru, mat.name as materi, stc.name as estatus_cliente, c.id as cliente_id'))
-            ->join('clientes as c', 'c.id', '=', 'inscripcions.cliente_id')
+            ->join('clientes as c', 'c.id', '=', 'hacademicas.cliente_id')
             ->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
             ->join('medios as m', 'm.id', '=', 'c.medio_id')
-            ->join('especialidads as esp', 'esp.id', '=', 'inscripcions.especialidad_id')
-            ->join('grupos as gru', 'gru.id', '=', 'inscripcions.grupo_id')
-            ->join('hacademicas as h', 'h.inscripcion_id', '=', 'inscripcions.id')
-            ->join('materia as mat', 'mat.id', '=', 'h.materium_id')
+            ->join('especialidads as esp', 'esp.id', '=', 'hacademicas.especialidad_id')
+            ->join('grupos as gru', 'gru.id', '=', 'hacademicas.grupo_id')
+            ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
+            ->join('materia as mat', 'mat.id', '=', 'hacademicas.materium_id')
             ->join('asignacion_academicas as aa', 'aa.materium_id', '=', 'h.materium_id')
-            ->whereColumn('aa.grupo_id', 'h.grupo_id')
-            ->whereColumn('aa.plantel_id', 'inscripcions.plantel_id')
-            ->whereColumn('aa.lectivo_id', 'inscripcions.lectivo_id')
+            ->whereColumn('aa.grupo_id', 'hacademicas.grupo_id')
+            ->whereColumn('aa.plantel_id', 'hacademicas.plantel_id')
+            ->whereColumn('aa.lectivo_id', 'hacademicas.lectivo_id')
             ->join('empleados as e', 'e.id', '=', 'aa.empleado_id')
-            ->where('inscripcions.plantel_id', $data['plantel_f'])
-            ->where('inscripcions.lectivo_id', $data['lectivo_f'])
+            ->where('hacademicas.plantel_id', $data['plantel_f'])
+            ->where('hacademicas.lectivo_id', $data['lectivo_f'])
             ->where('h.lectivo_id', $data['lectivo_f'])
-            ->whereNull('inscripcions.deleted_at')
-            ->whereNull('h.deleted_at')
+            ->whereNull('hacademicas.deleted_at')
+            ->whereNull('i.deleted_at')
             ->whereNull('aa.deleted_at')
             ->orderBy('aa.id', 'esp.name', 'gru.id')
             ->distinct()

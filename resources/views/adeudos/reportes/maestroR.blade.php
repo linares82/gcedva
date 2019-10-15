@@ -81,7 +81,7 @@
         </thead>
     -->
         <tbody>
-            
+            <?php $total=['concepto'=>"",'clientes_activos'=>0,'clientes_pagados'=>0,'total_monto_pagado'=>0,'deudores'=>0,'monto_deuda'=>0,'bajas_pagadas'=>0]; ?>
             @foreach($lineas_procesadas as $registro)
             @if($registro['concepto']=="Total")
             <tr>
