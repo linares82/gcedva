@@ -19,6 +19,8 @@ use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updatePago;
 use App\Http\Requests\createPago;
+use App\IngresoEgreso;
+use App\Transference;
 use DB;
 
 class PagosController extends Controller {
@@ -401,9 +403,20 @@ class PagosController extends Controller {
                             ->orderBy('fp.id')
                             ->orderBy('pag.fecha')
                             ->distinct()
-                            ->get();
+                            ->get();                    
                 
-                
+                $transferencias= Transference::select('ceo.name as origen', 'ced.name as destino', 'po.razon as plantel_origen','pd.razon as plantel_destino',
+                                                            'e.nombre','e.ape_paterno','e.ape_materno', 'fecha','monto')
+                                                            ->join('cuentas_efectivos as ceo','ceo.id','=','origen_id')
+                                                            ->join('cuentas_efectivos as ced', 'ced.id', '=', 'origen_id')
+                                                            ->join('plantels as po', 'po.id', '=', 'transferences.plantel_id')
+                                                            ->join('plantels as pd', 'pd.id', '=', 'transferences.plantel_destino_id')
+                                                            ->join('empleados as e', 'e.id', '=', 'transferences.responsable_id')
+                                                            ->where('fecha', '>=', $data['fecha_f'])
+                                                            ->where('fecha', '<=', $data['fecha_t'])
+                                                            ->where('plantel_id', '=', $data['plantel_f'])
+                                                            ->get();
+
                 //dd($registros_pagados->toArray());
                 
                 $registros_parciales= Caja::select('pla.razon','c.id',
@@ -450,7 +463,7 @@ class PagosController extends Controller {
                 */
                 return view('pagos.reportes.inscritosPagosR', array('registros_pagados'=>$registros_pagados,
                                                                            'registros_parciales'=>$registros_parciales,
-                                                                           'registros_pagados1'=>'registros_pagados1',
+                                                                           'transferencias'=>$transferencias,
                                                                            'plantel'=>$plantel,
                                                                            'data'=>$data,
                                                                            'egresos'=>$egresos));

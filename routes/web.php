@@ -23,8 +23,8 @@ if (version_compare(PHP_VERSION, '7.2.0', '>=')) {
     //var_dump($query->bindings);
     //var_dump($query->time);
     //echo'</pre>';
-    Log::info($query->sql);
-    Log::info($query->bindings);
+   // Log::info($query->sql);
+    //Log::info($query->bindings);
 });
 
 Route::get('/', 'Auth\LoginController@showLoginForm');

@@ -17,7 +17,7 @@
         <h3>Consulta Ingresos y Egresos</h3>
         <table class="table table-condensed table-striped">
             <thead>
-                <th>Cuenta Efectivo</th><th>Plantel</th><th>Egreso</th><th>Concepto</th><th>Caja</th><th>Transferencia</th><th>Fecha</th><th>Monto Egreso</th><th>Monto Ingreso</th>
+                <th>Cuenta Efectivo</th><th>Plantel</th><th>Egreso</th><th>Concepto</th><th>Caja</th><th>Transferencia</th><th>Fecha</th><th>Monto Egreso</th><th>Monto Ingreso</th><th></th>
             </thead>
             <tbody>
                 <?php 
@@ -28,6 +28,7 @@
                 $total_ingreso=0;
                 $total_cuenta_egreso=0;
                 $total_cuenta_ingreso=0;
+               
                 ?>
                 @foreach($registros as $registro)
                 @if($cuenta<>$registro->id and ($total_cuenta_egreso>0 or $total_cuenta_ingreso>0))
@@ -44,7 +45,7 @@
                 @else
                     <tr><td colspan='7'>Saldo Actualizado</td><td>{{$cuenta_efectivo->saldo_actualizado}}</td><td>0</td></tr>
                 @endif
-                <tr><td colspan="7"><strong>Total del Cuenta</strong></td><td><strong>{{$total_cuenta_egreso}}</strong></td><td>{{$total_cuenta_ingreso}}</td></tr>
+            <tr><td colspan="7"><strong>Total del Cuenta</strong></td><td><strong>{{$total_cuenta_egreso}}</strong></td><td>{{$total_cuenta_ingreso}}</td><td>{{$total_cuenta_ingreso-$total_cuenta_egreso}}</td></tr>
                 
                 <?php $total_cuenta_egreso=0; 
                       $total_cuenta_ingreso=0
@@ -100,9 +101,9 @@
                 @else
                     <tr><td colspan='7'>Saldo Actualizado</td><td>{{$cuenta_efectivo->saldo_actualizado}}</td><td>0</td></tr>
                 @endif
-                <tr><td colspan="7"><strong>Total del Cuenta</strong></td><td><strong>{{$total_cuenta_egreso}}</strong></td><td>{{$total_cuenta_ingreso}}</td></tr>
+                <tr><td colspan="7"><strong>Total del Cuenta</strong></td><td><strong>{{$total_cuenta_egreso}}</strong></td><td>{{$total_cuenta_ingreso}}</td><td>{{$total_cuenta_ingreso-$total_cuenta_egreso}}</td></tr>
                 
-                <tr><td colspan="7"><strong>Total</strong></td><td><strong>{{$total_egreso}}</strong></td><td>{{$total_ingreso}}</td></tr>
+                <tr><td colspan="7"><strong>Total</strong></td><td><strong>{{$total_egreso}}</strong></td><td>{{$total_ingreso}}</td><td>{{$total_ingreso-$total_egreso}}</td></tr>
             </tbody>
         </table>
     </div>

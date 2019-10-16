@@ -52,17 +52,7 @@
 
 </head>
   <body>
-<!--
-<table>
-    @foreach($registros_totales as $r)
-    <tr>
-    <td>{{$r->razon}}</td><td>{{$r->id}}</td><td>{{$r->pagado_bnd}}</td><td>{{$r->adeudo_planeado}}</td><td>{{$r->concepto}}</td>
-    <td>{{$r->pago_calculado_adeudo}}</td><td>{{$r->caja}}</td><td>{{$r->borrado_c}}</td><td>{{$r->borrado_cln}}</td><td></td>
-    <td>{{$r->st_cliente_id}}</td><td>{{$r->st_seguimiento_id}}</td>
-    </tr>        
-    @endforeach
-</table>
--->
+
 <table border="0" width="100%" >
             <td border="0" align="center"  >
                 <h3>

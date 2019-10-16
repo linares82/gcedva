@@ -81,10 +81,10 @@
                     $j=$i+$j;
                     ?>
                     <tr>
-                        <td><strong>Total Forma de Pago</strong></td><td colspan="5"><strong><strong></td><td style="text-align:right;"><strong>{{number_format($total_forma_pago)}}</strong></td><td></td>
+                        <td><strong>Total Forma de Pago</strong></td><td colspan="6"><strong><strong></td><td style="text-align:right;"><strong>{{number_format($total_forma_pago)}}</strong></td><td></td>
                     </tr>
                     <tr>
-                        <td><strong>Total</strong></td><td colspan="5"><strong><strong></td><td style="text-align:right;"><strong>{{number_format($suma_total)}}</strong></td><td></td>
+                        <td><strong>Total</strong></td><td colspan="6"><strong><strong></td><td style="text-align:right;"><strong>{{number_format($suma_total)}}</strong></td><td></td>
                     </tr>
                     <?php $total=$suma_total ?>
             </tbody>
@@ -206,7 +206,20 @@
             </thead>
             <td style="text-align:right;">{{number_format($total)}}</td><td style="text-align:right;">{{number_format($total_suma)}}</td><td style="text-align:right;">{{number_format($total-$total_suma)}}</td>
         </table>
-            
+        @if(isset($transferencias))
+        <h3>Transferencias</h3>
+        <table>
+            <thead>
+            <th>Plantel Origen</th><th>Plantel Destino</th><th>Cuenta Origen</th><th>Cuenta Destino</th><th>Fecha</th><th>Monto</th>
+            </thead>
+            <tbody>
+              @foreach($transferencias as $transferencia)
+                <tr><td>{{$transferencia->plantel_origen}}</td><td>{{$transferencia->plantel_destino}}</td><td>{{$transferencia->origen}}</td>
+                  <td>{{$transferencia->destino}}</td><td>{{$transferencia->fecha}}</td><td>{{$transferencia->monto}}</td></tr>
+              @endforeach
+            </tbody>
+        </table>   
+        @endif 
     </div>
       
       
