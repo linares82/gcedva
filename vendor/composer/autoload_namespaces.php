@@ -15,5 +15,6 @@ return array(
     'Mockery' => array($vendorDir . '/mockery/mockery/library'),
     'Mailgun' => array($vendorDir . '/mailgun/mailgun-php/src'),
     'Maatwebsite\\Excel\\' => array($vendorDir . '/maatwebsite/excel/src'),
+    'JasperPHP' => array($vendorDir . '/cossou/jasperphp/src'),
     'BaconQrCode' => array($vendorDir . '/bacon/bacon-qr-code/src'),
 );

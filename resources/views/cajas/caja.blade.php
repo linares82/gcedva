@@ -112,12 +112,16 @@
                 @if(isset($cliente))
 
                 {!! Form::open(array('route' => 'cajas.store')) !!} 
+                @permission('cajas.store')
                 <div class="input-group form-group col-md-12 @if($errors->has('cliente_id')) has-error @endif">
+                    
                     <div class="input-group-btn">
                         <button type="submit" class="btn btn-warning" data-toggle="tooltip" title="Crear Venta"><i class='glyphicon glyphicon-plus-sign'></i></button>
                     </div>
+                    
                     {!! Form::text("fecha", null, array("class" => "form-control fecha", "id" => "fecha-field", 'placeholder'=>'Fecha de Venta', 'style'=>"100%")) !!}
                 </div>
+                @endpermission
                 {!! Form::hidden("cliente_id", $cliente->id, array("class" => "form-control", "id" => "cliente_id-field")) !!}
                 {!! Form::hidden("st_caja_id", 0, array("class" => "form-control", "id" => "st_caja_id_id-field")) !!}
                 {!! Form::close() !!}
@@ -159,12 +163,12 @@
                 @if(isset($caja))
                 <div class="form-group col-md-4">
                     <div class='text-center'>
-
+                        @permission('cajas.cancelar')
                         {!! Form::open(array('route' => 'cajas.cancelar')) !!}
                         {!! Form::hidden("caja", $caja->id, array("class" => "form-control", "id" => "caja_id-field")) !!}
                         <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-close"></i> Cancelar Venta</button>
                         {!! Form::close() !!}
-
+                        @endpermission
                     </div>
                 </div>
                 @if($cliente->beca_bnd==-1)

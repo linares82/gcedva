@@ -12,6 +12,7 @@
         "barryvdh/laravel-dompdf": "^0.8.0",
         "bogardo/mailgun": "^5.0",
         "chumper/zipper": "1.0.x",
+        "cossou/jasperphp": "^2.8",
         "dog-ears/crud-d-scaffold": "1.*",
         "fideloper/proxy": "~3.3",
         "guzzlehttp/guzzle": "^6.2",

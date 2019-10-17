@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use File;
+use JasperPHP\JasperPHP as JasperPHP; 
 
 use App\AvisosInicio;
 use App\Aviso;
@@ -1405,8 +1406,42 @@ class ClientesController extends Controller {
         $cliente=Cliente::find($datos['id']);
         $inscripcion=Inscripcion::find($datos['inscripcion']);
         $img= PivotDocCliente::where('cliente_id',$datos['id'])->where('doc_alumno_id',11)->first();
-        return view('clientes.reportes.credencial_anverso', compact('cliente', 'inscripcion', 'img'))
-                        ->with('');
+
+        $cadena_img=explode('/',$img->archivo);
+        //dd($cadena_img[count($cadena_img) - 1]);
+        //dd(base_path() . '/vendor/cossou/jasperphp/examples/' . $cadena_img[count($cadena_img) - 1]);
+        return view('clientes.reportes.credencial_anverso', compact('cliente', 'inscripcion', 'img'));
+
+        /* PDF::setOptions(['defaultFont' => 'arial']);
+        $pdf = PDF::loadView('clientes.reportes.credencial_anverso', array('cliente' => $cliente,
+                                                                                                           'inscripcion'=>$inscripcion,
+                                                                                                           'img'=>$img))
+            ->setPaper('letter', 'portrait');
+        return $pdf->download('reporte.pdf');
+        */
+        /*
+            // Crear el objeto JasperPHP
+            $jasper = new JasperPHP;
+
+            // Generar el Reporte
+            $jasper->process(
+                // Ruta y nombre de archivo de entrada del reporte
+                base_path() . '/vendor/cossou/jasperphp/examples/credencial.jasper',
+                false, // Ruta y nombre de archivo de salida del reporte (sin extensión)
+                array('pdf'), // Formatos de salida del reporte
+                array('cliente' => $cliente->id,
+                'inscripcion' => $inscripcion->id,
+                'imagen' => base_path() . '/vendor/cossou/jasperphp/examples/'. $cadena_img[count($cadena_img) - 1]), // Parámetros del reporte
+                array(
+                'driver' => 'mysql',
+                'username' => 'root',
+                'host' => 'localhost',
+                'database' => 'crmscool_jesadi',
+                'port' => '3306')
+            )->execute();
+        */
+
+
     }
     
     public function credencialReverso(Request $request){

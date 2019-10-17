@@ -35,6 +35,14 @@
                         <span class="help-block">{{ $errors->first("archivo") }}</span>
                        @endif
                     </div>
+                    <div class='row'></div>
+                     <div class="form-group col-md-12 @if($errors->has('inscripcion_id')) has-error @endif">
+                       <label for="inscripcion_id-field">Inscripcion</label>
+                       {!! Form::select("inscripcion_id", $inscripcions, null, array("class" => "form-control select_seguridad", "id" => "inscripcion_id-field")) !!}
+                       @if($errors->has("inscripcion_id"))
+                        <span class="help-block">{{ $errors->first("inscripcion_id") }}</span>
+                       @endif
+                    </div>
                     
 @push('scripts')
 <script type="text/javascript">
@@ -53,6 +61,9 @@
                                 lang_clear_date: 'Limpiar',
                                 show_select_today: 'Hoy',
     });
+    
     });
+
+
 </script>
 @endpush

@@ -926,7 +926,7 @@
                 <thead style="color: #ffffff;background: #0B0B3B;">
                 <td>Plantel</td><td>Especialidad</td><td>Nivel</td>
                 <td>Grado</td><td>Grupo</td><td>Periodo</td><td>F. Inscripcion</td>
-                <td>Periodo Lectivo</td><td>Matricula</td><td>Control</td><td></td>
+                <td>Periodo Lectivo</td><td>Matricula</td><td>Control</td><td>Estatus</td><td></td>
                 </thead>
                 <tbody>
 
@@ -941,6 +941,7 @@
                         <td>{{$i->lectivo->name}}</td>
                         <td>{{$i->matricula}}</td>
                         <td>{{$i->control}}</td>
+                        <td>{{$i->stInscripcion->name}}</td>
                         <td>
                             @permission('inscripcions.edit')
                             

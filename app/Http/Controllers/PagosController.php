@@ -408,13 +408,13 @@ class PagosController extends Controller {
                 $transferencias= Transference::select('ceo.name as origen', 'ced.name as destino', 'po.razon as plantel_origen','pd.razon as plantel_destino',
                                                             'e.nombre','e.ape_paterno','e.ape_materno', 'fecha','monto')
                                                             ->join('cuentas_efectivos as ceo','ceo.id','=','origen_id')
-                                                            ->join('cuentas_efectivos as ced', 'ced.id', '=', 'origen_id')
+                                                            ->join('cuentas_efectivos as ced', 'ced.id', '=', 'destino_id')
                                                             ->join('plantels as po', 'po.id', '=', 'transferences.plantel_id')
                                                             ->join('plantels as pd', 'pd.id', '=', 'transferences.plantel_destino_id')
                                                             ->join('empleados as e', 'e.id', '=', 'transferences.responsable_id')
                                                             ->where('fecha', '>=', $data['fecha_f'])
                                                             ->where('fecha', '<=', $data['fecha_t'])
-                                                            ->where('plantel_id', '=', $data['plantel_f'])
+                                                            //->where('plantel_id', '=', $data['plantel_f'])
                                                             ->get();
 
                 //dd($registros_pagados->toArray());

@@ -11,6 +11,8 @@ use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updateHistoriaCliente;
 use App\Http\Requests\createHistoriaCliente;
+use App\Inscripcion;
+use Illuminate\Support\Facades\DB;
 
 class HistoriaClientesController extends Controller {
 
@@ -34,8 +36,21 @@ class HistoriaClientesController extends Controller {
 	public function create(Request $request )
 	{
                 $data=$request->all();
-                $cliente=$data['cliente'];
-		return view('historiaClientes.create', compact('cliente'))
+				$cliente=$data['cliente'];
+				$inscripcions=Inscripcion::select(DB::raw('inscripcions.id, concat(p.cve_plantel," / ",e.name," / ",n.name," / ",g.name," / ",gru.name," / ",l.name," / ",pe.name) as inscripcion'))
+				->join('plantels as p','p.id','=','inscripcions.plantel_id')
+				->join('especialidads as e','e.id','=','inscripcions.especialidad_id')
+				->join('nivels as n','n.id','=','inscripcions.nivel_id')
+				->join('grados as g','g.id','=','inscripcions.grado_id')
+				->join('grupos as gru','gru.id','=','inscripcions.grupo_id')
+				->join('lectivos as l', 'l.id', '=', 'inscripcions.lectivo_id')
+				->join('periodo_estudios as pe', 'pe.id', '=', 'inscripcions.periodo_estudio_id')
+				->where('cliente_id', $data['cliente'])
+				->where('st_inscripcion_id', '<>',3)
+				->whereNull('inscripcions.deleted_at')
+				->pluck('inscripcion', 'id');
+				//dd($inscripcions);
+		return view('historiaClientes.create', compact('cliente','inscripcions'))
 			->with( 'list', HistoriaCliente::getListFromAllRelationApps() );
 	}
 
@@ -67,13 +82,23 @@ class HistoriaClientesController extends Controller {
                     $cliente->st_cliente_id=24;
                     $cliente->save();
                 }elseif($e->evento_cliente_id==2){
-                    $cliente=Cliente::find($e->cliente_id);
-                    $cliente->st_cliente_id=3;
-                    $cliente->save();
+					$inscripcion=Inscripcion::find($e->inscripcion_id);
+					$inscripcion->st_inscripcion_id=3;
+					$inscripcion->save();
+
+					$inscripcions=Inscripcion::where('cliente_id',$e->cliente_id)->where('st_inscripcion_id','<>',3)->whereNull('deleted_at')->count();
+					//dd($inscripcions);
+					if($inscripcions==0){
+						$cliente = Cliente::find($e->cliente_id);
+						$cliente->st_cliente_id = 3;
+						$cliente->save();
+
+						$seguimiento = Seguimiento::where('cliente_id', $cliente->id)->first();
+						$seguimiento->st_seguimiento_id = 6;
+						$seguimiento->save();
+					}
+
                     
-                    $seguimiento=Seguimiento::where('cliente_id',$cliente->id)->first();
-                    $seguimiento->st_seguimiento_id=6;
-                    $seguimiento->save();
                      //dd("echo");     
                 }elseif($e->evento_cliente_id==6){
                     $cliente=Cliente::find($e->cliente_id);
@@ -121,8 +146,19 @@ class HistoriaClientesController extends Controller {
 	public function edit($id, HistoriaCliente $historiaCliente)
 	{
 		$historiaCliente=$historiaCliente->find($id);
-                $cliente=$historiaCliente->cliente_id;
-		return view('historiaClientes.edit', compact('historiaCliente','cliente'))
+				$cliente=$historiaCliente->cliente_id;
+		$inscripcions = Inscripcion::select(DB::raw('inscripcions.id, concat(p.cve_plantel," / ",e.name," / ",n.name," / ",g.name," / ",gru.name," / ",l.name," / ",pe.name) as inscripcion'))
+			->join('plantels as p', 'p.id', '=', 'inscripcions.plantel_id')
+			->join('especialidads as e', 'e.id', '=', 'inscripcions.especialidad_id')
+			->join('nivels as n', 'n.id', '=', 'inscripcions.nivel_id')
+			->join('grados as g', 'g.id', '=', 'inscripcions.grado_id')
+			->join('grupos as gru', 'gru.id', '=', 'inscripcions.grupo_id')
+			->join('lectivos as l', 'l.id', '=', 'inscripcions.lectivo_id')
+			->join('periodo_estudios as pe', 'pe.id', '=', 'inscripcions.periodo_estudio_id')
+			->where('cliente_id', $historiaCliente->cliente_id)
+			->whereNull('inscripcions.deleted_at')
+			->pluck('inscripcion', 'id');
+		return view('historiaClientes.edit', compact('historiaCliente','cliente','inscripcions'))
 			->with( 'list', HistoriaCliente::getListFromAllRelationApps() );
 	}
 

@@ -24,7 +24,7 @@ class createHistoriaCliente extends FormRequest
     public function rules()
     {
         return [
-            //
+            inscripcion_id=>'required'
         ];
     }
 }

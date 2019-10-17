@@ -705,7 +705,7 @@ class InscripcionsController extends Controller
     {
         $data = $request->all();
         //dd($data);
-        
+
         $registros = Hacademica::select(
             'c.nombre',
             'c.nombre2',
@@ -994,9 +994,9 @@ class InscripcionsController extends Controller
             ->whereNull('aa.deleted_at')
             ->orderBy('aa.id', 'esp.name', 'gru.id')
             ->distinct()
-            ->get();  
+            ->get();
 
-            
+
         //dd($registros->toArray());
 
 
@@ -1038,7 +1038,7 @@ class InscripcionsController extends Controller
             ->join('grupos as gru', 'gru.id', '=', 'inscripcions.grupo_id')
             ->join('hacademicas as h', 'h.inscripcion_id', '=', 'inscripcions.id')
             ->join('materia as mat', 'mat.id', '=', 'h.materium_id')
-            ->join('asignacion_academicas as aa', 'aa.materium_id', '=', 'h.materium_id')
+            ->join('asignacion_academicas as aa', 'aa.materium_id', '=', 'hacademicas.materium_id')
             ->whereColumn('aa.grupo_id', 'h.grupo_id')
             ->whereColumn('aa.plantel_id', 'inscripcions.plantel_id')
             ->whereColumn('aa.lectivo_id', 'inscripcions.lectivo_id')
@@ -1056,7 +1056,7 @@ class InscripcionsController extends Controller
         $registros = Hacademica::select('c.id', DB::raw('concat(e.nombre, " ",e.ape_paterno, " ",e.ape_materno) as instructor, '
             . 'concat(c.nombre," ",c.nombre2," ",c.ape_paterno," ",c.ape_materno) as cliente,'
             . 'c.beca_bnd, esp.name as especialidad, i.fec_inscripcion, aa.id as asignacion,'
-            . 'gru.name as grupo, gru.id as gru, mat.name as materi, stc.name as estatus_cliente, h.id as hacademica'))
+            . 'gru.name as grupo, gru.id as gru, mat.name as materi, stc.name as estatus_cliente, hacademicas.id as hacademica'))
             ->join('clientes as c', 'c.id', '=', 'hacademicas.cliente_id')
             ->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
             ->join('medios as m', 'm.id', '=', 'c.medio_id')
@@ -1064,7 +1064,7 @@ class InscripcionsController extends Controller
             ->join('grupos as gru', 'gru.id', '=', 'hacademicas.grupo_id')
             ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
             ->join('materia as mat', 'mat.id', '=', 'hacademicas.materium_id')
-            ->join('asignacion_academicas as aa', 'aa.materium_id', '=', 'h.materium_id')
+            ->join('asignacion_academicas as aa', 'aa.materium_id', '=', 'hacademicas.materium_id')
             ->whereColumn('aa.grupo_id', 'hacademicas.grupo_id')
             ->whereColumn('aa.plantel_id', 'hacademicas.plantel_id')
             ->whereColumn('aa.lectivo_id', 'hacademicas.lectivo_id')
@@ -1119,7 +1119,7 @@ class InscripcionsController extends Controller
             ->join('grupos as gru', 'gru.id', '=', 'hacademicas.grupo_id')
             ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
             ->join('materia as mat', 'mat.id', '=', 'hacademicas.materium_id')
-            ->join('asignacion_academicas as aa', 'aa.materium_id', '=', 'h.materium_id')
+            ->join('asignacion_academicas as aa', 'aa.materium_id', '=', 'hacademicas.materium_id')
             ->whereColumn('aa.grupo_id', 'hacademicas.grupo_id')
             ->whereColumn('aa.plantel_id', 'hacademicas.plantel_id')
             ->whereColumn('aa.lectivo_id', 'hacademicas.lectivo_id')
@@ -1147,7 +1147,7 @@ class InscripcionsController extends Controller
             'registros' => $registros,
             'plantel' => $plantel,
             'lectivo' => $lectivo,
-            'data'=>$data
+            'data' => $data
         ));
     }
 
@@ -1180,7 +1180,7 @@ class InscripcionsController extends Controller
     public function listaMesR(Request $request)
     {
         $data = $request->all();
-        
+
         $registros = Hacademica::select(
             'hacademicas.grupo_id',
             'hacademicas.grado_id',
@@ -1210,7 +1210,7 @@ class InscripcionsController extends Controller
             ->join('empleados as e', 'e.id', '=', 'aa.empleado_id')
             ->join('grados as gra', 'gra.id', '=', 'hacademicas.grado_id')
             ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
-            ->where('c.st_cliente_id','<>', 3)
+            ->where('c.st_cliente_id', '<>', 3)
             ->where('aa.id', $data['asignacion'])
             ->where('hacademicas.plantel_id', $data['plantel_f'])
             ->where('hacademicas.lectivo_id', $data['lectivo_f'])
@@ -1539,5 +1539,4 @@ class InscripcionsController extends Controller
             'grado' => $grado
         ));
     }
-
 }

@@ -663,6 +663,13 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
                 0 => __DIR__ . '/..' . '/maatwebsite/excel/src',
             ),
         ),
+        'J' => 
+        array (
+            'JasperPHP' => 
+            array (
+                0 => __DIR__ . '/..' . '/cossou/jasperphp/src',
+            ),
+        ),
         'B' => 
         array (
             'BaconQrCode' => 
@@ -735,6 +742,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'AddIndexSegmentoMercadoClientesTable' => __DIR__ . '/../..' . '/database/migrations/2018_04_12_143425_add_index_segmento_mercado_clientes_table.php',
         'AddIndexTpoInformeClientesTable' => __DIR__ . '/../..' . '/database/migrations/2018_03_12_111856_add_index_tpo_informe_clientes_table.php',
         'AddIndexTurnoClientesTable' => __DIR__ . '/../..' . '/database/migrations/2017_11_13_111422_add_index_turno_clientes_table.php',
+        'AddInscripcionIdHistoriaClientesTable' => __DIR__ . '/../..' . '/database/migrations/2019_10_17_122135_add_inscripcion_id_historia_clientes_table.php',
         'AddJustificacionBecaClientesTable' => __DIR__ . '/../..' . '/database/migrations/2019_02_13_112616_add_justificacion_beca_clientes_table.php',
         'AddLectAsisAsignacionAcademicasTable' => __DIR__ . '/../..' . '/database/migrations/2018_02_21_191146_add_lect_asis_asignacion_academicas_table.php',
         'AddLectivoGrfEspecialidadTable' => __DIR__ . '/../..' . '/database/migrations/2017_12_14_190700_add_lectivo_grf_especialidad_table.php',
