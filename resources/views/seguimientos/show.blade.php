@@ -385,8 +385,9 @@
 @push('scripts')
   <script type="text/javascript">
     $(document).ready(function() {
+        @permission('seguimiento.opcionConcretado')
         $("#st_seguimiento_id-field option[value='2']").prop('disabled',true); 
-        
+        @endpermission
     $('#fecha-field').Zebra_DatePicker({
         days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
         months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],

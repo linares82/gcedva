@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 
+use App\Adeudo;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use File as Archi;
@@ -85,6 +86,14 @@ class HistoriaClientesController extends Controller {
 					$inscripcion=Inscripcion::find($e->inscripcion_id);
 					$inscripcion->st_inscripcion_id=3;
 					$inscripcion->save();
+
+					$adeudos=Adeudo::where('combinacion_cliente_id', $inscripcion->combinacion_cliente_id)
+											  ->where('caja_id',0)
+											  ->where('pagado_bnd',0)
+											  ->get();
+					foreach($adeudos as $adeudo){
+						$adeudo->delete();
+					}
 
 					$inscripcions=Inscripcion::where('cliente_id',$e->cliente_id)->where('st_inscripcion_id','<>',3)->whereNull('deleted_at')->count();
 					//dd($inscripcions);
