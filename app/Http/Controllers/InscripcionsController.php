@@ -940,6 +940,7 @@ class InscripcionsController extends Controller
     public function InscritosLectivoR(Request $request)
     {
         $data = $request->all();
+        //dd($data);
         $plantel = Plantel::find($data['plantel_f']);
         //dd($data);
         $lectivo = Lectivo::find($data['lectivo_f']);
@@ -987,7 +988,7 @@ class InscripcionsController extends Controller
             ->whereColumn('aa.lectivo_id', 'hacademicas.lectivo_id')
             ->join('empleados as e', 'e.id', '=', 'aa.empleado_id')
             ->where('hacademicas.plantel_id', $data['plantel_f'])
-            ->where('hacademicas.lectivo_id', $data['lectivo_f'])
+            ->whereIn('hacademicas.lectivo_id', $data['lectivo_f'])
             ->whereNull('hacademicas.deleted_at')
             ->whereNull('i.deleted_at')
             ->whereNull('hacademicas.deleted_at')
