@@ -841,7 +841,6 @@ class AdeudosController extends Controller
 
     public function maestro()
     {
-
         $planteles = Plantel::pluck('razon', 'id');
         $conceptos = CajaConcepto::pluck('name', 'id');
 

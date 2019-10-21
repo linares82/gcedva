@@ -943,7 +943,7 @@ class InscripcionsController extends Controller
         //dd($data);
         $plantel = Plantel::find($data['plantel_f']);
         //dd($data);
-        $lectivo = Lectivo::find($data['lectivo_f']);
+        //$lectivo = Lectivo::find($data['lectivo_f']);
         /*
         $registros = Inscripcion::select('c.id', DB::raw('concat(e.nombre, " ",e.ape_paterno, " ",e.ape_materno) as instructor, '
             . 'concat(c.nombre," ",c.nombre2," ",c.ape_paterno," ",c.ape_materno) as cliente,'
@@ -971,16 +971,18 @@ class InscripcionsController extends Controller
             ->distinct()
             ->get();
             */
+            try{
         $registros = Hacademica::select('c.id', DB::raw('concat(e.nombre, " ",e.ape_paterno, " ",e.ape_materno) as instructor, '
             . 'concat(c.nombre," ",c.nombre2," ",c.ape_paterno," ",c.ape_materno) as cliente,'
             . 'c.beca_bnd, esp.name as especialidad, i.fec_inscripcion, aa.id as asignacion,'
-            . 'gru.name as grupo, gru.id as gru, mat.name as materi, stc.name as estatus_cliente'))
+            . 'gru.name as grupo, gru.id as gru, mat.name as materi, stc.name as estatus_cliente, l.name as lectivo'))
             ->join('clientes as c', 'c.id', '=', 'hacademicas.cliente_id')
             ->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
             ->join('medios as m', 'm.id', '=', 'c.medio_id')
             ->join('especialidads as esp', 'esp.id', '=', 'hacademicas.especialidad_id')
             ->join('grupos as gru', 'gru.id', '=', 'hacademicas.grupo_id')
             ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
+            ->join('lectivos as l','l.id','=','hacademicas.lectivo_id')
             ->join('materia as mat', 'mat.id', '=', 'hacademicas.materium_id')
             ->join('asignacion_academicas as aa', 'aa.materium_id', '=', 'hacademicas.materium_id')
             ->whereColumn('aa.grupo_id', 'hacademicas.grupo_id')
@@ -996,7 +998,9 @@ class InscripcionsController extends Controller
             ->orderBy('aa.id', 'esp.name', 'gru.id')
             ->distinct()
             ->get();
-
+            }catch(Exception $e){
+                dd($e);
+            }
 
         //dd($registros->toArray());
 
@@ -1011,7 +1015,7 @@ class InscripcionsController extends Controller
         return view('inscripcions.reportes.inscritosLectivoR', array(
             'registros' => $registros,
             'plantel' => $plantel,
-            'lectivo' => $lectivo
+            //'lectivo' => $lectivo
         ));
     }
 

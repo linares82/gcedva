@@ -12,12 +12,12 @@
     
   </head>
   <body>
-      <h3>Inscritos <br/>Lectivo {{$lectivo->name}}</h3>
+      <h3>Inscritos</h3>
     <div class="datagrid">
         <table class="table table-condensed table-striped">
             <thead>
                 <tr>
-                    <th></th><th>Plantel</th><th>Especialidad</th><th>Grupo</th><th>Instructor</th><th>Materia</th><th>Cliente</th><th>Fecha Inscripción</th><th>Estatus Cliente</th>
+                    <th></th><th>Plantel</th><th>Especialidad</th><th>Grupo</th><th>Instructor</th><th>Materia</th><th>Cliente</th><th>Fecha Inscripción</th><th>Estatus Cliente</th><th>Lectivo</th>
                 </tr> 
             </thead>
             <tbody>
@@ -45,7 +45,7 @@
                         <td>{{$registro->id}} - {{$registro->cliente}}</td>
                         <td>{{$registro->fec_inscripcion}}</td>
                         <td>{{$registro->estatus_cliente}}</td>
-                        
+                        <td>{{$registro->lectivo}}</td>    
                     </tr>
                     
                     <?php 
