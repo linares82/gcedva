@@ -223,6 +223,9 @@
                                     @permission('historiaClientes.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('historiaClientes.edit', $historiaCliente->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
                                     @endpermission
+                                    @permission('historiaClientes.reactivar')
+                                        <a class="btn btn-xs btn-warning" href="{{ route('historiaClientes.reactivar', array('id'=>$historiaCliente)) }}"><i class="glyphicon glyphicon-edit"></i> Reactivar</a>
+                                    @endpermission
                                     @permission('historiaClientes.destroy')
                                     {!! Form::model($historiaCliente, array('route' => array('historiaClientes.destroy', $historiaCliente->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}
                                         <button type="submit" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> Borrar</button>

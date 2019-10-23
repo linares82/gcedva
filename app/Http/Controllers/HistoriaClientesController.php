@@ -17,11 +17,13 @@ use Illuminate\Support\Facades\DB;
 
 class HistoriaClientesController extends Controller {
 
+	protected $historiaCliente;
 	/**
 	 * Display a listing of the resource.
 	 *
 	 * @return Response
 	 */
+	
 	public function index(Request $request)
 	{
 		$historiaClientes = HistoriaCliente::getAllData($request);
@@ -281,4 +283,20 @@ class HistoriaClientesController extends Controller {
 		return redirect()->route('historiaClientes.index',array('q[cliente_id_lt]'=>$cliente))->with('message', 'Registro Borrado.');
 	}
 
+	public function reactivar(Request $request){
+		$input=$request->all();
+		$historiaCliente=HistoriaCliente::find($input['id']);
+		$historiaCliente->descripcion= $historiaCliente->descripcion." - Reactivado";
+		$historiaCliente->save();
+
+		$cliente=Cliente::find($historiaCliente->cliente_id);
+		$cliente->st_cliente_id=4;
+		$cliente->save();
+
+		$inscripcion=Inscripcion::find($historiaCliente->inscripcion_id);
+		$inscripcion->st_inscripcion_id=1;
+		$inscripcion->save();
+
+		return redirect()->route('historiaClientes.index', array('q[cliente_id_lt]' => $cliente->id))->with('message', 'Registro Borrado.');
+	}
 }
