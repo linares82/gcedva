@@ -208,16 +208,47 @@ class HistoriaClientesController extends Controller {
 		$historiaCliente->update( $input );
                 
                 $e=$historiaCliente;
-                
-                if($e->evento_cliente_id==4){
-                    $cliente=Cliente::find($e->cliente_id);
-                    $cliente->st_cliente_id=24;
-                    $cliente->save();
-                }elseif($e->evento_cliente_id==2){
-                    $cliente=Cliente::find($e->cliente_id);
-                    $cliente->st_cliente_id=3;
-                    $cliente->save();
-                }
+
+		if ($e->evento_cliente_id == 4) {
+			$cliente = Cliente::find($e->cliente_id);
+			$cliente->st_cliente_id = 24;
+			$cliente->save();
+		} elseif ($e->evento_cliente_id == 2) {
+			$inscripcion = Inscripcion::find($e->inscripcion_id);
+			$inscripcion->st_inscripcion_id = 3;
+			$inscripcion->save();
+
+			$adeudos = Adeudo::where('combinacion_cliente_id', $inscripcion->combinacion_cliente_id)
+				->where('caja_id', 0)
+				->where('pagado_bnd', 0)
+				->get();
+			foreach ($adeudos as $adeudo) {
+				$adeudo->delete();
+			}
+
+			$inscripcions = Inscripcion::where('cliente_id', $e->cliente_id)->where('st_inscripcion_id', '<>', 3)->whereNull('deleted_at')->count();
+			//dd($inscripcions);
+			if ($inscripcions == 0) {
+				$cliente = Cliente::find($e->cliente_id);
+				$cliente->st_cliente_id = 3;
+				$cliente->save();
+
+				$seguimiento = Seguimiento::where('cliente_id', $cliente->id)->first();
+				$seguimiento->st_seguimiento_id = 6;
+				$seguimiento->save();
+			}
+
+
+			//dd("echo");     
+		} elseif ($e->evento_cliente_id == 6) {
+			$cliente = Cliente::find($e->cliente_id);
+			$cliente->st_cliente_id = 4;
+			$cliente->save();
+
+			$seguimiento = Seguimiento::where('cliente_id', $cliente->id)->first();
+			$seguimiento->st_seguimiento_id = 2;
+			$seguimiento->save();
+		}
                 
                 if ( $e ){
                     $ruta=public_path()."/imagenes/historia_clientes/".$e->id."/";
