@@ -293,6 +293,10 @@ class HistoriaClientesController extends Controller {
 		$cliente->st_cliente_id=4;
 		$cliente->save();
 
+		$seguimiento=Seguimiento::where('cliente_id', $cliente->id)->first();
+		$seguimiento->st_seguimiento_id=2;
+		$seguimiento->save();
+
 		$inscripcion=Inscripcion::find($historiaCliente->inscripcion_id);
 		$inscripcion->st_inscripcion_id=1;
 		$inscripcion->save();
