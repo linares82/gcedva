@@ -17,7 +17,7 @@
         <h3>Consulta de eventos de Bajas del {{$datos['fecha_f']}} al {{$datos['fecha_t']}}</h3>
         <table class="table table-condensed table-striped">
             <thead>
-                <th>Plantel</th><th>Alumno</th><th>Fecha</th><th>Estatus</th><th>Tel. Cel.</th><th>Descripción</th>
+                <th>Plantel</th><th>Alumno</th><th>Fecha</th><th>Estatus</th><th>Tel. Cel.</th><th>Descripción</th><th>Inscripciones Activas</th>
             </thead>
             <tbody>
                 <?php $cont=0; ?>
@@ -25,6 +25,11 @@
                 <tr>
                     <td>{{ $registro->razon }}</td><td>{{$registro->cliente."-".$registro->nombre." ".$registro->ape_paterno." ".$registro->ape_materno}}</td>
                     <td>{{$registro->fecha}}</td><td>{{$registro->estatus}}</td><td>{{$registro->tel_cel}}</td><td>{{$registro->descripcion}}</td>
+                    @php
+                      $cuenta_inscripciones=\App\Inscripcion::where('cliente_id',$registro->cliente)
+                      ->whereNull('deleted_at')->where('st_inscripcion_id',1)->count();    
+                    @endphp
+                    <td>{{$cuenta_inscripciones}}</td>
                 </tr>
                 <?php $cont++; ?>
                 @endforeach
