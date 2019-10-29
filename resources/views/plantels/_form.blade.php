@@ -293,6 +293,17 @@
                         <span class="help-block">{{ $errors->first("membrete") }}</span>
                        @endif
                     </div>
+                    <div class="form-group col-md-4 @if($errors->has('img_firma')) has-error @endif">
+                       <label for="img_firma-field">Firma</label>
+                       {!! Form::text("img_firma", null, array("class" => "form-control input-sm", "id" => "membrete-field", 'readonly'=>'readonly')) !!}
+                       {!! Form::file('img_firma_file') !!}
+                       @if (isset($plantel))
+                       <img src="{!! asset('imagenes/planteles/'.$plantel->id.'/'.$plantel->img_firma) !!}" alt="Logo" height="100"> </img>
+                       @endif
+                       @if($errors->has("img_firma"))
+                        <span class="help-block">{{ $errors->first("img_firma") }}</span>
+                       @endif
+                    </div>
             </fieldset> 
         </div>
         <div id="tab2" class="tab-pane">

@@ -1404,13 +1404,14 @@ class ClientesController extends Controller {
     public function credencialAnverso(Request $request){
         $datos=$request->all();
         $cliente=Cliente::find($datos['id']);
+        $plantel=Plantel::find($cliente->plantel_id);
         $inscripcion=Inscripcion::find($datos['inscripcion']);
         $img= PivotDocCliente::where('cliente_id',$datos['id'])->where('doc_alumno_id',11)->first();
 
         $cadena_img=explode('/',$img->archivo);
         //dd($cadena_img[count($cadena_img) - 1]);
         //dd(base_path() . '/vendor/cossou/jasperphp/examples/' . $cadena_img[count($cadena_img) - 1]);
-        return view('clientes.reportes.credencial_anverso', compact('cliente', 'inscripcion', 'img'));
+        return view('clientes.reportes.credencial_anverso', compact('cliente', 'inscripcion', 'img','plantel'));
 
         /* PDF::setOptions(['defaultFont' => 'arial']);
         $pdf = PDF::loadView('clientes.reportes.credencial_anverso', array('cliente' => $cliente,

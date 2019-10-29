@@ -75,6 +75,11 @@ class PlantelsController extends Controller {
 			$membrete_file = $request->file('membrete_file');
 			$input['membrete'] = $membrete_file->getClientOriginalName();	
 		}
+		$r = $request->hasFile('img_firma_file');
+		if ($r) {
+			$img_firma_file = $request->file('img_firma_file');
+			$input['img_firma'] = $img_firma_file->getClientOriginalName();
+		}
 
 		//create data
 		$e=Plantel::create( $input );
@@ -94,6 +99,10 @@ class PlantelsController extends Controller {
 			if($request->file('membrete_file')){
 				//\Storage::disk('local')->put($input['membrete'],  \File::get($membrete_file));
 				$request->file('membrete_file')->move($ruta, $input['membrete']);
+			}
+			if ($request->file('img_firma_file')) {
+				//\Storage::disk('local')->put($input['membrete'],  \File::get($membrete_file));
+				$request->file('img_firma_file')->move($ruta, $input['img_firma']);
 			}
 		}
 
@@ -195,7 +204,12 @@ class PlantelsController extends Controller {
 			$membrete_file = $request->file('membrete_file');
 			$input['membrete'] = $membrete_file->getClientOriginalName();	
 		}
-
+		$r = $request->hasFile('img_firma_file');
+		if ($r) {
+			$img_firma_file = $request->file('img_firma_file');
+			$input['img_firma'] = $img_firma_file->getClientOriginalName();
+		}
+		//dd($input);
 		$plantel=$plantel->find($id);
 
 		//update data
@@ -217,6 +231,10 @@ class PlantelsController extends Controller {
 			if($request->file('membrete_file')){
 				//\Storage::disk('local')->put($input['membrete'],  \File::get($membrete_file));
 				$request->file('membrete_file')->move($ruta, $input['membrete']);
+			}
+			if ($request->file('img_firma_file')) {
+				//\Storage::disk('local')->put($input['membrete'],  \File::get($membrete_file));
+				$request->file('img_firma_file')->move($ruta, $input['img_firma']);
 			}
 		}
 
