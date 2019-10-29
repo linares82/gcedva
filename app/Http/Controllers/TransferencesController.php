@@ -11,6 +11,8 @@ use Auth;
 use DB;
 use App\Http\Requests\updateTransference;
 use App\Http\Requests\createTransference;
+use App\Plantel;
+
 
 class TransferencesController extends Controller {
 
@@ -34,8 +36,14 @@ class TransferencesController extends Controller {
 	public function create()
 	{
             $cuentasEfectivo= CuentasEfectivo::pluck('name','id');
-            $empleados=Empleado::select('id', DB::raw('concat(nombre, " ",ape_paterno," ",ape_materno) as name'))->pluck('name','id');
-		return view('transferences.create',compact('cuentasEfectivo','empleados'))
+			$empleados=Empleado::select('id', DB::raw('concat(nombre, " ",ape_paterno," ",ape_materno) as name'))->pluck('name','id');
+		$empleado = Empleado::where('user_id', Auth::user()->id)->first();
+		if (Auth::user()->can('transferencia.filtroPlantel')) {
+			$plantels = Plantel::where('id', $empleado->plantel_id)->pluck('razon', 'id');
+		} else {
+			$plantels = Plantel::pluck('razon', 'id');
+		}
+		return view('transferences.create',compact('cuentasEfectivo','empleados','plantels'))
 			->with( 'list', Transference::getListFromAllRelationApps() );
 	}
 
@@ -79,10 +87,16 @@ class TransferencesController extends Controller {
 	public function edit($id, Transference $transference)
 	{
 		$transference=$transference->find($id);
-                $cuentasEfectivo= CuentasEfectivo::pluck('name','id');
-				$empleados=Empleado::select('id', DB::raw('concat(nombre, " ",ape_paterno," ",ape_materno) as name'))->pluck('name','id');
-				//$plantels=Plantel::where('')
-		return view('transferences.edit', compact('transference','cuentasEfectivo','empleados'))
+		$cuentasEfectivo= CuentasEfectivo::pluck('name','id');
+		$empleados=Empleado::select('id', DB::raw('concat(nombre, " ",ape_paterno," ",ape_materno) as name'))->pluck('name','id');
+		$empleado= Empleado::where('user_id', Auth::user()->id)->first();
+		if(Entrust::can('transferencia.filtroPlantel')){
+			$plantels = Plantel::where('id',$empleado->plantel_id)->pluck('razon', 'id');
+		}else{
+			$plantels = Plantel::pluck('razon','id');
+		}
+		
+		return view('transferences.edit', compact('transference','cuentasEfectivo','empleados','plantels'))
 			->with( 'list', Transference::getListFromAllRelationApps() );
 	}
 

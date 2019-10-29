@@ -206,7 +206,7 @@
             </thead>
             <td style="text-align:right;">{{number_format($total)}}</td><td style="text-align:right;">{{number_format($total_suma)}}</td><td style="text-align:right;">{{number_format($total-$total_suma)}}</td>
         </table>
-        @if(isset($transferencias))
+        @if(isset($transferencias) and count($transferencias)>0)
         <h3>Transferencias</h3>
         <table>
             <thead>

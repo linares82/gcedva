@@ -403,8 +403,10 @@ class PagosController extends Controller {
                             ->orderBy('fp.id')
                             ->orderBy('pag.fecha')
                             ->distinct()
-                            ->get();                    
-                
+                            ->get();
+
+                $empleado = Empleado::where('user_id', Auth::user()->id)->first();
+
                 $transferencias= Transference::select('ceo.name as origen', 'ced.name as destino', 'po.razon as plantel_origen','pd.razon as plantel_destino',
                                                             'e.nombre','e.ape_paterno','e.ape_materno', 'fecha','monto')
                                                             ->join('cuentas_efectivos as ceo','ceo.id','=','origen_id')
@@ -412,9 +414,9 @@ class PagosController extends Controller {
                                                             ->join('plantels as po', 'po.id', '=', 'transferences.plantel_id')
                                                             ->join('plantels as pd', 'pd.id', '=', 'transferences.plantel_destino_id')
                                                             ->join('empleados as e', 'e.id', '=', 'transferences.responsable_id')
-                                                            ->where('fecha', '>=', $data['fecha_f'])
-                                                            ->where('fecha', '<=', $data['fecha_t'])
-                                                            //->where('plantel_id', '=', $data['plantel_f'])
+                                                            ->where('transferences.fecha', '>=', $data['fecha_f'])
+                                                            ->where('transferences.fecha', '<=', $data['fecha_t'])
+                                                            ->WhereRaw('transferences.plantel_id=? or transferences.plantel_destino_id=?', [$data['plantel_f'], $data['plantel_f']])
                                                             ->get();
 
                 //dd($registros_pagados->toArray());
