@@ -123,6 +123,8 @@ class CajaLnsController extends Controller {
 	{
                 
 		$cajaLn=$cajaLn->find($id);
+		$cajaLn->adeudo_id=0;
+		$cajaLn->save();
                 $vcaja=$cajaLn->caja_id;
                 $vcliente=$cajaLn->cliente_id;
                 if($cajaLn->adeudo_id<>0){

@@ -1007,10 +1007,10 @@ class SeguimientosController extends Controller {
             //dd($data);
 
             $hoy=date('Y-m-d');
-            //dd($hoy);
+        //dd($hoy);
 
-            //$adeudos_tomados=Adeudo::join('combinacion_clientes as cc','cc.id','=','adeudos.combinacion_cliente_id')
-            $adeudos_tomados=Adeudo::select('stc.id', 'adeudos.id as adeudo','adeudos.*','cc.*','g.id as grupo_id','g.name as grupo','stc.name as st_cliente',
+        /*
+                    $adeudos_tomados=Adeudo::select('stc.id', 'adeudos.id as adeudo','adeudos.*','cc.*','g.id as grupo_id','g.name as grupo','stc.name as st_cliente',
                                             'sts.name as st_seguimiento','e.name as especialidad')
                            ->join('combinacion_clientes as cc','cc.id','=','adeudos.combinacion_cliente_id')
                            ->join('clientes as c','c.id','=','adeudos.cliente_id')
@@ -1020,15 +1020,10 @@ class SeguimientosController extends Controller {
                            ->join('inscripcions as i','i.cliente_id','=','c.id')
                            ->join('especialidads as e','e.id','=','i.especialidad_id')
                            ->join('grupos as g','g.id','=','i.grupo_id')
-                           /*->join('asignacion_academicas as aa','aa.grupo_id','=','i.grupo_id')
-                           ->whereColumn('aa.lectivo_id','i.lectivo_id')
-                           ->whereColumn('aa.lectivo_id', 'i.lectivo_id')*/
                            ->where('fecha_pago','>=',$data['fecha_f'])        
                            ->where('fecha_pago','<=',$data['fecha_t']) 
                            ->where('c.plantel_id','>=',$data['plantel_f'])
                            ->where('c.plantel_id','<=',$data['plantel_t'])
-                           //->where('i.st_inscripcion_id',1)
-                           //->where('caja_id','<>',0)
                            ->where('i.grupo_id','>',0)
                            ->whereIn('stc.id', array(4,25))
                            ->where('sts.id', 2)
@@ -1042,7 +1037,51 @@ class SeguimientosController extends Controller {
                            ->orderBy('stc.id','desc')
                            ->orderBy('e.name')
                            ->orderBy('g.id')
-                           ->get();
+                           ->get(); 
+          
+         */
+
+        $adeudos_tomados = Adeudo::select(
+            'stc.id',
+            'adeudos.id as adeudo',
+            'adeudos.*',
+            'cc.*',
+            'g.id as grupo_id',
+            'g.name as grupo',
+            'stc.name as st_cliente',
+            'sts.name as st_seguimiento',
+            'e.name as especialidad'
+        )
+            ->join('clientes as c', 'c.id', '=', 'adeudos.cliente_id')
+            ->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
+            ->join('seguimientos as s', 's.cliente_id', '=', 'c.id')
+            ->join('st_seguimientos as sts', 'sts.id', '=', 's.st_seguimiento_id')
+            ->join('hacademicas as h', 'h.cliente_id', '=', 'c.id')
+            ->join('inscripcions as i', 'i.id', '=', 'h.inscripcion_id')
+            ->join('combinacion_clientes as cc', 'cc.id', '=', 'i.combinacion_cliente_id')
+            ->join('especialidads as e', 'e.id', '=', 'i.especialidad_id')
+            ->join('grupos as g', 'g.id', '=', 'h.grupo_id')
+            ->where('adeudos.fecha_pago', '>=', $data['fecha_f'])
+            ->where('adeudos.fecha_pago', '<=', $data['fecha_t'])
+            ->where('c.plantel_id', '>=', $data['plantel_f'])
+            ->where('c.plantel_id', '<=', $data['plantel_t'])
+            ->where('i.grupo_id', '>', 0)
+            ->whereIn('stc.id', array(4, 25))
+            ->where('sts.id', 2)
+            ->whereIn('h.lectivo_id', $data['lectivo_f'])
+            ->whereNull('h.deleted_at')
+            ->whereNull('cc.deleted_at')
+            ->whereNull('s.deleted_at')
+            ->whereNull('i.deleted_at')
+            ->whereNull('g.deleted_at')
+            ->whereNull('adeudos.deleted_at')
+            ->distinct()
+            ->orderBy('stc.id', 'desc')
+            ->orderBy('e.name')
+            ->orderBy('g.id')
+            ->get();	
+
+
             $registros=array();
             foreach($adeudos_tomados as $adeudo_tomado){
                 //$adeudos=Adeudo::where('id', '=', $adeudo_tomado)->get();
