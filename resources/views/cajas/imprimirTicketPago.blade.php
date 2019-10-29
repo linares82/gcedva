@@ -29,9 +29,27 @@ body{
                     alt='img' style='width: 100px;
                     margin: 4px;'>
             @endif
-            
-        </td>
+        </td>    
     </tr>
+    <tr><td colspan="2" align="center" height="30px">
+        @php
+        $cadena='Id:'.$cliente->id.
+                       '; Nombre:'.$cliente->nombre.' '.$cliente->nombre2.' '.$cliente->ape_paterno.' '.$ape_materno.
+                       '; Plantel:'.$cliente->plantel->razon;
+        foreach($caja->cajaLns as $caja_linea){
+            if($caja_linea->cajaConcepto->id==1){
+                $cadena=$cadena.';'.$caja_linea->cajaConcepto->name." (".$caja_linea->adeudo->fecha_pago.")";
+            }else{
+                $cadena=$cadena.';'.$caja_linea->cajaConcepto->name;
+            }
+            
+        }    
+        $cadena=$cadena.'; Total:'.number_format($caja->total, 2);
+        @endphp
+        
+         <img src="data:image/png;base64, 
+                                {!! base64_encode(QrCode::format('png')->size(80)->generate($cadena)) !!} ">
+    </td></tr>
     <tr><td colspan="2" align="center" height="30px">{{$cliente->plantel->razon}}</td></tr>
     <tr>
         <td colspan="2" align="center" height="30px">
