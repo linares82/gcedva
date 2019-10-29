@@ -80,7 +80,8 @@ class TransferencesController extends Controller {
 	{
 		$transference=$transference->find($id);
                 $cuentasEfectivo= CuentasEfectivo::pluck('name','id');
-                $empleados=Empleado::select('id', DB::raw('concat(nombre, " ",ape_paterno," ",ape_materno) as name'))->pluck('name','id');
+				$empleados=Empleado::select('id', DB::raw('concat(nombre, " ",ape_paterno," ",ape_materno) as name'))->pluck('name','id');
+				//$plantels=Plantel::where('')
 		return view('transferences.edit', compact('transference','cuentasEfectivo','empleados'))
 			->with( 'list', Transference::getListFromAllRelationApps() );
 	}

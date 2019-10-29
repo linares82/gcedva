@@ -181,7 +181,7 @@ return [
         Kim\Activity\ActivityServiceProvider::class,
         Studio\Totem\Providers\TotemServiceProvider::class,
         Bogardo\Mailgun\MailgunServiceProvider::class,
-        
+        SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
         /*
          * Application Service Providers...
          */
@@ -249,7 +249,8 @@ return [
         'PDF' => Barryvdh\DomPDF\Facade::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'Activity' => Kim\Activity\ActivityFacade::class,
-        'Mailgun' => Bogardo\Mailgun\Facades\Mailgun::class
+        'Mailgun' => Bogardo\Mailgun\Facades\Mailgun::class,
+        'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class
     ],
 
 ];

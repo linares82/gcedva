@@ -580,6 +580,11 @@ class InscripcionsController extends Controller
             ->distinct()
             ->get();
 
+            $total_alumnos=0;
+            foreach($registros as $r){
+                $total_alumnos++;
+            }
+
         //dd($registros->toArray());
 
 
@@ -687,7 +692,8 @@ class InscripcionsController extends Controller
             'fechas_enc' => $fechas,
             'asignacion' => $asignacion,
             'total_asistencias' => $total_asistencias,
-            'contador' => $contador
+            'contador' => $contador,
+            'total_alumnos'=>$total_alumnos
         ));
     }
 
@@ -1235,7 +1241,10 @@ class InscripcionsController extends Controller
             ->orderBy('hacademicas.grado_id')
             ->distinct()
             ->get();
-
+        $total_alumnos=0;    
+        foreach($registros as $r){
+            $total_alumnos++;
+        }    
         //dd($registros->toArray());
 
 
@@ -1346,7 +1355,8 @@ class InscripcionsController extends Controller
             'asignacion' => $asignacion,
             'total_asistencias' => $total_asistencias,
             'contador' => $contador,
-            'mes' => $mes
+            'mes' => $mes,
+            'total_alumnos'=>$total_alumnos
         ));
     }
 

@@ -141,6 +141,7 @@ trait GetAllDataTrait {
             case "autorizacion_becas":
                 $myQuery=$myQuery->orderBy('autorizacion_becas.st_beca_id');
             case "clientes":
+                $myQuery = $myQuery->with('plantel','especialidad','nivel','grado','stCliente','pais','empleado');
                 if($baseTable=="clientes" and (Auth::user()->can('IfiltroClientesXPlantel'))){
                     $myQuery=$myQuery->where('clientes.plantel_id', '=', $empleado->plantel_id);
                 }
@@ -222,6 +223,7 @@ trait GetAllDataTrait {
                 }
                 break;
             case "seguimientos":
+                $myQuery = $myQuery->with(['cliente','stSeguimiento']);
                 if($baseTable=="seguimientos" and Auth::user()->can('IfiltroClientesXEmpleado')){
                     $myQuery=$myQuery->where('clientes.empleado_id', '=', $empleado->id);
                 }
