@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updateLectivo;
 use App\Http\Requests\createLectivo;
+use App\PeriodoExamen;
 use Carbon\Carbon;
 class LectivosController extends Controller {
 
@@ -146,9 +147,18 @@ class LectivosController extends Controller {
 		}else{
 			$input['grafica_bnd']=1;
 		}
+		//dd($input);
 		$lectivo=$lectivo->find($id);
 		//update data
 		$this->calculaAsistencias($id);
+		if(isset($input['calificacion_inicio']) and isset($input['calificacion_fin'])){
+			$periodo_calificacion['lectivo_id'] = $lectivo->id;
+			$periodo_calificacion['inicio']= $input['calificacion_inicio'];
+			$periodo_calificacion['fin'] = $input['calificacion_fin'];
+			$periodo_calificacion['usu_alta_id'] = Auth::user()->id;
+			$periodo_calificacion['usu_mod_id'] = Auth::user()->id;
+			PeriodoExamen::create($periodo_calificacion);
+		}
 		if ($lectivo->update($input)){
 			return redirect()->route('lectivos.index')->with('message', 'Registro creado.');	
 		} 

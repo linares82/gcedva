@@ -34,7 +34,7 @@ body{
     <tr><td colspan="2" align="center" height="30px">
         @php
         $cadena='Id:'.$cliente->id.
-                       '; Nombre:'.$cliente->nombre.' '.$cliente->nombre2.' '.$cliente->ape_paterno.' '.$ape_materno.
+                       '; Nombre:'.$cliente->nombre.' '.$cliente->nombre2.' '.$cliente->ape_paterno.' '.$cliente->ape_materno.
                        '; Plantel:'.$cliente->plantel->razon;
         foreach($caja->cajaLns as $caja_linea){
             if($caja_linea->cajaConcepto->id==1){

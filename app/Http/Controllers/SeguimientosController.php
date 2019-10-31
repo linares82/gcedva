@@ -1009,7 +1009,7 @@ class SeguimientosController extends Controller {
             $hoy=date('Y-m-d');
         //dd($hoy);
 
-        /*
+        
                     $adeudos_tomados=Adeudo::select('stc.id', 'adeudos.id as adeudo','adeudos.*','cc.*','g.id as grupo_id','g.name as grupo','stc.name as st_cliente',
                                             'sts.name as st_seguimiento','e.name as especialidad')
                            ->join('combinacion_clientes as cc','cc.id','=','adeudos.combinacion_cliente_id')
@@ -1039,8 +1039,8 @@ class SeguimientosController extends Controller {
                            ->orderBy('g.id')
                            ->get(); 
           
-         */
-
+         
+/*
         $adeudos_tomados = Adeudo::select(
             'stc.id',
             'adeudos.id as adeudo',
@@ -1080,7 +1080,7 @@ class SeguimientosController extends Controller {
             ->orderBy('e.name')
             ->orderBy('g.id')
             ->get();	
-
+*/
 
             $registros=array();
             foreach($adeudos_tomados as $adeudo_tomado){

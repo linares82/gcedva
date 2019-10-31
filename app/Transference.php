@@ -19,7 +19,7 @@ class Transference extends Model
     } 
 
 	//Mass Assignment
-	protected $fillable = ['origen_id','destino_id','monto','fecha','responsable_id','plantel_id','plantel_destino_id','motivo','usu_alta_id','usu_mod_id'];
+	protected $fillable = ['origen_id','destino_id','monto','fecha','responsable_id','plantel_id','plantel_destino_id','motivo','usu_alta_id','usu_mod_id','archivo'];
 
 	public function usu_alta() {
 		return $this->hasOne('App\User', 'id', 'usu_alta_id');

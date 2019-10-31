@@ -541,6 +541,7 @@ class InscripcionsController extends Controller
             'c.ape_materno',
             'g.name as grupo',
             'l.name as lectivo',
+            'mat.name as materia',
             DB::raw('concat(e.nombre," ",e.ape_paterno," ",e.ape_materno) as maestro'),
             'gra.name as grado',
             'p.razon as plantel',
@@ -550,7 +551,7 @@ class InscripcionsController extends Controller
             'p.id as p_id',
             'c.tel_fijo'
         )
-            //->join('hacademicas as h','h.inscripcion_id','=','inscripcions.id')
+            ->join('materia as mat','mat.id','=','hacademicas.materium_id')
             ->join('clientes as c', 'c.id', '=', 'hacademicas.cliente_id')
             ->join('grupos as g', 'g.id', '=', 'hacademicas.grupo_id')
             ->join('lectivos as l', 'l.id', '=', 'hacademicas.lectivo_id')
@@ -1203,6 +1204,7 @@ class InscripcionsController extends Controller
             'c.ape_materno',
             'g.name as grupo',
             'l.name as lectivo',
+            'mat.name as materia',
             DB::raw('concat(e.nombre," ",e.ape_paterno," ",e.ape_materno) as maestro'),
             'gra.name as grado',
             'p.razon as plantel',
@@ -1212,7 +1214,7 @@ class InscripcionsController extends Controller
             'p.id as p_id',
             'c.tel_fijo'
         )
-            //->join('hacademicas as h','h.inscripcion_id','=','inscripcions.id')
+            ->join('materia as mat', 'mat.id', '=', 'hacademicas.materium_id')
             ->join('clientes as c', 'c.id', '=', 'hacademicas.cliente_id')
             ->join('grupos as g', 'g.id', '=', 'hacademicas.grupo_id')
             ->join('lectivos as l', 'l.id', '=', 'hacademicas.lectivo_id')

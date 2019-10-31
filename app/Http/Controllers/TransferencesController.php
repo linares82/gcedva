@@ -12,7 +12,7 @@ use DB;
 use App\Http\Requests\updateTransference;
 use App\Http\Requests\createTransference;
 use App\Plantel;
-
+use File as Archi;
 
 class TransferencesController extends Controller {
 
@@ -124,9 +124,27 @@ class TransferencesController extends Controller {
 	{
 		$input = $request->all();
 		$input['usu_mod_id']=Auth::user()->id;
+
+		$r = $request->hasFile('comprobante_file');
+		if ($r) {
+			$comprobante_file = $request->file('comprobante_file');
+			$input['archivo'] = $comprobante_file->getClientOriginalName();
+		}
+		//dd($input);
 		//update data
 		$transference=$transference->find($id);
-		$transference->update( $input );
+		$e=$transference->update( $input );
+
+		if ($e) {
+			$ruta = public_path() . "/imagenes/transferencias/" . $transference->id . "/";
+			if (!file_exists($ruta)) {
+				Archi::makedirectory($ruta, 0777, true, true);
+			}
+			if ($request->file('comprobante_file')) {
+				//Storage::disk('img_plantels')->put($input['logo'],  File::get($logo_file));
+				$request->file('comprobante_file')->move($ruta, $input['archivo']);
+			}
+		}
 
 		return redirect()->route('transferences.index')->with('message', 'Registro Actualizado.');
 	}
@@ -145,4 +163,8 @@ class TransferencesController extends Controller {
 		return redirect()->route('transferences.index')->with('message', 'Registro Borrado.');
 	}
 
+	public function recibo($id, Request $request){
+		$transferencia=Transference::find($id);
+		return view('transferences.reportes.recibo', array('transferencia' => $transferencia));
+	}
 }

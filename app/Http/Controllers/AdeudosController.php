@@ -853,6 +853,7 @@ class AdeudosController extends Controller
         $datos = $request->all();
         //dd($datos);
         $lineas_procesadas = array();
+        $lineas_detalle=array();
         foreach ($datos['plantel_f'] as $plantel) {
             $registros_totales = Adeudo::select(
                 'p.razon',
@@ -863,14 +864,19 @@ class AdeudosController extends Controller
                 'cc.id as concepto_id',
                 'cln.total as pago_calculado_adeudo',
                 'caj.id as caja',
+                'caj.consecutivo',
                 'cln.deleted_at as borrado_cln',
                 'caj.deleted_at as borrado_c',
                 'c.st_cliente_id',
-                's.st_seguimiento_id'
+                'stc.name as st_cliente',
+                's.st_seguimiento_id',
+                'sts.name as st_seguimiento'
                 //'pag.monto as monto_pago'
             )
                 ->join('clientes as c', 'c.id', '=', 'adeudos.cliente_id')
+                ->join('st_clientes as stc','stc.id','=','c.st_cliente_id')
                 ->join('seguimientos as s', 's.cliente_id', '=', 'c.id')
+                ->join('st_seguimientos as sts', 'sts.id', '=', 's.st_seguimiento_id')
                 ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
                 ->leftJoin('caja_lns as cln', 'cln.adeudo_id', '=', 'adeudos.id')
                 ->leftJoin('cajas as caj', 'caj.id', '=', 'adeudos.caja_id')
@@ -896,10 +902,11 @@ class AdeudosController extends Controller
             //$calculo = array();
             $calculo = [
                 'plantel' => "", 'concepto' => "", 'clientes_activos' => 0, 'clientes_pagados' => 0, 'total_monto_pagado' => 0, 'suma_deudores' => 0,
-                'monto_deuda' => 0, 'porcentaje_pagado' => 0, 'deudores' => 0, 'bajas_pagadas' => 0
+                'monto_deuda' => 0, 'porcentaje_pagado' => 0, 'deudores' => 0, 'bajas_pagadas' => 0, 'porcentaje_deudores' => 0
             ];
 
             foreach ($registros_totales as $registro) {
+                array_push($lineas_detalle, $registro->toArray());
                 $calculo['plantel'] = $registro->razon;
 
                 if (is_null($registro->borrado_c) and is_null($registro->borrado_cln) and $registro->st_cliente_id == 4) {
@@ -948,8 +955,8 @@ class AdeudosController extends Controller
                 //dd($id);
                 //$calculo = array();
                 $calculo = [
-                    'plantel' => "", 'concepto' => "", 'clientes_activos' => 0, 'clientes_pagados' => 0, 'total_monto_pagado' => 0, 'suma_deudores' => 0,
-                    'monto_deuda' => 0, 'porcentaje_pagado' => 0, 'deudores' => 0, 'bajas_pagadas' => 0
+                    'plantel' => "", 'concepto' => $concepto, 'clientes_activos' => 0, 'clientes_pagados' => 0, 'total_monto_pagado' => 0, 'suma_deudores' => 0,
+                    'monto_deuda' => 0, 'porcentaje_pagado' => 0, 'deudores' => 0, 'bajas_pagadas' => 0, 'porcentaje_deudores' => 0
                 ];
                 foreach ($registros_totales as $registro) {
                     // dd($conceptos);
@@ -991,6 +998,7 @@ class AdeudosController extends Controller
                 array_push($lineas_procesadas, $calculo);
             }
         }
+        //dd($lineas_detalle);
         /*
         $cajas=array();
         $i=0;
@@ -1025,6 +1033,6 @@ class AdeudosController extends Controller
         //dd($lineas_procesadas);                           
 */
 
-        return view('adeudos.reportes.maestroR', compact('lineas_procesadas', 'pagos'));
+        return view('adeudos.reportes.maestroR', compact('lineas_procesadas', 'pagos', 'lineas_detalle','datos'));
     }
 }

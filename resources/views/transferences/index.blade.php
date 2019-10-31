@@ -256,10 +256,21 @@
                     <td>{{$transference->monto}}</td>
                     <td>{{$transference->fecha}}</td>
                     <td>{{$transference->responsable->nombre}} {{$transference->responsable->ape_paterno}} {{$transference->responsable->ape_materno}}</td>
+                    <td>
+                        @if (!is_null($transference->archivo))
+                       <a href="{!! asset('imagenes/transferencias/'.$transference->id.'/'.$transference->archivo) !!}"  target="_blank"> VER </a>
+                       @else
+                       <form action="{{ route('transferences.update',$transference->id) }}" method="post" style="display: none" id="avatarForm">
+                            <input type="hidden" name="_token" id="_token"  value="<?= csrf_token(); ?>"> 
+                            <input type="file" id="comprobante_file" name="comprobante_file">
+                        </form>
+                        <a href='#' id="avatarImage">Cargar</a>
+                       @endif
+                    </td>
                     
                     
                                 <td class="text-right">
-                                    
+                                <a href='{{route("transferences.recibo",$transference->id)}}' target='_blank' class="btn btn-primary btn-xs">recibo</a>    
                                     
                                     @permission('transferences.destroy')
                                     {!! Form::model($transference, array('route' => array('transferences.destroy', $transference->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}
@@ -280,3 +291,48 @@
     </div>
 
 @endsection
+
+@push('scripts')
+<script type="text/javascript">
+    $(function () {
+    var $avatarImage, $avatarInput, $avatarForm;
+
+    $avatarImage = $('#avatarImage');
+    $avatarInput = $('#comprobante_file');
+    $avatarForm = $('#avatarForm');
+
+    $avatarImage.on('click', function () {
+        $avatarInput.click();
+    });
+
+    $avatarInput.on('change', function () {
+        var formData = new FormData();
+            formData.append('comprobante_file', $avatarInput[0].files[0]);
+            
+            
+            $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('#_token').val()
+                }
+            });
+            $.ajax({
+                url: $avatarForm.attr('action'),
+                method: $avatarForm.attr('method'),
+                cache: false,
+                data: formData,
+                processData: false,
+                contentType: false
+            }).done(function (data) {
+                //if (data.success)
+                    //$avatarImage.attr('src', data.path);
+                    //location.reload();
+            }).fail(function () {
+                alert('La imagen subida no tiene un formato correcto');
+            });
+    });
+});
+      
+      
+</script>
+@endpush
+                    

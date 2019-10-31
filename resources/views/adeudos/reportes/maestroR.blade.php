@@ -118,7 +118,33 @@
             </tr>
         </tbody>
     </table>
-    
+    <br/>
+    @if($datos['detalle_f']==1)
+    <table border="1" width="100%" >
+        <thead>
+            <tr>
+                <th>Plantel</th><th>Cliente Id</th><th>Pagado</th><th>Monto Planeado</th><th>Concepto</th><th>Pago Recibido</th>
+                <th>Consecutivo Caja</th><th>Caja borrada</th><th>Linea de Caja Borrada</th><th>St. Cliente</th><th>St. Seguimiento</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($lineas_detalle as $detalle)
+            <tr>
+            <td>{{$detalle['razon']}}</td><td>{{$detalle['id']}}</td>
+            <td>
+                @if($detalle['pagado_bnd']==0)
+                NO
+                @elseif($detalle['pagado_bnd']==1)
+                SI
+                @endif
+            </td>
+            <td>{{$detalle['adeudo_planeado']}}</td><td>{{$detalle['concepto']}}</td><td>{{$detalle['pago_calculado_adeudo']}}</td>
+            <td>{{$detalle['consecutivo']}}</td><td>{{$detalle['borrado_c']}}</td><td>{{$detalle['borrado_cln']}}</td><td>{{$detalle['st_cliente']}}</td><td>{{$detalle['st_seguimiento']}}</td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
+    @endif
 </div>
 
   </body>

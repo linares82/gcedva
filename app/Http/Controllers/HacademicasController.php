@@ -22,6 +22,7 @@ use Auth;
 use App\Http\Requests\updateHacademica;
 use App\Http\Requests\createHacademica;
 use App\Lectivo;
+use App\PeriodoExamen;
 use DB;
 use Carbon\Carbon;
 use Session;
@@ -457,16 +458,30 @@ class HacademicasController extends Controller {
         $asignacionAcademica = AsignacionAcademica::find($data['asignacion']);
         $lectivo=Lectivo::find($asignacionAcademica->lectivo_id);
         //dd($lectivo);
-        $calificacion_inicio=Carbon::createFromFormat('Y-m-d',$lectivo->calificacion_inicio);
-        $calificacion_fin = Carbon::createFromFormat('Y-m-d', $lectivo->calificacion_fin);
-        $hoy=Carbon::createFromFormat('Y-m-d', Date('Y-m-d'));
+        //$calificacion_inicio=Carbon::createFromFormat('Y-m-d',$lectivo->calificacion_inicio);
+        //$calificacion_fin = Carbon::createFromFormat('Y-m-d', $lectivo->calificacion_fin);
+        $dentroPeriodoExamenes=0;
+        $hoy = Carbon::createFromFormat('Y-m-d', Date('Y-m-d'));
+        $periodos_capturados_total=0;
+        
+        foreach($lectivo->periodoExamens as $periodoExamen){
+            $calificacion_inicio = Carbon::createFromFormat('Y-m-d', $periodoExamen->inicio);
+            $calificacion_fin = Carbon::createFromFormat('Y-m-d', $periodoExamen->fin);
+            if ($calificacion_inicio <= $hoy and $calificacion_fin >= $hoy) {
+                $dentroPeriodoExamenes=$periodoExamen->id;
+            }
+            $periodos_capturados_total++;
+        }
+        
+        //dd($periodos_capturados_total);
+        $periodo_examen=PeriodoExamen::find($dentroPeriodoExamenes);
 
         $materia=Materium::find($asignacionAcademica->materium_id);
         //dd($asignacionAcademica);
         //$carga_ponderaciones=CargaPonderacion::where('ponderacion_id','=',$materia->ponderacion_id)->pluck('name','id');
         //dd($carga_ponderaciones->toArray());
         $msj="";
-        if(isset($data['excepcion'])){
+        if(isset($data['excepcion']) or $periodos_capturados_total == 0){
             $hacademicas=HAcademica::select('cli.id', 'cli.nombre','cli.nombre2','cli.ape_paterno','cli.ape_materno','c.calificacion',
                                         'cp.calificacion_parcial_calculada','cp.id as calificacion_ponderacion_id','cp.calificacion_parcial',
                                         'cpo.name as ponderacion','stc.name as estatus_cliente','stc.id as estatus_cliente_id')
@@ -484,7 +499,8 @@ class HacademicasController extends Controller {
                                 ->orderBy('cliente_id')
                                 ->get();
         }else{
-            if($calificacion_inicio<=$hoy and $calificacion_fin>=$hoy){
+            //if($calificacion_inicio<=$hoy and $calificacion_fin>=$hoy){
+            if($dentroPeriodoExamenes>0){
                 $hacademicas=HAcademica::select('cli.id', 'cli.nombre','cli.nombre2','cli.ape_paterno','cli.ape_materno','c.calificacion',
                                         'cp.calificacion_parcial_calculada','cp.id as calificacion_ponderacion_id','cp.calificacion_parcial',
                                         'stc.name as estatus_cliente, stc.id as estatus_cliente_id')
@@ -512,7 +528,7 @@ class HacademicasController extends Controller {
         }
 
             if(!is_object($hacademicas)){
-                $msj= "Lo sentimos usted no es el profesor de la materia o la fecha limite del perido lectivo ha finalizado en la fecha: " . $calificacion_fin->toDateString();
+                $msj= "Lo sentimos usted no es el profesor de la materia o la fecha limite del perido lectivo ha finalizado";
             }
 
         $hacademica=HAcademica::where('grupo_id','=',$asignacionAcademica->grupo_id)

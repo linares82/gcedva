@@ -680,6 +680,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
     );
 
     public static $classMap = array (
+        'AddArchivoTransferencesTable' => __DIR__ . '/../..' . '/database/migrations/2019_10_30_113553_add_archivo_transferences_table.php',
         'AddBecaPorcentajeClientesTable' => __DIR__ . '/../..' . '/database/migrations/2018_05_07_114940_add_beca_porcentaje_clientes_table.php',
         'AddBecadoBndCajasTable' => __DIR__ . '/../..' . '/database/migrations/2018_11_01_133610_add_becado_bnd_cajas_table.php',
         'AddBndAplicarBecaCajaConceptoTable' => __DIR__ . '/../..' . '/database/migrations/2019_02_25_115155_add_bnd_aplicar_beca_caja_concepto_table.php',
@@ -890,7 +891,9 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'CreatePaisesTable' => __DIR__ . '/../..' . '/database/migrations/2018_10_23_100204_create_paises_table.php',
         'CreateParamsTable' => __DIR__ . '/../..' . '/database/migrations/2017_05_16_190353_create_params_table.php',
         'CreatePasswordResetsTable' => __DIR__ . '/../..' . '/database/migrations/2014_10_12_100000_create_password_resets_table.php',
+        'CreatePeridoExamensTable' => __DIR__ . '/../..' . '/database/migrations/2019_10_30_130316_create_perido_examens_table.php',
         'CreatePeriodoEstudiosTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_17_165449_create_periodo_estudios_table.php',
+        'CreatePeriodoExamensTable' => __DIR__ . '/../..' . '/database/migrations/2019_10_30_130355_create_periodo_examens_table.php',
         'CreatePeriodosTable' => __DIR__ . '/../..' . '/database/migrations/2017_04_18_144945_create_periodos_table.php',
         'CreatePivotAvisoGralEmpleadosTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_03_131514_create_pivot_aviso_gral_empleados_table.php',
         'CreatePivotDocClientesTable' => __DIR__ . '/../..' . '/database/migrations/2017_09_06_135040_create_pivot_doc_clientes_table.php',

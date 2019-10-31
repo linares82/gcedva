@@ -125,7 +125,7 @@ class EgresosController extends Controller {
                 //dd($request->all());
 		$input['usu_mod_id']=Auth::user()->id;
                 
-                $r=$request->hasFile('comprobante_file');
+        $r=$request->hasFile('comprobante_file');
 		if($r){
 			$comprobante_file = $request->file('comprobante_file');
 			$input['archivo'] = $comprobante_file->getClientOriginalName();
@@ -135,7 +135,7 @@ class EgresosController extends Controller {
 		$egreso=$egreso->find($id);
 		$e=$egreso->update( $input );
                 
-                if($e){
+            if($e){
                     $ruta=public_path()."/imagenes/egresos/".$egreso->id."/";
 			if(!file_exists($ruta)){
 				Archi::makedirectory($ruta, 0777, true, true);

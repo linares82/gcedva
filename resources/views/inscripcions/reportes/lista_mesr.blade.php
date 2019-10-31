@@ -88,7 +88,7 @@
                                 {{"Periodo Lectivo: ".$r->lectivo}}<br/>
                                 {{"Profesor: ".$r->maestro}}<br/>
                                 {{"Grado: ".$r->grado}}<br/>
-                                
+                                {{"Materia: ".$r->materia}}<br/>
                             </td>
                             <td colspan="{{$contador}}">
                                 <img src="data:image/png;base64, 

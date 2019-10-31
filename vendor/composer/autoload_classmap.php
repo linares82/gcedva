@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'AddArchivoTransferencesTable' => $baseDir . '/database/migrations/2019_10_30_113553_add_archivo_transferences_table.php',
     'AddBecaPorcentajeClientesTable' => $baseDir . '/database/migrations/2018_05_07_114940_add_beca_porcentaje_clientes_table.php',
     'AddBecadoBndCajasTable' => $baseDir . '/database/migrations/2018_11_01_133610_add_becado_bnd_cajas_table.php',
     'AddBndAplicarBecaCajaConceptoTable' => $baseDir . '/database/migrations/2019_02_25_115155_add_bnd_aplicar_beca_caja_concepto_table.php',
@@ -216,7 +217,9 @@ return array(
     'CreatePaisesTable' => $baseDir . '/database/migrations/2018_10_23_100204_create_paises_table.php',
     'CreateParamsTable' => $baseDir . '/database/migrations/2017_05_16_190353_create_params_table.php',
     'CreatePasswordResetsTable' => $baseDir . '/database/migrations/2014_10_12_100000_create_password_resets_table.php',
+    'CreatePeridoExamensTable' => $baseDir . '/database/migrations/2019_10_30_130316_create_perido_examens_table.php',
     'CreatePeriodoEstudiosTable' => $baseDir . '/database/migrations/2017_08_17_165449_create_periodo_estudios_table.php',
+    'CreatePeriodoExamensTable' => $baseDir . '/database/migrations/2019_10_30_130355_create_periodo_examens_table.php',
     'CreatePeriodosTable' => $baseDir . '/database/migrations/2017_04_18_144945_create_periodos_table.php',
     'CreatePivotAvisoGralEmpleadosTable' => $baseDir . '/database/migrations/2017_08_03_131514_create_pivot_aviso_gral_empleados_table.php',
     'CreatePivotDocClientesTable' => $baseDir . '/database/migrations/2017_09_06_135040_create_pivot_doc_clientes_table.php',

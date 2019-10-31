@@ -120,7 +120,7 @@
                 <td>
                     <img src="data:image/png;base64, 
                                 {!! base64_encode(QrCode::format('png')->size(80)->generate('Id:'.$cliente->id.
-                                                                                                                            '; Nombre:'.$cliente->nombre.' '.$cliente->nombre2.' '.$cliente->ape_paterno.' '.$ape_materno.
+                                                                                                                            '; Nombre:'.$cliente->nombre.' '.$cliente->nombre2.' '.$cliente->ape_paterno.' '.$cliente->ape_materno.
                                                                                                                             '; Matricula:'.$inscripcion->matricula.
                                                                                                                             '; Plantel:'.$plantel->razon)) !!} ">
                 </td>
