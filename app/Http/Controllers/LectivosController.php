@@ -160,7 +160,7 @@ class LectivosController extends Controller {
 			PeriodoExamen::create($periodo_calificacion);
 		}
 		if ($lectivo->update($input)){
-			return redirect()->route('lectivos.index')->with('message', 'Registro creado.');	
+			return redirect()->route('lectivos.edit', $lectivo->id)->with('message', 'Registro creado.');	
 		} 
 
 	}

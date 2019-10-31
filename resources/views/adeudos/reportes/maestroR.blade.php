@@ -123,13 +123,17 @@
     <table border="1" width="100%" >
         <thead>
             <tr>
-                <th>Plantel</th><th>Cliente Id</th><th>Pagado</th><th>Monto Planeado</th><th>Concepto</th><th>Pago Recibido</th>
+                <th>No.</th><th>Plantel</th><th>Cliente Id</th><th>Pagado</th><th>Monto Planeado</th><th>Concepto</th><th>Pago Recibido</th>
                 <th>Consecutivo Caja</th><th>Caja borrada</th><th>Linea de Caja Borrada</th><th>St. Cliente</th><th>St. Seguimiento</th>
             </tr>
         </thead>
         <tbody>
+            @php
+                $consecutivo_linea=1;
+                @endphp 
             @foreach($lineas_detalle as $detalle)
-            <tr>
+            <tr>   
+            <td>{{$consecutivo_linea++}}</td>
             <td>{{$detalle['razon']}}</td><td>{{$detalle['id']}}</td>
             <td>
                 @if($detalle['pagado_bnd']==0)
