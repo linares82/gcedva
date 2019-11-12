@@ -481,13 +481,17 @@ class PagosController extends Controller {
         $plantel=Plantel::find($data['plantel_f']);
         $registros=Cliente::select(DB::raw('clientes.id as cliente, '
                 . 'concat(clientes.nombre," ",clientes.nombre2," ",clientes.ape_paterno," ",clientes.ape_materno) as cliente_nombre,'
-                . 'clientes.beca_porcentaje as monto_inscripcion, clientes.monto_mensualidad, clientes.justificacion_beca,'
+                . 'clientes.beca_porcentaje as monto_inscripcion, clientes.monto_mensualidad, ab.solicitud as justificaion,'
                 . 'sts.name as estatus_seguimiento, stc.name as estatus_cliente, beca_bnd'))
                 ->join('combinacion_clientes as cc','cc.cliente_id','=','clientes.id')
                 ->join('seguimientos as s','s.cliente_id','=','clientes.id')
                 ->join('st_seguimientos as sts','sts.id','=','s.st_seguimiento_id')
                 ->join('st_clientes as stc','stc.id','=','clientes.st_cliente_id')
-                ->where('beca_bnd',1)
+                ->join('autorizacion_becas as ab','ab.cliente_id','=','clientes.id')
+                ->whereNull('cc.deleted_at')
+                ->where('clientes.beca_bnd',1)
+                ->where('cc.bnd_beca', 1)
+                ->where('st_beca_id', 4)
                 ->where('clientes.st_cliente_id',4)
                 ->where('s.st_seguimiento_id',2)
                 ->where('clientes.plantel_id',$data['plantel_f'])

@@ -4,33 +4,33 @@
         h1, h3, h5, th { text-align: center; }
         body{
            font-family: Arial;
-           font-size: 1em;
+           font-size: 0.8em;
         }
         
         
         .table_format {
             border: 1px solid #ddd;
-            font-size: 1em;
+            font-size: 8px;
             border-collapse: collapse;
         }
         
         .table_format2 {
             border: 1px solid #ddd;
-            font-size: 1em;
+            font-size: 8px;
             border-collapse: collapse;
             margin: 10px auto;
         }
         
         .table_format td {
             border: 1px solid #ddd;
-            font-size: 1em;
+            font-size: 8px;
             border-collapse: collapse;
             text-align: center;
         }
         
         .table_format th {
             border: 1px solid #ddd;
-            font-size: 1em;
+            font-size: 8px;
             border-collapse: collapse;
             text-align: center;
         }
@@ -128,12 +128,16 @@
                                                     @endforeach
                                                 </tr>
                                                 <tr>
-                                                    <strong>CalificaciÃ³n: {{$cali->calificacion}}</strong>
+                                                    <strong>Calificación: {{$cali->calificacion}}</strong>
                                                     @foreach($cali->calificacionPonderacions as $calificacionPonderacion)
                                                         <td class="centrar_texto">{{$calificacionPonderacion->calificacion_parcial}}</td>
                                                     @endforeach
                                                 </tr>
                                             <tr>
+                                            @php
+                                                $sumatoria_calificaciones=$cali->calificacion;
+                                                $cantidad_materias=$cantidad_materias+1;
+                                            @endphp
                                             @endforeach
                                         </tbody>
                                     </table>
@@ -148,11 +152,21 @@
                     </table>
                             </td>
                 
-                
+                @php
+                    $promedio=$sumatoria_calificaciones/$cantidad_materias;
+                @endphp
                 <table width='500px' class='table_format table_format2'>
-                    <tr><td><br/><br/><br/><br/><br/><br/><br/><br/><br/></td><td ></td></tr>
-                    <tr><td ></td><td ></td></tr>
-                    <tr><td>Director de Carrera</td><td>Instructor del Area</td></tr>
+                    <tr><td><br/><br/><br/><br/><br/><br/><br/><br/><br/></td>
+                        <td >
+                            <img src="data:image/png;base64, 
+                                {!! base64_encode(QrCode::format('png')->size(100)->generate('Cliente:'.$c->id.', Promedio:'.$promedio)) !!} ">    
+                        </td>
+                        <td > </td></tr>
+                    <tr><td ></td><td ></td><td ></td></tr>
+                    <tr><td>Director de Carrera</td>
+                           <td></td>
+                           <td>Instructor del Area</td>
+                    </tr>
                 </table
                 
                 <table width="95%" class="table_format">

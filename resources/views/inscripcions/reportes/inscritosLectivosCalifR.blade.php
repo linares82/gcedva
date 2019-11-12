@@ -53,13 +53,18 @@
                         @foreach($calificaciones as $calif)
                             <table>
                             <tr>    
-                            <th>{{$calif->tpoExamen->name}} </th><th> {{$calif->calificacion}}</th>
-                            </tr>
+                            <th>{{$calif->tpoExamen->name}} </th>
                             @foreach($calif->calificacionPonderacions as $cp)
-                                <tr>
-                                <td>{{$cp->cargaPonderacion->name}} </td> <td> {{$cp->calificacion_parcial}} </td>
-                                </tr>
+                                <th>{{$cp->cargaPonderacion->name}} </th>
                             @endforeach
+                            </tr>
+                            <tr>
+                            <td> {{$calif->calificacion}}</td>
+                            @foreach($calif->calificacionPonderacions as $cp)
+                                 <td> {{$cp->calificacion_parcial}} </td>
+                            @endforeach
+                            </tr>
+                            
                             </table>
                         @endforeach
                         </td>     

@@ -64,6 +64,27 @@
                     </tr>
             </tbody>
         </table>
+        <table>
+            <thead>
+                <th>Estatus</th><th>Cantidad</th>
+            </thead>
+            <tbody>
+                @foreach($estatus_revisados as $estatus)
+                @php
+                    $cuenta=0;
+                    foreach($registros as $registro){
+                        if($registro->estatus_cliente==$estatus){
+                            $cuenta++;
+                        }
+                    }
+                    
+                @endphp
+                <tr>
+                <td>{{$estatus}}</td><td>{{$cuenta}}</td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
     </div>
     
   </body>

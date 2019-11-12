@@ -33,6 +33,7 @@ use App\Http\Requests\createInscripcion;
 use DB;
 use PDF;
 use Carbon\Carbon;
+use Log;
 
 class InscripcionsController extends Controller
 {
@@ -495,41 +496,7 @@ class InscripcionsController extends Controller
     public function listar(Request $request)
     {
         $data = $request->all();
-        //dd($data);
-        /*$registros= Inscripcion::select('inscripcions.grupo_id','inscripcions.grado_id','inscripcions.lectivo_id','inscripcions.plantel_id',
-                                                'c.nombre','c.nombre2','c.ape_paterno','c.ape_materno', 'g.name as grupo','l.name as lectivo',
-                                               DB::raw('concat(e.nombre," ",e.ape_paterno," ",e.ape_materno) as maestro'),'gra.name as grado',
-                                               'p.razon as plantel', 'p.logo','aa.id as asignacion','c.id as cliente','p.id as p_id','c.tel_fijo')
-                                       ->join('hacademicas as h','h.inscripcion_id','=','inscripcions.id')
-                                       ->join('clientes as c', 'c.id', '=', 'inscripcions.cliente_id')
-                                       ->join('grupos as g', 'g.id', '=', 'inscripcions.grupo_id')
-                                       ->join('lectivos as l','l.id', '=', 'inscripcions.lectivo_id')
-                                       ->join('asignacion_academicas as aa', 'aa.grupo_id','=','g.id')
-                                       //->join('asistencia_rs as asis', 'asis.asignacion_academica_id','=','aa.id')
-                                       ->join('empleados as e','e.id','=','aa.empleado_id')
-                                       ->join('grados as gra','gra.id','=','inscripcions.grado_id')
-                                       ->join('plantels as p','p.id','=','c.plantel_id')
-                                       ->where('aa.id',$data['asignacion'])
-                                       ->where('inscripcions.plantel_id', $data['plantel_f'])
-                                       ->where('inscripcions.lectivo_id',$data['lectivo_f'])
-				       ->where('inscripcions.grupo_id',$data['grupo_f'])
-                                       //->where('inscripcions.grado_id',$data['grado_f'])
-                                       ->where('aa.plantel_id', $data['plantel_f'])
-                                       ->where('aa.lectivo_id',$data['lectivo_f'])
-                                       ->where('aa.grupo_id',$data['grupo_f'])
-                                       ->where('aa.empleado_id',$data['instructor_f'])
-                                       ->where('aa.materium_id',$data['materia_f'])
-                                       ->where('h.materium_id',$data['materia_f'])
-                                       ->whereNull('h.deleted_at')
-                                       ->whereNull('inscripcions.deleted_at')
-                                       ->orderBy('inscripcions.plantel_id')
-                                       ->orderBy('inscripcions.lectivo_id')
-                                       ->orderBy('inscripcions.grupo_id')
-                                       ->orderBy('inscripcions.grado_id')
-				       ->distinct()
-                                       ->get();
-                 * 
-                 */
+        
         $registros = Hacademica::select(
             'hacademicas.grupo_id',
             'hacademicas.grado_id',
@@ -592,13 +559,7 @@ class InscripcionsController extends Controller
 
         //Agregar fechas
         $asignacion = AsignacionAcademica::find($data['asignacion']);
-        /*foreach($registros as $registro){
-                    $asignacion= AsignacionAcademica::find($registro->asignacion);
-                    break;
-                }*/
-
-
-
+       
         $dias = array();
         //dd($asignacion);
         foreach ($asignacion->horarios as $horario) {
@@ -615,13 +576,9 @@ class InscripcionsController extends Controller
             array_push($no_habiles, Carbon::createFromFormat('Y-m-d', $no_habil->fecha));
         }
         //dd($no_habiles);    
-        //$inicio=Carbon::createFromFormat('Y-m-d', $lectivo->inicio);
-        //$fin=Carbon::createFromFormat('Y-m-d', $lectivo->fin);
         $pinicio = Carbon::createFromFormat('Y-m-d', $asignacion->fec_inicio);
         $pfin = Carbon::createFromFormat('Y-m-d', $asignacion->fec_fin);
-        //dd($pfin->toDateString());
-        //array_push($fechas,$pinicio);
-        //$fecha=Carbon::createFromFormat('Y-m-d', $lectivo->inicio);
+        
         $total_asistencias = 0;
         while ($pfin->greaterThanOrEqualTo($pinicio)) {
 
@@ -790,12 +747,17 @@ class InscripcionsController extends Controller
                         ->setPaper('legal', 'landscape');
                 return $pdf->download('reporte.pdf');
                 */
+                $total_alumnos=0;
+        foreach($registros as $registro){
+            $total_alumnos++;
+        }
         return view('inscripcions.reportes.lista_calificacionesr', array(
             'registros' => $registros,
             'carga_ponderacions_enc' => $carga_ponderacion,
             'asignacion' => $asignacion,
             'contador' => $contador,
-            'data' => $data
+            'data' => $data,
+            'total_alumnos'=>$total_alumnos
         ));
     }
 
@@ -983,7 +945,7 @@ class InscripcionsController extends Controller
         $registros = Hacademica::select('c.id', DB::raw('concat(e.nombre, " ",e.ape_paterno, " ",e.ape_materno) as instructor, '
             . 'concat(c.nombre," ",c.nombre2," ",c.ape_paterno," ",c.ape_materno) as cliente,'
             . 'c.beca_bnd, esp.name as especialidad, i.fec_inscripcion, aa.id as asignacion,'
-            . 'gru.name as grupo, gru.id as gru, mat.name as materi, stc.name as estatus_cliente, l.name as lectivo'))
+            . 'gru.name as grupo, gru.id as gru, mat.name as materi, stc.id as estatus_cliente_id,  stc.name as estatus_cliente, l.name as lectivo'))
             ->join('clientes as c', 'c.id', '=', 'hacademicas.cliente_id')
             ->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
             ->join('medios as m', 'm.id', '=', 'c.medio_id')
@@ -1020,10 +982,20 @@ class InscripcionsController extends Controller
                         ->setPaper('legal', 'landscape');
                 return $pdf->download('reporte.pdf');
                 */
+        $estatus_revisados=array();
+        $i=1;
+        foreach($registros as $registro){
+            //dd($registro);
+            if (!array_has($estatus_revisados, $registro->estatus_cliente_id)) {
+                $estatus_revisados[$registro->estatus_cliente_id]=$registro->estatus_cliente;
+                //array_push($estatus, array($registro->estatus_cliente, 0));
+            }
+        }
+        
         return view('inscripcions.reportes.inscritosLectivoR', array(
             'registros' => $registros,
             'plantel' => $plantel,
-            //'lectivo' => $lectivo
+            'estatus_revisados' => $estatus_revisados
         ));
     }
 
@@ -1139,7 +1111,7 @@ class InscripcionsController extends Controller
             ->join('empleados as e', 'e.id', '=', 'aa.empleado_id')
             ->where('hacademicas.plantel_id', $data['plantel_f'])
             ->where('hacademicas.lectivo_id', $data['lectivo_f'])
-            ->where('h.lectivo_id', $data['lectivo_f'])
+            ->where('hacademicas.lectivo_id', $data['lectivo_f'])
             ->whereNull('hacademicas.deleted_at')
             ->whereNull('i.deleted_at')
             ->whereNull('aa.deleted_at')
@@ -1558,4 +1530,227 @@ class InscripcionsController extends Controller
             'grado' => $grado
         ));
     }
+
+    public function porcentajeAsistencia()
+    {
+        
+        return view('inscripcions.reportes.porcentajeAsistencia')
+            ->with('list', Inscripcion::getListFromAllRelationApps());
+    }
+
+    public function porcentajeAsistenciaR(Request $request)
+    {
+        $data = $request->all();
+
+        $asignaciones=AsignacionAcademica::whereIn('plantel_id',$data['plantel_f'])
+                            ->where('lectivo_id', $data['lectivo_f'])
+                            //->where('id',1037)
+                            ->orderBy('plantel_id')
+                            ->orderBy('lectivo_id')
+                            ->orderBy('materium_id')
+                            ->get();
+        $contador_clientes=0;
+        $sumatoria_promedio_clientes=0;
+        $resumen=array();
+        //dd($asignaciones->toArray());
+        foreach($asignaciones as $asignacion){
+            $contador_clientes_asignacion=0;
+            $sumatoria_promedio_clientes_asignacion=0;
+            $registros = Hacademica::select(
+            'hacademicas.grupo_id',
+            'hacademicas.grado_id',
+            'hacademicas.lectivo_id',
+            'hacademicas.plantel_id',
+            'c.nombre',
+            'c.nombre2',
+            'c.ape_paterno',
+            'c.ape_materno',
+            'g.name as grupo',
+            'l.name as lectivo',
+            'mat.name as materia',
+            DB::raw('concat(e.nombre," ",e.ape_paterno," ",e.ape_materno) as maestro'),
+            'gra.name as grado',
+            'p.razon as plantel',
+            'p.logo',
+            'aa.id as asignacion',
+            'c.id as cliente',
+            'p.id as p_id',
+            'c.tel_fijo'
+            )
+            ->join('materia as mat', 'mat.id', '=', 'hacademicas.materium_id')
+            ->join('clientes as c', 'c.id', '=', 'hacademicas.cliente_id')
+            ->join('grupos as g', 'g.id', '=', 'hacademicas.grupo_id')
+            ->join('lectivos as l', 'l.id', '=', 'hacademicas.lectivo_id')
+            ->join('asignacion_academicas as aa', 'aa.grupo_id', '=', 'g.id')
+            //->join('asistencia_rs as asis', 'asis.asignacion_academica_id','=','aa.id')
+            ->join('empleados as e', 'e.id', '=', 'aa.empleado_id')
+            ->join('grados as gra', 'gra.id', '=', 'hacademicas.grado_id')
+            ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
+            ->where('c.st_cliente_id', '<>', 3)
+            ->where('c.st_cliente_id', '<>', 1)
+            ->where('aa.id', $asignacion->id)
+            ->where('hacademicas.plantel_id', $asignacion->plantel_id)
+            ->where('hacademicas.lectivo_id', $asignacion->lectivo_id)
+            ->where('hacademicas.grupo_id', $asignacion->grupo_id)
+            //->where('inscripcions.grado_id ',$asignacion->grado_id)
+            ->where('aa.plantel_id', $asignacion->plantel_id)
+            ->where('aa.lectivo_id', $asignacion->lectivo_id)
+            ->where('aa.grupo_id', $asignacion->grupo_id)
+            ->where('aa.empleado_id', $asignacion->empleado_id)
+            ->where('aa.materium_id', $asignacion->materium_id)
+            ->where('hacademicas.materium_id', $asignacion->materium_id)
+            ->whereNull('hacademicas.deleted_at')
+            ->whereNull('hacademicas.deleted_at')
+            ->orderBy('hacademicas.plantel_id')
+            ->orderBy('hacademicas.lectivo_id')
+            ->orderBy('hacademicas.grupo_id')
+            ->orderBy('hacademicas.grado_id')
+            ->distinct()
+            ->get();
+
+            $total_alumnos = 0;
+            foreach ($registros as $r) {
+                $total_alumnos++;
+            }
+
+            
+
+            //Log::info("FIL-".$asignacion->id."-".$total_alumnos);
+
+            //dd($registros->toArray());
+
+
+            //Agregar fechas
+            //$asignacion = AsignacionAcademica::find($data['asignacion']);
+
+            $dias = array();
+            //dd($asignacion);
+            foreach ($asignacion->horarios as $horario) {
+                array_push($dias, $horario->dia->name);
+            }
+            //dd($dias);
+
+
+            $fechas = array();
+            $lectivo = Lectivo::find($data['lectivo_f']);
+            //dd($lectivo);
+            $no_habiles = array();
+            
+            if(count($lectivo->diasNoHabiles)>0){    
+                foreach ($lectivo->diasNoHabiles as $no_habil) {
+                    array_push($no_habiles, Carbon::createFromFormat('Y-m-d', $no_habil->fecha));
+                }
+            }
+            
+            //dd($no_habiles);    
+            $pinicio = Carbon::createFromFormat('Y-m-d', $data['fecha_f']);
+            $pfin = Carbon::createFromFormat('Y-m-d', $data['fecha_t']);
+
+            $total_asistencias = 0;
+            while ($pfin->greaterThanOrEqualTo($pinicio)) {
+
+                if (in_array('Lunes', $dias)) {
+                    //dd("hay lunes");
+                    if ($pinicio->isMonday() and !in_array($pinicio, $no_habiles)) {
+                        array_push($fechas, $pinicio->toDateString());
+                        $total_asistencias++;
+                    }
+                    //dd($fechas);
+                }
+                if (in_array('Martes', $dias)) {
+                    //dd("hay martes");
+                    if ($pinicio->isTuesday() and !in_array($pinicio, $no_habiles)) {
+                        array_push($fechas, $pinicio->toDateString());
+                        $total_asistencias++;
+                    }
+                }
+                if (in_array('Miercoles', $dias)) {
+                    //dd("hay miercoles");
+                    if ($pinicio->isWednesday() and !in_array($pinicio, $no_habiles)) {
+                        array_push($fechas, $pinicio->toDateString());
+                        $total_asistencias++;
+                    }
+                }
+                if (in_array('Jueves', $dias)) {
+                    //dd("hay jueves");
+                    if ($pinicio->isThursday() and !in_array($pinicio, $no_habiles)) {
+                        array_push($fechas, $pinicio->toDateString());
+                        $total_asistencias++;
+                    }
+                }
+                if (in_array('Viernes', $dias)) {
+                    //dd("hay viernes");
+                    if ($pinicio->isFriday() and !in_array($pinicio, $no_habiles)) {
+                        array_push($fechas, $pinicio->toDateString());
+                        $total_asistencias++;
+                    }
+                }
+                if (in_array('Sabado', $dias)) {
+
+                    if ($pinicio->isSaturday()  and !in_array($pinicio, $no_habiles)) {
+                        array_push($fechas, $pinicio->toDateString());
+                        $total_asistencias++;
+                    }
+                }
+                $pinicio->addDay();
+                //dd($fechas);
+            }
+            //dd($fechas);
+            $asistencias_planeadas = 0;
+            foreach ($fechas as $fecha) {
+                $asistencias_planeadas++;
+            }
+            
+            foreach($registros as $r){
+                /*if($loop==1){
+                    Log::info("FLC-" . $asignacion->id . "-" . $total_alumnos);
+                }*/
+                $asistencias_reales = \App\AsistenciaR::where('asignacion_academica_id', $asignacion->id)
+                    ->where('cliente_id', $r->cliente)
+                    ->whereIn('est_asistencia_id', array(1,4))
+                    ->whereNotIn('cliente_id', [0, 2])
+                    ->where('fecha', '>=', $data['fecha_f'])
+                    ->where('fecha', '<=', $data['fecha_t'])
+                    ->count();
+                    //->get();
+                    
+               //dd($asistencias_planeadas ." - ".$asistencias_reales);    
+                $promedio_cliente=($asistencias_reales*100)/$asistencias_planeadas;
+                //Log::info('Promedio-'.$promedio_cliente);
+                $contador_clientes++;
+                $contador_clientes_asignacion++;
+                $sumatoria_promedio_clientes_asignacion= $sumatoria_promedio_clientes_asignacion + $promedio_cliente;
+                $sumatoria_promedio_clientes= $sumatoria_promedio_clientes+$promedio_cliente;
+            }
+            array_push($resumen, array('asignacion' => $asignacion->id,
+                                                     'plantel'=>$asignacion->plantel->razon, 
+                                                     'instructor' => $asignacion->empleado->nombre.' '. $asignacion->empleado->ape_paterno.' '. $asignacion->empleado->ape_materno,
+                                                     'materia'=>$asignacion->materia->name,
+                                                     'grupo'=>$asignacion->grupo->name,
+                                                     'lectivo'=>$asignacion->lectivo->name,  
+                                                     'total_alumnos' => $total_alumnos,
+                                                    'promedio_asistencia'=>($sumatoria_promedio_clientes_asignacion/ $contador_clientes_asignacion)));
+                                                    
+        }
+        //dd($resumen);
+        //dd($sumatoria_promedio_clientes.'-'.$contador_clientes);
+        //dd($fechas);
+        //dd($registros->grupo);
+
+        /*return view('inscripcions.reportes.lista_alumnosr',compact('registros'))
+			->with( 'list', Inscripcion::getListFromAllRelationApps() );
+                 * */
+
+        /*                PDF::setOptions(['defaultFont' => 'arial']);
+
+                $pdf = PDF::loadView('inscripcions.reportes.lista_alumnosr', array('registros'=>$registros,'fechas_enc'=>$fechas))
+                        ->setPaper('legal', 'landscape');
+                return $pdf->download('reporte.pdf');
+  */
+        return view('inscripcions.reportes.porcentajeAsistenciaR', array(
+            'resumen' => $resumen,
+            'datos'=>$data
+        ));
+    }
+
 }

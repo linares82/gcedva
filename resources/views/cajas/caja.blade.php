@@ -339,13 +339,13 @@
         <div class="box box-danger">
             <div class="box-header">
                 <a href="{{route('clientes.edit', $cliente->id)}}" class="btn btn-md btn-success" target="_blank">
-                    <h3 class="box-title">
-                        Adeudos-{{$cliente->nombre." ".$cliente->nombre2." ".$cliente->ape_paterno." ".$cliente->ape_materno}}
+                    
+                        Adeudos-{{$cliente->nombre." ".$cliente->nombre2." ".$cliente->ape_paterno." ".$cliente->ape_materno}} - {{$cliente->stCliente->name}}
                         @if($cliente->beca_bnd==1)
-                        -Becado
+                        - Becado
                         @endif
 
-                    </h3></a>
+                    </a>
             </div>
             <div class="box-body no-padding">
 

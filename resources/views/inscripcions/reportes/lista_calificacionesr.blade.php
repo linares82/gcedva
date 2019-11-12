@@ -118,6 +118,8 @@
                                 ?>
                             </td>
                             <td colspan="{{$contador}}">
+                                <img src="data:image/png;base64, 
+                                {!! base64_encode(QrCode::format('png')->size(100)->generate('Asignacion:'.$asignacion->id.', Alumnos Inscritos:'.$total_alumnos.', Maestro:'.$r->maestro)) !!} ">
                                 <img src="{{ asset('/imagenes/planteles/'.$r->p_id."/".$r->logo) }}" alt="Sin logo" height="80px" ></img>
                             </td>
                             <td></td><td></td>

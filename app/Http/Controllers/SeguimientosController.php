@@ -1097,6 +1097,7 @@ class SeguimientosController extends Controller {
                 //foreach($adeudos as $adeudo){
                     $existe_linea=CajaLn::where('adeudo_id','=',$adeudo_tomado->adeudo)->whereNull('caja_lns.deleted_at')->first();
                     //dd($existe_linea);
+                    
                     if(!is_object($existe_linea)){
                         
                         $caja_ln['grupo']=$adeudo_tomado->grupo;
@@ -1223,6 +1224,9 @@ class SeguimientosController extends Controller {
                 //    }
                         array_push($registros, $caja_ln);
                 }elseif(is_object($existe_linea) and $existe_linea->caja->st_caja_id==3){
+                if ($adeudo_tomado->adeudo == 107301) {
+                    dd($existe_linea->caja->st_caja_id);
+                }
                     //dd($adeudo_tomado->toArray());
                     $caja_ln['grupo']=$adeudo_tomado->grupo;
                     $caja_ln['concepto']=$adeudo_tomado->cajaConcepto->name;

@@ -4,10 +4,13 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\Calificacion;
+use App\Cliente;
 use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updateCalificacion;
 use App\Http\Requests\createCalificacion;
+use App\Lectivo;
+use App\Plantel;
 
 class CalificacionsController extends Controller {
 
@@ -123,4 +126,38 @@ class CalificacionsController extends Controller {
 		return redirect()->route('calificacions.index')->with('message', 'Registro Borrado.');
 	}
 
+	public function promedios(){
+		$plantels=Plantel::pluck('razon','id');
+		$lectivos=Lectivo::pluck('name','id');
+		return view('calificacions.reportes.promedios', compact('plantels','lectivos'));
+	}
+
+	public function promediosR(Request $request)
+	{
+		$datos=$request->all();
+		//dd($datos);
+		$registros=Cliente::select('p.razon','g.name as grado','l.name as lectivo','clientes.id','m.name as materia','car_po.name as ponderacion',
+								'calif.calificacion','cp.calificacion_parcial', 'cp.ponderacion', 'cp.calificacion_parcial_calculada')
+								->join('st_clientes as stc','stc.id','=','clientes.st_cliente_id')
+								->join('plantels as p','p.id','=','clientes.plantel_id')
+								->join('hacademicas as h','h.cliente_id','=','clientes.id')
+								->join('grados as g','g.id','=','h.grado_id')
+								->join('materia as m','m.id','=','h.materium_id')
+								->join('lectivos as l', 'l.id', '=', 'h.lectivo_id')
+								->join('calificacions as calif','calif.hacademica_id','=','h.id')
+								->join('calificacion_ponderacions as cp','cp.calificacion_id','=','calif.id')
+								->join('carga_ponderacions as car_po','car_po.id','=','cp.carga_ponderacion_id')
+								->whereIn('p.id', $datos['plantel_f'])
+								->whereIn('h.lectivo_id', $datos['lectivo_f'])
+								->where('clientes.st_cliente_id','4')
+								->whereNull('h.deleted_at')
+								->whereNull('calif.deleted_at')
+								->whereNull('cp.deleted_at')
+								->get();
+			dd($registros->toArray());					 
+
+		return view('calificacions.reportes.promediosR', compact('plantels'));
+		
+		
+	}
 }
