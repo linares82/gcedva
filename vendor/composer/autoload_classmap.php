@@ -7,6 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'AddArchivoTransferencesTable' => $baseDir . '/database/migrations/2019_10_30_113553_add_archivo_transferences_table.php',
+    'AddAutFieldsToHistoriaClientesTable' => $baseDir . '/database/migrations/2019_11_13_134936_add_aut_fields_to_historia_clientes_table.php',
     'AddBecaPorcentajeClientesTable' => $baseDir . '/database/migrations/2018_05_07_114940_add_beca_porcentaje_clientes_table.php',
     'AddBecadoBndCajasTable' => $baseDir . '/database/migrations/2018_11_01_133610_add_becado_bnd_cajas_table.php',
     'AddBndAplicarBecaCajaConceptoTable' => $baseDir . '/database/migrations/2019_02_25_115155_add_bnd_aplicar_beca_caja_concepto_table.php',
@@ -217,7 +218,6 @@ return array(
     'CreatePaisesTable' => $baseDir . '/database/migrations/2018_10_23_100204_create_paises_table.php',
     'CreateParamsTable' => $baseDir . '/database/migrations/2017_05_16_190353_create_params_table.php',
     'CreatePasswordResetsTable' => $baseDir . '/database/migrations/2014_10_12_100000_create_password_resets_table.php',
-    'CreatePeridoExamensTable' => $baseDir . '/database/migrations/2019_10_30_130316_create_perido_examens_table.php',
     'CreatePeriodoEstudiosTable' => $baseDir . '/database/migrations/2017_08_17_165449_create_periodo_estudios_table.php',
     'CreatePeriodoExamensTable' => $baseDir . '/database/migrations/2019_10_30_130355_create_periodo_examens_table.php',
     'CreatePeriodosTable' => $baseDir . '/database/migrations/2017_04_18_144945_create_periodos_table.php',
@@ -240,6 +240,7 @@ return array(
     'CreatePromoPlanLnsTable' => $baseDir . '/database/migrations/2019_01_23_142924_create_promo_plan_lns_table.php',
     'CreatePromocionsTable' => $baseDir . '/database/migrations/2017_05_02_204052_create_promocions_table.php',
     'CreatePuestosTable' => $baseDir . '/database/migrations/2017_03_28_175357_create_puestos_table.php',
+    'CreateRegistroHistoriaClientesTable' => $baseDir . '/database/migrations/2019_11_13_141248_create_registro_historia_clientes_table.php',
     'CreateReglaRecargosTable' => $baseDir . '/database/migrations/2018_04_05_123031_create_regla_recargos_table.php',
     'CreateSalonsTable' => $baseDir . '/database/migrations/2017_08_17_164957_create_salons_table.php',
     'CreateSegmentoMercadosTable' => $baseDir . '/database/migrations/2018_04_12_141340_create_segmento_mercados_table.php',
@@ -256,6 +257,7 @@ return array(
     'CreateStCursoEmpresasTable' => $baseDir . '/database/migrations/2019_03_29_113538_create_st_curso_empresas_table.php',
     'CreateStEmpleadosTable' => $baseDir . '/database/migrations/2017_03_28_180955_create_st_empleados_table.php',
     'CreateStEmpresasTable' => $baseDir . '/database/migrations/2019_02_01_120504_create_st_empresas_table.php',
+    'CreateStHistoriaClientesTable' => $baseDir . '/database/migrations/2019_11_13_130013_create_st_historia_clientes_table.php',
     'CreateStInscripcionsTable' => $baseDir . '/database/migrations/2019_05_16_131805_create_st_inscripcions_table.php',
     'CreateStMateriasTable' => $baseDir . '/database/migrations/2017_09_18_164707_create_st_materias_table.php',
     'CreateStMuebleUsosTable' => $baseDir . '/database/migrations/2019_10_03_105937_create_st_mueble_usos_table.php',

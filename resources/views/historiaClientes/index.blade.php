@@ -193,7 +193,7 @@
     <div class="row">
         <div class="col-md-12">
             @if($historiaClientes->count())
-                <table class="table table-condensed table-striped">
+                <table class="table table-condensed table-striped tblEnc">
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
@@ -202,8 +202,12 @@
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'fecha', 'title' => 'FECHA'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'fec_vigencia', 'title' => 'FECHA VIGENCIA'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'archivo', 'title' => 'ARCHIVO'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clientes.nombre', 'title' => 'CLIENTE_NOMBRE'])</th>
-                        
+                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clientes.nombre', 'title' => 'CLIENTE'])</th>
+                        <th>ESTATUS</th>
+                        <th>AUTORIZACIONES</th>
+                        <th>SERV. ESC.</th>
+                        <th>CAJA</th>
+                        <th>SERV. ESC. C.</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
@@ -218,7 +222,52 @@
                     <td>{{$historiaCliente->fec_vigencia}}</td>
                     <td><a href='{!! asset("/imagenes/historia_clientes/".$historiaCliente->id."/".$historiaCliente->archivo) !!}' target='_blank'>Ver</h></td>
                     <td>{{$historiaCliente->cliente->nombre}} {{$historiaCliente->cliente->nombre2}} {{$historiaCliente->cliente->ape_paterno}} {{$historiaCliente->cliente->ape_materno}}</td>
-                    
+                    <td>{{$historiaCliente->stHistoriaCliente->name}}</td>
+                    <td>
+                        @if($historiaCliente->evento_cliente_id==2)
+                        <button class="btn btn-success btnVerLineas pull-right btn-xs" lang="mesaj" data-check="{{$historiaCliente->id}}" data-href="formation_json_parents" style="margin-left:10px;" >
+                                        <span class="fa fa-eye" aria-hidden="true"></span> Ver
+                        </button>
+                         @endif
+                        
+                        
+                    </td>
+                    <td>
+                        {{$historiaCliente->autSerEsc->name}}
+                        @if($historiaCliente->evento_cliente_id==2)
+                        @permission('autorizacionBaja.aut_servicios_escolares')
+                                <button type="button" class="btn btn-primary btn-xs btn_create_comentario" 
+                                        data-toggle="modal" data-historia_cliente_id="{{ $historiaCliente->id }}"
+                                                                      data-autorizacion='aut_ser_esc'>
+                                    Autorización
+                                </button>
+                        @endpermission
+                        @endif
+                    </td>
+                    <td>
+                        {{$historiaCliente->autCaja->name}}
+                        @if($historiaCliente->aut_ser_esc==2 and $historiaCliente->evento_cliente_id==2)
+                        @permission('autorizacionBaja.aut_caja')
+                                <button type="button" class="btn btn-primary btn-xs btn_create_comentario" 
+                                        data-toggle="modal" data-historia_cliente_id="{{ $historiaCliente->id }}"
+                                                                      data-autorizacion='aut_caja'>
+                                    Autorización
+                                </button>
+                        @endpermission
+                        @endif
+                    </td>
+                    <td>
+                        {{$historiaCliente->autSerEscCorp->name}}
+                        @if($historiaCliente->aut_ser_esc==2 and $historiaCliente->aut_caja==2 and $historiaCliente->evento_cliente_id==2)
+                        @permission('autorizacionBaja.aut_servicios_escolares_c')
+                                <button type="button" class="btn btn-primary btn-xs btn_create_comentario"  
+                                        data-toggle="modal" data-historia_cliente_id="{{ $historiaCliente->id }}"
+                                                                      data-autorizacion='aut_ser_esc_corp'>
+                                    Autorización
+                                </button>
+                        @endpermission
+                        @endif
+                    </td>
                                 <td class="text-right">
                                     @permission('historiaClientes.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('historiaClientes.edit', $historiaCliente->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
@@ -244,4 +293,202 @@
         </div>
     </div>
 
+<!-- Ventana crear comentario y modificar estatus -->
+    <div id="createComentarioModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                    <h4 class="modal-title">Autorizacion / Comentario</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="" role="form">
+                        <div class="row_reglas_relacionadas">
+                            <div >
+                                {!! Form::hidden("historia_cliente_id", null, array("class" => "form-control", "id" => "historia_cliente_id-crear")) !!}
+                                {!! Form::hidden("autorizacion", null, array("class" => "form-control", "id" => "autorizacion-crear")) !!}
+                                <input type="hidden" name="_token" id="_token"  value="<?= csrf_token(); ?>"> 
+                             </div>
+                             <div class="form-group col-md-4 @if($errors->has('st_historia_cliente_id')) has-error @endif">
+                                <label for="st_historia_cliente_id-field">Estatus</label>
+                                {!! Form::select("st_historia_cliente_id", $stHistoriaClientes, null, array("class" => "form-control select_seguridad", "id" => "st_historia_cliente_id-crear")) !!}
+                                @if($errors->has("st_historia_cliente_id"))
+                                <span class="help-block">{{ $errors->first("st_historia_cliente_id") }}</span>
+                                @endif
+                            </div>
+                             <div class="form-group col-sm-12 @if($errors->has('fec_fin')) has-error @endif">
+                                <label for="inicial_bnd-field">Comentario</label>
+                                {!! Form::text("comentario", null, array("class" => "form-control", "id" => "comentario-crear")) !!}
+                            </div>
+                            
+                            </div>
+                            <div class="row"></div>
+                        </div> 
+                    </form>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="comentario-crear" data-dismiss="modal">
+                            <span class='glyphicon glyphicon-check'></span> Crear
+                        </button>
+                        <button type="button" class="btn btn-warning" data-dismiss="modal">
+                            <span class='glyphicon glyphicon-remove'></span> Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>        
+
 @endsection
+@push('scripts')
+  <script type="text/javascript">
+    $(document).ready(function() {
+
+    //Crear comentario
+        $(document).on('click', '.btn_create_comentario', function() {
+            $('#historia_cliente_id-crear').val($(this).data('historia_cliente_id'));
+            $('#autorizacion-crear').val($(this).data('autorizacion'));
+            $('#st_beca_id-crear').val($(this).data('st_beca_id')).change();
+
+            $('#createComentarioModal').modal('show');
+        });
+
+        //Crear comentario
+        $('.modal-footer').on('click', '#comentario-crear', function() {
+        var ruta='{{url("registroHistoriaClientes/store")}}';
+        
+        //alert(bnd);
+        $.ajax({
+            type: 'POST',
+            url: ruta,
+            data: {
+                '_token': $('input[name=_token]').val(),
+                'historia_cliente_id': $('#historia_cliente_id-crear').val(),
+                'autorizacion': $('#autorizacion-crear').val(),
+                'st_historia_cliente_id': $('#st_historia_cliente_id-crear option:selected').val(),
+                'comentario': $('#comentario-crear').val(),
+                
+            },
+            beforeSend : function(){$("#loading3").show(); },
+            complete : function(){$("#loading3").hide(); },
+            success: function(data) {
+                    location.reload();
+                }   
+        });
+    });
+    
+
+var $table = $('.tblEnc');
+    $table.find('.btnVerLineas').on('click', function(e) {
+
+// click button
+
+    //e.preventDefault();
+    var $btn = $(e.target), $tablosatir = $btn.closest('tr'), $tablosonrakisatir = $tablosatir.next('tr.expand-child');
+    if ($btn.attr("lang") === "mesaj") {
+///////////// mesajlar butonuna tıklandığında olan olaylar.
+
+    if ($tablosonrakisatir.css("display") === 'none') {
+    // if panel close !
+    $tablosonrakisatir.slideDown(100);
+    } else {
+    // if panel open !
+    $tablosonrakisatir.slideUp(100);
+    }
+
+    //$("#kullanicihebir").html($tablosatir.find("tr").length);	
+
+
+    if ($tablosonrakisatir.length) {
+    // sonraki satır yok ise 	
+
+
+
+    } else
+    {
+
+    // sonraki satır var ise
+    	
+    $.ajax({
+    url: "{{route('registroHistoriaClientes.findByHistoriaClienteId')}}",
+            dataType: "json",
+            data: "check=" + $(this).data('check'),
+            success: function (anaVeri) {
+
+            var yenitablosatir = '<tr class="expand-child" id="collapse' + $btn.data('id') + '">' +
+                    '<td colspan="12">' +
+                    '<table class="table table-condensed altTablo table-hover" width=100% >' +
+                    '<thead>' +
+                    '<tr>' +
+                    '<th>Consecutivo</th>' +
+                    '<th>Comentario</th>' +
+                    '<th>Estatus</th>' +
+                    '<th>Creado el</th>' +
+                    '<th>Creado por</th>' +
+                    '<th></th>' +
+                    '</tr>' +
+                    '</thead>' +
+                    '<tbody>';
+            //if (anaVeri.kullanici) {
+            if (anaVeri) {
+            //$.each(anaVeri.kullanici, function(i, kullaniciTomar) {
+
+            var j = 1;
+            $.each(anaVeri, function(i) {
+            var btnEditarLn = "";
+            @permission('registroHistoriaClientes.edit')
+                    btnEditarLn = '<button type="button" class="btn btn-xs btn-primary btnEditLinea" data-linea=' + anaVeri[i].id + '>' +
+                    '<i class="glyphicon glyphicon-pencil"></i> Editar' +
+                    '</button>'
+            @endpermission
+                    var btnEliminarLn = "";
+            @permission('registroHistoriaClientes.destroy')
+                    btnEliminarLn = '<button type="submit" class="btn btn-danger btn-xs" title="Eliminar" onclick="return confirm(&quot; Eliminar &quot;)">' +
+                    '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>Eliminar' +
+                    '</button>';
+            @endpermission
+                    yenitablosatir += '<tr>' +
+                    //kullaniciTomar.Surname      
+                    '<td>' + anaVeri[i].id + '</td>' +
+                    '<td>' + anaVeri[i].comentario + '</td>' +
+                    '<td>' + anaVeri[i].estatus + '</td>' +
+                    '<td>' + anaVeri[i].created_at + '</td>' +
+                    '<td>' + anaVeri[i].user + '</td>' +
+                    '<td>' +
+                    '<form method="POST" action="' + '{!! url('check_ls / check_l / ') !!}' + '/' + anaVeri[i].id + '" accept-charset="UTF-8">' +
+                    '<input name="_method" value="DELETE" type="hidden">' +
+                    '{{ csrf_field() }}' +
+                    //btnEditarLn +
+                    //btnEliminarLn +
+                    '</td>' +
+                    '</tr>';
+            j++;
+            });
+            }
+            yenitablosatir += '</tbody></table></td></tr>';
+            // set next row
+            $tablosonrakisatir = $(yenitablosatir).insertAfter($tablosatir);
+            $(".btnEditLinea").click(function(){
+            //window.location = '{{url("/ln_impactos/edit/")}}'+'/'+$(this).data('linea');
+            window.open('{{url("/check_ls/edit/")}}' + '/' + $(this).data('linea'), '_blank');
+            });
+            }
+    });
+    
+    }
+
+
+
+    } // if click mesaj buton!
+
+
+
+    if ($btn.attr("lang") === "yorum") {
+    //////// yorum butonuna tıklandığında olan olaylar. (if clicked command buton)
+    $table.find('.btnVerLineas').trigger('click');
+    }
+
+    }); // on click .btnVerLineas end
+    });
+    </script>
+@endpush  
+    

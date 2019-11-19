@@ -1722,6 +1722,12 @@ class InscripcionsController extends Controller
                 $sumatoria_promedio_clientes_asignacion= $sumatoria_promedio_clientes_asignacion + $promedio_cliente;
                 $sumatoria_promedio_clientes= $sumatoria_promedio_clientes+$promedio_cliente;
             }
+            if($contador_clientes_asignacion>0){
+                $resul=$sumatoria_promedio_clientes_asignacion / $contador_clientes_asignacion;
+            }else{
+                $resul = "Sin clientes";
+            }
+                
             array_push($resumen, array('asignacion' => $asignacion->id,
                                                      'plantel'=>$asignacion->plantel->razon, 
                                                      'instructor' => $asignacion->empleado->nombre.' '. $asignacion->empleado->ape_paterno.' '. $asignacion->empleado->ape_materno,
@@ -1729,7 +1735,7 @@ class InscripcionsController extends Controller
                                                      'grupo'=>$asignacion->grupo->name,
                                                      'lectivo'=>$asignacion->lectivo->name,  
                                                      'total_alumnos' => $total_alumnos,
-                                                    'promedio_asistencia'=>($sumatoria_promedio_clientes_asignacion/ $contador_clientes_asignacion)));
+                                                    'promedio_asistencia'=>$resul));
                                                     
         }
         //dd($resumen);

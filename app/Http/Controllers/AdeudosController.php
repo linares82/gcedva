@@ -889,6 +889,8 @@ class AdeudosController extends Controller
                 //->whereIn('adeudos.caja_concepto_id', $datos['concepto_f'])
                 ->whereDate('adeudos.fecha_pago', '>=', $datos['fecha_f'])
                 ->whereDate('adeudos.fecha_pago', '<=', $datos['fecha_t'])
+                ->whereNull('adeudos.deleted_at')
+                ->whereNull('s.deleted_at')
                 ->orderBy('p.id')
                 ->orderBy('adeudos.caja_concepto_id')
                 ->orderBy('c.id')

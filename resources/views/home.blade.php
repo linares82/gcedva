@@ -14,7 +14,7 @@
     </style>-->
     
     @permission('Wanalitica')
-    <div class="form-group col-md-10 col-sm-10 col-xs-10">
+    <div class="form-group col-md-12 col-sm-12 col-xs-12">
         <div class="box box-primary">
             <div class="box-header with-border">
                 <h3 class="box-title">
@@ -29,6 +29,38 @@
     </div>
     @endpermission
     
+    @if (Auth::user()->can('autorizacionBaja.aut_servicios_escolares') or 
+    Auth::user()->can('autorizacionBaja.aut_caja') or
+    Auth::user()->can('autorizacionBaja.aut_servicios_escolares_c'))
+    <div class="form-group col-md-12 col-sm-12 col-xs-12">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">
+                    Autorizaciones Bajas
+                </h3>
+            </div>
+            <div class="box-body">
+                <table class="table table-bordered table-striped dataTable">
+                    <thead><th>Cliente</th><th>Justificacion</th><th>A. Servicios Escolares</th><th>A. Caja</th><th>A. Servicios Escolares C.</th><th></th></thead>
+                    <tbody>
+                        @foreach ($bajas as $baja)
+                            <tr>
+                            <td> <a href="{{route('clientes.edit',$baja->cliente_id)}}" target=_blank>{{$baja->cliente_id}}</a></td>
+                            <td>{{$baja->descripcion}}</td>
+                            <td>{{optional($baja->autSerEsc)->name}}</td>
+                            <td>{{optional($baja->autCaja)->name}}</td>
+                            <td>{{optional($baja->autSerEscCorp)->name}}</td>
+                            <td><a class="btn btn-xs btn-warning" href="{{ route('historiaClientes.index',array('q[cliente_id_lt]'=>$baja->cliente->id)) }}" target='_blank'><i class="glyphicon glyphicon-plus"></i> Ver</a></td>
+                            </tr>
+                        @endforeach
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    @endif
+
     @role('CAJA')
     <div class="form-group col-md-2 col-sm-2 col-xs-2">
         <div class="box box-primary">

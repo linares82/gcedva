@@ -69,7 +69,7 @@
             <h3>Lista de Asistencia del </h3>
             <table>
                <thead>
-                   <th>Csc</th><th>Asignacion</th><th>Plantel</th><th>Instructor</th><th>Materia</th><th>Grupo</th><th>Lectivo</th><th>Total Alumnos</th><th>Promedio Asistencia</th>
+                   <th>Csc</th><th>Asignacion</th><th>Plantel</th><th>Instructor</th><th>Materia</th><th>Grupo</th><th>Lectivo</th><th>Total Alumnos</th><th>Promedio % Asistencia</th>
                </thead>
                @php
                    $contador_linea=1;

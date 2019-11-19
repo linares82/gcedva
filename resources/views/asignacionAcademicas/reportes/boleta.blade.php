@@ -118,6 +118,9 @@
                                     <table class='table_format' width='100%'>
 
                                         <tbody>
+                                            @php
+                                                $cantidad_materias=0;
+                                            @endphp
                                             @foreach($a->calificaciones as $cali)
                                             <tr>
 

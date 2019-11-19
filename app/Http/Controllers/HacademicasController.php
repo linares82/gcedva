@@ -527,9 +527,9 @@ class HacademicasController extends Controller {
             }
         }
 
-            if(!is_object($hacademicas)){
+            /*if(!is_object($hacademicas)){
                 $msj= "Lo sentimos usted no es el profesor de la materia o la fecha limite del perido lectivo ha finalizado";
-            }
+            }*/
 
         $hacademica=HAcademica::where('grupo_id','=',$asignacionAcademica->grupo_id)
                                 ->where('lectivo_id', '=', $asignacionAcademica->lectivo_id)

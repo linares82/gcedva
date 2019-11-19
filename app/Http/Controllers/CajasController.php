@@ -601,6 +601,8 @@ class CajasController extends Controller {
             $caja->total=0;
             $caja->save();
             foreach($caja->cajaLns as $ln){
+                $ln->adeudo_id=0;
+                $ln->save();
                 $ln->delete();
             }
             $adeudos=Adeudo::where('caja_id',$caja->id)->get();

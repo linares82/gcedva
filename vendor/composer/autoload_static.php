@@ -681,6 +681,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
 
     public static $classMap = array (
         'AddArchivoTransferencesTable' => __DIR__ . '/../..' . '/database/migrations/2019_10_30_113553_add_archivo_transferences_table.php',
+        'AddAutFieldsToHistoriaClientesTable' => __DIR__ . '/../..' . '/database/migrations/2019_11_13_134936_add_aut_fields_to_historia_clientes_table.php',
         'AddBecaPorcentajeClientesTable' => __DIR__ . '/../..' . '/database/migrations/2018_05_07_114940_add_beca_porcentaje_clientes_table.php',
         'AddBecadoBndCajasTable' => __DIR__ . '/../..' . '/database/migrations/2018_11_01_133610_add_becado_bnd_cajas_table.php',
         'AddBndAplicarBecaCajaConceptoTable' => __DIR__ . '/../..' . '/database/migrations/2019_02_25_115155_add_bnd_aplicar_beca_caja_concepto_table.php',
@@ -891,7 +892,6 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'CreatePaisesTable' => __DIR__ . '/../..' . '/database/migrations/2018_10_23_100204_create_paises_table.php',
         'CreateParamsTable' => __DIR__ . '/../..' . '/database/migrations/2017_05_16_190353_create_params_table.php',
         'CreatePasswordResetsTable' => __DIR__ . '/../..' . '/database/migrations/2014_10_12_100000_create_password_resets_table.php',
-        'CreatePeridoExamensTable' => __DIR__ . '/../..' . '/database/migrations/2019_10_30_130316_create_perido_examens_table.php',
         'CreatePeriodoEstudiosTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_17_165449_create_periodo_estudios_table.php',
         'CreatePeriodoExamensTable' => __DIR__ . '/../..' . '/database/migrations/2019_10_30_130355_create_periodo_examens_table.php',
         'CreatePeriodosTable' => __DIR__ . '/../..' . '/database/migrations/2017_04_18_144945_create_periodos_table.php',
@@ -914,6 +914,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'CreatePromoPlanLnsTable' => __DIR__ . '/../..' . '/database/migrations/2019_01_23_142924_create_promo_plan_lns_table.php',
         'CreatePromocionsTable' => __DIR__ . '/../..' . '/database/migrations/2017_05_02_204052_create_promocions_table.php',
         'CreatePuestosTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_28_175357_create_puestos_table.php',
+        'CreateRegistroHistoriaClientesTable' => __DIR__ . '/../..' . '/database/migrations/2019_11_13_141248_create_registro_historia_clientes_table.php',
         'CreateReglaRecargosTable' => __DIR__ . '/../..' . '/database/migrations/2018_04_05_123031_create_regla_recargos_table.php',
         'CreateSalonsTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_17_164957_create_salons_table.php',
         'CreateSegmentoMercadosTable' => __DIR__ . '/../..' . '/database/migrations/2018_04_12_141340_create_segmento_mercados_table.php',
@@ -930,6 +931,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'CreateStCursoEmpresasTable' => __DIR__ . '/../..' . '/database/migrations/2019_03_29_113538_create_st_curso_empresas_table.php',
         'CreateStEmpleadosTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_28_180955_create_st_empleados_table.php',
         'CreateStEmpresasTable' => __DIR__ . '/../..' . '/database/migrations/2019_02_01_120504_create_st_empresas_table.php',
+        'CreateStHistoriaClientesTable' => __DIR__ . '/../..' . '/database/migrations/2019_11_13_130013_create_st_historia_clientes_table.php',
         'CreateStInscripcionsTable' => __DIR__ . '/../..' . '/database/migrations/2019_05_16_131805_create_st_inscripcions_table.php',
         'CreateStMateriasTable' => __DIR__ . '/../..' . '/database/migrations/2017_09_18_164707_create_st_materias_table.php',
         'CreateStMuebleUsosTable' => __DIR__ . '/../..' . '/database/migrations/2019_10_03_105937_create_st_mueble_usos_table.php',

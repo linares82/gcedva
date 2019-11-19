@@ -69,16 +69,17 @@
                         <td>{{$registro['fecha_real_pago']}}</td>
                         <td style="align:right;">{{number_format($registro['total'],2)}}</td>
                         <?php
-                        $eventos=\App\HistoriaCliente::where('cliente_id',$registro['cliente_id'])
+                        $evento=\App\HistoriaCliente::where('cliente_id',$registro['cliente_id'])
                                                      ->where('evento_cliente_id',6)
-                                                     ->whereNull('deleted_at')->get()
+                                                     ->whereNull('deleted_at')->first()
                         ?>
                         <td>
-                            @if(count($eventos)>0)
-                                SI
+                            @if(count($evento)>0)
+                                SI: 
                             @else
-                                NO
+                                NO: 
                             @endif
+                            {{$evento->descripcion}}
                         </td>
                     </tr>
                     

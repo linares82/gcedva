@@ -74,7 +74,7 @@
                        <tbody>
                            @foreach($lectivo->periodoExamens as $periodoExamen)
                            <tr>
-                           <td>{{$periodoExamen->inicio}}</td><td>{{$periodoExamen->inicio}}</td>
+                           <td>{{$periodoExamen->inicio}}</td><td>{{$periodoExamen->fin}}</td>
                            <td>
                            <a href="{{route('periodoExamens.destroy', $periodoExamen->id)}}"  class="btn btn-xs btn-danger ">Eliminar</a>  
                            </td>

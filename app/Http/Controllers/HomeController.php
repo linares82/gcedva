@@ -17,6 +17,7 @@ use App\Menu;
 use DB;
 use Auth;
 use Activity;
+use App\HistoriaCliente;
 use Log;
 
 class HomeController extends Controller
@@ -477,9 +478,23 @@ class HomeController extends Controller
                                 ->whereNull('c.bnd_visto')
                                 ->get();
         //dd($becas);
+
+        $autorizacionBajas = HistoriaCliente::where('evento_cliente_id', 2)->where('st_historia_cliente_id','<>', 2)->where('st_historia_cliente_id', '<>', 0);
+        //dd(Auth::user()->can('aut_ser_esc'));
+        if (Auth::user()->can('autorizacionBaja.aut_servicios_escolares')) {
+            $autorizacionBajas->where('aut_ser_esc', '<>', 2);
+        }
+        if (Auth::user()->can('autorizacionBaja.aut_caja')) {
+            $autorizacionBajas->where('aut_caja', '<>', 2);
+        }
+        if (Auth::user()->can('autorizacionBaja.aut_servicios_escolares_c')) {
+            $autorizacionBajas->where('aut_ser_esc_corp', '<>', 2);
+        }
+        $bajas=$autorizacionBajas->get();
+        
         
         return view('home', compact('avisos', 'a_1', 'a_2', 'a_3', 'a_4','a_5', 'grafica2','grafica', 'fil', 'lectivosSt2','avisosEmpresas',
-                                    'avisos_generales', 'avance', 'gauge', 'tabla', 'plantel','estatusPlantel', 'tsuma','lectivoss','becas'))
+                                    'avisos_generales', 'avance', 'gauge', 'tabla', 'plantel','estatusPlantel', 'tsuma','lectivoss','becas','bajas'))
                     ->with('datos_grafica', json_encode($tabla))
                     ->with('datos', json_encode($datos))
                     ->with('datos2', json_encode($datos2))

@@ -79,6 +79,7 @@
                          <th></th>
                      </thead>
                      <tbody>
+                         
                          @foreach($hacademicas as $r)
                          <tr>
                          <td>{{$r->id}}</td>
@@ -117,7 +118,9 @@
                      </tbody>
                  </table>
             @endif
-                    
+            @if(!isset($hacademicas))
+                Lo sentimos usted no es el profesor de la materia o la fecha limite del perido lectivo ha finalizado.
+            @endif        
         </div>
     </div>
     
