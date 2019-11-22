@@ -51,8 +51,8 @@ class RegistroHistoriaClientesController extends Controller
 	public function store(createRegistroHistoriaCliente $request)
 	{
 
-		$input = $request->except(autorizacion);
-		$campo_autorizacion = $request->only(autorizacion);
+		$input = $request->except('autorizacion');
+		$campo_autorizacion = $request->only('autorizacion');
 		//dd($campo_autorizacion['autorizacion']);
 		$input['usu_alta_id'] = Auth::user()->id;
 		$input['usu_mod_id'] = Auth::user()->id;
@@ -118,8 +118,8 @@ class RegistroHistoriaClientesController extends Controller
 				$seguimiento->save();
 			}
 		}
-
-		return redirect()->route('registroHistoriaClientes.index')->with('message', 'Registro Creado.');
+		return $e;
+		//return redirect()->route('registroHistoriaClientes.index')->with('message', 'Registro Creado.');
 	}
 
 	/**

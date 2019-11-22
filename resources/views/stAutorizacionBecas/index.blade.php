@@ -1,6 +1,6 @@
 @extends('plantillas.admin_template')
 
-@include('stBecas._common')
+@include('stAutorizacionBecas._common')
 
 @section('header')
 
@@ -9,7 +9,7 @@
         <!--
         @if ( $query_params = Request::input('q') )
 
-            <li class="active"><a href="{{ route('stBecas.index') }}">@yield('stBecasAppTitle')</a></li>
+            <li class="active"><a href="{{ route('stAutorizacionBecas.index') }}">@yield('stAutorizacionBecasAppTitle')</a></li>
             <li class="active">condition(  
 
             @foreach( $query_params as $key => $value )
@@ -17,17 +17,17 @@
             @endforeach
             )</li>
         @else
-            <li class="active">@yield('stBecasAppTitle')</li>
+            <li class="active">@yield('stAutorizacionBecasAppTitle')</li>
         @endif
         -->
-        <li class="active">@yield('stBecasAppTitle')</li>
+        <li class="active">@yield('stAutorizacionBecasAppTitle')</li>
     </ol>
 
     <div class="">
         <h3>
-            <i class="glyphicon glyphicon-align-justify"></i> @yield('stBecasAppTitle')
-            @permission('stBecas.create')
-            <a class="btn btn-success pull-right" href="{{ route('stBecas.create') }}"><i class="glyphicon glyphicon-plus"></i> Crear</a>
+            <i class="glyphicon glyphicon-align-justify"></i> @yield('stAutorizacionBecasAppTitle')
+            @permission('stAutorizacionBecas.create')
+            <a class="btn btn-success pull-right" href="{{ route('stAutorizacionBecas.create') }}"><i class="glyphicon glyphicon-plus"></i> Crear</a>
             @endpermission
         </h3>
 
@@ -44,7 +44,7 @@
             </div>
             <div aria-labelledby="headingOne" role="tabpanel" class="panel-collapse collapse" id="collapseOne">
                 <div class="panel-body">
-                    <form class="StBeca_search" id="search" action="{{ route('stBecas.index') }}" accept-charset="UTF-8" method="get">
+                    <form class="StAutorizacionBeca_search" id="search" action="{{ route('stAutorizacionBecas.index') }}" accept-charset="UTF-8" method="get">
                         <input type="hidden" name="q[s]" value="{{ @(Request::input('q')['s']) ?: '' }}" />
                         <div class="form-horizontal">
 
@@ -120,32 +120,32 @@
 @section('content')
     <div class="row">
         <div class="col-md-12">
-            @if($stBecas->count())
+            @if($stAutorizacionBecas->count())
                 <table class="table table-condensed table-striped">
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'name', 'title' => 'ESTATUS'])</th>
+                        
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
 
                     <tbody>
-                        @foreach($stBecas as $stBeca)
+                        @foreach($stAutorizacionBecas as $stAutorizacionBeca)
                             <tr>
-                                <td><a href="{{ route('stBecas.show', $stBeca->id) }}">{{$stBeca->id}}</a></td>
-                                <td>{{$stBeca->name}}</td>
-                    <td>{{$stBeca->usu_alta_id}}</td>
-                    <td>{{$stBeca->usu_mod_id}}</td>
+                                <td><a href="{{ route('stAutorizacionBecas.show', $stAutorizacionBeca->id) }}">{{$stAutorizacionBeca->id}}</a></td>
+                                <td>{{$stAutorizacionBeca->name}}</td>
+                    
                                 <td class="text-right">
-                                    @permission('stBecas.edit')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('stBecas.duplicate', $stBeca->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
+                                    @permission('stAutorizacionBecas.edit')
+                                    <a class="btn btn-xs btn-primary" href="{{ route('stAutorizacionBecas.duplicate', $stAutorizacionBeca->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
                                     @endpermission
-                                    @permission('stBecas.edit')
-                                    <a class="btn btn-xs btn-warning" href="{{ route('stBecas.edit', $stBeca->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
+                                    @permission('stAutorizacionBecas.edit')
+                                    <a class="btn btn-xs btn-warning" href="{{ route('stAutorizacionBecas.edit', $stAutorizacionBeca->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
                                     @endpermission
-                                    @permission('stBecas.destroy')
-                                    {!! Form::model($stBeca, array('route' => array('stBecas.destroy', $stBeca->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}
+                                    @permission('stAutorizacionBecas.destroy')
+                                    {!! Form::model($stAutorizacionBeca, array('route' => array('stAutorizacionBecas.destroy', $stAutorizacionBeca->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}
                                         <button type="submit" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> Borrar</button>
                                     {!! Form::close() !!}
                                     @endpermission
@@ -154,7 +154,7 @@
                         @endforeach
                     </tbody>
                 </table>
-                {!! $stBecas->appends(Request::except('page'))->render() !!}
+                {!! $stAutorizacionBecas->appends(Request::except('page'))->render() !!}
             @else
                 <h3 class="text-center alert alert-info">Vacio!</h3>
             @endif

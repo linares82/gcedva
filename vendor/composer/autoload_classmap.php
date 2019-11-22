@@ -7,6 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'AddArchivoTransferencesTable' => $baseDir . '/database/migrations/2019_10_30_113553_add_archivo_transferences_table.php',
+    'AddAutFieldsToAutorizacionBecas' => $baseDir . '/database/migrations/2019_11_19_143629_add_aut_fields_to_autorizacion_becas.php',
     'AddAutFieldsToHistoriaClientesTable' => $baseDir . '/database/migrations/2019_11_13_134936_add_aut_fields_to_historia_clientes_table.php',
     'AddBecaPorcentajeClientesTable' => $baseDir . '/database/migrations/2018_05_07_114940_add_beca_porcentaje_clientes_table.php',
     'AddBecadoBndCajasTable' => $baseDir . '/database/migrations/2018_11_01_133610_add_becado_bnd_cajas_table.php',
@@ -240,7 +241,7 @@ return array(
     'CreatePromoPlanLnsTable' => $baseDir . '/database/migrations/2019_01_23_142924_create_promo_plan_lns_table.php',
     'CreatePromocionsTable' => $baseDir . '/database/migrations/2017_05_02_204052_create_promocions_table.php',
     'CreatePuestosTable' => $baseDir . '/database/migrations/2017_03_28_175357_create_puestos_table.php',
-    'CreateRegistroHistoriaClientesTable' => $baseDir . '/database/migrations/2019_11_13_141248_create_registro_historia_clientes_table.php',
+    'CreateRegistroHistoriaClientesTable' => $baseDir . '/database/migrations/2019_11_13_141350_create_registro_historia_clientes_table.php',
     'CreateReglaRecargosTable' => $baseDir . '/database/migrations/2018_04_05_123031_create_regla_recargos_table.php',
     'CreateSalonsTable' => $baseDir . '/database/migrations/2017_08_17_164957_create_salons_table.php',
     'CreateSegmentoMercadosTable' => $baseDir . '/database/migrations/2018_04_12_141340_create_segmento_mercados_table.php',
@@ -250,6 +251,7 @@ return array(
     'CreateSmsPredefinidosTable' => $baseDir . '/database/migrations/2018_03_22_082751_create_sms_predefinidos_table.php',
     'CreateSmsTable' => $baseDir . '/database/migrations/2017_05_12_155453_create_sms_table.php',
     'CreateStAlumnosTable' => $baseDir . '/database/migrations/2017_08_24_181015_create_st_alumnos_table.php',
+    'CreateStAutorizacionBecasTable' => $baseDir . '/database/migrations/2019_11_19_144102_create_st_autorizacion_becas_table.php',
     'CreateStBecasTable' => $baseDir . '/database/migrations/2019_03_06_141730_create_st_becas_table.php',
     'CreateStCajasTable' => $baseDir . '/database/migrations/2018_04_10_134535_create_st_cajas_table.php',
     'CreateStClientesTable' => $baseDir . '/database/migrations/2017_03_30_180956_create_st_clientes_table.php',

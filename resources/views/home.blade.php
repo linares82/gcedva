@@ -44,6 +44,8 @@
                     <thead><th>Cliente</th><th>Justificacion</th><th>A. Servicios Escolares</th><th>A. Caja</th><th>A. Servicios Escolares C.</th><th></th></thead>
                     <tbody>
                         @foreach ($bajas as $baja)
+                        @if($baja->id>1011)
+                        @if($baja->aut_ser_esc<>2 or $baja->aut_caja<>2 or $baja->aut_ser_esc_corp<>2)
                             <tr>
                             <td> <a href="{{route('clientes.edit',$baja->cliente_id)}}" target=_blank>{{$baja->cliente_id}}</a></td>
                             <td>{{$baja->descripcion}}</td>
@@ -52,6 +54,8 @@
                             <td>{{optional($baja->autSerEscCorp)->name}}</td>
                             <td><a class="btn btn-xs btn-warning" href="{{ route('historiaClientes.index',array('q[cliente_id_lt]'=>$baja->cliente->id)) }}" target='_blank'><i class="glyphicon glyphicon-plus"></i> Ver</a></td>
                             </tr>
+                        @endif
+                        @endif
                         @endforeach
 
                     </tbody>
@@ -60,6 +64,65 @@
         </div>
     </div>
     @endif
+
+     <div class="form-group col-md-12">
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    <h3 class="box-title">
+                        Autorizacion de becas
+                    </h3>
+                    <div class="box-tools pull-right">
+                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    </div>
+                </div>
+                <div class="box-body" >
+                    <div class="table">
+                        <table class="table table-bordered table-striped dataTable">
+                            <thead>
+                                <tr>
+                                    <th>Cliente</th>
+                                    <th>Solicitud</th>
+                                    <th>Fecha</th>
+                                    <th>A. Caja P.</th>
+                                    <th>A. Director P.</th>
+                                    <th>A. Caja C.</th>
+                                    <th>A. Serv. Esc. C.</th>
+                                    <th>A. Final</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($becas as $beca)
+                                @if($beca->id > 561)
+                                <tr>
+                                    <td>
+                                        <a href="{{route('clientes.edit',$beca->cliente)}}" target=_blank>{{$beca->cliente}}</a>
+                                    </td>
+                                    <td>
+                                        {{$beca->solicitud}}
+                                    </td>
+                                    <td>
+                                        {{$beca->created_at}}
+                                    </td>
+                                    <td>{{$beca->aut_caja_plantel}}</td>
+                                    <td>{{$beca->aut_dir_plantel}}</td>
+                                    <td>{{$beca->aut_caja_corp}}</td>
+                                    <td>{{$beca->aut_ser_esc}}</td>
+                                    <td>{{$beca->aut_dueno}}</td>
+                                    <td>
+                                    <a class="btn btn-xs bg-purple" target=_blank href="{{ route('autorizacionBecas.findByClienteId', array('cliente_id'=>$beca->cliente)) }}">
+                                        <i class="fa fa-eye"></i> S. Becas
+                                    </a>
+                                    </td>
+                                </tr>
+                                @endif
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     @role('CAJA')
     <div class="form-group col-md-2 col-sm-2 col-xs-2">
@@ -428,56 +491,7 @@
                 </div>
             </div>
         </div>
-        <div class="form-group col-md-6">
-            <div class="box box-success">
-                <div class="box-header with-border">
-                    <h3 class="box-title">
-                        Comentarios de becas
-                    </h3>
-                    <div class="box-tools pull-right">
-                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                    </div>
-                </div>
-                <div class="box-body" >
-                    <div class="table">
-                        <table class="table table-bordered table-striped dataTable">
-                            <thead>
-                                <tr>
-                                    <th>Cliente</th>
-                                    <th>Solicitud</th>
-                                    <th>Comentario</th>
-                                    <th>Fecha</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($becas as $beca)
-                                <tr>
-                                    <td>
-                                        {{ $beca->nombre." ".$beca->nombre2." ".$beca->ape_paterno." ".$beca->ape_materno }}
-                                    </td>
-                                    <td>
-                                        {{$beca->solicitud}}
-                                    </td>
-                                    <td>
-                                        {{$beca->comentario}}
-                                    </td>
-                                    <td>
-                                        {{$beca->created_at}}
-                                    </td>
-                                    <td>
-                                    <a class="btn btn-xs bg-purple" href="{{ route('autorizacionBecas.findByClienteId', array('cliente_id'=>$beca->cliente)) }}">
-                                        <i class="fa fa-eye"></i> S. Becas
-                                    </a>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
+       
     </div>
     <div class="row">
         @permission('WgaugesXplantel')

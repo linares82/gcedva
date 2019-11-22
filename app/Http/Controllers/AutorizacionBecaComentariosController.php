@@ -42,22 +42,50 @@ class AutorizacionBecaComentariosController extends Controller {
 	 * @param Request $request
 	 * @return Response
 	 */
-	public function store(createAutorizacionBecaComentario $request)
+	public function store(Request $request)
 	{
 
-		$input = $request->all();
+		$input = $request->except('autorizacion');
+		$autorizacion=$request->only('autorizacion');
+		//dd($autorizacion);
 		$input['usu_alta_id']=Auth::user()->id;
 		$input['usu_mod_id']=Auth::user()->id;
 
 		//create data
 		AutorizacionBecaComentario::create( $input );
                 
-                $autorizacionBeca=AutorizacionBeca::find($input['autorizacion_beca_id']);
-                $autorizacionBeca->st_beca_id=$input['st_beca_id'];
-                $autorizacionBeca->monto_inscripcion=$input['monto_inscripcion'];
-                $autorizacionBeca->monto_mensualidad=$input['monto_mensualidad'];
-                $autorizacionBeca->save();
+    	$autorizacionBeca=AutorizacionBeca::find($input['autorizacion_beca_id']);
                 
+		if($autorizacion['autorizacion']=='aut_caja_plantel'){
+			$autorizacionBeca->st_beca_id = 3;
+			$autorizacionBeca->aut_caja_plantel = $input['st_beca_id'];
+		}elseif ($autorizacion['autorizacion']=='aut_dir_plantel') {
+			$autorizacionBeca->st_beca_id = 3;
+			$autorizacionBeca->aut_dir_plantel = $input['st_beca_id'];
+		} elseif ($autorizacion['autorizacion'] == 'aut_caja_corp') {
+			$autorizacionBeca->st_beca_id = 3;
+			$autorizacionBeca->aut_caja_corp = $input['st_beca_id'];
+		} elseif ($autorizacion['autorizacion'] == 'aut_ser_esc') {
+			$autorizacionBeca->st_beca_id = 3;
+			$autorizacionBeca->aut_ser_esc = $input['st_beca_id'];
+		} elseif ($autorizacion['autorizacion'] == 'aut_dueno') {
+			$autorizacionBeca->st_beca_id = $input['st_beca_id'];
+			$autorizacionBeca->aut_dueno = $input['st_beca_id'];
+		}
+
+		$autorizacionBeca->monto_inscripcion = $input['monto_inscripcion'];
+		$autorizacionBeca->monto_mensualidad = $input['monto_mensualidad'];
+		$autorizacionBeca->save();
+
+		if($autorizacion['autorizacion']=='aut_dueno' and $autorizacionBeca->st_beca_id==4){
+			$cliente = Cliente::find($autorizacionBeca->cliente_id);
+			$cliente->monto_mensualidad = $input['monto_mensualidad'];
+			$cliente->beca_porcentaje = $input['monto_inscripcion'];
+			$cliente->beca_bnd = 1;
+			$cliente->save();
+		}
+
+               /* 
                 if($input['st_beca_id']==4){
                     $cliente=Cliente::find($autorizacionBeca->cliente_id);
                     $cliente->monto_mensualidad=$input['monto_mensualidad'];
@@ -73,7 +101,7 @@ class AutorizacionBecaComentariosController extends Controller {
                     $cliente->beca_bnd=0;
                     $cliente->save();
                 }
-                
+                */
 
 		//return redirect()->route('autorizacionBecaComentarios.index')->with('message', 'Registro Creado.');
 	}

@@ -1,1 +1,1 @@
-@section('stBecasAppTitle','StBeca')
+@section('stBecasAppTitle','Estatus Autorizacion Becas')

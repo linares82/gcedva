@@ -681,6 +681,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
 
     public static $classMap = array (
         'AddArchivoTransferencesTable' => __DIR__ . '/../..' . '/database/migrations/2019_10_30_113553_add_archivo_transferences_table.php',
+        'AddAutFieldsToAutorizacionBecas' => __DIR__ . '/../..' . '/database/migrations/2019_11_19_143629_add_aut_fields_to_autorizacion_becas.php',
         'AddAutFieldsToHistoriaClientesTable' => __DIR__ . '/../..' . '/database/migrations/2019_11_13_134936_add_aut_fields_to_historia_clientes_table.php',
         'AddBecaPorcentajeClientesTable' => __DIR__ . '/../..' . '/database/migrations/2018_05_07_114940_add_beca_porcentaje_clientes_table.php',
         'AddBecadoBndCajasTable' => __DIR__ . '/../..' . '/database/migrations/2018_11_01_133610_add_becado_bnd_cajas_table.php',
@@ -914,7 +915,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'CreatePromoPlanLnsTable' => __DIR__ . '/../..' . '/database/migrations/2019_01_23_142924_create_promo_plan_lns_table.php',
         'CreatePromocionsTable' => __DIR__ . '/../..' . '/database/migrations/2017_05_02_204052_create_promocions_table.php',
         'CreatePuestosTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_28_175357_create_puestos_table.php',
-        'CreateRegistroHistoriaClientesTable' => __DIR__ . '/../..' . '/database/migrations/2019_11_13_141248_create_registro_historia_clientes_table.php',
+        'CreateRegistroHistoriaClientesTable' => __DIR__ . '/../..' . '/database/migrations/2019_11_13_141350_create_registro_historia_clientes_table.php',
         'CreateReglaRecargosTable' => __DIR__ . '/../..' . '/database/migrations/2018_04_05_123031_create_regla_recargos_table.php',
         'CreateSalonsTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_17_164957_create_salons_table.php',
         'CreateSegmentoMercadosTable' => __DIR__ . '/../..' . '/database/migrations/2018_04_12_141340_create_segmento_mercados_table.php',
@@ -924,6 +925,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'CreateSmsPredefinidosTable' => __DIR__ . '/../..' . '/database/migrations/2018_03_22_082751_create_sms_predefinidos_table.php',
         'CreateSmsTable' => __DIR__ . '/../..' . '/database/migrations/2017_05_12_155453_create_sms_table.php',
         'CreateStAlumnosTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_24_181015_create_st_alumnos_table.php',
+        'CreateStAutorizacionBecasTable' => __DIR__ . '/../..' . '/database/migrations/2019_11_19_144102_create_st_autorizacion_becas_table.php',
         'CreateStBecasTable' => __DIR__ . '/../..' . '/database/migrations/2019_03_06_141730_create_st_becas_table.php',
         'CreateStCajasTable' => __DIR__ . '/../..' . '/database/migrations/2018_04_10_134535_create_st_cajas_table.php',
         'CreateStClientesTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_30_180956_create_st_clientes_table.php',

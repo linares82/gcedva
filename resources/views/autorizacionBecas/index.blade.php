@@ -169,7 +169,7 @@
                                     @permission('autorizacionBecas.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('autorizacionBecas.edit', $autorizacionBeca->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
                                     @endpermission
-                                    @permission('autorizacionBecas.respuesta')
+                                    @permission('autorizacionBecas.respuesta_inhabilitado')
                                     <button type="button" class="btn btn-primary btn-xs" id='create_comentario' 
                                             data-toggle="modal" data-autorizacion_beca_id="{{ $autorizacionBeca->id }}"
                                                                 data-monto_inscripcion="{{ $autorizacionBeca->monto_inscripcion }}"
@@ -178,7 +178,7 @@
                                         Respuesta
                                     </button>
                                     @endpermission
-                                    @permission('autorizacionBecas.enProceso')
+                                    @permission('autorizacionBecas.enProceso_inhabilitado')
                                     <button type="button" class="btn btn-primary btn-xs" id='create_comentario' 
                                             data-toggle="modal" data-autorizacion_beca_id="{{ $autorizacionBeca->id }}"
                                                                 data-monto_inscripcion="{{ $autorizacionBeca->monto_inscripcion }}"
@@ -187,7 +187,7 @@
                                         En Proceso
                                     </button>
                                     @endpermission
-                                    @permission('autorizacionBecas.autorizacion')
+                                    @permission('autorizacionBecas.autorizacion_inhabilitado')
                                     <button type="button" class="btn btn-primary btn-xs" id='create_comentario' 
                                             data-toggle="modal" data-autorizacion_beca_id="{{ $autorizacionBeca->id }}"
                                                                 data-monto_inscripcion="{{ $autorizacionBeca->monto_inscripcion }}"
@@ -196,7 +196,7 @@
                                         Autorizacion
                                     </button>
                                     @endpermission
-                                    @permission('autorizacionBecas.baja')
+                                    @permission('autorizacionBecas.baja_inhabilitado')
                                     <button type="button" class="btn btn-primary btn-xs" id='create_comentario' 
                                             data-toggle="modal" data-autorizacion_beca_id="{{ $autorizacionBeca->id }}"
                                                                 data-monto_inscripcion="{{ $autorizacionBeca->monto_inscripcion }}"
@@ -205,7 +205,7 @@
                                         Baja
                                     </button>
                                     @endpermission
-                                    @permission('autorizacionBecas.destroy')
+                                    @permission('autorizacionBecas.destroy_inhabilitado')
                                     {!! Form::model($autorizacionBeca, array('route' => array('autorizacionBecas.destroy', $autorizacionBeca->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}
                                         <button type="submit" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> Borrar</button>
                                     {!! Form::close() !!}

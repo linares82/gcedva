@@ -233,7 +233,7 @@
                         
                     </td>
                     <td>
-                        {{$historiaCliente->autSerEsc->name}}
+                        {{optional($historiaCliente->autSerEsc)->name}}
                         @if($historiaCliente->evento_cliente_id==2)
                         @permission('autorizacionBaja.aut_servicios_escolares')
                                 <button type="button" class="btn btn-primary btn-xs btn_create_comentario" 
@@ -245,7 +245,7 @@
                         @endif
                     </td>
                     <td>
-                        {{$historiaCliente->autCaja->name}}
+                        {{optional($historiaCliente->autCaja)->name}}
                         @if($historiaCliente->aut_ser_esc==2 and $historiaCliente->evento_cliente_id==2)
                         @permission('autorizacionBaja.aut_caja')
                                 <button type="button" class="btn btn-primary btn-xs btn_create_comentario" 
@@ -257,7 +257,7 @@
                         @endif
                     </td>
                     <td>
-                        {{$historiaCliente->autSerEscCorp->name}}
+                        {{optional($historiaCliente->autSerEscCorp)->name}}
                         @if($historiaCliente->aut_ser_esc==2 and $historiaCliente->aut_caja==2 and $historiaCliente->evento_cliente_id==2)
                         @permission('autorizacionBaja.aut_servicios_escolares_c')
                                 <button type="button" class="btn btn-primary btn-xs btn_create_comentario"  

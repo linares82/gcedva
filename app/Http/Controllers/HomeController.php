@@ -465,33 +465,56 @@ class HomeController extends Controller
                 ->where('e.empleado_id', '=', $e->id)
                 ->get();
         //dd($e);
-       //dd($avisosEmpresas->toArray());
+        //dd($avisosEmpresas->toArray());
         //$tareasEmpresas = TareasEmpresa::where('empresa_id', '=', $empresa->id)->get();
-        
+
         //Procesos de Beca
-        $becas= AutorizacionBeca::select('autorizacion_becas.id','cli.id as cliente','cli.nombre','cli.nombre2','cli.ape_paterno','cli.ape_materno',
-                                         'autorizacion_becas.solicitud','c.comentario','st.name as estatus','c.created_at')
-                                ->where('autorizacion_becas.usu_alta_id',Auth::user()->id)
-                                ->join('autorizacion_beca_comentarios as c','c.autorizacion_beca_id','=','autorizacion_becas.id')
+        $empleado = Empleado::where('user_id', Auth::user()->id)->first();
+        $becas_aux= AutorizacionBeca::select('autorizacion_becas.id','autorizacion_becas.cliente_id as cliente',
+                                         'autorizacion_becas.solicitud','autorizacion_becas.created_at', 'acp.name as aut_caja_plantel', 
+                                         'adp.name as aut_dir_plantel','acc.name as aut_caja_corp','ase.name as aut_ser_esc','ad.name as aut_dueno' )
+                                //->where('autorizacion_becas.usu_alta_id',Auth::user()->id)
+                                //->leftJoin('autorizacion_beca_comentarios as c','c.autorizacion_beca_id','=','autorizacion_becas.id')
                                 ->join('clientes as cli','cli.id','=','autorizacion_becas.cliente_id')
-                                ->join('st_becas as st','st.id','=','c.st_beca_id')
-                                ->whereNull('c.bnd_visto')
-                                ->get();
+                                //->join('st_becas as st','st.id','=','c.st_beca_id')
+                                ->leftJoin('st_becas as acp', 'acp.id', '=', 'autorizacion_becas.aut_caja_plantel')
+                                ->leftJoin('st_becas as adp', 'adp.id', '=', 'autorizacion_becas.aut_dir_plantel')
+                                ->leftJoin('st_becas as acc', 'acc.id', '=', 'autorizacion_becas.aut_caja_corp')
+                                ->leftJoin('st_becas as ase', 'ase.id', '=', 'autorizacion_becas.aut_ser_esc')
+                                ->leftJoin('st_becas as ad', 'ad.id', '=', 'autorizacion_becas.aut_dueno')
+                                ->where('autorizacion_becas.id','>',560)
+                                ->whereRaw('(aut_caja_plantel <> 4 or aut_dir_plantel<> 4 or aut_caja_corp<> 4 or aut_ser_esc<> 4 or aut_dueno<> 4)');
+        if (Auth::user()->can('autorizacionBecas.filtroPlantels')) {
+            $becas_aux->where('cli.plantel_id', $empleado->plantel_id);
+        }
+                                //->whereNull('c.bnd_visto')
+        $becas=$becas_aux->get();
         //dd($becas);
 
-        $autorizacionBajas = HistoriaCliente::where('evento_cliente_id', 2)->where('st_historia_cliente_id','<>', 2)->where('st_historia_cliente_id', '<>', 0);
-        //dd(Auth::user()->can('aut_ser_esc'));
-        if (Auth::user()->can('autorizacionBaja.aut_servicios_escolares')) {
-            $autorizacionBajas->where('aut_ser_esc', '<>', 2);
-        }
-        if (Auth::user()->can('autorizacionBaja.aut_caja')) {
-            $autorizacionBajas->where('aut_caja', '<>', 2);
-        }
-        if (Auth::user()->can('autorizacionBaja.aut_servicios_escolares_c')) {
-            $autorizacionBajas->where('aut_ser_esc_corp', '<>', 2);
-        }
-        $bajas=$autorizacionBajas->get();
         
+
+        $autorizacionBajas = HistoriaCliente::select('historia_clientes.*','c.plantel_id')
+            ->join('clientes as c', 'c.id', '=', 'historia_clientes.cliente_id')
+            ->where('historia_clientes.id', '>', 1011)
+            ->whereNotIn('st_historia_cliente_id', array(0, 2))
+            ->where('evento_cliente_id', 2)
+            ->whereRaw('(aut_ser_esc <> 2 or aut_caja <> 2 or aut_ser_esc_corp <>2) ');
+        
+        if (Auth::user()->can('autorizacionBajas.filtroPlantels')) {
+            $autorizacionBajas->where('c.plantel_id', $empleado->plantel_id);
+        }
+        //dd(Auth::user()->can('aut_ser_esc'));
+        //if (Auth::user()->can('autorizacionBaja.aut_servicios_escolares')) {
+        //$autorizacionBajas->orWhere('aut_ser_esc', '<>', 2);
+        //}
+        //if (Auth::user()->can('autorizacionBaja.aut_caja')) {
+        //$autorizacionBajas->orWhere('aut_caja', '<>', 2);
+        //}
+        //if (Auth::user()->can('autorizacionBaja.aut_servicios_escolares_c')) {
+        //$autorizacionBajas->orWhere('aut_ser_esc_cor', '<>', 2);
+        //}
+        $bajas = $autorizacionBajas->get();
+        //dd($bajas->toArray());
         
         return view('home', compact('avisos', 'a_1', 'a_2', 'a_3', 'a_4','a_5', 'grafica2','grafica', 'fil', 'lectivosSt2','avisosEmpresas',
                                     'avisos_generales', 'avance', 'gauge', 'tabla', 'plantel','estatusPlantel', 'tsuma','lectivoss','becas','bajas'))

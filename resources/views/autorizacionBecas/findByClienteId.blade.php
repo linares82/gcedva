@@ -61,8 +61,11 @@
                         <th>MONTO INSCRIPCION</th>
                         <th>MONTO MENSUALIDAD</th>
                         <th>ESTATUS</th>
-                        <th>ALTA</th>
-                        <th>ULTIMA EDICIÓN</th>
+                        <th>A. CAJA P.</th>
+                        <th>A. DIR. P.</th>
+                        <th>A. CAJA C.</th>
+                        <th>A. SERV. ESC. C.</th>
+                        <th>A. FINAL</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
@@ -77,8 +80,71 @@
                                 <td>{{$autorizacionBeca->monto_inscripcion}}</td>
                                 <td>{{$autorizacionBeca->monto_mensualidad}}</td>
                                 <td>{{$autorizacionBeca->stBeca->name}}</td>
-                                <td>{{$autorizacionBeca->usu_alta->name}}</td>
-                                <td>{{$autorizacionBeca->usu_mod->name}}</td>
+                                <td>{{ optional($autorizacionBeca->autCajaPlantel)->name }}
+                                        @permission('autorizacionBecas.aut_caja_plantel')
+                                    <button type="button" class="btn btn-primary btn-xs create_comentario"  
+                                            data-toggle="modal" data-autorizacion_beca_id="{{ $autorizacionBeca->id }}"
+                                                                data-monto_inscripcion="{{ $autorizacionBeca->monto_inscripcion }}"
+                                                                data-monto_mensualidad="{{ $autorizacionBeca->monto_mensualidad }}"
+                                                                data-autorizacion="aut_caja_plantel">
+                                        Autorizacion
+                                    </button>
+                                    @endpermission
+                                </td>
+                                <td>{{ optional($autorizacionBeca->autDirPlantel)->name }}
+                                    @if($autorizacionBeca->aut_caja_plantel==4)
+                                    @permission('autorizacionBecas.aut_dir_plantel')
+                                    <button type="button" class="btn btn-primary btn-xs create_comentario"  
+                                            data-toggle="modal" data-autorizacion_beca_id="{{ $autorizacionBeca->id }}"
+                                                                data-monto_inscripcion="{{ $autorizacionBeca->monto_inscripcion }}"
+                                                                data-monto_mensualidad="{{ $autorizacionBeca->monto_mensualidad }}"
+                                                                data-autorizacion="aut_dir_plantel">
+                                        Autorizacion
+                                    </button>
+                                    @endpermission
+                                    @endif
+                                </td>
+                                <td>{{ optional($autorizacionBeca->autCajaCorp)->name }}
+                                    @if($autorizacionBeca->aut_caja_plantel==4 and $autorizacionBeca->aut_dir_plantel==4)
+                                    @permission('autorizacionBecas.aut_caja_corp')
+                                    <button type="button" class="btn btn-primary btn-xs create_comentario"  
+                                            data-toggle="modal" data-autorizacion_beca_id="{{ $autorizacionBeca->id }}"
+                                                                data-monto_inscripcion="{{ $autorizacionBeca->monto_inscripcion }}"
+                                                                data-monto_mensualidad="{{ $autorizacionBeca->monto_mensualidad }}"
+                                                                data-autorizacion="aut_caja_corp">
+                                        Autorizacion
+                                    </button>
+                                    @endpermission
+                                    @endif
+                                </td>
+                                <td>{{ optional($autorizacionBeca->autSerEsc)->name }}
+                                    @if($autorizacionBeca->aut_caja_plantel==4 and $autorizacionBeca->aut_dir_plantel==4
+                                    and $autorizacionBeca->aut_caja_corp==4)
+                                    @permission('autorizacionBecas.aut_ser_esc')
+                                    <button type="button" class="btn btn-primary btn-xs create_comentario"  
+                                            data-toggle="modal" data-autorizacion_beca_id="{{ $autorizacionBeca->id }}"
+                                                                data-monto_inscripcion="{{ $autorizacionBeca->monto_inscripcion }}"
+                                                                data-monto_mensualidad="{{ $autorizacionBeca->monto_mensualidad }}"
+                                                                data-autorizacion="aut_ser_esc">
+                                        Autorizacion
+                                    </button>
+                                    @endpermission
+                                    @endif
+                                </td>
+                                <td>{{ optional($autorizacionBeca->autDueno)->name }}
+                                    @if($autorizacionBeca->aut_caja_plantel==4 and $autorizacionBeca->aut_dir_plantel==4
+                                    and $autorizacionBeca->aut_caja_corp==4 and $autorizacionBeca->aut_ser_esc==4) 
+                                    @permission('autorizacionBecas.aut_dueno')
+                                    <button type="button" class="btn btn-primary btn-xs create_comentario"  
+                                            data-toggle="modal" data-autorizacion_beca_id="{{ $autorizacionBeca->id }}"
+                                                                data-monto_inscripcion="{{ $autorizacionBeca->monto_inscripcion }}"
+                                                                data-monto_mensualidad="{{ $autorizacionBeca->monto_mensualidad }}"
+                                                                data-autorizacion="aut_dueno">
+                                        Autorizacion
+                                    </button>
+                                    @endpermission
+                                    @endif
+                                </td>
                                 <td class="text-right">
                                     <button class="btn btn-success btnVerLineas pull-right btn-xs" lang="mesaj" data-check="{{$autorizacionBeca->id}}" data-href="formation_json_parents" style="margin-left:10px;" >
                                         <span class="fa fa-eye" aria-hidden="true"></span> Ver comentarios
@@ -87,7 +153,7 @@
                                     <a class="btn btn-xs btn-warning" href="{{ route('autorizacionBecas.edit', $autorizacionBeca->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
                                     @endpermission
                                     
-                                    @permission('autorizacionBecas.respuesta')
+                                    @permission('autorizacionBecas.respuesta_inhabilitado')
                                     <button type="button" class="btn btn-primary btn-xs" id='create_comentario' 
                                             data-toggle="modal" data-autorizacion_beca_id="{{ $autorizacionBeca->id }}"
                                                                 data-monto_inscripcion="{{ $autorizacionBeca->monto_inscripcion }}"
@@ -96,7 +162,7 @@
                                         Respuesta
                                     </button>
                                     @endpermission
-                                    @permission('autorizacionBecas.enProceso')
+                                    @permission('autorizacionBecas.enProceso_inhabilitado')
                                     <button type="button" class="btn btn-primary btn-xs" id='create_comentario' 
                                             data-toggle="modal" data-autorizacion_beca_id="{{ $autorizacionBeca->id }}"
                                                                 data-monto_inscripcion="{{ $autorizacionBeca->monto_inscripcion }}"
@@ -105,7 +171,7 @@
                                         En Proceso
                                     </button>
                                     @endpermission
-                                    @permission('autorizacionBecas.autorizacion')
+                                    @permission('autorizacionBecas.autorizacion_inhabilitado')
                                     <button type="button" class="btn btn-primary btn-xs" id='create_comentario' 
                                             data-toggle="modal" data-autorizacion_beca_id="{{ $autorizacionBeca->id }}"
                                                                 data-monto_inscripcion="{{ $autorizacionBeca->monto_inscripcion }}"
@@ -114,7 +180,7 @@
                                         Autorizacion
                                     </button>
                                     @endpermission
-                                    @permission('autorizacionBecas.baja')
+                                    @permission('autorizacionBecas.baja_inhabilitado')
                                     <button type="button" class="btn btn-primary btn-xs" id='create_comentario' 
                                             data-toggle="modal" data-autorizacion_beca_id="{{ $autorizacionBeca->id }}"
                                                                 data-monto_inscripcion="{{ $autorizacionBeca->monto_inscripcion }}"
@@ -123,7 +189,7 @@
                                         Baja
                                     </button>
                                     @endpermission
-                                    @permission('autorizacionBecas.destroy')
+                                    @permission('autorizacionBecas.destroy_inhabilitado')
                                     {!! Form::model($autorizacionBeca, array('route' => array('autorizacionBecas.destroy', $autorizacionBeca->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}
                                         <button type="submit" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> Borrar</button>
                                     {!! Form::close() !!}
@@ -154,8 +220,16 @@
                         <div class="row_reglas_relacionadas">
                             <div >
                                 {!! Form::hidden("autorizacion_beca_id", null, array("class" => "form-control", "id" => "autorizacion_beca_id-crear")) !!}
+                                {!! Form::hidden("autorizacion", null, array("class" => "form-control", "id" => "autorizacion-crear")) !!}
                                 <input type="hidden" name="_token" id="_token"  value="<?= csrf_token(); ?>"> 
                              </div>
+                             <div class="form-group col-sm-12 @if($errors->has('st_beca_id')) has-error @endif">
+                                <label for="st_beca_id-field">Estatus</label>
+                                {!! Form::select("st_beca_id", $stBecas, null, array("class" => "form-control select_seguridad", "id" => "st_beca_id-crear")) !!}
+                                @if($errors->has("st_beca_id"))
+                                <span class="help-block">{{ $errors->first("st_beca_id") }}</span>
+                                @endif
+                            </div>
                             <div class="form-group col-sm-12 @if($errors->has('fec_fin')) has-error @endif">
                                 <label for="inicial_bnd-field">Comentario</label>
                                 {!! Form::text("comentario", null, array("class" => "form-control", "id" => "comentario-crear")) !!}
@@ -195,22 +269,14 @@
     $(document).ready(function() {
         
         //Crear comentario
-        $(document).on('click', '#create_comentario', function() {
+        $(document).on('click', '.create_comentario', function() {
             $('#autorizacion_beca_id-crear').val($(this).data('autorizacion_beca_id'));
             $('#monto_inscripcion-crear').val($(this).data('monto_inscripcion'));
-            console.log($(this).data('monto_inscripcion'));
+            
             $('#monto_mensualidad-crear').val($(this).data('monto_mensualidad'));
-            $('#st_beca_id-crear').val($(this).data('st_beca_id')).change();
+            $('#autorizacion-crear').val($(this).data('autorizacion'));
 
-            if($(this).data('st_beca_id')==2){
-                $('.modal-title').text('Comentario / Respuesta');
-            }else if($(this).data('st_beca_id')==3){
-                $('.modal-title').text('Comentario / En Proceso');
-            }else if($(this).data('st_beca_id')==4){
-                $('.modal-title').text('Comentario / Autorizar');
-            }else if($(this).data('st_beca_id')==5){
-                $('.modal-title').text('Comentario / Baja');
-            }
+            $('.modal-title').text('Autorizacion');
 
             $('#createComentarioModal').modal('show');
         });
@@ -230,7 +296,8 @@
                 'comentario': $('#comentario-crear').val(),
                 'monto_inscripcion': $('#monto_inscripcion-crear').val(),
                 'monto_mensualidad': $('#monto_mensualidad-crear').val(),
-                'st_beca_id': $('#st_beca_id-crear').val(),
+                'st_beca_id': $('#st_beca_id-crear option:selected').val(),
+                'autorizacion': $('#autorizacion-crear').val(),
             },
             beforeSend : function(){$("#loading3").show(); },
             complete : function(){$("#loading3").hide(); },

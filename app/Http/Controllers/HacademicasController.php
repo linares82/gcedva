@@ -538,6 +538,7 @@ class HacademicasController extends Controller {
 
         $g = Grado::find($hacademica->grado_id)->first();
            //dd($g->toArray());
+        $carga_ponderaciones=collection;
         if(isset($data['tpo_examen_id'])){
             if ($data['tpo_examen_id'] == 2 and $g->name == "BACHILLERATO") {
                 $carga_ponderaciones = CargaPonderacion::where('ponderacion_id', '=', 1)->pluck('name','id');

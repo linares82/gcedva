@@ -30,9 +30,10 @@ class AutorizacionBecasController extends Controller {
         public function findByClienteId(Request $request)
 	{
 		$autorizacionBecas = AutorizacionBeca::where('cliente_id',$request->input('cliente_id'))->paginate(25);
-                $cliente=$request->input('cliente_id');
+				$cliente=$request->input('cliente_id');
+		$stBecas=StBeca::where('id','>',1)->pluck('name','id');
                 
-		return view('autorizacionBecas.findByClienteId', compact('autorizacionBecas','cliente'));
+		return view('autorizacionBecas.findByClienteId', compact('autorizacionBecas','cliente','stBecas'));
 	}
 
 	/**
