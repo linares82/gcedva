@@ -36,21 +36,24 @@
         <div class="col-md-12">
 
             {!! Form::open(array('route' => 'inscripcions.listaMes', 'id'=>'frm')) !!}
+                <div class="form-group col-md-6 @if($errors->has('fecha_f')) has-error @endif">
+                   <strong>Lectivo: {{$asignacion->lectivo->name}}</strong>
+                </div>
 
-<!--                <div class="form-group col-md-6 @if($errors->has('fecha_f')) has-error @endif">
+                <div class="form-group col-md-6 @if($errors->has('fecha_f')) has-error @endif">
                     <label for="fecha_f-field">Fecha de:</label>
-                    {!! Form::text("fecha_f", null, array("class" => "form-control input-sm", "id" => "fecha_f-field")) !!}
+                    {!! Form::text("fecha_f", null, array("class" => "form-control input-sm fecha", "id" => "fecha_f-field")) !!}
                     @if($errors->has("fecha_f"))
                     <span class="help-block">{{ $errors->first("fecha_f") }}</span>
                     @endif
                 </div>
                 <div class="form-group col-md-6 @if($errors->has('fecha_t')) has-error @endif">
                     <label for="fecha_t-field">Fecha a:</label>
-                    {!! Form::text("fecha_t", null, array("class" => "form-control input-sm", "id" => "fecha_t-field")) !!}
+                    {!! Form::text("fecha_t", null, array("class" => "form-control input-sm fecha", "id" => "fecha_t-field")) !!}
                     @if($errors->has("fecha_t"))
                     <span class="help-block">{{ $errors->first("fecha_t") }}</span>
                     @endif
-                </div>-->
+                </div>
                 
 <!--                <div class="form-group col-md-6 @if($errors->has('plantel_f')) has-error @endif" id="div_plantel">
                     <label for="plantel_f-field">Plantel de:</label>
@@ -73,7 +76,7 @@
                 <div class="form-group col-md-6 @if($errors->has('mes')) has-error @endif">
                     <label for="mes-field">Mes:</label>
                     {!! Form::hidden("asignacion", $asignacion->id, array("class" => "form-control input-sm", "id" => "asignacion-field")) !!}
-                    {!! Form::select("mes", $meses, null, array("class" => "form-control select_seguridad", "id" => "mes")) !!}
+                    <!--{!! Form::select("mes", $meses, null, array("class" => "form-control select_seguridad", "id" => "mes")) !!}-->
                     {!! Form::hidden("plantel_f", $asignacion->plantel_id, array("class" => "form-control input-sm", "id" => "plantel_f-field")) !!}
                     {!! Form::hidden("lectivo_f", $asignacion->lectivo_id, array("class" => "form-control input-sm", "id" => "lectivo_f-field")) !!}
                     {!! Form::hidden("grupo_f", $asignacion->grupo_id, array("class" => "form-control input-sm", "id" => "grupo_f-field")) !!}
@@ -140,6 +143,14 @@
 @push('scripts')
   <script type="text/javascript">
     $(document).ready(function() {
+        $('.fecha').Zebra_DatePicker({
+                            days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
+                            months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                            readonly_element: false,
+                            lang_clear_date: 'Limpiar',
+                            show_select_today: 'Hoy',
+                          });
+
         $plantel_activo='{{DB::table("empleados")->where("user_id", Auth::user()->id)->value("plantel_id")}}';
         //$('#plantel_f-field').val($plantel_activo).change();
         

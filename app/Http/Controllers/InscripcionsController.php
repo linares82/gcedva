@@ -1251,8 +1251,8 @@ class InscripcionsController extends Controller
         //dd($no_habiles);    
         //$inicio=Carbon::createFromFormat('Y-m-d', $lectivo->inicio);
         //$fin=Carbon::createFromFormat('Y-m-d', $lectivo->fin);
-        $pinicio = Carbon::createFromFormat('Y-m-d', $asignacion->fec_inicio);
-        $pfin = Carbon::createFromFormat('Y-m-d', $asignacion->fec_fin);
+        $pinicio = Carbon::createFromFormat('Y-m-d', $data['fecha_f']);
+        $pfin = Carbon::createFromFormat('Y-m-d', $data['fecha_t']);
         //dd($pfin->toDateString());
         //array_push($fechas,$pinicio);
         //$fecha=Carbon::createFromFormat('Y-m-d', $lectivo->inicio);
@@ -1261,7 +1261,7 @@ class InscripcionsController extends Controller
 
             if (in_array('Lunes', $dias)) {
                 //dd("hay lunes");
-                if ($pinicio->isMonday() and !in_array($pinicio, $no_habiles) and $pinicio->month == $data['mes']) {
+                if ($pinicio->isMonday() and !in_array($pinicio, $no_habiles)) {
                     array_push($fechas, $pinicio->toDateString());
                     $total_asistencias++;
                 }
@@ -1269,35 +1269,36 @@ class InscripcionsController extends Controller
             }
             if (in_array('Martes', $dias)) {
                 //dd("hay martes");
-                if ($pinicio->isTuesday() and !in_array($pinicio, $no_habiles) and $pinicio->month == $data['mes']) {
+                if ($pinicio->isTuesday() and !in_array($pinicio, $no_habiles)) {
                     array_push($fechas, $pinicio->toDateString());
                     $total_asistencias++;
                 }
             }
             if (in_array('Miercoles', $dias)) {
                 //dd("hay miercoles");
-                if ($pinicio->isWednesday() and !in_array($pinicio, $no_habiles) and $pinicio->month == $data['mes']) {
+                if ($pinicio->isWednesday() and !in_array($pinicio, $no_habiles)) {
                     array_push($fechas, $pinicio->toDateString());
                     $total_asistencias++;
                 }
             }
             if (in_array('Jueves', $dias)) {
                 //dd("hay jueves");
-                if ($pinicio->isThursday() and !in_array($pinicio, $no_habiles) and $pinicio->month == $data['mes']) {
+                if ($pinicio->isThursday() and !in_array($pinicio, $no_habiles)) {
                     array_push($fechas, $pinicio->toDateString());
                     $total_asistencias++;
                 }
             }
             if (in_array('Viernes', $dias)) {
                 //dd("hay viernes");
-                if ($pinicio->isFriday() and !in_array($pinicio, $no_habiles) and $pinicio->month == $data['mes']) {
+                if ($pinicio->isFriday() and !in_array($pinicio, $no_habiles)) {
                     array_push($fechas, $pinicio->toDateString());
                     $total_asistencias++;
                 }
             }
             if (in_array('Sabado', $dias)) {
 
-                if ($pinicio->isSaturday()  and !in_array($pinicio, $no_habiles) and $pinicio->month == $data['mes']) {
+                //if ($pinicio->isSaturday()  and !in_array($pinicio, $no_habiles) and $pinicio->month == $data['mes']) {
+                if ($pinicio->isSaturday()  and !in_array($pinicio, $no_habiles)) {    
                     array_push($fechas, $pinicio->toDateString());
                     $total_asistencias++;
                 }
@@ -1311,7 +1312,7 @@ class InscripcionsController extends Controller
             $contador++;
         }
 
-        $mes = Mese::find($data['mes']);
+        //$mes = Mese::find($data['mes']);
         //dd($fechas);
         //dd($registros->grupo);
 
@@ -1331,7 +1332,7 @@ class InscripcionsController extends Controller
             'asignacion' => $asignacion,
             'total_asistencias' => $total_asistencias,
             'contador' => $contador,
-            'mes' => $mes,
+            'data' => $data,
             'total_alumnos'=>$total_alumnos
         ));
     }

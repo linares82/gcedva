@@ -75,11 +75,11 @@
                         ?>
                         <td>
                             @if(count($evento)>0)
-                                SI: 
+                                SI: {{$evento->descripcion}}
                             @else
-                                NO: 
+                                NO 
                             @endif
-                            {{$evento->descripcion}}
+                            
                         </td>
                     </tr>
                     

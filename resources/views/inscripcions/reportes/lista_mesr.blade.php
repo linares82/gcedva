@@ -66,7 +66,7 @@
     </head>
     <body>
         <div id="printeArea">
-            <h3>Lista de Asistencia del Mes {{$mes->name}} </h3>
+            <h3>Lista de Asistencia del {{$data['fecha_f']}} al {{$data['fecha_t']}}</h3>
             
             
             <table>
