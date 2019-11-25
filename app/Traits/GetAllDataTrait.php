@@ -146,6 +146,10 @@ trait GetAllDataTrait {
                     $myQuery=$myQuery->where('clientes.plantel_id', '=', $empleado->plantel_id);
                 }
                 break;
+            case 'transferences':
+                if(Auth::user()->can('transferencia.filtroPlantel')){
+                    $myQuery=$myQuery->whereRaw('(plantel_id=? or plantel_destino_id=?)',[$empleado->plantel_id, $empleado->plantel_id]);
+                }
             /*
             case "cuentas_efectivos":
                 $empleado=Empleado::where('user_id', Auth::user()->id)->first();

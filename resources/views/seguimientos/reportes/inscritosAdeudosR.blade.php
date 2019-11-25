@@ -75,7 +75,7 @@
                         ?>
                         <td>
                             @if(count($evento)>0)
-                                SI: {{$evento->descripcion}}
+                                SI: {{$evento->descripcion}} Creacion: {{$evento->fecha}} Vigencia: {{$evento->fec_vigencia}}
                             @else
                                 NO 
                             @endif
