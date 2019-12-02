@@ -86,14 +86,14 @@
             
             <table>
                 <tr>
-                    <th>No.</th><th><strong>Id</strong></th><th><strong>Empleado</strong></th><th><strong>Documento Faltante</strong></th>
+                    <th>No.</th><th><strong>Id</strong></th><th><strong>Estatus</strong></th><th><strong>Empleado</strong></th><th><strong>Documento Faltante</strong></th>
                 </tr>
                 @php
                     $i=1;
                 @endphp
                 @foreach($documentos_faltantes as $documento)
                     <tr>
-                    <td>{{$i++}}</td><td>{{$documento['empleado']}}</td><td>{{$documento['nombre']}}</td><td>{{$documento['documento']}}</td>
+                    <td>{{$i++}}</td><td>{{$documento['empleado']}}</td><td>{{$documento['estatus']}}</td><td>{{$documento['nombre']}}</td><td>{{$documento['documento']}}</td>
                     </tr>
                 @endforeach
             </table>

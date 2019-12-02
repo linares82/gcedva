@@ -30,6 +30,14 @@
             <span class="help-block">{{ $errors->first("plantel_f") }}</span>
             @endif
         </div>
+
+        <div class="form-group col-md-6 @if($errors->has('estatus_f')) has-error @endif">
+            <label for="estatus_f-field">Estatus de:</label>
+            {!! Form::select("estatus_f", $list["StEmpleado"], null, array("class" => "form-control select_seguridad", "id" => "estatus_f-field")) !!}
+            @if($errors->has("estatus_f"))
+            <span class="help-block">{{ $errors->first("estatus_f") }}</span>
+            @endif
+        </div>
         
         <div class="row">
         </div>

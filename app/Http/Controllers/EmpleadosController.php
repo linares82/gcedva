@@ -497,7 +497,9 @@ class EmpleadosController extends Controller {
     {
         $datos=$request->all();
         $documentos_obligatorios=DocEmpleado::where('doc_obligatorio',1)->get();
-        $empleados=Empleado::where('empleados.plantel_id',$datos['plantel_f'])
+        $empleados=Empleado::select('empleados.*','ste.name as estatus')->where('empleados.plantel_id',$datos['plantel_f'])
+                                     ->join('st_empleados as ste','ste.id','=','empleados.st_empleado_id')
+                                     ->where('st_empleado_id',$datos['estatus_f'])
                                      ->get();
         $documentos_faltantes=array();
         foreach($empleados as $empleado){
@@ -517,7 +519,8 @@ class EmpleadosController extends Controller {
                    //dd($do->id);
                     array_push($documentos_faltantes,array('empleado'=>$empleado->id,
                                                                                'nombre'=>$empleado->nombre.' '.$empleado->ape_paterno.' '.$empleado->ape_materno,
-                                                                               'documento'=>$do->name));
+                                                                               'documento'=>$do->name,
+                                                                               'estatus'=>$empleado->estatus));
                 }
             }
         }
