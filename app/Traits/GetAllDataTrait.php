@@ -140,6 +140,7 @@ trait GetAllDataTrait {
         switch($baseTable){
             case "autorizacion_becas":
                 $myQuery=$myQuery->orderBy('autorizacion_becas.st_beca_id');
+                break;
             case "clientes":
                 $myQuery = $myQuery->with('plantel','especialidad','nivel','grado','stCliente','pais','empleado');
                 if($baseTable=="clientes" and (Auth::user()->can('IfiltroClientesXPlantel'))){

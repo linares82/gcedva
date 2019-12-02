@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DocEmpleado;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use File;
@@ -487,4 +488,41 @@ class EmpleadosController extends Controller {
         //echo json_encode(0);
     }
 
+    public function ListaDocumentos(){
+        return view('empleados.reportes.listaDocumentos')
+            ->with('list', Empleado::getListFromAllRelationApps());            
+    }
+
+    public function ListaDocumentosR(Request $request)
+    {
+        $datos=$request->all();
+        $documentos_obligatorios=DocEmpleado::where('doc_obligatorio',1)->get();
+        $empleados=Empleado::where('empleados.plantel_id',$datos['plantel_f'])
+                                     ->get();
+        $documentos_faltantes=array();
+        foreach($empleados as $empleado){
+           $docsPorEmpleado=PivotDocEmpleado::where('empleado_id',$empleado->id)->select('doc_empleado_id')->get();
+            //dd($docsPorEmpleado);
+           if(!is_null($docsPorEmpleado)){
+               $array_docsPorEmpleado = array();
+               $i=0;
+                foreach($docsPorEmpleado as $do){
+                    //dd($do);
+                    $array_docsPorEmpleado[$i]= $do->doc_empleado_id;
+                    $i++;
+                }
+                //dd($array_docsPorEmpleado);
+            foreach($documentos_obligatorios as $do){
+                if(!in_array($do->id, $array_docsPorEmpleado)){
+                   //dd($do->id);
+                    array_push($documentos_faltantes,array('empleado'=>$empleado->id,
+                                                                               'nombre'=>$empleado->nombre.' '.$empleado->ape_paterno.' '.$empleado->ape_materno,
+                                                                               'documento'=>$do->name));
+                }
+            }
+        }
+        }
+        //dd($documentos_faltantes);
+        return view('empleados.reportes.listaDocumentosR',compact('documentos_faltantes'));
+    }
 }

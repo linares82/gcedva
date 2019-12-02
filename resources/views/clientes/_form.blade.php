@@ -232,6 +232,15 @@
                         </div>
                     </div>
                     <div class="box-body">
+                        
+                        <div class="form-group col-md-4 @if($errors->has('interes_estudio_id')) has-error @endif">
+                            <label for="interes_estudio_id-field">¿Por que te interesa estudiar nuestra carrera técnica?</label>
+                            {!! Form::select("interes_estudio_id", $list["InteresEstudio"], null, array("class" => "form-control select_seguridad", "id" => "interes_estudio_id-field")) !!}
+                            @if($errors->has("interes_estudio_id"))
+                            <span class="help-block">{{ $errors->first("interes_estudio_id") }}</span>
+                            @endif
+                        </div>
+                        <div class="row"></div>
                         <div class="form-group col-md-4 @if($errors->has('ccuestionario_id')) has-error @endif">
                     <label for="ccuestionario_id-field">Cuestionario</label>
                     {!! Form::select("ccuestionario_id", $cuestionarios, null, array("class" => "form-control select_seguridad", "id" => "ccuestionario_id-field", "style"=>"width:100%")) !!}

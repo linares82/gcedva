@@ -63,9 +63,9 @@
                         <th>ESTATUS</th>
                         <th>A. CAJA P.</th>
                         <th>A. DIR. P.</th>
-                        <th>A. CAJA C.</th>
                         <th>A. SERV. ESC. C.</th>
                         <th>A. FINAL</th>
+                        <th>A. CAJA C.</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
@@ -104,22 +104,8 @@
                                     @endpermission
                                     @endif
                                 </td>
-                                <td>{{ optional($autorizacionBeca->autCajaCorp)->name }}
-                                    @if($autorizacionBeca->aut_caja_plantel==4 and $autorizacionBeca->aut_dir_plantel==4)
-                                    @permission('autorizacionBecas.aut_caja_corp')
-                                    <button type="button" class="btn btn-primary btn-xs create_comentario"  
-                                            data-toggle="modal" data-autorizacion_beca_id="{{ $autorizacionBeca->id }}"
-                                                                data-monto_inscripcion="{{ $autorizacionBeca->monto_inscripcion }}"
-                                                                data-monto_mensualidad="{{ $autorizacionBeca->monto_mensualidad }}"
-                                                                data-autorizacion="aut_caja_corp">
-                                        Autorizacion
-                                    </button>
-                                    @endpermission
-                                    @endif
-                                </td>
                                 <td>{{ optional($autorizacionBeca->autSerEsc)->name }}
-                                    @if($autorizacionBeca->aut_caja_plantel==4 and $autorizacionBeca->aut_dir_plantel==4
-                                    and $autorizacionBeca->aut_caja_corp==4)
+                                    @if($autorizacionBeca->aut_caja_plantel==4 and $autorizacionBeca->aut_dir_plantel==4)
                                     @permission('autorizacionBecas.aut_ser_esc')
                                     <button type="button" class="btn btn-primary btn-xs create_comentario"  
                                             data-toggle="modal" data-autorizacion_beca_id="{{ $autorizacionBeca->id }}"
@@ -133,13 +119,27 @@
                                 </td>
                                 <td>{{ optional($autorizacionBeca->autDueno)->name }}
                                     @if($autorizacionBeca->aut_caja_plantel==4 and $autorizacionBeca->aut_dir_plantel==4
-                                    and $autorizacionBeca->aut_caja_corp==4 and $autorizacionBeca->aut_ser_esc==4) 
+                                     and $autorizacionBeca->aut_ser_esc==4) 
                                     @permission('autorizacionBecas.aut_dueno')
                                     <button type="button" class="btn btn-primary btn-xs create_comentario"  
                                             data-toggle="modal" data-autorizacion_beca_id="{{ $autorizacionBeca->id }}"
                                                                 data-monto_inscripcion="{{ $autorizacionBeca->monto_inscripcion }}"
                                                                 data-monto_mensualidad="{{ $autorizacionBeca->monto_mensualidad }}"
                                                                 data-autorizacion="aut_dueno">
+                                        Autorizacion
+                                    </button>
+                                    @endpermission
+                                    @endif
+                                </td>
+                                <td>{{ optional($autorizacionBeca->autCajaCorp)->name }}
+                                    @if($autorizacionBeca->aut_caja_plantel==4 and $autorizacionBeca->aut_dir_plantel==4
+                                     and $autorizacionBeca->aut_ser_esc==4 and $autorizacionBeca->aut_dueno==4 )
+                                    @permission('autorizacionBecas.aut_caja_corp')
+                                    <button type="button" class="btn btn-primary btn-xs create_comentario"  
+                                            data-toggle="modal" data-autorizacion_beca_id="{{ $autorizacionBeca->id }}"
+                                                                data-monto_inscripcion="{{ $autorizacionBeca->monto_inscripcion }}"
+                                                                data-monto_mensualidad="{{ $autorizacionBeca->monto_mensualidad }}"
+                                                                data-autorizacion="aut_caja_corp">
                                         Autorizacion
                                     </button>
                                     @endpermission
@@ -194,6 +194,8 @@
                                         <button type="submit" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> Borrar</button>
                                     {!! Form::close() !!}
                                     @endpermission
+                                    <a href='{!! asset("/imagenes/autorizacion_becas/".$autorizacionBeca->id."/".$autorizacionBeca->file) !!}' target='_blank'>Ver A.</a>
+
                                 </td>
                             </tr>
                         @endforeach

@@ -22,7 +22,7 @@
     <div class="row">
         <div class="col-md-12">
 
-            {!! Form::model($autorizacionBeca, array('route' => array('autorizacionBecas.update', $autorizacionBeca->id),'method' => 'post')) !!}
+            {!! Form::model($autorizacionBeca, array('route' => array('autorizacionBecas.update', $autorizacionBeca->id),'method' => 'post', 'files'=>true)) !!}
 
 @include('autorizacionBecas._form')
 

@@ -71,6 +71,8 @@
                         <?php
                         $evento=\App\HistoriaCliente::where('cliente_id',$registro['cliente_id'])
                                                      ->where('evento_cliente_id',6)
+                                                     ->whereDate('fec_vigencia','>=',$data['fecha_f'])
+                                                     ->whereDate('fec_vigencia','<=',$data['fecha_t'])
                                                      ->whereNull('deleted_at')->first()
                         ?>
                         <td>

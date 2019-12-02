@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updateAutorizacionBeca;
 use App\Http\Requests\createAutorizacionBeca;
+use File as Archi;
 
 class AutorizacionBecasController extends Controller {
 
@@ -63,8 +64,27 @@ class AutorizacionBecasController extends Controller {
 		$input['usu_alta_id']=Auth::user()->id;
 		$input['usu_mod_id']=Auth::user()->id;
 
+		$r = $request->hasFile('archivo_file');
+		//dd($r);
+		if ($r) {
+			$archivo_file = $request->file('archivo_file');
+			$input['file'] = $archivo_file->getClientOriginalName();
+		}
+
 		//create data
-		AutorizacionBeca::create( $input );
+		$e=AutorizacionBeca::create( $input );
+
+		if ($e) {
+			$ruta = public_path() . "/imagenes/autorizacion_becas/" . $e->id . "/";
+			if (!file_exists($ruta)) {
+				Archi::makedirectory($ruta, 0777, true, true);
+			}
+
+			if ($request->file('archivo_file')) {
+				//Storage::disk('img_plantels')->put($input['logo'],  File::get($logo_file));
+				$request->file('archivo_file')->move($ruta, $input['file']);
+			}
+		}
 
 		return redirect()->route('autorizacionBecas.findByClienteId',array('cliente_id'=>$input['cliente_id']))->with('message', 'Registro Creado.');
 	}
@@ -119,9 +139,31 @@ class AutorizacionBecasController extends Controller {
 	{
 		$input = $request->all();
 		$input['usu_mod_id']=Auth::user()->id;
+
+		$r = $request->hasFile('archivo_file');
+		//dd($r);
+		if ($r) {
+			$archivo_file = $request->file('archivo_file');
+			$input['file'] = $archivo_file->getClientOriginalName();
+		}
+
 		//update data
 		$autorizacionBeca=$autorizacionBeca->find($id);
 		$autorizacionBeca->update( $input );
+
+		$e=$autorizacionBeca;
+
+		if ($e) {
+			$ruta = public_path() . "/imagenes/autorizacion_becas/" . $e->id . "/";
+			if (!file_exists($ruta)) {
+				Archi::makedirectory($ruta, 0777, true, true);
+			}
+
+			if ($request->file('archivo_file')) {
+				//Storage::disk('img_plantels')->put($input['logo'],  File::get($logo_file));
+				$request->file('archivo_file')->move($ruta, $input['file']);
+			}
+		}	
 
 		return redirect()->route('autorizacionBecas.index')->with('message', 'Registro Actualizado.');
 	}

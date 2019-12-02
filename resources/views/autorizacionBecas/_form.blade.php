@@ -27,4 +27,12 @@
                         <span class="help-block">{{ $errors->first("monto_mensualidad") }}</span>
                        @endif
                     </div>
+                    <div class="form-group col-md-4 @if($errors->has('file')) has-error @endif">
+                       <label for="file-field">Archivo</label>
+                       {!! Form::text("file", null, array("class" => "form-control input-sm", "id" => "file-field", 'readonly'=>'readonly')) !!}
+                       {!! Form::file('archivo_file') !!}
+                       @if($errors->has("file"))
+                        <span class="help-block">{{ $errors->first("file") }}</span>
+                       @endif
+                    </div>
                     

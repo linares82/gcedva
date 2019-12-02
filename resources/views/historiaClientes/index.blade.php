@@ -220,7 +220,7 @@
                     <td>{{$historiaCliente->descripcion}}</td>
                     <td>{{$historiaCliente->fecha}}</td>
                     <td>{{$historiaCliente->fec_vigencia}}</td>
-                    <td><a href='{!! asset("/imagenes/historia_clientes/".$historiaCliente->id."/".$historiaCliente->archivo) !!}' target='_blank'>Ver</h></td>
+                    <td><a href='{!! asset("/imagenes/historia_clientes/".$historiaCliente->id."/".$historiaCliente->archivo) !!}' target='_blank'>Ver</a></td>
                     <td>{{$historiaCliente->cliente->nombre}} {{$historiaCliente->cliente->nombre2}} {{$historiaCliente->cliente->ape_paterno}} {{$historiaCliente->cliente->ape_materno}}</td>
                     <td>{{$historiaCliente->stHistoriaCliente->name}}</td>
                     <td>

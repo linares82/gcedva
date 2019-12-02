@@ -167,18 +167,9 @@ class AdeudosController extends Controller
     {
         $data = $request->all();
         //dd($data);
-        $cliente = Cliente::find($data['cliente']);
-        $cliente->st_cliente_id = 1;
-        $cliente->save();
-
+        
         $plantel = Plantel::find($cliente->plantel_id);
         $combinacion = CombinacionCliente::find($data['combinacion']);
-
-        if ($combinacion->cuenta_ticket_pago > 0) {
-            $seguimiento = Seguimiento::where('cliente_id', $cliente->id)->first();
-            $seguimiento->st_seguimiento_id = 5;
-            $seguimiento->save();
-        }
 
         if ($combinacion->cuenta_ticket_pago == 0) {
             foreach ($combinacion->planPago->Lineas as $adeudo) {
@@ -201,6 +192,16 @@ class AdeudosController extends Controller
         }
         $combinacion->cuenta_ticket_pago = $combinacion->cuenta_ticket_pago + 1;
         $combinacion->save();
+
+        if ($combinacion->cuenta_ticket_pago == 1) {
+            $seguimiento = Seguimiento::where('cliente_id', $cliente->id)->first();
+            $seguimiento->st_seguimiento_id = 5;
+            $seguimiento->save();
+
+            $cliente = Cliente::find($data['cliente']);
+            $cliente->st_cliente_id = 1;
+            $cliente->save();
+        }
 
         $adeudos = Adeudo::where('cliente_id', '=', $cliente->id)->where('combinacion_cliente_id', '=', $combinacion->id)->get();
         $empleado = Empleado::where('user_id', '=', Auth::user()->id)->first();
