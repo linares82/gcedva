@@ -5,12 +5,16 @@ use App\Http\Controllers\Controller;
 
 use App\Vinculacion;
 use App\DocVinculacionVinculacion;
+use App\Especialidad;
 use Illuminate\Http\Request;
 use Auth;
 use DB;
 use File;
 use App\Http\Requests\updateVinculacion;
 use App\Http\Requests\createVinculacion;
+use App\Plantel;
+use App\StVinculacion;
+use Log;
 
 class VinculacionsController extends Controller {
 
@@ -130,6 +134,7 @@ class VinculacionsController extends Controller {
 	 */
 	public function update($id, Vinculacion $vinculacion, updateVinculacion $request)
 	{
+		//dd($request);
 		$input = $request->all();
 		$input['usu_mod_id']=Auth::user()->id;
                 if(!isset($input['bnd_constacia_entregada'])){
@@ -182,12 +187,56 @@ class VinculacionsController extends Controller {
                 $documento->archivo=$input['file'];
                 $documento->usu_alta_id=Auth::user()->id;
                 $documento->usu_mod_id=Auth::user()->id;
-                $documento->save();
+				$documento->save();
+				
+				$vinculacion=Vinculacion::find($documento->vinculacion_id);
+				if($documento->doc_vinculacion_id==11 and $vinculacion->csc_vinculacion==0){
+					$plantel=Plantel::find($vinculacion->cliente->plantel_id);
+					$plantel->csc_vinculacion=$plantel->csc_vinculacion+1;
+					$plantel->save();
+					$cadena="00000";
+					$csc_numero=$plantel->csc_vinculacion;
+					
+					//Log::info('flc-'.strlen($cadena)-strlen($csc_numero)."-".substr($cadena,(strlen($cadena)-strlen($csc_numero))));
+					$csc_str= $plantel->cve_vinculacion.substr($cadena,0,(5-strlen($csc_numero))).$csc_numero;
+
+					$vinculacion->csc_vinculacion=$csc_str;
+					$vinculacion->save();
+				}
+
                 echo json_encode($ruta_web."/".$input['file']);
             }else{
                 echo json_encode(0);
             }
          }
         //echo json_encode(0);
-    }
+	}
+	
+	public function listaVinculacion(){
+		$plantels=Plantel::pluck('razon','id');
+		$estatus=StVinculacion::pluck('name','id');
+		return view('vinculacions.reportes.listaVinculacion',compact('plantels','estatus'));		
+	}
+
+	public function listaVinculacionR(Request $request){
+		$data=$request->all();
+		$registros=Vinculacion::select('p.razon','e.name as especialidad','n.name as nivel','g.name as grado',
+								'c.nombre','c.nombre2','c.ape_paterno','c.ape_materno','stv.name as st_vinculacion',
+								'vinculacions.lugar_practica','vinculacions.fec_inicio','vinculacions.fec_fin',
+								'vinculacions.csc_vinculacion')
+								->join('clientes as c','c.id','=','vinculacions.cliente_id')
+								->join('inscripcions as i','i.cliente_id','=','c.id')
+								->join('plantels as p','p.id','=','i.plantel_id')
+								->join('especialidads as e','e.id','=','i.especialidad_id')
+								->join('nivels as n','n.id','=','i.nivel_id')
+								->join('grados as g','g.id','=','i.grado_id')
+								->join('st_vinculacions as stv','stv.id','=','vinculacions.st_vinculacion_id')
+								->where('p.id',$data['plantel_id'])
+								->where('e.id',$data['especialidad_id'])
+								->where('n.id',$data['nivel_id'])
+								->where('g.id',$data['grado_id'])
+								->where('vinculacions.st_vinculacion_id',$data['estatus_f'])
+								->get();
+		return view('vinculacions.reportes.listaVinculacionR',compact('registros'));		
+	}
 }

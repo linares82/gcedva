@@ -50,6 +50,20 @@
                         <span class="help-block">{{ $errors->first("fec_fin") }}</span>
                        @endif
                     </div>
+                    <div class="form-group col-md-4 @if($errors->has('st_vinculacion_id')) has-error @endif">
+                        <label for="st_vinculacion_id-field">Estatus</label>
+                        {!! Form::select("st_vinculacion_id", $list["StVinculacion"], null, array("class" => "form-control select_seguridad", "id" => "st_vinculacion_id-field", 'style'=>'width:100%')) !!}
+                        @if($errors->has("st_vinculacion_id"))
+                        <span class="help-block">{{ $errors->first("st_vinculacion_id") }}</span>
+                        @endif
+                    </div>
+                    <div class="form-group col-md-4 @if($errors->has('csc_vinculacion')) has-error @endif">
+                        <label for="csc_vinculacion-field">Consecutivo Vinculacion</label>
+                        {!! Form::text("csc_vinculacion", null, array("class" => "form-control input-sm", "id" => "csc_vinculacion-field", 'disabled'=>true)) !!}
+                        @if($errors->has("csc_vinculacion"))
+                         <span class="help-block">{{ $errors->first("csc_vinculacion") }}</span>
+                        @endif
+                     </div>
                     <div class="form-group col-md-4 @if($errors->has('bnd_constancia_entregada')) has-error @endif">
                        <label for="bnd_constancia_entregada-field">DV4 Entregada</label>
                        {!! Form::checkbox("bnd_constancia_entregada", 1, null, [ "id" => "bnd_constancia_entregada-field", 'class'=>'minimal']) !!}

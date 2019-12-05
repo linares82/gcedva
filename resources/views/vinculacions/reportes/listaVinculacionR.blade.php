@@ -82,18 +82,22 @@
     <body>
         
         <div id="printeArea" class='SaltoDePagina'>
-                <h3>Lista de Documentos Faltantes</h3>
+            <h3>Lista de Alumnos en Vinculacion</h3>
             
             <table>
                 <tr>
-                    <th>No.</th><th><strong>Id</strong></th><th><strong>Estatus</strong></th><th><strong>Empleado</strong></th><th><strong>Documento Faltante</strong></th>
+                    <th>No.</th><th><strong>Plantel</strong></th><th><strong>Alumno</strong></th>
+                    <th><strong>Carrera</strong></th><th><strong>Estatus</strong></th><th><strong>Lugar Practica</strong></th>
+                    <th><strong>F. Inicio</strong></th><th><strong>F. Fin</strong></th><th><strong>Folio</strong></th>
                 </tr>
                 @php
                     $i=1;
                 @endphp
-                @foreach($documentos_faltantes as $documento)
+                @foreach($registros as $r)
                     <tr>
-                    <td>{{$i++}}</td><td>{{$documento['empleado']}}</td><td>{{$documento['estatus']}}</td><td>{{$documento['nombre']}}</td><td>{{$documento['documento']}}</td>
+                    <td>{{$i++}}</td><td>{{$r->razon}}</td><td>{{$r->nombre}} {{$r->nombre2}} {{$r->ape_paterno}} {{$r->ape_materno}}</td>
+                    <td>{{$r->especialidad}} {{$r->nivel}} {{$r->grado}}</td><td>{{$r->st_vinculacion}}</td><td>{{$r->lugar_practica}}</td>
+                    <td>{{$r->fec_inicio}}</td><td>{{$r->fec_fin}}</td><td>{{$r->csc_vinculacion}}</td>
                     </tr>
                 @endforeach
             </table>

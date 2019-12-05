@@ -189,13 +189,13 @@
                                         Baja
                                     </button>
                                     @endpermission
-                                    @permission('autorizacionBecas.destroy_inhabilitado')
+                                    @permission('autorizacionBecas.destroy')
                                     {!! Form::model($autorizacionBeca, array('route' => array('autorizacionBecas.destroy', $autorizacionBeca->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}
                                         <button type="submit" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> Borrar</button>
                                     {!! Form::close() !!}
                                     @endpermission
                                     <a href='{!! asset("/imagenes/autorizacion_becas/".$autorizacionBeca->id."/".$autorizacionBeca->file) !!}' target='_blank'>Ver A.</a>
-
+                                    
                                 </td>
                             </tr>
                         @endforeach

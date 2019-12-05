@@ -177,9 +177,11 @@ class AutorizacionBecasController extends Controller {
 	public function destroy($id,AutorizacionBeca $autorizacionBeca)
 	{
 		$autorizacionBeca=$autorizacionBeca->find($id);
+		$cliente=$autorizacionBeca->cliente_id;
 		$autorizacionBeca->delete();
 
-		return redirect()->route('autorizacionBecas.index')->with('message', 'Registro Borrado.');
+		
+		return redirect()->route('autorizacionBecas.findByClienteId', array('id'=>$cliente))->with('message', 'Registro Borrado.');
 	}
 
         public function findByCliente(Request $request){

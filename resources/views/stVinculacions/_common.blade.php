@@ -1,0 +1,1 @@
+@section('stVinculacionsAppTitle','Estatus Vinculacion')

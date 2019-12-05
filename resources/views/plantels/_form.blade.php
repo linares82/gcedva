@@ -6,7 +6,9 @@
         <li class="">
             <a data-toggle="tab" href="#tab2">Documentos</a>
         </li>
-        
+        <li class="">
+            <a data-toggle="tab" href="#tab3">Parametros</a>
+        </li>
     </ul>
     <div class="tab-content">
         <div id="tab1" class="tab-pane active">
@@ -62,35 +64,7 @@
                           <span class="help-block">{{ $errors->first("cct") }}</span>
                          @endif
                       </div>
-                      <div class="form-group col-md-4 @if($errors->has('cns_empleado')) has-error @endif">
-                         <label for="cns_empleado-field">Consecutivo Empleado</label>
-                         {!! Form::text("cns_empleado", null, array("class" => "form-control input-sm", "id" => "cns_empleado-field", 'readonly'=>'readonly')) !!}
-                         @if($errors->has("cns_empleado"))
-                          <span class="help-block">{{ $errors->first("cns_empleado") }}</span>
-                         @endif
-                      </div>
-                      <div class="form-group col-md-4 @if($errors->has('cns_alumno')) has-error @endif">
-                         <label for="cns_alumno-field">Consecutivo Alumno</label>
-                         {!! Form::text("cns_alumno", null, array("class" => "form-control input-sm", "id" => "cns_alumno-field", 'readonly'=>'readonly')) !!}
-                         @if($errors->has("cns_alumno"))
-                          <span class="help-block">{{ $errors->first("cns_alumno") }}</span>
-                         @endif
-                      </div>
-                      <div class="form-group col-md-4 @if($errors->has('consecutivo')) has-error @endif">
-                         <label for="consecutivo-field">Consecutivo Ticket</label>
-                         {!! Form::text("consecutivo", null, array("class" => "form-control input-sm", "id" => "consecutivo-field")) !!}
-                         @if($errors->has("consecutivo"))
-                          <span class="help-block">{{ $errors->first("consecutivo") }}</span>
-                         @endif
-                      </div>    
-                      <div class="form-group col-md-4 @if($errors->has('consecutivo_pago')) has-error @endif">
-                         <label for="consecutivo_pago-field">Consecutivo Pago</label>
-                         {!! Form::text("consecutivo_pago", null, array("class" => "form-control input-sm", "id" => "consecutivo_pago-field")) !!}
-                         @if($errors->has("consecutivo_pago"))
-                          <span class="help-block">{{ $errors->first("consecutivo") }}</span>
-                         @endif
-                      </div>    
-                    </div>
+                      
                   </div>
                   <div class="box box-default">
                       <div class="box-body">
@@ -178,20 +152,7 @@
                           <span class="help-block">{{ $errors->first("lectivo_id") }}</span>
                          @endif
                       </div>
-                      <div class="form-group col-md-4 @if($errors->has('meta_venta')) has-error @endif" style="clear:left;">
-                         <label for="meta_venta-field">Meta Total Empleado</label>
-                         {!! Form::text("meta_venta", null, array("class" => "form-control input-sm", "id" => "meta_venta-field")) !!}
-                         @if($errors->has("meta_venta"))
-                          <span class="help-block">{{ $errors->first("meta_venta") }}</span>
-                         @endif
-                      </div>
-                      <div class="form-group col-md-4 @if($errors->has('meta_total')) has-error @endif">
-                         <label for="meta_total-field">Meta Total</label>
-                         {!! Form::text("meta_total", null, array("class" => "form-control input-sm", "id" => "meta_total-field")) !!}
-                         @if($errors->has("meta_total"))
-                          <span class="help-block">{{ $errors->first("meta_total") }}</span>
-                         @endif
-                      </div>
+                      
                       <div class="form-group col-md-4 @if($errors->has('st_plantel_id')) has-error @endif">
                          <label for="st_plantel_id-field">Estatus</label>
                          {!! Form::select("st_plantel_id", $list["StPlantel"], null, array("class" => "form-control select_seguridad", "id" => "st_plantel_id-field")) !!}
@@ -247,19 +208,7 @@
                          </div>
                     </div>
                     </div>
-                    <div class="box box-default">
-                      <div class="box-body">
-                      
-                      <div class="form-group col-md-12 @if($errors->has('clausulas_cotizacion')) has-error @endif">
-                         <label for="clausulas_cotizacion-field">Clausulas Cotizacion</label>
-                         {!! Form::textArea("clausulas_cotizacion", null, array("class" => "form-control input-sm", "id" => "clausulas_cotizacion-field", 'rows'=>5)) !!}
-                         @if($errors->has("clausulas_cotizacion"))
-                          <span class="help-block">{{ $errors->first('clausulas_cotizacion') }}</span>
-                         @endif
-                      </div>      
-                      </div>
-                      
-                    </div>
+                    
                     <div class="form-group col-md-4 @if($errors->has('logo')) has-error @endif">
                        <label for="logo-field">Logo</label>
                        {!! Form::text("logo", null, array("class" => "form-control input-sm", "id" => "logo-field", 'readonly'=>'readonly')) !!}
@@ -392,6 +341,85 @@
                         </table>
                     </div>
             </fieldset>
+            @endif
+            
+            
+        </div>
+
+        <div id="tab3" class="tab-pane">
+            @if(isset($plantel))
+            <fieldset>
+                <div class="form-group col-md-4 @if($errors->has('cns_empleado')) has-error @endif">
+                    <label for="cns_empleado-field">Consecutivo Empleado</label>
+                    {!! Form::text("cns_empleado", null, array("class" => "form-control input-sm", "id" => "cns_empleado-field", 'readonly'=>'readonly')) !!}
+                    @if($errors->has("cns_empleado"))
+                     <span class="help-block">{{ $errors->first("cns_empleado") }}</span>
+                    @endif
+                 </div>
+                 <div class="form-group col-md-4 @if($errors->has('cns_alumno')) has-error @endif">
+                    <label for="cns_alumno-field">Consecutivo Alumno</label>
+                    {!! Form::text("cns_alumno", null, array("class" => "form-control input-sm", "id" => "cns_alumno-field", 'readonly'=>'readonly')) !!}
+                    @if($errors->has("cns_alumno"))
+                     <span class="help-block">{{ $errors->first("cns_alumno") }}</span>
+                    @endif
+                 </div>
+                 <div class="form-group col-md-4 @if($errors->has('consecutivo')) has-error @endif">
+                    <label for="consecutivo-field">Consecutivo Ticket</label>
+                    {!! Form::text("consecutivo", null, array("class" => "form-control input-sm", "id" => "consecutivo-field")) !!}
+                    @if($errors->has("consecutivo"))
+                     <span class="help-block">{{ $errors->first("consecutivo") }}</span>
+                    @endif
+                 </div>    
+                 <div class="form-group col-md-4 @if($errors->has('consecutivo_pago')) has-error @endif">
+                    <label for="consecutivo_pago-field">Consecutivo Pago</label>
+                    {!! Form::text("consecutivo_pago", null, array("class" => "form-control input-sm", "id" => "consecutivo_pago-field")) !!}
+                    @if($errors->has("consecutivo_pago"))
+                     <span class="help-block">{{ $errors->first("consecutivo") }}</span>
+                    @endif
+                 </div>
+                 <div class="form-group col-md-4 @if($errors->has('cve_vinculacion')) has-error @endif">
+                    <label for="cve_vinculacion-field">Clave Vinculacion</label>
+                    {!! Form::text("cve_vinculacion", null, array("class" => "form-control input-sm", "id" => "cve_vinculacion-field")) !!}
+                    @if($errors->has("cve_vinculacion"))
+                     <span class="help-block">{{ $errors->first("cve_vinculacion") }}</span>
+                    @endif
+                 </div>
+                 <div class="form-group col-md-4 @if($errors->has('csc_vinculacion')) has-error @endif">
+                    <label for="csc_vinculacion-field">Consecutivo Vinculacion</label>
+                    {!! Form::text("csc_vinculacion", null, array("class" => "form-control input-sm", "id" => "csc_vinculacion-field")) !!}
+                    @if($errors->has("csc_vinculacion"))
+                     <span class="help-block">{{ $errors->first("csc_vinculacion") }}</span>
+                    @endif
+                 </div>
+                 <div class="form-group col-md-4 @if($errors->has('meta_venta')) has-error @endif" style="clear:left;">
+                    <label for="meta_venta-field">Meta Total Empleado</label>
+                    {!! Form::text("meta_venta", null, array("class" => "form-control input-sm", "id" => "meta_venta-field")) !!}
+                    @if($errors->has("meta_venta"))
+                    <span class="help-block">{{ $errors->first("meta_venta") }}</span>
+                    @endif
+                </div>
+                <div class="form-group col-md-4 @if($errors->has('meta_total')) has-error @endif">
+                    <label for="meta_total-field">Meta Total</label>
+                    {!! Form::text("meta_total", null, array("class" => "form-control input-sm", "id" => "meta_total-field")) !!}
+                    @if($errors->has("meta_total"))
+                    <span class="help-block">{{ $errors->first("meta_total") }}</span>
+                    @endif
+                </div>
+                
+            </fieldset>
+            <div class="box box-default">
+                <div class="box-body">
+                
+                <div class="form-group col-md-12 @if($errors->has('clausulas_cotizacion')) has-error @endif">
+                   <label for="clausulas_cotizacion-field">Clausulas Cotizacion</label>
+                   {!! Form::textArea("clausulas_cotizacion", null, array("class" => "form-control input-sm", "id" => "clausulas_cotizacion-field", 'rows'=>5)) !!}
+                   @if($errors->has("clausulas_cotizacion"))
+                    <span class="help-block">{{ $errors->first('clausulas_cotizacion') }}</span>
+                   @endif
+                </div>      
+                </div>
+                
+            </div>
             @endif
             
             

@@ -113,7 +113,12 @@
         });
     }
     
+filtroCuentaOrigen();    
 $('#plantel_id-field').change(function(){
+    filtroCuentaOrigen();
+});
+
+function filtroCuentaOrigen(){
     $.ajax({
     type: 'GET',
             url: '{{route("cuentasEfectivos.getCuentasPlantel")}}',
@@ -139,9 +144,14 @@ $('#plantel_id-field').change(function(){
                 //$('#cuenta_efectivo_id-field').change();
             }
     });
+}
+
+filtroCuentaDestino();
+$('#plantel_destino_id-field').change(function(){
+    filtroCuentaDestino();
 });
 
-$('#plantel_destino_id-field').change(function(){
+function filtroCuentaDestino(){
     $.ajax({
     type: 'GET',
             url: '{{route("cuentasEfectivos.getCuentasPlantel")}}',
@@ -167,6 +177,7 @@ $('#plantel_destino_id-field').change(function(){
                 //$('#cuenta_efectivo_id-field').change();
             }
     });
-});
+}
+
 </script>
 @endpush                    
