@@ -164,7 +164,7 @@
                 <div class="form-group col-md-4">
                     <div class='text-center'>
                         @permission('cajas.cancelar')
-                        {!! Form::open(array('route' => 'cajas.cancelar')) !!}
+                        {!! Form::open(array('route' => 'cajas.cancelar','onsubmit'=> "if(confirm('¿Cancelar Caja? ¿Esta seguro?')) { return true } else {return false };")) !!}
                         {!! Form::hidden("caja", $caja->id, array("class" => "form-control", "id" => "caja_id-field")) !!}
                         <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-close"></i> Cancelar Venta</button>
                         {!! Form::close() !!}
@@ -334,7 +334,7 @@
     </div>
     </div>
     @if(isset($cliente))
-    <?php $valores= collect(); ?>
+    <?php $valores= collect(); $vfechas=collect();?>
     <div class="col-md-5" id="adeudos-lista">
         <div class="box box-danger">
             <div class="box-header">
@@ -460,6 +460,7 @@
                         foreach($combinacion->adeudos as $adeudo){
                             //if($adeudo->caja_concepto_id==$ln->caja_concepto_id){
                                 $valores->push($adeudo->caja_concepto_id);
+                                $vfechas->push(optional($adeudo->caja)->fecha);
                             //}
                         }
                         ?>                
@@ -475,17 +476,19 @@
                             <thead>
                                 <tr>
                                     
-                                    <th>Concepto</th><th>Monto</th><th>Caja</th><th>Estatus</th>
+                                    <th>Concepto</th><th>Fecha</th><th>Monto</th><th>Caja</th><th>Estatus</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                
+                                @php
+                                    //dd($vfechas);
+                                @endphp
                                 @foreach($cajas as $ln)
                                     @if(isset($valores))
-                                    @if(!is_int($valores->search($ln->concepto_id)))
+                                    @if(!is_int($valores->search($ln->concepto_id)) or !is_int($vfechas->search($ln->fecha)))
                                     <tr>
                                         
-                                        <td> {{$ln->concepto}}</td><td>{{$ln->total}}</td><td>{{$ln->caja}}</td><td>{{$ln->estatus}}</td>
+                                    <td> {{$ln->concepto}}</td> <td>{{$ln->fecha}}</td> <td>{{$ln->total}}</td><td>{{$ln->caja}}</td><td>{{$ln->estatus}}</td>
                                     </tr>
                                     @endif
                                     @endif

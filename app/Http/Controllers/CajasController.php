@@ -63,7 +63,7 @@ class CajasController extends Controller {
                 
                 $caja=Caja::where('st_caja_id',0)->where('plantel_id',$cliente->plantel_id)->get();
                 
-                $cajas=Caja::select('cajas.consecutivo as caja','ln.caja_concepto_id as concepto_id','cc.name as concepto', 'ln.total','st.name as estatus')
+                $cajas=Caja::select('cajas.consecutivo as caja','cajas.fecha','ln.caja_concepto_id as concepto_id','cc.name as concepto', 'ln.total','st.name as estatus')
                     ->join('caja_lns as ln','ln.caja_id','=','cajas.id')
                     ->join('caja_conceptos as cc','cc.id','=','ln.caja_concepto_id')
                     ->join('st_cajas as st','st.id','=','cajas.st_caja_id')
@@ -151,7 +151,7 @@ class CajasController extends Controller {
 	{
 		$caja=$caja->find($id);
                 $cliente=Cliente::find($caja->cliente_id);
-                $cajas=Caja::select('cajas.consecutivo as caja','ln.caja_concepto_id as concepto_id','cc.name as concepto', 'ln.total','st.name as estatus')
+                $cajas=Caja::select('cajas.consecutivo as caja','cajas.fecha','ln.caja_concepto_id as concepto_id','cc.name as concepto', 'ln.total','st.name as estatus')
                     ->join('caja_lns as ln','ln.caja_id','=','cajas.id')
                     ->join('caja_conceptos as cc','cc.id','=','ln.caja_concepto_id')
                     ->join('st_cajas as st','st.id','=','cajas.st_caja_id')
@@ -232,7 +232,7 @@ class CajasController extends Controller {
             //$adeudos=Adeudo::where('cliente_id', '=', $cliente->id)->get();
             //dd($cliente);
             $combinaciones=CombinacionCliente::where('cliente_id', '=', $cliente->id)->get();
-            $cajas=Caja::select('cajas.consecutivo as caja','ln.caja_concepto_id as concepto_id','cc.name as concepto', 'ln.total','st.name as estatus')
+            $cajas=Caja::select('cajas.consecutivo as caja','cajas.fecha','ln.caja_concepto_id as concepto_id','cc.name as concepto', 'ln.total','st.name as estatus')
                     ->join('caja_lns as ln','ln.caja_id','=','cajas.id')
                     ->join('caja_conceptos as cc','cc.id','=','ln.caja_concepto_id')
                     ->join('st_cajas as st','st.id','=','cajas.st_caja_id')
@@ -274,7 +274,7 @@ class CajasController extends Controller {
             }
             //dd($caja);
             $combinaciones=CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
-            $cajas=Caja::select('cajas.consecutivo as caja','ln.caja_concepto_id as concepto_id','cc.name as concepto', 'ln.total','st.name as estatus')
+            $cajas=Caja::select('cajas.consecutivo as caja','cajas.fecha','ln.caja_concepto_id as concepto_id','cc.name as concepto', 'ln.total','st.name as estatus')
                     ->join('caja_lns as ln','ln.caja_id','=','cajas.id')
                     ->join('caja_conceptos as cc','cc.id','=','ln.caja_concepto_id')
                     ->join('st_cajas as st','st.id','=','cajas.st_caja_id')
@@ -343,7 +343,7 @@ class CajasController extends Controller {
                 $adeudos=Adeudo::where('id', '=', $adeudo_tomado)->get();
                 
                 $cliente=Cliente::find($data['cliente_id']);
-                $cajas=Caja::select('cajas.consecutivo as caja','ln.caja_concepto_id as concepto_id','cc.name as concepto', 'ln.total','st.name as estatus')
+                $cajas=Caja::select('cajas.consecutivo as caja','cajas.fecha','ln.caja_concepto_id as concepto_id','cc.name as concepto', 'ln.total','st.name as estatus')
                     ->join('caja_lns as ln','ln.caja_id','=','cajas.id')
                     ->join('caja_conceptos as cc','cc.id','=','ln.caja_concepto_id')
                     ->join('st_cajas as st','st.id','=','cajas.st_caja_id')
@@ -569,7 +569,7 @@ class CajasController extends Controller {
             $caja->forma_pago_id=$request->get('forma_pago_id');
             $caja->save();
             $cliente=Cliente::find($caja->cliente_id);
-            $cajas=Caja::select('cajas.consecutivo as caja','ln.caja_concepto_id as concepto_id','cc.name as concepto', 'ln.total','st.name as estatus')
+            $cajas=Caja::select('cajas.consecutivo as caja','cajas.fecha','ln.caja_concepto_id as concepto_id','cc.name as concepto', 'ln.total','st.name as estatus')
                     ->join('caja_lns as ln','ln.caja_id','=','cajas.id')
                     ->join('caja_conceptos as cc','cc.id','=','ln.caja_concepto_id')
                     ->join('st_cajas as st','st.id','=','cajas.st_caja_id')
@@ -604,6 +604,10 @@ class CajasController extends Controller {
                 $ln->adeudo_id=0;
                 $ln->save();
                 $ln->delete();
+            }
+            foreach($caja->pagos as $pago){
+                $pc=new PagosController();
+                $pc->destroy($pago->id, new Pago());
             }
             $adeudos=Adeudo::where('caja_id',$caja->id)->get();
             foreach($adeudos as $adeudo){
@@ -704,7 +708,7 @@ class CajasController extends Controller {
         
         $cliente=Cliente::find($caja->cliente_id);
         $combinaciones=CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
-        $cajas=Caja::select('cajas.consecutivo as caja','ln.caja_concepto_id as concepto_id','cc.name as concepto', 'ln.total','st.name as estatus')
+        $cajas=Caja::select('cajas.consecutivo as caja','cajas.fecha','ln.caja_concepto_id as concepto_id','cc.name as concepto', 'ln.total','st.name as estatus')
                     ->join('caja_lns as ln','ln.caja_id','=','cajas.id')
                     ->join('caja_conceptos as cc','cc.id','=','ln.caja_concepto_id')
                     ->join('st_cajas as st','st.id','=','cajas.st_caja_id')
@@ -731,7 +735,7 @@ class CajasController extends Controller {
             $caja->save();
         }
         $combinaciones=CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
-        $cajas=Caja::select('cajas.consecutivo as caja','ln.caja_concepto_id as concepto_id','cc.name as concepto', 'ln.total','st.name as estatus')
+        $cajas=Caja::select('cajas.consecutivo as caja','cajas.fecha','ln.caja_concepto_id as concepto_id','cc.name as concepto', 'ln.total','st.name as estatus')
                     ->join('caja_lns as ln','ln.caja_id','=','cajas.id')
                     ->join('caja_conceptos as cc','cc.id','=','ln.caja_concepto_id')
                     ->join('st_cajas as st','st.id','=','cajas.st_caja_id')
@@ -769,7 +773,7 @@ class CajasController extends Controller {
         }
         
         $combinaciones=CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
-        $cajas=Caja::select('cajas.consecutivo as caja','ln.caja_concepto_id as concepto_id','cc.name as concepto', 'ln.total','st.name as estatus')
+        $cajas=Caja::select('cajas.consecutivo as caja','cajas.fecha','ln.caja_concepto_id as concepto_id','cc.name as concepto', 'ln.total','st.name as estatus')
                     ->join('caja_lns as ln','ln.caja_id','=','cajas.id')
                     ->join('caja_conceptos as cc','cc.id','=','ln.caja_concepto_id')
                     ->join('st_cajas as st','st.id','=','cajas.st_caja_id')
