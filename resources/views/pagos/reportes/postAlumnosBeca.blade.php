@@ -20,7 +20,7 @@
         <table class="table table-condensed table-striped">
             <thead>
                 <tr>
-                    <th>Cliente</th><th>Estatus Cliente</th><th>Estatus Seguimiento</th><th>Becado</th><th>Justificacion</th><th>monto inscripcion</th><th>monto mensualidad</th><th></th>
+                    <th>Especialidad</th><th>Nivel</th><th>Grado</th><th>Cliente</th><th>Estatus Cliente</th><th>Estatus Seguimiento</th><th>Becado</th><th>Justificacion</th><th>monto inscripcion</th><th>monto mensualidad</th><th></th>
                 </tr> 
             </thead>
             <tbody>
@@ -34,6 +34,9 @@
                 @foreach($registros as $registro)
                     
                     <tr>
+                        <td>{{ $registro->especialidad }}</td>
+                        <td>{{ $registro->nivel }}</td>
+                        <td>{{ $registro->grado }}</td>
                         <td>{{$registro->cliente}} - {{$registro->cliente_nombre}}</td>
                         <td>{{$registro->estatus_cliente}}</td><td>{{$registro->estatus_seguimiento}}</td>
                         <td>

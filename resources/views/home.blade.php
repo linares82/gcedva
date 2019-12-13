@@ -141,7 +141,7 @@
     @endrole
     
     @permission('widget_maestroIndicador')
-    <div class="form-group col-md-4 col-sm-4 col-xs-4">
+    <div class="form-group col-md-2 col-sm-2 col-xs-2">
             <div class="box box-primary">
                 <div class="box-header with-border">
                     <h3 class="box-title">
@@ -165,21 +165,21 @@
                         //dd($fecha_t->toDateString('Y-m-d'));
                         @endphp
                         
-                                <div  id="porcentaje_pago2" style="height: 150px;">
-                                        <div id='loading30' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div>  
-                                </div>
-                                    
-                                {!! Form::model($turno, array('route' => array('adeudos.maestroR'),'method' => 'post', 'style' => 'display: inline;')) !!}
-                                {!! Form::hidden("fecha_f", $fecha_f->toDateString('Y-m-d'), array("class" => "form-control input-sm", "id" => "fecha_f-field")) !!}
-                                {!! Form::hidden("fecha_t", $fecha_t->toDateString('Y-m-d'), array("class" => "form-control input-sm", "id" => "fecha_t-field")) !!}
-                                {!! Form::select("plantel_f[]", $planteles, $empleado->plantel_id, array("class" => "form-control select_seguridad", "id" => "plantel_f-field", 'multiple'=>true)) !!}
-                                <label for="detalle_f-field">Con detalle:</label>
-                        {!! Form::select("detalle_f", array('1'=>'Si','2'=>'No'), null, array("class" => "form-control select_seguridad", "id" => "detalle_f-field")) !!}
-                                    <button type="submit" class="btn btn-xs btn-success"><i class="glyphicon glyphicon-ok"></i> Ver Maestro</button>
-                                {!! Form::close() !!} 
-                        
-                            
+                        <div  id="porcentaje_pago2" style="height: 150px;">
+                                <div id='loading30' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div>  
                         </div>
+                            
+                        {!! Form::model($turno, array('route' => array('adeudos.maestroR'),'method' => 'post', 'style' => 'display: inline;')) !!}
+                        {!! Form::hidden("fecha_f", $fecha_f->toDateString('Y-m-d'), array("class" => "form-control input-sm", "id" => "fecha_f-field")) !!}
+                        {!! Form::hidden("fecha_t", $fecha_t->toDateString('Y-m-d'), array("class" => "form-control input-sm", "id" => "fecha_t-field")) !!}
+                        {!! Form::select("plantel_f[]", $planteles, $empleado->plantel_id, array("class" => "form-control select_seguridad select_oculto", "id" => "plantel_f-field", 'multiple'=>true)) !!}
+                        <label for="detalle_f-field">Con detalle:</label>
+                        {!! Form::select("detalle_f", array('1'=>'Si','2'=>'No'), null, array("class" => "form-control select_seguridad", "id" => "detalle_f-field")) !!}
+                            <button type="submit" class="btn btn-xs btn-success"><i class="glyphicon glyphicon-ok"></i> Ver Maestro</button>
+                        {!! Form::close() !!} 
+                
+                            
+                        
                     
                 </div>
             </div>
@@ -187,9 +187,53 @@
     
     @endpermission
 
+    @permission('widget_maestrosIndicador')
+    @foreach($plantels as $plantel)
+    @php
+    
+    $date=date('Y-m-d');
+    //dd($date);
+    $fecha_f=\Carbon\Carbon::createFromFormat('Y-m-d',$date);
+    $fecha_f->day=01;
+    
+    $fecha_t=\Carbon\Carbon::createFromFormat('Y-m-d',$date);
+    if($fecha_t->month==2){
+        $fecha_t->day=28;
+    }
+    $fecha_t->day=30;
+    //dd($fecha_t->toDateString('Y-m-d'));
+    $planteles=App\Plantel::pluck('razon','id');
+    @endphp
+    <div class="form-group col-md-2 col-sm-2 col-xs-2">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">
+                        Porcentaje de pago del mes en curso - {{ $plantel->cve_plantel }}
+                    </h3>
+                </div>
+                <div class="box-body">   
+                        <div id="porcentaj_pago{{ $plantel->id }}" style="height: 150px;">
+                                <div id='loading{{ $plantel->id }}' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div>  
+                        </div>
+                            
+                        {!! Form::model($turno, array('route' => array('adeudos.maestroR'),'method' => 'post', 'style' => 'display: inline;')) !!}
+                        {!! Form::hidden("fecha_f", $fecha_f->toDateString('Y-m-d'), array("class" => "form-control input-sm", "id" => "fecha_f-field")) !!}
+                        {!! Form::hidden("fecha_t", $fecha_t->toDateString('Y-m-d'), array("class" => "form-control input-sm", "id" => "fecha_t-field")) !!}
+                        {!! Form::select("plantel_f[]", $planteles, $plantel->id, array("class" => "form-control select_seguridad select_oculto", "id" => "plantel_f-field", 'multiple'=>true)) !!}
+                        <label for="detalle_f-field">Con detalle:</label>
+                        {!! Form::select("detalle_f", array('1'=>'Si','2'=>'No'), null, array("class" => "form-control select_seguridad", "id" => "detalle_f-field")) !!}
+                            <button type="submit" class="btn btn-xs btn-success"><i class="glyphicon glyphicon-ok"></i> Ver Maestro</button>
+                        {!! Form::close() !!} 
+                </div>
+            </div>
+        </div>
+    @endforeach
+    @endpermission
+
+
     @permission('repDireccion')
     
-    
+    @permission('wGEstatusTotales')
 	<div class="form-group col-md-4 col-sm-4 col-xs-4">
             <div class="box box-primary">
                 <div class="box-header with-bord1er">
@@ -204,6 +248,7 @@
                 </div>
             </div>
         </div>
+    @endpermission
     
         <div class="form-group col-md-4 col-sm-4 col-xs-4">
             <div class="box box-primary">
@@ -544,7 +589,7 @@
     <div class="row">
         @permission('WgaugesXplantel')
         @foreach($gauge as $grf)
-        <div class="form-group col-lg-3 col-md-3 col-sm-4 col-xs-12">
+        <div class="form-group col-lg-2 col-md-2 col-sm-2 col-xs-2">
             <div class="box box-primary">
                 <div class="box-header with-border">
                     <h4 class="box-title">
@@ -684,17 +729,18 @@
       $(document).ready(function(){
          $.ajax({
             type: 'GET',
+            cache: true,
             url: '{{route("cajas.adeudosXplantelWidget")}}',
             beforeSend : function(){$("#loading3").show(); },
             complete : function(){$("#loading3").hide(); },
             success: function(data) {
-                href="{{route('cajas.adeudosXplantel')}}";
+                href="{{ route('cajas.adeudosXplantel')}}";
                 $('#adeudos_cantidad').html('<a class="btn btn-sm btn-warning" target="_blank" href="'+href+'">'+data+' Adeudos<a>');
             }
             });
         //porcentajePago(); 
         
-        $("#plantel_f-field").select2().next().hide();
+        $(".select_oculto").select2().next().hide();
         
       });  
 
@@ -703,17 +749,18 @@
         $empleado=App\Empleado::where('user_id',Auth::user()->id)->first();
         $date=date('Y-m-d');
         $fecha_f=\Carbon\Carbon::createFromFormat('Y-m-d',$date);
-        $fecha->day=01;
+        $fecha_f->day=01;
         $fecha_t=\Carbon\Carbon::createFromFormat('Y-m-d',$date);
         if($fecha_t->month==2){
-            $fecha->day=28;
+            $fecha_t->day=28;
         }
-        $fecha->day=30;
+        $fecha_t->day=30;
         @endphp
         
         $.ajax({
             type: 'POST',
             url: '{{route("adeudos.maestroIndicador")}}',
+            cache: true,
             data: {
                 'plantel': {{$empleado->plantel_id}},
                 'fecha_f': {{$fecha_f->toDateString('Y-m-d')}},
@@ -812,6 +859,12 @@
         google.charts.setOnLoadCallback(drawChart);
         google.charts.setOnLoadCallback(drawChart_maestroIndicador);
         google.charts.setOnLoadCallback(drawVisualization2);
+
+        @foreach($plantels as $plantel)
+        google.charts.setOnLoadCallback(drawChart_maestroIndicador{{ $plantel->id }});
+        
+        @endforeach
+
         @foreach($gauge as $grf)
             google.charts.setOnLoadCallback(drawChart_velocimetro{{$grf['id']}});
         @endforeach
@@ -895,10 +948,11 @@
         //Gaugace Chart
         function drawChart_maestroIndicador() {
 
-            var res;
+            
             $.ajax({
                 type: 'GET',
                 url: '{{route("adeudos.maestroIndicador")}}',
+                cache: true,
                 data: {
                     'plantel': {{$empleado->plantel_id}},
                     'fecha_f': "{{ $fecha_f->toDateString('Y-m-d') }}",
@@ -928,15 +982,57 @@
 
                     chart.draw(data, options);
                 },
-            }).responseText;
+            });
             //console.log(res);
             
             
 
         }//End Guagace Chart
 
+        @foreach($plantels as $plantel)
+        
+        function drawChart_maestroIndicador{{ $plantel->id }}() {
+        $.ajax({
+            type: 'GET',
+            url: '{{ route("adeudos.maestroIndicador") }}',
+            cache: true,
+            data: {
+                'plantel': {{ $plantel->id}},
+                'fecha_f': "{{ $fecha_f->toDateString('Y-m-d') }}",
+                'fecha_t': "{{ $fecha_t->toDateString('Y-m-d') }}"                
+            },
+            beforeSend : function(){$("#loading{{ $plantel->id }}").show();  },
+            complete : function(){$("#loading{{ $plantel->id }}").hide();},
+            success: function(data) {
+                
+                var linea=JSON.parse(data);
+                //console.log(data);
+                //$('#porcentaje_pago').html(linea.porcentaje_pagado.toFixed(2));
+                var data = google.visualization.arrayToDataTable([
+                ['Label', 'Value'],
+                ['Pagado', linea],
+                ]);
 
+                var options = {
+                //width: 400, height: 250,
+                greenFrom:90, greenTo: 100,
+                yellowFrom:75, yellowTo: 90,
+                redFrom: 0, redTo: 75,
+                minorTicks: 5
+                };
 
+                var chart = new google.visualization.Gauge(document.getElementById('porcentaj_pago{{ $plantel->id }}'));
+
+                chart.draw(data, options);
+            },
+        });
+        //console.log(res);
+        }//End Guagace Chart
+        @if($loop==23)
+            @php break; @endphp
+        @endif
+        @endforeach
+        
         //Gaugace Chart
         @foreach($gauge as $grf)
         function drawChart_velocimetro{{$grf['id']}}() {

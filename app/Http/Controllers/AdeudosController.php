@@ -844,7 +844,13 @@ class AdeudosController extends Controller
 
     public function maestro()
     {
-        $planteles = Plantel::pluck('razon', 'id');
+        if (Auth::user()->can('adeudos.maestroXPlantel')) {
+            $empleado = Empleado::where('user_id', Auth::user()->id)->first();
+            $planteles = Plantel::where('id', $empleado->id)->pluck('razon', 'id');
+        } else {
+            $planteles = Plantel::pluck('razon', 'id');
+        }
+
         $conceptos = CajaConcepto::pluck('name', 'id');
 
         //dd($stCajas);
@@ -886,8 +892,8 @@ class AdeudosController extends Controller
                 ->join('caja_conceptos as cc', 'cc.id', '=', 'adeudos.caja_concepto_id')
                 //->join('pagos as pag','pag.caja_id','=','caj.id')
                 //->whereNull('pag.deleted_at')
-                ->where('c.plantel_id', $plantel)
-                ->whereIn('c.st_cliente_id', array(3, 4, 23, 24, 25))
+                ->where('p.id', $plantel)
+                ->whereIn('stc.id', array(3, 4, 23, 24, 25))
                 //->whereIn('s.st_seguimiento_id', array(2))
                 //->whereIn('adeudos.caja_concepto_id', $datos['concepto_f'])
                 ->whereDate('adeudos.fecha_pago', '>=', $datos['fecha_f'])
@@ -922,14 +928,14 @@ class AdeudosController extends Controller
                     if ($registro->pagado_bnd == 1) {
                         $calculo['clientes_pagados'] = $calculo['clientes_pagados'] + $registro->pagado_bnd;
                         $calculo['total_monto_pagado'] = $calculo['total_monto_pagado'] + $registro->pago_calculado_adeudo;
-                        $query_pagos = Pago::where('caja_id', $registro->caja)->where('caja_id', '>', 0)->whereNull('pagos.deleted_at')->get();
+                        /*$query_pagos = Pago::where('caja_id', $registro->caja)->where('caja_id', '>', 0)->whereNull('pagos.deleted_at')->get();
                         foreach ($query_pagos as $pago) {
                             if ($pago->forma_pago_id == 1 and $pago->monto >= $registro->pago_calculado_adeudo) {
-                                //$calculo['pagos_efectivo'] = $calculo['pagos_efectivo'] + $registro->pago_calculado_adeudo;
+                                $calculo['pagos_efectivo'] = $calculo['pagos_efectivo'] + $registro->pago_calculado_adeudo;
                             } elseif ($pago->forma_pago_id <> 1 and $pago->monto >= $registro->pago_calculado_adeudo) {
-                                //$calculo['pagos_banco'] = $calculo['pagos_banco'] + $registro->pago_calculado_adeudo;
+                                $calculo['pagos_banco'] = $calculo['pagos_banco'] + $registro->pago_calculado_adeudo;
                             }
-                        }
+                        }*/
                     } elseif ($registro->pagado_bnd == 0) {
                         $calculo['suma_deudores'] = $calculo['suma_deudores'] + 1;
                         $calculo['monto_deuda'] = $calculo['monto_deuda'] + $registro->adeudo_planeado;
@@ -975,14 +981,14 @@ class AdeudosController extends Controller
                             if ($registro->pagado_bnd == 1) {
                                 $calculo['clientes_pagados'] = $calculo['clientes_pagados'] + $registro->pagado_bnd;
                                 $calculo['total_monto_pagado'] = $calculo['total_monto_pagado'] + $registro->pago_calculado_adeudo;
-                                $query_pagos = Pago::where('caja_id', $registro->caja)->where('caja_id', '>', 0)->whereNull('pagos.deleted_at')->get();
+                                /*$query_pagos = Pago::where('caja_id', $registro->caja)->where('caja_id', '>', 0)->whereNull('pagos.deleted_at')->get();
                                 foreach ($query_pagos as $pago) {
                                     if ($pago->forma_pago_id == 1 and $pago->monto >= $registro->pago_calculado_adeudo) {
-                                        //$calculo['pagos_efectivo'] = $calculo['pagos_efectivo'] + $registro->pago_calculado_adeudo;
+                                        $calculo['pagos_efectivo'] = $calculo['pagos_efectivo'] + $registro->pago_calculado_adeudo;
                                     } elseif ($pago->forma_pago_id <> 1 and $pago->monto >= $registro->pago_calculado_adeudo) {
-                                        //$calculo['pagos_banco'] = $calculo['pagos_banco'] + $registro->pago_calculado_adeudo;
+                                        $calculo['pagos_banco'] = $calculo['pagos_banco'] + $registro->pago_calculado_adeudo;
                                     }
-                                }
+                                }*/
                             } elseif ($registro->pagado_bnd == 0) {
                                 $calculo['suma_deudores'] = $calculo['suma_deudores'] + 1;
                                 $calculo['monto_deuda'] = $calculo['monto_deuda'] + $registro->adeudo_planeado;
@@ -1111,14 +1117,14 @@ class AdeudosController extends Controller
                 if ($registro->pagado_bnd == 1) {
                     $calculo['clientes_pagados'] = $calculo['clientes_pagados'] + $registro->pagado_bnd;
                     $calculo['total_monto_pagado'] = $calculo['total_monto_pagado'] + $registro->pago_calculado_adeudo;
-                    $query_pagos = Pago::where('caja_id', $registro->caja)->where('caja_id', '>', 0)->whereNull('pagos.deleted_at')->get();
+                    /*$query_pagos = Pago::where('caja_id', $registro->caja)->where('caja_id', '>', 0)->whereNull('pagos.deleted_at')->get();
                     foreach ($query_pagos as $pago) {
                         if ($pago->forma_pago_id == 1 and $pago->monto >= $registro->pago_calculado_adeudo) {
                             //$calculo['pagos_efectivo'] = $calculo['pagos_efectivo'] + $registro->pago_calculado_adeudo;
                         } elseif ($pago->forma_pago_id <> 1 and $pago->monto >= $registro->pago_calculado_adeudo) {
                             //$calculo['pagos_banco'] = $calculo['pagos_banco'] + $registro->pago_calculado_adeudo;
                         }
-                    }
+                    }*/
                 } elseif ($registro->pagado_bnd == 0) {
                     $calculo['suma_deudores'] = $calculo['suma_deudores'] + 1;
                     $calculo['monto_deuda'] = $calculo['monto_deuda'] + $registro->adeudo_planeado;
@@ -1126,7 +1132,7 @@ class AdeudosController extends Controller
                 $calculo['porcentaje_pagado'] = ($calculo['clientes_pagados'] * 100) / $calculo['clientes_activos'];
                 $calculo['deudores'] = $calculo['clientes_activos'] - $calculo['clientes_pagados'];
                 $calculo['porcentaje_deudores'] = ($calculo['deudores'] * 100) / $calculo['clientes_activos'];
-            } elseif (is_null($registro->borrado_c) and is_null($registro->borrado_cln) and $registro->st_cliente_id == 3) {
+            } /*elseif (is_null($registro->borrado_c) and is_null($registro->borrado_cln) and $registro->st_cliente_id == 3) {
                 $baja = HistoriaCliente::where('cliente_id', $registro->id)
                     ->where('evento_cliente_id', 2)
                     ->where('fecha', '>=', $datos['fecha_f'])
@@ -1135,7 +1141,7 @@ class AdeudosController extends Controller
                 if (is_object($baja) and $registro->caja > 0) {
                     $calculo['bajas_pagadas'] = $calculo['bajas_pagadas'] + 1;
                 }
-            }
+            }*/
         }
         array_push($lineas_procesadas, $calculo);
         //}
