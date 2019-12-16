@@ -846,7 +846,8 @@ class AdeudosController extends Controller
     {
         if (Auth::user()->can('adeudos.maestroXPlantel')) {
             $empleado = Empleado::where('user_id', Auth::user()->id)->first();
-            $planteles = Plantel::where('id', $empleado->id)->pluck('razon', 'id');
+
+            $planteles = Plantel::where('id', $empleado->plantel_id)->pluck('razon', 'id');
         } else {
             $planteles = Plantel::pluck('razon', 'id');
         }

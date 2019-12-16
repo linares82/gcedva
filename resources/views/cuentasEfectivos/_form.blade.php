@@ -71,6 +71,13 @@
                             {!! $errors->first('tpo_deteccion_id', '<p class="help-block">:message</p>') !!}
                         <!--</div>-->
                     </div>
+                    <div class='row'></div>
+                    <div id="comprobar_div" class="form-group col-md-4 @if($errors->has('comprobacion')) has-error @endif">
+                     <label for="comprobacion-field">Saldo Comprobado</label>
+                     {!! Form::text("comprobacion", null, array("class" => "form-control", "id" => "comprobacion-field")) !!}
+                     <button type="button" id="btn_comprobar" class="btn btn-success btn-sm">Comprobar</button>
+                     
+                     </div>
 @push('scripts')
   <script type="text/javascript">
     $(document).ready(function() {
@@ -81,8 +88,27 @@
         lang_clear_date: 'Limpiar',
         show_select_today: 'Hoy',
       });
+    
       
+    $('#comprobar_div').on('click', '#btn_comprobar', function() {
+        $.ajax({
+            type: 'POST',
+            url: '{{ route("cuentasEfectivos.comprobarSaldo")}}',
+            data: {
+                '_token': $('input[name=_token]').val(),
+                'cuenta': {{ $cuentasEfectivo->id }},
+            },
+            beforeSend : function(){$("#loading3").show(); },
+            complete : function(){$("#loading3").hide(); },
+            success: function(data) {
+                $('#comprobacion-field').val(data);
+            },
+        });
+    });
+
     });
     
+
+
     </script>
 @endpush                    

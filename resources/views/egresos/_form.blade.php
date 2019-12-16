@@ -36,6 +36,7 @@
                     <div class="form-group col-md-4 @if($errors->has('cuentas_efectivo_id')) has-error @endif">
                        <label for="cuentas_efectivo_id-field">Cuenta Efectivo</label>
                        {!! Form::select("cuentas_efectivo_id", $list["CuentasEfectivo"], null, array("class" => "form-control select_seguridad", "id" => "cuentas_efectivo_id-field")) !!}
+                       Saldo Actualizado:<div id="origen"></div>
                        @if($errors->has("cuentas_efectivo_id"))
                         <span class="help-block">{{ $errors->first("cuentas_efectivo_id") }}</span>
                        @endif
@@ -97,6 +98,30 @@
                     }
             }); 
       });
+
+      $('#cuentas_efectivo_id-field').change(function(){
+            getSaldo($('#cuentas_efectivo_id-field option:selected').val(), $('#origen'));
+      });
+
+      function getSaldo(cuenta, obj){
+        $.ajax({
+            url: '{{ route("cuentasEfectivos.getSaldo") }}',
+            type: 'GET',
+            data: "cuenta=" + cuenta, 
+            dataType: 'json',
+            beforeSend : function(){$("#loading13").show();},
+            complete : function(){$("#loading13").hide();},
+            success: function(data){
+                obj.html("<strong>"+data+"</strong>");
+
+               //alert(saldo);
+               if(data<=0){
+                  $('.btn').attr("disabled", true);
+                  alert('No es posible realizar esta operacion, revise saldos');
+               }
+            }
+        });
+    }
       
 </script>
 @endpush

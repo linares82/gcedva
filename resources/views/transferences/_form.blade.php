@@ -58,7 +58,7 @@
                         <span class="help-block">{{ $errors->first("motivo") }}</span>
                        @endif
                     </div>
-@push('scripts')
+@push('scripts') 
 <script type="text/javascript">
     /*window.onbeforeunload=finalizar();
             function finalizar(){
