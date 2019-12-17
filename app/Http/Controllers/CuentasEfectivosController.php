@@ -262,7 +262,7 @@ class CuentasEfectivosController extends Controller
 				->where('egreso_id', '>', 0)
 				->whereDate('fecha', '>=', $cuenta->fecha_saldo_inicial)
 				->sum('monto');
-			dd($egreso);
+			//dd($egreso);
 			$tegreso = IngresoEgreso::where('cuenta_Efectivo_id', $cuenta->id)
 				->where('transference_id', '>', 0)
 				->where('concepto', 'Transferencia:egreso')
