@@ -58,7 +58,7 @@
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         @if(Auth::user())
-                        Plantel: {!!
+                        Plantel: {!!  
                             Cache::remember('razon', 30, function(){
                                 return DB::table('plantels as p')
                             ->join('empleados as e', 'e.plantel_id','=', 'p.id')

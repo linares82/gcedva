@@ -124,31 +124,42 @@
             </div>
         </div>
 
-    @role('CAJA')
-    <div class="form-group col-md-2 col-sm-2 col-xs-2">
-        <div class="box box-primary">
-            <div class="box-header with-border">
-                <h3 class="box-title">
-                    Adeudos
-                </h3>
-            </div>
-            <div class="box-body">
-                <div id='loading3' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
-                <span id='adeudos_cantidad'></span>
-            </div>
-        </div>
-    </div>
-    @endrole
-    
-    @permission('widget_maestroIndicador')
-    <div class="form-group col-md-2 col-sm-2 col-xs-2">
-            <div class="box box-primary">
+    @permission('indicadores_plantel')
+    <div class="row">
+        <div class="form-group col-md-12 col-sm-12 col-xs-12">
+            <div class="box box-success">
                 <div class="box-header with-border">
                     <h3 class="box-title">
-                        Porcentaje de pago del mes en curso
+                        Indicadores @if(Auth::user())
+                        Plantel: {!!  
+                            Cache::remember('razon', 30, function(){
+                                return DB::table('plantels as p')
+                            ->join('empleados as e', 'e.plantel_id','=', 'p.id')
+                            ->where('e.user_id', Auth::user()->id)->value('razon');
+                            });
+                        !!}
+                        @endif
                     </h3>
                 </div>
                 <div class="box-body">
+                    <div class="form-group col-md-3 col-sm-3 col-xs-3">
+                        <h4>% Asistencia Semana Anterior</h4>
+                    <div id="wAsistencias" style="height: 150px;">
+                        <div id='loading30' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
+                    </div>
+                    </div>
+                    
+                    <div class="form-group col-md-3 col-sm-3 col-xs-3">
+                        <h4 id="titulo_concretados"> </h4>
+                    <div id='loading31' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
+                    <div id="wConcretados" style="height: 150px;">
+                    </div>
+                    <div id="wConcretados_pie">
+                    </div>
+                    </div>
+                    
+                    <div class="form-group col-md-3 col-sm-3 col-xs-3">
+                        <h4 class="box-title">Porcentaje de pago del mes en curso</h4>
                         @php
                         $empleado=App\Empleado::where('user_id',Auth::user()->id)->first();
                         $date=date('Y-m-d');
@@ -166,7 +177,7 @@
                         @endphp
                         
                         <div  id="porcentaje_pago2" style="height: 150px;">
-                                <div id='loading30' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div>  
+                                <div id='loading32' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div>  
                         </div>
                             
                         {!! Form::open(['route' => array('adeudos.maestroR'),'method' => 'post', 'style' => 'display: inline;']) !!}
@@ -176,61 +187,102 @@
                         <label for="detalle_f-field">Con detalle:</label>
                         {!! Form::select("detalle_f", array('1'=>'Si','2'=>'No'), null, array("class" => "form-control select_seguridad", "id" => "detalle_f-field")) !!}
                             <button type="submit" class="btn btn-xs btn-success"><i class="glyphicon glyphicon-ok"></i> Ver Maestro</button>
-                        {!! Form::close() !!} 
-                
-                            
-                        
-                    
+                        {!! Form::close() !!}     
+                    </div>
                 </div>
             </div>
         </div>
-    
+    </div>
     @endpermission
 
-    @permission('widget_maestrosIndicador')
+    @permission('indicadores_plantels')
     @foreach($plantels as $plantel)
-    @php
-    
-    $date=date('Y-m-d');
-    //dd($date);
-    $fecha_f=\Carbon\Carbon::createFromFormat('Y-m-d',$date);
-    $fecha_f->day=01;
-    
-    $fecha_t=\Carbon\Carbon::createFromFormat('Y-m-d',$date);
-    if($fecha_t->month==2){
-        $fecha_t->day=28;
-    }
-    $fecha_t->day=30;
-    //dd($fecha_t->toDateString('Y-m-d'));
-    $planteles=App\Plantel::pluck('razon','id');
-    @endphp
-    <div class="form-group col-md-2 col-sm-2 col-xs-2">
-            <div class="box box-primary">
+    <div class="row">
+        <div class="form-group col-md-12 col-sm-12 col-xs-12">
+            <div class="box box-success">
                 <div class="box-header with-border">
                     <h3 class="box-title">
-                        Porcentaje de pago del mes en curso - {{ $plantel->cve_plantel }}
+                        Indicadores 
+                        Plantel: {!!  
+                                DB::table('plantels')->where('id',$plantel->id)->value('razon'); 
+                        !!}
                     </h3>
                 </div>
-                <div class="box-body">   
-                        <div id="porcentaj_pago{{ $plantel->id }}" style="height: 150px;">
-                                <div id='loading{{ $plantel->id }}' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div>  
+                <div class="box-body">
+                    <div class="form-group col-md-3 col-sm-3 col-xs-3">
+                        <h4>% Asistencia Semana Anterior</h4>
+                    <div id="wAsistencias_{{ $plantel->id }}" style="height: 150px;">
+                        <div id='loading30{{ $plantel->id }}' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
+                    </div>
+                    </div>
+                    
+                    <div class="form-group col-md-3 col-sm-3 col-xs-3">
+                        <h4 id="titulo_concretados{{ $plantel->id }}"> </h4>
+                    <div id='loading31{{ $plantel->id }}' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
+                    <div id="wConcretados{{ $plantel->id }}" style="height: 150px;">
+                    </div>
+                    <div id="wConcretados_pie{{ $plantel->id }}">
+                    </div>
+                    </div>
+                    
+                    <div class="form-group col-md-3 col-sm-3 col-xs-3">
+                        <h4 class="box-title">Porcentaje de pago del mes en curso</h4>
+                        @php
+    
+                        $date=date('Y-m-d');
+                        //dd($date);
+                        $fecha_f=\Carbon\Carbon::createFromFormat('Y-m-d',$date);
+                        $fecha_f->day=01;
+                        
+                        $fecha_t=\Carbon\Carbon::createFromFormat('Y-m-d',$date);
+                        if($fecha_t->month==2){
+                            $fecha_t->day=28;
+                        }
+                        $fecha_t->day=30;
+                        //dd($fecha_t->toDateString('Y-m-d'));
+                        $planteles=App\Plantel::pluck('razon','id');
+                        @endphp
+                        <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                            <div class="box-body">   
+                                <div id="porcentaj_pago{{ $plantel->id }}" style="height: 150px;">
+                                        <div id='loading{{ $plantel->id }}' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div>  
+                                </div>
+                                    
+                                {!! Form::open(['route' => array('adeudos.maestroR'),'method' => 'post', 'style' => 'display: inline;']) !!}
+                                {!! Form::hidden("fecha_f", $fecha_f->toDateString('Y-m-d'), array("class" => "form-control input-sm", "id" => "fecha_f-field")) !!}
+                                {!! Form::hidden("fecha_t", $fecha_t->toDateString('Y-m-d'), array("class" => "form-control input-sm", "id" => "fecha_t-field")) !!}
+                                {!! Form::select("plantel_f[]", $planteles, $plantel->id, array("class" => "form-control select_seguridad select_oculto", "id" => "plantel_f-field", 'multiple'=>true)) !!}
+                                <label for="detalle_f-field">Con detalle:</label>
+                                {!! Form::select("detalle_f", array('1'=>'Si','2'=>'No'), null, array("class" => "form-control select_seguridad", "id" => "detalle_f-field")) !!}
+                                    <button type="submit" class="btn btn-xs btn-success"><i class="glyphicon glyphicon-ok"></i> Ver Maestro</button>
+                                {!! Form::close() !!} 
+                            </div>
                         </div>
-                            
-                        {!! Form::open(['route' => array('adeudos.maestroR'),'method' => 'post', 'style' => 'display: inline;']) !!}
-                        {!! Form::hidden("fecha_f", $fecha_f->toDateString('Y-m-d'), array("class" => "form-control input-sm", "id" => "fecha_f-field")) !!}
-                        {!! Form::hidden("fecha_t", $fecha_t->toDateString('Y-m-d'), array("class" => "form-control input-sm", "id" => "fecha_t-field")) !!}
-                        {!! Form::select("plantel_f[]", $planteles, $plantel->id, array("class" => "form-control select_seguridad select_oculto", "id" => "plantel_f-field", 'multiple'=>true)) !!}
-                        <label for="detalle_f-field">Con detalle:</label>
-                        {!! Form::select("detalle_f", array('1'=>'Si','2'=>'No'), null, array("class" => "form-control select_seguridad", "id" => "detalle_f-field")) !!}
-                            <button type="submit" class="btn btn-xs btn-success"><i class="glyphicon glyphicon-ok"></i> Ver Maestro</button>
-                        {!! Form::close() !!} 
+                    </div>
                 </div>
             </div>
         </div>
+    </div>
     @endforeach
     @endpermission
 
 
+    @role('CAJA')
+    <div class="form-group col-md-2 col-sm-2 col-xs-2">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">
+                    Adeudos
+                </h3>
+            </div>
+            <div class="box-body">
+                <div id='loading3' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
+                <span id='adeudos_cantidad'></span>
+            </div>
+        </div>
+    </div>
+    @endrole
+    
     @permission('repDireccion')
     
     @permission('wGEstatusTotales')
@@ -268,7 +320,7 @@
         </div>
         
         
-        @endpermission   
+    @endpermission   
         
     <div class="row">
         <div class="form-group col-md-6 col-sm-6 col-xs-12" style='display: none'>
@@ -587,25 +639,7 @@
        
     </div>
     <div class="row">
-        @permission('WgaugesXplantel')
-        @foreach($gauge as $grf)
-        <div class="form-group col-lg-2 col-md-2 col-sm-2 col-xs-2">
-            <div class="box box-primary">
-                <div class="box-header with-border">
-                    <h4 class="box-title">
-                        {{$grf['razon']}}: 
-                    </h4>
-                </div>
-                <div class="box-body">
-                        <div id="velocimetro_{{$grf['id']}}" ></div>
-                        Meta del plantel: {{$grf['meta_total']}}
-                        <br/>
-                        Inscritos: {{$grf['avance']}}
-                </div>
-            </div>
-        </div>
-        @endforeach
-        @endpermission
+        
     </div>
     
     <div class="row">
@@ -776,11 +810,16 @@
         
         
       google.charts.load('current', {'packages':['corechart','bar']});
+      @permission('WStPlantelAsesor')
       google.charts.setOnLoadCallback(drawVisualization);
+      @endpermission
+      @permission('wGEstatusTotales')
       google.charts.setOnLoadCallback(drawgrfDir1);
+      @endpermission
       google.charts.setOnLoadCallback(drawgrfDir2);
-      google.charts.setOnLoadCallback(drawgrfDir3);
+      //google.charts.setOnLoadCallback(drawgrfDir3);
 
+      @permission('WStPlantelAsesor')  
     function drawVisualization() {
         // Some raw data (not necessarily accurate)
         var data = google.visualization.arrayToDataTable(<?php echo $datos_grafica; ?>);
@@ -795,7 +834,9 @@
         var chart = new google.visualization.ComboChart(document.getElementById('chart_div'));
         chart.draw(data, options);
     }
+    @endpermission
     
+    @permission('wGEstatusTotales')
     function drawgrfDir1() {
         // Some raw data (not necessarily accurate)
         var dataA = google.visualization.arrayToDataTable(<?php echo $grfDir1; ?>);
@@ -813,6 +854,7 @@
         var chartA = new google.visualization.ComboChart(document.getElementById('estatus_totales'));
         chartA.draw(dataA, optionsA);
     }
+    @endpermission
     
     function drawgrfDir2() {
         // Some raw data (not necessarily accurate)
@@ -857,17 +899,24 @@
     <script type="text/javascript">    
         google.charts.load('current', {'packages':['gauge','corechart', 'bar']});
         google.charts.setOnLoadCallback(drawChart);
+        @permission('widget_maestroIndicador')
         google.charts.setOnLoadCallback(drawChart_maestroIndicador);
+        @endpermission
+        @permission('avances_mes2')
         google.charts.setOnLoadCallback(drawVisualization2);
+        @endpermission
+        google.charts.setOnLoadCallback(drawChart_wAsistencias);
+        google.charts.setOnLoadCallback(drawChart_wConcretados);
 
+        @permission('indicadores_plantels')
         @foreach($plantels as $plantel)
+        google.charts.setOnLoadCallback(drawChart_wAsistencias_{{ $plantel->id }});
+        google.charts.setOnLoadCallback(drawChart_wConcretados{{ $plantel->id }});
         google.charts.setOnLoadCallback(drawChart_maestroIndicador{{ $plantel->id }});
-        
         @endforeach
+        @endpermission
 
-        @foreach($gauge as $grf)
-            google.charts.setOnLoadCallback(drawChart_velocimetro{{$grf['id']}});
-        @endforeach
+        
 
         <?php $i=0; ?>
         @if(count($fil)>0)
@@ -900,7 +949,7 @@
         @endif
         
         
-
+        @permission('avances_mes2')
         var datos2=<?php echo $datos2; ?>; 
 
         function drawVisualization2() {
@@ -922,6 +971,7 @@
 
             chart.draw(data, options);
         }
+        @endpermission
         
 
         //Gaugace Chart
@@ -946,9 +996,8 @@
         }//End Guagace Chart
 
         //Gaugace Chart
+        @permission('widget_maestroIndicador')
         function drawChart_maestroIndicador() {
-
-            
             $.ajax({
                 type: 'GET',
                 url: '{{route("adeudos.maestroIndicador")}}',
@@ -958,8 +1007,8 @@
                     'fecha_f': "{{ $fecha_f->toDateString('Y-m-d') }}",
                     'fecha_t': "{{ $fecha_t->toDateString('Y-m-d') }}"                
                 },
-                beforeSend : function(){$("#loading30").show();  },
-                complete : function(){$("#loading30").hide();},
+                beforeSend : function(){$("#loading32").show();  },
+                complete : function(){$("#loading32").hide();},
                 success: function(data) {
                     
                     var linea=JSON.parse(data);
@@ -984,12 +1033,125 @@
                 },
             });
             //console.log(res);
-            
-            
+            function drawChart_wConcretados() {
+            $.ajax({
+                type: 'GET',
+                url: '{{route("home.wConcretados")}}',
+                //cache: true,
+                data: {
+                    'plantel': {{ $empleado->plantel_id }},
+                },
+                beforeSend : function(){$("#loading32").show();  },
+                complete : function(){$("#loading32").hide(); },
+                success: function(data) {
+                    
+                    var linea=JSON.parse(data);
+                    
+                    var data = google.visualization.arrayToDataTable([
+                    ['Label', 'Value'],
+                    ['Concretados', linea[0].p_avance],
+                    ]);
+
+                    var options = {
+                    greenFrom:90, greenTo: 100,
+                    yellowFrom:75, yellowTo: 90,
+                    redFrom: 0, redTo: 75,
+                    minorTicks: 5
+                    };
+
+                    var chart = new google.visualization.Gauge(document.getElementById('wConcretados'));
+
+                    chart.draw(data, options);
+                    $('#wConcretados_pie').html('Meta del Plantel:'+linea[0].meta_total+'<br/>Inscritos:'+linea[0].avance);
+                    var tinicio=linea[0].inicio;
+                    var tfin=linea[0].fin;
+                    $('#titulo_concretados').html('Concretados del '+ tinicio.replace(/^(\d{4})-(\d{2})-(\d{2})$/g,'$3/$2/$1') +' al '+tfin.replace(/^(\d{4})-(\d{2})-(\d{2})$/g,'$3/$2/$1'));
+                },
+            });
+            //console.log(res);
+        }//End Guagace Chart
+    
 
         }//End Guagace Chart
+        @endpermission
 
+        @permission('indicadores_plantels')
         @foreach($plantels as $plantel)
+        
+        function drawChart_wAsistencias_{{ $plantel->id }}() {
+            $.ajax({
+                type: 'GET',
+                url: '{{route("inscripcions.widgetPorcentajeAsistencia")}}',
+                //cache: true,
+                data: {
+                    'plantel': {{ $plantel->id }},
+                },
+                beforeSend : function(){$("#loading30{{ $plantel->id }}").show();  },
+                complete : function(){$("#loading30{{ $plantel->id }}").hide(); },
+                success: function(data) {
+                    
+                    var linea=JSON.parse(data);
+                    
+                    var data = google.visualization.arrayToDataTable([
+                    ['Label', 'Value'],
+                    ['Asistencia', linea],
+                    ]);
+
+                    var options = {
+                    greenFrom:90, greenTo: 100,
+                    yellowFrom:75, yellowTo: 90,
+                    redFrom: 0, redTo: 75,
+                    minorTicks: 5
+                    };
+
+                    var chart = new google.visualization.Gauge(document.getElementById("wAsistencias_{{ $plantel->id }}"));
+
+                    chart.draw(data, options);
+                    
+                },
+            });
+            //console.log(res);
+        }//End Guagace Chart
+
+        
+        function drawChart_wConcretados{{ $plantel->id }}() {
+            $.ajax({
+                type: 'GET',
+                url: '{{route("home.wConcretados")}}',
+                //cache: true,
+                data: {
+                    'plantel': {{ $plantel->id }},
+                },
+                beforeSend : function(){$("#loading31{{ $plantel->id }}").show();  },
+                complete : function(){$("#loading31{{ $plantel->id }}").hide(); },
+                success: function(data) {
+                    
+                    var linea=JSON.parse(data);
+                    
+                    var data = google.visualization.arrayToDataTable([
+                    ['Label', 'Value'],
+                    ['Concretados', linea[0].p_avance],
+                    ]);
+
+                    var options = {
+                    greenFrom:90, greenTo: 100,
+                    yellowFrom:75, yellowTo: 90,
+                    redFrom: 0, redTo: 75,
+                    minorTicks: 5
+                    };
+
+                    var chart = new google.visualization.Gauge(document.getElementById('wConcretados{{ $plantel->id }}'));
+
+                    chart.draw(data, options);
+                    $('#wConcretados_pie{{ $plantel->id }}').html('Meta del Plantel:'+linea[0].meta_total+'<br/>Inscritos:'+linea[0].avance);
+                    var tinicio=linea[0].inicio;
+                    var tfin=linea[0].fin;
+                    $('#titulo_concretados{{ $plantel->id }}').html('Concretados del '+ tinicio.replace(/^(\d{4})-(\d{2})-(\d{2})$/g,'$3/$2/$1') +' al '+tfin.replace(/^(\d{4})-(\d{2})-(\d{2})$/g,'$3/$2/$1'));
+                },
+            });
+            //console.log(res);
+        }//End Guagace Chart
+        
         
         function drawChart_maestroIndicador{{ $plantel->id }}() {
         $.ajax({
@@ -1030,9 +1192,84 @@
         }//End Guagace Chart
         
         @endforeach
+        @endpermission
         
+        function drawChart_wAsistencias() {
+            $.ajax({
+                type: 'GET',
+                url: '{{route("inscripcions.widgetPorcentajeAsistencia")}}',
+                //cache: true,
+                data: {
+                    'plantel': {{ $empleado->plantel_id }},
+                },
+                beforeSend : function(){$("#loading31").show();  },
+                complete : function(){$("#loading31").hide(); },
+                success: function(data) {
+                    
+                    var linea=JSON.parse(data);
+                    
+                    var data = google.visualization.arrayToDataTable([
+                    ['Label', 'Value'],
+                    ['Asistencia', linea],
+                    ]);
+
+                    var options = {
+                    greenFrom:90, greenTo: 100,
+                    yellowFrom:75, yellowTo: 90,
+                    redFrom: 0, redTo: 75,
+                    minorTicks: 5
+                    };
+
+                    var chart = new google.visualization.Gauge(document.getElementById('wAsistencias'));
+
+                    chart.draw(data, options);
+                    
+                },
+            });
+            //console.log(res);
+        }//End Guagace Chart
+
+        function drawChart_wConcretados() {
+            $.ajax({
+                type: 'GET',
+                url: '{{route("home.wConcretados")}}',
+                //cache: true,
+                data: {
+                    'plantel': {{ $empleado->plantel_id }},
+                },
+                beforeSend : function(){$("#loading32").show();  },
+                complete : function(){$("#loading32").hide(); },
+                success: function(data) {
+                    
+                    var linea=JSON.parse(data);
+                    
+                    var data = google.visualization.arrayToDataTable([
+                    ['Label', 'Value'],
+                    ['Concretados', linea[0].p_avance],
+                    ]);
+
+                    var options = {
+                    greenFrom:90, greenTo: 100,
+                    yellowFrom:75, yellowTo: 90,
+                    redFrom: 0, redTo: 75,
+                    minorTicks: 5
+                    };
+
+                    var chart = new google.visualization.Gauge(document.getElementById('wConcretados'));
+
+                    chart.draw(data, options);
+                    $('#wConcretados_pie').html('Meta del Plantel:'+linea[0].meta_total+'<br/>Inscritos:'+linea[0].avance);
+                    var tinicio=linea[0].inicio;
+                    var tfin=linea[0].fin;
+                    $('#titulo_concretados').html('Concretados del '+ tinicio.replace(/^(\d{4})-(\d{2})-(\d{2})$/g,'$3/$2/$1') +' al '+tfin.replace(/^(\d{4})-(\d{2})-(\d{2})$/g,'$3/$2/$1'));
+                },
+            });
+            //console.log(res);
+        }//End Guagace Chart
+
+
         //Gaugace Chart
-        @foreach($gauge as $grf)
+        /*
         function drawChart_velocimetro{{$grf['id']}}() {
             var data = google.visualization.arrayToDataTable([
             ['Label', 'Value'],
@@ -1040,7 +1277,6 @@
             ]);
 
             var options = {
-            //width: 400, height: 250,
             greenFrom:90, greenTo: 100,
             yellowFrom:75, yellowTo: 90,
             redFrom: 0, redTo: 75,
@@ -1051,8 +1287,8 @@
 
             chart.draw(data, options);
 
-        }//End Guagace Chart
-        @endforeach
+        }*/ //End Guagace Chart
+        
 
         var popup;
         function DetalleAviso(id) {

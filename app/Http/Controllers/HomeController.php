@@ -149,7 +149,7 @@ class HomeController extends Controller
         /*graficas de velocimetro
          * 
          */
-        $gauge = array();
+        /*$gauge = array();
         if (!Auth::user()->can('WgaugesXplantelIndividual')) {
             $plantels = DB::table('plantels as p')->where('id', '>', 0)
                 ->select('razon', 'id', 'meta_total')->get();
@@ -211,6 +211,7 @@ class HomeController extends Controller
                 }
             }
         }
+        */
         /*
          * Fin graficas e velocimetro
          */
@@ -551,7 +552,7 @@ class HomeController extends Controller
             'avisosEmpresas',
             'avisos_generales',
             'avance',
-            'gauge',
+            //'gauge',
             'tabla',
             'plantel',
             'estatusPlantel',
@@ -850,5 +851,58 @@ class HomeController extends Controller
             }
         }
         return $total_msj;
+    }
+
+    public function wConcretados(Request $request)
+    {
+
+        $datos = $request->all();
+
+        $gauge = array();
+        $l = Lectivo::find(0)->first();
+        //dd($l);
+        $plantel = DB::table('plantels as p')->where('id', '>', 0)->where('id', '=', $datos['plantel'])
+            ->select('razon', 'id', 'meta_total')->first();
+
+        $c = Seguimiento::select(
+            'p.id',
+            'p.razon',
+            'p.meta_total',
+            DB::raw('count(c.nombre) as avance'),
+            DB::raw('((count(c.nombre)*100)/p.meta_total) as p_avance')
+        )
+            ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
+            ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
+            ->join('hactividades as h', 'h.cliente_id', '=', 'c.id')
+            ->where('h.tarea', '=', 'Seguimiento')
+            ->where('h.detalle', '=', 'Concretado')
+            ->where('h.created_at', '>=', $l->inicio)
+            ->where('h.created_at', '<=', $l->fin)
+            ->where('c.st_cliente_id', '=', '4')
+            ->where('p.id', '=', $plantel->id)
+            ->groupBy('p.id')
+            ->groupBy('p.razon')
+            ->groupBy('p.meta_total')
+            ->first();
+        if (is_null($c)) {
+            array_push(
+                $gauge,
+                array(
+                    'id' => $plantel->id, 'razon' => $plantel->razon, 'meta_total' => $plantel->meta_total,
+                    'avance' => 0, 'p_avance' => 0, 'inicio' => $l->inicio, 'fin' => $l->fin
+                )
+            );
+        } else {
+            //array_push($gauge, $c->toArray());
+            array_push(
+                $gauge,
+                array(
+                    'id' => $plantel->id, 'razon' => $plantel->razon, 'meta_total' => $plantel->meta_total,
+                    'avance' => $c->avance, 'p_avance' => round($c->p_avance, 2), 'inicio' => $l->inicio, 'fin' => $l->fin
+                )
+            );
+        }
+
+        echo json_encode($gauge);
     }
 }
