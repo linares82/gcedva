@@ -844,6 +844,16 @@ Route::get('medios/index', array(
         'middleware' => 'permission:clientes.clientesEstatus',
         'uses' => 'ClientesController@clientesEstatusR')
     )->middleware('auth');
+    Route::get('/clientes/listaDocumentos/', array(
+        'as' => 'clientes.listaDocumentos',
+        'middleware' => 'permission:clientes.listaDocumentos',
+        'uses' => 'ClientesController@listaDocumentos')
+    )->middleware('auth');
+    Route::post('/clientes/listaDocumentosR/', array(
+        'as' => 'clientes.listaDocumentosR',
+        'middleware' => 'permission:clientes.listaDocumentos',
+        'uses' => 'ClientesController@listaDocumentosR')
+    )->middleware('auth');
     ////////////////////////////////////
     Route::get('clientesa/index', array(
         'as' => 'clientesa.index',

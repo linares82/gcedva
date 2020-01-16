@@ -1270,10 +1270,10 @@
 
         //Gaugace Chart
         /*
-        function drawChart_velocimetro{{$grf['id']}}() {
+        function drawChart_velocimetro() {
             var data = google.visualization.arrayToDataTable([
             ['Label', 'Value'],
-            ['Concretados', {{ $grf['p_avance'] }}],
+            ['Concretados', 0],
             ]);
 
             var options = {
@@ -1283,7 +1283,7 @@
             minorTicks: 5
             };
 
-            var chart = new google.visualization.Gauge(document.getElementById('velocimetro_{{$grf["id"]}}'));
+            var chart = new google.visualization.Gauge(document.getElementById('velocimetro_'));
 
             chart.draw(data, options);
 

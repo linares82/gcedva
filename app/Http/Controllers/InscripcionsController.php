@@ -1970,7 +1970,7 @@ class InscripcionsController extends Controller
             if ($contador_clientes_asignacion > 0) {
                 $resul = $sumatoria_promedio_clientes_asignacion / $contador_clientes_asignacion;
             } else {
-                $resul = "Sin clientes";
+                $resul = 0;
             }
 
             array_push($resumen, array(

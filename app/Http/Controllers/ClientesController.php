@@ -15,6 +15,7 @@ use App\Ccuestionario;
 use App\CcuestionarioDato;
 use App\ConsultaCalificacion;
 use App\Correo;
+use App\DocAlumno;
 use App\Empleado;
 use App\Estado;
 use App\HistoriaCliente;
@@ -1487,5 +1488,49 @@ class ClientesController extends Controller {
         return view('clientes.reportes.clientesEstatusR', array('registros'=>$historia_clientes,
                                                                 'datos'=>$datos))
                         ->with('list', Cliente::getListFromAllRelationApps());;
+    }
+
+    public function ListaDocumentos(){
+        return view('clientes.reportes.listaDocumentos')
+            ->with('list', Cliente::getListFromAllRelationApps());            
+    }
+
+    public function ListaDocumentosR(Request $request)
+    {
+        $datos=$request->all();
+        $documentos_obligatorios=DocAlumno::where('doc_obligatorio',1)->get();
+        $clientes=Cliente::select('clientes.id','clientes.nombre','clientes.nombre2','clientes.ape_paterno',
+                                    'clientes.ape_materno','stc.name as estatus')
+                                     ->where('clientes.plantel_id',$datos['plantel_f'])
+                                     ->join('st_clientes as stc','stc.id','=','clientes.st_cliente_id')
+                                     ->where('st_cliente_id',$datos['estatus_f'])
+                                     ->get();
+        $documentos_faltantes=array();
+        foreach($clientes as $cliente){
+           $docsPorCliente=PivotDocCliente::where('cliente_id',$cliente->id)->select('doc_alumno_id')->get();
+            //dd($docsPorEmpleado);
+           if(!is_null($docsPorCliente)){
+               $array_docsPorCliente = array();
+               $i=0;
+                foreach($docsPorCliente as $do){
+                    //dd($do);
+                    $array_docsPorCliente[$i]= $do->doc_cliente_id;
+                    $i++;
+                }
+                //dd($array_docsPorEmpleado);
+            foreach($documentos_obligatorios as $do){
+                if(!in_array($do->id, $array_docsPorCliente)){
+                   //dd($do->id);
+                    array_push($documentos_faltantes,array('cliente'=>$cliente->id,
+                                                                               'nombre'=>$cliente->nombre.' '.$cliente->nombre2.' '.$cliente->ape_paterno.' '.$cliente->ape_materno,
+                                                                               'documento'=>$do->name,
+                                                                               'estatus'=>$cliente->estatus));
+                }
+            }
+        }
+        }
+        //dd($documentos_faltantes);
+        //dd($documentos_faltantes);
+        return view('clientes.reportes.listaDocumentosR',compact('documentos_faltantes'));
     }
 }
