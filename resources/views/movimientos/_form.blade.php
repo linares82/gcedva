@@ -93,7 +93,7 @@
                     </div>
                     <div class="form-group col-md-4 @if($errors->has('observaciones')) has-error @endif">
                        <label for="observaciones-field">Observaciones</label>
-                       {!! Form::text("caducidad", null, array("class" => "form-control", "id" => "observaciones-field")) !!}
+                       {!! Form::text("observaciones", null, array("class" => "form-control", "id" => "observaciones-field")) !!}
                        @if($errors->has("observaciones"))
                         <span class="help-block">{{ $errors->first("observaciones") }}</span>
                        @endif

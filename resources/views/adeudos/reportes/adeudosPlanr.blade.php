@@ -90,9 +90,11 @@
                 </td>
                 
                 <td>
+                    @php $indicador=0; @endphp
                     @foreach($caja2->cajaLns as $linea)
-                        @if($linea->caja_concepto_id>=$datos['concepto_f'] and $linea->caja_concepto_id<=$datos['concepto_t'])
+                        @if($linea->caja_concepto_id>=$datos['concepto_f'] and $linea->caja_concepto_id<=$datos['concepto_t'] and $linea->adeudo->combinacionCliente->planPago->id==$caja->plan_id)
                             {{$linea->cajaConcepto->name}} / {{$linea->total}}<br/>
+                            @php $indicador=1; @endphp
                         @endif
                     @endforeach
                 </td>
@@ -105,7 +107,9 @@
                         $suma_pagos=$suma_pagos+$pago->monto; 
                         $sumatoria=$suma_pagos+$sumatoria;        
                         ?>
+                        @if($indicador==1)
                         {{$pago->fecha}} - {{$pago->monto}}
+                        @endif
                     @endforeach
                     
                 </td>

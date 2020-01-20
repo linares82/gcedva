@@ -33,8 +33,8 @@
           <tr>
               <td >	
               <br/>	
-                @if(isset($img->archivo))
-                    <img src="{{$img->archivo}}" alt="Sin foto" width="60px" height="80px"></img> 
+                @if(isset($cadena_img))
+                    <img src="{{asset("imagenes/clientes/".$cliente->id."/".end($cadena_img))}}" alt="Sin foto" width="60px" height="80px"></img> 
                 @endif
             </td>
           </tr>

@@ -878,7 +878,7 @@ class HomeController extends Controller
             ->where('h.detalle', '=', 'Concretado')
             ->where('h.created_at', '>=', $l->inicio)
             ->where('h.created_at', '<=', $l->fin)
-            ->where('c.st_cliente_id', '=', '4')
+            ->where('seguimientos.st_seguimiento_id', '=', '2')
             ->where('p.id', '=', $plantel->id)
             ->groupBy('p.id')
             ->groupBy('p.razon')

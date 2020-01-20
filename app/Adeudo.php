@@ -24,7 +24,7 @@ class Adeudo extends Model
     } 
 
 	//Mass Assignment
-	protected $fillable = ['cliente_id','caja_concepto_id', 'caja_id','cuenta_contable_id','cuenta_recargo_id','fecha_pago','monto','inicial_bnd','plan_pago_ln_id','usu_alta_id','usu_mod_id','combinacion_cliente_id'];
+	protected $fillable = ['cliente_id','caja_concepto_id', 'caja_id', 'cuenta_contable_id', 'cuenta_recargo_id','fecha_pago','monto','inicial_bnd','plan_pago_ln_id','usu_alta_id','usu_mod_id','combinacion_cliente_id'];
 
 	public function usu_alta() {
 		return $this->hasOne('App\User', 'id', 'usu_alta_id');
@@ -72,5 +72,5 @@ class Adeudo extends Model
 	public function caja() {
 		return $this->belongsTo('App\Caja');
 	}// end
-        
+ 
 }

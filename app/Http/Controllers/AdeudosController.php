@@ -330,6 +330,7 @@ class AdeudosController extends Controller
 
         $cajas = PlanPago::select(
             'plan_pagos.name as plan',
+            'plan_pagos.id as plan_id',
             'caj.id as caja',
             'caj.consecutivo',
             'c.id as cliente',
@@ -352,6 +353,9 @@ class AdeudosController extends Controller
             ->whereIn('caj.st_caja_id', $datos['estatus_f'])
             //->where('st.id','<>',2)
             ->whereNull('cc.deleted_at')
+            ->whereNull('plan_pagos.deleted_at')
+            ->whereNull('caj.deleted_at')
+            ->where('st_caja_id', '<>',  2)
             ->orderBy('c.plantel_id', 'plan_pagos.id', 'c.id')
             ->get();
         //dd($cajas->toArray());
