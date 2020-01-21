@@ -92,6 +92,7 @@
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'name', 'title' => 'ESPECIALIDAD'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'vencimiento_rvoe', 'title' => 'VENCIMIENTO RVOE'])</th>
                             <th class="text-right"></th>
+                            <th class="text-right"></th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
@@ -123,7 +124,11 @@
                                            >{{$especialidad->vencimiento_rvoe}}</span>
                                 </td>
                                 <td>
+                                    
                                     <img src="{{asset('storage/especialidads/'.$especialidad->imagen)}}" alt="Logo" height="42" width="42" > </td>
+                                </td>
+                                <td>
+                                    <img src="{{asset('storage/especialidads/'.$especialidad->fondo_credencial)}}" alt="Fondo Credencial" height="42" width="42" > </td>
                                 </td>
                                 <td class="text-right">
                                     @permission('especialidads.edit')

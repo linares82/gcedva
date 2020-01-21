@@ -1,4 +1,6 @@
-<?php namespace App\Http\Controllers;
+<?php
+
+namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -13,7 +15,8 @@ use Auth;
 use App\Http\Requests\updateArticulo;
 use App\Http\Requests\createArticulo;
 
-class ArticulosController extends Controller {
+class ArticulosController extends Controller
+{
 
 	/**
 	 * Display a listing of the resource.
@@ -34,9 +37,9 @@ class ArticulosController extends Controller {
 	 */
 	public function create()
 	{
-            $unidades=UnidadUso::pluck('name','name');
+		$unidades = UnidadUso::pluck('name', 'name');
 		return view('articulos.create', compact('unidades'))
-			->with( 'list', Articulo::getListFromAllRelationApps() );
+			->with('list', Articulo::getListFromAllRelationApps());
 	}
 
 	/**
@@ -49,21 +52,21 @@ class ArticulosController extends Controller {
 	{
 
 		$input = $request->all();
-		$input['usu_alta_id']=Auth::user()->id;
-		$input['usu_mod_id']=Auth::user()->id;
-                
+		$input['usu_alta_id'] = Auth::user()->id;
+		$input['usu_mod_id'] = Auth::user()->id;
+
 		//create data
-		$a=Articulo::create( $input );
-                
-                $plantels=Plantel::get();
-                foreach($plantels as $plantel){
-                    $existencia['plantel_id']=$plantel->id;
-                    $existencia['articulo_id']=$a->id;
-                    $existencia['existencia']=0;
-                    $existencia['usu_alta_id']=Auth::user()->id;
-                    $existencia['usu_mod_id']=Auth::user()->id;
-                    Existencium::create($existencia);
-                }
+		$a = Articulo::create($input);
+
+		$plantels = Plantel::get();
+		foreach ($plantels as $plantel) {
+			$existencia['plantel_id'] = $plantel->id;
+			$existencia['articulo_id'] = $a->id;
+			$existencia['existencia'] = 0;
+			$existencia['usu_alta_id'] = Auth::user()->id;
+			$existencia['usu_mod_id'] = Auth::user()->id;
+			Existencium::create($existencia);
+		}
 
 		return redirect()->route('articulos.index')->with('message', 'Registro Creado.');
 	}
@@ -76,7 +79,7 @@ class ArticulosController extends Controller {
 	 */
 	public function show($id, Articulo $articulo)
 	{
-		$articulo=$articulo->find($id);
+		$articulo = $articulo->find($id);
 		return view('articulos.show', compact('articulo'));
 	}
 
@@ -88,10 +91,10 @@ class ArticulosController extends Controller {
 	 */
 	public function edit($id, Articulo $articulo)
 	{
-                $unidades=UnidadUso::pluck('name','name');
-		$articulo=$articulo->find($id);
-		return view('articulos.edit', compact('articulo','unidades'))
-			->with( 'list', Articulo::getListFromAllRelationApps() );
+		$unidades = UnidadUso::pluck('name', 'name');
+		$articulo = $articulo->find($id);
+		return view('articulos.edit', compact('articulo', 'unidades'))
+			->with('list', Articulo::getListFromAllRelationApps());
 	}
 
 	/**
@@ -102,9 +105,9 @@ class ArticulosController extends Controller {
 	 */
 	public function duplicate($id, Articulo $articulo)
 	{
-		$articulo=$articulo->find($id);
+		$articulo = $articulo->find($id);
 		return view('articulos.duplicate', compact('articulo'))
-			->with( 'list', Articulo::getListFromAllRelationApps() );
+			->with('list', Articulo::getListFromAllRelationApps());
 	}
 
 	/**
@@ -117,10 +120,10 @@ class ArticulosController extends Controller {
 	public function update($id, Articulo $articulo, updateArticulo $request)
 	{
 		$input = $request->all();
-		$input['usu_mod_id']=Auth::user()->id;
+		$input['usu_mod_id'] = Auth::user()->id;
 		//update data
-		$articulo=$articulo->find($id);
-		$articulo->update( $input );
+		$articulo = $articulo->find($id);
+		$articulo->update($input);
 
 		return redirect()->route('articulos.index')->with('message', 'Registro Actualizado.');
 	}
@@ -131,38 +134,41 @@ class ArticulosController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id,Articulo $articulo)
+	public function destroy($id, Articulo $articulo)
 	{
-		$articulo=$articulo->find($id);
+		$articulo = $articulo->find($id);
 		$articulo->delete();
 
 		return redirect()->route('articulos.index')->with('message', 'Registro Borrado.');
 	}
 
-	public function existenciasActuales(){
-		$articulos=Articulo::pluck('name','id');
-		$plantels=Plantel::pluck('razon','id');
-		return view('articulos.reportes.existenciasActuales',compact('articulos','plantels'))
+	public function existenciasActuales()
+	{
+		$articulos = Articulo::pluck('name', 'id');
+		$plantels = Plantel::pluck('razon', 'id');
+		return view('articulos.reportes.existenciasActuales', compact('articulos', 'plantels'))
 			->with('list', Articulo::getListFromAllRelationApps());
 	}
 
-	public function existenciasActualesR(Request $request){
-		$datos=$request->all();
+	public function existenciasActualesR(Request $request)
+	{
+		$datos = $request->all();
 		//dd($datos);
-		$registros=Articulo::select('articulos.name as articulo','articulos.unidad_uso','ca.name as categoria','p.razon as plantel','e.existencia')
-								   ->join('existencia as e','e.articulo_id','=','articulos.id')
-								   ->join('categoria_articulos as ca','ca.id','=','articulos.categoria_articulo_id')
-								   ->join('plantels as p','p.id','=','e.plantel_id')
-								   ->whereIn('e.plantel_id', $datos['plantel_f'])
-								   ->whereIn('e.articulo_id', $datos['articulo_t'])
-								   ->get();
+		$registros = Articulo::select('articulos.name as articulo', 'articulos.unidad_uso', 'ca.name as categoria', 'p.razon as plantel', 'e.existencia')
+			->join('existencia as e', 'e.articulo_id', '=', 'articulos.id')
+			->join('categoria_articulos as ca', 'ca.id', '=', 'articulos.categoria_articulo_id')
+			->join('plantels as p', 'p.id', '=', 'e.plantel_id')
+			->whereIn('e.plantel_id', $datos['plantel_f'])
+			->whereIn('e.articulo_id', $datos['articulo_t'])
+			->get();
 		//						   dd($registros);
 		return view('articulos.reportes.existenciasActualesR', compact('registros'));
 	}
 
-	public function getUnidad(Request $request){
-		if($request->ajax()){
-			$datos=$request->all();
+	public function getUnidad(Request $request)
+	{
+		if ($request->ajax()) {
+			$datos = $request->all();
 			return Articulo::find($datos['articulo'])->value('unidad_uso');
 		}
 	}

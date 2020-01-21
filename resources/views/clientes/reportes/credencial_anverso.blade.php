@@ -15,7 +15,7 @@
         td { font-family: arial; font-size: 7px; color: #000; text-align:center; width: 100%;}
         #td_frontal { font-family: arial; font-size: 9px; padding: 15px 15px; color: #fff; text-align:center;}
         /*table { padding: 1px 1px; width: 100%;}*/
-        #tbl_frontal { background: url({{asset('images/cred_frontal.jpg')}}) no-repeat;
+        #tbl_frontal { background: url({{asset('storage/especialidads/'.$inscripcion->especialidad->fondo_credencial)}}) no-repeat;
                             background-size:200px 307px;}
       </style>
     

@@ -57,13 +57,23 @@
                             </div>
                             @if(isset($especialidad))
                             <input type="hidden" name="_token" id="_token"  value="<?= csrf_token(); ?>"> 
-                            <div class="form-group">
+                            <div class="form-group col-md-4">
                                 <div class="btn btn-default btn-file">
                                     <i class="fa fa-paperclip"></i> Adjuntar Archivo
                                     <input type="file"  id="file" name="file" class="email_archivo" >
                                 </div>
                                 <p class="help-block"  >Max. 20MB</p>
                                 <div id="texto_notificacion">
+
+                                </div>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <div class="btn btn-default btn-file">
+                                    <i class="fa fa-paperclip"></i> Adjuntar fondo credencial
+                                    <input type="file"  id="file_fondo" name="file_fondo" class="email_archivo2" >
+                                </div>
+                                <p class="help-block"  >Max. 20MB</p>
+                                <div id="texto_notificacion2">
 
                                 </div>
                             </div>
@@ -186,6 +196,51 @@
         });
 
     })
+
+$(document).on("change", ".email_archivo2", function (e) {
+
+var miurl = "{{route('especialidads.cargaFondo')}}";
+// var fileup=$("#file").val();
+var divresul = "texto_notificacion2";
+
+var data = new FormData();
+data.append('file_fondo', $('#file_fondo')[0].files[0]);
+data.append('especialidad', {{$especialidad->id}});
+
+$.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': $('#_token').val()
+    }
+});
+$.ajax({
+    url: miurl,
+    type: 'POST',
+
+    // Form data
+    //datos del formulario
+    data: data,
+    //necesario para subir archivos via ajax
+    cache: false,
+    contentType: false,
+    processData: false,
+    //mientras enviamos el archivo
+    beforeSend: function () {
+        $("#" + divresul + "").html($("#cargador_empresa").html());
+    },
+    //una vez finalizado correctamente
+    success: function (data) {
+        var codigo = '<div class="mailbox-attachment-info"><a href="#" class="mailbox-attachment-name"><i class="fa fa-paperclip"></i>' + data + '</a><span class="mailbox-attachment-size"> </span></div>';
+        $("#" + divresul + "").html(codigo);
+
+    },
+    //si ha ocurrido un error
+    error: function (data) {
+        $("#" + divresul + "").html(data);
+
+    }
+});
+
+})
     @endif
     
     </script>

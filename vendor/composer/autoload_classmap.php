@@ -64,6 +64,7 @@ return array(
     'AddFieldsLectivosTable' => $baseDir . '/database/migrations/2018_02_14_150006_add_fields_lectivos_table.php',
     'AddFieldsPlantelsTable' => $baseDir . '/database/migrations/2017_06_16_222542_Add_fields_Plantels_Table.php',
     'AddFileToAutorizacionBecasTable' => $baseDir . '/database/migrations/2019_11_29_130802_add_file_to_autorizacion_becas_table.php',
+    'AddFondoCredencialEspecialidadsTable' => $baseDir . '/database/migrations/2020_01_20_141610_add_fondo_credencial_especialidads_table.php',
     'AddHashEbanxesTable' => $baseDir . '/database/migrations/2019_01_14_154325_add_hash_ebanxes_table.php',
     'AddImagenEspecialidadTable' => $baseDir . '/database/migrations/2018_05_17_142252_add_imagen_especialidad_table.php',
     'AddImgFirmaPlantelsTable' => $baseDir . '/database/migrations/2019_10_29_115039_add_img_firma_plantels_table.php',
