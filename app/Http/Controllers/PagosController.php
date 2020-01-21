@@ -393,6 +393,12 @@ class PagosController extends Controller
     public function postRptPagos(Request $request)
     {
         $data = $request->all();
+        if (!$request->has('plantel_f')) {
+            $data['plantel_f'] = DB::table('empleados as e')
+                ->where('e.user_id', Auth::user()->id)->value('plantel_id');
+            //$data['plantel_t'] = $datos['plantel_f'];
+        }
+
         $plantel = Plantel::find($data['plantel_f']);
         //dd($data);
         $usuario = Empleado::find($data['empleado_f']);
@@ -510,6 +516,12 @@ class PagosController extends Controller
     public function postAlumnoBeca(Request $request)
     {
         $data = $request->all();
+        if (!$request->has('plantel_f')) {
+            $data['plantel_f'] = DB::table('empleados as e')
+                ->where('e.user_id', Auth::user()->id)->value('plantel_id');
+            //$data['plantel_t'] = $datos['plantel_f'];
+        }
+
         $plantel = Plantel::find($data['plantel_f']);
         $registros = Cliente::select(DB::raw('clientes.id as cliente, '
             . 'concat(clientes.nombre," ",clientes.nombre2," ",clientes.ape_paterno," ",clientes.ape_materno) as cliente_nombre,'

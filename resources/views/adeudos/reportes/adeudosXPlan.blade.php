@@ -89,6 +89,10 @@
 @push('scripts')
   <script type="text/javascript">
     $(document).ready(function() {
+    @permission('IreporteFiltroXplantel')
+        $("#plantel_f-field").prop("disabled", true);
+        //$("#plantel_t-field").prop("disabled", true);
+    @endpermission
     /*$('#fecha_f-field').Zebra_DatePicker({
         days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
         months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],

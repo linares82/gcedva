@@ -243,7 +243,6 @@ class AdeudosController extends Controller
     {
         $datos = $request->all();
 
-
         $fecha = date('Y/m/d');
         //dd($fecha);
         //$empleado=Empleado::where('user_id', '=', Auth::user()->id)->first();
@@ -325,6 +324,12 @@ class AdeudosController extends Controller
         $fecha = date('Y/m/d');
         //dd($fecha);
         //$empleado=Empleado::where('user_id', '=', Auth::user()->id)->first();
+        if (!$request->has('plantel_f')) {
+            $datos['plantel_f'] = DB::table('empleados as e')
+                ->where('e.user_id', Auth::user()->id)->value('plantel_id');
+            //$datos['plantel_t'] = $datos['plantel_f'];
+        }
+
 
         $plantel = Plantel::find($datos['plantel_f']);
 

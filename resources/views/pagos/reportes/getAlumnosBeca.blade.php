@@ -80,6 +80,11 @@
   <script type="text/javascript">
     $(document).ready(function() {
         
+        @permission('IreporteFiltroXplantel')
+        $("#plantel_f-field").prop("disabled", true);
+        //$("#plantel_t-field").prop("disabled", true);
+        @endpermission
+
         $('#plantel_f-field').change(function(){
             getCmbEmpleados()
         });
