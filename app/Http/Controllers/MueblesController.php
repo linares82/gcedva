@@ -155,6 +155,11 @@ class MueblesController extends Controller
 	public function resguardosR(Request $request)
 	{
 		$datos = $request->all();
+		if (!$request->has('plantel_f')) {
+			$datos['plantel_f'] = DB::table('empleados as e')
+				->where('e.user_id', Auth::user()->id)->value('plantel_id');
+			//$datos['plantel_t'] = $datos['plantel_f'];
+		}
 		//dd($datos);
 		$registros = Mueble::select(
 			'muebles.id',

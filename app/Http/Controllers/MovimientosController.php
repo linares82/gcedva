@@ -23,9 +23,10 @@ class MovimientosController extends Controller
 	 */
 	public function index(Request $request)
 	{
+
 		$movimientos = Movimiento::getAllData($request);
 
-		return view('movimientos.index', compact('movimientos'));
+		return view('movimientos.index', compact('movimientos'))->with('list', Movimiento::getListFromAllRelationApps());
 	}
 
 	/**

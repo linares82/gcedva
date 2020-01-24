@@ -60,6 +60,10 @@
 @push('scripts')
   <script type="text/javascript">
     $(document).ready(function() {
+        @permission('IreporteFiltroXplantel')
+        $("#plantel_f-field").prop("disabled", true);
+        //$("#plantel_t-field").prop("disabled", true);
+    @endpermission
     $('#fecha_f-field').Zebra_DatePicker({
         days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
         months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
@@ -77,16 +81,19 @@
       getUbicaciones();
       $('#plantel_f-field').change(function(){
          getUbicaciones();
-         
       });
     
     });
     function getUbicaciones(){
+        vplantel=$('#plantel_f-field option:selected').val();
+        @permission('IreporteFiltroXplantel')
+        vplantel={{ $plantelActual }}
+        @endpermission
       $.ajax({
                 url: '{{ route("ubicacionArts.getUbicacionesXPlantel") }}',
                 type: 'GET',
                 data: {
-                   'plantel':$('#plantel_f-field option:selected').val(),
+                   'plantel':vplantel,
                    'ubicacion':$('#ubicacion_art_id-field option:selected').val()
                 },
                 dataType: 'json',

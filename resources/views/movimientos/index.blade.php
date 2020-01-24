@@ -46,7 +46,7 @@
                 <div class="panel-body">
                     <form class="Movimiento_search" id="search" action="{{ route('movimientos.index') }}" accept-charset="UTF-8" method="get">
                         <input type="hidden" name="q[s]" value="{{ @(Request::input('q')['s']) ?: '' }}" />
-                        <div class="form-horizontal">
+                        <div class="">
 
                             <!--
                             <div class="form-group">
@@ -60,11 +60,23 @@
                                 </div>
                             </div>
                             -->
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_plantels.razon_cont">PLANTEL_RAZON</label>
-                                <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['plantels.razon_cont']) ?: '' }}" name="q[plantels.razon_cont]" id="q_plantels.razon_cont" />
-                                </div>
+                            <div class="form-group col-md-4" >
+                                <label for="q_movimientos.plantel_id_lt">PLANTEL</label>
+                                
+                                    {!! Form::select("movimientos.plantel_id", $list["Plantel"], "{{ @(Request::input('q')['movimientos.plantel_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[movimientos.plantel_id_lt]", "id"=>"q_movimientos.plantel_id_lt", "style"=>"width:100%;", 'onchange'=>'getUbicaciones()')) !!}
+                                    <div id='loading10' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
+                            </div>
+                            <div class="form-group col-md-4" >
+                                <label for="q_movimientos.ubicacion_art_id_lt">Ubicacion</label>
+                                
+                                    {!! Form::select("movimientos.ubicacion_art_id", array(), "{{ @(Request::input('q')['movimientos.ubicacion_art_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[movimientos.ubicacion_art_id_lt]", "id"=>"q_movimientos.ubicacion_art_id_lt", "style"=>"width:100%;")) !!}
+                             
+                            </div>
+                            <div class="form-group col-md-4" >
+                                <label for="q_movimientos.articulo_id_lt">Articulo</label>
+                                
+                                    {!! Form::select("movimientos.articulo_id", $list['Articulo'], "{{ @(Request::input('q')['movimientos.articulo_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[movimientos.articulo_id_lt]", "id"=>"q_movimientos.articulo_id_lt", "style"=>"width:100%;")) !!}
+                             
                             </div>
                                                     <!--
                             <div class="form-group">
@@ -78,12 +90,7 @@
                                 </div>
                             </div>
                             -->
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_articulos.name_cont">ARTICULO_NAME</label>
-                                <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['articulos.name_cont']) ?: '' }}" name="q[articulos.name_cont]" id="q_articulos.name_cont" />
-                                </div>
-                            </div>
+                            
                                                     <!--
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_cantidad_gt">CANTIDAD</label>
@@ -96,12 +103,7 @@
                                 </div>
                             </div>
                             -->
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_cantidad_cont">CANTIDAD</label>
-                                <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['cantidad_cont']) ?: '' }}" name="q[cantidad_cont]" id="q_cantidad_cont" />
-                                </div>
-                            </div>
+                            
                                                     <!--
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_fecha_gt">FECHA</label>
@@ -113,14 +115,14 @@
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['fecha_lt']) ?: '' }}" name="q[fecha_lt]" id="q_fecha_lt" />
                                 </div>
                             </div>
-                            -->
+                            
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_fecha_cont">FECHA</label>
                                 <div class=" col-sm-9">
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['fecha_cont']) ?: '' }}" name="q[fecha_cont]" id="q_fecha_cont" />
                                 </div>
                             </div>
-                                                    <!--
+                                                    
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_entrada_salidas.name_gt">ENTRADA_SALIDA_NAME</label>
                                 <div class=" col-sm-4">
@@ -132,12 +134,13 @@
                                 </div>
                             </div>
                             -->
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_entrada_salidas.name_cont">ENTRADA_SALIDA_NAME</label>
-                                <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['entrada_salidas.name_cont']) ?: '' }}" name="q[entrada_salidas.name_cont]" id="q_entrada_salidas.name_cont" />
-                                </div>
+                            <div class="form-group col-md-4" >
+                                <label for="q_movimientos.entrada_salida_id_lt">TIPO</label>
+                                
+                                    {!! Form::select("movimientos.entrada_salida_id", $list['EntradaSalida'], "{{ @(Request::input('q')['movimientos.entrada_salida_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[movimientos.entrada_salida_id_lt]", "id"=>"q_movimientos.articulo_id_lt", "style"=>"width:100%;")) !!}
+                             
                             </div>
+                            
                                                     <!--
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_usu_alta_id_gt">USU_ALTA_ID</label>
@@ -150,30 +153,7 @@
                                 </div>
                             </div>
                             -->
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_usu_alta_id_cont">USU_ALTA_ID</label>
-                                <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['usu_alta_id_cont']) ?: '' }}" name="q[usu_alta_id_cont]" id="q_usu_alta_id_cont" />
-                                </div>
-                            </div>
-                                                    <!--
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_usu_mod_id_gt">USU_MOD_ID</label>
-                                <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['usu_mod_id_gt']) ?: '' }}" name="q[usu_mod_id_gt]" id="q_usu_mod_id_gt" />
-                                </div>
-                                <div class=" col-sm-1 text-center"> - </div>
-                                <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['usu_mod_id_lt']) ?: '' }}" name="q[usu_mod_id_lt]" id="q_usu_mod_id_lt" />
-                                </div>
-                            </div>
-                            -->
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_usu_mod_id_cont">USU_MOD_ID</label>
-                                <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['usu_mod_id_cont']) ?: '' }}" name="q[usu_mod_id_cont]" id="q_usu_mod_id_cont" />
-                                </div>
-                            </div>
+                            
 
                             <div class="form-group">
                                 <div class="col-sm-10 col-sm-offset-2">
@@ -198,6 +178,7 @@
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'plantels.razon', 'title' => 'PLANTEL'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'plantels.ubicacion_art_id', 'title' => 'UBICACION'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'articulos.name', 'title' => 'ARTICULO'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'cantidad', 'title' => 'CANTIDAD'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'fecha', 'title' => 'FECHA'])</th>
@@ -211,6 +192,7 @@
                             <tr>
                                 <td><a href="{{ route('movimientos.show', $movimiento->id) }}">{{$movimiento->id}}</a></td>
                                 <td>{{$movimiento->plantel->razon}}</td>
+                                <td>{{$movimiento->ubicacionArt->ubicacion}}</td>
                     <td>{{$movimiento->articulo->name}}</td>
                     <td>{{$movimiento->cantidad}}</td>
                     <td>{{$movimiento->fecha}}</td>
@@ -241,3 +223,58 @@
     </div>
 
 @endsection
+
+@push('scripts')
+
+    <script>
+        $(document).ready(function(){
+        //getUbicaciones();
+        
+        $('#q_movimientos.plantel_id_lt').change(function(){
+        //getUbicaciones();         
+        });
+        });
+
+        function removeOptions(selectbox)
+        {
+            
+            if((selectbox.options.length - 1)>0){
+                var i;
+                for(i = selectbox.options.length - 1 ; i >= 0 ; i--)
+                {
+                    selectbox.remove(i);
+                }
+            }
+        }
+
+        function getUbicaciones(){
+            var vplantel=document.getElementById('q_movimientos.plantel_id_lt');
+            var vubicacion=document.getElementById('q_movimientos.ubicacion_art_id_lt');
+      $.ajax({
+                url: '{{ route("ubicacionArts.getUbicacionesXPlantel") }}',
+                type: 'GET',
+                data: {
+                   'plantel': vplantel.options[vplantel.selectedIndex].value,
+                   'ubicacion': 0//vubicacion.options[vubicacion.selectedIndex].value
+                },
+                dataType: 'json',
+                beforeSend : function(){$("#loading10").show();},
+                complete : function(){$("#loading10").hide();},
+                success: function(data){
+                    if(data != null){   
+                        removeOptions(vubicacion);
+                        $.each(data, function(i) {
+                            var opt = document.createElement('option');
+                            opt.value = data[i].id;
+                            opt.innerHTML = data[i].name;
+                            vubicacion.appendChild(opt);
+                        });
+                    }else{
+                        alert('Sin ubicaciones');
+                    }
+                }
+            });
+   }
+    </script>
+
+@endpush

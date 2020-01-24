@@ -15,6 +15,7 @@ use Auth;
 use App\Http\Requests\updateArticulo;
 use App\Http\Requests\createArticulo;
 use App\UbicacionArt;
+use DB;
 
 class ArticulosController extends Controller
 {
@@ -151,7 +152,9 @@ class ArticulosController extends Controller
 	{
 		$articulos = Articulo::pluck('name', 'id');
 		$plantels = Plantel::pluck('razon', 'id');
-		return view('articulos.reportes.existenciasActuales', compact('articulos', 'plantels'))
+		$plantelActual = DB::table('empleados as e')
+			->where('e.user_id', Auth::user()->id)->value('plantel_id');
+		return view('articulos.reportes.existenciasActuales', compact('articulos', 'plantels', 'plantelActual'))
 			->with('list', Articulo::getListFromAllRelationApps());
 	}
 
@@ -159,6 +162,11 @@ class ArticulosController extends Controller
 	{
 		$datos = $request->all();
 		//dd($datos);
+		if (!$request->has('plantel_f')) {
+			$datos['plantel_f'] = DB::table('empleados as e')
+				->where('e.user_id', Auth::user()->id)->value('plantel_id');
+			//$datos['plantel_t'] = $datos['plantel_f'];
+		}
 		$registros = Articulo::select(
 			'articulos.name as articulo',
 			'articulos.unidad_uso',

@@ -142,6 +142,16 @@ trait GetAllDataTrait
         $empleado = Empleado::where('user_id', '=', Auth::user()->id)->first();
         //dd($baseTable);
         switch ($baseTable) {
+            case "movimientos":
+                if (Auth::user()->can('IfiltroClientesXPlantel')) {
+                    $myQuery = $myQuery->where('movimientos.plantel_id', '=', $empleado->plantel_id);
+                }
+                break;
+            case "muebles":
+                if (Auth::user()->can('IfiltroClientesXPlantel')) {
+                    $myQuery = $myQuery->where('muebles.plantel_id', '=', $empleado->plantel_id);
+                }
+                break;
             case "autorizacion_becas":
                 $myQuery = $myQuery->orderBy('autorizacion_becas.st_beca_id');
                 break;
@@ -188,8 +198,8 @@ trait GetAllDataTrait
 
                 break;
             case "egresos":
-                if ($empleado->puesto_id==23) {
-                    $planteles_rl=Plantel::where('responsable_id',$empleado->id)->pluck('id');
+                if ($empleado->puesto_id == 23) {
+                    $planteles_rl = Plantel::where('responsable_id', $empleado->id)->pluck('id');
                     $myQuery = $myQuery->whereIn('egresos.plantel_id', $planteles_rl->toArray());
                 }
                 //dd(!Auth::user()->can('IfiltroEgresosCreador'));
