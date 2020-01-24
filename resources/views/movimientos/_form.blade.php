@@ -1,10 +1,31 @@
-                <div class="form-group col-md-4 @if($errors->has('plantel_id')) has-error @endif">
+                  <div class="form-group col-md-4 @if($errors->has('entrada_salida_id')) has-error @endif">
+                     <label for="entrada_salida_id-field">Tipo</label>
+                     {!! Form::select("entrada_salida_id", $list["EntradaSalida"], null, array("class" => "form-control select_seguridad", "id" => "entrada_salida_id-field")) !!}
+                     @if($errors->has("entrada_salida_id"))
+                     <span class="help-block">{{ $errors->first("entrada_salida_id") }}</span>
+                     @endif
+                  </div>
+                  <div class="form-group col-md-4 @if($errors->has('plantel_id')) has-error @endif">
                        <label for="plantel_id-field">Plantel</label>
                        {!! Form::select("plantel_id", $list["Plantel"], null, array("class" => "form-control select_seguridad", "id" => "plantel_id-field")) !!}
                        @if($errors->has("plantel_id"))
                         <span class="help-block">{{ $errors->first("plantel_id") }}</span>
                        @endif
                     </div>
+                    <div class="form-group col-md-4 @if($errors->has('ubicacion_art_id')) has-error @endif">
+                     <label for="ubicacion_art_id-field">Ubicacion</label>
+                     {!! Form::select("ubicacion_art_id", array(), null, array("class" => "form-control select_seguridad", "id" => "ubicacion_art_id-field")) !!}
+                     @if($errors->has("ubicacion_art_id"))
+                      <span class="help-block">{{ $errors->first("ubicacion_art_id") }}</span>
+                     @endif
+                  </div>
+                  <div class="form-group col-md-4 @if($errors->has('empleado_id')) has-error @endif">
+                     <label for="empleado_id-field">Resposanble</label>
+                     {!! Form::select("empleado_id", array(), null, array("class" => "form-control select_seguridad", "id" => "empleado_id-field")) !!}
+                     @if($errors->has("empleado_id"))
+                      <span class="help-block">{{ $errors->first("empleado_id") }}</span>
+                     @endif
+                  </div>
                     <div class="form-group col-md-4 @if($errors->has('articulo_id')) has-error @endif">
                        <label for="articulo_id-field">Articulo</label>
                        {!! Form::select("articulo_id", $articulos, null, array("class" => "form-control select_seguridad", "id" => "articulo_id-field")) !!}
@@ -20,6 +41,13 @@
                         <span class="help-block">{{ $errors->first("unidad") }}</span>
                        @endif
                     </div>
+                    <div class="form-group col-md-4 @if($errors->has('existencia')) has-error @endif">
+                     <label for="existencia-field">Existencia</label>
+                     {!! Form::text("existencia", null, array("class" => "form-control", "id" => "existencia-field", 'readonly'=>true)) !!}
+                     @if($errors->has("existencia"))
+                      <span class="help-block">{{ $errors->first("existencia") }}</span>
+                     @endif
+                  </div>
                     
                     <div class="form-group col-md-4 @if($errors->has('cantidad')) has-error @endif">
                        <label for="cantidad-field">Cantidad</label>
@@ -68,27 +96,6 @@
                        {!! Form::text("fecha", null, array("class" => "form-control", "id" => "fecha-field")) !!}
                        @if($errors->has("fecha"))
                         <span class="help-block">{{ $errors->first("fecha") }}</span>
-                       @endif
-                    </div>
-                    <div class="form-group col-md-4 @if($errors->has('ubicacion_art_id')) has-error @endif">
-                       <label for="ubicacion_art_id-field">Ubicacion</label>
-                       {!! Form::select("ubicacion_art_id", array(), null, array("class" => "form-control select_seguridad", "id" => "ubicacion_art_id-field")) !!}
-                       @if($errors->has("ubicacion_art_id"))
-                        <span class="help-block">{{ $errors->first("ubicacion_art_id") }}</span>
-                       @endif
-                    </div>
-                    <div class="form-group col-md-4 @if($errors->has('empleado_id')) has-error @endif">
-                       <label for="empleado_id-field">Resposanble</label>
-                       {!! Form::select("empleado_id", array(), null, array("class" => "form-control select_seguridad", "id" => "empleado_id-field")) !!}
-                       @if($errors->has("empleado_id"))
-                        <span class="help-block">{{ $errors->first("empleado_id") }}</span>
-                       @endif
-                    </div>
-                    <div class="form-group col-md-4 @if($errors->has('entrada_salida_id')) has-error @endif">
-                       <label for="entrada_salida_id-field">Tipo</label>
-                       {!! Form::select("entrada_salida_id", $list["EntradaSalida"], null, array("class" => "form-control select_seguridad", "id" => "entrada_salida_id-field")) !!}
-                       @if($errors->has("entrada_salida_id"))
-                        <span class="help-block">{{ $errors->first("entrada_salida_id") }}</span>
                        @endif
                     </div>
                     <div class="form-group col-md-4 @if($errors->has('observaciones')) has-error @endif">
@@ -141,7 +148,34 @@
       $('#plantel_id-field').change(function(){
          getEmpleados();
       });
-   }) ;  
+
+      $('#articulo_id-field').change(function(){
+         $.ajax({
+                url: '{{ route("movimientos.getExistencia") }}',
+                type: 'GET',
+                data: {
+                   'articulo':$('#articulo_id-field option:selected').val(),
+                   'plantel':$('#plantel_id-field option:selected').val(),
+                   'ubicacion':$('#ubicacion_art_id-field option:selected').val()
+                },
+                //dataType: 'json',
+                beforeSend : function(){$("#loading1").show();},
+                complete : function(){$("#loading1").hide();},
+                success: function(data){
+                   console.log(data);
+                    $('#existencia-field').val('');
+                    $('#existencia-field').val(data);
+                }
+            });
+      });
+
+      $('#cantidad-field').change(function(){
+         if($('#existencia-field').val()<$('#cantidad-field').val() && 
+         $('#entrada_salida_id-field option:selected').val()==2){
+            alert('No es posible, revisar existencia.');
+         }
+      });
+   });  
    function getEmpleados(){
       $.ajax({
                 url: '{{ route("empleados.getEmpleadosXplantel") }}',

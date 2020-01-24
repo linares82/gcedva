@@ -1,4 +1,6 @@
-<?php namespace App\Http\Controllers;
+<?php
+
+namespace App\Http\Controllers;
 
 use App\Articulo;
 use App\Http\Requests;
@@ -11,7 +13,8 @@ use Auth;
 use App\Http\Requests\updateMovimiento;
 use App\Http\Requests\createMovimiento;
 
-class MovimientosController extends Controller {
+class MovimientosController extends Controller
+{
 
 	/**
 	 * Display a listing of the resource.
@@ -32,9 +35,9 @@ class MovimientosController extends Controller {
 	 */
 	public function create()
 	{
-		$articulos=Articulo::where('tpo_articulo_id',1)->pluck('name','id');
+		$articulos = Articulo::where('tpo_articulo_id', 1)->pluck('name', 'id');
 		return view('movimientos.create', compact('articulos'))
-			->with( 'list', Movimiento::getListFromAllRelationApps() );
+			->with('list', Movimiento::getListFromAllRelationApps());
 	}
 
 	/**
@@ -47,14 +50,19 @@ class MovimientosController extends Controller {
 	{
 
 		$input = $request->all();
-		$input['usu_alta_id']=Auth::user()->id;
-		$input['usu_mod_id']=Auth::user()->id;
+		$input['usu_alta_id'] = Auth::user()->id;
+		$input['usu_mod_id'] = Auth::user()->id;
 
 		//create data
-		Movimiento::create( $input );
-                
-                $this->actualizarExistencia($input['plantel_id'],$input['articulo_id'],
-                                           $input['cantidad'],$input['entrada_salida_id']);
+		Movimiento::create($input);
+
+		$this->actualizarExistencia(
+			$input['plantel_id'],
+			$input['articulo_id'],
+			$input['cantidad'],
+			$input['entrada_salida_id'],
+			$input['ubicacion_art_id']
+		);
 
 		return redirect()->route('movimientos.index')->with('message', 'Registro Creado.');
 	}
@@ -67,7 +75,7 @@ class MovimientosController extends Controller {
 	 */
 	public function show($id, Movimiento $movimiento)
 	{
-		$movimiento=$movimiento->find($id);
+		$movimiento = $movimiento->find($id);
 		return view('movimientos.show', compact('movimiento'));
 	}
 
@@ -79,10 +87,10 @@ class MovimientosController extends Controller {
 	 */
 	public function edit($id, Movimiento $movimiento)
 	{
-		$movimiento=$movimiento->find($id);
+		$movimiento = $movimiento->find($id);
 		$articulos = Articulo::where('tpo_articulo_id', 1)->pluck('name', 'id');
-		return view('movimientos.edit', compact('movimiento','articulos'))
-			->with( 'list', Movimiento::getListFromAllRelationApps() );
+		return view('movimientos.edit', compact('movimiento', 'articulos'))
+			->with('list', Movimiento::getListFromAllRelationApps());
 	}
 
 	/**
@@ -93,9 +101,9 @@ class MovimientosController extends Controller {
 	 */
 	public function duplicate($id, Movimiento $movimiento)
 	{
-		$movimiento=$movimiento->find($id);
+		$movimiento = $movimiento->find($id);
 		return view('movimientos.duplicate', compact('movimiento'))
-			->with( 'list', Movimiento::getListFromAllRelationApps() );
+			->with('list', Movimiento::getListFromAllRelationApps());
 	}
 
 	/**
@@ -108,10 +116,10 @@ class MovimientosController extends Controller {
 	public function update($id, Movimiento $movimiento, updateMovimiento $request)
 	{
 		$input = $request->all();
-		$input['usu_mod_id']=Auth::user()->id;
+		$input['usu_mod_id'] = Auth::user()->id;
 		//update data
-		$movimiento=$movimiento->find($id);
-		$movimiento->update( $input );
+		$movimiento = $movimiento->find($id);
+		$movimiento->update($input);
 
 		return redirect()->route('movimientos.index')->with('message', 'Registro Actualizado.');
 	}
@@ -122,34 +130,61 @@ class MovimientosController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id,Movimiento $movimiento)
+	public function destroy($id, Movimiento $movimiento)
 	{
-		$movimiento=$movimiento->find($id);
-                
-                $this->actualizarExistencia($movimiento->plantel_id, $movimiento->articulo_id,
-                                           $movimiento->cantidad, 2);
-                
+		$movimiento = $movimiento->find($id);
+
+		$this->actualizarExistencia(
+			$movimiento->plantel_id,
+			$movimiento->articulo_id,
+			$movimiento->cantidad,
+			2,
+			$movimiento->ubicacion_art_id
+		);
+
 		$movimiento->delete();
 
 		return redirect()->route('movimientos.index')->with('message', 'Registro Borrado.');
 	}
 
-        public function actualizarExistencia($plantel, $articulo, $existencia, $es){
-            $existencium=Existencium::where('plantel_id',$plantel)->where('articulo_id',$articulo)->first();
-            if(is_object($existencium)){
-                if($es==1){
-                    $existencium->existencia=$existencium->existencia+$existencia;
-                }else{
-                    $existencium->existencia=$existencium->existencia-$existencia;
-                }
-                $existencium->save();
-            }else{
-                $e['plantel_id']=$plantel;
-                $e['articulo_id']=$articulo;
-                $e['existencia']=$existencia;
-                $e['usu_mod_id']=Auth::user()->id;
-                $e['usu_alta_id']=Auth::user()->id;
-                Existencia::create($e);
-            }
-        }
+	public function actualizarExistencia($plantel, $articulo, $existencia, $es, $ubicacion)
+	{
+		$existencium = Existencium::where('plantel_id', $plantel)
+			->where('articulo_id', $articulo)
+			->where('ubicacion_art_id', $ubicacion)
+			->first();
+		if (is_object($existencium)) {
+			if ($es == 1) {
+				$existencium->existencia = $existencium->existencia + $existencia;
+			} else {
+				$existencium->existencia = $existencium->existencia - $existencia;
+			}
+			$existencium->save();
+		} else {
+			$e['plantel_id'] = $plantel;
+			$e['articulo_id'] = $articulo;
+			$e['existencia'] = $existencia;
+			$e['usu_mod_id'] = Auth::user()->id;
+			$e['usu_alta_id'] = Auth::user()->id;
+			$e['ubicacion_art_id'] = $ubicacion;
+			Existencium::create($e);
+		}
+	}
+
+	public function getExistencia(Request $request)
+	{
+		if ($request->ajax()) {
+			$datos = $request->all();
+			$resultado = Existencium::where('plantel_id', $datos['plantel'])
+				->where('articulo_id', $datos['articulo'])
+				->where('ubicacion_art_id', $datos['ubicacion'])
+				->value('existencia');
+			//dd(is_null($resultado));
+			if (!is_null($resultado)) {
+				return $resultado;
+			} else {
+				return 0;
+			}
+		}
+	}
 }

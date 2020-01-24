@@ -14,6 +14,7 @@ use App\Observers\AvisoObserver;
 use App\Observers\CuentasEfectivoObserver;
 use App\Observers\PagoObserver;
 use App\Observers\EgresoObserver;
+use App\Observers\MuebleObserver;
 use App\Observers\TransferenceObserver;
 use App\Caja;
 use App\Cliente;
@@ -25,6 +26,7 @@ use App\AsignacionTarea;
 use App\Aviso;
 use App\CuentasEfectivo;
 use App\Egreso;
+use App\Mueble;
 use App\Pago;
 use App\Transference;
 use Studio\Totem\Totem;
@@ -52,7 +54,8 @@ class AppServiceProvider extends ServiceProvider
         Pago::observe(PagoObserver::class);
         Egreso::observe(EgresoObserver::class);
         Transference::observe(TransferenceObserver::class);
-        Totem::auth(function($request) {
+        Mueble::observe(MuebleObserver::class);
+        Totem::auth(function ($request) {
             // return true / false . For e.g.
             return Auth::check();
         });
@@ -66,7 +69,7 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         //
-        $this->app->bind('mailgun.client', function() {
+        $this->app->bind('mailgun.client', function () {
             return \Http\Adapter\Guzzle6\Client::createWithConfig([
                 // your Guzzle6 configuration
             ]);

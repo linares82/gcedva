@@ -17,7 +17,7 @@
         <h3>Consulta de Existencias</h3>
         <table class="table table-condensed table-striped">
             <thead>
-                <th>Plantel</th><th>Articulo</th><th>Categoria</th><th>Existencias</th>
+                <th>Plantel</th><th>Ubicacion</th><th>Articulo</th><th>Categoria</th><th>Existencias</th>
             </thead>
             <tbody>
                 <?php 
@@ -28,7 +28,7 @@
                 @foreach($registros as $registro)
                 
                 <tr>
-                    <td>{{ $registro->plantel }}</td><td>{{$registro->articulo}}</td><td>{{$registro->categoria}}</td><td>{{$registro->existencia}}</td>
+                    <td>{{ $registro->plantel }}</td><td>{{ $registro->ubicacion }}</td><td>{{$registro->articulo}}</td><td>{{$registro->categoria}}</td><td>{{$registro->existencia}}</td>
                 </tr>
                 
                 @endforeach

@@ -1,4 +1,6 @@
-<?php namespace App\Http\Controllers;
+<?php
+
+namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -9,7 +11,8 @@ use Auth;
 use App\Http\Requests\updateExistencium;
 use App\Http\Requests\createExistencium;
 
-class ExistenciasController extends Controller {
+class ExistenciasController extends Controller
+{
 
 	/**
 	 * Display a listing of the resource.
@@ -31,7 +34,7 @@ class ExistenciasController extends Controller {
 	public function create()
 	{
 		return view('existencias.create')
-			->with( 'list', Existencium::getListFromAllRelationApps() );
+			->with('list', Existencium::getListFromAllRelationApps());
 	}
 
 	/**
@@ -44,11 +47,11 @@ class ExistenciasController extends Controller {
 	{
 
 		$input = $request->all();
-		$input['usu_alta_id']=Auth::user()->id;
-		$input['usu_mod_id']=Auth::user()->id;
+		$input['usu_alta_id'] = Auth::user()->id;
+		$input['usu_mod_id'] = Auth::user()->id;
 
 		//create data
-		Existencium::create( $input );
+		Existencium::create($input);
 
 		return redirect()->route('existencias.index')->with('message', 'Registro Creado.');
 	}
@@ -61,7 +64,7 @@ class ExistenciasController extends Controller {
 	 */
 	public function show($id, Existencium $existencium)
 	{
-		$existencium=$existencium->find($id);
+		$existencium = $existencium->find($id);
 		return view('existencias.show', compact('existencium'));
 	}
 
@@ -73,9 +76,9 @@ class ExistenciasController extends Controller {
 	 */
 	public function edit($id, Existencium $existencium)
 	{
-		$existencium=$existencium->find($id);
+		$existencium = $existencium->find($id);
 		return view('existencias.edit', compact('existencium'))
-			->with( 'list', Existencium::getListFromAllRelationApps() );
+			->with('list', Existencium::getListFromAllRelationApps());
 	}
 
 	/**
@@ -86,9 +89,9 @@ class ExistenciasController extends Controller {
 	 */
 	public function duplicate($id, Existencium $existencium)
 	{
-		$existencium=$existencium->find($id);
+		$existencium = $existencium->find($id);
 		return view('existencias.duplicate', compact('existencium'))
-			->with( 'list', Existencium::getListFromAllRelationApps() );
+			->with('list', Existencium::getListFromAllRelationApps());
 	}
 
 	/**
@@ -101,10 +104,10 @@ class ExistenciasController extends Controller {
 	public function update($id, Existencium $existencium, updateExistencium $request)
 	{
 		$input = $request->all();
-		$input['usu_mod_id']=Auth::user()->id;
+		$input['usu_mod_id'] = Auth::user()->id;
 		//update data
-		$existencium=$existencium->find($id);
-		$existencium->update( $input );
+		$existencium = $existencium->find($id);
+		$existencium->update($input);
 
 		return redirect()->route('existencias.index')->with('message', 'Registro Actualizado.');
 	}
@@ -115,12 +118,11 @@ class ExistenciasController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id,Existencium $existencium)
+	public function destroy($id, Existencium $existencium)
 	{
-		$existencium=$existencium->find($id);
+		$existencium = $existencium->find($id);
 		$existencium->delete();
 
 		return redirect()->route('existencias.index')->with('message', 'Registro Borrado.');
 	}
-
 }

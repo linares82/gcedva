@@ -25,12 +25,20 @@
 
                 <div class="form-group col-md-6 @if($errors->has('plantel_f')) has-error @endif">
                     <label for="plantel_f-field">Plantel de:</label>
-                    {!! Form::select("plantel_f[]", $plantels, null, array("class" => "form-control select_seguridad", "id" => "plantel_f-field", 'multiple'=>true)) !!}
+                    {!! Form::select("plantel_f", $plantels, null, array("class" => "form-control select_seguridad", "id" => "plantel_f-field")) !!}
                     @if($errors->has("plantel_f"))
                     <span class="help-block">{{ $errors->first("plantel_f") }}</span>
                     @endif
                 </div>
                 
+                <div class="form-group col-md-4 @if($errors->has('ubicacion_art_id')) has-error @endif">
+                    <label for="ubicacion_art_id-field">Ubicacion</label>
+                    {!! Form::select("ubicacion_art_id[]", array(), null, array("class" => "form-control select_seguridad", "id" => "ubicacion_art_id-field",'multiple'=>true)) !!}
+                    @if($errors->has("ubicacion_art_id"))
+                     <span class="help-block">{{ $errors->first("ubicacion_art_id") }}</span>
+                    @endif
+                 </div>
+
                 <div class="row">
                 </div>
                 <div class="well well-sm">
@@ -58,7 +66,37 @@
         show_select_today: 'Hoy',
       });
     
+      getUbicaciones();
+      $('#plantel_f-field').change(function(){
+         getUbicaciones();
+         
+      });
     });
+
+    function getUbicaciones(){
+      $.ajax({
+                url: '{{ route("ubicacionArts.getUbicacionesXPlantel") }}',
+                type: 'GET',
+                data: {
+                   'plantel':$('#plantel_f-field option:selected').val(),
+                   'ubicacion':$('#ubicacion_art_id-field option:selected').val()
+                },
+                dataType: 'json',
+                beforeSend : function(){$("#loading1").show();},
+                complete : function(){$("#loading1").hide();},
+                success: function(data){
+                   console.log(data);
+                      $('#ubicacion_art_id-field').html('');
+                      
+                      $('#ubicacion_art_id-field').append($('<option></option>').text('Seleccionar').val('0'));
+                      
+                      $.each(data, function(i) {
+                          $('#ubicacion_art_id-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                      });
+                      
+                }
+            });
+   }
     
     </script>
 @endpush

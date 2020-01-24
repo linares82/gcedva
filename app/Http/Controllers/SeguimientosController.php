@@ -1086,7 +1086,7 @@ class SeguimientosController extends Controller
         if (!$request->has('plantel_f')) {
             $data['plantel_f'] = DB::table('empleados as e')
                 ->where('e.user_id', Auth::user()->id)->value('plantel_id');
-            $data['plantel_t'] = $datos['plantel_f'];
+            $data['plantel_t'] = $data['plantel_f'];
         }
 
         $plantel = Plantel::find($data['plantel_f']);

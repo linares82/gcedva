@@ -91,6 +91,21 @@
                         <span class="help-block">{{ $errors->first("observaciones") }}</span>
                        @endif
                     </div>
+                    @if(isset($mueble))
+                    <table class="table table-condensed table-striped">
+                       <thead>
+                        <th>Fecha</th><th>Estatus</th><th>Observacion</th><th>Usuario</th><th>
+                       </thead>
+                       <tbody>
+                          @foreach($mueble->comenMuebles as $comen)
+                          <tr>
+                          <td>{{$comen->created_at}}</td><td>{{$comen->stMueble->name}}</td><td>{{$comen->obs}}</td><td>{{$comen->usu_alta->name}}</td><td></td>
+                          </tr>
+                          @endforeach
+                       </tbody>
+                       
+                    </table>
+                    @endif
 @push('scripts')
 <script>
    $('#fecha_alta-field').Zebra_DatePicker({

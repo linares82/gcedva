@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updateArticulo;
 use App\Http\Requests\createArticulo;
+use App\UbicacionArt;
 
 class ArticulosController extends Controller
 {
@@ -60,12 +61,16 @@ class ArticulosController extends Controller
 
 		$plantels = Plantel::get();
 		foreach ($plantels as $plantel) {
-			$existencia['plantel_id'] = $plantel->id;
-			$existencia['articulo_id'] = $a->id;
-			$existencia['existencia'] = 0;
-			$existencia['usu_alta_id'] = Auth::user()->id;
-			$existencia['usu_mod_id'] = Auth::user()->id;
-			Existencium::create($existencia);
+			$ubicaciones = UbicacionArt::where('plantel_id', $plantel->id)->get();
+			foreach ($ubicaciones as $ubicacion) {
+				$existencia['plantel_id'] = $plantel->id;
+				$existencia['articulo_id'] = $a->id;
+				$existencia['existencia'] = 0;
+				$existencia['usu_alta_id'] = Auth::user()->id;
+				$existencia['usu_mod_id'] = Auth::user()->id;
+				$existencia['ubiacion_art_id'] = $ubicacion->id;
+				Existencium::create($existencia);
+			}
 		}
 
 		return redirect()->route('articulos.index')->with('message', 'Registro Creado.');
@@ -154,11 +159,20 @@ class ArticulosController extends Controller
 	{
 		$datos = $request->all();
 		//dd($datos);
-		$registros = Articulo::select('articulos.name as articulo', 'articulos.unidad_uso', 'ca.name as categoria', 'p.razon as plantel', 'e.existencia')
+		$registros = Articulo::select(
+			'articulos.name as articulo',
+			'articulos.unidad_uso',
+			'ca.name as categoria',
+			'p.razon as plantel',
+			'e.existencia',
+			'ua.ubicacion'
+		)
 			->join('existencia as e', 'e.articulo_id', '=', 'articulos.id')
 			->join('categoria_articulos as ca', 'ca.id', '=', 'articulos.categoria_articulo_id')
 			->join('plantels as p', 'p.id', '=', 'e.plantel_id')
-			->whereIn('e.plantel_id', $datos['plantel_f'])
+			->join('ubicacion_arts as ua', 'ua.id', '=', 'e.ubicacion_art_id')
+			->where('e.plantel_id', $datos['plantel_f'])
+			->whereIn('e.ubicacion_art_id', $datos['ubicacion_art_id'])
 			->whereIn('e.articulo_id', $datos['articulo_t'])
 			->get();
 		//						   dd($registros);

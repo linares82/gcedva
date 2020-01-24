@@ -55,11 +55,12 @@ class MueblesController extends Controller
 		$input['usu_mod_id'] = Auth::user()->id;
 
 		$anterior = Mueble::select('no_inv')->where('plantel_id', $input['plantel_id'])->limit(1)->first();
+		//dd($anterior);
 		$plantel = Plantel::find($input['plantel_id']);
 		$ubicacion = UbicacionArt::find($input['ubicacion_art_id']);
 		$numero = 1;
 		if (!is_null($anterior)) {
-			$numero = $anterior + 1;
+			$numero = $anterior->no_inv + 1;
 		}
 		$input['no_inv'] = $numero;
 		//dd($input);
@@ -178,7 +179,8 @@ class MueblesController extends Controller
 			->join('empleados as e', 'e.id', '=', 'muebles.empleado_id')
 			->join('st_muebles as stm', 'stm.id', '=', 'muebles.st_mueble_id')
 			->join('st_mueble_usos as stmu', 'stmu.id', '=', 'muebles.st_mueble_uso_id')
-			->whereIn('muebles.plantel_id', $datos['plantel_f'])
+			->where('muebles.plantel_id', $datos['plantel_f'])
+			->whereIn('muebles.ubicacion_art_id', $datos['ubicacion_art_id'])
 			->get();
 
 		//dd($registros);

@@ -329,6 +329,7 @@
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'ubicacion_arts.ubicacion', 'title' => 'UBICACION'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'empleados.nombre', 'title' => 'RESPONSABLE'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'no_inv', 'title' => 'NO. INVENTARIO'])</th>
+                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'st_mueble_id', 'title' => 'ESTATUS'])</th>
                         
                             <th class="text-right">OPCIONES</th>
                         </tr>
@@ -344,6 +345,7 @@
                     <td>{{$mueble->ubicacionArt->ubicacion}}</td>
                     <td>{{$mueble->empleado->nombre}}</td>
                     <td>{{$mueble->no_inv}}</td>
+                    <td>{{$mueble->stMueble->name}}</td>
                                 <td class="text-right">
                                     @permission('muebles.edit')
                                     <a class="btn btn-xs btn-primary" href="{{ route('muebles.duplicate', $mueble->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
