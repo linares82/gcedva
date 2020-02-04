@@ -180,7 +180,7 @@
                                 <div id='loading32' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div>  
                         </div>
                             
-                        {!! Form::open(['route' => array('adeudos.maestroR'),'method' => 'post', 'style' => 'display: inline;']) !!}
+                        {!! Form::open(['route' => array('adeudos.maestroIndicadorDetalle'),'method' => 'post', 'style' => 'display: inline;']) !!}
                         {!! Form::hidden("fecha_f", $fecha_f->toDateString('Y-m-d'), array("class" => "form-control input-sm", "id" => "fecha_f-field")) !!}
                         {!! Form::hidden("fecha_t", $fecha_t->toDateString('Y-m-d'), array("class" => "form-control input-sm", "id" => "fecha_t-field")) !!}
                         {!! Form::select("plantel_f[]", $planteles, $empleado->plantel_id, array("class" => "form-control select_seguridad select_oculto", "id" => "plantel_f-field", 'multiple'=>true)) !!}
@@ -264,7 +264,7 @@
                                         <div id='loading{{ $plantel->id }}' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div>  
                                 </div>
                                     
-                                {!! Form::open(['route' => array('adeudos.maestroR'),'method' => 'post', 'style' => 'display: inline;']) !!}
+                                {!! Form::open(['route' => array('adeudos.maestroIndicadorDetalle'),'method' => 'post', 'style' => 'display: inline;']) !!}
                                 {!! Form::hidden("fecha_f", $fecha_f->toDateString('Y-m-d'), array("class" => "form-control input-sm", "id" => "fecha_f-field")) !!}
                                 {!! Form::hidden("fecha_t", $fecha_t->toDateString('Y-m-d'), array("class" => "form-control input-sm", "id" => "fecha_t-field")) !!}
                                 {!! Form::select("plantel_f[]", $planteles, $plantel->id, array("class" => "form-control select_seguridad select_oculto", "id" => "plantel_f-field", 'multiple'=>true)) !!}

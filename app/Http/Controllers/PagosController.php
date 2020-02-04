@@ -551,6 +551,8 @@ class PagosController extends Controller
         $indicador = 0;
         $vespecialidad = "";
         $linea = array();
+        $linea['cantidad'] = 0;
+        $linea['suma_descuentos'] = 0;
         foreach ($registros as $registro) {
             $indicador++;
             if ($vespecialidad <> $registro->especialidad and $indicador <> 1) {
