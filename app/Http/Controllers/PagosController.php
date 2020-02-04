@@ -544,8 +544,121 @@ class PagosController extends Controller
             ->where('s.st_seguimiento_id', 2)
             ->where('clientes.plantel_id', $data['plantel_f'])
             //->where('cajas.usu_alta_id','<=',Auth::user()->id)
+            ->orderBy('e.id')
             ->get();
+
+        $resumen = array();
+        $indicador = 0;
+        $vespecialidad = "";
+        $linea = array();
+        foreach ($registros as $registro) {
+            $indicador++;
+            if ($vespecialidad <> $registro->especialidad and $indicador <> 1) {
+                array_push($resumen, $linea);
+                $linea['suma_descuentos'] = 0;
+                $linea['cantidad'] = 0;
+            }
+            $linea['especialidad'] = $registro->especialidad;
+            $linea['cantidad'] = $linea['cantidad'] + 1;
+            $cajas = Caja::select('cajas.consecutivo', 'cc.name as concepto', 'ln.subtotal', 'ln.descuento', 'ln.recargo', 'ln.total', 'a.fecha_pago')
+                ->where('cajas.cliente_id', $registro->cliente)
+                ->join('caja_lns as ln', 'ln.caja_id', '=', 'cajas.id')
+                ->join('caja_conceptos as cc', 'cc.id', '=', 'ln.caja_concepto_id')
+                ->join('adeudos as a', 'a.id', '=', 'ln.adeudo_id')
+                ->where('a.fecha_pago', '>=', $data['fecha_f'])
+                ->where('a.fecha_pago', '<=', $data['fecha_t'])
+                ->where('ln.promo_plan_ln_id', 0)
+                ->where('ln.descuento', '>', 0)
+                ->get();
+            if (count($cajas) > 0) {
+                foreach ($cajas as $caja) {
+                    $linea['suma_descuentos'] = $linea['suma_descuentos'] + $caja->descuento;
+                }
+            }
+            $vespecialidad = $registro->especialidad;
+        }
+        array_push($resumen, $linea);
+
         return view('pagos.reportes.postAlumnosBeca', array(
+            'registros' => $registros,
+            'plantel' => $plantel,
+            'data' => $data,
+            'resumen' => $resumen
+        ));
+    }
+
+    public function getResumenBeca()
+    {
+        return view('pagos.reportes.getResumenBeca')
+            ->with('list', Inscripcion::getListFromAllRelationApps());
+    }
+
+    public function postResumenBeca(Request $request)
+    {
+        $data = $request->all();
+        if (!$request->has('plantel_f')) {
+            $data['plantel_f'] = DB::table('empleados as e')
+                ->where('e.user_id', Auth::user()->id)->value('plantel_id');
+            //$data['plantel_t'] = $datos['plantel_f'];
+        }
+
+        $plantel = Plantel::find($data['plantel_f']);
+        $registros = Cliente::select(DB::raw('clientes.id as cliente, '
+            . 'concat(clientes.nombre," ",clientes.nombre2," ",clientes.ape_paterno," ",clientes.ape_materno) as cliente_nombre,'
+            . 'clientes.beca_porcentaje as monto_inscripcion, clientes.monto_mensualidad, ab.solicitud as justificaion,'
+            . 'sts.name as estatus_seguimiento, stc.name as estatus_cliente, beca_bnd, e.name as especialidad,'
+            . 'n.name as nivel, g.name as grado'))
+            ->join('combinacion_clientes as cc', 'cc.cliente_id', '=', 'clientes.id')
+            ->join('especialidads as e', 'e.id', '=', 'cc.especialidad_id')
+            ->join('grados as g', 'g.id', '=', 'cc.grado_id')
+            ->join('nivels as n', 'n.id', '=', 'cc.nivel_id')
+            ->join('seguimientos as s', 's.cliente_id', '=', 'clientes.id')
+            ->join('st_seguimientos as sts', 'sts.id', '=', 's.st_seguimiento_id')
+            ->join('st_clientes as stc', 'stc.id', '=', 'clientes.st_cliente_id')
+            ->join('autorizacion_becas as ab', 'ab.cliente_id', '=', 'clientes.id')
+            ->whereNull('cc.deleted_at')
+            ->where('clientes.beca_bnd', 1)
+            ->where('cc.bnd_beca', 1)
+            ->where('st_beca_id', 4)
+            ->where('clientes.st_cliente_id', 4)
+            ->where('s.st_seguimiento_id', 2)
+            ->where('clientes.plantel_id', $data['plantel_f'])
+            //->where('cajas.usu_alta_id','<=',Auth::user()->id)
+            ->orderBy('e.id')
+            ->get();
+        $resumen = array();
+        $indicador = 0;
+        $vespecialidad = "";
+        $linea = array();
+        foreach ($registros as $registro) {
+            $indicador++;
+            if ($vespecialidad <> $registro->especialidad and $indicador <> 1) {
+                array_push($resumen, $linea);
+                $linea['suma_descuentos'] = 0;
+                $linea['cantidad'] = 0;
+            }
+            $linea['especialidad'] = $registro->especialidad;
+            $linea['cantidad'] = $linea['cantidad'] + 1;
+            $cajas = Caja::select('cajas.consecutivo', 'cc.name as concepto', 'ln.subtotal', 'ln.descuento', 'ln.recargo', 'ln.total', 'a.fecha_pago')
+                ->where('cajas.cliente_id', $registro->cliente)
+                ->join('caja_lns as ln', 'ln.caja_id', '=', 'cajas.id')
+                ->join('caja_conceptos as cc', 'cc.id', '=', 'ln.caja_concepto_id')
+                ->join('adeudos as a', 'a.id', '=', 'ln.adeudo_id')
+                ->where('a.fecha_pago', '>=', $data['fecha_f'])
+                ->where('a.fecha_pago', '<=', $data['fecha_t'])
+                ->where('ln.promo_plan_ln_id', 0)
+                ->where('ln.descuento', '>', 0)
+                ->get();
+            if (count($cajas) > 0) {
+                foreach ($cajas as $caja) {
+                    $linea['suma_descuentos'] = $linea['suma_descuentos'] + $caja->descuento;
+                }
+            }
+            $vespecialidad = $registro->especialidad;
+        }
+        array_push($resumen, $linea);
+        //dd($resumen);
+        return view('pagos.reportes.postResumenBeca', array(
             'registros' => $registros,
             'plantel' => $plantel,
             'data' => $data

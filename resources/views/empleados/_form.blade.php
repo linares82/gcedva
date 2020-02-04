@@ -255,7 +255,13 @@
                                   {{$doc->docEmpleado->name}}
                                 </td>
                                 <td>
-                                  <a href="{{$doc->archivo}}" target="_blank">Ver</a>
+                                  @php
+                                  $cadena_img = "";
+                  
+                                        $cadena_img = explode('/', $doc->archivo);
+                                        
+                                  @endphp
+                                  <a href="{{asset("imagenes/empleados/".$empleado->id."/".end($cadena_img))}}" target="_blank">Ver</a>
                                 </td>
                                 <td>
                                   <a class="btn btn-xs btn-danger" href="{{route('pivotDocEmpleados.destroy', $doc->id)}}">Eliminar</a>

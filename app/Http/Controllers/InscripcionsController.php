@@ -2000,4 +2000,214 @@ class InscripcionsController extends Controller
         $promedio = round(($suma_calificaciones / $cuenta_calificaciones), 2);
         return $promedio;
     }
+
+    public function wCalificacion(Request $request)
+    {
+        return view('inscripcions.reportes.wCalificacion')
+            ->with('list', Inscripcion::getListFromAllRelationApps());
+    }
+
+    public function wCalificacionR(Request $request)
+    {
+        $datos = $request->all();
+        $registros = Hacademica::select(
+            'c.id',
+            'stc.name as estatus',
+            'e.name as especialidad',
+            'n.name as nivel',
+            'g.name as grado',
+            'm.name as materia',
+            'te.name as tipo_examen',
+            'cpo.name as carga_ponderacion',
+            'cp.calificacion_parcial as calificacion',
+            'cp.updated_at as fecha'
+        )
+            ->join('especialidads as e', 'e.id', '=', 'hacademicas.especialidad_id')
+            ->join('nivels as n', 'n.id', '=', 'hacademicas.nivel_id')
+            ->join('grados as g', 'g.id', '=', 'hacademicas.grado_id')
+            ->join('materia as m', 'm.id', '=', 'hacademicas.materium_id')
+            ->join('clientes as c', 'c.id', '=', 'hacademicas.cliente_id')
+            ->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
+            ->join('calificacions as calif', 'calif.hacademica_id', '=', 'hacademicas.id')
+            ->join('tpo_examens as te', 'te.id', '=', 'calif.tpo_examen_id')
+            ->join('calificacion_ponderacions as cp', 'cp.calificacion_id', '=', 'calif.id')
+            ->join('carga_ponderacions as cpo', 'cpo.id', '=', 'cp.carga_ponderacion_id')
+            ->where('hacademicas.plantel_id', $datos['plantel'])
+            ->where('c.st_cliente_id', $datos['st_cliente'])
+            ->whereRaw('DATE_FORMAT(cp.updated_at, "%Y-%m-%d")>=?', [$datos['fecha_f']])
+            ->whereRaw('DATE_FORMAT(cp.updated_at, "%Y-%m-%d")<=?', [$datos['fecha_t']])
+            ->where('cp.padre_id', 0)
+            ->where('cp.tiene_detalle', 0)
+            ->whereNull('hacademicas.deleted_at')
+            ->whereNull('calif.deleted_at')
+            ->whereNull('cpo.deleted_at')
+            ->orderBy('c.id')
+            ->orderBy('cp.updated_at')
+            ->get();
+
+        return view('inscripcions.reportes.wCalificacionR')
+            ->with('list', Inscripcion::getListFromAllRelationApps());
+    }
+
+    public function wdCalificacionR(Request $request)
+    {
+        $datos = $request->all();
+        //dd($datos);
+
+        $fecha = Carbon::createFromFormat('Y-m-d', Date('Y-m-d'));
+        $mes = 0;
+        $anio = 0;
+        if ($fecha->month == 1) {
+            $mes = 12;
+            $anio = $fecha->year - 1;
+        } else {
+            $mes = $fecha->month;
+            $anio = $fecha->year;
+        }
+
+        //dd($fecha);
+        $registros = Hacademica::select(
+            'c.id',
+            'stc.name as estatus',
+            'e.name as especialidad',
+            'n.name as nivel',
+            'g.name as grado',
+            'm.name as materia',
+            'te.name as tipo_examen',
+            'cpo.name as carga_ponderacion',
+            'cp.calificacion_parcial as calificacion',
+            'cp.updated_at as fecha',
+            'gru.name as grupo'
+        )
+            ->join('especialidads as e', 'e.id', '=', 'hacademicas.especialidad_id')
+            ->join('nivels as n', 'n.id', '=', 'hacademicas.nivel_id')
+            ->join('grados as g', 'g.id', '=', 'hacademicas.grado_id')
+            ->join('materia as m', 'm.id', '=', 'hacademicas.materium_id')
+            ->join('grupos as gru', 'gru.id', '=', 'hacademicas.grupo_id')
+            ->join('clientes as c', 'c.id', '=', 'hacademicas.cliente_id')
+            ->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
+            ->join('calificacions as calif', 'calif.hacademica_id', '=', 'hacademicas.id')
+            ->join('tpo_examens as te', 'te.id', '=', 'calif.tpo_examen_id')
+            ->join('calificacion_ponderacions as cp', 'cp.calificacion_id', '=', 'calif.id')
+            ->join('carga_ponderacions as cpo', 'cpo.id', '=', 'cp.carga_ponderacion_id')
+            ->where('hacademicas.plantel_id', $datos['plantel'])
+            ->where('c.st_cliente_id', 4)
+            ->whereMonth('cp.updated_at', $mes)
+            ->whereYear('cp.updated_at', $anio)
+            ->where('cp.padre_id', 0)
+            ->where('cp.tiene_detalle', 0)
+            ->whereNull('hacademicas.deleted_at')
+            ->whereNull('calif.deleted_at')
+            ->whereNull('cpo.deleted_at')
+            ->orderBy('e.id')
+            ->orderBy('n.id')
+            ->orderBy('g.id')
+            ->orderBy('gru.id')
+            ->orderBy('cp.updated_at')
+            ->get();
+        //dd($registros->toArray());
+        $total = count($registros);
+        //dd($total);
+        $suma = 0;
+        $cuenta = 0;
+        foreach ($registros as $registro) {
+            $suma = $suma + $registro->calificacion;
+            $cuenta++;
+        }
+        //dd($cuenta);
+        if ($total == 0) {
+            return response()->json(['promedio' => 0]);
+        }
+        $promedio = round($suma / $total, 2) * 10;
+        return response()->json(['promedio' => $promedio]);
+    }
+
+    public function wdCalificacionRDetalle(Request $request)
+    {
+        $datos = $request->all();
+        //dd($datos);
+
+        $fecha = Carbon::createFromFormat('Y-m-d', Date('Y-m-d'));
+        $mes = 0;
+        $anio = 0;
+
+        //$mes_desc=$fecha->
+        if ($fecha->month == 1) {
+            $mes = 12;
+            $anio = $fecha->year - 1;
+        } else {
+            $mes = $fecha->month;
+            $anio = $fecha->year;
+        }
+        $mese = Mese::find($mes);
+
+        //dd($fecha);
+        $registros = Hacademica::select(
+            'c.id',
+            'stc.name as estatus',
+            'e.name as especialidad',
+            'n.name as nivel',
+            'g.name as grado',
+            'm.name as materia',
+            'te.name as tipo_examen',
+            'cpo.name as carga_ponderacion',
+            'cp.calificacion_parcial as calificacion',
+            'cp.updated_at as fecha',
+            'gru.name as grupo'
+        )
+            ->join('especialidads as e', 'e.id', '=', 'hacademicas.especialidad_id')
+            ->join('nivels as n', 'n.id', '=', 'hacademicas.nivel_id')
+            ->join('grados as g', 'g.id', '=', 'hacademicas.grado_id')
+            ->join('materia as m', 'm.id', '=', 'hacademicas.materium_id')
+            ->join('grupos as gru', 'gru.id', '=', 'hacademicas.grupo_id')
+            ->join('clientes as c', 'c.id', '=', 'hacademicas.cliente_id')
+            ->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
+            ->join('calificacions as calif', 'calif.hacademica_id', '=', 'hacademicas.id')
+            ->join('tpo_examens as te', 'te.id', '=', 'calif.tpo_examen_id')
+            ->join('calificacion_ponderacions as cp', 'cp.calificacion_id', '=', 'calif.id')
+            ->join('carga_ponderacions as cpo', 'cpo.id', '=', 'cp.carga_ponderacion_id')
+            ->where('hacademicas.plantel_id', $datos['plantel'])
+            ->where('c.st_cliente_id', 4)
+            ->whereMonth('cp.updated_at', $mes)
+            ->whereYear('cp.updated_at', $anio)
+            ->where('cp.padre_id', 0)
+            ->where('cp.tiene_detalle', 0)
+            ->whereNull('hacademicas.deleted_at')
+            ->whereNull('calif.deleted_at')
+            ->whereNull('cpo.deleted_at')
+            ->orderBy('e.id')
+            ->orderBy('n.id')
+            ->orderBy('g.id')
+            ->orderBy('gru.id')
+            ->orderBy('cp.updated_at')
+            ->get();
+        //dd($registros->toArray());
+        $resumen = array();
+        $detalle = array();
+        $grupo = "";
+        $indicador = 0;
+        $cantidad = 0;
+        foreach ($registros as $registro) {
+            $indicador++;
+            $detalle['especialidad'] = $registro->especialidad;
+            $detalle['nivel'] = $registro->nivel;
+            $detalle['grado'] = $registro->grado;
+            $detalle['calificacion'] = $detalle['calificacion'] + $registro->calificacion;
+            $detalle['cantidad']++;
+            //Log::info($indicador . "-" . $detalle['cantidad']);
+            $detalle['grupo'] = $registro->grupo;
+            //dd($registro);
+            if ($grupo <> $registro->grupo and $indicador <> 1) {
+                //dd($grado . "-" . $registro->grado);
+                $detalle['promedio'] = $detalle['calificacion'] / $detalle['cantidad'];
+                array_push($resumen, $detalle);
+                $detalle['cantidad'] = 0;
+                $detalle['calificacion'] = 0;
+            }
+            $grupo = $registro->grupo;
+        }
+        array_push($resumen, $detalle);
+        //dd($resumen);
+        return view('inscripcions.reportes.wCalificacionRDetalle', compact('resumen', 'mese'));
+    }
 }

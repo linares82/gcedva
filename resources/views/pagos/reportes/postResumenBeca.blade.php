@@ -16,31 +16,7 @@
   <body>
       <h3>Pagos del Plantel {{$plantel->razon}} el dia {{$data['fecha_f']}}</h3>
     <div class="datagrid">
-      @if(isset($registros) and count($registros)>0)
-      <h4>Resumen</h4>
-      <table class="table table-condensed table-striped">
-        <thead>
-            <tr>
-                <th>Especialidad</th><th>Cantidad Alumnos</th><th>Suma Descuentos</th>
-            </tr> 
-        </thead>
-        <tbody>
-          @foreach($resumen as $linea)
-          <tr>
-            <td> {{ $linea['especialidad'] }} </td><td> {{ $linea['cantidad'] }} </td><td> {{ $linea['suma_descuentos'] }} </td>
-          </tr>
-          @php
-           $total_descuentos=$total_descuentos+$linea['suma_descuentos'];
-           $total_cantidad=$total_cantidad+$linea['cantidad'];   
-          @endphp
-          @endforeach
-          <tr>
-            <td> <strong>Totales</strong>  </td><td> <strong>{{ $total_cantidad }}</strong> </td><td> <strong>{{ $total_descuentos }}</strong>  </td>
-          </tr>
-        </tbody>
-      </table>
-        <br/>
-        <h4>Detalle</h4>
+        @if(isset($registros) and count($registros)>0)
         <table class="table table-condensed table-striped">
             <thead>
                 <tr>

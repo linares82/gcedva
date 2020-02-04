@@ -9,6 +9,7 @@ use File as Archi;
 
 use App\HistoriaCliente;
 use App\Cliente;
+use App\Mese;
 use App\Seguimiento;
 use Illuminate\Http\Request;
 use Auth;
@@ -17,6 +18,7 @@ use App\Http\Requests\createHistoriaCliente;
 use App\Inscripcion;
 use App\RegistroHistoriaCliente;
 use App\StHistoriaCliente;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class HistoriaClientesController extends Controller
@@ -32,9 +34,9 @@ class HistoriaClientesController extends Controller
 	public function index(Request $request)
 	{
 		$historiaClientes = HistoriaCliente::getAllData($request);
-		$stHistoriaClientes=StHistoriaCliente::where('id','>',1)->pluck('name','id');
+		$stHistoriaClientes = StHistoriaCliente::where('id', '>', 1)->pluck('name', 'id');
 
-		return view('historiaClientes.index', compact('historiaClientes','stHistoriaClientes'));
+		return view('historiaClientes.index', compact('historiaClientes', 'stHistoriaClientes'));
 	}
 
 	/**
@@ -87,12 +89,12 @@ class HistoriaClientesController extends Controller
 		//create data
 		$e = HistoriaCliente::create($input);
 
-		$registroHistoriaCliente['historia_cliente_id']=$e->id;
+		$registroHistoriaCliente['historia_cliente_id'] = $e->id;
 		$registroHistoriaCliente['st_historia_cliente_id'] = $e->st_historia_cliente_id;
 		$registroHistoriaCliente['comentario'] = $e->descripcion;
 		$registroHistoriaCliente['usu_alta_id'] = Auth::user()->id;
 		$registroHistoriaCliente['usu_mod_id'] = Auth::user()->id;
-//dd($registroHistoriaCliente);
+		//dd($registroHistoriaCliente);
 		RegistroHistoriaCliente::create($registroHistoriaCliente);
 
 
@@ -322,18 +324,135 @@ class HistoriaClientesController extends Controller
 		return redirect()->route('historiaClientes.index', array('q[cliente_id_lt]' => $cliente->id))->with('message', 'Registro Borrado.');
 	}
 
-	public function widgetSeguimiento(){
-		$registros = HistoriaCliente::where('evento_cliente_id',2);
-		if(Auth::user()->can('aut_ser_esc')){
-			$registros->aut_user_esc<>2;
+	public function widgetSeguimiento()
+	{
+		$registros = HistoriaCliente::where('evento_cliente_id', 2);
+		if (Auth::user()->can('aut_ser_esc')) {
+			$registros->aut_user_esc <> 2;
 		}
 		if (Auth::user()->can('aut_caja')) {
 			$registros->aut_caja <> 2;
 		}
 		if (Auth::user()->can('aut_ser_esc_corp')) {
 			$registros->aut_user_esc_corp <> 2;
-		}											
+		}
 		$registros->get();
 		return $registros;
+	}
+
+	public function wdBajas(Request $request)
+	{
+		$datos = $request->all();
+		$inscripciones_clientes_activos = Inscripcion::select(
+			'c.id as cliente',
+			'e.name as especialidad',
+			'n.name as nivel',
+			'g.name as grado'
+		)
+			->join('clientes as c', 'c.id', '=', 'inscripcions.cliente_id')
+			->join('especialidads as e', 'e.id', '=', 'inscripcions.especialidad_id')
+			->join('nivels as n', 'n.id', '=', 'inscripcions.nivel_id')
+			->join('grados as g', 'g.id', '=', 'inscripcions.grado_id')
+			->where('c.st_cliente_id', 4)
+			->where('inscripcions.plantel_id', $datos['plantel'])
+			->get();
+		//dd($inscripciones_clientes_activos->toArray());
+		$hoy = Carbon::createFromFormat('Y-m-d', Date('Y-m-d'));
+		$fec_aux = Carbon::createFromFormat('Y-m-d', Date('Y-m-d'));
+
+		$hoy->subMonth();
+		//dd($hoy->year);
+
+		$bajas = HistoriaCliente::select(
+			'c.id as cliente',
+			'c.st_cliente_id',
+			'e.name as especialidad',
+			'n.name as nivel',
+			'g.name as grado'
+		)
+			->join('clientes as c', 'c.id', '=', 'historia_clientes.cliente_id')
+			->join('inscripcions as i', 'i.cliente_id', '=', 'c.id')
+			->join('especialidads as e', 'e.id', '=', 'i.especialidad_id')
+			->join('nivels as n', 'n.id', '=', 'i.nivel_id')
+			->join('grados as g', 'g.id', '=', 'i.grado_id')
+			->where('historia_clientes.evento_cliente_id', 2)
+			->where('c.st_cliente_id', 3)
+			->whereMonth('historia_clientes.fecha', $hoy->month)
+			->whereYear('historia_clientes.fecha', $hoy->year)
+			->where('i.plantel_id', $datos['plantel'])
+			->whereNull('i.deleted_at')
+			->get();
+		//dd(count($inscripciones_clientes_activos) . "-" . count($bajas->toArray()));
+		$total = count($bajas) + count($inscripciones_clientes_activos);
+		//dd($total);
+		$porcentaje_bajas = round(((count($bajas) * 100) / $total), 2);
+
+		//dd($porcentaje_bajas);
+		return response()->json(['porcentaje_bajas' => $porcentaje_bajas]);
+	}
+
+	public function wdBajasDetalle(Request $request)
+	{
+		$datos = $request->all();
+		$inscripciones_clientes_activos = Inscripcion::select(
+			//	'c.id as cliente',
+			//'c.st_cliente_id',
+			'e.id as id',
+			'e.name as especialidad',
+			DB::raw('count(e.name) as total_especialidad')
+			//'n.name as nivel',
+			//'g.name as grado'
+		)
+			->join('clientes as c', 'c.id', '=', 'inscripcions.cliente_id')
+			->join('especialidads as e', 'e.id', '=', 'inscripcions.especialidad_id')
+			->join('nivels as n', 'n.id', '=', 'inscripcions.nivel_id')
+			->join('grados as g', 'g.id', '=', 'inscripcions.grado_id')
+			->where('c.st_cliente_id', 4)
+			->where('inscripcions.plantel_id', $datos['plantel'])
+			->groupBy('e.id')
+			->groupBy('e.name')
+			->get();
+		//dd($inscripciones_clientes_activos->toArray());
+		$hoy = Carbon::createFromFormat('Y-m-d', Date('Y-m-d'));
+		$fec_aux = Carbon::createFromFormat('Y-m-d', Date('Y-m-d'));
+
+		$hoy->subMonth();
+		//dd($hoy->year);
+		$resumen = array();
+		foreach ($inscripciones_clientes_activos as $ica) {
+			$linea = array();
+			$linea['especialidad'] = $ica->especialidad;
+			$linea['activos'] = $ica->total_especialidad;
+			$bajas = HistoriaCliente::select(
+				'c.id as cliente'
+				//'c.st_cliente_id',
+				//'e.name as especialidad',
+				//'n.name as nivel',
+				//'g.name as grado'
+			)
+				->join('clientes as c', 'c.id', '=', 'historia_clientes.cliente_id')
+				->join('inscripcions as i', 'i.cliente_id', '=', 'c.id')
+				->join('especialidads as e', 'e.id', '=', 'i.especialidad_id')
+				->join('nivels as n', 'n.id', '=', 'i.nivel_id')
+				->join('grados as g', 'g.id', '=', 'i.grado_id')
+				->where('historia_clientes.evento_cliente_id', 2)
+				->where('c.st_cliente_id', 3)
+				->whereMonth('historia_clientes.fecha', $hoy->month)
+				->whereYear('historia_clientes.fecha', $hoy->year)
+				->where('i.plantel_id', $datos['plantel'])
+				->where('i.especialidad_id', $ica->id)
+				->whereNull('i.deleted_at')
+				->get();
+			$linea['bajas'] = count($bajas);
+			array_push($resumen, $linea);
+		}
+		//dd($resumen);
+
+		//dd(count($inscripciones_clientes_activos) . "-" . count($bajas->toArray()));
+		$total = count($bajas) + count($inscripciones_clientes_activos);
+		$porcentaje_bajas = round((($bajas * 100) / $total), 2);
+		$mese = Mese::find($hoy->month);
+
+		return view('historiaClientes.reportes.wdBajasDetalle', compact('mese', 'resumen'));
 	}
 }

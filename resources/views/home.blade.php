@@ -142,14 +142,14 @@
                     </h3>
                 </div>
                 <div class="box-body">
-                    <div class="form-group col-md-3 col-sm-3 col-xs-3">
+                    <div class="form-group col-md-2 col-sm-2 col-xs-2">
                         <h4>% Asistencia Semana Anterior</h4>
                     <div id="wAsistencias" style="height: 150px;">
                         <div id='loading30' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                     </div>
                     </div>
                     
-                    <div class="form-group col-md-3 col-sm-3 col-xs-3">
+                    <div class="form-group col-md-2 col-sm-2 col-xs-2">
                         <h4 id="titulo_concretados"> </h4>
                     <div id='loading31' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                     <div id="wConcretados" style="height: 150px;">
@@ -158,7 +158,7 @@
                     </div>
                     </div>
                     
-                    <div class="form-group col-md-3 col-sm-3 col-xs-3">
+                    <div class="form-group col-md-2 col-sm-2 col-xs-2">
                         <h4 class="box-title">Porcentaje de pago del mes en curso</h4>
                         @php
                         $empleado=App\Empleado::where('user_id',Auth::user()->id)->first();
@@ -189,6 +189,22 @@
                             <button type="submit" class="btn btn-xs btn-success"><i class="glyphicon glyphicon-ok"></i> Ver Maestro</button>
                         {!! Form::close() !!}     
                     </div>
+
+                    <div class="form-group col-md-2 col-sm-2 col-xs-2">
+                        <h4>Promedio General Mes Anterior</h4>
+                        <div id="wCalificacion" style="height: 150px;">
+                            <div id='loading33' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
+                        </div>
+                        <a class="btn btn-xs btn-success" target="_blank" href="{{route('inscripcions.wdCalificacionRDetalle',array('plantel'=>$empleado->plantel_id))}}">Detalle</a>
+                    </div>
+
+                    <div class="form-group col-md-2 col-sm-2 col-xs-2">
+                        <h4>Bajas Mes Anterior</h4>
+                        <div id="wBajas" style="height: 150px;">
+                            <div id='loading34' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
+                        </div>
+                        <a class="btn btn-xs btn-success" target="_blank" href="{{route('historiaClientes.wdBajasDetalle',array('plantel'=>$empleado->plantel_id))}}">Detalle</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -209,14 +225,14 @@
                     </h3>
                 </div>
                 <div class="box-body">
-                    <div class="form-group col-md-3 col-sm-3 col-xs-3">
+                    <div class="form-group col-md-2 col-sm-2 col-xs-2">
                         <h4>% Asistencia Semana Anterior</h4>
                     <div id="wAsistencias_{{ $plantel->id }}" style="height: 150px;">
                         <div id='loading30{{ $plantel->id }}' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                     </div>
                     </div>
                     
-                    <div class="form-group col-md-3 col-sm-3 col-xs-3">
+                    <div class="form-group col-md-2 col-sm-2 col-xs-2">
                         <h4 id="titulo_concretados{{ $plantel->id }}"> </h4>
                     <div id='loading31{{ $plantel->id }}' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                     <div id="wConcretados{{ $plantel->id }}" style="height: 150px;">
@@ -225,7 +241,7 @@
                     </div>
                     </div>
                     
-                    <div class="form-group col-md-3 col-sm-3 col-xs-3">
+                    <div class="form-group col-md-2 col-sm-2 col-xs-2">
                         <h4 class="box-title">Porcentaje de pago del mes en curso</h4>
                         @php
     
@@ -258,6 +274,22 @@
                                 {!! Form::close() !!} 
                             </div>
                         </div>
+                    </div>
+
+                    <div class="form-group col-md-2 col-sm-2 col-xs-2">
+                        <h4>Promedio General Mes Anterior</h4>
+                        <div id="wCalificacion_{{$plantel->id}}" style="height: 150px;">
+                            <div id='loading33_{{$plantel->id}}' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
+                        </div>
+                        <a class="btn btn-xs btn-success" target="_blank" href="{{route('inscripcions.wdCalificacionRDetalle',array('plantel'=>$plantel->id))}}">Detalle</a>   
+                    </div>
+
+                    <div class="form-group col-md-2 col-sm-2 col-xs-2">
+                        <h4>Bajas Mes Anterior</h4>
+                        <div id="wBajas_{{$plantel->id}}" style="height: 150px;">
+                            <div id='loading34_{{$plantel->id}}' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
+                        </div>
+                        <a class="btn btn-xs btn-success" target="_blank" href="{{route('historiaClientes.wdBajasDetalle',array('plantel'=>$plantel->id))}}">Detalle</a>
                     </div>
                 </div>
             </div>
@@ -907,12 +939,17 @@
         @endpermission
         google.charts.setOnLoadCallback(drawChart_wAsistencias);
         google.charts.setOnLoadCallback(drawChart_wConcretados);
+        google.charts.setOnLoadCallback(drawChart_wCalificacion);
+        google.charts.setOnLoadCallback(drawChart_wBajas);
 
         @permission('indicadores_plantels')
         @foreach($plantels as $plantel)
         google.charts.setOnLoadCallback(drawChart_wAsistencias_{{ $plantel->id }});
         google.charts.setOnLoadCallback(drawChart_wConcretados{{ $plantel->id }});
         google.charts.setOnLoadCallback(drawChart_maestroIndicador{{ $plantel->id }});
+        google.charts.setOnLoadCallback(drawChart_wCalificacion_{{ $plantel->id }});
+        google.charts.setOnLoadCallback(drawChart_wBajas_{{ $plantel->id }});
+        
         @endforeach
         @endpermission
 
@@ -1191,6 +1228,79 @@
         //console.log(res);
         }//End Guagace Chart
         
+        function drawChart_wCalificacion_{{ $plantel->id }}() {
+            $.ajax({
+                type: 'GET',
+                url: '{{route("inscripcions.wdCalificacionR")}}',
+                //cache: true,
+                data: {
+                    'plantel': {{ $plantel->id }},
+                },
+                beforeSend : function(){$("#loading33_{{ $plantel->id }}").show();  },
+                complete : function(){$("#loading33_{{ $plantel->id }}").hide(); },
+                success: function(data) {
+                    
+                    //var linea=JSON.parse(data);
+                //alert(data.promedio);
+                    var data = google.visualization.arrayToDataTable([
+                    ['Label', 'Value'],
+                    ['Promedio', data.promedio],
+                    ]);
+
+                    var options = {
+                    greenFrom:90, greenTo: 100,
+                    yellowFrom:75, yellowTo: 90,
+                    redFrom: 0, redTo: 75,
+                    minorTicks: 5
+                    };
+
+                    var chart = new google.visualization.Gauge(document.getElementById("wCalificacion_{{ $plantel->id }}"));
+
+                    chart.draw(data, options);
+                    
+                },
+            });
+            //console.log(res);
+        }//End Guagace Chart
+
+        function drawChart_wBajas_{{ $plantel->id }}() {
+            var f = new Date();
+            var dt = new Date();
+            dt.setDate( dt.getDate() - 30 );
+            $.ajax({
+                type: 'GET',
+                url: '{{route("historiaClientes.wdBajas")}}',
+                //cache: true,
+                data: {
+                    'plantel': {{ $plantel->id }}
+                },
+                beforeSend : function(){$("#loading34_{{ $plantel->id }}").show();  },
+                complete : function(){$("#loading34_{{ $plantel->id }}").hide(); },
+                success: function(data) {
+                    
+                    //var linea=JSON.parse(data);
+                    
+                    var data = google.visualization.arrayToDataTable([
+                    ['Label', 'Value'],
+                    ['P. Bajas', data.porcentaje_bajas],
+                    ]);
+
+                    var options = {
+                    greenFrom:90, greenTo: 100,
+                    yellowFrom:75, yellowTo: 90,
+                    redFrom: 0, redTo: 75,
+                    minorTicks: 5
+                    };
+
+                    var chart = new google.visualization.Gauge(document.getElementById('wBajas_{{ $plantel->id }}'));
+
+                    chart.draw(data, options);
+                    
+                },
+            });
+            //console.log(res);
+        }//End Guagace Chart
+
         @endforeach
         @endpermission
         
@@ -1267,6 +1377,84 @@
             //console.log(res);
         }//End Guagace Chart
 
+        function drawChart_wCalificacion() {
+            var f = new Date();
+            var dt = new Date();
+            dt.setDate( dt.getDate() - 30 );
+            $.ajax({
+                type: 'GET',
+                url: '{{route("inscripcions.wdCalificacionR")}}',
+                //cache: true,
+                data: {
+                    'plantel': {{ $empleado->plantel_id }},
+                    'st_cliente':4,
+                    'fecha_t':f.getFullYear() + "-" + (f.getMonth() +1) + "-" + f.getDate(),
+                    'fecha_f': dt.getFullYear() + "-" + (dt.getMonth() +1) + "-" + dt.getDate()
+                },
+                beforeSend : function(){$("#loading33").show();  },
+                complete : function(){$("#loading33").hide(); },
+                success: function(data) {
+                    
+                    //var linea=JSON.parse(data);
+                    
+                    var data = google.visualization.arrayToDataTable([
+                    ['Label', 'Value'],
+                    ['Promedio', data.promedio],
+                    ]);
+
+                    var options = {
+                    greenFrom:90, greenTo: 100,
+                    yellowFrom:75, yellowTo: 90,
+                    redFrom: 0, redTo: 75,
+                    minorTicks: 5
+                    };
+
+                    var chart = new google.visualization.Gauge(document.getElementById('wCalificacion'));
+
+                    chart.draw(data, options);
+                    
+                },
+            });
+            //console.log(res);
+        }//End Guagace Chart
+
+        function drawChart_wBajas() {
+            var f = new Date();
+            var dt = new Date();
+            dt.setDate( dt.getDate() - 30 );
+            $.ajax({
+                type: 'GET',
+                url: '{{route("historiaClientes.wdBajas")}}',
+                //cache: true,
+                data: {
+                    'plantel': {{ $empleado->plantel_id }}
+                },
+                beforeSend : function(){$("#loading34").show();  },
+                complete : function(){$("#loading34").hide(); },
+                success: function(data) {
+                    
+                    //var linea=JSON.parse(data);
+                    
+                    var data = google.visualization.arrayToDataTable([
+                    ['Label', 'Value'],
+                    ['P. Bajas', data.porcentaje_bajas],
+                    ]);
+
+                    var options = {
+                    greenFrom:90, greenTo: 100,
+                    yellowFrom:75, yellowTo: 90,
+                    redFrom: 0, redTo: 75,
+                    minorTicks: 5
+                    };
+
+                    var chart = new google.visualization.Gauge(document.getElementById('wBajas'));
+
+                    chart.draw(data, options);
+                    
+                },
+            });
+            //console.log(res);
+        }//End Guagace Chart
 
         //Gaugace Chart
         /*

@@ -17,6 +17,7 @@ use App\ConsultaCalificacion;
 use App\Correo;
 use App\DocAlumno;
 use App\Empleado;
+use App\Especialidad;
 use App\Estado;
 use App\HistoriaCliente;
 use App\Inscripcion;
@@ -1457,11 +1458,11 @@ class ClientesController extends Controller
         $plantel = Plantel::find($cliente->plantel_id);
         $inscripcion = Inscripcion::find($datos['inscripcion']);
         $img = PivotDocCliente::where('cliente_id', $datos['id'])->where('doc_alumno_id', 11)->first();
-        $cadena_img="";
+        $cadena_img = "";
         //dd(count($img));
         if (count($img) == 0) {
-            $cadena_img=explode('/', asset('images/sin_foto.png'));
-        }else{
+            $cadena_img = explode('/', asset('images/sin_foto.png'));
+        } else {
             $cadena_img = explode('/', $img->archivo);
         }
         //dd($cadena_img);
@@ -1557,13 +1558,13 @@ class ClientesController extends Controller
             ->with('list', Cliente::getListFromAllRelationApps());;
     }
 
-    public function ListaDocumentos()
+    public function listaDocumentos()
     {
         return view('clientes.reportes.listaDocumentos')
             ->with('list', Cliente::getListFromAllRelationApps());
     }
 
-    public function ListaDocumentosR(Request $request)
+    public function listaDocumentosR(Request $request)
     {
         $datos = $request->all();
         $documentos_obligatorios = DocAlumno::where('doc_obligatorio', 1)->get();
@@ -1580,6 +1581,7 @@ class ClientesController extends Controller
             ->where('st_cliente_id', $datos['estatus_f'])
             ->get();
         $documentos_faltantes = array();
+
         foreach ($clientes as $cliente) {
             $docsPorCliente = PivotDocCliente::where('cliente_id', $cliente->id)->select('doc_alumno_id')->get();
             //dd($docsPorEmpleado);
@@ -1588,10 +1590,10 @@ class ClientesController extends Controller
                 $i = 0;
                 foreach ($docsPorCliente as $do) {
                     //dd($do);
-                    $array_docsPorCliente[$i] = $do->doc_cliente_id;
+                    $array_docsPorCliente[$i] = $do->doc_alumno_id;
                     $i++;
                 }
-                //dd($array_docsPorEmpleado);
+                //dd($array_docsPorCliente);
                 foreach ($documentos_obligatorios as $do) {
                     if (!in_array($do->id, $array_docsPorCliente)) {
                         //dd($do->id);
@@ -1608,5 +1610,120 @@ class ClientesController extends Controller
         //dd($documentos_faltantes);
         //dd($documentos_faltantes);
         return view('clientes.reportes.listaDocumentosR', compact('documentos_faltantes'));
+    }
+
+    public function matrizDocumentos()
+    {
+        return view('clientes.reportes.matrizDocumentos')
+            ->with('list', Cliente::getListFromAllRelationApps());
+    }
+
+    public function matrizDocumentosR(Request $request)
+    {
+        $datos = $request->all();
+        $documentos_obligatorios = DocAlumno::where('doc_obligatorio', 1)->get();
+        $clientes = Cliente::select(
+            'clientes.id',
+            'clientes.nombre',
+            'clientes.nombre2',
+            'clientes.ape_paterno',
+            'clientes.ape_materno',
+            'stc.name as estatus'
+        )
+            ->where('clientes.plantel_id', $datos['plantel_f'])
+            ->join('st_clientes as stc', 'stc.id', '=', 'clientes.st_cliente_id')
+            ->where('st_cliente_id', $datos['estatus_f'])
+            ->get();
+        $documentos_faltantes = array();
+        $enc = array();
+        array_push($enc, 'Cliente');
+        array_push($enc, 'Nombre');
+        array_push($enc, 'Estatus');
+        foreach ($documentos_obligatorios as $do) {
+            array_push($enc, $do->id);
+        }
+
+        array_push($resumen, $enc);
+        foreach ($clientes as $cliente) {
+            $registro['cliente'] = $cliente->id;
+            $registro['nombre'] = $cliente->nombre . ' ' . $cliente->nombre2 . ' ' . $cliente->ape_paterno . ' ' . $cliente->ape_materno;
+            $registro['estatus'] = $cliente->estatus;
+            foreach ($documentos_obligatorios as $do) {
+                $doc = PivotDocCliente::where('cliente_id', $cliente->id)
+                    ->where('doc_alumno_id', $do->id)
+                    ->select('doc_alumno_id')->first();
+                if (!is_null($doc)) {
+                    $registro[$do->id + 100] = 'X';
+                } else {
+                    $registro[$do->id + 100] = '';
+                }
+            }
+            array_push($documentos_faltantes, $registro);
+        }
+        //dd($resumen);
+
+        return view('clientes.reportes.matrizDocumentosR', compact('documentos_faltantes', 'documentos_obligatorios'));
+    }
+
+    public function listaCredenciales()
+    {
+        $lectivos = Lectivo::pluck('name', 'id');
+        return view('clientes.reportes.listaCredenciales', compact('lectivos'))
+            ->with('list', Cliente::getListFromAllRelationApps());
+    }
+
+    public function listaCredencialesR(Request $request)
+    {
+        $datos = $request->all();
+        //dd($datos);
+        $registros = Cliente::select(
+            'i.matricula',
+            'clientes.id as cliente',
+            'clientes.nombre',
+            'clientes.nombre2',
+            'clientes.ape_materno',
+            'clientes.ape_paterno',
+            'clientes.nombre_padre',
+            'clientes.tel_padre',
+            'clientes.cel_padre',
+            'clientes.nombre_madre',
+            'clientes.tel_madre',
+            'clientes.cel_madre',
+            'clientes.nombre_acudiente',
+            'clientes.tel_acudiente',
+            'clientes.cel_acudiente',
+            'p.razon',
+            'p.calle',
+            'p.no_int',
+            'p.colonia',
+            'p.municipio',
+            'p.estado',
+            'p.cp',
+            'p.id as plantel',
+            'p.img_firma',
+            'd.nombre as dnombre',
+            'd.ape_materno as dape_materno',
+            'd.ape_paterno as dape_paterno',
+            'e.rvoe',
+            'e.ccte',
+            'e.fondo_credencial'
+        )
+            ->join('inscripcions as i', 'i.cliente_id', '=', 'clientes.id')
+            ->join('plantels as p', 'p.id', '=', 'i.plantel_id')
+            ->join('empleados as d', 'd.id', '=', 'p.director_id')
+            ->join('especialidads as e', 'e.id', '=', 'i.especialidad_id')
+            ->where('i.plantel_id', '=', $datos['plantel_f'])
+            ->where('i.especialidad_id', '=', $datos['especialidad_id'])
+            ->where('i.lectivo_id', '=', $datos['lectivo'])
+            ->where('clientes.st_cliente_id', '=', $datos['estatus_f'])
+            ->whereNull('i.deleted_at')
+            ->get();
+        //dd($registros->toArray());
+        $especialidad = Especialidad::find($datos['especialidad_id']);
+
+        //dd($cadena_img);
+        //dd($cadena_img[count($cadena_img) - 1]);
+        //dd(base_path() . '/vendor/cossou/jasperphp/examples/' . $cadena_img[count($cadena_img) - 1]);
+        return view('clientes.reportes.listaCredencialesR', compact('registros', 'especialidad', 'datos'));
     }
 }
