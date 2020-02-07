@@ -2184,6 +2184,9 @@ class InscripcionsController extends Controller
         //dd($registros->toArray());
         $resumen = array();
         $detalle = array();
+        $detalle['calificacion'] = 0;
+        $detalle['cantidad'] = 0;
+
         $grupo = "";
         $indicador = 0;
         $cantidad = 0;

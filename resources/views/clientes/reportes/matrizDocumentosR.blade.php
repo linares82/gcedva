@@ -100,7 +100,7 @@
                         @foreach($documento as $d)
                         <td>{{$d}}</td>
                         @endforeach
-                    <!--<td>{{$i++}}</td><td>{{$documento['cliente']}}</td><td>{{$documento['estatus']}}</td><td>{{$documento['nombre']}}</td><td>{{$documento['documento']}}</td>-->
+                    
                     </tr>
                 @endforeach
             </table>

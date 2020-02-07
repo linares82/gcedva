@@ -72,6 +72,11 @@
                     <th>Especialidad</th><th>Activos</th><th>Bajas</th>
                 </thead>
                 <tbody>
+                    @php
+                        $total_activos=0;
+                        $total_bajas=0;
+                    @endphp
+
                     @foreach($resumen as $linea)
                     <tr>
                     <td>{{$linea['especialidad']}}</td><td>{{$linea['activos']}}</td><td>{{$linea['bajas']}}</td>

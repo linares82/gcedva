@@ -134,6 +134,7 @@
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'name', 'title' => 'DOCUMENTO'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'doc_obligatorio', 'title' => 'OBLIGATORIO'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
@@ -143,7 +144,14 @@
                             <tr>
                                 <td><a href="{{ route('docAlumnos.show', $docAlumno->id) }}">{{$docAlumno->id}}</a></td>
                                 <td>{{$docAlumno->name}}</td>
-                                
+                                <td>
+                                    @if($docAlumno==1)
+                                    SI
+                                    @else
+                                    NO
+                                    @endif
+
+                                </td>
                     
                                 <td class="text-right">
                                     @permission('docAlumnos.edit')

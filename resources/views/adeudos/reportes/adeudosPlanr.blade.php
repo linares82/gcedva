@@ -84,7 +84,7 @@
             <tr>
                 <td>{{$caja->razon}}</td>
                 <td>{{$caja->plan}}</td>
-                <td>{{$caja->cliente." - ".$caja->nombre." ".$caja->nombre2." ".$caja->ape_paterno." ".$caja->ape_materno}}</td>
+                <td>{{$caja->cliente." - ".$caja->nombre." ".$caja->nombre2." ".$caja->ape_paterno." ".$caja->ape_materno." - ".$caja->estatus_cliente}}</td>
                 <td> {{$caja->consecutivo}}</td>
                 <td> {{$caja->estatus}}
                 </td>

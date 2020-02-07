@@ -75,7 +75,7 @@ class ClientesController extends Controller
         }
 
         $users = User::pluck('name', 'id');
-        $users->prepend('Seleccionar opción', 0);
+        $users->prepend('Seleccionar opciÃ³n', 0);
         if (isset($_REQUEST["p"])) {
             if (session()->has('filtro_clientes')) {
                 session(['filtro_clientes' => 1]);
@@ -103,7 +103,7 @@ class ClientesController extends Controller
     public function indexEventos(Request $request)
     {
         $users = User::pluck('name', 'id');
-        $users->prepend('Seleccionar opción', 0);
+        $users->prepend('Seleccionar opciÃ³n', 0);
         //dd($request);
         if (isset($_REQUEST["p"])) {
             if (session()->has('filtro_clientes')) {
@@ -194,7 +194,7 @@ class ClientesController extends Controller
                 ->pluck('name', 'id');
         }
         $empleados = $empleados->reverse();
-        $empleados->put(0, 'Seleccionar Opción');
+        $empleados->put(0, 'Seleccionar OpciÃ³n');
         $empleados = $empleados->reverse();
         //dd($empleados);
         $cuestionarios = Ccuestionario::where('st_cuestionario_id', '=', '1')->pluck('name', 'id');
@@ -358,7 +358,7 @@ class ClientesController extends Controller
                 ->pluck('name', 'id');
         }
         $empleados = $empleados->reverse();
-        $empleados->put(0, 'Seleccionar Opción');
+        $empleados->put(0, 'Seleccionar OpciÃ³n');
         $empleados = $empleados->reverse();
         $cp = PreguntaCliente::where('cliente_id', '=', $id)->get();
         $preguntas = Preguntum::pluck('name', 'id');
@@ -1002,7 +1002,7 @@ class ClientesController extends Controller
             ->get();
         //dd($clientes);
         /* $clientes_array=array();
-          $encabezados=array('Fecha', 'P. Nombre', 'S. Nombre', 'A. Paterno', 'A. Materno', 'Teléfono',
+          $encabezados=array('Fecha', 'P. Nombre', 'S. Nombre', 'A. Paterno', 'A. Materno', 'TelÃ©fono',
           'Celular', 'Mail', 'Escuela Procedencia', 'Medio');
           array_push($clientes_array, $encabezados);
           //dd($clientes_array);
@@ -1485,11 +1485,11 @@ class ClientesController extends Controller
             $jasper->process(
                 // Ruta y nombre de archivo de entrada del reporte
                 base_path() . '/vendor/cossou/jasperphp/examples/credencial.jasper',
-                false, // Ruta y nombre de archivo de salida del reporte (sin extensión)
+                false, // Ruta y nombre de archivo de salida del reporte (sin extensiÃ³n)
                 array('pdf'), // Formatos de salida del reporte
                 array('cliente' => $cliente->id,
                 'inscripcion' => $inscripcion->id,
-                'imagen' => base_path() . '/vendor/cossou/jasperphp/examples/'. $cadena_img[count($cadena_img) - 1]), // Parámetros del reporte
+                'imagen' => base_path() . '/vendor/cossou/jasperphp/examples/'. $cadena_img[count($cadena_img) - 1]), // ParÃ¡metros del reporte
                 array(
                 'driver' => 'mysql',
                 'username' => 'root',
@@ -1636,14 +1636,17 @@ class ClientesController extends Controller
             ->get();
         $documentos_faltantes = array();
         $enc = array();
+
         array_push($enc, 'Cliente');
         array_push($enc, 'Nombre');
         array_push($enc, 'Estatus');
+
         foreach ($documentos_obligatorios as $do) {
             array_push($enc, $do->id);
         }
 
-        array_push($resumen, $enc);
+        //array_push($documentos_faltantes, $enc);
+
         foreach ($clientes as $cliente) {
             $registro['cliente'] = $cliente->id;
             $registro['nombre'] = $cliente->nombre . ' ' . $cliente->nombre2 . ' ' . $cliente->ape_paterno . ' ' . $cliente->ape_materno;
@@ -1660,7 +1663,7 @@ class ClientesController extends Controller
             }
             array_push($documentos_faltantes, $registro);
         }
-        //dd($resumen);
+
 
         return view('clientes.reportes.matrizDocumentosR', compact('documentos_faltantes', 'documentos_obligatorios'));
     }

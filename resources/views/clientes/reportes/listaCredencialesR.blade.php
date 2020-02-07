@@ -153,10 +153,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <tr>
                 <td>
                     <img src="data:image/png;base64, 
-                                {!! base64_encode(QrCode::format('png')->size(80)->generate('Id:'.$r->cliente.
-                                                                                                                            '; Nombre:'.$cliente->nombre.' '.$cliente->nombre2.' '.$cliente->ape_paterno.' '.$cliente->ape_materno.
-                                                                                                                            '; Matricula:'.$inscripcion->matricula.
-                                                                                                                            '; Plantel:'.$plantel->razon)) !!} ">
+                        {!! base64_encode(QrCode::format('png')->size(80)->generate('Id:'.$r->cliente.
+                                                                                '; Nombre:'.$r->nombre.' '.$r->nombre2.' '.$r->ape_paterno.' '.$r->ape_materno.
+                                                                                '; Matricula:'.$r->matricula.
+                                                                                '; Plantel:'.$r->razon)) !!} ">
                 </td>
             </tr>    
           <tr><td>ESTA CREDENCIAL ES ÚNICA E INTRANSFERIBLE YA QUE ACREDITA AL PORTADOR COMO ALUMNO DE ÉSTA

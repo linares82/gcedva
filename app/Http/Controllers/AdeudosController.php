@@ -345,10 +345,12 @@ class AdeudosController extends Controller
             'c.ape_materno',
             'st.name as estatus',
             'st.id as estatus_caja',
-            'p.razon'
+            'p.razon',
+            'stc.name as estatus_cliente'
         )
             ->join('combinacion_clientes as cc', 'cc.plan_pago_id', '=', 'plan_pagos.id')
             ->join('clientes as c', 'c.id', '=', 'cc.cliente_id')
+            ->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
             ->join('cajas as caj', 'caj.cliente_id', '=', 'c.id')
             ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
             ->join('st_cajas as st', 'st.id', '=', 'caj.st_caja_id')
@@ -1067,8 +1069,8 @@ class AdeudosController extends Controller
         //dd($datos);
         $lineas_procesadas = array();
 
-        $mesActual = Carbon::createFromFormat('Y-m-d', $datos['fecha_t'])->month;
-        $yearActual = Carbon::createFromFormat('Y-m-d', $datos['fecha_t'])->year;
+        $mesActual = Carbon::createFromFormat('Y-m-d', Date('Y-m-d'))->month;
+        $yearActual = Carbon::createFromFormat('Y-m-d', Date('Y-m-d'))->year;
         //dd($mesActual);
         $lineas_detalle = array();
         //foreach ($datos['plantel_f'] as $plantel) {
@@ -1166,8 +1168,8 @@ class AdeudosController extends Controller
     {
         $datos = $request->all();
         //dd($datos);
-        $mesActual = Carbon::createFromFormat('Y-m-d', $datos['fecha_t'])->month;
-        $yearActual = Carbon::createFromFormat('Y-m-d', $datos['fecha_t'])->year;
+        $mesActual = Carbon::createFromFormat('Y-m-d', Date('Y-m-d'))->month;
+        $yearActual = Carbon::createFromFormat('Y-m-d', Date('Y-m-d'))->year;
 
         $lineas_procesadas = array();
         $lineas_detalle = array();

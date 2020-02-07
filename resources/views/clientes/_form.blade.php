@@ -1072,7 +1072,10 @@
                                         {{$doc->docAlumno->name}}
                                     </td>
                                     <td>
-                                        <a href="{{$doc->archivo}}" target="_blank">Ver</a>
+                                        @php
+                                            $cadena_img = explode('/', $doc->archivo);
+                                        @endphp
+                                        <a href="{{asset("imagenes/clientes/".$cliente->id."/".end($cadena_img))}}" target="_blank">Ver</a>
                                     </td>
                                     <td>
                                         <a class="btn btn-xs btn-danger" href="{{route('pivotDocClientes.destroy', $doc->id)}}">Eliminar</a>

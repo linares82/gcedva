@@ -25,6 +25,10 @@
             </tr> 
         </thead>
         <tbody>
+          @php
+          $total_descuentos=0;
+          $total_cantidad=0;
+          @endphp
           @foreach($resumen as $linea)
           <tr>
             <td> {{ $linea['especialidad'] }} </td><td> {{ $linea['cantidad'] }} </td><td> {{ $linea['suma_descuentos'] }} </td>

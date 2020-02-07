@@ -9,6 +9,7 @@ use File as Archi;
 
 use App\HistoriaCliente;
 use App\Cliente;
+use App\EventoCliente;
 use App\Mese;
 use App\Seguimiento;
 use Illuminate\Http\Request;
@@ -450,9 +451,55 @@ class HistoriaClientesController extends Controller
 
 		//dd(count($inscripciones_clientes_activos) . "-" . count($bajas->toArray()));
 		$total = count($bajas) + count($inscripciones_clientes_activos);
-		$porcentaje_bajas = round((($bajas * 100) / $total), 2);
+		$porcentaje_bajas = round(((count($bajas) * 100) / $total), 2);
 		$mese = Mese::find($hoy->month);
 
 		return view('historiaClientes.reportes.wdBajasDetalle', compact('mese', 'resumen'));
+	}
+
+	public function clientesEstatus()
+	{
+		$eventos = EventoCliente::pluck('name', 'id');
+		return view('historiaClientes.reportes.clientesEstatus', compact('eventos'))
+			->with('list', Cliente::getListFromAllRelationApps());;
+	}
+
+	public function clientesEstatusR(Request $request)
+	{
+		$datos = $request->all();
+		//dd($datos);
+
+		$historia_clientes = HistoriaCliente::select(
+			'c.id as cliente',
+			'c.nombre',
+			'c.nombre2',
+			'c.ape_paterno',
+			'historia_clientes.descripcion',
+			'c.ape_materno',
+			'p.razon',
+			'stc.name as estatus',
+			'historia_clientes.fecha',
+			'c.tel_cel',
+			'ec.name as evento'
+		)
+			->join('clientes as c', 'c.id', '=', 'historia_clientes.cliente_id')
+			->join('plantels as p', 'p.id', '=', 'c.plantel_id')
+			->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
+			->join('evento_clientes as ec', 'ec.id', '=', 'historia_clientes.evento_cliente_id')
+			->whereDate('fecha', '>=', $datos['fecha_f'])
+			->whereDate('fecha', '<=', $datos['fecha_t'])
+			->whereIn('evento_cliente_id', $datos['evento'])
+			->whereIn('p.id', $datos['plantel'])
+			->orderBy('p.id')
+			->orderBy('ec.id')
+			->orderBy('c.id')
+			->get();
+		//dd($historia_clientes->toArray());
+
+		return view('historiaClientes.reportes.clientesEstatusR', array(
+			'registros' => $historia_clientes,
+			'datos' => $datos
+		))
+			->with('list', Cliente::getListFromAllRelationApps());;
 	}
 }
