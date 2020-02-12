@@ -22,7 +22,7 @@
         <table class="table table-condensed table-striped">
             <thead>
                 <tr>
-                    <th>Cliente</th><th>Becado</th><th>Caja</th><th>Estatus</th><th>Fecha Pago</th><th>Creacion</th><th>Concepto</th><th>Monto Pago</th><th>Forma Pago</th>
+                    <th>Cliente</th><th>Becado</th><th>Caja</th><th>Creado Por</th><th>Estatus</th><th>Fecha Pago</th><th>Creacion</th><th>Concepto</th><th>Monto Pago</th><th>Forma Pago</th>
                 </tr> 
             </thead>
             <tbody>
@@ -39,7 +39,7 @@
                 @foreach($registros_pagados as $registro)
                     @if($forma_pago<>$registro->forma_pago_id and $total_forma_pago>0)
                     <tr>
-                        <td colspan="6"><strong>Total Forma de Pago</strong></td><td style="text-align:right;"><strong>{{number_format($total_forma_pago)}}</strong></td><td></td>
+                        <td colspan="7"><strong>Total Forma de Pago</strong></td><td style="text-align:right;"><strong>{{number_format($total_forma_pago)}}</strong></td><td></td>
                     </tr>
                     <?php $total_forma_pago=0; ?>
                     @endif
@@ -53,6 +53,7 @@
                             @endif
                         </td>
                         <td>{{$registro->consecutivo}}</td>
+                        <td>{{$registro->creador_pago}}</td>
                         <td>{{$registro->estatus_caja}}</td>
                         <td>{{$registro->fecha_pago}}</td>
                         <td>{{$registro->created_at}}</td>
@@ -81,10 +82,10 @@
                     $j=$i+$j;
                     ?>
                     <tr>
-                        <td><strong>Total Forma de Pago</strong></td><td colspan="6"><strong><strong></td><td style="text-align:right;"><strong>{{number_format($total_forma_pago)}}</strong></td><td></td>
+                        <td><strong>Total Forma de Pago</strong></td><td colspan="7"><strong><strong></td><td style="text-align:right;"><strong>{{number_format($total_forma_pago)}}</strong></td><td></td>
                     </tr>
                     <tr>
-                        <td><strong>Total</strong></td><td colspan="6"><strong><strong></td><td style="text-align:right;"><strong>{{number_format($suma_total)}}</strong></td><td></td>
+                        <td><strong>Total</strong></td><td colspan="7"><strong><strong></td><td style="text-align:right;"><strong>{{number_format($suma_total)}}</strong></td><td></td>
                     </tr>
                     <?php $total=$suma_total ?>
             </tbody>

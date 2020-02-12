@@ -97,7 +97,7 @@ Route::get(
     '/hacademicas/lectivosXalumno',
     array(
         'as' => 'hacademicas.lectivosXalumno',
-        'uses' => 'hacademicasController@lectivosXalumno'
+        'uses' => 'HacademicasController@lectivosXalumno'
     )
 );
 
@@ -105,7 +105,7 @@ Route::get(
     '/hacademicas/materiasXalumno',
     array(
         'as' => 'hacademicas.materiasXalumno',
-        'uses' => 'hacademicasController@materiasXalumno'
+        'uses' => 'HacademicasController@materiasXalumno'
     )
 );
 
@@ -113,7 +113,7 @@ Route::get(
     '/hacademicas/gruposXalumno',
     array(
         'as' => 'hacademicas.gruposXalumno',
-        'uses' => 'hacademicasController@gruposXalumno'
+        'uses' => 'HacademicasController@gruposXalumno'
     )
 );
 
@@ -124,4 +124,3 @@ Route::get(
         'uses' => 'AsignacionAcademicasController@asistenciasXAsignacion'
     )
 );
-

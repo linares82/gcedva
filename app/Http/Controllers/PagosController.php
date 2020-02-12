@@ -409,12 +409,14 @@ class PagosController extends Controller
             DB::raw(''
                 . 'concat(c.nombre," ",c.nombre2," ",c.ape_paterno," ",c.ape_materno) as cliente, cajas.id as caja, cajas.consecutivo,'
                 . 'c.beca_bnd, st.name as estatus_caja, fp.id as forma_pago_id, cajas.st_caja_id,'
-                . 'pag.monto as monto_pago, fp.name as forma_pago, pag.fecha as fecha_pago, pag.created_at, cajas.fecha as fecha_caja')
+                . 'pag.monto as monto_pago, fp.name as forma_pago, pag.fecha as fecha_pago, pag.created_at, cajas.fecha as fecha_caja,'
+                . 'up.name as creador_pago')
         )
             ->join('clientes as c', 'c.id', '=', 'cajas.cliente_id')
             ->join('plantels as pla', 'pla.id', '=', 'c.plantel_id')
             ->join('st_cajas as st', 'st.id', '=', 'cajas.st_caja_id')
             ->join('pagos as pag', 'pag.caja_id', '=', 'cajas.id')
+            ->join('users as up', 'up.id', 'pag.usu_alta_id')
             ->join('forma_pagos as fp', 'fp.id', '=', 'pag.forma_pago_id')
             ->where('cajas.plantel_id', '=', $data['plantel_f'])
             ->where('pag.fecha', '>=', $data['fecha_f'])
