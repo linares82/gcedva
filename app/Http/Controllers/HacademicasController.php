@@ -653,4 +653,53 @@ class HacademicasController extends Controller {
             }
         }
     }
+
+    public function lectivosXalumno(Request $request){
+        $datos=$request->all();
+        $lectivos= Hacademica::select('l.id','l.name')->where('cliente_id',$datos['cliente'])
+        ->join('lectivos as l','l.id','=','hacademicas.lectivo_id')
+        ->get();
+        $registros=array();
+        if(count($lectivos)==0){
+            return response()->json([
+                'message' => 'Sin lectivos'], 404); 
+        }
+        foreach($lectivos as $lectivo){
+            array_push($registros, array('id'=>$lectivo->id,'lectivo'=>$lectivo->name));
+        }
+        return response()->json(['resultado'=>$registros]);
+    }
+
+    public function gruposXalumno(Request $request){
+        $datos=$request->all();
+        $grupos =Hacademica::select('g.id','g.name')->where('cliente_id',$datos['cliente'])
+        ->join('grupos as g','g.id','=','hacademicas.grupo_id')
+        ->get();
+        $registros=array();
+        if(count($grupos)==0){
+            return response()->json([
+                'message' => 'Sin grupos'], 404); 
+        }
+        foreach($grupos as $grupo){
+            array_push($registros, array('id'=>$grupo->id,'lectivo'=>$grupo->name));
+        }
+        return response()->json(['resultado'=>$registros]);
+    }
+
+    public function materiasXalumno(Request $request){
+        $datos=$request->all();
+        $materias= Hacademica::select('m.id','m.name')->where('cliente_id',$datos['cliente'])
+        ->join('materia as m','m.id','=','hacademicas.materium_id')
+        ->get();
+        $registros=array();
+        if(count($materias)==0){
+            return response()->json([
+                'message' => 'Sin materias'], 404); 
+        }
+        foreach($materias as $materia){
+            array_push($registros, array('id'=>$materia->id,'materia'=>$materia->name));
+        }
+        return response()->json(['resultado'=>$registros]);
+    }
+
 }

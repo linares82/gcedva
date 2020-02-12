@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Adeudo;
 use App\Cliente;
 use App\Inscripcion;
+use App\Plantel;
 use App\Seguimiento;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
@@ -42,21 +43,24 @@ class graduarCliente extends Command
      */
     public function handle()
     {
-        $clientes_inscritos = Inscripcion::select('cliente_id')->where('plantel_id', 11)->get();
-        //dd($clientes_inscritos->toArray());
-        foreach ($clientes_inscritos as $cliente_inscrito) {
-            $cliente = Cliente::find($cliente_inscrito->cliente_id);
-            $seguimiento = Seguimiento::where('cliente_id', $cliente_inscrito->cliente_id)->first();
-            $adeudos = Adeudo::where('cliente_id', $cliente_inscrito->cliente_id)->where('pagado_bnd', 0)->count();
-            if ($adeudos == 0 and $cliente->st_cliente_id == 4 and $seguimiento->st_seguimiento_id == 2) {
+        $planteles = Plantel::all();
+        foreach ($planteles as $plantel) {
+            $clientes_inscritos = Inscripcion::select('cliente_id')->where('plantel_id', $plantel->id)->get();
+            //dd($clientes_inscritos->toArray());
+            foreach ($clientes_inscritos as $cliente_inscrito) {
+                $cliente = Cliente::find($cliente_inscrito->cliente_id);
+                $seguimiento = Seguimiento::where('cliente_id', $cliente_inscrito->cliente_id)->first();
+                $adeudos = Adeudo::where('cliente_id', $cliente_inscrito->cliente_id)->where('pagado_bnd', 0)->count();
+                if ($adeudos == 0 and $cliente->st_cliente_id == 4 and $seguimiento->st_seguimiento_id == 2) {
 
-                $cliente->st_cliente_id = 20;
-                $cliente->save();
+                    $cliente->st_cliente_id = 20;
+                    $cliente->save();
 
-                $seguimiento->st_seguimiento_id = 7;
-                $seguimiento->save();
+                    $seguimiento->st_seguimiento_id = 7;
+                    $seguimiento->save();
 
-                Log::info('egresado:' . $cliente->id . ' - ' . $seguimiento->id);
+                    Log::info('egresado:' . $cliente->id . ' - ' . $seguimiento->id);
+                }
             }
         }
     }

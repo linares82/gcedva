@@ -4,6 +4,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\AsignacionAcademica;
+use App\AsistenciaR;
 use App\Cliente;
 use App\Empleado;
 use App\Hacademica;
@@ -356,5 +357,38 @@ class AsignacionAcademicasController extends Controller {
             //dd($clientes->toArray());
             return view('asignacionAcademicas.reportes.boleta', compact('clientes'))
                             ->with('');
-        }
+		}
+		
+		public function asistenciasXAsignacion(Request $request){
+			$datos=$request->all();
+
+			$asignaciones=AsignacionAcademica::where('grupo_id',$datos['grupo'])
+			->where('lectivo_id',$datos['lectivo'])
+			->where('materium_id',$datos['materia'])
+			->get();
+			//dd($asignaciones->toArray());
+
+			$array_asistencias=array();
+			$array_resultado=array();
+			foreach($asignaciones as $asignacion){
+				//dd($asignacion);
+				$asistencias=AsistenciaR::where('cliente_id', $datos['cliente'])
+				->where('asignacion_academica_id',$asignacion->id)
+				->get();
+				//dd($asistencias);
+				foreach($asistencias as $asistencia){
+					//dd($asistencia->estAsistencium);
+					array_push($array_asistencias, array('fecha'=>$asistencia->fecha,
+					'estatus'=>$asistencia->estAsistencium->name));
+				}
+				array_push($array_resultado,array(['id_asignacion_academicas'=>$asignacion->id,
+				'materia'=>$asignacion->materia->name,
+				'grupo'=>$asignacion->grupo->name,
+				'lectivo'=>$asignacion->lectivo->name,
+				'asistencias'=>$array_asistencias]));
+			}
+
+			return response()->json(['resultado'=>$array_resultado]);
+			
+		}
 }

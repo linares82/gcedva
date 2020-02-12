@@ -77,9 +77,51 @@ Route::post(
 
 //Api para consultas en la web del cliente
 Route::get(
-    '/clientes/Asistencias',
+    '/adeudos/adeudosXCliente',
     array(
-        'as' => 'ebanxes.cmbOfertaCedva',
-        'uses' => 'EbanxesController@cmbOfertaCedva'
+        'as' => 'adeudos.adeudosXCliente',
+        'uses' => 'AdeudosController@adeudosXCliente'
     )
 );
+
+Route::get(
+    '/inscripcions/historiaCalificaciones',
+    array(
+        'as' => 'inscripcions.historiaCalificaciones',
+        'uses' => 'InscripcionsController@historiaCalificaciones'
+    )
+);
+
+
+Route::get(
+    '/hacademicas/lectivosXalumno',
+    array(
+        'as' => 'hacademicas.lectivosXalumno',
+        'uses' => 'hacademicasController@lectivosXalumno'
+    )
+);
+
+Route::get(
+    '/hacademicas/materiasXalumno',
+    array(
+        'as' => 'hacademicas.materiasXalumno',
+        'uses' => 'hacademicasController@materiasXalumno'
+    )
+);
+
+Route::get(
+    '/hacademicas/gruposXalumno',
+    array(
+        'as' => 'hacademicas.gruposXalumno',
+        'uses' => 'hacademicasController@gruposXalumno'
+    )
+);
+
+Route::get(
+    '/asignacion_academicas/asistenciasXAsignacion',
+    array(
+        'as' => 'asignacion_academicas.asistenciasXAsignacion',
+        'uses' => 'AsignacionAcademicasController@asistenciasXAsignacion'
+    )
+);
+

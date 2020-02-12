@@ -2213,4 +2213,94 @@ class InscripcionsController extends Controller
         //dd($resumen);
         return view('inscripcions.reportes.wCalificacionRDetalle', compact('resumen', 'mese'));
     }
+
+    public function historiaCalificaciones(Request $request){
+        $datos=$request->all();
+
+        $cliente=Cliente::find($datos['cliente']);
+        if(is_null($cliente)){
+            return response()->json([
+                'message' => 'Cliente No Existe'], 404); 
+        }
+        //dd($cliente);
+        $array_resultado=array();
+        $inscripciones=Inscripcion::where('cliente_id', $cliente->id)->get();
+        //dd($inscripciones->toArray());
+        $array_inscripcions=array();
+        foreach($inscripciones as $inscripcion){
+            $array_materias=array();
+            $materias=Hacademica::where('inscripcion_id',$inscripcion->id)->get();
+            //dd($materias->toArray());
+            foreach($materias as $materia){
+                $calificacions=Calificacion::where('hacademica_id',$materia->id)->get();
+                $array_calificaciones=array();
+                foreach($calificacions as $calificacion){
+                    
+                    $ponderacions=CalificacionPonderacion::where('calificacion_id',$calificacion->id)
+                    ->where('calificacion_parcial','<>',0)
+                    ->get();
+                    $array_ponderaciones=array();
+                    $registro=array();
+                    foreach($ponderacions as $ponderacion){
+                        $registro['ponderacion']=$ponderacion->cargaPonderacion->name;
+                        $registro['calificacion_parcial']=$ponderacion->calificacion_parcial;
+                        array_push($array_ponderaciones,$registro);
+                    }
+                    //dd($array_ponderaciones);
+                    if(count($ponderacions)==0){
+                        array_push($array_calificaciones,array('tipo_examen'=>$calificacion->tpoExamen->name,
+                    'calificacion'=>$calificacion->calificacion,
+                    'ponderaciones'=>'Sin Ponderaciones'));
+                    }else{
+                        array_push($array_calificaciones,array('tipo_examen'=>$calificacion->tpoExamen->name,
+                    'calificacion'=>$calificacion->calificacion,
+                    'ponderaciones'=>$array_ponderaciones));
+                    }
+                    
+                }
+                //dd($array_calificaciones);
+                if(count($calificacions)==0){
+                    array_push($array_materias,array('materia'=>$materia->materia->name,
+                    'estatus'=>$materia->stMateria->name,
+                    'calificaciones'=>'Sin calificaciones'));
+                }else{
+                    array_push($array_materias,array('materia'=>$materia->materia->name,
+                    'estatus'=>$materia->stMateria->name,
+                    'calificaciones'=>$array_calificaciones));
+                }
+                
+            }
+            //dd($array_materias);
+            if(count($materias)==0){
+                array_push($array_inscripcions, array('plantel'=>$inscripcion->plantel->razon,
+                'especialidad'=>$inscripcion->especialidad->name,
+                'nivel'=>$inscripcion->nivel->name,
+                'grado'=>$inscripcion->grado->name,
+                'lectivo'=>$inscripcion->lectivo->name,
+                'estatus'=>$inscripcion->stInscripcion->name,
+                 'materias'=>'Sin materias'));   
+            }else{
+                array_push($array_inscripcions, array('plantel'=>$inscripcion->plantel->razon,
+            'especialidad'=>$inscripcion->especialidad->name,
+            'nivel'=>$inscripcion->nivel->name,
+            'grado'=>$inscripcion->grado->name,
+            'lectivo'=>$inscripcion->lectivo->name,
+            'estatus'=>$inscripcion->stInscripcion->name,
+            'materias'=>$array_materias));
+            }
+            
+        }
+        if(count($inscripciones)==0){
+            array_push($array_resultado,array('ciente_id' => $cliente->id,
+            'cliente_nombre_completo' => $cliente->nombre . " " . $cliente->nombre2 . " " . $cliente->ape_paterno . " " . $cliente->ape_materno,
+            'inscripciones'=>'Sin inscripciones'));
+        }else{
+            array_push($array_resultado,array('ciente_id' => $cliente->id,
+            'cliente_nombre_completo' => $cliente->nombre . " " . $cliente->nombre2 . " " . $cliente->ape_paterno . " " . $cliente->ape_materno,
+            'inscripciones'=>$array_inscripcions));
+        }
+        
+        //dd($array_resultado);
+        return response()->json(['resultado'=>$array_resultado]);
+    }
 }

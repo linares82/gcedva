@@ -906,7 +906,7 @@ class AdeudosController extends Controller
                 //->join('pagos as pag','pag.caja_id','=','caj.id')
                 //->whereNull('pag.deleted_at')
                 ->where('p.id', $plantel)
-                ->whereIn('stc.id', array(3, 4, 23, 24, 25))
+                ->whereIn('stc.id', array(3, 4, 20,23, 24, 25))
                 //->whereIn('s.st_seguimiento_id', array(2))
                 //->whereIn('adeudos.caja_concepto_id', $datos['concepto_f'])
                 ->whereDate('adeudos.fecha_pago', '>=', $datos['fecha_f'])
@@ -935,7 +935,7 @@ class AdeudosController extends Controller
                 array_push($lineas_detalle, $registro->toArray());
                 $calculo['plantel'] = $registro->razon;
 
-                if (is_null($registro->borrado_c) and is_null($registro->borrado_cln) and $registro->st_cliente_id == 4) {
+                if (is_null($registro->borrado_c) and is_null($registro->borrado_cln) and ($registro->st_cliente_id == 4 or $registro->st_cliente_id == 20)) {
                     $calculo['clientes_activos']++;
                     $calculo['concepto'] = "Total";
                     if ($registro->pagado_bnd == 1) {
@@ -988,7 +988,7 @@ class AdeudosController extends Controller
                     // dd($conceptos);
                     if ($registro->concepto_id == $id) {
                         $calculo['plantel'] = $registro->razon;
-                        if (is_null($registro->borrado_c) and is_null($registro->borrado_cln) and $registro->st_cliente_id == 4) {
+                        if (is_null($registro->borrado_c) and is_null($registro->borrado_cln) and ($registro->st_cliente_id == 4 or $registro->st_cliente_id == 20)) {
                             $calculo['concepto'] = $concepto;
                             $calculo['clientes_activos']++;
                             if ($registro->pagado_bnd == 1) {
@@ -1101,7 +1101,7 @@ class AdeudosController extends Controller
             ->leftJoin('cajas as caj', 'caj.id', '=', 'adeudos.caja_id')
             ->join('caja_conceptos as cc', 'cc.id', '=', 'adeudos.caja_concepto_id')
             ->where('c.plantel_id', $datos['plantel'])
-            ->whereIn('c.st_cliente_id', array(3, 4, 23, 24, 25))
+            ->whereIn('c.st_cliente_id', array(3, 4,20, 23, 24, 25))
             ->whereMonth('adeudos.fecha_pago', $mesActual)
             ->whereYear('adeudos.fecha_pago', $yearActual)
             //->whereDate('adeudos.fecha_pago', '>=', $datos['fecha_f'])
@@ -1124,7 +1124,7 @@ class AdeudosController extends Controller
             array_push($lineas_detalle, $registro->toArray());
             $calculo['plantel'] = $registro->razon;
 
-            if (is_null($registro->borrado_c) and is_null($registro->borrado_cln) and $registro->st_cliente_id == 4) {
+            if (is_null($registro->borrado_c) and is_null($registro->borrado_cln) and ($registro->st_cliente_id == 4 or $registro->st_cliente_id == 20)) {
                 $calculo['clientes_activos']++;
                 $calculo['concepto'] = "Total";
                 if ($registro->pagado_bnd == 1) {
@@ -1201,7 +1201,7 @@ class AdeudosController extends Controller
                 ->leftJoin('cajas as caj', 'caj.id', '=', 'adeudos.caja_id')
                 ->join('caja_conceptos as cc', 'cc.id', '=', 'adeudos.caja_concepto_id')
                 ->where('p.id', $plantel)
-                ->whereIn('stc.id', array(3, 4, 23, 24, 25))
+                ->whereIn('stc.id', array(3, 4, 20,23, 24, 25))
                 ->whereMonth('adeudos.fecha_pago', $mesActual)
                 ->whereYear('adeudos.fecha_pago', $yearActual)
                 ->whereNull('adeudos.deleted_at')
@@ -1225,7 +1225,8 @@ class AdeudosController extends Controller
                 array_push($lineas_detalle, $registro->toArray());
                 $calculo['plantel'] = $registro->razon;
 
-                if (is_null($registro->borrado_c) and is_null($registro->borrado_cln) and $registro->st_cliente_id == 4) {
+                
+                if (is_null($registro->borrado_c) and is_null($registro->borrado_cln) and ($registro->st_cliente_id == 4 or $registro->st_cliente_id == 20)) {
                     $calculo['clientes_activos']++;
                     $calculo['concepto'] = "Total";
                     if ($registro->pagado_bnd == 1) {
@@ -1270,7 +1271,7 @@ class AdeudosController extends Controller
                     // dd($conceptos);
                     if ($registro->concepto_id == $id) {
                         $calculo['plantel'] = $registro->razon;
-                        if (is_null($registro->borrado_c) and is_null($registro->borrado_cln) and $registro->st_cliente_id == 4) {
+                        if (is_null($registro->borrado_c) and is_null($registro->borrado_cln) and ($registro->st_cliente_id == 4 or $registro->st_cliente_id == 20)) {
                             $calculo['concepto'] = $concepto;
                             $calculo['clientes_activos']++;
                             if ($registro->pagado_bnd == 1) {
@@ -1302,5 +1303,111 @@ class AdeudosController extends Controller
 
 
         return view('adeudos.reportes.maestroR', compact('lineas_procesadas', 'pagos', 'lineas_detalle', 'datos'));
+    }
+
+    public function adeudosXCliente(Request $request)
+    {
+        $resultado = array();
+
+        $datos = $request->all();
+        $cliente = Cliente::find($datos['cliente']);
+        if(is_null($cliente)){
+            return response()->json([
+                'message' => 'Cliente No Existe'], 404); 
+        }
+
+        $combinaciones = CombinacionCliente::select(
+            'combinacion_clientes.id',
+            'p.razon',
+            'e.name as especialidad',
+            'n.name as nivel',
+            'g.name as grado'
+        )
+            ->where('cliente_id', $datos['cliente'])
+            ->join('plantels as p', 'p.id', 'combinacion_clientes.plantel_id')
+            ->join('especialidads as e', 'e.id', 'combinacion_clientes.especialidad_id')
+            ->join('nivels as n', 'n.id', 'combinacion_clientes.nivel_id')
+            ->join('grados as g', 'g.id', 'combinacion_clientes.grado_id')
+            ->where('plan_pago_id', '<>', 0)
+            ->where('cuenta_ticket_pago', '>', 0)
+            ->get();
+
+        foreach ($combinaciones as $combinacion) {
+            $array_combinacion = array();
+            
+            $array_adeudos = array();
+
+            $monto=0;
+            $adeudos = Adeudo::select(
+                'cc.name as concepto',
+                'adeudos.fecha_pago as fecha_planeada_pago',
+                'adeudos.monto',
+                'adeudos.pagado_bnd',
+                'adeudos.caja_id',
+                'adeudos.id'
+            )
+                ->join('caja_conceptos as cc', 'cc.id', '=', 'adeudos.caja_concepto_id')
+                ->where('cliente_id', $datos['cliente'])
+                ->where('combinacion_cliente_id', $combinacion->id)
+                ->get();
+            foreach ($adeudos as $adeudo) {
+                if($adeudo->caja_id<>0){
+                    $caja=Caja::join('caja_lns as ln','ln.caja_id','=','cajas.id')
+                    ->where('cajas.id',$adeudo->caja_id)
+                    ->where('ln.adeudo_id',$adeudo->id)
+                    ->whereNull('ln.deleted_at')
+                    //->get();
+                    ->value('consecutivo');
+                    //dd($caja);
+
+                    $vmonto=Caja::select('ln.total')->join('caja_lns as ln','ln.caja_id','=','cajas.id')
+                    ->where('cajas.id',$adeudo->caja_id)
+                    ->where('ln.adeudo_id',$adeudo->id)
+                    ->whereNull('ln.deleted_at')
+                    ->first();
+                    $monto=$vmonto->total;
+                }else{
+                    $caja=0;
+                    $monto=$adeudo->monto;
+                }
+                //dd($monto);
+                array_push($array_adeudos,array('concepto'=>$adeudo->concepto,
+                                                'fecha_pago_planeada'=>$adeudo->fecha_planeada_pago,
+                                                'monto'=>$monto,
+                                                'pagado_bnd'=>$adeudo->pagado_bnd,
+                                                'caja'=>$caja
+                                            ));
+
+            }
+            //dd($array_adeudos);
+            array_push($array_combinacion, array(
+                'combinacion_id' => $combinacion->id,
+                'plantel' => $combinacion->razon,
+                'especialidad' => $combinacion->especialidad,
+                'nivel' => $combinacion->nivel,
+                'grado' => $combinacion->grado,
+                'adeudos'=>$array_adeudos
+            ));
+            
+        }
+        //dd(count($combinaciones));
+        if(count($combinaciones)==0){
+            array_push($resultado, array(
+                'ciente_id' => $cliente->id,
+                'cliente_nombre_completo' => $cliente->nombre . " " . $cliente->nombre2 . " " . $cliente->ape_paterno . " " . $cliente->ape_materno,
+                'combinacion'=>'Sin combinaciones'
+            ));    
+        }else{
+            array_push($resultado, array(
+                'ciente_id' => $cliente->id,
+                'cliente_nombre_completo' => $cliente->nombre . " " . $cliente->nombre2 . " " . $cliente->ape_paterno . " " . $cliente->ape_materno,
+                'combinacion'=>$array_combinacion
+            ));
+        }
+        
+        
+        //dd($resultado);
+
+        return response()->json(['resultado'=>$resultado]);
     }
 }
