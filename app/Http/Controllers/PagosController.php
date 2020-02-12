@@ -403,7 +403,7 @@ class PagosController extends Controller
         //dd($data);
         $usuario = Empleado::find($data['empleado_f']);
 
-        $registros_pagados = Caja::select(
+        $registros_pagados_aux = Caja::select(
             'pla.razon',
             'c.id',
             DB::raw(''
@@ -419,16 +419,21 @@ class PagosController extends Controller
             ->join('users as up', 'up.id', 'pag.usu_alta_id')
             ->join('forma_pagos as fp', 'fp.id', '=', 'pag.forma_pago_id')
             ->where('cajas.plantel_id', '=', $data['plantel_f'])
-            ->where('pag.fecha', '>=', $data['fecha_f'])
-            ->where('pag.fecha', '<=', $data['fecha_t'])
             ->where('cajas.usu_alta_id', '<=', $usuario->user_id)
             ->whereNull('pag.deleted_at')
             ->where('cajas.st_caja_id', '=', 1)
             ->orderBy('fp.id')
             ->orderBy('pag.fecha')
-            ->distinct()
-            ->get();
-
+            ->distinct();
+        if ($data['fecha_pago'] == 1) {
+            $registros_pagados_aux->where('pag.fecha', '>=', $data['fecha_f'])
+                ->where('pag.fecha', '<=', $data['fecha_t']);
+        } else {
+            $registros_pagados_aux->where('pag.created_at', '>=', $data['fecha_f'])
+                ->where('pag.created_at', '<=', $data['fecha_t']);
+        }
+        $registros_pagados = $registros_pagados_aux->get();
+        //dd($registros_pagados);
         $empleado = Empleado::where('user_id', Auth::user()->id)->first();
 
         $transferencias = Transference::select(

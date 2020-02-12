@@ -14,7 +14,7 @@
     
   </head>
   <body>
-      <h3>Pagos del Plantel {{$plantel->razon}} del dia {{$data['fecha_f']}} al {{$data['fecha_t']}}</h3>
+      <h3>Pagos del Plantel {{$plantel->razon}} del dia(@if($data['fecha_pago']==1) Fecha pago @else Fecha Pago Creacion @endif) {{$data['fecha_f']}} al {{$data['fecha_t']}}</h3>
     <div class="datagrid">
         <?php $total=0; ?>
         @if(isset($registros_pagados) and count($registros_pagados)>0)
@@ -39,7 +39,7 @@
                 @foreach($registros_pagados as $registro)
                     @if($forma_pago<>$registro->forma_pago_id and $total_forma_pago>0)
                     <tr>
-                        <td colspan="7"><strong>Total Forma de Pago</strong></td><td style="text-align:right;"><strong>{{number_format($total_forma_pago)}}</strong></td><td></td>
+                        <td colspan="8"><strong>Total Forma de Pago</strong></td><td style="text-align:right;"><strong>{{number_format($total_forma_pago)}}</strong></td><td></td>
                     </tr>
                     <?php $total_forma_pago=0; ?>
                     @endif
@@ -82,10 +82,10 @@
                     $j=$i+$j;
                     ?>
                     <tr>
-                        <td><strong>Total Forma de Pago</strong></td><td colspan="7"><strong><strong></td><td style="text-align:right;"><strong>{{number_format($total_forma_pago)}}</strong></td><td></td>
+                        <td><strong>Total Forma de Pago</strong></td><td colspan="8"><strong><strong></td><td style="text-align:right;"><strong>{{number_format($total_forma_pago)}}</strong></td><td></td>
                     </tr>
                     <tr>
-                        <td><strong>Total</strong></td><td colspan="7"><strong><strong></td><td style="text-align:right;"><strong>{{number_format($suma_total)}}</strong></td><td></td>
+                        <td><strong>Total</strong></td><td colspan="8"><strong><strong></td><td style="text-align:right;"><strong>{{number_format($suma_total)}}</strong></td><td></td>
                     </tr>
                     <?php $total=$suma_total ?>
             </tbody>

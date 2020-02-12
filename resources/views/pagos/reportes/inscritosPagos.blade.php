@@ -59,6 +59,14 @@
                     <span class="help-block">{{ $errors->first("lectivo_f") }}</span>
                     @endif
                 </div>-->
+                <div class="form-group col-md-6 @if($errors->has('fecha_pago')) has-error @endif">
+                    {!!Form::radio('fecha_pago', '1')!!} <label>Fecha Pago</label>
+                    {!!Form::radio('fecha_pago', '2')!!} <label>Fecha Pago Creacion</label>
+                    @if($errors->has("fecha_pago"))
+                    <span class="help-block">{{ $errors->first("fecha_pago") }}</span>
+                    @endif
+                </div>
+                
                 <div class="form-group col-md-6 @if($errors->has('fecha_f')) has-error @endif">
                     <label for="fecha_f-field">Fecha de:</label>
                     {!! Form::text("fecha_f", null, array("class" => "form-control input-sm", "id" => "fecha_f-field")) !!}
