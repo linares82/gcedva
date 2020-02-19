@@ -1,4 +1,6 @@
-<?php namespace App;
+<?php
+
+namespace App;
 
 use Esensi\Model\Contracts\ValidatingModelInterface;
 use Esensi\Model\Traits\ValidatingModelTrait;
@@ -13,7 +15,7 @@ use Hash;
 
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract, ValidatingModelInterface, HashMethodInterface
 {
-  use Authenticatable, CanResetPassword, ValidatingModelTrait, EntrustUserTrait;
+    use Authenticatable, CanResetPassword, ValidatingModelTrait, EntrustUserTrait;
 
     protected $throwValidationExceptions = true;
 
@@ -29,7 +31,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      *
      * @var array
      */
-    protected $fillable = ['name', 'email', 'password'];
+    protected $fillable = ['name', 'email', 'password', 'api_token'];
 
     /**
      * The attributes excluded from the model's JSON form.
@@ -53,15 +55,14 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         ],
     ];
 
-    public function entrustPasswordHash() 
+    public function entrustPasswordHash()
     {
         $this->password = Hash::make($this->password);
         $this->save();
     }
 
-     public function empleado()
+    public function empleado()
     {
         return $this->belongsTo('App\Empleado', 'empleado_id', 'id');
     }
-
 }

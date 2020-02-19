@@ -17,7 +17,7 @@ class CreateAsistenciaRsTable extends Migration {
             $table->integer('asignacion_academica_id')->unsigned();
             $table->date('fecha');
             $table->integer('cliente_id')->unsigned();
-            $table->integer('est_asistencium_id')->unsigned();
+            $table->integer('est_asistencia_id')->unsigned();
             $table->integer('usu_alta_id')->unsigned();
             $table->integer('usu_mod_id')->unsigned();
             $table->timestamps();

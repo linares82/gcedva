@@ -14,7 +14,7 @@ class AddConsecutivoPagoPlantelsTable extends Migration
     public function up()
     {
         Schema::table('plantels', function(Blueprint $table) {
-            $table->integer('consecutivo_pago')->unsigned();
+            $table->integer('consecutivo_pago')->unsigned()->nullable();
         });
     }
 

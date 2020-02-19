@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Auth;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -76,6 +76,28 @@ Route::post(
 );
 
 //Api para consultas en la web del cliente
+
+Route::post('test', function () {
+    echo json_encode(array('saludo' => "Hola fil"));
+})->middleware('APIToken');
+
+Route::middleware('auth:api')->post('test1', function (Request $request) {
+    echo json_encode(array('saludo' => "Hola fil2"));
+    //return $request->user();
+});
+
+Route::post('test2', function (Request $request) {
+    //echo json_encode(array('saludo' => "Hola fil3"));
+    return $request->user();
+})->middleware('auth:api');
+
+Route::post(
+    '/user/apiLogin',
+    array(
+        'as' => 'users.apiLogin',
+        'uses' => 'User1Controller@apiLogin'
+    )
+);
 Route::get(
     '/adeudos/adeudosXCliente',
     array(

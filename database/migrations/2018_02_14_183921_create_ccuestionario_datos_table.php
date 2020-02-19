@@ -26,9 +26,9 @@ class CreateCcuestionarioDatosTable extends Migration {
             $table->softDeletes();
             $table->foreign('usu_mod_id')->references('id')->on('users');
             $table->foreign('usu_alta_id')->references('id')->on('users');
-            $table->foreign('ccuestionario_pregunta_id')->references('id')->on('ccuestionario_preguntas');
+            $table->foreign('ccuestionario_pregunta_id')->references('id')->on('ccuestionario_pregunta');
             $table->foreign('ccuestionario_id')->references('id')->on('ccuestionarios');
-            $table->foreign('ccuestionario_respuesta_id')->references('id')->on('ccuestionario_respuestas');
+            $table->foreign('ccuestionario_respuesta_id')->references('id')->on('ccuestionario_respuesta');
             $table->foreign('cliente_id')->references('id')->on('clientes');
         });
 	}

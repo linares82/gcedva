@@ -34,7 +34,7 @@ class CreateEmpleadosTable extends Migration {
             $table->string('evaluacion_psico')->nullable();
             $table->integer('plantel_id')->unsigned();
             $table->integer('st_empleado_id')->unsigned();
-            $table->integer('pendientes')->unsigned();
+            $table->integer('pendientes')->unsigned()->nullable();
             $table->integer('user_id')->unsigned();
             $table->integer('usu_alta_id')->unsigned();
             $table->integer('usu_mod_id')->unsigned();

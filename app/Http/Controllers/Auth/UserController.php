@@ -20,30 +20,28 @@ class UserController extends Controller
     |
     */
 
-    
 
-    
     /**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function editPerfil($id, User $user)
-	{
-        $user=$user->find($id);
-		return view('auth.perfil', compact('user'));
-	}
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function editPerfil($id, User $user)
+    {
+        $user = $user->find($id);
+        return view('auth.perfil', compact('user'));
+    }
 
-    public function updatePerfil(User $user,Request $request)
-	{
-		//update data
-        $input=$request->all();
-        dd($input);
-        $user=$user->find($input['id']);
-        $user->email=$input['email'];
-        $user->password=Hash::make($input['password']);
-	$user->update();
+    public function updatePerfil(User $user, Request $request)
+    {
+        //update data
+        $input = $request->all();
+        //dd($input);
+        $user = $user->find($input['id']);
+        $user->email = $input['email'];
+        $user->password = Hash::make($input['password']);
+        $user->update();
         return redirect()->route('home')->with('message', 'Item updated successfully.');
-	}
+    }
 }

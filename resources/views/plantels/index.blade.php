@@ -26,7 +26,7 @@
     <div class="">
         <h3>
             <i class="glyphicon glyphicon-align-justify"></i> @yield('plantelsAppTitle')
-            @permission('lectivos.create')
+            @permission('plantels.create')
             <a class="btn btn-success pull-right" href="{{ route('plantels.create') }}"><i class="glyphicon glyphicon-plus"></i> Crear</a>
             @endpermission
         </h3>
@@ -142,13 +142,13 @@
                                 <td>{{$plantel->rfc}}</td>
                                 <td>{{$plantel->cve_incorporacion}}</td>
                                 <td class="text-right">
-                                    @permission('lectivos.duplicate')
+                                    @permission('plantels.duplicate')
                                     <a class="btn btn-xs btn-primary" href="{{ route('plantels.duplicate', $plantel->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>
                                     @endpermission
-                                    @permission('lectivos.edit')
+                                    @permission('plantels.edit')
                                         <a class="btn btn-xs btn-warning" href="{{ route('plantels.edit', $plantel->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
                                     @endpermission
-                                    @permission('lectivos.destroy')
+                                    @permission('plantels.destroy')
                                         {!! Form::model($plantel, array('route' => array('plantels.destroy', $plantel->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}
                                             <button type="submit" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> Borrar</button>
                                         {!! Form::close() !!}

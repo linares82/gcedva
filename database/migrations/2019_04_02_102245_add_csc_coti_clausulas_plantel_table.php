@@ -15,7 +15,7 @@ class AddCscCotiClausulasPlantelTable extends Migration
     {
         Schema::table('plantels', function(Blueprint $table) {
             $table->integer('csc_cotizacion')->unsigned()->default(0);
-            $table->text('clausulas_cotizacion');
+            $table->text('clausulas_cotizacion')->nullable();
         });
     }
 

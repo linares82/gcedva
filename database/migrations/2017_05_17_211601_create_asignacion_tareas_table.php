@@ -20,7 +20,7 @@ class CreateAsignacionTareasTable extends Migration {
             $table->integer('asunto_id')->unsigned();
             $table->text('detalle')->nullable();
             $table->integer('st_tarea_id')->unsigned();
-            $table->text('observaciones');
+            $table->text('observaciones')->nullable();
             $table->integer('usu_alta_id')->unsigned();
             $table->integer('usu_mod_id')->unsigned();
             $table->timestamps();

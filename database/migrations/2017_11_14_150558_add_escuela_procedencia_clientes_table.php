@@ -14,7 +14,7 @@ class AddEscuelaProcedenciaClientesTable extends Migration
     public function up()
     {
         Schema::table('clientes', function(Blueprint $table) {
-            $table->string('escuela_procedencia');
+            $table->string('escuela_procedencia')->nullable();
         });
     }
 
