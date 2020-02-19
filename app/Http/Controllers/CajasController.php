@@ -567,10 +567,7 @@ class CajasController extends Controller
     public function pagar(Request $request)
     {
         $caja = Caja::find($request->get('caja'));
-        $caja->st_caja_id = 1;
-        $caja->referencia = $request->get('referencia');
-        $caja->forma_pago_id = $request->get('forma_pago_id');
-        $caja->save();
+
         $cliente = Cliente::find($caja->cliente_id);
         $cajas = Caja::select('cajas.consecutivo as caja', 'cajas.fecha', 'ln.caja_concepto_id as concepto_id', 'cc.name as concepto', 'ln.total', 'st.name as estatus')
             ->join('caja_lns as ln', 'ln.caja_id', '=', 'cajas.id')
@@ -589,6 +586,12 @@ class CajasController extends Controller
             $adeudo->caja_id = $caja->id;
             $adeudo->save();
         }
+
+        $caja->st_caja_id = 1;
+        $caja->referencia = $request->get('referencia');
+        $caja->forma_pago_id = $request->get('forma_pago_id');
+        $caja->save();
+
         return view('cajas.caja', compact('cliente', 'caja', 'combinaciones', 'cajas'))
             ->with('list', Caja::getListFromAllRelationApps())
             ->with('list1', CajaLn::getListFromAllRelationApps());

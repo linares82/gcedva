@@ -63,7 +63,7 @@
                             <div class="form-group col-md-4" >
                                 <label for="q_grados.plantel_id_lt">PLANTEL</label>
                                 
-                                    {!! Form::select("grados.plantel_id", $list["Plantel"], "{{ @(Request::input('q')['grados.plantel_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[grados.plantel_id_lt]", "id"=>"q_grados.plantel_id_lt", "style"=>"width:100%;", "onchange"=>"cambioOpcion()")) !!}
+                                    {!! Form::select("grados.plantel_id", $list["Plantel"], "{{ @(Request::input('q')['grados.plantel_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[grados.plantel_id_lt]", "id"=>"q_grados.plantel_id_lt", "style"=>"width:100%;"")) !!}
                                     <div id='loading10' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                             </div>
                             

@@ -142,11 +142,16 @@
                     </h3>
                 </div>
                 <div class="box-body">
+                    @php
+                    $empleado=App\Empleado::where('user_id',Auth::user()->id)->first();
+                    @endphp
                     <div class="form-group col-md-2 col-sm-2 col-xs-2">
                         <h4>% Asistencia Semana Anterior</h4>
                     <div id="wAsistencias" style="height: 150px;">
                         <div id='loading30' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                     </div>
+                        <a href="{{route('inscripcions.widgetPorcentajeAsistenciaDetalle', array('plantel'=>$empleado->plantel_id))}}" class="btn btn-xs btn-success" target="_blank">Detalle</a>
+                        
                     </div>
                     
                     <div class="form-group col-md-2 col-sm-2 col-xs-2">
@@ -161,7 +166,7 @@
                     <div class="form-group col-md-2 col-sm-2 col-xs-2">
                         <h4 class="box-title">Porcentaje de pago del mes en curso</h4>
                         @php
-                        $empleado=App\Empleado::where('user_id',Auth::user()->id)->first();
+                        
                         $date=date('Y-m-d');
                         //dd($date);
                         $fecha_f=\Carbon\Carbon::createFromFormat('Y-m-d',$date);
@@ -230,6 +235,7 @@
                     <div id="wAsistencias_{{ $plantel->id }}" style="height: 150px;">
                         <div id='loading30{{ $plantel->id }}' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                     </div>
+                    <a href="{{route('inscripcions.widgetPorcentajeAsistenciaDetalle', array('plantel'=>$plantel->id))}}" class="btn btn-xs btn-success" target="_blank">Detalle</a>
                     </div>
                     
                     <div class="form-group col-md-2 col-sm-2 col-xs-2">
@@ -1286,9 +1292,9 @@
                     ]);
 
                     var options = {
-                    greenFrom:90, greenTo: 100,
-                    yellowFrom:75, yellowTo: 90,
-                    redFrom: 0, redTo: 75,
+                    redFrom:15, redTo: 100,
+                    yellowFrom:2, yellowTo: 15,
+                    greenFrom: 0, greenTo: 2,
                     minorTicks: 5
                     };
 
@@ -1441,9 +1447,9 @@
                     ]);
 
                     var options = {
-                    greenFrom:90, greenTo: 100,
-                    yellowFrom:75, yellowTo: 90,
-                    redFrom: 0, redTo: 75,
+                    redFrom:15, redTo: 100,
+                    yellowFrom:2, yellowTo: 15,
+                    greenFrom: 0, greenTo: 2,
                     minorTicks: 5
                     };
 

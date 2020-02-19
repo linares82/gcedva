@@ -1956,6 +1956,7 @@ class InscripcionsController extends Controller
                     ->whereNotIn('cliente_id', [0, 2])
                     ->whereDate('fecha', '>=', $vinicio->format('Y-m-d'))
                     ->whereDate('fecha', '<=', $pfin->format('Y-m-d'))
+                    ->whereIn('fecha', $fechas)
                     ->count();
                 //->get();
 
@@ -1999,6 +2000,238 @@ class InscripcionsController extends Controller
         }
         $promedio = round(($suma_calificaciones / $cuenta_calificaciones), 2);
         return $promedio;
+    }
+
+    public function widgetPorcentajeAsistenciaDetalle(Request $request)
+    {
+        $data = $request->all();
+        //dd($data);
+
+        //$fecha_hoy = date('2019-12-17');
+        $fecha_hoy = date('Y-m-d');
+
+        $lectivos = Lectivo::whereDate('inicio', '<=', $fecha_hoy)
+            ->whereDate('fin', '>=', $fecha_hoy)
+            ->get();
+
+        $lectivos_array = array();
+        $posicion = 0;
+        foreach ($lectivos as $lectivo) {
+            $lectivos_array[$posicion] = $lectivo->id;
+            $posicion++;
+        }
+        //dd($lectivos_array);
+        $asignaciones = AsignacionAcademica::where('plantel_id', $data['plantel'])
+            ->whereIn('lectivo_id', $lectivos_array)
+            //->where('lectivo_id', $data['lectivo_f'])
+            //->where('id', 1508)
+            ->orderBy('plantel_id')
+            ->orderBy('lectivo_id')
+            ->orderBy('materium_id')
+            ->get();
+        //dd($asignaciones->toArray());
+        $contador_clientes = 0;
+        $sumatoria_promedio_clientes = 0;
+        $resumen = array();
+        //dd($asignaciones->toArray());
+        foreach ($asignaciones as $asignacion) {
+            $contador_clientes_asignacion = 0;
+            $sumatoria_promedio_clientes_asignacion = 0;
+            $registros = Hacademica::select(
+                'hacademicas.grupo_id',
+                'hacademicas.grado_id',
+                'hacademicas.lectivo_id',
+                'hacademicas.plantel_id',
+                'c.nombre',
+                'c.nombre2',
+                'c.ape_paterno',
+                'c.ape_materno',
+                'g.name as grupo',
+                'l.name as lectivo',
+                'mat.name as materia',
+                DB::raw('concat(e.nombre," ",e.ape_paterno," ",e.ape_materno) as maestro'),
+                'gra.name as grado',
+                'p.razon as plantel',
+                'p.logo',
+                'aa.id as asignacion',
+                'c.id as cliente',
+                'p.id as p_id',
+                'c.tel_fijo'
+            )
+                ->join('materia as mat', 'mat.id', '=', 'hacademicas.materium_id')
+                ->join('clientes as c', 'c.id', '=', 'hacademicas.cliente_id')
+                ->join('grupos as g', 'g.id', '=', 'hacademicas.grupo_id')
+                ->join('lectivos as l', 'l.id', '=', 'hacademicas.lectivo_id')
+                ->join('asignacion_academicas as aa', 'aa.grupo_id', '=', 'g.id')
+                //->join('asistencia_rs as asis', 'asis.asignacion_academica_id','=','aa.id')
+                ->join('empleados as e', 'e.id', '=', 'aa.empleado_id')
+                ->join('grados as gra', 'gra.id', '=', 'hacademicas.grado_id')
+                ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
+                ->where('c.st_cliente_id', '<>', 3)
+                ->where('c.st_cliente_id', '<>', 1)
+                ->where('aa.id', $asignacion->id)
+                //->where('aa.id', 1508)
+                ->where('hacademicas.plantel_id', $asignacion->plantel_id)
+                ->where('hacademicas.lectivo_id', $asignacion->lectivo_id)
+                ->where('hacademicas.grupo_id', $asignacion->grupo_id)
+                //->where('inscripcions.grado_id ',$asignacion->grado_id)
+                ->where('aa.plantel_id', $asignacion->plantel_id)
+                ->where('aa.lectivo_id', $asignacion->lectivo_id)
+                ->where('aa.grupo_id', $asignacion->grupo_id)
+                ->where('aa.empleado_id', $asignacion->empleado_id)
+                ->where('aa.materium_id', $asignacion->materium_id)
+                ->where('hacademicas.materium_id', $asignacion->materium_id)
+                ->whereNull('hacademicas.deleted_at')
+                ->whereNull('hacademicas.deleted_at')
+                ->orderBy('hacademicas.plantel_id')
+                ->orderBy('hacademicas.lectivo_id')
+                ->orderBy('hacademicas.grupo_id')
+                ->orderBy('hacademicas.grado_id')
+                ->distinct()
+                ->get();
+
+            $total_alumnos = 0;
+            foreach ($registros as $r) {
+                $total_alumnos++;
+            }
+
+
+            //AsignacionAcademica::find($data['asignacion']);
+
+            $dias = array();
+            //dd($asignacion->horarios->toArray());
+            foreach ($asignacion->horarios as $horario) {
+                array_push($dias, $horario->dia->name);
+            }
+            //dd($dias);
+
+
+            $fechas = array();
+            $lectivo = Lectivo::find($asignacion->lectivo_id);
+            //dd(count($lectivo->diasNoHabiles));
+            $no_habiles = array();
+
+            if (count($lectivo->diasNoHabiles) > 0) {
+                foreach ($lectivo->diasNoHabiles as $no_habil) {
+                    array_push($no_habiles, Carbon::createFromFormat('Y-m-d', $no_habil->fecha));
+                }
+            }
+
+            //dd($no_habiles);
+            //$pinicio = Carbon::createFromFormat('Y-m-d', $data['fecha_f']);
+            $pinicio = Carbon::createFromFormat('Y-m-d', $fecha_hoy)
+                ->startOfWeek(Carbon::MONDAY)
+                ->subWeek()
+                ->startOfWeek();
+            $vinicio = Carbon::createFromFormat('Y-m-d', $fecha_hoy)
+                ->startOfWeek(Carbon::MONDAY)
+                ->subWeek()
+                ->startOfWeek();
+
+            $pfin = Carbon::createFromFormat('Y-m-d', $fecha_hoy)
+                ->startOfWeek(Carbon::MONDAY)
+                ->subWeek()
+                ->endOfWeek();
+
+            $total_asistencias = 0;
+            while ($pfin->greaterThanOrEqualTo($pinicio)) {
+
+                if (in_array('Lunes', $dias)) {
+                    //dd("hay lunes");
+                    if ($pinicio->isMonday() and !in_array($pinicio, $no_habiles)) {
+                        array_push($fechas, $pinicio->toDateString());
+                        $total_asistencias++;
+                    }
+                    //dd($fechas);
+                }
+                if (in_array('Martes', $dias)) {
+                    //dd("hay martes");
+                    if ($pinicio->isTuesday() and !in_array($pinicio, $no_habiles)) {
+                        array_push($fechas, $pinicio->toDateString());
+                        $total_asistencias++;
+                    }
+                }
+                if (in_array('Miercoles', $dias)) {
+                    //dd("hay miercoles");
+                    if ($pinicio->isWednesday() and !in_array($pinicio, $no_habiles)) {
+                        array_push($fechas, $pinicio->toDateString());
+                        $total_asistencias++;
+                    }
+                }
+                if (in_array('Jueves', $dias)) {
+                    //dd("hay jueves");
+                    if ($pinicio->isThursday() and !in_array($pinicio, $no_habiles)) {
+                        array_push($fechas, $pinicio->toDateString());
+                        $total_asistencias++;
+                    }
+                }
+                if (in_array('Viernes', $dias)) {
+                    //dd("hay viernes");
+                    if ($pinicio->isFriday() and !in_array($pinicio, $no_habiles)) {
+                        array_push($fechas, $pinicio->toDateString());
+                        $total_asistencias++;
+                    }
+                }
+                if (in_array('Sabado', $dias)) {
+
+                    if ($pinicio->isSaturday()  and !in_array($pinicio, $no_habiles)) {
+                        array_push($fechas, $pinicio->toDateString());
+                        $total_asistencias++;
+                    }
+                }
+                $pinicio->addDay();
+                //dd($fechas);
+            }
+            //dd($fechas);
+            $asistencias_planeadas = 0;
+            foreach ($fechas as $fecha) {
+                $asistencias_planeadas++;
+            }
+
+            foreach ($registros as $r) {
+                /*if($loop==1){
+                    Log::info("FLC-" . $asignacion->id . "-" . $total_alumnos);
+                }*/
+
+                $asistencias_reales = \App\AsistenciaR::where('asignacion_academica_id', $asignacion->id)
+                    ->where('cliente_id', $r->cliente)
+                    ->whereIn('est_asistencia_id', array(1, 4))
+                    ->whereNotIn('cliente_id', [0, 2])
+                    ->whereDate('fecha', '>=', $vinicio->format('Y-m-d'))
+                    ->whereDate('fecha', '<=', $pfin->format('Y-m-d'))
+                    ->whereIn('fecha', $fechas)
+                    ->count();
+                //->get();
+                //dd($asistencias_reales->toArray());
+
+                //dd($asistencias_planeadas ." - ".$asistencias_reales);    
+                $promedio_cliente = ($asistencias_reales * 100) / $asistencias_planeadas;
+                //Log::info($r->cliente . 'Promedio-' . $asistencias_reales);
+                $contador_clientes++;
+                $contador_clientes_asignacion++;
+                $sumatoria_promedio_clientes_asignacion = $sumatoria_promedio_clientes_asignacion + $promedio_cliente;
+                $sumatoria_promedio_clientes = $sumatoria_promedio_clientes + $promedio_cliente;
+            }
+            if ($contador_clientes_asignacion > 0) {
+                $resul = $sumatoria_promedio_clientes_asignacion / $contador_clientes_asignacion;
+            } else {
+                $resul = 0;
+            }
+
+            array_push($resumen, array(
+                'asignacion' => $asignacion->id,
+                'plantel' => $asignacion->plantel->razon,
+                'instructor' => $asignacion->empleado->nombre . ' ' . $asignacion->empleado->ape_paterno . ' ' . $asignacion->empleado->ape_materno,
+                'materia' => $asignacion->materia->name,
+                'grupo' => $asignacion->grupo->name,
+                'lectivo' => $asignacion->lectivo->name,
+                'total_alumnos' => $total_alumnos,
+                'promedio_asistencia' => $resul
+            ));
+        }
+        //dd($resumen);
+
+        return view('inscripcions.reportes.widgetPorcentajeAsistenciaDetalle', compact('resumen'));
     }
 
     public function wCalificacion(Request $request)
@@ -2214,93 +2447,108 @@ class InscripcionsController extends Controller
         return view('inscripcions.reportes.wCalificacionRDetalle', compact('resumen', 'mese'));
     }
 
-    public function historiaCalificaciones(Request $request){
-        $datos=$request->all();
+    public function historiaCalificaciones(Request $request)
+    {
+        $datos = $request->all();
 
-        $cliente=Cliente::find($datos['cliente']);
-        if(is_null($cliente)){
+        $cliente = Cliente::find($datos['cliente']);
+        if (is_null($cliente)) {
             return response()->json([
-                'message' => 'Cliente No Existe'], 404); 
+                'message' => 'Cliente No Existe'
+            ], 404);
         }
         //dd($cliente);
-        $array_resultado=array();
-        $inscripciones=Inscripcion::where('cliente_id', $cliente->id)->get();
+        $array_resultado = array();
+        $inscripciones = Inscripcion::where('cliente_id', $cliente->id)->get();
         //dd($inscripciones->toArray());
-        $array_inscripcions=array();
-        foreach($inscripciones as $inscripcion){
-            $array_materias=array();
-            $materias=Hacademica::where('inscripcion_id',$inscripcion->id)->get();
+        $array_inscripcions = array();
+        foreach ($inscripciones as $inscripcion) {
+            $array_materias = array();
+            $materias = Hacademica::where('inscripcion_id', $inscripcion->id)->get();
             //dd($materias->toArray());
-            foreach($materias as $materia){
-                $calificacions=Calificacion::where('hacademica_id',$materia->id)->get();
-                $array_calificaciones=array();
-                foreach($calificacions as $calificacion){
-                    
-                    $ponderacions=CalificacionPonderacion::where('calificacion_id',$calificacion->id)
-                    ->where('calificacion_parcial','<>',0)
-                    ->get();
-                    $array_ponderaciones=array();
-                    $registro=array();
-                    foreach($ponderacions as $ponderacion){
-                        $registro['ponderacion']=$ponderacion->cargaPonderacion->name;
-                        $registro['calificacion_parcial']=$ponderacion->calificacion_parcial;
-                        array_push($array_ponderaciones,$registro);
+            foreach ($materias as $materia) {
+                $calificacions = Calificacion::where('hacademica_id', $materia->id)->get();
+                $array_calificaciones = array();
+                foreach ($calificacions as $calificacion) {
+
+                    $ponderacions = CalificacionPonderacion::where('calificacion_id', $calificacion->id)
+                        ->where('calificacion_parcial', '<>', 0)
+                        ->get();
+                    $array_ponderaciones = array();
+                    $registro = array();
+                    foreach ($ponderacions as $ponderacion) {
+                        $registro['ponderacion'] = $ponderacion->cargaPonderacion->name;
+                        $registro['calificacion_parcial'] = $ponderacion->calificacion_parcial;
+                        array_push($array_ponderaciones, $registro);
                     }
                     //dd($array_ponderaciones);
-                    if(count($ponderacions)==0){
-                        array_push($array_calificaciones,array('tipo_examen'=>$calificacion->tpoExamen->name,
-                    'calificacion'=>$calificacion->calificacion,
-                    'ponderaciones'=>'Sin Ponderaciones'));
-                    }else{
-                        array_push($array_calificaciones,array('tipo_examen'=>$calificacion->tpoExamen->name,
-                    'calificacion'=>$calificacion->calificacion,
-                    'ponderaciones'=>$array_ponderaciones));
+                    if (count($ponderacions) == 0) {
+                        array_push($array_calificaciones, array(
+                            'tipo_examen' => $calificacion->tpoExamen->name,
+                            'calificacion' => $calificacion->calificacion,
+                            'ponderaciones' => 'Sin Ponderaciones'
+                        ));
+                    } else {
+                        array_push($array_calificaciones, array(
+                            'tipo_examen' => $calificacion->tpoExamen->name,
+                            'calificacion' => $calificacion->calificacion,
+                            'ponderaciones' => $array_ponderaciones
+                        ));
                     }
-                    
                 }
                 //dd($array_calificaciones);
-                if(count($calificacions)==0){
-                    array_push($array_materias,array('materia'=>$materia->materia->name,
-                    'estatus'=>$materia->stMateria->name,
-                    'calificaciones'=>'Sin calificaciones'));
-                }else{
-                    array_push($array_materias,array('materia'=>$materia->materia->name,
-                    'estatus'=>$materia->stMateria->name,
-                    'calificaciones'=>$array_calificaciones));
+                if (count($calificacions) == 0) {
+                    array_push($array_materias, array(
+                        'materia' => $materia->materia->name,
+                        'estatus' => $materia->stMateria->name,
+                        'calificaciones' => 'Sin calificaciones'
+                    ));
+                } else {
+                    array_push($array_materias, array(
+                        'materia' => $materia->materia->name,
+                        'estatus' => $materia->stMateria->name,
+                        'calificaciones' => $array_calificaciones
+                    ));
                 }
-                
             }
             //dd($array_materias);
-            if(count($materias)==0){
-                array_push($array_inscripcions, array('plantel'=>$inscripcion->plantel->razon,
-                'especialidad'=>$inscripcion->especialidad->name,
-                'nivel'=>$inscripcion->nivel->name,
-                'grado'=>$inscripcion->grado->name,
-                'lectivo'=>$inscripcion->lectivo->name,
-                'estatus'=>$inscripcion->stInscripcion->name,
-                 'materias'=>'Sin materias'));   
-            }else{
-                array_push($array_inscripcions, array('plantel'=>$inscripcion->plantel->razon,
-            'especialidad'=>$inscripcion->especialidad->name,
-            'nivel'=>$inscripcion->nivel->name,
-            'grado'=>$inscripcion->grado->name,
-            'lectivo'=>$inscripcion->lectivo->name,
-            'estatus'=>$inscripcion->stInscripcion->name,
-            'materias'=>$array_materias));
+            if (count($materias) == 0) {
+                array_push($array_inscripcions, array(
+                    'plantel' => $inscripcion->plantel->razon,
+                    'especialidad' => $inscripcion->especialidad->name,
+                    'nivel' => $inscripcion->nivel->name,
+                    'grado' => $inscripcion->grado->name,
+                    'lectivo' => $inscripcion->lectivo->name,
+                    'estatus' => $inscripcion->stInscripcion->name,
+                    'materias' => 'Sin materias'
+                ));
+            } else {
+                array_push($array_inscripcions, array(
+                    'plantel' => $inscripcion->plantel->razon,
+                    'especialidad' => $inscripcion->especialidad->name,
+                    'nivel' => $inscripcion->nivel->name,
+                    'grado' => $inscripcion->grado->name,
+                    'lectivo' => $inscripcion->lectivo->name,
+                    'estatus' => $inscripcion->stInscripcion->name,
+                    'materias' => $array_materias
+                ));
             }
-            
         }
-        if(count($inscripciones)==0){
-            array_push($array_resultado,array('ciente_id' => $cliente->id,
-            'cliente_nombre_completo' => $cliente->nombre . " " . $cliente->nombre2 . " " . $cliente->ape_paterno . " " . $cliente->ape_materno,
-            'inscripciones'=>'Sin inscripciones'));
-        }else{
-            array_push($array_resultado,array('ciente_id' => $cliente->id,
-            'cliente_nombre_completo' => $cliente->nombre . " " . $cliente->nombre2 . " " . $cliente->ape_paterno . " " . $cliente->ape_materno,
-            'inscripciones'=>$array_inscripcions));
+        if (count($inscripciones) == 0) {
+            array_push($array_resultado, array(
+                'ciente_id' => $cliente->id,
+                'cliente_nombre_completo' => $cliente->nombre . " " . $cliente->nombre2 . " " . $cliente->ape_paterno . " " . $cliente->ape_materno,
+                'inscripciones' => 'Sin inscripciones'
+            ));
+        } else {
+            array_push($array_resultado, array(
+                'ciente_id' => $cliente->id,
+                'cliente_nombre_completo' => $cliente->nombre . " " . $cliente->nombre2 . " " . $cliente->ape_paterno . " " . $cliente->ape_materno,
+                'inscripciones' => $array_inscripcions
+            ));
         }
-        
+
         //dd($array_resultado);
-        return response()->json(['resultado'=>$array_resultado]);
+        return response()->json(['resultado' => $array_resultado]);
     }
 }

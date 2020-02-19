@@ -94,9 +94,6 @@ class PagosController extends Controller
 
         $suma_pagos = Pago::select('monto')->where('caja_id', '=', $pago->caja_id)->sum('monto');
         if ($suma_pagos >= $caja->total) {
-            $caja->st_caja_id = 1;
-            //$caja->fecha=date_create(date_format(date_create(date('Y/m/d')),'Y/m/d'));
-            $caja->save();
 
             foreach ($caja->cajaLns as $ln) {
                 if ($ln->adeudo_id > 0) {
@@ -106,6 +103,10 @@ class PagosController extends Controller
                     $adeudo->save();
                 }
             }
+
+            $caja->st_caja_id = 1;
+            //$caja->fecha=date_create(date_format(date_create(date('Y/m/d')),'Y/m/d'));
+            $caja->save();
         } elseif ($suma_pagos > 0 and $suma_pagos < $caja->total) {
             $caja->st_caja_id = 3;
             $caja->save();

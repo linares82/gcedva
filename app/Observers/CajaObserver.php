@@ -6,7 +6,7 @@ use App\Adeudo;
 use App\Caja;
 use App\Cliente;
 use App\Seguimiento;
-use App\Plantel;
+use Log;
 use App\Inscripcion;
 
 class CajaObserver
@@ -17,9 +17,9 @@ class CajaObserver
      * @param  User  $user
      * @return void
      */
-     public $cajas;
-     public $caja;
-    
+    public $cajas;
+    public $caja;
+
 
     /**
      * Listen to the Caja updated event.
@@ -29,32 +29,36 @@ class CajaObserver
      */
     public function updated(Caja $caja)
     {
-        $this->caja=$caja;
-        $cliente=Cliente::find($this->caja->cliente_id);
-        $seguimiento=Seguimiento::where('cliente_id',$this->caja->cliente_id)->first();
-        
+        $this->caja = $caja;
+        $cliente = Cliente::find($this->caja->cliente_id);
+        $seguimiento = Seguimiento::where('cliente_id', $this->caja->cliente_id)->first();
+
         //$cajas=Caja::where('cliente_id',$this->caja->cliente_id)->where('id','<>',$this->caja->id)->get();
         //dd($this->caja);
-        if($this->caja->st_caja_id==1 or $this->caja->st_caja_id==3){    
-            $seguimiento->st_seguimiento_id=2;
+        if ($this->caja->st_caja_id == 1 or $this->caja->st_caja_id == 3) {
+            $seguimiento->st_seguimiento_id = 2;
             $seguimiento->save();
-            
-            $inscripcions=Inscripcion::where('cliente_id',$cliente->id)->whereNull('inscripcions.deleted_at')->get();
-            if($inscripcions->isEmpty()){
-                $cliente->st_cliente_id=22;
+
+            $inscripcions = Inscripcion::where('cliente_id', $cliente->id)->whereNull('inscripcions.deleted_at')->get();
+            if ($inscripcions->isEmpty()) {
+                $cliente->st_cliente_id = 22;
                 $cliente->save();
-            }else{
-                $cliente->st_cliente_id=4;
+            } else {
+                $cliente->st_cliente_id = 4;
                 $cliente->save();
             }
-            
         }
-        if($this->caja->st_caja_id==1){
-            $adeudos=Adeudo::where('cliente_id',$this->caja->cliente_id)->where('pagado_bnd',0)->count();
-            if($adeudos==0){
-                $cliente->st_cliente_id=20;
+        if ($this->caja->st_caja_id == 1) {
+            $adeudos = Adeudo::where('cliente_id', $this->caja->cliente_id)->where('pagado_bnd', 0)
+                ->whereNull('deleted_at')
+                ->count();
+            //->get();
+            //dd($adeudos->toArray());
+            //Log::info('Adeudos:' . $adeudos);
+            if ($adeudos == 0) {
+                $cliente->st_cliente_id = 20;
                 $cliente->save();
-                $seguimiento->st_seguimiento_id=7;
+                $seguimiento->st_seguimiento_id = 7;
                 $seguimiento->save();
             }
         }
