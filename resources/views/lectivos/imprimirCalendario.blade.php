@@ -54,18 +54,32 @@ div.mes caption.titulo {
 </style>
 </head>
 <body>
-    <h3>Calendario {{$anio}}</h3>
+    <h3>Calendario</h3>
 <script>
 	var mes_text = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 
 var dia_text = ["Dom", "Lun", "Mar", "Mie", "Juv", "Vie", "Sab"];
 
-estructurar();
+@if($anio==$anio_fin)
+estructurar({{ $anio }});
+numerar({{ $anio }});
+ocultarMesesAnteriores({{ $mes_inicio }}, {{ $anio }});
+ocultarMesesPosteriores({{ $mes_fin }}, {{ $anio_fin }});
+@else
+estructurar({{ $anio }});
+numerar({{ $anio }});
+ocultarMesesAnteriores({{ $mes_inicio }}, {{ $anio }});
 
-function estructurar() {
+estructurar({{ $anio_fin }});
+numerar({{ $anio_fin }});
+ocultarMesesPosteriores({{ $mes_fin }}, {{ $anio_fin }});
+@endif
+
+function estructurar(year) {
   for (m = 0; m <= 11; m++) {
     //Mes
     let mes = document.createElement("DIV");
+    mes.setAttribute('id',"mes"+mes_text[m]+year);
     mes.className = "mes";
     document.body.appendChild(mes);
     //Tabla
@@ -75,7 +89,7 @@ function estructurar() {
     //Título
     let titulo = document.createElement("CAPTION");
     titulo.className = "titulo";
-    titulo.innerText = mes_text[m];
+    titulo.innerText = mes_text[m]+" "+year;
     tabla_mes.appendChild(titulo);
     //Cabecera
     let cabecera = document.createElement("THEAD");
@@ -102,15 +116,19 @@ function estructurar() {
   }
 }
 
-numerar();
 
-function numerar() {
+
+function numerar(year) {
   
   for (i = 1; i < 366; i++) {
-    let fecha = fechaPorDia({{$anio}}, i);
+    let fecha = fechaPorDia(year, i);
 	//alert(fecha);
     let mes = fecha.getMonth();
-    let select_tabla = document.getElementsByClassName('tabla_mes')[mes];
+    //alert(mes);
+    //let div_mes=document.getElementById("mes"+mes_text[mes]+year).children;
+    //console.log(div_mes);
+    //let select_tabla = document.getElementsByClassName('tabla_mes')[mes];
+    let select_tabla=document.getElementById("mes"+mes_text[mes]+year).children[0];
     let dia = fecha.getDate()
 	//alert(dia);
     let dia_semana = fecha.getDay();
@@ -129,7 +147,22 @@ function numerar() {
         if(fecha.getTime()==f[{{$i}}].getTime()){
             
             select_tabla.children[2].children[sem].children[dia_semana].classList.add("tdmio")
-	}
+	      }
+        <?php $i++; ?>
+    @endforeach
+
+    <?php $i=0; ?>
+    @foreach($noHabilesFin as $nh)
+        <?php
+        $date = date('Y-m-d', strtotime($nh->fecha));
+        $componentes=explode("-",$date);
+        ?>
+        f[{{$i}}] = new Date({{$componentes[0]}},{{$componentes[1]-1}},{{$componentes[2]}});
+        //alert(f);
+        if(fecha.getTime()==f[{{$i}}].getTime()){
+            
+            select_tabla.children[2].children[sem].children[dia_semana].classList.add("tdmio")
+	      }
         <?php $i++; ?>
     @endforeach
         
@@ -141,6 +174,24 @@ function fechaPorDia(anio, dia) {
   var date = new Date(anio, 0);
   return new Date(date.setDate(dia));
 }
+
+function ocultarMesesAnteriores(inicial,year){
+  for(c=inicial-2; c>=0; c--){
+    //console.log("mes"+mes_text[c]);
+    var mes = document.getElementById("mes"+mes_text[c]+year);
+    mes.style.display="none";
+  }
+}
+
+function ocultarMesesPosteriores(inicial,year){
+  for(c=inicial; c<=11; c++){
+    //console.log("mes"+mes_text[c]);
+    var mes = document.getElementById("mes"+mes_text[c]+year);
+    mes.style.display="none";
+  }
+}
+
+
 </script>
 <div class="mes">
     <table class="tabla_mes">

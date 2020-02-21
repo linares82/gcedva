@@ -44,7 +44,7 @@ body{
             }
             
         }    
-        $cadena=$cadena.'; Total:'.number_format($caja->total, 2);
+        $cadena=$cadena.'; Total:'.number_format($caja->total, 2).'; '.$impresion_token->toke_unico;
         @endphp
         
          <img src="data:image/png;base64, 

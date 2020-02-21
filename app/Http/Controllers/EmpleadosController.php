@@ -18,19 +18,21 @@ use App\Http\Requests\createEmpleado;
 use DB;
 use Hash;
 
-class EmpleadosController extends Controller {
+class EmpleadosController extends Controller
+{
 
     /**
      * Display a listing of the resource.
      *
      * @return Response
      */
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
         $empleados = Empleado::getAllData($request);
         //$historials = Historial::getAllData($request);
 
-        return view('empleados.index', compact('empleados','historials'))
-                ->with('list', Empleado::getListFromAllRelationApps());
+        return view('empleados.index', compact('empleados', 'historials'))
+            ->with('list', Empleado::getListFromAllRelationApps());
     }
 
     /**
@@ -38,18 +40,19 @@ class EmpleadosController extends Controller {
      *
      * @return Response
      */
-    public function create() {
+    public function create()
+    {
         //$plantel=DB::table('empleados')->where('user_id', Auth::user()->id)->value('plantel_id');
         $jefes = Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
-                ->where('jefe_bnd', '=', '1')
-                //->where('plantel_id', '=', $plantel)
-                ->pluck('name', 'id');
+            ->where('jefe_bnd', '=', '1')
+            //->where('plantel_id', '=', $plantel)
+            ->pluck('name', 'id');
         $responsables = Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
-                //->where('plantel_id', '=', $plantel)
-                ->pluck('name', 'id');
+            //->where('plantel_id', '=', $plantel)
+            ->pluck('name', 'id');
         return view('empleados.create', compact('jefes', 'responsables'))
-                        ->with('list', Empleado::getListFromAllRelationApps())
-                        ->with('list1', PivotDocEmpleado::getListFromAllRelationApps());
+            ->with('list', Empleado::getListFromAllRelationApps())
+            ->with('list1', PivotDocEmpleado::getListFromAllRelationApps());
     }
 
     /**
@@ -58,7 +61,8 @@ class EmpleadosController extends Controller {
      * @param Request $request
      * @return Response
      */
-    public function store(createEmpleado $request) {
+    public function store(createEmpleado $request)
+    {
 
         $input = $request->all();
         $input['usu_alta_id'] = Auth::user()->id;
@@ -105,7 +109,8 @@ class EmpleadosController extends Controller {
      * @param  int  $id
      * @return Response
      */
-    public function show($id, Empleado $empleado) {
+    public function show($id, Empleado $empleado)
+    {
         $empleado = $empleado->find($id);
         return view('empleados.show', compact('empleado'));
     }
@@ -116,24 +121,25 @@ class EmpleadosController extends Controller {
      * @param  int  $id
      * @return Response
      */
-    public function edit($id, Empleado $empleado, PivotDocEmpleado $pivotDocEmpleado) {
+    public function edit($id, Empleado $empleado, PivotDocEmpleado $pivotDocEmpleado)
+    {
         $empleado = $empleado->find($id);
         if ($empleado->cve_empleado == "") {
             $empleado->cve_empleado = substr(Hash::make(rand(0, 1000)), 2, 8);
         }
         $jefes = Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
-                ->where('jefe_bnd', '=', '1')
-                ->where('plantel_id', '=', $empleado->plantel_id)
-                ->pluck('name', 'id');
+            ->where('jefe_bnd', '=', '1')
+            ->where('plantel_id', '=', $empleado->plantel_id)
+            ->pluck('name', 'id');
         $responsables = Empleado::select('empleados.id', DB::raw('concat(empleados.nombre," ",empleados.ape_paterno," ",empleados.ape_materno) as name'))
-                ->join('puestos as p', 'p.id', '=', 'empleados.puesto_id')
-                ->where('p.name','=', 'RH')
-                ->pluck('empleados.name', 'empleados.id');
+            ->join('puestos as p', 'p.id', '=', 'empleados.puesto_id')
+            ->where('p.name', '=', 'RH')
+            ->pluck('empleados.name', 'empleados.id');
         $doc_existentes = DB::table('pivot_doc_empleados as pde')->select('doc_empleado_id')
-                        ->join('empleados as e', 'e.id', '=', 'pde.empleado_id')
-                        ->where('e.id', '=', $id)
-                        ->where('pde.deleted_at', '=', NULL)->get();
-
+            ->join('empleados as e', 'e.id', '=', 'pde.empleado_id')
+            ->where('e.id', '=', $id)
+            ->where('pde.deleted_at', '=', NULL)->get();
+        //dd($doc_existentes->toArray());
         $de_array = array();
         if ($doc_existentes->isNotEmpty()) {
             foreach ($doc_existentes as $de) {
@@ -142,14 +148,17 @@ class EmpleadosController extends Controller {
             //dd($de_array);
         }
 
+        //dd($de_array);
+
         $documentos_faltantes = DB::table('doc_empleados')
-                ->select()
-                ->whereNotIn('id', $de_array)
-                ->get();
-        //dd($documentos_faltantes);
+            ->select()
+            //->where('doc_obligatorio', 1)
+            ->whereNotIn('id', $de_array)
+            ->get();
+        //dd($documentos_faltantes->toArray());
         return view('empleados.edit', compact('empleado', 'pivotDocEmpleado', 'jefes', 'responsables', 'documentos_faltantes'))
-                        ->with('list', Empleado::getListFromAllRelationApps())
-                        ->with('list1', PivotDocEmpleado::getListFromAllRelationApps());
+            ->with('list', Empleado::getListFromAllRelationApps())
+            ->with('list1', PivotDocEmpleado::getListFromAllRelationApps());
     }
 
     /**
@@ -158,19 +167,20 @@ class EmpleadosController extends Controller {
      * @param  int  $id
      * @return Response
      */
-    public function duplicate($id, Empleado $empleado) {
+    public function duplicate($id, Empleado $empleado)
+    {
         $empleado = $empleado->find($id);
         $jefes = Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
-                ->where('jefe_bnd', '=', '1')
-                //->where('plantel_id', '=', $plantel)
-                ->pluck('name', 'id');
+            ->where('jefe_bnd', '=', '1')
+            //->where('plantel_id', '=', $plantel)
+            ->pluck('name', 'id');
         $responsables = Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
-                ->where('plantel_id', '=', $empleado->plantel_id)
-                ->pluck('name', 'id');
+            ->where('plantel_id', '=', $empleado->plantel_id)
+            ->pluck('name', 'id');
         $doc_existentes = DB::table('pivot_doc_empleados as pde')->select('doc_empleado_id')
-                        ->join('empleados as e', 'e.id', '=', 'pde.empleado_id')
-                        ->where('e.id', '=', $id)
-                        ->where('pde.deleted_at', '=', NULL)->get();
+            ->join('empleados as e', 'e.id', '=', 'pde.empleado_id')
+            ->where('e.id', '=', $id)
+            ->where('pde.deleted_at', '=', NULL)->get();
 
         $de_array = array();
         if ($doc_existentes->isNotEmpty()) {
@@ -181,12 +191,12 @@ class EmpleadosController extends Controller {
         }
 
         $documentos_faltantes = DB::table('doc_empleados')
-                ->select()
-                ->whereNotIn('id', $de_array)
-                ->get();
+            ->select()
+            ->whereNotIn('id', $de_array)
+            ->get();
         return view('empleados.duplicate', compact('empleado', 'jefes', 'responsables', 'documentos_faltantes'))
-                        ->with('list', Empleado::getListFromAllRelationApps())
-                        ->with('list1', PivotDocEmpleado::getListFromAllRelationApps());
+            ->with('list', Empleado::getListFromAllRelationApps())
+            ->with('list1', PivotDocEmpleado::getListFromAllRelationApps());
     }
 
     /**
@@ -259,7 +269,8 @@ class EmpleadosController extends Controller {
       return redirect()->route('empleados.index')->with('message', 'Registro Actualizado.');
       }
      */
-    public function update($id, Empleado $empleado, updateEmpleado $request) {
+    public function update($id, Empleado $empleado, updateEmpleado $request)
+    {
         $input = $request->except(['doc_empleado_id', 'archivo']);
         $input['usu_mod_id'] = Auth::user()->id;
         if (!isset($input['jefe_bnd'])) {
@@ -276,7 +287,7 @@ class EmpleadosController extends Controller {
         $empleado = $empleado->find($id);
         $e = $empleado->update($input);
         //dd($request->all());
-        if ($request->has('doc_empleado_id') and $request->get('doc_empleado_id')>0 and $request->has('archivo')) {
+        if ($request->has('doc_empleado_id') and $request->get('doc_empleado_id') > 0 and $request->has('archivo')) {
             $input2['doc_empleado_id'] = $request->get('doc_empleado_id');
             $input2['archivo'] = $request->get('archivo');
             $input2['empleado_id'] = $id;
@@ -294,18 +305,20 @@ class EmpleadosController extends Controller {
      * @param  int  $id
      * @return Response
      */
-    public function destroy($id, Empleado $empleado) {
+    public function destroy($id, Empleado $empleado)
+    {
         $empleado = $empleado->find($id);
         $empleado->delete();
 
         return redirect()->route('empleados.index')->with('message', 'Registro Borrado.');
     }
 
-    public function usuarios(Request $request) {
+    public function usuarios(Request $request)
+    {
         //dd($_REQUEST);
         $data = User::select('id as d', "name as n")
-                ->where("name", "LIKE", "%" . $request->input('term') . "%")
-                ->get();
+            ->where("name", "LIKE", "%" . $request->input('term') . "%")
+            ->get();
         //dd($data);
         $results = array();
         foreach ($data as $value) {
@@ -315,7 +328,8 @@ class EmpleadosController extends Controller {
         return response()->json($results);
     }
 
-    public function getPlantel($id = 0) {
+    public function getPlantel($id = 0)
+    {
         //dd($_REQUEST['estado']);
         $e = $_REQUEST['empleado'];
         $plantel = Empleado::find($e)->plantel_id;
@@ -323,7 +337,8 @@ class EmpleadosController extends Controller {
         return $plantel;
     }
 
-    public function getEmpleadosXplantelXpuesto(Request $request) {
+    public function getEmpleadosXplantelXpuesto(Request $request)
+    {
         if ($request->ajax()) {
             //dd($request->all());
             $plantel = $request->get('plantel_id');
@@ -331,14 +346,14 @@ class EmpleadosController extends Controller {
             $empleado = $request->get('empleado_id');
 
             $final = array();
-            if($plantel<>0){
+            if ($plantel <> 0) {
                 $r = DB::table('empleados as e')
                     ->select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as nombre'))
                     ->where('e.plantel_id', '=', $plantel)
                     ->where('e.puesto_id', '=', $puesto)
                     ->where('e.id', '>', '0')
                     ->get();
-            }else{
+            } else {
                 $r = DB::table('empleados as e')
                     ->select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as nombre'))
                     ->where('e.puesto_id', '=', $puesto)
@@ -350,13 +365,17 @@ class EmpleadosController extends Controller {
             if (isset($empleado) and $empleado <> 0) {
                 foreach ($r as $r1) {
                     if ($r1->id == $empleado) {
-                        array_push($final, array('id' => $r1->id,
+                        array_push($final, array(
+                            'id' => $r1->id,
                             'nombre' => $r1->nombre,
-                            'selectec' => 'Selected'));
+                            'selectec' => 'Selected'
+                        ));
                     } else {
-                        array_push($final, array('id' => $r1->id,
+                        array_push($final, array(
+                            'id' => $r1->id,
                             'nombre' => $r1->nombre,
-                            'selectec' => ''));
+                            'selectec' => ''
+                        ));
                     }
                 }
                 return $final;
@@ -366,166 +385,199 @@ class EmpleadosController extends Controller {
         }
     }
 
-    public function getEmpleadosXplantel(Request $request) {
+    public function getEmpleadosXplantel(Request $request)
+    {
         if ($request->ajax()) {
             //dd($request->all());
-            $input=$request->all();
-            if(isset($input['asignacion_academicas.empleado_id_lt'])){
+            $input = $request->all();
+            if (isset($input['asignacion_academicas.empleado_id_lt'])) {
                 $plantel = $request->get('plantel_id');
                 $empleado = $input['q']['asignacion_academicas.empleado_id_lt'];
-            }else{
+            } else {
                 $plantel = $request->get('plantel_id');
                 $empleado = $request->get('empleado_id');
             }
 
             $final = array();
             $r = DB::table('empleados as e')
-                    ->select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as nombre'))
-                    ->where('e.plantel_id', '=', $plantel)
-                    ->where('e.id', '>', '0')
-                    ->whereNotIn('st_empleado_id', array(3, 2, 10))
-                    ->get();
+                ->select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as nombre'))
+                ->where('e.plantel_id', '=', $plantel)
+                ->where('e.id', '>', '0')
+                ->whereNotIn('st_empleado_id', array(3, 2, 10))
+                ->get();
 
             if (isset($empleado) and $empleado <> 0) {
                 foreach ($r as $r1) {
                     if ($r1->id == $empleado) {
-                        array_push($final, array('id' => $r1->id,
+                        array_push($final, array(
+                            'id' => $r1->id,
                             'nombre' => $r1->nombre,
-                            'selectec' => 'Selected'));
+                            'selectec' => 'Selected'
+                        ));
                     } else {
-                        array_push($final, array('id' => $r1->id,
+                        array_push($final, array(
+                            'id' => $r1->id,
                             'nombre' => $r1->nombre,
-                            'selectec' => ''));
+                            'selectec' => ''
+                        ));
                     }
                 }
                 return $final;
             } else {
                 foreach ($r as $r1) {
-                    array_push($final, array('id' => $r1->id,
+                    array_push($final, array(
+                        'id' => $r1->id,
                         'nombre' => $r1->nombre,
-                        'selectec' => ''));
+                        'selectec' => ''
+                    ));
                 }
                 return $final;
-                
             }
         }
     }
-    
-    public function getAsesoresXplantel(Request $request) {
+
+    public function getAsesoresXplantel(Request $request)
+    {
         if ($request->ajax()) {
             //dd($request->all());
-            $input=$request->all();
-            if(isset($input['asignacion_academicas.empleado_id_lt'])){
+            $input = $request->all();
+            if (isset($input['asignacion_academicas.empleado_id_lt'])) {
                 $plantel = $request->get('plantel_id');
                 $empleado = $input['q']['asignacion_academicas.empleado_id_lt'];
-            }else{
+            } else {
                 $plantel = $request->get('plantel_id');
                 $empleado = $request->get('empleado_id');
             }
 
             $final = array();
             $r = DB::table('empleados as e')
-                    ->select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as nombre'))
-                    ->where('e.plantel_id', '=', $plantel)
-                    //->where('puesto_id',2)
-                    ->where('e.id', '>', '0')
-                    ->whereNotIn('st_empleado_id', array(3,2,10))
-                    ->get();
+                ->select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as nombre'))
+                ->where('e.plantel_id', '=', $plantel)
+                //->where('puesto_id',2)
+                ->where('e.id', '>', '0')
+                ->whereNotIn('st_empleado_id', array(3, 2, 10))
+                ->get();
 
             //dd($r);
             if (isset($empleado) and $empleado <> 0) {
                 foreach ($r as $r1) {
                     if ($r1->id == $empleado) {
-                        array_push($final, array('id' => $r1->id,
+                        array_push($final, array(
+                            'id' => $r1->id,
                             'nombre' => $r1->nombre,
-                            'selectec' => 'Selected'));
+                            'selectec' => 'Selected'
+                        ));
                     } else {
-                        array_push($final, array('id' => $r1->id,
+                        array_push($final, array(
+                            'id' => $r1->id,
                             'nombre' => $r1->nombre,
-                            'selectec' => ''));
+                            'selectec' => ''
+                        ));
                     }
                 }
                 return $final;
             } else {
                 foreach ($r as $r1) {
-                    array_push($final, array('id' => $r1->id,
+                    array_push($final, array(
+                        'id' => $r1->id,
                         'nombre' => $r1->nombre,
-                        'selectec' => ''));
+                        'selectec' => ''
+                    ));
                 }
                 return $final;
-                
             }
         }
     }
 
-    public function cargarImg(Request $request){
-        
-        $r=$request->hasFile('file');
-        $datos=$request->all();
+    public function cargarImg(Request $request)
+    {
+
+        $r = $request->hasFile('file');
+        $datos = $request->all();
         //dd($request->all());
         if ($r) {
             $logo_file = $request->file('file');
             $input['file'] = $logo_file->getClientOriginalName();
-            $ruta_web=asset("/imagenes/empleados/".$datos['empleado']);
+            $ruta_web = asset("/imagenes/empleados/" . $datos['empleado']);
             //dd($ruta_web);
-            $ruta= public_path()."/imagenes/empleados/".$datos['empleado']."/";
-            if(!file_exists($ruta)){
+            $ruta = public_path() . "/imagenes/empleados/" . $datos['empleado'] . "/";
+            if (!file_exists($ruta)) {
                 File::makedirectory($ruta, 0777, true, true);
             }
-            if($request->file('file')->move($ruta, $input['file'])){
-                $documento= new PivotDocEmpleado();
-                $documento->empleado_id=$datos['empleado'];
-                $documento->doc_empleado_id=$datos['doc_empleado_id'];
-                $documento->archivo=$ruta_web."/".$input['file'];
-                $documento->usu_alta_id=Auth::user()->id;
-                $documento->usu_mod_id=Auth::user()->id;
+            if ($request->file('file')->move($ruta, $input['file'])) {
+                $documento = new PivotDocEmpleado();
+                $documento->empleado_id = $datos['empleado'];
+                $documento->doc_empleado_id = $datos['doc_empleado_id'];
+                $documento->archivo = $ruta_web . "/" . $input['file'];
+                $documento->usu_alta_id = Auth::user()->id;
+                $documento->usu_mod_id = Auth::user()->id;
                 $documento->save();
-                echo json_encode($ruta_web."/".$input['file']);
-            }else{
+                echo json_encode($ruta_web . "/" . $input['file']);
+            } else {
                 echo json_encode(0);
             }
-         }
+        }
         //echo json_encode(0);
     }
 
-    public function ListaDocumentos(){
+    public function ListaDocumentos()
+    {
         return view('empleados.reportes.listaDocumentos')
-            ->with('list', Empleado::getListFromAllRelationApps());            
+            ->with('list', Empleado::getListFromAllRelationApps());
     }
 
     public function ListaDocumentosR(Request $request)
     {
-        $datos=$request->all();
-        $documentos_obligatorios=DocEmpleado::where('doc_obligatorio',1)->get();
-        $empleados=Empleado::select('empleados.*','ste.name as estatus')->where('empleados.plantel_id',$datos['plantel_f'])
-                                     ->join('st_empleados as ste','ste.id','=','empleados.st_empleado_id')
-                                     ->where('st_empleado_id',$datos['estatus_f'])
-                                     ->get();
-        $documentos_faltantes=array();
-        foreach($empleados as $empleado){
-           $docsPorEmpleado=PivotDocEmpleado::where('empleado_id',$empleado->id)->select('doc_empleado_id')->get();
-            //dd($docsPorEmpleado);
-           if(!is_null($docsPorEmpleado)){
-               $array_docsPorEmpleado = array();
-               $i=0;
-                foreach($docsPorEmpleado as $do){
+        $datos = $request->all();
+
+
+        $empleados = Empleado::select('empleados.*', 'ste.name as estatus')->where('empleados.plantel_id', $datos['plantel_f'])
+            ->join('st_empleados as ste', 'ste.id', '=', 'empleados.st_empleado_id')
+            ->where('st_empleado_id', $datos['estatus_f'])
+            ->get();
+        $documentos_faltantes = array();
+        foreach ($empleados as $empleado) {
+            $documentos_obligatorios_Aux = DocEmpleado::where('doc_obligatorio', 1);
+            if ($empleado->extranjero_bnd == 1) {
+                $documentos_obligatorios_Aux->orWhere('id', 18);
+            }
+            if ($empleado->alimenticia_bnd == 1) {
+                $documentos_obligatorios_Aux->orWhere('id', 17);
+            }
+            if ($empleado->genero == 1) {
+                $documentos_obligatorios_Aux->orWhere('id', 14);
+            }
+
+            $documentos_obligatorios = $documentos_obligatorios_Aux->get();
+            //dd($documentos_obligatorios);
+
+            $docsPorEmpleado = PivotDocEmpleado::where('empleado_id', $empleado->id)
+                ->select('pivot_doc_empleados.doc_empleado_id')
+                ->get();
+            //dd($docsPorEmpleado->toArray());
+            if (!is_null($docsPorEmpleado)) {
+                $array_docsPorEmpleado = array();
+                $i = 0;
+                foreach ($docsPorEmpleado as $do) {
                     //dd($do);
-                    $array_docsPorEmpleado[$i]= $do->doc_empleado_id;
+                    $array_docsPorEmpleado[$i] = $do->doc_empleado_id;
                     $i++;
                 }
                 //dd($array_docsPorEmpleado);
-            foreach($documentos_obligatorios as $do){
-                if(!in_array($do->id, $array_docsPorEmpleado)){
-                   //dd($do->id);
-                    array_push($documentos_faltantes,array('empleado'=>$empleado->id,
-                                                                               'nombre'=>$empleado->nombre.' '.$empleado->ape_paterno.' '.$empleado->ape_materno,
-                                                                               'documento'=>$do->name,
-                                                                               'estatus'=>$empleado->estatus));
+                foreach ($documentos_obligatorios as $do) {
+                    if (!in_array($do->id, $array_docsPorEmpleado)) {
+                        //dd($do->id);
+                        array_push($documentos_faltantes, array(
+                            'empleado' => $empleado->id,
+                            'nombre' => $empleado->nombre . ' ' . $empleado->ape_paterno . ' ' . $empleado->ape_materno,
+                            'documento' => $do->name,
+                            'estatus' => $empleado->estatus
+                        ));
+                    }
                 }
             }
         }
-        }
         //dd($documentos_faltantes);
-        return view('empleados.reportes.listaDocumentosR',compact('documentos_faltantes'));
+        return view('empleados.reportes.listaDocumentosR', compact('documentos_faltantes'));
     }
 }

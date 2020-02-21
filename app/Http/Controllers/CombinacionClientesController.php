@@ -1,4 +1,6 @@
-<?php namespace App\Http\Controllers;
+<?php
+
+namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -10,7 +12,8 @@ use Auth;
 use App\Http\Requests\updateCombinacionCliente;
 use App\Http\Requests\createCombinacionCliente;
 
-class CombinacionClientesController extends Controller {
+class CombinacionClientesController extends Controller
+{
 
 	/**
 	 * Display a listing of the resource.
@@ -32,7 +35,7 @@ class CombinacionClientesController extends Controller {
 	public function create()
 	{
 		return view('combinacionClientes.create')
-			->with( 'list', CombinacionCliente::getListFromAllRelationApps() );
+			->with('list', CombinacionCliente::getListFromAllRelationApps());
 	}
 
 	/**
@@ -45,13 +48,13 @@ class CombinacionClientesController extends Controller {
 	{
 
 		$input = $request->all();
-                //dd($input);
-		$input['usu_alta_id']=Auth::user()->id;
-		$input['usu_mod_id']=Auth::user()->id;
-                $input['plan_pago_id']=0;
+		//dd($input);
+		$input['usu_alta_id'] = Auth::user()->id;
+		$input['usu_mod_id'] = Auth::user()->id;
+		$input['plan_pago_id'] = 0;
 
 		//create data
-		CombinacionCliente::create( $input );
+		CombinacionCliente::create($input);
 
 		//return redirect()->route('combinacionClientes.index')->with('message', 'Registro Creado.');
 	}
@@ -64,7 +67,7 @@ class CombinacionClientesController extends Controller {
 	 */
 	public function show($id, CombinacionCliente $combinacionCliente)
 	{
-		$combinacionCliente=$combinacionCliente->find($id);
+		$combinacionCliente = $combinacionCliente->find($id);
 		return view('combinacionClientes.show', compact('combinacionCliente'));
 	}
 
@@ -76,9 +79,9 @@ class CombinacionClientesController extends Controller {
 	 */
 	public function edit($id, CombinacionCliente $combinacionCliente)
 	{
-		$combinacionCliente=$combinacionCliente->find($id);
+		$combinacionCliente = $combinacionCliente->find($id);
 		return view('combinacionClientes.edit', compact('combinacionCliente'))
-			->with( 'list', CombinacionCliente::getListFromAllRelationApps() );
+			->with('list', CombinacionCliente::getListFromAllRelationApps());
 	}
 
 	/**
@@ -89,9 +92,9 @@ class CombinacionClientesController extends Controller {
 	 */
 	public function duplicate($id, CombinacionCliente $combinacionCliente)
 	{
-		$combinacionCliente=$combinacionCliente->find($id);
+		$combinacionCliente = $combinacionCliente->find($id);
 		return view('combinacionClientes.duplicate', compact('combinacionCliente'))
-			->with( 'list', CombinacionCliente::getListFromAllRelationApps() );
+			->with('list', CombinacionCliente::getListFromAllRelationApps());
 	}
 
 	/**
@@ -104,10 +107,10 @@ class CombinacionClientesController extends Controller {
 	public function update($id, CombinacionCliente $combinacionCliente, updateCombinacionCliente $request)
 	{
 		$input = $request->all();
-		$input['usu_mod_id']=Auth::user()->id;
+		$input['usu_mod_id'] = Auth::user()->id;
 		//update data
-		$combinacionCliente=$combinacionCliente->find($id);
-		$combinacionCliente->update( $input );
+		$combinacionCliente = $combinacionCliente->find($id);
+		$combinacionCliente->update($input);
 
 		return redirect()->route('combinacionClientes.index')->with('message', 'Registro Actualizado.');
 	}
@@ -118,43 +121,50 @@ class CombinacionClientesController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id,CombinacionCliente $combinacionCliente)
+	public function destroy($id, CombinacionCliente $combinacionCliente)
 	{
-		$combinacionCliente=$combinacionCliente->find($id);
-                $adeudos=Adeudo::where('combinacion_cliente_id',$combinacionCliente->id)->get();
-		$c=$combinacionCliente->cliente_id;
-                $combinacionCliente->delete();
-                if(count($adeudos)>0){
-                    foreach($adeudos as $adeudo){
-                    $adeudo->delete();
-                    }
-                }
-                
+		$combinacionCliente = $combinacionCliente->find($id);
+		$adeudos = Adeudo::where('combinacion_cliente_id', $combinacionCliente->id)->get();
+		$c = $combinacionCliente->cliente_id;
+		$combinacionCliente->delete();
+		if (count($adeudos) > 0) {
+			foreach ($adeudos as $adeudo) {
+				$adeudo->delete();
+			}
+		}
+
 
 		return redirect()->route('clientes.edit', $c)->with('message', 'Registro Borrado.');
 	}
 
-        public function savePlanPago(Request $request){
-            //dd($request);
-            if($request->ajax()){
-                $data=$request->all();
-                //dd($data);
-                $combinacion=CombinacionCliente::find($data['combinacion']);
-                $combinacion->plan_pago_id=$data['plan_pago'];
-                $combinacion->save();
-                echo json_encode($combinacion);
-            }
-        }
-        
-        public function saveBndBeca(Request $request){
-            //dd($request);
-            if($request->ajax()){
-                $data=$request->all();
-                //dd($data);
-                $combinacion=CombinacionCliente::find($data['combinacion']);
-                $combinacion->bnd_beca=$data['bnd_beca'];
-                $combinacion->save();
-                echo json_encode($combinacion);
-            }
-        }
+	public function savePlanPago(Request $request)
+	{
+		//dd($request);
+		if ($request->ajax()) {
+			$data = $request->all();
+			//dd($data);
+			$combinacion = CombinacionCliente::find($data['combinacion']);
+			$combinacion->plan_pago_id = $data['plan_pago'];
+			$combinacion->save();
+			echo json_encode($combinacion);
+		}
+	}
+
+	public function saveBndBeca(Request $request)
+	{
+		//dd($request);
+		if ($request->ajax()) {
+			$data = $request->all();
+			//dd($data);
+			$combinacion = CombinacionCliente::find($data['combinacion']);
+			$combinacion->bnd_beca = $data['bnd_beca'];
+			$combinacion->save();
+			echo json_encode($combinacion);
+		}
+	}
+
+	public function cargas()
+	{
+		return view('combinacionClientes.reportes.cargas');
+	}
 }

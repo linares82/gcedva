@@ -222,4 +222,10 @@ class EspecialidadsController extends Controller
 			return "Error vuelva a intentarlo";
 		}
 	}
+
+	public function listaEspecialidades()
+	{
+		$especialidades = Especialidad::all();
+		return view('combinacionClientes.reportes.cargas', compact('especialidades'));
+	}
 }

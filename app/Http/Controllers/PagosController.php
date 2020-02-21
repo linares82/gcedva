@@ -21,6 +21,7 @@ use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updatePago;
 use App\Http\Requests\createPago;
+use App\ImpresionTicket;
 use App\IngresoEgreso;
 use App\Transference;
 use DB;
@@ -259,6 +260,17 @@ class PagosController extends Controller
 
         $caja = Caja::find($pago->caja_id);
 
+        $input['caja_id'] = $caja->id;
+        $input['pago_id'] = $pago->id;
+        $input['cliente_id'] = $caja->cliente_id;
+        $input['plantel_id'] = $caja->plantel_id;
+        $input['consecutivo'] = $caja->consecutivo;
+        $input['monto'] = $caja->total;
+        $input['toke_unico'] = uniqid(base64_encode(str_random(6)));
+        $input['usu_alta_id'] = Auth::user()->id;
+        $input['usu_mod_id'] = Auth::user()->id;
+        $impresion_token = ImpresionTicket::create($input);
+
         $acumulado = Pago::select('monto')->where('caja_id', '=', $caja->id)->sum('monto');
 
         $adeudo = Adeudo::where('caja_id', '=', $caja->id)->first();
@@ -274,7 +286,7 @@ class PagosController extends Controller
             $date = $date->format('d-m-Y h:i:s');
 
             //dd($adeudo->toArray());
-            return view('cajas.imprimirTicketPago', array(
+            /*return view('cajas.imprimirTicketPago', array(
                 'cliente' => $cliente,
                 'caja' => $caja,
                 'empleado' => $empleado,
@@ -282,7 +294,7 @@ class PagosController extends Controller
                 'combinacion' => $combinacion,
                 'pago' => $pago,
                 'acumulado' => $acumulado
-            ));
+            ));*/
         } else {
             $combinacion = 0;
             $cliente = Cliente::find($caja->cliente_id);
@@ -293,16 +305,18 @@ class PagosController extends Controller
             $date = $date->format('d-m-Y h:i:s');
 
             //dd($adeudo->toArray());
-            return view('cajas.imprimirTicketPago', array(
-                'cliente' => $cliente,
-                'caja' => $caja,
-                'empleado' => $empleado,
-                'fecha' => $date,
-                'combinacion' => $combinacion,
-                'pago' => $pago,
-                'acumulado' => $acumulado
-            ));
+
         }
+        return view('cajas.imprimirTicketPago', array(
+            'cliente' => $cliente,
+            'caja' => $caja,
+            'empleado' => $empleado,
+            'fecha' => $date,
+            'combinacion' => $combinacion,
+            'pago' => $pago,
+            'acumulado' => $acumulado,
+            'impresion_token' => $impresion_token
+        ));
     }
 
     public function pagosXPeriodoXPlantelXConcepto()

@@ -12,14 +12,16 @@ use App\Http\Requests\updateGrado;
 use App\Http\Requests\createGrado;
 use DB;
 
-class GradosController extends Controller {
+class GradosController extends Controller
+{
 
     /**
      * Display a listing of the resource.
      *
      * @return Response
      */
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
         $grados = Grado::getAllData($request);
 
         return view('grados.index', compact('grados'))->with('list', Grado::getListFromAllRelationApps());
@@ -30,10 +32,11 @@ class GradosController extends Controller {
      *
      * @return Response
      */
-    public function create() {
-        $modulos=Modulo::pluck('name','id');
-        return view('grados.create',compact('modulos'))
-                        ->with('list', Grado::getListFromAllRelationApps());
+    public function create()
+    {
+        $modulos = Modulo::pluck('name', 'id');
+        return view('grados.create', compact('modulos'))
+            ->with('list', Grado::getListFromAllRelationApps());
     }
 
     /**
@@ -42,13 +45,14 @@ class GradosController extends Controller {
      * @param Request $request
      * @return Response
      */
-    public function store(createGrado $request) {
+    public function store(createGrado $request)
+    {
 
         $input = $request->all();
-        if(isset($input['mexico_bnd'])){
-            $input['mexico_bnd']=1;
-        }else{
-            $input['mexico_bnd']=0;
+        if (isset($input['mexico_bnd'])) {
+            $input['mexico_bnd'] = 1;
+        } else {
+            $input['mexico_bnd'] = 0;
         }
         $input['usu_alta_id'] = Auth::user()->id;
         $input['usu_mod_id'] = Auth::user()->id;
@@ -65,7 +69,8 @@ class GradosController extends Controller {
      * @param  int  $id
      * @return Response
      */
-    public function show($id, Grado $grado) {
+    public function show($id, Grado $grado)
+    {
         $grado = $grado->find($id);
         return view('grados.show', compact('grado'));
     }
@@ -76,11 +81,12 @@ class GradosController extends Controller {
      * @param  int  $id
      * @return Response
      */
-    public function edit($id, Grado $grado) {
+    public function edit($id, Grado $grado)
+    {
         $grado = $grado->find($id);
-        $modulos=Modulo::pluck('name','id');
-        return view('grados.edit', compact('grado','modulos'))
-                        ->with('list', Grado::getListFromAllRelationApps());
+        $modulos = Modulo::pluck('name', 'id');
+        return view('grados.edit', compact('grado', 'modulos'))
+            ->with('list', Grado::getListFromAllRelationApps());
     }
 
     /**
@@ -89,10 +95,11 @@ class GradosController extends Controller {
      * @param  int  $id
      * @return Response
      */
-    public function duplicate($id, Grado $grado) {
+    public function duplicate($id, Grado $grado)
+    {
         $grado = $grado->find($id);
         return view('grados.duplicate', compact('grado'))
-                        ->with('list', Grado::getListFromAllRelationApps());
+            ->with('list', Grado::getListFromAllRelationApps());
     }
 
     /**
@@ -102,14 +109,15 @@ class GradosController extends Controller {
      * @param Request $request
      * @return Response
      */
-    public function update($id, Grado $grado, updateGrado $request) {
+    public function update($id, Grado $grado, updateGrado $request)
+    {
         $input = $request->all();
         //dd($input);
         $input['usu_mod_id'] = Auth::user()->id;
-        if(isset($input['mexico_bnd'])){
-            $input['mexico_bnd']=1;
-        }else{
-            $input['mexico_bnd']=0;
+        if (isset($input['mexico_bnd'])) {
+            $input['mexico_bnd'] = 1;
+        } else {
+            $input['mexico_bnd'] = 0;
         }
         //update data
         $grado = $grado->find($id);
@@ -124,14 +132,16 @@ class GradosController extends Controller {
      * @param  int  $id
      * @return Response
      */
-    public function destroy($id, Grado $grado) {
+    public function destroy($id, Grado $grado)
+    {
         $grado = $grado->find($id);
         $grado->delete();
 
         return redirect()->route('grados.index')->with('message', 'Registro Borrado.');
     }
 
-    public function getCmbGrados(Request $request) {
+    public function getCmbGrados(Request $request)
+    {
         if ($request->ajax()) {
             //dd($request->all());
             $plantel = $request->get('plantel_id');
@@ -140,24 +150,28 @@ class GradosController extends Controller {
             $grado = $request->get('grado_id');
             $final = array();
             $r = DB::table('grados as g')
-                    ->select('g.id', 'g.name')
-                    ->where('g.plantel_id', '=', $plantel)
-                    ->where('g.especialidad_id', '=', $especialidad)
-                    ->where('g.nivel_id', '=', $nivel)
-                    ->where('g.id', '>', '0')
-                    ->whereNull('g.deleted_at')
-                    ->get();
+                ->select('g.id', 'g.name')
+                ->where('g.plantel_id', '=', $plantel)
+                ->where('g.especialidad_id', '=', $especialidad)
+                ->where('g.nivel_id', '=', $nivel)
+                ->where('g.id', '>', '0')
+                ->whereNull('g.deleted_at')
+                ->get();
             //dd($r);
             if (isset($grado) and $grado <> 0) {
                 foreach ($r as $r1) {
                     if ($r1->id == $grado) {
-                        array_push($final, array('id' => $r1->id,
+                        array_push($final, array(
+                            'id' => $r1->id,
                             'name' => $r1->name,
-                            'selectec' => 'Selected'));
+                            'selectec' => 'Selected'
+                        ));
                     } else {
-                        array_push($final, array('id' => $r1->id,
+                        array_push($final, array(
+                            'id' => $r1->id,
                             'name' => $r1->name,
-                            'selectec' => ''));
+                            'selectec' => ''
+                        ));
                     }
                 }
                 return $final;
@@ -167,7 +181,8 @@ class GradosController extends Controller {
         }
     }
 
-    public function getCmbGradosXalumno(Request $request) {
+    public function getCmbGradosXalumno(Request $request)
+    {
         if ($request->ajax()) {
             //dd($request->all());
             $cliente = $request->get('cliente_id');
@@ -175,23 +190,27 @@ class GradosController extends Controller {
 
             $final = array();
             $r = DB::table('grados as g')
-                    ->join('inscripcions as i', 'i.grado_id', '=', 'g.id')
-                    ->join('clientes as c', 'i.cliente_id', '=', 'c.id')
-                    ->select('g.id', 'g.name')
-                    ->where('c.id', '=', $cliente)
-                    ->where('g.id', '>', '0')
-                    ->get();
+                ->join('inscripcions as i', 'i.grado_id', '=', 'g.id')
+                ->join('clientes as c', 'i.cliente_id', '=', 'c.id')
+                ->select('g.id', 'g.name')
+                ->where('c.id', '=', $cliente)
+                ->where('g.id', '>', '0')
+                ->get();
             //dd($r);
             if (isset($grado) and $grado <> 0) {
                 foreach ($r as $r1) {
                     if ($r1->id == $grado) {
-                        array_push($final, array('id' => $r1->id,
+                        array_push($final, array(
+                            'id' => $r1->id,
                             'name' => $r1->name,
-                            'selectec' => 'Selected'));
+                            'selectec' => 'Selected'
+                        ));
                     } else {
-                        array_push($final, array('id' => $r1->id,
+                        array_push($final, array(
+                            'id' => $r1->id,
                             'name' => $r1->name,
-                            'selectec' => ''));
+                            'selectec' => ''
+                        ));
                     }
                 }
                 return $final;
@@ -200,8 +219,9 @@ class GradosController extends Controller {
             }
         }
     }
-    
-    public function getCmbGradosXAsignacion(Request $request) {
+
+    public function getCmbGradosXAsignacion(Request $request)
+    {
         if ($request->ajax()) {
             //dd($request->all());
             $plantel = $request->get('plantel');
@@ -210,26 +230,30 @@ class GradosController extends Controller {
 
             $final = array();
             $r = DB::table('grados as g')
-                    ->join('inscripcions as i', 'i.grado_id', '=', 'g.id')
-                    ->join('clientes as c', 'i.cliente_id', '=', 'c.id')
-                    ->select('g.id', 'g.name')
-                    ->where('i.plantel_id', '=', $plantel)
-                    ->where('i.lectivo_id', '=', $lectivo)
-                    ->where('i.grupo_id', '=', $grupo)
-                    ->where('g.id', '>', '0')
-                    ->distinct()
-                    ->get();
+                ->join('inscripcions as i', 'i.grado_id', '=', 'g.id')
+                ->join('clientes as c', 'i.cliente_id', '=', 'c.id')
+                ->select('g.id', 'g.name')
+                ->where('i.plantel_id', '=', $plantel)
+                ->where('i.lectivo_id', '=', $lectivo)
+                ->where('i.grupo_id', '=', $grupo)
+                ->where('g.id', '>', '0')
+                ->distinct()
+                ->get();
             //dd($r);
             if (isset($grado) and $grado <> 0) {
                 foreach ($r as $r1) {
                     if ($r1->id == $grado) {
-                        array_push($final, array('id' => $r1->id,
+                        array_push($final, array(
+                            'id' => $r1->id,
                             'name' => $r1->name,
-                            'selectec' => 'Selected'));
+                            'selectec' => 'Selected'
+                        ));
                     } else {
-                        array_push($final, array('id' => $r1->id,
+                        array_push($final, array(
+                            'id' => $r1->id,
                             'name' => $r1->name,
-                            'selectec' => ''));
+                            'selectec' => ''
+                        ));
                     }
                 }
                 return $final;
@@ -238,6 +262,10 @@ class GradosController extends Controller {
             }
         }
     }
-    
 
+    public function listaGrados()
+    {
+        $grados = Grado::all();
+        return view('combinacionClientes.reportes.cargas', compact('grados'));
+    }
 }
