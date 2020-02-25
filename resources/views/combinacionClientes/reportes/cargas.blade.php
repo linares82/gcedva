@@ -49,15 +49,15 @@
         @if(isset($especialidades))
         <table class="table table-condensed table-striped">
             <thead>
-                <th>Id</th><th>Especialidad</th><th>RVOE</th><th>Vencimiento RVOE</th><th>CTE</th><th>Plantel</th>
+                <th>Plantel</th><th>Id</th><th>Especialidad</th><th>RVOE</th><th>Vencimiento RVOE</th><th>CCT</th>
                 <th>Meta</th><th>Imagen</th><th>Abreviatura</th><th>Fondo Credencial</th>
             </thead>
             <tbody>
             
                 @foreach($especialidades as $especialidad)
                 <tr>
-                <td>{{$especialidad->id}}</td><td>{{$especialidad->name}}</td><td>{{$especialidad->rvoe}}</td><td>{{$especialidad->vencimiento_rvoe}}</td>
-                <td>{{$especialidad->ccte}}</td><td>{{$especialidad->plantel->razon}}</td><td>{{$especialidad->meta}}</td><td>{{$especialidad->imagen}}</td>
+                    <td>{{$especialidad->plantel->razon}}</td><td>{{$especialidad->id}}</td><td>{{$especialidad->name}}</td><td>{{$especialidad->rvoe}}</td><td>{{$especialidad->vencimiento_rvoe}}</td>
+                <td>{{$especialidad->ccte}}</td><td>{{$especialidad->meta}}</td><td>{{$especialidad->imagen}}</td>
                 <td>{{$especialidad->abreviatura}}</td><td>{{$especialidad->fondo_credencial}}</td>
                 </tr>
                 @endforeach
@@ -69,13 +69,13 @@
         @if(isset($niveles))
         <table class="table table-condensed table-striped">
             <thead>
-                <th>Id</th><th>Nivel</th><th>Plantel</th><th>Especialidad</th>
+                <th>Plantel</th><th>Especialidad</th><th>Id</th><th>Nivel</th>
             </thead>
             <tbody>
             
                 @foreach($niveles as $nivel)
                 <tr>
-                <td>{{$nivel->id}}</td><td>{{$nivel->name}}</td><td>{{$nivel->plantel->razon}}</td><td>{{$nivel->especialidad->name}}</td>
+                    <td>{{$nivel->plantel->razon}}</td><td>{{$nivel->especialidad->name}}</td><td>{{$nivel->id}}</td><td>{{$nivel->name}}</td>
                 
                 </tr>
                 @endforeach
@@ -87,14 +87,14 @@
         @if(isset($grados))
         <table class="table table-condensed table-striped">
             <thead>
-                <th>Id</th><th>Grado</th><th>Plantel</th><th>Especialidad</th><th>Nivel</th>
+                <th>Plantel</th><th>Especialidad</th><th>Nivel</th><th>Id</th><th>Grado</th>
             </thead>
             <tbody>
             
                 @foreach($grados as $grado)
                 <tr>
-                <td>{{$grado->id}}</td><td>{{$grado->name}}</td><td>{{$grado->plantel->razon}}</td>
-                <td>{{$grado->especialidad->name}}</td><td>{{$grado->nivel->name}}</td>
+                    <td>{{$grado->plantel->razon}}</td>
+                    <td>{{$grado->especialidad->name}}</td><td>{{$grado->nivel->name}}</td><td>{{$grado->id}}</td><td>{{$grado->name}}</td>
                 </tr>
                 @endforeach
                 
@@ -111,8 +111,8 @@
             
                 @foreach($grupos as $grupo)
                 <tr>
-                <td>{{$grupo->id}}</td><td>{{$grupo->name}}</td><td>{{$grupo->desc_corta}}</td>
-                <td>{{$grupo->plantel->razon}}</td><td>{{$grupo->salon->name}}</td>
+                    <td>{{$grupo->plantel->razon}}</td><td>{{$grupo->id}}</td><td>{{$grupo->name}}</td><td>{{$grupo->desc_corta}}</td>
+                <td>{{$grupo->salon->name}}</td>
                 </tr>
                 @endforeach
                 
@@ -123,14 +123,14 @@
         @if(isset($turnos))
         <table class="table table-condensed table-striped">
             <thead>
-                <th>Id</th><th>Turno</th><th>Plantel</th><th>Especialidad</th><th>Nivel</th><th>Grado</th>
+                <th>Plantel</th><th>Especialidad</th><th>Nivel</th><th>Grado</th><th>Id</th><th>Turno</th>
             </thead>
             <tbody>
             
                 @foreach($turnos as $turno)
                 <tr>
-                <td>{{$turno->id}}</td><td>{{$turno->name}}</td><td>{{$turno->plantel->razon}}</td>
-                <td>{{$turno->especialidad->name}}</td><td>{{$turno->nivel->name}}</td><td>{{$turno->grado->name}}</td>
+                    <td>{{$turno->plantel->razon}}</td>
+                    <td>{{$turno->especialidad->name}}</td><td>{{$turno->nivel->name}}</td><td>{{$turno->grado->name}}</td><td>{{$turno->id}}</td><td>{{$turno->name}}</td>
                 </tr>
                 @endforeach
                 

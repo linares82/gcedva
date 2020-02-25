@@ -161,6 +161,7 @@
                     </div>
                     <div id="wConcretados_pie">
                     </div>
+                    <a href="{{route('home.wConcretadosDetalle', array('plantel'=>$empleado->plantel_id))}}" class="btn btn-xs btn-success" target="_blank">Detalle</a>
                     </div>
                     
                     <div class="form-group col-md-2 col-sm-2 col-xs-2">

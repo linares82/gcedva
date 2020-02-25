@@ -225,7 +225,7 @@ class EspecialidadsController extends Controller
 
 	public function listaEspecialidades()
 	{
-		$especialidades = Especialidad::all();
+		$especialidades = Especialidad::orderBy('plantel_id')->orderBy('id')->get();
 		return view('combinacionClientes.reportes.cargas', compact('especialidades'));
 	}
 }

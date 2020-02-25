@@ -18,7 +18,10 @@ class ImpresionTicket extends Model
 	}
 
 	//Mass Assignment
-	protected $fillable = ['caja_id', 'pago_id', 'cliente_id', 'plantel_id', 'consecutivo', 'monto', 'toke_unico', 'usu_alta_id', 'usu_mod_id'];
+	protected $fillable = [
+		'caja_id', 'pago_id', 'cliente_id', 'plantel_id', 'consecutivo', 'monto',
+		'toke_unico', 'usu_alta_id', 'usu_mod_id', 'fecha_pago'
+	];
 
 	public function usu_alta()
 	{

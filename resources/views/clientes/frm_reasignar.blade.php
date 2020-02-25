@@ -49,20 +49,27 @@
                     @endif
                     </div>
 
-                    <div class="form-group col-md-4 @if($errors->has('st_seguimiento_id')) has-error @endif">
+                    <div class="form-group col-md-2 @if($errors->has('st_seguimiento_id')) has-error @endif">
                     <label for="st_cliente_id-field">Estatus Seguimiento</label>
                     {!! Form::select("st_seguimiento_id", $list2["StSeguimiento"], null, array("class" => "form-control select_seguridad", "id" => "st_seguimiento_id-field", 'style'=>'width:100%;')) !!}
                     @if($errors->has("st_seguimiento_id"))
                         <span class="help-block">{{ $errors->first("st_seguimiento_id") }}</span>
                     @endif
                     </div>
-                    <div class="form-group col-md-1 @if($errors->has('matricula')) has-error @endif">
-                    <label for="cantidad-field">Registros</label>
-                    {!! Form::text("cantidad", null, array("class" => "form-control input-sm", "id" => "cantidad-field")) !!}
+                    <div class="form-group col-md-2 @if($errors->has('matricula')) has-error @endif">
+                    <label for="cantidad-field">R. Existentes</label>
+                    {!! Form::text("cantidad", null, array("class" => "form-control input-sm", "id" => "cantidad-field", 'readonly'=>true)) !!}
                     @if($errors->has("cantidad"))
                         <span class="help-block">{{ $errors->first("cantidad") }}</span>
                     @endif
                     </div>
+                    <div class="form-group col-md-1 @if($errors->has('cantidad_afectar')) has-error @endif">
+                        <label for="cantidad_afectar-field">Afectar a</label>
+                        {!! Form::text("cantidad_afectar", null, array("class" => "form-control input-sm", "id" => "cantidad_afectar-field")) !!}
+                        @if($errors->has("cantidad_afectar"))
+                            <span class="help-block">{{ $errors->first("cantidad_afectar") }}</span>
+                        @endif
+                        </div>
                 </div>
             </div>
             <div class="box box-default box-solid">

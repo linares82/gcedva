@@ -265,10 +265,11 @@ class PagosController extends Controller
         $input['cliente_id'] = $caja->cliente_id;
         $input['plantel_id'] = $caja->plantel_id;
         $input['consecutivo'] = $caja->consecutivo;
-        $input['monto'] = $caja->total;
+        $input['monto'] = $pago->monto;
         $input['toke_unico'] = uniqid(base64_encode(str_random(6)));
         $input['usu_alta_id'] = Auth::user()->id;
         $input['usu_mod_id'] = Auth::user()->id;
+        $input['fecha_pago'] = $pago->fecha;
         $impresion_token = ImpresionTicket::create($input);
 
         $acumulado = Pago::select('monto')->where('caja_id', '=', $caja->id)->sum('monto');

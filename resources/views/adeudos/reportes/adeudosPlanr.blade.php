@@ -61,6 +61,7 @@
         <th><strong>Plantel</strong></th>    
         <th><strong>Plan</strong></th>    
         <th><strong>Cliente</strong></th>
+        <th><strong>Turno</strong></th>
         <th><strong>Caja</strong></th>
         <th><strong>Estatus</strong></th>
         <th><strong>Conceptos / Monto </strong></th>
@@ -85,6 +86,7 @@
                 <td>{{$caja->razon}}</td>
                 <td>{{$caja->plan}}</td>
                 <td>{{$caja->cliente." - ".$caja->nombre." ".$caja->nombre2." ".$caja->ape_paterno." ".$caja->ape_materno." - ".$caja->estatus_cliente}}</td>
+                <td>{{$caja->turno}}</td>
                 <td> {{$caja->consecutivo}}</td>
                 <td> {{$caja->estatus}}
                 </td>

@@ -20,6 +20,13 @@
                         <span class="help-block">{{ $errors->first("name") }}</span>
                        @endif
                     </div>
+                <div class="form-group col-md-3 @if($errors->has('bnd_corto')) has-error @endif">
+                      <label for="bnd_corto-field">Tiempo corto(Solo para grafica de cambio de estatus Concretado)</label>
+                      {!! Form::checkbox("bnd_corto", 1, null, [ "id" => "bnd_corto-field", 'class'=>'minimal']) !!}
+                      @if($errors->has("bnd_corto"))
+                      <span class="help-block">{{ $errors->first("bnd_corto") }}</span>
+                      @endif
+                </div>
 
 @push('scripts')                    
 <script>

@@ -265,7 +265,7 @@ class GradosController extends Controller
 
     public function listaGrados()
     {
-        $grados = Grado::all();
+        $grados = Grado::orderBy('plantel_id')->orderBy('especialidad_id')->orderBy('nivel_id')->orderBy('id')->get();
         return view('combinacionClientes.reportes.cargas', compact('grados'));
     }
 }

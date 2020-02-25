@@ -346,9 +346,11 @@ class AdeudosController extends Controller
             'st.name as estatus',
             'st.id as estatus_caja',
             'p.razon',
-            'stc.name as estatus_cliente'
+            'stc.name as estatus_cliente',
+            't.name as turno'
         )
             ->join('combinacion_clientes as cc', 'cc.plan_pago_id', '=', 'plan_pagos.id')
+            ->join('turnos as t', 't.id', '=', 'cc.turno_id')
             ->join('clientes as c', 'c.id', '=', 'cc.cliente_id')
             ->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
             ->join('cajas as caj', 'caj.cliente_id', '=', 'c.id')

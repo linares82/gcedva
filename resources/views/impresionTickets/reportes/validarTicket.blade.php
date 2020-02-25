@@ -43,12 +43,12 @@
             <h4>Información Impresa</h4>
             <table class="table table-condensed table-striped">
                 <thead>
-                    <th>Consecutivo Caja</th><th>Plantel</th><th>Cliente</th><th>Monto</th><th>Fecha Impresion</th>
+                    <th>Consecutivo Caja</th><th>Plantel</th><th>Cliente</th><th>Monto</th><th>Fecha Impresion</th><th>Fecha Pago</th>
                 </thead>
                 <tbody>
                     <td>{{$registro->consecutivo}}</td><td>{{$registro->plantel->razon}}</td>
                     <td>{{$registro->cliente_id}} {{$registro->cliente->nombre}} {{$registro->cliente->nombre2}} {{$registro->cliente->ape_paterno}} {{$registro->cliente->ape_materno}}</td>
-                    <td>{{$registro->monto}}</td><td>{{$registro->created_at}}</td>
+                    <td>{{$registro->monto}}</td><td>{{$registro->created_at}}</td><td>{{$registro->fecha_pago}}</td>
                 </tbody>
             </table>
 

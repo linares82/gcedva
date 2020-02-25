@@ -242,7 +242,7 @@ class GruposController extends Controller
 
 	public function listaGrupos()
 	{
-		$grupos = Grupo::all();
+		$grupos = Grupo::orderBy('plantel_id')->orderBy('id')->get();
 		return view('combinacionClientes.reportes.cargas', compact('grupos'));
 	}
 }

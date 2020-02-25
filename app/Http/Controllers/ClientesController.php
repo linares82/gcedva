@@ -420,20 +420,25 @@ class ClientesController extends Controller
     {
         $input = $request->all();
         //dd($input);
-        do {
-            $clis = Cliente::select('clientes.id')
-                ->join('seguimientos as s', 's.cliente_id', '=', 'clientes.id')
-                ->where('clientes.plantel_id', '=', $input['plantel_id'])
-                ->where('clientes.empleado_id', '=', $input['empleado_id'])
-                ->where('s.st_seguimiento_id', '=', $input['st_seguimiento_id'])
-                ->take(50)
-                ->get();
-            foreach ($clis as $cli) {
+        //do {
+        $clis = Cliente::select('clientes.id')
+            ->join('seguimientos as s', 's.cliente_id', '=', 'clientes.id')
+            ->where('clientes.plantel_id', '=', $input['plantel_id'])
+            ->where('clientes.empleado_id', '=', $input['empleado_id'])
+            ->where('s.st_seguimiento_id', '=', $input['st_seguimiento_id'])
+            ->take(50)
+            ->get();
+        $cantidad = $input['cantidad_afectar'];
+        $indicador = 1;
+        foreach ($clis as $cli) {
+            if ($indicador <= $cantidad) {
                 $cliente = Cliente::find($cli->id);
                 $cliente->empleado_id = $input['empleado_id2'];
                 $cliente->save();
             }
-        } while (count($clis) > 0);
+            $indicador++;
+        }
+        //} while (count($clis) > 0);
 
 
         /*->update(['clientes.empleado_id' => $input['empleado_id2'],

@@ -16,8 +16,8 @@ class CreateAvisoGralsTable extends Migration {
             $table->increments('id');
             $table->string('desc_corta');
 			$table->text('aviso');
-            $table->date('inicio');
-            $table->date('fin');
+            $table->date('inicio')->nullable();
+            $table->date('fin')->nullable();
 			$table->integer('plantel_id')->unsigned();
 			$table->integer('puesto_id')->unsigned();
             $table->integer('usu_alta_id')->unsigned();

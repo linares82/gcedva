@@ -533,7 +533,7 @@ class EmpleadosController extends Controller
 
         $empleados = Empleado::select('empleados.*', 'ste.name as estatus')->where('empleados.plantel_id', $datos['plantel_f'])
             ->join('st_empleados as ste', 'ste.id', '=', 'empleados.st_empleado_id')
-            ->where('st_empleado_id', $datos['estatus_f'])
+            ->whereIn('st_empleado_id', $datos['estatus_f'])
             ->get();
         $documentos_faltantes = array();
         foreach ($empleados as $empleado) {

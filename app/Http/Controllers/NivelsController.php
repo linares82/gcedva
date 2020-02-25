@@ -177,7 +177,7 @@ class NivelsController extends Controller
 
 	public function listaNiveles()
 	{
-		$niveles = Nivel::all();
+		$niveles = Nivel::orderBy('plantel_id')->orderBy('especialidad_id')->get();
 		return view('combinacionClientes.reportes.cargas', compact('niveles'));
 	}
 }

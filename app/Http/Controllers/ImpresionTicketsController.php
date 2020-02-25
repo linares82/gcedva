@@ -134,7 +134,7 @@ class ImpresionTicketsController extends Controller
 	public function validarTicketR(Request $request)
 	{
 		$datos = $request->all();
-		$registro = ImpresionTicket::where('toke_unico', $datos['token'])->first();
+		$registro = ImpresionTicket::where('toke_unico', '=', $datos['token'])->first();
 
 		return view('impresionTickets.reportes.validarTicket', compact('registro'));
 	}

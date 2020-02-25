@@ -884,6 +884,7 @@ class HomeController extends Controller
             ->groupBy('p.razon')
             ->groupBy('p.meta_total')
             ->first();
+
         if (is_null($c)) {
             array_push(
                 $gauge,
@@ -904,5 +905,216 @@ class HomeController extends Controller
         }
 
         echo json_encode($gauge);
+    }
+
+    public function wConcretadosDetalle(Request $request)
+    {
+
+        $datos = $request->all();
+
+        $gauge_corto = array();
+        $gauge_largo = array();
+        $l = Lectivo::find(0)->first();
+        //dd($l);
+        $plantel = DB::table('plantels as p')->where('id', '>', 0)->where('id', '=', $datos['plantel'])
+            ->select('razon', 'id', 'meta_total')->first();
+
+        $c = Seguimiento::select(
+            'p.id',
+            'p.razon',
+            'p.meta_total',
+            DB::raw('count(c.nombre) as avance'),
+            DB::raw('((count(c.nombre)*100)/p.meta_total) as p_avance')
+        )
+            ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
+            ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
+            ->join('hactividades as h', 'h.cliente_id', '=', 'c.id')
+            ->where('h.tarea', '=', 'Seguimiento')
+            ->where('h.detalle', '=', 'Concretado')
+            ->where('h.created_at', '>=', $l->inicio)
+            ->where('h.created_at', '<=', $l->fin)
+            ->where('seguimientos.st_seguimiento_id', '=', '2')
+            ->where('p.id', '=', $plantel->id)
+            ->groupBy('p.id')
+            ->groupBy('p.razon')
+            ->groupBy('p.meta_total')
+            ->first();
+        $detalle1 = Seguimiento::select(
+            'p.id',
+            'p.razon',
+            'p.meta_total',
+            'seguimientos.cliente_id',
+            'h.fecha',
+            'h.hora'
+        )
+            ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
+            ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
+            ->join('hactividades as h', 'h.cliente_id', '=', 'c.id')
+            ->where('h.tarea', '=', 'Seguimiento')
+            ->where('h.detalle', '=', 'Concretado')
+            ->where('h.created_at', '>=', $l->inicio)
+            ->where('h.created_at', '<=', $l->fin)
+            ->where('seguimientos.st_seguimiento_id', '=', '2')
+            ->where('p.id', '=', $plantel->id)
+            ->orderBy('p.id')
+            ->orderBy('p.razon')
+            //->groupBy('p.id')
+            //->groupBy('p.razon')
+            //->groupBy('p.meta_total')
+            ->get();
+
+        //dd($detalle1->toArray());
+
+        $resumenCorto = Seguimiento::select(
+            'p.id',
+            'p.razon',
+            'p.meta_total',
+            DB::raw('count(c.nombre) as avance'),
+            DB::raw('((count(c.nombre)*100)/p.meta_total) as p_avance')
+        )
+            ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
+            ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
+            ->join('hactividades as h', 'h.cliente_id', '=', 'c.id')
+            ->join('combinacion_clientes as cc', 'cc.cliente_id', '=', 'c.id')
+            ->join('nivels as n', 'n.id', '=', 'cc.nivel_id')
+            ->where('n.bnd_corto', 1)
+            ->where('cc.plan_pago_id', '>', 0)
+            ->where('cc.cuenta_ticket_pago', '>', 0)
+            ->whereNull('cc.deleted_at')
+            ->where('h.tarea', '=', 'Seguimiento')
+            ->where('h.detalle', '=', 'Concretado')
+            ->where('h.created_at', '>=', $l->inicio)
+            ->where('h.created_at', '<=', $l->fin)
+            ->where('seguimientos.st_seguimiento_id', '=', '2')
+            ->where('p.id', '=', $plantel->id)
+            ->groupBy('p.id')
+            ->groupBy('p.razon')
+            ->groupBy('p.meta_total')
+            ->first();
+
+        $detalleCorto = Seguimiento::select(
+            'p.id',
+            'p.razon',
+            'p.meta_total',
+            'seguimientos.cliente_id',
+            'h.fecha',
+            'h.hora'
+        )
+            ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
+            ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
+            ->join('hactividades as h', 'h.cliente_id', '=', 'c.id')
+            ->join('combinacion_clientes as cc', 'cc.cliente_id', '=', 'c.id')
+            ->join('nivels as n', 'n.id', '=', 'cc.nivel_id')
+            ->where('n.bnd_corto', 1)
+            ->where('cc.plan_pago_id', '>', 0)
+            ->where('cc.cuenta_ticket_pago', '>', 0)
+            ->whereNull('cc.deleted_at')
+            ->where('h.tarea', '=', 'Seguimiento')
+            ->where('h.detalle', '=', 'Concretado')
+            ->where('h.created_at', '>=', $l->inicio)
+            ->where('h.created_at', '<=', $l->fin)
+            ->where('seguimientos.st_seguimiento_id', '=', '2')
+            ->where('p.id', '=', $plantel->id)
+            ->orderBy('p.id')
+            ->orderBy('p.razon')
+            ->get();
+        //dd($detalleCorto->toArray());
+        $resumenLargo = Seguimiento::select(
+            'p.id',
+            'p.razon',
+            'p.meta_total',
+            DB::raw('count(c.nombre) as avance'),
+            DB::raw('((count(c.nombre)*100)/p.meta_total) as p_avance')
+        )
+            ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
+            ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
+            ->join('hactividades as h', 'h.cliente_id', '=', 'c.id')
+            ->join('combinacion_clientes as cc', 'cc.cliente_id', '=', 'c.id')
+            ->join('nivels as n', 'n.id', '=', 'cc.nivel_id')
+            ->where('n.bnd_corto', 0)
+            ->where('cc.plan_pago_id', '>', 0)
+            ->where('cc.cuenta_ticket_pago', '>', 0)
+            ->whereNull('cc.deleted_at')
+            ->where('h.tarea', '=', 'Seguimiento')
+            ->where('h.detalle', '=', 'Concretado')
+            ->where('h.created_at', '>=', $l->inicio)
+            ->where('h.created_at', '<=', $l->fin)
+            ->where('seguimientos.st_seguimiento_id', '=', '2')
+            ->where('p.id', '=', $plantel->id)
+            ->groupBy('p.id')
+            ->groupBy('p.razon')
+            ->groupBy('p.meta_total')
+            ->first();
+        //dd($resumenLargo);
+        $detalleLargo = Seguimiento::select(
+            'p.id',
+            'p.razon',
+            'p.meta_total',
+            'seguimientos.cliente_id',
+            'h.fecha',
+            'h.hora'
+        )
+            ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
+            ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
+            ->join('hactividades as h', 'h.cliente_id', '=', 'c.id')
+            ->join('combinacion_clientes as cc', 'cc.cliente_id', '=', 'c.id')
+            ->join('nivels as n', 'n.id', '=', 'cc.nivel_id')
+            ->where('n.bnd_corto', 0)
+            ->where('cc.plan_pago_id', '>', 0)
+            ->where('cc.cuenta_ticket_pago', '>', 0)
+            ->whereNull('cc.deleted_at')
+            ->where('h.tarea', '=', 'Seguimiento')
+            ->where('h.detalle', '=', 'Concretado')
+            ->where('h.created_at', '>=', $l->inicio)
+            ->where('h.created_at', '<=', $l->fin)
+            ->where('seguimientos.st_seguimiento_id', '=', '2')
+            ->where('p.id', '=', $plantel->id)
+            ->orderBy('p.id')
+            ->orderBy('p.razon')
+            ->get();
+
+        if (is_null($resumenCorto)) {
+            array_push(
+                $gauge_corto,
+                array(
+                    'id' => $plantel->id, 'razon' => $plantel->razon, 'meta_total' => $plantel->meta_total,
+                    'avance' => 0, 'p_avance' => 0, 'inicio' => $l->inicio, 'fin' => $l->fin
+                )
+            );
+        } else {
+            array_push(
+                $gauge_corto,
+                array(
+                    'id' => $plantel->id, 'razon' => $plantel->razon, 'meta_total' => $plantel->meta_total,
+                    'avance' => $resumenCorto->avance, 'p_avance' => round($resumenCorto->p_avance, 2), 'inicio' => $l->inicio, 'fin' => $l->fin
+                )
+            );
+        }
+
+        if (is_null($resumenLargo)) {
+            array_push(
+                $gauge_largo,
+                array(
+                    'id' => $plantel->id, 'razon' => $plantel->razon, 'meta_total' => $plantel->meta_total,
+                    'avance' => 0, 'p_avance' => 0, 'inicio' => $l->inicio, 'fin' => $l->fin
+                )
+            );
+        } else {
+            array_push(
+                $gauge_largo,
+                array(
+                    'id' => $plantel->id, 'razon' => $plantel->razon, 'meta_total' => $plantel->meta_total,
+                    'avance' => $resumenLargo->avance, 'p_avance' => round($resumenLargo->p_avance, 2), 'inicio' => $l->inicio, 'fin' => $l->fin
+                )
+            );
+        }
+        //dd($gauge_largo[0]);
+
+        return view('wConcretadosDetalle')
+            ->with('detalle1', $detalle1)
+            ->with('detalleCorto', $detalleCorto)
+            ->with('resumenCorto', $gauge_corto[0])
+            ->with('detalleLargo', $detalleLargo)
+            ->with('resumenLargo', $gauge_largo[0]);
     }
 }

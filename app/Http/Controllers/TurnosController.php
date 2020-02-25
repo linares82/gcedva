@@ -171,7 +171,7 @@ class TurnosController extends Controller
 
 	public function listaTurnos()
 	{
-		$turnos = Turno::all();
+		$turnos = Turno::orderBy('plantel_id')->orderBy('especialidad_id')->orderBy('nivel_id')->orderBy('grado_id')->get();
 		return view('combinacionClientes.reportes.cargas', compact('turnos'));
 	}
 }
