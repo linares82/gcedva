@@ -76,6 +76,7 @@
                         <div class="form-group col-md-4 @if($errors->has('fecha')) has-error @endif">
                             <label for="fecha-field">Fecha</label>
                             {!! Form::text("fecha", null, array("class" => "form-control", "id" => "fecha-field")) !!}
+                            {!! Form::hidden("lectivo", $lectivo->id, array("class" => "form-control", "id" => "lectivo")) !!}
                             @if($errors->has("fecha"))
                              <span class="help-block">{{ $errors->first("fecha") }}</span>
                             @endif

@@ -1,4 +1,6 @@
-<?php namespace App\Http\Controllers;
+<?php
+
+namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -8,8 +10,10 @@ use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updateDiaNoHabil;
 use App\Http\Requests\createDiaNoHabil;
+use App\Lectivo;
 
-class DiaNoHabilsController extends Controller {
+class DiaNoHabilsController extends Controller
+{
 
 	/**
 	 * Display a listing of the resource.
@@ -31,7 +35,7 @@ class DiaNoHabilsController extends Controller {
 	public function create()
 	{
 		return view('diaNoHabils.create')
-			->with( 'list', DiaNoHabil::getListFromAllRelationApps() );
+			->with('list', DiaNoHabil::getListFromAllRelationApps());
 	}
 
 	/**
@@ -44,13 +48,19 @@ class DiaNoHabilsController extends Controller {
 	{
 
 		$input = $request->all();
-		$input['usu_alta_id']=Auth::user()->id;
-		$input['usu_mod_id']=Auth::user()->id;
+		// 	($input);
+		$input['usu_alta_id'] = Auth::user()->id;
+		$input['usu_mod_id'] = Auth::user()->id;
 
 		//create data
-		DiaNoHabil::create( $input );
-                app('App\Http\Controllers\LectivosController')->calculaAsistencias($input['lectivo_id']);
-		return redirect()->route('lectivos.show', $input['lectivo_id'])->with('message', 'Registro Creado.');
+		DiaNoHabil::create($input);
+		$lectivos = Lectivo::whereDate('inicio', '<=', $input['fecha'])->whereDate('fin', '>=', $input['fecha'])->get();
+		foreach ($lectivos as $lectivo) {
+			app('App\Http\Controllers\LectivosController')->calculaAsistencias($lectivo->id);
+		}
+
+		//return redirect()->route('lectivos.show', $input['lectivo_id'])->with('message', 'Registro Creado.');
+		return redirect()->back();
 	}
 
 	/**
@@ -61,7 +71,7 @@ class DiaNoHabilsController extends Controller {
 	 */
 	public function show($id, DiaNoHabil $diaNoHabil)
 	{
-		$diaNoHabil=$diaNoHabil->find($id);
+		$diaNoHabil = $diaNoHabil->find($id);
 		return view('diaNoHabils.show', compact('diaNoHabil'));
 	}
 
@@ -73,9 +83,9 @@ class DiaNoHabilsController extends Controller {
 	 */
 	public function edit($id, DiaNoHabil $diaNoHabil)
 	{
-		$diaNoHabil=$diaNoHabil->find($id);
+		$diaNoHabil = $diaNoHabil->find($id);
 		return view('diaNoHabils.edit', compact('diaNoHabil'))
-			->with( 'list', DiaNoHabil::getListFromAllRelationApps() );
+			->with('list', DiaNoHabil::getListFromAllRelationApps());
 	}
 
 	/**
@@ -86,9 +96,9 @@ class DiaNoHabilsController extends Controller {
 	 */
 	public function duplicate($id, DiaNoHabil $diaNoHabil)
 	{
-		$diaNoHabil=$diaNoHabil->find($id);
+		$diaNoHabil = $diaNoHabil->find($id);
 		return view('diaNoHabils.duplicate', compact('diaNoHabil'))
-			->with( 'list', DiaNoHabil::getListFromAllRelationApps() );
+			->with('list', DiaNoHabil::getListFromAllRelationApps());
 	}
 
 	/**
@@ -101,10 +111,10 @@ class DiaNoHabilsController extends Controller {
 	public function update($id, DiaNoHabil $diaNoHabil, updateDiaNoHabil $request)
 	{
 		$input = $request->all();
-		$input['usu_mod_id']=Auth::user()->id;
+		$input['usu_mod_id'] = Auth::user()->id;
 		//update data
-		$diaNoHabil=$diaNoHabil->find($id);
-		$diaNoHabil->update( $input );
+		$diaNoHabil = $diaNoHabil->find($id);
+		$diaNoHabil->update($input);
 
 		return redirect()->route('diaNoHabils.index')->with('message', 'Registro Actualizado.');
 	}
@@ -115,13 +125,16 @@ class DiaNoHabilsController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id,DiaNoHabil $diaNoHabil)
+	public function destroy($id, DiaNoHabil $diaNoHabil)
 	{
-		$diaNoHabil=$diaNoHabil->find($id);
-                $lectivo=$diaNoHabil->lectivo_id;
+		$diaNoHabil = $diaNoHabil->find($id);
+		$fecha = $diaNoHabil->fecha;
 		$diaNoHabil->delete();
-                app('App\Http\Controllers\LectivosController')->calculaAsistencias($lectivo);
-		return redirect()->route('lectivos.show', $lectivo)->with('message', 'Registro Borrado.');
+		$lectivos = Lectivo::whereDate('inicio', '<=', $fecha)->whereDate('fin', '>=', $fecha)->get();
+		foreach ($lectivos as $lectivo) {
+			app('App\Http\Controllers\LectivosController')->calculaAsistencias($lectivo->id);
+		}
+		return redirect()->back();
+		//return redirect()->route('lectivos.show', $lectivo)->with('message', 'Registro Borrado.');
 	}
-
 }

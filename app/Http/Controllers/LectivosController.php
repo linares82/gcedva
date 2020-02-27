@@ -195,9 +195,9 @@ class LectivosController extends Controller
 		$total_lv = 0;
 		$total_s = 0;
 		while ($fecarbon->lte($fincarbon)) {
-			$noHabil = DiaNoHabil::where('lectivo_id', '=', $id)
-				->where('fecha', '=', $fecarbon->format('Y-m-d'))
+			$noHabil = DiaNoHabil::where('fecha', '=', $fecarbon->format('Y-m-d'))
 				->first();
+
 			//dd($noHabil);
 			if (is_null($noHabil)) {
 				switch ($fecarbon->dayOfWeek) {
