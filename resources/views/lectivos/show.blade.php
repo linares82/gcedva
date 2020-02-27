@@ -76,7 +76,6 @@
                         <div class="form-group col-md-4 @if($errors->has('fecha')) has-error @endif">
                             <label for="fecha-field">Fecha</label>
                             {!! Form::text("fecha", null, array("class" => "form-control", "id" => "fecha-field")) !!}
-                            {!! Form::hidden("lectivo_id", $lectivo->id, array("class" => "form-control", "id" => "lectivo_id-field")) !!}
                             @if($errors->has("fecha"))
                              <span class="help-block">{{ $errors->first("fecha") }}</span>
                             @endif
@@ -96,7 +95,7 @@
                     <td>Fecha</td><td></td>
                 </thead>
                 <tbody>
-                    @foreach( $lectivo->diasNoHabiles as $d )
+                    @foreach( $diasNoHabiles as $d )
                     <tr>
                     <td> {{$d->fecha}} </td>
                     <td>

@@ -56,7 +56,11 @@
                         $lectivo = \App\Lectivo::find($data['lectivo_f']);
                         //dd($lectivo);
                         $no_habiles = array();
-                        foreach ($lectivo->diasNoHabiles as $no_habil) {
+                        $diasNoHabiles = DiaNoHabil::distinct()
+                        ->where('fecha', '>=', $lectivo->inicio)
+                        ->where('fecha', '<=', $lectivo->fin)
+                        ->get();
+                        foreach ($diasNoHabiles as $no_habil) {
                             array_push($no_habiles, \Carbon\Carbon::createFromFormat('Y-m-d', $no_habil->fecha));
                         }
                         $pinicio = \Carbon\Carbon::createFromFormat('Y-m-d', $data['fecha_f']);

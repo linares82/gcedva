@@ -116,28 +116,11 @@
 
 @push('scripts')
   
-  <script type="text/javascript" src="{{asset('bower_components/AdminLTE/plugins/masktime/jquery.maskedinput.js')}}"></script>	
+  
   <script type="text/javascript">
-    /*function valida(valor) 
-		{
-		   //que no existan elementos sin escribir
-		   if(valor.indexOf("_") == -1)
-		   {		      
-		      var hora = valor.split(":")[0];
-		      if(parseInt(hora) > 23 )
-		      {
-		           $("#hora-field").val("");		      
-		      } 
-		   }
-		}
-        */
+    
     $(document).ready(function() {
-      /*  
-        $.mask.definitions['H']='[012]';
-        $.mask.definitions['N']='[012345]';
-        $.mask.definitions['n']='[0123456789]';
-        $("#hora-field").mask("Hn:Nn:Nn");
-*/
+      
 
         getCmbInstructores();
         getCmbMaterias();
@@ -147,6 +130,10 @@
           getCmbInstructores();
           getCmbMaterias();
           getCmbGrupos();
+      });
+
+      $('#lectivo_id-field').change(function(){
+          getDatosLectivo();
       });
       function getCmbInstructores(){
           //$('#empleado_id_field option:selected').val($('#empleado_id_campo option:selected').val()).change();
@@ -232,7 +219,26 @@
       
 
     });
-    
+
+    function getDatosLectivo(){
+          //$('#empleado_id_field option:selected').val($('#empleado_id_campo option:selected').val()).change();
+          
+              $.ajax({
+                  url: '{{ route("lectivos.getLectivo") }}',
+                  type: 'GET',
+                  data: {lectivo:$("#lectivo_id-field option:selected").val()},
+                  dataType: 'json',
+                  beforeSend : function(){$("#loading3").show();},
+                  complete : function(){$("#loading3").hide();},
+                  success: function(data){
+                      //console.log(data);
+                      $('#asistencias_max-field').val(data.total_asistencias_lv+data.total_asistencias_s);
+                      $('#fec_inicio-field').val(data.inicio);
+                      $('#fec_fin-field').val(data.fin);
+                  }
+              });       
+      }
+
     $('#fec_inicio-field').Zebra_DatePicker({
     days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
             months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],

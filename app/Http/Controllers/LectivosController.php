@@ -88,7 +88,9 @@ class LectivosController extends Controller
 	public function show($id, Lectivo $lectivo)
 	{
 		$lectivo = $lectivo->find($id);
-		return view('lectivos.show', compact('lectivo'));
+		$diasNoHabiles = DiaNoHabil::distinct()->where('fecha', '>=', $lectivo->inicio)->where('fecha', '<=', $lectivo->fin)->get();
+
+		return view('lectivos.show', compact('lectivo', 'diasNoHabiles'));
 	}
 
 	/**
@@ -245,9 +247,9 @@ class LectivosController extends Controller
 		$mes_fin = $fecha_fin->month;
 		$dia_final = $fecha->dayOfYear;
 
-		$noHabiles = DiaNoHabil::whereYear('fecha', $anio)
+		$noHabiles = DiaNoHabil::distinct()->whereYear('fecha', $anio)
 			->get();
-		$noHabilesFin = DiaNoHabil::whereYear('fecha', $anio_fin)->get();
+		$noHabilesFin = DiaNoHabil::distinct()->whereYear('fecha', $anio_fin)->get();
 		//dd($noHabiles);
 		return view('lectivos.imprimirCalendario', compact(
 			'anio',

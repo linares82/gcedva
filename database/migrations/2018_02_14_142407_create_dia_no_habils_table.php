@@ -14,7 +14,6 @@ class CreateDiaNoHabilsTable extends Migration {
 	{
 		Schema::create('dia_no_habils', function(Blueprint $table) {
             $table->increments('id');
-            $table->integer('lectivo_id')->unsigned();
             $table->date('fecha');
             $table->integer('usu_alta_id')->unsigned();
             $table->integer('usu_mod_id')->unsigned();
@@ -22,7 +21,6 @@ class CreateDiaNoHabilsTable extends Migration {
             $table->softDeletes();
             $table->foreign('usu_mod_id')->references('id')->on('users');
             $table->foreign('usu_alta_id')->references('id')->on('users');
-            $table->foreign('lectivo_id')->references('id')->on('lectivos');
         });
 	}
 

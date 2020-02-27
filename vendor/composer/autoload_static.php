@@ -766,6 +766,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'AddMatriculaInscripcionsTable' => __DIR__ . '/../..' . '/database/migrations/2018_02_14_122022_add_matricula_inscripcions_table.php',
         'AddMontoMensualidadClientesTable' => __DIR__ . '/../..' . '/database/migrations/2018_11_01_123717_add_monto_mensualidad_clientes_table.php',
         'AddNombre2GradosTable' => __DIR__ . '/../..' . '/database/migrations/2019_08_23_093321_add_nombre2_grados_table.php',
+        'AddOrdenPeriodoEstudiosTable' => __DIR__ . '/../..' . '/database/migrations/2020_02_25_094544_add_orden_periodo_estudios_table.php',
         'AddOrigenEbanxesTable' => __DIR__ . '/../..' . '/database/migrations/2018_12_20_142232_add_origen_ebanxes_table.php',
         'AddPaiseIdFieldClientesTable' => __DIR__ . '/../..' . '/database/migrations/2018_10_23_103201_add_paise_id_field_clientes_table.php',
         'AddPeriodoEstudioFInscricionsTable' => __DIR__ . '/../..' . '/database/migrations/2017_12_11_084732_add_periodo_estudio_f_inscricions_table.php',

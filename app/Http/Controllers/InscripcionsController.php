@@ -25,6 +25,7 @@ use App\Pago;
 use App\Plantel;
 use App\CalificacionPonderacion;
 use App\CargaPonderacion;
+use App\DiaNoHabil;
 use App\PeriodoEstudio;
 use Illuminate\Http\Request;
 use Auth;
@@ -571,8 +572,13 @@ class InscripcionsController extends Controller
         $fechas = array();
         $lectivo = Lectivo::find($data['lectivo_f']);
         //dd($lectivo);
+        $diasNoHabiles = DiaNoHabil::distinct()
+            ->where('fecha', '>=', $lectivo->inicio)
+            ->where('fecha', '<=', $lectivo->fin)
+            ->get();
+
         $no_habiles = array();
-        foreach ($lectivo->diasNoHabiles as $no_habil) {
+        foreach ($diasNoHabiles as $no_habil) {
             array_push($no_habiles, Carbon::createFromFormat('Y-m-d', $no_habil->fecha));
         }
         //dd($no_habiles);    
@@ -1245,7 +1251,11 @@ class InscripcionsController extends Controller
         $lectivo = Lectivo::find($data['lectivo_f']);
         //dd($lectivo);
         $no_habiles = array();
-        foreach ($lectivo->diasNoHabiles as $no_habil) {
+        $diasNoHabiles = DiaNoHabil::distinct()
+            ->where('fecha', '>=', $lectivo->inicio)
+            ->where('fecha', '<=', $lectivo->fin)
+            ->get();
+        foreach ($diasNoHabiles as $no_habil) {
             array_push($no_habiles, Carbon::createFromFormat('Y-m-d', $no_habil->fecha));
         }
         //dd($no_habiles);    
@@ -1636,9 +1646,12 @@ class InscripcionsController extends Controller
             $lectivo = Lectivo::find($data['lectivo_f']);
             //dd($lectivo);
             $no_habiles = array();
-
-            if (count($lectivo->diasNoHabiles) > 0) {
-                foreach ($lectivo->diasNoHabiles as $no_habil) {
+            $diasNoHabiles = DiaNoHabil::distinct()
+                ->where('fecha', '>=', $lectivo->inicio)
+                ->where('fecha', '<=', $lectivo->fin)
+                ->get();
+            if (count($diasNoHabiles) > 0) {
+                foreach ($diasNoHabiles as $no_habil) {
                     array_push($no_habiles, Carbon::createFromFormat('Y-m-d', $no_habil->fecha));
                 }
             }
@@ -1867,9 +1880,12 @@ class InscripcionsController extends Controller
             $lectivo = Lectivo::find($asignacion->lectivo_id);
             //dd(count($lectivo->diasNoHabiles));
             $no_habiles = array();
-
-            if (count($lectivo->diasNoHabiles) > 0) {
-                foreach ($lectivo->diasNoHabiles as $no_habil) {
+            $diasNoHabiles = DiaNoHabil::distinct()
+                ->where('fecha', '>=', $lectivo->inicio)
+                ->where('fecha', '<=', $lectivo->fin)
+                ->get();
+            if (count($diasNoHabiles) > 0) {
+                foreach ($diasNoHabiles as $no_habil) {
                     array_push($no_habiles, Carbon::createFromFormat('Y-m-d', $no_habil->fecha));
                 }
             }
@@ -2110,9 +2126,12 @@ class InscripcionsController extends Controller
             $lectivo = Lectivo::find($asignacion->lectivo_id);
             //dd(count($lectivo->diasNoHabiles));
             $no_habiles = array();
-
-            if (count($lectivo->diasNoHabiles) > 0) {
-                foreach ($lectivo->diasNoHabiles as $no_habil) {
+            $diasNoHabiles = DiaNoHabil::distinct()
+                ->where('fecha', '>=', $lectivo->inicio)
+                ->where('fecha', '<=', $lectivo->fin)
+                ->get();
+            if (count($diasNoHabiles) > 0) {
+                foreach ($diasNoHabiles as $no_habil) {
                     array_push($no_habiles, Carbon::createFromFormat('Y-m-d', $no_habil->fecha));
                 }
             }

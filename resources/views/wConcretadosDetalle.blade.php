@@ -48,6 +48,7 @@ crossorigin="anonymous">
                 </thead>
                 @php
                     $indicador=0;
+                    $vMeta=0;
                 @endphp
                 @foreach($detalle1 as $linea)
                     <tr>
@@ -61,7 +62,7 @@ crossorigin="anonymous">
 
                 @endforeach      
                 <tr><td colspan="5"><strong>Total</strong></td><td><strong>{{$indicador}}</strong> </td>
-                    <tr><td colspan="5"><strong>Porcentaje</strong></td><td><strong>{{round(($indicador*100)/$linea['meta_total'],2)}}</strong> </td>    
+                    <tr><td colspan="5"><strong>Porcentaje</strong></td><td><strong>@if($vMeta<>0){{round(($indicador*100)/$vMeta,2)}} @endif</strong> </td>    
                 
             </table>
             <br>
@@ -77,6 +78,7 @@ crossorigin="anonymous">
                     </thead>
                     @php
                         $indicador=0;
+                        $vMeta=0;
                     @endphp
                     @foreach($detalleCorto as $linea)
                         <tr>
@@ -90,7 +92,7 @@ crossorigin="anonymous">
     
                     @endforeach      
                     <tr><td colspan="5"><strong>Total</strong></td><td><strong>{{$indicador}}</strong> </td>
-                        <tr><td colspan="5"><strong>Porcentaje</strong></td><td><strong>{{round(($indicador*100)/$linea['meta_total'],2)}}</strong> </td>    
+                        <tr><td colspan="5"><strong>Porcentaje</strong></td><td><strong>@if($vMeta<>0){{round(($indicador*100)/$vMeta,2)}} @endif</strong> </td>    
                     
                 </table>
             </div >
@@ -105,6 +107,7 @@ crossorigin="anonymous">
                     </thead>
                     @php
                         $indicador=0;
+                        $vMeta=0;
                     @endphp
                     @foreach($detalleLargo as $linea)
                         <tr>
@@ -118,7 +121,7 @@ crossorigin="anonymous">
     
                     @endforeach      
                     <tr><td colspan="5"><strong>Total</strong></td><td><strong>{{$indicador}}</strong> </td>
-                        <tr><td colspan="5"><strong>Porcentaje</strong></td><td><strong>{{round(($indicador*100)/$linea['meta_total'],2)}}</strong> </td>    
+                        <tr><td colspan="5"><strong>Porcentaje</strong></td><td><strong>@if($vMeta<>0){{round(($indicador*100)/$vMeta,2)}} @endif</strong> </td>    
                     
                 </table>
             </div>
