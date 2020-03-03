@@ -14,6 +14,7 @@ use App\CajaLn;
 use App\CombinacionCliente;
 use App\Empleado;
 use App\Egreso;
+use App\FormaPago;
 use App\Inscripcion;
 use App\Pago;
 use App\Plantel;
@@ -499,7 +500,36 @@ class PagosController extends Controller
             ->distinct()
             ->get();
 
-        $egresos = Egreso::select('egresos.id', 'fecha', 'ec.name as concepto', 'fp.name as forma_pago', 'ce.name as cuenta_efectivo', 'monto')
+        $ingresosMenosEgresos = array();
+        $formasPago = FormaPago::where('id', '>', 0)->get();
+        foreach ($registros_pagados as $registro_pagado) {
+
+            foreach ($formasPago as $formaPago) {
+                if ($formaPago->id == $registro_pagado->forma_pago_id) {
+                    $ingresosMenosEgresos['ingreso' . $formaPago->name] = $ingresosMenosEgresos['ingreso' . $formaPago->name] + $registro_pagado->monto_pago;
+                }
+            }
+        }
+        //dd($ingresosMenosEgresos);
+        foreach ($registros_parciales as $registro_pagado) {
+
+            foreach ($formasPago as $formaPago) {
+                if ($formaPago->id == $registro_pagado->forma_pago_id) {
+                    $ingresosMenosEgresos['ingreso' . $formaPago->name] = $ingresosMenosEgresos['ingreso' . $formaPago->name] + $registro_pagado->monto_pago;
+                }
+            }
+        }
+
+
+        $egresos = Egreso::select(
+            'egresos.id',
+            'fecha',
+            'ec.name as concepto',
+            'fp.name as forma_pago',
+            'ce.name as cuenta_efectivo',
+            'monto',
+            'fp.id as forma_pago_id'
+        )
             ->join('egresos_conceptos as ec', 'ec.id', '=', 'egresos.egresos_concepto_id')
             ->join('cuentas_efectivos as ce', 'ce.id', '=', 'egresos.cuentas_efectivo_id')
             ->join('forma_pagos as fp', 'fp.id', 'egresos.forma_pago_id')
@@ -510,6 +540,15 @@ class PagosController extends Controller
             ->orderBy('ce.id')
             ->get();
 
+        foreach ($egresos as $registro_pagado) {
+
+            foreach ($formasPago as $formaPago) {
+                if ($formaPago->id == $registro_pagado->forma_pago_id) {
+                    $ingresosMenosEgresos['egreso' . $formaPago->name] = $ingresosMenosEgresos['egreso' . $formaPago->name] + $registro_pagado->monto;
+                }
+            }
+        }
+        //dd($ingresosMenosEgresos);
         //dd($registros_parciales->toArray());
 
 
@@ -526,7 +565,9 @@ class PagosController extends Controller
             'transferencias' => $transferencias,
             'plantel' => $plantel,
             'data' => $data,
-            'egresos' => $egresos
+            'egresos' => $egresos,
+            'ingresosMenosEgresos' => $ingresosMenosEgresos,
+            'formasPago' => $formasPago
         ));
     }
 

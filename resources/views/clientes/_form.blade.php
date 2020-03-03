@@ -281,6 +281,7 @@
                     <div class="box-body">   
                         <div class="form-group col-md-3 @if($errors->has('especialidad')) has-error @endif">
                             <label for="especialidad-field">Especialidad</label>
+                            {!! Form::hidden("combinacion", null, array("class" => "form-control input-sm", "id" => "combinacion-field")) !!}
                             {!! Form::select("especialidad_id", $list["Especialidad"], null, array("class" => "form-control select_seguridad", "id" => "especialidad_id-field")) !!}
                             <div id='loading10' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                             @if($errors->has("especialidad"))
@@ -315,8 +316,16 @@
                         @permission('combinacionClientes.store')
                         @if(isset($cliente))
                         <div class="form-group col-md-1 @if($errors->has('grado_id')) has-error @endif">
-                            <br/><input type="button" class="btn btn-xs btn-block btn-success" value="Crear" onclick="CrearCombinacionCliente()" />
+                            <input type="button" id="crearCombinacion" class="btn btn-xs btn-block btn-success" value="Crear" onclick="CrearCombinacionCliente()" />
+                            <a href=# class="btn btn-xs btn-warning btn-block" id="btnConsultaPlan">Ver Plan</a>
                         </div>
+                        <div class="form-group col-md-1 @if($errors->has('grado_id')) has-error @endif">
+                            <br/><input type="button" id="actualizarCombinacion" class="btn btn-xs btn-block btn-success" value="Guardar" onclick="ActualizarCombinacionCliente()" style="display:none;" />
+                            
+                        </div>
+
+                        
+
                         @endif
                         @endpermission    
                         
@@ -324,30 +333,51 @@
                             @if(isset($cliente))
                             <table class="table table-condensed table-striped">
                                 <thead>
-                                        <th>Especialidad</th>
-                                        <th>Nivel</th>
-                                        <th>Grado</th>
-                                        <th>Turno</th>
-                                        <th>Inscribir</th>
-                                        <th>Plan Pago</th>
-                                        <th>beca</th>
-                                        <th></th>
+                                    <th>Editar</th>
+                                    <th>Especialidad</th>
+                                    <th>Nivel</th>
+                                    <th>Grado</th>
+                                    <th>Turno</th>
+                                    <th>Inscribir</th>
+                                    <th>Plan Pago</th>
+                                    <th>beca</th>
+                                    <th></th>
                                 </thead>
                                 <tbody>
                                     @foreach($cliente->combinaciones as $c)
                                     @if($c->especialidad_id<>0 and $c->nivel_id<>0 and $c->grado_id<>0 and $c->turno_id<>0)
                                     <tr>
+                                        <td>
+                                            {!! Form::checkbox("editar_combinacion", 1, null, [ "id" => "editar_combinacion", 
+                                            'class'=>'minimal', 
+                                            'data-combinacion'=>$c->id,
+                                            'data-especialidad'=>$c->especialidad_id,
+                                            'data-nivel'=>$c->nivel_id,
+                                            'data-grado'=>$c->grado_id,
+                                            'data-turno'=>$c->turno_id]) !!}    
+                                        </td>
                                         <td>{{$c->especialidad->name}}</td>
-                                        <td>{{$c->nivel->name}}</td>
-                                        <td>{{$c->grado->name}}</td>
-                                        <td>{{$c->turno->name}}</td>
+                                        
+                                        <td>
+                                            {{$c->nivel->name}}
+                                         
+                                        </td>
+                                        <td>
+                                            {{$c->grado->name}}
+                                         
+                                        </td>
+                                        <td>
+                                            {{$c->turno->name}}  
+                                            <a href={{ route('planPagos.show',$c->turno->plan_pago_id) }} target="_blank" class="btn btn-xs btn-warning">Ver Plan</a>
+                                        </td>
                                         <td>
                                         @if($c->bnd_inscrito==1)  
                                             Si
                                         @endif
                                         </td>
                                         <td>
-                                            {!! Form::select("plan_pago_id", $list2["PlanPago"], $c->plan_pago_id, array("class" => "form-control select_seguridad plan_pago", "id" => "plan_pago_id-field", "style"=>"width:75%;", 'data-combinacion'=>$c->id)) !!}
+                                           {!! Form::select("plan_pago_id",$list2["PlanPago"],$c->plan_pago_id,array("class"=>"form-control select_seguridad plan_pago","id"=>"plan_pago_id-field","style"=>"width:75%;",'data-combinacion'=>$c->id)) !!} 
+                                           {{ $c->planPago->name }} <br>
                                             <div id='loading120' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                                             Impresiones:{{$c->cuenta_ticket_pago}}
                                             @if($c->plan_pago_id<>0)
@@ -1177,6 +1207,26 @@ $(document).on("click", "#btn_archivo", function (e) {
     });
 })    
 $(document).ready(function() {
+    $("#btnConsultaPlan").click(function(event) {
+        event.preventDefault();
+        var plan=0;
+        $.ajax({
+                  url: '{{ route("planPagos.getPlanPago") }}',
+                  type: 'GET',
+                  data: {
+                      'turno':$('#turno_id-field option:selected').val()
+                  },
+                  dataType: 'json',
+                  beforeSend : function(){$("#loading13").show();},
+                  complete : function(){$("#loading13").hide();},
+                  success: function(data){
+                    window.open("{{ url('planPagos/show') }}"+"/"+data, '_blank');
+                  }
+              });
+      
+      return false;
+   });
+
     $('#grupo_id-crear').change(function(){
           getDisponibles();
           getCmbPeriodosEstudio();
@@ -1582,6 +1632,26 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                         $('#grado_id-field').change(function(){
                         getCmbTurno();
                         });
+
+                        $('#editar_combinacion').click(function(){
+                            if($(this).is(':checked')==true){
+                                
+                                $('#combinacion-field').val($(this).data('combinacion'));
+                                $('#especialidad_id-field').val(0).change();
+                                $('#nivel_id-field').val(0).change();
+                                $('#grado_id-field').val(0).change();
+                                //alert($(this).data('nivel'));
+                                $('#turno_id-field').val(0).change();
+                                $('#actualizarCombinacion').show();
+                                $('#crearCombinacion').hide();
+                            }else{
+                                $('#actualizarCombinacion').hide();
+                                $('#crearCombinacion').show();
+                            }
+                            
+                            //getCmbTurno2();
+                            
+                        });
                         
                         
                         /*getCmbEspecialidadCrear();
@@ -1698,6 +1768,27 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                                 type: 'GET',
                                 data: "cliente_id={{$cliente->id}}&plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad_id-field option:selected').val() + "&nivel_id=" + $('#nivel_id-field option:selected').val() + "&grado_id=" + $('#grado_id-field option:selected').val() + "&turno_id=" + $('#turno_id-field option:selected').val() + "",
                                 dataType: 'json',
+                                beforeSend: function () {
+                                $("#loading11").show();
+                                },
+                                complete: function () {
+                                location.reload();
+                                },
+                        });
+                        }
+                        function ActualizarCombinacionCliente(){
+                            $.ajax({
+                        url: '{{ url("combinacionClientes/update") }}'+"/"+$('#combinacion-field').val(),
+                                type: 'GET',
+                                data:{
+                                    cliente_id :{{ $cliente->id  }},
+                                    plantel_id:$('#plantel_id-field option:selected').val(),
+                                    especialidad_id:$('#especialidad_id-field option:selected').val(),
+                                    nivel_id:$('#nivel_id-field option:selected').val(),
+                                    grado_id:$('#grado_id-field option:selected').val(),
+                                    turno_id:$('#turno_id-field option:selected').val()
+                                },
+                                //dataType: 'json',
                                 beforeSend: function () {
                                 $("#loading11").show();
                                 },
@@ -1913,19 +2004,19 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                         $.ajax({
                         url: '{{ route("turnos.getCmbTurno") }}',
                                 type: 'GET',
-                                data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad_id-field option:selected').val() + "&nivel_id=" + $('#nivel_id-field option:selected').val() + "&grado_id=" + $('#subcurso_id-field option:selected').val() + "&turno_id=" + $('#turno2_id-field option:selected').val() + "",
+                                data: "plantel_id=" + $('#cTurno_id-field').data('plantel') + "&especialidad_id=" + $('#cTurno_id-field').data('especialidad') + "&nivel_id=" + $('#cTurno_id-field').data('nivel') + "&grado_id=" + $('#cTurno_id-field').data('grado') + "&turno_id=" + $('#cTurno_id-field option:selected').val() + "",
                                 dataType: 'json',
                                 beforeSend : function(){$("#loading12").show(); },
                                 complete : function(){$("#loading12").hide(); },
                                 success: function(data){
                                 //alert(data);
                                 //$example.select2("destroy");
-                                $('#turno2_id-field').html('');
+                                $('#cTurno_id-field').html('');
                                 //$('#especialidad_id-field').empty();
-                                $('#turno2_id-field').append($('<option></option>').text('Seleccionar').val('0'));
+                                $('#cTurno_id-field').append($('<option></option>').text('Seleccionar').val('0'));
                                 $.each(data, function(i) {
                                 //alert(data[i].name);
-                                $('#turno2_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
+                                $('#cTurno_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
                                 });
                                 //$example.select2();
                                 }

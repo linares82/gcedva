@@ -201,6 +201,17 @@
                         <a href="#" class="add-pago btn btn-success btn-sm"><i class="glyphicon glyphicon-plus-sign"></i>Agregar Pago</a> 
                     </div>
                 </div>
+                
+                @endif
+
+                @if(isset($caja))
+                @permission('cajas.aplicarRecargos')
+                <div class="form-group col-md-4">
+                    <div class='text-center'>
+                    <a href="{{ route('cajas.aplicarRecargos', array('caja'=>$caja->id)) }}" class="add-recargos btn btn-success btn-sm"><i class="glyphicon glyphicon-plus-sign"></i>Aplicar Recargos</a> 
+                    </div>
+                </div>
+                @endpermission
                 @endif
             </div><!-- /.box-body -->
         </div>

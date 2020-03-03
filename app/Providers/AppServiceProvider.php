@@ -10,7 +10,9 @@ use App\Observers\AlumnoObserver;
 use App\Observers\InscripcionObserver;
 use App\Observers\SeguimientoObserver;
 use App\Observers\AsignacionTareaObserver;
+use App\Observers\AsistenciaRObserver;
 use App\Observers\AvisoObserver;
+use App\Observers\CalificacionPonderacionObserver;
 use App\Observers\CuentasEfectivoObserver;
 use App\Observers\PagoObserver;
 use App\Observers\EgresoObserver;
@@ -23,9 +25,12 @@ use App\Alumno;
 use App\Inscripcion;
 use App\Seguimiento;
 use App\AsignacionTarea;
+use App\AsistenciaR;
 use App\Aviso;
+use App\CalificacionPonderacion;
 use App\CuentasEfectivo;
 use App\Egreso;
+use App\HCalifPonderacion;
 use App\Mueble;
 use App\Pago;
 use App\Transference;
@@ -55,6 +60,8 @@ class AppServiceProvider extends ServiceProvider
         Egreso::observe(EgresoObserver::class);
         Transference::observe(TransferenceObserver::class);
         Mueble::observe(MuebleObserver::class);
+        AsistenciaR::observe(AsistenciaRObserver::class);
+        CalificacionPonderacion::observe(CalificacionPonderacionObserver::class);
         Totem::auth(function ($request) {
             // return true / false . For e.g.
             return Auth::check();

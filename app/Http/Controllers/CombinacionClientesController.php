@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updateCombinacionCliente;
 use App\Http\Requests\createCombinacionCliente;
+use App\Turno;
 
 class CombinacionClientesController extends Controller
 {
@@ -51,7 +52,8 @@ class CombinacionClientesController extends Controller
 		//dd($input);
 		$input['usu_alta_id'] = Auth::user()->id;
 		$input['usu_mod_id'] = Auth::user()->id;
-		$input['plan_pago_id'] = 0;
+		$turno = Turno::find($input['turno_id']);
+		$input['plan_pago_id'] = $turno->plan_pago_id;
 
 		//create data
 		CombinacionCliente::create($input);
@@ -110,9 +112,12 @@ class CombinacionClientesController extends Controller
 		$input['usu_mod_id'] = Auth::user()->id;
 		//update data
 		$combinacionCliente = $combinacionCliente->find($id);
+		$turno = Turno::find($input['turno_id']);
+		$input['plan_pago_id'] = $turno->plan_pago_id;
 		$combinacionCliente->update($input);
 
-		return redirect()->route('combinacionClientes.index')->with('message', 'Registro Actualizado.');
+
+		//return redirect()->route('combinacionClientes.index')->with('message', 'Registro Actualizado.');
 	}
 
 	/**
@@ -129,7 +134,9 @@ class CombinacionClientesController extends Controller
 		$combinacionCliente->delete();
 		if (count($adeudos) > 0) {
 			foreach ($adeudos as $adeudo) {
-				$adeudo->delete();
+				if ($adeudo->pagado_bnd == 0) {
+					$adeudo->delete();
+				}
 			}
 		}
 

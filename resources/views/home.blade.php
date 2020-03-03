@@ -185,7 +185,8 @@
                         <div  id="porcentaje_pago2" style="height: 150px;">
                                 <div id='loading32' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div>  
                         </div>
-                            
+                         
+                        @permission('adeudos.maestroIndicadorDetalle')
                         {!! Form::open(['route' => array('adeudos.maestroIndicadorDetalle'),'method' => 'post', 'style' => 'display: inline;']) !!}
                         {!! Form::hidden("fecha_f", $fecha_f->toDateString('Y-m-d'), array("class" => "form-control input-sm", "id" => "fecha_f-field")) !!}
                         {!! Form::hidden("fecha_t", $fecha_t->toDateString('Y-m-d'), array("class" => "form-control input-sm", "id" => "fecha_t-field")) !!}
@@ -194,6 +195,7 @@
                         {!! Form::select("detalle_f", array('1'=>'Si','2'=>'No'), null, array("class" => "form-control select_seguridad", "id" => "detalle_f-field")) !!}
                             <button type="submit" class="btn btn-xs btn-success"><i class="glyphicon glyphicon-ok"></i> Ver Maestro</button>
                         {!! Form::close() !!}     
+                        @endpermission
                     </div>
 
                     <div class="form-group col-md-2 col-sm-2 col-xs-2">
@@ -246,6 +248,7 @@
                     </div>
                     <div id="wConcretados_pie{{ $plantel->id }}">
                     </div>
+                    <a href="{{route('home.wConcretadosDetalle', array('plantel'=>$plantel->id))}}" class="btn btn-xs btn-success" target="_blank">Detalle</a>
                     </div>
                     
                     <div class="form-group col-md-2 col-sm-2 col-xs-2">
@@ -265,12 +268,13 @@
                         //dd($fecha_t->toDateString('Y-m-d'));
                         $planteles=App\Plantel::pluck('razon','id');
                         @endphp
+                        
                         <div class="form-group col-md-12 col-sm-12 col-xs-12">
                             <div class="box-body">   
                                 <div id="porcentaj_pago{{ $plantel->id }}" style="height: 150px;">
                                         <div id='loading{{ $plantel->id }}' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div>  
                                 </div>
-                                    
+                                @permission('adeudos.maestroIndicadorDetalle')     
                                 {!! Form::open(['route' => array('adeudos.maestroIndicadorDetalle'),'method' => 'post', 'style' => 'display: inline;']) !!}
                                 {!! Form::hidden("fecha_f", $fecha_f->toDateString('Y-m-d'), array("class" => "form-control input-sm", "id" => "fecha_f-field")) !!}
                                 {!! Form::hidden("fecha_t", $fecha_t->toDateString('Y-m-d'), array("class" => "form-control input-sm", "id" => "fecha_t-field")) !!}
@@ -279,6 +283,7 @@
                                 {!! Form::select("detalle_f", array('1'=>'Si','2'=>'No'), null, array("class" => "form-control select_seguridad", "id" => "detalle_f-field")) !!}
                                     <button type="submit" class="btn btn-xs btn-success"><i class="glyphicon glyphicon-ok"></i> Ver Maestro</button>
                                 {!! Form::close() !!} 
+                                @endpermission
                             </div>
                         </div>
                     </div>

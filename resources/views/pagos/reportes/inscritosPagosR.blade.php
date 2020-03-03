@@ -203,9 +203,30 @@
         <h3>Pagos menos Egresos</h3>
         <table>
             <thead>
-            <th>Pagos en Caja</th><th>Egresos</th><th>Diferencia</th>
+            <th>Forma Pago</th><th>Monto Pago</th><th>Monto Egreso</th><th>Diferencia</th>
             </thead>
-            <td style="text-align:right;">{{number_format($total)}}</td><td style="text-align:right;">{{number_format($total_suma)}}</td><td style="text-align:right;">{{number_format($total-$total_suma)}}</td>
+            <tbody>
+              @php
+                  $total_egresos=0;
+                  $total_ingresos=0;
+              @endphp
+              @foreach($formasPago as $formaPago)
+              <tr>
+              <td>{{$formaPago->name}}</td>
+              <td style="text-align:right;">{{number_format($ingresosMenosEgresos['ingreso' . $formaPago->name])}}</td>
+                <td style="text-align:right;">{{ number_format($ingresosMenosEgresos['egreso' . $formaPago->name]) }}</td>
+                <td style="text-align:right;">{{ number_format($ingresosMenosEgresos['ingreso' . $formaPago->name] - $ingresosMenosEgresos['egreso' . $formaPago->name])}}</td>
+              </tr>
+              @php
+               $total_ingresos=$total_ingresos+$ingresosMenosEgresos['ingreso' . $formaPago->name];
+               $total_egresos=$total_egresos+$ingresosMenosEgresos['egreso' . $formaPago->name];   
+              @endphp
+              @endforeach
+              <tr>
+                <td>Totales</td><td style="text-align:right;">{{number_format($total_ingresos)}}</td><td style="text-align:right;">{{number_format($total_egresos)}}</td><td style="text-align:right;">{{number_format($total_ingresos-$total_egresos)}}</td>
+              </tr>
+            </tbody>
+            
         </table>
         @if(isset($transferencias) and count($transferencias)>0)
         <h3>Transferencias</h3>

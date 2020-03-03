@@ -31,6 +31,7 @@ use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updateInscripcion;
 use App\Http\Requests\createInscripcion;
+use App\ImpresionListaAsisten;
 use DB;
 use PDF;
 use Carbon\Carbon;
@@ -639,6 +640,17 @@ class InscripcionsController extends Controller
         foreach ($fechas as $fecha) {
             $contador++;
         }
+
+        $impresion = array();
+        $impresion['asignacion_id'] = $asignacion->id;
+        $impresion['inscritos'] = $total_alumnos;
+        $impresion['fecha_f'] = $asignacion->fec_inicio;
+        $impresion['fecha_t'] = $asignacion->fec_fin;
+        $impresion['token'] = uniqid(base64_encode(str_random(6)));
+        $impresion['usu_alta_id'] = Auth::user()->id;
+        $impresion['usu_mod_id'] = Auth::user()->id;
+        ImpresionListaAsisten::create($impresion);
+
         //dd($fechas);
         //dd($registros->grupo);
 
@@ -658,7 +670,8 @@ class InscripcionsController extends Controller
             'asignacion' => $asignacion,
             'total_asistencias' => $total_asistencias,
             'contador' => $contador,
-            'total_alumnos' => $total_alumnos
+            'total_alumnos' => $total_alumnos,
+            'token' => $impresion['token']
         ));
     }
 
@@ -1322,6 +1335,16 @@ class InscripcionsController extends Controller
             $contador++;
         }
 
+        $impresion = array();
+        $impresion['asignacion_id'] = $asignacion->id;
+        $impresion['inscritos'] = $total_alumnos;
+        $impresion['fecha_f'] = $data['fecha_f'];
+        $impresion['fecha_t'] = $data['fecha_t'];
+        $impresion['token'] = uniqid(base64_encode(str_random(6)));
+        $impresion['usu_alta_id'] = Auth::user()->id;
+        $impresion['usu_mod_id'] = Auth::user()->id;
+        ImpresionListaAsisten::create($impresion);
+
         //$mes = Mese::find($data['mes']);
         //dd($fechas);
         //dd($registros->grupo);
@@ -1343,7 +1366,8 @@ class InscripcionsController extends Controller
             'total_asistencias' => $total_asistencias,
             'contador' => $contador,
             'data' => $data,
-            'total_alumnos' => $total_alumnos
+            'total_alumnos' => $total_alumnos,
+            'token' => $impresion['token']
         ));
     }
 

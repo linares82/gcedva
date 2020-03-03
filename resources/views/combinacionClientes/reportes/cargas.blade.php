@@ -56,7 +56,7 @@
             
                 @foreach($especialidades as $especialidad)
                 <tr>
-                    <td>{{$especialidad->plantel->razon}}</td><td>{{$especialidad->id}}</td><td>{{$especialidad->name}}</td><td>{{$especialidad->rvoe}}</td><td>{{$especialidad->vencimiento_rvoe}}</td>
+                    <td>{{optional($especialidad->plantel)->razon}}</td><td>{{$especialidad->id}}</td><td>{{$especialidad->name}}</td><td>{{$especialidad->rvoe}}</td><td>{{$especialidad->vencimiento_rvoe}}</td>
                 <td>{{$especialidad->ccte}}</td><td>{{$especialidad->meta}}</td><td>{{$especialidad->imagen}}</td>
                 <td>{{$especialidad->abreviatura}}</td><td>{{$especialidad->fondo_credencial}}</td>
                 </tr>
@@ -93,8 +93,8 @@
             
                 @foreach($grados as $grado)
                 <tr>
-                    <td>{{$grado->plantel->razon}}</td>
-                    <td>{{$grado->especialidad->name}}</td><td>{{$grado->nivel->name}}</td><td>{{$grado->id}}</td><td>{{$grado->name}}</td>
+                    <td>{{optional($grado->plantel)->razon}}</td>
+                    <td>{{optional($grado->especialidad)->name}}</td><td>{{optional($grado->nivel)->name}}</td><td>{{$grado->id}}</td><td>{{$grado->name}}</td>
                 </tr>
                 @endforeach
                 
@@ -111,8 +111,8 @@
             
                 @foreach($grupos as $grupo)
                 <tr>
-                    <td>{{$grupo->plantel->razon}}</td><td>{{$grupo->id}}</td><td>{{$grupo->name}}</td><td>{{$grupo->desc_corta}}</td>
-                <td>{{$grupo->salon->name}}</td>
+                    <td>{{ptional($grupo->plantel)->razon}}</td><td>{{$grupo->id}}</td><td>{{$grupo->name}}</td><td>{{$grupo->desc_corta}}</td>
+                <td>{{optional($grupo->salon)->name}}</td>
                 </tr>
                 @endforeach
                 
@@ -123,14 +123,14 @@
         @if(isset($turnos))
         <table class="table table-condensed table-striped">
             <thead>
-                <th>Plantel</th><th>Especialidad</th><th>Nivel</th><th>Grado</th><th>Id</th><th>Turno</th>
+                <th>Plantel</th><th>Especialidad</th><th>Nivel</th><th>Grado</th><th>Id</th><th>Turno</th><th>Plan Pagos</th>
             </thead>
             <tbody>
             
                 @foreach($turnos as $turno)
                 <tr>
-                    <td>{{$turno->plantel->razon}}</td>
-                    <td>{{$turno->especialidad->name}}</td><td>{{$turno->nivel->name}}</td><td>{{$turno->grado->name}}</td><td>{{$turno->id}}</td><td>{{$turno->name}}</td>
+                    <td>{{optional($turno->plantel)->razon}}</td>
+                <td>{{optional($turno->especialidad)->name}}</td><td>{{optional($turno->nivel)->name}}</td><td>{{optional($turno->grado)->name}}</td><td>{{$turno->id}}</td><td>{{$turno->name}}</td><td>{{$turno->planPago->name}}</td>
                 </tr>
                 @endforeach
                 

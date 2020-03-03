@@ -35,6 +35,13 @@
     <span class="help-block">{{ $errors->first("name") }}</span>
     @endif
 </div>
+<div class="form-group col-md-4 @if($errors->has('plan_pago_id')) has-error @endif">
+    <label for="plan_pago_id-field">Plan Pagos</label>
+    {!! Form::select("plan_pago_id", $list["PlanPago"], null, array("class" => "form-control select_seguridad plan_pago", "id" => "plan_pago_id-field", "style"=>"width:75%;")) !!}
+    @if($errors->has("plan_pago_id"))
+    <span class="help-block">{{ $errors->first("plan_pago_id") }}</span>
+    @endif
+</div>
 @push('scripts')                    
 <script>
   $(document).ready(function() {
