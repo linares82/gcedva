@@ -410,6 +410,7 @@ class AdeudosController extends Controller
     {
         $data = $request->all();
         $adeudos_sin_pagar = Adeudo::where('cliente_id', $data['cliente'])
+            ->where('combinacion_cliente_id', $data['combinacion'])
             ->where('pagado_bnd', 0)
             ->where('caja_id', 0)
             ->delete();

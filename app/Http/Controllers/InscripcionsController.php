@@ -573,6 +573,8 @@ class InscripcionsController extends Controller
         $fechas = array();
         $lectivo = Lectivo::find($data['lectivo_f']);
         //dd($lectivo);
+        $data['fecha_f'] = $lectivo->inicio;
+        $data['fecha_t'] = $lectivo->fin;
         $diasNoHabiles = DiaNoHabil::distinct()
             ->where('fecha', '>=', $lectivo->inicio)
             ->where('fecha', '<=', $lectivo->fin)
@@ -664,6 +666,7 @@ class InscripcionsController extends Controller
                         ->setPaper('legal', 'landscape');
                 return $pdf->download('reporte.pdf');
   */
+
         return view('inscripcions.reportes.lista_alumnosr', array(
             'registros' => $registros,
             'fechas_enc' => $fechas,
@@ -671,6 +674,7 @@ class InscripcionsController extends Controller
             'total_asistencias' => $total_asistencias,
             'contador' => $contador,
             'total_alumnos' => $total_alumnos,
+            'data' => $data,
             'token' => $impresion['token']
         ));
     }
@@ -2001,7 +2005,12 @@ class InscripcionsController extends Controller
                 //->get();
 
                 //dd($asistencias_planeadas ." - ".$asistencias_reales);    
-                $promedio_cliente = ($asistencias_reales * 100) / $asistencias_planeadas;
+                if ($asistencias_planeadas == 0) {
+                    $promedio_cliente = 0;
+                } else {
+                    $promedio_cliente = ($asistencias_reales * 100) / $asistencias_planeadas;
+                }
+
                 //Log::info('Promedio-'.$promedio_cliente);
                 $contador_clientes++;
                 $contador_clientes_asignacion++;
@@ -2038,7 +2047,11 @@ class InscripcionsController extends Controller
         if ($suma_calificaciones == 0) {
             return 0;
         }
-        $promedio = round(($suma_calificaciones / $cuenta_calificaciones), 2);
+        if ($cuenta_calificaciones > 0) {
+            $promedio = round(($suma_calificaciones / $cuenta_calificaciones), 2);
+        } else {
+            $promedio = 0;
+        }
         return $promedio;
     }
 

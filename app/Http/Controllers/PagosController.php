@@ -444,10 +444,10 @@ class PagosController extends Controller
             ->distinct();
         if ($data['fecha_pago'] == 1) {
             $registros_pagados_aux->where('pag.fecha', '>=', $data['fecha_f'])
-                ->where('pag.fecha', '<=', $data['fecha_t']);
+                ->whereDate('pag.fecha', '<=', $data['fecha_t']);
         } else {
             $registros_pagados_aux->where('pag.created_at', '>=', $data['fecha_f'])
-                ->where('pag.created_at', '<=', $data['fecha_t']);
+                ->whereDate('pag.created_at', '<=', $data['fecha_t']);
         }
         $registros_pagados = $registros_pagados_aux->get();
         //dd($registros_pagados);
@@ -469,9 +469,9 @@ class PagosController extends Controller
             ->join('plantels as po', 'po.id', '=', 'transferences.plantel_id')
             ->join('plantels as pd', 'pd.id', '=', 'transferences.plantel_destino_id')
             ->join('empleados as e', 'e.id', '=', 'transferences.responsable_id')
-            ->where('transferences.fecha', '>=', $data['fecha_f'])
-            ->where('transferences.fecha', '<=', $data['fecha_t'])
-            ->WhereRaw('transferences.plantel_id=? or transferences.plantel_destino_id=?', [$data['plantel_f'], $data['plantel_f']])
+            ->whereDate('transferences.fecha', '>=', $data['fecha_f'])
+            ->whereDate('transferences.fecha', '<=', $data['fecha_t'])
+            ->WhereRaw('(transferences.plantel_id=? or transferences.plantel_destino_id=?)', [$data['plantel_f'], $data['plantel_f']])
             ->get();
 
         //dd($registros_pagados->toArray());
@@ -502,6 +502,11 @@ class PagosController extends Controller
 
         $ingresosMenosEgresos = array();
         $formasPago = FormaPago::where('id', '>', 0)->get();
+        foreach ($formasPago as $formaPago) {
+            $ingresosMenosEgresos['egreso' . $formaPago->name] = 0;
+            $ingresosMenosEgresos['ingreso' . $formaPago->name] = 0;
+        }
+
         foreach ($registros_pagados as $registro_pagado) {
 
             foreach ($formasPago as $formaPago) {

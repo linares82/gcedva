@@ -20,7 +20,12 @@ class CalificacionPonderacionObserver
         $input['calificacion_id'] = $calificacionPonderacion->calificacion_id;
         $input['carga_ponderacion_id'] = $calificacionPonderacion->carga_ponderacion_id;
         $input['calificacion_parcial'] = $calificacionPonderacion->calificacion_parcial;
-        $input['calificacion_parcial_calculada'] = $calificacionPonderacion->calificacion_parcial_calculada;
+        if (!is_null($calificacionPonderacion->calificacion_parcial_calculada)) {
+            $input['calificacion_parcial_calculada'] = $calificacionPonderacion->calificacion_parcial_calculada;
+        } else {
+            $input['calificacion_parcial_calculada'] = 0;
+        }
+
         $input['ponderacion'] = $calificacionPonderacion->ponderacion;
         $input['tiene_detalle'] = $calificacionPonderacion->tiene_detalle;
         $input['padre_id'] = $calificacionPonderacion->padre_id;
@@ -36,7 +41,11 @@ class CalificacionPonderacionObserver
         $input['calificacion_id'] = $calificacionPonderacion->calificacion_id;
         $input['carga_ponderacion_id'] = $calificacionPonderacion->carga_ponderacion_id;
         $input['calificacion_parcial'] = $calificacionPonderacion->calificacion_parcial;
-        $input['calificacion_parcial_calculada'] = $calificacionPonderacion->calificacion_parcial_calculada;
+        if (!is_null($calificacionPonderacion->calificacion_parcial_calculada <> "")) {
+            $input['calificacion_parcial_calculada'] = $calificacionPonderacion->calificacion_parcial_calculada;
+        } else {
+            $input['calificacion_parcial_calculada'] = 0;
+        }
         $input['ponderacion'] = $calificacionPonderacion->ponderacion;
         $input['tiene_detalle'] = $calificacionPonderacion->tiene_detalle;
         $input['padre_id'] = $calificacionPonderacion->padre_id;
