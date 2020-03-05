@@ -146,6 +146,7 @@ return array(
     'CreateAvisosTable' => $baseDir . '/database/migrations/2017_07_18_215044_create_avisos_table.php',
     'CreateBanderasTable' => $baseDir . '/database/migrations/2017_03_24_164248_create_banderas_table.php',
     'CreateCajaConceptosTable' => $baseDir . '/database/migrations/2018_04_05_122114_create_caja_conceptos_table.php',
+    'CreateCajaCortesTable' => $baseDir . '/database/migrations/2020_03_04_131743_create_caja_cortes_table.php',
     'CreateCajaLnsTable' => $baseDir . '/database/migrations/2018_04_10_134753_create_caja_lns_table.php',
     'CreateCajasTable' => $baseDir . '/database/migrations/2018_04_10_134538_create_cajas_table.php',
     'CreateCalendarioEvaluacionsTable' => $baseDir . '/database/migrations/2017_10_12_140337_create_calendario_evaluacions_table.php',

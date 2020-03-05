@@ -197,6 +197,9 @@ trait GetAllDataTrait
                 }
 
                 break;
+            case "corte_cajas":
+                $myQuery = $myQuery->where('corte_cajas.plantel_id', '=', $empleado->plantel_id);
+                break;
             case "egresos":
                 if ($empleado->puesto_id == 23) {
                     $planteles_rl = Plantel::where('responsable_id', $empleado->id)->pluck('id');

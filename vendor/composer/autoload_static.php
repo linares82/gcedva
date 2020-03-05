@@ -820,6 +820,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'CreateAvisosTable' => __DIR__ . '/../..' . '/database/migrations/2017_07_18_215044_create_avisos_table.php',
         'CreateBanderasTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_24_164248_create_banderas_table.php',
         'CreateCajaConceptosTable' => __DIR__ . '/../..' . '/database/migrations/2018_04_05_122114_create_caja_conceptos_table.php',
+        'CreateCajaCortesTable' => __DIR__ . '/../..' . '/database/migrations/2020_03_04_131743_create_caja_cortes_table.php',
         'CreateCajaLnsTable' => __DIR__ . '/../..' . '/database/migrations/2018_04_10_134753_create_caja_lns_table.php',
         'CreateCajasTable' => __DIR__ . '/../..' . '/database/migrations/2018_04_10_134538_create_cajas_table.php',
         'CreateCalendarioEvaluacionsTable' => __DIR__ . '/../..' . '/database/migrations/2017_10_12_140337_create_calendario_evaluacions_table.php',

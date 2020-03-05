@@ -35,13 +35,14 @@
 @endif
 
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-6">
         <div class="box box-info">
             <div class="box-body">
+                
                 @permission('cajas.buscarVenta')
                 {!! Form::open(array('route' => 'cajas.buscarVenta','id'=>'form-buscarVenta')) !!}
                 
-                <div class="input-group col-md-6">
+                <div class="input-group col-md-12">
                     @if(isset($caja))
                     {!! Form::select("plantel_id", $list["Plantel"], ($caja)?$caja->plantel_id:"", array("class" => "form-control select_seguridad", "id" => "plantel_id-field")) !!}
                     @else
@@ -49,7 +50,7 @@
                     @endif
                 </div>
                 
-                <div class="input-group form-group col-md-6">
+                <div class="input-group form-group col-md-12">
                     <div class="input-group-btn">
                         <button type="submit" class="btn btn-info" data-toggle="tooltip" title="Buscar Venta"><i class='fa fa-search'></i></button>
                     </div>
@@ -71,10 +72,27 @@
                 {!! Form::close() !!}
                 @endpermission
                 
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <a class='btn btn-sm btn-warning' target='_blank' href="{{route('cajas.adeudosXplantel')}}"> Ver Adeudos</a>
                 </div>
-
+            
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="box box-info">
+            <div class="box-header with-border">
+                <div class="box-title">
+                    <h4>Corte</h4> 
+                </div>
+                
+            </div>
+            <div class="box-body">
+                
+                    <a class='btn btn-sm btn-success' target='_blank' href="{{route('cajaCortes.create')}}">Corte de Caja</a>
+                    <a class='btn btn-sm btn-success' target='_blank' href="{{route('cajaCortes.index')}}">Historia</a>
+                
+                
             </div>
         </div>
     </div>

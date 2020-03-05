@@ -14,14 +14,16 @@ use App\Http\Requests\createCorreo;
 use Mail;
 use Storage;
 
-class CorreosController extends Controller {
+class CorreosController extends Controller
+{
 
     /**
      * Display a listing of the resource.
      *
      * @return Response
      */
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
         $correos = Correo::getAllData($request);
 
         return view('correos.index', compact('correos'));
@@ -32,9 +34,13 @@ class CorreosController extends Controller {
      *
      * @return Response
      */
-    public function create() {
+    public function create()
+    {
+
+        //dd($vUltimoCorte);
+
         return view('correos.create')
-                        ->with('list', Correo::getListFromAllRelationApps());
+            ->with('list', Correo::getListFromAllRelationApps());
     }
 
     /**
@@ -43,7 +49,8 @@ class CorreosController extends Controller {
      * @param Request $request
      * @return Response
      */
-    public function store(createCorreo $request) {
+    public function store(createCorreo $request)
+    {
 
         $input = $request->all();
         $input['usu_alta_id'] = Auth::user()->id;
@@ -61,7 +68,8 @@ class CorreosController extends Controller {
      * @param  int  $id
      * @return Response
      */
-    public function show($id, Correo $correo) {
+    public function show($id, Correo $correo)
+    {
         $correo = $correo->find($id);
         return view('correos.show', compact('correo'));
     }
@@ -72,10 +80,11 @@ class CorreosController extends Controller {
      * @param  int  $id
      * @return Response
      */
-    public function edit($id, Correo $correo) {
+    public function edit($id, Correo $correo)
+    {
         $correo = $correo->find($id);
         return view('correos.edit', compact('correo'))
-                        ->with('list', Correo::getListFromAllRelationApps());
+            ->with('list', Correo::getListFromAllRelationApps());
     }
 
     /**
@@ -84,10 +93,11 @@ class CorreosController extends Controller {
      * @param  int  $id
      * @return Response
      */
-    public function duplicate($id, Correo $correo) {
+    public function duplicate($id, Correo $correo)
+    {
         $correo = $correo->find($id);
         return view('correos.duplicate', compact('correo'))
-                        ->with('list', Correo::getListFromAllRelationApps());
+            ->with('list', Correo::getListFromAllRelationApps());
     }
 
     /**
@@ -97,7 +107,8 @@ class CorreosController extends Controller {
      * @param Request $request
      * @return Response
      */
-    public function update($id, Correo $correo, updateCorreo $request) {
+    public function update($id, Correo $correo, updateCorreo $request)
+    {
         $input = $request->all();
         $input['usu_mod_id'] = Auth::user()->id;
         //update data
@@ -113,30 +124,33 @@ class CorreosController extends Controller {
      * @param  int  $id
      * @return Response
      */
-    public function destroy($id, Correo $correo) {
+    public function destroy($id, Correo $correo)
+    {
         $correo = $correo->find($id);
         $correo->delete();
 
         return redirect()->route('correos.index')->with('message', 'Registro Borrado.');
     }
 
-    public function redactar($mail="Sin correo", $nombre="", $empresa=0, $msj="") {
+    public function redactar($mail = "Sin correo", $nombre = "", $empresa = 0, $msj = "")
+    {
         $mail = $mail;
         $nombre = $nombre;
-        $empresa=$empresa;
-        $msj=$msj;
-        $from=Auth::user()->email;
-        return view('correos.version2.frm_envio', compact('mail', 'nombre', 'empresa','msj','from'));
+        $empresa = $empresa;
+        $msj = $msj;
+        $from = Auth::user()->email;
+        return view('correos.version2.frm_envio', compact('mail', 'nombre', 'empresa', 'msj', 'from'));
     }
 
-    public function cargaArchivoCorreo(Request $request) {
-        $nombre="";
-        if($request->hasFile('file1')) {
+    public function cargaArchivoCorreo(Request $request)
+    {
+        $nombre = "";
+        if ($request->hasFile('file1')) {
             $file = $request->file('file1');
             $extension = $file->getClientOriginalExtension();
             $nombre = $file->getClientOriginalName();
             $r = Storage::disk('tmp_correos')->put($nombre, \File::get($file));
-        }else {
+        } else {
             return "no";
         }
 
@@ -147,31 +161,32 @@ class CorreosController extends Controller {
         }
     }
 
-    public function enviarCorreo(Request $request) {
+    public function enviarCorreo(Request $request)
+    {
         //dd($request->all());
         $pathToFile = array();
         $containfile = false;
-        $paths=array();
+        $paths = array();
         if ($request->hasFile('file1')) {
             $containfile = true;
             $file = $request->file('file1');
             $nombre = $file->getClientOriginalName();
             $pathToFile = storage_path('app') . "/tmp_correos/" . $nombre;
-            array_push($paths,$pathToFile);
+            array_push($paths, $pathToFile);
         }
         if ($request->hasFile('file2')) {
             $containfile = true;
             $file = $request->file('file2');
             $nombre = $file->getClientOriginalName();
             $pathToFile = storage_path('app') . "/tmp_correos/" . $nombre;
-            array_push($paths,$pathToFile);
+            array_push($paths, $pathToFile);
         }
         if ($request->hasFile('file3')) {
             $containfile = true;
             $file = $request->file('file3');
             $nombre = $file->getClientOriginalName();
             $pathToFile = storage_path('app') . "/tmp_correos/" . $nombre;
-            array_push($paths,$pathToFile);
+            array_push($paths, $pathToFile);
         }
         /*
         
@@ -179,28 +194,27 @@ class CorreosController extends Controller {
             $cli=Cliente::where('mail', '=', $request->input("persona_bnd"))->first();
         }
         */
-        $f=$request->all();
+        $f = $request->all();
         //dd($f);
         $destinatario = $request->input("destinatario");
         $n = $request->input("nombre");
         $asunto = $request->input("asunto");
         $contenido = $request->input("contenido_mail");
-        $from=$request->input("from");
+        $from = $request->input("from");
 
-        $data = array('contenido' => $contenido, 'nombre' => $n, 'correo'=>$from);
+        $data = array('contenido' => $contenido, 'nombre' => $n, 'correo' => $from);
         $r = \Mail::send('correos.version2.correo_individual', $data, function ($message)
-                    use ($asunto, $destinatario, $containfile, $paths, $n, $from) {
-                    $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
-                    $message->to($destinatario, $n)->subject($asunto);
-                    $message->replyTo($from);
-                    if ($containfile) {
-                        foreach($paths as $path){
-                            //dd($path);
-                            $message->attach($path);
-                        }
-                        
-                    }
-                });
+        use ($asunto, $destinatario, $containfile, $paths, $n, $from) {
+            $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
+            $message->to($destinatario, $n)->subject($asunto);
+            $message->replyTo($from);
+            if ($containfile) {
+                foreach ($paths as $path) {
+                    //dd($path);
+                    $message->attach($path);
+                }
+            }
+        });
         /*
         if(isset($f['empresa_bnd']) and $f['empresa_bnd']==1){
             $e=Empresa::where('correo1', '=', $destinatario)->first();
@@ -223,13 +237,12 @@ class CorreosController extends Controller {
         }*/
         //dd($r);
         //if ($r) {
-            if ($containfile) {
-                Storage::disk('local')->delete($nombre);
-            }
-            return view("correos.version2.msj_correcto")->with("msj", "Correo enviado correctamente");
+        if ($containfile) {
+            Storage::disk('local')->delete($nombre);
+        }
+        return view("correos.version2.msj_correcto")->with("msj", "Correo enviado correctamente");
         /*} else {
             return view("correos.version2.msj_rechazado")->with("msj", "Se presentÃ³ un error vuelva a intentarlo");
         }*/
     }
-
 }
