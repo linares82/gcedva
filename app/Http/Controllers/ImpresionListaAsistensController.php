@@ -1,4 +1,6 @@
-<?php namespace App\Http\Controllers;
+<?php
+
+namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -9,7 +11,8 @@ use Auth;
 use App\Http\Requests\updateImpresionListaAsisten;
 use App\Http\Requests\createImpresionListaAsisten;
 
-class ImpresionListaAsistensController extends Controller {
+class ImpresionListaAsistensController extends Controller
+{
 
 	/**
 	 * Display a listing of the resource.
@@ -31,7 +34,7 @@ class ImpresionListaAsistensController extends Controller {
 	public function create()
 	{
 		return view('impresionListaAsistens.create')
-			->with( 'list', ImpresionListaAsisten::getListFromAllRelationApps() );
+			->with('list', ImpresionListaAsisten::getListFromAllRelationApps());
 	}
 
 	/**
@@ -44,11 +47,11 @@ class ImpresionListaAsistensController extends Controller {
 	{
 
 		$input = $request->all();
-		$input['usu_alta_id']=Auth::user()->id;
-		$input['usu_mod_id']=Auth::user()->id;
+		$input['usu_alta_id'] = Auth::user()->id;
+		$input['usu_mod_id'] = Auth::user()->id;
 
 		//create data
-		ImpresionListaAsisten::create( $input );
+		ImpresionListaAsisten::create($input);
 
 		return redirect()->route('impresionListaAsistens.index')->with('message', 'Registro Creado.');
 	}
@@ -61,7 +64,7 @@ class ImpresionListaAsistensController extends Controller {
 	 */
 	public function show($id, ImpresionListaAsisten $impresionListaAsisten)
 	{
-		$impresionListaAsisten=$impresionListaAsisten->find($id);
+		$impresionListaAsisten = $impresionListaAsisten->find($id);
 		return view('impresionListaAsistens.show', compact('impresionListaAsisten'));
 	}
 
@@ -73,9 +76,9 @@ class ImpresionListaAsistensController extends Controller {
 	 */
 	public function edit($id, ImpresionListaAsisten $impresionListaAsisten)
 	{
-		$impresionListaAsisten=$impresionListaAsisten->find($id);
+		$impresionListaAsisten = $impresionListaAsisten->find($id);
 		return view('impresionListaAsistens.edit', compact('impresionListaAsisten'))
-			->with( 'list', ImpresionListaAsisten::getListFromAllRelationApps() );
+			->with('list', ImpresionListaAsisten::getListFromAllRelationApps());
 	}
 
 	/**
@@ -86,9 +89,9 @@ class ImpresionListaAsistensController extends Controller {
 	 */
 	public function duplicate($id, ImpresionListaAsisten $impresionListaAsisten)
 	{
-		$impresionListaAsisten=$impresionListaAsisten->find($id);
+		$impresionListaAsisten = $impresionListaAsisten->find($id);
 		return view('impresionListaAsistens.duplicate', compact('impresionListaAsisten'))
-			->with( 'list', ImpresionListaAsisten::getListFromAllRelationApps() );
+			->with('list', ImpresionListaAsisten::getListFromAllRelationApps());
 	}
 
 	/**
@@ -101,10 +104,10 @@ class ImpresionListaAsistensController extends Controller {
 	public function update($id, ImpresionListaAsisten $impresionListaAsisten, updateImpresionListaAsisten $request)
 	{
 		$input = $request->all();
-		$input['usu_mod_id']=Auth::user()->id;
+		$input['usu_mod_id'] = Auth::user()->id;
 		//update data
-		$impresionListaAsisten=$impresionListaAsisten->find($id);
-		$impresionListaAsisten->update( $input );
+		$impresionListaAsisten = $impresionListaAsisten->find($id);
+		$impresionListaAsisten->update($input);
 
 		return redirect()->route('impresionListaAsistens.index')->with('message', 'Registro Actualizado.');
 	}
@@ -115,12 +118,25 @@ class ImpresionListaAsistensController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id,ImpresionListaAsisten $impresionListaAsisten)
+	public function destroy($id, ImpresionListaAsisten $impresionListaAsisten)
 	{
-		$impresionListaAsisten=$impresionListaAsisten->find($id);
+		$impresionListaAsisten = $impresionListaAsisten->find($id);
 		$impresionListaAsisten->delete();
 
 		return redirect()->route('impresionListaAsistens.index')->with('message', 'Registro Borrado.');
 	}
 
+	public function validarLista()
+	{
+		return view('impresionListaAsistens.reportes.validarLista');
+	}
+
+	public function validarListaR(Request $request)
+	{
+		$datos = $request->all();
+		$registro = ImpresionListaAsisten::where('token', '=', $datos['token'])->first();
+		//dd($registro);
+
+		return view('impresionListaAsistens.reportes.validarLista', compact('registro'));
+	}
 }

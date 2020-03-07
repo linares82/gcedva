@@ -2266,7 +2266,12 @@ class InscripcionsController extends Controller
                 //dd($asistencias_reales->toArray());
 
                 //dd($asistencias_planeadas ." - ".$asistencias_reales);    
-                $promedio_cliente = ($asistencias_reales * 100) / $asistencias_planeadas;
+
+                if ($asistencias_planeadas == 0) {
+                    $promedio_cliente = 0;
+                } else {
+                    $promedio_cliente = ($asistencias_reales * 100) / $asistencias_planeadas;
+                }
                 //Log::info($r->cliente . 'Promedio-' . $asistencias_reales);
                 $contador_clientes++;
                 $contador_clientes_asignacion++;

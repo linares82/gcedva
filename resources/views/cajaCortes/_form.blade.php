@@ -15,14 +15,14 @@
                     </div>
                     <div class="form-group col-md-4 @if($errors->has('faltante')) has-error @endif">
                        <label for="faltante-field">Faltante</label>
-                       {!! Form::text("faltante", $ultimoCorte->faltante, array("class" => "form-control", "id" => "faltante-field", 'readonly'=>true)) !!}
+                       {!! Form::text("faltante", $vUltimoCorte['faltante'], array("class" => "form-control", "id" => "faltante-field", 'readonly'=>true)) !!}
                        @if($errors->has("faltante"))
                         <span class="help-block">{{ $errors->first("faltante") }}</span>
                        @endif
                     </div>
                     <div class="form-group col-md-4 @if($errors->has('sobrante')) has-error @endif">
                        <label for="sobrante-field">Sobrante</label>
-                       {!! Form::text("sobrante", $ultimoCorte->sobrante, array("class" => "form-control", "id" => "sobrante-field", 'readonly'=>true)) !!}
+                       {!! Form::text("sobrante", $vUltimoCorte['sobrante'], array("class" => "form-control", "id" => "sobrante-field", 'readonly'=>true)) !!}
                        @if($errors->has("sobrante"))
                         <span class="help-block">{{ $errors->first("sobrante") }}</span>
                        @endif

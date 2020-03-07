@@ -192,9 +192,12 @@
             
             if($resta>0){
                 $('#sobrante-field').val(parseFloat($resta)  + {{ $vUltimoCorte['sobrante'] }});
+                $('#faltante-field').val(0+ {{ $vUltimoCorte['faltante'] }});
             }else if($resta<0){
                 $('#faltante-field').val(parseFloat($resta) +{{ $vUltimoCorte['faltante'] }});
+                $('#sobrante-field').val(0 +{{ $vUltimoCorte['sobrante'] }});
             }else{
+                
                 $('#sobrante-field').val(0);
                 $('#faltante-field').val(0);
             }

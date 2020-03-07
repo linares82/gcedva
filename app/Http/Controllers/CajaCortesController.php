@@ -47,7 +47,7 @@ class CajaCortesController extends Controller
 			$vUltimoCorte['faltante'] = 0;
 			$vUltimoCorte['sobrante'] = 0;
 			$vUltimoCorte['usu_alta'] = "";
-			$vUltimoCorte['created_at'] = "";
+			$vUltimoCorte['created_at'] = Date('Y-m-d');
 		} else {
 			$vUltimoCorte['id'] = $ultimoCorte->id;
 			$vUltimoCorte['monto_calculado'] = $ultimoCorte->monto_calculado;
@@ -67,7 +67,7 @@ class CajaCortesController extends Controller
 			'u.name as user',
 			'pagos.created_at'
 		)
-			->where('pagos.created_at', '>=', $vUltimoCorte['created_at'])
+			->whereDate('pagos.created_At', '>=', date($vUltimoCorte['created_at']))
 			//->whereDate('pagos.fecha', date('2020-01-31'))
 			->join('cajas as caj', 'caj.id', '=', 'pagos.caja_id')
 			->join('clientes as c', 'c.id', '=', 'caj.cliente_id')
@@ -89,12 +89,11 @@ class CajaCortesController extends Controller
 			->join('plantels as p', 'p.id', 'egresos.plantel_id')
 			->join('forma_pagos as fp', 'fp.id', '=', 'egresos.forma_pago_id')
 			->join('users as u', 'u.id', 'egresos.usu_alta_id')
-			->whereDate('egresos.created_at', '>=', $vUltimoCorte['created_at'])
+			->whereDate('egresos.created_at', '>=', date($vUltimoCorte['created_at']))
 			//->whereDate('fecha', Date('2020-01-31'))
 			->where('plantel_id', $empleado->plantel_id)
 			->where('forma_pago_id', 1)
 			->get();
-
 
 		return view('cajaCortes.create', compact('pagos', 'egresos', 'vUltimoCorte'))
 			->with('list', CajaCorte::getListFromAllRelationApps());

@@ -88,10 +88,12 @@
                 
             </div>
             <div class="box-body">
-                
+                @permission('cajaCortes.create')
                     <a class='btn btn-sm btn-success' target='_blank' href="{{route('cajaCortes.create')}}">Corte de Caja</a>
+                @endpermission
+                @permission('cajaCortes.index')
                     <a class='btn btn-sm btn-success' target='_blank' href="{{route('cajaCortes.index')}}">Historia</a>
-                
+                @endpermission
                 
             </div>
         </div>
