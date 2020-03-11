@@ -95,7 +95,7 @@ class InscripcionsController extends Controller
         if ($especialidad->abreviatura <> "") {
             $entrada['matricula'] = date('m', strtotime($fecha)) . date('y', strtotime($fecha)) . $especialidad->abreviatura . $consecutivo;
             //$i->update($entrada);
-            $cliente = Cliente::where($i->cliente_id)->first();
+            $cliente = Cliente::where('id',$i->cliente_id)->first();
             if ($cliente->matricula == "") {
                 $cliente->matricula = $entrada['matricula'];
             }

@@ -1413,4 +1413,41 @@ class AdeudosController extends Controller
 
         return response()->json(['resultado' => $resultado]);
     }
+
+    public function adeudosXClienteF(Request $request)
+    {
+        return view('adeudos.reportes.adeudosXClienteF');
+    }
+
+    public function adeudosXClienteR(Request $request)
+    {
+        $empleado = Empleado::where('user_id', Auth::user()->id)->first();
+        $cliente = Cliente::find($request->cliente);
+
+
+        //dd($cliente);
+        $combinaciones = CombinacionCliente::where('cliente_id', '=', $cliente->id)->get();
+        $cajas = Caja::select('cajas.consecutivo as caja', 'cajas.fecha', 'ln.caja_concepto_id as concepto_id', 'cc.name as concepto', 'ln.total', 'st.name as estatus')
+            ->join('caja_lns as ln', 'ln.caja_id', '=', 'cajas.id')
+            ->join('caja_conceptos as cc', 'cc.id', '=', 'ln.caja_concepto_id')
+            ->join('st_cajas as st', 'st.id', '=', 'cajas.st_caja_id')
+            ->where('cliente_id', $cliente->id)
+            ->whereNull('cajas.deleted_at')
+            ->whereNull('ln.deleted_at')
+            ->get();
+
+        $permiso_caja_buscarCliente = Auth::user()->can('permiso_caja_buscarCliente');
+        if (is_object($cliente) and count($combinaciones) > 0 and $cliente->plantel_id == $empleado->plantel_id) {
+
+            return view('adeudos.reportes.adeudosXClienteR', compact('cliente', 'combinaciones', 'cajas'))
+                ->with('list', Caja::getListFromAllRelationApps())
+                ->with('list1', CajaLn::getListFromAllRelationApps());
+        } elseif (is_object($cliente) and count($combinaciones) > 0 and $cliente->plantel_id <> $empleado->plantel_id and $permiso_caja_buscarCliente) {
+            return view('adeudos.reportes.adeudosXClienteR', compact('cliente', 'combinaciones', 'cajas'))
+                ->with('list', Caja::getListFromAllRelationApps())
+                ->with('list1', CajaLn::getListFromAllRelationApps());
+        }
+        Session::flash('msj', 'Cliente buscado pertenece a otro plantel');
+        return view('adeudos.reportes.adeudosXClienteR', compact('cliente'));
+    }
 }

@@ -644,6 +644,7 @@
         $('#cuenta_contable_id-editar').val($(this).data('cuenta_contable_id')).change();
         $('#cuenta_recargo_id-editar').val($(this).data('cuenta_recargo_id')).change();
         $('#fecha_pago-editar').val($(this).data('fecha_pago'));
+        
         $('#monto-editar').val($(this).data('monto'));
         if ($(this).data('inicial_bnd')==1) {
             $('#inicial_bnd-editar').prop("checked", true);
@@ -917,7 +918,9 @@
     });
     
     $('#caja_concepto_id-editar').change(function(){
-        getCosto($('#caja_concepto_id-editar option:selected').val());
+        if($('#caja_concepto_id-editar').val()==""){
+			getCosto($('#caja_concepto_id-editar option:selected').val());
+		}
     });
     
     function getCosto(concepto){

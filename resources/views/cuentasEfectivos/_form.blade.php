@@ -89,7 +89,7 @@
         show_select_today: 'Hoy',
       });
     
-      
+    @if(isset($cuentasEfectivo))  
     $('#comprobar_div').on('click', '#btn_comprobar', function() {
         $.ajax({
             type: 'POST',
@@ -105,7 +105,7 @@
             },
         });
     });
-
+    @endif
     });
     
 
