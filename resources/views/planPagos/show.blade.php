@@ -683,6 +683,7 @@
             beforeSend : function(){$("#loading3").show(); },
             complete : function(){$("#loading3").hide(); },
             success: function(data) {
+                location.reload();
                 $('.errorTitle').addClass('hidden');
                 $('.errorContent').addClass('hidden');
 

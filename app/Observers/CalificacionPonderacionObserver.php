@@ -27,8 +27,17 @@ class CalificacionPonderacionObserver
         }
 
         $input['ponderacion'] = $calificacionPonderacion->ponderacion;
-        $input['tiene_detalle'] = $calificacionPonderacion->tiene_detalle;
-        $input['padre_id'] = $calificacionPonderacion->padre_id;
+        if (!is_null($calificacionPonderacion->tiene_detalle)) {
+            $input['tiene_detalle'] = $calificacionPonderacion->tiene_detalle;
+        } else {
+            $input['tiene_detalle'] = 0;
+        }
+        if (!is_null($calificacionPonderacion->padre_id)) {
+            $input['padre_id'] = $calificacionPonderacion->padre_id;
+        } else {
+            $input['padre_id'] = 0;
+        }
+
         $input['usu_alta_id'] = $calificacionPonderacion->usu_alta_id;
         $input['usu_mod_id'] = $calificacionPonderacion->usu_mod_id;
         //dd($input);
@@ -47,8 +56,16 @@ class CalificacionPonderacionObserver
             $input['calificacion_parcial_calculada'] = 0;
         }
         $input['ponderacion'] = $calificacionPonderacion->ponderacion;
-        $input['tiene_detalle'] = $calificacionPonderacion->tiene_detalle;
-        $input['padre_id'] = $calificacionPonderacion->padre_id;
+        if (!is_null($calificacionPonderacion->tiene_detalle)) {
+            $input['tiene_detalle'] = $calificacionPonderacion->tiene_detalle;
+        } else {
+            $input['tiene_detalle'] = 0;
+        }
+        if (!is_null($calificacionPonderacion->padre_id)) {
+            $input['padre_id'] = $calificacionPonderacion->padre_id;
+        } else {
+            $input['padre_id'] = 0;
+        }
         $input['usu_alta_id'] = $calificacionPonderacion->usu_alta_id;
         $input['usu_mod_id'] = $calificacionPonderacion->usu_mod_id;
         //dd($input);
