@@ -11,6 +11,7 @@ class HAsistenciaR extends Model
 {
 	use RelationManagerTrait, GetAllDataTrait;
 	use SoftDeletes;
+	protected $table = 'h_asistencia_rs';
 
 	public function __construct(array $attributes = array())
 	{
