@@ -95,7 +95,7 @@ class InscripcionsController extends Controller
         if ($especialidad->abreviatura <> "") {
             $entrada['matricula'] = date('m', strtotime($fecha)) . date('y', strtotime($fecha)) . $especialidad->abreviatura . $consecutivo;
             //$i->update($entrada);
-            $cliente = Cliente::where('id',$i->cliente_id)->first();
+            $cliente = Cliente::where('id', $i->cliente_id)->first();
             if ($cliente->matricula == "") {
                 $cliente->matricula = $entrada['matricula'];
             }
@@ -993,7 +993,9 @@ class InscripcionsController extends Controller
                 ->whereNull('i.deleted_at')
                 ->whereNull('hacademicas.deleted_at')
                 ->whereNull('aa.deleted_at')
-                ->orderBy('aa.id', 'esp.name', 'gru.id')
+                ->orderBy('aa.id', 'asc')
+                ->orderBy('esp.name', 'asc')
+                ->orderBy('gru.id', 'asc')
                 ->distinct()
                 ->get();
         } catch (Exception $e) {
@@ -1088,7 +1090,9 @@ class InscripcionsController extends Controller
             ->whereNull('hacademicas.deleted_at')
             ->whereNull('i.deleted_at')
             ->whereNull('aa.deleted_at')
-            ->orderBy('aa.id', 'esp.name', 'gru.id')
+            ->orderBy('aa.id', 'asc')
+            ->orderBy('esp.name', 'asc')
+            ->orderBy('gru.id', 'asc')
             ->distinct()
             ->get();
         //dd($registros->toArray());
@@ -1143,7 +1147,9 @@ class InscripcionsController extends Controller
             ->whereNull('hacademicas.deleted_at')
             ->whereNull('i.deleted_at')
             ->whereNull('aa.deleted_at')
-            ->orderBy('aa.id', 'esp.name', 'gru.id')
+            ->orderBy('aa.id', 'asc')
+            ->orderBy('esp.name', 'asc')
+            ->orderBy('gru.id', 'asc')
             ->distinct()
             ->get();
         //dd($registros->toArray());
@@ -1461,7 +1467,10 @@ class InscripcionsController extends Controller
             ->whereIn('c.id', $arreglo_egresados)
             ->whereNull('inscripcions.deleted_at')
             //->where('inscripcions.grado_id',$data['grado_f'])
-            ->orderBy('inscripcions.plantel_id', 'inscripcions.lectivo_id', 'inscripcions.grupo_id', 'inscripcions.grado_id')
+            ->orderBy('inscripcions.plantel_id', 'asc')
+            ->orderBy('inscripcions.lectivo_id', 'asc')
+            ->orderBy('inscripcions.grupo_id', 'asc')
+            ->orderBy('inscripcions.grado_id', 'asc')
             ->distinct()
             ->get();
 
@@ -1548,7 +1557,10 @@ class InscripcionsController extends Controller
             ->whereIn('c.id', $arreglo_egresados)
             ->whereNull('inscripcions.deleted_at')
             //->where('inscripcions.grado_id',$data['grado_f'])
-            ->orderBy('inscripcions.plantel_id', 'inscripcions.lectivo_id', 'inscripcions.grupo_id', 'inscripcions.grado_id')
+            ->orderBy('inscripcions.plantel_id', 'asc')
+            ->orderBy('inscripcions.lectivo_id', 'asc')
+            ->orderBy('inscripcions.grupo_id', 'asc')
+            ->orderBy('inscripcions.grado_id', 'asc')
             ->distinct()
             ->get();
 

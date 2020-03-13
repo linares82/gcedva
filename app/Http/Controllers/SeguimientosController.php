@@ -996,7 +996,8 @@ class SeguimientosController extends Controller
             ->whereNull('a.deleted_at')
             ->whereNull('pag.deleted_at')
             ->where('cajas.st_caja_id', '=', 1)
-            ->orderBy('colaborador', 'cajas.st_caja_id')
+            ->orderBy('colaborador', 'asc')
+            ->orderBy('cajas.st_caja_id', 'asc')
             ->distinct()
             ->get();
 
@@ -1021,7 +1022,8 @@ class SeguimientosController extends Controller
             ->where('cajas.fecha', '=', $data['fecha_f'])
             ->whereNull('pag.deleted_at')
             ->where('cajas.st_caja_id', '=', 1)
-            ->orderBy('colaborador', 'cajas.st_caja_id')
+            ->orderBy('colaborador', 'asc')
+            ->orderBy('cajas.st_caja_id', 'asc')
             ->distinct()
             ->get();
 
@@ -1050,7 +1052,8 @@ class SeguimientosController extends Controller
             ->whereNull('a.deleted_at')
             ->whereNull('pag.deleted_at')
             ->where('cajas.st_caja_id', '=', 3)
-            ->orderBy('colaborador', 'cajas.st_caja_id')
+            ->orderBy('colaborador', 'asc')
+            ->orderBy('cajas.st_caja_id', 'asc')
             ->distinct()
             ->get();
 
@@ -1121,7 +1124,7 @@ class SeguimientosController extends Controller
             ->where('c.plantel_id', '<=', $data['plantel_t'])
             ->where('i.grupo_id', '>', 0)
             ->whereIn('stc.id', array(4, 20, 25))
-            ->whereIn('sts.id', array(2,7))
+            ->whereIn('sts.id', array(2, 7))
             ->whereIn('i.lectivo_id', $data['lectivo_f'])
             ->whereNull('cc.deleted_at')
             ->whereNull('s.deleted_at')

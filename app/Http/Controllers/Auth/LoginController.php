@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Session;
+//use Auth;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -41,8 +43,10 @@ class LoginController extends Controller
 
     public function logout(Request $request)
     {
-        $this->guard()->logout();
 
+        $this->guard()->logout();
+        //Auth::logout();
+        // dd('fil');
         $request->session()->flush();
 
         $request->session()->regenerate(true); //<-- pass a boolean true to regenerate function.
@@ -50,9 +54,10 @@ class LoginController extends Controller
         return redirect('/');
     }
 
-    public function authenticated(Request $request, $user){
+    public function authenticated(Request $request, $user)
+    {
         //dd($user->id);
-        
+
         Session::put('user_id', $user->id);
 
         $files = array_diff(scandir(storage_path('framework/sessions')), array('.', '..', '.gitignore'));
@@ -61,12 +66,11 @@ class LoginController extends Controller
             $filepath = storage_path('framework/sessions/' . $file);
             $session = unserialize(file_get_contents($filepath));
             //dd($session);
-            if(isset($session['user_id'])){
+            if (isset($session['user_id'])) {
                 if ($session['user_id'] === $user->id && $session['_token'] !== Session::get('_token')) {
-                unlink($filepath);
-                }    
+                    unlink($filepath);
+                }
             }
-            
         }
 
         return redirect()->intended($this->redirectPath());

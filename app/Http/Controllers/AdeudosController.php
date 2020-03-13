@@ -365,7 +365,9 @@ class AdeudosController extends Controller
             ->whereNull('plan_pagos.deleted_at')
             ->whereNull('caj.deleted_at')
             ->where('st_caja_id', '<>',  2)
-            ->orderBy('c.plantel_id', 'plan_pagos.id', 'c.id')
+            ->orderBy('c.plantel_id', 'asc')
+            ->orderBy('plan_pagos.id', 'asc')
+            ->orderBy('c.id', 'asc')
             ->get();
         //dd($cajas->toArray());
         return view(
