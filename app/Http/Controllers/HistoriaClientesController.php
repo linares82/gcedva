@@ -386,7 +386,11 @@ class HistoriaClientesController extends Controller
 		//dd(count($inscripciones_clientes_activos) . "-" . count($bajas->toArray()));
 		$total = count($bajas) + count($inscripciones_clientes_activos);
 		//dd($total);
-		$porcentaje_bajas = round(((count($bajas) * 100) / $total), 2);
+		$porcentaje_bajas = 0;
+		if ($total <> 0) {
+			$porcentaje_bajas = round(((count($bajas) * 100) / $total), 2);
+		}
+
 
 		//dd($porcentaje_bajas);
 		return response()->json(['porcentaje_bajas' => $porcentaje_bajas]);
