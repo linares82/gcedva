@@ -14,8 +14,6 @@ class BustCache extends Listener
     public function handle(Event $event)
     {
         $this->clear($event);
-
-        $this->rebuild($event);
     }
 
     /**
@@ -30,23 +28,6 @@ class BustCache extends Listener
         }
 
         $this->app['cache']->forget('totem.tasks.all');
-
         $this->app['cache']->forget('totem.tasks.active');
-    }
-
-    /**
-     * Rebuild Cache.
-     *
-     * @param Event $event
-     */
-    protected function rebuild(Event $event)
-    {
-        if ($event->task) {
-            $this->tasks->find($event->task->id);
-        }
-
-        $this->tasks->findAll();
-
-        $this->tasks->findAllActive();
     }
 }

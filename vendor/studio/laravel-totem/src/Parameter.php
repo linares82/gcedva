@@ -2,13 +2,12 @@
 
 namespace Studio\Totem;
 
-use Illuminate\Database\Eloquent\Model;
-
-class Parameter extends Model
+class Parameter extends TotemModel
 {
     protected $table = 'frequency_parameters';
 
     protected $fillable = [
+        'id',
         'name',
         'value',
     ];

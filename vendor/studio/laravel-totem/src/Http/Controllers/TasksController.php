@@ -4,7 +4,6 @@ namespace Studio\Totem\Http\Controllers;
 
 use Studio\Totem\Task;
 use Studio\Totem\Totem;
-use Illuminate\Support\Facades\Artisan;
 use Studio\Totem\Contracts\TaskInterface;
 use Studio\Totem\Http\Requests\TaskRequest;
 
@@ -35,7 +34,15 @@ class TasksController extends Controller
     public function index()
     {
         return view('totem::tasks.index', [
-            'tasks' => $this->tasks->builder()->paginate(10),
+            'tasks' => $this->tasks
+                ->builder()
+                ->sortableBy([
+                    'description',
+                ], ['description'=>'asc'])
+                ->when(request('q'), function ($query) {
+                    $query->where('description', 'LIKE', '%'.request('q').'%');
+                })
+                ->paginate(20),
         ]);
     }
 
@@ -48,9 +55,7 @@ class TasksController extends Controller
     {
         return view('totem::tasks.form', [
             'task'          => new Task,
-            'commands'      => collect(Artisan::all())->sortBy(function ($command) {
-                return $command->getDescription();
-            }),
+            'commands'      => Totem::getCommands(),
             'timezones'     => timezone_identifiers_list(),
             'frequencies'   => Totem::frequencies(),
         ]);
@@ -77,7 +82,7 @@ class TasksController extends Controller
      * @param $task
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function view($task)
+    public function view(Task $task)
     {
         return view('totem::tasks.view', [
             'task'  => $task,
@@ -90,13 +95,11 @@ class TasksController extends Controller
      * @param $task
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function edit($task)
+    public function edit(Task $task)
     {
         return view('totem::tasks.form', [
             'task'          => $task,
-            'commands'      => collect(Artisan::all())->sortBy(function ($command) {
-                return $command->getDescription();
-            }),
+            'commands'      => Totem::getCommands(),
             'timezones'     => timezone_identifiers_list(),
             'frequencies'   => Totem::frequencies(),
         ]);
@@ -109,7 +112,7 @@ class TasksController extends Controller
      * @param $task
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(TaskRequest $request, $task)
+    public function update(TaskRequest $request, Task $task)
     {
         $task = $this->tasks->update($request->all(), $task);
 
@@ -124,7 +127,7 @@ class TasksController extends Controller
      * @param $task
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy($task)
+    public function destroy(Task $task)
     {
         $this->tasks->destroy($task);
 

@@ -2,7 +2,10 @@
 
 namespace Studio\Totem\Providers;
 
+use Studio\Totem\Totem;
 use Cron\CronExpression;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Validator;
@@ -20,11 +23,23 @@ class TotemServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        try {
+            if (Totem::baseTableExists()) {
+                $this->app->register(ConsoleServiceProvider::class);
+            }
+        } catch (\PDOException $ex) {
+            // This will trigger if DB cannot be connected to
+            Log::error($ex->getMessage());
+        }
         $this->registerResources();
         $this->defineAssetPublishing();
 
         Validator::extend('cron_expression', function ($attribute, $value, $parameters, $validator) {
             return CronExpression::isValidExpression($value);
+        });
+
+        Validator::extend('json_file', function ($attribute, UploadedFile $value, $validator) {
+            return $value->getClientOriginalExtension() == 'json';
         });
     }
 
@@ -35,8 +50,21 @@ class TotemServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->mergeConfigFrom(
+            __DIR__.'/../../config/totem.php',
+            'totem'
+        );
+
         if (! defined('TOTEM_PATH')) {
             define('TOTEM_PATH', realpath(__DIR__.'/../../'));
+        }
+
+        if (! defined('TOTEM_TABLE_PREFIX')) {
+            define('TOTEM_TABLE_PREFIX', config('totem.table_prefix'));
+        }
+
+        if (! defined('TOTEM_DATABASE_CONNECTION')) {
+            define('TOTEM_DATABASE_CONNECTION', config('totem.database_connection', Schema::getConnection()->getName()));
         }
 
         $this->commands([
@@ -48,15 +76,7 @@ class TotemServiceProvider extends ServiceProvider
         $this->app->alias('totem.tasks', TaskInterface::class);
         $this->app->register(TotemRouteServiceProvider::class);
         $this->app->register(TotemEventServiceProvider::class);
-
-        if (Schema::hasTable('tasks')) {
-            $this->app->register(ConsoleServiceProvider::class);
-        }
-
-        $this->mergeConfigFrom(
-            __DIR__.'/../../config/totem.php',
-            'totem'
-        );
+        $this->app->register(TotemFormServiceProvider::class);
     }
 
     /**
@@ -89,5 +109,9 @@ class TotemServiceProvider extends ServiceProvider
         $this->publishes([
             TOTEM_PATH.'/public/img' => public_path('vendor/totem/img'),
         ], 'totem-assets');
+
+        $this->publishes([
+            TOTEM_PATH.'/config' => config_path(),
+        ], 'totem-config');
     }
 }

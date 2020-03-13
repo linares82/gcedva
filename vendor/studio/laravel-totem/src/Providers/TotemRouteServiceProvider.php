@@ -25,7 +25,12 @@ class TotemRouteServiceProvider extends RouteServiceProvider
     public function boot()
     {
         parent::boot();
-        Route::model('task', Task::class);
+
+        Route::bind('task', function ($value) {
+            return cache()->rememberForever('totem.task.'.$value, function () use ($value) {
+                return Task::find($value) ?? abort(404);
+            });
+        });
     }
 
     /**
@@ -38,8 +43,6 @@ class TotemRouteServiceProvider extends RouteServiceProvider
         $this->mapApiRoutes();
 
         $this->mapWebRoutes();
-
-        //
     }
 
     /**
@@ -52,7 +55,7 @@ class TotemRouteServiceProvider extends RouteServiceProvider
     protected function mapWebRoutes()
     {
         Route::prefix('totem')
-            ->middleware('web')
+            ->middleware(config('totem.web.middleware'))
             ->namespace($this->namespace)
             ->group(__DIR__.'/../../routes/web.php');
     }
@@ -67,7 +70,7 @@ class TotemRouteServiceProvider extends RouteServiceProvider
     protected function mapApiRoutes()
     {
         Route::prefix('api')
-            ->middleware('api')
+            ->middleware(config('totem.web.middleware'))
             ->namespace($this->namespace)
             ->group(__DIR__.'/../../routes/api.php');
     }

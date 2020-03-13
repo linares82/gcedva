@@ -16,11 +16,8 @@ class ConsoleServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // TODO: refactor this to resolving callback while 5.5 branching
-        $this->app->booted(function () {
-            if ($this->app->runningInConsole()) {
-                $this->schedule($this->app->make(Schedule::class));
-            }
+        $this->app->resolving(Schedule::class, function ($schedule) {
+            $this->schedule($schedule);
         });
     }
 
@@ -52,6 +49,9 @@ class ConsoleServiceProvider extends ServiceProvider
             }
             if ($task->run_in_maintenance) {
                 $event->evenInMaintenanceMode();
+            }
+            if ($task->run_on_one_server && in_array(config('cache.default'), ['memcached', 'redis'])) {
+                $event->onOneServer();
             }
         });
     }

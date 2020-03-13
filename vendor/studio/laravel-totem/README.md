@@ -1,13 +1,15 @@
 <p align="center">
-  <img src="https://github.com/codestudiohq/laravel-totem/blob/master/resources/assets/img/totem.png?raw=true" alt="Laravel Totem"/>
+  <img src="https://github.com/codestudiohq/laravel-totem/blob/1.0/resources/assets/img/totem.png?raw=true" alt="Laravel Totem"/>
 </p>
 <p align="center">
-<a href="https://travis-ci.org/codestudiohq/laravel-totem"><img src="https://travis-ci.org/codestudiohq/laravel-totem.svg" alt="Build Status"></a>
-<a href="https://styleci.io/repos/99050894"><img src="https://styleci.io/repos/99050894/shield?branch=master" alt="StyleCI"></a>
+<a href="https://travis-ci.org/codestudiohq/laravel-totem"><img src="https://travis-ci.org/codestudiohq/laravel-totem.svg?branch=3.0" alt="Build Status"></a>
+<a href="https://styleci.io/repos/99050894"><img src="https://styleci.io/repos/99050894/shield?branch=3.0" alt="StyleCI"></a>
 <a href="https://packagist.org/packages/studio/laravel-totem"><img src="https://poser.pugx.org/studio/laravel-totem/license.svg" alt="License"></a>
 </p>
 
 # Introduction
+
+[![Join the chat at https://gitter.im/laravel-totem/Lobby](https://badges.gitter.im/laravel-totem/Lobby.svg)](https://gitter.im/laravel-totem/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Manage your `Laravel Schedule` from a pretty dashboard. Schedule your `Laravel Console Commands` to your liking. Enable/Disable scheduled tasks on the fly without going back to your code again.
 
@@ -17,18 +19,21 @@ Manage your `Laravel Schedule` from a pretty dashboard. Schedule your `Laravel C
 
 |<span align="left">Laravel</span> |<span align="left">Totem</span>| 
 |:-------|----------:|
-|5.5     |     2.0   |
-|5.4     |     1.0   |
+|5.8     |     5.x   |
+|5.7     |     4.x   |
+|5.6     |     3.x   |
+|5.5     |     2.x   |
+|5.4     |     1.x   |
 
 #### Installing
 
-`Totem` requires Laravel v5.4 and above. Use composer to install totem to your Laravel project
+`Totem` requires Laravel v5.4 and above, please refer to the above table for compatability. Use composer to install totem to your Laravel project
 
 ```
 composer require studio/laravel-totem
 ```
 
-> Laravel Totem supports auto package discovery for Laravel v5.5, therefore service provider registration is not required in Laravel v5.5
+> Laravel Totem supports auto package discovery for Laravel v5.5+, therefore service provider registration is not required in Laravel v5.5+
 
 Add `TotemServiceProvider` to the `providers` array of your Laravel v5.4 application's config/app.php
 
@@ -49,6 +54,10 @@ php artisan migrate
 ```    
 php artisan totem:assets
 ```
+
+##### Table Prefix
+
+Totems' tables use generic names which may conflict with existing tables in a project. To alleviate this the `.env` param `TOTEM_TABLE_PREFIX` can be set which will apply a prefix to all of Totems tables and their models.
 
 #### Updating
 
@@ -83,6 +92,43 @@ Totem::auth(function($request) {
 
 By default Totem's dashboard only works in local environment. To view the dashboard point your browser to /totem of your app. For e.g. laravel.dev/totem.
 
+##### Filter Commands Dropdown
+
+By default `Totem` outputs all Artisan commands on the Create/Edit tasks. To make this dropdown more concise there is a filter config feature that can be set in the `totem.php` config file.
+
+Example filters
+```php
+'artisan' => [
+    'command_filter' => [
+        'stats:*',
+        'email:daily-reports'
+    ],
+],
+```
+
+This feature uses [fnmatch](http://php.net/manual/en/function.fnmatch.php) syntax to filter displayed commands. `stats:*` will match all Artisan commands that start with `stats:` while `email:daily-reports` will only match the command named `email:daily-reports`.
+
+This filter can be used as either a whitelist or a blacklist. By default it acts as a whitelist but an option flag can be set to instead act as a blacklist.
+
+```php
+'artisan' => [
+    'command_filter' => [
+        'stats:*',
+        'email:daily-reports'
+    ],
+    'whitelist' => true,
+],
+
+```
+
+If the value of whitelist is `false` then the filter acts as a blacklist.
+
+`'whitelist' => false`
+
+#### Middleware
+
+`Laravel Totem` uses the default web and api middleware but if customization is required the middleware can be changed by setting the appropriate `.env` value. These values can be found in `config/totem.php`.
+
 #### Making Commands available in `Laravel Totem`
 
 All artisan commands can be scheduled. If you want to hide a command from Totem make sure you have the `hidden` attribute set to true in your command. For e.g.
@@ -113,26 +159,25 @@ php artisan schedule:list
 ### Screenshots
 
 ##### Task List
-<img src="https://github.com/codestudiohq/laravel-totem/blob/master/public/img/screenshots/tasks.png?raw=true" alt="Task List"/>
+<img src="https://github.com/codestudiohq/laravel-totem/blob/1.0/public/img/screenshots/tasks.png?raw=true" alt="Task List"/>
 
 ##### Task Details
-<img src="https://github.com/codestudiohq/laravel-totem/blob/master/public/img/screenshots/task-details.png?raw=true" alt="Task List"/>
+<img src="https://github.com/codestudiohq/laravel-totem/blob/1.0/public/img/screenshots/task-details.png?raw=true" alt="Task List"/>
 
 ##### Edit Task
-<img src="https://github.com/codestudiohq/laravel-totem/blob/master/public/img/screenshots/edit-task.png?raw=true" alt="Task List"/>
+<img src="https://github.com/codestudiohq/laravel-totem/blob/1.0/public/img/screenshots/edit-task.png?raw=true" alt="Task List"/>
 
 ##### Artisan Command to view scheduled tasks
-<img src="https://github.com/codestudiohq/laravel-totem/blob/master/public/img/screenshots/artisan.png?raw=true" alt="Task List"/>
+<img src="https://github.com/codestudiohq/laravel-totem/blob/1.0/public/img/screenshots/artisan.png?raw=true" alt="Task List"/>
  
 ## Changelog
 
 Important versions listed below. Refer to the [Changelog](CHANGELOG.md) for a full history of the project.
 
-- [1.0](CHANGELOG.md) - TBD
-
 ## Credits
 
 - [Roshan Gautam](https://twitter.com/@roshangautam)
+- [OSS Contributors](https://github.com/codestudiohq/laravel-totem/graphs/contributors)
 
 Bug reports, feature requests, and pull requests can be submitted by following our [Contribution Guide](CONTRIBUTING.md).
 

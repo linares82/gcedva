@@ -136,7 +136,7 @@ class LogViewerController extends Controller
      * @param  string                    $level
      * @param  \Illuminate\Http\Request  $request
      *
-     * @return \Illuminate\View\View
+     * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
      */
     public function search($date, $level = 'all', Request $request)
     {
@@ -175,8 +175,7 @@ class LogViewerController extends Controller
      */
     public function delete(Request $request)
     {
-        if ( ! $request->ajax())
-            abort(405, 'Method Not Allowed');
+        abort_unless($request->ajax(), 405, 'Method Not Allowed');
 
         $date = $request->get('date');
 
@@ -201,7 +200,9 @@ class LogViewerController extends Controller
      */
     protected function view($view, $data = [], $mergeData = [])
     {
-        return view('log-viewer::'.$view, $data, $mergeData);
+        $theme = config('log-viewer.theme');
+
+        return view()->make("log-viewer::{$theme}.{$view}", $data, $mergeData);
     }
 
     /**

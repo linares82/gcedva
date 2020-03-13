@@ -216,4 +216,16 @@ return [
             ],
         ],
     ],
+    'web' => [
+        'middleware' => env('TOTEM_WEB_MIDDLEWARE', 'web'),
+    ],
+    'api' => [
+        'middleware' => env('TOTEM_API_MIDDLEWARE', 'api'),
+    ],
+    'table_prefix' => env('TOTEM_TABLE_PREFIX', ''),
+    'artisan' => [
+        'command_filter' => [],
+        'whitelist' => true,
+    ],
+    'database_connection' => env('TOTEM_DATABASE_CONNECTION'),
 ];

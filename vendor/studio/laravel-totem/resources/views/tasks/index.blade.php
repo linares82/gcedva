@@ -6,20 +6,22 @@
 @section('title')
     <div class="uk-flex uk-flex-between uk-flex-middle">
         <h4 class="uk-card-title uk-margin-remove">Tasks</h4>
-        <form class="uk-display-inline uk-search uk-search-default">
-            <span class="uk-icon uk-search-icon">
-                <icon name="search" :scale="100"></icon>
-            </span>
-
-            <input class="uk-search-input" type="search" placeholder="Search...">
-        </form>
+        {!! Form::open([
+            'id' => 'totem__search__form',
+            'url' => Request::fullUrl(),
+            'method' => 'GET',
+            'class' => 'uk-display-inline uk-search uk-search-default'
+        ]) !!}
+        <span uk-search-icon></span>
+        {!! Form::text('q', request('q'), ['class' => 'uk-search-input', 'placeholder' => 'Search...']) !!}
+        {!! Form::close() !!}
     </div>
 @stop
 @section('main-panel-content')
     <table class="uk-table uk-table-responsive" cellpadding="0" cellspacing="0" class="mb1">
         <thead>
             <tr>
-                <th>Description</th>
+                <th>{!! Html::columnSort('Description', 'description') !!}</th>
                 <th>Average Runtime</th>
                 <th>Last Run</th>
                 <th>Next Run</th>
@@ -36,10 +38,10 @@
                         <span class="uk-float-right uk-hidden@s uk-text-muted">Command</span>
                     </td>
                     <td>
-                        {{  $task->results->count() > 0 ? number_format(  $task->results->sum('duration') / (1000 * $task->results->count()) , 2) : '0' }} seconds
+                        {{ number_format(  $task->averageRuntime / 1000 , 2 ) }} seconds
                         <span class="uk-float-right uk-hidden@s uk-text-muted">Avg. Runtime</span>
                     </td>
-                    @if($last = $task->results->last())
+                    @if($last = $task->lastResult)
                         <td>
                             {{$last->ran_at->toDateTimeString()}}
                             <span class="uk-float-right uk-hidden@s uk-text-muted">Last Run</span>
@@ -55,7 +57,7 @@
                         <span class="uk-float-right uk-hidden@s uk-text-muted">Next Run</span>
                     </td>
                     <td class="uk-text-center@m">
-                        <execute-button :data-task="{{$task}}" url="{{route('totem.task.execute', $task)}}" icon-name="cog" button-class="uk-button-link"></execute-button>
+                        <execute-button :data-task="{{$task}}" url="{{route('totem.task.execute', $task)}}" icon-name="play" button-class="uk-button-link"></execute-button>
                     </td>
                 </tr>
             @empty
@@ -70,6 +72,17 @@
     </table>
 @stop
 @section('main-panel-footer')
-    <a class="uk-button uk-button-primary uk-button-small" href="{{route('totem.task.create')}}">New Task</a>
+    <div class="uk-flex uk-flex-between">
+        <span>
+            <a class="uk-icon-button uk-button-primary uk-hidden@m" uk-icon="icon: plus" href="{{route('totem.task.create')}}"></a>
+            <a class="uk-button uk-button-primary uk-button-small uk-visible@m" href="{{route('totem.task.create')}}">New Task</a>
+        </span>
+
+        <span>
+            <import-button url="{{route('totem.tasks.import')}}"></import-button>
+            <a class="uk-icon-button uk-button-primary uk-hidden@m" uk-icon="icon: cloud-download"  href="{{route('totem.tasks.export')}}"></a>
+            <a class="uk-button uk-button-primary uk-button-small uk-visible@m" href="{{route('totem.tasks.export')}}">Export</a>
+        </span>
+    </div>
     {{$tasks->links('totem::partials.pagination')}}
 @stop

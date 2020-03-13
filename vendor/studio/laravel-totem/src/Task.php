@@ -2,14 +2,15 @@
 
 namespace Studio\Totem;
 
+use Carbon\Carbon;
 use Cron\CronExpression;
-use Illuminate\Database\Eloquent\Model;
 use Studio\Totem\Traits\HasFrequencies;
 use Illuminate\Notifications\Notifiable;
+use Studio\Totem\Traits\FrontendSortable;
 
-class Task extends Model
+class Task extends TotemModel
 {
-    use Notifiable, HasFrequencies;
+    use Notifiable, HasFrequencies, FrontendSortable;
 
     /**
      * The attributes that are mass assignable.
@@ -17,6 +18,7 @@ class Task extends Model
      * @var array
      */
     protected $fillable = [
+        'id',
         'description',
         'command',
         'parameters',
@@ -28,6 +30,9 @@ class Task extends Model
         'notification_email_address',
         'notification_phone_number',
         'notification_slack_webhook',
+        'auto_cleanup_type',
+        'auto_cleanup_num',
+        'run_on_one_server',
     ];
 
     /**
@@ -64,6 +69,7 @@ class Task extends Model
      * Convert a string of command arguments and options to an array.
      *
      * @param bool $console if true will convert arguments to non associative array
+     *
      * @return array
      */
     public function compileParameters($console = false)
@@ -72,10 +78,24 @@ class Task extends Model
             $regex = '/(?=\S)[^\'"\s]*(?:\'[^\']*\'[^\'"\s]*|"[^"]*"[^\'"\s]*)*/';
             preg_match_all($regex, $this->parameters, $matches, PREG_SET_ORDER, 0);
 
-            $parameters = collect($matches)->mapWithKeys(function ($parameter) use ($console) {
+            $argument_index = 0;
+            $parameters = collect($matches)->mapWithKeys(function ($parameter) use ($console, &$argument_index) {
                 $param = explode('=', $parameter[0]);
 
-                return count($param) > 1 ? ($console ? ((starts_with($param[0], '--') ? [$param[0] => $param[1]] : [$param[1]])) : [$param[0] => $param[1]]) : $param;
+                if (count($param) > 1) {
+                    $trimmed_param = trim(trim($param[1], '"'), "'");
+                    if ($console) {
+                        return starts_with($param[0], '--') ?
+                            [$param[0] => $trimmed_param] :
+                            [$argument_index++ => $trimmed_param];
+                    }
+
+                    return [$param[0] => $trimmed_param];
+                }
+
+                return starts_with($param[0], '--') && ! $console ?
+                    [$param[0] => true] :
+                    [$argument_index++ => $param[0]];
             })->toArray();
 
             return $parameters;
@@ -92,6 +112,24 @@ class Task extends Model
     public function results()
     {
         return $this->hasMany(Result::class, 'task_id', 'id');
+    }
+
+    /**
+     * Returns the most recent result entry for this task.
+     *
+     * @return Model|null
+     */
+    public function getLastResultAttribute()
+    {
+        return $this->results()->orderBy('id', 'desc')->first();
+    }
+
+    /**
+     * @return float
+     */
+    public function getAverageRuntimeAttribute()
+    {
+        return $this->results()->avg('duration') ?? 0.00;
     }
 
     /**
@@ -122,5 +160,28 @@ class Task extends Model
     public function routeNotificationForSlack()
     {
         return $this->notification_slack_webhook;
+    }
+
+    /**
+     * Attempt to perform clean on task results.
+     */
+    public function autoCleanup()
+    {
+        if ($this->auto_cleanup_num > 0) {
+            if ($this->auto_cleanup_type === 'results') {
+                $oldest_id = self::results()
+                    ->orderBy('ran_at', 'desc')
+                    ->limit($this->auto_cleanup_num)
+                    ->get()
+                    ->min('id');
+                self::results()
+                    ->where('id', '<', $oldest_id)
+                    ->delete();
+            } else {
+                self::results()
+                    ->where('ran_at', '<', Carbon::now()->subDays($this->auto_cleanup_num - 1))
+                    ->delete();
+            }
+        }
     }
 }
