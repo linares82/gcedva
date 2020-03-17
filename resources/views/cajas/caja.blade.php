@@ -964,8 +964,9 @@ Agregar nuevo registro
     });
     
     @if(isset($vplantel) and isset($vconsecutivo))
-        $('#plantel_id-field option:selected').val({{$vplantel}});    
-        $('#consecutivo_id-field selected:option').val({{$vconsecutivo}});        
+        $('#plantel_id-field option:selected').val({{$vplantel}}).change();    
+        $('#consecutivo-field').val({{$vconsecutivo}}).change(); 
+        //console.log({{$vconsecutivo}});       
         $('#form-buscarVenta').submit();
     @endif
 

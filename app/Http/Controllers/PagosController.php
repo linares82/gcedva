@@ -14,6 +14,7 @@ use App\CajaLn;
 use App\CombinacionCliente;
 use App\Empleado;
 use App\Egreso;
+use App\Exports\PagosExport;
 use App\FormaPago;
 use App\Inscripcion;
 use App\Pago;
@@ -26,6 +27,8 @@ use App\ImpresionTicket;
 use App\IngresoEgreso;
 use App\Transference;
 use DB;
+use Maatwebsite\Excel\Concerns\FromView;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PagosController extends Controller
 {
@@ -649,6 +652,9 @@ class PagosController extends Controller
             $vespecialidad = $registro->especialidad;
         }
         array_push($resumen, $linea);
+
+
+        //return Excel::download(new PagosExport($registros->toArray(), $plantel->toArray(), $data, $resumen), 'pagos.xlsx');
 
         return view('pagos.reportes.postAlumnosBeca', array(
             'registros' => $registros,

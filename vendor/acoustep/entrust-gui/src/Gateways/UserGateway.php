@@ -1,4 +1,6 @@
-<?php namespace Acoustep\EntrustGui\Gateways;
+<?php
+
+namespace Acoustep\EntrustGui\Gateways;
 
 use Acoustep\EntrustGui\Repositories\UserRepository;
 use Acoustep\EntrustGui\Events\UserCreatedEvent;
@@ -62,7 +64,7 @@ class UserGateway implements ManyToManyGatewayInterface
         $data = $request->all();
         $user = $this->repository->create($data);
 
-        $event_class = "Acoustep\EntrustGui\Events\\".ucwords($this->getModelName()).'CreatedEvent';
+        $event_class = "Acoustep\EntrustGui\Events\\" . ucwords($this->getModelName()) . 'CreatedEvent';
         $event = new $event_class;
         $this->dispatcher->fire($event->setModel($user));
         return $user;
@@ -84,9 +86,10 @@ class UserGateway implements ManyToManyGatewayInterface
             $data['password_confirmation'] = $request->get('password_confirmation');
         }
         $user = $this->repository->update($data, $id);
-        $event_class = "Acoustep\EntrustGui\Events\\".ucwords($this->getModelName()).'UpdatedEvent';
+        $event_class = "Acoustep\EntrustGui\Events\\" . ucwords($this->getModelName()) . 'UpdatedEvent';
         $event = new $event_class;
-        $this->dispatcher->fire($event->setModel($user));
+        //$this->dispatcher->fire($event->setModel($user));
+        $this->dispatcher->dispatch($event->setModel($user));
         return $user;
     }
 

@@ -1,4 +1,6 @@
-<?php namespace App\Http\Controllers;
+<?php
+
+namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -13,7 +15,8 @@ use Auth;
 use App\Http\Requests\updateCajaLn;
 use App\Http\Requests\createCajaLn;
 
-class CajaLnsController extends Controller {
+class CajaLnsController extends Controller
+{
 
 	/**
 	 * Display a listing of the resource.
@@ -35,7 +38,7 @@ class CajaLnsController extends Controller {
 	public function create()
 	{
 		return view('cajaLns.create')
-			->with( 'list', CajaLn::getListFromAllRelationApps() );
+			->with('list', CajaLn::getListFromAllRelationApps());
 	}
 
 	/**
@@ -48,11 +51,11 @@ class CajaLnsController extends Controller {
 	{
 
 		$input = $request->all();
-		$input['usu_alta_id']=Auth::user()->id;
-		$input['usu_mod_id']=Auth::user()->id;
+		$input['usu_alta_id'] = Auth::user()->id;
+		$input['usu_mod_id'] = Auth::user()->id;
 
 		//create data
-		CajaLn::create( $input );
+		CajaLn::create($input);
 
 		return redirect()->route('cajaLns.index')->with('message', 'Registro Creado.');
 	}
@@ -65,7 +68,7 @@ class CajaLnsController extends Controller {
 	 */
 	public function show($id, CajaLn $cajaLn)
 	{
-		$cajaLn=$cajaLn->find($id);
+		$cajaLn = $cajaLn->find($id);
 		return view('cajaLns.show', compact('cajaLn'));
 	}
 
@@ -77,9 +80,9 @@ class CajaLnsController extends Controller {
 	 */
 	public function edit($id, CajaLn $cajaLn)
 	{
-		$cajaLn=$cajaLn->find($id);
+		$cajaLn = $cajaLn->find($id);
 		return view('cajaLns.edit', compact('cajaLn'))
-			->with( 'list', CajaLn::getListFromAllRelationApps() );
+			->with('list', CajaLn::getListFromAllRelationApps());
 	}
 
 	/**
@@ -90,9 +93,9 @@ class CajaLnsController extends Controller {
 	 */
 	public function duplicate($id, CajaLn $cajaLn)
 	{
-		$cajaLn=$cajaLn->find($id);
+		$cajaLn = $cajaLn->find($id);
 		return view('cajaLns.duplicate', compact('cajaLn'))
-			->with( 'list', CajaLn::getListFromAllRelationApps() );
+			->with('list', CajaLn::getListFromAllRelationApps());
 	}
 
 	/**
@@ -105,10 +108,10 @@ class CajaLnsController extends Controller {
 	public function update($id, CajaLn $cajaLn, updateCajaLn $request)
 	{
 		$input = $request->all();
-		$input['usu_mod_id']=Auth::user()->id;
+		$input['usu_mod_id'] = Auth::user()->id;
 		//update data
-		$cajaLn=$cajaLn->find($id);
-		$cajaLn->update( $input );
+		$cajaLn = $cajaLn->find($id);
+		$cajaLn->update($input);
 
 		return redirect()->route('cajaLns.index')->with('message', 'Registro Actualizado.');
 	}
@@ -119,81 +122,78 @@ class CajaLnsController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id,CajaLn $cajaLn)
+	public function destroy($id, CajaLn $cajaLn)
 	{
-                
-		$cajaLn=$cajaLn->find($id);
-		
-                $vcaja=$cajaLn->caja_id;
-                $vcliente=$cajaLn->cliente_id;
-                if($cajaLn->adeudo_id<>0){
-                    try{
-                        $adeudo=Adeudo::find($cajaLn->adeudo_id);
-                        $adeudo->caja_id=0;
-                        $adeudo->pagado_bnd=0;
-                        $adeudo->save();
-                    }catch(Exception $e){
-                        
-                    }
-                    
-				}
+
+		$cajaLn = $cajaLn->find($id);
+
+		$vcaja = $cajaLn->caja_id;
+		$vcliente = $cajaLn->cliente_id;
+		if ($cajaLn->adeudo_id <> 0) {
+			try {
+				$adeudo = Adeudo::find($cajaLn->adeudo_id);
+				$adeudo->caja_id = 0;
+				$adeudo->pagado_bnd = 0;
+				$adeudo->save();
+			} catch (Exception $e) {
+			}
+		}
 		$cajaLn->adeudo_id = 0;
 		$cajaLn->save();
-                
-                $pagos=0;
-                if(isset($caja->pagos)){
-                    foreach($caja->pagos as $pago){
-                        $pagos=$pago->monto+$pagos;
-                    }
-                    if($caja->total>$pagos and $pagos>0){
-                        $caja->st_caja_id=3;
-                    }elseif($caja->total>=$pagos and $pagos>0){
-                        $caja->st_caja_id=1;
-                    }
-                    $caja->save();
-                }
-                
-                
-                $cliente=Cliente::find($vcliente);
-		$cajaLn->delete();
-                
-                $caja=Caja::find($vcaja);
-                
-                $subtotal=0;
-                $recargo=0;
-                $descuento=0;
-                $total=0;
-                foreach($caja->cajaLns as $ln){
-                    if(is_null($ln->deleted_at)){
-                        $subtotal=$ln->subtotal+$subtotal;
-                        $recargo=$ln->recargo+$recargo;
-                        $descuento=$ln->descuento+$descuento;
-                        $total=$ln->total+$total;
-                    }
-                    
-                }
-                
-                $caja->subtotal=$subtotal;
-                $caja->recargo=$recargo;
-                $caja->descuento=$descuento;
-                $caja->total=$total;
-                $caja->save();
-                
-                $cajas=Caja::select('cajas.consecutivo as caja','ln.caja_concepto_id as concepto_id','cc.name as concepto', 'ln.total','st.name as estatus')
-                    ->join('caja_lns as ln','ln.caja_id','=','cajas.id')
-                    ->join('caja_conceptos as cc','cc.id','=','ln.caja_concepto_id')
-                    ->join('st_cajas as st','st.id','=','cajas.st_caja_id')
-                    ->where('cliente_id',$vcliente)
-                    ->get();
-                $combinaciones=CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
 
-                 return redirect('/cajas/caja?plantel='.$caja->plantel_id."&consecutivo=".$caja->consecutivo);
-                
+		$pagos = 0;
+		if (isset($caja->pagos)) {
+			foreach ($caja->pagos as $pago) {
+				$pagos = $pago->monto + $pagos;
+			}
+			if ($caja->total > $pagos and $pagos > 0) {
+				$caja->st_caja_id = 3;
+			} elseif ($caja->total >= $pagos and $pagos > 0) {
+				$caja->st_caja_id = 1;
+			}
+			$caja->save();
+		}
+
+
+		$cliente = Cliente::find($vcliente);
+		$cajaLn->delete();
+
+		$caja = Caja::find($vcaja);
+
+		$subtotal = 0;
+		$recargo = 0;
+		$descuento = 0;
+		$total = 0;
+		foreach ($caja->cajaLns as $ln) {
+			if (is_null($ln->deleted_at)) {
+				$subtotal = $ln->subtotal + $subtotal;
+				$recargo = $ln->recargo + $recargo;
+				$descuento = $ln->descuento + $descuento;
+				$total = $ln->total + $total;
+			}
+		}
+
+		$caja->subtotal = $subtotal;
+		$caja->recargo = $recargo;
+		$caja->descuento = $descuento;
+		$caja->total = $total;
+		$caja->save();
+
+		$cajas = Caja::select('cajas.consecutivo as caja', 'ln.caja_concepto_id as concepto_id', 'cc.name as concepto', 'ln.total', 'st.name as estatus')
+			->join('caja_lns as ln', 'ln.caja_id', '=', 'cajas.id')
+			->join('caja_conceptos as cc', 'cc.id', '=', 'ln.caja_concepto_id')
+			->join('st_cajas as st', 'st.id', '=', 'cajas.st_caja_id')
+			->where('cliente_id', $vcliente)
+			->get();
+		$combinaciones = CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
+
+		return redirect('/cajas/caja?plantel=' . $caja->plantel_id . "&consecutivo=" . $caja->consecutivo);
+		//return redirect(url('cajas/caja', array('plantel' => $caja->plantel_id, 'consecutivo' => $caja->consecutivo)));
+
 		/*return view('cajas.caja', compact('cliente', 'caja', 'combinaciones','cajas'))
                         ->with( 'list', Caja::getListFromAllRelationApps() )
                         ->with( 'list1', CajaLn::getListFromAllRelationApps() );
                  * 
                  */
 	}
-
 }

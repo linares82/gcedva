@@ -7,7 +7,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
-    <title>{{ $page_title or "SieScool" }}</title>
+    <title>{{ "SieScool" }}</title>
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
 	<link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
     

@@ -10,10 +10,8 @@ return array(
     'SimpleSoftwareIO\\QrCode\\' => array($vendorDir . '/simplesoftwareio/simple-qrcode/src'),
     'Sabberworm\\CSS' => array($vendorDir . '/sabberworm/php-css-parser/lib'),
     'Parsedown' => array($vendorDir . '/erusev/parsedown'),
-    'PHPExcel' => array($vendorDir . '/phpoffice/phpexcel/Classes'),
     'Mockery' => array($vendorDir . '/mockery/mockery/library'),
     'Mailgun' => array($vendorDir . '/mailgun/mailgun-php/src'),
-    'Maatwebsite\\Excel\\' => array($vendorDir . '/maatwebsite/excel/src'),
     'JasperPHP' => array($vendorDir . '/cossou/jasperphp/src'),
     'BaconQrCode' => array($vendorDir . '/bacon/bacon-qr-code/src'),
 );

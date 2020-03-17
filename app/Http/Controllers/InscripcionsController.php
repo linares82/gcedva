@@ -748,7 +748,11 @@ class InscripcionsController extends Controller
             ->whereNull('hacademicas.deleted_at')
             ->whereNull('aa.deleted_at')
             //->where('inscripcions.grado_id',$data['grado_f'])
-            ->orderBy('hacademicas.plantel_id', 'hacademicas.lectivo_id', 'hacademicas.grupo_id', 'hacademicas.grado_id')
+            ->orderBy('hacademicas.plantel_id')
+            ->orderBy('hacademicas.lectivo_id')
+            ->orderBy('hacademicas.grupo_id')
+            ->orderBy('hacademicas.grado_id')
+
             ->distinct()
             ->get();
         //Agregar fechas

@@ -20,9 +20,9 @@
       <h4>Resumen</h4>
       <table class="table table-condensed table-striped">
         <thead>
-            <tr>
-                <th>Especialidad</th><th>Cantidad Alumnos</th><th>Suma Descuentos</th>
-            </tr> 
+            
+            <th>Especialidad</th><th>Cantidad Alumnos</th><th>Suma Descuentos</th>
+            
         </thead>
         <tbody>
           @php
@@ -126,10 +126,10 @@
     </div>
 <!--    <div id="wdr-component"></div>
     
-    <div id="wdr-component1"></div>-->
-    <script src="{{asset('bower_components\AdminLTE\plugins\webdatarocks\webdatarocks.toolbar.min.js')}}"></script>
-    <script src="{{asset('bower_components\AdminLTE\plugins\webdatarocks\webdatarocks.js')}}"></script>
-<!--    <script>
+    <div id="wdr-component1"></div>
+    <script src="@{{asset('bower_components\AdminLTE\plugins\webdatarocks\webdatarocks.toolbar.min.js')}}"></script>
+    <script src="@{{asset('bower_components\AdminLTE\plugins\webdatarocks\webdatarocks.js')}}"></script>
+    <script>
 	function customizeToolbar(toolbar) {
 		var tabs = toolbar.getTabs(); // get all tabs from the toolbar
 		toolbar.getTabs = function() {
