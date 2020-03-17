@@ -574,6 +574,7 @@
             beforeSend : function(){$("#loading3").show(); },
             complete : function(){$("#loading3").hide(); },
             success: function(data) {
+                location.reload;
                 $('.errorTitle').addClass('hidden');
                 $('.errorContent').addClass('hidden');
 
@@ -753,12 +754,12 @@
     $(document).on('click', '.reglas-modal', function() {
         $('.modal-title').text('Editar');
         $('#plan_pago_id-editar').val($(this).data('plan_pago_id'));
-        id=$(this).data('id');
+        id_regla=$(this).data('id');
         
         $.ajax({
             url: '{{ route("reglaRecargos.getReglaXLinea") }}',
             type: 'GET',
-            data: "linea=" + id,
+            data: "linea=" + id_regla,
             dataType: 'json',
             beforeSend: function () {
                 //$("#loading10").show();
@@ -780,7 +781,7 @@
         $.ajax({
             url: '{{ route("reglaRecargos.getNoReglaXLinea") }}',
             type: 'GET',
-            data: "linea=" + id,
+            data: "linea=" + id_regla,
             dataType: 'json',
             beforeSend: function () {
                 //$("#loading10").show();
@@ -855,14 +856,14 @@
         
         //alert($('#descuento-editar').val());
         //console.log($(this).data('descuento'));
-        id=$(this).data('promo_plan_pago_id');
+        id_promo=$(this).data('promo_plan_pago_id');
         
         $('#editPromoModal').modal('show');
     });
     
     //botones para editar una promocion
     $('.modal-footer').on('click', '#Promo-editar', function() {
-        var ruta='{{url("/promoPlanLns/update")}}' + '/' + id;
+        var ruta='{{url("/promoPlanLns/update")}}' + '/' + id_promo;
         //alert(ruta);
         
         //alert(bnd);
@@ -895,10 +896,10 @@
         $('#monto-eliminar').val($(this).data('monto'));
         $('#inicial_bnd-eliminar').val($(this).data('inicial_bnd'));
         $('#deleteModal').modal('show');
-        id=$(this).data('id');
+        id_deleted=$(this).data('id');
     });
     $('.modal-footer').on('click', '.delete', function() {
-        var ruta='{{url("planPagoLns/destroy")}}' + '/' + id;
+        var ruta='{{url("planPagoLns/destroy")}}' + '/' + id_delete;
         $.ajax({
             type: 'GET',
             url: ruta,
@@ -959,7 +960,7 @@
                 $.ajax({
                     url: '{{ route("planPagoLns.lessRegla") }}',
                     type: 'GET',
-                    data: "linea="+id+"&regla=" + regla + "",
+                    data: "linea="+id_regla+"&regla=" + regla + "",
                     dataType: 'json',
                     beforeSend: function () {
                         /*$('.row_reglas_relacionadas').loading({
@@ -981,7 +982,7 @@
                 $.ajax({
                     url: '{{ route("planPagoLns.addRegla") }}',
                     type: 'GET',
-                    data: "linea="+id+"&regla=" + actividad + "",
+                    data: "linea="+id_regla+"&regla=" + actividad + "",
                     dataType: 'json',
                     beforeSend: function () {
                         $('.row_reglas_relacionadas').loading({
