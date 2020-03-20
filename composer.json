@@ -16,9 +16,9 @@
     "chumper/zipper": "1.0.x",
     "cossou/jasperphp": "^2.8",
     "dog-ears/crud-d-scaffold": "1.*",
+    "fideloper/proxy": "^4.0",
     "guzzlehttp/guzzle": "^6.2",
     "kim/activity": "^1.1",
-    "fideloper/proxy": "^4.0",
     "laravel/framework": "5.8.*",
     "laravel/tinker": "~1.0",
     "laravelcollective/html": "^5.4",
@@ -32,6 +32,7 @@
     "studio/laravel-totem": "5.0",
     "twilio/sdk": "4.10",
     "usmanhalalit/laracsv": "1.*@dev",
+    "webklex/laravel-imap": "^1.4",
     "zizaco/entrust": "5.2.x-dev"
   },
   "require-dev": {

@@ -66,7 +66,8 @@ class UserGateway implements ManyToManyGatewayInterface
 
         $event_class = "Acoustep\EntrustGui\Events\\" . ucwords($this->getModelName()) . 'CreatedEvent';
         $event = new $event_class;
-        $this->dispatcher->fire($event->setModel($user));
+        //$this->dispatcher->fire($event->setModel($user));
+		$this->dispatcher->dispatch($event->setModel($user));
         return $user;
     }
 

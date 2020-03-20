@@ -2,17 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
 use App\Correo;
-use App\Empresa;
-use App\Cliente;
-use Illuminate\Http\Request;
-use Auth;
-use App\Http\Requests\updateCorreo;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\createCorreo;
+use App\Http\Requests\updateCorreo;
+use Auth;
+use Illuminate\Http\Request;
 use Mail;
 use Storage;
+use Webklex\IMAP\Client;
 
 class CorreosController extends Controller
 {
@@ -25,7 +23,6 @@ class CorreosController extends Controller
     public function index(Request $request)
     {
         $correos = Correo::getAllData($request);
-
         return view('correos.index', compact('correos'));
     }
 
@@ -189,11 +186,11 @@ class CorreosController extends Controller
             array_push($paths, $pathToFile);
         }
         /*
-        
+
         if(isset($request->input("persona_bnd"))){
-            $cli=Cliente::where('mail', '=', $request->input("persona_bnd"))->first();
+        $cli=Cliente::where('mail', '=', $request->input("persona_bnd"))->first();
         }
-        */
+         */
         $f = $request->all();
         //dd($f);
         $destinatario = $request->input("destinatario");
@@ -204,36 +201,36 @@ class CorreosController extends Controller
 
         $data = array('contenido' => $contenido, 'nombre' => $n, 'correo' => $from);
         $r = \Mail::send('correos.version2.correo_individual', $data, function ($message)
-        use ($asunto, $destinatario, $containfile, $paths, $n, $from) {
-            $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
-            $message->to($destinatario, $n)->subject($asunto);
-            $message->replyTo($from);
-            if ($containfile) {
-                foreach ($paths as $path) {
-                    //dd($path);
-                    $message->attach($path);
+             use ($asunto, $destinatario, $containfile, $paths, $n, $from) {
+                $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
+                $message->to($destinatario, $n)->subject($asunto);
+                $message->replyTo($from);
+                if ($containfile) {
+                    foreach ($paths as $path) {
+                        //dd($path);
+                        $message->attach($path);
+                    }
                 }
-            }
-        });
+            });
         /*
         if(isset($f['empresa_bnd']) and $f['empresa_bnd']==1){
-            $e=Empresa::where('correo1', '=', $destinatario)->first();
-            //dd($e->toArray());
-            $clientes=Cliente::where('empresa_id', '=', $e->id)->get();
-            //dd($clientes->toArray());
-            foreach($clientes as $c){
-                //dd($c);
-                $data = array('contenido' => $contenido, 'nombre' => $c->nombre);
-                $r = \Mail::send('correos.version2.correo_individual', $data, function ($message)
-                    use ($asunto, $containfile, $pathToFile, $c) {
-                    $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
-                    $message->to($c->mail, $c->nombre)->subject($asunto);
-                    $message->replyTo($from);
-                    if ($containfile) {
-                        $message->attach($pathToFile);
-                    }
-                });
-            }
+        $e=Empresa::where('correo1', '=', $destinatario)->first();
+        //dd($e->toArray());
+        $clientes=Cliente::where('empresa_id', '=', $e->id)->get();
+        //dd($clientes->toArray());
+        foreach($clientes as $c){
+        //dd($c);
+        $data = array('contenido' => $contenido, 'nombre' => $c->nombre);
+        $r = \Mail::send('correos.version2.correo_individual', $data, function ($message)
+        use ($asunto, $containfile, $pathToFile, $c) {
+        $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
+        $message->to($c->mail, $c->nombre)->subject($asunto);
+        $message->replyTo($from);
+        if ($containfile) {
+        $message->attach($pathToFile);
+        }
+        });
+        }
         }*/
         //dd($r);
         //if ($r) {
@@ -242,7 +239,51 @@ class CorreosController extends Controller
         }
         return view("correos.version2.msj_correcto")->with("msj", "Correo enviado correctamente");
         /*} else {
-            return view("correos.version2.msj_rechazado")->with("msj", "Se presentÃ³ un error vuelva a intentarlo");
-        }*/
+    return view("correos.version2.msj_rechazado")->with("msj", "Se presentÃ³ un error vuelva a intentarlo");
+    }*/
+    }
+
+    public function bandeja(Request $request)
+    {
+        //dd('fil');
+        $datos = $request->all();
+        /*$oClient = new Client([
+        'host' => 'mail.grcmexico.com.mx',
+        'port' => 143,
+        'encryption' => false,
+        'validate_cert' => false,
+        'username' => 'filprb@grcmexico.com.mx',
+        'password' => 'fil2848aztec.',
+        'protocol' => 'imap',
+        ]);*/
+        $oClient = new Client([
+            'host' => 'imap.gmail.com',
+            'port' => 993,
+            'encryption' => 'ssl',
+            'validate_cert' => true,
+            'username' => 'linares82@gmail.com',
+            'password' => 'fil2848aztec',
+            //'protocol' => 'imap',
+        ]);
+        $oClient->connect();
+        $aFolder = $oClient->getFolders();
+        //dd($aFolder);
+        if (isset($datos['carpeta'])) {
+            $oFolder = $oClient->getFolder($datos['carpeta']);
+            //dd($oFolder);
+        } else {
+            foreach ($aFolder as $oFolder) {
+
+                //Get all Messages of the current Mailbox $oFolder
+                /** @var \Webklex\IMAP\Support\MessageCollection $aMessage */
+                break;
+            }
+        }
+
+        //$aMessage = $oFolder->messages()->all()->get();
+        $aMessage = $oFolder->messages()->all()->get()->paginate($perPage = 20, $page = null, $pageName = 'imap_blade_example');
+        //dd($aMessage);
+
+        return view('correos.bandeja', compact('aFolder', 'aMessage'));
     }
 }
