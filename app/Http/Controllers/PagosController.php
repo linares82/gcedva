@@ -653,8 +653,9 @@ class PagosController extends Controller
         }
         array_push($resumen, $linea);
 
-
-        //return Excel::download(new PagosExport($registros->toArray(), $plantel->toArray(), $data, $resumen), 'pagos.xlsx');
+        if ($data['excel'] == 1) {
+            return Excel::download(new PagosExport($registros->toArray(), $plantel->toArray(), $data, $resumen), 'pagos.xlsx');
+        }
 
         return view('pagos.reportes.postAlumnosBeca', array(
             'registros' => $registros,

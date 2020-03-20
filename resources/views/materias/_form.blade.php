@@ -19,6 +19,20 @@
                         <span class="help-block">{{ $errors->first("abreviatura") }}</span>
                        @endif
                     </div>
+                    <div class="form-group col-md-4 @if($errors->has('codigo')) has-error @endif">
+                     <label for="codigo-field">Codigo</label>
+                     {!! Form::text("codigo", null, array("class" => "form-control input-sm", "id" => "codigo-field")) !!}
+                     @if($errors->has("codigo"))
+                      <span class="help-block">{{ $errors->first("codigo") }}</span>
+                     @endif
+                  </div>
+                  <div class="form-group col-md-4 @if($errors->has('creditos')) has-error @endif">
+                     <label for="creditos-field">creditos</label>
+                     {!! Form::text("creditos", null, array("class" => "form-control input-sm", "id" => "creditos-field")) !!}
+                     @if($errors->has("creditos"))
+                      <span class="help-block">{{ $errors->first("creditos") }}</span>
+                     @endif
+                  </div>
                     <div class="form-group col-md-4 @if($errors->has('seriada_bnd')) has-error @endif">
                        <label for="seriada_bnd-field">Seriada</label>
                        {!! Form::checkbox("seriada_bnd", 1, null, [ "id" => "seriada_bnd-field"]) !!}

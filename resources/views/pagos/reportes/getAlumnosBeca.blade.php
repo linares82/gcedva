@@ -66,6 +66,14 @@
                     <span class="help-block">{{ $errors->first("fecha_t") }}</span>
                     @endif
                 </div>
+
+                <div class="form-group col-md-3 @if($errors->has('excel')) has-error @endif">
+                    <label for="excel-field">Excel</label>
+                    {!! Form::checkbox("excel", 1, null, [ "id" => "excel-field", 'class'=>'minimal']) !!}
+                    @if($errors->has("excel"))
+                    <span class="help-block">{{ $errors->first("excel") }}</span>
+                    @endif
+                </div>
             
                 <div class="row">
                 </div>

@@ -48,7 +48,7 @@
         <table class="table table-condensed table-striped">
             <thead>
                 <tr>
-                    <th>Especialidad</th><th>Nivel</th><th>Grado</th><th>Cliente</th><th>Estatus Cliente</th><th>Estatus Seguimiento</th><th>Becado</th><th>Justificacion</th><th>monto inscripcion</th><th>monto mensualidad</th><th></th>
+                  <th>Especialidad</th><th>Nivel</th><th>Grado</th><th>Cliente</th><th>Estatus Cliente</th><th>Estatus Seguimiento</th><th>Becado</th><th>Justificacion</th><th>Desc. Inscripcion</th><th>Desc. Mensualidad</th><th></th>
                 </tr> 
             </thead>
             <tbody>
