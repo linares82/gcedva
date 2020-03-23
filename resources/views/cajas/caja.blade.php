@@ -131,12 +131,12 @@
 
                 @if(isset($cliente))
 
-                {!! Form::open(array('route' => 'cajas.store')) !!} 
+                {!! Form::open(array('route' => 'cajas.store','id'=>'frmCrearVenta')) !!} 
                 @permission('cajas.store')
                 <div class="input-group form-group col-md-12 @if($errors->has('cliente_id')) has-error @endif">
                     
                     <div class="input-group-btn">
-                        <button type="submit" class="btn btn-warning" data-toggle="tooltip" title="Crear Venta"><i class='glyphicon glyphicon-plus-sign'></i></button>
+                        <button type="submit" class="btn btn-warning" data-toggle="tooltip" title="Crear Venta" id="btnCrearVenta"><i class='glyphicon glyphicon-plus-sign'></i></button>
                     </div>
                     
                     {!! Form::text("fecha", null, array("class" => "form-control fecha", "id" => "fecha-field", 'placeholder'=>'Fecha de Venta', 'style'=>"100%")) !!}
@@ -1002,6 +1002,11 @@ Agregar nuevo registro
     });
     @endif
 
+    $('#btnCrearVenta').click(function(){
+        //$('input.submitForm').read
+        $('#btnCrearVenta').prop('disabled', true);
+        $('#frmCrearVenta').submit();
+    });
     
 
 </script>

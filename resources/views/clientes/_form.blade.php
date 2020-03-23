@@ -345,7 +345,7 @@
                                 </thead>
                                 <tbody>
                                     @foreach($cliente->combinaciones as $c)
-                                    @if($c->especialidad_id<>0 and $c->nivel_id<>0 and $c->grado_id<>0 and $c->turno_id<>0)
+                                    @if($c->especialidad_id<>0 and $c->nivel_id<>0 and $c->grado_id<>0)
                                     <tr>
                                         <td>
                                             {!! Form::checkbox("editar_combinacion", 1, null, [ "id" => "editar_combinacion", 
@@ -367,8 +367,8 @@
                                          
                                         </td>
                                         <td>
-                                            {{$c->turno->name}}  
-                                            <a href={{ route('planPagos.show',$c->turno->plan_pago_id) }} target="_blank" class="btn btn-xs btn-warning">Ver Plan</a>
+                                            {{optional($c->turno)->name}}  
+                                            <a href={{ route('planPagos.show',optional($c->turno)->plan_pago_id) }} target="_blank" class="btn btn-xs btn-warning">Ver Plan</a>
                                         </td>
                                         <td>
                                         @if($c->bnd_inscrito==1)  
@@ -377,7 +377,7 @@
                                         </td>
                                         <td>
                                            {!! Form::select("plan_pago_id",$list2["PlanPago"],$c->plan_pago_id,array("class"=>"form-control select_seguridad plan_pago","id"=>"plan_pago_id-field","style"=>"width:75%;",'data-combinacion'=>$c->id)) !!} 
-                                           {{ $c->planPago->name }} <br>
+                                           {{ optional($c->planPago)->name }} <br>
                                             <div id='loading120' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                                             Impresiones:{{$c->cuenta_ticket_pago}}
                                             @if($c->plan_pago_id<>0)
