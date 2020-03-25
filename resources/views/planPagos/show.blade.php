@@ -120,6 +120,7 @@
                         <th>Monto</th>
                         <th>Inicial</th>
                         <th>Promocion</th>
+                        <th>R. Desc. Rec.</th>
                         <th></th>
                     </tr>
                     {{ csrf_field() }}
@@ -139,7 +140,6 @@
                                 @endif
                             </td>
                             <td>
-                                
                                 @foreach($linea->promoPlanLns as $promoPlanLn)
                                     {{$promoPlanLn->fec_inicio." / ".$promoPlanLn->fec_fin." / ".$promoPlanLn->descuento}} 
                                     <button class="edit-promo-modal btn btn-default btn-xs" data-promo_plan_pago_id="{{$promoPlanLn->id}}" 
@@ -152,6 +152,17 @@
                             </td>
                             
                             <td>
+                                <button class="reglas-modal btn btn-warning btn-xs" data-id="{{$linea->id}}" 
+                                    data-plan_pago_id="{{$linea->plan_pago_id}}" >
+                                <span class="glyphicon glyphicon-edit"></span> Reglas Descuento Recargo </button>
+                                <br>
+                                @foreach($linea->reglaRecargos as $regla)
+                                {{ $regla->name }}
+                                <br>
+                                @endforeach
+                            </td>
+
+                            <td>
                                 <button class="edit-modal btn btn-info btn-xs" data-id="{{$linea->id}}" 
                                                                                data-plan_pago_id="{{$linea->plan_pago_id}}" 
                                                                                data-caja_concepto_id="{{$linea->caja_concepto_id}}" 
@@ -161,10 +172,7 @@
                                                                                data-monto="{{$linea->monto}}"
                                                                                data-inicial_bnd="{{$linea->inicial_bnd}}">
                                 <span class="glyphicon glyphicon-edit"></span> Editar </button>
-                                <button class="reglas-modal btn btn-warning btn-xs" data-id="{{$linea->id}}" 
-                                                                               data-plan_pago_id="{{$linea->plan_pago_id}}" 
-                                                                               >
-                                <span class="glyphicon glyphicon-edit"></span> Reglas Descuento Recargo </button>
+                                
                                 
                                 <button class="promo-modal btn btn-success btn-xs" data-plan_pago_ln_id="{{$linea->id}}" >
                                 <span class="glyphicon glyphicon-star"></span> Crear Promoción </button>
@@ -899,7 +907,7 @@
         id_deleted=$(this).data('id');
     });
     $('.modal-footer').on('click', '.delete', function() {
-        var ruta='{{url("planPagoLns/destroy")}}' + '/' + id_delete;
+        var ruta='{{url("planPagoLns/destroy")}}' + '/' + id_deleted;
         $.ajax({
             type: 'GET',
             url: ruta,

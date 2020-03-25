@@ -57,6 +57,13 @@
                         <span class="help-block">{{ $errors->first("st_vinculacion_id") }}</span>
                         @endif
                     </div>
+                    <div class="form-group col-md-4 @if($errors->has('clasificacion_id')) has-error @endif">
+                        <label for="clasificacion_id-field">Clasificación</label>
+                        {!! Form::select("clasificacion_id", $list["Clasificacion"], null, array("class" => "form-control select_seguridad", "id" => "clasificacion_id-field", 'style'=>'width:100%')) !!}
+                        @if($errors->has("clasificacion_id"))
+                        <span class="help-block">{{ $errors->first("clasificacion_id") }}</span>
+                        @endif
+                    </div>
                     <div class="form-group col-md-4 @if($errors->has('csc_vinculacion')) has-error @endif">
                         <label for="csc_vinculacion-field">Consecutivo Vinculacion</label>
                         {!! Form::text("csc_vinculacion", null, array("class" => "form-control input-sm", "id" => "csc_vinculacion-field", 'disabled'=>true)) !!}
