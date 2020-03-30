@@ -21,18 +21,30 @@
     <div class="row">
         <div class="col-md-12">
 
-            {!! Form::open(array('route' => 'asignacionAcademicas.store', 'id'=>'frm_asignacion_academica')) !!}
+            {!! Form::open(array('route' => 'asignacionAcademicas.store', 'id'=>'formulario')) !!}
 
 @include('asignacionAcademicas._form')
 
                 <div class="row">
                 </div>
                 <div class="well well-sm">
-                    <button type="submit" class="btn btn-primary">Crear</button>
-                    <a class="btn btn-link pull-right" href="{{ route('asignacionAcademicas.index') }}"><i class="glyphicon glyphicon-backward"></i> Regresar</a>
+                    <button type="submit" class="btn btn-primary" id='btnEnviar'>Crear</button>
+                    <a class="btn btn-link pull-right"  href="{{ route('asignacionAcademicas.index') }}"><i class="glyphicon glyphicon-backward"></i> Regresar</a>
                 </div>
             {!! Form::close() !!}
 
         </div>
     </div>
 @endsection
+
+@push('scripts')
+
+<script>
+
+
+
+
+
+</script>
+
+@endpush

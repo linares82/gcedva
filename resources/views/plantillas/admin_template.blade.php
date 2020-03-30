@@ -156,6 +156,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
 (function() {
   $('.select_seguridad').select2({ width: '100%' });
 })();
+
+$("button[type=submit]").click(function(){
+    $(this).prop('disabled', true);
+    $(this).closest('form').submit();
+    //$('#formulario').submit();
+});
+
 </script>
 
  @stack('scripts')

@@ -21,7 +21,8 @@
     <div class="row">
         <div class="col-md-12">
 
-            {!! Form::model($planPago, array('route' => array('planPagos.store'))) !!}
+            {!! Form::model($planPago, array('route' => array('planPagos.fullDuplicate'))) !!}
+            {!! Form::hidden("id_duplicado", optional($planPago)->id, array("class" => "form-control", "id" => "id_duplicado-field")) !!}
 
 @include('planPagos._form')
 

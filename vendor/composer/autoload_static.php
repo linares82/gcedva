@@ -903,6 +903,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'AddUbicacionArtIdMovimientosTable' => __DIR__ . '/../..' . '/database/migrations/2019_10_02_131218_add_ubicacion_art_id_movimientos_table.php',
         'AddVencimientoRvoeEspecialidadsTable' => __DIR__ . '/../..' . '/database/migrations/2019_07_24_133707_add_vencimiento_rvoe_especialidads_table.php',
         'AddfieldsInscripcionTable' => __DIR__ . '/../..' . '/database/migrations/2017_12_07_134646_addfields_inscripcion_table.php',
+        'CajaConceptoReglaRecargo' => __DIR__ . '/../..' . '/database/migrations/2020_03_27_174049_caja_concepto_regla_recargo.php',
         'CreateActividadEmpresasEmpresasTable' => __DIR__ . '/../..' . '/database/migrations/2018_01_09_111135_create_actividad_empresas_empresas_table.php',
         'CreateActividadEmpresasTable' => __DIR__ . '/../..' . '/database/migrations/2018_01_09_111134_create_actividad_empresas_table.php',
         'CreateAdeudosTable' => __DIR__ . '/../..' . '/database/migrations/2018_04_10_134210_create_adeudos_table.php',

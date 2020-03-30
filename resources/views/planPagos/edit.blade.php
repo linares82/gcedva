@@ -22,7 +22,7 @@
     <div class="row">
         <div class="col-md-12">
 
-            {!! Form::model($planPago, array('route' => array('planPagos.update', $planPago->id),'method' => 'post')) !!}
+            {!! Form::model($planPago, array('route' => array('planPagos.update', $planPago->id),'method' => 'post', 'enctype' => 'multipart/form-data')) !!}
 
 @include('planPagos._form')
 

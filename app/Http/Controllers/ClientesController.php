@@ -2,53 +2,45 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
-use File;
-use JasperPHP\JasperPHP as JasperPHP;
-
-use App\AvisosInicio;
 use App\Aviso;
-use App\Cliente;
-use App\CombinacionCliente;
+use App\AvisosInicio;
 use App\Ccuestionario;
 use App\CcuestionarioDato;
+use App\Cliente;
+use App\CombinacionCliente;
 use App\ConsultaCalificacion;
 use App\Correo;
 use App\DocAlumno;
 use App\Empleado;
 use App\Especialidad;
-use App\Estado;
 use App\HistoriaCliente;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Carga;
+use App\Http\Requests\createCliente;
+use App\Http\Requests\updateCliente;
 use App\Inscripcion;
 use App\Lectivo;
 use App\Municipio;
-use App\PivotDocCliente;
-use App\Preguntum;
-use App\Param;
 use App\Paise;
-use App\PreguntaCliente;
-use App\Plantilla;
+use App\Param;
+use App\PivotDocCliente;
 use App\Plantel;
-use App\StCliente;
+use App\Plantilla;
+use App\PreguntaCliente;
+use App\Preguntum;
 use App\Seguimiento;
-use App\StSeguimiento;
 use App\Sm;
+use App\StSeguimiento;
 use App\User;
-use Illuminate\Http\Request;
 use Auth;
-use App\Http\Requests\updateCliente;
-use App\Http\Requests\createCliente;
-use App\Http\Requests\Carga;
-use Sms;
-use Session;
-use Hash;
+use Carbon\Carbon;
 use DB;
 use Excel;
-use Log;
+use File;
+use Illuminate\Http\Request;
+use Session;
+use Sms;
 use Storage;
-use PDF;
-use Carbon\Carbon;
 
 //use App\Mail\CorreoBienvenida as Envia_mail;
 
@@ -93,7 +85,6 @@ class ClientesController extends Controller
         //dd($request);
         $clientes = Seguimiento::getAllData($request, 10, session('filtro_clientes'));
         $empleado = Empleado::where('user_id', '=', Auth::user()->id)->first();
-
 
         return view('clientes.index', compact('clientes', 'users', 'empleado', 'fecha_superada'))
             ->with('list', Seguimiento::getListFromAllRelationApps())
@@ -186,11 +177,11 @@ class ClientesController extends Controller
             $e = Empleado::where('user_id', '=', Auth::user()->id)->first();
             $empleados = Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
                 ->where('plantel_id', '=', $e->plantel_id)
-                //->where('puesto_id', '=', 2)
+            //->where('puesto_id', '=', 2)
                 ->pluck('name', 'id');
         } else {
             $empleados = Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
-                //->where('puesto_id', '=', 2)
+            //->where('puesto_id', '=', 2)
                 ->pluck('name', 'id');
         }
         $empleados = $empleados->reverse();
@@ -222,6 +213,7 @@ class ClientesController extends Controller
         //$input['nivel_id'] = 0;
         //$input['grado_id'] = 0;
         //$input['turno_id'] = 0;
+        //$input['st_cliente_id']=1;
         $input['especialidad2_id'] = 0;
         $input['diplomado_id'] = 0;
         $input['subdiplomado_id'] = 0;
@@ -367,7 +359,7 @@ class ClientesController extends Controller
         $doc_existentes = DB::table('pivot_doc_clientes as pde')->select('doc_alumno_id')
             ->join('clientes as c', 'c.id', '=', 'pde.cliente_id')
             ->where('c.id', '=', $id)
-            ->where('pde.deleted_at', '=', NULL)->get();
+            ->where('pde.deleted_at', '=', null)->get();
 
         $de_array = array();
         if ($doc_existentes->isNotEmpty()) {
@@ -440,11 +432,10 @@ class ClientesController extends Controller
         }
         //} while (count($clis) > 0);
 
-
         /*->update(['clientes.empleado_id' => $input['empleado_id2'],
-                          'clientes.updated_at'=>Carbon::now(),
-                          's.updated_at'=>Carbon::now()]);
-        */
+        'clientes.updated_at'=>Carbon::now(),
+        's.updated_at'=>Carbon::now()]);
+         */
         return redirect()->route('clientes.index');
     }
 
@@ -476,17 +467,16 @@ class ClientesController extends Controller
         //dd("fil");
         //$input = $request->all();
 
-
         $input = $request->except([
             '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15',
             '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28',
-            '29', '30', '31', '32', '33', '34', '35', '36', '37', '38', '39', '40'
+            '29', '30', '31', '32', '33', '34', '35', '36', '37', '38', '39', '40',
         ]);
         //dd($input);
         $preguntas = $request->only([
             '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15',
             '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28',
-            '29', '30', '31', '32', '33', '34', '35', '36', '37', '38', '39', '40'
+            '29', '30', '31', '32', '33', '34', '35', '36', '37', '38', '39', '40',
         ]);
         //dd($preguntas);
         $input['usu_mod_id'] = Auth::user()->id;
@@ -503,11 +493,11 @@ class ClientesController extends Controller
         //$empleado=Empleado::find($request->input('empleado_id'));
         //$input['plantel_id']=$empleado->plantel->id;
         /*
-          $pc['cliente_id'] = $id;
-          $pc['pregunta_id'] = $input['pregunta_id'];
-          $pc['respuesta'] = $input['respuesta'];
-          $pc['usu_alta_id'] = Auth::user()->id;
-          $pc['usu_mod_id'] = Auth::user()->id;
+        $pc['cliente_id'] = $id;
+        $pc['pregunta_id'] = $input['pregunta_id'];
+        $pc['respuesta'] = $input['respuesta'];
+        $pc['usu_alta_id'] = Auth::user()->id;
+        $pc['usu_mod_id'] = Auth::user()->id;
          */
         //dd($pc);
         unset($input['pregunta_id']);
@@ -567,7 +557,7 @@ class ClientesController extends Controller
         }
 
         foreach ($preguntas as $llave => $valor) {
-            if ($llave <> '_token' and !is_null($valor)) {
+            if ($llave != '_token' and !is_null($valor)) {
                 //dd($preguntas);
                 $dato = CcuestionarioDato::where('cliente_id', '=', $id)
                     ->where('ccuestionario_id', '=', $input['ccuestionario_id'])
@@ -600,7 +590,7 @@ class ClientesController extends Controller
         $cantidad_respuestas = CcuestionarioDato::where('cliente_id', '=', $id)
             ->where('ccuestionario_id', '=', $input['ccuestionario_id'])
             ->count();
-        if ($cantidad_preguntas <> $cantidad_respuestas) {
+        if ($cantidad_preguntas != $cantidad_respuestas) {
             return redirect()->route('clientes.edit', $id)->with('message', 'Cuestionario incompleto.');
         }
 
@@ -760,7 +750,7 @@ class ClientesController extends Controller
             try {
                 $pais = Paise::find($request->input('pais_id'));
                 //dd($pais);
-                if ($pais->marcado <> "") {
+                if ($pais->marcado != "") {
                     $r = Param::where('llave', '=', 'sms')->first();
                     $no = Param::where('llave', '=', 'num_twilio')->first();
 
@@ -819,47 +809,46 @@ class ClientesController extends Controller
     }
 
     /* public function enviaMail(Request $request){
-      //dd($_REQUEST);
-      if($request->ajax()){
-      try{
-      $r=Param::where('llave','=', 'correo_electronico')->first();
-      if($r->valor=='activo'){
-      //dd($r->id);
-      //$data=$r->toArray();
-      //dd($data);
-      \Mail::send('emails.2', array(), function($message) use ($request)
-      {
-      $message->to(e($request->mail), e($request->nombre)." ".e($request->ape_paterno)." ".e($request->ape_materno));
-      $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
-      $message->subject("Bienvenido");
-      });
+    //dd($_REQUEST);
+    if($request->ajax()){
+    try{
+    $r=Param::where('llave','=', 'correo_electronico')->first();
+    if($r->valor=='activo'){
+    //dd($r->id);
+    //$data=$r->toArray();
+    //dd($data);
+    \Mail::send('emails.2', array(), function($message) use ($request)
+    {
+    $message->to(e($request->mail), e($request->nombre)." ".e($request->ape_paterno)." ".e($request->ape_materno));
+    $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
+    $message->subject("Bienvenido");
+    });
 
-      $cli=Cliente::find(e($request->id));
+    $cli=Cliente::find(e($request->id));
 
-      $nombre=e($request->nombre)." ".e($request->ape_paterno)." ".e($request->ape_materno);
-      $mail=e($request->mail);
-      $m=\Mail::to($mail, $nombre);
-      $m->queue(new Envia_mail($cli));
+    $nombre=e($request->nombre)." ".e($request->ape_paterno)." ".e($request->ape_materno);
+    $mail=e($request->mail);
+    $m=\Mail::to($mail, $nombre);
+    $m->queue(new Envia_mail($cli));
 
-      $input2['usu_envio_id']=Auth::user()->id;
-      $input2['cliente_id']=e($request->input('id'));
-      $input2['fecha_envio']=date("Y/m/d");
-      $input2['cantidad']=1;
-      $input2['usu_alta_id']=Auth::user()->id;
-      $input2['usu_mod_id']=Auth::user()->id;
-      //dd("f");
-      Correo::create($input2);
-      }
+    $input2['usu_envio_id']=Auth::user()->id;
+    $input2['cliente_id']=e($request->input('id'));
+    $input2['fecha_envio']=date("Y/m/d");
+    $input2['cantidad']=1;
+    $input2['usu_alta_id']=Auth::user()->id;
+    $input2['usu_mod_id']=Auth::user()->id;
+    //dd("f");
+    Correo::create($input2);
+    }
 
-      return true;
-      }catch(\Exception $e){
-      dd($e);
-      //return false;
-      }
+    return true;
+    }catch(\Exception $e){
+    dd($e);
+    //return false;
+    }
 
-
-      }
-      } */
+    }
+    } */
 
     public function enviaMail(Request $request)
     {
@@ -959,19 +948,19 @@ class ClientesController extends Controller
                 ->where('i.id', '>', '0')
                 ->get();
             //dd($r);
-            if (isset($cliente) and $cliente <> 0) {
+            if (isset($cliente) and $cliente != 0) {
                 foreach ($r as $r1) {
                     if ($r1->id == $cliente) {
                         array_push($final, array(
                             'id' => $r1->id,
                             'name' => $r1->name,
-                            'selectec' => 'Selected'
+                            'selectec' => 'Selected',
                         ));
                     } else {
                         array_push($final, array(
                             'id' => $r1->id,
                             'name' => $r1->name,
-                            'selectec' => ''
+                            'selectec' => '',
                         ));
                     }
                 }
@@ -1003,21 +992,21 @@ class ClientesController extends Controller
         $clientes = Cliente::select('clientes.fec_registro as FechaRegistro', 'clientes.nombre as PrimerNombre', 'clientes.nombre2 as SegundoNombre', 'clientes.ape_paterno as ApellidoPaterno', 'clientes.ape_materno as ApellidoMaterno', 'clientes.tel_fijo as Telefono', 'clientes.tel_cel as Celular', 'clientes.mail as Email', 'clientes.escuela_procedencia as EscuelaProcedencia', 'm.name as medio as Medio', DB::raw('concat(e.nombre, " ",e.ape_paterno, " ",e.ape_materno) as Asesor'))
             ->join('medios as m', 'm.id', '=', 'clientes.medio_id')
             ->join('empleados as e', 'e.id', '=', 'clientes.empleado_id')
-            //->limit(20)
+        //->limit(20)
             ->get();
         //dd($clientes);
         /* $clientes_array=array();
-          $encabezados=array('Fecha', 'P. Nombre', 'S. Nombre', 'A. Paterno', 'A. Materno', 'TelÃ©fono',
-          'Celular', 'Mail', 'Escuela Procedencia', 'Medio');
-          array_push($clientes_array, $encabezados);
-          //dd($clientes_array);
+        $encabezados=array('Fecha', 'P. Nombre', 'S. Nombre', 'A. Paterno', 'A. Materno', 'TelÃ©fono',
+        'Celular', 'Mail', 'Escuela Procedencia', 'Medio');
+        array_push($clientes_array, $encabezados);
+        //dd($clientes_array);
 
-          foreach($clientes as $c){
-          //$clientes_array=$c->toArray();
-          array_push($clientes_array, $c);
-          }
-          dd($clientes_array);
-         * 
+        foreach($clientes as $c){
+        //$clientes_array=$c->toArray();
+        array_push($clientes_array, $c);
+        }
+        dd($clientes_array);
+         *
          */
         //dd("excel inicia");
         Excel::create('Clientes', function ($excel) use ($clientes) {
@@ -1050,13 +1039,13 @@ class ClientesController extends Controller
                 ->join('plantels as p', 'p.id', '=', 'clientes.plantel_id')
                 ->join('st_seguimientos as st', 'st.id', '=', 's.st_seguimiento_id')
                 ->where('clientes.plantel_id', '=', $filtros['plantel_f'])
-                //->where('clientes.plantel_id','<=', $filtros['plantel_t'])
+            //->where('clientes.plantel_id','<=', $filtros['plantel_t'])
                 ->where('clientes.created_at', '>=', $filtros['fecha_f'])
                 ->where('clientes.created_at', '<=', $filtros['fecha_t'])
                 ->where('clientes.municipio_id', '>', 0)
                 ->get();
             return view('clientes.reportes.ccxep_r')
-                ->with('datos_grafica', json_encode($clientes->toArray()));;
+                ->with('datos_grafica', json_encode($clientes->toArray()));
         } elseif ($filtros['tipo'] == 2) {
             $plantel = Plantel::find($filtros['plantel_f']);
             $p = $plantel->razon;
@@ -1091,8 +1080,8 @@ class ClientesController extends Controller
                         ->where('clientes.created_at', '<=', $filtros['fecha_t'])
                         ->where('s.st_seguimiento_id', '=', $s->id)
                         ->where('clientes.municipio_id', '=', $m->id)
-                        //->groupBy('s.created_at')
-                        //->groupBy('s.mes')
+                    //->groupBy('s.created_at')
+                    //->groupBy('s.mes')
                         ->value('total');
                     array_push($ln, $clientes);
                 }
@@ -1193,10 +1182,10 @@ class ClientesController extends Controller
         //dd($resultado);
         return view('clientes.reportes.cuentaEstatusClientes', compact('resultado'));
         /*PDF::setOptions(['defaultFont' => 'arial']);
-        $pdf = PDF::loadView('clientes.reportes.cuentaEstatusClientes', array('resultado' => $resultado))
-                ->setPaper('letter', 'portrait');
-        return $pdf->download('reporte.pdf');
-        */
+    $pdf = PDF::loadView('clientes.reportes.cuentaEstatusClientes', array('resultado' => $resultado))
+    ->setPaper('letter', 'portrait');
+    return $pdf->download('reporte.pdf');
+     */
     }
 
     public function reportesEppa()
@@ -1258,10 +1247,10 @@ class ClientesController extends Controller
                             ->join('combinacion_clientes as cc', 'cc.cliente_id', '=', 'c.id')
                             ->join('especialidads as esp', 'esp.id', '=', 'cc.especialidad_id')
                             ->where('esp.lectivo_id', '=', $lSt2->id)
-                            //->where('seguimientos.created_at', '>=', $l->inicio)
-                            //->where('seguimientos.created_at', '<=', $l->fin)
+                        //->where('seguimientos.created_at', '>=', $l->inicio)
+                        //->where('seguimientos.created_at', '<=', $l->fin)
                             ->where('c.empleado_id', '=', $e->id)
-                            //->where('c.plantel_id', '=', $e->plantel_id)
+                        //->where('c.plantel_id', '=', $e->plantel_id)
                             ->where('h.fecha', '>=', $lSt2->inicio)
                             ->where('h.fecha', '<=', $lSt2->fin)
                             ->where('h.detalle', '=', 'Concretado')
@@ -1274,54 +1263,53 @@ class ClientesController extends Controller
                             $i++;
                         }
 
-
                         /*
-                        array_push($a_2, array($a, $lSt2->name));
-                        $avance[$i]=0;
-                        if($a>0){
-                            $avance[$i]=(($a*100)/$e->plantel->meta_total);
-                        }
-                        $i++;*/
+                    array_push($a_2, array($a, $lSt2->name));
+                    $avance[$i]=0;
+                    if($a>0){
+                    $avance[$i]=(($a*100)/$e->plantel->meta_total);
+                    }
+                    $i++;*/
                     }
                     /*$lectivosSt2=Lectivo::where('grafica_bnd','=','1')->get();
-                   $valor=Seguimiento::select(DB::raw('count(st.name) as total'))
-                            ->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
-                            ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
-                            ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
-                            ->join('combinacion_clientes as cc', 'cc.cliente_id','=','c.id')
-                            ->join('especialidads as esp', 'esp.id','=','cc.especialidad_id')
-                            ->join('hactividades as h', 'h.cliente_id','=','c.id')
-                            ->where('esp.lectivo_id', '=', $lSt2->id)
-                            ->where('st_seguimiento_id', '=', $st->id)
-                            ->where('e.id', '=', $e->id)
-                            ->where('c.plantel_id', '=', $filtros['plantel_f'])
-                            ->where('h.fecha', '>=', $filtros['fecha_f'])
-                            ->where('h.fecha', '<=', $filtros['fecha_t'])
-                            ->where('h.asunto','=','Cambio estatus ')
-                            ->where('h.detalle', '=','Concretado')
-                            //->where('seguimientos.created_at', '>=', $l->inicio)
-                            //->where('seguimientos.created_at', '<=', $l->fin)
-                            ->value('total');
-                    * 
-                    */
+                $valor=Seguimiento::select(DB::raw('count(st.name) as total'))
+                ->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
+                ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
+                ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
+                ->join('combinacion_clientes as cc', 'cc.cliente_id','=','c.id')
+                ->join('especialidads as esp', 'esp.id','=','cc.especialidad_id')
+                ->join('hactividades as h', 'h.cliente_id','=','c.id')
+                ->where('esp.lectivo_id', '=', $lSt2->id)
+                ->where('st_seguimiento_id', '=', $st->id)
+                ->where('e.id', '=', $e->id)
+                ->where('c.plantel_id', '=', $filtros['plantel_f'])
+                ->where('h.fecha', '>=', $filtros['fecha_f'])
+                ->where('h.fecha', '<=', $filtros['fecha_t'])
+                ->where('h.asunto','=','Cambio estatus ')
+                ->where('h.detalle', '=','Concretado')
+                //->where('seguimientos.created_at', '>=', $l->inicio)
+                //->where('seguimientos.created_at', '<=', $l->fin)
+                ->value('total');
+                 *
+                 */
                 } elseif ($st->id > 0) {
 
                     $valor = Seguimiento::where('st_seguimiento_id', '=', $st->id)
                         ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
-                        //->where('mes', '=', $mes)
+                    //->where('mes', '=', $mes)
                         ->where('c.empleado_id', '=', $e->id)
-                        //->where('c.plantel_id', '=', $e->plantel_id)
+                    //->where('c.plantel_id', '=', $e->plantel_id)
                         ->count();
                     /*Seguimiento::select(DB::raw('count(st.name) as total'))
-                            ->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
-                            ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
-                            ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
-                            ->where('st_seguimiento_id', '<>', $st->id)
-                            ->where('e.id', '=', $e->id)
-                            ->where('c.plantel_id', '=', $filtros['plantel_f'])
-                            ->value('total');
-                            * 
-                            */
+                    ->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
+                    ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
+                    ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
+                    ->where('st_seguimiento_id', '<>', $st->id)
+                    ->where('e.id', '=', $e->id)
+                    ->where('c.plantel_id', '=', $filtros['plantel_f'])
+                    ->value('total');
+                     *
+                     */
                     $linea[$i] = $valor;
                 }
             }
@@ -1377,7 +1365,7 @@ class ClientesController extends Controller
             'tel_cel' => 'CELULAR',
             'celular_confirmado' => 'CELULAR CONFIRMADO',
             'mail' => 'MAIL',
-            'correo_confirmado' => 'CORREO CONFIRMADO'
+            'correo_confirmado' => 'CORREO CONFIRMADO',
         ])->download();
     }
 
@@ -1477,32 +1465,32 @@ class ClientesController extends Controller
 
         /* PDF::setOptions(['defaultFont' => 'arial']);
         $pdf = PDF::loadView('clientes.reportes.credencial_anverso', array('cliente' => $cliente,
-                                                                                                           'inscripcion'=>$inscripcion,
-                                                                                                           'img'=>$img))
-            ->setPaper('letter', 'portrait');
+        'inscripcion'=>$inscripcion,
+        'img'=>$img))
+        ->setPaper('letter', 'portrait');
         return $pdf->download('reporte.pdf');
-        */
+         */
         /*
-            // Crear el objeto JasperPHP
-            $jasper = new JasperPHP;
+    // Crear el objeto JasperPHP
+    $jasper = new JasperPHP;
 
-            // Generar el Reporte
-            $jasper->process(
-                // Ruta y nombre de archivo de entrada del reporte
-                base_path() . '/vendor/cossou/jasperphp/examples/credencial.jasper',
-                false, // Ruta y nombre de archivo de salida del reporte (sin extensiÃ³n)
-                array('pdf'), // Formatos de salida del reporte
-                array('cliente' => $cliente->id,
-                'inscripcion' => $inscripcion->id,
-                'imagen' => base_path() . '/vendor/cossou/jasperphp/examples/'. $cadena_img[count($cadena_img) - 1]), // ParÃ¡metros del reporte
-                array(
-                'driver' => 'mysql',
-                'username' => 'root',
-                'host' => 'localhost',
-                'database' => 'crmscool_jesadi',
-                'port' => '3306')
-            )->execute();
-        */
+    // Generar el Reporte
+    $jasper->process(
+    // Ruta y nombre de archivo de entrada del reporte
+    base_path() . '/vendor/cossou/jasperphp/examples/credencial.jasper',
+    false, // Ruta y nombre de archivo de salida del reporte (sin extensiÃ³n)
+    array('pdf'), // Formatos de salida del reporte
+    array('cliente' => $cliente->id,
+    'inscripcion' => $inscripcion->id,
+    'imagen' => base_path() . '/vendor/cossou/jasperphp/examples/'. $cadena_img[count($cadena_img) - 1]), // ParÃ¡metros del reporte
+    array(
+    'driver' => 'mysql',
+    'username' => 'root',
+    'host' => 'localhost',
+    'database' => 'crmscool_jesadi',
+    'port' => '3306')
+    )->execute();
+     */
     }
 
     public function credencialReverso(Request $request)
@@ -1518,7 +1506,7 @@ class ClientesController extends Controller
     {
 
         return view('clientes.reportes.clientesEstatus')
-            ->with('list', Cliente::getListFromAllRelationApps());;
+            ->with('list', Cliente::getListFromAllRelationApps());
     }
 
     public function clientesEstatusR(Request $request)
@@ -1527,7 +1515,7 @@ class ClientesController extends Controller
 
         //        $clientes=Cliente::select('clientes.id as cliente','clientes.nombre','clientes.nombre2','clientes.ape_paterno','clientes.ape_materno',
         //                                  'p.razon','stc.name as estatus')
-        //                        ->join('plantes as p','p.id','=','clientes.plantel_id')          
+        //                        ->join('plantes as p','p.id','=','clientes.plantel_id')
         //                        ->join('st_clientes as stc','stc.id','=','clientes.st_cliente_id')
         //                        ->where('stc.id','>=',$datos['estatus_f'])
         //                        ->where('stc.id','<=',$datos['estatus_t'])
@@ -1558,9 +1546,9 @@ class ClientesController extends Controller
 
         return view('clientes.reportes.clientesEstatusR', array(
             'registros' => $historia_clientes,
-            'datos' => $datos
+            'datos' => $datos,
         ))
-            ->with('list', Cliente::getListFromAllRelationApps());;
+            ->with('list', Cliente::getListFromAllRelationApps());
     }
 
     public function listaDocumentos()
@@ -1606,7 +1594,7 @@ class ClientesController extends Controller
                             'cliente' => $cliente->id,
                             'nombre' => $cliente->nombre . ' ' . $cliente->nombre2 . ' ' . $cliente->ape_paterno . ' ' . $cliente->ape_materno,
                             'documento' => $do->name,
-                            'estatus' => $cliente->estatus
+                            'estatus' => $cliente->estatus,
                         ));
                     }
                 }
@@ -1668,7 +1656,6 @@ class ClientesController extends Controller
             }
             array_push($documentos_faltantes, $registro);
         }
-
 
         return view('clientes.reportes.matrizDocumentosR', compact('documentos_faltantes', 'documentos_obligatorios'));
     }

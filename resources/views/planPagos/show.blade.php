@@ -349,7 +349,7 @@
                         </div> 
                     </form>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary edit" id="Reglas" data-dismiss="modal">
+                        <button type="button" class="btn btn-primary edit closeReglas" data-dismiss="modal">
                             <span class='glyphicon glyphicon-check'></span> Editar
                         </button>
                         <button type="button" class="btn btn-warning" data-dismiss="modal">
@@ -617,35 +617,36 @@
                     bnd=(data.inicial_bnd==1)?"SI":"NO";
                     
                     $('#postTable').append("<tr class='item" + data.id +"'><td>" + data.caja_concepto + 
-                                               "</td><td>" + data.cuenta_contable + 
-                                               "</td><td>" + data.cuenta_recargo + 
-                                               "</td><td>" + data.fecha_pago + 
-                                               "</td><td>" + data.monto + 
-                                               "</td><td>" + bnd + 
-                                               "</td><td><button class='edit-modal btn btn-info btn-xs' data-id='" + data.id + 
-                                                                                       "' data-plan_pago_id='" + data.plan_pago_id + 
-                                                                                       "' data-caja_concepto_id='" + data.caja_concepto_id +
-                                                                                       "' data-cuenta_contable_id='" + data.cuenta_contable_id +
-                                                                                       "' data-cuenta_recargo_id='" + data.cuenta_recargo_id +
-                                                                                       "' data-fecha_pago='" + data.fecha_pago +
-                                                                                       "' data-monto='" + data.monto +
-                                                                                       "' data-inicial_bnd='" + data.inicial_bnd +
-                                                "'><span class='glyphicon glyphicon-edit'></span> Editar</button><button class='reglas-modal btn btn-warning btn-xs' data-id='" + data.id + 
-                                                                                       "' data-plan_pago_id='" + data.plan_pago_id + 
-                                               "'><span class='glyphicon glyphicon-edit'></span> Reglas Descuento Recargo</button> <button class='delete-modal btn btn-danger btn-xs' data-id='" + data.id + 
-                                                                                       "' data-plan_pago_id='" + data.plan_pago_id + 
-                                                                                       "' data-caja_concepto_id='" + data.caja_concepto_id +
-                                                                                       "' data-cuenta_contable_id='" + data.cuenta_contable_id +
-                                                                                       "' data-cuenta_recargo_id='" + data.cuenta_recargo_id +
-                                                                                       "' data-fecha_pago='" + data.fecha_pago +
-                                                                                       "' data-monto='" + data.monto +
-                                                                                       "' data-inicial_bnd='" + data.inicial_bnd +
-                                               "'><span class='glyphicon glyphicon-trash'></span> Borrar </button></td></tr>");
+                        "</td><td>" + data.cuenta_contable + 
+                        "</td><td>" + data.cuenta_recargo + 
+                        "</td><td>" + data.fecha_pago + 
+                        "</td><td>" + data.monto + 
+                        "</td><td>" + bnd + 
+                        "</td><td><button class='edit-modal btn btn-info btn-xs' data-id='" + data.id + 
+                                                                "' data-plan_pago_id='" + data.plan_pago_id + 
+                                                                "' data-caja_concepto_id='" + data.caja_concepto_id +
+                                                                "' data-cuenta_contable_id='" + data.cuenta_contable_id +
+                                                                "' data-cuenta_recargo_id='" + data.cuenta_recargo_id +
+                                                                "' data-fecha_pago='" + data.fecha_pago +
+                                                                "' data-monto='" + data.monto +
+                                                                "' data-inicial_bnd='" + data.inicial_bnd +
+                        "'><span class='glyphicon glyphicon-edit'></span> Editar</button><button class='reglas-modal btn btn-warning btn-xs' data-id='" + data.id + 
+                                                                "' data-plan_pago_id='" + data.plan_pago_id + 
+                        "'><span class='glyphicon glyphicon-edit'></span> Reglas Descuento Recargo</button> <button class='delete-modal btn btn-danger btn-xs' data-id='" + data.id + 
+                                                                "' data-plan_pago_id='" + data.plan_pago_id + 
+                                                                "' data-caja_concepto_id='" + data.caja_concepto_id +
+                                                                "' data-cuenta_contable_id='" + data.cuenta_contable_id +
+                                                                "' data-cuenta_recargo_id='" + data.cuenta_recargo_id +
+                                                                "' data-fecha_pago='" + data.fecha_pago +
+                                                                "' data-monto='" + data.monto +
+                                                                "' data-inicial_bnd='" + data.inicial_bnd +
+                        "'><span class='glyphicon glyphicon-trash'></span> Borrar </button></td></tr>");
                 }
             },
         });
     });
     // Edit a post
+    id_editar=0;
     $(document).on('click', '.edit-modal', function() {
         $('.modal-title').text('Editar');
         $('#plan_pago_id-editar').val($(this).data('plan_pago_id'));
@@ -662,13 +663,13 @@
         }
         
         $('#editModal').modal('show');
-        id=$(this).data('id');
+        id_editar=$(this).data('id');
         //alert(id);
     });
     
     
-     $('.modal-footer').on('click', '.edit', '#Editar', function() {
-        var ruta='{{url("planPagoLns/update")}}' + '/' + id;
+     $('.modal-footer').on('click', '#Editar', function() {
+        var ruta='{{url("planPagoLns/update")}}' + '/' + id_editar;
         //alert(ruta);
         if( $('#inicial_bnd-editar').prop('checked') ) {
             bnd=1;
@@ -811,6 +812,11 @@
         $('#reglasModal').modal('show');
         
         //alert(id);
+    });
+
+    $('.modal-footer').on('click', '.closeReglas', function() {
+        //alert('fil');
+        location.reload();
     });
     
     // Crear una Promocion

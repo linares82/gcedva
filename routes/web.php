@@ -4660,6 +4660,11 @@ Route::get('/planPagos/duplicate/{id}', array(
     'middleware' => 'permission:planPagos.duplicate',
     'uses' => 'PlanPagosController@duplicate')
 )->middleware('auth');
+Route::post('/planPagos/fullDuplicate', array(
+    'as' => 'planPagos.fullDuplicate',
+    'middleware' => 'permission:planPagos.duplicate',
+    'uses' => 'PlanPagosController@fullDuplicate')
+)->middleware('auth');
 Route::get('/planPagos/getPlanPago', array(
     'as' => 'planPagos.getPlanPago',
     //'middleware' => 'permission:planPagos.duplicate',

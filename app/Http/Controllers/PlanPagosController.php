@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests;
+use App\CajaConcepto;
 use App\Http\Controllers\Controller;
-
+use App\Http\Requests\createPlanPago;
+use App\Http\Requests\updatePlanPago;
 use App\PlanPago;
 use App\PlanPagoLn;
+use App\PromoPlanLn;
 use App\ReglaRecargo;
-use Illuminate\Http\Request;
-use Auth;
-use App\Http\Requests\updatePlanPago;
-use App\Http\Requests\createPlanPago;
 use App\Turno;
+use Auth;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class PlanPagosController extends Controller
 {
@@ -92,7 +92,8 @@ class PlanPagosController extends Controller
     {
         $planPago = $planPago->find($id);
         return view('planPagos.edit', compact('planPago'))
-            ->with('list', PlanPago::getListFromAllRelationApps());
+            ->with('list', PlanPago::getListFromAllRelationApps())
+            ->with('list2', PlanPagoLn::getListFromAllRelationApps());
     }
 
     /**
@@ -108,6 +109,57 @@ class PlanPagosController extends Controller
             ->with('list', PlanPago::getListFromAllRelationApps());
     }
 
+    public function fullDuplicate(Request $request)
+    {
+        $input = $request->except('id_duplicado');
+        $id_duplicado = $request->only('id_duplicado');
+        $input['usu_alta_id'] = Auth::user()->id;
+        $input['usu_mod_id'] = Auth::user()->id;
+
+        if (isset($input['activo'])) {
+            $input['activo'] = 1;
+        } else {
+            $input['activo'] = 0;
+        }
+
+        //create data
+        $plan_nuevo = PlanPago::create($input);
+        $plan_base = PlanPago::find($id_duplicado);
+        //dd($plan_base);
+        $plan_base_lineas = PlanPagoLn::where('plan_pago_id', $id_duplicado)->get();
+        //dd($plan_base_lineas->toArray());
+        foreach ($plan_base_lineas as $linea) {
+            $input_ln['plan_pago_id'] = $plan_nuevo->id;
+            $input_ln['caja_concepto_id'] = $linea->caja_concepto_id;
+            $input_ln['cuenta_contable_id'] = $linea->cuenta_contable_id;
+            $input_ln['cuenta_recargo_id'] = $linea->cuenta_recargo_id;
+            $input_ln['fecha_pago'] = $linea->fecha_pago;
+            $input_ln['monto'] = $linea->monto;
+            $input_ln['inicial_bnd'] = $linea->inicial_bnd;
+            $input_ln['usu_alta_id'] = Auth::user()->id;
+            $input_ln['usu_mod_id'] = Auth::user()->id;
+            $ln = PlanPagoLn::create($input_ln);
+            foreach ($linea->reglaRecargos as $regla) {
+                /*$input_regla_nueva['plan_pago_ln_id'] = $ln->id;
+                $input_regla_nueva['regla_recargo_id'] = $regla->id;
+                $regla_nueva = PlanPagoLnReglaRecargo::create($input_regla_nueva);
+                 */
+                $ln->reglaRecargos()->attach($regla->id);
+            }
+            foreach ($linea->promoPlanLns as $promo) {
+                $input_promocion['plan_pago_ln_id'] = $ln->id;
+                $input_promocion['fec_inicio'] = $promo->fec_inicio;
+                $input_promocion['fec_fin'] = $promo->fec_fin;
+                $input_promocion['descuento'] = $promo->descuento;
+                $input_promocion['usu_alta_id'] = Auth::user()->id;
+                $input_promocion['usu_mod_id'] = Auth::user()->id;
+                $promocion = PromoPlanLn::create($input_promocion);
+            }
+        }
+
+        return redirect()->route('planPagos.show', $plan_nuevo->id)->with('message', 'Registro Creado.');
+    }
+
     /**
      * Update the specified resource in storage.
      *
@@ -117,10 +169,12 @@ class PlanPagosController extends Controller
      */
     public function update($id, PlanPago $planPago, updatePlanPago $request)
     {
+        //dd($request->all());
         $input = $request->only('name', 'activo');
         $input['usu_mod_id'] = Auth::user()->id;
-        $generar_pagos = $request->except('name', 'activo');
-
+        $generar_pagos = $request->only('inscripcion', 'uniforme', 'tramites', 'mensualidad', 'cuantas_mensualidad', 'fecha_pago', 'seguro');
+        $lineas = $request->except('name', 'activo', 'inscripcion', 'uniforme', 'tramites', 'mensualidad', 'cuantas_mensualidad', 'fecha_pago', 'seguro');
+        //dd($lineas);
         if (isset($input['activo'])) {
             $input['activo'] = 1;
         } else {
@@ -132,13 +186,13 @@ class PlanPagosController extends Controller
         $planPago->update($input);
         //dd($request->all());
         if (
-            isset($generar_pagos['inscripcion']) and $generar_pagos['inscripcion'] <> null and
-            isset($generar_pagos['uniforme']) and $generar_pagos['uniforme'] <> null and
-            isset($generar_pagos['tramites']) and $generar_pagos['tramites'] <> null and
-            isset($generar_pagos['mensualidad']) and $generar_pagos['mensualidad'] <> null and
-            isset($generar_pagos['cuantas_mensualidad']) and $generar_pagos['cuantas_mensualidad'] <> null and
-            isset($generar_pagos['fecha_pago']) and $generar_pagos['fecha_pago'] <> null and
-            isset($generar_pagos['seguro']) and $generar_pagos['seguro'] <> null
+            isset($generar_pagos['inscripcion']) and $generar_pagos['inscripcion'] != null and
+            isset($generar_pagos['uniforme']) and $generar_pagos['uniforme'] != null and
+            isset($generar_pagos['tramites']) and $generar_pagos['tramites'] != null and
+            isset($generar_pagos['mensualidad']) and $generar_pagos['mensualidad'] != null and
+            isset($generar_pagos['cuantas_mensualidad']) and $generar_pagos['cuantas_mensualidad'] != null and
+            isset($generar_pagos['fecha_pago']) and $generar_pagos['fecha_pago'] != null and
+            isset($generar_pagos['seguro']) and $generar_pagos['seguro'] != null
         ) {
 
             $inscripcion = new PlanPagoLn;
@@ -152,7 +206,6 @@ class PlanPagosController extends Controller
             $inscripcion->usu_alta_id = Auth::user()->id;
             $inscripcion->usu_mod_id = Auth::user()->id;
             $inscripcion->save();
-
 
             //for($i=1;$i<=$generar_pagos['cuantas_seguro'];$i++){
             $seguro = new PlanPagoLn;
@@ -278,7 +331,6 @@ class PlanPagosController extends Controller
                 $fecha_pago->addMonth();
             }
 
-
             $tramites = new PlanPagoLn;
             $tramites->plan_pago_id = $planPago->id;
             $tramites->caja_concepto_id = 17;
@@ -290,9 +342,35 @@ class PlanPagosController extends Controller
             $tramites->usu_alta_id = Auth::user()->id;
             $tramites->usu_mod_id = Auth::user()->id;
             $tramites->save();
+        } else {
+            //dd($lineas);
+            for ($i = 0; $i < count($lineas['plan_pago_id']); $i++) {
+                if ($lineas['plan_pago_id'][$i] > 0 and
+                    $lineas['caja_concepto_id'][$i] > 0 and
+                    $lineas['cuenta_contable_id'][$i] and
+                    $lineas['cuenta_recargo_id'][$i] and
+                    $lineas['fecha_p'][$i] != 0 and
+                    $lineas['monto'][$i] > 0) {
+                    $ln_input['plan_pago_id'] = $lineas['plan_pago_id'][$i];
+                    $ln_input['caja_concepto_id'] = $lineas['caja_concepto_id'][$i];
+                    $ln_input['cuenta_contable_id'] = $lineas['cuenta_contable_id'][$i];
+                    $ln_input['cuenta_recargo_id'] = $lineas['cuenta_recargo_id'][$i];
+                    $ln_input['fecha_pago'] = $lineas['fecha_p'][$i];
+                    $ln_input['monto'] = $lineas['monto'][$i];
+                    $ln_input['inicial_bnd'] = 0;
+                    $ln_input['usu_alta_id'] = Auth::user()->id;
+                    $ln_input['usu_mod_id'] = Auth::user()->id;
+                    $linea = PlanPagoLn::create($ln_input);
+                    $concepto = CajaConcepto::find($ln_input['caja_concepto_id']);
+                    foreach ($concepto->reglas as $regla) {
+                        $linea->reglaRecargos()->attach($regla->id);
+                    }
+                }
+            }
+
         }
 
-        return redirect()->route('planPagos.index')->with('message', 'Registro Actualizado.');
+        return redirect()->route('planPagos.show', $planPago->id)->with('message', 'Registro Actualizado.');
     }
 
     /**

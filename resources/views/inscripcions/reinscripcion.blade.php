@@ -33,14 +33,14 @@
                 <div class="box-body">
                         <div class="form-group col-md-4 @if($errors->has('plantel_id')) has-error @endif">
                         <label for="plantel_id-field">Plantel</label>
-                        {!! Form::select("plantel_id", $list["Plantel"], null, array("class" => "form-control select_seguridad", "id" => "plantel_id-field", 'readonly'=>'readonly')) !!}
+                        {!! Form::select("plantel_id", $list["Plantel"], isset($input['plantel_id']) ? $input['plantel_id'] : null, array("class" => "form-control select_seguridad", "id" => "plantel_id-field")) !!}
                         @if($errors->has("plantel_id"))
                             <span class="help-block">{{ $errors->first("plantel_id") }}</span>
                         @endif
                         </div>
                         <div class="form-group col-md-4 @if($errors->has('especialidad')) has-error @endif">
                         <label for="especialidad-field">Especialidad</label>
-                        {!! Form::select("especialidad_id", $list["Especialidad"], null, array("class" => "form-control select_seguridad", "id" => "especialidad_id-field")) !!}
+                        {!! Form::select("especialidad_id", $list["Especialidad"], isset($input['especialidad_id']) ? $input['especialidad_id'] : null, array("class" => "form-control select_seguridad", "id" => "especialidad_id-field")) !!}
                         <div id='loading10' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                         @if($errors->has("especialidad"))
                             <span class="help-block">{{ $errors->first("especialidad") }}</span>
@@ -48,7 +48,7 @@
                         </div>
                         <div class="form-group col-md-4 @if($errors->has('nivel_id')) has-error @endif">
                         <label for="nivel_id-field">Nivel</label>
-                        {!! Form::select("nivel_id", $list["Nivel"], null, array("class" => "form-control select_seguridad", "id" => "nivel_id-field")) !!}
+                        {!! Form::select("nivel_id", $list["Nivel"], isset($input['nivel_id']) ? $input['nivel_id'] : null, array("class" => "form-control select_seguridad", "id" => "nivel_id-field")) !!}
                         <div id='loading11' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                         @if($errors->has("nivel_id"))
                             <span class="help-block">{{ $errors->first("nivel_id") }}</span>
@@ -56,7 +56,7 @@
                         </div>
                         <div class="form-group col-md-4 @if($errors->has('grado_id')) has-error @endif">
                         <label for="grado_id-field">Grado</label>
-                        {!! Form::select("grado_id", $list["Grado"], null, array("class" => "form-control select_seguridad", "id" => "grado_id-field")) !!}
+                        {!! Form::select("grado_id", $list["Grado"], isset($input['grado_id']) ? $input['grado_id'] : null, array("class" => "form-control select_seguridad", "id" => "grado_id-field")) !!}
                         <div id='loading12' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                         @if($errors->has("grado_id"))
                             <span class="help-block">{{ $errors->first("grado_id") }}</span>
@@ -64,14 +64,14 @@
                         </div>
                         <div class="form-group col-md-4 @if($errors->has('lectivo_id')) has-error @endif">
                             <label for="lectivo_id-field">Periodo Lectivo</label>
-                            {!! Form::select("lectivo_id", $list["Lectivo"], null, array("class" => "form-control select_seguridad", "id" => "lectivo_id-field")) !!}
+                            {!! Form::select("lectivo_id", $list["Lectivo"], isset($input['lectivo_id']) ? $input['lectivo_id'] : null, array("class" => "form-control select_seguridad", "id" => "lectivo_id-field")) !!}
                             @if($errors->has("lectivo_id"))
                             <span class="help-block">{{ $errors->first("lectivo_id") }}</span>
                             @endif
                         </div>
                         <div class="form-group col-md-4 @if($errors->has('grupo_id')) has-error @endif">
                             <label for="grupo_id-field" id="lbl_disponibles">De Grupo </label>
-                            {!! Form::select("grupo_id", $list["Grupo"], null, array("class" => "form-control select_seguridad", "id" => "grupo_id-field")) !!}
+                            {!! Form::select("grupo_id", $list["Grupo"], isset($input['grupo_id']) ? $input['grupo_id'] : null, array("class" => "form-control select_seguridad", "id" => "grupo_id-field")) !!}
                             @if($errors->has("grupo_id"))
                             <span class="help-block">{{ $errors->first("grupo_id") }}</span>
                             @endif
