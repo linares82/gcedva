@@ -62,8 +62,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <!-- Content Header (Page header) -->
         <!--<section class="content-header">
             <h1>
-                {{ $page_title or "Page Title" }}
-                <small>{{ $page_description or null }}</small>
+                
             </h1>
             <!-- You can dynamically generate breadcrumbs here -->
             <!--<ol class="breadcrumb">

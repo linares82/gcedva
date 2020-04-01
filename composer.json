@@ -22,7 +22,6 @@
     "laravel/framework": "5.8.*",
     "laravel/tinker": "~1.0",
     "laravelcollective/html": "^5.4",
-    "leadthread/laravel-sms": "^2.1",
     "league/csv": "^9.1",
     "maatwebsite/excel": "^3.1",
     "paulvl/backup": "3.*",
@@ -30,7 +29,7 @@
     "php-imap/php-imap": "^3.0",
     "simplesoftwareio/simple-qrcode": "^2.0",
     "studio/laravel-totem": "5.0",
-    "twilio/sdk": "4.10",
+    "twilio/sdk": "^6.1",
     "usmanhalalit/laracsv": "1.*@dev",
     "webklex/laravel-imap": "^1.4",
     "zizaco/entrust": "5.2.x-dev"

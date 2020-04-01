@@ -92,9 +92,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         '5323a5cb5bb1bab9b2f24566beed262a' => __DIR__ . '/..' . '/arcanedev/support/helpers.php',
         '9e4824c5afbdc1482b6025ce3d4dfde8' => __DIR__ . '/..' . '/league/csv/src/functions_include.php',
         '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
-        '017b24472353920ed42bb364f7653c43' => __DIR__ . '/..' . '/propaganistas/laravel-phone/src/helpers.php',
         '801c31d8ed748cfa537fa45402288c95' => __DIR__ . '/..' . '/psy/psysh/src/functions.php',
-        'bccfaf6207f67190a92f35585e9a78b2' => __DIR__ . '/..' . '/twilio/sdk/Services/Twilio.php',
         'd04e9322f14ab3e66b5b68c6d1e15433' => __DIR__ . '/..' . '/arcanedev/log-viewer/constants.php',
         '24be6d98d7c305f36699ba4e34b6df3c' => __DIR__ . '/..' . '/arcanedev/log-viewer/helpers.php',
         '4a1f389d6ce373bda9e57857d3b61c84' => __DIR__ . '/..' . '/barryvdh/laravel-debugbar/src/helpers.php',
@@ -106,10 +104,6 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         array (
             'phpDocumentor\\Reflection\\' => 25,
         ),
-        'l' => 
-        array (
-            'libphonenumber\\' => 15,
-        ),
         'd' => 
         array (
             'dogears\\CrudDscaffold\\' => 22,
@@ -117,7 +111,6 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'Z' => 
         array (
             'Zizaco\\Entrust\\' => 15,
-            'Zenapply\\Sms\\' => 13,
         ),
         'X' => 
         array (
@@ -132,6 +125,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         ),
         'T' => 
         array (
+            'Twilio\\' => 7,
             'TijsVerkoyen\\CssToInlineStyles\\' => 31,
             'Tests\\' => 6,
         ),
@@ -178,7 +172,6 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
             'Psr\\Http\\Message\\' => 17,
             'Psr\\Container\\' => 14,
             'Prophecy\\' => 9,
-            'Propaganistas\\LaravelPhone\\' => 27,
             'Prettus\\Validator\\' => 18,
             'Prettus\\Repository\\' => 19,
             'PhpParser\\' => 10,
@@ -220,7 +213,6 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         ),
         'I' => 
         array (
-            'Iso3166\\' => 8,
             'Illuminate\\' => 11,
         ),
         'H' => 
@@ -238,7 +230,6 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
             'GuzzleHttp\\Psr7\\' => 16,
             'GuzzleHttp\\Promise\\' => 19,
             'GuzzleHttp\\' => 11,
-            'Giggsey\\Locale\\' => 15,
         ),
         'F' => 
         array (
@@ -294,10 +285,6 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
             1 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
             2 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
         ),
-        'libphonenumber\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/giggsey/libphonenumber-for-php/src',
-        ),
         'dogears\\CrudDscaffold\\' => 
         array (
             0 => __DIR__ . '/..' . '/dog-ears/crud-d-scaffold/src',
@@ -305,10 +292,6 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'Zizaco\\Entrust\\' => 
         array (
             0 => __DIR__ . '/..' . '/zizaco/entrust/src/Entrust',
-        ),
-        'Zenapply\\Sms\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/leadthread/laravel-sms/src',
         ),
         'XdgBaseDir\\' => 
         array (
@@ -329,6 +312,10 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'Watson\\Validating\\' => 
         array (
             0 => __DIR__ . '/..' . '/watson/validating/src',
+        ),
+        'Twilio\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/twilio/sdk/src/Twilio',
         ),
         'TijsVerkoyen\\CssToInlineStyles\\' => 
         array (
@@ -479,10 +466,6 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         array (
             0 => __DIR__ . '/..' . '/phpspec/prophecy/src/Prophecy',
         ),
-        'Propaganistas\\LaravelPhone\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/propaganistas/laravel-phone/src',
-        ),
         'Prettus\\Validator\\' => 
         array (
             0 => __DIR__ . '/..' . '/prettus/laravel-validation/src/Prettus/Validator',
@@ -563,10 +546,6 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         array (
             0 => __DIR__ . '/..' . '/jakub-onderka/php-console-color/src',
         ),
-        'Iso3166\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/julien-c/iso3166/src',
-        ),
         'Illuminate\\' => 
         array (
             0 => __DIR__ . '/..' . '/laravel/framework/src/Illuminate',
@@ -611,10 +590,6 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'GuzzleHttp\\' => 
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/guzzle/src',
-        ),
-        'Giggsey\\Locale\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/giggsey/locale/src',
         ),
         'FontLib\\' => 
         array (
@@ -1621,24 +1596,6 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'PlantelSubotroTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_06_123830_plantel_subotro_table.php',
         'PlantillasActivasPlantillasTable' => __DIR__ . '/../..' . '/database/migrations/2017_07_06_124931_plantillas_activas_plantillas_table.php',
         'PlantillasEspecialidadTable' => __DIR__ . '/../..' . '/database/migrations/2017_07_11_165639_plantillas_especialidad_table.php',
-        'Plivo\\Conference' => __DIR__ . '/..' . '/plivo/plivo-php/plivo.php',
-        'Plivo\\DTMF' => __DIR__ . '/..' . '/plivo/plivo-php/plivo.php',
-        'Plivo\\Dial' => __DIR__ . '/..' . '/plivo/plivo-php/plivo.php',
-        'Plivo\\Element' => __DIR__ . '/..' . '/plivo/plivo-php/plivo.php',
-        'Plivo\\GetDigits' => __DIR__ . '/..' . '/plivo/plivo-php/plivo.php',
-        'Plivo\\Hangup' => __DIR__ . '/..' . '/plivo/plivo-php/plivo.php',
-        'Plivo\\Message' => __DIR__ . '/..' . '/plivo/plivo-php/plivo.php',
-        'Plivo\\Number' => __DIR__ . '/..' . '/plivo/plivo-php/plivo.php',
-        'Plivo\\Play' => __DIR__ . '/..' . '/plivo/plivo-php/plivo.php',
-        'Plivo\\PlivoError' => __DIR__ . '/..' . '/plivo/plivo-php/plivo.php',
-        'Plivo\\PreAnswer' => __DIR__ . '/..' . '/plivo/plivo-php/plivo.php',
-        'Plivo\\Record' => __DIR__ . '/..' . '/plivo/plivo-php/plivo.php',
-        'Plivo\\Redirect' => __DIR__ . '/..' . '/plivo/plivo-php/plivo.php',
-        'Plivo\\Response' => __DIR__ . '/..' . '/plivo/plivo-php/plivo.php',
-        'Plivo\\RestAPI' => __DIR__ . '/..' . '/plivo/plivo-php/plivo.php',
-        'Plivo\\Speak' => __DIR__ . '/..' . '/plivo/plivo-php/plivo.php',
-        'Plivo\\User' => __DIR__ . '/..' . '/plivo/plivo-php/plivo.php',
-        'Plivo\\Wait' => __DIR__ . '/..' . '/plivo/plivo-php/plivo.php',
         'SebastianBergmann\\CodeCoverage\\CodeCoverage' => __DIR__ . '/..' . '/phpunit/php-code-coverage/src/CodeCoverage.php',
         'SebastianBergmann\\CodeCoverage\\CoveredCodeNotExecutedException' => __DIR__ . '/..' . '/phpunit/php-code-coverage/src/Exception/CoveredCodeNotExecutedException.php',
         'SebastianBergmann\\CodeCoverage\\Driver\\Driver' => __DIR__ . '/..' . '/phpunit/php-code-coverage/src/Driver/Driver.php',

@@ -39,8 +39,8 @@ use Excel;
 use File;
 use Illuminate\Http\Request;
 use Session;
-use Sms;
 use Storage;
+use Twilio\Rest\Client;
 
 //use App\Mail\CorreoBienvenida as Envia_mail;
 
@@ -743,9 +743,27 @@ class ClientesController extends Controller
         }
     }
 
+    /**
+     * Sends sms to user using Twilio's programmable sms client
+     * @param String $message Body of sms
+     * @param Number $recipients Number of recipient
+     */
+    private function sendMessage($message, $telefonos)
+    {
+        $account_sid = Param::where('llave', '=', 'TWILIO_AUTH_SID')->first();
+        $auth_token = Param::where('llave', '=', 'TWILIO_AUTH_TOKEN')->first();
+        $twilio_number = Param::where('llave', '=', 'TWILIO_FROM')->first();
+
+        $client = new Client($account_sid->valor, $auth_token->valor);
+        $client->messages->create($telefonos,
+            ['from' => $twilio_number->valor, 'body' => $message]);
+    }
+
     public function enviaSms(Request $request)
     {
-        //dd($_REQUEST);
+        //dd(getenv('DB_CONNECTION'));
+
+        //dd($TWILIO_AUTH_SID->valor);
         if ($request->ajax()) {
             try {
                 $pais = Paise::find($request->input('pais_id'));
@@ -762,7 +780,22 @@ class ClientesController extends Controller
 
                     //dd($r->valor);
                     if ($r->valor == 'activo') {
-                        if (Sms::send($message, $to, $from)) {
+                        /*if (Sms::send($message, $to, $from)) {
+                        $input['usu_envio_id'] = Auth::user()->id;
+                        $input['cliente_id'] = e($request->input('id'));
+                        $input['cantidad'] = 1;
+                        $input['fecha_envio'] = date("Y/m/d");
+                        $input['usu_alta_id'] = Auth::user()->id;
+                        $input['usu_mod_id'] = Auth::user()->id;
+                        Sm::create($input);
+                        //dd("msj");
+                        $c = Cliente::find($input['cliente_id']);
+                        $c->contador_sms = $c->contador_sms + 1;
+                        $c->save();
+                        }*/
+
+                        //$this->sendMessage($message, $to);
+                        if ($this->sendMessage($message, $to)) {
                             $input['usu_envio_id'] = Auth::user()->id;
                             $input['cliente_id'] = e($request->input('id'));
                             $input['cantidad'] = 1;
@@ -770,11 +803,8 @@ class ClientesController extends Controller
                             $input['usu_alta_id'] = Auth::user()->id;
                             $input['usu_mod_id'] = Auth::user()->id;
                             Sm::create($input);
-                            //dd("msj");
-                            $c = Cliente::find($input['cliente_id']);
-                            $c->contador_sms = $c->contador_sms + 1;
-                            $c->save();
                         }
+
                     }
                 }
                 return json_encode(true);

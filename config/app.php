@@ -25,7 +25,7 @@ return [
     |
      */
 
-    'env' => env('APP_ENV', 'production'),
+    'env' => env('APP_ENV', 'local'),
 
     /*
     |--------------------------------------------------------------------------
@@ -173,7 +173,7 @@ return [
         Barryvdh\Debugbar\ServiceProvider::class,
         Backup\BackupServiceProvider::class,
         Chumper\Zipper\ZipperServiceProvider::class,
-        Zenapply\Sms\Providers\SmsServiceProvider::class,
+        //Zenapply\Sms\Providers\SmsServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Arcanedev\LogViewer\LogViewerServiceProvider::class,
@@ -244,7 +244,7 @@ return [
         'Entrust' => Zizaco\Entrust\EntrustFacade::class,
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
         'Zipper' => Chumper\Zipper\Zipper::class,
-        "Sms" => Zenapply\Sms\Facades\Sms::class,
+        //"Sms" => Zenapply\Sms\Facades\Sms::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'Activity' => Kim\Activity\ActivityFacade::class,
