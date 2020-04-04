@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Bandeja;
 use App\Correo;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\createCorreo;
 use App\Http\Requests\updateCorreo;
 use Auth;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Mail;
 use Storage;
@@ -247,6 +249,7 @@ class CorreosController extends Controller
     {
         //dd('fil');
         $datos = $request->all();
+        //dd($datos);
         /*$oClient = new Client([
         'host' => 'mail.grcmexico.com.mx',
         'port' => 143,
@@ -256,13 +259,23 @@ class CorreosController extends Controller
         'password' => 'fil2848aztec.',
         'protocol' => 'imap',
         ]);*/
+        /*
         $oClient = new Client([
-            'host' => 'imap.gmail.com',
+        'host' => 'imap.gmail.com',
+        'port' => 993,
+        'encryption' => 'ssl',
+        'validate_cert' => true,
+        'username' => 'linares82@gmail.com',
+        'password' => 'fil2848aztec',
+        //'protocol' => 'imap',
+        ]);*/
+        $oClient = new Client([
+            'host' => 'imap-mail.outlook.com',
             'port' => 993,
             'encryption' => 'ssl',
             'validate_cert' => true,
-            'username' => 'linares82@gmail.com',
-            'password' => 'fil2848aztec',
+            'username' => 'dreikdream00@hotmail.com',
+            'password' => 'aztec2848fil',
             //'protocol' => 'imap',
         ]);
         $oClient->connect();
@@ -270,20 +283,76 @@ class CorreosController extends Controller
         //dd($aFolder);
         if (isset($datos['carpeta'])) {
             $oFolder = $oClient->getFolder($datos['carpeta']);
-            //dd($oFolder);
         } else {
-            foreach ($aFolder as $oFolder) {
+            /*foreach ($aFolder as $oFolder) {
+            if ($oFolder->name == 'Baan') {
+            $datos['carpeta'] = $oFolder->name;
+            //dd($datos);
+            break;
+            }
 
-                //Get all Messages of the current Mailbox $oFolder
-                /** @var \Webklex\IMAP\Support\MessageCollection $aMessage */
-                break;
+            }*/
+            $datos['carpeta'] = 'Emociones';
+            $oFolder = $oClient->getFolder($datos['carpeta']);
+        }
+        //dd($datos);
+        //dd($oFolder->query()->text('fotiko')->get());
+
+        $bandejas = Bandeja::where('from', $datos['mail_from'])
+            ->where('to', $datos['mail_to'])
+            ->where('carpeta', $datos['carpeta'])
+            ->count();
+        //$aMessage = $oFolder->messages()->all()->get();
+
+        if ($bandejas == 0) {
+            $aMessage = $oFolder->query()->from($datos['mail_from'])->since(Carbon::now()->subDays(15))->get();
+            $aMessage_count = $oFolder->query()->from($datos['mail_from'])->since(Carbon::now()->subDays(15))->get()->count();
+            if ($aMessage_count > 0) {
+                foreach ($aMessage as $oMessage) {
+                    $input['carpeta'] = $datos['carpeta'];
+                    $input['uid'] = $oMessage->getUid();
+                    $input['from'] = $oMessage->getFrom()[0]->mail;
+                    $input['to'] = $oMessage->getTo()[0]->mail;
+                    $input['asunto'] = $oMessage->getSubject();
+                    $input['adjuntos'] = $oMessage->getAttachments()->count() > 0 ? 'SI' : 'NO';
+                    $input['fecha'] = $oMessage->date->toDateTimeString();
+                    $input['mensaje'] = $oMessage->getHTMLBody();
+                    $input['bnd_leido'] = 0;
+                    $input['usu_alta_id'] = 0;
+                    $input['usu_mod_id'] = 0;
+                    Bandeja::create($input);
+                }
+            }
+        } else {
+            $aMessage = $oFolder->query()->from($datos['mail_from'])->since(Carbon::now()->subDays(15))->unseen()->get();
+            $aMessage_count = $oFolder->query()->from($datos['mail_from'])->since(Carbon::now()->subDays(15))->unseen()->get()->count();
+            if ($aMessage_count > 0) {
+                foreach ($aMessage as $oMessage) {
+                    $input['carpeta'] = $datos['carpeta'];
+                    $input['uid'] = $oMessage->getUid();
+                    $input['from'] = $oMessage->getFrom()[0]->mail;
+                    $input['to'] = $oMessage->getTo()[0]->mail;
+                    $input['asunto'] = $oMessage->getSubject();
+                    $input['adjuntos'] = $oMessage->getAttachments()->count() > 0 ? 'SI' : 'NO';
+                    $input['fecha'] = $oMessage->date->toDateTimeString();
+                    $input['mensaje'] = $oMessage->getHTMLBody();
+                    $input['bnd_leido'] = 0;
+                    $input['usu_alta_id'] = 0;
+                    $input['usu_mod_id'] = 0;
+                    Bandeja::create($input);
+                }
             }
         }
+        $aMessage = $oFolder->query()->from($datos['mail_from'])->since(Carbon::now()->subDays(15))->get()->paginate($perPage = 20, $page = null, $pageName = 'imap_blade_example');
+        dd($aMessage);
 
-        //$aMessage = $oFolder->messages()->all()->get();
-        $aMessage = $oFolder->messages()->all()->get()->paginate($perPage = 20, $page = null, $pageName = 'imap_blade_example');
-        //dd($aMessage);
+        $bandejas = Bandeja::where('from', $datos['mail_from'])
+            ->where('to', $datos['mail_to'])
+            ->where('carpeta', $datos['carpeta'])
+            ->orderBy('fecha', 'desc')
+            ->get();
 
+        dd($bandejas->toArray());
         return view('correos.bandeja', compact('aFolder', 'aMessage'));
     }
 }

@@ -88,7 +88,25 @@
                   <td class="mailbox-star"><a href="#"><i class="fa fa-star text-yellow"></i></a></td>
                   <td class="mailbox-name"><a href="read-mail.html">{{$oMessage->getFrom()[0]->personal}}({{$oMessage->getFrom()[0]->mail}})</a></td>
                   <td class="mailbox-subject">{{$oMessage->getSubject()}}</td>
-                  <td class="mailbox-attachment">{{$oMessage->getAttachments()->count() > 0 ? 'yes' : 'no'}}</td>
+                  <td class="mailbox-attachment">{{$oMessage->getAttachments()->count() > 0 ? 'SI' : 'NO'}}</td>
+                  @php
+                    //$identificador=$oMessage()->getUid();
+                   if($oMessage->getAttachments()->count()>0){
+                    $oMessage->getAttachments()->each(function ($attachment) {
+                          /** @var \Webklex\IMAP\Attachment $oAttachment */
+                          //dd($identificador);
+                          $id_unico=Date('Ymdmsi');
+                          $path=public_path()."/correos/";
+                          
+                          if(!file_exists($path)){
+                            File::makedirectory($path, 0777, true, true);
+                          } 
+                          $filename=$attachment->getName();
+                          
+                          $attachment->save($path, $id_unico."_".$filename);
+                      });
+                   }   
+                  @endphp
                   <td class="mailbox-date">{{$oMessage->date}}</td>
                 </tr>
                 @endforeach

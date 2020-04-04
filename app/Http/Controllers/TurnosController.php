@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\createTurno;
 use App\Http\Requests\updateTurno;
+use App\PlanPago;
 use App\Turno;
 use Auth;
 use DB;
@@ -22,7 +23,7 @@ class TurnosController extends Controller
     {
         $turnos = Turno::getAllData($request);
 
-        return view('turnos.index', compact('turnos'));
+        return view('turnos.index', compact('turnos'))->with('list', Turno::getListFromAllRelationApps());
     }
 
     /**
@@ -32,7 +33,8 @@ class TurnosController extends Controller
      */
     public function create()
     {
-        return view('turnos.create')
+        $planes = PlanPago::pluck('name', 'id');
+        return view('turnos.create', compact('planes'))
             ->with('list', Turno::getListFromAllRelationApps());
     }
 
@@ -76,7 +78,8 @@ class TurnosController extends Controller
     public function edit($id, Turno $turno)
     {
         $turno = $turno->find($id);
-        return view('turnos.edit', compact('turno'))
+        $planes = PlanPago::pluck('name', 'id');
+        return view('turnos.edit', compact('turno', 'planes'))
             ->with('list', Turno::getListFromAllRelationApps());
     }
 
@@ -102,11 +105,14 @@ class TurnosController extends Controller
      */
     public function update($id, Turno $turno, updateTurno $request)
     {
-        $input = $request->all();
+        $input = $request->except('plan_pago_id');
+        $planes = $request->only('plan_pago_id');
+        //dd($planes);
         $input['usu_mod_id'] = Auth::user()->id;
         //update data
         $turno = $turno->find($id);
         $turno->update($input);
+        $turno->planes()->sync($planes['plan_pago_id']);
 
         return redirect()->route('turnos.index')->with('message', 'Registro Actualizado.');
     }

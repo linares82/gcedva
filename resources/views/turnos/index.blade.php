@@ -46,7 +46,7 @@
                 <div class="panel-body">
                     <form class="Turno_search" id="search" action="{{ route('turnos.index') }}" accept-charset="UTF-8" method="get">
                         <input type="hidden" name="q[s]" value="{{ @(Request::input('q')['s']) ?: '' }}" />
-                        <div class="form-horizontal">
+                        <div class="">
 
                             <!--
                             <div class="form-group">
@@ -60,12 +60,19 @@
                                 </div>
                             </div>
                             -->
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_name_cont">NAME</label>
+                            <div class="form-group col-md-4">
+                                <label class="col-sm-2 control-label" for="q_name_cont">TURNO</label>
                                 <div class=" col-sm-9">
                                     <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['name_cont']) ?: '' }}" name="q[name_cont]" id="q_name_cont" />
                                 </div>
                             </div>
+                            <div class="form-group col-md-4" >
+                                <label for="q_turnos.plantel_id_lt">PLANTEL</label>
+                                
+                                    {!! Form::select("turnos.plantel_id", $list["Plantel"], "{{ @(Request::input('q')['clientes.plantel_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[turnos.plantel_id_lt]", "id"=>"q_turnos.plantel_id_lt", "style"=>"width:100%;")) !!}
+                                    <div id='loading10' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
+                            </div>
+                            
                                                     <!--
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_usu_alta_id_gt">USU_ALTA_ID</label>

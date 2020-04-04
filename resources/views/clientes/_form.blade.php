@@ -348,8 +348,7 @@
                                     @if($c->especialidad_id<>0 and $c->nivel_id<>0 and $c->grado_id<>0)
                                     <tr>
                                         <td>
-                                            {!! Form::checkbox("editar_combinacion", 1, null, [ "id" => "editar_combinacion", 
-                                            'class'=>'minimal', 
+                                            {!! Form::checkbox("editar_combinacion", 1, null, [ "class" => "editar_combinacion minimal",  
                                             'data-combinacion'=>$c->id,
                                             'data-especialidad'=>$c->especialidad_id,
                                             'data-nivel'=>$c->nivel_id,
@@ -368,7 +367,7 @@
                                         </td>
                                         <td>
                                             {{optional($c->turno)->name}}  
-                                            <a href={{ route('planPagos.show',optional($c->turno)->plan_pago_id) }} target="_blank" class="btn btn-xs btn-warning">Ver Plan</a>
+                                            <a href={{ route('planPagos.show',optional($c->planPago)->id) }} target="_blank" class="btn btn-xs btn-warning">Ver Plan</a>
                                         </td>
                                         <td>
                                         @if($c->bnd_inscrito==1)  
@@ -376,7 +375,7 @@
                                         @endif
                                         </td>
                                         <td>
-                                           {!! Form::select("plan_pago_id",$list2["PlanPago"],$c->plan_pago_id,array("class"=>"form-control select_seguridad plan_pago","id"=>"plan_pago_id-field","style"=>"width:75%;",'data-combinacion'=>$c->id)) !!} 
+                                           {!! Form::select("plan_pago_id", $c->turno->planes->pluck('name','id'),$c->plan_pago_id,array("class"=>"form-control select_seguridad plan_pago","id"=>"plan_pago_id-field","style"=>"width:75%;",'data-combinacion'=>$c->id)) !!} 
                                            {{ optional($c->planPago)->name }} <br>
                                             <div id='loading120' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                                             Impresiones:{{$c->cuenta_ticket_pago}}
@@ -1640,9 +1639,9 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                         getCmbTurno();
                         });
 
-                        $('#editar_combinacion').click(function(){
-                            if($(this).is(':checked')==true){
-                                
+                        $('.editar_combinacion').click(function(){
+                            
+                            if($(this).is(':checked')==true){    
                                 $('#combinacion-field').val($(this).data('combinacion'));
                                 $('#especialidad_id-field').val(0).change();
                                 $('#nivel_id-field').val(0).change();

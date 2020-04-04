@@ -757,6 +757,7 @@ class ClientesController extends Controller
         $client = new Client($account_sid->valor, $auth_token->valor);
         $client->messages->create($telefonos,
             ['from' => $twilio_number->valor, 'body' => $message]);
+
     }
 
     public function enviaSms(Request $request)

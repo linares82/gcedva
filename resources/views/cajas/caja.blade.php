@@ -456,7 +456,7 @@
                                 
                                 $linea_caja= \App\CajaLn::where('adeudo_id',$adeudo->id)->whereNull('deleted_at')->first();    
                                 ?>
-                                @if(count($linea_caja)>0)
+                                @if(!is_null($linea_caja))
                                 {{$linea_caja->total}}
                                 @endif
                             </td>
