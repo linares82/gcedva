@@ -35,6 +35,11 @@
                     </div>
                 </div>
                 <div class="box-body">
+                    <div class="form-group col-md-4">
+                        <label for="linea_id-field">Linea de Tiempo</label><br/>
+                           {!! Form::select("linea_id", array(1=>'Futuro',-1=>'Pasado'), null, array("class" => "form-control select_seguridad", "id" => "linea_id-crear",)) !!}
+                           
+                     </div>
                     <div class="form-group col-md-4 @if($errors->has('fecha_pago')) has-error @endif">
                         <label for="fecha_pago-field">Dia Pago Mensualidad</label>
                         {!! Form::text("fecha_pago", null, array("class" => "form-control", "id" => "fecha_pago-field")) !!}

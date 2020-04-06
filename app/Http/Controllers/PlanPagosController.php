@@ -111,9 +111,11 @@ class PlanPagosController extends Controller
 
     public function fullDuplicate(Request $request)
     {
-        $input = $request->except('id_duplicado', 'fecha_pagp');
+        $input = $request->except('id_duplicado', 'fecha_pago', 'linea_id');
         $id_duplicado = $request->only('id_duplicado');
         $fecha_pago = $request->only('fecha_pago');
+        $linea_tiempo = $request->only('linea_id');
+        //dd($linea);
         $input['usu_alta_id'] = Auth::user()->id;
         $input['usu_mod_id'] = Auth::user()->id;
 
@@ -135,9 +137,10 @@ class PlanPagosController extends Controller
             if ($meses == 0) {
                 $fecha_nueva = Carbon::createFromFormat('Y-m-d', $fecha_pago['fecha_pago']);
                 $fecha_anterior = Carbon::createFromFormat('Y-m-d', $linea->fecha_pago);
-                $meses = $fecha_nueva->diffInMonths($fecha_anterior);
+                $meses = ($fecha_nueva->diffInMonths($fecha_anterior) * $linea_tiempo['linea_id']);
                 $dia = $fecha_nueva->day;
             }
+            //dd($meses);
             $input_ln['plan_pago_id'] = $plan_nuevo->id;
             $input_ln['caja_concepto_id'] = $linea->caja_concepto_id;
             $input_ln['cuenta_contable_id'] = $linea->cuenta_contable_id;
