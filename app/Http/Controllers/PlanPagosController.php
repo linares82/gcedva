@@ -111,8 +111,9 @@ class PlanPagosController extends Controller
 
     public function fullDuplicate(Request $request)
     {
-        $input = $request->except('id_duplicado');
+        $input = $request->except('id_duplicado', 'fecha_pagp');
         $id_duplicado = $request->only('id_duplicado');
+        $fecha_pago = $request->only('fecha_pago');
         $input['usu_alta_id'] = Auth::user()->id;
         $input['usu_mod_id'] = Auth::user()->id;
 
@@ -128,17 +129,29 @@ class PlanPagosController extends Controller
         //dd($plan_base);
         $plan_base_lineas = PlanPagoLn::where('plan_pago_id', $id_duplicado)->get();
         //dd($plan_base_lineas->toArray());
+        $meses = 0;
+        $dia = 0;
         foreach ($plan_base_lineas as $linea) {
+            if ($meses == 0) {
+                $fecha_nueva = Carbon::createFromFormat('Y-m-d', $fecha_pago['fecha_pago']);
+                $fecha_anterior = Carbon::createFromFormat('Y-m-d', $linea->fecha_pago);
+                $meses = $fecha_nueva->diffInMonths($fecha_anterior);
+                $dia = $fecha_nueva->day;
+            }
             $input_ln['plan_pago_id'] = $plan_nuevo->id;
             $input_ln['caja_concepto_id'] = $linea->caja_concepto_id;
             $input_ln['cuenta_contable_id'] = $linea->cuenta_contable_id;
             $input_ln['cuenta_recargo_id'] = $linea->cuenta_recargo_id;
-            $input_ln['fecha_pago'] = $linea->fecha_pago;
+            $fecha_p = Carbon::createFromFormat('Y-m-d', $linea->fecha_pago);
+            $input_ln['fecha_pago'] = $fecha_p->addMonths($meses)->toDateString();
             $input_ln['monto'] = $linea->monto;
             $input_ln['inicial_bnd'] = $linea->inicial_bnd;
             $input_ln['usu_alta_id'] = Auth::user()->id;
             $input_ln['usu_mod_id'] = Auth::user()->id;
+
+            //dd($input_ln);
             $ln = PlanPagoLn::create($input_ln);
+
             foreach ($linea->reglaRecargos as $regla) {
                 /*$input_regla_nueva['plan_pago_ln_id'] = $ln->id;
                 $input_regla_nueva['regla_recargo_id'] = $regla->id;
@@ -148,8 +161,10 @@ class PlanPagosController extends Controller
             }
             foreach ($linea->promoPlanLns as $promo) {
                 $input_promocion['plan_pago_ln_id'] = $ln->id;
-                $input_promocion['fec_inicio'] = $promo->fec_inicio;
-                $input_promocion['fec_fin'] = $promo->fec_fin;
+                $fec_i = Carbon::createFromFormat('Y-m-d', $promo->fec_inicio);
+                $input_promocion['fec_inicio'] = $fec_i->addMonths($meses)->toDateString();
+                $fec_f = Carbon::createFromFormat('Y-m-d', $promo->fec_fin);
+                $input_promocion['fec_fin'] = $fec_f->addMonths($meses)->toDateString();
                 $input_promocion['descuento'] = $promo->descuento;
                 $input_promocion['usu_alta_id'] = Auth::user()->id;
                 $input_promocion['usu_mod_id'] = Auth::user()->id;

@@ -216,7 +216,7 @@
                                 </td>
                                 <td class="text-right">
                                     @permission('planPagos.edit')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('planPagos.duplicate', $planPago->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
+                                    <a class="btn btn-xs btn-primary" href="{{ route('planPagos.duplicate', $planPago->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Nuevo En Base A</a>
                                     @endpermission
                                     @permission('planPagos.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('planPagos.edit', $planPago->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>

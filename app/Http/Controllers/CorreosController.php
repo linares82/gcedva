@@ -267,7 +267,7 @@ class CorreosController extends Controller
         'validate_cert' => true,
         'username' => 'linares82@gmail.com',
         'password' => 'fil2848aztec',
-        //'protocol' => 'imap',
+        'protocol' => 'imap',
         ]);*/
         $oClient = new Client([
             'host' => 'imap-mail.outlook.com',
@@ -276,8 +276,13 @@ class CorreosController extends Controller
             'validate_cert' => true,
             'username' => 'dreikdream00@hotmail.com',
             'password' => 'aztec2848fil',
-            //'protocol' => 'imap',
+            'protocol' => 'imap',
         ]);
+        $utf = 'utf-8';
+        if (is_integer(strpos($oClient->username, 'hotmail.com'))) {
+            $utf = null;
+        }
+
         $oClient->connect();
         $aFolder = $oClient->getFolders();
         //dd($aFolder);
@@ -292,21 +297,23 @@ class CorreosController extends Controller
             }
 
             }*/
-            $datos['carpeta'] = 'Emociones';
+            $datos['carpeta'] = 'Inbox';
             $oFolder = $oClient->getFolder($datos['carpeta']);
         }
-        //dd($datos);
-        //dd($oFolder->query()->text('fotiko')->get());
+        //dd($utf);
+        //dd($oFolder->query()->unseen()->get());
 
         $bandejas = Bandeja::where('from', $datos['mail_from'])
             ->where('to', $datos['mail_to'])
             ->where('carpeta', $datos['carpeta'])
             ->count();
+        //dd($bandejas);
         //$aMessage = $oFolder->messages()->all()->get();
 
         if ($bandejas == 0) {
-            $aMessage = $oFolder->query()->from($datos['mail_from'])->since(Carbon::now()->subDays(15))->get();
-            $aMessage_count = $oFolder->query()->from($datos['mail_from'])->since(Carbon::now()->subDays(15))->get()->count();
+            $aMessage = $oFolder->query($utf)->from($datos['mail_from'])->since(Carbon::now()->subDays(15))->get();
+
+            $aMessage_count = $aMessage->count();
             if ($aMessage_count > 0) {
                 foreach ($aMessage as $oMessage) {
                     $input['carpeta'] = $datos['carpeta'];
@@ -325,7 +332,7 @@ class CorreosController extends Controller
             }
         } else {
             $aMessage = $oFolder->query()->from($datos['mail_from'])->since(Carbon::now()->subDays(15))->unseen()->get();
-            $aMessage_count = $oFolder->query()->from($datos['mail_from'])->since(Carbon::now()->subDays(15))->unseen()->get()->count();
+            $aMessage_count = $aMessage->count();
             if ($aMessage_count > 0) {
                 foreach ($aMessage as $oMessage) {
                     $input['carpeta'] = $datos['carpeta'];
@@ -343,8 +350,8 @@ class CorreosController extends Controller
                 }
             }
         }
-        $aMessage = $oFolder->query()->from($datos['mail_from'])->since(Carbon::now()->subDays(15))->get()->paginate($perPage = 20, $page = null, $pageName = 'imap_blade_example');
-        dd($aMessage);
+        $aMessage = $aMessage->paginate($perPage = 20, $page = null, $pageName = 'imap_blade_example');
+        //dd($aMessage);
 
         $bandejas = Bandeja::where('from', $datos['mail_from'])
             ->where('to', $datos['mail_to'])
@@ -352,7 +359,7 @@ class CorreosController extends Controller
             ->orderBy('fecha', 'desc')
             ->get();
 
-        dd($bandejas->toArray());
+        //dd($bandejas->toArray());
         return view('correos.bandeja', compact('aFolder', 'aMessage'));
     }
 }
