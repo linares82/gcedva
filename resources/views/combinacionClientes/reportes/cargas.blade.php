@@ -130,7 +130,12 @@
                 @foreach($turnos as $turno)
                 <tr>
                     <td>{{optional($turno->plantel)->razon}}</td>
-                <td>{{optional($turno->especialidad)->name}}</td><td>{{optional($turno->nivel)->name}}</td><td>{{optional($turno->grado)->name}}</td><td>{{$turno->id}}</td><td>{{$turno->name}}</td><td>{{$turno->planPago->name}}</td>
+                <td>{{optional($turno->especialidad)->name}}</td><td>{{optional($turno->nivel)->name}}</td><td>{{optional($turno->grado)->name}}</td><td>{{$turno->id}}</td><td>{{$turno->name}}</td>
+                <td>
+                    @foreach($turno->planes as $plan)
+                    {{$plan->name}} <br>
+                    @endforeach
+                </td>
                 </tr>
                 @endforeach
                 

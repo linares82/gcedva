@@ -104,47 +104,47 @@
       <div id="repetirFrm">
          <div class="col-xs-12">
             
-               <div class="form-group col-md-2 has-error">
-                  <label for="caja_concepto_id-field">Caja Concepto</label><br/>
-                     {!! Form::select("caja_concepto_id[]", $list2["CajaConcepto"], null, array("class" => "form-control select_seguridad1", "id" => "caja_concepto_id-crear","data-validacion-tipo"=>"requerido")) !!}
-                     {!! Form::hidden("plan_pago_id[]", $planPago->id, array("class" => "form-control", "id" => "plan_pago_id-crear")) !!}
+            <div class="form-group col-md-2 has-error">
+               <label for="caja_concepto_id-field">Caja Concepto</label><br/>
+                  {!! Form::select("caja_concepto_id[]", $list2["CajaConcepto"], null, array("class" => "form-control select_seguridad1", "id" => "caja_concepto_id-crear","data-validacion-tipo"=>"requerido")) !!}
+                  {!! Form::hidden("plan_pago_id[]", $planPago->id, array("class" => "form-control", "id" => "plan_pago_id-crear")) !!}
+            </div>
+            <div class="form-group col-md-2 has-error">
+               <label for="cuenta_contable_id-field">Cuenta Contable</label><br/>
+               {!! Form::select("cuenta_contable_id[]", $list2["CuentaContable"], null, array("class" => "form-control select_seguridad1", "id" => "cuenta_contable_id-crear","data-validacion-tipo"=>"requerido")) !!}
+            </div>
+            <div class="form-group col-md-2 has-error">
+               <label for="cuenta_recargo_id-field">Cuenta Recargo</label><br/>
+               {!! Form::select("cuenta_recargo_id[]", $list2["CuentaContable"], null, array("class" => "form-control select_seguridad1", "id" => "cuenta_recargo_id-crear","data-validacion-tipo"=>"requerido")) !!}
+            </div>
+            <div class="form-group col-md-2 has-error">
+               <label for="fecha_p-field">Fecha Pago</label>
+               {!! Form::text("fecha_p[]", null, array("class" => "form-control fecha_calendario", "id" => "fecha_p-crear","data-validacion-tipo"=>"requerido")) !!}
+            </div>
+            <div class="form-group col-md-2 has-error">
+               <label for="monto-field">Monto</label>
+               <div class="input-group">
+                  <span class="input-group-addon"><i class="fa fa-dollar"></i></span>
+                  {!! Form::text("monto[]", null, array("class" => "form-control", "id" => "monto-crear","data-validacion-tipo"=>"requerido")) !!}
                </div>
-               <div class="form-group col-md-2 has-error">
-                  <label for="cuenta_contable_id-field">Cuenta Contable</label><br/>
-                  {!! Form::select("cuenta_contable_id[]", $list2["CuentaContable"], null, array("class" => "form-control select_seguridad1", "id" => "cuenta_contable_id-crear","data-validacion-tipo"=>"requerido")) !!}
-               </div>
-               <div class="form-group col-md-2 has-error">
-                  <label for="cuenta_recargo_id-field">Cuenta Recargo</label><br/>
-                  {!! Form::select("cuenta_recargo_id[]", $list2["CuentaContable"], null, array("class" => "form-control select_seguridad1", "id" => "cuenta_recargo_id-crear","data-validacion-tipo"=>"requerido")) !!}
-               </div>
-               <div class="form-group col-md-2 has-error">
-                  <label for="fecha_p-field">Fecha Pago</label>
-                  {!! Form::text("fecha_p[]", null, array("class" => "form-control fecha_calendario", "id" => "fecha_p-crear","data-validacion-tipo"=>"requerido")) !!}
-               </div>
-               <div class="form-group col-md-2 has-error">
-                  <label for="monto-field">Monto</label>
-                  <div class="input-group">
-                     <span class="input-group-addon"><i class="fa fa-dollar"></i></span>
-                     {!! Form::text("monto[]", null, array("class" => "form-control", "id" => "monto-crear","data-validacion-tipo"=>"requerido")) !!}
-                  </div>
-               </div>
-               <!--<div class="form-group col-md-1">
-                  <label for="inicial_bnd-field">Inicial</label>
-                  @{!! Form::checkbox("inicial_bnd[]", 1, null, [ "id" => "inicial_bnd-crear"]) !!}
-               </div>-->
+            </div>
+            <!--<div class="form-group col-md-1">
+               <label for="inicial_bnd-field">Inicial</label>
+               @{!! Form::checkbox("inicial_bnd[]", 1, null, [ "id" => "inicial_bnd-crear"]) !!}
+            </div>-->
             
          </div>
       </div>
       <div id="areaFrm" class="row">
-      <div class="row"></div>   
-      <div class="row col-md-12">
-         <div class="form-group col-sm-2">
-           
-            <button id="nuevoFrm" class="btn btn-sm btn-success" type="button">Agregar</button>                
-         
+         <div class="row"></div>   
+         <div class="row col-md-12">
+            <div class="form-group col-sm-2">
+            
+               <button id="nuevoFrm" class="btn btn-sm btn-success" type="button">Agregar</button>                
+            
+            </div>
          </div>
       </div>
-      
   </div>
 </div>
 

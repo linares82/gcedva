@@ -288,27 +288,6 @@ class SeguimientosController extends Controller
         $input = $request->all();
         $fecha = date('d-m-Y');
 
-        /* $seguimientos=Seguimiento::select(
-        'p.razon','emp.nombre as nombre_e','emp.ape_paterno as paterno_e','emp.ape_materno as materno_e',
-        'cli.nombre as nombre_c','cli.nombre2 as nombre2_c','cli.ape_paterno as paterno_c',
-        'cli.ape_materno as materno_c','cli.calle','cli.no_interior','cli.no_exterior','cli.colonia',
-        'm.name as municipio', 'est.name as estado','cli.tel_fijo','cli.tel_cel', 'cli.mail',
-        'stc.name as estatus_cliente','sts.name as estatus_seguimiento'
-        )
-        ->join('clientes as cli', 'cli.id', '=','seguimientos.cliente_id')
-        ->join('municipios as m', 'm.id', '=', 'cli.municipio_id')
-        ->join('estados as est', 'est.id', '=', 'cli.estado_id')
-        ->join('empleados as emp', 'emp.id', '=', 'cli.empleado_id')
-        ->join('plantels as p', 'p.id', '=', 'cli.plantel_id')
-        ->join('st_clientes as stc', 'stc.id', '=', 'cli.st_cliente_id')
-        ->join('st_seguimientos as sts', 'sts.id', '=', 'seguimientos.estatus_id')
-        ->whereBetween('cli.empleado_id', [$input['empleado_f'], $input['empleado_t']])
-        ->whereBetween('cli.plantel_id', [$input['plantel_f'], $input['plantel_t']])
-        ->whereBetween('seguimientos.estatus_id', [$input['estatus_f'], $input['estatus_t']])
-        ->whereBetween('seguimientos.created_at', [$input['fecha_f'], $input['fecha_t']])
-        ->orderBy('cli.empleado_id', 'seguimientos.estatus_id')
-        ->get();
-         */
         $seguimientos = Seguimiento::select('p.razon', DB::raw('concat(e.nombre," ", e.ape_paterno," ", e.ape_materno) as nombre'), 'sts.name', DB::raw('count(sts.name) as total'))
             ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
             ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
@@ -320,8 +299,13 @@ class SeguimientosController extends Controller
             ->whereBetween('seguimientos.created_at', [$input['fecha_f'], $input['fecha_t']])
             ->groupBy('p.razon', 'e.nombre', 'e.ape_paterno', 'e.ape_materno', 'sts.name')
             ->get();
+
+        /*$seguimientos = DB::select('CALL seguimientosXempleadoGr(?, ?, ?, ?, ?, ?,?,?)',
+        array($input['empleado_f'], $input['empleado_t'], $input['plantel_f'], $input['plantel_t'],
+        $input['estatus_f'], $input['estatus_t'], $input['fecha_f'], $input['fecha_t']));
+         */
         //dd($seguimientos);
-        //$s=Seguimiento::get();
+
         //dd($clientes);
         PDF::setOptions(['defaultFont' => 'arial']);
         $pdf = PDF::loadView('seguimientos.reportes.seguimientosXempleadoGr', array('seguimientos' => $seguimientos, 'fecha' => $fecha))
