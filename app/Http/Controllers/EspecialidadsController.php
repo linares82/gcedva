@@ -25,7 +25,8 @@ class EspecialidadsController extends Controller
         $especialidads = Especialidad::getAllData($request);
         //dd($especialidads);
 
-        return view('especialidads.index', compact('especialidads'));
+        return view('especialidads.index', compact('especialidads'))
+            ->with('list', Especialidad::getListFromAllRelationApps());
     }
 
     /**
