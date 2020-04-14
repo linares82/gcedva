@@ -46,7 +46,7 @@
                 <div class="panel-body">
                     <form class="Nivel_search" id="search" action="{{ route('nivels.index') }}" accept-charset="UTF-8" method="get">
                         <input type="hidden" name="q[s]" value="{{ @(Request::input('q')['s']) ?: '' }}" />
-                        <div class="form-horizontal">
+                        <div class="">
 
                             <!--
                             <div class="form-group">
@@ -60,6 +60,12 @@
                                 </div>
                             </div>
                             -->
+                            <div class="form-group col-md-4" >
+                                <label for="q_nivels.plantel_id_lt">PLANTEL</label>
+                                
+                                    {!! Form::select("nivels.plantel_id", $list["Plantel"], "{{ @(Request::input('q')['nivels.plantel_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[nivels.plantel_id_lt]", "id"=>"q_nivels.plantel_id_lt", "style"=>"width:100%;")) !!}
+                                    <div id='loading10' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
+                            </div>
                             <div class="form-group col-md-4">
                                 <label class="col-sm-12 control-label" for="q_name_cont">NIVEL</label>
                                 <div class="col-sm-12">
