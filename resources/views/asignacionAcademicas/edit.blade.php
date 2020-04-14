@@ -22,7 +22,7 @@
     <div class="row">
         <div class="col-md-12">
 
-            {!! Form::model($asignacionAcademica, array('route' => array('asignacionAcademicas.update', $asignacionAcademica->id),'method' => 'post', 'id'=>'frm_asignacion_academica')) !!}
+            {!! Form::model($asignacionAcademica, array('route' => array('asignacionAcademicas.update', $asignacionAcademica->id),'method' => 'post', 'id'=>'formulario')) !!}
 
 @include('asignacionAcademicas._form')
 

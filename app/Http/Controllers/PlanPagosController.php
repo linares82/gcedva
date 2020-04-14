@@ -132,9 +132,10 @@ class PlanPagosController extends Controller
         $plan_base_lineas = PlanPagoLn::where('plan_pago_id', $id_duplicado)->get();
         //dd($plan_base_lineas->toArray());
         $meses = 0;
-        $dia = 0;
+        $contador = 0;
         foreach ($plan_base_lineas as $linea) {
-            if ($meses == 0) {
+            $contador++;
+            if ($contador == 1) {
                 $fecha_nueva = Carbon::createFromFormat('Y-m-d', $fecha_pago['fecha_pago']);
                 $fecha_anterior = Carbon::createFromFormat('Y-m-d', $linea->fecha_pago);
                 $meses = ($fecha_nueva->diffInMonths($fecha_anterior) * $linea_tiempo['linea_id']);
