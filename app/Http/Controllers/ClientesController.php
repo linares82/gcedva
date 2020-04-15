@@ -13,6 +13,7 @@ use App\Correo;
 use App\DocAlumno;
 use App\Empleado;
 use App\Especialidad;
+use App\Grupo;
 use App\HistoriaCliente;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Carga;
@@ -1751,5 +1752,31 @@ class ClientesController extends Controller
         //dd($cadena_img[count($cadena_img) - 1]);
         //dd(base_path() . '/vendor/cossou/jasperphp/examples/' . $cadena_img[count($cadena_img) - 1]);
         return view('clientes.reportes.listaCredencialesR', compact('registros', 'especialidad', 'datos'));
+    }
+
+    public function listaClientes()
+    {
+        $grupos = Grupo::pluck('name', 'id');
+        $lectivos = Lectivo::pluck('name', 'id');
+        return view('clientes.reportes.listaClientes', compact('grupos', 'lectivos'))->with('list', Cliente::getListFromAllRelationApps());
+    }
+
+    public function listaClientesR(Request $request)
+    {
+        $datos = $request->all();
+        $registros = Cliente::select('clientes.id', 'clientes.nombre', 'clientes.nombre2', 'clientes.ape_paterno',
+            'clientes.ape_materno', 'clientes.matricula', 'clientes.genero', 'clientes.fec_nacimiento',
+            'clientes.mail', 'clientes.tel_fijo', 'clientes.tel_cel', 'clientes.nombre_padre', 'clientes.tel_padre',
+            'clientes.dir_padre', 'clientes.st_cliente_id', 'clientes.curp', 'clientes.mail_madre', 'clientes.tel_madre',
+            'clientes.dir_madre', 'clientes.nombre_acudiente', 'clientes.tel_acudiente', 'clientes.dir_acudiente')
+            ->join('inscripcions as i', 'i.cliente_id', '=', 'clientes.id')
+            ->where('clientes.plantel_id', $datos['plantel_f'])
+            ->where('i.lectivo_id', $datos['lectivo_f'])
+            ->where('i.grupo_id', $datos['grupo_f'])
+            ->orderBy('i.lectivo_id')
+            ->orderBy('i.grupo_id')
+            ->get();
+        //dd($registros);
+        return view('clientes.reportes.listaClientesR', compact('registros'));
     }
 }
