@@ -3,23 +3,24 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateEgresosTable extends Migration {
+class CreateEgresosTable extends Migration
+{
 
-	/**
-	 * Run the migrations.
-	 *
-	 * @return void
-	 */
-	public function up()
-	{
-		Schema::create('egresos', function(Blueprint $table) {
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('egresos', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('plantel_id')->unsigned();
             $table->date('fecha');
             $table->integer('egresos_concepto_id')->unsigned();
             $table->string('detalle')->nullable();
             $table->string('archivo')->nullable();
-            $table->string('saldo_inicial', 8, 2);
+            $table->string('saldo_inicial', 8, 2)->nullable();
             $table->integer('forma_pago_id')->unsigned();
             $table->integer('cuentas_efectivo_id')->unsigned();
             $table->double('monto', 8, 2);
@@ -36,16 +37,15 @@ class CreateEgresosTable extends Migration {
             $table->foreign('egresos_concepto_id')->references('id')->on('egresos_conceptos');
             $table->foreign('plantel_id')->references('id')->on('plantels');
         });
-	}
+    }
 
-	/**
-	 * Reverse the migrations.
-	 *
-	 * @return void
-	 */
-	public function down()
-	{
-		Schema::drop('egresos');
-	}
-
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::drop('egresos');
+    }
 }

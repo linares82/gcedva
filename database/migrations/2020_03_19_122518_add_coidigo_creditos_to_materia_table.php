@@ -15,7 +15,7 @@ class AddCoidigoCreditosToMateriaTable extends Migration
     {
         Schema::table('materia', function (Blueprint $table) {
             $table->string('codigo')->nullable();
-            $table->integer('creditos')->nullable();
+            $table->decimal('creditos')->nullable();
         });
     }
 

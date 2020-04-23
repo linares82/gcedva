@@ -483,6 +483,10 @@ class HomeController extends Controller
 
         //Procesos de Beca
         $empleado = Empleado::where('user_id', Auth::user()->id)->first();
+        $planteles = array();
+        foreach ($empleado->plantels as $p) {
+            array_push($planteles, $p->id);
+        }
         $becas_aux = AutorizacionBeca::select(
             'autorizacion_becas.id',
             'autorizacion_becas.cliente_id as cliente',
@@ -506,7 +510,7 @@ class HomeController extends Controller
             ->where('autorizacion_becas.id', '>', 560)
             ->whereRaw('(aut_caja_plantel <> 4 or aut_dir_plantel<> 4 or aut_caja_corp<> 4 or aut_ser_esc<> 4 or aut_dueno<> 4)');
         if (Auth::user()->can('autorizacionBecas.filtroPlantels')) {
-            $becas_aux->where('cli.plantel_id', $empleado->plantel_id);
+            $becas_aux->whereIn('cli.plantel_id', $planteles);
         }
         //->whereNull('c.bnd_visto')
         $becas = $becas_aux->get();
@@ -713,10 +717,15 @@ class HomeController extends Controller
     public function WidgetsMetaEspecialidad()
     {
         $e = Empleado::where('user_id', '=', Auth::user()->id)->first();
+        $planteles = array();
+        foreach ($e->plantels as $p) {
+            //dd($p->id);
+            array_push($planteles, $p->id);
+        }
         if (!Auth::user()->can('WgaugesXplantelIndividual')) {
             $planteles = DB::table('plantels')->where('id', '>', 0)->get();
         } else {
-            $planteles = DB::table('plantels')->where('id', '>', 0)->where('id', '=', $e->plantel_id)->get();
+            $planteles = DB::table('plantels')->where('id', '>', 0)->whereIn('id', $planteles)->get();
         }
 
         //dd($planteles);

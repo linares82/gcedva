@@ -1,4 +1,6 @@
-<?php namespace App\Http\Controllers;
+<?php
+
+namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -9,7 +11,8 @@ use Auth;
 use App\Http\Requests\updateMedio;
 use App\Http\Requests\createMedio;
 
-class MediosController extends Controller {
+class MediosController extends Controller
+{
 
 	/**
 	 * Display a listing of the resource.
@@ -31,7 +34,7 @@ class MediosController extends Controller {
 	public function create()
 	{
 		return view('medios.create')
-			->with( 'list', Medio::getListFromAllRelationApps() );
+			->with('list', Medio::getListFromAllRelationApps());
 	}
 
 	/**
@@ -44,11 +47,11 @@ class MediosController extends Controller {
 	{
 
 		$input = $request->all();
-		$input['usu_alta_id']=Auth::user()->id;
-		$input['usu_mod_id']=Auth::user()->id;
+		$input['usu_alta_id'] = Auth::user()->id;
+		$input['usu_mod_id'] = Auth::user()->id;
 
 		//create data
-		Medio::create( $input );
+		Medio::create($input);
 
 		return redirect()->route('medios.index')->with('message', 'Registro Creado.');
 	}
@@ -61,7 +64,7 @@ class MediosController extends Controller {
 	 */
 	public function show($id, Medio $medio)
 	{
-		$medio=$medio->find($id);
+		$medio = $medio->find($id);
 		return view('medios.show', compact('medio'));
 	}
 
@@ -73,9 +76,9 @@ class MediosController extends Controller {
 	 */
 	public function edit($id, Medio $medio)
 	{
-		$medio=$medio->find($id);
+		$medio = $medio->find($id);
 		return view('medios.edit', compact('medio'))
-			->with( 'list', Medio::getListFromAllRelationApps() );
+			->with('list', Medio::getListFromAllRelationApps());
 	}
 
 	/**
@@ -86,9 +89,9 @@ class MediosController extends Controller {
 	 */
 	public function duplicate($id, Medio $medio)
 	{
-		$medio=$medio->find($id);
+		$medio = $medio->find($id);
 		return view('medios.duplicate', compact('medio'))
-			->with( 'list', Medio::getListFromAllRelationApps() );
+			->with('list', Medio::getListFromAllRelationApps());
 	}
 
 	/**
@@ -101,10 +104,10 @@ class MediosController extends Controller {
 	public function update($id, Medio $medio, updateMedio $request)
 	{
 		$input = $request->all();
-		$input['usu_mod_id']=Auth::user()->id;
+		$input['usu_mod_id'] = Auth::user()->id;
 		//update data
-		$medio=$medio->find($id);
-		$medio->update( $input );
+		$medio = $medio->find($id);
+		$medio->update($input);
 
 		return redirect()->route('medios.index')->with('message', 'Registro Actualizado.');
 	}
@@ -115,12 +118,17 @@ class MediosController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id,Medio $medio)
+	public function destroy($id, Medio $medio)
 	{
-		$medio=$medio->find($id);
+		$medio = $medio->find($id);
 		$medio->delete();
 
 		return redirect()->route('medios.index')->with('message', 'Registro Borrado.');
 	}
 
+	public function apiLista()
+	{
+		$lista = Medio::select('id', 'name')->get();
+		return response()->json(['resultado' => $lista]);
+	}
 }

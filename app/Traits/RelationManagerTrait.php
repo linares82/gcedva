@@ -5,97 +5,106 @@ Copyright (c) 2016 dog-ears
 
 This software is released under the MIT License.
 http://dog-ears.net/
-*/
+ */
 
 namespace App\Traits;
+
 use App\Empleado;
 use App\Nivel;
 use Auth;
 use DB;
-trait RelationManagerTrait {
 
-    /**
-     * The relation App.
-     *
-     * @var relationApps
-     */
-    protected $relationApps;
+trait RelationManagerTrait
+{
 
-    /**
-     * Add relation App to list
-     *
-     * @param  string  $path
-     * @return string
-     */
-    protected function addRelationApp($app, $relation_display_column = 'name'){
+  /**
+   * The relation App.
+   *
+   * @var relationApps
+   */
+  protected $relationApps;
 
-		if( !is_object($app) ){
-			throw new \Exception( "Argument is not Object!" );
-		}
+  /**
+   * Add relation App to list
+   *
+   * @param  string  $path
+   * @return string
+   */
+  protected function addRelationApp($app, $relation_display_column = 'name')
+  {
 
-		$appNames = explode( '\\', get_class($app) );
-		$appName = end($appNames);
-
-    	$this->relationApps[$appName]['app'] = $app;
-    	$this->relationApps[$appName]['relation_display_column'] = $relation_display_column;
+    if (!is_object($app)) {
+      throw new \Exception("Argument is not Object!");
     }
 
-    /**
-     * Build the directory for the class if necessary.
-     *
-     * @param  string  $path
-     * @return string
-     */
-    protected function getListFromAllRelationApps()
-    {
-    	$list = [];
-        
-        if( $this->relationApps ){
-    		foreach ( $this->relationApps as $relationAppName => $relationAppArray ){
-          
-          $relatedObjList = $relationAppArray['app']::where('id', '>', 0)->pluck($relationAppArray['relation_display_column'], 'id');
-          $e=Empleado::where('user_id', '=', Auth::user()->id)->first();
-          
-          if($relationAppName=="Empleado" and Auth::user()->can('IfiltroEmpleadosXPlantel')){
-            //dd($relationAppName);
-            $relatedObjList = $relationAppArray['app']::where('plantel_id', '=', $e->plantel_id)
-                                                        ->pluck($relationAppArray['relation_display_column'], 'id');
-            //dd($relatedObjList);
-          }
-          if($relationAppName=="Empleado"){
-            //dd($relationAppName);
-            $relatedObjList = $relationAppArray['app']::select(DB::raw('concat(empleados.nombre, " ",empleados.ape_paterno, " ",empleados.ape_materno) as relacion, empleados.id'))
-                                                        ->pluck('relacion', 'id');
-            //dd($relatedObjList);
-          }
-          /*if($relationAppName=="Cliente"){
+    $appNames = explode('\\', get_class($app));
+    $appName = end($appNames);
+
+    $this->relationApps[$appName]['app'] = $app;
+    $this->relationApps[$appName]['relation_display_column'] = $relation_display_column;
+  }
+
+  /**
+   * Build the directory for the class if necessary.
+   *
+   * @param  string  $path
+   * @return string
+   */
+  protected function getListFromAllRelationApps()
+  {
+    $list = [];
+
+    if ($this->relationApps) {
+      foreach ($this->relationApps as $relationAppName => $relationAppArray) {
+
+        $relatedObjList = $relationAppArray['app']::where('id', '>', 0)->pluck($relationAppArray['relation_display_column'], 'id');
+        $e = Empleado::where('user_id', '=', Auth::user()->id)->first();
+        $planteles = array();
+        foreach ($e->plantels as $p) {
+          //dd($p->id);
+          array_push($planteles, $p->id);
+        }
+
+        if ($relationAppName == "Empleado") { //and Auth::user()->can('IfiltroEmpleadosXPlantel')
+          //dd($relationAppName);
+          $relatedObjList = $relationAppArray['app']::whereIn('plantel_id', $planteles)
+            ->pluck($relationAppArray['relation_display_column'], 'id');
+          //dd($relatedObjList);
+        }
+        if ($relationAppName == "Empleado") {
+          //dd($relationAppName);
+          $relatedObjList = $relationAppArray['app']::select(DB::raw('concat(empleados.nombre, " ",empleados.ape_paterno, " ",empleados.ape_materno) as relacion, empleados.id'))
+            ->pluck('relacion', 'id');
+          //dd($relatedObjList);
+        }
+        /*if($relationAppName=="Cliente"){
             $relatedObjList = $relationAppArray['app']::select(DB::raw('concat(clientes.nombre, " ",clientes.ape_paterno, " ",clientes.ape_materno) as relacion, clientes.id'))
                                                         ->pluck('relacion', 'id');
           }*/
-          if($relationAppName=="TpoExamen"){
-            
-            $relatedObjList = $relationAppArray['app']::where('id', '>', 1)->pluck($relationAppArray['relation_display_column'], 'id');
-            //dd($relatedObjList);
-          }
-          if($relationAppName=="Ponderacion"){
-            //dd($relationAppName);
-            $relatedObjList = $relationAppArray['app']::where('id', '>', 2)->pluck($relationAppArray['relation_display_column'], 'id');
-            //dd($relatedObjList);
-          }
-          if($relationAppName=="Empresa"){
-            //dd($relationAppName);
-            $relatedObjList = $relationAppArray['app']::where('plantel_id', '=', $e->plantel_id)->pluck($relationAppArray['relation_display_column'], 'id');
-              
-            //dd($relatedObjList);
-          }
-          if($relationAppName=="Cuestionario"){
-            //dd($relationAppName);
-            $relatedObjList = $relationAppArray['app']::where('st_cuestionario_id', '=', 1)->pluck($relationAppArray['relation_display_column'], 'id');
-              
-            //dd($relatedObjList);
-          }
+        if ($relationAppName == "TpoExamen") {
 
-          /*if($relationAppName=="Lectivo"){
+          $relatedObjList = $relationAppArray['app']::where('id', '>', 1)->pluck($relationAppArray['relation_display_column'], 'id');
+          //dd($relatedObjList);
+        }
+        if ($relationAppName == "Ponderacion") {
+          //dd($relationAppName);
+          //$relatedObjList = $relationAppArray['app']::where('id', '>', 2)->pluck($relationAppArray['relation_display_column'], 'id');
+          //dd($relatedObjList);
+        }
+        if ($relationAppName == "Empresa") {
+          //dd($relationAppName);
+          $relatedObjList = $relationAppArray['app']::where('plantel_id', '=', $e->plantel_id)->pluck($relationAppArray['relation_display_column'], 'id');
+
+          //dd($relatedObjList);
+        }
+        if ($relationAppName == "Cuestionario") {
+          //dd($relationAppName);
+          $relatedObjList = $relationAppArray['app']::where('st_cuestionario_id', '=', 1)->pluck($relationAppArray['relation_display_column'], 'id');
+
+          //dd($relatedObjList);
+        }
+
+        /*if($relationAppName=="Lectivo"){
             //dd($relationAppName);
             $fecha=date('Y-m-d');
             $relatedObjList = $relationAppArray['app']::where('inicio', '<=', $fecha)
@@ -104,10 +113,10 @@ trait RelationManagerTrait {
             
           }*/
 
-          
-            //dd($relatedObjList);
-          
-          /*
+
+        //dd($relatedObjList);
+
+        /*
           if($relationAppName=="Especialidad" and Auth::user()->can('IfiltroEspecialidadsXPlantel')){
             $relatedObjList = $relationAppArray['app']::where('plantel_id', '=', $e->plantel_id)
                                                       ->join('plantels as p', 'p.id', '=', 'especialidads.plantel_id')
@@ -234,16 +243,16 @@ trait RelationManagerTrait {
           }
           //$relatedObjList = $relationAppArray['app']::pluck($relationAppArray['relation_display_column'], 'id');
     			*/
-          //dd($opt0);
-          $reverse=$relatedObjList->reverse(); 
-          
-          $reverse->put(0,'Seleccionar Opción');
-          //dd($reverse->reverse());
-          //$relatedObjList
-          $list[$relationAppName] = $reverse->reverse(); 
-          //dd($list[$relationAppName]);
-    		}
-        }
-		return $list;
+        //dd($opt0);
+        $reverse = $relatedObjList->reverse();
+
+        $reverse->put(0, 'Seleccionar Opción');
+        //dd($reverse->reverse());
+        //$relatedObjList
+        $list[$relationAppName] = $reverse->reverse();
+        //dd($list[$relationAppName]);
+      }
     }
+    return $list;
+  }
 }

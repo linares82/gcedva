@@ -268,4 +268,19 @@ class GradosController extends Controller
         $grados = Grado::orderBy('plantel_id')->orderBy('especialidad_id')->orderBy('nivel_id')->orderBy('id')->get();
         return view('combinacionClientes.reportes.cargas', compact('grados'));
     }
+
+    public function apiListaXplantelYespecialidadYgrado(Request $request)
+    {
+        //dd($request);
+        $datos = $request->all();
+        $lista = Grado::select('id', 'name')
+            ->where('plantel_id', $datos['plantel'])
+            ->where('especialidad_id', $datos['especialidad'])
+            ->where('nivel_id', $datos['nivel'])
+            ->get();
+        if (count($lista) == 0) {
+            return response()->json(['msj' => 'Sin registros'], 500);
+        }
+        return response()->json(['resultado' => $lista]);
+    }
 }

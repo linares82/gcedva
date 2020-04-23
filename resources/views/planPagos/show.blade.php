@@ -886,7 +886,7 @@
             url: ruta,
             data: {
                 '_token': $('input[name=_token]').val(),
-                'id': id,
+                'id': id_promo,
                 'fec_inicio': $('#fec_inicio-editar').val(),
                 'fec_fin': $('#fec_fin-editar').val(),
                 'descuento': $('#descuento-editar').val()

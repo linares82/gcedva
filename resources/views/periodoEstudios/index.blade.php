@@ -46,7 +46,7 @@
                 <div class="panel-body">
                     <form class="PeriodoEstudio_search" id="search" action="{{ route('periodoEstudios.index') }}" accept-charset="UTF-8" method="get">
                         <input type="hidden" name="q[s]" value="{{ @(Request::input('q')['s']) ?: '' }}" />
-                        <div class="form-horizontal">
+                        <div class="">
 
                             <!--
                             <div class="form-group">
@@ -60,7 +60,11 @@
                                 </div>
                             </div>
                             -->
-                            <div class="form-group">
+                            <div class="form-group col-md-4">
+                                <label for="q_periodo_estudios.plan_estudio_id_lt">Plan Estudios</label>
+                                    {!! Form::select("plan_estudio_id", $list["PlanEstudio"], "{{ @(Request::input('q')['periodo_estudios.plan_estudio_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[periodo_estudios.plan_estudio_id_lt]", "id"=>"q_periodo_estudios.plan_estudio_id_id_lt", "style"=>"width:100%;" )) !!}
+                            </div>
+                            <div class="form-group col-md-4">
                                 <label class="col-sm-2 control-label" for="q_name_cont">PERIODO</label>
                                 <div class=" col-sm-9">
                                     <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['name_cont']) ?: '' }}" name="q[name_cont]" id="q_name_cont" />
@@ -78,7 +82,7 @@
                                 </div>
                             </div>
                             -->
-                            <div class="form-group">
+                            <div class="form-group col-md-4">
                                 <label class="col-sm-2 control-label" for="q_grados.name_cont">GRADO</label>
                                 <div class=" col-sm-9">
                                     <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['grados.name_cont']) ?: '' }}" name="q[grados.name_cont]" id="q_grados.name_cont" />

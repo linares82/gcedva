@@ -234,4 +234,14 @@ class EspecialidadsController extends Controller
         $especialidades = Especialidad::orderBy('plantel_id')->orderBy('id')->get();
         return view('combinacionClientes.reportes.cargas', compact('especialidades'));
     }
+
+    public function apiListaXPlantel(Request $request)
+    {
+        $datos = $request->all();
+        $lista = Especialidad::select('id', 'name')->where('plantel_id', $datos['plantel'])->get();
+        if (count($lista) == 0) {
+            return response()->json(['msj' => 'Sin registros'], 500);
+        }
+        return response()->json(['resultado' => $lista]);
+    }
 }

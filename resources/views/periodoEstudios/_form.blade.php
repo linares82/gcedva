@@ -1,5 +1,12 @@
 <link rel="stylesheet" type="text/css" href="asset('bower_components/AdminLTE/plugins/lou-multi-select/css/css/multi-select.css')">                
                     <div class="form-group col-md-4 @if($errors->has('plantel_id')) has-error @endif">
+                        <label for="plan_estudio_id-field">Plan Estudios</label>
+                        {!! Form::select("plan_estudio_id", $list["PlanEstudio"], null, array("class" => "form-control select_seguridad", "id" => "plan_estudio_id-field")) !!}
+                        @if($errors->has("plan_estudio_id"))
+                        <span class="help-block">{{ $errors->first("plan_estudio_id") }}</span>
+                        @endif
+                    </div>
+                    <div class="form-group col-md-4 @if($errors->has('plantel_id')) has-error @endif">
                        <label for="plantel_id-field">Plantel</label>
                        {!! Form::select("plantel_id", $list["Plantel"], null, array("class" => "form-control select_seguridad", "id" => "plantel_id-field", 'readonly'=>'readonly')) !!}
                        @if($errors->has("plantel_id"))

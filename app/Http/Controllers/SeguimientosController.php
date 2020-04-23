@@ -256,7 +256,7 @@ class SeguimientosController extends Controller
             ->join('municipios as m', 'm.id', '=', 'c.municipio_id')
             ->join('estados as e', 'e.id', '=', 'c.estado_id')
             ->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
-        //->leftJoin('asignacion_tareas as at', 'at.cliente_id', '=','seguimientos.cliente_id')
+            //->leftJoin('asignacion_tareas as at', 'at.cliente_id', '=','seguimientos.cliente_id')
             ->where('mes', '=', $mes)
             ->where('c.plantel_id', '=', $e->plantel_id)
             ->where('c.empleado_id', '=', $e->id)
@@ -352,15 +352,15 @@ class SeguimientosController extends Controller
         } */
 
         $especialidades = DB::table('especialidads as e')->select('e.id', 'e.name as especialidad', 'e.meta')
-        //->join('empleados as emp', 'emp.id', '=', 'c.empleado_id')
+            //->join('empleados as emp', 'emp.id', '=', 'c.empleado_id')
             ->where('e.plantel_id', '=', $input['plantel_f'])
-        //->where('c.plantel_id', '=', 1)
-        //->where('c.especialidad_id', '=', $input['especialidad_f'])
-        //->where('seguimientos.st_seguimiento_id', '=', '2')
+            //->where('c.plantel_id', '=', 1)
+            //->where('c.especialidad_id', '=', $input['especialidad_f'])
+            //->where('seguimientos.st_seguimiento_id', '=', '2')
             ->orderby('e.plantel_id', 'asc')
             ->orderby('e.id', 'asc')
-        //->orderby('empleado_id', 'asc')
-        //->orderBy('name', 'asc')
+            //->orderby('empleado_id', 'asc')
+            //->orderBy('name', 'asc')
             ->get();
         //dd($especialidades->toArray());
         $encabezado = array();
@@ -402,15 +402,15 @@ class SeguimientosController extends Controller
                     ->join('seguimientos', 'seguimientos.cliente_id', '=', 'c.id')
                     ->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
                     ->join('combinacion_clientes as cc', 'cc.cliente_id', '=', 'c.id')
-                //->where('c.plantel_id', '=', $input['plantel_f'])
-                //->where('c.plantel_id', '=', 1)
+                    //->where('c.plantel_id', '=', $input['plantel_f'])
+                    //->where('c.plantel_id', '=', 1)
                     ->where('cc.especialidad_id', '=', $e->id)
                     ->where('c.empleado_id', '=', $emp->id)
-                //->where('seguimientos.st_seguimiento_id', '=', '2')
+                    //->where('seguimientos.st_seguimiento_id', '=', '2')
                     ->orderby('c.plantel_id', 'asc')
-                //->orderby('especialidad_id', 'asc')
+                    //->orderby('especialidad_id', 'asc')
                     ->orderby('empleado_id', 'asc')
-                //->orderBy('name', 'asc')
+                    //->orderBy('name', 'asc')
                     ->groupBy('seguimientos.cliente_id')
                     ->value('total');
                 array_push($linea, $total);
@@ -466,11 +466,11 @@ class SeguimientosController extends Controller
             ->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
             ->where('c.plantel_id', '>=', $input['plantel_f'])
             ->where('c.plantel_id', '<=', $input['plantel_t'])
-        //->where('c.especialidad_id', '=', $input['especialidad_f'])
-        //->where('seguimientos.st_seguimiento_id', '=', '2')
+            //->where('c.especialidad_id', '=', $input['especialidad_f'])
+            //->where('seguimientos.st_seguimiento_id', '=', '2')
             ->whereBetween('seguimientos.created_at', [$input['fecha_f'], $input['fecha_t']])
             ->orderBy('Plantel')
-        //->groupBy('esp.meta','e.nombre', 'e.ape_paterno', 'e.ape_materno')
+            //->groupBy('esp.meta','e.nombre', 'e.ape_paterno', 'e.ape_materno')
             ->get();
 
         //dd($seguimientos->toArray());
@@ -525,20 +525,20 @@ class SeguimientosController extends Controller
         )
             ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
             ->join('combinacion_clientes as cc', 'cc.cliente_id', '=', 'c.id')
-        //->join('inscripcions as i','i.cliente_id','=','c.id')
+            //->join('inscripcions as i','i.cliente_id','=','c.id')
             ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
             ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
             ->join('especialidads as esp', 'esp.id', '=', 'cc.especialidad_id')
             ->join('lectivos as lec', 'lec.id', '=', 'esp.lectivo_id')
             ->join('nivels as n', 'n.id', '=', 'cc.nivel_id')
             ->join('grados as g', 'g.id', '=', 'cc.grado_id')
-        //->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
+            //->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
             ->join('medios as m', 'm.id', '=', 'c.medio_id')
             ->join('hactividades as h', 'h.cliente_id', '=', 'c.id')
             ->join('users as u', 'u.id', '=', 'h.usu_alta_id')
             ->where('h.asunto', '=', 'Cambio estatus ')
-        //->orWhere('h.asunto','=','Creacion')
-        /*->orWhere(function($q){
+            //->orWhere('h.asunto','=','Creacion')
+            /*->orWhere(function($q){
         $q->orWhere('h.asunto','=','Cambio estatus ');
         $q->orWhere('h.asunto','=','Concretado');
         })*/
@@ -632,6 +632,11 @@ class SeguimientosController extends Controller
         $fecha_inicio = date('Y-m-j', strtotime('-15 day', strtotime(date('Y-m-j'))));
         $e = Empleado::where('user_id', '=', Auth::user()->id)->first();
         $plantel = $e->plantel_id;
+        $planteles = array();
+        foreach ($e->plantels as $p) {
+            //dd($p->id);
+            array_push($planteles, $p->id);
+        }
         //dd($fecha_inicio);
         if (Auth::user()->can('WgaugesXplantelIndividual')) {
             $ds_actividades = DB::table('hactividades as has')
@@ -650,7 +655,7 @@ class SeguimientosController extends Controller
                 ->join('plantels as p', 'p.id', '=', 'e.plantel_id')
                 ->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
                 ->where('has.fecha', '>', $fecha_inicio)
-                ->where('p.id', '=', $plantel)
+                ->whereIn('p.id', '=', $planteles)
                 ->get();
         } else {
             $ds_actividades = DB::table('hactividades as has')
@@ -756,12 +761,12 @@ class SeguimientosController extends Controller
             ->where('c.plantel_id', '=', $parametros['plantel'])
             ->where('e.id', '=', $parametros['empleado'])
             ->where('esp.id', '=', $parametros['especialidad'])
-        //->where('c.especialidad_id', '=', $input['especialidad_f'])
-        //->where('seguimientos.st_seguimiento_id', '=', '2')
+            //->where('c.especialidad_id', '=', $input['especialidad_f'])
+            //->where('seguimientos.st_seguimiento_id', '=', '2')
             ->whereColumn('seguimientos.created_at', '>=', 'l.inicio')
             ->whereColumn('seguimientos.created_at', '<=', 'l.fin')
             ->orderBy('Plantel')
-        //->groupBy('esp.meta','e.nombre', 'e.ape_paterno', 'e.ape_materno')
+            //->groupBy('esp.meta','e.nombre', 'e.ape_paterno', 'e.ape_materno')
             ->get();
         //dd($seguimientos->toArray());
         //dd($seguimientos->toArray());
@@ -992,10 +997,10 @@ class SeguimientosController extends Controller
             ->join('clientes as c', 'c.id', '=', 'cajas.cliente_id')
             ->join('plantels as pla', 'pla.id', '=', 'c.plantel_id')
             ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
-        //->join('caja_lns as ln','ln.caja_id','=','caj.id')
-        //->join('caja_conceptos as conce','conce.id','=','ln.caja_concepto_id')
+            //->join('caja_lns as ln','ln.caja_id','=','caj.id')
+            //->join('caja_conceptos as conce','conce.id','=','ln.caja_concepto_id')
             ->join('st_cajas as st', 'st.id', '=', 'cajas.st_caja_id')
-        //->join('adeudos as a','a.id','=','ln.adeudo_id')
+            //->join('adeudos as a','a.id','=','ln.adeudo_id')
             ->join('pagos as pag', 'pag.caja_id', '=', 'cajas.id')
             ->join('forma_pagos as fp', 'fp.id', '=', 'pag.forma_pago_id')
             ->where('cajas.plantel_id', '=', $data['plantel_f'])
@@ -1233,7 +1238,7 @@ class SeguimientosController extends Controller
                     if ($cliente->beca_bnd != 1) {
                         foreach ($promociones as $promocion) {
                             $inscripcion = Adeudo::where('cliente_id', $adeudo_tomado->cliente_id)
-                            //->where('plan_pago_ln_id',$adeudo->plan_pago_ln_id)
+                                //->where('plan_pago_ln_id',$adeudo->plan_pago_ln_id)
                                 ->where('caja_concepto_id', 1)
                                 ->where('combinacion_cliente_id', $adeudo_tomado->combinacion_cliente_id)
                                 ->where('pagado_bnd', 1)

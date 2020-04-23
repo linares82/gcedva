@@ -75,6 +75,9 @@
                 <div class="col-md-4">
                     <a class='btn btn-sm btn-warning' target='_blank' href="{{route('cajas.adeudosXplantel')}}"> Ver Adeudos</a>
                 </div>
+                <div class="col-md-4">
+                    <a class='btn btn-sm btn-warning' target='_blank' href="{{route('cajas.moodleAdeudosXplantel')}}"> Moodle</a>
+                </div>
             
             </div>
         </div>

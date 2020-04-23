@@ -179,4 +179,18 @@ class NivelsController extends Controller
         $niveles = Nivel::orderBy('plantel_id')->orderBy('especialidad_id')->get();
         return view('combinacionClientes.reportes.cargas', compact('niveles'));
     }
+
+    public function apiListaXplantelYespecialidad(Request $request)
+    {
+        $datos = $request->all();
+        $lista = Nivel::select('id', 'name')
+            ->where('plantel_id', $datos['plantel'])
+            ->where('especialidad_id', $datos['especialidad'])
+            ->get();
+
+        if (count($lista) == 0) {
+            return response()->json(['msj' => 'Sin registros'], 500);
+        }
+        return response()->json(['resultado' => $lista]);
+    }
 }

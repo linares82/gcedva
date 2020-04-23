@@ -30,7 +30,8 @@ use Excel;
 use Log;
 //use App\Mail\CorreoBienvenida as Envia_mail;
 
-class ClientesaController extends Controller {
+class ClientesaController extends Controller
+{
 
     private $meta_residuo = 0;
 
@@ -39,26 +40,28 @@ class ClientesaController extends Controller {
      *
      * @return Response
      */
-    public function index(Request $request) {
-        return redirect()->route('clientes.index', array('p'=>1));
+    public function index(Request $request)
+    {
+        return redirect()->route('clientes.index', array('p' => 1));
         /* $c=Cliente::find(86);
           dd($c); */
-        
-        $clientes = Seguimiento::getAllData($request,20,1);
+
+        $clientes = Seguimiento::getAllData($request, 20, 1);
         //dd($clientes->toArray());
         //dd($clientes);
         return view('clientesa.index', compact('clientes'))
-                        ->with('list', Seguimiento::getListFromAllRelationApps())
-                        ->with('list1', Cliente::getListFromAllRelationApps());
+            ->with('list', Seguimiento::getListFromAllRelationApps())
+            ->with('list1', Cliente::getListFromAllRelationApps());
     }
 
-    public function index2(Request $request) {
+    public function index2(Request $request)
+    {
         //dd($request);
         $clientes = Cliente::getAllData($request);
         //dd($clientes);
         return view('clientes.index2', compact('clientes'))
-                        ->with('list', Seguimiento::getListFromAllRelationApps())
-                        ->with('list1', Cliente::getListFromAllRelationApps());
+            ->with('list', Seguimiento::getListFromAllRelationApps())
+            ->with('list1', Cliente::getListFromAllRelationApps());
     }
 
     /**
@@ -66,27 +69,33 @@ class ClientesaController extends Controller {
      *
      * @return Response
      */
-    public function create() {
+    public function create()
+    {
 
         //dd(Municipio::get());
-        $p = Auth::user()->can('IfiltroEmpleadosXPlantel');
-        if ($p) {
-            $e = Empleado::where('user_id', '=', Auth::user()->id)->first();
-            $empleados = Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
-                    ->where('plantel_id', '=', $e->plantel_id)
-                    ->where('puesto_id', '=', 2)
-                    ->pluck('name', 'id');
-        } else {
-            $empleados = Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
-                    ->where('puesto_id', '=', 2)
-                    ->pluck('name', 'id');
+        //$p = Auth::user()->can('IfiltroEmpleadosXPlantel');
+        //if ($p) {
+        $e = Empleado::where('user_id', '=', Auth::user()->id)->first();
+        $planteles = array();
+        foreach ($e->plantels as $p) {
+            //dd($p->id);
+            array_push($planteles, $p->id);
         }
+        $empleados = Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
+            ->whereIn('plantel_id', $planteles)
+            ->where('puesto_id', '=', 2)
+            ->pluck('name', 'id');
+        /*} else {
+            $empleados = Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
+                ->where('puesto_id', '=', 2)
+                ->pluck('name', 'id');
+        }*/
         $empleados = $empleados->reverse();
         $empleados->put(0, 'Seleccionar Opción');
         $empleados = $empleados->reverse();
         //dd($empleados);
         return view('clientesa.create', compact('empleados'))
-                        ->with('list', Cliente::getListFromAllRelationApps());
+            ->with('list', Cliente::getListFromAllRelationApps());
     }
 
     /**
@@ -95,23 +104,24 @@ class ClientesaController extends Controller {
      * @param Request $request
      * @return Response
      */
-    public function store(createCliente $request) {
+    public function store(createCliente $request)
+    {
         $id = 0;
         $input = $request->all();
         //$empleado=Empleado::find($request->input('empleado_id'));
         //$input['plantelplantel_id']=$empleado->plantel->id;
         $input['usu_alta_id'] = Auth::user()->id;
         $input['usu_mod_id'] = Auth::user()->id;
-        if(!isnull($input['ape_materno'])){
-            $input['ape_materno']=" ";
+        if (!isnull($input['ape_materno'])) {
+            $input['ape_materno'] = " ";
         }
-        if(!isnull($input['nombre2'])){
-            $input['nombre2']=" ";
+        if (!isnull($input['nombre2'])) {
+            $input['nombre2'] = " ";
         }
-        if(!isnull($input['matricula'])){
-            $input['matricula']=" ";
+        if (!isnull($input['matricula'])) {
+            $input['matricula'] = " ";
         }
-        $param=Param::where('llave', '=', 'msj_text')->first();
+        $param = Param::where('llave', '=', 'msj_text')->first();
         if ($input['cve_cliente'] == "") {
             $input['cve_cliente'] = 'Codigo: ' . substr(Hash::make(rand(0, 1000)), 2, 8) . $param->valor;
         }
@@ -168,7 +178,8 @@ class ClientesaController extends Controller {
      * @param  int  $id
      * @return Response
      */
-    public function show($id, Cliente $cliente) {
+    public function show($id, Cliente $cliente)
+    {
         $cliente = $cliente->find($id);
         return view('clientes.show', compact('cliente'));
     }
@@ -179,20 +190,21 @@ class ClientesaController extends Controller {
      * @param  int  $id
      * @return Response
      */
-    public function edit($id, Cliente $cliente) {
+    public function edit($id, Cliente $cliente)
+    {
         $cliente = $cliente->find($id);
         $p = Auth::user()->can('IfiltroEmpleadosXPlantel');
         //dd($p);
         if ($p) {
             $e = Empleado::where('user_id', '=', Auth::user()->id)->first();
             $empleados = Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
-                    ->where('plantel_id', '=', $e->plantel_id)
-                    ->where('puesto_id', '=', 2)
-                    ->pluck('name', 'id');
+                ->where('plantel_id', '=', $e->plantel_id)
+                ->where('puesto_id', '=', 2)
+                ->pluck('name', 'id');
         } else {
             $empleados = Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
-                    ->where('puesto_id', '=', 2)
-                    ->pluck('name', 'id');
+                ->where('puesto_id', '=', 2)
+                ->pluck('name', 'id');
         }
         $empleados = $empleados->reverse();
         $empleados->put(0, 'Seleccionar Opción');
@@ -202,9 +214,9 @@ class ClientesaController extends Controller {
         //dd($cp);
         //dd($preguntas);
         $doc_existentes = DB::table('pivot_doc_clientes as pde')->select('doc_alumno_id')
-                        ->join('clientes as c', 'c.id', '=', 'pde.cliente_id')
-                        ->where('c.id', '=', $id)
-                        ->where('pde.deleted_at', '=', NULL)->get();
+            ->join('clientes as c', 'c.id', '=', 'pde.cliente_id')
+            ->where('c.id', '=', $id)
+            ->where('pde.deleted_at', '=', NULL)->get();
 
         $de_array = array();
         if ($doc_existentes->isNotEmpty()) {
@@ -215,40 +227,43 @@ class ClientesaController extends Controller {
         }
 
         $documentos_faltantes = DB::table('doc_alumnos')
-                ->select()
-                ->whereNotIn('id', $de_array)
-                ->get();
+            ->select()
+            ->whereNotIn('id', $de_array)
+            ->get();
         //dd($cliente->toArray());
         return view('clientesa.edit', compact('cliente', 'preguntas', 'cp', 'documentos_faltantes', 'empleados'))
-                        ->with('list', Cliente::getListFromAllRelationApps())
-                        ->with('list1', PivotDocCliente::getListFromAllRelationApps());
+            ->with('list', Cliente::getListFromAllRelationApps())
+            ->with('list1', PivotDocCliente::getListFromAllRelationApps());
     }
 
-    public function getReasignar() {
+    public function getReasignar()
+    {
         return view('clientes.frm_reasignar')
-                        ->with('list', Cliente::getListFromAllRelationApps());
+            ->with('list', Cliente::getListFromAllRelationApps());
     }
 
-    public function getCuenta(Request $request) {
+    public function getCuenta(Request $request)
+    {
         //dd($request->input('plantel_id'));
         $plantel = $request->input('plantel_id');
         $empleado = $request->input('empleado_id');
         $estatus = $request->input('st_cliente_id');
         $cuenta = Cliente::where('plantel_id', '=', $plantel)
-                ->where('empleado_id', '=', $empleado)
-                ->where('st_cliente_id', '=', $estatus)
-                ->count();
+            ->where('empleado_id', '=', $empleado)
+            ->where('st_cliente_id', '=', $estatus)
+            ->count();
 
         return $cuenta;
     }
 
-    public function postReasignar(Request $request) {
+    public function postReasignar(Request $request)
+    {
         $input = $request->all();
         //dd($input);
         Cliente::where('plantel_id', '=', $input['plantel_id'])
-                ->where('empleado_id', '=', $input['empleado_id'])
-                ->where('st_cliente_id', '=', $input['st_cliente_id'])
-                ->update(['empleado_id' => $input['empleado_id2']]);
+            ->where('empleado_id', '=', $input['empleado_id'])
+            ->where('st_cliente_id', '=', $input['st_cliente_id'])
+            ->update(['empleado_id' => $input['empleado_id2']]);
 
         return redirect()->route('clientes.index');
     }
@@ -259,13 +274,14 @@ class ClientesaController extends Controller {
      * @param  int  $id
      * @return Response
      */
-    public function duplicate($id, Cliente $cliente) {
+    public function duplicate($id, Cliente $cliente)
+    {
         $cliente = $cliente->find($id);
         $preguntas = Preguntum::pluck('name', 'id');
         $cp = PreguntaCliente::where('cliente_id', '=', $id)->get();
         return view('clientes.duplicate', compact('cliente', 'preguntas', 'cp'))
-                        ->with('list', Cliente::getListFromAllRelationApps())
-                        ->with('list1', Cliente::getListFromAllRelationApps());
+            ->with('list', Cliente::getListFromAllRelationApps())
+            ->with('list1', Cliente::getListFromAllRelationApps());
     }
 
     /**
@@ -275,18 +291,19 @@ class ClientesaController extends Controller {
      * @param Request $request
      * @return Response
      */
-    public function update($id, Cliente $cliente, updateCliente $request) {
+    public function update($id, Cliente $cliente, updateCliente $request)
+    {
         //dd("fil");
         $input = $request->all();
         $input['usu_mod_id'] = Auth::user()->id;
-        if(!isnull($input['ape_materno'])){
-            $input['ape_materno']=" ";
+        if (!isnull($input['ape_materno'])) {
+            $input['ape_materno'] = " ";
         }
-        if(!isnull($input['nombre2'])){
-            $input['nombre2']=" ";
+        if (!isnull($input['nombre2'])) {
+            $input['nombre2'] = " ";
         }
-        if(!isnull($input['matricula'])){
-            $input['matricula']=" ";
+        if (!isnull($input['matricula'])) {
+            $input['matricula'] = " ";
         }
         //$empleado=Empleado::find($request->input('empleado_id'));
         //$input['plantel_id']=$empleado->plantel->id;
@@ -295,7 +312,7 @@ class ClientesaController extends Controller {
         $pc['respuesta'] = $input['respuesta'];
         $pc['usu_alta_id'] = Auth::user()->id;
         $pc['usu_mod_id'] = Auth::user()->id;
-        
+
         //dd($pc);
         unset($input['pregunta_id']);
         unset($input['respuesta']);
@@ -347,7 +364,8 @@ class ClientesaController extends Controller {
         return redirect()->route('clientesa.edit', $id)->with('message', 'Registro Actualizado.');
     }
 
-    public function confirmaCorreo($id, Cliente $cliente, Request $request) {
+    public function confirmaCorreo($id, Cliente $cliente, Request $request)
+    {
         $cliente = $cliente->find($id);
         $cliente->correo_confirmado = 1;
         $cliente->save();
@@ -362,7 +380,8 @@ class ClientesaController extends Controller {
      * @param  int  $id
      * @return Response
      */
-    public function destroy($id, Cliente $cliente, Seguimiento $s) {
+    public function destroy($id, Cliente $cliente, Seguimiento $s)
+    {
         $cliente = $cliente->find($id);
         $cliente->delete();
         $s->where('cliente_id', '=', $id)->delete();
@@ -370,11 +389,12 @@ class ClientesaController extends Controller {
         return redirect()->route('clientes.index')->with('message', 'Registro Borrado.');
     }
 
-    public function autocomplete(Request $request) {
+    public function autocomplete(Request $request)
+    {
         //dd($_REQUEST);
         $data = Cliente::select("expo as descripcion")
-                ->where("expo", "LIKE", "%" . $request->input('term') . "%")
-                ->get();
+            ->where("expo", "LIKE", "%" . $request->input('term') . "%")
+            ->get();
         //dd($data);
         $results = array();
         foreach ($data as $value) {
@@ -384,12 +404,14 @@ class ClientesaController extends Controller {
         return response()->json($results);
     }
 
-    public function carga() {
+    public function carga()
+    {
         return view('clientes.carga')
-                        ->with('list', Empleado::getListFromAllRelationApps());
+            ->with('list', Empleado::getListFromAllRelationApps());
     }
 
-    public function cargaFile(Carga $request) {
+    public function cargaFile(Carga $request)
+    {
         $procesados = 0;
         //Define datos de trabajo
         $p = $request->input('plantel_id');
@@ -461,7 +483,6 @@ class ClientesaController extends Controller {
                         $procesados++;
                     }
                 } catch (\Exception $e) {
-                    
                 }
             }
         }
@@ -469,10 +490,11 @@ class ClientesaController extends Controller {
         //unlink($ruta.$a);
 
         return view('clientesa.carga', compact('procesados'))
-                        ->with('list', Empleado::getListFromAllRelationApps());
+            ->with('list', Empleado::getListFromAllRelationApps());
     }
 
-    public function defineEmpleado($meta_individual) {
+    public function defineEmpleado($meta_individual)
+    {
         $empleados = Empleado::select('id', 'pendientes')->where('st_empleado_id', '=', '1')->get();
         foreach ($empleados as $e) {
             $pendientes = Empleado::where('id', '=', $e->id)->value('pendientes');
@@ -488,17 +510,18 @@ class ClientesaController extends Controller {
         }
     }
 
-    public function enviaSms(Request $request) {
+    public function enviaSms(Request $request)
+    {
         //dd($_REQUEST);
         if ($request->ajax()) {
             try {
                 $r = Param::where('llave', '=', 'sms')->first();
-                $no= Param::where('llave', '=', 'num_twilio')->first();
+                $no = Param::where('llave', '=', 'num_twilio')->first();
                 $to = '+52' . e($request->input('tel_cel'));
                 //dd($to);
                 $message = e($request->input('cve_cliente'));
                 $from = $no->valor;
-                
+
                 //dd($r->valor);
                 if ($r->valor == 'activo') {
                     if (Sms::send($message, $to, $from)) {
@@ -562,28 +585,29 @@ class ClientesaController extends Controller {
       }
       } */
 
-    public function enviaMail(Request $request) {
+    public function enviaMail(Request $request)
+    {
         //dd($_REQUEST);
         $r = 0;
         $cli = Cliente::find(e($request->id));
         $pla = Plantilla::find(2);
         //dd($pla);
-        $p=array();
-        $p['img1']=$pla->img1;
-        $p['plantilla']=$pla->plantilla;
-        $p['id']=$cli->id;
+        $p = array();
+        $p['img1'] = $pla->img1;
+        $p['plantilla'] = $pla->plantilla;
+        $p['id'] = $cli->id;
         //dd($pla);
-        
+
         if ($request->ajax()) {
             try {
                 $r = Param::where('llave', '=', 'correo_electronico')->first();
                 if ($r->valor == 'activo') {
-                    \Mail::send('emails.2', array('img1'=>$pla->img1, 'plantilla'=>$pla->plantilla, 'id'=>$cli->id), function($message) use ($request) {
+                    \Mail::send('emails.2', array('img1' => $pla->img1, 'plantilla' => $pla->plantilla, 'id' => $cli->id), function ($message) use ($request) {
                         $message->to(e($request->mail), e($request->nombre) . " " . e($request->ape_paterno) . " " . e($request->ape_materno));
                         $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
                         $message->subject("Bienvenido");
                     });
-                    
+
                     $input2['usu_envio_id'] = Auth::user()->id;
                     $input2['cliente_id'] = e($request->input('id'));
                     $input2['fecha_envio'] = date("Y/m/d");
@@ -601,17 +625,20 @@ class ClientesaController extends Controller {
         }
     }
 
-    public function cmbMClientes() {
+    public function cmbMClientes()
+    {
         $c = Cliente::select('id', 'nombre', 'nombre2', 'ape_paterno', 'ape_materno', 'mail')->get();
         //return response()->json($c);
         echo json_encode($c);
     }
 
-    public function indexLista() {
+    public function indexLista()
+    {
         return view('clientesa.modal_search');
     }
 
-    public function lista(Request $request) {
+    public function lista(Request $request)
+    {
         //dd(Session::get('cliente_field'));
         Session::put('cliente_search', $request->has('ok') ? $request->input('search') : (Session::has('cliente_search') ? Session::get('cliente_search') : ''));
         Session::put('nombre2_search', $request->has('ok') ? $request->input('search2') : (Session::has('nombre2_search') ? Session::get('nombre2_search') : ''));
@@ -620,16 +647,17 @@ class ClientesaController extends Controller {
         //Session::put('cliente_field', $request->has('field') ? $request->input('field') : (Session::has('cliente_field') ? Session::get('cliente_field') : 'nombre'));
         //Session::put('cliente_sort', $request->has('sort') ? $request->input('sort') : (Session::has('cliente_sort') ? Session::get('cliente_sort') : 'asc'));
         $clientes = Cliente::where('nombre', 'like', '%' . Session::get('cliente_search') . '%')
-                ->where('nombre2', 'like', '%' . Session::get('nombre2_search') . '%')
-                ->where('ape_paterno', 'like', '%' . Session::get('ape_paterno_search') . '%')
-                ->where('ape_materno', 'like', '%' . Session::get('ape_materno_search') . '%')
-                ->paginate(8);
+            ->where('nombre2', 'like', '%' . Session::get('nombre2_search') . '%')
+            ->where('ape_paterno', 'like', '%' . Session::get('ape_paterno_search') . '%')
+            ->where('ape_materno', 'like', '%' . Session::get('ape_materno_search') . '%')
+            ->paginate(8);
         //->orderBy(Session::get('cliente_field'), Session::get('cliente_sort'))->paginate(8);
 
         return view('clientesa.modal_list', ['clientes' => $clientes]);
     }
 
-    public function getCmbAlumno(Request $request) {
+    public function getCmbAlumno(Request $request)
+    {
         if ($request->ajax()) {
             //dd($request->all());
             $plantel = $request->get('plantel_id');
@@ -641,26 +669,30 @@ class ClientesaController extends Controller {
             $cliente = $request->get('cliente_id');
             $final = array();
             $r = DB::table('inscripcions as i')
-                    ->select('c.id', DB::raw('concat(c.nombre," ",c.ape_paterno," ",c.ape_paterno) as name'))
-                    ->join('clientes as c', 'c.id', '=', 'i.cliente_id')
-                    ->where('i.plantel_id', '=', $plantel)
-                    ->where('i.especialidad_id', '=', $especialidad)
-                    ->where('i.nivel_id', '=', $nivel)
-                    ->where('i.grado_id', '=', $grado)
-                    ->where('i.grupo_id', '=', $grupo)
-                    ->where('i.id', '>', '0')
-                    ->get();
+                ->select('c.id', DB::raw('concat(c.nombre," ",c.ape_paterno," ",c.ape_paterno) as name'))
+                ->join('clientes as c', 'c.id', '=', 'i.cliente_id')
+                ->where('i.plantel_id', '=', $plantel)
+                ->where('i.especialidad_id', '=', $especialidad)
+                ->where('i.nivel_id', '=', $nivel)
+                ->where('i.grado_id', '=', $grado)
+                ->where('i.grupo_id', '=', $grupo)
+                ->where('i.id', '>', '0')
+                ->get();
             //dd($r);
             if (isset($cliente) and $cliente <> 0) {
                 foreach ($r as $r1) {
                     if ($r1->id == $cliente) {
-                        array_push($final, array('id' => $r1->id,
+                        array_push($final, array(
+                            'id' => $r1->id,
                             'name' => $r1->name,
-                            'selectec' => 'Selected'));
+                            'selectec' => 'Selected'
+                        ));
                     } else {
-                        array_push($final, array('id' => $r1->id,
+                        array_push($final, array(
+                            'id' => $r1->id,
                             'name' => $r1->name,
-                            'selectec' => ''));
+                            'selectec' => ''
+                        ));
                     }
                 }
                 return $final;
@@ -669,18 +701,27 @@ class ClientesaController extends Controller {
             }
         }
     }
-    
-    public function descargaClientes(){
-        
-        $clientes = Cliente::select('clientes.fec_registro as FechaRegistro', 'clientes.nombre as PrimerNombre', 
-                        'clientes.nombre2 as SegundoNombre', 'clientes.ape_paterno as ApellidoPaterno', 'clientes.ape_materno as ApellidoMaterno',
-                        'clientes.tel_fijo as Telefono', 'clientes.tel_cel as Celular', 'clientes.mail as Email', 
-                        'clientes.escuela_procedencia as EscuelaProcedencia', 'm.name as medio as Medio',
-                        DB::raw('concat(e.nombre, " ",e.ape_paterno, " ",e.ape_materno) as Asesor'))
-                        ->join('medios as m', 'm.id', '=', 'clientes.medio_id')
-                        ->join('empleados as e', 'e.id', '=', 'clientes.empleado_id')
-                        //->limit(20)
-                        ->get();
+
+    public function descargaClientes()
+    {
+
+        $clientes = Cliente::select(
+            'clientes.fec_registro as FechaRegistro',
+            'clientes.nombre as PrimerNombre',
+            'clientes.nombre2 as SegundoNombre',
+            'clientes.ape_paterno as ApellidoPaterno',
+            'clientes.ape_materno as ApellidoMaterno',
+            'clientes.tel_fijo as Telefono',
+            'clientes.tel_cel as Celular',
+            'clientes.mail as Email',
+            'clientes.escuela_procedencia as EscuelaProcedencia',
+            'm.name as medio as Medio',
+            DB::raw('concat(e.nombre, " ",e.ape_paterno, " ",e.ape_materno) as Asesor')
+        )
+            ->join('medios as m', 'm.id', '=', 'clientes.medio_id')
+            ->join('empleados as e', 'e.id', '=', 'clientes.empleado_id')
+            //->limit(20)
+            ->get();
         //dd($clientes);
         /*$clientes_array=array();
         $encabezados=array('Fecha', 'P. Nombre', 'S. Nombre', 'A. Paterno', 'A. Materno', 'Teléfono', 
@@ -696,12 +737,11 @@ class ClientesaController extends Controller {
          * 
          */
         //dd("excel inicia");
-        Excel::create('Clientes', function($excel) use ($clientes) {
-            $excel->sheet('Clientes', function($sheet) use ($clientes) {
+        Excel::create('Clientes', function ($excel) use ($clientes) {
+            $excel->sheet('Clientes', function ($sheet) use ($clientes) {
                 $sheet->fromArray($clientes->toArray());
             });
         })->download('xlsx');
         dd("excel terminado");
     }
-
 }

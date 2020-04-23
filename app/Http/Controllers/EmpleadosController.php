@@ -64,9 +64,11 @@ class EmpleadosController extends Controller
     public function store(createEmpleado $request)
     {
 
-        $input = $request->all();
+        $input = $request->except('plantel_id');
+        $planteles = $request->only('plantel_id');
         $input['usu_alta_id'] = Auth::user()->id;
         $input['usu_mod_id'] = Auth::user()->id;
+        $input['plantel_id'] = 0;
         if (!isset($input['jefe_bnd'])) {
             $input['jefe_bnd'] = 0;
         } else {
@@ -99,6 +101,8 @@ class EmpleadosController extends Controller
             $input2['usu_mod_id'] = Auth::user()->id;
             PivotDocEmpleado::create($input2);
         }
+
+        $e->plantels()->sync($planteles['plantel_id']);
 
         return redirect()->route('empleados.edit', $e->id)->with('message', 'Registro Creado.');
     }
@@ -271,7 +275,8 @@ class EmpleadosController extends Controller
      */
     public function update($id, Empleado $empleado, updateEmpleado $request)
     {
-        $input = $request->except(['doc_empleado_id', 'archivo']);
+        $input = $request->except(['doc_empleado_id', 'archivo', 'plantel_id']);
+        $planteles = $request->only('plantel_id');
         $input['usu_mod_id'] = Auth::user()->id;
         if (!isset($input['jefe_bnd'])) {
             $input['jefe_bnd'] = 0;
@@ -295,6 +300,8 @@ class EmpleadosController extends Controller
             $input2['usu_mod_id'] = Auth::user()->id;
             PivotDocEmpleado::create($input2);
         }
+
+        $empleado->plantels()->sync($planteles['plantel_id']);
 
         return redirect()->route('empleados.edit', $id)->with('message', 'Registro Actualizado.');
     }

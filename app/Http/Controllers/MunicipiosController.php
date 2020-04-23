@@ -1,4 +1,6 @@
-<?php namespace App\Http\Controllers;
+<?php
+
+namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -9,7 +11,8 @@ use Auth;
 use App\Http\Requests\updateMunicipio;
 use App\Http\Requests\createMunicipio;
 
-class MunicipiosController extends Controller {
+class MunicipiosController extends Controller
+{
 
 	/**
 	 * Display a listing of the resource.
@@ -31,7 +34,7 @@ class MunicipiosController extends Controller {
 	public function create()
 	{
 		return view('municipios.create')
-			->with( 'list', Municipio::getListFromAllRelationApps() );
+			->with('list', Municipio::getListFromAllRelationApps());
 	}
 
 	/**
@@ -44,11 +47,11 @@ class MunicipiosController extends Controller {
 	{
 
 		$input = $request->all();
-		$input['usu_alta_id']=Auth::user()->id;
-		$input['usu_mod_id']=Auth::user()->id;
+		$input['usu_alta_id'] = Auth::user()->id;
+		$input['usu_mod_id'] = Auth::user()->id;
 
 		//create data
-		Municipio::create( $input );
+		Municipio::create($input);
 
 		return redirect()->route('municipios.index')->with('message', 'Registro Creado.');
 	}
@@ -61,7 +64,7 @@ class MunicipiosController extends Controller {
 	 */
 	public function show($id, Municipio $municipio)
 	{
-		$municipio=$municipio->find($id);
+		$municipio = $municipio->find($id);
 		return view('municipios.show', compact('municipio'));
 	}
 
@@ -73,9 +76,9 @@ class MunicipiosController extends Controller {
 	 */
 	public function edit($id, Municipio $municipio)
 	{
-		$municipio=$municipio->find($id);
+		$municipio = $municipio->find($id);
 		return view('municipios.edit', compact('municipio'))
-			->with( 'list', Municipio::getListFromAllRelationApps() );
+			->with('list', Municipio::getListFromAllRelationApps());
 	}
 
 	/**
@@ -86,9 +89,9 @@ class MunicipiosController extends Controller {
 	 */
 	public function duplicate($id, Municipio $municipio)
 	{
-		$municipio=$municipio->find($id);
+		$municipio = $municipio->find($id);
 		return view('municipios.duplicate', compact('municipio'))
-			->with( 'list', Municipio::getListFromAllRelationApps() );
+			->with('list', Municipio::getListFromAllRelationApps());
 	}
 
 	/**
@@ -101,10 +104,10 @@ class MunicipiosController extends Controller {
 	public function update($id, Municipio $municipio, updateMunicipio $request)
 	{
 		$input = $request->all();
-		$input['usu_mod_id']=Auth::user()->id;
+		$input['usu_mod_id'] = Auth::user()->id;
 		//update data
-		$municipio=$municipio->find($id);
-		$municipio->update( $input );
+		$municipio = $municipio->find($id);
+		$municipio->update($input);
 
 		return redirect()->route('municipios.index')->with('message', 'Registro Actualizado.');
 	}
@@ -115,14 +118,18 @@ class MunicipiosController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id,Municipio $municipio)
+	public function destroy($id, Municipio $municipio)
 	{
-		$municipio=$municipio->find($id);
+		$municipio = $municipio->find($id);
 		$municipio->delete();
 
 		return redirect()->route('municipios.index')->with('message', 'Registro Borrado.');
 	}
 
-	
-
+	public function apiListaXestado(Request $request)
+	{
+		$datos = $request->all();
+		$lista = Municipio::select('id', 'name')->where('estado_id', $datos['estado'])->get();
+		return response()->json(['resultados' => $lista]);
+	}
 }

@@ -140,26 +140,33 @@ trait GetAllDataTrait
         //dd(Auth::user()->can('IfiltroClientesXPlantel'));
         //dd();
         $empleado = Empleado::where('user_id', '=', Auth::user()->id)->first();
+        $planteles = array();
+        foreach ($empleado->plantels as $p) {
+            //dd($p->id);
+            array_push($planteles, $p->id);
+        }
+
+        //dd($planteles);
         //dd($baseTable);
         switch ($baseTable) {
             case "movimientos":
-                if (Auth::user()->can('IfiltroClientesXPlantel')) {
-                    $myQuery = $myQuery->where('movimientos.plantel_id', '=', $empleado->plantel_id);
-                }
+                //if (Auth::user()->can('IfiltroClientesXPlantel')) {
+                $myQuery = $myQuery->whereIn('movimientos.plantel_id', $planteles);
+                //}
                 break;
             case "muebles":
-                if (Auth::user()->can('IfiltroClientesXPlantel')) {
-                    $myQuery = $myQuery->where('muebles.plantel_id', '=', $empleado->plantel_id);
-                }
+                //if (Auth::user()->can('IfiltroClientesXPlantel')) {
+                $myQuery = $myQuery->whereIn('muebles.plantel_id', $planteles);
+                //}
                 break;
             case "autorizacion_becas":
                 $myQuery = $myQuery->orderBy('autorizacion_becas.st_beca_id');
                 break;
             case "clientes":
                 $myQuery = $myQuery->with('plantel', 'especialidad', 'nivel', 'grado', 'stCliente', 'pais', 'empleado');
-                if ($baseTable == "clientes" and (Auth::user()->can('IfiltroClientesXPlantel'))) {
-                    $myQuery = $myQuery->where('clientes.plantel_id', '=', $empleado->plantel_id);
-                }
+                //if ($baseTable == "clientes" and (Auth::user()->can('IfiltroClientesXPlantel'))) {
+                $myQuery = $myQuery->whereIn('clientes.plantel_id', $planteles);
+                //}
                 break;
             case 'transferences':
                 if (Auth::user()->can('transferencia.filtroPlantel')) {
@@ -189,8 +196,8 @@ trait GetAllDataTrait
              * */
 
             case "empleados":
-                if ($baseTable == "empleados" and Auth::user()->can('IfiltroEmpleadosXPlantel')) {
-                    $myQuery = $myQuery->where('empleados.plantel_id', '=', $empleado->plantel_id);
+                if ($baseTable == "empleados") { // and Auth::user()->can('IfiltroEmpleadosXPlantel')
+                    $myQuery = $myQuery->whereIn('empleados.plantel_id', $planteles);
                 }
                 if ($baseTable == "empleados" and Auth::user()->can('empleados.bajas')) {
                     $myQuery = $myQuery->where('empleados.st_empleado_id', '<>', 3);
@@ -211,31 +218,31 @@ trait GetAllDataTrait
                 }
                 break;
             case "grupos":
-                if (Auth::user()->can('IFiltroEmpleadosXPlantel')) {
-                    //dd("fil");
-                    $myQuery = $myQuery->where('grupos.plantel_id', '=', $empleado->plantel_id);
-                }
+                //if (Auth::user()->can('IFiltroEmpleadosXPlantel')) {
+                //dd("fil");
+                $myQuery = $myQuery->whereIn('grupos.plantel_id', $planteles);
+                //}
                 break;
             case "materia":
-                if (Auth::user()->can('IFiltroEmpleadosXPlantel')) {
-                    $myQuery = $myQuery->where('materia.plantel_id', '=', $empleado->plantel_id);
-                }
+                //if (Auth::user()->can('IFiltroEmpleadosXPlantel')) {
+                $myQuery = $myQuery->whereIn('materia.plantel_id', $planteles);
+                //}
                 break;
             case "salons":
-                if (Auth::user()->can('IFiltroEmpleadosXPlantel')) {
-                    $myQuery = $myQuery->where('salons.plantel_id', '=', $empleado->plantel_id);
-                }
+                //if (Auth::user()->can('IFiltroEmpleadosXPlantel')) {
+                $myQuery = $myQuery->whereIn('salons.plantel_id', $planteles);
+                //}
 
                 break;
             case "periodo_estudios":
-                if (Auth::user()->can('IFiltroEmpleadosXPlantel')) {
-                    $myQuery = $myQuery->where('periodo_estudios.plantel_id', '=', $empleado->plantel_id);
-                }
+                //if (Auth::user()->can('IFiltroEmpleadosXPlantel')) {
+                $myQuery = $myQuery->whereIn('periodo_estudios.plantel_id', $planteles);
+                //}
                 break;
             case "asignacion_academicas":
-                if (Auth::user()->can('IFiltroEmpleadosXPlantel')) {
-                    $myQuery = $myQuery->where('asignacion_academicas.plantel_id', '=', $empleado->plantel_id);
-                }
+                //if (Auth::user()->can('IFiltroEmpleadosXPlantel')) {
+                $myQuery = $myQuery->whereIn('asignacion_academicas.plantel_id', $planteles);
+                //}
                 $user = Auth::user()->id;
                 $empleado = Empleado::where('user_id', $user)->first();
                 if ($empleado->puesto_id == 3) {
@@ -244,20 +251,20 @@ trait GetAllDataTrait
                 //dd($request);
                 break;
             case "alumnos":
-                if (Auth::user()->can('IFiltroEmpleadosXPlantel')) {
-                    $myQuery = $myQuery->where('alumnos.plantel_id', '=', $empleado->plantel_id);
-                }
+                //if (Auth::user()->can('IFiltroEmpleadosXPlantel')) {
+                $myQuery = $myQuery->whereIn('alumnos.plantel_id', $planteles);
+                //}
                 break;
             case "seguimientos":
                 $myQuery = $myQuery->with(['cliente', 'stSeguimiento']);
                 if ($baseTable == "seguimientos" and Auth::user()->can('IfiltroClientesXEmpleado')) {
                     $myQuery = $myQuery->where('clientes.empleado_id', '=', $empleado->id);
                 }
-                if ($baseTable == "seguimientos" and Auth::user()->can('IfiltroClientesXPlantel')) {
-                    $myQuery = $myQuery->where('clientes.plantel_id', '=', $empleado->plantel_id);
+                if ($baseTable == "seguimientos") { //and Auth::user()->can('IfiltroClientesXPlantel')
+                    $myQuery = $myQuery->whereIn('clientes.plantel_id', $planteles);
                 }
-                if ($baseTable == "seguimientos" and Auth::user()->can('IfiltroClientesXPlantel')) {
-                    $myQuery = $myQuery->where('clientes.plantel_id', '=', $empleado->plantel_id)
+                if ($baseTable == "seguimientos") { //and Auth::user()->can('IfiltroClientesXPlantel')
+                    $myQuery = $myQuery->whereIn('clientes.plantel_id', $planteles)
                         ->where('st_seguimiento_id', '<>', '3');
                 }
                 if ($baseTable == "seguimientos" and Auth::user()->can('IfiltroRechazados')) {
@@ -277,8 +284,8 @@ trait GetAllDataTrait
                 break;
             case "nivels":
                 //dd(Auth::user()->can('IfiltroNivelXplantel'));
-                if ($baseTable == "nivels" and Auth::user()->can('IfiltroNivelXplantel')) {
-                    $myQuery = $myQuery->where('nivels.plantel_id', '=', $empleado->plantel_id);
+                if ($baseTable == "nivels") { // and Auth::user()->can('IfiltroNivelXplantel')
+                    $myQuery = $myQuery->whereIn('nivels.plantel_id', $planteles);
                 }
                 break;
             case "calendario_evaluacions":

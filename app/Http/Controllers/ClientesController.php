@@ -43,8 +43,6 @@ use Session;
 use Storage;
 use Twilio\Rest\Client;
 
-//use App\Mail\CorreoBienvenida as Envia_mail;
-
 class ClientesController extends Controller
 {
 
@@ -173,18 +171,23 @@ class ClientesController extends Controller
     {
 
         //dd(Municipio::get());
-        $p = Auth::user()->can('IfiltroEmpleadosXPlantel');
-        if ($p) {
-            $e = Empleado::where('user_id', '=', Auth::user()->id)->first();
-            $empleados = Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
-                ->where('plantel_id', '=', $e->plantel_id)
-            //->where('puesto_id', '=', 2)
-                ->pluck('name', 'id');
-        } else {
-            $empleados = Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
-            //->where('puesto_id', '=', 2)
-                ->pluck('name', 'id');
+        //$p = Auth::user()->can('IfiltroEmpleadosXPlantel');
+        //if ($p) {
+        $e = Empleado::where('user_id', '=', Auth::user()->id)->first();
+        $planteles = array();
+        foreach ($e->plantels as $p) {
+            //dd($p->id);
+            array_push($planteles, $p->id);
         }
+        $empleados = Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
+            ->whereIn('plantel_id', $planteles)
+            //->where('puesto_id', '=', 2)
+            ->pluck('name', 'id');
+        /*} else {
+        $empleados = Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
+        //->where('puesto_id', '=', 2)
+        ->pluck('name', 'id');
+        }*/
         $empleados = $empleados->reverse();
         $empleados->put(0, 'Seleccionar OpciÃ³n');
         $empleados = $empleados->reverse();
@@ -756,9 +759,10 @@ class ClientesController extends Controller
         $twilio_number = Param::where('llave', '=', 'TWILIO_FROM')->first();
 
         $client = new Client($account_sid->valor, $auth_token->valor);
-        $client->messages->create($telefonos,
-            ['from' => $twilio_number->valor, 'body' => $message]);
-
+        $client->messages->create(
+            $telefonos,
+            ['from' => $twilio_number->valor, 'body' => $message]
+        );
     }
 
     public function enviaSms(Request $request)
@@ -806,7 +810,6 @@ class ClientesController extends Controller
                             $input['usu_mod_id'] = Auth::user()->id;
                             Sm::create($input);
                         }
-
                     }
                 }
                 return json_encode(true);
@@ -1024,7 +1027,7 @@ class ClientesController extends Controller
         $clientes = Cliente::select('clientes.fec_registro as FechaRegistro', 'clientes.nombre as PrimerNombre', 'clientes.nombre2 as SegundoNombre', 'clientes.ape_paterno as ApellidoPaterno', 'clientes.ape_materno as ApellidoMaterno', 'clientes.tel_fijo as Telefono', 'clientes.tel_cel as Celular', 'clientes.mail as Email', 'clientes.escuela_procedencia as EscuelaProcedencia', 'm.name as medio as Medio', DB::raw('concat(e.nombre, " ",e.ape_paterno, " ",e.ape_materno) as Asesor'))
             ->join('medios as m', 'm.id', '=', 'clientes.medio_id')
             ->join('empleados as e', 'e.id', '=', 'clientes.empleado_id')
-        //->limit(20)
+            //->limit(20)
             ->get();
         //dd($clientes);
         /* $clientes_array=array();
@@ -1071,7 +1074,7 @@ class ClientesController extends Controller
                 ->join('plantels as p', 'p.id', '=', 'clientes.plantel_id')
                 ->join('st_seguimientos as st', 'st.id', '=', 's.st_seguimiento_id')
                 ->where('clientes.plantel_id', '=', $filtros['plantel_f'])
-            //->where('clientes.plantel_id','<=', $filtros['plantel_t'])
+                //->where('clientes.plantel_id','<=', $filtros['plantel_t'])
                 ->where('clientes.created_at', '>=', $filtros['fecha_f'])
                 ->where('clientes.created_at', '<=', $filtros['fecha_t'])
                 ->where('clientes.municipio_id', '>', 0)
@@ -1112,8 +1115,8 @@ class ClientesController extends Controller
                         ->where('clientes.created_at', '<=', $filtros['fecha_t'])
                         ->where('s.st_seguimiento_id', '=', $s->id)
                         ->where('clientes.municipio_id', '=', $m->id)
-                    //->groupBy('s.created_at')
-                    //->groupBy('s.mes')
+                        //->groupBy('s.created_at')
+                        //->groupBy('s.mes')
                         ->value('total');
                     array_push($ln, $clientes);
                 }
@@ -1279,10 +1282,10 @@ class ClientesController extends Controller
                             ->join('combinacion_clientes as cc', 'cc.cliente_id', '=', 'c.id')
                             ->join('especialidads as esp', 'esp.id', '=', 'cc.especialidad_id')
                             ->where('esp.lectivo_id', '=', $lSt2->id)
-                        //->where('seguimientos.created_at', '>=', $l->inicio)
-                        //->where('seguimientos.created_at', '<=', $l->fin)
+                            //->where('seguimientos.created_at', '>=', $l->inicio)
+                            //->where('seguimientos.created_at', '<=', $l->fin)
                             ->where('c.empleado_id', '=', $e->id)
-                        //->where('c.plantel_id', '=', $e->plantel_id)
+                            //->where('c.plantel_id', '=', $e->plantel_id)
                             ->where('h.fecha', '>=', $lSt2->inicio)
                             ->where('h.fecha', '<=', $lSt2->fin)
                             ->where('h.detalle', '=', 'Concretado')
@@ -1328,9 +1331,9 @@ class ClientesController extends Controller
 
                     $valor = Seguimiento::where('st_seguimiento_id', '=', $st->id)
                         ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
-                    //->where('mes', '=', $mes)
+                        //->where('mes', '=', $mes)
                         ->where('c.empleado_id', '=', $e->id)
-                    //->where('c.plantel_id', '=', $e->plantel_id)
+                        //->where('c.plantel_id', '=', $e->plantel_id)
                         ->count();
                     /*Seguimiento::select(DB::raw('count(st.name) as total'))
                     ->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
@@ -1764,11 +1767,30 @@ class ClientesController extends Controller
     public function listaClientesR(Request $request)
     {
         $datos = $request->all();
-        $registros = Cliente::select('clientes.id', 'clientes.nombre', 'clientes.nombre2', 'clientes.ape_paterno',
-            'clientes.ape_materno', 'clientes.matricula', 'clientes.genero', 'clientes.fec_nacimiento',
-            'clientes.mail', 'clientes.tel_fijo', 'clientes.tel_cel', 'clientes.nombre_padre', 'clientes.tel_padre',
-            'clientes.dir_padre', 'clientes.st_cliente_id', 'clientes.curp', 'clientes.mail_madre', 'clientes.tel_madre',
-            'clientes.dir_madre', 'clientes.nombre_acudiente', 'clientes.tel_acudiente', 'clientes.dir_acudiente')
+        $registros = Cliente::select(
+            'clientes.id',
+            'clientes.nombre',
+            'clientes.nombre2',
+            'clientes.ape_paterno',
+            'clientes.ape_materno',
+            'clientes.matricula',
+            'clientes.genero',
+            'clientes.fec_nacimiento',
+            'clientes.mail',
+            'clientes.tel_fijo',
+            'clientes.tel_cel',
+            'clientes.nombre_padre',
+            'clientes.tel_padre',
+            'clientes.dir_padre',
+            'clientes.st_cliente_id',
+            'clientes.curp',
+            'clientes.mail_madre',
+            'clientes.tel_madre',
+            'clientes.dir_madre',
+            'clientes.nombre_acudiente',
+            'clientes.tel_acudiente',
+            'clientes.dir_acudiente'
+        )
             ->join('inscripcions as i', 'i.cliente_id', '=', 'clientes.id')
             ->where('clientes.plantel_id', $datos['plantel_f'])
             ->where('i.lectivo_id', $datos['lectivo_f'])
@@ -1778,5 +1800,122 @@ class ClientesController extends Controller
             ->get();
         //dd($registros);
         return view('clientes.reportes.listaClientesR', compact('registros'));
+    }
+
+    public function apiStore(Request $request)
+    {
+
+        $id = 0;
+        $input = $request->all();
+        $empleado = Empleado::where('mail', $input['mail_empleado_asignado'])->first();
+        //dd($input);
+        //$empleado=Empleado::find($request->input('empleado_id'));
+        //$input['plantelplantel_id']=$empleado->plantel->id;
+        $input['usu_alta_id'] = 1;
+        $input['usu_mod_id'] = 1;
+        $input['paise_id'] = 22;
+        $input['st_cliente_id'] = 1;
+        $input['ofertum_id'] = 0;
+        $input['empleado_id'] = $empleado->id;
+        //$input['especialidad_id'] = 0;
+        //$input['nivel_id'] = 0;
+        //$input['grado_id'] = 0;
+        //$input['turno_id'] = 0;
+        //$input['st_cliente_id']=1;
+        $input['especialidad2_id'] = 0;
+        $input['diplomado_id'] = 0;
+        $input['subdiplomado_id'] = 0;
+        $input['turno2_id'] = 0;
+        $input['especialidad3_id'] = 0;
+        $input['curso_id'] = 0;
+        $input['subcurso_id'] = 0;
+        $input['turno3_id'] = 0;
+        $input['especialidad4_id'] = 0;
+        $input['otro_id'] = 0;
+        $input['subotro_id'] = 0;
+        $input['turno4_id'] = 0;
+        //$input['grado_id'] = 0;
+        $input['turno_id'] = 0;
+        $input['paise_id'] = 22;
+
+        $input['turno_id'] = 0;
+        if (is_null($input['ape_materno'])) {
+            $input['ape_materno'] = " ";
+        }
+        if (is_null($input['nombre2'])) {
+            $input['nombre2'] = " ";
+        }
+        if (is_null($input['matricula'])) {
+            $input['matricula'] = " ";
+        }
+        $param = Param::where('llave', '=', 'msj_text')->first();
+        if ($input['cve_cliente'] == "") {
+            //$input['cve_cliente'] = 'Codigo: ' . substr(Hash::make(rand(0, 1000)), 2, 8) . $param->valor;
+            $input['cve_cliente'] = $param->valor;
+        }
+        if (!isset($input['promociones'])) {
+            $input['promociones'] = 0;
+        } else {
+            $input['promociones'] = 1;
+        }
+        if (!isset($input['promo_cel'])) {
+            $input['promo_cel'] = 0;
+        } else {
+            $input['promo_cel'] = 1;
+        }
+        if (!isset($input['promo_correo'])) {
+            $input['promo_correo'] = 0;
+        } else {
+            $input['promo_correo'] = 1;
+        }
+        if (!isset($input['celular_confirmado'])) {
+            $input['celular_confirmado'] = 0;
+        } else {
+            $input['celular_confirmado'] = 1;
+        }
+        if (!isset($input['extranjero'])) {
+            $input['extranjero'] = 0;
+        } else {
+            $input['extranjero'] = 1;
+        }
+        if (!isset($input['bnd_beca'])) {
+            $input['bnd_beca'] = 0;
+        } else {
+            $input['bnd_beca'] = 1;
+        }
+        if (!isset($input['bnd_regingreso'])) {
+            $input['bnd_regingreso'] = 0;
+        } else {
+            $input['bnd_reingreso'] = 1;
+        }
+        //dd($input);
+        //create data
+        try {
+            //dd($input);
+            $c = Cliente::create($input);
+            $id = $c->id;
+            $input_seguimiento['cliente_id'] = $c->id;
+            $input_seguimiento['st_seguimiento_id'] = 1;
+            $input_seguimiento['mes'] = date('m');
+            $input_seguimiento['usu_alta_id'] = 1;
+            $input_seguimiento['usu_mod_id'] = 1;
+            $s = Seguimiento::create($input_seguimiento);
+            $avisos = AvisosInicio::get();
+            foreach ($avisos as $a) {
+                $aviso = new Aviso;
+                $aviso->seguimiento_id = $s->id;
+                $aviso->asunto_id = $a->asunto_id;
+                $aviso->detalle = $a->detalle;
+                $aviso->fecha = date('Y-m-j', strtotime('+' . $a->dias_despues . ' day', strtotime(date('Y-m-j'))));
+                $aviso->activo = 1;
+                $aviso->usu_alta_id = 1;
+                $aviso->usu_mod_id = 1;
+                $aviso->save();
+            }
+        } catch (\PDOException $e) {
+            //dd($e);
+            return response()->json(['msj' => 'Fallo, por favo reportar']);
+        }
+        return response()->json(['ic_cliente' => $c->id]);
     }
 }

@@ -36,6 +36,13 @@
                           <span class="help-block">{{ $errors->first("razon") }}</span>
                          @endif
                       </div>
+                      <div class="form-group col-md-4 @if($errors->has('denominacion')) has-error @endif">
+                        <label for="denominacion-field">Denominacion</label>
+                        {!! Form::text("denominacion", null, array("class" => "form-control input-sm", "id" => "denominacion-field")) !!}
+                        @if($errors->has("denominacion"))
+                         <span class="help-block">{{ $errors->first("denominacion") }}</span>
+                        @endif
+                     </div>
                       <div class="form-group col-md-4 @if($errors->has('rfc')) has-error @endif">
                          <label for="rfc-field">RFC</label>
                          {!! Form::text("rfc", null, array("class" => "form-control input-sm", "id" => "rfc-field")) !!}

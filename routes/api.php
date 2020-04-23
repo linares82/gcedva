@@ -16,6 +16,72 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 return $request->user();
 });
  */
+//Api para crear formularios en paginas web
+Route::get(
+    '/planteles/lista',
+    array(
+        'as' => 'planteles.lista',
+        'uses' => 'PlantelsController@apiLista',
+    )
+);
+
+Route::get(
+    '/especialidades/listaXplantel',
+    array(
+        'as' => 'especialidades.listaXplantel',
+        'uses' => 'EspecialidadsController@apiListaXPlantel',
+    )
+);
+
+Route::get(
+    '/niveles/listaXplantelYespecialidad',
+    array(
+        'as' => 'nivels.listaXplantelYespecialidad',
+        'uses' => 'NivelsController@apiListaXplantelYespecialidad',
+    )
+);
+
+Route::get(
+    '/grados/listaXplantelYespecialidadYgrado',
+    array(
+        'as' => 'grados.listaXplantelYespecialidadYgrado',
+        'uses' => 'GradosController@apiListaXplantelYespecialidadYgrado',
+    )
+);
+
+Route::get(
+    '/medios/lista',
+    array(
+        'as' => 'medios.lista',
+        'uses' => 'MediosController@apiLista',
+    )
+);
+
+Route::get(
+    '/estados/lista',
+    array(
+        'as' => 'estados.lista',
+        'uses' => 'EstadosController@apiLista',
+    )
+);
+
+Route::get(
+    '/municipios/listaXestado',
+    array(
+        'as' => 'municipios.listaXestado',
+        'uses' => 'MunicipiosController@apiListaXestado',
+    )
+);
+
+Route::post(
+    '/clientes/apiCreate',
+    array(
+        'as' => 'clientes.apiCreate',
+        'uses' => 'ClientesController@apiStore',
+    )
+);
+
+//Api para crear registros con ebanx
 Route::get(
     '/cliente/findBy',
     array(

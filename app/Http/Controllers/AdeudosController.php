@@ -280,7 +280,7 @@ class AdeudosController extends Controller
             ->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
             ->join('seguimientos as s', 's.cliente_id', '=', 'c.id')
             ->join('st_seguimientos as sts', 'sts.id', '=', 's.st_seguimiento_id')
-        //->where('pagado_bnd', '=', 0)
+            //->where('pagado_bnd', '=', 0)
             ->whereDate('adeudos.fecha_pago', '<=', $fecha)
             ->where('c.plantel_id', '=', $datos['plantel_f'])
             ->whereIn('stc.id', array(4, 25))
@@ -350,10 +350,10 @@ class AdeudosController extends Controller
             ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
             ->join('st_cajas as st', 'st.id', '=', 'caj.st_caja_id')
             ->whereIn('plan_pagos.id', $datos['plan_f'])
-        //->where('plan_pagos.id','<=',$datos['plan_t'])
+            //->where('plan_pagos.id','<=',$datos['plan_t'])
             ->where('c.plantel_id', '=', $datos['plantel_f'])
             ->whereIn('caj.st_caja_id', $datos['estatus_f'])
-        //->where('st.id','<>',2)
+            //->where('st.id','<>',2)
             ->whereNull('cc.deleted_at')
             ->whereNull('plan_pagos.deleted_at')
             ->whereNull('caj.deleted_at')
@@ -530,8 +530,8 @@ class AdeudosController extends Controller
                     $a = Adeudo::create($adeudo_nuevo);
 
                     $csvDatos[] = $a->id . ',' . $combinacion->cliente_id . ',' . $plan->caja_concepto_id . ',' . $plan->cuenta_contable_id . ',' . $plan->cuenta_recargo_id . ',' .
-                    $plan->fecha_pago . ',' . $plan->monto . ',' . $plan->inicial_bnd . ',' . '0' . ',' . $plan->id . ',' . '1' . ',' . '1' . ',' . 'NULL' . ',' . 'NULL' . ',' .
-                    'NULL' . ',' . $combinacion->id . ',' . '0';
+                        $plan->fecha_pago . ',' . $plan->monto . ',' . $plan->inicial_bnd . ',' . '0' . ',' . $plan->id . ',' . '1' . ',' . '1' . ',' . 'NULL' . ',' . 'NULL' . ',' .
+                        'NULL' . ',' . $combinacion->id . ',' . '0';
                 }
             }
         }
@@ -576,8 +576,8 @@ class AdeudosController extends Controller
             ->join('plan_pago_lns as ppln', 'ppln.id', '=', 'adeudos.plan_pago_ln_id')
             ->join('plan_pagos as pp', 'pp.id', '=', 'ppln.plan_pago_id')
             ->leftJoin('cajas as caj', 'caj.id', '=', 'adeudos.caja_id')
-        //->leftJoin('pagos as pag','pag.caja_id','=','caj.id')
-        //->leftJoin('forma_pagos as fp','fp.id','=','pag.forma_pago_id')
+            //->leftJoin('pagos as pag','pag.caja_id','=','caj.id')
+            //->leftJoin('forma_pagos as fp','fp.id','=','pag.forma_pago_id')
             ->join('caja_conceptos as con', 'con.id', '=', 'adeudos.caja_concepto_id')
             ->join('combinacion_clientes as cc', 'cc.id', '=', 'adeudos.combinacion_cliente_id')
             ->where('c.st_cliente_id', 4)
@@ -590,15 +590,15 @@ class AdeudosController extends Controller
             ->where('c.plantel_id', '>=', $datos['plantel_f'])
             ->where('c.plantel_id', '<=', $datos['plantel_t'])
             ->whereIn('adeudos.caja_concepto_id', $datos['concepto_f'])
-        //->whereColumn('adeudos.caja_concepto_id','ln.caja_concepto_id')
+            //->whereColumn('adeudos.caja_concepto_id','ln.caja_concepto_id')
             ->where('s.st_seguimiento_id', '<>', 3)
-        //->where('caj.st_caja_id', $datos['st_caja_f'])
+            //->where('caj.st_caja_id', $datos['st_caja_f'])
             ->whereNull('adeudos.deleted_at')
             ->whereNull('cc.deleted_at')
             ->whereNull('c.deleted_at')
             ->whereNull('caj.deleted_at')
             ->whereNull('ppln.deleted_at')
-        //->whereNull('pag.deleted_at')
+            //->whereNull('pag.deleted_at')
             ->orderBy('p.razon')
             ->orderBy('adeudos.caja_id')
             ->orderBy('c.id')
@@ -767,7 +767,7 @@ class AdeudosController extends Controller
                     if ($cliente->beca_bnd != 1 and $adeudo->combinacionCliente->bnd_beca != 1) {
                         foreach ($promociones as $promocion) {
                             $inscripcion = Adeudo::where('cliente_id', $adeudo->cliente_id)
-                            //->where('plan_pago_ln_id',$adeudo->plan_pago_ln_id)
+                                //->where('plan_pago_ln_id',$adeudo->plan_pago_ln_id)
                                 ->where('caja_concepto_id', 1)
                                 ->where('combinacion_cliente_id', $adeudo->combinacion_cliente_id)
                                 ->where('pagado_bnd', 1)
@@ -852,8 +852,13 @@ class AdeudosController extends Controller
     {
         if (Auth::user()->can('adeudos.maestroXPlantel')) {
             $empleado = Empleado::where('user_id', Auth::user()->id)->first();
+            $planteles = array();
+            foreach ($empleado->plantels as $p) {
+                //dd($p->id);
+                array_push($planteles, $p->id);
+            }
 
-            $planteles = Plantel::where('id', $empleado->plantel_id)->pluck('razon', 'id');
+            $planteles = Plantel::whereIn('id', $planteles)->pluck('razon', 'id');
         } else {
             $planteles = Plantel::pluck('razon', 'id');
         }
@@ -952,7 +957,8 @@ class AdeudosController extends Controller
                     ->where('fecha', '<=', $datos['fecha_t'])
                     ->first();*/
                     $baja = DB::select('CALL maestroRHistoriaCliente(?,?,?)', array($registro->id, $datos['fecha_f'], $datos['fecha_t']));
-                    if (is_object($baja) and $registro->caja > 0) {
+                    //dd($baja);
+                    if (is_array($baja) and $registro->caja > 0) {
                         $calculo['bajas_pagadas'] = $calculo['bajas_pagadas'] + 1;
                     }
                 }
@@ -1007,7 +1013,7 @@ class AdeudosController extends Controller
                             ->first();
                              */
                             $baja = DB::select('CALL maestroRHistoriaCliente(?,?,?)', array($registro->id, $datos['fecha_f'], $datos['fecha_t']));
-                            if (is_object($baja) and $registro->caja > 0) {
+                            if (is_array($baja) and $registro->caja > 0) {
                                 $calculo['bajas_pagadas'] = $calculo['bajas_pagadas'] + 1;
                             }
                         }
@@ -1096,14 +1102,14 @@ class AdeudosController extends Controller
             ->whereIn('c.st_cliente_id', array(3, 4, 20, 23, 24, 25))
             ->whereMonth('adeudos.fecha_pago', $mesActual)
             ->whereYear('adeudos.fecha_pago', $yearActual)
-        //->whereDate('adeudos.fecha_pago', '>=', $datos['fecha_f'])
-        //->whereDate('adeudos.fecha_pago', '<=', $datos['fecha_t'])
+            //->whereDate('adeudos.fecha_pago', '>=', $datos['fecha_f'])
+            //->whereDate('adeudos.fecha_pago', '<=', $datos['fecha_t'])
             ->whereNull('adeudos.deleted_at')
             ->whereNull('s.deleted_at')
             ->orderBy('p.id')
             ->orderBy('adeudos.caja_concepto_id')
             ->orderBy('c.id')
-        //->orderBy('caj.id')
+            //->orderBy('caj.id')
             ->get();
 
         //$calculo = array();
@@ -1201,7 +1207,7 @@ class AdeudosController extends Controller
                 ->orderBy('p.id')
                 ->orderBy('adeudos.caja_concepto_id')
                 ->orderBy('c.id')
-            //->orderBy('caj.id')
+                //->orderBy('caj.id')
                 ->get();
 
             //dd($conceptos);
@@ -1346,7 +1352,7 @@ class AdeudosController extends Controller
                         ->where('cajas.id', $adeudo->caja_id)
                         ->where('ln.adeudo_id', $adeudo->id)
                         ->whereNull('ln.deleted_at')
-                    //->get();
+                        //->get();
                         ->value('consecutivo');
                     //dd($caja);
 
@@ -1437,8 +1443,10 @@ class AdeudosController extends Controller
             ->with('list', Caja::getListFromAllRelationApps())
             ->with('list1', CajaLn::getListFromAllRelationApps());
              */
-            $pdf = PDF::loadView('adeudos.reportes.adeudosXClienteR',
-                array('cliente' => $cliente, 'combinaciones' => $combinaciones, 'cajas' => $cajas))
+            $pdf = PDF::loadView(
+                'adeudos.reportes.adeudosXClienteR',
+                array('cliente' => $cliente, 'combinaciones' => $combinaciones, 'cajas' => $cajas)
+            )
                 ->setPaper('Letter', 'portrait');
             return $pdf->download('EstatusPlanPagos.pdf');
         }

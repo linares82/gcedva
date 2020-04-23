@@ -229,7 +229,7 @@
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clientes.plantel_id', 'title' => 'PLANTEL'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clientes.especialidad_id', 'title' => 'ESPECIALIDAD'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clientes.empleado_id', 'title' => 'EMPLEADO'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clientes.paise_id', 'title' => 'PAIS'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clientes.matricula', 'title' => 'MATRICULA'])</th>
                             
                             <th class="text-right">OPCIONES</th>
                         </tr>
@@ -263,7 +263,7 @@
                                 </td>
                                 
                                 <td>{{$cliente->cliente->empleado->nombre." ".$cliente->cliente->empleado->ape_paterno." ".$cliente->cliente->empleado->ape_materno}}</td>
-                                <td> {{$cliente->cliente->paise->name}} </td>
+                                <td> {{$cliente->cliente->matricula}} </td>
                                 <td class="text-right">
                                     <a class="btn btn-xs bg-maroon" href="{{ route('clientes.boleta', array('id'=>$cliente->cliente->id)) }}"><i class="glyphicon glyphicon-calendar"></i> Boleta</a>
                                     <a class="btn btn-xs bg-purple" href="{{ route('autorizacionBecas.findByClienteId', array('cliente_id'=>$cliente->cliente->id)) }}">

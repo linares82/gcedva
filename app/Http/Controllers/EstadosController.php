@@ -1,4 +1,6 @@
-<?php namespace App\Http\Controllers;
+<?php
+
+namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -10,7 +12,8 @@ use Auth;
 use App\Http\Requests\updateEstado;
 use App\Http\Requests\createEstado;
 
-class EstadosController extends Controller {
+class EstadosController extends Controller
+{
 
 	/**
 	 * Display a listing of the resource.
@@ -32,7 +35,7 @@ class EstadosController extends Controller {
 	public function create()
 	{
 		return view('estados.create')
-			->with( 'list', Estado::getListFromAllRelationApps() );
+			->with('list', Estado::getListFromAllRelationApps());
 	}
 
 	/**
@@ -45,11 +48,11 @@ class EstadosController extends Controller {
 	{
 
 		$input = $request->all();
-		$input['usu_alta_id']=Auth::user()->id;
-		$input['usu_mod_id']=Auth::user()->id;
+		$input['usu_alta_id'] = Auth::user()->id;
+		$input['usu_mod_id'] = Auth::user()->id;
 
 		//create data
-		Estado::create( $input );
+		Estado::create($input);
 
 		return redirect()->route('estados.index')->with('message', 'Registro Creado.');
 	}
@@ -62,7 +65,7 @@ class EstadosController extends Controller {
 	 */
 	public function show($id, Estado $estado)
 	{
-		$estado=$estado->find($id);
+		$estado = $estado->find($id);
 		return view('estados.show', compact('estado'));
 	}
 
@@ -74,9 +77,9 @@ class EstadosController extends Controller {
 	 */
 	public function edit($id, Estado $estado)
 	{
-		$estado=$estado->find($id);
+		$estado = $estado->find($id);
 		return view('estados.edit', compact('estado'))
-			->with( 'list', Estado::getListFromAllRelationApps() );
+			->with('list', Estado::getListFromAllRelationApps());
 	}
 
 	/**
@@ -87,9 +90,9 @@ class EstadosController extends Controller {
 	 */
 	public function duplicate($id, Estado $estado)
 	{
-		$estado=$estado->find($id);
+		$estado = $estado->find($id);
 		return view('estados.duplicate', compact('estado'))
-			->with( 'list', Estado::getListFromAllRelationApps() );
+			->with('list', Estado::getListFromAllRelationApps());
 	}
 
 	/**
@@ -102,10 +105,10 @@ class EstadosController extends Controller {
 	public function update($id, Estado $estado, updateEstado $request)
 	{
 		$input = $request->all();
-		$input['usu_mod_id']=Auth::user()->id;
+		$input['usu_mod_id'] = Auth::user()->id;
 		//update data
-		$estado=$estado->find($id);
-		$estado->update( $input );
+		$estado = $estado->find($id);
+		$estado->update($input);
 
 		return redirect()->route('estados.index')->with('message', 'Registro Actualizado.');
 	}
@@ -116,21 +119,28 @@ class EstadosController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id,Estado $estado)
+	public function destroy($id, Estado $estado)
 	{
-		$estado=$estado->find($id);
+		$estado = $estado->find($id);
 		$estado->delete();
 
 		return redirect()->route('estados.index')->with('message', 'Registro Borrado.');
 	}
 
-	public function getCmbMunicipios($id=0){
+	public function getCmbMunicipios($id = 0)
+	{
 		//dd($_REQUEST['estado']);
 		$e = $_REQUEST['estado'];
-        $municipios = Estado::find($e)->municipios;
-        //dd($municipios);
-        return $municipios->pluck('name', 'id');
-
+		$municipios = Estado::find($e)->municipios;
+		//dd($municipios);
+		return $municipios->pluck('name', 'id');
 	}
 
+	public function apiLista()
+	{
+		//dd($_REQUEST['estado']);
+		$lista = Estado::select('id', 'name')->get();
+		//dd($municipios);
+		return response()->json(['resultado' => $lista]);
+	}
 }
