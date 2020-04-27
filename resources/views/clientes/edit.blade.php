@@ -119,9 +119,10 @@
                         <span class="help-block">{{ $errors->first("grupo_id") }}</span>
                        @endif
                     </div>
-                    <div class="form-group col-md-6 @if($errors->has('disponibles')) has-error @endif">
+                    <div class="form-group div_disponibles col-md-6 @if($errors->has('disponibles')) has-error @endif">
                        <label for="disponibles-crear">Disponibles</label>
                        {!! Form::text("disponibles", null, array("class" => "form-control input-sm", "id" => "disponibles-crear")) !!}
+                       <span class="help-block msjDisponiblesError" ></span>
                     </div>
                     <div class="form-group col-md-6 @if($errors->has('periodo_estudio_id')) has-error @endif">
                        <label for="periodo_estudio_id-crear" id="lbl_disponibles">Perido Estudio </label>
@@ -246,9 +247,10 @@
                         <span class="help-block">{{ $errors->first("grupo_id") }}</span>
                        @endif
                     </div>
-                    <div class="form-group col-md-6 @if($errors->has('disponibles')) has-error @endif">
+                    <div  class="form-group div_disponibles col-md-6 @if($errors->has('disponibles')) has-error @endif">
                        <label for="disponibles-field">Disponibles</label>
                        {!! Form::text("disponibles", null, array("class" => "form-control input-sm", "id" => "disponibles-editar")) !!}
+                       <span class="help-block msjDisponiblesError"></span>
                     </div>
                     <div class="form-group col-md-6 @if($errors->has('periodo_estudio_id')) has-error @endif">
                        <label for="periodo_estudio_id-field" id="lbl_disponibles">Perido Estudio </label>

@@ -98,6 +98,7 @@ return array(
     'AddMontoMensualidadClientesTable' => $baseDir . '/database/migrations/2018_11_01_123717_add_monto_mensualidad_clientes_table.php',
     'AddNoPolizaToClientesTable' => $baseDir . '/database/migrations/2020_03_19_122343_add_no_poliza_to_clientes_table.php',
     'AddNombre2GradosTable' => $baseDir . '/database/migrations/2019_08_23_093321_add_nombre2_grados_table.php',
+    'AddNombreCortoToPlantelsTable' => $baseDir . '/database/migrations/2020_04_23_130534_add_nombre_corto_to_plantels_table.php',
     'AddOrdenPeriodoEstudiosTable' => $baseDir . '/database/migrations/2020_02_25_094544_add_orden_periodo_estudios_table.php',
     'AddOrigenEbanxesTable' => $baseDir . '/database/migrations/2018_12_20_142232_add_origen_ebanxes_table.php',
     'AddPaiseIdFieldClientesTable' => $baseDir . '/database/migrations/2018_10_23_103201_add_paise_id_field_clientes_table.php',

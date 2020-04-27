@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateEmpleadoPlantelTable extends Migration
+class AddNombreCortoToPlantelsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,8 @@ class CreateEmpleadoPlantelTable extends Migration
      */
     public function up()
     {
-        Schema::create('empleado_plantel', function (Blueprint $table) {
-            $table->integer('empleado_id')->unsigned();
-            $table->integer('plantel_id')->unsigned();
+        Schema::table('plantels', function (Blueprint $table) {
+            $table->string('nombre_corto')->nullable();
         });
     }
 
@@ -26,6 +25,8 @@ class CreateEmpleadoPlantelTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('empleado_plantel');
+        Schema::table('plantels', function (Blueprint $table) {
+            //
+        });
     }
 }

@@ -46,7 +46,7 @@
                 <div class="panel-body">
                     <form class="PeriodoEstudio_search" id="search" action="{{ route('periodoEstudios.index') }}" accept-charset="UTF-8" method="get">
                         <input type="hidden" name="q[s]" value="{{ @(Request::input('q')['s']) ?: '' }}" />
-                        <div class="">
+                        <div class="contenido_frm">
 
                             <!--
                             <div class="form-group">
@@ -60,6 +60,24 @@
                                 </div>
                             </div>
                             -->
+                            <div class="form-group plantel col-md-4" >
+                                <label for="q_periodo_estudios.plantel_id_lt">PLANTEL</label>
+                                    {!! Form::select("periodo_estudios.plantel_id", $list["Plantel"], "{{ @(Request::input('q')['clientes.plantel_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[periodo_estudios.plantel_id_lt]", "id"=>"q_periodo_estudios.plantel_id_lt", "style"=>"width:100%;", "onchange"=>"cambioOpcion()")) !!}
+                                    <div id='loading10' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
+                            </div>
+                            
+                            <div class="form-group especialidad col-md-4" >
+                                <label for="q_periodo_estudios.especialidad_id_lt">ESPECIALIDAD</label> 
+                                    {!! Form::select("periodo_estudios.especialidad_id", $list["Especialidad"], "{{ @(Request::input('q')['periodo_estudios.especialidad_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[periodo_estudios.especialidad_id_lt]", "id"=>"q_periodo_estudios.especialidad_id_lt", "style"=>"width:100%;")) !!}
+                            </div>
+                            <div class="form-group nivel col-md-4" >
+                                <label for="q_periodo_estudios.nivel_id_lt">NIVEL</label> 
+                                    {!! Form::select("periodo_estudios.nivel_id", $list["Nivel"], "{{ @(Request::input('q')['periodo_estudios.nivel_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[periodo_estudios.nivel_id_lt]", "id"=>"q_periodo_estudios.nivel_id_lt", "style"=>"width:100%;")) !!}
+                            </div>
+                            <div class="form-group grado col-md-4" >
+                                <label for="q_periodo_estudios.grado_id_lt">GRADO</label> 
+                                    {!! Form::select("periodo_estudios.grado_id", $list["Especialidad"], "{{ @(Request::input('q')['periodo_estudios.grado_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[periodo_estudios.grado_id_lt]", "id"=>"q_periodo_estudios.grado_id_lt", "style"=>"width:100%;")) !!}
+                            </div>
                             <div class="form-group col-md-4">
                                 <label for="q_periodo_estudios.plan_estudio_id_lt">Plan Estudios</label>
                                     {!! Form::select("plan_estudio_id", $list["PlanEstudio"], "{{ @(Request::input('q')['periodo_estudios.plan_estudio_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[periodo_estudios.plan_estudio_id_lt]", "id"=>"q_periodo_estudios.plan_estudio_id_id_lt", "style"=>"width:100%;" )) !!}
@@ -167,3 +185,119 @@
     </div>
 
 @endsection
+
+@push('scripts')
+<script type="text/javascript">
+    function cambioOpcion(){
+        //getCmbEspecialidad();
+    }
+
+    $("select").change(function(){
+        if($(this).attr("id")=="q_periodo_estudios.plantel_id_lt"){
+            getCmbEspecialidad($(this));
+        }
+        if($(this).attr("id")=="q_periodo_estudios.especialidad_id_lt"){
+            getCmbNivel($(this));
+        }
+
+        if($(this).attr("id")=="q_periodo_estudios.nivel_id_lt"){
+            getCmbGrado($(this));
+        }
+    });
+    
+    
+    function removeOptions(selectbox)
+        {
+            var i;
+            for(i = selectbox.options.length - 1 ; i >= 0 ; i--)
+            {
+                selectbox.remove(i);
+            }
+        }
+
+    function getCmbEspecialidad(obj){
+        //esp=obj.closest('.contenido_frm').children('.especialidad').children('#q_periodo_estudios.especialidad_id_lt');
+        //console.log(esp);
+        var plantel=document.getElementById('q_periodo_estudios.plantel_id_lt');
+        var especialidad=document.getElementById('q_periodo_estudios.especialidad_id_lt');
+        
+        $.ajax({
+        url: '{{ route("especialidads.getCmbEspecialidad") }}',
+                type: 'GET',
+                data: "plantel_id=" + plantel.options[plantel.selectedIndex].value + "&especialidad_id=" + especialidad.options[especialidad.selectedIndex].value + "",
+                dataType: 'json',
+                beforeSend : function(){$("#loading10").show(); },
+                complete : function(){$("#loading10").hide(); },
+                success: function(data){
+                    removeOptions(document.getElementById("q_periodo_estudios.especialidad_id_lt"));
+                    
+                $.each(data, function(i) {
+                //$('#q_clientes.especialidad_id_lt-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
+                    var opt = document.createElement('option');
+                    opt.value = data[i].id;
+                    opt.innerHTML = data[i].name;
+                    especialidad.appendChild(opt);
+                });
+                
+                }
+        });
+    }
+
+    function getCmbNivel(){
+        var plantel=document.getElementById('q_periodo_estudios.plantel_id_lt');
+        var especialidad=document.getElementById('q_periodo_estudios.especialidad_id_lt');
+        var nivel=document.getElementById('q_periodo_estudios.nivel_id_lt');
+              $.ajax({
+                  url: '{{ route("nivels.getCmbNivels") }}',
+                  type: 'GET',
+                  data: "plantel_id=" + plantel.options[plantel.selectedIndex].value + 
+                  "&especialidad_id=" + especialidad.options[especialidad.selectedIndex].value + 
+                  "&nivel_id=" + nivel.options[nivel.selectedIndex].value + "",
+                  dataType: 'json',
+                  beforeSend : function(){$("#loading11").show();},
+                  complete : function(){$("#loading11").hide();},
+                  success: function(data){
+                    removeOptions(document.getElementById("q_periodo_estudios.nivel_id_lt"));
+                      
+                    $.each(data, function(i) {
+                //$('#q_clientes.especialidad_id_lt-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
+                    var opt = document.createElement('option');
+                    opt.value = data[i].id;
+                    opt.innerHTML = data[i].name;
+                    nivel.appendChild(opt);
+                });
+                  }
+              });       
+      }
+
+      function getCmbGrado(){
+        var plantel=document.getElementById('q_periodo_estudios.plantel_id_lt');
+        var especialidad=document.getElementById('q_periodo_estudios.especialidad_id_lt');
+        var nivel=document.getElementById('q_periodo_estudios.nivel_id_lt');
+        var grado=document.getElementById('q_periodo_estudios.grado_id_lt');
+              $.ajax({
+                  url: '{{ route("grados.getCmbGrados") }}',
+                  type: 'GET',
+                  data: "plantel_id=" + plantel.options[plantel.selectedIndex].value + 
+                  "&especialidad_id=" + especialidad.options[especialidad.selectedIndex].value + 
+                  "&nivel_id=" + nivel.options[nivel.selectedIndex].value + 
+                  "&grado_id=" + grado.options[grado.selectedIndex].value +"",
+                  dataType: 'json',
+                  beforeSend : function(){$("#loading12").show();},
+                  complete : function(){$("#loading12").hide();},
+                  success: function(data){
+                    removeOptions(document.getElementById("q_periodo_estudios.grado_id_lt"));
+                      
+                      $.each(data, function(i) {
+                  //$('#q_clientes.especialidad_id_lt-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
+                      var opt = document.createElement('option');
+                      opt.value = data[i].id;
+                      opt.innerHTML = data[i].name;
+                      grado.appendChild(opt);
+                  });
+                  }
+              });       
+      }
+
+</script>
+@endpush

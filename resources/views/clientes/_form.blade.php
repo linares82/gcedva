@@ -969,7 +969,18 @@
             <table class="table table-condensed table-striped">
                 <thead style="color: #ffffff;background: #0B0B3B;">
                 <td>Plantel</td><td>Especialidad</td><td>Nivel</td>
-                <td>Grado</td><td>Grupo</td><td>Periodo</td><td>F. Inscripcion</td>
+                <td>Grado</td>
+                <td>
+                    Grupo
+                    @permission('inscripcions.alumnosXinscripcion')
+                    <a href="{{ route('inscripcions.alumnosXinscripcion',array('id'=>$i->id) )}}" target="_blank" class="btn btn-primary btn-xs"> 
+                    <span class="glyphicon glyphicon-star"></span> Ver Alumnos </a>
+                    @endpermission
+                </td>
+                <td>
+                    Periodo
+                </td>
+                <td>F. Inscripcion</td>
                 <td>Periodo Lectivo</td><td>Matricula</td><td>Control</td><td>Estatus</td><td></td>
                 </thead>
                 <tbody>
@@ -1233,12 +1244,12 @@ $(document).ready(function() {
    });
 
     $('#grupo_id-crear').change(function(){
-          getDisponibles();
+          getDisponibles($('#disponibles-crear'));
           getCmbPeriodosEstudio();
         });
         
     $('#grupo_id-editar').change(function(){
-          //getDisponibles();
+          getDisponibles($('#disponibles-editar'));
           getCmbPeriodosEstudioEditar();
         });
     
@@ -1334,22 +1345,29 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
       }      
     
         
-    function getDisponibles(){
-          
+    function getDisponibles(obj){
+          var miobj=obj;
+          //console.log(miobj.prop('id'));
           //var a= $('#frm_cliente').serialize();
               $.ajax({
                   url: '{{ route("grupos.getDisponibles") }}',
                   type: 'GET',
-                  data: "grupo_id=" + $('#grupo_id-crear option:selected').val() ,
+                  data: "grupo_id=" + $('#grupo_id-editar option:selected').val() ,
                   dataType: 'json',
                   beforeSend : function(){$(".loading3").show();},
                   complete : function(){$(".loading3").hide();},
                   success: function(data){
-                      $('#disponibles-crear').val('');
-                      $('#disponibles-crear').val(data);
+                      miobj.val('');
+                      miobj.val(data);
+                      if(data<=0){
+                        $('.div_disponibles').addClass('has-error');
+                        $('.msjDisponiblesError').html('Cupo maximo alcanzado')
+                      }
+                      
                   }
               });       
       }
+
     /*
      * Crear Inscripcion 
      */    

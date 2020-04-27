@@ -1914,8 +1914,8 @@ class ClientesController extends Controller
             }
         } catch (\PDOException $e) {
             //dd($e);
-            return response()->json(['msj' => 'Fallo, por favo reportar']);
+            return response()->json(['msj' => 'Fallo, exception: ' . $e->getMessage()]);
         }
-        return response()->json(['ic_cliente' => $c->id]);
+        return response()->json(['id_cliente' => $c->id]);
     }
 }

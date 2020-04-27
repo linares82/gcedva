@@ -310,4 +310,13 @@ class PlantelsController extends Controller
 		$planteles = Plantel::all();
 		return view('combinacionClientes.reportes.cargas', compact('planteles'));
 	}
+
+	public function apiLista()
+	{
+		$lista = Plantel::select('id', 'razon')->get();
+		if (count($lista) == 0) {
+			return response()->json(['msj' => 'Sin registros'], 500);
+		}
+		return response()->json(['resultado' => $lista]);
+	}
 }

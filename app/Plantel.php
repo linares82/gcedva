@@ -30,7 +30,7 @@ class Plantel extends Model
 		'tpo_plantel_id', 'meta_venta', 'cve_plantel', 'cns_alumno', 'cns_empleado',
 		'meta_total', 'st_plantel_id', 'consecutivo', 'estado_id', 'csc_cotizacion', 'clausulas_cotizacion',
 		'director_id', 'responsable_id', 'enlace_lugar', 'enlace', 'cve_estatal', 'cve_centro', 'img_firma',
-		'cve_vinculacion', 'csc_vinculacion', 'denominacion'
+		'cve_vinculacion', 'csc_vinculacion', 'denominacion', 'nombre_corto'
 	];
 
 	protected $dates = ['deleted_at'];

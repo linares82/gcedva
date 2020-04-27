@@ -43,6 +43,13 @@
                          <span class="help-block">{{ $errors->first("denominacion") }}</span>
                         @endif
                      </div>
+                     <div class="form-group col-md-4 @if($errors->has('nombre_corto')) has-error @endif">
+                        <label for="nombre_corto-field">Nombre Corto</label>
+                        {!! Form::text("nombre_corto", null, array("class" => "form-control input-sm", "id" => "nombre_corto-field")) !!}
+                        @if($errors->has("nombre_corto"))
+                         <span class="help-block">{{ $errors->first("nombre_corto") }}</span>
+                        @endif
+                     </div>
                       <div class="form-group col-md-4 @if($errors->has('rfc')) has-error @endif">
                          <label for="rfc-field">RFC</label>
                          {!! Form::text("rfc", null, array("class" => "form-control input-sm", "id" => "rfc-field")) !!}

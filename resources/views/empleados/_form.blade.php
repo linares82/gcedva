@@ -117,7 +117,7 @@
                           @endif
                         </div>
                         <div class="form-group col-md-4 @if($errors->has('plantel_id')) has-error @endif">
-                          <label for="plantel_id-field">Planteles</label>
+                          <label for="plantel_id-field">Planteles *<input type="checkbox" id="seleccionar_planteles">Seleccionar Todo</label>
                           {!! Form::select("plantel_id[]", $list["Plantel"], $empleado->plantels, array("class" => "form-control select_seguridad", "id" => "plantel_id-field", 'multiple'=>true)) !!}
                           @if($errors->has("plantel_id"))
                             <span class="help-block">{{ $errors->first("plantel_id") }}</span>
@@ -143,13 +143,13 @@
                             @endif
                         </div>
                         <div class="form-group col-md-2 @if($errors->has('genero')) has-error @endif">
-                          <label for="Genero-field">Género</label><br/>
+                          <label for="genero-field">Género</label><br/>
                           <div class="form-group col-md-6 @if($errors->has('genero')) has-error @endif">
                             {!! Form::radio("genero", 1, null, [ "id" => "genero-field"]) !!}
                             <label for="Genero-field">Masculino</label>
                           </div>
                           <div class="form-group col-md-6 @if($errors->has('genero')) has-error @endif">
-                            {!! Form::radio("genero", 2, null, [ "id" => "genero-field"]) !!}
+                            {!! Form::radio("genero", 2, null, [ "id" => "genero-field2"]) !!}
                             <label for="Genero-field">Femenino</label>
                           </div>
                           
@@ -314,6 +314,20 @@
 <script src="{{ asset ('/bower_components/AdminLTE/plugins/tinymce/js/tinymce/tinymce.min.js') }}"></script>
 <script src="{{ asset ('/bower_components/AdminLTE/plugins/tinymce/js/tinymce/tinymce_editor.js') }}"></script>
 <script type="text/javascript">
+
+$(document).ready(function() {
+  $('#seleccionar_planteles').change(function(){
+    if( $(this).is(':checked') ) {
+      $("#plantel_id-field > option").prop("selected","selected");
+            $("#plantel_id-field").trigger("change");
+    }else{
+      $("#plantel_id-field > option").prop("selected","selected");
+            $('#plantel_id-field').val(null).trigger('change');
+    }
+  });
+});
+  
+
   $('#fin_contrato-field').Zebra_DatePicker({
         days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
         months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
