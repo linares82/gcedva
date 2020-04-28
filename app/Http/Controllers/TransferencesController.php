@@ -1,4 +1,6 @@
-<?php namespace App\Http\Controllers;
+<?php
+
+namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -14,7 +16,8 @@ use App\Http\Requests\createTransference;
 use App\Plantel;
 use File as Archi;
 
-class TransferencesController extends Controller {
+class TransferencesController extends Controller
+{
 
 	/**
 	 * Display a listing of the resource.
@@ -35,16 +38,22 @@ class TransferencesController extends Controller {
 	 */
 	public function create()
 	{
-            $cuentasEfectivo= CuentasEfectivo::pluck('name','id');
-			$empleados=Empleado::select('id', DB::raw('concat(nombre, " ",ape_paterno," ",ape_materno) as name'))->pluck('name','id');
+		$cuentasEfectivo = CuentasEfectivo::pluck('name', 'id');
+		$empleados = Empleado::select('id', DB::raw('concat(nombre, " ",ape_paterno," ",ape_materno) as name'))->pluck('name', 'id');
 		$empleado = Empleado::where('user_id', Auth::user()->id)->first();
+		$planteles = array();
+		foreach ($empleado->plantels as $p) {
+			//dd($p->id);
+			array_push($planteles, $p->id);
+		}
 		if (Auth::user()->can('transferencia.filtroPlantel')) {
-			$plantels = Plantel::where('id', $empleado->plantel_id)->pluck('razon', 'id');
+			//$plantels = Plantel::where('id', $empleado->plantel_id)->pluck('razon', 'id');
+			$plantels = Plantel::whereIn('id', $planteles)->pluck('razon', 'id');
 		} else {
 			$plantels = Plantel::pluck('razon', 'id');
 		}
-		return view('transferences.create',compact('cuentasEfectivo','empleados','plantels'))
-			->with( 'list', Transference::getListFromAllRelationApps() );
+		return view('transferences.create', compact('cuentasEfectivo', 'empleados', 'plantels'))
+			->with('list', Transference::getListFromAllRelationApps());
 	}
 
 	/**
@@ -57,11 +66,11 @@ class TransferencesController extends Controller {
 	{
 
 		$input = $request->all();
-		$input['usu_alta_id']=Auth::user()->id;
-		$input['usu_mod_id']=Auth::user()->id;
+		$input['usu_alta_id'] = Auth::user()->id;
+		$input['usu_mod_id'] = Auth::user()->id;
 
 		//create data
-		Transference::create( $input );
+		Transference::create($input);
 
 		return redirect()->route('transferences.index')->with('message', 'Registro Creado.');
 	}
@@ -74,7 +83,7 @@ class TransferencesController extends Controller {
 	 */
 	public function show($id, Transference $transference)
 	{
-		$transference=$transference->find($id);
+		$transference = $transference->find($id);
 		return view('transferences.show', compact('transference'));
 	}
 
@@ -86,18 +95,24 @@ class TransferencesController extends Controller {
 	 */
 	public function edit($id, Transference $transference)
 	{
-		$transference=$transference->find($id);
-		$cuentasEfectivo= CuentasEfectivo::pluck('name','id');
-		$empleados=Empleado::select('id', DB::raw('concat(nombre, " ",ape_paterno," ",ape_materno) as name'))->pluck('name','id');
-		$empleado= Empleado::where('user_id', Auth::user()->id)->first();
-		if(Entrust::can('transferencia.filtroPlantel')){
-			$plantels = Plantel::where('id',$empleado->plantel_id)->pluck('razon', 'id');
-		}else{
-			$plantels = Plantel::pluck('razon','id');
+		$transference = $transference->find($id);
+		$cuentasEfectivo = CuentasEfectivo::pluck('name', 'id');
+		$empleados = Empleado::select('id', DB::raw('concat(nombre, " ",ape_paterno," ",ape_materno) as name'))->pluck('name', 'id');
+		$empleado = Empleado::where('user_id', Auth::user()->id)->first();
+		$planteles = array();
+		foreach ($empleado->plantels as $p) {
+			//dd($p->id);
+			array_push($planteles, $p->id);
 		}
-		
-		return view('transferences.edit', compact('transference','cuentasEfectivo','empleados','plantels'))
-			->with( 'list', Transference::getListFromAllRelationApps() );
+		if (Entrust::can('transferencia.filtroPlantel')) {
+			//$plantels = Plantel::where('id', $empleado->plantel_id)->pluck('razon', 'id');
+			$plantels = Plantel::whereIn('id', $planteles)->pluck('razon', 'id');
+		} else {
+			$plantels = Plantel::pluck('razon', 'id');
+		}
+
+		return view('transferences.edit', compact('transference', 'cuentasEfectivo', 'empleados', 'plantels'))
+			->with('list', Transference::getListFromAllRelationApps());
 	}
 
 	/**
@@ -108,9 +123,9 @@ class TransferencesController extends Controller {
 	 */
 	public function duplicate($id, Transference $transference)
 	{
-		$transference=$transference->find($id);
+		$transference = $transference->find($id);
 		return view('transferences.duplicate', compact('transference'))
-			->with( 'list', Transference::getListFromAllRelationApps() );
+			->with('list', Transference::getListFromAllRelationApps());
 	}
 
 	/**
@@ -123,7 +138,7 @@ class TransferencesController extends Controller {
 	public function update($id, Transference $transference, updateTransference $request)
 	{
 		$input = $request->all();
-		$input['usu_mod_id']=Auth::user()->id;
+		$input['usu_mod_id'] = Auth::user()->id;
 
 		$r = $request->hasFile('comprobante_file');
 		if ($r) {
@@ -132,8 +147,8 @@ class TransferencesController extends Controller {
 		}
 		//dd($input);
 		//update data
-		$transference=$transference->find($id);
-		$e=$transference->update( $input );
+		$transference = $transference->find($id);
+		$e = $transference->update($input);
 
 		if ($e) {
 			$ruta = public_path() . "/imagenes/transferencias/" . $transference->id . "/";
@@ -155,16 +170,17 @@ class TransferencesController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id,Transference $transference)
+	public function destroy($id, Transference $transference)
 	{
-		$transference=$transference->find($id);
+		$transference = $transference->find($id);
 		$transference->delete();
 
 		return redirect()->route('transferences.index')->with('message', 'Registro Borrado.');
 	}
 
-	public function recibo($id, Request $request){
-		$transferencia=Transference::find($id);
+	public function recibo($id, Request $request)
+	{
+		$transferencia = Transference::find($id);
 		return view('transferences.reportes.recibo', array('transferencia' => $transferencia));
 	}
 }

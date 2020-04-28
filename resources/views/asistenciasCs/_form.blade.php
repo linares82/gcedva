@@ -1,7 +1,13 @@
                     
+                    <div class="form-group col-md-4 @if($errors->has('plantel_id')) has-error @endif">
+                        <label for="plantel_id-field">Plantel</label>
+                        {!! Form::select("plantel_id", $list["Plantel"], $e->id, array("class" => "form-control select_seguridad", "id" => "plantel_id-field")) !!}
+                        @if($errors->has("plantel_id"))
+                         <span class="help-block">{{ $errors->first("plantel_id") }}</span>
+                        @endif
+                     </div>
                     <div class="form-group col-md-4 @if($errors->has('empleado_id')) has-error @endif">
                        <label for="empleado_id-field">Empleado</label>
-                       {!! Form::hidden("plantel_id", $e->plantel_id, array("class" => "form-control input-sm", "id" => "plantel-field")) !!}
                        {!! Form::select("empleado_id", $list["Empleado"], $e->id, array("class" => "form-control select_seguridad", "id" => "empleado_id-field")) !!}
                        @if($errors->has("empleado_id"))
                         <span class="help-block">{{ $errors->first("empleado_id") }}</span>

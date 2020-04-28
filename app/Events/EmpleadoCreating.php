@@ -9,7 +9,7 @@ use Illuminate\Queue\SerializesModels;
 
 class EmpledaoCreating
 {
-    
+
     protected $empleado;
     /**
      * Create a new event instance.
@@ -19,14 +19,14 @@ class EmpledaoCreating
     public function __construct(Empleado $empleado)
     {
         //dd("hi fil");
-        $this->empleado=$empleado;
+        /*$this->empleado=$empleado;
         $plantel=Plantel::find($this->empleado->plantel_id);
         $plantel->cns_empleado=$plantel->cns_empleado+1;
         $plantel->save();
         $this->empleado->cve_empleado=$plantel->cns_empleado;
-        
+        */
         //Asignar clave
-        
+
     }
 
     /**
@@ -36,6 +36,5 @@ class EmpledaoCreating
      */
     public function broadcastOn()
     {
-        
     }
 }

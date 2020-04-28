@@ -243,12 +243,28 @@ class CajasController extends Controller
         //dd(Caja::getListFromAllRelationApps());
         //dd("fil");
         $permiso_caja_buscarCliente = Auth::user()->can('permiso_caja_buscarCliente');
-        if (is_object($cliente) and count($combinaciones) > 0 and $cliente->plantel_id == $empleado->plantel_id) {
+        $planteles = array();
+        foreach ($empleado->plantels as $p) {
+            array_push($planteles, $p->id);
+        }
+        //dd($plantels);
+        //dd(array_search(1, $plantels));
+
+        if (
+            is_object($cliente) and
+            count($combinaciones) > 0 and
+            array_search($cliente->plantel_id, $planteles) <> false
+        ) {
 
             return view('cajas.caja', compact('cliente', 'combinaciones', 'cajas'))
                 ->with('list', Caja::getListFromAllRelationApps())
                 ->with('list1', CajaLn::getListFromAllRelationApps());
-        } elseif (is_object($cliente) and count($combinaciones) > 0 and $cliente->plantel_id != $empleado->plantel_id and $permiso_caja_buscarCliente) {
+        } elseif (
+            is_object($cliente) and
+            count($combinaciones) > 0 and
+            array_search($cliente->plantel_id, $planteles) == false and
+            $permiso_caja_buscarCliente
+        ) {
             return view('cajas.caja', compact('cliente', 'combinaciones', 'cajas'))
                 ->with('list', Caja::getListFromAllRelationApps())
                 ->with('list1', CajaLn::getListFromAllRelationApps());
@@ -283,7 +299,12 @@ class CajasController extends Controller
         $permiso_caja_buscarVenta = Auth::user()->can('permiso_caja_buscarVenta');
         //dd($permiso_caja_buscarVenta);
 
-        if (is_object($caja) and $caja->plantel_id == $empleado->plantel_id) {
+        $planteles = array();
+        foreach ($empleado->plantels as $p) {
+            //dd($p->id);
+            array_push($planteles, $p->id);
+        }
+        if (is_object($caja) and array_search($caja->plantel_id, $planteles) <> false) { //$caja->plantel_id == $empleado->plantel_id) {
             //Apliacion de recargos
             if ($caja->st_caja_id == 0 and $caja->descuento == 0) {
                 //dd($caja->st_caja_id);
@@ -295,7 +316,7 @@ class CajasController extends Controller
             return view('cajas.caja', compact('cliente', 'caja', 'combinaciones', 'cajas', 'cuentasEfectivo'))
                 ->with('list', Caja::getListFromAllRelationApps())
                 ->with('list1', CajaLn::getListFromAllRelationApps());
-        } elseif (is_object($caja) and $caja->plantel_id != $empleado->plantel_id and $permiso_caja_buscarVenta) {
+        } elseif (is_object($caja) and $permiso_caja_buscarVenta and array_search($caja->plantel_id, $planteles) == false) { //$caja->plantel_id != $empleado->plantel_id) {
             //Apliacion de recargos
             if ($caja->st_caja_id == 0 and $caja->descuento == 0) {
                 //dd($caja->st_caja_id);
@@ -707,8 +728,13 @@ class CajasController extends Controller
         //dd($data);
         $empleado = Empleado::where('user_id', Auth::user()->id)->first();
         if (!isset($data['plantel_f'])) {
-            $data['plantel_f'] = $empleado->plantel_id;
-            $data['plantel_t'] = $empleado->plantel_id;
+            //$data['plantel_f'] = $empleado->plantel_id;
+            //$data['plantel_t'] = $empleado->plantel_id;
+            $planteles = array();
+            foreach ($empleado->plantels as $p) {
+                //dd($p->id);
+                array_push($planteles, $p->id);
+            }
         }
 
         $resultado = Caja::select(DB::raw('sum(cajas.total) as total_cajas, p.razon ,fm.name as forma_pago'))
@@ -717,8 +743,9 @@ class CajasController extends Controller
             ->join('pagos as pag', 'pag.caja_id', '=', 'cajas.id')
             ->where('pag.fecha', '>=', $data['fecha_f'])
             ->where('pag.fecha', '<=', $data['fecha_t'])
-            ->where('p.id', '>=', $data['plantel_f'])
-            ->where('p.id', '<=', $data['plantel_t'])
+            //->where('p.id', '>=', $data['plantel_f'])
+            //->where('p.id', '<=', $data['plantel_t'])
+            ->whereIn('p.id', $planteles)
             ->groupBy('p.razon')
             ->whereNull('cajas.deleted_at')
             ->groupBy('forma_pago')
@@ -890,7 +917,12 @@ class CajasController extends Controller
         //$user=Auth::user()->id;
         $empleado = Empleado::where('user_id', Auth::user()->id)->first();
 
-        $plantel = Plantel::find($empleado->plantel_id);
+        //$plantel = Plantel::find($empleado->plantel_id);
+        $planteles = array();
+        foreach ($empleado->plantels as $p) {
+            //dd($p->id);
+            array_push($planteles, $p->id);
+        }
         //dd($data);
 
         $hoy = date('Y-m-d');
@@ -922,7 +954,8 @@ class CajasController extends Controller
             ->join('grupos as g', 'g.id', '=', 'i.grupo_id')
             ->where('fecha_pago', '>=', $tresMesesAntes)
             ->where('fecha_pago', '<=', $hoy)
-            ->where('c.plantel_id', '=', $plantel->id)
+            //->where('c.plantel_id', '=', $plantel->id)
+            ->whereIn('c.plantel_id', $planteles)
             //->where('i.st_inscripcion_id',1)
             ->where('caja_id', '<>', 0)
             ->where('i.grupo_id', '>', 0)
@@ -1120,7 +1153,12 @@ class CajasController extends Controller
 
         $empleado = Empleado::where('user_id', Auth::user()->id)->first();
 
-        $plantel = Plantel::find($empleado->plantel_id);
+        //$plantel = Plantel::find($empleado->plantel_id);
+        $planteles = array();
+        foreach ($empleado->plantels as $p) {
+            //dd($p->id);
+            array_push($planteles, $p->id);
+        }
         //dd($data);
 
         $hoy = date('Y-m-d');
@@ -1151,7 +1189,8 @@ class CajasController extends Controller
             ->join('grupos as g', 'g.id', '=', 'i.grupo_id')
             ->where('fecha_pago', '>=', $tresMesesAntes)
             ->where('fecha_pago', '<=', $hoy)
-            ->where('c.plantel_id', '=', $plantel->id)
+            //->where('c.plantel_id', '=', $plantel->id)
+            ->whereIn('c.plantel_id', $planteles)
             //->where('i.st_inscripcion_id',1)
             ->where('caja_id', '<>', 0)
             ->where('i.grupo_id', '>', 0)
@@ -1258,7 +1297,12 @@ class CajasController extends Controller
         //$user=Auth::user()->id;
         $empleado = Empleado::where('user_id', Auth::user()->id)->first();
 
-        $plantel = Plantel::find($empleado->plantel_id);
+        //$plantel = Plantel::find($empleado->plantel_id);
+        $planteles = array();
+        foreach ($empleado->plantels as $p) {
+            //dd($p->id);
+            array_push($planteles, $p->id);
+        }
         //dd($data);
 
         $hoy = date('Y-m-d');
@@ -1290,7 +1334,8 @@ class CajasController extends Controller
             ->join('grupos as g', 'g.id', '=', 'i.grupo_id')
             ->where('fecha_pago', '>=', $tresMesesAntes)
             ->where('fecha_pago', '<=', $hoy)
-            ->where('c.plantel_id', '=', $plantel->id)
+            //->where('c.plantel_id', '=', $plantel->id)
+            ->whereIn('c.plantel_id', $planteles)
             //->where('i.st_inscripcion_id',1)
             ->where('caja_id', '<>', 0)
             ->where('i.grupo_id', '>', 0)

@@ -1414,6 +1414,10 @@ class AdeudosController extends Controller
     {
         $empleado = Empleado::where('user_id', Auth::user()->id)->first();
         $cliente = Cliente::find($request->cliente);
+        $planteles = array();
+        foreach ($empleado->plantels as $plantel) {
+            array_push($planteles, $plantel->id);
+        }
 
         //dd($cliente);
         $combinaciones = CombinacionCliente::where('cliente_id', '=', $cliente->id)->get();
@@ -1427,7 +1431,7 @@ class AdeudosController extends Controller
             ->get();
 
         $permiso_caja_buscarCliente = Auth::user()->can('permiso_caja_buscarCliente');
-        if (is_object($cliente) and count($combinaciones) > 0 and $cliente->plantel_id == $empleado->plantel_id) {
+        if (is_object($cliente) and count($combinaciones) > 0 and array_search($cliente->plantel_id, $planteles) <> false) { //$cliente->plantel_id == $empleado->plantel_id) {
 
             return view('adeudos.reportes.adeudosXClienteR', compact('cliente', 'combinaciones', 'cajas'))
                 ->with('list', Caja::getListFromAllRelationApps())
@@ -1437,7 +1441,7 @@ class AdeudosController extends Controller
         array('cliente' => $cliente, 'combinaciones' => $combinaciones, 'cajas' => $cajas))
         ->setPaper('Letter', 'portrait');
          */
-        } elseif (is_object($cliente) and count($combinaciones) > 0 and $cliente->plantel_id != $empleado->plantel_id and $permiso_caja_buscarCliente) {
+        } elseif (is_object($cliente) and count($combinaciones) > 0 and $permiso_caja_buscarCliente and array_search($cliente->plantel_id, $planteles) == false) {
 
             /*return view('adeudos.reportes.adeudosXClienteR', compact('cliente', 'combinaciones', 'cajas'))
             ->with('list', Caja::getListFromAllRelationApps())

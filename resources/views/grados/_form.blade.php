@@ -35,6 +35,20 @@
                         <span class="help-block">{{ $errors->first("nombre2") }}</span>
                        @endif
                     </div>
+                    <div class="form-group col-md-4 @if($errors->has('denominacion')) has-error @endif">
+                        <label for="denominacion-field">Denominacion</label>
+                        {!! Form::text("denominacion", null, array("class" => "form-control input-sm", "id" => "denominacion-field")) !!}
+                        @if($errors->has("denominacion"))
+                         <span class="help-block">{{ $errors->first("denominacion") }}</span>
+                        @endif
+                     </div>
+                     <div class="form-group col-md-4 @if($errors->has('rvoe')) has-error @endif">
+                        <label for="rvoe-field">RVOE</label>
+                        {!! Form::text("rvoe", null, array("class" => "form-control input-sm", "id" => "rvoe-field")) !!}
+                        @if($errors->has("rvoe"))
+                         <span class="help-block">{{ $errors->first("denominacion") }}</span>
+                        @endif
+                     </div>
                     <div class="form-group col-md-4 @if($errors->has('precio_online')) has-error @endif">
                        <label for="precio_online-field">Precio Online</label>
                        {!! Form::text("precio_online", null, array("class" => "form-control input-sm", "id" => "precio_online-field")) !!}

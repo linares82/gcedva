@@ -124,103 +124,12 @@
             </div>
         </div>
 
-    @permission('indicadores_plantel')
-    <div class="row">
-        <div class="form-group col-md-12 col-sm-12 col-xs-12">
-            <div class="box box-success">
-                <div class="box-header with-border">
-                    <h3 class="box-title">
-                        Indicadores @if(Auth::user())
-                        Plantel: {!!  
-                            Cache::remember('razon', 30, function(){
-                                return DB::table('plantels as p')
-                            ->join('empleados as e', 'e.plantel_id','=', 'p.id')
-                            ->where('e.user_id', Auth::user()->id)->value('razon');
-                            });
-                        !!}
-                        @endif
-                    </h3>
-                </div>
-                <div class="box-body">
-                    @php
-                    $empleado=App\Empleado::where('user_id',Auth::user()->id)->first();
-                    @endphp
-                    <div class="form-group col-md-2 col-sm-2 col-xs-2">
-                        <h4>% Asistencia Semana Anterior</h4>
-                    <div id="wAsistencias" style="height: 150px;">
-                        <div id='loading30' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
-                    </div>
-                        <a href="{{route('inscripcions.widgetPorcentajeAsistenciaDetalle', array('plantel'=>$empleado->plantel_id))}}" class="btn btn-xs btn-success" target="_blank">Detalle</a>
-                        
-                    </div>
-                    
-                    <div class="form-group col-md-2 col-sm-2 col-xs-2">
-                        <h4 id="titulo_concretados"> </h4>
-                    <div id='loading31' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
-                    <div id="wConcretados" style="height: 150px;">
-                    </div>
-                    <div id="wConcretados_pie">
-                    </div>
-                    <a href="{{route('home.wConcretadosDetalle', array('plantel'=>$empleado->plantel_id))}}" class="btn btn-xs btn-success" target="_blank">Detalle</a>
-                    </div>
-                    
-                    <div class="form-group col-md-2 col-sm-2 col-xs-2">
-                        <h4 class="box-title">Porcentaje de pago del mes en curso</h4>
-                        @php
-                        
-                        $date=date('Y-m-d');
-                        //dd($date);
-                        $fecha_f=\Carbon\Carbon::createFromFormat('Y-m-d',$date);
-                        $fecha_f->day=01;
-                        
-                        $fecha_t=\Carbon\Carbon::createFromFormat('Y-m-d',$date);
-                        if($fecha_t->month==2){
-                            $fecha_t->day=28;
-                        }
-                        $fecha_t->day=30;
-                        $planteles=App\Plantel::pluck('razon','id');
-                        //dd($fecha_t->toDateString('Y-m-d'));
-                        @endphp
-                        
-                        <div  id="porcentaje_pago2" style="height: 150px;">
-                                <div id='loading32' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div>  
-                        </div>
-                         
-                        @permission('adeudos.maestroIndicadorDetalle')
-                        {!! Form::open(['route' => array('adeudos.maestroIndicadorDetalle'),'method' => 'post', 'style' => 'display: inline;']) !!}
-                        {!! Form::hidden("fecha_f", $fecha_f->toDateString('Y-m-d'), array("class" => "form-control input-sm", "id" => "fecha_f-field")) !!}
-                        {!! Form::hidden("fecha_t", $fecha_t->toDateString('Y-m-d'), array("class" => "form-control input-sm", "id" => "fecha_t-field")) !!}
-                        {!! Form::select("plantel_f[]", $planteles, $empleado->plantel_id, array("class" => "form-control select_seguridad select_oculto", "id" => "plantel_f-field", 'multiple'=>true)) !!}
-                        <label for="detalle_f-field">Con detalle:</label>
-                        {!! Form::select("detalle_f", array('1'=>'Si','2'=>'No'), null, array("class" => "form-control select_seguridad", "id" => "detalle_f-field")) !!}
-                            <button type="submit" class="btn btn-xs btn-success"><i class="glyphicon glyphicon-ok"></i> Ver Maestro</button>
-                        {!! Form::close() !!}     
-                        @endpermission
-                    </div>
-
-                    <div class="form-group col-md-2 col-sm-2 col-xs-2">
-                        <h4>Promedio General Mes Anterior</h4>
-                        <div id="wCalificacion" style="height: 150px;">
-                            <div id='loading33' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
-                        </div>
-                        <a class="btn btn-xs btn-success" target="_blank" href="{{route('inscripcions.wdCalificacionRDetalle',array('plantel'=>$empleado->plantel_id))}}">Detalle</a>
-                    </div>
-
-                    <div class="form-group col-md-2 col-sm-2 col-xs-2">
-                        <h4>Bajas Mes Anterior</h4>
-                        <div id="wBajas" style="height: 150px;">
-                            <div id='loading34' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
-                        </div>
-                        <a class="btn btn-xs btn-success" target="_blank" href="{{route('historiaClientes.wdBajasDetalle',array('plantel'=>$empleado->plantel_id))}}">Detalle</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    @endpermission
-
     @permission('indicadores_plantels')
-    @foreach($plantels as $plantel)
+    @php
+    $empleado=App\Empleado::where('user_id',Auth::user()->id)->first();
+    
+    @endphp
+    @foreach($empleado->plantels as $plantel)
     <div class="row">
         <div class="form-group col-md-12 col-sm-12 col-xs-12">
             <div class="box box-success">

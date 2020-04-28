@@ -170,7 +170,7 @@ trait GetAllDataTrait
                 break;
             case 'transferences':
                 if (Auth::user()->can('transferencia.filtroPlantel')) {
-                    $myQuery = $myQuery->whereRaw('(plantel_id=? or plantel_destino_id=?)', [$empleado->plantel_id, $empleado->plantel_id]);
+                    $myQuery = $myQuery->whereRaw('(plantel_id in ? or plantel_destino_id in ?)', [$planteles, $planteles]);
                 }
                 /*
             case "cuentas_efectivos":
@@ -205,7 +205,7 @@ trait GetAllDataTrait
 
                 break;
             case "corte_cajas":
-                $myQuery = $myQuery->where('corte_cajas.plantel_id', '=', $empleado->plantel_id);
+                $myQuery = $myQuery->whereIn('corte_cajas.plantel_id', $planteles);
                 break;
             case "egresos":
                 if ($empleado->puesto_id == 23) {
@@ -290,7 +290,7 @@ trait GetAllDataTrait
                 break;
             case "calendario_evaluacions":
                 if ($baseTable == "calendario_evaluacions") {
-                    $myQuery = $myQuery->where('calendario_evaluacions.plantel_id', '=', $empleado->plantel_id);
+                    $myQuery = $myQuery->whereIn('calendario_evaluacions.plantel_id', $planteles);
                 }
                 break;
             case "asignacion_academicas":

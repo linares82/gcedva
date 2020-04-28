@@ -197,8 +197,14 @@ class ClientesaController extends Controller
         //dd($p);
         if ($p) {
             $e = Empleado::where('user_id', '=', Auth::user()->id)->first();
+            $planteles = array();
+            foreach ($empleado->plantels as $p) {
+                //dd($p->id);
+                array_push($planteles, $p->id);
+            }
             $empleados = Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
-                ->where('plantel_id', '=', $e->plantel_id)
+                //->where('plantel_id', '=', $e->plantel_id)
+                ->whereIn('plantel_id', $planteles)
                 ->where('puesto_id', '=', 2)
                 ->pluck('name', 'id');
         } else {

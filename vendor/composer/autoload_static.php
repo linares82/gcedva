@@ -869,6 +869,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'AddRecursivoCalificacionPonderacionsTable' => __DIR__ . '/../..' . '/database/migrations/2019_01_17_114733_add_recursivo_calificacion_ponderacions_table.php',
         'AddRecursivoCargaPonderacionsTable' => __DIR__ . '/../..' . '/database/migrations/2019_01_17_113213_add_recursivo_carga_ponderacions_table.php',
         'AddReferenciaCajasTable' => __DIR__ . '/../..' . '/database/migrations/2018_05_25_171049_add_referencia_cajas_table.php',
+        'AddRvoeDenominacionFieldsToGradosTable' => __DIR__ . '/../..' . '/database/migrations/2020_04_28_125355_add_rvoe_denominacion_fields_to_grados_table.php',
         'AddSaldoInicialCuentasEfectivosTable' => __DIR__ . '/../..' . '/database/migrations/2019_06_25_182830_add_saldo_inicial_cuentas_efectivos_table.php',
         'AddSegmentoMercadoClientesTable' => __DIR__ . '/../..' . '/database/migrations/2018_04_12_143415_add_segmento_mercado_clientes_table.php',
         'AddStEmpresaIdEmpresasTable' => __DIR__ . '/../..' . '/database/migrations/2019_02_01_120531_add_st_empresa_id_empresas_table.php',

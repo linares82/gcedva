@@ -285,7 +285,13 @@
                                     @permission('clientes.edit')
                                     <a class="btn btn-xs btn-primary" href="{{ route('clientes.duplicate', $cliente->cliente->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>
                                     @endpermission
-                                    @if($cliente->cliente->plantel_id==$empleado->plantel_id)
+                                    @php
+                                    $planteles = array();
+                                    foreach ($empleado->plantels as $plantel) {
+                                        array_push($planteles, $plantel->id);
+                                    }
+                                    @endphp
+                                    @if(array_seach($cliente->cliente->plantel_id,$planteles)<>false)//$cliente->cliente->plantel_id==$empleado->plantel_id)
                                     @permission('clientes.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('clientes.edit', $cliente->cliente->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
                                     @endpermission

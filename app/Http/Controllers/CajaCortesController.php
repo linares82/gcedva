@@ -24,6 +24,8 @@ class CajaCortesController extends Controller
 	 */
 	public function index(Request $request)
 	{
+		$datos = $request->all();
+
 		$cajaCortes = CajaCorte::getAllData($request);
 
 		return view('cajaCortes.index', compact('cajaCortes'));
@@ -34,11 +36,13 @@ class CajaCortesController extends Controller
 	 *
 	 * @return Response
 	 */
-	public function create()
+	public function create(Request $request)
 	{
+		$datos = $request->all();
 		$empleado = Empleado::where('user_id', Auth::user()->id)->first();
+		$plantel = $datos['plantel_id'];
 
-		$ultimoCorte = CajaCorte::where('plantel_id', $empleado->plantel_id)->latest()->first();
+		$ultimoCorte = CajaCorte::where('plantel_id', $datos['plantel_id'])->latest()->first();
 		$vUltimoCorte = array();
 		if (!is_object($ultimoCorte)) {
 			$vUltimoCorte['id'] = 0;
@@ -74,7 +78,7 @@ class CajaCortesController extends Controller
 			->join('forma_pagos as fp', 'fp.id', '=', 'pagos.forma_pago_id')
 			->join('users as u', 'u.id', 'pagos.usu_alta_id')
 			->join('plantels as p', 'p.id', 'caj.plantel_id')
-			->where('c.plantel_id', $empleado->plantel_id)
+			->where('c.plantel_id', $plantel)
 			->where('pagos.forma_pago_id', 1)
 			->get();
 
@@ -91,11 +95,11 @@ class CajaCortesController extends Controller
 			->join('users as u', 'u.id', 'egresos.usu_alta_id')
 			->whereDate('egresos.created_at', '>=', date($vUltimoCorte['created_at']))
 			//->whereDate('fecha', Date('2020-01-31'))
-			->where('plantel_id', $empleado->plantel_id)
+			->where('plantel_id', $plantel)
 			->where('forma_pago_id', 1)
 			->get();
 
-		return view('cajaCortes.create', compact('pagos', 'egresos', 'vUltimoCorte'))
+		return view('cajaCortes.create', compact('pagos', 'egresos', 'vUltimoCorte', 'plantel'))
 			->with('list', CajaCorte::getListFromAllRelationApps());
 	}
 
@@ -106,13 +110,14 @@ class CajaCortesController extends Controller
 	 * @return Response
 	 */
 	public function store(createCajaCorte $request)
+
 	{
 
 		$input = $request->all();
 		$input['usu_alta_id'] = Auth::user()->id;
 		$input['usu_mod_id'] = Auth::user()->id;
-		$empleado = Empleado::where('user_id', Auth::user()->id)->first();
-		$input['plantel_id'] = $empleado->plantel_id;
+		//$empleado = Empleado::where('user_id', Auth::user()->id)->first();
+		//$input['plantel_id'] = $empleado->plantel_id;
 		$input['fecha'] = Date('Y-m-d');
 		//dd($input);
 		//create data

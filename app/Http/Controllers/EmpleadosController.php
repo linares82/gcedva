@@ -64,11 +64,9 @@ class EmpleadosController extends Controller
     public function store(createEmpleado $request)
     {
 
-        $input = $request->except('plantel_id');
-        $planteles = $request->only('plantel_id');
+        $input = $request->all();
         $input['usu_alta_id'] = Auth::user()->id;
         $input['usu_mod_id'] = Auth::user()->id;
-        $input['plantel_id'] = 0;
         if (!isset($input['jefe_bnd'])) {
             $input['jefe_bnd'] = 0;
         } else {
@@ -102,8 +100,6 @@ class EmpleadosController extends Controller
             PivotDocEmpleado::create($input2);
         }
 
-        $e->plantels()->sync($planteles['plantel_id']);
-
         return redirect()->route('empleados.edit', $e->id)->with('message', 'Registro Creado.');
     }
 
@@ -128,12 +124,17 @@ class EmpleadosController extends Controller
     public function edit($id, Empleado $empleado, PivotDocEmpleado $pivotDocEmpleado)
     {
         $empleado = $empleado->find($id);
+        $planteles = array();
+        foreach ($empleado->plantels as $plantel) {
+            array_push($planteles, $plantel->id);
+        }
         if ($empleado->cve_empleado == "") {
             $empleado->cve_empleado = substr(Hash::make(rand(0, 1000)), 2, 8);
         }
         $jefes = Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
             ->where('jefe_bnd', '=', '1')
-            ->where('plantel_id', '=', $empleado->plantel_id)
+            //->where('plantel_id', '=', $empleado->plantel_id)
+            ->whereIn('plantel_id', $planteles)
             ->pluck('name', 'id');
         $responsables = Empleado::select('empleados.id', DB::raw('concat(empleados.nombre," ",empleados.ape_paterno," ",empleados.ape_materno) as name'))
             ->join('puestos as p', 'p.id', '=', 'empleados.puesto_id')
@@ -174,12 +175,17 @@ class EmpleadosController extends Controller
     public function duplicate($id, Empleado $empleado)
     {
         $empleado = $empleado->find($id);
+        $planteles = array();
+        foreach ($empleado->plantels as $plantel) {
+            array_push($planteles, $plantel->id);
+        }
         $jefes = Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
             ->where('jefe_bnd', '=', '1')
             //->where('plantel_id', '=', $plantel)
             ->pluck('name', 'id');
         $responsables = Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
-            ->where('plantel_id', '=', $empleado->plantel_id)
+            //->where('plantel_id', '=', $empleado->plantel_id)
+            ->whereIn('plantel_id', $planteles)
             ->pluck('name', 'id');
         $doc_existentes = DB::table('pivot_doc_empleados as pde')->select('doc_empleado_id')
             ->join('empleados as e', 'e.id', '=', 'pde.empleado_id')
@@ -275,8 +281,7 @@ class EmpleadosController extends Controller
      */
     public function update($id, Empleado $empleado, updateEmpleado $request)
     {
-        $input = $request->except(['doc_empleado_id', 'archivo', 'plantel_id']);
-        $planteles = $request->only('plantel_id');
+        $input = $request->except(['doc_empleado_id', 'archivo']);
         $input['usu_mod_id'] = Auth::user()->id;
         if (!isset($input['jefe_bnd'])) {
             $input['jefe_bnd'] = 0;
@@ -300,8 +305,6 @@ class EmpleadosController extends Controller
             $input2['usu_mod_id'] = Auth::user()->id;
             PivotDocEmpleado::create($input2);
         }
-
-        $empleado->plantels()->sync($planteles['plantel_id']);
 
         return redirect()->route('empleados.edit', $id)->with('message', 'Registro Actualizado.');
     }

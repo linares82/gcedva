@@ -526,7 +526,7 @@ class HomeController extends Controller
             ->whereRaw('(aut_ser_esc <> 2 or aut_caja <> 2 or aut_ser_esc_corp <>2) ');
 
         if (Auth::user()->can('autorizacionBajas.filtroPlantels')) {
-            $autorizacionBajas->where('c.plantel_id', $empleado->plantel_id);
+            $autorizacionBajas->whereIn('c.plantel_id', $planteles);
         }
         //dd(Auth::user()->can('aut_ser_esc'));
         //if (Auth::user()->can('autorizacionBaja.aut_servicios_escolares')) {
