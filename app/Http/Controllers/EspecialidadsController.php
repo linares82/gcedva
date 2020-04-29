@@ -142,7 +142,8 @@ class EspecialidadsController extends Controller
             $r2 = DB::table('especialidads as e')
                 ->select('e.id', 'e.name')
                 ->where('e.plantel_id', '=', $plantel)
-                ->where('e.id', '>', '0');
+                ->where('e.id', '>', '0')
+                ->whereNull('deleted_at');
             //->get();
 
             $r = DB::table('especialidads as e')
