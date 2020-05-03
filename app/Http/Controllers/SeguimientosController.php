@@ -655,7 +655,7 @@ class SeguimientosController extends Controller
                 ->join('plantels as p', 'p.id', '=', 'e.plantel_id')
                 ->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
                 ->where('has.fecha', '>', $fecha_inicio)
-                ->whereIn('p.id', '=', $planteles)
+                ->whereIn('p.id', $planteles)
                 ->get();
         } else {
             $ds_actividades = DB::table('hactividades as has')

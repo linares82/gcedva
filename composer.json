@@ -17,7 +17,7 @@
     "cossou/jasperphp": "^2.8",
     "dog-ears/crud-d-scaffold": "1.*",
     "fideloper/proxy": "^4.0",
-    "guzzlehttp/guzzle": "^6.2",
+    "guzzlehttp/guzzle": "^6.5",
     "kim/activity": "^1.1",
     "laravel/framework": "5.8.*",
     "laravel/tinker": "~1.0",

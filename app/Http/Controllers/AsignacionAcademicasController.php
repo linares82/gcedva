@@ -222,6 +222,8 @@ class AsignacionAcademicasController extends Controller
 				->where('g.plantel_id', '=', $plantel)
 				->where('aa.lectivo_id', '=', $lectivo)
 				->where('g.id', '>', '0')
+				->whereNull('aa.deleted_at')
+				->whereNull('g.deleted_at')
 				->distinct()
 				->get();
 			//dd($r);

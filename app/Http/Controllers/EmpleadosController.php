@@ -65,6 +65,7 @@ class EmpleadosController extends Controller
     {
 
         $input = $request->all();
+        dd($input);
         $input['usu_alta_id'] = Auth::user()->id;
         $input['usu_mod_id'] = Auth::user()->id;
         if (!isset($input['jefe_bnd'])) {
@@ -90,6 +91,9 @@ class EmpleadosController extends Controller
 
         //dd($input);
         $e = Empleado::create($input);
+
+        $e->plantels()->sync($input['plantel_id']);
+
 
         if ($request->has('doc_empleado_id') and $request->has('archivo')) {
             $input2['doc_empleado_id'] = $request->get('doc_empleado_id');
@@ -125,8 +129,9 @@ class EmpleadosController extends Controller
     {
         $empleado = $empleado->find($id);
         $planteles = array();
-        foreach ($empleado->plantels as $plantel) {
-            array_push($planteles, $plantel->id);
+        foreach ($empleado->plantels as $p) {
+            //dd($p->id);
+            array_push($planteles, $p->id);
         }
         if ($empleado->cve_empleado == "") {
             $empleado->cve_empleado = substr(Hash::make(rand(0, 1000)), 2, 8);
@@ -175,9 +180,11 @@ class EmpleadosController extends Controller
     public function duplicate($id, Empleado $empleado)
     {
         $empleado = $empleado->find($id);
+
         $planteles = array();
-        foreach ($empleado->plantels as $plantel) {
-            array_push($planteles, $plantel->id);
+        foreach ($empleado->plantels as $p) {
+            //dd($p->id);
+            array_push($planteles, $p->id);
         }
         $jefes = Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
             ->where('jefe_bnd', '=', '1')
@@ -293,10 +300,13 @@ class EmpleadosController extends Controller
         } else {
             $input['alerta_bnd'] = 1;
         }
-
+        //dd($input);
         $empleado = $empleado->find($id);
         $e = $empleado->update($input);
-        //dd($request->all());
+        //dd($input['plantel_id']);
+
+        $empleado->plantels()->sync($input['plantel_id']);
+
         if ($request->has('doc_empleado_id') and $request->get('doc_empleado_id') > 0 and $request->has('archivo')) {
             $input2['doc_empleado_id'] = $request->get('doc_empleado_id');
             $input2['archivo'] = $request->get('archivo');
@@ -359,7 +369,8 @@ class EmpleadosController extends Controller
             if ($plantel <> 0) {
                 $r = DB::table('empleados as e')
                     ->select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as nombre'))
-                    ->where('e.plantel_id', '=', $plantel)
+                    ->join('empleado_plantel as ep', 'ep.empleado_id', '=', 'e.id')
+                    ->where('ep.plantel_id', '=', $plantel)
                     ->where('e.puesto_id', '=', $puesto)
                     ->where('e.id', '>', '0')
                     ->get();
@@ -411,7 +422,8 @@ class EmpleadosController extends Controller
             $final = array();
             $r = DB::table('empleados as e')
                 ->select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as nombre'))
-                ->where('e.plantel_id', '=', $plantel)
+                ->join('empleado_plantel as ep', 'ep.empleado_id', '=', 'e.id')
+                ->where('ep.plantel_id', '=', $plantel)
                 ->where('e.id', '>', '0')
                 ->whereNotIn('st_empleado_id', array(3, 2, 10))
                 ->get();

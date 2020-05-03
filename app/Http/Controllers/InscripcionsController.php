@@ -289,12 +289,12 @@ class InscripcionsController extends Controller
         $cli = $inscripcion->cliente_id;
         $inscripcion->delete();
         $hacademicas = Hacademica::where('inscripcion_id', $inscripcion->id)->get();
-        if (count($hacademicas) > 0) {
+        if ($hacademicas->count() > 0) {
             foreach ($hacademicas as $h) {
                 $h->delete();
             }
         }
-        $hacademica->delete();
+        //$hacademica->delete();
 
         return redirect()->route('clientes.edit', $cli)->with('message', 'Registro Borrado.');
     }
@@ -2696,5 +2696,81 @@ class InscripcionsController extends Controller
                 }
             }
         }
+    }
+
+    public function InscritosSinMateriasLectivo()
+    {
+
+        return view('inscripcions.reportes.inscritosSinMateriasLectivo')
+            ->with('list', Inscripcion::getListFromAllRelationApps());
+    }
+
+    public function InscritosSinMateriasLectivoR(Request $request)
+    {
+        $data = $request->all();
+        //dd($data);
+        $plantel = Plantel::find($data['plantel_f']);
+        //dd($data);
+
+        try {
+            $registros = Inscripcion::select('c.id', DB::raw(' '
+                . 'concat(c.nombre," ",c.nombre2," ",c.ape_paterno," ",c.ape_materno) as cliente,'
+                . 'c.beca_bnd, esp.name as especialidad, n.name as nivel, g.name as grado,'
+                . 'inscripcions.fec_inscripcion,'
+                . 'gru.name as grupo, gru.id as gru, stc.id as estatus_cliente_id,  stc.name as estatus_cliente, l.name as lectivo'))
+                ->join('clientes as c', 'c.id', '=', 'inscripcions.cliente_id')
+                ->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
+                ->join('medios as m', 'm.id', '=', 'c.medio_id')
+                ->join('especialidads as esp', 'esp.id', '=', 'inscripcions.especialidad_id')
+                ->join('nivels as n', 'n.id', '=', 'inscripcions.nivel_id')
+                ->join('grados as g', 'g.id', '=', 'inscripcions.grado_id')
+                ->join('grupos as gru', 'gru.id', '=', 'inscripcions.grupo_id')
+                //->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
+                ->join('lectivos as l', 'l.id', '=', 'inscripcions.lectivo_id')
+                //->join('materia as mat', 'mat.id', '=', 'inscripcions.materium_id')
+                //->join('asignacion_academicas as aa', 'aa.materium_id', '=', 'inscripcions.materium_id')
+                //->whereColumn('aa.grupo_id', 'inscripcions.grupo_id')
+                //->whereColumn('aa.plantel_id', 'inscripcions.plantel_id')
+                //->whereColumn('aa.lectivo_id', 'inscripcions.lectivo_id')
+                //->join('empleados as e', 'e.id', '=', 'aa.empleado_id')
+                ->where('inscripcions.plantel_id', $data['plantel_f'])
+                //->whereIn('inscripcions.lectivo_id', $data['lectivo_f'])
+                ->whereNull('inscripcions.deleted_at')
+                //->whereNull('i.deleted_at')
+                //->whereNull('hacademicas.deleted_at')
+                //->whereNull('aa.deleted_at')
+                //->orderBy('aa.id', 'asc')
+                ->orderBy('esp.name', 'asc')
+                ->orderBy('gru.id', 'asc')
+                ->distinct()
+                ->get();
+        } catch (Exception $e) {
+            dd($e);
+        }
+
+        //dd($registros->toArray());
+
+        /*
+        PDF::setOptions(['defaultFont' => 'arial']);
+
+        $pdf = PDF::loadView('inscripcions.reportes.lista_calificacionesr', array('registros'=>$registros,'carga_ponderacions_enc'=>$carga_ponderacion))
+        ->setPaper('legal', 'landscape');
+        return $pdf->download('reporte.pdf');
+         */
+        $estatus_revisados = array();
+        $i = 1;
+        foreach ($registros as $registro) {
+            //dd($registro);
+            if (array_search($estatus_revisados, $registro->estatus_cliente_id) == false) {
+                $estatus_revisados[$registro->estatus_cliente_id] = $registro->estatus_cliente;
+                //array_push($estatus, array($registro->estatus_cliente, 0));
+            }
+        }
+
+        return view('inscripcions.reportes.inscritosSinMateriasLectivoR', array(
+            'registros' => $registros,
+            'plantel' => $plantel,
+            'estatus_revisados' => $estatus_revisados,
+        ));
     }
 }

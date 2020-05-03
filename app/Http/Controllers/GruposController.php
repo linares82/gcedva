@@ -25,7 +25,7 @@ class GruposController extends Controller
 	{
 		$grupos = Grupo::getAllData($request);
 
-		return view('grupos.index', compact('grupos'));
+		return view('grupos.index', compact('grupos'))->with('list', Grupo::getListFromAllRelationApps());
 	}
 
 	/**

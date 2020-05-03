@@ -3,18 +3,19 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateEmpleadosTable extends Migration {
+class CreateEmpleadosTable extends Migration
+{
 
-	/**
-	 * Run the migrations.
-	 *
-	 * @return void
-	 */
-	public function up()
-	{
-		Schema::create('empleados', function(Blueprint $table) {
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('empleados', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('cve_empleado');
+            $table->string('cve_empleado')->nullable();
             $table->string('nombre');
             $table->string('ape_paterno');
             $table->string('ape_materno')->nullable;
@@ -32,7 +33,6 @@ class CreateEmpleadosTable extends Migration {
             $table->string('identificacion')->nullable();
             $table->string('contrato')->nullable();
             $table->string('evaluacion_psico')->nullable();
-            $table->integer('plantel_id')->unsigned();
             $table->integer('st_empleado_id')->unsigned();
             $table->integer('pendientes')->unsigned()->nullable();
             $table->integer('user_id')->unsigned();
@@ -44,20 +44,18 @@ class CreateEmpleadosTable extends Migration {
             $table->foreign('usu_alta_id')->references('id')->on('users');
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('st_empleado_id')->references('id')->on('st_empleados');
-            $table->foreign('plantel_id')->references('id')->on('plantels');
             $table->foreign('area_id')->references('id')->on('areas');
             $table->foreign('puesto_id')->references('id')->on('puestos');
         });
-	}
+    }
 
-	/**
-	 * Reverse the migrations.
-	 *
-	 * @return void
-	 */
-	public function down()
-	{
-		Schema::drop('empleados');
-	}
-
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::drop('empleados');
+    }
 }

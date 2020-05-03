@@ -647,7 +647,8 @@
             "archive",
             "laravel",
             "zip"
-        ]
+        ],
+        "abandoned": true
     },
     {
         "name": "clue/stream-filter",

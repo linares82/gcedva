@@ -1462,4 +1462,10 @@ class AdeudosController extends Controller
     return $pdf->download('EstatusPlanPagos.pdf');
      */
     }
+
+    public function adeudosXplantel()
+    {
+        $plantels = Plantel::pluck('razon', 'id');
+        return view('adeudos.adeudosXPlantel', compact('plantels'));
+    }
 }

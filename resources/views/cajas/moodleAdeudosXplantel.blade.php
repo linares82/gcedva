@@ -31,16 +31,7 @@
                 ?>
                 <?php $colaborador="" ?>
                 @foreach($registros as $registro)
-                    @if($grupo<>$registro['grupo'] and $i<>0)
-                    <tr>
-                        <td><strong>Suma Grupo</strong></td><td colspan="10"><strong>{{$i}}<strong></td><td style="align:right;"><strong>{{number_format($total_monto,2)}}</strong></td>
-                    </tr>
-                    <?php 
-                    $j=$i+$j;
-                    $i=0;
-                    $total_monto=0;
-                    ?>
-                    @endif
+                    
                     <tr>
                         <td>{{$registro['razon']}}</td>
                         <td>{{$registro['especialidad']}}</td>
@@ -74,9 +65,6 @@
                     <?php 
                     $j=$i+$j;
                     ?>
-                    <tr>
-                        <td><strong>Suma Cliente</strong></td><td colspan="10"><strong>{{$i}}<strong></td><td style="align:right;"><strong>{{number_format($total_monto,2)}}</strong></td>
-                    </tr>
                     <tr>
                         <td><strong>Total</strong></td><td colspan="10"><strong>{{$j}}<strong></td><td style="align:right;"><strong>{{number_format($suma_total,2)}}</strong></td>
                     </tr>

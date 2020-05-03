@@ -46,7 +46,7 @@
                 <div class="panel-body">
                     <form class="Grupo_search" id="search" action="{{ route('grupos.index') }}" accept-charset="UTF-8" method="get">
                         <input type="hidden" name="q[s]" value="{{ @(Request::input('q')['s']) ?: '' }}" />
-                        <div class="form-horizontal">
+                        <div class="">
 
                             <!--
                             <div class="form-group">
@@ -60,7 +60,12 @@
                                 </div>
                             </div>
                             -->
-                            <div class="form-group">
+                            <div class="form-group col-md-4" >
+                                <label for="q_grupos.plantel_id_lt">PLANTEL</label>
+                                    {!! Form::select("grupos.plantel_id", $list["Plantel"], "{{ @(Request::input('q')['grupos.plantel_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[grupos.plantel_id_lt]", "id"=>"q_grupos.plantel_id_lt", "style"=>"width:100%;")) !!}
+                                    <div id='loading10' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
+                            </div>
+                            <div class="form-group col-md-4">
                                 <label class="col-sm-2 control-label" for="q_name_cont">GRUPO</label>
                                 <div class=" col-sm-9">
                                     <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['name_cont']) ?: '' }}" name="q[name_cont]" id="q_name_cont" />
@@ -96,13 +101,13 @@
                                 </div>
                             </div>
                             -->
-                            <div class="form-group">
+                            <div class="form-group col-md-4 ">
                                 <label class="col-sm-2 control-label" for="q_limite_alumnos_cont">LIMITE ALUMNOS</label>
                                 <div class=" col-sm-9">
                                     <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['limite_alumnos_cont']) ?: '' }}" name="q[limite_alumnos_cont]" id="q_limite_alumnos_cont" />
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group col-md-4">
                                 <label class="col-sm-2 control-label" for="q_minimo_alumnos_cont">MINIMO ALUMNOS</label>
                                 <div class=" col-sm-9">
                                     <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['minimo_alumnos_cont']) ?: '' }}" name="q[minimo_alumnos_cont]" id="q_minimo_alumnos_cont" />

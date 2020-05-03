@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "885924b31533e9e2436b1329551b3c10",
+    "content-hash": "9b3b576d162d58d21975dd08355aab05",
     "packages": [
         {
             "name": "acoustep/entrust-gui",
@@ -505,6 +505,7 @@
                 "laravel",
                 "zip"
             ],
+            "abandoned": true,
             "time": "2020-02-25T11:57:40+00:00"
         },
         {
