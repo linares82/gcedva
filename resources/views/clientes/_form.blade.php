@@ -1272,6 +1272,7 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                   type: 'GET',
                   data: "plantel_id=" + $('#plantel_id-crear option:selected').val() + 
                         "&grupo_id=" + $('#grupo_id-crear option:selected').val() + 
+                        "&nivel_id=" + $('#nivel_id-crear option:selected').val() + 
                         "&lectivo_id=" + $('#lectivo_id-crear option:selected').val() + "",
                   dataType: 'json',
                   beforeSend : function(){$("#loading13").show();},

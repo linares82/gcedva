@@ -1,3 +1,6 @@
+@php header('Access-Control-Allow-Origin: *');
+header('Content-Type: application/json');
+@endphp
 @extends('plantillas.admin_template')
 
 @include('cajas._common')
@@ -13,12 +16,17 @@
 
 @section('content')
     <div class="row">
+        @if(isset($message))
+        <div class="alert alert-warning">
+            {{ $message }}
+        </div>
+        @endif
         <div class="col-md-12">
             @if(isset($registros) and count($registros)>0)
         <table class="table table-condensed table-striped">
             <thead>
                 <tr>
-                    <th>Plantel</th><th>Especialidad</th><th>Grupo</th><th>Cliente</th><th>St Cliente</th><th>St Seguimiento</th><th>Concepto</th><th>Fecha Pago</th><th>Pagado</th><th>St Caja</th><th>Fecha Pago</th><th>Monto</th>
+                    <th>Moodle</th><th>Plantel</th><th>Especialidad</th><th>Grupo</th><th>Cliente</th><th>St Cliente</th><th>St Seguimiento</th><th>Concepto</th><th>Fecha Pago</th><th>Pagado</th><th>St Caja</th><th>Fecha Pago</th><th>Monto</th>
                 </tr> 
             </thead>
             <tbody>
@@ -33,6 +41,24 @@
                 @foreach($registros as $registro)
                     
                     <tr>
+                        <td>
+                            @php
+                            $bajas=\App\MoodleBaja::where('cliente_id',$registro['cliente_id'])
+                            ->where('bnd_baja',1)
+                            ->where('bnd_alta',0)
+                            ->first();
+                            @endphp
+                            @permission('moodleBajas.procesarUno')
+                            @if(is_null($bajas))
+                            <a href="{{ route('moodleBajas.procesarUno',array('cliente'=>$registro['cliente_id'])) }}" data-cliente={{ $registro['cliente_id'] }} class="btn btn-xs btn-success btn-baja">S. Baja</a>
+                            <button  data-cliente={{ $registro['cliente_id'] }} class="btn btn-xs btn-success btn-baja">BS. Baja</button>
+                            @else
+                            <a href="{{ route('moodleBajas.procesarUnoAlta',array('id'=>$bajas->id)) }}" data-baja={{ $bajas->id }} class="btn btn-xs btn-info btn-alta">S. Alta</a>
+                            @endif
+                            @endpermission
+
+                            
+                        </td>
                         <td>{{$registro['razon']}}</td>
                         <td>{{$registro['especialidad']}}</td>
                         <td>{{$registro['grupo']}}</td>
@@ -75,3 +101,50 @@
     </div>
 
 @endsection
+
+@push('scripts')
+<script src="{{ asset('bower_components\AdminLTE\plugins\JavaScript-MD5-2.14.0\js\md5.min.js') }}"></script>
+<script type="text/javascript">
+
+    
+$('.btn-baja').click(function(e){
+    e.preventDefault();
+    var d = new Date();
+    var n = d.getDate('Ymd');
+    //alert(n);
+    var salt="SbSkhl0XvctpPUscgLNg";
+
+    $.ajax({
+        type: 'GET',
+                url: '{{ route('moodleBajas.procesarUno') }}',
+                cache:true,
+                data: {
+                    'method':'changeUserStatus' ,
+                    'key': md5(n+salt),
+                    'username':"",
+                    'active':false
+                },
+                dataType:"json",
+                //jsonp: 'jsonp-callback',
+                //beforeSend : function(){$("#loading3").show(); },
+                //complete : function(){$("#loading3").hide(); },
+                success: function(data) {
+                    console.log('exito');
+                    ele=data.split('{');
+                    ele2=data.split(',')[0];
+                    ele3=ele2.split(':');
+                    console.log(ele3[1]);
+                },
+                error: function(data){
+                    console.log('error');
+                    ele=data.split('{');
+                    ele2=data.split(',')[0];
+                    console.log(ele2);
+                }
+        }); 
+    
+});
+
+</script>
+    
+@endpush

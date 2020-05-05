@@ -15,6 +15,13 @@
                          <span class="help-block">{{ $errors->first("empleado_id") }}</span>
                         @endif
                      </div>
+                     <div class="form-group col-md-4 @if($errors->has('docente_oficial')) has-error @endif">
+                        <label for="docente_oficial-field">Docente Oficial</label>
+                        {!! Form::text("docente_oficial", null, array("class" => "form-control input-sm", "id" => "docente_oficial-field")) !!}
+                        @if($errors->has("docente_oficial"))
+                         <span class="help-block">{{ $errors->first("docente_oficial") }}</span>
+                        @endif
+                     </div>
                      <div class="form-group col-md-4 @if($errors->has('materium_id')) has-error @endif">
                         <label for="materium_id-field">Materia</label>
                         {!! Form::select("materium_id", $list["Materium"], null, array("class" => "form-control select_seguridad", "id" => "materium_id-field")) !!}
@@ -41,6 +48,13 @@
                         {!! Form::select("lectivo_id", $list["Lectivo"], null, array("class" => "form-control select_seguridad", "id" => "lectivo_id-field")) !!}
                         @if($errors->has("lectivo_id"))
                          <span class="help-block">{{ $errors->first("lectivo_id") }}</span>
+                        @endif
+                     </div>
+                     <div class="form-group col-md-4 @if($errors->has('lectivo_oficial_id')) has-error @endif">
+                        <label for="lectivo_oficial_id-field">Lectivo Oficial</label>
+                        {!! Form::select("lectivo_oficial_id", $list["Lectivo"], null, array("class" => "form-control select_seguridad", "id" => "lectivo_oficial_id-field")) !!}
+                        @if($errors->has("lectivo_oficial_id"))
+                         <span class="help-block">{{ $errors->first("lectivo_oficial_id") }}</span>
                         @endif
                      </div>
                      <div class="form-group col-md-4 @if($errors->has('asistencias_max')) has-error @endif" style="clear:left;">

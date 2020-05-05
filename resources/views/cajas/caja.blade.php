@@ -219,7 +219,7 @@
                 
                 <div class="form-group col-md-4">
                     <div class='text-center'>
-                        <a href="#" class="add-pago btn btn-success btn-sm"><i class="glyphicon glyphicon-plus-sign"></i>Agregar Pago</a> 
+                        <a href="#" class="add-pago btn btn-success btn-sm" data-total_caja={{ $caja->total }}><i class="glyphicon glyphicon-plus-sign" ></i>Agregar Pago</a> 
                     </div>
                 </div>
                 
@@ -831,6 +831,7 @@ Agregar nuevo registro
     $('.modal-title').text('Agregar Pago');
     //Limpiar valores
     $('#addPago').modal({backdrop: 'static', keyboard: false});
+    $('#monto-field').val($(this).data('total_caja'));
     $('#addPago').modal('show');
     
     $('#AgregarPago').prop('disabled',true);

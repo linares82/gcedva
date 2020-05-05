@@ -1218,6 +1218,7 @@ class CajasController extends Controller
             $caja_ln['grupo'] = $adeudo_tomado->grupo;
             $caja_ln['concepto'] = $adeudo_tomado->cajaConcepto->name;
             $caja_ln['cliente'] = $cliente->id . '-' . $cliente->nombre . ' ' . $cliente->nombre2 . " " . $cliente->ape_paterno . ' ' . $cliente->ape_materno;
+            $caja_ln['cliente_id'] = $cliente->id;
             $caja_ln['seguimiento'] = $cliente->seguimiento;
             if ($adeudo_tomado->caja_id > 0) {
                 $caja_ln['estatus_caja'] = $adeudo_tomado->caja->stCaja->name;

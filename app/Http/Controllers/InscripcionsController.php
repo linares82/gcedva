@@ -119,7 +119,7 @@ class InscripcionsController extends Controller
     public function registrarMaterias($id)
     {
         $i = Inscripcion::find($id);
-        dd($i);
+        //dd($i);
         $materias = PeriodoEstudio::find($i->periodo_estudio_id)->materias;
         $materias_array = array();
         foreach ($materias as $m) {

@@ -799,6 +799,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'AddDatesLectivoTable' => __DIR__ . '/../..' . '/database/migrations/2017_06_16_195301_Add_Dates_Lectivo_Table.php',
         'AddDenominacionPlantelsTable' => __DIR__ . '/../..' . '/database/migrations/2020_04_20_164405_add_denominacion_plantels_table.php',
         'AddDirResPlantelsTable' => __DIR__ . '/../..' . '/database/migrations/2019_07_02_120947_add_dir_res_plantels_table.php',
+        'AddDocenteLectivoOficialAsignacionAcademicasTable' => __DIR__ . '/../..' . '/database/migrations/2020_05_05_120656_add_docente_lectivo_oficial_asignacion_academicas_table.php',
         'AddEmpleadoIdCotizacionLnsTable' => __DIR__ . '/../..' . '/database/migrations/2019_04_08_144922_add_empleado_id_cotizacion_lns_table.php',
         'AddEmpleadoIdEmpresasTable' => __DIR__ . '/../..' . '/database/migrations/2019_02_05_132229_add_empleado_id_empresas_table.php',
         'AddEmpleadoIdIndexEmpresasTable' => __DIR__ . '/../..' . '/database/migrations/2019_02_05_132245_add_empleado_id_index_empresas_table.php',

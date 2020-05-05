@@ -215,10 +215,14 @@ class AsignacionAcademicasController extends Controller
 			$plantel = $request->get('plantel_id');
 			$grupo = $request->get('grupo_id');
 			$lectivo = $request->get('lectivo_id');
+			$nivel = $request->get('nivel_id');
 			$final = array();
 			$r = DB::table('grupos as g')
 				->select('g.id', 'g.name')
 				->join('asignacion_academicas as aa', 'aa.plantel_id', '=', 'g.plantel_id')
+				->join('grupo_periodo_estudios as gpe', 'gpe.grupo_id', '=', 'g.id')
+				->join('periodo_estudios as pe', 'pe.id', '=', 'gpe.periodo_estudio_id')
+				->where('pe.nivel_id', $nivel)
 				->where('g.plantel_id', '=', $plantel)
 				->where('aa.lectivo_id', '=', $lectivo)
 				->where('g.id', '>', '0')

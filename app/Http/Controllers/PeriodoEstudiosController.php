@@ -228,4 +228,24 @@ class PeriodoEstudiosController extends Controller
             }
         }
     }
+
+    public function planEstudio()
+    {
+        return view('periodoEstudios.reportes.plan_estudio')->with('list', PeriodoEstudio::getListFromAllRelationApps());
+    }
+
+    public function planEstudioR(Request $request)
+    {
+        $datos = $request->all();
+        //dd($datos);
+        $registros = PeriodoEstudio::where('plantel_id', $datos['plantel_f'])
+            ->where('especialidad_id', $datos['especialidad_f'])
+            ->where('nivel_id', $datos['nivel_f'])
+            ->where('grado_id', $datos['grado_f'])
+            ->orderBy('orden')
+            ->with('materias')
+            ->get();
+        //dd($registros->toArray());
+        return view('periodoEstudios.reportes.plan_estudior', compact('registros'))->with('list', PeriodoEstudio::getListFromAllRelationApps());
+    }
 }
