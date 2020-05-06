@@ -65,7 +65,7 @@ class EmpleadosController extends Controller
     {
 
         $input = $request->all();
-        dd($input);
+        //dd($input);
         $input['usu_alta_id'] = Auth::user()->id;
         $input['usu_mod_id'] = Auth::user()->id;
         if (!isset($input['jefe_bnd'])) {
@@ -418,12 +418,18 @@ class EmpleadosController extends Controller
                 $plantel = $request->get('plantel_id');
                 $empleado = $request->get('empleado_id');
             }
+            $e = Empleado::where('user_id', Auth::user()->id)->first();
+            $planteles = array();
+            foreach ($e->plantels as $p) {
+                array_push($planteles, $p->id);
+            }
 
             $final = array();
             $r = DB::table('empleados as e')
                 ->select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as nombre'))
                 ->join('empleado_plantel as ep', 'ep.empleado_id', '=', 'e.id')
-                ->where('ep.plantel_id', '=', $plantel)
+                ->where('ep.plantel_id', $plantel)
+                ->where('e.puesto_id', 3)
                 ->where('e.id', '>', '0')
                 ->whereNotIn('st_empleado_id', array(3, 2, 10))
                 ->get();

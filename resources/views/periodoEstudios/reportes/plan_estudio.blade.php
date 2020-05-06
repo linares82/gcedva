@@ -11,7 +11,7 @@
 	</ol>
 
     <div class="page-header">
-        <h3><i class="glyphicon glyphicon-plus"></i>  / Clientes - Lista </h3>
+        <h3><i class="glyphicon glyphicon-plus"></i>  / Plan Estudios </h3>
     </div>
 @endsection
 

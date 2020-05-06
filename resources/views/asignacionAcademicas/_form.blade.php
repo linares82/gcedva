@@ -22,13 +22,6 @@
                          <span class="help-block">{{ $errors->first("docente_oficial") }}</span>
                         @endif
                      </div>
-                     <div class="form-group col-md-4 @if($errors->has('materium_id')) has-error @endif">
-                        <label for="materium_id-field">Materia</label>
-                        {!! Form::select("materium_id", $list["Materium"], null, array("class" => "form-control select_seguridad", "id" => "materium_id-field")) !!}
-                        @if($errors->has("materium_id"))
-                         <span class="help-block">{{ $errors->first("materium_id") }}</span>
-                        @endif
-                     </div>
                      <div class="form-group col-md-4 @if($errors->has('grupo_id')) has-error @endif">
                         <label for="grupo_id-field">Grupo</label>
                         {!! Form::select("grupo_id", $list["Grupo"], null, array("class" => "form-control select_seguridad", "id" => "grupo_id-field")) !!}
@@ -36,6 +29,14 @@
                          <span class="help-block">{{ $errors->first("grupo_id") }}</span>
                         @endif
                      </div>
+                     <div class="form-group col-md-4 @if($errors->has('materium_id')) has-error @endif">
+                        <label for="materium_id-field">Materia</label>
+                        {!! Form::select("materium_id", $list["Materium"], null, array("class" => "form-control select_seguridad", "id" => "materium_id-field")) !!}
+                        @if($errors->has("materium_id"))
+                         <span class="help-block">{{ $errors->first("materium_id") }}</span>
+                        @endif
+                     </div>
+                     
                      <div class="form-group col-md-4 @if($errors->has('horas')) has-error @endif">
                         <label for="horas-field">Horas</label>
                         {!! Form::text("horas", null, array("class" => "form-control input-sm", "id" => "horas-field")) !!}
@@ -142,10 +143,13 @@
        
        $('#plantel_id-field').change(function(){
            getCmbInstructores();
-           getCmbMaterias();
            getCmbGrupos();
        });
  
+       $('#grupo_id-field').change(function(){
+        getCmbMaterias();
+       });
+
        $('#lectivo_id-field').change(function(){
            getDatosLectivo();
        });
@@ -181,7 +185,7 @@
            //$('#materia_id_field option:selected').val($('#materium_id_campo option:selected').val()).change();
            var a= $('#formulario').serialize();
                $.ajax({
-                   url: '{{ route("materias.getCmbMateria") }}',
+                   url: '{{ route("materias.getCmbMateria2") }}',
                    type: 'GET',
                    data: a,
                    dataType: 'json',

@@ -154,6 +154,7 @@ class GruposController extends Controller
 			$r = DB::table('grupos as g')
 				->select('g.id', 'g.name')
 				->where('g.plantel_id', '=', $plantel)
+				->whereNull('g.deleted_at')
 				->where('g.id', '>', '0')
 				->get();
 			//dd($r);

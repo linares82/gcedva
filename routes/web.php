@@ -4105,6 +4105,14 @@ Route::get(
     )
 )->middleware('auth');
 Route::get(
+    '/materias/getCmbMateria2',
+    array(
+        'as' => 'materias.getCmbMateria2',
+        //'middleware' => 'permission:especialidads.getCmbEspecialidad',
+        'uses' => 'MateriasController@getCmbMateria2'
+    )
+)->middleware('auth');
+Route::get(
     '/materias/getCmbMateriaXalumno',
     array(
         'as' => 'materias.getCmbMateriaXalumno',

@@ -1263,6 +1263,13 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
         $('#lectivo_id-crear').change(function(){
           getCmbGrupo();
         });
+
+        $('#plantel_id-editar').change(function(){
+          getCmbGrupoEditar();
+        });
+        $('#lectivo_id-editar').change(function(){
+          getCmbGrupoEditar();
+        });
         
     function getCmbGrupo(){
           //var $example = $("#especialidad_id-field").select2();
@@ -1287,6 +1294,35 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                       $.each(data, function(i) {
                           //alert(data[i].name);
                           $('#grupo_id-crear').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                      });
+                      //$example.select2();
+                  }
+              });       
+      }
+
+      function getCmbGrupoEditar(){
+          //var $example = $("#especialidad_id-field").select2();
+          var a= $('#frm_academica').serialize();
+              $.ajax({
+                  url: '{{ route("asignacionAcademica.getCmbGrupo") }}',
+                  type: 'GET',
+                  data: "plantel_id=" + $('#plantel_id-editar option:selected').val() + 
+                        "&grupo_id=" + $('#grupo_id-editar option:selected').val() + 
+                        "&nivel_id=" + $('#nivel_id-editar option:selected').val() + 
+                        "&lectivo_id=" + $('#lectivo_id-editar option:selected').val() + "",
+                  dataType: 'json',
+                  beforeSend : function(){$("#loading13").show();},
+                  complete : function(){$("#loading13").hide();},
+                  success: function(data){
+                      //$example.select2("destroy");
+                      $('#grupo_id-editar').html('');
+                      
+                      //$('#especialidad_id-field').empty();
+                      $('#grupo_id-editar').append($('<option></option>').text('Seleccionar').val('0'));
+                      
+                      $.each(data, function(i) {
+                          //alert(data[i].name);
+                          $('#grupo_id-editar').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
                       });
                       //$example.select2();
                   }
