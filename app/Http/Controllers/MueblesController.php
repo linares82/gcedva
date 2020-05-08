@@ -54,7 +54,7 @@ class MueblesController extends Controller
 		$input['usu_alta_id'] = Auth::user()->id;
 		$input['usu_mod_id'] = Auth::user()->id;
 
-		$anterior = Mueble::select('no_inv')->where('plantel_id', $input['plantel_id'])->limit(1)->first();
+		$anterior = Mueble::select('no_inv')->where('plantel_id', $input['plantel_id'])->orderBy('desc')->first();
 		//dd($anterior);
 		$plantel = Plantel::find($input['plantel_id']);
 		$ubicacion = UbicacionArt::find($input['ubicacion_art_id']);

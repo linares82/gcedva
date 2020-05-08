@@ -1,4 +1,6 @@
-<?php namespace App\Http\Controllers;
+<?php
+
+namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -10,7 +12,8 @@ use App\Http\Requests\updateUbicacionArt;
 use App\Http\Requests\createUbicacionArt;
 use DB;
 
-class UbicacionArtsController extends Controller {
+class UbicacionArtsController extends Controller
+{
 
 	/**
 	 * Display a listing of the resource.
@@ -21,7 +24,7 @@ class UbicacionArtsController extends Controller {
 	{
 		$ubicacionArts = UbicacionArt::getAllData($request);
 
-		return view('ubicacionArts.index', compact('ubicacionArts'));
+		return view('ubicacionArts.index', compact('ubicacionArts'))->with('list', UbicacionArt::getListFromAllRelationApps());
 	}
 
 	/**
@@ -32,7 +35,7 @@ class UbicacionArtsController extends Controller {
 	public function create()
 	{
 		return view('ubicacionArts.create')
-			->with( 'list', UbicacionArt::getListFromAllRelationApps() );
+			->with('list', UbicacionArt::getListFromAllRelationApps());
 	}
 
 	/**
@@ -45,11 +48,11 @@ class UbicacionArtsController extends Controller {
 	{
 
 		$input = $request->all();
-		$input['usu_alta_id']=Auth::user()->id;
-		$input['usu_mod_id']=Auth::user()->id;
+		$input['usu_alta_id'] = Auth::user()->id;
+		$input['usu_mod_id'] = Auth::user()->id;
 
 		//create data
-		UbicacionArt::create( $input );
+		UbicacionArt::create($input);
 
 		return redirect()->route('ubicacionArts.index')->with('message', 'Registro Creado.');
 	}
@@ -62,7 +65,7 @@ class UbicacionArtsController extends Controller {
 	 */
 	public function show($id, UbicacionArt $ubicacionArt)
 	{
-		$ubicacionArt=$ubicacionArt->find($id);
+		$ubicacionArt = $ubicacionArt->find($id);
 		return view('ubicacionArts.show', compact('ubicacionArt'));
 	}
 
@@ -74,9 +77,9 @@ class UbicacionArtsController extends Controller {
 	 */
 	public function edit($id, UbicacionArt $ubicacionArt)
 	{
-		$ubicacionArt=$ubicacionArt->find($id);
+		$ubicacionArt = $ubicacionArt->find($id);
 		return view('ubicacionArts.edit', compact('ubicacionArt'))
-			->with( 'list', UbicacionArt::getListFromAllRelationApps() );
+			->with('list', UbicacionArt::getListFromAllRelationApps());
 	}
 
 	/**
@@ -87,9 +90,9 @@ class UbicacionArtsController extends Controller {
 	 */
 	public function duplicate($id, UbicacionArt $ubicacionArt)
 	{
-		$ubicacionArt=$ubicacionArt->find($id);
+		$ubicacionArt = $ubicacionArt->find($id);
 		return view('ubicacionArts.duplicate', compact('ubicacionArt'))
-			->with( 'list', UbicacionArt::getListFromAllRelationApps() );
+			->with('list', UbicacionArt::getListFromAllRelationApps());
 	}
 
 	/**
@@ -102,10 +105,10 @@ class UbicacionArtsController extends Controller {
 	public function update($id, UbicacionArt $ubicacionArt, updateUbicacionArt $request)
 	{
 		$input = $request->all();
-		$input['usu_mod_id']=Auth::user()->id;
+		$input['usu_mod_id'] = Auth::user()->id;
 		//update data
-		$ubicacionArt=$ubicacionArt->find($id);
-		$ubicacionArt->update( $input );
+		$ubicacionArt = $ubicacionArt->find($id);
+		$ubicacionArt->update($input);
 
 		return redirect()->route('ubicacionArts.index')->with('message', 'Registro Actualizado.');
 	}
@@ -116,17 +119,18 @@ class UbicacionArtsController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id,UbicacionArt $ubicacionArt)
+	public function destroy($id, UbicacionArt $ubicacionArt)
 	{
-		$ubicacionArt=$ubicacionArt->find($id);
+		$ubicacionArt = $ubicacionArt->find($id);
 		$ubicacionArt->delete();
 
 		return redirect()->route('ubicacionArts.index')->with('message', 'Registro Borrado.');
 	}
 
-	public function getUbicacionesXPlantel(Request $request){
-		if($request->ajax()){
-			$datos=$request->all();
+	public function getUbicacionesXPlantel(Request $request)
+	{
+		if ($request->ajax()) {
+			$datos = $request->all();
 			$final = array();
 			$r = DB::table('ubicacion_arts as u')
 				->select('u.id', 'u.ubicacion as name')

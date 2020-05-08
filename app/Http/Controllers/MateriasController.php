@@ -195,9 +195,6 @@ class MateriasController extends Controller
             //dd("FLC:".$materia);
             $final = array();
             $r = DB::table('materia as m')
-                ->join('materium_periodos as mp', 'mp.materium_id', '=', 'm.id')
-                ->join('periodo_estudios as pe', 'pe.id', '=', 'mp.periodo_estudio_id')
-                ->join('grupo_periodo_estudios as gpe', 'gpe.periodo_estudio_id', '=', 'pe.id')
                 ->select('m.id', 'm.name')
                 ->where('m.plantel_id', '=', $plantel)
                 ->where('m.id', '>', '0')

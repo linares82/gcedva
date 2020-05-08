@@ -185,7 +185,7 @@
            //$('#materia_id_field option:selected').val($('#materium_id_campo option:selected').val()).change();
            var a= $('#formulario').serialize();
                $.ajax({
-                   url: '{{ route("materias.getCmbMateria2") }}',
+                   url: '{{ route("materias.getCmbMateria") }}',
                    type: 'GET',
                    data: a,
                    dataType: 'json',

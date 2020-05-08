@@ -108,7 +108,7 @@
           var $example = $("#especialidad_id-field").select2();
           var a= $('#frm_periodo_estudios').serialize();
               $.ajax({
-                  url: '{{ route("materias.getCmbMateria") }}',
+                  url: '{{ route("materias.getCmbMateria2") }}',
                   type: 'GET',
                   data: "plantel_id=" + $('#plantel_id-field option:selected').val(),
                   dataType: 'json',
