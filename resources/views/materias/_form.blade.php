@@ -76,7 +76,7 @@
     function getCmbMateria(){
           
               $.ajax({
-                  url: '{{ route("materias.getCmbMateria") }}',
+                  url: '{{ route("materias.getCmbMateria2") }}',
                   type: 'GET',
                   data: "plantel_id=" + $('#plantel_id-field option:selected').val()+
                   "&materium_id="+$('#serie_anterior-field option:selected').val(),

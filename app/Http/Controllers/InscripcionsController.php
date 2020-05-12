@@ -2716,18 +2716,21 @@ class InscripcionsController extends Controller
             $registros = Inscripcion::select('c.id', DB::raw(' '
                 . 'concat(c.nombre," ",c.nombre2," ",c.ape_paterno," ",c.ape_materno) as cliente,'
                 . 'c.beca_bnd, esp.name as especialidad, n.name as nivel, g.name as grado,'
-                . 'inscripcions.fec_inscripcion,'
-                . 'gru.name as grupo, gru.id as gru, stc.id as estatus_cliente_id,  stc.name as estatus_cliente, l.name as lectivo'))
+                . 'inscripcions.fec_inscripcion, p.razon as plantel, pe.name as periodo_estudio,'
+                . 't.name as turno, pe.name as periodo_estudio, '
+                . 'gru.name as grupo, gru.id as gru, stc.id as estatus_cliente_id, stc.name as estatus_cliente, '
+                . 'l.name as lectivo'))
                 ->join('clientes as c', 'c.id', '=', 'inscripcions.cliente_id')
                 ->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
                 ->join('medios as m', 'm.id', '=', 'c.medio_id')
+                ->join('plantels as p', 'p.id', '=', 'inscripcions.plantel_id')
                 ->join('especialidads as esp', 'esp.id', '=', 'inscripcions.especialidad_id')
                 ->join('nivels as n', 'n.id', '=', 'inscripcions.nivel_id')
                 ->join('grados as g', 'g.id', '=', 'inscripcions.grado_id')
                 ->join('grupos as gru', 'gru.id', '=', 'inscripcions.grupo_id')
-                //->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
+                ->join('turnos as t', 't.id', '=', 'inscripcions.turno_id')
                 ->join('lectivos as l', 'l.id', '=', 'inscripcions.lectivo_id')
-                //->join('materia as mat', 'mat.id', '=', 'inscripcions.materium_id')
+                ->join('periodo_estudios as pe', 'pe.id', '=', 'inscripcions.periodo_estudio_id')
                 //->join('asignacion_academicas as aa', 'aa.materium_id', '=', 'inscripcions.materium_id')
                 //->whereColumn('aa.grupo_id', 'inscripcions.grupo_id')
                 //->whereColumn('aa.plantel_id', 'inscripcions.plantel_id')
