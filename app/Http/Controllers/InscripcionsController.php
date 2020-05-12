@@ -2714,7 +2714,7 @@ class InscripcionsController extends Controller
 
         try {
             $registros = Inscripcion::select('c.id', DB::raw(' '
-                . 'concat(c.nombre," ",c.nombre2," ",c.ape_paterno," ",c.ape_materno) as cliente,'
+                . 'c.nombre, c.nombre2,c.ape_paterno,c.ape_materno,'
                 . 'c.beca_bnd, esp.name as especialidad, n.name as nivel, g.name as grado,'
                 . 'inscripcions.fec_inscripcion, p.razon as plantel, pe.name as periodo_estudio,'
                 . 't.name as turno, pe.name as periodo_estudio, '

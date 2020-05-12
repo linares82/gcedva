@@ -19,7 +19,8 @@
                 <tr>
                     <th></th><th>Plantel</th><th>Especialidad</th><th>Nivel</th><th>Grado</th><th>Grupo</th>
                     <th>Turno</th><th>P. Estudio</th>
-                    <th>Cliente</th><th>Fecha Inscripción</th><th>Estatus Cliente</th><th>Lectivo</th>
+                    <th>Cliente</th><th>P. Nombre</th><th>S. Nombre</th><th>A. Paterno</th><th>A. Materno</th><th>Fecha Inscripción</th>
+                    <th>Estatus Cliente</th><th>Lectivo</th>
                 </tr> 
             </thead>
             <tbody>
@@ -32,7 +33,7 @@
                 @foreach($registros as $registro)
                     @if($grupo<>$registro->grupo and $i<>0)
                     <tr>
-                        <td><strong>Suma Grupo</strong></td><td colspan="8"><strong>{{$i}}<strong></td>
+                        <td><strong>Suma Grupo</strong></td><td colspan="15"><strong>{{$i}}<strong></td>
                     </tr>
                     <?php 
                     $j=$i+$j;
@@ -46,7 +47,9 @@
                         <td>{{$registro->especialidad}}</td><td>{{$registro->nivel}}</td><td>{{$registro->grado}}</td>
                         <td>{{$registro->grupo}} {{$registro->asignacion}}</td>
                         <td>{{ $registro->turno  }}</td><td>{{ $registro->periodo_estudio }}</td>
-                        <td>{{$registro->id}} - {{$registro->cliente}}</td>
+                        <td>{{$registro->id}}</td><td>{{$registro->nombre}}</td><td>{{$registro->nombre2}}</td>
+                        <td>{{$registro->ape_paterno}}</td>
+                        <td>{{$registro->ape_materno}}</td>
                         <td>{{$registro->fec_inscripcion}}</td>
                         <td>{{$registro->estatus_cliente}}</td>
                         <td>{{$registro->lectivo}}</td>    

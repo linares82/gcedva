@@ -642,6 +642,7 @@ class SeguimientosController extends Controller
             $ds_actividades = DB::table('hactividades as has')
                 ->select(
                     'p.razon as plantel',
+                    'c.id as cli',
                     DB::raw('concat(e.nombre,e.ape_paterno,e.ape_materno) as empleado'),
                     DB::raw('concat(c.nombre,c.ape_paterno,c.ape_materno) as cliente'),
                     'has.tarea',
@@ -661,6 +662,7 @@ class SeguimientosController extends Controller
             $ds_actividades = DB::table('hactividades as has')
                 ->select(
                     'p.razon as plantel',
+                    'c.id as cli',
                     DB::raw('concat(e.nombre,e.ape_paterno,e.ape_materno) as empleado'),
                     DB::raw('concat(c.nombre,c.ape_paterno,c.ape_materno) as cliente'),
                     'has.tarea',

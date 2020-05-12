@@ -43,6 +43,7 @@
                     <div class="form-group col-md-4 @if($errors->has('serie_anterior')) has-error @endif">
                        <label for="serie_anterior-field">Serie anterior</label>
                        {!! Form::select("serie_anterior", $materiales_ls, null, array("class" => "form-control select_seguridad", "id" => "serie_anterior-field")) !!}
+                       <div id='loading3' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                        @if($errors->has("serie_anterior"))
                         <span class="help-block">{{ $errors->first("serie_anterior") }}</span>
                        @endif
