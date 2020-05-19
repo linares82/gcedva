@@ -156,7 +156,7 @@ class MoodleBajasController extends Controller
 				$result = $client->request('GET', "/wsrpc/rpc.controller.php?method=" . $metodo . "&key=" . $key . '&username=' . $username . '&active=' . $active);
 				//dd($result->getBody()->getContents());
 				$request = $result->getBody()->getContents();
-				//$cadena = explode(',', $result->getBody()->getContents());
+				//dd($request);
 				return response()->Json($request);
 				/*if ($result->getStatusCode() == 200) {
 					$this->procesar($datos['cliente']);

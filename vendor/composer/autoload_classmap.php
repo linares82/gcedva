@@ -37,6 +37,7 @@ return array(
     'AddControlFieldInscripcionsTable' => $baseDir . '/database/migrations/2019_08_23_121031_add_control_field_inscripcions_table.php',
     'AddCscCotiClausulasPlantelTable' => $baseDir . '/database/migrations/2019_04_02_102245_add_csc_coti_clausulas_plantel_table.php',
     'AddCscVinculacionVinculacionsTable' => $baseDir . '/database/migrations/2019_12_04_095621_add_csc_vinculacion_vinculacions_table.php',
+    'AddCuentaContablePlantelsTable' => $baseDir . '/database/migrations/2020_05_19_092501_add_cuenta_contable_plantels_table.php',
     'AddCuentaEfectivoIdPagosTable' => $baseDir . '/database/migrations/2019_06_19_142820_add_cuenta_efectivo_id_pagos_table.php',
     'AddCuentaFormaPagoTable' => $baseDir . '/database/migrations/2018_05_14_182242_add_cuenta_forma_pago_table.php',
     'AddCuestionarioIdClientesIndexTable' => $baseDir . '/database/migrations/2018_02_14_184921_add_cuestionario_id_clientes_index_table.php',

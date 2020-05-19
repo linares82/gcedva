@@ -233,6 +233,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         ),
         'F' => 
         array (
+            'Fruitcake\\Cors\\' => 15,
             'FontLib\\' => 8,
             'Fideloper\\Proxy\\' => 16,
             'Faker\\' => 6,
@@ -271,6 +272,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'A' => 
         array (
             'Aws\\' => 4,
+            'Asm89\\Stack\\' => 12,
             'Arcanedev\\Support\\' => 18,
             'Arcanedev\\LogViewer\\' => 20,
             'App\\' => 4,
@@ -591,6 +593,10 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/guzzle/src',
         ),
+        'Fruitcake\\Cors\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/fruitcake/laravel-cors/src',
+        ),
         'FontLib\\' => 
         array (
             0 => __DIR__ . '/..' . '/phenx/php-font-lib/src/FontLib',
@@ -682,6 +688,10 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'Aws\\' => 
         array (
             0 => __DIR__ . '/..' . '/aws/aws-sdk-php/src',
+        ),
+        'Asm89\\Stack\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/asm89/stack-cors/src',
         ),
         'Arcanedev\\Support\\' => 
         array (
@@ -790,6 +800,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'AddControlFieldInscripcionsTable' => __DIR__ . '/../..' . '/database/migrations/2019_08_23_121031_add_control_field_inscripcions_table.php',
         'AddCscCotiClausulasPlantelTable' => __DIR__ . '/../..' . '/database/migrations/2019_04_02_102245_add_csc_coti_clausulas_plantel_table.php',
         'AddCscVinculacionVinculacionsTable' => __DIR__ . '/../..' . '/database/migrations/2019_12_04_095621_add_csc_vinculacion_vinculacions_table.php',
+        'AddCuentaContablePlantelsTable' => __DIR__ . '/../..' . '/database/migrations/2020_05_19_092501_add_cuenta_contable_plantels_table.php',
         'AddCuentaEfectivoIdPagosTable' => __DIR__ . '/../..' . '/database/migrations/2019_06_19_142820_add_cuenta_efectivo_id_pagos_table.php',
         'AddCuentaFormaPagoTable' => __DIR__ . '/../..' . '/database/migrations/2018_05_14_182242_add_cuenta_forma_pago_table.php',
         'AddCuestionarioIdClientesIndexTable' => __DIR__ . '/../..' . '/database/migrations/2018_02_14_184921_add_cuestionario_id_clientes_index_table.php',

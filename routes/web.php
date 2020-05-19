@@ -5338,7 +5338,7 @@ Route::post(
         'uses' => 'PonderacionsController@update'
     )
 )->middleware('auth');
-Route::get(
+Route::delete(
     '/ponderacions/destroy/{id}',
     array(
         'as' => 'ponderacions.destroy',

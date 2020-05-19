@@ -51,12 +51,12 @@ header('Content-Type: application/json');
                             @permission('moodleBajas.procesarUno')
                             @if(is_null($bajas))
                             <a href="{{ route('moodleBajas.procesarUno',array('cliente'=>$registro['cliente_id'])) }}" data-cliente={{ $registro['cliente_id'] }} class="btn btn-xs btn-success btn-baja">S. Baja</a>
-                            <button  data-cliente={{ $registro['cliente_id'] }} class="btn btn-xs btn-success btn-baja">BS. Baja</button>
+                            <button  data-cliente={{ $registro['cliente_id'] }} data-loading='loading{{ $registro["cliente_id"] }}' class="btn btn-xs btn-success btn-baja">BS. Baja</button>
                             @else
                             <a href="{{ route('moodleBajas.procesarUnoAlta',array('id'=>$bajas->id)) }}" data-baja={{ $bajas->id }} class="btn btn-xs btn-info btn-alta">S. Alta</a>
                             @endif
                             @endpermission
-
+                            <div id='loading{{ $registro["cliente_id"] }}' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                             
                         </td>
                         <td>{{$registro['razon']}}</td>
@@ -109,41 +109,65 @@ header('Content-Type: application/json');
     
 $('.btn-baja').click(function(e){
     e.preventDefault();
+    peticionMoodle("", $(this).data('loading')); 
+    
+});
+
+function peticionMoodle(llave="", loading){
     var d = new Date();
     var n = d.getDate('Ymd');
     //alert(n);
     var salt="SbSkhl0XvctpPUscgLNg";
+    if(llave==""){
+        llave=md5(n+salt);
+    }
 
     $.ajax({
         type: 'GET',
                 url: '{{ route('moodleBajas.procesarUno') }}',
-                cache:true,
+                //cache:true,
                 data: {
                     'method':'changeUserStatus' ,
-                    'key': md5(n+salt),
-                    'username':"",
+                    'key': llave,
+                    'username':"092020IMA350001",
                     'active':false
                 },
                 dataType:"json",
                 //jsonp: 'jsonp-callback',
-                //beforeSend : function(){$("#loading3").show(); },
-                //complete : function(){$("#loading3").hide(); },
-                success: function(data) {
+                beforeSend : function(){$("#"+loading).show(); },
+                complete : function(){$("#"+loading).hide(); },
+                success: function(datos) {
                     console.log('exito');
-                    ele=data.split('{');
-                    ele2=data.split(',')[0];
-                    ele3=ele2.split(':');
-                    console.log(ele3[1]);
+                    res = datos.split("}");
+                    res[0]=res[0]+"}";
+                    objetivo=JSON.parse(res[0]);
+                    //console.log(typeof objetivo);
+                    if(typeof objetivo != "undefined"){
+                        if(objetivo.status==403){
+                            //console.log(objetivo.message);
+                            clave=objetivo.message.split(".");
+                            //console.log(clave[1]);
+                            peticionMoodle(clave[1], loading);
+                        }else{
+                            console.log(objetivo);
+                        }
+                    }else{
+                        console.log(objetivo);
+                    }
+                    
+                    
                 },
-                error: function(data){
+                error: function(datos){
                     console.log('error');
-                    ele=data.split('{');
-                    ele2=data.split(',')[0];
-                    console.log(ele2);
+                    res = datos.split("}");
+                    res[0]=res[0]+"}";
+                    objetivo=JSON.parse(res[0]);
+                    //if(typeof objetivo.status !== "undefined" and objetivo.status<>403){
+                        console.log(objetivo);
+                    //}
                 }
-        }); 
-    
-});
+        });
+}
 
 </script>
     

@@ -42,6 +42,18 @@
 @endsection
 
 @section('content')
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-condensed table-striped">
+        <thead><th>Plantel</th><th>Especialidad</th><th>Nivel</th><th>Grado</th><th>Turno</th></thead>
+        <tbody>
+            <td>{{ $seguimiento->cliente->plantel->razon }}</td><td>{{ $seguimiento->cliente->especialidad->name  }}</td>
+            <td>{{ $seguimiento->cliente->nivel->name }}</td><td>{{ $seguimiento->cliente->grado->name }}</td>
+            <td>{{ $seguimiento->cliente->turno->name }}</td>
+        </tbody>
+    </table>
+    </div>
+</div>
     <div class="row">
         <div class="col-md-12">
             <div class="form-group col-md-7 ">

@@ -78,7 +78,13 @@
                           <span class="help-block">{{ $errors->first("cct") }}</span>
                          @endif
                       </div>
-                      
+                      <div class="form-group col-md-4 @if($errors->has('cuenta_contable')) has-error @endif">
+                        <label for="cuenta_contable-field">Cuenta Contable</label>
+                        {!! Form::text("cuenta_contable", null, array("class" => "form-control input-sm", "id" => "cuenta_contable-field")) !!}
+                        @if($errors->has("cuenta_contable"))
+                         <span class="help-block">{{ $errors->first("cuenta_contable") }}</span>
+                        @endif
+                     </div>
                   </div>
                   <div class="box box-default">
                       <div class="box-body">
