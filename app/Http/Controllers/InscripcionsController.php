@@ -126,12 +126,14 @@ class InscripcionsController extends Controller
             array_push($materias_array, $m->id);
         }
         //dd($materias);
-        $materias_validar = Hacademica::where('grupo_id', '=', $i->grupo_id)
-            ->where('cliente_id', '=', $i->cliente_id)
-            ->where('grado_id', '=', $i->grado_id)
-            ->where('lectivo_id', '=', $i->lectivo_id)
-            ->whereIn('materium_id', $materias_array)
-            ->whereNull('deleted_at')
+        $materias_validar = Hacademica::where('hacademicas.grupo_id', '=', $i->grupo_id)
+            ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
+            ->whereNull('i.deleted_at')
+            ->where('hacademicas.cliente_id', '=', $i->cliente_id)
+            ->where('hacademicas.grado_id', '=', $i->grado_id)
+            ->where('hacademicas.lectivo_id', '=', $i->lectivo_id)
+            ->whereIn('hacademicas.materium_id', $materias_array)
+            ->whereNull('hacademicas.deleted_at')
             ->get();
 
         /*$materias_validar=Hacademica::where('inscripcion_id', '=', $i->id)
@@ -2647,12 +2649,14 @@ class InscripcionsController extends Controller
             array_push($materias_array, $m->id);
         }
         //dd($materias);
-        $materias_validar = Hacademica::where('grupo_id', '=', $i->grupo_id)
-            ->where('cliente_id', '=', $i->cliente_id)
-            ->where('grado_id', '=', $i->grado_id)
-            ->where('lectivo_id', '=', $i->lectivo_id)
-            ->whereIn('materium_id', $materias_array)
-            ->whereNull('deleted_at')
+        $materias_validar = Hacademica::where('hacademicas.grupo_id', '=', $i->grupo_id)
+            ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
+            ->whereNull('i.deleted_at')
+            ->where('hacademicas.cliente_id', '=', $i->cliente_id)
+            ->where('hacademicas.grado_id', '=', $i->grado_id)
+            ->where('hacademicas.lectivo_id', '=', $i->lectivo_id)
+            ->whereIn('hacademicas.materium_id', $materias_array)
+            ->whereNull('hacademicas.deleted_at')
             ->get();
 
         if ($materias_validar->count() == 0) {

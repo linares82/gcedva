@@ -345,9 +345,11 @@
                                 @endif
                             </td>
                             <td>
+                                @permission('cajas.eliminarPago')
                                 {!! Form::model($pago, array('route' => array('pagos.destroy', $pago->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('Â¿Borrar? Â¿Esta seguro?')) { return true } else {return false };")) !!}
                                     <button type="submit" class="btn btn-xs btn-danger" data-toggle="tooltip" title="Eliminar"><i class="glyphicon glyphicon-trash"></i> </button>
                                 {!! Form::close() !!}
+                                @endpermission
                                 <a href="{{route('pagos.imprimir', array('pago'=>$pago->id))}}" data-toggle="tooltip" title="Imprimir" class="btn btn-info btn-xs " target="_blank"><i class="fa fa-print"></i></a>
                             </td>
                             
@@ -953,7 +955,7 @@ Agregar nuevo registro
                 }
                 
                 monto=$('#monto-field').val().toString();
-                fecha=$('#fecha-field').val().toString();
+                fecha=$('#fecha_ln-field').val().toString();
                 forma_pago_id=$('#forma_pago_id-field option:selected').val().valueOf();
                 cuenta_efectivo_id=$('#cuenta_efectivo_id-field option:selected').val().valueOf();
                 ref0=$('#referencia-field').val().toString();

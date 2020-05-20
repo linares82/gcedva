@@ -140,21 +140,28 @@
                                 @endif
                             </td>
                             <td>
+                                
                                 @foreach($linea->promoPlanLns as $promoPlanLn)
+                                @permission('promocions.edit')
                                     {{$promoPlanLn->fec_inicio." / ".$promoPlanLn->fec_fin." / ".$promoPlanLn->descuento}} 
                                     <button class="edit-promo-modal btn btn-default btn-xs" data-promo_plan_pago_id="{{$promoPlanLn->id}}" 
                                                                                           data-fec_inicio="{{$promoPlanLn->fec_inicio}}"
                                                                                           data-fec_fin="{{$promoPlanLn->fec_fin}}"
                                                                                           data-descuento="{{$promoPlanLn->descuento}}">
                                 <span class="glyphicon glyphicon-star"></span> Editar </button><br/>
+                                @endpermission
+                                @permission('promoPlanLns.destroy')
                                 <a class="btn btn-danger btn-xs" href="{{route('promoPlanLns.destroy',$promoPlanLn->id)}}">Borrar</a>
+                                @endpermission
                                 @endforeach
                             </td>
                             
                             <td>
+                                @permission('planPagoLns.reglaDescuentoRecargo')
                                 <button class="reglas-modal btn btn-warning btn-xs" data-id="{{$linea->id}}" 
                                     data-plan_pago_id="{{$linea->plan_pago_id}}" >
                                 <span class="glyphicon glyphicon-edit"></span> Reglas Descuento Recargo </button>
+                                @endpermission
                                 <br>
                                 @foreach($linea->reglaRecargos as $regla)
                                 {{ $regla->name }}
@@ -163,6 +170,7 @@
                             </td>
 
                             <td>
+                                @permission('planPagoLns.edit')
                                 <button class="edit-modal btn btn-info btn-xs" data-id="{{$linea->id}}" 
                                                                                data-plan_pago_id="{{$linea->plan_pago_id}}" 
                                                                                data-caja_concepto_id="{{$linea->caja_concepto_id}}" 
@@ -172,14 +180,15 @@
                                                                                data-monto="{{$linea->monto}}"
                                                                                data-inicial_bnd="{{$linea->inicial_bnd}}">
                                 <span class="glyphicon glyphicon-edit"></span> Editar </button>
+                                @endpermission
                                 
-                                
+                                @permission('promocions.create')
                                 <button class="promo-modal btn btn-success btn-xs" data-plan_pago_ln_id="{{$linea->id}}" >
                                 <span class="glyphicon glyphicon-star"></span> Crear Promoción </button>
+                                @endpermission
                                 
                                 
-                                
-                                
+                                @permission('planPagoLns.destroy')
                                 <button class="delete-modal btn btn-danger btn-xs" data-id="{{$linea->id}}" 
                                                                                data-plan_pago_id="{{$linea->plan_pago_id}}" 
                                                                                data-caja_concepto_id="{{$linea->caja_concepto_id}}" 
@@ -189,6 +198,7 @@
                                                                                data-monto="{{$linea->monto}}"
                                                                                data-inicial_bnd="{{$linea->inicial_bnd}}">
                                 <span class="glyphicon glyphicon-trash"></span> Borrar </button>
+                                @endpermission
                             </td>
                         </tr>
                     @endforeach
