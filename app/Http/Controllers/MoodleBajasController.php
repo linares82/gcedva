@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Cliente;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
@@ -174,37 +175,71 @@ class MoodleBajasController extends Controller
 	{
 		$datos = $request->all();
 		//dd($datos);
-		$this->procesarAlta($datos['id']);
+		//$this->procesarAlta($datos['id']);
 		return redirect()->route('adeudos.adeudosXplantel');
 	}
 
-	protected function procesar($cliente)
+	protected function procesar(Request $request)
 	{
 		//dd($cliente);
-		MoodleBaja::create(
-			array(
-				'cliente_id' => $cliente,
-				'bnd_baja' => 1,
-				'fecha_baja' => Date('Y-m-d'),
-				'bnd_alta' => 0,
-				'usu_alta_id' => Auth::user()->id,
-				'usu_mod_id' => Auth::user()->id,
-			)
-		);
-		return true;
+		$datos = $request->all();
+		//dd($datos);
+		$cliente = Cliente::find($datos['id']);
+		/*dd(array(
+			'cliente_id' => $cliente->id,
+			'bnd_baja' => 1,
+			'fecha_baja' => Date('Y-m-d'),
+			'bnd_alta' => 0,
+			'usu_alta_id' => Auth::user()->id,
+			'usu_mod_id' => Auth::user()->id,
+		));*/
+		$baja=MoodleBaja::where('cliente_id', $cliente->id)
+		->where('bnd_baja', 0)
+		->where('bnd_alta', 0)
+		->first();
+		//dd(is_null($baja));
+		if(is_null($baja)){
+			MoodleBaja::create(
+				array(
+					'cliente_id' => $cliente->id,
+					'bnd_baja' => $datos['bnd_baja'],
+					'fecha_baja' => $datos['fecha_baja'],
+					'msj'=>$datos['msj'],
+					'bnd_alta' => 0,
+					'usu_alta_id' => Auth::user()->id,
+					'usu_mod_id' => Auth::user()->id,
+				)
+			);
+		}else{
+			$baja->update(
+				array(
+					//'cliente_id' => $cliente->id,
+					'bnd_baja' => $datos['bnd_baja'],
+					'fecha_baja' => $datos['fecha_baja'],
+					'msj'=>$datos['msj'],
+					'bnd_alta' => 0,
+					//'usu_alta_id' => Auth::user()->id,
+					'usu_mod_id' => Auth::user()->id,
+				)
+			);
+		}
+		
+		return response()->json(['message'=>"Registro creado."], 200);
 	}
 
-	protected function procesarAlta($id)
+	protected function procesarAlta(Request $request)
 	{
 		//dd($cliente);
-		$registro = MoodleBaja::find($id);
+		$datos=$request->all();
+		$registro = MoodleBaja::find($datos['id']);
 		$registro->update(
 			array(
-				'fecha_alta' => Date('Y-m-d'),
-				'bnd_alta' => 1,
+				'fecha_alta' => $datos['fecha_alta'],
+				'bnd_alta' => $datos['bnd_alta'],
+				'msj_alta' => $datos['msj']
 			)
 		);
-		return true;
+		return response()->json(['message'=>"Registro actualizado."], 200);
 	}
 
 	protected function verificaDisponibilidad()

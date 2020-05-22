@@ -39,8 +39,8 @@
                     <p class="form-control-static">{{$moodleBaja->id}}</p>
                 </div>
                 <div class="form-group">
-                     <label for="cliente_id">CLIENTE_ID</label>
-                     <p class="form-control-static">{{$moodleBaja->cliente_id}}</p>
+                     <label for="cliente_nombre">CLIENTE_NOMBRE</label>
+                     <p class="form-control-static">{{$moodleBaja->cliente->nombre}}</p>
                 </div>
                     <div class="form-group">
                      <label for="bnd_baja">BND_BAJA</label>

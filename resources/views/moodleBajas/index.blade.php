@@ -50,20 +50,20 @@
 
                             <!--
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_cliente_id_gt">CLIENTE_ID</label>
+                                <label class="col-sm-2 control-label" for="q_clientes.nombre_gt">CLIENTE_NOMBRE</label>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['cliente_id_gt']) ?: '' }}" name="q[cliente_id_gt]" id="q_cliente_id_gt" />
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['clientes.nombre_gt']) ?: '' }}" name="q[clientes.nombre_gt]" id="q_clientes.nombre_gt" />
                                 </div>
                                 <div class=" col-sm-1 text-center"> - </div>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['cliente_id_lt']) ?: '' }}" name="q[cliente_id_lt]" id="q_cliente_id_lt" />
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['clientes.nombre_lt']) ?: '' }}" name="q[clientes.nombre_lt]" id="q_clientes.nombre_lt" />
                                 </div>
                             </div>
                             -->
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_cliente_id_cont">CLIENTE_ID</label>
+                                <label class="col-sm-2 control-label" for="q_clientes.nombre_cont">CLIENTE_NOMBRE</label>
                                 <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['cliente_id_cont']) ?: '' }}" name="q[cliente_id_cont]" id="q_cliente_id_cont" />
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['clientes.nombre_cont']) ?: '' }}" name="q[clientes.nombre_cont]" id="q_clientes.nombre_cont" />
                                 </div>
                             </div>
                                                     <!--
@@ -197,7 +197,7 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'cliente_id', 'title' => 'CLIENTE_ID'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clientes.nombre', 'title' => 'CLIENTE_NOMBRE'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'bnd_baja', 'title' => 'BND_BAJA'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'fecha_baja', 'title' => 'FECHA_BAJA'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'bnd_alta', 'title' => 'BND_ALTA'])</th>
@@ -212,7 +212,7 @@
                         @foreach($moodleBajas as $moodleBaja)
                             <tr>
                                 <td><a href="{{ route('moodleBajas.show', $moodleBaja->id) }}">{{$moodleBaja->id}}</a></td>
-                                <td>{{$moodleBaja->cliente_id}}</td>
+                                <td>{{$moodleBaja->cliente->nombre}}</td>
                     <td>{{$moodleBaja->bnd_baja}}</td>
                     <td>{{$moodleBaja->fecha_baja}}</td>
                     <td>{{$moodleBaja->bnd_alta}}</td>

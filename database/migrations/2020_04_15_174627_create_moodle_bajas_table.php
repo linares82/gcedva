@@ -20,6 +20,8 @@ class CreateMoodleBajasTable extends Migration
             $table->date('fecha_baja')->nullable();
             $table->integer('bnd_alta')->unsigned()->default(0);
             $table->date('fecha_alta')->nullable();
+            $table->text('msj')->nullable();
+            $table->text('msj_alta')->nullable();
             $table->integer('usu_alta_id')->unsigned();
             $table->integer('usu_mod_id')->unsigned();
             $table->timestamps();
@@ -39,5 +41,4 @@ class CreateMoodleBajasTable extends Migration
     {
         Schema::drop('moodle_bajas');
     }
-
 }
