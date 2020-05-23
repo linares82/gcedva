@@ -265,7 +265,9 @@
                                 <td>{{$cliente->cliente->empleado->nombre." ".$cliente->cliente->empleado->ape_paterno." ".$cliente->cliente->empleado->ape_materno}}</td>
                                 <td> {{$cliente->cliente->matricula}} </td>
                                 <td class="text-right">
+                                    @permission('clientes.boleta')
                                     <a class="btn btn-xs bg-maroon" href="{{ route('clientes.boleta', array('id'=>$cliente->cliente->id)) }}"><i class="glyphicon glyphicon-calendar"></i> Boleta</a>
+                                    @endpermission
                                     <a class="btn btn-xs bg-purple" href="{{ route('autorizacionBecas.findByClienteId', array('cliente_id'=>$cliente->cliente->id)) }}">
                                         <i class="fa fa-eye"></i> S. Becas
                                     </a>
@@ -287,11 +289,13 @@
                                     @endpermission
                                     @php
                                     $planteles = array();
+                				    array_push($planteles, intval(0));
                                     foreach ($empleado->plantels as $plantel) {
-                                        array_push($planteles, $plantel->id);
+                                        array_push($planteles, intval($plantel->id));
                                     }
                                     @endphp
-                                    @if(array_search($cliente->cliente->plantel_id,$planteles)<>false)
+
+                                    @if(array_search(intval($cliente->cliente->plantel_id),$planteles)<>false)
                                     @permission('clientes.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('clientes.edit', $cliente->cliente->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
                                     @endpermission

@@ -230,7 +230,7 @@ class AdeudosController extends Controller
 
         $planteles = Plantel::pluck('razon', 'id');
         $conceptos = CajaConcepto::pluck('name', 'id');
-        return view('adeudos.reportes.adeudosXPlantel', compact('planteles', 'conceptos'));
+        return view('adeudos.reportes.adeudosXplantel', compact('planteles', 'conceptos'));
     }
 
     public function reporteAdeudosPendientesr(Request $request)

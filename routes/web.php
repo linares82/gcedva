@@ -1278,7 +1278,7 @@ Route::get(
     '/clientes/boleta/',
     array(
         'as' => 'clientes.boleta',
-        //'middleware' => 'permission:clientes.descargaClientes',
+        'middleware' => 'permission:clientes.boleta',
         'uses' => 'ClientesController@boleta'
     )
 )->middleware('auth');
@@ -4891,7 +4891,7 @@ Route::get(
     '/asignacionAcademica/boletasGrupo',
     array(
         'as' => 'asignacionAcademica.boletasGrupo',
-        //'middleware' => 'permission:salons.getCmbSalon',
+        'middleware' => 'permission:asignacionAcademica.boletasGrupo',
         'uses' => 'AsignacionAcademicasController@boletasGrupo'
     )
 )->middleware('auth');
