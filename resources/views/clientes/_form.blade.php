@@ -317,7 +317,7 @@
                         @if(isset($cliente))
                         <div class="form-group col-md-1 @if($errors->has('grado_id')) has-error @endif">
                             <input type="button" id="crearCombinacion" class="btn btn-xs btn-block btn-success" value="Crear" onclick="CrearCombinacionCliente()" />
-                            <a href=# class="btn btn-xs btn-warning btn-block" id="btnConsultaPlan">Ver Plan</a>
+                            <!--<a href=# class="btn btn-xs btn-warning btn-block" id="btnConsultaPlan">Ver Plan</a>-->
                         </div>
                         <div class="form-group col-md-1 @if($errors->has('grado_id')) has-error @endif">
                             <br/><input type="button" id="actualizarCombinacion" class="btn btn-xs btn-block btn-success" value="Guardar" onclick="ActualizarCombinacionCliente()" style="display:none;" />
