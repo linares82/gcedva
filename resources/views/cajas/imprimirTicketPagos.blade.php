@@ -161,6 +161,7 @@ body{
     <tr>
         <tr><td colspan="2">Fecha Impresion: {{$fecha}}</td></tr>
     </tr>
+    @foreach($pagos as $pago)
     <tr>
         <td>
             Pago
@@ -168,6 +169,7 @@ body{
         <td>Fecha Pago:{{$pago->fecha}}</td>
         <td align="right"> {{ $pago->monto }} </td>
     </tr>
+    @endforeach
     <tr>
         <td>
             Acumulado
@@ -187,7 +189,6 @@ body{
     <tr><td>-</td></tr>
     <tr><td>--------------------------------------------</td></tr>
 </table>
-
 
 <table style="width:100%;height:auto;border:1px solid #ccc;font-size: 0.70em;">
     <tr>
@@ -329,6 +330,7 @@ body{
     <tr>
         <tr><td colspan="2">Fecha Impresion: {{$fecha}}</td></tr>
     </tr>
+    @foreach($pagos as $pago)
     <tr>
         <td>
             Pago
@@ -336,6 +338,7 @@ body{
         <td>Fecha Pago:{{$pago->fecha}}</td>
         <td align="right"> {{ $pago->monto }} </td>
     </tr>
+    @endforeach
     <tr>
         <td>
             Acumulado

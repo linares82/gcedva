@@ -487,6 +487,7 @@ class HomeController extends Controller
         foreach ($empleado->plantels as $p) {
             array_push($planteles, $p->id);
         }
+        //dd($planteles);
         $becas_aux = AutorizacionBeca::select(
             'autorizacion_becas.id',
             'autorizacion_becas.cliente_id as cliente',
@@ -507,7 +508,7 @@ class HomeController extends Controller
             ->leftJoin('st_becas as acc', 'acc.id', '=', 'autorizacion_becas.aut_caja_corp')
             ->leftJoin('st_becas as ase', 'ase.id', '=', 'autorizacion_becas.aut_ser_esc')
             ->leftJoin('st_becas as ad', 'ad.id', '=', 'autorizacion_becas.aut_dueno')
-            ->where('autorizacion_becas.id', '>', 560)
+            //->where('autorizacion_becas.id', '>', 560)
             ->whereRaw('(aut_caja_plantel <> 4 or aut_dir_plantel<> 4 or aut_caja_corp<> 4 or aut_ser_esc<> 4 or aut_dueno<> 4)');
         if (Auth::user()->can('autorizacionBecas.filtroPlantels')) {
             $becas_aux->whereIn('cli.plantel_id', $planteles);

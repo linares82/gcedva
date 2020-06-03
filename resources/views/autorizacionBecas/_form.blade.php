@@ -13,15 +13,16 @@
                         <span class="help-block">{{ $errors->first("cliente_id") }}</span>
                        @endif
                     </div>
-                    <div class="form-group col-md-4 @if($errors->has('monto_inscripcion')) has-error @endif">
-                       <label for="monto_inscripcion-field">Monto Inscripcion</label>
-                       {!! Form::text("monto_inscripcion", null, array("class" => "form-control", "id" => "monto_inscripcion-field")) !!}
-                       @if($errors->has("monto_inscripcion"))
-                        <span class="help-block">{{ $errors->first("monto_inscripcion") }}</span>
-                       @endif
-                    </div>
+                    <div class="form-group col-md-4 @if($errors->has('lectivo_id')) has-error @endif">
+                     <label for="lectivo_id-field">Lectivo:</label>
+                     {!! Form::select("lectivo_id", $lectivos, null, array("class" => "form-control select_seguridad", "id" => "lectivo_id-field")) !!}
+                     @if($errors->has("lectivo_id"))
+                      <span class="help-block">{{ $errors->first("lectivo_id") }}</span>
+                     @endif
+                  </div>
+                    
                     <div class="form-group col-md-4 @if($errors->has('monto_mensualidad')) has-error @endif">
-                       <label for="monto_mensualidad-field">Monto Mensualidad</label>
+                       <label for="monto_mensualidad-field">Porcentaje Mensualidad (formato decimal 0.00)</label>
                        {!! Form::text("monto_mensualidad", null, array("class" => "form-control", "id" => "monto_mensualidad-field")) !!}
                        @if($errors->has("monto_mensualidad"))
                         <span class="help-block">{{ $errors->first("monto_mensualidad") }}</span>

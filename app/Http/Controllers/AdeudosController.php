@@ -8,6 +8,7 @@ use App\CajaConcepto;
 use App\CajaLn;
 use App\Cliente;
 use App\CombinacionCliente;
+use App\Descuento;
 use App\Empleado;
 use App\HistoriaCliente;
 use App\Http\Controllers\Controller;
@@ -28,6 +29,7 @@ use Illuminate\Http\Request;
 use Log;
 use PDF;
 use Session;
+use Exception;
 
 class AdeudosController extends Controller
 {
@@ -121,12 +123,52 @@ class AdeudosController extends Controller
      */
     public function update($id, Adeudo $adeudo, updateAdeudo $request)
     {
-        $input = $request->all();
-        //dd($input);
+        $input = $request->except(['porcentaje','autorizado_por', 'justificacion','autorizado_el','adeudo_id']);
+        $inputDescuento = $request->only(['porcentaje','autorizado_por', 'justificacion','autorizado_el','adeudo_id']);
+        
         $input['usu_mod_id'] = Auth::user()->id;
         //update data
         $adeudo = $adeudo->find($id);
         $adeudo->update($input);
+
+        //dd(!isset($adeudo->descuento->id));
+
+        if(!isset($adeudo->descuento->id)){
+            if(isset($inputDescuento['adeudo_id']) and isset($inputDescuento['porcentaje']) and 
+               isset($inputDescuento['justificacion']) and isset($inputDescuento['autorizado_por']) and
+               isset($inputDescuento['autorizado_el'])){
+                $valores=array();
+                $valores['adeudo_id']=$inputDescuento['adeudo_id'];
+                $valores['porcentaje']=$inputDescuento['porcentaje'];
+                $valores['justificacion']=$inputDescuento['justificacion'];
+                $valores['autorizado_por']=$inputDescuento['autorizado_por'];
+                $valores['autorizado_el']=$inputDescuento['autorizado_el'];
+                $valores['usu_alta_id']=Auth::user()->id;
+                $valores['usu_mod_id']=Auth::user()->id;
+                //dd($valores);
+                try{
+                    Descuento::create($valores);
+                }catch(Exception $e){
+                    dd($e->getMessage());
+                }
+                
+               }
+            
+        }else{
+            if(isset($inputDescuento['porcentaje']) and 
+               isset($inputDescuento['justificacion']) and 
+               isset($inputDescuento['autorizado_por']) and
+               isset($inputDescuento['autorizado_el'])){
+                $valores=array(
+                    'porcentaje'=>$inputDescuento['porcentaje'],
+                    'justificacion'=>$inputDescuento['justificacion'],
+                    'autorizado_por'=>$inputDescuento['autorizado_por'],
+                    'autorizado_el'=>$inputDescuento['autorizado_el'],
+                    'usu_mod_id'=>Auth::user()->id);
+                    $adeudo->descuento->update($valores);
+               }
+            
+        }
 
         //return redirect()->route('adeudos.index')->with('message', 'Registro Actualizado.');
     }
@@ -243,22 +285,7 @@ class AdeudosController extends Controller
 
         $plantel = Plantel::find($datos['plantel_f']);
         //dd($plantel);
-        /*$adeudosPendientes=Adeudo::select('esp.name as especialidad','n.name as nivel','g.name as grado','c.id as cliente','c.nombre','c.nombre2',
-        'c.ape_paterno','c.ape_materno','adeudos.fecha_pago','adeudos.monto')
-        ->join('combinacion_clientes as cc','cc.id',"=",'adeudos.combinacion_cliente_id')
-        ->join('especialidads as esp','esp.id','=','cc.especialidad_id')
-        ->join('nivels as n','n.id','=','cc.nivel_id')
-        ->join('grados as g','g.id','=','cc.grado_id')
-        ->join('clientes as c', 'c.id', '=', 'adeudos.cliente_id')
-        ->where('pagado_bnd', '=', 0)
-        ->whereDate('fecha_pago', '<', $fecha)
-        ->where('c.plantel_id', '=', session('plantel'))
-        ->orderBy('c.id', 'asc')
-        ->orderBy('adeudos.combinacion_cliente_id', 'asc')
-        //->get();
-        ->paginate(100);
-         *
-         */
+    
 
         $adeudosPendientes = Adeudo::select(
             'esp.name as especialidad',

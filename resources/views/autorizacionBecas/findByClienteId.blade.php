@@ -57,6 +57,7 @@
                             <th>ID</th>
                             <th>PLANTEL</th>
                             <th>SOLICITUD</th>
+                            <th>LECTIVO</th>
                         <th>CLIENTE</th>
                         <th>MONTO INSCRIPCION</th>
                         <th>MONTO MENSUALIDAD</th>
@@ -65,7 +66,7 @@
                         <th>A. DIR. P.</th>
                         <th>A. SERV. ESC. C.</th>
                         <th>A. FINAL</th>
-                        <th>A. CAJA C.</th>
+                        
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
@@ -76,6 +77,7 @@
                                 <td>{{$autorizacionBeca->id}}</td>
                                 <td>{{$autorizacionBeca->cliente->plantel->razon}}</td>
                                 <td>{{$autorizacionBeca->solicitud}}</td>
+                                <td>{{$autorizacionBeca->lectivo->name}}</td>
                                 <td>{{$autorizacionBeca->cliente->nombre." ".$autorizacionBeca->cliente->nombre2." ".$autorizacionBeca->cliente->ape_paterno." ".$autorizacionBeca->cliente->ape_materno}}</td>
                                 <td>{{$autorizacionBeca->monto_inscripcion}}</td>
                                 <td>{{$autorizacionBeca->monto_mensualidad}}</td>
@@ -131,7 +133,8 @@
                                     @endpermission
                                     @endif
                                 </td>
-                                <td>{{ optional($autorizacionBeca->autCajaCorp)->name }}
+                                <!--
+                                <td>@{{ optional($autorizacionBeca->autCajaCorp)->name }}
                                     @if($autorizacionBeca->aut_caja_plantel==4 and $autorizacionBeca->aut_dir_plantel==4
                                      and $autorizacionBeca->aut_ser_esc==4 and $autorizacionBeca->aut_dueno==4 )
                                     @permission('autorizacionBecas.aut_caja_corp')
@@ -145,6 +148,7 @@
                                     @endpermission
                                     @endif
                                 </td>
+                            -->
                                 <td class="text-right">
                                     <button class="btn btn-success btnVerLineas pull-right btn-xs" lang="mesaj" data-check="{{$autorizacionBeca->id}}" data-href="formation_json_parents" style="margin-left:10px;" >
                                         <span class="fa fa-eye" aria-hidden="true"></span> Ver comentarios

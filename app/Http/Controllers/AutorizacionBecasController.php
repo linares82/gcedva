@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 
 use App\AutorizacionBeca;
 use App\Cliente;
+use App\Lectivo;
 use App\Plantel;
 use App\StBeca;
 use Illuminate\Http\Request;
@@ -45,8 +46,12 @@ class AutorizacionBecasController extends Controller {
 	public function create(Request $request)
 	{
             $datos=$request->all();
-            $cliente=Cliente::find($datos['id']);
-		return view('autorizacionBecas.create', compact('cliente'))
+			$cliente=Cliente::find($datos['id']);
+			$lectivos=Lectivo::join('inscripcions as i','i.lectivo_id','=','lectivos.id')
+			->where('i.cliente_id',$cliente->id)
+			->whereNull('i.deleted_at')
+			->pluck('lectivos.name','lectivos.id');
+		return view('autorizacionBecas.create', compact('cliente','lectivos'))
 			->with( 'list', AutorizacionBeca::getListFromAllRelationApps() );
 	}
 

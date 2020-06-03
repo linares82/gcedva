@@ -51,13 +51,34 @@
                          <span class="help-block">{{ $errors->first("orden") }}</span>
                         @endif
                      </div>
-                     <div class="form-group col-md-3 @if($errors->has('bnd_activo')) has-error @endif">
+                     <div class="form-group col-md-4 @if($errors->has('bnd_activo')) has-error @endif">
                         <label for="bnd_activo-field">Activo</label>
                         {!! Form::checkbox("bnd_activo", 1, null, [ "id" => "bnd_activo-field", 'class'=>'minimal']) !!}
                         @if($errors->has("bnd_activo"))
                         <span class="help-block">{{ $errors->first("bnd_activo") }}</span>
                         @endif
                     </div> 
+                    <div class="form-group col-md-4 @if($errors->has('rvoe')) has-error @endif">
+                        <label for="rvoe-field">RVOE</label>
+                        {!! Form::text("rvoe", null, array("class" => "form-control input-sm", "id" => "rvoe-field")) !!}
+                        @if($errors->has("rvoe"))
+                         <span class="help-block">{{ $errors->first("rvoe") }}</span>
+                        @endif
+                     </div>
+                     <div class="form-group col-md-4 @if($errors->has('cct')) has-error @endif">
+                        <label for="cct-field">CCT</label>
+                        {!! Form::text("cct", null, array("class" => "form-control input-sm", "id" => "cct-field")) !!}
+                        @if($errors->has("cct"))
+                         <span class="help-block">{{ $errors->first("cct") }}</span>
+                        @endif
+                     </div>
+                     <div class="form-group col-md-4 @if($errors->has('fec_vigencia_rvoe')) has-error @endif">
+                        <label for="fec_vigencia_-field">Fec. Vigencia RVOE</label>
+                        {!! Form::text("fec_vigencia_rvoe", null, array("class" => "fecha form-control input-sm", "id" => "fec_vigencia_rvoe-field")) !!}
+                        @if($errors->has("fec_vigencia_rvoe"))
+                         <span class="help-block">{{ $errors->first("fec_vigencia_rvoe") }}</span>
+                        @endif
+                     </div>
                     <div class="row"></div>
                     @if(isset($materias_ls))
                     <div class="form-group col-md-4 @if($errors->has('materia_id')) has-error @endif">

@@ -23,7 +23,7 @@
     <div class="alert alert-error">
         Tickets con estatus Invalido: 
         @foreach($ids as $id)
-        {{ $id['consecutivo'] }} en {{ $id['cve_plantel'] }} con cliente {{ $id['cliente_id'] }} <br/>
+        {{ $id['consecutivo'] }} en {{ $id['razon'] }} con cliente {{ $id['cliente_id'] }} <br/>
         @endforeach
     </div>
 @endif
@@ -64,7 +64,6 @@
                                 
                 @if(isset($message))
                 <div class="alert alert-danger alert-dismissable">
-<!--                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">Ã—</button>-->
                     {{$message}}
                 </div>
                 @endif
@@ -99,277 +98,287 @@
             </div>
         </div>
     </div>
-    <div class="col-md-7">
-    <div class="col-md-4">
-        <div class="box box-info">
-            <div class="box-body">
-                {!! Form::open(array('route' => 'cajas.buscarCliente', 'id'=>'frmBuscarCliente')) !!}
+    <div class="row"></div>
+    <div class="col-md-6">
+        <div class="col-md-4">
+            <div class="box box-info">
+                <div class="box-body">
+                    {!! Form::open(array('route' => 'cajas.buscarCliente', 'id'=>'frmBuscarCliente')) !!}
 
-                <div class="input-group form-group col-md-12 @if($errors->has('cliente_id')) has-error @endif">
-                    <div class="input-group-btn">
-                        <button type="submit" class="btn btn-info" data-toggle="tooltip" title="Buscar Cliente"><i class='fa fa-search'></i></button>
-                    </div>
-                    @if(isset($cliente))
-                    {!! Form::text("cliente_id", ($cliente)?$cliente->id:"", array("class" => "form-control ", 'placeholder'=>'No. de Cliente',"id" => "cliente_id-field")) !!}
-                    @else
-                    {!! Form::text("cliente_id", null, array("class" => "form-control ", 'placeholder'=>'No. de Cliente', "id" => "cliente_id-field")) !!}
-                    @endif
-
-                    @if($errors->has("cliente_id"))
-                    <span class="help-block">{{ $errors->first("cliente_id") }}</span>
-                    @endif
-                </div>
-
-                @if(isset($message))
-                <div class="alert alert-danger alert-dismissable">
-<!--                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">Ã—</button>-->
-                    {{$message}}
-                </div>
-                @endif
-
-                {!! Form::close() !!}
-
-
-                @if(isset($cliente))
-
-                {!! Form::open(array('route' => 'cajas.store','id'=>'frmCrearVenta')) !!} 
-                @permission('cajas.store')
-                <div class="input-group form-group col-md-12 @if($errors->has('cliente_id')) has-error @endif">
-                    
-                    <div class="input-group-btn">
-                        <button type="submit" class="btn btn-warning" data-toggle="tooltip" title="Crear Venta" id="btnCrearVenta"><i class='glyphicon glyphicon-plus-sign'></i></button>
-                    </div>
-                    
-                    {!! Form::text("fecha", null, array("class" => "form-control fecha", "id" => "fecha-field", 'placeholder'=>'Fecha de Venta', 'style'=>"100%")) !!}
-                </div>
-                @endpermission
-                {!! Form::hidden("cliente_id", $cliente->id, array("class" => "form-control", "id" => "cliente_id-field")) !!}
-                {!! Form::hidden("st_caja_id", 0, array("class" => "form-control", "id" => "st_caja_id_id-field")) !!}
-                {!! Form::close() !!}
-                <!--                    @if(isset($caja) and $caja->st_caja_id==0)
-                                    <div class="form-group col-md-3">
-                                        <div class='text-center'>
-                                            
-                                            {!! Form::open(array('route' => 'cajas.pagar')) !!}
-                                                <div class="form-group @if($errors->has('forma_pago_id')) has-error @endif">
-                                                    <label for="forma_pago_id-field">Forma Pago</label>
-                                                    {!! Form::select("forma_pago_id", $list["FormaPago"], null, array("class" => "form-control", "id" => "forma_pago_id-field")) !!}
-                                                    {!! Form::text("referencia", $caja->referencia, array("class" => "form-control", "id" => "referencia_id-field", 'placeholder'=>'Referencia')) !!}
-                                                    @if($errors->has("forma_pago_id"))
-                                                    <span class="help-block">{{ $errors->first("forma_pago_id") }}</span>
-                                                    @endif
-                                                </div>
-                                                {!! Form::hidden("caja", $caja->id, array("class" => "form-control", "id" => "caja_id-field")) !!}
-                                                <button type="submit" class="btn btn-success btn-sm "><i class="fa fa-money"></i> Pagar Venta</button>
-                                            {!! Form::close() !!}
-                                            
-                                        </div>
-                                    </div>
-                                    @endif-->
-            </div><!-- /.box-body -->
-        </div>
-    </div>
-    <div class="col-md-8">
-        <div class="box box-info">
-            <div class="box-body">
-                @if(isset($caja))
-                <div class="form-group col-md-4">
-                    <div class='text-center'>
-                    @permission('cajas.eliminarRecargo')
-                        <a href="{{route('cajas.eliminarRecargo', array('caja_id'=>$caja->id))}}" class="btn btn-info btn-sm "><i class=""></i> Eliminar Recargo</a>
-                    @endpermission
-                    </div>
-                </div>
-                @endif
-                @if(isset($caja))
-                <div class="form-group col-md-4">
-                    <div class='text-center'>
-                        @permission('cajas.cancelar')
-                        {!! Form::open(array('route' => 'cajas.cancelar','onsubmit'=> "if(confirm('¿Cancelar Caja? ¿Esta seguro?')) { return true } else {return false };")) !!}
-                        {!! Form::hidden("caja", $caja->id, array("class" => "form-control", "id" => "caja_id-field")) !!}
-                        <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-close"></i> Cancelar Venta</button>
-                        {!! Form::close() !!}
-                        @endpermission
-                    </div>
-                </div>
-                @if($cliente->beca_bnd==-1)
-                <div class="form-group col-md-4">
-                    <div class='text-center'>
-                    
-                        <a href="{{route('cajas.becaInscripcion', array('caja_id'=>$caja->id))}}" class="btn btn-warning btn-sm "><i class=""></i> Beca Inscripcion</a>
-                    
-                    </div>
-                </div>
-                <div class="form-group col-md-4">
-                    <div class='text-center'>
-                    
-                        <a href="{{route('cajas.becaMensualidad', array('caja_id'=>$caja->id))}}" class="btn btn-warning btn-sm "><i class=""></i> Beca Mensualidad</a>
-                    
-                    </div>
-                </div>
-                @endif
-                @endif
-                @endif
-                @if(isset($caja) and ($caja->st_caja_id==0 or $caja->st_caja_id==3))
-                <div class="form-group col-md-4">
-                    <div class='text-center'>
-                        <a href="#" class="add-modal btn btn-success btn-sm"><i class="glyphicon glyphicon-plus-sign"></i>Agregar Linea</a> 
-                    </div>
-                </div>
-                
-                <div class="form-group col-md-4">
-                    <div class='text-center'>
-                        <a href="#" class="add-pago btn btn-success btn-sm" data-total_caja={{ $caja->total }}><i class="glyphicon glyphicon-plus-sign" ></i>Agregar Pago</a> 
-                    </div>
-                </div>
-                
-                @endif
-
-                @if(isset($caja))
-                @permission('cajas.aplicarRecargos')
-                <div class="form-group col-md-4">
-                    <div class='text-center'>
-                    <a href="{{ route('cajas.aplicarRecargos', array('caja'=>$caja->id)) }}" class="add-recargos btn btn-success btn-sm"><i class="glyphicon glyphicon-plus-sign"></i>Aplicar Recargos</a> 
-                    </div>
-                </div>
-                @endpermission
-                @endif
-            </div><!-- /.box-body -->
-        </div>
-    </div>
-    <div class="col-md-5" style="clear:left;">    
-        <div class="box box-success">
-            <div class="box-body no-padding">
-                <div class="box-header with-border editable_fecha">
-                    @if(isset($caja))
-                    <lable><strong>No. Ticket:</strong>{{$caja->consecutivo}}</lable>
-                        <lable><strong>Fecha:</strong>{{$caja->fecha}}</lable>
-                        <lable><strong>Estatus:</strong>{{$caja->stCaja->name}}</lable>
-                        <input class='fecha_editable form-control' value='{{$caja->fecha}}' data-id="{{$caja->id}}"></input>
-                    <div class="box-tools pull-right">
-                        <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-                    </div><!-- /.box-tools -->
-                    @endif
-                </div>
-                <div class="row col-md-12" id='loading3' style='display: none'>
-                    <h3>Actualizando... Por Favor Espere.</h3>
-                    <div class="progress progress-striped active page-progress-bar">
-                        <div class="progress-bar" style="width: 100%;"></div>
-                    </div>
-                </div>
-                @if(isset($caja))
-
-                <table class="table table-striped table-bordered table-hover" id="postTable" >
-                    <thead>
-                        <tr>
-                            <th>Concepto</th>
-                            <th>Monto</th>
-                            <th>Desc.</th>
-                            <th></th>
-                        </tr>
-                        {{ csrf_field() }}
-                    </thead>
-                    <tbody>
-                        @foreach($caja->cajaLns as $linea)
-                        <tr>
-                            <td> {{$linea->cajaConcepto->name}} </td><td>{{ $linea->subtotal }}</td><td>{{ $linea->descuento }}</td>
-                            <td>
-                                @if(isset($caja) and $caja->st_caja_id==0)
-                                @permission('cajaLns.destroy')
-                                {!! Form::model($linea, array('route' => array('cajaLns.destroy', $linea->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('Â¿Borrar? Â¿Esta seguro?')) { return true } else {return false };")) !!}
-                                <button type="submit" class="btn btn-xs btn-danger" data-toggle="tooltip" title="Eliminar"><i class="glyphicon glyphicon-trash"></i></button>
-                                {!! Form::close() !!}
-                                @endpermission
-                                @endif
-                            </td>
-                        </tr>
-                        @endforeach
-                        <tr>
-                            <td> Subtotal </td><td>{{ $caja->subtotal }}</td>
-                        </tr>
-                        <tr>
-                            <td> Recargos </td><td>{{ $caja->recargo }}</td>
-                        </tr>
-                        <tr>
-                            <td> Descuentos </td><td>{{ $caja->descuento }}</td>
-                        </tr>
-                        <tr>
-                            <td> Total </td><td>{{ $caja->total }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-                @endif
-            </div><!-- /.box-body -->
-        </div>
-    </div>
-    <div class="col-md-7">    
-        <div class="box box-success">
-            <div class="box-body no-padding">
-                <div class="box-header with-border">
-                    @if(isset($caja))
-                    <lable><strong>Pagos</strong></label>
-                    <div class="box-tools pull-right">
-                        <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-                    </div><!-- /.box-tools -->
-                    @endif
-                </div>
-                <div class="row col-md-12" id='loading3' style='display: none'>
-                    <h3>Actualizando... Por Favor Espere.</h3>
-                    <div class="progress progress-striped active page-progress-bar">
-                        <div class="progress-bar" style="width: 100%;"></div>
-                    </div>
-                </div>
-                @if(isset($caja))
-
-                <table class="table table-striped table-bordered table-hover" id="postTable" >
-                    <thead>
-                        <tr>
-                            <th>Id</th>
-                            <th>Monto</th>
-                            <th>Fecha</th>
-                            <th>Forma Pago</th>
-                            <th>Ref.</th>
-                            <th>C. Efectivo</th>
-                            <th></th>
-                        </tr>
-                        {{ csrf_field() }}
-                    </thead>
-                    <tbody>
-                        <?php $suma_pagos=0; ?>
-                        @foreach($caja->pagos as $pago)
-                        @if(is_null($pago->deleted_at))
-                        <tr>
-                            <td> {{$pago->consecutivo}} </td><td>{{ $pago->monto }}</td><td>{{ $pago->fecha }}</td><td>{{ $pago->formaPago->name }}</td><td>{{ $pago->referencia }}</td>
-                            <td>@if($pago->cuenta_efectivo_id<>0)
-                                {{ App\CuentasEfectivo::where('id', $pago->cuenta_efectivo_id)->value('name')}}
-                                @endif
-                            </td>
-                            <td>
-                                @permission('cajas.eliminarPago')
-                                {!! Form::model($pago, array('route' => array('pagos.destroy', $pago->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('Â¿Borrar? Â¿Esta seguro?')) { return true } else {return false };")) !!}
-                                    <button type="submit" class="btn btn-xs btn-danger" data-toggle="tooltip" title="Eliminar"><i class="glyphicon glyphicon-trash"></i> </button>
-                                {!! Form::close() !!}
-                                @endpermission
-                                <a href="{{route('pagos.imprimir', array('pago'=>$pago->id))}}" data-toggle="tooltip" title="Imprimir" class="btn btn-info btn-xs " target="_blank"><i class="fa fa-print"></i></a>
-                            </td>
-                            
-                        </tr>
+                    <div class="input-group form-group col-md-12 @if($errors->has('cliente_id')) has-error @endif">
+                        <div class="input-group-btn">
+                            <button type="submit" class="btn btn-info" data-toggle="tooltip" title="Buscar Cliente"><i class='fa fa-search'></i></button>
+                        </div>
+                        @if(isset($cliente))
+                        {!! Form::text("cliente_id", ($cliente)?$cliente->id:"", array("class" => "form-control ", 'placeholder'=>'No. de Cliente',"id" => "cliente_id-field")) !!}
+                        @else
+                        {!! Form::text("cliente_id", null, array("class" => "form-control ", 'placeholder'=>'No. de Cliente', "id" => "cliente_id-field")) !!}
                         @endif
-                        <?php $suma_pagos=$suma_pagos+$pago->monto; ?>
-                        @endforeach
-                        <tr>
-                            <td> Total </td><td>{{ $suma_pagos }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-                @endif
-            </div><!-- /.box-body -->
+
+                        @if($errors->has("cliente_id"))
+                        <span class="help-block">{{ $errors->first("cliente_id") }}</span>
+                        @endif
+                    </div>
+
+                    @if(isset($message))
+                    <div class="alert alert-danger alert-dismissable">
+    
+                        {{$message}}
+                    </div>
+                    @endif
+
+                    {!! Form::close() !!}
+
+
+                    @if(isset($cliente))
+
+                    {!! Form::open(array('route' => 'cajas.store','id'=>'frmCrearVenta')) !!} 
+                    @permission('cajas.store')
+                    <div class="input-group form-group col-md-12 @if($errors->has('cliente_id')) has-error @endif">
+                        
+                        <div class="input-group-btn">
+                            <button type="submit" class="btn btn-warning" data-toggle="tooltip" title="Crear Venta" id="btnCrearVenta"><i class='glyphicon glyphicon-plus-sign'></i></button>
+                        </div>
+                        
+                        {!! Form::select("forma_pago_id", $list["FormaPago"], null, array("class" => "form-control", "id" => "forma_pago_id1-field")) !!}
+                        {!! Form::text("fecha", null, array("class" => "form-control fecha", "id" => "fecha-field", 'placeholder'=>'Fecha de Venta', 'style'=>"100%")) !!}
+                    </div>
+
+                    @endpermission
+                    {!! Form::hidden("cliente_id", $cliente->id, array("class" => "form-control", "id" => "cliente_id-field")) !!}
+                    {!! Form::hidden("st_caja_id", 0, array("class" => "form-control", "id" => "st_caja_id_id-field")) !!}
+                    {!! Form::close() !!}
+                    <!--                    @if(isset($caja) and $caja->st_caja_id==0)
+                                        <div class="form-group col-md-3">
+                                            <div class='text-center'>
+                                                
+                                                {!! Form::open(array('route' => 'cajas.pagar')) !!}
+                                                    <div class="form-group @if($errors->has('forma_pago_id')) has-error @endif">
+                                                        <label for="forma_pago_id-field">Forma Pago</label>
+                                                        {!! Form::select("forma_pago_id", $list["FormaPago"], null, array("class" => "form-control", "id" => "forma_pago_id-field")) !!}
+                                                        {!! Form::text("referencia", $caja->referencia, array("class" => "form-control", "id" => "referencia_id-field", 'placeholder'=>'Referencia')) !!}
+                                                        @if($errors->has("forma_pago_id"))
+                                                        <span class="help-block">{{ $errors->first("forma_pago_id") }}</span>
+                                                        @endif
+                                                    </div>
+                                                    {!! Form::hidden("caja", $caja->id, array("class" => "form-control", "id" => "caja_id-field")) !!}
+                                                    <button type="submit" class="btn btn-success btn-sm "><i class="fa fa-money"></i> Pagar Venta</button>
+                                                {!! Form::close() !!}
+                                                
+                                            </div>
+                                        </div>
+                                        @endif-->
+                </div><!-- /.box-body -->
+            </div>
         </div>
-    </div>
+        <div class="col-md-8">
+            <div class="box box-info">
+                <div class="box-body">
+                    @if(isset($caja))
+                    <div class="form-group col-md-4">
+                        <div class='text-center'>
+                        @permission('cajas.eliminarRecargo')
+                            <a href="{{route('cajas.eliminarRecargo', array('caja_id'=>$caja->id))}}" class="btn btn-info btn-sm "><i class=""></i> Eliminar Recargo</a>
+                        @endpermission
+                        </div>
+                    </div>
+                    @endif
+                    @if(isset($caja))
+                    <div class="form-group col-md-4">
+                        <div class='text-center'>
+                            @permission('cajas.cancelar')
+                            {!! Form::open(array('route' => 'cajas.cancelar','onsubmit'=> "if(confirm('¿Cancelar Caja? ¿Esta seguro?')) { return true } else {return false };")) !!}
+                            {!! Form::hidden("caja", $caja->id, array("class" => "form-control", "id" => "caja_id-field")) !!}
+                            <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-close"></i> Cancelar Venta</button>
+                            {!! Form::close() !!}
+                            @endpermission
+                        </div>
+                    </div>
+                    @if($cliente->beca_bnd==-1)
+                    <div class="form-group col-md-4">
+                        <div class='text-center'>
+                        
+                            <a href="{{route('cajas.becaInscripcion', array('caja_id'=>$caja->id))}}" class="btn btn-warning btn-sm "><i class=""></i> Beca Inscripcion</a>
+                        
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <div class='text-center'>
+                        
+                            <a href="{{route('cajas.becaMensualidad', array('caja_id'=>$caja->id))}}" class="btn btn-warning btn-sm "><i class=""></i> Beca Mensualidad</a>
+                        
+                        </div>
+                    </div>
+                    @endif
+                    @endif
+                    @endif
+                    @if(isset($caja) and ($caja->st_caja_id==0 or $caja->st_caja_id==3))
+                    <div class="form-group col-md-4">
+                        <div class='text-center'>
+                            <a href="#" class="add-modal btn btn-success btn-sm"><i class="glyphicon glyphicon-plus-sign"></i>Agregar Linea</a> 
+                        </div>
+                    </div>
+                    
+                    <div class="form-group col-md-4">
+                        <div class='text-center'>
+                            <a href="#" class="add-pago btn btn-success btn-sm" data-total_caja={{ $caja->total }}><i class="glyphicon glyphicon-plus-sign" ></i>Agregar Pago</a> 
+                        </div>
+                    </div>
+                    
+                    @endif
+
+                    @if(isset($caja))
+                    @permission('cajas.aplicarRecargos')
+                    <div class="form-group col-md-4">
+                        <div class='text-center'>
+                        <a href="{{ route('cajas.aplicarRecargos', array('caja'=>$caja->id)) }}" class="add-recargos btn btn-success btn-sm"><i class="glyphicon glyphicon-plus-sign"></i>Aplicar Recargos</a> 
+                        </div>
+                    </div>
+                    @endpermission
+                    @endif
+                </div><!-- /.box-body -->
+            </div><!-- /.box -->
+        </div>
+    
+        <div class="col-md-12">    
+            <div class="box box-success">
+                <div class="box-body no-padding">
+                    <div class="box-header with-border editable_fecha">
+                        @if(isset($caja))
+                        <lable><strong>No. Ticket:</strong>{{$caja->consecutivo}}</lable>
+                            <lable><strong>Fecha:</strong>{{$caja->fecha}}</lable>
+                            <lable><strong>Estatus:</strong>{{$caja->stCaja->name}}</lable>
+                            <lable><strong>F. Pago:</strong>{{$caja->formaPago->name}}</lable>
+                            <input class='fecha_editable form-control' value='{{$caja->fecha}}' data-id="{{$caja->id}}"></input>
+                        <div class="box-tools pull-right">
+                            <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                        </div><!-- /.box-tools -->
+                        @endif
+                    </div>
+                    <div class="row col-md-12" id='loading3' style='display: none'>
+                        <h3>Actualizando... Por Favor Espere.</h3>
+                        <div class="progress progress-striped active page-progress-bar">
+                            <div class="progress-bar" style="width: 100%;"></div>
+                        </div>
+                    </div>
+                    @if(isset($caja))
+
+                    <table class="table table-striped table-bordered table-hover" id="postTable" >
+                        <thead>
+                            <tr>
+                                <th>Concepto</th>
+                                <th>Monto</th>
+                                <th>Desc.</th>
+                                <th></th>
+                            </tr>
+                            {{ csrf_field() }}
+                        </thead>
+                        <tbody>
+                            @foreach($caja->cajaLns as $linea)
+                            <tr>
+                                <td> {{$linea->cajaConcepto->name}} </td><td>{{ $linea->subtotal }}</td><td>{{ $linea->descuento }}</td>
+                                <td>
+                                    @if(isset($caja) and $caja->st_caja_id==0)
+                                    @permission('cajaLns.destroy')
+                                    {!! Form::model($linea, array('route' => array('cajaLns.destroy', $linea->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('Â¿Borrar? Â¿Esta seguro?')) { return true } else {return false };")) !!}
+                                    <button type="submit" class="btn btn-xs btn-danger" data-toggle="tooltip" title="Eliminar"><i class="glyphicon glyphicon-trash"></i></button>
+                                    {!! Form::close() !!}
+                                    @endpermission
+                                    @endif
+                                </td>
+                            </tr>
+                            @endforeach
+                            <tr>
+                                <td> Subtotal </td><td>{{ $caja->subtotal }}</td>
+                            </tr>
+                            <tr>
+                                <td> Recargos </td><td>{{ $caja->recargo }}</td>
+                            </tr>
+                            <tr>
+                                <td> Descuentos </td><td>{{ $caja->descuento }}</td>
+                            </tr>
+                            <tr>
+                                <td> <strong>Total</strong> </td><td>{{ $caja->total }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    @endif
+                </div><!-- /.box-body -->
+            </div>
+        </div>
+        <div class="col-md-12">    
+            <div class="box box-success">
+                <div class="box-body no-padding">
+                    <div class="box-header with-border">
+                        @if(isset($caja))
+                        <label>
+                            <strong>Pagos</strong>
+                        </label>
+                        
+                        <a href="{{route('pagos.imprimirTodos', array('caja'=>$caja->id))}}" data-toggle="tooltip" title="Imprimir" class="btn btn-info btn-xs " target="_blank"><i class="fa fa-print"></i>Imprimir Todo</a>
+                        
+                        <div class="box-tools pull-right">
+                            <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                        </div><!-- /.box-tools -->
+                        @endif
+                    </div>
+                    <div class="row col-md-12" id='loading3' style='display: none'>
+                        <h3>Actualizando... Por Favor Espere.</h3>
+                        <div class="progress progress-striped active page-progress-bar">
+                            <div class="progress-bar" style="width: 100%;"></div>
+                        </div>
+                    </div>
+                    @if(isset($caja))
+
+                    <table class="table table-striped table-bordered table-hover" id="postTable" >
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Monto</th>
+                                <th>Fecha</th>
+                                <th>Forma Pago</th>
+                                <th>Ref.</th>
+                                <th>C. Efectivo</th>
+                                <th></th>
+                            </tr>
+                            {{ csrf_field() }}
+                        </thead>
+                        <tbody>
+                            <?php $suma_pagos=0; ?>
+                            @foreach($caja->pagos as $pago)
+                            @if(is_null($pago->deleted_at))
+                            <tr>
+                                <td> {{$pago->consecutivo}} </td><td>{{ $pago->monto }}</td><td>{{ $pago->fecha }}</td><td>{{ $pago->formaPago->name }}</td><td>{{ $pago->referencia }}</td>
+                                <td>@if($pago->cuenta_efectivo_id<>0)
+                                    {{ App\CuentasEfectivo::where('id', $pago->cuenta_efectivo_id)->value('name')}}
+                                    @endif
+                                </td>
+                                <td>
+                                    @permission('cajas.eliminarPago')
+                                    {!! Form::model($pago, array('route' => array('pagos.destroy', $pago->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('Â¿Borrar? Â¿Esta seguro?')) { return true } else {return false };")) !!}
+                                        <button type="submit" class="btn btn-xs btn-danger" data-toggle="tooltip" title="Eliminar"><i class="glyphicon glyphicon-trash"></i> </button>
+                                    {!! Form::close() !!}
+                                    @endpermission
+                                    <a href="{{route('pagos.imprimir', array('pago'=>$pago->id))}}" data-toggle="tooltip" title="Imprimir" class="btn btn-info btn-xs " target="_blank"><i class="fa fa-print"></i></a>
+                                </td>
+                                
+                            </tr>
+                            @endif
+                            <?php $suma_pagos=$suma_pagos+$pago->monto; ?>
+                            @endforeach
+                            <tr>
+                                <td> <strong>Total</strong> </td><td>{{ $suma_pagos }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    @endif
+                </div><!-- /.box-body -->
+            </div>
+        </div>
     </div>
     @if(isset($cliente))
     <?php $valores= collect(); $vfechas=collect();?>
-    <div class="col-md-5" id="adeudos-lista">
+    <div class="col-md-6" id="adeudos-lista">
         <div class="box box-danger">
             <div class="box-header">
                 <a href="{{route('clientes.edit', $cliente->id)}}" class="btn btn-md btn-success" target="_blank">
@@ -391,7 +400,7 @@
                         @if($combinacion->especialidad_id<>0 and $combinacion->nivel_id<>0 and $combinacion->grado_id<>0 and $combinacion->turno_id<>0)
                         <tr>
                             <td colspan='6'><strong>Grado:</strong>{{$combinacion->grado->name}}</td>
-                            <td colspan='6'><strong>Beca:</strong>@if($combinacion->bnd_beca==1) SI @else NO @endif</td>
+                            <td colspan='6'><strong>Becas Solicitadas:</strong>{{ $cliente->autorizacionBecas->count() }} </td>
                         </tr>
                         <tr>
                         <table id='conceptos_predefinidos' class='table table-striped table-condensed'>
@@ -407,7 +416,7 @@
                                         </div>
                                         
                                     </th>
-                                    <th>Concepto</th><th>Monto<th>Pagado</></th><th></th><th>Fecha</th><th>Ticket</th><th>Pagado</th><th>dias</th> 
+                                    <th>Concepto</th><th>Monto</th> <th>Desc.</th> <th>Pagado</th><th>Borrar</th><th>Fecha</th><th>Ticket</th><th>Pagado</th><th>dias</th> 
                                 </tr>
                             </thead>
                             <tbody>
@@ -445,15 +454,29 @@
                                 <input type="checkbox" class="adeudos_tomados" value="{{$adeudo->id}}" />
                                 @endif
                                 @endif
-                            <td class='editarAdeudo' data-adeudo='{{$adeudo->id}}' 
-                                                     data-caja_concepto='{{$adeudo->caja_concepto_id}}' 
-                                                     data-fecha_pago='{{$adeudo->fecha_pago}}' 
-                                                     data-monto='{{$adeudo->monto}}'
-                                                     >{{$adeudo->cajaConcepto->name}}</td>
+                                @php
+                                $adeudo->load('descuento');
+                                @endphp
+                            <td 
+                                @if($adeudo->pagado_bnd==0)
+                                class='editarAdeudo' 
+                                @endif
+                                data-adeudo='{{$adeudo->id}}' 
+                                data-caja_concepto='{{$adeudo->caja_concepto_id}}' 
+                                data-fecha_pago='{{$adeudo->fecha_pago}}' 
+                                data-monto='{{$adeudo->monto}}'
+                                
+                                data-porcentaje='{{optional($adeudo->descuento)->porcentaje}}'
+                                data-justificacion='{{optional($adeudo->descuento)->justificacion}}'
+                                data-autorizado_por='{{optional($adeudo->descuento)->autorizado_por}}'
+                                data-autorizado_el='{{optional($adeudo->descuento)->autorizado_el}}'
+                                
+                                >{{$adeudo->cajaConcepto->name}}</td>
                             <td class='editable'>
                                 {{$adeudo->monto}}
                                 <input class='monto_editable form-control' value='{{$adeudo->monto}}' data-id="{{$adeudo->id}}"></input>
                             </td>
+                            <td>{{optional($adeudo->descuento)->porcentaje}}</td>
                             <td>
                                 <?php
                                 
@@ -466,7 +489,7 @@
                             <td>
                                 @permission('adeudos.destroy')
                                     {!! Form::model($adeudo, array('route' => array('adeudos.destroy', $adeudo->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('Â¿Borrar? Â¿Esta seguro?')) { return true } else {return false };")) !!}
-                                        <button type="submit" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> Borrar</button>
+                                        <button type="submit" class="btn btn-xs btn-danger" data-toggle="tooltip" title="Borrar Adeudo"><i class="glyphicon glyphicon-trash"></i> </button>
                                     {!! Form::close() !!}
                                 @endpermission
                             </td>
@@ -602,7 +625,7 @@ Agregar nuevo registro
                     </div>
                     <div class="form-group col-md-6 @if($errors->has('forma_pago_id')) has-error @endif">
                        <label for="forma_pago_id-field">Forma Pago</label>
-                       {!! Form::select("forma_pago_id", $list["FormaPago"], null, array("class" => "form-control", "id" => "forma_pago_id-field")) !!}
+                       {!! Form::select("forma_pago_id", $list["FormaPago"], null, array("class" => "form-control", "id" => "forma_pago_id-field", 'disabled'=>true)) !!}
                        @if($errors->has("forma_pago_id"))
                         <span class="help-block">{{ $errors->first("forma_pago_id") }}</span>
                        @endif
@@ -656,21 +679,50 @@ Agregar nuevo registro
             </div>
             <div class="modal-body">
                 {!! Form::open(array('route' => 'adeudos.store')) !!}
-                <div class="form-group col-md-12 @if($errors->has('caja_concepto_id')) has-error @endif">
+                <div class="form-group col-md-6 @if($errors->has('caja_concepto_id')) has-error @endif">
                     <label for="caja_concepto_id-field">Caja Concepto</label><br/>
                     {!! Form::select("caja_concepto_id", $list1["CajaConcepto"], null, array("class" => "form-control select_seguridad", "id" => "caja_concepto_id-adeudo")) !!}
                     <p class="errorCajaConcepto text-center alert alert-danger hidden"></p>
                 </div>
-                <div class="form-group col-md-12 @if($errors->has('fecha_pago')) has-error @endif">
+                <div class="form-group col-md-6 @if($errors->has('fecha_pago')) has-error @endif">
                     <label for="fecha_pago-field">Fecha Pago</label><br/>
                     {!! Form::text("fecha_pago", null, array("class" => "form-control fecha", "id" => "fecha_pago-adeudo")) !!}
                     <p class="errorCajaConcepto text-center alert alert-danger hidden"></p>
                 </div>
-                <div class="form-group col-md-12 @if($errors->has('monto')) has-error @endif">
+                <div class="form-group col-md-6 @if($errors->has('monto')) has-error @endif">
                     <label for="monto-field">Monto</label><br/>
                     {!! Form::text("monto", null, array("class" => "form-control", "id" => "monto-adeudo")) !!}
                     <p class="errorCajaConcepto text-center alert alert-danger hidden"></p>
                 </div>
+                <div class="row"></div>
+                <hr>
+
+                <div id="descuento_inscripcion" style='display: none'>
+                <div class="form-group col-md-6 @if($errors->has('porcentaje')) has-error @endif">
+                    <label for="porcentaje-field">Porcentaje (0.00)</label><br/>
+                    {!! Form::number("porcentaje", null, array("class" => "form-control", "id" => "porcentaje-adeudo", 'placeholder'=>'Valor maximo 0.60', 'step'=>"0.05", 'min'=>"0", 'max'=>"0.60" )) !!}
+                    <p class="errorCajaConcepto text-center alert alert-danger hidden"></p>
+                </div>
+
+                <div class="form-group col-md-6 @if($errors->has('autorizado_por')) has-error @endif">
+                    <label for="autorizado_por-field">Autorizado por</label>
+                        {!! Form::select("autorizado_por", $empleados, null, array("class" => "form-control select_seguridad", "id" => "autorizado_por-adeudo")) !!}
+                    <p class="errorCajaConcepto text-center alert alert-danger hidden"></p>
+                </div>
+
+                <div class="form-group col-md-12 @if($errors->has('justificacion')) has-error @endif">
+                    <label for="justificacion-field">Justificacion (0.00)</label><br/>
+                    {!! Form::text("justificacion", null, array("class" => "form-control", "id" => "justificacion-adeudo")) !!}
+                    <p class="errorCajaConcepto text-center alert alert-danger hidden"></p>
+                </div>
+
+                <div class="form-group col-md-6 @if($errors->has('autorizado_el')) has-error @endif">
+                    <label for="autorizado_el-field">F. Autorizacion</label><br/>
+                    {!! Form::text("autorizado_el", null, array("class" => "fecha form-control", "id" => "autorizado_el-adeudo")) !!}
+                    <p class="errorCajaConcepto text-center alert alert-danger hidden"></p>
+                </div>
+                </div>
+
                 {!! Form::close() !!}
                 <div class="row"></div>
                 <div class="modal-footer">
@@ -693,7 +745,10 @@ Agregar nuevo registro
 
 
 <script>
-    
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+        })    
+
     
     $('.fecha').Zebra_DatePicker({
     days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
@@ -750,10 +805,13 @@ Agregar nuevo registro
         });
         @endpermission
         @permission('cajas.editFecha')
+        
+        @if($caja->forma_pago_id<>1 and $caja->forma_pago_id<>6)
         $('.editable_fecha').dblclick(function(){
             captura=$(this).children("input");
             captura.show();
         });
+        @endif
         @endpermission
         $('.monto_editable').on('keypress', function (e) {
          if(e.which === 13){
@@ -834,6 +892,8 @@ Agregar nuevo registro
     //Limpiar valores
     $('#addPago').modal({backdrop: 'static', keyboard: false});
     $('#monto-field').val($(this).data('total_caja'));
+    $('#forma_pago_id-field').val({{$caja->forma_pago_id}}).change();
+
     $('#addPago').modal('show');
     
     $('#AgregarPago').prop('disabled',true);
@@ -875,6 +935,7 @@ Agregar nuevo registro
     @endif
 
     $('#forma_pago_id-field').change(function(){
+        
         forma_pago=$(this).val();
        @if(isset($caja))
         $.ajax({
@@ -982,28 +1043,53 @@ Agregar nuevo registro
     $('#caja_concepto_id-adeudo').val($(this).data('caja_concepto')).change();
     $('#fecha_pago-adeudo').val($(this).data('fecha_pago'));
     $('#monto-adeudo').val($(this).data('monto'));
+    
+    if($(this).data('caja_concepto')==1 || $(this).data('caja_concepto')==23){
+        $('#descuento_inscripcion').show();
+        $('#porcentaje-adeudo').val($(this).data('porcentaje'));
+        $('#autorizado_por-adeudo').val($(this).data('autorizado_por')).change();
+        $('#justificacion-adeudo').val($(this).data('justificacion'));
+        $('#autorizado_el-adeudo').val($(this).data('autorizado_el'));
+    }else{
+        $('#descuento_inscripcion').hide();
+    }
+
     vadeudo=$(this).data('adeudo');
     });
     
     @if (isset($cliente))
+    
     $('.modal-footer').on('click', '#btnEditarAdeudo', function() {
-    vurl='{{url("adeudos/update")}}'+'/'+vadeudo;    
-    $.ajax({
-    type: 'POST',
-            url: vurl,
-            data: {
-                '_token': $('input[name=_token]').val(),
-                'caja_concepto_id': $('#caja_concepto_id-adeudo option:selected').val(),
-                'fecha_pago': $('#fecha_pago-adeudo').val(),
-                'monto': $('#monto-adeudo').val()
-            },
-            beforeSend : function(){$("#loading3").show(); },
-            complete : function(){$("#loading3").hide(); },
-            success: function(data) {
-                $('#frmBuscarCliente').submit();
-            }
+        if(parseFloat($('#porcentaje-adeudo').val())>0.60){
+            alert('Descuento maximo permitido 0.60');
+        }else{
+            vurl='{{url("adeudos/update")}}'+'/'+vadeudo;    
+            $.ajax({
+            type: 'POST',
+                    url: vurl,
+                    data: {
+                        '_token': $('input[name=_token]').val(),
+                        'caja_concepto_id': $('#caja_concepto_id-adeudo option:selected').val(),
+                        'fecha_pago': $('#fecha_pago-adeudo').val(),
+                        'monto': $('#monto-adeudo').val(),
+                        'porcentaje': $('#porcentaje-adeudo').val(),
+                        'autorizado_por': $('#autorizado_por-adeudo option:selected').val(),
+                        'justificacion': $('#justificacion-adeudo').val(),
+                        'autorizado_el': $('#autorizado_el-adeudo').val(),
+                        'adeudo_id':vadeudo
+                    },
+                    beforeSend : function(){$("#loading3").show(); },
+                    complete : function(){$("#loading3").hide(); },
+                    success: function(data) {
+                        $('#frmBuscarCliente').submit();
+                    }
+            });        
+        }
+        
     });
-    });
+
+    
+    
     @endif
 
     $('#btnCrearVenta').click(function(){

@@ -30,7 +30,7 @@
                          @endif
                       </div>
                       <div class="form-group col-md-4 @if($errors->has('razon')) has-error @endif">
-                         <label for="razon-field">Razón Social</label>
+                         <label for="razon-field">Razon Social</label>
                          {!! Form::text("razon", null, array("class" => "form-control input-sm", "id" => "razon-field")) !!}
                          @if($errors->has("razon"))
                           <span class="help-block">{{ $errors->first("razon") }}</span>
@@ -44,7 +44,7 @@
                         @endif
                      </div>
                      <div class="form-group col-md-4 @if($errors->has('nombre_corto')) has-error @endif">
-                        <label for="nombre_corto-field">Nombre Corto</label>
+                        <label for="nombre_corto-field">Razón Social(Contabilidad)</label>
                         {!! Form::text("nombre_corto", null, array("class" => "form-control input-sm", "id" => "nombre_corto-field")) !!}
                         @if($errors->has("nombre_corto"))
                          <span class="help-block">{{ $errors->first("nombre_corto") }}</span>

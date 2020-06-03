@@ -324,6 +324,67 @@ class PagosController extends Controller
         ));
     }
 
+    public function imprimirTodos(Request $request)
+    {
+        $data = $request->all();
+
+        //$pago = Pago::find($data['pago']);
+
+        $caja = Caja::find($data['caja']);
+
+        $token = uniqid(base64_encode(str_random(6)));
+        foreach ($caja->pagos as $pago) {
+            $input['caja_id'] = $caja->id;
+            $input['pago_id'] = $pago->id;
+            $input['cliente_id'] = $caja->cliente_id;
+            $input['plantel_id'] = $caja->plantel_id;
+            $input['consecutivo'] = $caja->consecutivo;
+            $input['monto'] = $pago->monto;
+            $input['toke_unico'] = $token;
+            $input['usu_alta_id'] = Auth::user()->id;
+            $input['usu_mod_id'] = Auth::user()->id;
+            $input['fecha_pago'] = $pago->fecha;
+            $impresion_token = ImpresionTicket::create($input);
+        }
+
+        $acumulado = Pago::select('monto')->where('caja_id', '=', $caja->id)->sum('monto');
+
+        $adeudo = Adeudo::where('caja_id', '=', $caja->id)->first();
+
+        if (!is_null($adeudo)) {
+            $combinacion = CombinacionCliente::find($adeudo->combinacion_cliente_id);
+            //dd($combinacion);
+            $cliente = Cliente::find($caja->cliente_id);
+            $empleado = Empleado::where('user_id', '=', Auth::user()->id)->first();
+
+            $carbon = new \Carbon\Carbon();
+            $date = $carbon->now();
+            $date = $date->format('d-m-Y h:i:s');
+        } else {
+            $combinacion = 0;
+            $cliente = Cliente::find($caja->cliente_id);
+            $empleado = Empleado::where('user_id', '=', Auth::user()->id)->first();
+
+            $carbon = new \Carbon\Carbon();
+            $date = $carbon->now();
+            $date = $date->format('d-m-Y h:i:s');
+
+            //dd($adeudo->toArray());
+
+        }
+
+        return view('cajas.imprimirTicketPagos', array(
+            'cliente' => $cliente,
+            'caja' => $caja,
+            'empleado' => $empleado,
+            'fecha' => $date,
+            'combinacion' => $combinacion,
+            'pagos' => $caja->pagos,
+            'acumulado' => $acumulado,
+            'impresion_token' => $impresion_token
+        ));
+    }
+
     public function pagosXPeriodoXPlantelXConcepto()
     {
         return view('pagos.reportes.pagosXplantelXPeriodoXConcepto')

@@ -93,7 +93,7 @@
                             </thead>
                             <tbody>
                                 @foreach($becas as $beca)
-                                @if($beca->id > 561)
+                                
                                 <tr>
                                     <td>
                                         <a href="{{route('clientes.edit',$beca->cliente)}}" target=_blank>{{$beca->cliente}}</a>
@@ -115,7 +115,7 @@
                                     </a>
                                     </td>
                                 </tr>
-                                @endif
+                                
                                 @endforeach
                             </tbody>
                         </table>

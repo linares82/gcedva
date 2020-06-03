@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Adeudo;
+use App\AutorizacionBeca;
 use App\Caja;
 use App\CajaConcepto;
 use App\CajaLn;
@@ -80,7 +81,7 @@ class CajasController extends Controller
         if ($validator->fails()) {*/
         //dd($caja);
         if (count($caja) > 0) {
-            $ids_invalidos = Caja::select('cajas.consecutivo', 'p.cve_plantel', 'cajas.cliente_id')
+            $ids_invalidos = Caja::select('cajas.consecutivo', 'p.razon', 'cajas.cliente_id')
                 ->join('plantels as p', 'p.id', '=', 'cajas.plantel_id')
                 ->where('plantel_id', $cliente->plantel_id)
                 ->where('cajas.st_caja_id', '=', 0)->where('cajas.id', '>', 0)->get();
@@ -100,7 +101,7 @@ class CajasController extends Controller
 
         $caja_r['cliente_id'] = $cliente->id;
         $caja_r['plantel_id'] = $cliente->plantel_id;
-        $caja_r['forma_pago_id'] = 0;
+        $caja_r['forma_pago_id'] = $input['forma_pago_id'];
         $caja_r['fecha'] = $input['fecha'];
         $caja_r['subtotal'] = 0;
         $caja_r['descuento'] = 0;
@@ -220,7 +221,10 @@ class CajasController extends Controller
     public function buscarCliente(Request $request)
     {
         $empleado = Empleado::where('user_id', Auth::user()->id)->first();
-        $cliente = Cliente::find($request->cliente_id);
+        $empleados = Empleado::select(DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name, id'))->pluck('name', 'id');
+
+        //dd($empleados);
+        $cliente = Cliente::find($request['cliente_id']);
         if (!is_object($cliente)) {
             Session::flash('msj', 'Cliente no existe');
             return view('cajas.caja')->with('list', Caja::getListFromAllRelationApps())->with('list1', CajaLn::getListFromAllRelationApps());
@@ -247,8 +251,9 @@ class CajasController extends Controller
         foreach ($empleado->plantels as $p) {
             array_push($planteles, $p->id);
         }
-        //dd($plantels);
-        //dd(array_search(1, $plantels));
+        //dd($planteles);
+        //dd($cliente->plantel_id);
+        //dd(array_search($cliente->plantel_id, $planteles) <> false);
 
         if (
             is_object($cliente) and
@@ -256,7 +261,7 @@ class CajasController extends Controller
             array_search($cliente->plantel_id, $planteles) <> false
         ) {
 
-            return view('cajas.caja', compact('cliente', 'combinaciones', 'cajas'))
+            return view('cajas.caja', compact('cliente', 'combinaciones', 'cajas', 'empleados'))
                 ->with('list', Caja::getListFromAllRelationApps())
                 ->with('list1', CajaLn::getListFromAllRelationApps());
         } elseif (
@@ -265,12 +270,12 @@ class CajasController extends Controller
             array_search($cliente->plantel_id, $planteles) == false and
             $permiso_caja_buscarCliente
         ) {
-            return view('cajas.caja', compact('cliente', 'combinaciones', 'cajas'))
+            return view('cajas.caja', compact('cliente', 'combinaciones', 'cajas', 'empelados'))
                 ->with('list', Caja::getListFromAllRelationApps())
                 ->with('list1', CajaLn::getListFromAllRelationApps());
         }
         Session::flash('msj', 'Cliente buscado pertenece a otro plantel');
-        return view('cajas.caja')->with('list', Caja::getListFromAllRelationApps())->with('list1', CajaLn::getListFromAllRelationApps());
+        return view('cajas.caja', compact('empleados'))->with('list', Caja::getListFromAllRelationApps())->with('list1', CajaLn::getListFromAllRelationApps());
     }
 
     public function buscarVenta(Request $request)
@@ -278,6 +283,7 @@ class CajasController extends Controller
         $data = $request->all();
         //dd($data);
         $empleado = Empleado::where('user_id', '=', Auth::user()->id)->first();
+        $empleados = Empleado::select(DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name, id'))->pluck('name', 'id');
         //dd($empleado->toArray());
         $caja = Caja::where('consecutivo', '=', $data['consecutivo'])->where('plantel_id', '=', $data['plantel_id'])->first();
         if (!is_object($caja)) {
@@ -313,7 +319,7 @@ class CajasController extends Controller
 
             $cliente = Cliente::find($caja->cliente_id);
 
-            return view('cajas.caja', compact('cliente', 'caja', 'combinaciones', 'cajas', 'cuentasEfectivo'))
+            return view('cajas.caja', compact('cliente', 'caja', 'combinaciones', 'cajas', 'cuentasEfectivo', 'empleados'))
                 ->with('list', Caja::getListFromAllRelationApps())
                 ->with('list1', CajaLn::getListFromAllRelationApps());
         } elseif (is_object($caja) and $permiso_caja_buscarVenta and array_search($caja->plantel_id, $planteles) == false) { //$caja->plantel_id != $empleado->plantel_id) {
@@ -325,13 +331,13 @@ class CajasController extends Controller
 
             //dd($cuentasEfectivo);
             $cliente = Cliente::find($caja->cliente_id);
-            return view('cajas.caja', compact('cliente', 'caja', 'combinaciones', 'cajas', 'cuentasEfectivo'))
+            return view('cajas.caja', compact('cliente', 'caja', 'combinaciones', 'cajas', 'cuentasEfectivo', 'empleados'))
                 ->with('list', Caja::getListFromAllRelationApps())
                 ->with('list1', CajaLn::getListFromAllRelationApps());
         }
         Session::flash('msj', 'Informacion buscada pertenece a otro plantel');
 
-        return view('cajas.caja', compact('cuentasEfectivo'))->with('list', Caja::getListFromAllRelationApps())->with('list1', CajaLn::getListFromAllRelationApps());
+        return view('cajas.caja', compact('cuentasEfectivo', 'empleados'))->with('list', Caja::getListFromAllRelationApps())->with('list1', CajaLn::getListFromAllRelationApps());
     }
 
     //Lineas de la caja con adeudos predefinidos
@@ -366,6 +372,9 @@ class CajasController extends Controller
                 ->whereNull('ln.deleted_at')
                 ->get();
             //dd($adeudos->toArray());
+
+
+
             $subtotal = 0;
             $recargo = 0;
             $descuento = 0;
@@ -383,6 +392,31 @@ class CajasController extends Controller
                     $caja_ln['total'] = 0;
                     $caja_ln['recargo'] = 0;
                     $caja_ln['descuento'] = 0;
+
+                    //Realiza descuento para inscripciones
+                    if (isset($adeudo->descuento->id)) {
+                        $caja_ln['descuento'] = $caja_ln['subtotal'] * $adeudo->descuento->porcentaje;
+                    }
+
+                    //Busca datos de beca del cliente
+                    $beca_a = 0;
+                    foreach ($cliente->autorizacionBecas as $beca) {
+                        //dd($beca->lectivo);
+                        if (
+                            $beca->lectivo->inicio <= $adeudo->fecha_pago and
+                            $beca->lectivo->fin >= $adeudo->fecha_pago and
+                            $beca->aut_dueno == 4 and
+                            is_null($beca->deleted_at)
+                        ) {
+                            $beca_a = $beca->id;
+                            //dd($beca);
+                        }
+                    }
+                    //dd($beca_a);
+                    $beca_autorizada = AutorizacionBeca::find($beca_a);
+                    //dd($beca_autorizada);
+
+
                     foreach ($adeudo->planPagoLn->reglaRecargos as $regla) {
                         //dd($adeudo->planPagoLn->reglaRecargos->toArray());
                         $fecha_caja = Carbon::createFromFormat('Y-m-d', $caja->fecha);
@@ -461,7 +495,7 @@ class CajasController extends Controller
                     try {
                         $promociones = PromoPlanLn::where('plan_pago_ln_id', $adeudo->plan_pago_ln_id)->get();
                         $caja_ln['promo_plan_ln_id'] = 0;
-                        if ($cliente->beca_bnd != 1 and $adeudo->combinacionCliente->bnd_beca != 1) {
+                        if ($beca_a == 0) {
                             foreach ($promociones as $promocion) {
 
                                 $inscripcion = Adeudo::where('cliente_id', $adeudo->cliente_id)
@@ -512,13 +546,18 @@ class CajasController extends Controller
                                     }
                                 }
                             }
-                        } elseif ($cliente->beca_bnd == 1 and $adeudo->combinacionCliente->bnd_beca == 1) {
-                            if ($cliente->monto_mensualidad > 0 and is_int(strpos($adeudo->cajaConcepto->name, 'MENSUALIDAD'))) {
-                                $caja_ln['descuento'] = $caja_ln['descuento'] + $cliente->monto_mensualidad;
+                        } elseif ($beca_a <> 0) {
+                            if (
+                                $beca->monto_mensualidad > 0 and
+                                $adeudo->cajaConcepto->bnd_mensualidad == 1
+                            ) {
+                                $calculo_monto_mensualidad = $adeudo->monto * $beca->monto_mensualidad;
+                                $caja_ln['descuento'] = $caja_ln['descuento'] + $calculo_monto_mensualidad;
                             }
+                            /*
                             if ($cliente->beca_porcentaje > 0 and is_int(strpos($adeudo->cajaConcepto->name, 'INSCRIP'))) {
                                 $caja_ln['descuento'] = $caja_ln['descuento'] + $cliente->beca_porcentaje;
-                            }
+                            }*/
                         }
                         //dd($promocion);
                         //if(is_object($promocion)){

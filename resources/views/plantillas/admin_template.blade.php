@@ -163,6 +163,14 @@ $("button[type=submit]").click(function(){
     //$('#formulario').submit();
 });
 
+$('.fecha').Zebra_DatePicker({
+    days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
+            months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+            readonly_element: false,
+            lang_clear_date: 'Limpiar',
+            show_select_today: 'Hoy',
+    });
+
 </script>
 
  @stack('scripts')

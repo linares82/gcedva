@@ -549,7 +549,10 @@ class InscripcionsController extends Controller
             ->orderBy('hacademicas.plantel_id')
             ->orderBy('hacademicas.lectivo_id')
             ->orderBy('hacademicas.grupo_id')
-            ->orderBy('hacademicas.grado_id')
+            //->orderBy('hacademicas.grado_id')
+            ->orderBy('c.ape_paterno')
+            ->orderBy('c.ape_materno')
+
             ->distinct()
             ->get();
 
@@ -746,7 +749,9 @@ class InscripcionsController extends Controller
             ->orderBy('hacademicas.plantel_id')
             ->orderBy('hacademicas.lectivo_id')
             ->orderBy('hacademicas.grupo_id')
-            ->orderBy('hacademicas.grado_id')
+            //->orderBy('hacademicas.grado_id')
+            ->orderBy('c.ape_paterno')
+            ->orderBy('c.ape_materno')
 
             ->distinct()
             ->get();

@@ -290,4 +290,8 @@ class Cliente extends Model
 	public function moodleBajas() {
 		return $this->hasMany('App\MoodleBaja');
 	}// end
+
+	public function autorizacionBecas() {
+		return $this->hasMany('App\AutorizacionBeca');
+	}// end
 }

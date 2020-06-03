@@ -516,6 +516,37 @@
                         </div>
                     </div>
                     <div class="box-body">    
+                        @php
+                            $cliente->load('autorizacionBeca');
+                        @endphp
+                        
+                        <table class="table table-condensed table-striped">
+                            <thead>
+                                <th>Solicitud</th><th>Porcejate</th><th>Estatus A. Final</th><th>Lectivo</th>
+                            </thead>
+                            <tbody>
+                                @foreach($cliente->autorizacionBecas as $beca)
+                                <tr>
+                                    <td>{{ $beca->solicitud }}</td>
+                                    <td>{{ $beca->monto_mensualidad }}</td>
+                                    <td>
+                                        @if($beca->autDueno->id==4)
+                                        <span class="badge bg-green">
+                                            {{ $beca->autDueno->name }}
+                                        </span>
+                                         @else
+                                         <span class="badge bg-red">
+                                            {{ $beca->autDueno->name }}
+                                        </span>
+                                         @endif
+                                    </td>
+                                    <td>{{ $beca->lectivo->name }}</td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                        
+                        <!--
                         <div class="form-group col-md-3 @if($errors->has('beca_bnd')) has-error @endif">
                             <label for="beca_bnd-field">Becado</label>
                             {!! Form::checkbox("beca_bnd", 1, null, [ "id" => "beca_bnd-field", 'class'=>'minimal', 'disabled'=>'disabled']) !!}
@@ -550,7 +581,7 @@
                             <label > {{ $cliente->beca_nota }}</label>
                         </div>
                         @endif
-                    
+                    -->
                     </div>
                 </div>
                 
@@ -1827,6 +1858,7 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
 
                         @if(isset($cliente))
                         function CrearCombinacionCliente() {
+                            $('#crearCombinacion').prop('disabled', true);
                         $.ajax({
                         url: '{{ route("combinacionClientes.store") }}',
                                 type: 'GET',

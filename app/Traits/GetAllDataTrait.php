@@ -146,7 +146,7 @@ trait GetAllDataTrait
             array_push($planteles, $p->id);
         }
 
-        //dd($planteles);
+        //dd($empleado);
         //dd($baseTable);
         switch ($baseTable) {
             case "movimientos":
