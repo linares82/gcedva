@@ -522,6 +522,7 @@ class InscripcionsController extends Controller
             'p.id as p_id',
             'c.tel_fijo'
         )
+            ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
             ->join('materia as mat', 'mat.id', '=', 'hacademicas.materium_id')
             ->join('clientes as c', 'c.id', '=', 'hacademicas.cliente_id')
             ->join('grupos as g', 'g.id', '=', 'hacademicas.grupo_id')
@@ -546,6 +547,7 @@ class InscripcionsController extends Controller
             ->where('hacademicas.materium_id', $data['materia_f'])
             ->whereNull('hacademicas.deleted_at')
             ->whereNull('hacademicas.deleted_at')
+            ->whereNull('i.deleted_at')
             ->orderBy('hacademicas.plantel_id')
             ->orderBy('hacademicas.lectivo_id')
             ->orderBy('hacademicas.grupo_id')
@@ -721,6 +723,7 @@ class InscripcionsController extends Controller
             'hacademicas.grado_id',
             'p.id as plantel_id'
         )
+            ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
             ->join('clientes as c', 'c.id', '=', 'hacademicas.cliente_id')
             //->join('hacademicas as h','h.inscripcion_id','=','inscripcions.id')
             ->join('seguimientos as s', 's.cliente_id', '=', 'c.id')
@@ -745,6 +748,7 @@ class InscripcionsController extends Controller
             ->whereIn('c.st_cliente_id', array(4, 25, 20))
             ->whereNull('hacademicas.deleted_at')
             ->whereNull('aa.deleted_at')
+            ->whereNull('i.deleted_at')
             //->where('inscripcions.grado_id',$data['grado_f'])
             ->orderBy('hacademicas.plantel_id')
             ->orderBy('hacademicas.lectivo_id')
