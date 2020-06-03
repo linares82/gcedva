@@ -747,8 +747,9 @@ Agregar nuevo registro
 <script>
     $(function () {
         $('[data-toggle="tooltip"]').tooltip()
-        })    
+        });    
 
+    
     
     $('.fecha').Zebra_DatePicker({
     days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
@@ -791,6 +792,13 @@ Agregar nuevo registro
     });
     
     $(document).ready(function(){
+        $('#forma_pago_id1-field').change(function(){
+            if($(this).val()==1 || $(this).val()==6){
+                $('#fecha-field').prop('disabled',true);
+            }else{
+                $('#fecha-field').prop('disabled',false);
+            }
+        });
         
          $('.monto_editable').hide();
          $('.fecha_editable').hide();

@@ -58,6 +58,9 @@ class CajasController extends Controller
     public function store(createCaja $request)
     {
         $input = $request->all();
+        if(!isset(input['fecha'])){
+            $input['fecha']=Date('Y-m-d');
+        }
         //dd($input);
         $cliente = Cliente::find($input['cliente_id']);
 
