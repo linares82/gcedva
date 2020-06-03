@@ -137,7 +137,9 @@
                     <div class="input-group form-group col-md-12 @if($errors->has('cliente_id')) has-error @endif">
                         
                         <div class="input-group-btn">
-                            <button type="submit" class="btn btn-warning" data-toggle="tooltip" title="Crear Venta" id="btnCrearVenta"><i class='glyphicon glyphicon-plus-sign'></i></button>
+                            <button type="submit" class="btn btn-warning" data-toggle="tooltip" title="Crear Venta" id="btnCrearVenta">
+                                <i class='glyphicon glyphicon-plus-sign'></i>
+                            </button>
                         </div>
                         
                         {!! Form::select("forma_pago_id", $list["FormaPago"], null, array("class" => "form-control", "id" => "forma_pago_id1-field")) !!}
@@ -896,12 +898,22 @@ Agregar nuevo registro
     
 
     $(document).on('click', '.add-pago', function() {
+    @php
+        $monto_max_pago=0;
+        if(optional($caja->pagos)->count()>0){
+            $monto_max_pago=$caja->total-$caja->pagos->sum(monto);
+        }else{
+            $monto_max_pago=$caja->total;
+        }
+
+    @endphp
     $('.modal-title').text('Agregar Pago');
     //Limpiar valores
     $('#addPago').modal({backdrop: 'static', keyboard: false});
-    $('#monto-field').val($(this).data('total_caja'));
+    //$('#monto-field').val($(this).data('total_caja'));
+    $('#monto-field').val({{$monto_max_pago}});
     $('#forma_pago_id-field').val({{$caja->forma_pago_id}}).change();
-
+    $('#fecha_ln-field').val('{{$caja->fecha}}');
     $('#addPago').modal('show');
     
     $('#AgregarPago').prop('disabled',true);
@@ -915,30 +927,34 @@ Agregar nuevo registro
     @if (isset($caja) and isset($cliente))
         //$('.modal-footer1').on('click', 'addPagoB','#AgregarPago', function() {
         $('#AgregarPago').on('click', function() {    
-        //alert("fil");    
-        $.ajax({
-            type: 'POST',
-            url: '{{url("pagos/store")}}',
-            data: {
-                '_token': $('input[name=_token]').val(),
-                'caja_id': {{$caja->id}},
-                'monto': $('#monto-field').val(),
-                'fecha': $('#fecha_ln-field').val(),
-                'forma_pago_id': $('#forma_pago_id-field option:selected').val(),
-                'referencia':$('#referencia-field').val(),
-                'cuenta_efectivo_id': $('#cuenta_efectivo_id-field').val(),
-            },
-            beforeSend : function(){
-                $("#loading3").show(); 
-                $('#AgregarPago').prop('disabled',true);
-                $('#cerrarAgregarPago').prop('disabled',true);
-            },
-            complete : function(){$("#loading3").hide(); },
-            success: function(data) {
-                //location.reload(); 
-                $('#form-buscarVenta').submit();
-            }
-        });
+        if(parseFloat($('#monto-field').val())>{{$monto_max_pago}} ){
+            alert('Monto de pagos excede monto de caja total');
+        }else{
+            $.ajax({
+                type: 'POST',
+                url: '{{url("pagos/store")}}',
+                data: {
+                    '_token': $('input[name=_token]').val(),
+                    'caja_id': {{$caja->id}},
+                    'monto': $('#monto-field').val(),
+                    'fecha': $('#fecha_ln-field').val(),
+                    'forma_pago_id': $('#forma_pago_id-field option:selected').val(),
+                    'referencia':$('#referencia-field').val(),
+                    'cuenta_efectivo_id': $('#cuenta_efectivo_id-field').val(),
+                },
+                beforeSend : function(){
+                    $("#loading3").show(); 
+                    $('#AgregarPago').prop('disabled',true);
+                    $('#cerrarAgregarPago').prop('disabled',true);
+                },
+                complete : function(){$("#loading3").hide(); },
+                success: function(data) {
+                    //location.reload(); 
+                    $('#form-buscarVenta').submit();
+                }
+            });
+            }    
+        
         });
     @endif
 
@@ -1100,11 +1116,20 @@ Agregar nuevo registro
     
     @endif
 
-    $('#btnCrearVenta').click(function(){
+    function crearCaja(){
+    //$('#btnCrearVenta').click(function(e){
         //$('input.submitForm').read
-        $('#btnCrearVenta').prop('disabled', true);
-        $('#frmCrearVenta').submit();
-    });
+        e.preventDefaul();
+        alert($('#forma_pago_id1-field option:selected').val());
+        if($('#forma_pago_id1-field option:selected').val()==0){
+            alert('Seleccionar una Forma de Pago');
+        }else{
+            $('#btnCrearVenta').prop('disabled', true);
+            $('#frmCrearVenta').submit();
+        }
+
+        
+    }
     
 
 </script>

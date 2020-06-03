@@ -546,7 +546,7 @@ class InscripcionsController extends Controller
             ->where('aa.materium_id', $data['materia_f'])
             ->where('hacademicas.materium_id', $data['materia_f'])
             ->whereNull('hacademicas.deleted_at')
-            ->whereNull('hacademicas.deleted_at')
+            ->whereNull('aa.deleted_at')
             ->whereNull('i.deleted_at')
             ->orderBy('hacademicas.plantel_id')
             ->orderBy('hacademicas.lectivo_id')
@@ -1225,6 +1225,7 @@ class InscripcionsController extends Controller
             'p.id as p_id',
             'c.tel_fijo'
         )
+            ->join('inscripcions as i','i.id','=','hacademicas.inscripcion_id')
             ->join('materia as mat', 'mat.id', '=', 'hacademicas.materium_id')
             ->join('clientes as c', 'c.id', '=', 'hacademicas.cliente_id')
             ->join('grupos as g', 'g.id', '=', 'hacademicas.grupo_id')
@@ -1248,7 +1249,8 @@ class InscripcionsController extends Controller
             ->where('aa.materium_id', $data['materia_f'])
             ->where('hacademicas.materium_id', $data['materia_f'])
             ->whereNull('hacademicas.deleted_at')
-            ->whereNull('hacademicas.deleted_at')
+            ->whereNull('aa.deleted_at')
+            ->whereNull('i.deleted_at')
             ->orderBy('hacademicas.plantel_id')
             ->orderBy('hacademicas.lectivo_id')
             ->orderBy('hacademicas.grupo_id')
@@ -1628,6 +1630,7 @@ class InscripcionsController extends Controller
                 'p.id as p_id',
                 'c.tel_fijo'
             )
+                ->join('inscripcions as i','i.id','=','hacademicas.inscripcion_id')
                 ->join('materia as mat', 'mat.id', '=', 'hacademicas.materium_id')
                 ->join('clientes as c', 'c.id', '=', 'hacademicas.cliente_id')
                 ->join('grupos as g', 'g.id', '=', 'hacademicas.grupo_id')
@@ -1651,7 +1654,8 @@ class InscripcionsController extends Controller
                 ->where('aa.materium_id', $asignacion->materium_id)
                 ->where('hacademicas.materium_id', $asignacion->materium_id)
                 ->whereNull('hacademicas.deleted_at')
-                ->whereNull('hacademicas.deleted_at')
+                ->whereNull('aa.deleted_at')
+                ->whereNull('i.deleted_at')
                 ->orderBy('hacademicas.plantel_id')
                 ->orderBy('hacademicas.lectivo_id')
                 ->orderBy('hacademicas.grupo_id')
@@ -1865,6 +1869,7 @@ class InscripcionsController extends Controller
                 'p.id as p_id',
                 'c.tel_fijo'
             )
+                ->join('inscripcions as i','i.id','=','hacademicas.inscripcion_id')
                 ->join('materia as mat', 'mat.id', '=', 'hacademicas.materium_id')
                 ->join('clientes as c', 'c.id', '=', 'hacademicas.cliente_id')
                 ->join('grupos as g', 'g.id', '=', 'hacademicas.grupo_id')
@@ -1888,7 +1893,8 @@ class InscripcionsController extends Controller
                 ->where('aa.materium_id', $asignacion->materium_id)
                 ->where('hacademicas.materium_id', $asignacion->materium_id)
                 ->whereNull('hacademicas.deleted_at')
-                ->whereNull('hacademicas.deleted_at')
+                ->whereNull('aa.deleted_at')
+                ->whereNull('i.deleted_at')
                 ->orderBy('hacademicas.plantel_id')
                 ->orderBy('hacademicas.lectivo_id')
                 ->orderBy('hacademicas.grupo_id')
@@ -2117,6 +2123,7 @@ class InscripcionsController extends Controller
                 'p.id as p_id',
                 'c.tel_fijo'
             )
+                ->join('inscripcions as i','i.id','=','hacademicas.inscripcion_id')
                 ->join('materia as mat', 'mat.id', '=', 'hacademicas.materium_id')
                 ->join('clientes as c', 'c.id', '=', 'hacademicas.cliente_id')
                 ->join('grupos as g', 'g.id', '=', 'hacademicas.grupo_id')
@@ -2141,7 +2148,8 @@ class InscripcionsController extends Controller
                 ->where('aa.materium_id', $asignacion->materium_id)
                 ->where('hacademicas.materium_id', $asignacion->materium_id)
                 ->whereNull('hacademicas.deleted_at')
-                ->whereNull('hacademicas.deleted_at')
+                ->whereNull('aa.deleted_at')
+                ->whereNull('i.deleted_at')
                 ->orderBy('hacademicas.plantel_id')
                 ->orderBy('hacademicas.lectivo_id')
                 ->orderBy('hacademicas.grupo_id')

@@ -27,7 +27,7 @@
             <fieldset>
                 <div class="box box-default box-solid">
                     <div class="box-header">
-                        <h3 class="box-title">IDENTIFICACIÓN</h3>
+                        <h3 class="box-title">IDENTIFICACION</h3>
                         <div class="box-tools">
                             <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                         </div>
@@ -78,7 +78,7 @@
                         </div>
 
                         <div class="form-group col-md-4 @if($errors->has('tel_fijo')) has-error @endif">
-                            <label for="tel_fijo-field">Teléfono Fijo</label>
+                            <label for="tel_fijo-field">Telefono Fijo</label>
                             {!! Form::text("tel_fijo", null, array("class" => "form-control input-sm", "id" => "tel_fijo-field")) !!}
                             @if($errors->has("tel_fijo"))
                             <span class="help-block">{{ $errors->first("tel_fijo") }}</span>
@@ -160,7 +160,7 @@
                     </div>
                     <div class="box-body">
                         <div class="form-group col-md-4 @if($errors->has('tel_cel')) has-error @endif">
-                            <label for="tel_cel-field">Teléfono Celular(10 dígitos)</label>
+                            <label for="tel_cel-field">Telefono Celular(10 digitos)</label>
                             {!! Form::text("tel_cel", null, array("class" => "form-control input-sm", "id" => "tel_cel-field")) !!}
                             @if($errors->has("tel_cel"))
                             <span class="help-block">{{ $errors->first("tel_cel") }}</span>
@@ -190,7 +190,7 @@
                         @endif
 
                         <div class="form-group col-md-4 @if($errors->has('mail')) has-error @endif" style="clear:left;">
-                            <label for="mail-field">Correo Electrónico</label>
+                            <label for="mail-field">Correo ElectrOnico</label>
                             {!! Form::text("mail", null, array("class" => "form-control input-sm", "id" => "mail-field")) !!}
                             @if($errors->has("mail"))
                             <span class="help-block">{{ $errors->first("mail") }}</span>
@@ -234,7 +234,7 @@
                     <div class="box-body">
                         
                         <div class="form-group col-md-4 @if($errors->has('interes_estudio_id')) has-error @endif">
-                            <label for="interes_estudio_id-field">Â¿Por que te interesa estudiar nuestra carrera técnica?</label>
+                            <label for="interes_estudio_id-field">Â¿Por que te interesa estudiar nuestra carrera tecnica?</label>
                             {!! Form::select("interes_estudio_id", $list["InteresEstudio"], null, array("class" => "form-control select_seguridad", "id" => "interes_estudio_id-field")) !!}
                             @if($errors->has("interes_estudio_id"))
                             <span class="help-block">{{ $errors->first("interes_estudio_id") }}</span>
@@ -425,7 +425,7 @@
                 
                 <div class="box box-default box-solid">
                     <div class="box-header">
-                        <h3 class="box-title">INFORMACIÓN DE PUBLICIDAD Y PROPAGANDA</h3>
+                        <h3 class="box-title">INFORMACION DE PUBLICIDAD Y PROPAGANDA</h3>
                         <div class="box-tools">
 
                             <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
@@ -454,7 +454,7 @@
                             @endif
                         </div>
                         <div class="form-group col-md-4 @if($errors->has('medio_id')) has-error @endif" style="clear:left;">
-                            <label for="medio_id-field">Medio por el que se enteró</label>
+                            <label for="medio_id-field">Medio por el que se enterO</label>
                             {!! Form::select("medio_id", $list["Medio"], null, array("class" => "form-control select_seguridad", "id" => "medio_id-field")) !!}
                             @if($errors->has("medio_id"))
                             <span class="help-block">{{ $errors->first("medio_id") }}</span>
@@ -516,8 +516,9 @@
                         </div>
                     </div>
                     <div class="box-body">    
-                        @php
-                            $cliente->load('autorizacionBeca');
+                        @if(isset($cliente))
+                        @php 
+                            $cliente->load('autorizacionBeca'); 
                         @endphp
                         
                         <table class="table table-condensed table-striped">
@@ -545,7 +546,7 @@
                                 @endforeach
                             </tbody>
                         </table>
-                        
+                        @endif
                         <!--
                         <div class="form-group col-md-3 @if($errors->has('beca_bnd')) has-error @endif">
                             <label for="beca_bnd-field">Becado</label>
@@ -587,7 +588,7 @@
                 
                 <div class="box box-default box-solid">
                     <div class="box-header">
-                        <h3 class="box-title">DIRECCIÓN DEL CLIENTE</h3>
+                        <h3 class="box-title">DIRECCION DEL CLIENTE</h3>
                         <div class="box-tools">
                             <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                         </div>
@@ -675,7 +676,7 @@
                     @endif
                 </div>
                 <div class="form-group col-md-4 @if($errors->has('genero')) has-error @endif">
-                    <label for="Genero-field">Género</label><br/>
+                    <label for="Genero-field">Genero</label><br/>
                     {!! Form::radio("genero", 1, null, [ "id" => "genero-field"]) !!}
                     <label for="Genero-field">Masculino</label>
                     {!! Form::radio("genero", 2, null, [ "id" => "genero-field"]) !!}
@@ -796,35 +797,35 @@
                             @endif
                         </div>
                         <div class="form-group col-md-4 @if($errors->has('dir_padre')) has-error @endif">
-                            <label for="dir_padre-field">Dirección</label>
+                            <label for="dir_padre-field">DirecciOn</label>
                             {!! Form::text("dir_padre", null, array("class" => "form-control input-sm", "id" => "dir_padre-field")) !!}
                             @if($errors->has("dir_padre"))
                             <span class="help-block">{{ $errors->first("dir_padre") }}</span>
                             @endif
                         </div>
                         <div class="form-group col-md-4 @if($errors->has('tel_padre')) has-error @endif">
-                            <label for="tel_padre-field">Teléfono Fijo</label>
+                            <label for="tel_padre-field">Telefono Fijo</label>
                             {!! Form::text("tel_padre", null, array("class" => "form-control input-sm", "id" => "tel_padre-field")) !!}
                             @if($errors->has("tel_padre"))
                             <span class="help-block">{{ $errors->first("tel_padre") }}</span>
                             @endif
                         </div>
                         <div class="form-group col-md-4 @if($errors->has('cel_padre')) has-error @endif">
-                            <label for="cel_padre-field">Teléfono Celular</label>
+                            <label for="cel_padre-field">Telefono Celular</label>
                             {!! Form::text("cel_padre", null, array("class" => "form-control input-sm", "id" => "cel_padre-field")) !!}
                             @if($errors->has("cel_padre"))
                             <span class="help-block">{{ $errors->first("cel_padre") }}</span>
                             @endif
                         </div>
                         <div class="form-group col-md-4 @if($errors->has('tel_ofi_padre')) has-error @endif">
-                            <label for="tel_ofi_padre-field">Teléfono Trabajo</label>
+                            <label for="tel_ofi_padre-field">Telefono Trabajo</label>
                             {!! Form::text("tel_ofi_padre", null, array("class" => "form-control input-sm", "id" => "tel_ofi_padre-field")) !!}
                             @if($errors->has("tel_ofi_padre"))
                             <span class="help-block">{{ $errors->first("tel_ofi_padre") }}</span>
                             @endif
                         </div>
                         <div class="form-group col-md-4 @if($errors->has('mail_padre')) has-error @endif">
-                            <label for="mail_padre-field">Correo Electrónico</label>
+                            <label for="mail_padre-field">Correo ElectrOnico</label>
                             {!! Form::text("mail_padre", null, array("class" => "form-control input-sm", "id" => "mail_padre-field")) !!}
                             @if($errors->has("mail_padre"))
                             <span class="help-block">{{ $errors->first("mail_padre") }}</span>
@@ -856,35 +857,35 @@
                             @endif
                         </div>
                         <div class="form-group col-md-4 @if($errors->has('dir_madre')) has-error @endif">
-                            <label for="dir_madre-field">Dirección</label>
+                            <label for="dir_madre-field">DirecciOn</label>
                             {!! Form::text("dir_madre", null, array("class" => "form-control input-sm", "id" => "dir_madre-field")) !!}
                             @if($errors->has("dir_madre"))
                             <span class="help-block">{{ $errors->first("dir_madre") }}</span>
                             @endif
                         </div>
                         <div class="form-group col-md-4 @if($errors->has('tel_madre')) has-error @endif">
-                            <label for="tel_madre-field">Teléfono Fijo</label>
+                            <label for="tel_madre-field">Telefono Fijo</label>
                             {!! Form::text("tel_madre", null, array("class" => "form-control input-sm", "id" => "tel_madre-field")) !!}
                             @if($errors->has("tel_madre"))
                             <span class="help-block">{{ $errors->first("tel_madre") }}</span>
                             @endif
                         </div>
                         <div class="form-group col-md-4 @if($errors->has('cel_madre')) has-error @endif">
-                            <label for="cel_madre-field">Teléfono Celular</label>
+                            <label for="cel_madre-field">Telefono Celular</label>
                             {!! Form::text("cel_madre", null, array("class" => "form-control input-sm", "id" => "cel_madre-field")) !!}
                             @if($errors->has("cel_madre"))
                             <span class="help-block">{{ $errors->first("cel_madre") }}</span>
                             @endif
                         </div>
                         <div class="form-group col-md-4 @if($errors->has('tel_ofi_madre')) has-error @endif">
-                            <label for="tel_ofi_madre-field">Teléfono Trabajo</label>
+                            <label for="tel_ofi_madre-field">Telefono Trabajo</label>
                             {!! Form::text("tel_ofi_madre", null, array("class" => "form-control input-sm", "id" => "tel_ofi_madre-field")) !!}
                             @if($errors->has("tel_ofi_madre"))
                             <span class="help-block">{{ $errors->first("tel_ofi_madre") }}</span>
                             @endif
                         </div>
                         <div class="form-group col-md-4 @if($errors->has('mail_madre')) has-error @endif">
-                            <label for="mail_madre-field">Correo Electrónico</label>
+                            <label for="mail_madre-field">Correo ElectrOnico</label>
                             {!! Form::text("mail_madre", null, array("class" => "form-control input-sm", "id" => "mail_madre-field")) !!}
                             @if($errors->has("mail_madre"))
                             <span class="help-block">{{ $errors->first("mail_madre") }}</span>
@@ -916,35 +917,35 @@
                             @endif
                         </div>
                         <div class="form-group col-md-4 @if($errors->has('dir_acudiente')) has-error @endif">
-                            <label for="dir_acudiente-field">Dirrección</label>
+                            <label for="dir_acudiente-field">DirrecciOn</label>
                             {!! Form::text("dir_acudiente", null, array("class" => "form-control input-sm", "id" => "dir_acudiente-field")) !!}
                             @if($errors->has("dir_acudiente"))
                             <span class="help-block">{{ $errors->first("dir_acudiente") }}</span>
                             @endif
                         </div>
                         <div class="form-group col-md-4 @if($errors->has('tel_acudiente')) has-error @endif">
-                            <label for="tel_acudiente-field">Teléfono Fijo</label>
+                            <label for="tel_acudiente-field">Telefono Fijo</label>
                             {!! Form::text("tel_acudiente", null, array("class" => "form-control input-sm", "id" => "tel_acudiente-field")) !!}
                             @if($errors->has("tel_acudiente"))
                             <span class="help-block">{{ $errors->first("tel_acudiente") }}</span>
                             @endif
                         </div>
                         <div class="form-group col-md-4 @if($errors->has('cel_acudiente')) has-error @endif">
-                            <label for="cel_acudiente-field">Teléfono Celular</label>
+                            <label for="cel_acudiente-field">Telefono Celular</label>
                             {!! Form::text("cel_acudiente", null, array("class" => "form-control input-sm", "id" => "cel_acudiente-field")) !!}
                             @if($errors->has("cel_acudiente"))
                             <span class="help-block">{{ $errors->first("cel_acudiente") }}</span>
                             @endif
                         </div>
                         <div class="form-group col-md-4 @if($errors->has('tel_ofi_acudiente')) has-error @endif">
-                            <label for="tel_ofi_acudiente-field">Teléfono Trabajo</label>
+                            <label for="tel_ofi_acudiente-field">Telefono Trabajo</label>
                             {!! Form::text("tel_ofi_acudiente", null, array("class" => "form-control input-sm", "id" => "tel_ofi_acudiente-field")) !!}
                             @if($errors->has("tel_ofi_acudiente"))
                             <span class="help-block">{{ $errors->first("tel_ofi_acudiente") }}</span>
                             @endif
                         </div>
                         <div class="form-group col-md-4 @if($errors->has('mail_acudiente')) has-error @endif">
-                            <label for="mail_acudiente-field">Correo Electrónico</label>
+                            <label for="mail_acudiente-field">Correo ElectrOnico</label>
                             {!! Form::text("mail_acudiente", null, array("class" => "form-control input-sm", "id" => "mail_acudiente-field")) !!}
                             @if($errors->has("mail_acudiente"))
                             <span class="help-block">{{ $errors->first("mail_acudiente") }}</span>
@@ -971,7 +972,7 @@
                                 <table class="table table-condensed table-striped">
                                     <head>
                                     <th>Horario</th><th>Materia</th><th>Modulo</th><th>Instructor</th><th>Clave</th>
-                                    <th>A. Paterno</th><th>A. Materno</th><th>Nombre(s)</th><th>Calificación final</th>
+                                    <th>A. Paterno</th><th>A. Materno</th><th>Nombre(s)</th><th>CalificaciOn final</th>
                                     </head>
                                     <body>
                                     @foreach($historia as $registro)
@@ -1076,7 +1077,7 @@
                             <td colspan="2">
                                 <table class="table table-condensed table-striped">
                                     <thead>
-                                    <td>Examen</td><td>Calificación</td>
+                                    <td>Examen</td><td>CalificaciOn</td>
                                     </thead>
                                     <tbody>
                                         @foreach($a->calificaciones as $cali)
@@ -1495,7 +1496,7 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
     
     $(document).on('click', '.inscribir-edit', function(e) {
         e.preventDefault();
-        $('.modal-title').text('Editar Inscripción');
+        $('.modal-title').text('Editar InscripciOn');
         
         
         //Limpiar valores

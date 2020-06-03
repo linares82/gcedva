@@ -14,6 +14,7 @@ return array(
     'AddBecaPorcentajeClientesTable' => $baseDir . '/database/migrations/2018_05_07_114940_add_beca_porcentaje_clientes_table.php',
     'AddBecadoBndCajasTable' => $baseDir . '/database/migrations/2018_11_01_133610_add_becado_bnd_cajas_table.php',
     'AddBndAplicarBecaCajaConceptoTable' => $baseDir . '/database/migrations/2019_02_25_115155_add_bnd_aplicar_beca_caja_concepto_table.php',
+    'AddBndBancoToCuentasEfectivosTable' => $baseDir . '/database/migrations/2020_06_03_161628_add_bnd_banco_to_cuentas_efectivos_table.php',
     'AddBndBecaCombinacionClientesTable' => $baseDir . '/database/migrations/2019_05_27_162240_add_bnd_beca_combinacion_clientes_table.php',
     'AddBndCortoToNivelsTable' => $baseDir . '/database/migrations/2020_02_24_103913_add_bnd_corto_to_nivels_table.php',
     'AddBndGraficaLectivosTable' => $baseDir . '/database/migrations/2018_06_19_145551_add_bnd_grafica_lectivos_table.php',

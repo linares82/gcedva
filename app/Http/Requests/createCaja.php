@@ -24,7 +24,7 @@ class createCaja extends FormRequest
     public function rules()
     {
         return [
-            //
+            'forma_pago_id' => 'min:1'
         ];
     }
 }

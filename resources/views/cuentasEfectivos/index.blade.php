@@ -164,6 +164,7 @@
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'name', 'title' => 'NOMBRE'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clabe', 'title' => 'CLABE'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'no_cuenta', 'title' => 'NO. CUENTA'])</th>
+                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'bnd_banco', 'title' => 'CUENTA BANCARIA'])</th>
                         <th>CUENTA CONTABLE</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'saldo_inicial', 'title' => 'SALDO INICIAL'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'fecha_saldo_inicial', 'title' => 'FECHA SALDO INICIAL'])</th>
@@ -204,12 +205,14 @@
                                 <td>{{$cuentasEfectivo->clabe}}</td>
                                 <td>{{$cuentasEfectivo->no_cuenta}}</td>
                                 <td>
+                                    @if ($cuentasEfectivo->bnd_banco==1) SI @else NO @endif
+                                </td>
+                                <td>
                                     @foreach($cuentasEfectivo->plantels as $plantel)
                                         {{ $plantel->razon }} - {{ $plantel->cuenta_contable }} <br>
-                                        
-                                        
                                     @endforeach
                                 </td>
+                                
                                 <td>{{$cuentasEfectivo->saldo_inicial}}</td>
                                 <td>{{$cuentasEfectivo->fecha_saldo_inicial}}</td>
                                 <td>{{$cuentasEfectivo->saldo_actualizado}}</td>

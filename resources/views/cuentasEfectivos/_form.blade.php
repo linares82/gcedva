@@ -5,6 +5,20 @@
                         <span class="help-block">{{ $errors->first("name") }}</span>
                        @endif
                     </div>
+                    <div class="form-group col-md-12 {{ $errors->has('plantel_id') ? 'has-error' : '' }}">
+                        <label for="plantel_id" class="control-label">Plantel</label>
+                        <!--<div class="col-md-10">-->
+                            <select class="form-control select_seguridad" id="tpo_deteccion_id" name="plantel_id[]" required="true" multiple="multiple">
+                                    @foreach ($plantels as $key => $plantel)
+                                        <option value="{{ $key }}" {{ old('plantel_id', optional($plantels_selected))->search($key)>-1 ? 'selected' : '' }}>
+                                            {{ $plantel }}
+                                        </option>
+                                    @endforeach
+                            </select>
+
+                            {!! $errors->first('tpo_deteccion_id', '<p class="help-block">:message</p>') !!}
+                        <!--</div>-->
+                    </div>
                     <div class="form-group col-md-4 @if($errors->has('clabe')) has-error @endif">
                        <label for="clabe-field">CLABE</label>
                        {!! Form::text("clabe", null, array("class" => "form-control", "id" => "clabe-field")) !!}
@@ -57,20 +71,7 @@
                        @endif
                     </div>
 
-                    <div class="form-group col-md-12 {{ $errors->has('plantel_id') ? 'has-error' : '' }}">
-                        <label for="plantel_id" class="control-label">Plantel</label>
-                        <!--<div class="col-md-10">-->
-                            <select class="form-control select_seguridad" id="tpo_deteccion_id" name="plantel_id[]" required="true" multiple="multiple">
-                                    @foreach ($plantels as $key => $plantel)
-                                        <option value="{{ $key }}" {{ old('plantel_id', optional($plantels_selected))->search($key)>-1 ? 'selected' : '' }}>
-                                            {{ $plantel }}
-                                        </option>
-                                    @endforeach
-                            </select>
-
-                            {!! $errors->first('tpo_deteccion_id', '<p class="help-block">:message</p>') !!}
-                        <!--</div>-->
-                    </div>
+                    
                     <div class='row'></div>
                     <div id="comprobar_div" class="form-group col-md-4 @if($errors->has('comprobacion')) has-error @endif">
                      <label for="comprobacion-field">Saldo Comprobado</label>
@@ -106,6 +107,8 @@
         });
     });
     @endif
+
+    $('#plantel_id-field')
     });
     
 
