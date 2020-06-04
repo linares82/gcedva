@@ -189,10 +189,12 @@
                     <div class="form-group col-md-4">
                         <div class='text-center'>
                             @permission('cajas.cancelar')
+                            @if($caja->st_caja_id<>1 and $caja->st_caja_id<>2)
                             {!! Form::open(array('route' => 'cajas.cancelar','onsubmit'=> "if(confirm('¿Cancelar Caja? ¿Esta seguro?')) { return true } else {return false };")) !!}
                             {!! Form::hidden("caja", $caja->id, array("class" => "form-control", "id" => "caja_id-field")) !!}
                             <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-close"></i> Cancelar Venta</button>
                             {!! Form::close() !!}
+                            @endif
                             @endpermission
                         </div>
                     </div>

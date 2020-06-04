@@ -28,7 +28,7 @@ class Empleado extends Model
 	protected $fillable = [
 		'cve_empleado', 'nombre', 'ape_paterno', 'ape_materno', 'puesto_id', 'area_id', 'rfc', 'curp',
 		'direccion', 'tel_fijo', 'tel_cel', 'cel_empresa', 'mail', 'mail_empresa', 'foto',
-		'identificacion', 'contrato', 'evaluacion_psico', 'st_empleado_id',
+		'identificacion', 'contrato', 'evaluacion_psico', 'st_empleado_id','plantel_id',
 		'pendientes', 'user_id', 'usu_alta_id', 'usu_mod_id', 'jefe_bnd', 'jefe_id', 'alerta_bnd',
 		'dias_alerta', 'resp_alerta_id', 'fin_contrato', 'extranjero_bnd', 'genero', 'alimenticia_bnd'
 	];

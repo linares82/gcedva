@@ -64,10 +64,12 @@ class EmpleadosController extends Controller
     public function store(createEmpleado $request)
     {
 
-        $input = $request->all();
+        $input = $request->except('plantel_id');
+        $input2 = $request->only('plantel_id');
         //dd($input);
         $input['usu_alta_id'] = Auth::user()->id;
         $input['usu_mod_id'] = Auth::user()->id;
+        $input['plantel_id']=$input['pertenece_a'];
         if (!isset($input['jefe_bnd'])) {
             $input['jefe_bnd'] = 0;
         } else {
@@ -92,15 +94,15 @@ class EmpleadosController extends Controller
         //dd($input);
         $e = Empleado::create($input);
 
-        $e->plantels()->sync($input['plantel_id']);
+        $e->plantels()->sync($input2['plantel_id']);
 
 
         if ($request->has('doc_empleado_id') and $request->has('archivo')) {
-            $input2['doc_empleado_id'] = $request->get('doc_empleado_id');
-            $input2['archivo'] = $request->get('archivo');
-            $input2['empleado_id'] = $id;
-            $input2['usu_alta_id'] = Auth::user()->id;
-            $input2['usu_mod_id'] = Auth::user()->id;
+            $input3['doc_empleado_id'] = $request->get('doc_empleado_id');
+            $input3['archivo'] = $request->get('archivo');
+            $input3['empleado_id'] = $id;
+            $input3['usu_alta_id'] = Auth::user()->id;
+            $input3['usu_mod_id'] = Auth::user()->id;
             PivotDocEmpleado::create($input2);
         }
 
@@ -288,7 +290,9 @@ class EmpleadosController extends Controller
      */
     public function update($id, Empleado $empleado, updateEmpleado $request)
     {
-        $input = $request->except(['doc_empleado_id', 'archivo']);
+        $input = $request->except(['doc_empleado_id', 'archivo', 'plantel_id']);
+        $input2= $request->only(['plantel_id']);
+        $input['plantel_id']=$input['pertenece_a'];
         $input['usu_mod_id'] = Auth::user()->id;
         if (!isset($input['jefe_bnd'])) {
             $input['jefe_bnd'] = 0;
@@ -305,15 +309,15 @@ class EmpleadosController extends Controller
         $e = $empleado->update($input);
         //dd($input['plantel_id']);
 
-        $empleado->plantels()->sync($input['plantel_id']);
+        $empleado->plantels()->sync($input2['plantel_id']);
 
         if ($request->has('doc_empleado_id') and $request->get('doc_empleado_id') > 0 and $request->has('archivo')) {
-            $input2['doc_empleado_id'] = $request->get('doc_empleado_id');
-            $input2['archivo'] = $request->get('archivo');
-            $input2['empleado_id'] = $id;
-            $input2['usu_alta_id'] = Auth::user()->id;
-            $input2['usu_mod_id'] = Auth::user()->id;
-            PivotDocEmpleado::create($input2);
+            $input3['doc_empleado_id'] = $request->get('doc_empleado_id');
+            $input3['archivo'] = $request->get('archivo');
+            $input3['empleado_id'] = $id;
+            $input3['usu_alta_id'] = Auth::user()->id;
+            $input3['usu_mod_id'] = Auth::user()->id;
+            PivotDocEmpleado::create($input3);
         }
 
         return redirect()->route('empleados.edit', $id)->with('message', 'Registro Actualizado.');

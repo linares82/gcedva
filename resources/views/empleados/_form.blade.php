@@ -116,6 +116,13 @@
                             <span class="help-block">{{ $errors->first("resp_alerta_id") }}</span>
                           @endif
                         </div>
+                        <div class="form-group col-md-4 @if($errors->has('pertenece_a')) has-error @endif">
+                          <label for="pertenece_a-field">Pertenece A</label>
+                          {!! Form::select("pertenece_a", $list["Plantel"], $empleado->plantel_id, array("class" => "form-control select_seguridad", "id" => "pertenece_a-field")) !!}
+                          @if($errors->has("pertenece_a"))
+                            <span class="help-block">{{ $errors->first("pertenece_a") }}</span>
+                          @endif
+                        </div>
                         <div class="form-group col-md-4 @if($errors->has('plantel_id')) has-error @endif">
                           <label for="plantel_id-field">Planteles *<input type="checkbox" id="seleccionar_planteles">Seleccionar Todo</label>
                           {!! Form::select("plantel_id[]", $list["Plantel"], $empleado->plantels, array("class" => "form-control select_seguridad", "id" => "plantel_id-field", 'multiple'=>true)) !!}
