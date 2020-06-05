@@ -288,9 +288,10 @@ class InscripcionsController extends Controller
     {
         $inscripcion = $inscripcion->find($id);
         //dd($id);
+        $i = $inscripcion->id;
         $cli = $inscripcion->cliente_id;
         $inscripcion->delete();
-        $hacademicas = Hacademica::where('inscripcion_id', $inscripcion->id)->get();
+        $hacademicas = Hacademica::where('inscripcion_id', $i)->get();
         if ($hacademicas->count() > 0) {
             foreach ($hacademicas as $h) {
                 $h->delete();
@@ -1225,7 +1226,7 @@ class InscripcionsController extends Controller
             'p.id as p_id',
             'c.tel_fijo'
         )
-            ->join('inscripcions as i','i.id','=','hacademicas.inscripcion_id')
+            ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
             ->join('materia as mat', 'mat.id', '=', 'hacademicas.materium_id')
             ->join('clientes as c', 'c.id', '=', 'hacademicas.cliente_id')
             ->join('grupos as g', 'g.id', '=', 'hacademicas.grupo_id')
@@ -1630,7 +1631,7 @@ class InscripcionsController extends Controller
                 'p.id as p_id',
                 'c.tel_fijo'
             )
-                ->join('inscripcions as i','i.id','=','hacademicas.inscripcion_id')
+                ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
                 ->join('materia as mat', 'mat.id', '=', 'hacademicas.materium_id')
                 ->join('clientes as c', 'c.id', '=', 'hacademicas.cliente_id')
                 ->join('grupos as g', 'g.id', '=', 'hacademicas.grupo_id')
@@ -1869,7 +1870,7 @@ class InscripcionsController extends Controller
                 'p.id as p_id',
                 'c.tel_fijo'
             )
-                ->join('inscripcions as i','i.id','=','hacademicas.inscripcion_id')
+                ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
                 ->join('materia as mat', 'mat.id', '=', 'hacademicas.materium_id')
                 ->join('clientes as c', 'c.id', '=', 'hacademicas.cliente_id')
                 ->join('grupos as g', 'g.id', '=', 'hacademicas.grupo_id')
@@ -2123,7 +2124,7 @@ class InscripcionsController extends Controller
                 'p.id as p_id',
                 'c.tel_fijo'
             )
-                ->join('inscripcions as i','i.id','=','hacademicas.inscripcion_id')
+                ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
                 ->join('materia as mat', 'mat.id', '=', 'hacademicas.materium_id')
                 ->join('clientes as c', 'c.id', '=', 'hacademicas.cliente_id')
                 ->join('grupos as g', 'g.id', '=', 'hacademicas.grupo_id')

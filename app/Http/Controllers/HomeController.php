@@ -495,7 +495,7 @@ class HomeController extends Controller
             'autorizacion_becas.created_at',
             'acp.name as aut_caja_plantel',
             'adp.name as aut_dir_plantel',
-            'acc.name as aut_caja_corp',
+            //'acc.name as aut_caja_corp',
             'ase.name as aut_ser_esc',
             'ad.name as aut_dueno'
         )
@@ -505,11 +505,11 @@ class HomeController extends Controller
             //->join('st_becas as st','st.id','=','c.st_beca_id')
             ->leftJoin('st_becas as acp', 'acp.id', '=', 'autorizacion_becas.aut_caja_plantel')
             ->leftJoin('st_becas as adp', 'adp.id', '=', 'autorizacion_becas.aut_dir_plantel')
-            ->leftJoin('st_becas as acc', 'acc.id', '=', 'autorizacion_becas.aut_caja_corp')
+            //->leftJoin('st_becas as acc', 'acc.id', '=', 'autorizacion_becas.aut_caja_corp')
             ->leftJoin('st_becas as ase', 'ase.id', '=', 'autorizacion_becas.aut_ser_esc')
             ->leftJoin('st_becas as ad', 'ad.id', '=', 'autorizacion_becas.aut_dueno')
             //->where('autorizacion_becas.id', '>', 560)
-            ->whereRaw('(aut_caja_plantel <> 4 or aut_dir_plantel<> 4 or aut_caja_corp<> 4 or aut_ser_esc<> 4 or aut_dueno<> 4)');
+            ->whereRaw('(aut_caja_plantel <> 4 or aut_dir_plantel<> 4 or aut_ser_esc<> 4 or aut_dueno<> 4)');
         if (Auth::user()->can('autorizacionBecas.filtroPlantels')) {
             $becas_aux->whereIn('cli.plantel_id', $planteles);
         }

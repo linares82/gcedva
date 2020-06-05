@@ -166,6 +166,7 @@ trait GetAllDataTrait
                 $myQuery = $myQuery->with('plantel', 'especialidad', 'nivel', 'grado', 'stCliente', 'pais', 'empleado');
                 //if ($baseTable == "clientes" and (Auth::user()->can('IfiltroClientesXPlantel'))) {
                 $myQuery = $myQuery->whereIn('clientes.plantel_id', $planteles);
+                $myQuery = $myQuery->whereNull('clientes.deleted_at');
                 //}
                 break;
             case 'transferences':
@@ -257,6 +258,7 @@ trait GetAllDataTrait
                 break;
             case "seguimientos":
                 $myQuery = $myQuery->with(['cliente', 'stSeguimiento']);
+                $myQuery = $myQuery->whereNull('clientes.deleted_at');
                 if ($baseTable == "seguimientos" and Auth::user()->can('IfiltroClientesXEmpleado')) {
                     $myQuery = $myQuery->where('clientes.empleado_id', '=', $empleado->id);
                 }

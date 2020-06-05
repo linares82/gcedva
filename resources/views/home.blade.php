@@ -85,7 +85,7 @@
                                     <th>Fecha</th>
                                     <th>A. Caja P.</th>
                                     <th>A. Director P.</th>
-                                    <th>A. Caja C.</th>
+                                    
                                     <th>A. Serv. Esc. C.</th>
                                     <th>A. Final</th>
                                     <th></th>
@@ -106,7 +106,7 @@
                                     </td>
                                     <td>{{$beca->aut_caja_plantel}}</td>
                                     <td>{{$beca->aut_dir_plantel}}</td>
-                                    <td>{{$beca->aut_caja_corp}}</td>
+                                    
                                     <td>{{$beca->aut_ser_esc}}</td>
                                     <td>{{$beca->aut_dueno}}</td>
                                     <td>
