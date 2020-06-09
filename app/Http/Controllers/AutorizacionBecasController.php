@@ -8,6 +8,7 @@ use App\Cliente;
 use App\Lectivo;
 use App\Plantel;
 use App\StBeca;
+use App\TipoBeca;
 use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updateAutorizacionBeca;
@@ -47,11 +48,12 @@ class AutorizacionBecasController extends Controller {
 	{
             $datos=$request->all();
 			$cliente=Cliente::find($datos['id']);
+			$tipo_becas=TipoBeca::pluck('name','id');
 			$lectivos=Lectivo::join('inscripcions as i','i.lectivo_id','=','lectivos.id')
 			->where('i.cliente_id',$cliente->id)
 			->whereNull('i.deleted_at')
 			->pluck('lectivos.name','lectivos.id');
-		return view('autorizacionBecas.create', compact('cliente','lectivos'))
+		return view('autorizacionBecas.create', compact('cliente','lectivos','tipo_becas'))
 			->with( 'list', AutorizacionBeca::getListFromAllRelationApps() );
 	}
 
@@ -114,9 +116,15 @@ class AutorizacionBecasController extends Controller {
 	 */
 	public function edit($id, AutorizacionBeca $autorizacionBeca)
 	{
+		$tipo_becas=TipoBeca::pluck('name','id');
 		$autorizacionBeca=$autorizacionBeca->find($id);
-                $cliente=Cliente::find($autorizacionBeca->cliente->id);
-		return view('autorizacionBecas.edit', compact('autorizacionBeca','cliente'))
+		$cliente=Cliente::find($autorizacionBeca->cliente->id);
+		$lectivos=Lectivo::join('inscripcions as i','i.lectivo_id','=','lectivos.id')
+			->where('i.cliente_id',$cliente->id)
+			->whereNull('i.deleted_at')
+			->pluck('lectivos.name','lectivos.id');
+		
+		return view('autorizacionBecas.edit', compact('autorizacionBeca','cliente','tipo_becas','lectivos'))
 			->with( 'list', AutorizacionBeca::getListFromAllRelationApps() );
 	}
 
@@ -170,7 +178,8 @@ class AutorizacionBecasController extends Controller {
 			}
 		}	
 
-		return redirect()->route('autorizacionBecas.index')->with('message', 'Registro Actualizado.');
+		return redirect()->route('autorizacionBecas.findByClienteId', array('cliente_id'=>$autorizacionBeca->cliente_id))->with('message', 'Registro Actualizado.');
+		//return redirect()->route('autorizacionBecas.index')->with('message', 'Registro Actualizado.');
 	}
 
 	/**

@@ -125,10 +125,14 @@ class AdeudosController extends Controller
     {
         $input = $request->except(['porcentaje','autorizado_por', 'justificacion','autorizado_el','adeudo_id']);
         $inputDescuento = $request->only(['porcentaje','autorizado_por', 'justificacion','autorizado_el','adeudo_id']);
-        
+        if($input['monto']=="0"){
+            $input['pagado_bnd']=1;
+        }
+
         $input['usu_mod_id'] = Auth::user()->id;
         //update data
         $adeudo = $adeudo->find($id);
+        //dd($input);
         $adeudo->update($input);
 
         //dd(!isset($adeudo->descuento->id));
@@ -170,6 +174,7 @@ class AdeudosController extends Controller
             
         }
 
+        return response()->json(['adeudo'=>$adeudo]);
         //return redirect()->route('adeudos.index')->with('message', 'Registro Actualizado.');
     }
 

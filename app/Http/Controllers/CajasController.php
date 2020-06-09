@@ -58,14 +58,15 @@ class CajasController extends Controller
     public function store(createCaja $request)
     {
         $input = $request->all();
+        //dd($input);
 
-        if($input['forma_pago_id']==0){
-            Session::flash('msj','Forma Pago Vacia');
+        if ($input['forma_pago_id'] == 0) {
+            Session::flash('msj', 'Forma Pago Vacia');
             return redirect()->route('cajas.caja')
                 ->withInput();
         }
-        
-        if (!isset(input['fecha'])) {
+
+        if (!isset($input['fecha'])) {
             $input['fecha'] = Date('Y-m-d');
         }
         //dd($input);
@@ -81,8 +82,8 @@ class CajasController extends Controller
             ->whereNull('cajas.deleted_at')
             ->whereNull('ln.deleted_at')
             ->get();
-        
-        
+
+
 
 
         //dd($caja);

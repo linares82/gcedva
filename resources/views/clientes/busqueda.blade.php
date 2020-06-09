@@ -102,6 +102,18 @@
                                 
                             </div>
                             <div class="form-group col-md-4">
+                                <label for="q_clientes.tel_fijo_cont">Telefono Fijo</label>
+                                
+                                    <input class="form-control input-sm", value="{{ @(Request::input('tel_fijo')) ?: '' }}" name="tel_fijo" id="tel_fijo" />
+                                
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="q_clientes.mail_cont">E-mail</label>
+                                
+                                    <input class="form-control input-sm", value="{{ @(Request::input('mail')) ?: '' }}" name="mail" id="mail" />
+                                
+                            </div>
+                            <div class="form-group col-md-4">
                                 <label for="q_clientes.curp_cont">CURP</label>
                                 
                                     <input class="form-control input-sm", value="{{ @(Request::input('curp')) ?: '' }}" name="curp" id="curp" />
@@ -171,6 +183,8 @@
                             <th>SEGUNDO NOMBRE</th>
                             <th>APELLIDO PATERNO</th>
                             <th>APELLIDO MATERNO</th>
+                            <th>TEL.</th>
+                            <th>MAIL</th>
                             <th>CURP</th>
                             <th>CALLE</th>
                             <th>PLANTEL</th>
@@ -189,6 +203,8 @@
                                 <td>{{$cliente->nombre2}}</td>
                                 <td>{{$cliente->ape_paterno}}</td>
                                 <td>{{$cliente->ape_materno}}</td>
+                                <td>{{$cliente->tel}}</td>
+                                <td>{{$cliente->mail}}</td>
                                 <td>
                                 {{$cliente->curp}}
                                 

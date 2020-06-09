@@ -375,7 +375,17 @@
                                         @endif
                                         </td>
                                         <td>
-                                           {!! Form::select("plan_pago_id", $c->turno->planes->pluck('name','id'),$c->plan_pago_id,array("class"=>"form-control select_seguridad plan_pago","id"=>"plan_pago_id-field","style"=>"width:75%;",'data-combinacion'=>$c->id)) !!} 
+                                           <!--@{!! Form::select("plan_pago_id", $c->turno->planes->pluck('name','id'),$c->plan_pago_id,array("class"=>"form-control select_seguridad plan_pago","id"=>"plan_pago_id-field","style"=>"width:75%;",'data-combinacion'=>$c->id)) !!} -->
+                                        
+                                           <select class="form-control select_seguridad plan_pago" id="plan_pago_id-field" name="plan_pago_id" data-combinacion="{{$c->id}}">
+                                            <option data-combinacion="{{$c->id}}" value="" style="display: none;" {{ old('plan_pago_id', optional($c)->plan_pago_id ?: '') == '' ? 'selected' : '' }} disabled selected>Seleccionar opcion </option>
+                                                @foreach ($c->turno->planes()->get() as $plan)
+                                                    <option data-combinacion="{{$c->id}}" value="{{ $plan->id }}" {{ old('plan_pago_id', optional($c)->plan_pago_id) == $plan->id ? 'selected' : '' }}>
+                                                        {{ $plan->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+
                                            {{ optional($c->planPago)->name }} <br>
                                             <div id='loading120' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                                             Impresiones:{{$c->cuenta_ticket_pago}}
@@ -523,7 +533,7 @@
                         
                         <table class="table table-condensed table-striped">
                             <thead>
-                                <th>Solicitud</th><th>Porcejate</th><th>Estatus A. Final</th><th>Lectivo</th>
+                                <th>Solicitud</th><th>Porcentaje Mensualidad Beca</th><th>Estatus A. Final</th><th>Lectivo</th>
                             </thead>
                             <tbody>
                                 @foreach($cliente->autorizacionBecas as $beca)

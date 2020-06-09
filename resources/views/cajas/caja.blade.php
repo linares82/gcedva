@@ -455,7 +455,17 @@
                                 <input class="form-control" id="caja-field" name="caja" value="{{$caja->id}}" type="hidden">
 <!--                                <button type="submit" class="btn btn-xs btn-info" data-toggle="tooltip" title="Agregar"><i class="glyphicon glyphicon-plus-sign"></i></button>-->
                                 {!! Form::close() !!}
+                                
+                                @permission('cajas.inscripcion')
+                                @if($adeudo->cajaConcepto->id==1 or $adeudo->cajaConcepto->id==23)
+                                    <input type="checkbox" class="adeudos_tomados" value="{{$adeudo->id}}" />
+                                @endif
+                                @endpermission
+                                @permission('cajas.no_inscripcion')
+                                
                                 <input type="checkbox" class="adeudos_tomados" value="{{$adeudo->id}}" />
+                                
+                                @endpermission
                                 @endif
                                 @endif
                                 @php

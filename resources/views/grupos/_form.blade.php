@@ -56,6 +56,7 @@
                         <span class="help-block">{{ $errors->first("periodo_estudio_id") }}</span>
                        @endif
                     </div>
+                    
 @if(isset($grupo->periodosEstudio))
 <table class="table table-condensed table-striped">
     <thead>

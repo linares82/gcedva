@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class createAutorizacionBeca extends FormRequest
+class createTipoBeca extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,14 +24,7 @@ class createAutorizacionBeca extends FormRequest
     public function rules()
     {
         return [
-            'archivo_file' => "required"
-        ];
-    }
-
-    public function messages()
-    {
-        return [
-            'archivo_file.required' =>  'Necesita cargar un archivo'
+            //
         ];
     }
 }

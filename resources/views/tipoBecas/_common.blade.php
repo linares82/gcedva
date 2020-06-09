@@ -1,0 +1,1 @@
+@section('tipoBecasAppTitle','TipoBeca')

@@ -59,8 +59,7 @@
                             <th>SOLICITUD</th>
                             <th>LECTIVO</th>
                         <th>CLIENTE</th>
-                        <th>MONTO INSCRIPCION</th>
-                        <th>MONTO MENSUALIDAD</th>
+                        <th>PORCENTAJE MENSUALIDAD BECA</th>
                         <th>ESTATUS</th>
                         <th>A. CAJA P.</th>
                         <th>A. DIR. P.</th>
@@ -79,7 +78,6 @@
                                 <td>{{$autorizacionBeca->solicitud}}</td>
                                 <td>{{$autorizacionBeca->lectivo->name}}</td>
                                 <td>{{$autorizacionBeca->cliente->nombre." ".$autorizacionBeca->cliente->nombre2." ".$autorizacionBeca->cliente->ape_paterno." ".$autorizacionBeca->cliente->ape_materno}}</td>
-                                <td>{{$autorizacionBeca->monto_inscripcion}}</td>
                                 <td>{{$autorizacionBeca->monto_mensualidad}}</td>
                                 <td>{{$autorizacionBeca->stBeca->name}}</td>
                                 <td>{{ optional($autorizacionBeca->autCajaPlantel)->name }}

@@ -92,7 +92,7 @@
                         @endif
                     </div>
                     <div class="row"></div>
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-md-6">
                     <table class="table table-condensed table-striped">
                         <thead>
                             <tr>
@@ -110,6 +110,28 @@
                     </table>
                     </div>
                     @endif
+                    @if(isset($periodoEstudio->grupos))
+                    <div class="col-md-6">
+                    <table class="table table-condensed table-striped">
+                        <thead>
+                        <th>Grupos Vinculados</th><th></th>
+                        </thead>
+                        <tbody>
+                            @foreach($periodoEstudio->grupos as $g)
+                            <tr>
+                            <td> {{$g->name}} </td>
+                            <td>
+                                
+                            </td>
+                            </tr>
+                            @endforeach
+                            
+                        </tbody>
+                    </table>    
+                </div>
+                    @endif                
+
+                    
 
 @push('scripts')
   

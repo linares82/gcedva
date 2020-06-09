@@ -85,7 +85,8 @@ class PeriodoEstudio extends Model
 
 	public function grupos()
 	{
-		return $this->belongsToMany('App\Grupo');
+		return $this->belongsToMany('App\Grupo','grupo_periodo_estudios','periodo_estudio_id','grupo_id');
+		//return $this->belongsToMany('App\PeriodoEstudio','grupo_periodo_estudios', 'grupo_id', 'periodo_estudio_id');
 	}
 
 	public function periodoEstudio()
