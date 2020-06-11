@@ -693,6 +693,7 @@ Agregar nuevo registro
             </div>
             <div class="modal-body">
                 {!! Form::open(array('route' => 'adeudos.store')) !!}
+                @permission('cajas.no_incripcion')
                 <div class="form-group col-md-6 @if($errors->has('caja_concepto_id')) has-error @endif">
                     <label for="caja_concepto_id-field">Caja Concepto</label><br/>
                     {!! Form::select("caja_concepto_id", $list1["CajaConcepto"], null, array("class" => "form-control select_seguridad", "id" => "caja_concepto_id-adeudo")) !!}
@@ -708,6 +709,7 @@ Agregar nuevo registro
                     {!! Form::text("monto", null, array("class" => "form-control", "id" => "monto-adeudo")) !!}
                     <p class="errorCajaConcepto text-center alert alert-danger hidden"></p>
                 </div>
+                @endpermission
                 <div class="row"></div>
                 <hr>
 

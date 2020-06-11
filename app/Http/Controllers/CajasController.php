@@ -260,7 +260,7 @@ class CajasController extends Controller
         //dd($planteles);
         //dd($cliente->plantel_id);
         //dd(array_search($cliente->plantel_id, $planteles) <> false);
-
+        //dd(array_search($cliente->plantel_id, $planteles));
         if (
             is_object($cliente) and
             count($combinaciones) > 0 and

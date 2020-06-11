@@ -166,7 +166,7 @@ class InscripcionsController extends Controller
                 $c['usu_mod_id'] = Auth::user()->id;
                 $calif = Calificacion::create($c);
 
-                $ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $m->ponderacion_id)->get();
+                $ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $m->ponderacion_id)->where('bnd_activo', 1)->get();
                 //dd($ponderaciones);
                 foreach ($ponderaciones as $p) {
                     $ponde['calificacion_id'] = $calif->id;
@@ -701,6 +701,7 @@ class InscripcionsController extends Controller
         //dd($data);
 
         $registros = Hacademica::select(
+            'c.id as cliente_id',
             'c.nombre',
             'c.nombre2',
             'c.ape_paterno',
@@ -766,8 +767,17 @@ class InscripcionsController extends Controller
         $asignacion = AsignacionAcademica::find($data['asignacion']);
         //                $asignacion=collect();
         foreach ($registros as $registro) {
-            $carga_ponderacion = CargaPonderacion::where('ponderacion_id', $registro->ponderacion)->get();
-            //                    $asignacion = AsignacionAcademica::find($registro->asignacion);
+            //$carga_ponderacion = CargaPonderacion::where('ponderacion_id', $registro->ponderacion)->get();
+            $hacademica = Hacademica::find($registro->hacademica);
+            //Log::info("hacademicas-" . $hacademica->id);
+            $calificacion_ordinaria = Calificacion::where('hacademica_id', $hacademica->id)
+                ->where('tpo_examen_id', 1)
+                ->first();
+
+            foreach ($calificacion_ordinaria->calificacionPonderacions as $calificacionPonderacion) {
+                $carga_ponderacion->push($calificacionPonderacion->cargaPonderacion);
+            }
+            //dd($carga_ponderacion);
             break;
         }
         //dd($asignacion);
@@ -2703,7 +2713,7 @@ class InscripcionsController extends Controller
                 $c['usu_mod_id'] = Auth::user()->id;
                 $calif = Calificacion::create($c);
 
-                $ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $m->ponderacion_id)->get();
+                $ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $m->ponderacion_id)->where('bnd_activo', 1)->get();
                 //dd($ponderaciones);
                 foreach ($ponderaciones as $p) {
                     $ponde['calificacion_id'] = $calif->id;

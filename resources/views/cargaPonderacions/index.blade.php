@@ -139,6 +139,7 @@
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'ponderacion_id', 'title' => 'PONDERACION'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'name', 'title' => 'NOMBRE'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'porcentaje', 'title' => 'PORCENTAJE'])</th>
+                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'bnd_activo', 'title' => 'ACTIVO'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'tiene_detalle', 'title' => 'TIENE DETALLE'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'tiene_detalle', 'title' => 'PADRE'])</th>
                             <th class="text-right">OPCIONES</th>
@@ -149,9 +150,23 @@
                         @foreach($cargaPonderacions as $cargaPonderacion)
                             <tr>
                                 <td><a href="{{ route('cargaPonderacions.show', $cargaPonderacion->id) }}">{{$cargaPonderacion->id}}</a></td>
-                                <td>{{$cargaPonderacion->ponderacion->name}}</td>
+                                <td>
+                                    {{$cargaPonderacion->ponderacion->name}}
+                                    @permission('cargaPonderacions.ajustarMaterias')
+                                    @if($cargaPonderacion->bnd_activo==1)
+                                    <a class="btn btn-xs btn-primary" href="{{ route('cargaPonderacions.ajustarMaterias', array('ponderacion'=>$cargaPonderacion->ponderacion->id)) }}">Ajustar Materias</a>
+                                    @endif
+                                    @endpermission
+                                </td>
                                 <td>{{$cargaPonderacion->name}}</td>
                                 <td>{{$cargaPonderacion->porcentaje}}</td>
+                                <td>
+                                    @if($cargaPonderacion->bnd_activo==1)
+                                    SI
+                                    @else
+                                    NO
+                                    @endif
+                                </td>
                                 <td>
                                     @if($cargaPonderacion->tiene_detalle==1)
                                     SI

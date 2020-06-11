@@ -503,7 +503,9 @@ class HacademicasController extends Controller
         $asignacionAcademica = AsignacionAcademica::find($data['asignacion']);
         $materia = Materium::find($asignacionAcademica->materium_id);
         //dd($asignacionAcademica);
-        $carga_ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $materia->ponderacion_id)->pluck('name', 'id');
+        $carga_ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $materia->ponderacion_id)
+        ->where('bnd_activo',1)
+        ->pluck('name', 'id');
 
 
         return view('hacademicas.calificacionGrupos', compact('asignacion', 'examen', 'carga_ponderaciones'))
@@ -542,6 +544,7 @@ class HacademicasController extends Controller
         //dd($carga_ponderaciones->toArray());
         $msj = "";
         if (isset($data['excepcion']) or $periodos_capturados_total == 0) {
+            //dd('flc');
             $hacademicas = HAcademica::select(
                 'cli.id',
                 'cli.nombre',
@@ -707,11 +710,20 @@ class HacademicasController extends Controller
             $g = Grado::find($hacademica->grado_id)->first();
             //dd($g->toArray());
             if ($tpo_examen_id == 2 and $g->name == "BACHILLERATO") {
-                $carga_ponderaciones = CargaPonderacion::where('ponderacion_id', '=', 1)->where('tiene_detalle', '=', 0)->get();
+                $carga_ponderaciones = CargaPonderacion::where('ponderacion_id', '=', 1)
+                ->where('tiene_detalle', '=', 0)
+                ->where('bnd_activo',1)
+                ->get();
             } elseif ($tpo_examen_id == 2 and $g->name <> "BACHILLERATO") {
-                $carga_ponderaciones = CargaPonderacion::where('ponderacion_id', '=', 2)->where('tiene_detalle', '=', 0)->get();
+                $carga_ponderaciones = CargaPonderacion::where('ponderacion_id', '=', 2)
+                ->where('tiene_detalle', '=', 0)
+                ->where('bnd_activo',1)
+                ->get();
             } elseif ($tpo_examen_id == 1) {
-                $carga_ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $materia->ponderacion_id)->where('tiene_detalle', '=', 0)->get();
+                $carga_ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $materia->ponderacion_id)
+                ->where('tiene_detalle', '=', 0)
+                ->where('bnd_activo',1)
+                ->get();
             }
 
             //dd($carga_ponderaciones->toArray());

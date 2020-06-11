@@ -20,6 +20,13 @@
                         <span class="help-block">{{ $errors->first("porcentaje") }}</span>
                        @endif
                     </div>
+                    <div class="form-group col-md-4 @if($errors->has('bnd_activo')) has-error @endif">
+                     <label for="bnd_activo-field">Activo</label>
+                     {!! Form::checkbox("bnd_activo", 1, null, [ "id" => "bnd_activo-field", 'class'=>'minimal']) !!}
+                     @if($errors->has("bnd_activo"))
+                     <span class="help-block">{{ $errors->first("bnd_activo") }}</span>
+                     @endif
+                 </div>
                     <div class="form-group col-md-4 @if($errors->has('tiene_detalle')) has-error @endif">
                             <label for="tiene_detalle-field">Tiene Detalle</label>
                             {!! Form::checkbox("tiene_detalle", 1, null, [ "id" => "tiene_detalle-field", 'class'=>'minimal']) !!}

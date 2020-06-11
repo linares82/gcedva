@@ -782,6 +782,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'AddBndGraficaLectivosTable' => __DIR__ . '/../..' . '/database/migrations/2018_06_19_145551_add_bnd_grafica_lectivos_table.php',
         'AddBndMensualidadCajaConceptosTable' => __DIR__ . '/../..' . '/database/migrations/2019_03_25_142826_add_bnd_mensualidad_caja_conceptos_table.php',
         'AddBndMexicoGradosTable' => __DIR__ . '/../..' . '/database/migrations/2019_01_16_142539_add_bnd_mexico_grados_table.php',
+        'AddBndPagadoPagosTable' => __DIR__ . '/../..' . '/database/migrations/2020_06_09_145858_add_bnd_pagado_pagos_table.php',
         'AddBndPromoCajaLnsTable' => __DIR__ . '/../..' . '/database/migrations/2019_01_25_125534_add_bnd_promo_caja_lns_table.php',
         'AddBndReingresoClientesTable' => __DIR__ . '/../..' . '/database/migrations/2019_07_24_115002_add_bnd_reingreso_clientes_table.php',
         'AddCicloClientesTable' => __DIR__ . '/../..' . '/database/migrations/2017_11_17_134515_add_ciclo_clientes_table.php',

@@ -144,8 +144,7 @@
                             <th>PLANTEL</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'solicitud', 'title' => 'SOLICITUD'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clientes.nombre', 'title' => 'CLIENTE'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'monto_inscripcion', 'title' => 'MONTO INSCRIPCION'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'monto_mensualidad', 'title' => 'MONTO MENSUALIDAD'])</th>
+                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'monto_mensualidad', 'title' => 'PORCENTAJE BECA'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'st_becas.name', 'title' => 'ESTATUS'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_mod_id', 'title' => 'ALTA'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_mod_id', 'title' => 'ULTIMA EDICIÓN'])</th>
@@ -160,7 +159,6 @@
                                 <td>{{$autorizacionBeca->cliente->plantel->razon}}</td>
                                 <td>{{$autorizacionBeca->solicitud}}</td>
                                 <td>{{$autorizacionBeca->cliente->nombre." ".$autorizacionBeca->cliente->nombre2." ".$autorizacionBeca->cliente->ape_paterno." ".$autorizacionBeca->cliente->ape_materno}}</td>
-                                <td>{{$autorizacionBeca->monto_inscripcion}}</td>
                                 <td>{{$autorizacionBeca->monto_mensualidad}}</td>
                                 <td>{{$autorizacionBeca->stBeca->name}}</td>
                                 <td>{{$autorizacionBeca->usu_alta->name}}</td>

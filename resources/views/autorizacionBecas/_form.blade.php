@@ -29,7 +29,7 @@
                   </div>
                     
                     <div class="form-group col-md-4 @if($errors->has('monto_mensualidad')) has-error @endif">
-                       <label for="monto_mensualidad-field">Porcentaje Mensualidad (formato decimal 0.00)</label>
+                       <label for="monto_mensualidad-field">Porcentaje Beca (formato decimal 0.00)</label>
                        {!! Form::text("monto_mensualidad", null, array("class" => "form-control", "id" => "monto_mensualidad-field")) !!}
                        @if($errors->has("monto_mensualidad"))
                         <span class="help-block">{{ $errors->first("monto_mensualidad") }}</span>

@@ -203,7 +203,7 @@
                                 <td>{{$cliente->nombre2}}</td>
                                 <td>{{$cliente->ape_paterno}}</td>
                                 <td>{{$cliente->ape_materno}}</td>
-                                <td>{{$cliente->tel}}</td>
+                                <td>{{$cliente->tel_cel}}</td>
                                 <td>{{$cliente->mail}}</td>
                                 <td>
                                 {{$cliente->curp}}

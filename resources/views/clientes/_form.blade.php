@@ -533,7 +533,7 @@
                         
                         <table class="table table-condensed table-striped">
                             <thead>
-                                <th>Solicitud</th><th>Porcentaje Mensualidad Beca</th><th>Estatus A. Final</th><th>Lectivo</th>
+                                <th>Solicitud</th><th>Porcentaje Beca</th><th>Estatus A. Final</th><th>Lectivo</th>
                             </thead>
                             <tbody>
                                 @foreach($cliente->autorizacionBecas as $beca)

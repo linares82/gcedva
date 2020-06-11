@@ -130,8 +130,37 @@ class PagosController extends Controller
                 }
             }
         }
+
+        $datosMultipagos = array();
+        $datosMultipagos['mp_account'] = $caja->cliente_id;
+        $datosMultipagos['mp_product'] = 1;
+        $datosMultipagos['mp_order'] = $this->formatoDato('000000000', $caja->id) . $this->formatoDato('000000', $caja->consecutivo);
+        $datosMultipagos['mp_reference'] = $this->formatoDato('000000000', $pago->id) . $this->formatoDato('000000', $pago->consecutivo);
+        $datosMultipagos['mp_node'] = $caja->plantel_id . "-" . $caja->plantel->razon;
+        foreach ($caja->cajaLns as $ln) {
+            $datosMultipagos['mp_concept'] = $datosMultipagos['mp_concept'] . "-" . $ln->cajaConcepto->name;
+        }
+        $datosMultipagos['mp_amount'] = number_format((float) $caja->total, 2, '.', '');
+        $cliNombre = $caja->cliente->nombre . " " . $caja->cliente->nombre2 . " " . $caja->cliente->ape_paterno . " " . $caja->cliente->ape_materno;
+        $datosMultipagos['mp_customername'] = substr($cliNombre, 0, 50);
+        $datosMultipagos['mp_currency'] = 1;
+        $cadenaCifrar = $datosMultipagos['mp_order'] . $datosMultipagos['mp_reference'] . $datosMultipagos['mp_amount'];
+        $datosMultipagos['mp_signature'] = hash_hmac('sha256', $cadenaCifrar, "LLAVE PRIVADA");
+        $datosMultipagos['mp_urlsuccess'] = "PENDIENTE";
+        $datosMultipagos['mp_urlfailure'] = "PENDIENTE";
+        $this->multipagosSolicitud();
+
         //dd($suma_pagos);
         //return redirect()->route('cajas.caja')->with('message', 'Registro Creado.');
+    }
+
+    public function formatoDato($cadena0, $dato)
+    {
+        return substr($cadena0, 1, (strlen($cadena0) - strlen($dato))) . $dato;
+    }
+
+    public function multipagosSoicitud()
+    {
     }
 
     /**
