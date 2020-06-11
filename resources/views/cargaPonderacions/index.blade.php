@@ -154,8 +154,10 @@
                                     {{$cargaPonderacion->ponderacion->name}}
                                     @permission('cargaPonderacions.ajustarMaterias')
                                     @if($cargaPonderacion->bnd_activo==1)
-                                    <a class="btn btn-xs btn-primary" href="{{ route('cargaPonderacions.ajustarMaterias', array('ponderacion'=>$cargaPonderacion->ponderacion->id)) }}">Ajustar Materias</a>
+                                    <a class="btn btn-xs btn-primary carga_spinner" data-ponderacion="{{ $cargaPonderacion->ponderacion->id }}" href="{{ route('cargaPonderacions.ajustarMaterias', array('ponderacion'=>$cargaPonderacion->ponderacion->id)) }}">Ajustar Materias</a>
+                                    <div class='loading{{ $cargaPonderacion->ponderacion->id }}' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                                     @endif
+
                                     @endpermission
                                 </td>
                                 <td>{{$cargaPonderacion->name}}</td>
@@ -206,3 +208,11 @@
     </div>
 
 @endsection
+
+@push('scripts')
+<script type="text/javascript">
+    $('.carga_spinner').click(function(){
+        $(".loading"+$(this).data('ponderacion')).show();
+    });
+</script>
+@endpush

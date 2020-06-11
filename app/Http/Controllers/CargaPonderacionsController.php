@@ -204,27 +204,28 @@ class CargaPonderacionsController extends Controller
         $datos = $request->all();
 
         $ponderacion = Ponderacion::find($datos['ponderacion']);
-        $carga_ponderacions_borrar=array();
-        foreach($ponderacion->cargaPonderacions as $cp){
-            if($cp->bnd_activo==0){
+        $carga_ponderacions_borrar = array();
+        foreach ($ponderacion->cargaPonderacions as $cp) {
+            if ($cp->bnd_activo == 0) {
                 array_push($carga_ponderacions_borrar, $cp->id);
             }
         }
         //dd($carga_ponderacions_borrar);
 
-        $calificacion_ponderacions_borrar=CalificacionPonderacion::whereIn('carga_ponderacion_id',$carga_ponderacions_borrar)
-        ->whereNull('deleted_at')
-        ->get();
+        $calificacion_ponderacions_borrar = CalificacionPonderacion::whereIn('carga_ponderacion_id', $carga_ponderacions_borrar)
+            ->whereNull('deleted_at')
+            ->get();
         //dd($calificacion_ponderacions_borrar);
-        if($calificacion_ponderacions_borrar->count()>0){
-            foreach($calificacion_ponderacions_borrar as $calificacion_ponderacion_borrar){
-                if($calificacion_ponderacion_borrar->calificion->calificacion==0){
+        if ($calificacion_ponderacions_borrar->count() > 0) {
+            foreach ($calificacion_ponderacions_borrar as $calificacion_ponderacion_borrar) {
+                if ($calificacion_ponderacion_borrar->calificion->calificacion == 0) {
                     //dd($calificacion_ponderacion_borrar);
                     $calificacion_ponderacion_borrar->delete();
                 }
             }
         }
-  
+
+        /*
         $inscripciones=Hacademica::select('hacademicas.inscripcion_id','hacademicas.cliente_id')
         ->join('materia as m','m.id','=','hacademicas.materium_id')
         ->where('m.ponderacion_id',$datos['ponderacion'])
@@ -235,87 +236,95 @@ class CargaPonderacionsController extends Controller
         //->limit(10)
         //->whereIn('hacademicas.cliente_id', array(9334, 3279, 3299, 3506, 3536))
         ->get();
+*/
+
+        $inscripciones = Hacademica::select('hacademicas.inscripcion_id', 'hacademicas.cliente_id', 'calif.calificacion')
+            ->join('materia as m', 'm.id', '=', 'hacademicas.materium_id')
+            ->join('calificacions as calif', 'calif.hacademica_id', '=', 'hacademicas.id')
+            ->where('m.ponderacion_id', $datos['ponderacion'])
+            ->where('calif.calificacion', 0)
+            ->whereNull('m.deleted_at')
+            ->whereNull('hacademicas.deleted_at')
+            ->orderBy('hacademicas.cliente_id')
+            ->distinct()
+            ->orderBy('hacademicas.cliente_id')
+            ->chunk(10, function ($inscripcions) {
+                foreach ($inscripcions as $inscripcion) {
+                    if ($inscripcion->calificacion == 0) {
+                        $this->registrarMaterias($inscripcion->inscripcion_id);
+                        Log::info("Ajuste de ponderaciones" . $inscripcion->cliente_id);
+                    }
+                }
+            });
+
 
         //dd($inscripciones->toArray());
-        foreach($inscripciones as $inscripcion){
+        /*foreach ($inscripciones as $inscripcion) {
             $this->registrarMaterias($inscripcion->inscripcion_id);
-            Log::info("Ajuste de ponderaciones".$inscripcion->cliente_id);
-        //break;
-        }
+            Log::info("Ajuste de ponderaciones" . $inscripcion->cliente_id);
+            //break;
+        }*/
 
         return redirect()->back();
-
-        /*
-        $inscripciones=Hacademica::select('hacademicas.inscripcion_id','hacademicas.cliente_id')
-        ->join('materia as m','m.id','=','hacademicas.materium_id')
-        ->where('m.ponderacion_id',$datos['ponderacion'])
-        ->whereNull('m.deleted_at')
-        ->whereNull('hacademicas.deleted_at')
-        ->distinct()
-        ->orderBy('hacademicas.cliente_id')
-        ->chunk(10, function($hacademicas){
-            foreach($hacademicas as $hacademica){
-                $this->registrarMaterias($hacademica->inscripcion_id);
-            }
-        });
-        */
-
     }
 
     public function registrarMaterias($id)
     {
         $i = Inscripcion::find($id);
         //dd($i);
-        
-        $materias = Hacademica::select('hacademicas.id','materium_id')->where('hacademicas.inscripcion_id', '=', $i->id)
+
+        $materias = Hacademica::select('hacademicas.id', 'materium_id')->where('hacademicas.inscripcion_id', '=', $i->id)
             ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
             ->whereNull('i.deleted_at')
             ->whereNull('hacademicas.deleted_at')
             ->get();
         //dd($materias->toArray());    
 
-            foreach ($materias as $m) {
-                //$ha=$m;
-                //dd($m->id);
-                $calif=Calificacion::where('hacademica_id',$m->id)
-                ->where('tpo_examen_id',1)
+        foreach ($materias as $m) {
+            //$ha=$m;
+            //dd($m->id);
+            $calif = Calificacion::where('hacademica_id', $m->id)
+                ->where('tpo_examen_id', 1)
                 ->wherenull('deleted_at')
+                ->where('calificacion', 0)
                 ->first();
-                //dd($calif);
-                //dd($m->materia);
-                $ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $m->materia->ponderacion_id)
+            if (is_null($calif)) {
+                dd($m);
+            }
+
+            //dd($m->materia);
+            $ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $m->materia->ponderacion_id)
                 ->where('bnd_activo', 1)
                 ->get();
 
-                //dd($ponderaciones);
+            //dd($ponderaciones);
 
-                $ponderaciones_validar=array();
-                foreach($ponderaciones as $ponderacion){
-                   array_push($ponderaciones_validar, $ponderacion->id); 
-                }
-                //dd($ponderaciones_validar);
+            $ponderaciones_validar = array();
+            foreach ($ponderaciones as $ponderacion) {
+                array_push($ponderaciones_validar, $ponderacion->id);
+            }
+            //dd($ponderaciones_validar);
 
-                $contar_registros=CalificacionPonderacion::where('id',$calif->id)
+            $contar_registros = CalificacionPonderacion::where('calificacion_id', $calif->id)
                 ->whereIn('carga_ponderacion_id', $ponderaciones_validar)
                 ->count();
 
-                //dd($contar_registros==0);
-                //dd($calif->calificacion==0);
-                if($contar_registros==0 and $calif->calificacion==0){
-                    //dd($ponderaciones   );
-                    foreach ($ponderaciones as $p) {
-                        $ponde['calificacion_id'] = $calif->id;
-                        $ponde['carga_ponderacion_id'] = $p->id;
-                        $ponde['calificacion_parcial'] = 0;
-                        $ponde['ponderacion'] = $p->porcentaje;
-                        $ponde['usu_alta_id'] = Auth::user()->id;
-                        $ponde['usu_mod_id'] = Auth::user()->id;
-                        $ponde['tiene_detalle'] = $p->tiene_detalle;
-                        $ponde['padre_id'] = $p->padre_id;
-                        CalificacionPonderacion::create($ponde);
-                    }
+            //dd($contar_registros==0);
+            //dd($calif->calificacion==0);
+            if ($contar_registros == 0 and $calif->calificacion == 0) {
+                //dd($ponderaciones   );
+                foreach ($ponderaciones as $p) {
+                    $ponde['calificacion_id'] = $calif->id;
+                    $ponde['carga_ponderacion_id'] = $p->id;
+                    $ponde['calificacion_parcial'] = 0;
+                    $ponde['ponderacion'] = $p->porcentaje;
+                    $ponde['usu_alta_id'] = Auth::user()->id;
+                    $ponde['usu_mod_id'] = Auth::user()->id;
+                    $ponde['tiene_detalle'] = $p->tiene_detalle;
+                    $ponde['padre_id'] = $p->padre_id;
+                    CalificacionPonderacion::create($ponde);
                 }
             }
-        
+        }
     }
 }
