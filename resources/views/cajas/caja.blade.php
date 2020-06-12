@@ -626,6 +626,7 @@ Agregar nuevo registro
                        <label for="monto-field">Monto</label>
                        {!! Form::hidden("caja_id", $caja->id, array("class" => "form-control", "id" => "caja_id-field")) !!}
                        {!! Form::text("monto", null, array("class" => "form-control", "id" => "monto-field")) !!}
+                       <div id="msj_validacion"></div>
                        @if($errors->has("monto"))
                         <span class="help-block">{{ $errors->first("monto") }}</span>
                        @endif
@@ -909,9 +910,6 @@ Agregar nuevo registro
     });
     @endif
 
-    
-
-    $(document).on('click', '.add-pago', function() {
     @php
         $monto_max_pago=0;
         if(optional($caja->pagos)->count()>0){
@@ -921,6 +919,24 @@ Agregar nuevo registro
         }
 
     @endphp
+    
+    $('#monto-field').keyup(function(){
+    if(parseInt($(this).val()) > ({{$monto_max_pago + 100}})){
+        $('#msj_validacion').html('Valor no puede ser mayor de '+ {{$monto_max_pago +100}});
+        $(this).val('');
+    }
+    else if(parseInt($(this).val()) < 0)
+    {
+        $('#msj_validacion').html('Valor no puede ser menor que 0');
+        $(this).val('');
+    }
+    else
+    { $('#msj_validacion').html(''); }
+    });
+
+
+    $(document).on('click', '.add-pago', function() {
+    
     $('.modal-title').text('Agregar Pago');
     //Limpiar valores
     $('#addPago').modal({backdrop: 'static', keyboard: false});

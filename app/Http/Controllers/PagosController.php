@@ -98,7 +98,7 @@ class PagosController extends Controller
         }
 
         $suma_pagos = Pago::select('monto')->where('caja_id', '=', $pago->caja_id)->sum('monto');
-        if ($suma_pagos >= $caja->total) {
+        if ($suma_pagos >= ($caja->total - 1) and $suma_pagos < ($caja->total + 100)) {
 
             foreach ($caja->cajaLns as $ln) {
                 if ($ln->adeudo_id > 0) {
@@ -112,7 +112,7 @@ class PagosController extends Controller
             $caja->st_caja_id = 1;
             //$caja->fecha=date_create(date_format(date_create(date('Y/m/d')),'Y/m/d'));
             $caja->save();
-        } elseif ($suma_pagos > 0 and $suma_pagos < $caja->total) {
+        } elseif ($suma_pagos > 0 and $suma_pagos < ($caja->total - 1)) {
             $caja->st_caja_id = 3;
             $caja->save();
             foreach ($caja->cajaLns as $ln) {
@@ -159,8 +159,9 @@ class PagosController extends Controller
         return substr($cadena0, 1, (strlen($cadena0) - strlen($dato))) . $dato;
     }
 
-    public function multipagosSoicitud()
+    public function multipagosSolicitud()
     {
+        echo "hi";
     }
 
     /**
