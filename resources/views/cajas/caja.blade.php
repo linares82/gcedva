@@ -352,7 +352,10 @@
                             @foreach($caja->pagos as $pago)
                             @if(is_null($pago->deleted_at))
                             <tr>
-                                <td> {{$pago->consecutivo}} </td><td>{{ $pago->monto }}</td><td>{{ $pago->fecha }}</td><td>{{ $pago->formaPago->name }}</td><td>{{ $pago->referencia }}</td>
+                                <td> {{$pago->consecutivo}} </td>
+                                <td>{{ $pago->monto }}</td>
+                                <td>{{ $pago->fecha }}</td>
+                                <td>{{ $pago->formaPago->name }}</td><td>{{ $pago->referencia }}</td>
                                 <td>@if($pago->cuenta_efectivo_id<>0)
                                     {{ App\CuentasEfectivo::where('id', $pago->cuenta_efectivo_id)->value('name')}}
                                     @endif
@@ -957,7 +960,7 @@ Agregar nuevo registro
     @if (isset($caja) and isset($cliente))
         //$('.modal-footer1').on('click', 'addPagoB','#AgregarPago', function() {
         $('#AgregarPago').on('click', function() {    
-        if(parseFloat($('#monto-field').val())>{{$monto_max_pago}} ){
+        if(parseFloat($('#monto-field').val())>{{$monto_max_pago+100}} ){
             alert('Monto de pagos excede monto de caja total');
         }else{
             $.ajax({
