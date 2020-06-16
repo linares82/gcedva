@@ -1,0 +1,1 @@
+@section('failMultipagosAppTitle','FailMultipago')

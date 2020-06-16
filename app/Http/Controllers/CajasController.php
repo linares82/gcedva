@@ -402,7 +402,7 @@ class CajasController extends Controller
                     //Realiza descuento para inscripciones
                     if (
                         isset(optional($adeudo->descuento)->id) and
-                        ($adeudo->caja_concepto_id == 1 or $adeudo->caja_concepto_id == 23)
+                        ($adeudo->caja_concepto_id == 1 or $adeudo->caja_concepto_id == 23 or $adeudo->caja_concepto_id == 25)
                     ) {
                         $caja_ln['descuento'] = $caja_ln['subtotal'] * $adeudo->descuento->porcentaje;
                     } else {

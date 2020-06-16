@@ -184,6 +184,13 @@
                     
                     <div class="box box-default">
                       <div class="box-body">
+                        <div class="form-group col-md-3 @if($errors->has('tipo_contrato_id')) has-error @endif">
+                          <label for="tipo_contrato_id-field">Tipo Contrato</label>
+                          {!! Form::select("tipo_contrato_id", $tipoContratos, $empleado->plantel_id, array("class" => "form-control select_seguridad", "id" => "tipo_contrato_id-field")) !!}
+                          @if($errors->has("tipo_contrato_id"))
+                            <span class="help-block">{{ $errors->first("tipo_contrato_id") }}</span>
+                          @endif
+                        </div>
                         <div class="form-group col-md-1 @if($errors->has('alerta_bnd')) has-error @endif">
                           <label for="alerta_bnd-field">Alerta</label>
                           {!! Form::checkbox("alerta_bnd", 1, null, [ "id" => "alerta_bnd-field"]) !!}
@@ -205,7 +212,7 @@
                             <span class="help-block">{{ $errors->first("resp_alerta_id") }}</span>
                           @endif
                         </div>
-                        <div class="form-group col-md-4 @if($errors->has('dias_alerta')) has-error @endif">
+                        <div class="form-group col-md-1 @if($errors->has('dias_alerta')) has-error @endif">
                           <label for="dias_alerta-field">Dias Alerta</label>
                           {!! Form::text("dias_alerta", null, array("class" => "form-control input-sm", "id" => "dias_alerta-field")) !!}
                           @if($errors->has("dias_alerta"))

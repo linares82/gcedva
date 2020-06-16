@@ -18,11 +18,17 @@ use App\Exports\PagosExport;
 use App\FormaPago;
 use App\Inscripcion;
 use App\Pago;
+use App\PeticionMultipago;
+use App\Param;
 use App\Plantel;
+use App\SuccessMultipago;
+use App\FailMultipago;
 use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updatePago;
 use App\Http\Requests\createPago;
+use GuzzleHttp\Client;
+use GuzzleHttp\RequestOptions;
 use App\ImpresionTicket;
 use App\IngresoEgreso;
 use App\Transference;
@@ -83,7 +89,6 @@ class PagosController extends Controller
             $input['referencia'] = $cuenta_efectivo->csc_efectivo;
         }
 
-
         //create data
         //dd($input);
         $pago = Pago::create($input);
@@ -131,24 +136,38 @@ class PagosController extends Controller
             }
         }
 
-        $datosMultipagos = array();
-        $datosMultipagos['mp_account'] = $caja->cliente_id;
-        $datosMultipagos['mp_product'] = 1;
-        $datosMultipagos['mp_order'] = $this->formatoDato('000000000', $caja->id) . $this->formatoDato('000000', $caja->consecutivo);
-        $datosMultipagos['mp_reference'] = $this->formatoDato('000000000', $pago->id) . $this->formatoDato('000000', $pago->consecutivo);
-        $datosMultipagos['mp_node'] = $caja->plantel_id . "-" . $caja->plantel->razon;
-        foreach ($caja->cajaLns as $ln) {
+        if ($pago->forma_pago_id == 7) {
+            $datosMultipagos = array();
+            $datosMultipagos['pago_id'] = $pago->id;
+            $datosMultipagos['mp_account'] = $caja->cliente_id;
+            $datosMultipagos['mp_product'] = 1;
+            $datosMultipagos['mp_order'] = $this->formatoDato('000', $caja->plantel_id) . $this->formatoDato('000000000', $caja->id) . $this->formatoDato('000000', $caja->consecutivo);
+            $datosMultipagos['mp_reference'] = $this->formatoDato('000', $caja->plantel_id) . $this->formatoDato('000000000', $pago->id) . $this->formatoDato('000000', $pago->consecutivo);
+            //$datosMultipagos['mp_node'] = $caja->plantel_id . "-" . $caja->plantel->razon;
+            $datosMultipagos['mp_node'] = 0;
+            $datosMultipagos['mp_concept'] = 99;
+            /*foreach ($caja->cajaLns as $ln) {
             $datosMultipagos['mp_concept'] = $datosMultipagos['mp_concept'] . "-" . $ln->cajaConcepto->name;
+        }*/
+            $datosMultipagos['mp_amount'] = number_format((float) $caja->total, 2, '.', '');
+            $cliNombre = $caja->cliente->nombre . " " . $caja->cliente->nombre2 . " " . $caja->cliente->ape_paterno . " " . $caja->cliente->ape_materno;
+            $datosMultipagos['mp_customername'] = substr($cliNombre, 0, 50);
+            $datosMultipagos['mp_currency'] = 1;
+            $cadenaCifrar = $datosMultipagos['mp_order'] . $datosMultipagos['mp_reference'] . $datosMultipagos['mp_amount'];
+            $parametros = Param::where('llave', 'cifrado_multipagos')->first();
+            $datosMultipagos['mp_signature'] = hash_hmac('sha256', $cadenaCifrar, $parametros->valor);
+            $datosMultipagos['mp_urlsuccess'] = "PENDIENTE";
+            $datosMultipagos['mp_urlfailure'] = "PENDIENTE";
+            $datosMultipagos['usu_alta_id'] = 1;
+            $datosMultipagos['usu_mod_id'] = 1;
+            //$respuesta = $this->multipagosSolicitud($datosMultipagos);
+
+            //if ($respuesta) {
+            //dd($datosMultipagos);
+            PeticionMultipago::create($datosMultipagos);
+            //}
         }
-        $datosMultipagos['mp_amount'] = number_format((float) $caja->total, 2, '.', '');
-        $cliNombre = $caja->cliente->nombre . " " . $caja->cliente->nombre2 . " " . $caja->cliente->ape_paterno . " " . $caja->cliente->ape_materno;
-        $datosMultipagos['mp_customername'] = substr($cliNombre, 0, 50);
-        $datosMultipagos['mp_currency'] = 1;
-        $cadenaCifrar = $datosMultipagos['mp_order'] . $datosMultipagos['mp_reference'] . $datosMultipagos['mp_amount'];
-        $datosMultipagos['mp_signature'] = hash_hmac('sha256', $cadenaCifrar, "LLAVE PRIVADA");
-        $datosMultipagos['mp_urlsuccess'] = "PENDIENTE";
-        $datosMultipagos['mp_urlfailure'] = "PENDIENTE";
-        $this->multipagosSolicitud();
+
 
         //dd($suma_pagos);
         //return redirect()->route('cajas.caja')->with('message', 'Registro Creado.');
@@ -159,9 +178,95 @@ class PagosController extends Controller
         return substr($cadena0, 1, (strlen($cadena0) - strlen($dato))) . $dato;
     }
 
-    public function multipagosSolicitud()
+    public function multipagosSolicitud($datosMultipagos)
     {
-        echo "hi";
+        $client = new Client([
+            'headers' => ['Content-Type' => 'application/json']
+        ]);
+
+        $res = $client->post(
+            'url',
+            ['body' => json_encode(
+                [
+                    'mp_account' => $datosMultipagos['mp_account'],
+                    'mp_product' => $datosMultipagos['mp_product'],
+                    'mp_order' => $datosMultipagos['mp_order'],
+                    'mp_reference' => $datosMultipagos['mp_reference'],
+                    'mp_node' => $datosMultipagos['mp_node'],
+                    'mp_concept' => $datosMultipagos['mp_concept'],
+                    'mp_amount' => $datosMultipagos['mp_amount'],
+                    'mp_customername' => $datosMultipagos['mp_customername'],
+                    'mp_currency' => $datosMultipagos['mp_currency'],
+                    'mp_signature' => $datosMultipagos['mp_signature'],
+                    'mp_urlsuccess' => $datosMultipagos['mp_urlsuccess'],
+                    'mp_urlfailure' => $datosMultipagos['mp_urlfailure']
+                ]
+            )]
+        );
+
+        //$response = $request->send();
+
+        return $res->getStatusCode();
+    }
+
+    public function successMultipagos(Request $request)
+    {
+        $param = Param::where('llave', 'servidor_respuesta_multipagos')->first();
+        if ($request->path() == $param->valor) {
+            $datos = $request->all();
+            $crearRegistro = array();
+            $crearRegistro['mp_order'] = $datos['mp_order'];
+            $crearRegistro['mp_reference'] = $datos['mp_reference'];
+            $crearRegistro['mp_amount'] = $datos['mp_amount'];
+            $crearRegistro['mp_response'] = $datos['mp_response'];
+            $crearRegistro['mp_responsemsg'] = $datos['mp_responsemsg'];
+            $crearRegistro['mp_authorization'] = $datos['mp_authorization'];
+            $crearRegistro['mp_signature'] = $datos['mp_signature'];
+            $crearRegistro[' usu_alta_id'] = 1;
+            $crearRegistro['usu_mod_id'] = 1;
+
+            SuccessMultipago::create($crearRegistro);
+
+            $peticion = PeticionMultipago::where('mp_order', $crearRegistro['mp_order'])->first();
+            $pago = Pago::find($peticion->pago_id);
+            $pago->bnd_pagado = 1;
+
+            return response()->json(['msj' => 'Peticion procesada'], 200);
+        } else {
+            return response()
+                ->json(['msj' => 'Dominio de origen invalido'], 203);
+        }
+    }
+
+    public function failMultipagos(Request $request)
+    {
+        $param = Param::where('llave', 'servidor_respuesta_multipagos')->first();
+        if ($request->path() == $param->valor) {
+            $datos = $request->all();
+            $crearRegistro = array();
+            $crearRegistro['mp_order'] = $datos['mp_order'];
+            $crearRegistro['mp_reference'] = $datos['mp_reference'];
+            $crearRegistro['mp_amount'] = $datos['mp_amount'];
+            $crearRegistro['mp_response'] = $datos['mp_response'];
+            $crearRegistro['mp_responsemsg'] = $datos['mp_responsemsg'];
+            $crearRegistro['mp_authorization'] = $datos['mp_authorization'];
+            $crearRegistro['mp_signature'] = $datos['mp_signature'];
+            $crearRegistro[' usu_alta_id'] = 1;
+            $crearRegistro['usu_mod_id'] = 1;
+
+            FailMultipago::create($crearRegistro);
+            $peticion = PeticionMultipago::where('mp_order', $crearRegistro['mp_order'])->first();
+            $pago = Pago::find($peticion->pago_id);
+            $pago->bnd_pagado = 0;
+            return response()->json(['msj' => 'Peticion procesada'], 200);
+        } else {
+            return response()
+                ->json(['msj' => 'Dominio de origen invalido'], 203);
+        }
+    }
+
+    public function conciliacionMultipagos()
+    {
     }
 
     /**
@@ -504,6 +609,7 @@ class PagosController extends Controller
     public function postRptPagos(Request $request)
     {
         $data = $request->all();
+
         if (!$request->has('plantel_f')) {
             $data['plantel_f'] = DB::table('empleados as e')
                 ->where('e.user_id', Auth::user()->id)->value('plantel_id');

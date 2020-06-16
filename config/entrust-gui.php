@@ -10,7 +10,7 @@ return [
   ],
   "middleware" => ['web', 'entrust-gui.admin'],
   "unauthorized-url" => '/login',
-  "middleware-role" => array('ADMINISTRACION EMPLEADOS Y PUESTOS', 'superadmin'),
+  "middleware-role" => array('superadmin'),
   "confirmable" => false,
   "users" => [
     'fieldSearchable' => ['name'],

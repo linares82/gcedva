@@ -156,11 +156,37 @@ Route::post('test2', function (Request $request) {
 return $request->user();
 })->middleware('auth:api');
  */
+
+//Multipagos inicio
 Route::post(
-    '/user/apiLogin',
+    '/multipagos/successMultipagos',
     array(
-        'as' => 'users.apiLogin',
-        'uses' => 'User1Controller@apiLogin',
+        'as' => 'multipagos.successMultipagos',
+        'uses' => 'PagosController@successMultipagos',
+    )
+);
+
+Route::post(
+    '/multipagos/failMultipagos',
+    array(
+        'as' => 'multipagos.failMultipagos',
+        'uses' => 'PagosController@failMultipagos',
+    )
+);
+//Multipagos fin
+
+Route::post(
+    '/user/apiLoginCliente',
+    array(
+        'as' => 'users.apiLoginCliente',
+        'uses' => 'User1Controller@apiLoginCliente',
+    )
+);
+Route::post(
+    '/user/apiLoginUsuario',
+    array(
+        'as' => 'users.apiLoginUsuario',
+        'uses' => 'User1Controller@apiLoginUsuario',
     )
 );
 Route::get(

@@ -142,8 +142,8 @@
                             <td>
                                 
                                 @foreach($linea->promoPlanLns as $promoPlanLn)
+                                {{$promoPlanLn->fec_inicio." / ".$promoPlanLn->fec_fin." / ".$promoPlanLn->descuento}} 
                                 @permission('promocions.edit')
-                                    {{$promoPlanLn->fec_inicio." / ".$promoPlanLn->fec_fin." / ".$promoPlanLn->descuento}} 
                                     <button class="edit-promo-modal btn btn-default btn-xs" data-promo_plan_pago_id="{{$promoPlanLn->id}}" 
                                                                                           data-fec_inicio="{{$promoPlanLn->fec_inicio}}"
                                                                                           data-fec_fin="{{$promoPlanLn->fec_fin}}"

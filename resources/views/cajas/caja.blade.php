@@ -460,7 +460,9 @@
                                 {!! Form::close() !!}
                                 
                                 @permission('cajas.inscripcion')
-                                @if($adeudo->cajaConcepto->id==1 or $adeudo->cajaConcepto->id==23)
+                                @if($adeudo->cajaConcepto->id==1 or 
+                                $adeudo->cajaConcepto->id==23 or 
+                                $adeudo->cajaConcepto->id==25)
                                     <input type="checkbox" class="adeudos_tomados" value="{{$adeudo->id}}" />
                                 @endif
                                 @endpermission
@@ -983,7 +985,7 @@ Agregar nuevo registro
                 complete : function(){$("#loading3").hide(); },
                 success: function(data) {
                     //location.reload(); 
-                    $('#form-buscarVenta').submit();
+                    //$('#form-buscarVenta').submit();
                 }
             });
             }    
@@ -1101,7 +1103,9 @@ Agregar nuevo registro
     $('#fecha_pago-adeudo').val($(this).data('fecha_pago'));
     $('#monto-adeudo').val($(this).data('monto'));
     
-    if($(this).data('caja_concepto')==1 || $(this).data('caja_concepto')==23){
+    if($(this).data('caja_concepto')==1 || 
+    $(this).data('caja_concepto')==23 || 
+    $(this).data('caja_concepto')==25){
         $('#descuento_inscripcion').show();
         $('#porcentaje-adeudo').val($(this).data('porcentaje'));
         $('#autorizado_por-adeudo').val($(this).data('autorizado_por')).change();

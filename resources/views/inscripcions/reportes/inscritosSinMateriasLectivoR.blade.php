@@ -19,7 +19,7 @@
                 <tr>
                     <th></th><th>Plantel</th><th>Especialidad</th><th>Nivel</th><th>Grado</th><th>Grupo</th>
                     <th>Turno</th><th>P. Estudio</th>
-                    <th>Cliente</th><th>P. Nombre</th><th>A. Paterno</th><th>A. Materno</th><th>Fecha Inscripción</th>
+                    <th>Cliente</th><th>P. Nombre</th><th>Fecha Inscripción</th>
                     <th>Estatus Cliente</th><th>Lectivo</th>
                 </tr> 
             </thead>

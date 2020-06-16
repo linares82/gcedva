@@ -9,6 +9,7 @@ use File;
 use App\Empleado;
 
 use App\PivotDocEmpleado;
+use App\TipoContrato;
 use App\User;
 use App\Historial;
 use Illuminate\Http\Request;
@@ -47,10 +48,11 @@ class EmpleadosController extends Controller
             ->where('jefe_bnd', '=', '1')
             //->where('plantel_id', '=', $plantel)
             ->pluck('name', 'id');
+        $tipoContratos = TipoContrato::pluck('name', 'id');
         $responsables = Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
             //->where('plantel_id', '=', $plantel)
             ->pluck('name', 'id');
-        return view('empleados.create', compact('jefes', 'responsables'))
+        return view('empleados.create', compact('jefes', 'responsables', 'tipoContratos'))
             ->with('list', Empleado::getListFromAllRelationApps())
             ->with('list1', PivotDocEmpleado::getListFromAllRelationApps());
     }
@@ -69,7 +71,7 @@ class EmpleadosController extends Controller
         //dd($input);
         $input['usu_alta_id'] = Auth::user()->id;
         $input['usu_mod_id'] = Auth::user()->id;
-        $input['plantel_id']=$input['pertenece_a'];
+        $input['plantel_id'] = $input['pertenece_a'];
         if (!isset($input['jefe_bnd'])) {
             $input['jefe_bnd'] = 0;
         } else {
@@ -152,6 +154,7 @@ class EmpleadosController extends Controller
             ->where('e.id', '=', $id)
             ->where('pde.deleted_at', '=', NULL)->get();
         //dd($doc_existentes->toArray());
+        $tipoContratos = TipoContrato::pluck('name', 'id');
         $de_array = array();
         if ($doc_existentes->isNotEmpty()) {
             foreach ($doc_existentes as $de) {
@@ -168,7 +171,7 @@ class EmpleadosController extends Controller
             ->whereNotIn('id', $de_array)
             ->get();
         //dd($documentos_faltantes->toArray());
-        return view('empleados.edit', compact('empleado', 'pivotDocEmpleado', 'jefes', 'responsables', 'documentos_faltantes'))
+        return view('empleados.edit', compact('tipoContratos', 'empleado', 'pivotDocEmpleado', 'jefes', 'responsables', 'documentos_faltantes'))
             ->with('list', Empleado::getListFromAllRelationApps())
             ->with('list1', PivotDocEmpleado::getListFromAllRelationApps());
     }
@@ -291,8 +294,8 @@ class EmpleadosController extends Controller
     public function update($id, Empleado $empleado, updateEmpleado $request)
     {
         $input = $request->except(['doc_empleado_id', 'archivo', 'plantel_id']);
-        $input2= $request->only(['plantel_id']);
-        $input['plantel_id']=$input['pertenece_a'];
+        $input2 = $request->only(['plantel_id']);
+        $input['plantel_id'] = $input['pertenece_a'];
         $input['usu_mod_id'] = Auth::user()->id;
         if (!isset($input['jefe_bnd'])) {
             $input['jefe_bnd'] = 0;

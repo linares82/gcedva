@@ -27,13 +27,13 @@ class User1Controller extends Controller
         $this->apiToken = uniqid(base64_encode(str_random(60)));
     }
 
-    public function apiLogin(Request $request)
+    public function apiLoginCliente(Request $request)
     {
         $data = $request->all();
-
-        $usuario = User::where('email', $data['email'])->get();
         //dd($data);
-        if (count($usuario) == 0) {
+        $usuario = User::where('email', $data['email'])->first();
+        //dd($data);
+        if (is_null($usuario)) {
             return response()->json(['error' => 'Correo no encontrado'], 405);
         }
 
@@ -44,11 +44,37 @@ class User1Controller extends Controller
 
         if (password_verify($data['password'], $usuario[0]->password)) {
             $cliente->api_token = $this->apiToken;
-            $cliente->save();
+            $cliente->update();
 
             $array = array(
                 //"id" => $usuario[0]->id,
                 "api_token" => $cliente->api_token
+            );
+            return response()->json($array, 201);
+        } else {
+            return response()->json(['error' => 'Usuario no autorizado'], 401, []);
+        }
+    }
+
+    public function apiLoginUsuario(Request $request)
+    {
+        $data = $request->all();
+        //dd($data);
+        $usuario = User::where('email', $data['email'])->first();
+        //dd($data);
+        if (is_null($usuario)) {
+            return response()->json(['error' => 'Correo no encontrado'], 405);
+        }
+
+        if (password_verify($data['password'], $usuario->password)) {
+            if ($usuario->api_token == "") {
+                $usuario->api_token = $this->apiToken;
+                $usuario->save();
+            }
+
+            $array = array(
+                //"id" => $usuario[0]->id,
+                "api_token" => $usuario->api_token
             );
             return response()->json($array, 201);
         } else {

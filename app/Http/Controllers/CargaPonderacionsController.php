@@ -222,6 +222,61 @@ class CargaPonderacionsController extends Controller
                 //dd($calificacion_ponderacion_borrar->calificacion->calificacion);
                 if ($calificacion_ponderacion_borrar->calificacion->calificacion == 0) {
                     //dd($calificacion_ponderacion_borrar->calificacion->calificacion);
+                    $calificacion = $calificacion_ponderacion_borrar->calificacion;
+                    $hacademica = $calificacion->hacademica;
+                    //dd($hacademica);
+
+                    //inicion
+                    //foreach ($materias as $m) {
+                    //$ha=$m;
+                    //dd($m);
+                    Log::info("hacademica_id: " . $hacademica->id);
+                    /*$calif = Calificacion::where('hacademica_id', $m->id)
+                            ->where('tpo_examen_id', 1)
+                            ->wherenull('deleted_at')
+                            ->where('calificacion', 0)
+                            ->first();
+                        */
+
+                    //if (!is_null($calif)) {
+                    //dd($calif);
+                    $ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $hacademica->materia->ponderacion_id)
+                        ->where('bnd_activo', 1)
+                        ->get();
+
+                    //dd($ponderaciones);
+
+                    $ponderaciones_validar = array();
+                    foreach ($ponderaciones as $ponderacion) {
+                        array_push($ponderaciones_validar, $ponderacion->id);
+                    }
+                    //dd($ponderaciones_validar);
+
+                    $contar_registros = CalificacionPonderacion::where('calificacion_id', $calificacion->id)
+                        ->whereIn('carga_ponderacion_id', $ponderaciones_validar)
+                        ->count();
+
+                    //dd($contar_registros==0);
+                    //dd($calif->calificacion==0);
+                    if ($contar_registros == 0 and $calificacion->calificacion == 0) {
+                        //dd($ponderaciones   );
+                        foreach ($ponderaciones as $p) {
+                            $ponde['calificacion_id'] = $calificacion->id;
+                            $ponde['carga_ponderacion_id'] = $p->id;
+                            $ponde['calificacion_parcial'] = 0;
+                            $ponde['ponderacion'] = $p->porcentaje;
+                            $ponde['usu_alta_id'] = Auth::user()->id;
+                            $ponde['usu_mod_id'] = Auth::user()->id;
+                            $ponde['tiene_detalle'] = $p->tiene_detalle;
+                            $ponde['padre_id'] = $p->padre_id;
+                            CalificacionPonderacion::create($ponde);
+                        }
+                    }
+                    //}
+                    //}
+                    //FIn
+
+
                     $calificacion_ponderacion_borrar->delete();
                 }
             }
@@ -239,8 +294,8 @@ class CargaPonderacionsController extends Controller
         //->whereIn('hacademicas.cliente_id', array(9334, 3279, 3299, 3506, 3536))
         ->get();
 */
-
-        $inscripciones = Hacademica::select('hacademicas.inscripcion_id', 'hacademicas.cliente_id', 'calif.calificacion', 'calif.id as calificaicon_id')
+        /*
+        $inscripciones = Hacademica::select('hacademicas.inscripcion_id', 'hacademicas.cliente_id', 'calif.calificacion')
             ->join('materia as m', 'm.id', '=', 'hacademicas.materium_id')
             ->join('calificacions as calif', 'calif.hacademica_id', '=', 'hacademicas.id')
             ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
@@ -252,19 +307,20 @@ class CargaPonderacionsController extends Controller
             //->where('hacademicas.cliente_id', 9210)
             ->orderBy('hacademicas.cliente_id')
             ->distinct()
+            ->limit(10)
             ->orderBy('hacademicas.cliente_id')
             ->chunk(10, function ($inscripcions) {
                 foreach ($inscripcions as $inscripcion) {
 
                     if ($inscripcion->calificacion == 0) {
                         //Log::info(($inscripcion->calificacion == 0) . "inscriopcion:" . $inscripcion->inscripcion_id . " - caifica:" . $inscripcion->calificacion);
-                        //dd($inscripcions->toArray());
+                        //dd($inscripcion);
                         $this->registrarMaterias($inscripcion->inscripcion_id);
                         //Log::info("Ajuste de ponderaciones" . $inscripcion->cliente_id);
                     }
                 }
             });
-
+*/
 
         //dd($inscripciones->toArray());
         /*foreach ($inscripciones as $inscripcion) {
@@ -285,22 +341,26 @@ class CargaPonderacionsController extends Controller
             ->where('hacademicas.inscripcion_id', '=', $i->id)
             ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
             ->join('calificacions as c', 'c.hacademica_id', '=', 'hacademicas.id')
-            ->where('c.calificacion', '<>', 0)
+            ->where('c.calificacion', '=', 0)
             ->whereNull('i.deleted_at')
             ->whereNull('hacademicas.deleted_at')
+            ->distinct()
             ->get();
-        //dd($materias->toArray());    
-
+        //dd($materias->toArray());
+        //Log::info($materias);
         foreach ($materias as $m) {
             //$ha=$m;
-            //dd($m->id);
+            //dd($m);
+            Log::info("hacademica_id: " . $m->id);
             $calif = Calificacion::where('hacademica_id', $m->id)
                 ->where('tpo_examen_id', 1)
                 ->wherenull('deleted_at')
                 ->where('calificacion', 0)
                 ->first();
+
+
             if (!is_null($calif)) {
-                //dd($m->materia);
+                //dd($calif);
                 $ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $m->materia->ponderacion_id)
                     ->where('bnd_activo', 1)
                     ->get();

@@ -142,6 +142,7 @@ class InscripcionsController extends Controller
         //dd($materias_validar->count());
         if ($materias_validar->count() == 0) {
             foreach ($materias as $m) {
+                //dd($materias->toArray());
                 $h['inscripcion_id'] = $i->id;
                 $h['cliente_id'] = $i->cliente_id;
                 $h['plantel_id'] = $i->plantel_id;
@@ -166,8 +167,10 @@ class InscripcionsController extends Controller
                 $c['usu_mod_id'] = Auth::user()->id;
                 $calif = Calificacion::create($c);
 
-                $ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $m->ponderacion_id)->where('bnd_activo', 1)->get();
-                //dd($ponderaciones);
+                $ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $m->ponderacion_id)
+                    ->where('bnd_activo', 1)
+                    ->get();
+
                 foreach ($ponderaciones as $p) {
                     $ponde['calificacion_id'] = $calif->id;
                     $ponde['carga_ponderacion_id'] = $p->id;
@@ -2713,7 +2716,9 @@ class InscripcionsController extends Controller
                 $c['usu_mod_id'] = Auth::user()->id;
                 $calif = Calificacion::create($c);
 
-                $ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $m->ponderacion_id)->where('bnd_activo', 1)->get();
+                $ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $m->ponderacion_id)
+                    ->where('bnd_activo', 1)
+                    ->get();
                 //dd($ponderaciones);
                 foreach ($ponderaciones as $p) {
                     $ponde['calificacion_id'] = $calif->id;
