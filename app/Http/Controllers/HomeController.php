@@ -295,10 +295,33 @@ class HomeController extends Controller
         $encabezado = array();
         $encabezado[0] = 'Empleado';
         $estatus = StSeguimiento::where('id', '>', 0)->get();
-        $empleados = Empleado::where('plantel_id', '=', $filtros['plantel_f'])
-            ->where('puesto_id', '=', 2)
-            ->where('id', '>', 0)
+        //dd($estatus);
+        
+        $empleados = Empleado::select('empleados.*')
+            ->where('c.plantel_id', '=', $filtros['plantel_f'])
+            ->join('clientes as c', 'c.empleado_id','=','empleados.id')
+            ->where('empleados.puesto_id', '=', 2)
+            ->whereIn('empleados.st_empleado_id', array(1,9))
+            ->where('empleados.id', '>', 0)
+            ->distinct()
             ->get();
+            
+        /*
+        $empleados = Empleado::where('plantel_id', '=', $filtros['plantel_f'])
+        ->where('puesto_id', '=', 2)
+        ->where('id', '>', 0)
+        ->get();
+*/
+        //dd($empleados->toArray());
+        Seguimiento::select(DB::raw('count(st.name) as total'))
+            ->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
+            ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
+            ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
+            ->where('st_seguimiento_id', '=', $st->id)
+            ->where('e.id', '=', $em->id)
+            ->where('c.plantel_id', '=', $filtros['plantel_f'])
+            ->value('total');
+
         //dd($empleados->toArray());
         $i = 1;
         foreach ($estatus as $st) {
@@ -347,8 +370,9 @@ class HomeController extends Controller
                         $linea[$i] = $valor;
                         $i++;
                     }
-                    $i--;
+                    //$i--;
                 } elseif ($st->id > 0) {
+                    
                     $valor = Seguimiento::select(DB::raw('count(st.name) as total'))
                         ->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
                         ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
@@ -358,8 +382,10 @@ class HomeController extends Controller
                         ->where('c.plantel_id', '=', $filtros['plantel_f'])
                         ->value('total');
                     //dd('stop fil');
+                    //Log::info("Parametros: ".$st->id."-".$em->id."-".$filtros['plantel_f']);
                 }
                 $linea[$i] = $valor;
+                //dd($linea);
             }
             array_push($tabla, $linea);
         }
@@ -383,6 +409,7 @@ class HomeController extends Controller
             ->where('e.id', '>', 0)
             ->where('e.puesto_id', '=', 2)
             ->where('st.id', '>', 0)
+            ->whereIn('e.st_empleado_id', array(1,9))
             ->groupBy('st.name')
             ->get();
         //dd($estatusPlantel->toArray());

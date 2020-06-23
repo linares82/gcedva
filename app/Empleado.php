@@ -31,7 +31,8 @@ class Empleado extends Model
 		'identificacion', 'contrato', 'evaluacion_psico', 'st_empleado_id', 'plantel_id',
 		'pendientes', 'user_id', 'usu_alta_id', 'usu_mod_id', 'jefe_bnd', 'jefe_id', 'alerta_bnd',
 		'dias_alerta', 'resp_alerta_id', 'fin_contrato', 'extranjero_bnd', 'genero', 'alimenticia_bnd',
-		'tipo_contrato_id'
+		'tipo_contrato_id', 'fec_nacimiento','estado_nacimiento_id','pais_nacimiento','nivel_estudio_id',
+		'profesion','cedula','anios_servicio_escuela'
 	];
 
 	public function usu_alta()

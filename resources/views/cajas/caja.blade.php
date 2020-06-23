@@ -368,7 +368,28 @@
                                     @endpermission
                                     <a href="{{route('pagos.imprimir', array('pago'=>$pago->id))}}" data-toggle="tooltip" title="Imprimir" class="btn btn-info btn-xs " target="_blank"><i class="fa fa-print"></i></a>
                                 </td>
-                                
+                                @if($pago->peticionMultipago->count()>0)
+                                    
+                                <tr>
+                                <td><strong>Peticion Multipagos</strong></td>
+                                    <td>
+                                        @if($pago->bnd_pagado==1) 
+                                        <span class="badge bg-green">Pagado </span>
+                                        @else 
+                                        <span class="badge bg-red"> En proceso <span>
+                                        @endif    
+                                    </td> 
+                                    <td>
+                                        @if($pago->bnd_pagado<>1)  
+                                        @permission('pagos.store')
+                                        <button type="button" class="btn btn-success" data-dismiss="modal" data-pago="{{$pago->id}}" id="aRepetirPeticion">
+                                            <span class='glyphicon glyphicon-reload'></span> Solicitud ({{$pago->peticionMultipago->contador_peticiones}})
+                                        </button>
+                                        @endif
+                                        @endif    
+                                    </td>
+                                </tr>
+                                @endif
                             </tr>
                             @endif
                             <?php $suma_pagos=$suma_pagos+$pago->monto; ?>
@@ -676,11 +697,34 @@ Agregar nuevo registro
                 {!! Form::close() !!}
                 <div class="row"></div>
                 <div class="modal-footer">
+                    <button type="button" class="btn btn-default" onclick="location.reload();" data-dismiss="modal">
+                        <span id="" class='glyphicon glyphicon-loading'></span> Actualizar
+                    </button>
                     <button type="button" class="btn btn-success addPagoB" id="AgregarPago" data-dismiss="modal">
                         <span id="" class='glyphicon glyphicon-check'></span> Crear
                     </button>
                     <button type="button" class="btn btn-warning" data-dismiss="modal" id='cerrarAgregarPago'>
                         <span class='glyphicon glyphicon-remove'></span> Cerrar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="divActualizar" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                    
+<!--                <button type="button" class="close" data-dismiss="modal">X</button>-->
+                <h4 class="modal-title">Presione el boton para actualizar</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" onclick="location.reload();" data-dismiss="modal">
+                        <span id="" class='glyphicon glyphicon-loading'></span> Actualizar
                     </button>
                 </div>
             </div>
@@ -751,6 +795,7 @@ Agregar nuevo registro
                     <button type="button" class="btn btn-success btnEditarAdeudo" id="btnEditarAdeudo" data-dismiss="modal">
                         <span id="" class='glyphicon glyphicon-check'></span> Guardar
                     </button>
+                    
                     <button type="button" class="btn btn-warning" data-dismiss="modal">
                         <span class='glyphicon glyphicon-remove'></span> Cerrar
                     </button>
@@ -759,6 +804,25 @@ Agregar nuevo registro
         </div>
     </div>
 </div>
+
+<div id="formulario_multipagos">
+    <form method="post" id="frm_multipagos" action="about:blank" target='_blank'>
+        <input type="hidden" name="mp_account" id="mp_account" value="">
+        <input type="hidden" name="mp_product" id="mp_product" value="">
+        <input type="hidden" name="mp_order" id="mp_order" value="">
+        <input type="hidden" name="mp_reference" id="mp_reference" value="">
+        <input type="hidden" name="mp_node" id="mp_node" value="">
+        <input type="hidden" name="mp_amount" id="mp_amount" value="">
+        <input type="hidden" name="mp_customername" id="mp_customername" value="">
+        <input type="hidden" name="mp_currency" id="mp_currency" value="">
+        <input type="hidden" name="mp_signature" id="mp_signature" value="">
+        <input type="hidden" name="mp_urlsuccess" id="mp_urlsuccess" value="">
+        <input type="hidden" name="mp_urlfailure" id="mp_urlfailure" value="">
+        
+    </form>
+</div>
+
+
 @endif
 
 @endsection
@@ -942,19 +1006,19 @@ Agregar nuevo registro
 
     $(document).on('click', '.add-pago', function() {
     
-    $('.modal-title').text('Agregar Pago');
-    //Limpiar valores
-    $('#addPago').modal({backdrop: 'static', keyboard: false});
-    //$('#monto-field').val($(this).data('total_caja'));
-    $('#monto-field').val({{$monto_max_pago}});
-    $('#forma_pago_id-field').val({{$caja->forma_pago_id}}).change();
-    $('#fecha_ln-field').val('{{$caja->fecha}}');
-    $('#addPago').modal('show');
-    
-    $('#AgregarPago').prop('disabled',true);
-    
-    //Cargar cuentas de efectivo
-    //Fin cargar cuentas de efectivo
+        $('.modal-title').text('Agregar Pago');
+        //Limpiar valores
+        $('#addPago').modal({backdrop: 'static', keyboard: false});
+        //$('#monto-field').val($(this).data('total_caja'));
+        $('#monto-field').val({{$monto_max_pago}});
+        $('#forma_pago_id-field').val({{$caja->forma_pago_id}}).change();
+        $('#fecha_ln-field').val('{{$caja->fecha}}');
+        $('#addPago').modal('show');
+        
+        $('#AgregarPago').prop('disabled',true);
+        
+        //Cargar cuentas de efectivo
+        //Fin cargar cuentas de efectivo
     });
     
     
@@ -984,13 +1048,83 @@ Agregar nuevo registro
                 },
                 complete : function(){$("#loading3").hide(); },
                 success: function(data) {
-                    //location.reload(); 
-                    //$('#form-buscarVenta').submit();
+                    @if($caja->forma_pago_id<>7)
+                        location.reload(); 
+                        $('#form-buscarVenta').submit();
+                    @else
+                        console.log(data.datos)
+                        $("#mp_account").val(data.datos.mp_account);
+                        $("#mp_product").val(data.datos.mp_product);
+                        $("#mp_order").val(data.datos.mp_order);
+                        $("#mp_reference").val(data.datos.mp_reference);
+                        $("#mp_node").val(data.datos.mp_node);
+                        $("#mp_concept").val(data.datos.mp_concept);
+                        $("#mp_amount").val(data.datos.mp_amount);
+                        $("#mp_customername").val(data.datos.mp_customername);
+                        $("#mp_currency").val(data.datos.mp_currency);
+                        $("#mp_order").val(data.datos.mp_order);
+                        $("#mp_signature").val(data.datos.mp_signature);
+                        $("#mp_urlsuccess").val(data.datos.mp_urlsuccess);
+                        $("#mp_urlfilure").val(data.datos.mp_urlfilure);
+                        
+                        $('#frm_multipagos').attr("action", data.datos.url_peticion);
+                        $('#frm_multipagos').submit();
+                        //$('#form-buscarVenta').submit();
+                        /*$.ajax({
+                            url: data.datos.url_peticion,
+                            dataType: 'jsonp',
+                            success: function(data) {*/
+                                
+                           /* }
+                        });*/
+                    @endif
                 }
             });
             }    
         
         });
+
+        $('#aRepetirPeticion').on('click', function() {    
+            let pago=$(this).data('pago');
+            $.ajax({
+                type: 'GET',
+                url: '{{url("pagos/repetirMultipagosSolicitud")}}',
+                data: {
+                    '_token': $('input[name=_token]').val(),
+                    'pago': pago,
+                },
+                beforeSend : function(){
+                    $("#loading3").show(); 
+                    
+                },
+                complete : function(){$("#loading3").hide(); },
+                success: function(data) {
+                    
+                        console.log(data.datos)
+                        $("#mp_account").val(data.datos.mp_account);
+                        $("#mp_product").val(data.datos.mp_product);
+                        $("#mp_order").val(data.datos.mp_order);
+                        $("#mp_reference").val(data.datos.mp_reference);
+                        $("#mp_node").val(data.datos.mp_node);
+                        $("#mp_concept").val(data.datos.mp_concept);
+                        $("#mp_amount").val(data.datos.mp_amount);
+                        $("#mp_customername").val(data.datos.mp_customername);
+                        $("#mp_currency").val(data.datos.mp_currency);
+                        $("#mp_order").val(data.datos.mp_order);
+                        $("#mp_signature").val(data.datos.mp_signature);
+                        $("#mp_urlsuccess").val(data.datos.mp_urlsuccess);
+                        $("#mp_urlfilure").val(data.datos.mp_urlfilure);
+                        
+                        $('#frm_multipagos').attr("action", data.datos.url_peticion);
+                        $('#frm_multipagos').submit();
+                        $('#divActualizar').modal('show');
+                        //$('#form-buscarVenta').submit();
+                        
+                }
+            });
+        });    
+        
+        
     @endif
 
     $('#forma_pago_id-field').change(function(){

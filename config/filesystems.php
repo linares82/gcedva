@@ -72,6 +72,12 @@ return [
             'url' => env('APP_URL').'/storage/pdf/cotizaciones',
             'visibility' => 'public',
         ],
+        'conciliaciones' => [
+            'driver' => 'local',
+            'root' => storage_path('conciliaciones'),
+            'url' => env('APP_URL').'/storage/conciliaciones',
+            'visibility' => 'public',
+        ],
 
         'local' => [
             'driver' => 'local',

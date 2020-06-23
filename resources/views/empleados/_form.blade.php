@@ -84,6 +84,55 @@
                           <span class="help-block">{{ $errors->first("mail_empresa") }}</span>
                          @endif
                       </div>
+                      <div class="form-group col-md-4 @if($errors->has('fec_nacimiento')) has-error @endif">
+                        <label for="fec_nacimiento-field">Fecha Nacimiento</label>
+                        {!! Form::text("fec_nacimiento", null, array("class" => "form-control input-sm fecha", "id" => "fec_nacimiento-field")) !!}
+                        @if($errors->has("fec_nacimiento"))
+                        <span class="help-block">{{ $errors->first("fec_nacimiento") }}</span>
+                        @endif
+                    </div>
+                    <div class="form-group col-md-4 @if($errors->has('pais_nacimiento')) has-error @endif">
+                      <label for="pais_nacimiento-field">Pais Nacimiento</label>
+                      {!! Form::text("pais_nacimiento", null, array("class" => "form-control input-sm", "id" => "pais_nacimiento-field")) !!}
+                      @if($errors->has("pais_nacimiento"))
+                       <span class="help-block">{{ $errors->first("pais_nacimiento") }}</span>
+                      @endif
+                   </div>
+                    <div class="form-group col-md-4 @if($errors->has('estado_nacimiento_id')) has-error @endif">
+                      <label for="estado_nacimiento_id-field">Estado Nacimiento</label>
+                      {!! Form::select("estado_nacimiento_id", $estados, null, array("class" => "form-control select_seguridad", "id" => "estado_nacimiento_id-field")) !!}
+                      @if($errors->has("estado_nacimiento_id"))
+                      <span class="help-block">{{ $errors->first("estado_nacimiento_id") }}</span>
+                      @endif
+                  </div>
+                    <div class="form-group col-md-4 @if($errors->has('nivel_estudio_id')) has-error @endif" style="clear:left;">
+                      <label for="nivel_estudio_id-field">Nivel Estudio</label>
+                      {!! Form::select("nivel_estudio_id", $nivel_estudios, null, array("class" => "form-control select_seguridad", "id" => "nivel_estudio_id-field")) !!}
+                      @if($errors->has("nivel_estudio_id"))
+                      <span class="help-block">{{ $errors->first("nivel_estudio_id") }}</span>
+                      @endif
+                  </div>
+                    <div class="form-group col-md-4 @if($errors->has('profesion')) has-error @endif">
+                      <label for="profesion-field">Profesion</label>
+                      {!! Form::text("profesion", null, array("class" => "form-control input-sm", "id" => "profesion-field")) !!}
+                      @if($errors->has("profesion"))
+                        <span class="help-block">{{ $errors->first("profesion") }}</span>
+                      @endif
+                    </div>
+                    <div class="form-group col-md-4 @if($errors->has('cedula')) has-error @endif">
+                      <label for="cedula-field">Cedula</label>
+                      {!! Form::text("cedula", null, array("class" => "form-control input-sm", "id" => "cedula-field")) !!}
+                      @if($errors->has("cedula"))
+                        <span class="help-block">{{ $errors->first("cedula") }}</span>
+                      @endif
+                    </div>
+                    <div class="form-group col-md-4 @if($errors->has('anios_servicio_escuela')) has-error @endif">
+                      <label for="anios_servicio_escuela-field">Años Servicio Escuela</label>
+                      {!! Form::text("anios_servicio_escuela", null, array("class" => "form-control input-sm", "id" => "anios_servicio_escuela-field")) !!}
+                      @if($errors->has("anios_servicio_escuela"))
+                        <span class="help-block">{{ $errors->first("cedula") }}</span>
+                      @endif
+                    </div>
                       </div>
                     </div>
                     <div class="box box-default">

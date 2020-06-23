@@ -8,6 +8,8 @@ use App\Http\Controllers\Controller;
 use File;
 use App\Empleado;
 
+use App\Estado;
+use App\NivelEstudio;
 use App\PivotDocEmpleado;
 use App\TipoContrato;
 use App\User;
@@ -52,7 +54,9 @@ class EmpleadosController extends Controller
         $responsables = Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
             //->where('plantel_id', '=', $plantel)
             ->pluck('name', 'id');
-        return view('empleados.create', compact('jefes', 'responsables', 'tipoContratos'))
+        $estados=Estado::pluck('name','id');
+        $nivel_estudios=NivelEstudio::pluck('name','id');
+        return view('empleados.create', compact('estados','jefes', 'responsables', 'tipoContratos','nivel_esstudios'))
             ->with('list', Empleado::getListFromAllRelationApps())
             ->with('list1', PivotDocEmpleado::getListFromAllRelationApps());
     }
@@ -153,6 +157,7 @@ class EmpleadosController extends Controller
             ->join('empleados as e', 'e.id', '=', 'pde.empleado_id')
             ->where('e.id', '=', $id)
             ->where('pde.deleted_at', '=', NULL)->get();
+            $estados=Estado::pluck('name','id');
         //dd($doc_existentes->toArray());
         $tipoContratos = TipoContrato::pluck('name', 'id');
         $de_array = array();
@@ -162,7 +167,7 @@ class EmpleadosController extends Controller
             }
             //dd($de_array);
         }
-
+        $nivel_estudios=NivelEstudio::pluck('name','id');
         //dd($de_array);
 
         $documentos_faltantes = DB::table('doc_empleados')
@@ -171,7 +176,7 @@ class EmpleadosController extends Controller
             ->whereNotIn('id', $de_array)
             ->get();
         //dd($documentos_faltantes->toArray());
-        return view('empleados.edit', compact('tipoContratos', 'empleado', 'pivotDocEmpleado', 'jefes', 'responsables', 'documentos_faltantes'))
+        return view('empleados.edit', compact('estados','tipoContratos', 'empleado', 'pivotDocEmpleado', 'jefes', 'responsables', 'documentos_faltantes','nivel_estudios'))
             ->with('list', Empleado::getListFromAllRelationApps())
             ->with('list1', PivotDocEmpleado::getListFromAllRelationApps());
     }

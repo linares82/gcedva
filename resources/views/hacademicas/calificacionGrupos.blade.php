@@ -83,7 +83,7 @@
                          @foreach($hacademicas as $r)
                          <tr>
                          <td>{{$r->id}}</td>
-                         <td>{{$r->nombre." ".$r->nombre2." ".$r->ape_paterno.$r->ape_materno}}</td>
+                         <td>{{$r->nombre." ".$r->nombre2." ".$r->ape_paterno." ".$r->ape_materno}}</td>
                          <td>{{$r->estatus_cliente}}</td>
                          <td>{{$r->ponderacion}}</td>
                          <td><div id="div_c{{$r->id}}">{{$r->calificacion}}</div></td>

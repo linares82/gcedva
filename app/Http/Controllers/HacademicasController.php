@@ -339,7 +339,7 @@ class HacademicasController extends Controller
     {
         $examen = TpoExamen::where('id', '>', 1)->pluck('name', 'id');
         //$examen->reverse();
-        //$examen->put(0,'Seleccionar Opción');
+        //$examen->put(0,'Seleccionar OpciÃ³n');
         //$examen->reverse();
         return view('hacademicas.examen', compact('examen'))
             ->with('list', Hacademica::getListFromAllRelationApps());
@@ -428,7 +428,7 @@ class HacademicasController extends Controller
         //dd($hacademicas->toArray());
         $examen = TpoExamen::where('id', '>', 1)->pluck('name', 'id');
         //$examen->reverse();
-        //$examen->put(0,'Seleccionar Opción');
+        //$examen->put(0,'Seleccionar OpciÃ³n');
         //$examen->reverse();
         Session::flash('msj', 'Registro Creado');
         /*return view('hacademicas.examen', compact('examen'))
@@ -559,18 +559,21 @@ class HacademicasController extends Controller
                 'stc.name as estatus_cliente',
                 'stc.id as estatus_cliente_id'
             )
-                ->where('grupo_id', '=', $asignacionAcademica->grupo_id)
+                ->where('hacademicas.grupo_id', '=', $asignacionAcademica->grupo_id)
+		->join('inscripcions as i','i.id','=','hacademicas.inscripcion_id')
                 ->join('calificacions as c', 'c.hacademica_id', '=', 'hacademicas.id')
                 ->join('calificacion_ponderacions as cp', 'cp.calificacion_id', '=', 'c.id')
                 ->join('carga_ponderacions as cpo', 'cpo.id', '=', 'cp.carga_ponderacion_id')
                 ->join('clientes as cli', 'cli.id', '=', 'hacademicas.cliente_id')
                 ->join('st_clientes as stc', 'stc.id', '=', 'cli.st_cliente_id')
-                ->where('lectivo_id', '=', $asignacionAcademica->lectivo_id)
-                ->where('materium_id', '=', $asignacionAcademica->materium_id)
+                ->where('hacademicas.lectivo_id', '=', $asignacionAcademica->lectivo_id)
+                ->where('hacademicas.materium_id', '=', $asignacionAcademica->materium_id)
                 ->where('c.tpo_examen_id', '=', $data['tpo_examen_id'])
                 ->where('cp.carga_ponderacion_id', '=', $data['carga_ponderacion_id'])
                 ->whereNull('hacademicas.deleted_at')
-                ->orderBy('cliente_id')
+                ->whereNull('i.deleted_at')
+		->whereNull('cp.deleted_at')
+                ->orderBy('hacademicas.cliente_id')
                 ->get();
         } else {
             //if($calificacion_inicio<=$hoy and $calificacion_fin>=$hoy){
@@ -587,17 +590,18 @@ class HacademicasController extends Controller
                     'cp.calificacion_parcial',
                     'stc.name as estatus_cliente, stc.id as estatus_cliente_id'
                 )
-                    ->where('grupo_id', '=', $asignacionAcademica->grupo_id)
+                    ->where('hacademicas.grupo_id', '=', $asignacionAcademica->grupo_id)
+      		    ->join('inscripcions as i','i.id','=','hacademicas.inscripcion_id')
                     ->join('calificacions as c', 'c.hacademica_id', '=', 'hacademicas.id')
                     ->join('calificacion_ponderacions as cp', 'cp.calificacion_id', '=', 'c.id')
                     ->join('carga_ponderacions as cpo', 'cpo.id', '=', 'cp.carga_ponderacion_id')
                     ->join('clientes as cli', 'cli.id', '=', 'hacademicas.cliente_id')
                     ->join('st_clientes as stc', 'stc.id', '=', 'cli.st_cliente_id')
-                    ->where('lectivo_id', '=', $asignacionAcademica->lectivo_id)
-                    ->where('materium_id', '=', $asignacionAcademica->materium_id)
+                    ->where('hacademicas.lectivo_id', '=', $asignacionAcademica->lectivo_id)
+                    ->where('hacademicas.materium_id', '=', $asignacionAcademica->materium_id)
                     ->where('c.tpo_examen_id', '=', $data['tpo_examen_id'])
                     ->where('cp.carga_ponderacion_id', '=', $data['carga_ponderacion_id'])
-                    ->orderBy('cliente_id')
+                    ->orderBy('hacademicas.cliente_id')
                     ->whereExists(function ($query) {
                         $query->from('calendario_evaluacions as ce')
                             ->join('lectivos as lec', 'lec.id', '=', 'ce.lectivo_id')
@@ -606,6 +610,8 @@ class HacademicasController extends Controller
                             ->whereRaw('lec.id = hacademicas.lectivo_id');
                     })
                     ->whereNull('hacademicas.deleted_at')
+		    ->whereNull('i.deleted_at')
+		    ->whereNull('cp.deleted_at')
                     ->get();
             }
         }

@@ -30,6 +30,7 @@ class CreatePeticionMultipagosTable extends Migration
             $table->text('mp_signature');
             $table->string('mp_urlsuccess');
             $table->string('mp_urlfailure');
+            $table->integer('contador_peticiones')->unsigned()->default(1);
             $table->integer('usu_alta_id')->unsigned();
             $table->integer('usu_mod_id')->unsigned();
             $table->timestamps();

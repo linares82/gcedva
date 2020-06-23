@@ -71,6 +71,7 @@ class PagosController extends Controller
     public function store(createPago $request)
     {
 
+
         $input = $request->all();
         //dd($input);
         $caja = Caja::find($input['caja_id']);
@@ -139,16 +140,14 @@ class PagosController extends Controller
         if ($pago->forma_pago_id == 7) {
             $datosMultipagos = array();
             $datosMultipagos['pago_id'] = $pago->id;
-            $datosMultipagos['mp_account'] = $caja->cliente_id;
+            $datosMultipagos['mp_account'] = 6683; //Valor fijo pendiente de recibir
             $datosMultipagos['mp_product'] = 1;
             $datosMultipagos['mp_order'] = $this->formatoDato('000', $caja->plantel_id) . $this->formatoDato('000000000', $caja->id) . $this->formatoDato('000000', $caja->consecutivo);
             $datosMultipagos['mp_reference'] = $this->formatoDato('000', $caja->plantel_id) . $this->formatoDato('000000000', $pago->id) . $this->formatoDato('000000', $pago->consecutivo);
-            //$datosMultipagos['mp_node'] = $caja->plantel_id . "-" . $caja->plantel->razon;
-            $datosMultipagos['mp_node'] = 0;
-            $datosMultipagos['mp_concept'] = 99;
-            /*foreach ($caja->cajaLns as $ln) {
-            $datosMultipagos['mp_concept'] = $datosMultipagos['mp_concept'] . "-" . $ln->cajaConcepto->name;
-        }*/
+
+            $datosMultipagos['mp_node'] = 20; //VAlor depente del plantel por ahora default
+            $datosMultipagos['mp_concept'] = 1; //Valor depende del caja_conceptos por ahora default
+
             $datosMultipagos['mp_amount'] = number_format((float) $caja->total, 2, '.', '');
             $cliNombre = $caja->cliente->nombre . " " . $caja->cliente->nombre2 . " " . $caja->cliente->ape_paterno . " " . $caja->cliente->ape_materno;
             $datosMultipagos['mp_customername'] = substr($cliNombre, 0, 50);
@@ -156,15 +155,23 @@ class PagosController extends Controller
             $cadenaCifrar = $datosMultipagos['mp_order'] . $datosMultipagos['mp_reference'] . $datosMultipagos['mp_amount'];
             $parametros = Param::where('llave', 'cifrado_multipagos')->first();
             $datosMultipagos['mp_signature'] = hash_hmac('sha256', $cadenaCifrar, $parametros->valor);
-            $datosMultipagos['mp_urlsuccess'] = "PENDIENTE";
-            $datosMultipagos['mp_urlfailure'] = "PENDIENTE";
+            $parametros = Param::where('llave', 'url_success_multipagos')->first();
+            $datosMultipagos['mp_urlsuccess'] = url($parametros->valor);
+            $parametros = Param::where('llave', 'url_fail_multipagos')->first();
+            $datosMultipagos['mp_urlfailure'] = url($parametros->valor);
             $datosMultipagos['usu_alta_id'] = 1;
             $datosMultipagos['usu_mod_id'] = 1;
+            $parametros = Param::where('llave', 'url_multipagos')->first();
+            $datosMultipagos['url_peticion'] = $parametros->valor;
             //$respuesta = $this->multipagosSolicitud($datosMultipagos);
 
             //if ($respuesta) {
             //dd($datosMultipagos);
             PeticionMultipago::create($datosMultipagos);
+
+            return response()->json([
+                'datos' => $datosMultipagos,
+            ], 200);
             //}
         }
 
@@ -178,14 +185,60 @@ class PagosController extends Controller
         return substr($cadena0, 1, (strlen($cadena0) - strlen($dato))) . $dato;
     }
 
+    public function repetirMultipagosSolicitud(Request $request)
+    {
+        $datos = $request->all();
+        $pago = Pago::find($datos['pago']);
+
+        $caja = Caja::find($pago->caja_id);
+        $cliente = Cliente::find($caja->cliente_id);
+        /*$combinaciones = CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
+        $cajas = Caja::select('cajas.consecutivo as caja', 'cajas.fecha', 'ln.caja_concepto_id as concepto_id', 'cc.name as concepto', 'ln.total', 'st.name as estatus')
+            ->join('caja_lns as ln', 'ln.caja_id', '=', 'cajas.id')
+            ->join('caja_conceptos as cc', 'cc.id', '=', 'ln.caja_concepto_id')
+            ->join('st_cajas as st', 'st.id', '=', 'cajas.st_caja_id')
+            ->where('cliente_id', $cliente->id)
+            ->whereNull('cajas.deleted_at')
+            ->whereNull('ln.deleted_at')
+            ->get();
+*/
+        $peticionMultipago = $pago->peticionMultipago;
+        $datosMultipagos = $peticionMultipago->toArray();
+        unset($datosMultipagos['id']);
+        unset($datosMultipagos['pago_id']);
+        unset($datosMultipagos['contador_peticiones']);
+        unset($datosMultipagos['usu_alta_id']);
+        unset($datosMultipagos['usu_mod_id']);
+        unset($datosMultipagos['created_at']);
+        unset($datosMultipagos['updated_at']);
+        unset($datosMultipagos['deleted_at']);
+        $parametros = Param::where('llave', 'url_multipagos')->first();
+        $datosMultipagos['url_peticion'] = $parametros->valor;
+        //dd($datosMultipagos);
+        //$respuesta = $this->multipagosSolicitud($datosMultipagos);
+        $peticionMultipago->contador_peticiones = $peticionMultipago->contador_peticiones + 1;
+        $peticionMultipago->update();
+
+        return response()->json([
+            'datos' => $datosMultipagos,
+        ], 200);
+
+        /*return view('cajas.caja', compact('cliente', 'caja', 'combinaciones', 'cajas'))
+            ->with('list', Caja::getListFromAllRelationApps())
+            ->with('list1', CajaLn::getListFromAllRelationApps());
+            */
+    }
+
     public function multipagosSolicitud($datosMultipagos)
     {
         $client = new Client([
             'headers' => ['Content-Type' => 'application/json']
         ]);
 
+        $parametros = Param::where('llave', 'url_multipagos')->first();
+
         $res = $client->post(
-            'url',
+            $parametros->valor,
             ['body' => json_encode(
                 [
                     'mp_account' => $datosMultipagos['mp_account'],
@@ -212,6 +265,7 @@ class PagosController extends Controller
     public function successMultipagos(Request $request)
     {
         $param = Param::where('llave', 'servidor_respuesta_multipagos')->first();
+        Log::info("Se recibio peticion de: " . $request->path());
         if ($request->path() == $param->valor) {
             $datos = $request->all();
             $crearRegistro = array();
@@ -241,6 +295,7 @@ class PagosController extends Controller
     public function failMultipagos(Request $request)
     {
         $param = Param::where('llave', 'servidor_respuesta_multipagos')->first();
+        Log::info("Se recibio peticion de: " . $request->path());
         if ($request->path() == $param->valor) {
             $datos = $request->all();
             $crearRegistro = array();

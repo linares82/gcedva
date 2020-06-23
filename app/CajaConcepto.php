@@ -18,7 +18,7 @@ class CajaConcepto extends Model
     }
 
     //Mass Assignment
-    protected $fillable = ['name', 'monto', 'activo', 'bnd_aplicar_beca', 'usu_alta_id', 'usu_mod_id', 'bnd_mensualidad'];
+    protected $fillable = ['name', 'monto', 'activo', 'bnd_aplicar_beca', 'usu_alta_id', 'usu_mod_id', 'bnd_mensualidad', 'cve_multipagos'];
 
     public function usu_alta()
     {
