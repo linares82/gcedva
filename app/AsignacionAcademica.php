@@ -25,7 +25,7 @@ class AsignacionAcademica extends Model
 	//Mass Assignment
 	protected $fillable = [
 		'lectivo_id', 'empleado_id', 'materium_id', 'grupo_id', 'horas', 'usu_alta_id', 'usu_mod_id', 'plantel_id', 'asistencias_max',
-		'fec_inicio', 'fec_fin', 'docente_oficial', 'lectivo_oficial_id'
+		'fec_inicio', 'fec_fin', 'docente_oficial', 'lectivo_oficial_id', 'docente_oficial_id'
 	];
 
 	public function usu_alta()

@@ -769,6 +769,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
     );
 
     public static $classMap = array (
+        'AddAbreviaturaToEstadosTable' => __DIR__ . '/../..' . '/database/migrations/2020_06_23_113026_add_abreviatura_to_estados_table.php',
         'AddApiTokenClientesTable' => __DIR__ . '/../..' . '/database/migrations/2020_02_13_093137_add_api_token_clientes_table.php',
         'AddApiTokenUsersTable' => __DIR__ . '/../..' . '/database/migrations/2020_02_12_154521_add_api_token_users_table.php',
         'AddArchivoTransferencesTable' => __DIR__ . '/../..' . '/database/migrations/2019_10_30_113553_add_archivo_transferences_table.php',
@@ -816,6 +817,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'AddDenominacionPlantelsTable' => __DIR__ . '/../..' . '/database/migrations/2020_04_20_164405_add_denominacion_plantels_table.php',
         'AddDirResPlantelsTable' => __DIR__ . '/../..' . '/database/migrations/2019_07_02_120947_add_dir_res_plantels_table.php',
         'AddDocenteLectivoOficialAsignacionAcademicasTable' => __DIR__ . '/../..' . '/database/migrations/2020_05_05_120656_add_docente_lectivo_oficial_asignacion_academicas_table.php',
+        'AddDocenteOficialIdToAsignacionAcademicasTable' => __DIR__ . '/../..' . '/database/migrations/2020_06_23_100307_add_docente_oficial_id_to_asignacion_academicas_table.php',
         'AddEmpleadoIdCotizacionLnsTable' => __DIR__ . '/../..' . '/database/migrations/2019_04_08_144922_add_empleado_id_cotizacion_lns_table.php',
         'AddEmpleadoIdEmpresasTable' => __DIR__ . '/../..' . '/database/migrations/2019_02_05_132229_add_empleado_id_empresas_table.php',
         'AddEmpleadoIdIndexEmpresasTable' => __DIR__ . '/../..' . '/database/migrations/2019_02_05_132245_add_empleado_id_index_empresas_table.php',
@@ -838,6 +840,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'AddFieldModuloMateriasTable' => __DIR__ . '/../..' . '/database/migrations/2017_12_08_141207_add_field_modulo_materias_table.php',
         'AddFieldTpoArticuloIdArticulosTable' => __DIR__ . '/../..' . '/database/migrations/2019_10_03_103342_add_field_tpo_articulo_id_articulos_table.php',
         'AddFieldsCalificacionLectivosTable' => __DIR__ . '/../..' . '/database/migrations/2019_09_18_152904_add_fields_calificacion_lectivos_table.php',
+        'AddFieldsCedvaToClientesTable' => __DIR__ . '/../..' . '/database/migrations/2020_06_23_101034_add_fields_cedva_to_clientes_table.php',
         'AddFieldsCuentasEfectivosTable' => __DIR__ . '/../..' . '/database/migrations/2019_07_11_125550_add_fields_cuentas_efectivos_table.php',
         'AddFieldsLectivosTable' => __DIR__ . '/../..' . '/database/migrations/2018_02_14_150006_add_fields_lectivos_table.php',
         'AddFieldsPlantelsTable' => __DIR__ . '/../..' . '/database/migrations/2017_06_16_222542_Add_fields_Plantels_Table.php',
@@ -981,6 +984,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'CreateEscolaridadsTable' => __DIR__ . '/../..' . '/database/migrations/2019_08_23_093903_create_escolaridads_table.php',
         'CreateEspecialidadsTable' => __DIR__ . '/../..' . '/database/migrations/2017_05_03_000000_create_especialidads_table.php',
         'CreateEstAsistenciasTable' => __DIR__ . '/../..' . '/database/migrations/2017_11_07_114040_create_est_asistencias_table.php',
+        'CreateEstadoCivilsTable' => __DIR__ . '/../..' . '/database/migrations/2020_06_22_102927_create_estado_civils_table.php',
         'CreateEstadoIdPlantelsTable' => __DIR__ . '/../..' . '/database/migrations/2018_10_22_105406_create_estado_id_plantels_table.php',
         'CreateEstadosTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_30_224317_create_estados_table.php',
         'CreateEventoClientesTable' => __DIR__ . '/../..' . '/database/migrations/2019_06_04_133352_create_evento_clientes_table.php',
@@ -1021,7 +1025,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'CreateMovimientosTable' => __DIR__ . '/../..' . '/database/migrations/2019_09_12_155530_create_movimientos_table.php',
         'CreateMueblesTable' => __DIR__ . '/../..' . '/database/migrations/2019_10_03_110111_create_muebles_table.php',
         'CreateMunicipiosTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_30_224335_create_municipios_table.php',
-        'CreateNivelEstudiosTable' => __DIR__ . '/../..' . '/database/migrations/2020_06_22_162921_create_nivel_estudios_table.php',
+        'CreateNivelEstudiosTable' => __DIR__ . '/../..' . '/database/migrations/2020_06_21_162921_create_nivel_estudios_table.php',
         'CreateNivelsTable' => __DIR__ . '/../..' . '/database/migrations/2017_05_02_202927_create_nivels_table.php',
         'CreateOfertasTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_30_224237_create_ofertas_table.php',
         'CreateOtrosTable' => __DIR__ . '/../..' . '/database/migrations/2017_05_02_203928_create_otros_table.php',

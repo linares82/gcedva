@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'AddAbreviaturaToEstadosTable' => $baseDir . '/database/migrations/2020_06_23_113026_add_abreviatura_to_estados_table.php',
     'AddApiTokenClientesTable' => $baseDir . '/database/migrations/2020_02_13_093137_add_api_token_clientes_table.php',
     'AddApiTokenUsersTable' => $baseDir . '/database/migrations/2020_02_12_154521_add_api_token_users_table.php',
     'AddArchivoTransferencesTable' => $baseDir . '/database/migrations/2019_10_30_113553_add_archivo_transferences_table.php',
@@ -53,6 +54,7 @@ return array(
     'AddDenominacionPlantelsTable' => $baseDir . '/database/migrations/2020_04_20_164405_add_denominacion_plantels_table.php',
     'AddDirResPlantelsTable' => $baseDir . '/database/migrations/2019_07_02_120947_add_dir_res_plantels_table.php',
     'AddDocenteLectivoOficialAsignacionAcademicasTable' => $baseDir . '/database/migrations/2020_05_05_120656_add_docente_lectivo_oficial_asignacion_academicas_table.php',
+    'AddDocenteOficialIdToAsignacionAcademicasTable' => $baseDir . '/database/migrations/2020_06_23_100307_add_docente_oficial_id_to_asignacion_academicas_table.php',
     'AddEmpleadoIdCotizacionLnsTable' => $baseDir . '/database/migrations/2019_04_08_144922_add_empleado_id_cotizacion_lns_table.php',
     'AddEmpleadoIdEmpresasTable' => $baseDir . '/database/migrations/2019_02_05_132229_add_empleado_id_empresas_table.php',
     'AddEmpleadoIdIndexEmpresasTable' => $baseDir . '/database/migrations/2019_02_05_132245_add_empleado_id_index_empresas_table.php',
@@ -75,6 +77,7 @@ return array(
     'AddFieldModuloMateriasTable' => $baseDir . '/database/migrations/2017_12_08_141207_add_field_modulo_materias_table.php',
     'AddFieldTpoArticuloIdArticulosTable' => $baseDir . '/database/migrations/2019_10_03_103342_add_field_tpo_articulo_id_articulos_table.php',
     'AddFieldsCalificacionLectivosTable' => $baseDir . '/database/migrations/2019_09_18_152904_add_fields_calificacion_lectivos_table.php',
+    'AddFieldsCedvaToClientesTable' => $baseDir . '/database/migrations/2020_06_23_101034_add_fields_cedva_to_clientes_table.php',
     'AddFieldsCuentasEfectivosTable' => $baseDir . '/database/migrations/2019_07_11_125550_add_fields_cuentas_efectivos_table.php',
     'AddFieldsLectivosTable' => $baseDir . '/database/migrations/2018_02_14_150006_add_fields_lectivos_table.php',
     'AddFieldsPlantelsTable' => $baseDir . '/database/migrations/2017_06_16_222542_Add_fields_Plantels_Table.php',
@@ -218,6 +221,7 @@ return array(
     'CreateEscolaridadsTable' => $baseDir . '/database/migrations/2019_08_23_093903_create_escolaridads_table.php',
     'CreateEspecialidadsTable' => $baseDir . '/database/migrations/2017_05_03_000000_create_especialidads_table.php',
     'CreateEstAsistenciasTable' => $baseDir . '/database/migrations/2017_11_07_114040_create_est_asistencias_table.php',
+    'CreateEstadoCivilsTable' => $baseDir . '/database/migrations/2020_06_22_102927_create_estado_civils_table.php',
     'CreateEstadoIdPlantelsTable' => $baseDir . '/database/migrations/2018_10_22_105406_create_estado_id_plantels_table.php',
     'CreateEstadosTable' => $baseDir . '/database/migrations/2017_03_30_224317_create_estados_table.php',
     'CreateEventoClientesTable' => $baseDir . '/database/migrations/2019_06_04_133352_create_evento_clientes_table.php',
@@ -258,7 +262,7 @@ return array(
     'CreateMovimientosTable' => $baseDir . '/database/migrations/2019_09_12_155530_create_movimientos_table.php',
     'CreateMueblesTable' => $baseDir . '/database/migrations/2019_10_03_110111_create_muebles_table.php',
     'CreateMunicipiosTable' => $baseDir . '/database/migrations/2017_03_30_224335_create_municipios_table.php',
-    'CreateNivelEstudiosTable' => $baseDir . '/database/migrations/2020_06_22_162921_create_nivel_estudios_table.php',
+    'CreateNivelEstudiosTable' => $baseDir . '/database/migrations/2020_06_21_162921_create_nivel_estudios_table.php',
     'CreateNivelsTable' => $baseDir . '/database/migrations/2017_05_02_202927_create_nivels_table.php',
     'CreateOfertasTable' => $baseDir . '/database/migrations/2017_03_30_224237_create_ofertas_table.php',
     'CreateOtrosTable' => $baseDir . '/database/migrations/2017_05_02_203928_create_otros_table.php',

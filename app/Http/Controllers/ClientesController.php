@@ -13,6 +13,7 @@ use App\Correo;
 use App\DocAlumno;
 use App\Empleado;
 use App\Especialidad;
+use App\EstadoCivil;
 use App\Grupo;
 use App\HistoriaCliente;
 use App\Http\Controllers\Controller;
@@ -198,8 +199,9 @@ class ClientesController extends Controller
         $empleados->put(0, 'Seleccionar OpciÃ³n');
         $empleados = $empleados->reverse();
         //dd($empleados);
+        $estado_civiles = EstadoCivil::pluck('id', 'name');
         $cuestionarios = Ccuestionario::where('st_cuestionario_id', '=', '1')->pluck('name', 'id');
-        return view('clientes.create', compact('empleados', 'cuestionarios'))
+        return view('clientes.create', compact('empleados', 'cuestionarios', 'estado_civiles'))
             ->with('list', Cliente::getListFromAllRelationApps())
             ->with('list3', Inscripcion::getListFromAllRelationApps());
     }
@@ -396,7 +398,17 @@ class ClientesController extends Controller
         $historia = ConsultaCalificacion::where('cliente_id', $cliente->id)->get();
         //dd($historia->toArray());
         //count($cliente->adeudos));
-        return view('clientes.edit', compact('cliente', 'preguntas', 'cp', 'documentos_faltantes', 'empleados', 'cuestionarios', 'historia'))
+        $estado_civiles = EstadoCivil::pluck('name', 'id');
+        return view('clientes.edit', compact(
+            'cliente',
+            'preguntas',
+            'cp',
+            'documentos_faltantes',
+            'empleados',
+            'cuestionarios',
+            'historia',
+            'estado_civiles'
+        ))
             ->with('list', Cliente::getListFromAllRelationApps())
             ->with('list1', PivotDocCliente::getListFromAllRelationApps())
             ->with('list2', CombinacionCliente::getListFromAllRelationApps())

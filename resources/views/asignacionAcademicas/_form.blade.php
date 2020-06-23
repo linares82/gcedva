@@ -22,6 +22,13 @@
                          <span class="help-block">{{ $errors->first("docente_oficial") }}</span>
                         @endif
                      </div>
+                     <div class="form-group col-md-4 @if($errors->has('docente_oficial_id')) has-error @endif">
+                        <label for="docente_oficial_id-field">Docente Ofical</label>
+                        {!! Form::select("docente_oficial_id", $list["Empleado"], null, array("class" => "form-control select_seguridad", "id" => "docente_oficial_id-field")) !!}             
+                        @if($errors->has("docente_oficial_id"))
+                         <span class="help-block">{{ $errors->first("docente_oficial_id") }}</span>
+                        @endif
+                     </div>
                      <div class="form-group col-md-4 @if($errors->has('grupo_id')) has-error @endif">
                         <label for="grupo_id-field">Grupo</label>
                         {!! Form::select("grupo_id", $list["Grupo"], null, array("class" => "form-control select_seguridad", "id" => "grupo_id-field")) !!}

@@ -137,11 +137,19 @@
                         </div>
 
                         @if(isset($cliente))
-                        <div class="form-group col-md-4 @if($errors->has('paise_id')) has-error @endif">
+                        <!--<div class="form-group col-md-4 @if($errors->has('paise_id')) has-error @endif">
                             <label for="paise_id-field">Pais:{{$cliente->paise->name}}</label>
                             {!! Form::hidden("pais_id", $cliente->paise_id, array("class" => "form-control input-sm", "id" => "pais_id-field")) !!}
                         </div>
+                    -->
                         @endif
+                        <div class="form-group col-md-4 @if($errors->has('nacionalidad')) has-error @endif">
+                            <label for="nacionalidad-field">Nacionalidad</label>
+                            {!! Form::text("nacionalidad", null, array("class" => "form-control input-sm", "id" => "nacionalidad-field")) !!}
+                            @if($errors->has("nacionalidad"))
+                            <span class="help-block">{{ $errors->first("nacionalidad") }}</span>
+                            @endif
+                        </div>
                         <div class="form-group col-md-4 @if($errors->has('escolaridad_id')) has-error @endif">
                             <label for="escolaridad_id-field">Escolaridad</label>
                             {!! Form::select("escolaridad_id", $list["Escolaridad"], null, array("class" => "form-control select_seguridad", "id" => "escolaridad_id-field")) !!}
@@ -149,6 +157,7 @@
                             <span class="help-block">{{ $errors->first("escolaridad_id") }}</span>
                             @endif
                         </div>
+                        
                     </div>
                 </div>
                 <div class="box box-default box-solid">
@@ -695,11 +704,32 @@
                     <span class="help-block">{{ $errors->first("genero") }}</span>
                     @endif
                 </div>
+                <div class="form-group col-md-4 @if($errors->has('estado_civil_id')) has-error @endif">
+                    <label for="estado_civil_id-field">Estado Civil</label>
+                    {!! Form::select("estado_civil_id", $estado_civiles, null, array("class" => "form-control select_seguridad", "id" => "estado_civil_id-field")) !!}
+                    @if($errors->has("estado_civil_id"))
+                    <span class="help-block">{{ $errors->first("estado_civil_id") }}</span>
+                    @endif
+                </div>
                 <div class="form-group col-md-4 @if($errors->has('fec_nacimiento')) has-error @endif">
                     <label for="fec_nacimiento-field">F. Nacimiento</label>
                     {!! Form::text("fec_nacimiento", null, array("class" => "form-control input-sm", "id" => "fec_nacimiento-field")) !!}
                     @if($errors->has("fec_nacimiento"))
                     <span class="help-block">{{ $errors->first("fec_nacimiento") }}</span>
+                    @endif
+                </div>
+                <div class="form-group col-md-4 @if($errors->has('estado_nacimiento_id')) has-error @endif">
+                    <label for="estado_nacimiento_id-field">Estado Nacimiento</label>
+                    {!! Form::select("estado_nacimiento_id", $list["Estado"], null, array("class" => "form-control select_seguridad", "id" => "estado_nacimiento_id-field")) !!}
+                    @if($errors->has("estado_nacimiento_id"))
+                    <span class="help-block">{{ $errors->first("estado_nacimiento_id") }}</span>
+                    @endif
+                </div>
+                <div class="form-group col-md-4 @if($errors->has('edad')) has-error @endif">
+                    <label for="edad-field">Edad</label>
+                    {!! Form::text("edad", null, array("class" => "form-control input-sm", "id" => "edad-field")) !!}
+                    @if($errors->has("edad"))
+                    <span class="help-block">{{ $errors->first("edad") }}</span>
                     @endif
                 </div>
                 <div class="form-group col-md-4 @if($errors->has('lugar_nacimiento')) has-error @endif">
@@ -714,6 +744,13 @@
                     {!! Form::checkbox("extranjero_bnd", 1, null, [ "id" => "extranjero_bnd-field"]) !!}
                     @if($errors->has("extranjero"))
                     <span class="help-block">{{ $errors->first("extranjero") }}</span>
+                    @endif
+                </div>
+                <div class="form-group col-md-4 @if($errors->has('fec_reingreso')) has-error @endif">
+                    <label for="fec_reingreso-field">F. Reingreso</label>
+                    {!! Form::text("fec_reingreso", null, array("class" => "form-control input-sm fecha", "id" => "fec_reingreso-field")) !!}
+                    @if($errors->has("fec_reingreso"))
+                    <span class="help-block">{{ $errors->first("fec_reingreso") }}</span>
                     @endif
                 </div>
                 <div class="form-group col-md-4 @if($errors->has('distancia_escuela')) has-error @endif">
