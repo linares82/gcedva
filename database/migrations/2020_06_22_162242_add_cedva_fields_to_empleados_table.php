@@ -20,9 +20,9 @@ class AddCedvaFieldsToEmpleadosTable extends Migration
             $table->string('pais_nacimiento')->nullable();
             $table->integer('nivel_estudio_id')->unsigned()->nullable();
             $table->index('nivel_estudio_id');
-            $table->string('profesion')->nullabe();
-            $table->string('cedula')->nullabe();
-            $table->string('anios_servicio_escuela')->nullabe();
+            $table->string('profesion')->nullable();
+            $table->string('cedula')->nullable();
+            $table->string('anios_servicio_escuela')->nullable();
         });
     }
 

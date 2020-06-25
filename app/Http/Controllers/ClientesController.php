@@ -1832,7 +1832,7 @@ class ClientesController extends Controller
 
         $id = 0;
         $input = $request->all();
-        $empleado = Empleado::where('mail', $input['mail_empleado_asignado'])->first();
+        $empleado = Empleado::where('mail_empresa', $input['mail_empleado_asignado'])->first();
         //dd($input);
         //$empleado=Empleado::find($request->input('empleado_id'));
         //$input['plantelplantel_id']=$empleado->plantel->id;

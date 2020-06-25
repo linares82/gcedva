@@ -347,7 +347,7 @@
                                     <th>Nivel</th>
                                     <th>Grado</th>
                                     <th>Turno</th>
-                                    <th>Inscribir</th>
+                                    <th>Inscripción</th>
                                     <th>Plan Pago</th>
                                     <th>beca</th>
                                     <th></th>
@@ -381,7 +381,10 @@
                                         <td>
                                         @if($c->bnd_inscrito==1)  
                                             Si
+                                        @elseif($c->inscripcion)
+                                            Si
                                         @endif
+                                        
                                         </td>
                                         <td>
                                            <!--@{!! Form::select("plan_pago_id", $c->turno->planes->pluck('name','id'),$c->plan_pago_id,array("class"=>"form-control select_seguridad plan_pago","id"=>"plan_pago_id-field","style"=>"width:75%;",'data-combinacion'=>$c->id)) !!} -->

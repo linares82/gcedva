@@ -504,8 +504,8 @@ class HacademicasController extends Controller
         $materia = Materium::find($asignacionAcademica->materium_id);
         //dd($asignacionAcademica);
         $carga_ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $materia->ponderacion_id)
-        ->where('bnd_activo',1)
-        ->pluck('name', 'id');
+            ->where('bnd_activo', 1)
+            ->pluck('name', 'id');
 
 
         return view('hacademicas.calificacionGrupos', compact('asignacion', 'examen', 'carga_ponderaciones'))
@@ -560,7 +560,7 @@ class HacademicasController extends Controller
                 'stc.id as estatus_cliente_id'
             )
                 ->where('hacademicas.grupo_id', '=', $asignacionAcademica->grupo_id)
-		->join('inscripcions as i','i.id','=','hacademicas.inscripcion_id')
+                ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
                 ->join('calificacions as c', 'c.hacademica_id', '=', 'hacademicas.id')
                 ->join('calificacion_ponderacions as cp', 'cp.calificacion_id', '=', 'c.id')
                 ->join('carga_ponderacions as cpo', 'cpo.id', '=', 'cp.carga_ponderacion_id')
@@ -572,8 +572,11 @@ class HacademicasController extends Controller
                 ->where('cp.carga_ponderacion_id', '=', $data['carga_ponderacion_id'])
                 ->whereNull('hacademicas.deleted_at')
                 ->whereNull('i.deleted_at')
-		->whereNull('cp.deleted_at')
-                ->orderBy('hacademicas.cliente_id')
+                ->whereNull('cp.deleted_at')
+                ->orderBy('cli.nombre')
+                ->orderBy('cli.nombre2')
+                ->orderBy('cli.ape_paterno')
+                ->orderBy('cli.ape_materno')
                 ->get();
         } else {
             //if($calificacion_inicio<=$hoy and $calificacion_fin>=$hoy){
@@ -591,7 +594,7 @@ class HacademicasController extends Controller
                     'stc.name as estatus_cliente, stc.id as estatus_cliente_id'
                 )
                     ->where('hacademicas.grupo_id', '=', $asignacionAcademica->grupo_id)
-      		    ->join('inscripcions as i','i.id','=','hacademicas.inscripcion_id')
+                    ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
                     ->join('calificacions as c', 'c.hacademica_id', '=', 'hacademicas.id')
                     ->join('calificacion_ponderacions as cp', 'cp.calificacion_id', '=', 'c.id')
                     ->join('carga_ponderacions as cpo', 'cpo.id', '=', 'cp.carga_ponderacion_id')
@@ -601,7 +604,10 @@ class HacademicasController extends Controller
                     ->where('hacademicas.materium_id', '=', $asignacionAcademica->materium_id)
                     ->where('c.tpo_examen_id', '=', $data['tpo_examen_id'])
                     ->where('cp.carga_ponderacion_id', '=', $data['carga_ponderacion_id'])
-                    ->orderBy('hacademicas.cliente_id')
+                    ->orderBy('cli.nombre')
+                    ->orderBy('cli.nombre2')
+                    ->orderBy('cli.ape_paterno')
+                    ->orderBy('cli.ape_materno')
                     ->whereExists(function ($query) {
                         $query->from('calendario_evaluacions as ce')
                             ->join('lectivos as lec', 'lec.id', '=', 'ce.lectivo_id')
@@ -610,8 +616,8 @@ class HacademicasController extends Controller
                             ->whereRaw('lec.id = hacademicas.lectivo_id');
                     })
                     ->whereNull('hacademicas.deleted_at')
-		    ->whereNull('i.deleted_at')
-		    ->whereNull('cp.deleted_at')
+                    ->whereNull('i.deleted_at')
+                    ->whereNull('cp.deleted_at')
                     ->get();
             }
         }
@@ -717,19 +723,19 @@ class HacademicasController extends Controller
             //dd($g->toArray());
             if ($tpo_examen_id == 2 and $g->name == "BACHILLERATO") {
                 $carga_ponderaciones = CargaPonderacion::where('ponderacion_id', '=', 1)
-                ->where('tiene_detalle', '=', 0)
-                ->where('bnd_activo',1)
-                ->get();
+                    ->where('tiene_detalle', '=', 0)
+                    ->where('bnd_activo', 1)
+                    ->get();
             } elseif ($tpo_examen_id == 2 and $g->name <> "BACHILLERATO") {
                 $carga_ponderaciones = CargaPonderacion::where('ponderacion_id', '=', 2)
-                ->where('tiene_detalle', '=', 0)
-                ->where('bnd_activo',1)
-                ->get();
+                    ->where('tiene_detalle', '=', 0)
+                    ->where('bnd_activo', 1)
+                    ->get();
             } elseif ($tpo_examen_id == 1) {
                 $carga_ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $materia->ponderacion_id)
-                ->where('tiene_detalle', '=', 0)
-                ->where('bnd_activo',1)
-                ->get();
+                    ->where('tiene_detalle', '=', 0)
+                    ->where('bnd_activo', 1)
+                    ->get();
             }
 
             //dd($carga_ponderaciones->toArray());

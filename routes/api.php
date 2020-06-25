@@ -50,6 +50,14 @@ Route::get(
 );
 
 Route::get(
+    '/turnos/listaXplantelYespecialidadYgradoYnivel',
+    array(
+        'as' => 'turnos.listaXplantelYespecialidadYgradoYnivel',
+        'uses' => 'TurnosController@apiListaXplantelYespecialidadYgradoYnivel',
+    )
+);
+
+Route::get(
     '/medios/lista',
     array(
         'as' => 'medios.lista',

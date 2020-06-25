@@ -186,4 +186,20 @@ class TurnosController extends Controller
         $turnos = Turno::orderBy('plantel_id')->orderBy('especialidad_id')->orderBy('nivel_id')->orderBy('grado_id')->get();
         return view('combinacionClientes.reportes.cargas', compact('turnos'));
     }
+
+    public function apiListaXplantelYespecialidadYgradoYnivel(Request $request)
+    {
+        //dd($request);
+        $datos = $request->all();
+        $lista = Turno::select('id', 'name')
+            ->where('plantel_id', $datos['plantel'])
+            ->where('especialidad_id', $datos['especialidad'])
+            ->where('nivel_id', $datos['nivel'])
+            ->where('grado_id', $datos['grado'])
+            ->get();
+        if (count($lista) == 0) {
+            return response()->json(['msj' => 'Sin registros'], 500);
+        }
+        return response()->json(['resultado' => $lista]);
+    }
 }
