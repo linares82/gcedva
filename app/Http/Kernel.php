@@ -18,7 +18,7 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
-		\Fruitcake\Cors\HandleCors::class,
+        \Fruitcake\Cors\HandleCors::class,
     ];
 
     /**
@@ -63,5 +63,8 @@ class Kernel extends HttpKernel
         'ability' => \Zizaco\Entrust\Middleware\EntrustAbility::class,
         'webhook' => App\Http\Middleware\ValidateMailgunWebhook::class,
         'APIToken' => \App\Http\Middleware\APIToken::class,
+        'fruitCors' => \Fruitcake\Cors\HandleCors::class,
+        'corsMultipagos' => \App\Http\Middleware\CorsMultipagos::class,
+        'cors' => \App\Http\Middleware\Cors::class,
     ];
 }

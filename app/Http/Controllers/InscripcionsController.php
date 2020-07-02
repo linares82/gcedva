@@ -519,8 +519,9 @@ class InscripcionsController extends Controller
             'mat.name as materia',
             DB::raw('concat(e.nombre," ",e.ape_paterno," ",e.ape_materno) as maestro'),
             'gra.name as grado',
+            'gra.denominacion',
             'p.razon as plantel',
-            'p.logo',
+            'esp.imagen as logo',
             'aa.id as asignacion',
             'c.id as cliente',
             'p.id as p_id',
@@ -536,6 +537,7 @@ class InscripcionsController extends Controller
             ->join('empleados as e', 'e.id', '=', 'aa.empleado_id')
             ->join('grados as gra', 'gra.id', '=', 'hacademicas.grado_id')
             ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
+            ->join('especialidads as esp', 'esp.id', '=', 'hacademicas.especialidad_id')
             ->where('c.st_cliente_id', '<>', 3)
             ->where('c.st_cliente_id', '<>', 1)
             ->where('aa.id', $data['asignacion'])
@@ -713,8 +715,9 @@ class InscripcionsController extends Controller
             'l.name as lectivo',
             DB::raw('concat(e.nombre," ",e.ape_paterno," ",e.ape_materno) as maestro'),
             'gra.name as grado',
+            'gra.denominacion',
             'p.razon as plantel',
-            'p.logo',
+            'esp.imagen as logo',
             'aa.id as asignacion',
             'c.id as cliente',
             'mate.name as materia',
@@ -739,6 +742,7 @@ class InscripcionsController extends Controller
             ->join('empleados as e', 'e.id', '=', 'aa.empleado_id')
             ->join('grados as gra', 'gra.id', '=', 'hacademicas.grado_id')
             ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
+            ->join('especialidads as esp','esp.id','=','hacademicas.especialidad_id')
             ->where('aa.id', $data['asignacion'])
             ->where('hacademicas.plantel_id', $data['plantel_f'])
             ->where('hacademicas.lectivo_id', $data['lectivo_f'])
@@ -1233,7 +1237,7 @@ class InscripcionsController extends Controller
             DB::raw('concat(e.nombre," ",e.ape_paterno," ",e.ape_materno) as maestro'),
             'gra.name as grado',
             'p.razon as plantel',
-            'p.logo',
+            'esp.imagen as logo',
             'aa.id as asignacion',
             'c.id as cliente',
             'p.id as p_id',
@@ -1245,6 +1249,7 @@ class InscripcionsController extends Controller
             ->join('grupos as g', 'g.id', '=', 'hacademicas.grupo_id')
             ->join('lectivos as l', 'l.id', '=', 'hacademicas.lectivo_id')
             ->join('asignacion_academicas as aa', 'aa.grupo_id', '=', 'g.id')
+            ->join('especialidads as esp','esp.id','=','hacademicas.especialidad_id')
             //->join('asistencia_rs as asis', 'asis.asignacion_academica_id','=','aa.id')
             ->join('empleados as e', 'e.id', '=', 'aa.empleado_id')
             ->join('grados as gra', 'gra.id', '=', 'hacademicas.grado_id')

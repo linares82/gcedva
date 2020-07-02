@@ -4,6 +4,7 @@ use App\CajaConcepto;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\createCajaConcepto;
 use App\Http\Requests\updateCajaConcepto;
+use App\ConceptoMultipago;
 use App\ReglaRecargo;
 use Auth;
 use Illuminate\Http\Request;
@@ -31,7 +32,8 @@ class CajaConceptosController extends Controller
     public function create()
     {
         $reglas = ReglaRecargo::pluck('name', 'id');
-        return view('cajaConceptos.create', compact('reglas'))
+        $listaMultipagos=ConceptoMultipago::pluck('name','id');
+        return view('cajaConceptos.create', compact('reglas','listaMultipagos'))
             ->with('list', CajaConcepto::getListFromAllRelationApps());
     }
 
@@ -88,7 +90,8 @@ class CajaConceptosController extends Controller
     {
         $cajaConcepto = $cajaConcepto->find($id);
         $reglas = ReglaRecargo::pluck('name', 'id');
-        return view('cajaConceptos.edit', compact('cajaConcepto', 'reglas'))
+        $listaMultipagos=ConceptoMultipago::pluck('name','id');
+        return view('cajaConceptos.edit', compact('cajaConcepto', 'reglas','listaMultipagos'))
             ->with('list', CajaConcepto::getListFromAllRelationApps());
     }
 

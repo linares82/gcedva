@@ -384,6 +384,7 @@ class AsignacionAcademicasController extends Controller
 			'l.name as lectivo'
 		)
 			->join('hacademicas as h', 'h.cliente_id', '=', 'clientes.id')
+			->join('inscripcions as i', 'i.id', '=', 'h.inscripcion_id')
 			->join('plantels as p', 'p.id', '=', 'h.plantel_id')
 			->join('especialidads as e', 'e.id', '=', 'h.especialidad_id')
 			->join('nivels as n', 'n.id', '=', 'h.nivel_id')
@@ -394,6 +395,7 @@ class AsignacionAcademicasController extends Controller
 			->where('h.grupo_id', '=', $asignacion->grupo_id)
 			->where('h.plantel_id', '=', $asignacion->plantel_id)
 			->whereNull('h.deleted_at')
+			->whereNull('i.deleted_at')
 			->distinct()
 			->get();
 		//dd($clientes->toArray());

@@ -80,7 +80,7 @@
                     <!--<div style="page-break-after:always;"></div>-->
                         <tr>
                             <td colspan="5">
-                                {{"Plantel: ".$r->plantel }} <br/>
+                                {{$r->denominacion }} <br/>
                                 {{"Grupo: ".$r->grupo}}<br/>
                                 {{"Periodo Lectivo: ".$r->lectivo}}<br/>
                                 {{"Profesor: ".$r->maestro}}<br/>
@@ -91,7 +91,7 @@
                                 <img src="data:image/png;base64, 
                                 {!! base64_encode(QrCode::format('png')->size(100)->generate('Asignacion:'.$asignacion->id.
                                 ', Alumnos Inscritos:'.$total_alumnos.', rango:'.$data['fecha_f'].':'.$data['fecha_t'].', token:'.$token)) !!} ">
-                                <img src="{{ asset('/imagenes/planteles/'.$r->p_id."/".$r->logo) }}" alt="Sin logo" height="80px" ></img>
+                                <img src="{{ asset('/storage/especialidads/'.$r->logo) }}" alt="Sin logo" height="80px" ></img>
                             </td>
                         </tr>
                         <tr>

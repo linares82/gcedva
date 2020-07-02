@@ -280,7 +280,22 @@
                         <tbody>
                             @foreach($caja->cajaLns as $linea)
                             <tr>
-                                <td> {{$linea->cajaConcepto->name}} </td><td>{{ $linea->subtotal }}</td><td>{{ $linea->descuento }}</td>
+                                @if($caja->forma_pago_id==3 or $caja->forma_pago_id==4 or $caja->forma_pago_id==6)
+                                    @php
+                                    $valor=$linea->cajaConcepto->cve_multipagos;
+                                    $valores=$caja->plantel->conceptoMultipagos->pluck('id');
+                                    $indicador=0;
+                                    foreach($valores as $v){
+                                        if($v==$valor){
+                                            $indicador=1;
+                                        }
+                                    }
+                                    
+                                
+                                    @endphp    
+                                <td> {{$linea->cajaConcepto->name}} </td>
+                                <td>{{ $linea->subtotal }}</td>
+                                <td>{{ $linea->descuento }}</td>
                                 <td>
                                     @if(isset($caja) and $caja->st_caja_id==0)
                                     @permission('cajaLns.destroy')
@@ -290,6 +305,7 @@
                                     @endpermission
                                     @endif
                                 </td>
+                                @endif
                             </tr>
                             @endforeach
                             <tr>
@@ -368,21 +384,30 @@
                                     @endpermission
                                     <a href="{{route('pagos.imprimir', array('pago'=>$pago->id))}}" data-toggle="tooltip" title="Imprimir" class="btn btn-info btn-xs " target="_blank"><i class="fa fa-print"></i></a>
                                 </td>
-                                @if($pago->peticionMultipago->count()>0)
+                                @if(optional($pago->peticionMultipago)->count()>0)
                                     
                                 <tr>
                                 <td><strong>Peticion Multipagos</strong></td>
                                     <td>
+                                        @php
+                                        
+                                        $success=\App\SuccessMultipago::where('mp_order', $pago->peticonMultipago->mp_order)
+                                        ->where('mp_reference', $pago->peticonMultipago->mp_reference)
+                                        ->where('mp_amount', $pago->peticonMultipago->mp_amount)
+                                        ->where('mp_signature', $pago->peticonMultipago->mp_signature)
+                                        ->first();
+                                        @endphp
+                                        
                                         @if($pago->bnd_pagado==1) 
-                                        <span class="badge bg-green">Pagado </span>
+                                        <span class="badge bg-green">Pagado - {{$success->responsemsg}}</span>
                                         @else 
-                                        <span class="badge bg-red"> En proceso <span>
+                                        <span class="badge bg-red"> En proceso - {{$success->responsemsg}}<span>
                                         @endif    
                                     </td> 
                                     <td>
                                         @if($pago->bnd_pagado<>1)  
                                         @permission('pagos.store')
-                                        <button type="button" class="btn btn-success" data-dismiss="modal" data-pago="{{$pago->id}}" id="aRepetirPeticion">
+                                        <button type="button" class="btn btn-success aRepetirPeticion" data-dismiss="modal" data-pago="{{$pago->id}}">
                                             <span class='glyphicon glyphicon-reload'></span> Solicitud ({{$pago->peticionMultipago->contador_peticiones}})
                                         </button>
                                         @endif
@@ -484,12 +509,14 @@
                                 @if($adeudo->cajaConcepto->id==1 or 
                                 $adeudo->cajaConcepto->id==23 or 
                                 $adeudo->cajaConcepto->id==25)
+                                     
                                     <input type="checkbox" class="adeudos_tomados" value="{{$adeudo->id}}" />
                                 @endif
                                 @endpermission
                                 @permission('cajas.no_inscripcion')
                                 
                                 <input type="checkbox" class="adeudos_tomados" value="{{$adeudo->id}}" />
+                                
                                 
                                 @endpermission
                                 @endif
@@ -671,6 +698,13 @@ Agregar nuevo registro
                         <span class="help-block">{{ $errors->first("forma_pago_id") }}</span>
                        @endif
                     </div>
+                    <div class="form-group col-md-3 @if($errors->has('bnd_referenciado')) has-error @endif">
+                        <label for="bnd_referenciado-field">Pago Referenciado</label>
+                        {!! Form::checkbox("bnd_referenciado", 1, null, [ "id" => "bnd_referenciado-field", 'class'=>'minimal']) !!}
+                        @if($errors->has("bnd_referenciado"))
+                        <span class="help-block">{{ $errors->first("bnd_referenciado") }}</span>
+                        @endif
+                    </div>
                     <div class="form-group col-md-6 @if($errors->has('cuenta_efectivo_id')) has-error @endif">
                        <label for="cuenta_efectivo_id-field">Cuenta Efectivo</label>
                        {!! Form::select("cuenta_efectivo_id-field", App\CuentasEfectivo::pluck('name','id'), null, array("class" => "form-control", "id" => "cuenta_efectivo_id-field")) !!}
@@ -812,6 +846,7 @@ Agregar nuevo registro
         <input type="hidden" name="mp_order" id="mp_order" value="">
         <input type="hidden" name="mp_reference" id="mp_reference" value="">
         <input type="hidden" name="mp_node" id="mp_node" value="">
+        <input type="hidden" name="mp_concept" id="mp_concept" value="">
         <input type="hidden" name="mp_amount" id="mp_amount" value="">
         <input type="hidden" name="mp_customername" id="mp_customername" value="">
         <input type="hidden" name="mp_currency" id="mp_currency" value="">
@@ -884,7 +919,8 @@ Agregar nuevo registro
             }else{
                 $('#fecha-field').prop('disabled',false);
             }
-        });
+            
+        }); 
         
          $('.monto_editable').hide();
          $('.fecha_editable').hide();
@@ -973,7 +1009,7 @@ Agregar nuevo registro
             beforeSend : function(){$("#loading3").show(); },
             complete : function(){$("#loading3").hide(); },
             success: function(data) {
-            window.location.href = "{{route('cajas.edit', $caja->id)}}";
+            window.location.href = "{{ route('cajas.edit', $caja->id) }}";
             }
     });
     });
@@ -1013,9 +1049,19 @@ Agregar nuevo registro
         $('#monto-field').val({{$monto_max_pago}});
         $('#forma_pago_id-field').val({{$caja->forma_pago_id}}).change();
         $('#fecha_ln-field').val('{{$caja->fecha}}');
+        console.log({{$indicador}});
+        @if(isset($caja) )
+            @if($caja->cajaLns->count()<>1 or $indicador==0 or ($caja->forma_pago_id<>3 and $caja->forma_pago_id<>4 and $caja->forma_pago_id<>6))
+            
+            $('#bnd_referenciado-field').prop('disabled', true);
+            @endif
+            
+        @endif  
+        
         $('#addPago').modal('show');
         
         $('#AgregarPago').prop('disabled',true);
+        
         
         //Cargar cuentas de efectivo
         //Fin cargar cuentas de efectivo
@@ -1084,8 +1130,9 @@ Agregar nuevo registro
         
         });
 
-        $('#aRepetirPeticion').on('click', function() {    
+        $('.aRepetirPeticion').on('click', function() {    
             let pago=$(this).data('pago');
+
             $.ajax({
                 type: 'GET',
                 url: '{{url("pagos/repetirMultipagosSolicitud")}}',
@@ -1118,6 +1165,8 @@ Agregar nuevo registro
                         $('#frm_multipagos').attr("action", data.datos.url_peticion);
                         $('#frm_multipagos').submit();
                         $('#divActualizar').modal('show');
+                        
+                        
                         //$('#form-buscarVenta').submit();
                         
                 }
@@ -1181,9 +1230,10 @@ Agregar nuevo registro
     @endif
     
     $(document).on('click', '.validarReferencia', function() {
-    
-    $.ajax({
-        type: 'GET',
+
+        if(!$('#bnd_referenciado-field').prop('checked')){
+            $.ajax({
+            type: 'GET',
             url: '{{route("pagos.validarReferencia")}}',
             data: {
             '_token': $('input[name=_token]').val(),
@@ -1218,7 +1268,21 @@ Agregar nuevo registro
                 }
                 
             }
-    });
+            });    
+        }else{
+            monto=$('#monto-field').val().toString();
+            fecha=$('#fecha_ln-field').val().toString();
+            forma_pago_id=$('#forma_pago_id-field option:selected').val().valueOf();
+            cuenta_efectivo_id=$('#cuenta_efectivo_id-field option:selected').val().valueOf();
+            ref0=$('#referencia-field').val().toString();
+            if(monto!='' & fecha!='' & forma_pago_id!=0 & ref0!=''){
+                $('#AgregarPago').prop('disabled',false);
+            }
+        }
+
+        
+    
+    
     });
     
     @if(isset($vplantel) and isset($vconsecutivo))

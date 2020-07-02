@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use File as Archi;
+use App\ConceptoMultipago;
 use App\DocPlantelPlantel;
 use App\Plantel;
 use App\Empleado;
@@ -47,7 +48,8 @@ class PlantelsController extends Controller
 			->where('puesto_id', 23)->pluck('name', 'id');
 		$enlaces = Empleado::select(DB::raw("CONCAT(nombre,' ',ape_paterno,' ',ape_materno) AS name"), 'id')
 			->where('puesto_id', 15)->pluck('name', 'id');
-		return view('plantels.create', compact('directores', 'responsables', 'enlaces'))
+		$lista_conceptosMultipago=ConceptoMultipago::pluck('name','id');
+		return view('plantels.create', compact('directores', 'responsables', 'enlaces','lista_conceptosMultipago'))
 			->with('list', Plantel::getListFromAllRelationApps());
 	}
 
@@ -59,7 +61,8 @@ class PlantelsController extends Controller
 	 */
 	public function store(createPlantel $request)
 	{
-		$input = $request->all();
+		$input = $request->except('concepto_multipago_id');
+		$conceptos = $request->only('concepto_multipago_id');
 		$input['usu_alta_id'] = Auth::user()->id;
 		$input['usu_mod_id'] = Auth::user()->id;
 		//$input['logo']="";
@@ -86,6 +89,9 @@ class PlantelsController extends Controller
 
 		//create data
 		$e = Plantel::create($input);
+
+		$plantel->conceptoMultipagos()->sync($conceptos['concepto_multipagos_id']);
+
 		if ($e) {
 			$ruta = public_path() . "/imagenes/planteles/" . $e->id . "/";
 			if (!file_exists($ruta)) {
@@ -160,7 +166,10 @@ class PlantelsController extends Controller
 			->whereNotIn('id', $de_array)
 			->get();
 
-		return view('plantels.edit', compact('plantel', 'ruta', 'directores', 'responsables', 'documentos_faltantes', 'enlaces'))
+		$lista_conceptosMultipago=ConceptoMultipago::pluck('name','id');
+
+		return view('plantels.edit', compact('plantel', 'ruta', 'directores', 'responsables', 
+		'documentos_faltantes', 'enlaces','lista_conceptosMultipago'))
 			->with('list', Plantel::getListFromAllRelationApps())
 			->with('list1', DocPlantelPlantel::getListFromAllRelationApps());
 	}
@@ -188,7 +197,8 @@ class PlantelsController extends Controller
 	public function update($id, Plantel $plantel, updatePlantel $request)
 	{
 		//dd($request->all());
-		$input = $request->all();
+		$input = $request->except('concepto_multipagos_id');
+		$conceptos=$request->only('concepto_multipagos_id');
 		$input['usu_mod_id'] = Auth::user()->id;
 
 		//$input['logo']="";
@@ -217,6 +227,9 @@ class PlantelsController extends Controller
 
 		//update data
 		$e = $plantel->update($input);
+
+		$plantel->conceptoMultipagos()->sync($conceptos['concepto_multipagos_id']);
+
 		if ($e) {
 			$ruta = public_path() . "/imagenes/planteles/" . $id . "/";
 			if (!file_exists($ruta)) {

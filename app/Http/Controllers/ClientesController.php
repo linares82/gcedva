@@ -1829,11 +1829,11 @@ class ClientesController extends Controller
 
     public function apiStore(Request $request)
     {
-
+        //dd($_REQUEST);
         $id = 0;
         $input = $request->all();
         $empleado = Empleado::where('mail_empresa', $input['mail_empleado_asignado'])->first();
-        //dd($input);
+        //dd($empleado);
         //$empleado=Empleado::find($request->input('empleado_id'));
         //$input['plantelplantel_id']=$empleado->plantel->id;
         $input['usu_alta_id'] = 1;

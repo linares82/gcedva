@@ -50,31 +50,33 @@
         
         ?>
         <div class="SaltoDePagina">
+            <?php
+            $inscripcion= \App\Inscripcion::find($c->inscripcion_id);
+             
+    /*            $inscripcion= \App\Inscripcion::where('plantel_id',$c->plantel_id)
+                                              ->where('especialidad_id',$c->especialidad_id)
+                                              ->where('nivel_id',$c->nivel_id)
+                                              ->where('grado_id',$c->grado_id)
+                                              ->where('grupo_id',$c->grupo_id)
+                                              ->where('lectivo_id',$c->lectivo_id)
+                                              ->first()*/
+                ?>
         <table width="100%">
             <td> <img src="{{ asset('storage/especialidads/'.$c->imagen) }}" alt="Sin logo" height="80px" ></img></td>
-            <td> {{$cliente->plantel->razon}} <br/> Informe de Calificaciones </td>
+            
         </table>
+        
         <table width="100%">
             <tr>
                 <td> Nombre: {{$cliente->nombre." ".$cliente->nombre2." ".$cliente->ape_paterno." ".$cliente->ape_materno}}</td>
-                <td>Fecha Impresion:{{Date('d-m-Y')}}</td>
+                <td>Fecha Impresión:{{Date('d-m-Y')}}</td>
             </tr>
             <tr>
-                <td colspan="3">Plantel:{{$cliente->plantel->razon}}</td>
+                <td colspan="3">{{$inscripcion->grado->denominacion}}</td>
                 
             </tr>
         </table>
-            <?php
-		$inscripcion= \App\Inscripcion::find($c->inscripcion_id);
-		 
-/*            $inscripcion= \App\Inscripcion::where('plantel_id',$c->plantel_id)
-                                          ->where('especialidad_id',$c->especialidad_id)
-                                          ->where('nivel_id',$c->nivel_id)
-                                          ->where('grado_id',$c->grado_id)
-                                          ->where('grupo_id',$c->grupo_id)
-                                          ->where('lectivo_id',$c->lectivo_id)
-                                          ->first()*/
-            ?>
+            
 
             <table width="100%" class='table_format'>
                 <thead>
@@ -96,13 +98,17 @@
                     <tr>
                         <td colspan='8'>
                     <?php 
-                        $hacademicas= \App\Hacademica::where('plantel_id',$c->plantel_id)
-                                          ->where('especialidad_id',$c->especialidad_id)
-                                          ->where('nivel_id',$c->nivel_id)
-                                          ->where('grado_id',$c->grado_id)
-                                          ->where('grupo_id',$c->grupo_id)
-                                          ->where('lectivo_id',$c->lectivo_id)
-                                          ->where('cliente_id',$c->id)
+                        $hacademicas= \App\Hacademica::select('hacademicas.*')->where('hacademicas.plantel_id',$c->plantel_id)
+					  ->join('inscripcions as i','i.id','=','hacademicas.inscripcion_id')
+                                          ->where('hacademicas.especialidad_id',$c->especialidad_id)
+                                          ->where('hacademicas.nivel_id',$c->nivel_id)
+                                          ->where('hacademicas.grado_id',$c->grado_id)
+                                          ->where('hacademicas.grupo_id',$c->grupo_id)
+                                          ->where('hacademicas.lectivo_id',$c->lectivo_id)
+                                          ->where('hacademicas.cliente_id',$c->id)
+					  ->where('hacademicas.inscripcion_id',$c->inscripcion_id)	
+					  ->whereNull('hacademicas.deleted_at')
+					  ->whereNull('i.deleted_at')
                                           ->get();
                     ?>        
                     <table class='table_format' width='100%'>
@@ -112,29 +118,58 @@
                         <tbody>
                             @foreach($hacademicas as $a)
                             <tr>
-                                <td colspan='3'>{{$a->materia->name}}</td>
+                                <td colspan='3'> {{$a->materia->name}}</td>
 
                                 <td colspan="5">
                                     <table class='table_format' width='100%'>
-
+					
                                         <tbody>
                                             @php
                                                 $cantidad_materias=0;
+						//$a->load('calificaciones');
+						$calificaciones=\App\Calificacion::where('hacademica_id',$a->id)->get();
                                             @endphp
+					    
                                             @foreach($a->calificaciones as $cali)
                                             <tr>
-
-                                                <tr>    
+							
+                                                <tr>
+						    @php
+						    //$cali->load('tpoExamen');
+						    //$cali->load('calificacionPonderacions');
+						    @endphp    
                                                     <strong>Tipo de examen:{{$cali->tpoExamen->name}} - </strong>
                                                     @foreach($cali->calificacionPonderacions as $calificacionPonderacion)
                                                         <th class="centrar_texto">{{$calificacionPonderacion->cargaPonderacion->name}}</th>
                                                     @endforeach
+                                                    <th>Promedio</th>
                                                 </tr>
                                                 <tr>
-                                                    <strong>Calificación: {{$cali->calificacion}}</strong>
+                                                    <strong>Calificacion: {{$cali->calificacion}}</strong>
+                                                    @php
+                                                        $cantidad_materias_validas=0;
+                                                        $sumatoria_calificacions_validas=0;
+                                                    @endphp
                                                     @foreach($cali->calificacionPonderacions as $calificacionPonderacion)
-                                                        <td class="centrar_texto">{{$calificacionPonderacion->calificacion_parcial}}</td>
+                                                        @if(is_null($calificacionParcial->deleted))
+                                                        <td class="centrar_texto">{{round($calificacionPonderacion->calificacion_parcial,2)}}</td>
+                                                        @php
+                                                         if($calificacionPonderacion->calificacion_parcial>0){
+                                                            $cantidad_materias_validas++;
+                                                            $sumatoria_calificacions_validas=$sumatoria_calificacions_validas+$calificacionPonderacion->calificacion_parcial;
+                                                        }   
+                                                        @endphp
+                                                        @endif
                                                     @endforeach
+                                                    @if($cantidad_materias_validas>0)
+                                                    @if(($sumatoria_calificacions_validas/$cantidad_materias_validas)>=6)    
+                                                    <td>{{ round($sumatoria_calificacions_validas/$cantidad_materias_validas) }}</td>
+                                                    @else
+                                                    <td> {{ intdiv(($sumatoria_calificacions_validas/$cantidad_materias_validas),1) }}</td>
+                                                    @endif
+                                                    @else
+                                                        <td>0</td>
+                                                    @endif
                                                 </tr>
                                             <tr>
                                             @php
@@ -159,16 +194,21 @@
                     $promedio=$sumatoria_calificaciones/$cantidad_materias;
                 @endphp
                 <table width='500px' class='table_format table_format2'>
-                    <tr><td><br/><br/><br/><br/><br/><br/><br/><br/><br/></td>
-                        <td >
+                    <tr><td><br/><br/><br/><br/><br/><br/><br/><br/>
+		     {{$cliente->plantel->director->nombre}} {{$cliente->plantel->director->ape_paterno}} {{$cliente->plantel->director->ape_materno}}
+		    </td>
+                        <!--<td >
                             <img src="data:image/png;base64, 
                                 {!! base64_encode(QrCode::format('png')->size(100)->generate('Cliente:'.$c->id.', Promedio:'.$promedio)) !!} ">    
+
                         </td>
-                        <td > </td></tr>
-                    <tr><td ></td><td ></td><td ></td></tr>
-                    <tr><td>Director de Carrera</td>
-                           <td></td>
-                           <td>Instructor del Area</td>
+                        <td > </td>
+			-->
+		    </tr>
+                    <tr><td ></td><!--<td ></td><td ></td>--></tr>
+                    <tr><td>Director</td>
+                           <!--<td></td>
+                           <td>Instructor del Area</td>-->
                     </tr>
                 </table
                 
@@ -187,7 +227,7 @@
                       </tr>
                     <tr>
                       <td height="70" align="center" valign="bottom" bordercolor="#FFFFFF"><strong>____________________________________________________</strong><br>
-                        Nombre y firma del alumno (enterado y de conformidad)</td>
+                        Nombre y firma del padre o tutor (enterado y de conformidad)</td>
                       <td align="center" valign="bottom" bordercolor="#FFFFFF"><br>
                   <br>
 

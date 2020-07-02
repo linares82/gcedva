@@ -100,6 +100,7 @@ class AsistenciaRsController extends Controller
 					->where('hacademicas.materium_id', $asignacionAcademica->materium_id)
 					->orderBy('hacademicas.cliente_id')
 					->whereNull('hacademicas.deleted_at')
+					->whereNull('i.deleted_at')
 					->get();
 				//dd($asistencias);
 

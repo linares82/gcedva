@@ -21,7 +21,11 @@ return [
      * You can enable CORS for 1 or multiple paths.
      * Example: ['api/*']
      */
-    'paths' => ['api/*'],
+    //'paths' => ['api/*'],
+    'paths' => [
+        'api/plantels/*', 'api/especialidads/*', 'api/nivels/*', 'api/grados/*', 'api/turnos/*',
+        'api/medios/*', 'api/estados/*', 'api/municipios/*', 'api/clientes/*', 'api/multipagos/*',
+    ],
 
     /*
     * Matches the request method. `[*]` allows all methods.
@@ -36,7 +40,7 @@ return [
     /*
      * Patterns that can be used with `preg_match` to match the origin.
      */
-    'allowed_origins_patterns' => [],
+    'allowed_origins_patterns' => [''],
 
     /*
      * Sets the Access-Control-Allow-Headers response header. `[*]` allows all headers.

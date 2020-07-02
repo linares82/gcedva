@@ -177,4 +177,8 @@ class Plantel extends Model
 		return $this->hasMany('App\Mueble');
 	} // end
 
+	public function conceptoMultipagos()
+	{
+		return $this->belongsToMany('App\ConceptoMultipago', 'concepto_multipago_plantel', 'plantel_id', 'concepto_multipago_id');
+	} // end
 }

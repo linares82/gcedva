@@ -1,6 +1,6 @@
 <div class="form-group col-md-4 @if($errors->has('cve_multipagos')) has-error @endif">
    <label for="cve_multipagos-field">Clave Multipagos</label>
-   {!! Form::text("cve_multipagos", null, array("class" => "form-control input-sm", "id" => "cve_multipagos-field")) !!}
+   {!! Form::select("cve_multipagos", $listaMultipagos, $cajaConcepto->cve_multipagos, array("class" => "form-control select_seguridad", "id" => "cve_multipagos-crear")) !!}
    @if($errors->has("cve_multipagos"))
     <span class="help-block">{{ $errors->first("cve_multipagos") }}</span>
    @endif

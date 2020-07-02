@@ -630,6 +630,12 @@ class HacademicasController extends Controller
             ->where('lectivo_id', '=', $asignacionAcademica->lectivo_id)
             ->where('materium_id', '=', $asignacionAcademica->materium_id)
             ->first();
+            
+        if($hacademicas->count()==0){
+            return view('hacademicas.calificacionGrupos')
+            ->with('list', Hacademica::getListFromAllRelationApps())
+            ->with('msj', $msj);    
+        }
 
         $g = Grado::find($hacademica->grado_id)->first();
         //dd($g->toArray());

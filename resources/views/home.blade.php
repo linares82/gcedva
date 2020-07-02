@@ -127,9 +127,15 @@
     @permission('indicadores_plantels')
     @php
     $empleado=App\Empleado::where('user_id',Auth::user()->id)->first();
-    
+    //dd($empleado->toArray());
+    //dd(Auth::user()->username);
+    $lista=App\EmpleadoPlantel::where('empleado_id',$empleado->id)->distinct()->pluck('plantel_id');
+    //dd($lista);
+    $listaPlanteles=App\Plantel::whereIn('id',$lista->toArray())->get();
+    //dd($listaPlanteles);
     @endphp
-    @foreach($empleado->plantels as $plantel)
+    @foreach($listaPlanteles as $plantel)
+    @if($plantel->id>0)
     <div class="row">
         <div class="form-group col-md-12 col-sm-12 col-xs-12">
             <div class="box box-success">
@@ -216,6 +222,7 @@
             </div>
         </div>
     </div>
+    @endif
     @endforeach
     @endpermission
 

@@ -59,7 +59,7 @@
                             <th>SOLICITUD</th>
                             <th>LECTIVO</th>
                         <th>CLIENTE</th>
-                        <th>PORCENTAJE MENSUALIDAD BECA</th>
+                        <th>PORCENTAJE BECA</th>
                         <th>ESTATUS</th>
                         <th>A. CAJA P.</th>
                         <th>A. DIR. P.</th>

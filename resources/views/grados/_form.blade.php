@@ -49,6 +49,13 @@
                          <span class="help-block">{{ $errors->first("denominacion") }}</span>
                         @endif
                      </div>
+                     <div class="form-group col-md-4 @if($errors->has('fec_rvoe')) has-error @endif">
+                        <label for="fec_rvoe-field">Fec. RVOE</label>
+                        {!! Form::text("fec_rvoe", null, array("class" => "form-control input-sm fecha", "id" => "fec_rvoe-field")) !!}
+                        @if($errors->has("fec_rvoe"))
+                         <span class="help-block">{{ $errors->first("fec_rvoe") }}</span>
+                        @endif
+                     </div>
                     <div class="form-group col-md-4 @if($errors->has('precio_online')) has-error @endif">
                        <label for="precio_online-field">Precio Online</label>
                        {!! Form::text("precio_online", null, array("class" => "form-control input-sm", "id" => "precio_online-field")) !!}

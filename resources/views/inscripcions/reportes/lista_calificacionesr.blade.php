@@ -107,7 +107,8 @@
                     <!--<div style="page-break-after:always;"></div>-->
                         <tr>
                             <td colspan="6">
-                                {{"Plantel: ".$r->plantel }} <br/>
+                                
+                                {{$r->denominacion }} <br/>
                                 {{"Grupo: ".$r->grupo}}<br/>
                                 {{"Periodo Lectivo: ".$r->lectivo}}<br/>
                                 {{"Profesor: ".$r->maestro}}<br/>
@@ -120,7 +121,7 @@
                             <td colspan="{{$contador}}">
                                 <img src="data:image/png;base64, 
                                 {!! base64_encode(QrCode::format('png')->size(100)->generate('Asignacion:'.$asignacion->id.', Alumnos Inscritos:'.$total_alumnos.', Maestro:'.$r->maestro)) !!} ">
-                                <img src="{{ asset('/imagenes/planteles/'.$r->p_id."/".$r->logo) }}" alt="Sin logo" height="80px" ></img>
+                                <img src="{{ asset('/storage/especialidads/'.$r->logo) }}" alt="Sin logo" height="80px" ></img>
                             </td>
                             <td></td><td></td>
                         </tr>
@@ -193,7 +194,11 @@
                 <tr>
                     <td></td><td></td><td></td><td></td><td> <?php //dd($promedios); ?> </td>
                     @foreach($promedios as $promedio)
+                    @if(($promedio/$cantidad_registros)>=6)
                     <td> {{ round($promedio/$cantidad_registros,2) }}</td>
+                    @else
+                    <td> {{ round($promedio/$cantidad_registros,0,PHP_ROUND_HALF_DOWN) }} </td>
+                    @endif
                     @endforeach
                     @if($promedio_totales>0)
                     <td>{{round($promedio_totales/$cantidad_registros,2)}}</td>

@@ -166,13 +166,16 @@ return $request->user();
  */
 
 //Multipagos inicio
+
+
 Route::post(
     '/multipagos/successMultipagos',
     array(
         'as' => 'multipagos.successMultipagos',
         'uses' => 'PagosController@successMultipagos',
     )
-);
+)->middleware('corsMultipagos');
+
 
 Route::post(
     '/multipagos/failMultipagos',
@@ -180,7 +183,9 @@ Route::post(
         'as' => 'multipagos.failMultipagos',
         'uses' => 'PagosController@failMultipagos',
     )
-);
+)->middleware('corsMultipagos');
+
+
 //Multipagos fin
 
 Route::post(

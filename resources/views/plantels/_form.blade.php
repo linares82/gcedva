@@ -92,6 +92,13 @@
                          <span class="help-block">{{ $errors->first("cve_multipagos") }}</span>
                         @endif
                      </div>
+                     <div class="form-group col-md-4 @if($errors->has('concepto_multipagos_id')) has-error @endif">
+                        <label for="concepto_multipagos_id-field">Conceptos Multipago *<input type="checkbox" id="seleccionar_conceptos">Seleccionar Todo</label>
+                        {!! Form::select("concepto_multipagos_id[]", $lista_conceptosMultipago, $plantel->conceptoMultipagos, array("class" => "form-control select_seguridad", "id" => "concepto_multipagos_id-field", 'multiple'=>true)) !!}
+                        @if($errors->has("concepto_multipagos_id"))
+                          <span class="help-block">{{ $errors->first("concepto_multipagos_id") }}</span>
+                        @endif
+                      </div>
                   </div>
                   <div class="box box-default">
                       <div class="box-body">
@@ -522,5 +529,16 @@
             }
         });
     })
+    $(document).ready(function() {
+  $('#seleccionar_conceptos').change(function(){
+    if( $(this).is(':checked') ) {
+      $("#concepto_multipagos_id-field > option").prop("selected","selected");
+            $("#concepto_multipagos_id-field").trigger("change");
+    }else{
+      $("#concepto_multipagos_id-field > option").prop("selected","selected");
+            $('#concepto_multipagos_id-field').val(null).trigger('change');
+    }
+  });
+});
     </script>
 @endpush
