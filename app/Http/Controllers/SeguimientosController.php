@@ -603,7 +603,14 @@ class SeguimientosController extends Controller
 
         $fecha_inicio = date('Y-m-j', strtotime('-8 day', strtotime(date('Y-m-j'))));
         //dd($fecha_inicio);
-        $ds_actividades = DB::table('hactividades as has')
+        $e = Empleado::where('user_id', '=', Auth::user()->id)->first();
+        $plantel = $e->plantel_id;
+        $planteles = array();
+        foreach ($e->plantels as $p) {
+            //dd($p->id);
+            array_push($planteles, $p->id);
+        }
+        $ds_actividades_aux = DB::table('hactividades as has')
             ->select(
                 'p.razon as plantel',
                 DB::raw('concat(e.nombre," ",e.ape_paterno," ",e.ape_materno) as empleado'),
@@ -618,10 +625,15 @@ class SeguimientosController extends Controller
             ->join('plantels as p', 'p.id', '=', 'e.plantel_id')
             ->where('has.asunto', '=', 'Cambio estatus ')
             ->where('has.fecha', '>=', $input['fecha_f'])
-            ->where('has.fecha', '<=', $input['fecha_t'])
-            ->where('c.plantel_id', '>=', $input['plantel_f'])
-            ->where('c.plantel_id', '<=', $input['plantel_t'])
-            ->get();
+            ->where('has.fecha', '<=', $input['fecha_t']);
+        if (isset($input['plantel_f']) and $input['plantel_t']) {
+            $ds_actividades_aux->where('c.plantel_id', '>=', $input['plantel_f'])
+                ->where('c.plantel_id', '<=', $input['plantel_t']);
+        } else {
+            $ds_actividades_aux->wherein('c.plantel_id', $planteles);
+        }
+
+        $ds_actividades = $ds_actividades_aux->get();
         //dd($ds_actividades->toArray());
         return view('seguimientos.reportes.analitica_actividadesr')
             ->with('actividades', json_encode($ds_actividades));

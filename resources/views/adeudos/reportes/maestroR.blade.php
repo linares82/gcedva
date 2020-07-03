@@ -123,7 +123,7 @@
     <table border="1" width="100%" >
         <thead>
             <tr>
-                <th>No.</th><th>Plantel</th><th>Cliente Id</th><th>Pagado</th><th>Monto Planeado</th><th>Concepto</th><th>Pago Recibido</th>
+                <th>No.</th><th>Plantel</th><th>Cliente Id</th><th>Cliente</th><th>Pagado</th><th>Monto Planeado</th><th>Concepto</th><th>Pago Recibido</th>
                 <th>Consecutivo Caja</th><th>Caja borrada</th><th>Linea de Caja Borrada</th><th>St. Cliente</th><th>St. Seguimiento</th>
             </tr>
         </thead>
@@ -134,7 +134,9 @@
             @foreach($lineas_detalle as $detalle)
             <tr>   
             <td>{{$consecutivo_linea++}}</td>
-            <td>{{$detalle['razon']}}</td><td>{{$detalle['id']}}</td>
+            <td>{{$detalle['razon']}}</td>
+            <td>{{$detalle['id']}}</td>
+            <td>{{ $detalle['nombre'] }} {{ $detalle['nombre2'] }} {{ $detalle['ape_paterno'] }} {{ $detalle['ape_materno'] }}</td>
             <td>
                 @if($detalle['pagado_bnd']==0)
                 NO

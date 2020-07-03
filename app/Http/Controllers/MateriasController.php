@@ -58,6 +58,9 @@ class MateriasController extends Controller
         } else {
             $input['seriada_bnd'] = 1;
         }
+        if (!isset($input['bnd_oficial'])) {
+            $input['bnd_oficial'] = 0;
+        }
         //create data
         Materium::create($input);
 
@@ -122,6 +125,9 @@ class MateriasController extends Controller
             $input['seriada_bnd'] = 0;
         } else {
             $input['seriada_bnd'] = 1;
+        }
+        if (!isset($input['bnd_oficial'])) {
+            $input['bnd_oficial'] = 0;
         }
         $materium->update($input);
 

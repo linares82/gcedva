@@ -12,6 +12,13 @@
                       <span class="help-block">{{ $errors->first("tipo_beca_id") }}</span>
                      @endif
                   </div>
+                  <div class="form-group col-md-4 @if($errors->has('motivo_beca_id')) has-error @endif">
+                     <label for="motivo_beca_id-field">Motivo:</label>
+                     {!! Form::select("motivo_beca_id", $list['MotivoBeca'], null, array("class" => "form-control select_seguridad", "id" => "motivo_beca_id-field")) !!}
+                     @if($errors->has("motivo_beca_id"))
+                      <span class="help-block">{{ $errors->first("motivo_beca_id") }}</span>
+                     @endif
+                  </div>
                     <div class="form-group col-md-4 @if($errors->has('cliente_id')) has-error @endif">
                        <label for="cliente_id-field">Cliente:</label>
                        {{$cliente->nombre." ".$cliente->nombre2." ".$cliente->ape_paterno." ".$cliente->ape_materno}}

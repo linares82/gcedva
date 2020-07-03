@@ -123,10 +123,10 @@ class AdeudosController extends Controller
      */
     public function update($id, Adeudo $adeudo, updateAdeudo $request)
     {
-        $input = $request->except(['porcentaje','autorizado_por', 'justificacion','autorizado_el','adeudo_id']);
-        $inputDescuento = $request->only(['porcentaje','autorizado_por', 'justificacion','autorizado_el','adeudo_id']);
-        if($input['monto']=="0"){
-            $input['pagado_bnd']=1;
+        $input = $request->except(['porcentaje', 'autorizado_por', 'justificacion', 'autorizado_el', 'adeudo_id']);
+        $inputDescuento = $request->only(['porcentaje', 'autorizado_por', 'justificacion', 'autorizado_el', 'adeudo_id']);
+        if ($input['monto'] == "0") {
+            $input['pagado_bnd'] = 1;
         }
 
         $input['usu_mod_id'] = Auth::user()->id;
@@ -137,44 +137,46 @@ class AdeudosController extends Controller
 
         //dd(!isset($adeudo->descuento->id));
 
-        if(!isset($adeudo->descuento->id)){
-            if(isset($inputDescuento['adeudo_id']) and isset($inputDescuento['porcentaje']) and 
-               isset($inputDescuento['justificacion']) and isset($inputDescuento['autorizado_por']) and
-               isset($inputDescuento['autorizado_el'])){
-                $valores=array();
-                $valores['adeudo_id']=$inputDescuento['adeudo_id'];
-                $valores['porcentaje']=$inputDescuento['porcentaje'];
-                $valores['justificacion']=$inputDescuento['justificacion'];
-                $valores['autorizado_por']=$inputDescuento['autorizado_por'];
-                $valores['autorizado_el']=$inputDescuento['autorizado_el'];
-                $valores['usu_alta_id']=Auth::user()->id;
-                $valores['usu_mod_id']=Auth::user()->id;
+        if (!isset($adeudo->descuento->id)) {
+            if (
+                isset($inputDescuento['adeudo_id']) and isset($inputDescuento['porcentaje']) and
+                isset($inputDescuento['justificacion']) and isset($inputDescuento['autorizado_por']) and
+                isset($inputDescuento['autorizado_el'])
+            ) {
+                $valores = array();
+                $valores['adeudo_id'] = $inputDescuento['adeudo_id'];
+                $valores['porcentaje'] = $inputDescuento['porcentaje'];
+                $valores['justificacion'] = $inputDescuento['justificacion'];
+                $valores['autorizado_por'] = $inputDescuento['autorizado_por'];
+                $valores['autorizado_el'] = $inputDescuento['autorizado_el'];
+                $valores['usu_alta_id'] = Auth::user()->id;
+                $valores['usu_mod_id'] = Auth::user()->id;
                 //dd($valores);
-                try{
+                try {
                     Descuento::create($valores);
-                }catch(Exception $e){
+                } catch (Exception $e) {
                     dd($e->getMessage());
                 }
-                
-               }
-            
-        }else{
-            if(isset($inputDescuento['porcentaje']) and 
-               isset($inputDescuento['justificacion']) and 
-               isset($inputDescuento['autorizado_por']) and
-               isset($inputDescuento['autorizado_el'])){
-                $valores=array(
-                    'porcentaje'=>$inputDescuento['porcentaje'],
-                    'justificacion'=>$inputDescuento['justificacion'],
-                    'autorizado_por'=>$inputDescuento['autorizado_por'],
-                    'autorizado_el'=>$inputDescuento['autorizado_el'],
-                    'usu_mod_id'=>Auth::user()->id);
-                    $adeudo->descuento->update($valores);
-               }
-            
+            }
+        } else {
+            if (
+                isset($inputDescuento['porcentaje']) and
+                isset($inputDescuento['justificacion']) and
+                isset($inputDescuento['autorizado_por']) and
+                isset($inputDescuento['autorizado_el'])
+            ) {
+                $valores = array(
+                    'porcentaje' => $inputDescuento['porcentaje'],
+                    'justificacion' => $inputDescuento['justificacion'],
+                    'autorizado_por' => $inputDescuento['autorizado_por'],
+                    'autorizado_el' => $inputDescuento['autorizado_el'],
+                    'usu_mod_id' => Auth::user()->id
+                );
+                $adeudo->descuento->update($valores);
+            }
         }
 
-        return response()->json(['adeudo'=>$adeudo]);
+        return response()->json(['adeudo' => $adeudo]);
         //return redirect()->route('adeudos.index')->with('message', 'Registro Actualizado.');
     }
 
@@ -290,7 +292,7 @@ class AdeudosController extends Controller
 
         $plantel = Plantel::find($datos['plantel_f']);
         //dd($plantel);
-    
+
 
         $adeudosPendientes = Adeudo::select(
             'esp.name as especialidad',
@@ -910,40 +912,44 @@ class AdeudosController extends Controller
         $lineas_detalle = array();
         foreach ($datos['plantel_f'] as $plantel) {
             /*$registros_totales = Adeudo::select(
-            'p.razon',
-            'c.id',
-            'adeudos.pagado_bnd',
-            'adeudos.monto as adeudo_planeado',
-            'cc.name as concepto',
-            'cc.id as concepto_id',
-            'cln.total as pago_calculado_adeudo',
-            'caj.id as caja',
-            'caj.consecutivo',
-            'cln.deleted_at as borrado_cln',
-            'caj.deleted_at as borrado_c',
-            'c.st_cliente_id',
-            'stc.name as st_cliente',
-            's.st_seguimiento_id',
-            'sts.name as st_seguimiento'
+                'p.razon',
+                'c.id',
+                'c.nombre',
+                'c.nombre2',
+                'c.ape_paterno',
+                'c.ape_materno',
+                'adeudos.pagado_bnd',
+                'adeudos.monto as adeudo_planeado',
+                'cc.name as concepto',
+                'cc.id as concepto_id',
+                'cln.total as pago_calculado_adeudo',
+                'caj.id as caja',
+                'caj.consecutivo',
+                'cln.deleted_at as borrado_cln',
+                'caj.deleted_at as borrado_c',
+                'c.st_cliente_id',
+                'stc.name as st_cliente',
+                's.st_seguimiento_id',
+                'sts.name as st_seguimiento'
             )
-            ->join('clientes as c', 'c.id', '=', 'adeudos.cliente_id')
-            ->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
-            ->join('seguimientos as s', 's.cliente_id', '=', 'c.id')
-            ->join('st_seguimientos as sts', 'sts.id', '=', 's.st_seguimiento_id')
-            ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
-            ->leftJoin('caja_lns as cln', 'cln.adeudo_id', '=', 'adeudos.id')
-            ->leftJoin('cajas as caj', 'caj.id', '=', 'adeudos.caja_id')
-            ->join('caja_conceptos as cc', 'cc.id', '=', 'adeudos.caja_concepto_id')
-            ->where('p.id', $plantel)
-            ->whereIn('stc.id', array(3, 4, 20, 23, 24, 25))
-            ->whereDate('adeudos.fecha_pago', '>=', $datos['fecha_f'])
-            ->whereDate('adeudos.fecha_pago', '<=', $datos['fecha_t'])
-            ->whereNull('adeudos.deleted_at')
-            ->whereNull('s.deleted_at')
-            ->orderBy('p.id')
-            ->orderBy('adeudos.caja_concepto_id')
-            ->orderBy('c.id')
-            ->get();*/
+                ->join('clientes as c', 'c.id', '=', 'adeudos.cliente_id')
+                ->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
+                ->join('seguimientos as s', 's.cliente_id', '=', 'c.id')
+                ->join('st_seguimientos as sts', 'sts.id', '=', 's.st_seguimiento_id')
+                ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
+                ->leftJoin('caja_lns as cln', 'cln.adeudo_id', '=', 'adeudos.id')
+                ->leftJoin('cajas as caj', 'caj.id', '=', 'adeudos.caja_id')
+                ->join('caja_conceptos as cc', 'cc.id', '=', 'adeudos.caja_concepto_id')
+                ->where('p.id', $plantel)
+                ->whereIn('stc.id', array(3, 4, 20, 23, 24, 25))
+                ->whereDate('adeudos.fecha_pago', '>=', $datos['fecha_f'])
+                ->whereDate('adeudos.fecha_pago', '<=', $datos['fecha_t'])
+                ->whereNull('adeudos.deleted_at')
+                ->whereNull('s.deleted_at')
+                ->orderBy('p.id')
+                ->orderBy('adeudos.caja_concepto_id')
+                ->orderBy('c.id')
+                ->get();*/
             $registros_totales = DB::select('CALL maestroR(?,?,?)', array($plantel, $datos['fecha_f'], $datos['fecha_t']));
             //dd($registros_totales[0]->razon);
             //return view('adeudos.reportes.maestroR', compact('registros_totales'));
@@ -1088,7 +1094,7 @@ class AdeudosController extends Controller
         dd($adeudos_invalidos);
         //dd($lineas_procesadas);
          */
-
+        //dd($lineas_detalle);
         return view('adeudos.reportes.maestroR', compact('lineas_procesadas', 'pagos', 'lineas_detalle', 'datos'));
     }
 

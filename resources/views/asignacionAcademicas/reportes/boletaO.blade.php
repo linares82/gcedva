@@ -100,13 +100,15 @@
                     <?php 
                         $hacademicas= \App\Hacademica::select('hacademicas.*')->where('hacademicas.plantel_id',$c->plantel_id)
                       ->join('inscripcions as i','i.id','=','hacademicas.inscripcion_id')
+                      ->join('materia as m','m.id','=','hacademicas.materium_id')
                                           ->where('hacademicas.especialidad_id',$c->especialidad_id)
                                           ->where('hacademicas.nivel_id',$c->nivel_id)
                                           ->where('hacademicas.grado_id',$c->grado_id)
                                           ->where('hacademicas.grupo_id',$c->grupo_id)
                                           ->where('hacademicas.lectivo_id',$c->lectivo_id)
                                           ->where('hacademicas.cliente_id',$c->id)
-					  ->where('hacademicas.inscripcion_id',$c->inscripcion_id)	
+                      ->where('hacademicas.inscripcion_id',$c->inscripcion_id)
+                      ->where('m.bnd_oficial',1)	
 					  ->whereNull('hacademicas.deleted_at')
 					  ->whereNull('i.deleted_at')
                                           ->get();

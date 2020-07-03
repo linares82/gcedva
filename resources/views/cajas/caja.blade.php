@@ -532,6 +532,7 @@
                                 data-caja_concepto='{{$adeudo->caja_concepto_id}}' 
                                 data-fecha_pago='{{$adeudo->fecha_pago}}' 
                                 data-monto='{{$adeudo->monto}}'
+                                data-bnd_eximir_descuentos='{{$adeudo->bnd_eximir_descuentos}}'
                                 
                                 data-porcentaje='{{optional($adeudo->descuento)->porcentaje}}'
                                 data-justificacion='{{optional($adeudo->descuento)->justificacion}}'
@@ -777,7 +778,7 @@ Agregar nuevo registro
             </div>
             <div class="modal-body">
                 {!! Form::open(array('route' => 'adeudos.store')) !!}
-                @permission('cajas.no_incripcion')
+                @permission('cajas.no_inscripcion')
                 <div class="form-group col-md-6 @if($errors->has('caja_concepto_id')) has-error @endif">
                     <label for="caja_concepto_id-field">Caja Concepto</label><br/>
                     {!! Form::select("caja_concepto_id", $list1["CajaConcepto"], null, array("class" => "form-control select_seguridad", "id" => "caja_concepto_id-adeudo")) !!}
@@ -792,6 +793,13 @@ Agregar nuevo registro
                     <label for="monto-field">Monto</label><br/>
                     {!! Form::text("monto", null, array("class" => "form-control", "id" => "monto-adeudo")) !!}
                     <p class="errorCajaConcepto text-center alert alert-danger hidden"></p>
+                </div>
+                <div class="form-group col-md-3 @if($errors->has('bnd_eximir_descuentos')) has-error @endif">
+                    <label for="bnd_eximir_descuentos-adeudo">Eximir Descuentos</label>
+                    {!! Form::checkbox("bnd_eximir_descuentos", 1, null, [ "id" => "bnd_eximir_descuentos-adeudo", 'class'=>'minimal']) !!}
+                    @if($errors->has("bnd_eximir_descuentos"))
+                    <span class="help-block">{{ $errors->first("bnd_eximir_descuentos") }}</span>
+                    @endif
                 </div>
                 @endpermission
                 <div class="row"></div>
@@ -1301,6 +1309,13 @@ Agregar nuevo registro
     $('#fecha_pago-adeudo').val($(this).data('fecha_pago'));
     $('#monto-adeudo').val($(this).data('monto'));
     
+    if($(this).data('bnd_eximir_descuentos')==1){
+        $('#bnd_eximir_descuentos-adeudo').prop('checked', true);
+    }else{
+        $('#bnd_eximir_descuentos-adeudo').prop('checked', false);
+    }
+    
+    
     if($(this).data('caja_concepto')==1 || 
     $(this).data('caja_concepto')==23 || 
     $(this).data('caja_concepto')==25){
@@ -1331,6 +1346,7 @@ Agregar nuevo registro
                         'caja_concepto_id': $('#caja_concepto_id-adeudo option:selected').val(),
                         'fecha_pago': $('#fecha_pago-adeudo').val(),
                         'monto': $('#monto-adeudo').val(),
+                        'bnd_eximir_descuentos': $('#bnd_eximir_descuentos-adeudo').val(),
                         'porcentaje': $('#porcentaje-adeudo').val(),
                         'autorizado_por': $('#autorizado_por-adeudo option:selected').val(),
                         'justificacion': $('#justificacion-adeudo').val(),
@@ -1340,7 +1356,7 @@ Agregar nuevo registro
                     beforeSend : function(){$("#loading3").show(); },
                     complete : function(){$("#loading3").hide(); },
                     success: function(data) {
-                        $('#frmBuscarCliente').submit();
+                        //$('#frmBuscarCliente').submit();
                     }
             });        
         }

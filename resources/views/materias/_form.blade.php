@@ -40,6 +40,13 @@
                         <span class="help-block">{{ $errors->first("seriada_bnd") }}</span>
                        @endif
                     </div>
+                    <div class="form-group col-md-4 @if($errors->has('bnd_oficial')) has-error @endif">
+                     <label for="bnd_oficial-field">Oficial</label>
+                     {!! Form::checkbox("bnd_oficial", 1, null, [ "id" => "bnd_oficial-field"]) !!}
+                     @if($errors->has("bnd_oficial"))
+                      <span class="help-block">{{ $errors->first("bnd_oficial") }}</span>
+                     @endif
+                  </div>
                     <div class="form-group col-md-4 @if($errors->has('serie_anterior')) has-error @endif">
                        <label for="serie_anterior-field">Serie anterior</label>
                        {!! Form::select("serie_anterior", $materiales_ls, null, array("class" => "form-control select_seguridad", "id" => "serie_anterior-field")) !!}
