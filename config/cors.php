@@ -23,7 +23,7 @@ return [
      */
     //'paths' => ['api/*'],
     'paths' => [
-        'api/plantels/*', 'api/especialidads/*', 'api/nivels/*', 'api/grados/*', 'api/turnos/*',
+        'api/planteles/*', 'api/especialidads/*', 'api/nivels/*', 'api/grados/*', 'api/turnos/*',
         'api/medios/*', 'api/estados/*', 'api/municipios/*', 'api/clientes/*', 'api/multipagos/*',
     ],
 

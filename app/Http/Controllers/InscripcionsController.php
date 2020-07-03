@@ -133,9 +133,11 @@ class InscripcionsController extends Controller
             ->where('hacademicas.grado_id', '=', $i->grado_id)
             ->where('hacademicas.lectivo_id', '=', $i->lectivo_id)
             ->whereIn('hacademicas.materium_id', $materias_array)
+            ->where('hacademicas.inscripcion_id', $i->id)
+            ->whereNull('i.deleted_at')
             ->whereNull('hacademicas.deleted_at')
             ->get();
-
+        //dd($materias_validar);
         /*$materias_validar=Hacademica::where('inscripcion_id', '=', $i->id)
         ->whereNull('deleted_at')
         ->get();*/
@@ -181,6 +183,57 @@ class InscripcionsController extends Controller
                     $ponde['tiene_detalle'] = $p->tiene_detalle;
                     $ponde['padre_id'] = $p->padre_id;
                     CalificacionPonderacion::create($ponde);
+                }
+            }
+        } else {
+            foreach ($materias as $m) {
+                $existe_materia = 0;
+                foreach ($materias_validar as $mv) {
+                    if ($mv->materium_id == $m->id) {
+                        $existe_materia = 1;
+                    }
+                }
+                //dd($existe_materia);
+                if ($existe_materia == 0) {
+                    $h['inscripcion_id'] = $i->id;
+                    $h['cliente_id'] = $i->cliente_id;
+                    $h['plantel_id'] = $i->plantel_id;
+                    $h['especialidad_id'] = $i->especialidad_id;
+                    $h['nivel_id'] = $i->nivel_id;
+                    $h['grado_id'] = $i->grado_id;
+                    $h['grupo_id'] = $i->grupo_id;
+                    $h['materium_id'] = $m->id;
+                    $h['st_materium_id'] = 0;
+                    $h['lectivo_id'] = $i->lectivo_id;
+                    $h['usu_alta_id'] = Auth::user()->id;
+                    $h['usu_mod_id'] = Auth::user()->id;
+                    $ha = Hacademica::create($h);
+                    //$h=new Hacademica;
+                    //$h->save($h);
+                    $c['hacademica_id'] = $ha->id;
+                    $c['tpo_examen_id'] = 1;
+                    $c['calificacion'] = 0;
+                    $c['fecha'] = date('Y-m-d');
+                    $c['reporte_bnd'] = 0;
+                    $c['usu_alta_id'] = Auth::user()->id;
+                    $c['usu_mod_id'] = Auth::user()->id;
+                    $calif = Calificacion::create($c);
+
+                    $ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $m->ponderacion_id)
+                        ->where('bnd_activo', 1)
+                        ->get();
+
+                    foreach ($ponderaciones as $p) {
+                        $ponde['calificacion_id'] = $calif->id;
+                        $ponde['carga_ponderacion_id'] = $p->id;
+                        $ponde['calificacion_parcial'] = 0;
+                        $ponde['ponderacion'] = $p->porcentaje;
+                        $ponde['usu_alta_id'] = Auth::user()->id;
+                        $ponde['usu_mod_id'] = Auth::user()->id;
+                        $ponde['tiene_detalle'] = $p->tiene_detalle;
+                        $ponde['padre_id'] = $p->padre_id;
+                        CalificacionPonderacion::create($ponde);
+                    }
                 }
             }
         }
@@ -742,7 +795,7 @@ class InscripcionsController extends Controller
             ->join('empleados as e', 'e.id', '=', 'aa.empleado_id')
             ->join('grados as gra', 'gra.id', '=', 'hacademicas.grado_id')
             ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
-            ->join('especialidads as esp','esp.id','=','hacademicas.especialidad_id')
+            ->join('especialidads as esp', 'esp.id', '=', 'hacademicas.especialidad_id')
             ->where('aa.id', $data['asignacion'])
             ->where('hacademicas.plantel_id', $data['plantel_f'])
             ->where('hacademicas.lectivo_id', $data['lectivo_f'])
@@ -1249,7 +1302,7 @@ class InscripcionsController extends Controller
             ->join('grupos as g', 'g.id', '=', 'hacademicas.grupo_id')
             ->join('lectivos as l', 'l.id', '=', 'hacademicas.lectivo_id')
             ->join('asignacion_academicas as aa', 'aa.grupo_id', '=', 'g.id')
-            ->join('especialidads as esp','esp.id','=','hacademicas.especialidad_id')
+            ->join('especialidads as esp', 'esp.id', '=', 'hacademicas.especialidad_id')
             //->join('asistencia_rs as asis', 'asis.asignacion_academica_id','=','aa.id')
             ->join('empleados as e', 'e.id', '=', 'aa.empleado_id')
             ->join('grados as gra', 'gra.id', '=', 'hacademicas.grado_id')
