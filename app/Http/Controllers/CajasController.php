@@ -74,10 +74,10 @@ class CajasController extends Controller
         $cliente = Cliente::find($input['cliente_id']);
 
         $caja = Caja::where('st_caja_id', 0)
-        ->join('pagos as pag','pag.caja_id','=','cajas.id')
-        ->where('pag.bnd_bnd_referenciado','<>',1)
-        ->where('plantel_id', $cliente->plantel_id)
-        ->get();
+            ->join('pagos as pag', 'pag.caja_id', '=', 'cajas.id')
+            ->where('pag.bnd_referenciado', '<>', 1)
+            ->where('plantel_id', $cliente->plantel_id)
+            ->get();
 
         $cajas = Caja::select('cajas.consecutivo as caja', 'cajas.fecha', 'ln.caja_concepto_id as concepto_id', 'cc.name as concepto', 'ln.total', 'st.name as estatus')
             ->join('caja_lns as ln', 'ln.caja_id', '=', 'cajas.id')
@@ -95,11 +95,11 @@ class CajasController extends Controller
         if (count($caja) > 0) {
             $ids_invalidos = Caja::select('cajas.consecutivo', 'p.razon', 'cajas.cliente_id')
                 ->join('plantels as p', 'p.id', '=', 'cajas.plantel_id')
-                ->join('pagos as pag','pag.caja_id','=','cajas.id')
+                ->join('pagos as pag', 'pag.caja_id', '=', 'cajas.id')
                 ->where('plantel_id', $cliente->plantel_id)
                 ->where('cajas.st_caja_id', '=', 0)
                 ->where('cajas.id', '>', 0)
-                ->where('pag.bnd_referenciado','<>',1)
+                ->where('pag.bnd_referenciado', '<>', 1)
                 ->get();
             //dd($ids_invalidos);
             Session::flash('ids_invalidos', $ids_invalidos->toArray());

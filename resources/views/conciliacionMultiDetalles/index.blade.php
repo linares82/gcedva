@@ -50,20 +50,20 @@
 
                             <!--
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_conciliacion_multipago_id_gt">CONCILIACION_MULTIPAGO_ID</label>
+                                <label class="col-sm-2 control-label" for="q_conciliacion_multipagos.fecha_carga_gt">CONCILIACION_MULTIPAGO_FECHA_CARGA</label>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['conciliacion_multipago_id_gt']) ?: '' }}" name="q[conciliacion_multipago_id_gt]" id="q_conciliacion_multipago_id_gt" />
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['conciliacion_multipagos.fecha_carga_gt']) ?: '' }}" name="q[conciliacion_multipagos.fecha_carga_gt]" id="q_conciliacion_multipagos.fecha_carga_gt" />
                                 </div>
                                 <div class=" col-sm-1 text-center"> - </div>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['conciliacion_multipago_id_lt']) ?: '' }}" name="q[conciliacion_multipago_id_lt]" id="q_conciliacion_multipago_id_lt" />
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['conciliacion_multipagos.fecha_carga_lt']) ?: '' }}" name="q[conciliacion_multipagos.fecha_carga_lt]" id="q_conciliacion_multipagos.fecha_carga_lt" />
                                 </div>
                             </div>
                             -->
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_conciliacion_multipago_id_cont">CONCILIACION_MULTIPAGO_ID</label>
+                                <label class="col-sm-2 control-label" for="q_conciliacion_multipagos.fecha_carga_cont">CONCILIACION_MULTIPAGO_FECHA_CARGA</label>
                                 <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['conciliacion_multipago_id_cont']) ?: '' }}" name="q[conciliacion_multipago_id_cont]" id="q_conciliacion_multipago_id_cont" />
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['conciliacion_multipagos.fecha_carga_cont']) ?: '' }}" name="q[conciliacion_multipagos.fecha_carga_cont]" id="q_conciliacion_multipagos.fecha_carga_cont" />
                                 </div>
                             </div>
                                                     <!--
@@ -467,7 +467,7 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'conciliacion_multipago_id', 'title' => 'CONCILIACION_MULTIPAGO_ID'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'conciliacion_multipagos.fecha_carga', 'title' => 'CONCILIACION_MULTIPAGO_FECHA_CARGA'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'fecha_pago', 'title' => 'FECHA_PAGO'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'razon_social', 'title' => 'RAZON_SOCIAL'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'mp_node', 'title' => 'MP_NODE'])</th>
@@ -497,7 +497,7 @@
                         @foreach($conciliacionMultiDetalles as $conciliacionMultiDetalle)
                             <tr>
                                 <td><a href="{{ route('conciliacionMultiDetalles.show', $conciliacionMultiDetalle->id) }}">{{$conciliacionMultiDetalle->id}}</a></td>
-                                <td>{{$conciliacionMultiDetalle->conciliacion_multipago_id}}</td>
+                                <td>{{$conciliacionMultiDetalle->conciliacionMultipago->fecha_carga}}</td>
                     <td>{{$conciliacionMultiDetalle->fecha_pago}}</td>
                     <td>{{$conciliacionMultiDetalle->razon_social}}</td>
                     <td>{{$conciliacionMultiDetalle->mp_node}}</td>

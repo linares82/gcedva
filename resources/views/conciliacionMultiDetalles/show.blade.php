@@ -39,8 +39,8 @@
                     <p class="form-control-static">{{$conciliacionMultiDetalle->id}}</p>
                 </div>
                 <div class="form-group">
-                     <label for="conciliacion_multipago_id">CONCILIACION_MULTIPAGO_ID</label>
-                     <p class="form-control-static">{{$conciliacionMultiDetalle->conciliacion_multipago_id}}</p>
+                     <label for="conciliacion_multipago_fecha_carga">CONCILIACION_MULTIPAGO_FECHA_CARGA</label>
+                     <p class="form-control-static">{{$conciliacionMultiDetalle->conciliacionMultipago->fecha_carga}}</p>
                 </div>
                     <div class="form-group">
                      <label for="fecha_pago">FECHA_PAGO</label>

@@ -1123,8 +1123,8 @@ Agregar nuevo registro
                         $("#mp_order").val(data.datos.mp_order);
                         $("#mp_signature").val(data.datos.mp_signature);
                         $("#mp_urlsuccess").val(data.datos.mp_urlsuccess);
-                        $("#mp_urlfilure").val(data.datos.mp_urlfilure);
-                        $("#mp_paymethmethod").val(data.datos.mp_paymentmethod);
+                        $("#mp_urlfailure").val(data.datos.mp_urlfailure);
+                        $("#mp_paymentmethod").val(data.datos.mp_paymentmethod);
                         
                         $('#frm_multipagos').attr("action", data.datos.url_peticion);
                         $('#frm_multipagos').submit();

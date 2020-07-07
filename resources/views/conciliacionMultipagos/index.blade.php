@@ -193,11 +193,12 @@
                             <tr>
                                 <td>{{$conciliacionMultipago->id}}</td>
                                 <td>{{$conciliacionMultipago->fecha_carga}}</td>
-                    <td>{{$conciliacionMultipago->archivo}}</td>
-                    <td>{{$conciliacionMultipago->registros}}</td>
-                    <td>{{$conciliacionMultipago->contador_ejecucion}}</td>
-                    <td>{{$conciliacionMultipago->usu_alta->name}}</td>
+                                <td>{{$conciliacionMultipago->archivo}}</td>
+                                <td>{{$conciliacionMultipago->registros}}</td>
+                                <td>{{$conciliacionMultipago->contador_ejecucion}}</td>
+                                <td>{{$conciliacionMultipago->usu_alta->name}}</td>
                                 <td class="text-right">
+                                    <a class="btn btn-xs btn-warning" href="{{ route('conciliacionMultipagos.show', $conciliacionMultipago->id) }}"><i class="glyphicon glyphicon-view"></i> Ver</a>
                                     @permission('conciliacionMultipagos.ejecutarConciliacion')
                                     <a class="btn btn-xs btn-primary" href="{{ route('conciliacionMultipagos.ejecutarConciliacion', array('id'=>$conciliacionMultipago->id)) }}"><i class="glyphicon glyphicon-check"></i> Ejecutar</a>
                                     @endpermission

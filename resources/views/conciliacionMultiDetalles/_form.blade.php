@@ -1,6 +1,6 @@
                 <div class="form-group @if($errors->has('conciliacion_multipago_id')) has-error @endif">
-                       <label for="conciliacion_multipago_id-field">Conciliacion_multipago_id</label>
-                       {!! Form::text("conciliacion_multipago_id", null, array("class" => "form-control", "id" => "conciliacion_multipago_id-field")) !!}
+                       <label for="conciliacion_multipago_id-field">Conciliacion_multipago_fecha_carga</label>
+                       {!! Form::select("conciliacion_multipago_id", $list["ConciliacionMultipago"], null, array("class" => "form-control", "id" => "conciliacion_multipago_id-field")) !!}
                        @if($errors->has("conciliacion_multipago_id"))
                         <span class="help-block">{{ $errors->first("conciliacion_multipago_id") }}</span>
                        @endif

@@ -38,15 +38,15 @@
                     <label for="nome">ID</label>
                     <p class="form-control-static">{{$conceptoMultipago->id}}</p>
                 </div>
-                <div class="form-group">
-                     <label for="name">NAME</label>
+                <div class="form-group col-sm-4">
+                     <label for="name"></label>
                      <p class="form-control-static">{{$conceptoMultipago->name}}</p>
                 </div>
-                    <div class="form-group">
+                    <div class="form-group col-sm-4">
                      <label for="usu_alta_id">USU_ALTA_ID</label>
                      <p class="form-control-static">{{$conceptoMultipago->usu_alta_id}}</p>
                 </div>
-                    <div class="form-group">
+                    <div class="form-group col-sm-4">
                      <label for="usu_mod_id">USU_MOD_ID</label>
                      <p class="form-control-static">{{$conceptoMultipago->usu_mod_id}}</p>
                 </div>

@@ -492,7 +492,10 @@ class SeguimientosController extends Controller
 
     public function seguimientosGrf()
     {
-        return view('seguimientos.reportes.seguimientosGrf')
+        $empleado = Empleado::where('user_id', Auth::user()->id)->first();
+        $planteles_validos = $empleado->plantels->pluck('razon', 'id');
+        //dd($planteles_validos);
+        return view('seguimientos.reportes.seguimientosGrf', compact('planteles_validos'))
             ->with('list', Cliente::getListFromAllRelationApps())
             ->with('list1', Seguimiento::getListFromAllRelationApps());
     }
