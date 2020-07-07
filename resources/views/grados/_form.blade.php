@@ -29,7 +29,7 @@
                        @endif
                     </div>
                     <div class="form-group col-md-4 @if($errors->has('nombre2')) has-error @endif">
-                       <label for="nombre2-field">Nombre 2</label>
+                       <label for="nombre2-field">Nombre RVOE</label>
                        {!! Form::text("nombre2", null, array("class" => "form-control input-sm", "id" => "nombre2-field")) !!}
                        @if($errors->has("nombre2"))
                         <span class="help-block">{{ $errors->first("nombre2") }}</span>
@@ -54,6 +54,13 @@
                         {!! Form::text("fec_rvoe", null, array("class" => "form-control input-sm fecha", "id" => "fec_rvoe-field")) !!}
                         @if($errors->has("fec_rvoe"))
                          <span class="help-block">{{ $errors->first("fec_rvoe") }}</span>
+                        @endif
+                     </div>
+                     <div class="form-group col-md-4 @if($errors->has('cct')) has-error @endif">
+                        <label for="cct-field">CCT</label>
+                        {!! Form::text("cct", null, array("class" => "form-control input-sm", "id" => "cct-field")) !!}
+                        @if($errors->has("cct"))
+                         <span class="help-block">{{ $errors->first("cct") }}</span>
                         @endif
                      </div>
                     <div class="form-group col-md-4 @if($errors->has('precio_online')) has-error @endif">

@@ -22,8 +22,8 @@ class Grado extends Model
 
 	//Mass Assignment
 	protected $fillable = [
-		'nivel_id', 'name', 'especialidad_id', 'plantel_id', 'usu_alta_id', 'usu_mod_id',
-		'precio_online', 'mexico_bnd', 'nombre2', 'modulo_final_id', 'rvoe', 'denominacion','fec_rvoe'
+		'nivel_id', 'name', 'especialidad_id', 'plantel_id', 'usu_alta_id', 'usu_mod_id', 'cct',
+		'precio_online', 'mexico_bnd', 'nombre2', 'modulo_final_id', 'rvoe', 'denominacion', 'fec_rvoe'
 	];
 
 	public function usu_alta()

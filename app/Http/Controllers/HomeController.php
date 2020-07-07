@@ -549,7 +549,7 @@ class HomeController extends Controller
         $autorizacionBajas = HistoriaCliente::select('historia_clientes.*', 'c.plantel_id')
             ->join('clientes as c', 'c.id', '=', 'historia_clientes.cliente_id')
             ->where('historia_clientes.id', '>', 1011)
-            ->whereNotIn('st_historia_cliente_id', array(0, 2))
+            ->whereNotIn('st_historia_cliente_id', array(0, 2,5))
             ->where('evento_cliente_id', 2)
             ->whereRaw('(aut_ser_esc <> 2 or aut_caja <> 2 or aut_ser_esc_corp <>2) ');
 

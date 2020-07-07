@@ -86,6 +86,7 @@ class ClientesController extends Controller
         $clientes = Seguimiento::getAllData($request, 10, session('filtro_clientes'));
         $empleado = Empleado::where('user_id', '=', Auth::user()->id)->first();
 
+
         return view('clientes.index', compact('clientes', 'users', 'empleado', 'fecha_superada'))
             ->with('list', Seguimiento::getListFromAllRelationApps())
             ->with('list1', Cliente::getListFromAllRelationApps());
@@ -154,7 +155,15 @@ class ClientesController extends Controller
             $r->where('calle', 'like', '%' . $data['calle'] . '%');
         }
 
-        $clientes = $r->paginate(10);
+        if (
+            isset($data['nombre']) or isset($data['nombre2']) or isset($data['ape_paterno']) or isset($data['ape_materno']) or
+            isset($data['tel_fijo']) or isset($data['mail']) or isset($data['curp']) or isset($data['calle'])
+        ) {
+            $clientes = $r->paginate(10);
+        } else {
+            $clientes = null;
+        }
+
         //dd($clientes);
         return view('clientes.busqueda', compact('clientes', 'nombre'));
     }

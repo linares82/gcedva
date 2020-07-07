@@ -167,14 +167,14 @@
 
 @section('content')
     <div class="row">@permission('clientes.create')
-            @if(isset($clientes))
+            @if(!is_null($clientes))
             <a class="btn btn-success pull-right" href="{{ route('clientes.create') }}"><i class="glyphicon glyphicon-plus"></i> Crear</a>
             @endif
             @endpermission
             </div>
     <div class="row">
         <div class="col-md-12">
-            @if($clientes->count())
+            @if(!is_null($clientes) and $clientes->count())
                 <table class="table table-condensed table-striped tblEnc">
                     <thead>
                         <tr>

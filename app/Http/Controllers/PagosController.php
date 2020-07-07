@@ -106,13 +106,13 @@ class PagosController extends Controller
         }
 
         $this->actualizaEstatusCaja($caja->id);
-        $lineaCaja=CajaLn::where('caja_id',$caja->id)->firts();
+        $lineaCaja = CajaLn::where('caja_id', $caja->id)->first();
 
         if ($pago->bnd_referenciado == 1) {
             $datosMultipagos = array();
             $datosMultipagos['pago_id'] = $pago->id;
-            $datosMultipagos['mp_account'] = 6683; 
-            $datosMultipagos['mp_product'] = $lineaCaja->caja_concepto_id;
+            $datosMultipagos['mp_account'] = 6683;
+            $datosMultipagos['mp_product'] = $lineaCaja->cajaConcepto->cve_multipagos;
             $datosMultipagos['mp_order'] = $this->formatoDato('000', $caja->plantel_id) . $this->formatoDato('000000000', $caja->id) . $this->formatoDato('000000', $caja->consecutivo);
             $datosMultipagos['mp_reference'] = $this->formatoDato('000', $caja->plantel_id) . $this->formatoDato('000000000', $pago->id) . $this->formatoDato('000000', $pago->consecutivo);
 
@@ -134,6 +134,13 @@ class PagosController extends Controller
             $datosMultipagos['usu_mod_id'] = 1;
             $parametros = Param::where('llave', 'url_multipagos')->first();
             $datosMultipagos['url_peticion'] = $parametros->valor;
+            if($pago->forma_pago_id==3){
+                $datosMultipagos['mp_paymentmethod']="SUC";
+            }elseif($pago->forma_pago_id==4){
+                //$datosMultipagos['mp_paymentmethod']="CIE";
+            }elseif($pago->forma_pago_id==6){
+                $datosMultipagos['mp_paymentmethod']="TDX";
+            }
             //$respuesta = $this->multipagosSolicitud($datosMultipagos);
 
             //if ($respuesta) {
@@ -279,6 +286,8 @@ class PagosController extends Controller
 
         //if ($dominio == $param->valor) {
         $datos = $request->all();
+	//dd($datos);
+
         $crearRegistro = array();
         $crearRegistro['mp_order'] = $datos['mp_order'];
         $crearRegistro['mp_reference'] = $datos['mp_reference'];
@@ -291,50 +300,59 @@ class PagosController extends Controller
         $crearRegistro[' usu_alta_id'] = 1;
         $crearRegistro['usu_mod_id'] = 1;
 
-        $buscarRegistro = SuccessMultipago::where('mp_order', $crearRegistro['mp_order'])
+        $parametros = Param::where('llave', 'cifrado_multipagos')->first();
+        $cadenaCifrar = $crearRegistro['mp_order'] . $crearRegistro['mp_reference'] . $crearRegistro['mp_amount'] . $crearRegistro['mp_authorization'];
+        $nuevaFirma= hash_hmac('sha256', $cadenaCifrar, $parametros->valor);
+        //dd($cadenaCifrar." - ".$nuevaFirma);    
+        if($nuevaFirma==$crearRegistro['mp_signature']){
+            $buscarRegistro = SuccessMultipago::where('mp_order', $crearRegistro['mp_order'])
             ->where('mp_reference', $crearRegistro['mp_reference'])
             ->where('mp_amount', $crearRegistro['mp_amount'])
             ->where('mp_signature', $crearRegistro['mp_signature'])
             ->first();
-        if (!is_null($buscarRegistro)) {
+        if (is_null($buscarRegistro)) {
             SuccessMultipago::create($crearRegistro);
         }
 
         $peticion = PeticionMultipago::where('mp_order', $crearRegistro['mp_order'])
             ->where('mp_reference', $crearRegistro['mp_reference'])
             ->where('mp_amount', $crearRegistro['mp_amount'])
-            ->where('mp_signature', $crearRegistro['mp_signature'])
             ->first();
+	$pago = Pago::find($peticion->pago_id);
+
+//dd($peticion->toArray());
         if (
-            ($datos['mp_paymentmethod'] == "AMEX" or
-                $datos['mp_paymentmethod'] == "PCB" or
-                $datos['mp_paymentmethod'] == "TDX" or
-                $datos['mp_paymentmethod'] == "CIE") and
-            ($datos['mp_response'] == '0' or
-                $datos['mp_response'] == '00' or $datos['mp_response'] == '000')
-        ) {
-            $pago = Pago::find($peticion->pago_id);
+                $datos['mp_authorization'] <> "000000" and
+                ($datos['mp_response'] == '0' or
+                    $datos['mp_response'] == '00' or $datos['mp_response'] == '000')
+            ) {
+            //$pago = Pago::find($peticion->pago_id);
             $pago->bnd_pagado = 1;
+	    $pago->save();
             $this->actualizaEstatusCaja($pago->caja->id);
         }
 
-
+	//dd($pago);
         $caja = $pago->caja;
-        $cliente = Cliente::find($caja->cliente_id);
-        $cajas = Caja::select('cajas.consecutivo as caja', 'cajas.fecha', 'ln.caja_concepto_id as concepto_id', 'cc.name as concepto', 'ln.total', 'st.name as estatus')
-            ->join('caja_lns as ln', 'ln.caja_id', '=', 'cajas.id')
-            ->join('caja_conceptos as cc', 'cc.id', '=', 'ln.caja_concepto_id')
-            ->join('st_cajas as st', 'st.id', '=', 'cajas.st_caja_id')
-            ->where('cliente_id', $cliente->id)
-            ->whereNull('cajas.deleted_at')
-            ->whereNull('ln.deleted_at')
-            ->get();
-
-        $combinaciones = CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
-
-        return view('cajas.caja', compact('cliente', 'caja', 'combinaciones', 'cajas'))
+        
+        $errors=collect();
+        
+        /*
+        return view('cajas.caja', 
+        array('plantel'=>$caja->plantel_id,'consecutivo'=>$caja->consecutivo), 
+        compact('errors'))
             ->with('list', Caja::getListFromAllRelationApps())
             ->with('list1', CajaLn::getListFromAllRelationApps());
+            */
+	//dd($caja->toArray());
+        return redirect()->route('cajas.caja',array('plantel'=>$caja->plantel_id,'consecutivo'=>$caja->consecutivo));
+        }else{
+            dd('Firma incorrecta');
+        }
+
+        
+
+        
     }
 
     public function failMultipagos(Request $request)

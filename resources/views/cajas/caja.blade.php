@@ -105,7 +105,7 @@
                 <div class="box-body">
                     {!! Form::open(array('route' => 'cajas.buscarCliente', 'id'=>'frmBuscarCliente')) !!}
 
-                    <div class="input-group form-group col-md-12 @if($errors->has('cliente_id')) has-error @endif">
+                    <div class="input-group form-group col-md-12">
                         <div class="input-group-btn">
                             <button type="submit" class="btn btn-info" data-toggle="tooltip" title="Buscar Cliente"><i class='fa fa-search'></i></button>
                         </div>
@@ -391,17 +391,16 @@
                                     <td>
                                         @php
                                         
-                                        $success=\App\SuccessMultipago::where('mp_order', $pago->peticonMultipago->mp_order)
-                                        ->where('mp_reference', $pago->peticonMultipago->mp_reference)
-                                        ->where('mp_amount', $pago->peticonMultipago->mp_amount)
-                                        ->where('mp_signature', $pago->peticonMultipago->mp_signature)
+                                        $success=\App\SuccessMultipago::where('mp_order', $pago->peticionMultipago->mp_order)
+                                        ->where('mp_reference', $pago->peticionMultipago->mp_reference)
+                                        ->where('mp_amount', $pago->peticionMultipago->mp_amount)
                                         ->first();
                                         @endphp
-                                        
+
                                         @if($pago->bnd_pagado==1) 
-                                        <span class="badge bg-green">Pagado - {{$success->responsemsg}}</span>
+                                        <span class="">Pagado - {{$success->mp_responsemsg}}</span>
                                         @else 
-                                        <span class="badge bg-red"> En proceso - {{$success->responsemsg}}<span>
+                                        <span class=""> En proceso - {{$success->mp_responsemsg}}<span>
                                         @endif    
                                     </td> 
                                     <td>
@@ -861,7 +860,7 @@ Agregar nuevo registro
         <input type="hidden" name="mp_signature" id="mp_signature" value="">
         <input type="hidden" name="mp_urlsuccess" id="mp_urlsuccess" value="">
         <input type="hidden" name="mp_urlfailure" id="mp_urlfailure" value="">
-        
+        <input type="hidden" name="mp_paymentmethod" id="mp_paymentmethod" value="">
     </form>
 </div>
 
@@ -1080,6 +1079,11 @@ Agregar nuevo registro
     @if (isset($caja) and isset($cliente))
         //$('.modal-footer1').on('click', 'addPagoB','#AgregarPago', function() {
         $('#AgregarPago').on('click', function() {    
+            let referencia_check=0;
+            if( $('#bnd_referenciado-field').prop('checked') ) {
+                referencia_check=1
+            }    
+            console.log(referencia_check);
         if(parseFloat($('#monto-field').val())>{{$monto_max_pago+100}} ){
             alert('Monto de pagos excede monto de caja total');
         }else{
@@ -1094,6 +1098,7 @@ Agregar nuevo registro
                     'forma_pago_id': $('#forma_pago_id-field option:selected').val(),
                     'referencia':$('#referencia-field').val(),
                     'cuenta_efectivo_id': $('#cuenta_efectivo_id-field').val(),
+                    'bnd_referenciado':referencia_check
                 },
                 beforeSend : function(){
                     $("#loading3").show(); 
@@ -1102,10 +1107,9 @@ Agregar nuevo registro
                 },
                 complete : function(){$("#loading3").hide(); },
                 success: function(data) {
-                    @if($caja->forma_pago_id<>7)
-                        location.reload(); 
+                    if(referencia_check==0){
                         $('#form-buscarVenta').submit();
-                    @else
+                    }else{
                         console.log(data.datos)
                         $("#mp_account").val(data.datos.mp_account);
                         $("#mp_product").val(data.datos.mp_product);
@@ -1120,18 +1124,12 @@ Agregar nuevo registro
                         $("#mp_signature").val(data.datos.mp_signature);
                         $("#mp_urlsuccess").val(data.datos.mp_urlsuccess);
                         $("#mp_urlfilure").val(data.datos.mp_urlfilure);
+                        $("#mp_paymethmethod").val(data.datos.mp_paymentmethod);
                         
                         $('#frm_multipagos').attr("action", data.datos.url_peticion);
                         $('#frm_multipagos').submit();
-                        //$('#form-buscarVenta').submit();
-                        /*$.ajax({
-                            url: data.datos.url_peticion,
-                            dataType: 'jsonp',
-                            success: function(data) {*/
-                                
-                           /* }
-                        });*/
-                    @endif
+                    }
+                    
                 }
             });
             }    
@@ -1168,8 +1166,9 @@ Agregar nuevo registro
                         $("#mp_order").val(data.datos.mp_order);
                         $("#mp_signature").val(data.datos.mp_signature);
                         $("#mp_urlsuccess").val(data.datos.mp_urlsuccess);
-                        $("#mp_urlfilure").val(data.datos.mp_urlfilure);
-                        
+                        $("#mp_urlfailure").val(data.datos.mp_urlfailure);
+                        $("#mp_paymentmethod").val(data.datos.mp_paymentmethod);
+
                         $('#frm_multipagos').attr("action", data.datos.url_peticion);
                         $('#frm_multipagos').submit();
                         $('#divActualizar').modal('show');

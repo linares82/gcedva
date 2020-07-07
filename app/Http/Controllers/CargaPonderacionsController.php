@@ -226,20 +226,9 @@ class CargaPonderacionsController extends Controller
                     $hacademica = $calificacion->hacademica;
                     //dd($hacademica);
 
-                    //inicion
-                    //foreach ($materias as $m) {
-                    //$ha=$m;
-                    //dd($m);
-                    Log::info("hacademica_id: " . $hacademica->id);
-                    /*$calif = Calificacion::where('hacademica_id', $m->id)
-                            ->where('tpo_examen_id', 1)
-                            ->wherenull('deleted_at')
-                            ->where('calificacion', 0)
-                            ->first();
-                        */
 
-                    //if (!is_null($calif)) {
-                    //dd($calif);
+                    Log::info("hacademica_id: " . $hacademica->id);
+
                     $ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $hacademica->materia->ponderacion_id)
                         ->where('bnd_activo', 1)
                         ->get();
@@ -282,52 +271,6 @@ class CargaPonderacionsController extends Controller
             }
         }
 
-        /*
-        $inscripciones=Hacademica::select('hacademicas.inscripcion_id','hacademicas.cliente_id')
-        ->join('materia as m','m.id','=','hacademicas.materium_id')
-        ->where('m.ponderacion_id',$datos['ponderacion'])
-        ->whereNull('m.deleted_at')
-        ->whereNull('hacademicas.deleted_at')
-        ->orderBy('hacademicas.cliente_id')
-        ->distinct()
-        //->limit(10)
-        //->whereIn('hacademicas.cliente_id', array(9334, 3279, 3299, 3506, 3536))
-        ->get();
-*/
-        /*
-        $inscripciones = Hacademica::select('hacademicas.inscripcion_id', 'hacademicas.cliente_id', 'calif.calificacion')
-            ->join('materia as m', 'm.id', '=', 'hacademicas.materium_id')
-            ->join('calificacions as calif', 'calif.hacademica_id', '=', 'hacademicas.id')
-            ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
-            ->where('m.ponderacion_id', $datos['ponderacion'])
-            ->where('calif.calificacion', 0)
-            ->whereNull('m.deleted_at')
-            ->whereNull('i.deleted_at')
-            ->whereNull('hacademicas.deleted_at')
-            //->where('hacademicas.cliente_id', 9210)
-            ->orderBy('hacademicas.cliente_id')
-            ->distinct()
-            ->limit(10)
-            ->orderBy('hacademicas.cliente_id')
-            ->chunk(10, function ($inscripcions) {
-                foreach ($inscripcions as $inscripcion) {
-
-                    if ($inscripcion->calificacion == 0) {
-                        //Log::info(($inscripcion->calificacion == 0) . "inscriopcion:" . $inscripcion->inscripcion_id . " - caifica:" . $inscripcion->calificacion);
-                        //dd($inscripcion);
-                        $this->registrarMaterias($inscripcion->inscripcion_id);
-                        //Log::info("Ajuste de ponderaciones" . $inscripcion->cliente_id);
-                    }
-                }
-            });
-*/
-
-        //dd($inscripciones->toArray());
-        /*foreach ($inscripciones as $inscripcion) {
-            $this->registrarMaterias($inscripcion->inscripcion_id);
-            Log::info("Ajuste de ponderaciones" . $inscripcion->cliente_id);
-            //break;
-        }*/
 
         return redirect()->back();
     }
