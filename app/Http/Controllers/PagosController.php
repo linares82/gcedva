@@ -137,7 +137,7 @@ class PagosController extends Controller
             if ($pago->forma_pago_id == 3) {
                 $datosMultipagos['mp_paymentmethod'] = "SUC";
             } elseif ($pago->forma_pago_id == 4) {
-                //$datosMultipagos['mp_paymentmethod']="CIE";
+                $datosMultipagos['mp_paymentmethod'] = "CIE";
             } elseif ($pago->forma_pago_id == 6) {
                 $datosMultipagos['mp_paymentmethod'] = "TDX";
             }
