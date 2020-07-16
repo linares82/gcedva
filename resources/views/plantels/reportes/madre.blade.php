@@ -11,7 +11,7 @@
 	</ol>
 
     <div class="page-header">
-        <h3><i class="glyphicon glyphicon-plus"></i> @yield('seguimientosAppTitle') / Clientes - Cantidades de estatus por municipio en un periodo </h3>
+        <h3><i class="glyphicon glyphicon-plus"></i> @yield('seguimientosAppTitle') / Reporte Madre </h3>
     </div>
 @endsection
 
@@ -74,7 +74,7 @@
                 <table class="table table-condensed table-striped">
                     <thead>
                         <th>Csc</th>
-                        <th>Logo</th><th>Razon</th><th>Denominacion</th><th>Nombre Corto</th><th>RFC</th>
+                        <th>Logo</th><th>Razon Social</th><th>Razon Social(Contabilidad)</th><th>RFC</th>
                         <th>Direccion</th><th>Cve Multipagos</th><th>Cuenta Contable</th>
                         <th>Director</th><th>Tel.</th><th>Tel. Fijo</th><th>Tel. Cel.</th>
                         <th>Mail</th><th>Mail Empresa</th>
@@ -83,7 +83,7 @@
                         @foreach($plantels as $plantel)
                         <tr>
                             <td>{{++$i}}</td>
-                            <td>{{$plantel->logo}}</td><td>{{$plantel->razon}}</td><td>{{$plantel->denominacion}}</td><td>{{$plantel->nombre_corto}}</td>
+                            <td>{{$plantel->logo}}</td><td>{{$plantel->razon}}</td><td>{{$plantel->nombre_corto}}</td>
                             <td>{{$plantel->rfc}}</td>
                             <td>{{$plantel->calle}} {{$plantel->no_int}}, {{$plantel->colonia}}, {{$plantel->municipio}}, {{$plantel->Estado}}, C.P. {{$plantel->cp}}</td>
                             <td>{{$plantel->cve_multipagos}}</td><td>{{$plantel->cuenta_contable}}</td>
@@ -105,7 +105,7 @@
                 <div class="table-responsive">    
                 <table class="table table-condensed table-striped">
                     <thead>
-                        <th>Csc</th><th>Plantel</th><th>Especialidad</th><th>Nivel</th><th>Grado</th><th>RVOE</th><th>Fec. RVOE</th>
+                        <th>Csc</th><th>Plantel</th><th>Especialidad</th><th>Nivel</th><th>Grado</th><th>Nombre RVOE</th><th>RVOE</th><th>Fec. RVOE</th>
                         <th>CCT</th><th>Denominacion</th><th>Seccion</th>
                     </thead>
                     <tbody>
@@ -113,8 +113,8 @@
                         <tr>
                             <td>{{++$i}}</td>
                             <td>{{$combinacion->plantel}}</td><td>{{$combinacion->especialidad}}</td><td>{{$combinacion->nivel}}</td><td>{{$combinacion->grado}}</td>
-                            <td>{{$combinacion->rvoe}}</td><td>{{$combinacion->fec_rvoe}}</td><td>{{$combinacion->cct}}</td><td>{{$combinacion->denominacion}}</td>
-                            <td>{{$combinacion->seccion}}</td>
+                            <td>{{$combinacion->nombre2}}</td><td>{{$combinacion->rvoe}}</td><td>{{$combinacion->fec_rvoe}}</td><td>{{$combinacion->cct}}</td>
+                            <td>{{$combinacion->denominacion}}</td><td>{{$combinacion->seccion}}</td>
                         </tr>
                         @endforeach
                     </tbody>

@@ -396,7 +396,8 @@ class PlantelsController extends Controller
 					'grados.fec_rvoe',
 					'grados.cct',
 					'grados.denominacion',
-					'grados.seccion'
+					'grados.seccion',
+					'grados.nombre2'
 				)
 					->leftJoin('especialidads as e', 'e.id', '=', 'grados.especialidad_id')
 					->leftJoin('nivels as n', 'n.id', '=', 'grados.especialidad_id')
@@ -477,6 +478,7 @@ class PlantelsController extends Controller
 					'clientes.no_exterior',
 					'clientes.colonia',
 					'clientes.cp',
+					'clientes.matricula',
 					'e.name as estado',
 					'm.name as municipio',
 					'clientes.fec_nacimiento',
@@ -536,6 +538,7 @@ class PlantelsController extends Controller
 					'c.nombre2',
 					'c.ape_paterno',
 					'c.ape_materno',
+					'c.matricula',
 					'p.razon',
 					'e.name as especialidad',
 					'n.name as nivel',
