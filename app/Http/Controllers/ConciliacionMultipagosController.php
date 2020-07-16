@@ -170,98 +170,6 @@ class ConciliacionMultipagosController extends Controller
 		return redirect()->route('conciliacionMultipagos.index')->with('message', 'Registro Creado.');
 	}
 
-	public function ejecutarConciliacion(Request $request)
-	{
-		$registros = ConciliacionMultiDetalle::where('conciliacion_multipago_id', $request['id'])->get();
-		//dd($registros->toArray());
-		foreach ($registros as $pagoConciliacion) {
-			$pagoBuscado = PeticionMultipago::where('mp_reference', $pagoConciliacion->mp_reference)
-				->where('mp_order', $pagoConciliacion->mp_order)
-				->where('mp_amount', $pagoConciliacion->importe)
-				->first();
-			$successBuscado = SuccessMultipago::where('mp_reference', $pagoConciliacion->mp_reference)
-				->where('mp_order', $pagoConciliacion->mp_order)
-				->where('mp_amount', $pagoConciliacion->importe)
-				->first();
-			if ($pagoConciliacion->id == 11) {
-				//dd($pagoBuscado);
-			}
-
-			if (!is_null($pagoBuscado) and !is_null($successBuscado) and $pagoBuscado->pago->bnd_pagado <> 1) {
-
-				//dd($successBuscado->toArray());
-				$pagoBuscado->pago->bnd_pagado = 1;
-				$pagoBuscado->pago->save();
-
-				$successBuscado->conciliacion_multi_detalle_id = $pagoConciliacion->id;
-				$successBuscado->save();
-
-				$pagoConciliacion->success_multipago_id = $successBuscado->id;
-				$pagoConciliacion->peticion_multipago_id = $pagoBuscado->id;
-				$pagoConciliacion->save();
-
-				$caja = $pagoBuscado->pago->caja;
-				$this->actualizaEstatusCaja($caja->id);
-
-				//dd($pagoConciliacion);
-			}
-		}
-		$conciliacion = ConciliacionMultipago::find($request['id']);
-		$conciliacion->contador_ejecucion = $conciliacion->contador_ejecucion + 1;
-		$conciliacion->save();
-		return redirect()->route('conciliacionMultipagos.index')->with('message', 'Ejecucion Exitosa.');
-	}
-
-	public function actualizaEstatusCaja($caja_id)
-	{
-		//$pago = Pago::find($pago_id);
-		$caja = Caja::find($caja_id);
-		$suma_pagos = Pago::select('monto')
-			->where('caja_id', '=', $caja->id)
-			->where('bnd_referenciado', 0)
-			->sum('monto');
-
-		$suma_pagos_referenciados = Pago::select('monto')
-			->where('caja_id', '=', $caja->id)
-			->where('bnd_referenciado', 1)
-			->where('bnd_pagado', 1)
-			->sum('monto');
-
-		$suma = $suma_pagos + $suma_pagos_referenciados;
-
-		if ($suma >= ($caja->total - 1) and $suma < ($caja->total + 100)) {
-
-			foreach ($caja->cajaLns as $ln) {
-				if ($ln->adeudo_id > 0) {
-					Adeudo::where('id', '=', $ln->adeudo_id)->update(['pagado_bnd' => 1]);
-					$adeudo = Adeudo::find($ln->adeudo_id);
-					$adeudo->pagado_bnd = 1;
-					$adeudo->save();
-				}
-			}
-
-			$caja->st_caja_id = 1;
-			//$caja->fecha=date_create(date_format(date_create(date('Y/m/d')),'Y/m/d'));
-			$caja->save();
-		} elseif ($suma > 0 and $suma < ($caja->total - 1)) {
-			$caja->st_caja_id = 3;
-			$caja->save();
-			foreach ($caja->cajaLns as $ln) {
-				if ($ln->adeudo_id > 0) {
-					Adeudo::where('id', '=', $ln->adeudo_id)->update(['pagado_bnd' => 0]);
-				}
-			}
-		} else {
-			$caja->st_caja_id = 0;
-			$caja->save();
-
-			foreach ($caja->cajaLns as $ln) {
-				if ($ln->adeudo_id > 0) {
-					Adeudo::where('id', '=', $ln->adeudo_id)->update(['pagado_bnd' => 0]);
-				}
-			}
-		}
-	}
 
 	/**
 	 * Display the specified resource.
@@ -331,5 +239,182 @@ class ConciliacionMultipagosController extends Controller
 		$conciliacionMultipago->delete();
 
 		return redirect()->route('conciliacionMultipagos.index')->with('message', 'Registro Borrado.');
+	}
+
+	public function ejecutarConciliacion(Request $request)
+	{
+
+		$registros = ConciliacionMultiDetalle::where('conciliacion_multipago_id', $request['id'])->get();
+
+		//dd($registros->toArray());
+
+		foreach ($registros as $pagoConciliacion) {
+			$peticionBuscado = PeticionMultipago::where('mp_reference', $pagoConciliacion->mp_reference)
+				->where('mp_order', $pagoConciliacion->mp_order)
+				->where('mp_amount', $pagoConciliacion->importe)
+				->first();
+			$successBuscado = SuccessMultipago::where('mp_reference', $pagoConciliacion->mp_reference)
+				->where('mp_order', $pagoConciliacion->mp_order)
+				->where('mp_amount', $pagoConciliacion->importe)
+				->first();
+			/*if ($pagoConciliacion->mp_reference == "017000000041000021") {
+				dd($peticionBuscado->pago);
+			}*/
+			//dd($successBuscado);
+
+			if (
+				!is_null($peticionBuscado) and
+				!is_null($peticionBuscado->pago) and
+				$peticionBuscado->pago->bnd_pagado <> 1
+			) {
+				$peticionBuscado->pago->bnd_pagado = 1;
+				$peticionBuscado->pago->save();
+
+				$pagoConciliacion->peticion_multipago_id = $peticionBuscado->id;
+				if (!is_null($successBuscado)) {
+					$pagoConciliacion->success_multipago_id = $successBuscado->id;
+					$successBuscado->conciliacion_multi_detalle_id = $pagoConciliacion->id;
+					$successBuscado->save();
+				} else {
+					$pagoConciliacion->success_multipago_id = 0;
+				}
+
+				$pagoConciliacion->save();
+
+				$caja = $peticionBuscado->pago->caja;
+				$this->actualizaEstatusCaja($caja->id);
+				//dd($pagoConciliacion);
+			} elseif (
+				!is_null($peticionBuscado) and
+				!is_null($peticionBuscado->pago) and
+				$peticionBuscado->pago->bnd_pagado == 1
+			) {
+				$pagoConciliacion->peticion_multipago_id = $peticionBuscado->id;
+				if (!is_null($successBuscado)) {
+					$pagoConciliacion->success_multipago_id = $successBuscado->id;
+					$successBuscado->conciliacion_multi_detalle_id = $pagoConciliacion->id;
+					$successBuscado->save();
+				} else {
+					$pagoConciliacion->success_multipago_id = 0;
+				}
+				$pagoConciliacion->save();
+			}
+		}
+
+		$conciliacion = ConciliacionMultipago::find($request['id']);
+		$conciliacion->contador_ejecucion = $conciliacion->contador_ejecucion + 1;
+		$conciliacion->save();
+		return redirect()->route('conciliacionMultipagos.index')->with('message', 'Ejecucion Exitosa.');
+	}
+
+	public function actualizaEstatusCaja($caja_id)
+	{
+		//$pago = Pago::find($pago_id);
+		$caja = Caja::find($caja_id);
+		$suma_pagos = Pago::select('monto')
+			->where('caja_id', '=', $caja->id)
+			->where('bnd_referenciado', 0)
+			->sum('monto');
+
+		$suma_pagos_referenciados = Pago::select('monto')
+			->where('caja_id', '=', $caja->id)
+			->where('bnd_referenciado', 1)
+			->where('bnd_pagado', 1)
+			->sum('monto');
+
+		$suma = $suma_pagos + $suma_pagos_referenciados;
+
+		if ($suma >= ($caja->total - 1) and $suma < ($caja->total + 100)) {
+
+			foreach ($caja->cajaLns as $ln) {
+				if ($ln->adeudo_id > 0) {
+					Adeudo::where('id', '=', $ln->adeudo_id)->update(['pagado_bnd' => 1]);
+					$adeudo = Adeudo::find($ln->adeudo_id);
+					$adeudo->pagado_bnd = 1;
+					$adeudo->save();
+				}
+			}
+
+			$caja->st_caja_id = 1;
+			//$caja->fecha=date_create(date_format(date_create(date('Y/m/d')),'Y/m/d'));
+			$caja->save();
+		} elseif ($suma > 0 and $suma < ($caja->total - 1)) {
+			$caja->st_caja_id = 3;
+			$caja->save();
+			foreach ($caja->cajaLns as $ln) {
+				if ($ln->adeudo_id > 0) {
+					Adeudo::where('id', '=', $ln->adeudo_id)->update(['pagado_bnd' => 0]);
+				}
+			}
+		} else {
+			$caja->st_caja_id = 0;
+			$caja->save();
+
+			foreach ($caja->cajaLns as $ln) {
+				if ($ln->adeudo_id > 0) {
+					Adeudo::where('id', '=', $ln->adeudo_id)->update(['pagado_bnd' => 0]);
+				}
+			}
+		}
+	}
+
+
+	public function rptConciliacion($id)
+	{
+		$conciliacion = ConciliacionMultipago::find($id);
+		//dd($conciliacion);
+		$peticionesExistentes = PeticionMultipago::where('created_at', '>=', $conciliacion->fec_inicio)
+			->where('created_at', '<=', $conciliacion->fec_fin)
+			->get();
+		//dd($peticionesExistentes);
+		$lnsDetalleConciliacion = $conciliacion->conciliacionMultiDetalles;
+		//dd($lnsDetalleConciliacion->toArray());
+		$registrosConciliados = array();
+
+		foreach ($peticionesExistentes as $peticion) {
+			//dd($peticion);
+			$registro = array();
+			$registro['plantel'] = $peticion->pago->caja->plantel->razon;
+			$registro['caja_consecutivo'] = $peticion->pago->caja->consecutivo;
+			$registro['caja_monto'] = $peticion->pago->caja->total;
+			$registro['caja_fecha'] = $peticion->pago->caja->fecha;
+			$registro['pago_consecutivo'] = $peticion->pago->consecutivo;
+			$registro['pago_fecha'] = $peticion->pago->fecha;
+			$registro['pago_monto'] = $peticion->pago->fecha;
+			$registro['peticion_fecha'] = $peticion->created_at;
+			$registro['peticion_mp_node'] = $peticion->mp_node;
+			$registro['peticion_mp_order'] = $peticion->mp_order;
+			$registro['peticion_mp_reference'] = $peticion->mp_reference;
+			$registro['peticion_mp_amount'] = $peticion->mp_amount;
+			$registro['peticion_mp_paymentmethod'] = $peticion->mp_paymentmethod;
+			$filtered = $lnsDetalleConciliacion->where('mp_order', $peticion->mp_order)
+				->where('mp_reference', $peticion->mp_reference)
+				->where('importe', $peticion->mp_amount)
+				->first();
+			//dd($filtered);
+			if (!is_null($filtered) > 0) {
+				$registro['conciliacion_no_aprobacion'] = $filtered->no_aprobacion;
+				$registro['conciliacion_importe'] = $filtered->importe;
+				$registro['conciliacion_comision'] = $filtered->comision;
+				$registro['conciliacion_iva_comision'] = $filtered->iva_comision;
+				$registro['conciliacion_fecha_dispersion'] = $filtered->fecha_dispersion;
+				$registro['respuesta_mp_response'] = $filtered->successMultipago->mp_response;
+				$registro['respuesta_mp_responsemsg'] = $filtered->successMultipago->mp_responsemsg;
+			} else {
+				$registro['no_aprobacion'] = "";
+				$registro['importe'] = "";
+				$registro['comision'] = "";
+				$registro['iva_comision'] = "";
+				$registro['fecha_dispersion'] = "";
+				$registro['respuesta_mp_response'] = '';
+				$registro['respuesta_mp_responsemsg'] = '';
+			}
+			array_push($registrosConciliados, $registro);
+		}
+		//dd($registros);
+		$lineasConciliacionExtra = ConciliacionMultiDetalle::where('conciliacion_multipago_id', $conciliacion->id)->whereNull('peticion_multipago_id')->get();
+		//dd($lineasConciliacionExtra->toArray());
+
+		return view('conciliacionMultipagos.reportes.rptConciliacion', compact('registrosConciliados', 'lineasConciliacionExtra'));
 	}
 }

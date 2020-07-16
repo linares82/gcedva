@@ -1952,4 +1952,52 @@ class ClientesController extends Controller
         }
         return response()->json(['id_cliente' => $c->id]);
     }
+
+    public function activos()
+    {
+        $empleado = Empleado::where('user_id', Auth::user()->id)->first();
+        $planteles = $empleado->plantels()->pluck('razon', 'id');
+        return view('clientes.reportes.activos', compact('planteles'))
+            ->with('list', Cliente::getListFromAllRelationApps());
+    }
+
+    public function activosR(Request $request)
+    {
+        $datos = $request->all();
+        $registros = Cliente::select(
+            'clientes.id',
+            'clientes.matricula',
+            'clientes.nombre',
+            'clientes.nombre2',
+            'clientes.ape_paterno',
+            'clientes.ape_paterno',
+            'e.name as especialidad',
+            'pe.name as periodo_estudio',
+            'cc.name as concepto',
+            'a.monto'
+        )
+            ->join('adeudos as a', 'a.cliente_id', '=', 'clientes.id')
+            ->join('caja_conceptos as cc', 'cc.id', '=', 'a.caja_concepto_id')
+            ->join('inscripcions as i', 'i.cliente_id', '=', 'clientes.id')
+            ->join('especialidads as e', 'e.id', '=', 'i.especialidad_id')
+            ->join('periodo_estudios as pe', 'pe.id', '=', 'i.periodo_estudio_id')
+            ->where('a.fecha_pago', '>=', $datos['fecha_f'])
+            ->where('a.fecha_pago', '<=', $datos['fecha_t'])
+            ->where('clientes.plantel_id', $datos['plantel_f'])
+            ->where('a.pagado_bnd', 0)
+            ->whereNull('i.deleted_at')
+            ->whereNull('a.deleted_at')
+            //->whereNull('ln.deleted_at')
+            ->orderBy('especialidad')
+            ->orderBy('periodo_estudio')
+            ->orderBy('clientes.ape_paterno')
+            ->orderBy('clientes.ape_materno')
+            ->orderBy('clientes.nombre')
+            ->orderBy('clientes.nombre2')
+            ->get();
+
+        $plantel = Plantel::find($datos['plantel_f']);
+        //dd($registros->toArray());
+        return view('clientes.reportes.activosR', compact('registros', 'plantel', 'datos'));
+    }
 }

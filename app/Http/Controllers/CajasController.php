@@ -73,11 +73,15 @@ class CajasController extends Controller
         //dd($input);
         $cliente = Cliente::find($input['cliente_id']);
 
-        $caja = Caja::where('st_caja_id', 0)
-            ->join('pagos as pag', 'pag.caja_id', '=', 'cajas.id')
-            ->where('pag.bnd_referenciado', '<>', 1)
+        $caja = Caja::select('cajas.consecutivo', 'p.razon', 'cajas.cliente_id', 'pag.bnd_referenciado')
+            ->where('st_caja_id', 0)
+            ->leftJoin('pagos as pag', 'pag.caja_id', '=', 'cajas.id')
+            ->join('plantels as p', 'p.id', '=', 'cajas.plantel_id')
             ->where('plantel_id', $cliente->plantel_id)
             ->get();
+        $caja_filtrada = $caja->whereIn('bnd_referenciado', [NULL,0]);
+        $caja_filtrada->all();
+        //dd($caja_filtrada);
 
         $cajas = Caja::select('cajas.consecutivo as caja', 'cajas.fecha', 'ln.caja_concepto_id as concepto_id', 'cc.name as concepto', 'ln.total', 'st.name as estatus')
             ->join('caja_lns as ln', 'ln.caja_id', '=', 'cajas.id')
@@ -92,17 +96,19 @@ class CajasController extends Controller
 
 
         //dd($caja);
-        if (count($caja) > 0) {
-            $ids_invalidos = Caja::select('cajas.consecutivo', 'p.razon', 'cajas.cliente_id')
+        if (count($caja_filtrada) > 0) {
+            $ids_invalidos = $caja_filtrada->toArray();
+            /*Caja::select('cajas.consecutivo', 'p.razon', 'cajas.cliente_id', 'pag.bnd_referenciado')
                 ->join('plantels as p', 'p.id', '=', 'cajas.plantel_id')
-                ->join('pagos as pag', 'pag.caja_id', '=', 'cajas.id')
+                ->leftJoin('pagos as pag', 'pag.caja_id', '=', 'cajas.id')
                 ->where('plantel_id', $cliente->plantel_id)
                 ->where('cajas.st_caja_id', '=', 0)
                 ->where('cajas.id', '>', 0)
-                ->where('pag.bnd_referenciado', '<>', 1)
-                ->get();
+                //->where('pag.bnd_referenciado', '<>', 1)
+                ->get();*/
             //dd($ids_invalidos);
-            Session::flash('ids_invalidos', $ids_invalidos->toArray());
+            
+            Session::flash('ids_invalidos', $ids_invalidos);
             //dd(session('ids_invalidos'));
             return redirect()->route('cajas.caja')
                 ->withInput();
@@ -365,6 +371,7 @@ class CajasController extends Controller
         $caja = Caja::find($data['caja']);
 
         $conceptosValidos = $caja->plantel->conceptoMultipagos->toArray();
+        //dd($conceptosValidos);
 
         foreach ($data['adeudos_tomados'] as $adeudo_tomado) {
             $adeudos = Adeudo::where('id', '=', $adeudo_tomado)->get();
@@ -388,11 +395,13 @@ class CajasController extends Controller
             //dd($adeudos->toArray());
 
             foreach ($adeudos as $adeudo) {
+                //dd($adeudo->toArray());
                 /*if ((array_search($adeudo->caja_concepto_id, $conceptosValidos) > 0
                         and $caja->forma_pago_id == 7) or
                     $caja->forma_pago_id <> 7
                 ) {*/
                 $existe_linea = CajaLn::where('adeudo_id', '=', $adeudo->id)->first();
+                //dd($existe_linea->toArray());
                 if (!is_object($existe_linea)) {
                     $adeudo->caja_id = $caja->id;
                     $adeudo->save();
@@ -535,7 +544,7 @@ class CajasController extends Controller
                                         //dd($hoy);
                                         if ($inicio->lessThanOrEqualTo($hoy) and $fin->greaterThanOrEqualTo($hoy) and $caja_ln['promo_plan_ln_id'] == 0) {
 
-                                            $monto_promocion = $promocion->descuento * $caja_ln['subtotal'];
+                                            $monto_promocion = $promocion->descuento * $caja_ln['total'];
                                             $caja_ln['descuento'] = $caja_ln['descuento'] + $monto_promocion;
                                             $caja_ln['promo_plan_ln_id'] = $promocion->id;
                                         }
@@ -553,7 +562,7 @@ class CajasController extends Controller
                                         //dd($hoy);
                                         if ($inicio->lessThanOrEqualTo($hoy) and $fin->greaterThanOrEqualTo($hoy) and $caja_ln['promo_plan_ln_id'] == 0) {
 
-                                            $monto_promocion = $promocion->descuento * $caja_ln['subtotal'];
+                                            $monto_promocion = $promocion->descuento * $caja_ln['total'];
                                             $caja_ln['descuento'] = $caja_ln['descuento'] + $monto_promocion;
                                             $caja_ln['promo_plan_ln_id'] = $promocion->id;
                                         }
@@ -593,6 +602,7 @@ class CajasController extends Controller
                     }*/
                     //dd($caja_ln);
                     $caja_linea = CajaLn::create($caja_ln);
+                    //dd($caja_linea);
                     $subtotal = $subtotal + $caja_ln['subtotal'];
                     $recargo = $recargo + $caja_ln['recargo'];
                     $descuento = $descuento + $caja_ln['descuento'];

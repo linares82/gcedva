@@ -190,7 +190,7 @@
                         <div class='text-center'>
                             @permission('cajas.cancelar')
                             @if($caja->st_caja_id<>1 and $caja->st_caja_id<>2)
-                            {!! Form::open(array('route' => 'cajas.cancelar','onsubmit'=> "if(confirm('¿Cancelar Caja? ¿Esta seguro?')) { return true } else {return false };")) !!}
+                            {!! Form::open(array('route' => 'cajas.cancelar','onsubmit'=> "if(confirm('Â¿Cancelar Caja? Â¿Esta seguro?')) { return true } else {return false };")) !!}
                             {!! Form::hidden("caja", $caja->id, array("class" => "form-control", "id" => "caja_id-field")) !!}
                             <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-close"></i> Cancelar Venta</button>
                             {!! Form::close() !!}
@@ -278,10 +278,13 @@
                             {{ csrf_field() }}
                         </thead>
                         <tbody>
+			    @php
+			    $caja->load(cajaLns);
+				//dd($caja->cajaLns->toArray());
+			    @endphp
                             @foreach($caja->cajaLns as $linea)
                             <tr>
-                                @if($caja->forma_pago_id==3 or $caja->forma_pago_id==4 or $caja->forma_pago_id==6)
-                                    @php
+                                @php
                                     $valor=$linea->cajaConcepto->cve_multipagos;
                                     $valores=$caja->plantel->conceptoMultipagos->pluck('id');
                                     $indicador=0;
@@ -299,13 +302,13 @@
                                 <td>
                                     @if(isset($caja) and $caja->st_caja_id==0)
                                     @permission('cajaLns.destroy')
-                                    {!! Form::model($linea, array('route' => array('cajaLns.destroy', $linea->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('Â¿Borrar? Â¿Esta seguro?')) { return true } else {return false };")) !!}
+                                    {!! Form::model($linea, array('route' => array('cajaLns.destroy', $linea->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('Ã‚Â¿Borrar? Ã‚Â¿Esta seguro?')) { return true } else {return false };")) !!}
                                     <button type="submit" class="btn btn-xs btn-danger" data-toggle="tooltip" title="Eliminar"><i class="glyphicon glyphicon-trash"></i></button>
                                     {!! Form::close() !!}
                                     @endpermission
                                     @endif
                                 </td>
-                                @endif
+                                
                             </tr>
                             @endforeach
                             <tr>
@@ -378,7 +381,7 @@
                                 </td>
                                 <td>
                                     @permission('cajas.eliminarPago')
-                                    {!! Form::model($pago, array('route' => array('pagos.destroy', $pago->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('Â¿Borrar? Â¿Esta seguro?')) { return true } else {return false };")) !!}
+                                    {!! Form::model($pago, array('route' => array('pagos.destroy', $pago->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('Ã‚Â¿Borrar? Ã‚Â¿Esta seguro?')) { return true } else {return false };")) !!}
                                         <button type="submit" class="btn btn-xs btn-danger" data-toggle="tooltip" title="Eliminar"><i class="glyphicon glyphicon-trash"></i> </button>
                                     {!! Form::close() !!}
                                     @endpermission
@@ -468,7 +471,7 @@
                                         </div>
                                         
                                     </th>
-                                    <th>Concepto</th><th>Monto</th> <th>Desc.</th> <th>Pagado</th><th>Borrar</th><th>Fecha</th><th>Ticket</th><th>Pagado</th><th>dias</th> 
+                                    <th>Concepto</th><th>ED</th><th>Monto</th> <th>Desc.</th> <th>Pagado</th><th>Borrar</th><th>Fecha</th><th>Ticket</th><th>Pagado</th><th>dias</th> 
                                 </tr>
                             </thead>
                             <tbody>
@@ -516,17 +519,20 @@
                                 
                                 <input type="checkbox" class="adeudos_tomados" value="{{$adeudo->id}}" />
                                 
-                                
                                 @endpermission
+                                
                                 @endif
                                 @endif
                                 @php
                                 $adeudo->load('descuento');
                                 @endphp
                             <td 
+                                @permission('cajas.adeudo_descripcion')
                                 @if($adeudo->pagado_bnd==0)
                                 class='editarAdeudo' 
-                                @endif
+                                @endif        
+                                @endpermission
+                                
                                 data-adeudo='{{$adeudo->id}}' 
                                 data-caja_concepto='{{$adeudo->caja_concepto_id}}' 
                                 data-fecha_pago='{{$adeudo->fecha_pago}}' 
@@ -539,10 +545,18 @@
                                 data-autorizado_el='{{optional($adeudo->descuento)->autorizado_el}}'
                                 
                                 >{{$adeudo->cajaConcepto->name}}</td>
+                            <td>
+                                @if($adeudo->bnd_eximir_descuentos==1)
+                                SI
+                                @else
+                                NO
+                                @endif
+                            </td>
                             <td class='editable'>
                                 {{$adeudo->monto}}
                                 <input class='monto_editable form-control' value='{{$adeudo->monto}}' data-id="{{$adeudo->id}}"></input>
                             </td>
+                            
                             <td>{{optional($adeudo->descuento)->porcentaje}}</td>
                             <td>
                                 <?php
@@ -555,7 +569,7 @@
                             </td>
                             <td>
                                 @permission('adeudos.destroy')
-                                    {!! Form::model($adeudo, array('route' => array('adeudos.destroy', $adeudo->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('Â¿Borrar? Â¿Esta seguro?')) { return true } else {return false };")) !!}
+                                    {!! Form::model($adeudo, array('route' => array('adeudos.destroy', $adeudo->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('Ã‚Â¿Borrar? Ã‚Â¿Esta seguro?')) { return true } else {return false };")) !!}
                                         <button type="submit" class="btn btn-xs btn-danger" data-toggle="tooltip" title="Borrar Adeudo"><i class="glyphicon glyphicon-trash"></i> </button>
                                     {!! Form::close() !!}
                                 @endpermission
@@ -914,7 +928,7 @@ Agregar nuevo registro
             complete : function(){$("#loading3").hide(); },
             success: function(data) {
                 //location.reload();
-                $('#form-buscarVenta').submit();
+                //$('#form-buscarVenta').submit();
             },
         });
     });
@@ -943,6 +957,13 @@ Agregar nuevo registro
         @endpermission
         @permission('cajas.editFecha')
         
+        @role('superadmin')
+        $('.editable_fecha').dblclick(function(){
+            captura=$(this).children("input");
+            captura.show();
+        });
+        @endrole
+
         @if($caja->forma_pago_id<>1 and $caja->forma_pago_id<>6)
         $('.editable_fecha').dblclick(function(){
             captura=$(this).children("input");

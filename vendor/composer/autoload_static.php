@@ -195,6 +195,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         ),
         'L' => 
         array (
+            'Luecano\\NumeroALetras\\' => 22,
             'League\\Flysystem\\AwsS3v3\\' => 25,
             'League\\Flysystem\\' => 17,
             'League\\Csv\\' => 11,
@@ -511,6 +512,10 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'Maatwebsite\\Excel\\' => 
         array (
             0 => __DIR__ . '/..' . '/maatwebsite/excel/src',
+        ),
+        'Luecano\\NumeroALetras\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/luecano/numero-a-letras/src',
         ),
         'League\\Flysystem\\AwsS3v3\\' => 
         array (
@@ -841,6 +846,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'AddFechaPagoToImpresionTicketsTable' => __DIR__ . '/../..' . '/database/migrations/2020_02_21_111204_add_fecha_pago_to_impresion_tickets_table.php',
         'AddFechaVigenciaHistoriaClientesTable' => __DIR__ . '/../..' . '/database/migrations/2019_07_24_113703_add_fecha_vigencia_historia_clientes_table.php',
         'AddFechasGraficaEspecialidadTable' => __DIR__ . '/../..' . '/database/migrations/2017_12_13_102850_add_fechas_grafica_especialidad_table.php',
+        'AddFechasToConciliacionMultipagosTable' => __DIR__ . '/../..' . '/database/migrations/2020_07_08_130236_add_fechas_to_conciliacion_multipagos_table.php',
         'AddFieldAbreviaturaEspecialidadsTable' => __DIR__ . '/../..' . '/database/migrations/2019_07_08_130330_add_field_abreviatura_especialidads_table.php',
         'AddFieldFecCelVinculacionsTable' => __DIR__ . '/../..' . '/database/migrations/2019_08_05_092805_add_field_fec_cel_vinculacions_table.php',
         'AddFieldIndexClienteIdEbanxesTable' => __DIR__ . '/../..' . '/database/migrations/2018_12_17_153737_add_field_index_cliente_id_ebanxes_table.php',
@@ -903,6 +909,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'AddRvoeDenominacionFieldsToGradosTable' => __DIR__ . '/../..' . '/database/migrations/2020_04_28_125355_add_rvoe_denominacion_fields_to_grados_table.php',
         'AddRvoeToPeriodoEstudiosTable' => __DIR__ . '/../..' . '/database/migrations/2020_05_28_142332_add_rvoe_to_periodo_estudios_table.php',
         'AddSaldoInicialCuentasEfectivosTable' => __DIR__ . '/../..' . '/database/migrations/2019_06_25_182830_add_saldo_inicial_cuentas_efectivos_table.php',
+        'AddSeccionToGradosTable' => __DIR__ . '/../..' . '/database/migrations/2020_07_15_111740_add_seccion_to_grados_table.php',
         'AddSegmentoMercadoClientesTable' => __DIR__ . '/../..' . '/database/migrations/2018_04_12_143415_add_segmento_mercado_clientes_table.php',
         'AddStEmpresaIdEmpresasTable' => __DIR__ . '/../..' . '/database/migrations/2019_02_01_120531_add_st_empresa_id_empresas_table.php',
         'AddStEmpresaIdIndexEmpresasTable' => __DIR__ . '/../..' . '/database/migrations/2019_02_01_120755_add_st_empresa_id_index_empresas_table.php',

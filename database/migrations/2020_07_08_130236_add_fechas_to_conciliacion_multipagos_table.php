@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddBndReferenciadoToPagosTable extends Migration
+class AddFechasToConciliacionMultipagosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,9 @@ class AddBndReferenciadoToPagosTable extends Migration
      */
     public function up()
     {
-        Schema::table('pagos', function (Blueprint $table) {
-            $table->integer('bnd_referenciado')->nullable()->default(0);
+        Schema::table('conciliacion_multipagos', function (Blueprint $table) {
+            $table->date('fec_inicio')->nullable();
+            $table->date('fec_fin')->nullable();
         });
     }
 
@@ -25,7 +26,7 @@ class AddBndReferenciadoToPagosTable extends Migration
      */
     public function down()
     {
-        Schema::table('pagos', function (Blueprint $table) {
+        Schema::table('conciliacion_multipagos', function (Blueprint $table) {
             //
         });
     }

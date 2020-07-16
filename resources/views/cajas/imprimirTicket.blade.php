@@ -20,6 +20,8 @@ body{
 }
 </style>
 
+
+
 <div id="printeArea">
 <table style="width:100%;height:auto;border:1px solid #ccc;font-size: 0.70em;">
     <tr>
@@ -128,9 +130,7 @@ body{
         <tr><td colspan="2">Fecha Impresion: {{$fecha}}</td></tr>
     </tr>
     
-    <tr><td>-</td></tr>
-    <tr><td>-</td></tr>
-    <tr><td>--------------------------------------------</td></tr>
+    
 </table>
 
 </div>

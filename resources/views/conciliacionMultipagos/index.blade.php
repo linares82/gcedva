@@ -199,6 +199,7 @@
                                 <td>{{$conciliacionMultipago->usu_alta->name}}</td>
                                 <td class="text-right">
                                     <a class="btn btn-xs btn-warning" href="{{ route('conciliacionMultipagos.show', $conciliacionMultipago->id) }}"><i class="glyphicon glyphicon-view"></i> Ver</a>
+                                    <a class="btn btn-xs btn-warning" href="{{ route('conciliacionMultipagos.rptConciliacion', $conciliacionMultipago->id) }}"><i class="glyphicon glyphicon-view"></i> Reporte Conciliacion</a>
                                     @permission('conciliacionMultipagos.ejecutarConciliacion')
                                     <a class="btn btn-xs btn-primary" href="{{ route('conciliacionMultipagos.ejecutarConciliacion', array('id'=>$conciliacionMultipago->id)) }}"><i class="glyphicon glyphicon-check"></i> Ejecutar</a>
                                     @endpermission

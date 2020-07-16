@@ -13,4 +13,18 @@
                         <span class="help-block">{{ $errors->first("archivo") }}</span>
                        @endif
                     </div>
+                    <div class="form-group col-md-4 @if($errors->has('fec_inicio')) has-error @endif">
+                        <label for="fec_inicio-field">Fecha Inicio</label>
+                        {!! Form::text("fec_inicio", null, array("class" => "form-control fecha", "id" => "fec_inicio-field")) !!}
+                        @if($errors->has("fec_inicio"))
+                        <span class="help-block">{{ $errors->first("fec_inicio") }}</span>
+                        @endif
+                     </div>
+                     <div class="form-group col-md-4 @if($errors->has('fec_fin')) has-error @endif">
+                        <label for="fec_fin-field">Fecha Fin</label>
+                        {!! Form::text("fec_fin", null, array("class" => "form-control fecha", "id" => "fec_fin-field")) !!}
+                        @if($errors->has("fec_fin"))
+                        <span class="help-block">{{ $errors->first("fec_fin") }}</span>
+                        @endif
+                     </div>
                   

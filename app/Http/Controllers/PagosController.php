@@ -14,6 +14,7 @@ use App\CajaLn;
 use App\CombinacionCliente;
 use App\Empleado;
 use App\Egreso;
+use App\Mese;
 use App\Exports\PagosExport;
 use App\FormaPago;
 use App\Inscripcion;
@@ -36,6 +37,9 @@ use DB;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Facades\Excel;
 use Log;
+use Luecano\NumeroALetras\NumeroALetras;
+
+use Carbon\Carbon;
 
 class PagosController extends Controller
 {
@@ -556,7 +560,7 @@ class PagosController extends Controller
         } else {
             $combinacion = 0;
             $cliente = Cliente::find($caja->cliente_id);
-            $empleado = Empleado::where('user_id', '=', Auth::user()->id)->first();
+            $empleado = Empleado::where('user_id', '=', $pago->usua_alta_id)->first();
 
             $carbon = new \Carbon\Carbon();
             $date = $carbon->now();
@@ -565,6 +569,16 @@ class PagosController extends Controller
             //dd($adeudo->toArray());
 
         }
+
+        $formatter = new NumeroALetras;
+        $totalEntero=intdiv($caja->total,1);
+        $centavos=($caja->total-$totalEntero)*100;
+        $totalLetra = $formatter->toMoney($totalEntero, 2, "Pesos", 'Centavos');
+        //dd($centavos);
+        
+        //dd($fechaLetra);
+
+
         return view('cajas.imprimirTicketPago', array(
             'cliente' => $cliente,
             'caja' => $caja,
@@ -573,7 +587,10 @@ class PagosController extends Controller
             'combinacion' => $combinacion,
             'pago' => $pago,
             'acumulado' => $acumulado,
-            'impresion_token' => $impresion_token
+            'impresion_token' => $impresion_token,
+            'totalLetra' => $totalLetra,
+            'centavos'=>$centavos,
+            //'fechaLetra' => $fechaLetra
         ));
     }
 

@@ -70,6 +70,13 @@
                         <span class="help-block">{{ $errors->first("precio_online") }}</span>
                        @endif
                     </div>
+                    <div class="form-group col-md-4 @if($errors->has('seccion')) has-error @endif">
+                        <label for="seccion-field">Seccion</label>
+                        {!! Form::text("seccion", null, array("class" => "form-control input-sm", "id" => "seccion-field")) !!}
+                        @if($errors->has("seccion"))
+                         <span class="help-block">{{ $errors->first("seccion") }}</span>
+                        @endif
+                     </div>
                     <div class="form-group col-md-4 @if($errors->has('modulo_final_id')) has-error @endif">
                        <label for="modulo_final_id-field">Modulo final</label>
                        {!! Form::select("modulo_final_id", $modulos, null, array("class" => "form-control select_seguridad", "id" => "modulo_final_id-field")) !!}

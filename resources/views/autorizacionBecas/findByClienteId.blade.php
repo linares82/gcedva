@@ -239,11 +239,7 @@
                                 {!! Form::text("comentario", null, array("class" => "form-control", "id" => "comentario-crear")) !!}
                             </div>
                             <div class="form-group col-sm-6 @if($errors->has('fec_fin')) has-error @endif">
-                                <label for="inicial_bnd-field">Monto Inscripcion</label>
-                                {!! Form::text("monto_inscripcion", null, array("class" => "form-control", "id" => "monto_inscripcion-crear")) !!}
-                            </div>
-                            <div class="form-group col-sm-6 @if($errors->has('fec_fin')) has-error @endif">
-                                <label for="inicial_bnd-field">Monto mensualidad</label>
+                                <label for="inicial_bnd-field">Porcentaje Beca (formato decimal 0.00)</label>
                                 {!! Form::text("monto_mensualidad", null, array("class" => "form-control", "id" => "monto_mensualidad-crear")) !!}
                             </div>
                             

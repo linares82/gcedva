@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use File as Archi;
+use App\AsignacionAcademica;
 use App\ConceptoMultipago;
+use App\Cliente;
 use App\DocPlantelPlantel;
+use App\Grado;
 use App\Plantel;
 use App\Empleado;
 use Illuminate\Http\Request;
@@ -48,8 +51,8 @@ class PlantelsController extends Controller
 			->where('puesto_id', 23)->pluck('name', 'id');
 		$enlaces = Empleado::select(DB::raw("CONCAT(nombre,' ',ape_paterno,' ',ape_materno) AS name"), 'id')
 			->where('puesto_id', 15)->pluck('name', 'id');
-		$lista_conceptosMultipago=ConceptoMultipago::pluck('name','id');
-		return view('plantels.create', compact('directores', 'responsables', 'enlaces','lista_conceptosMultipago'))
+		$lista_conceptosMultipago = ConceptoMultipago::pluck('name', 'id');
+		return view('plantels.create', compact('directores', 'responsables', 'enlaces', 'lista_conceptosMultipago'))
 			->with('list', Plantel::getListFromAllRelationApps());
 	}
 
@@ -166,10 +169,17 @@ class PlantelsController extends Controller
 			->whereNotIn('id', $de_array)
 			->get();
 
-		$lista_conceptosMultipago=ConceptoMultipago::pluck('name','id');
+		$lista_conceptosMultipago = ConceptoMultipago::pluck('name', 'id');
 
-		return view('plantels.edit', compact('plantel', 'ruta', 'directores', 'responsables', 
-		'documentos_faltantes', 'enlaces','lista_conceptosMultipago'))
+		return view('plantels.edit', compact(
+			'plantel',
+			'ruta',
+			'directores',
+			'responsables',
+			'documentos_faltantes',
+			'enlaces',
+			'lista_conceptosMultipago'
+		))
 			->with('list', Plantel::getListFromAllRelationApps())
 			->with('list1', DocPlantelPlantel::getListFromAllRelationApps());
 	}
@@ -198,7 +208,7 @@ class PlantelsController extends Controller
 	{
 		//dd($request->all());
 		$input = $request->except('concepto_multipagos_id');
-		$conceptos=$request->only('concepto_multipagos_id');
+		$conceptos = $request->only('concepto_multipagos_id');
 		$input['usu_mod_id'] = Auth::user()->id;
 
 		//$input['logo']="";
@@ -331,5 +341,183 @@ class PlantelsController extends Controller
 			return response()->json(['msj' => 'Sin registros'], 500);
 		}
 		return response()->json(['resultado' => $lista]);
+	}
+
+	public function madre()
+	{
+		$empleado = Empleado::where('user_id', Auth::user()->id)->first();
+		$planteles = $empleado->plantels()->pluck('razon', 'id');
+		return view('plantels.reportes.madre', compact('planteles'));
+	}
+
+	public function madreR(Request $request)
+	{
+		$datos = $request->all();
+		$empleado = Empleado::where('user_id', Auth::user()->id)->first();
+		$planteles = $empleado->plantels()->pluck('razon', 'id');
+		switch ($datos['valor_reporte']) {
+			case 'planteles':
+				$plantels = Plantel::select(
+					'plantels.logo',
+					'plantels.razon',
+					'plantels.denominacion',
+					'plantels.nombre_corto',
+					'plantels.rfc',
+					'plantels.calle',
+					'plantels.no_int',
+					'plantels.colonia',
+					'plantels.municipio',
+					'plantels.estado',
+					'plantels.cp',
+					'plantels.cve_multipagos',
+					'plantels.cuenta_contable',
+					'dir.nombre',
+					'dir.ape_paterno',
+					'dir.ape_materno',
+					'plantels.tel',
+					'dir.tel_cel',
+					'dir.tel_fijo',
+					'dir.mail',
+					'dir.mail_empresa'
+				)
+					->leftJoin('empleados as dir', 'dir.id', '=', 'plantels.director_id')
+					->where('plantels.id', '>', 0)
+					->get();
+				return view('plantels.reportes.madre', compact('plantels', 'planteles'));
+				break;
+			case 'combinaciones':
+				$combinaciones = Grado::select(
+					'p.razon as plantel',
+					'e.name as especialidad',
+					'n.name as nivel',
+					'grados.name as grado',
+					'grados.rvoe',
+					'grados.fec_rvoe',
+					'grados.cct',
+					'grados.denominacion',
+					'grados.seccion'
+				)
+					->leftJoin('especialidads as e', 'e.id', '=', 'grados.especialidad_id')
+					->leftJoin('nivels as n', 'n.id', '=', 'grados.especialidad_id')
+					->leftJoin('plantels as p', 'p.id', '=', 'grados.plantel_id')
+					->where('grados.plantel_id', $datos['plantel_f'])
+					//->whereNull('grados.deleted_at')
+					->orderBy('plantel')
+					->orderBy('especialidad')
+					->orderBy('nivel')
+					->orderBy('grado')
+					->get();
+
+				return view('plantels.reportes.madre', compact('combinaciones', 'planteles'));
+				break;
+			case 'asignaciones':
+				$asignaciones = AsignacionAcademica::select(
+					'p.razon',
+					'l.name as lectivo',
+					'lo.name as lectivo_oficial',
+					'g.name as grupo',
+					'm.name as materia',
+					'd.nombre',
+					'd.ape_paterno',
+					'd.ape_materno',
+					'd.curp',
+					'd.direccion',
+					'd.fec_nacimiento',
+					'd.genero',
+					'ed.name as estado',
+					'd.pais_nacimiento',
+					'ned.name as nivel_estudios',
+					'd.profesion',
+					'd.cedula',
+					'd.anios_servicio_escuela',
+					'do.nombre as do_nombre',
+					'do.ape_paterno as do_ape_paterno',
+					'do.ape_materno as do_ape_materno',
+					'do.curp as do_curp',
+					'do.direccion as do_direccion',
+					'do.fec_nacimiento as do_fec_nacimiento',
+					'do.genero as do_genero',
+					'edo.name as do_estado',
+					'do.pais_nacimiento as do_pais_nacimiento',
+					'edo.name as do_nivel_estudios',
+					'do.profesion as do_profesion',
+					'do.cedula as do_cedula',
+					'do.anios_servicio_escuela as do_anios_servicio_escuela',
+					DB::raw('(select count(cliente_id) from hacademicas as h2 where h2.plantel_id=p.id and h2.lectivo_id=l.id and h2.grupo_id=g.id and h2.materium_id=m.id) as total_alumnos')
+				)
+					->leftJoin('plantels as p', 'p.id', 'asignacion_academicas.plantel_id')
+					->leftJoin('lectivos as l', 'l.id', 'asignacion_academicas.lectivo_id')
+					->leftJoin('lectivos as lo', 'lo.id', 'asignacion_academicas.lectivo_oficial_id')
+					->leftJoin('materia as m', 'm.id', '=', 'asignacion_academicas.materium_id')
+					->leftJoin('grupos as g', 'g.id', '=', 'asignacion_academicas.grupo_id')
+					->leftJoin('empleados as d', 'd.id', '=', 'asignacion_academicas.empleado_id')
+					->leftJoin('estados as ed', 'ed.id', '=', 'd.estado_nacimiento_id')
+					->leftJoin('nivel_estudios as ned', 'ned.id', '=', 'd.nivel_estudio_id')
+					->leftJoin('empleados as do', 'do.id', '=', 'asignacion_academicas.docente_oficial_id')
+					->leftJoin('estados as edo', 'edo.id', '=', 'do.estado_nacimiento_id')
+					->where('p.id', $datos['plantel_f'])
+					->orderBy('lectivo')
+					->orderBy('grupo')
+					->orderBy('materia')
+					->get();
+				//dd($asignaciones->toArray());
+				return view('plantels.reportes.madre', compact('asignaciones', 'planteles'));
+				break;
+			case 'alumnos':
+				$alumnos = Cliente::select(
+					'clientes.id as cliente_id',
+					'p.razon',
+					'clientes.nombre',
+					'clientes.nombre2',
+					'clientes.ape_paterno',
+					'clientes.ape_materno',
+					'clientes.curp',
+					'clientes.calle',
+					'clientes.no_exterior',
+					'clientes.colonia',
+					'clientes.cp',
+					'e.name as estado',
+					'm.name as municipio',
+					'clientes.fec_nacimiento',
+					'clientes.genero',
+					'clientes.curp',
+					'stc.name as st_cliente',
+					'clientes.created_at',
+					'clientes.nacionalidad',
+					'clientes.mail',
+					'clientes.tel_fijo',
+					'ec.name as estado_civil',
+					'clientes.edad',
+					'en.name as estado_nacimiento',
+					'i.created_at as fecha_inscripcion',
+					DB::raw('(select fecha from historia_clientes as hc2 where hc2.cliente_id=clientes.id and hc2.evento_cliente_id=2) as fecha_baja'),
+					DB::raw('(select tb2.name as tipo_beca
+				from autorizacion_becas as ab2 
+				inner join tipo_becas as tb2 on tb2.id=ab2.tipo_beca_id
+				where ab2.cliente_id=clientes.id and ab2.lectivo_id=i.lectivo_id)'),
+					DB::raw('(select ab3.monto_mensualidad as porcentaje_beca
+				from autorizacion_becas as ab3 
+				inner join tipo_becas as tb3 on tb3.id=ab3.tipo_beca_id
+				where ab3.cliente_id=clientes.id and ab3.lectivo_id=i.lectivo_id)')
+				)
+					->leftJoin('plantels as p', 'p.id', '=', 'clientes.plantel_id')
+					->leftjoin('municipios as m', 'm.id', '=', 'clientes.municipio_id')
+					->leftjoin('estados as e', 'e.id', '=', 'clientes.estado_id')
+					->leftjoin('estados as en', 'en.id', '=', 'clientes.estado_nacimiento_id')
+					->leftjoin('st_clientes as stc', 'stc.id', '=', 'clientes.st_cliente_id')
+					->leftjoin('estado_civils as ec', 'ec.id', '=', 'clientes.estado_civil_id')
+					->leftJoin('inscripcions as i', 'i.cliente_id', '=', 'clientes.id')
+					->whereNull('i.deleted_at')
+					->where('clientes.plantel_id', $datos['plantel_f'])
+					->orderBY('clientes.plantel_id')
+					->orderBY('clientes.ape_paterno')
+					->orderBY('clientes.ape_materno')
+					->orderBY('clientes.nombre')
+					->orderBY('clientes.nombre2')
+					->get();
+				//dd($alumnos->toArray());
+				return view('plantels.reportes.madre', compact('alumnos', 'planteles'));
+				break;
+		}
 	}
 }
