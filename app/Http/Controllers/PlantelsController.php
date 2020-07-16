@@ -10,6 +10,7 @@ use App\ConceptoMultipago;
 use App\Cliente;
 use App\DocPlantelPlantel;
 use App\Grado;
+use App\Hacademica;
 use App\Plantel;
 use App\Empleado;
 use Illuminate\Http\Request;
@@ -490,22 +491,32 @@ class PlantelsController extends Controller
 					'clientes.edad',
 					'en.name as estado_nacimiento',
 					'i.created_at as fecha_inscripcion',
+					'clientes.nombre_padre',
+					'clientes.dir_padre',
+					'clientes.curp_padre',
+					'clientes.mail_padre',
+					'clientes.tel_padre',
+					'clientes.nombre_madre',
+					'clientes.dir_madre',
+					'clientes.curp_madre',
+					'clientes.mail_madre',
+					'clientes.tel_madre',
 					DB::raw('(select fecha from historia_clientes as hc2 where hc2.cliente_id=clientes.id and hc2.evento_cliente_id=2) as fecha_baja'),
 					DB::raw('(select tb2.name as tipo_beca
-				from autorizacion_becas as ab2 
-				inner join tipo_becas as tb2 on tb2.id=ab2.tipo_beca_id
-				where ab2.cliente_id=clientes.id and ab2.lectivo_id=i.lectivo_id)'),
+					from autorizacion_becas as ab2 
+					inner join tipo_becas as tb2 on tb2.id=ab2.tipo_beca_id
+					where ab2.cliente_id=clientes.id and ab2.lectivo_id=i.lectivo_id)'),
 					DB::raw('(select ab3.monto_mensualidad as porcentaje_beca
-				from autorizacion_becas as ab3 
-				inner join tipo_becas as tb3 on tb3.id=ab3.tipo_beca_id
-				where ab3.cliente_id=clientes.id and ab3.lectivo_id=i.lectivo_id)')
+					from autorizacion_becas as ab3 
+					inner join tipo_becas as tb3 on tb3.id=ab3.tipo_beca_id
+					where ab3.cliente_id=clientes.id and ab3.lectivo_id=i.lectivo_id)')
 				)
-					->leftJoin('plantels as p', 'p.id', '=', 'clientes.plantel_id')
-					->leftjoin('municipios as m', 'm.id', '=', 'clientes.municipio_id')
-					->leftjoin('estados as e', 'e.id', '=', 'clientes.estado_id')
-					->leftjoin('estados as en', 'en.id', '=', 'clientes.estado_nacimiento_id')
-					->leftjoin('st_clientes as stc', 'stc.id', '=', 'clientes.st_cliente_id')
-					->leftjoin('estado_civils as ec', 'ec.id', '=', 'clientes.estado_civil_id')
+					->join('plantels as p', 'p.id', '=', 'clientes.plantel_id')
+					->leftJoin('municipios as m', 'm.id', '=', 'clientes.municipio_id')
+					->leftJoin('estados as e', 'e.id', '=', 'clientes.estado_id')
+					->leftJoin('estados as en', 'en.id', '=', 'clientes.estado_nacimiento_id')
+					->join('st_clientes as stc', 'stc.id', '=', 'clientes.st_cliente_id')
+					->leftJoin('estado_civils as ec', 'ec.id', '=', 'clientes.estado_civil_id')
 					->leftJoin('inscripcions as i', 'i.cliente_id', '=', 'clientes.id')
 					->whereNull('i.deleted_at')
 					->where('clientes.plantel_id', $datos['plantel_f'])
@@ -517,6 +528,65 @@ class PlantelsController extends Controller
 					->get();
 				//dd($alumnos->toArray());
 				return view('plantels.reportes.madre', compact('alumnos', 'planteles'));
+				break;
+			case 'alumnosCalificaciones':
+				$alumnosCalificaciones = Hacademica::select(
+					'c.id as cliente_id',
+					'c.nombre',
+					'c.nombre2',
+					'c.ape_paterno',
+					'c.ape_materno',
+					'p.razon',
+					'e.name as especialidad',
+					'n.name as nivel',
+					'gra.name as grado',
+					'g.name as grupo',
+					'm.name as materia',
+					'te.name as tipo_examen',
+					'calif.calificacion',
+					't.name as turno',
+					'l.name as lectivo',
+					'pe.name as periodo_estudio',
+					'm.creditos',
+					'm.codigo',
+					DB::raw('(select count(cliente_id) 
+					from asistencia_rs as a2 
+					inner join asignacion_academicas as aa2 on aa2.id=a2.asignacion_academica_id
+					inner join lectivos as l2 on l2.id=aa2.lectivo_id
+					where aa2.plantel_id=hacademicas.plantel_id and
+					aa2.lectivo_id=hacademicas.lectivo_id and
+					aa2.materium_id=hacademicas.materium_id and
+					aa2.grupo_id=hacademicas.grupo_id and
+					a2.fecha>=l2.inicio and
+					a2.fecha<=l2.fin and
+					a2.est_asistencia_id=4) as faltas')
+				)
+					->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
+					->join('turnos as t', 't.id', '=', 'i.turno_id')
+					->join('lectivos as l', 'l.id', '=', 'i.lectivo_id')
+					->join('periodo_estudios as pe', 'pe.id', '=', 'i.periodo_estudio_id')
+					->join('plantels as p', 'p.id', '=', 'hacademicas.plantel_id')
+					->join('especialidads as e', 'e.id', '=', 'hacademicas.especialidad_id')
+					->join('nivels as n', 'n.id', '=', 'hacademicas.nivel_id')
+					->join('grados as gra', 'gra.id', '=', 'hacademicas.grado_id')
+					->join('clientes as c', 'c.id', '=', 'hacademicas.cliente_id')
+					->join('grupos as g', 'g.id', '=', 'hacademicas.grupo_id')
+					->join('materia as m', 'm.id', '=', 'hacademicas.materium_id')
+					->join('calificacions as calif', 'calif.hacademica_id', '=', 'hacademicas.id')
+					->join('tpo_examens as te', 'te.id', '=', 'calif.tpo_examen_id')
+					->whereNull('hacademicas.deleted_at')
+					->where('hacademicas.plantel_id', $datos['plantel_f'])
+					->orderBy('p.razon')
+					->orderBy('especialidad')
+					->orderBy('nivel')
+					->orderBy('grado')
+					->orderBy('ape_paterno')
+					->orderBy('ape_materno')
+					->orderBy('nombre')
+					->orderBy('nombre2')
+					->get();
+				//dd($alumnosCalificaciones->toArray());
+				return view('plantels.reportes.madre', compact('alumnosCalificaciones', 'planteles'));
 				break;
 		}
 	}

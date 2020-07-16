@@ -57,6 +57,7 @@
                     <button class="btn btn-primary combinaciones">Combinaciones</button>
                     <button class="btn btn-primary asignaciones">Asignaciones</button>
                     <button class="btn btn-primary alumnos">Alumnos</button>
+                    <button class="btn btn-primary alumnosCalificaciones">Alumnos Calificaciones</button>
                     
                     
 
@@ -183,6 +184,8 @@
                         <th>Id</th><th>Alumno</th><th>Matricula</th><th>Fec. Nacimiento</th><th>Genero</th><th>CURP</th><th>Estatus</th>
                         <th>Fec. Alta / Fec. Baja</th><th>Domicilio</th><th>Nacionalidad</th><th>Correo Electronico</th><th>Telefono</th><th>Estado Civil</th>
                         <th>Edad</th><th>Estado Nacimiento</th><th>Fec. Ingreso</th><th>Documentos</th><th>T. Beca</th><th>% Beca</th>
+                        <th>Nombre Padre</th><th>Direccion</th><th>CURP</th><th>Mail</th><th>Tel.</th>
+                        <th>Nombre Madre</th><th>Direccion</th><th>CURP</th><th>Mail</th><th>Tel.</th>
                     </thead>
                     <tbody>
                         @foreach($alumnos as $alumno)
@@ -212,6 +215,39 @@
                                 </ul>
                             </td>
                             <td> {{$alumno->tipo_beca}}</td><td> {{$alumno->porcentaje_beca}}</td>
+                            <td>{{ $alumno->nombre_padre }}</td><td>{{ $alumno->dir_padre }}</td><td>{{ $alumno->curp_padre }}</td><td>{{ $alumno->mail_padre }}</td><td>{{ $alumno->tel_padre }}</td>
+                            <td>{{ $alumno->nombre_madre }}</td><td>{{ $alumno->dir_madre }}</td><td>{{ $alumno->curp_madre }}</td><td>{{ $alumno->mail_madre }}</td><td>{{ $alumno->tel_madre }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+                <div>
+            <div>
+        <div>
+        @endif
+        @if(isset($alumnosCalificaciones))
+        <h4> Lista de Alumnos y Calificaciones</h4>
+        <div class="box">
+            <div class="box-body">
+                <div class="table-responsive">    
+                <table class="table table-condensed table-striped">
+                    <thead>
+                        <th>Csc</th><th>Plantel</th>
+                        <th>Especialidad</th><th>Nivel</th><th>Grado</th><th>Id</th><th>Alumno</th><th>Matricula</th><th>Grupo</th>
+                        <th>Materia</th><th>Codigo</th><th>Creditos</th>
+                        <th>Turno</th><th>Lectivo</th><th>Periodo Estudio</th>
+                        <th>Tipo Examen</th><th>Calificacion</th><th>Faltas</th> 
+                    </thead>
+                    <tbody>
+                        @foreach($alumnosCalificaciones as $alumnoC)
+                        <tr>
+                            <td>{{++$i}}</td><td>{{$alumnoC->razon}}</td>
+                            <td>{{$alumnoC->especialidad}}</td><td>{{$alumnoC->nivel}}</td><td>{{$alumnoC->grado}}</td><td>{{$alumnoC->cliente_id}}</td>
+                            <td>{{$alumnoC->nombre}} {{$alumnoC->nombre2}} {{$alumnoC->ape_paterno}} {{$alumnoC->ape_materno}}</td><td>{{$alumnoC->matricula}}</td>
+                            <td>{{$alumnoC->grupo}}</td><td>{{$alumnoC->materia}}</td><td>{{$alumnoC->codigo}}</td><td>{{$alumnoC->creditos}}</td>
+                            <td>{{$alumnoC->turno}}</td><td>{{$alumnoC->lectivo}}</td><td>{{$alumnoC->periodo_Estudio}}</td>
+                            <td>{{$alumnoC->tipo_examen}}</td><td>{{$alumnoC->calificacion}}</td><td>{{ $alumnoC->faltas }}</td>
+                            
                         </tr>
                         @endforeach
                     </tbody>
@@ -253,7 +289,14 @@
             $('#frm_reporte').attr('action', '{{route("plantels.madreR")}}');
             $('#frm_reporte').submit();
         });
+
         
+        $(".alumnosCalificaciones").click(function(e){
+            e.preventDefault();
+            $('#valor_reporte-field').val('alumnosCalificaciones');
+            $('#frm_reporte').attr('action', '{{route("plantels.madreR")}}');
+            $('#frm_reporte').submit();
+        });
     });
     
     </script>
