@@ -1021,21 +1021,18 @@
                             <div class="panel-body">
                                 <table class="table table-condensed table-striped">
                                     <head>
-                                    <th>Horario</th><th>Materia</th><th>Modulo</th><th>Instructor</th><th>Clave</th>
-                                    <th>A. Paterno</th><th>A. Materno</th><th>Nombre(s)</th><th>CalificaciOn final</th>
+                                    <th>Asignatura</th><th>Clave</th><th>Creditos</th><th>Periodo</th><th>Calificacion</th>
+                                    <th>Estado</th>
                                     </head>
                                     <body>
                                     @foreach($historia as $registro)
                                         <tr>
-                                            <td>{{$registro->horario}}</td>
                                             <td>{{$registro->materia}}</td>
-                                            <td>{{$registro->modulo}}</td>
-                                            <td>{{$registro->instructor}}</td>
-                                            <td>{{$registro->clave}}</td>
-                                            <td>{{$registro->apellido_paterno}}</td>
-                                            <td>{{$registro->apellido_materno}}</td>
-                                            <td>{{$registro->nombre}}</td>
-                                            <td>{{$registro->calif_final}}</td>
+                                            <td>{{$registro->codigo}}</td>
+                                            <td>{{$registro->creditos}}</td>
+                                            <td>{{$registro->lectivo}}</td>
+                                            <td>{{$registro->calificacion}}</td>
+                                            <td>{{$registro->tipo_examen}}</td>
                                         </tr>
                                     @endforeach
                                     </body>

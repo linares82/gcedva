@@ -404,7 +404,7 @@ class ClientesController extends Controller
         //dd($cliente->toArray());
         $cuestionarios = Ccuestionario::where('st_cuestionario_id', '=', '1')->pluck('name', 'id');
 
-        $historia = ConsultaCalificacion::where('cliente_id', $cliente->id)->get();
+        $historia = ConsultaCalificacion::where('matricula', $cliente->matricula)->get();
         //dd($historia->toArray());
         //count($cliente->adeudos));
         $estado_civiles = EstadoCivil::pluck('name', 'id');

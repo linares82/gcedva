@@ -504,14 +504,18 @@ class PlantelsController extends Controller
 					'clientes.mail_madre',
 					'clientes.tel_madre',
 					DB::raw('(select fecha from historia_clientes as hc2 where hc2.cliente_id=clientes.id and hc2.evento_cliente_id=2) as fecha_baja'),
-					DB::raw('(select tb2.name as tipo_beca
+					DB::raw('(select tb2.name 
 					from autorizacion_becas as ab2 
 					inner join tipo_becas as tb2 on tb2.id=ab2.tipo_beca_id
-					where ab2.cliente_id=clientes.id and ab2.lectivo_id=i.lectivo_id)'),
-					DB::raw('(select ab3.monto_mensualidad as porcentaje_beca
+					where ab2.cliente_id=clientes.id and ab2.lectivo_id=i.lectivo_id) as tipo_beca'),
+					DB::raw('(select ab3.monto_mensualidad 
 					from autorizacion_becas as ab3 
 					inner join tipo_becas as tb3 on tb3.id=ab3.tipo_beca_id
-					where ab3.cliente_id=clientes.id and ab3.lectivo_id=i.lectivo_id)')
+					where ab3.cliente_id=clientes.id and ab3.lectivo_id=i.lectivo_id) as porcentaje_beca'),
+					DB::raw('(select ab4.mensualidad_sep 
+					from autorizacion_becas as ab4 
+					inner join tipo_becas as tb4 on tb4.id=ab4.tipo_beca_id
+					where ab4.cliente_id=clientes.id and ab4.lectivo_id=i.lectivo_id) as mensualidad_sep')
 				)
 					->join('plantels as p', 'p.id', '=', 'clientes.plantel_id')
 					->leftJoin('municipios as m', 'm.id', '=', 'clientes.municipio_id')
@@ -519,14 +523,16 @@ class PlantelsController extends Controller
 					->leftJoin('estados as en', 'en.id', '=', 'clientes.estado_nacimiento_id')
 					->join('st_clientes as stc', 'stc.id', '=', 'clientes.st_cliente_id')
 					->leftJoin('estado_civils as ec', 'ec.id', '=', 'clientes.estado_civil_id')
-					->leftJoin('inscripcions as i', 'i.cliente_id', '=', 'clientes.id')
+					->join('inscripcions as i', 'i.cliente_id', '=', 'clientes.id')
 					->whereNull('i.deleted_at')
 					->where('clientes.plantel_id', $datos['plantel_f'])
+					//->where('clientes.st_cliente_id=')
 					->orderBY('clientes.plantel_id')
 					->orderBY('clientes.ape_paterno')
 					->orderBY('clientes.ape_materno')
 					->orderBY('clientes.nombre')
 					->orderBY('clientes.nombre2')
+					//->where('clientes.id', 14127)
 					->get();
 				//dd($alumnos->toArray());
 				return view('plantels.reportes.madre', compact('alumnos', 'planteles'));

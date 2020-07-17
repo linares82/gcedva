@@ -9,9 +9,15 @@
                     font-size: 10px;
                 }
 
-                td, th {
+                td_izquierda {
                     border: 1px solid #dddddd;
-                    text-align: left;
+                    text-align: right;
+                    padding: 10px;
+                }
+
+                td_centro {
+                    border: 1px solid #dddddd;
+                    text-align: center;
                     padding: 10px;
                 }
 
@@ -53,8 +59,15 @@
             tr:nth-child(even) {
                 background-color: #dddddd;
             }*/
+
+            body{
+                font-size: 11px;
+                font-family: Segoe UI;
+            }
+
               h1, h3, h5, th { text-align: center; }
-        table, #chart_div { margin: auto; font-family: Segoe UI; border: thin ridge gray; }*/
+        table, #chart_div { margin: auto; font-family: Segoe UI; border: none ridge gray; }
+        .table_calif { margin: auto; font-family: Segoe UI; border: thin ridge gray; }
         th { font-size: 10px; background: #0046c3; color: #fff; max-width: 400px; padding: 2px 5px; }
         td { font-size: 10px; padding: 2px 10px; color: #000; }
         tr { background: #b8d1f3; }
@@ -66,47 +79,98 @@
     </head>
     <body>
         <div id="printeArea">
-            <table>
-                <tr><td><strong>Plantel:</strong>{{$inscripcion->plantel->razon}}</td><td><strong>Especialidad:</strong>{{$inscripcion->especialidad->name}}</td></tr>
-                <tr><td><strong>Nivel:</strong>{{$inscripcion->nivel->name}}</td><td><strong>Grado:</strong>{{$inscripcion->grado->name}}</td></tr>
-                <tr><td colspan='2'><strong>Alumno:</strong>{{$inscripcion->cliente->nombre}} {{$inscripcion->cliente->nombre2}} {{$inscripcion->cliente->ape_paterno}} {{$inscripcion->cliente->ape_materno}}</td></tr>
+            <table style="width:100%">
+                <tr >
+                    <td>
+
+                        <img src="{{ asset('/imagenes/planteles/'.$plantel->id."/".$plantel->logo) }}" alt="Sin logo" height="80px" ></img>
+
+                    </td>
+                    <td align="right" class="td_derecha">
+                        {{ $grado->denominacion }}<br/>
+                        {{ $grado->name }}<br/>
+                        @php
+                            $fechaEntero=strtotime($grado->fec_rvoe);
+                            $anio=date('Y',$fechaEntero);
+                            $mes=date('m',$fechaEntero);
+                            $dia=date('d',$fechaEntero);
+                            $mesLetra=\App\Mese::find($mes);
+                            @endphp
+                        RVOE S.E.P. NO {{ $grado->rvoe }} de fecha {{ $dia }} de {{ $mesLetra->name }} de {{ $anio }}<br/>
+                        
+                    </td>
+                    
+                </tr>
+                <tr ><td colspan='2' align="center" class="td_centro">HISTORIA ACADÉMICA</td></tr>
             </table>
-            <table class="table table-condensed table-striped">
-                    <thead style="">
-                    <th>Lectivo</th><th>Grupo</th><th>Materia</th><th>Estatus</th><th>Calificaciones</th>
+            <p>
+                Alumno: {{ $cliente->nombre }} {{ $cliente->nombre2 }} {{ $cliente->ape_paterno }} {{ $cliente->ape_paterno }}<br/>
+                Matricula: {{ $cliente->matricula }}
+            </p>
+            
+            <table class="table table-condensed table-striped table_calif">
+                    <thead >
+                    <th>ASIGNATURA</th><th>CLAVE</th><th>CRÉDITOS</th><th>PERIODO</th><th>CALIFICACION</th><TH>ESTADO</TH>
                     </thead>
                     <tbody>
-                        @foreach($inscripcion->hacademicas as $a)
+                        @php
+                            $total_creditos=0;
+                            $suma_calificaciones=0;
+                            $total_materias=0;
+                        @endphp
+                        @foreach($consulta_calificaciones as $a)
                         <tr>
-                            <td>{{$a->lectivo->name}}</td><td>{{$a->grupo->name}}</td><td>{{$a->materia->name}}</td><td>{{$a->stMateria->name}}</td>
-                            
-                            <td colspan="2">
-                                <table >
-                                    <thead>
-                                    <th>Evaluación</th><th>Calificación</th>
-                                    </thead>
-                                    <tbody>
-                                        @foreach($a->calificaciones as $cali)
-                                        <tr>
-                                            <td>
-                                                {{$cali->tpoExamen->name}}
-                                            </td>
-                                            <td>
-                                                {{$cali->calificacion}}
-                                            </td>
-                                        <tr>
-                                            @endforeach
-                                    </tbody>
-                                </table>
-                            </td>
+                            <td>{{$a->materia}}</td><td>{{$a->codigo}}</td><td>{{$a->creditos}}</td>
+                            <td>{{$a->lectivo}}</td><td>{{$a->calificacion}}</td><td>{{$a->tipo_examen}}</td>
+                            @php
+                                $total_creditos=$total_creditos+$a->creditos;
+                                $suma_calificaciones=$suma_calificaciones+$a->calificacion;
+                                $total_materias=$total_materias+1;
+                            @endphp
                         </tr>
                         @endforeach
-                    </tbody>
+                        @foreach($hacademicas as $a)
+                        <tr>
+                            <td>{{$a->materia}}</td><td>{{$a->codigo}}</td><td>{{$a->creditos}}</td>
+                            <td>{{$a->lectivo}}</td><td>{{$a->calificacion}}</td><td>{{$a->tipo_examen}}</td>
+                            @php
+                                $total_creditos=$total_creditos+$a->creditos;
+                                $suma_calificaciones=$suma_calificaciones+$a->calificacion;
+                                $total_materias=$total_materias+1;
+                            @endphp
+                        </tr>
+                        @endforeach
+                        <tr>
+                            <td colspan="2" class="td_derecho">TOTAL DE CREDITOS</td><td>{{ $total_creditos }}</td>
+                            <td colspan="2" rowspan='2' class="td_centro">PROMEDIO GENERAL</td><td rowspan='2'>{{ round(($suma_calificaciones/$total_materias),2) }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="td_derecho">%</td><td></td>
+                        </tr>
                     </tbody>
                     </tr>
 
                     </tbody>
                 </table>
+
+                <div>
+                    @php
+                        $anio=date('Y');
+                        $mes=date('m');
+                        $dia=date('d');
+                        $mesLetra=\App\Mese::find($mes);
+                    @endphp
+                    <table>
+                        <tr>
+                            <td class="td_centro" align="center">
+                                {{ $plantel->estado }}, México; a {{ $dia }} de {{ $mesLetra->name }} de {{ $anio }} <br/><br/><br/>
+                                {{ $plantel->director->nombre }} {{ $plantel->director->ape_paterno }} {{ $plantel->director->ape_materno }}
+                                Director del Plantel
+                            </td>
+                        </tr>
+                    </table>
+                    
+                </div>
         </div>
 
         <script type="text/php">

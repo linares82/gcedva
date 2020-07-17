@@ -127,7 +127,10 @@ class AdeudosController extends Controller
         $inputDescuento = $request->only(['porcentaje', 'autorizado_por', 'justificacion', 'autorizado_el', 'adeudo_id']);
         if ($input['monto'] == "0") {
             $input['pagado_bnd'] = 1;
+        } else {
+            $input['pagado_bnd'] = 0;
         }
+
 
         $input['usu_mod_id'] = Auth::user()->id;
         //update data

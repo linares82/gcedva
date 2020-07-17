@@ -537,20 +537,37 @@
                                 data-caja_concepto='{{$adeudo->caja_concepto_id}}' 
                                 data-fecha_pago='{{$adeudo->fecha_pago}}' 
                                 data-monto='{{$adeudo->monto}}'
+                                data-bnd_eximir_descuentos_beca='{{$adeudo->bnd_eximir_descuento_beca}}'
                                 data-bnd_eximir_descuentos='{{$adeudo->bnd_eximir_descuentos}}'
+                                data-bnd_eximir_descuentos_regla='{{$adeudo->bnd_eximir_descuento_regla}}'
+                                data-comentario='{{$adeudo->comentario}}'
                                 
                                 data-porcentaje='{{optional($adeudo->descuento)->porcentaje}}'
                                 data-justificacion='{{optional($adeudo->descuento)->justificacion}}'
                                 data-autorizado_por='{{optional($adeudo->descuento)->autorizado_por}}'
                                 data-autorizado_el='{{optional($adeudo->descuento)->autorizado_el}}'
                                 
-                                >{{$adeudo->cajaConcepto->name}}</td>
-                            <td>
-                                @if($adeudo->bnd_eximir_descuentos==1)
-                                SI
-                                @else
-                                NO
+                                >
+                                @if(isset($adeudo->comentario))
+                                <button class="btn btn-box-tool" data-toggle="tooltip" rel="tooltip" title="{{$adeudo->comentario}}"><i class="fa fa-comments"></i></button>
                                 @endif
+                                {{$adeudo->cajaConcepto->name}} 
+                            </td>
+                            <td>
+                                
+                                @php
+                                $eximir_descuento_beca=($adeudo->bnd_eximir_descuento_beca==1) ? "SI" : "NO";
+                                $eximir_descuentos=($adeudo->bnd_eximir_descuentos==1) ? "SI" : "NO";
+                                $eximir_descuento_regla=($adeudo->bnd_eximir_descuento_regla==1) ? "SI" : "NO";
+                                @endphp
+                                <button class="btn btn-box-tool" 
+                                data-toggle="tooltip" 
+                                rel="tooltip" 
+                                title="Eximir Descuento Beca: {{$eximir_descuento_beca}} -    
+                                Eximir Descuento Promocion: {{$eximir_descuentos}} -  
+                                Eximir Descuento Regla: {{$eximir_descuento_regla}}">
+                                <i class="fa fa-comments"></i>
+                                </button>
                             </td>
                             <td class='editable'>
                                 {{$adeudo->monto}}
@@ -807,12 +824,31 @@ Agregar nuevo registro
                     {!! Form::text("monto", null, array("class" => "form-control", "id" => "monto-adeudo")) !!}
                     <p class="errorCajaConcepto text-center alert alert-danger hidden"></p>
                 </div>
+                <div class="form-group col-md-3 @if($errors->has('bnd_eximir_descuentos_beca')) has-error @endif">
+                    <label for="bnd_eximir_descuentos_beca-adeudo">Eximir Descuentos Beca</label>
+                    {!! Form::checkbox("bnd_eximir_descuentos_beca", 1, null, [ "id" => "bnd_eximir_descuentos_beca-adeudo", 'class'=>'minimal']) !!}
+                    @if($errors->has("bnd_eximir_descuentos_beca"))
+                    <span class="help-block">{{ $errors->first("bnd_eximir_descuentos_beca") }}</span>
+                    @endif
+                </div>
                 <div class="form-group col-md-3 @if($errors->has('bnd_eximir_descuentos')) has-error @endif">
-                    <label for="bnd_eximir_descuentos-adeudo">Eximir Descuentos</label>
+                    <label for="bnd_eximir_descuentos-adeudo">Eximir Descuentos Promocion</label>
                     {!! Form::checkbox("bnd_eximir_descuentos", 1, null, [ "id" => "bnd_eximir_descuentos-adeudo", 'class'=>'minimal']) !!}
                     @if($errors->has("bnd_eximir_descuentos"))
                     <span class="help-block">{{ $errors->first("bnd_eximir_descuentos") }}</span>
                     @endif
+                </div>
+                <div class="form-group col-md-3 @if($errors->has('bnd_eximir_descuentos_regla')) has-error @endif">
+                    <label for="bnd_eximir_descuentos_regla-adeudo">Eximir Descuentos Regla</label>
+                    {!! Form::checkbox("bnd_eximir_descuentos_regla", 1, null, [ "id" => "bnd_eximir_descuentos_regla-adeudo", 'class'=>'minimal']) !!}
+                    @if($errors->has("bnd_eximir_descuentos_regla"))
+                    <span class="help-block">{{ $errors->first("bnd_eximir_descuentos_regla") }}</span>
+                    @endif
+                </div>
+                <div class="form-group col-md-12 @if($errors->has('comentario')) has-error @endif">
+                    <label for="comentario-field">Comentario</label><br/>
+                    {!! Form::text("comentario", null, array("class" => "form-control", "id" => "comentario-adeudo")) !!}
+                    <p class="errorCajaConcepto text-center alert alert-danger hidden"></p>
                 </div>
                 @endpermission
                 <div class="row"></div>
@@ -890,7 +926,7 @@ Agregar nuevo registro
     $(function () {
         $('[data-toggle="tooltip"]').tooltip()
         });    
-
+        $('#tooltip').tooltip();
     
     
     $('.fecha').Zebra_DatePicker({
@@ -928,7 +964,7 @@ Agregar nuevo registro
             complete : function(){$("#loading3").hide(); },
             success: function(data) {
                 //location.reload();
-                $('#form-buscarVenta').submit();
+                //$('#form-buscarVenta').submit();
             },
         });
     });
@@ -1329,11 +1365,23 @@ Agregar nuevo registro
     $('#fecha_pago-adeudo').val($(this).data('fecha_pago'));
     $('#monto-adeudo').val($(this).data('monto'));
     
+    if($(this).data('bnd_eximir_descuentos_beca')==1){
+        $('#bnd_eximir_descuentos_beca-adeudo').prop('checked', true);
+    }else{
+        $('#bnd_eximir_descuentos_beca-adeudo').prop('checked', false);
+    }
     if($(this).data('bnd_eximir_descuentos')==1){
         $('#bnd_eximir_descuentos-adeudo').prop('checked', true);
     }else{
         $('#bnd_eximir_descuentos-adeudo').prop('checked', false);
     }
+    if($(this).data('bnd_eximir_descuentos_regla')==1){
+        $('#bnd_eximir_descuentos_regla-adeudo').prop('checked', true);
+    }else{
+        $('#bnd_eximir_descuentos_regla-adeudo').prop('checked', false);
+    }
+
+    $('#comentario-adeudo').val($(this).data('comentario'));
     
     
     if($(this).data('caja_concepto')==1 || 
@@ -1357,7 +1405,25 @@ Agregar nuevo registro
         if(parseFloat($('#porcentaje-adeudo').val())>0.60){
             alert('Descuento maximo permitido 0.60');
         }else{
-            vurl='{{url("adeudos/update")}}'+'/'+vadeudo;    
+            vurl='{{url("adeudos/update")}}'+'/'+vadeudo;  
+            $vbnd_eximir_descuentos_beca=0;
+            $vbnd_eximir_descuentos=0;
+            $vbnd_eximir_descuentos_regla=0;
+            if( $('#bnd_eximir_descuentos_beca-adeudo').prop('checked') ) {
+                $vbnd_eximir_descuentos_beca=1;
+            }else{
+                $vbnd_eximir_descuentos_beca=0;    
+            }
+            if( $('#bnd_eximir_descuentos-adeudo').prop('checked') ) {
+                $vbnd_eximir_descuentos=1;
+            }else{
+                $vbnd_eximir_descuentos=0;    
+            }
+            if( $('#bnd_eximir_descuentos_regla-adeudo').prop('checked') ) {
+                $vbnd_eximir_descuentos_regla=1;
+            }else{
+                $vbnd_eximir_descuentos_regla=0;    
+            }  
             $.ajax({
             type: 'POST',
                     url: vurl,
@@ -1366,7 +1432,10 @@ Agregar nuevo registro
                         'caja_concepto_id': $('#caja_concepto_id-adeudo option:selected').val(),
                         'fecha_pago': $('#fecha_pago-adeudo').val(),
                         'monto': $('#monto-adeudo').val(),
-                        'bnd_eximir_descuentos': $('#bnd_eximir_descuentos-adeudo').val(),
+                        'bnd_eximir_descuento_beca': $vbnd_eximir_descuentos_beca,
+                        'bnd_eximir_descuentos': $vbnd_eximir_descuentos,
+                        'bnd_eximir_descuento_regla': $vbnd_eximir_descuentos_regla,
+                        'comentario':$('#comentario-adeudo').val(),
                         'porcentaje': $('#porcentaje-adeudo').val(),
                         'autorizado_por': $('#autorizado_por-adeudo option:selected').val(),
                         'justificacion': $('#justificacion-adeudo').val(),
@@ -1376,7 +1445,7 @@ Agregar nuevo registro
                     beforeSend : function(){$("#loading3").show(); },
                     complete : function(){$("#loading3").hide(); },
                     success: function(data) {
-                        //$('#frmBuscarCliente').submit();
+                        $('#frmBuscarCliente').submit();
                     }
             });        
         }

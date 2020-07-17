@@ -183,7 +183,8 @@
                         <th>Csc</th><th>Plantel</th>
                         <th>Id</th><th>Alumno</th><th>Matricula</th><th>Fec. Nacimiento</th><th>Genero</th><th>CURP</th><th>Estatus</th>
                         <th>Fec. Alta / Fec. Baja</th><th>Domicilio</th><th>Nacionalidad</th><th>Correo Electronico</th><th>Telefono</th><th>Estado Civil</th>
-                        <th>Edad</th><th>Estado Nacimiento</th><th>Fec. Ingreso</th><th>Documentos</th><th>T. Beca</th><th>% Beca</th>
+                        <th>Edad</th><th>Estado Nacimiento</th><th>Fec. Ingreso</th><th>Documentos</th><th>T. Beca</th><th>% Beca</th><th>Mensualidad SEP</th>
+                        <th>Monto Beca SEP</th>
                         <th>Nombre Padre</th><th>Direccion</th><th>CURP</th><th>Mail</th><th>Tel.</th>
                         <th>Nombre Madre</th><th>Direccion</th><th>CURP</th><th>Mail</th><th>Tel.</th>
                     </thead>
@@ -214,7 +215,7 @@
                                 @endforeach
                                 </ul>
                             </td>
-                            <td> {{$alumno->tipo_beca}}</td><td> {{$alumno->porcentaje_beca}}</td>
+                            <td> {{$alumno->tipo_beca}}</td><td> {{$alumno->porcentaje_beca}}</td><td> {{$alumno->mensualidad_sep}}</td><td> {{$alumno->mensualidad_sep*$alumno->porcentaje_beca}}</td>
                             <td>{{ $alumno->nombre_padre }}</td><td>{{ $alumno->dir_padre }}</td><td>{{ $alumno->curp_padre }}</td><td>{{ $alumno->mail_padre }}</td><td>{{ $alumno->tel_padre }}</td>
                             <td>{{ $alumno->nombre_madre }}</td><td>{{ $alumno->dir_madre }}</td><td>{{ $alumno->curp_madre }}</td><td>{{ $alumno->mail_madre }}</td><td>{{ $alumno->tel_madre }}</td>
                         </tr>

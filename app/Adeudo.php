@@ -27,7 +27,7 @@ class Adeudo extends Model
 	protected $fillable = [
 		'cliente_id', 'caja_concepto_id', 'caja_id', 'cuenta_contable_id', 'cuenta_recargo_id',
 		'fecha_pago', 'monto', 'inicial_bnd', 'plan_pago_ln_id', 'usu_alta_id', 'usu_mod_id', 'combinacion_cliente_id',
-		'pagado_bnd', 'bnd_eximir_descuentos'
+		'pagado_bnd', 'bnd_eximir_descuentos', 'bnd_eximir_descuento_regla', 'bnd_eximir_descuento_beca', 'comentario'
 	];
 
 	public function usu_alta()

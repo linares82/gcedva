@@ -42,6 +42,13 @@
                         <span class="help-block">{{ $errors->first("monto_mensualidad") }}</span>
                        @endif
                     </div>
+                    <div class="form-group col-md-4 @if($errors->has('mensualidad_sep')) has-error @endif">
+                        <label for="mensualidad_sep-field">Mensualidad SEP (formato decimal 0.00)</label>
+                        {!! Form::text("mensualidad_sep", $monto_sep, array("class" => "form-control", "id" => "mensualidad_sep-field")) !!}
+                        @if($errors->has("mensualidad_sep"))
+                           <span class="help-block">{{ $errors->first("mensualidad_sep") }}</span>
+                        @endif
+                     </div>
                     <div class="form-group col-md-4 @if($errors->has('file')) has-error @endif">
                        <label for="file-field">Archivo</label>
                        {!! Form::text("file", null, array("class" => "form-control input-sm", "id" => "file-field", 'readonly'=>'readonly')) !!}

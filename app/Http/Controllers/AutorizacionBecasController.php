@@ -1,4 +1,6 @@
-<?php namespace App\Http\Controllers;
+<?php
+
+namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -9,13 +11,15 @@ use App\Lectivo;
 use App\Plantel;
 use App\StBeca;
 use App\TipoBeca;
+use App\Param;
 use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updateAutorizacionBeca;
 use App\Http\Requests\createAutorizacionBeca;
 use File as Archi;
 
-class AutorizacionBecasController extends Controller {
+class AutorizacionBecasController extends Controller
+{
 
 	/**
 	 * Display a listing of the resource.
@@ -25,18 +29,18 @@ class AutorizacionBecasController extends Controller {
 	public function index(Request $request)
 	{
 		$autorizacionBecas = AutorizacionBeca::getAllData($request);
-                $estatus= StBeca::pluck('name','id');
-                $plantels=Plantel::pluck('razon','id');
-		return view('autorizacionBecas.index', compact('autorizacionBecas','estatus','plantels'));
+		$estatus = StBeca::pluck('name', 'id');
+		$plantels = Plantel::pluck('razon', 'id');
+		return view('autorizacionBecas.index', compact('autorizacionBecas', 'estatus', 'plantels'));
 	}
-        
-        public function findByClienteId(Request $request)
+
+	public function findByClienteId(Request $request)
 	{
-		$autorizacionBecas = AutorizacionBeca::where('cliente_id',$request->input('cliente_id'))->paginate(25);
-				$cliente=$request->input('cliente_id');
-		$stBecas=StBeca::where('id','>',1)->pluck('name','id');
-                
-		return view('autorizacionBecas.findByClienteId', compact('autorizacionBecas','cliente','stBecas'));
+		$autorizacionBecas = AutorizacionBeca::where('cliente_id', $request->input('cliente_id'))->paginate(25);
+		$cliente = $request->input('cliente_id');
+		$stBecas = StBeca::where('id', '>', 1)->pluck('name', 'id');
+
+		return view('autorizacionBecas.findByClienteId', compact('autorizacionBecas', 'cliente', 'stBecas'));
 	}
 
 	/**
@@ -46,15 +50,17 @@ class AutorizacionBecasController extends Controller {
 	 */
 	public function create(Request $request)
 	{
-            $datos=$request->all();
-			$cliente=Cliente::find($datos['id']);
-			$tipo_becas=TipoBeca::pluck('name','id');
-			$lectivos=Lectivo::join('inscripcions as i','i.lectivo_id','=','lectivos.id')
-			->where('i.cliente_id',$cliente->id)
+		$datos = $request->all();
+		$cliente = Cliente::find($datos['id']);
+		$tipo_becas = TipoBeca::pluck('name', 'id');
+		$lectivos = Lectivo::join('inscripcions as i', 'i.lectivo_id', '=', 'lectivos.id')
+			->where('i.cliente_id', $cliente->id)
 			->whereNull('i.deleted_at')
-			->pluck('lectivos.name','lectivos.id');
-		return view('autorizacionBecas.create', compact('cliente','lectivos','tipo_becas'))
-			->with( 'list', AutorizacionBeca::getListFromAllRelationApps() );
+			->pluck('lectivos.name', 'lectivos.id');
+		$parametro = Param::where('llave', 'mensualidad_sep')->first();
+		$monto_sep = $parametro->valor;
+		return view('autorizacionBecas.create', compact('cliente', 'lectivos', 'tipo_becas', 'monto_sep'))
+			->with('list', AutorizacionBeca::getListFromAllRelationApps());
 	}
 
 	/**
@@ -67,9 +73,9 @@ class AutorizacionBecasController extends Controller {
 	{
 
 		$input = $request->all();
-                $input['st_beca_id']=1;
-		$input['usu_alta_id']=Auth::user()->id;
-		$input['usu_mod_id']=Auth::user()->id;
+		$input['st_beca_id'] = 1;
+		$input['usu_alta_id'] = Auth::user()->id;
+		$input['usu_mod_id'] = Auth::user()->id;
 
 		$r = $request->hasFile('archivo_file');
 		//dd($r);
@@ -79,7 +85,7 @@ class AutorizacionBecasController extends Controller {
 		}
 
 		//create data
-		$e=AutorizacionBeca::create( $input );
+		$e = AutorizacionBeca::create($input);
 
 		if ($e) {
 			$ruta = public_path() . "/imagenes/autorizacion_becas/" . $e->id . "/";
@@ -93,7 +99,7 @@ class AutorizacionBecasController extends Controller {
 			}
 		}
 
-		return redirect()->route('autorizacionBecas.findByClienteId',array('cliente_id'=>$input['cliente_id']))->with('message', 'Registro Creado.');
+		return redirect()->route('autorizacionBecas.findByClienteId', array('cliente_id' => $input['cliente_id']))->with('message', 'Registro Creado.');
 	}
 
 	/**
@@ -104,7 +110,7 @@ class AutorizacionBecasController extends Controller {
 	 */
 	public function show($id, AutorizacionBeca $autorizacionBeca)
 	{
-		$autorizacionBeca=$autorizacionBeca->find($id);
+		$autorizacionBeca = $autorizacionBeca->find($id);
 		return view('autorizacionBecas.show', compact('autorizacionBeca'));
 	}
 
@@ -116,16 +122,16 @@ class AutorizacionBecasController extends Controller {
 	 */
 	public function edit($id, AutorizacionBeca $autorizacionBeca)
 	{
-		$tipo_becas=TipoBeca::pluck('name','id');
-		$autorizacionBeca=$autorizacionBeca->find($id);
-		$cliente=Cliente::find($autorizacionBeca->cliente->id);
-		$lectivos=Lectivo::join('inscripcions as i','i.lectivo_id','=','lectivos.id')
-			->where('i.cliente_id',$cliente->id)
+		$tipo_becas = TipoBeca::pluck('name', 'id');
+		$autorizacionBeca = $autorizacionBeca->find($id);
+		$cliente = Cliente::find($autorizacionBeca->cliente->id);
+		$lectivos = Lectivo::join('inscripcions as i', 'i.lectivo_id', '=', 'lectivos.id')
+			->where('i.cliente_id', $cliente->id)
 			->whereNull('i.deleted_at')
-			->pluck('lectivos.name','lectivos.id');
-		
-		return view('autorizacionBecas.edit', compact('autorizacionBeca','cliente','tipo_becas','lectivos'))
-			->with( 'list', AutorizacionBeca::getListFromAllRelationApps() );
+			->pluck('lectivos.name', 'lectivos.id');
+
+		return view('autorizacionBecas.edit', compact('autorizacionBeca', 'cliente', 'tipo_becas', 'lectivos'))
+			->with('list', AutorizacionBeca::getListFromAllRelationApps());
 	}
 
 	/**
@@ -136,9 +142,9 @@ class AutorizacionBecasController extends Controller {
 	 */
 	public function duplicate($id, AutorizacionBeca $autorizacionBeca)
 	{
-		$autorizacionBeca=$autorizacionBeca->find($id);
+		$autorizacionBeca = $autorizacionBeca->find($id);
 		return view('autorizacionBecas.duplicate', compact('autorizacionBeca'))
-			->with( 'list', AutorizacionBeca::getListFromAllRelationApps() );
+			->with('list', AutorizacionBeca::getListFromAllRelationApps());
 	}
 
 	/**
@@ -151,7 +157,7 @@ class AutorizacionBecasController extends Controller {
 	public function update($id, AutorizacionBeca $autorizacionBeca, updateAutorizacionBeca $request)
 	{
 		$input = $request->all();
-		$input['usu_mod_id']=Auth::user()->id;
+		$input['usu_mod_id'] = Auth::user()->id;
 
 		$r = $request->hasFile('archivo_file');
 		//dd($r);
@@ -161,10 +167,10 @@ class AutorizacionBecasController extends Controller {
 		}
 
 		//update data
-		$autorizacionBeca=$autorizacionBeca->find($id);
-		$autorizacionBeca->update( $input );
+		$autorizacionBeca = $autorizacionBeca->find($id);
+		$autorizacionBeca->update($input);
 
-		$e=$autorizacionBeca;
+		$e = $autorizacionBeca;
 
 		if ($e) {
 			$ruta = public_path() . "/imagenes/autorizacion_becas/" . $e->id . "/";
@@ -176,9 +182,9 @@ class AutorizacionBecasController extends Controller {
 				//Storage::disk('img_plantels')->put($input['logo'],  File::get($logo_file));
 				$request->file('archivo_file')->move($ruta, $input['file']);
 			}
-		}	
+		}
 
-		return redirect()->route('autorizacionBecas.findByClienteId', array('cliente_id'=>$autorizacionBeca->cliente_id))->with('message', 'Registro Actualizado.');
+		return redirect()->route('autorizacionBecas.findByClienteId', array('cliente_id' => $autorizacionBeca->cliente_id))->with('message', 'Registro Actualizado.');
 		//return redirect()->route('autorizacionBecas.index')->with('message', 'Registro Actualizado.');
 	}
 
@@ -188,25 +194,33 @@ class AutorizacionBecasController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id,AutorizacionBeca $autorizacionBeca)
+	public function destroy($id, AutorizacionBeca $autorizacionBeca)
 	{
-		$autorizacionBeca=$autorizacionBeca->find($id);
-		$cliente=$autorizacionBeca->cliente_id;
+		$autorizacionBeca = $autorizacionBeca->find($id);
+		$cliente = $autorizacionBeca->cliente_id;
 		$autorizacionBeca->delete();
 
-		
-		return redirect()->route('autorizacionBecas.findByClienteId', array('id'=>$cliente))->with('message', 'Registro Borrado.');
+
+		return redirect()->route('autorizacionBecas.findByClienteId', array('id' => $cliente))->with('message', 'Registro Borrado.');
 	}
 
-        public function findByCliente(Request $request){
-            $datos=$request->all();
-            //dd($datos);
-            $registros=AutorizacionBeca::select('autorizacion_becas.id','autorizacion_becas.solicitud','autorizacion_becas.monto_inscripcion','autorizacion_becas.monto_mensualidad',
-                                                'autorizacion_becas.created_at','autorizacion_becas.updated_at','st.name as estatus')
-                    ->where('cliente_id',$datos['check'])
-                    ->join('st_becas as st','st.id','=','autorizacion_becas.st_beca_id')
-                    ->with('autorizacionBecaComentarios')
-                    ->get();
-            echo $registros->toJson();
-        }
+	public function findByCliente(Request $request)
+	{
+		$datos = $request->all();
+		//dd($datos);
+		$registros = AutorizacionBeca::select(
+			'autorizacion_becas.id',
+			'autorizacion_becas.solicitud',
+			'autorizacion_becas.monto_inscripcion',
+			'autorizacion_becas.monto_mensualidad',
+			'autorizacion_becas.created_at',
+			'autorizacion_becas.updated_at',
+			'st.name as estatus'
+		)
+			->where('cliente_id', $datos['check'])
+			->join('st_becas as st', 'st.id', '=', 'autorizacion_becas.st_beca_id')
+			->with('autorizacionBecaComentarios')
+			->get();
+		echo $registros->toJson();
+	}
 }
