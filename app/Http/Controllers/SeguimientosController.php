@@ -514,7 +514,7 @@ class SeguimientosController extends Controller
         $seguimientos = Seguimiento::select(
             'c.id',
             DB::raw('concat(c.nombre," ", c.ape_paterno," ", c.ape_materno) as cliente'),
-            'cve_plantel as Plantel',
+            'razon as Plantel',
             'esp.name as Especialidad',
             'n.name as Nivel',
             'g.name as Grado',
