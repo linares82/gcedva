@@ -146,7 +146,7 @@ class ClientResolver
         'endpoint_discovery' => [
             'type'     => 'value',
             'valid'    => [ConfigurationInterface::class, CacheInterface::class, 'array', 'callable'],
-            'doc'      => 'Specifies settings for endpoint discovery. Provide an instance of Aws\EndpointDiscovery\ConfigurationInterface, an instance Aws\CacheInterface, a callable that provides a promise for a Configuration object, or an associative array with the following keys: enabled: (bool) Set to true to enable endpoint discovery. Defaults to false; cache_limit: (int) The maximum number of keys in the endpoints cache. Defaults to 1000.',
+            'doc'      => 'Specifies settings for endpoint discovery. Provide an instance of Aws\EndpointDiscovery\ConfigurationInterface, an instance Aws\CacheInterface, a callable that provides a promise for a Configuration object, or an associative array with the following keys: enabled: (bool) Set to true to enable endpoint discovery, false to explicitly disable it. Defaults to false; cache_limit: (int) The maximum number of keys in the endpoints cache. Defaults to 1000.',
             'fn'       => [__CLASS__, '_apply_endpoint_discovery'],
             'default'  => [__CLASS__, '_default_endpoint_discovery_provider']
         ],
@@ -216,6 +216,12 @@ class ClientResolver
             'doc'       => 'Set to false to disable SDK to populate parameters that enabled \'idempotencyToken\' trait with a random UUID v4 value on your behalf. Using default value \'true\' still allows parameter value to be overwritten when provided. Note: auto-fill only works when cryptographically secure random bytes generator functions(random_bytes, openssl_random_pseudo_bytes or mcrypt_create_iv) can be found. You may also provide a callable source of random bytes.',
             'default'   => true,
             'fn'        => [__CLASS__, '_apply_idempotency_auto_fill']
+        ],
+        'use_aws_shared_config_files' => [
+            'type'      => 'value',
+            'valid'     => ['bool'],
+            'doc'       => 'Set to false to disable checking for shared aws config files usually located in \'~/.aws/config\' and \'~/.aws/credentials\'.',
+            'default'   => true,
         ],
     ];
 
