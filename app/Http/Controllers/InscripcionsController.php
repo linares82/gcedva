@@ -2893,4 +2893,32 @@ class InscripcionsController extends Controller
             'estatus_revisados' => $estatus_revisados,
         ));
     }
+
+    public function inscritosActivosPlantel()
+    {
+        $empleado = Empleado::where('user_id', Auth::user()->id)->first();
+        $planteles_activos = $empleado->empleado_plantel->pluck('razon', 'id');
+
+        return view('inscripcions.reportes.inscritosActivosPlantel', compact('planteles_activos'))
+            ->with('list', Inscripcion::getListFromAllRelationApps());
+    }
+
+    public function inscritosActivosPlantelR(Request $request)
+    {
+        $datos = $request->all();
+        $registros = Inscripcion::select('p.razon', 'gra.name as grado', 'g.name as grupo', DB::raw('count("name") as total'))
+            ->join('plantels as p', 'p.id', '=', 'inscripcions.plantel_id')
+            ->join('grupos as g', 'g.id', '=', 'inscripcions.grupo_id')
+            ->join('grados as gra', 'gra.id', '=', 'inscripcions.grado_id')
+            ->join('clientes as c', 'c.id', '=', 'inscripcions.cliente_id')
+            ->whereNull('inscripcions.deleted_at')
+            ->where('inscripcions.plantel_id', $datos['plantel_f'])
+            ->whereIn('c.st_cliente_id', array(1, 4, 22, 23))
+            ->groupBy('p.razon')
+            ->groupBy('grupo')
+            ->groupBy('grado')
+            ->get();
+        //dd($registros);
+        return view('inscripcions.reportes.inscritosActivosPlantelR', compact('registros'));
+    }
 }

@@ -419,7 +419,7 @@
                                             @permission('inscripcions.create') 
                                                 <a href="{!! route('combinacionClientes.destroy', $c->id) !!}" class="btn btn-xs btn-block btn-danger">Eliminar</a>
                                                 
-                                                @if($cliente->seguimiento->st_seguimiento_id>0)
+                                                @if($cliente->seguimiento->st_seguimiento_id==2 and $cliente->cliente_id==22)
                                                 <button class="inscribir-create btn btn-primary btn-xs" data-cliente_id="{{$c->cliente_id}}"
                                                                                                    data-cliente_nombre="{{$cliente->nombre.' '.$cliente->nombre2.' '.$cliente->ape_paterno.' '.$cliente->ape_materno}}"
                                                                                                    data-plantel="{{$c->plantel_id}}"

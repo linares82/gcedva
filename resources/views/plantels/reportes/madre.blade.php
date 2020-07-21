@@ -53,7 +53,7 @@
                 <div class="row">
                 </div>
                 <div class="well well-sm">
-                    <button class="btn btn-primary plantel" >Planteles</button>
+                    
                     <button class="btn btn-primary combinaciones">Combinaciones</button>
                     <button class="btn btn-primary asignaciones">Asignaciones</button>
                     <button class="btn btn-primary alumnos">Alumnos</button>
@@ -103,16 +103,31 @@
         <div class="box">
             <div class="box-body">
                 <div class="table-responsive">    
-                <table class="table table-condensed table-striped">
+                <table id="example1" class="table table-condensed table-striped">
                     <thead>
-                        <th>Csc</th><th>Plantel</th><th>Especialidad</th><th>Nivel</th><th>Grado</th><th>Nombre RVOE</th><th>RVOE</th><th>Fec. RVOE</th>
-                        <th>CCT</th><th>Denominacion</th><th>Seccion</th>
+                        <tr>
+                            <th>Csc</th>
+                            <th>Logo</th><th>Razon Social</th><th>Razon Social(Contabilidad)</th><th>RFC</th>
+                            <th>Direccion</th><th>Cve Multipagos</th><th>Cuenta Contable</th><th>CLABE</th><th>C. Bancaria</th>
+                            <th>Director</th><th>Tel.</th><th>Tel. Fijo</th><th>Tel. Cel.</th>
+                            <th>Mail</th><th>Mail Empresa</th>
+                            <th>Especialidad</th><th>Nivel</th><th>Grado</th><th>Nombre RVOE</th><th>RVOE</th><th>Fec. RVOE</th>
+                            <th>CCT</th><th>Denominacion</th><th>Seccion</th>
+                        </tr>
+                        
                     </thead>
                     <tbody>
                         @foreach($combinaciones as $combinacion)
                         <tr>
                             <td>{{++$i}}</td>
-                            <td>{{$combinacion->plantel}}</td><td>{{$combinacion->especialidad}}</td><td>{{$combinacion->nivel}}</td><td>{{$combinacion->grado}}</td>
+                            <td>{{$combinacion->logo}}</td><td>{{$combinacion->razon}}</td><td>{{$combinacion->nombre_corto}}</td>
+                            <td>{{$combinacion->rfc}}</td>
+                            <td>{{$combinacion->calle}} {{$combinacion->no_int}}, {{$combinacion->colonia}}, {{$combinacion->municipio}}, {{$combinacion->Estado}}, C.P. {{$combinacion->cp}}</td>
+                            <td>{{$combinacion->cve_multipagos}}</td><td>{{$combinacion->cuenta_contable}}</td><td>{{$combinacion->clabe}}</td><td>{{$combinacion->cuenta_banco}}</td>
+                            <td>{{$combinacion->nombre}} {{$combinacion->ape_paterno}} {{$combinacion->ape_materno}}</td>
+                            <td>{{$combinacion->tel}}</td><td>{{$combinacion->tel_fijo}}</td><td>{{$combinacion->tel_cel}}</td>
+                            <td>{{$combinacion->mail}}</td><td>{{$combinacion->mail_empresa}}</td>
+                            <td>{{$combinacion->especialidad}}</td><td>{{$combinacion->nivel}}</td><td>{{$combinacion->grado}}</td>
                             <td>{{$combinacion->nombre2}}</td><td>{{$combinacion->rvoe}}</td><td>{{$combinacion->fec_rvoe}}</td><td>{{$combinacion->cct}}</td>
                             <td>{{$combinacion->denominacion}}</td><td>{{$combinacion->seccion}}</td>
                         </tr>
@@ -262,7 +277,53 @@
 @push('scripts')
   <script type="text/javascript">
     $(document).ready(function() {
+        
+        $('#example1 thead tr').clone(true).appendTo( '#example1 thead' );
+        $('#example1 thead tr:eq(1) th').each( function (i) {
+            var title = $(this).text();
+            $(this).html( '<input type="text" placeholder="Buscar '+title+'" />' );
     
+            $( 'input', this ).on( 'keyup change', function (e) {
+                
+                if (e.keyCode == 13){
+                    if ( table.column(i).search() !== this.value ) {
+                    table
+                        .column(i)
+                        .search( this.value )
+                        .draw();
+                }
+                }
+                
+            } );
+        } );
+        
+
+        let table = $('#example1').DataTable({
+          "paging": false,
+          "lengthChange": true,
+          "searching": true,
+          "ordering": false,
+          "info": true,
+          "autoWidth": true
+        });
+
+        /*
+        var oTable = $('#example1').dataTable( {
+        "bPaginate": false,
+        "bLengthChange": true,
+        "bFilter": true,
+        "bSort": true,
+        "bInfo": true,
+        "bAutoWidth": true } );
+        
+        $('#example1_filter input').unbind();
+        $('#example1_filter input').bind('keyup', function(e) {
+        if(e.keyCode == 13) {
+        oTable.fnFilter(this.value);
+        }
+        });*/
+        
+
         $(".plantel").click(function(e){
             e.preventDefault();
             $('#valor_reporte-field').val('planteles');

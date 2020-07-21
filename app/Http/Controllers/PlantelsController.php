@@ -388,7 +388,7 @@ class PlantelsController extends Controller
 				break;
 			case 'combinaciones':
 				$combinaciones = Grado::select(
-					'p.razon as plantel',
+					//'p.razon as plantel',
 					'e.name as especialidad',
 					'n.name as nivel',
 					'grados.name as grado',
@@ -397,14 +397,40 @@ class PlantelsController extends Controller
 					'grados.cct',
 					'grados.denominacion',
 					'grados.seccion',
-					'grados.nombre2'
+					'grados.nombre2',
+					'p.logo',
+					'p.razon',
+					'p.denominacion',
+					'p.nombre_corto',
+					'p.rfc',
+					'p.calle',
+					'p.no_int',
+					'p.colonia',
+					'p.municipio',
+					'p.estado',
+					'p.cp',
+					'p.cve_multipagos',
+					'p.cuenta_contable',
+					'dir.nombre',
+					'dir.ape_paterno',
+					'dir.ape_materno',
+					'p.tel',
+					'dir.tel_cel',
+					'dir.tel_fijo',
+					'dir.mail',
+					'dir.mail_empresa',
+					'ce.clabe',
+					'ce.no_cuenta as cuenta_banco'
 				)
 					->leftJoin('especialidads as e', 'e.id', '=', 'grados.especialidad_id')
 					->leftJoin('nivels as n', 'n.id', '=', 'grados.especialidad_id')
 					->leftJoin('plantels as p', 'p.id', '=', 'grados.plantel_id')
-					->where('grados.plantel_id', $datos['plantel_f'])
-					//->whereNull('grados.deleted_at')
-					->orderBy('plantel')
+					->leftJoin('cuentas_efectivo_plantels as cep', 'cep.plantel_id', '=', 'p.id')
+					->leftJoin('cuentas_efectivos as ce', 'ce.id', '=', 'cep.cuentas_efectivo_id')
+					->leftJoin('empleados as dir', 'dir.id', '=', 'p.director_id')
+					//->where('grados.plantel_id', $datos['plantel_f'])
+					->where('p.id', '>', 0)
+					->orderBy('p.razon')
 					->orderBy('especialidad')
 					->orderBy('nivel')
 					->orderBy('grado')

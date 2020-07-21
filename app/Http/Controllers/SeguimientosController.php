@@ -596,7 +596,9 @@ class SeguimientosController extends Controller
 
     public function analitica_actividades()
     {
-        return view('seguimientos.reportes.analitica_actividades')
+        $empleado = Empleado::where('user_id', Auth::user()->id)->first();
+        $planteles_validos = $empleado->plantels->pluck('razon', 'id');
+        return view('seguimientos.reportes.analitica_actividades', compact('planteles_validos'))
             ->with('list', Cliente::getListFromAllRelationApps());
     }
 

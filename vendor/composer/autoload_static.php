@@ -1127,6 +1127,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'CreateUbicacionArtsTable' => __DIR__ . '/../..' . '/database/migrations/2019_10_02_131023_create_ubicacion_arts_table.php',
         'CreateUnidadUsosTable' => __DIR__ . '/../..' . '/database/migrations/2019_09_12_112224_create_unidad_usos_table.php',
         'CreateUsersTable' => __DIR__ . '/../..' . '/database/migrations/2014_10_12_000000_create_users_table.php',
+        'CreateUsuarioClientesTable' => __DIR__ . '/../..' . '/database/migrations/2020_07_20_140002_create_usuario_clientes_table.php',
         'CreateVinculacionHorasTable' => __DIR__ . '/../..' . '/database/migrations/2019_07_30_113349_create_vinculacion_horas_table.php',
         'CreateVinculacionsTable' => __DIR__ . '/../..' . '/database/migrations/2019_07_30_112352_create_vinculacions_table.php',
         'DatabaseSeeder' => __DIR__ . '/../..' . '/database/seeds/DatabaseSeeder.php',
