@@ -10,6 +10,7 @@ use App\ConceptoMultipago;
 use App\Cliente;
 use App\DocPlantelPlantel;
 use App\Grado;
+use App\FormaPago;
 use App\Hacademica;
 use App\Plantel;
 use App\Empleado;
@@ -53,7 +54,8 @@ class PlantelsController extends Controller
 		$enlaces = Empleado::select(DB::raw("CONCAT(nombre,' ',ape_paterno,' ',ape_materno) AS name"), 'id')
 			->where('puesto_id', 15)->pluck('name', 'id');
 		$lista_conceptosMultipago = ConceptoMultipago::pluck('name', 'id');
-		return view('plantels.create', compact('directores', 'responsables', 'enlaces', 'lista_conceptosMultipago'))
+		$lista_formaPagos = FormaPago::pluck('name', 'id');
+		return view('plantels.create', compact('directores', 'responsables', 'enlaces', 'lista_conceptosMultipago', 'lista_formaPagos'))
 			->with('list', Plantel::getListFromAllRelationApps());
 	}
 
@@ -65,8 +67,9 @@ class PlantelsController extends Controller
 	 */
 	public function store(createPlantel $request)
 	{
-		$input = $request->except('concepto_multipago_id');
+		$input = $request->except('concepto_multipago_id', 'forma_pago_id');
 		$conceptos = $request->only('concepto_multipago_id');
+		$formas_pago = $request->only('forma_pago_id');
 		$input['usu_alta_id'] = Auth::user()->id;
 		$input['usu_mod_id'] = Auth::user()->id;
 		//$input['logo']="";
@@ -95,6 +98,7 @@ class PlantelsController extends Controller
 		$e = Plantel::create($input);
 
 		$plantel->conceptoMultipagos()->sync($conceptos['concepto_multipagos_id']);
+		$plantel->formaPagos()->sync($formas_pago['forma_pago_id']);
 
 		if ($e) {
 			$ruta = public_path() . "/imagenes/planteles/" . $e->id . "/";
@@ -151,6 +155,7 @@ class PlantelsController extends Controller
 		$enlaces = Empleado::select(DB::raw("CONCAT(nombre,' ',ape_paterno,' ',ape_materno) AS name"), 'id')
 			->where('puesto_id', 15)->pluck('name', 'id');
 		$ruta = public_path() . "\\imagenes\\planteles\\" . $id . "\\";
+		$lista_formaPagos = FormaPago::pluck('name', 'id');
 
 		$doc_existentes = DB::table('doc_plantel_plantels as dpp')->select('doc_plantel_id')
 			->join('plantels as p', 'p.id', '=', 'dpp.plantel_id')
@@ -179,7 +184,8 @@ class PlantelsController extends Controller
 			'responsables',
 			'documentos_faltantes',
 			'enlaces',
-			'lista_conceptosMultipago'
+			'lista_conceptosMultipago',
+			'lista_formaPagos'
 		))
 			->with('list', Plantel::getListFromAllRelationApps())
 			->with('list1', DocPlantelPlantel::getListFromAllRelationApps());
@@ -208,8 +214,9 @@ class PlantelsController extends Controller
 	public function update($id, Plantel $plantel, updatePlantel $request)
 	{
 		//dd($request->all());
-		$input = $request->except('concepto_multipagos_id');
+		$input = $request->except('concepto_multipagos_id', 'forma_oago_id');
 		$conceptos = $request->only('concepto_multipagos_id');
+		$formas_pago = $input = $request->only('forma_pago_id');
 		$input['usu_mod_id'] = Auth::user()->id;
 
 		//$input['logo']="";
@@ -240,6 +247,7 @@ class PlantelsController extends Controller
 		$e = $plantel->update($input);
 
 		$plantel->conceptoMultipagos()->sync($conceptos['concepto_multipagos_id']);
+		$plantel->formaPagos()->sync($formas_pago['forma_pago_id']);
 
 		if ($e) {
 			$ruta = public_path() . "/imagenes/planteles/" . $id . "/";

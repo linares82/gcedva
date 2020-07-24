@@ -25,7 +25,7 @@ class PeriodoEstudio extends Model
 	//Mass Assignment
 	protected $fillable = [
 		'name', 'plantel_id', 'nivel_id', 'especialidad_id', 'grado_id', 'usu_alta_id', 'usu_mod_id',
-		'bnd_activo', 'orden', 'plan_estudio_id', 'rvoe','cct','fec_vigencia_rvoe'
+		'bnd_activo', 'orden', 'plan_estudio_id', 'rvoe', 'cct', 'fec_vigencia_rvoe', 'desc_certificado'
 	];
 
 	public function usu_alta()
@@ -85,7 +85,7 @@ class PeriodoEstudio extends Model
 
 	public function grupos()
 	{
-		return $this->belongsToMany('App\Grupo','grupo_periodo_estudios','periodo_estudio_id','grupo_id');
+		return $this->belongsToMany('App\Grupo', 'grupo_periodo_estudios', 'periodo_estudio_id', 'grupo_id');
 		//return $this->belongsToMany('App\PeriodoEstudio','grupo_periodo_estudios', 'grupo_id', 'periodo_estudio_id');
 	}
 

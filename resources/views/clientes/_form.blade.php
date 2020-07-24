@@ -419,7 +419,7 @@
                                             @permission('inscripcions.create') 
                                                 <a href="{!! route('combinacionClientes.destroy', $c->id) !!}" class="btn btn-xs btn-block btn-danger">Eliminar</a>
                                                 
-                                                @if($cliente->seguimiento->st_seguimiento_id==2 and $cliente->cliente_id==22)
+                                                @if($cliente->seguimiento->st_seguimiento_id==2 and $cliente->st_cliente_id==22)
                                                 <button class="inscribir-create btn btn-primary btn-xs" data-cliente_id="{{$c->cliente_id}}"
                                                                                                    data-cliente_nombre="{{$cliente->nombre.' '.$cliente->nombre2.' '.$cliente->ape_paterno.' '.$cliente->ape_materno}}"
                                                                                                    data-plantel="{{$c->plantel_id}}"
@@ -1021,12 +1021,13 @@
                             <div class="panel-body">
                                 <table class="table table-condensed table-striped">
                                     <head>
-                                    <th>Asignatura</th><th>Clave</th><th>Creditos</th><th>Periodo</th><th>Calificacion</th>
+                                    <th>Periodo Escolar</th><th>Asignatura</th><th>Clave</th><th>Creditos</th><th>Periodo</th><th>Calificacion</th>
                                     <th>Estado</th>
                                     </head>
                                     <body>
                                     @foreach($historia as $registro)
                                         <tr>
+                                            <td>{{$registro->periodo_escolar}}</td>
                                             <td>{{$registro->materia}}</td>
                                             <td>{{$registro->codigo}}</td>
                                             <td>{{$registro->creditos}}</td>

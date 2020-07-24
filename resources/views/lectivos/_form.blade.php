@@ -5,6 +5,13 @@
                         <span class="help-block">{{ $errors->first("name") }}</span>
                        @endif
                     </div>
+                    <div class="form-group col-md-4 @if($errors->has('desc_certificado')) has-error @endif">
+                     <label for="desc_certificado-field">Descripcion Certificado</label>
+                     {!! Form::text("desc_certificado", null, array("class" => "form-control", "id" => "desc_certificado-field")) !!}
+                     @if($errors->has("desc_certificado"))
+                      <span class="help-block">{{ $errors->first("inscripcion") }}</span>
+                     @endif
+                  </div>  
                     <div class="form-group col-md-1 @if($errors->has('activo')) has-error @endif">
                        <label for="activo-field">Activo</label>
                        {!! Form::checkbox("activo", 1, null, [ "id" => "activo-field"]) !!}
@@ -67,6 +74,7 @@
                         <span class="help-block">{{ $errors->first("calificacion_fin") }}</span>
                        @endif
                     </div>
+                    
                     <table class="table table-condensed table-striped">
                        <thead>
                            <th>Inicio</th><th>Fin</th><th></th>

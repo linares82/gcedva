@@ -44,6 +44,13 @@
                         <span class="help-block">{{ $errors->first("name") }}</span>
                        @endif
                     </div>
+                    <div class="form-group col-md-4 @if($errors->has('desc_certificado')) has-error @endif">
+                        <label for="desc_certificado-field">Descripcion Certificado</label>
+                        {!! Form::text("desc_certificado", null, array("class" => "form-control", "id" => "desc_certificado-field")) !!}
+                        @if($errors->has("desc_certificado"))
+                         <span class="help-block">{{ $errors->first("inscripcion") }}</span>
+                        @endif
+                     </div>  
                     <div class="form-group col-md-4 @if($errors->has('orden')) has-error @endif">
                         <label for="orden-field">Orden</label>
                         {!! Form::text("orden", null, array("class" => "form-control input-sm", "id" => "orden-field")) !!}

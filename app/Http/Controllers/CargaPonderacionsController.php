@@ -9,6 +9,7 @@ use App\CalificacionPonderacion;
 use App\CargaPonderacion;
 use App\Hacademica;
 use App\Inscripcion;
+use App\Materium;
 use App\Ponderacion;
 use App\PeriodoEstudio;
 use Illuminate\Http\Request;
@@ -337,6 +338,27 @@ class CargaPonderacionsController extends Controller
                     }
                 }
             }
+        }
+    }
+
+    public function ponderacionesXMateria(Request $request)
+    {
+        if ($request->ajax()) {
+            //dd($request->all());
+            $materia = $request->get('materia_id');
+            $materium = Materium::find($materia);
+
+            $final = array();
+            $r = DB::table('carga_ponderacions as cp')
+                ->select('cp.id', 'cp.name')
+                ->where('cp.ponderacion_id', '=', $materium->ponderacion_id)
+                ->where('cp.id', '>', '0')
+                ->where('cp.bnd_activo', 1)
+                ->distinct()
+                ->get();
+
+            //dd($r);
+            return $r;
         }
     }
 }

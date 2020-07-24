@@ -450,4 +450,48 @@ class MateriasController extends Controller
             return $final;
         }
     }
+
+    public function materiasXplantelXasignacion(Request $request)
+    {
+        if ($request->ajax()) {
+            //dd($request->all());
+            $plantel = $request->get('plantel_id');
+            $lectivo = $request->get('lectivo_id');
+            $grupo = $request->get('grupo_id');
+            $materia = $request->get('materia_id');
+
+            $final = array();
+            $r = DB::table('materia as m')
+                ->join('asignacion_academicas as aa', 'aa.materium_id', '=', 'm.id')
+                ->select('m.id', 'm.name')
+                ->where('aa.plantel_id', '=', $plantel)
+                ->where('aa.lectivo_id', '=', $lectivo)
+                ->where('aa.grupo_id', '=', $grupo)
+                ->where('m.id', '>', '0')
+                ->distinct()
+                ->get();
+
+            //dd($r);
+            if (isset($materia) and $materia != 0) {
+                foreach ($r as $r1) {
+                    if ($r1->id == $materia) {
+                        array_push($final, array(
+                            'id' => $r1->id,
+                            'name' => $r1->name,
+                            'selectec' => 'Selected',
+                        ));
+                    } else {
+                        array_push($final, array(
+                            'id' => $r1->id,
+                            'name' => $r1->name,
+                            'selectec' => '',
+                        ));
+                    }
+                }
+                return $final;
+            } else {
+                return $r;
+            }
+        }
+    }
 }

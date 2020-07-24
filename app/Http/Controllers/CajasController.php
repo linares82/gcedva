@@ -307,7 +307,7 @@ class CajasController extends Controller
         $empleado = Empleado::where('user_id', '=', Auth::user()->id)->first();
         $empleados = Empleado::select(DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name, id'))->pluck('name', 'id');
         //dd($empleado->toArray());
-        $caja = Caja::where('consecutivo', '=', $data['consecutivo'])->where('plantel_id', '=', $data['plantel_id'])->first();
+        $caja = Caja::where('consecutivo', '=', $data['consecutivo'])->where('plantel_id', '=', $data['plantel_id'])->where('st_caja_id', '<>', 2)->first();
         if (!is_object($caja)) {
             Session::flash('msj', 'Caja no existe');
             return view('cajas.caja')->with('list', Caja::getListFromAllRelationApps())->with('list1', CajaLn::getListFromAllRelationApps());
@@ -639,6 +639,12 @@ class CajasController extends Controller
                     $caja_ln['adeudo_id'] = $adeudo->id;
                     $caja_ln['usu_alta_id'] = Auth::user()->id;
                     $caja_ln['usu_mod_id'] = Auth::user()->id;
+
+                    $caja_ln['subtotal'] = round($caja_ln['subtotal'], 0);
+                    $caja_ln['total'] = round($caja_ln['total'], 0);
+                    $caja_ln['recargo'] = round($caja_ln['recargo'], 0);
+                    $caja_ln['descuento'] = round($caja_ln['descuento'], 0);
+
                     /*if($cliente->beca_bnd==1 and $caja_ln['caja_concepto_id']==1){
                     $caja_ln['descuento']=$caja_ln['descuento']+($caja_ln['subtotal']*$cliente->beca_porcentaje);
                     $caja_ln['total']=$caja_ln['total']-($caja_ln['subtotal']-$caja_ln['descuento']);
@@ -653,10 +659,10 @@ class CajasController extends Controller
             }
             if ($subtotal > 0) {
                 //dd($subtotal);
-                $caja->subtotal = $caja->subtotal + $subtotal;
-                $caja->recargo = $caja->recargo + $recargo;
-                $caja->descuento = $caja->descuento + $descuento;
-                $caja->total = $caja->subtotal + $caja->recargo - $caja->descuento;
+                $caja->subtotal = round($caja->subtotal + $subtotal, 0);
+                $caja->recargo = round($caja->recargo + $recargo, 2);
+                $caja->descuento = round($caja->descuento + $descuento);
+                $caja->total = round($caja->subtotal + $caja->recargo - $caja->descuento);
                 //dd($caja);
                 $caja->save();
             }

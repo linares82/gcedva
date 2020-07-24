@@ -181,4 +181,9 @@ class Plantel extends Model
 	{
 		return $this->belongsToMany('App\ConceptoMultipago', 'concepto_multipago_plantel', 'plantel_id', 'concepto_multipago_id');
 	} // end
+
+	public function formaPagos()
+	{
+		return $this->belongsToMany('App\FormaPago', 'forma_pago_plantel', 'plantel_id', 'forma_pago_id');
+	} // end
 }

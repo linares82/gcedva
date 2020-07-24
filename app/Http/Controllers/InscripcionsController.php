@@ -7,8 +7,9 @@ use App\AsistenciaR;
 use App\Calificacion;
 use App\CalificacionPonderacion;
 use App\CargaPonderacion;
-use App\ConsultaCalificacion;
 use App\Cliente;
+use App\ConsultaCalificacion;
+use App\ConsecutivoMatricula;
 use App\DiaNoHabil;
 use App\Empleado;
 use App\Especialidad;
@@ -28,10 +29,11 @@ use App\Plantel;
 use App\Ponderacion;
 use App\StCliente;
 use Auth;
+use App\UsuarioCliente;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Http\Request;
-use Log;
+use Hash;
 
 class InscripcionsController extends Controller
 {
@@ -81,21 +83,62 @@ class InscripcionsController extends Controller
             //create data
             $i = Inscripcion::create($input);
 
+        //Datos para matricula
         $lectivo = Lectivo::find($i->lectivo_id);
-        $fecha = Carbon::createFromFormat('Y-m-d', $lectivo->inicio)->format('y-m-d');
-        $especialidad = Especialidad::find($i->especialidad_id);
+        $fecha = Carbon::createFromFormat('Y-m-d', $lectivo->inicio);
+        $grado = Grado::find($i->grado_id);
         //dd($especialidad);
-        $relleno = "0000000";
-        $consecutivo = substr($relleno, 0, 7 - strlen($i->cliente_id)) . $i->cliente_id;
+        $relleno = "0000";
+        $rellenoPlantel = "00";
+        $rellenoConsecutivo = "000";
+
+
         //dd($consecutivo);
-        if ($especialidad->abreviatura != "") {
-            $entrada['matricula'] = date('m', strtotime($fecha)) . date('y', strtotime($fecha)) . $especialidad->abreviatura . $consecutivo;
-            //$i->update($entrada);
-            $cliente = Cliente::where('id', $i->cliente_id)->first();
-            if ($cliente->matricula == "") {
-                $cliente->matricula = $entrada['matricula'];
+        $cliente = Cliente::where('id', $i->cliente_id)->first();
+
+        if ($grado->seccion != "" and $cliente->matricula == "") {
+            $consecutivo = ConsecutivoMatricula::where('plantel_id', $i->plantel_id)
+                ->where('anio', $fecha->year)
+                ->where('mes', $fecha->month)
+                ->where('seccion', $grado->seccion)
+                ->first();
+
+            if (is_null($consecutivo)) {
+                $consecutivo = ConsecutivoMatricula::create(array(
+                    'plantel_id' => $i->plantel_id,
+                    'mes' => $fecha->month,
+                    'anio' => $fecha->year,
+                    'seccion' => $grado->seccion,
+                    'consecutivo' => 1,
+                    'usu_alta_id' => 1,
+                    'usu_mod_id' => 1
+                ));
+            } else {
+                $consecutivo->consecutivo = $consecutivo->consecutivo + 1;
+                $consecutivo->save();
             }
+            $mes = substr($rellenoPlantel, 0, 2 - strlen($fecha->month)) . $fecha->month;
+            $anio = $fecha->year - 2000;
+            $plantel = substr($rellenoPlantel, 0, 2 - strlen($i->plantel_id)) . $i->plantel_id;
+            $seccion = substr($relleno, 0, 4 - strlen($grado->seccion)) . $grado->seccion;
+            $consecutivoCadena = substr($rellenoConsecutivo, 0, 3 - strlen($consecutivo->consecutivo)) . $consecutivo->consecutivo;
+
+            $entrada['matricula'] = $mes . $anio . $seccion . $plantel . $consecutivoCadena;
+            //$i->update($entrada);
+
+            $cliente->matricula = $entrada['matricula'];
             $cliente->save();
+
+            if (!is_null($cliente->matricula)) {
+                $buscarMatricula = UsuarioCliente::find('name', $input['matricula'])->first();
+                $buscarMail = UsuarioCliente::where('email', $input['mail'])->first();
+                if (is_null($buscarMatricula) and is_null($buscarMail)) {
+                    $usuario_cliente['name'] = $cliente->matricula;
+                    $usuario_cliente['email'] = $cliente->mail;
+                    $usuario_cliente['password'] = Hash::make('123456');
+                    UsuarioCliente::create($usuario_cliente);
+                }
+            }
         }
 
         $combinacion = \App\CombinacionCliente::find($i->combinacion_cliente_id);
@@ -2897,7 +2940,8 @@ class InscripcionsController extends Controller
     public function inscritosActivosPlantel()
     {
         $empleado = Empleado::where('user_id', Auth::user()->id)->first();
-        $planteles_activos = $empleado->empleado_plantel->pluck('razon', 'id');
+        //dd($empleado);
+        $planteles_activos = $empleado->plantels->pluck('razon', 'id');
 
         return view('inscripcions.reportes.inscritosActivosPlantel', compact('planteles_activos'))
             ->with('list', Inscripcion::getListFromAllRelationApps());
@@ -2912,13 +2956,43 @@ class InscripcionsController extends Controller
             ->join('grados as gra', 'gra.id', '=', 'inscripcions.grado_id')
             ->join('clientes as c', 'c.id', '=', 'inscripcions.cliente_id')
             ->whereNull('inscripcions.deleted_at')
-            ->where('inscripcions.plantel_id', $datos['plantel_f'])
-            ->whereIn('c.st_cliente_id', array(1, 4, 22, 23))
+            //->where('inscripcions.plantel_id', $datos['plantel_f'])
+            ->whereIn('c.st_cliente_id', array(1, 2, 4, 22, 23))
             ->groupBy('p.razon')
             ->groupBy('grupo')
             ->groupBy('grado')
             ->get();
         //dd($registros);
         return view('inscripcions.reportes.inscritosActivosPlantelR', compact('registros'));
+    }
+
+    public function certificados(Request $request)
+    {
+        $datos = $request->all();
+        if (
+            isset($datos['plantel_f']) and
+            isset($datos['especialidad_f']) and
+            isset($datos['nivel_f']) and
+            isset($datos['grado_f']) and
+            isset($datos['lectivo_f'])
+        ) {
+            $registros = Inscripcion::where('plantel_id', $datos['plantel_f'])
+                ->where('especialidad_id', $datos['especialidad_f'])
+                ->where('nivel_id', $datos['nivel_f'])
+                ->where('grado_id', $datos['grado_f'])
+                ->where('lectivo_id', $datos['lectivo_f'])
+                ->distinct()
+                ->get();
+        }
+
+        $empleado = Empleado::where('user_id', Auth::user()->id)->first();
+        $planteles_validos = $empleado->plantels->pluck('razon', 'id');
+        return view('inscripcions.reportes.certificados', compact('planteles_validos'));
+    }
+
+    public function certificadosR()
+    {
+
+        return view('inscripcions.reportes.certificadosR', compact('$registros'));
     }
 }

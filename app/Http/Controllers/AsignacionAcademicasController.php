@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 
 use App\AsignacionAcademica;
 use App\AsistenciaR;
+use App\CargaPonderacion;
 use App\Cliente;
 use App\Empleado;
 use App\Hacademica;
@@ -16,6 +17,7 @@ use Auth;
 use App\Http\Requests\updateAsignacionAcademica;
 use App\Http\Requests\createAsignacionAcademica;
 use DB;
+use Luecano\NumeroALetras\NumeroALetras;
 
 class AsignacionAcademicasController extends Controller
 {
@@ -497,5 +499,54 @@ class AsignacionAcademicasController extends Controller
 		}
 
 		return response()->json(['resultado' => $array_resultado]);
+	}
+
+	public function actaCalificaciones()
+	{
+		$empleado = Empleado::where('user_id', Auth::user()->id)->first();
+		$planteles_validos = $empleado->plantels->pluck('razon', 'id');
+		return view('asignacionAcademicas.reportes.actaCalificaciones', compact('planteles_validos'));
+	}
+
+	public function actaCalificacionesR(Request $request)
+	{
+		$datos = $request->all();
+		//dd($datos);
+		$carga_ponderacion = CargaPonderacion::find($datos['ponderacion_f']);
+		$cadena = explode(" ", $carga_ponderacion->name);
+		$numero = $cadena[count($cadena) - 1];
+		$ponderaciones = CargaPonderacion::where('name', 'like', '%' . $numero)
+			->where('ponderacion_id', $carga_ponderacion->ponderacion_id)
+			->get();
+		$array_ponderaciones = array();
+		foreach ($ponderaciones as $p) {
+			array_push($array_ponderaciones, $p->id);
+		}
+
+		$asignacion_academica = AsignacionAcademica::where('plantel_id', $datos['plantel_f'])
+			->where('lectivo_id', $datos['lectivo_f'])
+			->where('grupo_id', $datos['grupo_f'])
+			->where('materium_id', $datos['materia_f'])
+			->whereNull('deleted_at')
+			->first();
+		//dd($asignacion_academica->docenteOficial);
+		$encabezado = Hacademica::where('plantel_id', $datos['plantel_f'])
+			->where('lectivo_id', $datos['lectivo_f'])
+			->where('grupo_id', $datos['grupo_f'])
+			->where('materium_id', $datos['materia_f'])
+			->whereNull('deleted_at')
+			->first();
+		//dd($encabezado);
+		$alumnos = Hacademica::where('plantel_id', $datos['plantel_f'])
+			->where('lectivo_id', $datos['lectivo_f'])
+			->where('grupo_id', $datos['grupo_f'])
+			->where('materium_id', $datos['materia_f'])
+			->whereNull('deleted_at')
+			->get();
+		$formatter = new NumeroALetras;
+		return view(
+			'asignacionAcademicas.reportes.actaCalificacionesR',
+			compact('encabezado', 'alumnos', 'asignacion_academica', 'array_ponderaciones', 'formatter')
+		);
 	}
 }

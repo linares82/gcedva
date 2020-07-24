@@ -246,4 +246,46 @@ class GruposController extends Controller
 		$grupos = Grupo::orderBy('plantel_id')->orderBy('id')->get();
 		return view('combinacionClientes.reportes.cargas', compact('grupos'));
 	}
+
+	public function gruposXplantelXasignacion(Request $request)
+	{
+		if ($request->ajax()) {
+			//dd($request->all());
+			$plantel = $request->get('plantel_id');
+			$lectivo = $request->get('lectivo_id');
+			$grupo = $request->get('grupo_id');
+
+			$final = array();
+			$r = DB::table('grupos as g')
+				->join('asignacion_academicas as aa', 'aa.grupo_id', '=', 'g.id')
+				->select('g.id', 'g.name')
+				->where('aa.plantel_id', '=', $plantel)
+				->where('aa.lectivo_id', '=', $lectivo)
+				->where('g.id', '>', '0')
+				->distinct()
+				->get();
+
+			//dd($r);
+			if (isset($grupo) and $grupo != 0) {
+				foreach ($r as $r1) {
+					if ($r1->id == $grupo) {
+						array_push($final, array(
+							'id' => $r1->id,
+							'name' => $r1->name,
+							'selectec' => 'Selected',
+						));
+					} else {
+						array_push($final, array(
+							'id' => $r1->id,
+							'name' => $r1->name,
+							'selectec' => '',
+						));
+					}
+				}
+				return $final;
+			} else {
+				return $r;
+			}
+		}
+	}
 }

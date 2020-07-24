@@ -18,7 +18,7 @@ class Lectivo extends Model
 	}
 
 	//Mass Assignment
-	protected $fillable = ['name', 'activo', 'bachillerato_bnd', 'carrera_bnd', 'usu_alta_id', 'usu_mod_id', 'inicio', 'fin', 'grafica_bnd'];
+	protected $fillable = ['name', 'activo', 'bachillerato_bnd', 'carrera_bnd', 'usu_alta_id', 'usu_mod_id', 'inicio', 'fin', 'grafica_bnd', 'desc_certificado'];
 
 	protected $dates = ['deleted_at'];
 
@@ -58,10 +58,10 @@ class Lectivo extends Model
 		return $this->hasMany('App\CalendarioEvaluacion');
 	} // end
 
-
-
 	public function periodoExamens()
 	{
 		return $this->hasMany('App\PeriodoExamen');
 	} // end
+
+
 }

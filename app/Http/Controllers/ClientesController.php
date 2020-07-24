@@ -532,17 +532,7 @@ class ClientesController extends Controller
         if (is_null($input['nombre2'])) {
             $input['nombre2'] = " ";
         }
-        if (is_null($input['matricula'])) {
-            $input['matricula'] = " ";
-        } else {
-            $buscar = UsuarioCliente::find($input['matricula']);
-            if (is_null($buscar)) {
-                $usuario_cliente['name'] = $input['matricula'];
-                $usuario_cliente['email'] = $input['mail'];
-                $usuario_cliente['password'] = Hash::make('123456');
-                UsuarioCliente::create($usuario_cliente);
-            }
-        }
+
         //$empleado=Empleado::find($request->input('empleado_id'));
         //$input['plantel_id']=$empleado->plantel->id;
         /*

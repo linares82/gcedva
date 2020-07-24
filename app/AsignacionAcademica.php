@@ -80,4 +80,9 @@ class AsignacionAcademica extends Model
 	{
 		return $this->hasMany('App\Horario');
 	} // end
+
+	public function docenteOficial()
+	{
+		return $this->belongsTo('App\Empleado', 'docente_oficial_id', 'id');
+	} // end
 }

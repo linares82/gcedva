@@ -15,8 +15,9 @@ class CreateConsultaCalificacionsTable extends Migration
 	{
 		Schema::create('consulta_calificacions', function (Blueprint $table) {
 			$table->increments('id');
-			$table->integer('matricula')->nullable();
+			$table->string('matricula')->nullable();
 			$table->index('matricula');
+			$table->string('periodo_escolar')->nullable();
 			$table->string('materia')->nullable();
 			$table->string('codigo')->nullable();
 			$table->string('creditos', 10, 2)->nullable();

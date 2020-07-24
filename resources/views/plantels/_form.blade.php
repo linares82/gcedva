@@ -99,6 +99,13 @@
                           <span class="help-block">{{ $errors->first("concepto_multipagos_id") }}</span>
                         @endif
                       </div>
+                      <div class="form-group col-md-4 @if($errors->has('forma_pago_id')) has-error @endif">
+                        <label for="forma_pago_id-field">Formas Pago Multipago *<input type="checkbox" id="seleccionar_conceptos">Seleccionar Todo</label>
+                        {!! Form::select("forma_pago_id[]", $lista_formaPagos, $plantel->formaPagos, array("class" => "form-control select_seguridad", "id" => "forma_pago_id-field", 'multiple'=>true)) !!}
+                        @if($errors->has("forma_pago_id"))
+                          <span class="help-block">{{ $errors->first("forma_pago_id") }}</span>
+                        @endif
+                      </div>
                   </div>
                   <div class="box box-default">
                       <div class="box-body">
