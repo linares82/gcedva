@@ -973,6 +973,8 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'CajaConceptoReglaRecargo' => __DIR__ . '/../..' . '/database/migrations/2020_03_27_174049_caja_concepto_regla_recargo.php',
         'CreateActividadEmpresasEmpresasTable' => __DIR__ . '/../..' . '/database/migrations/2018_01_09_111135_create_actividad_empresas_empresas_table.php',
         'CreateActividadEmpresasTable' => __DIR__ . '/../..' . '/database/migrations/2018_01_09_111134_create_actividad_empresas_table.php',
+        'CreateAdeudoPagoOnLinesTable' => __DIR__ . '/../..' . '/database/migrations/2020_07_27_165713_create_adeudo_pago_on_lines_table.php',
+        'CreateAdeudosPagosOnlineTable' => __DIR__ . '/../..' . '/database/migrations/2020_07_27_164622_create_adeudos_pagos_online_table.php',
         'CreateAdeudosTable' => __DIR__ . '/../..' . '/database/migrations/2018_04_10_134210_create_adeudos_table.php',
         'CreateAlumnosTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_24_195654_create_alumnos_table.php',
         'CreateApplesTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_14_230217_create_apples_table.php',

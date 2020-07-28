@@ -166,6 +166,8 @@ return array(
     'CajaConceptoReglaRecargo' => $baseDir . '/database/migrations/2020_03_27_174049_caja_concepto_regla_recargo.php',
     'CreateActividadEmpresasEmpresasTable' => $baseDir . '/database/migrations/2018_01_09_111135_create_actividad_empresas_empresas_table.php',
     'CreateActividadEmpresasTable' => $baseDir . '/database/migrations/2018_01_09_111134_create_actividad_empresas_table.php',
+    'CreateAdeudoPagoOnLinesTable' => $baseDir . '/database/migrations/2020_07_27_165713_create_adeudo_pago_on_lines_table.php',
+    'CreateAdeudosPagosOnlineTable' => $baseDir . '/database/migrations/2020_07_27_164622_create_adeudos_pagos_online_table.php',
     'CreateAdeudosTable' => $baseDir . '/database/migrations/2018_04_10_134210_create_adeudos_table.php',
     'CreateAlumnosTable' => $baseDir . '/database/migrations/2017_08_24_195654_create_alumnos_table.php',
     'CreateApplesTable' => $baseDir . '/database/migrations/2017_03_14_230217_create_apples_table.php',

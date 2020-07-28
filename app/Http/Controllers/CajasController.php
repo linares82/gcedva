@@ -461,7 +461,7 @@ class CajasController extends Controller
                             //if ($beca_a == 0 and $adeudo->bnd_eximir_descuentos == 0) {
                             if ($adeudo->bnd_eximir_descuentos == 0 or is_null($adeudo->bnd_eximir_descuentos)) {
                                 foreach ($promociones as $promocion) {
-
+                                    /*
                                     $inscripcion = Adeudo::where('cliente_id', $adeudo->cliente_id)
                                         //->where('plan_pago_ln_id',$adeudo->plan_pago_ln_id)
                                         ->where('caja_concepto_id', 1)
@@ -489,21 +489,24 @@ class CajasController extends Controller
                                             $caja_ln['promo_plan_ln_id'] = $promocion->id;
                                         }
                                     } else {
-                                        $inicio = Carbon::createFromFormat('Y-m-d', $promocion->fec_inicio);
-                                        $fin = Carbon::createFromFormat('Y-m-d', $promocion->fec_fin);
-                                        $hoy = Carbon::createFromFormat('Y-m-d', $caja->fecha);
-                                        $monto_promocion = 0;
-                                        //dd($hoy);
-                                        if ($inicio->lessThanOrEqualTo($hoy) and $fin->greaterThanOrEqualTo($hoy) and $caja_ln['promo_plan_ln_id'] == 0) {
+                                        */
+                                    $inicio = Carbon::createFromFormat('Y-m-d', $promocion->fec_inicio);
+                                    $fin = Carbon::createFromFormat('Y-m-d', $promocion->fec_fin);
+                                    $hoy = Carbon::createFromFormat('Y-m-d', $caja->fecha);
+                                    $monto_promocion = 0;
+                                    //dd($hoy);
+                                    if ($inicio->lessThanOrEqualTo($hoy) and $fin->greaterThanOrEqualTo($hoy) and $caja_ln['promo_plan_ln_id'] == 0) {
 
-                                            $monto_promocion = $promocion->descuento * $caja_ln['total'];
-                                            $caja_ln['descuento'] = $caja_ln['descuento'] + $monto_promocion;
-                                            $caja_ln['total'] = $caja_ln['subtotal'] - $caja_ln['descuento'];
+                                        $monto_promocion = $promocion->descuento * $caja_ln['total'];
+                                        $caja_ln['descuento'] = $caja_ln['descuento'] + $monto_promocion;
+                                        $caja_ln['total'] = $caja_ln['subtotal'] - $caja_ln['descuento'];
 
-                                            $caja_ln['promo_plan_ln_id'] = $promocion->id;
-                                        }
+                                        $caja_ln['promo_plan_ln_id'] = $promocion->id;
                                     }
+                                    //}
                                 }
+                            } else {
+                                //$caja_ln['total'] = $caja_ln['subtotal'] - $caja_ln['descuento'];
                             }
                         } catch (Exception $e) {
                             dd($e);
@@ -541,15 +544,15 @@ class CajasController extends Controller
 
                                             if ($regla->porcentaje > 0) {
                                                 //dd($regla->porcentaje);
-                                                $regla_recargo = $adeudo->monto * $regla->porcentaje;
+                                                $regla_recargo = $caja_ln['total'] * $regla->porcentaje;
                                                 $caja_ln['recargo'] = $caja_ln['recargo'] + $regla_recargo;
                                                 //$caja_ln['recargo'] = $adeudo->monto * $regla->porcentaje;
                                                 //echo $caja_ln['recargo'];
                                             } else {
                                                 if ($adeudo->bnd_eximir_descuento_regla == 0) {
-                                                    $regla_descuento = $adeudo->monto * $regla->porcentaje * -1;
+                                                    $regla_descuento = $caja_ln['total'] * $regla->porcentaje * -1;
                                                     $caja_ln['descuento'] = $caja_ln['descuento'] + $regla_descuento;
-                                                    $caja_ln['total'] = $caja_ln['subtotal'] - $caja_ln['descuento'];
+                                                    $caja_ln['total'] = $caja_ln['total'] - $caja_ln['descuento'];
 
                                                     //$caja_ln['descuento'] = $adeudo->monto * $regla->porcentaje * -1;
                                                     //echo $caja_ln['descuento'];
@@ -592,7 +595,7 @@ class CajasController extends Controller
                                                 //echo $caja_ln['recargo'];
                                             } else {
                                                 if ($adeudo->bnd_eximir_descuento_regla == 0) {
-                                                    $regla_descuento = $adeudo->monto * $regla->porcentaje * -1;
+                                                    $regla_descuento = $caja_ln['total'] * $regla->porcentaje * -1;
                                                     $caja_ln['descuento'] = $caja_ln['descuento'] + $regla_descuento;
                                                     $caja_ln['total'] = $caja_ln['subtotal'] - $caja_ln['descuento'];
 
@@ -618,6 +621,8 @@ class CajasController extends Controller
                                         }
                                     }
                                 }
+                            } else {
+                                //$caja_ln['total'] = $caja_ln['subtotal'] - $caja_ln['descuento'];
                             }
                         } //end regla recargo descuento
                         //dd($caja_ln);

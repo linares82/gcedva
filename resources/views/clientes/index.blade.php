@@ -155,9 +155,17 @@
                             
                             <div class="form-group col-md-4" >
                                 <label for="q_clientes.especialidad_id_lt">ESPECIALIDAD</label>
-                                
-                                    {!! Form::select("clientes.especialidad_id", $list1["Especialidad"], "{{ @(Request::input('q')['clientes.especialidad_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[clientes.especialidad_id_lt]", "id"=>"q_clientes.especialidad_id_lt", "style"=>"width:100%;")) !!}
-                                
+                                    {!! Form::select("clientes.especialidad_id", $list1["Especialidad"], "{{ @(Request::input('q')['clientes.especialidad_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[clientes.especialidad_id_lt]", "id"=>"q_clientes.especialidad_id_lt", "style"=>"width:100%;", "onchange"=>"getCmbNivel()")) !!}
+                            </div>
+
+                            <div class="form-group col-md-4" >
+                                <label for="q_clientes.nivel_id_lt">nivel</label>
+                                    {!! Form::select("clientes.nivel_id", $list1["Nivel"], "{{ @(Request::input('q')['clientes.nivel_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[clientes.nivel_id_lt]", "id"=>"q_clientes.nivel_id_lt", "style"=>"width:100%;", "onchange"=>"getCmbGrado()")) !!}
+                            </div>
+
+                            <div class="form-group col-md-4" >
+                                <label for="q_clientes.grado_id_lt">Grado</label>
+                                    {!! Form::select("clientes.grado_id", $list1["Grado"], "{{ @(Request::input('q')['clientes.grado_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[clientes.grado_id_lt]", "id"=>"q_clientes.grado_id_lt", "style"=>"width:100%;")) !!}
                             </div>
                             
                             <div class="form-group col-md-4">
@@ -368,29 +376,95 @@
         }
         
         function getCmbEspecialidad(){
-                var plantel=document.getElementById('q_clientes.plantel_id_lt');
-                var especialidad=document.getElementById('q_clientes.especialidad_id_lt');
+            var plantel=document.getElementById('q_clientes.plantel_id_lt');
+            var especialidad=document.getElementById('q_clientes.especialidad_id_lt');
                 
-                $.ajax({
-                url: '{{ route("especialidads.getCmbEspecialidad") }}',
-                        type: 'GET',
-                        data: "plantel_id=" + plantel.options[plantel.selectedIndex].value + "&especialidad_id=" + especialidad.options[especialidad.selectedIndex].value + "",
-                        dataType: 'json',
-                        beforeSend : function(){$("#loading10").show(); },
-                        complete : function(){$("#loading10").hide(); },
-                        success: function(data){
-                        removeOptions(document.getElementById("q_clientes.especialidad_id_lt"));
+            $.ajax({
+            url: '{{ route("especialidads.getCmbEspecialidad") }}',
+                    type: 'GET',
+                    data: "plantel_id=" + plantel.options[plantel.selectedIndex].value + "&especialidad_id=" + especialidad.options[especialidad.selectedIndex].value + "",
+                    dataType: 'json',
+                    beforeSend : function(){$("#loading10").show(); },
+                    complete : function(){$("#loading10").hide(); },
+                    success: function(data){
+                    removeOptions(document.getElementById("q_clientes.especialidad_id_lt"));
+                    $.each(data, function(i) {
+                    //$('#q_clientes.especialidad_id_lt-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
+                        var opt = document.createElement('option');
+                        opt.value = data[i].id;
+                        opt.innerHTML = data[i].name;
+                        especialidad.appendChild(opt);
+                    });
+                    
+                    }
+            });
+        }
+
+        function getCmbNivel(){
+            var plantel=document.getElementById('q_clientes.plantel_id_lt');
+            var especialidad=document.getElementById('q_clientes.especialidad_id_lt');
+            var nivel=document.getElementById('q_clientes.nivel_id_lt');
+            var a = $('#frm_cliente').serialize();
+            $.ajax({
+            url: '{{ route("nivels.getCmbNivels") }}',
+                    type: 'GET',
+                    data: {
+                        'plantel_id':plantel.options[plantel.selectedIndex].value,
+                        'especialidad_id':especialidad.options[especialidad.selectedIndex].value,
+                        //'nivel_id':nivel.options[nivel.selectedIndex].value.success,
+                    },
+                    dataType: 'json',
+                    beforeSend : function(){$("#loading10").show(); },
+                    complete : function(){$("#loading10").hide(); },
+                    success: function(data){
+                        removeOptions(document.getElementById("q_clientes.nivel_id_lt"));
+                        var opt = document.createElement('option');
+                            opt.value = 0;
+                            opt.innerHTML = 'Seleccionar';
+                            nivel.appendChild(opt);
                         $.each(data, function(i) {
-                        //$('#q_clientes.especialidad_id_lt-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
                             var opt = document.createElement('option');
                             opt.value = data[i].id;
                             opt.innerHTML = data[i].name;
-                            especialidad.appendChild(opt);
+                            nivel.appendChild(opt);
                         });
-                        
-                        }
-                });
+                    }
+            });
+        }
+
+        function getCmbGrado(){
+            var plantel=document.getElementById('q_clientes.plantel_id_lt');
+            var especialidad=document.getElementById('q_clientes.especialidad_id_lt');
+            var nivel=document.getElementById('q_clientes.nivel_id_lt');
+            var grado=document.getElementById('q_clientes.grado_id_lt');
+            var a = $('#frm_cliente').serialize();
+            $.ajax({
+            url: '{{ route("grados.getCmbGrados") }}',
+                type: 'GET',
+                data: {
+                        'plantel_id':plantel.options[plantel.selectedIndex].value,
+                        'especialidad_id':especialidad.options[especialidad.selectedIndex].value,
+                        'nivel_id':nivel.options[nivel.selectedIndex].value,
+                        'grado_id':grado.options[grado.selectedIndex].value,
+                    },
+                dataType: 'json',
+                beforeSend : function(){$("#loading10").show(); },
+                complete : function(){$("#loading10").hide(); },
+                success: function(data){
+                    removeOptions(document.getElementById("q_clientes.grado_id_lt"));
+                    var opt = document.createElement('option');
+                            opt.value = 0;
+                            opt.innerHTML = 'Seleccionar';
+                            grado.appendChild(opt);
+                        $.each(data, function(i) {
+                            var opt = document.createElement('option');
+                            opt.value = data[i].id;
+                            opt.innerHTML = data[i].name;
+                            grado.appendChild(opt);
+                        });
                 }
+            });
+        }
 /*
     $(document).ready(function() {
         var $table = $('.tblEnc');

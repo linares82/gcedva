@@ -88,7 +88,7 @@ class InscripcionsController extends Controller
         $fecha = Carbon::createFromFormat('Y-m-d', $lectivo->inicio);
         $grado = Grado::find($i->grado_id);
         //dd($especialidad);
-        $relleno = "0000";
+        $relleno = "00000";
         $rellenoPlantel = "00";
         $rellenoConsecutivo = "000";
 
@@ -120,7 +120,7 @@ class InscripcionsController extends Controller
             $mes = substr($rellenoPlantel, 0, 2 - strlen($fecha->month)) . $fecha->month;
             $anio = $fecha->year - 2000;
             $plantel = substr($rellenoPlantel, 0, 2 - strlen($i->plantel_id)) . $i->plantel_id;
-            $seccion = substr($relleno, 0, 4 - strlen($grado->seccion)) . $grado->seccion;
+            $seccion = substr($relleno, 0, 5 - strlen($grado->seccion)) . $grado->seccion;
             $consecutivoCadena = substr($rellenoConsecutivo, 0, 3 - strlen($consecutivo->consecutivo)) . $consecutivo->consecutivo;
 
             $entrada['matricula'] = $mes . $anio . $seccion . $plantel . $consecutivoCadena;
