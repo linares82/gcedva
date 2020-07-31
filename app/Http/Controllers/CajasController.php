@@ -822,6 +822,8 @@ class CajasController extends Controller
             $date = $carbon->now();
             $date = $date->format('d-m-Y h:i:s');
 
+            $atendio_pago = Empleado::where('user_id', $caja->pagos->pluck('usu_alta_id')->first())->first();
+
             //dd($adeudo->toArray());
             return view('cajas.imprimirTicket', array(
                 'cliente' => $cliente,
@@ -829,6 +831,7 @@ class CajasController extends Controller
                 'empleado' => $empleado,
                 'fecha' => $date,
                 'combinacion' => $combinacion,
+                'atendio_pago' => $atendio_pago
             ));
         }
     }
