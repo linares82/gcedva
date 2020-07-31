@@ -110,7 +110,7 @@
             
             <table class="table table-condensed table-striped table_calif">
                     <thead >
-                    <th>ASIGNATURA</th><th>CLAVE</th><th>CRÉDITOS</th><th>PERIODO</th><th>CALIFICACION</th><TH>ESTADO</TH>
+                    <th>MATRICULA</th><th>ASIGNATURA</th><th>CLAVE</th><th>CRÉDITOS</th><th>PERIODO</th><th>CALIFICACION</th><TH>TIPO EVALUACION</TH>
                     </thead>
                     <tbody>
                         @php
@@ -120,6 +120,7 @@
                         @endphp
                         @foreach($consulta_calificaciones as $a)
                         <tr>
+                            <td>$cliente->matricula</td>
                             <td>{{$a->materia}}</td><td>{{$a->codigo}}</td><td>{{$a->creditos}}</td>
                             <td>{{$a->lectivo}}</td><td>{{$a->calificacion}}</td><td>{{$a->tipo_examen}}</td>
                             @php

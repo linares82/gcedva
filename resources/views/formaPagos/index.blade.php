@@ -102,6 +102,7 @@
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'name', 'title' => 'FORMA PAGO'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'name', 'title' => 'CVE MULTIPAGO'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
@@ -111,6 +112,7 @@
                             <tr>
                                 <td><a href="{{ route('formaPagos.show', $formaPago->id) }}">{{$formaPago->id}}</a></td>
                                 <td>{{$formaPago->name}}</td>
+                                <td>{{$formaPago->cve_multipagos}}</td>
                                 <td class="text-right">
                                     @permission('formaPagos.edit')
                                     <a class="btn btn-xs btn-primary" href="{{ route('formaPagos.duplicate', $formaPago->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>

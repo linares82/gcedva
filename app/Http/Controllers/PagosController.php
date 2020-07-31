@@ -138,13 +138,7 @@ class PagosController extends Controller
             $datosMultipagos['usu_mod_id'] = 1;
             $parametros = Param::where('llave', 'url_multipagos')->first();
             $datosMultipagos['url_peticion'] = $parametros->valor;
-            if ($pago->forma_pago_id == 3) {
-                $datosMultipagos['mp_paymentmethod'] = "SUC";
-            } elseif ($pago->forma_pago_id == 4) {
-                $datosMultipagos['mp_paymentmethod'] = "CIE";
-            } elseif ($pago->forma_pago_id == 6) {
-                $datosMultipagos['mp_paymentmethod'] = "TDX";
-            }
+            $datosMultipagos['mp_paymentmethod'] = $pago->forma_pago->cve_multipagos;
             //$respuesta = $this->multipagosSolicitud($datosMultipagos);
 
             //if ($respuesta) {
@@ -179,7 +173,7 @@ class PagosController extends Controller
 
         $suma = $suma_pagos + $suma_pagos_referenciados;
 
-        if ($suma >= ($caja->total - 1) and $suma < ($caja->total + 100)) {
+        if ($suma >= ($caja->total - 1) and $suma <= ($caja->total + 100)) {
 
             foreach ($caja->cajaLns as $ln) {
                 if ($ln->adeudo_id > 0) {
@@ -571,11 +565,11 @@ class PagosController extends Controller
         }
 
         $formatter = new NumeroALetras;
-        $totalEntero=intdiv($caja->total,1);
-        $centavos=($caja->total-$totalEntero)*100;
+        $totalEntero = intdiv($caja->total, 1);
+        $centavos = ($caja->total - $totalEntero) * 100;
         $totalLetra = $formatter->toMoney($totalEntero, 2, "Pesos", 'Centavos');
         //dd($centavos);
-        
+
         //dd($fechaLetra);
 
 
@@ -589,7 +583,7 @@ class PagosController extends Controller
             'acumulado' => $acumulado,
             'impresion_token' => $impresion_token,
             'totalLetra' => $totalLetra,
-            'centavos'=>$centavos,
+            'centavos' => $centavos,
             //'fechaLetra' => $fechaLetra
         ));
     }

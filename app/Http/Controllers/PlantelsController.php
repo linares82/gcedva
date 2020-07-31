@@ -403,12 +403,12 @@ class PlantelsController extends Controller
 					'grados.rvoe',
 					'grados.fec_rvoe',
 					'grados.cct',
-					'grados.denominacion',
+					'grados.denominacion as denominacion_grado',
 					'grados.seccion',
 					'grados.nombre2',
 					'p.logo',
 					'p.razon',
-					'p.denominacion',
+					'p.denominacion as denominacion_plantel',
 					'p.nombre_corto',
 					'p.rfc',
 					'p.calle',
@@ -443,6 +443,7 @@ class PlantelsController extends Controller
 					->orderBy('nivel')
 					->orderBy('grado')
 					->get();
+				//dd($combinaciones->toArray());
 
 				return view('plantels.reportes.madre', compact('combinaciones', 'planteles'));
 				break;

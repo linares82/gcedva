@@ -18,7 +18,7 @@ class CreatePagosTable extends Migration {
             $table->double('monto');
             $table->date('fecha');
             $table->integer('forma_pago_id')->unsigned();
-            $table->string('referencia');
+            $table->string('referencia')->nullable();
             $table->integer('usu_alta_id')->unsigned();
             $table->integer('usu_mod_id')->unsigned();
             $table->timestamps();
