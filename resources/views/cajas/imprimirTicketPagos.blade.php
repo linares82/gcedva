@@ -89,7 +89,7 @@ body{
     
     <tr>
         <td colspan="2" height="30px">
-            Atendido por: {{ $empleado->nombre." ".$empleado->ape_paterno." ".$empleado->ape_materno }}
+            Atendido por: {{ $atendio_pago->nombre." ".$atendio_pago->ape_paterno." ".$atendio_pago->ape_materno }}
         </td>
     </tr>
     <tr>
@@ -258,7 +258,7 @@ body{
     
     <tr>
         <td colspan="2" height="30px">
-            Atendido por: {{ $empleado->nombre." ".$empleado->ape_paterno." ".$empleado->ape_materno }}
+            Atendido por: {{ $atendio_pago->nombre." ".$atendio_pago->ape_paterno." ".$atendio_pago->ape_materno }}
         </td>
     </tr>
     <tr>

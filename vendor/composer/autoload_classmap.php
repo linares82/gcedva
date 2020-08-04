@@ -94,6 +94,7 @@ return array(
     'AddFieldsCuentasEfectivosTable' => $baseDir . '/database/migrations/2019_07_11_125550_add_fields_cuentas_efectivos_table.php',
     'AddFieldsLectivosTable' => $baseDir . '/database/migrations/2018_02_14_150006_add_fields_lectivos_table.php',
     'AddFieldsPlantelsTable' => $baseDir . '/database/migrations/2017_06_16_222542_Add_fields_Plantels_Table.php',
+    'AddFieldsReportsToEmpleadosTable' => $baseDir . '/database/migrations/2020_07_31_144003_add_fields_reports_to_empleados_table.php',
     'AddFileToAutorizacionBecasTable' => $baseDir . '/database/migrations/2019_11_29_130802_add_file_to_autorizacion_becas_table.php',
     'AddFondoCredencialEspecialidadsTable' => $baseDir . '/database/migrations/2020_01_20_141610_add_fondo_credencial_especialidads_table.php',
     'AddHashEbanxesTable' => $baseDir . '/database/migrations/2019_01_14_154325_add_hash_ebanxes_table.php',

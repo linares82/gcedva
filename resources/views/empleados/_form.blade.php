@@ -133,6 +133,20 @@
                         <span class="help-block">{{ $errors->first("cedula") }}</span>
                       @endif
                     </div>
+                    <div class="form-group col-md-4 @if($errors->has('profordems')) has-error @endif">
+                      <label for="profordems-field">PROFORDEMS</label>
+                      {!! Form::text("profordems", null, array("class" => "form-control input-sm", "id" => "profordems-field")) !!}
+                      @if($errors->has("profordems"))
+                        <span class="help-block">{{ $errors->first("profordems") }}</span>
+                      @endif
+                    </div>
+                    <div class="form-group col-md-4 @if($errors->has('fec_inicio_experiencia_academicas')) has-error @endif">
+                      <label for="fec_inicio_experiencia_academicas-field">F. Inicio Experiencia Academica</label>
+                      {!! Form::text("fec_inicio_experiencia_academicas", null, array("class" => "form-control input-sm fecha", "id" => "fec_inicio_experiencia_academicas-field")) !!}
+                      @if($errors->has("fec_inicio_experiencia_academicas"))
+                        <span class="help-block">{{ $errors->first("fec_inicio_experiencia_academicas") }}</span>
+                      @endif
+                    </div>
                       </div>
                     </div>
                     <div class="box box-default">

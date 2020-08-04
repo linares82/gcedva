@@ -79,7 +79,7 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->get();
     
     <tr>
         <td colspan="2">
-            Atendido por: {{ $empleado->nombre." ".$empleado->ape_paterno." ".$empleado->ape_materno }}
+            Atendido por: {{ $atendio_pago->nombre." ".$atendio_pago->ape_paterno." ".$atendio_pago->ape_materno }}
         </td>
     </tr>
     <tr>

@@ -9,6 +9,7 @@ use File;
 use App\Empleado;
 
 use App\Estado;
+use App\Lectivo;
 use App\NivelEstudio;
 use App\PivotDocEmpleado;
 use App\TipoContrato;
@@ -54,9 +55,9 @@ class EmpleadosController extends Controller
         $responsables = Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
             //->where('plantel_id', '=', $plantel)
             ->pluck('name', 'id');
-        $estados=Estado::pluck('name','id');
-        $nivel_estudios=NivelEstudio::pluck('name','id');
-        return view('empleados.create', compact('estados','jefes', 'responsables', 'tipoContratos','nivel_esstudios'))
+        $estados = Estado::pluck('name', 'id');
+        $nivel_estudios = NivelEstudio::pluck('name', 'id');
+        return view('empleados.create', compact('estados', 'jefes', 'responsables', 'tipoContratos', 'nivel_esstudios'))
             ->with('list', Empleado::getListFromAllRelationApps())
             ->with('list1', PivotDocEmpleado::getListFromAllRelationApps());
     }
@@ -157,7 +158,7 @@ class EmpleadosController extends Controller
             ->join('empleados as e', 'e.id', '=', 'pde.empleado_id')
             ->where('e.id', '=', $id)
             ->where('pde.deleted_at', '=', NULL)->get();
-            $estados=Estado::pluck('name','id');
+        $estados = Estado::pluck('name', 'id');
         //dd($doc_existentes->toArray());
         $tipoContratos = TipoContrato::pluck('name', 'id');
         $de_array = array();
@@ -167,7 +168,7 @@ class EmpleadosController extends Controller
             }
             //dd($de_array);
         }
-        $nivel_estudios=NivelEstudio::pluck('name','id');
+        $nivel_estudios = NivelEstudio::pluck('name', 'id');
         //dd($de_array);
 
         $documentos_faltantes = DB::table('doc_empleados')
@@ -176,7 +177,7 @@ class EmpleadosController extends Controller
             ->whereNotIn('id', $de_array)
             ->get();
         //dd($documentos_faltantes->toArray());
-        return view('empleados.edit', compact('estados','tipoContratos', 'empleado', 'pivotDocEmpleado', 'jefes', 'responsables', 'documentos_faltantes','nivel_estudios'))
+        return view('empleados.edit', compact('estados', 'tipoContratos', 'empleado', 'pivotDocEmpleado', 'jefes', 'responsables', 'documentos_faltantes', 'nivel_estudios'))
             ->with('list', Empleado::getListFromAllRelationApps())
             ->with('list1', PivotDocEmpleado::getListFromAllRelationApps());
     }
@@ -619,5 +620,75 @@ class EmpleadosController extends Controller
         }
         //dd($documentos_faltantes);
         return view('empleados.reportes.listaDocumentosR', compact('documentos_faltantes'));
+    }
+
+    public function registroDocentes()
+    {
+        return view('empleados.reportes.registroDocentes')->with('list', Empleado::getListFromAllRelationApps());;
+    }
+
+    public function registroDocentesR(Request $request)
+    {
+        $datos = $request->all();
+        $registros = Empleado::select(
+            'curp',
+            'ape_paterno',
+            'ape_materno',
+            'nombre',
+            'fec_nacimiento',
+            'genero',
+            'est_nacimiento.abreviatura as estado_nacimiento',
+            'pais_nacimiento',
+            'ne.name as nivel_estudio',
+            'profesion',
+            'profordems',
+            'fec_inicio_experiencia_academicas',
+            'cedula'
+        )
+            ->join('nivel_estudios as ne', 'ne.id', '=', 'empleados.nivel_estudio_id')
+            ->join('estados as est_nacimiento', 'est_nacimiento.id', '=', 'empleados.estado_nacimiento_id')
+            ->where('empleados.plantel_id', $datos['plantel_f'])
+            ->whereIn('empleados.st_empleado_id', $datos['estatus_f'])
+            ->where('empleados.puesto_id', 3)
+            ->WhereNull('empleados.deleted_at')
+            ->get();
+        //dd($registros->toArray());
+        return view('empleados.reportes.registroDocentesR', compact('registros'));
+    }
+
+    public function registroInfDocentes()
+    {
+
+        $lectivos = Lectivo::pluck('name', 'id');
+        return view('empleados.reportes.registroInfDocentes', compact('lectivos'))
+            ->with('list', Empleado::getListFromAllRelationApps());;
+    }
+
+    public function registroInfDocentesR(Request $request)
+    {
+        $datos = $request->all();
+        $registros = Empleado::select(
+            'g.rvoe',
+            'empleados.curp',
+            'm.codigo as clave',
+            'l.inicio'
+        )
+            ->join('asignacion_academicas as aa', 'aa.empleado_id', '=', 'empleados.id')
+            ->join('lectivos as l', 'l.id', '=', 'aa.lectivo_id')
+            ->join('materia as m', 'm.id', '=', 'aa.materium_id')
+            ->join('hacademicas as h', 'h.materium_id', '=', 'm.id')
+            ->whereColumn('h.lectivo_id', 'aa.lectivo_id')
+            ->whereColumn('h.grupo_id', 'aa.grupo_id')
+            ->whereColumn('h.plantel_id', 'aa.plantel_id')
+            ->join('grados as g', 'g.id', '=', 'h.grado_id')
+            ->where('aa.lectivo_id', $datos['lectivo_f'])
+            ->where('empleados.plantel_id', $datos['plantel_f'])
+            ->whereIn('empleados.st_empleado_id', $datos['estatus_f'])
+            ->where('empleados.puesto_id', 3)
+            ->WhereNull('empleados.deleted_at')
+            ->distinct()
+            ->get();
+        //dd($registros->toArray());
+        return view('empleados.reportes.registroInfDocentesR', compact('registros'));
     }
 }

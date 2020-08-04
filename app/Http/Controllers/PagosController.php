@@ -515,6 +515,8 @@ class PagosController extends Controller
 
         $caja = Caja::find($pago->caja_id);
 
+        $atendio_pago = Empleado::where('user_id', $pago->usu_alta_id)->first();
+
         $input['caja_id'] = $caja->id;
         $input['pago_id'] = $pago->id;
         $input['cliente_id'] = $caja->cliente_id;
@@ -584,7 +586,7 @@ class PagosController extends Controller
             'impresion_token' => $impresion_token,
             'totalLetra' => $totalLetra,
             'centavos' => $centavos,
-            //'fechaLetra' => $fechaLetra
+            'atendio_pago' => $atendio_pago
         ));
     }
 
@@ -637,6 +639,8 @@ class PagosController extends Controller
 
         }
 
+        $atendio_pago = Empleado::where('user_id', $caja->pagos->pluck('usu_alta_id')->first())->first();
+
         return view('cajas.imprimirTicketPagos', array(
             'cliente' => $cliente,
             'caja' => $caja,
@@ -645,7 +649,8 @@ class PagosController extends Controller
             'combinacion' => $combinacion,
             'pagos' => $caja->pagos,
             'acumulado' => $acumulado,
-            'impresion_token' => $impresion_token
+            'impresion_token' => $impresion_token,
+            'atendio_pago' => $atendio_pago
         ));
     }
 

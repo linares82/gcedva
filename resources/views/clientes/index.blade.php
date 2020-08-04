@@ -193,6 +193,13 @@
                             <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['clientes.created_at_menorq']) ?: '' }}" name="q[clientes.created_at_menorq]" id="q_clientes.created_at_menorq" />
                             </div>
 
+                            <div class="form-group col-md-4">
+                                <label for="q_clientes.matricula_cont">MATRICULA</label>
+                                
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['clientes.matricula_cont']) ?: '' }}" name="q[clientes.matricula_cont]" id="q_clientes.matricula_cont" />
+                                
+                            </div>
+
                             <div class="form-group" id='ultimo'>
                                 <div class="col-sm-10 col-sm-offset-2">
                                     <input type="submit" name="commit" value="Buscar" class="btn btn-default btn-xs" />
