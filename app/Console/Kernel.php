@@ -21,7 +21,8 @@ class Kernel extends ConsoleKernel
         Commands\CambiarEstatus::class,
         Commands\EnvioSmsMail::class,
         Commands\AtrazoPagos::class,
-        Commands\PrbEmail::class    
+        Commands\PrbEmail::class,
+        Commands\IANMatricula::class
     ];
 
     /**
@@ -36,7 +37,7 @@ class Kernel extends ConsoleKernel
         //          ->hourly();
         //$schedule->command('backup:mysql-dump')->dailyAt('14:00');
         //$schedule->command('ian:FinContratos')->dailyAt('23:00');
-        
+
     }
 
     /**
@@ -46,7 +47,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands()
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
         require base_path('routes/console.php');
     }
 }

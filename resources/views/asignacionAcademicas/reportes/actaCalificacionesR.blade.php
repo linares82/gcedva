@@ -143,23 +143,31 @@
                             <td>{{ $a->cliente->ape_paterno }} {{ $a->cliente->ape_materno }} {{ $a->cliente->nombre }} {{ $a->cliente->nombre2 }}</td>
                             <td>{{ $a->cliente->curp }}</td>
                             @php
+                            //dd($datos);
                             if($datos['ponderacion_f']<>0){
-                                $ponderaciones=App\CalificacionPonderacion::where('calificacion_id',$a->calificacion->id)
+                            
+                                $ponderaciones=App\CalificacionPonderacion::where('calificacion_id',$a->calificaciones->max()->id)
                                 ->whereIn('carga_ponderacion_id',$array_ponderaciones)
                                 ->get();
+                                //dd($ponderaciones->toArray());
                                 $cantidad_calificaciones=0;
                                 $suma_calificaciones=0;
                                 foreach($ponderaciones as $p){
                                     $suma_calificaciones=$suma_calificaciones+$p->calificacion_parcial;
                                     $cantidad_calificaciones++;
                                 }
-                                if($cantidad_calificacion<>0){
+                                //dd($cantidad_calificaciones);
+                                if($cantidad_calificaciones>0){
                                     $promedio=$suma_calificaciones/$cantidad_calificaciones;
+                                    //dd($promedio);
                                 }else{
                                     $promedio=0;
+                                    
                                 }
-                            }elseif($datos['ponderacion_f']<>0){
-                                $promedio=$a->calificacion->calificacion;
+                                
+                            }elseif($datos['ponderacion_f']==0){
+                                $promedio=$a->calificaciones->max()->calificacion;
+                                //dd($a->calificaciones->max());
                             }
                             if($promedio>6){
                                 $promedio=round($promedio,0);

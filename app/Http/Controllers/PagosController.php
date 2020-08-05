@@ -83,7 +83,15 @@ class PagosController extends Controller
 
         if (!isset($input['bnd_referenciado'])) {
             $input['bnd_referenciado'] = 0;
+            $input['bnd_pagado'] = 1;
         }
+
+        if ($input['bnd_referenciado'] == 1) {
+            $input['bnd_pagado'] = 0;
+        } else {
+            $input['bnd_pagado'] = 1;
+        }
+
         $plantel = Plantel::find($caja->plantel_id);
         $plantel->consecutivo_pago = $plantel->consecutivo_pago + 1;
         $plantel->save();

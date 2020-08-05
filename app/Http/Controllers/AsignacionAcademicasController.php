@@ -546,7 +546,7 @@ class AsignacionAcademicasController extends Controller
 		$formatter = new NumeroALetras;
 		return view(
 			'asignacionAcademicas.reportes.actaCalificacionesR',
-			compact('encabezado', 'alumnos', 'asignacion_academica', 'array_ponderaciones', 'formatter')
+			compact('datos', 'encabezado', 'alumnos', 'asignacion_academica', 'array_ponderaciones', 'formatter')
 		);
 	}
 }

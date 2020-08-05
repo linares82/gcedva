@@ -1165,7 +1165,7 @@ Agregar nuevo registro
                 complete : function(){$("#loading3").hide(); },
                 success: function(data) {
                     if(referencia_check==0){
-                        $('#form-buscarVenta').submit();
+                        //$('#form-buscarVenta').submit();
                     }else{
                         console.log(data.datos)
                         $("#mp_account").val(data.datos.mp_account);
