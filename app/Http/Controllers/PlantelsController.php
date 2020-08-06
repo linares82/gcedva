@@ -214,9 +214,9 @@ class PlantelsController extends Controller
 	public function update($id, Plantel $plantel, updatePlantel $request)
 	{
 		//dd($request->all());
-		$input = $request->except('concepto_multipagos_id', 'forma_oago_id');
+		$input = $request->except('concepto_multipagos_id', 'forma_pago_id');
 		$conceptos = $request->only('concepto_multipagos_id');
-		$formas_pago = $input = $request->only('forma_pago_id');
+		$formas_pago = $request->only('forma_pago_id');
 		$input['usu_mod_id'] = Auth::user()->id;
 
 		//$input['logo']="";

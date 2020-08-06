@@ -578,11 +578,16 @@
                             <td>
                                 <?php
                                 
-                                $linea_caja= \App\CajaLn::where('adeudo_id',$adeudo->id)->whereNull('deleted_at')->first();    
+                                //$linea_caja= \App\CajaLn::where('adeudo_id',$adeudo->id)->whereNull('deleted_at')->first();    
+                                $suma_pagos=0;
+                                foreach($adeudo->caja->pagos as $pago){
+                                    $suma_pagos=$suma_pagos+$pago->monto;
+                                }
                                 ?>
                                 @if(!is_null($linea_caja))
                                 {{$linea_caja->total}}
                                 @endif
+                                {{ $suma_pagos }}
                             </td>
                             <td>
                                 @permission('adeudos.destroy')
@@ -1165,7 +1170,7 @@ Agregar nuevo registro
                 complete : function(){$("#loading3").hide(); },
                 success: function(data) {
                     if(referencia_check==0){
-                        //$('#form-buscarVenta').submit();
+                        $('#form-buscarVenta').submit();
                     }else{
                         console.log(data.datos)
                         $("#mp_account").val(data.datos.mp_account);
