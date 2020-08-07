@@ -77,6 +77,13 @@
                          <span class="help-block">{{ $errors->first("seccion") }}</span>
                         @endif
                      </div>
+                     <div class="form-group col-md-4 @if($errors->has('id_mapa')) has-error @endif">
+                        <label for="id_mapa-field">Id Mapa</label>
+                        {!! Form::text("id_mapa", null, array("class" => "form-control input-sm", "id" => "id_mapa-field")) !!}
+                        @if($errors->has("id_mapa"))
+                         <span class="help-block">{{ $errors->first("id_mapa") }}</span>
+                        @endif
+                     </div>
                     <div class="form-group col-md-4 @if($errors->has('modulo_final_id')) has-error @endif">
                        <label for="modulo_final_id-field">Modulo final</label>
                        {!! Form::select("modulo_final_id", $modulos, null, array("class" => "form-control select_seguridad", "id" => "modulo_final_id-field")) !!}

@@ -734,13 +734,13 @@ Agregar nuevo registro
                         <span class="help-block">{{ $errors->first("forma_pago_id") }}</span>
                        @endif
                     </div>
-                    <div class="form-group col-md-3 @if($errors->has('bnd_referenciado')) has-error @endif">
+                    <!--<div class="form-group col-md-3 @if($errors->has('bnd_referenciado')) has-error @endif">
                         <label for="bnd_referenciado-field">Pago Referenciado</label>
-                        {!! Form::checkbox("bnd_referenciado", 1, null, [ "id" => "bnd_referenciado-field", 'class'=>'minimal']) !!}
+                        @{!! Form::checkbox("bnd_referenciado", 1, null, [ "id" => "bnd_referenciado-field", 'class'=>'minimal']) !!}
                         @if($errors->has("bnd_referenciado"))
                         <span class="help-block">{{ $errors->first("bnd_referenciado") }}</span>
                         @endif
-                    </div>
+                    </div>-->
                     <div class="form-group col-md-6 @if($errors->has('cuenta_efectivo_id')) has-error @endif">
                        <label for="cuenta_efectivo_id-field">Cuenta Efectivo</label>
                        {!! Form::select("cuenta_efectivo_id-field", App\CuentasEfectivo::pluck('name','id'), null, array("class" => "form-control", "id" => "cuenta_efectivo_id-field")) !!}

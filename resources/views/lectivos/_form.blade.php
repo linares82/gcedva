@@ -55,6 +55,20 @@
                         <span class="help-block">{{ $errors->first("fin") }}</span>
                        @endif
                     </div>
+                    <div class="form-group col-md-4 @if($errors->has('ciclo_escolar')) has-error @endif">
+                     <label for="ciclo_escolar-field">Ciclo Escolar</label>
+                     {!! Form::text("ciclo_escolar", null, array("class" => "form-control input-sm", "id" => "ciclo_escolar-field")) !!}
+                     @if($errors->has("ciclo_escolar"))
+                      <span class="help-block">{{ $errors->first("ciclo_escolar") }}</span>
+                     @endif
+                  </div>
+                  <div class="form-group col-md-4 @if($errors->has('periodo_escolar')) has-error @endif">
+                     <label for="periodo_escolar-field">Periodo Escolar</label>
+                     {!! Form::text("periodo_escolar", null, array("class" => "form-control input-sm", "id" => "periodo_escolar-field")) !!}
+                     @if($errors->has("periodo_escolar"))
+                      <span class="help-block">{{ $errors->first("periodo_escolar") }}</span>
+                     @endif
+                  </div>
                     <div class="row"></div>
                     @if(isset($lectivo))
                     <div class="form-group col-md-12">

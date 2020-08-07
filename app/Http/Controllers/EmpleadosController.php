@@ -673,7 +673,7 @@ class EmpleadosController extends Controller
             'm.codigo as clave',
             'l.inicio'
         )
-            ->join('asignacion_academicas as aa', 'aa.empleado_id', '=', 'empleados.id')
+            ->join('asignacion_academicas as aa', 'aa.docente_oficial_id', '=', 'empleados.id')
             ->join('lectivos as l', 'l.id', '=', 'aa.lectivo_id')
             ->join('materia as m', 'm.id', '=', 'aa.materium_id')
             ->join('hacademicas as h', 'h.materium_id', '=', 'm.id')

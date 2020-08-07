@@ -16,6 +16,8 @@ use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updatePeriodoEstudio;
 use App\Http\Requests\createPeriodoEstudio;
+use App\Lectivo;
+use App\StEmpleado;
 use DB;
 use Cache;
 
@@ -499,5 +501,57 @@ class PeriodoEstudiosController extends Controller
         //dd($promedio);
 
         return view("periodoEstudios.reportes.concentradoParcialesR", compact('materias', 'ponderaciones', 'clientes', 'registros', 'promedios'));
+    }
+
+    public function gruposOrdinarios()
+    {
+        $empleado = Empleado::where('user_id', Auth::user()->id)->first();
+        $planteles_validos = $empleado->plantels->pluck('razon', 'id');
+        $lectivo = Lectivo::pluck('name', 'id');
+        $stEmpleados = StEmpleado::pluck('name', 'id');
+        return view('periodoEstudios.reportes.gruposOrdinarios', compact('planteles_validos', 'lectivo', 'stEmpleados'));
+    }
+
+    public function gruposOrdinariosR(Request $request)
+    {
+        $datos = $request->all();
+        //dd($datos);
+
+        $registros = Empleado::select(
+            'g.rvoe',
+            'l.ciclo_escolar',
+            'l.periodo_escolar',
+            'gru.name as grupo',
+            'pe.orden',
+            'j.name as jornada',
+            'm.codigo as clave',
+            'g.id_mapa',
+            'empleados.curp'
+        )
+            ->leftJoin('asignacion_academicas as aa', 'aa.docente_oficial_id', '=', 'empleados.id')
+            ->leftJoin('lectivos as l', 'l.id', '=', 'aa.lectivo_id')
+            ->leftJoin('materia as m', 'm.id', '=', 'aa.materium_id')
+            ->leftJoin('hacademicas as h', 'h.materium_id', '=', 'm.id')
+            ->leftJoin('grupos as gru', 'gru.id', '=', 'h.grupo_id')
+            ->leftJoin('jornadas as j', 'j.id', '=', 'gru.jornada_id')
+            ->leftJoin('inscripcions as i', 'i.id', '=', 'h.inscripcion_id')
+            ->leftJoin('periodo_estudios as pe', 'pe.id', '=', 'i.periodo_estudio_id')
+            ->whereColumn('h.lectivo_id', 'aa.lectivo_id')
+            ->whereColumn('h.grupo_id', 'aa.grupo_id')
+            ->whereColumn('h.plantel_id', 'aa.plantel_id')
+            ->leftJoin('grados as g', 'g.id', '=', 'h.grado_id')
+            ->where('aa.lectivo_id', $datos['lectivo_f'])
+            ->where('empleados.plantel_id', $datos['plantel_f'])
+            ->whereIn('empleados.st_empleado_id', $datos['estatus_f'])
+            ->where('empleados.puesto_id', 3)
+            ->WhereNull('empleados.deleted_at')
+            ->WhereNull('i.deleted_at')
+            ->WhereNull('h.deleted_at')
+            ->WhereNull('aa.deleted_at')
+            ->distinct()
+            ->get();
+        //dd($registros);
+
+        return view('periodoEstudios.reportes.gruposOrdinariosR', compact('registros'));
     }
 }
