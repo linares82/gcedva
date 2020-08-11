@@ -362,7 +362,7 @@ class ClientesController extends Controller
         $p = Auth::user()->can('IfiltroEmpleadosXPlantel');
         //dd($p);
         if ($p) {
-            $e = Empleado::where('user_id', '=', Auth::user()->id)->first();
+            //$e = Empleado::where('user_id', '=', Auth::user()->id)->first();
             $e = Empleado::where('user_id', '=', Auth::user()->id)->first();
             $planteles = array();
             foreach ($e->plantels as $p) {
@@ -372,11 +372,11 @@ class ClientesController extends Controller
             $empleados = Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
                 //->where('plantel_id', '=', $e->plantel_id)
                 ->whereIn('plantel_id', '=', $planteles)
-                ->where('puesto_id', '=', 2)
+                ->whereIn('puesto_id', array(2, 3))
                 ->pluck('name', 'id');
         } else {
             $empleados = Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
-                ->where('puesto_id', '=', 2)
+                ->whereIn('puesto_id', array(2, 3))
                 ->pluck('name', 'id');
         }
         $empleados = $empleados->reverse();
@@ -2004,5 +2004,13 @@ class ClientesController extends Controller
         $plantel = Plantel::find($datos['plantel_f']);
         //dd($registros->toArray());
         return view('clientes.reportes.activosR', compact('registros', 'plantel', 'datos'));
+    }
+
+    public function formatoInscripcion(Request $request)
+    {
+        $datos = $request->all();
+        $cliente = Cliente::find($datos['cliente_id']);
+        $combinacion = CombinacionCliente::where('cliente_id', $cliente->id)->first();
+        return view('clientes.reportes.formatoInscripcion', compact('cliente', 'combinacion'));
     }
 }

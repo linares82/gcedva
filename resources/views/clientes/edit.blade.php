@@ -32,6 +32,7 @@
                 <div class="well well-sm">
                     <button type="submit" class="btn btn-primary submitForm">Guardar</button>
                     <a class="btn btn-md btn-warning" href="{{ route('seguimientos.show', $cliente->id) }}"><i class="glyphicon glyphicon-new-window"></i> Seguimiento </a>
+                    <a class="btn btn-md bg-maroon" target="_blank" href="{{ route('clientes.formatoInscripcion', array('cliente_id'=>$cliente->id)) }}"><i class="fa fa-print"></i> F. Inscripcion </a>
                     <a class="btn btn-link pull-right" href="{{ route('clientes.index') }}"><i class="glyphicon glyphicon-backward"></i>  Clientes</a>
                     <a class="btn btn-link pull-right" href="{{ route('clientes.index', array('p'=>1)) }}"><i class="glyphicon glyphicon-backward"></i> Inscritos</a>
                 </div>

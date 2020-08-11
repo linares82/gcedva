@@ -1,0 +1,1 @@
+@section('discapacidadsAppTitle','Discapacidad')

@@ -280,11 +280,14 @@
                                 <td>{{$cliente->cliente->empleado->nombre." ".$cliente->cliente->empleado->ape_paterno." ".$cliente->cliente->empleado->ape_materno}}</td>
                                 <td> {{$cliente->cliente->matricula}} </td>
                                 <td class="text-right">
+                                    <a class="btn btn-xs bg-maroon" href="{{ route('clientes.formatoInscripcion', array('cliente_id'=>$cliente->cliente->id)) }}">
+                                        <i class="fa fa-print"></i> F. Insc.
+                                    </a>
                                     @permission('clientes.boleta')
                                     <a class="btn btn-xs bg-maroon" href="{{ route('clientes.boleta', array('id'=>$cliente->cliente->id)) }}"><i class="glyphicon glyphicon-calendar"></i> Boleta</a>
                                     @endpermission
                                     <a class="btn btn-xs bg-purple" href="{{ route('autorizacionBecas.findByClienteId', array('cliente_id'=>$cliente->cliente->id)) }}">
-                                        <i class="fa fa-eye"></i> S. Becas
+                                        <i class="fa fa-newspaper-o"></i> S. Becas
                                     </a>
            <!--                         
                                     <button class="btn btn-success btnVerLineas pull-right btn-xs" lang="mesaj" data-check="{{$cliente->cliente->id}}" data-href="formation_json_parents" style="margin-left:10px;" >

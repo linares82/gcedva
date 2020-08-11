@@ -157,6 +157,13 @@
                             <span class="help-block">{{ $errors->first("escolaridad_id") }}</span>
                             @endif
                         </div>
+                        <div class="form-group col-md-4 @if($errors->has('discapacidad_id')) has-error @endif">
+                            <label for="discapacidad_id-field">Discapacidad</label>
+                            {!! Form::select("discapacidad_id", $list["Discapacidad"], null, array("class" => "form-control select_seguridad", "id" => "discapacidad_id-field")) !!}
+                            @if($errors->has("discapacidad_id"))
+                            <span class="help-block">{{ $errors->first("discapacidad_id") }}</span>
+                            @endif
+                        </div>
                         
                     </div>
                 </div>
@@ -817,6 +824,13 @@
                     {!! Form::text("senas_particulares", null, array("class" => "form-control input-sm", "id" => "senas_particulares-field")) !!}
                     @if($errors->has("senas_particulares"))
                     <span class="help-block">{{ $errors->first("senas_particulares") }}</span>
+                    @endif
+                </div>
+                <div class="form-group col-md-4 @if($errors->has('pagador_id')) has-error @endif">
+                    <label for="pagador_id-field">Quien Paga</label>
+                    {!! Form::select("pagador_id", $list["Pagador"], null, array("class" => "form-control select_seguridad", "id" => "pagador_id-field", 'style'=>'width:100%')) !!}
+                    @if($errors->has("pagador_id"))
+                    <span class="help-block">{{ $errors->first("pagador_id") }}</span>
                     @endif
                 </div>
             </fieldset>
