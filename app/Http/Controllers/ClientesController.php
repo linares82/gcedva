@@ -406,8 +406,10 @@ class ClientesController extends Controller
         //dd($cliente->toArray());
         $cuestionarios = Ccuestionario::where('st_cuestionario_id', '=', '1')->pluck('name', 'id');
 
+        //dd($cliente->matricula);
         if (isset($cliente->matricula)) {
-            $historia = ConsultaCalificacion::where('matricula', $cliente->matricula)->get();
+            $historia = ConsultaCalificacion::where('matricula', 'like', "%" . $cliente->matricula . "%")->get();
+            //dd($historia);
         } else {
             $historia = collect();
         }

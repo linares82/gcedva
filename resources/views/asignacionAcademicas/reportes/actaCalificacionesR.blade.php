@@ -100,7 +100,7 @@
                     </td>
                     
                 </tr>
-                <tr ><td colspan='2' align="center" class="td_centro">ACTA DE CALIFICACIÓN VIA ORDINARIO</td></tr>
+            <tr ><td colspan='2' align="center" class="td_centro">ACTA DE CALIFICACIÓN VIA ORDINARIO {{ (!is_null($nomenclatura[$numero])) ? $nomenclatura[$numero]." PARCIAL" : "" }} </td></tr>
             </table>
             <br/>
             

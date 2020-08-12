@@ -11,7 +11,7 @@
 	</ol>
 
     <div class="page-header">
-        <h3><i class="glyphicon glyphicon-plus"></i> @yield('asignacionAcademicasAppTitle') / Crear </h3>
+        <h3><i class="glyphicon glyphicon-plus"></i> @yield('asignacionAcademicasAppTitle') / Acta Calificaciones </h3>
     </div>
 @endsection
 

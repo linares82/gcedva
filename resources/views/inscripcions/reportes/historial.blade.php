@@ -104,7 +104,7 @@
                 <tr ><td colspan='2' align="center" class="td_centro">HISTORIA ACADÉMICA</td></tr>
             </table>
             <p>
-                Alumno: {{ $cliente->nombre }} {{ $cliente->nombre2 }} {{ $cliente->ape_paterno }} {{ $cliente->ape_paterno }}<br/>
+                Alumno: {{ $cliente->nombre }} {{ $cliente->nombre2 }} {{ $cliente->ape_paterno }} {{ $cliente->ape_materno }}<br/>
                 Matricula: {{ $cliente->matricula }}
             </p>
             
@@ -120,7 +120,7 @@
                         @endphp
                         @foreach($consulta_calificaciones as $a)
                         <tr>
-                            <td>$cliente->matricula</td>
+                            <td>{{ $cliente->matricula }}</td>
                             <td>{{$a->materia}}</td><td>{{$a->codigo}}</td><td>{{$a->creditos}}</td>
                             <td>{{$a->lectivo}}</td><td>{{$a->calificacion}}</td><td>{{$a->tipo_examen}}</td>
                             @php
@@ -132,6 +132,7 @@
                         @endforeach
                         @foreach($hacademicas as $a)
                         <tr>
+                            <td>{{ $cliente->matricula }}</td>
                             <td>{{$a->materia}}</td><td>{{$a->codigo}}</td><td>{{$a->creditos}}</td>
                             <td>{{$a->lectivo}}</td><td>{{$a->calificacion}}</td><td>{{$a->tipo_examen}}</td>
                             @php

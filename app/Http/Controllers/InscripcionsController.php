@@ -1526,9 +1526,10 @@ class InscripcionsController extends Controller
             ->join('tpo_examens as te', 'te.id', '=', 'c.tpo_examen_id')
             ->where('inscripcion_id', $inscripcion->id)
             ->whereNull('hacademicas.deleted_at')
+            ->with('cliente')
             ->get();
-        $consulta_calificaciones = ConsultaCalificacion::where('matricula', $cliente->matricula)->get();
-
+        $consulta_calificaciones = ConsultaCalificacion::where('matricula', 'like', "%" . $cliente->matricula . "%")->get();
+        //dd($consulta_calificaciones);
         //dd($inscripcion);
         /*return view('inscripcions.reportes.lista_alumnosr',compact('registros'))
         ->with( 'list', Inscripcion::getListFromAllRelationApps() );

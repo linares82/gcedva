@@ -1169,9 +1169,9 @@ Agregar nuevo registro
                 },
                 complete : function(){$("#loading3").hide(); },
                 success: function(data) {
-                    if(referencia_check==0){
+                    //if(referencia_check==0){
                         $('#form-buscarVenta').submit();
-                    }else{
+                    /*}else{
                         console.log(data.datos)
                         $("#mp_account").val(data.datos.mp_account);
                         $("#mp_product").val(data.datos.mp_product);
@@ -1190,7 +1190,7 @@ Agregar nuevo registro
                         
                         $('#frm_multipagos').attr("action", data.datos.url_peticion);
                         $('#frm_multipagos').submit();
-                    }
+                    }*/
                     
                 }
             });

@@ -523,6 +523,8 @@ class AsignacionAcademicasController extends Controller
 			array_push($array_ponderaciones, $p->id);
 		}
 
+		$nomenclatura = array('Primer', 'SEGUNDO', 'TERCERO', 'CUARTO', 'QUINTO', 'SEXTO', 'SEPTIMO', 'OCTAVO', 'NOVENO', 'DECIMO');
+		//dd($nomenclatura[$numero]);
 		$asignacion_academica = AsignacionAcademica::where('plantel_id', $datos['plantel_f'])
 			->where('lectivo_id', $datos['lectivo_f'])
 			->where('grupo_id', $datos['grupo_f'])
@@ -546,7 +548,7 @@ class AsignacionAcademicasController extends Controller
 		$formatter = new NumeroALetras;
 		return view(
 			'asignacionAcademicas.reportes.actaCalificacionesR',
-			compact('datos', 'encabezado', 'alumnos', 'asignacion_academica', 'array_ponderaciones', 'formatter')
+			compact('datos', 'encabezado', 'alumnos', 'asignacion_academica', 'array_ponderaciones', 'formatter', 'numero', 'nomenclatura')
 		);
 	}
 }
