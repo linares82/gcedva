@@ -17,7 +17,7 @@
         <table class="table table-condensed table-striped">
             <thead>
                 <tr>
-                    <th>Asesor</th><th>Cliente</th><th>Especialidad</th><th>Fecha</th><th>Becado</th><th>Medio</th>
+                    <th>Asesor</th><th>Cliente</th><th>Plantel</th><th>Especialidad</th><th>Grado</th><th>Fecha</th><th>Becado</th><th>Medio</th>
                 </tr> 
             </thead>
             <tbody>
@@ -39,7 +39,9 @@
                     <tr>
                         <td>{{$registro->colaborador}}</td>
                         <td>{{$registro->id}} - {{$registro->cliente}}</td>
+                        <td>{{$registro->plantel}}</td>
                         <td>{{$registro->especialidad}}</td>
+                        <td>{{$registro->grado}}</td>
                         <td>{{$registro->fecha}}</td>
                         <td>
                             @if($registro->beca_bnd==1)

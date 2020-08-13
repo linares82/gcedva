@@ -104,7 +104,6 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->get();
         <td>
             @php
             $conceptoMensualidad=explode(' ',$caja_linea->cajaConcepto->name);    
-
             @endphp
             @if($caja_linea->cajaConcepto->id==1)
                 {{$caja_linea->cajaConcepto->name." (".$caja_linea->adeudo->fecha_pago.")"}}
@@ -114,7 +113,7 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->get();
                 @else
                 {{$caja_linea->cajaConcepto->name}}
                 @endif
-            @endif
+            @endif 
         </td>
         <td>
             @if (isset($caja_linea->adeudo->fecha_pago))
@@ -253,10 +252,10 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->get();
             {{
                 $cliente->plantel->calle." ".
                 $cliente->plantel->no_int.", ".
-                $cliente->plantel->no_ext.", colonia ".
+                $cliente->plantel->no_ext.", COLONIA ".
                 $cliente->plantel->colonia.", ".
                 $cliente->plantel->municipio.", ".
-                $cliente->plantel->estado.", México"
+                $cliente->plantel->estado.", MÉXICO"
             }}
         </td>
     </tr>
@@ -305,6 +304,37 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->get();
         <td align="right"> Monto </td>
     </tr>
     
+    <?php $total=0; ?>
+    @foreach($caja->cajaLns as $caja_linea)
+    
+    <tr>
+        <td>
+            @php
+            $conceptoMensualidad=explode(' ',$caja_linea->cajaConcepto->name);    
+            @endphp
+            @if($caja_linea->cajaConcepto->id==1)
+                {{$caja_linea->cajaConcepto->name." (".$caja_linea->adeudo->fecha_pago.")"}}
+            @else
+                @if($conceptoMensualidad[0]="Mensualidad")
+                    {{ $conceptoMensualidad[1] }}
+                @else
+                {{$caja_linea->cajaConcepto->name}}
+                @endif
+            @endif 
+        </td>
+        <td>
+            @if (isset($caja_linea->adeudo->fecha_pago))
+            {{$caja_linea->adeudo->fecha_pago}}
+            @else
+            {{$caja_linea->caja->fecha}}
+            @endif        </td>
+
+        </td>
+        <td align="right"> <!--@{{ number_format($caja_linea->subtotal, 2) }}--> </td>
+    </tr>
+    
+    @endforeach
+
     <tr>
         <td>
             Total

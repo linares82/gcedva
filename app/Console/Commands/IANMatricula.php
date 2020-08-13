@@ -73,7 +73,7 @@ class IANMatricula extends Command
             $grado = Grado::find($combinacion->grado_id);
             //Log::info("grado: " . $grado->id);
             //dd($grado);
-            $relleno = "00000";
+            $relleno = "000000";
             $rellenoPlantel = "00";
             $rellenoConsecutivo = "000";
 
@@ -106,7 +106,7 @@ class IANMatricula extends Command
                 $mes = substr($rellenoPlantel, 0, 2 - strlen($fecha->month)) . $fecha->month;
                 $anio = $fecha->year - 2000;
                 $plantel = substr($rellenoPlantel, 0, 2 - strlen($combinacion->plantel_id)) . $combinacion->plantel_id;
-                $seccion = substr($relleno, 0, 5 - strlen($grado->seccion)) . $grado->seccion;
+                $seccion = substr($relleno, 0, 6 - strlen($grado->seccion)) . $grado->seccion;
                 $consecutivoCadena = substr($rellenoConsecutivo, 0, 3 - strlen($consecutivo->consecutivo)) . $consecutivo->consecutivo;
 
                 $entrada['matricula'] = $mes . $anio . $seccion . $plantel . $consecutivoCadena;

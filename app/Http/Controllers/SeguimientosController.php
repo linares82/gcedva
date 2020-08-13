@@ -919,14 +919,16 @@ class SeguimientosController extends Controller
         //dd($data);
         $registros = CombinacionCliente::select('c.id', DB::raw('concat(e.nombre, " ",e.ape_paterno, " ",e.ape_materno) as colaborador, '
             . 'concat(c.nombre," ",c.nombre2," ",c.ape_paterno," ",c.ape_materno) as cliente, caj.id as caja, p.fecha, m.name as medio, '
-            . 'c.beca_bnd, esp.name as especialidad'))
+            . 'c.beca_bnd, esp.name as especialidad, pla.razon as plantel, g.name as grado'))
             ->join('clientes as c', 'c.id', '=', 'combinacion_clientes.cliente_id')
+            ->join('plantels as pla', 'pla.id', '=', 'c.plantel_id')
             ->join('medios as m', 'm.id', '=', 'c.medio_id')
             ->join('especialidads as esp', 'esp.id', '=', 'combinacion_clientes.especialidad_id')
             ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
             ->join('cajas as caj', 'caj.cliente_id', '=', 'c.id')
             ->join('caja_lns as clns', 'clns.caja_id', '=', 'caj.id')
             ->join('caja_conceptos as cc', 'cc.id', '=', 'clns.caja_concepto_id')
+            ->join('grados as g', 'g.id', '=', 'combinacion_clientes.grado_id')
             ->join('pagos as p', 'p.caja_id', '=', 'caj.id')
             ->where('combinacion_clientes.plantel_id', '>=', $data['plantel_f'])
             ->where('combinacion_clientes.plantel_id', '<=', $data['plantel_t'])
@@ -942,7 +944,7 @@ class SeguimientosController extends Controller
             ->whereNull('clns.deleted_at')
             ->whereIn('caj.st_caja_id', [1, 3])
             ->where(function ($query) {
-                $query->orWhere('cc.name', 'LIKE', 'INSCRIP%');
+                $query->orWhere('cc.id', 1)->orWhere('cc.id', 22)->orWhere('cc.id', 23)->orWhere('cc.id', 24);
             })
             ->orderBy('colaborador')
             ->distinct()

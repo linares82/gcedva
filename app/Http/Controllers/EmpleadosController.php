@@ -682,9 +682,9 @@ class EmpleadosController extends Controller
             ->whereColumn('h.plantel_id', 'aa.plantel_id')
             ->join('grados as g', 'g.id', '=', 'h.grado_id')
             ->where('aa.lectivo_id', $datos['lectivo_f'])
-            ->where('empleados.plantel_id', $datos['plantel_f'])
-            ->whereIn('empleados.st_empleado_id', $datos['estatus_f'])
-            ->where('empleados.puesto_id', 3)
+            ->where('aa.plantel_id', $datos['plantel_f'])
+            //->whereIn('empleados.st_empleado_id', $datos['estatus_f'])
+            //->where('empleados.puesto_id', 3)
             ->WhereNull('empleados.deleted_at')
             ->distinct()
             ->get();

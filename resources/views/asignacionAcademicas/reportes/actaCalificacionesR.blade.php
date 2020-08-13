@@ -166,9 +166,35 @@
                                 }
                                 
                             }elseif($datos['ponderacion_f']==0){
-                                $promedio=$a->calificaciones->max()->calificacion;
+                                //$promedio=$a->calificaciones->max()->calificacion;
                                 //dd($a->calificaciones->max());
+                                $ponderaciones=App\CalificacionPonderacion::where('calificacion_id',$a->calificaciones->max()->id)
+                                //->whereIn('carga_ponderacion_id',$array_ponderaciones)
+                                ->get();
+                                //dd($ponderaciones->toArray());
+                                $cantidad_calificaciones=0;
+                                $suma_calificaciones=0;
+                                $calificacion_id=0;
+                                foreach($ponderaciones as $p){
+                                    $calificacion_id=$p->calificacion_id;
+                                    $suma_calificaciones=$suma_calificaciones+$p->calificacion_parcial;
+                                    $cantidad_calificaciones++;
+                                }
+                                //dd($cantidad_calificaciones);
+                                if($cantidad_calificaciones>0){
+                                    $promedio=$suma_calificaciones/$cantidad_calificaciones;
+                                    //dd($promedio);
+                                }else{
+                                    $promedio=0;
+                                    
+                                }
+
                             }
+                            
+                            $calificacion=\App\Calificacion::find($calificacion_id);
+                            $calificacion->calificacion=$promedio;
+                            $calificacion->save();
+                            
                             if($promedio>6){
                                 $promedio=round($promedio,0);
                             }else{
