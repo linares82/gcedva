@@ -119,7 +119,7 @@
         </tbody>
     </table>
     <br/>
-    @if($datos['detalle_f']==1)
+    @if($datos['detalle_f']<4)
     <table border="1" width="100%" >
         <thead>
             <tr>

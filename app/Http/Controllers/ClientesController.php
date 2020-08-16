@@ -288,6 +288,16 @@ class ClientesController extends Controller
         } else {
             $input['celular_confirmado'] = 1;
         }
+        if (!isset($input['bnd_trabaja'])) {
+            $input['bnd_trabaja'] = 0;
+        } else {
+            $input['bnd_trabaja'] = 1;
+        }
+        if (!isset($input['bnd_indigena'])) {
+            $input['bnd_indigena'] = 0;
+        } else {
+            $input['bnd_indigena'] = 1;
+        }
         if (!isset($input['extranjero'])) {
             $input['extranjero'] = 0;
         } else {
@@ -372,11 +382,11 @@ class ClientesController extends Controller
             $empleados = Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
                 //->where('plantel_id', '=', $e->plantel_id)
                 ->whereIn('plantel_id', '=', $planteles)
-                ->whereIn('puesto_id', array(2, 3))
+                ->whereIn('puesto_id', array(1, 2, 3, 10, 19))
                 ->pluck('name', 'id');
         } else {
             $empleados = Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
-                ->whereIn('puesto_id', array(2, 3))
+                ->whereIn('puesto_id', array(1, 2, 3, 10, 19))
                 ->pluck('name', 'id');
         }
         $empleados = $empleados->reverse();
@@ -567,6 +577,16 @@ class ClientesController extends Controller
             $input['celular_confirmado'] = 0;
         } else {
             $input['celular_confirmado'] = 1;
+        }
+        if (!isset($input['bnd_trabaja'])) {
+            $input['bnd_trabaja'] = 0;
+        } else {
+            $input['bnd_trabaja'] = 1;
+        }
+        if (!isset($input['bnd_indigena'])) {
+            $input['bnd_indigena'] = 0;
+        } else {
+            $input['bnd_indigena'] = 1;
         }
         if (!isset($input['extranjero'])) {
             $input['extranjero'] = 0;

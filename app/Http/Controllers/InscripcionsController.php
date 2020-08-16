@@ -28,6 +28,7 @@ use App\PeriodoEstudio;
 use App\Plantel;
 use App\Ponderacion;
 use App\StCliente;
+use App\TpoExamen;
 use Auth;
 use App\UsuarioCliente;
 use Carbon\Carbon;
@@ -75,7 +76,7 @@ class InscripcionsController extends Controller
 
         $input['usu_alta_id'] = Auth::user()->id;
         $input['usu_mod_id'] = Auth::user()->id;
-        $input['st_inscripcion_id'] = 1;
+        $input['st_inscripcion_id'] = 0;
 
         $plantel = Plantel::find($input['plantel_id']);
         $input['control'] =
@@ -419,6 +420,7 @@ class InscripcionsController extends Controller
                 $id = $value;
                 $posicion = $key;
                 $i = Inscripcion::find($id);
+                $plantel_anterior = $i->plantel_id;
                 if (
                     isset($input['activar-field']) and
                     isset($input['especialidad_to']) and
@@ -433,6 +435,7 @@ class InscripcionsController extends Controller
                 $i->grupo_id = $input['grupo_to'];
                 $i->lectivo_id = $input['lectivo_to'];
                 $i->periodo_estudio_id = $input['periodo_estudios_to'];
+                $i->st_inscripcion = 1;
                 $i->save();
                 if (isset($input['registrar_materias'])) {
                     $this->registrarMaterias($id);
@@ -2986,8 +2989,7 @@ class InscripcionsController extends Controller
                 ->get();
         }
 
-        $empleado = Empleado::where('user_id', Auth::user()->id)->first();
-        $planteles_validos = $empleado->plantels->pluck('razon', 'id');
+
         return view('inscripcions.reportes.certificados', compact('planteles_validos'));
     }
 
@@ -2995,5 +2997,110 @@ class InscripcionsController extends Controller
     {
 
         return view('inscripcions.reportes.certificadosR', compact('$registros'));
+    }
+
+    public function grupoAsignatura()
+    {
+        //dd('flc');
+        $empleado = Empleado::where('user_id', Auth::user()->id)->first();
+        $planteles_validos = $empleado->plantels->pluck('razon', 'id');
+        return view('inscripcions.reportes.grupoAsignatura', compact('planteles_validos'));
+    }
+
+    public function grupoAsignaturaR(Request $request)
+    {
+        $datos = $request->all();
+        //dd($datos);
+        $registros = Inscripcion::where('plantel_id', $datos['plantel_f'])
+            ->where('lectivo_id', $datos['lectivo_f'])
+            ->whereNull('inscripcions.deleted_at')
+            ->with('cliente')
+            ->with('grupo')
+            ->with('lectivo')
+            ->with('grado')
+            ->orderBy('grupo_id')
+            ->get();
+        //dd($registros);
+        return view('inscripcions.reportes.grupoAsignaturaR', compact('registros'));
+    }
+
+    public function inscripcionReinscripcion()
+    {
+        $empleado = Empleado::where('user_id', Auth::user()->id)->first();
+        $planteles_validos = $empleado->plantels->pluck('razon', 'id');
+        return view('inscripcions.reportes.inscripcionReinscripcion', compact('planteles_validos'));
+    }
+
+    public function inscripcionReinscripcionR(Request $request)
+    {
+        $datos = $request->all();
+        $registros = Inscripcion::select(
+            'inscripcions.*',
+            'ab.st_beca_id',
+            'ab.tipo_beca_id',
+            'ab.monto_mensualidad',
+            'ab.mensualidad_sep'
+        )
+            ->leftJoin('autorizacion_becas as ab', 'ab.cliente_id', '=', 'inscripcions.cliente_id')
+            ->whereColumn('inscripcions.lectivo_id', 'ab.lectivo_id')
+            ->where('inscripcions.plantel_id', $datos['plantel_f'])
+            ->where('inscripcions.lectivo_id', $datos['lectivo_f'])
+            ->whereNull('inscripcions.deleted_at')
+            ->with('cliente')
+            ->with('grupo')
+            ->with('lectivo')
+            ->with('grado')
+            ->orderBy('grupo_id')
+            ->get();
+        //dd($registros->toArray());
+        return view('inscripcions.reportes.inscripcionReinscripcionR', compact('registros'));
+    }
+
+    public function evaluacionOE()
+    {
+        $empleado = Empleado::where('user_id', Auth::user()->id)->first();
+        $planteles_validos = $empleado->plantels->pluck('razon', 'id');
+        $tipoEvaluacion = TpoExamen::where('id', '>', 0)->pluck('name', 'id');
+        return view('inscripcions.reportes.evaluacionOE', compact('planteles_validos', 'tipoEvaluacion'));
+    }
+
+    public function evaluacionOER(Request $request)
+    {
+        $datos = $request->all();
+        //dd($datos);
+        $registros = Hacademica::select(
+            'l.ciclo_escolar',
+            'l.periodo_escolar',
+            'g.rvoe',
+            'g.name as grado',
+            'cli.curp',
+            'te.name as tipo_examen',
+            'e.curp as curp_docente',
+            'gru.name as grupo',
+            'm.codigo',
+            'c.calificacion'
+        )
+            ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
+            ->join('asignacion_academicas as aa', 'aa.plantel_id', '=', 'hacademicas.plantel_id')
+            ->whereColumn('aa.grupo_id', 'hacademicas.grupo_id')
+            ->whereColumn('aa.lectivo_id', 'hacademicas.lectivo_id')
+            ->whereColumn('aa.materium_id', 'hacademicas.materium_id')
+            ->join('empleados as e', 'e.id', '=', 'aa.docente_oficial_id')
+            ->join('calificacions as c', 'c.hacademica_id', '=', 'hacademicas.id')
+            ->join('tpo_examens as te', 'te.id', '=', 'c.tpo_examen_id')
+            ->join('grados as g', 'g.id', '=', 'hacademicas.grado_id')
+            ->join('lectivos as l', 'l.id', '=', 'hacademicas.lectivo_id')
+            ->join('grupos as gru', 'gru.id', '=', 'hacademicas.grupo_id')
+            ->join('clientes as cli', 'cli.id', '=', 'hacademicas.cliente_id')
+            ->join('materia as m', 'm.id', '=', 'hacademicas.materium_id')
+            ->where('c.tpo_examen_id', $datos['tipo_examen_f'])
+            ->where('hacademicas.plantel_id', $datos['plantel_f'])
+            ->where('hacademicas.lectivo_id', $datos['lectivo_f'])
+            ->whereNull('hacademicas.deleted_at')
+            ->whereNull('i.deleted_at')
+            ->get();
+        //dd($registros->toArray());
+
+        return view('inscripcions.reportes.evaluacionOER', compact('registros', 'datos'));
     }
 }

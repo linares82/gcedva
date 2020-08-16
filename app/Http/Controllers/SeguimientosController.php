@@ -917,7 +917,7 @@ class SeguimientosController extends Controller
         $data = $request->all();
         $plantel = Plantel::find($data['plantel_f']);
         //dd($data);
-        $registros = CombinacionCliente::select('c.id', DB::raw('concat(e.nombre, " ",e.ape_paterno, " ",e.ape_materno) as colaborador, '
+        $registros_aux = CombinacionCliente::select('c.id', DB::raw('concat(e.nombre, " ",e.ape_paterno, " ",e.ape_materno) as colaborador, '
             . 'concat(c.nombre," ",c.nombre2," ",c.ape_paterno," ",c.ape_materno) as cliente, caj.id as caja, p.fecha, m.name as medio, '
             . 'c.beca_bnd, esp.name as especialidad, pla.razon as plantel, g.name as grado'))
             ->join('clientes as c', 'c.id', '=', 'combinacion_clientes.cliente_id')
@@ -949,6 +949,8 @@ class SeguimientosController extends Controller
             ->orderBy('colaborador')
             ->distinct()
             ->get();
+        $unicos = $registros_aux->unique('cliente');
+        $registros = $unicos->values()->all();
         //dd($registros->toArray());
 
         /*

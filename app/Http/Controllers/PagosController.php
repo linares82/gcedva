@@ -327,11 +327,7 @@ class PagosController extends Controller
             $pago = Pago::find($peticion->pago_id);
 
             //dd($peticion->toArray());
-            if (
-                $datos['mp_authorization'] <> "000000" and
-                ($datos['mp_response'] == '0' or
-                    $datos['mp_response'] == '00' or $datos['mp_response'] == '000')
-            ) {
+            if ($datos['mp_response'] == '00') {
                 //$pago = Pago::find($peticion->pago_id);
                 $pago->bnd_pagado = 1;
                 $pago->save();
@@ -503,13 +499,14 @@ class PagosController extends Controller
             }
         }
 
+        /*
         if (count($caja->pagos) == 0)
             foreach ($caja->cajaLns as $ln) {
                 if ($ln->adeudo_id > 0) {
                     Adeudo::where('id', '=', $ln->adeudo_id)->update(['caja_id' => 0]);
                 }
             }
-
+        */
         return view('cajas.caja', compact('cliente', 'caja', 'combinaciones', 'cajas'))
             ->with('list', Caja::getListFromAllRelationApps())
             ->with('list1', CajaLn::getListFromAllRelationApps());

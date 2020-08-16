@@ -86,8 +86,8 @@ class PagoObserver
                     }
                     $mes = substr($rellenoPlantel, 0, 2 - strlen($fecha->month)) . $fecha->month;
                     $anio = $fecha->year - 2000;
+                    $seccion = $grado->seccion;
                     $plantel = substr($rellenoPlantel, 0, 2 - strlen($combinacion->plantel_id)) . $combinacion->plantel_id;
-                    $seccion = substr($relleno, 0, 6 - strlen($grado->seccion)) . $grado->seccion;
                     $consecutivoCadena = substr($rellenoConsecutivo, 0, 3 - strlen($consecutivo->consecutivo)) . $consecutivo->consecutivo;
 
                     $entrada['matricula'] = $mes . $anio . $seccion . $plantel . $consecutivoCadena;
@@ -96,6 +96,7 @@ class PagoObserver
                     //dd($entrada['matricula']);
                     $cliente->matricula = $entrada['matricula'];
                     $cliente->save();
+                    Log::info('matricula cliente:' . $cliente->id . "-" . $cliente->matricula);
 
                     if (!is_null($cliente->matricula)) {
                         $buscarMatricula = UsuarioCliente::where('name', $cliente->matricula)->first();

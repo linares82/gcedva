@@ -914,7 +914,7 @@ class AdeudosController extends Controller
         $lineas_procesadas = array();
         $lineas_detalle = array();
         foreach ($datos['plantel_f'] as $plantel) {
-            /*$registros_totales = Adeudo::select(
+            $registros_totales_aux = Adeudo::select(
                 'p.razon',
                 'c.id',
                 'c.nombre',
@@ -933,17 +933,39 @@ class AdeudosController extends Controller
                 'c.st_cliente_id',
                 'stc.name as st_cliente',
                 's.st_seguimiento_id',
-                'sts.name as st_seguimiento'
+                'sts.name as st_seguimiento',
+                'adeudos.fecha_pago',
+                'adeudos.caja_id',
+                'adeudo_concepto.bnd_mensualidad as mensualidad'
             )
                 ->join('clientes as c', 'c.id', '=', 'adeudos.cliente_id')
                 ->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
                 ->join('seguimientos as s', 's.cliente_id', '=', 'c.id')
                 ->join('st_seguimientos as sts', 'sts.id', '=', 's.st_seguimiento_id')
                 ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
-                ->leftJoin('caja_lns as cln', 'cln.adeudo_id', '=', 'adeudos.id')
-                ->leftJoin('cajas as caj', 'caj.id', '=', 'adeudos.caja_id')
-                ->join('caja_conceptos as cc', 'cc.id', '=', 'adeudos.caja_concepto_id')
-                ->where('p.id', $plantel)
+                ->join('caja_conceptos as adeudo_concepto', 'adeudo_concepto.id', '=', 'adeudos.caja_concepto_id');
+            if ($datos['detalle_f'] == 1) {
+                $registros_totales_aux->leftJoin('caja_lns as cln', 'cln.adeudo_id', '=', 'adeudos.id')
+                    ->leftJoin('cajas as caj', 'caj.id', '=', 'adeudos.caja_id')
+                    ->join('caja_conceptos as cc', 'cc.id', '=', 'adeudos.caja_concepto_id');
+            } elseif ($datos['detalle_f'] == 2) {
+                $registros_totales_aux->leftJoin('caja_lns as cln', 'cln.adeudo_id', '=', 'adeudos.id')
+                    ->join('cajas as caj', 'caj.id', '=', 'adeudos.caja_id')
+                    ->join('caja_conceptos as cc', 'cc.id', '=', 'adeudos.caja_concepto_id')
+                    ->where('caj.st_caja_id', 1)
+                    ->whereNull('cln.deleted_at')
+                    ->whereNull('caj.deleted_at');
+            } elseif ($datos['detalle_f'] == 3) {
+                $registros_totales_aux->leftJoin('caja_lns as cln', 'cln.adeudo_id', '=', 'adeudos.id')
+                    ->leftJoin('cajas as caj', 'caj.id', '=', 'adeudos.caja_id')
+                    ->join('caja_conceptos as cc', 'cc.id', '=', 'adeudos.caja_concepto_id')
+                    ->where('adeudos.caja_id', 0);
+            } else {
+                $registros_totales_aux->leftJoin('caja_lns as cln', 'cln.adeudo_id', '=', 'adeudos.id')
+                    ->leftJoin('cajas as caj', 'caj.id', '=', 'adeudos.caja_id')
+                    ->join('caja_conceptos as cc', 'cc.id', '=', 'adeudos.caja_concepto_id');
+            }
+            $registros_totales = $registros_totales_aux->where('p.id', $plantel)
                 ->whereIn('stc.id', array(3, 4, 20, 23, 24, 25))
                 ->whereDate('adeudos.fecha_pago', '>=', $datos['fecha_f'])
                 ->whereDate('adeudos.fecha_pago', '<=', $datos['fecha_t'])
@@ -952,8 +974,9 @@ class AdeudosController extends Controller
                 ->orderBy('p.id')
                 ->orderBy('adeudos.caja_concepto_id')
                 ->orderBy('c.id')
-                ->get();*/
-            $registros_totales = DB::select('CALL maestroR(?,?,?)', array($plantel, $datos['fecha_f'], $datos['fecha_t']));
+                ->get();
+            //dd($registros_totales->toArray());
+            //FLC $registros_totales = DB::select('CALL maestroR(?,?,?)', array($plantel, $datos['fecha_f'], $datos['fecha_t']));
             //dd($registros_totales[0]->razon);
             //return view('adeudos.reportes.maestroR', compact('registros_totales'));
             //dd($registros_totales->toArray());
@@ -967,7 +990,15 @@ class AdeudosController extends Controller
             ];
 
             foreach ($registros_totales as $registro) {
-                array_push($lineas_detalle, (array) $registro);
+                //array_push($lineas_detalle, (array) $registro);
+                $fecha_aux = Carbon::createFromFormat('Y-m-d', $registro->fecha_pago)->addDay(9);
+                $hoy = Carbon::createFromFormat('Y-m-d', date('Y-m-d'));
+                //dd($hoy);
+                //dd($fecha_aux->lessThan($hoy));
+                if ($registro->caja_id == 0 and $fecha_aux->lessThan($hoy) and $registro->mensualidad == 1) {
+                    $registro->adeudo_planeado = $registro->adeudo_planeado + ($registro->adeudo_planeado * .10);
+                }
+                array_push($lineas_detalle, $registro->toArray());
                 $calculo['plantel'] = $registro->razon;
 
                 if (is_null($registro->borrado_c) and is_null($registro->borrado_cln) and ($registro->st_cliente_id == 4 or $registro->st_cliente_id == 20)) {
@@ -992,12 +1023,12 @@ class AdeudosController extends Controller
                     $calculo['deudores'] = $calculo['clientes_activos'] - $calculo['clientes_pagados'];
                     $calculo['porcentaje_deudores'] = ($calculo['deudores'] * 100) / $calculo['clientes_activos'];
                 } elseif (is_null($registro->borrado_c) and is_null($registro->borrado_cln) and $registro->st_cliente_id == 3) {
-                    /*$baja = HistoriaCliente::where('cliente_id', $registro->id)
-                    ->where('evento_cliente_id', 2)
-                    ->where('fecha', '>=', $datos['fecha_f'])
-                    ->where('fecha', '<=', $datos['fecha_t'])
-                    ->first();*/
-                    $baja = DB::select('CALL maestroRHistoriaCliente(?,?,?)', array($registro->id, $datos['fecha_f'], $datos['fecha_t']));
+                    $baja = HistoriaCliente::where('cliente_id', $registro->id)
+                        ->where('evento_cliente_id', 2)
+                        ->where('fecha', '>=', $datos['fecha_f'])
+                        ->where('fecha', '<=', $datos['fecha_t'])
+                        ->first();
+                    //FLC$baja = DB::select('CALL maestroRHistoriaCliente(?,?,?)', array($registro->id, $datos['fecha_f'], $datos['fecha_t']));
                     //dd($baja);
                     if (is_array($baja) and $registro->caja > 0) {
                         $calculo['bajas_pagadas'] = $calculo['bajas_pagadas'] + 1;
@@ -1047,13 +1078,13 @@ class AdeudosController extends Controller
                             $calculo['deudores'] = $calculo['clientes_activos'] - $calculo['clientes_pagados'];
                             $calculo['porcentaje_deudores'] = ($calculo['deudores'] * 100) / $calculo['clientes_activos'];
                         } elseif (is_null($registro->borrado_c) and is_null($registro->borrado_cln) and $registro->st_cliente_id == 3) {
-                            /*$baja = HistoriaCliente::where('cliente_id', $registro->id)
-                            ->where('evento_cliente_id', 2)
-                            ->where('fecha', '>=', $datos['fecha_f'])
-                            ->where('fecha', '<=', $datos['fecha_t'])
-                            ->first();
-                             */
-                            $baja = DB::select('CALL maestroRHistoriaCliente(?,?,?)', array($registro->id, $datos['fecha_f'], $datos['fecha_t']));
+                            $baja = HistoriaCliente::where('cliente_id', $registro->id)
+                                ->where('evento_cliente_id', 2)
+                                ->where('fecha', '>=', $datos['fecha_f'])
+                                ->where('fecha', '<=', $datos['fecha_t'])
+                                ->first();
+
+                            //FLC$baja = DB::select('CALL maestroRHistoriaCliente(?,?,?)', array($registro->id, $datos['fecha_f'], $datos['fecha_t']));
                             if (is_array($baja) and $registro->caja > 0) {
                                 $calculo['bajas_pagadas'] = $calculo['bajas_pagadas'] + 1;
                             }

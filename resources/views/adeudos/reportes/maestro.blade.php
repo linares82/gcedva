@@ -46,7 +46,7 @@
                 </div>
                 <div class="form-group col-md-6 @if($errors->has('detalle_f')) has-error @endif">
                     <label for="detalle_f-field">Con detalle:</label>
-                    {!! Form::select("detalle_f", array('1'=>'Si','2'=>'No'), null, array("class" => "form-control select_seguridad", "id" => "detalle_f-field")) !!}
+                    {!! Form::select("detalle_f", array('1'=>'Ambos','2'=>'Pagos','3'=>'Adeudos', '4'=>'Sin Detalle'), null, array("class" => "form-control select_seguridad", "id" => "detalle_f-field")) !!}
                     @if($errors->has("detalle_f"))
                     <span class="help-block">{{ $errors->first("detalle_f") }}</span>
                     @endif

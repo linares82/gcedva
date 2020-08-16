@@ -157,11 +157,26 @@
                             <span class="help-block">{{ $errors->first("escolaridad_id") }}</span>
                             @endif
                         </div>
+                        <div class="row"></div>
                         <div class="form-group col-md-4 @if($errors->has('discapacidad_id')) has-error @endif">
                             <label for="discapacidad_id-field">Discapacidad</label>
                             {!! Form::select("discapacidad_id", $list["Discapacidad"], null, array("class" => "form-control select_seguridad", "id" => "discapacidad_id-field")) !!}
                             @if($errors->has("discapacidad_id"))
                             <span class="help-block">{{ $errors->first("discapacidad_id") }}</span>
+                            @endif
+                        </div>
+                        <div class="form-group col-md-3 @if($errors->has('bnd_trabaja')) has-error @endif">
+                            <label for="bnd_trabaja-field">¿Trabaja?</label>
+                            {!! Form::checkbox("bnd_trabaja", 1, null, [ "id" => "bnd_trabaja-field", 'class'=>'minimal']) !!}
+                            @if($errors->has("bnd_trabaja"))
+                            <span class="help-block">{{ $errors->first("bnd_trabaja") }}</span>
+                            @endif
+                        </div>
+                        <div class="form-group col-md-3 @if($errors->has('bnd_indigena')) has-error @endif">
+                            <label for="bnd_indigena-field">¿Es indigena?</label>
+                            {!! Form::checkbox("bnd_indigena", 1, null, [ "id" => "bnd_indigena-field", 'class'=>'minimal']) !!}
+                            @if($errors->has("bnd_indigena"))
+                            <span class="help-block">{{ $errors->first("bnd_indigena") }}</span>
                             @endif
                         </div>
                         
