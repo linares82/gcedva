@@ -51,7 +51,8 @@ class IANMatricula extends Command
             ->join('cajas as caj', 'caj.id', '=', 'adeudos.caja_id')
             ->join('clientes as cli', 'cli.id', '=', 'adeudos.cliente_id')
             ->where('pagado_bnd', 1)->where('fecha_pago', '>=', '2020-09-01')
-            ->where('cli.matricula', '')
+            ->whereIn('cli.id', array())
+            //->where('cli.matricula', '')
             //->take(5)
             ->get();
         //dd($adeudos->toArray());
@@ -61,7 +62,7 @@ class IANMatricula extends Command
             //Datos para matricula
             $cajaLn = $adeudo->caja->cajaLns->first();
 
-            $combinacion = CombinacionCliente::find($cajaLn->adeudo->combinacion_cliente_id);
+            $combinacion = CombinacionCliente::find($cajaLn->adeudo->cliente_id);
             //dd($combinacion);
             $planPagoLn = PlanPagoLn::where('plan_pago_id', $combinacion->plan_pago_id)->orderBy('fecha_pago', 'asc')->first();
             //$adeudos = Adeudo::where('combinacion_cliente_id', $combinacion->id)->where('caja_concepto_id', 1)->first();

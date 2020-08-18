@@ -41,19 +41,19 @@
             
                 <div class="form-group col-md-6 @if($errors->has('plantel_f')) has-error @endif">
                     <label for="plantel_f-field">Plantel de:</label>
-                    {!! Form::select("plantel_f", $list["Plantel"], null, array("class" => "form-control select_seguridad", "id" => "plantel_f-field")) !!}
+                    {!! Form::select("plantel_f[]", $list["Plantel"], null, array("class" => "form-control select_seguridad", "id" => "plantel_f-field", 'multiple'=>true)) !!}
                     @if($errors->has("plantel_f"))
                     <span class="help-block">{{ $errors->first("plantel_f") }}</span>
                     @endif
                 </div>
             
-                <div class="form-group col-md-6 @if($errors->has('plantel_t')) has-error @endif">
+                <!--<div class="form-group col-md-6 @if($errors->has('plantel_t')) has-error @endif">
                     <label for="plantel_t-field">Plantel a:</label>
                     {!! Form::select("plantel_t", $list["Plantel"], null, array("class" => "form-control select_seguridad", "id" => "plantel_t-field", 'readonly'=>'readonly')) !!}
                     @if($errors->has("plantel_t"))
                     <span class="help-block">{{ $errors->first("plantel_t") }}</span>
                     @endif
-                </div>
+                </div>-->
 
                 <div class="form-group col-md-6 @if($errors->has('fecha_f')) has-error @endif">
                     <label for="fecha_f-field">Fecha de:</label>

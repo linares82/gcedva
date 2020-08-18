@@ -41,13 +41,15 @@
             </div>
             <div class="box-body">
                 <table class="table table-bordered table-striped dataTable">
-                    <thead><th>Cliente</th><th>Justificacion</th><th>A. Servicios Escolares</th><th>A. Caja</th><th>A. Servicios Escolares C.</th><th></th></thead>
+                    <thead><th>Cliente Id</th><th>Cliente Nombre</th><th>Plantel</th><th>Justificacion</th><th>A. Servicios Escolares</th><th>A. Caja</th><th>A. Director</th><th></th></thead>
                     <tbody>
                         @foreach ($bajas as $baja)
-                        @if($baja->id>1011)
+                        
                         @if($baja->aut_ser_esc<>2 or $baja->aut_caja<>2 or $baja->aut_ser_esc_corp<>2)
                             <tr>
                             <td> <a href="{{route('clientes.edit',$baja->cliente_id)}}" target=_blank>{{$baja->cliente_id}}</a></td>
+                            <td>{{ $baja->cliente->nombre }} {{ $baja->cliente->nombre2 }} {{ $baja->cliente->ape_paterno }} {{ $baja->cliente->ape_materno }}</td>
+                            <td>{{ $baja->cliente->plantel->razon }}</td>
                             <td>{{$baja->descripcion}}</td>
                             <td>{{optional($baja->autSerEsc)->name}}</td>
                             <td>{{optional($baja->autCaja)->name}}</td>
@@ -55,7 +57,7 @@
                             <td><a class="btn btn-xs btn-warning" href="{{ route('historiaClientes.index',array('q[cliente_id_lt]'=>$baja->cliente->id)) }}" target='_blank'><i class="glyphicon glyphicon-plus"></i> Ver</a></td>
                             </tr>
                         @endif
-                        @endif
+                        
                         @endforeach
 
                     </tbody>
@@ -81,7 +83,9 @@
                         <table class="table table-bordered table-striped dataTable">
                             <thead>
                                 <tr>
-                                    <th>Cliente</th>
+                                    <th>Cliente Id</th>
+                                    <th>Cliente Nombre</th>
+                                    <th>Plantel</th>
                                     <th>Solicitud</th>
                                     <th>Fecha</th>
                                     <th>A. Caja P.</th>
@@ -99,6 +103,8 @@
                                     <td>
                                         <a href="{{route('clientes.edit',$beca->cliente)}}" target=_blank>{{$beca->cliente}}</a>
                                     </td>
+                                    <td>{{ $beca->cli_nombre }} {{ $beca->cli_nombre2 }} {{ $beca->cli_ape_paterno }} {{ $beca->cli_ape_materno }}</td>
+                                    <td>{{ $beca->razon }}</td>
                                     <td>
                                         {{$beca->solicitud}}
                                     </td>

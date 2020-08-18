@@ -2960,7 +2960,7 @@ class InscripcionsController extends Controller
             ->join('grados as gra', 'gra.id', '=', 'inscripcions.grado_id')
             ->join('clientes as c', 'c.id', '=', 'inscripcions.cliente_id')
             ->whereNull('inscripcions.deleted_at')
-            //->where('inscripcions.plantel_id', $datos['plantel_f'])
+            ->whereIn('inscripcions.plantel_id', $datos['plantel_f'])
             ->whereIn('c.st_cliente_id', array(1, 2, 4, 22, 23))
             ->groupBy('p.razon')
             ->groupBy('grupo')

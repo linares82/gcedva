@@ -207,7 +207,7 @@
                         <th>AUTORIZACIONES</th>
                         <th>SERV. ESC.</th>
                         <th>CAJA</th>
-                        <th>SERV. ESC. C.</th>
+                        <th>DIRECTOR</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

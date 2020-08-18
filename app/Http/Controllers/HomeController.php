@@ -296,16 +296,16 @@ class HomeController extends Controller
         $encabezado[0] = 'Empleado';
         $estatus = StSeguimiento::where('id', '>', 0)->get();
         //dd($estatus);
-        
+
         $empleados = Empleado::select('empleados.*')
             ->where('c.plantel_id', '=', $filtros['plantel_f'])
-            ->join('clientes as c', 'c.empleado_id','=','empleados.id')
+            ->join('clientes as c', 'c.empleado_id', '=', 'empleados.id')
             ->where('empleados.puesto_id', '=', 2)
-            ->whereIn('empleados.st_empleado_id', array(1,9))
+            ->whereIn('empleados.st_empleado_id', array(1, 9))
             ->where('empleados.id', '>', 0)
             ->distinct()
             ->get();
-            
+
         /*
         $empleados = Empleado::where('plantel_id', '=', $filtros['plantel_f'])
         ->where('puesto_id', '=', 2)
@@ -372,7 +372,7 @@ class HomeController extends Controller
                     }
                     //$i--;
                 } elseif ($st->id > 0) {
-                    
+
                     $valor = Seguimiento::select(DB::raw('count(st.name) as total'))
                         ->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
                         ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
@@ -409,7 +409,7 @@ class HomeController extends Controller
             ->where('e.id', '>', 0)
             ->where('e.puesto_id', '=', 2)
             ->where('st.id', '>', 0)
-            ->whereIn('e.st_empleado_id', array(1,9))
+            ->whereIn('e.st_empleado_id', array(1, 9))
             ->groupBy('st.name')
             ->get();
         //dd($estatusPlantel->toArray());
@@ -524,11 +524,17 @@ class HomeController extends Controller
             'adp.name as aut_dir_plantel',
             //'acc.name as aut_caja_corp',
             'ase.name as aut_ser_esc',
-            'ad.name as aut_dueno'
+            'ad.name as aut_dueno',
+            'cli.nombre as cli_nombre',
+            'cli.nombre2 as cli_nombre2',
+            'cli.ape_paterno as cli_ape_paterno',
+            'cli.ape_materno as cli_ape_materno',
+            'pla.razon'
         )
             //->where('autorizacion_becas.usu_alta_id',Auth::user()->id)
             //->leftJoin('autorizacion_beca_comentarios as c','c.autorizacion_beca_id','=','autorizacion_becas.id')
             ->join('clientes as cli', 'cli.id', '=', 'autorizacion_becas.cliente_id')
+            ->join('plantels as pla', 'pla.id', '=', 'cli.plantel_id')
             //->join('st_becas as st','st.id','=','c.st_beca_id')
             ->leftJoin('st_becas as acp', 'acp.id', '=', 'autorizacion_becas.aut_caja_plantel')
             ->leftJoin('st_becas as adp', 'adp.id', '=', 'autorizacion_becas.aut_dir_plantel')
@@ -541,17 +547,19 @@ class HomeController extends Controller
             $becas_aux->whereIn('cli.plantel_id', $planteles);
         }
         //->whereNull('c.bnd_visto')
-        $becas = $becas_aux->get();
+        $becas = $becas_aux->with('cliente')->get();
         //dd($becas);
 
 
 
         $autorizacionBajas = HistoriaCliente::select('historia_clientes.*', 'c.plantel_id')
             ->join('clientes as c', 'c.id', '=', 'historia_clientes.cliente_id')
-            ->where('historia_clientes.id', '>', 1011)
-            ->whereNotIn('st_historia_cliente_id', array(0, 2,5))
+
+            ->whereNotIn('st_historia_cliente_id', array(0, 2, 5))
             ->where('evento_cliente_id', 2)
-            ->whereRaw('(aut_ser_esc <> 2 or aut_caja <> 2 or aut_ser_esc_corp <>2) ');
+            ->whereRaw('(aut_ser_esc <> 2 or aut_caja <> 2 or aut_ser_esc_corp <>2) ')
+            ->with('cliente');
+
 
         if (Auth::user()->can('autorizacionBajas.filtroPlantels')) {
             $autorizacionBajas->whereIn('c.plantel_id', $planteles);

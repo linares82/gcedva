@@ -1634,8 +1634,8 @@ class ClientesController extends Controller
             ->whereDate('fecha', '>=', $datos['fecha_f'])
             ->whereDate('fecha', '<=', $datos['fecha_t'])
             ->where('evento_cliente_id', 2)
-            ->where('p.id', '>=', $datos['plantel_f'])
-            ->where('p.id', '<=', $datos['plantel_t'])
+            ->whereIn('p.id', $datos['plantel_f'])
+            //->where('p.id', '<=', $datos['plantel_t'])
             ->orderBy('p.id')
             ->orderBy('c.id')
             ->get();
