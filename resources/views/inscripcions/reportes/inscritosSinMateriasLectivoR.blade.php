@@ -43,7 +43,7 @@
                     
                     <tr>
                         <td>{{$contador_linea++}}</td>
-                        <td>{{$plantel->razon}} </td>
+                        <td>{{$registro->plantel}} </td>
                         <td>{{$registro->especialidad}}</td><td>{{$registro->nivel}}</td><td>{{$registro->grado}}</td>
                         <td>{{$registro->grupo}} {{$registro->asignacion}}</td>
                         <td>{{ $registro->turno  }}</td><td>{{ $registro->periodo_estudio }}</td>

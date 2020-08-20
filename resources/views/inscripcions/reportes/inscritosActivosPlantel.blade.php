@@ -23,8 +23,9 @@
 
             {!! Form::open(array('route' => 'inscripcions.inscritosActivosPlantelR', 'id'=>'frm_analitica')) !!}
 
-                <div class="form-group col-md-6 @if($errors->has('plantel_f')) has-error @endif">
-                    <label for="plantel_f-field">Plantel de:</label>
+                <div class="form-group col-md-12 @if($errors->has('plantel_f')) has-error @endif">
+                    <label for="plantel_f-field">Plantel de: *<input type="checkbox" id="seleccionar_planteles">Seleccionar Todo</label>
+                    
                     {!! Form::select("plantel_f[]", $planteles_activos, null, array("class" => "form-control select_seguridad", "id" => "plantel_f-field",'multiple'=>true)) !!}
                     @if($errors->has("plantel_f"))
                     <span class="help-block">{{ $errors->first("plantel_f") }}</span>
@@ -43,7 +44,17 @@
 @push('scripts')
   <script type="text/javascript">
     $(document).ready(function() {
-        
+
+        $('#seleccionar_planteles').change(function(){
+            if( $(this).is(':checked') ) {
+            $("#plantel_f-field > option").prop("selected","selected");
+                    $("#plantel_f-field").trigger("change");
+            }else{
+            $("#plantel_f-field > option").prop("selected","selected");
+                    $('#plantel_f-field').val(null).trigger('change');
+            }
+        });
+
         $('#plantel_f-field').change(function(){
             getCmbEmpleados()
         });

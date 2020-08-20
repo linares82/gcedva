@@ -967,6 +967,7 @@ class AdeudosController extends Controller
             }
             $registros_totales = $registros_totales_aux->where('p.id', $plantel)
                 ->whereIn('stc.id', array(3, 4, 20, 23, 24, 25))
+                ->whereIn('adeudos.caja_concepto_id', $datos['concepto_f'])
                 ->whereDate('adeudos.fecha_pago', '>=', $datos['fecha_f'])
                 ->whereDate('adeudos.fecha_pago', '<=', $datos['fecha_t'])
                 ->whereNull('adeudos.deleted_at')

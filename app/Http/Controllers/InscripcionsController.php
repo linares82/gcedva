@@ -2873,7 +2873,7 @@ class InscripcionsController extends Controller
     {
         $data = $request->all();
         //dd($data);
-        $plantel = Plantel::find($data['plantel_f']);
+        $plantel = Plantel::whereIn('id', $data['plantel_f'])->get();
         //dd($data);
 
         try {
@@ -2900,7 +2900,7 @@ class InscripcionsController extends Controller
                 //->whereColumn('aa.plantel_id', 'inscripcions.plantel_id')
                 //->whereColumn('aa.lectivo_id', 'inscripcions.lectivo_id')
                 //->join('empleados as e', 'e.id', '=', 'aa.empleado_id')
-                ->where('inscripcions.plantel_id', $data['plantel_f'])
+                ->whereIn('inscripcions.plantel_id', $data['plantel_f'])
                 //->whereIn('inscripcions.lectivo_id', $data['lectivo_f'])
                 ->whereNull('inscripcions.deleted_at')
                 //->whereNull('i.deleted_at')
