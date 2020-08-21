@@ -346,6 +346,7 @@
                         
                         @permission('combinacionClientes.store')
                         @if(isset($cliente))
+                        @if($cliente->combinaciones->count()==0)
                         <div class="form-group col-md-1 @if($errors->has('grado_id')) has-error @endif">
                             <input type="button" id="crearCombinacion" class="btn btn-xs btn-block btn-success" value="Crear" onclick="CrearCombinacionCliente()" />
                             <!--<a href=# class="btn btn-xs btn-warning btn-block" id="btnConsultaPlan">Ver Plan</a>-->
@@ -354,9 +355,18 @@
                             <br/><input type="button" id="actualizarCombinacion" class="btn btn-xs btn-block btn-success" value="Guardar" onclick="ActualizarCombinacionCliente()" style="display:none;" />
                             
                         </div>
-
-                        
-
+                        @else
+                        @permission('combinacionClientes.storeMasDeUno')
+                        <div class="form-group col-md-1 @if($errors->has('grado_id')) has-error @endif">
+                            <input type="button" id="crearCombinacion" class="btn btn-xs btn-block btn-success" value="Crear" onclick="CrearCombinacionCliente()" />
+                            <!--<a href=# class="btn btn-xs btn-warning btn-block" id="btnConsultaPlan">Ver Plan</a>-->
+                        </div>
+                        <div class="form-group col-md-1 @if($errors->has('grado_id')) has-error @endif">
+                            <br/><input type="button" id="actualizarCombinacion" class="btn btn-xs btn-block btn-success" value="Guardar" onclick="ActualizarCombinacionCliente()" style="display:none;" />
+                            
+                        </div>
+                        @endif
+                        @endif
                         @endif
                         @endpermission    
                         
@@ -441,7 +451,7 @@
                                             @permission('inscripcions.create') 
                                                 <a href="{!! route('combinacionClientes.destroy', $c->id) !!}" class="btn btn-xs btn-block btn-danger">Eliminar</a>
                                                 
-                                                @if($cliente->seguimiento->st_seguimiento_id==2 and $cliente->st_cliente_id==22)
+                                                <!--@@if($cliente->seguimiento->st_seguimiento_id==2 and $cliente->st_cliente_id==22)-->
                                                 <button class="inscribir-create btn btn-primary btn-xs" data-cliente_id="{{$c->cliente_id}}"
                                                                                                    data-cliente_nombre="{{$cliente->nombre.' '.$cliente->nombre2.' '.$cliente->ape_paterno.' '.$cliente->ape_materno}}"
                                                                                                    data-plantel="{{$c->plantel_id}}"
@@ -451,7 +461,7 @@
                                                                                                    data-turno="{{$c->turno_id}}"
                                                                                                    data-combinacion="{{$c->id}}">
                                                 <span class="glyphicon glyphicon-star"></span> Inscribir </button>
-                                                @endif
+                                                <!--@@endif-->
                                             @endpermission
                                             
                                         </td>
@@ -1129,6 +1139,7 @@
                             <a class="btn btn-xs btn-warning" href="{{ route('inscripcions.registrarMaterias', $i->id) }}"><i class="glyphicon glyphicon-edit"></i>Registrar Materias</a>
                             @endpermission
                             <a class="btn btn-xs btn-default" href='{{route("inscripcions.historial", array('inscripcion'=>$i))}}' target="_blank">Historial</a>
+                            <a class="btn btn-xs btn-success" href='{{route("inscripcions.historialOficial", array('inscripcion'=>$i))}}' target="_blank">Historial O.</a>
                             @permission('inscripcions.destroy')
                             <a class="btn btn-xs btn-danger" href="{{ route('inscripcions.destroyCli', $i->id) }}"><i class="glyphicon glyphicon-trash"></i>Borrar</a>
                             @endpermission

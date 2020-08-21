@@ -188,12 +188,14 @@
                                     $promedio=0;
                                     
                                 }
-
+                                if($calificacion_id<>0){
+                                    $calificacion=\App\Calificacion::find($calificacion_id);
+                                    $calificacion->calificacion=$promedio;
+                                    Log::info($calificacion->id);
+                                    $calificacion->save();
+                                }
+                                
                             }
-                            
-                            $calificacion=\App\Calificacion::find($calificacion_id);
-                            $calificacion->calificacion=$promedio;
-                            $calificacion->save();
                             
                             if($promedio>6){
                                 $promedio=round($promedio,0);

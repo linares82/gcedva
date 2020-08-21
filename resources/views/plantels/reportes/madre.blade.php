@@ -129,7 +129,7 @@
                             <td>{{$combinacion->mail}}</td><td>{{$combinacion->mail_empresa}}</td>
                             <td>{{$combinacion->especialidad}}</td><td>{{$combinacion->nivel}}</td><td>{{$combinacion->grado}}</td>
                             <td>{{$combinacion->nombre2}}</td><td>{{$combinacion->rvoe}}</td><td>{{$combinacion->fec_rvoe}}</td><td>{{$combinacion->cct}}</td>
-                            <td>{{$combinacion->denominacion_grado}}</td><td>2{{$combinacion->seccion}}</td>
+                            <td>{{$combinacion->denominacion_grado}}</td><td>{{$combinacion->seccion}}</td>
                         </tr>
                         @endforeach
                     </tbody>

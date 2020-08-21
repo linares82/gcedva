@@ -52,7 +52,7 @@
                     @endif
                 </div>
                 <div class="form-group col-md-6 @if($errors->has('concepto_f')) has-error @endif">
-                    <label for="concepto_f-field">Concepto de:</label>
+                    <label for="concepto_f-field">Concepto de:*<input type="checkbox" id="seleccionar_conceptos">Seleccionar Todo</label>
                     {!! Form::select("concepto_f[]", $conceptos, null, array("class" => "form-control select_seguridad", "id" => "concepto_f-field", 'multiple'=>true)) !!}
                     @if($errors->has("concepto_f"))
                     <span class="help-block">{{ $errors->first("concepto_f") }}</span>
@@ -72,7 +72,16 @@
 @push('scripts')
   <script type="text/javascript">
     $(document).ready(function() {
-    
+        
+        $('#seleccionar_conceptos').change(function(){
+            if( $(this).is(':checked') ) {
+            $("#concepto_f-field > option").prop("selected","selected");
+                    $("#concepto_f-field").trigger("change");
+            }else{
+            $("#concepto_f-field > option").prop("selected","selected");
+                    $('#concepto_f-field').val(null).trigger('change');
+            }
+        });
 
     $('#concepto_f-field').select2();
 

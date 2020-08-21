@@ -4729,6 +4729,14 @@ Route::get(
     )
 )->middleware('auth');
 Route::get(
+    '/inscripcions/historialOficial',
+    array(
+        'as' => 'inscripcions.historialOficial',
+        //'middleware' => 'permission:inscripcions.listaMes',
+        'uses' => 'InscripcionsController@historialOficial'
+    )
+)->middleware('auth');
+Route::get(
     '/inscripcions/sepCP08Boletas',
     array(
         'as' => 'inscripcions.sepCP08Boletas',

@@ -123,8 +123,19 @@
     <table border="1" width="100%" >
         <thead>
             <tr>
-                <th>No.</th><th>Plantel</th><th>Cliente Id</th><th>Cliente</th><th>Pagado</th><th>Monto Planeado</th><th>Concepto</th><th>Pago Recibido</th>
-                <th>Consecutivo Caja</th><th>Caja borrada</th><th>Linea de Caja Borrada</th><th>St. Cliente</th><th>St. Seguimiento</th>
+                <th>No.</th>
+                <th>Plantel</th>
+                <!--<th>Cliente Id</th>-->
+                <th>Cliente</th>
+                <!--<th>Pagado</th>
+                <th>Monto Planeado</th>-->
+                <th>Concepto</th>
+                <th>Pago Recibido</th>
+                <!--<th>Consecutivo Caja</th>
+                <th>Caja borrada</th>
+                <th>Linea de Caja Borrada</th>
+                <th>St. Cliente</th>
+                <th>St. Seguimiento</th>-->
             </tr>
         </thead>
         <tbody>
@@ -135,8 +146,9 @@
             <tr>   
             <td>{{$consecutivo_linea++}}</td>
             <td>{{$detalle['razon']}}</td>
-            <td>{{$detalle['id']}}</td>
+            <!--<td>{{$detalle['id']}}</td>-->
             <td>{{ $detalle['nombre'] }} {{ $detalle['nombre2'] }} {{ $detalle['ape_paterno'] }} {{ $detalle['ape_materno'] }}</td>
+            <!--
             <td>
                 @if($detalle['pagado_bnd']==0)
                 NO
@@ -144,8 +156,16 @@
                 SI
                 @endif
             </td>
-            <td>{{$detalle['adeudo_planeado']}}</td><td>{{$detalle['concepto']}}</td><td>{{$detalle['pago_calculado_adeudo']}}</td>
-            <td>{{$detalle['consecutivo']}}</td><td>{{$detalle['borrado_c']}}</td><td>{{$detalle['borrado_cln']}}</td><td>{{$detalle['st_cliente']}}</td><td>{{$detalle['st_seguimiento']}}</td>
+            <td>{{$detalle['adeudo_planeado']}}</td>-->
+            <td>{{$detalle['concepto']}}</td>
+            <td>{{$detalle['pago_calculado_adeudo']}}</td>
+            <!--
+            <td>{{$detalle['consecutivo']}}</td>
+            <td>{{$detalle['borrado_c']}}</td>
+            <td>{{$detalle['borrado_cln']}}</td>
+            <td>{{$detalle['st_cliente']}}</td>
+            <td>{{$detalle['st_seguimiento']}}</td>
+            -->
             </tr>
             @endforeach
         </tbody>

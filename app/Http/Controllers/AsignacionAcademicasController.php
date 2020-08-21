@@ -512,6 +512,16 @@ class AsignacionAcademicasController extends Controller
 	{
 		$datos = $request->all();
 		//dd($datos);
+		/*if($datos['ponderacion_f']==0){
+			DB::table('carga_ponderacions as cp')
+                ->select('cp.id', 'cp.name')
+                ->where('cp.ponderacion_id', '=', $datos['']materium->ponderacion_id)
+                ->where('cp.id', '>', '0')
+                ->where('cp.bnd_activo', 1)
+                ->distinct()
+                ->get();
+		}*/
+
 		$carga_ponderacion = CargaPonderacion::find($datos['ponderacion_f']);
 		$cadena = explode(" ", $carga_ponderacion->name);
 		$numero = $cadena[count($cadena) - 1];
@@ -546,6 +556,7 @@ class AsignacionAcademicasController extends Controller
 			->whereNull('deleted_at')
 			->get();
 		$formatter = new NumeroALetras;
+		//dd($alumnos);
 		return view(
 			'asignacionAcademicas.reportes.actaCalificacionesR',
 			compact('datos', 'encabezado', 'alumnos', 'asignacion_academica', 'array_ponderaciones', 'formatter', 'numero', 'nomenclatura')

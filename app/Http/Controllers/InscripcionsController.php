@@ -1547,6 +1547,47 @@ class InscripcionsController extends Controller
         return view('inscripcions.reportes.historial', compact('inscripcion', 'cliente', 'plantel', 'grado', 'hacademicas', 'consulta_calificaciones'));
     }
 
+    public function historialOficial(Request $request)
+    {
+        $datos = $request->all();
+        $inscripcion = Inscripcion::find($datos['inscripcion']);
+        $cliente = Cliente::find($inscripcion->cliente_id);
+        $plantel = Plantel::find($inscripcion->plantel_id);
+        $grado = Grado::find($inscripcion->grado_id);
+        $hacademicas = Hacademica::select(
+            'm.name as materia',
+            'm.codigo',
+            'm.creditos',
+            'l.name as lectivo',
+            'c.calificacion',
+            'te.name as tipo_examen'
+        )
+            ->join('lectivos as l', 'l.id', '=', 'hacademicas.lectivo_id')
+            ->join('grados as g', 'g.id', '=', 'hacademicas.grado_id')
+            ->join('materia as m', 'm.id', '=', 'hacademicas.materium_id')
+            ->join('calificacions as c', 'c.hacademica_id', 'hacademicas.id')
+            ->join('tpo_examens as te', 'te.id', '=', 'c.tpo_examen_id')
+            ->where('inscripcion_id', $inscripcion->id)
+            ->where('bnd_oficial', 1)
+            ->whereNull('hacademicas.deleted_at')
+            ->with('cliente')
+            ->get();
+        $consulta_calificaciones = ConsultaCalificacion::where('matricula', 'like', "%" . $cliente->matricula . "%")->get();
+        //dd($consulta_calificaciones);
+        //dd($inscripcion);
+        /*return view('inscripcions.reportes.lista_alumnosr',compact('registros'))
+        ->with( 'list', Inscripcion::getListFromAllRelationApps() );
+         * */
+
+        /*                PDF::setOptions(['defaultFont' => 'arial']);
+
+        $pdf = PDF::loadView('inscripcions.reportes.lista_alumnosr', array('registros'=>$registros,'fechas_enc'=>$fechas))
+        ->setPaper('legal', 'landscape');
+        return $pdf->download('reporte.pdf');
+         */
+        return view('inscripcions.reportes.historial', compact('inscripcion', 'cliente', 'plantel', 'grado', 'hacademicas', 'consulta_calificaciones'));
+    }
+
     public function sepICP08Boletas()
     {
         return view('inscripcions.reportes.sepICP08Boletas')
