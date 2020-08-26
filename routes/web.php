@@ -3230,6 +3230,23 @@ Route::post(
         'uses' => 'SeguimientosController@inscritosPagosR'
     )
 )->middleware('auth');
+
+Route::get(
+    '/seguimientos/inscritosMatriculas',
+    array(
+        'as' => 'seguimientos.inscritosMatriculas',
+        'middleware' => 'permission:seguimientos.inscritosMatriculas',
+        'uses' => 'SeguimientosController@inscritosMatriculas'
+    )
+)->middleware('auth');
+Route::post(
+    '/seguimientos/inscritosMatriculasR',
+    array(
+        'as' => 'seguimientos.inscritosMatriculasR',
+        'middleware' => 'permission:seguimientos.inscritosMatriculas',
+        'uses' => 'SeguimientosController@inscritosMatriculasR'
+    )
+)->middleware('auth');
 Route::get(
     '/seguimientos/inscritosAdeudos',
     array(

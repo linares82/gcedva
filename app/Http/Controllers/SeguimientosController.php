@@ -1398,4 +1398,65 @@ class SeguimientosController extends Controller
             'data' => $data,
         ));
     }
+
+    public function InscritosMatriculas()
+    {
+
+        return view('seguimientos.reportes.inscritosMatriculas')
+            ->with('list', Inscripcion::getListFromAllRelationApps());
+    }
+
+    public function InscritosMatriculasR(Request $request)
+    {
+        $data = $request->all();
+        $plantel = Plantel::find($data['plantel_f']);
+        //dd($data);
+        $registros_aux = CombinacionCliente::select('c.id', DB::raw(''
+            . 'c.nombre,c.nombre2,c.ape_paterno,c.ape_materno, c.matricula, '
+            . 'pla.razon as plantel, g.name as grado'))
+            ->join('clientes as c', 'c.id', '=', 'combinacion_clientes.cliente_id')
+            ->join('plantels as pla', 'pla.id', '=', 'c.plantel_id')
+            ->join('medios as m', 'm.id', '=', 'c.medio_id')
+            ->join('especialidads as esp', 'esp.id', '=', 'combinacion_clientes.especialidad_id')
+            ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
+            ->join('cajas as caj', 'caj.cliente_id', '=', 'c.id')
+            ->join('caja_lns as clns', 'clns.caja_id', '=', 'caj.id')
+            ->join('caja_conceptos as cc', 'cc.id', '=', 'clns.caja_concepto_id')
+            ->join('grados as g', 'g.id', '=', 'combinacion_clientes.grado_id')
+            ->join('pagos as p', 'p.caja_id', '=', 'caj.id')
+            ->whereIn('combinacion_clientes.plantel_id', $data['plantel_f'])
+            ->where('p.fecha', '>=', $data['fecha_f'])
+            ->where('p.fecha', '<=', $data['fecha_t'])
+            ->where('combinacion_clientes.especialidad_id', '<>', 0)
+            ->where('combinacion_clientes.nivel_id', '<>', 0)
+            ->where('combinacion_clientes.grado_id', '<>', 0)
+            ->where('combinacion_clientes.turno_id', '<>', 0)
+            ->whereNull('combinacion_clientes.deleted_at', '<>', 0)
+            ->where('combinacion_clientes.plan_pago_id', '>', 0)
+            ->whereNull('p.deleted_at')
+            ->whereNull('clns.deleted_at')
+            ->whereIn('caj.st_caja_id', [1, 3])
+            ->where(function ($query) {
+                $query->orWhere('cc.id', 1)->orWhere('cc.id', 22)->orWhere('cc.id', 23)->orWhere('cc.id', 24);
+            })
+            ->orderBy('plantel')
+            ->distinct()
+            ->get();
+        $unicos = $registros_aux->unique('cliente');
+        $registros = $unicos->values()->all();
+        //dd($registros->toArray());
+
+        /*
+        PDF::setOptions(['defaultFont' => 'arial']);
+
+        $pdf = PDF::loadView('inscripcions.reportes.lista_calificacionesr', array('registros'=>$registros,'carga_ponderacions_enc'=>$carga_ponderacion))
+        ->setPaper('legal', 'landscape');
+        return $pdf->download('reporte.pdf');
+         */
+        return view('seguimientos.reportes.inscritosMatriculasR', array(
+            'registros' => $registros,
+            'plantel' => $plantel,
+            'data' => $data,
+        ));
+    }
 }

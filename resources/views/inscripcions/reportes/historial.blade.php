@@ -125,7 +125,7 @@
                             <td>{{$a->lectivo}}</td><td>{{$a->calificacion}}</td><td>{{$a->tipo_examen}}</td>
                             @php
                                 $total_creditos=$total_creditos+$a->creditos;
-                                $suma_calificaciones=$suma_calificaciones+$a->calificacion;
+                                $suma_calificaciones=$suma_calificaciones+$a['calificacion'];
                                 $total_materias=$total_materias+1;
                             @endphp
                         </tr>
@@ -133,11 +133,11 @@
                         @foreach($hacademicas as $a)
                         <tr>
                             <td>{{ $cliente->matricula }}</td>
-                            <td>{{$a->materia}}</td><td>{{$a->codigo}}</td><td>{{$a->creditos}}</td>
-                            <td>{{$a->lectivo}}</td><td>{{$a->calificacion}}</td><td>{{$a->tipo_examen}}</td>
+                            <td>{{$a['materia']}}</td><td>{{$a['codigo']}}</td><td>{{$a['creditos']}}</td>
+                            <td>{{$a['lectivo']}}</td><td>{{$a['calificacion']}}</td><td>{{$a['tipo_examen']}}</td>
                             @php
                                 $total_creditos=$total_creditos+$a->creditos;
-                                $suma_calificaciones=$suma_calificaciones+$a->calificacion;
+                                $suma_calificaciones=$suma_calificaciones+$a['calificacion'];
                                 $total_materias=$total_materias+1;
                             @endphp
                         </tr>

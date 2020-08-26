@@ -14,12 +14,11 @@ class AddSaldoInicialCuentasEfectivosTable extends Migration
     public function up()
     {
         //
-        Schema::table('cuentas_efectivos', function(Blueprint $table) {
-            $table->double('saldo_inicial',8,2)->nullable();
-            $table->double('saldo_actualizado',8,2)->nullable();
+        Schema::table('cuentas_efectivos', function (Blueprint $table) {
+            $table->decimal('saldo_inicial', 20, 2)->nullable();
+            $table->decimal('saldo_actualizado', 20, 2)->nullable();
             $table->date('fecha_saldo_inicial')->nullable();
         });
-        
     }
 
     /**

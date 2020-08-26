@@ -950,8 +950,8 @@ class AdeudosController extends Controller
                     ->join('caja_conceptos as cc', 'cc.id', '=', 'adeudos.caja_concepto_id');
             } elseif ($datos['detalle_f'] == 2) {
                 $registros_totales_aux->leftJoin('caja_lns as cln', 'cln.adeudo_id', '=', 'adeudos.id')
-                    ->join('cajas as caj', 'caj.id', '=', 'adeudos.caja_id')
-                    ->join('caja_conceptos as cc', 'cc.id', '=', 'adeudos.caja_concepto_id')
+                    ->leftJoin('cajas as caj', 'caj.id', '=', 'adeudos.caja_id')
+                    ->leftjoin('caja_conceptos as cc', 'cc.id', '=', 'adeudos.caja_concepto_id')
                     ->where('caj.st_caja_id', 1)
                     ->whereNull('cln.deleted_at')
                     ->whereNull('caj.deleted_at');
@@ -966,7 +966,7 @@ class AdeudosController extends Controller
                     ->join('caja_conceptos as cc', 'cc.id', '=', 'adeudos.caja_concepto_id');
             }
             $registros_totales = $registros_totales_aux->where('p.id', $plantel)
-                ->whereIn('stc.id', array(3, 4, 20, 23, 24, 25))
+                ->whereIn('stc.id', array(3, 4, 20, 22, 23, 24, 25))
                 ->whereIn('adeudos.caja_concepto_id', $datos['concepto_f'])
                 ->whereDate('adeudos.fecha_pago', '>=', $datos['fecha_f'])
                 ->whereDate('adeudos.fecha_pago', '<=', $datos['fecha_t'])
@@ -990,19 +990,24 @@ class AdeudosController extends Controller
                 'monto_deuda' => 0, 'porcentaje_pagado' => 0, 'deudores' => 0, 'bajas_pagadas' => 0, 'porcentaje_deudores' => 0,
             ];
 
+            //recorrido linea de totales
             foreach ($registros_totales as $registro) {
                 //array_push($lineas_detalle, (array) $registro);
                 $fecha_aux = Carbon::createFromFormat('Y-m-d', $registro->fecha_pago)->addDay(9);
                 $hoy = Carbon::createFromFormat('Y-m-d', date('Y-m-d'));
                 //dd($hoy);
                 //dd($fecha_aux->lessThan($hoy));
-                if ($registro->caja_id == 0 and $fecha_aux->lessThan($hoy) and $registro->mensualidad == 1) {
-                    $registro->adeudo_planeado = $registro->adeudo_planeado + ($registro->adeudo_planeado * .10);
-                }
-                array_push($lineas_detalle, $registro->toArray());
+
+
                 $calculo['plantel'] = $registro->razon;
 
-                if (is_null($registro->borrado_c) and is_null($registro->borrado_cln) and ($registro->st_cliente_id == 4 or $registro->st_cliente_id == 20)) {
+                if (is_null($registro->borrado_c) and is_null($registro->borrado_cln) and ($registro->st_cliente_id == 4 or $registro->st_cliente_id == 20 or $registro->st_cliente_id == 22)) {
+                    //Armado de detalle
+                    if ($registro->caja_id == 0 and $fecha_aux->lessThan($hoy) and $registro->mensualidad == 1) {
+                        $registro->adeudo_planeado = $registro->adeudo_planeado + ($registro->adeudo_planeado * .10);
+                    }
+                    array_push($lineas_detalle, $registro->toArray());
+                    //Fin Armado de detalle
                     $calculo['clientes_activos']++;
                     $calculo['concepto'] = "Total";
                     if ($registro->pagado_bnd == 1) {
@@ -1046,6 +1051,7 @@ class AdeudosController extends Controller
                 }
             }
 
+            //recorrido linea de totales por concepto
             foreach ($conceptos as $id => $concepto) {
                 //dd($id);
                 //$calculo = array();
@@ -1057,7 +1063,7 @@ class AdeudosController extends Controller
                     // dd($conceptos);
                     if ($registro->concepto_id == $id) {
                         $calculo['plantel'] = $registro->razon;
-                        if (is_null($registro->borrado_c) and is_null($registro->borrado_cln) and ($registro->st_cliente_id == 4 or $registro->st_cliente_id == 20)) {
+                        if (is_null($registro->borrado_c) and is_null($registro->borrado_cln) and ($registro->st_cliente_id == 4 or $registro->st_cliente_id == 20 or $registro->st_cliente_id == 22)) {
                             $calculo['concepto'] = $concepto;
                             $calculo['clientes_activos']++;
                             if ($registro->pagado_bnd == 1) {
@@ -1130,6 +1136,7 @@ class AdeudosController extends Controller
         //dd($lineas_procesadas);
          */
         //dd($lineas_detalle);
+
         return view('adeudos.reportes.maestroR', compact('lineas_procesadas', 'pagos', 'lineas_detalle', 'datos'));
     }
 

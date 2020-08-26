@@ -1514,23 +1514,48 @@ class InscripcionsController extends Controller
         $cliente = Cliente::find($inscripcion->cliente_id);
         $plantel = Plantel::find($inscripcion->plantel_id);
         $grado = Grado::find($inscripcion->grado_id);
+        $resultados = array();
         $hacademicas = Hacademica::select(
             'm.name as materia',
             'm.codigo',
             'm.creditos',
             'l.name as lectivo',
-            'c.calificacion',
-            'te.name as tipo_examen'
+            'hacademicas.id'
+            //'c.calificacion',
+            //'te.id',
+            //'te.name as tipo_examen'
         )
             ->join('lectivos as l', 'l.id', '=', 'hacademicas.lectivo_id')
-            ->join('grados as g', 'g.id', '=', 'hacademicas.grado_id')
+            //->join('grados as g', 'g.id', '=', 'hacademicas.grado_id')
             ->join('materia as m', 'm.id', '=', 'hacademicas.materium_id')
-            ->join('calificacions as c', 'c.hacademica_id', 'hacademicas.id')
-            ->join('tpo_examens as te', 'te.id', '=', 'c.tpo_examen_id')
+            //->join('calificacions as c', 'c.hacademica_id', 'hacademicas.id')
+            //->join('tpo_examens as te', 'te.id', '=', 'c.tpo_examen_id')
             ->where('inscripcion_id', $inscripcion->id)
             ->whereNull('hacademicas.deleted_at')
+            //->whereNull('c.deleted_at')
             ->with('cliente')
+            ->orderBy('hacademicas.id')
+            //->orderBy('te.id')
             ->get();
+        foreach ($hacademicas as $hacademica) {
+            $tpo_examen_max = Calificacion::where('hacademica_id', $hacademica->id)->max('tpo_examen_id');
+            $calificacion = Calificacion::select('calificacions.calificacion', 'te.name as tipo_examen')
+                ->join('tpo_examens as te', 'te.id', 'calificacions.tpo_examen_id')
+                ->where('hacademica_id', $hacademica->id)
+                ->where('tpo_examen_id', $tpo_examen_max)
+                ->first();
+            $resultado = array(
+                'materia' => $hacademica->materia,
+                'codigo' => $hacademica->codigo,
+                'creditos' => $hacademica->creditos,
+                'lectivo' => $hacademica->lectivo,
+                'calificacion' => $calificacion->calificacion,
+                'tipo_examen' => $calificacion->tipo_examen
+            );
+            //dd($resultado);
+            array_push($resultados, $resultado);
+        }
+        //dd($resultados);
         $consulta_calificaciones = ConsultaCalificacion::where('matricula', 'like', "%" . $cliente->matricula . "%")->get();
         //dd($consulta_calificaciones);
         //dd($inscripcion);
@@ -1544,48 +1569,7 @@ class InscripcionsController extends Controller
         ->setPaper('legal', 'landscape');
         return $pdf->download('reporte.pdf');
          */
-        return view('inscripcions.reportes.historial', compact('inscripcion', 'cliente', 'plantel', 'grado', 'hacademicas', 'consulta_calificaciones'));
-    }
-
-    public function historialOficial(Request $request)
-    {
-        $datos = $request->all();
-        $inscripcion = Inscripcion::find($datos['inscripcion']);
-        $cliente = Cliente::find($inscripcion->cliente_id);
-        $plantel = Plantel::find($inscripcion->plantel_id);
-        $grado = Grado::find($inscripcion->grado_id);
-        $hacademicas = Hacademica::select(
-            'm.name as materia',
-            'm.codigo',
-            'm.creditos',
-            'l.name as lectivo',
-            'c.calificacion',
-            'te.name as tipo_examen'
-        )
-            ->join('lectivos as l', 'l.id', '=', 'hacademicas.lectivo_id')
-            ->join('grados as g', 'g.id', '=', 'hacademicas.grado_id')
-            ->join('materia as m', 'm.id', '=', 'hacademicas.materium_id')
-            ->join('calificacions as c', 'c.hacademica_id', 'hacademicas.id')
-            ->join('tpo_examens as te', 'te.id', '=', 'c.tpo_examen_id')
-            ->where('inscripcion_id', $inscripcion->id)
-            ->where('bnd_oficial', 1)
-            ->whereNull('hacademicas.deleted_at')
-            ->with('cliente')
-            ->get();
-        $consulta_calificaciones = ConsultaCalificacion::where('matricula', 'like', "%" . $cliente->matricula . "%")->get();
-        //dd($consulta_calificaciones);
-        //dd($inscripcion);
-        /*return view('inscripcions.reportes.lista_alumnosr',compact('registros'))
-        ->with( 'list', Inscripcion::getListFromAllRelationApps() );
-         * */
-
-        /*                PDF::setOptions(['defaultFont' => 'arial']);
-
-        $pdf = PDF::loadView('inscripcions.reportes.lista_alumnosr', array('registros'=>$registros,'fechas_enc'=>$fechas))
-        ->setPaper('legal', 'landscape');
-        return $pdf->download('reporte.pdf');
-         */
-        return view('inscripcions.reportes.historial', compact('inscripcion', 'cliente', 'plantel', 'grado', 'hacademicas', 'consulta_calificaciones'));
+        return view('inscripcions.reportes.historial', compact('inscripcion', 'cliente', 'plantel', 'grado', 'consulta_calificaciones'))->with('hacademicas', $resultados);
     }
 
     public function sepICP08Boletas()
@@ -2914,7 +2898,7 @@ class InscripcionsController extends Controller
     {
         $data = $request->all();
         //dd($data);
-        $plantel = Plantel::whereIn('id', $data['plantel_f'])->get();
+        $plantel = Plantel::find($data['plantel_f']);
         //dd($data);
 
         try {
@@ -2941,7 +2925,7 @@ class InscripcionsController extends Controller
                 //->whereColumn('aa.plantel_id', 'inscripcions.plantel_id')
                 //->whereColumn('aa.lectivo_id', 'inscripcions.lectivo_id')
                 //->join('empleados as e', 'e.id', '=', 'aa.empleado_id')
-                ->whereIn('inscripcions.plantel_id', $data['plantel_f'])
+                ->where('inscripcions.plantel_id', $data['plantel_f'])
                 //->whereIn('inscripcions.lectivo_id', $data['lectivo_f'])
                 ->whereNull('inscripcions.deleted_at')
                 //->whereNull('i.deleted_at')
@@ -3143,5 +3127,71 @@ class InscripcionsController extends Controller
         //dd($registros->toArray());
 
         return view('inscripcions.reportes.evaluacionOER', compact('registros', 'datos'));
+    }
+
+    public function historialOficial(Request $request)
+    {
+        $datos = $request->all();
+        $inscripcion = Inscripcion::find($datos['inscripcion']);
+        $cliente = Cliente::find($inscripcion->cliente_id);
+        $plantel = Plantel::find($inscripcion->plantel_id);
+        $grado = Grado::find($inscripcion->grado_id);
+        $resultados = array();
+        $hacademicas = Hacademica::select(
+            'm.name as materia',
+            'm.codigo',
+            'm.creditos',
+            'l.name as lectivo',
+            'hacademicas.id'
+            //'c.calificacion',
+            //'te.id',
+            //'te.name as tipo_examen'
+        )
+            ->join('lectivos as l', 'l.id', '=', 'hacademicas.lectivo_id')
+            //->join('grados as g', 'g.id', '=', 'hacademicas.grado_id')
+            ->join('materia as m', 'm.id', '=', 'hacademicas.materium_id')
+            //->join('calificacions as c', 'c.hacademica_id', 'hacademicas.id')
+            //->join('tpo_examens as te', 'te.id', '=', 'c.tpo_examen_id')
+            ->where('inscripcion_id', $inscripcion->id)
+            ->where('m.bnd_oficial', 1)
+            ->whereNull('hacademicas.deleted_at')
+            //->whereNull('c.deleted_at')
+            ->with('cliente')
+            ->orderBy('hacademicas.id')
+            //->orderBy('te.id')
+            ->get();
+        foreach ($hacademicas as $hacademica) {
+            $tpo_examen_max = Calificacion::where('hacademica_id', $hacademica->id)->max('tpo_examen_id');
+            $calificacion = Calificacion::select('calificacions.calificacion', 'te.name as tipo_examen')
+                ->join('tpo_examens as te', 'te.id', 'calificacions.tpo_examen_id')
+                ->where('hacademica_id', $hacademica->id)
+                ->where('tpo_examen_id', $tpo_examen_max)
+                ->first();
+            $resultado = array(
+                'materia' => $hacademica->materia,
+                'codigo' => $hacademica->codigo,
+                'creditos' => $hacademica->creditos,
+                'lectivo' => $hacademica->lectivo,
+                'calificacion' => $calificacion->calificacion,
+                'tipo_examen' => $calificacion->tipo_examen
+            );
+            //dd($resultado);
+            array_push($resultados, $resultado);
+        }
+        //dd($resultados);
+        $consulta_calificaciones = ConsultaCalificacion::where('matricula', 'like', "%" . $cliente->matricula . "%")->get();
+        //dd($consulta_calificaciones);
+        //dd($inscripcion);
+        /*return view('inscripcions.reportes.lista_alumnosr',compact('registros'))
+        ->with( 'list', Inscripcion::getListFromAllRelationApps() );
+         * */
+
+        /*                PDF::setOptions(['defaultFont' => 'arial']);
+
+        $pdf = PDF::loadView('inscripcions.reportes.lista_alumnosr', array('registros'=>$registros,'fechas_enc'=>$fechas))
+        ->setPaper('legal', 'landscape');
+        return $pdf->download('reporte.pdf');
+         */
+        return view('inscripcions.reportes.historial', compact('inscripcion', 'cliente', 'plantel', 'grado', 'consulta_calificaciones'))->with('hacademicas', $resultados);
     }
 }
