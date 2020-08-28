@@ -1413,12 +1413,12 @@ class SeguimientosController extends Controller
         //dd($data);
         $registros_aux = CombinacionCliente::select('c.id', DB::raw(''
             . 'c.nombre,c.nombre2,c.ape_paterno,c.ape_materno, c.matricula, '
-            . 'pla.razon as plantel, g.name as grado'))
+            . 'pla.razon as plantel, g.name as grado, cc.name as concepto'))
             ->join('clientes as c', 'c.id', '=', 'combinacion_clientes.cliente_id')
             ->join('plantels as pla', 'pla.id', '=', 'c.plantel_id')
-            ->join('medios as m', 'm.id', '=', 'c.medio_id')
+            //->join('medios as m', 'm.id', '=', 'c.medio_id')
             ->join('especialidads as esp', 'esp.id', '=', 'combinacion_clientes.especialidad_id')
-            ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
+            //->join('empleados as e', 'e.id', '=', 'c.empleado_id')
             ->join('cajas as caj', 'caj.cliente_id', '=', 'c.id')
             ->join('caja_lns as clns', 'clns.caja_id', '=', 'caj.id')
             ->join('caja_conceptos as cc', 'cc.id', '=', 'clns.caja_concepto_id')
@@ -1440,9 +1440,10 @@ class SeguimientosController extends Controller
                 $query->orWhere('cc.id', 1)->orWhere('cc.id', 22)->orWhere('cc.id', 23)->orWhere('cc.id', 24);
             })
             ->orderBy('plantel')
+            ->orderBy('grado')
             ->distinct()
             ->get();
-        $unicos = $registros_aux->unique('cliente');
+        $unicos = $registros_aux->unique('id');
         $registros = $unicos->values()->all();
         //dd($registros->toArray());
 

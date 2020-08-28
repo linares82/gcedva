@@ -17,30 +17,45 @@
         <table class="table table-condensed table-striped">
             <thead>
                 <tr>
-                    <th>Plantel</th><th>Carrera</th><th>Nombre(s)</th><th>Apellido Paterno</th><th>Apellido Materno</th><th>Matricula</th>
+                    <th>No.</th><th>Cliente Id</th>
+                    <th>Plantel</th><th>Carrera</th><th>Nombre(s)</th><th>Apellido Paterno</th><th>Apellido Materno</th><th>Matricula</th><th>Concepto</th>
                 </tr> 
             </thead>
             <tbody>
                 <?php 
                 $i=0; 
-                $j=0;
+                $grado="";
+                $contador=0;
                 ?>
                 <?php $colaborador="" ?>
-                @foreach($registros as $registro)
-                    
+                @foreach($registros as $registro)    
+                @if($grado<>"" and $grado<>$registro->grado)
                     <tr>
+                        <td colspan="2"><strong> Cantidad Registros </strong> </td><td><strong>{{ $contador }}</strong> </td><td colspan="5"></td>
+                    </tr>
+                    @php
+                        $contador=0;
+                    @endphp
+                @endif
+                    <tr>
+                        <td>{{ ++$i }}</td>
+                        <td>{{$registro->id}}</td>
                         <td>{{$registro->plantel}}</td>
                         <td>{{$registro->grado}}</td>
                         <td>{{$registro->nombre}} {{$registro->nombre2}}</td>
                         <td>{{$registro->ape_paterno}}</td>
                         <td>{{$registro->ape_materno}}</td>
                         <td>{{$registro->matricula}}</td>
-                    
+                        <td>{{$registro->concepto}}</td>
+                        @php
+                            $grado=$registro->grado;
+                            $contador++;
+                        @endphp
                     </tr>
-                    
-                    
                 @endforeach
-                    
+                <tr>
+                    <td colspan="2"><strong> Cantidad Registros </strong> </td><td><strong>{{ $contador }}</strong> </td><td colspan="5"></td>
+                </tr>
             </tbody>
         </table>
     </div>

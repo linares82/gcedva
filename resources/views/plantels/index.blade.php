@@ -129,6 +129,7 @@
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'razon', 'title' => 'RAZON SOCIAL'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'rfc', 'title' => 'RFC'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'cve_incorporacion', 'title' => 'CLAVE INCORPORACION'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'cuenta_p_id', 'title' => 'CUENTA'])</th>
                         
                             <th class="text-right">OPTIONS</th>
                         </tr>
@@ -141,6 +142,7 @@
                                 <td>{{$plantel->razon}}</td>
                                 <td>{{$plantel->rfc}}</td>
                                 <td>{{$plantel->cve_incorporacion}}</td>
+                                <td>{{$plantel->cuentaP->name}}</td>
                                 <td class="text-right">
                                     @permission('plantels.duplicate')
                                     <a class="btn btn-xs btn-primary" href="{{ route('plantels.duplicate', $plantel->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>

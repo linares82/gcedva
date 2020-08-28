@@ -362,6 +362,7 @@
                                 <th>Forma Pago</th>
                                 <th>Ref.</th>
                                 <th>C. Efectivo</th>
+                                <th>Consecutivo</th>
                                 <th></th>
                             </tr>
                             {{ csrf_field() }}
@@ -379,6 +380,7 @@
                                     {{ App\CuentasEfectivo::where('id', $pago->cuenta_efectivo_id)->value('name')}}
                                     @endif
                                 </td>
+                                <td>{{$pago->csc_simplificado}}</td>
                                 <td>
                                     @permission('cajas.eliminarPago')
                                     {!! Form::model($pago, array('route' => array('pagos.destroy', $pago->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('Ã‚Â¿Borrar? Ã‚Â¿Esta seguro?')) { return true } else {return false };")) !!}

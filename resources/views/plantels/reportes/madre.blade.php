@@ -53,7 +53,7 @@
                 <div class="row">
                 </div>
                 <div class="well well-sm">
-                    
+                    <button class="btn btn-primary multipagos">Multipagos</button>
                     <button class="btn btn-primary combinaciones">Combinaciones</button>
                     <button class="btn btn-primary asignaciones">Asignaciones</button>
                     <button class="btn btn-primary alumnos">Alumnos</button>
@@ -98,6 +98,33 @@
             <div>
         <div>
         @endif
+        @if(isset($multipagos))
+        <h4> Lista de Planteles-Multipagos</h4>
+        <div class="box">
+            <div class="box-body">
+                <div class="table-responsive">    
+                <table class="table table-condensed table-striped">
+                    <thead>
+                        <th>Csc</th>
+                        <th>Razon Social</th><th>Razon Social(Contabilidad)</th>
+                        <th>Nodo Multipagos</th><th>Cuenta Contable</th>
+                        <th>Forma Pago M.</th><th>Concepto M.</th>
+                    </thead>
+                    <tbody>
+                        @foreach($multipagos as $multipago)
+                        <tr>
+                            <td>{{++$i}}</td>
+                            <td>{{$multipago->razon}}</td><td>{{$multipago->nombre_corto}}</td>
+                            <td>{{$multipago->cve_multipagos}}</td><td>{{$multipago->cuenta_contable}}</td>
+                            <td>{{$multipago->forma_pago}} - {{ $multipago->fp_cve }} </td><td>{{$multipago->concepto}} - {{ $multipago->cc_cve }} </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+                <div>
+            <div>
+        <div>
+        @endif
         @if(isset($combinaciones))
         <h4> Lista de Combinaciones</h4>
         <div class="box">
@@ -108,7 +135,7 @@
                         <tr>
                             <th>Csc</th>
                             <th>Logo</th><th>Razon Social</th><th>Razon Social(Contabilidad)</th><th>RFC</th>
-                            <th>Direccion</th><th>Cve Multipagos</th><th>Cuenta Contable</th><th>CLABE</th><th>C. Bancaria</th>
+                            <th>Direccion</th><th>Nodo Multipagos</th><th>Cuenta Contable</th><th>CLABE</th><th>C. Bancaria</th>
                             <th>Director</th><th>Tel.</th><th>Tel. Fijo</th><th>Tel. Cel.</th>
                             <th>Mail</th><th>Mail Empresa</th>
                             <th>Especialidad</th><th>Nivel</th><th>Grado</th><th>Nombre RVOE</th><th>RVOE</th><th>Fec. RVOE</th>
@@ -327,6 +354,13 @@
         $(".plantel").click(function(e){
             e.preventDefault();
             $('#valor_reporte-field').val('planteles');
+            $('#frm_reporte').attr('action', '{{route("plantels.madreR")}}');
+            $('#frm_reporte').submit();
+        });
+
+        $(".multipagos").click(function(e){
+            e.preventDefault();
+            $('#valor_reporte-field').val('multipagos');
             $('#frm_reporte').attr('action', '{{route("plantels.madreR")}}');
             $('#frm_reporte').submit();
         });

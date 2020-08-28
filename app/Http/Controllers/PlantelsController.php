@@ -394,6 +394,27 @@ class PlantelsController extends Controller
 					->get();
 				return view('plantels.reportes.madre', compact('plantels', 'planteles'));
 				break;
+			case 'multipagos':
+				$multipagos = Plantel::select(
+					'plantels.razon',
+					'plantels.denominacion',
+					'plantels.nombre_corto',
+					'plantels.cve_multipagos',
+					'plantels.cuenta_contable',
+					'fp.name as forma_pago',
+					'fp.cve_multipagos as fp_cve',
+					'cm.name as concepto',
+					'cc.cve_multipagos as cc_cve'
+				)
+					->leftJoin('forma_pago_plantel as fpp', 'fpp.plantel_id', '=', 'plantels.id')
+					->leftJoin('forma_pagos as fp', 'fp.id', '=', 'fpp.forma_pago_id')
+					->leftJoin('concepto_multipago_plantel as cmp', 'cmp.plantel_id', '=', 'plantels.id')
+					->leftJoin('concepto_multipagos as cm', 'cm.id', '=', 'cmp.concepto_multipago_id')
+					->leftJoin('caja_conceptos as cc', 'cc.cve_multipagos', '=', 'cm.id')
+					->where('plantels.id', '>', 0)
+					->get();
+				return view('plantels.reportes.madre', compact('multipagos', 'planteles'));
+				break;
 			case 'combinaciones':
 				$combinaciones = Grado::select(
 					//'p.razon as plantel',

@@ -85,6 +85,13 @@
                          <span class="help-block">{{ $errors->first("cuenta_contable") }}</span>
                         @endif
                      </div>
+                     <div class="form-group col-md-4 @if($errors->has('cuenta_p_id')) has-error @endif">
+                        <label for="cuenta_p_id-field">Cuenta Contable</label>
+                        {!! Form::select("cuenta_p_id", $list["CuentaP"], null, array("class" => "form-control select_seguridad", "id" => "cuenta_p_id-field")) !!}
+                        @if($errors->has("cuenta_p_id"))
+                         <span class="help-block">{{ $errors->first("cuenta_p_id") }}</span>
+                        @endif
+                     </div>
                      <div class="form-group col-md-4 @if($errors->has('cve_multipagos')) has-error @endif">
                         <label for="cve_multipagos-field">Clave Multipagos</label>
                         {!! Form::text("cve_multipagos", null, array("class" => "form-control input-sm", "id" => "cve_multipagos-field")) !!}
