@@ -239,6 +239,7 @@ class PagosController extends Controller
                     ->where('bnd_activo', 1)
                     ->where('bnd_fiscal', 0)
                     ->first();
+                //dd($serie_folio_simplificado);
                 $serie_folio_simplificado->folio_actual = $serie_folio_simplificado->folio_actual + 1;
                 $serie_folio_simplificado->save();
                 $folio_actual = $serie_folio_simplificado->folio_actual;

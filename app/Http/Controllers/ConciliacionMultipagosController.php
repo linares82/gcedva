@@ -249,10 +249,12 @@ class ConciliacionMultipagosController extends Controller
 		//dd($registros->toArray());
 
 		foreach ($registros as $pagoConciliacion) {
+			//Busca la peticion inicial
 			$peticionBuscado = PeticionMultipago::where('mp_reference', $pagoConciliacion->mp_reference)
 				->where('mp_order', $pagoConciliacion->mp_order)
 				->where('mp_amount', $pagoConciliacion->importe)
 				->first();
+			//Buscar la respues a la peticion
 			$successBuscado = SuccessMultipago::where('mp_reference', $pagoConciliacion->mp_reference)
 				->where('mp_order', $pagoConciliacion->mp_order)
 				->where('mp_amount', $pagoConciliacion->importe)
@@ -262,16 +264,21 @@ class ConciliacionMultipagosController extends Controller
 			}*/
 			//dd($successBuscado);
 
+			//Si existe la peticion y no esta pagada entra en la condicion
 			if (
 				!is_null($peticionBuscado) and
 				!is_null($peticionBuscado->pago) and
 				$peticionBuscado->pago->bnd_pagado <> 1
 			) {
+				//Marca como pagado el pago
 				$peticionBuscado->pago->bnd_pagado = 1;
 				$peticionBuscado->pago->save();
 
+				//Referencia la linea de conciliacion con la peticion inicial
 				$pagoConciliacion->peticion_multipago_id = $peticionBuscado->id;
 				if (!is_null($successBuscado)) {
+					//Si la respuesta existe se guarda referencia con la linea de conciliacion
+					//Y guarda en la respuesta una referencia de la linea de conciliacion
 					$pagoConciliacion->success_multipago_id = $successBuscado->id;
 					$successBuscado->conciliacion_multi_detalle_id = $pagoConciliacion->id;
 					$successBuscado->save();
@@ -281,6 +288,7 @@ class ConciliacionMultipagosController extends Controller
 
 				$pagoConciliacion->save();
 
+				//Se actualiza estatus de caja
 				$caja = $peticionBuscado->pago->caja;
 				$this->actualizaEstatusCaja($caja->id);
 				//dd($pagoConciliacion);
@@ -289,6 +297,7 @@ class ConciliacionMultipagosController extends Controller
 				!is_null($peticionBuscado->pago) and
 				$peticionBuscado->pago->bnd_pagado == 1
 			) {
+				//Solo se guardan referencias de la linea del archivo de conciliacion
 				$pagoConciliacion->peticion_multipago_id = $peticionBuscado->id;
 				if (!is_null($successBuscado)) {
 					$pagoConciliacion->success_multipago_id = $successBuscado->id;

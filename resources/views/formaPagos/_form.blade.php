@@ -12,4 +12,12 @@
                       <span class="help-block">{{ $errors->first("cve_multipagos") }}</span>
                      @endif
                   </div>
+				<div class="form-group col-md-4 @if($errors->has('cve_sat')) has-error @endif">
+                     <label for="cve_sat-field">Clave SAT</label>
+                     {!! Form::text("cve_sat", null, array("class" => "form-control", "id" => "cve_sat-field")) !!}
+                     @if($errors->has("cve_sat"))
+                      <span class="help-block">{{ $errors->first("cve_sat") }}</span>
+                     @endif
+                  </div>  
+                  
                   

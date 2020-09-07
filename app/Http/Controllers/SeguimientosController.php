@@ -1411,14 +1411,63 @@ class SeguimientosController extends Controller
         $data = $request->all();
         $plantel = Plantel::find($data['plantel_f']);
         //dd($data);
+
+        /*$mes = Carbon::createFromFormat('Y-m-d', $data['fecha_f'])->month;
+        $anio = Carbon::createFromFormat('Y-m-d', $data['fecha_f'])->year;
+        $anio = $anio - 2000;
+        $mesAnio = "";
+        if (strlen($mes) == 1) {
+            $mes = "0" . $mes;
+            //dd($mes);
+        }
+
+        $mesAnio = $mes . $anio;
+        */
+        //dd($mesAnio);
+
+        $registros_aux2 = CombinacionCliente::select('c.id', DB::raw(''
+            . 'c.nombre,c.nombre2,c.ape_paterno,c.ape_materno, c.matricula, '
+            . 'pla.razon as plantel, g.name as grado, cc.name as concepto'))
+            ->join('clientes as c', 'c.id', '=', 'combinacion_clientes.cliente_id')
+            ->join('plantels as pla', 'pla.id', '=', 'c.plantel_id')
+            ->join('especialidads as esp', 'esp.id', '=', 'combinacion_clientes.especialidad_id')
+            //->join('cajas as caj', 'caj.cliente_id', '=', 'c.id')
+            //->join('caja_lns as clns', 'clns.caja_id', '=', 'caj.id')
+            ->join('adeudos as ad', 'ad.cliente_id', '=', 'c.id')
+            ->join('caja_conceptos as cc', 'cc.id', '=', 'ad.caja_concepto_id')
+            ->join('grados as g', 'g.id', '=', 'combinacion_clientes.grado_id')
+            //->join('pagos as p', 'p.caja_id', '=', 'caj.id')
+            ->whereIn('combinacion_clientes.plantel_id', $data['plantel_f'])
+            //->where('p.fecha', '>=', $data['fecha_f'])
+            //->where('p.fecha', '<=', $data['fecha_t'])
+            ->where('ad.fecha_pago', '>=', $data['fecha_f'])
+            ->where('ad.fecha_pago', '<=', $data['fecha_t'])
+            ->where('combinacion_clientes.especialidad_id', '<>', 0)
+            ->where('combinacion_clientes.nivel_id', '<>', 0)
+            ->where('combinacion_clientes.grado_id', '<>', 0)
+            ->where('combinacion_clientes.turno_id', '<>', 0)
+            ->whereNull('combinacion_clientes.deleted_at', '<>', 0)
+            ->where('combinacion_clientes.plan_pago_id', '>', 0)
+            ->where('ad.pagado_bnd', 1)
+            ->where('ad.monto', 0)
+            ->whereNull('ad.deleted_at')
+            //->whereNull('p.deleted_at')
+            //->whereNull('clns.deleted_at')
+            //->whereIn('caj.st_caja_id', [1, 3])
+            ->where(function ($query) {
+                $query->orWhere('cc.id', 1)->orWhere('cc.id', 22)->orWhere('cc.id', 23)->orWhere('cc.id', 24)->orWhere('cc.id', 25);
+            })
+            ->orderBy('plantel')
+            ->orderBy('combinacion_clientes.grado_id')
+            ->distinct();
+        //->get();
+
         $registros_aux = CombinacionCliente::select('c.id', DB::raw(''
             . 'c.nombre,c.nombre2,c.ape_paterno,c.ape_materno, c.matricula, '
             . 'pla.razon as plantel, g.name as grado, cc.name as concepto'))
             ->join('clientes as c', 'c.id', '=', 'combinacion_clientes.cliente_id')
             ->join('plantels as pla', 'pla.id', '=', 'c.plantel_id')
-            //->join('medios as m', 'm.id', '=', 'c.medio_id')
             ->join('especialidads as esp', 'esp.id', '=', 'combinacion_clientes.especialidad_id')
-            //->join('empleados as e', 'e.id', '=', 'c.empleado_id')
             ->join('cajas as caj', 'caj.cliente_id', '=', 'c.id')
             ->join('caja_lns as clns', 'clns.caja_id', '=', 'caj.id')
             ->join('caja_conceptos as cc', 'cc.id', '=', 'clns.caja_concepto_id')
@@ -1427,22 +1476,27 @@ class SeguimientosController extends Controller
             ->whereIn('combinacion_clientes.plantel_id', $data['plantel_f'])
             ->where('p.fecha', '>=', $data['fecha_f'])
             ->where('p.fecha', '<=', $data['fecha_t'])
+            //->where('c.matricula', 'like', $mesAnio . '%')
             ->where('combinacion_clientes.especialidad_id', '<>', 0)
             ->where('combinacion_clientes.nivel_id', '<>', 0)
             ->where('combinacion_clientes.grado_id', '<>', 0)
             ->where('combinacion_clientes.turno_id', '<>', 0)
             ->whereNull('combinacion_clientes.deleted_at', '<>', 0)
             ->where('combinacion_clientes.plan_pago_id', '>', 0)
-            ->whereNull('p.deleted_at')
+            //->whereNull('p.deleted_at')
             ->whereNull('clns.deleted_at')
             ->whereIn('caj.st_caja_id', [1, 3])
             ->where(function ($query) {
-                $query->orWhere('cc.id', 1)->orWhere('cc.id', 22)->orWhere('cc.id', 23)->orWhere('cc.id', 24);
+                $query->orWhere('cc.id', 1)->orWhere('cc.id', 22)->orWhere('cc.id', 23)->orWhere('cc.id', 24)->orWhere('cc.id', 25);
             })
+            ->union($registros_aux2)
             ->orderBy('plantel')
-            ->orderBy('grado')
+            ->orderBy('combinacion_clientes.grado_id')
             ->distinct()
             ->get();
+
+
+        //dd($registros_aux2->toArray());
         $unicos = $registros_aux->unique('id');
         $registros = $unicos->values()->all();
         //dd($registros->toArray());

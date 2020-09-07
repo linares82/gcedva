@@ -5,6 +5,13 @@
     <span class="help-block">{{ $errors->first("cve_multipagos") }}</span>
    @endif
 </div>
+<div class="form-group col-md-4 @if($errors->has('uso_factura')) has-error @endif">
+   <label for="uso_factura-field">Uso Factura</label>
+   {!! Form::text("uso_factura", null, array("class" => "form-control", "id" => "uso_factura-field")) !!}
+   @if($errors->has("uso_factura"))
+    <span class="help-block">{{ $errors->first("uso_factura") }}</span>
+   @endif
+</div> 
                      <div class="form-group col-md-4 @if($errors->has('name')) has-error @endif">
                        <label for="name-field">Concepto</label>
                        {!! Form::text("name", null, array("class" => "form-control", "id" => "name-field")) !!}
@@ -44,3 +51,4 @@
                      <label for="reglas-field">Reglas Descuento/Recargo</label><br/>
                      {!! Form::select("reglas[]", $reglas, null, array("class" => "form-control select_seguridad", 'multiple'=>true, "id" => "reglas-field")) !!}
                   </div>
+                  

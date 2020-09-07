@@ -32,7 +32,10 @@ class PagoObserver
         //Crear un registro de ingreso de dinero en ingreso_egresos
         if ($this->pago->cuenta_efectivo_id > 0) {
             $cuentas_efectivo = CuentasEfectivo::where('id', $this->pago->cuenta_efectivo_id)->first();
-            //dd($this->pago);
+            /*dd($cuentas_efectivo->saldo_inicial > 0 and
+                $this->pago->fecha >= $cuentas_efectivo->fecha_saldo_inicial and
+                $this->pago->bnd_pagado == 1 and
+                $this->pago->bnd_referenciado <> 1);*/
             if (
                 $cuentas_efectivo->saldo_inicial > 0 and
                 $this->pago->fecha >= $cuentas_efectivo->fecha_saldo_inicial and
@@ -62,8 +65,8 @@ class PagoObserver
 
                 //dd($consecutivo);
                 $cliente = Cliente::where('id', $combinacion->cliente_id)->first();
-
-                if (($grado->seccion != "" or !is_null($grado->seccion)) and $cliente->matricula == "") {
+                //dd(($grado->seccion != "" or !is_null($grado->seccion)) and ($cliente->matricula == "" or $cliente->matricula == " "));
+                if (($grado->seccion != "" or !is_null($grado->seccion)) and ($cliente->matricula == "" or $cliente->matricula == " ")) {
                     $consecutivo = ConsecutivoMatricula::where('plantel_id', $combinacion->plantel_id)
                         ->where('anio', $fecha->year)
                         ->where('mes', $fecha->month)

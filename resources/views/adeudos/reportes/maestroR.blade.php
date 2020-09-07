@@ -125,8 +125,9 @@
             <tr>
                 <th>No.</th>
                 <th>Plantel</th>
-                <!--<th>Cliente Id</th>-->
+                <th>Cliente Id</th>
                 <th>Cliente</th>
+                <th>Matricula</th>
                 <!--<th>Pagado</th>
                 <th>Monto Planeado</th>-->
                 <th>Concepto</th>
@@ -146,8 +147,9 @@
             <tr>   
             <td>{{$consecutivo_linea++}}</td>
             <td>{{$detalle['razon']}}</td>
-            <!--<td>{{$detalle['id']}}</td>-->
+            <td>{{$detalle['id']}}</td>
             <td>{{ $detalle['nombre'] }} {{ $detalle['nombre2'] }} {{ $detalle['ape_paterno'] }} {{ $detalle['ape_materno'] }}</td>
+            <td>{{ $detalle['matricula'] }}</td>
             <!--
             <td>
                 @if($detalle['pagado_bnd']==0)

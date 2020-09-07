@@ -141,6 +141,7 @@
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'monto', 'title' => 'MONTO'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'bnd_aplicar_beca', 'title' => 'APLICAR BECA'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'activo', 'title' => 'ACTIVO'])</th>
+                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'uso_factura', 'title' => 'USO FACTURA'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
@@ -162,6 +163,9 @@
                                     @else
                                     NO
                                     @endif
+                                </td>
+                                <td>
+                                    {{ $cajaConcepto->uso_factura }}
                                 </td>
                                 <td class="text-right">
                                     @permission('cajaConceptos.edit')

@@ -7,10 +7,12 @@ use App\Caja;
 use App\CajaConcepto;
 use App\CajaLn;
 use App\Cliente;
+use App\ConsecutivoMatricula;
 use App\CombinacionCliente;
 use App\Descuento;
 use App\Empleado;
 use App\HistoriaCliente;
+use App\Grado;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\createAdeudo;
 use App\Http\Requests\updateAdeudo;
@@ -22,6 +24,7 @@ use App\PromoPlanLn;
 use App\ReglaRecargo;
 use App\Seguimiento;
 use App\StCaja;
+use App\UsuarioCliente;
 use Auth;
 use Carbon\Carbon;
 use DB;
@@ -30,6 +33,7 @@ use Log;
 use PDF;
 use Session;
 use Exception;
+use Hash;
 
 class AdeudosController extends Controller
 {
@@ -125,8 +129,75 @@ class AdeudosController extends Controller
     {
         $input = $request->except(['porcentaje', 'autorizado_por', 'justificacion', 'autorizado_el', 'adeudo_id']);
         $inputDescuento = $request->only(['porcentaje', 'autorizado_por', 'justificacion', 'autorizado_el', 'adeudo_id']);
+        $adeudo = $adeudo->find($id);
         if ($input['monto'] == "0") {
             $input['pagado_bnd'] = 1;
+
+            //Genera la matricula para un cliente si no la tiene.
+            //Datos para matricula
+
+
+            $combinacion = CombinacionCliente::find($adeudo->combinacion_cliente_id);
+            //dd($combinacion);
+            $planPagoLn = PlanPagoLn::where('plan_pago_id', $combinacion->plan_pago_id)->orderBy('fecha_pago', 'asc')->first();
+
+            $fecha = Carbon::createFromFormat('Y-m-d', $planPagoLn->fecha_pago);
+            $grado = Grado::find($combinacion->grado_id);
+            //dd($grado);
+            $relleno = "000000";
+            $rellenoPlantel = "00";
+            $rellenoConsecutivo = "000";
+
+
+            //dd($consecutivo);
+            $cliente = Cliente::where('id', $combinacion->cliente_id)->first();
+
+            if (($grado->seccion != "" or !is_null($grado->seccion)) and ($cliente->matricula == "" or $cliente->matricula == " ")) {
+                $consecutivo = ConsecutivoMatricula::where('plantel_id', $combinacion->plantel_id)
+                    ->where('anio', $fecha->year)
+                    ->where('mes', $fecha->month)
+                    ->where('seccion', $grado->seccion)
+                    ->first();
+
+                if (is_null($consecutivo)) {
+                    $consecutivo = ConsecutivoMatricula::create(array(
+                        'plantel_id' => $combinacion->plantel_id,
+                        'mes' => $fecha->month,
+                        'anio' => $fecha->year,
+                        'seccion' => $grado->seccion,
+                        'consecutivo' => 1,
+                        'usu_alta_id' => 1,
+                        'usu_mod_id' => 1
+                    ));
+                } else {
+                    $consecutivo->consecutivo = $consecutivo->consecutivo + 1;
+                    $consecutivo->save();
+                }
+                $mes = substr($rellenoPlantel, 0, 2 - strlen($fecha->month)) . $fecha->month;
+                $anio = $fecha->year - 2000;
+                $seccion = $grado->seccion;
+                $plantel = substr($rellenoPlantel, 0, 2 - strlen($combinacion->plantel_id)) . $combinacion->plantel_id;
+                $consecutivoCadena = substr($rellenoConsecutivo, 0, 3 - strlen($consecutivo->consecutivo)) . $consecutivo->consecutivo;
+
+                $entrada['matricula'] = $mes . $anio . $seccion . $plantel . $consecutivoCadena;
+                //$i->update($entrada);
+
+                //dd($entrada['matricula']);
+                $cliente->matricula = $entrada['matricula'];
+                $cliente->save();
+                Log::info('matricula cliente:' . $cliente->id . "-" . $cliente->matricula);
+
+                if (!is_null($cliente->matricula)) {
+                    $buscarMatricula = UsuarioCliente::where('name', $cliente->matricula)->first();
+                    $buscarMail = UsuarioCliente::where('email', $cliente->mail)->first();
+                    if (is_null($buscarMatricula) and is_null($buscarMail)) {
+                        $usuario_cliente['name'] = $cliente->matricula;
+                        $usuario_cliente['email'] = $cliente->mail;
+                        $usuario_cliente['password'] = Hash::make('123456');
+                        UsuarioCliente::create($usuario_cliente);
+                    }
+                }
+            }
         } else {
             $input['pagado_bnd'] = 0;
         }
@@ -134,7 +205,7 @@ class AdeudosController extends Controller
 
         $input['usu_mod_id'] = Auth::user()->id;
         //update data
-        $adeudo = $adeudo->find($id);
+
         //dd($input);
         $adeudo->update($input);
 
@@ -921,6 +992,7 @@ class AdeudosController extends Controller
                 'c.nombre2',
                 'c.ape_paterno',
                 'c.ape_materno',
+                'c.matricula',
                 'adeudos.pagado_bnd',
                 'adeudos.monto as adeudo_planeado',
                 'cc.name as concepto',

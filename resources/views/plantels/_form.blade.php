@@ -113,6 +113,13 @@
                           <span class="help-block">{{ $errors->first("forma_pago_id") }}</span>
                         @endif
                       </div>
+                      <div class="form-group col-md-4 @if($errors->has('regimen_fiscal')) has-error @endif">
+                        <label for="regimen_fiscal-field">Régimen Fiscal</label>
+                        {!! Form::text("regimen_fiscal", null, array("class" => "form-control input-sm", "id" => "regimen_fiscal-field")) !!}
+                        @if($errors->has("regimen_fiscal"))
+                          <span class="help-block">{{ $errors->first("regimen_fiscal") }}</span>
+                        @endif
+                      </div>
                   </div>
                   <div class="box box-default">
                       <div class="box-body">

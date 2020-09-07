@@ -206,6 +206,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'L' => 
         array (
             'Luecano\\NumeroALetras\\' => 22,
+            'League\\MimeTypeDetection\\' => 25,
             'League\\Flysystem\\AwsS3v3\\' => 25,
             'League\\Flysystem\\' => 17,
             'League\\Csv\\' => 11,
@@ -552,6 +553,10 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         array (
             0 => __DIR__ . '/..' . '/luecano/numero-a-letras/src',
         ),
+        'League\\MimeTypeDetection\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/league/mime-type-detection/src',
+        ),
         'League\\Flysystem\\AwsS3v3\\' => 
         array (
             0 => __DIR__ . '/..' . '/league/flysystem-aws-s3-v3/src',
@@ -866,6 +871,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'AddCveMultipagosToCajaConceptosTable' => __DIR__ . '/../..' . '/database/migrations/2020_06_17_101325_add_cve_multipagos_to_caja_conceptos_table.php',
         'AddCveMultipagosToFormaPagosTable' => __DIR__ . '/../..' . '/database/migrations/2020_07_29_122100_add_cve_multipagos_to_forma_pagos_table.php',
         'AddCveMultipagosToPlantelsTable' => __DIR__ . '/../..' . '/database/migrations/2020_06_17_101202_add_cve_multipagos_to_plantels_table.php',
+        'AddCveSatFormaPagosTable' => __DIR__ . '/../..' . '/database/migrations/2020_09_04_142759_add_cve_sat_forma_pagos_table.php',
         'AddCveVinculacionPlantelsTable' => __DIR__ . '/../..' . '/database/migrations/2019_12_04_093558_add_cve_vinculacion_plantels_table.php',
         'AddDatesLectivoTable' => __DIR__ . '/../..' . '/database/migrations/2017_06_16_195301_Add_Dates_Lectivo_Table.php',
         'AddDenominacionPlantelsTable' => __DIR__ . '/../..' . '/database/migrations/2020_04_20_164405_add_denominacion_plantels_table.php',
@@ -894,6 +900,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'AddFechaVigenciaHistoriaClientesTable' => __DIR__ . '/../..' . '/database/migrations/2019_07_24_113703_add_fecha_vigencia_historia_clientes_table.php',
         'AddFechasGraficaEspecialidadTable' => __DIR__ . '/../..' . '/database/migrations/2017_12_13_102850_add_fechas_grafica_especialidad_table.php',
         'AddFechasToConciliacionMultipagosTable' => __DIR__ . '/../..' . '/database/migrations/2020_07_08_130236_add_fechas_to_conciliacion_multipagos_table.php',
+        'AddFiedsFacturaToClientesTable' => __DIR__ . '/../..' . '/database/migrations/2020_08_31_090624_add_fieds-factura_to_clientes_table.php',
         'AddFieldAbreviaturaEspecialidadsTable' => __DIR__ . '/../..' . '/database/migrations/2019_07_08_130330_add_field_abreviatura_especialidads_table.php',
         'AddFieldFecCelVinculacionsTable' => __DIR__ . '/../..' . '/database/migrations/2019_08_05_092805_add_field_fec_cel_vinculacions_table.php',
         'AddFieldIndexClienteIdEbanxesTable' => __DIR__ . '/../..' . '/database/migrations/2018_12_17_153737_add_field_index_cliente_id_ebanxes_table.php',
@@ -939,6 +946,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'AddMpDatereferenceToPeticionMultipagosTable' => __DIR__ . '/../..' . '/database/migrations/2020_07_30_083455_add_mp_datereference_to_peticion_multipagos_table.php',
         'AddMpPaymentMethodToSuccessMultipagosTable' => __DIR__ . '/../..' . '/database/migrations/2020_06_29_075349_add_mp_payment_method_to_success_multipagos_table.php',
         'AddMpPaymentmethodToPeticionMultipagosTable' => __DIR__ . '/../..' . '/database/migrations/2020_07_07_103316_add_mp_paymentmethod_to_peticion_multipagos_table.php',
+        'AddNivelToUsuarioClientesTable' => __DIR__ . '/../..' . '/database/migrations/2020_08_31_182428_add_nivel_to_usuario_clientes_table.php',
         'AddNoPolizaToClientesTable' => __DIR__ . '/../..' . '/database/migrations/2020_03_19_122343_add_no_poliza_to_clientes_table.php',
         'AddNombre2GradosTable' => __DIR__ . '/../..' . '/database/migrations/2019_08_23_093321_add_nombre2_grados_table.php',
         'AddNombreCortoToPlantelsTable' => __DIR__ . '/../..' . '/database/migrations/2020_04_23_130534_add_nombre_corto_to_plantels_table.php',
@@ -960,6 +968,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'AddRecursivoCalificacionPonderacionsTable' => __DIR__ . '/../..' . '/database/migrations/2019_01_17_114733_add_recursivo_calificacion_ponderacions_table.php',
         'AddRecursivoCargaPonderacionsTable' => __DIR__ . '/../..' . '/database/migrations/2019_01_17_113213_add_recursivo_carga_ponderacions_table.php',
         'AddReferenciaCajasTable' => __DIR__ . '/../..' . '/database/migrations/2018_05_25_171049_add_referencia_cajas_table.php',
+        'AddRegimenFiscalPlantelsTable' => __DIR__ . '/../..' . '/database/migrations/2020_09_04_154402_add_regimen_fiscal_plantels_table.php',
         'AddRvoeDenominacionFieldsToGradosTable' => __DIR__ . '/../..' . '/database/migrations/2020_04_28_125355_add_rvoe_denominacion_fields_to_grados_table.php',
         'AddRvoeToPeriodoEstudiosTable' => __DIR__ . '/../..' . '/database/migrations/2020_05_28_142332_add_rvoe_to_periodo_estudios_table.php',
         'AddSaldoInicialCuentasEfectivosTable' => __DIR__ . '/../..' . '/database/migrations/2019_06_25_182830_add_saldo_inicial_cuentas_efectivos_table.php',
@@ -976,6 +985,8 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'AddTurnoClientesTable' => __DIR__ . '/../..' . '/database/migrations/2017_11_13_111414_add_turno_clientes_table.php',
         'AddUbicacionArtIdExistenciasTable' => __DIR__ . '/../..' . '/database/migrations/2020_01_23_094138_add_ubicacion_art_id_existencias_table.php',
         'AddUbicacionArtIdMovimientosTable' => __DIR__ . '/../..' . '/database/migrations/2019_10_02_131218_add_ubicacion_art_id_movimientos_table.php',
+        'AddUsoFacturaToFormaPagosTable' => __DIR__ . '/../..' . '/database/migrations/2020_09_07_113722_add_uso_factura_to_forma_pagos_table.php',
+        'AddUuidCbbXmlToPagosTable' => __DIR__ . '/../..' . '/database/migrations/2020_09_04_172320_add_uuid_cbb_xml_to_pagos_table.php',
         'AddVencimientoRvoeEspecialidadsTable' => __DIR__ . '/../..' . '/database/migrations/2019_07_24_133707_add_vencimiento_rvoe_especialidads_table.php',
         'AddfieldsInscripcionTable' => __DIR__ . '/../..' . '/database/migrations/2017_12_07_134646_addfields_inscripcion_table.php',
         'ArithmeticError' => __DIR__ . '/..' . '/symfony/polyfill-php70/Resources/stubs/ArithmeticError.php',
@@ -1032,6 +1043,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'CreateCorreosTable' => __DIR__ . '/../..' . '/database/migrations/2017_05_12_155535_create_correos_table.php',
         'CreateCotizacionCursosTable' => __DIR__ . '/../..' . '/database/migrations/2019_04_01_115103_create_cotizacion_cursos_table.php',
         'CreateCotizacionLnsTable' => __DIR__ . '/../..' . '/database/migrations/2019_04_01_123834_create_cotizacion_lns_table.php',
+        'CreateCpSatsTable' => __DIR__ . '/../..' . '/database/migrations/2020_09_04_081859_create_cp_sats_table.php',
         'CreateCuentaContablesTable' => __DIR__ . '/../..' . '/database/migrations/2018_04_05_122258_create_cuenta_contables_table.php',
         'CreateCuentaPsTable' => __DIR__ . '/../..' . '/database/migrations/2020_08_27_112438_create_cuenta_ps_table.php',
         'CreateCuentasEfectivoPlantelsTable' => __DIR__ . '/../..' . '/database/migrations/2019_06_25_141033_create_cuentas_efectivo_plantels_table.php',
@@ -1176,6 +1188,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'CreateTareasTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_30_224257_create_tareas_table.php',
         'CreateTipoBecasTable' => __DIR__ . '/../..' . '/database/migrations/2020_06_09_121542_create_tipo_becas_table.php',
         'CreateTipoContratosTable' => __DIR__ . '/../..' . '/database/migrations/2020_06_16_125151_create_tipo_contratos_table.php',
+        'CreateTipoPersonasTable' => __DIR__ . '/../..' . '/database/migrations/2020_08_31_090620_create_tipo_personas_table.php',
         'CreateTipoPrecioCotisTable' => __DIR__ . '/../..' . '/database/migrations/2019_04_01_123620_create_tipo_precio_cotis_table.php',
         'CreateTipoReglasTable' => __DIR__ . '/../..' . '/database/migrations/2018_04_05_123030_create_tipo_reglas_table.php',
         'CreateTpoArticulosTable' => __DIR__ . '/../..' . '/database/migrations/2019_10_03_103208_create_tpo_articulos_table.php',

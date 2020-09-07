@@ -18,7 +18,7 @@ class FormaPago extends Model
 	}
 
 	//Mass Assignment
-	protected $fillable = ['name', 'usu_alta_id', 'usu_mod_id', 'cve_multipagos'];
+	protected $fillable = ['name', 'usu_alta_id', 'usu_mod_id', 'cve_multipagos', 'cve_sat'];
 
 	public function usu_alta()
 	{

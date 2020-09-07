@@ -1,0 +1,1 @@
+@section('tipoPersonasAppTitle','TipoPersona')

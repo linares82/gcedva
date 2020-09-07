@@ -29,7 +29,7 @@ class CreateSerieFolioSimplificadosTable extends Migration
 			$table->softDeletes();
 			$table->foreign('usu_alta_id')->references('id')->on('users');
 			$table->foreign('usu_mod_id')->references('id')->on('users');
-			$table->foreign('mes_id')->references('id')->on('mese');
+			$table->foreign('mese_id')->references('id')->on('mese');
 			$table->foreign('cuenta_p_id')->references('id')->on('cuenta_ps');
 		});
 	}

@@ -73,7 +73,7 @@ class CajasController extends Controller
         //dd($input);
         $cliente = Cliente::find($input['cliente_id']);
 
-        $caja = Caja::select('cajas.consecutivo', 'p.razon', 'cajas.cliente_id', 'pag.bnd_referenciado')
+        $caja = Caja::select('cajas.id', 'cajas.consecutivo', 'p.razon', 'cajas.cliente_id', 'pag.bnd_referenciado')
             ->where('st_caja_id', 0)
             ->leftJoin('pagos as pag', 'pag.caja_id', '=', 'cajas.id')
             ->join('plantels as p', 'p.id', '=', 'cajas.plantel_id')
@@ -82,6 +82,15 @@ class CajasController extends Controller
         $caja_filtrada = $caja->whereIn('bnd_referenciado', [NULL, 0]);
         $caja_filtrada->all();
         //dd($caja_filtrada);
+
+        //de los registros conestatus invalido se busca uno pagado
+        $caja_pagada = 0;
+        foreach ($caja_filtrada as $r_filtrado) {
+            $buscar_caja_pagada = Caja::find($r_filtrado->id);
+            if ($buscar_caja_pagada->st_caja_id == 1) {
+                $caja_pagada = 1;
+            }
+        }
 
         $cajas = Caja::select('cajas.consecutivo as caja', 'cajas.fecha', 'ln.caja_concepto_id as concepto_id', 'cc.name as concepto', 'ln.total', 'st.name as estatus')
             ->join('caja_lns as ln', 'ln.caja_id', '=', 'cajas.id')
@@ -96,7 +105,7 @@ class CajasController extends Controller
 
 
         //dd($caja);
-        if (count($caja_filtrada) > 0) {
+        if (count($caja_filtrada) > 0 and $caja_pagada == 0) {
             $ids_invalidos = $caja_filtrada->toArray();
             /*Caja::select('cajas.consecutivo', 'p.razon', 'cajas.cliente_id', 'pag.bnd_referenciado')
                 ->join('plantels as p', 'p.id', '=', 'cajas.plantel_id')
@@ -253,7 +262,12 @@ class CajasController extends Controller
         }
         //$adeudos=Adeudo::where('cliente_id', '=', $cliente->id)->get();
         //dd($cliente);
-        $combinaciones = CombinacionCliente::where('cliente_id', '=', $cliente->id)->get();
+        $combinaciones = CombinacionCliente::where('cliente_id', '=', $cliente->id)->whereNull('deleted_at')->get();
+        if ($combinaciones->count() == 0) {
+            Session::flash('msj', 'Cliente sin combinacion definida');
+            return view('cajas.caja', compact('empleados'))->with('list', Caja::getListFromAllRelationApps())->with('list1', CajaLn::getListFromAllRelationApps());
+        }
+
         $cajas = Caja::select('cajas.consecutivo as caja', 'cajas.fecha', 'ln.caja_concepto_id as concepto_id', 'cc.name as concepto', 'ln.total', 'st.name as estatus')
             ->join('caja_lns as ln', 'ln.caja_id', '=', 'cajas.id')
             ->join('caja_conceptos as cc', 'cc.id', '=', 'ln.caja_concepto_id')

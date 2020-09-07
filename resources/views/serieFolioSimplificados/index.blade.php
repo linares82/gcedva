@@ -48,9 +48,9 @@
                         <input type="hidden" name="q[s]" value="{{ @(Request::input('q')['s']) ?: '' }}" />
                         <div class="form-horizontal">
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_cuenta_ps.id_cont">ID</label>
+                                <label class="col-sm-2 control-label" for="q_cuenta_p_id_lt">ID</label>
                                 <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['cuenta_ps.id_cont']) ?: '' }}" name="q[cuenta_ps.id_cont]" id="q_cuenta_ps.id_cont" />
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['cuenta_p_id_lt']) ?: '' }}" name="q[cuenta_p_id_lt]" id="q_cuenta_p_id_lt" />
                                 </div>
                             </div>
                             <!--

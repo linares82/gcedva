@@ -156,7 +156,7 @@
                                 
                                 <td class="text-right">
                                     @permission('serieFolioSimplificados.index')
-                                    <a target="_blank" class="btn btn-xs btn-default" href="{{ url('serieFolioSimplificados/index'."?q%5Bs%5D=&q%5Bcuenta_ps.id_cont%5D=".$cuentaP->id."&q%5Bserie_cont%5D=&q%5Bfolio_inicial_cont%5D=&q%5Bfolio_actual_cont%5D=&q%5Banio_cont%5D=&q%5Bmes_id_cont%5D=&q%5Bbnd_activo_cont%5D=&q%5Busu_alta_id_cont%5D=&q%5Busu_mod_id_cont%5D=&commit=Buscar&cuentap=".$cuentaP->id) }}"><i class="fa fa-gears"></i> Series y Folios</a>
+                                    <a target="_blank" class="btn btn-xs btn-default" href="{{ url('serieFolioSimplificados/index'."?q%5Bs%5D=&q%5Bcuenta_p_id_lt%5D=".$cuentaP->id."&q%5Bserie_cont%5D=&q%5Bfolio_inicial_cont%5D=&q%5Bfolio_actual_cont%5D=&q%5Banio_cont%5D=&q%5Bmes_id_cont%5D=&q%5Bbnd_activo_cont%5D=&q%5Busu_alta_id_cont%5D=&q%5Busu_mod_id_cont%5D=&commit=Buscar&cuentap=".$cuentaP->id) }}"><i class="fa fa-gears"></i> Series y Folios</a>
                                     @endpermission
                                     @permission('cuentaPs.edit')
                                     <a class="btn btn-xs btn-primary" href="{{ route('cuentaPs.duplicate', $cuentaP->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>

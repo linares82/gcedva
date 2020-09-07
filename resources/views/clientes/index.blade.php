@@ -327,8 +327,13 @@
                                     {!! Form::close() !!}
                                     @endpermission
                                     @permission('cajas.buscarVenta')
-                                    
-                                    @if(count($cliente->cliente->adeudos)>0)
+                                    @php
+                                        $combinacion=App\CombinacionCliente::where('cliente_id',$cliente->cliente->id)->whereNull('deleted_at')->get();
+                                        //dd($combinacion->count());
+                                        $adeudos=App\Adeudo::where('cliente_id',$cliente->cliente->id)->whereNull('deleted_at')->get();
+                                        //dd($adeudos->count());
+                                    @endphp
+                                    @if($adeudos->count()>0 and $combinacion->count()>0)
                                     {!! Form::model($cliente, array('route' => array('cajas.buscarCliente'),'method' => 'post', 'style' => 'display: inline;')) !!}
                                         {!! Form::hidden("cliente_id", null, array("class" => "form-control input-sm", "id" => "cliente_id-field")) !!}
                                         <button type="submit" class="btn btn-xs btn-info"><i class="glyphicon glyphicon-trash"></i> Caja</button>
