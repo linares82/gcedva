@@ -43,7 +43,7 @@
                        @endif
                     </div>
                     <div class="form-group col-md-4 @if($errors->has('mensualidad_sep')) has-error @endif">
-                        <label for="mensualidad_sep-field">Mensualidad SEP (formato decimal 0.00)</label>
+                        <label for="mensualidad_sep-field">SEP (formato decimal 0.00)</label>
                         {!! Form::text("mensualidad_sep", $monto_sep, array("class" => "form-control", "id" => "mensualidad_sep-field")) !!}
                         @if($errors->has("mensualidad_sep"))
                            <span class="help-block">{{ $errors->first("mensualidad_sep") }}</span>

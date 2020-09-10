@@ -1008,14 +1008,17 @@ class AdeudosController extends Controller
                 'sts.name as st_seguimiento',
                 'adeudos.fecha_pago',
                 'adeudos.caja_id',
-                'adeudo_concepto.bnd_mensualidad as mensualidad'
+                'adeudo_concepto.bnd_mensualidad as mensualidad',
+                't.name as turno'
             )
                 ->join('clientes as c', 'c.id', '=', 'adeudos.cliente_id')
                 ->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
                 ->join('seguimientos as s', 's.cliente_id', '=', 'c.id')
                 ->join('st_seguimientos as sts', 'sts.id', '=', 's.st_seguimiento_id')
                 ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
-                ->join('caja_conceptos as adeudo_concepto', 'adeudo_concepto.id', '=', 'adeudos.caja_concepto_id');
+                ->join('caja_conceptos as adeudo_concepto', 'adeudo_concepto.id', '=', 'adeudos.caja_concepto_id')
+                ->join('combinacion_clientes as ccli', 'ccli.id', '=', 'adeudos.combinacion_cliente_id')
+                ->join('turnos as t', 't.id', '=', 'ccli.turno_id');
             if ($datos['detalle_f'] == 1) {
                 $registros_totales_aux->leftJoin('caja_lns as cln', 'cln.adeudo_id', '=', 'adeudos.id')
                     ->leftJoin('cajas as caj', 'caj.id', '=', 'adeudos.caja_id')

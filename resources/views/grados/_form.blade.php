@@ -77,6 +77,20 @@
                          <span class="help-block">{{ $errors->first("seccion") }}</span>
                         @endif
                      </div>
+                     <div class="form-group col-md-4 @if($errors->has('clave_servicio')) has-error @endif">
+                        <label for="clave_servicio-field">C. Servicio Facturacion</label>
+                        {!! Form::text("clave_servicio", null, array("class" => "form-control input-sm", "id" => "clave_servicio-field")) !!}
+                        @if($errors->has("clave_servicio"))
+                         <span class="help-block">{{ $errors->first("clave_servicio") }}</span>
+                        @endif
+                     </div>
+                     <div class="form-group col-md-4 @if($errors->has('nivel_educativo_sat_id')) has-error @endif">
+                        <label for="nivel_educativo_sat_id-field">Nivel Educativo SAT</label>
+                        {!! Form::select("nivel_educativo_sat_id", $list["NivelEducativoSat"], null, array("class" => "form-control select_seguridad", "id" => "nivel_educativo_sat_id-field")) !!}
+                        @if($errors->has("nivel_educativo_sat_id"))
+                         <span class="help-block">{{ $errors->first("modulo_final_id") }}</span>
+                        @endif
+                     </div>
                      <div class="form-group col-md-4 @if($errors->has('id_mapa')) has-error @endif">
                         <label for="id_mapa-field">Id Mapa</label>
                         {!! Form::text("id_mapa", null, array("class" => "form-control input-sm", "id" => "id_mapa-field")) !!}

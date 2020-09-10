@@ -19,6 +19,15 @@
                         <span class="help-block">{{ $errors->first("name") }}</span>
                        @endif
                     </div>
+
+                    <div class="form-group col-md-4 @if($errors->has('leyenda_factura')) has-error @endif">
+                     <label for="leyenda_factura-field">Leyenda Factura</label>
+                     {!! Form::text("leyenda_factura", null, array("class" => "form-control", "id" => "leyenda_factura-field")) !!}
+                     @if($errors->has("leyenda_factura"))
+                      <span class="help-block">{{ $errors->first("leyenda_factura") }}</span>
+                     @endif
+                  </div> 
+
                     <div class="form-group col-md-4 @if($errors->has('monto')) has-error @endif">
                        <label for="monto-field">Monto</label>
                        {!! Form::text("monto", null, array("class" => "form-control", "id" => "monto-field")) !!}

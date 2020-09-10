@@ -130,6 +130,8 @@
                 <th>Matricula</th>
                 <!--<th>Pagado</th>
                 <th>Monto Planeado</th>-->
+                <th>Turno</th>
+                <th>F. Planeada Pago</th>
                 <th>Concepto</th>
                 <th>Pago Recibido</th>
                 <!--<th>Consecutivo Caja</th>
@@ -150,6 +152,8 @@
             <td>{{$detalle['id']}}</td>
             <td>{{ $detalle['nombre'] }} {{ $detalle['nombre2'] }} {{ $detalle['ape_paterno'] }} {{ $detalle['ape_materno'] }}</td>
             <td>{{ $detalle['matricula'] }}</td>
+            <td>{{ $detalle['turno'] }}</td>
+            <td>{{ $detalle['fecha_pago'] }}</td>
             <!--
             <td>
                 @if($detalle['pagado_bnd']==0)
