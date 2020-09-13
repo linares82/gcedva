@@ -435,9 +435,15 @@ class CajasController extends Controller
                         $beca_a = 0;
                         foreach ($cliente->autorizacionBecas as $beca) {
                             //dd(is_null($beca->deleted_at));
+                            $mesAdeudo = Carbon::createFromFormat('Y-m-d', $adeudo->fecha_pago)->month;
+                            $anioAdeudo = Carbon::createFromFormat('Y-m-d', $adeudo->fecha_pago)->year;
+                            $mesInicio = Carbon::createFromFormat('Y-m-d', $beca->lectivo->inicio)->month;
+                            $anioInicio = Carbon::createFromFormat('Y-m-d', $beca->lectivo->inicio)->year;
+                            $mesFin = Carbon::createFromFormat('Y-m-d', $beca->lectivo->fin)->month;
+                            $anioFin = Carbon::createFromFormat('Y-m-d', $beca->lectivo->fin)->year;
                             if (
-                                $beca->lectivo->inicio <= $adeudo->fecha_pago and
-                                $beca->lectivo->fin >= $adeudo->fecha_pago and
+                                (($beca->lectivo->inicio <= $adeudo->fecha_pago and $beca->lectivo->fin >= $adeudo->fecha_pago) or
+                                    (($anioInicio <= $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin >= $anioAdeudo or $mesFin >= $mesAdeudo))) and
                                 $beca->aut_dueno == 4 and
                                 is_null($beca->deleted_at)
                             ) {

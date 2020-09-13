@@ -574,7 +574,7 @@ class PagosController extends Controller
             ->with('list1', CajaLn::getListFromAllRelationApps());
     }
 
-    public function imprimir(Request $request)
+    public function imprimirFiscal(Request $request)
     {
         $data = $request->all();
 
@@ -634,15 +634,98 @@ class PagosController extends Controller
         }
 
         $formatter = new NumeroALetras;
-        $totalEntero = intdiv($caja->total, 1);
-        $centavos = ($caja->total - $totalEntero) * 100;
+        $totalEntero = intdiv($pago->monto, 1);
+        $centavos = ($pago->monto - $totalEntero) * 100;
         $totalLetra = $formatter->toMoney($totalEntero, 2, "Pesos", 'Centavos');
         //dd($centavos);
 
         //dd($fechaLetra);
 
 
-        return view('cajas.imprimirTicketPago', array(
+        return view('cajas.imprimirTicketPagoFiscal', array(
+            'cliente' => $cliente,
+            'caja' => $caja,
+            'empleado' => $empleado,
+            'fecha' => $date,
+            'combinacion' => $combinacion,
+            'pago' => $pago,
+            'acumulado' => $acumulado,
+            'impresion_token' => $impresion_token,
+            'totalLetra' => $totalLetra,
+            'centavos' => $centavos,
+            'atendio_pago' => $atendio_pago
+        ));
+    }
+
+    public function imprimirNoFiscal(Request $request)
+    {
+        $data = $request->all();
+
+        $pago = Pago::find($data['pago']);
+
+        $caja = Caja::find($pago->caja_id);
+
+        $atendio_pago = Empleado::where('user_id', $pago->usu_alta_id)->first();
+
+        $input['caja_id'] = $caja->id;
+        $input['pago_id'] = $pago->id;
+        $input['cliente_id'] = $caja->cliente_id;
+        $input['plantel_id'] = $caja->plantel_id;
+        $input['consecutivo'] = $caja->consecutivo;
+        $input['monto'] = $pago->monto;
+        $input['toke_unico'] = uniqid(base64_encode(str_random(6)));
+        $input['usu_alta_id'] = Auth::user()->id;
+        $input['usu_mod_id'] = Auth::user()->id;
+        $input['fecha_pago'] = $pago->fecha;
+        $impresion_token = ImpresionTicket::create($input);
+
+        $acumulado = Pago::select('monto')->where('caja_id', '=', $caja->id)->sum('monto');
+
+        $adeudo = Adeudo::where('caja_id', '=', $caja->id)->first();
+
+        if (!is_null($adeudo)) {
+            $combinacion = CombinacionCliente::find($adeudo->combinacion_cliente_id);
+            //dd($combinacion);
+            $cliente = Cliente::find($caja->cliente_id);
+            $empleado = Empleado::where('user_id', '=', Auth::user()->id)->first();
+
+            $carbon = new \Carbon\Carbon();
+            $date = $carbon->now();
+            $date = $date->format('d-m-Y h:i:s');
+
+            //dd($adeudo->toArray());
+            /*return view('cajas.imprimirTicketPago', array(
+                'cliente' => $cliente,
+                'caja' => $caja,
+                'empleado' => $empleado,
+                'fecha' => $date,
+                'combinacion' => $combinacion,
+                'pago' => $pago,
+                'acumulado' => $acumulado
+            ));*/
+        } else {
+            $combinacion = 0;
+            $cliente = Cliente::find($caja->cliente_id);
+            $empleado = Empleado::where('user_id', '=', $pago->usua_alta_id)->first();
+
+            $carbon = new \Carbon\Carbon();
+            $date = $carbon->now();
+            $date = $date->format('d-m-Y h:i:s');
+
+            //dd($adeudo->toArray());
+
+        }
+
+        $formatter = new NumeroALetras;
+        $totalEntero = intdiv($pago->monto, 1);
+        $centavos = ($pago->monto - $totalEntero) * 100;
+        $totalLetra = $formatter->toMoney($totalEntero, 2, "Pesos", 'Centavos');
+        //dd($centavos);
+
+        //dd($fechaLetra);
+
+
+        return view('cajas.imprimirTicketPagoNoFiscal', array(
             'cliente' => $cliente,
             'caja' => $caja,
             'empleado' => $empleado,
@@ -1139,5 +1222,40 @@ class PagosController extends Controller
             'plantel' => $plantel,
             'data' => $data
         ));
+    }
+
+    public function pagosFacturas()
+    {
+        $plantels = Plantel::pluck('razon', 'id');
+        return view('pagos.reportes.pagosFacturas', compact('plantels'));
+    }
+
+    public function pagosFacturasR(Request $request)
+    {
+        $datos = $request->all();
+        $registros = Pago::select(
+            'p.razon',
+            'fp.name as forma_pago',
+            'c.cliente_id',
+            'c.consecutivo',
+            'pagos.fecha as fecha_pago',
+            'pagos.monto',
+            'pagos.uuid'
+        )
+            ->join('cajas as c', 'c.id', '=', 'pagos.caja_id')
+            ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
+            ->join('forma_pagos as fp', 'fp.id', '=', 'pagos.forma_pago_id')
+            ->where('c.plantel_id', $datos['plantel_f'])
+            ->where('pagos.fecha', '>=', $datos['fecha_f'])
+            ->where('pagos.fecha', '<=', $datos['fecha_t'])
+            ->where('pagos.bnd_pagado', 1)
+            ->whereNull('pagos.deleted_at')
+            ->whereNull('c.deleted_at')
+            ->orderBy('p.razon')
+            ->orderBy('fp.name')
+            ->orderBy('pagos.uuid')
+            ->get();
+        //dd($registros->toArray());
+        return view('pagos.reportes.pagosFacturasR', compact('registros'));
     }
 }

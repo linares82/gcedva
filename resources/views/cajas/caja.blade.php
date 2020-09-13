@@ -357,12 +357,12 @@
                         <thead>
                             <tr>
                                 <th>Id</th>
-                                <th>Monto</th>
-                                <th>Fecha</th>
-                                <th>Forma Pago</th>
-                                <th>Ref.</th>
-                                <th>C. Efectivo</th>
-                                <th>Consecutivo</th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <!--<th>Ref.</th>
+                                <th>C. Efectivo</th>-->
+                                <!--<th>Consecutivo</th>-->
                                 <th></th>
                             </tr>
                             {{ csrf_field() }}
@@ -373,21 +373,46 @@
                             @if(is_null($pago->deleted_at))
                             <tr>
                                 <td> {{$pago->consecutivo}} </td>
-                                <td>{{ $pago->monto }}</td>
-                                <td>{{ $pago->fecha }}</td>
-                                <td>{{ $pago->formaPago->name }}</td><td>{{ $pago->referencia }}</td>
+                                <td><strong>Monto:</strong>{{ $pago->monto }} <br>
+                                    <strong>Fecha:</strong> {{ $pago->fecha }} <br>
+                                    <strong>Forma Pago:</strong> {{ $pago->formaPago->name }} <br>
+                                    <strong>Folio y Serie:</strong> {{$pago->csc_simplificado}}<br>
+                                    <strong>Referencia:</strong> {{ $pago->referencia }} <br>
+                                    @if($pago->cuenta_efectivo_id<>0)
+                                    <strong>C. Efectivo:</strong>{{ App\CuentasEfectivo::where('id', $pago->cuenta_efectivo_id)->value('name')}}
+                                    @endif
+                                </td>
+
+                                <!--<td>
+                                </td>
+                                <td></td>-->
+                                <!--<td>{{ $pago->referencia }}</td>
                                 <td>@if($pago->cuenta_efectivo_id<>0)
                                     {{ App\CuentasEfectivo::where('id', $pago->cuenta_efectivo_id)->value('name')}}
                                     @endif
-                                </td>
-                                <td>{{$pago->csc_simplificado}}</td>
+                                </td>-->
+                                <!--<td></td>-->
                                 <td>
+                                    
+                                    
                                     @permission('cajas.eliminarPago')
-                                    {!! Form::model($pago, array('route' => array('pagos.destroy', $pago->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('Ã‚Â¿Borrar? Ã‚Â¿Esta seguro?')) { return true } else {return false };")) !!}
+                                    {!! Form::model($pago, array('route' => array('pagos.destroy', $pago->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}
                                         <button type="submit" class="btn btn-xs btn-danger" data-toggle="tooltip" title="Eliminar"><i class="glyphicon glyphicon-trash"></i> </button>
                                     {!! Form::close() !!}
                                     @endpermission
-                                    <a href="{{route('pagos.imprimir', array('pago'=>$pago->id))}}" data-toggle="tooltip" title="Imprimir" class="btn btn-info btn-xs " target="_blank"><i class="fa fa-print"></i></a>
+                                    @php
+                                    $mensualidad=0;
+                                    foreach($caja->cajaLns as $linea){
+                                        if($linea->cajaConcepto->bnd_mensualidad==1){
+                                            $mensualidad=1;
+                                        }
+                                    }
+                                    @endphp
+                                    @if($mensualidad==1)
+                                    <a href="{{route('pagos.imprimirFiscal', array('pago'=>$pago->id))}}" data-toggle="tooltip" title="Imprimir" class="btn btn-info btn-xs " target="_blank"><i class="fa fa-print"></i></a>
+                                    @else
+                                    <a href="{{route('pagos.imprimirNoFiscal', array('pago'=>$pago->id))}}" data-toggle="tooltip" title="Imprimir" class="btn btn-info btn-xs " target="_blank"><i class="fa fa-print"></i></a>
+                                    @endif
                                 </td>
                                 @if(optional($pago->peticionMultipago)->count()>0)
                                     
@@ -784,6 +809,77 @@ Agregar nuevo registro
     </div>
 </div>
 
+<div id="verPago" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                    
+<!--                <button type="button" class="close" data-dismiss="modal">X</button>-->
+                <h4 class="modal-title">Ver Pago</h4>
+            </div>
+            <div class="modal-body">
+                {!! Form::open(array('route' => 'cajaLns.store')) !!}
+                    <div class="form-group col-md-6 @if($errors->has('monto')) has-error @endif">
+                       <label for="monto-field">Monto</label>
+                       {!! Form::hidden("caja_id", $caja->id, array("class" => "form-control", "id" => "caja_id-field")) !!}
+                       {!! Form::text("monto", null, array("class" => "form-control", "id" => "monto-field")) !!}
+                       <div id="msj_validacion"></div>
+                       @if($errors->has("monto"))
+                        <span class="help-block">{{ $errors->first("monto") }}</span>
+                       @endif
+                    </div>
+                    <div class="form-group col-md-6 @if($errors->has('fecha')) has-error @endif">
+                       <label for="fecha-field">Fecha</label>
+                       {!! Form::text("fecha", null, array("class" => "form-control fecha", "id" => "fecha_ln-field")) !!}
+                       @if($errors->has("fecha"))
+                        <span class="help-block">{{ $errors->first("fecha") }}</span>
+                       @endif
+                    </div>
+                    <div class="form-group col-md-6 @if($errors->has('forma_pago_id')) has-error @endif">
+                       <label for="forma_pago_id-field">Forma Pago</label>
+                       {!! Form::select("forma_pago_id", $list["FormaPago"], null, array("class" => "form-control", "id" => "forma_pago_id-field", 'disabled'=>true)) !!}
+                       @if($errors->has("forma_pago_id"))
+                        <span class="help-block">{{ $errors->first("forma_pago_id") }}</span>
+                       @endif
+                    </div>
+                    
+                    <div class="form-group col-md-6 @if($errors->has('cuenta_efectivo_id')) has-error @endif">
+                       <label for="cuenta_efectivo_id-field">Cuenta Efectivo</label>
+                       {!! Form::select("cuenta_efectivo_id-field", App\CuentasEfectivo::pluck('name','id'), null, array("class" => "form-control", "id" => "cuenta_efectivo_id-field")) !!}
+                       @if($errors->has("cuenta_efectivo_id"))
+                        <span class="help-block">{{ $errors->first("cuenta_efectivo_id") }}</span>
+                       @endif
+                    </div>
+                    <div class="form-group col-md-6 @if($errors->has('referencia')) has-error @endif">
+                       <label for="referencia-field">Referencia</label>
+                       {!! Form::text("referencia", 0, array("class" => "form-control", "id" => "referencia-field")) !!}
+                       @if($errors->has("referencia"))
+                        <span class="help-block">{{ $errors->first("referencia") }}</span>
+                       @endif
+                    </div>
+                    
+                    <div class="form-group col-md-6 @if($errors->has('referencia')) has-error @endif">
+                        <button type="button" class="btn btn-warning validarReferencia" id="validarReferencia">
+                            <span id="" class='glyphicon glyphicon-check'></span> Validar
+                        </button>
+                        <div id='loadingValidar' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
+                        <div id='resVal'></div>
+                    </div>
+                    
+                {!! Form::close() !!}
+                <div class="row"></div>
+                <div class="modal-footer">
+                    
+                    <button type="button" class="btn btn-warning" data-dismiss="modal" id='cerrarAgregarPago'>
+                        <span class='glyphicon glyphicon-remove'></span> Cerrar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <div id="divActualizar" class="modal fade" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -1137,6 +1233,33 @@ Agregar nuevo registro
         //Cargar cuentas de efectivo
         //Fin cargar cuentas de efectivo
     });
+
+    $(document).on('click', '.ver-pago', function() {
+    
+    $('.modal-title').text('Ver Pago');
+    //Limpiar valores
+    $('#verPago').modal({backdrop: 'static', keyboard: false});
+    //$('#monto-field').val($(this).data('total_caja'));
+    $('#monto-field').val({{$monto_max_pago}});
+    $('#forma_pago_id-field').val({{$caja->forma_pago_id}}).change();
+    $('#fecha_ln-field').val('{{$caja->fecha}}');
+    console.log({{$indicador}});
+    @if(isset($caja) )
+        @if($caja->cajaLns->count()<>1 or $indicador==0 or ($caja->forma_pago_id<>3 and $caja->forma_pago_id<>4 and $caja->forma_pago_id<>6))
+        
+        $('#bnd_referenciado-field').prop('disabled', true);
+        @endif
+        
+    @endif  
+    
+    $('#addPago').modal('show');
+    
+    $('#AgregarPago').prop('disabled',true);
+    
+    
+    //Cargar cuentas de efectivo
+    //Fin cargar cuentas de efectivo
+});
     
     
     
