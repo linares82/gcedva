@@ -54,24 +54,10 @@ class IANMatricula extends Command
             ->whereIn('cc.id', array(1, 22, 23, 24, 25))
             //->where('pagado_bnd', 1)->where('fecha_pago', '>=', '2020-09-01')
             ->whereIn('cli.id', array(
-	    20631,
-22370,
-22253,
-21522,
-21687,
-20692,
-18985,
-22418,
-22529,
-22408,
-22407,
-22406,
-22411,
-22531,
-19513,
-22526,
-22383,
-20906
+13504,
+2499,
+8985,
+1843	    
 ))
             ->whereNull('adeudos.deleted_at')
             //->where('cli.matricula', '')

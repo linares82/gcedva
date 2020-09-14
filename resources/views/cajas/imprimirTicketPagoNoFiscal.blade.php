@@ -11,7 +11,7 @@
 
 <body>
 @php
-$sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->get();
+$sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_id',1)->get();
 @endphp
 
 <div id="printeArea">

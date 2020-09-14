@@ -11,7 +11,7 @@
 
 <body>
 @php
-$sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->get();
+$sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_id',1)->get();
 @endphp
 
 <div id="printeArea">
@@ -56,7 +56,7 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->get();
             {{ $cliente->plantel->colonia }},
             {{ $cliente->plantel->municipio }},
             {{ $cliente->plantel->estado }},
-            México
+            MÉXICO
 
         </td>
     </tr>
@@ -270,7 +270,7 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->get();
             {{ $cliente->plantel->colonia }},
             {{ $cliente->plantel->municipio }},
             {{ $cliente->plantel->estado }},
-            México
+            MÉXICO
         </td>
     </tr>
     
