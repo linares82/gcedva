@@ -50,14 +50,14 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->get();
     <tr><td colspan="2" align="center">RFC: {{$cliente->plantel->rfc}}</td></tr>
     <tr>
         <td colspan="2" align="center">
-            {{
-                $cliente->plantel->calle." ".
-                $cliente->plantel->no_int.", ".
-                $cliente->plantel->no_ext.", COLONIA ".
-                $cliente->plantel->colonia.", ".
-                $cliente->plantel->municipio.", ".
-                $cliente->plantel->estado.", MÉXICO"
-            }}
+            {{ $cliente->plantel->calle }}, 
+            {{ $cliente->plantel->no_int }},
+            {{ $cliente->plantel->no_ext }},
+            {{ $cliente->plantel->colonia }},
+            {{ $cliente->plantel->municipio }},
+            {{ $cliente->plantel->estado }},
+            México
+
         </td>
     </tr>
     
@@ -204,7 +204,7 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->get();
         <td></td>
         <td align="right"> {{ $caja->total-$acumulado }} </td>
     </tr>
-
+-->
     <tr>
         <td colspan=3>
         <table style="width:100%;height:auto;border:1px solid #ccc;font-size: 0.70em;">
@@ -221,6 +221,7 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->get();
         </table>
         <td>
     </tr>
+    <!--
     <tr><td>{{$fechaLetra}}</td></tr>
     <tr><td>*El saldo pendiente puede incrementar por recargos al exceder la fecha limite de pago</td></tr>
     -->
@@ -263,14 +264,13 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->get();
     <tr><td colspan="2" align="center">RFC: {{$cliente->plantel->rfc}}</td></tr>
     <tr>
         <td colspan="2" align="center">
-            {{
-                $cliente->plantel->calle." ".
-                $cliente->plantel->no_int.", ".
-                $cliente->plantel->no_ext.", COLONIA ".
-                $cliente->plantel->colonia.", ".
-                $cliente->plantel->municipio.", ".
-                $cliente->plantel->estado.", MÉXICO"
-            }}
+            {{ $cliente->plantel->calle }}, 
+            {{ $cliente->plantel->no_int }},
+            {{ $cliente->plantel->no_ext }},
+            {{ $cliente->plantel->colonia }},
+            {{ $cliente->plantel->municipio }},
+            {{ $cliente->plantel->estado }},
+            México
         </td>
     </tr>
     
@@ -417,7 +417,7 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->get();
         <td></td>
         <td align="right"> {{ $caja->total-$acumulado }} </td>
     </tr>
-
+-->
     <tr>
         <td colspan=3>
         <table style="width:100%;height:auto;border:1px solid #ccc;font-size: 0.70em;">
@@ -434,6 +434,7 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->get();
         </table>
         <td>
     </tr>
+    <!--
     <tr><td>{{$fechaLetra}}</td></tr>
     <tr><td>*El saldo pendiente puede incrementar por recargos al exceder la fecha limite de pago</td></tr>
 -->    
