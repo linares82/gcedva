@@ -378,6 +378,7 @@
                                     <strong>Forma Pago:</strong> {{ $pago->formaPago->name }} <br>
                                     <strong>Folio y Serie:</strong> {{$pago->csc_simplificado}}<br>
                                     <strong>Referencia:</strong> {{ $pago->referencia }} <br>
+                                    <strong>UUID:</strong> {{ $pago->uuid }} <br>
                                     @if($pago->cuenta_efectivo_id<>0)
                                     <strong>C. Efectivo:</strong>{{ App\CuentasEfectivo::where('id', $pago->cuenta_efectivo_id)->value('name')}}
                                     @endif
@@ -431,7 +432,9 @@
                                         <span class="">Pagado - {{$success->mp_responsemsg}}</span>
                                         @else 
                                         <span class=""> En proceso - {{$success->mp_responsemsg}}<span>
-                                        @endif    
+                                        @endif
+                                        
+                                        
                                     </td> 
                                     <td>
                                         @if($pago->bnd_pagado<>1)  
@@ -498,7 +501,7 @@
                                         </div>
                                         
                                     </th>
-                                    <th>Concepto</th><th>ED</th><th>Monto</th> <th>Desc.</th> <th>Pagado</th><th>Borrar</th><th>Fecha</th><th>Ticket</th><th>Pagado</th><th>dias</th> 
+                                    <th>Concepto</th><th>ED</th><th>Monto</th> <th>Desc.</th> <th>Pagado</th><th>Borrar</th><th>Fecha</th><th>Ticket</th><th>Pag./Fact.</th><th>dias</th> 
                                 </tr>
                             </thead>
                             <tbody>
@@ -638,7 +641,10 @@
                                 <td class="bg-yellow"> 
                                 <?php $regla_pago_seriado=1;?>
                             @endif
-                                @if($adeudo->pagado_bnd==1) SI @else NO @endif</td>
+                                @if($adeudo->pagado_bnd==1) SI @else NO @endif
+                                @if(is_null($pago->uuid)) / NO @else / SI @endif    
+                            </td>
+                                
                             <td>{{$dia}}</td>
 	
                         </tr>

@@ -187,7 +187,11 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_
             $mes->name . " de " . $lugarFecha->year;
          //dd($fechaLetra);   
         @endphp
-        <td>Fecha Pago:{{$fechaLetra}}</td>
+        <td>Fecha Pago:{{$fechaLetra}} 
+        @permission('ticket.fechaPago')
+            Creado: {{ $pago->created_at }}
+        @endpermission
+        </td>
         <!--<td align="right"> @{{ $pago->monto }} </td>-->
     </tr>
     <!--<tr>
@@ -400,7 +404,11 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_
             $mes->name . " de " . $lugarFecha->year;
          //dd($fechaLetra);   
         @endphp
-        <td>Fecha Pago:{{$fechaLetra}}</td>
+        <td>Fecha Pago:{{$fechaLetra}}
+        @permission('ticket.fechaPago')
+            Creado: {{ $pago->created_at }}
+        @endpermission
+        </td>
         <!--<td align="right"> @{{ $pago->monto }} </td>-->
     </tr>
     <!--<tr>

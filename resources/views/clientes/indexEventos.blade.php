@@ -175,6 +175,13 @@
                             <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['clientes.created_at_menorq']) ?: '' }}" name="q[clientes.created_at_menorq]" id="q_clientes.created_at_menorq" />
                             </div>
 
+                            <div class="form-group col-md-4">
+                                <label for="q_clientes.matricula_cont">MATRICULA</label>
+                                
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['clientes.matricula_cont']) ?: '' }}" name="q[clientes.matricula_cont]" id="q_clientes.matricula_cont" />
+                                
+                            </div>
+
                             <div class="form-group" id='ultimo'>
                                 <div class="col-sm-10 col-sm-offset-2">
                                     <input type="submit" name="commit" value="Buscar" class="btn btn-default btn-xs" />
@@ -272,6 +279,14 @@
                                     @endif
                                     @permission('corporativo.editarCliente')
                                     <a class="btn btn-xs btn-warning" href="{{ route('clientes.edit', $cliente->cliente->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
+                                    @endpermission
+                                    @php
+                                     $usuario=\App\usuarioCliente::where('name',$cliente->cliente->matricula)->first();   
+                                    @endphp
+                                    @permission('usuarioClientes.edit')
+                                    @if(!is_null($usuario))
+                                    <a class="btn btn-xs btn-info" href="{{ route('usuarioClientes.edit', $usuario->id) }}"><i class="glyphicon glyphicon-user"></i> Editar Usuario</a>
+                                    @endif
                                     @endpermission
                                     @permission('clientes.destroy')
                                     {!! Form::model($cliente, array('route' => array('clientes.destroy', $cliente->cliente->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}

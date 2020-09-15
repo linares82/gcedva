@@ -80,8 +80,41 @@ body{
                     </tr>
                 </thead>
                 <tbody>
-                    
+                    @php
+                    $suma=0;
+                    $forma_pago="";
+                    $uuid="";
+                    @endphp
                     @foreach($registros as $registro)
+                    @if((is_null($registro->uuid)<>$uuid or $registro->forma_pago<>$forma_pago) and $loop->index>0)
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>Total Facturado/No facturado</td>
+                        <td>{{number_format($suma_grupo_factura,2)}}</td>
+                        <td></td>
+                    </tr>
+                    @php
+                        $suma_grupo_factura=0;
+                    @endphp
+                    @endif
+                    @if($registro->forma_pago<>$forma_pago and $loop->index>0)
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>Total por forma de pago</td>
+                        <td>{{number_format($suma,2)}}</td>
+                        <td></td>
+                    </tr>
+                    @php
+                        $suma=0;
+                    @endphp
+                    @endif
+                    
                     <tr>
                         <td>{{$registro->razon}}</td>
                         <td>{{$registro->forma_pago}}</td>
@@ -91,17 +124,36 @@ body{
                         <td>{{number_format($registro->monto,2)}}</td>
                         <td>{{$registro->uuid}}</td>
                     </tr>
-                    <?php $suma=$suma+$registro->monto; ?>
+                    @php 
+                    $suma=$suma+$registro->monto; 
+                    $forma_pago=$registro->forma_pago;
+                    $suma_grupo_factura=$suma_grupo_factura+$registro->monto; 
+                    if(is_null($registro->uuid))
+                    $uuid=true;
+                    else
+                    $uuid=false;
+                    //dd($uuid);
+                    @endphp
                     @endforeach
                     <tr>
                         <td></td>
                         <td></td>
                         <td></td>
                         <td></td>
-                        <td>Total</td>
+                        <td>Total Facturado/No facturado</td>
+                        <td>{{number_format($suma_grupo_factura,2)}}</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>Total por Forma de pago</td>
                         <td>{{number_format($suma,2)}}</td>
                         <td></td>
                     </tr>
+                    
                 </tbody>
             </table>
             
