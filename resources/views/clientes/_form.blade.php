@@ -350,38 +350,38 @@
                         
                         @permission('combinacionClientes.store')
                         @if(isset($cliente))
-                        @php
-                            $combinaciones=\App\CombinacionCliente::where('cliente_id',$cliente->id)
-                            ->where('plantel_id','<>',0)
-                            ->where('especialidad_id','<>',0)
-                            ->where('nivel_id','<>',0)
-                            ->where('grado_id','<>',0)
-                            ->where('turno_id','<>',0)
-                            ->where('plan_pago_id','<>',0)
-                            ->get();
-                        @endphp
-                        
-                        @if($combinaciones->count()==0)
-                        <div class="form-group col-md-1 @if($errors->has('grado_id')) has-error @endif">
-                            <input type="button" id="crearCombinacion" class="btn btn-xs btn-block btn-success" value="Crear" onclick="CrearCombinacionCliente()" />
-                            <!--<a href=# class="btn btn-xs btn-warning btn-block" id="btnConsultaPlan">Ver Plan</a>-->
-                        </div>
-                        <div class="form-group col-md-1 @if($errors->has('grado_id')) has-error @endif">
-                            <br/><input type="button" id="actualizarCombinacion" class="btn btn-xs btn-block btn-success" value="Guardar" onclick="ActualizarCombinacionCliente()" style="display:none;" />
+                            @php
+                                $combinaciones=\App\CombinacionCliente::where('cliente_id',$cliente->id)
+                                ->where('plantel_id','<>',0)
+                                ->where('especialidad_id','<>',0)
+                                ->where('nivel_id','<>',0)
+                                ->where('grado_id','<>',0)
+                                ->where('turno_id','<>',0)
+                                ->where('plan_pago_id','<>',0)
+                                ->get();
+                            @endphp
                             
-                        </div>
-                        @else
-                        @permission('combinacionClientes.storeMasDeUno')
-                        <div class="form-group col-md-1 @if($errors->has('grado_id')) has-error @endif">
-                            <input type="button" id="crearCombinacion" class="btn btn-xs btn-block btn-success" value="Crear" onclick="CrearCombinacionCliente()" />
-                            <!--<a href=# class="btn btn-xs btn-warning btn-block" id="btnConsultaPlan">Ver Plan</a>-->
-                        </div>
-                        <div class="form-group col-md-1 @if($errors->has('grado_id')) has-error @endif">
-                            <br/><input type="button" id="actualizarCombinacion" class="btn btn-xs btn-block btn-success" value="Guardar" onclick="ActualizarCombinacionCliente()" style="display:none;" />
-                            
-                        </div>
-                        @endif
-                        @endif
+                            @if($combinaciones->count()==0)
+                                <div class="form-group col-md-1 @if($errors->has('grado_id')) has-error @endif">
+                                    <input type="button" id="crearCombinacion" class="btn btn-xs btn-block btn-success" value="Crear" onclick="CrearCombinacionCliente()" />
+                                    <!--<a href=# class="btn btn-xs btn-warning btn-block" id="btnConsultaPlan">Ver Plan</a>-->
+                                </div>
+                                <div class="form-group col-md-1 @if($errors->has('grado_id')) has-error @endif">
+                                    <br/><input type="button" id="actualizarCombinacion" class="btn btn-xs btn-block btn-success" value="Guardar" onclick="ActualizarCombinacionCliente()" style="display:none;" />
+                                    
+                                </div>
+                            @else
+                            @permission('combinacionClientes.storeMasDeUno')
+                                <div class="form-group col-md-1 @if($errors->has('grado_id')) has-error @endif">
+                                    <input type="button" id="crearCombinacion" class="btn btn-xs btn-block btn-success" value="Crear" onclick="CrearCombinacionCliente()" />
+                                    <!--<a href=# class="btn btn-xs btn-warning btn-block" id="btnConsultaPlan">Ver Plan</a>-->
+                                </div>
+                                <div class="form-group col-md-1 @if($errors->has('grado_id')) has-error @endif">
+                                    <br/><input type="button" id="actualizarCombinacion" class="btn btn-xs btn-block btn-success" value="Guardar" onclick="ActualizarCombinacionCliente()" style="display:none;" />
+                                    
+                                </div>
+                            @endpermission
+                            @endif
                         @endif
                         @endpermission    
                         

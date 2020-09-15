@@ -281,7 +281,7 @@
                                     <a class="btn btn-xs btn-warning" href="{{ route('clientes.edit', $cliente->cliente->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
                                     @endpermission
                                     @php
-                                     $usuario=\App\usuarioCliente::where('name',$cliente->cliente->matricula)->first();   
+                                     $usuario=\App\UsuarioCliente::where('name',$cliente->cliente->matricula)->first();   
                                     @endphp
                                     @permission('usuarioClientes.edit')
                                     @if(!is_null($usuario))

@@ -375,6 +375,9 @@
                                 <td> {{$pago->consecutivo}} </td>
                                 <td><strong>Monto:</strong>{{ $pago->monto }} <br>
                                     <strong>Fecha:</strong> {{ $pago->fecha }} <br>
+                                    @permission('ticket.fechaPago')
+                                    <strong>Creado:</strong> {{ $pago->created_at }} <br>
+                                    @endpermission
                                     <strong>Forma Pago:</strong> {{ $pago->formaPago->name }} <br>
                                     <strong>Folio y Serie:</strong> {{$pago->csc_simplificado}}<br>
                                     <strong>Referencia:</strong> {{ $pago->referencia }} <br>

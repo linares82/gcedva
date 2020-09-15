@@ -100,16 +100,16 @@ class PagoObserver
                     $cliente->matricula = $entrada['matricula'];
                     $cliente->save();
                     Log::info('matricula cliente:' . $cliente->id . "-" . $cliente->matricula);
+                }
 
-                    if (!is_null($cliente->matricula)) {
-                        $buscarMatricula = UsuarioCliente::where('name', $cliente->matricula)->first();
-                        $buscarMail = UsuarioCliente::where('email', $cliente->mail)->first();
-                        if (is_null($buscarMatricula) and is_null($buscarMail)) {
-                            $usuario_cliente['name'] = $cliente->matricula;
-                            $usuario_cliente['email'] = $cliente->mail;
-                            $usuario_cliente['password'] = Hash::make('123456');
-                            UsuarioCliente::create($usuario_cliente);
-                        }
+                if (!is_null($cliente->matricula)) {
+                    $buscarMatricula = UsuarioCliente::where('name', $cliente->matricula)->where('email', $cliente->mail)->first();
+
+                    if (is_null($buscarMatricula)) {
+                        $usuario_cliente['name'] = $cliente->matricula;
+                        $usuario_cliente['email'] = $cliente->mail;
+                        $usuario_cliente['password'] = Hash::make('123456');
+                        UsuarioCliente::create($usuario_cliente);
                     }
                 }
 
