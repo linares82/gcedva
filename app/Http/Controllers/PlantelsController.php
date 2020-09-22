@@ -35,7 +35,7 @@ class PlantelsController extends Controller
 	{
 		$plantels = Plantel::getAllData($request);
 
-		return view('plantels.index', compact('plantels'));
+		return view('plantels.index', compact('plantels'))->with('list', Plantel::getListFromAllRelationApps());
 	}
 
 	/**

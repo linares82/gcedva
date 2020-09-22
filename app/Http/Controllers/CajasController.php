@@ -141,12 +141,16 @@ class CajasController extends Controller
         $caja_r['st_caja_id'] = 0;
         $caja_r['usu_alta_id'] = Auth::user()->id;
         $caja_r['usu_mod_id'] = Auth::user()->id;
-        $caja_r['consecutivo'] = $plantel->consecutivo + 1;
+        //$plantel->consecutivo = $plantel->consecutivo + 1;
+        //$plantel->save();
+        $caja_r['consecutivo'] = ++$plantel->consecutivo;
+        $plantel->save();
+
 
         $caja = Caja::create($caja_r);
 
-        $plantel->consecutivo = $plantel->consecutivo + 1;
-        $plantel->save();
+
+
 
         $combinaciones = CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
 

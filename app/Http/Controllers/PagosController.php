@@ -920,7 +920,7 @@ class PagosController extends Controller
             ->join('users as up', 'up.id', 'pag.usu_alta_id')
             ->join('forma_pagos as fp', 'fp.id', '=', 'pag.forma_pago_id')
             ->where('cajas.plantel_id', '=', $data['plantel_f'])
-            ->where('cajas.usu_alta_id', '<=', $usuario->user_id)
+            ->where('cajas.usu_alta_id', '=', $usuario->user_id)
             ->whereNull('pag.deleted_at')
             ->where('cajas.st_caja_id', '=', 1)
             ->orderBy('fp.id')

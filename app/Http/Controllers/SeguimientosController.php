@@ -250,7 +250,7 @@ class SeguimientosController extends Controller
         $mes = (int) date('m');
         $fecha = date('d-m-Y');
 
-        $seguimientos = Seguimiento::select('c.nombre as Nombre', 'c.nombre2 as Segundo Nombre', 'c.ape_paterno as Apellido_Paterno', 'c.ape_materno as Apellido_Materno', 'c.calle as Calle', 'c.no_interior as No_Interior', 'c.no_exterior as No_Exterior', 'm.name as Municipio', 'e.name as Estado', 'c.tel_fijo as TelÃ©fono_Fijo', 'tel_cel as TelÃ©fono_Celular', 'mail as Correo_ElectrÃ³nico', 'sts.name as Estatus_Seguimiento', 'stc.name as Estatus_Cliente')
+        $seguimientos = Seguimiento::select('c.nombre as Nombre', 'c.nombre2 as Segundo Nombre', 'c.ape_paterno as Apellido_Paterno', 'c.ape_materno as Apellido_Materno', 'c.calle as Calle', 'c.no_interior as No_Interior', 'c.no_exterior as No_Exterior', 'm.name as Municipio', 'e.name as Estado', 'c.tel_fijo as TelÃƒÂ©fono_Fijo', 'tel_cel as TelÃƒÂ©fono_Celular', 'mail as Correo_ElectrÃƒÂ³nico', 'sts.name as Estatus_Seguimiento', 'stc.name as Estatus_Cliente')
             ->join('st_seguimientos as sts', 'sts.id', '=', 'seguimientos.estatus_id')
             ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
             ->join('municipios as m', 'm.id', '=', 'c.municipio_id')
@@ -1427,9 +1427,10 @@ class SeguimientosController extends Controller
 
         $registros_aux2 = CombinacionCliente::select('c.id', DB::raw(''
             . 'c.nombre,c.nombre2,c.ape_paterno,c.ape_materno, c.matricula, '
-            . 'pla.razon as plantel, g.name as grado, cc.name as concepto'))
+            . 'pla.razon as plantel, g.name as grado, cc.name as concepto', 'g.id as grado_id_orden'))
             ->join('clientes as c', 'c.id', '=', 'combinacion_clientes.cliente_id')
             ->join('plantels as pla', 'pla.id', '=', 'c.plantel_id')
+            //->join('especialidads as esp', 'esp.id', '=', 'g.id as grado_id')
             ->join('especialidads as esp', 'esp.id', '=', 'combinacion_clientes.especialidad_id')
             //->join('cajas as caj', 'caj.cliente_id', '=', 'c.id')
             //->join('caja_lns as clns', 'clns.caja_id', '=', 'caj.id')
@@ -1457,14 +1458,14 @@ class SeguimientosController extends Controller
             ->where(function ($query) {
                 $query->orWhere('cc.id', 1)->orWhere('cc.id', 22)->orWhere('cc.id', 23)->orWhere('cc.id', 24)->orWhere('cc.id', 25);
             })
-            ->orderBy('plantel')
-            ->orderBy('combinacion_clientes.grado_id')
+            //->orderBy('plantel')
+            //->orderBy('combinacion_clientes.grado_id')
             ->distinct();
         //->get();
 
         $registros_aux = CombinacionCliente::select('c.id', DB::raw(''
             . 'c.nombre,c.nombre2,c.ape_paterno,c.ape_materno, c.matricula, '
-            . 'pla.razon as plantel, g.name as grado, cc.name as concepto'))
+            . 'pla.razon as plantel, g.name as grado, cc.name as concepto', 'g.id as grado_id_orden'))
             ->join('clientes as c', 'c.id', '=', 'combinacion_clientes.cliente_id')
             ->join('plantels as pla', 'pla.id', '=', 'c.plantel_id')
             ->join('especialidads as esp', 'esp.id', '=', 'combinacion_clientes.especialidad_id')
@@ -1491,7 +1492,7 @@ class SeguimientosController extends Controller
             })
             ->union($registros_aux2)
             ->orderBy('plantel')
-            ->orderBy('combinacion_clientes.grado_id')
+            ->orderBy('grado')
             ->distinct()
             ->get();
 

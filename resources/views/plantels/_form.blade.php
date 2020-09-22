@@ -460,6 +460,27 @@
                     <span class="help-block">{{ $errors->first("meta_total") }}</span>
                     @endif
                 </div>
+                <div class="form-group col-md-4 @if($errors->has('fcuenta')) has-error @endif">
+                    <label for="fcuenta-field">Cuenta Facturacion</label>
+                    {!! Form::text("fcuenta", null, array("class" => "form-control input-sm", "id" => "fcuenta-field")) !!}
+                    @if($errors->has("meta_total"))
+                    <span class="help-block">{{ $errors->first("fcuenta") }}</span>
+                    @endif
+                </div>
+                <div class="form-group col-md-4 @if($errors->has('fusuario')) has-error @endif">
+                    <label for="fusuario-field">Usuario Facturacion</label>
+                    {!! Form::text("fusuario", null, array("class" => "form-control input-sm", "id" => "fusuario-field")) !!}
+                    @if($errors->has("fusuario"))
+                    <span class="help-block">{{ $errors->first("fusuario") }}</span>
+                    @endif
+                </div>
+                <div class="form-group col-md-4 @if($errors->has('fpassword')) has-error @endif">
+                    <label for="fpassword-field">Password Facturación</label>
+                    {!! Form::text("fpassword", null, array("class" => "form-control input-sm", "id" => "fpassword-field")) !!}
+                    @if($errors->has("fpassword"))
+                    <span class="help-block">{{ $errors->first("fpassword") }}</span>
+                    @endif
+                </div>
                 
             </fieldset>
             <div class="box box-default">

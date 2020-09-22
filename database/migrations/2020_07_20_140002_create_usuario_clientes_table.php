@@ -18,7 +18,7 @@ class CreateUsuarioClientesTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->index('name');
-            $table->string('email');
+            $table->string('email')->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();

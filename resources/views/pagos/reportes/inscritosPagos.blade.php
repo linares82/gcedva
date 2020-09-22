@@ -123,7 +123,7 @@
 
     function getCmbEmpleados(){
         $.ajax({
-        url: '{{ route("empleados.getAsesoresXplantel") }}',
+        url: '{{ route("empleados.getEmpleadosXplantel") }}',
         type: 'GET',
         data: "empleado_id="+$('#empleado_f-field option:selected').val()+"&plantel_id=" + $('#plantel_f-field option:selected').val()  +"&puesto_id=5" + "",
         dataType: 'json',
