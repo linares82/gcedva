@@ -105,6 +105,8 @@ return array(
     'AddFieldsReportsToEmpleadosTable' => $baseDir . '/database/migrations/2020_07_31_144003_add_fields_reports_to_empleados_table.php',
     'AddFieldsToLectivosTable' => $baseDir . '/database/migrations/2020_08_07_093123_add_fields_to_lectivos_table.php',
     'AddFileToAutorizacionBecasTable' => $baseDir . '/database/migrations/2019_11_29_130802_add_file_to_autorizacion_becas_table.php',
+    'AddFolioFacturaToPagosTable' => $baseDir . '/database/migrations/2020_09_22_162636_add_folio_factura_to_pagos_table.php',
+    'AddFolioFacturaToPlantelsTable' => $baseDir . '/database/migrations/2020_09_22_161826_add_folio_factura_to_plantels_table.php',
     'AddFondoCredencialEspecialidadsTable' => $baseDir . '/database/migrations/2020_01_20_141610_add_fondo_credencial_especialidads_table.php',
     'AddHashEbanxesTable' => $baseDir . '/database/migrations/2019_01_14_154325_add_hash_ebanxes_table.php',
     'AddIdMapaToGradosTable' => $baseDir . '/database/migrations/2020_08_07_092216_add_id_mapa_to_grados_table.php',

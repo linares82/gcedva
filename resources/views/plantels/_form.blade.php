@@ -481,6 +481,20 @@
                     <span class="help-block">{{ $errors->first("fpassword") }}</span>
                     @endif
                 </div>
+                <div class="form-group col-md-4 @if($errors->has('serie_factura')) has-error @endif">
+                    <label for="serie_factura-field">Serie Factura</label>
+                    {!! Form::text("serie_factura", null, array("class" => "form-control input-sm", "id" => "serie_factura-field")) !!}
+                    @if($errors->has("serie_factura"))
+                    <span class="help-block">{{ $errors->first("serie_factura") }}</span>
+                    @endif
+                </div>
+                <div class="form-group col-md-4 @if($errors->has('folio_facturados')) has-error @endif">
+                    <label for="folio_facturados-field">Folio Factura</label>
+                    {!! Form::text("folio_facturados", null, array("class" => "form-control input-sm", "id" => "folio_facturados-field")) !!}
+                    @if($errors->has("folio_facturados"))
+                    <span class="help-block">{{ $errors->first("folio_facturados") }}</span>
+                    @endif
+                </div>
                 
             </fieldset>
             <div class="box box-default">

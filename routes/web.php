@@ -8454,11 +8454,20 @@ Route::get(
 )->middleware('auth');
 
 Route::get(
-    '/pagos/imprimirTodos',
+    '/pagos/imprimirTodosFiscal',
     array(
-        'as' => 'pagos.imprimirTodos',
+        'as' => 'pagos.imprimirTodosFiscal',
         'middleware' => 'permission:pagos.imprimir',
-        'uses' => 'PagosController@imprimirTodos'
+        'uses' => 'PagosController@imprimirTodosFiscal'
+    )
+)->middleware('auth');
+
+Route::get(
+    '/pagos/imprimirTodosNoFiscal',
+    array(
+        'as' => 'pagos.imprimirTodosNoFiscal',
+        'middleware' => 'permission:pagos.imprimir',
+        'uses' => 'PagosController@imprimirTodosNoFiscal'
     )
 )->middleware('auth');
 

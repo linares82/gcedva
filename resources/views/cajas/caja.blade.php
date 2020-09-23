@@ -337,8 +337,20 @@
                         <label>
                             <strong>Pagos</strong>
                         </label>
+                        @php
+                        $mensualidad=0;
+                        foreach($caja->cajaLns as $linea){
+                            if($linea->cajaConcepto->bnd_mensualidad==1){
+                                $mensualidad=1;
+                            }
+                        }
+                        @endphp
+                        @if($mensualidad==1)
+                        <a href="{{route('pagos.imprimirTodosFiscal', array('caja'=>$caja->id))}}" data-toggle="tooltip" title="Imprimir" class="btn btn-info btn-xs " target="_blank"><i class="fa fa-print"></i></a>
+                        @else
+                        <a href="{{route('pagos.imprimirTodosNoFiscal', array('caja'=>$caja->id))}}" data-toggle="tooltip" title="Imprimir" class="btn btn-info btn-xs " target="_blank"><i class="fa fa-print"></i></a>
+                        @endif
                         
-                        <a href="{{route('pagos.imprimirTodos', array('caja'=>$caja->id))}}" data-toggle="tooltip" title="Imprimir" class="btn btn-info btn-xs " target="_blank"><i class="fa fa-print"></i>Imprimir Todo</a>
                         
                         <div class="box-tools pull-right">
                             <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
