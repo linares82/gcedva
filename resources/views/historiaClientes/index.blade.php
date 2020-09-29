@@ -205,9 +205,9 @@
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clientes.nombre', 'title' => 'CLIENTE'])</th>
                         <th>ESTATUS</th>
                         <th>AUTORIZACIONES</th>
-                        <th>SERV. ESC.</th>
                         <th>CAJA</th>
                         <th>DIRECTOR</th>
+                        <th>CAJA CORP.</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
@@ -217,69 +217,79 @@
                             <tr>
                                 <td><a href="{{ route('historiaClientes.show', $historiaCliente->id) }}">{{$historiaCliente->id}}</a></td>
                                 <td>{{$historiaCliente->eventoCliente->name}}</td>
-                    <td>{{$historiaCliente->descripcion}}</td>
-                    <td>{{$historiaCliente->fecha}}</td>
-                    <td>{{$historiaCliente->fec_vigencia}}</td>
-                    <td><a href='{!! asset("/imagenes/historia_clientes/".$historiaCliente->id."/".$historiaCliente->archivo) !!}' target='_blank'>Ver</a></td>
-                    <td>{{$historiaCliente->cliente->nombre}} {{$historiaCliente->cliente->nombre2}} {{$historiaCliente->cliente->ape_paterno}} {{$historiaCliente->cliente->ape_materno}}</td>
-                    <td>{{$historiaCliente->stHistoriaCliente->name}}</td>
-                    <td>
-                        @if($historiaCliente->evento_cliente_id==2)
-                        <button class="btn btn-success btnVerLineas pull-right btn-xs" lang="mesaj" data-check="{{$historiaCliente->id}}" data-href="formation_json_parents" style="margin-left:10px;" >
-                                        <span class="fa fa-eye" aria-hidden="true"></span> Ver
-                        </button>
-                         @endif
-                        
-                        
-                    </td>
-                    <td>
-                        {{optional($historiaCliente->autSerEsc)->name}}
-                        @if($historiaCliente->evento_cliente_id==2)
-                        @permission('autorizacionBaja.aut_servicios_escolares')
-                                <button type="button" class="btn btn-primary btn-xs btn_create_comentario" 
-                                        data-toggle="modal" data-historia_cliente_id="{{ $historiaCliente->id }}"
-                                                                      data-autorizacion='aut_ser_esc'>
-                                    Autorización
-                                </button>
-                        @endpermission
-                        @endif
-                    </td>
-                    <td>
-                        {{optional($historiaCliente->autCaja)->name}}
-                        @if($historiaCliente->aut_ser_esc==2 and $historiaCliente->evento_cliente_id==2)
-                        @permission('autorizacionBaja.aut_caja')
-                                <button type="button" class="btn btn-primary btn-xs btn_create_comentario" 
-                                        data-toggle="modal" data-historia_cliente_id="{{ $historiaCliente->id }}"
-                                                                      data-autorizacion='aut_caja'>
-                                    Autorización
-                                </button>
-                        @endpermission
-                        @endif
-                    </td>
-                    <td>
-                        {{optional($historiaCliente->autSerEscCorp)->name}}
-                        @if($historiaCliente->aut_ser_esc==2 and $historiaCliente->aut_caja==2 and $historiaCliente->evento_cliente_id==2)
-                        @permission('autorizacionBaja.aut_servicios_escolares_c')
-                                <button type="button" class="btn btn-primary btn-xs btn_create_comentario"  
-                                        data-toggle="modal" data-historia_cliente_id="{{ $historiaCliente->id }}"
-                                                                      data-autorizacion='aut_ser_esc_corp'>
-                                    Autorización
-                                </button>
-                        @endpermission
-                        @endif
-                    </td>
-                                <td class="text-right">
-                                    @permission('historiaClientes.edit')
-                                    <a class="btn btn-xs btn-warning" href="{{ route('historiaClientes.edit', $historiaCliente->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
+                                <td>{{$historiaCliente->descripcion}}</td>
+                                <td>{{$historiaCliente->fecha}}</td>
+                                <td>{{$historiaCliente->fec_vigencia}}</td>
+                                <td><a href='{!! asset("/imagenes/historia_clientes/".$historiaCliente->id."/".$historiaCliente->archivo) !!}' target='_blank'>Ver</a></td>
+                                <td>{{$historiaCliente->cliente->nombre}} {{$historiaCliente->cliente->nombre2}} {{$historiaCliente->cliente->ape_paterno}} {{$historiaCliente->cliente->ape_materno}}</td>
+                                <td>{{$historiaCliente->stHistoriaCliente->name}}</td>
+                                <td>
+                                    @if($historiaCliente->evento_cliente_id==2)
+                                    <button class="btn btn-success btnVerLineas pull-right btn-xs" lang="mesaj" data-check="{{$historiaCliente->id}}" data-href="formation_json_parents" style="margin-left:10px;" >
+                                                    <span class="fa fa-eye" aria-hidden="true"></span> Ver
+                                    </button>
+                                    @endif
+                                    
+                                    
+                                </td>
+                                <td>
+                                    <!--{{optional($historiaCliente->autSerEsc)->name}}
+                                    @@if($historiaCliente->evento_cliente_id==2)
+                                    @@permission('autorizacionBaja.aut_servicios_escolares')
+                                            <button type="button" class="btn btn-primary btn-xs btn_create_comentario" 
+                                                    data-toggle="modal" data-historia_cliente_id="{{ $historiaCliente->id }}"
+                                                                                data-autorizacion='aut_ser_esc'>
+                                                Autorización
+                                            </button>
+                                    @@endpermission
+                                    @@endif-->
+                                    {{optional($historiaCliente->autCaja)->name}}
+                                    @if($historiaCliente->evento_cliente_id==2)
+                                    @permission('autorizacionBaja.aut_caja')
+                                            <button type="button" class="btn btn-primary btn-xs btn_create_comentario" 
+                                                    data-toggle="modal" data-historia_cliente_id="{{ $historiaCliente->id }}"
+                                                                                data-autorizacion='aut_caja'>
+                                                Autorización
+                                            </button>
                                     @endpermission
-                                    @permission('historiaClientes.reactivar')
-                                        <a class="btn btn-xs btn-warning" href="{{ route('historiaClientes.reactivar', array('id'=>$historiaCliente)) }}"><i class="glyphicon glyphicon-edit"></i> Reactivar</a>
+                                    @endif
+                                </td>
+                                <td>
+                                    {{optional($historiaCliente->autDirector)->name}}
+                                    @if($historiaCliente->aut_caja==2 and $historiaCliente->evento_cliente_id==2)
+                                    @permission('autorizacionBaja.aut_director')
+                                            <button type="button" class="btn btn-primary btn-xs btn_create_comentario" 
+                                                    data-toggle="modal" data-historia_cliente_id="{{ $historiaCliente->id }}"
+                                                                                data-autorizacion='aut_director'>
+                                                Autorización
+                                            </button>
                                     @endpermission
-                                    @permission('historiaClientes.destroy')
-                                    {!! Form::model($historiaCliente, array('route' => array('historiaClientes.destroy', $historiaCliente->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}
-                                        <button type="submit" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> Borrar</button>
-                                    {!! Form::close() !!}
+                                    @endif
+                                </td>
+                                <td>
+                                    {{optional($historiaCliente->autCajaCorp)->name}}
+                                    @if($historiaCliente->aut_caja==2 and $historiaCliente->aut_director==2 and $historiaCliente->evento_cliente_id==2)
+                                    @permission('autorizacionBaja.aut_caja_corp')
+                                            <button type="button" class="btn btn-primary btn-xs btn_create_comentario"  
+                                                    data-toggle="modal" data-historia_cliente_id="{{ $historiaCliente->id }}"
+                                                                                data-autorizacion='aut_caja_corp'>
+                                                Autorización
+                                            </button>
                                     @endpermission
+                                    @endif
+                                </td>
+                                            <td class="text-right">
+                                                @permission('historiaClientes.edit')
+                                                <a class="btn btn-xs btn-warning" href="{{ route('historiaClientes.edit', $historiaCliente->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
+                                                @endpermission
+                                                @permission('historiaClientes.reactivar')
+                                                    <a class="btn btn-xs btn-warning" href="{{ route('historiaClientes.reactivar', array('id'=>$historiaCliente)) }}"><i class="glyphicon glyphicon-edit"></i> Reactivar</a>
+                                                @endpermission
+                                                @permission('historiaClientes.destroy')
+                                                {!! Form::model($historiaCliente, array('route' => array('historiaClientes.destroy', $historiaCliente->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}
+                                                    <button type="submit" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> Borrar</button>
+                                                {!! Form::close() !!}
+                                                @endpermission
                                 </td>
                             </tr>
                         @endforeach
@@ -371,7 +381,7 @@
             beforeSend : function(){$("#loading3").show(); },
             complete : function(){$("#loading3").hide(); },
             success: function(data) {
-                    location.reload();
+                      location.reload();
                 }   
         });
     });

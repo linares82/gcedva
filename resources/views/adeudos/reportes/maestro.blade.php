@@ -46,7 +46,7 @@
                 </div>
                 <div class="form-group col-md-6 @if($errors->has('detalle_f')) has-error @endif">
                     <label for="detalle_f-field">Con detalle:</label>
-                    {!! Form::select("detalle_f", array('1'=>'Ambos','2'=>'Pagos','3'=>'Adeudos', '4'=>'Sin Detalle'), null, array("class" => "form-control select_seguridad", "id" => "detalle_f-field")) !!}
+                    {!! Form::select("detalle_f", array('3'=>'Adeudos'), null, array("class" => "form-control select_seguridad", "id" => "detalle_f-field")) !!}
                     @if($errors->has("detalle_f"))
                     <span class="help-block">{{ $errors->first("detalle_f") }}</span>
                     @endif
@@ -85,7 +85,28 @@
 
     $('#concepto_f-field').select2();
 
-    
+    @permission('maestro.detalleTodo')
+        let opciones=new Array(5);
+        opciones[1]= 'Ambos';
+        opciones[2]='Pagos';
+        opciones[3]='Adeudos';
+        opciones[4]='Sin Detalle';
+        $('#detalle_f-field').empty();
+        for(i=1;i<opciones.length;i++){
+            $('#detalle_f-field').append("<option value='" + i + "'>" + opciones[i] + "</option>");
+        }
+    @endpermission
+
+    @permission('maestro.detalleAdeudos')
+        let opciones=new Array(5);
+        opciones[3]='Adeudos';
+        $('#detalle_f-field').empty();
+        //for(i=0;i<opciones.length;i++){
+            $('#detalle_f-field').append("<option value='3'>" + opciones[3] + "</option>");
+        //}
+    @endpermission
+
+
     $('#fecha_f-field').Zebra_DatePicker({
         days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
         months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],

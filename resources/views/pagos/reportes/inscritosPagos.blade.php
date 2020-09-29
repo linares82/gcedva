@@ -32,7 +32,7 @@
                 </div>
                 <div class="form-group col-md-6 @if($errors->has('empleado_f')) has-error @endif">
                     <label for="empleado_f-field">Colaborador de:</label>
-                    {!! Form::select("empleado_f", $empleados, null, array("class" => "form-control select_seguridad", "id" => "empleado_f-field")) !!}
+                    {!! Form::select("empleado_f[]", $empleados, null, array("class" => "form-control select_seguridad", "id" => "empleado_f-field", 'multiple'=>true)) !!}
                     @if($errors->has("empleado_f"))
                     <span class="help-block">{{ $errors->first("empleado_f") }}</span>
                     @endif
@@ -47,7 +47,7 @@
             
 <!--                <div class="form-group col-md-6 @if($errors->has('empleado_f')) has-error @endif">
                     <label for="empleado_f-field">Colaborador de:</label>
-                    {!! Form::select("empleado_f", array(), null, array("class" => "form-control select_seguridad", "id" => "empleado_f-field")) !!}
+                    {!! Form::select("empleado_f[]", $empleados, null, array("class" => "form-control select_seguridad", "id" => "empleado_f-field", 'multiple'=>true)) !!}
                     @if($errors->has("empleado_f"))
                     <span class="help-block">{{ $errors->first("empleado_f") }}</span>
                     @endif
@@ -133,7 +133,7 @@
 
             $('#empleado_f-field').html('');
             //$('#especialidad_id-field').empty();
-            $('#empleado_f-field').append($('<option></option>').text('Seleccionar Opción').val('0'));
+            $('#empleado_f-field').append($('<option></option>').text('Seleccionar OpciÃ³n').val('0'));
 
 
             $.each(data, function(i) {

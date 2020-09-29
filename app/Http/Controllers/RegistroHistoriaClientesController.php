@@ -52,6 +52,7 @@ class RegistroHistoriaClientesController extends Controller
 	{
 
 		$input = $request->except('autorizacion');
+		//dd($input) ;
 		$campo_autorizacion = $request->only('autorizacion');
 		//dd($campo_autorizacion['autorizacion']);
 		$input['usu_alta_id'] = Auth::user()->id;
@@ -60,21 +61,22 @@ class RegistroHistoriaClientesController extends Controller
 		//create data
 		$r = RegistroHistoriaCliente::create($input);
 		$historiaCliente = HistoriaCliente::find($r->historia_cliente_id);
-		if ($campo_autorizacion['autorizacion'] == 'aut_ser_esc') {
-			$historiaCliente->aut_ser_esc = $r->st_historia_cliente_id;
-			$historiaCliente->st_historia_cliente_id = 6;
-		} elseif ($campo_autorizacion['autorizacion'] == 'aut_caja') {
+		if ($campo_autorizacion['autorizacion'] == 'aut_caja') {
 			$historiaCliente->aut_caja = $r->st_historia_cliente_id;
 			$historiaCliente->st_historia_cliente_id = 6;
-		} elseif ($campo_autorizacion['autorizacion'] == 'aut_ser_esc_corp') {
-			$historiaCliente->aut_ser_esc_corp = $r->st_historia_cliente_id;
+		} elseif ($campo_autorizacion['autorizacion'] == 'aut_director') {
+			$historiaCliente->aut_director = $r->st_historia_cliente_id;
+			$historiaCliente->st_historia_cliente_id = 6;
+		} elseif ($campo_autorizacion['autorizacion'] == 'aut_caja_corp') {
+			$historiaCliente->aut_caja_corp = $r->st_historia_cliente_id;
 			$historiaCliente->st_historia_cliente_id = $r->st_historia_cliente_id;
 		}
 		$historiaCliente->save();
 		$e=$historiaCliente;
 		if (
-			$historiaCliente->aut_ser_esc == 2 and
 			$historiaCliente->aut_caja == 2 and
+			$historiaCliente->aut_director == 2 and
+			$historiaCliente->aut_caja_corp == 2 and
 			$historiaCliente->st_historia_cliente_id == 2
 		) {
 			if ($e->evento_cliente_id == 4) {

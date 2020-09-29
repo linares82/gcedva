@@ -58,10 +58,10 @@
                         <td>{{$registro->fecha_pago}}</td>
                         <td>{{$registro->created_at}}</td>
                         <td>
-                        <?php $rcaja=App\Caja::find($registro->caja);
+                        <?php $rcaja=App\CajaLn::where('caja_id',$registro->caja)->whereNull('deleted_at')->get();
                         //dd($rcaja->cajaLns);
                         ?>
-                          @foreach($rcaja->cajaLns as $ln)
+                          @foreach($rcaja as $ln)
                                 {{$ln->cajaConcepto->name}}<br/>
                             @endforeach  
                         </td>

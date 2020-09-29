@@ -127,6 +127,7 @@
                 <th>Plantel</th>
                 <th>Cliente Id</th>
                 <th>Cliente</th>
+		<th></th>
                 <th>Matricula</th>
                 <!--<th>Pagado</th>
                 <th>Monto Planeado</th>-->
@@ -134,6 +135,7 @@
                 <th>F. Planeada Pago</th>
                 <th>Concepto</th>
                 <th>Pago Recibido</th>
+		<th>Csc. Caja</th>
                 <!--<th>Consecutivo Caja</th>
                 <th>Caja borrada</th>
                 <th>Linea de Caja Borrada</th>
@@ -151,6 +153,7 @@
             <td>{{$detalle['razon']}}</td>
             <td>{{$detalle['id']}}</td>
             <td>{{ $detalle['nombre'] }} {{ $detalle['nombre2'] }} {{ $detalle['ape_paterno'] }} {{ $detalle['ape_materno'] }}</td>
+	    <td> {{$detalle['usu_alta_id']}} </td>
             <td>{{ $detalle['matricula'] }}</td>
             <td>{{ $detalle['turno'] }}</td>
             <td>{{ $detalle['fecha_pago'] }}</td>
@@ -164,9 +167,10 @@
             </td>
             <td>{{$detalle['adeudo_planeado']}}</td>-->
             <td>{{$detalle['concepto']}}</td>
-            <td>{{$detalle['pago_calculado_adeudo']}}</td>
-            <!--
-            <td>{{$detalle['consecutivo']}}</td>
+            <!--<td>{{$detalle['pago_calculado_adeudo']}}</td>-->
+	    <td>{{$detalle['monto_pago']}}</td>
+	    <td>{{$detalle['consecutivo']}}</td>
+<!--            
             <td>{{$detalle['borrado_c']}}</td>
             <td>{{$detalle['borrado_cln']}}</td>
             <td>{{$detalle['st_cliente']}}</td>

@@ -789,16 +789,16 @@ class PagosController extends Controller
 
         }
 
-        foreach($caja->pagos as $p){
-            $usu_alta=$p->usu_alta_id;
+        foreach ($caja->pagos as $p) {
+            $usu_alta = $p->usu_alta_id;
             break;
         }
         $atendio_pago = Empleado::where('user_id', $usu_alta)->first();
-        
 
-        $suma_pagos=0;
-        foreach($caja->pagos as $pago){
-            $suma_pagos=$pago->monto+$suma_pagos;
+
+        $suma_pagos = 0;
+        foreach ($caja->pagos as $pago) {
+            $suma_pagos = $pago->monto + $suma_pagos;
         }
         $formatter = new NumeroALetras;
         $totalEntero = intdiv($suma_pagos, 1);
@@ -815,8 +815,8 @@ class PagosController extends Controller
             'acumulado' => $acumulado,
             'impresion_token' => $impresion_token,
             'atendio_pago' => $atendio_pago,
-            'suma_pagos'=>$suma_pagos,
-            'totalLetra'=>$totalLetra
+            'suma_pagos' => $suma_pagos,
+            'totalLetra' => $totalLetra
         ));
     }
 
@@ -869,15 +869,15 @@ class PagosController extends Controller
 
         }
 
-        foreach($caja->pagos as $p){
-            $usu_alta=$p->usu_alta_id;
+        foreach ($caja->pagos as $p) {
+            $usu_alta = $p->usu_alta_id;
             break;
         }
         $atendio_pago = Empleado::where('user_id', $usu_alta)->first();
 
-        $suma_pagos=0;
-        foreach($caja->pagos as $pago){
-            $suma_pagos=$pago->monto+$suma_pagos;
+        $suma_pagos = 0;
+        foreach ($caja->pagos as $pago) {
+            $suma_pagos = $pago->monto + $suma_pagos;
         }
         $formatter = new NumeroALetras;
         $totalEntero = intdiv($suma_pagos, 1);
@@ -895,8 +895,8 @@ class PagosController extends Controller
             'acumulado' => $acumulado,
             'impresion_token' => $impresion_token,
             'atendio_pago' => $atendio_pago,
-            'suma_pagos'=>$suma_pagos,
-            'totalLetra'=>$totalLetra
+            'suma_pagos' => $suma_pagos,
+            'totalLetra' => $totalLetra
         ));
     }
 
@@ -989,7 +989,7 @@ class PagosController extends Controller
     public function postRptPagos(Request $request)
     {
         $data = $request->all();
-
+        //dd($data);
         if (!$request->has('plantel_f')) {
             $data['plantel_f'] = DB::table('empleados as e')
                 ->where('e.user_id', Auth::user()->id)->value('plantel_id');
@@ -998,7 +998,8 @@ class PagosController extends Controller
 
         $plantel = Plantel::find($data['plantel_f']);
         //dd($data);
-        $usuario = Empleado::find($data['empleado_f']);
+        $usuario = Empleado::whereIn('id', $data['empleado_f'])->pluck('user_id');
+        //dd($usuario);
 
         $registros_pagados_aux = Caja::select(
             'pla.razon',
@@ -1016,7 +1017,7 @@ class PagosController extends Controller
             ->join('users as up', 'up.id', 'pag.usu_alta_id')
             ->join('forma_pagos as fp', 'fp.id', '=', 'pag.forma_pago_id')
             ->where('cajas.plantel_id', '=', $data['plantel_f'])
-            ->where('cajas.usu_alta_id', '=', $usuario->user_id)
+            ->whereIn('cajas.usu_alta_id', $usuario)
             ->whereNull('pag.deleted_at')
             ->where('cajas.st_caja_id', '=', 1)
             ->orderBy('fp.id')
@@ -1072,7 +1073,7 @@ class PagosController extends Controller
             ->where('cajas.plantel_id', '=', $data['plantel_f'])
             ->where('pag.fecha', '>=', $data['fecha_f'])
             ->where('pag.fecha', '<=', $data['fecha_t'])
-            ->where('cajas.usu_alta_id', '<=', $usuario->user_id)
+            ->whereIn('cajas.usu_alta_id',  $usuario)
             ->whereNull('pag.deleted_at')
             ->where('cajas.st_caja_id', '=', 3)
             ->orderBy('fp.id')
