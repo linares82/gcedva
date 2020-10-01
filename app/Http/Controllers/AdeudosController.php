@@ -985,28 +985,77 @@ class AdeudosController extends Controller
         $lineas_procesadas = array();
         $lineas_detalle = array();
         foreach ($datos['plantel_f'] as $plantel) {
+
             $registros_totales_aux = Adeudo::join('clientes as c', 'c.id', '=', 'adeudos.cliente_id')
                 ->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
                 ->join('seguimientos as s', 's.cliente_id', '=', 'c.id')
                 ->join('st_seguimientos as sts', 'sts.id', '=', 's.st_seguimiento_id')
-                ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
                 ->join('caja_conceptos as adeudo_concepto', 'adeudo_concepto.id', '=', 'adeudos.caja_concepto_id')
                 ->join('combinacion_clientes as ccli', 'ccli.id', '=', 'adeudos.combinacion_cliente_id')
                 ->join('turnos as t', 't.id', '=', 'ccli.turno_id');
             if ($datos['detalle_f'] == 1) {
                 $registros_totales_aux->leftJoin('caja_lns as cln', 'cln.adeudo_id', '=', 'adeudos.id')
                     ->leftJoin('cajas as caj', 'caj.id', '=', 'adeudos.caja_id')
+                    ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
                     ->join('caja_conceptos as cc', 'cc.id', '=', 'adeudos.caja_concepto_id');
             } elseif ($datos['detalle_f'] == 2) {
+                $cajas_sin_adeudos = Caja::select(
+                    'p.razon',
+                    'c.id',
+                    'c.nombre',
+                    'c.nombre2',
+                    'c.ape_paterno',
+                    'c.ape_materno',
+                    'c.matricula',
+                    'cc.name as concepto',
+                    'cc.id as concepto_id',
+                    'cln.total as pago_calculado_adeudo',
+                    'cajas.id as caja',
+                    'cajas.consecutivo',
+                    'cln.deleted_at as borrado_cln',
+                    'cajas.deleted_at as borrado_c',
+                    'cajas.usu_alta_id',
+                    'c.st_cliente_id',
+                    'stc.name as st_cliente',
+                    's.st_seguimiento_id',
+                    'sts.name as st_seguimiento',
+                    DB::raw('date(0000-00-00) as fecha_pago'),
+                    'cajas.id',
+                    'cc.name as mensualidad',
+                    DB::raw('1 as pagado_bnd'),
+                    't.name as turno',
+                    'pag.monto as monto_pago'
+                )
+                    ->join('clientes as c', 'c.id', '=', 'cajas.cliente_id')
+                    ->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
+                    ->join('seguimientos as s', 's.cliente_id', '=', 'c.id')
+                    ->join('st_seguimientos as sts', 'sts.id', '=', 's.st_seguimiento_id')
+                    ->join('plantels as p', 'p.id', '=', 'cajas.plantel_id')
+                    ->join('caja_lns as cln', 'cln.caja_id', '=', 'cajas.id')
+                    ->join('caja_conceptos as cc', 'cc.id', 'cln.caja_concepto_id')
+                    ->join('pagos as pag', 'pag.caja_id', '=', 'cajas.id')
+                    ->join('combinacion_clientes as ccli', 'ccli.cliente_id', '=', 'c.id')
+                    ->join('turnos as t', 't.id', '=', 'ccli.turno_id')
+                    ->where('cajas.plantel_id', $plantel)
+                    ->where('cajas.st_caja_id', 1)
+                    ->where('cln.adeudo_id', 0)
+                    ->whereNull('cln.deleted_at')
+                    ->whereNull('pag.deleted_at')
+                    ->whereIn('cc.id', $datos['concepto_f'])
+                    ->whereNull('p.deleted_at')
+                    ->whereNull('cajas.deleted_at')
+                    ->whereNull('ccli.deleted_at');
+                //->get();
+                //dd($cajas_sin_adeudos->toArray());
                 $registros_totales_aux->join('caja_lns as cln', 'cln.adeudo_id', '=', 'adeudos.id')
                     ->join('cajas as caj', 'caj.id', '=', 'adeudos.caja_id')
                     ->join('pagos as pag', 'pag.caja_id', '=', 'caj.id')
+                    ->join('plantels as p', 'p.id', '=', 'caj.plantel_id')
                     ->whereDate('pag.fecha', '>=', $datos['fecha_f'])
                     ->whereDate('pag.fecha', '<=', $datos['fecha_t'])
                     ->join('caja_conceptos as cc', 'cc.id', '=', 'adeudos.caja_concepto_id')
                     ->where('caj.st_caja_id', 1)
                     ->whereNull('cln.deleted_at')
-                    ->whereNull('caj.deleted_at')
                     ->whereNull('pag.deleted_at')
                     ->select(
                         'p.razon',
@@ -1016,8 +1065,6 @@ class AdeudosController extends Controller
                         'c.ape_paterno',
                         'c.ape_materno',
                         'c.matricula',
-                        'adeudos.pagado_bnd',
-                        'adeudos.monto as adeudo_planeado',
                         'cc.name as concepto',
                         'cc.id as concepto_id',
                         'cln.total as pago_calculado_adeudo',
@@ -1033,13 +1080,16 @@ class AdeudosController extends Controller
                         'adeudos.fecha_pago',
                         'adeudos.caja_id',
                         'adeudo_concepto.bnd_mensualidad as mensualidad',
+                        'adeudos.pagado_bnd',
                         't.name as turno',
                         'pag.monto as monto_pago'
                     )
-                    ->whereNull('caj.deleted_at');
+                    ->whereNull('caj.deleted_at')
+                    ->union($cajas_sin_adeudos);
             } elseif ($datos['detalle_f'] == 3) {
                 $registros_totales_aux->leftJoin('caja_lns as cln', 'cln.adeudo_id', '=', 'adeudos.id')
                     ->leftJoin('cajas as caj', 'caj.id', '=', 'adeudos.caja_id')
+                    ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
                     ->join('caja_conceptos as cc', 'cc.id', '=', 'adeudos.caja_concepto_id')
                     ->select(
                         'p.razon',
@@ -1072,18 +1122,19 @@ class AdeudosController extends Controller
             } else {
                 $registros_totales_aux->leftJoin('caja_lns as cln', 'cln.adeudo_id', '=', 'adeudos.id')
                     ->leftJoin('cajas as caj', 'caj.id', '=', 'adeudos.caja_id')
+                    ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
                     ->join('caja_conceptos as cc', 'cc.id', '=', 'adeudos.caja_concepto_id');
             }
             $registros_totales = $registros_totales_aux->where('p.id', $plantel)
                 //->whereIn('stc.id', array(3, 4, 20, 22, 23, 24, 25))
                 ->whereIn('adeudos.caja_concepto_id', $datos['concepto_f'])
-                ->whereDate('adeudos.fecha_pago', '>=', $datos['fecha_f'])
-                ->whereDate('adeudos.fecha_pago', '<=', $datos['fecha_t'])
+                //->whereDate('adeudos.fecha_pago', '>=', $datos['fecha_f'])
+                //->whereDate('adeudos.fecha_pago', '<=', $datos['fecha_t'])
                 ->whereNull('adeudos.deleted_at')
                 ->whereNull('s.deleted_at')
-                ->orderBy('p.id')
-                ->orderBy('adeudos.caja_concepto_id')
-                ->orderBy('c.id')
+                //->orderBy('p.id')
+                //->orderBy('adeudos.caja_concepto_id')
+                //->orderBy('c.id')
                 ->get();
             //dd($registros_totales->toArray());
             //FLC $registros_totales = DB::select('CALL maestroR(?,?,?)', array($plantel, $datos['fecha_f'], $datos['fecha_t']));
@@ -1107,18 +1158,25 @@ class AdeudosController extends Controller
                 //dd($hoy);
                 //dd($fecha_aux->lessThan($hoy));
 
+                if ($registro->consecutivo == 1154) {
+                    //dd($registro->toArray());
+                }
 
                 $calculo['plantel'] = $registro->razon;
 
-                if (is_null($registro->borrado_c) and is_null($registro->borrado_cln) and ($registro->st_cliente_id == 2 or $registro->st_cliente_id == 4 or $registro->st_cliente_id == 20 or $registro->st_cliente_id == 22)) {
+                if (
+                    is_null($registro->borrado_c) and is_null($registro->borrado_cln) and
+                    ($registro->st_cliente_id == 2 or
+                        $registro->st_cliente_id == 4 or
+                        $registro->st_cliente_id == 20 or
+                        $registro->st_cliente_id == 22)
+                ) {
                     //Armado de detalle
                     if ($registro->caja_id == 0 and $fecha_aux->lessThan($hoy) and $registro->mensualidad == 1) {
                         $registro->adeudo_planeado = $registro->adeudo_planeado + ($registro->adeudo_planeado * .10);
                     }
                     array_push($lineas_detalle, $registro->toArray());
-                    if ($registro->consecutivo == 382) {
-                        //			dd($lineas_detalle);	
-                    }
+
 
 
                     //Fin Armado de detalle

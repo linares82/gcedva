@@ -516,7 +516,9 @@ class PagosController extends Controller
     public function destroy($id, Pago $pago)
     {
         $pago = $pago->find($id);
-
+        $pago->usu_delete_id = Auth::user()->id;
+        $pago->save();
+        //dd($pago->toArray());
         $pago->delete();
 
         $caja = Caja::find($pago->caja_id);
@@ -1005,10 +1007,10 @@ class PagosController extends Controller
             'pla.razon',
             'c.id',
             DB::raw(''
-                . 'concat(c.nombre," ",c.nombre2," ",c.ape_paterno," ",c.ape_materno) as cliente, cajas.id as caja, cajas.consecutivo,'
+                . 'c.nombre, c.nombre2, c.ape_paterno, c.ape_materno, cajas.id as caja, cajas.consecutivo,'
                 . 'c.beca_bnd, st.name as estatus_caja, fp.id as forma_pago_id, cajas.st_caja_id,'
                 . 'pag.monto as monto_pago, fp.name as forma_pago, pag.fecha as fecha_pago, pag.created_at, cajas.fecha as fecha_caja,'
-                . 'up.name as creador_pago')
+                . 'up.name as creador_pago,cln.caja_concepto_id')
         )
             ->join('clientes as c', 'c.id', '=', 'cajas.cliente_id')
             ->join('plantels as pla', 'pla.id', '=', 'c.plantel_id')
@@ -1016,11 +1018,14 @@ class PagosController extends Controller
             ->join('pagos as pag', 'pag.caja_id', '=', 'cajas.id')
             ->join('users as up', 'up.id', 'pag.usu_alta_id')
             ->join('forma_pagos as fp', 'fp.id', '=', 'pag.forma_pago_id')
+            ->join('caja_lns as cln', 'cln.caja_id', '=', 'cajas.id')
             ->where('cajas.plantel_id', '=', $data['plantel_f'])
             ->whereIn('cajas.usu_alta_id', $usuario)
             ->whereNull('pag.deleted_at')
+            ->whereNull('cajas.deleted_at')
             ->where('cajas.st_caja_id', '=', 1)
             ->orderBy('fp.id')
+            ->orderBy('cln.caja_concepto_id')
             ->orderBy('pag.fecha')
             ->distinct();
         if ($data['fecha_pago'] == 1) {
@@ -1057,11 +1062,11 @@ class PagosController extends Controller
 
         //dd($registros_pagados->toArray());
 
-        $registros_parciales = Caja::select(
+        $registros_parciales_aux = Caja::select(
             'pla.razon',
             'c.id',
             DB::raw(''
-                . 'concat(c.nombre," ",c.nombre2," ",c.ape_paterno," ",c.ape_materno) as cliente, cajas.id as caja, cajas.consecutivo,'
+                . 'c.nombre, c.nombre2, c.ape_paterno, c.ape_materno, cajas.id as caja, cajas.consecutivo,'
                 . 'c.beca_bnd, st.name as estatus_caja, cajas.total as total_caja, fp.id as forma_pago_id, cajas.st_caja_id,'
                 . 'pag.monto as monto_pago, fp.name as forma_pago, pag.fecha as fecha_pago,pag.created_at, cajas.fecha as fecha_caja')
         )
@@ -1071,15 +1076,23 @@ class PagosController extends Controller
             ->join('pagos as pag', 'pag.caja_id', '=', 'cajas.id')
             ->join('forma_pagos as fp', 'fp.id', '=', 'pag.forma_pago_id')
             ->where('cajas.plantel_id', '=', $data['plantel_f'])
-            ->where('pag.fecha', '>=', $data['fecha_f'])
-            ->where('pag.fecha', '<=', $data['fecha_t'])
+            //->where('pag.fecha', '>=', $data['fecha_f'])
+            //->where('pag.fecha', '<=', $data['fecha_t'])
             ->whereIn('cajas.usu_alta_id',  $usuario)
             ->whereNull('pag.deleted_at')
             ->where('cajas.st_caja_id', '=', 3)
             ->orderBy('fp.id')
             ->orderBy('pag.fecha')
-            ->distinct()
-            ->get();
+            ->distinct();
+        //->get();
+        if ($data['fecha_pago'] == 1) {
+            $registros_parciales_aux->where('pag.fecha', '>=', $data['fecha_f'])
+                ->whereDate('pag.fecha', '<=', $data['fecha_t']);
+        } else {
+            $registros_parciales_aux->where('pag.created_at', '>=', $data['fecha_f'])
+                ->whereDate('pag.created_at', '<=', $data['fecha_t']);
+        }
+        $registros_parciales = $registros_parciales_aux->get();
 
         $ingresosMenosEgresos = array();
         $formasPago = FormaPago::where('id', '>', 0)->get();

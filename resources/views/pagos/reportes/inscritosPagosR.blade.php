@@ -22,7 +22,7 @@
         <table class="table table-condensed table-striped">
             <thead>
                 <tr>
-                    <th>Cliente</th><th>Becado</th><th>Caja</th><th>Creado Por</th><th>Estatus</th><th>Fecha Pago</th><th>Creacion</th><th>Concepto</th><th>Monto Pago</th><th>Forma Pago</th>
+                  <th>id</th><th>Cliente</th><!--<th>Becado</th>--><th>Caja</th><th>Cobrado Por</th><!--<th>Estatus</th>--><th>Fecha Pago</th><th>Fecha Creacion</th><th>Concepto</th><th>Monto Pago</th><th>Forma Pago</th>
                 </tr> 
             </thead>
             <tbody>
@@ -33,28 +33,38 @@
                 $suma_total=0;
                 $forma_pago=0;
                 $total_forma_pago=0;
+                $concepto=0;
+                $concepto_suma=0;
                 ?>
                 <?php $colaborador="" ?>
                 
                 @foreach($registros_pagados as $registro)
-                    @if($forma_pago<>$registro->forma_pago_id and $total_forma_pago>0)
+                @if(($concepto<>$registro->caja_concepto_id and $concepto_suma>0))
+                        <tr>
+                          <td colspan="7"><strong>Total Concepto</strong></td><td style="text-align:right;"><strong>{{number_format($concepto_suma,2)}}</strong></td><td></td>
+                      </tr>
+                      <?php $concepto_suma=0; ?>
+                    @endif    
+                @if($forma_pago<>$registro->forma_pago_id and $total_forma_pago>0)
                     <tr>
-                        <td colspan="8"><strong>Total Forma de Pago</strong></td><td style="text-align:right;"><strong>{{number_format($total_forma_pago)}}</strong></td><td></td>
+                        <td colspan="7"><strong>Total Forma de Pago</strong></td><td style="text-align:right;"><strong>{{number_format($total_forma_pago,2)}}</strong></td><td></td>
                     </tr>
                     <?php $total_forma_pago=0; ?>
                     @endif
+                    
                     <tr>
-                        <td>{{$registro->id}} - {{$registro->cliente}}</td>
-                        <td>
+                      <td>{{$registro->id}}</td> 
+                      <td>{{$registro->ape_paterno}} {{$registro->ape_materno}} {{$registro->nombre}} {{$registro->nombre2}}</td>
+                        <!--<td>
                             @if($registro->beca_bnd==1)
                                 SI
                             @else
                                 NO
                             @endif
-                        </td>
+                        </td>-->
                         <td>{{$registro->consecutivo}}</td>
                         <td>{{$registro->creador_pago}}</td>
-                        <td>{{$registro->estatus_caja}}</td>
+                        <!--<td>{{$registro->estatus_caja}}</td>-->
                         <td>{{$registro->fecha_pago}}</td>
                         <td>{{$registro->created_at}}</td>
                         <td>
@@ -65,8 +75,9 @@
                                 {{$ln->cajaConcepto->name}}<br/>
                             @endforeach  
                         </td>
-                        <td style="text-align:right;">{{number_format($registro->monto_pago)}}</td>
+                        <td style="text-align:right;">{{number_format($registro->monto_pago,2)}}</td>
                         <td>{{$registro->forma_pago}}</td>
+                        
                     </tr>
                     
                     <?php 
@@ -76,16 +87,21 @@
                     $total_forma_pago=$total_forma_pago+$registro->monto_pago;
                     $suma_total=$suma_total+$registro->monto_pago;
                     
+                    $concepto=$registro->caja_concepto_id;
+                    $concepto_suma=$concepto_suma+$registro->monto_pago;
                     ?>
                 @endforeach
                     <?php 
                     $j=$i+$j;
                     ?>
                     <tr>
-                        <td><strong>Total Forma de Pago</strong></td><td colspan="8"><strong><strong></td><td style="text-align:right;"><strong>{{number_format($total_forma_pago)}}</strong></td><td></td>
+                      <td colspan="7"><strong>Total Concepto</strong></td><td style="text-align:right;"><strong>{{number_format($concepto_suma,2)}}</strong></td><td></td>
                     </tr>
                     <tr>
-                        <td><strong>Total</strong></td><td colspan="8"><strong><strong></td><td style="text-align:right;"><strong>{{number_format($suma_total)}}</strong></td><td></td>
+                        <td><strong>Total Forma de Pago</strong></td><td colspan="6"><strong><strong></td><td style="text-align:right;"><strong>{{number_format($total_forma_pago,2)}}</strong></td><td></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Total</strong></td><td colspan="6"><strong><strong></td><td style="text-align:right;"><strong>{{number_format($suma_total,2)}}</strong></td><td></td>
                     </tr>
                     <?php $total=$suma_total ?>
             </tbody>
@@ -97,7 +113,7 @@
         <table class="table table-condensed table-striped">
             <thead>
                 <tr>
-                    <th>Cliente</th><th>Becado</th><th>Caja</th><th>Caja Total</th><th>Estatus</th><th>Fecha Pago</th><th>Concepto</th><th>Monto Pago</th><th>Forma Pago</th>
+                    <th>id</th><th>Cliente</th><!--<th>Becado</th>--><th>Caja</th><th>Caja Total</th><!--<th>Estatus</th>--><th>Fecha Pago</th><th>Concepto</th><th>Monto Pago</th><th>Forma Pago</th>
                 </tr> 
             </thead>
             <tbody>
@@ -113,12 +129,14 @@
                 @foreach($registros_parciales as $registro)
                     @if($forma_pago<>$registro->forma_pago_id and $total_forma_pago>0)
                     <tr>
-                        <td colspan="7"><strong>Total Forma de Pago</strong></td><td style="text-align:right;"><strong>{{number_format($total_forma_pago)}}</strong></td><td></td>
+                        <td colspan="5"><strong>Total Forma de Pago</strong></td><td style="text-align:right;"><strong>{{number_format($total_forma_pago,2)}}</strong></td><td></td>
                     </tr>
                     <?php $total_forma_pago=0; ?>
                     @endif
                     <tr>
-                        <td>{{$registro->id}} - {{$registro->cliente}}</td>
+                        <td>{{$registro->id}}</td> 
+                        <td>{{$registro->ape_paterno}} {{$registro->ape_materno}} {{$registro->nombre}} {{$registro->nombre2}}</td>
+                        <!--
                         <td>
                             @if($registro->beca_bnd==1)
                                 SI
@@ -126,9 +144,10 @@
                                 NO
                             @endif
                         </td>
+                      -->
                         <td>{{$registro->consecutivo}}</td>
                         <td>{{$registro->total_caja}}</td>
-                        <td>{{$registro->estatus_caja}}</td>
+                        <!--<td>{{$registro->estatus_caja}}</td>-->
                         <td>{{$registro->fecha_pago}}</td>
                         <td>
                         <?php $rcaja=App\Caja::find($registro->caja);
@@ -138,7 +157,7 @@
                                 {{$ln->cajaConcepto->name}}<br/>
                             @endforeach  
                         </td>
-                        <td style="text-align:right;">{{number_format($registro->monto_pago)}}</td>
+                        <td style="text-align:right;">{{number_format($registro->monto_pago,2)}}</td>
                         <td>{{$registro->forma_pago}}</td>
                     </tr>
                     
@@ -154,10 +173,10 @@
                     $j=$i+$j;
                     ?>
                     <tr>
-                        <td><strong>Total Forma de Pago</strong></td><td colspan="6"><strong><strong></td><td style="text-align:right;"><strong>{{number_format($total_forma_pago)}}</strong></td><td></td>
+                        <td><strong>Total Forma de Pago</strong></td><td colspan="5"><strong><strong></td><td style="text-align:right;"><strong>{{number_format($total_forma_pago,2)}}</strong></td><td></td>
                     </tr>
                     <tr>
-                        <td><strong>Total</strong></td><td colspan="6"><strong><strong></td><td style="text-align:right;"><strong>{{number_format($suma_total)}}</strong></td><td></td>
+                        <td><strong>Total</strong></td><td colspan="5"><strong><strong></td><td style="text-align:right;"><strong>{{number_format($suma_total,2)}}</strong></td><td></td>
                     </tr>
                     <?php $total=$total+$suma_total ?>
             </tbody>
@@ -179,12 +198,12 @@
                 @foreach($egresos as $egreso)
                 @if($cuenta<>$egreso->cuenta_efectivo and $total_cuenta>0)
                 <tr>
-                    <td colspan="5"><strong>Total Cuenta</strong></td><td style="text-align:right;"><strong>{{number_format($total_cuenta)}}</strong></td>
+                    <td colspan="5"><strong>Total Cuenta</strong></td><td style="text-align:right;"><strong>{{number_format($total_cuenta,2)}}</strong></td>
                 </tr>
                 <?php $total_cuenta=0; ?>    
                 @endif
                 <tr>
-                    <td>{{$egreso->id}}</td><td>{{$egreso->fecha}}</td><td>{{$egreso->concepto}}</td><td>{{$egreso->forma_pago}}</td><td>{{$egreso->cuenta_efectivo}}</td><td style="text-align:right;">{{number_format($egreso->monto)}}</td>
+                    <td>{{$egreso->id}}</td><td>{{$egreso->fecha}}</td><td>{{$egreso->concepto}}</td><td>{{$egreso->forma_pago}}</td><td>{{$egreso->cuenta_efectivo}}</td><td style="text-align:right;">{{number_format($egreso->monto,2)}}</td>
                 </tr>
                 <?php
                 $total_cuenta=$total_cuenta+$egreso->monto;
@@ -193,10 +212,10 @@
                 ?>
                 @endforeach
                 <tr>
-                    <td colspan="5"><strong>Total Cuenta</strong></td><td style="text-align:right;"><strong>{{number_format($total_cuenta)}}</strong></td>
+                    <td colspan="5"><strong>Total Cuenta</strong></td><td style="text-align:right;"><strong>{{number_format($total_cuenta,2)}}</strong></td>
                 </tr>
                 <tr>
-                    <td colspan="5"><strong>Total</strong></td><td style="text-align:right;"><strong>{{number_format($total_suma)}}</strong></td>
+                    <td colspan="5"><strong>Total</strong></td><td style="text-align:right;"><strong>{{number_format($total_suma,2)}}</strong></td>
                 </tr>
             </tbody>
         </table>
@@ -213,9 +232,9 @@
               @foreach($formasPago as $formaPago)
               <tr>
               <td>{{$formaPago->name}}</td>
-              <td style="text-align:right;">{{number_format($ingresosMenosEgresos['ingreso' . $formaPago->name])}}</td>
-                <td style="text-align:right;">{{ number_format($ingresosMenosEgresos['egreso' . $formaPago->name]) }}</td>
-                <td style="text-align:right;">{{ number_format($ingresosMenosEgresos['ingreso' . $formaPago->name] - $ingresosMenosEgresos['egreso' . $formaPago->name])}}</td>
+              <td style="text-align:right;">{{number_format($ingresosMenosEgresos['ingreso' . $formaPago->name],2)}}</td>
+                <td style="text-align:right;">{{ number_format($ingresosMenosEgresos['egreso' . $formaPago->name],2) }}</td>
+                <td style="text-align:right;">{{ number_format($ingresosMenosEgresos['ingreso' . $formaPago->name] - $ingresosMenosEgresos['egreso' . $formaPago->name],2)}}</td>
               </tr>
               @php
                $total_ingresos=$total_ingresos+$ingresosMenosEgresos['ingreso' . $formaPago->name];
@@ -223,7 +242,7 @@
               @endphp
               @endforeach
               <tr>
-                <td>Totales</td><td style="text-align:right;">{{number_format($total_ingresos)}}</td><td style="text-align:right;">{{number_format($total_egresos)}}</td><td style="text-align:right;">{{number_format($total_ingresos-$total_egresos)}}</td>
+                <td>Totales</td><td style="text-align:right;">{{number_format($total_ingresos,2)}}</td><td style="text-align:right;">{{number_format($total_egresos,2)}}</td><td style="text-align:right;">{{number_format($total_ingresos-$total_egresos,2)}}</td>
               </tr>
             </tbody>
             

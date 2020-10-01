@@ -24,7 +24,7 @@ class Pago extends Model
 	protected $fillable = [
 		'caja_id', 'monto', 'fecha', 'forma_pago_id', 'referencia', 'usu_alta_id', 'usu_mod_id',
 		'consecutivo', 'cuenta_efectivo_id', 'bnd_pagado', 'bnd_referenciado', 'csc_simplificado', 'fecha_solicitud_factura',
-		'uui', 'cbb', 'xml', 'fecha_solicitud_factura', 'serie_factura', 'folio_facturados'
+		'uui', 'cbb', 'xml', 'fecha_solicitud_factura', 'serie_factura', 'folio_facturados', 'usu_delete_id'
 	];
 
 	public function usu_alta()
@@ -35,6 +35,11 @@ class Pago extends Model
 	public function usu_mod()
 	{
 		return $this->hasOne('App\User', 'id', 'usu_mod_id');
+	} // end
+
+	public function usu_delete()
+	{
+		return $this->hasOne('App\User', 'id', 'usu_delete_id');
 	} // end
 
 

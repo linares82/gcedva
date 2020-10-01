@@ -55,7 +55,12 @@ class PagoObserver
                 //$inscripcionConcepto = $adeudos->where('caja_concepto_id', 1);
                 //$lectivo = Lectivo::find($combinacion->lectivo_id);
                 //dd($planPagoLn);
-                $fecha = Carbon::createFromFormat('Y-m-d', $planPagoLn->fecha_pago);
+                if (!is_null($planPagoLn)) {
+                    $fecha = Carbon::createFromFormat('Y-m-d', $planPagoLn->fecha_pago);
+                } else {
+                    $fecha = Carbon::createFromFormat('Y-m-d', date('Y-m-d'));
+                }
+
                 $grado = Grado::find($combinacion->grado_id);
                 //dd($grado);
                 $relleno = "000000";

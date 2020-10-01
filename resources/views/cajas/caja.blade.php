@@ -345,12 +345,13 @@
                             }
                         }
                         @endphp
+                        @if($caja->st_caja_id==1)
                         @if($mensualidad==1)
                         <a href="{{route('pagos.imprimirTodosFiscal', array('caja'=>$caja->id))}}" data-toggle="tooltip" title="Imprimir" class="btn btn-info btn-xs " target="_blank"><i class="fa fa-print"></i></a>
                         @else
                         <a href="{{route('pagos.imprimirTodosNoFiscal', array('caja'=>$caja->id))}}" data-toggle="tooltip" title="Imprimir" class="btn btn-info btn-xs " target="_blank"><i class="fa fa-print"></i></a>
                         @endif
-                        
+                        @endif
                         
                         <div class="box-tools pull-right">
                             <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
@@ -424,10 +425,12 @@
                                         }
                                     }
                                     @endphp
+                                    @if($caja->st_caja_id==1)
                                     @if($mensualidad==1)
-                                    <a href="{{route('pagos.imprimirFiscal', array('pago'=>$pago->id))}}" data-toggle="tooltip" title="Imprimir" class="btn btn-info btn-xs " target="_blank"><i class="fa fa-print"></i></a>
+                                    <!--<a href="{{route('pagos.imprimirFiscal', array('pago'=>$pago->id))}}" data-toggle="tooltip" title="Imprimir" class="btn btn-info btn-xs " target="_blank"><i class="fa fa-print"></i></a>-->
                                     @else
-                                    <a href="{{route('pagos.imprimirNoFiscal', array('pago'=>$pago->id))}}" data-toggle="tooltip" title="Imprimir" class="btn btn-info btn-xs " target="_blank"><i class="fa fa-print"></i></a>
+                                    <!--<a href="{{route('pagos.imprimirNoFiscal', array('pago'=>$pago->id))}}" data-toggle="tooltip" title="Imprimir" class="btn btn-info btn-xs " target="_blank"><i class="fa fa-print"></i></a>-->
+                                    @endif
                                     @endif
                                 </td>
                                 @if(optional($pago->peticionMultipago)->count()>0)
@@ -732,6 +735,13 @@ Agregar nuevo registro
                     {!! Form::select("caja_concepto_id", $list1["CajaConcepto"], null, array("class" => "form-control select_seguridad", "id" => "caja_concepto_id-crear")) !!}
                     <p class="errorCajaConcepto text-center alert alert-danger hidden"></p>
                 </div>
+                <div class="form-group col-md-12 @if($errors->has('monto_concepto')) has-error @endif">
+                    <label for="monto_concepto-field">Monto(Dejar en 0 para tomar valor del concepto)</label>
+                    {!! Form::text("monto_concepto", 0, array("class" => "form-control", "id" => "monto_concepto-crear")) !!}
+                    @if($errors->has("monto_concepto"))
+                     <span class="help-block">{{ $errors->first("monto_concepto") }}</span>
+                    @endif
+                 </div>
 
                 {!! Form::close() !!}
                 <div class="row"></div>
@@ -1088,7 +1098,7 @@ Agregar nuevo registro
             complete : function(){$("#loading3").hide(); },
             success: function(data) {
                 //location.reload();
-                $('#form-buscarVenta').submit();
+                //$('#form-buscarVenta').submit();
             },
         });
     });
@@ -1192,7 +1202,8 @@ Agregar nuevo registro
             '_token': $('input[name=_token]').val(),
                     'caja': {{$caja->id}},
                     'cliente': {{$cliente->id}},
-                    'concepto': $('#caja_concepto_id-crear').val()
+                    'concepto': $('#caja_concepto_id-crear').val(),
+                    'monto_concepto': $('#monto_concepto-crear').val()
             },
             beforeSend : function(){$("#loading3").show(); },
             complete : function(){$("#loading3").hide(); },

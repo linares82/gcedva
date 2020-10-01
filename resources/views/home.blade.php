@@ -41,19 +41,19 @@
             </div>
             <div class="box-body">
                 <table class="table table-bordered table-striped dataTable">
-                    <thead><th>Cliente Id</th><th>Cliente Nombre</th><th>Plantel</th><th>Justificacion</th><th>A. Servicios Escolares</th><th>A. Caja</th><th>A. Director</th><th></th></thead>
+                    <thead><th>Cliente Id</th><th>Cliente Nombre</th><th>Plantel</th><th>Justificacion</th><th>A. Caja</th><th>A. Director</th><th>A. Caja Corp.</th><th></th></thead>
                     <tbody>
                         @foreach ($bajas as $baja)
                         
-                        @if($baja->aut_ser_esc<>2 or $baja->aut_caja<>2 or $baja->aut_ser_esc_corp<>2)
+                        @if($baja->aut_caja<>2 or $baja->director<>2 or $baja->aut_caja_corp<>2)
                             <tr>
                             <td> <a href="{{route('clientes.edit',$baja->cliente_id)}}" target=_blank>{{$baja->cliente_id}}</a></td>
                             <td>{{ $baja->cliente->nombre }} {{ $baja->cliente->nombre2 }} {{ $baja->cliente->ape_paterno }} {{ $baja->cliente->ape_materno }}</td>
                             <td>{{ $baja->cliente->plantel->razon }}</td>
                             <td>{{$baja->descripcion}}</td>
-                            <td>{{optional($baja->autSerEsc)->name}}</td>
                             <td>{{optional($baja->autCaja)->name}}</td>
-                            <td>{{optional($baja->autSerEscCorp)->name}}</td>
+                            <td>{{optional($baja->autDirector)->name}}</td>
+                            <td>{{optional($baja->autCajaCorp)->name}}</td>
                             <td><a class="btn btn-xs btn-warning" href="{{ route('historiaClientes.index',array('q[cliente_id_lt]'=>$baja->cliente->id)) }}" target='_blank'><i class="glyphicon glyphicon-plus"></i> Ver</a></td>
                             </tr>
                         @endif

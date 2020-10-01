@@ -236,6 +236,8 @@ class CajasController extends Controller
     public function destroy($id, Caja $caja)
     {
         $caja = $caja->find($id);
+        $caja->usu_delete_id = Auth::user()->id;
+        $caja->save();
         $caja->delete();
 
         return redirect()->route('cajas.index')->with('message', 'Registro Borrado.');
@@ -445,9 +447,18 @@ class CajasController extends Controller
                             $anioInicio = Carbon::createFromFormat('Y-m-d', $beca->lectivo->inicio)->year;
                             $mesFin = Carbon::createFromFormat('Y-m-d', $beca->lectivo->fin)->month;
                             $anioFin = Carbon::createFromFormat('Y-m-d', $beca->lectivo->fin)->year;
+
+                            //$fechaAdeudo = Carbon::createFromFormat('Y-m-d', $adeudo->fecha_pago);
+                            //$lectivoInicio = Carbon::createFromFormat('Y-m-d', $beca->lectivo->inicio);
+                            //$lectivoFin = Carbon::createFromFormat('Y-m-d', $beca->lectivo->fin);
+                            //dd(($beca->lectivo->inicio <= $adeudo->fecha_pago and $beca->lectivo->fin >= $adeudo->fecha_pago));
+                            //dd($fechaAdeudo->greaterThanOrEqualTo($lectivoInicio) and $fechaAdeudo->lessThanOrEqualTo($lectivoFin));
+                            /*dd(($beca->lectivo->inicio <= $adeudo->fecha_pago and $beca->lectivo->fin >= $adeudo->fecha_pago) or
+                                (($anioInicio = $anioAdeudo or $mesInicio = $mesAdeudo) and ($anioFin >= $anioAdeudo)));
+*/
                             if (
                                 (($beca->lectivo->inicio <= $adeudo->fecha_pago and $beca->lectivo->fin >= $adeudo->fecha_pago) or
-                                    (($anioInicio <= $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin >= $anioAdeudo or $mesFin >= $mesAdeudo))) and
+                                    (($anioInicio = $anioAdeudo or $mesInicio = $mesAdeudo) and ($anioFin >= $anioAdeudo))) and
                                 $beca->aut_dueno == 4 and
                                 is_null($beca->deleted_at)
                             ) {
@@ -457,7 +468,7 @@ class CajasController extends Controller
                         }
 
                         $beca_autorizada = AutorizacionBeca::find($beca_a);
-                        //                        dd($beca_autorizada->monto_mensualidad > 0);
+                        //dd($beca_autorizada);
                         if (
                             $beca_autorizada->monto_mensualidad > 0 and
                             $adeudo->cajaConcepto->bnd_mensualidad == 1 and
@@ -730,7 +741,12 @@ class CajasController extends Controller
         $concepto = CajaConcepto::find($data['concepto']);
         $registro['caja_id'] = $caja->id;
         $registro['caja_concepto_id'] = $concepto->id;
-        $registro['subtotal'] = $concepto->monto;
+        if ($data['monto_concepto'] == 0) {
+            $registro['subtotal'] = $concepto->monto;
+        } else {
+            $registro['subtotal'] = $data['monto_concepto'];
+        }
+
         $registro['descuento'] = 0;
         $registro['recargo'] = 0;
         $registro['total'] = $registro['subtotal'];
@@ -788,6 +804,7 @@ class CajasController extends Controller
         //dd($request->get('caja'));
         $caja = Caja::find($request->get('caja'));
         $caja->st_caja_id = 2;
+        $caja->usu_cancelar_id = Auth::user()->id;
         $caja->subtotal = 0;
         $caja->descuento = 0;
         $caja->recargo = 0;
