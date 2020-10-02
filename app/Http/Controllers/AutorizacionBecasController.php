@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 
 use App\AutorizacionBeca;
 use App\Cliente;
+use App\Empleado;
 use App\Lectivo;
 use App\Plantel;
 use App\StBeca;
@@ -222,5 +223,51 @@ class AutorizacionBecasController extends Controller
 			->with('autorizacionBecaComentarios')
 			->get();
 		echo $registros->toJson();
+	}
+
+	public function becasAutorizadas()
+	{
+		$empleado = Empleado::where('user_id', Auth::user()->id)->first();
+		$planteles = $empleado->plantels->pluck('razon', 'id');
+
+		//dd($planteles);
+		return view('autorizacionBecas.reportes.becasAutorizadas', compact('planteles'));
+	}
+
+	public function becasAutorizadasR(Request $request)
+	{
+		$datos = $request->all();
+		$registros = AutorizacionBeca::select(
+			'p.razon as plantel',
+			'e.name as especialidad',
+			'n.name as nivel',
+			'g.name as grado',
+			'l.name as lectivo',
+			'c.matricula',
+			'c.id',
+			'c.nombre',
+			'c.nombre2',
+			'c.ape_paterno',
+			'c.ape_materno',
+			'autorizacion_becas.monto_mensualidad as porcentaje'
+		)
+			->join('clientes as c', 'c.id', '=', 'autorizacion_becas.cliente_id')
+			->join('inscripcions as i', 'i.cliente_id', '=', 'c.id')
+			->join('plantels as p', 'p.id', '=', 'c.plantel_id')
+			->join('especialidads as e', 'e.id', '=', 'i.especialidad_id')
+			->join('nivels as n', 'n.id', '=', 'i.nivel_id')
+			->join('grados as g', 'g.id', '=', 'i.grado_id')
+			->join('lectivos as l', 'l.id', '=', 'i.lectivo_id')
+			->where('p.id', $datos['plantel_f'])
+			->where('n.id', $datos['nivel_f'])
+			->where('e.id', $datos['especialidad_f'])
+			->where('g.id', $datos['grado_f'])
+			->where('l.id', $datos['lectivo_f'])
+			->where('autorizacion_becas.st_beca_id', 4)
+			->whereNull('i.deleted_at')
+			->whereNull('autorizacion_becas.deleted_at')
+			->get();
+		//dd($registros->toArray());
+		return view('autorizacionBecas.reportes.becasAutorizadasR', compact('registros'));
 	}
 }
