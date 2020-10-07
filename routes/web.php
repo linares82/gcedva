@@ -44,6 +44,14 @@ Route::get(
     )
 )->middleware('auth');
 Route::get(
+    'widgets',
+    array(
+        'as' => 'widgets',
+        'middleware' => 'permission:widgets',
+        'uses' => 'HomeController@widgets'
+    )
+)->middleware('auth');
+Route::get(
     'home/grfEstatusXEmpleado',
     array(
         'as' => 'grfEstatusXEmpleado',

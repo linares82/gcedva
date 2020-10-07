@@ -49,6 +49,14 @@ class HistoriaClientesController extends Controller
 	{
 		$data = $request->all();
 		$cliente = $data['cliente'];
+		//$cliente_actual = Cliente::find($data['cliente']);
+		$bajas_existentes = HistoriaCliente::where('cliente_id', $data['cliente'])
+			->where('evento_cliente_id', 2)
+			->where('st_historia_cliente_id', '<>', 2)
+			->whereNull('deleted_at')
+			->get();
+		//dd($bajas_existentes);
+
 		$inscripcions = Inscripcion::select(DB::raw('inscripcions.id, concat(p.razon," / ",e.name," / ",n.name," / ",g.name," / ",gru.name," / ",l.name," / ",pe.name) as inscripcion'))
 			->join('plantels as p', 'p.id', '=', 'inscripcions.plantel_id')
 			->join('especialidads as e', 'e.id', '=', 'inscripcions.especialidad_id')
@@ -62,7 +70,7 @@ class HistoriaClientesController extends Controller
 			->whereNull('inscripcions.deleted_at')
 			->pluck('inscripcion', 'id');
 		//dd($inscripcions);
-		return view('historiaClientes.create', compact('cliente', 'inscripcions'))
+		return view('historiaClientes.create', compact('cliente', 'inscripcions', 'bajas_existentes'))
 			->with('list', HistoriaCliente::getListFromAllRelationApps());
 	}
 

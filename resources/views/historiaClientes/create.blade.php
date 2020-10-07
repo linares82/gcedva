@@ -17,6 +17,14 @@
 
 @section('content')
     @include('error')
+    @php
+       $cliente_actual=App\Cliente::find($cliente); 
+    @endphp
+    @if ($bajas_existentes->count() > 0 and $cliente_actual->st_cliente_id<>3)
+    <div class="callout callout-info">
+        <i class="glyphicon glyphicon-remove"></i> Existen procesos de Baja
+    </div>
+    @endif
 
     <div class="row">
         <div class="col-md-12">
@@ -36,3 +44,4 @@
         </div>
     </div>
 @endsection
+

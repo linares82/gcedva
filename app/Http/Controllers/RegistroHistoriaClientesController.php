@@ -72,7 +72,7 @@ class RegistroHistoriaClientesController extends Controller
 			$historiaCliente->st_historia_cliente_id = $r->st_historia_cliente_id;
 		}
 		$historiaCliente->save();
-		$e=$historiaCliente;
+		$e = $historiaCliente;
 		if (
 			$historiaCliente->aut_caja == 2 and
 			$historiaCliente->aut_director == 2 and
@@ -85,10 +85,12 @@ class RegistroHistoriaClientesController extends Controller
 				$cliente->save();
 			} elseif ($e->evento_cliente_id == 2) {
 				$inscripcion = Inscripcion::find($e->inscripcion_id);
-				$inscripcion->st_inscripcion_id = 3;
-				$inscripcion->save();
+				if (!is_null($inscripcion)) {
+					$inscripcion->st_inscripcion_id = 3;
+					$inscripcion->save();
+				}
 
-				$adeudos =Adeudo::where('combinacion_cliente_id', $inscripcion->combinacion_cliente_id)
+				$adeudos = Adeudo::where('combinacion_cliente_id', $inscripcion->combinacion_cliente_id)
 					->where('caja_id', 0)
 					->where('pagado_bnd', 0)
 					->get();
@@ -219,5 +221,4 @@ class RegistroHistoriaClientesController extends Controller
 
 		echo $registros->toJson();
 	}
-
 }

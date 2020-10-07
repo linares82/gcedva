@@ -1116,8 +1116,10 @@ class AdeudosController extends Controller
                         'adeudos.fecha_pago',
                         'adeudos.caja_id',
                         'adeudo_concepto.bnd_mensualidad as mensualidad',
-                        't.name as turno'
+                        't.nam as turno'
                     )
+                    ->whereDate('adeudos.fecha_pago', '>=', $datos['fecha_f'])
+                    ->whereDate('adeudos.fecha_pago', '<=', $datos['fecha_t'])
                     ->where('adeudos.caja_id', 0);
             } else {
                 $registros_totales_aux->leftJoin('caja_lns as cln', 'cln.adeudo_id', '=', 'adeudos.id')
@@ -1128,8 +1130,6 @@ class AdeudosController extends Controller
             $registros_totales = $registros_totales_aux->where('p.id', $plantel)
                 //->whereIn('stc.id', array(3, 4, 20, 22, 23, 24, 25))
                 ->whereIn('adeudos.caja_concepto_id', $datos['concepto_f'])
-                //->whereDate('adeudos.fecha_pago', '>=', $datos['fecha_f'])
-                //->whereDate('adeudos.fecha_pago', '<=', $datos['fecha_t'])
                 ->whereNull('adeudos.deleted_at')
                 ->whereNull('s.deleted_at')
                 //->orderBy('p.id')

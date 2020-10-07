@@ -37,7 +37,11 @@
                     
                     <div class="form-group col-md-4 @if($errors->has('monto_mensualidad')) has-error @endif">
                        <label for="monto_mensualidad-field">Porcentaje Beca (formato decimal 0.00)</label>
+                       @if(isset($autorizacionBeca) and $autorizacionBeca->st_beca_id==4)
+                       {!! Form::text("monto_mensualidad", null, array("class" => "form-control", "id" => "monto_mensualidad-field",'readonly'=>true)) !!}
+                       @else
                        {!! Form::text("monto_mensualidad", null, array("class" => "form-control", "id" => "monto_mensualidad-field")) !!}
+                       @endif
                        @if($errors->has("monto_mensualidad"))
                         <span class="help-block">{{ $errors->first("monto_mensualidad") }}</span>
                        @endif

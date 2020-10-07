@@ -95,6 +95,8 @@
                             <span class="help-block">{{ $errors->first("st_cliente_id") }}</span>
                             @endif
                         </div>
+                        
+                        
                         <div class="form-group col-md-4 @if($errors->has('plantel_id')) has-error @endif">
                             <label for="plantel_id-field">Plantel</label>
                             {!! Form::select("plantel_id", $list["Plantel"], null, array("class" => "form-control select_seguridad", "id" => "plantel_id-field")) !!}
@@ -1404,6 +1406,14 @@
 <script src="{{ asset ('/bower_components/AdminLTE/plugins/input-mask/jquery.inputmask.extensions.js') }}"></script>
 <script src="{{ asset ('/bower_components/AdminLTE/plugins/input-mask/jquery.inputmask.phone.extensions.js') }}"></script>
 <script type="text/javascript">
+@php
+if(isset($cliente)){
+    $pagos_validar=App\Adeudo::where('cliente_id',$cliente->id)->where('pagado_bnd',1)->get();    
+}
+@endphp
+@if(isset($cliente) and $pagos_validar->count()>0)
+document.getElementById("plantel_id-field").disabled=true;
+@endif
 $(document).on("click", "#btn_archivo", function (e) {
     e.preventDefault();
     if($('#doc_cliente_id-field option:selected').val()==0){

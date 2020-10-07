@@ -31,7 +31,7 @@
                     <span class="help-block">{{ $errors->first("plantel_f") }}</span>
                     @endif
                 </div>
-                
+                <!--
                 <div class="form-group col-md-6 @if($errors->has('especialidad_f')) has-error @endif">
                     <label for="especialidad_f-field">Especialidad de:</label>
                     {!! Form::select("especialidad_f", $list["Especialidad"], null, array("class" => "form-control select_seguridad", "id" => "especialidad_f-field")) !!}
@@ -56,7 +56,7 @@
                     <span class="help-block">{{ $errors->first("grado_f") }}</span>
                     @endif
                 </div>
-
+            -->
                 <div class="form-group col-md-6 @if($errors->has('lectivo_f')) has-error @endif">
                     <label for="lectivo_f-field">Lectivo:</label>
                     {!! Form::select("lectivo_f", $list["Lectivo"], null, array("class" => "form-control select_seguridad", "id" => "lectivo_f-field")) !!}

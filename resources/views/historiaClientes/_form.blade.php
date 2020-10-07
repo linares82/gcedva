@@ -63,7 +63,13 @@
     });
     
     });
+    @if ($bajas_existentes->count() > 0)
+    $('#evento_cliente_id-field option[value="2"]').prop('disabled',true);
+    $('#evento_cliente_id-field').select2();
+   @endif
 
+    
 
 </script>
 @endpush
+

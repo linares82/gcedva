@@ -27,7 +27,7 @@
         <h3>
             <i class="glyphicon glyphicon-align-justify"></i> @yield('historiaClientesAppTitle')
             @permission('historiaClientes.create')
-            <a class="btn btn-success pull-right" href="{{ route('historiaClientes.create') }}"><i class="glyphicon glyphicon-plus"></i> Crear</a>
+            <!--<a class="btn btn-success pull-right" href="{{ route('historiaClientes.create') }}"><i class="glyphicon glyphicon-plus"></i> Crear</a>-->
             @endpermission
         </h3>
 
