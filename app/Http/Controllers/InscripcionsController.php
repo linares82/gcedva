@@ -2066,7 +2066,7 @@ class InscripcionsController extends Controller
                 ->orderBy('hacademicas.grado_id')
                 ->distinct()
                 ->get();
-
+            //dd($registros);
             $total_alumnos = 0;
             foreach ($registros as $r) {
                 $total_alumnos++;

@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\Observers\AdeudoObserver;
 use App\Observers\CajaObserver;
 use App\Observers\ClienteObserver;
 use App\Observers\EmpleadoObserver;
@@ -18,6 +19,7 @@ use App\Observers\PagoObserver;
 use App\Observers\EgresoObserver;
 use App\Observers\MuebleObserver;
 use App\Observers\TransferenceObserver;
+use App\Adeudo;
 use App\Caja;
 use App\Cliente;
 use App\Empleado;
@@ -62,6 +64,7 @@ class AppServiceProvider extends ServiceProvider
         Mueble::observe(MuebleObserver::class);
         AsistenciaR::observe(AsistenciaRObserver::class);
         CalificacionPonderacion::observe(CalificacionPonderacionObserver::class);
+        Adeudo::observe(AdeudoObserver::class);
         Totem::auth(function ($request) {
             // return true / false . For e.g.
             return Auth::check();

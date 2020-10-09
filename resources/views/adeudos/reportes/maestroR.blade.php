@@ -73,6 +73,7 @@
         <tbody>
             <?php $total=['concepto'=>"",'clientes_activos'=>0,'clientes_pagados'=>0,'total_monto_pagado'=>0,'deudores'=>0,'monto_deuda'=>0,'bajas_pagadas'=>0]; ?>
             @foreach($lineas_procesadas as $registro)
+            
             @if($registro['concepto']=="Total")
             <tr>
                 <th><strong>Plantel</strong></th><th><strong>Clientes Activos</strong></th><th><strong>Concepto</strong></th>
@@ -135,7 +136,8 @@
                 <th>F. Planeada Pago</th>
                 <th>Concepto</th>
                 <th>Pago Recibido</th>
-		<th>Csc. Caja</th>
+                <th>Csc. Caja</th>
+                <th>Beca</th>
                 <!--<th>Consecutivo Caja</th>
                 <th>Caja borrada</th>
                 <th>Linea de Caja Borrada</th>
@@ -146,14 +148,28 @@
         <tbody>
             @php
                 $consecutivo_linea=1;
-                @endphp 
+            @endphp 
             @foreach($lineas_detalle as $detalle)
+            @php
+                $beca=App\AutorizacionBeca::where('cliente_id',$detalle['id'])
+                ->orderBy('autorizacion_becas.id','Desc')
+                ->where('autorizacion_becas.st_beca_id',4)
+                ->take(1)
+                ->first();
+                //dd($beca);
+                if(!is_null($beca)){
+                    $fecha_inicio=Carbon\Carbon::createFromFormat('Y-m-d',$beca->lectivo->inicio);
+                    $fecha_fin=Carbon\Carbon::createFromFormat('Y-m-d',$beca->lectivo->fin);
+                    $fecha_adeudo=Carbon\Carbon::createFromFormat('Y-m-d',$detalle['fecha_pago']);
+                }
+                
+            @endphp
             <tr>   
             <td>{{$consecutivo_linea++}}</td>
             <td>{{$detalle['razon']}}</td>
             <td>{{$detalle['id']}}</td>
             <td>{{ $detalle['nombre'] }} {{ $detalle['nombre2'] }} {{ $detalle['ape_paterno'] }} {{ $detalle['ape_materno'] }}</td>
-	    <td> {{$detalle['usu_alta_id']}} </td>
+	        <td> {{$detalle['usu_alta_id']}} </td>
             <td>{{ $detalle['matricula'] }}</td>
             <td>{{ $detalle['turno'] }}</td>
             <td>{{ $detalle['fecha_pago'] }}</td>
@@ -169,7 +185,16 @@
             <td>{{$detalle['concepto']}}</td>
             <!--<td>{{$detalle['pago_calculado_adeudo']}}</td>-->
 	    <td>{{$detalle['monto_pago']}}</td>
-	    <td>{{$detalle['consecutivo']}}</td>
+        <td>{{$detalle['consecutivo']}}</td>
+        @if(!is_null($beca)) 
+        @if($fecha_adeudo->greaterThanOrEqualTo($fecha_inicio) and $fecha_adeudo->lessThanOrEqualTo($fecha_fin))
+        <td>{{$beca->monto_mensualidad}}</td>
+        @else
+        <td></td>
+        @endif
+        @else
+        <td></td>
+        @endif
 <!--            
             <td>{{$detalle['borrado_c']}}</td>
             <td>{{$detalle['borrado_cln']}}</td>

@@ -107,6 +107,9 @@
                                      data-calificacion_ponderacion_id="{{ $r->calificacion_ponderacion_id }}"
                                      data-cliente_id="{{$r->id}}"
                                  >Actualizar</button>
+                                 @permission('hCalificacions.index')
+                                 <a href="{{ url('hCalificacions/index') }}?q%5Bs%5D=&q%5Bclientes.nombre_cont%5D=&q%5Bcalificacions.calificacion_cont%5D=&q%5Bh_calificacions.calificacion_ponderacion_id_cont%5D={{ $r->calificacion_ponderacion_id }}&q%5Bcarga_ponderacions.name_cont%5D=&q%5Bcalificacion_parcial_anterior_cont%5D=&q%5Bcalificacion_parcial_actual_cont%5D=&q%5Busu_alta_id_cont%5D=&q%5Busu_mod_id_cont%5D=&commit=Buscar" class="btn btn-success btn-xs" target="_blank">Historia</a>
+                                 @endpermission
                              @endif
                              
                          </td>

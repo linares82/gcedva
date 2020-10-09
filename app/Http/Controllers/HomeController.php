@@ -92,7 +92,8 @@ class HomeController extends Controller
             ->join('clientes as c', 'c.id', '=', 'historia_clientes.cliente_id')
             ->whereNotIn('st_historia_cliente_id', array(0, 2, 5))
             ->where('evento_cliente_id', 2)
-            ->whereRaw('(aut_ser_esc <> 2 or aut_caja <> 2 or aut_ser_esc_corp <>2) ')
+            ->whereNotIn('st_historia_cliente_id', array(2, 4, 5))
+            //->whereRaw('(aut_ser_esc <> 2 or aut_caja <> 2 or aut_ser_esc_corp <>2) ')
             ->whereIn('c.plantel_id', $planteles)
             ->with('cliente');
 

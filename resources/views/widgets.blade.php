@@ -40,7 +40,7 @@ $listaPlanteles=App\Plantel::whereIn('id',$lista->toArray())->get();
 //dd($listaPlanteles);
 @endphp
 @foreach($listaPlanteles as $plantel)
-@if($plantel->id>0)
+@if($plantel->id>1)
 <div class="row">
     <div class="form-group col-md-12 col-sm-12 col-xs-12">
         <div class="box box-success">
@@ -71,7 +71,7 @@ $listaPlanteles=App\Plantel::whereIn('id',$lista->toArray())->get();
                     <a href="{{route('home.wConcretadosDetalle', array('plantel'=>$plantel->id))}}" class="btn btn-xs btn-success" target="_blank">Detalle</a>
                 </div>
 
-                <div class="form-group col-md-2 col-sm-2 col-xs-2">
+                <div class="form-group col-md-3 col-sm-3 col-xs-3">
                     <h4 class="box-title">Porcentaje de pago del mes en curso</h4>
                     @php
 
@@ -95,12 +95,12 @@ $listaPlanteles=App\Plantel::whereIn('id',$lista->toArray())->get();
                                 <div id='loading{{ $plantel->id }}' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div>
                             </div>
                             @permission('adeudos.maestroIndicadorDetalle')
-                            {!! Form::open(['route' => array('adeudos.maestroIndicadorDetalle'),'method' => 'post', 'style' => 'display: inline;']) !!}
+                            {!! Form::open(['route' => array('adeudos.maestroIndicadorDetalle'),'method' => 'post', 'style' => 'display: inline;','target'=>'_blank']) !!}
                             {!! Form::hidden("fecha_f", $fecha_f->toDateString('Y-m-d'), array("class" => "form-control input-sm", "id" => "fecha_f-field")) !!}
                             {!! Form::hidden("fecha_t", $fecha_t->toDateString('Y-m-d'), array("class" => "form-control input-sm", "id" => "fecha_t-field")) !!}
                             {!! Form::select("plantel_f[]", $planteles, $plantel->id, array("class" => "form-control select_seguridad select_oculto", "id" => "plantel_f-field", 'multiple'=>true)) !!}
-                            <label for="detalle_f-field">Con detalle:</label>
-                            {!! Form::select("detalle_f", array('1'=>'Si','2'=>'No'), null, array("class" => "form-control select_seguridad", "id" => "detalle_f-field")) !!}
+                            <!--<label for="detalle_f-field">Con detalle:</label>-->
+                            <!--@{!! Form::select("detalle_f", array('1'=>'Si','2'=>'No'), null, array("class" => "form-control select_seguridad", "id" => "detalle_f-field")) !!}-->
                             <button type="submit" class="btn btn-xs btn-success"><i class="glyphicon glyphicon-ok"></i> Ver Maestro</button>
                             {!! Form::close() !!}
                             @endpermission
@@ -677,21 +677,10 @@ $listaPlanteles=App\Plantel::whereIn('id',$lista->toArray())->get();
                 url: '{{route("adeudos.maestroIndicador")}}',
                 cache: true,
                 data: {
-                    'plantel': {
-                        {
-                            $empleado->plantel_id
-                        }
-                    },
-                    'fecha_f': {
-                        {
-                            $fecha_f->toDateString('Y-m-d')
-                        }
-                    },
-                    'fecha_t': {
-                        {
-                            $fecha_t->toDateString('Y-m-d')
-                        }
-                    }
+                    'plantel': {{$empleado->plantel_id}},
+                    'fecha_f': {{
+                            $fecha_f->toDateString('Y-m-d')}},
+                    'fecha_t': {{$fecha_t->toDateString('Y-m-d')}}
                 },
                 beforeSend: function() {
                     $("#loading3").show();
@@ -831,32 +820,13 @@ $listaPlanteles=App\Plantel::whereIn('id',$lista->toArray())->get();
 
         @permission('indicadores_plantels')
         @foreach($plantels as $plantel)
-        google.charts.setOnLoadCallback(drawChart_wAsistencias_ {
-            {
-                $plantel->id
-            }
-        });
-        google.charts.setOnLoadCallback(drawChart_wConcretados {
-            {
-                $plantel->id
-            }
-        });
-        google.charts.setOnLoadCallback(drawChart_maestroIndicador {
-            {
-                $plantel->id
-            }
-        });
-        google.charts.setOnLoadCallback(drawChart_wCalificacion_ {
-            {
-                $plantel->id
-            }
-        });
-        google.charts.setOnLoadCallback(drawChart_wBajas_ {
-            {
-                $plantel->id
-            }
-        });
-
+        @if($plantel->id>1)
+        google.charts.setOnLoadCallback(drawChart_wAsistencias_{{$plantel->id}});
+        google.charts.setOnLoadCallback(drawChart_wConcretados{{$plantel->id}});
+        google.charts.setOnLoadCallback(drawChart_maestroIndicador{{$plantel->id}});
+        google.charts.setOnLoadCallback(drawChart_wCalificacion_{{$plantel->id}});
+        google.charts.setOnLoadCallback(drawChart_wBajas_{{$plantel->id}});
+        @endif
         @endforeach
         @endpermission
 
@@ -865,29 +835,13 @@ $listaPlanteles=App\Plantel::whereIn('id',$lista->toArray())->get();
         <?php $i = 0; ?>
         @if(count($fil) > 0)
         @foreach($fil as $f)
-        var datos_ {
-            {
-                $i
-            }
-        } = <?php echo json_encode($fil[$i]); ?>;
+        var datos_{{$i}} = <?php echo json_encode($fil[$i]); ?>;
 
-        google.charts.setOnLoadCallback(drawVisualization_ {
-            {
-                $i
-            }
-        });
+        google.charts.setOnLoadCallback(drawVisualization_{{$i}});
 
-        function drawVisualization_ {
-            {
-                $i
-            }
-        }() {
+        function drawVisualization_{{$i}}() {
             // Some raw data (not necessarily accurate)
-            var data = google.visualization.arrayToDataTable(datos_ {
-                {
-                    $i
-                }
-            });
+            var data = google.visualization.arrayToDataTable(datos_{{$i}});
 
             var options = {
                 title: 'Comparativo Concretados - Meta ',
@@ -946,11 +900,7 @@ $listaPlanteles=App\Plantel::whereIn('id',$lista->toArray())->get();
         function drawChart() {
             var data = google.visualization.arrayToDataTable([
                 ['Label', 'Value'],
-                ['Concretados', {
-                    {
-                        $avance[0]
-                    }
-                }],
+                ['Concretados', {{$avance[0]}}],
             ]);
 
             var options = {
@@ -979,11 +929,7 @@ $listaPlanteles=App\Plantel::whereIn('id',$lista->toArray())->get();
                 url: '{{route("adeudos.maestroIndicador")}}',
                 cache: true,
                 data: {
-                    'plantel': {
-                        {
-                            $empleado->plantel_id
-                        }
-                    },
+                    'plantel': {{$empleado->plantel_id}},
                     'fecha_f': "{{ $fecha_f->toDateString('Y-m-d') }}",
                     'fecha_t': "{{ $fecha_t->toDateString('Y-m-d') }}"
                 },
@@ -1026,11 +972,7 @@ $listaPlanteles=App\Plantel::whereIn('id',$lista->toArray())->get();
                     url: '{{route("home.wConcretados")}}',
                     //cache: true,
                     data: {
-                        'plantel': {
-                            {
-                                $empleado->plantel_id
-                            }
-                        },
+                        'plantel': {{$empleado->plantel_id}},
                     },
                     beforeSend: function() {
                         $("#loading32").show();
@@ -1075,22 +1017,15 @@ $listaPlanteles=App\Plantel::whereIn('id',$lista->toArray())->get();
 
         @permission('indicadores_plantels')
         @foreach($plantels as $plantel)
+        @if($plantel->id>1)
 
-        function drawChart_wAsistencias_ {
-            {
-                $plantel->id
-            }
-        }() {
+        function drawChart_wAsistencias_{{$plantel->id}}() {
             $.ajax({
                 type: 'GET',
                 url: '{{route("inscripcions.widgetPorcentajeAsistencia")}}',
                 //cache: true,
                 data: {
-                    'plantel': {
-                        {
-                            $plantel->id
-                        }
-                    },
+                    'plantel': {{$plantel->id}},
                 },
                 beforeSend: function() {
                     $("#loading30{{ $plantel->id }}").show();
@@ -1127,21 +1062,13 @@ $listaPlanteles=App\Plantel::whereIn('id',$lista->toArray())->get();
         } //End Guagace Chart
 
 
-        function drawChart_wConcretados {
-            {
-                $plantel->id
-            }
-        }() {
+        function drawChart_wConcretados{{$plantel->id}}() {
             $.ajax({
                 type: 'GET',
                 url: '{{route("home.wConcretados")}}',
                 //cache: true,
                 data: {
-                    'plantel': {
-                        {
-                            $plantel->id
-                        }
-                    },
+                    'plantel': {{$plantel->id}},
                 },
                 beforeSend: function() {
                     $("#loading31{{ $plantel->id }}").show();
@@ -1181,21 +1108,13 @@ $listaPlanteles=App\Plantel::whereIn('id',$lista->toArray())->get();
         } //End Guagace Chart
 
 
-        function drawChart_maestroIndicador {
-            {
-                $plantel->id
-            }
-        }() {
+        function drawChart_maestroIndicador{{$plantel->id}}() {
             $.ajax({
                 type: 'GET',
                 url: '{{ route("adeudos.maestroIndicador") }}',
                 cache: true,
                 data: {
-                    'plantel': {
-                        {
-                            $plantel->id
-                        }
-                    },
+                    'plantel': {{$plantel->id}},
                     'fecha_f': "{{ $fecha_f->toDateString('Y-m-d') }}",
                     'fecha_t': "{{ $fecha_t->toDateString('Y-m-d') }}"
                 },
@@ -1234,21 +1153,13 @@ $listaPlanteles=App\Plantel::whereIn('id',$lista->toArray())->get();
             //console.log(res);
         } //End Guagace Chart
 
-        function drawChart_wCalificacion_ {
-            {
-                $plantel->id
-            }
-        }() {
+        function drawChart_wCalificacion_{{$plantel->id}}() {
             $.ajax({
                 type: 'GET',
                 url: '{{route("inscripcions.wdCalificacionR")}}',
                 //cache: true,
                 data: {
-                    'plantel': {
-                        {
-                            $plantel->id
-                        }
-                    },
+                    'plantel': {{$plantel->id}},
                 },
                 beforeSend: function() {
                     $("#loading33_{{ $plantel->id }}").show();
@@ -1284,11 +1195,7 @@ $listaPlanteles=App\Plantel::whereIn('id',$lista->toArray())->get();
             //console.log(res);
         } //End Guagace Chart
 
-        function drawChart_wBajas_ {
-            {
-                $plantel->id
-            }
-        }() {
+        function drawChart_wBajas_{{$plantel->id}}() {
             var f = new Date();
             var dt = new Date();
             dt.setDate(dt.getDate() - 30);
@@ -1297,11 +1204,7 @@ $listaPlanteles=App\Plantel::whereIn('id',$lista->toArray())->get();
                 url: '{{route("historiaClientes.wdBajas")}}',
                 //cache: true,
                 data: {
-                    'plantel': {
-                        {
-                            $plantel->id
-                        }
-                    }
+                    'plantel': {{$plantel->id}}
                 },
                 beforeSend: function() {
                     $("#loading34_{{ $plantel->id }}").show();
@@ -1337,6 +1240,7 @@ $listaPlanteles=App\Plantel::whereIn('id',$lista->toArray())->get();
             //console.log(res);
         } //End Guagace Chart
 
+        @endif
         @endforeach
         @endpermission
 
@@ -1346,11 +1250,7 @@ $listaPlanteles=App\Plantel::whereIn('id',$lista->toArray())->get();
                 url: '{{route("inscripcions.widgetPorcentajeAsistencia")}}',
                 //cache: true,
                 data: {
-                    'plantel': {
-                        {
-                            $empleado->plantel_id
-                        }
-                    },
+                    'plantel': {{$empleado->plantel_id}},
                 },
                 beforeSend: function() {
                     $("#loading31").show();
@@ -1392,11 +1292,7 @@ $listaPlanteles=App\Plantel::whereIn('id',$lista->toArray())->get();
                 url: '{{route("home.wConcretados")}}',
                 //cache: true,
                 data: {
-                    'plantel': {
-                        {
-                            $empleado->plantel_id
-                        }
-                    },
+                    'plantel': {{$empleado->plantel_id}},
                 },
                 beforeSend: function() {
                     $("#loading32").show();
@@ -1444,11 +1340,7 @@ $listaPlanteles=App\Plantel::whereIn('id',$lista->toArray())->get();
                 url: '{{route("inscripcions.wdCalificacionR")}}',
                 //cache: true,
                 data: {
-                    'plantel': {
-                        {
-                            $empleado->plantel_id
-                        }
-                    },
+                    'plantel': {{$empleado->plantel_id}},
                     'st_cliente': 4,
                     'fecha_t': f.getFullYear() + "-" + (f.getMonth() + 1) + "-" + f.getDate(),
                     'fecha_f': dt.getFullYear() + "-" + (dt.getMonth() + 1) + "-" + dt.getDate()
@@ -1496,11 +1388,7 @@ $listaPlanteles=App\Plantel::whereIn('id',$lista->toArray())->get();
                 url: '{{route("historiaClientes.wdBajas")}}',
                 //cache: true,
                 data: {
-                    'plantel': {
-                        {
-                            $empleado->plantel_id
-                        }
-                    }
+                    'plantel': {{$empleado->plantel_id}}
                 },
                 beforeSend: function() {
                     $("#loading34").show();

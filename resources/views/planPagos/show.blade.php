@@ -153,6 +153,7 @@
                                 @permission('promoPlanLns.destroy')
                                 <a class="btn btn-danger btn-xs" href="{{route('promoPlanLns.destroy',$promoPlanLn->id)}}">Borrar</a>
                                 @endpermission
+                                
                                 @endforeach
                             </td>
                             
@@ -198,6 +199,9 @@
                                                                                data-monto="{{$linea->monto}}"
                                                                                data-inicial_bnd="{{$linea->inicial_bnd}}">
                                 <span class="glyphicon glyphicon-trash"></span> Borrar </button>
+                                @endpermission
+                                @permission('planLns.editarAdeudos')
+                                <!--<a class="btn btn-default btn-xs" href="{{route('planLns.editarAdeudos',$promoPlanLn->id)}}">Editar Adeudos</a>-->
                                 @endpermission
                             </td>
                         </tr>

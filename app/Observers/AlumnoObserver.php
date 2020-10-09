@@ -14,22 +14,22 @@ class AlumnoObserver
      * @param  User  $user
      * @return void
      */
-     public $alumno;
+    public $alumno;
     public function creating(Alumno $alumno)
     {
         //dd("hi fil");
-        $mes=date('m');
-        $year=date('y');
-        $cadena0="00000";
-        
-        $this->alumno=$alumno;
-        $plantel=Plantel::find($this->alumno->plantel_id);
-        $plantel->cns_alumno=$plantel->cns_alumno+1;
+        $mes = date('m');
+        $year = date('y');
+        $cadena0 = "00000";
+
+        $this->alumno = $alumno;
+        $plantel = Plantel::find($this->alumno->plantel_id);
+        $plantel->cns_alumno = $plantel->cns_alumno + 1;
         $plantel->save();
 
-        $str=substr($cadena0, 0, strlen($cadena0)- strlen($plantel->cns_alumno));
+        $str = substr($cadena0, 0, strlen($cadena0) - strlen($plantel->cns_alumno));
 
-        $this->alumno->cve_alumno=$mes.$year.$plantel->cve_plantel.$str.$plantel->cns_alumno;
+        $this->alumno->cve_alumno = $mes . $year . $plantel->cve_plantel . $str . $plantel->cns_alumno;
     }
 
     /**

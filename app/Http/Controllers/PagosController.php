@@ -1006,7 +1006,7 @@ class PagosController extends Controller
         $registros_pagados_aux = Caja::select(
             'pla.razon',
             'c.id',
-            DB::raw(''
+            DB::raw('c.id as cliente_id,'
                 . 'c.nombre, c.nombre2, c.ape_paterno, c.ape_materno, cajas.id as caja, cajas.consecutivo,'
                 . 'c.beca_bnd, st.name as estatus_caja, fp.id as forma_pago_id, cajas.st_caja_id,'
                 . 'pag.monto as monto_pago, fp.name as forma_pago, pag.fecha as fecha_pago, pag.created_at, cajas.fecha as fecha_caja,'

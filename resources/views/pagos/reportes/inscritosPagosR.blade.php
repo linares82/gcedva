@@ -22,7 +22,7 @@
         <table class="table table-condensed table-striped">
             <thead>
                 <tr>
-                  <th>id</th><th>Cliente</th><!--<th>Becado</th>--><th>Caja</th><th>Cobrado Por</th><!--<th>Estatus</th>--><th>Fecha Pago</th><th>Fecha Creacion</th><th>Concepto</th><th>Monto Pago</th><th>Forma Pago</th>
+                  <th>id</th><th>Cliente</th><!--<th>Becado</th>--><th>Caja</th><th>Cobrado Por</th><!--<th>Estatus</th>--><th>Fecha Pago</th><th>Fecha Creacion</th><th>Concepto</th><th>Monto Pago</th><th>Forma Pago</th><th>Beca</th>
                 </tr> 
             </thead>
             <tbody>
@@ -35,10 +35,24 @@
                 $total_forma_pago=0;
                 $concepto=0;
                 $concepto_suma=0;
+
                 ?>
                 <?php $colaborador="" ?>
                 
                 @foreach($registros_pagados as $registro)
+                @php
+                    $beca=App\AutorizacionBeca::where('cliente_id',$registro->cliente_id)
+                ->orderBy('autorizacion_becas.id','Desc')
+                ->where('autorizacion_becas.st_beca_id',4)
+                ->take(1)
+                ->first();
+                //dd($beca);
+                if(!is_null($beca)){
+                    $fecha_inicio=Carbon\Carbon::createFromFormat('Y-m-d',$beca->lectivo->inicio);
+                    $fecha_fin=Carbon\Carbon::createFromFormat('Y-m-d',$beca->lectivo->fin);
+                    $fecha_adeudo=Carbon\Carbon::createFromFormat('Y-m-d',$detalle['fecha_pago']);
+                }
+                @endphp
                 @if(($concepto<>$registro->caja_concepto_id and $concepto_suma>0))
                         <tr>
                           <td colspan="7"><strong>Total Concepto</strong></td><td style="text-align:right;"><strong>{{number_format($concepto_suma,2)}}</strong></td><td></td>
@@ -77,7 +91,15 @@
                         </td>
                         <td style="text-align:right;">{{number_format($registro->monto_pago,2)}}</td>
                         <td>{{$registro->forma_pago}}</td>
-                        
+                        @if(!is_null($beca)) 
+                        @if($fecha_adeudo->greaterThanOrEqualTo($fecha_inicio) and $fecha_adeudo->lessThanOrEqualTo($fecha_fin))
+                        <td>{{$beca->monto_mensualidad}}</td>
+                        @else
+                        <td></td>
+                        @endif
+                        @else
+                        <td></td>
+                        @endif
                     </tr>
                     
                     <?php 

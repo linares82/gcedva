@@ -133,11 +133,12 @@ class CombinacionClientesController extends Controller
     {
         $combinacionCliente = $combinacionCliente->find($id);
         $adeudos = Adeudo::where('combinacion_cliente_id', $combinacionCliente->id)->get();
+
         $pagado = 0;
         if (count($adeudos) > 0) {
             foreach ($adeudos as $adeudo) {
-                if ($adeudo->bnd_pagado == 1) {
-                    $pagado == 1;
+                if ($adeudo->pagado_bnd == 1) {
+                    $pagado = 1;
                 } else {
                     $adeudo->delete();
                 }

@@ -523,8 +523,13 @@
                                 </tr>
                             </thead>
                             <tbody>
-                        <?php $regla_pago_seriado=0; ?>
-                        @foreach($combinacion->adeudos as $adeudo)
+                        <?php $regla_pago_seriado=0; 
+                        $adeudos_lineas=App\Adeudo::where('combinacion_cliente_id', $combinacion->id)
+                        ->orderBy('fecha_pago')
+                        ->whereNull('deleted_at')
+                        ->get();
+                        ?>
+                        @foreach($adeudos_lineas as $adeudo)
                         <?php
                         $dias = date_diff(date_create(), date_create($adeudo->fecha_pago));
                         //dd($dias);
@@ -600,6 +605,9 @@
                                 <button class="btn btn-box-tool" data-toggle="tooltip" rel="tooltip" title="{{$adeudo->comentario}}"><i class="fa fa-comments"></i></button>
                                 @endif
                                 {{$adeudo->cajaConcepto->name}} 
+                                @permission('hadeudos.historia')    
+                                <a class="btn btn-default btn-xs" href="{{ route('hadeudos.historia',array('adeudo'=>$adeudo->id)) }}" target="_blank">H.</a>
+                                @endpermission
                             </td>
                             <td>
                                 
