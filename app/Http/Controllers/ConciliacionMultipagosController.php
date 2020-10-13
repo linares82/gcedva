@@ -9,6 +9,7 @@ use App\Adeudo;
 use App\Caja;
 use App\ConciliacionMultipago;
 use App\ConciliacionMultiDetalle;
+use App\CuentaP;
 use Illuminate\Http\Request;
 use App\Pago;
 use App\PeticionMultipago;
@@ -41,7 +42,8 @@ class ConciliacionMultipagosController extends Controller
 	 */
 	public function create()
 	{
-		return view('conciliacionMultipagos.create')
+		$cuentas = CuentaP::pluck('name', 'id');
+		return view('conciliacionMultipagos.create', compact('cuentas'))
 			->with('list', ConciliacionMultipago::getListFromAllRelationApps());
 	}
 
@@ -97,10 +99,10 @@ class ConciliacionMultipagosController extends Controller
 				$registro['conciliacion_multipago_id'] = $e->id;
 				$longitud = 26;
 				$registro['fecha_pago'] = substr($linea, $posicion, $longitud);
-				$posicion = $posicion + $longitud;
+				$posicion = $posicion + $longitud + 1; //27
 				$longitud = 50;
 				$registro['razon_social'] = trim(substr($linea, $posicion, $longitud));
-				$posicion = $posicion + $longitud;
+				$posicion = $posicion + $longitud; //77
 				$longitud = 10;
 				$registro['mp_node'] = trim(substr($linea, $posicion, $longitud));
 				$posicion = $posicion + $longitud;
@@ -372,9 +374,24 @@ class ConciliacionMultipagosController extends Controller
 	{
 		$conciliacion = ConciliacionMultipago::find($id);
 		//dd($conciliacion);
-		$peticionesExistentes = PeticionMultipago::where('created_at', '>=', $conciliacion->fec_inicio)
-			->where('created_at', '<=', $conciliacion->fec_fin)
-			->get();
+		if (is_null($conciliacion->cuenta_p_id)) {
+			$peticionesExistentes = PeticionMultipago::select('peticion_multipagos.*')
+				->where('peticion_multipagos.created_at', '>=', $conciliacion->fec_inicio)
+				->where('peticion_multipagos.created_at', '<=', $conciliacion->fec_fin)
+				->with('pago')
+				->get();
+		} else {
+			$peticionesExistentes = PeticionMultipago::select('peticion_multipagos.*')
+				->join('pagos as p', 'p.id', '=', 'peticion_multipagos.pago_id')
+				->join('cajas as c', 'c.id', '=', 'p.caja_id')
+				->join('plantels as pla', 'pla.id', '=', 'c.plantel_id')
+				->where('pla.cuenta_p_id', '=', $conciliacion->cuenta_p_id)
+				->where('peticion_multipagos.created_at', '>=', $conciliacion->fec_inicio)
+				->where('peticion_multipagos.created_at', '<=', $conciliacion->fec_fin)
+				->with('pago')
+				->get();
+		}
+
 		//dd($peticionesExistentes);
 		$lnsDetalleConciliacion = $conciliacion->conciliacionMultiDetalles;
 		//dd($lnsDetalleConciliacion->toArray());

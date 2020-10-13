@@ -526,6 +526,7 @@
                         <?php $regla_pago_seriado=0; 
                         $adeudos_lineas=App\Adeudo::where('combinacion_cliente_id', $combinacion->id)
                         ->orderBy('fecha_pago')
+                        ->orderBy('id')
                         ->whereNull('deleted_at')
                         ->get();
                         ?>

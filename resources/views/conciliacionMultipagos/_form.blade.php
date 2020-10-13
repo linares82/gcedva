@@ -5,7 +5,7 @@
                         <span class="help-block">{{ $errors->first("fecha_carga") }}</span>
                        @endif
                     </div>-->
-                    <div class="form-group col-md-4 @if($errors->has('archivo')) has-error @endif">
+                    <div class="form-group col-md-12 @if($errors->has('archivo')) has-error @endif">
                        <label for="archivo-field">Archivo</label>
                        
                        {!! Form::file('archivo') !!}
@@ -13,6 +13,13 @@
                         <span class="help-block">{{ $errors->first("archivo") }}</span>
                        @endif
                     </div>
+                    <div class="form-group col-md-4 @if($errors->has('cuenta_p_id')) has-error @endif">
+                     <label for="cuenta_p_id-field">Cuenta Contable</label>
+                     {!! Form::select("cuenta_p_id", $cuentas, null, array("class" => "form-control select_seguridad", "id" => "cuenta_p_id-field")) !!}
+                     @if($errors->has("cuenta_p_id"))
+                      <span class="help-block">{{ $errors->first("cuenta_p_id") }}</span>
+                     @endif
+                  </div>
                     <div class="form-group col-md-4 @if($errors->has('fec_inicio')) has-error @endif">
                         <label for="fec_inicio-field">Fecha Inicio</label>
                         {!! Form::text("fec_inicio", null, array("class" => "form-control fecha", "id" => "fec_inicio-field")) !!}

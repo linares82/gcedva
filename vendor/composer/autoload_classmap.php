@@ -54,6 +54,7 @@ return array(
     'AddCuentaContablePlantelsTable' => $baseDir . '/database/migrations/2020_05_19_092501_add_cuenta_contable_plantels_table.php',
     'AddCuentaEfectivoIdPagosTable' => $baseDir . '/database/migrations/2019_06_19_142820_add_cuenta_efectivo_id_pagos_table.php',
     'AddCuentaFormaPagoTable' => $baseDir . '/database/migrations/2018_05_14_182242_add_cuenta_forma_pago_table.php',
+    'AddCuentaPIdToConciliacionMultipagosTable' => $baseDir . '/database/migrations/2020_10_12_141018_add_cuenta_p_id_to_conciliacion_multipagos_table.php',
     'AddCuentapIdToPlantelsTable' => $baseDir . '/database/migrations/2020_08_27_112700_add_cuentap_id_to_plantels_table.php',
     'AddCuestionarioIdClientesIndexTable' => $baseDir . '/database/migrations/2018_02_14_184921_add_cuestionario_id_clientes_index_table.php',
     'AddCuestionarioIdClientesTable' => $baseDir . '/database/migrations/2018_02_14_184825_add_cuestionario_id_clientes_table.php',

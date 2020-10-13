@@ -38,7 +38,7 @@
                     @endif
                 </div>
                 <div class="form-group col-md-6 @if($errors->has('plantel_f')) has-error @endif">
-                    <label for="plantel_f-field">Plantel de:</label>
+                    <label for="plantel_f-field">Plantel de:*<input type="checkbox" id="seleccionar_planteles">Seleccionar Todo</label>
                     {!! Form::select("plantel_f[]", $planteles, null, array("class" => "form-control select_seguridad", "id" => "plantel_f-field", 'multiple'=>true)) !!}
                     @if($errors->has("plantel_f"))
                     <span class="help-block">{{ $errors->first("plantel_f") }}</span>
@@ -83,6 +83,16 @@
             }
         });
 
+        $('#seleccionar_planteles').change(function(){
+            if( $(this).is(':checked') ) {
+            $("#plantel_f-field > option").prop("selected","selected");
+                    $("#plantel_f-field").trigger("change");
+            }else{
+            $("#plantel_f-field > option").prop("selected","selected");
+                    $('#plantel_f-field').val(null).trigger('change');
+            }
+        });
+
     $('#concepto_f-field').select2();
 
     @permission('maestro.detalleTodo')
@@ -95,15 +105,20 @@
         for(i=1;i<opciones.length;i++){
             $('#detalle_f-field').append("<option value='" + i + "'>" + opciones[i] + "</option>");
         }
+        $('#detalle_f-field').val(1);
+        $('#detalle_f-field').trigger('change');
     @endpermission
 
     @permission('maestro.detalleAdeudos')
+    console.log('adeudos');
         let opciones=new Array(5);
         opciones[3]='Adeudos';
         $('#detalle_f-field').empty();
         //for(i=0;i<opciones.length;i++){
             $('#detalle_f-field').append("<option value='3'>" + opciones[3] + "</option>");
         //}
+        $('#detalle_f-field').val(3);
+        $('#detalle_f-field').trigger('change');
     @endpermission
 
 

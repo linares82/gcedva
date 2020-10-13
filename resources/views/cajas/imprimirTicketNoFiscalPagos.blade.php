@@ -15,7 +15,7 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_
 @endphp
 
 <div id="printeArea">
-<table style="width:100%;height:auto;border:1px solid #ccc;font-size: 0.70em;">
+<table style="width:35%;height:auto;border:1px solid #ccc;font-size: 0.70em;">
     <tr>
         <td align="center" colspan="2">
             @if(isset($combinacion->especialidad->imagen))
@@ -46,7 +46,7 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_
                                     
         </td>
     </tr>
-    <tr><td colspan="2" align="center" >{{$cliente->plantel->nombre_corto}}</td></tr>
+    <tr><td colspan="2" align="center" >{{$cliente->plantel->razon_social}}</td></tr>
     <tr><td colspan="2" align="center"></td></tr>
     <tr>
         <td colspan="2" align="center">
@@ -90,9 +90,9 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_
     <tr></tr>
     <tr>
         <td width="50%">
-            Concepto de Pago: Servicios Educativos - Monto
+            Concepto de Pago:  
         </td>
-        <td align="right">  </td>
+        
         <td>
             F. Limite Pago
         </td>
@@ -107,7 +107,7 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_
             $conceptoMensualidad=explode(' ',$caja_linea->cajaConcepto->name);    
             @endphp
             @if($caja_linea->cajaConcepto->id==1)
-                {{$caja_linea->cajaConcepto->name." (".$caja_linea->adeudo->fecha_pago.")"}}
+                {{$caja_linea->cajaConcepto->name}}
             @else
                 @if($conceptoMensualidad[0]="Mensualidad")
                     {{ $conceptoMensualidad[1] }}
@@ -117,7 +117,7 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_
             @endif 
             - {{ number_format($suma_pagos, 2) }}
         </td>
-        <td align="right">  </td>
+        
         <td>
             @if (isset($caja_linea->adeudo->fecha_pago))
             {{$caja_linea->adeudo->fecha_pago}}
@@ -156,7 +156,7 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_
         <td>
             Total
         </td>
-        <td></td>
+        
         <td align="right"> {{ number_format($suma_pagos, 2) }}
         <br/>{{$totalLetra}} {{round($centavos)."/100 M.N."}} </td>
     </tr>
@@ -164,9 +164,7 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_
         <tr><td colspan="2">Fecha Impresion: {{$fecha}}</td></tr>
     </tr>
     <tr>
-        <td>
-            <!--Pago-->
-        </td>
+        
         @php
         
         
@@ -180,7 +178,7 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_
             $mes->name . " de " . $lugarFecha->year;
          //dd($fechaLetra);   
         @endphp
-        <td>Fecha Pago:{{$fechaLetra}}
+        <td colspan="2">Fecha Pago:{{$fechaLetra}}
             
         </td>
         <!--<td align="right"> @{{ $pago->monto }} </td>-->
@@ -199,7 +197,7 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_
         <td></td>
         <td align="right"> {{ $caja->total-$acumulado }} </td>
     </tr>
--->
+
     <tr>
         <td colspan=3>
         <table style="width:100%;height:auto;border:1px solid #ccc;font-size: 0.70em;">
@@ -217,13 +215,15 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_
         <td>
     </tr>
     <tr><td>{{$fechaLetra}}</td></tr>
-    <tr><td>*El saldo pendiente puede incrementar por recargos al exceder la fecha limite de pago</td></tr>
+-->
+    
+    <tr><td colspan="2">*El saldo pendiente puede incrementar por recargos al exceder la fecha limite de pago</td></tr>
     
 </table>
 
 <br>
 
-<table style="width:100%;height:auto;border:1px solid #ccc;font-size: 0.70em;">
+<table style="width:35%;height:auto;border:1px solid #ccc;font-size: 0.70em;">
     <tr>
         <td align="center" colspan="2">
             @if(isset($combinacion->especialidad->imagen))
@@ -254,7 +254,7 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_
                                     
         </td>
     </tr>
-    <tr><td colspan="2" align="center" >{{$cliente->plantel->nombre_corto}}</td></tr>
+    <tr><td colspan="2" align="center" >{{$cliente->plantel->razon_social}}</td></tr>
     <tr><td colspan="2" align="center"></td></tr>
     <tr>
         <td colspan="2" align="center">
@@ -298,11 +298,11 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_
     <tr></tr>
     <tr>
         <td width="50%">
-            Concepto de Pago: Servicios Educativos - Monto
+            Concepto de Pago:  
         </td>
-        <td align="right">  </td>
+        
         <td>
-            F. Limite Pago 
+            F. Limite Pago
         </td>
         
     </tr>
@@ -315,7 +315,7 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_
             $conceptoMensualidad=explode(' ',$caja_linea->cajaConcepto->name);    
             @endphp
             @if($caja_linea->cajaConcepto->id==1)
-                {{$caja_linea->cajaConcepto->name." (".$caja_linea->adeudo->fecha_pago.")"}}
+                {{$caja_linea->cajaConcepto->name}}
             @else
                 @if($conceptoMensualidad[0]="Mensualidad")
                     {{ $conceptoMensualidad[1] }}
@@ -325,7 +325,7 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_
             @endif 
             - {{ number_format($suma_pagos, 2) }}
         </td>
-        <td align="right">  </td>
+        
         <td>
             @if (isset($caja_linea->adeudo->fecha_pago))
             {{$caja_linea->adeudo->fecha_pago}}
@@ -364,7 +364,7 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_
         <td>
             Total
         </td>
-        <td></td>
+        
         <td align="right"> {{ number_format($suma_pagos, 2) }}
         <br/>{{$totalLetra}} {{round($centavos)."/100 M.N."}} </td>
     </tr>
@@ -372,9 +372,7 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_
         <tr><td colspan="2">Fecha Impresion: {{$fecha}}</td></tr>
     </tr>
     <tr>
-        <td>
-            <!--Pago-->
-        </td>
+        
         @php
         
         
@@ -388,7 +386,7 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_
             $mes->name . " de " . $lugarFecha->year;
          //dd($fechaLetra);   
         @endphp
-        <td>Fecha Pago:{{$fechaLetra}}
+        <td colspan="2">Fecha Pago:{{$fechaLetra}}
             
         </td>
         <!--<td align="right"> @{{ $pago->monto }} </td>-->
@@ -407,7 +405,7 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_
         <td></td>
         <td align="right"> {{ $caja->total-$acumulado }} </td>
     </tr>
--->
+
     <tr>
         <td colspan=3>
         <table style="width:100%;height:auto;border:1px solid #ccc;font-size: 0.70em;">
@@ -425,7 +423,9 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_
         <td>
     </tr>
     <tr><td>{{$fechaLetra}}</td></tr>
-    <tr><td>*El saldo pendiente puede incrementar por recargos al exceder la fecha limite de pago</td></tr>
+-->
+    
+    <tr><td colspan="2">*El saldo pendiente puede incrementar por recargos al exceder la fecha limite de pago</td></tr>
     
 </table>
 

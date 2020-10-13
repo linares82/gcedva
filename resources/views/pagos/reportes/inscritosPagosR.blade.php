@@ -41,16 +41,18 @@
                 
                 @foreach($registros_pagados as $registro)
                 @php
-                    $beca=App\AutorizacionBeca::where('cliente_id',$registro->cliente_id)
+                    $beca=App\AutorizacionBeca::where('cliente_id',$registro->id)
                 ->orderBy('autorizacion_becas.id','Desc')
                 ->where('autorizacion_becas.st_beca_id',4)
+                ->whereNull('deleted_at')
                 ->take(1)
                 ->first();
-                //dd($beca);
+                
                 if(!is_null($beca)){
+                  //Log::info($beca->id."-*-".$beca->lectivo->inicio."-*-".$beca->lectivo->fin);
                     $fecha_inicio=Carbon\Carbon::createFromFormat('Y-m-d',$beca->lectivo->inicio);
                     $fecha_fin=Carbon\Carbon::createFromFormat('Y-m-d',$beca->lectivo->fin);
-                    $fecha_adeudo=Carbon\Carbon::createFromFormat('Y-m-d',$detalle['fecha_pago']);
+                    $fecha_adeudo=Carbon\Carbon::createFromFormat('Y-m-d',$registro->fecha_pago);
                 }
                 @endphp
                 @if(($concepto<>$registro->caja_concepto_id and $concepto_suma>0))
