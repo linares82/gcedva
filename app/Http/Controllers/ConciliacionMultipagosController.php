@@ -438,7 +438,12 @@ class ConciliacionMultipagosController extends Controller
 			array_push($registrosConciliados, $registro);
 		}
 		//dd($registros);
-		$lineasConciliacionExtra = ConciliacionMultiDetalle::where('conciliacion_multipago_id', $conciliacion->id)->whereNull('peticion_multipago_id')->get();
+
+		$lineasConciliacionExtra = ConciliacionMultiDetalle::where('conciliacion_multipago_id', $conciliacion->id)
+			->whereNull('peticion_multipago_id')
+			->get();
+
+
 		//dd($lineasConciliacionExtra->toArray());
 
 		return view('conciliacionMultipagos.reportes.rptConciliacion', compact('registrosConciliados', 'lineasConciliacionExtra'));

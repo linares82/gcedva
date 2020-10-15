@@ -4,18 +4,25 @@
         
         body{
             font-family:"Arial";
-            font-size:small;
+            font-size:large;
         }
-        </style>
+
+        @media print {
+            body{
+            font-family:"Arial";
+            font-size:large;
+            }
+        }
+    </style>
 </head>
 
-<body>
+<body >
 @php
 $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_id',1)->get();
 @endphp
 
 <div id="printeArea">
-    <table style="width:35%;height:auto;border:1px solid #ccc;font-size: 0.70em;">
+    <table style="width:100%;height:auto;border:1px solid #ccc;font-size: 0.70em;">
         <tr>
             <td align="center" colspan="2">
                 @if(isset($combinacion->especialidad->imagen))
@@ -198,7 +205,7 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_
 
 <br>
 
-<table style="width:35%;height:auto;border:1px solid #ccc;font-size: 0.70em;">
+<table style="width:100%;height:auto;border:1px solid #ccc;font-size: 0.70em;">
     <tr>
         <td align="center" colspan="2">
             @if(isset($combinacion->especialidad->imagen))

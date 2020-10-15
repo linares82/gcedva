@@ -135,6 +135,7 @@ return array(
     'AddMarcadoPaisesTable' => $baseDir . '/database/migrations/2018_12_14_112248_add_marcado_paises_table.php',
     'AddMatriculaClientesTable' => $baseDir . '/database/migrations/2017_07_17_160208_add_matricula_clientes_table.php',
     'AddMatriculaInscripcionsTable' => $baseDir . '/database/migrations/2018_02_14_122022_add_matricula_inscripcions_table.php',
+    'AddMatrizIdToPlantelsTable' => $baseDir . '/database/migrations/2020_10_14_101651_add_matriz_id_to_plantels_table.php',
     'AddMensualidadSepToAutorizacionBecasTable' => $baseDir . '/database/migrations/2020_07_16_184411_add_mensualidad_sep_to_autorizacion_becas_table.php',
     'AddMontoMensualidadClientesTable' => $baseDir . '/database/migrations/2018_11_01_123717_add_monto_mensualidad_clientes_table.php',
     'AddMotivoBecaIdToAutorizacionBecasTable' => $baseDir . '/database/migrations/2020_07_02_120520_add_motivo_beca_id_to_autorizacion_becas_table.php',

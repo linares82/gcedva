@@ -55,7 +55,8 @@ class PlantelsController extends Controller
 			->where('puesto_id', 15)->pluck('name', 'id');
 		$lista_conceptosMultipago = ConceptoMultipago::pluck('name', 'id');
 		$lista_formaPagos = FormaPago::pluck('name', 'id');
-		return view('plantels.create', compact('directores', 'responsables', 'enlaces', 'lista_conceptosMultipago', 'lista_formaPagos'))
+		$matrices = Plantel::pluck('razon', 'id');
+		return view('plantels.create', compact('matrices', 'directores', 'responsables', 'enlaces', 'lista_conceptosMultipago', 'lista_formaPagos'))
 			->with('list', Plantel::getListFromAllRelationApps());
 	}
 
@@ -156,6 +157,7 @@ class PlantelsController extends Controller
 			->where('puesto_id', 15)->pluck('name', 'id');
 		$ruta = public_path() . "\\imagenes\\planteles\\" . $id . "\\";
 		$lista_formaPagos = FormaPago::pluck('name', 'id');
+		$matrices = Plantel::pluck('razon', 'id');
 
 		$doc_existentes = DB::table('doc_plantel_plantels as dpp')->select('doc_plantel_id')
 			->join('plantels as p', 'p.id', '=', 'dpp.plantel_id')
@@ -185,7 +187,8 @@ class PlantelsController extends Controller
 			'documentos_faltantes',
 			'enlaces',
 			'lista_conceptosMultipago',
-			'lista_formaPagos'
+			'lista_formaPagos',
+			'matrices'
 		))
 			->with('list', Plantel::getListFromAllRelationApps())
 			->with('list1', DocPlantelPlantel::getListFromAllRelationApps());

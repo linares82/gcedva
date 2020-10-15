@@ -80,8 +80,8 @@ class SeguimientoObserver
             $input['estatus'] = $st_seguimiento->name;
             $input['estatus_id'] = $st_seguimiento->id;
             $input['fecha'] = Date('Y-m-d');
-            $input['usu_alta_id'] = Auth::user()->id;
-            $input['usu_mod_id'] = Auth::user()->id;
+            $input['usu_alta_id'] = isset(Auth::user()->id) ? Auth::user()->id : 1;
+            $input['usu_mod_id'] = isset(Auth::user()->id) ? Auth::user()->id : 1;
             HEstatus::create($input);
         }
     }
@@ -111,5 +111,4 @@ class SeguimientoObserver
             $cliente->save();
         }
     }
-
 }

@@ -45,6 +45,7 @@
                 ->orderBy('autorizacion_becas.id','Desc')
                 ->where('autorizacion_becas.st_beca_id',4)
                 ->whereNull('deleted_at')
+                ->whereNotNull('lectivo_id')
                 ->take(1)
                 ->first();
                 

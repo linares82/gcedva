@@ -78,11 +78,19 @@
                           <span class="help-block">{{ $errors->first("cct") }}</span>
                          @endif
                       </div>
-                      <div class="form-group col-md-4 @if($errors->has('cuenta_contable')) has-error @endif">
+                      <!--<div class="form-group col-md-4 @if($errors->has('cuenta_contable')) has-error @endif">
                         <label for="cuenta_contable-field">Cuenta Contable</label>
                         {!! Form::text("cuenta_contable", null, array("class" => "form-control input-sm", "id" => "cuenta_contable-field")) !!}
                         @if($errors->has("cuenta_contable"))
                          <span class="help-block">{{ $errors->first("cuenta_contable") }}</span>
+                        @endif
+                     </div>
+                    -->
+                    <div class="form-group col-md-4 @if($errors->has('matriz_id')) has-error @endif">
+                        <label for="matriz_id-field">Matriz</label>
+                        {!! Form::select("matriz_id", $matrices, null, array("class" => "form-control select_seguridad", "id" => "matriz_id-field")) !!}
+                        @if($errors->has("matriz_id"))
+                         <span class="help-block">{{ $errors->first("matriz_id") }}</span>
                         @endif
                      </div>
                      <div class="form-group col-md-4 @if($errors->has('cuenta_p_id')) has-error @endif">
