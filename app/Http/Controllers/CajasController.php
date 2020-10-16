@@ -139,6 +139,13 @@ class CajasController extends Controller
 
         $caja_r['total'] = 0;
         $caja_r['st_caja_id'] = 0;
+
+        if (isset($input['bnd_sin_reactivacion'])) {
+            $caja_r['bnd_sin_reactivacion'] = $input['bnd_reactivacion'];
+        } else {
+            $caja_r['bnd_sin_reactivacion'] = 0;
+        }
+
         $caja_r['usu_alta_id'] = Auth::user()->id;
         $caja_r['usu_mod_id'] = Auth::user()->id;
         //$plantel->consecutivo = $plantel->consecutivo + 1;

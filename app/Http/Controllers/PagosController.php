@@ -518,10 +518,11 @@ class PagosController extends Controller
         $pago = $pago->find($id);
         $pago->usu_delete_id = Auth::user()->id;
         $pago->save();
-        //dd($pago->toArray());
+        $caja = Caja::find($pago->caja_id);
+        //dd($caja);
         $pago->delete();
 
-        $caja = Caja::find($pago->caja_id);
+
         //dd($caja->toArray());
         $combinaciones = CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
         //dd($combinaciones->toArray());
@@ -533,7 +534,7 @@ class PagosController extends Controller
             ->where('cliente_id', $cliente->id)
             ->get();
 
-        $suma_pagos = Pago::select('monto')->where('caja_id', '=', $pago->caja_id)->whereNull('deleted_at')->sum('monto');
+        $suma_pagos = Pago::select('monto')->where('caja_id', '=', $caja->id)->whereNull('deleted_at')->sum('monto');
         if ($suma_pagos == $caja->total) {
             $caja->st_caja_id = 1;
             $caja->save();
@@ -552,7 +553,8 @@ class PagosController extends Controller
                     Adeudo::where('id', '=', $ln->adeudo_id)->update(['pagado_bnd' => 0]);
                 }
             }
-        } elseif ($caja->st_caja_id == 1) {
+        }
+        if ($caja->st_caja_id == 1) {
             $caja->st_caja_id = 0;
             $caja->save();
 

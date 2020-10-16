@@ -677,6 +677,14 @@ Route::post(
         'uses' => 'EmpleadosController@listaDocumentosR'
     )
 )->middleware('auth');
+Route::get(
+    '/empleados/baja/',
+    array(
+        'as' => 'empleados.baja',
+        'middleware' => 'permission:empleados.baja',
+        'uses' => 'EmpleadosController@baja'
+    )
+)->middleware('auth');
 ///////////////////////////////////////////////////////////////////////////////////////////
 /*Route::get('zip/imagenes', function () {
 $files = glob(public_path('imagenes'));

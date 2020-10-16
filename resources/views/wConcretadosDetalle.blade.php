@@ -44,7 +44,7 @@ crossorigin="anonymous">
             
         <table class="table table-condensed table-striped">
                 <thead>
-                    <th>Csc</th><th>Plantel</th><th>Meta Total</th><th>Cliente</th><th>Fecha</th> <th>Hora</th>
+                    <th>Csc</th><th>Plantel</th><th>Meta Total</th><th>Cliente</th><th>Fecha</th><th>F. Planeada</th>
                 </thead>
                 @php
                     $indicador=0;
@@ -54,7 +54,7 @@ crossorigin="anonymous">
                     <tr>
                     <td>{{++$indicador}}</td>
                     <td>{{$linea['razon']}}</td><td>{{$linea['meta_total']}}</td><td>{{$linea['cliente_id']}}</td>
-                    <td>{{$linea['fecha']}}</td><td>{{$linea['hora']}}</td>
+                    <td>{{$linea['fecha_pago']}}</td><td>{{$linea['fecha_planeada']}}</td>
                     </tr>
                 @php
                     $vMeta=$linea['meta_total'];
@@ -74,7 +74,7 @@ crossorigin="anonymous">
                 </div>
                 <table class="table table-condensed table-striped">
                     <thead>
-                        <th>Csc</th><th>Plantel</th><th>Meta Total</th><th>Cliente</th><th>Fecha</th> <th>Hora</th>
+                        <th>Csc</th><th>Plantel</th><th>Meta Total</th><th>Cliente</th><th>Fecha</th><th>F. Planeada</th>
                     </thead>
                     @php
                         $indicador=0;
@@ -84,7 +84,7 @@ crossorigin="anonymous">
                         <tr>
                         <td>{{++$indicador}}</td>
                         <td>{{$linea['razon']}}</td><td>{{$linea['meta_total']}}</td><td>{{$linea['cliente_id']}}</td>
-                        <td>{{$linea['fecha']}}</td><td>{{$linea['hora']}}</td>
+                        <td>{{$linea['fecha_pago']}}</td><td>{{$linea['fecha_planeada']}}</td>
                         </tr>
                     @php
                         $vMeta=$linea['meta_total'];
@@ -103,7 +103,7 @@ crossorigin="anonymous">
                 </div>
                 <table class="table table-condensed table-striped">
                     <thead>
-                        <th>Csc</th><th>Plantel</th><th>Meta Total</th><th>Cliente</th><th>Fecha</th> <th>Hora</th>
+                        <th>Csc</th><th>Plantel</th><th>Meta Total</th><th>Cliente</th><th>Fecha</th><th>F. Planeada</th>
                     </thead>
                     @php
                         $indicador=0;
@@ -113,7 +113,7 @@ crossorigin="anonymous">
                         <tr>
                         <td>{{++$indicador}}</td>
                         <td>{{$linea['razon']}}</td><td>{{$linea['meta_total']}}</td><td>{{$linea['cliente_id']}}</td>
-                        <td>{{$linea['fecha']}}</td><td>{{$linea['hora']}}</td>
+                        <td>{{$linea['fecha_pago']}}</td><td>{{$linea['fecha_planeada']}}</td>
                         </tr>
                     @php
                         $vMeta=$linea['meta_total'];

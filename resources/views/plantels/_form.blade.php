@@ -413,29 +413,37 @@
             @if(isset($plantel))
             <fieldset>
                 <div class="form-group col-md-4 @if($errors->has('cns_empleado')) has-error @endif">
-                    <label for="cns_empleado-field">Consecutivo Empleado</label>
+                    <label for="cns_empleado-field">Consecutivo Empleado:{{ $plantel->cns_empleado }}</label>
+                    @permission('plantels.consecutivo_empleado')
                     {!! Form::text("cns_empleado", null, array("class" => "form-control input-sm", "id" => "cns_empleado-field", 'readonly'=>'readonly')) !!}
+                    @endpermission
                     @if($errors->has("cns_empleado"))
                      <span class="help-block">{{ $errors->first("cns_empleado") }}</span>
                     @endif
                  </div>
                  <div class="form-group col-md-4 @if($errors->has('cns_alumno')) has-error @endif">
-                    <label for="cns_alumno-field">Consecutivo Alumno</label>
+                    <label for="cns_alumno-field">Consecutivo Alumno: {{ $plantel->cns_alumno }}</label>
+                    @permission('plantels.consecutivo_alumno')
                     {!! Form::text("cns_alumno", null, array("class" => "form-control input-sm", "id" => "cns_alumno-field", 'readonly'=>'readonly')) !!}
+                    @endpermission
                     @if($errors->has("cns_alumno"))
                      <span class="help-block">{{ $errors->first("cns_alumno") }}</span>
                     @endif
                  </div>
                  <div class="form-group col-md-4 @if($errors->has('consecutivo')) has-error @endif">
-                    <label for="consecutivo-field">Consecutivo Ticket</label>
+                    <label for="consecutivo-field">Consecutivo Ticket:{{ $plantel->consecutivo }}</label>
+                    @permission('plantels.consecutivo')
                     {!! Form::text("consecutivo", null, array("class" => "form-control input-sm", "id" => "consecutivo-field")) !!}
+                    @endpermission
                     @if($errors->has("consecutivo"))
                      <span class="help-block">{{ $errors->first("consecutivo") }}</span>
                     @endif
                  </div>    
                  <div class="form-group col-md-4 @if($errors->has('consecutivo_pago')) has-error @endif">
-                    <label for="consecutivo_pago-field">Consecutivo Pago</label>
+                    <label for="consecutivo_pago-field">Consecutivo Pago:{{ $plantel->consecutivo }}</label>
+                    @permission('plantels.consecutivo_pago')
                     {!! Form::text("consecutivo_pago", null, array("class" => "form-control input-sm", "id" => "consecutivo_pago-field")) !!}
+                    @endpermission
                     @if($errors->has("consecutivo_pago"))
                      <span class="help-block">{{ $errors->first("consecutivo") }}</span>
                     @endif
@@ -448,8 +456,10 @@
                     @endif
                  </div>
                  <div class="form-group col-md-4 @if($errors->has('csc_vinculacion')) has-error @endif">
-                    <label for="csc_vinculacion-field">Consecutivo Vinculacion</label>
+                    <label for="csc_vinculacion-field">Consecutivo Vinculacion:{{ $plantel->csc_vinculacion }}</label>
+                    @permission('plantels.csc_vinculacion')
                     {!! Form::text("csc_vinculacion", null, array("class" => "form-control input-sm", "id" => "csc_vinculacion-field")) !!}
+                    @endpermission
                     @if($errors->has("csc_vinculacion"))
                      <span class="help-block">{{ $errors->first("csc_vinculacion") }}</span>
                     @endif
@@ -527,6 +537,7 @@
 <!-- CK Editor -->
     <script src="https://cdn.ckeditor.com/4.4.3/standard/ckeditor.js"></script>
 <script type="text/javascript">
+
     $(function () {
         // Replace the <textarea id="detalle-field"> with a CKEditor
         // instance, using default configuration.
@@ -594,15 +605,16 @@
         });
     })
     $(document).ready(function() {
-  $('#seleccionar_conceptos').change(function(){
-    if( $(this).is(':checked') ) {
-      $("#concepto_multipagos_id-field > option").prop("selected","selected");
-            $("#concepto_multipagos_id-field").trigger("change");
-    }else{
-      $("#concepto_multipagos_id-field > option").prop("selected","selected");
-            $('#concepto_multipagos_id-field').val(null).trigger('change');
-    }
-  });
-});
+        $('#seleccionar_conceptos').change(function(){
+            if( $(this).is(':checked') ) {
+            $("#concepto_multipagos_id-field > option").prop("selected","selected");
+                    $("#concepto_multipagos_id-field").trigger("change");
+            }else{
+            $("#concepto_multipagos_id-field > option").prop("selected","selected");
+                    $('#concepto_multipagos_id-field').val(null).trigger('change');
+            }
+        });
+
+    });
     </script>
 @endpush

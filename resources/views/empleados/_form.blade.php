@@ -277,7 +277,7 @@
                         </div>
                         <div class="form-group col-md-1 @if($errors->has('dias_alerta')) has-error @endif">
                           <label for="dias_alerta-field">Dias Alerta</label>
-                          {!! Form::text("dias_alerta", null, array("class" => "form-control input-sm", "id" => "dias_alerta-field")) !!}
+                          {!! Form::text("dias_alerta", 0, array("class" => "form-control input-sm", "id" => "dias_alerta-field")) !!}
                           @if($errors->has("dias_alerta"))
                             <span class="help-block">{{ $errors->first("dias_alerta") }}</span>
                           @endif
@@ -402,8 +402,18 @@ $(document).ready(function() {
             $('#plantel_id-field').val(null).trigger('change');
     }
   });
+
+  @permission('empleados.editarPlanteles')
+  $("#frm_empleado").find(':input').each(function() {   
+         $(this).prop('disabled',true);
+         $('#plantel_id-field').prop('disabled',false);
+         $('#seleccionar_planteles').prop('disabled',false);
+      });
+  @endpermission
 });
   
+
+
 
   $('#fin_contrato-field').Zebra_DatePicker({
         days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],

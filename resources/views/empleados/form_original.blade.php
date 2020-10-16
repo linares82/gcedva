@@ -203,5 +203,6 @@ $('#user_id-field').select2({
                 },
             }
 });
+   
 </script>
 @endpush

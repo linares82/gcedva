@@ -43,7 +43,7 @@ class CajaObserver
             if ($inscripcions->isEmpty()) {
                 $cliente->st_cliente_id = 22;
                 $cliente->save();
-            } else {
+            } elseif ($this->caja->bnd_sin_reactivacion == 0) {
                 $cliente->st_cliente_id = 4;
                 $cliente->save();
             }

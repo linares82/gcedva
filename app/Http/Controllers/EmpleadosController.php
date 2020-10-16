@@ -691,4 +691,13 @@ class EmpleadosController extends Controller
         //dd($registros->toArray());
         return view('empleados.reportes.registroInfDocentesR', compact('registros'));
     }
+
+    public function baja(Request $request)
+    {
+        $datos = $request->all();
+        $empleado = Empleado::find($datos['id']);
+        $empleado->st_empleado_id = 3;
+        $empleado->save();
+        return redirect(url('/home'));
+    }
 }

@@ -12,6 +12,42 @@
 			height: 400px;
 		}
     </style>-->
+
+    @permission('empleados.contratosVencidos')
+    <div class="form-group col-md-12 col-sm-12 col-xs-12">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">
+                    Contratos vencidos
+                </h3>
+            </div>
+            <div class="box-body">
+                <table class="table table-bordered table-striped dataTable">
+                    <thead><th>Empleado Id</th><th>Empleado Nombre</th><th>Plantel</th><th>F. Vencimiento</th><th></th>
+                    <tbody>
+                        @foreach ($contratosVencidos as $contrato)
+                            <tr>
+                            <td>{{$contrato->id}}</td>
+                            <td>{{ $contrato->nombre }} {{ $contrato->ape_paterno }} {{ $contrato->ape_materno }}</td>
+                            <td>{{$contrato->plantel->razon}}</td>
+                            <td>{{$contrato->fin_contrato}}</td>
+                            <td>
+                                @permission('empleados.baja')
+                                <a href="{{ route('empleados.baja', array('id'=>$contrato->id)) }}" class="btn btn-xs btn-danger">Baja</a>
+                                @endpermission
+                                @permission('empleados.edit')
+                                <a href="{{ route('empleados.edit', $contrato->id) }}" target="_blank" class="btn btn-xs btn-success">Editar</a>
+                                @endpermission
+                            </td>
+                            </tr>
+                        @endforeach
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    @endpermission
      
     @if (Auth::user()->can('autorizacionBaja.aut_servicios_escolares') or 
     Auth::user()->can('autorizacionBaja.aut_caja') or

@@ -43,7 +43,6 @@ class HomeController extends Controller
         $f = date("Y-m-d");
         $l = Lectivo::find(0)->first();
 
-
         //Procesos de Beca
         $empleado = Empleado::where('user_id', Auth::user()->id)->first();
         $planteles = array();
@@ -67,22 +66,16 @@ class HomeController extends Controller
             'cli.ape_materno as cli_ape_materno',
             'pla.razon'
         )
-            //->where('autorizacion_becas.usu_alta_id',Auth::user()->id)
-            //->leftJoin('autorizacion_beca_comentarios as c','c.autorizacion_beca_id','=','autorizacion_becas.id')
             ->join('clientes as cli', 'cli.id', '=', 'autorizacion_becas.cliente_id')
             ->join('plantels as pla', 'pla.id', '=', 'cli.plantel_id')
-            //->join('st_becas as st','st.id','=','c.st_beca_id')
             ->leftJoin('st_becas as acp', 'acp.id', '=', 'autorizacion_becas.aut_caja_plantel')
             ->leftJoin('st_becas as adp', 'adp.id', '=', 'autorizacion_becas.aut_dir_plantel')
-            //->leftJoin('st_becas as acc', 'acc.id', '=', 'autorizacion_becas.aut_caja_corp')
             ->leftJoin('st_becas as ase', 'ase.id', '=', 'autorizacion_becas.aut_ser_esc')
             ->leftJoin('st_becas as ad', 'ad.id', '=', 'autorizacion_becas.aut_dueno')
-            //->where('autorizacion_becas.id', '>', 560)
             ->whereRaw('(aut_caja_plantel <> 4 or aut_dir_plantel<> 4 or aut_ser_esc<> 4 or aut_dueno<> 4)');
         if (Auth::user()->can('autorizacionBecas.filtroPlantels')) {
             $becas_aux->whereIn('cli.plantel_id', $planteles);
         }
-        //->whereNull('c.bnd_visto')
         $becas = $becas_aux->with('cliente')->get();
         //dd($becas);
 
@@ -101,24 +94,23 @@ class HomeController extends Controller
         if (Auth::user()->can('autorizacionBajas.filtroPlantels')) {
             $autorizacionBajas->whereIn('c.plantel_id', $planteles);
         }
-        //dd(Auth::user()->can('aut_ser_esc'));
-        //if (Auth::user()->can('autorizacionBaja.aut_servicios_escolares')) {
-        //$autorizacionBajas->orWhere('aut_ser_esc', '<>', 2);
-        //}
-        //if (Auth::user()->can('autorizacionBaja.aut_caja')) {
-        //$autorizacionBajas->orWhere('aut_caja', '<>', 2);
-        //}
-        //if (Auth::user()->can('autorizacionBaja.aut_servicios_escolares_c')) {
-        //$autorizacionBajas->orWhere('aut_ser_esc_cor', '<>', 2);
-        //}
+
         $bajas = $autorizacionBajas->get();
-        //dd($bajas->toArray());
+
         $plantels = Plantel::where('id', '>', 1)->get();
+
+        $contratosVencidos = Empleado::where('st_empleado_id', '<>', 3)
+            ->where('dias_alerta', '>', 0)
+            ->whereRaw('DATEDIFF(fin_contrato, "' . Date("Y-m-d") . '") <= dias_alerta')
+            ->orderBy('plantel_id')
+            ->get();
+        //dd($contratosVencidos->toArray());
 
         return view('home', compact(
             'becas',
             'bajas',
-            'plantels'
+            'plantels',
+            'contratosVencidos'
         ));
     }
 
@@ -422,7 +414,7 @@ class HomeController extends Controller
         $plantel = DB::table('plantels as p')->where('id', '>', 0)->where('id', '=', $datos['plantel'])
             ->select('razon', 'id', 'meta_total')->first();
 
-        $c = Seguimiento::select(
+        /*$c = Seguimiento::select(
             'p.id',
             'p.razon',
             'p.meta_total',
@@ -442,6 +434,31 @@ class HomeController extends Controller
             ->groupBy('p.razon')
             ->groupBy('p.meta_total')
             ->first();
+            */
+        $c = Seguimiento::select(
+            'p.id',
+            'p.razon',
+            'p.meta_total',
+            DB::raw('count(c.nombre) as avance'),
+            DB::raw('((count(c.nombre)*100)/p.meta_total) as p_avance')
+        )
+            ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
+            ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
+            ->join('adeudos as a', 'a.cliente_id', '=', 'c.id')
+            ->join('cajas as caj', 'caj.id', '=', 'a.caja_id')
+            ->where('a.caja_concepto_id', 1)
+            ->where('a.pagado_bnd', 1)
+            ->where('a.fecha_pago', '>=', $l->inicio)
+            ->where('a.fecha_pago', '<=', $l->fin)
+            ->where('p.id', '=', $plantel->id)
+            ->where('caj.st_caja_id', 1)
+            ->whereNull('a.deleted_at')
+            ->whereNull('caj.deleted_at')
+            ->groupBy('p.id')
+            ->groupBy('p.razon')
+            ->groupBy('p.meta_total')
+            ->first();
+        //dd($c->toArray());
 
         if (is_null($c)) {
             array_push(
@@ -486,13 +503,16 @@ class HomeController extends Controller
         )
             ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
             ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
-            ->join('hactividades as h', 'h.cliente_id', '=', 'c.id')
-            ->where('h.tarea', '=', 'Seguimiento')
-            ->where('h.detalle', '=', 'Concretado')
-            ->where('h.created_at', '>=', $l->inicio)
-            ->where('h.created_at', '<=', $l->fin)
-            ->where('seguimientos.st_seguimiento_id', '=', '2')
+            ->join('adeudos as a', 'a.cliente_id', '=', 'c.id')
+            ->join('cajas as caj', 'caj.id', '=', 'a.caja_id')
+            ->where('a.caja_concepto_id', 1)
+            ->where('a.pagado_bnd', 1)
+            ->where('a.fecha_pago', '>=', $l->inicio)
+            ->where('a.fecha_pago', '<=', $l->fin)
             ->where('p.id', '=', $plantel->id)
+            ->where('caj.st_caja_id', 1)
+            ->whereNull('a.deleted_at')
+            ->whereNull('caj.deleted_at')
             ->groupBy('p.id')
             ->groupBy('p.razon')
             ->groupBy('p.meta_total')
@@ -502,23 +522,23 @@ class HomeController extends Controller
             'p.razon',
             'p.meta_total',
             'seguimientos.cliente_id',
-            'h.fecha',
-            'h.hora'
+            'caj.fecha as fecha_pago',
+            'a.fecha_pago as fecha_planeada'
         )
             ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
             ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
-            ->join('hactividades as h', 'h.cliente_id', '=', 'c.id')
-            ->where('h.tarea', '=', 'Seguimiento')
-            ->where('h.detalle', '=', 'Concretado')
-            ->where('h.created_at', '>=', $l->inicio)
-            ->where('h.created_at', '<=', $l->fin)
-            ->where('seguimientos.st_seguimiento_id', '=', '2')
+            ->join('adeudos as a', 'a.cliente_id', '=', 'c.id')
+            ->join('cajas as caj', 'caj.id', '=', 'a.caja_id')
+            ->where('a.caja_concepto_id', 1)
+            ->where('a.pagado_bnd', 1)
+            ->where('a.fecha_pago', '>=', $l->inicio)
+            ->where('a.fecha_pago', '<=', $l->fin)
             ->where('p.id', '=', $plantel->id)
+            ->where('caj.st_caja_id', 1)
+            ->whereNull('a.deleted_at')
+            ->whereNull('caj.deleted_at')
             ->orderBy('p.id')
             ->orderBy('p.razon')
-            //->groupBy('p.id')
-            //->groupBy('p.razon')
-            //->groupBy('p.meta_total')
             ->get();
 
         //dd($detalle1->toArray());
@@ -532,19 +552,22 @@ class HomeController extends Controller
         )
             ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
             ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
-            ->join('hactividades as h', 'h.cliente_id', '=', 'c.id')
+            ->join('adeudos as a', 'a.cliente_id', '=', 'c.id')
+            ->join('cajas as caj', 'caj.id', '=', 'a.caja_id')
             ->join('combinacion_clientes as cc', 'cc.cliente_id', '=', 'c.id')
             ->join('nivels as n', 'n.id', '=', 'cc.nivel_id')
             ->where('n.bnd_corto', 1)
             ->where('cc.plan_pago_id', '>', 0)
             ->where('cc.cuenta_ticket_pago', '>', 0)
             ->whereNull('cc.deleted_at')
-            ->where('h.tarea', '=', 'Seguimiento')
-            ->where('h.detalle', '=', 'Concretado')
-            ->where('h.created_at', '>=', $l->inicio)
-            ->where('h.created_at', '<=', $l->fin)
-            ->where('seguimientos.st_seguimiento_id', '=', '2')
+            ->where('a.caja_concepto_id', 1)
+            ->where('a.pagado_bnd', 1)
+            ->where('a.fecha_pago', '>=', $l->inicio)
+            ->where('a.fecha_pago', '<=', $l->fin)
             ->where('p.id', '=', $plantel->id)
+            ->where('caj.st_caja_id', 1)
+            ->whereNull('a.deleted_at')
+            ->whereNull('caj.deleted_at')
             ->groupBy('p.id')
             ->groupBy('p.razon')
             ->groupBy('p.meta_total')
@@ -555,24 +578,27 @@ class HomeController extends Controller
             'p.razon',
             'p.meta_total',
             'seguimientos.cliente_id',
-            'h.fecha',
-            'h.hora'
+            'caj.fecha as fecha_pago',
+            'a.fecha_pago as fecha_planeada'
         )
             ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
             ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
-            ->join('hactividades as h', 'h.cliente_id', '=', 'c.id')
+            ->join('adeudos as a', 'a.cliente_id', '=', 'c.id')
+            ->join('cajas as caj', 'caj.id', '=', 'a.caja_id')
             ->join('combinacion_clientes as cc', 'cc.cliente_id', '=', 'c.id')
             ->join('nivels as n', 'n.id', '=', 'cc.nivel_id')
             ->where('n.bnd_corto', 1)
             ->where('cc.plan_pago_id', '>', 0)
             ->where('cc.cuenta_ticket_pago', '>', 0)
             ->whereNull('cc.deleted_at')
-            ->where('h.tarea', '=', 'Seguimiento')
-            ->where('h.detalle', '=', 'Concretado')
-            ->where('h.created_at', '>=', $l->inicio)
-            ->where('h.created_at', '<=', $l->fin)
-            ->where('seguimientos.st_seguimiento_id', '=', '2')
+            ->where('a.caja_concepto_id', 1)
+            ->where('a.pagado_bnd', 1)
+            ->where('a.fecha_pago', '>=', $l->inicio)
+            ->where('a.fecha_pago', '<=', $l->fin)
             ->where('p.id', '=', $plantel->id)
+            ->where('caj.st_caja_id', 1)
+            ->whereNull('a.deleted_at')
+            ->whereNull('caj.deleted_at')
             ->orderBy('p.id')
             ->orderBy('p.razon')
             ->get();
@@ -586,19 +612,22 @@ class HomeController extends Controller
         )
             ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
             ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
-            ->join('hactividades as h', 'h.cliente_id', '=', 'c.id')
+            ->join('adeudos as a', 'a.cliente_id', '=', 'c.id')
+            ->join('cajas as caj', 'caj.id', '=', 'a.caja_id')
             ->join('combinacion_clientes as cc', 'cc.cliente_id', '=', 'c.id')
             ->join('nivels as n', 'n.id', '=', 'cc.nivel_id')
             ->where('n.bnd_corto', 0)
             ->where('cc.plan_pago_id', '>', 0)
             ->where('cc.cuenta_ticket_pago', '>', 0)
             ->whereNull('cc.deleted_at')
-            ->where('h.tarea', '=', 'Seguimiento')
-            ->where('h.detalle', '=', 'Concretado')
-            ->where('h.created_at', '>=', $l->inicio)
-            ->where('h.created_at', '<=', $l->fin)
-            ->where('seguimientos.st_seguimiento_id', '=', '2')
+            ->where('a.caja_concepto_id', 1)
+            ->where('a.pagado_bnd', 1)
+            ->where('a.fecha_pago', '>=', $l->inicio)
+            ->where('a.fecha_pago', '<=', $l->fin)
             ->where('p.id', '=', $plantel->id)
+            ->where('caj.st_caja_id', 1)
+            ->whereNull('a.deleted_at')
+            ->whereNull('caj.deleted_at')
             ->groupBy('p.id')
             ->groupBy('p.razon')
             ->groupBy('p.meta_total')
@@ -609,24 +638,27 @@ class HomeController extends Controller
             'p.razon',
             'p.meta_total',
             'seguimientos.cliente_id',
-            'h.fecha',
-            'h.hora'
+            'caj.fecha as fecha_pago',
+            'a.fecha_pago as fecha_planeada'
         )
             ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
             ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
-            ->join('hactividades as h', 'h.cliente_id', '=', 'c.id')
+            ->join('adeudos as a', 'a.cliente_id', '=', 'c.id')
+            ->join('cajas as caj', 'caj.id', '=', 'a.caja_id')
             ->join('combinacion_clientes as cc', 'cc.cliente_id', '=', 'c.id')
             ->join('nivels as n', 'n.id', '=', 'cc.nivel_id')
             ->where('n.bnd_corto', 0)
             ->where('cc.plan_pago_id', '>', 0)
             ->where('cc.cuenta_ticket_pago', '>', 0)
             ->whereNull('cc.deleted_at')
-            ->where('h.tarea', '=', 'Seguimiento')
-            ->where('h.detalle', '=', 'Concretado')
-            ->where('h.created_at', '>=', $l->inicio)
-            ->where('h.created_at', '<=', $l->fin)
-            ->where('seguimientos.st_seguimiento_id', '=', '2')
+            ->where('a.caja_concepto_id', 1)
+            ->where('a.pagado_bnd', 1)
+            ->where('a.fecha_pago', '>=', $l->inicio)
+            ->where('a.fecha_pago', '<=', $l->fin)
             ->where('p.id', '=', $plantel->id)
+            ->where('caj.st_caja_id', 1)
+            ->whereNull('a.deleted_at')
+            ->whereNull('caj.deleted_at')
             ->orderBy('p.id')
             ->orderBy('p.razon')
             ->get();

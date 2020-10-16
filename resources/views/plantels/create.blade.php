@@ -21,7 +21,7 @@
     <div class="row">
         <div class="col-md-12">
 
-            {!! Form::open(array('route' => 'plantels.store', 'files'=>true)) !!}
+            {!! Form::open(array('route' => 'plantels.store', 'files'=>true, 'id'=>'frm_plantel')) !!}
 
 @include('plantels._form')
 
