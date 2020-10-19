@@ -25,7 +25,7 @@ class Caja extends Model
 	protected $fillable = [
 		'consecutivo', 'cliente_id', 'plantel_id', 'subtotal', 'descuento', 'recargo', 'total', 'referencia',
 		'forma_pago_id', 'autorizacion_descuento', 'fecha', 'st_caja_id', 'usu_alta_id', 'usu_mod_id', 'becado_bnd',
-		'usu_delete_id', 'usu_cancelar_id', 'bnd_reactivacion'
+		'usu_delete_id', 'usu_cancelar_id', 'bnd_sin_reactivacion'
 	];
 
 	public function usu_alta()

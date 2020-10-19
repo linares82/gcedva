@@ -141,7 +141,7 @@ class CajasController extends Controller
         $caja_r['st_caja_id'] = 0;
 
         if (isset($input['bnd_sin_reactivacion'])) {
-            $caja_r['bnd_sin_reactivacion'] = $input['bnd_reactivacion'];
+            $caja_r['bnd_sin_reactivacion'] = $input['bnd_sin_reactivacion'];
         } else {
             $caja_r['bnd_sin_reactivacion'] = 0;
         }
@@ -153,7 +153,7 @@ class CajasController extends Controller
         $caja_r['consecutivo'] = ++$plantel->consecutivo;
         $plantel->save();
 
-
+        //dd($caja_r);
         $caja = Caja::create($caja_r);
 
 

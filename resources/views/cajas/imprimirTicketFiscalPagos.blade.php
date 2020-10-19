@@ -108,7 +108,7 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_
             </td>
             
             <td>
-                F. Limite Pago
+                
             </td>
             
         </tr>
@@ -138,12 +138,7 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_
             </td>
             
             <td>
-                @if (isset($caja_linea->adeudo->fecha_pago))
-                {{$caja_linea->adeudo->fecha_pago}}
-                @else
-                {{$caja_linea->caja->fecha}}
-                @endif        
-    
+                
             </td>
             
         </tr>
@@ -152,11 +147,11 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_
         
         <tr>
             <td>
-                Total
+                Total:{{ number_format($suma_pagos, 2) }}
+                <br/>{{$totalLetra}} {{round($centavos)."/100 M.N."}}
             </td>
             
-            <td align="right"> {{ number_format($suma_pagos, 2) }}
-            <br/>{{$totalLetra}} {{round($centavos)."/100 M.N."}} </td>
+            <td align="right">  </td>
         </tr>
         <tr>
             <tr><td colspan="2">Fecha Impresion: {{$fecha}}</td></tr>
@@ -167,7 +162,7 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_
             
             
             //dd($fecha);
-            $lugarFecha = \Carbon\Carbon::createFromFormat('d-m-Y H:i:s', $fecha);
+            $lugarFecha = \Carbon\Carbon::createFromFormat('Y-m-d', $caja->fecha);
             //dd($lugarFecha);
             $mes = App\Mese::find($lugarFecha->month);
             $fechaLetra = $caja->plantel->municipio . ", " .
@@ -291,7 +286,7 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_
         </td>
         
         <td>
-            F. Limite Pago
+            
         </td>
         
     </tr>
@@ -321,11 +316,7 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_
         </td>
         
         <td>
-            @if (isset($caja_linea->adeudo->fecha_pago))
-            {{$caja_linea->adeudo->fecha_pago}}
-            @else
-            {{$caja_linea->caja->fecha}}
-            @endif        
+                  
 
         </td>
         
@@ -335,11 +326,11 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_
     
     <tr>
         <td>
-            Total
+            Total:{{ number_format($suma_pagos, 2) }}
+            <br/>{{$totalLetra}} {{round($centavos)."/100 M.N."}}
         </td>
         
-        <td align="right"> {{ number_format($suma_pagos, 2) }}
-        <br/>{{$totalLetra}} {{round($centavos)."/100 M.N."}} </td>
+        <td align="right">  </td>
     </tr>
     <tr>
         <tr><td colspan="2">Fecha Impresion: {{$fecha}}</td></tr>
@@ -350,7 +341,7 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_
         
         
         //dd($fecha);
-        $lugarFecha = \Carbon\Carbon::createFromFormat('d-m-Y H:i:s', $fecha);
+        $lugarFecha = \Carbon\Carbon::createFromFormat('Y-m-d', $caja->fecha);
         //dd($lugarFecha);
         $mes = App\Mese::find($lugarFecha->month);
         $fechaLetra = $caja->plantel->municipio . ", " .

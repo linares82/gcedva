@@ -145,7 +145,7 @@
                         {!! Form::select("forma_pago_id", $list["FormaPago"], null, array("class" => "form-control", "id" => "forma_pago_id1-field")) !!}
                         {!! Form::text("fecha", null, array("class" => "form-control fecha", "id" => "fecha-field", 'placeholder'=>'Fecha de Venta', 'style'=>"100%")) !!}
                         @permission('cajas.reactivarCliente')
-                        <label>{!! Form::checkbox('bnd_sin_reactivacion', '1', false) !!} Sin Reactivacion</label>
+                        <label>{!! Form::checkbox('bnd_sin_reactivacion', '1', false) !!} No Reactivar</label>
                         @endpermission
                         
                     </div>
@@ -257,7 +257,7 @@
                             <lable><strong>Fecha:</strong>{{$caja->fecha}}</lable>
                             <lable><strong>Estatus:</strong>{{$caja->stCaja->name}}</lable>
                             <lable><strong>F. Pago:</strong>{{$caja->formaPago->name}}</lable>
-                            <lable><strong>Sin Reactivacion:</strong>@if($caja->bnd_reactivacion==1) SI @else NO @endif</lable>
+                            <lable><strong>No Reactivar:</strong>@if($caja->bnd_sin_reactivacion==1) SI @else NO @endif</lable>
                             <input class='fecha_editable form-control' value='{{$caja->fecha}}' data-id="{{$caja->id}}"></input>
                         <div class="box-tools pull-right">
                             <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
