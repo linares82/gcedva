@@ -53,7 +53,7 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_
                                     
         </td>
     </tr>
-    <tr><td colspan="2" align="center" >{{$cliente->plantel->razon_social}}</td></tr>
+    <tr><td colspan="2" align="left" >{{$cliente->plantel->razon}}</td></tr>
     <tr><td colspan="2" align="center"></td></tr>
     <tr>
         <td colspan="2" align="center">
@@ -260,7 +260,7 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_
                                     
         </td>
     </tr>
-    <tr><td colspan="2" align="center" >{{$cliente->plantel->razon_social}}</td></tr>
+    <tr><td colspan="2" align="left" >{{$cliente->plantel->razon}}</td></tr>
     <tr><td colspan="2" align="center"></td></tr>
     <tr>
         <td colspan="2" align="center">
@@ -382,7 +382,7 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_
         
         
         //dd($fecha);
-        $lugarFecha = \Carbon\Carbon::createFromFormat('d-m-Y H:i:s', $fecha);
+        $lugarFecha = \Carbon\Carbon::createFromFormat('Y-m-d', $caja->fecha);
         //dd($lugarFecha);
         $mes = App\Mese::find($lugarFecha->month);
         $fechaLetra = $caja->plantel->municipio . ", " .

@@ -23,17 +23,21 @@
             </div>
             <div class="box-body">
                 <table class="table table-bordered table-striped dataTable">
-                    <thead><th>Empleado Id</th><th>Empleado Nombre</th><th>Plantel</th><th>F. Vencimiento</th><th></th>
+                    <thead><th>Plantel</th><th>Empleado Id</th><th>Empleado Nombre</th><th>RFC</th><th>Puesto</th><th>Direccion</th><th>F. Vencimiento</th><th></th>
                     <tbody>
                         @foreach ($contratosVencidos as $contrato)
                             <tr>
+                                <td>{{$contrato->plantel->razon}}</td>    
                             <td>{{$contrato->id}}</td>
                             <td>{{ $contrato->nombre }} {{ $contrato->ape_paterno }} {{ $contrato->ape_materno }}</td>
-                            <td>{{$contrato->plantel->razon}}</td>
+                            <td>{{ $contrato->rfc }}</td>
+                            <td>{{ $contrato->puesto->name }}</td>
+                            <td>{{ $contrato->direccion }}</td>
                             <td>{{$contrato->fin_contrato}}</td>
                             <td>
                                 @permission('empleados.baja')
-                                <a href="{{ route('empleados.baja', array('id'=>$contrato->id)) }}" class="btn btn-xs btn-danger">Baja</a>
+                                <!--<a href="{{ route('empleados.baja', array('id'=>$contrato->id)) }}" class="btn btn-xs btn-danger">Baja</a>-->
+                                <a class="btn btn-xs btn-danger" href="{{ route('historials.create',array('empleado'=>$contrato->id)) }}"> Evento Baja</a>
                                 @endpermission
                                 @permission('empleados.edit')
                                 <a href="{{ route('empleados.edit', $contrato->id) }}" target="_blank" class="btn btn-xs btn-success">Editar</a>
@@ -61,13 +65,14 @@
             </div>
             <div class="box-body">
                 <table class="table table-bordered table-striped dataTable">
-                    <thead><th>Cliente Id</th><th>Cliente Nombre</th><th>Plantel</th><th>Justificacion</th><th>A. Caja</th><th>A. Director</th><th>A. Caja Corp.</th><th></th></thead>
+                    <thead><th>Cliente Id</th><th>Matricula</th><th>Cliente Nombre</th><th>Plantel</th><th>Justificacion</th><th>A. Caja</th><th>A. Director</th><th>A. Caja Corp.</th><th></th></thead>
                     <tbody>
                         @foreach ($bajas as $baja)
                         
                         @if($baja->aut_caja<>2 or $baja->director<>2 or $baja->aut_caja_corp<>2)
                             <tr>
                             <td> <a href="{{route('clientes.edit',$baja->cliente_id)}}" target=_blank>{{$baja->cliente_id}}</a></td>
+                            <td>{{ $baja->cliente->matricula }}</td>
                             <td>{{ $baja->cliente->nombre }} {{ $baja->cliente->nombre2 }} {{ $baja->cliente->ape_paterno }} {{ $baja->cliente->ape_materno }}</td>
                             <td>{{ $baja->cliente->plantel->razon }}</td>
                             <td>{{$baja->descripcion}}</td>
@@ -104,6 +109,7 @@
                             <thead>
                                 <tr>
                                     <th>Cliente Id</th>
+                                    <th>Matricula</th>
                                     <th>Cliente Nombre</th>
                                     <th>Plantel</th>
                                     <th>Solicitud</th>
@@ -123,6 +129,7 @@
                                     <td>
                                         <a href="{{route('clientes.edit',$beca->cliente)}}" target=_blank>{{$beca->cliente}}</a>
                                     </td>
+                                    <td>{{ $beca->matricula }}</td>
                                     <td>{{ $beca->cli_nombre }} {{ $beca->cli_nombre2 }} {{ $beca->cli_ape_paterno }} {{ $beca->cli_ape_materno }}</td>
                                     <td>{{ $beca->razon }}</td>
                                     <td>

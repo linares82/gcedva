@@ -18,7 +18,10 @@
 
 <body >
 @php
-$sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_id',1)->get();
+if(!is_null($cliente->plantel->matriz_id) and $cliente->plantel->matriz_id>0){
+    $sucursales=App\Plantel::where('matriz_id',$cliente->plantel->matriz_id)->where('st_plantel_id',1)->get();
+}
+
 @endphp
 
 <div id="printeArea">
@@ -58,12 +61,11 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_
         <tr>
             <td colspan="2" align="center">
                 {{ $cliente->plantel->calle }}, 
-                {{ $cliente->plantel->no_int }},
                 {{ $cliente->plantel->no_ext }},
                 {{ $cliente->plantel->colonia }},
                 {{ $cliente->plantel->municipio }},
                 {{ $cliente->plantel->estado }},
-                MÉXICO
+                C.P.{{ $cliente->plantel->cp }}
     
             </td>
         </tr>
@@ -181,12 +183,27 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_
             <td colspan=3>
             <table style="width:100%;height:auto;border:1px solid #ccc;font-size: 0.70em;">
                 <tr>
+                    
+                    @if($cliente->plantel->matriz_id>0 and 
+                    !is_null($cliente->plantel->matriz_id and
+                    $matriz->calle.$matriz->no_ext.$matriz->colonia<>$cliente->plantel->calle.$cliente->plantel->no_ext.$cliente->plantel->colonia))
+                    @php
+                    $matriz=App\Plantel::find($cliente->plantel->matriz_id);   
+                    @endphp
+                    <td>
+                        {{$matriz->nombre_corto}}<br/>
+                        {{$matriz->rfc}}<br/>
+                        {{$matriz->calle}} {{$matriz->no_ext}}, {{$matriz->colonia}}, <br/> 
+                        {{$matriz->municipio}}, {{$matriz->estado}}, C.P. {{$matriz->cp}}<br/>
+                    </td>
+                    @endif
                     @foreach($sucursales as $sucursal)
-                    @if($sucursal->id<>$cliente->plantel_id)
+                    @if($sucursal->id<>$cliente->plantel_id and
+                    $sucursal->calle.$sucursal->no_ext.$sucursal->colonia<>$cliente->plantel->calle.$cliente->plantel->no_ext.$cliente->plantel->colonia)
                     <td>
                         {{$sucursal->nombre_corto}}<br/>
                         {{$sucursal->rfc}}<br/>
-                        {{$sucursal->calle}} {{$sucursal->no_int}}, {{$sucursal->colonia}}, <br/> 
+                        {{$sucursal->calle}} {{$sucursal->no_ext}}, {{$sucursal->colonia}}, <br/> 
                         {{$sucursal->municipio}}, {{$sucursal->estado}}, C.P. {{$sucursal->cp}}<br/>
                     </td>
                     @endif
@@ -236,12 +253,11 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_
     <tr>
         <td colspan="2" align="center">
             {{ $cliente->plantel->calle }}, 
-            {{ $cliente->plantel->no_int }},
             {{ $cliente->plantel->no_ext }},
             {{ $cliente->plantel->colonia }},
             {{ $cliente->plantel->municipio }},
             {{ $cliente->plantel->estado }},
-            MÉXICO
+            C.P.{{ $cliente->plantel->cp }}
 
         </td>
     </tr>
@@ -351,7 +367,6 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_
          //dd($fechaLetra);   
         @endphp
         <td colspan="2">Fecha Pago:{{$fechaLetra}} 
-        
         </td>
         
     </tr>
@@ -360,12 +375,27 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_
         <td colspan=3>
         <table style="width:100%;height:auto;border:1px solid #ccc;font-size: 0.70em;">
             <tr>
+                
+                @if($cliente->plantel->matriz_id>0 and 
+                    !is_null($cliente->plantel->matriz_id and
+                    $matriz->calle.$matriz->no_ext.$matriz->colonia<>$cliente->plantel->calle.$cliente->plantel->no_ext.$cliente->plantel->colonia))
+                    @php
+                    $matriz=App\Plantel::find($cliente->plantel->matriz_id);   
+                    @endphp
+                    <td>
+                        {{$matriz->nombre_corto}}<br/>
+                        {{$matriz->rfc}}<br/>
+                        {{$matriz->calle}} {{$matriz->no_ext}}, {{$matriz->colonia}}, <br/> 
+                        {{$matriz->municipio}}, {{$matriz->estado}}, C.P. {{$matriz->cp}}<br/>
+                    </td>
+                    @endif
                 @foreach($sucursales as $sucursal)
-                @if($sucursal->id<>$cliente->plantel_id)
+                @if($sucursal->id<>$cliente->plantel_id and
+                    $sucursal->calle.$sucursal->no_ext.$sucursal->colonia<>$cliente->plantel->calle.$cliente->plantel->no_ext.$cliente->plantel->colonia)
                 <td>
                     {{$sucursal->nombre_corto}}<br/>
                     {{$sucursal->rfc}}<br/>
-                    {{$sucursal->calle}} {{$sucursal->no_int}}, {{$sucursal->colonia}}, <br/> 
+                    {{$sucursal->calle}} {{$sucursal->no_ext}}, {{$sucursal->colonia}}, <br/> 
                     {{$sucursal->municipio}}, {{$sucursal->estado}}, C.P. {{$sucursal->cp}}<br/>
                 </td>
                 @endif

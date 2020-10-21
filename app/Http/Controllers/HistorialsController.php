@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 
+use App\Empleado;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use File as Archi;
@@ -56,9 +57,15 @@ class HistorialsController extends Controller {
 			$archivo_file = $request->file('archivo_file');
 			$input['archivo'] = $archivo_file->getClientOriginalName();
 		}
-                
+               
 		//create data
 		$e=Historial::create( $input );
+
+		if($e->historia_evento_id==2){
+			$empleado=Empleado::find($e->empleado_id);
+			$empleado->st_empleado_id=3;
+			$empleado->save();
+		}
 
                 if ( $e ){
                     $ruta=public_path()."/imagenes/historial_eventos/".$e->id."/";

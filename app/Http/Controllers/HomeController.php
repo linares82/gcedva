@@ -64,7 +64,8 @@ class HomeController extends Controller
             'cli.nombre2 as cli_nombre2',
             'cli.ape_paterno as cli_ape_paterno',
             'cli.ape_materno as cli_ape_materno',
-            'pla.razon'
+            'pla.razon',
+            'cli.matricula'
         )
             ->join('clientes as cli', 'cli.id', '=', 'autorizacion_becas.cliente_id')
             ->join('plantels as pla', 'pla.id', '=', 'cli.plantel_id')
@@ -81,7 +82,7 @@ class HomeController extends Controller
 
 
 
-        $autorizacionBajas = HistoriaCliente::select('historia_clientes.*', 'c.plantel_id')
+        $autorizacionBajas = HistoriaCliente::select('historia_clientes.*', 'c.plantel_id','c.matricula')
             ->join('clientes as c', 'c.id', '=', 'historia_clientes.cliente_id')
             ->whereNotIn('st_historia_cliente_id', array(0, 2, 5))
             ->where('evento_cliente_id', 2)

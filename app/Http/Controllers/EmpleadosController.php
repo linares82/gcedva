@@ -300,6 +300,7 @@ class EmpleadosController extends Controller
     public function update($id, Empleado $empleado, updateEmpleado $request)
     {
         $input = $request->except(['doc_empleado_id', 'archivo', 'plantel_id']);
+        
         $input2 = $request->only(['plantel_id']);
         $input['plantel_id'] = $input['pertenece_a'];
         $input['usu_mod_id'] = Auth::user()->id;
@@ -316,6 +317,7 @@ class EmpleadosController extends Controller
         //dd($input);
         $empleado = $empleado->find($id);
         $e = $empleado->update($input);
+        
         //dd($input['plantel_id']);
 
         $empleado->plantels()->sync($input2['plantel_id']);

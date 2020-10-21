@@ -55,9 +55,7 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_
             {{ $cliente->plantel->no_ext }},
             {{ $cliente->plantel->colonia }},
             {{ $cliente->plantel->municipio }},
-            {{ $cliente->plantel->estado }},
-            MÉXICO
-
+            {{ $cliente->plantel->estado }}
         </td>
     </tr>
     
@@ -271,8 +269,7 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_
             {{ $cliente->plantel->no_ext }},
             {{ $cliente->plantel->colonia }},
             {{ $cliente->plantel->municipio }},
-            {{ $cliente->plantel->estado }},
-            MÉXICO
+            {{ $cliente->plantel->estado }}
         </td>
     </tr>
     

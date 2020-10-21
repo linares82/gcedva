@@ -98,8 +98,10 @@ class PlantelsController extends Controller
 		//create data
 		$e = Plantel::create($input);
 
-		$plantel->conceptoMultipagos()->sync($conceptos['concepto_multipagos_id']);
-		$plantel->formaPagos()->sync($formas_pago['forma_pago_id']);
+		if (!is_null($conceptos['concepto_multipagos_id']) or !is_null($formas_pago['forma_pago_id'])) {
+			$plantel->conceptoMultipagos()->sync($conceptos['concepto_multipagos_id']);
+			$plantel->formaPagos()->sync($formas_pago['forma_pago_id']);
+		}
 
 		if ($e) {
 			$ruta = public_path() . "/imagenes/planteles/" . $e->id . "/";
@@ -249,8 +251,10 @@ class PlantelsController extends Controller
 		//update data
 		$e = $plantel->update($input);
 
-		$plantel->conceptoMultipagos()->sync($conceptos['concepto_multipagos_id']);
-		$plantel->formaPagos()->sync($formas_pago['forma_pago_id']);
+		if (!is_null($conceptos['concepto_multipagos_id']) or !is_null($formas_pago['forma_pago_id'])) {
+			$plantel->conceptoMultipagos()->sync($conceptos['concepto_multipagos_id']);
+			$plantel->formaPagos()->sync($formas_pago['forma_pago_id']);
+		}
 
 		if ($e) {
 			$ruta = public_path() . "/imagenes/planteles/" . $id . "/";

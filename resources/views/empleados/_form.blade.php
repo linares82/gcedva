@@ -249,7 +249,7 @@
                       <div class="box-body">
                         <div class="form-group col-md-3 @if($errors->has('tipo_contrato_id')) has-error @endif">
                           <label for="tipo_contrato_id-field">Tipo Contrato</label>
-                          {!! Form::select("tipo_contrato_id", $tipoContratos, $empleado->plantel_id, array("class" => "form-control select_seguridad", "id" => "tipo_contrato_id-field")) !!}
+                          {!! Form::select("tipo_contrato_id", $tipoContratos, $empleado->tipo_contrato_id, array("class" => "form-control select_seguridad", "id" => "tipo_contrato_id-field")) !!}
                           @if($errors->has("tipo_contrato_id"))
                             <span class="help-block">{{ $errors->first("tipo_contrato_id") }}</span>
                           @endif
@@ -277,7 +277,7 @@
                         </div>
                         <div class="form-group col-md-1 @if($errors->has('dias_alerta')) has-error @endif">
                           <label for="dias_alerta-field">Dias Alerta</label>
-                          {!! Form::text("dias_alerta", 0, array("class" => "form-control input-sm", "id" => "dias_alerta-field")) !!}
+                          {!! Form::text("dias_alerta", (is_null($empleado->dias_alerta)) ? 0 : null, array("class" => "form-control input-sm", "id" => "dias_alerta-field")) !!}
                           @if($errors->has("dias_alerta"))
                             <span class="help-block">{{ $errors->first("dias_alerta") }}</span>
                           @endif

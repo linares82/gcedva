@@ -138,6 +138,7 @@
                 <th>Pago Recibido</th>
                 <th>Csc. Caja</th>
                 <th>Beca</th>
+                <th>Estatus Cliente</th>
                 <!--<th>Consecutivo Caja</th>
                 <th>Caja borrada</th>
                 <th>Linea de Caja Borrada</th>
@@ -195,6 +196,7 @@
         @else
         <td></td>
         @endif
+        <td>{{ $detalle['st_cliente'] }}</td>
 <!--            
             <td>{{$detalle['borrado_c']}}</td>
             <td>{{$detalle['borrado_cln']}}</td>

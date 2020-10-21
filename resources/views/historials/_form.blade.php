@@ -5,7 +5,7 @@
                         <span class="help-block">{{ $errors->first("historia_evento_id") }}</span>
                        @endif
                     </div>
-                    <div class="form-group col-md-4 @if($errors->has('descripcion')) has-error @endif">
+                    <div class="form-group col-md-8 @if($errors->has('descripcion')) has-error @endif">
                        <label for="descripcion-field">Descripcion</label>
                        {!! Form::text("descripcion", null, array("class" => "form-control", "id" => "descripcion-field")) !!}
                        @if($errors->has("descripcion"))

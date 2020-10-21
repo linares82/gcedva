@@ -1171,7 +1171,9 @@ class AdeudosController extends Controller
                     ($registro->st_cliente_id == 2 or
                         $registro->st_cliente_id == 4 or
                         $registro->st_cliente_id == 20 or
-                        $registro->st_cliente_id == 22)
+                        $registro->st_cliente_id == 22 or
+                        $registro->st_cliente_id == 24 or
+                        $registro->st_cliente_id == 25)
                 ) {
                     //Armado de detalle
                     if ($registro->caja_id == 0 and $fecha_aux->lessThan($hoy) and $registro->mensualidad == 1) {
@@ -1237,7 +1239,13 @@ class AdeudosController extends Controller
                     // dd($conceptos);
                     if ($registro->concepto_id == $id) {
                         $calculo['plantel'] = $registro->razon;
-                        if (is_null($registro->borrado_c) and is_null($registro->borrado_cln) and ($registro->st_cliente_id == 2 or $registro->st_cliente_id == 4 or $registro->st_cliente_id == 20 or $registro->st_cliente_id == 22)) {
+                        if (is_null($registro->borrado_c) and is_null($registro->borrado_cln) and 
+                        ($registro->st_cliente_id == 2 or 
+                        $registro->st_cliente_id == 4 or 
+                        $registro->st_cliente_id == 20 or 
+                        $registro->st_cliente_id == 22 or
+                        $registro->st_cliente_id == 24 or
+                        $registro->st_cliente_id == 25)) {
                             $calculo['concepto'] = $concepto;
                             $calculo['clientes_activos']++;
                             if ($registro->pagado_bnd == 1) {
@@ -1309,7 +1317,7 @@ class AdeudosController extends Controller
         dd($adeudos_invalidos);
         //dd($lineas_procesadas);
          */
-        //dd($lineas_detalle);
+    //dd($lineas_detalle);
 
         return view('adeudos.reportes.maestroR', compact('lineas_procesadas', 'pagos', 'lineas_detalle', 'datos'));
     }

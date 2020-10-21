@@ -497,6 +497,9 @@
                         @endif
 
                     </a>
+                    @permission('historiaClientes.create')
+                    <a class="btn btn-md btn-warning" href="{{ route('historiaClientes.index',array('q[cliente_id_lt]'=>$cliente->id)) }}" target='_blank'><i class="glyphicon glyphicon-eye"></i> Eventos</a>
+                    @endpermission
             </div>
             <div class="box-body no-padding">
 
@@ -746,7 +749,7 @@ Agregar nuevo registro
                 {!! Form::open(array('route' => 'cajaLns.store')) !!}
                 <div class="form-group col-md-12 @if($errors->has('caja_concepto_id')) has-error @endif">
                     <label for="caja_concepto_id-field">Caja Concepto</label><br/>
-                    {!! Form::select("caja_concepto_id", $list1["CajaConcepto"], null, array("class" => "form-control select_seguridad", "id" => "caja_concepto_id-crear")) !!}
+                    {!! Form::select("caja_concepto_id", $list1["CajaConcepto"], null, array("class" => "form-control select_seguridad", "id" => "caja_concepto_id-crear", "style"=>"width: 100%")) !!}
                     <p class="errorCajaConcepto text-center alert alert-danger hidden"></p>
                 </div>
                 <div class="form-group col-md-12 @if($errors->has('monto_concepto')) has-error @endif">
@@ -1204,7 +1207,36 @@ Agregar nuevo registro
     
     $('.modal-title').text('Agregar Linea');
     //Limpiar valores
+    @permission('caja.conceptosSinPlan')
+        $('#caja_concepto_id-crear option[value="1"]').prop('disabled',true);
+        $('#caja_concepto_id-crear option[value="4"]').prop('disabled',true);
+        $('#caja_concepto_id-crear option[value="5"]').prop('disabled',true);
+        $('#caja_concepto_id-crear option[value="6"]').prop('disabled',true);
+        $('#caja_concepto_id-crear option[value="7"]').prop('disabled',true);
+        $('#caja_concepto_id-crear option[value="8"]').prop('disabled',true);
+        $('#caja_concepto_id-crear option[value="9"]').prop('disabled',true);
+        $('#caja_concepto_id-crear option[value="10"]').prop('disabled',true);
+        $('#caja_concepto_id-crear option[value="11"]').prop('disabled',true);
+        $('#caja_concepto_id-crear option[value="12"]').prop('disabled',true);
+        $('#caja_concepto_id-crear option[value="13"]').prop('disabled',true);
+        $('#caja_concepto_id-crear option[value="14"]').prop('disabled',true);
+        $('#caja_concepto_id-crear option[value="15"]').prop('disabled',true);
+        $('#caja_concepto_id-crear option[value="16"]').prop('disabled',true);
+        $('#caja_concepto_id-crear option[value="17"]').prop('disabled',true);
+        $('#caja_concepto_id-crear option[value="21"]').prop('disabled',true);
+        $('#caja_concepto_id-crear option[value="22"]').prop('disabled',true);
+        $('#caja_concepto_id-crear option[value="23"]').prop('disabled',true);
+        $('#caja_concepto_id-crear option[value="24"]').prop('disabled',true);
+        $('#caja_concepto_id-crear option[value="25"]').prop('disabled',true);
+        $('#caja_concepto_id-crear option[value="26"]').prop('disabled',true);
+        $('#caja_concepto_id-crear').select2({
+        width: 'resolve' // need to override the changed default
+        });
+    @endpermission
     $('#addModal').modal('show');
+    //caja_concepto_id-crear
+
+
     });
     
     @if (isset($caja) and isset($cliente))
@@ -1263,6 +1295,12 @@ Agregar nuevo registro
         $('#forma_pago_id-field').val({{$caja->forma_pago_id}}).change();
         $('#fecha_ln-field').val('{{$caja->fecha}}');
         console.log({{$indicador}});
+        @if($caja->forma_pago_id==1)
+           $('#fecha_ln-field').prop('disabled', true);
+        @else
+           $('#fecha_ln-field').prop('disabled', false);
+        @endif
+        
         @if(isset($caja) )
             @if($caja->cajaLns->count()<>1 or $indicador==0 or ($caja->forma_pago_id<>3 and $caja->forma_pago_id<>4 and $caja->forma_pago_id<>6))
             
