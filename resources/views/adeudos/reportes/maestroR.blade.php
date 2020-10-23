@@ -158,7 +158,7 @@
                 ->take(1)
                 ->first();
                 //dd($beca);
-                if(!is_null($beca)){
+                if(!is_null($beca) and !is_null($beca->lectivo_id)){
                     $fecha_inicio=Carbon\Carbon::createFromFormat('Y-m-d',$beca->lectivo->inicio);
                     $fecha_fin=Carbon\Carbon::createFromFormat('Y-m-d',$beca->lectivo->fin);
                     $fecha_adeudo=Carbon\Carbon::createFromFormat('Y-m-d',$detalle['fecha_pago']);

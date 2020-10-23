@@ -1,0 +1,101 @@
+@extends('plantillas.admin_template')
+
+@include('facturaGenerals._common')
+
+@section('header')
+
+<ol class="breadcrumb">
+	<li><a href="{{ route('home') }}"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></a></li>
+    <li><a href="{{ route('facturaGenerals.index') }}">@yield('facturaGeneralsAppTitle')</a></li>
+    <li class="active">{{ $facturaGeneral->name }}</li>
+</ol>
+
+<div class="page-header">
+        <h1>@yield('facturaGeneralsAppTitle') / Mostrar {{$facturaGeneral->id}}
+
+            {!! Form::model($facturaGeneral, array('route' => array('facturaGenerals.destroy', $facturaGeneral->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? Estas seguro?')) { return true } else {return false };")) !!}
+                <div class="btn-group pull-right" role="group" aria-label="...">
+                    @permission('facturaGeneral.edit')
+                    <a class="btn btn-warning btn-group" role="group" href="{{ route('facturaGenerals.edit', $facturaGeneral->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
+                    @endpermission
+                    @permission('facturaGeneral.destroy')
+                    <button type="submit" class="btn btn-danger">Borrar <i class="glyphicon glyphicon-trash"></i><
+                    /button>
+                    @endpermission
+                </div>
+            {!! Form::close() !!}
+
+        </h1>
+    </div>
+@endsection
+
+@section('content')
+    <div class="row">
+        <div class="col-md-12">
+
+            <form action="#">
+                <div class="form-group col-sm-4">
+                    <label for="nome">ID</label>
+                    <p class="form-control-static">{{$facturaGeneral->id}}</p>
+                </div>
+                <div class="form-group col-sm-4">
+                     <label for="plantel_razon">PLANTEL</label>
+                     <p class="form-control-static">{{$facturaGeneral->plantel->razon}}</p>
+                </div>
+                    <div class="form-group col-sm-4">
+                     <label for="fec_inicio">F. INICIO</label>
+                     <p class="form-control-static">{{$facturaGeneral->fec_inicio}}</p>
+                </div>
+                    <div class="form-group col-sm-4">
+                     <label for="fec_fin">F. FIN</label>
+                     <p class="form-control-static">{{$facturaGeneral->fec_fin}}</p>
+                </div>
+                    <div class="form-group col-sm-4">
+                     <label for="uuid">UUID</label>
+                     <p class="form-control-static">{{$facturaGeneral->uuid}}</p>
+                </div>
+            </form>
+
+            <div class="row">
+                </div>
+
+            <a class="btn btn-link" href="{{ route('facturaGenerals.index') }}"><i class="glyphicon glyphicon-backward"></i>  Regresar</a>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-condensed table-striped">
+                <thead>
+                    <th>No.</th><th>Cliente Id</th><th>Cliente</th><th>Fecha Pago</th><th>Concepto</th><th>Monto</th><th>UUID</th><th>Incluir</th>
+                </thead>
+                <tbody>
+                    @foreach($registrosSinFactura as $registro)
+                    <tr>
+                        <td>{{ ++$i }}</td>
+                        <td>{{ $registro->cliente_id }}</td><td>{{ $registro->nombre }} {{ $registro->nombre2 }} {{ $registro->ape_paterno }} {{ $registro->materno }}</td>
+                        <td>{{ $registro->fecha_pago }}</td><td>{{ $registro->concepto }}</td><td align="right">{{ number_format($registro->monto) }}</td><td>{{ $registro->uuid }}</td>
+                        <td><label><input type="checkbox" checked value="1">Si</label></td>
+                    </tr>
+                    @php
+                        $suma=$suma+$registro->monto;
+                    @endphp
+                    @endforeach
+                    <tr>
+                        <td colspan="5" align="right">Suma Total</td>
+                        <td align="right">{{ number_format($suma,2) }}</td>
+                        <td colspan="2">
+                            <a href="#" class="btn btn-xs btn-warning btn-block">Guardar y Recalcular</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6"></td>
+                        <td colspan="2">
+                            <a href="#" class="btn btn-xs btn-success btn-block">Generar Factura</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+@endsection

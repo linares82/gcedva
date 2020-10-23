@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Aviso;
 use App\AvisosInicio;
+use App\CajaConcepto;
 use App\Ccuestionario;
 use App\CcuestionarioDato;
 use App\Cliente;
@@ -2034,5 +2035,40 @@ class ClientesController extends Controller
         $cliente = Cliente::find($datos['cliente_id']);
         $combinacion = CombinacionCliente::where('cliente_id', $cliente->id)->first();
         return view('clientes.reportes.formatoInscripcion', compact('cliente', 'combinacion'));
+    }
+
+    public function alumnosConceptoPlaneado(){
+        $conceptos=CajaConcepto::pluck('name','id');
+        $e = Empleado::where('user_id', Auth::user()->id)->first();
+            $plantels = array();
+            foreach ($e->plantels as $p) {
+                array_push($plantels, $p->id);
+            }
+        $planteles=Plantel::whereIn('id',$plantels)->pluck('razon','id');
+        return view('clientes.reportes.alumnosConceptoPlaneado',compact('conceptos','planteles'));
+    }
+
+    public function alumnosConceptoPlaneadoR(Request $request){
+        $datos=$request->all();
+        $registros=Cliente::select('p.razon', 'clientes.id', 'clientes.matricula', 'clientes.nombre', 'clientes.nombre2', 
+        'clientes.ape_paterno', 'clientes.ape_materno', 'stc.name AS estatus_cliente','sts.name AS estatus_seguimiento', 
+        'cc.name AS concepto','clientes.fec_nacimiento','esp.name as especialidad')
+        ->join('especialidads as esp','esp.id','=','clientes.especialidad_id')
+        ->join('adeudos AS a', 'a.cliente_id','=','clientes.id')
+        ->join('seguimientos AS s','s.cliente_id','=','clientes.id')
+        ->join('st_seguimientos AS sts','sts.id','=','s.st_seguimiento_id')
+        ->join('st_clientes AS stc','stc.id','=','clientes.st_cliente_id')
+        ->join('caja_conceptos AS cc','cc.id','=','a.caja_concepto_id')
+        ->join('plantels as p','p.id','=','clientes.plantel_id')
+        ->where('a.caja_concepto_id',$datos['concepto_f'])
+        ->whereIn('clientes.plantel_id',$datos['plantel_f'])
+        ->where('a.fecha_pago',$datos['fecha_f'])
+        ->where('clientes.st_cliente_id','<>',3)
+        //->where('pagado_bnd',1)
+        ->whereNull('a.deleted_at')
+        ->whereNull('clientes.deleted_at')
+        ->get();
+        //dd($registros);
+        return view('clientes.reportes.alumnosConceptoPlaneadoR', compact('registros'));
     }
 }

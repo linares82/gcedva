@@ -60,6 +60,7 @@ class RegistroHistoriaClientesController extends Controller
 		//dd($input);
 		//create data
 		$r = RegistroHistoriaCliente::create($input);
+		
 		$historiaCliente = HistoriaCliente::find($r->historia_cliente_id);
 		if ($campo_autorizacion['autorizacion'] == 'aut_caja') {
 			$historiaCliente->aut_caja = $r->st_historia_cliente_id;
@@ -93,6 +94,7 @@ class RegistroHistoriaClientesController extends Controller
 				$adeudos = Adeudo::where('combinacion_cliente_id', $inscripcion->combinacion_cliente_id)
 					->where('caja_id', 0)
 					->where('pagado_bnd', 0)
+					->whereDate('adeudos.fecha_pago','>',Date('Y-m-d'))
 					->get();
 				foreach ($adeudos as $adeudo) {
 					$adeudo->delete();

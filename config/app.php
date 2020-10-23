@@ -251,6 +251,7 @@ return [
         'Mailgun' => Bogardo\Mailgun\Facades\Mailgun::class,
         'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
         'Client' => Webklex\IMAP\Facades\Client::class,
+        //'Arr' => Illuminate\Support\Arr::class,
     ],
 
 ];

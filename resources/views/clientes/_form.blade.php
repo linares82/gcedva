@@ -7,7 +7,7 @@
         <li class="">
             <a data-toggle="tab" href="#tab2">Preguntas</a>
         </li>
-        @permission('inscripcions.create')
+        
         <li class="">
             <a data-toggle="tab" href="#tab3">Otros Datos</a>
         </li>
@@ -24,7 +24,7 @@
         <li class="">
             <a data-toggle="tab" href="#tab7">Facturación</a>
         </li>
-        @endpermission
+        
     </ul>
     <div class="tab-content">
         <div id="tab1" class="tab-pane active">
@@ -465,8 +465,12 @@
                                             <div id='loading33' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                                         </td>
                                         <td>
+                                            @permission('combinacionClientes.destroy')
+                                            <a href="{!! route('combinacionClientes.destroy', $c->id) !!}" class="btn btn-xs btn-block btn-danger">Eliminar</a>
+                                            @endpermission
+
                                             @permission('inscripcions.create') 
-                                                <a href="{!! route('combinacionClientes.destroy', $c->id) !!}" class="btn btn-xs btn-block btn-danger">Eliminar</a>
+                                                
                                                 
                                                 <!--@@if($cliente->seguimiento->st_seguimiento_id==2 and $cliente->st_cliente_id==22)-->
                                                 <button class="inscribir-create btn btn-primary btn-xs" data-cliente_id="{{$c->cliente_id}}"

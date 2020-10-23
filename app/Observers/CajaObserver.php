@@ -56,10 +56,12 @@ class CajaObserver
             //dd($adeudos->toArray());
             //Log::info('Adeudos:' . $adeudos);
             if ($adeudos == 0) {
-                $cliente->st_cliente_id = 20;
-                $cliente->save();
-                $seguimiento->st_seguimiento_id = 7;
-                $seguimiento->save();
+                if($cliente->st_cliente_id<>3){
+                    $cliente->st_cliente_id = 20;
+                    $cliente->save();
+                    $seguimiento->st_seguimiento_id = 7;
+                    $seguimiento->save();
+                }
             }
         }
     }

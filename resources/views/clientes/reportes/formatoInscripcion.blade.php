@@ -75,7 +75,7 @@
     <div class="tablediv">
         <table>
             <tr>
-                <td width="20px">Domicilio</td><td class="td_contenido">{{ $cliente->calle }}</td><td class="td_contenido">{{ $cliente->no_ext }}</td><td class="td_contenido">{{ $cliente->cp }}</td>
+                <td width="20px">Domicilio</td><td class="td_contenido">{{ $cliente->calle }}</td><td class="td_contenido">{{ $cliente->no_exterior }}</td><td class="td_contenido">{{ $cliente->cp }}</td>
             </tr>
             <tr>
                 <td></td><td class="descripcion_pequenia">Calle</td><td class="descripcion_pequenia">No.</td><td class="descripcion_pequenia">C.P.</td>
@@ -132,7 +132,7 @@
     </div>            
     <h4>DATOS DEL PADRE O TUTOR</h4>
     <HR></HR>            
-    @if($cliente->pagador->id==1)
+    @if($cliente->pagador_id==1)
     <div class="tablediv">
         <table>
             <tr>
@@ -160,7 +160,7 @@
             </tr>
         </table>
     </div>      
-    @elseif($cliente->pagador->id==2)
+    @elseif($cliente->pagador_id==2)
     <div class="tablediv">
         <table>
             <tr>
@@ -192,7 +192,7 @@
     <div class="tablediv">
         <table>
             <tr>
-                <TD width="20px">Nombre:</TD><TD class="td_contenido">{{ $cliente->nombre_acuediente }} </TD>
+                <TD width="20px">Nombre:</TD><TD class="td_contenido">{{ $cliente->nombre_acudiente }} </TD>
             </tr>
             <tr>
                 <td></td><td class="descripcion_pequenia">Apellido Paterno, Apellido Materno, Nombre</td>
@@ -202,7 +202,7 @@
     <div class="tablediv">
         <table>
             <tr>
-                <TD width="20px">Domicilio:</TD><TD class="td_contenido">{{ $cliente->dir_acuediente }} </TD>
+                <TD width="20px">Domicilio:</TD><TD class="td_contenido">{{ $cliente->dir_acudiente }} </TD>
             </tr>
             <tr>
                 <td></td><td class="descripcion_pequenia">Calle, No., CP, Col., Municipio, Ciudad</td>
@@ -212,7 +212,7 @@
     <div class="tablediv">
         <table>
             <tr>
-                <TD width="20px">Ocupacion:</TD><TD class="td_contenido"> - </TD><TD width="220px">Tel. Oficina:</TD><TD class="td_contenido"> {{ $cliente->tel_ofi_acuediente }} </TD>
+                <TD width="20px">Ocupacion:</TD><TD class="td_contenido"> - </TD><TD width="220px">Tel. Oficina:</TD><TD class="td_contenido"> {{ $cliente->tel_ofi_acudiente }} </TD>
             </tr>
         </table>
     </div>      

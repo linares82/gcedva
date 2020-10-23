@@ -12,6 +12,7 @@ use App\Estado;
 use App\Lectivo;
 use App\NivelEstudio;
 use App\PivotDocEmpleado;
+use App\Plantel;
 use App\TipoContrato;
 use App\User;
 use App\Historial;
@@ -701,5 +702,28 @@ class EmpleadosController extends Controller
         $empleado->st_empleado_id = 3;
         $empleado->save();
         return redirect(url('/home'));
+    }
+
+    public function finContratos(){
+        $e = Empleado::where('user_id', Auth::user()->id)->first();
+            $plantels = array();
+            foreach ($e->plantels as $p) {
+                array_push($plantels, $p->id);
+            }
+        $planteles=Plantel::whereIn('id',$plantels)->pluck('razon','id');
+        return view('empleados.reportes.finContratos',compact('planteles'));
+    }
+
+    public function finContratosR(Request $request){
+        $datos=$request->all();
+        //dd($datos);
+        $contratosVencidos = Empleado::where('st_empleado_id', '<>', 3)
+            ->where('dias_alerta', '>', 0)
+            ->whereIn('plantel_id', $datos['plantel_f'])
+            ->whereRaw('DATEDIFF(fin_contrato, "' . Date("Y-m-d") . '") <= dias_alerta')
+            ->orderBy('plantel_id')
+            ->orderBy('fin_contrato')
+            ->get();
+        return view('empleados.reportes.finContratosR',compact('contratosVencidos'));
     }
 }

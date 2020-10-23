@@ -49,7 +49,7 @@ class AtrazoPagos extends Command
             $registros = Adeudo::select(DB::raw('adeudos.cliente_id, count(adeudos.cliente_id) as adeudos_cantidad'))
                 ->join('clientes as c', 'c.id', '=', 'adeudos.cliente_id')
                 ->join('combinacion_clientes as cc', 'cc.cliente_id', '=', 'c.id')
-                ->join('caja_conceptos as caj_con', 'caj_con.id', '=', 'adeduos.caja_concepto_id')
+                ->join('caja_conceptos as caj_con', 'caj_con.id', '=', 'adeudos.caja_concepto_id')
                 ->where('caj_con.bnd_mensualidad', 1)
                 ->where('fecha_pago', '<', $fechaActual)
                 ->where('pagado_bnd', 0)

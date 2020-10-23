@@ -645,7 +645,8 @@
                                 
                                 //$linea_caja= \App\CajaLn::where('adeudo_id',$adeudo->id)->whereNull('deleted_at')->first();    
                                 $suma_pagos=0;
-                                foreach($adeudo->caja->pagos as $pago){
+                                $pagos=App\Pago::where('caja_id', $adeudo->caja_id)->get();
+                                foreach($pagos as $pago){
                                     $suma_pagos=$suma_pagos+$pago->monto;
                                 }
                                 ?>
@@ -656,7 +657,7 @@
                             </td>
                             <td>
                                 @permission('adeudos.destroy')
-                                    {!! Form::model($adeudo, array('route' => array('adeudos.destroy', $adeudo->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('Ã‚Â¿Borrar? Ã‚Â¿Esta seguro?')) { return true } else {return false };")) !!}
+                                    {!! Form::model($adeudo, array('route' => array('adeudos.destroy', $adeudo->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}
                                         <button type="submit" class="btn btn-xs btn-danger" data-toggle="tooltip" title="Borrar Adeudo"><i class="glyphicon glyphicon-trash"></i> </button>
                                     {!! Form::close() !!}
                                 @endpermission
@@ -670,6 +671,7 @@
                                 <a href="#" onclick="abrirTicket({{$adeudo->caja->consecutivo}});" data-toggle="tooltip" title="Ir">{{$adeudo->caja->consecutivo}}</a>
                                 @endif
                             </td>
+                            
                             @if($adeudo->pagado_bnd==1) 
                                 <td> 
                             @else 
@@ -677,7 +679,10 @@
                                 <?php $regla_pago_seriado=1;?>
                             @endif
                                 @if($adeudo->pagado_bnd==1) SI @else NO @endif
-                                @if(is_null($pago->uuid)) / NO @else / SI @endif    
+                                @if($adeudo->caja->consecutivo<>0)
+                                @if(is_null($pago->uuid)) / NO @else / SI @endif   
+                                @endif
+                                 
                             </td>
                                 
                             <td>{{$dia}}</td>

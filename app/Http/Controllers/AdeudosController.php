@@ -1086,6 +1086,7 @@ class AdeudosController extends Controller
                     )
                     ->whereNull('caj.deleted_at')
                     ->whereNull('ccli.deleted_at')
+                    ->where('adeudos.pagado_bnd',1)
                     ->union($cajas_sin_adeudos);
             } elseif ($datos['detalle_f'] == 3) {
                 $registros_totales_aux->leftJoin('caja_lns as cln', 'cln.adeudo_id', '=', 'adeudos.id')
@@ -1121,8 +1122,9 @@ class AdeudosController extends Controller
                     )
                     ->whereDate('adeudos.fecha_pago', '>=', $datos['fecha_f'])
                     ->whereDate('adeudos.fecha_pago', '<=', $datos['fecha_t'])
-                    ->whereNull('ccli.deleted_at')
-                    ->where('adeudos.caja_id', 0);
+                    ->where('adeudos.pagado_bnd',0)
+                    ->whereNull('ccli.deleted_at');
+                    //->where('adeudos.caja_id', 0);
             } else {
                 $registros_totales_aux->leftJoin('caja_lns as cln', 'cln.adeudo_id', '=', 'adeudos.id')
                     ->leftJoin('cajas as caj', 'caj.id', '=', 'adeudos.caja_id')

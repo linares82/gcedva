@@ -221,7 +221,12 @@
                                 <td>{{$historiaCliente->fecha}}</td>
                                 <td>{{$historiaCliente->fec_vigencia}}</td>
                                 <td><a href='{!! asset("/imagenes/historia_clientes/".$historiaCliente->id."/".$historiaCliente->archivo) !!}' target='_blank'>Ver</a></td>
-                                <td>{{$historiaCliente->cliente->nombre}} {{$historiaCliente->cliente->nombre2}} {{$historiaCliente->cliente->ape_paterno}} {{$historiaCliente->cliente->ape_materno}}</td>
+                                <td>
+                                    <a href="{{ route('clientes.edit',$historiaCliente->cliente_id) }}" target="_blank">
+                                        {{$historiaCliente->cliente->nombre}} {{$historiaCliente->cliente->nombre2}} {{$historiaCliente->cliente->ape_paterno}} {{$historiaCliente->cliente->ape_materno}}
+                                    </a>
+                                    
+                                </td>
                                 <td>{{$historiaCliente->stHistoriaCliente->name}}</td>
                                 <td>
                                     @if($historiaCliente->evento_cliente_id==2)
@@ -246,11 +251,13 @@
                                     {{optional($historiaCliente->autCaja)->name}}
                                     @if($historiaCliente->evento_cliente_id==2)
                                     @permission('autorizacionBaja.aut_caja')
+                                    @if($historiaCliente->aut_caja<>2)
                                             <button type="button" class="btn btn-primary btn-xs btn_create_comentario" 
                                                     data-toggle="modal" data-historia_cliente_id="{{ $historiaCliente->id }}"
                                                                                 data-autorizacion='aut_caja'>
                                                 Autorización
                                             </button>
+                                    @endif
                                     @endpermission
                                     @endif
                                 </td>
@@ -258,11 +265,13 @@
                                     {{optional($historiaCliente->autDirector)->name}}
                                     @if($historiaCliente->aut_caja==2 and $historiaCliente->evento_cliente_id==2)
                                     @permission('autorizacionBaja.aut_director')
+                                    @if($historiaCliente->aut_director<>2)
                                             <button type="button" class="btn btn-primary btn-xs btn_create_comentario" 
                                                     data-toggle="modal" data-historia_cliente_id="{{ $historiaCliente->id }}"
                                                                                 data-autorizacion='aut_director'>
                                                 Autorización
                                             </button>
+                                    @endif
                                     @endpermission
                                     @endif
                                 </td>
@@ -270,17 +279,21 @@
                                     {{optional($historiaCliente->autCajaCorp)->name}}
                                     @if($historiaCliente->aut_caja==2 and $historiaCliente->aut_director==2 and $historiaCliente->evento_cliente_id==2)
                                     @permission('autorizacionBaja.aut_caja_corp')
+                                    @if($historiaCliente->aut_caja_corp<>2)
                                             <button type="button" class="btn btn-primary btn-xs btn_create_comentario"  
                                                     data-toggle="modal" data-historia_cliente_id="{{ $historiaCliente->id }}"
                                                                                 data-autorizacion='aut_caja_corp'>
                                                 Autorización
                                             </button>
+                                    @endif
                                     @endpermission
                                     @endif
                                 </td>
                                             <td class="text-right">
                                                 @permission('historiaClientes.edit')
+                                                @if($historiaCliente->st_historia_cliente_id<>2)
                                                 <a class="btn btn-xs btn-warning" href="{{ route('historiaClientes.edit', $historiaCliente->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
+                                                @endif
                                                 @endpermission
                                                 @permission('historiaClientes.reactivar')
                                                     <a class="btn btn-xs btn-warning" href="{{ route('historiaClientes.reactivar', array('id'=>$historiaCliente)) }}"><i class="glyphicon glyphicon-edit"></i> Reactivar</a>
