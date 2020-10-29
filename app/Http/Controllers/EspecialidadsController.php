@@ -245,4 +245,55 @@ class EspecialidadsController extends Controller
         }
         return response()->json(['resultado' => $lista]);
     }
+
+    public function getCmbEspecialidadGrupoInscripcion(Request $request)
+    {
+        if ($request->ajax()) {
+            //dd($request->all());
+            $plantel = $request->get('plantel_id');
+            $especialidad = $request->get('especialidad_id');
+            $grupo = $request->get('grupo_id');
+
+            $final = array();
+            $r2 = DB::table('especialidads as e')
+                ->join('inscripcions as i','i.especialidad_id','=','e.id')
+                ->select('e.id', 'e.name')
+                ->where('e.plantel_id', '=', $plantel)
+                ->where('i.grupo_id', '=', $grupo)
+                ->where('e.id', '>', '0')
+                ->whereNull('e.deleted_at')
+                ->distinct()
+                ->whereNull('i.deleted_at');
+            //->get();
+
+            $r = DB::table('especialidads as e')
+                ->select('e.id', 'e.name')
+                ->where('e.id', '0')
+                ->union($r2)
+                ->get();
+
+            //dd($r);
+            if (isset($especialidad) and $especialidad != 0) {
+                foreach ($r as $r1) {
+                    if ($r1->id == $especialidad) {
+                        array_push($final, array(
+                            'id' => $r1->id,
+                            'name' => $r1->name,
+                            'selectec' => 'Selected',
+                        ));
+                    } else {
+                        array_push($final, array(
+                            'id' => $r1->id,
+                            'name' => $r1->name,
+                            'selectec' => '',
+                        ));
+                    }
+                }
+                return $final;
+            } else {
+                return $r;
+            }
+        }
+    }
+
 }

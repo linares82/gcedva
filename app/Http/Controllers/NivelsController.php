@@ -174,6 +174,51 @@ class NivelsController extends Controller
         }
     }
 
+    public function getCmbNivelsGrupoInscripcion(Request $request)
+    {
+        if ($request->ajax()) {
+            //dd($request->get('plantel_id'));
+            $plantel = $request->get('plantel_id');
+            $especialidad = $request->get('especialidad_id');
+            $nivel = $request->get('nivel_id');
+            $grupo = $request->get('grupo_id');
+
+            $final = array();
+            $r = DB::table('nivels as n')
+                ->join('inscripcions as i','i.nivel_id','=','n.id')
+                ->select('n.id', 'n.name')
+                ->where('n.plantel_id', '=', $plantel)
+                ->where('n.especialidad_id', '=', $especialidad)
+                ->where('i.grupo_id', '=', $grupo)
+                ->where('n.id', '>', '0')
+                ->whereNull('n.deleted_at')
+                ->whereNull('i.deleted_at')
+                ->distinct()
+                ->get();
+            //dd($r);
+            if (isset($nivel) and $nivel != 0) {
+                foreach ($r as $r1) {
+                    if ($r1->id == $nivel) {
+                        array_push($final, array(
+                            'id' => $r1->id,
+                            'name' => $r1->name,
+                            'selectec' => 'Selected',
+                        ));
+                    } else {
+                        array_push($final, array(
+                            'id' => $r1->id,
+                            'name' => $r1->name,
+                            'selectec' => '',
+                        ));
+                    }
+                }
+                return $final;
+            } else {
+                return $r;
+            }
+        }
+    }
+
     public function listaNiveles()
     {
         $niveles = Nivel::orderBy('plantel_id')->orderBy('especialidad_id')->get();

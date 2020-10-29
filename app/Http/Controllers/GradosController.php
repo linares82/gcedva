@@ -283,4 +283,51 @@ class GradosController extends Controller
         }
         return response()->json(['resultado' => $lista]);
     }
+
+    public function getCmbGradosGrupoInscripcion(Request $request)
+    {
+        if ($request->ajax()) {
+            //dd($request->all());
+            $plantel = $request->get('plantel_id');
+            $especialidad = $request->get('especialidad_id');
+            $nivel = $request->get('nivel_id');
+            $grado = $request->get('grado_id');
+            $grupo = $request->get('grupo_id');
+
+            $final = array();
+            $r = DB::table('grados as g')
+            ->join('inscripcions as i','i.grado_id','=','g.id')
+                ->select('g.id', 'g.name')
+                ->where('g.plantel_id', '=', $plantel)
+                ->where('g.especialidad_id', '=', $especialidad)
+                ->where('g.nivel_id', '=', $nivel)
+                ->where('i.grupo_id', '=', $grupo)
+                ->where('g.id', '>', '0')
+                ->whereNull('g.deleted_at')
+                ->whereNull('i.deleted_at')
+                ->distinct()
+                ->get();
+            //dd($r);
+            if (isset($grado) and $grado <> 0) {
+                foreach ($r as $r1) {
+                    if ($r1->id == $grado) {
+                        array_push($final, array(
+                            'id' => $r1->id,
+                            'name' => $r1->name,
+                            'selectec' => 'Selected'
+                        ));
+                    } else {
+                        array_push($final, array(
+                            'id' => $r1->id,
+                            'name' => $r1->name,
+                            'selectec' => ''
+                        ));
+                    }
+                }
+                return $final;
+            } else {
+                return $r;
+            }
+        }
+    }
 }

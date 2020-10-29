@@ -31,6 +31,22 @@
                     <span class="help-block">{{ $errors->first("plantel_f") }}</span>
                     @endif
                 </div>
+
+                <div class="form-group col-md-6 @if($errors->has('lectivo_f')) has-error @endif">
+                    <label for="lectivo_f-field">Lectivo de:</label>
+                    {!! Form::select("lectivo_f", $list['Grado'], null, array("class" => "form-control select_seguridad", "id" => "lectivo_f-field")) !!}
+                    @if($errors->has("lectivo_f"))
+                    <span class="help-block">{{ $errors->first("lectivo_f") }}</span>
+                    @endif
+                </div>
+
+                <div class="form-group col-md-6 @if($errors->has('grupo_f')) has-error @endif">
+                    <label for="grupo_f-field">Grupo de:</label>
+                    {!! Form::select("grupo_f", $list['Grado'], null, array("class" => "form-control select_seguridad", "id" => "grupo_f-field")) !!}
+                    @if($errors->has("grupo_f"))
+                    <span class="help-block">{{ $errors->first("grupo_f") }}</span>
+                    @endif
+                </div>
             
                 <div class="form-group col-md-6 @if($errors->has('especialidad_f')) has-error @endif">
                     <label for="especialidad_f-field">Especialidad de:</label>
@@ -59,21 +75,7 @@
                     @endif
                 </div>
 
-                <div class="form-group col-md-6 @if($errors->has('lectivo_f')) has-error @endif">
-                    <label for="lectivo_f-field">Lectivo de:</label>
-                    {!! Form::select("lectivo_f", $list['Grado'], null, array("class" => "form-control select_seguridad", "id" => "lectivo_f-field")) !!}
-                    @if($errors->has("lectivo_f"))
-                    <span class="help-block">{{ $errors->first("lectivo_f") }}</span>
-                    @endif
-                </div>
-
-                <div class="form-group col-md-6 @if($errors->has('grupo_f')) has-error @endif">
-                    <label for="grupo_f-field">Grupo de:</label>
-                    {!! Form::select("grupo_f", $list['Grado'], null, array("class" => "form-control select_seguridad", "id" => "grupo_f-field")) !!}
-                    @if($errors->has("grupo_f"))
-                    <span class="help-block">{{ $errors->first("grupo_f") }}</span>
-                    @endif
-                </div>
+                
 
                 <!--<div class="form-group col-md-6 @if($errors->has('periodos_estudio')) has-error @endif">
                     <label for="periodos_estudio-field">Periodos Estudio:</label>
@@ -98,14 +100,14 @@
     $(document).ready(function() {
         
         $('#plantel_f-field').change(function(){
-            getCmbEspecialidad();
+            
             getCmbLectivo();
         }); 
         $('#especialidad_f-field').change(function(){
-            getCmbNivel();
+            getCmbNivelGrupoInscripcion();
         });
        $('#nivel_f-field').change(function(){
-            getCmbGrado();
+            getCmbGradoGrupoInscripcion();
         });
         $('#grado_f-field').change(function(){
             getCmbPeriodos();
@@ -113,18 +115,23 @@
         $('#lectivo_f-field').change(function(){
             getCmbGrupo();
         });
+        $('#grupo_f-field').change(function(){
+            getCmbEspecialidadGrupoInscripcion();
+        });
+        
     });
 
 
-    function getCmbEspecialidad(){
+    function getCmbEspecialidadGrupoInscripcion(){
         //var $example = $("#especialidad_id-field").select2();
         var a= $('#frm_grados').serialize();
             $.ajax({
-                url: '{{ route("especialidads.getCmbEspecialidad") }}',
+                url: '{{ route("especialidads.getCmbEspecialidadGrupoInscripcion") }}',
                 type: 'GET',
                 data: {
                     'plantel_id':$('#plantel_f-field option:selected').val(),
-                    'especialidad_id':$('#especialidad_f-field option:selected').val()
+                    'especialidad_id':$('#especialidad_f-field option:selected').val(),
+                    'grupo_id':$('#grupo_f-field option:selected').val()
                 },
                 dataType: 'json',
                 beforeSend : function(){$("#loading_plantel").show();},
@@ -143,14 +150,19 @@
             });       
     }
 
-    function getCmbNivel(){
+    function getCmbNivelGrupoInscripcion(){
                         //var $example = $("#especialidad_id-field").select2();
     //alert($('#especialidad_id-field option:selected').val());
     
     $.ajax({
-    url: '{{ route("nivels.getCmbNivels") }}',
+    url: '{{ route("nivels.getCmbNivelsGrupoInscripcion") }}',
             type: 'GET',
-            data: "plantel_id=" + $('#plantel_f-field option:selected').val() + "&especialidad_id=" + $('#especialidad_f-field option:selected').val() + "&nivel_id=" + $('#nivel_f-field option:selected').val() + "",
+            data: {
+                    'plantel_id':$('#plantel_f-field option:selected').val(),
+                    'especialidad_id':$('#especialidad_f-field option:selected').val(),
+                    'nivel_id':$('#nivel_f-field option:selected').val(),
+                    'grupo_id':$('#grupo_f-field option:selected').val()
+                },
             dataType: 'json',
             beforeSend : function(){$("#loading_especialidad").show(); },
             complete : function(){$("#loading_especialidad").hide(); },
@@ -169,16 +181,19 @@
     });
     }
 
-    function getCmbGrado(){
+    function getCmbGradoGrupoInscripcion(){
                         //var $example = $("#especialidad_id-field").select2();
     
     $.ajax({
-    url: '{{ route("grados.getCmbGrados") }}',
+    url: '{{ route("grados.getCmbGradosGrupoInscripcion") }}',
             type: 'GET',
-            data: "plantel_id=" + $('#plantel_f-field option:selected').val() + 
-            "&especialidad_id=" + $('#especialidad_f-field option:selected').val() + 
-            "&nivel_id=" + $('#nivel_f-field option:selected').val() + 
-            "&grado_f=" + $('#grado_f-field option:selected').val() + "",
+            data: {
+                    'plantel_id':$('#plantel_f-field option:selected').val(),
+                    'especialidad_id':$('#especialidad_f-field option:selected').val(),
+                    'nivel_id':$('#nivel_f-field option:selected').val(),
+                    'grado_f': $('#grado_f-field option:selected').val(),
+                    'grupo_id':$('#grupo_f-field option:selected').val()
+                },
             dataType: 'json',
             beforeSend : function(){$("#loading_nivel").show(); },
             complete : function(){$("#loading_nivel").hide(); },

@@ -1999,6 +1999,14 @@ Route::get(
     )
 )->middleware('auth');
 Route::get(
+    '/getCmbNivelsGrupoInscripcion',
+    array(
+        'as' => 'nivels.getCmbNivelsGrupoInscripcion',
+        //'middleware' => 'permission:tareas.show',
+        'uses' => 'NivelsController@getCmbNivelsGrupoInscripcion'
+    )
+)->middleware('auth');
+Route::get(
     'nivels/listaNiveles',
     array(
         'as' => 'nivels.listaNiveles',
@@ -2087,6 +2095,14 @@ Route::get(
         'as' => 'grados.getCmbGrados',
         //'middleware' => 'permission:tareas.show',
         'uses' => 'GradosController@getCmbGrados'
+    )
+)->middleware('auth');
+Route::get(
+    '/getCmbGradosGrupoInscripcion',
+    array(
+        'as' => 'grados.getCmbGradosGrupoInscripcion',
+        //'middleware' => 'permission:tareas.show',
+        'uses' => 'GradosController@getCmbGradosGrupoInscripcion'
     )
 )->middleware('auth');
 Route::get(
@@ -3024,6 +3040,14 @@ Route::get(
         'as' => 'especialidads.getCmbEspecialidad',
         //'middleware' => 'permission:especialidads.getCmbEspecialidad',
         'uses' => 'EspecialidadsController@getCmbEspecialidad'
+    )
+); //->middleware('auth');
+Route::get(
+    '/especialidads/getCmbEspecialidadGrupoInscripcion',
+    array(
+        'as' => 'especialidads.getCmbEspecialidadGrupoInscripcion',
+        //'middleware' => 'permission:especialidads.getCmbEspecialidad',
+        'uses' => 'EspecialidadsController@getCmbEspecialidadGrupoInscripcion'
     )
 ); //->middleware('auth');
 Route::post('especialidads/cargaArchivo', [
