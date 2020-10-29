@@ -316,6 +316,7 @@ class HistoriaClientesController extends Controller
 		$input = $request->all();
 		$historiaCliente = HistoriaCliente::find($input['id']);
 		$historiaCliente->descripcion = $historiaCliente->descripcion . " - Reactivado";
+		$historiaCliente->reactivado=$historiaCliente->reactivado+1;
 		$historiaCliente->save();
 
 		$cliente = Cliente::find($historiaCliente->cliente_id);

@@ -1632,10 +1632,11 @@ class ClientesController extends Controller
             ->join('clientes as c', 'c.id', '=', 'historia_clientes.cliente_id')
             ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
             ->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
-            ->whereDate('fecha', '>=', $datos['fecha_f'])
-            ->whereDate('fecha', '<=', $datos['fecha_t'])
+            ->whereDate('historia_clientes.fecha', '>=', $datos['fecha_f'])
+            ->whereDate('historia_clientes.fecha', '<=', $datos['fecha_t'])
             ->where('evento_cliente_id', 2)
             ->whereIn('p.id', $datos['plantel_f'])
+            ->whereNull('historia_clientes.deleted_at')
             //->where('p.id', '<=', $datos['plantel_t'])
             ->orderBy('p.id')
             ->orderBy('c.id')
@@ -2070,5 +2071,56 @@ class ClientesController extends Controller
         ->get();
         //dd($registros);
         return view('clientes.reportes.alumnosConceptoPlaneadoR', compact('registros'));
+    }
+
+    public function concretados(){
+        $e = Empleado::where('user_id', Auth::user()->id)->first();
+            $plantels = array();
+            foreach ($e->plantels as $p) {
+                array_push($plantels, $p->id);
+            }
+        $planteles=Plantel::whereIn('id',$plantels)->pluck('razon','id');
+        return view('clientes.reportes.concretados',compact('planteles'));
+    }
+
+    public function concretadosR(Request $request){
+        $datos=$request->all();
+        $detalle=Cliente::select('clientes.plantel_id','clientes.id as cliente_id','clientes.matricula','p.razon',
+        'cc.name as concepto','stc.name as st_cliente', 'c.fecha as fecha_caja', 'c.st_caja_id')
+        ->join('adeudos as a','a.cliente_id','=','clientes.id')
+        ->join('caja_conceptos as cc','cc.id','=','a.caja_concepto_id')
+        ->join('plantels as p','p.id','=','clientes.plantel_id')
+        ->join('st_clientes as stc','stc.id','=','clientes.st_cliente_id')
+        ->join('cajas as c','c.id','=','a.caja_id')
+        ->where('a.pagado_bnd',1)
+        ->where('c.st_caja_id',1)
+        ->whereIn('a.caja_concepto_id',array(1, 25))
+        ->where('clientes.st_cliente_id','<>',3)
+        ->whereIn('clientes.plantel_id',$datos['plantel_f'])
+        ->where('clientes.matricula','like',$datos['inicio_matricula']."%")
+        ->whereNull('a.deleted_at')
+        ->whereNull('c.deleted_at')
+        ->get();
+        //dd($registros->toArray());
+        
+        
+        $totales=Cliente::select(DB::raw('p.razon, count(clientes.matricula) as total_matriculas'))
+        ->join('adeudos as a','a.cliente_id','=','clientes.id')
+        ->join('caja_conceptos as cc','cc.id','=','a.caja_concepto_id')
+        ->join('plantels as p','p.id','=','clientes.plantel_id')
+        ->join('st_clientes as stc','stc.id','=','clientes.st_cliente_id')
+        ->join('cajas as c','c.id','=','a.caja_id')
+        ->where('a.pagado_bnd',1)
+        ->where('c.st_caja_id',1)
+        ->whereIn('a.caja_concepto_id',array(1, 25))
+        ->where('clientes.st_cliente_id','<>',3)
+        ->whereIn('clientes.plantel_id',$datos['plantel_f'])
+        ->where('clientes.matricula','like',$datos['inicio_matricula']."%")
+        ->whereNull('a.deleted_at')
+        ->whereNull('c.deleted_at')
+        ->groupBy('p.razon')
+        ->get();
+        //dd($registros->toArray());
+        return view('clientes.reportes.concretadosR',compact('totales','detalle'));
     }
 }

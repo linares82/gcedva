@@ -1169,13 +1169,14 @@ class AdeudosController extends Controller
                 $calculo['plantel'] = $registro->razon;
 
                 if (
-                    is_null($registro->borrado_c) and is_null($registro->borrado_cln) and
-                    ($registro->st_cliente_id == 2 or
+                    is_null($registro->borrado_c) and is_null($registro->borrado_cln)
+                    //$registro->st_cliente_id <>3
+                    /*($registro->st_cliente_id == 2 or
                         $registro->st_cliente_id == 4 or
                         $registro->st_cliente_id == 20 or
                         $registro->st_cliente_id == 22 or
                         $registro->st_cliente_id == 24 or
-                        $registro->st_cliente_id == 25)
+                        $registro->st_cliente_id == 25)*/
                 ) {
                     //Armado de detalle
                     if ($registro->caja_id == 0 and $fecha_aux->lessThan($hoy) and $registro->mensualidad == 1) {
@@ -1206,7 +1207,8 @@ class AdeudosController extends Controller
                     $calculo['porcentaje_pagado'] = ($calculo['clientes_pagados'] * 100) / $calculo['clientes_activos'];
                     $calculo['deudores'] = $calculo['clientes_activos'] - $calculo['clientes_pagados'];
                     $calculo['porcentaje_deudores'] = ($calculo['deudores'] * 100) / $calculo['clientes_activos'];
-                } elseif (is_null($registro->borrado_c) and is_null($registro->borrado_cln) and $registro->st_cliente_id == 3) {
+                } 
+                if (is_null($registro->borrado_c) and is_null($registro->borrado_cln) and $registro->st_cliente_id == 3) {
                     $baja = HistoriaCliente::where('cliente_id', $registro->id)
                         ->where('evento_cliente_id', 2)
                         ->where('fecha', '>=', $datos['fecha_f'])
@@ -1241,13 +1243,15 @@ class AdeudosController extends Controller
                     // dd($conceptos);
                     if ($registro->concepto_id == $id) {
                         $calculo['plantel'] = $registro->razon;
-                        if (is_null($registro->borrado_c) and is_null($registro->borrado_cln) and 
-                        ($registro->st_cliente_id == 2 or 
+                        if (is_null($registro->borrado_c) and is_null($registro->borrado_cln) 
+                        //$registro->st_cliente_id <> 3
+                        /*($registro->st_cliente_id == 2 or 
                         $registro->st_cliente_id == 4 or 
                         $registro->st_cliente_id == 20 or 
                         $registro->st_cliente_id == 22 or
                         $registro->st_cliente_id == 24 or
-                        $registro->st_cliente_id == 25)) {
+                        $registro->st_cliente_id == 25)*/
+                        ) {
                             $calculo['concepto'] = $concepto;
                             $calculo['clientes_activos']++;
                             if ($registro->pagado_bnd == 1) {
@@ -1268,7 +1272,8 @@ class AdeudosController extends Controller
                             $calculo['porcentaje_pagado'] = ($calculo['clientes_pagados'] * 100) / $calculo['clientes_activos'];
                             $calculo['deudores'] = $calculo['clientes_activos'] - $calculo['clientes_pagados'];
                             $calculo['porcentaje_deudores'] = ($calculo['deudores'] * 100) / $calculo['clientes_activos'];
-                        } elseif (is_null($registro->borrado_c) and is_null($registro->borrado_cln) and $registro->st_cliente_id == 3) {
+                        } 
+                        if (is_null($registro->borrado_c) and is_null($registro->borrado_cln) and $registro->st_cliente_id == 3) {
                             $baja = HistoriaCliente::where('cliente_id', $registro->id)
                                 ->where('evento_cliente_id', 2)
                                 ->where('fecha', '>=', $datos['fecha_f'])

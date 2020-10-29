@@ -2958,7 +2958,7 @@ class InscripcionsController extends Controller
                 . 'inscripcions.fec_inscripcion, p.razon as plantel, pe.name as periodo_estudio,'
                 . 't.name as turno, pe.name as periodo_estudio, '
                 . 'gru.name as grupo, gru.id as gru, stc.id as estatus_cliente_id, stc.name as estatus_cliente, '
-                . 'l.name as lectivo'))
+                . 'l.name as lectivo, c.matricula'))
                 ->join('clientes as c', 'c.id', '=', 'inscripcions.cliente_id')
                 ->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
                 ->join('medios as m', 'm.id', '=', 'c.medio_id')
@@ -2976,7 +2976,8 @@ class InscripcionsController extends Controller
                 //->whereColumn('aa.lectivo_id', 'inscripcions.lectivo_id')
                 //->join('empleados as e', 'e.id', '=', 'aa.empleado_id')
                 ->where('inscripcions.plantel_id', $data['plantel_f'])
-                //->whereIn('inscripcions.lectivo_id', $data['lectivo_f'])
+                ->whereIn('inscripcions.lectivo_id', $data['lectivo_f'])
+                //->whereIn('inscripcions.especialidad_id', $data['especialidad_f'])
                 ->whereNull('inscripcions.deleted_at')
                 //->whereNull('i.deleted_at')
                 //->whereNull('hacademicas.deleted_at')

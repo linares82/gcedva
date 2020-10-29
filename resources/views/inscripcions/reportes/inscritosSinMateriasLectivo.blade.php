@@ -30,6 +30,22 @@
                     <span class="help-block">{{ $errors->first("plantel_f") }}</span>
                     @endif
                 </div>
+                <!--
+                <div class="form-group col-md-6 @if($errors->has('especialidad_f')) has-error @endif">
+                    <label for="especialidad_f">Especialidad</label>
+                    {!! Form::select("especialidad_f[]", $list["Especialidad"], null, array("class" => "form-control select_seguridad", "id" => "especialidad_f-field", 'multiple'=>true)) !!}
+                    @if($errors->has("especialidad_f"))
+                     <span class="help-block">{{ $errors->first("especialidad_f") }}</span>
+                    @endif
+                 </div>
+                 <div class="form-group col-md-6 @if($errors->has('nivel_f')) has-error @endif">
+                    <label for="nivel_f">nivel</label>
+                    {!! Form::select("nivel_f[]", $list["nivel"], null, array("class" => "form-control select_seguridad", "id" => "nivel_f-field", 'multiple'=>true)) !!}
+                    @if($errors->has("nivel_f"))
+                     <span class="help-block">{{ $errors->first("nivel_f") }}</span>
+                    @endif
+                 </div>
+                -->
             
 <!--                <div class="form-group col-md-6 @if($errors->has('empleado_f')) has-error @endif">
                     <label for="empleado_f-field">Colaborador de:</label>
@@ -104,6 +120,30 @@
         }
         });       
     }
+
+    function getCmbEspecialidad(){
+                        //var $example = $("#especialidad_id-field").select2();
+                        
+                        $.ajax({
+                        url: '{{ route("especialidads.getCmbEspecialidad") }}',
+                                type: 'GET',
+                                data: {plantel_id:$('#plantel_id-field option:selected').val(),
+                                especialidad_id:$('#especialidad_id-field option:selected').val()},
+                                dataType: 'json',
+                                beforeSend : function(){$("#loading10").show(); },
+                                complete : function(){$("#loading10").hide(); },
+                                success: function(data){
+                                //$example.select2("destroy");
+                                $('#especialidad_id-field').empty();
+                                $('#especialidad_id-field').append($('<option></option>').text('Seleccionar').val('0'));
+                                $.each(data, function(i) {
+                                //alert(data[i].name);
+                                $('#especialidad_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
+                                });
+                                //$example.select2();
+                                }
+                        });
+                        }
 
     </script>
 @endpush

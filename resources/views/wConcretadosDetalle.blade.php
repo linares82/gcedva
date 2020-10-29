@@ -141,7 +141,7 @@ crossorigin="anonymous">
                 var linea=<?php echo $resumenCorto['p_avance'] ?>;
                     var data = google.visualization.arrayToDataTable([
                     ['Label', 'Value'],
-                    ['Asistencia', linea],
+                    ['Concretados', linea],
                     ]);
 
                     var options = {
@@ -162,7 +162,7 @@ crossorigin="anonymous">
 
                     var data = google.visualization.arrayToDataTable([
                     ['Label', 'Value'],
-                    ['Asistencia', linea],
+                    ['Concretados', linea],
                     ]);
 
                     var options = {

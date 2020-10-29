@@ -60,38 +60,55 @@
                 </div>
 
             <a class="btn btn-link" href="{{ route('facturaGenerals.index') }}"><i class="glyphicon glyphicon-backward"></i>  Regresar</a>
-
+            <a class="btn btn-success" href="{{ route('facturaGenerals.recargarLineas', $facturaGeneral->id) }}">  Recargar Lineas</a>
         </div>
     </div>
     <div class="row">
         <div class="col-md-12">
             <table class="table table-condensed table-striped">
                 <thead>
-                    <th>No.</th><th>Cliente Id</th><th>Cliente</th><th>Fecha Pago</th><th>Concepto</th><th>Monto</th><th>UUID</th><th>Incluir</th>
+                    <th>No.</th><th>Cliente Id</th><th>Cliente</th><th>Fecha Pago</th><th>Caja</th><th>Concepto(s)</th><th>Monto Pago</th><th>UUID</th><th>Incluir</th>
                 </thead>
                 <tbody>
-                    @foreach($registrosSinFactura as $registro)
+                    @foreach($lineas as $registro)
                     <tr>
                         <td>{{ ++$i }}</td>
-                        <td>{{ $registro->cliente_id }}</td><td>{{ $registro->nombre }} {{ $registro->nombre2 }} {{ $registro->ape_paterno }} {{ $registro->materno }}</td>
-                        <td>{{ $registro->fecha_pago }}</td><td>{{ $registro->concepto }}</td><td align="right">{{ number_format($registro->monto) }}</td><td>{{ $registro->uuid }}</td>
-                        <td><label><input type="checkbox" checked value="1">Si</label></td>
+                        <td>{{ $registro->cliente->id }}</td><td>{{ $registro->cliente->nombre }} {{ $registro->cliente->nombre2 }} {{ $registro->cliente->ape_paterno }} {{ $registro->cliente->materno }}</td>
+                        <td>{{ $registro->pago->fecha }}</td><td>{{ $registro->caja->consecutivo }}</td>
+                        <td>@foreach($registro->caja->cajaLns as $linea)
+                            {{ $linea->cajaConcepto->name }} 
+                            @endforeach
+                        </td>
+                        <td align="right">{{ number_format($registro->monto) }}</td><td>{{ $registro->pago->uuid }}</td>
+                        <td>
+                               
+                            <label><input class="bnd_incluir" data-id_linea={{ $registro->id }} type="checkbox" 
+                            @if($registro->bnd_incluido==1)
+                            checked
+                            @endif
+                            value="1">Si</label>
+                            <div class='loading' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div>    
+                        </td>
                     </tr>
                     @php
-                        $suma=$suma+$registro->monto;
+                        if($registro->bnd_incluido==1){
+                            $suma=$suma+$registro->monto;
+                        }
+                        
+
                     @endphp
                     @endforeach
                     <tr>
-                        <td colspan="5" align="right">Suma Total</td>
+                        <td colspan="6" align="right">Suma Total</td>
                         <td align="right">{{ number_format($suma,2) }}</td>
                         <td colspan="2">
-                            <a href="#" class="btn btn-xs btn-warning btn-block">Guardar y Recalcular</a>
+                            <a href="{{ route('facturaGenerals.total', array('id'=>$facturaGeneral->id)) }}" class="btn btn-xs btn-warning btn-block" >Guardar y Recalcular</a>
                         </td>
                     </tr>
                     <tr>
                         <td colspan="6"></td>
                         <td colspan="2">
-                            <a href="#" class="btn btn-xs btn-success btn-block">Generar Factura</a>
+                            <a href="#" class="btn btn-xs btn-success btn-block" >Generar Factura</a>
                         </td>
                     </tr>
                 </tbody>
@@ -99,3 +116,40 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+<script type="text/javascript">
+$(document).on("click", ".bnd_incluir", function (e) {
+    linea=$(this).data('id_linea');
+    let valor=0;
+    if($(this).is(':checked')){
+        valor=1;
+        
+    }
+    
+    $.ajax({
+        url: "{{ route('facturaGeneralLineas.bndIncluir') }}",
+        type: 'GET',
+        data: {'id':linea,
+              'valor':valor},
+        cache: false,
+        beforeSend: function () {  
+            $(".loading").show();
+             
+        },
+        complete:function(){
+            $(".loading").hide(); 
+        },
+        success: function (data) {
+            
+        },
+        //si ha ocurrido un error
+        error: function (data) {
+
+
+        }
+    });
+})
+
+</script>
+@endpush

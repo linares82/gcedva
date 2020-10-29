@@ -18,7 +18,7 @@
             <thead>
                 <tr>
                     <th></th><th>Plantel</th><th>Especialidad</th><th>Nivel</th><th>Grado</th><th>Grupo</th>
-                    <th>Turno</th><th>P. Estudio</th>
+                    <th>Turno</th><th>P. Estudio</th><th>Matricula</th>
                     <th>Cliente</th><th>P. Nombre</th><th>Fecha Inscripción</th>
                     <th>Estatus Cliente</th><th>Lectivo</th>
                 </tr> 
@@ -46,7 +46,7 @@
                         <td>{{$registro->plantel}} </td>
                         <td>{{$registro->especialidad}}</td><td>{{$registro->nivel}}</td><td>{{$registro->grado}}</td>
                         <td>{{$registro->grupo}} {{$registro->asignacion}}</td>
-                        <td>{{ $registro->turno  }}</td><td>{{ $registro->periodo_estudio }}</td>
+                        <td>{{ $registro->turno  }}</td><td>{{ $registro->periodo_estudio }}</td><td>{{ $registro->matricula }}</td>
                         <td>{{$registro->id}}</td><td>{{$registro->nombre}} {{$registro->nombre2}} {{$registro->ape_paterno}} {{$registro->ape_materno}}</td>
                         <td>{{$registro->fec_inscripcion}}</td>
                         <td>{{$registro->estatus_cliente}}</td>

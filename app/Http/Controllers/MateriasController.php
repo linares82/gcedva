@@ -204,6 +204,7 @@ class MateriasController extends Controller
                 ->select('m.id', 'm.name')
                 ->where('m.plantel_id', '=', $plantel)
                 ->where('m.id', '>', '0')
+                ->whereNull('deleted_at')
                 ->get();
 
             //dd($r);

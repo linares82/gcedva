@@ -231,8 +231,9 @@
                                 <td>
                                     @if($historiaCliente->evento_cliente_id==2)
                                     <button class="btn btn-success btnVerLineas pull-right btn-xs" lang="mesaj" data-check="{{$historiaCliente->id}}" data-href="formation_json_parents" style="margin-left:10px;" >
-                                                    <span class="fa fa-eye" aria-hidden="true"></span> Ver
+                                        <span class="fa fa-eye" aria-hidden="true"></span> Ver
                                     </button>
+                                    <div id='loading' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                                     @endif
                                     
                                     
@@ -435,6 +436,8 @@ var $table = $('.tblEnc');
     url: "{{route('registroHistoriaClientes.findByHistoriaClienteId')}}",
             dataType: "json",
             data: "check=" + $(this).data('check'),
+            beforeSend : function(){$("#loading").show(); },
+            complete : function(){$("#loading").hide(); },
             success: function (anaVeri) {
 
             var yenitablosatir = '<tr class="expand-child" id="collapse' + $btn.data('id') + '">' +

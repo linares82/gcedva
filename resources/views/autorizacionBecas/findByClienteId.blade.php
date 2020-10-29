@@ -81,7 +81,8 @@
                                 <td>{{$autorizacionBeca->monto_mensualidad}}</td>
                                 <td>{{$autorizacionBeca->stBeca->name}}</td>
                                 <td>{{ optional($autorizacionBeca->autCajaPlantel)->name }}
-                                        @permission('autorizacionBecas.aut_caja_plantel')
+                                    @if($autorizacionBeca->aut_caja_plantel<>4)
+                                    @permission('autorizacionBecas.aut_caja_plantel')
                                     <button type="button" class="btn btn-primary btn-xs create_comentario"  
                                             data-toggle="modal" data-autorizacion_beca_id="{{ $autorizacionBeca->id }}"
                                                                 data-monto_inscripcion="{{ $autorizacionBeca->monto_inscripcion }}"
@@ -90,9 +91,11 @@
                                         Autorizacion
                                     </button>
                                     @endpermission
+                                    @endif
                                 </td>
                                 <td>{{ optional($autorizacionBeca->autDirPlantel)->name }}
                                     @if($autorizacionBeca->aut_caja_plantel==4)
+                                    @if($autorizacionBeca->aut_dir_plantel<>4)
                                     @permission('autorizacionBecas.aut_dir_plantel')
                                     <button type="button" class="btn btn-primary btn-xs create_comentario"  
                                             data-toggle="modal" data-autorizacion_beca_id="{{ $autorizacionBeca->id }}"
@@ -103,9 +106,11 @@
                                     </button>
                                     @endpermission
                                     @endif
+                                    @endif
                                 </td>
                                 <td>{{ optional($autorizacionBeca->autSerEsc)->name }}
                                     @if($autorizacionBeca->aut_caja_plantel==4 and $autorizacionBeca->aut_dir_plantel==4)
+                                    @if($autorizacionBeca->aut_ser_esc<>4)
                                     @permission('autorizacionBecas.aut_ser_esc')
                                     <button type="button" class="btn btn-primary btn-xs create_comentario"  
                                             data-toggle="modal" data-autorizacion_beca_id="{{ $autorizacionBeca->id }}"
@@ -116,10 +121,12 @@
                                     </button>
                                     @endpermission
                                     @endif
+                                    @endif
                                 </td>
                                 <td>{{ optional($autorizacionBeca->autDueno)->name }}
                                     @if($autorizacionBeca->aut_caja_plantel==4 and $autorizacionBeca->aut_dir_plantel==4
                                      and $autorizacionBeca->aut_ser_esc==4) 
+                                    @if($autorizacionBeca->aut_dueno<>4)
                                     @permission('autorizacionBecas.aut_dueno')
                                     <button type="button" class="btn btn-primary btn-xs create_comentario"  
                                             data-toggle="modal" data-autorizacion_beca_id="{{ $autorizacionBeca->id }}"
@@ -130,11 +137,13 @@
                                     </button>
                                     @endpermission
                                     @endif
+                                    @endif
                                 </td>
                                 <!--
                                 <td>@{{ optional($autorizacionBeca->autCajaCorp)->name }}
                                     @if($autorizacionBeca->aut_caja_plantel==4 and $autorizacionBeca->aut_dir_plantel==4
                                      and $autorizacionBeca->aut_ser_esc==4 and $autorizacionBeca->aut_dueno==4 )
+                                    @if($autorizacionBeca->aut_caja_corp<>4)
                                     @permission('autorizacionBecas.aut_caja_corp')
                                     <button type="button" class="btn btn-primary btn-xs create_comentario"  
                                             data-toggle="modal" data-autorizacion_beca_id="{{ $autorizacionBeca->id }}"
@@ -145,15 +154,19 @@
                                     </button>
                                     @endpermission
                                     @endif
+                                    @endif
                                 </td>
                             -->
                                 <td class="text-right">
                                     <button class="btn btn-success btnVerLineas pull-right btn-xs" lang="mesaj" data-check="{{$autorizacionBeca->id}}" data-href="formation_json_parents" style="margin-left:10px;" >
                                         <span class="fa fa-eye" aria-hidden="true"></span> Ver comentarios
                                     </button>
+                                    <div id='loading' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
+                                    @if($autorizacionBeca->st_beca_id<>4)
                                     @permission('autorizacionBecas.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('autorizacionBecas.edit', $autorizacionBeca->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
                                     @endpermission
+                                    @endif
                                     
                                     @permission('autorizacionBecas.respuesta_inhabilitado')
                                     <button type="button" class="btn btn-primary btn-xs" id='create_comentario' 
@@ -196,7 +209,7 @@
                                         <button type="submit" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> Borrar</button>
                                     {!! Form::close() !!}
                                     @endpermission
-                                    <a href='{!! asset("/imagenes/autorizacion_becas/".$autorizacionBeca->id."/".$autorizacionBeca->file) !!}' target='_blank'>Ver A.</a>
+                                    <a href='{!! asset("/imagenes/autorizacion_becas/".$autorizacionBeca->id."/".$autorizacionBeca->file) !!}' target='_blank' class="btn btn-default btn-xs"><i class="fa fa-file"></i>Ver A.</a>
                                     
                                 </td>
                             </tr>
@@ -340,6 +353,8 @@
     $.ajax({
     url: "{{route('autorizacionBecaComentarios.findByAutorizacionBecaId')}}",
             dataType: "json",
+            beforeSend : function(){$("#loading").show(); },
+            complete : function(){$("#loading").hide(); },
             data: "check=" + $(this).data('check'),
             success: function (anaVeri) {
 

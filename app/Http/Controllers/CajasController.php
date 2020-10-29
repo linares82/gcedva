@@ -455,17 +455,6 @@ class CajasController extends Controller
                             $mesFin = Carbon::createFromFormat('Y-m-d', $beca->lectivo->fin)->month;
                             $anioFin = Carbon::createFromFormat('Y-m-d', $beca->lectivo->fin)->year;
 
-                            //$fechaAdeudo = Carbon::createFromFormat('Y-m-d', $adeudo->fecha_pago);
-                            //$lectivoInicio = Carbon::createFromFormat('Y-m-d', $beca->lectivo->inicio);
-                            //$lectivoFin = Carbon::createFromFormat('Y-m-d', $beca->lectivo->fin);
-                            //dd(($beca->lectivo->inicio <= $adeudo->fecha_pago and $beca->lectivo->fin >= $adeudo->fecha_pago));
-                            //dd($fechaAdeudo->greaterThanOrEqualTo($lectivoInicio) and $fechaAdeudo->lessThanOrEqualTo($lectivoFin));
-                            /*dd(($beca->lectivo->inicio <= $adeudo->fecha_pago and $beca->lectivo->fin >= $adeudo->fecha_pago) or
-                                (($anioInicio = $anioAdeudo or $mesInicio = $mesAdeudo) and ($anioFin >= $anioAdeudo)));
-*/
-                            /*dd((($beca->lectivo->inicio <= $adeudo->fecha_pago and $beca->lectivo->fin >= $adeudo->fecha_pago) or
-                                (($anioInicio = $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin = $anioAdeudo and $mesFin >= $mesAdeudo)) or
-                                (($anioInicio < $anioAdeudo or $mesInicio >= $mesAdeudo) and ($anioFin >= $anioAdeudo and $mesFin <= $mesAdeudo))));*/
                             if (
                                 (($beca->lectivo->inicio <= $adeudo->fecha_pago and $beca->lectivo->fin >= $adeudo->fecha_pago) or
                                     (($anioInicio = $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin = $anioAdeudo and $mesFin >= $mesAdeudo)) or
@@ -575,7 +564,7 @@ class CajasController extends Controller
                                 $fecha_caja = Carbon::createFromFormat('Y-m-d', $caja->fecha);
                                 $fecha_adeudo = Carbon::createFromFormat('Y-m-d', $adeudo->fecha_pago);
                                 //dd($fecha_caja->greaterThanOrEqualTo($fecha_adeudo));
-                                if ($fecha_caja >= $fecha_adeudo) {
+                                if ($fecha_caja->greaterThanOrEqualTo($fecha_adeudo)) {
 
                                     $dias = $fecha_caja->diffInDays($fecha_adeudo);
                                     if ($fecha_caja < $fecha_adeudo) {
@@ -590,13 +579,13 @@ class CajasController extends Controller
 
                                             if ($regla->porcentaje > 0) {
                                                 //dd($regla->porcentaje);
-                                                $regla_recargo = $caja_ln['total'] * $regla->porcentaje;
+                                                $regla_recargo = $caja_ln['subtotal'] * $regla->porcentaje;
                                                 $caja_ln['recargo'] = $caja_ln['recargo'] + $regla_recargo;
                                                 //$caja_ln['recargo'] = $adeudo->monto * $regla->porcentaje;
                                                 //echo $caja_ln['recargo'];
                                             } else {
                                                 if ($adeudo->bnd_eximir_descuento_regla == 0) {
-                                                    $regla_descuento = $caja_ln['total'] * $regla->porcentaje * -1;
+                                                    $regla_descuento = $caja_ln['subtotal'] * $regla->porcentaje * -1;
                                                     $caja_ln['descuento'] = $caja_ln['descuento'] + $regla_descuento;
                                                     $caja_ln['total'] = $caja_ln['total'] - $caja_ln['descuento'];
 
@@ -641,7 +630,7 @@ class CajasController extends Controller
                                                 //echo $caja_ln['recargo'];
                                             } else {
                                                 if ($adeudo->bnd_eximir_descuento_regla == 0) {
-                                                    $regla_descuento = $caja_ln['total'] * $regla->porcentaje * -1;
+                                                    $regla_descuento = $caja_ln['subtotal'] * $regla->porcentaje * -1;
                                                     $caja_ln['descuento'] = $caja_ln['descuento'] + $regla_descuento;
                                                     $caja_ln['total'] = $caja_ln['subtotal'] - $caja_ln['descuento'];
 

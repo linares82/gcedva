@@ -85,17 +85,21 @@ class RegistroHistoriaClientesController extends Controller
 				$cliente->st_cliente_id = 24;
 				$cliente->save();
 			} elseif ($e->evento_cliente_id == 2) {
-				$inscripcion = Inscripcion::find($e->inscripcion_id);
-				if (!is_null($inscripcion)) {
-					$inscripcion->st_inscripcion_id = 3;
-					$inscripcion->save();
+			
+				if(!is_null($e->inscripcion_id)){
+					$inscripcion = Inscripcion::find($e->inscripcion_id);
+					if (!is_null($inscripcion)) {
+						$inscripcion->st_inscripcion_id = 3;
+						$inscripcion->save();
+					}
 				}
-
-				$adeudos = Adeudo::where('combinacion_cliente_id', $inscripcion->combinacion_cliente_id)
+					
+				$adeudos = Adeudo::where('cliente_id', $e->cliente_id)
 					->where('caja_id', 0)
 					->where('pagado_bnd', 0)
 					->whereDate('adeudos.fecha_pago','>',Date('Y-m-d'))
 					->get();
+				//dd($adeudos->toArray());
 				foreach ($adeudos as $adeudo) {
 					$adeudo->delete();
 				}
