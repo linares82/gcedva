@@ -1627,7 +1627,9 @@ class ClientesController extends Controller
             'p.razon',
             'stc.name as estatus',
             'historia_clientes.fecha',
-            'c.tel_cel'
+            'c.tel_cel',
+            'reactivado',
+            'fec_reactivado'
         )
             ->join('clientes as c', 'c.id', '=', 'historia_clientes.cliente_id')
             ->join('plantels as p', 'p.id', '=', 'c.plantel_id')

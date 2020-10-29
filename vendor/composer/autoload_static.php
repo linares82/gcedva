@@ -899,6 +899,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'AddEspecialidadNivelGradoTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_11_143725_add_especialidad_nivel_grado_table.php',
         'AddEspecialidadNivelTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_11_143659_add_especialidad_nivel_table.php',
         'AddExcepcionesDescuentosToAdeudosTable' => __DIR__ . '/../..' . '/database/migrations/2020_07_17_133014_add_excepciones_descuentos_to_adeudos_table.php',
+        'AddFecReactivadoToHistoriaClientesTable' => __DIR__ . '/../..' . '/database/migrations/2020_10_29_084312_add_fec_reactivado_to_historia_clientes_table.php',
         'AddFecRvoeToGradosTable' => __DIR__ . '/../..' . '/database/migrations/2020_06_30_133537_add_fec_rvoe_to_grados_table.php',
         'AddFechaPagoToImpresionTicketsTable' => __DIR__ . '/../..' . '/database/migrations/2020_02_21_111204_add_fecha_pago_to_impresion_tickets_table.php',
         'AddFechaSolicitudFacturaToPagosTable' => __DIR__ . '/../..' . '/database/migrations/2020_09_11_135034_add_fecha_solicitud_factura_to_pagos_table.php',

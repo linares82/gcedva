@@ -317,6 +317,7 @@ class HistoriaClientesController extends Controller
 		$historiaCliente = HistoriaCliente::find($input['id']);
 		$historiaCliente->descripcion = $historiaCliente->descripcion . " - Reactivado";
 		$historiaCliente->reactivado=$historiaCliente->reactivado+1;
+		$historiaCliente->fec_reactivado=Date('Y-m-d');
 		$historiaCliente->save();
 
 		$cliente = Cliente::find($historiaCliente->cliente_id);
@@ -328,8 +329,11 @@ class HistoriaClientesController extends Controller
 		$seguimiento->save();
 
 		$inscripcion = Inscripcion::find($historiaCliente->inscripcion_id);
-		$inscripcion->st_inscripcion_id = 1;
-		$inscripcion->save();
+		if(!is_null($inscripcion)){
+			$inscripcion->st_inscripcion_id = 1;
+			$inscripcion->save();
+		}
+		
 
 		return redirect()->route('historiaClientes.index', array('q[cliente_id_lt]' => $cliente->id))->with('message', 'Registro Borrado.');
 	}

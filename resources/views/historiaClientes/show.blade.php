@@ -38,40 +38,48 @@
                     <label for="nome">ID</label>
                     <p class="form-control-static">{{$historiaCliente->id}}</p>
                 </div>
-                <div class="form-group">
-                     <label for="evento_cliente_name">EVENTO_CLIENTE_NAME</label>
+                <div class="form-group col-sm-4">
+                     <label for="evento_cliente_name">EVENTO</label>
                      <p class="form-control-static">{{$historiaCliente->eventoCliente->name}}</p>
                 </div>
-                    <div class="form-group">
+                    <div class="form-group col-sm-4">
                      <label for="descripcion">DESCRIPCION</label>
                      <p class="form-control-static">{{$historiaCliente->descripcion}}</p>
                 </div>
-                    <div class="form-group">
+                    <div class="form-group col-sm-4">
                      <label for="fecha">FECHA</label>
                      <p class="form-control-static">{{$historiaCliente->fecha}}</p>
                 </div>
-                    <div class="form-group">
+                    <div class="form-group col-sm-4">
                      <label for="archivo">ARCHIVO</label>
                      <p class="form-control-static">{{$historiaCliente->archivo}}</p>
                 </div>
-                    <div class="form-group">
-                     <label for="cliente_nombre">CLIENTE_NOMBRE</label>
+                    <div class="form-group col-sm-4">
+                     <label for="cliente_nombre">CLIENTE</label>
                      <p class="form-control-static">{{$historiaCliente->cliente->nombre}}</p>
                 </div>
-                    <div class="form-group">
-                     <label for="usu_alta_id">USU_ALTA_ID</label>
-                     <p class="form-control-static">{{$historiaCliente->usu_alta_id}}</p>
+                <div class="form-group col-sm-4">
+                    <label for="cliente_nombre">REACTIVACION</label>
+                    <p class="form-control-static">{{$historiaCliente->reactivado}}</p>
+               </div>
+               <div class="form-group col-sm-4">
+                        <label for="cliente_nombre">FEC. ULTIMA REACTIVACION</label>
+                        <p class="form-control-static">{{$historiaCliente->fec_reactivado}}</p>
                 </div>
-                    <div class="form-group">
-                     <label for="usu_mod_id">USU_MOD_ID</label>
-                     <p class="form-control-static">{{$historiaCliente->usu_mod_id}}</p>
+                    <div class="form-group col-sm-4">
+                     <label for="usu_alta_id">U. ALTA</label>
+                     <p class="form-control-static">{{$historiaCliente->usu_alta->name}}</p>
+                </div>
+                    <div class="form-group col-sm-4">
+                     <label for="usu_mod_id">U. MODIFICACON</label>
+                     <p class="form-control-static">{{$historiaCliente->usu_mod->name}}</p>
                 </div>
             </form>
 
             <div class="row">
                 </div>
 
-            <a class="btn btn-link" href="{{ route('historiaClientes.index') }}"><i class="glyphicon glyphicon-backward"></i>  Regresar</a>
+            <a class="btn btn-link" href="{{ url('historiaClientes/index?q%5Bcliente_id_lt%5D='.$historiaCliente->cliente_id) }}"><i class="glyphicon glyphicon-backward"></i>  Regresar</a>
 
         </div>
     </div>

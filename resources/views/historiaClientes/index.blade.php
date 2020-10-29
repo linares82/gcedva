@@ -198,11 +198,11 @@
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'evento_clientes.name', 'title' => 'EVENTO'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'descripcion', 'title' => 'DESCRIPCION'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'fecha', 'title' => 'FECHA'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'fec_vigencia', 'title' => 'FECHA VIGENCIA'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'archivo', 'title' => 'ARCHIVO'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clientes.nombre', 'title' => 'CLIENTE'])</th>
+                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clientes.fec_reactivado', 'title' => 'F. REACT.'])</th>
                         <th>ESTATUS</th>
                         <th>AUTORIZACIONES</th>
                         <th>CAJA</th>
@@ -217,7 +217,6 @@
                             <tr>
                                 <td><a href="{{ route('historiaClientes.show', $historiaCliente->id) }}">{{$historiaCliente->id}}</a></td>
                                 <td>{{$historiaCliente->eventoCliente->name}}</td>
-                                <td>{{$historiaCliente->descripcion}}</td>
                                 <td>{{$historiaCliente->fecha}}</td>
                                 <td>{{$historiaCliente->fec_vigencia}}</td>
                                 <td><a href='{!! asset("/imagenes/historia_clientes/".$historiaCliente->id."/".$historiaCliente->archivo) !!}' target='_blank'>Ver</a></td>
@@ -227,7 +226,9 @@
                                     </a>
                                     
                                 </td>
+                                <td>({{ $historiaCliente->reactivado }}) {{$historiaCliente->fec_reactivado}}</td>
                                 <td>{{$historiaCliente->stHistoriaCliente->name}}</td>
+                                
                                 <td>
                                     @if($historiaCliente->evento_cliente_id==2)
                                     <button class="btn btn-success btnVerLineas pull-right btn-xs" lang="mesaj" data-check="{{$historiaCliente->id}}" data-href="formation_json_parents" style="margin-left:10px;" >

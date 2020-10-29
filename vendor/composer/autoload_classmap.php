@@ -87,6 +87,7 @@ return array(
     'AddEspecialidadNivelGradoTable' => $baseDir . '/database/migrations/2017_08_11_143725_add_especialidad_nivel_grado_table.php',
     'AddEspecialidadNivelTable' => $baseDir . '/database/migrations/2017_08_11_143659_add_especialidad_nivel_table.php',
     'AddExcepcionesDescuentosToAdeudosTable' => $baseDir . '/database/migrations/2020_07_17_133014_add_excepciones_descuentos_to_adeudos_table.php',
+    'AddFecReactivadoToHistoriaClientesTable' => $baseDir . '/database/migrations/2020_10_29_084312_add_fec_reactivado_to_historia_clientes_table.php',
     'AddFecRvoeToGradosTable' => $baseDir . '/database/migrations/2020_06_30_133537_add_fec_rvoe_to_grados_table.php',
     'AddFechaPagoToImpresionTicketsTable' => $baseDir . '/database/migrations/2020_02_21_111204_add_fecha_pago_to_impresion_tickets_table.php',
     'AddFechaSolicitudFacturaToPagosTable' => $baseDir . '/database/migrations/2020_09_11_135034_add_fecha_solicitud_factura_to_pagos_table.php',

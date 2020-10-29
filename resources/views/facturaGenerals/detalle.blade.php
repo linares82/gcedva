@@ -108,7 +108,7 @@
                     <tr>
                         <td colspan="6"></td>
                         <td colspan="2">
-                            <a href="#" class="btn btn-xs btn-success btn-block" >Generar Factura</a>
+                            <a href="{{ route('facturaGenerals.generarFactura', array('id'=>$facturaGeneral->id)) }}"  class="btn btn-xs btn-success btn-block" >Generar Factura</a>
                         </td>
                     </tr>
                 </tbody>

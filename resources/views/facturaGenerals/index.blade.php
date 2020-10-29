@@ -236,6 +236,7 @@
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'plantels.razon', 'title' => 'PLANTEL'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'fec_inicio', 'title' => 'F. INICIO'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'fec_fin', 'title' => 'F. FIN'])</th>
+                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'total', 'title' => 'TOTAL'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'uuid', 'title' => 'UUID'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
@@ -248,6 +249,7 @@
                                 <td>{{$facturaGeneral->plantel->razon}}</td>
                                 <td>{{$facturaGeneral->fec_inicio}}</td>
                                 <td>{{$facturaGeneral->fec_fin}}</td>
+                                <td>{{$facturaGeneral->total}}</td>
                                 <td>{{$facturaGeneral->uuid}}</td>
                                 <td class="text-right">
                                     @permission('facturaGenerals.create')
