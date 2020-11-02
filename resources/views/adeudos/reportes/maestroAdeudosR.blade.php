@@ -56,20 +56,14 @@
 <table border="0" width="100%" >
             <td border="0" align="center"  >
                 <h3>
-                    Maestro
+                    Maestro Pagos
                 </h3>
             </td>
 </table>
 
 <div class="datagrid">
     <table border="1" width="100%" >
-       <!-- <thead >
-        <th><strong>Plantel</strong></th><th><strong>Clientes Activos</strong></th><th><strong>Concepto</strong></th>
-        <th><strong>Clientes Con Pago</strong></th><th><strong>Monto Pagado</strong></th><th><strong>Porcentaje Pagado</strong></th>
-        <th><strong>Deudores</strong></th><th><strong>Monto Deuda(Estimacion Planeada)</strong></th><th><strong>Porcentaje Deuda</strong></th>
-        <th><strong>Bajas Con pago</strong></th>
-        </thead>
-    -->
+       
         <tbody>
             <?php $total=['concepto'=>"",'clientes_activos'=>0,'clientes_pagados'=>0,'total_monto_pagado'=>0,'deudores'=>0,'monto_deuda'=>0,'bajas_pagadas'=>0]; ?>
             @foreach($lineas_procesadas as $registro)
@@ -130,8 +124,6 @@
                 <th>Cliente</th>
 		<th></th>
                 <th>Matricula</th>
-                <!--<th>Pagado</th>
-                <th>Monto Planeado</th>-->
                 <th>Turno</th>
                 <th>F. Planeada Pago</th>
                 <th>Concepto</th>
@@ -139,11 +131,6 @@
                 <th>Csc. Caja</th>
                 <th>Beca</th>
                 <th>Estatus Cliente</th>
-                <!--<th>Consecutivo Caja</th>
-                <th>Caja borrada</th>
-                <th>Linea de Caja Borrada</th>
-                <th>St. Cliente</th>
-                <th>St. Seguimiento</th>-->
             </tr>
         </thead>
         <tbody>
@@ -182,21 +169,12 @@
             <td>{{ $detalle['matricula'] }}</td>
             <td>{{ $detalle['turno'] }}</td>
             <td>{{ $detalle['fecha_pago'] }}</td>
-            <!--
-            <td>
-                @if($detalle['pagado_bnd']==0)
-                NO
-                @elseif($detalle['pagado_bnd']==1)
-                SI
-                @endif
-            </td>
-            <td>{{$detalle['adeudo_planeado']}}</td>-->
             <td>{{$detalle['concepto']}}</td>
-            <!--<td>{{$detalle['pago_calculado_adeudo']}}</td>-->
+            
 	    <td>{{$detalle['monto_pago']}}</td>
         <td>{{$detalle['consecutivo']}}</td>
         @if(!is_null($beca)) 
-        <!--@@if($fecha_adeudo->greaterThanOrEqualTo($fecha_inicio) and $fecha_adeudo->lessThanOrEqualTo($fecha_fin))-->
+        
         @if(
             (($beca->lectivo->inicio <= $adeudo->fecha_pago and $beca->lectivo->fin >= $adeudo->fecha_pago) or
             (($anioInicio = $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin = $anioAdeudo and $mesFin >= $mesAdeudo)) or
@@ -212,12 +190,6 @@
         <td></td>
         @endif
         <td>{{ $detalle['st_cliente'] }}</td>
-<!--            
-            <td>{{$detalle['borrado_c']}}</td>
-            <td>{{$detalle['borrado_cln']}}</td>
-            <td>{{$detalle['st_cliente']}}</td>
-            <td>{{$detalle['st_seguimiento']}}</td>
-            -->
             </tr>
             @endforeach
         </tbody>

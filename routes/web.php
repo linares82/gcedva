@@ -8057,6 +8057,38 @@ Route::post(
     )
 )->middleware('auth');
 Route::get(
+    '/adeudos/maestroPagos',
+    array(
+        'as' => 'adeudos.maestroPagos',
+        'middleware' => 'permission:adeudos.maestroPagos',
+        'uses' => 'AdeudosController@maestroPagos'
+    )
+)->middleware('auth');
+Route::post(
+    '/adeudos/maestroPagosR',
+    array(
+        'as' => 'adeudos.maestroPagosR',
+        'middleware' => 'permission:adeudos.maestroPagos',
+        'uses' => 'AdeudosController@maestroPagosR',
+    )
+)->middleware('auth');
+Route::get(
+    '/adeudos/maestroAdeudos',
+    array(
+        'as' => 'adeudos.maestroAdeudos',
+        'middleware' => 'permission:adeudos.maestroAdeudos',
+        'uses' => 'AdeudosController@maestroAdeudos'
+    )
+)->middleware('auth');
+Route::post(
+    '/adeudos/maestroAdeudosR',
+    array(
+        'as' => 'adeudos.maestroAdeudosR',
+        'middleware' => 'permission:adeudos.maestroAdeudos',
+        'uses' => 'AdeudosController@maestroAdeudosR',
+    )
+)->middleware('auth');
+Route::get(
     '/adeudos/maestroIndicador',
     array(
         'as' => 'adeudos.maestroIndicador',

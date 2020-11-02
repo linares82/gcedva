@@ -28,7 +28,7 @@
             @endforeach
             </tbody>
         </table>
-        <!--
+        
         <h3>Detalle</h3>
         <table class="table table-condensed table-striped">
           
@@ -47,7 +47,7 @@
             
             </tbody>
         </table>
-      -->
+    
     </div>
     
   </body>

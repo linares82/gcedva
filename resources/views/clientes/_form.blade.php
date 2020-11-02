@@ -440,11 +440,13 @@
                                         
                                            <select class="form-control select_seguridad plan_pago" id="plan_pago_id-field" name="plan_pago_id" data-combinacion="{{$c->id}}">
                                             <option data-combinacion="{{$c->id}}" value="" style="display: none;" {{ old('plan_pago_id', optional($c)->plan_pago_id ?: '') == '' ? 'selected' : '' }} disabled selected>Seleccionar opcion </option>
-                                                @foreach ($c->turno->planes()->get() as $plan)
+                                                
+                                                @foreach (optional($c->turno->planes())->get() as $plan)
                                                     <option data-combinacion="{{$c->id}}" value="{{ $plan->id }}" {{ old('plan_pago_id', optional($c)->plan_pago_id) == $plan->id ? 'selected' : '' }}>
                                                         {{ $plan->name }}
                                                     </option>
                                                 @endforeach
+                                                
                                             </select>
 
                                            {{ optional($c->planPago)->name }} <br>
