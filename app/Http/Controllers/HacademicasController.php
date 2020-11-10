@@ -573,10 +573,11 @@ class HacademicasController extends Controller
                 ->whereNull('hacademicas.deleted_at')
                 ->whereNull('i.deleted_at')
                 ->whereNull('cp.deleted_at')
-                ->orderBy('cli.nombre')
-                ->orderBy('cli.nombre2')
                 ->orderBy('cli.ape_paterno')
                 ->orderBy('cli.ape_materno')
+                ->orderBy('cli.nombre')
+                ->orderBy('cli.nombre2')
+                
                 ->get();
         } else {
             //if($calificacion_inicio<=$hoy and $calificacion_fin>=$hoy){
@@ -604,10 +605,10 @@ class HacademicasController extends Controller
                     ->where('hacademicas.materium_id', '=', $asignacionAcademica->materium_id)
                     ->where('c.tpo_examen_id', '=', $data['tpo_examen_id'])
                     ->where('cp.carga_ponderacion_id', '=', $data['carga_ponderacion_id'])
-                    ->orderBy('cli.nombre')
-                    ->orderBy('cli.nombre2')
                     ->orderBy('cli.ape_paterno')
                     ->orderBy('cli.ape_materno')
+                    ->orderBy('cli.nombre')
+                    ->orderBy('cli.nombre2')
                     ->whereExists(function ($query) {
                         $query->from('calendario_evaluacions as ce')
                             ->join('lectivos as lec', 'lec.id', '=', 'ce.lectivo_id')

@@ -97,10 +97,9 @@
                         <tr>
                             <th></th>
                         <th class="altura"><strong>NO.</strong></th>
-                        <th class="altura"><strong>Nombre(s)</strong></th>
                         <th class="altura"><strong>A. Paterno</strong></th>
                         <th class="altura"><strong>A. Materno</strong></th>
-                        
+                        <th class="altura"><strong>Nombre(s)</strong></th>
                         @foreach($fechas_enc as $fecha_enc)
                             
                             <th class=""><strong >{{$fecha_enc}}</strong></th>
@@ -119,7 +118,7 @@
                             <tr>
                                 <td>{{$contador_linea++}}</td>
                                 <td>{{ $r->cliente }}</td>
-                                <td>{{$r->nombre." ".$r->nombre2}}</td><td>{{$r->ape_paterno}}</td><td>{{$r->ape_materno}}</td>
+                                <td>{{$r->ape_paterno}}</td><td>{{$r->ape_materno}}</td><td>{{$r->nombre." ".$r->nombre2}}</td>
                                 <?php
                                     $fechas=\App\AsistenciaR::where('asignacion_academica_id',$r->asignacion)
                                             ->where('cliente_id',$r->cliente)

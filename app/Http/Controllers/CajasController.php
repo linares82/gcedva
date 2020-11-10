@@ -585,7 +585,7 @@ class CajasController extends Controller
                                                 //echo $caja_ln['recargo'];
                                             } else {
                                                 if ($adeudo->bnd_eximir_descuento_regla == 0) {
-                                                    $regla_descuento = $caja_ln['subtotal'] * $regla->porcentaje * -1;
+                                                    $regla_descuento = $caja_ln['total'] * $regla->porcentaje * -1;
                                                     $caja_ln['descuento'] = $caja_ln['descuento'] + $regla_descuento;
                                                     $caja_ln['total'] = $caja_ln['total'] - $caja_ln['descuento'];
 

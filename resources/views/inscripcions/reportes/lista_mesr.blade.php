@@ -100,9 +100,9 @@
                         <tr>
                         <th></th>
                         <th class="altura"><strong>NO.</strong></th>
-                        <th class="altura"><strong>Nombre(s)</strong></th>
                         <th class="altura"><strong>A. Paterno</strong></th>
                         <th class="altura"><strong>A. Materno</strong></th>
+                        <th class="altura"><strong>Nombre(s)</strong></th>
                         <th class="altura"><strong>Tel. Fijo</strong></th>
                         <th class="altura"><strong>Adeudos</strong></th>
                         
@@ -124,7 +124,7 @@
                             <tr>
                                 <td>{{$contador_linea++}}</td>
                                 <td>{{ $r->cliente }}</td>
-                                <td>{{$r->nombre." ".$r->nombre2}}</td><td>{{$r->ape_paterno}}</td><td>{{$r->ape_materno}}</td><td>{{$r->tel_fijo}}</td>
+                                <td>{{$r->ape_paterno}}</td><td>{{$r->ape_materno}}</td><td>{{$r->nombre." ".$r->nombre2}}</td><td>{{$r->tel_fijo}}</td>
                                 @php
                                  $hoy=Date('Y-m-d');
                                     $adeudos=\App\Adeudo::where('cliente_id',$r->cliente)

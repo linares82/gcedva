@@ -1012,7 +1012,7 @@ class PagosController extends Controller
                 . 'c.nombre, c.nombre2, c.ape_paterno, c.ape_materno, cajas.id as caja, cajas.consecutivo,'
                 . 'c.beca_bnd, st.name as estatus_caja, fp.id as forma_pago_id, cajas.st_caja_id,'
                 . 'pag.monto as monto_pago, fp.name as forma_pago, pag.fecha as fecha_pago, pag.created_at, cajas.fecha as fecha_caja,'
-                . 'up.name as creador_pago,cln.caja_concepto_id')
+                . 'up.name as creador_pago, cln.caja_concepto_id')
         )
             ->join('clientes as c', 'c.id', '=', 'cajas.cliente_id')
             ->join('plantels as pla', 'pla.id', '=', 'c.plantel_id')
@@ -1028,7 +1028,7 @@ class PagosController extends Controller
             ->where('cajas.st_caja_id', '=', 1)
             ->orderBy('fp.id')
             ->orderBy('cln.caja_concepto_id')
-            ->orderBy('pag.fecha')
+            //->orderBy('pag.fecha')
             ->distinct();
         if ($data['fecha_pago'] == 1) {
             $registros_pagados_aux->where('pag.fecha', '>=', $data['fecha_f'])
@@ -1037,7 +1037,12 @@ class PagosController extends Controller
             $registros_pagados_aux->where('pag.created_at', '>=', $data['fecha_f'])
                 ->whereDate('pag.created_at', '<=', $data['fecha_t']);
         }
-        $registros_pagados = $registros_pagados_aux->get();
+	$registros_pagados_aux2 = $registros_pagados_aux->get();
+        //$registros_pagados=$registros_pagados_aux2->unique('consecutivo')->values()->all();
+
+        $registros_pagados= $registros_pagados_aux2->unique(function ($item) {
+            return $item['consecutivo'].$item['monto_pago'].$item['created_at'];
+        })->values()->all();
         //dd($registros_pagados);
         $empleado = Empleado::where('user_id', Auth::user()->id)->first();
 

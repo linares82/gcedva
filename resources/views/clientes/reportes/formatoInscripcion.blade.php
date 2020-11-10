@@ -37,7 +37,8 @@
     <table>
         <tr>
             <td style="width: 20%;">
-                <img src="{{ asset('/imagenes/planteles/'.$cliente->plantel_id."/".$cliente->plantel->logo) }}" alt="Sin logo" height="80px" ></img>
+                <!--<img src="{{ asset('/imagenes/planteles/'.$cliente->plantel_id."/".$cliente->plantel->logo) }}" alt="Sin logo" height="80px" ></img>-->
+                <img src="{{asset('storage/especialidads/'.$combinacion->especialidad->imagen)}}" alt="Logo" height="42" width="42" > </td>
             </td>
             <td align="center">
                 {{ $cliente->plantel->razon }} <br>

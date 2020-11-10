@@ -126,7 +126,10 @@
                     {{ csrf_field() }}
                 </thead>
                 <tbody>
-                    @foreach($planPago->lineas as $linea)
+                    @php
+                    $lineas=App\PlanPagoLn::where('plan_pago_id',$planPago->id)->orderBy('fecha_pago')->get();    
+                    @endphp
+                    @foreach($lineas as $linea)
                         <tr class="item{{$linea->id}}">
                             <td>{{$linea->cajaConcepto->name}}</td>
                             <!--<td>{{$linea->cuentaContable->name}}</td>

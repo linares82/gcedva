@@ -82,7 +82,7 @@ class AtrazoPagos extends Command
                         $seguimiento->st_seguimiento_id = 2;
                         $seguimiento->save();
                         */
-                    } elseif ($registro->adeudos_cantidad >= 2) {
+                    } elseif ($registro->adeudos_cantidad == 2) {
                         echo $registro->cliente_id . '-';
                         $cliente = Cliente::find($registro->cliente_id);
                         Log::info("cliente-" . $cliente->id . "-st" . $cliente->st_cliente_id);
@@ -94,14 +94,24 @@ class AtrazoPagos extends Command
                         $seguimiento->st_seguimiento_id = 2;
                         $seguimiento->save();
                     } elseif ($registro->adeudos_cantidad >= 3) {
-                        /*$cliente = Cliente::find($registro->cliente_id);
-                        $cliente->st_cliente_id = 3;
+                        $cliente = Cliente::find($registro->cliente_id);
+                        $cliente->st_cliente_id = 26;
                         $cliente->save();
+
+                        $adeudos = Adeudo::where('cliente_id', $cliente->cliente_id)
+                            ->where('caja_id', 0)
+                            ->where('pagado_bnd', 0)
+                            ->whereDate('adeudos.fecha_pago','>',Date('Y-m-d'))
+                            ->get();
+                        //dd($adeudos->toArray());
+                        foreach ($adeudos as $adeudo) {
+                            $adeudo->delete();
+                        }
 
                         $seguimiento = Seguimiento::where('cliente_id', $cliente->id)->first();
                         $seguimiento->st_seguimiento_id = 6;
                         $seguimiento->save();
-                        */
+                        
                     }
                 }
             }

@@ -2282,7 +2282,7 @@ class AdeudosController extends Controller
                     $calculo['deudores'] = $calculo['clientes_activos'] - $calculo['clientes_pagados'];
                     $calculo['porcentaje_deudores'] = ($calculo['deudores'] * 100) / $calculo['clientes_activos'];
                 }elseif (is_null($registro->borrado_c) and is_null($registro->borrado_cln) and $registro->st_cliente_id == 3) {
-                    array_push($lineas_detalle, $registro->toArray());
+                    //array_push($lineas_detalle, $registro->toArray());
                     $baja = HistoriaCliente::where('cliente_id', $registro->id)
                         ->where('evento_cliente_id', 2)
                         ->where('fecha', '>=', $datos['fecha_f'])

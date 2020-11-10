@@ -42,12 +42,12 @@
                 @foreach($registros_pagados as $registro)
                 @php
                     $beca=App\AutorizacionBeca::where('cliente_id',$registro->id)
-                ->orderBy('autorizacion_becas.id','Desc')
-                ->where('autorizacion_becas.st_beca_id',4)
-                ->whereNull('deleted_at')
-                ->whereNotNull('lectivo_id')
-                ->take(1)
-                ->first();
+                    ->orderBy('autorizacion_becas.id','Desc')
+                    ->where('autorizacion_becas.st_beca_id',4)
+                    ->whereNull('deleted_at')
+                    ->whereNotNull('lectivo_id')
+                    ->take(1)
+                    ->first();
                 
                 if(!is_null($beca)){
                   //Log::info($beca->id."-*-".$beca->lectivo->inicio."-*-".$beca->lectivo->fin);
@@ -56,21 +56,23 @@
                     $fecha_adeudo=Carbon\Carbon::createFromFormat('Y-m-d',$registro->fecha_pago);
                 }
                 @endphp
-                @if(($concepto<>$registro->caja_concepto_id and $concepto_suma>0))
+                
+                @if(($concepto<>$registro->caja_concepto_id and $concepto_suma>0) or ($forma_pago<>$registro->forma_pago_id and $total_forma_pago>0))
                         <tr>
-                          <td colspan="7"><strong>Total Concepto</strong></td><td style="text-align:right;"><strong>{{number_format($concepto_suma,2)}}</strong></td><td></td>
+                          <td colspan="7"><strong>Total Concepto </strong></td><td style="text-align:right;"><strong>{{number_format($concepto_suma,2)}}</strong></td><td></td>
                       </tr>
                       <?php $concepto_suma=0; ?>
-                    @endif    
+                @endif    
+                    
                 @if($forma_pago<>$registro->forma_pago_id and $total_forma_pago>0)
                     <tr>
-                        <td colspan="7"><strong>Total Forma de Pago</strong></td><td style="text-align:right;"><strong>{{number_format($total_forma_pago,2)}}</strong></td><td></td>
+                        <td colspan="7"><strong>Total Forma de Pago  </strong></td><td style="text-align:right;"><strong>{{number_format($total_forma_pago,2)}}</strong></td><td></td><td></td>
                     </tr>
-                    <?php $total_forma_pago=0; ?>
-                    @endif
+                    @php $total_forma_pago=0; @endphp
+                @endif
                     
                     <tr>
-                      <td>{{$registro->id}}</td> 
+                      <td>{{$registro->id}} </td> 
                       <td>{{$registro->ape_paterno}} {{$registro->ape_materno}} {{$registro->nombre}} {{$registro->nombre2}}</td>
                         <!--<td>
                             @if($registro->beca_bnd==1)
@@ -85,7 +87,7 @@
                         <td>{{$registro->fecha_pago}}</td>
                         <td>{{$registro->created_at}}</td>
                         <td>
-                        <?php $rcaja=App\CajaLn::where('caja_id',$registro->caja)->whereNull('deleted_at')->get();
+                        <?php $rcaja=App\CajaLn::where('caja_id',$registro->caja)->whereNull('deleted_at')->orderBy('caja_concepto_id')->get();
                         //dd($rcaja->cajaLns);
                         ?>
                           @foreach($rcaja as $ln)
@@ -119,14 +121,16 @@
                     <?php 
                     $j=$i+$j;
                     ?>
+                    
                     <tr>
-                      <td colspan="7"><strong>Total Concepto</strong></td><td style="text-align:right;"><strong>{{number_format($concepto_suma,2)}}</strong></td><td></td>
+                      <td colspan="7"><strong>Total Concepto</strong></td><td style="text-align:right;"><strong>{{number_format($concepto_suma,2)}}</strong></td><td></td><td></td>
+                    </tr>
+                  
+                    <tr>
+                        <td><strong>Total Forma de Pago</strong></td><td colspan="6"><strong><strong></td><td style="text-align:right;"><strong>{{number_format($total_forma_pago,2)}}</strong></td><td></td> <td></td>
                     </tr>
                     <tr>
-                        <td><strong>Total Forma de Pago</strong></td><td colspan="6"><strong><strong></td><td style="text-align:right;"><strong>{{number_format($total_forma_pago,2)}}</strong></td><td></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Total</strong></td><td colspan="6"><strong><strong></td><td style="text-align:right;"><strong>{{number_format($suma_total,2)}}</strong></td><td></td>
+                        <td><strong>Total</strong></td><td colspan="6"><strong><strong></td><td style="text-align:right;"><strong>{{number_format($suma_total,2)}}</strong></td><td></td><td></td>
                     </tr>
                     <?php $total=$suma_total ?>
             </tbody>

@@ -80,6 +80,7 @@ class AsistenciaRsController extends Controller
 	public function procesar(createAsistenciaR $request)
 	{
 		$input = $request->all();
+		//dd($input);
 		$asignacionAcademica = AsignacionAcademica::find($input['asignacion_academica_id']);
 		$as = $asignacionAcademica;
 
@@ -89,8 +90,13 @@ class AsistenciaRsController extends Controller
 				or isset($input['excepcion'])
 			) {
 				$asistencias = AsistenciaR::where('fecha', '=', $input['fecha'])
+					->join('clientes as c','c.id','=','asistencia_rs.cliente_id')
 					->where('asignacion_academica_id', '=', $input['asignacion_academica_id'])
-					->orderBy('cliente_id')
+					//->orderBy('cliente_id')
+					->orderBy('c.ape_paterno')
+                    ->orderBy('c.ape_materno')
+                    ->orderBy('c.nombre')
+                    ->orderBy('c.nombre2')
 					->get();
 
 				$inscripciones = Hacademica::where('hacademicas.grupo_id', '=', $asignacionAcademica->grupo_id)
@@ -123,7 +129,12 @@ class AsistenciaRsController extends Controller
 					}
 					$asignacion_academica_id = $input['asignacion_academica_id'];
 					$asistencias = AsistenciaR::where('fecha', '=', $input['fecha'])
+						->join('clientes as c','c.id','=','asistencia_rs.cliente_id')
 						->where('asignacion_academica_id', '=', $input['asignacion_academica_id'])
+						->orderBy('c.ape_paterno')
+						->orderBy('c.ape_materno')
+						->orderBy('c.nombre')
+						->orderBy('c.nombre2')
 						->get();
 					return view('asistenciaRs.buscar', compact('asignacion_academica_id', 'asistencias', 'as'))
 						->with('list', AsistenciaR::getListFromAllRelationApps());
@@ -153,7 +164,12 @@ class AsistenciaRsController extends Controller
 					}
 					$asignacion_academica_id = $input['asignacion_academica_id'];
 					$asistencias = AsistenciaR::where('fecha', '=', $input['fecha'])
+						->join('clientes as c','c.id','=','asistencia_rs.cliente_id')
 						->where('asignacion_academica_id', '=', $input['asignacion_academica_id'])
+						->orderBy('c.ape_paterno')
+						->orderBy('c.ape_materno')
+						->orderBy('c.nombre')
+						->orderBy('c.nombre2')
 						->get();
 					return view('asistenciaRs.buscar', compact('asignacion_academica_id', 'asistencias', 'as'))
 						->with('list', AsistenciaR::getListFromAllRelationApps());

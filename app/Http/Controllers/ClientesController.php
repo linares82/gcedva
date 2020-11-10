@@ -1653,7 +1653,9 @@ class ClientesController extends Controller
 
     public function listaDocumentos()
     {
-        return view('clientes.reportes.listaDocumentos')
+        $empleado = Empleado::where('user_id', Auth::user()->id)->first();
+        $planteles = $empleado->plantels->pluck('razon', 'id');
+        return view('clientes.reportes.listaDocumentos', compact('planteles'))
             ->with('list', Cliente::getListFromAllRelationApps());
     }
 

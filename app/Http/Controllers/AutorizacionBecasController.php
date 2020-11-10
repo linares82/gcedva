@@ -54,9 +54,10 @@ class AutorizacionBecasController extends Controller
 		$datos = $request->all();
 		$cliente = Cliente::find($datos['id']);
 		$tipo_becas = TipoBeca::pluck('name', 'id');
-		$lectivos = Lectivo::join('inscripcions as i', 'i.lectivo_id', '=', 'lectivos.id')
+		$lectivos = Lectivo::join('hacademicas as i', 'i.lectivo_id', '=', 'lectivos.id')
 			->where('i.cliente_id', $cliente->id)
 			->whereNull('i.deleted_at')
+			->distinct()
 			->pluck('lectivos.name', 'lectivos.id');
 		$parametro = Param::where('llave', 'mensualidad_sep')->first();
 		$monto_sep = $parametro->valor;
@@ -126,9 +127,10 @@ class AutorizacionBecasController extends Controller
 		$tipo_becas = TipoBeca::pluck('name', 'id');
 		$autorizacionBeca = $autorizacionBeca->find($id);
 		$cliente = Cliente::find($autorizacionBeca->cliente->id);
-		$lectivos = Lectivo::join('inscripcions as i', 'i.lectivo_id', '=', 'lectivos.id')
+		$lectivos = Lectivo::join('hacademicas as i', 'i.lectivo_id', '=', 'lectivos.id')
 			->where('i.cliente_id', $cliente->id)
 			->whereNull('i.deleted_at')
+			->distinct()
 			->pluck('lectivos.name', 'lectivos.id');
 
 		return view('autorizacionBecas.edit', compact('autorizacionBeca', 'cliente', 'tipo_becas', 'lectivos'))

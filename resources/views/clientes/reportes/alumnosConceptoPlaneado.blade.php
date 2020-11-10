@@ -74,6 +74,16 @@
         show_select_today: 'Hoy',
       });
 
+      $('#seleccionar_planteles').change(function(){
+            if( $(this).is(':checked') ) {
+            $("#plantel_f-field > option").prop("selected","selected");
+                    $("#plantel_f-field").trigger("change");
+            }else{
+            $("#plantel_f-field > option").prop("selected","selected");
+                    $('#plantel_f-field').val(null).trigger('change');
+            }
+        });
+
       $('#plantel_f-field').change(function(){
         getCmbEspecialidad();
       });

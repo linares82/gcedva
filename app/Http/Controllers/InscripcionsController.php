@@ -659,7 +659,9 @@ class InscripcionsController extends Controller
             //->orderBy('hacademicas.grado_id')
             ->orderBy('c.ape_paterno')
             ->orderBy('c.ape_materno')
-
+            ->orderBy('c.nombre')
+            ->orderBy('c.nombre2')
+            
             ->distinct()
             ->get();
 
@@ -1373,6 +1375,10 @@ class InscripcionsController extends Controller
             ->orderBy('hacademicas.lectivo_id')
             ->orderBy('hacademicas.grupo_id')
             ->orderBy('hacademicas.grado_id')
+            ->orderBy('c.ape_paterno')
+            ->orderBy('c.ape_materno')
+            ->orderBy('c.nombre')
+            ->orderBy('c.nombre2')
             ->distinct()
             ->get();
         $total_alumnos = 0;
@@ -2939,8 +2945,10 @@ class InscripcionsController extends Controller
 
     public function InscritosSinMateriasLectivo()
     {
-
-        return view('inscripcions.reportes.inscritosSinMateriasLectivo')
+        $empleado = Empleado::where('user_id', Auth::user()->id)->first();
+        $planteles = $empleado->plantels->pluck('razon', 'id');
+        
+        return view('inscripcions.reportes.inscritosSinMateriasLectivo', compact('planteles'))
             ->with('list', Inscripcion::getListFromAllRelationApps());
     }
 

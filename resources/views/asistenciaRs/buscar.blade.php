@@ -54,7 +54,7 @@
                         @foreach($asistencias as $s)
                         <tr>
                             <td>
-                                {{$s->cliente_id}} - {{ $s->cliente->nombre." ".$s->cliente->nombre2." ".$s->cliente->ape_paterno." ".$s->cliente->ape_materno." " }}
+                                {{$s->cliente_id}} - {{ $s->cliente->ape_paterno." ".$s->cliente->ape_materno." ".$s->cliente->nombre." ".$s->cliente->nombre2 }}
                             </td>
                             <td>{{ $s->cliente->stCliente->name }}</td>
                             <td>{{ $s->fecha }}</td>
