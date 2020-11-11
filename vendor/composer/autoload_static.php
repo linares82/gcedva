@@ -921,6 +921,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'AddFieldsReportsToEmpleadosTable' => __DIR__ . '/../..' . '/database/migrations/2020_07_31_144003_add_fields_reports_to_empleados_table.php',
         'AddFieldsToLectivosTable' => __DIR__ . '/../..' . '/database/migrations/2020_08_07_093123_add_fields_to_lectivos_table.php',
         'AddFileToAutorizacionBecasTable' => __DIR__ . '/../..' . '/database/migrations/2019_11_29_130802_add_file_to_autorizacion_becas_table.php',
+        'AddFmailToClientesTable' => __DIR__ . '/../..' . '/database/migrations/2020_11_10_134733_add_fmail_to_clientes_table.php',
         'AddFolioFacturaToPagosTable' => __DIR__ . '/../..' . '/database/migrations/2020_09_22_162636_add_folio_factura_to_pagos_table.php',
         'AddFolioFacturaToPlantelsTable' => __DIR__ . '/../..' . '/database/migrations/2020_09_22_161826_add_folio_factura_to_plantels_table.php',
         'AddFondoCredencialEspecialidadsTable' => __DIR__ . '/../..' . '/database/migrations/2020_01_20_141610_add_fondo_credencial_especialidads_table.php',

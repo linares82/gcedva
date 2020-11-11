@@ -1341,6 +1341,13 @@
                             <span class="help-block">{{ $errors->first("frfc") }}</span>
                             @endif
                         </div>
+                        <div class="form-group col-md-4 @if($errors->has('fmail')) has-error @endif">
+                            <label for="fmail-field">Correo electronico</label>
+                            {!! Form::text("fmail", null, array("class" => "form-control input-sm", "id" => "fmail-field")) !!}
+                            @if($errors->has("fmail"))
+                            <span class="help-block">{{ $errors->first("frfc") }}</span>
+                            @endif
+                        </div>
                         <div class="form-group col-md-4 @if($errors->has('fcalle')) has-error @endif">
                             <label for="fcalle-field">Calle</label>
                             {!! Form::text("fcalle", null, array("class" => "form-control input-sm", "id" => "fcalle-field")) !!}
