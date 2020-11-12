@@ -151,50 +151,55 @@ class AdeudosController extends Controller
 
             //dd($consecutivo);
             $cliente = Cliente::where('id', $combinacion->cliente_id)->first();
+            if($adeudo->caja_concepto_id==1 or 
+                $adeudo->caja_concepto_id==22 or 
+                $adeudo->caja_concepto_id==23 or 
+                $adeudo->caja_concepto_id==24 or 
+                $adeudo->caja_concepto_id==25){
+                if (($grado->seccion != "" or !is_null($grado->seccion)) and ($cliente->matricula == "" or $cliente->matricula == " ")) {
+                    $consecutivo = ConsecutivoMatricula::where('plantel_id', $combinacion->plantel_id)
+                        ->where('anio', $fecha->year)
+                        ->where('mes', $fecha->month)
+                        ->where('seccion', $grado->seccion)
+                        ->first();
 
-            if (($grado->seccion != "" or !is_null($grado->seccion)) and ($cliente->matricula == "" or $cliente->matricula == " ")) {
-                $consecutivo = ConsecutivoMatricula::where('plantel_id', $combinacion->plantel_id)
-                    ->where('anio', $fecha->year)
-                    ->where('mes', $fecha->month)
-                    ->where('seccion', $grado->seccion)
-                    ->first();
+                    if (is_null($consecutivo)) {
+                        $consecutivo = ConsecutivoMatricula::create(array(
+                            'plantel_id' => $combinacion->plantel_id,
+                            'mes' => $fecha->month,
+                            'anio' => $fecha->year,
+                            'seccion' => $grado->seccion,
+                            'consecutivo' => 1,
+                            'usu_alta_id' => 1,
+                            'usu_mod_id' => 1
+                        ));
+                    } else {
+                        $consecutivo->consecutivo = $consecutivo->consecutivo + 1;
+                        $consecutivo->save();
+                    }
+                    $mes = substr($rellenoPlantel, 0, 2 - strlen($fecha->month)) . $fecha->month;
+                    $anio = $fecha->year - 2000;
+                    $seccion = $grado->seccion;
+                    $plantel = substr($rellenoPlantel, 0, 2 - strlen($combinacion->plantel_id)) . $combinacion->plantel_id;
+                    $consecutivoCadena = substr($rellenoConsecutivo, 0, 3 - strlen($consecutivo->consecutivo)) . $consecutivo->consecutivo;
 
-                if (is_null($consecutivo)) {
-                    $consecutivo = ConsecutivoMatricula::create(array(
-                        'plantel_id' => $combinacion->plantel_id,
-                        'mes' => $fecha->month,
-                        'anio' => $fecha->year,
-                        'seccion' => $grado->seccion,
-                        'consecutivo' => 1,
-                        'usu_alta_id' => 1,
-                        'usu_mod_id' => 1
-                    ));
-                } else {
-                    $consecutivo->consecutivo = $consecutivo->consecutivo + 1;
-                    $consecutivo->save();
-                }
-                $mes = substr($rellenoPlantel, 0, 2 - strlen($fecha->month)) . $fecha->month;
-                $anio = $fecha->year - 2000;
-                $seccion = $grado->seccion;
-                $plantel = substr($rellenoPlantel, 0, 2 - strlen($combinacion->plantel_id)) . $combinacion->plantel_id;
-                $consecutivoCadena = substr($rellenoConsecutivo, 0, 3 - strlen($consecutivo->consecutivo)) . $consecutivo->consecutivo;
+                    $entrada['matricula'] = $mes . $anio . $seccion . $plantel . $consecutivoCadena;
+                    //$i->update($entrada);
 
-                $entrada['matricula'] = $mes . $anio . $seccion . $plantel . $consecutivoCadena;
-                //$i->update($entrada);
+                    //dd($entrada['matricula']);
+                    $cliente->matricula = $entrada['matricula'];
+                    $cliente->save();
+                    Log::info('matricula cliente:' . $cliente->id . "-" . $cliente->matricula);
 
-                //dd($entrada['matricula']);
-                $cliente->matricula = $entrada['matricula'];
-                $cliente->save();
-                Log::info('matricula cliente:' . $cliente->id . "-" . $cliente->matricula);
-
-                if (!is_null($cliente->matricula)) {
-                    $buscarMatricula = UsuarioCliente::where('name', $cliente->matricula)->first();
-                    $buscarMail = UsuarioCliente::where('email', $cliente->mail)->first();
-                    if (is_null($buscarMatricula) and is_null($buscarMail)) {
-                        $usuario_cliente['name'] = $cliente->matricula;
-                        $usuario_cliente['email'] = $cliente->mail;
-                        $usuario_cliente['password'] = Hash::make('123456');
-                        UsuarioCliente::create($usuario_cliente);
+                    if (!is_null($cliente->matricula)) {
+                        $buscarMatricula = UsuarioCliente::where('name', $cliente->matricula)->first();
+                        $buscarMail = UsuarioCliente::where('email', $cliente->mail)->first();
+                        if (is_null($buscarMatricula) and is_null($buscarMail)) {
+                            $usuario_cliente['name'] = $cliente->matricula;
+                            $usuario_cliente['email'] = $cliente->mail;
+                            $usuario_cliente['password'] = Hash::make('123456');
+                            UsuarioCliente::create($usuario_cliente);
+                        }
                     }
                 }
             }

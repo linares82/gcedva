@@ -79,11 +79,11 @@ class InscripcionsController extends Controller
         $input['st_inscripcion_id'] = 0;
 
         $plantel = Plantel::find($input['plantel_id']);
-        $input['control'] =
+        
 
             //create data
             $i = Inscripcion::create($input);
-
+        /*
         //Datos para matricula
         $lectivo = Lectivo::find($i->lectivo_id);
         $fecha = Carbon::createFromFormat('Y-m-d', $lectivo->inicio);
@@ -95,7 +95,7 @@ class InscripcionsController extends Controller
 
         //dd($consecutivo);
         $cliente = Cliente::where('id', $i->cliente_id)->first();
-
+        
         if ($grado->seccion != "" and $cliente->matricula == "") {
             $consecutivo = ConsecutivoMatricula::where('plantel_id', $i->plantel_id)
                 ->where('anio', $fecha->year)
@@ -139,7 +139,7 @@ class InscripcionsController extends Controller
                     UsuarioCliente::create($usuario_cliente);
                 }
             }
-        }
+        }*/
 
         $combinacion = \App\CombinacionCliente::find($i->combinacion_cliente_id);
         if (count($combinacion) > 0) {

@@ -29,6 +29,7 @@ class PagoObserver
     public function created(Pago $pago)
     {
         $this->pago = $pago;
+        $caja=$pago->caja;
         //Crear un registro de ingreso de dinero en ingreso_egresos
         if ($this->pago->cuenta_efectivo_id > 0) {
             $cuentas_efectivo = CuentasEfectivo::where('id', $this->pago->cuenta_efectivo_id)->first();
@@ -71,50 +72,56 @@ class PagoObserver
                 //dd($consecutivo);
                 $cliente = Cliente::where('id', $combinacion->cliente_id)->first();
                 //dd(($grado->seccion != "" or !is_null($grado->seccion)) and ($cliente->matricula == "" or $cliente->matricula == " "));
-                if (($grado->seccion != "" or !is_null($grado->seccion)) and ($cliente->matricula == "" or $cliente->matricula == " ")) {
-                    $consecutivo = ConsecutivoMatricula::where('plantel_id', $combinacion->plantel_id)
-                        ->where('anio', $fecha->year)
-                        ->where('mes', $fecha->month)
-                        ->where('seccion', $grado->seccion)
-                        ->first();
+                if($cajaLn->caja_concepto_id==1 or 
+                $cajaLn->caja_concepto_id==22 or 
+                $cajaLn->caja_concepto_id==23 or 
+                $cajaLn->caja_concepto_id==24 or 
+                $cajaLn->caja_concepto_id==25){
+                    if (($grado->seccion != "" or !is_null($grado->seccion)) and ($cliente->matricula == "" or $cliente->matricula == " ")) {
+                        $consecutivo = ConsecutivoMatricula::where('plantel_id', $combinacion->plantel_id)
+                            ->where('anio', $fecha->year)
+                            ->where('mes', $fecha->month)
+                            ->where('seccion', $grado->seccion)
+                            ->first();
 
-                    if (is_null($consecutivo)) {
-                        $consecutivo = ConsecutivoMatricula::create(array(
-                            'plantel_id' => $combinacion->plantel_id,
-                            'mes' => $fecha->month,
-                            'anio' => $fecha->year,
-                            'seccion' => $grado->seccion,
-                            'consecutivo' => 1,
-                            'usu_alta_id' => 1,
-                            'usu_mod_id' => 1
-                        ));
-                    } else {
-                        $consecutivo->consecutivo = $consecutivo->consecutivo + 1;
-                        $consecutivo->save();
+                        if (is_null($consecutivo)) {
+                            $consecutivo = ConsecutivoMatricula::create(array(
+                                'plantel_id' => $combinacion->plantel_id,
+                                'mes' => $fecha->month,
+                                'anio' => $fecha->year,
+                                'seccion' => $grado->seccion,
+                                'consecutivo' => 1,
+                                'usu_alta_id' => 1,
+                                'usu_mod_id' => 1
+                            ));
+                        } else {
+                            $consecutivo->consecutivo = $consecutivo->consecutivo + 1;
+                            $consecutivo->save();
+                        }
+                        $mes = substr($rellenoPlantel, 0, 2 - strlen($fecha->month)) . $fecha->month;
+                        $anio = $fecha->year - 2000;
+                        $seccion = $grado->seccion;
+                        $plantel = substr($rellenoPlantel, 0, 2 - strlen($combinacion->plantel_id)) . $combinacion->plantel_id;
+                        $consecutivoCadena = substr($rellenoConsecutivo, 0, 3 - strlen($consecutivo->consecutivo)) . $consecutivo->consecutivo;
+
+                        $entrada['matricula'] = $mes . $anio . $seccion . $plantel . $consecutivoCadena;
+                        //$i->update($entrada);
+
+                        //dd($entrada['matricula']);
+                        $cliente->matricula = $entrada['matricula'];
+                        $cliente->save();
+                        Log::info('matricula cliente:' . $cliente->id . "-" . $cliente->matricula);
                     }
-                    $mes = substr($rellenoPlantel, 0, 2 - strlen($fecha->month)) . $fecha->month;
-                    $anio = $fecha->year - 2000;
-                    $seccion = $grado->seccion;
-                    $plantel = substr($rellenoPlantel, 0, 2 - strlen($combinacion->plantel_id)) . $combinacion->plantel_id;
-                    $consecutivoCadena = substr($rellenoConsecutivo, 0, 3 - strlen($consecutivo->consecutivo)) . $consecutivo->consecutivo;
 
-                    $entrada['matricula'] = $mes . $anio . $seccion . $plantel . $consecutivoCadena;
-                    //$i->update($entrada);
+                    if (!is_null($cliente->matricula)) {
+                        $buscarMatricula = UsuarioCliente::where('name', $cliente->matricula)->where('email', $cliente->mail)->first();
 
-                    //dd($entrada['matricula']);
-                    $cliente->matricula = $entrada['matricula'];
-                    $cliente->save();
-                    Log::info('matricula cliente:' . $cliente->id . "-" . $cliente->matricula);
-                }
-
-                if (!is_null($cliente->matricula)) {
-                    $buscarMatricula = UsuarioCliente::where('name', $cliente->matricula)->where('email', $cliente->mail)->first();
-
-                    if (is_null($buscarMatricula)) {
-                        $usuario_cliente['name'] = $cliente->matricula;
-                        $usuario_cliente['email'] = $cliente->mail;
-                        $usuario_cliente['password'] = Hash::make('123456');
-                        UsuarioCliente::create($usuario_cliente);
+                        if (is_null($buscarMatricula)) {
+                            $usuario_cliente['name'] = $cliente->matricula;
+                            $usuario_cliente['email'] = $cliente->mail;
+                            $usuario_cliente['password'] = Hash::make('123456');
+                            UsuarioCliente::create($usuario_cliente);
+                        }
                     }
                 }
 
