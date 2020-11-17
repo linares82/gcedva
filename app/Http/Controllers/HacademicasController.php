@@ -529,7 +529,7 @@ class HacademicasController extends Controller
         foreach ($lectivo->periodoExamens as $periodoExamen) {
             $calificacion_inicio = Carbon::createFromFormat('Y-m-d', $periodoExamen->inicio);
             $calificacion_fin = Carbon::createFromFormat('Y-m-d', $periodoExamen->fin);
-            if ($calificacion_inicio <= $hoy and $calificacion_fin >= $hoy) {
+            if ($calificacion_inicio->lessThanOrEqualTo($hoy)  and $calificacion_fin->greaterThanOrEqualTo($hoy)) {
                 $dentroPeriodoExamenes = $periodoExamen->id;
             }
             $periodos_capturados_total++;
@@ -570,6 +570,10 @@ class HacademicasController extends Controller
                 ->where('hacademicas.materium_id', '=', $asignacionAcademica->materium_id)
                 ->where('c.tpo_examen_id', '=', $data['tpo_examen_id'])
                 ->where('cp.carga_ponderacion_id', '=', $data['carga_ponderacion_id'])
+                ->orderBy('cli.ape_paterno')
+                ->orderBy('cli.ape_materno')
+                ->orderBy('cli.nombre')
+                ->orderBy('cli.nombre2')
                 ->whereNull('hacademicas.deleted_at')
                 ->whereNull('i.deleted_at')
                 ->whereNull('cp.deleted_at')
@@ -581,6 +585,7 @@ class HacademicasController extends Controller
                 ->get();
         } else {
             //if($calificacion_inicio<=$hoy and $calificacion_fin>=$hoy){
+
             if ($dentroPeriodoExamenes > 0) {
                 $hacademicas = HAcademica::select(
                     'cli.id',
@@ -592,7 +597,8 @@ class HacademicasController extends Controller
                     'cp.calificacion_parcial_calculada',
                     'cp.id as calificacion_ponderacion_id',
                     'cp.calificacion_parcial',
-                    'stc.name as estatus_cliente, stc.id as estatus_cliente_id'
+                    'stc.name as estatus_cliente', 
+                    'stc.id as estatus_cliente_id'
                 )
                     ->where('hacademicas.grupo_id', '=', $asignacionAcademica->grupo_id)
                     ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')

@@ -38,7 +38,7 @@
                      </div>
                      <div class="form-group col-md-4 @if($errors->has('materium_id')) has-error @endif">
                         <label for="materium_id-field">Materia</label>
-                        {!! Form::select("materium_id", $list["Materium"], null, array("class" => "form-control select_seguridad", "id" => "materium_id-field")) !!}
+                        {!! Form::select("materium_id", $list["Materium"], $asignacionAcademica->materium_id, array("class" => "form-control select_seguridad", "id" => "materium_id-field")) !!}
                         @if($errors->has("materium_id"))
                          <span class="help-block">{{ $errors->first("materium_id") }}</span>
                         @endif
@@ -145,8 +145,8 @@
        
  
          getCmbInstructores();
-         getCmbMaterias();
          getCmbGrupos();
+	 getCmbMaterias();
        
        $('#plantel_id-field').change(function(){
            getCmbInstructores();
@@ -190,6 +190,11 @@
        function getCmbMaterias(){
            //var $example = $("#especialidad_id-field").select2();
            //$('#materia_id_field option:selected').val($('#materium_id_campo option:selected').val()).change();
+	   @if(isset($asignacionAcademica->materium_id))
+	   materia={{$asignacionAcademica->materium_id}};
+	   @else
+	   materia=$('#materium_id-field').val();
+	   @endif
            var a= $('#formulario').serialize();
                $.ajax({
                    url: '{{ route("materias.getCmbMateria") }}',
@@ -197,7 +202,7 @@
                    data: {
                        plantel_id:$('#plantel_id-field').val(),
                        grupo_id:$('#grupo_id-field').val(),
-                       materium_id:$('#materium_id-field').val()
+                       materium_id:materia
                    },
                    dataType: 'json',
                    beforeSend : function(){$("#loading10").show();},
@@ -215,6 +220,7 @@
                            
                        });
                        //$example.select2();
+	               $('#materium_id-field').change();
                    }
                });       
        }

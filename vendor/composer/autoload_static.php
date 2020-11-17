@@ -1033,6 +1033,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'CreateBandejaAdjuntosTable' => __DIR__ . '/../..' . '/database/migrations/2020_04_03_134050_create_bandeja_adjuntos_table.php',
         'CreateBandejasTable' => __DIR__ . '/../..' . '/database/migrations/2020_04_03_134049_create_bandejas_table.php',
         'CreateBanderasTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_24_164248_create_banderas_table.php',
+        'CreateBsBajasTable' => __DIR__ . '/../..' . '/database/migrations/2020_11_13_113517_create_bs_bajas_table.php',
         'CreateCajaConceptosTable' => __DIR__ . '/../..' . '/database/migrations/2018_04_05_122114_create_caja_conceptos_table.php',
         'CreateCajaCortesTable' => __DIR__ . '/../..' . '/database/migrations/2020_03_04_131743_create_caja_cortes_table.php',
         'CreateCajaLnsTable' => __DIR__ . '/../..' . '/database/migrations/2018_04_10_134753_create_caja_lns_table.php',

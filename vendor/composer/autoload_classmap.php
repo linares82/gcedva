@@ -221,6 +221,7 @@ return array(
     'CreateBandejaAdjuntosTable' => $baseDir . '/database/migrations/2020_04_03_134050_create_bandeja_adjuntos_table.php',
     'CreateBandejasTable' => $baseDir . '/database/migrations/2020_04_03_134049_create_bandejas_table.php',
     'CreateBanderasTable' => $baseDir . '/database/migrations/2017_03_24_164248_create_banderas_table.php',
+    'CreateBsBajasTable' => $baseDir . '/database/migrations/2020_11_13_113517_create_bs_bajas_table.php',
     'CreateCajaConceptosTable' => $baseDir . '/database/migrations/2018_04_05_122114_create_caja_conceptos_table.php',
     'CreateCajaCortesTable' => $baseDir . '/database/migrations/2020_03_04_131743_create_caja_cortes_table.php',
     'CreateCajaLnsTable' => $baseDir . '/database/migrations/2018_04_10_134753_create_caja_lns_table.php',

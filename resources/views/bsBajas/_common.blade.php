@@ -1,0 +1,1 @@
+@section('bsBajasAppTitle','Bajas Brightspace')
