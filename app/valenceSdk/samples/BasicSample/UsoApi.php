@@ -89,13 +89,13 @@ class UsoApi{
         //dd($hostSpec);
         $url = $authContext->createUrlForAuthenticationFromHostSpec($hostSpec, $redirectPage);
         //dd($url);
-        //header("Location: $url");
+        header("Location: $url");
         //return $url;
-        $client = new Client();
-        $result = $client->get($url);
+        //$client = new Client();
+        //$result = $client->get($url);
         //dd($result);
-        $request = $result->getBody()->getContents();
-        dd($request);
+        //$request = $result->getBody()->getContents();
+        //dd($request);
     }
 }
 

@@ -12551,6 +12551,15 @@ Route::get(
         'uses' => 'BsBajasController@prospectosBajas',
     )
 )->middleware('auth');
+Route::get(
+    '/bsBajas/apiAutenticar/',
+    array(
+        'as' => 'bsBajas.apiAutenticar',
+        'middleware' => 'permission:bsBajas.prospectosBajas',
+        'uses' => 'BsBajasController@apiAutenticar',
+    )
+)->middleware('auth');
+
 Route::post(
     '/bsBajas/prospectosBajasR/',
     array(

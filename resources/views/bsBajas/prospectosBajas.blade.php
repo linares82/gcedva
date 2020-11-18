@@ -72,6 +72,7 @@
                 </div>
                 <div class="well well-sm">
                     <button id="submit_tbl" type="submit" class="btn btn-primary">Tabla</button>
+                    <a href="{{ route('bsBajas.apiAutenticar') }}" class="btn btn-warning btn-default">Autenticar API Brigthspace</a>
                 </div>
             {!! Form::close() !!}
             </div>

@@ -133,7 +133,7 @@ class BsBajasController extends Controller {
 
 	public function prospectosBajas(){
 		$planteles=Plantel::pluck('razon','id');
-		return view('BsBajas.prospectosBajas', compact('planteles'));
+		return view('bsBajas.prospectosBajas', compact('planteles'));
 	}
 
 	public function prospectosBajasR(Request $request){
@@ -165,16 +165,34 @@ class BsBajasController extends Controller {
                 ->having('adeudos_cantidad', '>=', 2)
 				->get();
 		//dd($registros->toArray());	
-		return view('BsBajas.prospectosBajasR', compact('registros'));
+		return view('bsBajas.prospectosBajasR', compact('registros'));
 	}
+
+	public function apiAutenticar(Request $request){
+		if (isset($_GET['x_a']) && isset($_GET['x_b'])) {
+			session_start();
+			$_SESSION['userId'] = $_GET['x_a'];
+			$_SESSION['userKey']= $_GET['x_b'];
+			$authenticated = isset($_SESSION['userId']) && isset($_SESSION['userKey']);
+			session_write_close();
+			dd($_SESSION);
+			//header("Location: index.php");
+		} else {
+			$apiBs=new UsoApi();
+			//dd($apiBs->config);
+			$url=$apiBs->authenticate();
+			dd($url);	
+		}
+	}
+
 
 	public function bajasBs(Request $request){
 		$datos=$request->all();
 		//dd($datos);
-		$apiBs=new UsoApi();
-		//dd($apiBs->config);
-		$url=$apiBs->authenticate();
-		dd($url);
+		
+	}
 
+	public function bajsBsAutenticado(){
+		
 	}
 }
