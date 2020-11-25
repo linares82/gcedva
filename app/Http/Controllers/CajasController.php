@@ -60,9 +60,15 @@ class CajasController extends Controller
     {
         $input = $request->all();
         //dd($input);
+        $hoy=Carbon::createFromFormat('Y-m-d', Date('Y-m-d'));
+        $fecha_caja=Carbon::createFromFormat('Y-m-d', $input['fecha']);
 
         if ($input['forma_pago_id'] == 0) {
             Session::flash('msj', 'Forma Pago Vacia');
+            return redirect()->route('cajas.caja')
+                ->withInput();
+        }elseif($fecha_caja->greaterThan($hoy)){
+            Session::flash('msj', 'Fecha de caja no puede ser mayor a la del dia de hoy');
             return redirect()->route('cajas.caja')
                 ->withInput();
         }

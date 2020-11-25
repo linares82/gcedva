@@ -72,7 +72,8 @@
                 </div>
                 <div class="well well-sm">
                     <button id="submit_tbl" type="submit" class="btn btn-primary">Tabla</button>
-                    <a href="{{ route('bsBajas.apiAutenticar') }}" class="btn btn-warning btn-default">Autenticar API Brigthspace</a>
+                    <a href="{{ route('bsBajas.apiAutenticar') }}" class="btn btn-success">Autenticar API Brigthspace</a>
+                    <a href="{{ route('bsBajas.apiDesautenticar') }}" class="btn btn-danger ">Salir API Brigthspace</a>
                 </div>
             {!! Form::close() !!}
             </div>
@@ -80,3 +81,17 @@
     </div>
 
 @endsection
+
+@push('scripts')
+<script type="text/javascript">
+    @if(session()->has('userId') and session()->has('userKey'))
+        $('#submit_tbl').attr("disabled", false);
+	
+    @else
+        $('#submit_tbl').attr("disabled", true);
+	
+
+    @endif
+
+</script>
+@endpush

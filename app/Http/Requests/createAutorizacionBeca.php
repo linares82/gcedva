@@ -24,7 +24,13 @@ class createAutorizacionBeca extends FormRequest
     public function rules()
     {
         return [
-            'archivo_file' => "required"
+            'archivo_file' => "required",
+            'cliente_id'=> "required",
+            'monto_mensualidad'=> "required",
+            'lectivo_id'=> "required",
+            'tipo_beca_id'=> "required",
+            'motivo_id'=> "required",
+            'mensualidad'=> "required",
         ];
     }
 

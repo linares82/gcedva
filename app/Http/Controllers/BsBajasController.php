@@ -9,9 +9,12 @@ use Auth;
 use App\Http\Requests\updateBsBaja;
 use App\Http\Requests\createBsBaja;
 use App\Adeudo;
+use App\Cliente;
+use App\Param;
 use App\Plantel;
 use Carbon\Carbon;
 use DB;
+use Log;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7;
 use GuzzleHttp\Client;
@@ -168,28 +171,68 @@ class BsBajasController extends Controller {
 		return view('bsBajas.prospectosBajasR', compact('registros'));
 	}
 
-	public function apiAutenticar(Request $request){
+	public function apiAutenticar(){
 		if (isset($_GET['x_a']) && isset($_GET['x_b'])) {
-			session_start();
-			$_SESSION['userId'] = $_GET['x_a'];
-			$_SESSION['userKey']= $_GET['x_b'];
-			$authenticated = isset($_SESSION['userId']) && isset($_SESSION['userKey']);
-			session_write_close();
-			dd($_SESSION);
-			//header("Location: index.php");
+			if(session()->has('userId') and session()->has('userKey')){
+				
+				return redirect()->route('bsBajas.prospectosBajas');
+			}
+			session(['userId' => $_GET['x_a']]);
+			session(['userKey' => $_GET['x_b']]);
+			//dd(Param::all()->toArray());
+			$userId=Param::where('llave','idUser_bSpace')->first();
+			if($userId->valor==0){
+				$userId->valor=$_GET['x_a'];
+			}
+			$userId->save();
+			$userKey=Param::where('llave','keyUser_bSpace')->first();
+			if($userKey->valor==0){
+				$userKey->valor=$_GET['x_b'];
+			}
+			$userKey->save();			
+			return redirect()->route('bsBajas.prospectosBajas');
 		} else {
 			$apiBs=new UsoApi();
-			//dd($apiBs->config);
 			$url=$apiBs->authenticate();
-			dd($url);	
+		}
+	}
+
+	public function apiDesautenticar(){
+		if(session()->has('userId') and session()->has('userKey')){
+			$apiBs=new UsoApi();
+			$url=$apiBs->deauthenticate();	
+			return redirect()->route('bsBajas.prospectosBajas');
 		}
 	}
 
 
+
+
 	public function bajasBs(Request $request){
+		//Se reciben datos del form
 		$datos=$request->all();
-		//dd($datos);
 		
+		//Se crea instancia de la clase que controla la API
+		$apiBs=new UsoApi();
+		
+		//Se busca la version de uso de la API
+		$param=Param::where('llave','apiVersion_bSpace')->first();
+		
+		//Lineas comentadas para ejecutar la url de Whoami
+		//$resultado=$apiBs->doValence('GET','/d2l/api/lp/' . $param->valor . '/users/whoami');
+		//dd($resultado);
+		
+		//Se recorren los clientes para obtener datos de brigthspace
+		foreach($datos['bajasBs'] as $c){
+			$alumno=Cliente::find($c);
+			//dd($alumno->matricula);
+			if($alumno->matricula<>""){
+				//Se invoca el metodo doValence con los parametros del verbo y la url igual que en el ejemplo del SDK
+				$resultado=$apiBs->doValence('GET','/d2l/api/lp/' . $param->valor . '/users?orgDefinedId='.$alumno->matricula);
+				//Muestra resultado
+				dd($resultado);	
+			}
+		}
 	}
 
 	public function bajsBsAutenticado(){

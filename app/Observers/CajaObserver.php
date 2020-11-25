@@ -44,8 +44,19 @@ class CajaObserver
                 $cliente->st_cliente_id = 22;
                 $cliente->save();
             }elseif ($this->caja->cliente->st_cliente_id <> 3) {
-                $cliente->st_cliente_id = 4;
-                $cliente->save();
+                if($this->caja->cliente->st_cliente_id==26){
+                    $adeudos = Adeudo::where('cliente_id', $this->caja->cliente_id)->where('pagado_bnd', 0)
+                    ->whereNull('deleted_at')
+                    ->count();
+                    if($adeudos->count()<=1){
+                        $cliente->st_cliente_id = 4;
+                        $cliente->save();
+                    }
+                }else{
+                    $cliente->st_cliente_id = 4;
+                    $cliente->save();
+                }
+                
             }
         }
         if ($this->caja->st_caja_id == 1) {

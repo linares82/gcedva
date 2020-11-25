@@ -62,7 +62,7 @@ class AtrazoPagos extends Command
                 ->whereNotIn('c.plantel_id',array(17,49,74))
                 ->whereNull('cc.deleted_at')
                 ->whereNull('c.deleted_at')
-                ->where('c.st_cliente_id', '<>', 25)
+                //->where('c.st_cliente_id', '<>', 25)
                 ->where('c.st_cliente_id', '<>', 3)
                 ->groupBy('adeudos.cliente_id')
                 ->having('adeudos_cantidad', '>=', 2)

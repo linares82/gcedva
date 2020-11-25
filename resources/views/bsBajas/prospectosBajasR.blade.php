@@ -24,7 +24,7 @@
             {!! Form::open(array('route' => 'bsBajas.bajasBs')) !!}
             <table class="table table-condensed table-striped">
                 <thead>
-                    <th>No.</th><th>Plantel</th><th>Id Cliente</th><th>Cliente</th><th>Estatus</th><th>Adeudos</th>
+                    <th>No.</th><th>Plantel</th><th>Id Cliente</th><th>Matricula</th><th>Cliente</th><th>Estatus</th><th>Adeudos</th>
                     <th><input type="submit" class="btn btn-primary" value="Baja BrightSpace"></th>
                 </thead>
                 <tbody>
@@ -32,7 +32,8 @@
                     @foreach ($registros as $r)
                         <tr>
                             <td>{{ ++$i }}</td>
-                            <td>{{ $r->cliente->plantel->razon }}</td><td>{{ $r->cliente_id }}</td><td>{{ $r->cliente->ape_paterno }} {{ $r->cliente->ape_materno }} {{ $r->cliente->nombre }} {{ $r->cliente->nombre2 }}</td>
+                            <td>{{ $r->cliente->plantel->razon }}</td><td>{{ $r->cliente_id }}</td><td>{{ $r->cliente->matricula }}</td>
+                            <td>{{ $r->cliente->ape_paterno }} {{ $r->cliente->ape_materno }} {{ $r->cliente->nombre }} {{ $r->cliente->nombre2 }}</td>
                             <td>{{ $r->cliente->stCliente->name }}</td>
                             <td>
                                 <a href="#" class="btn btn-warning btn-xs linkAdeudos" data-cliente="{{ $r->cliente->id }}">

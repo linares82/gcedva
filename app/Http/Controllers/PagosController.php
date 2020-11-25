@@ -1375,4 +1375,104 @@ class PagosController extends Controller
         //dd($registros->toArray());
         return view('pagos.reportes.pagosFacturasR', compact('registros'));
     }
+
+    public function pagosCancelados()
+    {
+        $plantels = Plantel::pluck('razon', 'id');
+        return view('pagos.reportes.pagosCancelados', compact('plantels'));
+    }
+
+    public function pagosCanceladosR(Request $request)
+    {
+        $datos = $request->all();
+        //dd($datos);
+        $registros = Pago::select(
+            'p.razon',
+            'fp.name as forma_pago',
+            'c.cliente_id',
+            'cli.matricula',
+            'cli.nombre',
+            'cli.nombre2',
+            'cli.ape_paterno',
+            'cli.ape_materno',
+            'c.consecutivo',
+            'pagos.csc_simplificado',
+            'pagos.fecha as fecha_pago',
+            'pagos.monto',
+            'pagos.uuid',
+            'pagos.bnd_pagado',
+            'stcaj.name as stcaj',
+            'pagos.deleted_at'
+        )
+            ->join('cajas as c', 'c.id', '=', 'pagos.caja_id')
+            ->join('clientes as cli', 'cli.id', '=', 'c.cliente_id')
+            ->join('st_cajas as stcaj','stcaj.id','=','c.st_caja_id')
+            ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
+            ->join('forma_pagos as fp', 'fp.id', '=', 'pagos.forma_pago_id')
+            ->where('c.plantel_id', $datos['plantel_f'])
+            ->where('pagos.fecha', '>=', $datos['fecha_f'])
+            ->where('pagos.fecha', '<=', $datos['fecha_t'])
+            ->where('pagos.bnd_pagado', 1)
+            //->whereNotNull('pagos.deleted_at')
+            ->onlyTrashed()
+            ->whereNull('c.deleted_at')
+            ->orderBy('p.razon')
+            ->orderBy('fp.name')
+            ->orderBy('pagos.uuid')
+            ->get();
+        //dd($registros->toArray());
+        return view('pagos.reportes.pagosCanceladosR', compact('registros'));
+    }
+
+    public function pagosEnLinea()
+    {
+        $plantels = Plantel::pluck('razon', 'id');
+        return view('pagos.reportes.pagosEnLinea', compact('plantels'));
+    }
+
+    public function pagosEnLineaR(Request $request)
+    {
+        $datos = $request->all();
+        //dd($datos);
+        $registros = Pago::select(
+            'p.razon',
+            'fp.name as forma_pago',
+            'c.cliente_id',
+            'cli.matricula',
+            'cli.nombre',
+            'cli.nombre2',
+            'cli.ape_paterno',
+            'cli.ape_materno',
+            'c.consecutivo',
+            'pagos.csc_simplificado',
+            'pagos.fecha as fecha_pago',
+            'pagos.monto',
+            'pagos.uuid',
+            'pagos.bnd_pagado',
+            'stcaj.name as stcaj',
+            'pagos.deleted_at'
+        )
+            ->join('peticion_multipagos as pm','pm.pago_id','=','pagos.id')
+            ->join('success_multipagos as sm','sm.mp_order','=','pm.mp_order')
+            ->whereColumn('sm.mp_reference','pm.mp_reference')
+            ->whereColumn('sm.mp_amount','pm.mp_amount')
+            ->where('mp_response','00')
+            ->join('cajas as c', 'c.id', '=', 'pagos.caja_id')
+            ->join('clientes as cli', 'cli.id', '=', 'c.cliente_id')
+            ->join('st_cajas as stcaj','stcaj.id','=','c.st_caja_id')
+            ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
+            ->join('forma_pagos as fp', 'fp.id', '=', 'pagos.forma_pago_id')
+            ->where('c.plantel_id', $datos['plantel_f'])
+            ->where('pagos.fecha', '>=', $datos['fecha_f'])
+            ->where('pagos.fecha', '<=', $datos['fecha_t'])
+            ->where('pagos.bnd_pagado', 1)
+            ->whereNull('pagos.deleted_at')
+            ->whereNull('c.deleted_at')
+            ->orderBy('p.razon')
+            ->orderBy('fp.name')
+            ->orderBy('pagos.uuid')
+            ->get();
+        //dd($registros->toArray());
+        return view('pagos.reportes.pagosEnLineaR', compact('registros'));
+    }
 }

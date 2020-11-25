@@ -1095,10 +1095,11 @@ Agregar nuevo registro
     var fullDate = new Date()
 
             //convert month to 2 digits
-            var twoDigitMonth = ((fullDate.getMonth().length + 1) === 1)? (fullDate.getMonth() + 1) : '0' + (fullDate.getMonth() + 1);
-    var twoDigitDay = ((fullDate.getDate().length) === 1)? (fullDate.getDate()) : '0' + (fullDate.getDate());
+    //var twoDigitMonth = ((fullDate.getMonth().length + 1) === 1)? (fullDate.getMonth() + 1) : '0' + (fullDate.getMonth() + 1);
+    var twoDigitMonth = (parseInt(fullDate.getMonth()+1) < 10) ? ('0'+ (fullDate.getMonth()+1)) : (fullDate.getMonth()+1);
+    var twoDigitDay = (parseInt(fullDate.getDate().length) < 10)?  '0' + (fullDate.getDate()) : (fullDate.getDate());
     //console.log(twoDigitDay);
-    var currentDate = fullDate.getFullYear() + "/" + twoDigitMonth + "/" + twoDigitDay;
+    var currentDate = fullDate.getFullYear() + "-" + twoDigitMonth + "-" + twoDigitDay;
     $('#fecha-field').val(currentDate);
     
     $('.procesar').on('click', '.procesarAdeudos', function() {
