@@ -3,11 +3,16 @@
 namespace App\Observers;
 
 use App\Adeudo;
+use App\BsBaja;
 use App\Caja;
 use App\Cliente;
+use App\Param;
 use App\Seguimiento;
 use Log;
 use App\Inscripcion;
+use Auth;
+
+use App\valenceSdk\samples\BasicSample\UsoApi;
 
 class CajaObserver
 {
@@ -51,10 +56,76 @@ class CajaObserver
                     if($adeudos->count()<=1){
                         $cliente->st_cliente_id = 4;
                         $cliente->save();
+
+                        $param=Param::where('llave','apiVersion_bSpace')->first();
+                        $bs_activo=$param=Param::where('llave','api_brightSpace_activa')->first();
+                        if($bs_activo->valor==1){
+                            $apiBs=new UsoApi();
+                        
+                            //dd($datos);
+                            $resultado=$apiBs->doValence2('GET','/d2l/api/lp/' . $param->valor . '/users/?orgDefinedId='.$cliente->matricula);	
+                            //Muestra resultado
+                            $r=$resultado[0];
+                            $datos=['isActive'=>True];
+                            if(isset($r['UserId'])){
+                                $resultado2=$apiBs->doValence2('PUT','/d2l/api/lp/' . $param->valor . '/users/'.$r['UserId'].'/activation',$datos);
+                                $bsBaja=BsBaja::where('cliente_id',$cliente->id)
+                                ->where('bnd_baja',1)
+                                ->where('bnd_reactivar','<>',1)
+                                ->first();
+                                if(isset($resultado2['IsActive']) and $resultado2['IsActive'] and !is_null($bsBaja)){
+                                    $input['cliente_id']=$cliente->id;
+                                    $input['fecha_reactivar']=Date('Y-m-d');
+                                    $input['bnd_reactivar']=1;
+                                    $input['usu_mod_id']=Auth::user()->id;
+                                    $bsBaja->update($input);
+                                }else{
+                                    $input['cliente_id']=$cliente->id;
+                                    $input['fecha_reactivar']=Date('Y-m-d');
+                                    $input['bnd_reactivar']=0;
+                                    $input['usu_mod_id']=Auth::user()->id;
+                                    $bsBaja->update($input);
+                                    $bsBaja->update($input);
+                                }
+                            }
+                        }
                     }
                 }else{
                     $cliente->st_cliente_id = 4;
                     $cliente->save();
+                    
+                    $param=Param::where('llave','apiVersion_bSpace')->first();
+                    $bs_activo=$param=Param::where('llave','api_brightSpace_activa')->first();
+                    if($bs_activo->valor==1){
+                        $apiBs=new UsoApi();
+                        
+                        //dd($datos);
+                        $resultado=$apiBs->doValence2('GET','/d2l/api/lp/' . $param->valor . '/users/?orgDefinedId='.$cliente->matricula);	
+                        //Muestra resultado
+                        $r=$resultado[0];
+                        $datos=['isActive'=>True];
+                        if(isset($r['UserId'])){
+                            $resultado2=$apiBs->doValence2('PUT','/d2l/api/lp/' . $param->valor . '/users/'.$r['UserId'].'/activation',$datos);
+                            $bsBaja=BsBaja::where('cliente_id',$cliente->id)
+                            ->where('bnd_baja',1)
+                            ->whereNull('bnd_reactivar')
+                            ->first();
+                //dd($bsBaja);
+                            if(isset($resultado2['IsActive']) and $resultado2['IsActive'] and !is_null($bsBaja)){
+                                $input['cliente_id']=$cliente->id;
+                                $input['fecha_reactivar']=Date('Y-m-d');
+                                $input['bnd_reactivar']=1;
+                                $input['usu_mod_id']=Auth::user()->id;
+                                $bsBaja->update($input);
+                            }else{
+                                $input['cliente_id']=$cliente->id;
+                                $input['fecha_reactivar']=Date('Y-m-d');
+                                $input['bnd_reactivar']=0;
+                                $input['usu_mod_id']=Auth::user()->id;
+                                $bsBaja->update($input);
+                            }
+                        }
+                    }
                 }
                 
             }

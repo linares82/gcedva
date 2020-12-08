@@ -54,6 +54,7 @@ class AtrazoPagos extends Command
                 ->where('cc.nivel_id', '>', 0)
                 ->where('cc.grado_id', '>', 0)
                 ->where('cc.turno_id', '>', 0)
+                ->where('c.id', 1367)
                 ->whereColumn('adeudos.combinacion_cliente_id', 'cc.id')
                 ->join('caja_conceptos as caj_con', 'caj_con.id', '=', 'adeudos.caja_concepto_id')
                 ->where('caj_con.bnd_mensualidad', 1)
@@ -67,8 +68,9 @@ class AtrazoPagos extends Command
                 ->groupBy('adeudos.cliente_id')
                 ->having('adeudos_cantidad', '>=', 2)
                 ->get();
+               
 
-            //dd($registros->toArray());
+            dd($registros->toArray());
 
             foreach ($registros as $registro) {
                 $hoy = date('Y-m-d');

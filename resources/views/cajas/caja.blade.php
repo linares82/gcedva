@@ -1097,7 +1097,7 @@ Agregar nuevo registro
             //convert month to 2 digits
     //var twoDigitMonth = ((fullDate.getMonth().length + 1) === 1)? (fullDate.getMonth() + 1) : '0' + (fullDate.getMonth() + 1);
     var twoDigitMonth = (parseInt(fullDate.getMonth()+1) < 10) ? ('0'+ (fullDate.getMonth()+1)) : (fullDate.getMonth()+1);
-    var twoDigitDay = (parseInt(fullDate.getDate().length) < 10)?  '0' + (fullDate.getDate()) : (fullDate.getDate());
+    var twoDigitDay = (parseInt(fullDate.getDate()) < 10)?  '0' + (fullDate.getDate()) : (fullDate.getDate());
     //console.log(twoDigitDay);
     var currentDate = fullDate.getFullYear() + "-" + twoDigitMonth + "-" + twoDigitDay;
     $('#fecha-field').val(currentDate);

@@ -25,7 +25,10 @@
             <table class="table table-condensed table-striped">
                 <thead>
                     <th>No.</th><th>Plantel</th><th>Id Cliente</th><th>Matricula</th><th>Cliente</th><th>Estatus</th><th>Adeudos</th>
-                    <th><input type="submit" class="btn btn-primary" value="Baja BrightSpace"></th>
+                    <th>
+			<input type="submit" class="btn btn-primary" value="Baja BrightSpace"><br/>
+			<label>*<input type="checkbox" checked id="seleccionar_todo">Seleccionar Todo</label>
+		    </th>
                 </thead>
                 <tbody>
                     
@@ -39,12 +42,29 @@
                                 <a href="#" class="btn btn-warning btn-xs linkAdeudos" data-cliente="{{ $r->cliente->id }}">
                                     {{ $r->adeudos_cantidad }}
                                 </a>
-                                
                             </td>
                             <td>
-                                {{ Form::checkbox('bajasBs[]', $r->cliente->id, true) }}
+                                {{ Form::checkbox('bajasBs[]', $r->cliente->id, true, array('class'=>'bajasBs')) }}
                                 <!--<input type="checkbox" checked class="bajasBs" value="{{$r->cliente->id}}" />-->
                             </td>
+                            @php
+                            //$bsBajas=App\BsBaja::where('cliente_id',$r->cliente_id)->where('bnd_reactivar','<>',1)->get();    
+                            @endphp
+                            <!--<td>
+                                <table>
+                                    <thead>
+                                        <th>B. Fecha</th><th>B. Realizada</th><th>R. Fecha</th><th>R. Realizada</th>    
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            @foreach($bsBajas as $bsBaja)
+                                            <td>{{ $bsBaja->fecha_baja }}</td><td>{{ $bsBaja->bnd_baja }}</td><td>{{ $bsBaja->fecha_reactivar }}</td><td>{{ $bsBaja->bnd_reactivar }}</td>
+                                            @endforeach
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+				-->
                         </tr>
                     @endforeach
                     
@@ -68,6 +88,14 @@
         $('#cliente_id-field').val($(this).data('cliente'));
         $('#frmAdeudos').submit();    
     });
+
+    $('#seleccionar_todo').change(function(){
+            if( $(this).is(':checked') ) {
+            	$(".bajasBs").click();
+            }else{
+            	$(".bajasBs").removeAttr("checked","false");
+            }
+        });
 
 </script>
 @endpush

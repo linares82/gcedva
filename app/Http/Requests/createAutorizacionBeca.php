@@ -29,8 +29,9 @@ class createAutorizacionBeca extends FormRequest
             'monto_mensualidad'=> "required",
             'lectivo_id'=> "required",
             'tipo_beca_id'=> "required",
-            'motivo_id'=> "required",
-            'mensualidad'=> "required",
+            'motivo_beca_id'=> "required",
+            'mensualidad_sep'=> "required",
+
         ];
     }
 

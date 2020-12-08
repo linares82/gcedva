@@ -25,7 +25,7 @@ class updateEmpleado extends FormRequest
     {
         return [
             //'cve_empleado',
-            'nombre'=>'required',
+            /*'nombre'=>'required',
             'ape_paterno'=>'required',
             //'ape_materno'=>'required',
             'puesto_id'=>'required',
@@ -42,6 +42,7 @@ class updateEmpleado extends FormRequest
             'evaluacion_psico_file'=> 'max:1000',
             'plantel_id'=>'required',
             'st_empleado_id'=>'required',
+            */
         ];
     }
 

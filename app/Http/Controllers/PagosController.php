@@ -1475,4 +1475,79 @@ class PagosController extends Controller
         //dd($registros->toArray());
         return view('pagos.reportes.pagosEnLineaR', compact('registros'));
     }
+
+    public function pagosDosMeses(){
+        $plantels = Plantel::pluck('razon', 'id');
+        return view('pagos.reportes.pagosDosMeses', compact('plantels'));
+    }
+
+    public function pagosDosMesesR(Request $request){
+        $datos=$request->all();
+        //dd($datos);
+        $anioActual=Carbon::createFromFormat('Y-m-d', $datos['fecha_f'])->year;
+        $mesActual=Carbon::createFromFormat('Y-m-d', $datos['fecha_f'])->month;
+        //dd('fi');
+        $mesAnterior=0;
+        $anioAnterior=0;
+        $registros=array();
+        if($mesActual==1){
+            $mesAnterior=12;
+            $anioAnterior=$anioActual-1;
+        }else{
+            $mesAnterior=$mesActual-1;
+            $anioAnterior=$anioActual;
+        }
+        $mesAnteriorDesc=Mese::find($mesAnterior);
+        $mesActualDesc=Mese::find($mesActual);
+        array_push($registros, array('Planteles', $mesAnteriorDesc->name, $mesActualDesc->name, 'Porcentaje de Recuperacion', 'Diferencia'));
+        foreach($datos['plantel_f'] as $plantel){
+            $registro=array();
+            $rPlantel=Plantel::find($plantel);
+            $registro['plantel']=$rPlantel->razon;
+            $r1=Caja::join('caja_lns as ln','ln.caja_id','=','cajas.id')
+            ->join('caja_conceptos as cc','cc.id','=','ln.caja_concepto_id')
+            ->join('pagos as p','p.caja_id','=','cajas.id')
+            ->whereMonth('p.fecha', $mesAnterior)
+            ->whereYear('p.fecha', $anioAnterior)
+            ->where('cajas.plantel_id', $plantel)
+            ->where('cajas.st_caja_id',1)
+            ->where('cc.bnd_mensualidad',1)
+            ->whereNull('cajas.deleted_at')
+            ->whereNull('ln.deleted_at')
+            ->whereNull('p.deleted_at')
+            ->count();
+            
+            //$registro['mesAnterior']=$mes->name;
+            $registro['mesAnteriorTotal']=number_format($r1);
+
+            $r2=Caja::join('caja_lns as ln','ln.caja_id','=','cajas.id')
+            ->join('caja_conceptos as cc','cc.id','=','ln.caja_concepto_id')
+            ->join('pagos as p','p.caja_id','=','cajas.id')
+            ->whereMonth('p.fecha', $mesActual)
+            ->whereYear('p.fecha', $anioActual)
+            ->where('cajas.plantel_id', $plantel)
+            ->where('cajas.st_caja_id',1)
+            ->where('cc.bnd_mensualidad',1)
+            ->whereNull('cajas.deleted_at')
+            ->whereNull('ln.deleted_at')
+            ->whereNull('p.deleted_at')
+            ->count();
+            
+
+            //$registro['mesActual']=$mes->name;
+            $registro['mesActualTotal']=number_format($r2);
+            if($r1==0 and $r2>0){
+                $registro['recuperacion']=100;    
+            }elseif(($r1>0 and $r2==0) or ($r1==0 and $r2==0)){
+                $registro['recuperacion']=0;    
+            }else{
+                $registro['recuperacion']=number_format(($r2*100)/$r1,2);
+            }
+            $registro['diferencia']=number_format($r1-$r2);
+            array_push($registros, $registro);
+        }
+        //dd($registros);
+        
+        return view('pagos.reportes.pagosDosMesesR', compact('registros'));
+    }
 }

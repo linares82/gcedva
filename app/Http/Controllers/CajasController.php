@@ -60,9 +60,12 @@ class CajasController extends Controller
     {
         $input = $request->all();
         //dd($input);
+        if (!isset($input['fecha'])) {
+            $input['fecha'] = Date('Y-m-d');
+        }
         $hoy=Carbon::createFromFormat('Y-m-d', Date('Y-m-d'));
         $fecha_caja=Carbon::createFromFormat('Y-m-d', $input['fecha']);
-
+        //dd($input);
         if ($input['forma_pago_id'] == 0) {
             Session::flash('msj', 'Forma Pago Vacia');
             return redirect()->route('cajas.caja')
@@ -73,9 +76,7 @@ class CajasController extends Controller
                 ->withInput();
         }
 
-        if (!isset($input['fecha'])) {
-            $input['fecha'] = Date('Y-m-d');
-        }
+        
         //dd($input);
         $cliente = Cliente::find($input['cliente_id']);
 

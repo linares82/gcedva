@@ -39,8 +39,8 @@
                     <p class="form-control-static">{{$bsBaja->id}}</p>
                 </div>
                 <div class="form-group">
-                     <label for="cliente_id">CLIENTE_ID</label>
-                     <p class="form-control-static">{{$bsBaja->cliente_id}}</p>
+                     <label for="cliente_nombre">CLIENTE_NOMBRE</label>
+                     <p class="form-control-static">{{$bsBaja->cliente->nombre}}</p>
                 </div>
                     <div class="form-group">
                      <label for="fecha_baja">FECHA_BAJA</label>

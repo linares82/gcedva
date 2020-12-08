@@ -89,7 +89,8 @@ class AsistenciaRsController extends Controller
 			if ((strtotime($input['fecha']) == $hoy && strtotime($as->fec_inicio) <= strtotime($input['fecha']) && strtotime($as->fec_fin) >= strtotime($input['fecha']))
 				or isset($input['excepcion'])
 			) {
-				$asistencias = AsistenciaR::where('fecha', '=', $input['fecha'])
+				$asistencias = AsistenciaR::select('asistencia_rs.*','c.nombre','c.nombre2','c.ape_paterno','c.ape_materno')
+					->where('fecha', '=', $input['fecha'])
 					->join('clientes as c','c.id','=','asistencia_rs.cliente_id')
 					->where('asignacion_academica_id', '=', $input['asignacion_academica_id'])
 					//->orderBy('cliente_id')
@@ -128,7 +129,8 @@ class AsistenciaRsController extends Controller
 
 					}
 					$asignacion_academica_id = $input['asignacion_academica_id'];
-					$asistencias = AsistenciaR::where('fecha', '=', $input['fecha'])
+					$asistencias = AsistenciaR::select('asistencia_rs.*','c.nombre','c.nombre2','c.ape_paterno','c.ape_materno')
+						->where('fecha', '=', $input['fecha'])
 						->join('clientes as c','c.id','=','asistencia_rs.cliente_id')
 						->where('asignacion_academica_id', '=', $input['asignacion_academica_id'])
 						->orderBy('c.ape_paterno')
@@ -163,7 +165,8 @@ class AsistenciaRsController extends Controller
 						}
 					}
 					$asignacion_academica_id = $input['asignacion_academica_id'];
-					$asistencias = AsistenciaR::where('fecha', '=', $input['fecha'])
+					$asistencias = AsistenciaR::select('asistencia_rs.*','c.nombre','c.nombre2','c.ape_paterno','c.ape_materno')
+						->where('fecha', '=', $input['fecha'])
 						->join('clientes as c','c.id','=','asistencia_rs.cliente_id')
 						->where('asignacion_academica_id', '=', $input['asignacion_academica_id'])
 						->orderBy('c.ape_paterno')

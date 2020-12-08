@@ -154,7 +154,7 @@ class CalificacionsController extends Controller {
 								->whereNull('calif.deleted_at')
 								->whereNull('cp.deleted_at')
 								->get();
-			dd($registros->toArray());					 
+			//dd($registros->toArray());					 
 
 		return view('calificacions.reportes.promediosR', compact('plantels'));
 		

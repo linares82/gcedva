@@ -28,6 +28,7 @@
                           <span class="help-block">{{ $errors->first("ape_materno") }}</span>
                          @endif
                       </div>
+                      @permission('empleados.verDatosPersonales')
                       <div class="form-group col-md-4 @if($errors->has('rfc')) has-error @endif">
                          <label for="rfc-field">RFC</label>
                          {!! Form::text("rfc", null, array("class" => "form-control input-sm", "id" => "rfc-field")) !!}
@@ -147,8 +148,10 @@
                         <span class="help-block">{{ $errors->first("fec_inicio_experiencia_academicas") }}</span>
                       @endif
                     </div>
+                    @endpermission
                       </div>
                     </div>
+                    @permission('empleados.verDatosPlantel')
                     <div class="box box-default">
                       <div class="box-body">
                         <div class="form-group col-md-4 @if($errors->has('puesto_id')) has-error @endif">
@@ -243,8 +246,9 @@
                         </div>  
                       </div>
                     </div>
+                    @endpermission
                     
-                    
+                    @permission('empleados.verDatosContrato')
                     <div class="box box-default">
                       <div class="box-body">
                         <div class="form-group col-md-3 @if($errors->has('tipo_contrato_id')) has-error @endif">
@@ -286,6 +290,9 @@
                       
                       </div>
                     </div>
+                    @endpermission
+
+                    @permission('empleados.verDocumentos')
                     @if(isset($empleado))
                     <div class="box box-default">
                       <div class="box-body">
@@ -386,7 +393,7 @@
                       </div>
                     </div>
                     @endif
-                    
+                    @endpermission
 @push('scripts')
 <script src="{{ asset ('/bower_components/AdminLTE/plugins/tinymce/js/tinymce/tinymce.min.js') }}"></script>
 <script src="{{ asset ('/bower_components/AdminLTE/plugins/tinymce/js/tinymce/tinymce_editor.js') }}"></script>

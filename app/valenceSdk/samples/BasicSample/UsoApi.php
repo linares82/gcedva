@@ -24,10 +24,7 @@ use App\valenceSdk\lib\D2LHostSpec;
 use App\valenceSdk\lib\D2LUserContext;
 use App\Param;
 use Exception;
-use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\Psr7;
-use GuzzleHttp\Client;
-
+use Log;
 class UsoApi{
     public $config=array();
 
@@ -35,6 +32,8 @@ class UsoApi{
 
         $this->config['libpath']='../../lib';
         
+        $activo=$param=Param::where('llave','api_brightSpace_activa')->first();
+
         $param=Param::where('llave','url_bSpace')->first();
         $this->config['host']=$param->valor;
         $this->config['port']=443;
@@ -45,7 +44,7 @@ class UsoApi{
         $param=Param::where('llave','key_bSpace')->first();
         $this->config['appKey']=$param->valor;
 
-	$param=Param::where('llave','idUser_bSpace')->first();
+	    $param=Param::where('llave','idUser_bSpace')->first();
         $this->config['idUser']=$param->valor;
         $param=Param::where('llave','keyUser_bSpace')->first();
         $this->config['keyUser']=$param->valor;

@@ -1818,11 +1818,12 @@ class InscripcionsController extends Controller
                 ->where('hacademicas.lectivo_id', $asignacion->lectivo_id)
                 ->where('hacademicas.grupo_id', $asignacion->grupo_id)
                 //->where('inscripcions.grado_id ',$asignacion->grado_id)
-                ->where('aa.plantel_id', $asignacion->plantel_id)
-                ->where('aa.lectivo_id', $asignacion->lectivo_id)
-                ->where('aa.grupo_id', $asignacion->grupo_id)
-                ->where('aa.empleado_id', $asignacion->empleado_id)
-                ->where('aa.materium_id', $asignacion->materium_id)
+                //->where('aa.id', $asignacion->id)
+		//->where('aa.plantel_id', $asignacion->plantel_id)
+                //->where('aa.lectivo_id', $asignacion->lectivo_id)
+                //->where('aa.grupo_id', $asignacion->grupo_id)
+                //->where('aa.empleado_id', $asignacion->empleado_id)
+                //->where('aa.materium_id', $asignacion->materium_id)
                 ->where('hacademicas.materium_id', $asignacion->materium_id)
                 ->whereNull('hacademicas.deleted_at')
                 ->whereNull('aa.deleted_at')
@@ -1930,12 +1931,26 @@ class InscripcionsController extends Controller
                 /*if($loop==1){
                 Log::info("FLC-" . $asignacion->id . "-" . $total_alumnos);
                 }*/
+		$cadena_fechas_planeadas="";
+		$longitud=count($fechas);
+		foreach($fechas as $i=>$fecha){
+			//dd($i);
+			if($i==$longitud-1){
+				//dd($i);
+				$cadena_fechas_planeadas=$cadena_fechas_planeadas."'".$fecha."'";
+			}else{
+				$cadena_fechas_planeadas=$cadena_fechas_planeadas."'".$fecha."', ";
+			}
+		}
+		$cadena='fecha in ('.$cadena_fechas_planeadas.')';
+//dd($cadena);
                 $asistencias_reales = \App\AsistenciaR::where('asignacion_academica_id', $asignacion->id)
                     ->where('cliente_id', $r->cliente)
                     ->whereIn('est_asistencia_id', array(1, 4))
                     ->whereNotIn('cliente_id', [0, 2])
                     ->where('fecha', '>=', $data['fecha_f'])
                     ->where('fecha', '<=', $data['fecha_t'])
+		    //->whereRaw($cadena)	
                     ->count();
                 //->get();
 
@@ -1947,6 +1962,7 @@ class InscripcionsController extends Controller
                 $sumatoria_promedio_clientes_asignacion = $sumatoria_promedio_clientes_asignacion + $promedio_cliente;
                 $sumatoria_promedio_clientes = $sumatoria_promedio_clientes + $promedio_cliente;
             }
+	    //dd($sumatoria_promedio_clientes_asignacion." - ".$contador_clientes_asignacion);
             if ($contador_clientes_asignacion > 0) {
                 $resul = $sumatoria_promedio_clientes_asignacion / $contador_clientes_asignacion;
             } else {

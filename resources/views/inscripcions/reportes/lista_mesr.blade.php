@@ -139,6 +139,7 @@
                                             ->where('cliente_id',$r->cliente)
                                             ->whereNotIn('cliente_id',[0,2])
                                             ->get();
+				    //dd($fechas->toArray());
                                  
                                 ?>
                                 @foreach($fechas_enc as $fecha_enc)
@@ -154,7 +155,6 @@
                                             
                                             $marcador=1;
                                             ?>
-                                            <td class="centrar_texto">  </td>                                            
                                             @endif
                                             
                                         @endforeach    
@@ -163,8 +163,11 @@
                                     <?php $i=1; ?>
                                     @if($marcador==0)
                                         <td></td>
-                                    @endif
-                                @endforeach
+                                    @else
+                                        <td class="centrar_texto"> X </td>
+
+                                    @endif                                
+				@endforeach
                                 <?php 
                                 //$porcentaje = round((($asistencias*100)/$total_asistencias),2);
                                 //$asistencias_acumuladas=$asistencias+$asistencias_acumuladas;
@@ -172,7 +175,7 @@
                                  
                                  
                                 ?>
-                                <td></td>
+                                <td>{{$asistencias}}</td>
                                 <?php 
                                 $caja=\App\Caja::where('cliente_id',$r->id)->latest()->first();
                                 ?>

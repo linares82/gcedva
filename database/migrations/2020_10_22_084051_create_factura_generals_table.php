@@ -23,7 +23,7 @@ class CreateFacturaGeneralsTable extends Migration {
             $table->string('serie')->nullable();
             $table->integer('usu_alta_id')->unsigned();
 			$table->integer('usu_mod_id')->unsigned();
-			$table->integer('usu_eliminar_id')->unsigned();
+			$table->integer('usu_eliminar_id')->unsigned()->default(1);
             $table->timestamps();
 			$table->softDeletes();
 			$table->foreign('usu_alta_id')->references('id')->on('users');

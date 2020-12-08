@@ -16,9 +16,9 @@ class CreateBsBajasTable extends Migration {
             $table->increments('id');
             $table->integer('cliente_id')->unsigned();
             $table->date('fecha_baja');
-            $table->integer('bnd_baja');
-            $table->date('fecha_reactivar');
-            $table->integer('bnd_reactivar');
+            $table->integer('bnd_baja')->nullable();
+            $table->date('fecha_reactivar')->nullable();
+            $table->integer('bnd_reactivar')->nullable();
             $table->integer('usu_alta_id')->unsigned();
             $table->integer('usu_mod_id')->unsigned();
             $table->timestamps();

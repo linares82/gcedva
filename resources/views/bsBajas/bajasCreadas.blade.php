@@ -22,7 +22,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="row">
-                {!! Form::open(array('route' => 'bsBajas.prospectosBajasR', 'id'=>'frm_reporte')) !!}
+                {!! Form::open(array('route' => 'bsBajas.bajasCreadasR', 'id'=>'frm_reporte')) !!}
 
 <!--                <div class="form-group col-md-6 @if($errors->has('estatus_f')) has-error @endif">
                     <label for="estatus_f-field">Estatus de:</label>
@@ -48,7 +48,7 @@
                     <span class="help-block">{{ $errors->first("plantel_f") }}</span>
                     @endif
                 </div>
-            <!--
+            
                 <div class="form-group col-md-6 @if($errors->has('fecha_f')) has-error @endif">
                     <label for="fecha_f-field">Fecha de:</label>
                     {!! Form::text("fecha_f", null, array("class" => "form-control input-sm", "id" => "fecha_f-field")) !!}
@@ -63,7 +63,7 @@
                     <span class="help-block">{{ $errors->first("fecha_t") }}</span>
                     @endif
                 </div>
-            -->
+            
                 
                 
                 
@@ -72,10 +72,11 @@
                 </div>
                 <div class="well well-sm">
                     <button id="submit_tbl" type="submit" class="btn btn-primary">Tabla</button>
-		    @permission('bsBajas.id_key_bs')
+                    @permission('bsBajas.id_key_bs')
                     <a href="{{ route('bsBajas.apiAutenticar') }}" class="btn btn-success ">Autenticar API Brigthspace</a>
-                    <a href="{{ route('bsBajas.apiDesautenticar') }}" class="btn btn-danger ">Salir API Brigthspace</a>
-		    @endpermission
+                    <!--<a href="{{ route('bsBajas.apiDesautenticar') }}" class="btn btn-danger ">Salir API Brigthspace</a>-->
+        		    @endpermission
+
                 </div>
             {!! Form::close() !!}
             </div>
@@ -86,6 +87,20 @@
 
 @push('scripts')
 <script type="text/javascript">
-    
+	$('#fecha_f-field').Zebra_DatePicker({
+                            days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
+                            months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                            readonly_element: false,
+                            lang_clear_date: 'Limpiar',
+                            show_select_today: 'Hoy',
+                          });
+	$('#fecha_t-field').Zebra_DatePicker({
+                            days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
+                            months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                            readonly_element: false,
+                            lang_clear_date: 'Limpiar',
+                            show_select_today: 'Hoy',
+                          });
+
 </script>
 @endpush
