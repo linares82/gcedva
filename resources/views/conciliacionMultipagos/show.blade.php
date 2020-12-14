@@ -58,6 +58,14 @@
                     <label for="contador_ejecucion">Cuenta</label>
                     <p class="form-control-static">{{$conciliacionMultipago->cuentaP->name}}</p>
                </div>
+               <div class="form-group col-sm-3">
+                    <label for="fec_inicio">F. Inicio</label>
+                    <p class="form-control-static">{{$conciliacionMultipago->fec_inicio}}</p>
+                </div>
+                <div class="form-group col-sm-3">
+                    <label for="fec_fin">F. Fin</label>
+                    <p class="form-control-static">{{$conciliacionMultipago->fec_fin}}</p>
+                </div>
                     <div class="form-group col-sm-3">
                      <label for="usu_alta_id">ALTA</label>
                      <p class="form-control-static">{{$conciliacionMultipago->usu_alta->name}}</p>

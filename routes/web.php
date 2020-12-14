@@ -8268,6 +8268,14 @@ Route::post(
     )
 )->middleware('auth');
 Route::post(
+    '/cajas/cancelarEnLinea',
+    array(
+        'as' => 'cajas.cancelarEnLinea',
+        'middleware' => 'permission:cajas.cancelarEnLinea',
+        'uses' => 'CajasController@cancelarEnLinea'
+    )
+)->middleware('auth');
+Route::post(
     '/cajas/pagar',
     array(
         'as' => 'cajas.pagar',
@@ -12607,7 +12615,7 @@ Route::get(
         'uses' => 'BsBajasController@apiAutenticar',
     )
 )->middleware('auth');
-/*
+
 Route::get(
     '/bsBajas/apiDesautenticar/',
     array(
@@ -12616,7 +12624,7 @@ Route::get(
         'uses' => 'BsBajasController@apiDesautenticar',
     )
 )->middleware('auth');
-*/
+
 Route::post(
     '/bsBajas/prospectosBajasR/',
     array(

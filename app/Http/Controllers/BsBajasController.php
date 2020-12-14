@@ -19,8 +19,10 @@ use Log;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7;
 use GuzzleHttp\Client;
-
+use Exception;
+use Throwable;
 use App\valenceSdk\samples\BasicSample\UsoApi;
+
 class BsBajasController extends Controller {
 
 	/**
@@ -173,15 +175,16 @@ class BsBajasController extends Controller {
 	}
 
 	public function apiAutenticar(){
+		//dd(session()->all());
 		if (isset($_GET['x_a']) && isset($_GET['x_b'])) {
 			if(session()->has('userId') and session()->has('userKey')){
-				
 				return redirect()->route('bsBajas.prospectosBajas');
 			}
 			session(['userId' => $_GET['x_a']]);
 			session(['userKey' => $_GET['x_b']]);
 			//dd(Param::all()->toArray());
 			$userId=Param::where('llave','idUser_bSpace')->first();
+			//dd($userId);
 			if($userId->valor==0){
 				$userId->valor=$_GET['x_a'];
 			}
@@ -222,12 +225,13 @@ class BsBajasController extends Controller {
 			$param=Param::where('llave','apiVersion_bSpace')->first();
 			
 			//Lineas comentadas para ejecutar la url de Whoami
-			//$resultado=$apiBs->doValence('GET','/d2l/api/lp/' . $param->valor . '/users/whoami');
+			//$resultado=$apiBs->doValence2('GET','/d2l/api/lp/' . $param->valor . '/users/whoami');
 			//dd($resultado);
 			
 			//Se recorren los clientes para obtener datos de brigthspace
 			foreach($datos['bajasBs'] as $c){
-				$alumno=Cliente::find($c);
+				try {
+					$alumno=Cliente::find($c);
 				$fechaActual = Carbon::createFromFormat('Y-m-d', Date('Y-m-d'));
 				$adeudos = Adeudo::select(DB::raw('adeudos.cliente_id, count(adeudos.cliente_id) as adeudos_cantidad'))
 					->join('clientes as c', 'c.id', '=', 'adeudos.cliente_id')
@@ -266,6 +270,7 @@ class BsBajasController extends Controller {
 					//dd($datos);
 					if(isset($r['UserId'])){
 						$resultado2=$apiBs->doValence2('PUT','/d2l/api/lp/' . $param->valor . '/users/'.$r['UserId'].'/activation',$datos);
+						//dd($resultado2);
 						if(isset($resultado2['IsActive']) and !$resultado2['IsActive']){
 							$input['cliente_id']=$alumno->id;
 							$input['fecha_baja']=Date('Y-m-d');
@@ -314,6 +319,10 @@ class BsBajasController extends Controller {
 						}
 					}
 					//dd($resultado2['IsActive']);
+				}
+				} catch (Exception $e) {
+					Log::info("cliente no encontrado en Brigth Space u otro error: ".$alumno->matricula." - ".$e->getMessage());
+					//return false;
 				}
 			}
 		}

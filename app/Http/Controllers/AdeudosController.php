@@ -1188,7 +1188,7 @@ class AdeudosController extends Controller
                         $registro->adeudo_planeado = $registro->adeudo_planeado + ($registro->adeudo_planeado * .10);
                     }
                     array_push($lineas_detalle, $registro->toArray());
-
+                    //dd($lineas_detalle);
 
 
                     //Fin Armado de detalle

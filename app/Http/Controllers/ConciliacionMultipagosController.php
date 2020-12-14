@@ -376,8 +376,8 @@ class ConciliacionMultipagosController extends Controller
 		//dd($conciliacion);
 		if (is_null($conciliacion->cuenta_p_id)) {
 			$peticionesExistentes = PeticionMultipago::select('peticion_multipagos.*')
-				->where('peticion_multipagos.created_at', '>=', $conciliacion->fec_inicio)
-				->where('peticion_multipagos.created_at', '<=', $conciliacion->fec_fin)
+				->where('peticion_multipagos.updated_at', '>=', $conciliacion->fec_inicio)
+				->where('peticion_multipagos.updated_at', '<=', $conciliacion->fec_fin)
 				->with('pago')
 				->get();
 		} else {
@@ -386,8 +386,8 @@ class ConciliacionMultipagosController extends Controller
 				->join('cajas as c', 'c.id', '=', 'p.caja_id')
 				->join('plantels as pla', 'pla.id', '=', 'c.plantel_id')
 				->where('pla.cuenta_p_id', '=', $conciliacion->cuenta_p_id)
-				->where('peticion_multipagos.created_at', '>=', $conciliacion->fec_inicio)
-				->where('peticion_multipagos.created_at', '<=', $conciliacion->fec_fin)
+				->where('peticion_multipagos.updated_at', '>=', $conciliacion->fec_inicio)
+				->where('peticion_multipagos.updated_at', '<=', $conciliacion->fec_fin)
 				->with('pago')
 				->get();
 		}

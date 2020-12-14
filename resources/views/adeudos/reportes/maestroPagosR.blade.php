@@ -136,61 +136,75 @@
         <tbody>
             @php
                 $consecutivo_linea=1;
+                $caja_aux="";
             @endphp 
             @foreach($lineas_detalle as $detalle)
-            @php
-                $beca=App\AutorizacionBeca::where('cliente_id',$detalle['id'])
-                ->orderBy('autorizacion_becas.id','Desc')
-                ->where('autorizacion_becas.st_beca_id',4)
-                ->take(1)
-                ->first();
-                //dd($beca);
-                if(!is_null($beca) and !is_null($beca->lectivo_id)){
-                    $fecha_inicio=Carbon\Carbon::createFromFormat('Y-m-d',$beca->lectivo->inicio);
-                    $fecha_fin=Carbon\Carbon::createFromFormat('Y-m-d',$beca->lectivo->fin);
-                    $fecha_adeudo=Carbon\Carbon::createFromFormat('Y-m-d',$detalle['fecha_pago']);
+                @if($caja_aux<>$detalle['caja'])
+                @php
+                    $beca=App\AutorizacionBeca::where('cliente_id',$detalle['id'])
+                    ->orderBy('autorizacion_becas.id','Desc')
+                    ->where('autorizacion_becas.st_beca_id',4)
+                    ->take(1)
+                    ->first();
+                    //dd($beca);
+                    if(!is_null($beca) and !is_null($beca->lectivo_id)){
+                        $fecha_inicio=Carbon\Carbon::createFromFormat('Y-m-d',$beca->lectivo->inicio);
+                        $fecha_fin=Carbon\Carbon::createFromFormat('Y-m-d',$beca->lectivo->fin);
+                        $fecha_adeudo=Carbon\Carbon::createFromFormat('Y-m-d',$detalle['fecha_pago']);
 
-                    $mesAdeudo = Carbon\Carbon::createFromFormat('Y-m-d', $detalle['fecha_pago'])->month;
-                    $anioAdeudo = Carbon\Carbon::createFromFormat('Y-m-d', $detalle['fecha_pago'])->year;
+                        $mesAdeudo = Carbon\Carbon::createFromFormat('Y-m-d', $detalle['fecha_pago'])->month;
+                        $anioAdeudo = Carbon\Carbon::createFromFormat('Y-m-d', $detalle['fecha_pago'])->year;
 
-                    $mesInicio = Carbon\Carbon::createFromFormat('Y-m-d', $beca->lectivo->inicio)->month;
-                    $anioInicio = Carbon\Carbon::createFromFormat('Y-m-d', $beca->lectivo->inicio)->year;
-                    $mesFin = Carbon\Carbon::createFromFormat('Y-m-d', $beca->lectivo->fin)->month;
-                    $anioFin = Carbon\Carbon::createFromFormat('Y-m-d', $beca->lectivo->fin)->year;
-                }
+                        $mesInicio = Carbon\Carbon::createFromFormat('Y-m-d', $beca->lectivo->inicio)->month;
+                        $anioInicio = Carbon\Carbon::createFromFormat('Y-m-d', $beca->lectivo->inicio)->year;
+                        $mesFin = Carbon\Carbon::createFromFormat('Y-m-d', $beca->lectivo->fin)->month;
+                        $anioFin = Carbon\Carbon::createFromFormat('Y-m-d', $beca->lectivo->fin)->year;
+                    }
+                    
+                @endphp
+                <tr>   
+                <td>{{$consecutivo_linea++}}</td>
+                <td>{{$detalle['razon']}}</td>
+                <td>{{$detalle['id']}}</td>
+                <td>{{ $detalle['nombre'] }} {{ $detalle['nombre2'] }} {{ $detalle['ape_paterno'] }} {{ $detalle['ape_materno'] }}</td>
+                <td> {{$detalle['usu_alta_id']}} </td>
+                <td>{{ $detalle['matricula'] }}</td>
+                <td>{{ $detalle['turno'] }}</td>
+                <td>{{ $detalle['fecha_pago'] }}</td>
+                <td>{{$detalle['concepto']}}</td>
                 
-            @endphp
-            <tr>   
-            <td>{{$consecutivo_linea++}}</td>
-            <td>{{$detalle['razon']}}</td>
-            <td>{{$detalle['id']}}</td>
-            <td>{{ $detalle['nombre'] }} {{ $detalle['nombre2'] }} {{ $detalle['ape_paterno'] }} {{ $detalle['ape_materno'] }}</td>
-	        <td> {{$detalle['usu_alta_id']}} </td>
-            <td>{{ $detalle['matricula'] }}</td>
-            <td>{{ $detalle['turno'] }}</td>
-            <td>{{ $detalle['fecha_pago'] }}</td>
-            <td>{{$detalle['concepto']}}</td>
-            
-	    <td>{{$detalle['monto_pago']}}</td>
-        <td>{{$detalle['consecutivo']}}</td>
-        @if(!is_null($beca)) 
-        
-        @if(
-            (($beca->lectivo->inicio <= $adeudo->fecha_pago and $beca->lectivo->fin >= $adeudo->fecha_pago) or
-            (($anioInicio = $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin = $anioAdeudo and $mesFin >= $mesAdeudo)) or
-            (($anioInicio < $anioAdeudo or $mesInicio >= $mesAdeudo) and ($anioFin >= $anioAdeudo and $mesFin <= $mesAdeudo))) and
-            $beca->aut_dueno == 4 and
-            is_null($beca->deleted_at)
-        )
-        <td>{{$beca->monto_mensualidad}}</td>
-        @else
-        <td></td>
-        @endif
-        @else
-        <td></td>
-        @endif
-        <td>{{ $detalle['st_cliente'] }}</td>
-            </tr>
+                <td>{{$detalle['monto_pago']}}</td>
+                <td>{{$detalle['consecutivo']}}</td>
+                @if(!is_null($beca)) 
+                
+                @if(
+                    (($beca->lectivo->inicio <= $adeudo->fecha_pago and $beca->lectivo->fin >= $adeudo->fecha_pago) or
+                    (($anioInicio = $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin = $anioAdeudo and $mesFin >= $mesAdeudo)) or
+                    (($anioInicio < $anioAdeudo or $mesInicio >= $mesAdeudo) and ($anioFin >= $anioAdeudo and $mesFin <= $mesAdeudo))) and
+                    $beca->aut_dueno == 4 and
+                    is_null($beca->deleted_at)
+                )
+                <td>
+                    <!--@{{$beca->monto_mensualidad}}-->
+                    @php
+                        $caja=\App\Caja::with('pagos')->find($detalle['caja']);
+                        $suma_pagos=$caja['pagos']->sum('monto');
+                        
+                    @endphp
+                    {{ $suma_pagos }}
+                </td>
+                @else
+                <td></td>
+                @endif
+                @else
+                <td></td>
+                @endif
+                <td>{{ $detalle['st_cliente'] }}</td>
+                </tr>
+                @endif
+                @php
+                    $caja_aux=$detalle['caja'];
+                @endphp
             @endforeach
         </tbody>
     </table>

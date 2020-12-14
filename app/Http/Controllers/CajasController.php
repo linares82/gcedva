@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Adeudo;
+use App\AdeudoPagoOnLine;
 use App\AutorizacionBeca;
 use App\Caja;
 use App\CajaConcepto;
@@ -832,6 +833,46 @@ class CajasController extends Controller
             $adeudo->pagado_bnd = 0;
             $adeudo->save();
         }
+        return view('cajas.caja')->with('list', Caja::getListFromAllRelationApps())->with('list1', CajaLn::getListFromAllRelationApps());
+    }
+
+    public function cancelarEnLinea(Request $request)
+    {
+        //dd($request->get('caja'));
+        $caja = Caja::find($request->get('caja'));
+
+        foreach ($caja->pagos as $pago) {
+            $pc = new PagosController();
+            $pc->destroy($pago->id, new Pago());
+        }
+
+        $caja->st_caja_id = 2;
+        $caja->usu_cancelar_id = Auth::user()->id;
+        $caja->subtotal = 0;
+        $caja->descuento = 0;
+        $caja->recargo = 0;
+        $caja->total = 0;
+        $caja->save();
+        
+        if(count($caja->cajaLns)>0){
+            foreach ($caja->cajaLns as $ln) {
+                $ln->adeudo_id = 0;
+                $ln->save();
+                $ln->delete();
+            }
+        }
+        
+        $adeudos = Adeudo::where('caja_id', $caja->id)->get();
+        foreach ($adeudos as $adeudo) {
+            $adeudo->caja_id = 0;
+            $adeudo->pagado_bnd = 0;
+            $adeudo->save();
+        }
+        $enLinea=AdeudoPagoOnLine::where('caja_id',$caja->id)->where('matricula', $caja->cliente->matricula)->first();
+        if(!is_null($enLinea)){
+            $enLinea->delete();
+        }
+
         return view('cajas.caja')->with('list', Caja::getListFromAllRelationApps())->with('list1', CajaLn::getListFromAllRelationApps());
     }
 

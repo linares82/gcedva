@@ -194,11 +194,23 @@
                         <div class='text-center'>
                             @permission('cajas.cancelar')
                             @if($caja->st_caja_id<>1 and $caja->st_caja_id<>2)
-                            {!! Form::open(array('route' => 'cajas.cancelar','onsubmit'=> "if(confirm('Â¿Cancelar Caja? Â¿Esta seguro?')) { return true } else {return false };")) !!}
+                            {!! Form::open(array('route' => 'cajas.cancelar','onsubmit'=> "if(confirm('¿Cancelar Caja? ¿Esta seguro?')) { return true } else {return false };")) !!}
                             {!! Form::hidden("caja", $caja->id, array("class" => "form-control", "id" => "caja_id-field")) !!}
                             <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-close"></i> Cancelar Venta</button>
                             {!! Form::close() !!}
                             @endif
+                            @endpermission
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <div class='text-center'>
+                            @permission('cajas.cancelarEnLinea')
+                            <!--@@if($caja->st_caja_id<>1 and $caja->st_caja_id<>2)-->
+                            {!! Form::open(array('route' => 'cajas.cancelarEnLinea','onsubmit'=> "if(confirm('¿Cancelar Proceso En Linea? ¿Esta seguro?')) { return true } else {return false };")) !!}
+                            {!! Form::hidden("caja", $caja->id, array("class" => "form-control", "id" => "caja_id-field")) !!}
+                            <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-close"></i> Cancelar En Linea</button>
+                            {!! Form::close() !!}
+                            <!--@@endif-->
                             @endpermission
                         </div>
                     </div>

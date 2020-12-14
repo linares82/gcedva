@@ -87,7 +87,8 @@ class UsoApi{
     }
 
     public function authenticate(){
-	if($this->$this->config['idUser']==0 and $this->config['keyUser']==0){
+	//dd($this->config);
+	if($this->config['idUser']==0 and $this->config['keyUser']==0){
 		$redirectPage = str_replace('authenticateUser.php', 'postLogin.php', $this->getPageURL());
 	        $authContextFactory = new D2LAppContextFactory();
         	$authContext = $authContextFactory->createSecurityContext($this->config['appId'], $this->config['appKey']);
@@ -156,7 +157,7 @@ class UsoApi{
         throw new Exception("Valence API call $uri failed: $httpCode: $response ");
     }
 
-    public function doValence2($verb, $route) {
+    public function doValence2($verb, $route, $data=null) {
         //El arreglo config ya tiene todos los datos de trabajo, igual que el ejemplo del SDK.
         //Se valida la existencia de un id y key de usuario
             
@@ -176,12 +177,29 @@ class UsoApi{
             $uri = $userContext->createAuthenticatedUri($route, $verb);
             //dd($uri);
             $client = new \GuzzleHttp\Client();
-            $response = $client->request('PUT', $uri, [
-                'UpdateUserData ' => [
-                    'Activation' => ['isActive'=>false],
-                ]
-            ]);
-            $response = $response->getBody()->getContents();
+	    switch ($verb) {
+	    	case 'GET':
+			$response = $client->request('GET', $uri, [
+        	        	'UpdateUserData ' => [
+	                    	'Activation' => ['isActive'=>false],
+                		]
+                    ]);
+            //if($response->getStatusCode()==200){
+                $response = $response->getBody()->getContents();
+			    return json_decode($response, true);
+            //}        
+	            	
+			break;
+		case 'PUT':
+			//dd($uri);
+			$request = $client->put($uri,  ['json'=>$data]);
+	            	//dd($resquest->getStatusCode);
+			return json_decode($request->getBody()->getContents(), true);
+			
+		break;
+
+	    }
+            
         }
 }
 
