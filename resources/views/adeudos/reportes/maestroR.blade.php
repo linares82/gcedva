@@ -131,7 +131,7 @@
                 <th>Plantel</th>
                 <th>Cliente Id</th>
                 <th>Cliente</th>
-		<th></th>
+		        <th>Especialidad</th>
                 <th>Matricula</th>
                 <!--<th>Pagado</th>
                 <th>Monto Planeado</th>-->
@@ -183,7 +183,7 @@
                     <td>{{$detalle['razon']}}</td>
                     <td>{{$detalle['id']}}</td>
                     <td>{{ $detalle['nombre'] }} {{ $detalle['nombre2'] }} {{ $detalle['ape_paterno'] }} {{ $detalle['ape_materno'] }}</td>
-                    <td> {{$detalle['usu_alta_id']}} </td>
+                    <td> {{$detalle['especialidad']}} </td>
                     <td>{{ $detalle['matricula'] }}</td>
                     <td>{{ $detalle['turno'] }}</td>
                     <td>{{ $detalle['fecha_pago'] }}</td>

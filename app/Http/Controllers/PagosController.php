@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Adeudo;
 
 use App\Caja;
+use App\CajaConcepto;
 use App\CuentasEfectivo;
 use App\Cliente;
 use App\CajaLn;
@@ -1478,7 +1479,8 @@ class PagosController extends Controller
 
     public function pagosDosMeses(){
         $plantels = Plantel::pluck('razon', 'id');
-        return view('pagos.reportes.pagosDosMeses', compact('plantels'));
+        $conceptos = CajaConcepto::pluck('name', 'id');
+        return view('pagos.reportes.pagosDosMeses', compact('plantels', 'conceptos'));
     }
 
     public function pagosDosMesesR(Request $request){
@@ -1549,5 +1551,89 @@ class PagosController extends Controller
         //dd($registros);
         
         return view('pagos.reportes.pagosDosMesesR', compact('registros'));
+    }
+
+    public function pagosMes(){
+        $plantels = Plantel::pluck('razon', 'id');
+        $conceptos = CajaConcepto::pluck('name', 'id');
+        return view('pagos.reportes.pagosMes', compact('plantels','conceptos'));
+    }
+
+    public function pagosMesR(Request $request)
+    {
+        $data = $request->all();
+        //dd($data);
+        $anio=Carbon::createFromFormat('Y-m-d',$data['fecha_f'])->year;
+        //dd($anio);
+        
+        $registros_pagados=Adeudo::select(
+            'pla.razon',
+            'c.id',
+            DB::raw('c.id as cliente_id,'
+                . 'c.nombre, c.nombre2, c.ape_paterno, c.ape_materno, cajas.id as caja, cajas.consecutivo,'
+                . 'c.beca_bnd, st.name as estatus_caja, fp.id as forma_pago_id, cajas.st_caja_id,'
+                . 'pag.monto as monto_pago, fp.name as forma_pago, pag.fecha as fecha_pago, pag.created_at, cajas.fecha as fecha_caja,'
+                . 'up.name as creador_pago, cln.caja_concepto_id, esp.name as especialidad')
+            )
+            ->where('bnd_pagado',1)
+            ->join('combinacion_clientes as cc','cc.id','=','adeudos.combinacion_cliente_id')
+            ->join('especialidads as esp','esp.id','=','cc.especialidad_id')
+            ->join('cajas','cajas.id','=','adeudos.caja_id')
+            ->join('clientes as c', 'c.id', '=', 'cajas.cliente_id')
+            ->join('plantels as pla', 'pla.id', '=', 'c.plantel_id')
+            ->join('st_cajas as st', 'st.id', '=', 'cajas.st_caja_id')
+            ->join('pagos as pag', 'pag.caja_id', '=', 'cajas.id')
+            ->join('users as up', 'up.id', 'pag.usu_alta_id')
+            ->join('forma_pagos as fp', 'fp.id', '=', 'pag.forma_pago_id')
+            ->join('caja_lns as cln', 'cln.caja_id', '=', 'cajas.id')
+            ->whereIn('cajas.plantel_id', $data['plantel_f'])
+            ->whereYear('cajas.fecha',$anio)
+            ->whereIn('adeudos.caja_concepto_id',$data['concepto_f'])
+            ->whereNull('pag.deleted_at')
+            ->whereNull('cajas.deleted_at')
+            ->where('cajas.st_caja_id', '=', 1)
+            ->orderBy('pla.razon')
+            ->orderBy('esp.name')
+            ->orderBy('cln.caja_concepto_id')
+            ->get();
+
+        //dd($registros_pagados->toArray());
+        
+        $registros_parciales = Adeudo::select(
+            'pla.razon',
+            'c.id',
+            DB::raw('c.id as cliente_id,'
+                . 'c.nombre, c.nombre2, c.ape_paterno, c.ape_materno, cajas.id as caja, cajas.consecutivo,'
+                . 'c.beca_bnd, st.name as estatus_caja, fp.id as forma_pago_id, cajas.st_caja_id,'
+                . 'pag.monto as monto_pago, fp.name as forma_pago, pag.fecha as fecha_pago, pag.created_at, cajas.fecha as fecha_caja,'
+                . 'up.name as creador_pago, cln.caja_concepto_id, esp.name as especialidad')
+            )
+            //->where('bnd_pagado',1)
+            ->join('combinacion_clientes as cc','cc.id','=','adeudos.combinacion_cliente_id')
+            ->join('especialidads as esp','esp.id','=','cc.especialidad_id')
+            ->join('cajas','cajas.id','=','adeudos.caja_id')
+            ->join('clientes as c', 'c.id', '=', 'cajas.cliente_id')
+            ->join('plantels as pla', 'pla.id', '=', 'c.plantel_id')
+            ->join('st_cajas as st', 'st.id', '=', 'cajas.st_caja_id')
+            ->join('pagos as pag', 'pag.caja_id', '=', 'cajas.id')
+            ->join('users as up', 'up.id', 'pag.usu_alta_id')
+            ->join('forma_pagos as fp', 'fp.id', '=', 'pag.forma_pago_id')
+            ->join('caja_lns as cln', 'cln.caja_id', '=', 'cajas.id')
+            ->whereIn('cajas.plantel_id', $data['plantel_f'])
+            ->whereYear('cajas.fecha',$anio)
+            ->whereIn('adeudos.caja_concepto_id',$data['concepto_f'])
+            ->whereNull('pag.deleted_at')
+            ->whereNull('cajas.deleted_at')
+            ->where('cajas.st_caja_id', '=', 3)
+            ->orderBy('pla.razon')
+            ->orderBy('esp.name')
+            ->orderBy('cln.caja_concepto_id')
+            ->get();
+
+                
+        return view('pagos.reportes.pagosMesR', array(
+            'registros_pagados' => $registros_pagados,
+            'registros_parciales' => $registros_parciales
+        ));
     }
 }

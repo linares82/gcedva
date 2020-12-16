@@ -997,6 +997,7 @@ class AdeudosController extends Controller
                 ->join('st_seguimientos as sts', 'sts.id', '=', 's.st_seguimiento_id')
                 ->join('caja_conceptos as adeudo_concepto', 'adeudo_concepto.id', '=', 'adeudos.caja_concepto_id')
                 ->join('combinacion_clientes as ccli', 'ccli.id', '=', 'adeudos.combinacion_cliente_id')
+                ->join('especialidads as esp', 'esp.id','=','ccli.especialidad_id')
                 ->join('turnos as t', 't.id', '=', 'ccli.turno_id');
             if ($datos['detalle_f'] == 1) {
                 $registros_totales_aux->leftJoin('caja_lns as cln', 'cln.adeudo_id', '=', 'adeudos.id')
@@ -1029,7 +1030,8 @@ class AdeudosController extends Controller
                     'cc.name as mensualidad',
                     DB::raw('1 as pagado_bnd'),
                     't.name as turno',
-                    'pag.monto as monto_pago'
+                    'pag.monto as monto_pago',
+                    'esp.name as especialidad'
                 )
                     ->join('clientes as c', 'c.id', '=', 'cajas.cliente_id')
                     ->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
@@ -1040,6 +1042,7 @@ class AdeudosController extends Controller
                     ->join('caja_conceptos as cc', 'cc.id', 'cln.caja_concepto_id')
                     ->join('pagos as pag', 'pag.caja_id', '=', 'cajas.id')
                     ->join('combinacion_clientes as ccli', 'ccli.cliente_id', '=', 'c.id')
+                    ->join('especialidads as esp', 'esp.id','=','ccli.especialidad_id')
                     ->join('turnos as t', 't.id', '=', 'ccli.turno_id')
                     ->where('cajas.plantel_id', $plantel)
                     ->where('cajas.st_caja_id', 1)
@@ -1087,7 +1090,8 @@ class AdeudosController extends Controller
                         'adeudo_concepto.bnd_mensualidad as mensualidad',
                         'adeudos.pagado_bnd',
                         't.name as turno',
-                        'pag.monto as monto_pago'
+                        'pag.monto as monto_pago',
+                        'esp.name as especialidad'
                     )
                     ->whereNull('caj.deleted_at')
                     ->whereNull('ccli.deleted_at')
@@ -1123,7 +1127,8 @@ class AdeudosController extends Controller
                         'adeudos.fecha_pago',
                         'adeudos.caja_id',
                         'adeudo_concepto.bnd_mensualidad as mensualidad',
-                        't.name as turno'
+                        't.name as turno',
+                        'esp.name as especialidad'
                     )
                     ->whereDate('adeudos.fecha_pago', '>=', $datos['fecha_f'])
                     ->whereDate('adeudos.fecha_pago', '<=', $datos['fecha_t'])
@@ -1143,7 +1148,7 @@ class AdeudosController extends Controller
                 ->whereNull('s.deleted_at')
                 //->orderBy('p.id')
                 //->orderBy('adeudos.caja_concepto_id')
-                //->orderBy('c.id')
+                //->orderBy('esp.name','asc')
                 ->get();
             //dd($registros_totales->toArray());
             //FLC $registros_totales = DB::select('CALL maestroR(?,?,?)', array($plantel, $datos['fecha_f'], $datos['fecha_t']));

@@ -415,6 +415,7 @@ $(document).ready(function() {
          $(this).prop('disabled',true);
          $('#plantel_id-field').prop('disabled',false);
          $('#seleccionar_planteles').prop('disabled',false);
+         $('.btn').prop('disabled',false);
       });
   @endpermission
 });

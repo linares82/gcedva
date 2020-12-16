@@ -251,14 +251,15 @@
                             <tr>
                                 <td><a href="{{ route('planPagoLns.show', $planPagoLn->id) }}">{{$planPagoLn->id}}</a></td>
                                 <td>{{$planPagoLn->plan_pago_id}}</td>
-                    <td>{{$planPagoLn->cajaConcepto->name}}</td>
-                    <td>{{$planPagoLn->cuentaContable->name}}</td>
-                    <td>{{$planPagoLn->cuenta_recargo_id}}</td>
-                    <td>{{$planPagoLn->fecha_pago}}</td>
-                    <td>{{$planPagoLn->monto}}</td>
-                    <td>{{$planPagoLn->inicial_bnd}}</td>
-                    <td>{{$planPagoLn->usu_alta_id}}</td>
-                    <td>{{$planPagoLn->usu_mod_id}}</td>
+                                <td>{{$planPagoLn->cajaConcepto->name}}</td>
+                                <td>{{$planPagoLn->cuentaContable->name}}</td>
+                                <td>{{$planPagoLn->cuenta_recargo_id}}</td>
+                                <td>{{$planPagoLn->fecha_pago}}</td>
+                                <td>{{$planPagoLn->monto}}
+                                </td>
+                                <td>{{$planPagoLn->inicial_bnd}}</td>
+                                <td>{{$planPagoLn->usu_alta_id}}</td>
+                                <td>{{$planPagoLn->usu_mod_id}}</td>
                                 <td class="text-right">
                                     @permission('planPagoLns.edit')
                                     <a class="btn btn-xs btn-primary" href="{{ route('planPagoLns.duplicate', $planPagoLn->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>

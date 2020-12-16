@@ -135,7 +135,11 @@
                             <!--<td>{{$linea->cuentaContable->name}}</td>
                             <td>{{$linea->cuentaRecargo->name}}</td>-->
                             <td>{{$linea->fecha_pago}}</td>
-                            <td>{{$linea->monto}}</td>
+                            <td>{{$linea->monto}}
+                                @permission('planPagoLns.extenderEdicion')
+                                <a class="btn btn-xs btn-primary" href="{{ route('planPagoLns.extenderEdicion', array('linea'=>$planPagoLn->id)) }}"><i class="glyphicon glyphicon-duplicate"></i>Extender Edición</a>
+                                @endpermission
+                            </td>
                             <td>@if($linea->inicial_bnd==1)
                                 SI
                                 @else

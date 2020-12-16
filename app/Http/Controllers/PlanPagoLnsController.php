@@ -3,7 +3,9 @@
 use App\Http\Controllers\Controller;
 use App\Http\Requests\createPlanPagoLn;
 use App\Http\Requests\updatePlanPagoLn;
+use App\Adeudo;
 use App\PlanPagoLn;
+use App\ReglaRecargo;
 use Auth;
 use DB;
 use Illuminate\Http\Request;
@@ -252,6 +254,25 @@ class PlanPagoLnsController extends Controller
             return $final;
 
         }
+    }
+
+    public function extenderEdicion(Request $request){
+        $datos=$request->all();
+        $linea=PlanPagoLn::find($datos['linea']);
+        $adeudos=Adeudo::where('plan_pago_ln_id', $datos['linea'])
+        ->where('pagado_bnd','<>',1)
+        ->whereNull('deleted_at')
+        ->get();
+        foreach($adeudos as $adeudo){
+            $adeudo->monto=$linea->monto;
+            $adeudo->save();
+        }
+
+        $planPago = $linea->planPago;
+        //dd($planPago->lineas->toArray());
+        $reglaRecargo = ReglaRecargo::pluck('name', 'id');
+
+        return view('planPagos.show', compact('planPago', 'reglaRecargo'))->with('list', PlanPagoLn::getListFromAllRelationApps());
     }
 
 }
