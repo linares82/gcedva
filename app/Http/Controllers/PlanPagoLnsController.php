@@ -258,20 +258,23 @@ class PlanPagoLnsController extends Controller
 
     public function extenderEdicion(Request $request){
         $datos=$request->all();
+        //dd($datos);
         $linea=PlanPagoLn::find($datos['linea']);
         $adeudos=Adeudo::where('plan_pago_ln_id', $datos['linea'])
         ->where('pagado_bnd','<>',1)
         ->whereNull('deleted_at')
         ->get();
+        //dd($adeudos);
         foreach($adeudos as $adeudo){
             $adeudo->monto=$linea->monto;
             $adeudo->save();
         }
-
+        //dd('fil');
         $planPago = $linea->planPago;
+        //dd($planPago);
         //dd($planPago->lineas->toArray());
         $reglaRecargo = ReglaRecargo::pluck('name', 'id');
-
+        
         return view('planPagos.show', compact('planPago', 'reglaRecargo'))->with('list', PlanPagoLn::getListFromAllRelationApps());
     }
 
