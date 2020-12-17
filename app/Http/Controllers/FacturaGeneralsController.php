@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Caja;
 use App\FacturaGeneral;
 use App\FacturaGeneralLinea;
+use App\Mese;
 use App\Param;
 use Illuminate\Http\Request;
 use Auth;
@@ -272,7 +273,11 @@ class FacturaGeneralsController extends Controller
 			'Nombre' => 'PUBLICO EN GENERAL',
 			'UsoCFDI' => 'P01'
 		);
-		$lineas=$facturaGeneral->facturaGeneralLineas;
+		
+		$lineas=FacturaGeneralLinea::where('factura_general_id',$facturaGeneral->id)
+		->where('bnd_incluido',1)
+		->get();
+		
 		$conceptos = array();
 		//dd($facturaGeneral->facturaGeneralLineas->toArray());
 		foreach($lineas as $linea){
@@ -291,19 +296,20 @@ class FacturaGeneralsController extends Controller
 		$impuestos = array('TotalImpuestosTrasladados' => 0.0);
 		
 		$mes=Carbon::createFromFormat('Y-m-d', $facturaGeneral->fec_inicio)->month;
+		$mesLetra=Mese::find($mes);
 		$anio=Carbon::createFromFormat('Y-m-d', $facturaGeneral->fec_inicio)->year;
 		$adenda = array(
 			'xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
 			'xsi:schemaLocation' => 'http://dev.induxsoft.net/xsd/cfdi/addendas/addendabasica.xsd http://dev.induxsoft.net/xsd/cfdi/addendas/addendabasica.xsd',
 			'xmlns:induxsoft' => 'http://dev.induxsoft.net/xsd/cfdi/addendas/addendabasica.xsd',
-			'notas' => 'Este comprobante corresponde a los ingresos globales de '.$mes." ".$anio
+			'notas' => 'Este comprobante corresponde a los ingresos globales de '.$mesLetra->name." ".$anio
 		);
 
 		$formatter = new NumeroALetras;
 		$totalEntero = intdiv($facturaGeneral->total, 1);
 		$centavos = round((round($facturaGeneral->total,2) - $totalEntero) * 100);
 		//dd($centavos);
-		$totalLetra = $formatter->toMoney($totalEntero, 2, "Pesos", 'Centavos');
+		$totalLetra = $formatter->toMoney($totalEntero, 2, "", 'Centavos');
 		//dd($totalLetra);
 
 		$adendaEtiquetas = array(
@@ -388,6 +394,9 @@ class FacturaGeneralsController extends Controller
 			$objetoXML->writeAttribute("id", $etiqueta["id"]);
 			$objetoXML->writeAttribute("titulo", $etiqueta["titulo"]);
 			$objetoXML->writeAttribute("valor", $etiqueta["valor"]);
+			if(isset($etiqueta["valor2"])){
+				$objetoXML->writeAttribute("valor2", $etiqueta["valor2"]);
+			}
 			$objetoXML->endElement(); // Final del elemento que cubre todos los miembros técnicos.
 		}
 
