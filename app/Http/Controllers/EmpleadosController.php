@@ -303,7 +303,11 @@ class EmpleadosController extends Controller
         $input = $request->except(['doc_empleado_id', 'archivo', 'plantel_id']);
         
         $input2 = $request->only(['plantel_id']);
-        $input['plantel_id'] = $input['pertenece_a'];
+        //dd($input2['plantel_id']);
+        if(isset($input['pertenece_a'])){
+            $input['plantel_id'] = $input['pertenece_a'];
+        }
+        
         $input['usu_mod_id'] = Auth::user()->id;
         if (!isset($input['jefe_bnd'])) {
             $input['jefe_bnd'] = 0;

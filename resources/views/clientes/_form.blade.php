@@ -497,6 +497,79 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="box box-default box-solid">
+                    <div class="box-header">
+                        <h3 class="box-title">INCIDENCIAS</h3>
+                        <div class="box-tools">
+
+                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                        </div>
+                    </div>
+                    
+                    <div class="box-body">   
+                        <div class="form-group col-md-3 @if($errors->has('incidence_cliente_id')) has-error @endif">
+                            <label for="incidence_cliente_id-field">Incidencias</label>
+                            {!! Form::select("incidence_cliente_id", $incidencias, null, array("class" => "form-control select_seguridad", "id" => "incidence_cliente_id-field")) !!}
+                            
+                            @if($errors->has("incidence_cliente_id"))
+                            <span class="help-block">{{ $errors->first("incidence_cliente_id") }}</span>
+                            @endif
+                        </div>
+                        <div class="form-group col-md-4 @if($errors->has('detalle')) has-error @endif">
+                            <label for="detalle-field">Detalle</label>
+                            {!! Form::text("detalle", null, array("class" => "form-control input-sm", "id" => "detalle-field")) !!}
+                            @if($errors->has("detalle"))
+                            <span class="help-block">{{ $errors->first("detalle") }}</span>
+                            @endif
+                        </div>
+
+                        <div class="form-group col-md-4 @if($errors->has('fecha')) has-error @endif">
+                            <label for="fecha-field">Fecha</label>
+                            {!! Form::text("fecha", null, array("class" => "form-control input-sm fecha", "id" => "fecha-field")) !!}
+                            @if($errors->has("fecha"))
+                            <span class="help-block">{{ $errors->first("fecha") }}</span>
+                            @endif
+                        </div>
+                        
+                        @permission('incidencesClientes.store')
+                        @if(isset($cliente))
+                                <div class="form-group col-md-1 @if($errors->has('grado_id')) has-error @endif">
+                                    <a class="btn btn-xs btn-block btn-success" id="crearIncidencia" href="#">Crear</a> 
+                                </div>
+                                <div class="form-group col-md-1 @if($errors->has('grado_id')) has-error @endif">
+                                    <br/>
+                                    
+                                </div>
+                            
+                        @endif
+                        @endpermission    
+                        
+                        <div class="row col-md-12">
+                            @if(isset($cliente))
+                            <table class="table table-condensed table-striped">
+                                <thead>
+                                    <th>Incidencia</th><th>Detalle</th><th>Fecha</th><th></th>
+                                </thead>
+                                <tbody>
+                                    @foreach($cliente->incidencesClientes as $incidencia)
+                                    <tr>
+                                        <td>{{ $incidencia->incidenceCliente->name }}</td><td>{{ $incidencia->detalle }}</td><td>{{ $incidencia->fecha }}</td>
+                                        <td>
+                                            @permission('incidenceClientes.destroy')
+                                            
+                                            <a href="{!! route('incidencesClientes.destroy', $incidencia->id) !!}" class="btn btn-xs btn-block btn-danger">Eliminar</a>
+                                            @endpermission
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>    
+                                
+                            @endif
+                        </div>
+                    </div>
+                </div>
                 
                 
                 
@@ -2088,6 +2161,26 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
 
 
                         @if(isset($cliente))
+                        $('#crearIncidencia').click(function() {
+                            $('#crearIncidencia').prop('disabled', true);
+                            $.ajax({
+                            url: '{{ route("incidencesClientes.store") }}',
+                                    type: 'GET',
+                                    data: {
+                                        "cliente_id":{{ $cliente->id}},
+                                        "incidence_cliente_id":$('#incidence_cliente_id-field option:selected').val(),
+                                        "detalle":$('#detalle-field').val(),
+                                        "fecha":$('#fecha-field').val()
+                                    },
+                                    dataType: 'json',
+                                    beforeSend: function () {
+                                    $("#loading_incidencia").show();
+                                    },
+                                    complete: function () {
+                                    location.reload();
+                                    },
+                            });
+                        });
                         function CrearCombinacionCliente() {
                             $('#crearCombinacion').prop('disabled', true);
                         $.ajax({

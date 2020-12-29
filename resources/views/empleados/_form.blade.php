@@ -28,6 +28,13 @@
                           <span class="help-block">{{ $errors->first("ape_materno") }}</span>
                          @endif
                       </div>
+                      <div class="form-group col-md-4 @if($errors->has('mail')) has-error @endif">
+                        <label for="mail-field">Correo Electrónico</label>
+                        {!! Form::text("mail", null, array("class" => "form-control input-sm", "id" => "mail-field")) !!}
+                        @if($errors->has("mail"))
+                         <span class="help-block">{{ $errors->first("mail") }}</span>
+                        @endif
+                     </div>
                       @permission('empleados.verDatosPersonales')
                       <div class="form-group col-md-4 @if($errors->has('rfc')) has-error @endif">
                          <label for="rfc-field">RFC</label>
@@ -71,13 +78,7 @@
                           <span class="help-block">{{ $errors->first("cel_empresa") }}</span>
                          @endif
                       </div>
-                      <div class="form-group col-md-4 @if($errors->has('mail')) has-error @endif">
-                         <label for="mail-field">Correo Electrónico</label>
-                         {!! Form::text("mail", null, array("class" => "form-control input-sm", "id" => "mail-field")) !!}
-                         @if($errors->has("mail"))
-                          <span class="help-block">{{ $errors->first("mail") }}</span>
-                         @endif
-                      </div>
+                      
                       <div class="form-group col-md-4 @if($errors->has('mail_empresa')) has-error @endif">
                          <label for="mail_empresa-field">Correo Electrónico Empresa</label>
                          {!! Form::text("mail_empresa", null, array("class" => "form-control input-sm", "id" => "mail_empresa-field")) !!}
@@ -146,6 +147,20 @@
                       {!! Form::text("fec_inicio_experiencia_academicas", null, array("class" => "form-control input-sm fecha", "id" => "fec_inicio_experiencia_academicas-field")) !!}
                       @if($errors->has("fec_inicio_experiencia_academicas"))
                         <span class="help-block">{{ $errors->first("fec_inicio_experiencia_academicas") }}</span>
+                      @endif
+                    </div>
+                    <div class="form-group col-md-4 @if($errors->has('contacto_emergencia')) has-error @endif">
+                      <label for="contacto_emergencia-field">Contacto de Emergencia</label>
+                      {!! Form::text("contacto_emergencia", null, array("class" => "form-control input-sm", "id" => "contacto_emergencia-field")) !!}
+                      @if($errors->has("contacto_emergencia"))
+                        <span class="help-block">{{ $errors->first("contacto_emergencia") }}</span>
+                      @endif
+                    </div>
+                    <div class="form-group col-md-4 @if($errors->has('tel_emergencia')) has-error @endif">
+                      <label for="tel_emergencia-field">Tel. Emergencia</label>
+                      {!! Form::text("tel_emergencia", null, array("class" => "form-control input-sm", "id" => "tel_emergencia-field")) !!}
+                      @if($errors->has("tel_emergencia"))
+                        <span class="help-block">{{ $errors->first("tel_emergencia") }}</span>
                       @endif
                     </div>
                     @endpermission
@@ -412,10 +427,14 @@ $(document).ready(function() {
 
   @permission('empleados.editarPlanteles')
   $("#frm_empleado").find(':input').each(function() {   
-         $(this).prop('disabled',true);
-         $('#plantel_id-field').prop('disabled',false);
-         $('#seleccionar_planteles').prop('disabled',false);
-         $('.btn').prop('disabled',false);
+         $(this).prop('readonly',true);
+         $('#plantel_id-field').prop('readonly',false);
+         $('#seleccionar_planteles').prop('readonly',false);
+         $('.btn').prop('readonly',false);
+         $("#plantel_id-field").trigger("change");
+         //$('#_token').prop('readonly',false);
+         //$('#file_hidden').prop('readonly',false);
+         
       });
   @endpermission
 });

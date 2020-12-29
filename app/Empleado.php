@@ -32,7 +32,8 @@ class Empleado extends Model
 		'pendientes', 'user_id', 'usu_alta_id', 'usu_mod_id', 'jefe_bnd', 'jefe_id', 'alerta_bnd',
 		'dias_alerta', 'resp_alerta_id', 'fin_contrato', 'extranjero_bnd', 'genero', 'alimenticia_bnd',
 		'tipo_contrato_id', 'fec_nacimiento', 'estado_nacimiento_id', 'pais_nacimiento', 'nivel_estudio_id',
-		'profesion', 'cedula', 'anios_servicio_escuela', 'fec_inicio_experiencia_academicas', 'profordems'
+		'profesion', 'cedula', 'anios_servicio_escuela', 'fec_inicio_experiencia_academicas', 'profordems',
+		'contacto_emergencia','tel_emergencia'
 	];
 
 	public function usu_alta()

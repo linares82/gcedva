@@ -430,9 +430,11 @@
                                     
                                     
                                     @permission('cajas.eliminarPago')
+                                    @if($pago->bnd_pagado==1)
                                     {!! Form::model($pago, array('route' => array('pagos.destroy', $pago->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}
                                         <button type="submit" class="btn btn-xs btn-danger" data-toggle="tooltip" title="Eliminar"><i class="glyphicon glyphicon-trash"></i> </button>
                                     {!! Form::close() !!}
+                                    @endif
                                     @endpermission
                                     @php
                                     $mensualidad=0;
@@ -464,7 +466,7 @@
                                         @endphp
 
                                         @if($pago->bnd_pagado==1) 
-                                        <span class="">Pagado - {{$success->mp_responsemsg}}</span>
+                                        <span class="">Pagado </span>
                                         @else 
                                         <span class=""> En proceso - {{$success->mp_responsemsg}}<span>
                                         @endif
@@ -512,6 +514,8 @@
                     @permission('historiaClientes.create')
                     <a class="btn btn-md btn-warning" href="{{ route('historiaClientes.index',array('q[cliente_id_lt]'=>$cliente->id)) }}" target='_blank'><i class="glyphicon glyphicon-eye"></i> Eventos</a>
                     @endpermission
+
+                    <a class="btn btn-md btn-info modal-incidencias" href="#" ><i class="glyphicon glyphicon-eye"></i> Incidencias</a>
             </div>
             <div class="box-body no-padding">
 
@@ -754,6 +758,40 @@
 Pantallas modales
 Agregar nuevo registro
 -->
+<div id="modalIncidencias" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+<!--                <button type="button" class="close" data-dismiss="modal">X</button>-->
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+                <table class="table table-condensed table-striped">
+                    <thead>
+                        <th>Incidencia</th><th>Detalle</th><th>Fecha</th>
+                    </thead>
+                    <tbody>
+                        @foreach($cliente->incidencesClientes as $incidencia)
+                        <tr>
+                            <td>{{ $incidencia->incidenceCliente->name }}</td><td>{{ $incidencia->detalle }}</td><td>{{ $indicencia->fecha }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>    
+                <div class="row"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning" data-dismiss="modal">
+                        <span class='glyphicon glyphicon-remove'></span> Cerrar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
 @if(isset($caja))
 <div id="addModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
@@ -1140,7 +1178,7 @@ Agregar nuevo registro
     
     $(document).ready(function(){
         $('#forma_pago_id1-field').change(function(){
-            if($(this).val()==1 || $(this).val()==6){
+            if($(this).val()==1 || $(this).val()==6 || $(this).val()==9){
                 $('#fecha-field').prop('disabled',true);
             }else{
                 $('#fecha-field').prop('disabled',false);
@@ -1169,7 +1207,7 @@ Agregar nuevo registro
         });
         @endrole
 
-        @if($caja->forma_pago_id<>1 and $caja->forma_pago_id<>6)
+        @if($caja->forma_pago_id<>1 and $caja->forma_pago_id<>6 and $caja->forma_pago_id<>9)
         $('.editable_fecha').dblclick(function(){
             captura=$(this).children("input");
             captura.show();
@@ -1220,6 +1258,12 @@ Agregar nuevo registro
         });
         $('[data-toggle="tooltip"]').tooltip();
     });
+
+    $(document).on('click', '.modal-incidencias', function() {
+        $('.modal-title').text('Ver Incidencias');
+        $('#modalIncidencias').modal('show');
+    });
+
 //crear registro
     $(document).on('click', '.add-modal', function() {
     

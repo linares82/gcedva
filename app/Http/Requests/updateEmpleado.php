@@ -23,6 +23,7 @@ class updateEmpleado extends FormRequest
      */
     public function rules()
     {
+        
         return [
             //'cve_empleado',
             /*'nombre'=>'required',

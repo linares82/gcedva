@@ -17,6 +17,7 @@ use App\Especialidad;
 use App\EstadoCivil;
 use App\Grupo;
 use App\HistoriaCliente;
+use App\IncidenceCliente;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Carga;
 use App\Http\Requests\createCliente;
@@ -428,6 +429,7 @@ class ClientesController extends Controller
         //dd($historia->toArray());
         //count($cliente->adeudos));
         $estado_civiles = EstadoCivil::pluck('name', 'id');
+        $incidencias = IncidenceCliente::pluck('name', 'id');
         return view('clientes.edit', compact(
             'cliente',
             'preguntas',
@@ -436,7 +438,8 @@ class ClientesController extends Controller
             'empleados',
             'cuestionarios',
             'historia',
-            'estado_civiles'
+            'estado_civiles',
+            'incidencias'
         ))
             ->with('list', Cliente::getListFromAllRelationApps())
             ->with('list1', PivotDocCliente::getListFromAllRelationApps())
