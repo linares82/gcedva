@@ -112,7 +112,7 @@ trait GetAllDataTrait
 
         //(iii) order setting
         if ($baseTable == "serie_folio_simplificados") {
-            $myQuery = $myQuery->orderBy('serie_folio_simplificados.anio')->orderBy('serie_folio_simplificados.mese_id');
+            $myQuery = $myQuery->orderBy('serie_folio_simplificados.anio', 'desc')->orderBy('serie_folio_simplificados.mese_id');
         }
 
         if (is_array($request->input('q')) && array_key_exists('s', $request->input('q')) && $request->input('q')['s'] !== '') {
