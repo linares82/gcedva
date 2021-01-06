@@ -125,9 +125,8 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'name', 'title' => 'NAME'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'name', 'title' => 'NIVEL ESTUDIO'])</th>
+                        
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
@@ -137,8 +136,7 @@
                             <tr>
                                 <td><a href="{{ route('nivelEstudios.show', $nivelEstudio->id) }}">{{$nivelEstudio->id}}</a></td>
                                 <td>{{$nivelEstudio->name}}</td>
-                    <td>{{$nivelEstudio->usu_alta_id}}</td>
-                    <td>{{$nivelEstudio->usu_mod_id}}</td>
+                    
                                 <td class="text-right">
                                     @permission('nivelEstudios.edit')
                                     <a class="btn btn-xs btn-primary" href="{{ route('nivelEstudios.duplicate', $nivelEstudio->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>

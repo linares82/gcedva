@@ -102,6 +102,7 @@ class User1Controller extends Controller
         //dd($input);
         $user = $user->find($input['id']);
         $user->email = $input['email'];
+        $user->id_telegram = $input['id_telegram'];
         if (isset($input['password1'])) {
             $user->password = Hash::make($input['password1']);
         }

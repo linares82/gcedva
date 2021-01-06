@@ -1,0 +1,1 @@
+@section('etiquetasTicketsAppTitle','Etiquetas Tickets')

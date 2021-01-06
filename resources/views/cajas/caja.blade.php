@@ -809,7 +809,7 @@ Agregar nuevo registro
                 </div>
                 <div class="form-group col-md-12 @if($errors->has('monto_concepto')) has-error @endif">
                     <label for="monto_concepto-field">Monto(Dejar en 0 para tomar valor del concepto)</label>
-                    {!! Form::text("monto_concepto", 0, array("class" => "form-control", "id" => "monto_concepto-crear")) !!}
+                    {!! Form::text("monto_concepto", 0, array("class" => "form-control", "id" => "monto_concepto-crear", 'readonly'=>true)) !!}
                     @if($errors->has("monto_concepto"))
                      <span class="help-block">{{ $errors->first("monto_concepto") }}</span>
                     @endif
@@ -1171,7 +1171,7 @@ Agregar nuevo registro
             complete : function(){$("#loading3").hide(); },
             success: function(data) {
                 //location.reload();
-                $('#form-buscarVenta').submit();
+                //$('#form-buscarVenta').submit();
             },
         });
     });

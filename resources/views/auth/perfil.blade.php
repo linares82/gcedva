@@ -18,11 +18,18 @@
                                 <span class="help-block">{{ $errors->first("email") }}</span>
                             @endif
                         </div>
-                        <div class="form-group col-md-6 @if($errors->has('password')) has-error @endif">
+                        <div class="form-group col-md-3 @if($errors->has('password')) has-error @endif">
                             <label for="password1-field">Password</label>
                             {!! Form::text("password1", null, array("class" => "form-control input-sm", "id" => "password1-field")) !!}
                             @if($errors->has("password"))
                                 <span class="help-block">{{ $errors->first("password") }}</span>
+                            @endif
+                        </div>
+                        <div class="form-group col-md-3 @if($errors->has('id_telegram')) has-error @endif">
+                            <label for="id_telegram-field">ID Telegram</label>
+                            {!! Form::text("id_telegram", null, array("class" => "form-control input-sm", "id" => "id_telegram-field")) !!}
+                            @if($errors->has("id_telegram"))
+                                <span class="help-block">{{ $errors->first("id_telegram") }}</span>
                             @endif
                         </div>
                         <div class="form-group">

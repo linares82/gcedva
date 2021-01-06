@@ -7,19 +7,19 @@ namespace Composer\Autoload;
 class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
 {
     public static $files = array (
+        'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
-        '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
         '25072dd6e2470089de65ae7bf11d3109' => __DIR__ . '/..' . '/symfony/polyfill-php72/bootstrap.php',
         'e69f7f6ee287b969198c3c9d6777bd38' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/bootstrap.php',
-        '023d27dca8066ef29e6739335ea73bad' => __DIR__ . '/..' . '/symfony/polyfill-php70/bootstrap.php',
         'f598d06aa772fa33d905e87be6398fb1' => __DIR__ . '/..' . '/symfony/polyfill-intl-idn/bootstrap.php',
-        'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
+        '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
+        '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
         '0d59ee240a4cd96ddbb4ff164fccea4d' => __DIR__ . '/..' . '/symfony/polyfill-php73/bootstrap.php',
         '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
         'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
-        '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         'c964ee0ededf28c96ebd9db5099ef910' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
+        '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
         '667aeda72477189d0494fecd327c3641' => __DIR__ . '/..' . '/symfony/var-dumper/Resources/functions/dump.php',
         'b067bc7112e384b61c701452d53a14a8' => __DIR__ . '/..' . '/mtdowling/jmespath.php/src/JmesPath.php',
         '8a9dc1de0ca7e01f3e08231539562f61' => __DIR__ . '/..' . '/aws/aws-sdk-php/src/functions.php',
@@ -31,7 +31,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'e39a8b23c42d4e1452234d762b03835a' => __DIR__ . '/..' . '/ramsey/uuid/src/functions.php',
         'f0906e6318348a765ffb6eb24e0d0938' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Foundation/helpers.php',
         '58571171fd5812e6e447dce228f52f4d' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Support/helpers.php',
-        '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
+        '2cffec82183ee1cea088009cef9a6fc3' => __DIR__ . '/..' . '/ezyang/htmlpurifier/library/HTMLPurifier.composer.php',
         'f18cc91337d49233e5754e93f3ed9ec3' => __DIR__ . '/..' . '/laravelcollective/html/src/helpers.php',
         'abede361264e2ae69ec1eee813a101af' => __DIR__ . '/..' . '/markbaker/complex/classes/src/functions/abs.php',
         '21a5860fbef5be28db5ddfbc3cca67c4' => __DIR__ . '/..' . '/markbaker/complex/classes/src/functions/acos.php',
@@ -91,7 +91,6 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'aa53dcba601214d17ad405b7c291b7e8' => __DIR__ . '/..' . '/markbaker/matrix/classes/src/operations/multiply.php',
         '75c79eb1b25749b05a47976f32b0d8a2' => __DIR__ . '/..' . '/markbaker/matrix/classes/src/operations/divideby.php',
         '6ab8ad87a734f276a6bcd5a0fe1289be' => __DIR__ . '/..' . '/markbaker/matrix/classes/src/operations/divideinto.php',
-        'bd9634f2d41831496de0d3dfe4c94881' => __DIR__ . '/..' . '/symfony/polyfill-php56/bootstrap.php',
         'e803af0597ea9e5b518c7d090fb85601' => __DIR__ . '/..' . '/arcanedev/support/constants.php',
         '5323a5cb5bb1bab9b2f24566beed262a' => __DIR__ . '/..' . '/arcanedev/support/helpers.php',
         '9e4824c5afbdc1482b6025ce3d4dfde8' => __DIR__ . '/..' . '/league/csv/src/functions_include.php',
@@ -133,15 +132,13 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
             'Twilio\\' => 7,
             'TijsVerkoyen\\CssToInlineStyles\\' => 31,
             'Tests\\' => 6,
+            'TelegramNotifications\\' => 22,
         ),
         'S' => 
         array (
-            'Symfony\\Polyfill\\Util\\' => 22,
             'Symfony\\Polyfill\\Php80\\' => 23,
             'Symfony\\Polyfill\\Php73\\' => 23,
             'Symfony\\Polyfill\\Php72\\' => 23,
-            'Symfony\\Polyfill\\Php70\\' => 23,
-            'Symfony\\Polyfill\\Php56\\' => 23,
             'Symfony\\Polyfill\\Mbstring\\' => 26,
             'Symfony\\Polyfill\\Intl\\Normalizer\\' => 33,
             'Symfony\\Polyfill\\Intl\\Idn\\' => 26,
@@ -149,6 +146,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
             'Symfony\\Polyfill\\Ctype\\' => 23,
             'Symfony\\Contracts\\Translation\\' => 30,
             'Symfony\\Contracts\\Service\\' => 26,
+            'Symfony\\Contracts\\HttpClient\\' => 29,
             'Symfony\\Contracts\\EventDispatcher\\' => 34,
             'Symfony\\Component\\VarDumper\\' => 28,
             'Symfony\\Component\\Translation\\' => 30,
@@ -225,6 +223,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         ),
         'I' => 
         array (
+            'Intervention\\Image\\' => 19,
             'Illuminate\\' => 11,
         ),
         'H' => 
@@ -344,9 +343,9 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         array (
             0 => __DIR__ . '/../..' . '/tests',
         ),
-        'Symfony\\Polyfill\\Util\\' => 
+        'TelegramNotifications\\' => 
         array (
-            0 => __DIR__ . '/..' . '/symfony/polyfill-util',
+            0 => __DIR__ . '/..' . '/babenkoivan/telegram-notifications/src',
         ),
         'Symfony\\Polyfill\\Php80\\' => 
         array (
@@ -359,14 +358,6 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'Symfony\\Polyfill\\Php72\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-php72',
-        ),
-        'Symfony\\Polyfill\\Php70\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/polyfill-php70',
-        ),
-        'Symfony\\Polyfill\\Php56\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/polyfill-php56',
         ),
         'Symfony\\Polyfill\\Mbstring\\' => 
         array (
@@ -395,6 +386,10 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'Symfony\\Contracts\\Service\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/service-contracts',
+        ),
+        'Symfony\\Contracts\\HttpClient\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/http-client-contracts',
         ),
         'Symfony\\Contracts\\EventDispatcher\\' => 
         array (
@@ -592,6 +587,10 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'JakubOnderka\\PhpConsoleColor\\' => 
         array (
             0 => __DIR__ . '/..' . '/jakub-onderka/php-console-color/src',
+        ),
+        'Intervention\\Image\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/intervention/image/src/Intervention/Image',
         ),
         'Illuminate\\' => 
         array (
@@ -808,6 +807,13 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
                 0 => __DIR__ . '/..' . '/cossou/jasperphp/src',
             ),
         ),
+        'H' => 
+        array (
+            'HTMLPurifier' => 
+            array (
+                0 => __DIR__ . '/..' . '/ezyang/htmlpurifier/library',
+            ),
+        ),
         'B' => 
         array (
             'BaconQrCode' => 
@@ -928,6 +934,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'AddFondoCredencialEspecialidadsTable' => __DIR__ . '/../..' . '/database/migrations/2020_01_20_141610_add_fondo_credencial_especialidads_table.php',
         'AddHashEbanxesTable' => __DIR__ . '/../..' . '/database/migrations/2019_01_14_154325_add_hash_ebanxes_table.php',
         'AddIdMapaToGradosTable' => __DIR__ . '/../..' . '/database/migrations/2020_08_07_092216_add_id_mapa_to_grados_table.php',
+        'AddIdTelegramToUsersTable' => __DIR__ . '/../..' . '/database/migrations/2021_01_05_101807_add_id_telegram_to_users_table.php',
         'AddImagenEspecialidadTable' => __DIR__ . '/../..' . '/database/migrations/2018_05_17_142252_add_imagen_especialidad_table.php',
         'AddImgFirmaPlantelsTable' => __DIR__ . '/../..' . '/database/migrations/2019_10_29_115039_add_img_firma_plantels_table.php',
         'AddIndexCombinacionIdAdeudosTable' => __DIR__ . '/../..' . '/database/migrations/2018_04_17_133606_add_index_combinacion_id_adeudos_table.php',
@@ -968,6 +975,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'AddOrdenPeriodoEstudiosTable' => __DIR__ . '/../..' . '/database/migrations/2020_02_25_094544_add_orden_periodo_estudios_table.php',
         'AddOrigenEbanxesTable' => __DIR__ . '/../..' . '/database/migrations/2018_12_20_142232_add_origen_ebanxes_table.php',
         'AddPaiseIdFieldClientesTable' => __DIR__ . '/../..' . '/database/migrations/2018_10_23_103201_add_paise_id_field_clientes_table.php',
+        'AddParentescoUrgenteToEmpleadosTable' => __DIR__ . '/../..' . '/database/migrations/2021_01_05_144043_add_parentesco_urgente_to_empleados_table.php',
         'AddPeriodoEstudioFInscricionsTable' => __DIR__ . '/../..' . '/database/migrations/2017_12_11_084732_add_periodo_estudio_f_inscricions_table.php',
         'AddPeriodoEstudioIInscricionsTable' => __DIR__ . '/../..' . '/database/migrations/2017_12_11_084742_add_periodo_estudio_i_inscricions_table.php',
         'AddPeriodoFechasAsignacionAcademicasTable' => __DIR__ . '/../..' . '/database/migrations/2018_09_03_121715_add_periodo_fechas_asignacion_academicas_table.php',
@@ -1009,8 +1017,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'AddUuidCbbXmlToPagosTable' => __DIR__ . '/../..' . '/database/migrations/2020_09_04_172320_add_uuid_cbb_xml_to_pagos_table.php',
         'AddVencimientoRvoeEspecialidadsTable' => __DIR__ . '/../..' . '/database/migrations/2019_07_24_133707_add_vencimiento_rvoe_especialidads_table.php',
         'AddfieldsInscripcionTable' => __DIR__ . '/../..' . '/database/migrations/2017_12_07_134646_addfields_inscripcion_table.php',
-        'ArithmeticError' => __DIR__ . '/..' . '/symfony/polyfill-php70/Resources/stubs/ArithmeticError.php',
-        'AssertionError' => __DIR__ . '/..' . '/symfony/polyfill-php70/Resources/stubs/AssertionError.php',
+        'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
         'CajaConceptoReglaRecargo' => __DIR__ . '/../..' . '/database/migrations/2020_03_27_174049_caja_concepto_regla_recargo.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'CreateActividadEmpresasEmpresasTable' => __DIR__ . '/../..' . '/database/migrations/2018_01_09_111135_create_actividad_empresas_empresas_table.php',
@@ -1028,6 +1035,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'CreateAsuntosTable' => __DIR__ . '/../..' . '/database/migrations/2017_05_17_211600_create_asuntos_table.php',
         'CreateAutorizacionBecaComentariosTable' => __DIR__ . '/../..' . '/database/migrations/2019_03_06_143054_create_autorizacion_beca_comentarios_table.php',
         'CreateAutorizacionBecasTable' => __DIR__ . '/../..' . '/database/migrations/2019_03_06_142247_create_autorizacion_becas_table.php',
+        'CreateAvancesTicketsTable' => __DIR__ . '/../..' . '/database/migrations/2021_01_04_093328_create_avances_tickets_table.php',
         'CreateAvisoGralsTable' => __DIR__ . '/../..' . '/database/migrations/2017_07_25_165042_create_aviso_grals_table.php',
         'CreateAvisosEmpresasTable' => __DIR__ . '/../..' . '/database/migrations/2019_02_01_145804_create_avisos_empresas_table.php',
         'CreateAvisosIniciosTable' => __DIR__ . '/../..' . '/database/migrations/2018_03_15_080242_create_avisos_inicios_table.php',
@@ -1046,6 +1054,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'CreateCambioStSeguimientosTable' => __DIR__ . '/../..' . '/database/migrations/2017_07_18_215230_create_cambio_st_seguimientos_table.php',
         'CreateCargaPonderacionsTable' => __DIR__ . '/../..' . '/database/migrations/2017_10_02_170410_create_carga_ponderacions_table.php',
         'CreateCategoriaArticulosTable' => __DIR__ . '/../..' . '/database/migrations/2019_09_12_122937_create_categoria_articulos_table.php',
+        'CreateCategoriaTicketsTable' => __DIR__ . '/../..' . '/database/migrations/2021_01_04_093003_create_categoria_tickets_table.php',
         'CreateCcuestionarioDatosTable' => __DIR__ . '/../..' . '/database/migrations/2018_02_14_183921_create_ccuestionario_datos_table.php',
         'CreateCcuestionarioPreguntasTable' => __DIR__ . '/../..' . '/database/migrations/2018_02_14_183422_create_ccuestionario_preguntas_table.php',
         'CreateCcuestionarioRespuestasTable' => __DIR__ . '/../..' . '/database/migrations/2018_02_14_183423_create_ccuestionario_respuestas_table.php',
@@ -1100,6 +1109,8 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'CreateEstadoCivilsTable' => __DIR__ . '/../..' . '/database/migrations/2020_06_22_102927_create_estado_civils_table.php',
         'CreateEstadoIdPlantelsTable' => __DIR__ . '/../..' . '/database/migrations/2018_10_22_105406_create_estado_id_plantels_table.php',
         'CreateEstadosTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_30_224317_create_estados_table.php',
+        'CreateEtiquetasTicketTicketTable' => __DIR__ . '/../..' . '/database/migrations/2021_01_04_135442_create_etiquetas_ticket_ticket_table.php',
+        'CreateEtiquetasTicketsTable' => __DIR__ . '/../..' . '/database/migrations/2021_01_04_093210_create_etiquetas_tickets_table.php',
         'CreateEventoClientesTable' => __DIR__ . '/../..' . '/database/migrations/2019_06_04_133352_create_evento_clientes_table.php',
         'CreateExistenciasTable' => __DIR__ . '/../..' . '/database/migrations/2019_09_12_140446_create_existencias_table.php',
         'CreateFacturaCotizacionsTable' => __DIR__ . '/../..' . '/database/migrations/2019_04_04_140910_create_factura_cotizacions_table.php',
@@ -1126,6 +1137,8 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'CreateHistorialsTable' => __DIR__ . '/../..' . '/database/migrations/2018_11_01_135826_create_historials_table.php',
         'CreateHorariosTable' => __DIR__ . '/../..' . '/database/migrations/2017_09_12_093259_create_horarios_table.php',
         'CreateHsSeguimientosTable' => __DIR__ . '/../..' . '/database/migrations/2017_10_11_090810_create_hs_seguimientos_table.php',
+        'CreateImagenesAvancesTicketsTable' => __DIR__ . '/../..' . '/database/migrations/2021_01_04_135307_create_imagenes_avances_tickets_table.php',
+        'CreateImagenesTicketsTable' => __DIR__ . '/../..' . '/database/migrations/2021_01_04_133954_create_imagenes_tickets_table.php',
         'CreateImpresionListaAsistensTable' => __DIR__ . '/../..' . '/database/migrations/2020_03_03_122738_create_impresion_lista_asistens_table.php',
         'CreateImpresionTicketsTable' => __DIR__ . '/../..' . '/database/migrations/2020_02_20_182907_create_impresion_tickets_table.php',
         'CreateIncidenceClientesTable' => __DIR__ . '/../..' . '/database/migrations/2020_12_28_080235_create_incidence_clientes_table.php',
@@ -1178,6 +1191,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'CreatePonderacionsTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_24_143804_create_ponderacions_table.php',
         'CreatePreguntaClientesTable' => __DIR__ . '/../..' . '/database/migrations/2017_05_04_144933_create_pregunta_clientes_table.php',
         'CreatePreguntasTable' => __DIR__ . '/../..' . '/database/migrations/2017_04_18_144907_create_preguntas_table.php',
+        'CreatePrioridadTicketsTable' => __DIR__ . '/../..' . '/database/migrations/2021_01_04_093200_create_prioridad_tickets_table.php',
         'CreatePromoPlanLnsTable' => __DIR__ . '/../..' . '/database/migrations/2019_01_23_142924_create_promo_plan_lns_table.php',
         'CreatePromocionsTable' => __DIR__ . '/../..' . '/database/migrations/2017_05_02_204052_create_promocions_table.php',
         'CreatePuestosTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_28_175357_create_puestos_table.php',
@@ -1209,6 +1223,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'CreateStPlantelsTable' => __DIR__ . '/../..' . '/database/migrations/2017_06_16_152743_create_st_plantels_table.php',
         'CreateStSeguimientosTable' => __DIR__ . '/../..' . '/database/migrations/2017_07_17_160250_create_st_seguimientos_table.php',
         'CreateStTareasTable' => __DIR__ . '/../..' . '/database/migrations/2017_05_17_210250_create_st_tareas_table.php',
+        'CreateStTicketsTable' => __DIR__ . '/../..' . '/database/migrations/2021_01_04_092920_create_st_tickets_table.php',
         'CreateStVinculacionsTable' => __DIR__ . '/../..' . '/database/migrations/2019_12_04_121724_create_st_vinculacions_table.php',
         'CreateSubcursosTable' => __DIR__ . '/../..' . '/database/migrations/2017_05_02_203802_create_subcursos_table.php',
         'CreateSubdiplomadosTable' => __DIR__ . '/../..' . '/database/migrations/2017_05_02_203907_create_subdiplomados_table.php',
@@ -1216,6 +1231,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'CreateSuccessMultipagosTable' => __DIR__ . '/../..' . '/database/migrations/2020_06_15_123838_create_success_multipagos_table.php',
         'CreateTareasEmpresasTable' => __DIR__ . '/../..' . '/database/migrations/2019_02_01_145617_create_tareas_empresas_table.php',
         'CreateTareasTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_30_224257_create_tareas_table.php',
+        'CreateTicketsTable' => __DIR__ . '/../..' . '/database/migrations/2021_01_04_093216_create_tickets_table.php',
         'CreateTipoBecasTable' => __DIR__ . '/../..' . '/database/migrations/2020_06_09_121542_create_tipo_becas_table.php',
         'CreateTipoContratosTable' => __DIR__ . '/../..' . '/database/migrations/2020_06_16_125151_create_tipo_contratos_table.php',
         'CreateTipoPersonasTable' => __DIR__ . '/../..' . '/database/migrations/2020_08_31_090620_create_tipo_personas_table.php',
@@ -1236,10 +1252,8 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'CreateVinculacionsTable' => __DIR__ . '/../..' . '/database/migrations/2019_07_30_112352_create_vinculacions_table.php',
         'DatabaseSeeder' => __DIR__ . '/../..' . '/database/seeds/DatabaseSeeder.php',
         'DeleteFieldsPlantelsTable' => __DIR__ . '/../..' . '/database/migrations/2017_06_19_171229_Delete_fields_Plantels_Table.php',
-        'DivisionByZeroError' => __DIR__ . '/..' . '/symfony/polyfill-php70/Resources/stubs/DivisionByZeroError.php',
         'Dompdf\\Cpdf' => __DIR__ . '/..' . '/dompdf/dompdf/lib/Cpdf.php',
         'EntrustSetupTables' => __DIR__ . '/../..' . '/database/migrations/2017_03_17_185006_entrust_setup_tables.php',
-        'Error' => __DIR__ . '/..' . '/symfony/polyfill-php70/Resources/stubs/Error.php',
         'HTML5_Data' => __DIR__ . '/..' . '/dompdf/dompdf/lib/html5lib/Data.php',
         'HTML5_InputStream' => __DIR__ . '/..' . '/dompdf/dompdf/lib/html5lib/InputStream.php',
         'HTML5_Parser' => __DIR__ . '/..' . '/dompdf/dompdf/lib/html5lib/Parser.php',
@@ -1692,7 +1706,6 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'PHP_Token_XOR_EQUAL' => __DIR__ . '/..' . '/phpunit/php-token-stream/src/Token.php',
         'PHP_Token_YIELD' => __DIR__ . '/..' . '/phpunit/php-token-stream/src/Token.php',
         'PHP_Token_YIELD_FROM' => __DIR__ . '/..' . '/phpunit/php-token-stream/src/Token.php',
-        'ParseError' => __DIR__ . '/..' . '/symfony/polyfill-php70/Resources/stubs/ParseError.php',
         'PeriodoMateria' => __DIR__ . '/../..' . '/database/migrations/2017_08_24_184816_periodo_materia.php',
         'PharIo\\Manifest\\Application' => __DIR__ . '/..' . '/phar-io/manifest/src/values/Application.php',
         'PharIo\\Manifest\\ApplicationName' => __DIR__ . '/..' . '/phar-io/manifest/src/values/ApplicationName.php',
@@ -1871,7 +1884,6 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'SebastianBergmann\\Timer\\RuntimeException' => __DIR__ . '/..' . '/phpunit/php-timer/src/RuntimeException.php',
         'SebastianBergmann\\Timer\\Timer' => __DIR__ . '/..' . '/phpunit/php-timer/src/Timer.php',
         'SebastianBergmann\\Version' => __DIR__ . '/..' . '/sebastian/version/src/Version.php',
-        'SessionUpdateTimestampHandlerInterface' => __DIR__ . '/..' . '/symfony/polyfill-php70/Resources/stubs/SessionUpdateTimestampHandlerInterface.php',
         'Stringable' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
         'Text_Template' => __DIR__ . '/..' . '/phpunit/php-text-template/src/Template.php',
         'TheSeer\\Tokenizer\\Exception' => __DIR__ . '/..' . '/theseer/tokenizer/src/Exception.php',
@@ -1882,7 +1894,6 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'TheSeer\\Tokenizer\\TokenCollectionException' => __DIR__ . '/..' . '/theseer/tokenizer/src/TokenCollectionException.php',
         'TheSeer\\Tokenizer\\Tokenizer' => __DIR__ . '/..' . '/theseer/tokenizer/src/Tokenizer.php',
         'TheSeer\\Tokenizer\\XMLSerializer' => __DIR__ . '/..' . '/theseer/tokenizer/src/XMLSerializer.php',
-        'TypeError' => __DIR__ . '/..' . '/symfony/polyfill-php70/Resources/stubs/TypeError.php',
         'UnhandledMatchError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/UnhandledMatchError.php',
         'ValueError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/ValueError.php',
         'Zizaco\\Entrust\\MigrationCommand' => __DIR__ . '/..' . '/zizaco/entrust/src/commands/MigrationCommand.php',

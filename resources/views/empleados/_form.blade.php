@@ -156,6 +156,13 @@
                         <span class="help-block">{{ $errors->first("contacto_emergencia") }}</span>
                       @endif
                     </div>
+                    <div class="form-group col-md-4 @if($errors->has('parentesco')) has-error @endif">
+                      <label for="parentesco-field">Parentesco</label>
+                      {!! Form::text("parentesco", null, array("class" => "form-control input-sm", "id" => "parentesco-field")) !!}
+                      @if($errors->has("parentesco"))
+                        <span class="help-block">{{ $errors->first("parentesco") }}</span>
+                      @endif
+                    </div>
                     <div class="form-group col-md-4 @if($errors->has('tel_emergencia')) has-error @endif">
                       <label for="tel_emergencia-field">Tel. Emergencia</label>
                       {!! Form::text("tel_emergencia", null, array("class" => "form-control input-sm", "id" => "tel_emergencia-field")) !!}

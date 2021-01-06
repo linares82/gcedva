@@ -30,7 +30,7 @@
             <a class="btn btn-success pull-right" href="{{ route('cuentaPs.create') }}"><i class="glyphicon glyphicon-plus"></i> Crear</a>
             @endpermission
             @permission('cuentaPs.createSeriesFolios')
-            <a class="btn btn-info pull-right" href="{{ route('cuentaPs.createSeriesFolios') }}"><i class="glyphicon glyphicon-plus"></i> Crear Series y Folios Año en Curso</a>
+            <a class="btn btn-info pull-right" href="{{ route('cuentaPs.createSeriesFolios') }}"><i class="glyphicon glyphicon-plus"></i> Crear Series y Folios {{ Date('Y')+1 }}</a>
             @endpermission
         </h3>
 

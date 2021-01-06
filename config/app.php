@@ -182,6 +182,8 @@ return [
         Bogardo\Mailgun\MailgunServiceProvider::class,
         SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
         Webklex\IMAP\Providers\LaravelServiceProvider::class,
+        TelegramNotifications\TelegramServiceProvider::class,
+        Intervention\Image\ImageServiceProvider::class,
         /*
          * Application Service Providers...
          */
@@ -252,6 +254,7 @@ return [
         'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
         'Client' => Webklex\IMAP\Facades\Client::class,
         //'Arr' => Illuminate\Support\Arr::class,
+        'Image' => Intervention\Image\Facades\Image::class,
     ],
 
 ];
