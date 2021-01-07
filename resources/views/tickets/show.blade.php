@@ -3,6 +3,24 @@
 @include('tickets._common')
 
 @section('header')
+    <style>
+        .imagen:hover{
+        border-radius:10%;
+        -webkit-border-radius:10%;
+        box-shadow: 0px 0px 15px 15px #898a9b;
+        -webkit-box-shadow: 0px 0px 15px 15px #898a9b;
+        transform: rotate(360deg);
+        -webkit-transform: rotate(360deg);
+
+        .image{
+            border-radius:10%;
+            -webkit-border-radius:10%;
+            margin:10px;
+            padding:10px;
+        }
+        }
+    </style>
+
 
     <ol class="breadcrumb">
         <li><a href="{{ route('home') }}"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></a></li>
@@ -73,7 +91,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="asignado_a">ASIGNADO A:</label>
-                                    {{ $ticket->asignado_a }}
+                                    {{ $ticket->asignadoA->name }}
                                 </div>
                                 <div class="form-group">
                                     <label for="st_ticket_name">ESTATUS:</label>
@@ -113,7 +131,7 @@
                                             <input type="file" id="file1" name="file1" class="email_archivo"
                                                 data-class_resultado="texto_notificacion1">
                                         </div>
-                                        <p class="help-block">Solo jpg</p>
+                                        <p class="help-block">Solo imagenes jpg</p>
                                         <div id="texto_notificacion1">
 
                                         </div>
@@ -121,6 +139,20 @@
                                 </div>
 
                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="box box-default">
+                        <div class="box-body">
+                            @foreach($ticket->imagenesTickets as $imagen)
+                            <div class="col-md-6">
+                                <a href="{{ asset('storage/telegram_tickets/'.$imagen->nombre) }}" target="_blank">
+                                    <img class="imagen" src="{{ asset('storage/telegram_tickets/'.$imagen->nombre) }}" caption="no encontrada" width="150px">
+                                </a>
+                            </div>
+                            @endforeach
                         </div>
                     </div>
                 </div>
@@ -137,7 +169,10 @@
 
                     <ul class="timeline">
                         <!-- timeline time label -->
-                        @foreach ($ticket->avancesTickets as $avance)
+                        @php
+                            $avancesTickets=App\AvancesTicket::where('ticket_id',$ticket->id)->orderBy('id', 'desc')->get();
+                        @endphp
+                        @foreach ($avancesTickets as $avance)
                             <li class="time-label">
                                 <span class="bg-purple">
                                     {{ $avance->created_at }}
@@ -154,18 +189,47 @@
                                         @else
                                             Nota
                                         @endif
+                                        
                                     </h3>
                                     <div class="timeline-body">
-                                        {{ $avance->detalle }}
+                                        <table class="table table-hover table-condensed">
+                                            <tbody>
+                                                <td>{{ $avance->detalle }}</td>
+                                                <td>
+                                                    @foreach($avance->imagenesAvancesTickets as $imagen)
+                                        <div class="col-md-2">
+                                            <a href="{{ asset('storage/telegram_tickets/'.$imagen->nombre) }}" target="_blank">
+                                                <img class="imagen" src="{{ asset('storage/telegram_tickets/'.$imagen->nombre) }}" caption="no encontrada" width="150px">
+                                            </a>
+                                        </div>
+                                        @endforeach
+                                                </td>
+                                            </tbody>
+                                        </table>
+                                        
+                                        
+                                        
+
                                     </div>
                                     <div class="timeline-footer">
                                         @if ($avance->bnd_notificacion == 0)
                                             <a class="btn btn-primary btn-xs"
-                                                href="{{ route('avancesTickets.edit', $avance->id) }}">Editar</a>
+                                                href="{{ route('avancesTickets.edit', $avance->id) }}">Editar
+                                            </a>
                                         @else
                                             <a class="btn btn-primary btn-xs"
-                                                href="{{ route('avancesTickets.toTelegram', [$avance->usu_alta_id, $avance->asignado_a, $avance->id]) }}">Reenviar</a>
+                                                href="{{ route('avancesTickets.toTelegram', [$avance->usu_alta_id, $avance->asignado_a, $avance->id]) }}">Reenviar
+                                            </a>
                                         @endif
+                                        <div class="form-group col-md-4">
+                                            <div class="btn btn-default btn-xs btn-file">
+                                                <i class="fa fa-paperclip"></i> Adjuntar Archivo
+                                                <input type="file" id="file1" name="file2" class="email_archivo2"
+                                                    data-avance="{{ $avance->id }}">
+                                            </div>
+                                            Solo imagenes jpg
+                                            
+                                        </div>
                                     </div>
                                 </div>
                             </li>
@@ -209,6 +273,7 @@
                         var data = new FormData();
                         //console.log($(this)[0].files[0]);
                         data.append('file1', $(this)[0].files[0]);
+                        data.append('ticket', {{ $ticket->id }});
                         /*data.append('file1', $('#file1')[0].files[0]);
                             data.append('file2', $('#file2')[0].files[0]);
                             data.append('file3', $('#file3')[0].files[0]);
@@ -236,7 +301,7 @@
                             },
                             //una vez finalizado correctamente
                             success: function(data) {
-
+                                location.reload();
                                 var codigo =
                                     '<div class="mailbox-attachment-info"><a href="#" class="mailbox-attachment-name"><i class="fa fa-paperclip"></i>' +
                                     data + '</a><span class="mailbox-attachment-size"> </span></div>';
@@ -254,6 +319,63 @@
                         });
 
                     })
+
+                    $(document).on("change", ".email_archivo2", function(e) {
+
+                        var miurl = '{{ url('/avancesTickets/carga_archivo_correo') }}';
+                        // var fileup=$("#file").val();
+                        var divresul = $(this).data('class_resultado');
+
+                        var data = new FormData();
+                        //console.log($(this)[0].files[0]);
+                        data.append('file1', $(this)[0].files[0]);
+                        //console.log($(this).data());
+                        data.append('avance', $(this).data('avance'));
+                        /*data.append('file1', $('#file1')[0].files[0]);
+                            data.append('file2', $('#file2')[0].files[0]);
+                            data.append('file3', $('#file3')[0].files[0]);
+                        */
+                        //console.log(data);
+                        $.ajaxSetup({
+                            headers: {
+                                'X-CSRF-TOKEN': $('#_token').val()
+                            }
+                        });
+                        $.ajax({
+                            url: miurl,
+                            type: 'POST',
+
+                            // Form data
+                            //datos del formulario
+                            data: data,
+                            //necesario para subir archivos via ajax
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            //mientras enviamos el archivo
+                            beforeSend: function() {
+                                $("#" + divresul + "").html($("#cargador_empresa").html());
+                            },
+                            //una vez finalizado correctamente
+                            success: function(data) {
+                                location.reload();
+                                var codigo =
+                                    '<div class="mailbox-attachment-info"><a href="#" class="mailbox-attachment-name"><i class="fa fa-paperclip"></i>' +
+                                    data + '</a><span class="mailbox-attachment-size"> </span></div>';
+                                $("#" + divresul + "").html(codigo);
+
+                            },
+                            complete:function(data){
+                                console.log(data);
+                            },
+                            //si ha ocurrido un error
+                            error: function(data) {
+                                $("#" + divresul + "").html(data);
+
+                            }
+                        });
+
+                        });
 
                 </script>
             @endpush

@@ -39,8 +39,8 @@
                     <p class="form-control-static">{{$imagenesAvancesTicket->id}}</p>
                 </div>
                 <div class="form-group">
-                     <label for="avances_ticket_id">AVANCES_TICKET_ID</label>
-                     <p class="form-control-static">{{$imagenesAvancesTicket->avances_ticket_id}}</p>
+                     <label for="avances_ticket_detalle">AVANCES_TICKET_DETALLE</label>
+                     <p class="form-control-static">{{$imagenesAvancesTicket->avancesTicket->detalle}}</p>
                 </div>
                     <div class="form-group">
                      <label for="nombre">NOMBRE</label>

@@ -51,7 +51,8 @@ class LaravelTelegramNotification extends Notification
     }*/
     public function toTelegram() {
         return (new TelegramMessage())
-            ->text($this->data['text']);
+            ->text($this->data['text'])
+            ->photo(['photo' => $this->data['photo'], 'caption' => $this->data['photo_caption']]);
     }
 
     /**

@@ -29,7 +29,7 @@ class CreateTicketsTable extends Migration {
 			$table->foreign('usu_mod_id')->references('id')->on('users');
 			$table->foreign('st_ticket_id')->references('id')->on('st_tickets');
 			$table->foreign('asignado_a')->references('id')->on('users');
-			$table->foreign('prioridad_id')->references('id')->on('prioridad_tickets');
+			$table->foreign('prioridad_ticket_id')->references('id')->on('prioridad_tickets');
 			$table->foreign('categoria_ticket_id')->references('id')->on('categoria_tickets');
         });
 	}

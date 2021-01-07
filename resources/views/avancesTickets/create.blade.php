@@ -29,7 +29,7 @@
                 </div>
                 <div class="well well-sm">
                     <button type="submit" class="btn btn-primary">Crear</button>
-                    <a class="btn btn-link pull-right" href="{{ route('avancesTickets.index') }}"><i class="glyphicon glyphicon-backward"></i> Regresar</a>
+                    <a class="btn btn-link pull-right" href="{{ route('tickets.show', $ticket->id) }}"><i class="glyphicon glyphicon-backward"></i> Regresar</a>
                 </div>
             {!! Form::close() !!}
 

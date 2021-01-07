@@ -39,8 +39,8 @@
                     <p class="form-control-static">{{$imagenesTicket->id}}</p>
                 </div>
                 <div class="form-group">
-                     <label for="ticket_id">TICKET_ID</label>
-                     <p class="form-control-static">{{$imagenesTicket->ticket_id}}</p>
+                     <label for="ticket_nombre_corto">TICKET_NOMBRE_CORTO</label>
+                     <p class="form-control-static">{{$imagenesTicket->ticket->nombre_corto}}</p>
                 </div>
                     <div class="form-group">
                      <label for="nombre">NOMBRE</label>

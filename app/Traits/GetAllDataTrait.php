@@ -152,7 +152,12 @@ trait GetAllDataTrait
         //dd($empleado);
         //dd($baseTable);
         switch ($baseTable) {
-
+            case "tickets":
+                if (Auth::user()->can('tickets.usuarioTickets')) {
+                    $myQuery = $myQuery->orWhere('tickets.asignado_a', Auth::user()->id)
+                    ->orWhere('tickets.usu_alta_id', Auth::user()->id);
+                }
+                break;
             case "movimientos":
                 //if (Auth::user()->can('IfiltroClientesXPlantel')) {
                 $myQuery = $myQuery->whereIn('movimientos.plantel_id', $planteles);

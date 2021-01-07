@@ -61,9 +61,9 @@
                             </div>
                             -->
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_categoria_tickets.name_cont">CATEGORIA_TICKET_NAME</label>
+                                <label class="col-sm-2 control-label" for="q_categoria_tickets.name_cont">CATEGORIA</label>
                                 <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['categoria_tickets.name_cont']) ?: '' }}" name="q[categoria_tickets.name_cont]" id="q_categoria_tickets.name_cont" />
+                                    {!! Form::select("categoria_ticket_id", $list["CategoriaTicket"], "{{ @(Request::input('q')['tickets.categoria_ticket_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[tickets.categoria_ticket_id_lt]", "id"=>"q_tickets.categoria_ticket_id_lt", "style"=>"width:100%;" )) !!}
                                 </div>
                             </div>
                                                     <!--
@@ -78,12 +78,7 @@
                                 </div>
                             </div>
                             -->
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_detalle_cont">DETALLE</label>
-                                <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['detalle_cont']) ?: '' }}" name="q[detalle_cont]" id="q_detalle_cont" />
-                                </div>
-                            </div>
+                            
                                                     <!--
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_fecha_gt">FECHA</label>
@@ -99,7 +94,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_fecha_cont">FECHA</label>
                                 <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['fecha_cont']) ?: '' }}" name="q[fecha_cont]" id="q_fecha_cont" />
+                                    <input class="form-control input-sm fecha" type="search" value="{{ @(Request::input('q')['fecha_cont']) ?: '' }}" name="q[fecha_cont]" id="q_fecha_cont" />
                                 </div>
                             </div>
                                                     <!--
@@ -115,9 +110,10 @@
                             </div>
                             -->
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_asignado_a_cont">ASIGNADO_A</label>
+                                <label class="col-sm-2 control-label" for="q_asignado_a_cont">ASIGNADO A</label>
                                 <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['asignado_a_cont']) ?: '' }}" name="q[asignado_a_cont]" id="q_asignado_a_cont" />
+                                    
+                                    {!! Form::select("asignado_a", $users, "{{ @(Request::input('q')['tickets.asignado_a_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[tickets.asignado_a_lt]", "id"=>"q_tickets.asignado_a_lt", "style"=>"width:100%;" )) !!}
                                 </div>
                             </div>
                                                     <!--
@@ -133,9 +129,10 @@
                             </div>
                             -->
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_st_tickets.name_cont">ST_TICKET_NAME</label>
+                                <label class="col-sm-2 control-label" for="q_st_tickets.name_cont">ESTATUS</label>
                                 <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['st_tickets.name_cont']) ?: '' }}" name="q[st_tickets.name_cont]" id="q_st_tickets.name_cont" />
+                                    
+                                    {!! Form::select("st_ticket_id", $list["StTicket"], "{{ @(Request::input('q')['tickets.st_ticket_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[tickets.st_ticket_id_lt]", "id"=>"q_tickets.st_ticket_id_lt", "style"=>"width:100%;" )) !!}
                                 </div>
                             </div>
                                                     <!--
@@ -150,12 +147,7 @@
                                 </div>
                             </div>
                             -->
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_usu_alta_id_cont">USU_ALTA_ID</label>
-                                <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['usu_alta_id_cont']) ?: '' }}" name="q[usu_alta_id_cont]" id="q_usu_alta_id_cont" />
-                                </div>
-                            </div>
+                            
                                                     <!--
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_usu_mod_id_gt">USU_MOD_ID</label>
@@ -168,12 +160,7 @@
                                 </div>
                             </div>
                             -->
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_usu_mod_id_cont">USU_MOD_ID</label>
-                                <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['usu_mod_id_cont']) ?: '' }}" name="q[usu_mod_id_cont]" id="q_usu_mod_id_cont" />
-                                </div>
-                            </div>
+                            
 
                             <div class="form-group">
                                 <div class="col-sm-10 col-sm-offset-2">
@@ -217,7 +204,6 @@
                                 <td>
                                     @foreach ($ticket->etiquetas as $etiqueta)
                                         <span class="badge bg-blue">{{ $etiqueta->name }}</span>    
-                                                
                                     @endforeach
                                 </td>
                                 <td class="text-right">

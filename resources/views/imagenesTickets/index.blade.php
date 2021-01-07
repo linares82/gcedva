@@ -50,20 +50,20 @@
 
                             <!--
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_ticket_id_gt">TICKET_ID</label>
+                                <label class="col-sm-2 control-label" for="q_tickets.nombre_corto_gt">TICKET_NOMBRE_CORTO</label>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['ticket_id_gt']) ?: '' }}" name="q[ticket_id_gt]" id="q_ticket_id_gt" />
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['tickets.nombre_corto_gt']) ?: '' }}" name="q[tickets.nombre_corto_gt]" id="q_tickets.nombre_corto_gt" />
                                 </div>
                                 <div class=" col-sm-1 text-center"> - </div>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['ticket_id_lt']) ?: '' }}" name="q[ticket_id_lt]" id="q_ticket_id_lt" />
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['tickets.nombre_corto_lt']) ?: '' }}" name="q[tickets.nombre_corto_lt]" id="q_tickets.nombre_corto_lt" />
                                 </div>
                             </div>
                             -->
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_ticket_id_cont">TICKET_ID</label>
+                                <label class="col-sm-2 control-label" for="q_tickets.nombre_corto_cont">TICKET_NOMBRE_CORTO</label>
                                 <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['ticket_id_cont']) ?: '' }}" name="q[ticket_id_cont]" id="q_ticket_id_cont" />
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['tickets.nombre_corto_cont']) ?: '' }}" name="q[tickets.nombre_corto_cont]" id="q_tickets.nombre_corto_cont" />
                                 </div>
                             </div>
                                                     <!--
@@ -143,7 +143,7 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'ticket_id', 'title' => 'TICKET_ID'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'tickets.nombre_corto', 'title' => 'TICKET_NOMBRE_CORTO'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'nombre', 'title' => 'NOMBRE'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
@@ -155,7 +155,7 @@
                         @foreach($imagenesTickets as $imagenesTicket)
                             <tr>
                                 <td><a href="{{ route('imagenesTickets.show', $imagenesTicket->id) }}">{{$imagenesTicket->id}}</a></td>
-                                <td>{{$imagenesTicket->ticket_id}}</td>
+                                <td>{{$imagenesTicket->ticket->nombre_corto}}</td>
                     <td>{{$imagenesTicket->nombre}}</td>
                     <td>{{$imagenesTicket->usu_alta_id}}</td>
                     <td>{{$imagenesTicket->usu_mod_id}}</td>

@@ -89,6 +89,11 @@ return [
             'root' => storage_path('app/tmp_correos'),
         ],
 
+        'telegram_tickets' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/telegram_tickets'),
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),

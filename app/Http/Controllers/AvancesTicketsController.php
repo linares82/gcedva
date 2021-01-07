@@ -3,14 +3,17 @@
 use Auth;
 use App\User;
 
+use DateTime;
 use App\Ticket;
 use App\AvancesTicket;
 use App\Http\Requests;
 use Illuminate\Http\Request;
+use App\ImagenesAvancesTicket;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\createAvancesTicket;
 use App\Http\Requests\updateAvancesTicket;
 use App\Notifications\LaravelTelegramNotification;
+use Intervention\Image\ImageManagerStatic as Image;
 
 class AvancesTicketsController extends Controller {
 
@@ -152,4 +155,40 @@ class AvancesTicketsController extends Controller {
 		]));
 		return redirect()->route('tickets.show', array($Avance->ticket_id,"Mensaje Enviado"));
 	}
+
+	public function cargaArchivoCorreo(Request $request)
+    {
+		//dd($request);
+		if ($request->hasFile('file1')){
+			$avancesTicket=AvancesTicket::find($request['avance']);
+			$file1    = $request->file('file1');
+			$now = new DateTime();
+			$nombre     = $avancesTicket->ticket_id."_".$avancesTicket->id."_".$now->format('Ymdhmiv').".".$file1->guessExtension();
+	
+			$ruta=storage_path()."/app/public/telegram_tickets/".$nombre;
+	
+			Image::make($file1->getRealPath())
+				->resize(1100, null, function ($constraint){ 
+					$constraint->aspectRatio();
+				})
+				->save($ruta,40);
+				
+			
+				
+			$imagenAvanceTicket=New ImagenesAvancesTicket();
+			$imagenAvanceTicket->avances_ticket_id=$avancesTicket->id;
+			$imagenAvanceTicket->nombre=$nombre;
+			$imagenAvanceTicket->usu_alta_id=Auth::user()->id;
+			$imagenAvanceTicket->usu_mod_id=Auth::user()->id;
+			//dd($imagenAvanceTicket);
+			$imagenAvanceTicket->save();
+			
+			/*$this->toTelegramImagen($ticket->asignado_a, 
+									$ticket->usu_alta_id, 
+									$ticket->id, 
+									asset('storage/telegram_tickets/'.$nombre));	
+									*/
+		}
+		
+    }
 }

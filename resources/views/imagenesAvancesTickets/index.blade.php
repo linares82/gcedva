@@ -50,20 +50,20 @@
 
                             <!--
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_avances_ticket_id_gt">AVANCES_TICKET_ID</label>
+                                <label class="col-sm-2 control-label" for="q_avances_tickets.detalle_gt">AVANCES_TICKET_DETALLE</label>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['avances_ticket_id_gt']) ?: '' }}" name="q[avances_ticket_id_gt]" id="q_avances_ticket_id_gt" />
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['avances_tickets.detalle_gt']) ?: '' }}" name="q[avances_tickets.detalle_gt]" id="q_avances_tickets.detalle_gt" />
                                 </div>
                                 <div class=" col-sm-1 text-center"> - </div>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['avances_ticket_id_lt']) ?: '' }}" name="q[avances_ticket_id_lt]" id="q_avances_ticket_id_lt" />
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['avances_tickets.detalle_lt']) ?: '' }}" name="q[avances_tickets.detalle_lt]" id="q_avances_tickets.detalle_lt" />
                                 </div>
                             </div>
                             -->
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_avances_ticket_id_cont">AVANCES_TICKET_ID</label>
+                                <label class="col-sm-2 control-label" for="q_avances_tickets.detalle_cont">AVANCES_TICKET_DETALLE</label>
                                 <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['avances_ticket_id_cont']) ?: '' }}" name="q[avances_ticket_id_cont]" id="q_avances_ticket_id_cont" />
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['avances_tickets.detalle_cont']) ?: '' }}" name="q[avances_tickets.detalle_cont]" id="q_avances_tickets.detalle_cont" />
                                 </div>
                             </div>
                                                     <!--
@@ -143,7 +143,7 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'avances_ticket_id', 'title' => 'AVANCES_TICKET_ID'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'avances_tickets.detalle', 'title' => 'AVANCES_TICKET_DETALLE'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'nombre', 'title' => 'NOMBRE'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
@@ -155,7 +155,7 @@
                         @foreach($imagenesAvancesTickets as $imagenesAvancesTicket)
                             <tr>
                                 <td><a href="{{ route('imagenesAvancesTickets.show', $imagenesAvancesTicket->id) }}">{{$imagenesAvancesTicket->id}}</a></td>
-                                <td>{{$imagenesAvancesTicket->avances_ticket_id}}</td>
+                                <td>{{$imagenesAvancesTicket->avancesTicket->detalle}}</td>
                     <td>{{$imagenesAvancesTicket->nombre}}</td>
                     <td>{{$imagenesAvancesTicket->usu_alta_id}}</td>
                     <td>{{$imagenesAvancesTicket->usu_mod_id}}</td>

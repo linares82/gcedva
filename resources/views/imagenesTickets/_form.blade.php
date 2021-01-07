@@ -1,6 +1,6 @@
                 <div class="form-group @if($errors->has('ticket_id')) has-error @endif">
-                       <label for="ticket_id-field">Ticket_id</label>
-                       {!! Form::text("ticket_id", null, array("class" => "form-control", "id" => "ticket_id-field")) !!}
+                       <label for="ticket_id-field">Ticket_nombre_corto</label>
+                       {!! Form::select("ticket_id", $list["Ticket"], null, array("class" => "form-control", "id" => "ticket_id-field")) !!}
                        @if($errors->has("ticket_id"))
                         <span class="help-block">{{ $errors->first("ticket_id") }}</span>
                        @endif

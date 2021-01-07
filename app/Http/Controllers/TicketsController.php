@@ -3,8 +3,10 @@
 use Auth;
 use App\User;
 
+use DateTime;
 use App\Ticket;
 use App\Http\Requests;
+use App\ImagenesTicket;
 use App\EtiquetasTicket;
 use Illuminate\Http\Request;
 use App\Http\Requests\createTicket;
@@ -24,8 +26,9 @@ class TicketsController extends Controller {
 	public function index(Request $request)
 	{
 		$tickets = Ticket::getAllData($request);
-
-		return view('tickets.index', compact('tickets'));
+		$users=User::pluck('name','id');
+		$users->prepend('Seleccionar Opcion',0);
+		return view('tickets.index', compact('tickets','users'))->with( 'list', Ticket::getListFromAllRelationApps());
 	}
 
 	/**
@@ -37,6 +40,7 @@ class TicketsController extends Controller {
 	{
 		$etiquetas=EtiquetasTicket::pluck('name','id');
 		$users=User::pluck('name','id');
+		
 		return view('tickets.create', compact('etiquetas','users'))
 			->with( 'list', Ticket::getListFromAllRelationApps() );
 	}
@@ -151,34 +155,53 @@ class TicketsController extends Controller {
 		return redirect()->route('tickets.show', array($Avance->ticket_id,"Mensaje Enviado"));
 	}
 
+	public function toTelegramImagen($from, $to, $ticket, $file){
+		$From=User::find($from);
+		$To=User::find($to);
+		$Ticket=Ticket::find($ticket);
+		
+		$From->notify(new LaravelTelegramNotification([
+			'text' => "Ticket: ".$Ticket->id." Detalle:".$Ticket->nombre_corto,
+			'photo' => $file,
+			'photo_caption' => "Evidencia"
+		]));
+		$To->notify(new LaravelTelegramNotification([
+			'text' => "Ticket: ".$Ticket->id." Detalle:".$Ticket->nombre_corto,
+			'photo' => $file,
+			'photo_caption' => "Evidencia"
+		]));
+		return redirect()->route('tickets.show', array($Avance->ticket_id,"Mensaje Enviado"));
+	}
+
 	public function cargaArchivoCorreo(Request $request)
     {
-		/*
-        $nombre = "";
-        if ($request->hasFile('file1')) {
-            $file = $request->file('file1');
-            $extension = $file->getClientOriginalExtension();
-            $nombre = $file->getClientOriginalName();
-            $r = Storage::disk('tmp_correos')->put($nombre, \File::get($file));
-        } else {
-            return "no";
-        }
-
-        if ($r) {
-            return $nombre;
-        } else {
-            return "Error vuelva a intentarlo";
-		}*/
-		//dd();
+		//dd($request);
 		if ($request->hasFile('file1')){
 			$file1    = $request->file('file1');
-			$nombre     = date('Ymdhmi').".".$file1->guessExtension();
-			$ruta=storage_path()."/app/tmp_correos/".$nombre;
+			$now = new DateTime();
+			$nombre     = $request['ticket']."_".$now->format('Ymdhmiv').".".$file1->guessExtension();
+	
+			$ruta=storage_path()."/app/public/telegram_tickets/".$nombre;
+	
 			Image::make($file1->getRealPath())
 				->resize(1100, null, function ($constraint){ 
 					$constraint->aspectRatio();
 				})
 				->save($ruta,40);
+				
+			$ticket=Ticket::find($request['ticket']);
+				
+			$imagenTicket=New ImagenesTicket();
+			$imagenTicket->ticket_id=$ticket->id;
+			$imagenTicket->nombre=$nombre;
+			$imagenTicket->usu_alta_id=Auth::user()->id;
+			$imagenTicket->usu_mod_id=Auth::user()->id;
+			$imagenTicket->save();
+			
+			$this->toTelegramImagen($ticket->asignado_a, 
+									$ticket->usu_alta_id, 
+									$ticket->id, 
+									asset('storage/telegram_tickets/'.$nombre));	
 		}
 		
     }
