@@ -73,14 +73,14 @@ class AutorizacionBecaComentariosController extends Controller {
 			$autorizacionBeca->aut_dueno = $input['st_beca_id'];
 		}
 
-		$autorizacionBeca->monto_inscripcion = $input['monto_inscripcion'];
+		$autorizacionBeca->monto_inscripcion = $input['monto_mensualidad'];
 		$autorizacionBeca->monto_mensualidad = $input['monto_mensualidad'];
 		$autorizacionBeca->save();
 
 		if($autorizacion['autorizacion']=='aut_dueno' and $autorizacionBeca->st_beca_id==4){
 			$cliente = Cliente::find($autorizacionBeca->cliente_id);
 			$cliente->monto_mensualidad = $input['monto_mensualidad'];
-			$cliente->beca_porcentaje = $input['monto_inscripcion'];
+			$cliente->beca_porcentaje = $input['monto_mensualidad'];
 			$cliente->beca_bnd = 1;
 			$cliente->save();
 		}

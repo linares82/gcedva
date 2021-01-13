@@ -20,4 +20,8 @@ class Role extends EntrustRole implements ValidatingModelInterface
     'name'      => 'required|unique:roles',
     'display_name'      => 'required|unique:roles',
   ];
+
+  public function ususarios(){
+    return $this->belongsToMany('App\User','role_user','role_id','user_id');
+}
 }

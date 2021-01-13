@@ -63,6 +63,9 @@
                         <th>No.</th><th>Nombre</th><th>Materias</th>
                     </thead>
                     <tbody>
+                        @php
+                            $no=0;
+                        @endphp
                         @foreach($inscripcions as $i)
                         <tr>
                             <td>

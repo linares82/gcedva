@@ -110,7 +110,7 @@
     <div class="tablediv">
         <table>
             <tr>
-                <TD width="170px">Fecha de Nacimiento:</TD><TD class="td_contenido">{{ date_format(date_create($cliente->fec_nacimiento),"d-m-Y") }} </TD><td width="120px">Estado Civil:</td><td class="td_contenido">{{ $cliente->estadoCivil->name }}</td><td width="40px">Sexo:</td><td class="td_contenido">{{ ($cliente->genero==1? 'Masculino': 'Femenino') }}</td>
+                <TD width="170px">Fecha de Nacimiento:</TD><TD class="td_contenido">{{ date_format(date_create($cliente->fec_nacimiento),"d-m-Y") }} </TD><td width="120px">Estado Civil:</td><td class="td_contenido">{{ optional($cliente->estadoCivil)->name }}</td><td width="40px">Sexo:</td><td class="td_contenido">{{ ($cliente->genero==1? 'Masculino': 'Femenino') }}</td>
             </tr>
         </table>
     </div>

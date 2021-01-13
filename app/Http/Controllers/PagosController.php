@@ -574,7 +574,8 @@ class PagosController extends Controller
                 }
             }
         */
-        return view('cajas.caja', compact('cliente', 'caja', 'combinaciones', 'cajas'))
+        $empleados = Empleado::select(DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name, id'))->pluck('name', 'id');
+        return view('cajas.caja', compact('cliente', 'caja', 'combinaciones', 'cajas','empleados'))
             ->with('list', Caja::getListFromAllRelationApps())
             ->with('list1', CajaLn::getListFromAllRelationApps());
     }
@@ -821,7 +822,8 @@ class PagosController extends Controller
             'impresion_token' => $impresion_token,
             'atendio_pago' => $atendio_pago,
             'suma_pagos' => $suma_pagos,
-            'totalLetra' => $totalLetra
+            'totalLetra' => $totalLetra,
+            'centavos'=>$centavos
         ));
     }
 
@@ -901,7 +903,8 @@ class PagosController extends Controller
             'impresion_token' => $impresion_token,
             'atendio_pago' => $atendio_pago,
             'suma_pagos' => $suma_pagos,
-            'totalLetra' => $totalLetra
+            'totalLetra' => $totalLetra,
+            'centavos'=>$centavos
         ));
     }
 

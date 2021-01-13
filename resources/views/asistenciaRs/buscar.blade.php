@@ -52,15 +52,16 @@
                         <th>Alumno</th><th>Estatus Cliente</th><th>Fecha</th><th>Asistencia</th><th></th>
                     </thead>
                         @foreach($asistencias as $s)
+                        
                         <tr>
                             <td>
-                                {{$s->cliente_id}} - {{ $s->cliente->ape_paterno." ".$s->cliente->ape_materno." ".$s->cliente->nombre." ".$s->cliente->nombre2 }}
+                                {{$s->cliente_id}} - {{ optional($s->cliente)->ape_paterno." ".optional($s->cliente)->ape_materno." ".optional($s->cliente)->nombre." ".optional($s->cliente)->nombre2 }}
                             </td>
-                            <td>{{ $s->cliente->stCliente->name }}</td>
+                            <td>{{ optional($s->cliente->stCliente)->name }}</td>
                             <td>{{ $s->fecha }}</td>
                             <td>
                                 <div class="form-group col-md-4 @if($errors->has('est_asistencia_id')) has-error @endif">
-                                    @if($s->cliente->st_cliente_id==25)                                    
+                                    @if(optional($s->cliente)->st_cliente_id==25)                                    
                                     @else
                                         {!! Form::select("est_asistencia_id", $list["EstAsistencium"], $s->est_asistencia_id, array("class" => "form-control select_seguridad1", "id" => "est_asistencia_id".$s->id."-field", "name" => "est_asistencia_id".$s->id."-field")) !!}
                                     @endif

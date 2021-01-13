@@ -420,7 +420,7 @@
                                          
                                         </td>
                                         <td>
-                                            {{$c->grado->name}}
+                                            {{optional($c->grado)->name}}
                                          
                                         </td>
                                         <td>
@@ -681,14 +681,19 @@
                                     <td>{{ $beca->solicitud }}</td>
                                     <td>{{ $beca->monto_mensualidad }}</td>
                                     <td>
-                                        @if($beca->autDueno->id==4)
+                                        @if($beca->aut_dueno<>0)
+                                        @php
+                                            $autDueno=App\StBeca::find($beca->aut_dueno);
+                                        @endphp
+                                        @if($autDueno->id==4)
                                         <span class="badge bg-green">
-                                            {{ $beca->autDueno->name }}
+                                            {{ $autDueno->name }}
                                         </span>
                                          @else
                                          <span class="badge bg-red">
-                                            {{ $beca->autDueno->name }}
+                                            {{ $autDueno->name }}
                                         </span>
+                                         @endif
                                          @endif
                                     </td>
                                     <td>{{ $beca->lectivo->name }}</td>
@@ -809,7 +814,11 @@
                     @permission('clientes.editMatricula')
                     {!! Form::text("matricula", null, array("class" => "form-control input-sm", "id" => "matricula-field")) !!}
                     @endpermission
-                    {{ $cliente->matricula }}
+                    
+                    @if(isset($cliente))
+                    {!! Form::text("matricula", null, array("class" => "form-control input-sm", "id" => "matricula-field", 'readonly'=>true)) !!}
+        		    @endif
+
                     @if($errors->has("matricula"))
                     <span class="help-block">{{ $errors->first("matricula") }}</span>
                     @endif
@@ -1407,6 +1416,13 @@
                             <span class="help-block">{{ $errors->first("tipo_persona_id") }}</span>
                             @endif
                         </div>
+                        <div class="form-group col-md-4 @if($errors->has('uso_factura_id')) has-error @endif">
+                            <label for="uso_factura_id-field">Uso Factura</label>
+                            {!! Form::select("uso_factura_id", $list["UsoFactura"], null, array("class" => "form-control select_seguridad", "id" => "uso_factura_id-field", 'style'=>'width:100%')) !!}
+                            @if($errors->has("uso_factura_id"))
+                            <span class="help-block">{{ $errors->first("uso_factura_id") }}</span>
+                            @endif
+                        </div>
                         <div class="form-group col-md-4 @if($errors->has('frazon')) has-error @endif">
                             <label for="frazon-field">Nombre o Razon Social</label>
                             {!! Form::text("frazon", null, array("class" => "form-control input-sm", "id" => "frazon-field")) !!}
@@ -1983,7 +1999,7 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                             $.get("{{ url('getPlantel')}}",
                             { empleado: $(this).val() },
                                     function(data) {
-                                    $('#plantel_id-field').val(data).change();
+                                    //$('#plantel_id-field').val(data).change();
                                     $("#loading3").hide();
                                     }
                             );

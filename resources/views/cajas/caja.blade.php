@@ -296,7 +296,7 @@
                         </thead>
                         <tbody>
 			    @php
-			    $caja->load(cajaLns);
+			    $caja->load('cajaLns');
 				//dd($caja->cajaLns->toArray());
 			    @endphp
                             @foreach($caja->cajaLns as $linea)
@@ -468,7 +468,7 @@
                                         @if($pago->bnd_pagado==1) 
                                         <span class="">Pagado </span>
                                         @else 
-                                        <span class=""> En proceso - {{$success->mp_responsemsg}}<span>
+                                        <span class=""> En proceso - {{  !is_null($success) ? $success->mp_responsemsg : ""}} <span>
                                         @endif
                                         
                                         
@@ -666,16 +666,18 @@
                                     $suma_pagos=$suma_pagos+$pago->monto;
                                 }
                                 ?>
-                                @if(!is_null($linea_caja))
+                                @if(isset($linea_caja) and !is_null($linea_caja))
                                 {{$linea_caja->total}}
                                 @endif
                                 {{ $suma_pagos }}
                             </td>
                             <td>
                                 @permission('adeudos.destroy')
+                                    @if($adeudo->pagado_bnd<>1)
                                     {!! Form::model($adeudo, array('route' => array('adeudos.destroy', $adeudo->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}
                                         <button type="submit" class="btn btn-xs btn-danger" data-toggle="tooltip" title="Borrar Adeudo"><i class="glyphicon glyphicon-trash"></i> </button>
                                     {!! Form::close() !!}
+                                    @endif
                                 @endpermission
                             </td>
                             <td>{{$adeudo->fecha_pago}}</td>
@@ -696,7 +698,7 @@
                             @endif
                                 @if($adeudo->pagado_bnd==1) SI @else NO @endif
                                 @if($adeudo->caja->consecutivo<>0)
-                                @if(is_null($pago->uuid)) / NO @else / SI @endif   
+                                @if(isset($pago) and is_null($pago->uuid)) / NO @else / SI @endif   
                                 @endif
                                  
                             </td>
@@ -771,11 +773,13 @@ Agregar nuevo registro
                         <th>Incidencia</th><th>Detalle</th><th>Fecha</th>
                     </thead>
                     <tbody>
+			@if(isset($cliente))
                         @foreach($cliente->incidencesClientes as $incidencia)
                         <tr>
-                            <td>{{ $incidencia->incidenceCliente->name }}</td><td>{{ $incidencia->detalle }}</td><td>{{ $indicencia->fecha }}</td>
+                            <td>{{ $incidencia->incidenceCliente->name }}</td><td>{{ $incidencia->detalle }}</td><td>{{ $incidencia->fecha }}</td>
                         </tr>
                         @endforeach
+			@endif
                     </tbody>
                 </table>    
                 <div class="row"></div>
@@ -1170,7 +1174,7 @@ Agregar nuevo registro
             beforeSend : function(){$("#loading3").show(); },
             complete : function(){$("#loading3").hide(); },
             success: function(data) {
-                //location.reload();
+                location.reload();
                 $('#form-buscarVenta').submit();
             },
         });
@@ -1207,7 +1211,7 @@ Agregar nuevo registro
         });
         @endrole
 
-        @if($caja->forma_pago_id<>1 and $caja->forma_pago_id<>6 and $caja->forma_pago_id<>9)
+        @if(isset($caja) and $caja->forma_pago_id<>1 and $caja->forma_pago_id<>6 and $caja->forma_pago_id<>9)
         $('.editable_fecha').dblclick(function(){
             captura=$(this).children("input");
             captura.show();
@@ -1324,11 +1328,13 @@ Agregar nuevo registro
 
     @php
         $monto_max_pago=0;
+	if(isset($caja)){
         if(optional($caja->pagos)->count()>0){
-            $monto_max_pago=$caja->total-$caja->pagos->sum(monto);
+            $monto_max_pago=$caja->total-$caja->pagos->sum('monto');
         }else{
             $monto_max_pago=$caja->total;
         }
+	}
 
     @endphp
     
@@ -1347,8 +1353,8 @@ Agregar nuevo registro
     });
 
 
+    @if(isset($caja))
     $(document).on('click', '.add-pago', function() {
-    
         $('.modal-title').text('Agregar Pago');
         //Limpiar valores
         $('#addPago').modal({backdrop: 'static', keyboard: false});
@@ -1356,7 +1362,7 @@ Agregar nuevo registro
         $('#monto-field').val({{$monto_max_pago}});
         $('#forma_pago_id-field').val({{$caja->forma_pago_id}}).change();
         $('#fecha_ln-field').val('{{$caja->fecha}}');
-        console.log({{$indicador}});
+
         @if($caja->forma_pago_id==1)
            $('#fecha_ln-field').prop('disabled', true);
         @else
@@ -1379,7 +1385,9 @@ Agregar nuevo registro
         //Cargar cuentas de efectivo
         //Fin cargar cuentas de efectivo
     });
+    @endif
 
+    @if(isset($caja))
     $(document).on('click', '.ver-pago', function() {
     
     $('.modal-title').text('Ver Pago');
@@ -1389,7 +1397,7 @@ Agregar nuevo registro
     $('#monto-field').val({{$monto_max_pago}});
     $('#forma_pago_id-field').val({{$caja->forma_pago_id}}).change();
     $('#fecha_ln-field').val('{{$caja->fecha}}');
-    console.log({{$indicador}});
+
     @if(isset($caja) )
         @if($caja->cajaLns->count()<>1 or $indicador==0 or ($caja->forma_pago_id<>3 and $caja->forma_pago_id<>4 and $caja->forma_pago_id<>6))
         
@@ -1406,7 +1414,7 @@ Agregar nuevo registro
     //Cargar cuentas de efectivo
     //Fin cargar cuentas de efectivo
 });
-    
+    @endif
     
     
     @if (isset($caja) and isset($cliente))

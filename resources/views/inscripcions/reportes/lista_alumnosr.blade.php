@@ -175,7 +175,7 @@
                 @endforeach
                 <tr>
                     <td colspan='{{4+$total_asistencias}}'>Promedio de asistencias</td>
-                    <td>{{$asistencias_acumuladas/$total_registros}}</td>
+                    <td>{{$total_registros==0 ? 0 : $asistencias_acumuladas/$total_registros}}</td>
                 </tr>    
             </table>
         </div>

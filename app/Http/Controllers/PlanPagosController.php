@@ -192,8 +192,8 @@ class PlanPagosController extends Controller
         $input = $request->only('name', 'activo');
         $input['usu_mod_id'] = Auth::user()->id;
         $generar_pagos = $request->only('inscripcion', 'uniforme', 'tramites', 'mensualidad', 'cuantas_mensualidad', 'fecha_pago', 'seguro');
-        $lineas = $request->except('name', 'activo', 'inscripcion', 'uniforme', 'tramites', 'mensualidad', 'cuantas_mensualidad', 'fecha_pago', 'seguro');
-        //dd($lineas);
+        $lineas = $request->except('_token','name', 'activo', 'inscripcion', 'uniforme', 'tramites', 'mensualidad', 'cuantas_mensualidad', 'fecha_pago', 'seguro');
+        //dd(count($lineas['plan_pago_id']));
         if (isset($input['activo'])) {
             $input['activo'] = 1;
         } else {
@@ -363,6 +363,7 @@ class PlanPagosController extends Controller
             $tramites->save();
         } else {
             //dd($lineas);
+            if(isset($lineas['plan_pago_id'])){
             for ($i = 0; $i < count($lineas['plan_pago_id']); $i++) {
                 if ($lineas['plan_pago_id'][$i] > 0 and
                     $lineas['caja_concepto_id'][$i] > 0 and
@@ -386,7 +387,7 @@ class PlanPagosController extends Controller
                     }
                 }
             }
-
+            }
         }
 
         return redirect()->route('planPagos.show', $planPago->id)->with('message', 'Registro Actualizado.');

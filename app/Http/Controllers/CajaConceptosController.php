@@ -63,7 +63,10 @@ class CajaConceptosController extends Controller
 
         //create data
         $registro = CajaConcepto::create($input);
-        $registro->reglas()->sync($reglas['reglas']);
+        if (isset($reglas['reglas'])){
+            $registro->reglas()->sync($reglas['reglas']);
+        }
+        
 
         return redirect()->route('cajaConceptos.index')->with('message', 'Registro Creado.');
     }
@@ -134,7 +137,10 @@ class CajaConceptosController extends Controller
         //update data
         $cajaConcepto = $cajaConcepto->find($id);
         $cajaConcepto->update($input);
-        $cajaConcepto->reglas()->sync($reglas['reglas']);
+        if (isset($reglas['reglas'])){
+            $cajaConcepto->reglas()->sync($reglas['reglas']);
+        }
+        
 
         return redirect()->route('cajaConceptos.index')->with('message', 'Registro Actualizado.');
     }

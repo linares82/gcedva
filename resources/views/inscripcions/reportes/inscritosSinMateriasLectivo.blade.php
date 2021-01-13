@@ -33,14 +33,14 @@
                 <!--
                 <div class="form-group col-md-6 @if($errors->has('especialidad_f')) has-error @endif">
                     <label for="especialidad_f">Especialidad</label>
-                    {!! Form::select("especialidad_f[]", $list["Especialidad"], null, array("class" => "form-control select_seguridad", "id" => "especialidad_f-field", 'multiple'=>true)) !!}
+                    @{!! Form::select("especialidad_f[]", $list["Especialidad"], null, array("class" => "form-control select_seguridad", "id" => "especialidad_f-field", 'multiple'=>true)) !!}
                     @if($errors->has("especialidad_f"))
                      <span class="help-block">{{ $errors->first("especialidad_f") }}</span>
                     @endif
                  </div>
                  <div class="form-group col-md-6 @if($errors->has('nivel_f')) has-error @endif">
                     <label for="nivel_f">nivel</label>
-                    {!! Form::select("nivel_f[]", $list["nivel"], null, array("class" => "form-control select_seguridad", "id" => "nivel_f-field", 'multiple'=>true)) !!}
+                    @{!! Form::select("nivel_f[]", $list["nivel"], null, array("class" => "form-control select_seguridad", "id" => "nivel_f-field", 'multiple'=>true)) !!}
                     @if($errors->has("nivel_f"))
                      <span class="help-block">{{ $errors->first("nivel_f") }}</span>
                     @endif
@@ -49,7 +49,7 @@
             
 <!--                <div class="form-group col-md-6 @if($errors->has('empleado_f')) has-error @endif">
                     <label for="empleado_f-field">Colaborador de:</label>
-                    {!! Form::select("empleado_f", array(), null, array("class" => "form-control select_seguridad", "id" => "empleado_f-field")) !!}
+                    @{!! Form::select("empleado_f", array(), null, array("class" => "form-control select_seguridad", "id" => "empleado_f-field")) !!}
                     @if($errors->has("empleado_f"))
                     <span class="help-block">{{ $errors->first("empleado_f") }}</span>
                     @endif

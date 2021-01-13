@@ -48,7 +48,9 @@ class PagoObserver
                 //Datos para matricula
                 $cajaLn = $pago->caja->cajaLns->first();
 
-                $combinacion = CombinacionCliente::find($cajaLn->adeudo->combinacion_cliente_id);
+                if($cajaLn->adeudo_id<>0){
+                    $combinacion = CombinacionCliente::find($cajaLn->adeudo->combinacion_cliente_id);
+                
                 //dd($combinacion);
                 $planPagoLn = PlanPagoLn::where('plan_pago_id', $combinacion->plan_pago_id)->orderBy('fecha_pago', 'asc')->first();
                 //$adeudos = Adeudo::where('combinacion_cliente_id', $combinacion->id)->where('caja_concepto_id', 1)->first();
@@ -124,6 +126,8 @@ class PagoObserver
                         }
                     }
                 }
+                
+                }
 
                 $cuentas_efectivo->saldo_actualizado = $cuentas_efectivo->saldo_actualizado + $this->pago->monto;
                 $cuentas_efectivo->save();
@@ -190,7 +194,7 @@ class PagoObserver
                 $cuentas_efectivo->save();
 
                 $pago = IngresoEgreso::where('pago_id', $this->pago->id)->where('egreso_id', 0)->whereNull('deleted_at')->first();
-                if (count($pago) > 0) {
+                if (!is_null($pago) and $pago->count() > 0) {
                     $pago->delete();
                 }
             }

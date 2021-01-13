@@ -287,7 +287,8 @@ class PeriodoEstudiosController extends Controller
     {
         $empleado = Empleado::where('user_id', Auth::user()->id)->first();
         $planteles_validos = $empleado->plantels->pluck('razon', 'id');
-        return view("periodoEstudios.reportes.sabanaCalificaciones", compact('planteles_validos'));
+        return view("periodoEstudios.reportes.sabanaCalificaciones", compact('planteles_validos'))
+        ->with('list', PeriodoEstudio::getListFromAllRelationApps());
     }
 
     public function sabanaCalificacionesR(Request $request)
@@ -552,7 +553,8 @@ class PeriodoEstudiosController extends Controller
     {
         $empleado = Empleado::where('user_id', Auth::user()->id)->first();
         $planteles_validos = $empleado->plantels->pluck('razon', 'id');
-        return view("periodoEstudios.reportes.concentradoParciales", compact('planteles_validos'));
+        return view("periodoEstudios.reportes.concentradoParciales", compact('planteles_validos'))
+        ->with('list', PeriodoEstudio::getListFromAllRelationApps());
     }
 
     public function concentradoParcialesR(Request $request)
@@ -674,9 +676,10 @@ class PeriodoEstudiosController extends Controller
     {
         $empleado = Empleado::where('user_id', Auth::user()->id)->first();
         $planteles_validos = $empleado->plantels->pluck('razon', 'id');
-        $lectivo = Lectivo::pluck('name', 'id');
+        $lectivos = Lectivo::pluck('name', 'id');
         $stEmpleados = StEmpleado::pluck('name', 'id');
-        return view('periodoEstudios.reportes.gruposOrdinarios', compact('planteles_validos', 'lectivo', 'stEmpleados'));
+        return view('periodoEstudios.reportes.gruposOrdinarios', compact('planteles_validos', 'lectivos', 'stEmpleados'))
+        ->with('list', PeriodoEstudio::getListFromAllRelationApps());
     }
 
     public function gruposOrdinariosR(Request $request)

@@ -109,4 +109,26 @@ class User1Controller extends Controller
         $user->update();
         return redirect()->route('home')->with('message', 'Item updated successfully.');
     }
+
+    public function index(Request $request)
+	{
+        $input=$request->all();
+		$r=User::where('id', '<>', '0');
+		if(isset($input['name']) and $input['name']<>""){
+			$r->where('name', 'like', "%".$input['name']."%");
+		}
+        if(isset($input['email']) and $input['email']<>""){
+			$r->where('email', 'like', "%".$input['email']."%");
+		}
+                /*$entity=Entity::find(Auth::user()->entity_id);
+                if (Auth::user()->canDo('filtro_entity') or $entity->filtred_by_entity==1) {
+                    //dd('si puede');
+                    $r->where('entity_id', '=', Auth::user()->entity_id);
+                }*/
+		
+		$users = $r->paginate(100);
+		//$users = User::paginate(25);
+
+        return view('users.index', compact('users'));
+	}    
 }

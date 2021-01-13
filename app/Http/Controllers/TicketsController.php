@@ -63,7 +63,9 @@ class TicketsController extends Controller {
 		$ticket=Ticket::create( $input );
 		$ticket->etiquetas()->sync($input['etiquetas']);
 
-		$this->toTelegram($ticket->usu_alta_id, $ticket->asignado_a, $ticket->id);
+		$msg="Ticket: ".$ticket->id." Nombre Corto:".$ticket->nombre_corto;
+
+		$this->toTelegram($ticket->usu_alta_id, $ticket->asignado_a, $msg);
 
 		return redirect()->route('tickets.show',$ticket->id)->with('message', 'Registro Creado.');
 	}
@@ -142,39 +144,21 @@ class TicketsController extends Controller {
 		return redirect()->route('tickets.index')->with('message', 'Registro Borrado.');
 	}
 
-	public function toTelegram($from, $to, $ticket){
+	public function toTelegram($from, $to, $msg){
 		$From=User::find($from);
 		$To=User::find($to);
-		$Ticket=Ticket::find($ticket);
-		$From->notify(new LaravelTelegramNotification([
-			'text' => "Ticket: ".$Ticket->id." Detalle:".$Ticket->nombre_corto,
-		]));
-		$To->notify(new LaravelTelegramNotification([
-			'text' => "Ticket: ".$Ticket->id." Detalle:".$Ticket->nombre_corto,
-		]));
-		return redirect()->route('tickets.show', array($Avance->ticket_id,"Mensaje Enviado"));
-	}
-
-	public function toTelegramImagen($from, $to, $ticket, $file){
-		$From=User::find($from);
-		$To=User::find($to);
-		$Ticket=Ticket::find($ticket);
 		
 		$From->notify(new LaravelTelegramNotification([
-			'text' => "Ticket: ".$Ticket->id." Detalle:".$Ticket->nombre_corto,
-			'photo' => $file,
-			'photo_caption' => "Evidencia"
+			'text' => $msg,
 		]));
 		$To->notify(new LaravelTelegramNotification([
-			'text' => "Ticket: ".$Ticket->id." Detalle:".$Ticket->nombre_corto,
-			'photo' => $file,
-			'photo_caption' => "Evidencia"
+			'text' => $msg,
 		]));
-		return redirect()->route('tickets.show', array($Avance->ticket_id,"Mensaje Enviado"));
 	}
 
+
 	public function cargaArchivoCorreo(Request $request)
-    {
+        {
 		//dd($request);
 		if ($request->hasFile('file1')){
 			$file1    = $request->file('file1');
@@ -197,11 +181,12 @@ class TicketsController extends Controller {
 			$imagenTicket->usu_alta_id=Auth::user()->id;
 			$imagenTicket->usu_mod_id=Auth::user()->id;
 			$imagenTicket->save();
-			
-			$this->toTelegramImagen($ticket->asignado_a, 
-									$ticket->usu_alta_id, 
-									$ticket->id, 
-									asset('storage/telegram_tickets/'.$nombre));	
+
+			$msg="Ticket: ".$ticket->id." Se ha cargado una imagen";
+
+			$this->toTelegram($ticket->usu_mod_id, $ticket->asignado_a, $msg);	
+
+			return redirect()->route('tickets.show', array($ticket->id,"Mensaje Enviado"));
 		}
 		
     }

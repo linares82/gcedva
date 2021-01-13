@@ -25,14 +25,14 @@
 
                 <div class="form-group col-md-6 @if($errors->has('fecha_f')) has-error @endif">
                     <label for="fecha_f-field">Fecha de:</label>
-                    {!! Form::text("fecha_f", null, array("class" => "form-control input-sm", "id" => "fecha_f-field")) !!}
+                    {!! Form::text("fecha_f", null, array("class" => "form-control input-sm fecha", "id" => "fecha_f-field")) !!}
                     @if($errors->has("fecha_f"))
                     <span class="help-block">{{ $errors->first("fecha_f") }}</span>
                     @endif
                 </div>
                 <div class="form-group col-md-6 @if($errors->has('fecha_t')) has-error @endif">
                     <label for="fecha_t-field">Fecha a:</label>
-                    {!! Form::text("fecha_t", null, array("class" => "form-control input-sm", "id" => "fecha_t-field")) !!}
+                    {!! Form::text("fecha_t", null, array("class" => "form-control input-sm fecha", "id" => "fecha_t-field")) !!}
                     @if($errors->has("fecha_t"))
                     <span class="help-block">{{ $errors->first("fecha_t") }}</span>
                     @endif

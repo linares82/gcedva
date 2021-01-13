@@ -38,7 +38,10 @@
                      </div>
                      <div class="form-group col-md-4 @if($errors->has('materium_id')) has-error @endif">
                         <label for="materium_id-field">Materia</label>
-                        {!! Form::select("materium_id", $list["Materium"], $asignacionAcademica->materium_id, array("class" => "form-control select_seguridad", "id" => "materium_id-field")) !!}
+                        {!! Form::select("materium_id", 
+                        $list["Materium"], 
+                        isset($asignacionAcademica) ? optional($asignacionAcademica)->materium_id : null, 
+                        array("class" => "form-control select_seguridad", "id" => "materium_id-field")) !!}
                         @if($errors->has("materium_id"))
                          <span class="help-block">{{ $errors->first("materium_id") }}</span>
                         @endif
@@ -86,7 +89,7 @@
                              <span class="help-block">{{ $errors->first("fec_fin") }}</span>
                              @endif
                          </div>
-                     @if(isset($asignacionAcademica->horarios))
+                     @if(isset($asignacionAcademica) and isset($asignacionAcademica->horarios))
                      <div class="form-group col-md-12">
                          <div class="form-group col-md-4 @if($errors->has('dia_id')) has-error @endif">
                          <label for="dia_id-field">Dia</label>
@@ -116,6 +119,7 @@
                          </div>
                      </div>
                      
+                     @if(isset($asignacionAcademica))
                      <div class="col-md-12">
                          <table class="table table-condensed table-striped">
                              <thead>
@@ -133,6 +137,7 @@
                              </tbody>
                          </table>
                      </div>
+                     @endif
                      @endif
  
  

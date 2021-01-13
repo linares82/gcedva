@@ -7,11 +7,11 @@
 <ol class="breadcrumb">
 	<li><a href="{{ route('home') }}"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></a></li>
     
-    <li class="active">{{ $bsBaja->name }}</li>
+    <li class="active"></li>
 </ol>
 
 <div class="page-header">
-        <h1>@yield('bsBajasAppTitle') / Mostrar {{$bsBaja->id}}
+        <h1>@yield('bsBajasAppTitle') / Mostrar 
 
 
         </h1>
@@ -26,7 +26,7 @@
 
 <!--                <div class="form-group col-md-6 @if($errors->has('estatus_f')) has-error @endif">
                     <label for="estatus_f-field">Estatus de:</label>
-                    {!! Form::select("estatus_f", $list["StCliente"], null, array("class" => "form-control select_seguridad", "id" => "estatus_f-field", 'readonly'=>'readonly')) !!}
+                    @{!! Form::select("estatus_f", $list["StCliente"], null, array("class" => "form-control select_seguridad", "id" => "estatus_f-field", 'readonly'=>'readonly')) !!}
                     @if($errors->has("estatus_f"))
                     <span class="help-block">{{ $errors->first("estatus_f") }}</span>
                     @endif
@@ -34,7 +34,7 @@
             
                 <div class="form-group col-md-6 @if($errors->has('estatus_t')) has-error @endif">
                     <label for="estatus_t-field">Estatus a:</label>
-                    {!! Form::select("estatus_t", $list["StCliente"], null, array("class" => "form-control select_seguridad", "id" => "estatus_t-field", 'readonly'=>'readonly')) !!}
+                    @{!! Form::select("estatus_t", $list["StCliente"], null, array("class" => "form-control select_seguridad", "id" => "estatus_t-field", 'readonly'=>'readonly')) !!}
                     @if($errors->has("estatus_t"))
                     <span class="help-block">{{ $errors->first("estatus_t") }}</span>
                     @endif

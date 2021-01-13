@@ -152,6 +152,8 @@ class InscripcionsController extends Controller
                 $combinacion->nivel_id = $i->nivel_id;
                 $combinacion->grado_id = $i->grado_id;
                 $combinacion->save();
+                
+                //$cliente=Cliente::
             }
         }
 
@@ -1542,6 +1544,7 @@ class InscripcionsController extends Controller
             ->orderBy('hacademicas.id')
             //->orderBy('te.id')
             ->get();
+        
         foreach ($hacademicas as $hacademica) {
             $tpo_examen_max = Calificacion::where('hacademica_id', $hacademica->id)->max('tpo_examen_id');
             $calificacion = Calificacion::select('calificacions.calificacion', 'te.name as tipo_examen')
@@ -1562,7 +1565,7 @@ class InscripcionsController extends Controller
         }
         //dd($resultados);
         $consulta_calificaciones = ConsultaCalificacion::where('matricula', 'like', "%" . $cliente->matricula . "%")->get();
-        //dd($consulta_calificaciones);
+        //dd($consulta_calificaciones->toArray());
         //dd($inscripcion);
         /*return view('inscripcions.reportes.lista_alumnosr',compact('registros'))
         ->with( 'list', Inscripcion::getListFromAllRelationApps() );
@@ -3103,7 +3106,8 @@ class InscripcionsController extends Controller
         //dd('flc');
         $empleado = Empleado::where('user_id', Auth::user()->id)->first();
         $planteles_validos = $empleado->plantels->pluck('razon', 'id');
-        return view('inscripcions.reportes.grupoAsignatura', compact('planteles_validos'));
+        return view('inscripcions.reportes.grupoAsignatura', compact('planteles_validos'))
+        ->with('list', Inscripcion::getListFromAllRelationApps());
     }
 
     public function grupoAsignaturaR(Request $request)
@@ -3127,7 +3131,9 @@ class InscripcionsController extends Controller
     {
         $empleado = Empleado::where('user_id', Auth::user()->id)->first();
         $planteles_validos = $empleado->plantels->pluck('razon', 'id');
-        return view('inscripcions.reportes.inscripcionReinscripcion', compact('planteles_validos'));
+        return view('inscripcions.reportes.inscripcionReinscripcion', compact('planteles_validos'))
+        ->with('list', Inscripcion::getListFromAllRelationApps());
+
     }
 
     public function inscripcionReinscripcionR(Request $request)
@@ -3160,7 +3166,8 @@ class InscripcionsController extends Controller
         $empleado = Empleado::where('user_id', Auth::user()->id)->first();
         $planteles_validos = $empleado->plantels->pluck('razon', 'id');
         $tipoEvaluacion = TpoExamen::where('id', '>', 0)->pluck('name', 'id');
-        return view('inscripcions.reportes.evaluacionOE', compact('planteles_validos', 'tipoEvaluacion'));
+        return view('inscripcions.reportes.evaluacionOE', compact('planteles_validos', 'tipoEvaluacion'))
+        ->with('list', Inscripcion::getListFromAllRelationApps());
     }
 
     public function evaluacionOER(Request $request)

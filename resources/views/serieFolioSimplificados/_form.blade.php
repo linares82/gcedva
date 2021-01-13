@@ -2,7 +2,7 @@
                     <div class="form-group col-md-4 @if($errors->has('serie')) has-error @endif">
                        <label for="serie-field">Serie</label>
                        {!! Form::text("serie", null, array("class" => "form-control", "id" => "serie-field")) !!}
-                       {!! Form::hidden("cuenta_p_id", $cuentap, array("class" => "form-control", "id" => "cuenta_p_id-field")) !!}
+                       {!! Form::hidden("cuenta_p_id", isset($cuentap) ? $cuentap : null, array("class" => "form-control", "id" => "cuenta_p_id-field")) !!}
                        @if($errors->has("serie"))
                         <span class="help-block">{{ $errors->first("serie") }}</span>
                        @endif

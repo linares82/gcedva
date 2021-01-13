@@ -73,4 +73,8 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         return $this->id_telegram;
         //return 798978336; //FLC
     }
+
+    public function roles1(){
+        return $this->belongsToMany('App\Role','role_user','user_id','role_id');
+    }
 }

@@ -7,11 +7,11 @@
 <ol class="breadcrumb">
 	<li><a href="{{ route('home') }}"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></a></li>
     
-    <li class="active">{{ $bsBaja->name }}</li>
+    <li class="active"></li>
 </ol>
 
 <div class="page-header">
-        <h1>@yield('bsBajasAppTitle') / Mostrar {{$bsBaja->id}}
+        <h1>@yield('bsBajasAppTitle') / Mostrar 
 
 
         </h1>
@@ -31,7 +31,9 @@
 		    </th>
                 </thead>
                 <tbody>
-                    
+                    @php
+                        $i=0;
+                    @endphp
                     @foreach ($registros as $r)
                         <tr>
                             <td>{{ ++$i }}</td>
@@ -50,21 +52,7 @@
                             @php
                             //$bsBajas=App\BsBaja::where('cliente_id',$r->cliente_id)->where('bnd_reactivar','<>',1)->get();    
                             @endphp
-                            <!--<td>
-                                <table>
-                                    <thead>
-                                        <th>B. Fecha</th><th>B. Realizada</th><th>R. Fecha</th><th>R. Realizada</th>    
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            @foreach($bsBajas as $bsBaja)
-                                            <td>{{ $bsBaja->fecha_baja }}</td><td>{{ $bsBaja->bnd_baja }}</td><td>{{ $bsBaja->fecha_reactivar }}</td><td>{{ $bsBaja->bnd_reactivar }}</td>
-                                            @endforeach
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </td>
-				-->
+                            
                         </tr>
                     @endforeach
                     
@@ -74,7 +62,7 @@
             
         </div>
     </div>
-    {!! Form::model($cliente, array('route' => array('cajas.buscarCliente'),'method' => 'post','target'=>"_blank", 'style' => 'display: inline;', 'id'=>'frmAdeudos')) !!}
+    {!! Form::open(['url'=>'cajas.buscarCliente','method' => 'post','target'=>"_blank", 'id'=>'frmAdeudos']) !!}
         {!! Form::hidden("cliente_id", null, array("class" => "form-control input-sm", "id" => "cliente_id-field")) !!}
     {!! Form::close() !!}
 

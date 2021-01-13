@@ -195,7 +195,7 @@
                         SI
                         @endif
                     </td>
-                    <td>{{$detalle['adeudo_planeado']}}</td>-->
+                    <td>@{{$detalle['adeudo_planeado']}}</td>-->
                     <td>{{$detalle['concepto']}}</td>
                     <!--<td>{{$detalle['pago_calculado_adeudo']}}</td>-->
                     <td>
@@ -203,7 +203,7 @@
                         @php
                             $caja=\App\Caja::with('pagos')->find($detalle['caja']);
                             $suma_pagos=$caja['pagos']->sum('monto');
-                            
+                            $adeudo=App\Adeudo::find($detalle['adeudo']);
                         @endphp
                         {{ $suma_pagos }}
                     </td>

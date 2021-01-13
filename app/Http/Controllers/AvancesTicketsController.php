@@ -62,7 +62,9 @@ class AvancesTicketsController extends Controller {
 		$ticket->st_ticket_id=$avance->st_ticket_id;
 		$ticket->save();
 
-		$this->toTelegram($avance->usu_alta_id, $avance->asignado_a, $avance->id);
+		$msg="Ticket: ".$ticket->id."-".$avance->id." Detalle:".$avance->detalle;
+
+		$this->toTelegram($avance->usu_alta_id, $avance->asignado_a, $msg);
 
 		return redirect()->route('tickets.show', $avance->ticket_id)->with('message', 'Registro Creado.');
 	}
@@ -143,17 +145,17 @@ class AvancesTicketsController extends Controller {
 		return redirect()->route('avancesTickets.index');
 	}
 
-	public function toTelegram($from, $to, $avance){
+	public function toTelegram($from, $to, $msg){
 		$From=User::find($from);
 		$To=User::find($to);
-		$Avance=AvancesTicket::find($avance);
+		
 		$From->notify(new LaravelTelegramNotification([
-			'text' => "Ticket: ".$Avance->ticket_id." Detalle:".$Avance->detalle,
+			'text' => $msg,
 		]));
 		$To->notify(new LaravelTelegramNotification([
-			'text' => "Ticket: ".$Avance->ticket_id." Detalle:".$Avance->detalle,
+			'text' => $msg,
 		]));
-		return redirect()->route('tickets.show', array($Avance->ticket_id,"Mensaje Enviado"));
+		
 	}
 
 	public function cargaArchivoCorreo(Request $request)
@@ -173,8 +175,6 @@ class AvancesTicketsController extends Controller {
 				})
 				->save($ruta,40);
 				
-			
-				
 			$imagenAvanceTicket=New ImagenesAvancesTicket();
 			$imagenAvanceTicket->avances_ticket_id=$avancesTicket->id;
 			$imagenAvanceTicket->nombre=$nombre;
@@ -182,12 +182,12 @@ class AvancesTicketsController extends Controller {
 			$imagenAvanceTicket->usu_mod_id=Auth::user()->id;
 			//dd($imagenAvanceTicket);
 			$imagenAvanceTicket->save();
-			
-			/*$this->toTelegramImagen($ticket->asignado_a, 
-									$ticket->usu_alta_id, 
-									$ticket->id, 
-									asset('storage/telegram_tickets/'.$nombre));	
-									*/
+						
+			$msg="Ticket: ".$avancesTicket->ticket_id."-".$avancesTicket->id." Se ha cargado una Imagen";
+
+			$this->toTelegram($avancesTicket->usu_alta_id, $avancesTicket->asignado_a, 
+									$msg);	
+			return redirect()->route('tickets.show', array($avancesTicket->ticket_id,"Mensaje Enviado"));						
 		}
 		
     }

@@ -58,7 +58,7 @@ class EmpleadosController extends Controller
             ->pluck('name', 'id');
         $estados = Estado::pluck('name', 'id');
         $nivel_estudios = NivelEstudio::pluck('name', 'id');
-        return view('empleados.create', compact('estados', 'jefes', 'responsables', 'tipoContratos', 'nivel_esstudios'))
+        return view('empleados.create', compact('estados', 'jefes', 'responsables', 'tipoContratos', 'nivel_estudios'))
             ->with('list', Empleado::getListFromAllRelationApps())
             ->with('list1', PivotDocEmpleado::getListFromAllRelationApps());
     }

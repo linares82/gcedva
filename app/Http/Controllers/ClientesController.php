@@ -212,9 +212,10 @@ class ClientesController extends Controller
         $empleados->put(0, 'Seleccionar OpciÃ³n');
         $empleados = $empleados->reverse();
         //dd($empleados);
-        $estado_civiles = EstadoCivil::pluck('id', 'name');
+        $estado_civiles = EstadoCivil::pluck('name','id');
         $cuestionarios = Ccuestionario::where('st_cuestionario_id', '=', '1')->pluck('name', 'id');
-        return view('clientes.create', compact('empleados', 'cuestionarios', 'estado_civiles'))
+        $incidencias = IncidenceCliente::pluck('name', 'id');
+        return view('clientes.create', compact('empleados', 'cuestionarios', 'estado_civiles','incidencias'))
             ->with('list', Cliente::getListFromAllRelationApps())
             ->with('list3', Inscripcion::getListFromAllRelationApps());
     }
@@ -262,7 +263,7 @@ class ClientesController extends Controller
         if (is_null($input['nombre2'])) {
             $input['nombre2'] = " ";
         }
-        if (is_null($input['matricula'])) {
+        if (isset($input['matricula']) and is_null($input['matricula'])) {
             $input['matricula'] = " ";
         }
         $param = Param::where('llave', '=', 'msj_text')->first();
@@ -428,7 +429,7 @@ class ClientesController extends Controller
 
         //dd($historia->toArray());
         //count($cliente->adeudos));
-        $estado_civiles = EstadoCivil::pluck('name', 'id');
+        $estado_civiles = EstadoCivil::pluck('name','id');
         $incidencias = IncidenceCliente::pluck('name', 'id');
         return view('clientes.edit', compact(
             'cliente',

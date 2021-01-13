@@ -185,9 +185,9 @@
                                 <div class="timeline-item">
                                     <h3 class="timeline-header"><strong>{{ $avance->usu_alta->name }}</strong> -
                                         @if ($avance->bnd_notificacion == 1)
-                                            Notificacion
+                                            Notificacion {{ $avance->id }}
                                         @else
-                                            Nota
+                                            Nota {{ $avance->id }}
                                         @endif
                                         
                                     </h3>

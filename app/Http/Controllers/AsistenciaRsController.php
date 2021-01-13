@@ -94,6 +94,7 @@ class AsistenciaRsController extends Controller
 					->join('clientes as c','c.id','=','asistencia_rs.cliente_id')
 					->where('asignacion_academica_id', '=', $input['asignacion_academica_id'])
 					//->orderBy('cliente_id')
+					->whereNull('c.deleted_at')
 					->orderBy('c.ape_paterno')
                     ->orderBy('c.ape_materno')
                     ->orderBy('c.nombre')
@@ -133,6 +134,7 @@ class AsistenciaRsController extends Controller
 						->where('fecha', '=', $input['fecha'])
 						->join('clientes as c','c.id','=','asistencia_rs.cliente_id')
 						->where('asignacion_academica_id', '=', $input['asignacion_academica_id'])
+						->whereNull('c.deleted_at')
 						->orderBy('c.ape_paterno')
 						->orderBy('c.ape_materno')
 						->orderBy('c.nombre')
@@ -152,7 +154,7 @@ class AsistenciaRsController extends Controller
 							$asistencia['asignacion_academica_id'] = $input['asignacion_academica_id'];
 							$asistencia['fecha'] = $input['fecha'];
 							$asistencia['cliente_id'] = $i->cliente_id;
-							if ($i->cliente->st_cliente_id == 25) {
+							if (optional($i->cliente)->st_cliente_id == 25) {
 								$asistencia['est_asistencia_id'] = 2;
 							} else {
 								$asistencia['est_asistencia_id'] = 1;
@@ -169,6 +171,7 @@ class AsistenciaRsController extends Controller
 						->where('fecha', '=', $input['fecha'])
 						->join('clientes as c','c.id','=','asistencia_rs.cliente_id')
 						->where('asignacion_academica_id', '=', $input['asignacion_academica_id'])
+						->whereNull('c.deleted_at')
 						->orderBy('c.ape_paterno')
 						->orderBy('c.ape_materno')
 						->orderBy('c.nombre')

@@ -153,7 +153,7 @@
                                                         $sumatoria_calificacions_validas=0;
                                                     @endphp
                                                     @foreach($cali->calificacionPonderacions as $calificacionPonderacion)
-                                                        @if(is_null($calificacionParcial->deleted))
+                                                        @if(is_null($calificacionPonderacion->deleted))
                                                         <td class="centrar_texto">{{round($calificacionPonderacion->calificacion_parcial,2)}}</td>
                                                         @php
                                                          if($calificacionPonderacion->calificacion_parcial>0){

@@ -165,11 +165,11 @@ class CajasController extends Controller
         $caja = Caja::create($caja_r);
 
 
-
+        $empleados = Empleado::select(DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name, id'))->pluck('name', 'id');
 
         $combinaciones = CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
 
-        return view('cajas.caja', compact('cliente', 'caja', 'combinaciones', 'cajas'))
+        return view('cajas.caja', compact('cliente', 'caja', 'combinaciones', 'cajas','empleados'))
             ->with('list', Caja::getListFromAllRelationApps())
             ->with('list1', CajaLn::getListFromAllRelationApps());
     }
@@ -205,8 +205,9 @@ class CajasController extends Controller
             ->whereNull('ln.deleted_at')
             ->get();
         $combinaciones = CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
+        $empleados = Empleado::select(DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name, id'))->pluck('name', 'id');
 
-        return view('cajas.caja', compact('caja', 'cliente', 'combinaciones', 'cajas'))
+        return view('cajas.caja', compact('caja', 'cliente', 'combinaciones', 'cajas','empleados'))
             ->with('list', Caja::getListFromAllRelationApps())
             ->with('list1', CajaLn::getListFromAllRelationApps());
     }
@@ -279,7 +280,7 @@ class CajasController extends Controller
         $cliente = Cliente::find($request['cliente_id']);
         if (!is_object($cliente)) {
             Session::flash('msj', 'Cliente no existe');
-            return view('cajas.caja')->with('list', Caja::getListFromAllRelationApps())->with('list1', CajaLn::getListFromAllRelationApps());
+            return view('cajas.caja' ,compact('empleados'))->with('list', Caja::getListFromAllRelationApps())->with('list1', CajaLn::getListFromAllRelationApps());
         }
         //$adeudos=Adeudo::where('cliente_id', '=', $cliente->id)->get();
         //dd($cliente);
@@ -327,7 +328,7 @@ class CajasController extends Controller
             array_search($cliente->plantel_id, $planteles) == false and
             $permiso_caja_buscarCliente
         ) {
-            return view('cajas.caja', compact('cliente', 'combinaciones', 'cajas', 'empelados'))
+            return view('cajas.caja', compact('cliente', 'combinaciones', 'cajas', 'empleados'))
                 ->with('list', Caja::getListFromAllRelationApps())
                 ->with('list1', CajaLn::getListFromAllRelationApps());
         }
@@ -481,7 +482,7 @@ class CajasController extends Controller
 
                         $beca_autorizada = AutorizacionBeca::find($beca_a);
                         //dd($beca_autorizada);
-                        if (
+                        if (!is_null($beca_autorizada) and
                             $beca_autorizada->monto_mensualidad > 0 and
                             $adeudo->cajaConcepto->bnd_mensualidad == 1 and
                             ($adeudo->bnd_eximir_descuento_beca == 0 or is_null($adeudo->bnd_eximir_descuento_beca))
@@ -735,8 +736,9 @@ class CajasController extends Controller
         }
 
         $combinaciones = CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
+        $empleados = Empleado::select(DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name, id'))->pluck('name', 'id');
 
-        return view('cajas.caja', compact('cliente', 'caja', 'combinaciones', 'cajas'))
+        return view('cajas.caja', compact('cliente', 'caja', 'combinaciones', 'cajas','empleados'))
             ->with('list', Caja::getListFromAllRelationApps())
             ->with('list1', CajaLn::getListFromAllRelationApps());
     }
@@ -837,7 +839,10 @@ class CajasController extends Controller
             $adeudo->pagado_bnd = 0;
             $adeudo->save();
         }
-        return view('cajas.caja')->with('list', Caja::getListFromAllRelationApps())->with('list1', CajaLn::getListFromAllRelationApps());
+        $empleados = Empleado::select(DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name, id'))->pluck('name', 'id');
+        return view('cajas.caja', compact('empleados'))
+        ->with('list', Caja::getListFromAllRelationApps())
+        ->with('list1', CajaLn::getListFromAllRelationApps());
     }
 
     public function cancelarEnLinea(Request $request)

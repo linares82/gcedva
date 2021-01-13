@@ -122,10 +122,10 @@
                             <tr>
                                 <td><a href="{{ route('turnos.show', $turno->id) }}">{{$turno->id}}</a></td>
                                 <td>{{$turno->plantel->razon}}</td>
-                                <td>{{$turno->especialidad->name}}</td>
-                                <td>{{$turno->nivel->name}}</td>
-                                <td>{{$turno->grado->name}}</td>
-                                <td>{{$turno->name}}</td>
+                                <td>{{optional($turno->especialidad)->name}}</td>
+                                <td>{{optional($turno->nivel)->name}}</td>
+                                <td>{{optional($turno->grado)->name}}</td>
+                                <td>{{optional($turno)->name}}</td>
                                 <td class="text-right">
                                     @permission('turnos.edit')
                                     <a class="btn btn-xs btn-primary" href="{{ route('turnos.duplicate', $turno->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>

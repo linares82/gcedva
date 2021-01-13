@@ -93,7 +93,7 @@ class CajaObserver
                                     }
                                 }
                             } catch (Exception $e) {
-                                Log::info("cliente no encontrado en Brigth Space u otro error: " . $alumno->matricula . " - " . $e->getMessage());
+                                Log::info("cliente no encontrado en Brigth Space u otro error: " . $cliente->matricula . " - " . $e->getMessage());
                                 //return false;
                             }
                         }
@@ -138,7 +138,7 @@ class CajaObserver
                                 }
                             }
                         } catch (Exception $e) {
-                            Log::info("cliente no encontrado en Brigth Space u otro error: " . $alumno->matricula . " - " . $e->getMessage());
+                            Log::info("cliente no encontrado en Brigth Space u otro error: " . $cliente->matricula . " - " . $e->getMessage());
                             //return false;
                         }
                     }

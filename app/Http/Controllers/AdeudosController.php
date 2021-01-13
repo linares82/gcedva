@@ -130,7 +130,7 @@ class AdeudosController extends Controller
         $input = $request->except(['porcentaje', 'autorizado_por', 'justificacion', 'autorizado_el', 'adeudo_id']);
         $inputDescuento = $request->only(['porcentaje', 'autorizado_por', 'justificacion', 'autorizado_el', 'adeudo_id']);
         $adeudo = $adeudo->find($id);
-        if ($input['monto'] == "0") {
+        if (isset($input['monto']) and $input['monto'] == "0") {
             $input['pagado_bnd'] = 1;
 
             //Genera la matricula para un cliente si no la tiene.
@@ -282,7 +282,9 @@ class AdeudosController extends Controller
         $cliente = Cliente::find($adeudo->cliente_id);
         $combinaciones = CombinacionCliente::where('cliente_id', '=', $cliente->id)->get();
 
-        return view('cajas.caja', compact('cliente', 'combinaciones', 'caja', 'cajas'))
+        $empleados = Empleado::select(DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name, id'))->pluck('name', 'id');
+
+        return view('cajas.caja', compact('cliente', 'combinaciones', 'caja', 'cajas', 'empleados'))
             ->with('list', Caja::getListFromAllRelationApps())
             ->with('list1', CajaLn::getListFromAllRelationApps());
     }
@@ -1006,6 +1008,7 @@ class AdeudosController extends Controller
                     ->join('caja_conceptos as cc', 'cc.id', '=', 'adeudos.caja_concepto_id');
             } elseif ($datos['detalle_f'] == 2) {
                 $cajas_sin_adeudos = Caja::select(
+                    DB::raw('0 as adeudo'),
                     'p.razon',
                     'c.id',
                     'c.nombre',
@@ -1066,6 +1069,7 @@ class AdeudosController extends Controller
                     ->whereNull('cln.deleted_at')
                     ->whereNull('pag.deleted_at')
                     ->select(
+                        'adeudos.id as adeudo',
                         'p.razon',
                         'c.id',
                         'c.nombre',
@@ -1103,6 +1107,7 @@ class AdeudosController extends Controller
                     ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
                     ->join('caja_conceptos as cc', 'cc.id', '=', 'adeudos.caja_concepto_id')
                     ->select(
+                        'adeudos.id as adeudo',
                         'p.razon',
                         'c.id',
                         'c.nombre',

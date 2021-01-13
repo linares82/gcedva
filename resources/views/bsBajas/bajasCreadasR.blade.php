@@ -7,11 +7,11 @@
 <ol class="breadcrumb">
 	<li><a href="{{ route('home') }}"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></a></li>
     
-    <li class="active">{{ $bsBaja->name }}</li>
+    <li class="active"></li>
 </ol>
 
 <div class="page-header">
-        <h1>@yield('bsBajasAppTitle') / Mostrar {{$bsBaja->id}}
+        <h1>@yield('bsBajasAppTitle') / Mostrar 
 
 
         </h1>
@@ -28,7 +28,9 @@
                     <th>No.</th><th>Plantel</th><th>Id Cliente</th><th>Matricula</th><th>Estatus</th><th>F. Baja</th><th>Baja</th><th>F. Reactivar</th><th>Reactivar</th>
                 </thead>
                 <tbody>
-                    
+                    @php
+                        $i=0;
+                    @endphp
                     @foreach ($registros as $r)
                         <tr>
                             <td>{{ ++$i }}</td>

@@ -505,7 +505,8 @@ class AsignacionAcademicasController extends Controller
 	{
 		$empleado = Empleado::where('user_id', Auth::user()->id)->first();
 		$planteles_validos = $empleado->plantels->pluck('razon', 'id');
-		return view('asignacionAcademicas.reportes.actaCalificaciones', compact('planteles_validos'));
+		return view('asignacionAcademicas.reportes.actaCalificaciones', compact('planteles_validos'))
+		->with('list', AsignacionAcademica::getListFromAllRelationApps());
 	}
 
 	public function actaCalificacionesR(Request $request)

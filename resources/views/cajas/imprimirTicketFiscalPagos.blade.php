@@ -185,17 +185,19 @@ if(!is_null($cliente->plantel->matriz_id) and $cliente->plantel->matriz_id>0){
                 <tr>
                     
                     @if($cliente->plantel->matriz_id>0 and 
-                    !is_null($cliente->plantel->matriz_id and
-                    $matriz->calle.$matriz->no_ext.$matriz->colonia<>$cliente->plantel->calle.$cliente->plantel->no_ext.$cliente->plantel->colonia))
+                    !is_null($cliente->plantel->matriz_id)) 
                     @php
                     $matriz=App\Plantel::find($cliente->plantel->matriz_id);   
                     @endphp
+                    @if($matriz->calle.$matriz->no_ext.$matriz->colonia<>$cliente->plantel->calle.$cliente->plantel->no_ext.$cliente->plantel->colonia)
+                    
                     <td>
                         {{$matriz->nombre_corto}}<br/>
                         {{$matriz->rfc}}<br/>
                         {{$matriz->calle}} {{$matriz->no_ext}}, {{$matriz->colonia}}, <br/> 
                         {{$matriz->municipio}}, {{$matriz->estado}}, C.P. {{$matriz->cp}}<br/>
                     </td>
+                    @endif
                     @endif
                     @foreach($sucursales as $sucursal)
                     @if($sucursal->id<>$cliente->plantel_id and
@@ -377,17 +379,19 @@ if(!is_null($cliente->plantel->matriz_id) and $cliente->plantel->matriz_id>0){
             <tr>
                 
                 @if($cliente->plantel->matriz_id>0 and 
-                    !is_null($cliente->plantel->matriz_id and
-                    $matriz->calle.$matriz->no_ext.$matriz->colonia<>$cliente->plantel->calle.$cliente->plantel->no_ext.$cliente->plantel->colonia))
+                    !is_null($cliente->plantel->matriz_id)) 
                     @php
                     $matriz=App\Plantel::find($cliente->plantel->matriz_id);   
                     @endphp
+                    @if($matriz->calle.$matriz->no_ext.$matriz->colonia<>$cliente->plantel->calle.$cliente->plantel->no_ext.$cliente->plantel->colonia)
+                    
                     <td>
                         {{$matriz->nombre_corto}}<br/>
                         {{$matriz->rfc}}<br/>
                         {{$matriz->calle}} {{$matriz->no_ext}}, {{$matriz->colonia}}, <br/> 
                         {{$matriz->municipio}}, {{$matriz->estado}}, C.P. {{$matriz->cp}}<br/>
                     </td>
+                    @endif
                     @endif
                 @foreach($sucursales as $sucursal)
                 @if($sucursal->id<>$cliente->plantel_id and

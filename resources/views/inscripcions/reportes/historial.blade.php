@@ -118,7 +118,10 @@
                             $suma_calificaciones=0;
                             $total_materias=0;
                         @endphp
+                        
+                        @if($consulta_calificaciones->count())
                         @foreach($consulta_calificaciones as $a)
+                        
                         <tr>
                             <td>{{ $cliente->matricula }}</td>
                             <td>{{$a->materia}}</td><td>{{$a->codigo}}</td><td>{{$a->creditos}}</td>
@@ -130,21 +133,24 @@
                             @endphp
                         </tr>
                         @endforeach
+
                         @foreach($hacademicas as $a)
+                        
                         <tr>
                             <td>{{ $cliente->matricula }}</td>
                             <td>{{$a['materia']}}</td><td>{{$a['codigo']}}</td><td>{{$a['creditos']}}</td>
                             <td>{{$a['lectivo']}}</td><td>{{$a['calificacion']}}</td><td>{{$a['tipo_examen']}}</td>
                             @php
-                                $total_creditos=$total_creditos+$a->creditos;
+                                $total_creditos=$total_creditos+$a['creditos'];
                                 $suma_calificaciones=$suma_calificaciones+$a['calificacion'];
                                 $total_materias=$total_materias+1;
                             @endphp
                         </tr>
                         @endforeach
+                        @endif
                         <tr>
                             <td colspan="2" class="td_derecho">TOTAL DE CREDITOS</td><td>{{ $total_creditos }}</td>
-                            <td colspan="2" rowspan='2' class="td_centro">PROMEDIO GENERAL</td><td rowspan='2'>{{ round(($suma_calificaciones/$total_materias),2) }}</td>
+                            <td colspan="2" rowspan='2' class="td_centro">PROMEDIO GENERAL</td><td rowspan='2'>{{ $total_materias==0 ? 0 : round(($suma_calificaciones/$total_materias),2) }}</td>
                         </tr>
                         <tr>
                             <td colspan="2" class="td_derecho">%</td><td></td>
