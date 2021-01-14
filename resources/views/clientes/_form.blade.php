@@ -816,11 +816,13 @@
                     @endpermission
                     
                     @if(isset($cliente))
-                    {!! Form::text("matricula", null, array("class" => "form-control input-sm", "id" => "matricula-field", 'readonly'=>true)) !!}
+                    {!! Form::text("matricula", null, array("class" => "form-control input-sm", "id" => "matricula1-field", 'readonly'=>true)) !!}
         		    @endif
 
-                    @if($errors->has("matricula"))
-                    <span class="help-block">{{ $errors->first("matricula") }}</span>
+                    @if(isset($cliente))
+                    @permission('clientes.generarMatricula')
+                    <a href="{{ route('clientes.generarMatricula', array('cliente'=>$cliente->id)) }}" class="btn">Crear</a>
+                    @endpermission
                     @endif
                 </div>
                 <div class="form-group col-md-4 @if($errors->has('cve_alumno')) has-error @endif">

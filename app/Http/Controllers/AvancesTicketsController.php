@@ -64,7 +64,7 @@ class AvancesTicketsController extends Controller {
 
 		$msg="Ticket: ".$ticket->id."-".$avance->id." Detalle:".$avance->detalle;
 
-		$this->toTelegram($avance->usu_alta_id, $avance->asignado_a, $msg);
+		$this->toTelegram($ticket->usu_alta_id, $avance->asignado_a, $msg);
 
 		return redirect()->route('tickets.show', $avance->ticket_id)->with('message', 'Registro Creado.');
 	}
@@ -182,10 +182,11 @@ class AvancesTicketsController extends Controller {
 			$imagenAvanceTicket->usu_mod_id=Auth::user()->id;
 			//dd($imagenAvanceTicket);
 			$imagenAvanceTicket->save();
+			$ticket=Ticket::find($avancesTicket->ticket_id);
 						
 			$msg="Ticket: ".$avancesTicket->ticket_id."-".$avancesTicket->id." Se ha cargado una Imagen";
 
-			$this->toTelegram($avancesTicket->usu_alta_id, $avancesTicket->asignado_a, 
+			$this->toTelegram($ticket->usu_alta_id, $avancesTicket->asignado_a, 
 									$msg);	
 			return redirect()->route('tickets.show', array($avancesTicket->ticket_id,"Mensaje Enviado"));						
 		}

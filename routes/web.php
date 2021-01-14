@@ -1514,6 +1514,14 @@ Route::post(
         'uses' => 'ClientesController@alumnosConceptoPlaneadoR'
     )
 )->middleware('auth');
+Route::get(
+    '/clientes/generarMatricula/',
+    array(
+        'as' => 'clientes.generarMatricula',
+        'middleware' => 'permission:clientes.generarMatricula',
+        'uses' => 'ClientesController@generarMatricula'
+    )
+)->middleware('auth');
 ////////////////////////////////////
 Route::get(
     'clientesa/index',

@@ -1544,6 +1544,7 @@ class InscripcionsController extends Controller
             ->orderBy('hacademicas.id')
             //->orderBy('te.id')
             ->get();
+        //dd($hacademicas->toArray());
         
         foreach ($hacademicas as $hacademica) {
             $tpo_examen_max = Calificacion::where('hacademica_id', $hacademica->id)->max('tpo_examen_id');

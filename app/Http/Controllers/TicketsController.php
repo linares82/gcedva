@@ -188,7 +188,7 @@ class TicketsController extends Controller {
 
 			return redirect()->route('tickets.show', array($ticket->id,"Mensaje Enviado"));
 		}
-		
+				
     }
 
 }

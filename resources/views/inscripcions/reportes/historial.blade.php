@@ -133,7 +133,7 @@
                             @endphp
                         </tr>
                         @endforeach
-
+                        @endif
                         @foreach($hacademicas as $a)
                         
                         <tr>
@@ -147,7 +147,7 @@
                             @endphp
                         </tr>
                         @endforeach
-                        @endif
+                        
                         <tr>
                             <td colspan="2" class="td_derecho">TOTAL DE CREDITOS</td><td>{{ $total_creditos }}</td>
                             <td colspan="2" rowspan='2' class="td_centro">PROMEDIO GENERAL</td><td rowspan='2'>{{ $total_materias==0 ? 0 : round(($suma_calificaciones/$total_materias),2) }}</td>
