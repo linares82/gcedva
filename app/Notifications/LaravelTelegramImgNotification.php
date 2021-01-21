@@ -8,9 +8,11 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use TelegramNotifications\Messages\TelegramCollection;
 use TelegramNotifications\Messages\TelegramMessage;
+use TelegramNotifications\Messages\TelegramPhoto;
+use TelegramNotifications\Messages\TelegramEntity;
 use TelegramNotifications\TelegramChannel;
 
-class LaravelTelegramNotification extends Notification
+class LaravelTelegramImgNotification extends Notification
 {
     use Queueable;
 
@@ -52,9 +54,11 @@ class LaravelTelegramNotification extends Notification
     
 
     public function toTelegram() {
-        return (new TelegramMessage())
-            ->text($this->data['text'])
-            ->photo(['photo' => $this->data['photo'], 'caption' => $this->data['photo_caption']]);
+        //dd($this->data);
+        return (new TelegramPhoto(['caption'=>$this->data['caption'],
+        'photo' => $this->data['photo']]));
+            /*->text($this->data['text'])
+            ->photo(['photo' => $this->data['photo'], 'caption' => $this->data['photo_caption']]);*/
     }
 	
 

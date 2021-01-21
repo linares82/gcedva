@@ -1,13 +1,15 @@
 <?php namespace App\Http\Controllers;
 
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
-
-use App\Hactividade;
-use Illuminate\Http\Request;
 use Auth;
-use App\Http\Requests\updateHactividade;
+use App\Plantel;
+
+use App\Empleado;
+use App\Hactividade;
+use App\Http\Requests;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\createHactividade;
+use App\Http\Requests\updateHactividade;
 
 class HactividadesController extends Controller {
 
@@ -121,6 +123,33 @@ class HactividadesController extends Controller {
 		$hactividade->delete();
 
 		return redirect()->route('hactividades.index')->with('message', 'Registro Borrado.');
+	}
+
+	public function llamadasColaboradores(){
+		//$tareas=Tarea::pluc('name','name');
+		
+		$empleado = Empleado::where('user_id', Auth::user()->id)->first();
+		$planteles = $empleado->plantels->pluck('razon', 'id');
+		return view('hactividades.reportes.llamadasColaborador', compact('planteles'));
+	}
+
+	public function llamadasColaboradoresR(Request $request){
+		$datos=$request->all();
+		$registros=Hactividade::select('p.razon','c.id as cliente_id','c.nombre', 'c.nombre2','c.ape_paterno','c.ape_materno',
+		'hactividades.asunto','hactividades.detalle', 'hactividades.fecha', 'hactividades.hora','u.name as usuario_alta')
+		->join('clientes as c','c.id','=','hactividades.cliente_id')
+		->join('plantels as p','p.id','=','c.plantel_id')
+		->join('users as u','u.id','=','hactividades.usu_alta_id')
+		->where('hactividades.tarea','LLAMADA TELEFONICA')
+		->whereIn('p.id',$datos['plantel_f'])
+		->where('hactividades.fecha','>=',$datos['fecha_f'])
+		->where('hactividades.fecha','<=',$datos['fecha_t'])
+		->orderBy('hactividades.usu_alta_id')
+		->orderBy('hactividades.fecha')
+		->orderBy('hactividades.hora')
+		->get();
+		//dd($resultados->toArray());
+		return view('hactividades.reportes.llamadasColaboradorR', compact('registros'));
 	}
 
 }

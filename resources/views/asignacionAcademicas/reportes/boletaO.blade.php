@@ -147,7 +147,7 @@
                                                     <th>Promedio</th>
                                                 </tr>
                                                 <tr>
-                                                    <strong>Calificacion: {{$cali->calificacion}}</strong>
+                                                    <strong>Calificacion: {{$cali->calificacion<6 ? ($cali->calificacion % 1) : round($cali->calificacion,0)}}</strong>
                                                     @php
                                                         $cantidad_materias_validas=0;
                                                         $sumatoria_calificacions_validas=0;

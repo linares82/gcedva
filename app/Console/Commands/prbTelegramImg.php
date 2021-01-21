@@ -4,7 +4,10 @@ namespace App\Console\Commands;
 
 use App\User;
 use Illuminate\Console\Command;
-use App\Notifications\LaravelTelegramNotification;
+use App\Notifications\LaravelTelegramImgNotification;
+use TelegramNotifications\Messages\TelegramMessage;
+use TelegramNotifications\TelegramChannel;
+
 
 class prbTelegramImg extends Command
 {
@@ -40,10 +43,11 @@ class prbTelegramImg extends Command
     public function handle()
     {
         $user=User::find(1);
-        $user->notify(new LaravelTelegramNotification([
-            'text' => "Como has estado!"
-            'photo'=>
-            'photo_caption'=>
+        $user->notify(new LaravelTelegramImgNotification([
+            'text' => "Como has estado!",
+            'photo' => 'https://codezen.io/wp-content/uploads/2020/03/Telegram-Notifications-In-Laravel.jpg',
+            'photo_caption' => 'Telegram Notifications in Laravel'
         ]));
+        
     }
 }

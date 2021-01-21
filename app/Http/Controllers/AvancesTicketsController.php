@@ -14,6 +14,7 @@ use App\Http\Requests\createAvancesTicket;
 use App\Http\Requests\updateAvancesTicket;
 use App\Notifications\LaravelTelegramNotification;
 use Intervention\Image\ImageManagerStatic as Image;
+use App\Notifications\LaravelTelegramImgNotification;
 
 class AvancesTicketsController extends Controller {
 
@@ -158,6 +159,22 @@ class AvancesTicketsController extends Controller {
 		
 	}
 
+	public function toTelegramImg($from, $to, $msg, $img){
+		//$img="http://www.sistemacedva.com/storage/telegram_tickets/1_1_20210108080116721.png";
+		$From=User::find($from);
+		$To=User::find($to);
+		
+		$From->notify(new LaravelTelegramImgNotification([
+			'caption' => $msg,
+			'photo' => $img
+		]));
+		$To->notify(new LaravelTelegramImgNotification([
+			'caption' => $msg,
+			'photo'=> $img
+		]));
+		
+	}
+
 	public function cargaArchivoCorreo(Request $request)
     {
 		//dd($request);
@@ -186,8 +203,9 @@ class AvancesTicketsController extends Controller {
 						
 			$msg="Ticket: ".$avancesTicket->ticket_id."-".$avancesTicket->id." Se ha cargado una Imagen";
 
-			$this->toTelegram($ticket->usu_alta_id, $avancesTicket->asignado_a, 
-									$msg);	
+			$img=asset('storage/telegram_tickets/'.$nombre);	
+
+			$this->toTelegramImg($ticket->usu_alta_id, $avancesTicket->asignado_a, $msg, $img);	
 			return redirect()->route('tickets.show', array($avancesTicket->ticket_id,"Mensaje Enviado"));						
 		}
 		

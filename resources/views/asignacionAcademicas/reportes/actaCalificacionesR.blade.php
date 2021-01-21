@@ -136,7 +136,9 @@
                     <th>No.</th><th>Matricula</th><th>Alumno</th><th>CURP</th><TH>Calificacion Número</TH><TH>Calificacion Letra</TH><th>T. Movimiento</th>
                     </thead>
                     <tbody>
-                        
+                        @php
+                            $i=0;
+                        @endphp
                         @foreach($alumnos as $a)
                         <tr><td>{{ ++$i }}</td>
                             <td>{{$a->cliente->matricula}}</td>

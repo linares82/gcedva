@@ -390,11 +390,11 @@ class ClientesController extends Controller
             $empleados = Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
                 //->where('plantel_id', '=', $e->plantel_id)
                 ->whereIn('plantel_id', '=', $planteles)
-                ->whereIn('puesto_id', array(1, 2, 3, 4,7, 10, 19))
+                ->whereIn('puesto_id', array(1, 2, 3, 4,7, 10, 19, 23))
                 ->pluck('name', 'id');
         } else {
             $empleados = Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
-                ->whereIn('puesto_id', array(1, 2, 3, 4,7, 10, 19))
+                ->whereIn('puesto_id', array(1, 2, 3, 4,7, 10, 19, 23))
                 ->pluck('name', 'id');
         }
         $empleados = $empleados->reverse();
@@ -2143,19 +2143,19 @@ class ClientesController extends Controller
         //dd($datos);
         $adeudos = Adeudo::select('adeudos.*')
             ->join('caja_conceptos as cc', 'cc.id', '=', 'adeudos.caja_concepto_id')
-            ->join('cajas as caj', 'caj.id', '=', 'adeudos.caja_id')
+            //->join('cajas as caj', 'caj.id', '=', 'adeudos.caja_id')
             ->join('clientes as cli', 'cli.id', '=', 'adeudos.cliente_id')
             //->whereIn('cc.id', array(1, 22, 23, 24, 25))
             //->where('pagado_bnd', 1)->where('fecha_pago', '>=', '2020-09-01')
             ->where('cli.id', $datos['cliente'])
             ->whereNull('adeudos.deleted_at')
-            ->where('cli.matricula', '')
+            //->where('cli.matricula', '')
             //->take(5)
             ->get();
         //dd($adeudos->toArray());
 
         foreach ($adeudos as $adeudo) {
-            if (is_null($adeudo->cliente->matricula) or $adeudo->cliente->matricula == " ") {
+            if (is_null($adeudo->cliente->matricula) or $adeudo->cliente->matricula == " " or $adeudo->cliente->matricula == "") {
                 //Genera la matricula para un cliente si no la tiene.
                 //Datos para matricula
                 $cajaLn = $adeudo->caja->cajaLns->first();

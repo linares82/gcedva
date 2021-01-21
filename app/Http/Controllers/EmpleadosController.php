@@ -147,10 +147,13 @@ class EmpleadosController extends Controller
             $empleado->cve_empleado = substr(Hash::make(rand(0, 1000)), 2, 8);
         }
         $jefes = Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
+            ->join('empleado_plantel as ep','ep.empleado_id','=','empleados.id')
             ->where('jefe_bnd', '=', '1')
-            //->where('plantel_id', '=', $empleado->plantel_id)
-            ->whereIn('plantel_id', $planteles)
+            ->whereIn('ep.plantel_id', $planteles)
+            //->whereIn('plantel_id', $planteles)
             ->pluck('name', 'id');
+        //dd($jefes->toArray());
+
         $responsables = Empleado::select('empleados.id', DB::raw('concat(empleados.nombre," ",empleados.ape_paterno," ",empleados.ape_materno) as name'))
             ->join('puestos as p', 'p.id', '=', 'empleados.puesto_id')
             ->where('p.name', '=', 'RH')

@@ -127,8 +127,8 @@
                 <th>Turno</th>
                 <th>F. Planeada Pago</th>
                 <th>Concepto</th>
-                <th>Pago Recibido</th>
-                <th>Csc. Caja</th>
+                <th>Pago Planeado</th>
+                <!--<th>Csc. Caja</th>-->
                 <th>Beca</th>
                 <th>Estatus Cliente</th>
             </tr>
@@ -171,8 +171,8 @@
             <td>{{ $detalle['fecha_pago'] }}</td>
             <td>{{$detalle['concepto']}}</td>
             
-	    <td>{{$detalle['monto_pago']}}</td>
-        <td>{{$detalle['consecutivo']}}</td>
+	    <td>{{$detalle['adeudo_planeado']+($detalle['adeudo_planeado']*0.10)}}</td>
+        <!--<td>@{{$detalle['consecutivo']}}</td>-->
         @if(!is_null($beca)) 
         
         @if(

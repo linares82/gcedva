@@ -359,19 +359,14 @@
                             //una vez finalizado correctamente
                             success: function(data) {
                                 location.reload();
-                                var codigo =
-                                    '<div class="mailbox-attachment-info"><a href="#" class="mailbox-attachment-name"><i class="fa fa-paperclip"></i>' +
-                                    data + '</a><span class="mailbox-attachment-size"> </span></div>';
-                                $("#" + divresul + "").html(codigo);
-
+                                
                             },
                             complete:function(data){
                                 console.log(data);
                             },
                             //si ha ocurrido un error
                             error: function(data) {
-                                $("#" + divresul + "").html(data);
-
+                                
                             }
                         });
 

@@ -15,6 +15,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use App\Notifications\LaravelTelegramNotification;
 use Intervention\Image\ImageManagerStatic as Image;
+use App\Notifications\LaravelTelegramImgNotification;
 
 class TicketsController extends Controller {
 
@@ -156,6 +157,21 @@ class TicketsController extends Controller {
 		]));
 	}
 
+	public function toTelegramImg($from, $to, $msg, $img){
+		
+		$From=User::find($from);
+		$To=User::find($to);
+		
+		$From->notify(new LaravelTelegramImgNotification([
+			'caption' => $msg,
+			'photo' => $img
+		]));
+		$To->notify(new LaravelTelegramImgNotification([
+			'caption' => $msg,
+			'photo'=> $img
+		]));
+	}
+
 
 	public function cargaArchivoCorreo(Request $request)
         {
@@ -184,11 +200,13 @@ class TicketsController extends Controller {
 
 			$msg="Ticket: ".$ticket->id." Se ha cargado una imagen";
 
-			$this->toTelegram($ticket->usu_mod_id, $ticket->asignado_a, $msg);	
+			$img=asset('storage/telegram_tickets/'.$nombre);	
+
+			$this->toTelegram($ticket->usu_mod_id, $ticket->asignado_a, $msg, $img);	
 
 			return redirect()->route('tickets.show', array($ticket->id,"Mensaje Enviado"));
 		}
-				
+
     }
 
 }

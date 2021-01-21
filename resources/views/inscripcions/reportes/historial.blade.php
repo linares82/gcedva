@@ -125,10 +125,12 @@
                         <tr>
                             <td>{{ $cliente->matricula }}</td>
                             <td>{{$a->materia}}</td><td>{{$a->codigo}}</td><td>{{$a->creditos}}</td>
-                            <td>{{$a->lectivo}}</td><td>{{$a->calificacion}}</td><td>{{$a->tipo_examen}}</td>
+                            <td>{{$a->lectivo}}</td>
+                            <td> {{ $cali_redondeada=($a->calificacion<6 ? ($a->calificacion % 1) : round($a->calificacion,0)) }}</td>
+                            <td>{{$a->tipo_examen}}</td>
                             @php
                                 $total_creditos=$total_creditos+$a->creditos;
-                                $suma_calificaciones=$suma_calificaciones+$a['calificacion'];
+                                $suma_calificaciones=$suma_calificaciones+$cali_redondeada;
                                 $total_materias=$total_materias+1;
                             @endphp
                         </tr>
@@ -139,10 +141,12 @@
                         <tr>
                             <td>{{ $cliente->matricula }}</td>
                             <td>{{$a['materia']}}</td><td>{{$a['codigo']}}</td><td>{{$a['creditos']}}</td>
-                            <td>{{$a['lectivo']}}</td><td>{{$a['calificacion']}}</td><td>{{$a['tipo_examen']}}</td>
+                            <td>{{$a['lectivo']}}</td>
+                            <td>{{$cali_redondeada= ($a['calificacion']<6 ? ($a['calificacion'] % 1) : round($a['calificacion'],0)) }}</td>
+                                <td>{{$a['tipo_examen']}}</td>
                             @php
                                 $total_creditos=$total_creditos+$a['creditos'];
-                                $suma_calificaciones=$suma_calificaciones+$a['calificacion'];
+                                $suma_calificaciones=$suma_calificaciones+$cali_redondeada;
                                 $total_materias=$total_materias+1;
                             @endphp
                         </tr>
@@ -150,7 +154,7 @@
                         
                         <tr>
                             <td colspan="2" class="td_derecho">TOTAL DE CREDITOS</td><td>{{ $total_creditos }}</td>
-                            <td colspan="2" rowspan='2' class="td_centro">PROMEDIO GENERAL</td><td rowspan='2'>{{ $total_materias==0 ? 0 : round(($suma_calificaciones/$total_materias),2) }}</td>
+                            <td colspan="2" rowspan='2' class="td_centro">PROMEDIO GENERAL</td><td rowspan='2'> {{ $total_materias==0 ? 0 : round(($suma_calificaciones/$total_materias),2) }}</td>
                         </tr>
                         <tr>
                             <td colspan="2" class="td_derecho">%</td><td></td>

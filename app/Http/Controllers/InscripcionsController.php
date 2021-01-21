@@ -1528,21 +1528,13 @@ class InscripcionsController extends Controller
             'm.creditos',
             'l.name as lectivo',
             'hacademicas.id'
-            //'c.calificacion',
-            //'te.id',
-            //'te.name as tipo_examen'
         )
             ->join('lectivos as l', 'l.id', '=', 'hacademicas.lectivo_id')
-            //->join('grados as g', 'g.id', '=', 'hacademicas.grado_id')
             ->join('materia as m', 'm.id', '=', 'hacademicas.materium_id')
-            //->join('calificacions as c', 'c.hacademica_id', 'hacademicas.id')
-            //->join('tpo_examens as te', 'te.id', '=', 'c.tpo_examen_id')
             ->where('inscripcion_id', $inscripcion->id)
             ->whereNull('hacademicas.deleted_at')
-            //->whereNull('c.deleted_at')
             ->with('cliente')
             ->orderBy('hacademicas.id')
-            //->orderBy('te.id')
             ->get();
         //dd($hacademicas->toArray());
         
@@ -1577,7 +1569,10 @@ class InscripcionsController extends Controller
         $pdf = PDF::loadView('inscripcions.reportes.lista_alumnosr', array('registros'=>$registros,'fechas_enc'=>$fechas))
         ->setPaper('legal', 'landscape');
         return $pdf->download('reporte.pdf');
+        
          */
+
+         
         return view('inscripcions.reportes.historial', compact('inscripcion', 'cliente', 'plantel', 'grado', 'consulta_calificaciones'))->with('hacademicas', $resultados);
     }
 

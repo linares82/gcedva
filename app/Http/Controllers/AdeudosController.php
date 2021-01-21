@@ -2237,7 +2237,7 @@ class AdeudosController extends Controller
                 ->whereNull('s.deleted_at')
                 //->orderBy('p.id')
                 //->orderBy('adeudos.caja_concepto_id')
-                //->orderBy('c.id')
+                ->orderBy('c.id')
                 ->get();
             //dd($registros_totales->toArray());
             

@@ -415,6 +415,7 @@
                                     @if($pago->cuenta_efectivo_id<>0)
                                     <strong>C. Efectivo:</strong>{{ App\CuentasEfectivo::where('id', $pago->cuenta_efectivo_id)->value('name')}}
                                     @endif
+                                    <strong>Referencia EL:</strong>{{ optional($pago->peticionMultipago)->mp_reference }}
                                 </td>
 
                                 <!--<td>
@@ -476,7 +477,7 @@
                                     <td>
                                         @if($pago->bnd_pagado<>1)  
                                         @permission('pagos.store')
-                                        <button type="button" class="btn btn-success aRepetirPeticion" data-dismiss="modal" data-pago="{{$pago->id}}">
+                                        <button type="button" class="btn btn-success aRepetirPeticionEliminado" data-dismiss="modal" data-pago="{{$pago->id}}">
                                             <span class='glyphicon glyphicon-reload'></span> Solicitud ({{$pago->peticionMultipago->contador_peticiones}})
                                         </button>
                                         @endif
