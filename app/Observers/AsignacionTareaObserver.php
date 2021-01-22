@@ -40,14 +40,14 @@ class AsignacionTareaObserver
         $h->save();
         
         //cambio de estatus de cliente y seguimiento
-        $cliente=Cliente::find($this->AsignacionTarea->cliente_id);
-        $cliente->st_cliente_id=1;
-        $cliente->save();
+        //$cliente=Cliente::find($this->AsignacionTarea->cliente_id);
+        //$cliente->st_cliente_id=1;
+        //$cliente->save();
         
-        $seguimiento=Seguimiento::where('cliente_id',$this->AsignacionTarea->cliente_id)->first();
-        $seguimiento->st_seguimiento_id=4;
+        //$seguimiento=Seguimiento::where('cliente_id',$this->AsignacionTarea->cliente_id)->first();
+        //$seguimiento->st_seguimiento_id=4;
         //dd($seguimiento);
-        $seguimiento->save();
+        //$seguimiento->save();
         
     }
 

@@ -17,7 +17,7 @@
         <table class="table table-condensed table-striped">
             <thead>
                 <tr>
-                    <th></th><th>Plantel</th><th>Id Cliente</th><th>Cliente</th><th>Asunto</th><th>Detalle</th><th>Fecha</th><th>Hora</th><th>Usuario Alta</th>
+                    <th></th><th>Plantel</th><th>Id Cliente</th><th>Cliente</th><th>Asunto</th><th>Detalle</th><th>Tel. Fijo</th><th>Tel. Cel.</th><th>Fecha</th><th>Hora</th><th>Usuario Alta</th>
                 </tr> 
             </thead>
             <tbody>
@@ -43,7 +43,7 @@
                         <td>{{$registro->cliente_id}}</td>
                         <td>{{$registro->nombre}} {{$registro->nombre2}} {{$registro->ape_paterno}} {{$registro->ape_materno}}</td>
                         <td>{{$registro->asunto}}</td>
-                        <td>{{$registro->detalle}}</td>
+                        <td>{{ $registro->detalle }}</td><td>{{$registro->tel_fijo}}</td><td>{{$registro->tel_cel}}</td>
                         <td>{{$registro->fecha}}</td>
                         <td>{{$registro->hora}}</td>
                         <td>{{$registro->usuario_alta}}</td>

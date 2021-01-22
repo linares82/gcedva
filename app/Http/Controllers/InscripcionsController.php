@@ -2,39 +2,40 @@
 
 namespace App\Http\Controllers;
 
-use App\AsignacionAcademica;
-use App\AsistenciaR;
-use App\Calificacion;
-use App\CalificacionPonderacion;
-use App\CargaPonderacion;
-use App\Cliente;
-use App\ConsecutivoMatricula;
-use App\ConsultaCalificacion;
-use App\DiaNoHabil;
-use App\Empleado;
-use App\Especialidad;
+use DB;
+use Auth;
+use Hash;
+use App\Mese;
 use App\Grado;
 use App\Grupo;
+use App\Adeudo;
+use App\Cliente;
+use App\Lectivo;
+use App\Plantel;
+use App\Empleado;
+use App\Materium;
+use App\StCliente;
+use App\TpoExamen;
+use Carbon\Carbon;
+use App\DiaNoHabil;
 use App\Hacademica;
+use App\AsistenciaR;
+use App\Inscripcion;
+use App\Ponderacion;
+use App\Calificacion;
+use App\Especialidad;
+use App\PeriodoEstudio;
+use App\UsuarioCliente;
+use App\CargaPonderacion;
+use App\AsignacionAcademica;
+use Illuminate\Http\Request;
+use App\ConsecutivoMatricula;
+use App\ConsultaCalificacion;
+use App\ImpresionListaAsisten;
+use App\CalificacionPonderacion;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\createInscripcion;
 use App\Http\Requests\updateInscripcion;
-use App\ImpresionListaAsisten;
-use App\Inscripcion;
-use App\Lectivo;
-use App\Materium;
-use App\Mese;
-use App\PeriodoEstudio;
-use App\Plantel;
-use App\Ponderacion;
-use App\StCliente;
-use App\TpoExamen;
-use App\UsuarioCliente;
-use Auth;
-use Carbon\Carbon;
-use DB;
-use Hash;
-use Illuminate\Http\Request;
 
 class InscripcionsController extends Controller
 {
@@ -3270,5 +3271,216 @@ class InscripcionsController extends Controller
         return $pdf->download('reporte.pdf');
          */
         return view('inscripcions.reportes.historial', compact('inscripcion', 'cliente', 'plantel', 'grado', 'consulta_calificaciones'))->with('hacademicas', $resultados);
+    }
+
+    public function inspeccionVigilancia(){
+        $empleado=Empleado::where('user_id', Auth::user()->id)->first();
+        $planteles=$empleado->plantels->pluck('razon','id');
+        $lectivos=Lectivo::pluck('name','id');
+        return view('inscripcions.reportes.inspeccionVigilancia', compact('planteles','lectivos'));
+    }
+
+    public function inspeccionVigilanciaR(Request $request){
+        $datos=$request->all();
+        //dd($datos);
+        $resultados=Inscripcion::select('p.razon','c.id as cliente_id','c.nombre','c.nombre2','c.ape_paterno',
+        'c.ape_materno','n.name as nivel','g.name as grupo', 'l.inicio', 'l.fin','inscripcions.id as inscripcion_id')
+        ->join('clientes as c', 'c.id','=', 'inscripcions.cliente_id')
+        ->join('plantels as p', 'p.id','=', 'inscripcions.plantel_id')
+        ->join('nivels as n', 'n.id','=', 'inscripcions.nivel_id')
+        ->join('grupos as g', 'g.id','=', 'inscripcions.grupo_id')
+        ->join('lectivos as l', 'l.id','=', 'inscripcions.lectivo_id')
+        ->where('inscripcions.lectivo_id',$datos['lectivo_f'])
+        ->whereIn('inscripcions.plantel_id',$datos['plantel_f'])
+        ->whereNull('inscripcions.deleted_at')
+        //->where('c.id',16654)
+        ->orderBy('inscripcions.plantel_id')
+        ->orderBy('c.ape_paterno')
+        ->orderBy('c.ape_materno')
+        ->orderBy('c.nombre')
+        ->orderBy('c.nombre2')
+        ->get();
+        //dd($resultados->toArray());
+        $registros=array();
+        foreach($resultados as $r){
+            
+            $registro=array();
+            $registro['razon']=$r->razon;
+            $registro['cliente_id']=$r->cliente_id;
+            $registro['nombre']=$r->ape_paterno." ".$r->ape_materno." ".$r->nombre." ".$r->nombre2;
+            $registro['nivel']=$r->nivel;
+            $registro['grupo']=$r->grupo;
+            //Revisa inscripciones para identificar conceptos pagados
+            $buscarInscripcion=Adeudo::whereDate('fecha_pago','>=',$r->inicio)
+            ->whereDate('fecha_pago','<=',$r->fin)
+            ->whereIn('adeudos.caja_concepto_id', array(1,23, 4))
+            ->where('cliente_id',$r->cliente_id)
+            ->whereNull('deleted_at')
+            ->first();
+            //dd($buscarInscripcion);
+            if(!is_null($buscarInscripcion) and $buscarInscripcion->pagado_bnd==1){
+                $registro['inscripcion']=$buscarInscripcion->cajaConcepto->name;
+                //Revisa adeudos para identificar conceptos pagados
+                $buscarMensualidad=Adeudo::whereDate('fecha_pago','>=',$buscarInscripcion->fecha_pago)
+                ->whereNotIn('adeudos.caja_concepto_id', array(1,23, 4))
+                ->where('cliente_id',$r->cliente_id)
+                ->whereNull('deleted_at')
+                ->first();
+                if(!is_null($buscarMensualidad) and $buscarMensualidad->pagado_bnd==1){
+                    $registro['primera_mensualidad']=$buscarMensualidad->cajaConcepto->name;
+                }elseif(!is_null($buscarMensualidad) and $buscarMensualidad->pagado_bnd==0){
+                    $registro['primera_mensualidad']="";
+                }elseif(is_null($buscarMensualidad)){
+                    $registro['primera_mensualidad']="";
+                }
+            }elseif(!is_null($buscarInscripcion) and $buscarInscripcion->pagado_bnd==0){
+                $registro['inscripcion']="";
+                $registro['primera_mensualidad']="";
+            }elseif(is_null($buscarInscripcion)){
+                $registro['inscripcion']="";
+                $registro['primera_mensualidad']="";
+            }
+            
+            $hacademica=Hacademica::where('inscripcion_id',$r->inscripcion_id)
+            ->whereNull('deleted_at')
+            ->first();
+            
+            $registro['asistencias']=$this->getAsistencias($hacademica);
+            if($registro['inscripcion']<>"" and $registro['primera_mensualidad']<>"" and $registro['asistencias']>0){
+                $registro['cumple']="SI";
+            }else{
+                $registro['cumple']="NO";
+            }
+            
+            /*if($buscarInscripcion->count()>0){
+                dd($buscarInscripcion->toArray());
+            }*/
+            
+            //Revisa
+            array_push($registros, $registro);
+        }
+        //dd($registros);
+        return view('inscripcions.reportes.inspeccionVigilanciaR', compact('registros'));
+    }
+
+    public function getAsistencias($hacademica){
+        //dd($hacademica->toArray());
+        $asignacion=AsignacionAcademica::where('plantel_id',$hacademica->plantel_id)
+        ->where('grupo_id',$hacademica->grupo_id)
+        ->where('materium_id',$hacademica->materium_id)
+        ->where('lectivo_id',$hacademica->lectivo_id)
+        ->whereNull('deleted_at')
+        ->first();
+        if(is_null($asignacion)){
+            return 'Sin asignaciones validas';
+            
+        }
+        //dd($asignacion);
+
+        //$asignacion = AsignacionAcademica::find($data['asignacion']);
+        /*foreach($registros as $registro){
+        $asignacion= AsignacionAcademica::find($registro->asignacion);
+        break;
+        }*/
+
+        $dias = array();
+        //dd($asignacion);
+        foreach ($asignacion->horarios as $horario) {
+            array_push($dias, $horario->dia->name);
+        }
+        if(count($dias)==0){
+            return 'Sin dias de horario asignados a Asignacion '.$asignacion->id;
+            //dd();
+        }
+        //dd($dias);
+
+        $fechas = array();
+        $lectivo = Lectivo::find($asignacion->lectivo_id);
+        //dd($lectivo);
+        $no_habiles = array();
+        $diasNoHabiles = DiaNoHabil::distinct()
+            ->where('fecha', '>=', $lectivo->inicio)
+            ->where('fecha', '<=', $lectivo->fin)
+            ->get();
+        foreach ($diasNoHabiles as $no_habil) {
+            array_push($no_habiles, Carbon::createFromFormat('Y-m-d', $no_habil->fecha));
+        }
+        //dd($no_habiles);
+        //$inicio=Carbon::createFromFormat('Y-m-d', $lectivo->inicio);
+        //$fin=Carbon::createFromFormat('Y-m-d', $lectivo->fin);
+        $pinicio = Carbon::createFromFormat('Y-m-d', $lectivo->inicio);
+        $pfin = Carbon::createFromFormat('Y-m-d', $lectivo->fin);
+        
+        //dd($pfin->toDateString());
+        //array_push($fechas,$pinicio);
+        //$fecha=Carbon::createFromFormat('Y-m-d', $lectivo->inicio);
+        $total_asistencias = 0;
+        while ($pfin->greaterThanOrEqualTo($pinicio)) {
+
+            if (in_array('Lunes', $dias)) {
+                //dd("hay lunes");
+                if ($pinicio->isMonday() and !in_array($pinicio, $no_habiles)) {
+                    array_push($fechas, $pinicio->toDateString());
+                    $total_asistencias++;
+                }
+                //dd($fechas);
+            }
+            if (in_array('Martes', $dias)) {
+                //dd("hay martes");
+                if ($pinicio->isTuesday() and !in_array($pinicio, $no_habiles)) {
+                    array_push($fechas, $pinicio->toDateString());
+                    $total_asistencias++;
+                }
+            }
+            if (in_array('Miercoles', $dias)) {
+                //dd("hay miercoles");
+                if ($pinicio->isWednesday() and !in_array($pinicio, $no_habiles)) {
+                    array_push($fechas, $pinicio->toDateString());
+                    $total_asistencias++;
+                }
+            }
+            if (in_array('Jueves', $dias)) {
+                //dd("hay jueves");
+                if ($pinicio->isThursday() and !in_array($pinicio, $no_habiles)) {
+                    array_push($fechas, $pinicio->toDateString());
+                    $total_asistencias++;
+                }
+            }
+            if (in_array('Viernes', $dias)) {
+                //dd("hay viernes");
+                if ($pinicio->isFriday() and !in_array($pinicio, $no_habiles)) {
+                    array_push($fechas, $pinicio->toDateString());
+                    $total_asistencias++;
+                }
+            }
+            if (in_array('Sabado', $dias)) {
+
+                //if ($pinicio->isSaturday()  and !in_array($pinicio, $no_habiles) and $pinicio->month == $data['mes']) {
+                if ($pinicio->isSaturday() and !in_array($pinicio, $no_habiles)) {
+                    array_push($fechas, $pinicio->toDateString());
+                    $total_asistencias++;
+                }
+            }
+            $pinicio->addDay();
+            //dd($fechas);
+        }
+
+        $contador = 0;
+        foreach ($fechas as $fecha) {
+            $contador++;
+        }
+
+        return $contador;
+        /*
+        return view('inscripcions.reportes.lista_mesr', array(
+            'registros' => $registros,
+            'fechas_enc' => $fechas,
+            'asignacion' => $asignacion,
+            'total_asistencias' => $total_asistencias,
+            'contador' => $contador,
+            'data' => $data,
+            'total_alumnos' => $total_alumnos,
+            'token' => $impresion['token'],
+        ));*/
     }
 }

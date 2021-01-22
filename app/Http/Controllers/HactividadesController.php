@@ -136,7 +136,8 @@ class HactividadesController extends Controller {
 	public function llamadasColaboradoresR(Request $request){
 		$datos=$request->all();
 		$registros=Hactividade::select('p.razon','c.id as cliente_id','c.nombre', 'c.nombre2','c.ape_paterno','c.ape_materno',
-		'hactividades.asunto','hactividades.detalle', 'hactividades.fecha', 'hactividades.hora','u.name as usuario_alta')
+		'hactividades.asunto','hactividades.detalle', 'hactividades.fecha', 'hactividades.hora','u.name as usuario_alta',
+		'c.tel_fijo', 'c.tel_cel')
 		->join('clientes as c','c.id','=','hactividades.cliente_id')
 		->join('plantels as p','p.id','=','c.plantel_id')
 		->join('users as u','u.id','=','hactividades.usu_alta_id')

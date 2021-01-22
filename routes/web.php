@@ -4890,6 +4890,22 @@ Route::post(
     )
 )->middleware('auth');
 Route::get(
+    '/inscripcions/inspeccionVigilancia',
+    array(
+        'as' => 'inscripcions.inspeccionVigilancia',
+        'middleware' => 'permission:inscripcions.inspeccionVigilancia',
+        'uses' => 'InscripcionsController@inspeccionVigilancia'
+    )
+)->middleware('auth');
+Route::post(
+    '/inscripcions/inspeccionVigilanciaR',
+    array(
+        'as' => 'inscripcions.inspeccionVigilanciaR',
+        'middleware' => 'permission:inscripcions.inspeccionVigilancia',
+        'uses' => 'InscripcionsController@inspeccionVigilanciaR'
+    )
+)->middleware('auth');
+Route::get(
     '/inscripcions/wCalificacion',
     array(
         'as' => 'inscripcions.wCalificacion',
