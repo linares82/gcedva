@@ -3293,7 +3293,7 @@ class InscripcionsController extends Controller
         ->where('inscripcions.lectivo_id',$datos['lectivo_f'])
         ->whereIn('inscripcions.plantel_id',$datos['plantel_f'])
         ->whereNull('inscripcions.deleted_at')
-        //->where('c.id',16654)
+//        ->where('c.id',606)
         ->orderBy('inscripcions.plantel_id')
         ->orderBy('c.ape_paterno')
         ->orderBy('c.ape_materno')
@@ -3303,7 +3303,8 @@ class InscripcionsController extends Controller
         //dd($resultados->toArray());
         $registros=array();
         foreach($resultados as $r){
-            
+            $mes=Carbon::createFromFormat('Y-m-d',$r->inicio)->month;
+            $anio=Carbon::createFromFormat('Y-m-d',$r->inicio)->year;
             $registro=array();
             $registro['razon']=$r->razon;
             $registro['cliente_id']=$r->cliente_id;
@@ -3311,7 +3312,7 @@ class InscripcionsController extends Controller
             $registro['nivel']=$r->nivel;
             $registro['grupo']=$r->grupo;
             //Revisa inscripciones para identificar conceptos pagados
-            $buscarInscripcion=Adeudo::whereDate('fecha_pago','>=',$r->inicio)
+            $buscarInscripcion=Adeudo::whereMonth('fecha_pago','>=',$mes)->whereYear('fecha_pago', $anio)
             ->whereDate('fecha_pago','<=',$r->fin)
             ->whereIn('adeudos.caja_concepto_id', array(1,23, 4))
             ->where('cliente_id',$r->cliente_id)
@@ -3321,10 +3322,12 @@ class InscripcionsController extends Controller
             if(!is_null($buscarInscripcion) and $buscarInscripcion->pagado_bnd==1){
                 $registro['inscripcion']=$buscarInscripcion->cajaConcepto->name;
                 //Revisa adeudos para identificar conceptos pagados
-                $buscarMensualidad=Adeudo::whereDate('fecha_pago','>=',$buscarInscripcion->fecha_pago)
+                $buscarMensualidad=Adeudo::whereMonth('fecha_pago','>=',$mes)->whereYear('fecha_pago', $anio)
+                ->join('caja_conceptos as cc','cc.id','=','adeudos.caja_concepto_id')
                 ->whereNotIn('adeudos.caja_concepto_id', array(1,23, 4))
                 ->where('cliente_id',$r->cliente_id)
-                ->whereNull('deleted_at')
+                ->where('cc.bnd_mensualidad',1)
+                ->whereNull('adeudos.deleted_at')
                 ->first();
                 if(!is_null($buscarMensualidad) and $buscarMensualidad->pagado_bnd==1){
                     $registro['primera_mensualidad']=$buscarMensualidad->cajaConcepto->name;
@@ -3344,8 +3347,18 @@ class InscripcionsController extends Controller
             $hacademica=Hacademica::where('inscripcion_id',$r->inscripcion_id)
             ->whereNull('deleted_at')
             ->first();
+            $asignacion=AsignacionAcademica::where('plantel_id',$hacademica->plantel_id)
+            ->where('grupo_id',$hacademica->grupo_id)
+            ->where('materium_id',$hacademica->materium_id)
+            ->where('lectivo_id',$hacademica->lectivo_id)
+            ->whereNull('deleted_at')
+            ->first();
             
-            $registro['asistencias']=$this->getAsistencias($hacademica);
+            $registro['asignacion']=$asignacion->id;
+
+            $fechas=$this->getFechas($asignacion);
+
+            $registro['asistencias']=$this->getAsistencias($asignacion, $r->cliente_id, $fechas);
             if($registro['inscripcion']<>"" and $registro['primera_mensualidad']<>"" and $registro['asistencias']>0){
                 $registro['cumple']="SI";
             }else{
@@ -3363,26 +3376,7 @@ class InscripcionsController extends Controller
         return view('inscripcions.reportes.inspeccionVigilanciaR', compact('registros'));
     }
 
-    public function getAsistencias($hacademica){
-        //dd($hacademica->toArray());
-        $asignacion=AsignacionAcademica::where('plantel_id',$hacademica->plantel_id)
-        ->where('grupo_id',$hacademica->grupo_id)
-        ->where('materium_id',$hacademica->materium_id)
-        ->where('lectivo_id',$hacademica->lectivo_id)
-        ->whereNull('deleted_at')
-        ->first();
-        if(is_null($asignacion)){
-            return 'Sin asignaciones validas';
-            
-        }
-        //dd($asignacion);
-
-        //$asignacion = AsignacionAcademica::find($data['asignacion']);
-        /*foreach($registros as $registro){
-        $asignacion= AsignacionAcademica::find($registro->asignacion);
-        break;
-        }*/
-
+    public function getFechas($asignacion){
         $dias = array();
         //dd($asignacion);
         foreach ($asignacion->horarios as $horario) {
@@ -3464,10 +3458,40 @@ class InscripcionsController extends Controller
             $pinicio->addDay();
             //dd($fechas);
         }
+        return $fechas;
+    }
+
+    public function getAsistencias($asignacion, $cliente, $fechas){
+        //dd($hacademica->toArray());
+        
+        if(is_null($asignacion)){
+            return 'Sin asignaciones validas';
+            
+        }
+        //dd($asignacion);
+
+        //$asignacion = AsignacionAcademica::find($data['asignacion']);
+        /*foreach($registros as $registro){
+        $asignacion= AsignacionAcademica::find($registro->asignacion);
+        break;
+        }*/
+
+        
+
+        $fechasAsistenciasReales=\App\AsistenciaR::where('asignacion_academica_id',$asignacion->id)
+                                            ->where('cliente_id',$cliente)
+                                            ->whereNotIn('cliente_id',[0,2])
+                                            ->get();
 
         $contador = 0;
+	//dd($fechasAsistenciasReales);
         foreach ($fechas as $fecha) {
-            $contador++;
+            foreach($fechasAsistenciasReales as $fechaAsistenciaReal){
+                if($fecha==$fechaAsistenciaReal->fecha){
+                    $contador++;
+                }
+            }
+            
         }
 
         return $contador;

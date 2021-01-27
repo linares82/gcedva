@@ -1454,7 +1454,8 @@ class PagosController extends Controller
             'pagos.uuid',
             'pagos.bnd_pagado',
             'stcaj.name as stcaj',
-            'pagos.deleted_at'
+            'pagos.deleted_at',
+            'cc.name as concepto'
         )
             ->join('peticion_multipagos as pm','pm.pago_id','=','pagos.id')
             //->leftJoin('success_multipagos as sm','sm.mp_order','=','pm.mp_order')
@@ -1462,6 +1463,8 @@ class PagosController extends Controller
             //->whereColumn('sm.mp_amount','pm.mp_amount')
             //->where('mp_response','00')
             ->join('cajas as c', 'c.id', '=', 'pagos.caja_id')
+            ->join('caja_lns as cln', 'cln.caja_id', '=', 'c.id')
+            ->join('caja_conceptos as cc', 'cc.id', '=', 'cln.caja_concepto_id')
             ->join('clientes as cli', 'cli.id', '=', 'c.cliente_id')
             ->join('st_cajas as stcaj','stcaj.id','=','c.st_caja_id')
             ->join('plantels as p', 'p.id', '=', 'c.plantel_id')

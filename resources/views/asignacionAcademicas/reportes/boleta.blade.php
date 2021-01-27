@@ -116,36 +116,37 @@
                         <th colspan='8'>Materias</th>
                         </thead>
                         <tbody>
+                            @php
+                                $cantidad_materias=0;
+                            @endphp
                             @foreach($hacademicas as $a)
                             <tr>
                                 <td colspan='3'> {{$a->materia->name}}</td>
-
+                                
                                 <td colspan="5">
                                     <table class='table_format' width='100%'>
 					
                                         <tbody>
                                             @php
-                                                $cantidad_materias=0;
-						//$a->load('calificaciones');
-						$calificaciones=\App\Calificacion::where('hacademica_id',$a->id)->get();
+                                                
+						
+                                                $calificaciones=\App\Calificacion::where('hacademica_id',$a->id)->get();
+                                                //dd($calificaciones->ToArray());
                                             @endphp
 					    
                                             @foreach($a->calificaciones as $cali)
                                             <tr>
 							
                                                 <tr>
-						    @php
-						    //$cali->load('tpoExamen');
-						    //$cali->load('calificacionPonderacions');
-						    @endphp    
+						    
                                                     <strong>Tipo de examen:{{  $cali->tpoExamen->name}} - </strong>
                                                     @foreach($cali->calificacionPonderacions as $calificacionPonderacion)
                                                         <th class="centrar_texto">{{$calificacionPonderacion->cargaPonderacion->name}}</th>
                                                     @endforeach
-                                                    <th>Promedio</th>
+                                                    <th>Promedio Real</th>
                                                 </tr>
                                                 <tr>
-                                                    <strong>Calificacion: {{$cali->calificacion<6 ? ($cali->calificacion % 1) : round($cali->calificacion,0)}}</strong>
+                                                    <strong>Calificacion Sin Ponderar: <!--@{{$cali->calificacion<6 ? ($cali->calificacion % 1) : round($cali->calificacion,0)}}--></strong>
                                                     @php
                                                         $cantidad_materias_validas=0;
                                                         $sumatoria_calificacions_validas=0;
@@ -161,38 +162,55 @@
                                                         @endphp
                                                         @endif
                                                     @endforeach
+                                                        <td>{{$cali->calificacion<6 ? ($cali->calificacion % 1) : round($cali->calificacion,0)}}</td>
                                                     @if($cantidad_materias_validas>0)
                                                     @if(($sumatoria_calificacions_validas/$cantidad_materias_validas)>=6)    
-                                                    <td>{{ round($sumatoria_calificacions_validas/$cantidad_materias_validas) }}</td>
+                                                    {{ round($sumatoria_calificacions_validas/$cantidad_materias_validas) }}
                                                     @else
-                                                    <td> {{ intdiv(($sumatoria_calificacions_validas/$cantidad_materias_validas),1) }}</td>
+                                                     {{ intdiv(($sumatoria_calificacions_validas/$cantidad_materias_validas),1) }}
                                                     @endif
                                                     @else
-                                                        <td>0</td>
+                                                        0
                                                     @endif
                                                 </tr>
                                             <tr>
-                                            @php
-                                                $sumatoria_calificaciones=$cali->calificacion;
-                                                $cantidad_materias=$cantidad_materias+1;
-                                            @endphp
+                                            
                                             @endforeach
                                         </tbody>
                                     </table>
                                 </td>
                             </tr>
+                            @php
+                                $sumatoria_calificaciones=$sumatoria_calificaciones+ ($cali->calificacion<6 ? ($cali->calificacion % 1) : round($cali->calificacion,0));
+                                $cantidad_materias++;
+                            @endphp
                             @endforeach
+                            
+                            
                         </tbody>
+                        </table>
+                            
                         </tbody>
+                        </table>
+                        
                         </tr>
-
+                        
                         </tbody>
+                        
                     </table>
+                    <table width="100%" class='table_format'>
+                        @php
+                            $promedio=$sumatoria_calificaciones/$cantidad_materias;
+                        @endphp
+                        <tr><td>Promedio General Real</td><td> {{ $promedio }}</td></tr>
+                    </table>
+                        
+                    
+                    
                             </td>
+                            
                 
-                @php
-                    $promedio=$sumatoria_calificaciones/$cantidad_materias;
-                @endphp
+
                 <table width='500px' class='table_format table_format2'>
                     <tr><td><br/><br/><br/><br/><br/><br/><br/><br/>
 		     {{$cliente->plantel->director->nombre}} {{$cliente->plantel->director->ape_paterno}} {{$cliente->plantel->director->ape_materno}}

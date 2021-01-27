@@ -31,7 +31,7 @@
                 @foreach($registros as $registro)
                     
                     <tr>
-                        <td>{{$contador_linea++}}</td>
+                        <td>{{$contador_linea++}}<!--Asign {{ $registro['asignacion'] }} --></td>
                         <td>{{$registro['razon']}} </td>
                         <td>{{$registro['cliente_id']}}</td><td>{{$registro['nombre']}} </td>
                         <td>{{$registro['nivel']}}</td>

@@ -127,6 +127,7 @@
                 <th>Turno</th>
                 <th>F. Planeada Pago</th>
                 <th>Concepto</th>
+                <!--<th>Pago Planeado</th>-->
                 <th>Pago Planeado</th>
                 <!--<th>Csc. Caja</th>-->
                 <th>Beca</th>
@@ -171,7 +172,8 @@
             <td>{{ $detalle['fecha_pago'] }}</td>
             <td>{{$detalle['concepto']}}</td>
             
-	    <td>{{$detalle['adeudo_planeado']+($detalle['adeudo_planeado']*0.10)}}</td>
+        <!--<td>@{{ round($detalle['adeudo_planeado'])}}</td>-->
+        <td>{{ round($detalle['adeudo_planeado'])}}</td>
         <!--<td>@{{$detalle['consecutivo']}}</td>-->
         @if(!is_null($beca)) 
         

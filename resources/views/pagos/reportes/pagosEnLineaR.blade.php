@@ -76,6 +76,7 @@ body{
                         <th>Matricula</th>
                         <th>Cliente</th>
                         <th>Consecutivo Caja</th>
+                        <th>Concepto</th>
                         <th>Estatus Caja</th>
                         <th>Consecutivo Pago</th>
                         <th>Fecha Pago</th>
@@ -91,6 +92,7 @@ body{
                         <td>{{$registro->matricula}}</td>
                         <td>{{$registro->ape_paterno}} {{$registro->ape_materno}} {{$registro->nombre}} {{$registro->nombre2}}</td>
                         <td>{{$registro->consecutivo}}</td>
+                        <td>{{$registro->concepto}}</td>
                         <td>{{$registro->stcaj}}</td>
                         <td>{{$registro->csc_simplificado}}</td>
                         <td>{{$registro->fecha_pago}}</td>

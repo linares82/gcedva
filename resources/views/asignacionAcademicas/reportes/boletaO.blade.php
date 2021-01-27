@@ -147,7 +147,7 @@
                                                     <th>Promedio</th>
                                                 </tr>
                                                 <tr>
-                                                    <strong>Calificacion: {{$cali->calificacion<6 ? ($cali->calificacion % 1) : round($cali->calificacion,0)}}</strong>
+                                                    <strong>Calificacion: <!--@{{$cali->calificacion<6 ? ($cali->calificacion % 1) : round($cali->calificacion,0)}}--></strong>
                                                     @php
                                                         $cantidad_materias_validas=0;
                                                         $sumatoria_calificacions_validas=0;
@@ -163,14 +163,15 @@
                                                         @endphp
                                                         @endif
                                                     @endforeach
+                                                    <td>{{$cali->calificacion<6 ? ($cali->calificacion % 1) : round($cali->calificacion,0)}}</td>
                                                     @if($cantidad_materias_validas>0)
                                                     @if(($sumatoria_calificacions_validas/$cantidad_materias_validas)>=6)    
-                                                    <td>{{ round($sumatoria_calificacions_validas/$cantidad_materias_validas) }}</td>
+                                                    {{ round($sumatoria_calificacions_validas/$cantidad_materias_validas) }}
                                                     @else
-                                                    <td> {{ intdiv(($sumatoria_calificacions_validas/$cantidad_materias_validas),1) }}</td>
+                                                     {{ intdiv(($sumatoria_calificacions_validas/$cantidad_materias_validas),1) }}
                                                     @endif
                                                     @else
-                                                        <td>0</td>
+                                                        0
                                                     @endif
                                                 </tr>
                                             <tr>
