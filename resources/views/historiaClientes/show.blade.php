@@ -59,6 +59,10 @@
                      <p class="form-control-static">{{$historiaCliente->cliente->nombre}}</p>
                 </div>
                 <div class="form-group col-sm-4">
+                    <label for="cliente_nombre">INSCRIPCION</label>
+                    <p class="form-control-static">{{($historiaCliente->inscripcion ? $historiaCliente->inscripcion->grupo->name ." ". $historiaCliente->inscripcion->turno->name : 'Vacio')}}</p>
+               </div>
+                <div class="form-group col-sm-4">
                     <label for="cliente_nombre">REACTIVACION</label>
                     <p class="form-control-static">{{$historiaCliente->reactivado}}</p>
                </div>

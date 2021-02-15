@@ -175,10 +175,10 @@
                             <tr>
                                 <td><a href="{{ route('asignacionAcademicas.show', $asignacionAcademica->id) }}">{{$asignacionAcademica->id}}</a></td>
                                 <td>{{ $asignacionAcademica->plantel->razon }}</td>
-                                <td>{{ $asignacionAcademica->empleado->nombre." ".$asignacionAcademica->empleado->ape_paterno." ".$asignacionAcademica->empleado->ape_materno }}</td>
-                                <td>{{$asignacionAcademica->materia->name}}</td>
-                                <td>{{$asignacionAcademica->grupo->name}}</td>
-                                <td>{{$asignacionAcademica->lectivo->name}}</td>
+                                <td>{{ optional($asignacionAcademica->empleado)->nombre." ".optional($asignacionAcademica->empleado)->ape_paterno." ".optional($asignacionAcademica->empleado)->ape_materno }}</td>
+                                <td>{{optional($asignacionAcademica->materia)->name}}</td>
+                                <td>{{optional($asignacionAcademica->grupo)->name}}</td>
+                                <td>{{optional($asignacionAcademica->lectivo)->name}}</td>
                                 <td class="text-right">
                                     @permission('asignacionAcademica.boletasGrupo')
                                     <a class="btn btn-xs btn-default" href="{{ route('asignacionAcademica.boletasGrupo', array('asignacion'=>$asignacionAcademica->id)) }}"><i class=' fa fa-list-alt'></i> Boletas</a>

@@ -60,6 +60,11 @@ class CajaConceptosController extends Controller
         } else {
             $input['bnd_aplicar_beca'] = 1;
         }
+        if (!isset($input['bnd_concepto_sin_plan'])) {
+            $input['bnd_concepto_sin_plan'] = 0;
+        } else {
+            $input['bnd_concepto_sin_plan'] = 1;
+        }
 
         //create data
         $registro = CajaConcepto::create($input);
@@ -122,7 +127,7 @@ class CajaConceptosController extends Controller
     {
         $input = $request->except('reglas');
         $reglas = $request->only('reglas');
-        //dd($reglas['reglas']);
+        //dd($input);
         $input['usu_mod_id'] = Auth::user()->id;
         if (!isset($input['activo'])) {
             $input['activo'] = 0;
@@ -133,6 +138,11 @@ class CajaConceptosController extends Controller
             $input['bnd_aplicar_beca'] = 0;
         } else {
             $input['bnd_aplicar_beca'] = 1;
+        }
+        if (!isset($input['bnd_concepto_sin_plan'])) {
+            $input['bnd_concepto_sin_plan'] = 0;
+        } else {
+            $input['bnd_concepto_sin_plan'] = 1;
         }
         //update data
         $cajaConcepto = $cajaConcepto->find($id);

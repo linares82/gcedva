@@ -6,12 +6,12 @@
 
 	<ol class="breadcrumb">
 		<li><a href="{{ route('home') }}"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></a></li>
-	    <li><a href="{{ route('pagos.index') }}">@yield('pagosAppTitle')</a></li>
-	    <li class="active">Pagos</li>
+	    <li><a href="{{ route('seguimientos.index') }}">@yield('seguimientosAppTitle')</a></li>
+	    <li class="active">CCXEP</li>
 	</ol>
 
     <div class="page-header">
-        <h3><i class="glyphicon glyphicon-plus"></i> @yield('pagosAppTitle') / Pagos En Linea </h3>
+        <h3><i class="glyphicon glyphicon-plus"></i> @yield('seguimientosAppTitle') / Caja Geneal </h3>
     </div>
 @endsection
 
@@ -21,14 +21,8 @@
     <div class="row">
         <div class="col-md-12">
 
-            {!! Form::open(array('route' => 'pagos.pagosEnLineaR', 'id'=>'frm_reporte')) !!}
-                <div class="form-group col-md-6 @if($errors->has('plantel_f')) has-error @endif">
-                    <label for="plantel_f-field">Plantel de:</label>
-                    {!! Form::select("plantel_f", $plantels, null, array("class" => "form-control select_seguridad", "id" => "plantel_f-field")) !!}
-                    @if($errors->has("plantel_f"))
-                    <span class="help-block">{{ $errors->first("plantel_f") }}</span>
-                    @endif
-                </div>
+            {!! Form::open(array('route' => 'cajas.cajaGeneralR', 'id'=>'frm_reporte')) !!}
+
                 <div class="form-group col-md-6 @if($errors->has('fecha_f')) has-error @endif">
                     <label for="fecha_f-field">Fecha de:</label>
                     {!! Form::text("fecha_f", null, array("class" => "form-control input-sm", "id" => "fecha_f-field")) !!}
@@ -43,16 +37,20 @@
                     <span class="help-block">{{ $errors->first("fecha_t") }}</span>
                     @endif
                 </div>
-                
-                
-<!--                <div class="form-group col-md-6 @if($errors->has('plantel_t')) has-error @endif">
-                    <label for="plantel_t-field">Plantel de:</label>
-                    @{!! Form::select("plantel_t", $list2["Plantel"], null, array("class" => "form-control select_seguridad", "id" => "plantel_t-field")) !!}
-                    @if($errors->has("plantel_t"))
-                    <span class="help-block">{{ $errors->first("plantel_t") }}</span>
+                <div class="form-group col-md-6 @if($errors->has('plantel_f')) has-error @endif">
+                    <label for="plantel_f-field">Plantel de:</label>
+                    {!! Form::select("plantel_f[]", $planteles, null, array("class" => "form-control select_seguridad", "id" => "plantel_f-field", 'multiple'=>true)) !!}
+                    @if($errors->has("plantel_f"))
+                    <span class="help-block">{{ $errors->first("plantel_f") }}</span>
                     @endif
-                </div>-->
-                
+                </div>
+                <div class="form-group col-md-6 @if($errors->has('concepto_f')) has-error @endif">
+                    <label for="concepto_f-field">Concepto de:</label>
+                    {!! Form::select("concepto_f[]", $conceptos, null, array("class" => "form-control select_seguridad", "id" => "concepto_f-field",'multiple'=>true)) !!}
+                    @if($errors->has("concepto_f"))
+                    <span class="help-block">{{ $errors->first("plantel_f") }}</span>
+                    @endif
+                </div>
                 
                 <div class="row">
                 </div>

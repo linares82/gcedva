@@ -181,6 +181,18 @@
             <div class="box box-info">
                 <div class="box-body">
                     @if(isset($caja))
+                    
+                    
+                        @if($caja->st_caja_id==1 and $cliente->st_cliente_id==4)
+                        @permission('cajas.repetirActivarBs')
+                        <div class="form-group col-md-4">
+                            <div class='text-center'>
+                                <a href="{{route('cajas.repetirActivarBs', array('cliente'=>$caja->cliente_id, 'caja'=>$caja->id))}}" class="btn btn-info btn-sm "><i class=""></i> R. Activar BS</a>
+                            </div>
+                        </div>
+                        @endpermission
+                        @endif
+                        
                     <div class="form-group col-md-4">
                         <div class='text-center'>
                         @permission('cajas.eliminarRecargo')
@@ -1175,7 +1187,7 @@ Agregar nuevo registro
             beforeSend : function(){$("#loading3").show(); },
             complete : function(){$("#loading3").hide(); },
             success: function(data) {
-                location.reload();
+                //location.reload();
                 $('#form-buscarVenta').submit();
             },
         });

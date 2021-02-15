@@ -30,6 +30,14 @@
                     <span class="help-block">{{ $errors->first("plantel_f") }}</span>
                     @endif
                 </div>
+
+                <div class="form-group col-md-6 @if($errors->has('plan_estudio_f')) has-error @endif">
+                    <label for="plan_estudio_f-field">Plan Estudio de:</label>
+                    {!! Form::select("plan_estudio_f", $list["PlanEstudio"], null, array("class" => "form-control select_seguridad", "id" => "plan_estudio_f-field")) !!}
+                    @if($errors->has("plan_estudio_f"))
+                    <span class="help-block">{{ $errors->first("plan_estudio_f") }}</span>
+                    @endif
+                </div>
             
                 <div class="form-group col-md-6 @if($errors->has('especialidad_f')) has-error @endif">
                     <label for="especialidad_f-field">Especialidad de:</label>
@@ -72,6 +80,7 @@
         
         $('#plantel_f-field').change(function(){
             getCmbEspecialidad();
+            getCmbPeriodoEstudios();
         }); 
         $('#especialidad_f-field').change(function(){
             getCmbNivel();
@@ -103,6 +112,33 @@
                     $.each(data, function(i) {
                         //alert(data[i].name);
                         $('#especialidad_f-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                    });
+                    //$example.select2();
+                }
+            });       
+    }
+
+    function getCmbPeriodoEstudios(){
+        //var $example = $("#especialidad_id-field").select2();
+        
+            $.ajax({
+                url: '{{ route("planEstudios.cmbPlanEstudios") }}',
+                type: 'GET',
+                data: {
+                    'plantel':$('#plantel_f-field option:selected').val(),
+                    'periodoEstudio':$('#plan_estudio_f-field option:selected').val()
+                },
+                dataType: 'json',
+                beforeSend : function(){$("#loading2").show();},
+                complete : function(){$("#loading2").hide();},
+                success: function(data){
+                    //$example.select2("destroy");
+                    $('#plan_estudio_f-field').html('');
+                    //$('#especialidad_id-field').empty();
+                    $('#plan_estudio_f-field').append($('<option></option>').text('Seleccionar').val('0'));
+                    $.each(data, function(i) {
+                        //alert(data[i].name);
+                        $('#plan_estudio_f-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
                     });
                     //$example.select2();
                 }

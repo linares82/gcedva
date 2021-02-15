@@ -63,7 +63,7 @@
     });
     
     });
-    @if (count($bajas_existentes) > 0)
+    @if (isset($bajas_existentes) and count($bajas_existentes) > 0)
     $('#evento_cliente_id-field option[value="2"]').prop('disabled',true);
     $('#evento_cliente_id-field').select2();
    @endif

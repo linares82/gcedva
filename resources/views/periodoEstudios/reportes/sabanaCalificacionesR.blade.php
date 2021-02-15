@@ -78,6 +78,9 @@
                     </tr>
                     
                 </thead>
+                @php
+                    $no=0;
+                @endphp
                 @foreach($registros as $registro)
                 <tr>
                     @if($loop->first)

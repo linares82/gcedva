@@ -44,10 +44,13 @@ class AsignacionTareaObserver
         //$cliente->st_cliente_id=1;
         //$cliente->save();
         
-        //$seguimiento=Seguimiento::where('cliente_id',$this->AsignacionTarea->cliente_id)->first();
-        //$seguimiento->st_seguimiento_id=4;
-        //dd($seguimiento);
-        //$seguimiento->save();
+        $seguimiento=Seguimiento::where('cliente_id',$this->AsignacionTarea->cliente_id)->first();
+        if($seguimiento->st_seguimiento_id==1){
+            $seguimiento->st_seguimiento_id=4;
+            //dd($seguimiento);
+            $seguimiento->save();
+        }
+    
         
     }
 

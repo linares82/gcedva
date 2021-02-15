@@ -118,10 +118,11 @@
                         <tbody>
                             @php
                                 $cantidad_materias=0;
+                                $sumatoria_calificaciones=0;
                             @endphp
                             @foreach($hacademicas as $a)
                             <tr>
-                                <td colspan='3'> {{$a->materia->name}}</td>
+                                <td colspan='3'> {{optional($a->materia)->name}}</td>
                                 
                                 <td colspan="5">
                                     <table class='table_format' width='100%'>
@@ -202,7 +203,7 @@
                         @php
                             $promedio=$sumatoria_calificaciones/$cantidad_materias;
                         @endphp
-                        <tr><td>Promedio General Real</td><td> {{ $promedio }}</td></tr>
+                        <tr><td>Promedio General Real</td><td> {{ round($promedio,2) }}</td></tr>
                     </table>
                         
                     

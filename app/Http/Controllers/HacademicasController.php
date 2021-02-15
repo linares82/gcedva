@@ -525,18 +525,29 @@ class HacademicasController extends Controller
         $dentroPeriodoExamenes = 0;
         $hoy = Carbon::createFromFormat('Y-m-d', Date('Y-m-d'));
         $periodos_capturados_total = 0;
-
+        //dd($lectivo->periodoExamens->ToArray());
         foreach ($lectivo->periodoExamens as $periodoExamen) {
             $calificacion_inicio = Carbon::createFromFormat('Y-m-d', $periodoExamen->inicio);
             $calificacion_fin = Carbon::createFromFormat('Y-m-d', $periodoExamen->fin);
+            //dd($periodoExamen);
             if ($calificacion_inicio->lessThanOrEqualTo($hoy)  and $calificacion_fin->greaterThanOrEqualTo($hoy)) {
                 $dentroPeriodoExamenes = $periodoExamen->id;
+                
             }
             $periodos_capturados_total++;
         }
+        //dd($lectivo->calendarioEvaluacions->toArray());
+        foreach($lectivo->calendarioEvaluacions as $fechaCalendario){
+            $calificacion_inicio = Carbon::createFromFormat('Y-m-d', $fechaCalendario->v_inicio);
+            $calificacion_fin = Carbon::createFromFormat('Y-m-d', $fechaCalendario->v_fin);
+            if ($calificacion_inicio->lessThanOrEqualTo($hoy)  and $calificacion_fin->greaterThanOrEqualTo($hoy)) {
+                $dentroPeriodoExamenes = $fechaCalendario->id;
+                
+            }
+        }
 
         //dd($periodos_capturados_total);
-        $periodo_examen = PeriodoExamen::find($dentroPeriodoExamenes);
+        //$periodo_examen = PeriodoExamen::find($dentroPeriodoExamenes);
 
         $materia = Materium::find($asignacionAcademica->materium_id);
         //dd($asignacionAcademica);
@@ -598,7 +609,8 @@ class HacademicasController extends Controller
                     'cp.id as calificacion_ponderacion_id',
                     'cp.calificacion_parcial',
                     'stc.name as estatus_cliente', 
-                    'stc.id as estatus_cliente_id'
+                    'stc.id as estatus_cliente_id',
+                    'cpo.name as ponderacion'
                 )
                     ->where('hacademicas.grupo_id', '=', $asignacionAcademica->grupo_id)
                     ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
@@ -638,7 +650,7 @@ class HacademicasController extends Controller
             ->where('materium_id', '=', $asignacionAcademica->materium_id)
             ->first();
 
-        if ($hacademicas->count() == 0) {
+        if (is_null($hacademicas)) {
             return view('hacademicas.calificacionGrupos')
                 ->with('list', Hacademica::getListFromAllRelationApps())
                 ->with('msj', $msj);

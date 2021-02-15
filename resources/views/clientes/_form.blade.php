@@ -816,7 +816,7 @@
                     @endpermission
                     
                     @if(isset($cliente))
-                    {!! Form::text("matricula", null, array("class" => "form-control input-sm", "id" => "matricula1-field", 'readonly'=>true)) !!}
+                    {!! Form::text("matricul", $cliente->matricula, array("class" => "form-control input-sm", "id" => "matricula1-field", 'readonly'=>true)) !!}
         		    @endif
 
                     @if(isset($cliente))
@@ -1291,7 +1291,11 @@
                                                 {{$cali->tpoExamen->name}}
                                             </td>
                                             <td>
-                                                {{$cali->calificacion}}
+                                                @if($cali->calificacion>6)
+                                                {{round($cali->calificacion)}}
+                                                @else
+                                                {{intdiv($cali->calificacion,1)}}
+                                                @endif
                                             </td>
                                         <tr>
                                             @endforeach

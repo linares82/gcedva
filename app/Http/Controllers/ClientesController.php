@@ -65,13 +65,14 @@ class ClientesController extends Controller
      */
     public function index(Request $request)
     {
+        
         $lectivos_graficas = Lectivo::where('id', '<=', 2)->get();
         $hoy = Carbon::today();
         $fecha_superada = 0;
         foreach ($lectivos_graficas as $lg) {
             $fin = Carbon::createFromFormat('Y-m-d', $lg->fin);
             if ($fin < $hoy) {
-                $fecha_superada = 1;
+                //$fecha_superada = 1;
             }
         }
 
@@ -1362,10 +1363,10 @@ class ClientesController extends Controller
                             ->where('h.detalle', '=', 'Concretado')
                             ->where('h.asunto', '=', 'Cambio estatus ')
                             ->count();
-
+                            //Log::info("st:".$st->id."-i-".$i."-".$valor);
                         $linea[$i] = $valor;
                         $j++;
-                        if ($j < 3) {
+                        if ($j < 2) {
                             $i++;
                         }
 
@@ -1406,6 +1407,7 @@ class ClientesController extends Controller
                         ->where('c.empleado_id', '=', $e->id)
                         //->where('c.plantel_id', '=', $e->plantel_id)
                         ->count();
+                        //Log::info("st:".$st->id."-i-".$i."-".$valor);
                     /*Seguimiento::select(DB::raw('count(st.name) as total'))
                     ->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
                     ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
@@ -2093,13 +2095,15 @@ class ClientesController extends Controller
                 array_push($plantels, $p->id);
             }
         $planteles=Plantel::whereIn('id',$plantels)->pluck('razon','id');
-        return view('clientes.reportes.concretados',compact('planteles'));
+        return view('clientes.reportes.concretados',compact('planteles'))
+        ->with('list', Cliente::getListFromAllRelationApps());
     }
 
     public function concretadosR(Request $request){
         $datos=$request->all();
+        $planteles=Plantel::select('plantels.id','plantels.meta_total')->whereIn('plantels.id',$datos['plantel_f'])->get();
         $detalle=Cliente::select('clientes.plantel_id','clientes.id as cliente_id','clientes.matricula','p.razon',
-        'cc.name as concepto','stc.name as st_cliente', 'c.fecha as fecha_caja', 'c.st_caja_id')
+        'cc.name as concepto','stc.name as st_cliente', 'c.fecha as fecha_caja', 'c.st_caja_id','p.meta_total')
         ->join('adeudos as a','a.cliente_id','=','clientes.id')
         ->join('caja_conceptos as cc','cc.id','=','a.caja_concepto_id')
         ->join('plantels as p','p.id','=','clientes.plantel_id')
@@ -2113,11 +2117,12 @@ class ClientesController extends Controller
         ->where('clientes.matricula','like',$datos['inicio_matricula']."%")
         ->whereNull('a.deleted_at')
         ->whereNull('c.deleted_at')
+        ->orderBy('p.razon')
         ->get();
         //dd($registros->toArray());
         
         
-        $totales=Cliente::select(DB::raw('p.razon, count(clientes.matricula) as total_matriculas'))
+        $totales=Cliente::select(DB::raw('p.id, p.razon, p.meta_total, count(clientes.matricula) as total_matriculas'))
         ->join('adeudos as a','a.cliente_id','=','clientes.id')
         ->join('caja_conceptos as cc','cc.id','=','a.caja_concepto_id')
         ->join('plantels as p','p.id','=','clientes.plantel_id')
@@ -2131,9 +2136,12 @@ class ClientesController extends Controller
         ->where('clientes.matricula','like',$datos['inicio_matricula']."%")
         ->whereNull('a.deleted_at')
         ->whereNull('c.deleted_at')
+        ->orderBy('p.razon')
+        ->groupBy('p.id')
         ->groupBy('p.razon')
+        ->groupBy('p.meta_total')
         ->get();
-        //dd($registros->toArray());
+        //dd($totales->toArray());
         return view('clientes.reportes.concretadosR',compact('totales','detalle'));
     }
 

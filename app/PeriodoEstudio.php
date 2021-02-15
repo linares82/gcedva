@@ -89,8 +89,8 @@ class PeriodoEstudio extends Model
 		//return $this->belongsToMany('App\PeriodoEstudio','grupo_periodo_estudios', 'grupo_id', 'periodo_estudio_id');
 	}
 
-	public function periodoEstudio()
+	public function planEstudio()
 	{
-		return $this->belongsToMany('App\PeriodoEstudio');
+		return $this->belongsTo('App\PlanEstudio');
 	}
 }

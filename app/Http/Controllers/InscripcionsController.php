@@ -147,7 +147,7 @@ class InscripcionsController extends Controller
             $combinacion->plantel_id = $i->plantel_id;
             if ($combinacion->plantel_id != $i->plantel_id) {
                 $cliente = Cliente::find($combinacion->cliente_id);
-                $cliente->plantel_id = $inscripcion->plantel_id;
+                $cliente->plantel_id = $i->plantel_id;
                 $cliente->save();
                 $combinacion->especialidad_id = $i->especialidad_id;
                 $combinacion->nivel_id = $i->nivel_id;
@@ -1588,7 +1588,7 @@ class InscripcionsController extends Controller
         $data = $request->all();
         //dd($data);
         $plantel = Plantel::find($data['plantel_f']);
-        $egresados = Cliente::select('clientes.id')
+        $egresados = Cliente::select('i.created_at','clientes.id')
             ->join('inscripcions as i', 'i.cliente_id', '=', 'clientes.id')
             ->join('hacademicas as h', 'h.inscripcion_id', '=', 'i.id')
             ->join('materia as m', 'm.id', '=', 'h.materium_id')
@@ -1686,7 +1686,7 @@ class InscripcionsController extends Controller
         $plantel = Plantel::find($data['plantel_f']);
         $especialidad = Especialidad::find($data['especialidad_f']);
         $grado = Grado::find($data['grado_f']);
-        $egresados = Cliente::select('clientes.id', 'g.nombre2 as grado', 'e.ccte')
+        $egresados = Cliente::select('i.created_at','clientes.id', 'g.nombre2 as grado', 'e.ccte')
             ->join('inscripcions as i', 'i.cliente_id', '=', 'clientes.id')
             ->join('hacademicas as h', 'h.inscripcion_id', '=', 'i.id')
             ->join('materia as m', 'm.id', '=', 'h.materium_id')
@@ -3028,7 +3028,7 @@ class InscripcionsController extends Controller
         $i = 1;
         foreach ($registros as $registro) {
             //dd($registro);
-            if (array_search($estatus_revisados, $registro->estatus_cliente_id) == false) {
+            if (array_search($registro->estatus_cliente_id,$estatus_revisados) == false) {
                 $estatus_revisados[$registro->estatus_cliente_id] = $registro->estatus_cliente;
                 //array_push($estatus, array($registro->estatus_cliente, 0));
             }

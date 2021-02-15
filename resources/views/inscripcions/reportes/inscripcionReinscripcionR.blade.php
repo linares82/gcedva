@@ -61,7 +61,7 @@
                             @else
                             N
                             @endif
-                            </td><td>{{ $registro->cliente->discapacidad->clave }}</td>
+                            </td><td>{{ optional($registro->cliente->discapacidad)->clave }}</td>
                         <td>
                             @if(optional($registro)->st_beca_id==4)
                             S 

@@ -180,14 +180,15 @@
                        $('#empleado_id-field').html('');
                        
                        //$('#especialidad_id-field').empty();
-                       $('#empleado_id-field').append($('<option></option>').text('Seleccionar OpciÃ³n').val('0'));
+                       $('#empleado_id-field').append($('<option></option>').text('Seleccionar Opción').val('0'));
                        
                        $.each(data, function(i) {
                            //alert(data[i].name);
                            $('#empleado_id-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].nombre+"<\/option>");
                            
                        });
-                       $('#empleado_id-field').change();
+                       $('#empleado_id-field').val(0);
+                       $('#empleado_id-field').select2();
                        //$example.select2();
                    }
                });       

@@ -22,6 +22,9 @@
             <th>Estatus Cliente</th><th>Estatus Seguimiento</th><th>Concepto</th>
         </thead>
         <tbody>    
+          @php
+              $csc=0;
+          @endphp
         @foreach ($registros as $registro)
           
           

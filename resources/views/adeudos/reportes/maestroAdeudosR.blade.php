@@ -70,7 +70,7 @@
             
             @if($registro['concepto']=="Total")
             <tr>
-                <th><strong>Plantel</strong></th><th><strong>Clientes Activos</strong></th><th><strong>Concepto</strong></th>
+                <th><strong>Plantel</strong></th><th><strong>Seccion</strong></th><th><strong>Clientes Activos</strong></th><th><strong>Concepto</strong></th>
                 <th><strong>Clientes Con Pago</strong></th><th><strong>Monto Pagado</strong></th><th><strong>Porcentaje Pagado</strong></th>
                 <th><strong>Deudores</strong></th><th><strong>Monto Deuda(Estimacion Planeada)</strong></th><th><strong>Porcentaje Deuda</strong></th>
                 <th><strong>Bajas Con pago</strong></th>
@@ -78,6 +78,7 @@
             @endif
             <tr>
                 <td>{{$registro['plantel']}}</td>
+                <td>{{$registro['seccion']}}</td>
                 <td>{{$registro['clientes_activos']}}</td>
                 <td>{{$registro['concepto']}}</td>
                 <td>{{$registro['clientes_pagados']}}</td>
@@ -101,6 +102,7 @@
             @endforeach
             <tr class="tr_first">
                 <th>Sumas</th>
+                <th></th>
                 <th>{{$total['clientes_activos']}}</th>
                 <th></th>
                 <th>{{$total['clientes_pagados']}}</th>
@@ -114,7 +116,7 @@
         </tbody>
     </table>
     <br/>
-    @if($datos['detalle_f']<4)
+    
     <table border="1" width="100%" >
         <thead>
             <tr>
@@ -122,7 +124,7 @@
                 <th>Plantel</th>
                 <th>Cliente Id</th>
                 <th>Cliente</th>
-		<th></th>
+		        <th>Seccion</th>
                 <th>Matricula</th>
                 <th>Turno</th>
                 <th>F. Planeada Pago</th>
@@ -145,7 +147,9 @@
                 ->where('autorizacion_becas.st_beca_id',4)
                 ->take(1)
                 ->first();
-                //dd($beca);
+                
+                
+                
                 if(!is_null($beca) and !is_null($beca->lectivo_id)){
                     $fecha_inicio=Carbon\Carbon::createFromFormat('Y-m-d',$beca->lectivo->inicio);
                     $fecha_fin=Carbon\Carbon::createFromFormat('Y-m-d',$beca->lectivo->fin);
@@ -160,13 +164,14 @@
                     $anioFin = Carbon\Carbon::createFromFormat('Y-m-d', $beca->lectivo->fin)->year;
                 }
                 
+                
             @endphp
             <tr>   
             <td>{{$consecutivo_linea++}}</td>
             <td>{{$detalle['razon']}}</td>
             <td>{{$detalle['id']}}</td>
             <td>{{ $detalle['nombre'] }} {{ $detalle['nombre2'] }} {{ $detalle['ape_paterno'] }} {{ $detalle['ape_materno'] }}</td>
-	        <td> {{$detalle['usu_alta_id']}} </td>
+            <td> {{$detalle['seccion']}} </td>
             <td>{{ $detalle['matricula'] }}</td>
             <td>{{ $detalle['turno'] }}</td>
             <td>{{ $detalle['fecha_pago'] }}</td>
@@ -178,9 +183,9 @@
         @if(!is_null($beca)) 
         
         @if(
-            (($beca->lectivo->inicio <= $adeudo->fecha_pago and $beca->lectivo->fin >= $adeudo->fecha_pago) or
-            (($anioInicio = $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin = $anioAdeudo and $mesFin >= $mesAdeudo)) or
-            (($anioInicio < $anioAdeudo or $mesInicio >= $mesAdeudo) and ($anioFin >= $anioAdeudo and $mesFin <= $mesAdeudo))) and
+            (($beca->lectivo->inicio <= $fecha_adeudo and $beca->lectivo->fin >= $fecha_adeudo) or
+                (($anioInicio == $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin == $anioAdeudo and $mesFin >= $mesAdeudo)) or
+                (($anioInicio < $anioAdeudo or $mesInicio >= $mesAdeudo) and ($anioFin >= $anioAdeudo and $mesFin <= $mesAdeudo))) and
             $beca->aut_dueno == 4 and
             is_null($beca->deleted_at)
         )
@@ -196,7 +201,7 @@
             @endforeach
         </tbody>
     </table>
-    @endif
+    
 </div>
 
   </body>

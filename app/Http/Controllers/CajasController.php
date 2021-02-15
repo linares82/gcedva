@@ -2,27 +2,32 @@
 
 namespace App\Http\Controllers;
 
-use App\Adeudo;
-use App\AdeudoPagoOnLine;
-use App\AutorizacionBeca;
+use DB;
+use Log;
+use Auth;
+use Session;
 use App\Caja;
-use App\CajaConcepto;
+use App\Pago;
+use App\Param;
+use Exception;
+use App\Adeudo;
+use App\BsBaja;
 use App\CajaLn;
 use App\Cliente;
-use App\CombinacionCliente;
-use App\CuentasEfectivo;
+use App\Plantel;
 use App\Empleado;
-use App\Http\Controllers\Controller;
+use Carbon\Carbon;
+use App\PromoPlanLn;
+use App\CajaConcepto;
+use App\CuentasEfectivo;
+use App\AdeudoPagoOnLine;
+use App\AutorizacionBeca;
+use App\CombinacionCliente;
+use Illuminate\Http\Request;
 use App\Http\Requests\createCaja;
 use App\Http\Requests\updateCaja;
-use App\Pago;
-use App\Plantel;
-use App\PromoPlanLn;
-use Auth;
-use Carbon\Carbon;
-use DB;
-use Illuminate\Http\Request;
-use Session;
+use App\Http\Controllers\Controller;
+use App\valenceSdk\samples\BasicSample\UsoApi;
 
 class CajasController extends Controller
 {
@@ -571,9 +576,13 @@ class CajasController extends Controller
                         $regla_recargo = 0;
                         $regla_descuento = 0;
                         //dd($caja_ln);
-                        //dd($adeudo->planPagoLn->reglaRecargos->toArray());
+                        //dd($adeudo->planPagoLn->reglaRecargos);
                         foreach ($adeudo->planPagoLn->reglaRecargos as $regla) {
-                            if ($adeudo->bnd_eximir_descuento_regla == 0 or is_null($adeudo->bnd_eximir_descuento_regla)) {
+                            //dd($regla->toArray())
+                            if (($adeudo->bnd_eximir_descuento_regla == 0 or is_null($adeudo->bnd_eximir_descuento_regla)) and
+                                //$adeudo->cajaConcepto->bnd_mensualidad == 1 or
+                                $adeudo->caja_concepto_id <= 26
+                            ) {
                                 //dd($adeudo->planPagoLn->reglaRecargos->toArray());
                                 $fecha_caja = Carbon::createFromFormat('Y-m-d', $caja->fecha);
                                 $fecha_adeudo = Carbon::createFromFormat('Y-m-d', $adeudo->fecha_pago);
@@ -1964,5 +1973,116 @@ class CajasController extends Controller
         return view('cajas.caja', compact('cliente', 'caja', 'combinaciones', 'cajas'))
             ->with('list', Caja::getListFromAllRelationApps())
             ->with('list1', CajaLn::getListFromAllRelationApps());
+    }
+
+    public function repetirActivarBs(Request $request)
+    {
+        $datos = $request->all();
+        //dd($datos);
+        $cliente = Cliente::find($datos['cliente']);
+        if ($cliente->st_cliente_id == 4) {
+            $param = Param::where('llave', 'apiVersion_bSpace')->first();
+            $bs_activo = Param::where('llave', 'api_brightSpace_activa')->first();
+            if ($bs_activo->valor == 1) {
+                try {
+                    $apiBs = new UsoApi();
+
+                    //dd($datos);
+                    //Log::info('matricula bs reactivar en caja:'.$cliente->matricula);
+                    $resultado = $apiBs->doValence2('GET', '/d2l/api/lp/' . $param->valor . '/users/?orgDefinedId=' . $cliente->matricula);
+                    //Muestra resultado
+                    $r = $resultado[0];
+                    $datos = ['isActive' => True];
+                    if (isset($r['UserId'])) {
+                        $resultado2 = $apiBs->doValence2('PUT', '/d2l/api/lp/' . $param->valor . '/users/' . $r['UserId'] . '/activation', $datos);
+                        $bsBaja = BsBaja::where('cliente_id', $cliente->id)
+                            ->where('bnd_baja', 1)
+                            ->whereNull('bnd_reactivar')
+                            ->first();
+                        //dd($bsBaja);
+                        if (!is_null($bsBaja)) {
+                            if (isset($resultado2['IsActive']) and $resultado2['IsActive'] and !is_null($bsBaja)) {
+                                $input['cliente_id'] = $cliente->id;
+                                $input['fecha_reactivar'] = Date('Y-m-d');
+                                $input['bnd_reactivar'] = 1;
+                                $input['usu_mod_id'] = Auth::user()->id;
+                                $bsBaja->update($input);
+                            } else {
+                                $input['cliente_id'] = $cliente->id;
+                                $input['fecha_reactivar'] = Date('Y-m-d');
+                                $input['bnd_reactivar'] = 0;
+                                $input['usu_mod_id'] = Auth::user()->id;
+                                $bsBaja->update($input);
+                            }
+                        }
+                    }
+                } catch (Exception $e) {
+                    Log::info("cliente no encontrado en Brigth Space u otro error: " . $cliente->matricula . " - " . $e->getMessage());
+                    //return false;
+                }
+            }
+        }
+        $caja=Caja::find($datos['caja']);
+        $combinaciones = CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
+        $empleados = Empleado::select(DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name, id'))->pluck('name', 'id');
+
+        $cajas = Caja::select('cajas.consecutivo as caja', 'cajas.fecha', 'ln.caja_concepto_id as concepto_id', 'cc.name as concepto', 'ln.total', 'st.name as estatus')
+                ->join('caja_lns as ln', 'ln.caja_id', '=', 'cajas.id')
+                ->join('caja_conceptos as cc', 'cc.id', '=', 'ln.caja_concepto_id')
+                ->join('st_cajas as st', 'st.id', '=', 'cajas.st_caja_id')
+                ->where('cliente_id', $cliente->id)
+                ->whereNull('cajas.deleted_at')
+                ->whereNull('ln.deleted_at')
+                ->get();
+
+        return view('cajas.caja', compact('cliente', 'caja', 'combinaciones', 'cajas', 'empleados'))
+            ->with('list', Caja::getListFromAllRelationApps())
+            ->with('list1', CajaLn::getListFromAllRelationApps());
+    }
+
+    public function cajaGeneral()
+    {
+        $empleado=Empleado::where('user_id',Auth::user()->id)->first();
+        $planteles=$empleado->plantels->pluck('razon','id');
+        $conceptos=CajaConcepto::where('bnd_concepto_sin_plan',1)->whereNull('deleted_at')->pluck('name','id');
+        return view('cajas.reportes.cajaGeneral',compact('planteles','conceptos'))
+            ->with('list', Caja::getListFromAllRelationApps());
+    }
+
+    public function cajaGeneralR(Request $request)
+    {
+        $datos = $request->all();
+        
+        //dd($conceptos_validos);
+        
+        $registros = Caja::select('pl.razon', 'cajas.consecutivo','c.matricula',
+        DB::raw('concat(c.ape_paterno," ",c.ape_materno," ",c.nombre," ",c.nombre2) as cliente'),
+        'p.fecha', 'u.name as usuario','cc.name as concepto','fp.name as forma_pago','cajas.total')
+        ->join('forma_pagos as fp','fp.id','=','cajas.forma_pago_id')
+        ->join('clientes as c','c.id','=','cajas.cliente_id')
+        ->join('plantels as pl','pl.id','=','cajas.plantel_id')
+        ->join('caja_lns as cln','cln.caja_id','=','cajas.id')
+        ->join('caja_conceptos as cc','cc.id','=','cln.caja_concepto_id')
+        ->join('pagos as p','p.caja_id','=','cajas.id')
+        ->join('users as u','u.id','=','p.usu_alta_id')
+        ->where('p.bnd_pagado',1)
+        ->where('cajas.st_caja_id',1)
+        ->whereIn('cc.id',$datos['concepto_f'])
+        ->whereIn('pl.id',$datos['plantel_f'])
+        ->where('p.fecha',">=",$datos['fecha_f'])
+        ->where('p.fecha',"<=",$datos['fecha_t'])
+        ->whereNull('cajas.deleted_at')
+        ->whereNull('cln.deleted_at')
+        ->whereNull('p.deleted_at')
+        ->orderBy('pl.razon')
+        ->orderBy('cc.name')
+        ->get();
+
+        //dd($registros->toArray());
+
+        return view(
+            'cajas.reportes.cajaGeneralR',
+            compact('registros','datos')
+        );
     }
 }

@@ -146,7 +146,7 @@
                                 <td>{{$plantel->razon}}</td>
                                 <td>{{$plantel->rfc}}</td>
                                 <td>{{$plantel->cve_incorporacion}}</td>
-                                <td>{{$plantel->cuentaP->name}}</td>
+                                <td>{{optional($plantel->cuentaP)->name}}</td>
                                 <td class="text-right">
                                     @permission('plantels.duplicate')
                                     <a class="btn btn-xs btn-primary" href="{{ route('plantels.duplicate', $plantel->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\PlanEstudio;
 use Illuminate\Http\Request;
 use Auth;
+use DB;
 use App\Http\Requests\updatePlanEstudio;
 use App\Http\Requests\createPlanEstudio;
 
@@ -121,6 +122,46 @@ class PlanEstudiosController extends Controller {
 		$planEstudio->delete();
 
 		return redirect()->route('planEstudios.index')->with('message', 'Registro Borrado.');
+	}
+
+	public function cmbPlanEstudios(Request $request){
+		if ($request->ajax()) {
+            //dd($request->all());
+            $plantel = $request->get('plantel');
+            $planEstudio = $request->get('planEstudio');
+            
+            $final = array();
+            $r = DB::table('plan_estudios as pe')
+                ->join('periodo_estudios as pes','pes.plan_estudio_id','=','pe.id')
+                ->select('pe.id', 'pe.name')
+                ->where('pes.plantel_id', '=', $plantel)
+                ->where('pe.id', '>', '0')
+                ->whereNull('pe.deleted_at')
+                ->distinct()
+                ->get();
+            
+            //dd($r);
+            if (isset($planEstudio) and $planEstudio != 0) {
+                foreach ($r as $r1) {
+                    if ($r1->id == $planEstudio) {
+                        array_push($final, array(
+                            'id' => $r1->id,
+                            'name' => $r1->name,
+                            'selectec' => 'Selected',
+                        ));
+                    } else {
+                        array_push($final, array(
+                            'id' => $r1->id,
+                            'name' => $r1->name,
+                            'selectec' => '',
+                        ));
+                    }
+                }
+                return $final;
+            } else {
+                return $r;
+            }
+        }
 	}
 
 }

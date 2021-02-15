@@ -771,8 +771,10 @@ class HomeController extends Controller
             array_push($a_2, array($a, $lSt2->name));
             //dd($a_2);
             $avance[$i] = 0;
-            if ($a > 0) {
+            if ($a > 0 and $e->plantel->meta_total>0) {
                 $avance[$i] = (($a * 100) / $e->plantel->meta_total);
+            }else{
+                $avance[$i]=0;
             }
             $i++;
         }
@@ -985,7 +987,7 @@ class HomeController extends Controller
         ->get();
 */
         //dd($empleados->toArray());
-        Seguimiento::select(DB::raw('count(st.name) as total'))
+        /*Seguimiento::select(DB::raw('count(st.name) as total'))
             ->join('st_seguimientos as st', 'st.id', '=', 'seguimientos.st_seguimiento_id')
             ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
             ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
@@ -993,7 +995,7 @@ class HomeController extends Controller
             ->where('e.id', '=', $em->id)
             ->where('c.plantel_id', '=', $filtros['plantel_f'])
             ->value('total');
-
+*/
         //dd($empleados->toArray());
         $i = 1;
         foreach ($estatus as $st) {

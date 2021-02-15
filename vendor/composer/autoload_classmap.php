@@ -19,6 +19,7 @@ return array(
     'AddBndActivoToCargaPonderacions' => $baseDir . '/database/migrations/2020_06_10_092359_add_bnd_activo_to_carga_ponderacions.php',
     'AddBndAplicarBecaCajaConceptoTable' => $baseDir . '/database/migrations/2019_02_25_115155_add_bnd_aplicar_beca_caja_concepto_table.php',
     'AddBndBecaCombinacionClientesTable' => $baseDir . '/database/migrations/2019_05_27_162240_add_bnd_beca_combinacion_clientes_table.php',
+    'AddBndConceptoSinPlanToCajaConceptosTable' => $baseDir . '/database/migrations/2021_02_12_145503_add_bnd_concepto_sin_plan_to_caja_conceptos_table.php',
     'AddBndConciliacionToSuccessMultipagosTable' => $baseDir . '/database/migrations/2020_07_07_154144_add_bnd_conciliacion_to_success_multipagos_table.php',
     'AddBndCortoToNivelsTable' => $baseDir . '/database/migrations/2020_02_24_103913_add_bnd_corto_to_nivels_table.php',
     'AddBndEximirDescuentoToAdeudosTable' => $baseDir . '/database/migrations/2020_07_03_104152_add_bnd_eximir_descuento_to_adeudos_table.php',

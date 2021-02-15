@@ -522,22 +522,23 @@ class AsignacionAcademicasController extends Controller
                 ->distinct()
                 ->get();
 		}*/
-
-		$carga_ponderacion = CargaPonderacion::find($datos['ponderacion_f']);
-		//dd($carga_ponderacion->toArray());
-		$cadena = explode(" ", $carga_ponderacion->name);
-		//dd($cadena);
-		$numero = $cadena[count($cadena) - 1];
-		//dd($numero);
-		$ponderaciones = CargaPonderacion::where('name', 'like', '%' . $numero)
-			->where('ponderacion_id', $carga_ponderacion->ponderacion_id)
+		$numero=0;
+		if($datos['ponderacion_f']<>0){
+			$carga_ponderacion = CargaPonderacion::find($datos['ponderacion_f']);
+			$cadena = explode(" ", $carga_ponderacion->name);
+			//dd($cadena);
+			$numero = $cadena[count($cadena) - 1];
+			//dd($numero);
+			$ponderaciones = CargaPonderacion::where('ponderacion_id', $carga_ponderacion->ponderacion_id)
 			->get();
-		$array_ponderaciones = array();
-		foreach ($ponderaciones as $p) {
-			array_push($array_ponderaciones, $p->id);
-		}
 
-		$nomenclatura = array("",'Primer', 'SEGUNDO', 'TERCERO', 'CUARTO', 'QUINTO', 'SEXTO', 'SEPTIMO', 'OCTAVO', 'NOVENO', 'DECIMO');
+			$array_ponderaciones = array();
+			foreach ($ponderaciones as $p) {
+				array_push($array_ponderaciones, $p->id);
+			}
+		}
+		
+		$nomenclatura = array("",'PRIMER', 'SEGUNDO', 'TERCERO', 'CUARTO', 'QUINTO', 'SEXTO', 'SEPTIMO', 'OCTAVO', 'NOVENO', 'DECIMO');
 		//dd($nomenclatura[$numero]);
 		$asignacion_academica = AsignacionAcademica::where('plantel_id', $datos['plantel_f'])
 			->where('lectivo_id', $datos['lectivo_f'])

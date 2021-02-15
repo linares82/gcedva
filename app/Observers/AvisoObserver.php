@@ -22,7 +22,7 @@ class AvisoObserver
     public function created(Aviso $aviso)
     {
         $this->Aviso=$aviso;
-        //$seguimiento=Seguimiento::find($this->Aviso->seguimiento_id);
+        $seguimiento=Seguimiento::find($this->Aviso->seguimiento_id);
         //dd($seguimiento->toArray());
         $h=new Hactividade();
         
@@ -41,6 +41,11 @@ class AvisoObserver
         
         //cambio de estatus
         //cambio de estatus de cliente y seguimiento
+        if($seguimiento->st_seguimiento_id==1){
+            $seguimiento->st_seguimiento_id=4;
+            //dd($seguimiento);
+            $seguimiento->save();
+        }
         //$seguimiento->st_seguimiento_id=4;
         //$seguimiento->save();
         

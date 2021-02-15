@@ -233,7 +233,7 @@
                                 <td>{{$cliente->cliente->nombre2}}</td>
                                 <td>{{$cliente->cliente->ape_paterno}}</td>
                                 <td>{{$cliente->cliente->ape_materno}}</td>
-                                <td>{{$cliente->cliente->empleado->nombre." ".$cliente->cliente->empleado->ape_paterno." ".$cliente->cliente->empleado->ape_materno}}</td>
+                                <td>{{ $cliente->cliente->plantel->razon }} <!--@{{$cliente->cliente->empleado->nombre." ".$cliente->cliente->empleado->ape_paterno." ".$cliente->cliente->empleado->ape_materno}}--></td>
                                 <td> {{$cliente->cliente->paise->name}} </td>
                                 <td>{{$cliente->cliente->stCliente->name}}</td>
                                 <td>

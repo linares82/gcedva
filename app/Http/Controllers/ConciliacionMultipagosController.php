@@ -182,6 +182,7 @@ class ConciliacionMultipagosController extends Controller
 	public function show($id, ConciliacionMultipago $conciliacionMultipago)
 	{
 		$conciliacionMultipago = $conciliacionMultipago->find($id);
+		
 		return view('conciliacionMultipagos.show', compact('conciliacionMultipago'));
 	}
 
@@ -400,7 +401,7 @@ class ConciliacionMultipagosController extends Controller
 		foreach ($peticionesExistentes as $peticion) {
 			//dd($peticion);
 			$registro = array();
-			$registro['plantel'] = $peticion->pago->caja->plantel->razon;
+			$registro['plantel'] = optional($peticion->pago->caja->plantel)->razon;
 			$registro['caja_consecutivo'] = $peticion->pago->caja->consecutivo;
 			$registro['caja_monto'] = $peticion->pago->caja->total;
 			$registro['caja_fecha'] = $peticion->pago->caja->fecha;
@@ -417,27 +418,27 @@ class ConciliacionMultipagosController extends Controller
 				->where('mp_reference', $peticion->mp_reference)
 				->where('importe', $peticion->mp_amount)
 				->first();
-			//dd($filtered);
-			if (!is_null($filtered) > 0) {
-				$registro['conciliacion_no_aprobacion'] = $filtered->no_aprobacion;
+			//dd($filtered->toArray());
+			if (!is_null($filtered) and $filtered->count()>0) {
+				$registro['conciliacion_no_aprobacion'] = optional($filtered)->no_aprobacion;
 				$registro['conciliacion_importe'] = $filtered->importe;
 				$registro['conciliacion_comision'] = $filtered->comision;
 				$registro['conciliacion_iva_comision'] = $filtered->iva_comision;
 				$registro['conciliacion_fecha_dispersion'] = $filtered->fecha_dispersion;
-				$registro['respuesta_mp_response'] = $filtered->successMultipago->mp_response;
-				$registro['respuesta_mp_responsemsg'] = $filtered->successMultipago->mp_responsemsg;
+				$registro['respuesta_mp_response'] = optional($filtered->successMultipago)->mp_response;
+				$registro['respuesta_mp_responsemsg'] = optional($filtered->successMultipago)->mp_responsemsg;
 			} else {
-				$registro['no_aprobacion'] = "";
-				$registro['importe'] = "";
-				$registro['comision'] = "";
-				$registro['iva_comision'] = "";
-				$registro['fecha_dispersion'] = "";
+				$registro['conciliacion_no_aprobacion'] = "";
+				$registro['conciliacion_importe'] = "";
+				$registro['conciliacion_comision'] = "";
+				$registro['conciliacion_iva_comision'] = "";
+				$registro['conciliacion_fecha_dispersion'] = "";
 				$registro['respuesta_mp_response'] = '';
 				$registro['respuesta_mp_responsemsg'] = '';
 			}
 			array_push($registrosConciliados, $registro);
 		}
-		//dd($registros);
+		//dd($registrosConciliados);
 
 		$lineasConciliacionExtra = ConciliacionMultiDetalle::where('conciliacion_multipago_id', $conciliacion->id)
 			->whereNull('peticion_multipago_id')

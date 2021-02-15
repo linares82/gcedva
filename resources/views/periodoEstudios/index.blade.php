@@ -146,6 +146,8 @@
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'nivel_id', 'title' => 'NIVEL'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'grado_id', 'title' => 'GRADO'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'name', 'title' => 'PERIODO'])</th>
+                            <th>Periodo Estudio</th>
+                            <th>Orden</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
@@ -159,6 +161,8 @@
                                 <td>{{$periodoEstudio->nivel->name}}</td>
                                 <td>{{$periodoEstudio->grado->name}}</td>
                                 <td>{{$periodoEstudio->name}}</td>
+                                <td>{{optional($periodoEstudio->planEstudio)->name}}</td>
+                                <td>{{$periodoEstudio->orden}}</td>
                                 <td class="text-right">
                                     @permission('periodoEstudios.edit')
                                     <a class="btn btn-xs btn-primary" href="{{ route('periodoEstudios.duplicate', $periodoEstudio->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>

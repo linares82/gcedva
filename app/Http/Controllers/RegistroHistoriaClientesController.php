@@ -86,9 +86,16 @@ class RegistroHistoriaClientesController extends Controller
 				$cliente->save();
 			} elseif ($e->evento_cliente_id == 2) {
 			
-				if(!is_null($e->inscripcion_id)){
+				/*if(!is_null($e->inscripcion_id)){
 					$inscripcion = Inscripcion::find($e->inscripcion_id);
 					if (!is_null($inscripcion)) {
+						$inscripcion->st_inscripcion_id = 3;
+						$inscripcion->save();
+					}
+				}*/
+				$inscripciones = Inscripcion::where('cliente_id',$e->cliente_id)->whereNull('deleted_at')->count();
+				if ($inscripciones>0) {
+					foreach($inscripciones as $inscripcion){
 						$inscripcion->st_inscripcion_id = 3;
 						$inscripcion->save();
 					}

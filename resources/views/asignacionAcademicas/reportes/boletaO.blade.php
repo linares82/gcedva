@@ -118,6 +118,10 @@
                         <th colspan='8'>Materias</th>
                         </thead>
                         <tbody>
+                            @php
+                                $cantidad_materias=0;
+                                $sumatoria_calificaciones=0;
+                            @endphp
                             @foreach($hacademicas as $a)
                             <tr>
                                 <td colspan='3'> {{$a->materia->name}}</td>
