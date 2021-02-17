@@ -1980,6 +1980,7 @@ class CajasController extends Controller
         $datos = $request->all();
         //dd($datos);
         $cliente = Cliente::find($datos['cliente']);
+        $caja=Caja::find($datos['caja']);
         if ($cliente->st_cliente_id == 4) {
             $param = Param::where('llave', 'apiVersion_bSpace')->first();
             $bs_activo = Param::where('llave', 'api_brightSpace_activa')->first();
@@ -2022,7 +2023,7 @@ class CajasController extends Controller
                 }
             }
         }
-        $caja=Caja::find($datos['caja']);
+        
         $combinaciones = CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
         $empleados = Empleado::select(DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name, id'))->pluck('name', 'id');
 

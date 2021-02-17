@@ -2161,6 +2161,8 @@ class AdeudosController extends Controller
                     $calculo['porcentaje_pagado'] = ($calculo['clientes_pagados'] * 100) / $calculo['clientes_activos'];
                     $calculo['deudores'] = $calculo['clientes_activos'] - $calculo['clientes_pagados'];
                     $calculo['porcentaje_deudores'] = ($calculo['deudores'] * 100) / $calculo['clientes_activos'];
+                    $concepto_aux=$registro->concepto;
+                    $seccion_aux=$registro->seccion;
                 } elseif (is_null($registro->borrado_c) and is_null($registro->borrado_cln) and $registro->st_cliente_id == 3) {
                     $baja = HistoriaCliente::where('cliente_id', $registro->id)
                         ->where('evento_cliente_id', 2)
@@ -2172,8 +2174,7 @@ class AdeudosController extends Controller
                         $calculo['bajas_pagadas'] = $calculo['bajas_pagadas'] + 1;
                     }
                 }
-                $concepto_aux=$registro->concepto;
-                $seccion_aux=$registro->seccion;
+                
             }
             array_push($lineas_procesadas, $calculo);
 
@@ -2683,6 +2684,7 @@ class AdeudosController extends Controller
                         $calculo['bajas_pagadas'] = $calculo['bajas_pagadas'] + 1;
                     }
                 }
+                //array_push($lineas_detalle, $registro->toArray());
             }
             array_push($lineas_procesadas, $calculo);
             /*
@@ -2710,8 +2712,8 @@ class AdeudosController extends Controller
                     is_null($registro->borrado_c) and is_null($registro->borrado_cln) and
                     $registro->st_cliente_id <> 3
                 ) {
-                    if ($seccion_aux <> "" and $concepto_aux <> "" and $calculo['clientes_activos'] > 0) {
-
+                    if ($seccion_aux <> "" and $concepto_aux <> "") {
+                        
                         if ($seccion_aux <> $registro->seccion or $concepto_aux <> $registro->concepto) {
                             array_push($lineas_procesadas, $calculo);
                             //$calculo['seccion']=$registro->seccion;
@@ -2734,6 +2736,8 @@ class AdeudosController extends Controller
                     $calculo['porcentaje_pagado'] = ($calculo['clientes_pagados'] * 100) / $calculo['clientes_activos'];
                     $calculo['deudores'] = $calculo['clientes_activos'] - $calculo['clientes_pagados'];
                     $calculo['porcentaje_deudores'] = ($calculo['deudores'] * 100) / $calculo['clientes_activos'];
+                    $concepto_aux = $registro->concepto;
+                    $seccion_aux = $registro->seccion;
                 } elseif (is_null($registro->borrado_c) and is_null($registro->borrado_cln) and $registro->st_cliente_id == 3) {
                     $baja = HistoriaCliente::where('cliente_id', $registro->id)
                         ->where('evento_cliente_id', 2)
@@ -2745,8 +2749,7 @@ class AdeudosController extends Controller
                     }
                 }
 
-                $concepto_aux = $registro->concepto;
-                $seccion_aux = $registro->seccion;
+                
             }
             array_push($lineas_procesadas, $calculo);
 

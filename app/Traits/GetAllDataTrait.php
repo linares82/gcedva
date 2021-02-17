@@ -311,4 +311,6 @@ trait GetAllDataTrait
 
         return $myQuery->paginate($paginate);
     }
+
+    
 }

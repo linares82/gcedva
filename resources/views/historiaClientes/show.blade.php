@@ -70,6 +70,10 @@
                         <label for="cliente_nombre">FEC. ULTIMA REACTIVACION</label>
                         <p class="form-control-static">{{$historiaCliente->fec_reactivado}}</p>
                 </div>
+                <div class="form-group col-sm-4">
+                    <label for="usu_alta_id">F. CREACION</label>
+                    <p class="form-control-static">{{$historiaCliente->created_at}}</p>
+               </div>
                     <div class="form-group col-sm-4">
                      <label for="usu_alta_id">U. ALTA</label>
                      <p class="form-control-static">{{$historiaCliente->usu_alta->name}}</p>

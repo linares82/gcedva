@@ -250,7 +250,7 @@ class PeriodoEstudiosController extends Controller
             ->where('especialidad_id', $datos['especialidad_f'])
             ->where('nivel_id', $datos['nivel_f'])
             ->where('grado_id', $datos['grado_f'])
-            ->where('plan_estudio_id', $datos['plan_estudios_f'])
+            ->where('plan_estudio_id', $datos['plan_estudio_f'])
             ->orderBy('orden')
             ->with('materias')
             ->get();

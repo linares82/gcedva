@@ -148,7 +148,7 @@
                                                     @foreach($cali->calificacionPonderacions as $calificacionPonderacion)
                                                         <th class="centrar_texto">{{$calificacionPonderacion->cargaPonderacion->name}}</th>
                                                     @endforeach
-                                                    <th>Promedio</th>
+                                                    <th>Promedio {{ $cali->tpo_examen_id==1 ? 'O.' : 'E.'}}  </th>
                                                 </tr>
                                                 <tr>
                                                     <strong>Calificacion: <!--@{{$cali->calificacion<6 ? ($cali->calificacion % 1) : round($cali->calificacion,0)}}--></strong>

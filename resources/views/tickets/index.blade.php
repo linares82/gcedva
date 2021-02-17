@@ -187,6 +187,7 @@
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'categoria_tickets.name', 'title' => 'CATEGORIA'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'fecha', 'title' => 'FECHA'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'asignado_a', 'title' => 'ASIGNADO A'])</th>
+                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'nombre_corto', 'title' => 'DESC. CORTA'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'st_tickets.name', 'title' => 'ESTATUS'])</th>
                         <th>ETIQUETAS</th>
                             <th class="text-right">OPCIONES</th>
@@ -200,6 +201,7 @@
                                 <td>{{$ticket->categoriaTicket->name}}</td>
                                 <td>{{$ticket->fecha}}</td>
                                 <td>{{$ticket->asignadoA->name}}</td>
+                                <td>{{$ticket->nombre_corto}}</td>
                                 <td>{{$ticket->stTicket->name}}</td>
                                 <td>
                                     @foreach ($ticket->etiquetas as $etiqueta)

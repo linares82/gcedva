@@ -22,7 +22,7 @@ trait RelationManagerTrait
    *
    * @var relationApps
    */
-  protected $relationApps;
+  public $relationApps;
 
   /**
    * Add relation App to list
@@ -255,4 +255,6 @@ trait RelationManagerTrait
     }
     return $list;
   }
+
+  
 }

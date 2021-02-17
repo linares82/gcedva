@@ -120,7 +120,7 @@
                 <TD width="30%"><strong>Estudios Cursados</strong></TD><TD width="30%"><strong>Documentación que entregó</strong>  </TD><td width="30%"><strong>Quien cubre la colegiatura</strong> </td>
             </tr>
             <tr>
-                <TD width="30%">{{ $cliente->escolaridad->name }}</TD><TD width="30%">No requiere documentos </TD><td width="30%">{{ $cliente->pagador->name }} </td>
+                <TD width="30%">{{ optional($cliente->escolaridad)->name }}</TD><TD width="30%">No requiere documentos </TD><td width="30%">{{ optional($cliente->pagador)->name }} </td>
             </tr>
         </table>
     </div>

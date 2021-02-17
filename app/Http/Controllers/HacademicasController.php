@@ -650,7 +650,7 @@ class HacademicasController extends Controller
             ->where('materium_id', '=', $asignacionAcademica->materium_id)
             ->first();
 
-        if (is_null($hacademicas)) {
+        if (is_null($hacademica)) {
             return view('hacademicas.calificacionGrupos')
                 ->with('list', Hacademica::getListFromAllRelationApps())
                 ->with('msj', $msj);

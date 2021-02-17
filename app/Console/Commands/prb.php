@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use App\Grado;
 use DB;
 
 class prb extends Command
@@ -38,6 +39,12 @@ class prb extends Command
      */
     public function handle()
     {
+        $grado=Grado::find(10);
+        dd($grado->total_relaciones);
+        
+
+        
+        /*
         $tablas = array(
             'actividad_empresas',
             'actividad_empresas_empresas',
@@ -233,5 +240,6 @@ class prb extends Command
             }
         }
         dd($registrosCero);
+        */
     }
 }

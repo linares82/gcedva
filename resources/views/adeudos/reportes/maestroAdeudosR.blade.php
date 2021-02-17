@@ -72,7 +72,11 @@
             <tr>
                 <th><strong>Plantel</strong></th><th><strong>Seccion</strong></th><th><strong>Clientes Activos</strong></th><th><strong>Concepto</strong></th>
                 <th><strong>Clientes Con Pago</strong></th><th><strong>Monto Pagado</strong></th><th><strong>Porcentaje Pagado</strong></th>
-                <th><strong>Deudores</strong></th><th><strong>Monto Deuda(Estimacion Planeada)</strong></th><th><strong>Porcentaje Deuda</strong></th>
+                <th><strong>Deudores</strong></th>
+                @permission('adeudos.maestroAdeudoConMontos')
+                <th><strong>Monto Deuda(Estimacion Planeada)</strong></th>
+                @endpermission
+                <th><strong>Porcentaje Deuda</strong></th>
                 <th><strong>Bajas Con pago</strong></th>
             </tr>
             @endif
@@ -85,7 +89,9 @@
                 <td> {{number_format($registro['total_monto_pagado'],2)}}</td>
                 <td> {{ round($registro['porcentaje_pagado'],2)}}</td>
                 <td> {{$registro['deudores']}}</td>
+                @permission('adeudos.maestroAdeudoConMontos')
                 <td> {{number_format($registro['monto_deuda'],2)}}</td>
+                @endpermission
                 <td> {{round($registro['porcentaje_deudores'],2)}}</td>
                 <td> {{$registro['bajas_pagadas']}}</td>
             </tr>
@@ -130,7 +136,9 @@
                 <th>F. Planeada Pago</th>
                 <th>Concepto</th>
                 <!--<th>Pago Planeado</th>-->
+                @permission('adeudos.maestroAdeudoConMontos')
                 <th>Pago Planeado</th>
+                @endpermission
                 <!--<th>Csc. Caja</th>-->
                 <th>Beca</th>
                 <th>Estatus Cliente</th>
@@ -177,9 +185,9 @@
             <td>{{ $detalle['fecha_pago'] }}</td>
             <td>{{$detalle['concepto']}}</td>
             
-        <!--<td>@{{ round($detalle['adeudo_planeado'])}}</td>-->
-        <td>{{ round($detalle['adeudo_planeado'])}}</td>
-        <!--<td>@{{$detalle['consecutivo']}}</td>-->
+            @permission('adeudos.maestroAdeudoConMontos')    
+            <td>{{ round($detalle['adeudo_planeado'])}}</td>
+            @endpermission
         @if(!is_null($beca)) 
         
         @if(

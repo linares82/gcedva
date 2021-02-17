@@ -187,7 +187,7 @@
                            $('#empleado_id-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].nombre+"<\/option>");
                            
                        });
-                       $('#empleado_id-field').val(0);
+                       //$('#empleado_id-field').val(0);
                        $('#empleado_id-field').select2();
                        //$example.select2();
                    }

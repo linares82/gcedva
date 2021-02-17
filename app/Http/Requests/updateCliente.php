@@ -23,6 +23,7 @@ class updateCliente extends FormRequest
      */
     public function rules()
     {
+        
         return [
             //'cve_cliente',
             'nombre'=>'required',

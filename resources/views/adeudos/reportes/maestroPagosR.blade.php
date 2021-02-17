@@ -71,7 +71,11 @@
             @if($registro['concepto']=="Total")
             <tr>
                 <th><strong>Plantel</strong></th><th><strong>Seccion</strong></th> <th><strong>Clientes Activos</strong></th><th><strong>Concepto</strong></th>
-                <th><strong>Clientes Con Pago</strong></th><th><strong>Monto Pagado</strong></th><th><strong>Porcentaje Pagado</strong></th>
+                <th><strong>Clientes Con Pago</strong></th>
+                @permission('adeudos.maestroPagosConMontos')
+                <th><strong>Monto Pagado</strong></th>
+                @endpermission
+                <th><strong>Porcentaje Pagado</strong></th>
                 <th><strong>Deudores</strong></th><th><strong>Monto Deuda(Estimacion Planeada)</strong></th><th><strong>Porcentaje Deuda</strong></th>
                 <th><strong>Bajas Con pago</strong></th>
             </tr>
@@ -82,7 +86,9 @@
                 <td>{{$registro['clientes_activos']}}</td>
                 <td>{{$registro['concepto']}}</td>
                 <td>{{$registro['clientes_pagados']}}</td>
+                @permission('adeudos.maestroPagosConMontos')
                 <td> {{number_format($registro['total_monto_pagado'],2)}}</td>
+                @endpermission
                 <td> {{ round($registro['porcentaje_pagado'],2)}}</td>
                 <td> {{$registro['deudores']}}</td>
                 <td> {{number_format($registro['monto_deuda'],2)}}</td>
@@ -129,7 +135,9 @@
                 <th>Turno</th>
                 <th>F. Planeada Pago</th>
                 <th>Concepto</th>
+                @permission('adeudos.maestroPagosConMontos')
                 <th>Pago Recibido</th>
+                @endpermission
                 <th>Csc. Caja</th>
                 <th>Beca</th>
                 <th>Estatus Cliente</th>
@@ -175,8 +183,9 @@
                 <td>{{ $detalle['turno'] }}</td>
                 <td>{{ $detalle['fecha_pago'] }}</td>
                 <td>{{$detalle['concepto']}}</td>
-                
+                @permission('adeudos.maestroPagosConMontos')
                 <td>{{$detalle['monto_pago']}}</td>
+                @endpermission
                 <td>{{$detalle['consecutivo']}}</td>
                 @if(!is_null($beca)) 
                 

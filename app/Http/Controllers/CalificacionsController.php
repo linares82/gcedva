@@ -118,12 +118,13 @@ class CalificacionsController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id,Calificacion $calificacion)
+	public function destroy($id)
 	{
-		$calificacion=$calificacion->find($id);
+		$calificacion=Calificacion::find($id);
+		$hacademica=$calificacion->hacademica;
 		$calificacion->delete();
 
-		return redirect()->route('calificacions.index')->with('message', 'Registro Borrado.');
+		return redirect()->route('clientes.edit', $hacademica->cliente_id)->with('message', 'Registro Borrado.');
 	}
 
 	public function promedios(){

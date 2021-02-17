@@ -92,13 +92,13 @@
                         <tbody>
                             @foreach($conciliacionMultipago->conciliacionMultiDetalles as $detalle)
                             @php
-                             $peticionMultipago=PeticionMultipago::where('conciliacion_multipago_id',$detalle->peticionMultipago)
+                             $peticionMultipago=App\PeticionMultipago::where('peticion_multipagos.id',$detalle->peticion_multipago_id)
                              ->join('pagos as p','p.id','=','peticion_multipagos.pago_id')
                              ->join('cajas as c','c.id','=','p.caja_id')
                              ->whereNull('p.deleted_at')
                              ->whereNull('c.deleted_at')
                              ->first();
-                             if(!isnull($peticionMultipago)){
+                             if(!is_null($peticionMultipago)){
                                 $consecutivo=$detalle->peticionMultipago->pago->caja->consecutivo;
                                 $plantel_id=$detalle->peticionMultipago->pago->caja->plantel->id;
                                 $plantel_razon=$detalle->peticionMultipago->pago->caja->plantel->razon;

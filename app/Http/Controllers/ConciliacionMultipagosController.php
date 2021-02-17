@@ -182,7 +182,7 @@ class ConciliacionMultipagosController extends Controller
 	public function show($id, ConciliacionMultipago $conciliacionMultipago)
 	{
 		$conciliacionMultipago = $conciliacionMultipago->find($id);
-		
+		//dd($conciliacionMultipago->conciliacionMultiDetalles->toArray());
 		return view('conciliacionMultipagos.show', compact('conciliacionMultipago'));
 	}
 

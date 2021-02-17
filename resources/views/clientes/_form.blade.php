@@ -1223,13 +1223,13 @@
 
                     <tr style="color: #ffffff;background:#6495ED;">
                         <td>{{$i->plantel->razon}}</td>
-                        <td>{{$i->especialidad->name}}</td>
-                        <td>{{$i->nivel->name}}</td>
-                        <td>{{$i->grado->name}}</td>
-                        <td>{{$i->grupo->name}}</td>
-                        <td>{{$i->periodo_estudio->name}}</td>
+                        <td>{{optional($i->especialidad)->name}}</td>
+                        <td>{{optional($i->nivel)->name}}</td>
+                        <td>{{optional($i->grado)->name}}</td>
+                        <td>{{optional($i->grupo)->name}}</td>
+                        <td>{{optional($i->periodo_estudio)->name}}</td>
                         <td>{{$i->fec_inscripcion}}</td>
-                        <td>{{$i->lectivo->name}}</td>
+                        <td>{{optional($i->lectivo)->name}}</td>
                         <td>{{$i->matricula}}</td>
                         <td>{{$i->control}}</td>
                         <td>{{$i->stInscripcion->name}}</td>
@@ -1271,10 +1271,10 @@
                     <tbody>
                         @foreach($i->hacademicas as $a)
                         <tr>
-                            <td><a href='{{url("asignacionAcademicas/index")}}?&q%5Basignacion_academicas.lectivo_id_lt%5D={{$a->lectivo_id}}&q%5Basignacion_academicas.plantel_id_lt%5D={{$a->plantel_id}}&q%5Basignacion_academicas.empleado_id_lt%5D={{$a->empleado_id}}&q%5Basignacion_academicas.materium_id_lt%5D={{$a->materium_id}}&q%5Basignacion_academicas.grupo_id_lt%5D={{$a->grupo_id}}' target='_blank'>{{$a->materia->name}}</a></td>
-                            <td>{{$a->grupo->name}}</td>
-                            <td>{{$a->lectivo->name}}</td>
-                            <td>{{$a->stMateria->name}}</td>
+                            <td><a href='{{url("asignacionAcademicas/index")}}?&q%5Basignacion_academicas.lectivo_id_lt%5D={{$a->lectivo_id}}&q%5Basignacion_academicas.plantel_id_lt%5D={{$a->plantel_id}}&q%5Basignacion_academicas.empleado_id_lt%5D={{$a->empleado_id}}&q%5Basignacion_academicas.materium_id_lt%5D={{$a->materium_id}}&q%5Basignacion_academicas.grupo_id_lt%5D={{$a->grupo_id}}' target='_blank'>{{optional($a->materia)->name}}</a></td>
+                            <td>{{optional($a->grupo)->name}}</td>
+                            <td>{{optional($a->lectivo)->name}}</td>
+                            <td>{{optional($a->stMateria)->name}}</td>
 
                             <td>
                                 <a href="{{ route('hacademicas.destroy', $a->id) }}" class="btn btn-xs btn-danger" ><i class="glyphicon glyphicon-trash"></i> Eliminar</a>
@@ -1282,7 +1282,7 @@
                             <td colspan="2">
                                 <table class="table table-condensed table-striped">
                                     <thead>
-                                    <td>Examen</td><td>CalificaciOn</td>
+                                    <td>Examen</td><td>CalificaciOn</td><td></td>
                                     </thead>
                                     <tbody>
                                         @foreach($a->calificaciones as $cali)
@@ -1296,6 +1296,13 @@
                                                 @else
                                                 {{intdiv($cali->calificacion,1)}}
                                                 @endif
+                                            </td>
+                                            <td>
+                                                @permission('calificacions.destroy')
+                                                @if($cali->tpo_examen_id==2)
+                                                <a href="{{ route('calificacions.destroy', $cali->id) }}" class="btn btn-xs btn-danger" ><i class="glyphicon glyphicon-trash"></i> Eliminar</a>
+                                                @endif
+                                                @endpermission
                                             </td>
                                         <tr>
                                             @endforeach

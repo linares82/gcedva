@@ -2,12 +2,13 @@
 
 namespace App;
 
+use App\ModeloBase;
 use App\Traits\GetAllDataTrait;
 use App\Traits\RelationManagerTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Grado extends Model
+class Grado extends ModeloBase
 {
 	use RelationManagerTrait, GetAllDataTrait;
 	use SoftDeletes;
@@ -79,4 +80,6 @@ class Grado extends Model
 	{
 		return $this->belongsTo('App\NivelEducativoSat');
 	} // end
+
+	
 }

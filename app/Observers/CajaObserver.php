@@ -60,7 +60,9 @@ class CajaObserver
                 if ($this->caja->cliente->st_cliente_id == 26) {
                     $adeudos = Adeudo::where('cliente_id', $this->caja->cliente_id)->where('pagado_bnd', 0)
                         ->whereNull('deleted_at')
+                        ->whereDate('fecha_pago','<=', date('Y-m-d'))
                         ->count();
+                    //dd($adeudos);
                     if ($adeudos <= 1) {
                         $cliente->st_cliente_id = 4;
                         $cliente->save();
