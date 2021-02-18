@@ -71,7 +71,7 @@ body{
 
     <div class="row">
         <div class="col-md-12">
-            <h2 class="titulo">Caja General</h2>
+            <h2 class="titulo">Pagos Caja General</h2>
             <h3 class="titulo">De {{$datos['fecha_f']}} a {{$datos['fecha_t']}}</h3>
             <table class="table table-bordered table-striped dataTable">
                 <thead>

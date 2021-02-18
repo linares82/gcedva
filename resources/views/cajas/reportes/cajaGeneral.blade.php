@@ -11,7 +11,7 @@
 	</ol>
 
     <div class="page-header">
-        <h3><i class="glyphicon glyphicon-plus"></i> @yield('seguimientosAppTitle') / Caja Geneal </h3>
+        <h3><i class="glyphicon glyphicon-plus"></i> @yield('seguimientosAppTitle') / Pagos Caja General </h3>
     </div>
 @endsection
 

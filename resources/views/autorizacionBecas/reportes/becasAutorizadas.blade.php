@@ -34,7 +34,7 @@
                 <!--
                 <div class="form-group col-md-6 @if($errors->has('especialidad_f')) has-error @endif">
                     <label for="especialidad_f-field">Especialidad de:</label>
-                    {!! Form::select("especialidad_f", $list["Especialidad"], null, array("class" => "form-control select_seguridad", "id" => "especialidad_f-field")) !!}
+                    @{!! Form::select("especialidad_f", $list["Especialidad"], null, array("class" => "form-control select_seguridad", "id" => "especialidad_f-field")) !!}
                     <div id='loading_especialidad' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                     @if($errors->has("especialidad_f"))
                     <span class="help-block">{{ $errors->first("especialidad_f") }}</span>
@@ -42,7 +42,7 @@
                 </div>
                 <div class="form-group col-md-6 @if($errors->has('nivel_f')) has-error @endif">
                     <label for="nivel_f-field">Nivel de:</label>
-                    {!! Form::select("nivel_f", $list["Nivel"], null, array("class" => "form-control select_seguridad", "id" => "nivel_f-field")) !!}
+                    @{!! Form::select("nivel_f", $list["Nivel"], null, array("class" => "form-control select_seguridad", "id" => "nivel_f-field")) !!}
                     <div id='loading_nivel' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                     @if($errors->has("nivel_f"))
                     <span class="help-block">{{ $errors->first("nivel_f") }}</span>
@@ -51,7 +51,7 @@
 
                 <div class="form-group col-md-6 @if($errors->has('grado_f')) has-error @endif">
                     <label for="grado_f-field">Grado de:</label>
-                    {!! Form::select("grado_f", null, null, array("class" => "form-control select_seguridad", "id" => "grado_f-field")) !!}
+                    @{!! Form::select("grado_f", null, null, array("class" => "form-control select_seguridad", "id" => "grado_f-field")) !!}
                     @if($errors->has("grado_f"))
                     <span class="help-block">{{ $errors->first("grado_f") }}</span>
                     @endif
@@ -59,7 +59,7 @@
             -->
                 <div class="form-group col-md-6 @if($errors->has('lectivo_f')) has-error @endif">
                     <label for="lectivo_f-field">Lectivo:</label>
-                    {!! Form::select("lectivo_f", $list["Lectivo"], null, array("class" => "form-control select_seguridad", "id" => "lectivo_f-field")) !!}
+                    {!! Form::select("lectivo_f", array(), null, array("class" => "form-control select_seguridad", "id" => "lectivo_f-field")) !!}
                     <div id='loading_grupo' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                     @if($errors->has("lectivo_f"))
                     <span class="help-block">{{ $errors->first("lectivo_f") }}</span>
@@ -70,14 +70,14 @@
 <!--
                 <div class="form-group col-md-6 @if($errors->has('fecha_f')) has-error @endif">
                     <label for="fecha_f-field">Fecha de:</label>
-                    {!! Form::text("fecha_f", null, array("class" => "form-control input-sm", "id" => "fecha_f-field")) !!}
+                    @{!! Form::text("fecha_f", null, array("class" => "form-control input-sm", "id" => "fecha_f-field")) !!}
                     @if($errors->has("fecha_f"))
                     <span class="help-block">{{ $errors->first("fecha_f") }}</span>
                     @endif
                 </div>
                 <div class="form-group col-md-6 @if($errors->has('fecha_t')) has-error @endif">
                     <label for="fecha_t-field">Fecha a:</label>
-                    {!! Form::text("fecha_t", null, array("class" => "form-control input-sm", "id" => "fecha_t-field")) !!}
+                    @{!! Form::text("fecha_t", null, array("class" => "form-control input-sm", "id" => "fecha_t-field")) !!}
                     @if($errors->has("fecha_t"))
                     <span class="help-block">{{ $errors->first("fecha_t") }}</span>
                     @endif
