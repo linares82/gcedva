@@ -22,7 +22,9 @@
               <th>Plantel</th><th>Seccion</th><th>Estatus</th><th>Total</th>
           </thead>
           <tbody>
-            
+            @php
+                $total_suma=0;
+            @endphp
             @foreach($totales->toArray() as $total)
             <tr>
               @foreach($total as $celda)

@@ -10,7 +10,7 @@
 	</ol>
 
     <div class="page-header">
-        <h3><i class="glyphicon glyphicon-plus"></i>  Llamadas por Colaborador </h3>
+        <h3><i class="glyphicon glyphicon-plus"></i>  Tareas por Colaborador </h3>
     </div>
 @endsection
 

@@ -12,24 +12,25 @@
     
   </head>
   <body>
-      <h3>Llamadas por Colaborador</h3>
+      <h3>Tareas por Colaborador</h3>
     <div class="datagrid">
         <table class="table table-condensed table-striped">
             <thead>
                 <tr>
-                    <th></th><th>Plantel</th><th>Id Cliente</th><th>Cliente</th><th>Asunto</th><th>Detalle</th><th>Tel. Fijo</th><th>Tel. Cel.</th><th>Fecha</th><th>Hora</th><th>Usuario Alta</th>
+                    <th></th><th>Plantel</th><th>Id Cliente</th><th>Cliente</th><th>Tarea</th><th>Detalle</th>
+                    <th>Tel. Fijo</th><th>Tel. Cel.</th><th>Creado</th><th>Usuario Alta</th>
                 </tr> 
             </thead>
             <tbody>
                 @php
                     $cuenta_llamadas=0;
                     $i=0;
-                    $usu_alta="";
+                    $empleado="";
                 @endphp
                 @foreach($registros as $registro)
-                    @if($usu_alta<>"" and $usu_alta<>$registro->usuario_alta)
+                    @if($empleado<>"" and $empleado<>$registro->empleado)
                     <tr>
-                        <td colspan="7"></td>
+                        <td colspan="8"></td>
                         <td><strong>Total</strong></td>
                         <td><strong>{{ $cuenta_llamadas }}</strong></td>
                         @php
@@ -42,20 +43,19 @@
                         <td>{{$registro->razon}}</td>
                         <td>{{$registro->cliente_id}}</td>
                         <td>{{$registro->nombre}} {{$registro->nombre2}} {{$registro->ape_paterno}} {{$registro->ape_materno}}</td>
-                        <td>{{$registro->asunto}}</td>
-                        <td>{{ $registro->detalle }}</td><td>{{$registro->tel_fijo}}</td><td>{{$registro->tel_cel}}</td>
-                        <td>{{$registro->fecha}}</td>
-                        <td>{{$registro->hora}}</td>
-                        <td>{{$registro->usuario_alta}}</td>
+                        <td>{{ $registro->tarea }}</td><td>{{ $registro->detalle }}</td>
+                        <td>{{$registro->tel_fijo}}</td><td>{{$registro->tel_cel}}</td>
+                        <td>{{$registro->created_at}}</td>
+                        <td>{{$registro->empleado}}</td>
                         @php
-                            $usu_alta=$registro->usuario_alta;
+                            $empleado=$registro->empleado;
                             $cuenta_llamadas++;
                         @endphp
                     </tr>
                     
                 @endforeach
                 <tr>
-                    <td colspan="7"></td>
+                    <td colspan="8"></td>
                     <td><strong>Total</strong></td>
                     <td><strong>{{ $cuenta_llamadas }}</strong></td>
                     @php

@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 
+use App\AsignacionTarea;
 use Auth;
 use App\Plantel;
 
@@ -10,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\createHactividade;
 use App\Http\Requests\updateHactividade;
+use DB;
 
 class HactividadesController extends Controller {
 
@@ -135,13 +137,14 @@ class HactividadesController extends Controller {
 
 	public function llamadasColaboradoresR(Request $request){
 		$datos=$request->all();
+		/*
 		$registros=Hactividade::select('p.razon','c.id as cliente_id','c.nombre', 'c.nombre2','c.ape_paterno','c.ape_materno',
-		'hactividades.asunto','hactividades.detalle', 'hactividades.fecha', 'hactividades.hora','u.name as usuario_alta',
+		'hactividades.asunto','hactividades.tarea','hactividades.detalle', 'hactividades.fecha', 'hactividades.hora','u.name as usuario_alta',
 		'c.tel_fijo', 'c.tel_cel')
 		->join('clientes as c','c.id','=','hactividades.cliente_id')
 		->join('plantels as p','p.id','=','c.plantel_id')
 		->join('users as u','u.id','=','hactividades.usu_alta_id')
-		->where('hactividades.tarea','LLAMADA TELEFONICA')
+		//->where('hactividades.tarea','LLAMADA TELEFONICA')
 		->whereIn('p.id',$datos['plantel_f'])
 		->where('hactividades.fecha','>=',$datos['fecha_f'])
 		->where('hactividades.fecha','<=',$datos['fecha_t'])
@@ -149,7 +152,24 @@ class HactividadesController extends Controller {
 		->orderBy('hactividades.fecha')
 		->orderBy('hactividades.hora')
 		->get();
-		//dd($resultados->toArray());
+		*/
+		$registros=AsignacionTarea::select('p.razon','c.id as cliente_id','c.nombre', 'c.nombre2','c.ape_paterno','c.ape_materno',
+		't.name as tarea','asignacion_tareas.detalle', 'asignacion_tareas.created_at',DB::raw('concat(e.nombre," ", e.ape_paterno," ",e.ape_materno) as empleado'),
+		'c.tel_fijo', 'c.tel_cel')
+		->join('clientes as c','c.id','=','asignacion_tareas.cliente_id')
+		->join('plantels as p','p.id','=','c.plantel_id')
+		->join('empleados as e','e.id','=','asignacion_tareas.empleado_id')
+		->join('tareas as t','t.id','=','asignacion_tareas.tarea_id')
+		->join('st_tareas as sta','sta.id','=','asignacion_tareas.st_tarea_id')
+		//->where('hactividades.tarea','LLAMADA TELEFONICA')
+		->whereIn('p.id',$datos['plantel_f'])
+		->whereDate('asignacion_tareas.created_at','>=',$datos['fecha_f'])
+		->whereDate('asignacion_tareas.created_at','<=',$datos['fecha_t'])
+		->orderBy('asignacion_tareas.empleado_id')
+		->orderBy('asignacion_tareas.created_at')
+		//->orderBy('hactividades.hora')
+		->get();
+		//dd($registros->toArray());
 		return view('hactividades.reportes.llamadasColaboradorR', compact('registros'));
 	}
 

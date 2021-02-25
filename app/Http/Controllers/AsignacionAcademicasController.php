@@ -2,22 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
-
-use App\AsignacionAcademica;
-use App\AsistenciaR;
-use App\CargaPonderacion;
-use App\Cliente;
-use App\Empleado;
-use App\Hacademica;
-use App\Horario;
-use Illuminate\Http\Request;
-use Auth;
-use App\Http\Requests\updateAsignacionAcademica;
-use App\Http\Requests\createAsignacionAcademica;
 use DB;
+use Auth;
+
+use App\Grupo;
+use App\Cliente;
+use App\Horario;
+use App\Lectivo;
+use App\Empleado;
+use App\Materium;
+use App\Hacademica;
+use App\AsistenciaR;
+use App\Inscripcion;
+use App\Http\Requests;
+use App\CargaPonderacion;
+use App\AsignacionAcademica;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Luecano\NumeroALetras\NumeroALetras;
+use App\Http\Requests\createAsignacionAcademica;
+use App\Http\Requests\updateAsignacionAcademica;
 
 class AsignacionAcademicasController extends Controller
 {
@@ -566,5 +570,36 @@ class AsignacionAcademicasController extends Controller
 			'asignacionAcademicas.reportes.actaCalificacionesR',
 			compact('datos', 'encabezado', 'alumnos', 'asignacion_academica', 'array_ponderaciones', 'formatter', 'numero', 'nomenclatura')
 		);
+	}
+
+	public function actaExtraordinarios(){
+		$empleado = Empleado::where('user_id', Auth::user()->id)->first();
+		$planteles = $empleado->plantels->pluck('razon', 'id');
+		$lectivos=Lectivo::pluck('name','id');
+		$materias=Materium::pluck('name','id');
+		$grupos=Grupo::pluck('name','id');
+		return view('asignacionAcademicas.reportes.actaExtraordinarios', 
+		compact('planteles','lectivos','materias','grupos'));
+	}
+
+	public function actaExtraordinariosR(Request $request){
+		$datos=$request->all();
+		$calificaciones=Hacademica::where('plantel_id',$datos['plantel_f'])
+		->join('calificacions as cali','cali.hacademica_id','=','hacademicas.id')
+		->where('lectivo_id',$datos['lectivo_f'])
+		->where('grupo_id',$datos['grupo_f'])
+		->where('materium_id',$datos['materia_f'])
+		->where('tpo_examen_id',2)
+		->whereNull('hacademicas.deleted_at')
+		->whereNull('cali.deleted_at')
+		->get();
+		foreach($calificaciones as $c){
+			$encabezado=Inscripcion::find($c->inscripcion_id);
+			$hacademica=Hacademica::find($c->hacademica_id);
+			break;
+		}
+		//dd($hacademica);
+		//dd($calificaciones->toArray());
+		return view('asignacionAcademicas.reportes.actaExtraordinariosR', compact('calificaciones','encabezado','hacademica'));
 	}
 }

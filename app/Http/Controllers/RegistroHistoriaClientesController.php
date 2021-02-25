@@ -95,7 +95,8 @@ class RegistroHistoriaClientesController extends Controller
 				}*/
 				$inscripciones = Inscripcion::where('cliente_id',$e->cliente_id)->whereNull('deleted_at')->count();
 				if ($inscripciones>0) {
-					foreach($inscripciones as $inscripcion){
+					$inscripcionesR = Inscripcion::where('cliente_id',$e->cliente_id)->whereNull('deleted_at')->get();
+					foreach($inscripcionesR as $inscripcion){
 						$inscripcion->st_inscripcion_id = 3;
 						$inscripcion->save();
 					}
