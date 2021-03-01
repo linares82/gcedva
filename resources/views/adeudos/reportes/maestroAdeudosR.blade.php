@@ -147,6 +147,7 @@
         <tbody>
             @php
                 $consecutivo_linea=1;
+                $consecutivo_linea=0;
             @endphp 
             @foreach($lineas_detalle as $detalle)
             @php

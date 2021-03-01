@@ -24,6 +24,7 @@
             <tbody>
                 <?php 
                 $total=0; 
+                $contador_linea=0;
                 ?>
                 
                 @foreach($registros as $registro)

@@ -155,12 +155,13 @@ class HactividadesController extends Controller {
 		*/
 		$registros=AsignacionTarea::select('p.razon','c.id as cliente_id','c.nombre', 'c.nombre2','c.ape_paterno','c.ape_materno',
 		't.name as tarea','asignacion_tareas.detalle', 'asignacion_tareas.created_at',DB::raw('concat(e.nombre," ", e.ape_paterno," ",e.ape_materno) as empleado'),
-		'c.tel_fijo', 'c.tel_cel')
+		'c.tel_fijo', 'c.tel_cel','u.name as usuario_alta')
 		->join('clientes as c','c.id','=','asignacion_tareas.cliente_id')
 		->join('plantels as p','p.id','=','c.plantel_id')
-		->join('empleados as e','e.id','=','asignacion_tareas.empleado_id')
+		->join('empleados as e','e.id','=','c.empleado_id')
 		->join('tareas as t','t.id','=','asignacion_tareas.tarea_id')
 		->join('st_tareas as sta','sta.id','=','asignacion_tareas.st_tarea_id')
+		->join('users as u','u.id','=','asignacion_tareas.usu_alta_id')
 		//->where('hactividades.tarea','LLAMADA TELEFONICA')
 		->whereIn('p.id',$datos['plantel_f'])
 		->whereDate('asignacion_tareas.created_at','>=',$datos['fecha_f'])

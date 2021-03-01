@@ -1641,11 +1641,14 @@ class ClientesController extends Controller
             'historia_clientes.fecha',
             'c.tel_cel',
             'reactivado',
-            'fec_reactivado'
+            'fec_reactivado',
+            'g.name as grado'
         )
             ->join('clientes as c', 'c.id', '=', 'historia_clientes.cliente_id')
             ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
             ->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
+            ->join('combinacion_clientes as cc','cc.cliente_id','=','c.id')
+            ->join('grados as g','g.id','=','cc.grado_id')
             ->whereDate('historia_clientes.fecha', '>=', $datos['fecha_f'])
             ->whereDate('historia_clientes.fecha', '<=', $datos['fecha_t'])
             ->where('evento_cliente_id', 2)
@@ -2131,6 +2134,35 @@ class ClientesController extends Controller
         ->groupBy('g.seccion')
         ->groupBy('sts.name')
         ->get();
+
+        $totales2=Cliente::select('p.razon', 'sts.name as estatus', DB::raw('count(sts.name) as total_estatus'))
+        ->join('seguimientos as s','s.cliente_id','=','clientes.id')
+        ->join('st_seguimientos as sts','sts.id','=','s.st_seguimiento_id')
+        ->join('adeudos as a','a.cliente_id','=','clientes.id')
+        ->join('caja_conceptos as cc','cc.id','=','a.caja_concepto_id')
+        ->join('plantels as p','p.id','=','clientes.plantel_id')
+        ->join('st_clientes as stc','stc.id','=','clientes.st_cliente_id')
+        ->join('cajas as c','c.id','=','a.caja_id')
+        ->join('combinacion_clientes as ccli','ccli.cliente_id','=','clientes.id')
+        ->join('grados as g','g.id','=','ccli.grado_id')
+        ->where('a.pagado_bnd',1)
+        ->where('c.st_caja_id',1)
+        ->whereIn('a.caja_concepto_id',array(1, 23,25))
+        ->where('clientes.st_cliente_id','<>',3)
+        ->whereIn('clientes.plantel_id',$datos['plantel_f'])
+        ->where('clientes.matricula','like',$datos['inicio_matricula']."%")
+        ->whereNull('a.deleted_at')
+        ->whereNull('c.deleted_at')
+        ->whereNull('ccli.deleted_at')
+        ->where('ccli.plantel_id','>',0)
+        ->where('ccli.especialidad_id','>',0)
+        ->where('ccli.nivel_id','>',0)
+        ->where('ccli.grado_id','>',0)
+        ->where('ccli.turno_id','>',0)
+        ->groupBy('p.razon')
+        //->groupBy('g.seccion')
+        ->groupBy('sts.name')
+        ->get();
         //dd($totales->toArray());
 
         $detalle=Cliente::select('p.razon','clientes.matricula','clientes.id as cliente_id','clientes.ape_paterno','clientes.ape_materno','clientes.nombre',
@@ -2224,7 +2256,7 @@ class ClientesController extends Controller
         ->get();
         */
         //dd($totales->toArray());
-        return view('clientes.reportes.concretadosR',compact('registros','totales'));
+        return view('clientes.reportes.concretadosR',compact('registros','totales','totales2'));
     }
 
     public function generarMatricula(Request $request)

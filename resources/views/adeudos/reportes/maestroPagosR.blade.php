@@ -147,6 +147,7 @@
             @php
                 $consecutivo_linea=1;
                 $caja_aux="";
+                $consecutivo_linea=0;
             @endphp 
             @foreach($lineas_detalle as $detalle)
                 @if($caja_aux<>$detalle['caja'])

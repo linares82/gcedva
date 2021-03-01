@@ -19,6 +19,7 @@
             $especialidad="";
             $cantidad=0;
             $suma=0;
+            $csc=0;
         @endphp
         @foreach ($registros as $registro)
           @if($especialidad<>$registro->especialidad)

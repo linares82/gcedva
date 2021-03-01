@@ -18,7 +18,7 @@
             <thead>
                 <tr>
                     <th></th><th>Plantel</th><th>Id Cliente</th><th>Cliente</th><th>Tarea</th><th>Detalle</th>
-                    <th>Tel. Fijo</th><th>Tel. Cel.</th><th>Creado</th><th>Usuario Alta</th>
+                    <th>Tel. Fijo</th><th>Tel. Cel.</th><th>Creado</th><th>Empleado Cliente</th><th>Usuario Alta T.</th>
                 </tr> 
             </thead>
             <tbody>
@@ -47,6 +47,7 @@
                         <td>{{$registro->tel_fijo}}</td><td>{{$registro->tel_cel}}</td>
                         <td>{{$registro->created_at}}</td>
                         <td>{{$registro->empleado}}</td>
+                        <td>{{$registro->usuario_alta}}</td>
                         @php
                             $empleado=$registro->empleado;
                             $cuenta_llamadas++;

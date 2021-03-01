@@ -1,0 +1,51 @@
+<html>
+  <head>
+      <style>
+        h1, h3, h4, h5, th { text-align: center; font-family: Segoe UI;}
+        table, #chart_div { margin: auto; font-family: Segoe UI; box-shadow: 10px 10px 5px #888; border: thin ridge grey; }
+        th { background: #0046c3; color: #fff; max-width: 400px; padding: 5px 10px; }
+        td { font-size: 11px; padding: 5px 20px; color: #000; }
+        tr { background: #b8d1f3; }
+        tr:nth-child(even) { background: #dae5f4; }
+        tr:nth-child(odd) { background: #b8d1f3; }
+      </style>
+    
+    
+  </head>
+  <body>
+    <div class="datagrid">
+        
+        
+        <table class="table table-condensed table-striped">
+            <h4>Inscritos Por Ciclo</h4>
+            <thead>
+                <th>No.</th><th>Plantel</th><th>Id</th><th>Matricula</th><th>Seccion</th>
+                <th>A. Paterno</th><th>A. Materno</th>
+                <th>A. Materno</th><th>Estatus</th><th>Concepto Pagado</th><th>Ciclo/Periodo Lectivo</th>
+            </thead>
+            <tbody>    
+        @php
+        $cantidad=0;
+        $suma=0;
+        $csc=0;
+        $matricula="";
+        @endphp
+        @foreach ($registros as $registro)
+          <tr>
+            <td>{{ ++$csc }}</td><td>{{ $registro->razon }}</td><td>{{ $registro->cliente }}</td><td>{{ $registro->matricula }}</td><td>{{ $registro->seccion }}</td>
+            <td>{{ $registro->ape_paterno }} </td><td>{{ $registro->ape_materno }}</td><td>{{ $registro->nombre }} {{ $registro->nombre2 }}</td>
+            <td>{{ $registro->estatus }}</td><td>{{ $registro->concepto }}</td><td>{{ $datos['ciclo_f'] }}</td>
+          </tr>
+        @php
+            //$especialidad=$registro->especialidad;
+            $cantidad=$cantidad+1;
+            $suma=$registro->monto;
+        @endphp
+        @endforeach
+        <tr><td>Total Activos</td><td>{{ $cantidad }}</td></tr>
+            </tbody>
+        </table>
+    </div>
+    
+  </body>
+</html>
