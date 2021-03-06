@@ -174,7 +174,7 @@
                     
                 @endphp
                 <tr>   
-                <td>{{$consecutivo_linea++}}</td>
+                <td>{{++$consecutivo_linea}}</td>
                 <td>{{$detalle['razon']}}</td>
                 <td>{{$detalle['id']}}</td>
                 <td>{{ $detalle['nombre'] }} {{ $detalle['nombre2'] }} {{ $detalle['ape_paterno'] }} {{ $detalle['ape_materno'] }}</td>
@@ -193,7 +193,7 @@
                 @if(
                     (($beca->lectivo->inicio <= $fecha_adeudo and $beca->lectivo->fin >= $fecha_adeudo) or
                     (($anioInicio = $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin = $anioAdeudo and $mesFin >= $mesAdeudo)) or
-                    (($anioInicio < $anioAdeudo or $mesInicio >= $mesAdeudo) and ($anioFin >= $anioAdeudo and $mesFin <= $mesAdeudo))) and
+                    (($anioInicio < $anioAdeudo or $mesInicio >= $mesAdeudo) and ($anioFin >= $anioAdeudo and $mesFin >= $mesAdeudo))) and
                     $beca->aut_dueno == 4 and
                     is_null($beca->deleted_at)
                 )

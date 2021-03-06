@@ -20,13 +20,17 @@
             <h4>Activos</h4>
             <thead>
                 <th>No.</th><th>Plantel</th><th>Id</th><th>Matricula</th><th>Seccion</th>
-                <th>A. Paterno</th><th>A. Materno</th>
-                <th>A. Materno</th><th>Estatus</th><th>Saldo</th>
+                <th>A. Paterno</th><th>A. Materno</th><th>A. Materno</th><th>Estatus C.</th>
+                <th>Estatus S.</th>
+                <th>F. Planeada</th><th>Monto Planeado</th><th>Concepto</th><th>Ticket</th>
+                <th>F. Caja</th><th>Total Caja</th><th>Pagado</th><th>Total Adeudo</th>
             </thead>
             <tbody>    
         @php
         $cantidad=0;
-        $suma=0;
+        $suma_planeada=0;
+        $suma_adeudos=0;
+        $suma_caja=0;
         $csc=0;
         $matricula="";
         @endphp
@@ -34,27 +38,35 @@
           <tr>
             <td>{{ ++$csc }}</td><td>{{ $registro->razon }}</td><td>{{ $registro->cliente }}</td><td>{{ $registro->matricula }}</td><td>{{ $registro->seccion }}</td>
             <td>{{ $registro->ape_paterno }} </td><td>{{ $registro->ape_materno }}</td><td>{{ $registro->nombre }} {{ $registro->nombre2 }}</td>
-            <td>{{ $registro->estatus }}</td>
+            <td>{{ $registro->estatus_cliente }}</td><td>{{ $registro->estatus_seguimiento }}</td>
+            <td>{{ $registro->fecha_pago }}</td><td>{{ number_format($registro->monto,2) }}</td>
+            <td>{{ $registro->concepto }}</td><td>{{ $registro->consecutivo }}</td><td>{{ $registro->fecha_caja }}</td>
+            <td>{{ number_format($registro->total_caja,2) }}</td><td>@if($registro->pagado_bnd==1) Si @else No @endif</td>
             <td>
-                @php
-                    $suma=App\Caja::join('pagos as p','p.caja_id','=','cajas.id')
-                    ->where('cliente_id',$registro->cliente)
-                    ->where('cajas.st_caja_id',1)
-                    ->where('p.bnd_pagado',1)
-                    ->whereNull('cajas.deleted_at')
-                    ->whereNull('p.deleted_at')
-                    ->sum('p.monto');
-                @endphp
-                {{ $suma }}
+              @if($registro->pagado_bnd==0)
+              {{ number_format($registro->monto,2) }}
+              @else
+                0
+              @endif
             </td>
           </tr>
         @php
             //$especialidad=$registro->especialidad;
             $cantidad=$cantidad+1;
-            $suma=$registro->monto;
+            $suma_planeada=$suma_planeada+$registro->monto;
+            $suma_caja=$suma_caja+$registro->total_caja;
+            if($registro->pagado_bnd==0){
+              $suma_adeudos=$suma_adeudos+$registro->monto;
+            }
         @endphp
         @endforeach
-        <tr><td>Total Activos</td><td>{{ $cantidad }}</td></tr>
+        <tr><td>Totales</td><td colspan='10'>
+          </td><td>{{ number_format($suma_planeada,2) }}</td>
+          <td colspan='3'></td>
+          <td>{{ number_format($suma_caja,2) }}</td>
+          <td></td>
+          <td>{{ number_format($suma_adeudos,2) }}</td>
+        </tr>
             </tbody>
         </table>
     </div>

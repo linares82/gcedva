@@ -56,7 +56,7 @@
 
             <div class="form-group col-md-6 @if($errors->has('pagos_f')) has-error @endif" style="clear:left;">
                 <label for="pagos_f-field">Pagos:</label>
-                {!! Form::select("pagos_f", $estatus, null, array("class" => "form-control select_seguridad", "id" => "pagos_f-field")) !!}
+                {!! Form::select("pagos_f", $pagos, null, array("class" => "form-control select_seguridad", "id" => "pagos_f-field")) !!}
                 @if($errors->has("pagos_f"))
                 <span class="help-block">{{ $errors->first("pagos_f") }}</span>
                 @endif

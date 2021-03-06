@@ -12,6 +12,7 @@ use App\Adeudo;
 use App\Cliente;
 use App\Plantel;
 use App\Empleado;
+use App\StCliente;
 use Carbon\Carbon;
 use App\PromoPlanLn;
 use App\CajaConcepto;
@@ -28,7 +29,7 @@ class ReportesCedvaController extends Controller
         $reportes = array(1 => 'Activos', 2 => 'Adeudos', 3 => 'Pagados', 4 => 'Inscritos Por Ciclo');
         $empleado = Empleado::where('user_id', Auth::user()->id)->first();
         $planteles = $empleado->plantels->pluck('razon', 'id');
-        $estatus = array('0' => 'Todos', '1' => 'Vigente', '2' => 'No Vigente');
+        $estatus = array('0' => 'Todos', '1' => 'Vigente');
         $pagos = array('0' => 'Todos', '1' => 'Pagado', '2' => 'Pendiente');
         $caja_conceptos = CajaConcepto::pluck('name', 'id');
         $caja_conceptos->prepend('Todos');
@@ -42,14 +43,28 @@ class ReportesCedvaController extends Controller
         //dd($datos);
         $estatus = array();
         if($datos['estatus_f']==0){
-            $estatus=array(1,2,3,4,5,6,7);
+            $estatus=StCliente::pluck('id');
         }elseif($datos['estatus_f']==1){
-            $estatus=array('2','4','5');
+            $estatus=array(4,20,22,25,26);
         }elseif($datos['estatus_f']==2){
-            $estatus=array('1', '3','6','7');
+            //$estatus=array('1', '3','6','7');
         }
-        //dd($estatus);
+        if($datos['pagos_f']==0){
+            $pagos=array(0,1);
+        }elseif($datos['pagos_f']==1){
+            $pagos=array(1);
+        }elseif($datos['pagos_f']==2){
+            $pagos=array(0);
+        }
+
+        if(in_array(0, $datos['concepto_caja_f'])){
+            $concepto_caja=CajaConcepto::pluck('id');
+        }else{
+            $concepto_caja=$datos['concepto_caja_f'];
+        }
+        //dd($concepto_caja);
         switch ($datos['reportes_f']) {
+            //Filtros que operan
             case 1:
                 $registros = Cliente::select(
                     'p.razon',
@@ -60,21 +75,41 @@ class ReportesCedvaController extends Controller
                     'clientes.ape_materno',
                     'clientes.nombre',
                     'clientes.nombre2',
-                    'stc.name as estatus'
+                    'stc.name as estatus_cliente',
+                    'sts.name as estatus_seguimiento',
+                    'cc.name as concepto',
+                    'caj.consecutivo',
+                    'caj.fecha as fecha_caja',
+                    'caj.total as total_caja',
+                    'ad.fecha_pago',
+                    'ad.monto',
+                    'ad.pagado_bnd'
                 )
+                    ->join('adeudos as ad','ad.cliente_id','=','clientes.id')
+                    ->leftJoin('cajas as caj','caj.id','=','ad.caja_id')
+                    ->join('caja_conceptos as cc','cc.id','=','ad.caja_concepto_id')
                     ->join('seguimientos as s','s.cliente_id','=','clientes.id')
                     ->join('st_clientes as stc','stc.id','=','clientes.st_cliente_id')
+                    ->join('st_seguimientos as sts','sts.id','=','s.st_seguimiento_id')
                     ->join('plantels as p','p.id','=','clientes.plantel_id')
                     ->join('combinacion_clientes as ccli', 'ccli.cliente_id', '=', 'clientes.id')
                     ->join('grados as g', 'g.id', '=', 'ccli.grado_id')
-                    ->whereIn('s.st_seguimiento_id',$estatus)
+                    ->whereIn('clientes.st_cliente_id',$estatus)
+                    ->whereIn('ad.pagado_bnd',$pagos)
                     ->whereIn('clientes.plantel_id', $datos['plantel_f'])
+                    ->whereIn('ad.caja_concepto_id', $concepto_caja)
+                    ->where('clientes.matricula','like',$datos['ciclo_f'].'%')
+                    ->whereDate('ad.fecha_pago','>=',$datos['fecha_f'])
+                    ->whereDate('ad.fecha_pago','<=',$datos['fecha_t'])
                     ->whereNull('ccli.deleted_at')
+                    ->whereNull('ad.deleted_at')
                     ->orderBy('p.razon')
+                    ->orderBy('clientes.matricula')
+                    ->orderBy('cc.name')
                     ->orderBy('clientes.ape_paterno')
                     ->orderBy('clientes.ape_materno')
                     ->orderBy('clientes.nombre')
-                    ->orderBy('clientes.nombre2')
+                    ->orderBy('clientes.nombre')
                     ->get();
         
                 $plantel = Plantel::find($datos['plantel_f']);
@@ -119,8 +154,9 @@ class ReportesCedvaController extends Controller
                         ->whereDate('adeudos.fecha_pago', '<=', $datos['fecha_t'])
                         ->where('p.id', $plantel)
                         ->whereIn('adeudos.caja_concepto_id', $datos['concepto_caja_f'])
+                        ->where('c.matricula','like',$datos['ciclo_f'].'%')
                         ->where('adeudos.pagado_bnd', 0)
-                        ->where('c.st_cliente_id', '<>', 3)
+                        //->where('c.st_cliente_id', '<>', 3)
                         ->whereNull('ccli.deleted_at')
                         ->whereNull('adeudos.deleted_at')
                         ->whereNull('c.deleted_at')
@@ -203,7 +239,7 @@ class ReportesCedvaController extends Controller
                         ->where('cln.adeudo_id', 0)
                         ->whereNull('cln.deleted_at')
                         ->whereNull('pag.deleted_at')
-                        ->whereIn('cc.id', $datos['concepto_caja_f'])
+                        //->whereIn('cc.id', $datos['concepto_caja_f'])
                         ->whereNull('p.deleted_at')
                         ->whereNull('cajas.deleted_at')
                         ->whereNull('ccli.deleted_at')
@@ -254,11 +290,13 @@ class ReportesCedvaController extends Controller
                         ->whereNull('ccli.deleted_at')
                         ->whereNull('c.deleted_at')
                         ->where('adeudos.pagado_bnd', 1)
+                        ->where('caj.plantel_id', $plantel)
                         ->union($cajas_sin_adeudos);
 
                     $registros_totales = $registros_totales_aux->where('p.id', $plantel)
 
                         ->whereIn('adeudos.caja_concepto_id', $datos['concepto_caja_f'])
+                        ->where('c.matricula','like',$datos['ciclo_f'].'%')
                         ->whereNull('adeudos.deleted_at')
                         ->whereNull('s.deleted_at')
                         ->orderBy('seccion')
@@ -302,7 +340,7 @@ class ReportesCedvaController extends Controller
                     //->whereIn('s.st_seguimiento_id',$estatus)
                     ->whereIn('clientes.plantel_id', $datos['plantel_f'])
                     ->whereIn('a.caja_concepto_id', array(1,23,25))
-                    //->where('clientes.matricula','like',$datos['ciclo_f']."%")
+                    ->where('clientes.matricula','like',$datos['ciclo_f']."%")
                     ->whereNull('ccli.deleted_at')
                     ->orderBy('p.razon')
                     ->orderBy('clientes.ape_paterno')
@@ -374,7 +412,7 @@ class ReportesCedvaController extends Controller
                     if (
                         (($beca->lectivo->inicio <= $adeudo->fecha_pago and $beca->lectivo->fin >= $adeudo->fecha_pago) or
                             (($anioInicio == $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin == $anioAdeudo and $mesFin >= $mesAdeudo)) or
-                            (($anioInicio < $anioAdeudo or $mesInicio >= $mesAdeudo) and ($anioFin >= $anioAdeudo and $mesFin <= $mesAdeudo))) and
+                            (($anioInicio < $anioAdeudo or $mesInicio >= $mesAdeudo) and ($anioFin >= $anioAdeudo and $mesFin >= $mesAdeudo))) and
                         $beca->aut_dueno == 4 and
                         is_null($beca->deleted_at)
                     ) {

@@ -88,6 +88,7 @@
                 $consecutivo_linea=0;
                 $caja_aux="";
                 $suma=0;
+                $pagos_suma=0;
             @endphp 
             @foreach($lineas_detalle as $detalle)
                 @if($caja_aux<>$detalle['caja'])
@@ -136,7 +137,7 @@
                     @if(
                         (($beca->lectivo->inicio <= $fecha_adeudo and $beca->lectivo->fin >= $fecha_adeudo) or
                         (($anioInicio = $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin = $anioAdeudo and $mesFin >= $mesAdeudo)) or
-                        (($anioInicio < $anioAdeudo or $mesInicio >= $mesAdeudo) and ($anioFin >= $anioAdeudo and $mesFin <= $mesAdeudo))) and
+                        (($anioInicio < $anioAdeudo or $mesInicio >= $mesAdeudo) and ($anioFin >= $anioAdeudo and $mesFin >= $mesAdeudo))) and
                         $beca->aut_dueno == 4 and
                         is_null($beca->deleted_at)
                     )

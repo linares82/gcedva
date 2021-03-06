@@ -13,6 +13,13 @@
                         <span class="help-block">{{ $errors->first("name") }}</span>
                        @endif
                     </div>
+                    <div class="form-group col-md-4 @if($errors->has('ciclo_matricula_id')) has-error @endif">
+                     <label for="ciclo_matricula_id-field">Ciclo</label>
+                     {!! Form::select("ciclo_matricula_id", $list["CicloMatricula"], null, array("class" => "form-control select_seguridad", "id" => "ciclo_matricula_id-field")) !!}
+                     @if($errors->has("ciclo_matricula_id"))
+                      <span class="help-block">{{ $errors->first("ciclo_matricula_id") }}</span>
+                     @endif
+                  </div>
                     <div class="form-group @if($errors->has('activo')) has-error @endif">
                        <label for="activo-field">Activo</label>
                        {!! Form::checkbox("activo", 1, null, [ "id" => "activo-field"]) !!}

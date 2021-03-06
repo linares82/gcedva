@@ -78,6 +78,10 @@
                      <label for="name">PLAN PAGOS</label>
                      <p class="form-control-static">{{$planPago->name}}</p>
                 </div>
+                <div class="form-group col-sm-4">
+                    <label for="activo">CICLO</label>
+                    <p class="form-control-static">{{optional($planPago->cicloMAtricula)->name}}</p>
+               </div>
                     <div class="form-group col-sm-4">
                      <label for="activo">ACTIVO</label>
                      <p class="form-control-static">{{$planPago->activo}}</p>

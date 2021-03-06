@@ -522,62 +522,64 @@ class AdeudosController extends Controller
     public function cambiarPlanPagos(Request $request)
     {
         $data = $request->all();
-        $adeudos_sin_pagar = Adeudo::where('cliente_id', $data['cliente'])
-            ->where('combinacion_cliente_id', $data['combinacion'])
-            ->where('pagado_bnd', 0)
-            ->where('caja_id', 0)
-            ->delete();
-        /*$mensualidades_pagadas=Adeudo::where('cliente_id',$data['cliente'])
+        $cliente = Cliente::find($data['cliente']);
+        if ($cliente->st_cliente_id <> 3) {
+            $adeudos_sin_pagar = Adeudo::where('cliente_id', $data['cliente'])
+                ->where('combinacion_cliente_id', $data['combinacion'])
+                ->where('pagado_bnd', 0)
+                ->where('caja_id', 0)
+                ->delete();
+            /*$mensualidades_pagadas=Adeudo::where('cliente_id',$data['cliente'])
         ->where('pagado_bnd',1)
         ->orWhere('caja_id','>',0)
         ->join('caja_conceptos as cc','cc.id','=','adeudos.caja_concepto_id')
         ->where('cc.bnd_mensualidad',1)
         ->get();
          */
-        $cliente = Cliente::find($data['cliente']);
-        //dd($cliente);
-        //$cliente->st_cliente_id=22;
-        //$cliente->save();
-        $plantel = Plantel::find($cliente->plantel_id);
-        $combinacion = CombinacionCliente::find($data['combinacion']);
-        $combinacion->cuenta_ticket_pago = 1;
-        $combinacion->save();
-        $lineas = PlanPagoLn::where('plan_pago_id', $combinacion->plan_pago_id)->get();
-        //$combinacion->planPago->Lineas;
-        $i = 0;
-        $descarte_inicial = 0;
-        foreach ($lineas as $adeudo) {
-            //conceptos diferentes de mensualidad, se ignoran los Ã‚Â´primeros 3
-            //if($adeudo->cajaConcepto->bnd_mensualidad<>1 and $descarte_inicial>3){
-            $mensualidad_pagada = Adeudo::where('cliente_id', $data['cliente'])
-                ->where('caja_concepto_id', $adeudo->caja_concepto_id)
-                ->where('fecha_pago', $adeudo->fecha_pago)
-                ->where('pagado_bnd', 1)
-                ->where('caja_id', '>', 0)
-                ->whereNull('deleted_at')
-                ->first();
-            //dd($mensualidad_pagada);
-            if (is_null($mensualidad_pagada)) {
-                $registro['cliente_id'] = $cliente->id;
-                $registro['caja_id'] = 0;
-                $registro['combinacion_cliente_id'] = $combinacion->id;
-                $registro['caja_concepto_id'] = $adeudo->caja_concepto_id;
-                $registro['cuenta_contable_id'] = $adeudo->cuenta_contable_id;
-                $registro['cuenta_recargo_id'] = $adeudo->cuenta_recargo_id;
-                $registro['fecha_pago'] = $adeudo->fecha_pago;
-                $registro['monto'] = $adeudo->monto;
-                $registro['inicial_bnd'] = $adeudo->inicial_bnd;
-                $registro['pagado_bnd'] = 0;
-                $registro['plan_pago_ln_id'] = $adeudo->id;
-                $registro['usu_alta_id'] = Auth::user()->id;
-                $registro['usu_mod_id'] = Auth::user()->id;
-                //dd($registro);
-                Adeudo::create($registro);
-            }
 
-            //$descarte_inicial++;
-            //Mensualidadaes se descarta la misma cantidad que ya se haya pagado en el plan anterior
-            /*}elseif($adeudo->cajaConcepto->bnd_mensualidad==1 and $i>count($mensualidades_pagadas)){
+            //dd($cliente);
+            //$cliente->st_cliente_id=22;
+            //$cliente->save();
+            $plantel = Plantel::find($cliente->plantel_id);
+            $combinacion = CombinacionCliente::find($data['combinacion']);
+            $combinacion->cuenta_ticket_pago = 1;
+            $combinacion->save();
+            $lineas = PlanPagoLn::where('plan_pago_id', $combinacion->plan_pago_id)->get();
+            //$combinacion->planPago->Lineas;
+            $i = 0;
+            $descarte_inicial = 0;
+            foreach ($lineas as $adeudo) {
+                //conceptos diferentes de mensualidad, se ignoran los Ã‚Â´primeros 3
+                //if($adeudo->cajaConcepto->bnd_mensualidad<>1 and $descarte_inicial>3){
+                $mensualidad_pagada = Adeudo::where('cliente_id', $data['cliente'])
+                    ->where('caja_concepto_id', $adeudo->caja_concepto_id)
+                    ->where('fecha_pago', $adeudo->fecha_pago)
+                    ->where('pagado_bnd', 1)
+                    ->where('caja_id', '>', 0)
+                    ->whereNull('deleted_at')
+                    ->first();
+                //dd($mensualidad_pagada);
+                if (is_null($mensualidad_pagada)) {
+                    $registro['cliente_id'] = $cliente->id;
+                    $registro['caja_id'] = 0;
+                    $registro['combinacion_cliente_id'] = $combinacion->id;
+                    $registro['caja_concepto_id'] = $adeudo->caja_concepto_id;
+                    $registro['cuenta_contable_id'] = $adeudo->cuenta_contable_id;
+                    $registro['cuenta_recargo_id'] = $adeudo->cuenta_recargo_id;
+                    $registro['fecha_pago'] = $adeudo->fecha_pago;
+                    $registro['monto'] = $adeudo->monto;
+                    $registro['inicial_bnd'] = $adeudo->inicial_bnd;
+                    $registro['pagado_bnd'] = 0;
+                    $registro['plan_pago_ln_id'] = $adeudo->id;
+                    $registro['usu_alta_id'] = Auth::user()->id;
+                    $registro['usu_mod_id'] = Auth::user()->id;
+                    //dd($registro);
+                    Adeudo::create($registro);
+                }
+
+                //$descarte_inicial++;
+                //Mensualidadaes se descarta la misma cantidad que ya se haya pagado en el plan anterior
+                /*}elseif($adeudo->cajaConcepto->bnd_mensualidad==1 and $i>count($mensualidades_pagadas)){
         $registro['cliente_id']=$cliente->id;
         $registro['caja_id']=0;
         $registro['combinacion_cliente_id']=$combinacion->id;
@@ -595,10 +597,11 @@ class AdeudosController extends Controller
         Adeudo::create( $registro );
         $i++;
         } */
-        }
+            }
 
-        //$combinacion->cuenta_ticket_pago=$combinacion->cuenta_ticket_pago+1;
-        $combinacion->save();
+            //$combinacion->cuenta_ticket_pago=$combinacion->cuenta_ticket_pago+1;
+            $combinacion->save();
+        }
 
         //$adeudos=Adeudo::where('cliente_id', '=', $cliente->id)->where('combinacion_cliente_id', '=', $combinacion->id)->get();
         //$empleado=Empleado::where('user_id', '=', Auth::user()->id)->first();
@@ -2126,8 +2129,8 @@ class AdeudosController extends Controller
                 'monto_deuda' => 0, 'porcentaje_pagado' => 0, 'deudores' => 0, 'bajas_pagadas' => 0, 'porcentaje_deudores' => 0,
             ];
 
-            $concepto_aux="";
-            $seccion_aux="";
+            $concepto_aux = "";
+            $seccion_aux = "";
             foreach ($registros_totales as $registro) {
 
 
@@ -2144,7 +2147,7 @@ class AdeudosController extends Controller
                             $calculo['clientes_activos'] = 0;
                             $calculo['monto_deuda'] = 0;
                             $calculo['total_monto_pagado'] = 0;
-                            $calculo['clientes_pagados']=0;
+                            $calculo['clientes_pagados'] = 0;
                         }
                     }
                     $calculo['plantel'] = $registro->razon;
@@ -2161,8 +2164,8 @@ class AdeudosController extends Controller
                     $calculo['porcentaje_pagado'] = ($calculo['clientes_pagados'] * 100) / $calculo['clientes_activos'];
                     $calculo['deudores'] = $calculo['clientes_activos'] - $calculo['clientes_pagados'];
                     $calculo['porcentaje_deudores'] = ($calculo['deudores'] * 100) / $calculo['clientes_activos'];
-                    $concepto_aux=$registro->concepto;
-                    $seccion_aux=$registro->seccion;
+                    $concepto_aux = $registro->concepto;
+                    $seccion_aux = $registro->seccion;
                 } elseif (is_null($registro->borrado_c) and is_null($registro->borrado_cln) and $registro->st_cliente_id == 3) {
                     $baja = HistoriaCliente::where('cliente_id', $registro->id)
                         ->where('evento_cliente_id', 2)
@@ -2174,7 +2177,6 @@ class AdeudosController extends Controller
                         $calculo['bajas_pagadas'] = $calculo['bajas_pagadas'] + 1;
                     }
                 }
-                
             }
             array_push($lineas_procesadas, $calculo);
 
@@ -2713,7 +2715,7 @@ class AdeudosController extends Controller
                     $registro->st_cliente_id <> 3
                 ) {
                     if ($seccion_aux <> "" and $concepto_aux <> "") {
-                        
+
                         if ($seccion_aux <> $registro->seccion or $concepto_aux <> $registro->concepto) {
                             array_push($lineas_procesadas, $calculo);
                             //$calculo['seccion']=$registro->seccion;
@@ -2748,8 +2750,6 @@ class AdeudosController extends Controller
                         $calculo['bajas_pagadas'] = $calculo['bajas_pagadas'] + 1;
                     }
                 }
-
-                
             }
             array_push($lineas_procesadas, $calculo);
 
