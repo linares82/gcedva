@@ -41,7 +41,7 @@
 
             <div class="form-group col-md-6 @if($errors->has('ciclo_f')) has-error @endif">
                 <label for="ciclo_f-field">Ciclo de:</label>
-                {!! Form::text("ciclo_f", null, array("class" => "form-control input-sm", "id" => "ciclo_f-field")) !!}
+                {!! Form::select("ciclo_f[]", $ciclos, null, array("class" => "form-control select_seguridad", "id" => "ciclo_f-field", 'multiple'=>true)) !!}
                 @if($errors->has("ciclo_f"))
                 <span class="help-block">{{ $errors->first("ciclo_f") }}</span>
                 @endif

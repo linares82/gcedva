@@ -77,7 +77,12 @@
                                 <td>{{$autorizacionBeca->cliente->plantel->razon}}</td>
                                 <td>{{$autorizacionBeca->solicitud}}</td>
                                 <td>{{$autorizacionBeca->lectivo->name}}</td>
-                                <td>{{$autorizacionBeca->cliente->nombre." ".$autorizacionBeca->cliente->nombre2." ".$autorizacionBeca->cliente->ape_paterno." ".$autorizacionBeca->cliente->ape_materno}}</td>
+                                <td>
+                                    <a href="{{ route('clientes.edit', $autorizacionBeca->cliente->id) }}" target="_blank">
+                                        {{$autorizacionBeca->cliente->nombre." ".$autorizacionBeca->cliente->nombre2." ".$autorizacionBeca->cliente->ape_paterno." ".$autorizacionBeca->cliente->ape_materno}}
+                                    </a>
+                                    
+                                </td>
                                 <td>{{$autorizacionBeca->monto_mensualidad}}</td>
                                 <td>{{$autorizacionBeca->stBeca->name}}</td>
                                 <td>{{ optional($autorizacionBeca->autCajaPlantel)->name }}

@@ -1,0 +1,146 @@
+<div class="form-group col-md-4 @if($errors->has('nombre')) has-error @endif">
+   <label for="nombre-field">Primer nombre</label>
+   {!! Form::text("nombre", null, array("class" => "form-control input-sm", "id" => "nombre-field")) !!}
+   @if($errors->has("nombre"))
+   <span class="help-block">{{ $errors->first("nombre") }}</span>
+   @endif
+</div>
+<div class="form-group col-md-4 @if($errors->has('nombre2')) has-error @endif">
+   <label for="nombre2-field">Segundo nombre</label>
+   {!! Form::text("nombre2", null, array("class" => "form-control input-sm", "id" => "nombre2-field")) !!}
+   @if($errors->has("nombre2"))
+   <span class="help-block">{{ $errors->first("nombre2") }}</span>
+   @endif
+</div>
+<div class="form-group col-md-4 @if($errors->has('ape_paterno')) has-error @endif">
+   <label for="ape_paterno-field">A. Paterno</label>
+   {!! Form::text("ape_paterno", null, array("class" => "form-control input-sm", "id" => "ape_paterno-field")) !!}
+   @if($errors->has("ape_paterno"))
+   <span class="help-block">{{ $errors->first("ape_paterno") }}</span>
+   @endif
+</div>
+<div class="form-group col-md-4 @if($errors->has('ape_materno')) has-error @endif">
+   <label for="ape_materno-field">A. Materno</label>
+   {!! Form::text("ape_materno", null, array("class" => "form-control input-sm", "id" => "ape_materno-field")) !!}
+   @if($errors->has("ape_materno"))
+   <span class="help-block">{{ $errors->first("ape_materno") }}</span>
+   @endif
+</div>
+<div class="form-group col-md-4 @if($errors->has('tel_fijo')) has-error @endif">
+   <label for="tel_fijo-field">Telefono Fijo</label>
+   {!! Form::text("tel_fijo", null, array("class" => "form-control input-sm", "id" => "tel_fijo-field")) !!}
+   @if($errors->has("tel_fijo"))
+   <span class="help-block">{{ $errors->first("tel_fijo") }}</span>
+   @endif
+</div>
+<div class="form-group col-md-4 @if($errors->has('tel_cel')) has-error @endif">
+   <label for="tel_cel-field">Telefono Celular(10 digitos)</label>
+   {!! Form::text("tel_cel", null, array("class" => "form-control input-sm", "id" => "tel_cel-field")) !!}
+   @if($errors->has("tel_cel"))
+   <span class="help-block">{{ $errors->first("tel_cel") }}</span>
+   @endif
+</div>
+<div class="form-group col-md-4 @if($errors->has('mail')) has-error @endif" style="clear:left;">
+   <label for="mail-field">Correo ElectrOnico</label>
+   {!! Form::text("mail", null, array("class" => "form-control input-sm", "id" => "mail-field")) !!}
+   @if($errors->has("mail"))
+   <span class="help-block">{{ $errors->first("mail") }}</span>
+   @endif
+</div>
+<div class="form-group col-md-4 @if($errors->has('plantel_id')) has-error @endif">
+   <label for="plantel_id-field">Plantel</label>
+   {!! Form::select("plantel_id", $list["Plantel"], null, array("class" => "form-control select_seguridad", "id" => "plantel_id-field")) !!}
+   @if($errors->has("plantel_id"))
+   <span class="help-block">{{ $errors->first("plantel_id") }}</span>
+   @endif
+</div>
+<div class="form-group col-md-4 @if($errors->has('especialidad')) has-error @endif">
+   <label for="especialidad-field">Especialidad</label>
+   {!! Form::hidden("combinacion", null, array("class" => "form-control input-sm", "id" => "combinacion-field")) !!}
+   {!! Form::select("especialidad_id", $list["Especialidad"], null, array("class" => "form-control select_seguridad", "id" => "especialidad_id-field")) !!}
+   <div id='loading10' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
+   @if($errors->has("especialidad"))
+   <span class="help-block">{{ $errors->first("especialidad") }}</span>
+   @endif
+</div>
+<div class="form-group col-md-4 @if($errors->has('nivel_id')) has-error @endif" style="clear:left;">
+   <label for="nivel_id-field">Nivel</label>
+   {!! Form::select("nivel_id", $list["Nivel"], null, array("class" => "form-control select_seguridad", "id" => "nivel_id-field")) !!}
+   <div id='loading11' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
+   @if($errors->has("nivel_id"))
+   <span class="help-block">{{ $errors->first("nivel_id") }}</span>
+   @endif
+</div>
+<div class="form-group col-md-4 @if($errors->has('medio_id')) has-error @endif">
+   <label for="medio_id-field">Medio por el que se enterO</label>
+   {!! Form::select("medio_id", $list["Medio"], null, array("class" => "form-control select_seguridad", "id" => "medio_id-field")) !!}
+   @if($errors->has("medio_id"))
+   <span class="help-block">{{ $errors->first("medio_id") }}</span>
+   @endif
+</div>
+                    
+@push('scripts')
+<script src="{{ asset ('/bower_components/AdminLTE/plugins/input-mask/jquery.inputmask.js') }}"></script>
+<script src="{{ asset ('/bower_components/AdminLTE/plugins/input-mask/jquery.inputmask.extensions.js') }}"></script>
+<script src="{{ asset ('/bower_components/AdminLTE/plugins/input-mask/jquery.inputmask.phone.extensions.js') }}"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+   $('#plantel_id-field').change(function(){
+      getCmbEspecialidad();
+   });
+   $('#especialidad_id-field').change(function(){
+      getCmbNivel();
+   });
+});   
+
+   function getCmbEspecialidad(){
+      //var $example = $("#especialidad_id-field").select2();
+      var a = $('#frm_cliente').serialize();
+      $.ajax({
+      url: '{{ route("especialidads.getCmbEspecialidad") }}',
+               type: 'GET',
+               data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad_id-field option:selected').val() + "",
+               dataType: 'json',
+               beforeSend : function(){$("#loading10").show(); },
+               complete : function(){$("#loading10").hide(); },
+               success: function(data){
+               //$example.select2("destroy");
+               $('#especialidad_id-field').empty();
+               $('#especialidad_id-field').append($('<option></option>').text('Seleccionar').val('0'));
+               $.each(data, function(i) {
+               //alert(data[i].name);
+               $('#especialidad_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
+               });
+               //$example.select2();
+               }
+      });
+   }
+
+   function getCmbNivel(){
+      //var $example = $("#especialidad_id-field").select2();
+      //alert($('#especialidad_id-field option:selected').val());
+      var a = $('#frm_cliente').serialize();
+      $.ajax({
+      url: '{{ route("nivels.getCmbNivels") }}',
+               type: 'GET',
+               data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad_id-field option:selected').val() + "&nivel_id=" + $('#nivel_id-field option:selected').val() + "",
+               dataType: 'json',
+               beforeSend : function(){$("#loading11").show(); },
+               complete : function(){$("#loading11").hide(); },
+               success: function(data){
+               //alert(data);
+               //$example.select2("destroy");
+               $('#nivel_id-field').html('');
+               //$('#especialidad_id-field').empty();
+               $('#nivel_id-field').append($('<option></option>').text('Seleccionar').val('0'));
+               $.each(data, function(i) {
+               //alert(data[i].name);
+               $('#nivel_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
+               });
+               //$example.select2();
+               }
+      });
+   }
+                        
+</script>                        
+@endpush

@@ -17,6 +17,7 @@ use Carbon\Carbon;
 use App\PromoPlanLn;
 use App\CajaConcepto;
 use App\Http\Requests;
+use App\CicloMatricula;
 use App\HistoriaCliente;
 use App\AutorizacionBeca;
 use Illuminate\Http\Request;
@@ -33,8 +34,9 @@ class ReportesCedvaController extends Controller
         $pagos = array('0' => 'Todos', '1' => 'Pagado', '2' => 'Pendiente');
         $caja_conceptos = CajaConcepto::pluck('name', 'id');
         $caja_conceptos->prepend('Todos');
+        $ciclos=CicloMatricula::pluck('name','id');
         //dd($caja_conceptos);
-        return view('reportesCedva.varios', compact('reportes', 'planteles', 'estatus', 'pagos', 'caja_conceptos'));
+        return view('reportesCedva.varios', compact('reportes', 'planteles', 'estatus', 'pagos', 'caja_conceptos','ciclos'));
     }
 
     public function reportesCedvaR(Request $request)
@@ -83,9 +85,13 @@ class ReportesCedvaController extends Controller
                     'caj.total as total_caja',
                     'ad.fecha_pago',
                     'ad.monto',
-                    'ad.pagado_bnd'
+                    'ad.pagado_bnd',
+                    'cm.name as ciclo'
                 )
                     ->join('adeudos as ad','ad.cliente_id','=','clientes.id')
+                    ->join('plan_pago_lns as ppl','ppl.id','=','ad.plan_pago_ln_id')
+                    ->join('plan_pagos as pp','pp.id','=','ppl.plan_pago_id')
+                    ->join('ciclo_matriculas as cm','cm.id','=','pp.ciclo_matricula_id')
                     ->leftJoin('cajas as caj','caj.id','=','ad.caja_id')
                     ->join('caja_conceptos as cc','cc.id','=','ad.caja_concepto_id')
                     ->join('seguimientos as s','s.cliente_id','=','clientes.id')
@@ -98,13 +104,14 @@ class ReportesCedvaController extends Controller
                     ->whereIn('ad.pagado_bnd',$pagos)
                     ->whereIn('clientes.plantel_id', $datos['plantel_f'])
                     ->whereIn('ad.caja_concepto_id', $concepto_caja)
-                    ->where('clientes.matricula','like',$datos['ciclo_f'].'%')
+                    ->whereIn('cm.id', $datos['ciclo_f'])
+                    //->where('clientes.matricula','like',$datos['ciclo_f'].'%')
                     ->whereDate('ad.fecha_pago','>=',$datos['fecha_f'])
                     ->whereDate('ad.fecha_pago','<=',$datos['fecha_t'])
                     ->whereNull('ccli.deleted_at')
                     ->whereNull('ad.deleted_at')
                     ->orderBy('p.razon')
-                    ->orderBy('clientes.matricula')
+                    ->orderBy('cm.name')
                     ->orderBy('cc.name')
                     ->orderBy('clientes.ape_paterno')
                     ->orderBy('clientes.ape_materno')

@@ -482,7 +482,8 @@
                                                                                                    data-nivel="{{$c->nivel_id}}"
                                                                                                    data-grado="{{$c->grado_id}}"
                                                                                                    data-turno="{{$c->turno_id}}"
-                                                                                                   data-combinacion="{{$c->id}}">
+                                                                                                   data-combinacion="{{$c->id}}"
+                                                                                                   data-st_cliente="{{$cliente->st_cliente_id}}">
                                                 <span class="glyphicon glyphicon-star"></span> Inscribir </button>
                                                 <!--@@endif-->
                                             @endpermission
@@ -1775,25 +1776,31 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
     //crear registro
     $(document).on('click', '.inscribir-create', function(e) {
         e.preventDefault();
-        $('.modal-title').text('Inscribir');
+        if($(this).data('st_cliente')==3){
+            alert('Alumno con estatus de Baja, no es posible generar inscripcion');
+        }else{
+            $('.modal-title').text('Inscribir');
         
-        //Limpiar valores
-        $('#cliente_id-crear').val($(this).data('cliente_id')).change();
-        $('#cliente-crear').val($(this).data('cliente_nombre')).change();
-        $('#plantel_id-crear').val($(this).data('plantel'));
-        $('#especialidad_id-crear').val($(this).data('especialidad'));
-        $('#nivel_id-crear').val($(this).data('nivel'));
-        $('#grado_id-crear').val($(this).data('grado'));
-        $('#turno_id-crear').val($(this).data('turno')).change();
-        $('#combinacion_cliente_id-crear').val($(this).data('combinacion')).change();
+            //Limpiar valores
+            $('#cliente_id-crear').val($(this).data('cliente_id')).change();
+            $('#cliente-crear').val($(this).data('cliente_nombre')).change();
+            $('#plantel_id-crear').val($(this).data('plantel'));
+            $('#especialidad_id-crear').val($(this).data('especialidad'));
+            $('#nivel_id-crear').val($(this).data('nivel'));
+            $('#grado_id-crear').val($(this).data('grado'));
+            $('#turno_id-crear').val($(this).data('turno')).change();
+            $('#combinacion_cliente_id-crear').val($(this).data('combinacion')).change();
+            
+            $('#crearInscripcionModal').modal('show');
+            
+            $('#plantel_id-crear').change();
+            $('#especialidad_id-crear').change();
+            $('#nivel_id-crear').change();
+            $('#grado_id-crear').change();
+            
+        }
         
-        
-        $('#crearInscripcionModal').modal('show');
-        
-        $('#plantel_id-crear').change();
-        $('#especialidad_id-crear').change();
-        $('#nivel_id-crear').change();
-        $('#grado_id-crear').change();
+
         
         
     });
