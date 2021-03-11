@@ -23,7 +23,7 @@ class Prospecto extends Model
     } 
 
 	//Mass Assignment
-	protected $fillable = ['nombre','nombre2','ape_paterno','ape_materno','tel_fijo','tel_cel','mail','plantel_id','especialidad_id','nivel_id','medio_id','st_prospecto_id','usu_alta_id','usu_mod_id','cliente_id'];
+	protected $fillable = ['nombre','nombre2','ape_paterno','ape_materno','tel_fijo','tel_cel','mail','plantel_id','especialidad_id','nivel_id','medio_id','st_prospecto_id','usu_alta_id','usu_mod_id','cliente_id','fecha'];
 
 	public function usu_alta() {
 		return $this->hasOne('App\User', 'id', 'usu_alta_id');

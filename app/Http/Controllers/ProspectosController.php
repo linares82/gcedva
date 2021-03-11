@@ -9,6 +9,7 @@ use App\Seguimiento;
 use App\HStProspecto;
 use App\Http\Requests;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\createProspecto;
 use App\Http\Requests\updateProspecto;
@@ -51,6 +52,7 @@ class ProspectosController extends Controller {
 		$input['usu_alta_id']=Auth::user()->id;
 		$input['usu_mod_id']=Auth::user()->id;
 		$input['st_prospecto_id']=1;
+		$input['fecha']=date('Y-m-d');
 
 		//create data
 		$registro=Prospecto::create( $input );
@@ -193,5 +195,33 @@ class ProspectosController extends Controller {
 		$prospecto->save();
 
 		return redirect()->route('prospectos.index')->with('message', 'Registro Actualizado.');
+	}
+
+	public function prospectos(Request $request){
+		$empleado=Empleado::where('user_id', Auth::user()->id)->first();
+		$planteles=$empleado->plantels->pluck('razon','id');
+		return view('prospectos.reportes.prospectos', compact('planteles'));
+	}
+
+	public function prospectosR(Request $request){
+		$datos=$request->all();
+		$resumen=Prospecto::select(DB::raw('prospectos.fecha, u.name as usuario, stp.name as estatus, count(u.name) as total'))
+		->join('users as u','u.id','=','prospectos.usu_alta_id')
+		->join('st_prospectos as stp','stp.id','=','prospectos.st_prospecto_id')
+		//->join('plantels as p','p.id','=','prospectos.plantel_id')
+		->whereDate('prospectos.fecha','>=', $datos['fecha_f'])
+		->whereDate('prospectos.fecha','<=', $datos['fecha_t'])
+		->whereIn('prospectos.plantel_id', $datos['plantel_f'])
+		//->groupBy('p.razon')
+		->groupBy('prospectos.fecha')
+		->groupBy('stp.name')
+		->groupBy('u.name')
+		->get();
+		//dd($resumen->toArray());
+		$registros=Prospecto::whereDate('created_at','>=', $datos['fecha_f'])
+		->whereDate('created_at','<=', $datos['fecha_t'])
+		->whereIn('plantel_id', $datos['plantel_f'])
+		->get();
+		return view('prospectos.reportes.prospectosR', compact('registros', 'resumen'));
 	}
 }

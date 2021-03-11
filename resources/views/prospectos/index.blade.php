@@ -359,13 +359,13 @@
                     
                                 <td class="text-right">
                                     @permission('prospectos.aceptar')
-                                    @if($prospecto->st_prospecto_id==2)
+                                    @if($prospecto->st_prospecto_id==1 or $prospecto->st_prospecto_id==2)
                                     <a class="btn btn-xs btn-success" target="_blank" href="{{ route('prospectos.aceptar', array('prospecto'=>$prospecto->id)) }}"><i class="fa fa-thumbs-o-up"></i> Aceptar</a>
                                     
                                     @endif
                                     @endpermission
                                     @permission('prospectos.rechazar')
-                                    @if($prospecto->st_prospecto_id==2)
+                                    @if($prospecto->st_prospecto_id==1 or $prospecto->st_prospecto_id==2)
                                     <a class="btn btn-xs btn-danger" href="{{ route('prospectos.rechazar', array('prospecto'=>$prospecto->id)) }}"><i class="fa fa-thumbs-o-down"></i> Rechazar</a>
                                     @endif
                                     @endpermission

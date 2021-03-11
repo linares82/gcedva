@@ -252,6 +252,14 @@ trait GetAllDataTrait
             case "plantels":
                 $myQuery = $myQuery->whereIn('plantels.id', $planteles);
                 break;
+            case "prospectos":
+                if (Auth::user()->can('prospectos.CallCenter')) {
+                    $myQuery = $myQuery->where('prospectos.st_prospecto_id', '<>', 2);
+                }
+                if (Auth::user()->can('prospectos.Asesores')) {
+                    $myQuery = $myQuery->where('prospectos.st_prospecto_id', '<>', 1);
+                }
+                break;
             case "salons":
                 //if (Auth::user()->can('IFiltroEmpleadosXPlantel')) {
                 $myQuery = $myQuery->whereIn('salons.plantel_id', $planteles);

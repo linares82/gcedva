@@ -94,6 +94,7 @@ return array(
     'AddFecRvoeToGradosTable' => $baseDir . '/database/migrations/2020_06_30_133537_add_fec_rvoe_to_grados_table.php',
     'AddFechaPagoToImpresionTicketsTable' => $baseDir . '/database/migrations/2020_02_21_111204_add_fecha_pago_to_impresion_tickets_table.php',
     'AddFechaSolicitudFacturaToPagosTable' => $baseDir . '/database/migrations/2020_09_11_135034_add_fecha_solicitud_factura_to_pagos_table.php',
+    'AddFechaToProspectosTable' => $baseDir . '/database/migrations/2021_03_10_085112_add_fecha_to_prospectos_table.php',
     'AddFechaVigenciaHistoriaClientesTable' => $baseDir . '/database/migrations/2019_07_24_113703_add_fecha_vigencia_historia_clientes_table.php',
     'AddFechasGraficaEspecialidadTable' => $baseDir . '/database/migrations/2017_12_13_102850_add_fechas_grafica_especialidad_table.php',
     'AddFechasToConciliacionMultipagosTable' => $baseDir . '/database/migrations/2020_07_08_130236_add_fechas_to_conciliacion_multipagos_table.php',
