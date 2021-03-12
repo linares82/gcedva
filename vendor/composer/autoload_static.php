@@ -842,6 +842,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'AddBndCortoToNivelsTable' => __DIR__ . '/../..' . '/database/migrations/2020_02_24_103913_add_bnd_corto_to_nivels_table.php',
         'AddBndEximirDescuentoToAdeudosTable' => __DIR__ . '/../..' . '/database/migrations/2020_07_03_104152_add_bnd_eximir_descuento_to_adeudos_table.php',
         'AddBndGraficaLectivosTable' => __DIR__ . '/../..' . '/database/migrations/2018_06_19_145551_add_bnd_grafica_lectivos_table.php',
+        'AddBndLigaEnviadaToProspectosTable' => __DIR__ . '/../..' . '/database/migrations/2021_03_11_120904_add_bnd_liga_enviada_to_prospectos_table.php',
         'AddBndMensualidadCajaConceptosTable' => __DIR__ . '/../..' . '/database/migrations/2019_03_25_142826_add_bnd_mensualidad_caja_conceptos_table.php',
         'AddBndMexicoGradosTable' => __DIR__ . '/../..' . '/database/migrations/2019_01_16_142539_add_bnd_mexico_grados_table.php',
         'AddBndOficialToMateriaTable' => __DIR__ . '/../..' . '/database/migrations/2020_07_02_144708_add_bnd_oficial_to_materia_table.php',

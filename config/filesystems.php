@@ -42,6 +42,12 @@ return [
     */
 
     'disks' => [
+        'atrazoPagos' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/atrazoPagos'),
+            'url' => env('APP_URL').'/storage',
+            'visibility' => 'public',
+        ],
         'img_plantels' => [
             'driver' => 'local',
             'root' => storage_path('app/public/imagenes/plantels'),

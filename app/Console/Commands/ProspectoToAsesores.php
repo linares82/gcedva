@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Prospecto;
 use Carbon\Carbon;
+use App\DiaNoHabil;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
@@ -41,17 +42,38 @@ class ProspectoToAsesores extends Command
     public function handle()
     {
         $prospectos=Prospecto::where('st_prospecto_id',1)->get();
+        $hoy=Carbon::createFromFormat('Y-m-d',date('Y-m-d'));
+        
         foreach($prospectos as $prospecto){
-            $creacion=$prospecto->created_at;
-            //dd($creacion);
-            $hoy=Carbon::createFromFormat('Y-m-d',date('Y-m-d'));
-            //dd($hoy->diffInDays($creacion));
-            if($hoy->diffInDays($creacion)>=3){
-                //Log::info($hoy->diffInDays($creacion));
-                //dd($hoy->diffInDays($creacion));
-                $prospecto->st_prospecto_id=2;
-                $prospecto->save();
+            $creacion=Carbon::createFromFormat('Y-m-d', $prospecto->fecha);
+            $dias=0;
+            while($hoy->greaterThan($creacion)){
+                $creacion->addDay();
+                if($creacion->dayOfWeek==1 or 
+                    $creacion->dayOfWeek==2 or 
+                    $creacion->dayOfWeek==3 or 
+                    $creacion->dayOfWeek==4 or 
+                    $creacion->dayOfWeek==5){
+
+                    $dias_no_habiles=DiaNoHabil::where('fecha',$creacion->toDateString())->first();    
+                    if(is_null($dias_no_habiles)){
+                        $dias++;
+                        echo $prospecto->id."--".$dias."**";
+                        if($dias>=3){
+                            //Log::info($hoy->diffInDays($creacion));
+                            //dd($hoy->diffInDays($creacion));
+                            $prospecto->st_prospecto_id=2;
+                            $prospecto->save();
+                        }
+                    }
+
+                }    
             }
+            
+            //dd($creacion);
+            
+            //dd($hoy->diffInDays($creacion));
+            
         }
     }
 }

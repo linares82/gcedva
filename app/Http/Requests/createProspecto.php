@@ -24,7 +24,9 @@ class createProspecto extends FormRequest
     public function rules()
     {
         return [
-            //
+            'plantel_id'=>"min:1|not_in:0",
+            'nivel_id'=>"min:1|not_in:0",
+            'especialidad_id'=>"min:1|not_in:0",
         ];
     }
 }

@@ -53,6 +53,9 @@ class ProspectosController extends Controller {
 		$input['usu_mod_id']=Auth::user()->id;
 		$input['st_prospecto_id']=1;
 		$input['fecha']=date('Y-m-d');
+		if(!isset($input['bnd_liga_enviada'])){
+			$input['bnd_liga_enviada']=0;
+		}
 
 		//create data
 		$registro=Prospecto::create( $input );

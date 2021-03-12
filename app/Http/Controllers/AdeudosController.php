@@ -35,6 +35,7 @@ use App\ConsecutivoMatricula;
 use App\Http\Requests\createAdeudo;
 use App\Http\Requests\updateAdeudo;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 
 class AdeudosController extends Controller
 {
@@ -2802,5 +2803,22 @@ class AdeudosController extends Controller
         //dd($lineas_detalle);
 
         return view('adeudos.reportes.maestroAdeudosR', compact('lineas_procesadas', 'pagos', 'lineas_detalle', 'datos'));
+    }
+
+    public function consultaArchivosAtrazoPagos(){
+
+        $ficheros  = scandir(storage_path('app/public/atrazoPagos/'));
+        //dd($ficheros);        
+        return view('adeudos..reportes.consultaArchivosAtrazoPagos', compact('ficheros'));
+    }
+
+    public function borrarArchivoAtrazoPago(Request $request ){
+        $datos=$request->all();
+        //dd($datos);
+        //dd(storage_path('app/public/atrazoPagos/'.$datos['archivo']));
+        Storage::disk('atrazoPagos')->delete($datos['archivo']);
+        $ficheros = scandir(storage_path('app/public/atrazoPagos/'));
+        //dd($ficheros);        
+        return view('adeudos..reportes.consultaArchivosAtrazoPagos', compact('ficheros'));
     }
 }

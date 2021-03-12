@@ -26,6 +26,13 @@
    <span class="help-block">{{ $errors->first("ape_materno") }}</span>
    @endif
 </div>
+<div class="form-group col-md-4 @if($errors->has('bnd_liga_enviada')) has-error @endif">
+   <label for="bnd_liga_enviada-field">Liga Enviada</label>
+   {!! Form::checkbox("bnd_liga_enviada", 1, null, [ "id" => "bnd_liga_enviada-field"]) !!}
+   @if($errors->has("bnd_liga_enviada"))
+   <span class="help-block">{{ $errors->first("bnd_liga_enviada") }}</span>
+   @endif
+</div>
 <div class="form-group col-md-4 @if($errors->has('tel_fijo')) has-error @endif">
    <label for="tel_fijo-field">Telefono Fijo</label>
    {!! Form::text("tel_fijo", null, array("class" => "form-control input-sm", "id" => "tel_fijo-field")) !!}

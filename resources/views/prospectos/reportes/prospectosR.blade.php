@@ -24,7 +24,6 @@
             <tbody>
             @foreach ($resumen as $registro)
             <tr>
-                
                 <td>{{ $registro->fecha }}</td><td>{{ $registro->usuario }}</td>
                 <td>{{ $registro->estatus }} </td><td>{{ $registro->total }} </td> 
             </tr>

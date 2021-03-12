@@ -328,9 +328,8 @@
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'ape_paterno', 'title' => 'A.PATERNO'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'ape_materno', 'title' => 'A. MATERNO'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'tel_fijo', 'title' => 'TEL. FIJO'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'tel_cel', 'title' => 'TEL. CELULAR'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'mail', 'title' => 'MAIL'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'plantels.razon', 'title' => 'PLANTEL'])</th>
+                        <th>Liga Enviada</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'st_prospectos.name', 'title' => 'ESTATUS'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
@@ -344,10 +343,15 @@
                                 <td>{{$prospecto->nombre2}}</td>
                                 <td>{{$prospecto->ape_paterno}}</td>
                                 <td>{{$prospecto->ape_materno}}</td>
-                                <td>{{$prospecto->tel_fijo}}</td>
-                                <td>{{$prospecto->tel_cel}}</td>
                                 <td>{{$prospecto->mail}}</td>
                                 <td>{{$prospecto->plantel->razon}}</td>
+                                <td>
+                                    @if($prospecto->bnd_liga_enviada==1)
+                                    SI
+                                    @else
+                                    NO
+                                    @endif
+                                </td>
                                 <td>
                                     @if($prospecto->st_prospecto_id==3)
                                         <a href="{{ route('clientes.edit', $prospecto->cliente_id)}}" target="_blank">{{$prospecto->stProspecto->name}}</a>
@@ -361,7 +365,6 @@
                                     @permission('prospectos.aceptar')
                                     @if($prospecto->st_prospecto_id==1 or $prospecto->st_prospecto_id==2)
                                     <a class="btn btn-xs btn-success" target="_blank" href="{{ route('prospectos.aceptar', array('prospecto'=>$prospecto->id)) }}"><i class="fa fa-thumbs-o-up"></i> Aceptar</a>
-                                    
                                     @endif
                                     @endpermission
                                     @permission('prospectos.rechazar')

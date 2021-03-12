@@ -44,23 +44,32 @@ class AtrazoPagos extends Command
      */
     public function handle()
     {
+        //dd(storage_path('app/public/atrazoPagos'));
+        
         $fechaActual = Carbon::createFromFormat('Y-m-d', Date('Y-m-d'));
-        if ($fechaActual->day > 10) {
-            $registros = Adeudo::select(DB::raw('adeudos.cliente_id, count(adeudos.cliente_id) as adeudos_cantidad'))
+        if ($fechaActual->day == 11) {
+            $ruta=storage_path('app/public/atrazoPagos/');
+            $archivo=date('dmY')."_".date('Hsi').".csv";
+            $file = fopen($ruta.$archivo, 'w');
+            $columns = array('plantel', 'id_cliente', 'estatus','total_adeudos');
+            fputcsv($file, $columns);
+            $registros = Adeudo::select(DB::raw('p.razon,adeudos.cliente_id,stc.name as estatus, count(adeudos.cliente_id) as adeudos_cantidad'))
                 ->join('clientes as c', 'c.id', '=', 'adeudos.cliente_id')
                 ->join('combinacion_clientes as cc', 'cc.cliente_id', '=', 'c.id')
+                ->join('plantels as p','p.id','=','c.plantel_id')
+                ->join('st_clientes as stc','stc.id','=','c.st_cliente_id')
                 ->where('cc.plantel_id', '>', 0)
                 ->where('cc.especialidad_id', '>', 0)
                 ->where('cc.nivel_id', '>', 0)
                 ->where('cc.grado_id', '>', 0)
                 ->where('cc.turno_id', '>', 0)
-                ->where('c.id', 1367)
+                //->whereIn('c.id', array(70,179, 199))
                 ->whereColumn('adeudos.combinacion_cliente_id', 'cc.id')
                 ->join('caja_conceptos as caj_con', 'caj_con.id', '=', 'adeudos.caja_concepto_id')
                 ->where('caj_con.bnd_mensualidad', 1)
                 ->where('fecha_pago', '<', $fechaActual)
                 ->where('pagado_bnd', 0)
-                ->whereNotIn('c.plantel_id',array(17,49,74))
+                ->whereNotIn('c.plantel_id',array(54))
                 ->whereNull('cc.deleted_at')
                 ->whereNull('c.deleted_at')
                 //->where('c.st_cliente_id', '<>', 25)
@@ -70,7 +79,7 @@ class AtrazoPagos extends Command
                 ->get();
                
 
-            dd($registros->toArray());
+            //dd($registros->toArray());
 
             foreach ($registros as $registro) {
                 $hoy = date('Y-m-d');
@@ -92,7 +101,12 @@ class AtrazoPagos extends Command
                         $seguimiento->save();
                         */
                     } elseif ($registro->adeudos_cantidad == 2) {
-                        echo $registro->cliente_id . '-';
+                        //echo $registro->cliente_id . '-';
+                        fputcsv($file, array('plantel'=>$registro->razon, 
+                                            'id_cliente'=>$registro->cliente_id,
+                                            'estatus'=>$registro->estatus,
+                                            'adeudos_cantidad'=>$registro->adeudos_cantidad));
+
                         $cliente = Cliente::find($registro->cliente_id);
                         Log::info("cliente-" . $cliente->id . "-st" . $cliente->st_cliente_id);
                         $cliente->st_cliente_id = 25;
@@ -102,7 +116,13 @@ class AtrazoPagos extends Command
                         Log::info("seguimiento-" . $seguimiento->id . "-st" . $seguimiento->st_seguimiento_id);
                         $seguimiento->st_seguimiento_id = 2;
                         $seguimiento->save();
+                        
                     } elseif ($registro->adeudos_cantidad >= 3) {
+                        fputcsv($file, array('plantel'=>$registro->razon, 
+                                            'id_cliente'=>$registro->cliente_id,
+                                            'estatus'=>$registro->estatus,
+                                            'adeudos_cantidad'=>$registro->adeudos_cantidad));
+
                         $cliente = Cliente::find($registro->cliente_id);
                         $cliente->st_cliente_id = 26;
                         $cliente->save();
@@ -122,8 +142,11 @@ class AtrazoPagos extends Command
                         $seguimiento->save();
                         
                     }
+
                 }
             }
+
+            fclose($file);
         }
     }
 }

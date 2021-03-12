@@ -154,7 +154,7 @@ class ClientesController extends Controller
             $r->where('ape_materno', 'like', '%' . $data['ape_materno'] . '%');
         }
         if (isset($data['tel_fijo'])) {
-            $r->where('tel_fijo', 'like', '%' . $data['tel_fil'] . '%');
+            $r->where('tel_fijo', 'like', '%' . $data['tel_fijo'] . '%');
         }
         if (isset($data['mail'])) {
             $r->where('mail', 'like', '%' . $data['mail'] . '%');
