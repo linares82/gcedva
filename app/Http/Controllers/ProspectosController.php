@@ -1,8 +1,9 @@
 <?php namespace App\Http\Controllers;
 
 use Auth;
-use App\Cliente;
+use App\Medio;
 
+use App\Cliente;
 use App\Empleado;
 use App\Prospecto;
 use App\Seguimiento;
@@ -35,7 +36,8 @@ class ProspectosController extends Controller {
 	 */
 	public function create()
 	{
-		return view('prospectos.create')
+		$medios=Medio::whereIn('id', array(8,10,15,18,19,20))->pluck('name','id');
+		return view('prospectos.create', compact('medios'))
 			->with( 'list', Prospecto::getListFromAllRelationApps() );
 	}
 
@@ -92,7 +94,8 @@ class ProspectosController extends Controller {
 	public function edit($id, Prospecto $prospecto)
 	{
 		$prospecto=$prospecto->find($id);
-		return view('prospectos.edit', compact('prospecto'))
+		$medios=Medio::whereIn('id', array(8,10,15,18,19,20))->pluck('name','id');
+		return view('prospectos.edit', compact('prospecto', 'medios'))
 			->with( 'list', Prospecto::getListFromAllRelationApps() );
 	}
 
@@ -166,7 +169,7 @@ class ProspectosController extends Controller {
 		$input['promociones'] = 0;
 		$input['promo_cel'] = 0;
         $input['promo_correo'] = 0;
-		//$input['uso_factura_id']=0;
+		$input['uso_factura_id']=21;
 		//dd($input);
 		$cliente=Cliente::create($input);
 		$seguimiento=Seguimiento::create(array(
@@ -195,6 +198,15 @@ class ProspectosController extends Controller {
 		$datos=$request->all();
 		$prospecto=Prospecto::find($datos['prospecto']);
 		$prospecto->st_prospecto_id=2;
+		$prospecto->save();
+
+		return redirect()->route('prospectos.index')->with('message', 'Registro Actualizado.');
+	}
+
+	public function regresarCallCenter(Request $request){
+		$datos=$request->all();
+		$prospecto=Prospecto::find($datos['prospecto']);
+		$prospecto->st_prospecto_id=1;
 		$prospecto->save();
 
 		return redirect()->route('prospectos.index')->with('message', 'Registro Actualizado.');

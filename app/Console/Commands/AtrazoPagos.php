@@ -2,14 +2,18 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use App\Adeudo;
-use App\Cliente;
-use App\HistoriaCliente;
-use App\Seguimiento;
 use DB;
-use Carbon\Carbon;
 use Log;
+use App\Param;
+use Exception;
+use App\Adeudo;
+use App\BsBaja;
+use App\Cliente;
+use Carbon\Carbon;
+use App\Seguimiento;
+use App\HistoriaCliente;
+use Illuminate\Console\Command;
+use App\valenceSdk\samples\BasicSample\UsoApi;
 
 class AtrazoPagos extends Command
 {
@@ -45,19 +49,19 @@ class AtrazoPagos extends Command
     public function handle()
     {
         //dd(storage_path('app/public/atrazoPagos'));
-        
+
         $fechaActual = Carbon::createFromFormat('Y-m-d', Date('Y-m-d'));
         if ($fechaActual->day == 11) {
-            $ruta=storage_path('app/public/atrazoPagos/');
-            $archivo=date('dmY')."_".date('Hsi').".csv";
-            $file = fopen($ruta.$archivo, 'w');
-            $columns = array('plantel', 'id_cliente', 'estatus','total_adeudos');
+            $ruta = storage_path('app/public/atrazoPagos/');
+            $archivo = date('dmY') . "_" . date('Hsi') . ".csv";
+            $file = fopen($ruta . $archivo, 'w');
+            $columns = array('plantel', 'id_cliente', 'estatus', 'total_adeudos');
             fputcsv($file, $columns);
             $registros = Adeudo::select(DB::raw('p.razon,adeudos.cliente_id,stc.name as estatus, count(adeudos.cliente_id) as adeudos_cantidad'))
                 ->join('clientes as c', 'c.id', '=', 'adeudos.cliente_id')
                 ->join('combinacion_clientes as cc', 'cc.cliente_id', '=', 'c.id')
-                ->join('plantels as p','p.id','=','c.plantel_id')
-                ->join('st_clientes as stc','stc.id','=','c.st_cliente_id')
+                ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
+                ->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
                 ->where('cc.plantel_id', '>', 0)
                 ->where('cc.especialidad_id', '>', 0)
                 ->where('cc.nivel_id', '>', 0)
@@ -69,7 +73,7 @@ class AtrazoPagos extends Command
                 ->where('caj_con.bnd_mensualidad', 1)
                 ->where('fecha_pago', '<', $fechaActual)
                 ->where('pagado_bnd', 0)
-                ->whereNotIn('c.plantel_id',array(54))
+                ->whereNotIn('c.plantel_id', array(54))
                 ->whereNull('cc.deleted_at')
                 ->whereNull('c.deleted_at')
                 //->where('c.st_cliente_id', '<>', 25)
@@ -77,7 +81,7 @@ class AtrazoPagos extends Command
                 ->groupBy('adeudos.cliente_id')
                 ->having('adeudos_cantidad', '>=', 2)
                 ->get();
-               
+
 
             //dd($registros->toArray());
 
@@ -102,10 +106,13 @@ class AtrazoPagos extends Command
                         */
                     } elseif ($registro->adeudos_cantidad == 2) {
                         //echo $registro->cliente_id . '-';
-                        fputcsv($file, array('plantel'=>$registro->razon, 
-                                            'id_cliente'=>$registro->cliente_id,
-                                            'estatus'=>$registro->estatus,
-                                            'adeudos_cantidad'=>$registro->adeudos_cantidad));
+                        $this->bajaBs($registro->cliente_id);
+                        fputcsv($file, array(
+                            'plantel' => $registro->razon,
+                            'id_cliente' => $registro->cliente_id,
+                            'estatus' => $registro->estatus,
+                            'adeudos_cantidad' => $registro->adeudos_cantidad
+                        ));
 
                         $cliente = Cliente::find($registro->cliente_id);
                         Log::info("cliente-" . $cliente->id . "-st" . $cliente->st_cliente_id);
@@ -116,12 +123,14 @@ class AtrazoPagos extends Command
                         Log::info("seguimiento-" . $seguimiento->id . "-st" . $seguimiento->st_seguimiento_id);
                         $seguimiento->st_seguimiento_id = 2;
                         $seguimiento->save();
-                        
                     } elseif ($registro->adeudos_cantidad >= 3) {
-                        fputcsv($file, array('plantel'=>$registro->razon, 
-                                            'id_cliente'=>$registro->cliente_id,
-                                            'estatus'=>$registro->estatus,
-                                            'adeudos_cantidad'=>$registro->adeudos_cantidad));
+                        $this->bajaBs($registro->cliente_id);
+                        fputcsv($file, array(
+                            'plantel' => $registro->razon,
+                            'id_cliente' => $registro->cliente_id,
+                            'estatus' => $registro->estatus,
+                            'adeudos_cantidad' => $registro->adeudos_cantidad
+                        ));
 
                         $cliente = Cliente::find($registro->cliente_id);
                         $cliente->st_cliente_id = 26;
@@ -130,7 +139,7 @@ class AtrazoPagos extends Command
                         $adeudos = Adeudo::where('cliente_id', $cliente->cliente_id)
                             ->where('caja_id', 0)
                             ->where('pagado_bnd', 0)
-                            ->whereDate('adeudos.fecha_pago','>',Date('Y-m-d'))
+                            ->whereDate('adeudos.fecha_pago', '>', Date('Y-m-d'))
                             ->get();
                         //dd($adeudos->toArray());
                         foreach ($adeudos as $adeudo) {
@@ -140,13 +149,74 @@ class AtrazoPagos extends Command
                         $seguimiento = Seguimiento::where('cliente_id', $cliente->id)->first();
                         $seguimiento->st_seguimiento_id = 6;
                         $seguimiento->save();
-                        
                     }
-
                 }
             }
 
             fclose($file);
+        }
+    }
+
+    public function bajaBs($cliente)
+    {
+
+
+        $bs_activo = $param = Param::where('llave', 'api_brightSpace_activa')->first();
+        if ($bs_activo->valor == 1) {
+            $apiBs = new UsoApi();
+
+            //Se busca la version de uso de la API
+            $param = Param::where('llave', 'apiVersion_bSpace')->first();
+
+            //Lineas comentadas para ejecutar la url de Whoami
+            //$resultado=$apiBs->doValence2('GET','/d2l/api/lp/' . $param->valor . '/users/whoami');
+            //dd($resultado);
+
+
+
+            try {
+                $alumno = Cliente::find($cliente);
+
+
+                //dd($registros)	
+                //dd($alumno->matricula);
+
+                if ($alumno->matricula <> "" and !is_null($alumno->matricula)) {
+                    //Se invoca el metodo doValence con los parametros del verbo y la url igual que en el ejemplo del SDK
+                    //$resultado=$apiBs->doValence('GET','/d2l/api/lp/' . $param->valor . '/users/?orgDefinedId='.$alumno->matricula);
+                    $resultado = $apiBs->doValence2('GET', '/d2l/api/lp/' . $param->valor . '/users/?orgDefinedId=' . $alumno->matricula);
+
+                    //Muestra resultado
+                    $r = $resultado[0];
+                    //dd($r['UserId']);
+
+                    $datos = ['isActive' => False];
+                    //dd($datos);
+                    if (isset($r['UserId'])) {
+                        $resultado2 = $apiBs->doValence2('PUT', '/d2l/api/lp/' . $param->valor . '/users/' . $r['UserId'] . '/activation', $datos);
+                        //dd($resultado2);
+                        if (isset($resultado2['IsActive']) and !$resultado2['IsActive']) {
+                            $input['cliente_id'] = $alumno->id;
+                            $input['fecha_baja'] = Date('Y-m-d');
+                            $input['bnd_baja'] = 1;
+                            $input['usu_alta_id'] = Auth::user()->id;
+                            $input['usu_mod_id'] = Auth::user()->id;
+                            BsBaja::create($input);
+                        } else {
+                            $input['cliente_id'] = $alumno->id;
+                            $input['fecha_baja'] = Date('Y-m-d');
+                            $input['bnd_baja'] = 0;
+                            $input['usu_alta_id'] = Auth::user()->id;
+                            $input['usu_mod_id'] = Auth::user()->id;
+                            BsBaja::create($input);
+                        }
+                    }
+                    //dd($resultado2['IsActive']);
+                }
+            } catch (Exception $e) {
+                Log::info("cliente no encontrado en Brigth Space u otro error: " . $alumno->matricula . " - " . $e->getMessage());
+                //return false;
+            }
         }
     }
 }

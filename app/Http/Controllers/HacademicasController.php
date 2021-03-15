@@ -497,6 +497,7 @@ class HacademicasController extends Controller
     public function getCalificacionGrupo(Request $request)
     {
         $data = $request->all();
+        //dd($data);
         $asignacion = $data['asignacion'];
         $examen = TpoExamen::pluck('name', 'id');
 
@@ -515,6 +516,7 @@ class HacademicasController extends Controller
     public function postCalificacionGrupo(Request $request)
     {
         $data = $request->all();
+        //dd($data);
         $asignacion = $data['asignacion'];
         $examen = TpoExamen::pluck('name', 'id');
         $asignacionAcademica = AsignacionAcademica::find($data['asignacion']);
@@ -651,7 +653,16 @@ class HacademicasController extends Controller
             ->first();
 
         if (is_null($hacademica)) {
-            return view('hacademicas.calificacionGrupos')
+            $asignacion = $data['asignacion'];
+            $examen = TpoExamen::pluck('name', 'id');
+
+            $asignacionAcademica = AsignacionAcademica::find($data['asignacion']);
+            $materia = Materium::find($asignacionAcademica->materium_id);
+            $carga_ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $materia->ponderacion_id)
+            ->where('bnd_activo', 1)
+            ->pluck('name', 'id');
+
+            return view('hacademicas.calificacionGrupos', compact('asignacion', 'examen', 'carga_ponderaciones'))
                 ->with('list', Hacademica::getListFromAllRelationApps())
                 ->with('msj', $msj);
         }

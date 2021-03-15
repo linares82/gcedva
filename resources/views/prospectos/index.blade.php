@@ -327,7 +327,8 @@
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'nombre2', 'title' => 'NOMBRE2'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'ape_paterno', 'title' => 'A.PATERNO'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'ape_materno', 'title' => 'A. MATERNO'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'tel_fijo', 'title' => 'TEL. FIJO'])</th>
+                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'mail', 'title' => 'MAIL'])</th>
+                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'tel_cel', 'title' => 'CELULAR'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'plantels.razon', 'title' => 'PLANTEL'])</th>
                         <th>Liga Enviada</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'st_prospectos.name', 'title' => 'ESTATUS'])</th>
@@ -344,6 +345,7 @@
                                 <td>{{$prospecto->ape_paterno}}</td>
                                 <td>{{$prospecto->ape_materno}}</td>
                                 <td>{{$prospecto->mail}}</td>
+                                <td>{{$prospecto->tel_cel}}</td>
                                 <td>{{$prospecto->plantel->razon}}</td>
                                 <td>
                                     @if($prospecto->bnd_liga_enviada==1)
@@ -375,6 +377,11 @@
                                     @permission('prospectos.regresarAsesores')
                                     @if($prospecto->st_prospecto_id==4)
                                     <a class="btn btn-xs btn-info" href="{{ route('prospectos.regresarAsesores', array('prospecto'=>$prospecto->id)) }}"><i class=""></i> Regresar A.</a>
+                                    @endif
+                                    @endpermission
+                                    @permission('prospectos.regresarCallCenter')
+                                    @if($prospecto->st_prospecto_id==4)
+                                    <a class="btn btn-xs btn-info" href="{{ route('prospectos.regresarCallCenter', array('prospecto'=>$prospecto->id)) }}"><i class=""></i> Regresar CC.</a>
                                     @endif
                                     @endpermission
                                     @permission('prospectos.edit')
