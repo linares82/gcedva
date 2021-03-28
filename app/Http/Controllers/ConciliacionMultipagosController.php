@@ -6,6 +6,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\Adeudo;
+use App\AdeudoPagoOnLine;
 use App\Caja;
 use App\ConciliacionMultipago;
 use App\ConciliacionMultiDetalle;
@@ -182,8 +183,54 @@ class ConciliacionMultipagosController extends Controller
 	public function show($id, ConciliacionMultipago $conciliacionMultipago)
 	{
 		$conciliacionMultipago = $conciliacionMultipago->find($id);
+		$detalle = ConciliacionMultiDetalle::where('conciliacion_multipago_id', $id)->get();
+		$registrosMontoDiferente = array();
+		foreach ($detalle as $d) {
+			$peticionBuscado = PeticionMultipago::where('mp_reference', $d->mp_reference)
+				->where('mp_order', $d->mp_order)
+				//->where('mp_amount', $pagoConciliacion->importe)
+				->first();
+			if (!is_null($peticionBuscado)) {
+				if ($peticionBuscado->mp_amount <> $d->importe) {
+					//dd($peticionBuscado);
+					$adeudo_pago_on_line = AdeudoPagoOnLine::where('peticion_multipago_id', $peticionBuscado->id)->first();
+					if (!is_null($adeudo_pago_on_line)) {
+						array_push($registrosMontoDiferente, array(
+							'referencia' => $d->mp_reference,
+							'orden' => $d->mp_order,
+							'conciliacion_importe' => $d->importe,
+							'peticion_monto' => $peticionBuscado->mp_amount,
+							'caja_consecutivo' => $adeudo_pago_on_line->caja->consecutivo,
+							'caja_plantel' => $adeudo_pago_on_line->caja->plantel_id,
+							'msj' => 'Montos diferentes entre la peticon y la conciliacion.'
+						));
+					} else {
+						array_push($registrosMontoDiferente, array(
+							'referencia' => $d->mp_reference,
+							'orden' => $d->mp_order,
+							'conciliacion_importe' => $d->importe,
+							'peticion_monto' => $peticionBuscado->mp_amount,
+							'caja_consecutivo' => '',
+							'caja_plantel' => '',
+							'msj' => 'Existe la peticion en linea, sin embargo el proceso de pago en linea fue cancelado.'
+						));
+					}
+				}
+			} else {
+				array_push($registrosMontoDiferente, array(
+					'referencia' => $d->mp_reference,
+					'orden' => $d->mp_order,
+					'conciliacion_importe' => $d->importe,
+					'peticion_monto' => null,
+					'caja_consecutivo' => '',
+					'caja_plantel' => '',
+					'msj' => 'Sin peticion en linea encontrada.'
+				));
+			}
+		}
+		//dd($registrosMontoDiferente);
 		//dd($conciliacionMultipago->conciliacionMultiDetalles->toArray());
-		return view('conciliacionMultipagos.show', compact('conciliacionMultipago'));
+		return view('conciliacionMultipagos.show', compact('conciliacionMultipago', 'registrosMontoDiferente'));
 	}
 
 	/**
@@ -419,7 +466,7 @@ class ConciliacionMultipagosController extends Controller
 				->where('importe', $peticion->mp_amount)
 				->first();
 			//dd($filtered->toArray());
-			if (!is_null($filtered) and $filtered->count()>0) {
+			if (!is_null($filtered) and $filtered->count() > 0) {
 				$registro['conciliacion_no_aprobacion'] = optional($filtered)->no_aprobacion;
 				$registro['conciliacion_importe'] = $filtered->importe;
 				$registro['conciliacion_comision'] = $filtered->comision;

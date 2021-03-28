@@ -27,7 +27,7 @@
                     <tbody>
                         @foreach ($contratosVencidos as $contrato)
                             <tr>
-                                <td>{{$contrato->plantel->razon}}</td>    
+                                <td>{{optional($contrato->plantel)->razon}}</td>    
                             <td>{{$contrato->id}}</td>
                             <td>{{ $contrato->nombre }} {{ $contrato->ape_paterno }} {{ $contrato->ape_materno }}</td>
                             <td>{{ $contrato->rfc }}</td>
@@ -72,14 +72,14 @@
                         @if($baja->aut_caja<>2 or $baja->director<>2 or $baja->aut_caja_corp<>2)
                             <tr>
                             <td> <a href="{{route('clientes.edit',$baja->cliente_id)}}" target=_blank>{{$baja->cliente_id}}</a></td>
-                            <td>{{ $baja->cliente->matricula }}</td>
-                            <td>{{ $baja->cliente->nombre }} {{ $baja->cliente->nombre2 }} {{ $baja->cliente->ape_paterno }} {{ $baja->cliente->ape_materno }}</td>
-                            <td>{{ $baja->cliente->plantel->razon }}</td>
-                            <td>{{$baja->descripcion}}</td>
+                            <td>{{ optional($baja->cliente)->matricula }}</td>
+                            <td>{{ optional($baja->cliente)->nombre }} {{ optional($baja->cliente)->nombre2 }} {{ optional($baja->cliente)->ape_paterno }} {{ optional($baja->cliente)->ape_materno }}</td>
+                            <td>{{ optional(optional($baja->cliente)->plantel)->razon }}</td>
+                            <td>{{ $baja->descripcion}}</td>
                             <td>{{optional($baja->autCaja)->name}}</td>
                             <td>{{optional($baja->autDirector)->name}}</td>
                             <td>{{optional($baja->autCajaCorp)->name}}</td>
-                            <td><a class="btn btn-xs btn-warning" href="{{ route('historiaClientes.index',array('q[cliente_id_lt]'=>$baja->cliente->id)) }}" target='_blank'><i class="glyphicon glyphicon-plus"></i> Ver</a></td>
+                            <td><a class="btn btn-xs btn-warning" href="{{ route('historiaClientes.index',array('q[cliente_id_lt]'=>optional($baja->cliente)->id)) }}" target='_blank'><i class="glyphicon glyphicon-plus"></i> Ver</a></td>
                             </tr>
                         @endif
                         
@@ -138,7 +138,7 @@
                                     <td>
                                         {{$beca->created_at}}
                                     </td>
-                                    <td>{{$beca->aut_caja_plantel}}</td>
+                                    <td>{{ $beca->aut_caja_plantel}}</td>
                                     <td>{{$beca->aut_dir_plantel}}</td>
                                     
                                     <td>{{$beca->aut_ser_esc}}</td>

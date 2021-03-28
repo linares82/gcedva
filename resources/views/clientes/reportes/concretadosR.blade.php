@@ -70,7 +70,7 @@
           
           <thead>
               <th>No.</th><th>Plantel</th><th>Matricula</th><th>Id</th><th>A. Paterno</th><th>A. Materno</th><th>P. Nombre</th>
-              <th>S. Nombre</th><th>E. Cliente</th><th>E. Seguimiento</th><th>Seccion</th>
+              <th>S. Nombre</th><th>E. Cliente</th><th>E. Seguimiento</th><th>Seccion</th><th>Empleado</th>
               <th>Inscripción/S. Escolares</th><th>Fecha Pago</th><th>Trámites</th><th>Fecha Pago</th>
               <th>P. Mensualidad</th><th>Fecha Pago</th><th>Ultima Tarea Seguimiento</th>
           </thead>

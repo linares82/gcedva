@@ -366,6 +366,7 @@ class ClientesController extends Controller
     public function show($id, Cliente $cliente)
     {
         $cliente = $cliente->find($id);
+
         return view('clientes.show', compact('cliente'));
     }
 
@@ -2165,8 +2166,10 @@ class ClientesController extends Controller
         ->get();
         //dd($totales->toArray());
 
-        $detalle=Cliente::select('p.razon','clientes.matricula','clientes.id as cliente_id','clientes.ape_paterno','clientes.ape_materno','clientes.nombre',
+        $detalle=Cliente::select('p.razon','clientes.matricula','clientes.id as cliente_id',
+        'clientes.ape_paterno','clientes.ape_materno','clientes.nombre',
         'clientes.nombre2', 'stc.name as st_cliente', 'sts.name as st_seguimiento', 'g.seccion',
+        DB::raw('concat(emp.nombre, " ",emp.ape_paterno, " ",emp.ape_materno) as empleado_nombre'), 
         'cc.name as concepto', 'c.fecha as fecha_caja')
         ->join('seguimientos as s','s.cliente_id','=','clientes.id')
         ->join('st_seguimientos as sts','sts.id','=','s.st_seguimiento_id')
@@ -2174,6 +2177,7 @@ class ClientesController extends Controller
         ->join('caja_conceptos as cc','cc.id','=','a.caja_concepto_id')
         ->join('plantels as p','p.id','=','clientes.plantel_id')
         ->join('st_clientes as stc','stc.id','=','clientes.st_cliente_id')
+        ->join('empleados as emp','emp.id','=','clientes.empleado_id')
         ->join('cajas as c','c.id','=','a.caja_id')
         ->join('combinacion_clientes as ccli','ccli.cliente_id','=','clientes.id')
         ->join('grados as g','g.id','=','ccli.grado_id')

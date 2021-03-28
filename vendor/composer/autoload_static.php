@@ -977,6 +977,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'AddNombre2GradosTable' => __DIR__ . '/../..' . '/database/migrations/2019_08_23_093321_add_nombre2_grados_table.php',
         'AddNombreCortoToPlantelsTable' => __DIR__ . '/../..' . '/database/migrations/2020_04_23_130534_add_nombre_corto_to_plantels_table.php',
         'AddOrdenPeriodoEstudiosTable' => __DIR__ . '/../..' . '/database/migrations/2020_02_25_094544_add_orden_periodo_estudios_table.php',
+        'AddOrdenToMateriaTable' => __DIR__ . '/../..' . '/database/migrations/2021_03_26_143154_add_orden_to_materia_table.php',
         'AddOrigenEbanxesTable' => __DIR__ . '/../..' . '/database/migrations/2018_12_20_142232_add_origen_ebanxes_table.php',
         'AddPaiseIdFieldClientesTable' => __DIR__ . '/../..' . '/database/migrations/2018_10_23_103201_add_paise_id_field_clientes_table.php',
         'AddParentescoUrgenteToEmpleadosTable' => __DIR__ . '/../..' . '/database/migrations/2021_01_05_144043_add_parentesco_urgente_to_empleados_table.php',

@@ -159,6 +159,7 @@ return array(
     'AddNombre2GradosTable' => $baseDir . '/database/migrations/2019_08_23_093321_add_nombre2_grados_table.php',
     'AddNombreCortoToPlantelsTable' => $baseDir . '/database/migrations/2020_04_23_130534_add_nombre_corto_to_plantels_table.php',
     'AddOrdenPeriodoEstudiosTable' => $baseDir . '/database/migrations/2020_02_25_094544_add_orden_periodo_estudios_table.php',
+    'AddOrdenToMateriaTable' => $baseDir . '/database/migrations/2021_03_26_143154_add_orden_to_materia_table.php',
     'AddOrigenEbanxesTable' => $baseDir . '/database/migrations/2018_12_20_142232_add_origen_ebanxes_table.php',
     'AddPaiseIdFieldClientesTable' => $baseDir . '/database/migrations/2018_10_23_103201_add_paise_id_field_clientes_table.php',
     'AddParentescoUrgenteToEmpleadosTable' => $baseDir . '/database/migrations/2021_01_05_144043_add_parentesco_urgente_to_empleados_table.php',

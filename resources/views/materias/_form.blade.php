@@ -12,6 +12,13 @@
                         <span class="help-block">{{ $errors->first("name") }}</span>
                        @endif
                     </div>
+                    <div class="form-group col-md-4 @if($errors->has('orden')) has-error @endif">
+                        <label for="orden-field">Orden</label>
+                        {!! Form::text("orden", null, array("class" => "form-control input-sm", "id" => "orden-field")) !!}
+                        @if($errors->has("orden"))
+                        <span class="help-block">{{ $errors->first("orden") }}</span>
+                        @endif
+                     </div>
                     <div class="form-group col-md-4 @if($errors->has('abreviatura')) has-error @endif">
                        <label for="abreviatura-field">Abreviatura</label>
                        {!! Form::text("abreviatura", null, array("class" => "form-control input-sm", "id" => "abreviatura-field")) !!}

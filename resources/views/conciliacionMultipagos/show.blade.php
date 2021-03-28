@@ -76,9 +76,51 @@
                 </div>
             </form>
             <div class="row"></div>
+
             <div class="box">
                 <div class="box-body">
                 <div class="table-responsive">
+                    <h3>Montos diferentes con caja identificada</h3>
+                    <table class="table table-bordered table-striped dataTable" id="dtHorizontalExample">
+                        <thead>
+                            <th>Referencia</th> <th>Orden</th><th>Conciliacion Importe</th><th>Peticion Monto</th><th>Caja</th>
+                        </thead>
+                        <tbody>
+                            @foreach($registrosMontoDiferente as $r)
+                            <tr>
+                                <td>{{ $r['referencia'] }}</td>
+                                <td>{{ $r['orden'] }}</td>
+                                <td>
+                                    <span class="label label-success">
+                                    {{ $r['conciliacion_importe'] }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="label label-danger">
+                                    {{ $r['peticion_monto'] }}
+                                    </span>    
+                                </td>
+                                <td>
+                                    <a href="{{ route('cajas.caja', array('plantel'=>$r['caja_plantel'], 'consecutivo'=>$r['caja_consecutivo'])) }}" target="_blank">
+                                        {{ $r['caja_consecutivo'] }}
+                                    </a>                                    
+                                </td>
+                                <td>{{ $r['msj'] }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+    
+                </div>
+                </div>
+    
+            </div>
+
+
+            <div class="box">
+                <div class="box-body">
+                <div class="table-responsive">
+                    <h3>Conciliacion</h3>
                     <table class="table table-bordered table-striped dataTable" id="dtHorizontalExample">
                         <thead>
                             <th>Caja afectada</th><th>Plantel Afectado</th>
@@ -111,9 +153,11 @@
                             @endphp
                             <tr>
                                 <td>
-                                    <a href="{{ route('cajas.caja', array('plantel'=>$plantel_id, 'consecutivo'=>$consecutivo)) }}" target="_blank">
+                                    @if($consecutivo<>"")
+                                    <a class="label label-success" href="{{ route('cajas.caja', array('plantel'=>$plantel_id, 'consecutivo'=>$consecutivo)) }}" target="_blank">
                                         {{ $consecutivo }}
-                                    </a>                                    
+                                    </a>                  
+                                    @endif                  
                                 </td>
                                 <td>{{ $plantel_razon }}</td>
                                 <td>{{ $detalle->fecha_pago }}</td><td>{{ $detalle->razon_social }}</td><td>{{ $detalle->mp_node }}</td>

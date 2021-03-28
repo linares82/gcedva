@@ -2,12 +2,19 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use App\Grado;
 use DB;
+use App\Grado;
+use App\Materium;
+use App\Hacademica;
+use App\Calificacion;
+use App\CargaPonderacion;
+use Illuminate\Console\Command;
+use App\CalificacionPonderacion;
+use Illuminate\Support\Facades\Auth;
 
 class prb extends Command
 {
+
     /**
      * The name and signature of the console command.
      *
@@ -39,11 +46,66 @@ class prb extends Command
      */
     public function handle()
     {
-        $grado=Grado::find(10);
-        dd($grado->total_relaciones);
-        
 
-        
+        $materia = Materium::find(3426);
+
+        $materias_validar = Hacademica::whereIn(
+                'id', array(
+                47645,
+                47655,
+                47675,
+                47685,
+                47695,
+                47715,
+                47725,
+                47745,
+                47765,
+                47775,
+                47805,
+                47815,
+                47835,
+                47855,
+                47875,
+                47885,
+                47895,
+                47915,
+                47925,
+                47935,
+                47955)
+            )
+            ->get();
+
+        //if ($materias_validar->count() == 0) {*/
+        foreach ($materias_validar as $mv) {
+
+            $c['hacademica_id'] = $mv->id;
+            $c['tpo_examen_id'] = 1;
+            $c['calificacion'] = 0;
+            $c['fecha'] = date('Y-m-d');
+            $c['reporte_bnd'] = 0;
+            $c['usu_alta_id'] = 1;
+            $c['usu_mod_id'] = 1;
+            $calif = Calificacion::create($c);
+
+            $ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $materia->ponderacion_id)
+                ->where('bnd_activo', 1)
+                ->get();
+            //dd($ponderaciones);
+            foreach ($ponderaciones as $p) {
+                $ponde['calificacion_id'] = $calif->id;
+                $ponde['carga_ponderacion_id'] = $p->id;
+                $ponde['calificacion_parcial'] = 0;
+                $ponde['ponderacion'] = $p->porcentaje;
+                $ponde['usu_alta_id'] = 1;
+                $ponde['usu_mod_id'] = 1;
+                $ponde['tiene_detalle'] = $p->tiene_detalle;
+                $ponde['padre_id'] = $p->padre_id;
+                CalificacionPonderacion::create($ponde);
+            }
+        }
+
+
+
         /*
         $tablas = array(
             'actividad_empresas',
