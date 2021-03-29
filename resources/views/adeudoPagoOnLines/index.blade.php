@@ -50,20 +50,20 @@
 
                             <!--
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_adeudo_id_gt">ADEUDO_ID</label>
+                                <label class="col-sm-2 control-label" for="q_adeudos.id_gt">ADEUDO_ID</label>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['adeudo_id_gt']) ?: '' }}" name="q[adeudo_id_gt]" id="q_adeudo_id_gt" />
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['adeudos.id_gt']) ?: '' }}" name="q[adeudos.id_gt]" id="q_adeudos.id_gt" />
                                 </div>
                                 <div class=" col-sm-1 text-center"> - </div>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['adeudo_id_lt']) ?: '' }}" name="q[adeudo_id_lt]" id="q_adeudo_id_lt" />
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['adeudos.id_lt']) ?: '' }}" name="q[adeudos.id_lt]" id="q_adeudos.id_lt" />
                                 </div>
                             </div>
                             -->
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_adeudo_id_cont">ADEUDO_ID</label>
+                                <label class="col-sm-2 control-label" for="q_adeudos.id_cont">ADEUDO_ID</label>
                                 <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['adeudo_id_cont']) ?: '' }}" name="q[adeudo_id_cont]" id="q_adeudo_id_cont" />
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['adeudos.id_cont']) ?: '' }}" name="q[adeudos.id_cont]" id="q_adeudos.id_cont" />
                                 </div>
                             </div>
                                                     <!--
@@ -197,7 +197,7 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'adeudo_id', 'title' => 'ADEUDO_ID'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'adeudos.id', 'title' => 'ADEUDO_ID'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'subtotal', 'title' => 'SUBTOTAL'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'descuento', 'title' => 'DESCUENTO'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'recargo', 'title' => 'RECARGO'])</th>
@@ -212,7 +212,7 @@
                         @foreach($adeudoPagoOnLines as $adeudoPagoOnLine)
                             <tr>
                                 <td><a href="{{ route('adeudoPagoOnLines.show', $adeudoPagoOnLine->id) }}">{{$adeudoPagoOnLine->id}}</a></td>
-                                <td>{{$adeudoPagoOnLine->adeudo_id}}</td>
+                                <td>{{$adeudoPagoOnLine->adeudo->id}}</td>
                     <td>{{$adeudoPagoOnLine->subtotal}}</td>
                     <td>{{$adeudoPagoOnLine->descuento}}</td>
                     <td>{{$adeudoPagoOnLine->recargo}}</td>

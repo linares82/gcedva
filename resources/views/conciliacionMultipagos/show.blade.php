@@ -80,7 +80,7 @@
             <div class="box">
                 <div class="box-body">
                 <div class="table-responsive">
-                    <h3>Montos diferentes con caja identificada</h3>
+                    <h3>Inconsistencias</h3>
                     <table class="table table-bordered table-striped dataTable" id="dtHorizontalExample">
                         <thead>
                             <th>Referencia</th> <th>Orden</th><th>Conciliacion Importe</th><th>Peticion Monto</th><th>Caja</th>

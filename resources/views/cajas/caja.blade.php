@@ -256,8 +256,21 @@
                             <a href="#" class="add-pago btn btn-success btn-sm" data-total_caja={{ $caja->total }}><i class="glyphicon glyphicon-plus-sign" ></i>Agregar Pago</a> 
                         </div>
                     </div>
-                    
+
                     @endif
+
+                    @if(isset($caja) and ($caja->st_caja_id==0))
+                    @permission('cajas.actualizarAdeudosPagos')
+                    @foreach($caja->cajaLns as $ln)
+                    <div class="form-group col-md-4">
+                        <div class='text-center'>
+                            <a href="{{ route('cajas.actualizarAdeudosPagos',array('adeudo'=>$ln->adeudo_id)) }}" class="btn btn-success btn-sm" >A. Montos Diferentes</a> 
+                        </div>
+                    </div>
+                    @endforeach
+                    @endpermission
+                    @endif
+
 
                     @if(isset($caja))
                     @permission('cajas.aplicarRecargos')
@@ -531,7 +544,7 @@
                     <a class="btn btn-md btn-info modal-incidencias" href="#" ><i class="glyphicon glyphicon-eye"></i> Incidencias</a>
             </div>
             <div class="box-body no-padding">
-
+                
                 <table class='table table-striped table-condensed' >
 
                     <tbody>

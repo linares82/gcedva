@@ -40,7 +40,7 @@
                 </div>
                 <div class="form-group">
                      <label for="adeudo_id">ADEUDO_ID</label>
-                     <p class="form-control-static">{{$adeudoPagoOnLine->adeudo_id}}</p>
+                     <p class="form-control-static">{{$adeudoPagoOnLine->adeudo->id}}</p>
                 </div>
                     <div class="form-group">
                      <label for="subtotal">SUBTOTAL</label>
