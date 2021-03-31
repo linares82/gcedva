@@ -348,7 +348,16 @@ class CajasController extends Controller
         $empleado = Empleado::where('user_id', '=', Auth::user()->id)->first();
         $empleados = Empleado::select(DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name, id'))->pluck('name', 'id');
         //dd($empleado->toArray());
-        $caja = Caja::where('consecutivo', '=', $data['consecutivo'])->where('plantel_id', '=', $data['plantel_id'])->where('st_caja_id', '<>', 2)->first();
+        //$caja = Caja::where('consecutivo', '=', $data['consecutivo'])->where('plantel_id', '=', $data['plantel_id'])->where('st_caja_id', '<>', 2)->first();
+        $caja_aux = Caja::where('consecutivo', '=', $data['consecutivo'])->where('st_caja_id', '<>', 2);
+        if (isset($data['plantel_id']) and $data['plantel_id'] <> 0) {
+            $caja_aux->where('plantel_id', $data['plantel_id']);
+        }
+        if (isset($data['cliente_caja']) and $data['cliente_caja'] <> "") {
+            $caja_aux->where('cliente_id', $data['cliente_caja']);
+        }
+        $caja = $caja_aux->first();
+
         if (!is_object($caja)) {
             Session::flash('msj', 'Caja no existe');
             return view('cajas.caja')->with('list', Caja::getListFromAllRelationApps())->with('list1', CajaLn::getListFromAllRelationApps());

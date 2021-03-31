@@ -317,6 +317,7 @@ return array(
     'CreateHCalificacionsTable' => $baseDir . '/database/migrations/2020_05_18_163524_create_h_calificacions_table.php',
     'CreateHCuentasEfectivosTable' => $baseDir . '/database/migrations/2019_06_26_101826_create_h_cuentas_efectivos_table.php',
     'CreateHEstatusesTable' => $baseDir . '/database/migrations/2019_07_29_094034_create_h_estatuses_table.php',
+    'CreateHPeticionsTable' => $baseDir . '/database/migrations/2021_03_30_075036_create_h_peticions_table.php',
     'CreateHStProspectosTable' => $baseDir . '/database/migrations/2021_03_09_124430_create_h_st_prospectos_table.php',
     'CreateHacademicasTable' => $baseDir . '/database/migrations/2017_09_18_170010_create_hacademicas_table.php',
     'CreateHactividadesTable' => $baseDir . '/database/migrations/2017_11_09_175138_create_hactividades_table.php',

@@ -8,9 +8,11 @@ use App\Materium;
 use App\Hacademica;
 use App\Calificacion;
 use App\CargaPonderacion;
+use App\PeticionMultipago;
 use Illuminate\Console\Command;
 use App\CalificacionPonderacion;
 use Illuminate\Support\Facades\Auth;
+use App\Observers\PeticionMultipagoObserver;
 
 class prb extends Command
 {
@@ -46,9 +48,14 @@ class prb extends Command
      */
     public function handle()
     {
+        $peticion=PeticionMultipago::find(1);
+        $peticion->mp_amount=$peticion->mp_amount+1;
+        $peticion->save();
 
+
+        /*
+        Crea ponderaciones de calificaicon
         $materia = Materium::find(3426);
-
         $materias_validar = Hacademica::whereIn(
                 'id', array(
                 47645,
@@ -75,7 +82,7 @@ class prb extends Command
             )
             ->get();
 
-        //if ($materias_validar->count() == 0) {*/
+        
         foreach ($materias_validar as $mv) {
 
             $c['hacademica_id'] = $mv->id;
@@ -90,7 +97,7 @@ class prb extends Command
             $ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $materia->ponderacion_id)
                 ->where('bnd_activo', 1)
                 ->get();
-            //dd($ponderaciones);
+          
             foreach ($ponderaciones as $p) {
                 $ponde['calificacion_id'] = $calif->id;
                 $ponde['carga_ponderacion_id'] = $p->id;
@@ -103,7 +110,7 @@ class prb extends Command
                 CalificacionPonderacion::create($ponde);
             }
         }
-
+        */
 
 
         /*

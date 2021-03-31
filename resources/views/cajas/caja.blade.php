@@ -51,6 +51,14 @@
                 </div>
                 
                 <div class="input-group form-group col-md-12">
+                    @if(isset($caja))
+                    {!! Form::hidden("cliente_caja", ($caja)?$caja->cliente_id:"", array("class" => "form-control ", 'placeholder'=>'cliente',"id" => "cliente_caja-field")) !!}
+                    @else
+                    {!! Form::hidden("cliente_caja", null, array("class" => "form-control ", 'placeholder'=>'Cliente', "id" => "cliente_caja-field")) !!}
+                    @endif
+                </div>
+
+                <div class="input-group form-group col-md-12">
                     <div class="input-group-btn">
                         <button type="submit" class="btn btn-info" data-toggle="tooltip" title="Buscar Venta"><i class='fa fa-search'></i></button>
                     </div>
@@ -712,7 +720,7 @@
                                 @if($adeudo->caja->consecutivo==0)
                                 {{$adeudo->caja->consecutivo}}
                                 @else
-                                <a href="#" onclick="abrirTicket({{$adeudo->caja->consecutivo}});" data-toggle="tooltip" title="Ir">{{$adeudo->caja->consecutivo}}</a>
+                                <a href="#" onclick="abrirTicket({{$adeudo->caja->consecutivo}}, {{$adeudo->cliente_id}});" data-toggle="tooltip" title="Ir">{{$adeudo->caja->consecutivo}}</a>
                                 @endif
                             </td>
                             
@@ -1595,11 +1603,14 @@ Agregar nuevo registro
 
 
     @if (isset($cliente))
-    function abrirTicket(csc){
+    function abrirTicket(csc, cliente){
         
         $('#consecutivo-field').val(csc);
-        $('#plantel_id-field option:selected').val({{$cliente->plantel_id}});
+        $('#cliente_caja-field').val(cliente);
+        //$('#plantel_id-field option:selected').val({{$cliente->plantel_id}});
         $('#form-buscarVenta').submit();
+        
+        //window.location.assign("/path");
     }
     @endif
     

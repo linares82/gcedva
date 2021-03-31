@@ -21,6 +21,7 @@ use Studio\Totem\Totem;
 use App\AsignacionTarea;
 use App\CuentasEfectivo;
 use App\HCalifPonderacion;
+use App\PeticionMultipago;
 use App\Observers\CajaObserver;
 use App\Observers\PagoObserver;
 use App\CalificacionPonderacion;
@@ -39,6 +40,7 @@ use App\Observers\TransferenceObserver;
 use Illuminate\Support\ServiceProvider;
 use App\Observers\AsignacionTareaObserver;
 use App\Observers\CuentasEfectivoObserver;
+use App\Observers\PeticionMultipagoObserver;
 use App\Observers\CalificacionPonderacionObserver;
 
 class AppServiceProvider extends ServiceProvider
@@ -51,23 +53,24 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         //
-        Caja::observe(CajaObserver::class);
-        Cliente::observe(ClienteObserver::class);
-        Empleado::observe(EmpleadoObserver::class);
         Alumno::observe(AlumnoObserver::class);
-        Inscripcion::observe(InscripcionObserver::class);
-        Seguimiento::observe(SeguimientoObserver::class);
+        AsistenciaR::observe(AsistenciaRObserver::class);
+        Adeudo::observe(AdeudoObserver::class);
         AsignacionTarea::observe(AsignacionTareaObserver::class);
         Aviso::observe(AvisoObserver::class);
         CuentasEfectivo::observe(CuentasEfectivoObserver::class);
-        Pago::observe(PagoObserver::class);
-        Prospecto::observe(ProspectoObserver::class);
-        Egreso::observe(EgresoObserver::class);
-        Transference::observe(TransferenceObserver::class);
-        Mueble::observe(MuebleObserver::class);
-        AsistenciaR::observe(AsistenciaRObserver::class);
         CalificacionPonderacion::observe(CalificacionPonderacionObserver::class);
-        Adeudo::observe(AdeudoObserver::class);
+        Caja::observe(CajaObserver::class);
+        Cliente::observe(ClienteObserver::class);
+        Empleado::observe(EmpleadoObserver::class);
+        Egreso::observe(EgresoObserver::class);
+        Inscripcion::observe(InscripcionObserver::class);
+        Pago::observe(PagoObserver::class);
+        PeticionMultipago::observe(PeticionMultipagoObserver::class);
+        Prospecto::observe(ProspectoObserver::class);
+        Mueble::observe(MuebleObserver::class);
+        Seguimiento::observe(SeguimientoObserver::class);
+        Transference::observe(TransferenceObserver::class);
         Totem::auth(function ($request) {
             // return true / false . For e.g.
             return Auth::check();
