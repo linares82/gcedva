@@ -27,11 +27,14 @@
             </thead>
             <tbody>
                 @foreach($registros as $registro)
+                    @php
+                        $beca=\App\AutorizacionBeca::where('cliente_id',$registro->cliente_id)->where('lectivo_id',$registro->lectivo_id)->first();                        
+                    @endphp
                     <tr>
                         <td>{{$registro->grado->rvoe}}</td><td>{{$registro->lectivo->ciclo_escolar}}</td>
-                        <td>{{$registro->lectivo->periodo_escolar}}</td><td></td><td>{{$registro->cliente->curp}}</td>
-                        <td>{{ $registro->cliente->matricula }}</td><td>{{ $registro->lectivo->inicio }}</td>
-                        <td>{{ $registro->stInscripcion->name }}</td><td>{{ $registro->cliente->ape_paterno }}</td>
+                        <td>{{$registro->lectivo->periodo_escolar}}</td><td>{{ $registro->grado->id_mapa }}</td><td>{{$registro->cliente->curp}}</td>
+                        <td> {{ $registro->mesAnioMatricula.sprintf("%03d", $registro->plantel_id).sprintf("%07d", $registro->cliente_id)  }}</td><td>{{ $registro->lectivo->inicio }}</td>
+                        <td>{{ $registro->st_inscripcion_id }}</td><td>{{ $registro->cliente->ape_paterno }}</td>
                         <td>{{ $registro->cliente->ape_materno }}</td><td>{{ $registro->cliente->nombre }} {{ $registro->cliente->nombre2 }}</td>
                         <td>{{ $registro->cliente->fec_nacimiento }}</td>
                         <td>
@@ -42,10 +45,10 @@
                             @endif
                         </td>
                         <td>
-                            @if(strlen($registro->cliente->estadoNacimiento->id)==1)
+                            @if(strlen(optional($registro->cliente->estadoNacimiento)->id)==1)
                             0{{ $registro->cliente->estadoNacimiento->id }}
                             @else
-                            {{ $registro->cliente->estadoNacimiento->id }}
+                            {{ optional($registro->cliente->estadoNacimiento)->id }}
                             @endif
                         </td>
                         <td>
@@ -61,20 +64,20 @@
                             @else
                             N
                             @endif
-                            </td><td>{{ optional($registro->cliente->discapacidad)->clave }}</td>
+                        </td><td>{{ optional($registro->cliente->discapacidad)->clave }}</td>
                         <td>
-                            @if(optional($registro)->st_beca_id==4)
-                            S 
-                            @else
+                            @if(optional($beca)->tipo_beca_id==0)
                             N
+                            @else
+                            S
                             @endif
                         </td>
                         <td>
-                            {{ optional($registro)->tipo_beca_id ? optional($registro)->tipo_beca_id : 0 }}
+                            {{ optional($beca)->tipo_beca_id ? optional($beca)->tipo_beca_id : 0 }}
                         </td>
-                        <td>2</td>
-                        <td>{{ optional($registro)->monto_mensualidad ? optional($registro)->monto_mensualidad : 0 }}</td>
-                        <td>{{ optional($registro)->monto_mensualidad ? (optional($registro)->monto_mensualidad * optional($registro)->mensualidad_sep) : "" }}</td>
+                        <td>{{ optional($beca)->tipo_beca_id ? optional($beca)->tipo_beca_id : 0 }}</td>
+                        <td>{{ optional($beca)->monto_mensualidad ? optional($beca)->monto_mensualidad : 0 }}</td>
+                        <td>{{ optional($beca)->monto_mensualidad ? (optional($beca)->monto_mensualidad * optional($beca)->mensualidad_sep) : "" }}</td>
                         <td>A</td>
                     </tr>
                     

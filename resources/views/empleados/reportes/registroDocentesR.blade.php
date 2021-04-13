@@ -98,9 +98,9 @@
                     <td>{{date_format(date_create($r->fec_nacimiento),'d-m-Y')}}</td>
                     <td>
                         @if($r->genero==1)
-                        Masculino
+                        H
                         @else
-                        Femenino
+                        M
                         @endif
                     </td>
                     <td>{{$r->estado_nacimiento}}</td><td>{{$r->pais_nacimiento}}</td><td>{{$r->nivel_estudio}}</td>

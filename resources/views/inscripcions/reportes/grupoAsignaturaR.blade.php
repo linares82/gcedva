@@ -23,11 +23,11 @@
             <tbody>
                 @foreach($registros as $registro)
                     <tr>
-                        <td>{{$registro->grado->rvoe}}</td>
-                        <td>{{$registro->lectivo->ciclo_escolar}}</td>
-                        <td>{{$registro->lectivo->periodo_escolar}}</td>
-                        <td>{{$registro->cliente->curp}}</td>
-                        <td>{{$registro->grupo->name}}</td>
+                        <td>{{$registro->rvoe}}</td>
+                        <td>{{$registro->ciclo_escolar}}</td>
+                        <td>{{$registro->periodo_escolar}}</td>
+                        <td>{{$registro->curp}}</td>
+                        <td>{{$registro->grupo_numero."0".$registro->orden.$registro->grupo_letra}}</td>
                         <td>A</td>
                     </tr>
                     

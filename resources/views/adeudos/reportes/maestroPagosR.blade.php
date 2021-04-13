@@ -152,7 +152,7 @@
             @foreach($lineas_detalle as $detalle)
                 @if($caja_aux<>$detalle['caja'])
                 @php
-                    $beca=App\AutorizacionBeca::where('cliente_id',$detalle['id'])
+                    $beca=App\AutorizacionBeca::where('cliente_id',$detalle['cliente_id'])
                     ->orderBy('autorizacion_becas.id','Desc')
                     ->where('autorizacion_becas.st_beca_id',4)
                     ->take(1)
@@ -171,12 +171,18 @@
                         $mesFin = Carbon\Carbon::createFromFormat('Y-m-d', $beca->lectivo->fin)->month;
                         $anioFin = Carbon\Carbon::createFromFormat('Y-m-d', $beca->lectivo->fin)->year;
                     }
+
+                    $pagos=\App\PAgo::where('caja_id',$detalle['caja'])->where('bnd_pagado',1)->get();
+                    $sum_pagos=0;
                     
+                    foreach($pagos as $pago){
+                        $sum_pagos=$sum_pagos+$pago->monto;
+                    }                    
                 @endphp
                 <tr>   
                 <td>{{++$consecutivo_linea}}</td>
                 <td>{{$detalle['razon']}}</td>
-                <td>{{$detalle['id']}}</td>
+                <td>{{$detalle['cliente_id']}}</td>
                 <td>{{ $detalle['nombre'] }} {{ $detalle['nombre2'] }} {{ $detalle['ape_paterno'] }} {{ $detalle['ape_materno'] }}</td>
                 <td> {{ $detalle['especialidad'] }} </td>
                 <td> {{ $detalle['seccion'] }} </td>
@@ -185,7 +191,7 @@
                 <td>{{ $detalle['fecha_pago'] }}</td>
                 <td>{{$detalle['concepto']}}</td>
                 @permission('adeudos.maestroPagosConMontos')
-                <td>{{$detalle['monto_pago']}}</td>
+                <td><!--@{{$detalle['monto_pago']}}-->{{ $sum_pagos }}</td>
                 @endpermission
                 <td>{{$detalle['consecutivo']}}</td>
                 @if(!is_null($beca)) 

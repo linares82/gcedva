@@ -37,6 +37,13 @@
             <span class="help-block">{{ $errors->first("lectivo_f") }}</span>
             @endif
         </div>
+        <div class="form-group col-md-6 @if($errors->has('oficiales_f')) has-error @endif">
+            <label for="oficiales_f-field">Solo Oficiales:</label>
+            {!! Form::select("oficiales_f", array(1=>'Todas', 2=>'Solo Oficiales'), null, array("class" => "form-control select_seguridad", "id" => "oficiales_f-field")) !!}
+            @if($errors->has("oficiales_f"))
+            <span class="help-block">{{ $errors->first("oficiales_f") }}</span>
+            @endif
+        </div>
         <!--
         <div class="form-group col-md-6 @if($errors->has('estatus_f')) has-error @endif">
             <label for="estatus_f-field">Estatus de:</label>

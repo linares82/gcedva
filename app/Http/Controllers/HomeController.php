@@ -105,13 +105,27 @@ class HomeController extends Controller
             ->whereRaw('DATEDIFF(fin_contrato, "' . Date("Y-m-d") . '") <= dias_alerta')
             ->orderBy('plantel_id')
             ->get();
+        
+            //$e = Empleado::where('user_id', '=', Auth::user()->id)->first();
+            //dd($e);
+            $avisos = Aviso::select('avisos.id', 'a.name', 'avisos.detalle', 'avisos.fecha', 's.cliente_id')
+                ->join('asuntos as a', 'a.id', '=', 'avisos.asunto_id')
+                ->join('seguimientos as s', 's.id', '=', 'avisos.seguimiento_id')
+                ->join('clientes as c', 'c.id', '=', 's.cliente_id')
+                ->where('avisos.activo', '=', '1')
+                ->where('avisos.fecha', '>=', Db::Raw('CURDATE()'))
+                ->where('c.empleado_id', '=', $empleado->id)
+                ->orderBy('avisos.fecha')
+                ->get();
+        
         //dd($contratosVencidos->toArray());
 
         return view('home', compact(
             'becas',
             'bajas',
             'plantels',
-            'contratosVencidos'
+            'contratosVencidos',
+            'avisos'
         ));
     }
 

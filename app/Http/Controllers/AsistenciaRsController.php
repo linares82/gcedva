@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
-
-use App\AsistenciaR;
-use App\AsignacionAcademica;
-use App\Inscripcion;
-use App\Hacademica;
-use Illuminate\Http\Request;
 use Auth;
-use App\Http\Requests\updateAsistenciaR;
+use Carbon\Carbon;
+
+use App\Hacademica;
+use App\AsistenciaR;
+use App\Inscripcion;
+use App\Http\Requests;
+use App\AsignacionAcademica;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\createAsistenciaR;
+use App\Http\Requests\updateAsistenciaR;
 
 class AsistenciaRsController extends Controller
 {
@@ -83,106 +84,116 @@ class AsistenciaRsController extends Controller
 		//dd($input);
 		$asignacionAcademica = AsignacionAcademica::find($input['asignacion_academica_id']);
 		$as = $asignacionAcademica;
+		$dias_validos = array();
+		foreach ($asignacionAcademica->horarios as $horario) {
+			array_push($dias_validos, $horario->dia_id);
+		}
+		//dd($dias_validos);
 
 		if (isset($input['fecha'])) {
 			$hoy = strtotime(date('Y-m-d'));
+			$hoyCarbon = Carbon::createFromFormat('Y-m-d', $input['fecha']);
+			//dd($hoyCarbon->dayOfWeekIso);
 			if ((strtotime($input['fecha']) == $hoy && strtotime($as->fec_inicio) <= strtotime($input['fecha']) && strtotime($as->fec_fin) >= strtotime($input['fecha']))
 				or isset($input['excepcion'])
 			) {
-				$asistencias = AsistenciaR::select('asistencia_rs.*','c.nombre','c.nombre2','c.ape_paterno','c.ape_materno')
-					->where('fecha', '=', $input['fecha'])
-					->join('clientes as c','c.id','=','asistencia_rs.cliente_id')
-					->where('asignacion_academica_id', '=', $input['asignacion_academica_id'])
-					//->orderBy('cliente_id')
-					->whereNull('c.deleted_at')
-					->orderBy('c.ape_paterno')
-                    ->orderBy('c.ape_materno')
-                    ->orderBy('c.nombre')
-                    ->orderBy('c.nombre2')
-					->get();
-
-				$inscripciones = Hacademica::where('hacademicas.grupo_id', '=', $asignacionAcademica->grupo_id)
-					->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
-					->where('hacademicas.lectivo_id', '=', $asignacionAcademica->lectivo_id)
-					->where('hacademicas.plantel_id', '=', $asignacionAcademica->plantel_id)
-					->where('hacademicas.materium_id', $asignacionAcademica->materium_id)
-					->orderBy('hacademicas.cliente_id')
-					->whereNull('hacademicas.deleted_at')
-					->whereNull('i.deleted_at')
-					->get();
-				//dd($asistencias);
-
-				if ($asistencias->isEmpty()) {
-					foreach ($inscripciones as $i) {
-						if ($i->cliente->st_cliente_id <> 3) {
-							$asistencia['asignacion_academica_id'] = $input['asignacion_academica_id'];
-							$asistencia['fecha'] = $input['fecha'];
-							$asistencia['cliente_id'] = $i->cliente_id;
-							$asistencia['est_asistencia_id'] = 1;
-							$asistencia['usu_alta_id'] = Auth::user()->id;
-							$asistencia['usu_mod_id'] = Auth::user()->id;
-							//dd($asistencia);
-							AsistenciaR::create($asistencia);
-						}
-
-
-						//verifica adeudos y cambia estatus 
-
-					}
-					$asignacion_academica_id = $input['asignacion_academica_id'];
-					$asistencias = AsistenciaR::select('asistencia_rs.*','c.nombre','c.nombre2','c.ape_paterno','c.ape_materno')
+				
+				if (in_array($hoyCarbon->dayOfWeekIso, $dias_validos)) {
+					$asistencias = AsistenciaR::select('asistencia_rs.*', 'c.nombre', 'c.nombre2', 'c.ape_paterno', 'c.ape_materno')
 						->where('fecha', '=', $input['fecha'])
-						->join('clientes as c','c.id','=','asistencia_rs.cliente_id')
+						->join('clientes as c', 'c.id', '=', 'asistencia_rs.cliente_id')
 						->where('asignacion_academica_id', '=', $input['asignacion_academica_id'])
+						//->orderBy('cliente_id')
 						->whereNull('c.deleted_at')
 						->orderBy('c.ape_paterno')
 						->orderBy('c.ape_materno')
 						->orderBy('c.nombre')
 						->orderBy('c.nombre2')
 						->get();
-					return view('asistenciaRs.buscar', compact('asignacion_academica_id', 'asistencias', 'as'))
-						->with('list', AsistenciaR::getListFromAllRelationApps());
-				} elseif (count($asistencias) <> count($inscripciones)) {
-					foreach ($inscripciones as $i) {
-						$encontrado = 0;
-						foreach ($asistencias as $a) {
-							if ($a->cliente_id == $i->cliente_id) {
-								$encontrado = 1;
-							}
-						}
-						if ($encontrado == 0) {
-							$asistencia['asignacion_academica_id'] = $input['asignacion_academica_id'];
-							$asistencia['fecha'] = $input['fecha'];
-							$asistencia['cliente_id'] = $i->cliente_id;
-							if (optional($i->cliente)->st_cliente_id == 25) {
-								$asistencia['est_asistencia_id'] = 2;
-							} else {
+
+					$inscripciones = Hacademica::where('hacademicas.grupo_id', '=', $asignacionAcademica->grupo_id)
+						->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
+						->where('hacademicas.lectivo_id', '=', $asignacionAcademica->lectivo_id)
+						->where('hacademicas.plantel_id', '=', $asignacionAcademica->plantel_id)
+						->where('hacademicas.materium_id', $asignacionAcademica->materium_id)
+						->orderBy('hacademicas.cliente_id')
+						->whereNull('hacademicas.deleted_at')
+						->whereNull('i.deleted_at')
+						->get();
+					//dd($asistencias);
+
+					if ($asistencias->isEmpty()) {
+						foreach ($inscripciones as $i) {
+							if ($i->cliente->st_cliente_id <> 3) {
+								$asistencia['asignacion_academica_id'] = $input['asignacion_academica_id'];
+								$asistencia['fecha'] = $input['fecha'];
+								$asistencia['cliente_id'] = $i->cliente_id;
 								$asistencia['est_asistencia_id'] = 1;
+								$asistencia['usu_alta_id'] = Auth::user()->id;
+								$asistencia['usu_mod_id'] = Auth::user()->id;
+								//dd($asistencia);
+								AsistenciaR::create($asistencia);
 							}
 
-							$asistencia['usu_alta_id'] = Auth::user()->id;
-							$asistencia['usu_mod_id'] = Auth::user()->id;
-							//dd($asistencia);
-							AsistenciaR::create($asistencia);
+
+							//verifica adeudos y cambia estatus 
+
 						}
+						$asignacion_academica_id = $input['asignacion_academica_id'];
+						$asistencias = AsistenciaR::select('asistencia_rs.*', 'c.nombre', 'c.nombre2', 'c.ape_paterno', 'c.ape_materno')
+							->where('fecha', '=', $input['fecha'])
+							->join('clientes as c', 'c.id', '=', 'asistencia_rs.cliente_id')
+							->where('asignacion_academica_id', '=', $input['asignacion_academica_id'])
+							->whereNull('c.deleted_at')
+							->orderBy('c.ape_paterno')
+							->orderBy('c.ape_materno')
+							->orderBy('c.nombre')
+							->orderBy('c.nombre2')
+							->get();
+						return view('asistenciaRs.buscar', compact('asignacion_academica_id', 'asistencias', 'as'))
+							->with('list', AsistenciaR::getListFromAllRelationApps());
+					} elseif (count($asistencias) <> count($inscripciones)) {
+						foreach ($inscripciones as $i) {
+							$encontrado = 0;
+							foreach ($asistencias as $a) {
+								if ($a->cliente_id == $i->cliente_id) {
+									$encontrado = 1;
+								}
+							}
+							if ($encontrado == 0) {
+								$asistencia['asignacion_academica_id'] = $input['asignacion_academica_id'];
+								$asistencia['fecha'] = $input['fecha'];
+								$asistencia['cliente_id'] = $i->cliente_id;
+								if (optional($i->cliente)->st_cliente_id == 25) {
+									$asistencia['est_asistencia_id'] = 2;
+								} else {
+									$asistencia['est_asistencia_id'] = 1;
+								}
+
+								$asistencia['usu_alta_id'] = Auth::user()->id;
+								$asistencia['usu_mod_id'] = Auth::user()->id;
+								//dd($asistencia);
+								AsistenciaR::create($asistencia);
+							}
+						}
+						$asignacion_academica_id = $input['asignacion_academica_id'];
+						$asistencias = AsistenciaR::select('asistencia_rs.*', 'c.nombre', 'c.nombre2', 'c.ape_paterno', 'c.ape_materno')
+							->where('fecha', '=', $input['fecha'])
+							->join('clientes as c', 'c.id', '=', 'asistencia_rs.cliente_id')
+							->where('asignacion_academica_id', '=', $input['asignacion_academica_id'])
+							->whereNull('c.deleted_at')
+							->orderBy('c.ape_paterno')
+							->orderBy('c.ape_materno')
+							->orderBy('c.nombre')
+							->orderBy('c.nombre2')
+							->get();
+						return view('asistenciaRs.buscar', compact('asignacion_academica_id', 'asistencias', 'as'))
+							->with('list', AsistenciaR::getListFromAllRelationApps());
+					} else {
+						$asignacion_academica_id = $input['asignacion_academica_id'];
+						return view('asistenciaRs.buscar', compact('asignacion_academica_id', 'asistencias', 'as'))
+							->with('list', AsistenciaR::getListFromAllRelationApps());
 					}
-					$asignacion_academica_id = $input['asignacion_academica_id'];
-					$asistencias = AsistenciaR::select('asistencia_rs.*','c.nombre','c.nombre2','c.ape_paterno','c.ape_materno')
-						->where('fecha', '=', $input['fecha'])
-						->join('clientes as c','c.id','=','asistencia_rs.cliente_id')
-						->where('asignacion_academica_id', '=', $input['asignacion_academica_id'])
-						->whereNull('c.deleted_at')
-						->orderBy('c.ape_paterno')
-						->orderBy('c.ape_materno')
-						->orderBy('c.nombre')
-						->orderBy('c.nombre2')
-						->get();
-					return view('asistenciaRs.buscar', compact('asignacion_academica_id', 'asistencias', 'as'))
-						->with('list', AsistenciaR::getListFromAllRelationApps());
-				} else {
-					$asignacion_academica_id = $input['asignacion_academica_id'];
-					return view('asistenciaRs.buscar', compact('asignacion_academica_id', 'asistencias', 'as'))
-						->with('list', AsistenciaR::getListFromAllRelationApps());
 				}
 			}
 		}

@@ -145,7 +145,7 @@ class PeriodoEstudiosController extends Controller
      * @param  int  $id
      * @return Response
      */
-    public function destroy($id, PeriodoEstudios $periodoEstudios)
+    public function destroy($id, PeriodoEstudio $periodoEstudios)
     {
         $periodoEstudios = $periodoEstudios->find($id);
         $periodoEstudios->delete();
@@ -761,16 +761,21 @@ class PeriodoEstudiosController extends Controller
             'l.ciclo_escolar',
             'l.periodo_escolar',
             'gru.name as grupo',
-            'pe.orden',
+            DB::raw('SUBSTR(gru.name,-1) as grupo_letra, SUBSTR(gru.name,1,1) as grupo_numero'),
+            'm.orden as orden_materia',
+            //'pe.orden as orden_periodo_estudios',
             'j.name as jornada',
             'm.codigo as clave',
             'g.id_mapa',
             'empleados.curp'
+            //'pe.id as periodo_estudio',
+            //'m.id as materia_id'
         )
             ->leftJoin('asignacion_academicas as aa', 'aa.docente_oficial_id', '=', 'empleados.id')
             ->leftJoin('lectivos as l', 'l.id', '=', 'aa.lectivo_id')
             ->leftJoin('materia as m', 'm.id', '=', 'aa.materium_id')
             ->leftJoin('hacademicas as h', 'h.materium_id', '=', 'm.id')
+            ->leftJoin('clientes as cli','cli.id','=','h.cliente_id')
             ->leftJoin('grupos as gru', 'gru.id', '=', 'h.grupo_id')
             ->leftJoin('jornadas as j', 'j.id', '=', 'gru.jornada_id')
             ->leftJoin('inscripcions as i', 'i.id', '=', 'h.inscripcion_id')
@@ -781,12 +786,20 @@ class PeriodoEstudiosController extends Controller
             ->leftJoin('grados as g', 'g.id', '=', 'h.grado_id')
             ->where('aa.lectivo_id', $datos['lectivo_f'])
             ->where('aa.plantel_id', $datos['plantel_f'])
+            ->where('m.bnd_oficial', 1)
+            //->whereNotIn('cli.st_cliente_id', array(3,26))
             //->whereIn('empleados.st_empleado_id', $datos['estatus_f'])
             //->where('empleados.puesto_id', 3)
             ->WhereNull('empleados.deleted_at')
             ->WhereNull('i.deleted_at')
             ->WhereNull('h.deleted_at')
             ->WhereNull('aa.deleted_at')
+            ->WhereNull('m.deleted_at')
+            ->WhereNull('pe.deleted_at')
+            ->WhereNull('g.deleted_at')
+            ->orderBy('grupo_numero')
+            ->orderBy('grupo_letra')
+            ->orderBy('m.orden')
             ->distinct()
             ->get();
         //dd($registros);

@@ -8,6 +8,7 @@ $baseDir = dirname($vendorDir);
 return array(
     'AddAbreviaturaToEstadosTable' => $baseDir . '/database/migrations/2020_06_23_113026_add_abreviatura_to_estados_table.php',
     'AddAbreviaturaToMeseTable' => $baseDir . '/database/migrations/2020_08_27_165953_add_abreviatura_to_mese_table.php',
+    'AddActaFinalToCalificacionsTable' => $baseDir . '/database/migrations/2021_04_12_143147_add_acta_final_to_calificacions_table.php',
     'AddApiTokenClientesTable' => $baseDir . '/database/migrations/2020_02_13_093137_add_api_token_clientes_table.php',
     'AddApiTokenUsersTable' => $baseDir . '/database/migrations/2020_02_12_154521_add_api_token_users_table.php',
     'AddArchivoTransferencesTable' => $baseDir . '/database/migrations/2019_10_30_113553_add_archivo_transferences_table.php',
@@ -63,6 +64,7 @@ return array(
     'AddCuestionarioIdClientesIndexTable' => $baseDir . '/database/migrations/2018_02_14_184921_add_cuestionario_id_clientes_index_table.php',
     'AddCuestionarioIdClientesTable' => $baseDir . '/database/migrations/2018_02_14_184825_add_cuestionario_id_clientes_table.php',
     'AddCveEstatalPlantelsTable' => $baseDir . '/database/migrations/2019_08_23_092526_add_cve_estatal_plantels_table.php',
+    'AddCveInegiToEstadosTable' => $baseDir . '/database/migrations/2021_04_05_094833_add_cve_inegi_to_estados_table.php',
     'AddCveMultipagosToCajaConceptosTable' => $baseDir . '/database/migrations/2020_06_17_101325_add_cve_multipagos_to_caja_conceptos_table.php',
     'AddCveMultipagosToFormaPagosTable' => $baseDir . '/database/migrations/2020_07_29_122100_add_cve_multipagos_to_forma_pagos_table.php',
     'AddCveMultipagosToPlantelsTable' => $baseDir . '/database/migrations/2020_06_17_101202_add_cve_multipagos_to_plantels_table.php',
@@ -208,6 +210,7 @@ return array(
     'Attribute' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
     'CajaConceptoReglaRecargo' => $baseDir . '/database/migrations/2020_03_27_174049_caja_concepto_regla_recargo.php',
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
+    'CreateActaFinalsTable' => $baseDir . '/database/migrations/2021_04_12_142902_create_acta_finals_table.php',
     'CreateActividadEmpresasEmpresasTable' => $baseDir . '/database/migrations/2018_01_09_111135_create_actividad_empresas_empresas_table.php',
     'CreateActividadEmpresasTable' => $baseDir . '/database/migrations/2018_01_09_111134_create_actividad_empresas_table.php',
     'CreateAdeudoPagoOnLinesTable' => $baseDir . '/database/migrations/2020_07_27_165713_create_adeudo_pago_on_lines_table.php',

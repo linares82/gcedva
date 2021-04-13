@@ -1937,21 +1937,10 @@ class AdeudosController extends Controller
         $lineas_procesadas = array();
         $lineas_detalle = array();
         foreach ($datos['plantel_f'] as $plantel) {
-
-            $registros_totales_aux = Adeudo::join('clientes as c', 'c.id', '=', 'adeudos.cliente_id')
-                ->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
-                ->join('seguimientos as s', 's.cliente_id', '=', 'c.id')
-                ->join('st_seguimientos as sts', 'sts.id', '=', 's.st_seguimiento_id')
-                ->join('caja_conceptos as adeudo_concepto', 'adeudo_concepto.id', '=', 'adeudos.caja_concepto_id')
-                ->join('combinacion_clientes as ccli', 'ccli.id', '=', 'adeudos.combinacion_cliente_id')
-                ->join('especialidads as esp', 'esp.id', 'ccli.especialidad_id')
-                ->join('grados as g', 'g.id', '=', 'ccli.grado_id')
-                ->join('turnos as t', 't.id', '=', 'ccli.turno_id');
-
             $cajas_sin_adeudos = Caja::select(
-                'p.id',
+                'p.id as plantel_id',
                 'p.razon',
-                'c.id',
+                'c.id as cliente_id',
                 'c.nombre',
                 'c.nombre2',
                 'c.ape_paterno',
@@ -1998,10 +1987,19 @@ class AdeudosController extends Controller
                 ->whereIn('cc.id', $datos['concepto_f'])
                 ->whereNull('p.deleted_at')
                 ->whereNull('cajas.deleted_at')
-                ->whereNull('ccli.deleted_at');
-            //->get();
-            //dd($cajas_sin_adeudos->toArray());
-            $registros_totales_aux->join('caja_lns as cln', 'cln.adeudo_id', '=', 'adeudos.id')
+                ->whereNull('ccli.deleted_at')
+                ->orderBy('c.id');
+
+            $registros_totales_aux = Adeudo::join('clientes as c', 'c.id', '=', 'adeudos.cliente_id')
+                ->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
+                ->join('seguimientos as s', 's.cliente_id', '=', 'c.id')
+                ->join('st_seguimientos as sts', 'sts.id', '=', 's.st_seguimiento_id')
+                ->join('caja_conceptos as adeudo_concepto', 'adeudo_concepto.id', '=', 'adeudos.caja_concepto_id')
+                ->join('combinacion_clientes as ccli', 'ccli.id', '=', 'adeudos.combinacion_cliente_id')
+                ->join('especialidads as esp', 'esp.id', 'ccli.especialidad_id')
+                ->join('grados as g', 'g.id', '=', 'ccli.grado_id')
+                ->join('turnos as t', 't.id', '=', 'ccli.turno_id')
+                ->join('caja_lns as cln', 'cln.adeudo_id', '=', 'adeudos.id')
                 ->join('cajas as caj', 'caj.id', '=', 'adeudos.caja_id')
                 ->join('pagos as pag', 'pag.caja_id', '=', 'caj.id')
                 ->join('plantels as p', 'p.id', '=', 'caj.plantel_id')
@@ -2012,9 +2010,9 @@ class AdeudosController extends Controller
                 ->whereNull('cln.deleted_at')
                 ->whereNull('pag.deleted_at')
                 ->select(
-                    'p.id',
+                    'p.id as plantel_id',
                     'p.razon',
-                    'c.id',
+                    'c.id as cliente_id',
                     'c.nombre',
                     'c.nombre2',
                     'c.ape_paterno',
@@ -2040,13 +2038,15 @@ class AdeudosController extends Controller
                     'adeudos.pagado_bnd',
                     't.name as turno',
                     'pag.monto as monto_pago'
+                    //DB::raw('(select sum(pp.monto) as monto_pago from pagos as pp where pp.caja_id=caj.id and pp.deleted_at is null and pp.bnd_pagado=1)')
                 )
                 ->whereNull('caj.deleted_at')
                 ->whereNull('ccli.deleted_at')
                 ->where('adeudos.pagado_bnd', 1)
+                ->orderBy('c.id')
                 ->union($cajas_sin_adeudos);
 
-            $registros_totales = $registros_totales_aux->where('p.id', $plantel)
+            $registros_totales1 = $registros_totales_aux->where('p.id', $plantel)
 
                 ->whereIn('adeudos.caja_concepto_id', $datos['concepto_f'])
                 ->whereNull('adeudos.deleted_at')
@@ -2057,51 +2057,60 @@ class AdeudosController extends Controller
                 //->orderBy('p.id')
                 ->orderBy('seccion')
                 ->orderBy('concepto_id')
+                ->orderBy('cliente_id')
+                //->where('c.id',6072)
                 ->get();
-            //dd($registros_totales->toArray());
+            //dd($registros_totales1->toArray());
+            $registros_totales=$registros_totales1;
+            $registros_totales2=$registros_totales1;
 
             $calculo = [
                 'plantel' => "", 'seccion' => "", 'concepto' => "", 'clientes_activos' => 0, 'clientes_pagados' => 0, 'total_monto_pagado' => 0, 'suma_deudores' => 0,
                 'monto_deuda' => 0, 'porcentaje_pagado' => 0, 'deudores' => 0, 'bajas_pagadas' => 0, 'porcentaje_deudores' => 0,
             ];
 
+            foreach ($registros_totales as $registro) {
+                
+                if (
+                    is_null($registro->borrado_c) and is_null($registro->borrado_cln) and
+                    $registro->st_cliente_id <> 3
+                ) {
+                    array_push($lineas_detalle, $registro->toArray());
+                }
+            }
+            //dd($lineas_detalle);
+
             //recorrido linea de totales
+            $caja_aux1="";
+            $caja_aux2="";
             foreach ($registros_totales as $registro) {
                 //array_push($lineas_detalle, (array) $registro);
                 $fecha_aux = Carbon::createFromFormat('Y-m-d', $registro->fecha_pago)->addDay(9);
                 $hoy = Carbon::createFromFormat('Y-m-d', date('Y-m-d'));
                 //dd($hoy);
 
-
-                if ($registro->consecutivo == 1154) {
-                    //dd($registro->toArray());
-                }
-
                 $calculo['plantel'] = $registro->razon;
 
                 if (
                     is_null($registro->borrado_c) and is_null($registro->borrado_cln) and
                     $registro->st_cliente_id <> 3
-                    /*($registro->st_cliente_id == 2 or
-                        $registro->st_cliente_id == 4 or
-                        $registro->st_cliente_id == 20 or
-                        $registro->st_cliente_id == 22 or
-                        $registro->st_cliente_id == 24 or
-                        $registro->st_cliente_id == 25)*/
+                    
                 ) {
-                    //Armado de detalle
-                    if ($registro->caja_id == 0 and $fecha_aux->lessThan($hoy) and $registro->mensualidad == 1) {
-                        $registro->adeudo_planeado = $registro->adeudo_planeado + ($registro->adeudo_planeado * .10);
-                    }
-                    array_push($lineas_detalle, $registro->toArray());
-
-
-
+                   
                     //Fin Armado de detalle
-                    $calculo['clientes_activos']++;
+                    if($caja_aux1<>$registro->caja){
+                        $calculo['clientes_activos']++;
+                    }
+                    $caja_aux1=$registro->caja;
+                    
+                    //$calculo['clientes_activos']++;
                     $calculo['concepto'] = "Total";
                     if ($registro->pagado_bnd == 1) {
-                        $calculo['clientes_pagados'] = $calculo['clientes_pagados'] + $registro->pagado_bnd;
+                        if($caja_aux2<>$registro->caja){
+                            $calculo['clientes_pagados'] = $calculo['clientes_pagados'] + $registro->pagado_bnd;
+                        }
+                        $caja_aux2=$registro->caja;
+                        
                         $calculo['total_monto_pagado'] = $calculo['total_monto_pagado'] + $registro->monto_pago;
                     } elseif ($registro->pagado_bnd == 0) {
                         $calculo['suma_deudores'] = $calculo['suma_deudores'] + 1;
@@ -2123,7 +2132,7 @@ class AdeudosController extends Controller
                 }
             }
             array_push($lineas_procesadas, $calculo);
-
+            //dd($lineas_procesadas);
 
             $calculo = [
                 'plantel' => "", 'seccion' => "", 'concepto' => "", 'clientes_activos' => 0, 'clientes_pagados' => 0, 'total_monto_pagado' => 0, 'suma_deudores' => 0,
@@ -2132,9 +2141,9 @@ class AdeudosController extends Controller
 
             $concepto_aux = "";
             $seccion_aux = "";
+            $caja_aux1="";
+            $caja_aux2="";
             foreach ($registros_totales as $registro) {
-
-
                 if (
                     is_null($registro->borrado_c) and is_null($registro->borrado_cln) and
                     $registro->st_cliente_id <> 3
@@ -2154,14 +2163,25 @@ class AdeudosController extends Controller
                     $calculo['plantel'] = $registro->razon;
                     $calculo['seccion'] = $registro->seccion;
                     $calculo['concepto'] = $registro->concepto;
-                    $calculo['clientes_activos']++;
+                    if($caja_aux1<>$registro->caja){
+                        $calculo['clientes_activos']++;
+                    }
+                    $caja_aux1=$registro->caja;
                     if ($registro->pagado_bnd == 1) {
-                        $calculo['clientes_pagados'] = $calculo['clientes_pagados'] + $registro->pagado_bnd;
+                        if($caja_aux2<>$registro->caja){
+                            $calculo['clientes_pagados'] = $calculo['clientes_pagados'] + $registro->pagado_bnd;
+                        }
+                        $caja_aux2=$registro->caja;
+                        
                         $calculo['total_monto_pagado'] = $calculo['total_monto_pagado'] + $registro->monto_pago;
                     } elseif ($registro->pagado_bnd == 0) {
                         $calculo['suma_deudores'] = $calculo['suma_deudores'] + 1;
                         $calculo['monto_deuda'] = $calculo['monto_deuda'] + $registro->adeudo_planeado;
                     }
+                    if($calculo['seccion']=="LANI"){
+                        //dd($calculo['clientes_pagados'] ."-". $calculo['clientes_activos']);
+                    }
+                    
                     $calculo['porcentaje_pagado'] = ($calculo['clientes_pagados'] * 100) / $calculo['clientes_activos'];
                     $calculo['deudores'] = $calculo['clientes_activos'] - $calculo['clientes_pagados'];
                     $calculo['porcentaje_deudores'] = ($calculo['deudores'] * 100) / $calculo['clientes_activos'];
@@ -2180,60 +2200,8 @@ class AdeudosController extends Controller
                 }
             }
             array_push($lineas_procesadas, $calculo);
-
-            /*
-            $conceptos = array();
-            foreach ($registros_totales as $registro) {
-                if (!array_search($registro->concepto_id, $conceptos)) {
-
-                    $conceptos[$registro->concepto_id] = $registro->concepto;
-                }
-            }
-
-            //recorrido linea de totales por concepto
-            foreach ($conceptos as $id => $concepto) {
-                
-                $calculo = [
-                    'plantel' => "", 'concepto' => $concepto, 'clientes_activos' => 0, 'clientes_pagados' => 0, 'total_monto_pagado' => 0, 'suma_deudores' => 0,
-                    'monto_deuda' => 0, 'porcentaje_pagado' => 0, 'deudores' => 0, 'bajas_pagadas' => 0, 'porcentaje_deudores' => 0,
-                ];
-                foreach ($registros_totales as $registro) {
-                
-                    if ($registro->concepto_id == $id) {
-                        $calculo['plantel'] = $registro->razon;
-                        if (
-                            is_null($registro->borrado_c) and is_null($registro->borrado_cln) and
-                            $registro->st_cliente_id <> 3
-                            
-                        ) {
-                            $calculo['concepto'] = $concepto;
-                            $calculo['clientes_activos']++;
-                            if ($registro->pagado_bnd == 1) {
-                                $calculo['clientes_pagados'] = $calculo['clientes_pagados'] + $registro->pagado_bnd;
-                                $calculo['total_monto_pagado'] = $calculo['total_monto_pagado'] + $registro->monto_pago;
-                            } elseif ($registro->pagado_bnd == 0) {
-                                $calculo['suma_deudores'] = $calculo['suma_deudores'] + 1;
-                                $calculo['monto_deuda'] = $calculo['monto_deuda'] + $registro->adeudo_planeado;
-                            }
-                            $calculo['porcentaje_pagado'] = ($calculo['clientes_pagados'] * 100) / $calculo['clientes_activos'];
-                            $calculo['deudores'] = $calculo['clientes_activos'] - $calculo['clientes_pagados'];
-                            $calculo['porcentaje_deudores'] = ($calculo['deudores'] * 100) / $calculo['clientes_activos'];
-                        } elseif (is_null($registro->borrado_c) and is_null($registro->borrado_cln) and $registro->st_cliente_id == 3) {
-                            $baja = HistoriaCliente::where('cliente_id', $registro->id)
-                                ->where('evento_cliente_id', 2)
-                                ->where('fecha', '>=', $datos['fecha_f'])
-                                ->where('fecha', '<=', $datos['fecha_t'])
-                                ->first();
-
-
-                            if (is_array($baja) and $registro->caja > 0) {
-                                $calculo['bajas_pagadas'] = $calculo['bajas_pagadas'] + 1;
-                            }
-                        }
-                    }
-                }
-                array_push($lineas_procesadas, $calculo);
-            }*/
+            //dd($lineas_detalle);
+            
         }
 
         return view('adeudos.reportes.maestroPagosR', compact('lineas_procesadas', 'pagos', 'lineas_detalle', 'datos'));

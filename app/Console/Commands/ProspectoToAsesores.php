@@ -42,6 +42,7 @@ class ProspectoToAsesores extends Command
     public function handle()
     {
         $prospectos=Prospecto::where('st_prospecto_id',1)->get();
+        dd(date('Y-m-d'));
         $hoy=Carbon::createFromFormat('Y-m-d',date('Y-m-d'));
         
         foreach($prospectos as $prospecto){

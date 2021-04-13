@@ -18,7 +18,7 @@ class Calificacion extends Model
     } 
 
 	//Mass Assignment
-	protected $fillable = ['hacademica_id','examen_id','calificacion','fecha', 'tpo_examen_id','reporte_bnd','usu_alta_id','usu_mod_id'];
+	protected $fillable = ['hacademica_id','examen_id','calificacion','fecha', 'tpo_examen_id','reporte_bnd','usu_alta_id','usu_mod_id','acta_final_id'];
 
 	public function usu_alta() {
 		return $this->hasOne('App\User', 'id', 'usu_alta_id');

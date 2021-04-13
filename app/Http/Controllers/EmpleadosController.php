@@ -635,12 +635,15 @@ class EmpleadosController extends Controller
 
     public function registroDocentes()
     {
-        return view('empleados.reportes.registroDocentes')->with('list', Empleado::getListFromAllRelationApps());;
+        $lectivos=Lectivo::pluck('name','id');
+        return view('empleados.reportes.registroDocentes', compact('lectivos'))
+        ->with('list', Empleado::getListFromAllRelationApps());;
     }
 
     public function registroDocentesR(Request $request)
     {
         $datos = $request->all();
+        //dd($datos);
         $registros = Empleado::select(
             'curp',
             'ape_paterno',
@@ -648,9 +651,9 @@ class EmpleadosController extends Controller
             'nombre',
             'fec_nacimiento',
             'genero',
-            'est_nacimiento.abreviatura as estado_nacimiento',
+            'est_nacimiento.id as estado_nacimiento',
             'pais_nacimiento',
-            'ne.name as nivel_estudio',
+            'ne.id as nivel_estudio',
             'profesion',
             'profordems',
             'fec_inicio_experiencia_academicas',
@@ -658,10 +661,14 @@ class EmpleadosController extends Controller
         )
             ->join('nivel_estudios as ne', 'ne.id', '=', 'empleados.nivel_estudio_id')
             ->join('estados as est_nacimiento', 'est_nacimiento.id', '=', 'empleados.estado_nacimiento_id')
-            ->where('empleados.plantel_id', $datos['plantel_f'])
-            ->whereIn('empleados.st_empleado_id', $datos['estatus_f'])
+            ->join('asignacion_academicas as aa','aa.docente_oficial_id','=','empleados.id')
+            ->where('aa.plantel_id', $datos['plantel_f'])
+            //->whereIn('empleados.st_empleado_id', $datos['estatus_f'])
+            ->where('aa.lectivo_id',$datos['lectivo_f'])
             ->where('empleados.puesto_id', 3)
+            //->where('empleados.bnd_oficial', 1)
             ->WhereNull('empleados.deleted_at')
+            ->distinct()
             ->get();
         //dd($registros->toArray());
         return view('empleados.reportes.registroDocentesR', compact('registros'));
@@ -678,7 +685,7 @@ class EmpleadosController extends Controller
     public function registroInfDocentesR(Request $request)
     {
         $datos = $request->all();
-        $registros = Empleado::select(
+        $registros_aux = Empleado::select(
             'g.rvoe',
             'empleados.curp',
             'm.codigo as clave',
@@ -696,7 +703,11 @@ class EmpleadosController extends Controller
             ->where('aa.plantel_id', $datos['plantel_f'])
             //->whereIn('empleados.st_empleado_id', $datos['estatus_f'])
             //->where('empleados.puesto_id', 3)
-            ->WhereNull('empleados.deleted_at')
+            ->WhereNull('empleados.deleted_at');
+            if($datos['oficiales_f']==2){
+                $registros_aux->where('bnd_oficial',1);
+            }
+            $registros=$registros_aux
             ->distinct()
             ->get();
         //dd($registros->toArray());

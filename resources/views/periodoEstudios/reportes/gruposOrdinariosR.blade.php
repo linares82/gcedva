@@ -93,7 +93,9 @@
                 <body>
                     @foreach($registros as $r)
                     <tr>
-                    <td>{{$r->rvoe}}</td><td>{{$r->ciclo_escolar}}</td><td>{{$r->periodo_escolar}}</td><td>{{$r->grupo}}</td><td>{{$r->orden}}</td><td>{{$r->jornada}}</td>
+                    <td>{{$r->rvoe}}</td><td>{{$r->ciclo_escolar}}</td><td>{{$r->periodo_escolar}}</td>
+                    <td>{{$r->grupo_numero}}0{{ $r->orden_materia }}{{$r->grupo_letra}}</td><td>{{$r->grupo_numero}}</td>
+                    <td>1 </td>
                     <td>{{$r->clave}}</td><td>{{$r->id_mapa}}</td><td>{{$r->curp}}</td><td>A</td>
                     </tr>
                 @endforeach    
