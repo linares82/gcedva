@@ -56,8 +56,20 @@
                         <span class="help-block">{{ $errors->first("materium_id") }}</span>
                        @endif
                     </div>
+                    <div class="row">
+                        <hr>
+                    </div>
+                    
 
-                    <div class="form-group col-md-4 @if($errors->has('examen_id')) has-error @endif" style="clear:left;">
+                    <div class="form-group col-md-4 @if($errors->has('lectivo_id')) has-error @endif">
+                        <label for="lectivo_id-field">Lectivo</label>
+                        {!! Form::select("lectivo_id", $lectivos, null, array("class" => "form-control select_seguridad", "id" => "lectivo_id-field")) !!}
+                        @if($errors->has("lectivo_id"))
+                         <span class="help-block">{{ $errors->first("lectivo_id") }}</span>
+                        @endif
+                     </div>
+
+                    <div class="form-group col-md-4 @if($errors->has('examen_id')) has-error @endif" >
                        <label for="examen_id-field">Examen</label>
                        {!! Form::select("examen_id", $examen, null, array("class" => "form-control select_seguridad", "id" => "examen_id-field")) !!}
                        @if($errors->has("examen_id"))
@@ -91,7 +103,8 @@
                 <div class="row">
                 </div>
                 <div class="well well-sm">
-                    <button type="submit" class="btn btn-primary">Procesar y Crear nuevo</button>
+                    <button type="button" class="btn btn-danger" id="btnContarExtras">Contar extras por lectivo</button>
+                    <button type="submit" class="btn btn-primary " id="btnSubmitDatos" disabled=true>Procesar y Crear nuevo</button>
                 </div>
                 @if(isset($hacademicas))
                     <table class="table table-condensed table-striped">
@@ -148,6 +161,23 @@
   
   <script type="text/javascript">
     
+    $('#btnContarExtras').click(function(){
+        $valores=$('#frm_academica').serialize();
+        $.ajax({
+                  url: '{{ route("calificacions.contarExtras") }}',
+                  type: 'GET',
+                  data: $valores,
+                  dataType: 'json',
+                  beforeSend : function(){$("#loading13").show();},
+                  complete : function(){$("#loading13").hide();},
+                  success: function(data){
+                      
+                      $('#btnContarExtras').text('Contar extras por lectivo: '+data.totalExtras);
+                      $('#btnSubmitDatos').prop('disabled',false);
+                  }
+              });
+    });
+
     $(document).ready(function() {
       CmbGrado();
       CmbMateria();

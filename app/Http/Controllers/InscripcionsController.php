@@ -1851,7 +1851,7 @@ class InscripcionsController extends Controller
             //$asignacion = AsignacionAcademica::find($data['asignacion']);
 
             $dias = array();
-            $dias_numero_validos=array();
+            $dias_numero_validos = array();
             //dd($asignacion);
             foreach ($asignacion->horarios as $horario) {
                 array_push($dias, $horario->dia->name);
@@ -1962,18 +1962,18 @@ class InscripcionsController extends Controller
                     //->whereRaw($cadena)	
                     //->count();
                     ->get();
-                    //dd($asistencias_reales_aux->toArray());
-                    $asistencias_reales=0;
-                foreach($asistencias_reales_aux as $asistencia_real){
-                    $dia_carbon=Carbon::createFromFormat('Y-m-d',$asistencia_real->fecha);
-                    if(in_array($dia_carbon->dayOfWeekIso, $dias_numero_validos)){
+                //dd($asistencias_reales_aux->toArray());
+                $asistencias_reales = 0;
+                foreach ($asistencias_reales_aux as $asistencia_real) {
+                    $dia_carbon = Carbon::createFromFormat('Y-m-d', $asistencia_real->fecha);
+                    if (in_array($dia_carbon->dayOfWeekIso, $dias_numero_validos)) {
                         $asistencias_reales++;
                     }
                 }
 
                 //dd($asistencias_planeadas ." - ".$asistencias_reales);
-                if($asistencias_planeadas==0){
-                    dd("Asignacion con materia sin fechas de horario asignadas: ". $asignacion->id);
+                if ($asistencias_planeadas == 0) {
+                    dd("Asignacion con materia sin fechas de horario asignadas: " . $asignacion->id);
                 }
                 $promedio_cliente = ($asistencias_reales * 100) / $asistencias_planeadas;
                 //Log::info('Promedio-'.$promedio_cliente);
@@ -3131,17 +3131,24 @@ class InscripcionsController extends Controller
     {
         $datos = $request->all();
         //dd($datos);
-        $registros = Hacademica::select('gra.rvoe','l.ciclo_escolar','l.periodo_escolar','c.curp', 'm.orden','g.name',
-            DB::raw('substr(g.name,-1) as grupo_letra, substr(g.name,1,1) as grupo_numero'))
-            ->join('grupos as g','g.id','=','hacademicas.grupo_id')
-            ->join('clientes as c','c.id','=','hacademicas.cliente_id')
-            ->join('grados as gra','gra.id','=','hacademicas.grado_id')
-            ->join('lectivos as l','l.id','=','hacademicas.lectivo_id')
+        $registros = Hacademica::select(
+            'gra.rvoe',
+            'l.ciclo_escolar',
+            'l.periodo_escolar',
+            'c.curp',
+            'm.orden',
+            'g.name',
+            DB::raw('substr(g.name,-1) as grupo_letra, substr(g.name,1,1) as grupo_numero')
+        )
+            ->join('grupos as g', 'g.id', '=', 'hacademicas.grupo_id')
+            ->join('clientes as c', 'c.id', '=', 'hacademicas.cliente_id')
+            ->join('grados as gra', 'gra.id', '=', 'hacademicas.grado_id')
+            ->join('lectivos as l', 'l.id', '=', 'hacademicas.lectivo_id')
             ->where('hacademicas.plantel_id', $datos['plantel_f'])
-            ->join('materia as m','m.id','=','hacademicas.materium_id')
+            ->join('materia as m', 'm.id', '=', 'hacademicas.materium_id')
             ->where('lectivo_id', $datos['lectivo_f'])
             ->whereNull('hacademicas.deleted_at')
-            ->where('m.bnd_oficial',1)
+            ->where('m.bnd_oficial', 1)
             //->with('cliente')
             //->with('grupo')
             //->with('lectivo')
@@ -3152,7 +3159,7 @@ class InscripcionsController extends Controller
             ->orderBy('c.curp')
             ->get();
         //dd($registros);
-        return view('inscripcions.reportes.grupoAsignaturaR', compact('registros','datos'));
+        return view('inscripcions.reportes.grupoAsignaturaR', compact('registros', 'datos'));
     }
 
     public function inscripcionReinscripcion()
@@ -3177,7 +3184,7 @@ class InscripcionsController extends Controller
         )
             //->leftJoin('autorizacion_becas as ab', 'ab.cliente_id', '=', 'inscripcions.cliente_id')
             //->whereColumn('inscripcions.lectivo_id', 'ab.lectivo_id')
-            ->join('clientes as cli','cli.id','=','inscripcions.cliente_id')
+            ->join('clientes as cli', 'cli.id', '=', 'inscripcions.cliente_id')
             ->where('inscripcions.plantel_id', $datos['plantel_f'])
             ->where('inscripcions.lectivo_id', $datos['lectivo_f'])
             ->whereNull('inscripcions.deleted_at')
@@ -3188,7 +3195,7 @@ class InscripcionsController extends Controller
             ->orderBy('inscripcions.st_inscripcion_id')
             ->get();
 
-            
+
         //dd($registros->toArray());
         return view('inscripcions.reportes.inscripcionReinscripcionR', compact('registros'));
     }
@@ -3206,57 +3213,104 @@ class InscripcionsController extends Controller
     {
         $datos = $request->all();
         //dd($datos);
-        $registros = Hacademica::select(
-            'l.ciclo_escolar',
-            'l.periodo_escolar',
-            'g.rvoe',
-            'g.name as grado',
-            'cli.curp',
-            'te.name as tipo_examen',
-            'e.curp as curp_docente',
-            'gru.name as grupo',
-            'm.codigo',
-            'c.calificacion',
-            'c.id as calificacion_id',
-            DB::raw('substr(gru.name, 1,1) as grupo_numero, substr(gru.name, -1) as grupo_letra'),
-            'm.orden',
-            'af.consecutivo as consecutivo_acta',
-            'af.fecha as fecha_acta',
-            'l.fin'
-        )
-            ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
-            ->join('asignacion_academicas as aa', 'aa.plantel_id', '=', 'hacademicas.plantel_id')
-            ->whereColumn('aa.grupo_id', 'hacademicas.grupo_id')
-            ->whereColumn('aa.lectivo_id', 'hacademicas.lectivo_id')
-            ->whereColumn('aa.materium_id', 'hacademicas.materium_id')
-            ->join('empleados as e', 'e.id', '=', 'aa.docente_oficial_id')
-            ->join('calificacions as c', 'c.hacademica_id', '=', 'hacademicas.id')
-            ->leftJoin('acta_finals as af','af.id','=','c.acta_final_id')
-            ->join('tpo_examens as te', 'te.id', '=', 'c.tpo_examen_id')
-            ->join('grados as g', 'g.id', '=', 'hacademicas.grado_id')
-            ->join('lectivos as l', 'l.id', '=', 'aa.lectivo_oficial_id')
-            ->join('grupos as gru', 'gru.id', '=', 'hacademicas.grupo_id')
-            ->join('clientes as cli', 'cli.id', '=', 'hacademicas.cliente_id')
-            ->join('materia as m', 'm.id', '=', 'hacademicas.materium_id')
-            ->where('m.bnd_oficial', 1)
-            ->where('c.tpo_examen_id', $datos['tipo_examen_f'])
-            ->where('hacademicas.plantel_id', $datos['plantel_f'])
-            ->where('hacademicas.lectivo_id', $datos['lectivo_f'])
-            ->whereNull('hacademicas.deleted_at')
-            ->whereNull('i.deleted_at')
-            ->orderBy('gru.name')
-            ->orderBy('m.orden')
-            ->orderBy('cli.curp')
-            ->get();
-            $idCalificacionesArray=array();
-            $fecha_acta="";
-        foreach($registros as $registro){
+        if ($datos['tipo_examen_f'] == 1) {
+            $registros = Hacademica::select(
+                'l.ciclo_escolar',
+                'l.periodo_escolar',
+                'g.rvoe',
+                'g.name as grado',
+                'cli.curp',
+                'te.name as tipo_examen',
+                'e.curp as curp_docente',
+                'gru.name as grupo',
+                'm.codigo',
+                'c.calificacion',
+                'c.id as calificacion_id',
+                DB::raw('substr(gru.name, 1,1) as grupo_numero, substr(gru.name, -1) as grupo_letra'),
+                'm.orden',
+                'af.consecutivo as consecutivo_acta',
+                'af.fecha as fecha_acta',
+                'l.fin'
+            )
+                ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
+                ->join('asignacion_academicas as aa', 'aa.plantel_id', '=', 'hacademicas.plantel_id')
+                ->whereColumn('aa.grupo_id', 'hacademicas.grupo_id')
+                ->whereColumn('aa.lectivo_id', 'hacademicas.lectivo_id')
+                ->whereColumn('aa.materium_id', 'hacademicas.materium_id')
+                ->join('empleados as e', 'e.id', '=', 'aa.docente_oficial_id')
+                ->join('calificacions as c', 'c.hacademica_id', '=', 'hacademicas.id')
+                ->leftJoin('acta_finals as af', 'af.id', '=', 'c.acta_final_id')
+                ->join('tpo_examens as te', 'te.id', '=', 'c.tpo_examen_id')
+                ->join('grados as g', 'g.id', '=', 'hacademicas.grado_id')
+                ->join('lectivos as l', 'l.id', '=', 'aa.lectivo_oficial_id')
+                ->join('grupos as gru', 'gru.id', '=', 'hacademicas.grupo_id')
+                ->join('clientes as cli', 'cli.id', '=', 'hacademicas.cliente_id')
+                ->join('materia as m', 'm.id', '=', 'hacademicas.materium_id')
+                ->where('m.bnd_oficial', 1)
+                ->where('c.tpo_examen_id', $datos['tipo_examen_f'])
+                ->where('hacademicas.plantel_id', $datos['plantel_f'])
+                ->where('hacademicas.lectivo_id', $datos['lectivo_f'])
+                ->whereNull('hacademicas.deleted_at')
+                ->whereNull('i.deleted_at')
+                ->orderBy('gru.name')
+                ->orderBy('m.orden')
+                ->orderBy('cli.curp')
+                ->get();
+            
+        } elseif ($datos['tipo_examen_f'] == 2) {
+            $registros = Hacademica::select(
+                'l.ciclo_escolar',
+                'l.periodo_escolar',
+                'g.rvoe',
+                'g.name as grado',
+                'cli.curp',
+                'te.name as tipo_examen',
+                'e.curp as curp_docente',
+                'gru.name as grupo',
+                'm.codigo',
+                'c.calificacion',
+                'c.id as calificacion_id',
+                DB::raw('substr(gru.name, 1,1) as grupo_numero, substr(gru.name, -1) as grupo_letra'),
+                'm.orden',
+                'af.consecutivo as consecutivo_acta',
+                'af.fecha as fecha_acta',
+                'l.fin'
+            )
+                ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
+                ->join('asignacion_academicas as aa', 'aa.plantel_id', '=', 'hacademicas.plantel_id')
+                ->whereColumn('aa.grupo_id', 'hacademicas.grupo_id')
+                ->whereColumn('aa.lectivo_id', 'hacademicas.lectivo_id')
+                ->whereColumn('aa.materium_id', 'hacademicas.materium_id')
+                ->join('empleados as e', 'e.id', '=', 'aa.docente_oficial_id')
+                ->join('calificacions as c', 'c.hacademica_id', '=', 'hacademicas.id')
+                ->leftJoin('acta_finals as af', 'af.id', '=', 'c.acta_final_id')
+                ->join('tpo_examens as te', 'te.id', '=', 'c.tpo_examen_id')
+                ->join('grados as g', 'g.id', '=', 'hacademicas.grado_id')
+                ->join('lectivos as l', 'l.id', '=', 'c.lectivo_id')
+                ->join('grupos as gru', 'gru.id', '=', 'hacademicas.grupo_id')
+                ->join('clientes as cli', 'cli.id', '=', 'hacademicas.cliente_id')
+                ->join('materia as m', 'm.id', '=', 'hacademicas.materium_id')
+                ->where('m.bnd_oficial', 1)
+                ->where('c.calificacion','>=', 6)
+                ->where('c.tpo_examen_id', $datos['tipo_examen_f'])
+                ->where('hacademicas.plantel_id', $datos['plantel_f'])
+                ->where('c.lectivo_id', $datos['lectivo_f'])
+                ->whereNull('hacademicas.deleted_at')
+                ->whereNull('i.deleted_at')
+                ->orderBy('gru.name')
+                ->orderBy('m.orden')
+                ->orderBy('cli.curp')
+                ->get();
+        }
+        $idCalificacionesArray = array();
+        $fecha_acta = "";
+        foreach ($registros as $registro) {
             array_push($idCalificacionesArray, $registro->calificacion_id);
-            $fecha_acta=$registro->fecha_acta;
+            $fecha_acta = $registro->fecha_acta;
         }
         //dd($registros->toArray());
 
-        return view('inscripcions.reportes.evaluacionOER', compact('registros', 'datos', 'idCalificacionesArray','fecha_acta'));
+        return view('inscripcions.reportes.evaluacionOER', compact('registros', 'datos', 'idCalificacionesArray', 'fecha_acta'));
     }
 
     public function historialOficial(Request $request)
@@ -3448,12 +3502,12 @@ class InscripcionsController extends Controller
     {
         $dias = array();
         //dd($asignacion);
-        
+
         foreach ($asignacion->horarios as $horario) {
             array_push($dias, $horario->dia->name);
         }
         if (count($dias) == 0) {
-            dd('Asignacion sin dias de horario: '.$asignacion->id);
+            dd('Asignacion sin dias de horario: ' . $asignacion->id);
             return 'Sin dias de horario asignados a Asignacion ' . $asignacion->id;
             //dd();
         }

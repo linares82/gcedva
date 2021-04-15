@@ -29,7 +29,12 @@
         <table class="table table-condensed table-striped">
             <thead>
                 <tr>
-                    <th>RVOE</th><th>Ciclo Escolar</th><th>Subciclo Escolar</th><th>Tipo Evaluación</th><th>Grupo</th>
+                    <th>RVOE</th><th>Ciclo Escolar</th><th>Subciclo Escolar</th><th>Tipo Evaluación</th>
+                    @if($datos['tipo_examen_f']==1)
+                            <th>Grupo</th>
+                        @else
+                            <th>Grado</th>
+                        @endif
                     <th>CURP Docente</th><th>Clave Asignatura</th><th>Número Acta</th><th>Fecha Evaluación</th>
                     <th>CURP Alumno</th><th>Calificacion</th>
                     <th>Tipo Movimiento</th>
@@ -42,20 +47,25 @@
                         <td>@if($registro->tipo_examen=="Ordinario") 
                             ORD
                             @else
-                            EXT
+                            EE
                             @endif
                         </td>
                         @if($datos['tipo_examen_f']==1)
-                        <td>{{$registro->grupo_numero."0".$registro->orden.$registro->grupo_letra}}</td>
+                            <td>{{$registro->grupo_numero."0".$registro->orden.$registro->grupo_letra}}</td>
                         @else
-                        <td>{{$registro->grado}}</td>
+                            <td>{{$registro->grupo_numero}}</td>
                         @endif
                         <td>{{$registro->curp_docente}}</td><td>{{$registro->codigo}}</td>
                         <td>
                             @php
                                 if(isset($idCalificacionesArray) and $fecha_acta<>""){
                                     $fecha=\Carbon\Carbon::createFromFormat('Y-m-d',$registro->fecha_acta);
-                                    echo "F".$fecha->day.sprintf("%02d",$fecha->month).substr($fecha->year,-2).sprintf("%03d",$registro->consecutivo_acta);
+                                    if($datos['tipo_examen_f']==1){
+                                        echo "F".$fecha->day.sprintf("%02d",$fecha->month).substr($fecha->year,-2).sprintf("%03d",$registro->consecutivo_acta);
+                                    }else{
+                                        echo "EE".$fecha->day.sprintf("%02d",$fecha->month).substr($fecha->year,-2).sprintf("%03d",$registro->consecutivo_acta);
+                                    }
+                                    
                                 }
                                 $fecha_evaluacion=\Carbon\Carbon::createFromFormat('Y-m-d',$registro->fin);
                                 
@@ -84,13 +94,13 @@
         $(document).ready(function() {
             @if(isset($idCalificacionesArray))
             @php
-            $datos="";
+            $idCalifiaciones="";
             @endphp
             @foreach($idCalificacionesArray as $idCalificacion)
                 @if($loop->first)
-                    @php $datos=$idCalificacion; @endphp
+                    @php $idCalifiaciones=$idCalificacion; @endphp
                 @else
-                    @php $datos=$datos.",".$idCalificacion; @endphp
+                    @php $idCalifiaciones=$idCalifiaciones.",".$idCalificacion; @endphp
                 @endif
             @endforeach
                 
@@ -98,12 +108,13 @@
                 $.ajax({
                     url: '{{ route("actaFinals.store") }}',
                     type: 'GET',
-                    data: { 'calificaciones':'{{ $datos }}' },
-                    dataType: 'json',
+                    data: { 'tipo_evaluacion':{{ $datos['tipo_examen_f'] }}, 'calificaciones':'{{ $idCalifiaciones }}' },
+                    //dataType: 'json',
                     beforeSend : function(){$("#loading10").show(); },
                     complete : function(){$("#loading10").hide(); },
                     success: function(data){
-                        location.reload;
+                        location.reload();
+                        //console.log('Termine');
                     }
                     });
             });

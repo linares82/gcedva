@@ -70,6 +70,7 @@
                          <th>id</th>
                          <th>Alumno</th>
                          <th>Estatus Cliente</th>
+                         <th>Acta Final</th>
                          <th>Ponderacion</th>
                          <th>Calificacion Total</th>
                          <th>Calificacion</th>
@@ -85,6 +86,15 @@
                          <td>{{$r->id}}</td>
                          <td>{{$r->ape_paterno." ".$r->ape_materno." ".$r->nombre." ".$r->nombre2}}</td>
                          <td>{{$r->estatus_cliente}}</td>
+                         <td>
+                             @php
+                                 if(isset($r->fecha_acta)){
+                                    $fecha=\Carbon\Carbon::createFromFormat('Y-m-d',$r->fecha_acta);
+                                    echo "F".$fecha->day.sprintf("%02d",$fecha->month).substr($fecha->year,-2).sprintf("%03d",$r->consecutivo_acta);
+                                }
+                             @endphp
+                             
+                         </td>
                          <td>{{$r->ponderacion}}</td>
                          <td><div id="div_c{{$r->id}}">{{$r->calificacion}}</div></td>
                          <td><div id="div_par{{$r->id}}">{{ $r->calificacion_parcial }}</div></td>

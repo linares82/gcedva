@@ -18,7 +18,7 @@ class ActaFinal extends Model
     } 
 
 	//Mass Assignment
-	protected $fillable = ['fecha','consecutivo','usu_alta_id','usu_mod_id'];
+	protected $fillable = ['fecha','consecutivo','usu_alta_id','usu_mod_id','tpo_examen_id'];
 
 	public function usu_alta() {
 		return $this->hasOne('App\User', 'id', 'usu_alta_id');

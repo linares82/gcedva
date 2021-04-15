@@ -51,15 +51,16 @@ class ActaFinalsController extends Controller {
 		//dd($idCalificaciones);
 		$fecha=Date('Y-m-d');
 		
-		$actaFinal=ActaFinal::orderBy("id",'desc')->first();
+		$actaFinal=ActaFinal::orderBy("id",'desc')
+		->where('tpo_examen_id',$input1['tipo_evaluacion'])
+		->first();
+		$input['fecha']=$fecha;
+		$input['tpo_examen_id']=$input1['tipo_evaluacion'];
 		if(is_null($actaFinal)){
-			$input['fecha']=$fecha;
 			$input['consecutivo']=1;
 		}elseif(!is_null($actaFinal) and $actaFinal->consecutivo==999){
-			$input['fecha']=$fecha;
 			$input['consecutivo']=1;
 		}elseif(!is_null($actaFinal) and $actaFinal->consecutivo<999){
-			$input['fecha']=$fecha;
 			$input['consecutivo']=$actaFinal->consecutivo+1;
 		}
 		$input['usu_alta_id']=Auth::user()->id;

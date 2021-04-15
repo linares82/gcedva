@@ -1,16 +1,17 @@
 <?php namespace App\Http\Controllers;
 
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
-
-use App\Calificacion;
-use App\Cliente;
-use Illuminate\Http\Request;
 use Auth;
-use App\Http\Requests\updateCalificacion;
-use App\Http\Requests\createCalificacion;
+use App\Cliente;
+
 use App\Lectivo;
 use App\Plantel;
+use App\Inscripcion;
+use App\Calificacion;
+use App\Http\Requests;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\createCalificacion;
+use App\Http\Requests\updateCalificacion;
 
 class CalificacionsController extends Controller {
 
@@ -159,6 +160,25 @@ class CalificacionsController extends Controller {
 
 		return view('calificacions.reportes.promediosR', compact('plantels'));
 		
+		
+	}
+
+	public function contarExtras(Request $request){
+		$datos=$request->all();
+		if($request->ajax()){
+			$h = Inscripcion::select('h.id')
+                ->join('clientes as c', 'c.id', '=', 'inscripcions.cliente_id')
+                ->join('hacademicas as h', 'h.inscripcion_id', '=', 'inscripcions.id')
+                ->where('c.id', '=', $datos['cliente_id'])
+                ->where('inscripcions.grado_id', '=', $datos['grado_id'])
+                ->where('h.materium_id', '=', $datos['materium_id'])
+                ->where('h.deleted_at', '=', null)
+                ->first();
+			$totalExtras = Calificacion::where('hacademica_id', $h->id)
+			->where('tpo_examen_id', 2)
+			->where('lectivo_id',$datos['lectivo_id'])->count();
+			return json_encode(array('totalExtras'=>$totalExtras));
+		}
 		
 	}
 }

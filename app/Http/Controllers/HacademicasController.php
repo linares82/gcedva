@@ -341,7 +341,8 @@ class HacademicasController extends Controller
         //$examen->reverse();
         //$examen->put(0,'Seleccionar OpciÃ³n');
         //$examen->reverse();
-        return view('hacademicas.examen', compact('examen'))
+        $lectivos=Lectivo::pluck('name','id');
+        return view('hacademicas.examen', compact('examen','lectivos'))
             ->with('list', Hacademica::getListFromAllRelationApps());
     }
 
@@ -372,10 +373,11 @@ class HacademicasController extends Controller
 
 
             //dd($h->id);
-            if (!is_object($calificacion_extraordinaria)) {
+            //if (!is_object($calificacion_extraordinaria)) {
                 $c = new Calificacion;
                 $c->hacademica_id = $h->id;
                 $c->tpo_examen_id = $input['examen_id'];
+                $c->lectivo_id = $input['lectivo_id'];
                 $c->calificacion = 0;
                 $c->fecha = date('Y-m-d');
                 $c->reporte_bnd = 0;
@@ -406,7 +408,7 @@ class HacademicasController extends Controller
 
                     //Log::info($c_nueva->id . "- nuevo registro de ponderacion");
                 }
-            }
+            //}
         }
         /* if(isset($input['cve_alumno']) and isset($input['grado_id']) and isset($input['materium_id'])){
           $hacademicas=Hacademica::select('calif.id',
@@ -570,11 +572,14 @@ class HacademicasController extends Controller
                 'cp.calificacion_parcial',
                 'cpo.name as ponderacion',
                 'stc.name as estatus_cliente',
-                'stc.id as estatus_cliente_id'
+                'stc.id as estatus_cliente_id',
+                'af.fecha as fecha_acta',
+                'af.consecutivo as consecutivo_acta'
             )
                 ->where('hacademicas.grupo_id', '=', $asignacionAcademica->grupo_id)
                 ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
                 ->join('calificacions as c', 'c.hacademica_id', '=', 'hacademicas.id')
+                ->leftJoin('acta_finals as af','af.id','c.acta_final_id')
                 ->join('calificacion_ponderacions as cp', 'cp.calificacion_id', '=', 'c.id')
                 ->join('carga_ponderacions as cpo', 'cpo.id', '=', 'cp.carga_ponderacion_id')
                 ->join('clientes as cli', 'cli.id', '=', 'hacademicas.cliente_id')
