@@ -179,12 +179,12 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'codigo_posta', 'title' => 'CODIGO_POSTA'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clave_entidad_federativa', 'title' => 'CLAVE_ENTIDAD_FEDERATIVA'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clave_municipo', 'title' => 'CLAVE_MUNICIPO'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clave_mun_del', 'title' => 'CLAVE_MUN_DEL'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'codigo_posta', 'title' => 'CODIGO_POSTA'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'clave_entidad_federativa', 'title' => 'CLAVE_ENTIDAD_FEDERATIVA'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'clave_municipo', 'title' => 'CLAVE_MUNICIPO'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'clave_mun_del', 'title' => 'CLAVE_MUN_DEL'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

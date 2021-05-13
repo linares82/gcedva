@@ -86,6 +86,10 @@
                      <label for="activo">ACTIVO</label>
                      <p class="form-control-static">{{$planPago->activo}}</p>
                 </div>
+                <div class="form-group col-sm-4">
+                    <label for="activo">PLANTEL</label>
+                    <p class="form-control-static">{{$planPago->plantel->razon}}</p>
+               </div>
                     <div class="form-group col-sm-4">
                      <label for="usu_alta_id">ALTA</label>
                      <p class="form-control-static">{{$planPago->usu_alta->name}}</p>

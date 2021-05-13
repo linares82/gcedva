@@ -142,12 +142,12 @@
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
                             <th>PLANTEL</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'solicitud', 'title' => 'SOLICITUD'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clientes.nombre', 'title' => 'CLIENTE'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'monto_mensualidad', 'title' => 'PORCENTAJE BECA'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'st_becas.name', 'title' => 'ESTATUS'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_mod_id', 'title' => 'ALTA'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_mod_id', 'title' => 'ULTIMA EDICIÓN'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'solicitud', 'title' => 'SOLICITUD'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'clientes.nombre', 'title' => 'CLIENTE'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'monto_mensualidad', 'title' => 'PORCENTAJE BECA'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'st_becas.name', 'title' => 'ESTATUS'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_mod_id', 'title' => 'ALTA'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_mod_id', 'title' => 'ULTIMA EDICIÓN'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

@@ -233,15 +233,15 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'cajas.cliente_id', 'title' => 'CAJA_CLIENTE_ID'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'concepto_id', 'title' => 'CONCEPTO_ID'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'subtotal', 'title' => 'SUBTOTAL'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'descuento', 'title' => 'DESCUENTO'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'recargo', 'title' => 'RECARGO'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'total', 'title' => 'TOTAL'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'autorizacion_descuento', 'title' => 'AUTORIZACION_DESCUENTO'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'cajas.cliente_id', 'title' => 'CAJA_CLIENTE_ID'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'concepto_id', 'title' => 'CONCEPTO_ID'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'subtotal', 'title' => 'SUBTOTAL'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'descuento', 'title' => 'DESCUENTO'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'recargo', 'title' => 'RECARGO'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'total', 'title' => 'TOTAL'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'autorizacion_descuento', 'title' => 'AUTORIZACION_DESCUENTO'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

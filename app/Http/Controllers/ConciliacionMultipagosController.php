@@ -92,17 +92,24 @@ class ConciliacionMultipagosController extends Controller
 		while (!feof($fp)) {
 			$registro = array();
 			//$file=storage_path('conciliaciones\\'.$nombre);
-			$linea = fgets($fp);
+			
+
+			$linea_aux = fgets($fp);
+			$linea=utf8_decode($linea_aux);
+			//dd(utf8_encode($linea));
 			Log::info("linea " . $i . ": " . $linea);
+
 			if (trim($linea) <> "") {
+				//dd();
 				$posicion = 0;
 				$longitud = 0;
 				$registro['conciliacion_multipago_id'] = $e->id;
 				$longitud = 26;
 				$registro['fecha_pago'] = substr($linea, $posicion, $longitud);
-				$posicion = $posicion + $longitud + 1; //27
+				$posicion = $posicion + $longitud; //27
+				//$posicion = $posicion + $longitud;
 				$longitud = 50;
-				$registro['razon_social'] = trim(substr($linea, $posicion, $longitud));
+				$registro['razon_social'] = utf8_encode(trim(substr($linea, $posicion, $longitud)));
 				$posicion = $posicion + $longitud; //77
 				$longitud = 10;
 				$registro['mp_node'] = trim(substr($linea, $posicion, $longitud));
@@ -145,15 +152,16 @@ class ConciliacionMultipagosController extends Controller
 				$posicion = $posicion + $longitud;
 				$longitud = 1;
 				$registro['moneda'] = substr($linea, $posicion, $longitud);
+				//dd($registro);
 				$posicion = $posicion + $longitud;
 				$longitud = 100;
 				$registro['banco_emisor'] = trim(substr($linea, $posicion, $longitud));
 				$posicion = $posicion + $longitud;
 				$longitud = 100;
-				$registro['mp_customername'] = trim(substr($linea, $posicion, $longitud));
+				$registro['mp_customername'] = utf8_encode(trim(substr($linea, $posicion, $longitud)));
 				$posicion = $posicion + $longitud;
 				$longitud = 50;
-				$registro['mail'] = trim(substr($linea, $posicion, $longitud));
+				$registro['mail'] = utf8_encode(trim(substr($linea, $posicion, $longitud)));
 				$posicion = $posicion + $longitud;
 				$longitud = 50;
 				$registro['tel_customername'] = trim(substr($linea, $posicion, $longitud));
@@ -173,6 +181,12 @@ class ConciliacionMultipagosController extends Controller
 		return redirect()->route('conciliacionMultipagos.index')->with('message', 'Registro Creado.');
 	}
 
+	function remove_utf8_bom($text){
+        $bom = pack('H*','EFBBBF');
+        $text = preg_replace("/^$bom/", '', $text);
+        return $text;
+}
+
 
 	/**
 	 * Display the specified resource.
@@ -189,7 +203,9 @@ class ConciliacionMultipagosController extends Controller
 			$peticionBuscado = PeticionMultipago::where('mp_reference', $d->mp_reference)
 				->where('mp_order', $d->mp_order)
 				//->where('mp_amount', $pagoConciliacion->importe)
+				->orderBy('id','desc')
 				->first();
+			//dd($peticionBuscado->toArray());
 			if (!is_null($peticionBuscado)) {
 				if ($peticionBuscado->mp_amount <> $d->importe) {
 					//dd($peticionBuscado);
@@ -496,4 +512,6 @@ class ConciliacionMultipagosController extends Controller
 
 		return view('conciliacionMultipagos.reportes.rptConciliacion', compact('registrosConciliados', 'lineasConciliacionExtra'));
 	}
+
+	
 }

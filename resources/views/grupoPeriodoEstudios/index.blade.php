@@ -107,8 +107,8 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'grupo_id', 'title' => 'GRUPO_ID'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'periodo_estudio_id', 'title' => 'PERIODO_ESTUDIO_ID'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'grupo_id', 'title' => 'GRUPO_ID'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'periodo_estudio_id', 'title' => 'PERIODO_ESTUDIO_ID'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

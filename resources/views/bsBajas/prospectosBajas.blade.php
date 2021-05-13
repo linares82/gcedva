@@ -48,6 +48,13 @@
                     <span class="help-block">{{ $errors->first("plantel_f") }}</span>
                     @endif
                 </div>
+                <div class="form-group col-md-6 @if($errors->has('cantidad_adeudos_f')) has-error @endif">
+                    <label for="cantidad_adeudos_f-field">Cantidad Adeudos:</label>
+                    {!! Form::text("cantidad_adeudos_f", null, array("class" => "form-control input-sm", "id" => "cantidad_adeudos_f-field", "value"=>2)) !!}
+                    @if($errors->has("cantidad_adeudos_f"))
+                    <span class="help-block">{{ $errors->first("cantidad_adeudos_f") }}</span>
+                    @endif
+                </div>
             <!--
                 <div class="form-group col-md-6 @if($errors->has('fecha_f')) has-error @endif">
                     <label for="fecha_f-field">Fecha de:</label>
@@ -86,6 +93,7 @@
 
 @push('scripts')
 <script type="text/javascript">
+    document.getElementById('cantidad_adeudos_f-field').value=2;
     
 </script>
 @endpush

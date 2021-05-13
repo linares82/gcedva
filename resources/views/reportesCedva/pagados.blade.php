@@ -79,6 +79,7 @@
                 <th>Pago Recibido</th>
                 @endpermission  
                 <th>Csc. Caja</th>
+                <th>Usuario Pago</th>
                 <th>Beca</th>
                 
             </tr>
@@ -89,8 +90,28 @@
                 $caja_aux="";
                 $suma=0;
                 $pagos_suma=0;
+                $plantel="";
+                $suma_plantel=0;
+                $concepto="";
+                $suma_concepto=0;
             @endphp 
             @foreach($lineas_detalle as $detalle)
+                @permission('adeudos.maestroPagosConMontos')    
+                @if($plantel<>"" and $plantel<>$detalle['razon'])
+                <tr><td>Suma Plantel</td><td>{{ $suma_plantel }}</td></tr>
+                @php
+                    $suma_plantel=0;
+                @endphp
+                <tr>   
+                @endif
+                @if($concepto<>"" and $concepto<>$detalle['concepto'])
+                <tr><td>Suma Concepto</td><td>{{ $suma_concepto }}</td></tr>
+                @php
+                    $suma_concepto=0;
+                @endphp
+                <tr>   
+                @endif
+                @endpermission
                 @if($caja_aux<>$detalle['caja'])
                 @php
                     $beca=App\AutorizacionBeca::where('cliente_id',$detalle['cliente_id'])
@@ -132,6 +153,16 @@
                 @endpermission
                 
                 <td>{{$detalle['consecutivo']}}</td>
+                <td>
+                @php
+                    if(is_int($detalle['caja'])){
+                    $pago=App\Pago::where('caja_id', $detalle['caja'])->first();    
+                    }
+                    if(!is_null($pago)){
+                    echo $pago->usu_alta->name;
+                    }
+                @endphp
+                </td>
                 @if(!is_null($beca)) 
                 
                     @if(
@@ -155,6 +186,10 @@
                 @php
                     $suma=$suma+$pagos_suma;
                     $caja_aux=$detalle['caja'];
+                    $plantel=$detalle['razon'];
+                    $suma_plantel=$suma_plantel+round($pagos_suma);
+                    $concepto=$detalle['concepto'];
+                    $suma_concepto=$suma_concepto+round($pagos_suma);
                 @endphp
                 @endif
                 

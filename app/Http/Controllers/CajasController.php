@@ -2118,7 +2118,7 @@ class CajasController extends Controller
         $adeudos = Adeudo::where('id', $datos['adeudo'])->get();
         //dd($adeudos->toArray());
         foreach ($adeudos as $adeudo) {
-            $adeudo_pago_online=AdeudoPagoOnLine::where('adeudo_id',$adeudo->id)->first();
+            $adeudo_pago_online=AdeudoPagoOnLine::where('adeudo_id',$adeudo->id)->orderBy('id','desc')->first();
             //dd($adeudo_pago_online);
             //$adeudo_pago_online = optional($adeudo)->pagoOnLine;
 

@@ -108,11 +108,11 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'plantel_id', 'title' => 'PLANTEL'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'especialidad_id', 'title' => 'ESPECIALIDAD'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'nivel_id', 'title' => 'NIVEL'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'grado_id', 'title' => 'GRADO'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'name', 'title' => 'TURNO'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'plantel_id', 'title' => 'PLANTEL'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'especialidad_id', 'title' => 'ESPECIALIDAD'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'nivel_id', 'title' => 'NIVEL'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'grado_id', 'title' => 'GRADO'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'name', 'title' => 'TURNO'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

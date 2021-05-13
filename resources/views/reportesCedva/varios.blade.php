@@ -41,6 +41,7 @@
 
             <div class="form-group col-md-6 @if($errors->has('ciclo_f')) has-error @endif">
                 <label for="ciclo_f-field">Ciclo de:</label>
+                <a href='#' id='select-allCiclos'>Seleccionar todos</a>
                 {!! Form::select("ciclo_f[]", $ciclos, null, array("class" => "form-control select_seguridad", "id" => "ciclo_f-field", 'multiple'=>true)) !!}
                 @if($errors->has("ciclo_f"))
                 <span class="help-block">{{ $errors->first("ciclo_f") }}</span>
@@ -99,6 +100,10 @@
 @push('scripts')
   <script type="text/javascript">
     $(document).ready(function() {
+    $('#select-allCiclos').click(function(){
+        $('select#ciclo_f-field').multiSelect('select_all');
+        return false;
+    });
     $('#fecha_f-field').Zebra_DatePicker({
         days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
         months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],

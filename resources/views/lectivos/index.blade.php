@@ -108,10 +108,10 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'name', 'title' => 'Periodo Lectivo'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'activo', 'title' => 'ACTIVO'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'total_asistencias_lv', 'title' => 'Asistencias L-V'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'total_asistencias_s', 'title' => 'Asistencias S'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'name', 'title' => 'Periodo Lectivo'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'activo', 'title' => 'ACTIVO'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'total_asistencias_lv', 'title' => 'Asistencias L-V'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'total_asistencias_s', 'title' => 'Asistencias S'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

@@ -76,7 +76,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    
+                    @php
+                    $i=0;
+                    @endphp
+        
                     @foreach($registros as $r)
                     <tr>
                         <td>{{ ++$i }}</td>

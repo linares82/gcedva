@@ -35,6 +35,7 @@ use App\Seguimiento;
 use App\AvisosInicio;
 use App\CajaConcepto;
 use App\Especialidad;
+use App\AlumnosActivo;
 use App\Ccuestionario;
 use App\StSeguimiento;
 use App\UsuarioCliente;
@@ -390,19 +391,21 @@ class ClientesController extends Controller
                 //dd($p->id);
                 array_push($planteles, $p->id);
             }
+            //dd($planteles);
             $empleados = Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
                 //->where('plantel_id', '=', $e->plantel_id)
                 ->whereIn('plantel_id', '=', $planteles)
-                ->whereIn('puesto_id', array(1, 2, 3, 4,7, 10, 19, 23))
+                ->whereIn('puesto_id', array(1, 2, 3, 4,5,7, 10, 19, 23))
                 ->pluck('name', 'id');
         } else {
             $empleados = Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
-                ->whereIn('puesto_id', array(1, 2, 3, 4,7, 10, 19, 23))
+                ->whereIn('puesto_id', array(1, 2, 3, 4,5,7, 10, 19, 23))
                 ->pluck('name', 'id');
         }
         $empleados = $empleados->reverse();
         $empleados->put(0, 'Seleccionar OpciÃ³n');
         $empleados = $empleados->reverse();
+        //dd($empleados);
         $cp = PreguntaCliente::where('cliente_id', '=', $id)->get();
         $preguntas = Preguntum::pluck('name', 'id');
         //dd($cp);
@@ -624,6 +627,14 @@ class ClientesController extends Controller
         $cantidad_preguntas = $cliente->ccuestionario->ccuestionarioPreguntas->count();
         //dd($input);
         $cliente->update($input);
+
+        $usuarioCliente=UsuarioCliente::where('name',$cliente->matricula)->first();
+        if(!is_null($usuarioCliente)){
+            $usuarioCliente->email=$cliente->mail;
+		    $usuarioCliente->save();
+        }
+		
+
         //dd($request->all());
         if ($request->has('doc_cliente_id') and $request->input('doc_cliente_id') != '0' and $request->has('archivo')) {
             $input2['doc_alumno_id'] = $request->get('doc_cliente_id');
@@ -2019,7 +2030,7 @@ class ClientesController extends Controller
             'clientes.nombre',
             'clientes.nombre2',
             'clientes.ape_paterno',
-            'clientes.ape_paterno',
+            'clientes.ape_materno',
             'e.name as especialidad',
             'pe.name as periodo_estudio',
             'cc.name as concepto',
@@ -2383,5 +2394,34 @@ class ClientesController extends Controller
             }
         }
         return redirect()->route('clientes.edit', $datos['cliente']);
+    }
+
+    public function alumnosActivos(){
+        return view('clientes.reportes.alumnosActivos');
+    }
+
+    public function alumnosActivosR(Request $request){
+        $data=$request->all();
+        $registros=AlumnosActivo::select(DB::raw('fec_proceso, razon, count(cliente_id) as alumnos_activos'))
+                                  ->where('fec_proceso',$data['fecha_f'])
+                                  ->groupBy('fec_proceso')
+                                  ->groupBy('razon')
+                                  //->groupBy('estatus_cliente')
+                                  ->get();
+        //dd($registros->toArray());
+        return view('clientes.reportes.alumnosActivosR', compact('registros'));
+    }
+
+    public function alumnosActivosD(Request $request){
+        $data=$request->all();
+        $registros=AlumnosActivo::select('razon', 'cliente_id','nombre','nombre2','ape_paterno','ape_materno','estatus_cliente')
+                                  ->where('fec_proceso',$data['fecha_f'])
+                                  ->where('razon',$data['razon'])
+                                  ->orderBy('ape_paterno')
+                                  ->orderBy('ape_materno')
+                                  ->orderBy('nombre')
+                                  ->orderBy('nombre2')
+                                  ->get();
+        return view('clientes.reportes.alumnosActivosD', compact('registros'));
     }
 }

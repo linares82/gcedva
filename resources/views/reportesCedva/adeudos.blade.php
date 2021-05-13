@@ -86,9 +86,29 @@
             @php
                 $consecutivo_linea=0;
                 $suma=0;
+                $plantel="";
+                $suma_plantel=0;
+                $concepto="";
+                $suma_concepto=0;
             @endphp 
+            
             @foreach($lineas_detalle as $detalle)
+            @permission('adeudos.maestroAdeudoConMontos')    
+            @if($plantel<>"" and $plantel<>$detalle['razon'])
+            <tr><td>Suma Plantel</td><td>{{ $suma_plantel }}</td></tr>
+            @php
+                $suma_plantel=0;
+            @endphp
             <tr>   
+            @endif
+            @if($concepto<>"" and $concepto<>$detalle['concepto'])
+            <tr><td>Suma Concepto</td><td>{{ $suma_concepto }}</td></tr>
+            @php
+                $suma_concepto=0;
+            @endphp
+            <tr>   
+            @endif
+            @endpermission
             <td>{{++$consecutivo_linea}}</td>
             <td>{{$detalle['razon']}}</td>
             <td>{{$detalle['id']}}</td>
@@ -105,6 +125,10 @@
             </tr>
             @php
                 $suma=$suma+round($detalle['adeudo_planeado']);
+                $plantel=$detalle['razon'];
+                $suma_plantel=$suma_plantel+round($detalle['adeudo_planeado']);
+                $concepto=$detalle['concepto'];
+                $suma_concepto=$suma_concepto+round($detalle['adeudo_planeado']);
             @endphp
             @endforeach
             <tr><td>Total Alumnos Con Adeudo</td><td>{{ $consecutivo_linea }}</td></tr>

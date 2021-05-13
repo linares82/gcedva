@@ -233,15 +233,15 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'mp_order', 'title' => 'MP_ORDER'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'mp_reference', 'title' => 'MP_REFERENCE'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'mp_amount', 'title' => 'MP_AMOUNT'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'mp_response', 'title' => 'MP_RESPONSE'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'mp_responsemsg', 'title' => 'MP_RESPONSEMSG'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'mp_authorization', 'title' => 'MP_AUTHORIZATION'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'mp_signature', 'title' => 'MP_SIGNATURE'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => ' usu_alta_id', 'title' => ' USU_ALTA_ID'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'mp_order', 'title' => 'MP_ORDER'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'mp_reference', 'title' => 'MP_REFERENCE'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'mp_amount', 'title' => 'MP_AMOUNT'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'mp_response', 'title' => 'MP_RESPONSE'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'mp_responsemsg', 'title' => 'MP_RESPONSEMSG'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'mp_authorization', 'title' => 'MP_AUTHORIZATION'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'mp_signature', 'title' => 'MP_SIGNATURE'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => ' usu_alta_id', 'title' => ' USU_ALTA_ID'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

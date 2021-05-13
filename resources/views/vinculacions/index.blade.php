@@ -248,12 +248,12 @@
                 <table class="table table-condensed table-striped">
                     <thead>
                         <tr>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clientes.id', 'title' => 'id'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clientes.nombre', 'title' => 'CLIENTE'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'lugar_practica', 'title' => 'EMPRESA'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'tel_fijo', 'title' => 'TEL. FIJO'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'nombre_contacto', 'title' => 'NOMBRE CONTACTO'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'mail_contacto', 'title' => 'MAIL CONTACTO'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'clientes.id', 'title' => 'id'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'clientes.nombre', 'title' => 'CLIENTE'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'lugar_practica', 'title' => 'EMPRESA'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'tel_fijo', 'title' => 'TEL. FIJO'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'nombre_contacto', 'title' => 'NOMBRE CONTACTO'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'mail_contacto', 'title' => 'MAIL CONTACTO'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

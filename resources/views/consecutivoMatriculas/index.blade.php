@@ -197,13 +197,13 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'plantel_id', 'title' => 'PLANTEL_ID'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'anio', 'title' => 'ANIO'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'mes', 'title' => 'MES'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'seccion', 'title' => 'SECCION'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'consecutivo', 'title' => 'CONSECUTIVO'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'plantel_id', 'title' => 'PLANTEL_ID'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'anio', 'title' => 'ANIO'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'mes', 'title' => 'MES'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'seccion', 'title' => 'SECCION'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'consecutivo', 'title' => 'CONSECUTIVO'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

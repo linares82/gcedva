@@ -212,13 +212,13 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'matricula', 'title' => 'MATRICULA'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'cve_alumno', 'title' => 'CLAVE'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'nombre', 'title' => 'PRIMER NOMBRE'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'nombre2', 'title' => 'SEGUNDO NOMBRE'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'ape_paterno', 'title' => 'A. PATERNO'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'ape_materno', 'title' => 'A. MATERNO'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'curp', 'title' => 'CURP'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'matricula', 'title' => 'MATRICULA'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'cve_alumno', 'title' => 'CLAVE'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'nombre', 'title' => 'PRIMER NOMBRE'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'nombre2', 'title' => 'SEGUNDO NOMBRE'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'ape_paterno', 'title' => 'A. PATERNO'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'ape_materno', 'title' => 'A. MATERNO'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'curp', 'title' => 'CURP'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

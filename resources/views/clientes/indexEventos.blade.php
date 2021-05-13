@@ -212,13 +212,13 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'cliente_id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clientes.nombre', 'title' => 'PRIMER NOMBRE'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clientes.nombre2', 'title' => 'SEGUNDO NOMBRE'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clientes.ape_paterno', 'title' => 'APELLIDO PATERNO'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clientes.ape_materno', 'title' => 'APELLIDO MATERNO'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clientes.plantel_id', 'title' => 'PLANTEL'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clientes.pais_id', 'title' => 'PAIS'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clientes.st_cliente_id', 'title' => 'ESTATUS CLIENTE'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'clientes.nombre', 'title' => 'PRIMER NOMBRE'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'clientes.nombre2', 'title' => 'SEGUNDO NOMBRE'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'clientes.ape_paterno', 'title' => 'APELLIDO PATERNO'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'clientes.ape_materno', 'title' => 'APELLIDO MATERNO'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'clientes.plantel_id', 'title' => 'PLANTEL'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'clientes.pais_id', 'title' => 'PAIS'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'clientes.st_cliente_id', 'title' => 'ESTATUS CLIENTE'])</th>
                             <th>Eventos</th>
                             <th>Vinculacion</th>
                             <th class="text-right">OPCIONES</th>

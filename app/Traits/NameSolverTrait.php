@@ -7,7 +7,9 @@ This software is released under the MIT License.
 http://dog-ears.net/
 */
  
-namespace dogears\CrudDscaffold\Traits;
+namespace App\Traits;
+
+use Illuminate\Support\Str;
 
 trait NameSolverTrait {
 
@@ -20,27 +22,27 @@ trait NameSolverTrait {
      * @throws \Exception
      */
     public function solveName($input, $type){
-
+        
         if( $type === 'nameName' ){
             $result = camel_case( str_singular($input) );
         }elseif( $type === 'NameName' ){
             $result = studly_case( str_singular($input) );
         }elseif( $type === 'nameNames' ){
-            $result = camel_case( str_plural($input) );
+            $result = camel_case( Str::plural($input) );
         }elseif( $type === 'NameNames' ){
-            $result = studly_case( str_plural($input) );
+            $result = studly_case( Str::plural($input) );
         }elseif( $type === 'name_name' ){
-            $result = str_replace('__', '_', snake_case( str_singular($input) ) );
+            $result = str_replace('__', '_', Str::snake( Str::singular($input) ) );
         }elseif( $type === 'name_names' ){
-            $result = str_replace('__', '_', snake_case( str_plural($input) ) );
+            $result = str_replace('__', '_', Str::snake( Str::plural($input) ) );
         }elseif( $type === 'NAME_NAME' ){
-            $result = mb_strtoupper( str_replace('__', '_', snake_case( str_singular($input) ) ) );
+            $result = mb_strtoupper( str_replace('__', '_', snake_case( Str::singular($input) ) ) );
         }elseif( $type === 'NAME_NAMES' ){
-            $result = mb_strtoupper( str_replace('__', '_', snake_case( str_plural($input) ) ) );
+            $result = mb_strtoupper( str_replace('__', '_', snake_case( Str::plural($input) ) ) );
         }else{
-            throw new \Exception("NameSolver accept invalid type");
+            throw new \Exception("NameSolver acepto un tipo invalido: ".$type);
         }
-
+        
         return $result;
     }
 

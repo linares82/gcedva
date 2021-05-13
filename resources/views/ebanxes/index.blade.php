@@ -207,19 +207,19 @@
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
                             <th>@include('plantillas.getOrderLink', ['column' => 'origen', 'title' => 'ORIGEN'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'nombre', 'title' => 'PRIMER NOMBRE'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'nombre2', 'title' => 'SEGUNDO NOMBRE'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'ape_paterno', 'title' => 'A. PATERNO'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'ape_materno', 'title' => 'A. MATERNO'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'tel_fijo', 'title' => 'TEL. FIJO'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'mail', 'title' => 'MAIL'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'grado_id', 'title' => 'GRADO'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'tel_cel', 'title' => 'T. CELULAR'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'paise_id', 'title' => 'PAIS'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'bnd_pagado', 'title' => 'PAGADO'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'fecha_pagado', 'title' => 'FECHA'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'bnd_procesado', 'title' => 'PROCESADO'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'fecha_procesado', 'title' => 'FECHA'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'nombre', 'title' => 'PRIMER NOMBRE'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'nombre2', 'title' => 'SEGUNDO NOMBRE'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'ape_paterno', 'title' => 'A. PATERNO'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'ape_materno', 'title' => 'A. MATERNO'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'tel_fijo', 'title' => 'TEL. FIJO'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'mail', 'title' => 'MAIL'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'grado_id', 'title' => 'GRADO'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'tel_cel', 'title' => 'T. CELULAR'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'paise_id', 'title' => 'PAIS'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'bnd_pagado', 'title' => 'PAGADO'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'fecha_pagado', 'title' => 'FECHA'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'bnd_procesado', 'title' => 'PROCESADO'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'fecha_procesado', 'title' => 'FECHA'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

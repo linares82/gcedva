@@ -136,12 +136,12 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'ponderacion_id', 'title' => 'PONDERACION'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'name', 'title' => 'NOMBRE'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'porcentaje', 'title' => 'PORCENTAJE'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'bnd_activo', 'title' => 'ACTIVO'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'tiene_detalle', 'title' => 'TIENE DETALLE'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'tiene_detalle', 'title' => 'PADRE'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'ponderacion_id', 'title' => 'PONDERACION'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'name', 'title' => 'NOMBRE'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'porcentaje', 'title' => 'PORCENTAJE'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'bnd_activo', 'title' => 'ACTIVO'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'tiene_detalle', 'title' => 'TIENE DETALLE'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'tiene_detalle', 'title' => 'PADRE'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

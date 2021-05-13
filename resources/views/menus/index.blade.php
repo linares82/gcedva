@@ -231,15 +231,15 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'item', 'title' => 'ITEM'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'imagen', 'title' => 'IMAGEN'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'prioridad', 'title' => 'PRIORIDAD'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'activo', 'title' => 'ACTIVO'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'link', 'title' => 'LINK'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'parametros', 'title' => 'PARAMETROS'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'permiso', 'title' => 'PERMISO'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'padre', 'title' => 'PADRE'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => '', 'title' => ''])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'item', 'title' => 'ITEM'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'imagen', 'title' => 'IMAGEN'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'prioridad', 'title' => 'PRIORIDAD'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'activo', 'title' => 'ACTIVO'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'link', 'title' => 'LINK'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'parametros', 'title' => 'PARAMETROS'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'permiso', 'title' => 'PERMISO'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'padre', 'title' => 'PADRE'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => '', 'title' => ''])</th>
                             <th class="text-right">OPTIONS</th>
                         </tr>
                     </thead>

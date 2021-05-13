@@ -179,10 +179,10 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'name', 'title' => 'ARTICULO'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'unidad_uso', 'title' => 'UNIDAD USO'])</th>
-<!--                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'existencia', 'title' => 'EXISTENCIA'])</th>-->
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'categoria_id', 'title' => 'CATEGORIA'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'name', 'title' => 'ARTICULO'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'unidad_uso', 'title' => 'UNIDAD USO'])</th>
+<!--                        <th>@include('plantillas.getOrderlink', ['column' => 'existencia', 'title' => 'EXISTENCIA'])</th>-->
+                        <th>@include('plantillas.getOrderlink', ['column' => 'categoria_id', 'title' => 'CATEGORIA'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

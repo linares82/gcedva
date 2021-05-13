@@ -91,10 +91,10 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'plantilla', 'title' => 'NOMBRE'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'plantilla.tpo_correo_id', 'title' => 'TIPO'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'sms_bnd', 'title' => 'SMS'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'mail_bnd', 'title' => 'MAIL'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'plantilla', 'title' => 'NOMBRE'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'plantilla.tpo_correo_id', 'title' => 'TIPO'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'sms_bnd', 'title' => 'SMS'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'mail_bnd', 'title' => 'MAIL'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

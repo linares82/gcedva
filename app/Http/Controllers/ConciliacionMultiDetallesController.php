@@ -123,4 +123,5 @@ class ConciliacionMultiDetallesController extends Controller {
 		return redirect()->route('conciliacionMultiDetalles.index')->with('message', 'Registro Borrado.');
 	}
 
+	
 }

@@ -27,7 +27,11 @@ if (version_compare(PHP_VERSION, '7.2.0', '>=')) {
     //Log::info($query->bindings);
 });
 
-Route::get('/', 'Auth\LoginController@showLoginForm');
+//Route::get('/', 'Auth\LoginController@showLoginForm');
+Route::get('/', array(
+    'as' => 'login',
+    'uses' => 'Auth\LoginController@showLoginForm',
+));
 
 Auth::routes();
 
@@ -1523,6 +1527,30 @@ Route::get(
         'as' => 'clientes.generarMatricula',
         'middleware' => 'permission:clientes.generarMatricula',
         'uses' => 'ClientesController@generarMatricula'
+    )
+)->middleware('auth');
+Route::get(
+    '/clientes/clientesActivos/',
+    array(
+        'as' => 'clientes.clientesActivos',
+        'middleware' => 'permission:clientes.clientesActivos',
+        'uses' => 'ClientesController@alumnosActivos'
+    )
+)->middleware('auth');
+Route::post(
+    '/clientes/clientesActivosR/',
+    array(
+        'as' => 'clientes.clientesActivosR',
+        'middleware' => 'permission:clientes.clientesActivos',
+        'uses' => 'ClientesController@alumnosActivosR'
+    )
+)->middleware('auth');
+Route::get(
+    '/clientes/clientesActivosD/',
+    array(
+        'as' => 'clientes.clientesActivosD',
+        'middleware' => 'permission:clientes.clientesActivos',
+        'uses' => 'ClientesController@alumnosActivosD'
     )
 )->middleware('auth');
 ////////////////////////////////////

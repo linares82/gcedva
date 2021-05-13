@@ -9,6 +9,7 @@ use App\Hactividade;
 use App\Seguimiento;
 use Auth;
 use Carbon\Carbon;
+use Log;
 
 class CambiarEstatus extends Command
 {
@@ -24,7 +25,7 @@ class CambiarEstatus extends Command
      *
      * @var string
      */
-    protected $description = 'Estatus 4 (En proceso) cambia a estatus 1 (Pendiente) despues de 7 dias.';
+    protected $description = 'Estatus 4 (En proceso) cambia a estatus 1 (Pendiente) despues de 20 dias.';
 
     /**
      * Create a new command instance.
@@ -43,16 +44,27 @@ class CambiarEstatus extends Command
      */
     public function handle()
     {
-        $rs=DB::table('seguimientos')->where('st_seguimiento_id', '=', '4')->get();
+        $rs=DB::table('seguimientos')->where('st_seguimiento_id', '=', '4')
+        ->orderBy('cliente_id')
+        //->where('cliente_id','<',100)
+        ->whereNull('deleted_at')
+        ->get();
         //dd($rs->toArray());
+        Log::info('Id seguimiento con estatus cambiado despues de 20 dias de la ultima actividad');
         foreach($rs as $r){
-            $ultimo=DB::table('hactividades')->where('seguimiento_id', '=', $r->id)->orderBy('id', 'desc')->first();
-            if($ultimo){
+            $ultima_actividad=DB::table('hactividades')
+            ->where('seguimiento_id', '=', $r->id)
+            ->whereNull('deleted_at')
+            ->orderBy('id', 'desc')->first();
+            if(!is_null($ultima_actividad)){
                 //dd($ultimo);
                 $hoy = Carbon::now();
-                $fecha = Carbon::parse($ultimo->fecha);
+                $fecha = Carbon::parse($ultima_actividad->fecha);
                 $dif=$hoy->diffInDays($fecha);
-                if($dif>7){
+                if($dif>20){
+                    //Log::info('seguimiento_id:'.$ultima_actividad->seguimiento_id);
+                    Log::info('seguimiento_id:'.$ultima_actividad->seguimiento_id." - fecha: ".$ultima_actividad->fecha);
+                    //dd($ultima_actividad);
                     $registro=Seguimiento::find($r->id);
                     //dd($registro->toArray());
                     $registro->st_seguimiento_id=1;

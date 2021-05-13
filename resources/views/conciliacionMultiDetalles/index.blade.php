@@ -467,28 +467,28 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'conciliacion_multipagos.fecha_carga', 'title' => 'CONCILIACION_MULTIPAGO_FECHA_CARGA'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'fecha_pago', 'title' => 'FECHA_PAGO'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'razon_social', 'title' => 'RAZON_SOCIAL'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'mp_node', 'title' => 'MP_NODE'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'mp_concept', 'title' => 'MP_CONCEPT'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'mp_paymentmethod', 'title' => 'MP_PAYMENTMETHOD'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'mp_reference', 'title' => 'MP_REFERENCE'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'mp_order', 'title' => 'MP_ORDER'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'no_aprobacion', 'title' => 'NO_APROBACION'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'identificador_venta', 'title' => 'IDENTIFICADOR_VENTA'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'ref_medio_pago', 'title' => 'REF_MEDIO_PAGO'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'comicion', 'title' => 'COMICION'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'iva_comision', 'title' => 'IVA_COMISION'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'fecha_dispersion', 'title' => 'FECHA_DISPERSION'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'periodo_financiamiento', 'title' => 'PERIODO_FINANCIAMIENTO'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'moneda', 'title' => 'MONEDA'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'banco_emisor', 'title' => 'BANCO_EMISOR'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'mp_customername', 'title' => 'MP_CUSTOMERNAME'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'mail', 'title' => 'MAIL'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'tel_customername', 'title' => 'TEL_CUSTOMERNAME'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'conciliacion_multipagos.fecha_carga', 'title' => 'CONCILIACION_MULTIPAGO_FECHA_CARGA'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'fecha_pago', 'title' => 'FECHA_PAGO'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'razon_social', 'title' => 'RAZON_SOCIAL'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'mp_node', 'title' => 'MP_NODE'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'mp_concept', 'title' => 'MP_CONCEPT'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'mp_paymentmethod', 'title' => 'MP_PAYMENTMETHOD'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'mp_reference', 'title' => 'MP_REFERENCE'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'mp_order', 'title' => 'MP_ORDER'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'no_aprobacion', 'title' => 'NO_APROBACION'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'identificador_venta', 'title' => 'IDENTIFICADOR_VENTA'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'ref_medio_pago', 'title' => 'REF_MEDIO_PAGO'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'comicion', 'title' => 'COMICION'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'iva_comision', 'title' => 'IVA_COMISION'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'fecha_dispersion', 'title' => 'FECHA_DISPERSION'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'periodo_financiamiento', 'title' => 'PERIODO_FINANCIAMIENTO'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'moneda', 'title' => 'MONEDA'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'banco_emisor', 'title' => 'BANCO_EMISOR'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'mp_customername', 'title' => 'MP_CUSTOMERNAME'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'mail', 'title' => 'MAIL'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'tel_customername', 'title' => 'TEL_CUSTOMERNAME'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

@@ -359,11 +359,11 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'nombre', 'title' => 'NOMBRE'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'detalle', 'title' => 'DETALLE'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'activo_bnd', 'title' => 'ACTIVO'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'sms_bnd', 'title' => 'SMS'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'mail_bnd', 'title' => 'MAIL'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'nombre', 'title' => 'NOMBRE'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'detalle', 'title' => 'DETALLE'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'activo_bnd', 'title' => 'ACTIVO'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'sms_bnd', 'title' => 'SMS'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'mail_bnd', 'title' => 'MAIL'])</th>
                         
                         
                             <th class="text-right">OPCIONES</th>

@@ -108,9 +108,9 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'diplomado_id', 'title' => 'DIPLOMADO'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'name', 'title' => 'SUBDIPLOMADO'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'plantel_id', 'title' => 'PLANTEL'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'diplomado_id', 'title' => 'DIPLOMADO'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'name', 'title' => 'SUBDIPLOMADO'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'plantel_id', 'title' => 'PLANTEL'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

@@ -599,8 +599,8 @@ class HacademicasController extends Controller
                 ->orderBy('cli.ape_materno')
                 ->orderBy('cli.nombre')
                 ->orderBy('cli.nombre2')
-                
                 ->get();
+                
         } else {
             //if($calificacion_inicio<=$hoy and $calificacion_fin>=$hoy){
 

@@ -112,7 +112,7 @@ trait AuthenticatesUsers
      */
     protected function authenticated(Request $request, User $user)
     {
-        //
+        //dd($user);
     }
 
     /**

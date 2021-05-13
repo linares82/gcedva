@@ -227,15 +227,15 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'plantel_id', 'title' => 'PLANTEL'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'especialidad_id', 'title' => 'ESPECIALIDAD'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'nivel_id', 'title' => 'NIVEL'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'grado_id', 'title' => 'GRADO'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'grupos.name', 'title' => 'GRUPO'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'cliente.curp', 'title' => 'CURP'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'fec_inscripcion', 'title' => 'F. INSCRIPCION'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'periodo_lectivo_id', 'title' => 'PERIODO LECTIVO'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'cliente_id', 'title' => 'ALUMNO'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'plantel_id', 'title' => 'PLANTEL'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'especialidad_id', 'title' => 'ESPECIALIDAD'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'nivel_id', 'title' => 'NIVEL'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'grado_id', 'title' => 'GRADO'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'grupos.name', 'title' => 'GRUPO'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'cliente.curp', 'title' => 'CURP'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'fec_inscripcion', 'title' => 'F. INSCRIPCION'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'periodo_lectivo_id', 'title' => 'PERIODO LECTIVO'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'cliente_id', 'title' => 'ALUMNO'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

@@ -24,7 +24,9 @@
             {!! Form::open(array('route' => 'bsBajas.bajasBs')) !!}
             <table class="table table-condensed table-striped">
                 <thead>
-                    <th>No.</th><th>Plantel</th><th>Id Cliente</th><th>Matricula</th><th>Cliente</th><th>Estatus</th><th>Adeudos</th>
+                    <th>No.</th><th>Plantel</th><th>Especialidad</th><th>Nivel</th><th>Grado</th>
+                    <th>Id Cliente</th><th>Matricula</th><th>Cliente</th><th>Estatus</th>
+                    <th>Adeudos</th>
                     <th>
 			<input type="submit" class="btn btn-primary" value="Baja BrightSpace"><br/>
 			<label>*<input type="checkbox" checked id="seleccionar_todo">Seleccionar Todo</label>
@@ -37,7 +39,9 @@
                     @foreach ($registros as $r)
                         <tr>
                             <td>{{ ++$i }}</td>
-                            <td>{{ $r->cliente->plantel->razon }}</td><td>{{ $r->cliente_id }}</td><td>{{ $r->cliente->matricula }}</td>
+                            <td>{{ $r->cliente->plantel->razon }}</td><td>{{ $r->combinacionCliente->especialidad->name }}</td><td>{{ $r->combinacionCliente->nivel->name }}</td>
+                            <td>{{ $r->combinacionCliente->grado->name }}</td>
+                            <td>{{ $r->cliente_id }}</td><td>{{ $r->cliente->matricula }}</td>
                             <td>{{ $r->cliente->ape_paterno }} {{ $r->cliente->ape_materno }} {{ $r->cliente->nombre }} {{ $r->cliente->nombre2 }}</td>
                             <td>{{ $r->cliente->stCliente->name }}</td>
                             <td>

@@ -42,7 +42,7 @@ class ProspectoToAsesores extends Command
     public function handle()
     {
         $prospectos=Prospecto::where('st_prospecto_id',1)->get();
-        dd(date('Y-m-d'));
+        //dd($prospectos->toArray());
         $hoy=Carbon::createFromFormat('Y-m-d',date('Y-m-d'));
         
         foreach($prospectos as $prospecto){
@@ -59,7 +59,7 @@ class ProspectoToAsesores extends Command
                     $dias_no_habiles=DiaNoHabil::where('fecha',$creacion->toDateString())->first();    
                     if(is_null($dias_no_habiles)){
                         $dias++;
-                        echo $prospecto->id."--".$dias."**";
+                        //echo $prospecto->id."--".$dias."**";
                         if($dias>=3){
                             //Log::info($hoy->diffInDays($creacion));
                             //dd($hoy->diffInDays($creacion));

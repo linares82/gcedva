@@ -197,13 +197,13 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'autorizacion_becas.solicitud', 'title' => 'AUTORIZACION_BECA_SOLICITUD'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'comentario', 'title' => 'COMENTARIO'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'monto_inscripcion', 'title' => 'MONTO_INSCRIPCION'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'monto_mensualidad', 'title' => 'MONTO_MENSUALIDAD'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'st_becas.name', 'title' => 'ST_BECA_NAME'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'autorizacion_becas.solicitud', 'title' => 'AUTORIZACION_BECA_SOLICITUD'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'comentario', 'title' => 'COMENTARIO'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'monto_inscripcion', 'title' => 'MONTO_INSCRIPCION'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'monto_mensualidad', 'title' => 'MONTO_MENSUALIDAD'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'st_becas.name', 'title' => 'ST_BECA_NAME'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

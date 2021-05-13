@@ -215,14 +215,14 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'empresas.razon_social', 'title' => 'EMPRESA_RAZON_SOCIAL'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'empleados.nombre', 'title' => 'EMPLEADO_NOMBRE'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'tareas.name', 'title' => 'TAREA_NAME'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'asuntos.name', 'title' => 'ASUNTO_NAME'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'detalle', 'title' => 'DETALLE'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'st_tareas.name', 'title' => 'ST_TAREA_NAME'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'empresas.razon_social', 'title' => 'EMPRESA_RAZON_SOCIAL'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'empleados.nombre', 'title' => 'EMPLEADO_NOMBRE'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'tareas.name', 'title' => 'TAREA_NAME'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'asuntos.name', 'title' => 'ASUNTO_NAME'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'detalle', 'title' => 'DETALLE'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'st_tareas.name', 'title' => 'ST_TAREA_NAME'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

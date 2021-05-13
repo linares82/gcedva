@@ -179,12 +179,12 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'tickets.nombre_corto', 'title' => 'TICKET_NOMBRE_CORTO'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'detalle', 'title' => 'DETALLE'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'asignado_a', 'title' => 'ASIGNADO_A'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'st_tickets.nombre_corto', 'title' => 'ST_TICKET_NOMBRE_CORTO'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'tickets.nombre_corto', 'title' => 'TICKET_NOMBRE_CORTO'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'detalle', 'title' => 'DETALLE'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'asignado_a', 'title' => 'ASIGNADO_A'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'st_tickets.nombre_corto', 'title' => 'ST_TICKET_NOMBRE_CORTO'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

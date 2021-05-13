@@ -174,8 +174,8 @@
             //necesario para subir archivos via ajax
             dataType: 'json',
             //mientras enviamos el archivo
-            beforeSend : function(){$("#loading"+$(this).data('cliente_id')).show();},
-            complete : function(){$("#loading"+$(this).data('cliente_id')).hide();},
+            beforeSend : function(){$(".btn-guardar_caificacion").prop('disabled',true);},
+            complete : function(){$(".btn-guardar_caificacion").prop('disabled',false);},
             //una vez finalizado correctamente
             success: function (data) {
                 //location.reload();

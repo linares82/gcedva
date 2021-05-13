@@ -179,12 +179,12 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'plantilla_id', 'title' => 'PLANTILLA_ID'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'campo_id', 'title' => 'CAMPO_ID'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'signo_comparacion', 'title' => 'SIGNO_COMPARACION'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'valor_condicion', 'title' => 'VALOR_CONDICION'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'plantilla_id', 'title' => 'PLANTILLA_ID'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'campo_id', 'title' => 'CAMPO_ID'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'signo_comparacion', 'title' => 'SIGNO_COMPARACION'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'valor_condicion', 'title' => 'VALOR_CONDICION'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

@@ -179,12 +179,12 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'peticion_multipagos_id', 'title' => 'PETICION_MULTIPAGOS_ID'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'campo', 'title' => 'CAMPO'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'valor_anterior', 'title' => 'VALOR_ANTERIOR'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'valor', 'title' => 'VALOR'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'peticion_multipagos_id', 'title' => 'PETICION_MULTIPAGOS_ID'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'campo', 'title' => 'CAMPO'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'valor_anterior', 'title' => 'VALOR_ANTERIOR'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'valor', 'title' => 'VALOR'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

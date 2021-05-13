@@ -2,12 +2,17 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use Illuminate\Http\Request;
 use Session;
+use App\User;
+use App\Empleado;
+use Illuminate\Http\Request;
 //use Auth;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
+
+
 
 class LoginController extends Controller
 {
@@ -54,9 +59,43 @@ class LoginController extends Controller
         return redirect('/');
     }
 
+    /**
+     * The user has been authenticated.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  mixed  $user
+     * @return mixed
+     */
+    
+
+    /*public function authenticate(Request $request)
+    {
+        $credentials = $request->only('email', 'password');
+
+        if (Auth::attempt($credentials)) {
+            // Authentication passed...
+            
+            
+        }
+    }*/
+
+    
+
     public function authenticated(Request $request, $user)
     {
-        //dd($user->id);
+        //$usuario=User::where('email',$request->email)->first();
+        $empleado=Empleado::where('user_id',$user->id)->first();
+        //dd($empleado->plantel->st_plantel_id);
+        if($empleado->plantel->st_plantel_id<>1){
+            //dd('fil');
+            /*
+            $this->guard()->logout();
+            $request->session()->flush();
+            $request->session()->regenerate(true); //<-- pass a boolean true to regenerate function.
+            
+            return view('auth.login')->with('message','Plantel no esta activo');
+            */
+        }
 
         Session::put('user_id', $user->id);
 

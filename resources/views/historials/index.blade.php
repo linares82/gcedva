@@ -197,11 +197,11 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'historia_eventos.name', 'title' => 'EVENTO'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'descripcion', 'title' => 'DESCRIPCION'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'fecha', 'title' => 'FECHA'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'archivo', 'title' => 'ARCHIVO'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'empleados.nombre', 'title' => 'EMPLEADO'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'historia_eventos.name', 'title' => 'EVENTO'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'descripcion', 'title' => 'DESCRIPCION'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'fecha', 'title' => 'FECHA'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'archivo', 'title' => 'ARCHIVO'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'empleados.nombre', 'title' => 'EMPLEADO'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

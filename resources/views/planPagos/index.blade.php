@@ -103,8 +103,9 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'name', 'title' => 'PLAN PAGOS'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'activo', 'title' => 'ACTIVO'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'name', 'title' => 'PLAN PAGOS'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'plantel_id', 'title' => 'PLANTEL'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'activo', 'title' => 'ACTIVO'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
@@ -114,6 +115,7 @@
                             <tr>
                                 <td><a href="{{ route('planPagos.show', $planPago->id) }}">{{$planPago->id}}</a></td>
                                 <td>{{$planPago->name}}</td>
+                                <td>{{$planPago->plantel->razon}}</td>
                                 <td>@if($planPago->activo==1)
                                     SI
                                     @else

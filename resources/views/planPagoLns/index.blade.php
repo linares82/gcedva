@@ -233,15 +233,15 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'plan_pago_id', 'title' => 'PLAN_PAGO_ID'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'caja_conceptos.name', 'title' => 'CAJA_CONCEPTO_NAME'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'cuenta_contables.name', 'title' => 'CUENTA_CONTABLE_NAME'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'cuenta_recargo_id', 'title' => 'CUENTA_RECARGO_ID'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'fecha_pago', 'title' => 'FECHA_PAGO'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'monto', 'title' => 'MONTO'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'inicial_bnd', 'title' => 'INICIAL_BND'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'plan_pago_id', 'title' => 'PLAN_PAGO_ID'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'caja_conceptos.name', 'title' => 'CAJA_CONCEPTO_NAME'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'cuenta_contables.name', 'title' => 'CUENTA_CONTABLE_NAME'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'cuenta_recargo_id', 'title' => 'CUENTA_RECARGO_ID'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'fecha_pago', 'title' => 'FECHA_PAGO'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'monto', 'title' => 'MONTO'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'inicial_bnd', 'title' => 'INICIAL_BND'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

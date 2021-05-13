@@ -139,9 +139,9 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'name', 'title' => 'MATERIA'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'abreviatura', 'title' => 'ABREVIATURA'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'plantels.razon', 'title' => 'PLANTEL_RAZON'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'name', 'title' => 'MATERIA'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'abreviatura', 'title' => 'ABREVIATURA'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'plantels.razon', 'title' => 'PLANTEL_RAZON'])</th>
                         
                             <th class="text-right">OPCIONES</th>
                         </tr>

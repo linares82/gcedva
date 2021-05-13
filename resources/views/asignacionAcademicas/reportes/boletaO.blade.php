@@ -167,7 +167,7 @@
                                                         @endphp
                                                         @endif
                                                     @endforeach
-                                                    <td>{{$cali->calificacion<6 ? ($cali->calificacion % 1) : round($cali->calificacion,0)}}</td>
+                                                    <td>{{$cali->calificacion<6 ? (intdiv($cali->calificacion,1)) : round($cali->calificacion,0)}}</td>
                                                     @if($cantidad_materias_validas>0)
                                                     @if(($sumatoria_calificacions_validas/$cantidad_materias_validas)>=6)    
                                                     {{ round($sumatoria_calificacions_validas/$cantidad_materias_validas) }}

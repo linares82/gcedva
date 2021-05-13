@@ -287,18 +287,18 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'id', 'title' => 'ID'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'horario', 'title' => 'HORARIO'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'materia', 'title' => 'MATERIA'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'modulo', 'title' => 'MODULO'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'instructor', 'title' => 'INSTRUCTOR'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clave', 'title' => 'CLAVE'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'apellido_paterno', 'title' => 'APELLIDO_PATERNO'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'apellido_materno', 'title' => 'APELLIDO_MATERNO'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'nombre', 'title' => 'NOMBRE'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'calif_final', 'title' => 'CALIF_FINAL'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'id', 'title' => 'ID'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'horario', 'title' => 'HORARIO'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'materia', 'title' => 'MATERIA'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'modulo', 'title' => 'MODULO'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'instructor', 'title' => 'INSTRUCTOR'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'clave', 'title' => 'CLAVE'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'apellido_paterno', 'title' => 'APELLIDO_PATERNO'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'apellido_materno', 'title' => 'APELLIDO_MATERNO'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'nombre', 'title' => 'NOMBRE'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'calif_final', 'title' => 'CALIF_FINAL'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

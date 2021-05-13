@@ -30,7 +30,7 @@ class ReportesCedvaController extends Controller
         $reportes = array(1 => 'Activos', 2 => 'Adeudos', 3 => 'Pagados', 4 => 'Inscritos Por Ciclo');
         $empleado = Empleado::where('user_id', Auth::user()->id)->first();
         $planteles = $empleado->plantels->pluck('razon', 'id');
-        $estatus = array('0' => 'Todos', '1' => 'Vigente');
+        $estatus = array('0' => 'Todos', '1' => 'Vigente', '2'=>"Baja");
         $pagos = array('0' => 'Todos', '1' => 'Pagado', '2' => 'Pendiente');
         $caja_conceptos = CajaConcepto::pluck('name', 'id');
         $caja_conceptos->prepend('Todos');
@@ -49,7 +49,7 @@ class ReportesCedvaController extends Controller
         }elseif($datos['estatus_f']==1){
             $estatus=array(4,20,22,25,26);
         }elseif($datos['estatus_f']==2){
-            //$estatus=array('1', '3','6','7');
+            $estatus=array('3', '27','28');
         }
         if($datos['pagos_f']==0){
             $pagos=array(0,1);
@@ -80,6 +80,7 @@ class ReportesCedvaController extends Controller
                     'stc.name as estatus_cliente',
                     'sts.name as estatus_seguimiento',
                     'cc.name as concepto',
+                    'caj.id as caja_id',
                     'caj.consecutivo',
                     'caj.fecha as fecha_caja',
                     'caj.total as total_caja',
@@ -129,6 +130,9 @@ class ReportesCedvaController extends Controller
                 $lineas_detalle = array();
                 foreach ($datos['plantel_f'] as $plantel) {
                     $registros_totales = Adeudo::join('clientes as c', 'c.id', '=', 'adeudos.cliente_id')
+                        ->join('plan_pago_lns as ppl','ppl.id','=','adeudos.plan_pago_ln_id')
+                        ->join('plan_pagos as pp','pp.id','=','ppl.plan_pago_id')
+                        ->join('ciclo_matriculas as cm','cm.id','=','pp.ciclo_matricula_id')
                         ->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
                         ->join('caja_conceptos as adeudo_concepto', 'adeudo_concepto.id', '=', 'adeudos.caja_concepto_id')
                         ->join('combinacion_clientes as ccli', 'ccli.id', '=', 'adeudos.combinacion_cliente_id')
@@ -161,7 +165,8 @@ class ReportesCedvaController extends Controller
                         ->whereDate('adeudos.fecha_pago', '<=', $datos['fecha_t'])
                         ->where('p.id', $plantel)
                         ->whereIn('adeudos.caja_concepto_id', $datos['concepto_caja_f'])
-                        ->where('c.matricula','like',$datos['ciclo_f'].'%')
+                        //->where('c.matricula','like',$datos['ciclo_f'].'%')
+                        ->whereIn('cm.id', $datos['ciclo_f'])
                         ->where('adeudos.pagado_bnd', 0)
                         //->where('c.st_cliente_id', '<>', 3)
                         ->whereNull('ccli.deleted_at')
@@ -190,6 +195,9 @@ class ReportesCedvaController extends Controller
                 foreach ($datos['plantel_f'] as $plantel) {
 
                     $registros_totales_aux = Adeudo::join('clientes as c', 'c.id', '=', 'adeudos.cliente_id')
+                        ->join('plan_pago_lns as ppl','ppl.id','=','adeudos.plan_pago_ln_id')
+                        ->join('plan_pagos as pp','pp.id','=','ppl.plan_pago_id')
+                        ->join('ciclo_matriculas as cm','cm.id','=','pp.ciclo_matricula_id')
                         ->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
                         ->join('seguimientos as s', 's.cliente_id', '=', 'c.id')
                         ->join('st_seguimientos as sts', 'sts.id', '=', 's.st_seguimiento_id')
@@ -303,7 +311,8 @@ class ReportesCedvaController extends Controller
                     $registros_totales = $registros_totales_aux->where('p.id', $plantel)
 
                         ->whereIn('adeudos.caja_concepto_id', $datos['concepto_caja_f'])
-                        ->where('c.matricula','like',$datos['ciclo_f'].'%')
+                        //->where('c.matricula','like',$datos['ciclo_f'].'%')
+                        ->whereIn('cm.id', $datos['ciclo_f'])
                         ->whereNull('adeudos.deleted_at')
                         ->whereNull('s.deleted_at')
                         ->orderBy('seccion')
@@ -335,9 +344,13 @@ class ReportesCedvaController extends Controller
                     'clientes.nombre',
                     'clientes.nombre2',
                     'stc.name as estatus',
-                    'cc.name as concepto'
+                    'cc.name as concepto',
+                    'cm.name as ciclo_matricula'
                 )
                     ->join('adeudos as a','a.cliente_id','=','clientes.id')
+                    ->join('plan_pago_lns as ppl','ppl.id','=','a.plan_pago_ln_id')
+                    ->join('plan_pagos as pp','pp.id','=','ppl.plan_pago_id')
+                    ->join('ciclo_matriculas as cm','cm.id','=','pp.ciclo_matricula_id')
                     ->join('caja_conceptos as cc','cc.id','=','a.caja_concepto_id')
                     ->join('seguimientos as s','s.cliente_id','=','clientes.id')
                     ->join('st_clientes as stc','stc.id','=','clientes.st_cliente_id')
@@ -347,7 +360,8 @@ class ReportesCedvaController extends Controller
                     //->whereIn('s.st_seguimiento_id',$estatus)
                     ->whereIn('clientes.plantel_id', $datos['plantel_f'])
                     ->whereIn('a.caja_concepto_id', array(1,23,25))
-                    ->where('clientes.matricula','like',$datos['ciclo_f']."%")
+                    //->where('clientes.matricula','like',$datos['ciclo_f']."%")
+                    ->whereIn('cm.id', $datos['ciclo_f'])
                     ->whereNull('ccli.deleted_at')
                     ->orderBy('p.razon')
                     ->orderBy('clientes.ape_paterno')
@@ -355,7 +369,7 @@ class ReportesCedvaController extends Controller
                     ->orderBy('clientes.nombre')
                     ->orderBy('clientes.nombre2')
                     ->get();
-                    //dd($registros);
+                    //dd($registros->toArray());
         
                 $plantel = Plantel::find($datos['plantel_f']);
                 //dd($registros->toArray());

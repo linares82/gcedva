@@ -29,17 +29,39 @@
         $suma=0;
         $csc=0;
         $matricula="";
+        $plantel="";
+        $suma_plantel=0;
+        $ciclo="";
+        $suma_ciclo=0;
         @endphp
         @foreach ($registros as $registro)
+          @if($plantel<>"" and $plantel<>$registro->razon)
+          <tr><td>Suma Plantel</td><td>{{ $suma_plantel }}</td></tr>
+          @php
+              $suma_plantel=0;
+          @endphp
+          <tr>   
+          @endif
+          @if($ciclo<>"" and $ciclo<>$registro->ciclo_matricula)
+          <tr><td>Suma Concepto</td><td>{{ $suma_ciclo }}</td></tr>
+          @php
+              $suma_ciclo=0;
+          @endphp
+          <tr>   
+          @endif  
           <tr>
             <td>{{ ++$csc }}</td><td>{{ $registro->razon }}</td><td>{{ $registro->cliente }}</td><td>{{ $registro->matricula }}</td><td>{{ $registro->seccion }}</td>
             <td>{{ $registro->ape_paterno }} </td><td>{{ $registro->ape_materno }}</td><td>{{ $registro->nombre }} {{ $registro->nombre2 }}</td>
-            <td>{{ $registro->estatus }}</td><td>{{ $registro->concepto }}</td><td>{{ $datos['ciclo_f'] }}</td>
+            <td>{{ $registro->estatus }}</td><td>{{ $registro->concepto }}</td><td>{{ $registro->ciclo_matricula }}</td>
           </tr>
         @php
             //$especialidad=$registro->especialidad;
             $cantidad=$cantidad+1;
             $suma=$registro->monto;
+            $plantel=$registro->razon;
+            $suma_plantel=$suma_plantel+1;
+            $ciclo=$registro->ciclo_matricula;
+            $suma_ciclo=$suma_ciclo+1;
         @endphp
         @endforeach
         <tr><td>Total Activos</td><td>{{ $cantidad }}</td></tr>

@@ -233,13 +233,13 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'plantels.razon', 'title' => 'PLANTEL ORIGEN'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'origen_id', 'title' => 'ORIGEN'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'plantels.razon', 'title' => 'PLANTEL DESTINO'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'destino_id', 'title' => 'DESTINO'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'monto', 'title' => 'MONTO'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'fecha', 'title' => 'FECHA'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'responsable_id', 'title' => 'RESPONSABLE'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'plantels.razon', 'title' => 'PLANTEL ORIGEN'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'origen_id', 'title' => 'ORIGEN'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'plantels.razon', 'title' => 'PLANTEL DESTINO'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'destino_id', 'title' => 'DESTINO'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'monto', 'title' => 'MONTO'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'fecha', 'title' => 'FECHA'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'responsable_id', 'title' => 'RESPONSABLE'])</th>
                         
                             <th class="text-right">OPCIONES</th>
                         </tr>

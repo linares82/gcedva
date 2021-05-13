@@ -109,14 +109,14 @@
                      </div>
                      <div class="form-group col-md-4 @if($errors->has('concepto_multipagos_id')) has-error @endif">
                         <label for="concepto_multipagos_id-field">Conceptos Multipago *<input type="checkbox" id="seleccionar_conceptos">Seleccionar Todo</label>
-                        {!! Form::select("concepto_multipagos_id[]", $lista_conceptosMultipago, $plantel->conceptoMultipagos, array("class" => "form-control select_seguridad", "id" => "concepto_multipagos_id-field", 'multiple'=>true)) !!}
+                        {!! Form::select("concepto_multipagos_id[]", $lista_conceptosMultipago, optional($plantel)->conceptoMultipagos, array("class" => "form-control select_seguridad", "id" => "concepto_multipagos_id-field", 'multiple'=>true)) !!}
                         @if($errors->has("concepto_multipagos_id"))
                           <span class="help-block">{{ $errors->first("concepto_multipagos_id") }}</span>
                         @endif
                       </div>
                       <div class="form-group col-md-4 @if($errors->has('forma_pago_id')) has-error @endif">
                         <label for="forma_pago_id-field">Formas Pago Multipago *<input type="checkbox" id="seleccionar_conceptos">Seleccionar Todo</label>
-                        {!! Form::select("forma_pago_id[]", $lista_formaPagos, $plantel->formaPagos, array("class" => "form-control select_seguridad", "id" => "forma_pago_id-field", 'multiple'=>true)) !!}
+                        {!! Form::select("forma_pago_id[]", $lista_formaPagos, optional($plantel)->formaPagos, array("class" => "form-control select_seguridad", "id" => "forma_pago_id-field", 'multiple'=>true)) !!}
                         @if($errors->has("forma_pago_id"))
                           <span class="help-block">{{ $errors->first("forma_pago_id") }}</span>
                         @endif
@@ -383,6 +383,7 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @if(!is_null($documentos_faltantes))
                                 @foreach($documentos_faltantes as $df)
                                 <tr>
                                     <td>
@@ -393,13 +394,11 @@
                                         <button class="btn btn-success btn-xs"><span class="glyphicon glyphicon-ok"></span></button>
                                         @else
                                         <button class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-remove"></span></button>
-                                        
-
                                         @endif
                                     </td>
-
                                 </tr>
                                 @endforeach
+                                @endif
                             </tbody>
                         </table>
                     </div>

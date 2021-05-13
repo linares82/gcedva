@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
+use Auth;
+use Hash;
 
+use App\Cliente;
+use App\Http\Requests;
 use App\UsuarioCliente;
 use Illuminate\Http\Request;
-use Auth;
-use App\Http\Requests\updateUsuarioCliente;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\createUsuarioCliente;
-use Hash;
+use App\Http\Requests\updateUsuarioCliente;
 
 class UsuarioClientesController extends Controller
 {
@@ -109,6 +110,9 @@ class UsuarioClientesController extends Controller
 		//update data
 		$usuarioCliente = $usuarioCliente->find($id);
 		$usuarioCliente->update($input);
+		$cliente=Cliente::where('matricula',$usuarioCliente->name)->first();
+		$cliente->mail=$usuarioCliente->email;
+		$cliente->save();
 
 		return redirect()->route('clientes.indexEventos')->with('message', 'Registro Actualizado.');
 	}

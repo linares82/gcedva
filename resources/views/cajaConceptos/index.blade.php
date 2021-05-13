@@ -137,11 +137,11 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'name', 'title' => 'CONCEPTO'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'monto', 'title' => 'MONTO'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'bnd_aplicar_beca', 'title' => 'APLICAR BECA'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'activo', 'title' => 'ACTIVO'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'uso_factura', 'title' => 'USO FACTURA'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'name', 'title' => 'CONCEPTO'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'monto', 'title' => 'MONTO'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'bnd_aplicar_beca', 'title' => 'APLICAR BECA'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'activo', 'title' => 'ACTIVO'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'uso_factura', 'title' => 'USO FACTURA'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

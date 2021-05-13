@@ -220,8 +220,9 @@ class ProspectosController extends Controller {
 
 	public function prospectosR(Request $request){
 		$datos=$request->all();
-		$resumen=Prospecto::select(DB::raw('prospectos.fecha, u.name as usuario, stp.name as estatus, count(u.name) as total'))
-		->join('users as u','u.id','=','prospectos.usu_alta_id')
+		$resumen=Prospecto::select(DB::raw('prospectos.fecha, p.razon, ua.name as usuario_alta, stp.name as estatus, count(ua.name) as total'))
+		->join('users as ua','ua.id','=','prospectos.usu_alta_id')
+		->join('plantels as p','p.id','=','prospectos.plantel_id')
 		->join('st_prospectos as stp','stp.id','=','prospectos.st_prospecto_id')
 		//->join('plantels as p','p.id','=','prospectos.plantel_id')
 		->whereDate('prospectos.fecha','>=', $datos['fecha_f'])
@@ -229,8 +230,9 @@ class ProspectosController extends Controller {
 		->whereIn('prospectos.plantel_id', $datos['plantel_f'])
 		//->groupBy('p.razon')
 		->groupBy('prospectos.fecha')
+		->groupBy('p.razon')
 		->groupBy('stp.name')
-		->groupBy('u.name')
+		->groupBy('ua.name')
 		->get();
 		//dd($resumen->toArray());
 		$registros=Prospecto::whereDate('created_at','>=', $datos['fecha_f'])

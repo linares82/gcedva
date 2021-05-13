@@ -11,7 +11,7 @@ namespace App\Traits;
 
 use App\Http\Requests;
 use Illuminate\Http\Request;
-use dogears\CrudDscaffold\Traits\NameSolverTrait;
+use App\Traits\NameSolverTrait;
 use App\Empleado;
 use App\Plantel;
 use Auth;
@@ -35,7 +35,8 @@ trait GetAllDataTrait
         $myQuery = $myObj;
 
         $names = explode('\\', get_class($myObj));
-        $baseTable = $myObj->solveName(end($names), config('CrudDscaffold.app_name_rules.app_migrate_tablename'));    //ex).apples
+        //dd(end($names));
+        $baseTable = $myObj->solveName(end($names), 'name_names');    //ex).apples
         if ($baseTable == 'est_asistencia') {
             $baseTable = $baseTable . 's';
         }
@@ -45,9 +46,9 @@ trait GetAllDataTrait
         if (is_array($myObj->relationApps)) {
             //dd($myObj->relationApps);
             foreach ($myObj->relationApps as $className => $classObj) {
-
-                $relationTable = $myObj->solveName($className, config('CrudDscaffold.app_name_rules.app_migrate_tablename'));    //ex).apple_types
-                $relationColumnInBaseTable = $myObj->solveName($className, config('CrudDscaffold.app_name_rules.name_name')) . '_id';    //ex).apple_type_id
+                
+                $relationTable = $myObj->solveName($className, 'name_names');    //ex).apple_types
+                $relationColumnInBaseTable = $myObj->solveName($className, 'name_name') . '_id';    //ex).apple_type_id
                 //dd($relationTable);
                 $myQuery = $myQuery->leftJoin($relationTable, $baseTable . '.' . $relationColumnInBaseTable, '=', $relationTable . '.id');  //ex).leftJoin( 'apple_types', 'apples.apple_type_id', '=', 'apple_types.id' )
                 //dd($myQuery);
@@ -233,11 +234,6 @@ trait GetAllDataTrait
                 $myQuery = $myQuery->whereIn('muebles.plantel_id', $planteles);
                 //}
                 break;
-            case "periodo_estudios":
-                //if (Auth::user()->can('IFiltroEmpleadosXPlantel')) {
-                $myQuery = $myQuery->whereIn('periodo_estudios.plantel_id', $planteles);
-                //}
-                break;
             case "nivels":
                 //dd(Auth::user()->can('IfiltroNivelXplantel'));
                 //if ($baseTable == "nivels") { // and Auth::user()->can('IfiltroNivelXplantel')
@@ -249,6 +245,16 @@ trait GetAllDataTrait
                     $myQuery = $myQuery->where('pivot_aviso_gral_empleados.empleado_id', '=', $empleado->id);
                 }
                 break;
+            case "periodo_estudios":
+                //if (Auth::user()->can('IFiltroEmpleadosXPlantel')) {
+                $myQuery = $myQuery->whereIn('periodo_estudios.plantel_id', $planteles);
+                //}
+                break;
+                case "plan_pagos":
+                    if (Auth::user()->can('IPlanPagosXPlantel')) {
+                    $myQuery = $myQuery->whereIn('plan_pagos.plantel_id', $planteles);
+                    }
+                    break;
             case "plantels":
                 $myQuery = $myQuery->whereIn('plantels.id', $planteles);
                 break;

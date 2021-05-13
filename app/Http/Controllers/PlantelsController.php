@@ -56,8 +56,12 @@ class PlantelsController extends Controller
 		$lista_conceptosMultipago = ConceptoMultipago::pluck('name', 'id');
 		$lista_formaPagos = FormaPago::pluck('name', 'id');
 		$matrices = Plantel::pluck('razon', 'id');
-		return view('plantels.create', compact('matrices', 'directores', 'responsables', 'enlaces', 'lista_conceptosMultipago', 'lista_formaPagos'))
-			->with('list', Plantel::getListFromAllRelationApps());
+		$plantel=new Plantel;
+		$documentos_faltantes=null;
+		return view('plantels.create', compact('matrices', 'directores', 'responsables', 'enlaces', 'lista_conceptosMultipago', 'lista_formaPagos','plantel',
+		'documentos_faltantes'))
+			->with('list', Plantel::getListFromAllRelationApps())
+			->with('list1', DocPlantelPlantel::getListFromAllRelationApps());
 	}
 
 	/**

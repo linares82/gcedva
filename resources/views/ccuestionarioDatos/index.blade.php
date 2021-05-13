@@ -215,14 +215,14 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clientes.nombre', 'title' => 'CLIENTE_NOMBRE'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'ccuestionarios.name', 'title' => 'CCUESTIONARIO_NAME'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'ccuestionario_pregunta_id', 'title' => 'CCUESTIONARIO_PREGUNTA_ID'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'ccuestionario_respuesta_id', 'title' => 'CCUESTIONARIO_RESPUESTA_ID'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clave', 'title' => 'CLAVE'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'name', 'title' => 'NAME'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'clientes.nombre', 'title' => 'CLIENTE_NOMBRE'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'ccuestionarios.name', 'title' => 'CCUESTIONARIO_NAME'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'ccuestionario_pregunta_id', 'title' => 'CCUESTIONARIO_PREGUNTA_ID'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'ccuestionario_respuesta_id', 'title' => 'CCUESTIONARIO_RESPUESTA_ID'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'clave', 'title' => 'CLAVE'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'name', 'title' => 'NAME'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

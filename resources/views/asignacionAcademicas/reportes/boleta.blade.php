@@ -131,13 +131,13 @@
                                             @php
                                                 
 						
-                                                $calificaciones=\App\Calificacion::where('hacademica_id',$a->id)->get();
+                                                $calificaciones=\App\Calificacion::where('hacademica_id',$a->id)->whereNull('deleted_at')->get();
                                                 //dd($calificaciones->ToArray());
                                             @endphp
 					    
                                             @foreach($a->calificaciones as $cali)
                                             <tr>
-							
+                                                
                                                 <tr>
 						    
                                                     <strong>Tipo de examen:{{  $cali->tpoExamen->name}} - </strong>
@@ -163,7 +163,7 @@
                                                         @endphp
                                                         @endif
                                                     @endforeach
-                                                        <td>{{$cali->calificacion<6 ? ($cali->calificacion % 1) : round($cali->calificacion,0)}}</td>
+                                                        <td>{{$cali->calificacion<6 ? (intdiv($cali->calificacion,1)) : round($cali->calificacion,0)}} </td>
                                                     @if($cantidad_materias_validas>0)
                                                     @if(($sumatoria_calificacions_validas/$cantidad_materias_validas)>=6)    
                                                     {{ round($sumatoria_calificacions_validas/$cantidad_materias_validas) }}
@@ -182,7 +182,7 @@
                                 </td>
                             </tr>
                             @php
-                                $sumatoria_calificaciones=$sumatoria_calificaciones+ ($cali->calificacion<6 ? ($cali->calificacion % 1) : round($cali->calificacion,0));
+                                $sumatoria_calificaciones=$sumatoria_calificaciones+ ($cali->calificacion<6 ? (intdiv($cali->calificacion,1)) : round($cali->calificacion,0));
                                 $cantidad_materias++;
                             @endphp
                             @endforeach
@@ -203,7 +203,7 @@
                         @php
                             $promedio=$sumatoria_calificaciones/$cantidad_materias;
                         @endphp
-                        <tr><td>Promedio General Real</td><td> {{ round($promedio,2) }}</td></tr>
+                        <tr><td>Promedio General Real </td><td> {{ round($promedio,2) }}</td></tr>
                     </table>
                         
                     

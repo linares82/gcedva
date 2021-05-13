@@ -118,8 +118,8 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'plantels.razon', 'title' => 'PLANTEL'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'ubicacion', 'title' => 'UBICACION'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'plantels.razon', 'title' => 'PLANTEL'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'ubicacion', 'title' => 'UBICACION'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

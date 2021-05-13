@@ -197,12 +197,12 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'evento_clientes.name', 'title' => 'EVENTO'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'fecha', 'title' => 'FECHA'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'fec_vigencia', 'title' => 'FECHA VIGENCIA'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'archivo', 'title' => 'ARCHIVO'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clientes.nombre', 'title' => 'CLIENTE'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clientes.fec_reactivado', 'title' => 'F. REACT.'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'evento_clientes.name', 'title' => 'EVENTO'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'fecha', 'title' => 'FECHA'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'fec_vigencia', 'title' => 'FECHA VIGENCIA'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'archivo', 'title' => 'ARCHIVO'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'clientes.nombre', 'title' => 'CLIENTE'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'clientes.fec_reactivado', 'title' => 'F. REACT.'])</th>
                         <th>ESTATUS</th>
                         <th>AUTORIZACIONES</th>
                         <th>CAJA</th>

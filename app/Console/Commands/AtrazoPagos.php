@@ -51,7 +51,7 @@ class AtrazoPagos extends Command
         //dd(storage_path('app/public/atrazoPagos'));
 
         $fechaActual = Carbon::createFromFormat('Y-m-d', Date('Y-m-d'));
-        if ($fechaActual->day == 11) {
+        if ($fechaActual->day == 11 or $fechaActual->day == 12 or $fechaActual->day == 13) {
             $ruta = storage_path('app/public/atrazoPagos/');
             $archivo = date('dmY') . "_" . date('Hsi') . ".csv";
             $file = fopen($ruta . $archivo, 'w');
@@ -67,7 +67,7 @@ class AtrazoPagos extends Command
                 ->where('cc.nivel_id', '>', 0)
                 ->where('cc.grado_id', '>', 0)
                 ->where('cc.turno_id', '>', 0)
-                //->whereIn('c.id', array(70,179, 199))
+                //->whereIn('c.id', array(11522))
                 ->whereColumn('adeudos.combinacion_cliente_id', 'cc.id')
                 ->join('caja_conceptos as caj_con', 'caj_con.id', '=', 'adeudos.caja_concepto_id')
                 ->where('caj_con.bnd_mensualidad', 1)
@@ -199,15 +199,15 @@ class AtrazoPagos extends Command
                             $input['cliente_id'] = $alumno->id;
                             $input['fecha_baja'] = Date('Y-m-d');
                             $input['bnd_baja'] = 1;
-                            $input['usu_alta_id'] = Auth::user()->id;
-                            $input['usu_mod_id'] = Auth::user()->id;
+                            $input['usu_alta_id'] = 1;
+                            $input['usu_mod_id'] = 1;
                             BsBaja::create($input);
                         } else {
                             $input['cliente_id'] = $alumno->id;
                             $input['fecha_baja'] = Date('Y-m-d');
                             $input['bnd_baja'] = 0;
-                            $input['usu_alta_id'] = Auth::user()->id;
-                            $input['usu_mod_id'] = Auth::user()->id;
+                            $input['usu_alta_id'] = 1;
+                            $input['usu_mod_id'] = 1;
                             BsBaja::create($input);
                         }
                     }

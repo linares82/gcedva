@@ -179,12 +179,12 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'cuenta_efectivo_id', 'title' => 'CUENTA_EFECTIVO_ID'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'saldo_inicial', 'title' => 'SALDO_INICIAL'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'saldo_actualizado', 'title' => 'SALDO_ACTUALIZADO'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'fecha_saldo_inicial', 'title' => 'FECHA_SALDO_INICIAL'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'cuenta_efectivo_id', 'title' => 'CUENTA_EFECTIVO_ID'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'saldo_inicial', 'title' => 'SALDO_INICIAL'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'saldo_actualizado', 'title' => 'SALDO_ACTUALIZADO'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'fecha_saldo_inicial', 'title' => 'FECHA_SALDO_INICIAL'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

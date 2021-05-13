@@ -204,13 +204,13 @@
                     <thead>
                         <tr>
                             
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'carga_ponderacions.name', 'title' => 'CARGA PONDERACION'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'calificacion_parcial_anterior', 'title' => 'CALIFICACION ANTERIOR'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'calificacion_parcial_actual', 'title' => 'CALIFICACION ACTUAL'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_alta_id', 'title' => 'ALTA'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_mod_id', 'title' => 'U. MODIFICACION'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'created_at', 'title' => 'CREADA EL'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'updated_at', 'title' => 'ACTUALIZADA EL'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'carga_ponderacions.name', 'title' => 'CARGA PONDERACION'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'calificacion_parcial_anterior', 'title' => 'CALIFICACION ANTERIOR'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'calificacion_parcial_actual', 'title' => 'CALIFICACION ACTUAL'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_alta_id', 'title' => 'ALTA'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_mod_id', 'title' => 'U. MODIFICACION'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'created_at', 'title' => 'CREADA EL'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'updated_at', 'title' => 'ACTUALIZADA EL'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

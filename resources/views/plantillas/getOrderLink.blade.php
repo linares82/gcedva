@@ -8,3 +8,4 @@
     
 ?>
 {!! link_to_route( Route::currentRouteName(), $title, $parameters, $attributes = array()) !!}
+

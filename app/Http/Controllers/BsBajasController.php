@@ -145,9 +145,13 @@ class BsBajasController extends Controller {
 	public function prospectosBajasR(Request $request){
 		$datos=$request->all();
 		$fechaActual = Carbon::createFromFormat('Y-m-d', Date('Y-m-d'));
-		$registros = Adeudo::select(DB::raw('adeudos.cliente_id, count(adeudos.cliente_id) as adeudos_cantidad'))
+		$registros = Adeudo::select(DB::raw('adeudos.cliente_id, combinacion_cliente_id, count(adeudos.cliente_id) as adeudos_cantidad'))
                 ->join('clientes as c', 'c.id', '=', 'adeudos.cliente_id')
                 ->join('combinacion_clientes as cc', 'cc.cliente_id', '=', 'c.id')
+				->join('plantels as p','p.id','cc.plantel_id')
+				->join('especialidads as e','e.id','cc.especialidad_id')
+				->join('nivels as n','n.id','cc.nivel_id')
+				->join('grados as g','g.id','cc.grado_id')
                 ->where('cc.plantel_id', '>', 0)
                 ->where('cc.especialidad_id', '>', 0)
                 ->where('cc.nivel_id', '>', 0)
@@ -168,7 +172,8 @@ class BsBajasController extends Controller {
 				->orderBy('c.nombre')
 				->orderBy('c.nombre2')
 				->groupBy('adeudos.cliente_id')
-                ->having('adeudos_cantidad', '>=', 2)
+				->groupBy('combinacion_cliente_id')
+                ->having('adeudos_cantidad', '>=', $datos['cantidad_adeudos_f'])
 				->get();
 		//dd($registros->toArray());	
 		return view('bsBajas.prospectosBajasR', compact('registros'));

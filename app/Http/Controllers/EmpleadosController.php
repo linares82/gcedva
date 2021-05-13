@@ -34,7 +34,7 @@ class EmpleadosController extends Controller
     public function index(Request $request)
     {
         $empleados = Empleado::getAllData($request);
-        //$historials = Historial::getAllData($request);
+        $historials = Historial::getAllData($request);
 
         return view('empleados.index', compact('empleados', 'historials'))
             ->with('list', Empleado::getListFromAllRelationApps());
@@ -659,15 +659,17 @@ class EmpleadosController extends Controller
             'fec_inicio_experiencia_academicas',
             'cedula'
         )
-            ->join('nivel_estudios as ne', 'ne.id', '=', 'empleados.nivel_estudio_id')
-            ->join('estados as est_nacimiento', 'est_nacimiento.id', '=', 'empleados.estado_nacimiento_id')
+            ->leftJoin('nivel_estudios as ne', 'ne.id', '=', 'empleados.nivel_estudio_id')
+            ->leftJoin('estados as est_nacimiento', 'est_nacimiento.id', '=', 'empleados.estado_nacimiento_id')
             ->join('asignacion_academicas as aa','aa.docente_oficial_id','=','empleados.id')
+            ->join('materia as m','m.id','aa.materium_id')
             ->where('aa.plantel_id', $datos['plantel_f'])
             //->whereIn('empleados.st_empleado_id', $datos['estatus_f'])
             ->where('aa.lectivo_id',$datos['lectivo_f'])
-            ->where('empleados.puesto_id', 3)
-            //->where('empleados.bnd_oficial', 1)
+            //->where('empleados.puesto_id', 3)
+            ->where('m.bnd_oficial', 1)
             ->WhereNull('empleados.deleted_at')
+            //->where('aa.docente_oficial_id','>',0)
             ->distinct()
             ->get();
         //dd($registros->toArray());

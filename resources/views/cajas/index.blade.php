@@ -269,17 +269,17 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clientes.nombre', 'title' => 'CLIENTE_NOMBRE'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'plantels.razon', 'title' => 'PLANTEL_RAZON'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'subtotal', 'title' => 'SUBTOTAL'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'descuento', 'title' => 'DESCUENTO'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'recargo', 'title' => 'RECARGO'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'total', 'title' => 'TOTAL'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'forma_pagos.name', 'title' => 'FORMA_PAGO_NAME'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'autorizacion_descuento', 'title' => 'AUTORIZACION_DESCUENTO'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'fecha', 'title' => 'FECHA'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
+                            <th>@include('plantillas.getOrderlink', ['column' => 'clientes.nombre', 'title' => 'CLIENTE_NOMBRE'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'plantels.razon', 'title' => 'PLANTEL_RAZON'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'subtotal', 'title' => 'SUBTOTAL'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'descuento', 'title' => 'DESCUENTO'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'recargo', 'title' => 'RECARGO'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'total', 'title' => 'TOTAL'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'forma_pagos.name', 'title' => 'FORMA_PAGO_NAME'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'autorizacion_descuento', 'title' => 'AUTORIZACION_DESCUENTO'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'fecha', 'title' => 'FECHA'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
+                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

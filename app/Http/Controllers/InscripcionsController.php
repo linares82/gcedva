@@ -3173,17 +3173,11 @@ class InscripcionsController extends Controller
     public function inscripcionReinscripcionR(Request $request)
     {
         $datos = $request->all();
-        $registros = Inscripcion::select(
+        /*$registros = Inscripcion::select(
             'inscripcions.*',
             DB::raw('substr(cli.matricula,1,4) as mesAnioMatricula')
-            //'ab.st_beca_id',
-            //'ab.tipo_beca_id',
-            //'ab.monto_mensualidad',
-            //'ab.mensualidad_sep',
-            //'ab.lectivo_id as lectivo_beca'
+           
         )
-            //->leftJoin('autorizacion_becas as ab', 'ab.cliente_id', '=', 'inscripcions.cliente_id')
-            //->whereColumn('inscripcions.lectivo_id', 'ab.lectivo_id')
             ->join('clientes as cli', 'cli.id', '=', 'inscripcions.cliente_id')
             ->where('inscripcions.plantel_id', $datos['plantel_f'])
             ->where('inscripcions.lectivo_id', $datos['lectivo_f'])
@@ -3194,6 +3188,35 @@ class InscripcionsController extends Controller
             ->with('grado')
             ->orderBy('inscripcions.st_inscripcion_id')
             ->get();
+            */
+            $registros = Inscripcion::select(
+                'g.rvoe','l.ciclo_escolar','l.periodo_escolar','g.id_mapa','cli.curp',
+                'h.plantel_id','h.cliente_id','l.inicio','inscripcions.st_inscripcion_id',
+                'cli.nombre','cli.nombre2','cli.ape_paterno','cli.ape_materno',
+                'cli.fec_nacimiento','cli.genero','cli.estado_nacimiento_id',
+                'cli.bnd_trabaja','cli.bnd_indigena','d.clave as discapacidad_clave',
+                'l.id as lectivo_id',
+                DB::raw('substr(cli.matricula,1,4) as mesAnioMatricula'),
+                'gru.name as grupo'
+            )
+                ->join('hacademicas as h','h.inscripcion_id','inscripcions.id')
+                ->join('grupos as gru','gru.id','h.grupo_id')
+                ->join('grados as g','g.id','h.grado_id')
+                ->join('lectivos as l','l.id','h.lectivo_id')
+                ->join('clientes as cli', 'cli.id', '=', 'inscripcions.cliente_id')
+                ->leftJoin('discapacidads as d','d.id','cli.discapacidad_id') 
+                ->where('h.plantel_id', $datos['plantel_f'])
+                ->where('h.lectivo_id', $datos['lectivo_f'])
+                ->whereNull('inscripcions.deleted_at')
+                ->whereNull('h.deleted_at')
+                ->orderBy('inscripcions.st_inscripcion_id')
+                ->orderBy('gru.name')
+                ->orderBy('cli.ape_paterno')
+                ->orderBy('cli.ape_materno')
+                ->orderBy('cli.nombre')
+                ->orderBy('cli.nombre2')
+                ->distinct()
+                ->get();
 
 
         //dd($registros->toArray());

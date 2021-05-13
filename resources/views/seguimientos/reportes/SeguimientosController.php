@@ -605,8 +605,8 @@ class SeguimientosController extends Controller
     public function analitica_actividadesr(Request $request)
     {
         $input = $request->all();
-
-        $fecha_inicio = date('Y-m-j', strtotime('-8 day', strtotime(date('Y-m-j'))));
+        
+        //$fecha_inicio = date('Y-m-j', strtotime('-8 day', strtotime(date('Y-m-j'))));
         //dd($fecha_inicio);
         $e = Empleado::where('user_id', '=', Auth::user()->id)->first();
         $plantel = $e->plantel_id;
@@ -615,20 +615,24 @@ class SeguimientosController extends Controller
             //dd($p->id);
             array_push($planteles, $p->id);
         }
+
         $ds_actividades_aux = DB::table('hactividades as has')
             ->select(
                 'p.razon as plantel',
-                DB::raw('concat(e.nombre," ",e.ape_paterno," ",e.ape_materno) as empleado'),
                 "c.id as cli",
+                DB::raw('concat(e.nombre," ",e.ape_paterno," ",e.ape_materno) as empleado'),
                 DB::raw('concat(c.nombre," ",c.ape_paterno," ",c.ape_materno) as cliente'),
                 'has.tarea',
                 'has.fecha',
-                'has.detalle'
+                'has.asunto',
+                'has.detalle',
+                'stc.name as estatus_cliente'
             )
             ->join('clientes as c', 'c.id', '=', 'has.cliente_id')
             ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
             ->join('plantels as p', 'p.id', '=', 'e.plantel_id')
-            ->where('has.asunto', '=', 'Cambio estatus ')
+            ->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
+            //->where('has.asunto', '=', 'Cambio estatus ')
             ->where('has.fecha', '>=', $input['fecha_f'])
             ->where('has.fecha', '<=', $input['fecha_t']);
         if (isset($input['plantel_f']) and $input['plantel_t']) {
@@ -637,8 +641,8 @@ class SeguimientosController extends Controller
         } else {
             $ds_actividades_aux->wherein('c.plantel_id', $planteles);
         }
-
         $ds_actividades = $ds_actividades_aux->get();
+        
         //dd($ds_actividades->toArray());
         return view('seguimientos.reportes.analitica_actividadesr')
             ->with('actividades', json_encode($ds_actividades));
@@ -646,6 +650,7 @@ class SeguimientosController extends Controller
 
     public function analitica_actividadesf()
     {
+        
         $fecha_inicio = date('Y-m-j', strtotime('-15 day', strtotime(date('Y-m-j'))));
         $e = Empleado::where('user_id', '=', Auth::user()->id)->first();
         $plantel = $e->plantel_id;

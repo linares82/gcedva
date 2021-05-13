@@ -23,7 +23,7 @@
                 <th>A. Paterno</th><th>A. Materno</th><th>Nombre(s)</th><th>Estatus C.</th>
                 <th>Estatus S.</th>
                 <th>F. Planeada</th><th>Monto Planeado</th><th>Concepto</th><th>Ticket</th>
-                <th>F. Caja</th><th>Total Caja</th><th>Pagado</th><th>Total Adeudo</th>
+                <th>F. Caja</th><th>Total Caja</th><th>Usuario Pago</th><th>Pagado</th><th>Total Adeudo</th>
             </thead>
             <tbody>    
         @php
@@ -103,7 +103,19 @@
             <td>{{ $registro->estatus_cliente }}</td><td>{{ $registro->estatus_seguimiento }}</td>
             <td>{{ $registro->fecha_pago }}</td><td>{{ number_format($registro->monto,2) }}</td>
             <td>{{ $registro->concepto }}</td><td>{{ $registro->consecutivo }}</td><td>{{ $registro->fecha_caja }}</td>
-            <td>{{ number_format($registro->total_caja,2) }}</td><td>@if($registro->pagado_bnd==1) Si @else No @endif</td>
+            <td>{{ number_format($registro->total_caja,2) }}</td>
+            <td>
+              @php
+                if(is_int($registro->caja_id)){
+                  $pago=App\Pago::where('caja_id', $registro->caja_id)->first();    
+                }
+                if(!is_null($pago)){
+                  echo $pago->usu_alta->name;
+                }
+              @endphp
+                
+            </td>
+            <td>@if($registro->pagado_bnd==1) Si @else No @endif</td>
             <td>
               @if($registro->pagado_bnd==0)
               {{ number_format($registro->monto,2) }}
