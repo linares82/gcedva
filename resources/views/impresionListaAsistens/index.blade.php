@@ -197,13 +197,13 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'asignacion_id', 'title' => 'ASIGNACION_ID'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'inscritos', 'title' => 'INSCRITOS'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'fecha_f', 'title' => 'FECHA_F'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'fecha_t', 'title' => 'FECHA_T'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'token', 'title' => 'TOKEN'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'asignacion_id', 'title' => 'ASIGNACION_ID'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'inscritos', 'title' => 'INSCRITOS'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'fecha_f', 'title' => 'FECHA_F'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'fecha_t', 'title' => 'FECHA_T'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'token', 'title' => 'TOKEN'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

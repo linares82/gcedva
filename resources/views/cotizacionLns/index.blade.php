@@ -233,15 +233,15 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'cotizacion_cursos.no_coti', 'title' => 'COTIZACION_CURSO_NO_COTI'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'consecutivo', 'title' => 'CONSECUTIVO'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'cursos_empresas.name', 'title' => 'CURSOS_EMPRESA_NAME'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'tipo_precio_cotis.name', 'title' => 'TIPO_PRECIO_COTI_NAME'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'cantidad', 'title' => 'CANTIDAD'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'precio', 'title' => 'PRECIO'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'total', 'title' => 'TOTAL'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'cotizacion_cursos.no_coti', 'title' => 'COTIZACION_CURSO_NO_COTI'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'consecutivo', 'title' => 'CONSECUTIVO'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'cursos_empresas.name', 'title' => 'CURSOS_EMPRESA_NAME'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'tipo_precio_cotis.name', 'title' => 'TIPO_PRECIO_COTI_NAME'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'cantidad', 'title' => 'CANTIDAD'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'precio', 'title' => 'PRECIO'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'total', 'title' => 'TOTAL'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

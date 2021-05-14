@@ -130,10 +130,10 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'razon', 'title' => 'RAZON SOCIAL'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'rfc', 'title' => 'RFC'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'cve_incorporacion', 'title' => 'CLAVE INCORPORACION'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'cuenta_p_id', 'title' => 'CUENTA'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'razon', 'title' => 'RAZON SOCIAL'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'rfc', 'title' => 'RFC'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'cve_incorporacion', 'title' => 'CLAVE INCORPORACION'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'cuenta_p_id', 'title' => 'CUENTA'])</th>
                         
                             <th class="text-right">OPTIONS</th>
                         </tr>

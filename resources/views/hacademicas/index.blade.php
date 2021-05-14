@@ -212,14 +212,14 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'alumno_id', 'title' => 'ALUMNO'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'plantels.razon', 'title' => 'PLANTEL'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'especialidads.name', 'title' => 'ESPECIALIDAD'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'nivels.name', 'title' => 'NIVEL'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'grados.name', 'title' => 'GRADO'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'materia_id', 'title' => 'MATERIA'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'st_materia_id', 'title' => 'ESTATUS MATERIA'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'lectivos.name', 'title' => 'LECTIVO'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'alumno_id', 'title' => 'ALUMNO'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'plantels.razon', 'title' => 'PLANTEL'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'especialidads.name', 'title' => 'ESPECIALIDAD'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'nivels.name', 'title' => 'NIVEL'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'grados.name', 'title' => 'GRADO'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'materia_id', 'title' => 'MATERIA'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'st_materia_id', 'title' => 'ESTATUS MATERIA'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'lectivos.name', 'title' => 'LECTIVO'])</th>
                         </tr>
                     </thead>
 

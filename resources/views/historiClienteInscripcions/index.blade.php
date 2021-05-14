@@ -143,10 +143,10 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'historia_cliente_id', 'title' => 'HISTORIA_CLIENTE_ID'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'inscripcion_id', 'title' => 'INSCRIPCION_ID'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'historia_cliente_id', 'title' => 'HISTORIA_CLIENTE_ID'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'inscripcion_id', 'title' => 'INSCRIPCION_ID'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

@@ -13757,3 +13757,68 @@ Route::get(
         'uses' => 'ActaFinalsController@store',
     )
 )->middleware('auth');
+
+Route::get(
+    '/rolesF/index',
+    array(
+        'as' => 'rolesF.index',
+        //'middleware' => 'permission:roles.index',
+        'uses' => 'RolesController@index',
+    )
+)->middleware('auth');
+Route::get(
+    '/rolesF/create',
+    array(
+        'as' => 'rolesF.create',
+        //'middleware' => 'permission:roles.create',
+        'uses' => 'RolesController@create',
+    )
+)->middleware('auth');
+Route::post(
+    '/rolesF/store',
+    array(
+        'as' => 'rolesF.store',
+        //'middleware' => 'permission:roles.store',
+        'uses' => 'RolesController@store',
+    )
+)->middleware('auth');
+Route::get(
+    '/rolesF/show/{id}',
+    array(
+        'as' => 'rolesF.show',
+        //'middleware' => 'permission:roles.show',
+        'uses' => 'RolesController@show',
+    )
+)->middleware('auth');
+Route::get(
+    '/rolesF/edit/{id}',
+    array(
+        'as' => 'rolesF.edit',
+        //'middleware' => 'permission:roles.edit',
+        'uses' => 'RolesController@edit',
+    )
+)->middleware('auth');
+Route::post(
+    '/rolesF/update/{id}',
+    array(
+        'as' => 'rolesF.update',
+        //'middleware' => 'permission:roles.update',
+        'uses' => 'RolesController@update',
+    )
+)->middleware('auth');
+Route::get(
+    '/rolesF/destroy/{id}',
+    array(
+        'as' => 'rolesF.destroy',
+        //'middleware' => 'permission:roles.destroy',
+        'uses' => 'RolesController@destroy',
+    )
+)->middleware('auth');
+Route::get(
+    '/rolesF/duplicate/{id}',
+    array(
+        'as' => 'rolesF.duplicate',
+        //'middleware' => 'permission:roles.duplicate',
+        'uses' => 'RolesController@duplicate',
+    )
+)->middleware('auth');

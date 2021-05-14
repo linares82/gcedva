@@ -174,11 +174,11 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'lectivos.name', 'title' => 'LECTIVO'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'ponderacions.name', 'title' => 'PONDERACION'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'carga_ponderacions.name', 'title' => 'CARGA PONDERACION'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'v_inicio', 'title' => 'INICIO'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'v_fin', 'title' => 'FIN'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'lectivos.name', 'title' => 'LECTIVO'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'ponderacions.name', 'title' => 'PONDERACION'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'carga_ponderacions.name', 'title' => 'CARGA PONDERACION'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'v_inicio', 'title' => 'INICIO'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'v_fin', 'title' => 'FIN'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

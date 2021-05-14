@@ -179,11 +179,11 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'fecha_carga', 'title' => 'F. CARGA'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'archivo', 'title' => 'ARCHIVO'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'registros', 'title' => 'REGISTROS'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'contador_ejecucion', 'title' => 'CONTADOR EJECUCION'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_alta_id', 'title' => 'ALTA'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'fecha_carga', 'title' => 'F. CARGA'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'archivo', 'title' => 'ARCHIVO'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'registros', 'title' => 'REGISTROS'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'contador_ejecucion', 'title' => 'CONTADOR EJECUCION'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'usu_alta_id', 'title' => 'ALTA'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

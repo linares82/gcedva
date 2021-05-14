@@ -155,12 +155,12 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'name', 'title' => 'REGLA RECARGO'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'dia_inicio', 'title' => 'DIA INICIO'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'dia_fin', 'title' => 'DIA FIN'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'tipo_regla_id', 'title' => 'TIPO REGLA'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'porcentaje', 'title' => 'PORCENTAJE'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'monto', 'title' => 'MONTO'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'name', 'title' => 'REGLA RECARGO'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'dia_inicio', 'title' => 'DIA INICIO'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'dia_fin', 'title' => 'DIA FIN'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'tipo_regla_id', 'title' => 'TIPO REGLA'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'porcentaje', 'title' => 'PORCENTAJE'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'monto', 'title' => 'MONTO'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

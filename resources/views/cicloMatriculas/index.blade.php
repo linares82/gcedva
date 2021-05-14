@@ -143,8 +143,8 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'name', 'title' => 'CICLO'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'bnd_activo', 'title' => 'ACTIVO'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'name', 'title' => 'CICLO'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'bnd_activo', 'title' => 'ACTIVO'])</th>
                         
                             <th class="text-right">OPCIONES</th>
                         </tr>

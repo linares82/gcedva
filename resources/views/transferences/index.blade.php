@@ -233,13 +233,13 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'plantels.razon', 'title' => 'PLANTEL ORIGEN'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'origen_id', 'title' => 'ORIGEN'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'plantels.razon', 'title' => 'PLANTEL DESTINO'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'destino_id', 'title' => 'DESTINO'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'monto', 'title' => 'MONTO'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'fecha', 'title' => 'FECHA'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'responsable_id', 'title' => 'RESPONSABLE'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'plantels.razon', 'title' => 'PLANTEL ORIGEN'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'origen_id', 'title' => 'ORIGEN'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'plantels.razon', 'title' => 'PLANTEL DESTINO'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'destino_id', 'title' => 'DESTINO'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'monto', 'title' => 'MONTO'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'fecha', 'title' => 'FECHA'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'responsable_id', 'title' => 'RESPONSABLE'])</th>
                         
                             <th class="text-right">OPCIONES</th>
                         </tr>

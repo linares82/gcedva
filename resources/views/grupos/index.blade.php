@@ -227,10 +227,10 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'plantels.razon', 'title' => 'Plantel'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'name', 'title' => 'GRUPO'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'limite_alumnos', 'title' => 'LIMITE ALUMNOS'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'minimo_alumnos', 'title' => 'MINIMO ALUMNOS'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'plantels.razon', 'title' => 'Plantel'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'name', 'title' => 'GRUPO'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'limite_alumnos', 'title' => 'LIMITE ALUMNOS'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'minimo_alumnos', 'title' => 'MINIMO ALUMNOS'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

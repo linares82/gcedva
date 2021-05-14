@@ -92,8 +92,8 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'desc_corta', 'title' => 'DESC. CORTA'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'created_at', 'title' => 'FECHA'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'desc_corta', 'title' => 'DESC. CORTA'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'created_at', 'title' => 'FECHA'])</th>
                         
                             <th class="text-right">OPCIONES</th>
                         </tr>

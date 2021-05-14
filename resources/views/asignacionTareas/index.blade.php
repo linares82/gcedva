@@ -162,11 +162,11 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'cliente_id', 'title' => 'CLIENTE'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'empleado_id', 'title' => 'EMPLEADO'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'tareas.name', 'title' => 'TAREA'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'asunto_id', 'title' => 'ASUNTO'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'estatus_id', 'title' => 'ESTATUS'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'cliente_id', 'title' => 'CLIENTE'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'empleado_id', 'title' => 'EMPLEADO'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'tareas.name', 'title' => 'TAREA'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'asunto_id', 'title' => 'ASUNTO'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'estatus_id', 'title' => 'ESTATUS'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

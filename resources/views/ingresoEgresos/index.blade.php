@@ -215,14 +215,14 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'plantel_id', 'title' => 'PLANTEL_ID'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'cuenta_efectivo_id', 'title' => 'CUENTA_EFECTIVO_ID'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'pago_id', 'title' => 'PAGO_ID'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'egreso_id', 'title' => 'EGRESO_ID'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'fecha', 'title' => 'FECHA'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'monto', 'title' => 'MONTO'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'plantel_id', 'title' => 'PLANTEL_ID'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'cuenta_efectivo_id', 'title' => 'CUENTA_EFECTIVO_ID'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'pago_id', 'title' => 'PAGO_ID'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'egreso_id', 'title' => 'EGRESO_ID'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'fecha', 'title' => 'FECHA'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'monto', 'title' => 'MONTO'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

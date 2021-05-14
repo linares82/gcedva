@@ -251,16 +251,16 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'clientes.nombre', 'title' => 'CLIENTE_NOMBRE'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'concepto_cobro_id', 'title' => 'CONCEPTO_COBRO_ID'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'cuenta_contables.name', 'title' => 'CUENTA_CONTABLE_NAME'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'cuenta_recargo_id', 'title' => 'CUENTA_RECARGO_ID'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'fecha_pago', 'title' => 'FECHA_PAGO'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'monto', 'title' => 'MONTO'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'inicial_bnd', 'title' => 'INICIAL_BND'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'plan_pago_lns.fecha_pago', 'title' => 'PLAN_PAGO_LN_FECHA_PAGO'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'clientes.nombre', 'title' => 'CLIENTE_NOMBRE'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'concepto_cobro_id', 'title' => 'CONCEPTO_COBRO_ID'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'cuenta_contables.name', 'title' => 'CUENTA_CONTABLE_NAME'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'cuenta_recargo_id', 'title' => 'CUENTA_RECARGO_ID'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'fecha_pago', 'title' => 'FECHA_PAGO'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'monto', 'title' => 'MONTO'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'inicial_bnd', 'title' => 'INICIAL_BND'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'plan_pago_lns.fecha_pago', 'title' => 'PLAN_PAGO_LN_FECHA_PAGO'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

@@ -175,12 +175,12 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'cve_empleado', 'title' => 'CLAVE EMPLEADO'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'nombre', 'title' => 'NOMBRE'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'ape_paterno', 'title' => 'A. PATERNO'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'ape_materno', 'title' => 'A. MATERNO'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'puestos.name', 'title' => 'PUESTO'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'st_empleados.name', 'title' => 'ESTATUS'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'cve_empleado', 'title' => 'CLAVE EMPLEADO'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'nombre', 'title' => 'NOMBRE'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'ape_paterno', 'title' => 'A. PATERNO'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'ape_materno', 'title' => 'A. MATERNO'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'puestos.name', 'title' => 'PUESTO'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'st_empleados.name', 'title' => 'ESTATUS'])</th>
                             <th class="text-right">EVENTOS</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>

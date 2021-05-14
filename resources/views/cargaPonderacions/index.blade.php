@@ -136,12 +136,12 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'ponderacion_id', 'title' => 'PONDERACION'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'name', 'title' => 'NOMBRE'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'porcentaje', 'title' => 'PORCENTAJE'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'bnd_activo', 'title' => 'ACTIVO'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'tiene_detalle', 'title' => 'TIENE DETALLE'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'tiene_detalle', 'title' => 'PADRE'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'ponderacion_id', 'title' => 'PONDERACION'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'name', 'title' => 'NOMBRE'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'porcentaje', 'title' => 'PORCENTAJE'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'bnd_activo', 'title' => 'ACTIVO'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'tiene_detalle', 'title' => 'TIENE DETALLE'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'tiene_detalle', 'title' => 'PADRE'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

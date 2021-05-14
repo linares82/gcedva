@@ -159,12 +159,12 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'plantel.razon', 'title' => 'PLANTEL'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'empleados.nombre', 'title' => 'EMPLEADO'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'materium_id', 'title' => 'MATERIA'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'grupos.name', 'title' => 'GRUPO'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'lectivos.name', 'title' => 'PERIODO LECTIVO'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => '.name', 'title' => 'PERIODO LECTIVO'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'plantel.razon', 'title' => 'PLANTEL'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'empleados.nombre', 'title' => 'EMPLEADO'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'materium_id', 'title' => 'MATERIA'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'grupos.name', 'title' => 'GRUPO'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'lectivos.name', 'title' => 'PERIODO LECTIVO'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => '.name', 'title' => 'PERIODO LECTIVO'])</th>
                         
                         
                             <th class="text-right">OPCIONES</th>

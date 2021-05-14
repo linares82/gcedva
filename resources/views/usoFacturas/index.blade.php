@@ -179,12 +179,12 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'clave', 'title' => 'CLAVE'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'descripcion', 'title' => 'DESCRIPCION'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'bnd_fisica', 'title' => 'BND_FISICA'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'bnd_moral', 'title' => 'BND_MORAL'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => ' usu_alta_id', 'title' => ' USU_ALTA_ID'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'clave', 'title' => 'CLAVE'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'descripcion', 'title' => 'DESCRIPCION'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'bnd_fisica', 'title' => 'BND_FISICA'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'bnd_moral', 'title' => 'BND_MORAL'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => ' usu_alta_id', 'title' => ' USU_ALTA_ID'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

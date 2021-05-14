@@ -101,9 +101,9 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'name', 'title' => 'FORMA PAGO'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'cve_multipago', 'title' => 'CVE MULTIPAGO'])</th>
-							<th>@include('plantillas.getOrderlink', ['column' => 'cve_sat', 'title' => 'CVE SAT'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'name', 'title' => 'FORMA PAGO'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'cve_multipago', 'title' => 'CVE MULTIPAGO'])</th>
+							<th>@include('plantillas.getOrderLink', ['column' => 'cve_sat', 'title' => 'CVE SAT'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

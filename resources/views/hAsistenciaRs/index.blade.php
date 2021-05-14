@@ -197,13 +197,13 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'id', 'title' => 'ID'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'asignacion_academica_id', 'title' => 'ASIGNACION_ACADEMICA_ID'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'fecha', 'title' => 'FECHA'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'cliente_id', 'title' => 'CLIENTE_ID'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'est_asistencia_id', 'title' => 'EST_ASISTENCIA_ID'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'asignacion_academica_id', 'title' => 'ASIGNACION_ACADEMICA_ID'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'fecha', 'title' => 'FECHA'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'cliente_id', 'title' => 'CLIENTE_ID'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'est_asistencia_id', 'title' => 'EST_ASISTENCIA_ID'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

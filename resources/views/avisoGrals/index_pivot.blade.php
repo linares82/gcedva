@@ -103,14 +103,14 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'aviso_grals.desc_corta', 'title' => 'Asunto'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'created_at', 'title' => 'fecha'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'empleados.nombre', 'title' => 'destinatario'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'empleados.ape_paterno', 'title' => 'destinatario'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'empleados.ape_materno', 'title' => 'destinatario'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'aviso_grals.desc_corta', 'title' => 'Asunto'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'created_at', 'title' => 'fecha'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'empleados.nombre', 'title' => 'destinatario'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'empleados.ape_paterno', 'title' => 'destinatario'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'empleados.ape_materno', 'title' => 'destinatario'])</th>
                             
-                            <th>@include('plantillas.getOrderlink', ['column' => 'enviado', 'title' => 'Enviado'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'leido', 'title' => 'Leido'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'enviado', 'title' => 'Enviado'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'leido', 'title' => 'Leido'])</th>
                             
                             <th class="text-right">OPCIONES</th>
                         </tr>

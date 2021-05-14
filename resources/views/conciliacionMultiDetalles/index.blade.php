@@ -467,28 +467,28 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'conciliacion_multipagos.fecha_carga', 'title' => 'CONCILIACION_MULTIPAGO_FECHA_CARGA'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'fecha_pago', 'title' => 'FECHA_PAGO'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'razon_social', 'title' => 'RAZON_SOCIAL'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'mp_node', 'title' => 'MP_NODE'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'mp_concept', 'title' => 'MP_CONCEPT'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'mp_paymentmethod', 'title' => 'MP_PAYMENTMETHOD'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'mp_reference', 'title' => 'MP_REFERENCE'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'mp_order', 'title' => 'MP_ORDER'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'no_aprobacion', 'title' => 'NO_APROBACION'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'identificador_venta', 'title' => 'IDENTIFICADOR_VENTA'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'ref_medio_pago', 'title' => 'REF_MEDIO_PAGO'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'comicion', 'title' => 'COMICION'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'iva_comision', 'title' => 'IVA_COMISION'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'fecha_dispersion', 'title' => 'FECHA_DISPERSION'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'periodo_financiamiento', 'title' => 'PERIODO_FINANCIAMIENTO'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'moneda', 'title' => 'MONEDA'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'banco_emisor', 'title' => 'BANCO_EMISOR'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'mp_customername', 'title' => 'MP_CUSTOMERNAME'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'mail', 'title' => 'MAIL'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'tel_customername', 'title' => 'TEL_CUSTOMERNAME'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'conciliacion_multipagos.fecha_carga', 'title' => 'CONCILIACION_MULTIPAGO_FECHA_CARGA'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'fecha_pago', 'title' => 'FECHA_PAGO'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'razon_social', 'title' => 'RAZON_SOCIAL'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'mp_node', 'title' => 'MP_NODE'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'mp_concept', 'title' => 'MP_CONCEPT'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'mp_paymentmethod', 'title' => 'MP_PAYMENTMETHOD'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'mp_reference', 'title' => 'MP_REFERENCE'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'mp_order', 'title' => 'MP_ORDER'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'no_aprobacion', 'title' => 'NO_APROBACION'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'identificador_venta', 'title' => 'IDENTIFICADOR_VENTA'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'ref_medio_pago', 'title' => 'REF_MEDIO_PAGO'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'comicion', 'title' => 'COMICION'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'iva_comision', 'title' => 'IVA_COMISION'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'fecha_dispersion', 'title' => 'FECHA_DISPERSION'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'periodo_financiamiento', 'title' => 'PERIODO_FINANCIAMIENTO'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'moneda', 'title' => 'MONEDA'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'banco_emisor', 'title' => 'BANCO_EMISOR'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'mp_customername', 'title' => 'MP_CUSTOMERNAME'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'mail', 'title' => 'MAIL'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'tel_customername', 'title' => 'TEL_CUSTOMERNAME'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

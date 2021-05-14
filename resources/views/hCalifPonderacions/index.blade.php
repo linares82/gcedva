@@ -251,16 +251,16 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'calificacion_ponderacion_id', 'title' => 'CALIFICACION_PONDERACION_ID'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'calificacion_id', 'title' => 'CALIFICACION_ID'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'carga_pondercaion_id', 'title' => 'CARGA_PONDERCAION_ID'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'calificacion_parcial', 'title' => 'CALIFICACION_PARCIAL'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'calificacon_parcial_calculada', 'title' => 'CALIFICACON_PARCIAL_CALCULADA'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'ponderacion', 'title' => 'PONDERACION'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'tiene_detalle', 'title' => 'TIENE_DETALLE'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'padre_id', 'title' => 'PADRE_ID'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'calificacion_ponderacion_id', 'title' => 'CALIFICACION_PONDERACION_ID'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'calificacion_id', 'title' => 'CALIFICACION_ID'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'carga_pondercaion_id', 'title' => 'CARGA_PONDERCAION_ID'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'calificacion_parcial', 'title' => 'CALIFICACION_PARCIAL'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'calificacon_parcial_calculada', 'title' => 'CALIFICACON_PARCIAL_CALCULADA'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'ponderacion', 'title' => 'PONDERACION'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'tiene_detalle', 'title' => 'TIENE_DETALLE'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'padre_id', 'title' => 'PADRE_ID'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

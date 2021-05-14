@@ -108,9 +108,9 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'curso_id', 'title' => 'CURSO'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'name', 'title' => 'SUBCURSO'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'plantel_id', 'title' => 'PLANTEL'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'curso_id', 'title' => 'CURSO'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'name', 'title' => 'SUBCURSO'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'plantel_id', 'title' => 'PLANTEL'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

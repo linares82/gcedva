@@ -137,9 +137,9 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'empleados.nombre', 'title' => 'EMPLEADO'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'materia_id', 'title' => 'MATERIA'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'grupos.name', 'title' => 'GRUPO'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'empleados.nombre', 'title' => 'EMPLEADO'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'materia_id', 'title' => 'MATERIA'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'grupos.name', 'title' => 'GRUPO'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

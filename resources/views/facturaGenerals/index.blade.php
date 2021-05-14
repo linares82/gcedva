@@ -233,11 +233,11 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'plantels.razon', 'title' => 'PLANTEL'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'fec_inicio', 'title' => 'F. INICIO'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'fec_fin', 'title' => 'F. FIN'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'total', 'title' => 'TOTAL'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'uuid', 'title' => 'UUID'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'plantels.razon', 'title' => 'PLANTEL'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'fec_inicio', 'title' => 'F. INICIO'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'fec_fin', 'title' => 'F. FIN'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'total', 'title' => 'TOTAL'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'uuid', 'title' => 'UUID'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

@@ -101,7 +101,7 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'est_asistencia', 'title' => 'VALOR ASISTENCIA'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'est_asistencia', 'title' => 'VALOR ASISTENCIA'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

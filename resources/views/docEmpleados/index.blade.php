@@ -77,7 +77,7 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'name', 'title' => 'DOCUMENTO'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'name', 'title' => 'DOCUMENTO'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

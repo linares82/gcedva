@@ -121,10 +121,10 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'plantel_id', 'title' => 'PLANTEL'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'especialidad_id', 'title' => 'ESPECIALIDAD'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'nivel_id', 'title' => 'NIVEL'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'name', 'title' => 'GRADO'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'plantel_id', 'title' => 'PLANTEL'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'especialidad_id', 'title' => 'ESPECIALIDAD'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'nivel_id', 'title' => 'NIVEL'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'name', 'title' => 'GRADO'])</th>
                             
                         
                             <th class="text-right">OPCIONES</th>

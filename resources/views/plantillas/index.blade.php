@@ -91,10 +91,10 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'plantilla', 'title' => 'NOMBRE'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'plantilla.tpo_correo_id', 'title' => 'TIPO'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'sms_bnd', 'title' => 'SMS'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'mail_bnd', 'title' => 'MAIL'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'plantilla', 'title' => 'NOMBRE'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'plantilla.tpo_correo_id', 'title' => 'TIPO'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'sms_bnd', 'title' => 'SMS'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'mail_bnd', 'title' => 'MAIL'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

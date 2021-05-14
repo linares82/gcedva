@@ -323,13 +323,13 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'plantels.razon', 'title' => 'PLANTEL'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'articulos.name', 'title' => 'ARTICULO'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'fecha_alta', 'title' => 'FECHA ALTA'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'ubicacion_arts.ubicacion', 'title' => 'UBICACION'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'empleados.nombre', 'title' => 'RESPONSABLE'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'no_inv', 'title' => 'NO. INVENTARIO'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'st_mueble_id', 'title' => 'ESTATUS'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'plantels.razon', 'title' => 'PLANTEL'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'articulos.name', 'title' => 'ARTICULO'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'fecha_alta', 'title' => 'FECHA ALTA'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'ubicacion_arts.ubicacion', 'title' => 'UBICACION'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'empleados.nombre', 'title' => 'RESPONSABLE'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'no_inv', 'title' => 'NO. INVENTARIO'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'st_mueble_id', 'title' => 'ESTATUS'])</th>
                         
                             <th class="text-right">OPCIONES</th>
                         </tr>

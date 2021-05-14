@@ -161,11 +161,11 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'doc_vinculacions.name', 'title' => 'DOC_VINCULACION_NAME'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'vinculacions.lugar_practica', 'title' => 'VINCULACION_LUGAR_PRACTICA'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'archivo', 'title' => 'ARCHIVO'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'doc_vinculacions.name', 'title' => 'DOC_VINCULACION_NAME'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'vinculacions.lugar_practica', 'title' => 'VINCULACION_LUGAR_PRACTICA'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'archivo', 'title' => 'ARCHIVO'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

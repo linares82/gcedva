@@ -184,11 +184,11 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'categoria_tickets.name', 'title' => 'CATEGORIA'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'fecha', 'title' => 'FECHA'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'asignado_a', 'title' => 'ASIGNADO A'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'nombre_corto', 'title' => 'DESC. CORTA'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'st_tickets.name', 'title' => 'ESTATUS'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'categoria_tickets.name', 'title' => 'CATEGORIA'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'fecha', 'title' => 'FECHA'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'asignado_a', 'title' => 'ASIGNADO A'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'nombre_corto', 'title' => 'DESC. CORTA'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'st_tickets.name', 'title' => 'ESTATUS'])</th>
                         <th>ETIQUETAS</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>

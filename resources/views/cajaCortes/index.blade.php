@@ -197,13 +197,13 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'plantel_id', 'title' => 'PLANTEL'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'monto_calculado', 'title' => 'MONTO CALCULADO'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'monto_real', 'title' => 'MONTO REAL'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'faltante', 'title' => 'FALTANTE'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'sobrante', 'title' => 'SOBRANTE'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_alta_id', 'title' => 'CREADO POR'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'created_at', 'title' => 'CREADO EL'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'plantel_id', 'title' => 'PLANTEL'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'monto_calculado', 'title' => 'MONTO CALCULADO'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'monto_real', 'title' => 'MONTO REAL'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'faltante', 'title' => 'FALTANTE'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'sobrante', 'title' => 'SOBRANTE'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'usu_alta_id', 'title' => 'CREADO POR'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'created_at', 'title' => 'CREADO EL'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

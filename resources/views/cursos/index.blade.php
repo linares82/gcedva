@@ -88,8 +88,8 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'name', 'title' => 'CURSO'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'name', 'title' => 'PLANTEL'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'name', 'title' => 'CURSO'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'name', 'title' => 'PLANTEL'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

@@ -157,10 +157,10 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'orden', 'title' => 'ORDEN'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'avisos_inicios.asuntos.name', 'title' => 'ASUNTO'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'detalle', 'title' => 'DETALLE'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'dias_despues', 'title' => 'DIAS DESPUES'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'orden', 'title' => 'ORDEN'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'avisos_inicios.asuntos.name', 'title' => 'ASUNTO'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'detalle', 'title' => 'DETALLE'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'dias_despues', 'title' => 'DIAS DESPUES'])</th>
                         
                             <th class="text-right">OPCIONES</th>
                         </tr>

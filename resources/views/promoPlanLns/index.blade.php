@@ -179,12 +179,12 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'plan_pago_lns.monto', 'title' => 'PLAN_PAGO_LN_MONTO'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'fec_inicio', 'title' => 'FEC_INICIO'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'fec_fin', 'title' => 'FEC_FIN'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'descuento', 'title' => 'DESCUENTO'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'plan_pago_lns.monto', 'title' => 'PLAN_PAGO_LN_MONTO'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'fec_inicio', 'title' => 'FEC_INICIO'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'fec_fin', 'title' => 'FEC_FIN'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'descuento', 'title' => 'DESCUENTO'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

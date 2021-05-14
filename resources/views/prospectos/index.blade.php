@@ -323,15 +323,15 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'nombre', 'title' => 'NOMBRE'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'nombre2', 'title' => 'NOMBRE2'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'ape_paterno', 'title' => 'A.PATERNO'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'ape_materno', 'title' => 'A. MATERNO'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'mail', 'title' => 'MAIL'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'tel_cel', 'title' => 'CELULAR'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'plantels.razon', 'title' => 'PLANTEL'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'nombre', 'title' => 'NOMBRE'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'nombre2', 'title' => 'NOMBRE2'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'ape_paterno', 'title' => 'A.PATERNO'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'ape_materno', 'title' => 'A. MATERNO'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'mail', 'title' => 'MAIL'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'tel_cel', 'title' => 'CELULAR'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'plantels.razon', 'title' => 'PLANTEL'])</th>
                         <th>Liga Enviada</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'st_prospectos.name', 'title' => 'ESTATUS'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'st_prospectos.name', 'title' => 'ESTATUS'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

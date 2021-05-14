@@ -88,8 +88,8 @@
                 <table class="table table-condensed table-striped">
                     <thead>
                         <tr>
-                            <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'name', 'title' => 'Estatus Empleados'])</th>
+                            <th>@includeIf("plantillas.getOrderLink", ['column' => 'id', 'title' => 'ID'])</th>
+                            <th>@includeIf("plantillas.getOrderLink", ['column' => 'name', 'title' => 'Estatus Empleados'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

@@ -235,16 +235,16 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'cliente_id', 'title' => 'ID'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'clientes.nombre', 'title' => 'PRIMER NOMBRE'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'clientes.nombre2', 'title' => 'SEGUNDO NOMBRE'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'clientes.ape_paterno', 'title' => 'APELLIDO PATERNO'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'clientes.ape_materno', 'title' => 'APELLIDO MATERNO'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'st_seguimiento_id', 'title' => 'ESTATUS SEGUIMIENTO'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'clientes.st_cliente_id', 'title' => 'ESTATUS CLIENTE'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'clientes.plantel_id', 'title' => 'PLANTEL'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'clientes.especialidad_id', 'title' => 'ESPECIALIDAD'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'clientes.empleado_id', 'title' => 'EMPLEADO'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'clientes.matricula', 'title' => 'MATRICULA'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'clientes.nombre', 'title' => 'PRIMER NOMBRE'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'clientes.nombre2', 'title' => 'SEGUNDO NOMBRE'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'clientes.ape_paterno', 'title' => 'APELLIDO PATERNO'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'clientes.ape_materno', 'title' => 'APELLIDO MATERNO'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'st_seguimiento_id', 'title' => 'ESTATUS SEGUIMIENTO'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'clientes.st_cliente_id', 'title' => 'ESTATUS CLIENTE'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'clientes.plantel_id', 'title' => 'PLANTEL'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'clientes.especialidad_id', 'title' => 'ESPECIALIDAD'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'clientes.empleado_id', 'title' => 'EMPLEADO'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'clientes.matricula', 'title' => 'MATRICULA'])</th>
                             
                             <th class="text-right">OPCIONES</th>
                         </tr>

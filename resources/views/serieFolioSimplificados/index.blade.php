@@ -238,14 +238,14 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'cuenta_ps.name', 'title' => 'CUENTA'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'serie', 'title' => 'SERIE'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'folio_inicial', 'title' => 'FOLIO INICIAL'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'folio_actual', 'title' => 'FOLIO ACTUAL'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'anio', 'title' => 'AÑIO'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'mes_id', 'title' => 'MES'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'bnd_activo', 'title' => 'ACTIVO'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'bnd_activo', 'title' => 'FISCAL'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'cuenta_ps.name', 'title' => 'CUENTA'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'serie', 'title' => 'SERIE'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'folio_inicial', 'title' => 'FOLIO INICIAL'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'folio_actual', 'title' => 'FOLIO ACTUAL'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'anio', 'title' => 'AÑIO'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'mes_id', 'title' => 'MES'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'bnd_activo', 'title' => 'ACTIVO'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'bnd_activo', 'title' => 'FISCAL'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

@@ -161,14 +161,14 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'name', 'title' => 'NOMBRE'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'clabe', 'title' => 'CLABE'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'no_cuenta', 'title' => 'NO. CUENTA'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'bnd_banco', 'title' => 'CUENTA BANCARIA'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'name', 'title' => 'NOMBRE'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'clabe', 'title' => 'CLABE'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'no_cuenta', 'title' => 'NO. CUENTA'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'bnd_banco', 'title' => 'CUENTA BANCARIA'])</th>
                         <th>CUENTA CONTABLE</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'saldo_inicial', 'title' => 'SALDO INICIAL'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'fecha_saldo_inicial', 'title' => 'FECHA SALDO INICIAL'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'saldo_caculado', 'title' => 'SALDO CALCULADO'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'saldo_inicial', 'title' => 'SALDO INICIAL'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'fecha_saldo_inicial', 'title' => 'FECHA SALDO INICIAL'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'saldo_caculado', 'title' => 'SALDO CALCULADO'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

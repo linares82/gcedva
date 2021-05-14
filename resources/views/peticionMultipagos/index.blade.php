@@ -323,20 +323,20 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'mp_account', 'title' => 'MP_ACCOUNT'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'mp_product', 'title' => 'MP_PRODUCT'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'mp_order', 'title' => 'MP_ORDER'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'mp_reference', 'title' => 'MP_REFERENCE'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'mp_node', 'title' => 'MP_NODE'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'mp_concept', 'title' => 'MP_CONCEPT'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'mp_amount', 'title' => 'MP_AMOUNT'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'mp_customername', 'title' => 'MP_CUSTOMERNAME'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'mp_currency', 'title' => 'MP_CURRENCY'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'mp_signature', 'title' => 'MP_SIGNATURE'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'mp_urlsuccess', 'title' => 'MP_URLSUCCESS'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'mp_urlfailure', 'title' => 'MP_URLFAILURE'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'mp_account', 'title' => 'MP_ACCOUNT'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'mp_product', 'title' => 'MP_PRODUCT'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'mp_order', 'title' => 'MP_ORDER'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'mp_reference', 'title' => 'MP_REFERENCE'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'mp_node', 'title' => 'MP_NODE'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'mp_concept', 'title' => 'MP_CONCEPT'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'mp_amount', 'title' => 'MP_AMOUNT'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'mp_customername', 'title' => 'MP_CUSTOMERNAME'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'mp_currency', 'title' => 'MP_CURRENCY'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'mp_signature', 'title' => 'MP_SIGNATURE'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'mp_urlsuccess', 'title' => 'MP_URLSUCCESS'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'mp_urlfailure', 'title' => 'MP_URLFAILURE'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

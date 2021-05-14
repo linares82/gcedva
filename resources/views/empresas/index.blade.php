@@ -143,12 +143,12 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'razon_social', 'title' => 'RAZON SOCIAL'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'nombre_contacto', 'title' => 'NOMBRE CONTACTO'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'giro_id', 'title' => 'GIRO'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'estado_id', 'title' => 'ESTADO'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'st_empresa_id', 'title' => 'ESTATUS'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'created_at', 'title' => 'ALTA'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'razon_social', 'title' => 'RAZON SOCIAL'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'nombre_contacto', 'title' => 'NOMBRE CONTACTO'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'giro_id', 'title' => 'GIRO'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'estado_id', 'title' => 'ESTADO'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'st_empresa_id', 'title' => 'ESTATUS'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'created_at', 'title' => 'ALTA'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

@@ -119,8 +119,8 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'st_cuestionarios.name', 'title' => 'ESTATUS'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'name', 'title' => 'CUESTIONARIO'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'st_cuestionarios.name', 'title' => 'ESTATUS'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'name', 'title' => 'CUESTIONARIO'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>

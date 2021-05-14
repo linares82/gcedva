@@ -197,13 +197,13 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('plantillas.getOrderlink', ['column' => 'hacademica_id', 'title' => 'HACADEMICA_ID'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'examen_id', 'title' => 'EXAMEN_ID'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'calificacion', 'title' => 'CALIFICACION'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'fecha', 'title' => 'FECHA'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'reporte_bnd', 'title' => 'REPORTE_BND'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
-                        <th>@include('plantillas.getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'hacademica_id', 'title' => 'HACADEMICA_ID'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'examen_id', 'title' => 'EXAMEN_ID'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'calificacion', 'title' => 'CALIFICACION'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'fecha', 'title' => 'FECHA'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'reporte_bnd', 'title' => 'REPORTE_BND'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
