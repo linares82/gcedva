@@ -54,4 +54,6 @@ class PlanPago extends Model
 	public function plantel() {
 		return $this->belongsTo('App\Plantel');
 	}// end
+
+	
 }

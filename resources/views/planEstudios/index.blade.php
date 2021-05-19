@@ -125,6 +125,7 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'plantel_id', 'title' => 'PLATEL'])</th>
                             <th>@include('plantillas.getOrderLink', ['column' => 'name', 'title' => 'PLAN ESTUDIOS'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
@@ -134,6 +135,7 @@
                         @foreach($planEstudios as $planEstudio)
                             <tr>
                                 <td><a href="{{ route('planEstudios.show', $planEstudio->id) }}">{{$planEstudio->id}}</a></td>
+                                <td>{{optional($planEstudio->plantel)->razon}}</td>
                                 <td>{{$planEstudio->name}}</td>
                                 <td class="text-right">
                                     @permission('planEstudios.edit')

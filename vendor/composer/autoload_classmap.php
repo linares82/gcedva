@@ -173,6 +173,7 @@ return array(
     'AddPlanInscripcionsTable' => $baseDir . '/database/migrations/2019_03_28_131419_add_plan_inscripcions_table.php',
     'AddPlanPagoCombinacionTable' => $baseDir . '/database/migrations/2018_04_09_085152_add_plan_pago_combinacion_table.php',
     'AddPlantelEspecialidadTable' => $baseDir . '/database/migrations/2017_08_11_142022_add_plantel_especialidad_table.php',
+    'AddPlantelIdToPlanEstudiosTable' => $baseDir . '/database/migrations/2021_05_19_090223_add_plantel_id_to_plan_estudios_table.php',
     'AddPlantelIdToPlanPagosTable' => $baseDir . '/database/migrations/2021_05_13_125042_add_plantel_id_to_plan_pagos_table.php',
     'AddPrecioMovimientosTable' => $baseDir . '/database/migrations/2019_10_07_093218_add_precio_movimientos_table.php',
     'AddPrecioMueblesTable' => $baseDir . '/database/migrations/2019_10_07_093232_add_precio_muebles_table.php',
