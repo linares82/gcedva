@@ -212,12 +212,25 @@
                     @if(isset($caja))
                     <div class="form-group col-md-4">
                         <div class='text-center'>
+                            @php
+                                $referencia="";
+                                $adeudo_pago_online=App\AdeudoPAgoOnline::where('caja_id',$caja->id)
+                                ->where('cliente_id',$caja->cliente_id)
+                                ->first();
+                                
+                                if(!is_null($adeudo_pago_online) and $adeudo_pago_online->pago_id<>0){
+                                    $referencia=$adeudo_pago_online->peticionMultipago->mp_reference;
+                                }
+
+                            @endphp
                             @permission('cajas.cancelar')
-                            @if($caja->st_caja_id<>1 and $caja->st_caja_id<>2)
-                            {!! Form::open(array('route' => 'cajas.cancelar','onsubmit'=> "if(confirm('¿Cancelar Caja? ¿Esta seguro?')) { return true } else {return false };")) !!}
-                            {!! Form::hidden("caja", $caja->id, array("class" => "form-control", "id" => "caja_id-field")) !!}
-                            <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-close"></i> Cancelar Venta</button>
-                            {!! Form::close() !!}
+                            @if($referencia=="")
+                                @if($caja->st_caja_id<>1 and $caja->st_caja_id<>2)
+                                {!! Form::open(array('route' => 'cajas.cancelar','onsubmit'=> "if(confirm('¿Cancelar Caja? ¿Esta seguro?')) { return true } else {return false };")) !!}
+                                {!! Form::hidden("caja", $caja->id, array("class" => "form-control", "id" => "caja_id-field")) !!}
+                                <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-close"></i> Cancelar Venta</button>
+                                {!! Form::close() !!}
+                                @endif
                             @endif
                             @endpermission
                         </div>
@@ -350,11 +363,14 @@
                                 <td>{{ $linea->subtotal }}</td>
                                 <td>{{ $linea->descuento }}</td>
                                 <td>
+                                    
                                     @if(isset($caja) and $caja->st_caja_id==0)
                                     @permission('cajaLns.destroy')
+                                    @if($referencia=="")
                                     {!! Form::model($linea, array('route' => array('cajaLns.destroy', $linea->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('Ã‚Â¿Borrar? Ã‚Â¿Esta seguro?')) { return true } else {return false };")) !!}
                                     <button type="submit" class="btn btn-xs btn-danger" data-toggle="tooltip" title="Eliminar"><i class="glyphicon glyphicon-trash"></i></button>
                                     {!! Form::close() !!}
+                                    @endif
                                     @endpermission
                                     @endif
                                 </td>
@@ -1238,12 +1254,12 @@ Agregar nuevo registro
         @endpermission
         @permission('cajas.editFecha')
         
-        @role('superadmin')
+        @permission('cajas.editFecha')
         $('.editable_fecha').dblclick(function(){
             captura=$(this).children("input");
             captura.show();
         });
-        @endrole
+        @endpermission
 
         @if(isset($caja) and $caja->forma_pago_id<>1 and $caja->forma_pago_id<>6 and $caja->forma_pago_id<>9)
         $('.editable_fecha').dblclick(function(){

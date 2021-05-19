@@ -81,7 +81,7 @@
             <table width="100%" class='table_format'>
                 <thead>
                 <th>Especialidad</th><th>Nivel</th>
-                <th>Grado</th><th>Grupo</th><th>F. Inscripcion</th>
+                <th>Area</th><th>Grupo</th><th>F. Inscripcion</th>
                 <th>Periodo Lectivo</th>
                 <th>Matricula</th>
                 </thead>
@@ -89,7 +89,7 @@
                     <tr>
                         <td>{{$c->especialidad}}</td>
                         <td>{{$c->nivel}}</td>
-                        <td>{{$c->grado}}</td>
+                        <td>{{$c->rvoe}}</td>
                         <td>{{$c->grupo}}</td>
                         <td>{{date_format($inscripcion->created_at,'d-m-Y')}}</td>
                         <td>{{$c->lectivo}}</td>

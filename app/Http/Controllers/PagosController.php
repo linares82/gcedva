@@ -1047,7 +1047,7 @@ class PagosController extends Controller
         $registros_pagados= $registros_pagados_aux2->unique(function ($item) {
             return $item['consecutivo'].$item['monto_pago'].$item['created_at'];
         })->values()->all();
-        //dd($registros_pagados);
+        dd($registros_pagados);
         $empleado = Empleado::where('user_id', Auth::user()->id)->first();
 
         $transferencias = Transference::select(

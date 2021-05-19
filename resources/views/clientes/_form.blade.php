@@ -1064,7 +1064,7 @@
                             @endif
                         </div>
                         <div class="form-group col-md-4 @if($errors->has('dir_madre')) has-error @endif">
-                            <label for="dir_madre-field">DirecciOn</label>
+                            <label for="dir_madre-field">Direccion</label>
                             {!! Form::text("dir_madre", null, array("class" => "form-control input-sm", "id" => "dir_madre-field")) !!}
                             @if($errors->has("dir_madre"))
                             <span class="help-block">{{ $errors->first("dir_madre") }}</span>
@@ -1124,7 +1124,7 @@
                             @endif
                         </div>
                         <div class="form-group col-md-4 @if($errors->has('dir_acudiente')) has-error @endif">
-                            <label for="dir_acudiente-field">DirrecciOn</label>
+                            <label for="dir_acudiente-field">Direccion</label>
                             {!! Form::text("dir_acudiente", null, array("class" => "form-control input-sm", "id" => "dir_acudiente-field")) !!}
                             @if($errors->has("dir_acudiente"))
                             <span class="help-block">{{ $errors->first("dir_acudiente") }}</span>
@@ -1265,6 +1265,12 @@
                         </td>
                     </tr>
                     <tr>
+                    <tr>
+                        <div class="form-group col-md-4 registrarMateriaAdicional">
+                        <label for="materia_adicional-field">Materia Adicional</label>  {!! Form::select("materia_adicional", $materias, null, array("class" => "form-control select_seguridad", "id" => "materia_adicional-field", 'style'=>'width:100%')) !!}
+                        <a href="#" data-inscripcion_id="{{ $i->id }}" class="btn btn-default btn-xs registrar_materia_adicional">Registrar Materia Adicional</a>
+                        </div>
+                    </tr>
                 <table class="table table-condensed table-striped">
                     <thead style="color: #ffffff;background: #27ae60;">
                     <td>Materia</td><td>Grupo</td><td>Lectivo</td><td>Estatus</td><td></td><td></td>
@@ -2622,6 +2628,29 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                             //$('input.submitForm').read
                             $(':input[type="submit"]').prop('disabled', true);
                             $('form#frm_cliente').submit();
+                        });
+
+                        
+                        $('.registrar_materia_adicional').on('click', function (e) {
+                            e.preventDefault;
+                            boton=$(this);
+                            materia=$(this).parent().children('#materia_adicional-field');
+                            
+                            $.ajax({
+                                type: 'GET',
+                                url: '{{route("inscripcions.registrarMateriaAdicional")}}',
+                                data: {
+                                    'inscripcion_id': boton.attr('data-inscripcion_id'),
+                                    'materia_id': materia.val(),
+                                },
+                                dataType:"json",
+                                //beforeSend : function(){$("#loading3").show(); },
+                                //complete : function(){$("#loading3").hide(); },
+                                success: function(data) {
+                                    location.reload(); 
+                                }
+                                }); 
+                            
                         });
 </script>
 @endpush

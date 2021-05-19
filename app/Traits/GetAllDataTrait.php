@@ -87,7 +87,7 @@ trait GetAllDataTrait
 
                 if ($operator === 'cont' and ($value <> "" or $value <> 0)) {
                     $myQuery = $myQuery->Where($column, 'LIKE', '%' . $value . '%');
-                    //dd("cont");
+                    
                 } elseif ($operator === 'lt' and $value <> 0) {
                     $myQuery = $myQuery->Where($column, '=', $value);
                 } elseif ($operator === 'menorq' and $value <> "") {

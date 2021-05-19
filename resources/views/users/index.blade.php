@@ -51,10 +51,15 @@
         </div>
     </div>
 
+    
+    <a class="btn btn-success pull-right" href="{{ route('usuariosF.create') }}"><i class="glyphicon glyphicon-plus"></i> Crear</a>
+    
+
 @endsection
 
 @section('content')
     <div class="row">
+        <div class="col-md-12">
         <div class="table-responsive">
         <table class="table table-striped table-bordered table-hover">
             <thead>
@@ -63,6 +68,7 @@
                     <th>Nombre</th>
                     <th>Email</th>
                     <th>Roles</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -76,10 +82,18 @@
                             <div class="label bg-green">{{ $rol->name }}</div>
                         @endforeach
                     </td>
+                    <td>
+                    <form action="{{ route('usuariosF.destroy', $user->id) }}" method="post">
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    <a class="btn btn-labeled btn-default" href="{{ route('usuariosF.edit', $user->id) }}"><span class="btn-label"><i class="fa fa-pencil"></i></span>Editar</a>
+                    <button type="submit" class="btn btn-labeled btn-danger"><span class="btn-label"><i class="fa fa-trash"></i></span>Borrar</button>
+                    </form>
+                    </td>
                 </tr>
             @endforeach
             </tbody>
         </table>
+        </div>
         </div>
     </div>
     <div class="panel-footer">

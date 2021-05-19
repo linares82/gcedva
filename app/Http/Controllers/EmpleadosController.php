@@ -102,9 +102,10 @@ class EmpleadosController extends Controller
         //dd($input);
         $e = Empleado::create($input);
 
-        $e->plantels()->sync($input2['plantel_id']);
-
-
+        if(count($input2)>0){
+            $e->plantels()->sync($input2['plantel_id']);    
+        }
+        
         if ($request->has('doc_empleado_id') and $request->has('archivo')) {
             $input3['doc_empleado_id'] = $request->get('doc_empleado_id');
             $input3['archivo'] = $request->get('archivo');
@@ -156,7 +157,7 @@ class EmpleadosController extends Controller
 
         $responsables = Empleado::select('empleados.id', DB::raw('concat(empleados.nombre," ",empleados.ape_paterno," ",empleados.ape_materno) as name'))
             ->join('puestos as p', 'p.id', '=', 'empleados.puesto_id')
-            ->where('p.name', '=', 'RH')
+            //->where('p.name', '=', 'RH')
             ->pluck('empleados.name', 'empleados.id');
         $doc_existentes = DB::table('pivot_doc_empleados as pde')->select('doc_empleado_id')
             ->join('empleados as e', 'e.id', '=', 'pde.empleado_id')
@@ -327,8 +328,10 @@ class EmpleadosController extends Controller
         $e = $empleado->update($input);
         
         //dd($input['plantel_id']);
-
-        $empleado->plantels()->sync($input2['plantel_id']);
+        if(count($input2)>0){
+            $empleado->plantels()->sync($input2['plantel_id']);
+        }
+        
 
         if ($request->has('doc_empleado_id') and $request->get('doc_empleado_id') > 0 and $request->has('archivo')) {
             $input3['doc_empleado_id'] = $request->get('doc_empleado_id');

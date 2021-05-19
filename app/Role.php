@@ -3,12 +3,15 @@
 use Esensi\Model\Contracts\ValidatingModelInterface;
 use Esensi\Model\Traits\ValidatingModelTrait;
 use Zizaco\Entrust\EntrustRole;
+use App\Traits\GetAllDataTrait;
+use App\Traits\RelationManagerTrait;
 
-class Role extends EntrustRole implements ValidatingModelInterface
+class Role extends EntrustRole
 {
-  use ValidatingModelTrait;
+  
+  use RelationManagerTrait,GetAllDataTrait;
 
-  protected $throwValidationExceptions = true;
+  //protected $throwValidationExceptions = true;
 
   protected $fillable = [
     'name',
@@ -21,7 +24,11 @@ class Role extends EntrustRole implements ValidatingModelInterface
     'display_name'      => 'required|unique:roles',
   ];
 
-  public function ususarios(){
+  public function usuarios(){
     return $this->belongsToMany('App\User','role_user','role_id','user_id');
+}
+
+public function permisos(){
+  return $this->belongsToMany('App\Permission','permission_role','role_id','permission_id');
 }
 }

@@ -45,6 +45,7 @@ class HomeController extends Controller
 
         //Procesos de Beca
         $empleado = Empleado::where('user_id', Auth::user()->id)->first();
+        //dd(Auth::user());
         $planteles = array();
         foreach ($empleado->plantels as $p) {
             array_push($planteles, $p->id);

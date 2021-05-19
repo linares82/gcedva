@@ -23,6 +23,7 @@ use App\Cliente;
 use App\Lectivo;
 use App\Plantel;
 use App\Empleado;
+use App\Materium;
 use App\DocAlumno;
 use App\Municipio;
 use App\Plantilla;
@@ -177,7 +178,7 @@ class ClientesController extends Controller
         }
 
         //dd($clientes);
-        return view('clientes.busqueda', compact('clientes', 'nombre'));
+        return view('clientes.busqueda', compact('clientes'));
     }
 
     public function index2(Request $request)
@@ -442,8 +443,12 @@ class ClientesController extends Controller
         //count($cliente->adeudos));
         $estado_civiles = EstadoCivil::pluck('name','id');
         $incidencias = IncidenceCliente::pluck('name', 'id');
+        $materias=Materium::where('materia.bnd_oficial',0)
+        ->where('plantel_id',$cliente->plantel_id)
+        ->pluck('name','id');
         return view('clientes.edit', compact(
             'cliente',
+            'materias',
             'preguntas',
             'cp',
             'documentos_faltantes',
@@ -2424,4 +2429,6 @@ class ClientesController extends Controller
                                   ->get();
         return view('clientes.reportes.alumnosActivosD', compact('registros'));
     }
+
+    
 }

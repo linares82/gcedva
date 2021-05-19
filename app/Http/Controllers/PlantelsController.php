@@ -158,7 +158,7 @@ class PlantelsController extends Controller
 			->where('puesto_id', 4)->pluck('name', 'id');
 		//dd($directores);
 		$responsables = Empleado::select(DB::raw("CONCAT(nombre,' ',ape_paterno,' ',ape_materno) AS name"), 'id')
-			->where('puesto_id', 23)->pluck('name', 'id');
+			->whereIn('puesto_id', array(4,23))->pluck('name', 'id');
 		$enlaces = Empleado::select(DB::raw("CONCAT(nombre,' ',ape_paterno,' ',ape_materno) AS name"), 'id')
 			->where('puesto_id', 15)->pluck('name', 'id');
 		$ruta = public_path() . "\\imagenes\\planteles\\" . $id . "\\";

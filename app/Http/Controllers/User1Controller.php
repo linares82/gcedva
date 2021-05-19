@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Cliente;
 use App\User;
+use App\Role;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Hash;
@@ -130,5 +131,68 @@ class User1Controller extends Controller
 		//$users = User::paginate(25);
 
         return view('users.index', compact('users'));
-	}    
+	}   
+    
+    public function create(){
+        $model=new User;
+        $roles=Role::pluck('name','id');
+        return view('users.create', compact('roles', 'model'));
+    }
+
+    public function store(Request $request){
+        $datos=$request->all();
+        $pas=$request->only('password');
+        //dd($pas['password']);
+        if (!is_null($pas['password'])) {
+            $datos['password'] = Hash::make($pas['password']);
+        }
+                
+        $roles=$request->only('roles');
+        
+        $usuario=User::create($datos);
+
+        if(count($roles)>0){
+            $usuario->roles1()->sync($roles['roles']);
+        }else{
+            $usuario->roles1()->detach();
+        }
+
+        return redirect()->route('usuariosF.index')->with('message', 'Registro Creado.');
+    }
+
+    public function edit($id, Request $request){
+        $model=User::find($id);
+        $roles=Role::pluck('name','id');
+        return view('users.edit', compact('roles', 'model'));
+    }
+
+    public function update($id, Request $request){
+        $datos=$request->except('password');
+        //dd($request->all());
+        $pas=$request->only('password');
+        //dd($pas['password']);
+        if (!is_null($pas['password'])) {
+            $datos['password'] = Hash::make($pas['password']);
+        }
+        //dd($datos);
+
+        $roles=$request->only('roles');
+        
+        $usuario=User::find($id);
+        $usuario->update($datos);
+
+        if(count($roles)>0){
+            $usuario->roles1()->sync($roles['roles']);
+        }else{
+            $usuario->roles1()->detach();
+        }
+        
+        return redirect()->route('usuariosF.index')->with('message', 'Registro Creado.');
+    }
+
+    public function destroy($id, Request $request){
+        $usuario=User::find($id);
+        $usuario->delete();
+        return redirect()->route('usuariosF.index')->with('message', 'Registro Borrado.');
+    }
 }

@@ -3189,34 +3189,48 @@ class InscripcionsController extends Controller
             ->orderBy('inscripcions.st_inscripcion_id')
             ->get();
             */
-            $registros = Inscripcion::select(
-                'g.rvoe','l.ciclo_escolar','l.periodo_escolar','g.id_mapa','cli.curp',
-                'h.plantel_id','h.cliente_id','l.inicio','inscripcions.st_inscripcion_id',
-                'cli.nombre','cli.nombre2','cli.ape_paterno','cli.ape_materno',
-                'cli.fec_nacimiento','cli.genero','cli.estado_nacimiento_id',
-                'cli.bnd_trabaja','cli.bnd_indigena','d.clave as discapacidad_clave',
-                'l.id as lectivo_id',
-                DB::raw('substr(cli.matricula,1,4) as mesAnioMatricula'),
-                'gru.name as grupo'
-            )
-                ->join('hacademicas as h','h.inscripcion_id','inscripcions.id')
-                ->join('grupos as gru','gru.id','h.grupo_id')
-                ->join('grados as g','g.id','h.grado_id')
-                ->join('lectivos as l','l.id','h.lectivo_id')
-                ->join('clientes as cli', 'cli.id', '=', 'inscripcions.cliente_id')
-                ->leftJoin('discapacidads as d','d.id','cli.discapacidad_id') 
-                ->where('h.plantel_id', $datos['plantel_f'])
-                ->where('h.lectivo_id', $datos['lectivo_f'])
-                ->whereNull('inscripcions.deleted_at')
-                ->whereNull('h.deleted_at')
-                ->orderBy('inscripcions.st_inscripcion_id')
-                ->orderBy('gru.name')
-                ->orderBy('cli.ape_paterno')
-                ->orderBy('cli.ape_materno')
-                ->orderBy('cli.nombre')
-                ->orderBy('cli.nombre2')
-                ->distinct()
-                ->get();
+        $registros = Inscripcion::select(
+            'g.rvoe',
+            'l.ciclo_escolar',
+            'l.periodo_escolar',
+            'g.id_mapa',
+            'cli.curp',
+            'h.plantel_id',
+            'h.cliente_id',
+            'l.inicio',
+            'inscripcions.st_inscripcion_id',
+            'cli.nombre',
+            'cli.nombre2',
+            'cli.ape_paterno',
+            'cli.ape_materno',
+            'cli.fec_nacimiento',
+            'cli.genero',
+            'cli.estado_nacimiento_id',
+            'cli.bnd_trabaja',
+            'cli.bnd_indigena',
+            'd.clave as discapacidad_clave',
+            'l.id as lectivo_id',
+            DB::raw('substr(cli.matricula,1,4) as mesAnioMatricula'),
+            'gru.name as grupo'
+        )
+            ->join('hacademicas as h', 'h.inscripcion_id', 'inscripcions.id')
+            ->join('grupos as gru', 'gru.id', 'h.grupo_id')
+            ->join('grados as g', 'g.id', 'h.grado_id')
+            ->join('lectivos as l', 'l.id', 'h.lectivo_id')
+            ->join('clientes as cli', 'cli.id', '=', 'inscripcions.cliente_id')
+            ->leftJoin('discapacidads as d', 'd.id', 'cli.discapacidad_id')
+            ->where('h.plantel_id', $datos['plantel_f'])
+            ->where('h.lectivo_id', $datos['lectivo_f'])
+            ->whereNull('inscripcions.deleted_at')
+            ->whereNull('h.deleted_at')
+            ->orderBy('inscripcions.st_inscripcion_id')
+            ->orderBy('gru.name')
+            ->orderBy('cli.ape_paterno')
+            ->orderBy('cli.ape_materno')
+            ->orderBy('cli.nombre')
+            ->orderBy('cli.nombre2')
+            ->distinct()
+            ->get();
 
 
         //dd($registros->toArray());
@@ -3275,11 +3289,11 @@ class InscripcionsController extends Controller
                 ->where('hacademicas.lectivo_id', $datos['lectivo_f'])
                 ->whereNull('hacademicas.deleted_at')
                 ->whereNull('i.deleted_at')
+                ->whereNull('aa.deleted_at')
                 ->orderBy('gru.name')
                 ->orderBy('m.orden')
                 ->orderBy('cli.curp')
                 ->get();
-            
         } elseif ($datos['tipo_examen_f'] == 2) {
             $registros = Hacademica::select(
                 'l.ciclo_escolar',
@@ -3314,7 +3328,7 @@ class InscripcionsController extends Controller
                 ->join('clientes as cli', 'cli.id', '=', 'hacademicas.cliente_id')
                 ->join('materia as m', 'm.id', '=', 'hacademicas.materium_id')
                 ->where('m.bnd_oficial', 1)
-                ->where('c.calificacion','>=', 6)
+                ->where('c.calificacion', '>=', 6)
                 ->where('c.tpo_examen_id', $datos['tipo_examen_f'])
                 ->where('hacademicas.plantel_id', $datos['plantel_f'])
                 ->where('c.lectivo_id', $datos['lectivo_f'])
@@ -3653,5 +3667,55 @@ class InscripcionsController extends Controller
             'total_alumnos' => $total_alumnos,
             'token' => $impresion['token'],
         ));*/
+    }
+
+    public function registrarMateriaAdicional(Request $request)
+    {
+        
+        $datos = $request->all();
+        //dd($datos);
+        $i = Inscripcion::find($datos['inscripcion_id']);
+        $m= Materium::find($datos['materia_id']);
+        //dd($materias->toArray());
+        $h['inscripcion_id'] = $i->id;
+        $h['cliente_id'] = $i->cliente_id;
+        $h['plantel_id'] = $i->plantel_id;
+        $h['especialidad_id'] = $i->especialidad_id;
+        $h['nivel_id'] = $i->nivel_id;
+        $h['grado_id'] = $i->grado_id;
+        $h['grupo_id'] = $i->grupo_id;
+        $h['materium_id'] = $m->id;
+        $h['st_materium_id'] = 0;
+        $h['lectivo_id'] = $i->lectivo_id;
+        $h['usu_alta_id'] = Auth::user()->id;
+        $h['usu_mod_id'] = Auth::user()->id;
+        $ha = Hacademica::create($h);
+        //$h=new Hacademica;
+        //$h->save($h);
+        $c['hacademica_id'] = $ha->id;
+        $c['tpo_examen_id'] = 1;
+        $c['calificacion'] = 0;
+        $c['fecha'] = date('Y-m-d');
+        $c['reporte_bnd'] = 0;
+        $c['usu_alta_id'] = Auth::user()->id;
+        $c['usu_mod_id'] = Auth::user()->id;
+        $calif = Calificacion::create($c);
+
+        $ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $m->ponderacion_id)
+            ->where('bnd_activo', 1)
+            ->get();
+
+        foreach ($ponderaciones as $p) {
+            $ponde['calificacion_id'] = $calif->id;
+            $ponde['carga_ponderacion_id'] = $p->id;
+            $ponde['calificacion_parcial'] = 0;
+            $ponde['ponderacion'] = $p->porcentaje;
+            $ponde['usu_alta_id'] = Auth::user()->id;
+            $ponde['usu_mod_id'] = Auth::user()->id;
+            $ponde['tiene_detalle'] = $p->tiene_detalle;
+            $ponde['padre_id'] = $p->padre_id;
+            CalificacionPonderacion::create($ponde);
+        }
+        return 1;
     }
 }

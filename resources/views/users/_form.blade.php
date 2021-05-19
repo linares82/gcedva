@@ -1,14 +1,31 @@
-                <div class="form-group col-md-4 @if($errors->has('name')) has-error @endif">
-                       <label for="name-field">Name</label>
-                       {!! Form::text("name", null, array("class" => "form-control input-sm", "id" => "name-field")) !!}
-                       @if($errors->has("name"))
-                        <span class="help-block">{{ $errors->first("name") }}</span>
-                       @endif
-                    </div>
-                    <div class="form-group col-md-4 @if($errors->has('apple_type_id')) has-error @endif">
-                       <label for="apple_type_id-field">Apple_type_id</label>
-                       {!! Form::text("apple_type_id", null, array("class" => "form-control input-sm", "id" => "apple_type_id-field")) !!}
-                       @if($errors->has("apple_type_id"))
-                        <span class="help-block">{{ $errors->first("apple_type_id") }}</span>
-                       @endif
-                    </div>
+
+<input type="hidden" name="_token" value="{{ csrf_token() }}">
+<div class="col-md-4 form-group">
+    <label for="name">Nombre</label>
+    <input type="name" class="form-control" id="name" placeholder="Nombre" name="name" value="{{ (Session::has('errors')) ? old('name', '') : $model->name }}">
+</div>
+<div class="col-md-4 form-group {{ $errors->has('email') ? 'has-error' : ''}}">
+    <label for="email">Email</label>
+    <input type="email" class="form-control" id="email" placeholder="Email" name="email" value="{{ (Session::has('errors')) ? old('email', '') : $model->email }}">
+    {!! $errors->first('email', '<p class="help-block">:message</p>') !!}
+</div>
+<div class="col-md-4 form-group">
+    <label for="password">Password</label>
+    <input type="text" class="form-control" id="password" placeholder="Password" name="password">
+    @if(Route::currentRouteName() == 'usuariosF.edit')
+        <div class="alert alert-info">
+          <span class="fa fa-info-circle"></span> Leave the password field blank if you wish to keep it the same.
+        </div>
+    @endif
+</div>
+
+<div class="row"></div>
+
+<div class="form-group">
+    <label for="roles">Roles</label>
+    <select name="roles[]" id="roles" multiple class="select_seguridad form-control">
+        @foreach($roles as $index => $role)
+            <option value="{{ $index }}" {{ ((in_array($index, old('roles', []))) || ( ! Session::has('errors') && $model->roles->contains('id', $index))) ? 'selected' : '' }}>{{ $role }}</option>
+        @endforeach
+    </select>
+</div>
