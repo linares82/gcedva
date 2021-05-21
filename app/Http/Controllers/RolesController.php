@@ -116,7 +116,7 @@ class RolesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id, Role $rol)
+    public function destroy($id)
     {
         //dd($rol->toArray());
         $rol=Role::where('id',$id)->first();

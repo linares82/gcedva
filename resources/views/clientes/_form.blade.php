@@ -1266,10 +1266,12 @@
                     </tr>
                     <tr>
                     <tr>
+                        @permission('inscripcions.registrarMateriaAdicional')
                         <div class="form-group col-md-4 registrarMateriaAdicional">
                         <label for="materia_adicional-field">Materia Adicional</label>  {!! Form::select("materia_adicional", $materias, null, array("class" => "form-control select_seguridad", "id" => "materia_adicional-field", 'style'=>'width:100%')) !!}
                         <a href="#" data-inscripcion_id="{{ $i->id }}" class="btn btn-default btn-xs registrar_materia_adicional">Registrar Materia Adicional</a>
                         </div>
+                        @endpermission
                     </tr>
                 <table class="table table-condensed table-striped">
                     <thead style="color: #ffffff;background: #27ae60;">

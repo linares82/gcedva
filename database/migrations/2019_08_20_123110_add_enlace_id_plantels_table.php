@@ -14,8 +14,8 @@ class AddEnlaceIdPlantelsTable extends Migration
     public function up()
     {
         Schema::table('plantels', function(Blueprint $table) {
-            $table->string('enlace_lugar')->default("");
-            $table->string('enlace')->default("");;
+            $table->string('enlace_lugar')->default("")->nullable();
+            $table->string('enlace')->default("")->nullable();
         });
     }
 

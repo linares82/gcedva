@@ -214,9 +214,13 @@
                         <div class='text-center'>
                             @php
                                 $referencia="";
-                                $adeudo_pago_online=App\AdeudoPAgoOnline::where('caja_id',$caja->id)
+                                $adeudo_pago_online=\App\AdeudoPagoOnLine::where('caja_id',$caja->id)
+				                ->whereNotNull('peticion_multipago_id')
+                                ->where('peticion_multipago_id','<>',0)
                                 ->where('cliente_id',$caja->cliente_id)
+				                ->where('caja_id',$caja->id)
                                 ->first();
+
                                 
                                 if(!is_null($adeudo_pago_online) and $adeudo_pago_online->pago_id<>0){
                                     $referencia=$adeudo_pago_online->peticionMultipago->mp_reference;

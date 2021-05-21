@@ -51,9 +51,9 @@
         </div>
     </div>
 
-    
+    @role('superadmin')
     <a class="btn btn-success pull-right" href="{{ route('usuariosF.create') }}"><i class="glyphicon glyphicon-plus"></i> Crear</a>
-    
+    @endrole
 
 @endsection
 
@@ -84,8 +84,10 @@
                     </td>
                     <td>
                     <form action="{{ route('usuariosF.destroy', $user->id) }}" method="post">
+                    @role('superadmin')
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     <a class="btn btn-labeled btn-default" href="{{ route('usuariosF.edit', $user->id) }}"><span class="btn-label"><i class="fa fa-pencil"></i></span>Editar</a>
+                    @endrole
                     <button type="submit" class="btn btn-labeled btn-danger"><span class="btn-label"><i class="fa fa-trash"></i></span>Borrar</button>
                     </form>
                     </td>

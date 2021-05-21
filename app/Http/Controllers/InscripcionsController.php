@@ -193,6 +193,7 @@ class InscripcionsController extends Controller
         if ($materias_validar->count() == 0) {
             foreach ($materias as $m) {
                 //dd($materias->toArray());
+
                 $h['inscripcion_id'] = $i->id;
                 $h['cliente_id'] = $i->cliente_id;
                 $h['plantel_id'] = $i->plantel_id;
@@ -203,6 +204,9 @@ class InscripcionsController extends Controller
                 $h['materium_id'] = $m->id;
                 $h['st_materium_id'] = 0;
                 $h['lectivo_id'] = $i->lectivo_id;
+                $h['fec_inscripcion'] = $i->fec_inscripcion;
+                $h['turno_id'] = $i->turno_id;
+                $h['periodo_estudio_id'] = $i->periodo_estudio_id;
                 $h['usu_alta_id'] = Auth::user()->id;
                 $h['usu_mod_id'] = Auth::user()->id;
                 $ha = Hacademica::create($h);
@@ -253,6 +257,9 @@ class InscripcionsController extends Controller
                     $h['materium_id'] = $m->id;
                     $h['st_materium_id'] = 0;
                     $h['lectivo_id'] = $i->lectivo_id;
+                    $h['fec_inscripcion'] = $i->fec_inscripcion;
+                    $h['turno_id'] = $i->turno_id;
+                    $h['periodo_estudio_id'] = $i->periodo_estudio_id;
                     $h['usu_alta_id'] = Auth::user()->id;
                     $h['usu_mod_id'] = Auth::user()->id;
                     $ha = Hacademica::create($h);
@@ -2895,6 +2902,9 @@ class InscripcionsController extends Controller
                 $h['materium_id'] = $m->id;
                 $h['st_materium_id'] = 0;
                 $h['lectivo_id'] = $i->lectivo_id;
+                $h['fec_inscripcion'] = $i->fec_inscripcion;
+                $h['turno_id'] = $i->turno_id;
+                $h['periodo_estudio_id'] = $i->periodo_estudio_id;
                 $h['usu_alta_id'] = Auth::user()->id;
                 $h['usu_mod_id'] = Auth::user()->id;
                 $ha = Hacademica::create($h);
@@ -2945,6 +2955,9 @@ class InscripcionsController extends Controller
                     $h['materium_id'] = $m->id;
                     $h['st_materium_id'] = 0;
                     $h['lectivo_id'] = $i->lectivo_id;
+                    $h['fec_inscripcion'] = $i->fec_inscripcion;
+                    $h['turno_id'] = $i->turno_id;
+                    $h['periodo_estudio_id'] = $i->periodo_estudio_id;
                     $h['usu_alta_id'] = Auth::user()->id;
                     $h['usu_mod_id'] = Auth::user()->id;
                     $ha = Hacademica::create($h);

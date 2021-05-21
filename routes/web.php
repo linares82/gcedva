@@ -5116,7 +5116,7 @@ Route::get(
     '/inscripcions/registrarMateriaAdicional',
     array(
         'as' => 'inscripcions.registrarMateriaAdicional',
-        //'middleware' => 'permission:inscripcions.registrarMateriaAdicional',
+        'middleware' => 'permission:inscripcions.registrarMateriaAdicional',
         'uses' => 'InscripcionsController@registrarMateriaAdicional'
     )
 )->middleware('auth');
@@ -13814,7 +13814,7 @@ Route::post(
         'uses' => 'RolesController@update',
     )
 )->middleware('auth');
-Route::delete(
+Route::post(
     '/rolesF/destroy/{id}',
     array(
         'as' => 'rolesF.destroy',
