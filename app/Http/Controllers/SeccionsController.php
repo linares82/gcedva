@@ -59,9 +59,9 @@ class SeccionsController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function show($id, Seccion $seccion)
+	public function show($id)
 	{
-		$seccion=$seccion->find($id);
+		$seccion=Seccion::find($id);
 		return view('seccions.show', compact('seccion'));
 	}
 
@@ -71,9 +71,9 @@ class SeccionsController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function edit($id, Seccion $seccion)
+	public function edit($id)
 	{
-		$seccion=$seccion->find($id);
+		$seccion=Seccion::find($id);
 		return view('seccions.edit', compact('seccion'))
 			->with( 'list', Seccion::getListFromAllRelationApps() );
 	}

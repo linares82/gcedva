@@ -250,11 +250,21 @@ trait GetAllDataTrait
                 $myQuery = $myQuery->whereIn('periodo_estudios.plantel_id', $planteles);
                 //}
                 break;
-                case "plan_pagos":
-                    if (Auth::user()->can('IPlanPagosXPlantel')) {
-                    $myQuery = $myQuery->whereIn('plan_pagos.plantel_id', $planteles);
-                    }
-                    break;
+            case "plan_pagos":
+                if (Auth::user()->can('IPlanPagosXPlantel')) {
+                $myQuery = $myQuery->whereIn('plan_pagos.plantel_id', $planteles);
+                }
+                break;
+            case "plan_estudios":
+                if (Auth::user()->can('IPlanEstudiosXPlantel')) {
+                $myQuery = $myQuery->whereIn('plan_estudios.id', $planteles);
+                }
+                break;
+            case "periodo_estudios":
+                if (Auth::user()->can('IPlanEstudiosXPlantel')) {
+                $myQuery = $myQuery->whereIn('periodo_estudios.plantel_id', $planteles);
+                }
+                break;
             case "plantels":
                 $myQuery = $myQuery->whereIn('plantels.id', $planteles);
                 break;

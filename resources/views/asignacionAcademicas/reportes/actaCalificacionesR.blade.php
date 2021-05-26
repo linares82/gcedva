@@ -147,10 +147,14 @@
                             @php
                             //dd($datos);
                             if($datos['ponderacion_f']<>0){
-                            
+                                $carga_ponderacion = App\CalificacionPonderacion::where('carga_ponderacion_id',$datos['ponderacion_f'])
+                                ->where('calificacion_id',$a->calificaciones->max()->id)->first();
+                                $promedio=$carga_ponderacion->calificacion_parcial;
+                                /*
                                 $ponderaciones=App\CalificacionPonderacion::where('calificacion_id',$a->calificaciones->max()->id)
                                 ->whereIn('carga_ponderacion_id',$array_ponderaciones)
                                 ->get();
+                                //dd ($ponderaciones->toArray());
                                 //dd($ponderaciones->toArray());
                                 $cantidad_calificaciones=0;
                                 $suma_calificaciones=0;
@@ -165,7 +169,7 @@
                                 }else{
                                     $promedio=0;
                                     
-                                }
+                                }*/
                                 
                             }elseif($datos['ponderacion_f']==0){
                                 //$promedio=$a->calificaciones->max()->calificacion;
@@ -207,7 +211,7 @@
                             
                             @endphp
                             
-                            <td>{{ $promedio }}</td><td>{{ $formatter->toWords($promedio,0) }}</td>
+                            <td> {{ $promedio }}</td><td>{{ $formatter->toWords($promedio,0) }}</td>
                             <td>
                                 <input type="text" id="" name="TMovimiento" style="border: 0;width:25px;" value='A'>
                             </td>

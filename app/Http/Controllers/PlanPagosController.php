@@ -189,7 +189,7 @@ class PlanPagosController extends Controller
     public function update($id, PlanPago $planPago, updatePlanPago $request)
     {
         //dd($request->all());
-        $input = $request->only('name', 'activo','ciclo_matricula_id');
+        $input = $request->only('name', 'activo','ciclo_matricula_id','plante_id');
         $input['usu_mod_id'] = Auth::user()->id;
         $generar_pagos = $request->only('inscripcion', 'uniforme', 'tramites', 'mensualidad', 'cuantas_mensualidad', 'fecha_pago', 'seguro');
         $lineas = $request->except('_token','name', 'activo', 'inscripcion', 'uniforme', 'tramites', 'mensualidad', 'cuantas_mensualidad', 'fecha_pago', 'seguro');

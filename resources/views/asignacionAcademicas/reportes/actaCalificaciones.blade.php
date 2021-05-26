@@ -24,6 +24,15 @@
             {!! Form::open(array('route' => 'asignacionAcademica.actaCalificacionesR', 'id'=>'frm_seguimiento')) !!}
 
                 <div class="form-group col-md-6 @if($errors->has('plantel_f')) has-error @endif">
+                    <label for="plantel_f-field">Evaluación</label>
+                    {!! Form::select("evaluacion", array('0'=>'Seleccionar Opción','1'=>'Ordinaria','2'=>'Extraordinaria'), null, array("class" => "form-control select_seguridad", "id" => "evaluacion_f-field")) !!}
+                    <div id='loading_plantel' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
+                    @if($errors->has("plantel_f"))
+                    <span class="help-block">{{ $errors->first("plantel_f") }}</span>
+                    @endif
+                </div>
+
+                <div class="form-group col-md-6 @if($errors->has('plantel_f')) has-error @endif">
                     <label for="plantel_f-field">Plantel</label>
                     {!! Form::select("plantel_f", $planteles_validos, null, array("class" => "form-control select_seguridad", "id" => "plantel_f-field")) !!}
                     <div id='loading_plantel' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
@@ -90,6 +99,7 @@
         lang_clear_date: 'Limpiar',
         show_select_today: 'Hoy',
       });
+    
     $('#plantel_f-field').change(function(){
         getCmbLectivos();
     });

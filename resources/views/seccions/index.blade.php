@@ -126,8 +126,6 @@
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
                             <th>@include('plantillas.getOrderLink', ['column' => 'name', 'title' => 'NAME'])</th>
-                        <th>@include('plantillas.getOrderLink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
-                        <th>@include('plantillas.getOrderLink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
@@ -137,17 +135,15 @@
                             <tr>
                                 <td><a href="{{ route('seccions.show', $seccion->id) }}">{{$seccion->id}}</a></td>
                                 <td>{{$seccion->name}}</td>
-                    <td>{{$seccion->usu_alta_id}}</td>
-                    <td>{{$seccion->usu_mod_id}}</td>
                                 <td class="text-right">
                                     @permission('seccions.edit')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('seccions.duplicate', $seccion->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
+                                    
                                     @endpermission
                                     @permission('seccions.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('seccions.edit', $seccion->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
                                     @endpermission
                                     @permission('seccions.destroy')
-                                    {!! Form::model($seccion, array('route' => array('seccions.destroy', $seccion->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}
+                                    {!! Form::model($seccion, array('route' => array('seccions.destroy', $seccion->id), 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}
                                         <button type="submit" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> Borrar</button>
                                     {!! Form::close() !!}
                                     @endpermission

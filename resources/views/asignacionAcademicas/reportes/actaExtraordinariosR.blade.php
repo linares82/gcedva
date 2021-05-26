@@ -60,6 +60,11 @@
                 background-color: #dddddd;
             }*/
 
+            .SaltoDePagina{
+            page-break-after: always;
+            padding:10px;
+            }
+
             body{
                 font-size: 11px;
                 font-family: Segoe UI;
@@ -78,25 +83,29 @@
 
     </head>
     <body>
-        <div id="printeArea">
+        
+            @foreach($encabezados as $encabezado)
+            <div class="SaltoDePagina">
+                <div id="printeArea">
             <table style="width:100%">
                 <tr >
                     <td>
-                        <img src="{{asset('storage/especialidads/'.$encabezado->especialidad->imagen)}}" alt="Logo" height="75" >
+                        <img src="{{asset('storage/especialidads/'.$encabezado->imagen)}}" alt="Logo" height="75" >
 
                     </td>
                     <td align="right" class="td_derecha">
-                        {{ $encabezado->grado->denominacion }}<br/>
-                        {{ $encabezado->grado->name }}<br/>
+                        {{ $encabezado->denominacion }}<br/>
+                        {{ $encabezado->grado }}<br/>
                         @php
-                            $fechaEntero=strtotime($encabezado->grado->fec_rvoe);
+                            $fechaEntero=strtotime($encabezado->fec_rvoe);
                             $anio=date('Y',$fechaEntero);
                             $mes=date('m',$fechaEntero);
                             $dia=date('d',$fechaEntero);
                             $mesLetra=\App\Mese::find($mes);
-                            @endphp
-                        RVOE S.E.P. NO {{ $encabezado->grado->rvoe }} de fecha {{ $dia }} de {{ $mesLetra->name }} de {{ $anio }}<br/>
-                        {{ $encabezado->grado->cct }}
+                            
+                        @endphp
+                        RVOE S.E.P. NO {{ $encabezado->rvoe }} de fecha {{ $dia }} de {{ $mesLetra->name }} de {{ $anio }}<br/>
+                        {{ $encabezado->cct }}
                     </td>
                     
                 </tr>
@@ -107,59 +116,88 @@
             <table>
                 <tbody>
                     <tr>
-                        <td>Asignatura</td><td colspan='3'>{{ $hacademica->materia->name }}</td>
-                        <td>F. de Extraordinario</td><td colspan='3'></td>
+                        <td>Asignatura</td><td colspan='3'>{{ $encabezado->materia }}</td>
+                        <td>F. de Extraordinario</td><td colspan='3'>{{ $encabezado->fecha }}</td>
                     </tr>
                     <tr>
-                        <td>Clave de Asignatura</td><td colspan='3'>{{ $hacademica->materia->codigo }}</td>
-                        <td>Grupo</td><td colspan='3'>{{ $hacademica->grupo->name }}</td>
+                        <td>Clave de Asignatura</td><td colspan='3'>{{ $encabezado->codigo }}</td>
+                        <td>Grupo</td><td colspan='3'></td>
                     </tr>
                     <tr>
-                        <td>Periodo</td><td colspan='3'>{{ $hacademica->lectivo->ciclo_escolar }}</td>
-                        <td>Ciclo Escolar</td><td colspan='3'>{{ $hacademica->lectivo->ciclo_escolar }}</td>
+                        <td>Periodo</td><td colspan='3'>{{ $encabezado->ciclo_escolar }}</td>
+                        <td>Ciclo Escolar</td><td colspan='3'>{{ $encabezado->ciclo_escolar }}</td>
                     </tr>
                     
                 </tbody>
             </table>
             
+            @php
+                $detalle=App\Hacademica::select('hacademicas.materium_id','m.name as materia','cali.fecha','m.codigo',
+                'l.periodo_escolar','l.ciclo_escolar','e.imagen','g.denominacion', 'g.name as grado','g.fec_rvoe',
+                'g.rvoe','g.cct','c.matricula','c.curp','c.nombre','c.nombre2','c.ape_paterno','c.ape_materno',
+                'l.name as lectivo','cali.calificacion')
+                ->join('materia as m','m.id','=','hacademicas.materium_id')
+                ->join('calificacions as cali','cali.hacademica_id','=','hacademicas.id')
+                ->join('lectivos as l','l.id','cali.lectivo_id')
+                //->join('inscripcions as i','i.id','hacademicas.inscripcion_id')
+                ->join('especialidads as e','e.id','hacademicas.especialidad_id')
+                ->join('grados as g','g.id','hacademicas.grado_id')
+                ->join('clientes as c','c.id','hacademicas.cliente_id')
+                ->where('hacademicas.plantel_id',$encabezado->plantel_id)
+                ->where('cali.lectivo_id',$encabezado->lectivo_id)
+                //->where('hacademicas.grupo_id',$datos['grupo_f'])
+                ->where('hacademicas.materium_id',$encabezado->materium_id)
+                ->where('tpo_examen_id',2)
+                ->whereNull('hacademicas.deleted_at')
+                ->whereNull('cali.deleted_at')
+                ->distinct()
+                ->orderBy('hacademicas.materium_id')
+                ->get();
+            @endphp
+
+            
             <table class="table table-condensed table-striped table_calif">
-                    <thead >
-                    <th>No.</th><th>Matricula</th><th>Alumno</th><th>CURP</th><TH>Calificacion</TH><TH>Ciclo</TH>
-                    </thead>
-                    <tbody>
-                        @php
-                            $i=0;
-                        @endphp
-                        @foreach($calificaciones as $c)
-                        <tr><td>{{ ++$i }}</td>
-                            <td>{{$c->cliente->matricula}}</td>
-                            <td>{{ $c->cliente->ape_paterno }} {{ $c->cliente->ape_materno }} {{ $c->cliente->nombre }} {{ $c->cliente->nombre2 }}</td>
-                            <td>{{ $c->cliente->curp }}</td>
-                            
-                            <td>{{ $c->calificacion }}</td><td>{{ $c->lectivo->name }}</td>
-                            
-                        </tr>
-                        @endforeach
+                <thead >
+                <th>No.</th><th>Matricula</th><th>Alumno</th><th>CURP</th><TH>Calificacion</TH><TH>Ciclo</TH>
+                </thead>
+                <tbody>
+                    @php
+                        $i=0;
+                    @endphp
+                    @foreach($detalle as $c)
+                    <tr><td>{{ ++$i }}</td>
+                        <td>{{$c->matricula}}</td>
+                        <td>{{ $c->ape_paterno }} {{ $c->ape_materno }} {{ $c->nombre }} {{ $c->nombre2 }}</td>
+                        <td>{{ $c->curp }}</td>
+                        <td>{{ $c->calificacion }}</td><td>{{ $c->lectivo }}</td>
                         
-                    </tbody>
                     </tr>
-
-                    </tbody>
-                </table>
-
-            <table>
-                <br><br><br><br><br><br>
-            <tr style="width: 100%;">
-                <td>
-                    Nombre y Firma del Docente
-                </td>
-                <td>
-                    _______________________________________________________
+                    @endforeach
                     
-                </td>
-            </tr>
+                </tbody>
+                </tr>
+
+                </tbody>
+            </table>
+
+        <table>
+            <br><br><br><br><br><br>
+        <tr style="width: 100%;">
+            <td align="right">
+                Nombre y Firma del Docente
+            </td>
+            <td>
+                _______________________________________________________
+                
+            </td>
+        </tr>
+            
+            
             </table>    
         </div>
+    </div>
+            @endforeach
+        
 
         <script type="text/php">
             /*if (isset($pdf))

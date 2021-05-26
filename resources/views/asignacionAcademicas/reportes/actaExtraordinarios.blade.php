@@ -39,23 +39,24 @@
                     <span class="help-block">{{ $errors->first("lectivo_f") }}</span>
                     @endif
                 </div>
-                <div class="form-group col-md-6 @if($errors->has('grupo_f')) has-error @endif">
+                <!--
+                <div class="form-group col-md-6 @@if($errors->has('grupo_f')) has-error @@endif">
                     <label for="grupo_f-field">Grupo:</label>
-                    {!! Form::select("grupo_f", $grupos, null, array("class" => "form-control select_seguridad", "id" => "grupo_f-field")) !!}
+                    @{!! Form::select("grupo_f", $grupos, null, array("class" => "form-control select_seguridad", "id" => "grupo_f-field")) !!}
                     <div id='loading_materia' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
-                    @if($errors->has("grupo_f"))
+                    @@if($errors->has("grupo_f"))
                     <span class="help-block">{{ $errors->first("plantel_t") }}</span>
-                    @endif
+                    @@endif
                 </div>
                 <div class="form-group col-md-6 @if($errors->has('materia_f')) has-error @endif">
                     <label for="materia_f-field">Materia:</label>
-                    {!! Form::select("materia_f", $materias, null, array("class" => "form-control select_seguridad", "id" => "materia_f-field")) !!}
+                    @{!! Form::select("materia_f", $materias, null, array("class" => "form-control select_seguridad", "id" => "materia_f-field")) !!}
                     <div id='loading_ponderacion' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
-                    @if($errors->has("materia_f"))
+                    @@if($errors->has("materia_f"))
                     <span class="help-block">{{ $errors->first("materia_t") }}</span>
-                    @endif
-                </div>
-                
+                    @@endif
+                </div>-->
+            
                 
                 
                 <div class="row">
