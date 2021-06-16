@@ -46,7 +46,7 @@
                 <div class="panel-body">
                     <form class="PlanPago_search" id="search" action="{{ route('planPagos.index') }}" accept-charset="UTF-8" method="get">
                         <input type="hidden" name="q[s]" value="{{ @(Request::input('q')['s']) ?: '' }}" />
-                        <div class="form-horizontal">
+                        <div class="">
 
                             <!--
                             <div class="form-group">
@@ -60,11 +60,17 @@
                                 </div>
                             </div>
                             -->
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_name_cont">PLAN</label>
-                                <div class=" col-sm-9">
+                            <div class="form-group col-md-4" >
+                                <label for="q_plan_pagos.plantel_id_lt">PLANTEL</label>
+                                
+                                    {!! Form::select("plan_pagos.plantel_id", $plantels, "{{ @(Request::input('q')['plan_pagos.plantel_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[plan_pagos.plantel_id_lt]", "id"=>"q_plan_pagos.plantel_id_lt", "style"=>"width:100%;")) !!}
+                                    <div id='loading10' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label  for="q_name_cont">PLAN</label>
+                                
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['name_cont']) ?: '' }}" name="q[name_cont]" id="q_name_cont" />
-                                </div>
+                                
                             </div>
                                                     <!--
                             <div class="form-group">

@@ -502,4 +502,48 @@ class MateriasController extends Controller
             }
         }
     }
+
+    public function materiasExtraordinario(Request $request){
+        if ($request->ajax()) {
+            //dd($request->all());
+            $plantel = $request->get('plantel_id');
+            $lectivo = $request->get('lectivo_id');
+
+            $final = array();
+            $r = DB::table('materia as m')
+                ->select('m.id', 'm.name')
+                ->join('hacademicas as h','h.materium_id','m.id')
+                ->join('calificacions as cali','cali.hacademica_id','=','h.id')
+                ->where('h.plantel_id',$plantel)
+                ->where('cali.lectivo_id',$lectivo)
+                ->where('cali.tpo_examen_id',2)
+                ->whereNull('h.deleted_at')
+                ->whereNull('cali.deleted_at')
+                ->orderBy('m.id')
+                ->distinct()
+                ->get();
+
+            //dd($r);
+            if (isset($materia) and $materia != 0) {
+                foreach ($r as $r1) {
+                    if ($r1->id == $materia) {
+                        array_push($final, array(
+                            'id' => $r1->id,
+                            'name' => $r1->name,
+                            'selectec' => 'Selected',
+                        ));
+                    } else {
+                        array_push($final, array(
+                            'id' => $r1->id,
+                            'name' => $r1->name,
+                            'selectec' => '',
+                        ));
+                    }
+                }
+                return $final;
+            } else {
+                return $r;
+            }
+        }
+    }
 }

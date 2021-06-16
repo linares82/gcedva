@@ -103,8 +103,8 @@ class PlantelsController extends Controller
 		$e = Plantel::create($input);
 
 		if (!is_null($conceptos['concepto_multipagos_id']) or !is_null($formas_pago['forma_pago_id'])) {
-			$plantel->conceptoMultipagos()->sync($conceptos['concepto_multipagos_id']);
-			$plantel->formaPagos()->sync($formas_pago['forma_pago_id']);
+			$e->conceptoMultipagos()->sync($conceptos['concepto_multipagos_id']);
+			$e->formaPagos()->sync($formas_pago['forma_pago_id']);
 		}
 
 		if ($e) {

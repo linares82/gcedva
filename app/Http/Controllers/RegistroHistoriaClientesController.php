@@ -57,6 +57,7 @@ class RegistroHistoriaClientesController extends Controller
 		//dd($campo_autorizacion['autorizacion']);
 		$input['usu_alta_id'] = Auth::user()->id;
 		$input['usu_mod_id'] = Auth::user()->id;
+		$input['campo_etapa']= $campo_autorizacion['autorizacion'];
 		//dd($input);
 		//create data
 		$r = RegistroHistoriaCliente::create($input);
@@ -71,6 +72,9 @@ class RegistroHistoriaClientesController extends Controller
 		} elseif ($campo_autorizacion['autorizacion'] == 'aut_caja_corp') {
 			$historiaCliente->aut_caja_corp = $r->st_historia_cliente_id;
 			$historiaCliente->st_historia_cliente_id = $r->st_historia_cliente_id;
+		}
+		if($historiaCliente->st_historia_cliente_id==2){
+			$historiaCliente->fec_autorizacion=date('Y-m-d');
 		}
 		$historiaCliente->save();
 		$e = $historiaCliente;

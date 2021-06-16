@@ -15,6 +15,7 @@
                          <span class="help-block">{{ $errors->first("empleado_id") }}</span>
                         @endif
                      </div>
+                     @permission('asignacionAcademicas.docenteOficial')
                      <div class="form-group col-md-4 @if($errors->has('docente_oficial')) has-error @endif">
                         <label for="docente_oficial-field">Docente Oficial</label>
                         {!! Form::text("docente_oficial", null, array("class" => "form-control input-sm", "id" => "docente_oficial-field")) !!}
@@ -29,6 +30,7 @@
                          <span class="help-block">{{ $errors->first("docente_oficial_id") }}</span>
                         @endif
                      </div>
+                     @endpermission
                      <div class="form-group col-md-4 @if($errors->has('grupo_id')) has-error @endif">
                         <label for="grupo_id-field">Grupo</label>
                         {!! Form::select("grupo_id", $list["Grupo"], null, array("class" => "form-control select_seguridad", "id" => "grupo_id-field")) !!}

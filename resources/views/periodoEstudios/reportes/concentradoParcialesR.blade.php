@@ -78,7 +78,10 @@
                         
                     </tr>
                     
-                
+                @php
+                    $no=0;
+                    $promedio_grupal=0;
+                @endphp
                 @foreach($registros as $registro)
                 
                 <tr>

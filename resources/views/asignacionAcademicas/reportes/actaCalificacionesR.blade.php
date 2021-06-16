@@ -94,9 +94,26 @@
                             $mes=date('m',$fechaEntero);
                             $dia=date('d',$fechaEntero);
                             $mesLetra=\App\Mese::find($mes);
-                            @endphp
+                            $calificacion=$encabezado->calificaciones->where('tpo_examen_id',1)->whereNotIn('deleted_at', NULL)->max()->id;
+                            $actaFinal=\App\Calificacion::find($calificacion)->actaFinal;
+                            //dd($actaFinal->toArray());
+                        @endphp
                         RVOE S.E.P. NO {{ $encabezado->grado->rvoe }} de fecha {{ $dia }} de {{ $mesLetra->name }} de {{ $anio }}<br/>
                         {{ $encabezado->grado->cct }}
+                        No. Acta: 
+                        @permission("actaFinals.store")
+                        @if(is_null($actaFinal))
+                            <a class="btn btn-success" href="#" id="generarActa">Generar Acta</a>
+                        @else
+                            @php
+                                $fecha=\Carbon\Carbon::createFromFormat('Y-m-d',$actaFinal->fecha);
+                                    
+                                echo "F".sprintf("%02d",$fecha->day).sprintf("%02d",$fecha->month).substr($fecha->year,-2).sprintf("%03d",$actaFinal->consecutivo);
+                                    
+                            @endphp
+
+                        @endif
+                        @endpermission
                     </td>
                     
                 </tr>
@@ -138,6 +155,7 @@
                     <tbody>
                         @php
                             $i=0;
+                            $calificacionesArray=array();
                         @endphp
                         @foreach($alumnos as $a)
                         <tr><td>{{ ++$i }}</td>
@@ -149,7 +167,12 @@
                             if($datos['ponderacion_f']<>0){
                                 $carga_ponderacion = App\CalificacionPonderacion::where('carga_ponderacion_id',$datos['ponderacion_f'])
                                 ->where('calificacion_id',$a->calificaciones->max()->id)->first();
-                                $promedio=$carga_ponderacion->calificacion_parcial;
+                                if(is_null($carga_ponderacion)){
+                                    $promedio=0;    
+                                }else{
+                                    $promedio=$carga_ponderacion->calificacion_parcial;
+                                }
+                                
                                 /*
                                 $ponderaciones=App\CalificacionPonderacion::where('calificacion_id',$a->calificaciones->max()->id)
                                 ->whereIn('carga_ponderacion_id',$array_ponderaciones)
@@ -174,7 +197,10 @@
                             }elseif($datos['ponderacion_f']==0){
                                 //$promedio=$a->calificaciones->max()->calificacion;
                                 //dd($a->calificaciones->max());
-                                $ponderaciones=App\CalificacionPonderacion::where('calificacion_id',$a->calificaciones->max()->id)
+                                $calificacion_id=$a->calificaciones->where('tpo_examen_id',1)->whereNotIn('deleted_at', NULL)->max()->id;
+                                //dd($calificacion_id);
+                                array_push($calificacionesArray, $calificacion_id);
+                                $ponderaciones=App\CalificacionPonderacion::where('calificacion_id', $calificacion_id)
                                 //->whereIn('carga_ponderacion_id',$array_ponderaciones)
                                 ->get();
                                 //dd($ponderaciones->toArray());
@@ -233,6 +259,46 @@
             $pdf->page_text(670, 580, "Pagina {PAGE_NUM} de {PAGE_COUNT}", $font, 9, array(0, 0, 0));
             }*/
         </script>
+
+        <script src="{{ asset ('/bower_components/AdminLTE/plugins/jQuery/jQuery-2.1.4.min.js') }}"></script>
+    <script text="javascript">
+        
+        $(document).ready(function() {
+            @if(isset($calificacionesArray))
+            @php
+            $idCalifiaciones="";
+            @endphp
+            @foreach($calificacionesArray as $idCalificacion)
+                @if($loop->first)
+                    @php $idCalifiaciones=$idCalificacion; @endphp
+                @else
+                    @php $idCalifiaciones=$idCalifiaciones.",".$idCalificacion; @endphp
+                @endif
+            @endforeach
+                
+             $('#generarActa').click(function(){ 
+                $.ajax({
+                    url: '{{ route("actaFinals.store") }}',
+                    type: 'GET',
+                    data: { 
+                        'plantel':{{ $datos['plantel_f'] }},
+                        'lectivo':{{ $datos['lectivo_f'] }}, 
+                        'tipo_evaluacion':1, 
+                        'calificaciones':'{{ $idCalifiaciones }}' 
+                    },
+                    //dataType: 'json',
+                    beforeSend : function(){$("#loading10").show(); },
+                    complete : function(){$("#loading10").hide(); },
+                    success: function(data){
+                        location.reload();
+                        //console.log('Termine');
+                    }
+                    });
+            });
+        @endif    
+        });
+        
+    </script>    
 
     </body>
 </html>

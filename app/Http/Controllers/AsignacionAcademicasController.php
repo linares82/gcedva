@@ -529,6 +529,7 @@ class AsignacionAcademicasController extends Controller
                 ->get();
 		}*/
 		$numero=0;
+		$array_ponderaciones = array();
 		if($datos['ponderacion_f']<>0){
 			$carga_ponderacion = CargaPonderacion::find($datos['ponderacion_f']);
 			$cadena = explode(" ", $carga_ponderacion->name);
@@ -539,7 +540,7 @@ class AsignacionAcademicasController extends Controller
 			->get();
 			//dd($ponderaciones);
 
-			$array_ponderaciones = array();
+			
 			foreach ($ponderaciones as $p) {
 				array_push($array_ponderaciones, $p->id);
 			}
@@ -588,9 +589,9 @@ class AsignacionAcademicasController extends Controller
 
 	public function actaExtraordinariosR(Request $request){
 		$datos=$request->all();
-		$encabezados=Hacademica::select('hacademicas.materium_id','m.name as materia','cali.fecha','m.codigo',
+		$encabezado=Hacademica::select('hacademicas.materium_id','m.name as materia','cali.fecha','m.codigo',
 		'l.periodo_escolar','l.ciclo_escolar','e.imagen','g.denominacion', 'g.name as grado','g.fec_rvoe',
-		'g.rvoe','g.cct','hacademicas.plantel_id','cali.lectivo_id')
+		'g.rvoe','g.cct','hacademicas.plantel_id','cali.lectivo_id','hacademicas.id as hacademica_id','l.fin')
 		->join('materia as m','m.id','=','hacademicas.materium_id')
 		->join('calificacions as cali','cali.hacademica_id','=','hacademicas.id')
 		->join('lectivos as l','l.id','cali.lectivo_id')
@@ -598,6 +599,7 @@ class AsignacionAcademicasController extends Controller
 		->join('especialidads as e','e.id','hacademicas.especialidad_id')
 		->join('grados as g','g.id','hacademicas.grado_id')
 		->where('hacademicas.plantel_id',$datos['plantel_f'])
+		->where('hacademicas.materium_id',$datos['materia_f'])
 		->where('cali.lectivo_id',$datos['lectivo_f'])
 		//->where('hacademicas.grupo_id',$datos['grupo_f'])
 		//->where('hacademicas.materium_id',$datos['materia_f'])
@@ -606,7 +608,7 @@ class AsignacionAcademicasController extends Controller
 		->whereNull('cali.deleted_at')
 		->orderBy('m.codigo')
 		->distinct()
-		->get();
+		->first();
 		//dd($encabezados->toArray());
 		/*foreach($calificaciones as $c){
 			$encabezado=Inscripcion::find($c->inscripcion_id);
@@ -616,6 +618,6 @@ class AsignacionAcademicasController extends Controller
 		//dd($hacademica);
 		//dd($calificaciones->toArray());
 		return view('asignacionAcademicas.reportes.actaExtraordinariosR', 
-		compact('encabezados'));
+		compact('encabezado', 'datos'));
 	}
 }

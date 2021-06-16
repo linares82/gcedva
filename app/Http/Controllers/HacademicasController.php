@@ -357,7 +357,8 @@ class HacademicasController extends Controller
             isset($input['cliente_id']) and
             isset($input['grado_id']) and
             isset($input['materium_id']) and
-            isset($input['examen_id'])
+            isset($input['examen_id']) and
+            isset($input['lectivo_id'])
         ) {
             //isset($input['calificacion']) and
             //isset($input['fecha']) )
@@ -700,6 +701,7 @@ class HacademicasController extends Controller
         $data = $request->all();
         //calcula calificacion de la linea
         $calificacion_ponderacion = CalificacionPonderacion::find($data['calificacion_ponderacion']);
+        //dd($calificacion_ponderacion);
         $calificacion_ponderacion->calificacion_parcial = $data['calificacion_parcial'];
         $calificacion_ponderacion->calificacion_parcial_calculada = $data['calificacion_parcial'] * $calificacion_ponderacion->ponderacion;
         $calificacion_ponderacion->save();

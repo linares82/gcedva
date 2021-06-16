@@ -22,6 +22,7 @@
         <tbody>    
           @php
               $csc=0;
+              $total=0;
           @endphp
         @foreach ($registros as $registro)
           <tr>
@@ -30,8 +31,13 @@
             <td><a href="{{ route('clientes.clientesActivosD', 
             array('razon'=>$registro->razon,'fecha_f'=>$registro->fec_proceso)) }}" target="_blank">Ver</a></td>
           </tr>        
+          @php
+              $total=$total+$registro->alumnos_activos;
+          @endphp
         @endforeach
-        
+        <tr>
+          <td colspan="2">Total</td><td>{{ $total }}</td>
+        </tr>
             </tbody>
         </table>
     </div>

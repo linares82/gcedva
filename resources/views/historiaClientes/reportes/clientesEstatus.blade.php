@@ -31,11 +31,17 @@
                     @endif
                 </div>
             
-                
-            
                 <div class="form-group col-md-6 @if($errors->has('plantel')) has-error @endif">
                     <label for="plantel">Plantel:</label>
                     {!! Form::select("plantel[]", $list["Plantel"], null, array("class" => "form-control select_seguridad", "id" => "plantel-field",'multiple'=>true)) !!}
+                    @if($errors->has("plantel"))
+                    <span class="help-block">{{ $errors->first("plantel") }}</span>
+                    @endif
+                </div>
+
+                <div class="form-group col-md-6 @if($errors->has('st_cliente_f')) has-error @endif">
+                    <label for="st_cliente_f">Estatus Cliente:</label>
+                    {!! Form::select("st_cliente_f", $stClientes, null, array("class" => "form-control select_seguridad", "id" => "plantel-field")) !!}
                     @if($errors->has("plantel"))
                     <span class="help-block">{{ $errors->first("plantel") }}</span>
                     @endif

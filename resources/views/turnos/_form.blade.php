@@ -1,5 +1,6 @@
 <div class="form-group col-md-4 @if($errors->has('plantel_id')) has-error @endif">
     <label for="plantel_id-field">Plantel</label>
+    {!! Form::hidden("id", null, array("class" => "form-control input-sm", "id" => "id-field")) !!}
     {!! Form::select("plantel_id", $list["Plantel"], null, array("class" => "form-control select_seguridad", "id" => "plantel_id-field")) !!}
     @if($errors->has("plantel_id"))
     <span class="help-block">{{ $errors->first("plantel_id") }}</span>
@@ -45,11 +46,14 @@
 @push('scripts')                    
 <script>
   $(document).ready(function() {
+    getCmbPlanPagos();
     getCmbEspecialidad();
     getCmbNivel();
     getCmbGrado();
+
     $('#plantel_id-field').change(function(){
         getCmbEspecialidad();
+        getCmbPlanPagos();
     });
     function getCmbEspecialidad(){
         //var $example = $("#especialidad_id-field").select2();
@@ -74,6 +78,31 @@
                 }
             });       
     }
+
+    function getCmbPlanPagos(){
+        //var $example = $("#especialidad_id-field").select2();
+        var a= $('#frm_turnos').serialize();
+            $.ajax({
+                url: '{{ route("planPagos.getCmbPlanPagos") }}',
+                type: 'GET',
+                data: a,
+                dataType: 'json',
+                beforeSend : function(){$("#loading2").show();},
+                complete : function(){$("#loading2").hide();},
+                success: function(data){
+                    //$example.select2("destroy");
+                    $('#plan_pago_id-field').html('');
+                    //$('#especialidad_id-field').empty();
+                    $('#plan_pago_id-field').append($('<option></option>').text('Seleccionar').val('0'));
+                    $.each(data, function(i) {
+                        //alert(data[i].name);
+                        $('#plan_pago_id-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                    });
+                    //$('#plan_pago_id-field').select2();
+                }
+            });       
+    }
+
     $('#especialidad_id-field').change(function(){
         getCmbNivel();
     });

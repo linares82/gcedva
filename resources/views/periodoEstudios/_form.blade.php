@@ -103,12 +103,14 @@
                     <table class="table table-condensed table-striped">
                         <thead>
                             <tr>
-                                <th>Materia</th><th>Acciones</th>
+                                <th>id</th><th>Codigo</th><th>Materia</th><th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($materias as $m)
                             <tr>
+                                <td>{{ $m->id }}</td>
+                                <td>{{ $m->codigo }}</td>
                                 <td>{{$m->materia}}</td>
                                 <td><a href="{{route('periodoEstudios.destroyMateria', $m->id)}}" class="btn btn-xs btn-danger">Eliminar</a></td>
                             </tr>

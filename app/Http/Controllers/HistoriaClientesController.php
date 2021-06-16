@@ -2,25 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Adeudo;
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
-use File as Archi;
-
-use App\HistoriaCliente;
-use App\Cliente;
-use App\EventoCliente;
-use App\Mese;
-use App\Seguimiento;
-use Illuminate\Http\Request;
 use Auth;
-use App\Http\Requests\updateHistoriaCliente;
-use App\Http\Requests\createHistoriaCliente;
-use App\Inscripcion;
-use App\RegistroHistoriaCliente;
-use App\StHistoriaCliente;
+use App\Mese;
+use App\Adeudo;
+use App\Cliente;
+
+use App\StCliente;
 use Carbon\Carbon;
+use File as Archi;
+use App\Inscripcion;
+use App\Seguimiento;
+use App\EventoCliente;
+use App\Http\Requests;
+use App\HistoriaCliente;
+use App\StHistoriaCliente;
+use Illuminate\Http\Request;
+use App\RegistroHistoriaCliente;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\createHistoriaCliente;
+use App\Http\Requests\updateHistoriaCliente;
 
 class HistoriaClientesController extends Controller
 {
@@ -478,7 +479,8 @@ class HistoriaClientesController extends Controller
 	public function clientesEstatus()
 	{
 		$eventos = EventoCliente::pluck('name', 'id');
-		return view('historiaClientes.reportes.clientesEstatus', compact('eventos'))
+		$stClientes=StCliente::pluck('name','id');
+		return view('historiaClientes.reportes.clientesEstatus', compact('eventos','stClientes'))
 			->with('list', Cliente::getListFromAllRelationApps());;
 	}
 
@@ -498,18 +500,37 @@ class HistoriaClientesController extends Controller
 			'stc.name as estatus',
 			'historia_clientes.fecha',
 			'c.tel_cel',
-			'ec.name as evento'
+			'ec.name as evento',
+			'g.seccion',
+			'g.name as grado',
+			'c.calle',
+			'c.no_interior',
+			'c.colonia',
+			'muni.name as municipio',
+			'est.name as estado',
+			'c.cp',
+			'c.tel_cel',
+			'c.tel_fijo',
+			'historia_clientes.reactivado',
+			'historia_clientes.fec_reactivado',
+			'historia_clientes.fec_autorizacion'
 		)
 			->join('clientes as c', 'c.id', '=', 'historia_clientes.cliente_id')
+			->join('estados as est', 'est.id','c.estado_id')
+			->join('municipios as muni', 'muni.id','c.municipio_id')
 			->join('plantels as p', 'p.id', '=', 'c.plantel_id')
 			->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
 			->join('evento_clientes as ec', 'ec.id', '=', 'historia_clientes.evento_cliente_id')
+			->join('combinacion_clientes as cc','cc.cliente_id','c.id')
+			->join('grados as g', 'g.id','cc.grado_id')
 			->whereDate('fecha', '>=', $datos['fecha_f'])
 			->whereDate('fecha', '<=', $datos['fecha_t'])
 			->whereIn('evento_cliente_id', $datos['evento'])
 			->whereIn('p.id', $datos['plantel'])
+			->where('c.st_cliente_id', $datos['st_cliente_f'])
+			->whereNull('cc.deleted_at')
 			->orderBy('p.id')
-			->orderBy('ec.id')
+			->orderBy('g.id')
 			->orderBy('c.id')
 			->get();
 		//dd($historia_clientes->toArray());

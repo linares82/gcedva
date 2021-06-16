@@ -2,18 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use Auth;
+use App\Turno;
+use App\Plantel;
+use App\PlanPago;
+use Carbon\Carbon;
+use App\PlanPagoLn;
+use App\PromoPlanLn;
 use App\CajaConcepto;
+use App\ReglaRecargo;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\createPlanPago;
 use App\Http\Requests\updatePlanPago;
-use App\PlanPago;
-use App\PlanPagoLn;
-use App\PromoPlanLn;
-use App\ReglaRecargo;
-use App\Turno;
-use Auth;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
+use DB;
 
 class PlanPagosController extends Controller
 {
@@ -26,8 +28,9 @@ class PlanPagosController extends Controller
     public function index(Request $request)
     {
         $planPagos = PlanPago::getAllData($request);
+        $plantels=Plantel::pluck('razon','id');
 
-        return view('planPagos.index', compact('planPagos'));
+        return view('planPagos.index', compact('planPagos','plantels'));
     }
 
     /**
@@ -189,7 +192,7 @@ class PlanPagosController extends Controller
     public function update($id, PlanPago $planPago, updatePlanPago $request)
     {
         //dd($request->all());
-        $input = $request->only('name', 'activo','ciclo_matricula_id','plante_id');
+        $input = $request->only('name', 'activo','ciclo_matricula_id','plantel_id');
         $input['usu_mod_id'] = Auth::user()->id;
         $generar_pagos = $request->only('inscripcion', 'uniforme', 'tramites', 'mensualidad', 'cuantas_mensualidad', 'fecha_pago', 'seguro');
         $lineas = $request->except('_token','name', 'activo', 'inscripcion', 'uniforme', 'tramites', 'mensualidad', 'cuantas_mensualidad', 'fecha_pago', 'seguro');
@@ -414,5 +417,69 @@ class PlanPagosController extends Controller
         $turno = Turno::find($datos['turno']);
 
         return $turno->plan_pago_id;
+    }
+
+    public function getCmbPlanPagos(Request $request)
+    {
+        if ($request->ajax()) {
+            //dd($request->all());
+            $plantel = $request->get('plantel_id');
+            $turno = $request->get('id');
+            
+            $planes=Turno::find($turno)->planes;
+            //dd($planes->toArray());
+
+            $final = array();
+            //dd(Auth::user()->can('IPlanPagosXPlantel'));
+            $r = DB::table('plan_pagos as pp')
+                ->select('pp.id', 'pp.name');
+                if (Auth::user()->can('IPlanPagosXPlantel')) {
+                    $r=$r->where('pp.plantel_id', '=', $plantel);
+                }
+                $r=$r->where('pp.id', '>', '0')
+                ->whereNull('deleted_at')
+                ->get();
+                //dd($r->toArray());
+
+            //    return $r;
+            //dd($r);
+		    array_push($final, array(
+                'id' => 0,
+                'name' => "",
+                'selectec' => 'Selected',
+            ));
+            if (count($planes)>0) {
+                //dd($r);
+                foreach ($r as $r1) {
+                    //dd($r->id);
+                    foreach($planes as $plan){
+                        if ($r1->id == $plan->id) {
+                            //dd($plan->id);
+                            array_push($final, array(
+                                'id' => $r1->id,
+                                'name' => $r1->name,
+                                'selectec' => 'Selected',
+                            ));
+                        } 
+                    }
+                    foreach($final as $linea){
+			//dd(array_search($r1->id, array_column($final, 'id'), false));
+                        if(!array_search($r1->id, array_column($final, 'id')))
+                        {		
+                            array_push($final, array(
+                                'id' => $r1->id,
+                                'name' => $r1->name,
+                                'selectec' => '',
+                            ));
+			//dd($final);
+                        }
+                    }
+                    
+                }
+                return $final;
+            } else {
+                return $r;
+            }
+        }
     }
 }

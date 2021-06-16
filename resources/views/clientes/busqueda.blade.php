@@ -210,7 +210,7 @@
                                 
                                 </td>
                                 <td>{{$cliente->calle}} {{$cliente->no}} {{$cliente->colonia}}</td>
-                                <td>{{$cliente->plantel->razon}}</td>
+                                <td>{{optional($cliente->plantel)->razon}}</td>
                                 <td>{{$cliente->empleado->nombre}} {{$cliente->empleado->ape_paterno}} {{$cliente->empleado->ape_materno}}</td>
                                 <td class="text-right">
                                     

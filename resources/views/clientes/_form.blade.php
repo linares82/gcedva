@@ -437,10 +437,9 @@
                                         </td>
                                         <td>
                                            <!--@{!! Form::select("plan_pago_id", $c->turno->planes->pluck('name','id'),$c->plan_pago_id,array("class"=>"form-control select_seguridad plan_pago","id"=>"plan_pago_id-field","style"=>"width:75%;",'data-combinacion'=>$c->id)) !!} -->
-                                        
+                                           
                                            <select class="form-control select_seguridad plan_pago" id="plan_pago_id-field" name="plan_pago_id" data-combinacion="{{$c->id}}">
                                             <option data-combinacion="{{$c->id}}" value="" style="display: none;" {{ old('plan_pago_id', optional($c)->plan_pago_id ?: '') == '' ? 'selected' : '' }} disabled selected>Seleccionar opcion </option>
-                                                
                                                 @foreach (optional($c->turno->planes())->get() as $plan)
                                                     <option data-combinacion="{{$c->id}}" value="{{ $plan->id }}" {{ old('plan_pago_id', optional($c)->plan_pago_id) == $plan->id ? 'selected' : '' }}>
                                                         {{ $plan->name }}
@@ -1280,7 +1279,7 @@
                     <tbody>
                         @foreach($i->hacademicas as $a)
                         <tr>
-                            <td><a href='{{url("asignacionAcademicas/index")}}?&q%5Basignacion_academicas.lectivo_id_lt%5D={{$a->lectivo_id}}&q%5Basignacion_academicas.plantel_id_lt%5D={{$a->plantel_id}}&q%5Basignacion_academicas.empleado_id_lt%5D={{$a->empleado_id}}&q%5Basignacion_academicas.materium_id_lt%5D={{$a->materium_id}}&q%5Basignacion_academicas.grupo_id_lt%5D={{$a->grupo_id}}' target='_blank'>{{optional($a->materia)->name}}</a></td>
+                            <td><a href='{{url("asignacionAcademicas/index")}}?&q%5Basignacion_academicas.lectivo_id_lt%5D={{$a->lectivo_id}}&q%5Basignacion_academicas.plantel_id_lt%5D={{$a->plantel_id}}&q%5Basignacion_academicas.empleado_id_lt%5D={{$a->empleado_id}}&q%5Basignacion_academicas.materium_id_lt%5D={{$a->materium_id}}&q%5Basignacion_academicas.grupo_id_lt%5D={{$a->grupo_id}}' target='_blank'>{{optional($a->materia)->codigo}}-{{optional($a->materia)->name}}</a></td>
                             <td>{{optional($a->grupo)->name}}</td>
                             <td>{{optional($a->lectivo)->name}}</td>
                             <td>{{optional($a->stMateria)->name}}</td>
@@ -1542,8 +1541,9 @@ if(isset($cliente)){
     $pagos_validar=App\Adeudo::where('cliente_id',$cliente->id)->where('pagado_bnd',1)->get();    
 }
 @endphp
-@if(isset($cliente) and $pagos_validar->count()>0)
-document.getElementById("plantel_id-field").disabled=true;
+
+@if((isset($cliente) and $pagos_validar->count()>0) or (isset($combinaciones) and $combinaciones->count()>=1))
+    document.getElementById("plantel_id-field").disabled=true;
 @endif
 $(document).on("click", "#btn_archivo", function (e) {
     e.preventDefault();
@@ -2038,10 +2038,10 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                         @permission('Icliente.modificarPlantel')
                                 $('#plantel_id-field').prop('disabled', true);
                         @endpermission
-                                $("#frm_cliente").submit(function() {
-                        $('#plantel_id-field').prop('disabled', false);
+                        /*$("#frm_cliente").submit(function() {
+                            $('#plantel_id-field').prop('disabled', false);
                         return true;
-                        });
+                        });*/
                         //Campo combos dependientes
                         $('#estado_id-field').change(function(){
                         $.get("{{ url('getCmbMunicipios')}}",
@@ -2226,6 +2226,13 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                             });
                         });
                         function CrearCombinacionCliente() {
+                            if($('#especialidad_id-field option:selected').val()==0 ||
+                            $('#nivel_id-field option:selected').val()==0 ||
+                            $('#grado_id-field option:selected').val()==0 ||
+                            $('#turno_id-field option:selected').val()==0 
+                            ){
+                                alert("campo en intereses del cliente, contiene valor incorrecto");
+                            }else{
                             $('#crearCombinacion').prop('disabled', true);
                         $.ajax({
                         url: '{{ route("combinacionClientes.store") }}',
@@ -2238,7 +2245,7 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                                 complete: function () {
                                 location.reload();
                                 },
-                        });
+                        });}
                         }
                         function ActualizarCombinacionCliente(){
                             $.ajax({

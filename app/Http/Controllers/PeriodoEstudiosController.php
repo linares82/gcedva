@@ -20,6 +20,7 @@ use App\Lectivo;
 use App\StEmpleado;
 use DB;
 use Cache;
+use Log;
 
 class PeriodoEstudiosController extends Controller
 {
@@ -94,7 +95,7 @@ class PeriodoEstudiosController extends Controller
         //dd($periodoEstudio->materias->toArray());
         $list = DB::table('materia')->where('id', '>', '0')->where('plantel_id', '=', $p)->pluck('name', 'id')->toArray();
         $materias_ls = array_merge(['0' => 'Seleccionar Opción'], $list);
-        $materias = MateriumPeriodo::select('materium_periodos.id', 'm.name as materia')
+        $materias = MateriumPeriodo::select('materium_periodos.id', 'm.codigo', 'm.name as materia')
             ->join('materia as m', 'm.id', '=', 'materium_periodos.materium_id')
             ->where('periodo_estudio_id', '=', $id)->get();
         //dd($materias);
@@ -174,6 +175,7 @@ class PeriodoEstudiosController extends Controller
                 ->select('p.id', 'p.name')
                 ->where('p.plantel_id', '=', $plantel)
                 ->where('p.id', '>', '0')
+                ->whereNull('p.deleted_at')
                 ->get();
             //dd($r);
             if (isset($periodo) and $periodo <> 0) {
@@ -504,7 +506,7 @@ class PeriodoEstudiosController extends Controller
         //dd($cliente_base->toArray());
 
         $periodos_parametro = DB::table('periodo_estudios as pe')
-            //->select('pe.id', 'pe.name')
+            ->select('pe.id', 'pe.orden')
             //->join('inscripcions as i', 'i.periodo_estudio_id', '=', 'pe.id')
             //->join('hacademicas as h', 'h.inscripcion_id', '=', 'i.id')
             //->whereColumn('h.plantel_id', 'pe.plantel_id')
@@ -518,8 +520,8 @@ class PeriodoEstudiosController extends Controller
             ->where('pe.id', '>', '0')
             //->whereNull('i.deleted_at')
             //->whereNull('h.deleted_at')
+            ->orderBy('pe.orden')
             ->distinct()
-            ->orderBy('pe.id')
             ->pluck('pe.id');
         //dd($periodos_parametro);
         $materias = PeriodoEstudio::select('periodo_estudios.name as periodo', 'm.id', 'm.name as materia', 'm.codigo')
@@ -645,6 +647,11 @@ class PeriodoEstudiosController extends Controller
             ->groupBy('m.id')
             ->get();
 
+        /*$materias_array=array();
+        foreach($materias as $materia){
+            array_push($materias_array, $materia->id);
+        }*/
+
         $ponderaciones = PeriodoEstudio::select('m.name as materia', 'm.codigo', 'm.id as materia_id', 'cp.id as carga_ponderacion_id', 'cp.name as nombre_ponderacion')
             ->join('materium_periodos as mp', 'mp.periodo_estudio_id', '=', 'periodo_estudios.id')
             ->join('materia as m', 'm.id', '=', 'mp.materium_id')
@@ -656,6 +663,7 @@ class PeriodoEstudiosController extends Controller
             ->orderBy('m.codigo')
             ->orderBy('cp.id')
             ->get();
+        
         //dd($ponderaciones->toArray());
 
         $clientes = Hacademica::select('c.id', 'c.matricula', 'c.nombre', 'c.nombre2', 'c.ape_paterno', 'c.ape_materno')
@@ -667,6 +675,8 @@ class PeriodoEstudiosController extends Controller
             ->where('hacademicas.grado_id', $datos['grado_f'])
             ->where('hacademicas.lectivo_id', $datos['lectivo_f'])
             ->where('hacademicas.grupo_id', $datos['grupo_f'])
+            //->whereIn('hacademicas.materium_id', $materias_array)
+            //->where('hacademicas.cliente_id', 17757)
             ->whereNull('i.deleted_at')
             ->whereNull('hacademicas.deleted_at')
             ->distinct()
@@ -693,20 +703,36 @@ class PeriodoEstudiosController extends Controller
 
             $sumatoria_cali = 0;
             $cantidad_cali = 0;
+            
             foreach ($ponderaciones as $ponderacion) {
                 //Obtener calificacion por parcial
-                $calificacion = Hacademica::select('cc.calificacion_parcial')->join('calificacions as c', 'c.hacademica_id', '=', 'hacademicas.id')
+                $calificacion = Hacademica::select('cc.calificacion_parcial')
+                    ->join('calificacions as c', 'c.hacademica_id', '=', 'hacademicas.id')
                     ->join('calificacion_ponderacions as cc', 'cc.calificacion_id', '=', 'c.id')
                     ->where('cliente_id', $cliente->id)
                     ->where('materium_id', $ponderacion->materia_id)
                     ->where('cc.carga_ponderacion_id', $ponderacion->carga_ponderacion_id)
+                    //->whereIn('hacademicas.materium_id', $materias_array)
                     ->orderBy('c.calificacion', 'desc')
+                    ->whereNull('hacademicas.deleted_at')
+                    ->whereNull('c.deleted_at')
+                    ->whereNull('cc.deleted_at')
                     ->first();
-                array_push($registro, $calificacion->calificacion_parcial);
-                if ($calificacion->calificacion_parcial > 0) {
-                    $sumatoria_cali = $sumatoria_cali + $calificacion->calificacion_parcial;
-                    $cantidad_cali++;
+                
+                if (is_null($calificacion)){
+                    array_push($registro, 0);
+                    array_push($registro, 0);
+                }else{
+                    array_push($registro, $calificacion->calificacion_parcial);
+            
+                    if ($calificacion->calificacion_parcial > 0) {
+                        $sumatoria_cali = $sumatoria_cali + $calificacion->calificacion_parcial;
+                        $cantidad_cali++;
+                    }
+                    //
                 }
+                
+                
                 //dd($cliente->id . "-" . $materia->id);
             }
             array_push($registro, round($sumatoria_cali / $cantidad_cali, 1));
@@ -725,9 +751,19 @@ class PeriodoEstudiosController extends Controller
             $j = 0;
             //dd($registro);
             foreach ($registro as $celda) {
-                $suma_calificaciones[$j] = $suma_calificaciones[$j] + $celda;
-                $cantidad[$j]++;
-                $j++;
+                //dd($registro);
+                if(!is_string($celda)){
+                    //dd($celda);
+                    if(!array_key_exists($j, $suma_calificaciones)){
+                        $suma_calificaciones[$j]=0;    
+                    }
+                    $suma_calificaciones[$j] = $suma_calificaciones[$j] + floatval($celda);    
+                    if(!array_key_exists($j, $cantidad)){
+                        $cantidad[$j]=0;    
+                    }
+                    $cantidad[$j]++;
+                    $j++;
+                }
             }
             $i++;
         }

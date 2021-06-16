@@ -3265,11 +3265,14 @@ class InscripcionsController extends Controller
         //dd($datos);
         if ($datos['tipo_examen_f'] == 1) {
             $registros = Hacademica::select(
+                'p.razon',
                 'l.ciclo_escolar',
                 'l.periodo_escolar',
+                'l.name as lectivo',
                 'g.rvoe',
                 'g.name as grado',
                 'cli.curp',
+                'cli.id as cliente',
                 'te.name as tipo_examen',
                 'e.curp as curp_docente',
                 'gru.name as grupo',
@@ -3280,6 +3283,8 @@ class InscripcionsController extends Controller
                 'm.orden',
                 'af.consecutivo as consecutivo_acta',
                 'af.fecha as fecha_acta',
+                'af.plantel_id',
+                'af.plantel_id',
                 'l.fin'
             )
                 ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
@@ -3287,6 +3292,7 @@ class InscripcionsController extends Controller
                 ->whereColumn('aa.grupo_id', 'hacademicas.grupo_id')
                 ->whereColumn('aa.lectivo_id', 'hacademicas.lectivo_id')
                 ->whereColumn('aa.materium_id', 'hacademicas.materium_id')
+                ->join('plantels as p','p.id','i.plantel_id')
                 ->join('empleados as e', 'e.id', '=', 'aa.docente_oficial_id')
                 ->join('calificacions as c', 'c.hacademica_id', '=', 'hacademicas.id')
                 ->leftJoin('acta_finals as af', 'af.id', '=', 'c.acta_final_id')
@@ -3299,7 +3305,8 @@ class InscripcionsController extends Controller
                 ->where('m.bnd_oficial', 1)
                 ->where('c.tpo_examen_id', $datos['tipo_examen_f'])
                 ->where('hacademicas.plantel_id', $datos['plantel_f'])
-                ->where('hacademicas.lectivo_id', $datos['lectivo_f'])
+                ->where('aa.lectivo_oficial_id', $datos['lectivo_f'])
+                //->where('aa.lectivo_id', $datos['lectivo_f'])
                 ->whereNull('hacademicas.deleted_at')
                 ->whereNull('i.deleted_at')
                 ->whereNull('aa.deleted_at')
@@ -3309,13 +3316,16 @@ class InscripcionsController extends Controller
                 ->get();
         } elseif ($datos['tipo_examen_f'] == 2) {
             $registros = Hacademica::select(
+                'p.razon',
                 'l.ciclo_escolar',
                 'l.periodo_escolar',
+                'l.name as lectivo',
                 'g.rvoe',
                 'g.name as grado',
                 'cli.curp',
                 'te.name as tipo_examen',
                 'e.curp as curp_docente',
+                'cli.id as cliente',
                 'gru.name as grupo',
                 'm.codigo',
                 'c.calificacion',
@@ -3323,6 +3333,7 @@ class InscripcionsController extends Controller
                 DB::raw('substr(gru.name, 1,1) as grupo_numero, substr(gru.name, -1) as grupo_letra'),
                 'm.orden',
                 'af.consecutivo as consecutivo_acta',
+                'af.plantel_id',
                 'af.fecha as fecha_acta',
                 'l.fin'
             )
@@ -3331,6 +3342,7 @@ class InscripcionsController extends Controller
                 ->whereColumn('aa.grupo_id', 'hacademicas.grupo_id')
                 ->whereColumn('aa.lectivo_id', 'hacademicas.lectivo_id')
                 ->whereColumn('aa.materium_id', 'hacademicas.materium_id')
+                ->join('plantels as p','p.id','i.plantel_id')
                 ->join('empleados as e', 'e.id', '=', 'aa.docente_oficial_id')
                 ->join('calificacions as c', 'c.hacademica_id', '=', 'hacademicas.id')
                 ->leftJoin('acta_finals as af', 'af.id', '=', 'c.acta_final_id')

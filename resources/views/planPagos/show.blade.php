@@ -135,7 +135,7 @@
                 </thead>
                 <tbody>
                     @php
-                    $lineas=App\PlanPagoLn::where('plan_pago_id',$planPago->id)->orderBy('fecha_pago')->get();    
+                    $lineas=App\PlanPagoLn::where('plan_pago_id',$planPago->id)->orderBy('fecha_pago')->orderBy('id')->get();    
                     @endphp
                     @foreach($lineas as $linea)
                         <tr class="item{{$linea->id}}">

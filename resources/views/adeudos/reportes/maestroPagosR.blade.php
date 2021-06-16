@@ -172,7 +172,7 @@
                         $anioFin = Carbon\Carbon::createFromFormat('Y-m-d', $beca->lectivo->fin)->year;
                     }
 
-                    $pagos=\App\PAgo::where('caja_id',$detalle['caja'])->where('bnd_pagado',1)->get();
+                    $pagos=\App\Pago::where('caja_id',$detalle['caja'])->where('bnd_pagado',1)->get();
                     $sum_pagos=0;
                     
                     foreach($pagos as $pago){

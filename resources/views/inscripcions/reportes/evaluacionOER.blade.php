@@ -29,6 +29,7 @@
         <table class="table table-condensed table-striped">
             <thead>
                 <tr>
+                    <th>Razón</th>
                     <th>RVOE</th><th>Ciclo Escolar</th><th>Subciclo Escolar</th><th>Tipo Evaluación</th>
                     @if($datos['tipo_examen_f']==1)
                             <th>Grupo</th>
@@ -36,13 +37,14 @@
                             <th>Grado</th>
                         @endif
                     <th>CURP Docente</th><th>Clave Asignatura</th><th>Número Acta</th><th>Fecha Evaluación</th>
-                    <th>CURP Alumno</th><th>Calificacion</th>
+                    <th>CURP Alumno</th><th>ID</th><th>Calificacion</th>
                     <th>Tipo Movimiento</th>
                 </tr> 
             </thead>
             <tbody>
                 @foreach($registros as $registro)
                     <tr>
+                        <td>{{ $registro->razon }}</td>
                         <td>{{$registro->rvoe}}</td><td>{{$registro->ciclo_escolar}}</td><td>{{$registro->periodo_escolar}}</td>
                         <td>@if($registro->tipo_examen=="Ordinario") 
                             ORD
@@ -61,9 +63,10 @@
                                 if(isset($idCalificacionesArray) and $fecha_acta<>""){
                                     $fecha=\Carbon\Carbon::createFromFormat('Y-m-d',$registro->fecha_acta);
                                     if($datos['tipo_examen_f']==1){
-                                        echo "F".$fecha->day.sprintf("%02d",$fecha->month).substr($fecha->year,-2).sprintf("%03d",$registro->consecutivo_acta);
+                                        echo "F".sprintf("%02d",$fecha->day).sprintf("%02d",$fecha->month).substr($fecha->year,-2).sprintf("%03d",$registro->consecutivo_acta);
                                     }else{
-                                        echo "EE".$fecha->day.sprintf("%02d",$fecha->month).substr($fecha->year,-2).sprintf("%03d",$registro->consecutivo_acta);
+                                        $fecha_extra=$fecha->addDay(3);
+                                        echo "E".sprintf("%02d",$fecha_extra->day).sprintf("%02d",$fecha_extra->month).substr($fecha_extra->year,-2).sprintf("%03d",$registro->consecutivo_acta);
                                     }
                                     
                                 }
@@ -72,7 +75,7 @@
                             @endphp
                             
                         </td><td>{{ $fecha_evaluacion->format('d-m-Y') }}</td>
-                        <td>{{$registro->curp}}</td>
+                        <td>{{$registro->curp}}</td><td>{{ $registro->cliente }}</td>
                         <td>@if($registro->calificacion<6)
                             {{ 5 }}
                             @else
@@ -108,7 +111,12 @@
                 $.ajax({
                     url: '{{ route("actaFinals.store") }}',
                     type: 'GET',
-                    data: { 'tipo_evaluacion':{{ $datos['tipo_examen_f'] }}, 'calificaciones':'{{ $idCalifiaciones }}' },
+                    data: { 
+                        'plantel':{{ $datos['plantel_f'] }},
+                        'lectivo':{{ $datos['lectivo_f'] }}, 
+                        'tipo_evaluacion':{{ $datos['tipo_examen_f'] }}, 
+                        'calificaciones':'{{ $idCalifiaciones }}' 
+                    },
                     //dataType: 'json',
                     beforeSend : function(){$("#loading10").show(); },
                     complete : function(){$("#loading10").hide(); },

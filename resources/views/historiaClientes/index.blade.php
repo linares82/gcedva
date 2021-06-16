@@ -204,6 +204,7 @@
                         <th>@include('plantillas.getOrderLink', ['column' => 'clientes.nombre', 'title' => 'CLIENTE'])</th>
                         <th>@include('plantillas.getOrderLink', ['column' => 'clientes.fec_reactivado', 'title' => 'F. REACT.'])</th>
                         <th>ESTATUS</th>
+                        <th>F. AUTORIZACION</th>
                         <th>AUTORIZACIONES</th>
                         <th>CAJA</th>
                         <th>DIRECTOR</th>
@@ -228,7 +229,7 @@
                                 </td>
                                 <td>({{ $historiaCliente->reactivado }}) {{$historiaCliente->fec_reactivado}}</td>
                                 <td>{{$historiaCliente->stHistoriaCliente->name}}</td>
-                                
+                                <td>{{ $historiaCliente->fec_autorizacion }}</td>
                                 <td>
                                     @if($historiaCliente->evento_cliente_id==2)
                                     <button class="btn btn-success btnVerLineas pull-right btn-xs" lang="mesaj" data-check="{{$historiaCliente->id}}" data-href="formation_json_parents" style="margin-left:10px;" >

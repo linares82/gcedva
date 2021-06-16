@@ -201,10 +201,12 @@ class CorreosController extends Controller
         $contenido = $request->input("contenido_mail");
         $from = $request->input("from");
 
+        //dd(env('MAIL_FROM_ADDRESS'));
+
         $data = array('contenido' => $contenido, 'nombre' => $n, 'correo' => $from);
         $r = \Mail::send('correos.version2.correo_individual', $data, function ($message)
              use ($asunto, $destinatario, $containfile, $paths, $n, $from) {
-                $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
+                $message->from(env('MAIL_FROM_ADDRESS','hola@grupocedva.com'), env('MAIL_FROM_NAME','Grupo CEDVA'));
                 $message->to($destinatario, $n)->subject($asunto);
                 $message->replyTo($from);
                 if ($containfile) {

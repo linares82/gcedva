@@ -18,7 +18,7 @@ class RegistroHistoriaCliente extends Model
     } 
 
 	//Mass Assignment
-	protected $fillable = ['historia_cliente_id','st_historia_cliente_id','comentario','usu_alta_id','usu_mod_id'];
+	protected $fillable = ['historia_cliente_id','st_historia_cliente_id','comentario','usu_alta_id','usu_mod_id','campo_etapa'];
 
 	public function usu_alta() {
 		return $this->hasOne('App\User', 'id', 'usu_alta_id');

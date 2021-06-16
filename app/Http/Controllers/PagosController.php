@@ -214,46 +214,50 @@ class PagosController extends Controller
             }
             //dd($concepto);
             if ($concepto == 1 and is_null($pago_final->csc_simplificado)) {
-                $serie_folio_simplificado = SerieFolioSimplificado::where('cuenta_p_id', $plantel->cuenta_p_id)
-                    ->where('anio', $anio)
-                    ->where('mese_id', 13)
-                    ->where('bnd_activo', 1)
-                    ->where('bnd_fiscal', 1)
-                    ->first();
+                if ($plantel->cuenta_p_id <> 0) {
+                    $serie_folio_simplificado = SerieFolioSimplificado::where('cuenta_p_id', $plantel->cuenta_p_id)
+                        ->where('anio', $anio)
+                        ->where('mese_id', 13)
+                        ->where('bnd_activo', 1)
+                        ->where('bnd_fiscal', 1)
+                        ->first();
 
-                $serie_folio_simplificado->folio_actual = $serie_folio_simplificado->folio_actual + 1;
-                $folio_actual = $serie_folio_simplificado->folio_actual;
-                $serie = $serie_folio_simplificado->serie;
-                $serie_folio_simplificado->save();
+                    $serie_folio_simplificado->folio_actual = $serie_folio_simplificado->folio_actual + 1;
+                    $folio_actual = $serie_folio_simplificado->folio_actual;
+                    $serie = $serie_folio_simplificado->serie;
+                    $serie_folio_simplificado->save();
 
-                $relleno = "0000";
-                $consecutivo = substr($relleno, 0, 4 - strlen($folio_actual)) . $folio_actual;
-                foreach ($pagos as $pago) {
-                    $pago->csc_simplificado = $serie . "-" . $consecutivo;
-                    $pago->save();
-                    //dd($pago);
+                    $relleno = "0000";
+                    $consecutivo = substr($relleno, 0, 4 - strlen($folio_actual)) . $folio_actual;
+                    foreach ($pagos as $pago) {
+                        $pago->csc_simplificado = $serie . "-" . $consecutivo;
+                        $pago->save();
+                        //dd($pago);
+                    }
                 }
             } elseif ($concepto == 0 and is_null($pago_final->csc_simplificado)) {
-                $serie_folio_simplificado = SerieFolioSimplificado::where('cuenta_p_id', $plantel->cuenta_p_id)
-                    ->where('anio', $anio)
-                    ->where('mese_id', $mes)
-                    ->where('bnd_activo', 1)
-                    ->where('bnd_fiscal', 0)
-                    ->first();
-                //dd($serie_folio_simplificado);
-                $serie_folio_simplificado->folio_actual = $serie_folio_simplificado->folio_actual + 1;
-                $serie_folio_simplificado->save();
-                $folio_actual = $serie_folio_simplificado->folio_actual;
-                $mes_prefijo = $serie_folio_simplificado->mes1->abreviatura;
-                $anio_prefijo = $anio - 2000;
-                $serie = $serie_folio_simplificado->serie;
+                if ($plantel->cuenta_p_id <> 0) {
+                    $serie_folio_simplificado = SerieFolioSimplificado::where('cuenta_p_id', $plantel->cuenta_p_id)
+                        ->where('anio', $anio)
+                        ->where('mese_id', $mes)
+                        ->where('bnd_activo', 1)
+                        ->where('bnd_fiscal', 0)
+                        ->first();
+                    //dd($serie_folio_simplificado);
+                    $serie_folio_simplificado->folio_actual = $serie_folio_simplificado->folio_actual + 1;
+                    $serie_folio_simplificado->save();
+                    $folio_actual = $serie_folio_simplificado->folio_actual;
+                    $mes_prefijo = $serie_folio_simplificado->mes1->abreviatura;
+                    $anio_prefijo = $anio - 2000;
+                    $serie = $serie_folio_simplificado->serie;
 
 
-                $relleno = "0000";
-                $consecutivo = substr($relleno, 0, 4 - strlen($folio_actual)) . $folio_actual;
-                foreach ($pagos as $pago) {
-                    $pago->csc_simplificado = $serie . "-" . $mes_prefijo . $anio_prefijo . "-" . $consecutivo;
-                    $pago->save();
+                    $relleno = "0000";
+                    $consecutivo = substr($relleno, 0, 4 - strlen($folio_actual)) . $folio_actual;
+                    foreach ($pagos as $pago) {
+                        $pago->csc_simplificado = $serie . "-" . $mes_prefijo . $anio_prefijo . "-" . $consecutivo;
+                        $pago->save();
+                    }
                 }
             }
             //Fin crear consecutivo simplificado
@@ -575,7 +579,7 @@ class PagosController extends Controller
             }
         */
         $empleados = Empleado::select(DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name, id'))->pluck('name', 'id');
-        return view('cajas.caja', compact('cliente', 'caja', 'combinaciones', 'cajas','empleados'))
+        return view('cajas.caja', compact('cliente', 'caja', 'combinaciones', 'cajas', 'empleados'))
             ->with('list', Caja::getListFromAllRelationApps())
             ->with('list1', CajaLn::getListFromAllRelationApps());
     }
@@ -823,7 +827,7 @@ class PagosController extends Controller
             'atendio_pago' => $atendio_pago,
             'suma_pagos' => $suma_pagos,
             'totalLetra' => $totalLetra,
-            'centavos'=>$centavos
+            'centavos' => $centavos
         ));
     }
 
@@ -904,7 +908,7 @@ class PagosController extends Controller
             'atendio_pago' => $atendio_pago,
             'suma_pagos' => $suma_pagos,
             'totalLetra' => $totalLetra,
-            'centavos'=>$centavos
+            'centavos' => $centavos
         ));
     }
 
@@ -1041,11 +1045,11 @@ class PagosController extends Controller
             $registros_pagados_aux->where('pag.created_at', '>=', $data['fecha_f'])
                 ->whereDate('pag.created_at', '<=', $data['fecha_t']);
         }
-	$registros_pagados_aux2 = $registros_pagados_aux->get();
+        $registros_pagados_aux2 = $registros_pagados_aux->get();
         //$registros_pagados=$registros_pagados_aux2->unique('consecutivo')->values()->all();
 
-        $registros_pagados= $registros_pagados_aux2->unique(function ($item) {
-            return $item['consecutivo'].$item['monto_pago'].$item['created_at'];
+        $registros_pagados = $registros_pagados_aux2->unique(function ($item) {
+            return $item['consecutivo'] . $item['monto_pago'] . $item['created_at'];
         })->values()->all();
         //dd($registros_pagados);
         $empleado = Empleado::where('user_id', Auth::user()->id)->first();
@@ -1410,7 +1414,7 @@ class PagosController extends Controller
         )
             ->join('cajas as c', 'c.id', '=', 'pagos.caja_id')
             ->join('clientes as cli', 'cli.id', '=', 'c.cliente_id')
-            ->join('st_cajas as stcaj','stcaj.id','=','c.st_caja_id')
+            ->join('st_cajas as stcaj', 'stcaj.id', '=', 'c.st_caja_id')
             ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
             ->join('forma_pagos as fp', 'fp.id', '=', 'pagos.forma_pago_id')
             ->where('c.plantel_id', $datos['plantel_f'])
@@ -1457,7 +1461,7 @@ class PagosController extends Controller
             'pagos.deleted_at',
             'cc.name as concepto'
         )
-            ->join('peticion_multipagos as pm','pm.pago_id','=','pagos.id')
+            ->join('peticion_multipagos as pm', 'pm.pago_id', '=', 'pagos.id')
             //->leftJoin('success_multipagos as sm','sm.mp_order','=','pm.mp_order')
             //->whereColumn('sm.mp_reference','pm.mp_reference')
             //->whereColumn('sm.mp_amount','pm.mp_amount')
@@ -1466,7 +1470,7 @@ class PagosController extends Controller
             ->join('caja_lns as cln', 'cln.caja_id', '=', 'c.id')
             ->join('caja_conceptos as cc', 'cc.id', '=', 'cln.caja_concepto_id')
             ->join('clientes as cli', 'cli.id', '=', 'c.cliente_id')
-            ->join('st_cajas as stcaj','stcaj.id','=','c.st_caja_id')
+            ->join('st_cajas as stcaj', 'stcaj.id', '=', 'c.st_caja_id')
             ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
             ->join('forma_pagos as fp', 'fp.id', '=', 'pagos.forma_pago_id')
             ->where('c.plantel_id', $datos['plantel_f'])
@@ -1483,96 +1487,99 @@ class PagosController extends Controller
         return view('pagos.reportes.pagosEnLineaR', compact('registros'));
     }
 
-    public function pagosDosMeses(){
+    public function pagosDosMeses()
+    {
         $plantels = Plantel::pluck('razon', 'id');
         $conceptos = CajaConcepto::pluck('name', 'id');
         return view('pagos.reportes.pagosDosMeses', compact('plantels', 'conceptos'));
     }
 
-    public function pagosDosMesesR(Request $request){
-        $datos=$request->all();
+    public function pagosDosMesesR(Request $request)
+    {
+        $datos = $request->all();
         //dd($datos);
-        $anioActual=Carbon::createFromFormat('Y-m-d', $datos['fecha_f'])->year;
-        $mesActual=Carbon::createFromFormat('Y-m-d', $datos['fecha_f'])->month;
+        $anioActual = Carbon::createFromFormat('Y-m-d', $datos['fecha_f'])->year;
+        $mesActual = Carbon::createFromFormat('Y-m-d', $datos['fecha_f'])->month;
         //dd('fi');
-        $mesAnterior=0;
-        $anioAnterior=0;
-        $registros=array();
-        if($mesActual==1){
-            $mesAnterior=12;
-            $anioAnterior=$anioActual-1;
-        }else{
-            $mesAnterior=$mesActual-1;
-            $anioAnterior=$anioActual;
+        $mesAnterior = 0;
+        $anioAnterior = 0;
+        $registros = array();
+        if ($mesActual == 1) {
+            $mesAnterior = 12;
+            $anioAnterior = $anioActual - 1;
+        } else {
+            $mesAnterior = $mesActual - 1;
+            $anioAnterior = $anioActual;
         }
-        $mesAnteriorDesc=Mese::find($mesAnterior);
-        $mesActualDesc=Mese::find($mesActual);
+        $mesAnteriorDesc = Mese::find($mesAnterior);
+        $mesActualDesc = Mese::find($mesActual);
         array_push($registros, array('Planteles', $mesAnteriorDesc->name, $mesActualDesc->name, 'Porcentaje de Recuperacion', 'Diferencia'));
-        foreach($datos['plantel_f'] as $plantel){
-            $registro=array();
-            $rPlantel=Plantel::find($plantel);
-            $registro['plantel']=$rPlantel->razon;
-            $r1=Caja::join('caja_lns as ln','ln.caja_id','=','cajas.id')
-            ->join('caja_conceptos as cc','cc.id','=','ln.caja_concepto_id')
-            ->join('pagos as p','p.caja_id','=','cajas.id')
-            ->whereMonth('p.fecha', $mesAnterior)
-            ->whereYear('p.fecha', $anioAnterior)
-            ->where('cajas.plantel_id', $plantel)
-            ->where('cajas.st_caja_id',1)
-            ->where('cc.bnd_mensualidad',1)
-            ->whereNull('cajas.deleted_at')
-            ->whereNull('ln.deleted_at')
-            ->whereNull('p.deleted_at')
-            ->count();
-            
-            //$registro['mesAnterior']=$mes->name;
-            $registro['mesAnteriorTotal']=number_format($r1);
+        foreach ($datos['plantel_f'] as $plantel) {
+            $registro = array();
+            $rPlantel = Plantel::find($plantel);
+            $registro['plantel'] = $rPlantel->razon;
+            $r1 = Caja::join('caja_lns as ln', 'ln.caja_id', '=', 'cajas.id')
+                ->join('caja_conceptos as cc', 'cc.id', '=', 'ln.caja_concepto_id')
+                ->join('pagos as p', 'p.caja_id', '=', 'cajas.id')
+                ->whereMonth('p.fecha', $mesAnterior)
+                ->whereYear('p.fecha', $anioAnterior)
+                ->where('cajas.plantel_id', $plantel)
+                ->where('cajas.st_caja_id', 1)
+                ->where('cc.bnd_mensualidad', 1)
+                ->whereNull('cajas.deleted_at')
+                ->whereNull('ln.deleted_at')
+                ->whereNull('p.deleted_at')
+                ->count();
 
-            $r2=Caja::join('caja_lns as ln','ln.caja_id','=','cajas.id')
-            ->join('caja_conceptos as cc','cc.id','=','ln.caja_concepto_id')
-            ->join('pagos as p','p.caja_id','=','cajas.id')
-            ->whereMonth('p.fecha', $mesActual)
-            ->whereYear('p.fecha', $anioActual)
-            ->where('cajas.plantel_id', $plantel)
-            ->where('cajas.st_caja_id',1)
-            ->where('cc.bnd_mensualidad',1)
-            ->whereNull('cajas.deleted_at')
-            ->whereNull('ln.deleted_at')
-            ->whereNull('p.deleted_at')
-            ->count();
-            
+            //$registro['mesAnterior']=$mes->name;
+            $registro['mesAnteriorTotal'] = number_format($r1);
+
+            $r2 = Caja::join('caja_lns as ln', 'ln.caja_id', '=', 'cajas.id')
+                ->join('caja_conceptos as cc', 'cc.id', '=', 'ln.caja_concepto_id')
+                ->join('pagos as p', 'p.caja_id', '=', 'cajas.id')
+                ->whereMonth('p.fecha', $mesActual)
+                ->whereYear('p.fecha', $anioActual)
+                ->where('cajas.plantel_id', $plantel)
+                ->where('cajas.st_caja_id', 1)
+                ->where('cc.bnd_mensualidad', 1)
+                ->whereNull('cajas.deleted_at')
+                ->whereNull('ln.deleted_at')
+                ->whereNull('p.deleted_at')
+                ->count();
+
 
             //$registro['mesActual']=$mes->name;
-            $registro['mesActualTotal']=number_format($r2);
-            if($r1==0 and $r2>0){
-                $registro['recuperacion']=100;    
-            }elseif(($r1>0 and $r2==0) or ($r1==0 and $r2==0)){
-                $registro['recuperacion']=0;    
-            }else{
-                $registro['recuperacion']=number_format(($r2*100)/$r1,2);
+            $registro['mesActualTotal'] = number_format($r2);
+            if ($r1 == 0 and $r2 > 0) {
+                $registro['recuperacion'] = 100;
+            } elseif (($r1 > 0 and $r2 == 0) or ($r1 == 0 and $r2 == 0)) {
+                $registro['recuperacion'] = 0;
+            } else {
+                $registro['recuperacion'] = number_format(($r2 * 100) / $r1, 2);
             }
-            $registro['diferencia']=number_format($r1-$r2);
+            $registro['diferencia'] = number_format($r1 - $r2);
             array_push($registros, $registro);
         }
         //dd($registros);
-        
+
         return view('pagos.reportes.pagosDosMesesR', compact('registros'));
     }
 
-    public function pagosMes(){
+    public function pagosMes()
+    {
         $plantels = Plantel::pluck('razon', 'id');
         $conceptos = CajaConcepto::pluck('name', 'id');
-        return view('pagos.reportes.pagosMes', compact('plantels','conceptos'));
+        return view('pagos.reportes.pagosMes', compact('plantels', 'conceptos'));
     }
 
     public function pagosMesR(Request $request)
     {
         $data = $request->all();
         //dd($data);
-        $anio=Carbon::createFromFormat('Y-m-d',$data['fecha_f'])->year;
+        $anio = Carbon::createFromFormat('Y-m-d', $data['fecha_f'])->year;
         //dd($anio);
-        
-        $registros_pagados=Adeudo::select(
+
+        $registros_pagados = Adeudo::select(
             'pla.razon',
             'c.id',
             DB::raw('c.id as cliente_id,'
@@ -1580,11 +1587,11 @@ class PagosController extends Controller
                 . 'c.beca_bnd, st.name as estatus_caja, fp.id as forma_pago_id, cajas.st_caja_id,'
                 . 'pag.monto as monto_pago, fp.name as forma_pago, pag.fecha as fecha_pago, pag.created_at, cajas.fecha as fecha_caja,'
                 . 'up.name as creador_pago, cln.caja_concepto_id, esp.name as especialidad')
-            )
-            ->where('bnd_pagado',1)
-            ->join('combinacion_clientes as cc','cc.id','=','adeudos.combinacion_cliente_id')
-            ->join('especialidads as esp','esp.id','=','cc.especialidad_id')
-            ->join('cajas','cajas.id','=','adeudos.caja_id')
+        )
+            ->where('bnd_pagado', 1)
+            ->join('combinacion_clientes as cc', 'cc.id', '=', 'adeudos.combinacion_cliente_id')
+            ->join('especialidads as esp', 'esp.id', '=', 'cc.especialidad_id')
+            ->join('cajas', 'cajas.id', '=', 'adeudos.caja_id')
             ->join('clientes as c', 'c.id', '=', 'cajas.cliente_id')
             ->join('plantels as pla', 'pla.id', '=', 'c.plantel_id')
             ->join('st_cajas as st', 'st.id', '=', 'cajas.st_caja_id')
@@ -1593,8 +1600,8 @@ class PagosController extends Controller
             ->join('forma_pagos as fp', 'fp.id', '=', 'pag.forma_pago_id')
             ->join('caja_lns as cln', 'cln.caja_id', '=', 'cajas.id')
             ->whereIn('cajas.plantel_id', $data['plantel_f'])
-            ->whereYear('cajas.fecha',$anio)
-            ->whereIn('adeudos.caja_concepto_id',$data['concepto_f'])
+            ->whereYear('cajas.fecha', $anio)
+            ->whereIn('adeudos.caja_concepto_id', $data['concepto_f'])
             ->whereNull('pag.deleted_at')
             ->whereNull('cajas.deleted_at')
             ->where('cajas.st_caja_id', '=', 1)
@@ -1604,7 +1611,7 @@ class PagosController extends Controller
             ->get();
 
         //dd($registros_pagados->toArray());
-        
+
         $registros_parciales = Adeudo::select(
             'pla.razon',
             'c.id',
@@ -1613,11 +1620,11 @@ class PagosController extends Controller
                 . 'c.beca_bnd, st.name as estatus_caja, fp.id as forma_pago_id, cajas.st_caja_id,'
                 . 'pag.monto as monto_pago, fp.name as forma_pago, pag.fecha as fecha_pago, pag.created_at, cajas.fecha as fecha_caja,'
                 . 'up.name as creador_pago, cln.caja_concepto_id, esp.name as especialidad')
-            )
+        )
             //->where('bnd_pagado',1)
-            ->join('combinacion_clientes as cc','cc.id','=','adeudos.combinacion_cliente_id')
-            ->join('especialidads as esp','esp.id','=','cc.especialidad_id')
-            ->join('cajas','cajas.id','=','adeudos.caja_id')
+            ->join('combinacion_clientes as cc', 'cc.id', '=', 'adeudos.combinacion_cliente_id')
+            ->join('especialidads as esp', 'esp.id', '=', 'cc.especialidad_id')
+            ->join('cajas', 'cajas.id', '=', 'adeudos.caja_id')
             ->join('clientes as c', 'c.id', '=', 'cajas.cliente_id')
             ->join('plantels as pla', 'pla.id', '=', 'c.plantel_id')
             ->join('st_cajas as st', 'st.id', '=', 'cajas.st_caja_id')
@@ -1626,8 +1633,8 @@ class PagosController extends Controller
             ->join('forma_pagos as fp', 'fp.id', '=', 'pag.forma_pago_id')
             ->join('caja_lns as cln', 'cln.caja_id', '=', 'cajas.id')
             ->whereIn('cajas.plantel_id', $data['plantel_f'])
-            ->whereYear('cajas.fecha',$anio)
-            ->whereIn('adeudos.caja_concepto_id',$data['concepto_f'])
+            ->whereYear('cajas.fecha', $anio)
+            ->whereIn('adeudos.caja_concepto_id', $data['concepto_f'])
             ->whereNull('pag.deleted_at')
             ->whereNull('cajas.deleted_at')
             ->where('cajas.st_caja_id', '=', 3)
@@ -1636,7 +1643,7 @@ class PagosController extends Controller
             ->orderBy('cln.caja_concepto_id')
             ->get();
 
-                
+
         return view('pagos.reportes.pagosMesR', array(
             'registros_pagados' => $registros_pagados,
             'registros_parciales' => $registros_parciales

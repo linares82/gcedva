@@ -1,8 +1,9 @@
 <?php namespace App\Http\Controllers;
 
 use Auth;
-use App\ActaFinal;
+use App\Lectivo;
 
+use App\ActaFinal;
 use Carbon\Carbon;
 use App\Calificacion;
 use App\Http\Requests;
@@ -49,13 +50,18 @@ class ActaFinalsController extends Controller {
 		$input1 = $request->all();
 		$idCalificaciones=explode(",",$input1['calificaciones']);
 		//dd($idCalificaciones);
-		$fecha=Date('Y-m-d');
+		$lectivo=Lectivo::find($input1['lectivo']);
+		$fecha=$lectivo->fin;
 		
 		$actaFinal=ActaFinal::orderBy("id",'desc')
 		->where('tpo_examen_id',$input1['tipo_evaluacion'])
+		->where('plantel_id',$input1['plantel'])
+		//->where('lectivo_id',$input1['lectivo'])
 		->first();
 		$input['fecha']=$fecha;
 		$input['tpo_examen_id']=$input1['tipo_evaluacion'];
+		$input['plantel_id']=$input1['plantel'];
+		$input['lectivo_oficial_id']=$input1['lectivo'];
 		if(is_null($actaFinal)){
 			$input['consecutivo']=1;
 		}elseif(!is_null($actaFinal) and $actaFinal->consecutivo==999){

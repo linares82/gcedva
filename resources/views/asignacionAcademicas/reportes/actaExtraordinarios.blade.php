@@ -47,15 +47,15 @@
                     @@if($errors->has("grupo_f"))
                     <span class="help-block">{{ $errors->first("plantel_t") }}</span>
                     @@endif
-                </div>
+                </div>-->
                 <div class="form-group col-md-6 @if($errors->has('materia_f')) has-error @endif">
                     <label for="materia_f-field">Materia:</label>
-                    @{!! Form::select("materia_f", $materias, null, array("class" => "form-control select_seguridad", "id" => "materia_f-field")) !!}
+                    {!! Form::select("materia_f", array(), null, array("class" => "form-control select_seguridad", "id" => "materia_f-field")) !!}
                     <div id='loading_ponderacion' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
-                    @@if($errors->has("materia_f"))
+                    @if($errors->has("materia_f"))
                     <span class="help-block">{{ $errors->first("materia_t") }}</span>
-                    @@endif
-                </div>-->
+                    @endif
+                </div>
             
                 
                 
@@ -90,9 +90,10 @@
     });
     $('#lectivo_f-field').change(function(){
         getCmbGrupos();
+        getCmbMaterias();
     });
     $('#grupo_f-field').change(function(){
-        getCmbMaterias();
+        
     });
     $('#materia_f-field').change(function(){
         getCmbPonderaciones();
@@ -161,13 +162,11 @@
     function getCmbMaterias() {
         //var $example = $("#especialidad_id-field").select2();
         $.ajax({
-            url: '{{ route("materias.materiasXplantelXasignacion") }}',
+            url: '{{ route("materias.materiasExtraordinario") }}',
             type: 'GET',
             data: {
                 'plantel_id':$('#plantel_f-field option:selected').val(),
                 'lectivo_id':$('#lectivo_f-field option:selected').val(),
-                'grupo_id':$('#grupo_f-field option:selected').val(),
-                'materia_id':$('#materia_f-field option:selected').val(),
             },
             dataType: 'json',
             beforeSend: function () {

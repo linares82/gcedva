@@ -396,11 +396,11 @@ class ClientesController extends Controller
             $empleados = Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
                 //->where('plantel_id', '=', $e->plantel_id)
                 ->whereIn('plantel_id', '=', $planteles)
-                ->whereIn('puesto_id', array(1, 2, 3, 4,5,7, 10, 19, 23))
+                ->whereIn('puesto_id', array(1, 2, 3, 4,5,7, 10, 19,22, 23))
                 ->pluck('name', 'id');
         } else {
             $empleados = Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
-                ->whereIn('puesto_id', array(1, 2, 3, 4,5,7, 10, 19, 23))
+                ->whereIn('puesto_id', array(1, 2, 3, 4,5,7, 10, 19, 22, 23))
                 ->pluck('name', 'id');
         }
         $empleados = $empleados->reverse();

@@ -22,7 +22,8 @@ class HistoriaCliente extends Model
 	//Mass Assignment
 	protected $fillable = [
 		'evento_cliente_id', 'descripcion', 'fecha', 'archivo', 'cliente_id', 'usu_alta_id', 'usu_mod_id', 'fec_vigencia', 'inscripcion_id',
-		'st_historia_cliente_id', 'aut_serv_esc', 'aut_caja', 'aut_serv_esc_corp', 'aut_director', 'aut_caja_corp','reactivado','fec_reactivado'
+		'st_historia_cliente_id', 'aut_serv_esc', 'aut_caja', 'aut_serv_esc_corp', 'aut_director', 'aut_caja_corp','reactivado','fec_reactivado',
+		'fec_autorizacion'
 	];
 
 	public function usu_alta()

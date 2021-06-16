@@ -273,17 +273,18 @@ class AdeudosController extends Controller
     {
         $adeudo = $adeudo->find($id);
         $caja = Caja::find($adeudo->caja_id);
+        $cliente = Cliente::find($adeudo->cliente_id);
         $cajas = Caja::select('cajas.consecutivo as caja', 'ln.caja_concepto_id as concepto_id', 'cc.name as concepto', 'ln.total', 'st.name as estatus')
             ->join('caja_lns as ln', 'ln.caja_id', '=', 'cajas.id')
             ->join('caja_conceptos as cc', 'cc.id', '=', 'ln.caja_concepto_id')
             ->join('st_cajas as st', 'st.id', '=', 'cajas.st_caja_id')
-            ->where('cliente_id', $caja->cliente->id)
+            ->where('cliente_id', $adeudo->cliente->id)
             ->whereNull('cajas.deleted_at')
             ->whereNull('ln.deleted_at')
             ->get();
         $adeudo->delete();
 
-        $cliente = Cliente::find($adeudo->cliente_id);
+        
         $combinaciones = CombinacionCliente::where('cliente_id', '=', $cliente->id)->get();
 
         $empleados = Empleado::select(DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name, id'))->pluck('name', 'id');
@@ -2204,7 +2205,7 @@ class AdeudosController extends Controller
             
         }
 
-        return view('adeudos.reportes.maestroPagosR', compact('lineas_procesadas', 'pagos', 'lineas_detalle', 'datos'));
+        return view('adeudos.reportes.maestroPagosR', compact('lineas_procesadas', 'lineas_detalle', 'datos'));
     }
 
     public function maestroAdeudos()
@@ -2770,7 +2771,7 @@ class AdeudosController extends Controller
 
         //dd($lineas_detalle);
 
-        return view('adeudos.reportes.maestroAdeudosR', compact('lineas_procesadas', 'pagos', 'lineas_detalle', 'datos'));
+        return view('adeudos.reportes.maestroAdeudosR', compact('lineas_procesadas', 'lineas_detalle', 'datos'));
     }
 
     public function consultaArchivosAtrazoPagos(){
