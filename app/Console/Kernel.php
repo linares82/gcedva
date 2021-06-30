@@ -13,6 +13,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
+        Commands\ActivarBs::class,
         Commands\CargaRemota::class,
         Commands\EnviarCorreos::class,
         Commands\EnviarSms::class,

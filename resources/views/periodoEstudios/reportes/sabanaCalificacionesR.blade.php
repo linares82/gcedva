@@ -92,7 +92,18 @@
                     @else
                         <td>{{ ++$no }}</td>
                         @foreach($registro as $celda)
-                        <td>{{ $celda }}</td>
+                        <td>
+                            @if(is_numeric($celda))
+                                @if($celda>=6)
+                                {{ round($celda,0) }}
+                                @else
+                                {{ intdiv($celda,1) }}
+                                @endif
+                            @else
+                                {{ $celda }}
+                            @endif
+                            
+                        </td>
                         @endforeach
                     @endif
                 </tr>

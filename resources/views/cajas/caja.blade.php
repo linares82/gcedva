@@ -565,6 +565,7 @@
                         @endif
 
                     </a>
+                    <a class="btn btn-md btn-default" href="#" id='estatusBs'><i class="glyphicon glyphicon-eye"></i> Bs-</a>
                     @permission('historiaClientes.create')
                     <a class="btn btn-md btn-warning" href="{{ route('historiaClientes.index',array('q[cliente_id_lt]'=>$cliente->id)) }}" target='_blank'><i class="glyphicon glyphicon-eye"></i> Eventos</a>
                     @endpermission
@@ -1623,6 +1624,26 @@ Agregar nuevo registro
 
 
     @if (isset($cliente))
+    $.ajax({
+    type: 'GET',
+    url: '{{route("cajas.consultaStBs")}}',
+    data: {
+    'matricula': '{{ $cliente->matricula }}',
+    },
+    dataType:"json",
+    beforeSend : function(){$("#loadingValidar").show(); },
+    complete : function(){$("#loadingValidar").hide(); },
+    success: function(data) {
+        console.log(data);
+        if(data[0].Activation.IsActive){
+            $('#estatusBs').text('BS-Activo');
+        }else{
+            $('#estatusBs').text('BS-Inactivo');
+        }
+    }
+    });
+
+
     function abrirTicket(csc, cliente){
         
         $('#consecutivo-field').val(csc);

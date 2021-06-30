@@ -604,7 +604,12 @@ class PeriodoEstudiosController extends Controller
                     }
                     
                 } else {
-                    array_push($registro, $calificacion_historico->calificacion);
+                    if($calificacion_historico->calificacion>=6){
+                        $calificacion=round($calificacion_historico->calificacion,0);
+                    }else{
+                        $calificacion=intdiv($calificacion_historico->calificacion,1);
+                    }
+                    array_push($registro, $calificacion);
                 }
 
                 //dd($cliente->id . "-" . $materia->id);

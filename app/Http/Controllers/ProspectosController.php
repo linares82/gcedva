@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\createProspecto;
 use App\Http\Requests\updateProspecto;
-
+use Log;
 class ProspectosController extends Controller {
 
 	/**
@@ -36,7 +36,7 @@ class ProspectosController extends Controller {
 	 */
 	public function create()
 	{
-		$medios=Medio::whereIn('id', array(8,10,15,18,19,20))->pluck('name','id');
+		$medios=Medio::whereIn('id', array(8,10,15,18,19,20,23))->pluck('name','id');
 		return view('prospectos.create', compact('medios'))
 			->with( 'list', Prospecto::getListFromAllRelationApps() );
 	}
@@ -94,7 +94,7 @@ class ProspectosController extends Controller {
 	public function edit($id, Prospecto $prospecto)
 	{
 		$prospecto=$prospecto->find($id);
-		$medios=Medio::whereIn('id', array(8,10,15,18,19,20))->pluck('name','id');
+		$medios=Medio::whereIn('id', array(8,10,15,18,19,20,23))->pluck('name','id');
 		return view('prospectos.edit', compact('prospecto', 'medios'))
 			->with( 'list', Prospecto::getListFromAllRelationApps() );
 	}
@@ -241,4 +241,9 @@ class ProspectosController extends Controller {
 		->get();
 		return view('prospectos.reportes.prospectosR', compact('registros', 'resumen'));
 	}
+
+	public function whCrearProspecto(Request $request){
+        Log::info("Adwords");
+		Log::info($request);
+    }
 }

@@ -85,4 +85,9 @@ class AsignacionAcademica extends Model
 	{
 		return $this->belongsTo('App\Empleado', 'docente_oficial_id', 'id');
 	} // end
+
+	public function lectivoOficial()
+	{
+		return $this->belongsTo('App\Lectivo','lectivo_oficial_id','id');
+	} // end
 }

@@ -559,6 +559,7 @@ class HacademicasController extends Controller
         //$carga_ponderaciones=CargaPonderacion::where('ponderacion_id','=',$materia->ponderacion_id)->pluck('name','id');
         //dd($carga_ponderaciones->toArray());
         $msj = "";
+        $hacademicas=null;
         if (isset($data['excepcion']) or $periodos_capturados_total == 0) {
             //dd('flc');
             $hacademicas = HAcademica::select(

@@ -143,17 +143,28 @@
                                  
                                 ?>
                                 @foreach($fechas_enc as $fecha_enc)
-                                    <?php $marcador=0; ?>
+                                    <?php $marcador=0; 
+                                    $marca=""?>
                                     
                                         @foreach($fechas as $fecha)      
                                             @if($fecha_enc==$fecha->fecha)
                                             <?php 
                                             $st_asistencia= \App\EstAsistencium::find($fecha->est_asistencia_id);
-                                            if($st_asistencia->id<>2){
+                                            if($st_asistencia->id==1){
                                                 $asistencias++;
+                                                $marcador=1;
+                                                $marca='X';
+                                            }elseif($st_asistencia->id==3){
+                                                $asistencias++;
+                                                $marca='R';
+                                                $marcador=1;
+                                            }elseif($st_asistencia->id==4){
+                                                $asistencias++;
+                                                $marca='J';
+                                                $marcador=1;
                                             }
                                             
-                                            $marcador=1;
+                                            
                                             ?>
                                             @endif
                                             
@@ -164,9 +175,10 @@
                                     @if($marcador==0)
                                         <td></td>
                                     @else
-                                        <td class="centrar_texto"> X </td>
+                                        <td class="centrar_texto"> {{ $marca }} </td>
 
-                                    @endif                                
+                                    @endif               
+                                                  
 				@endforeach
                                 <?php 
                                 //$porcentaje = round((($asistencias*100)/$total_asistencias),2);

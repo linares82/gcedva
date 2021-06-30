@@ -1031,8 +1031,9 @@ class CajasController extends Controller
             ->whereNull('cajas.deleted_at')
             ->whereNull('ln.deleted_at')
             ->get();
+            $empleados = Empleado::select(DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name, id'))->pluck('name', 'id');
 
-        return view('cajas.caja', compact('cliente', 'caja', 'combinaciones', 'cajas'))
+        return view('cajas.caja', compact('cliente', 'caja', 'combinaciones', 'cajas','empleados'))
             ->with('list', Caja::getListFromAllRelationApps())
             ->with('list1', CajaLn::getListFromAllRelationApps());
     }
@@ -2532,5 +2533,29 @@ class CajasController extends Controller
             //dd($peticion_multipagos);
         }
 
+    }
+
+    public function consultaStBs(Request $request){
+        $data=$request->all();
+        $param = Param::where('llave', 'apiVersion_bSpace')->first();
+        $bs_activo = Param::where('llave', 'api_brightSpace_activa')->first();
+        try {
+            $apiBs = new UsoApi();
+
+            //dd($datos);
+            //Log::info('matricula bs reactivar en caja:'.$cliente->matricula);
+            $resultado = $apiBs->doValence2('GET', '/d2l/api/lp/' . $param->valor . '/users/?orgDefinedId=' . $data['matricula']);
+            //Muestra resultado
+            $r = $resultado[0];
+            $datos = ['isActive' => True];
+            if (!isset($r['UserId'])) {
+                return json_encode(array('resultado'=>'no encontrado'));
+            } else {
+                return $resultado;
+            }
+        } catch (Exception $e) {
+            Log::info("cliente no encontrado en Brigth Space u otro error: " . $e->getMessage());
+            //return false;
+        }
     }
 }

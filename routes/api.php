@@ -16,6 +16,15 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 return $request->user();
 });
  */
+//WebHook google adwords
+Route::post(
+    '/adwords/whCrearProspecto',
+    array(
+        'as' => 'adwords.whCrearProspecto',
+        'uses' => 'ProspectosController@whCrearProspecto',
+    )
+);
+
 //Api para crear formularios en paginas web
 Route::get(
     '/planteles/lista',

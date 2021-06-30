@@ -1901,6 +1901,12 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
     });
         
                         $("#st_cliente_id-field option[value*={{ $r->valor }}]").prop('readonly', true);
+                        @permission('clientes.cambioEstatus')
+                        @foreach($list["StCliente"] as $key=>$item)
+                            $("#st_cliente_id-field option[value*={{ $key }}]").prop('disabled', true);
+                        @endforeach
+                        @endpermission
+                        
                         collapseTable();
                         $('.header').click(function(){
                         collapseTable();

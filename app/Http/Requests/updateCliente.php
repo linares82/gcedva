@@ -38,7 +38,7 @@ class updateCliente extends FormRequest
             //'cp',
             //'municipio_id',
             //'estado_id',
-            'st_cliente_id'=>'required',
+            //'st_cliente_id'=>'required',
             //'oferta_id',
             //'medio_id',
             //'expo',

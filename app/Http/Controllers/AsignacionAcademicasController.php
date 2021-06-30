@@ -620,4 +620,24 @@ class AsignacionAcademicasController extends Controller
 		return view('asignacionAcademicas.reportes.actaExtraordinariosR', 
 		compact('encabezado', 'datos'));
 	}
+
+	public function listaAsignaciones(){
+		$asignaciones= AsignacionAcademica::select('asignacion_academicas.id as asignacion_id','e.id as d_id','e.nombre as d_nombre',
+		'e.ape_paterno as d_ape_paterno', 'e.ape_materno as d_ape_materno','p.id as plantel_id','p.razon',
+		'l.id as lectivo_id','l.name as lectivo','m.id as materia_id','m.name as materia','g.id as grupo_id',
+		'g.name as grupo','do.id as do_id','do.nombre as do_nombre',
+		'do.ape_paterno as do_ape_paterno', 'do.ape_materno as do_ape_materno','lo.id as lo_lectivo_id',
+		'lo.name as lo_lectivo')
+		->join('empleados as e','e.id','asignacion_academicas.empleado_id')
+		->join('plantels as p','p.id','asignacion_academicas.plantel_id')
+		->join('lectivos as l','l.id','asignacion_academicas.lectivo_id')
+		->join('materia as m','m.id','asignacion_academicas.materium_id')
+		->join('grupos as g','g.id','asignacion_academicas.grupo_id')
+		->join('empleados as do','do.id','asignacion_academicas.docente_oficial_id')
+		->join('lectivos as lo','lo.id','asignacion_academicas.lectivo_oficial_id')
+		->whereNull('asignacion_academicas.deleted_at')
+		->get();
+			//dd($asignaciones);
+		return view('combinacionClientes.reportes.cargas', compact('asignaciones'));
+	}
 }

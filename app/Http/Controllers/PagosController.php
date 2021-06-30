@@ -1649,4 +1649,6 @@ class PagosController extends Controller
             'registros_parciales' => $registros_parciales
         ));
     }
+
+    
 }
