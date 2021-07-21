@@ -46,7 +46,7 @@
                 <div class="panel-body">
                     <form class="AsignacionAcademica_search" id="search" action="{{ route('asignacionAcademicas.index') }}" accept-charset="UTF-8" method="get">
                         <input type="hidden" name="q[s]" value="{{ @(Request::input('q')['s']) ?: '' }}" />
-                        <div class="form-horizontal">
+                        <div>
 
                             <!--
                             <div class="form-group">
@@ -60,31 +60,36 @@
                                 </div>
                             </div>
                             -->
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_id_cont">ID</label>
-                                <div class="col-sm-9">
+                            <div class="form-group col-md-4">
+                                <label class="control-label" for="q_id_cont">ID</label>
+                                
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['id_cont']) ?: '' }}" name="q[id_cont]" id="q_id_cont" />
-                                </div>
+                                
                             </div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_lectivo_id_cont">LECTIVO</label>
-                                <div class=" col-sm-9">
+                            <div class="form-group col-md-4">
+                                <label class="control-label" for="q_lectivo_id_cont">LECTIVO</label>
+                                
                                     {!! Form::select("q_asignacion_academicas.lectivo_id_lt", $list["Lectivo"], "{{ @(Request::input('q')['asignacion_academicas.lectivo_id_lt']) ?: 0 }}", array("class" => "form-control select_seguridad", "name"=>"q[asignacion_academicas.lectivo_id_lt]", "id"=>"q_asignacion_academicas.lectivo_id_lt", "style"=>"width:100%;" )) !!}
-                                </div>
+                                
                             </div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_plantel_id_cont">PLANTEL</label>
-                                <div class=" col-sm-9">
+                            <div class="form-group col-md-4">
+                                <label class=" control-label" for="q_lectivo_oficial_id_cont">LECTIVO OFICIAL</label>
+                                
+                                    {!! Form::select("q_asignacion_academicas.lectivo_oficial_id_lt", $list["Lectivo"], "{{ @(Request::input('q')['asignacion_academicas.lectivo_oficial_id_lt']) ?: 0 }}", array("class" => "form-control select_seguridad", "name"=>"q[asignacion_academicas.lectivo_oficial_id_lt]", "id"=>"q_asignacion_academicas.lectivo_oficial_id_lt", "style"=>"width:100%;" )) !!}
+                                
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class=" control-label" for="q_plantel_id_cont">PLANTEL</label>
+                                
                                     
                                     {!! Form::select("q_asignacion_academicas.plantel_id_lt", $list["Plantel"], "{{ @(Request::input('q')['asignacion_academicas.plantel_id_lt']) ?: 0 }}", array("class" => "form-control select_seguridad", "name"=>"q[asignacion_academicas.plantel_id_lt]", "id"=>"q_asignacion_academicas.plantel_id_lt", "style"=>"width:100%;" )) !!}
-                                </div>
+                                
                             </div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_empleados.nombre_cont">EMPLEADO</label>
-                                <div class=" col-sm-9">
-                                    
+                            <div class="form-group col-md-4">
+                                <label class="control-label" for="q_empleados.nombre_cont">EMPLEADO</label>
+                                
                                     {!! Form::select("empleado_id", $list["Empleado"], "{{ @(Request::input('q')['asignacion_academicas.empleado_id_lt']) ?: 0 }}", array("class" => "form-control select_seguridad", "name"=>"q[asignacion_academicas.empleado_id_lt]", "id"=>"q_asignacion_academicas.empleado_id_lt", "style"=>"width:100%;" )) !!}
-                                </div>
+                                
                             </div>
                                                     <!--
                             <div class="form-group">
@@ -98,11 +103,11 @@
                                 </div>
                             </div>
                             -->
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_materium_id_cont">MATERIA</label>
-                                <div class=" col-sm-9">
+                            <div class="form-group col-md-4">
+                                <label class="control-label" for="q_materium_id_cont">MATERIA</label>
+                                
                                     {!! Form::select("materium_id", $list["Materium"], "{{ @(Request::input('q')['asignacion_academicas.materium_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[asignacion_academicas.materium_id_lt]", "id"=>"q_asignacion_academicas.materium_id_lt", "style"=>"width:100%;" )) !!}
-                                </div>
+                                
                             </div>
                                                     <!--
                             <div class="form-group">
@@ -116,11 +121,11 @@
                                 </div>
                             </div>
                             -->
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_grupos.name_cont">GRUPO</label>
-                                <div class=" col-sm-9">
+                            <div class="form-group col-md-4">
+                                <label class="control-label" for="q_grupos.name_cont">GRUPO</label>
+                                
                                     {!! Form::select("grupo_id", $list["Grupo"], "{{ @(Request::input('q')['asignacion_academicas.grupo_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[asignacion_academicas.grupo_id_lt]", "id"=>"q_asignacion_academicas.grupo_id_lt", "style"=>"width:100%;" )) !!}
-                                </div>
+                                
                             </div>
                                                     <!--
                             <div class="form-group">
@@ -164,7 +169,7 @@
                             <th>@include('plantillas.getOrderLink', ['column' => 'materium_id', 'title' => 'MATERIA'])</th>
                             <th>@include('plantillas.getOrderLink', ['column' => 'grupos.name', 'title' => 'GRUPO'])</th>
                             <th>@include('plantillas.getOrderLink', ['column' => 'lectivos.name', 'title' => 'PERIODO LECTIVO'])</th>
-                            <th>@include('plantillas.getOrderLink', ['column' => '.name', 'title' => 'PERIODO LECTIVO'])</th>
+                            <th>LECTIVO OFICIAL</th>
                         
                         
                             <th class="text-right">OPCIONES</th>
@@ -180,6 +185,7 @@
                                 <td>{{optional($asignacionAcademica->materia)->name}}</td>
                                 <td>{{optional($asignacionAcademica->grupo)->name}}</td>
                                 <td>{{optional($asignacionAcademica->lectivo)->name}}</td>
+                                <td>{{optional($asignacionAcademica->lectivoOficial)->name}}</td>
                                 <td class="text-right">
                                     @permission('asignacionAcademica.boletasGrupo')
                                     <a class="btn btn-xs btn-default" href="{{ route('asignacionAcademica.boletasGrupo', array('asignacion'=>$asignacionAcademica->id)) }}"><i class=' fa fa-list-alt'></i> Boletas</a>

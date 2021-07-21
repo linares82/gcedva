@@ -390,6 +390,11 @@ class InscripcionsController extends Controller
     public function destroy($id, Inscripcion $inscripcion)
     {
         $inscripcion = $inscripcion->find($id);
+        if($inscripcion->hacademicas()->coubnt()>0){
+            foreach($inscripcion->hacademicas() as $materia){
+                $materia->delete();
+            }
+        }
         $inscripcion->delete();
 
         return redirect()->route('inscripcions.index')->with('message', 'Registro Borrado.');
@@ -753,6 +758,13 @@ class InscripcionsController extends Controller
             if (in_array('Sabado', $dias)) {
 
                 if ($pinicio->isSaturday() and !in_array($pinicio, $no_habiles)) {
+                    array_push($fechas, $pinicio->toDateString());
+                    $total_asistencias++;
+                }
+            }
+            if (in_array('Domingo', $dias)) {
+
+                if ($pinicio->isSunday() and !in_array($pinicio, $no_habiles)) {
                     array_push($fechas, $pinicio->toDateString());
                     $total_asistencias++;
                 }
@@ -1478,6 +1490,14 @@ class InscripcionsController extends Controller
                     $total_asistencias++;
                 }
             }
+            if (in_array('Domingo', $dias)) {
+
+                if ($pinicio->isSunday() and !in_array($pinicio, $no_habiles)) {
+                    array_push($fechas, $pinicio->toDateString());
+                    $total_asistencias++;
+                }
+            }
+
             $pinicio->addDay();
             //dd($fechas);
         }
@@ -1540,7 +1560,7 @@ class InscripcionsController extends Controller
         )
             ->join('lectivos as l', 'l.id', '=', 'hacademicas.lectivo_id')
             ->join('materia as m', 'm.id', '=', 'hacademicas.materium_id')
-            ->where('inscripcion_id', $inscripcion->id)
+            ->where('cliente_id', $inscripcion->cliente_id)
             ->whereNull('hacademicas.deleted_at')
             ->with('cliente')
             ->orderBy('hacademicas.id')
@@ -1932,6 +1952,14 @@ class InscripcionsController extends Controller
                         $total_asistencias++;
                     }
                 }
+                if (in_array('Domingo', $dias)) {
+
+                    if ($pinicio->isSunday() and !in_array($pinicio, $no_habiles)) {
+                        array_push($fechas, $pinicio->toDateString());
+                        $total_asistencias++;
+                    }
+                }
+    
                 $pinicio->addDay();
                 //dd($fechas);
             }
@@ -2206,6 +2234,14 @@ class InscripcionsController extends Controller
                         $total_asistencias++;
                     }
                 }
+                if (in_array('Domingo', $dias)) {
+
+                    if ($pinicio->isSunday() and !in_array($pinicio, $no_habiles)) {
+                        array_push($fechas, $pinicio->toDateString());
+                        $total_asistencias++;
+                    }
+                }
+    
                 $pinicio->addDay();
                 //dd($fechas);
             }
@@ -2461,6 +2497,14 @@ class InscripcionsController extends Controller
                         $total_asistencias++;
                     }
                 }
+                if (in_array('Domingo', $dias)) {
+
+                    if ($pinicio->isSunday() and !in_array($pinicio, $no_habiles)) {
+                        array_push($fechas, $pinicio->toDateString());
+                        $total_asistencias++;
+                    }
+                }
+    
                 $pinicio->addDay();
                 //dd($fechas);
             }
@@ -3369,6 +3413,7 @@ class InscripcionsController extends Controller
         foreach ($registros as $registro) {
             array_push($idCalificacionesArray, $registro->calificacion_id);
             $fecha_acta = $registro->fecha_acta;
+	    //Log::info('fecha_acta: '.$registro->fecha_acta);
         }
         //dd($registros->toArray());
 
@@ -3379,16 +3424,20 @@ class InscripcionsController extends Controller
     {
         $datos = $request->all();
         $inscripcion = Inscripcion::find($datos['inscripcion']);
+        
         $cliente = Cliente::find($inscripcion->cliente_id);
+        //dd($cliente->toArray());
         $plantel = Plantel::find($inscripcion->plantel_id);
         $grado = Grado::find($inscripcion->grado_id);
         $resultados = array();
+        //dd($inscripcion->toArray());
         $hacademicas = Hacademica::select(
             'm.name as materia',
             'm.codigo',
             'm.creditos',
             'l.name as lectivo',
-            'hacademicas.id'
+            'hacademicas.id',
+            'hacademicas.cliente_id'
             //'c.calificacion',
             //'te.id',
             //'te.name as tipo_examen'
@@ -3398,7 +3447,7 @@ class InscripcionsController extends Controller
             ->join('materia as m', 'm.id', '=', 'hacademicas.materium_id')
             //->join('calificacions as c', 'c.hacademica_id', 'hacademicas.id')
             //->join('tpo_examens as te', 'te.id', '=', 'c.tpo_examen_id')
-            ->where('inscripcion_id', $inscripcion->id)
+            ->where('cliente_id', $inscripcion->cliente_id)
             ->where('m.bnd_oficial', 1)
             ->whereNull('hacademicas.deleted_at')
             //->whereNull('c.deleted_at')
@@ -3406,6 +3455,7 @@ class InscripcionsController extends Controller
             ->orderBy('hacademicas.id')
             //->orderBy('te.id')
             ->get();
+            //dd($hacademicas->toArray());
         foreach ($hacademicas as $hacademica) {
             $tpo_examen_max = Calificacion::where('hacademica_id', $hacademica->id)->max('tpo_examen_id');
             $calificacion = Calificacion::select('calificacions.calificacion', 'te.name as tipo_examen')
@@ -3642,6 +3692,14 @@ class InscripcionsController extends Controller
                     $total_asistencias++;
                 }
             }
+            if (in_array('Domingo', $dias)) {
+
+                if ($pinicio->isSunday() and !in_array($pinicio, $no_habiles)) {
+                    array_push($fechas, $pinicio->toDateString());
+                    $total_asistencias++;
+                }
+            }
+
             $pinicio->addDay();
             //dd($fechas);
         }

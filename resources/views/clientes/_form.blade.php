@@ -99,7 +99,7 @@
                         
                         <div class="form-group col-md-4 @if($errors->has('plantel_id')) has-error @endif">
                             <label for="plantel_id-field">Plantel</label>
-                            {!! Form::select("plantel_id", $list["Plantel"], null, array("class" => "form-control select_seguridad", "id" => "plantel_id-field")) !!}
+                            {!! Form::select("plantel_id", $plantels, null, array("class" => "form-control select_seguridad", "id" => "plantel_id-field")) !!}
                             @if($errors->has("plantel_id"))
                             <span class="help-block">{{ $errors->first("plantel_id") }}</span>
                             @endif
@@ -1617,12 +1617,12 @@ $(document).ready(function() {
    });
 
     $('#grupo_id-crear').change(function(){
-          getDisponibles($('#disponibles-crear'));
+          getDisponiblesCrear($('#disponibles-crear'));
           getCmbPeriodosEstudio();
         });
         
     $('#grupo_id-editar').change(function(){
-          getDisponibles($('#disponibles-editar'));
+	  getDisponibles($('#disponibles-editar'));
           getCmbPeriodosEstudioEditar();
         });
     
@@ -1763,6 +1763,31 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                   url: '{{ route("grupos.getDisponibles") }}',
                   type: 'GET',
                   data: "grupo_id=" + $('#grupo_id-editar option:selected').val() ,
+                  //data: "grupo_id=" + migrupo,
+                  dataType: 'json',
+                  beforeSend : function(){$(".loading3").show();},
+                  complete : function(){$(".loading3").hide();},
+                  success: function(data){
+                      miobj.val('');
+                      miobj.val(data);
+                      if(data<=0){
+                        $('.div_disponibles').addClass('has-error');
+                        $('.msjDisponiblesError').html('Cupo maximo alcanzado')
+                      }
+                      
+                  }
+              });       
+      }
+
+     function getDisponiblesCrear(obj){
+          var miobj=obj;
+          //console.log(miobj.prop('id'));
+          //var a= $('#frm_cliente').serialize();
+              $.ajax({
+                  url: '{{ route("grupos.getDisponibles") }}',
+                  type: 'GET',
+                  data: "grupo_id=" + $('#grupo_id-crear option:selected').val() ,
+                  //data: "grupo_id=" + migrupo,
                   dataType: 'json',
                   beforeSend : function(){$(".loading3").show();},
                   complete : function(){$(".loading3").hide();},

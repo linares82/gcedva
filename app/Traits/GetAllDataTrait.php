@@ -256,8 +256,9 @@ trait GetAllDataTrait
                 }
                 break;
             case "plan_estudios":
+                //dd(Auth::user()->can('IPlanEstudiosXPlantel'));
                 if (Auth::user()->can('IPlanEstudiosXPlantel')) {
-                $myQuery = $myQuery->whereIn('plan_estudios.id', $planteles);
+                $myQuery = $myQuery->whereIn('plan_estudios.plantel_id', $planteles);
                 }
                 break;
             case "periodo_estudios":

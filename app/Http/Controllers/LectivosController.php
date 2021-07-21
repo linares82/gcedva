@@ -310,6 +310,47 @@ class LectivosController extends Controller
         }
     }
 
+    public function lectivoOXplantelXasignacion(Request $request)
+    {
+        if ($request->ajax()) {
+            //dd($request->all());
+            $plantel = $request->get('plantel_id');
+            $lectivo = $request->get('lectivo_id');
+
+            $final = array();
+            $r = DB::table('lectivos as l')
+                ->join('asignacion_academicas as aa', 'aa.lectivo_oficial_id', '=', 'l.id')
+                ->select('l.id', 'l.name')
+                ->where('aa.plantel_id', '=', $plantel)
+                ->where('l.activo', 1)
+                ->where('l.id', '>', '0')
+                ->distinct()
+                ->get();
+
+            //dd($r);
+            if (isset($lectivo) and $lectivo != 0) {
+                foreach ($r as $r1) {
+                    if ($r1->id == $lectivo) {
+                        array_push($final, array(
+                            'id' => $r1->id,
+                            'name' => $r1->name,
+                            'selectec' => 'Selected',
+                        ));
+                    } else {
+                        array_push($final, array(
+                            'id' => $r1->id,
+                            'name' => $r1->name,
+                            'selectec' => '',
+                        ));
+                    }
+                }
+                return $final;
+            } else {
+                return $r;
+            }
+        }
+    }
+
     public function lectivoXplantelXasignacion(Request $request)
     {
         if ($request->ajax()) {

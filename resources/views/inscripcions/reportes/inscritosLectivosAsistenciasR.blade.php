@@ -113,6 +113,14 @@
                                     $total_asistencias++;
                                 }
                             }
+                            if (in_array('Domingo', $dias)) {
+
+                                if ($pinicio->isSunday() and !in_array($pinicio, $no_habiles)) {
+                                    array_push($fechas, $pinicio->toDateString());
+                                    $total_asistencias++;
+                                }
+                            }
+
                             $pinicio->addDay();
                             //dd($fechas);
                         }

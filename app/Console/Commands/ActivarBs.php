@@ -8,6 +8,7 @@ use Exception;
 use App\Adeudo;
 use App\BsBaja;
 use App\Cliente;
+use App\HEstatus;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -48,12 +49,43 @@ class ActivarBs extends Command
      */
     public function handle()
     {
-        $fechaActual = Carbon::createFromFormat('Y-m-d', Date('Y-m-d'));
-        $cajasHoy=Caja::where('fecha',$fechaActual->toDateString())->where('st_caja_id',1)->get();
+        $fechaActual = Carbon::createFromFormat('Y-m-d', Date('Y-m-d'))->toDateString();
+	    $fechaAnterior = Carbon::createFromFormat('Y-m-d', Date('Y-m-d'))->subDays(7)->toDateString();
+	//dd($fechaAnterior);
+        //Query para identificar clientes con cajas pagadas
+        
+        $cajasHoy=Caja::select('cajas.*')
+          ->join('pagos as p','p.caja_id','cajas.id')
+          ->join('clientes as cli','cli.id','cajas.cliente_id')
+          ->where('p.fecha','<=',$fechaActual)
+		  ->where('p.fecha','>=',$fechaAnterior)
+          ->where('cli.st_cliente_id', 4)
+		  ->where('st_caja_id',1)
+ 		  ->get();
+        
         $clientes=array();
         foreach($cajasHoy as $caja){
+            if(!in_array($caja->cliente_id, $clientes)){
             array_push($clientes, $caja->cliente_id);
+            }
         }
+
+        $clientesActivosHoy=HEstatus::where('fecha',$fechaActual)
+        ->where('tabla','clientes')
+        ->where('estatus_id',4)
+        ->get();
+        foreach($clientesActivosHoy as $cliente){
+            if(!in_array($cliente->id, $clientes)){
+                array_push($clientes, $cliente->cliente_id);
+            }
+        }
+        sort($clientes);
+        Log::info("clientes proceso activacion BS nocturno");
+        Log::info($clientes);
+	    //dd($clientes);
+        
+	//dd($cajasHoy->toArray());
+        
 
         $registros = Adeudo::select(DB::raw('p.razon,adeudos.cliente_id,stc.name as estatus, count(adeudos.cliente_id) as adeudos_cantidad'))
             ->join('clientes as c', 'c.id', '=', 'adeudos.cliente_id')
@@ -68,8 +100,10 @@ class ActivarBs extends Command
             ->whereColumn('adeudos.combinacion_cliente_id', 'cc.id')
             ->join('caja_conceptos as caj_con', 'caj_con.id', '=', 'adeudos.caja_concepto_id')
             ->where('caj_con.bnd_mensualidad', 1)
-            ->where('fecha_pago', '<', $fechaActual)
+            //->where('fecha_pago', '<=', $fechaActual)
+	        //->where('fecha_pago', '>=', $fechaAnterior)
             ->where('pagado_bnd', 0)
+            ->where('c.id', 4443)
             ->whereIn('c.id', $clientes)
             ->whereNotIn('c.plantel_id', array(54))
             ->whereNull('cc.deleted_at')

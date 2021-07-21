@@ -67,72 +67,143 @@
     <body>
         <div id="printeArea">
             <h3>Concentrado Parciales  </h3>
-
+            
+            @foreach($resultado as $registros)
             <table>
+            @php
+            //dd($registros);
+            $no=0;
+            $promedio_grupal=0;
+
+            $materias=array();
+            $contador_alumnos=0;
+            @endphp
+            
+            @php
+                $suma_calificaciones = array();
+                $cantidad = array();
+                $promedios = array();
+                $i = 0;
                 
-                    <tr>
-                        <th colspan='3'>
-                        @foreach($materias as $materia)
-                            <th colspan="{{ $materia->total_ponderaciones }}">{{ $materia->codigo }}</th>
-                        @endforeach
-                        
-                    </tr>
+                foreach ($registros as $registro) {
+                    $j = 0;
+                    //dd($registro);
+                    if($i>1){
+                       //dd($registro); 
+                       foreach ($registro as $celda) {
+                            //dd($registro);
+                            //dd($celda);
+                            //if(!is_string($celda)){
+                            if($j>2){
+
+                                //dd($celda);
+                                if(!array_key_exists($j, $suma_calificaciones)){
+                                    $suma_calificaciones[$j]=0;    
+                                }
+                                $suma_calificaciones[$j] = $suma_calificaciones[$j] + floatval($celda);    
+                                if(!array_key_exists($j, $cantidad)){
+                                    $cantidad[$j]=0;    
+                                }
+                                $cantidad[$j]++;
+                                
+                            }
+                            $j++;
+                        }
+                        //dd($suma_calificaciones);
+                    }
+                    $i++;
+                }
+                //dd($cantidad);
+                $i = 3;
+                
+                foreach ($suma_calificaciones as $suma) {
                     
-                @php
-                    $no=0;
-                    $promedio_grupal=0;
-                @endphp
-                @foreach($registros as $registro)
+                    $promedios[$i] = round($suma / $cantidad[$i], 1);
+                    $i++;
+                }
+            @endphp
+            
+        
+            @foreach($registros as $registro)
                 
-                <tr>
-                    @if($loop->first)
-                        <th>No.</th>
-                        @foreach($registro as $celda)
+                @if($loop->index==0)
+                    @php
+                    $cantidad_celdas=count($registro);    
+                    $i=1;
+                    @endphp
+                    
+                        <tr>
+                            <th colspan=""></th><th colspan=""></th><th colspan=""></th><th colspan=""></th>
+                            @while($i<($cantidad_celdas-2))
+                                <th colspan="{{ $registro[$i+2] }}">{{$registro[$i]}}</th>
+                                @php
+                                    array_push($materias, array('codigo'=>$registro[$i], 'materia'=>$registro[$i+1]));
+                                    $i++; $i++; $i++;
+                                @endphp
+                            @endwhile
+                            <th></th>
+                        </tr>
+                    
+                @elseif($loop->index==1)
+                    <th colspan="">No.</th>
+                    @foreach($registro as $celda)
                         <th>{{ $celda }}</th>
-                        @endforeach
-                        <th>Promedio Alumno</th>
-                    @else
+                    @endforeach
+                    <th>Promedio Alumno</th>
+                @else
+                    <tr>
                         <td>{{ ++$no }}</td>
                         @foreach($registro as $celda)
                         <td>{{ $celda }}</td>
                         @if($loop->last)
                             @php
-                             $promedio_grupal=$celda   
+                             $promedio_grupal=$promedio_grupal+$celda;
+                             $contador_alumnos++;   
                             @endphp
                         @endif
                         @endforeach
-                        
-                    @endif
-                </tr>
-                
+                    </tr>
+                @endif
+            @endforeach
+            <tr>
+                <td></td><td></td><td></td><td>Promedio de la Materia</td>
+                @foreach($promedios as $promedio)
+                <td>{{ $promedio }}</td>
                 @endforeach
-                <tr>
-                    <td></td><td></td><td>Promedio de la Materia</td>
-                    @foreach($promedios as $promedio)
-                        @if($loop->index>1)
-                        <td>{{ $promedio }}</td>
-                        @endif
-                    @endforeach
-                </tr>
-                
+            </tr>
             </table>
-
+            <br/>
+            
             <table>
                 <thead>
-                    <th>Promedio Grupal</th> <th>{{ $promedio_grupal }}</th>
+                    <th>Promedio Grupal</th> 
+                    <th>
+                        @if($contador_alumnos>0)
+                        {{ round($promedio_grupal/$contador_alumnos, 2) }}
+                        @else
+                        0
+                        @endif
+                    </th>
                 </thead>
             </table>
-
+            <br/>
+            
             <table>
                 <thead><th>Materia</th><th>Clave</th></thead>
                 <tbody>
                     @foreach($materias as $materia)
                     <tr>
-                        <td>{{ $materia->materia }}</td><td>{{ $materia->codigo }}</td>
+                        <td>{{ $materia['materia'] }}</td><td>{{ $materia['codigo'] }}</td>
                     </tr>
                     @endforeach
                 </tbody>
             </table>
+            <br/>
+            <br/>
+            @endforeach
+
+
+            
 
             
 

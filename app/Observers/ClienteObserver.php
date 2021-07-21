@@ -18,6 +18,8 @@ class ClienteObserver
      */
     public function created(Cliente $cliente)
     {
+        $cliente->st_cliente_id=1;
+        $cliente->save();
         /*$empleado=Empleado::find($cliente->empleado_id);
         $empleado->pendientes=$empleado->pendientes+1;
         $empleado->save();

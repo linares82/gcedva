@@ -146,7 +146,7 @@
                             <th>@include('plantillas.getOrderLink', ['column' => 'nivel_id', 'title' => 'NIVEL'])</th>
                             <th>@include('plantillas.getOrderLink', ['column' => 'grado_id', 'title' => 'GRADO'])</th>
                             <th>@include('plantillas.getOrderLink', ['column' => 'name', 'title' => 'PERIODO'])</th>
-                            <th>Periodo Estudio</th>
+                            <th>Plan Estudio</th>
                             <th>Orden</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>

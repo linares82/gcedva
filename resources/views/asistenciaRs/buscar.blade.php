@@ -60,10 +60,10 @@
                             <td>{{ optional($s->cliente->stCliente)->name }}</td>
                             <td>{{ $s->fecha }}</td>
                             <td>
-                                <div class="form-group col-md-4 @if($errors->has('est_asistencia_id')) has-error @endif">
-                                    @if(optional($s->cliente)->st_cliente_id==25)                                    
+                                <div class="form-group col-md-4  @if($errors->has('est_asistencia_id')) has-error @endif" >
+                                    @if(optional($s->cliente)->st_cliente_id==25 or optional($s->cliente)->st_cliente_id==3)                                    
                                     @else
-                                        {!! Form::select("est_asistencia_id", $list["EstAsistencium"], $s->est_asistencia_id, array("class" => "form-control select_seguridad1", "id" => "est_asistencia_id".$s->id."-field", "name" => "est_asistencia_id".$s->id."-field")) !!}
+                                        {!! Form::select("est_asistencia_id", $list["EstAsistencium"], $s->est_asistencia_id, array("class" => "select_seguridad1", "id" => "est_asistencia_id".$s->id."-field", "name" => "est_asistencia_id".$s->id."-field")) !!}
                                     @endif
                                     
                                     @if($errors->has("est_asistencia_id"))

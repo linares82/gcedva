@@ -73,7 +73,7 @@ class PlantelsController extends Controller
 	public function store(createPlantel $request)
 	{
 		$input = $request->except('concepto_multipago_id', 'forma_pago_id');
-		$conceptos = $request->only('concepto_multipago_id');
+		$conceptos = $request->only('concepto_multipagos_id');
 		$formas_pago = $request->only('forma_pago_id');
 		$input['usu_alta_id'] = Auth::user()->id;
 		$input['usu_mod_id'] = Auth::user()->id;

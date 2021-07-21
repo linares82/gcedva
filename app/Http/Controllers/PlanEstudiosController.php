@@ -20,7 +20,7 @@ class PlanEstudiosController extends Controller {
 	public function index(Request $request)
 	{
 		$planEstudios = PlanEstudio::getAllData($request);
-
+		
 		return view('planEstudios.index', compact('planEstudios'));
 	}
 

@@ -60,7 +60,7 @@
                         <td>{{$registro->curp_docente}}</td><td>{{$registro->codigo}}</td>
                         <td>
                             @php
-                                if(isset($idCalificacionesArray) and $fecha_acta<>""){
+                                if(isset($idCalificacionesArray) and !is_null($registro->fecha_acta)){
                                     $fecha=\Carbon\Carbon::createFromFormat('Y-m-d',$registro->fecha_acta);
                                     if($datos['tipo_examen_f']==1){
                                         echo "F".sprintf("%02d",$fecha->day).sprintf("%02d",$fecha->month).substr($fecha->year,-2).sprintf("%03d",$registro->consecutivo_acta);

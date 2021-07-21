@@ -206,7 +206,9 @@ class ClientesController extends Controller
         $planteles = array();
         foreach ($e->plantels as $p) {
             //dd($p->id);
-            array_push($planteles, $p->id);
+            //if($p->st_plantel_id<>1){
+                array_push($planteles, $p->id);
+            //}
         }
         $empleados = Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
             ->whereIn('plantel_id', $planteles)
@@ -224,7 +226,8 @@ class ClientesController extends Controller
         $estado_civiles = EstadoCivil::pluck('name','id');
         $cuestionarios = Ccuestionario::where('st_cuestionario_id', '=', '1')->pluck('name', 'id');
         $incidencias = IncidenceCliente::pluck('name', 'id');
-        return view('clientes.create', compact('empleados', 'cuestionarios', 'estado_civiles','incidencias'))
+        $plantels=Plantel::where('st_plantel_id',1)->pluck('razon','id');
+        return view('clientes.create', compact('empleados', 'cuestionarios', 'estado_civiles','incidencias','plantels'))
             ->with('list', Cliente::getListFromAllRelationApps())
             ->with('list3', Inscripcion::getListFromAllRelationApps());
     }
@@ -384,13 +387,16 @@ class ClientesController extends Controller
         //dd($cliente->ccuestionario->ccuestionarioPreguntas);
         $p = Auth::user()->can('IfiltroEmpleadosXPlantel');
         //dd($p);
+
         if ($p) {
             //$e = Empleado::where('user_id', '=', Auth::user()->id)->first();
             $e = Empleado::where('user_id', '=', Auth::user()->id)->first();
             $planteles = array();
             foreach ($e->plantels as $p) {
-                //dd($p->id);
+                //dd($p);
+                //if($p->st_plantel_id<>1){
                 array_push($planteles, $p->id);
+                //}
             }
             //dd($planteles);
             $empleados = Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
@@ -446,6 +452,7 @@ class ClientesController extends Controller
         $materias=Materium::where('materia.bnd_oficial',0)
         ->where('plantel_id',$cliente->plantel_id)
         ->pluck('name','id');
+        $plantels=Plantel::where('st_plantel_id',1)->pluck('razon','id');
         return view('clientes.edit', compact(
             'cliente',
             'materias',
@@ -456,7 +463,8 @@ class ClientesController extends Controller
             'cuestionarios',
             'historia',
             'estado_civiles',
-            'incidencias'
+            'incidencias',
+            'plantels'
         ))
             ->with('list', Cliente::getListFromAllRelationApps())
             ->with('list1', PivotDocCliente::getListFromAllRelationApps())
@@ -2430,5 +2438,11 @@ class ClientesController extends Controller
         return view('clientes.reportes.alumnosActivosD', compact('registros'));
     }
 
-    
+    public function plantelXCliente(Request $request){
+        if($request->ajax()){
+            $datos=$request->all();
+            $cliente=Cliente::find($datos['cliente']);
+            return json_encode(array('plantel'=>$cliente->plantel_id));
+        }
+    }    
 }

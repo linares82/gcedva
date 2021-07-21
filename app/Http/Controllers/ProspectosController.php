@@ -155,7 +155,7 @@ class ProspectosController extends Controller {
 		$input=$prospecto->toArray();
 		$input['municipio_id']=0;
 		$input['estado_id']=0;
-		$input['st_cliente_id']=0;
+		$input['st_cliente_id']=1;
 		$input['ofertum_id']=0;
 		$input['empleado_id']=$empleado->id;
 		$input['grado_id']=0;

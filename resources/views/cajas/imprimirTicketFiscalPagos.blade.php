@@ -199,6 +199,7 @@ if(!is_null($cliente->plantel->matriz_id) and $cliente->plantel->matriz_id>0){
                     </td>
                     @endif
                     @endif
+                    @if(isset($sucursales))
                     @foreach($sucursales as $sucursal)
                     @if($sucursal->id<>$cliente->plantel_id and
                     $sucursal->calle.$sucursal->no_ext.$sucursal->colonia<>$cliente->plantel->calle.$cliente->plantel->no_ext.$cliente->plantel->colonia)
@@ -210,6 +211,7 @@ if(!is_null($cliente->plantel->matriz_id) and $cliente->plantel->matriz_id>0){
                     </td>
                     @endif
                     @endforeach
+                    @endif
                 </tr>
             </table>
             <td>
@@ -393,6 +395,7 @@ if(!is_null($cliente->plantel->matriz_id) and $cliente->plantel->matriz_id>0){
                     </td>
                     @endif
                     @endif
+                    @if(isset($sucursales))
                 @foreach($sucursales as $sucursal)
                 @if($sucursal->id<>$cliente->plantel_id and
                     $sucursal->calle.$sucursal->no_ext.$sucursal->colonia<>$cliente->plantel->calle.$cliente->plantel->no_ext.$cliente->plantel->colonia)
@@ -404,6 +407,7 @@ if(!is_null($cliente->plantel->matriz_id) and $cliente->plantel->matriz_id>0){
                 </td>
                 @endif
                 @endforeach
+                @endif
             </tr>
         </table>
         <td>

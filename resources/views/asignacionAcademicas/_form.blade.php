@@ -24,7 +24,7 @@
                         @endif
                      </div>
                      <div class="form-group col-md-4 @if($errors->has('docente_oficial_id')) has-error @endif">
-                        <label for="docente_oficial_id-field">Docente Ofical</label>
+                        <label for="docente_oficial_id-field">Docente Oficial</label>
                         {!! Form::select("docente_oficial_id", $list["Empleado"], null, array("class" => "form-control select_seguridad", "id" => "docente_oficial_id-field")) !!}             
                         @if($errors->has("docente_oficial_id"))
                          <span class="help-block">{{ $errors->first("docente_oficial_id") }}</span>

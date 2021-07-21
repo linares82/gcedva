@@ -44,7 +44,7 @@ class alumnosActivos extends Command
     {
         $fechaHoy=Carbon::createFromFormat('Y-m-d', date('Y-m-d'));
         $fechaMesPasado=$fechaHoy->subMonth();
-        $fechaMesPasadoStr=$fechaHoy->subMonth()->toDateString();
+        $fechaMesPasadoStr=$fechaHoy->toDateString();
         
         $mes=Mese::where('id', $fechaMesPasado->month)->value('name');
         //dd($mes);
@@ -71,6 +71,7 @@ class alumnosActivos extends Command
             //->where('pagado_bnd',1)
             ->whereNull('a.deleted_at')
             ->whereNull('clientes.deleted_at')
+            ->distinct()
             ->chunk(100, function($registros){
                 $fechaHoy=Carbon::createFromFormat('Y-m-d', date('Y-m-d'));
                 foreach($registros as $r){
