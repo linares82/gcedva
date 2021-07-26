@@ -750,4 +750,30 @@ class EmpleadosController extends Controller
             ->get();
         return view('empleados.reportes.finContratosR',compact('contratosVencidos'));
     }
+
+    public function listadoColaboradores(){
+        $e = Empleado::where('user_id', Auth::user()->id)->first();
+            $plantels = array();
+            foreach ($e->plantels as $p) {
+                array_push($plantels, $p->id);
+            }
+        $planteles=Plantel::whereIn('id',$plantels)->pluck('razon','id');
+        return view('empleados.reportes.listadoColaboradores',compact('planteles'));
+    }
+
+
+
+    public function listadoColaboradoresR(Request $request){
+        $datos=$request->all();
+        $empleados=Empleado::select('pla.razon','empleados.id', 'empleados.nombre', 'empleados.ape_paterno', 
+        'empleados.ape_materno', 'empleados.curp', 'empleados.rfc', 'empleados.direccion', 'p.name AS puesto', 
+        'empleados.mail_empresa', 'empleados.tel_cel', 'empleados.tel_emergencia', 'empleados.parentesco', 
+        'empleados.fin_contrato','stc.name as estatus')
+        ->join('puestos as p','p.id','empleados.puesto_id')
+        ->join('plantels as pla','pla.id','empleados.plantel_id')
+        ->join('st_empleados as stc','stc.id','empleados.st_empleado_id')
+        ->whereIn('plantel_id', $datos['plantel_f']) 
+        ->get();
+        return view('empleados.reportes.listadoColaboradoresR',compact('empleados'));
+    }
 }

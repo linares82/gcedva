@@ -1258,7 +1258,7 @@
                             <a class="btn btn-xs btn-default" href='{{route("inscripcions.historial", array('inscripcion'=>$i))}}' target="_blank">Historial</a>
                             <a class="btn btn-xs btn-success" href='{{route("inscripcions.historialOficial", array('inscripcion'=>$i))}}' target="_blank">Historial O.</a>
                             @permission('inscripcions.destroy')
-                            <a class="btn btn-xs btn-danger" href="{{ route('inscripcions.destroyCli', $i->id) }}"><i class="glyphicon glyphicon-trash"></i>Borrar</a>
+                            <a class="btn btn-xs btn-danger" href="{{ route('inscripcions.destroyCli', $i->id) }}" onclick="return confirm('Confirmar borrado de inscripcion.');"><i class="glyphicon glyphicon-trash"></i>Borrar</a>
                             @endpermission
                             <a class="btn btn-xs btn-default" href="{{ route('clientes.credencial_anverso', array('id'=>$cliente->id, 'inscripcion'=>$i)) }}" target="_blank"><i class="fa fa-newspaper-o"></i> C. Anverso</a>
                         </td>
@@ -1536,6 +1536,8 @@
 <script src="{{ asset ('/bower_components/AdminLTE/plugins/input-mask/jquery.inputmask.extensions.js') }}"></script>
 <script src="{{ asset ('/bower_components/AdminLTE/plugins/input-mask/jquery.inputmask.phone.extensions.js') }}"></script>
 <script type="text/javascript">
+
+
 @php
 if(isset($cliente)){
     $pagos_validar=App\Adeudo::where('cliente_id',$cliente->id)->where('pagado_bnd',1)->get();    

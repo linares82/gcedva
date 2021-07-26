@@ -724,6 +724,22 @@ Route::post(
         'uses' => 'EmpleadosController@finContratosR'
     )
 )->middleware('auth');
+Route::get(
+    '/empleados/listadoColaboradores/',
+    array(
+        'as' => 'empleados.listadoColaboradores',
+        'middleware' => 'permission:empleados.listadoColaboradores',
+        'uses' => 'EmpleadosController@listadoColaboradores'
+    )
+)->middleware('auth');
+Route::post(
+    '/empleados/listadoColaboradoresR/',
+    array(
+        'as' => 'empleados.listadoColaboradoresR',
+        'middleware' => 'permission:empleados.listadoColaboradores',
+        'uses' => 'EmpleadosController@listadoColaboradoresR'
+    )
+)->middleware('auth');
 ///////////////////////////////////////////////////////////////////////////////////////////
 /*Route::get('zip/imagenes', function () {
 $files = glob(public_path('imagenes'));

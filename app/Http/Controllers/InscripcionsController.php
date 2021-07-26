@@ -1574,6 +1574,8 @@ class InscripcionsController extends Controller
                 ->where('hacademica_id', $hacademica->id)
                 ->where('tpo_examen_id', $tpo_examen_max)
                 ->first();
+            
+            
             $resultado = array(
                 'materia' => $hacademica->materia,
                 'codigo' => $hacademica->codigo,
