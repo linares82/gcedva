@@ -288,7 +288,7 @@ Route::post(
         'uses' => 'PlantelsController@cargarImg'
     )
 )->middleware('auth');
-Route::get(
+Route::post(
     'plantels/listaPlanteles',
     array(
         'as' => 'plantels.listaPlanteles',
@@ -2084,7 +2084,7 @@ Route::get(
         'uses' => 'NivelsController@getCmbNivelsGrupoInscripcion'
     )
 )->middleware('auth');
-Route::get(
+Route::post(
     'nivels/listaNiveles',
     array(
         'as' => 'nivels.listaNiveles',
@@ -2199,7 +2199,7 @@ Route::get(
         'uses' => 'GradosController@getCmbGradosXAsignacion'
     )
 )->middleware('auth');
-Route::get(
+Route::post(
     'grados/listaGrados',
     array(
         'as' => 'grados.listaGrados',
@@ -3138,7 +3138,7 @@ Route::post('especialidads/cargaFondo', [
     //'middleware'=>'permission:entities.entity.cargaArchivo',
     'as' => 'especialidads.cargaFondo',
 ])->middleware('auth');
-Route::get('especialidads/listaEspecialidades', [
+Route::post('especialidads/listaEspecialidades', [
     'uses' => 'EspecialidadsController@listaEspecialidades',
     //'middleware'=>'permission:entities.entity.cargaArchivo',
     'as' => 'especialidads.listaEspecialidades',
@@ -4587,7 +4587,7 @@ Route::get(
         'uses' => 'GruposController@cbmPeriodosEstudio'
     )
 )->middleware('auth');
-Route::get(
+Route::post(
     '/grupos/listaGrupos',
     array(
         'as' => 'grupos.listaGrupos',
@@ -4603,7 +4603,7 @@ Route::get(
         'uses' => 'GruposController@gruposXplantelXasignacion'
     )
 )->middleware('auth');
-Route::get(
+Route::post(
     '/grupos/listaMateriasXGrupo',
     array(
         'as' => 'grupos.listaMateriasXGrupo',
@@ -5351,7 +5351,7 @@ Route::get(
         'uses' => 'AsignacionAcademicasController@getCmbInstructor'
     )
 )->middleware('auth');
-Route::get(
+Route::post(
     '/asignacionAcademica/listaAsignaciones',
     array(
         'as' => 'asignacionAcademica.listaAsignaciones',
@@ -6551,7 +6551,7 @@ Route::get(
         'uses' => 'TurnosController@getCmbTurno'
     )
 )->middleware('auth');
-Route::get(
+Route::post(
     'turnos/listaTurnos',
     array(
         'as' => 'turnos.listaTurnos',

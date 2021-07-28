@@ -9,6 +9,7 @@ use App\Grupo;
 use App\Cliente;
 use App\Horario;
 use App\Lectivo;
+use App\Plantel;
 use App\Empleado;
 use App\Materium;
 use App\Hacademica;
@@ -621,7 +622,7 @@ class AsignacionAcademicasController extends Controller
 		compact('encabezado', 'datos'));
 	}
 
-	public function listaAsignaciones(){
+	public function listaAsignaciones(Request $request){
 		$asignaciones= AsignacionAcademica::select('asignacion_academicas.id as asignacion_id','e.id as d_id','e.nombre as d_nombre',
 		'e.ape_paterno as d_ape_paterno', 'e.ape_materno as d_ape_materno','p.id as plantel_id','p.razon',
 		'l.id as lectivo_id','l.name as lectivo','m.id as materia_id','m.name as materia','g.id as grupo_id',
@@ -636,8 +637,10 @@ class AsignacionAcademicasController extends Controller
 		->join('empleados as do','do.id','asignacion_academicas.docente_oficial_id')
 		->join('lectivos as lo','lo.id','asignacion_academicas.lectivo_oficial_id')
 		->whereNull('asignacion_academicas.deleted_at')
+		->whereIn('asignacion_academicas.plantel_id',$request->input('plantel'))
 		->get();
 			//dd($asignaciones);
-		return view('combinacionClientes.reportes.cargas', compact('asignaciones'));
+			$plantels=Plantel::pluck('razon','id');
+		return view('combinacionClientes.reportes.cargas', compact('asignaciones','plantels'));
 	}
 }

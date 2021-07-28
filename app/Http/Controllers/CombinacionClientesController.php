@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use Auth;
+use App\Turno;
 use App\Adeudo;
+use App\Plantel;
 use App\CombinacionCliente;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\createCombinacionCliente;
 use App\Http\Requests\updateCombinacionCliente;
-use App\Turno;
-use Auth;
-use Illuminate\Http\Request;
 
 class CombinacionClientesController extends Controller
 {
@@ -180,6 +181,8 @@ class CombinacionClientesController extends Controller
 
     public function cargas()
     {
-        return view('combinacionClientes.reportes.cargas');
+        $plantels=Plantel::pluck('razon','id');
+        //dd($plantels);
+        return view('combinacionClientes.reportes.cargas',compact('plantels'));
     }
 }

@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use DB;
+use Auth;
+use Storage;
+use App\Lectivo;
+use App\Plantel;
 use App\Especialidad;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\createEspecialidad;
 use App\Http\Requests\updateEspecialidad;
-use App\Lectivo;
-use Auth;
-use DB;
-use Illuminate\Http\Request;
-use Storage;
 
 class EspecialidadsController extends Controller
 {
@@ -230,10 +231,11 @@ class EspecialidadsController extends Controller
         }
     }
 
-    public function listaEspecialidades()
+    public function listaEspecialidades(Request $request)
     {
-        $especialidades = Especialidad::orderBy('plantel_id')->orderBy('id')->get();
-        return view('combinacionClientes.reportes.cargas', compact('especialidades'));
+        $especialidades = Especialidad::whereIn('plantel_id',$request->input('plantel'))->orderBy('plantel_id')->orderBy('id')->get();
+        $plantels=Plantel::pluck('razon','id');
+        return view('combinacionClientes.reportes.cargas', compact('especialidades','plantels'));
     }
 
     public function apiListaXPlantel(Request $request)

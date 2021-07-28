@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
+use DB;
+use Auth;
 use App\Grado;
 use App\Modulo;
+use App\Plantel;
+use App\Http\Requests;
 use Illuminate\Http\Request;
-use Auth;
-use App\Http\Requests\updateGrado;
 use App\Http\Requests\createGrado;
-use DB;
+use App\Http\Requests\updateGrado;
+use App\Http\Controllers\Controller;
 
 class GradosController extends Controller
 {
@@ -263,10 +264,11 @@ class GradosController extends Controller
         }
     }
 
-    public function listaGrados()
+    public function listaGrados(Request $request)
     {
-        $grados = Grado::orderBy('plantel_id')->orderBy('especialidad_id')->orderBy('nivel_id')->orderBy('id')->get();
-        return view('combinacionClientes.reportes.cargas', compact('grados'));
+        $grados = Grado::whereIn('plantel_id',$request->input('plantel'))->orderBy('plantel_id')->orderBy('especialidad_id')->orderBy('nivel_id')->orderBy('id')->get();
+        $plantels=Plantel::pluck('razon','id');
+        return view('combinacionClientes.reportes.cargas', compact('grados','plantels'));
     }
 
     public function apiListaXplantelYespecialidadYgrado(Request $request)

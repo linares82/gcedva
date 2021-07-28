@@ -20,6 +20,81 @@
   <body style="padding:10px;">
     <div class="datagrid">
         <h3>Consulta de Carga de registros</h3>
+        <select id="seleccion">
+            <option value="0">Seleccionar Opción</option>
+            <option value="1">Planteles</option>
+            <option value="2">Especialidades</option>
+            <option value="3">Niveles</option>
+            <option value="4">Grados</option>
+            <option value="5">Grupos</option>
+            <option value="6">Turnos</option>
+            <option value="7">Asignaciones</option>
+            <option value="8">Materias</option>
+        </select>
+        <div class="row"></div>
+        {!! Form::open(array('route' => 'plantels.listaPlanteles', 'id'=>"frm_planteles")) !!}
+            {!! Form::select("plantel[]", $plantels, null, array("class" => "form-control select_seguridad", "id" => "plantel_f-field", 'multiple'=>true)) !!}
+            <div class="well well-sm">
+                <button type="submit" class="btn btn-primary">Ver</button>
+            </div>
+        {!! Form::close() !!}
+
+        {!! Form::open(array('route' => 'especialidads.listaEspecialidades', 'id'=>"frm_especialidades")) !!}
+        <form method="post" id="frm_especialidades" action="{{route('especialidads.listaEspecialidades')}}">
+            {!! Form::select("plantel[]", $plantels, null, array("class" => "form-control select_seguridad", "id" => "plantel_f-field", 'multiple'=>true)) !!}
+            <div class="well well-sm">
+                <button type="submit" class="btn btn-primary">Ver</button>
+            </div>
+        {!! Form::close() !!}
+
+        {!! Form::open(array('route' => 'nivels.listaNiveles', 'id'=>"frm_niveles")) !!}
+        
+            {!! Form::select("plantel[]", $plantels, null, array("class" => "form-control select_seguridad", "id" => "plantel_f-field", 'multiple'=>true)) !!}
+            <div class="well well-sm">
+                <button type="submit" class="btn btn-primary">Ver</button>
+            </div>
+            {!! Form::close() !!}
+
+            {!! Form::open(array('route' => 'grados.listaGrados', 'id'=>"frm_grados")) !!}
+        
+            {!! Form::select("plantel[]", $plantels, null, array("class" => "form-control select_seguridad", "id" => "plantel_f-field", 'multiple'=>true)) !!}
+            <div class="well well-sm">
+                <button type="submit" class="btn btn-primary">Ver</button>
+            </div>
+        </form>
+
+        {!! Form::open(array('route' => 'grupos.listaGrupos', 'id'=>"frm_grupos")) !!}
+        
+            {!! Form::select("plantel[]", $plantels, null, array("class" => "form-control select_seguridad", "id" => "plantel_f-field", 'multiple'=>true)) !!}
+            <div class="well well-sm">
+                <button type="submit" class="btn btn-primary">Ver</button>
+            </div>
+            {!! Form::close() !!}
+
+            {!! Form::open(array('route' => 'turnos.listaTurnos', 'id'=>"frm_turnos")) !!}
+        
+            {!! Form::select("plantel[]", $plantels, null, array("class" => "form-control select_seguridad", "id" => "plantel_f-field", 'multiple'=>true)) !!}
+            <div class="well well-sm">
+                <button type="submit" class="btn btn-primary">Ver</button>
+            </div>
+            {!! Form::close() !!}
+
+            {!! Form::open(array('route' => 'asignacionAcademica.listaAsignaciones', 'id'=>"frm_asignaciones")) !!}
+    
+            {!! Form::select("plantel[]", $plantels, null, array("class" => "form-control select_seguridad", "id" => "plantel_f-field", 'multiple'=>true)) !!}
+            <div class="well well-sm">
+                <button type="submit" class="btn btn-primary">Ver</button>
+            </div>
+            {!! Form::close() !!}
+
+            {!! Form::open(array('route' => 'grupos.listaMateriasXGrupo', 'id'=>"frm_materias")) !!}
+        
+            {!! Form::select("plantel[]", $plantels, null, array("class" => "form-control select_seguridad", "id" => "plantel_f-field", 'multiple'=>true)) !!}
+            <div class="well well-sm">
+                <button type="submit" class="btn btn-primary">Ver</button>
+            </div>
+            {!! Form::close() !!}
+            <!--
         <a href="{{route('plantels.listaPlanteles')}}" class="btn btn-md btn-success">Planteles</a>
         <a href="{{route('especialidads.listaEspecialidades')}}" class="btn btn-md btn-success">Especialidades</a>
         <a href="{{route('nivels.listaNiveles')}}" class="btn btn-md btn-success">Niveles</a>
@@ -28,6 +103,7 @@
         <a href="{{route('turnos.listaTurnos')}}" class="btn btn-md btn-success">Turnos</a>
         <a href="{{route('asignacionAcademica.listaAsignaciones')}}" class="btn btn-md btn-success">Asignaciones</a>
         <a href="{{route('grupos.listaMateriasXGrupo')}}" class="btn btn-md btn-success">Materias por Grupo</a>
+            -->
         @if(isset($planteles))
         <table class="table table-condensed table-striped">
             <thead>
@@ -209,6 +285,96 @@
         </table>
         @endif
     </div>
+    <script>
+        document.getElementById('frm_planteles').style.display = 'none';
+                document.getElementById('frm_especialidades').style.display = 'none';
+                document.getElementById('frm_niveles').style.display = 'none';
+                document.getElementById('frm_grados').style.display = 'none';
+                document.getElementById('frm_grupos').style.display = 'none';
+                document.getElementById('frm_turnos').style.display = 'none';
+                document.getElementById('frm_asignaciones').style.display = 'none';
+                document.getElementById('frm_materias').style.display = 'none';
+        var seleccion=document.getElementById('seleccion');
+        //console.log(seleccion.options[seleccion.selectedIndex].value);
+        seleccion.addEventListener('change', (event) => {
+            //console.log();
+            opcion=seleccion.options[seleccion.selectedIndex].value;
+            if(opcion==1){
+                document.getElementById('frm_planteles').style.display = 'block';
+                document.getElementById('frm_especialidades').style.display = 'none';
+                document.getElementById('frm_niveles').style.display = 'none';
+                document.getElementById('frm_grados').style.display = 'none';
+                document.getElementById('frm_grupos').style.display = 'none';
+                document.getElementById('frm_turnos').style.display = 'none';
+                document.getElementById('frm_asignaciones').style.display = 'none';
+                document.getElementById('frm_materias').style.display = 'none';
+            }else if(opcion==2){
+                document.getElementById('frm_planteles').style.display = 'none';
+                document.getElementById('frm_especialidades').style.display = 'block';
+                document.getElementById('frm_niveles').style.display = 'none';
+                document.getElementById('frm_grados').style.display = 'none';
+                document.getElementById('frm_grupos').style.display = 'none';
+                document.getElementById('frm_turnos').style.display = 'none';
+                document.getElementById('frm_asignaciones').style.display = 'none';
+                document.getElementById('frm_materias').style.display = 'none';
+            }else if(opcion==3){
+                document.getElementById('frm_planteles').style.display = 'none';
+                document.getElementById('frm_especialidades').style.display = 'none';
+                document.getElementById('frm_niveles').style.display = 'block';
+                document.getElementById('frm_grados').style.display = 'none';
+                document.getElementById('frm_grupos').style.display = 'none';
+                document.getElementById('frm_turnos').style.display = 'none';
+                document.getElementById('frm_asignaciones').style.display = 'none';
+                document.getElementById('frm_materias').style.display = 'none';
+            }else if(opcion==4){
+                document.getElementById('frm_planteles').style.display = 'none';
+                document.getElementById('frm_especialidades').style.display = 'none';
+                document.getElementById('frm_niveles').style.display = 'none';
+                document.getElementById('frm_grados').style.display = 'block';
+                document.getElementById('frm_grupos').style.display = 'none';
+                document.getElementById('frm_turnos').style.display = 'none';
+                document.getElementById('frm_asignaciones').style.display = 'none';
+                document.getElementById('frm_materias').style.display = 'none';
+            }else if(opcion==5){
+                document.getElementById('frm_planteles').style.display = 'none';
+                document.getElementById('frm_especialidades').style.display = 'none';
+                document.getElementById('frm_niveles').style.display = 'none';
+                document.getElementById('frm_grados').style.display = 'none';
+                document.getElementById('frm_grupos').style.display = 'block';
+                document.getElementById('frm_turnos').style.display = 'none';
+                document.getElementById('frm_asignaciones').style.display = 'none';
+                document.getElementById('frm_materias').style.display = 'none';
+            }else if(opcion==6){
+                document.getElementById('frm_planteles').style.display = 'none';
+                document.getElementById('frm_especialidades').style.display = 'none';
+                document.getElementById('frm_niveles').style.display = 'none';
+                document.getElementById('frm_grados').style.display = 'none';
+                document.getElementById('frm_grupos').style.display = 'none';
+                document.getElementById('frm_turnos').style.display = 'block';
+                document.getElementById('frm_asignaciones').style.display = 'none';
+                document.getElementById('frm_materias').style.display = 'none';
+            }else if(opcion==7){
+                document.getElementById('frm_planteles').style.display = 'none';
+                document.getElementById('frm_especialidades').style.display = 'none';
+                document.getElementById('frm_niveles').style.display = 'none';
+                document.getElementById('frm_grados').style.display = 'none';
+                document.getElementById('frm_grupos').style.display = 'none';
+                document.getElementById('frm_turnos').style.display = 'none';
+                document.getElementById('frm_asignaciones').style.display = 'block';
+                document.getElementById('frm_materias').style.display = 'none';
+            }else if(opcion==8){
+                document.getElementById('frm_planteles').style.display = 'none';
+                document.getElementById('frm_especialidades').style.display = 'none';
+                document.getElementById('frm_niveles').style.display = 'none';
+                document.getElementById('frm_grados').style.display = 'none';
+                document.getElementById('frm_grupos').style.display = 'none';
+                document.getElementById('frm_turnos').style.display = 'none';
+                document.getElementById('frm_asignaciones').style.display = 'none';
+                document.getElementById('frm_materias').style.display = 'block';
+            }
+        });
+
+    </script>
     
   </body>
 </html>

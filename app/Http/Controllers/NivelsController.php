@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use DB;
+use Auth;
+use App\Nivel;
+use App\Plantel;
+use Illuminate\Http\Request;
 use App\Http\Requests\createNivel;
 use App\Http\Requests\updateNivel;
-use App\Nivel;
-use Auth;
-use DB;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class NivelsController extends Controller
 {
@@ -219,10 +220,11 @@ class NivelsController extends Controller
         }
     }
 
-    public function listaNiveles()
+    public function listaNiveles(Request $request)
     {
-        $niveles = Nivel::orderBy('plantel_id')->orderBy('especialidad_id')->get();
-        return view('combinacionClientes.reportes.cargas', compact('niveles'));
+        $niveles = Nivel::whereIn('plantel_id',$request->input('plantel'))->orderBy('plantel_id')->orderBy('especialidad_id')->get();
+        $plantels=Plantel::pluck('razon','id');
+        return view('combinacionClientes.reportes.cargas', compact('niveles','plantels'));
     }
 
     public function apiListaXplantelYespecialidad(Request $request)

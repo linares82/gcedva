@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use DB;
+use Auth;
+use App\Turno;
+use App\Plantel;
+use App\PlanPago;
+use Illuminate\Http\Request;
 use App\Http\Requests\createTurno;
 use App\Http\Requests\updateTurno;
-use App\PlanPago;
-use App\Turno;
-use Auth;
-use DB;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class TurnosController extends Controller
 {
@@ -181,10 +182,11 @@ class TurnosController extends Controller
         }
     }
 
-    public function listaTurnos()
+    public function listaTurnos(Request $request)
     {
-        $turnos = Turno::orderBy('plantel_id')->orderBy('especialidad_id')->orderBy('nivel_id')->orderBy('grado_id')->get();
-        return view('combinacionClientes.reportes.cargas', compact('turnos'));
+        $turnos = Turno::whereIn('plantel_id',$request->input('plantel'))->orderBy('plantel_id')->orderBy('especialidad_id')->orderBy('nivel_id')->orderBy('grado_id')->get();
+        $plantels=Plantel::pluck('razon','id');
+        return view('combinacionClientes.reportes.cargas', compact('turnos','plantels'));
     }
 
     public function apiListaXplantelYespecialidadYgradoYnivel(Request $request)

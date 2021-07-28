@@ -351,7 +351,8 @@ class PlantelsController extends Controller
 	public function listaPlanteles()
 	{
 		$planteles = Plantel::all();
-		return view('combinacionClientes.reportes.cargas', compact('planteles'));
+		$plantels=Plantel::pluck('razon','id');
+		return view('combinacionClientes.reportes.cargas', compact('planteles','plantels'));
 	}
 
 	public function apiLista()

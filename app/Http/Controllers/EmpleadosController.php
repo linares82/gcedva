@@ -758,7 +758,8 @@ class EmpleadosController extends Controller
                 array_push($plantels, $p->id);
             }
         $planteles=Plantel::whereIn('id',$plantels)->pluck('razon','id');
-        return view('empleados.reportes.listadoColaboradores',compact('planteles'));
+        return view('empleados.reportes.listadoColaboradores',compact('planteles'))
+        ->with('list', Empleado::getListFromAllRelationApps());
     }
 
 
@@ -773,6 +774,7 @@ class EmpleadosController extends Controller
         ->join('plantels as pla','pla.id','empleados.plantel_id')
         ->join('st_empleados as stc','stc.id','empleados.st_empleado_id')
         ->whereIn('plantel_id', $datos['plantel_f']) 
+        ->whereIn('st_empleado_id', $datos['estatus_f']) 
         ->get();
         return view('empleados.reportes.listadoColaboradoresR',compact('empleados'));
     }

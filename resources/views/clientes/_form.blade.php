@@ -1598,6 +1598,31 @@ $(document).on("click", "#btn_archivo", function (e) {
     });
 })    
 $(document).ready(function() {
+    
+    deshabilitarNombre();
+    function deshabilitarNombre(){
+        @if(isset($cliente))
+        @if($cliente->st_cliente_id<>0 and $cliente->st_cliente_id<>1 and $cliente->st_cliente_id<>22)
+        @if($cliente->seguimiento->st_seguimiento_id==2 or $cliente->seguimiento->st_seguimiento_id==6 or 
+        $cliente->seguimiento->st_seguimiento_id==7)
+        
+        $("#nombre-field").prop('readonly', true);
+        $("#nombre2-field").prop('readonly', true);
+        $("#ape_paterno-field").prop('readonly', true);
+        $("#ape_materno-field").prop('readonly', true);
+
+        @endif
+        @endif
+        @endif
+    }
+
+    @permission('clientes.editarNombre')
+        $("#nombre-field").prop('readonly', false);
+        $("#nombre2-field").prop('readonly', false);
+        $("#ape_paterno-field").prop('readonly', false);
+        $("#ape_materno-field").prop('readonly', false);
+    @endpermission
+
     $("#btnConsultaPlan").click(function(event) {
         event.preventDefault();
         var plan=0;
