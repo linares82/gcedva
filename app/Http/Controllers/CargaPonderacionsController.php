@@ -19,6 +19,7 @@ use App\Http\Requests\updateCargaPonderacion;
 use App\Http\Requests\createCargaPonderacion;
 use DB;
 use Log;
+use Response;
 
 class CargaPonderacionsController extends Controller
 {
@@ -212,11 +213,16 @@ class CargaPonderacionsController extends Controller
             }
         }
         //dd($carga_ponderacions_borrar);
+        $currentDate=Date('Y-m-d');
 
-        $calificacion_ponderacions_borrar = CalificacionPonderacion::whereIn('carga_ponderacion_id', $carga_ponderacions_borrar)
-            //->where('calificacion_parcial', 0)
-            ->whereNull('deleted_at')
+        $calificacion_ponderacions_borrar = CalificacionPonderacion::select('calificacion_ponderacions.*')->join('calificacions as cali','cali.id','calificacion_ponderacions.calificacion_id')
+            ->join('hacademicas as h','h.id','cali.hacademica_id')
+            ->join('lectivos as l','l.id','h.lectivo_id')
+            ->whereIn('carga_ponderacion_id', $carga_ponderacions_borrar)
+            ->whereDate('l.fin', '>=', $currentDate) 
+            ->whereNull('calificacion_ponderacions.deleted_at')
             ->get();
+        
         //dd($calificacion_ponderacions_borrar->toArray());
         if ($calificacion_ponderacions_borrar->count() > 0) {
             foreach ($calificacion_ponderacions_borrar as $calificacion_ponderacion_borrar) {
@@ -360,5 +366,27 @@ class CargaPonderacionsController extends Controller
             //dd($r);
             return $r;
         }
+    }
+
+    public function descargarCsv(){
+        $registros=CargaPonderacion::select('id','name','porcentaje','padre_id','tiene_detalle')->where('bnd_activo',1)->get();
+        //dd($registros->toArray());
+        $encabezado=array('ID','NOMBRE','PORCENTAJE','PADRE','TIENE DETALLE');
+        $handle = fopen('ponderaciones.csv', 'w');
+        fputcsv($handle, $encabezado, ',');
+        foreach ($registros as $registro) {
+            fputcsv($handle, $registro->toArray(), ',');
+        }
+        fclose($handle);
+        $headers = array(
+            'Content-Type' => 'text/csv',
+            'charset'=>'utf-8',
+            'lang'=>'es'
+        );
+        return Response::download('ponderaciones.csv', 'ponderaciones.csv', $headers);
+    }
+
+    public function cargarCsv(){
+        
     }
 }

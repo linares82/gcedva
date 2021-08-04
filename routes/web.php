@@ -5914,6 +5914,22 @@ Route::get(
         'uses' => 'CargaPonderacionsController@create'
     )
 )->middleware('auth');
+Route::get(
+    '/cargaPonderacions/cargarCsv',
+    array(
+        'as' => 'cargaPonderacions.cargarCsv',
+        'middleware' => 'permission:cargaPonderacions.create',
+        'uses' => 'CargaPonderacionsController@cargarCsv'
+    )
+)->middleware('auth');
+Route::get(
+    '/cargaPonderacions/descargarCsv',
+    array(
+        'as' => 'cargaPonderacions.descargarCsv',
+        //'middleware' => 'permission:cargaPonderacions.create',
+        'uses' => 'CargaPonderacionsController@descargarCsv'
+    )
+)->middleware('auth');
 Route::post(
     'cargaPonderacions/store',
     array(
