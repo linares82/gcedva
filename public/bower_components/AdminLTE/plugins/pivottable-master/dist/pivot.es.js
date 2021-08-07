@@ -73,7 +73,7 @@
         "Tabla con barras": $.pivotUtilities.renderers["Table Barchart"],
         "Heatmap": $.pivotUtilities.renderers["Heatmap"],
         "Heatmap por filas": $.pivotUtilities.renderers["Row Heatmap"],
-        "Heatmap por columnas": $.pivotUtilities.renderers["Col Heatmap"]
+        "Heatmap por columnas": $.pivotUtilities.renderers["Col Heatmap"],
 		"Gráfica de Barras": $.pivotUtilities.renderers["Bar chart"],
       }
     };

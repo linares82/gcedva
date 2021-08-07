@@ -27,7 +27,7 @@ class ReportesCedvaController extends Controller
 {
     public function reportesCedva()
     {
-        $reportes = array(1 => 'Activos', 2 => 'Adeudos', 3 => 'Pagados', 4 => 'Inscritos Por Ciclo');
+        $reportes = array(1 => 'Activos', 2 => 'Adeudos', 3 => 'Pagados', 4 => 'Inscritos Por Ciclo', 5 => 'Pagos con Baja');
         $empleado = Empleado::where('user_id', Auth::user()->id)->first();
         $planteles = $empleado->plantels->pluck('razon', 'id');
         $estatus = array('0' => 'Todos', '1' => 'Vigente', '2'=>"Baja");
@@ -379,6 +379,31 @@ class ReportesCedvaController extends Controller
                 $plantel = Plantel::find($datos['plantel_f']);
                 //dd($registros->toArray());
                 return view('reportesCedva.inscritosPorCiclo', compact('registros', 'plantel', 'datos'));
+                break;
+            case 5:
+                $registros=Caja::select('c.id as cliente_id','c.nombre','c.nombre2','c.ape_paterno','c.ape_materno',
+                'cln.total','p.created_at as fecha_creacion','p.fecha as fecha_pago','cajas.consecutivo','pla.razon',
+                'stc.name as st_cliente','cc.name as concepto','p.monto','fp.name as forma_pago')
+                ->join('caja_lns as cln','cln.caja_id','cajas.id')
+                ->join('caja_conceptos as cc','cc.id','cln.caja_concepto_id')
+                ->join('clientes as c','c.id','cajas.cliente_id')
+                ->join('st_clientes as stc','stc.id','c.st_cliente_id')
+                ->join('pagos as p','p.caja_id','cajas.id')
+                ->join('forma_pagos as fp','fp.id','p.forma_pago_id')
+                ->join('plantels as pla','pla.id','cajas.plantel_id')
+                ->where('cajas.st_caja_id',1)
+                ->where('c.st_cliente_id',3)
+                ->whereIn('cajas.plantel_id', $datos['plantel_f'])
+                ->whereDate('p.fecha','>=',$datos['fecha_f'])
+                ->whereDate('p.fecha','<=',$datos['fecha_t'])
+                ->whereNull('p.deleted_at')
+                ->whereNull('cajas.deleted_at')
+                ->whereNull('cln.deleted_at')
+                ->orderBy('pla.razon')
+                ->orderBy('cc.name')
+                ->distinct()
+                ->get();
+                return view('reportesCedva.pagosBajas', compact('registros'));
                 break;
         }
     }

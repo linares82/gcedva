@@ -2,36 +2,37 @@
 
 namespace App\Http\Controllers;
 
-use App\Adeudo;
-use App\AsignacionTarea;
-use App\Asunto;
-use App\Aviso;
+use DB;
+use PDF;
+use Auth;
 use App\Caja;
+use App\Aviso;
+use App\Tarea;
+use App\Adeudo;
+use App\Asunto;
 use App\CajaLn;
 use App\Cliente;
-use App\CombinacionCliente;
-use App\Empleado;
-use App\Especialidad;
-use App\Hactividade;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\createSeguimiento;
-use App\Http\Requests\updateAsignacionTarea;
-use App\Http\Requests\updateSeguimiento;
-use App\Inscripcion;
 use App\Lectivo;
 use App\Plantel;
+use App\StTarea;
+use App\Empleado;
+use App\HEstatus;
+use Carbon\Carbon;
+use App\Hactividade;
+use App\Inscripcion;
 use App\PromoPlanLn;
 use App\Seguimiento;
-use App\SmsPredefinido;
+use App\Especialidad;
 use App\StSeguimiento;
-use App\StTarea;
-use App\Tarea;
-use Auth;
-use Carbon\Carbon;
-use DB;
+use App\SmsPredefinido;
+use App\AsignacionTarea;
+use App\CombinacionCliente;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
-use PDF;
+use App\Http\Requests\createSeguimiento;
+use App\Http\Requests\updateSeguimiento;
+use App\Http\Requests\updateAsignacionTarea;
 
 class SeguimientosController extends Controller
 {
@@ -631,17 +632,37 @@ class SeguimientosController extends Controller
             //->where('has.asunto', '=', 'Cambio estatus ')
             ->where('has.fecha', '>=', $input['fecha_f'])
             ->where('has.fecha', '<=', $input['fecha_t']);
-        if (isset($input['plantel_f']) and $input['plantel_t']) {
-            $ds_actividades_aux->where('c.plantel_id', '>=', $input['plantel_f'])
-                ->where('c.plantel_id', '<=', $input['plantel_t']);
+        if (isset($input['plantel_f'])) {
+            $ds_actividades_aux->whereIn('c.plantel_id', $input['plantel_f']);
         } else {
             $ds_actividades_aux->wherein('c.plantel_id', $planteles);
         }
+        if($input['detalle_f']<>""){
+            $ds_actividades_aux->where('has.detalle', $input['detalle_f']);
+        }
 
         $ds_actividades = $ds_actividades_aux->distinct()->get();
-        //dd($ds_actividades->toArray());
+        //dd($ds_actividades->toJson());
+
+        $hestatus=HEstatus::select('c.id as cliente','p.razon','h_estatuses.estatus','h_estatuses.fecha',
+        'u.name as usuario',DB::raw('concat(e.nombre," ",e.ape_paterno," ",e.ape_materno) as colaborador'))
+        ->join('clientes as c','c.id','h_estatuses.cliente_id')
+        ->join('empleados as e','e.id','c.empleado_id')
+        ->join('plantels as p','p.id','c.plantel_id')
+        ->join('st_clientes as stc','stc.id','c.st_cliente_id')
+        ->join('users as u','u.id','c.usu_alta_id')
+        ->where('h_estatuses.cliente_id','>',0)
+        ->where('h_estatuses.fecha','<=', $input['fecha_t'])
+        ->where('h_estatuses.fecha','>=', $input['fecha_f'])
+        ->whereIn('c.plantel_id', $input['plantel_f'])
+        ->orderBy('p.razon'
+        )->get();
+
+        //dd($hestatus);
+
         return view('seguimientos.reportes.analitica_actividadesr')
-            ->with('actividades', json_encode($ds_actividades));
+            ->with('actividades', json_encode($ds_actividades))
+            ->with('cambios_estatus', json_encode($hestatus));
     }
 
     public function analitica_actividadesf()

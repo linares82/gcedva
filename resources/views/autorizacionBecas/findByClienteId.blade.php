@@ -73,7 +73,11 @@
                     <tbody>
                         @foreach($autorizacionBecas as $autorizacionBeca)
                             <tr>
-                                <td>{{$autorizacionBeca->id}}</td>
+                                <td>
+                                    
+                                    {{$autorizacionBeca->id}}
+                                    
+                                </td>
                                 <td>{{$autorizacionBeca->cliente->plantel->razon}}</td>
                                 <td>{{$autorizacionBeca->solicitud}}</td>
                                 <td>{{$autorizacionBeca->lectivo->name}}</td>
