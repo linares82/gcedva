@@ -95,8 +95,9 @@
 
     $('#concepto_f-field').select2();
 
+    
     @permission('maestro.detalleTodo')
-        let opciones=new Array(5);
+    let opciones=new Array(5);    
         opciones[1]= 'Ambos';
         opciones[2]='Pagos';
         opciones[3]='Adeudos';

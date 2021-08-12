@@ -61,9 +61,9 @@
                             </div>
                             -->
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_hacademica_id_cont">HACADEMICA_ID</label>
+                                <label class="col-sm-2 control-label" for="q_hacademicas.cliente_id_lt">CLIENTE ID</label>
                                 <div class=" col-sm-9">
-                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['hacademica_id_cont']) ?: '' }}" name="q[hacademica_id_cont]" id="q_hacademica_id_cont" />
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['hacademicas.cliente_id_lt']) ?: '' }}" name="q[hacademicas.cliente_id_lt]" id="q_hacademicas.cliente_id_lt" />
                                 </div>
                             </div>
                                                     <!--
@@ -197,13 +197,11 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('plantillas.getOrderLink', ['column' => 'hacademica_id', 'title' => 'HACADEMICA_ID'])</th>
-                        <th>@include('plantillas.getOrderLink', ['column' => 'examen_id', 'title' => 'EXAMEN_ID'])</th>
+                            <th>CLIENTE</th>
+                            <th>MATERIA</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'tpo_examen_id', 'title' => 'T. EXAMEN'])</th>
                         <th>@include('plantillas.getOrderLink', ['column' => 'calificacion', 'title' => 'CALIFICACION'])</th>
-                        <th>@include('plantillas.getOrderLink', ['column' => 'fecha', 'title' => 'FECHA'])</th>
-                        <th>@include('plantillas.getOrderLink', ['column' => 'reporte_bnd', 'title' => 'REPORTE_BND'])</th>
-                        <th>@include('plantillas.getOrderLink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
-                        <th>@include('plantillas.getOrderLink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'lectivo_id', 'title' => 'LECTIVO'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
@@ -211,14 +209,17 @@
                     <tbody>
                         @foreach($calificacions as $calificacion)
                             <tr>
-                                <td><a href="{{ route('calificacions.show', $calificacion->id) }}">{{$calificacion->id}}</a></td>
-                                <td>{{$calificacion->hacademica_id}}</td>
-                    <td>{{$calificacion->examen_id}}</td>
-                    <td>{{$calificacion->calificacion}}</td>
-                    <td>{{$calificacion->fecha}}</td>
-                    <td>{{$calificacion->reporte_bnd}}</td>
-                    <td>{{$calificacion->usu_alta_id}}</td>
-                    <td>{{$calificacion->usu_mod_id}}</td>
+                                <td><a href="">{{$calificacion->id}}</a></td>
+                                <td>{{$calificacion->hacademica->cliente->id}}
+                                    {{$calificacion->hacademica->cliente->nombre}} 
+                                    {{$calificacion->hacademica->cliente->nombre2}}
+                                    {{$calificacion->hacademica->cliente->ape_paterno}}
+                                    {{$calificacion->hacademica->cliente->materno}}</td>
+                                <td>{{$calificacion->hacademica->materia->name}}</td>
+                                <td>{{$calificacion->tpoExamen->name}}</td>
+                                <td>{{$calificacion->calificacion}}</td>
+                                <td>{{$calificacion->lectivo->name}}</td>
+                                
                                 <td class="text-right">
                                     @permission('calificacions.edit')
                                     <a class="btn btn-xs btn-primary" href="{{ route('calificacions.duplicate', $calificacion->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>

@@ -41,6 +41,10 @@ class Calificacion extends Model
 	public function tpoExamen() {
 		return $this->belongsTo('App\TpoExamen');
 	}// end
+
+	public function lectivo() {
+		return $this->belongsTo('App\Lectivo');
+	}// end
         
     protected $dates = ['deleted_at'];
 

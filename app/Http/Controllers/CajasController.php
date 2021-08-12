@@ -279,10 +279,15 @@ class CajasController extends Controller
     public function buscarCliente(Request $request)
     {
         $empleado = Empleado::where('user_id', Auth::user()->id)->first();
+        $planteles = array();
+        foreach ($empleado->plantels as $p) {
+            array_push($planteles, $p->id);
+        }
+        
         $empleados = Empleado::select(DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name, id'))->pluck('name', 'id');
 
         //dd($empleados);
-        $cliente = Cliente::find($request['cliente_id']);
+        $cliente = Cliente::where('id',$request['cliente_id'])->whereIn('plantel_id',$planteles)->first();
         if (!is_object($cliente)) {
             Session::flash('msj', 'Cliente no existe');
             return view('cajas.caja', compact('empleados'))->with('list', Caja::getListFromAllRelationApps())->with('list1', CajaLn::getListFromAllRelationApps());
@@ -310,10 +315,7 @@ class CajasController extends Controller
         //dd(Caja::getListFromAllRelationApps());
         //dd("fil");
         $permiso_caja_buscarCliente = Auth::user()->can('permiso_caja_buscarCliente');
-        $planteles = array();
-        foreach ($empleado->plantels as $p) {
-            array_push($planteles, $p->id);
-        }
+        
         //dd($planteles);
         //dd($cliente->plantel_id);
         //dd(array_search($cliente->plantel_id, $planteles) <> false);
@@ -346,10 +348,16 @@ class CajasController extends Controller
         $data = $request->all();
         //dd($data);
         $empleado = Empleado::where('user_id', '=', Auth::user()->id)->first();
+        $planteles = array();
+        foreach ($empleado->plantels as $p) {
+            //dd($p->id);
+            array_push($planteles, $p->id);
+        }
+        
         $empleados = Empleado::select(DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name, id'))->pluck('name', 'id');
         //dd($empleado->toArray());
         //$caja = Caja::where('consecutivo', '=', $data['consecutivo'])->where('plantel_id', '=', $data['plantel_id'])->where('st_caja_id', '<>', 2)->first();
-        $caja_aux = Caja::where('consecutivo', '=', $data['consecutivo'])->where('st_caja_id', '<>', 2);
+        $caja_aux = Caja::where('consecutivo', '=', $data['consecutivo'])->where('st_caja_id', '<>', 2)->whereIn('plantel_id',$planteles);
         if (isset($data['plantel_id']) and $data['plantel_id'] <> 0) {
             $caja_aux->where('plantel_id', $data['plantel_id']);
         }
@@ -377,11 +385,7 @@ class CajasController extends Controller
         $permiso_caja_buscarVenta = Auth::user()->can('permiso_caja_buscarVenta');
         //dd($permiso_caja_buscarVenta);
 
-        $planteles = array();
-        foreach ($empleado->plantels as $p) {
-            //dd($p->id);
-            array_push($planteles, $p->id);
-        }
+        
         if (is_object($caja) and array_search($caja->plantel_id, $planteles) <> false) { //$caja->plantel_id == $empleado->plantel_id) {
             //Apliacion de recargos
             if ($caja->st_caja_id == 0 and $caja->descuento == 0) {
@@ -603,6 +607,7 @@ class CajasController extends Controller
                                 if ($fecha_caja->greaterThanOrEqualTo($fecha_adeudo)) {
 
                                     $dias = $fecha_caja->diffInDays($fecha_adeudo);
+                                    //dd($dias);
                                     if ($fecha_caja < $fecha_adeudo) {
                                         $dias = $dias * -1;
                                     }
@@ -1017,7 +1022,7 @@ class CajasController extends Controller
         $caja = Caja::find($data['caja_id']);
         if ($caja->st_caja_id == 0) {
             $caja->recargo = 0;
-            $caja->total = $caja->recargo + $caja->subtotal;
+            $caja->total =  $caja->recargo + $caja->subtotal - $caja->descuento;
             $caja->save();
         }
 

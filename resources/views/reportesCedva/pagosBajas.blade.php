@@ -78,6 +78,7 @@
                 <th>Forma Pago</th>
                 <th>F. Creacion Pago</th>
                 <th>F. Pago</th>
+                <th>F. Baja</th>
             </tr>
         </thead>
         <tbody>
@@ -107,6 +108,7 @@
                 <td>{{$detalle['forma_pago']}}</td>
                 <td>{{$detalle['fecha_creacion']}}</td>
                 <td>{{$detalle['fecha_pago']}}</td>
+                <td>{{$detalle['fecha_baja']}}</td>
                 </tr>
                 
                 

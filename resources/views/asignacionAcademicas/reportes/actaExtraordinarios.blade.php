@@ -105,7 +105,7 @@
     function getCmbLectivos() {
         //var $example = $("#especialidad_id-field").select2();
         $.ajax({
-            url: '{{ route("lectivos.lectivoXplantelXasignacion") }}',
+            url: '{{ route("lectivos.lectivoOXplantelXasignacion") }}',
             type: 'GET',
             data: "plantel_id=" + $('#plantel_f-field option:selected').val() + "&lectivo_id=" + $('#lectivo_f-field option:selected').val() + "",
             dataType: 'json',

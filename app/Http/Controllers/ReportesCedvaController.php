@@ -381,9 +381,68 @@ class ReportesCedvaController extends Controller
                 return view('reportesCedva.inscritosPorCiclo', compact('registros', 'plantel', 'datos'));
                 break;
             case 5:
+                $bajas=HistoriaCliente::select('historia_clientes.id as historia_cliente','c.id as cliente_id',
+                'c.nombre','c.nombre2','c.ape_paterno','c.ape_materno',
+                'stc.name as st_cliente', 'historia_clientes.updated_at as fecha_baja')
+                ->whereDate('historia_clientes.updated_at','>=',$datos['fecha_f'])
+                ->join('clientes as c','c.id','historia_clientes.cliente_id')
+                ->join('st_clientes as stc','stc.id','c.st_cliente_id')
+                ->whereDate('historia_clientes.updated_at','<=',$datos['fecha_t'])
+                ->where('historia_clientes.evento_cliente_id',2)
+                ->where('historia_clientes.st_historia_cliente_id',2)
+                ->where('historia_clientes.reactivado',0)
+                ->where('c.st_cliente_id',3)
+                ->get();
+
+                $registros=array();
+
+                foreach($bajas as $baja){
+                    $ultimo_adeudo_pagado=Adeudo::select(
+                    'cln.total','p.created_at as fecha_creacion','p.fecha as fecha_pago','cajas.consecutivo','pla.razon',
+                    'cc.name as concepto','p.monto','fp.name as forma_pago')
+                    ->join('caja_conceptos as cc','cc.id','adeudos.caja_concepto_id')
+                    ->join('cajas as cajas','cajas.id','adeudos.caja_id')
+                    ->join('caja_lns as cln','cln.caja_id','cajas.id')
+                    ->join('pagos as p','p.caja_id','cajas.id')
+                    ->join('forma_pagos as fp','fp.id','p.forma_pago_id')
+                    ->join('plantels as pla','pla.id','cajas.plantel_id')
+                    ->join('historia_clientes as hc','hc.cliente_id','adeudos.cliente_id')
+                    ->where('adeudos.cliente_id',$baja->cliente_id)
+                    ->whereIn('cajas.plantel_id', $datos['plantel_f'])
+                    ->orderBy('adeudos.id','desc')
+                    ->take(1)
+                    ->first();
+
+                    if(!is_null($ultimo_adeudo_pagado)){
+                        array_push($registros, array('cliente_id'=>$baja->cliente_id,
+                        'nombre'=>$baja->nombre,
+                        'nombre2'=>$baja->nombre2,
+                        'ape_paterno'=>$baja->ape_paterno,
+                        'ape_materno'=>$baja->ape_materno,
+                        'fecha_baja'=>$baja->fecha_baja,
+                        'st_cliente'=>$baja->st_cliente,
+                        'cln.total'=>$ultimo_adeudo_pagado->total,
+                        'fecha_creacion'=>$ultimo_adeudo_pagado->fecha_creacion,
+                        'fecha_pago'=>$ultimo_adeudo_pagado->fecha_pago,
+                        'consecutivo'=>$ultimo_adeudo_pagado->consecutivo,
+                        'razon'=>$ultimo_adeudo_pagado->razon,
+                        'concepto'=>$ultimo_adeudo_pagado->concepto,
+                        'monto'=>$ultimo_adeudo_pagado->monto,
+                        'forma_pago'=>$ultimo_adeudo_pagado->forma_pago,
+                        'fecha_baja'=>$baja->fecha_baja
+                        ));    
+                    }
+
+                    
+                }
+
+                //dd($registros);
+                               
+
+                /*
                 $registros=Caja::select('c.id as cliente_id','c.nombre','c.nombre2','c.ape_paterno','c.ape_materno',
                 'cln.total','p.created_at as fecha_creacion','p.fecha as fecha_pago','cajas.consecutivo','pla.razon',
-                'stc.name as st_cliente','cc.name as concepto','p.monto','fp.name as forma_pago')
+                'stc.name as st_cliente','cc.name as concepto','p.monto','fp.name as forma_pago', 'hc.updated_at as fecha_baja')
                 ->join('caja_lns as cln','cln.caja_id','cajas.id')
                 ->join('caja_conceptos as cc','cc.id','cln.caja_concepto_id')
                 ->join('clientes as c','c.id','cajas.cliente_id')
@@ -391,6 +450,9 @@ class ReportesCedvaController extends Controller
                 ->join('pagos as p','p.caja_id','cajas.id')
                 ->join('forma_pagos as fp','fp.id','p.forma_pago_id')
                 ->join('plantels as pla','pla.id','cajas.plantel_id')
+                ->join('historia_clientes as hc','hc.cliente_id','c.id')
+                ->whereIn('hc.id',$bajas)
+                ->whereColumn('hc.updated_at','<=','p.fecha')
                 ->where('cajas.st_caja_id',1)
                 ->where('c.st_cliente_id',3)
                 ->whereIn('cajas.plantel_id', $datos['plantel_f'])
@@ -402,7 +464,10 @@ class ReportesCedvaController extends Controller
                 ->orderBy('pla.razon')
                 ->orderBy('cc.name')
                 ->distinct()
+                ->groupBy()
                 ->get();
+                */
+		//dd($registros->toArray());
                 return view('reportesCedva.pagosBajas', compact('registros'));
                 break;
         }

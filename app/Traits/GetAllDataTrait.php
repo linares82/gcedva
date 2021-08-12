@@ -143,7 +143,7 @@ trait GetAllDataTrait
         }
         //dd(Auth::user()->can('IfiltroClientesXPlantel'));
         //dd();
-        $empleado = Empleado::where('user_id', '=', Auth::user()->id)->first();
+        $empleado = Empleado::where('user_id', '=', Auth::user()->id)->where('st_empleado_id','<>',3)->first();
         $planteles = array();
         foreach ($empleado->plantels as $p) {
             //dd($p->id);
@@ -158,8 +158,10 @@ trait GetAllDataTrait
                 $myQuery = $myQuery->whereIn('asignacion_academicas.plantel_id', $planteles);
                 //}
                 $user = Auth::user()->id;
-                $empleado = Empleado::where('user_id', $user)->first();
+                $empleado = Empleado::where('user_id', $user)->where('st_empleado_id','<>',3)->first();
+                
                 if ($empleado->puesto_id == 3) {
+                    
                     $myQuery = $myQuery->where('asignacion_academicas.empleado_id', '=', $empleado->id);
                 }
                 //dd($request);

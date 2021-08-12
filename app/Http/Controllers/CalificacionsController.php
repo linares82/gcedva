@@ -23,6 +23,7 @@ class CalificacionsController extends Controller {
 	public function index(Request $request)
 	{
 		$calificacions = Calificacion::getAllData($request);
+		
 
 		return view('calificacions.index', compact('calificacions'));
 	}
@@ -180,5 +181,31 @@ class CalificacionsController extends Controller {
 			return json_encode(array('totalExtras'=>$totalExtras));
 		}
 		
+	}
+
+	public function examenesExtraordinarios(){
+		$planteles=Plantel::pluck('razon','id');
+		return view('calificacions.reportes.examenes',compact('planteles'));
+	}
+
+	public function examenesExtraordinariosR(Request $request){
+		$datos=$request->all();
+		$registros_aux=Calificacion::query();
+		$registros_aux->select('c.id as cliente_id','c.nombre','c.nombre2','c.ape_paterno','c.ape_materno',
+		'm.name as materia','l.name as lectivo','calificacions.fecha','p.razon as plantel','calificacions.calificacion',
+		'm.id as materia_id','l.id as lectivo_id')
+			->join('lectivos as l','l.id','calificacions.lectivo_id')
+			->join('hacademicas as h','h.id','calificacions.hacademica_id')
+			->join('plantels as p','p.id','h.plantel_id')
+			->join('materia as m','m.id','h.materium_id')
+			->join('clientes as c','c.id','h.cliente_id')
+			->where('calificacions.tpo_examen_id',2)
+			->where('h.plantel_id',$datos['plantel_f'])
+			->whereDate('calificacions.fecha','>=', $datos['fecha_f'])
+			->whereDate('calificacions.fecha','<=', $datos['fecha_t']);
+		$registros=$registros_aux->get();
+
+		//dd($registros->toArray());
+		return view('calificacions.reportes.examenesR', compact('registros'));
 	}
 }
