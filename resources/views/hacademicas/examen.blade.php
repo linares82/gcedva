@@ -235,10 +235,11 @@
 
     function getCmbLectivos() {
         //var $example = $("#especialidad_id-field").select2();
+        //url: '{{ route("lectivos.lectivoOXplantelXasignacion") }}',
         $.ajax({
-            url: '{{ route("lectivos.lectivoOXplantelXasignacion") }}',
+            url: '{{ route("lectivos.lectivoXplantelXasignacion") }}',
             type: 'GET',
-            data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&lectivo_id=" + $('#lectivo_id-field option:selected').val() + "",
+            data: "plantel_id=" + $('#plantel_id-field').val() + "&lectivo_id=" + $('#lectivo_id-field option:selected').val() + "",
             dataType: 'json',
             beforeSend: function () {
                 $("#loading_plantel").show();

@@ -5792,8 +5792,24 @@ Route::get(
     'calificacions/index',
     array(
         'as' => 'calificacions.index',
-        //'middleware' => 'permission:calificacions.index',
+        'middleware' => 'permission:calificacions.index',
         'uses' => 'CalificacionsController@index'
+    )
+)->middleware('auth');
+Route::get(
+    '/calificacions/edit/{id}',
+    array(
+        'as' => 'calificacions.edit',
+        'middleware' => 'permission:calificacions.edit',
+        'uses' => 'CalificacionsController@edit'
+    )
+)->middleware('auth');
+Route::post(
+    '/calificacions/update/{id}',
+    array(
+        'as' => 'calificacions.update',
+        'middleware' => 'permission:calificacions.update',
+        'uses' => 'CalificacionsController@update'
     )
 )->middleware('auth');
 Route::get(

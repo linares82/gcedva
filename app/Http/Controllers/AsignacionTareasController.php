@@ -1,14 +1,15 @@
 <?php namespace App\Http\Controllers;
 
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
-
-use App\AsignacionTarea;
-use App\Cliente;
-use Illuminate\Http\Request;
 use Auth;
-use App\Http\Requests\updateAsignacionTarea;
+use App\Cliente;
+
+use App\Empleado;
+use App\Http\Requests;
+use App\AsignacionTarea;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\createAsignacionTarea;
+use App\Http\Requests\updateAsignacionTarea;
 
 class AsignacionTareasController extends Controller {
 
@@ -61,9 +62,14 @@ class AsignacionTareasController extends Controller {
 		$input = $request->all();
 		$input['usu_alta_id']=Auth::user()->id;
 		$input['usu_mod_id']=Auth::user()->id;
+		$empleado=Empleado::where('user_id',Auth::user()->id)->first();
+		$input['empleado_id']=$empleado->id;
 		//dd($input);
 		//create data
 		$a=AsignacionTarea::create( $input );
+		$cliente=Cliente::find($a->cliente_id);
+		$cliente->empleado_id=$empleado->id;
+		$cliente->save();
 		
 		return redirect()->route('seguimientos.show', $a->cliente_id)->with('message', 'Registro Creado.');
 	}

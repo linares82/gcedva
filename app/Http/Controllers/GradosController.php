@@ -196,6 +196,7 @@ class GradosController extends Controller
                 ->select('g.id', 'g.name')
                 ->where('c.id', '=', $cliente)
                 ->where('g.id', '>', '0')
+                ->whereNull('i.deleted_at')
                 ->get();
             //dd($r);
             if (isset($grado) and $grado <> 0) {

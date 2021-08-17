@@ -382,7 +382,7 @@ class ReportesCedvaController extends Controller
                 break;
             case 5:
                 $bajas=HistoriaCliente::select('historia_clientes.id as historia_cliente','c.id as cliente_id',
-                'c.nombre','c.nombre2','c.ape_paterno','c.ape_materno',
+                'c.nombre','c.nombre2','c.ape_paterno','c.ape_materno','c.tel_fijo','c.tel_cel','c.calle','c.no_exterior',
                 'stc.name as st_cliente', 'historia_clientes.updated_at as fecha_baja')
                 ->whereDate('historia_clientes.updated_at','>=',$datos['fecha_f'])
                 ->join('clientes as c','c.id','historia_clientes.cliente_id')
@@ -419,6 +419,10 @@ class ReportesCedvaController extends Controller
                         'nombre2'=>$baja->nombre2,
                         'ape_paterno'=>$baja->ape_paterno,
                         'ape_materno'=>$baja->ape_materno,
+                        'tel_fijo'=>$baja->tel_fijo,
+                        'tel_cel'=>$baja->tel_cel,
+                        'calle'=>$baja->calle,
+                        'no_exterior'=>$baja->no_exterior,
                         'fecha_baja'=>$baja->fecha_baja,
                         'st_cliente'=>$baja->st_cliente,
                         'cln.total'=>$ultimo_adeudo_pagado->total,

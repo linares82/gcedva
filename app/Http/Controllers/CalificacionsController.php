@@ -5,6 +5,7 @@ use App\Cliente;
 
 use App\Lectivo;
 use App\Plantel;
+use App\TpoExamen;
 use App\Inscripcion;
 use App\Calificacion;
 use App\Http\Requests;
@@ -22,10 +23,34 @@ class CalificacionsController extends Controller {
 	 */
 	public function index(Request $request)
 	{
-		$calificacions = Calificacion::getAllData($request);
+		//$calificacions = Calificacion::getAllData($request);
+		$datos=$request->q;
+		//dd($datos['hacademicas.cliente_id_lt']);
+		$calificacions_aux= Calificacion::query();
+		$calificacions_aux->join('hacademicas as h','h.id','calificacions.hacademica_id');
+		$calificacions_aux->join('clientes as c','c.id','h.cliente_id');
+		$calificacions_aux->join('materia as m','m.id','h.materium_id');
+		$calificacions_aux->join('tpo_examens as te','te.id','calificacions.tpo_examen_id');
+		$calificacions_aux->join('lectivos as l','l.id','calificacions.lectivo_id');
+		$calificacions_aux->select('calificacions.id','c.id as cliente_id','c.nombre','c.nombre2',
+								   'c.ape_paterno','c.ape_materno','m.name as materia','te.name as tpo_examen',
+								'calificacions.calificacion','l.name as lectivo');
+		$calificacions_aux->orderBy('c.id','desc');
+		$calificacions_aux->orderBy('h.id','desc');
+		if(isset($datos['hacademicas.cliente_id_lt'])){
+			$calificacions_aux->where('h.cliente_id',$datos['hacademicas.cliente_id_lt']);
+		}
+		if(isset($datos['tpo_examen_id_lt']) and $datos['tpo_examen_id_lt']>0){
+			$calificacions_aux->where('calificacions.tpo_examen_id',$datos['tpo_examen_id_lt']);
+		}
 		
+		$calificacions_aux->whereNull('h.deleted_at');
+		$calificacions=$calificacions_aux->paginate(50);
+		//dd($calificacions->toArray());
 
-		return view('calificacions.index', compact('calificacions'));
+		$tiposExamen=TpoExamen::pluck('name','id');
+
+		return view('calificacions.index', compact('calificacions','tiposExamen'));
 	}
 
 	/**
@@ -79,7 +104,8 @@ class CalificacionsController extends Controller {
 	public function edit($id, Calificacion $calificacion)
 	{
 		$calificacion=$calificacion->find($id);
-		return view('calificacions.edit', compact('calificacion'))
+		$lectivos=Lectivo::pluck('name','id');
+		return view('calificacions.edit', compact('calificacion','lectivos'))
 			->with( 'list', Calificacion::getListFromAllRelationApps() );
 	}
 

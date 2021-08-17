@@ -349,6 +349,7 @@ class CajasController extends Controller
         //dd($data);
         $empleado = Empleado::where('user_id', '=', Auth::user()->id)->first();
         $planteles = array();
+        array_push($planteles, 0);
         foreach ($empleado->plantels as $p) {
             //dd($p->id);
             array_push($planteles, $p->id);
@@ -385,7 +386,7 @@ class CajasController extends Controller
         $permiso_caja_buscarVenta = Auth::user()->can('permiso_caja_buscarVenta');
         //dd($permiso_caja_buscarVenta);
 
-        
+        //dd(array_search($caja->plantel_id, $planteles));
         if (is_object($caja) and array_search($caja->plantel_id, $planteles) <> false) { //$caja->plantel_id == $empleado->plantel_id) {
             //Apliacion de recargos
             if ($caja->st_caja_id == 0 and $caja->descuento == 0) {

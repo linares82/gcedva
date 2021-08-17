@@ -71,6 +71,9 @@
                 <th>A. Paterno</th>
                 <th>A. Materno</th>
                 <th>Nombre</th>
+                <th>Tel.</th>
+                <th>Celular</th>
+                <th>Calle y No.</th>
                 <th>Estatus Cliente</th>
                 <th>Concepto</th>
                 <th>Pago Recibido</th>
@@ -101,6 +104,9 @@
                 <td>{{ $detalle['ape_paterno'] }}</td>
                 <td>{{ $detalle['ape_materno'] }}</td>
                 <td>{{ $detalle['nombre'] }} {{ $detalle['nombre2'] }}  </td>
+                <td>{{ $detalle['tel_fijo'] }}</td>
+                <td>{{ $detalle['tel_cel'] }}</td>
+                <td>{{ $detalle['calle'] }} {{ $detalle['no_exterior'] }}</td>
                 <td>{{ $detalle['st_cliente'] }}</td>
                 <td>{{$detalle['concepto']}}</td>
                 <td>{{ $detalle['monto'] }}</td>

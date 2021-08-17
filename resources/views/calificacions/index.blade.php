@@ -61,7 +61,7 @@
                             </div>
                             -->
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_hacademicas.cliente_id_lt">CLIENTE ID</label>
+                                <label class="col-sm-2 control-label" for="q_hacademicas.cliente_id_lt">CLIENTE</label>
                                 <div class=" col-sm-9">
                                     <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['hacademicas.cliente_id_lt']) ?: '' }}" name="q[hacademicas.cliente_id_lt]" id="q_hacademicas.cliente_id_lt" />
                                 </div>
@@ -79,101 +79,13 @@
                             </div>
                             -->
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_examen_id_cont">EXAMEN_ID</label>
+                                <label class="col-sm-2 control-label" for="q_examen_id_cont">TIPO EXAMEN</label>
                                 <div class=" col-sm-9">
-                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['examen_id_cont']) ?: '' }}" name="q[examen_id_cont]" id="q_examen_id_cont" />
+                                    {!! Form::select("st_cliente_id", $tiposExamen, "{{ @(Request::input('q')['tpo_examen_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[tpo_examen_id_lt]", "id"=>"q_tpo_examen_id_lt", "style"=>"width:100%;" )) !!}
                                 </div>
                             </div>
-                                                    <!--
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_calificacion_gt">CALIFICACION</label>
-                                <div class=" col-sm-4">
-                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['calificacion_gt']) ?: '' }}" name="q[calificacion_gt]" id="q_calificacion_gt" />
-                                </div>
-                                <div class=" col-sm-1 text-center"> - </div>
-                                <div class=" col-sm-4">
-                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['calificacion_lt']) ?: '' }}" name="q[calificacion_lt]" id="q_calificacion_lt" />
-                                </div>
-                            </div>
-                            -->
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_calificacion_cont">CALIFICACION</label>
-                                <div class=" col-sm-9">
-                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['calificacion_cont']) ?: '' }}" name="q[calificacion_cont]" id="q_calificacion_cont" />
-                                </div>
-                            </div>
-                                                    <!--
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_fecha_gt">FECHA</label>
-                                <div class=" col-sm-4">
-                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['fecha_gt']) ?: '' }}" name="q[fecha_gt]" id="q_fecha_gt" />
-                                </div>
-                                <div class=" col-sm-1 text-center"> - </div>
-                                <div class=" col-sm-4">
-                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['fecha_lt']) ?: '' }}" name="q[fecha_lt]" id="q_fecha_lt" />
-                                </div>
-                            </div>
-                            -->
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_fecha_cont">FECHA</label>
-                                <div class=" col-sm-9">
-                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['fecha_cont']) ?: '' }}" name="q[fecha_cont]" id="q_fecha_cont" />
-                                </div>
-                            </div>
-                                                    <!--
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_reporte_bnd_gt">REPORTE_BND</label>
-                                <div class=" col-sm-4">
-                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['reporte_bnd_gt']) ?: '' }}" name="q[reporte_bnd_gt]" id="q_reporte_bnd_gt" />
-                                </div>
-                                <div class=" col-sm-1 text-center"> - </div>
-                                <div class=" col-sm-4">
-                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['reporte_bnd_lt']) ?: '' }}" name="q[reporte_bnd_lt]" id="q_reporte_bnd_lt" />
-                                </div>
-                            </div>
-                            -->
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_reporte_bnd_cont">REPORTE_BND</label>
-                                <div class=" col-sm-9">
-                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['reporte_bnd_cont']) ?: '' }}" name="q[reporte_bnd_cont]" id="q_reporte_bnd_cont" />
-                                </div>
-                            </div>
-                                                    <!--
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_usu_alta_id_gt">USU_ALTA_ID</label>
-                                <div class=" col-sm-4">
-                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['usu_alta_id_gt']) ?: '' }}" name="q[usu_alta_id_gt]" id="q_usu_alta_id_gt" />
-                                </div>
-                                <div class=" col-sm-1 text-center"> - </div>
-                                <div class=" col-sm-4">
-                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['usu_alta_id_lt']) ?: '' }}" name="q[usu_alta_id_lt]" id="q_usu_alta_id_lt" />
-                                </div>
-                            </div>
-                            -->
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_usu_alta_id_cont">USU_ALTA_ID</label>
-                                <div class=" col-sm-9">
-                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['usu_alta_id_cont']) ?: '' }}" name="q[usu_alta_id_cont]" id="q_usu_alta_id_cont" />
-                                </div>
-                            </div>
-                                                    <!--
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_usu_mod_id_gt">USU_MOD_ID</label>
-                                <div class=" col-sm-4">
-                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['usu_mod_id_gt']) ?: '' }}" name="q[usu_mod_id_gt]" id="q_usu_mod_id_gt" />
-                                </div>
-                                <div class=" col-sm-1 text-center"> - </div>
-                                <div class=" col-sm-4">
-                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['usu_mod_id_lt']) ?: '' }}" name="q[usu_mod_id_lt]" id="q_usu_mod_id_lt" />
-                                </div>
-                            </div>
-                            -->
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_usu_mod_id_cont">USU_MOD_ID</label>
-                                <div class=" col-sm-9">
-                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['usu_mod_id_cont']) ?: '' }}" name="q[usu_mod_id_cont]" id="q_usu_mod_id_cont" />
-                                </div>
-                            </div>
+                                                
+                            
 
                             <div class="form-group">
                                 <div class="col-sm-10 col-sm-offset-2">
@@ -196,12 +108,12 @@
                 <table class="table table-condensed table-striped">
                     <thead>
                         <tr>
-                            <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
+                            <th>ID</th>
                             <th>CLIENTE</th>
                             <th>MATERIA</th>
-                        <th>@include('plantillas.getOrderLink', ['column' => 'tpo_examen_id', 'title' => 'T. EXAMEN'])</th>
-                        <th>@include('plantillas.getOrderLink', ['column' => 'calificacion', 'title' => 'CALIFICACION'])</th>
-                        <th>@include('plantillas.getOrderLink', ['column' => 'lectivo_id', 'title' => 'LECTIVO'])</th>
+                            <th>T. EXAMEN</th>
+                            <th>CALIFICACION</th>
+                            <th>LECTIVO</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
@@ -209,21 +121,19 @@
                     <tbody>
                         @foreach($calificacions as $calificacion)
                             <tr>
-                                <td><a href="">{{$calificacion->id}}</a></td>
-                                <td>{{$calificacion->hacademica->cliente->id}}
-                                    {{$calificacion->hacademica->cliente->nombre}} 
-                                    {{$calificacion->hacademica->cliente->nombre2}}
-                                    {{$calificacion->hacademica->cliente->ape_paterno}}
-                                    {{$calificacion->hacademica->cliente->materno}}</td>
-                                <td>{{$calificacion->hacademica->materia->name}}</td>
-                                <td>{{$calificacion->tpoExamen->name}}</td>
+                                <td><a href="{{ route('calificacions.edit', $calificacion->id) }}">{{$calificacion->id}}</a></td>
+                                <td>{{$calificacion->cliente_id}}
+                                    {{$calificacion->nombre}} 
+                                    {{$calificacion->nombre2}}
+                                    {{$calificacion->ape_paterno}}
+                                    {{$calificacion->materno}}</td>
+                                <td>{{$calificacion->materia}}</td>
+                                <td>{{$calificacion->tpo_examen}}</td>
                                 <td>{{$calificacion->calificacion}}</td>
-                                <td>{{$calificacion->lectivo->name}}</td>
+                                <td>{{$calificacion->lectivo}}</td>
                                 
                                 <td class="text-right">
-                                    @permission('calificacions.edit')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('calificacions.duplicate', $calificacion->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>
-                                    @endpermission
+                                    
                                     @permission('calificacions.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('calificacions.edit', $calificacion->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
                                     @endpermission

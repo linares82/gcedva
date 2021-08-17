@@ -7,7 +7,6 @@
 	<ol class="breadcrumb">
 	    <li><a href="{{ route('home') }}"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></a></li>
 	    <li><a href="{{ route('calificacions.index') }}">@yield('calificacionsAppTitle')</a></li>
-	    <li><a href="{{ route('calificacions.show', $calificacion->id) }}">{{ $calificacion->id }}</a></li>
 	    <li class="active">Editar</li>
 	</ol>
 
