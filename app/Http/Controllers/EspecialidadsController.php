@@ -127,9 +127,13 @@ class EspecialidadsController extends Controller
     public function destroy($id, Especialidad $especialidad)
     {
         $especialidad = $especialidad->find($id);
-        $especialidad->delete();
-
-        return redirect()->route('especialidads.index')->with('message', 'Registro Borrado.');
+        if($especialidad->combinacionClientes->count==0){
+            $especialidad->delete();
+            return redirect()->route('especialidads.index')->with('message', 'Registro Borrado.');
+        }
+        
+        return redirect()->route('especialidads.index')->with('message', 'Registro en uso, no se pudo borrar.');
+        
     }
 
     public function getCmbEspecialidad(Request $request)
@@ -258,6 +262,15 @@ class EspecialidadsController extends Controller
 
             $final = array();
             $r2 = DB::table('especialidads as e')
+                ->join('hacademicas as h','h.especialidad_id','=','e.id')
+                ->select('e.id', 'e.name')
+                ->where('e.plantel_id', '=', $plantel)
+                ->where('h.grupo_id', '=', $grupo)
+                ->where('e.id', '>', '0')
+                ->whereNull('e.deleted_at')
+                ->distinct()
+                ->whereNull('h.deleted_at');
+            /*$r2 = DB::table('especialidads as e')
                 ->join('inscripcions as i','i.especialidad_id','=','e.id')
                 ->select('e.id', 'e.name')
                 ->where('e.plantel_id', '=', $plantel)
@@ -266,6 +279,7 @@ class EspecialidadsController extends Controller
                 ->whereNull('e.deleted_at')
                 ->distinct()
                 ->whereNull('i.deleted_at');
+                */
             //->get();
 
             $r = DB::table('especialidads as e')

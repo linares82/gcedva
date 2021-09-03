@@ -98,9 +98,8 @@
 @push('scripts')
   <script type="text/javascript">
     $(document).ready(function() {
-        
-        $('#plantel_f-field').change(function(){
-            
+        getCmbLectivo();
+        $('#plantel_f-field').change(function(){            
             getCmbLectivo();
         }); 
         $('#especialidad_f-field').change(function(){

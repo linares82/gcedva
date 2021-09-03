@@ -127,9 +127,12 @@ class TurnosController extends Controller
     public function destroy($id, Turno $turno)
     {
         $turno = $turno->find($id);
-        $turno->delete();
-
-        return redirect()->route('turnos.index')->with('message', 'Registro Borrado.');
+        if($turno->combinacionClientes->count()==0){
+            $turno->delete();    
+            return redirect()->route('turnos.index')->with('message', 'Registro Borrado.');
+        }
+        
+        return redirect()->route('turnos.index')->with('message', 'Registro en uso, no se pude borrar.');
     }
 
     public function getCmbTurno(Request $request)

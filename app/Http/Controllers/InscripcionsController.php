@@ -144,7 +144,7 @@ class InscripcionsController extends Controller
         }*/
 
         $combinacion = \App\CombinacionCliente::find($i->combinacion_cliente_id);
-        if (count($combinacion) > 0) {
+        if (!is_null($combinacion) > 0) {
             $combinacion->plantel_id = $i->plantel_id;
             if ($combinacion->plantel_id != $i->plantel_id) {
                 $cliente = Cliente::find($combinacion->cliente_id);
@@ -369,7 +369,7 @@ class InscripcionsController extends Controller
                 $cliente->plantel_id = $inscripcion->plantel_id;
                 $cliente->save();
             }
-            if (count($combinacion) > 0) {
+            if (!is_null($combinacion) > 0) {
                 $combinacion->plantel_id = $inscripcion->plantel_id;
                 $combinacion->especialidad_id = $inscripcion->especialidad_id;
                 $combinacion->nivel_id = $inscripcion->nivel_id;
@@ -896,6 +896,7 @@ class InscripcionsController extends Controller
         //dd($registros->toArray());
         $carga_ponderacion = collect();
         $asignacion = AsignacionAcademica::find($data['asignacion']);
+        $plantel=$asignacion->plantel;
         //                $asignacion=collect();
         foreach ($registros as $registro) {
             //$carga_ponderacion = CargaPonderacion::where('ponderacion_id', $registro->ponderacion)->get();
@@ -936,6 +937,7 @@ class InscripcionsController extends Controller
             'contador' => $contador,
             'data' => $data,
             'total_alumnos' => $total_alumnos,
+            'plantel_id'=>$plantel->id,
         ));
     }
 

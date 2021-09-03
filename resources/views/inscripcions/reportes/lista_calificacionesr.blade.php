@@ -98,98 +98,105 @@
                     $promedio_totales=0;
                 ?>
                 <?php $contador_linea=1; ?>
-                @foreach($registros as $r)
-                    <?php $cantidad_registros++; 
-                    $plantel_id=$r->plantel_id;
-                    ?>
-                @if($grupo0<>$r->grupo)
-                    
-                    <!--<div style="page-break-after:always;"></div>-->
-                        <tr>
-                            <td colspan="6">
-                                
-                                {{$r->denominacion }} <br/>
-                                {{"Grupo: ".$r->grupo}}<br/>
-                                {{"Periodo Lectivo: ".$r->lectivo}}<br/>
-                                {{"Profesor: ".$r->maestro}}<br/>
-                                {{"Grado: ".$r->grado}}<br/>
-                                {{"Materia: ".$r->materia}}<br/>
-                                <?php
-                                $instructor=$r->maestro;
-                                ?>
-                            </td>
-                            <td colspan="{{$contador}}">
-                                <img src="data:image/png;base64, 
-                                {!! base64_encode(QrCode::format('png')->size(100)->generate('Asignacion:'.$asignacion->id.', Alumnos Inscritos:'.$total_alumnos.', Maestro:'.$r->maestro)) !!} ">
-                                <img src="{{ asset('/storage/especialidads/'.$r->logo) }}" alt="Sin logo" height="80px" ></img>
-                            </td>
-                            <td></td><td></td>
-                        </tr>
-                        <tr>
-                            <th></th>
-                        <th class="altura"><strong>NO.</strong></th>    
-                        <th class="altura"><strong>Nombre(s)</strong></th>
-                        <th class="altura"><strong>A. Paterno</strong></th>
-                        <th class="altura"><strong>A. Materno</strong></th>
-                        
-                        @foreach($carga_ponderacions_enc as $carga_ponderacion_enc)
+                
+                @if($registros->count()>0)
+                    @foreach($registros as $r)
+                        <?php $cantidad_registros++; 
+                        $plantel_id=$r->plantel_id;
+                        ?>
+                        @if($grupo0<>$r->grupo)
                             
-                            <th class=""><strong >{{$carga_ponderacion_enc->name}}<br/>{{$carga_ponderacion_enc->porcentaje}}</strong></th>
-                            
-                        @endforeach
-                        <th class="altura"><strong>Final</strong></th>
-                        <th class="altura"><strong>Extraordinario</strong></th>
-                        <th class="altura" width=150px><strong>Firma</strong></th>
-                        </tr>
-                        <?php $grupo0=$r->grupo; ?>
-                @endif
-                        
-                            <tr>
-                                <td>{{$contador_linea++}}</td>
-                                <td>{{ $r->cliente }}</td>
-                                <td>{{$r->nombre." ".$r->nombre2}}</td><td>{{$r->ape_paterno}}</td><td>{{$r->ape_materno}}</td>
-                                <?php
-                                    /*$fechas=\App\AsistenciaR::select('fecha')
-                                            ->where('asignacion_academica_id',$r->asignacion)
-                                            ->where('cliente_id',$r->cliente)
-                                            ->whereNotIn('cliente_id',[0,2])
-                                            ->get();
-                                     * */
-                                     $calificacion=\App\Calificacion::where('hacademica_id',$r->hacademica)
-                                                                                    ->where('tpo_examen_id',1)
-                                                                                    ->first();
-                                     $extra=\App\Calificacion::where('hacademica_id',$r->hacademica)
-                                                                                    ->where('tpo_examen_id',2)
-                                                                                    ->first();                                               
-                                     $marcador_extra_impreso=0;
-                                     
-                                     
-                                ?>
+                            <!--<div style="page-break-after:always;"></div>-->
+                                <tr>
+                                    <td colspan="6">
+                                        
+                                        {{$r->denominacion }} <br/>
+                                        {{"Grupo: ".$r->grupo}}<br/>
+                                        {{"Periodo Lectivo: ".$r->lectivo}}<br/>
+                                        {{"Profesor: ".$r->maestro}}<br/>
+                                        {{"Grado: ".$r->grado}}<br/>
+                                        {{"Materia: ".$r->materia}}<br/>
+                                        <?php
+                                        $instructor=$r->maestro;
+                                        ?>
+                                    </td>
+                                    <td colspan="{{$contador}}">
+                                        <img src="data:image/png;base64, 
+                                        {!! base64_encode(QrCode::format('png')->size(100)->generate('Asignacion:'.$asignacion->id.', Alumnos Inscritos:'.$total_alumnos.', Maestro:'.$r->maestro)) !!} ">
+                                        <img src="{{ asset('/storage/especialidads/'.$r->logo) }}" alt="Sin logo" height="80px" ></img>
+                                    </td>
+                                    <td></td><td></td>
+                                </tr>
+                                <tr>
+                                    <th></th>
+                                <th class="altura"><strong>NO.</strong></th>    
+                                <th class="altura"><strong>Nombre(s)</strong></th>
+                                <th class="altura"><strong>A. Paterno</strong></th>
+                                <th class="altura"><strong>A. Materno</strong></th>
                                 
                                 @foreach($carga_ponderacions_enc as $carga_ponderacion_enc)
-                                            @foreach($calificacion->calificacionPonderacions as $calificacionPonderacion)
-                                                @if($carga_ponderacion_enc->id == $calificacionPonderacion->carga_ponderacion_id)
-                                                <td class="centrar_texto">{{$calificacionPonderacion->calificacion_parcial}}</td>
-                                                <?php 
-                                                if(!isset($promedios[$calificacionPonderacion->carga_ponderacion_id])){
-                                                    $promedios[$calificacionPonderacion->carga_ponderacion_id]=0;                                            
-                                                }
-                                                $promedios[$calificacionPonderacion->carga_ponderacion_id] = $promedios[$calificacionPonderacion->carga_ponderacion_id]+$calificacionPonderacion->calificacion_parcial;                                         
-                                                ?>
-                                                @endif
-                                            @endforeach
+                                    
+                                    <th class=""><strong >{{$carga_ponderacion_enc->name}}<br/>{{$carga_ponderacion_enc->porcentaje}}</strong></th>
+                                    
                                 @endforeach
-                                <td class="centrar_texto">{{$calificacion->calificacion}}</td>
-                                @if(is_object($extra))
-                                    <td class="centrar_texto">{{$extra->calificacion}}</td>                    
-                                @else
-                                    <td class="centrar_texto">N/A</td>
-                                @endif
-                                <td height=40px></td>
-                                <?php $promedio_totales=$promedio_totales+$calificacion->calificacion;?>
-                            </tr>
+                                <th class="altura"><strong>Final</strong></th>
+                                <th class="altura"><strong>Extraordinario</strong></th>
+                                <th class="altura" width=150px><strong>Firma</strong></th>
+                                </tr>
+                                <?php $grupo0=$r->grupo; ?>
+                        @endif
                             
-                @endforeach
+                                <tr>
+                                    <td>{{$contador_linea++}}</td>
+                                    <td>{{ $r->cliente }}</td>
+                                    <td>{{$r->nombre." ".$r->nombre2}}</td><td>{{$r->ape_paterno}}</td><td>{{$r->ape_materno}}</td>
+                                    <?php
+                                        /*$fechas=\App\AsistenciaR::select('fecha')
+                                                ->where('asignacion_academica_id',$r->asignacion)
+                                                ->where('cliente_id',$r->cliente)
+                                                ->whereNotIn('cliente_id',[0,2])
+                                                ->get();
+                                        * */
+                                        $calificacion=\App\Calificacion::where('hacademica_id',$r->hacademica)
+                                                                                        ->where('tpo_examen_id',1)
+                                                                                        ->first();
+                                        $extra=\App\Calificacion::where('hacademica_id',$r->hacademica)
+                                                                                        ->where('tpo_examen_id',2)
+                                                                                        ->first();                                               
+                                        $marcador_extra_impreso=0;
+                                        
+                                        
+                                    ?>
+                                    
+                                    @foreach($carga_ponderacions_enc as $carga_ponderacion_enc)
+                                                @foreach($calificacion->calificacionPonderacions as $calificacionPonderacion)
+                                                    @if($carga_ponderacion_enc->id == $calificacionPonderacion->carga_ponderacion_id)
+                                                    <td class="centrar_texto">{{$calificacionPonderacion->calificacion_parcial}}</td>
+                                                    <?php 
+                                                    if(!isset($promedios[$calificacionPonderacion->carga_ponderacion_id])){
+                                                        $promedios[$calificacionPonderacion->carga_ponderacion_id]=0;                                            
+                                                    }
+                                                    $promedios[$calificacionPonderacion->carga_ponderacion_id] = $promedios[$calificacionPonderacion->carga_ponderacion_id]+$calificacionPonderacion->calificacion_parcial;                                         
+                                                    ?>
+                                                    @endif
+                                                @endforeach
+                                    @endforeach
+                                    <td class="centrar_texto">{{$calificacion->calificacion}}</td>
+                                    @if(is_object($extra))
+                                        <td class="centrar_texto">{{$extra->calificacion}}</td>                    
+                                    @else
+                                        <td class="centrar_texto">N/A</td>
+                                    @endif
+                                    <td height=40px></td>
+                                    <?php $promedio_totales=$promedio_totales+$calificacion->calificacion;?>
+                                </tr>
+                                
+                    @endforeach
+                @else
+                    @php
+                        echo "Sin registros";
+                    @endphp
+                @endif
                 
                 <tr>
                     <td></td><td></td><td></td><td></td><td> <?php //dd($promedios); ?> </td>
@@ -209,6 +216,7 @@
             <br/>
             <br/>
             <br/>
+            @if($registros->count()>0)
             <table class='blueTable'>
                 <tr class='td1'><td></td><td></td><td></td><td></td><td></td></tr>
                 <?php 
@@ -217,6 +225,7 @@
                 <tr><td class='tdw'>{{$instructor}}</td><td></td><td class='tdw'>Sello del Plantel</td><td></td><td>{{$plantel->director->nombre}} {{$plantel->director->ape_paterno}} {{$plantel->director->ape_materno}}</td></tr>
                 <tr><td>Instructor Titular</td><td></td><td></td><td></td><td class='tdw'>Firma de Director:</td></tr>
             </table>
+            @endif
         </div>
         
         <script type="text/php">

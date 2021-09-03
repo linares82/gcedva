@@ -43,7 +43,7 @@ class CalificacionsController extends Controller {
 		if(isset($datos['tpo_examen_id_lt']) and $datos['tpo_examen_id_lt']>0){
 			$calificacions_aux->where('calificacions.tpo_examen_id',$datos['tpo_examen_id_lt']);
 		}
-		
+		$calificacions_aux->where('calificacions.tpo_examen_id',2);
 		$calificacions_aux->whereNull('h.deleted_at');
 		$calificacions=$calificacions_aux->paginate(50);
 		//dd($calificacions->toArray());

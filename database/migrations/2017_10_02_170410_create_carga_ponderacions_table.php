@@ -15,7 +15,7 @@ class CreateCargaPonderacionsTable extends Migration {
             $table->increments('id');
             $table->integer('ponderacion_id')->unsigned();
             $table->string('name');
-            $table->decimal('porcentaje');
+            $table->decimal('porcentaje',7,3);
             $table->integer('usu_alta_id')->unsigned();
             $table->integer('usu_mod_id')->unsigned();
             $table->timestamps();

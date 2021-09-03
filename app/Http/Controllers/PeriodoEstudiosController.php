@@ -465,6 +465,50 @@ class PeriodoEstudiosController extends Controller
 
 
         //dd($datos);
+        $cliente_base = Hacademica::select(
+            'hacademicas.plantel_id',
+            'p.razon',
+            'hacademicas.especialidad_id',
+            'esp.name as especialidad',
+            'hacademicas.nivel_id',
+            'n.name as nivel',
+            'hacademicas.grado_id',
+            'g.name as grado',
+            'hacademicas.grupo_id',
+            'gru.name as grupo',
+            'hacademicas.lectivo_id',
+            'l.name as lectivo',
+            'cliente_id'
+        )
+            ->join('plantels as p', 'p.id', '=', 'hacademicas.plantel_id')
+            ->join('especialidads as esp', 'esp.id', '=', 'hacademicas.especialidad_id')
+            ->join('nivels as n', 'n.id', '=', 'hacademicas.nivel_id')
+            ->join('grados as g', 'g.id', '=', 'hacademicas.grado_id')
+            ->join('grupos as gru', 'gru.id', '=', 'hacademicas.grupo_id')
+            ->join('lectivos as l', 'l.id', '=', 'hacademicas.lectivo_id')
+            ->where('hacademicas.plantel_id', $datos['plantel_f'])
+            ->where('hacademicas.especialidad_id', $datos['especialidad_f'])
+            ->where('hacademicas.nivel_id', $datos['nivel_f'])
+            ->where('hacademicas.grado_id', $datos['grado_f'])
+            ->where('hacademicas.lectivo_id', $datos['lectivo_f'])
+            ->where('hacademicas.grupo_id', $datos['grupo_f'])
+            ->whereNull('hacademicas.deleted_at')
+            ->groupBy('hacademicas.plantel_id')
+            ->groupBy('p.razon')
+            ->groupBy('hacademicas.especialidad_id')
+            ->groupBy('esp.name')
+            ->groupBy('hacademicas.nivel_id')
+            ->groupBy('n.name')
+            ->groupBy('hacademicas.grado_id')
+            ->groupBy('g.name')
+            ->groupBy('hacademicas.grupo_id')
+            ->groupBy('gru.name')
+            ->groupBy('hacademicas.lectivo_id')
+            ->groupBy('l.name')
+            ->groupBy('cliente_id')
+            ->distinct()
+            ->first();
+        /*
         $cliente_base = Inscripcion::select(
             'inscripcions.plantel_id',
             'p.razon',
@@ -508,6 +552,7 @@ class PeriodoEstudiosController extends Controller
             ->groupBy('cliente_id')
             ->distinct()
             ->first();
+        */ 
             //dd($cliente_base);
 
         $periodos_parametro = Hacademica::select('pe.id', 'pe.name as periodo_estudio')
@@ -574,6 +619,10 @@ class PeriodoEstudiosController extends Controller
             ->join('materium_periodos as mp', 'mp.periodo_estudio_id', '=', 'periodo_estudios.id')
             ->join('materia as m', 'm.id', '=', 'mp.materium_id')
             ->whereIn('periodo_estudios.id', $periodos_parametro)
+            ->where('periodo_estudios.plantel_id', $datos['plantel_f'])
+            ->where('periodo_estudios.especialidad_id', $datos['especialidad_f'])
+            ->where('periodo_estudios.nivel_id', $datos['nivel_f'])
+            ->where('periodo_estudios.grado_id', $datos['grado_f'])
             ->orderBy('periodo_estudios.orden')
             ->orderBy('m.id')
             ->get();
@@ -587,6 +636,10 @@ class PeriodoEstudiosController extends Controller
             ->join('materium_periodos as mp', 'mp.periodo_estudio_id', '=', 'periodo_estudios.id')
             ->join('materia as m', 'm.id', '=', 'mp.materium_id')
             ->whereIn('periodo_estudios.id', $periodos_parametro)
+            ->where('periodo_estudios.plantel_id', $datos['plantel_f'])
+            ->where('periodo_estudios.especialidad_id', $datos['especialidad_f'])
+            ->where('periodo_estudios.nivel_id', $datos['nivel_f'])
+            ->where('periodo_estudios.grado_id', $datos['grado_f'])
             ->orderBy('periodo_estudios.orden')
             ->groupBy('periodo_estudios.name')
             ->groupBy('mp.periodo_estudio_id')
@@ -708,7 +761,7 @@ class PeriodoEstudiosController extends Controller
 
         $resultado = array();
         foreach ($periodosEstudio as $periodoEstudio) {
-            $clientes = Hacademica::select(
+            /*$clientes = Hacademica::select(
                 'c.id',
                 'c.matricula',
                 'c.nombre',
@@ -736,6 +789,37 @@ class PeriodoEstudiosController extends Controller
                 ->orderBy('c.nombre')
                 ->orderBy('c.nombre2')
                 ->get();
+                */
+                $clientes = Hacademica::select(
+                    'c.id',
+                    'c.matricula',
+                    'c.nombre',
+                    'c.nombre2',
+                    'c.ape_paterno',
+                    'c.ape_materno'
+                )
+                    ->join('clientes as c', 'c.id', '=', 'hacademicas.cliente_id')
+                    //->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
+                    ->join('grupos as g', 'g.id', '=', 'hacademicas.grupo_id')
+                    ->join('grupo_periodo_estudios as gpe', 'gpe.grupo_id', '=', 'g.id')
+                    ->join('materia as m','m.id','hacademicas.materium_id')
+                    ->join('materium_periodos as mp','mp.materium_id','m.id')
+                    //->join('periodo_estudios as pe','pe.id','mp.periodo_estudio_id')
+                    ->where('hacademicas.plantel_id', $datos['plantel_f'])
+                    //->where('hacademicas.especialidad_id', $datos['especialidad_f'])
+                    //->where('hacademicas.nivel_id', $datos['nivel_f'])
+                    //->where('hacademicas.grado_id', $datos['grado_f'])
+                    ->where('hacademicas.lectivo_id', $datos['lectivo_f'])
+                    ->where('hacademicas.grupo_id', $datos['grupo_f'])
+                    ->where('gpe.periodo_estudio_id', $periodoEstudio->id)
+                    //->whereNull('i.deleted_at')
+                    ->whereNull('hacademicas.deleted_at')
+                    ->distinct()
+                    ->orderBy('c.ape_paterno')
+                    ->orderBy('c.ape_materno')
+                    ->orderBy('c.nombre')
+                    ->orderBy('c.nombre2')
+                    ->get();
             $registros=$this->armaTabla($clientes, $periodoEstudio);
             if(count($registros)>2){
                 array_push($resultado,$registros);

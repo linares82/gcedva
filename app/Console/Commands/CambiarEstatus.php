@@ -25,7 +25,7 @@ class CambiarEstatus extends Command
      *
      * @var string
      */
-    protected $description = 'Estatus 4 (En proceso) cambia a estatus 1 (Pendiente) despues de 20 dias.';
+    protected $description = 'Estatus 4 (En proceso) cambia a estatus 1 (Pendiente) despues de 5 dias.';
 
     /**
      * Create a new command instance.
@@ -50,7 +50,7 @@ class CambiarEstatus extends Command
         ->whereNull('deleted_at')
         ->get();
         //dd($rs->toArray());
-        Log::info('Id seguimiento con estatus cambiado despues de 20 dias de la ultima actividad');
+        Log::info('Id seguimiento con estatus cambiado despues de 5 dias de la ultima actividad');
         foreach($rs as $r){
             $ultima_actividad=DB::table('hactividades')
             ->where('seguimiento_id', '=', $r->id)
@@ -61,7 +61,7 @@ class CambiarEstatus extends Command
                 $hoy = Carbon::now();
                 $fecha = Carbon::parse($ultima_actividad->fecha);
                 $dif=$hoy->diffInDays($fecha);
-                if($dif>20){
+                if($dif>5){
                     //Log::info('seguimiento_id:'.$ultima_actividad->seguimiento_id);
                     Log::info('seguimiento_id:'.$ultima_actividad->seguimiento_id." - fecha: ".$ultima_actividad->fecha);
                     //dd($ultima_actividad);

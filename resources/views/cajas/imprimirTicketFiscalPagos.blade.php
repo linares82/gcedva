@@ -114,7 +114,7 @@ if(!is_null($cliente->plantel->matriz_id) and $cliente->plantel->matriz_id>0){
             </td>
             
         </tr>
-        <?php $total=0; ?>
+        <?php $total=0; //dd($caja->cajaLns->toArray()); ?>
         @foreach($caja->cajaLns as $caja_linea)
         
         <tr>
@@ -127,7 +127,7 @@ if(!is_null($cliente->plantel->matriz_id) and $cliente->plantel->matriz_id>0){
                 @if($caja_linea->cajaConcepto->id==1)
                     {{$caja_linea->cajaConcepto->name." (".$caja_linea->adeudo->fecha_pago.")"}}
                 @else
-                    @if($conceptoMensualidad[0]="Mensualidad")
+                    @if($conceptoMensualidad[0]=="Mensualidad")
                         {{ $conceptoMensualidad[1] }}
                     @else
                     {{$caja_linea->cajaConcepto->name}}
@@ -323,7 +323,7 @@ if(!is_null($cliente->plantel->matriz_id) and $cliente->plantel->matriz_id>0){
             @if($caja_linea->cajaConcepto->id==1)
                 {{$caja_linea->cajaConcepto->name." (".$caja_linea->adeudo->fecha_pago.")"}}
             @else
-                @if($conceptoMensualidad[0]="Mensualidad")
+                @if($conceptoMensualidad[0]=="Mensualidad")
                     {{ $conceptoMensualidad[1] }}
                 @else
                 {{$caja_linea->cajaConcepto->name}}

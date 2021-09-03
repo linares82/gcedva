@@ -43,7 +43,7 @@ class updateCliente extends FormRequest
             //'medio_id',
             //'expo',
             //'otro_medio',
-            'empleado_id'=>'required',
+            //'empleado_id'=>'required',
             //'promociones',
             //'promo_cel',
             //'promo_correo'

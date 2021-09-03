@@ -117,7 +117,7 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_
             @if($caja_linea->cajaConcepto->bnd_mensualidad==0)
                 {{$caja_linea->cajaConcepto->name}}
             @else
-                @if($conceptoMensualidad[0]="Mensualidad")
+                @if($conceptoMensualidad[0]=="Mensualidad")
                     {{ $conceptoMensualidad[1] }}
                 @else
                 {{$caja_linea->cajaConcepto->name}}
@@ -324,7 +324,7 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_
             @if($caja_linea->cajaConcepto->bnd_mensualidad==0)
                 {{$caja_linea->cajaConcepto->name}}
             @else
-                @if($conceptoMensualidad[0]="Mensualidad")
+                @if($conceptoMensualidad[0]=="Mensualidad")
                     {{ $conceptoMensualidad[1] }}
                 @else
                 {{$caja_linea->cajaConcepto->name}}

@@ -264,6 +264,7 @@ class GruposController extends Controller
 				->where('aa.plantel_id', '=', $plantel)
 				->where('aa.lectivo_id', '=', $lectivo)
 				->where('g.id', '>', '0')
+				->whereNull('aa.deleted_at')
 				->distinct()
 				->get();
 

@@ -17,7 +17,7 @@ class CreatePromoPlanLnsTable extends Migration {
             $table->integer('plan_pago_ln_id')->unsigned();
             $table->date('fec_inicio')->nullable();
             $table->date('fec_fin')->nullable;
-            $table->float('descuento')->default(0);
+            $table->float('descuento',7,3)->default(0);
             $table->integer('usu_alta_id')->unsigned();
             $table->integer('usu_mod_id')->unsigned();
             $table->timestamps();

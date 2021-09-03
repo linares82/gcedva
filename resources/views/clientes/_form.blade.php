@@ -1958,6 +1958,18 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                             $("#st_cliente_id-field option[value*={{ $key }}]").prop('disabled', true);
                         @endforeach
                         @endpermission
+
+			            @if(isset($cliente) and $cliente->seguimiento->st_seguimiento_id==2)
+                            @foreach($empleados as $key=>$item)
+                                $("#empleado_id-field option[value*={{ $key }}]").prop('disabled', true);
+                            @endforeach
+                        @endif
+
+                        @permission('clientes.cambiarEmpleado')
+                            @foreach($empleados as $key=>$item)
+                                $("#empleado_id-field option[value*={{ $key }}]").prop('disabled', false);
+                            @endforeach
+                        @endpermission
                         
                         collapseTable();
                         $('.header').click(function(){

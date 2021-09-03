@@ -583,6 +583,7 @@ class CajasController extends Controller
                         } catch (Exception $e) {
                             dd($e);
                         }
+                        //dd($caja_ln);
                         //********************************* */
                         //Fin calculo descuento por promocion
                         //********************************* */    
@@ -596,7 +597,7 @@ class CajasController extends Controller
                         //dd($caja_ln);
                         //dd($adeudo->planPagoLn->reglaRecargos);
                         foreach ($adeudo->planPagoLn->reglaRecargos as $regla) {
-                            //dd($regla->toArray())
+                            //dd($regla->toArray());
                             if (($adeudo->bnd_eximir_descuento_regla == 0 or is_null($adeudo->bnd_eximir_descuento_regla)) and
                                 //$adeudo->cajaConcepto->bnd_mensualidad == 1 or
                                 $adeudo->caja_concepto_id <= 26
@@ -627,7 +628,8 @@ class CajasController extends Controller
                                                 //echo $caja_ln['recargo'];
                                             } else {
                                                 if ($adeudo->bnd_eximir_descuento_regla == 0) {
-                                                    $regla_descuento = $caja_ln['total'] * $regla->porcentaje * -1;
+                                                    $regla_descuento = $caja_ln['subtotal'] * $regla->porcentaje * -1;
+                                                    //dd($regla_descuento);
                                                     $caja_ln['descuento'] = $caja_ln['descuento'] + $regla_descuento;
                                                     $caja_ln['total'] = $caja_ln['total'] - $caja_ln['descuento'];
 
@@ -673,6 +675,7 @@ class CajasController extends Controller
                                             } else {
                                                 if ($adeudo->bnd_eximir_descuento_regla == 0) {
                                                     $regla_descuento = $caja_ln['subtotal'] * $regla->porcentaje * -1;
+                                                    //dd($regla_descuento);
                                                     $caja_ln['descuento'] = $caja_ln['descuento'] + $regla_descuento;
                                                     $caja_ln['total'] = $caja_ln['subtotal'] - $caja_ln['descuento'];
 

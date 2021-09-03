@@ -23,6 +23,12 @@
         <li class="active">@yield('nivelsAppTitle')</li>
     </ol>
 
+    @if (session('message'))
+        <div class="alert alert-success">
+            {{ session('message') }}
+        </div>
+    @endif
+
     <div class="">
         <h3>
             <i class="glyphicon glyphicon-align-justify"></i> @yield('nivelsAppTitle')

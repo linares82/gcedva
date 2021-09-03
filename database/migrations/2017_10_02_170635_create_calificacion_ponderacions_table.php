@@ -17,9 +17,9 @@ class CreateCalificacionPonderacionsTable extends Migration
 			$table->increments('id');
 			$table->integer('calificacion_id')->unsigned();
 			$table->integer('carga_ponderacion_id')->unsigned();
-			$table->decimal('calificacion_parcial')->nullable();
-			$table->decimal('calificacion_parcial_calculada')->nullable();
-			$table->decimal('ponderacion');
+			$table->decimal('calificacion_parcial',7,3)->nullable();
+			$table->decimal('calificacion_parcial_calculada',7,3)->nullable();
+			$table->decimal('ponderacion',7,3);
 			$table->integer('usu_alta_id')->unsigned();
 			$table->integer('usu_mod_id')->unsigned();
 			$table->timestamps();

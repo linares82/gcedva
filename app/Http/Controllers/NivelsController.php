@@ -122,9 +122,13 @@ class NivelsController extends Controller
     public function destroy($id, Nivel $nivel)
     {
         $nivel = $nivel->find($id);
-        $nivel->delete();
+        if($nivel->combinacionClientes->count==0){
+            $nivel->delete();
+            return redirect()->route('nivels.index')->with('message', 'Registro Borrado.');
+        }
+        
 
-        return redirect()->route('nivels.index')->with('message', 'Registro Borrado.');
+        return redirect()->route('nivels.index')->with('message', 'Registro en uso, no se pudo Borrar.');
     }
 
     public function getCmbGrados($id = 0)
@@ -186,6 +190,18 @@ class NivelsController extends Controller
 
             $final = array();
             $r = DB::table('nivels as n')
+                ->join('hacademicas as h','h.nivel_id','=','n.id')
+                ->select('n.id', 'n.name')
+                ->where('n.plantel_id', '=', $plantel)
+                ->where('n.especialidad_id', '=', $especialidad)
+                ->where('h.grupo_id', '=', $grupo)
+                ->where('n.id', '>', '0')
+                ->whereNull('n.deleted_at')
+                ->whereNull('h.deleted_at')
+                ->distinct()
+                ->get();
+            /*
+            $r = DB::table('nivels as n')
                 ->join('inscripcions as i','i.nivel_id','=','n.id')
                 ->select('n.id', 'n.name')
                 ->where('n.plantel_id', '=', $plantel)
@@ -196,6 +212,7 @@ class NivelsController extends Controller
                 ->whereNull('i.deleted_at')
                 ->distinct()
                 ->get();
+                */
             //dd($r);
             if (isset($nivel) and $nivel != 0) {
                 foreach ($r as $r1) {

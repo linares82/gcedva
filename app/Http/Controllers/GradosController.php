@@ -136,7 +136,10 @@ class GradosController extends Controller
     public function destroy($id, Grado $grado)
     {
         $grado = $grado->find($id);
-        $grado->delete();
+        if($grado->combinacionClientes->count==0){
+            $grado->delete();
+        }
+        
 
         return redirect()->route('grados.index')->with('message', 'Registro Borrado.');
     }
@@ -299,6 +302,18 @@ class GradosController extends Controller
 
             $final = array();
             $r = DB::table('grados as g')
+            ->join('hacademicas as h','h.grado_id','=','g.id')
+                ->select('g.id', 'g.name')
+                ->where('g.plantel_id', '=', $plantel)
+                ->where('g.especialidad_id', '=', $especialidad)
+                ->where('g.nivel_id', '=', $nivel)
+                ->where('h.grupo_id', '=', $grupo)
+                ->where('g.id', '>', '0')
+                ->whereNull('g.deleted_at')
+                ->whereNull('h.deleted_at')
+                ->distinct()
+                ->get();
+            /*$r = DB::table('grados as g')
             ->join('inscripcions as i','i.grado_id','=','g.id')
                 ->select('g.id', 'g.name')
                 ->where('g.plantel_id', '=', $plantel)
@@ -309,7 +324,7 @@ class GradosController extends Controller
                 ->whereNull('g.deleted_at')
                 ->whereNull('i.deleted_at')
                 ->distinct()
-                ->get();
+                ->get();*/
             //dd($r);
             if (isset($grado) and $grado <> 0) {
                 foreach ($r as $r1) {

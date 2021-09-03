@@ -86,7 +86,7 @@
         show_select_today: 'Hoy',
       });
     $('#plantel_f-field').change(function(){
-        getCmbLectivos();
+        //getCmbLectivos();
     });
     $('#lectivo_f-field').change(function(){
         getCmbGrupos();

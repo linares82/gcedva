@@ -196,7 +196,7 @@
                       //$example.select2("destroy");
                       
                       $('#plantel_id-field').val(data.plantel);
-                      getCmbLectivos();
+                      //getCmbLectivos();
                   }
               });
       });

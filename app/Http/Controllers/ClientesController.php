@@ -402,11 +402,11 @@ class ClientesController extends Controller
             $empleados = Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
                 //->where('plantel_id', '=', $e->plantel_id)
                 ->whereIn('plantel_id', '=', $planteles)
-                ->whereIn('puesto_id', array(1, 2, 3, 4,5,7, 10, 19,22, 23,46))
+                ->whereIn('puesto_id', array(1,2,3,4,5,7,8,10,18,19,22,23,31,33,35,46))
                 ->pluck('name', 'id');
         } else {
             $empleados = Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
-                ->whereIn('puesto_id', array(1, 2, 3, 4,5,7, 10, 19, 22, 23,46))
+                ->whereIn('puesto_id', array(1,2,3,4,5,7,8,10,18,19,22,23,31,33,35,46))
                 ->pluck('name', 'id');
         }
         $empleados = $empleados->reverse();
@@ -637,7 +637,10 @@ class ClientesController extends Controller
         //dd($input);
         //update data
         $cliente = $cliente->find($id);
-        $cantidad_preguntas = $cliente->ccuestionario->ccuestionarioPreguntas->count();
+        //if($cliente->ccuestionario_id>0){
+            $cantidad_preguntas = $cliente->ccuestionario->ccuestionarioPreguntas->count();
+        //}
+        
         //dd($input);
         $cliente->update($input);
 
