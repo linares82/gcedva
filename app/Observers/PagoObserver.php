@@ -74,11 +74,12 @@ class PagoObserver
                 //dd($consecutivo);
                 $cliente = Cliente::where('id', $combinacion->cliente_id)->first();
                 //dd(($grado->seccion != "" or !is_null($grado->seccion)) and ($cliente->matricula == "" or $cliente->matricula == " "));
-                if($cajaLn->caja_concepto_id==1 or 
+                /*if($cajaLn->caja_concepto_id==1 or 
                 $cajaLn->caja_concepto_id==22 or 
                 $cajaLn->caja_concepto_id==23 or 
                 $cajaLn->caja_concepto_id==24 or 
-                $cajaLn->caja_concepto_id==25){
+                $cajaLn->caja_concepto_id==25){*/
+                if($cajaLn->cajaConcepto->bnd_genera_matricula==1){
                     if (($grado->seccion != "" or !is_null($grado->seccion)) and ($cliente->matricula == "" or $cliente->matricula == " ")) {
                         $consecutivo = ConsecutivoMatricula::where('plantel_id', $combinacion->plantel_id)
                             ->where('anio', $fecha->year)

@@ -141,6 +141,7 @@
                         <th>@include('plantillas.getOrderLink', ['column' => 'monto', 'title' => 'MONTO'])</th>
                         <th>@include('plantillas.getOrderLink', ['column' => 'bnd_aplicar_beca', 'title' => 'APLICAR BECA'])</th>
                         <th>@include('plantillas.getOrderLink', ['column' => 'activo', 'title' => 'ACTIVO'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'bnd_genera_matricula', 'title' => 'GENERA MATRICULA'])</th>
                         <th>@include('plantillas.getOrderLink', ['column' => 'uso_factura', 'title' => 'USO FACTURA'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
@@ -159,6 +160,12 @@
                                     @endif
                                 </td>
                                 <td>@if($cajaConcepto->activo==1)
+                                    SI
+                                    @else
+                                    NO
+                                    @endif
+                                </td>
+                                <td>@if($cajaConcepto->bnd_genera_matricula==1)
                                     SI
                                     @else
                                     NO

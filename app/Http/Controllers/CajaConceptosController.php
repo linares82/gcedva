@@ -55,6 +55,11 @@ class CajaConceptosController extends Controller
         } else {
             $input['activo'] = 1;
         }
+        if (!isset($input['bnd_genera_matricula'])) {
+            $input['bnd_genera_matricula'] = 0;
+        } else {
+            $input['bnd_genera_matricula'] = 1;
+        }
         if (!isset($input['bnd_aplicar_beca'])) {
             $input['bnd_aplicar_beca'] = 0;
         } else {
@@ -133,6 +138,11 @@ class CajaConceptosController extends Controller
             $input['activo'] = 0;
         } else {
             $input['activo'] = 1;
+        }
+        if (!isset($input['bnd_genera_matricula'])) {
+            $input['bnd_genera_matricula'] = 0;
+        } else {
+            $input['bnd_genera_matricula'] = 1;
         }
         if (!isset($input['bnd_aplicar_beca'])) {
             $input['bnd_aplicar_beca'] = 0;

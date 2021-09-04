@@ -1789,7 +1789,12 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
               $.ajax({
                   url: '{{ route("grupos.getDisponibles") }}',
                   type: 'GET',
-                  data: "grupo_id=" + $('#grupo_id-editar option:selected').val() ,
+                  data: "plantel_id=" + $('#plantel_id-editar option:selected').val() + 
+                        "&especialidad_id=" + $('#especialidad_id-editar option:selected').val() + 
+                        "&nivel_id=" + $('#nivel_id-editar option:selected').val() + 
+                        "&grado_id=" + $('#grado_id-editar option:selected').val() + 
+                        "&lectivo_id=" + $('#lectivo_id-editar option:selected').val() + 
+                        "&grupo_id=" + $('#grupo_id-editar option:selected').val() + "",
                   //data: "grupo_id=" + migrupo,
                   dataType: 'json',
                   beforeSend : function(){$(".loading3").show();},
@@ -1813,7 +1818,12 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
               $.ajax({
                   url: '{{ route("grupos.getDisponibles") }}',
                   type: 'GET',
-                  data: "grupo_id=" + $('#grupo_id-crear option:selected').val() ,
+                  data: "plantel_id=" + $('#plantel_id-crear option:selected').val() + 
+                        "&especialidad_id=" + $('#especialidad_id-crear option:selected').val() + 
+                        "&nivel_id=" + $('#nivel_id-crear option:selected').val() + 
+                        "&grado_id=" + $('#grado_id-crear option:selected').val() + 
+                        "&lectivo_id=" + $('#lectivo_id-crear option:selected').val() + 
+                        "&grupo_id=" + $('#grupo_id-crear option:selected').val() ,
                   //data: "grupo_id=" + migrupo,
                   dataType: 'json',
                   beforeSend : function(){$(".loading3").show();},

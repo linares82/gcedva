@@ -7,6 +7,7 @@ use Auth;
 
 use App\Grupo;
 use App\Plantel;
+use App\Inscripcion;
 use App\Http\Requests;
 use App\PeriodoEstudio;
 use Illuminate\Http\Request;
@@ -185,8 +186,16 @@ class GruposController extends Controller
 	public function getDisponibles(Request $request)
 	{
 		$r = DB::table('grupos as g')->find($request->input('grupo_id'));
-		//dd($r->registrados);
-		return $r->limite_alumnos - $r->registrados;
+		$alumnosInscritos=Inscripcion::where('plantel_id',$request->input('plantel_id'))
+		->where('especialidad_id',$request->input('especialidad_id'))
+		->where('nivel_id',$request->input('nivel_id'))
+		->where('grado_id',$request->input('grado_id'))
+		->where('lectivo_id',$request->input('lectivo_id'))
+		->where('grupo_id',$request->input('grupo_id'))
+		->whereNull('inscripcions.deleted_at')
+		->count();
+		//dd($alumnosInscritos);
+		return $r->limite_alumnos - $alumnosInscritos;
 	}
 
 	public function destroyPeriodo(Request $request)

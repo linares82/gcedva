@@ -24,6 +24,7 @@ return array(
     'AddBndConciliacionToSuccessMultipagosTable' => $baseDir . '/database/migrations/2020_07_07_154144_add_bnd_conciliacion_to_success_multipagos_table.php',
     'AddBndCortoToNivelsTable' => $baseDir . '/database/migrations/2020_02_24_103913_add_bnd_corto_to_nivels_table.php',
     'AddBndEximirDescuentoToAdeudosTable' => $baseDir . '/database/migrations/2020_07_03_104152_add_bnd_eximir_descuento_to_adeudos_table.php',
+    'AddBndGeneraMatriculaToCajaConceptosTable' => $baseDir . '/database/migrations/2021_09_03_081521_add_bnd_genera_matricula_to_caja_conceptos_table.php',
     'AddBndGraficaLectivosTable' => $baseDir . '/database/migrations/2018_06_19_145551_add_bnd_grafica_lectivos_table.php',
     'AddBndLigaEnviadaToProspectosTable' => $baseDir . '/database/migrations/2021_03_11_120904_add_bnd_liga_enviada_to_prospectos_table.php',
     'AddBndMensualidadCajaConceptosTable' => $baseDir . '/database/migrations/2019_03_25_142826_add_bnd_mensualidad_caja_conceptos_table.php',
