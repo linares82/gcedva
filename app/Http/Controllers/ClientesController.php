@@ -399,14 +399,18 @@ class ClientesController extends Controller
                 //}
             }
             //dd($planteles);
-            $empleados = Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
+            $empleados = Empleado::select('empleados.id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
+                ->join('puestos as pu','pu.id','empleados.puesto_id')
                 //->where('plantel_id', '=', $e->plantel_id)
                 ->whereIn('plantel_id', '=', $planteles)
-                ->whereIn('puesto_id', array(1,2,3,4,5,7,8,10,18,19,22,23,31,33,35,46))
+                ->where('pu.bnd_permitido_clientes', 1)
+                //->whereIn('puesto_id', array(1,2,3,4,5,7,8,10,18,19,22,23,31,33,35,46))
                 ->pluck('name', 'id');
         } else {
-            $empleados = Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
-                ->whereIn('puesto_id', array(1,2,3,4,5,7,8,10,18,19,22,23,31,33,35,46))
+            $empleados = Empleado::select('empleados.id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
+                ->join('puestos as pu','pu.id','empleados.puesto_id')    
+            //->whereIn('puesto_id', array(1,2,3,4,5,7,8,10,18,19,22,23,31,33,35,46))
+                ->where('pu.bnd_permitido_clientes', 1)
                 ->pluck('name', 'id');
         }
         $empleados = $empleados->reverse();

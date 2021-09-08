@@ -47,6 +47,10 @@ class PuestosController extends Controller {
 		$input['usu_alta_id']=Auth::user()->id;
 		$input['usu_mod_id']=Auth::user()->id;
 
+		if(!isset($input['bnd_permitido_clientes'])){
+			$input['bnd_permitido_clientes']=0;
+		}
+
 		//create data
 		Puesto::create( $input );
 
@@ -102,6 +106,9 @@ class PuestosController extends Controller {
 	{
 		$input = $request->all();
 		$input['usu_mod_id']=Auth::user()->id;
+		if(!isset($input['bnd_permitido_clientes'])){
+			$input['bnd_permitido_clientes']=0;
+		}
 		//update data
 		
 

@@ -31,6 +31,7 @@ return array(
     'AddBndMexicoGradosTable' => $baseDir . '/database/migrations/2019_01_16_142539_add_bnd_mexico_grados_table.php',
     'AddBndOficialToMateriaTable' => $baseDir . '/database/migrations/2020_07_02_144708_add_bnd_oficial_to_materia_table.php',
     'AddBndPagadoPagosTable' => $baseDir . '/database/migrations/2020_06_09_145858_add_bnd_pagado_pagos_table.php',
+    'AddBndPermitidoClientesToPuestosTable' => $baseDir . '/database/migrations/2021_09_06_091119_add_bnd_permitido_clientes_to_puestos_table.php',
     'AddBndPromoCajaLnsTable' => $baseDir . '/database/migrations/2019_01_25_125534_add_bnd_promo_caja_lns_table.php',
     'AddBndReactivacionToCajasTable' => $baseDir . '/database/migrations/2020_10_16_110149_add_bnd_reactivacion_to_cajas_table.php',
     'AddBndReferenciadoToPagosTable' => $baseDir . '/database/migrations/2020_07_01_113041_add_bnd_referenciado_to_pagos_table.php',

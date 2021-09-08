@@ -36,7 +36,7 @@ class ProspectosController extends Controller {
 	 */
 	public function create()
 	{
-		$medios=Medio::whereIn('id', array(8,10,15,18,19,20,23))->pluck('name','id');
+		$medios=Medio::whereIn('id', array(8,10,15,18,19,20,23,24))->pluck('name','id');
 		return view('prospectos.create', compact('medios'))
 			->with( 'list', Prospecto::getListFromAllRelationApps() );
 	}
@@ -94,7 +94,7 @@ class ProspectosController extends Controller {
 	public function edit($id, Prospecto $prospecto)
 	{
 		$prospecto=$prospecto->find($id);
-		$medios=Medio::whereIn('id', array(8,10,15,18,19,20,23))->pluck('name','id');
+		$medios=Medio::whereIn('id', array(8,10,15,18,19,20,23,24))->pluck('name','id');
 		return view('prospectos.edit', compact('prospecto', 'medios'))
 			->with( 'list', Prospecto::getListFromAllRelationApps() );
 	}

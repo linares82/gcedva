@@ -90,6 +90,7 @@
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
                             <th>@include('plantillas.getOrderLink', ['column' => 'name', 'title' => 'NAME'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'bnd_permitido_clientes', 'title' => 'PERMITIDO EN CLIENTES'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
@@ -99,6 +100,13 @@
                             <tr>
                                 <td><a href="{{ route('puestos.show', $puesto->id) }}">{{$puesto->id}}</a></td>
                                 <td>{{$puesto->name}}</td>
+                                <td>
+                                    @if($puesto->bnd_permitido_clientes==1)
+                                        SI
+                                    @else
+                                        NO
+                                    @endif
+                                </td>
                                 <td class="text-right">
                                     @permission('puestos.edit')
                                     <a class="btn btn-xs btn-primary" href="{{ route('puestos.duplicate', $puesto->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>

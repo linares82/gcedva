@@ -1,3 +1,10 @@
+<style>
+
+input[id="bnd_genera_matricula-field"][readonly] {
+  pointer-events: none;
+}
+
+</style>
 <div class="form-group col-md-4 @if($errors->has('cve_multipagos')) has-error @endif">
    <label for="cve_multipagos-field">Clave Multipagos</label>
    {!! Form::select("cve_multipagos", $listaMultipagos, isset($cajaConcepto->cve_multipagos) ? $cajaConcepto->cve_multipagos : null, array("class" => "form-control select_seguridad", "id" => "cve_multipagos-crear")) !!}
@@ -37,7 +44,7 @@
                     </div>
                     <div class="form-group col-md-4 @if($errors->has('bnd_aplicar_beca')) has-error @endif">
                        <label for="bnd_aplicar_beca-field">Aplicar Beca</label>
-                       {!! Form::checkbox("bnd_aplicar_beca", 1, null, [ "id" => "bnd_aplicar_beca-field"]) !!}
+                       {!! Form::checkbox("bnd_aplicar_beca", 1, null, [ "id" => "bnd_aplicar_beca-field",'readonly' =>true]) !!}
                        @if($errors->has("bnd_aplicar_beca"))
                         <span class="help-block">{{ $errors->first("bnd_aplicar_beca") }}</span>
                        @endif
@@ -74,4 +81,11 @@
                      <label for="reglas-field">Reglas Descuento/Recargo</label><br/>
                      {!! Form::select("reglas[]", $reglas, null, array("class" => "form-control select_seguridad", 'multiple'=>true, "id" => "reglas-field")) !!}
                   </div>
-                  
+                 
+@push('scripts')
+<script type="text/javascript">
+@permission('conceptos.generaMatricula')
+$('#bnd_genera_matricula-field').prop('readonly', true);
+@endpermission
+</script>
+@endpush
