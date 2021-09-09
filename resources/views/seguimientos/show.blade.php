@@ -84,11 +84,10 @@
                             </div>
                             <div class="form-group col-md-6 @if($errors->has('st_seguimiento_id')) has-error @endif">
                             <label for="st_seguimiento_id-field">Estatus del seguimiento</label>
-                            @if($seguimiento->st_seguimiento_id==2 and Entrust::can('seguimientos.activarEstatus'))
-                                {!! Form::select("st_seguimiento_id", $sts,null, array("class" => "form-control select_seguridad", "id" => "st_seguimiento_id-field", "disabled"=>true)) !!}
-                            @else
-                                {!! Form::select("st_seguimiento_id", $sts,null, array("class" => "form-control select_seguridad", "id" => "st_seguimiento_id-field", "disabled"=>false)) !!}
-                            @endif
+                            
+                            
+                                {!! Form::select("st_seguimiento_id", $sts,null, array("class" => "form-control select_seguridad", "id" => "st_seguimiento_id-field")) !!}
+                            
                             @if($errors->has("st_seguimiento_id"))
                                 <span class="help-block">{{ $errors->first("st_seguimiento_id") }}</span>
                             @endif
@@ -131,10 +130,12 @@
                 <div class="box box-success">
                     <div class="box-body">
                         <div class="table-responsive">
+                            @permission('seguimientos.activarEstatus')
                             <button 
                             type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#favoritesModal">
                                 Agregar Tarea
                             </button>
+                            @endpermission
                         
                             <table class="table table-bordered table-striped dataTable">
                                 <thead>
@@ -176,10 +177,12 @@
                 <div class="box box-warning">
                     <div class="box-body">
                         <div class="table-responsive">
+                            @permission('seguimientos.activarEstatus')
                             <button 
                             type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#favoritesModal1">
                                 Agregar Aviso
                             </button>
+                            @endpermission
                         
                             <table class="table table-bordered table-striped dataTable">
                                 <thead>
@@ -397,6 +400,13 @@
 @push('scripts')
   <script type="text/javascript">
     $(document).ready(function() {
+        @permission('seguimientos.activarEstatus')
+        @if($seguimiento->st_seguimiento_id==2)
+        @foreach($sts as $key=>$item)
+            $("#st_seguimiento_id-field option[value*={{ $key }}]").prop('disabled', true);
+        @endforeach
+        @endif
+        @endpermission
         @permission('seguimiento.opcionConcretado')
         $("#st_seguimiento_id-field option[value='2']").prop('disabled',true); 
         @endpermission

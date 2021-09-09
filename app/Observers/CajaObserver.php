@@ -6,6 +6,7 @@ use App\Adeudo;
 use App\BsBaja;
 use App\Caja;
 use App\Cliente;
+use App\HCambiosCaja;
 use App\Param;
 use App\Seguimiento;
 use Log;
@@ -25,6 +26,40 @@ class CajaObserver
      */
     public $cajas;
     public $caja;
+
+    public function created(Caja $caja){
+        
+    }
+
+    public function updating(Caja $caja){
+        $caja_anterior=Caja::find($caja->id);
+        $this->caja=$caja;
+        //dd($this->caja);
+        
+        //dd($caja_anterior->toArray());
+        foreach($caja_anterior->toArray() as $campo=>$valor){
+            //Log::info("Par: ".$campo."-".$valor);
+            if($caja->$campo<>$caja_anterior->$campo){
+                $input=array();
+                //Log::info("Par2: ".$campo."-".$valor);
+                $input['caja_id']=$this->caja->id;
+                $input['campo']=$campo;
+                $input['valor_anterior']=$caja_anterior->$campo;
+                $input['valor_nuevo']=$caja->$campo;
+                $input['user_id']=Auth::user()->id;
+                $input['usu_mod_id']=$this->caja->usu_mod_id;
+                $input['usu_alta_id']=$this->caja->usu_alta_id;
+                //dd($input);
+                try{
+                    HCambiosCaja::create($input);
+                }catch(Exception $e){
+                    dd($input);
+                }
+                
+            }
+        }
+        
+    }
 
 
     /**

@@ -1148,6 +1148,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'CreateHAsistenciaRsTable' => __DIR__ . '/../..' . '/database/migrations/2020_03_03_130231_create_h_asistencia_rs_table.php',
         'CreateHCalifPonderacionsTable' => __DIR__ . '/../..' . '/database/migrations/2020_03_03_133812_create_h_calif_ponderacions_table.php',
         'CreateHCalificacionsTable' => __DIR__ . '/../..' . '/database/migrations/2020_05_18_163524_create_h_calificacions_table.php',
+        'CreateHCambiosCajasTable' => __DIR__ . '/../..' . '/database/migrations/2021_09_08_112437_create_h_cambios_cajas_table.php',
         'CreateHCuentasEfectivosTable' => __DIR__ . '/../..' . '/database/migrations/2019_06_26_101826_create_h_cuentas_efectivos_table.php',
         'CreateHEstatusesTable' => __DIR__ . '/../..' . '/database/migrations/2019_07_29_094034_create_h_estatuses_table.php',
         'CreateHPeticionsTable' => __DIR__ . '/../..' . '/database/migrations/2021_03_30_075036_create_h_peticions_table.php',
