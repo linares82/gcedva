@@ -32,7 +32,7 @@
                     @endif
                 </div>
                 <div class="form-group col-md-6 @if($errors->has('lectivo_f')) has-error @endif">
-                    <label for="lectivo_f-field">Lectivo:</label>
+                    <label for="lectivo_f-field">Lectivo Oficial:</label>
                     {!! Form::select("lectivo_f", $list["Lectivo"], null, array("class" => "form-control select_seguridad", "id" => "lectivo_f-field")) !!}
                     <div id='loading_grupo' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                     @if($errors->has("lectivo_f"))
@@ -118,7 +118,7 @@
         //var $example = $("#especialidad_id-field").select2();
         //url: '{{ route("lectivos.lectivoXplantelXasignacion") }}',
         $.ajax({
-            url: '{{ route("lectivos.lectivoXplantelXasignacion") }}',
+            url: '{{ route("lectivos.lectivoOXplantelXasignacion") }}',
             type: 'GET',
             data: "plantel_id=" + $('#plantel_f-field option:selected').val() + "&lectivo_id=" + $('#lectivo_f-field option:selected').val() + "",
             dataType: 'json',

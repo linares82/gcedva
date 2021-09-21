@@ -602,7 +602,7 @@ class HacademicasController extends Controller
                 ->orderBy('cli.nombre')
                 ->orderBy('cli.nombre2')
                 ->get();
-                
+                //dd($hacademicas);
         } else {
             //if($calificacion_inicio<=$hoy and $calificacion_fin>=$hoy){
 

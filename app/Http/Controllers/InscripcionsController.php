@@ -420,7 +420,9 @@ class InscripcionsController extends Controller
 
     public function getReinscripcion()
     {
-        return view('inscripcions.reinscripcion')
+        $empleado= Empleado::where('user_id', Auth::user()->id)->first();
+        $planteles=$empleado->plantels->pluck('razon', 'id');
+        return view('inscripcions.reinscripcion', compact('planteles'))
             ->with('list', Inscripcion::getListFromAllRelationApps());
     }
 
@@ -3774,6 +3776,8 @@ class InscripcionsController extends Controller
         $h['materium_id'] = $m->id;
         $h['st_materium_id'] = 0;
         $h['lectivo_id'] = $i->lectivo_id;
+        $h['periodo_estudio_id'] = $i->periodo_estudio_id;
+        $h['turno_id'] = $i->turno_id;
         $h['usu_alta_id'] = Auth::user()->id;
         $h['usu_mod_id'] = Auth::user()->id;
         $ha = Hacademica::create($h);

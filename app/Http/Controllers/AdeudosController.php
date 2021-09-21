@@ -153,13 +153,14 @@ class AdeudosController extends Controller
 
             //dd($consecutivo);
             $cliente = Cliente::where('id', $combinacion->cliente_id)->first();
-            if (
+            /*if (
                 $adeudo->caja_concepto_id == 1 or
                 $adeudo->caja_concepto_id == 22 or
                 $adeudo->caja_concepto_id == 23 or
                 $adeudo->caja_concepto_id == 24 or
                 $adeudo->caja_concepto_id == 25
-            ) {
+            ) {*/
+            if($adeudo->cajaConcepto->bnd_genera_matricula==1){    
                 if (($grado->seccion != "" or !is_null($grado->seccion)) and ($cliente->matricula == "" or $cliente->matricula == " ")) {
                     $consecutivo = ConsecutivoMatricula::where('plantel_id', $combinacion->plantel_id)
                         ->where('anio', $fecha->year)
@@ -2281,10 +2282,10 @@ class AdeudosController extends Controller
 
                     if (
                         (($beca->lectivo->inicio <= $adeudo->fecha_pago and $beca->lectivo->fin >= $adeudo->fecha_pago) or
-                            (($anioInicio == $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin == $anioAdeudo and $mesFin >= $mesAdeudo)) or
-                            (($anioInicio < $anioAdeudo or $mesInicio >= $mesAdeudo) and ($anioFin >= $anioAdeudo and $mesFin <= $mesAdeudo))) and
-                        $beca->aut_dueno == 4 and
-                        is_null($beca->deleted_at)
+                        (($anioInicio == $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin == $anioAdeudo and $mesFin >= $mesAdeudo)) or
+                        (($anioInicio == $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin > $anioAdeudo)) or
+                        (($anioInicio < $anioAdeudo) and ($anioFin == $anioAdeudo and $mesFin >= $mesAdeudo))) and
+                        $beca->aut_dueno == 4 and is_null($beca->deleted_at)
                     ) {
                         $beca_a = $beca->id;
                         //dd($beca);

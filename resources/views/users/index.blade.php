@@ -79,7 +79,11 @@
                     <td>{{ $user->email }}</td>
                     <td>
                         @foreach($user->roles1 as $rol)
-                            <div class="label bg-green">{{ $rol->name }}</div>
+                            
+                            <a class="btn btn-success btn-xs" href="{{ route('entrust-gui::roles.edit', $rol->id) }}">
+                                {{ $rol->name }}
+                            </a>
+                            
                         @endforeach
                     </td>
                     <td>

@@ -474,27 +474,31 @@ class CajasController extends Controller
                         //Calcula descuento por beca
                         //********************************* */
                         $beca_a = 0;
+                        //dd($cliente->autorizacionBecas->toArray());
                         foreach ($cliente->autorizacionBecas as $beca) {
                             //dd(is_null($beca->deleted_at));
+                            //$diaAdeudo = Carbon::createFromFormat('Y-m-d', $adeudo->fecha_pago)->dia;
                             $mesAdeudo = Carbon::createFromFormat('Y-m-d', $adeudo->fecha_pago)->month;
                             $anioAdeudo = Carbon::createFromFormat('Y-m-d', $adeudo->fecha_pago)->year;
                             $mesInicio = Carbon::createFromFormat('Y-m-d', $beca->lectivo->inicio)->month;
                             $anioInicio = Carbon::createFromFormat('Y-m-d', $beca->lectivo->inicio)->year;
                             $mesFin = Carbon::createFromFormat('Y-m-d', $beca->lectivo->fin)->month;
+                            //$diaFin = Carbon::createFromFormat('Y-m-d', $beca->lectivo->fin)->day;
                             $anioFin = Carbon::createFromFormat('Y-m-d', $beca->lectivo->fin)->year;
 
                             //dd($anioInicio."-".$anioAdeudo."-".$mesInicio."-".$mesAdeudo."-".);
                             //dd(($beca->lectivo->inicio <= $adeudo->fecha_pago and $beca->lectivo->fin >= $adeudo->fecha_pago));
                             //dd(($anioInicio == $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin == $anioAdeudo and $mesFin >= $mesAdeudo));
                             //dd(($anioInicio < $anioAdeudo or $mesInicio >= $mesAdeudo) and ($anioFin >= $anioAdeudo and $mesFin <= $mesAdeudo));
-
+                            //dd();
                             if (
                                 (($beca->lectivo->inicio <= $adeudo->fecha_pago and $beca->lectivo->fin >= $adeudo->fecha_pago) or
-                                    (($anioInicio == $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin == $anioAdeudo and $mesFin >= $mesAdeudo)) or
-                                    (($anioInicio < $anioAdeudo or $mesInicio >= $mesAdeudo) and ($anioFin >= $anioAdeudo and $mesFin >= $mesAdeudo))) and
-                                $beca->aut_dueno == 4 and
-                                is_null($beca->deleted_at)
+                                (($anioInicio == $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin == $anioAdeudo and $mesFin >= $mesAdeudo)) or
+                                (($anioInicio == $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin > $anioAdeudo)) or
+                                (($anioInicio < $anioAdeudo) and ($anioFin == $anioAdeudo and $mesFin >= $mesAdeudo))) and
+                                $beca->aut_dueno == 4 and is_null($beca->deleted_at)
                             ) {
+                                
                                 //dd(($beca->lectivo->inicio <= $adeudo->fecha_pago and $beca->lectivo->fin >= $adeudo->fecha_pago));
                                 //dd(($anioInicio == $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin == $anioAdeudo and $mesFin >= $mesAdeudo));
                                 //dd(($anioInicio < $anioAdeudo or $mesInicio >= $mesAdeudo) and ($anioFin >= $anioAdeudo and $mesFin <= $mesAdeudo));
@@ -504,7 +508,7 @@ class CajasController extends Controller
                         }
 
                         $beca_autorizada = AutorizacionBeca::find($beca_a);
-                        //dd($beca_autorizada);
+                        //dd($beca_a);
                         if (
                             !is_null($beca_autorizada) and
                             $beca_autorizada->monto_mensualidad > 0 and
@@ -2173,7 +2177,7 @@ class CajasController extends Controller
     public function calculaPredefinido($adeudo_tomado, $cja)
     {
         $adeudo = Adeudo::with('planPagoLn')->find($adeudo_tomado);
-        //dd($conceptosValidos);
+        //dd($conceptoceptosValidos);
         $caja = Caja::find($cja);
 
         //$adeudos = Adeudo::where('id', '=', $adeudo_tomado)->get();
@@ -2189,6 +2193,7 @@ class CajasController extends Controller
         $caja_ln['recargo'] = 0;
         $caja_ln['descuento'] = 0;
         $caja_ln['fecha_limite'] = "";
+        //dd($caja_ln);
 
         //Realiza descuento para inscripciones
         if (
@@ -2196,6 +2201,7 @@ class CajasController extends Controller
             ($adeudo->caja_concepto_id == 1 or $adeudo->caja_concepto_id == 23 or $adeudo->caja_concepto_id == 25)
         ) {
             $caja_ln['descuento'] = $caja_ln['subtotal'] * $adeudo->descuento->porcentaje;
+            
         } else {
             //********************************* */
             //Calcula descuento por beca
@@ -2213,10 +2219,10 @@ class CajasController extends Controller
 
                 if (
                     (($beca->lectivo->inicio <= $adeudo->fecha_pago and $beca->lectivo->fin >= $adeudo->fecha_pago) or
-                        (($anioInicio == $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin == $anioAdeudo and $mesFin >= $mesAdeudo)) or
-                        (($anioInicio < $anioAdeudo or $mesInicio >= $mesAdeudo) and ($anioFin >= $anioAdeudo and $mesFin >= $mesAdeudo))) and
-                    $beca->aut_dueno == 4 and
-                    is_null($beca->deleted_at)
+                    (($anioInicio == $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin == $anioAdeudo and $mesFin >= $mesAdeudo)) or
+                    (($anioInicio == $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin > $anioAdeudo)) or
+                    (($anioInicio < $anioAdeudo) and ($anioFin == $anioAdeudo and $mesFin >= $mesAdeudo))) and
+                    $beca->aut_dueno == 4 and is_null($beca->deleted_at)
                 ) {
                     $beca_a = $beca->id;
                     //dd($beca);

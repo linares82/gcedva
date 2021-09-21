@@ -76,7 +76,7 @@
                                                      ->whereNull('deleted_at')->first()
                         ?>
                         <td>
-                            @if(count($evento)>0)
+                            @if(!is_null($evento))
                                 SI: {{$evento->descripcion}} Creacion: {{$evento->fecha}} Vigencia: {{$evento->fec_vigencia}}
                             @else
                                 NO 
