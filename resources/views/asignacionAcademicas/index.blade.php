@@ -182,7 +182,7 @@
                                 <td><a href="{{ route('asignacionAcademicas.show', $asignacionAcademica->id) }}">{{$asignacionAcademica->id}}</a></td>
                                 <td>{{ $asignacionAcademica->plantel->razon }}</td>
                                 <td>{{ optional($asignacionAcademica->empleado)->nombre." ".optional($asignacionAcademica->empleado)->ape_paterno." ".optional($asignacionAcademica->empleado)->ape_materno }}</td>
-                                <td>{{optional($asignacionAcademica->materia)->name}}</td>
+                                <td>{{ $asignacionAcademica->materium_id}} - {{optional($asignacionAcademica->materia)->name}}</td>
                                 <td>{{optional($asignacionAcademica->grupo)->name}}</td>
                                 <td>{{optional($asignacionAcademica->lectivo)->name}}</td>
                                 <td>{{optional($asignacionAcademica->lectivoOficial)->name}}</td>

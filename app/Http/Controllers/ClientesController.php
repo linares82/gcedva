@@ -1686,6 +1686,7 @@ class ClientesController extends Controller
             ->where('evento_cliente_id', 2)
             ->whereIn('p.id', $datos['plantel_f'])
             ->whereNull('historia_clientes.deleted_at')
+            ->whereNull('cc.deleted_at')
             //->where('p.id', '<=', $datos['plantel_t'])
             ->orderBy('p.id')
             ->orderBy('c.id')

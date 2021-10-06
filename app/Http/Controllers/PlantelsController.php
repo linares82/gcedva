@@ -255,7 +255,7 @@ class PlantelsController extends Controller
 		//update data
 		$e = $plantel->update($input);
 
-		if (!is_null($conceptos['concepto_multipagos_id']) or !is_null($formas_pago['forma_pago_id'])) {
+		if (isset($conceptos['concepto_multipagos_id']) or isset($formas_pago['forma_pago_id'])) {
 			$plantel->conceptoMultipagos()->sync($conceptos['concepto_multipagos_id']);
 			$plantel->formaPagos()->sync($formas_pago['forma_pago_id']);
 		}

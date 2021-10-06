@@ -222,7 +222,7 @@
                 <?php 
                 $plantel=App\Plantel::find($plantel_id);
                 ?>
-                <tr><td class='tdw'>{{$instructor}}</td><td></td><td class='tdw'>Sello del Plantel</td><td></td><td>{{$plantel->director->nombre}} {{$plantel->director->ape_paterno}} {{$plantel->director->ape_materno}}</td></tr>
+                <tr><td class='tdw'>{{$instructor}}</td><td></td><td class='tdw'>Sello del Plantel</td><td></td><td> {{$plantel->director->nombre}} {{$plantel->director->ape_paterno}} {{$plantel->director->ape_materno}}</td></tr>
                 <tr><td>Instructor Titular</td><td></td><td></td><td></td><td class='tdw'>Firma de Director:</td></tr>
             </table>
             @endif

@@ -164,6 +164,7 @@ class HacademicasController extends Controller
         $input = $request->all();
         //dd($input['calificacion_parcial_id']);
         //dd($hacademicas);
+        
         $aprobatoria = Param::where('llave', 'calificacion_aprobatoria')->value('valor');
         if (isset($input['calificacion_parcial_id'])) {
             foreach ($input['calificacion_parcial_id'] as $key => $value) {
@@ -309,7 +310,7 @@ class HacademicasController extends Controller
         $examen = TpoExamen::pluck('name', 'id');
 
 
-        return view('hacademicas.calificaciones', compact('hacademicas', 'examen'))
+        return view('hacademicas.calificaciones', compact('hacademicas', 'examen','input'))
             ->with('list', Hacademica::getListFromAllRelationApps());
     }
 

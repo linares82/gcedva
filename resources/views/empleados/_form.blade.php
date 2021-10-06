@@ -340,7 +340,9 @@
                                     <input type="hidden" name="_token" id="_token"  value="<?= csrf_token(); ?>"> 
                                     <input type="hidden"  id="file_hidden" name="file_hidden" >
                                 </div>
+                                @permission('empleados.cargarImg')
                                 <button class="btn btn-success btn-xs" id="btn_archivo"> <span class="glyphicon glyphicon-ok">Cargar</span> </btn>
+                                @endpermission
                                 <br/>
                                 <p class="help-block"  >Max. 20MB</p>
                                 <div id="texto_notificacion">
@@ -371,7 +373,9 @@
                                   <a href="{{asset("imagenes/empleados/".$empleado->id."/".end($cadena_img))}}" target="_blank">Ver</a>
                                 </td>
                                 <td>
+                                  @permission('pivotDocEmpleados.destroy')
                                   <a class="btn btn-xs btn-danger" href="{{route('pivotDocEmpleados.destroy', $doc->id)}}">Eliminar</a>
+                                  @endpermission
                                 </td>
                               </tr>
                               @endforeach

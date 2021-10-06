@@ -100,7 +100,11 @@
                          <td><div id="div_par{{$r->id}}">{{ $r->calificacion_parcial }}</div></td>
                          <td><div id="div_cp{{$r->id}}">{{ $r->calificacion_parcial_calculada }}</div></td>
                          <td>
-                             @if($r->estatus_cliente_id==25)
+                            @if($r->estatus_cliente_id==3 or 
+                            $r->estatus_cliente_id==25 or 
+                             $r->estatus_cliente_id==26 or
+                             $r->estatus_cliente_id==27 or 
+                             $r->estatus_cliente_id==28)
                              
                              @else
                                 {!! Form::number("calificacion", null, array("class" => "form-control input-sm col-md-6", 
@@ -109,7 +113,11 @@
                              
                          </td>
                          <td>
-                             @if($r->estatus_cliente_id==25)
+                             @if($r->estatus_cliente_id==3 or 
+                                $r->estatus_cliente_id==25 or 
+                                 $r->estatus_cliente_id==26 or
+                                 $r->estatus_cliente_id==27 or 
+                                 $r->estatus_cliente_id==28)
                              
                              @else
                                 <button type="button"  

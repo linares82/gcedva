@@ -569,6 +569,7 @@ Route::post(
     '/empleados/cargarImg',
     array(
         'as' => 'empleados.cargarImg',
+        'middleware' => 'permission:empleados.cargarImg',
         'uses' => 'EmpleadosController@cargarImg'
     )
 )->middleware('auth');
@@ -3829,7 +3830,7 @@ Route::get(
     '/pivotDocEmpleados/destroy/{id}',
     array(
         'as' => 'pivotDocEmpleados.destroy',
-        //'middleware' => 'permission:pivotDocEmpleados.destroy',
+        'middleware' => 'permission:pivotDocEmpleados.destroy',
         'uses' => 'PivotDocEmpleadosController@destroy'
     )
 )->middleware('auth');

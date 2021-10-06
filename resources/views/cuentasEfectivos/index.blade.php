@@ -209,7 +209,7 @@
                                 </td>
                                 <td>
                                     @foreach($cuentasEfectivo->plantels as $plantel)
-                                        {{ $plantel->cuentaP->name }} <br>
+                                        {{ optional($plantel->cuentaP)->name }} <br>
                                     @endforeach
                                 </td>
                                 

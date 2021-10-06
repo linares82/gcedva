@@ -95,7 +95,7 @@ class PeriodoEstudiosController extends Controller
         //dd($periodoEstudio->materias->toArray());
         $list = DB::table('materia')->where('id', '>', '0')->where('plantel_id', '=', $p)->pluck('name', 'id')->toArray();
         $materias_ls = array_merge(['0' => 'Seleccionar Opción'], $list);
-        $materias = MateriumPeriodo::select('materium_periodos.id', 'm.codigo', 'm.name as materia')
+        $materias = MateriumPeriodo::select('m.id', 'm.codigo', 'm.name as materia')
             ->join('materia as m', 'm.id', '=', 'materium_periodos.materium_id')
             ->where('periodo_estudio_id', '=', $id)->get();
         //dd($materias);

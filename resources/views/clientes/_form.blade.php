@@ -1279,7 +1279,7 @@
                     <tbody>
                         @foreach($i->hacademicas as $a)
                         <tr>
-                            <td><a href='{{url("asignacionAcademicas/index")}}?&q%5Basignacion_academicas.lectivo_id_lt%5D={{$a->lectivo_id}}&q%5Basignacion_academicas.plantel_id_lt%5D={{$a->plantel_id}}&q%5Basignacion_academicas.empleado_id_lt%5D={{$a->empleado_id}}&q%5Basignacion_academicas.materium_id_lt%5D={{$a->materium_id}}&q%5Basignacion_academicas.grupo_id_lt%5D={{$a->grupo_id}}' target='_blank'>{{optional($a->materia)->codigo}}-{{optional($a->materia)->name}}</a></td>
+                            <td><a href='{{url("asignacionAcademicas/index")}}?&q%5Basignacion_academicas.lectivo_id_lt%5D={{$a->lectivo_id}}&q%5Basignacion_academicas.plantel_id_lt%5D={{$a->plantel_id}}&q%5Basignacion_academicas.empleado_id_lt%5D={{$a->empleado_id}}&q%5Basignacion_academicas.materium_id_lt%5D={{$a->materium_id}}&q%5Basignacion_academicas.grupo_id_lt%5D={{$a->grupo_id}}' target='_blank'>{{optional($a->materia)->id}}-{{optional($a->materia)->codigo}}-{{optional($a->materia)->name}}</a></td>
                             <td>{{optional($a->grupo)->name}}</td>
                             <td>{{optional($a->lectivo)->name}}</td>
                             <td>{{optional($a->stMateria)->name}}</td>
