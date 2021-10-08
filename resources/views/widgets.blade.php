@@ -990,7 +990,7 @@ $listaPlanteles=App\Plantel::whereIn('id',$lista->toArray())->get();
                     $("#loading30{{ $plantel->id }}").hide();
                 },
                 success: function(data) {
-
+                    console.log(data);
                     var linea = JSON.parse(data);
 
                     var data = google.visualization.arrayToDataTable([

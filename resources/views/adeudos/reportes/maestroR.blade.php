@@ -123,7 +123,7 @@
     @php
      //dd($lineas_detalle);   
     @endphp
-    @if($datos['detalle_f']<4)
+    @if(isset($datos['detalle_f']) and $datos['detalle_f']<4)
     <table border="1" width="100%" >
         <thead>
             <tr>

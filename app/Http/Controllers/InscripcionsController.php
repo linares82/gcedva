@@ -430,6 +430,9 @@ class InscripcionsController extends Controller
     {
         $input = $request->all();
 
+        $empleado= Empleado::where('user_id', Auth::user()->id)->first();
+        $planteles=$empleado->plantels->pluck('razon', 'id');
+
         //dd($input);
         if (isset($input['id']) and isset($input['grupo_to']) and isset($input['lectivo_to'])) {
 
@@ -598,7 +601,7 @@ class InscripcionsController extends Controller
 
         //dd($clientes->toArray());
         //dd($resultados);
-        return view('inscripcions.reinscripcion', compact('resultados', 'input'))
+        return view('inscripcions.reinscripcion', compact('resultados', 'input', 'planteles'))
             ->with('list', Hacademica::getListFromAllRelationApps());
 
         /*return redirect('/inscripcions/reinscripcion', compact('resultados'))
@@ -2290,7 +2293,7 @@ class InscripcionsController extends Controller
             } else {
                 $resul = 0;
             }
-
+            
             array_push($resumen, array(
                 'asignacion' => $asignacion->id,
                 'plantel' => $asignacion->plantel->razon,
@@ -2634,7 +2637,7 @@ class InscripcionsController extends Controller
             $mes = $fecha->month;
             $anio = $fecha->year;
         }
-
+        //dd($fecha);
         //dd($fecha);
         $registros = Hacademica::select(
             'c.id',
@@ -3227,6 +3230,7 @@ class InscripcionsController extends Controller
 
     public function inscripcionReinscripcion()
     {
+        
         $empleado = Empleado::where('user_id', Auth::user()->id)->first();
         $planteles_validos = $empleado->plantels->pluck('razon', 'id');
         return view('inscripcions.reportes.inscripcionReinscripcion', compact('planteles_validos'))
@@ -3236,6 +3240,9 @@ class InscripcionsController extends Controller
     public function inscripcionReinscripcionR(Request $request)
     {
         $datos = $request->all();
+        
+        $empleado = Empleado::where('user_id', Auth::user()->id)->first();
+        $planteles = $empleado->plantels->pluck('razon', 'id');
         /*$registros = Inscripcion::select(
             'inscripcions.*',
             DB::raw('substr(cli.matricula,1,4) as mesAnioMatricula')
@@ -3297,7 +3304,9 @@ class InscripcionsController extends Controller
 
 
         //dd($registros->toArray());
-        return view('inscripcions.reportes.inscripcionReinscripcionR', compact('registros'));
+        
+        return view('inscripcions.reportes.inscripcionReinscripcionR', compact('registros', 'planteles'))
+        ->with('list', Inscripcion::getListFromAllRelationApps());
     }
 
     public function evaluacionOE()

@@ -8308,6 +8308,22 @@ Route::post(
     )
 )->middleware('auth');
 Route::get(
+    '/adeudos/maestroJ',
+    array(
+        'as' => 'adeudos.maestroJ',
+        'middleware' => 'permission:adeudos.maestro',
+        'uses' => 'AdeudosController@maestroJ'
+    )
+)->middleware('auth');
+Route::post(
+    '/adeudos/maestroJR',
+    array(
+        'as' => 'adeudos.maestroJR',
+        'middleware' => 'permission:adeudos.maestro',
+        'uses' => 'AdeudosController@maestroJR',
+    )
+)->middleware('auth');
+Route::get(
     '/adeudos/maestroPagos',
     array(
         'as' => 'adeudos.maestroPagos',

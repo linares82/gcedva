@@ -1230,7 +1230,7 @@ Agregar nuevo registro
             complete : function(){$("#loading3").hide(); },
             success: function(data) {
                 //location.reload();
-                //$('#form-buscarVenta').submit();
+                $('#form-buscarVenta').submit();
             },
         });
     });

@@ -321,6 +321,7 @@ trait GetAllDataTrait
                 if (Auth::user()->can('transferencia.filtroPlantel')) {
                     $myQuery = $myQuery->whereRaw('(plantel_id in ? or plantel_destino_id in ?)', [$planteles, $planteles]);
                 }
+                break;
                 case "turnos":
                     $myQuery = $myQuery->whereIn('turnos.plantel_id', $planteles);
                     break;
