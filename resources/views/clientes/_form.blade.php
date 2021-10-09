@@ -14,7 +14,6 @@
         <li class="">
             <a data-toggle="tab" href="#tab4">Responsables</a>
         </li>
-        
         <li class="">
             <a data-toggle="tab" href="#tab5">Inscripciones</a>
         </li>
@@ -823,6 +822,11 @@
                     @permission('clientes.generarMatricula')
                     <a href="{{ route('clientes.generarMatricula', array('cliente'=>$cliente->id)) }}" class="btn">Crear</a>
                     @endpermission
+                    @if($cliente->matricula<>"")
+                    @permission('clientes.generarUsuarioPortal')
+                    <a href="{{ route('clientes.generarUsuarioPortal', array('cliente'=>$cliente->id)) }}" target="_blank" class="btn">G. Usuario Portal</a>
+                    @endpermission
+                    @endif
                     @endif
                 </div>
                 <div class="form-group col-md-4 @if($errors->has('cve_alumno')) has-error @endif">

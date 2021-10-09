@@ -2417,6 +2417,28 @@ class ClientesController extends Controller
         return redirect()->route('clientes.edit', $datos['cliente']);
     }
 
+    public function generarUsuarioPortal(Request $request ){
+        $datos=$request->all();
+        $cliente=Cliente::find($datos['cliente']);
+        if (!is_null($cliente->matricula)) {
+            $buscarMatricula = UsuarioCliente::where('name', $cliente->matricula)->first();
+            $buscarMail = UsuarioCliente::where('email', $cliente->mail)->first();
+            if (is_null($buscarMatricula) and is_null($buscarMail)) {
+                $usuario_cliente['name'] = $cliente->matricula;
+                if (is_null($cliente->mail) or $cliente->mail == "") {
+                    $usuario_cliente['email'] = "Sin correo";
+                } else {
+                    $usuario_cliente['email'] = $cliente->mail;
+                }
+                $usuario_cliente['password'] = Hash::make('123456');
+                $usuario=UsuarioCliente::create($usuario_cliente);
+            }else{
+                return redirect()->route('usuarioClientes.edit', $buscarMatricula->id);        
+            }
+        }
+        return redirect()->route('usuarioClientes.edit', $usuario->id);
+    }
+
     public function alumnosActivos(){
         return view('clientes.reportes.alumnosActivos');
     }

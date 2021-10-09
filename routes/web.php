@@ -1555,6 +1555,14 @@ Route::get(
     )
 )->middleware('auth');
 Route::get(
+    '/clientes/generarUsuarioPortal/',
+    array(
+        'as' => 'clientes.generarUsuarioPortal',
+        'middleware' => 'permission:clientes.generarUsuarioPortal',
+        'uses' => 'ClientesController@generarUsuarioPortal'
+    )
+)->middleware('auth');
+Route::get(
     '/clientes/clientesActivos/',
     array(
         'as' => 'clientes.clientesActivos',
