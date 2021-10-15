@@ -142,7 +142,9 @@ class PlantelsController extends Controller
 	public function show($id, Plantel $plantel)
 	{
 		$plantel = $plantel->find($id);
-		return view('plantels.show', compact('plantel', 'ruta'));
+		$registrosHistoricos = $plantel->revisionHistory->reverse()->paginate(30);
+		//dd($registrosHistoricos->paginate(5));
+		return view('plantels.show', compact('plantel','registrosHistoricos'));
 	}
 
 	/**

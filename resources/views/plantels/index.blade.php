@@ -148,6 +148,7 @@
                                 <td>{{$plantel->cve_incorporacion}}</td>
                                 <td>{{optional($plantel->cuentaP)->name}}</td>
                                 <td class="text-right">
+
                                     @permission('plantels.duplicate')
                                     <a class="btn btn-xs btn-primary" href="{{ route('plantels.duplicate', $plantel->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>
                                     @endpermission

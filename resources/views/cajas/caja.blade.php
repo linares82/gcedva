@@ -241,13 +241,25 @@
                     </div>
                     <div class="form-group col-md-4">
                         <div class='text-center'>
+                            @php
+                                $indicadorPeticionenlinea=0;
+                            @endphp
                             @permission('cajas.cancelarEnLinea')
+                            @foreach($caja->pagos as $pago)
+                                @if(isset($pago->peticionMultipago))
+                                    @php
+                                        $indicadorPeticionenlinea=1;
+                                    @endphp
+                                @endif
+                            @endforeach
+                            @if($caja->st_caja_id==0 and $indicadorPeticionenlinea==1))
                             <!--@@if($caja->st_caja_id<>1 and $caja->st_caja_id<>2)-->
                             {!! Form::open(array('route' => 'cajas.cancelarEnLinea','onsubmit'=> "if(confirm('¿Cancelar Proceso En Linea? ¿Esta seguro?')) { return true } else {return false };")) !!}
                             {!! Form::hidden("caja", $caja->id, array("class" => "form-control", "id" => "caja_id-field")) !!}
                             <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-close"></i> Cancelar En Linea</button>
                             {!! Form::close() !!}
                             <!--@@endif-->
+                            @endif
                             @endpermission
                         </div>
                     </div>

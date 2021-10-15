@@ -184,6 +184,7 @@ return [
         Webklex\IMAP\Providers\LaravelServiceProvider::class,
         TelegramNotifications\TelegramServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
+        Venturecraft\Revisionable\RevisionableServiceProvider::class,
         /*
          * Application Service Providers...
          */

@@ -103,7 +103,7 @@ class ActivarBs extends Command
             //->where('fecha_pago', '<=', $fechaActual)
 	        //->where('fecha_pago', '>=', $fechaAnterior)
             ->where('pagado_bnd', 0)
-            ->where('c.id', 4443)
+            //->where('c.id', 4443)
             ->whereIn('c.id', $clientes)
             ->whereNotIn('c.plantel_id', array(54))
             ->whereNull('cc.deleted_at')

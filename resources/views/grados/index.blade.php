@@ -52,7 +52,7 @@
                 <div class="panel-body">
                     <form class="Grado_search" id="search" action="{{ route('grados.index') }}" accept-charset="UTF-8" method="get">
                         <input type="hidden" name="q[s]" value="{{ @(Request::input('q')['s']) ?: '' }}" />
-                        <div class="form-horizontal">
+                        <div >
 
                             <!--
                             <div class="form-group">
@@ -66,6 +66,12 @@
                                 </div>
                             </div>
                             -->
+                            <div class="form-group col-md-4">
+                                <label for="q_name_cont">ID</label>
+                                
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['id_lt']) ?: '' }}" name="q[id_lt]" id="q_id_lt" />
+                                
+                            </div>
                             <div class="form-group col-md-4" >
                                 <label for="q_grados.plantel_id_lt">PLANTEL</label>
                                 

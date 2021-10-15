@@ -2475,4 +2475,39 @@ class ClientesController extends Controller
             return json_encode(array('plantel'=>$cliente->plantel_id));
         }
     }    
+
+    public function comprobanteEstudios()
+    {
+        return view('clientes.reportes.comprobateEstudios');
+    }
+
+    public function comprobanteEstudiosR(Request $request)
+    {/*
+        $datos = $request->all();
+        //dd($datos);
+        $cliente = Cliente::find($datos['cliente']);
+        $inscripcion = Inscripcion::where('cliente_id', $cliente->id)->whereNull('deleted_at')->first();
+        $input['inscripcion_id'] = $inscripcion->id;
+        $input['cliente_id'] = $inscripcion->cliente_id;
+        $input['plantel_id'] = $inscripcion->plantel_id;
+        $input['especialidad_id'] = $inscripcion->especialidad_id;
+        $input['nivel_id'] = $inscripcion->nivel_id;
+        $input['grado_id'] = $inscripcion->grado_id;
+        $input['grupo_id'] = $inscripcion->grupo_id;
+        $input['inscripcion_id'] = $inscripcion->id;
+        $input['turno_id'] = $inscripcion->turno_id;
+        $input['lectivo_id'] = $inscripcion->lectivo_id;
+        $input['periodo_estudio_id'] = $inscripcion->periodo_estudio_id;
+        $input['token'] = uniqid(base64_encode(Str::random(6)));
+        $input['usu_alta_id'] = Auth::user()->id;
+        $input['usu_mod_id'] = Auth::user()->id;
+        $token = ImpresionComprobanteE::create($input);
+        $foto_aux = $cliente->pivotDocCliente->where('doc_alumno_id', 11)->first();
+        $foto = end(explode('/', $foto_aux->archivo));
+        //dd($foto);
+
+        return view('clientes.reportes.comprobateEstudiosR', compact('cliente', 'inscripcion', 'token', 'foto'));
+        */
+    }
+
 }

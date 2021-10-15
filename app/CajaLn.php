@@ -6,11 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 use App\Traits\GetAllDataTrait;
 use App\Traits\RelationManagerTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Venturecraft\Revisionable\RevisionableTrait;
 
 class CajaLn extends Model
 {
     use RelationManagerTrait,GetAllDataTrait;
     use SoftDeletes;
+	use RevisionableTrait;
+
+	protected $revisionCleanup = true; //Remove old revisions (works only when used with $historyLimit)
+    protected $historyLimit = 1000;
 
     public function __construct(array $attributes = array())
     {

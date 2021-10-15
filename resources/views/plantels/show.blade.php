@@ -67,7 +67,7 @@
                 </div>
                     <div class="form-group col-sm-4 ">
                      <label for="director">DIRECTOR</label>
-                     <p class="form-control-static">{{$plantel->director}}</p>
+                     <p class="form-control-static">{{$plantel->director->nombre}}</p>
                 </div>
                     <div class="form-group col-sm-4 ">
                      <label for="director_tel">DIRECTOR TELÉFONO</label>
@@ -110,6 +110,9 @@
                      <p class="form-control-static">{{ $plantel->usu_mod->name }}</p>
                 </div>
             </form>
+
+            <div class="row">
+            </div>
 
             <div class="row">
                 </div>

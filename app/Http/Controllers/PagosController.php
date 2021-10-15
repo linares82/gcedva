@@ -1604,6 +1604,7 @@ class PagosController extends Controller
             ->whereIn('adeudos.caja_concepto_id', $data['concepto_f'])
             ->whereNull('pag.deleted_at')
             ->whereNull('cajas.deleted_at')
+            ->whereNull('cln.deleted_at')
             ->where('cajas.st_caja_id', '=', 1)
             ->orderBy('pla.razon')
             ->orderBy('esp.name')

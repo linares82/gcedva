@@ -388,8 +388,23 @@ $posts = $this->repository->findWhere([
     //Default Condition =
     'state_id'=>'10',
     'country_id'=>'15',
+
     //Custom Condition
-    ['columnName','>','10']
+    ['columnName1','>','10'],
+
+    //DATE, DAY, MONTH, YEAR
+    ['columnName2','DATE','2021-07-02'], //whereDate
+    ['columnName3','DATE >=','2021-07-02'], //whereDate with operator
+
+    ['columnName4','IN',['value1','value2']], //whereIn
+    ['columnName5','NOTIN',['value1','value2']], //whereNotIn
+    ['columnName6','EXIST',''], //whereExists
+    
+    //HAS, HASMORPH, DOESNTHAVE, DOESNTHAVEMORPH
+    ['columnName7','HAS',function($query){}], //whereHas
+
+    //BETWEEN, BETWEENCOLUMNS, NOTBETWEEN, NOTBETWEENCOLUMNS
+    ['columnName8','BETWEEN',[10, 100]], //whereBetween
 ]);
 ```
 
@@ -676,6 +691,10 @@ or
 ]
 ```
 
+You can use params "search" without full params "searchFields".
+
+`http://prettus.local/users?search=id:2;age:17;email:john@gmail.com&searchFields='id':=`
+
 By default RequestCriteria makes its queries using the **OR** comparison operator for each query parameter.
 `http://prettus.local/users?search=age:17;email:john@gmail.com`
 
@@ -760,6 +779,18 @@ ORDER BY posts.title
 ...
 ```
 
+`http://prettus.local/users?orderBy=posts:custom_id,other_id|posts.title&sortedBy=desc`
+
+Query will have something like this
+
+```sql
+...
+INNER JOIN posts ON users.custom_id = posts.other_id
+...
+ORDER BY posts.title
+...
+```
+
 Sorting multiple columns same sortedBy
 
 `http://prettus.local/users?orderBy=name;created_at&sortedBy=desc`
@@ -817,7 +848,47 @@ Add relationship
 
 `http://prettus.local/users?with=groups`
 
+Between filter
 
+`http://prettus.local/product?search=price:100,500&searchFields=price:between`
+
+Result will have something like this
+
+```json
+   [
+       {
+           "id": 3,
+           "price": "150",
+           "created_at": "-0001-11-28 00:00:00"
+       },
+       {
+           "id": 1,
+           "price": "300",
+           "created_at": "-0001-11-29 00:00:00"
+       },
+       {
+           "id": 2,
+           "price": "450",
+           "created_at": "-0001-11-30 00:00:00"
+       }
+   ]
+```
+
+WhereIn filter
+
+`http://prettus.local/product?search=price:300,500&searchFields=price:in`
+
+Result will have something like this
+
+```json
+   [
+       {
+           "id": 1,
+           "price": "300",
+           "created_at": "-0001-11-29 00:00:00"
+       }
+   ]
+```
 
 #### Overwrite params name
 

@@ -36,7 +36,8 @@
     "twilio/sdk": "^6.1",
     "usmanhalalit/laracsv": "1.*@dev",
     "webklex/laravel-imap": "^1.4",
-    "zizaco/entrust": "5.2.x-dev"
+    "zizaco/entrust": "5.2.x-dev",
+	"venturecraft/revisionable": "1.*"
   },
   "require-dev": {
     "barryvdh/laravel-debugbar": "^3.2",
