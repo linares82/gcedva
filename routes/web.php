@@ -1597,7 +1597,7 @@ Route::get(
     '/clientes/comprobanteEstudios/',
     array(
         'as' => 'clientes.comprobanteEstudios',
-        //'middleware' => 'permission:clientes.comprobanteEstudios',
+        'middleware' => 'permission:clientes.comprobanteEstudios',
         'uses' => 'ClientesController@comprobanteEstudios'
     )
 )->middleware('auth');
@@ -1605,7 +1605,7 @@ Route::post(
     '/clientes/comprobanteEstudiosR/',
     array(
         'as' => 'clientes.comprobanteEstudiosR',
-        //'middleware' => 'permission:clientes.comprobanteEstudios',
+        'middleware' => 'permission:clientes.comprobanteEstudios',
         'uses' => 'ClientesController@comprobanteEstudiosR'
     )
 )->middleware('auth');

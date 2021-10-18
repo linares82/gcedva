@@ -3,8 +3,6 @@
 namespace App\Providers;
 
 
-use Illuminate\Support\Collection;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Auth;
 use App\Caja;
 use App\Pago;
@@ -23,6 +21,7 @@ use App\Transference;
 use Studio\Totem\Totem;
 use App\AsignacionTarea;
 use App\CuentasEfectivo;
+use App\HistoriaCliente;
 use App\HCalifPonderacion;
 use App\PeticionMultipago;
 use App\Observers\CajaObserver;
@@ -33,7 +32,9 @@ use App\Observers\AdeudoObserver;
 use App\Observers\AlumnoObserver;
 use App\Observers\EgresoObserver;
 use App\Observers\MuebleObserver;
+use App\Observers\HistoriaClienteObserver;
 use App\Observers\ClienteObserver;
+use Illuminate\Support\Collection;
 use App\Observers\EmpleadoObserver;
 use App\Observers\ProspectoObserver;
 use App\Observers\AsistenciaRObserver;
@@ -44,6 +45,7 @@ use Illuminate\Support\ServiceProvider;
 use App\Observers\AsignacionTareaObserver;
 use App\Observers\CuentasEfectivoObserver;
 use App\Observers\PeticionMultipagoObserver;
+use Illuminate\Pagination\LengthAwarePaginator;
 use App\Observers\CalificacionPonderacionObserver;
 
 class AppServiceProvider extends ServiceProvider
@@ -67,6 +69,7 @@ class AppServiceProvider extends ServiceProvider
         Cliente::observe(ClienteObserver::class);
         Empleado::observe(EmpleadoObserver::class);
         Egreso::observe(EgresoObserver::class);
+        HistoriaCliente::observe(HistoriaClienteObserver::class);
         Inscripcion::observe(InscripcionObserver::class);
         Pago::observe(PagoObserver::class);
         PeticionMultipago::observe(PeticionMultipagoObserver::class);

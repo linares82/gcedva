@@ -47,10 +47,12 @@ use App\PreguntaCliente;
 use App\IncidenceCliente;
 use App\CcuestionarioDato;
 use App\CombinacionCliente;
+use Illuminate\Support\Str;
 use App\Http\Requests\Carga;
 use Illuminate\Http\Request;
 use App\ConsecutivoMatricula;
 use App\ConsultaCalificacion;
+use App\ImpresionComprobanteE;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\createCliente;
 use App\Http\Requests\updateCliente;
@@ -2482,7 +2484,7 @@ class ClientesController extends Controller
     }
 
     public function comprobanteEstudiosR(Request $request)
-    {/*
+    {
         $datos = $request->all();
         //dd($datos);
         $cliente = Cliente::find($datos['cliente']);
@@ -2503,11 +2505,16 @@ class ClientesController extends Controller
         $input['usu_mod_id'] = Auth::user()->id;
         $token = ImpresionComprobanteE::create($input);
         $foto_aux = $cliente->pivotDocCliente->where('doc_alumno_id', 11)->first();
-        $foto = end(explode('/', $foto_aux->archivo));
+        if(!is_null($foto_aux)){
+            $foto = end(explode('/', $foto_aux->archivo));
+        }else{
+            $foto="Sin foto";
+        }
+        
         //dd($foto);
 
         return view('clientes.reportes.comprobateEstudiosR', compact('cliente', 'inscripcion', 'token', 'foto'));
-        */
+    
     }
 
 }
