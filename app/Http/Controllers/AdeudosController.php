@@ -138,7 +138,7 @@ class AdeudosController extends Controller
             //Genera la matricula para un cliente si no la tiene.
             //Datos para matricula
 
-
+            $param=Param::where('llave','prefijo_matricula_instalacion')->first();
             $combinacion = CombinacionCliente::find($adeudo->combinacion_cliente_id);
             //dd($combinacion);
             $planPagoLn = PlanPagoLn::where('plan_pago_id', $combinacion->plan_pago_id)->orderBy('fecha_pago', 'asc')->first();
@@ -188,7 +188,12 @@ class AdeudosController extends Controller
                     $plantel = substr($rellenoPlantel, 0, 2 - strlen($combinacion->plantel_id)) . $combinacion->plantel_id;
                     $consecutivoCadena = substr($rellenoConsecutivo, 0, 3 - strlen($consecutivo->consecutivo)) . $consecutivo->consecutivo;
 
-                    $entrada['matricula'] = $mes . $anio . $seccion . $plantel . $consecutivoCadena;
+                    if($param->valor<>"0"){
+                        $entrada['matricula'] = $param->valor.$mes . $anio . $seccion . $plantel . $consecutivoCadena;
+                    }else{
+                        $entrada['matricula'] = $mes . $anio . $seccion . $plantel . $consecutivoCadena;
+                    }
+                    
                     //$i->update($entrada);
 
                     //dd($entrada['matricula']);

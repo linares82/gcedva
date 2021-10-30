@@ -2346,6 +2346,8 @@ class ClientesController extends Controller
                     //$inscripcionConcepto = $adeudos->where('caja_concepto_id', 1);
                     //$lectivo = Lectivo::find($combinacion->lectivo_id);
                     //dd($planPagoLn);
+                    $param=Param::where('llave','prefijo_matricula_instalacion')->first();
+                    
                     $fecha = Carbon::createFromFormat('Y-m-d', $planPagoLn->fecha_pago);
                     $grado = Grado::find($combinacion->grado_id);
                     //Log::info("grado: " . $grado->id);
@@ -2387,7 +2389,13 @@ class ClientesController extends Controller
                     $seccion = $grado->seccion;
                     $consecutivoCadena = substr($rellenoConsecutivo, 0, 3 - strlen($consecutivo->consecutivo)) . $consecutivo->consecutivo;
 
-                    $entrada['matricula'] = $mes . $anio . $seccion . $plantel . $consecutivoCadena;
+                    
+                    if($param->valor<>"0"){
+                        $entrada['matricula'] = $param->valor.$mes . $anio . $seccion . $plantel . $consecutivoCadena;
+                    }else{
+                        $entrada['matricula'] = $mes . $anio . $seccion . $plantel . $consecutivoCadena;
+                    }
+                    //dd($entrada);
                     //$i->update($entrada);
 
                     //dd($entrada['matricula']);

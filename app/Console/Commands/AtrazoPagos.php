@@ -70,7 +70,7 @@ class AtrazoPagos extends Command
                 //->whereIn('c.id', array(11522))
                 ->whereColumn('adeudos.combinacion_cliente_id', 'cc.id')
                 ->join('caja_conceptos as caj_con', 'caj_con.id', '=', 'adeudos.caja_concepto_id')
-                ->where('caj_con.bnd_mensualidad', 1)
+                //->where('caj_con.bnd_mensualidad', 1)
                 ->where('fecha_pago', '<', $fechaActual)
                 ->where('pagado_bnd', 0)
                 ->whereNotIn('c.plantel_id', array(54))

@@ -2,17 +2,18 @@
 
 namespace App\Console\Commands;
 
+use App\Grado;
+use App\Param;
 use App\Adeudo;
 use App\Cliente;
-use App\CombinacionCliente;
-use App\ConsecutivoMatricula;
-use App\Grado;
+use Carbon\Carbon;
 use App\PlanPagoLn;
 use App\UsuarioCliente;
-use Carbon\Carbon;
+use App\CombinacionCliente;
+use App\ConsecutivoMatricula;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Hash;
 
 class IANMatricula extends Command
 {
@@ -94,6 +95,7 @@ class IANMatricula extends Command
                     //$inscripcionConcepto = $adeudos->where('caja_concepto_id', 1);
                     //$lectivo = Lectivo::find($combinacion->lectivo_id);
                     //dd($planPagoLn);
+                    $param=Param::where('llave','prefijo_matricula_instalacion')->first();
                     $fecha = Carbon::createFromFormat('Y-m-d', $planPagoLn->fecha_pago);
                     $grado = Grado::find($combinacion->grado_id);
                     //Log::info("grado: " . $grado->id);
@@ -135,7 +137,12 @@ class IANMatricula extends Command
                     $seccion = $grado->seccion;
                     $consecutivoCadena = substr($rellenoConsecutivo, 0, 3 - strlen($consecutivo->consecutivo)) . $consecutivo->consecutivo;
 
-                    $entrada['matricula'] = $mes . $anio . $seccion . $plantel . $consecutivoCadena;
+                    if($param<>0){
+                        $entrada['matricula'] = $param->valor. $mes . $anio . $seccion . $plantel . $consecutivoCadena;
+                    }else{
+                        $entrada['matricula'] = $mes . $anio . $seccion . $plantel . $consecutivoCadena;
+                    }
+                    
                     //$i->update($entrada);
 
                     //dd($entrada['matricula']);

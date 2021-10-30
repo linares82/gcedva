@@ -122,7 +122,7 @@
             </div>
         </div>
     </div>
-
+    
 @endsection
 
 @section('content')
@@ -145,7 +145,7 @@
                                 <td><a href="{{ route('docAlumnos.show', $docAlumno->id) }}">{{$docAlumno->id}}</a></td>
                                 <td>{{$docAlumno->name}}</td>
                                 <td>
-                                    @if($docAlumno==1)
+                                    @if($docAlumno->doc_obligatorio==1)
                                     SI
                                     @else
                                     NO

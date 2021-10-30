@@ -281,6 +281,7 @@
                     @endif
                     @endif
                     @endif
+                    
                     @if(isset($caja) and ($caja->st_caja_id==0 or $caja->st_caja_id==3))
                     <div class="form-group col-md-4">
                         <div class='text-center'>
@@ -602,11 +603,12 @@
                                 <tr>
                                     <th>
                                         <div class="procesar">
-                                            @if(isset($caja))
+                                            @if(isset($caja) and count($caja->pagos)==0)
                                             <button class="procesarAdeudos btn btn-primary btn-xs" data-cliente_id="{{ $caja->cliente_id }}"
                                                                                                    data-caja="{{ $caja->id }}">
                                             <i class="glyphicon glyphicon-plus-sign"></i></button>    
                                             @endif
+                                            
                                         </div>
                                         
                                     </th>

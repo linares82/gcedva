@@ -210,7 +210,12 @@
                                         <td>{{$a->name}}</td>
                                         <td>{{$a->detalle}}</td>
                                         <td>
+                                            
+                                            @if($a->activo==1)
                                             <a class="btn btn-xs btn-primary" href="{{ route('avisos.inactivo', array('id'=>$a->id, 'cliente'=>$seguimiento->cliente_id)) }}"><i class="glyphicon glyphicon-trash"></i> Cerrar</a>
+                                            @else
+                                            Cerrado
+                                            @endif
                                         </td>
                                     </tr>
                                     @endforeach

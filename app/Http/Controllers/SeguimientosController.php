@@ -103,7 +103,7 @@ class SeguimientosController extends Controller
         //$seguimiento->getAllData();
         $sts = StSeguimiento::pluck('name', 'id');
         $asignacionTareas = AsignacionTarea::where('cliente_id', '=', $seguimiento->cliente_id)->get();
-        $avisos = Aviso::select('avisos.id', 'a.name', 'avisos.detalle', 'avisos.fecha', Db::Raw('DATEDIFF(avisos.fecha,CURDATE()) as dias_restantes'))
+        $avisos = Aviso::select('avisos.id', 'avisos.activo', 'a.name', 'avisos.detalle', 'avisos.fecha', Db::Raw('DATEDIFF(avisos.fecha,CURDATE()) as dias_restantes'))
             ->join('asuntos as a', 'a.id', '=', 'avisos.asunto_id')
             ->where('seguimiento_id', '=', $seguimiento->id)
             ->get();

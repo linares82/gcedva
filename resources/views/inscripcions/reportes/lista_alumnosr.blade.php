@@ -122,7 +122,7 @@
                                 <?php
                                     $fechas=\App\AsistenciaR::where('asignacion_academica_id',$r->asignacion)
                                             ->where('cliente_id',$r->cliente)
-                                            ->whereNotIn('cliente_id',[0,2])
+                                            //->whereNotIn('cliente_id',[0,2])
                                             ->get();
                                  
                                 ?>

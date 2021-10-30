@@ -88,13 +88,13 @@ class LoginController extends Controller
         //dd($empleado->plantel->st_plantel_id);
         if($empleado->plantel->st_plantel_id<>1){
             //dd('fil');
-            /*
+            
             $this->guard()->logout();
             $request->session()->flush();
             $request->session()->regenerate(true); //<-- pass a boolean true to regenerate function.
             
             return view('auth.login')->with('message','Plantel no esta activo');
-            */
+            
         }
 
         Session::put('user_id', $user->id);

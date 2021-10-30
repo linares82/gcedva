@@ -47,13 +47,17 @@ class TurnosController extends Controller
      */
     public function store(createTurno $request)
     {
-
-        $input = $request->all();
+        //$input = $request->all();
+        $input = $request->except('plan_pago_id');
+        $planes = $request->only('plan_pago_id');
+        
         $input['usu_alta_id'] = Auth::user()->id;
         $input['usu_mod_id'] = Auth::user()->id;
 
         //create data
-        Turno::create($input);
+        
+        $turno=Turno::create($input);
+        $turno->planes()->sync($planes['plan_pago_id']);
 
         return redirect()->route('turnos.index')->with('message', 'Registro Creado.');
     }

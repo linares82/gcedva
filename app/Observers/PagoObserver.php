@@ -2,20 +2,21 @@
 
 namespace App\Observers;
 
+use App\Pago;
+use App\Grado;
+use App\Param;
 use App\Adeudo;
 use App\Cliente;
+use App\Lectivo;
+use Carbon\Carbon;
+use App\PlanPagoLn;
+use App\IngresoEgreso;
+use App\UsuarioCliente;
+use App\CuentasEfectivo;
 use App\CombinacionCliente;
 use App\ConsecutivoMatricula;
-use App\Pago;
-use App\CuentasEfectivo;
-use App\Grado;
-use App\IngresoEgreso;
-use App\Lectivo;
-use App\PlanPagoLn;
-use App\UsuarioCliente;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Hash;
 
 class PagoObserver
 {
@@ -64,6 +65,7 @@ class PagoObserver
                     $fecha = Carbon::createFromFormat('Y-m-d', date('Y-m-d'));
                 }
 
+                $param=Param::where('llave','prefijo_matricula_instalacion')->first();
                 $grado = Grado::find($combinacion->grado_id);
                 //dd($grado);
                 $relleno = "000000";
@@ -107,7 +109,11 @@ class PagoObserver
                         $plantel = substr($rellenoPlantel, 0, 2 - strlen($combinacion->plantel_id)) . $combinacion->plantel_id;
                         $consecutivoCadena = substr($rellenoConsecutivo, 0, 3 - strlen($consecutivo->consecutivo)) . $consecutivo->consecutivo;
 
-                        $entrada['matricula'] = $mes . $anio . $seccion . $plantel . $consecutivoCadena;
+                        if($param->valor<>"0"){
+                            $entrada['matricula'] = $param->valor.$mes . $anio . $seccion . $plantel . $consecutivoCadena;
+                        }else{
+                            $entrada['matricula'] = $mes . $anio . $seccion . $plantel . $consecutivoCadena;
+                        }
                         //$i->update($entrada);
 
                         //dd($entrada['matricula']);

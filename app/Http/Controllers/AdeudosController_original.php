@@ -2,38 +2,39 @@
 
 namespace App\Http\Controllers;
 
-use App\Adeudo;
-use App\Caja;
-use App\CajaConcepto;
-use App\CajaLn;
-use App\Cliente;
-use App\ConsecutivoMatricula;
-use App\CombinacionCliente;
-use App\Descuento;
-use App\Empleado;
-use App\HistoriaCliente;
-use App\Grado;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\createAdeudo;
-use App\Http\Requests\updateAdeudo;
-use App\Pago;
-use App\PlanPago;
-use App\PlanPagoLn;
-use App\Plantel;
-use App\PromoPlanLn;
-use App\ReglaRecargo;
-use App\Seguimiento;
-use App\StCaja;
-use App\UsuarioCliente;
-use Auth;
-use Carbon\Carbon;
 use DB;
-use Illuminate\Http\Request;
 use Log;
 use PDF;
-use Session;
-use Exception;
+use Auth;
 use Hash;
+use Session;
+use App\Caja;
+use App\Pago;
+use App\Grado;
+use App\Param;
+use Exception;
+use App\Adeudo;
+use App\CajaLn;
+use App\StCaja;
+use App\Cliente;
+use App\Plantel;
+use App\Empleado;
+use App\PlanPago;
+use App\Descuento;
+use Carbon\Carbon;
+use App\PlanPagoLn;
+use App\PromoPlanLn;
+use App\Seguimiento;
+use App\CajaConcepto;
+use App\ReglaRecargo;
+use App\UsuarioCliente;
+use App\HistoriaCliente;
+use App\CombinacionCliente;
+use Illuminate\Http\Request;
+use App\ConsecutivoMatricula;
+use App\Http\Requests\createAdeudo;
+use App\Http\Requests\updateAdeudo;
+use App\Http\Controllers\Controller;
 
 class AdeudosController extends Controller
 {
@@ -136,7 +137,7 @@ class AdeudosController extends Controller
             //Genera la matricula para un cliente si no la tiene.
             //Datos para matricula
 
-
+            $param=Param::where('llave','prefijo_matricula_instalacion')->first();
             $combinacion = CombinacionCliente::find($adeudo->combinacion_cliente_id);
             //dd($combinacion);
             $planPagoLn = PlanPagoLn::where('plan_pago_id', $combinacion->plan_pago_id)->orderBy('fecha_pago', 'asc')->first();
@@ -185,7 +186,12 @@ class AdeudosController extends Controller
                     $plantel = substr($rellenoPlantel, 0, 2 - strlen($combinacion->plantel_id)) . $combinacion->plantel_id;
                     $consecutivoCadena = substr($rellenoConsecutivo, 0, 3 - strlen($consecutivo->consecutivo)) . $consecutivo->consecutivo;
 
-                    $entrada['matricula'] = $mes . $anio . $seccion . $plantel . $consecutivoCadena;
+                    if($param<>"0"){
+                        $entrada['matricula'] = $param->valor. $mes . $anio . $seccion . $plantel . $consecutivoCadena;
+                    }else{
+                        $entrada['matricula'] = $mes . $anio . $seccion . $plantel . $consecutivoCadena;
+                    }
+                    
                     //$i->update($entrada);
 
                     //dd($entrada['matricula']);

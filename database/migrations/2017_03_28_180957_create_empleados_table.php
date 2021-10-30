@@ -33,6 +33,7 @@ class CreateEmpleadosTable extends Migration
             $table->string('identificacion')->nullable();
             $table->string('contrato')->nullable();
             $table->string('evaluacion_psico')->nullable();
+            $table->integer('plantel_id')->unsigned();
             $table->integer('st_empleado_id')->unsigned();
             $table->integer('pendientes')->unsigned()->nullable();
             $table->integer('user_id')->unsigned();
@@ -46,6 +47,7 @@ class CreateEmpleadosTable extends Migration
             $table->foreign('st_empleado_id')->references('id')->on('st_empleados');
             $table->foreign('area_id')->references('id')->on('areas');
             $table->foreign('puesto_id')->references('id')->on('puestos');
+            $table->foreign('plantel_id')->references('id')->on('plantels');
         });
     }
 
