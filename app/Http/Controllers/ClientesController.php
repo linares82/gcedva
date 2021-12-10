@@ -2140,6 +2140,10 @@ class ClientesController extends Controller
 
     public function concretadosR(Request $request){
         $datos=$request->all();
+        $param=Param::where('llave','prefijo_matricula_instalacion')->first();
+        if($param->valor<>0){
+            $datos['inicio_matricula']=$param->valor.$datos['inicio_matricula'];
+        }
         $planteles=Plantel::select('plantels.id','plantels.meta_total')->whereIn('plantels.id',$datos['plantel_f'])->get();
         $totales=Cliente::select('p.razon','g.seccion', 'sts.name as estatus', DB::raw('count(sts.name) as total_estatus'))
         ->join('seguimientos as s','s.cliente_id','=','clientes.id')
@@ -2432,14 +2436,14 @@ class ClientesController extends Controller
         $cliente=Cliente::find($datos['cliente']);
         if (!is_null($cliente->matricula)) {
             $buscarMatricula = UsuarioCliente::where('name', $cliente->matricula)->first();
-            $buscarMail = UsuarioCliente::where('email', $cliente->mail)->first();
-            if (is_null($buscarMatricula) and is_null($buscarMail)) {
+            //$buscarMail = UsuarioCliente::where('email', $cliente->mail)->first();
+            if (is_null($buscarMatricula)/* and is_null($buscarMail)*/) {
                 $usuario_cliente['name'] = $cliente->matricula;
                 if (is_null($cliente->mail) or $cliente->mail == "") {
                     $usuario_cliente['email'] = "Sin correo";
                 } else {
                     $usuario_cliente['email'] = $cliente->mail;
-                }
+                }   
                 $usuario_cliente['password'] = Hash::make('123456');
                 $usuario=UsuarioCliente::create($usuario_cliente);
             }else{

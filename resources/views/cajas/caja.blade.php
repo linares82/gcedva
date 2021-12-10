@@ -204,7 +204,9 @@
                     <div class="form-group col-md-4">
                         <div class='text-center'>
                         @permission('cajas.eliminarRecargo')
+                            @if(isset($caja) and $caja->pagos->count()==0)
                             <a href="{{route('cajas.eliminarRecargo', array('caja_id'=>$caja->id))}}" class="btn btn-info btn-sm "><i class=""></i> Eliminar Recargo</a>
+                            @endif
                         @endpermission
                         </div>
                     </div>

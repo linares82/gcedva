@@ -17,7 +17,7 @@ class CreateHCuentasEfectivosTable extends Migration
 			$table->increments('id');
 			$table->integer('cuentas_efectivo_id')->unsigned();
 			$table->double('saldo_inicial', 8, 2)->nulable();
-			$table->double('saldo_actualizado', 8, 2)->nulable();
+			$table->double('saldo_actualizado', 20, 2)->nulable();
 			$table->date('fecha_saldo_inicial');
 			$table->integer('usu_alta_id')->unsigned();
 			$table->integer('usu_mod_id')->unsigned();

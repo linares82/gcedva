@@ -406,7 +406,7 @@
   <script type="text/javascript">
     $(document).ready(function() {
         @permission('seguimientos.activarEstatus')
-        @if($seguimiento->st_seguimiento_id==2)
+        @if($seguimiento->st_seguimiento_id==2 or $seguimiento->st_seguimiento_id==6)
         @foreach($sts as $key=>$item)
             $("#st_seguimiento_id-field option[value*={{ $key }}]").prop('disabled', true);
         @endforeach

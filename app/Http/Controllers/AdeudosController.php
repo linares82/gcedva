@@ -11,6 +11,7 @@ use Session;
 use App\Caja;
 use App\Pago;
 use App\Grado;
+use App\Param;
 use Exception;
 use App\Adeudo;
 use App\CajaLn;
@@ -1366,7 +1367,7 @@ class AdeudosController extends Controller
          */
         //dd($lineas_detalle);
 
-        return view('adeudos.reportes.maestroR', compact('lineas_procesadas', 'pagos', 'lineas_detalle', 'datos'));
+        return view('adeudos.reportes.maestroR', compact('lineas_procesadas', 'lineas_detalle', 'datos'));
     }
 
     public function maestroIndicador(Request $request)

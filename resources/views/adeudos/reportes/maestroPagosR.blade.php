@@ -111,7 +111,9 @@
                 <th>{{$total['clientes_activos']}}</th>
                 <th></th>
                 <th>{{$total['clientes_pagados']}}</th>
+                @permission('adeudos.maestroPagosConMontos')
                 <th> {{number_format($total['total_monto_pagado'],2)}}</th>
+                @endpermission
                 <th> </th>
                 <th> {{$total['deudores']}}</th>
                 <th> {{number_format($total['monto_deuda'],2)}}</th>

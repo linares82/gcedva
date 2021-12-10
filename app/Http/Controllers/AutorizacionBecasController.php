@@ -251,6 +251,7 @@ class AutorizacionBecasController extends Controller
 			'c.nombre2',
 			'c.ape_paterno',
 			'c.ape_materno',
+			'autorizacion_becas.solicitud',
 			'autorizacion_becas.monto_mensualidad as porcentaje'
 		)
 			->join('clientes as c', 'c.id', '=', 'autorizacion_becas.cliente_id')

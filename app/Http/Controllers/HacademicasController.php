@@ -391,10 +391,12 @@ class HacademicasController extends Controller
                 $c->save();
 
                 $g = Grado::find($input['grado_id'])->first();
+                $extra_bachillerato=Param::where('llave','extra_bachillerato')->first();
+                $extra_no_bachillerato=Param::where('llave','extra_no_bachillerato')->first();
                 if ($input['examen_id'] == 2 and $g->name == "BACHILLERATO") {
-                    $ponderaciones = CargaPonderacion::where('ponderacion_id', '=', 1)->get();
+                    $ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $extra_bachillerato->valor)->get();
                 } elseif ($input['examen_id'] == 2 and $g->name <> "BACHILLERATO") {
-                    $ponderaciones = CargaPonderacion::where('ponderacion_id', '=', 2)->get();
+                    $ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $extra_no_bachillerato->valor)->get();
                 }
                 //dd($ponderaciones);
                 foreach ($ponderaciones as $p) {
@@ -561,7 +563,9 @@ class HacademicasController extends Controller
         //dd($carga_ponderaciones->toArray());
         $msj = "";
         $hacademicas=null;
-        if (isset($data['excepcion']) or $periodos_capturados_total == 0) {
+        //dd($periodos_capturados_total);
+        //if (isset($data['excepcion']) or $periodos_capturados_total == 0) {
+            if (isset($data['excepcion'])) {    
             //dd('flc');
             $hacademicas = HAcademica::select(
                 'cli.id',
@@ -596,6 +600,7 @@ class HacademicasController extends Controller
                 ->orderBy('cli.nombre')
                 ->orderBy('cli.nombre2')
                 ->whereNull('hacademicas.deleted_at')
+                ->whereNull('c.deleted_at')
                 ->whereNull('i.deleted_at')
                 ->whereNull('cp.deleted_at')
                 ->orderBy('cli.ape_paterno')
@@ -646,6 +651,7 @@ class HacademicasController extends Controller
                     })
                     ->whereNull('hacademicas.deleted_at')
                     ->whereNull('i.deleted_at')
+                    ->whereNull('c.deleted_at')
                     ->whereNull('cp.deleted_at')
                     ->get();
             }
@@ -759,14 +765,17 @@ class HacademicasController extends Controller
                 ->first();
 
             $g = Grado::find($hacademica->grado_id)->first();
+
             //dd($g->toArray());
+            $extra_bachillerato=Param::where('llave','extra_bachillerato')->first();
+            $extra_no_bachillerato=Param::where('llave','extra_no_bachillerato')->first();
             if ($tpo_examen_id == 2 and $g->name == "BACHILLERATO") {
-                $carga_ponderaciones = CargaPonderacion::where('ponderacion_id', '=', 1)
+                $carga_ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $extra_bachillerato->valor)
                     ->where('tiene_detalle', '=', 0)
                     ->where('bnd_activo', 1)
                     ->get();
             } elseif ($tpo_examen_id == 2 and $g->name <> "BACHILLERATO") {
-                $carga_ponderaciones = CargaPonderacion::where('ponderacion_id', '=', 2)
+                $carga_ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $extra_no_bachillerato->valor)
                     ->where('tiene_detalle', '=', 0)
                     ->where('bnd_activo', 1)
                     ->get();

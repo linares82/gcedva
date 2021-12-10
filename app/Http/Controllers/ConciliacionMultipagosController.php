@@ -373,6 +373,11 @@ class ConciliacionMultipagosController extends Controller
 					$pagoConciliacion->success_multipago_id = 0;
 				}
 				$pagoConciliacion->save();
+
+				$caja = $peticionBuscado->pago->caja;
+				if($caja->st_caja_id==0){
+					$this->actualizaEstatusCaja($caja->id);
+				}
 			}
 		}
 
@@ -464,13 +469,25 @@ class ConciliacionMultipagosController extends Controller
 		foreach ($peticionesExistentes as $peticion) {
 			//dd($peticion);
 			$registro = array();
-			$registro['plantel'] = optional($peticion->pago->caja->plantel)->razon;
-			$registro['caja_consecutivo'] = $peticion->pago->caja->consecutivo;
-			$registro['caja_monto'] = $peticion->pago->caja->total;
-			$registro['caja_fecha'] = $peticion->pago->caja->fecha;
-			$registro['pago_consecutivo'] = $peticion->pago->consecutivo;
-			$registro['pago_fecha'] = $peticion->pago->fecha;
-			$registro['pago_monto'] = $peticion->pago->fecha;
+			$pago=Pago::where('id',$peticion->pago_id)->first();
+			if(is_null($pago)){
+				$registro['plantel'] = "Caja Cancelada";
+				$registro['caja_consecutivo'] = "Caja Cancelada";
+				$registro['caja_monto'] = "Caja Cancelada";
+				$registro['caja_fecha'] = "Caja Cancelada";
+				$registro['pago_consecutivo'] = "Caja Cancelada";
+				$registro['pago_fecha'] = "Caja Cancelada";
+				$registro['pago_monto'] = "Caja Cancelada";
+			}else{
+				$registro['plantel'] = optional($peticion->pago->caja->plantel)->razon;
+				$registro['caja_consecutivo'] = $peticion->pago->caja->consecutivo;
+				$registro['caja_monto'] = $peticion->pago->caja->total;
+				$registro['caja_fecha'] = $peticion->pago->caja->fecha;
+				$registro['pago_consecutivo'] = $peticion->pago->consecutivo;
+				$registro['pago_fecha'] = $peticion->pago->fecha;
+				$registro['pago_monto'] = $peticion->pago->fecha;
+				
+			}
 			$registro['peticion_fecha'] = $peticion->created_at;
 			$registro['peticion_mp_node'] = $peticion->mp_node;
 			$registro['peticion_mp_order'] = $peticion->mp_order;

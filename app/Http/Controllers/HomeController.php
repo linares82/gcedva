@@ -115,7 +115,8 @@ class HomeController extends Controller
                 ->join('clientes as c', 'c.id', '=', 's.cliente_id')
                 ->where('avisos.activo', '=', '1')
                 //->where('avisos.fecha', '>=', Db::Raw('CURDATE()'))
-                ->where('c.empleado_id', '=', $empleado->id)
+                //->where('c.empleado_id', '=', $empleado->id)
+                ->where('avisos.usu_alta_id', '=', $empleado->user_id)
                 ->orderBy('avisos.fecha')
                 ->get();
         

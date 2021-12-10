@@ -159,8 +159,8 @@
                         @endphp
                         @foreach($alumnos as $a)
                         <tr><td>{{ ++$i }}</td>
-                            <td>{{$a->cliente->matricula}}</td>
-                            <td>{{ $a->cliente->ape_paterno }} {{ $a->cliente->ape_materno }} {{ $a->cliente->nombre }} {{ $a->cliente->nombre2 }}</td>
+                            <td>{{optional($a->cliente)->matricula}}</td>
+                            <td>{{ optional($a->cliente)->ape_paterno }} {{ $a->cliente->ape_materno }} {{ $a->cliente->nombre }} {{ $a->cliente->nombre2 }}</td>
                             <td>{{ $a->cliente->curp }}</td>
                             @php
                             //dd($datos);

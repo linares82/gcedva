@@ -160,6 +160,7 @@
      
      $(document).on("click", ".btn-guardar_caificacion", function (e) {
         //alert($('#calificacion_parcial'+$(this).data('cliente_id')).val()); 
+        
         var miurl = "{{route('hacademicas.actualizarCalificacion')}}";
         var id=$(this).data('cliente_id');
         var data = new FormData();

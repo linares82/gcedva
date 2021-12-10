@@ -49,9 +49,17 @@ class ActivarBs extends Command
      */
     public function handle()
     {
-        $fechaActual = Carbon::createFromFormat('Y-m-d', Date('Y-m-d'))->toDateString();
-	    $fechaAnterior = Carbon::createFromFormat('Y-m-d', Date('Y-m-d'))->subDays(7)->toDateString();
-	//dd($fechaAnterior);
+
+        //$diaFechaActual=Carbon::createFromFormat('Y-m-d', Date('Y-m-d'))->day;
+        $aux=Carbon::createFromFormat('Y-m-d', Date('Y-m-d'));
+        /*if($diaFechaActual<=11 and $diaFechaActual>=1){
+            $aux->month=Carbon::createFromFormat('Y-m-d', Date('Y-m-d'))->month-1;
+            $aux->day=$aux->daysInMonth;
+        }*/
+        $fechaActual = $aux->toDateString();
+        
+	    $fechaAnterior = $aux->subDays(7)->toDateString();
+	    //dd($fechaActual);
         //Query para identificar clientes con cajas pagadas
         
         $cajasHoy=Caja::select('cajas.*')

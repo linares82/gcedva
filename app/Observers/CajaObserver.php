@@ -13,6 +13,7 @@ use Log;
 use App\Inscripcion;
 use Auth;
 use Exception;
+use Carbon\Carbon;
 
 use App\valenceSdk\samples\BasicSample\UsoApi;
 
@@ -93,9 +94,16 @@ class CajaObserver
                 $seguimiento->save();
 
                 if ($this->caja->cliente->st_cliente_id == 26) {
+                    $diaFechaActual=Carbon::createFromFormat('Y-m-d', Date('Y-m-d'))->day;
+                    $aux=Carbon::createFromFormat('Y-m-d', Date('Y-m-d'));
+                    if($diaFechaActual<=10 and $diaFechaActual>=1){
+                        $aux->month=Carbon::createFromFormat('Y-m-d', Date('Y-m-d'))->month-1;
+                        $aux->day=$aux->daysInMonth;
+                    }
+                    $fechaActual = $aux->toDateString();
                     $adeudos = Adeudo::where('cliente_id', $this->caja->cliente_id)->where('pagado_bnd', 0)
                         ->whereNull('deleted_at')
-                        ->whereDate('fecha_pago','<=', date('Y-m-d'))
+                        ->whereDate('fecha_pago','<=', $fechaActual)
                         ->count();
                     //dd($adeudos);
                     if ($adeudos <= 1) {
@@ -132,7 +140,7 @@ class CajaObserver
                                             $input['bnd_reactivar'] = 0;
                                             $input['usu_mod_id'] = Auth::user()->id;
                                             $bsBaja->update($input);
-                                            $bsBaja->update($input);
+                                            
                                         }
                                     }
                                 }

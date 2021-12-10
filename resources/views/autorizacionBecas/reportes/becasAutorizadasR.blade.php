@@ -72,6 +72,7 @@
                         <th>Matricula</th>
                         <th>Id</th>
                         <th>Alumno</th>
+                        <th>Solicitud</th>
                         <th>%</th>
                     </tr>
                 </thead>
@@ -91,6 +92,7 @@
                         <td>{{$r->matricula}}</td>
                         <td>{{$r->id}}</td>
                         <td>{{$r->ape_paterno}} {{$r->ape_materno}} {{$r->nombre}} {{$r->nombre2}}</td>
+                        <td>{{ $r->solicitud }}</td>
                         <td>{{$r->porcentaje}}</td>
                     </tr>
                     @endforeach

@@ -25,7 +25,7 @@
             <table class="table table-condensed table-striped">
                 <thead>
                     <th>No.</th><th>Plantel</th><th>Especialidad</th><th>Nivel</th><th>Grado</th>
-                    <th>Id Cliente</th><th>Matricula</th><th>Cliente</th><th>Estatus</th>
+                    <th>Id Cliente</th><th>Matricula</th><th>Cliente</th><th>Estatus S.</th><th>Estatus Bs.</th>
                     <th>Adeudos</th>
                     <th>
 			<input type="submit" class="btn btn-primary" value="Baja BrightSpace"><br/>
@@ -36,22 +36,36 @@
                     @php
                         $i=0;
                     @endphp
-                    @foreach ($registros as $r)
+                    @foreach ($registros2 as $r)
+                        @php
+                            $cliente=App\Cliente::find($r['cliente_id']);
+                            //Log::info($r['combinacion_cliente_id']);
+                            $combinacionCliente=App\CombinacionCliente::find($r['combinacion_cliente_id']);
+                        @endphp
                         <tr>
                             <td>{{ ++$i }}</td>
-                            <td>{{ $r->cliente->plantel->razon }}</td><td>{{ $r->combinacionCliente->especialidad->name }}</td><td>{{ $r->combinacionCliente->nivel->name }}</td>
-                            <td>{{ $r->combinacionCliente->grado->name }}</td>
-                            <td>{{ $r->cliente_id }}</td><td>{{ $r->cliente->matricula }}</td>
-                            <td>{{ $r->cliente->ape_paterno }} {{ $r->cliente->ape_materno }} {{ $r->cliente->nombre }} {{ $r->cliente->nombre2 }}</td>
-                            <td>{{ $r->cliente->stCliente->name }}</td>
+                            <td>{{ $cliente->plantel->razon }}</td><td>{{ $combinacionCliente->especialidad->name }}</td><td>{{ $combinacionCliente->nivel->name }}</td>
+                            <td>{{ $combinacionCliente->grado->name }}</td>
+                            <td>{{ $cliente->id }}</td><td>{{ $cliente->matricula }}</td>
+                            <td>{{ $cliente->ape_paterno }} {{ $cliente->ape_materno }} {{ $cliente->nombre }} {{ $cliente->nombre2 }}</td>
+                            <td>{{ $cliente->stCliente->name }}</td>
+			    <td>
+			    @if($r['estatusBs']=="N/A")
+				{{ $r['estatusBs'] }}
+			    @elseif(!$r['estatusBs'])
+				I
+			    @else
+				A
+			    @endif
+			    </td>
                             <td>
-                                <a href="#" class="btn btn-warning btn-xs linkAdeudos" data-cliente="{{ $r->cliente->id }}">
-                                    {{ $r->adeudos_cantidad }}
+                                <a href="#" class="btn btn-warning btn-xs linkAdeudos" data-cliente="{{ $cliente->id }}">
+                                    {{ $r['adeudos_cantidad'] }}
                                 </a>
                             </td>
                             <td>
-                                {{ Form::checkbox('bajasBs[]', $r->cliente->id, true, array('class'=>'bajasBs')) }}
-                                <!--<input type="checkbox" checked class="bajasBs" value="{{$r->cliente->id}}" />-->
+                                {{ Form::checkbox('bajasBs[]', $cliente->id, false, array('class'=>'bajasBs')) }}
+                                <!--<input type="checkbox" checked class="bajasBs" value="{{$cliente->id}}" />-->
                             </td>
                             @php
                             //$bsBajas=App\BsBaja::where('cliente_id',$r->cliente_id)->where('bnd_reactivar','<>',1)->get();    

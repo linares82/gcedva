@@ -994,7 +994,8 @@ class PagosController extends Controller
     public function getRptPagos()
     {
         $empleados = Empleado::select(DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name, id'))->pluck('name', 'id');
-        return view('pagos.reportes.inscritosPagos', compact('empleados'))
+        $conceptos = CajaConcepto::pluck('name', 'id');
+        return view('pagos.reportes.inscritosPagos', compact('empleados','conceptos'))
             ->with('list', Inscripcion::getListFromAllRelationApps());
     }
 
@@ -1031,6 +1032,7 @@ class PagosController extends Controller
             ->join('caja_lns as cln', 'cln.caja_id', '=', 'cajas.id')
             ->where('cajas.plantel_id', '=', $data['plantel_f'])
             ->whereIn('cajas.usu_alta_id', $usuario)
+            ->whereIn('cln.caja_concepto_id', $data['concepto_f'])
             ->whereNull('pag.deleted_at')
             ->whereNull('cajas.deleted_at')
             ->where('cajas.st_caja_id', '=', 1)
@@ -1090,7 +1092,9 @@ class PagosController extends Controller
             ->join('st_cajas as st', 'st.id', '=', 'cajas.st_caja_id')
             ->join('pagos as pag', 'pag.caja_id', '=', 'cajas.id')
             ->join('forma_pagos as fp', 'fp.id', '=', 'pag.forma_pago_id')
+            ->join('caja_lns as cln', 'cln.caja_id', '=', 'cajas.id')
             ->where('cajas.plantel_id', '=', $data['plantel_f'])
+            ->whereIn('cln.caja_concepto_id', $data['concepto_f'])
             //->where('pag.fecha', '>=', $data['fecha_f'])
             //->where('pag.fecha', '<=', $data['fecha_t'])
             ->whereIn('cajas.usu_alta_id',  $usuario)

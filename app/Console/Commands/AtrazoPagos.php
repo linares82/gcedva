@@ -67,7 +67,7 @@ class AtrazoPagos extends Command
                 ->where('cc.nivel_id', '>', 0)
                 ->where('cc.grado_id', '>', 0)
                 ->where('cc.turno_id', '>', 0)
-                //->whereIn('c.id', array(11522))
+                //->whereIn('c.id', array(43303,43305))
                 ->whereColumn('adeudos.combinacion_cliente_id', 'cc.id')
                 ->join('caja_conceptos as caj_con', 'caj_con.id', '=', 'adeudos.caja_concepto_id')
                 //->where('caj_con.bnd_mensualidad', 1)
@@ -93,7 +93,7 @@ class AtrazoPagos extends Command
                     ->whereDate('fec_vigencia', '>=', $hoy)
                     ->whereNull('historia_clientes.deleted_at')
                     ->get();
-                //dd($eventos->toArray());
+                //dd(count($eventos));
                 if (count($eventos) == 0) {
                     if ($registro->adeudos_cantidad == 1) {
                         /*$cliente = Cliente::find($registro->cliente_id);
@@ -188,12 +188,13 @@ class AtrazoPagos extends Command
 
                     //Muestra resultado
                     $r = $resultado[0];
-                    //dd($r['UserId']);
+                    //dd($r);
 
                     $datos = ['isActive' => False];
                     //dd($datos);
                     if (isset($r['UserId'])) {
                         $resultado2 = $apiBs->doValence2('PUT', '/d2l/api/lp/' . $param->valor . '/users/' . $r['UserId'] . '/activation', $datos);
+			sleep(3);
                         //dd($resultado2);
                         if (isset($resultado2['IsActive']) and !$resultado2['IsActive']) {
                             $input['cliente_id'] = $alumno->id;

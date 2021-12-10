@@ -4,9 +4,13 @@ namespace App\Http\Controllers;
 
 use Auth;
 use App\Mese;
-use App\Adeudo;
-use App\Cliente;
+use App\Param;
+use Exception;
+use Log;
 
+use App\Adeudo;
+use App\BsBaja;
+use App\Cliente;
 use App\StCliente;
 use Carbon\Carbon;
 use File as Archi;
@@ -22,6 +26,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\createHistoriaCliente;
 use App\Http\Requests\updateHistoriaCliente;
+use App\valenceSdk\samples\BasicSample\UsoApi;
 
 class HistoriaClientesController extends Controller
 {
@@ -198,7 +203,7 @@ class HistoriaClientesController extends Controller
 			->where('cliente_id', $historiaCliente->cliente_id)
 			->whereNull('inscripcions.deleted_at')
 			->pluck('inscripcion', 'id');
-		
+
 		return view('historiaClientes.edit', compact('historiaCliente', 'cliente', 'inscripcions'))
 			->with('list', HistoriaCliente::getListFromAllRelationApps());
 	}
@@ -318,8 +323,8 @@ class HistoriaClientesController extends Controller
 		$input = $request->all();
 		$historiaCliente = HistoriaCliente::find($input['id']);
 		$historiaCliente->descripcion = $historiaCliente->descripcion . " - Reactivado";
-		$historiaCliente->reactivado=$historiaCliente->reactivado+1;
-		$historiaCliente->fec_reactivado=Date('Y-m-d');
+		$historiaCliente->reactivado = $historiaCliente->reactivado + 1;
+		$historiaCliente->fec_reactivado = Date('Y-m-d');
 		$historiaCliente->save();
 
 		$cliente = Cliente::find($historiaCliente->cliente_id);
@@ -331,11 +336,50 @@ class HistoriaClientesController extends Controller
 		$seguimiento->save();
 
 		$inscripcion = Inscripcion::find($historiaCliente->inscripcion_id);
-		if(!is_null($inscripcion)){
+		if (!is_null($inscripcion)) {
 			$inscripcion->st_inscripcion_id = 1;
 			$inscripcion->save();
 		}
-		
+
+		$param = Param::where('llave', 'apiVersion_bSpace')->first();
+		$bs_activo = Param::where('llave', 'api_brightSpace_activa')->first();
+		if ($bs_activo->valor == 1) {
+			try {
+				$apiBs = new UsoApi();
+
+				//dd($datos);
+				$resultado = $apiBs->doValence2('GET', '/d2l/api/lp/' . $param->valor . '/users/?orgDefinedId=' . $cliente->matricula);
+				//Muestra resultado
+				$r = $resultado[0];
+				$datos = ['isActive' => True];
+				if (isset($r['UserId'])) {
+					$resultado2 = $apiBs->doValence2('PUT', '/d2l/api/lp/' . $param->valor . '/users/' . $r['UserId'] . '/activation', $datos);
+					$bsBaja = BsBaja::where('cliente_id', $cliente->id)
+						->where('bnd_baja', 1)
+						->where('bnd_reactivar', '<>', 1)
+						->first();
+					if (!is_null($bsBaja)) {
+						if (isset($resultado2['IsActive']) and $resultado2['IsActive'] and !is_null($bsBaja)) {
+							$input['cliente_id'] = $cliente->id;
+							$input['fecha_reactivar'] = Date('Y-m-d');
+							$input['bnd_reactivar'] = 1;
+							$input['usu_mod_id'] = Auth::user()->id;
+							$bsBaja->update($input);
+						} else {
+							$input['cliente_id'] = $cliente->id;
+							$input['fecha_reactivar'] = Date('Y-m-d');
+							$input['bnd_reactivar'] = 0;
+							$input['usu_mod_id'] = Auth::user()->id;
+							$bsBaja->update($input);
+						}
+					}
+				}
+			} catch (Exception $e) {
+				Log::info("cliente no encontrado en Brigth Space u otro error: " . $cliente->matricula . " - " . $e->getMessage());
+				//return false;
+			}
+		}
+
 
 		return redirect()->route('historiaClientes.index', array('q[cliente_id_lt]' => $cliente->id))->with('message', 'Registro Borrado.');
 	}
@@ -479,8 +523,8 @@ class HistoriaClientesController extends Controller
 	public function clientesEstatus()
 	{
 		$eventos = EventoCliente::pluck('name', 'id');
-		$stClientes=StCliente::pluck('name','id');
-		return view('historiaClientes.reportes.clientesEstatus', compact('eventos','stClientes'))
+		$stClientes = StCliente::pluck('name', 'id');
+		return view('historiaClientes.reportes.clientesEstatus', compact('eventos', 'stClientes'))
 			->with('list', Cliente::getListFromAllRelationApps());;
 	}
 
@@ -516,13 +560,13 @@ class HistoriaClientesController extends Controller
 			'historia_clientes.fec_autorizacion'
 		)
 			->join('clientes as c', 'c.id', '=', 'historia_clientes.cliente_id')
-			->join('estados as est', 'est.id','c.estado_id')
-			->join('municipios as muni', 'muni.id','c.municipio_id')
+			->join('estados as est', 'est.id', 'c.estado_id')
+			->join('municipios as muni', 'muni.id', 'c.municipio_id')
 			->join('plantels as p', 'p.id', '=', 'c.plantel_id')
 			->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
 			->join('evento_clientes as ec', 'ec.id', '=', 'historia_clientes.evento_cliente_id')
-			->join('combinacion_clientes as cc','cc.cliente_id','c.id')
-			->join('grados as g', 'g.id','cc.grado_id')
+			->join('combinacion_clientes as cc', 'cc.cliente_id', 'c.id')
+			->join('grados as g', 'g.id', 'cc.grado_id')
 			->whereDate('fecha', '>=', $datos['fecha_f'])
 			->whereDate('fecha', '<=', $datos['fecha_t'])
 			->whereIn('evento_cliente_id', $datos['evento'])

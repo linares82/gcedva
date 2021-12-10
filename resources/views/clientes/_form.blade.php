@@ -372,16 +372,17 @@
                                     
                                 </div>
                             @else
-                            @permission('combinacionClientes.storeMasDeUno')
-                                <div class="form-group col-md-1 @if($errors->has('grado_id')) has-error @endif">
-                                    <input type="button" id="crearCombinacion" class="btn btn-xs btn-block btn-success" value="Crear" onclick="CrearCombinacionCliente()" />
-                                    <!--<a href=# class="btn btn-xs btn-warning btn-block" id="btnConsultaPlan">Ver Plan</a>-->
-                                </div>
+                                @permission('combinacionClientes.storeMasDeUno')
+                                    <div class="form-group col-md-1 @if($errors->has('grado_id')) has-error @endif">
+                                        <input type="button" id="crearCombinacion" class="btn btn-xs btn-block btn-success" value="Crear" onclick="CrearCombinacionCliente()" />
+                                        <!--<a href=# class="btn btn-xs btn-warning btn-block" id="btnConsultaPlan">Ver Plan</a>-->
+                                    </div>
+                                @endpermission
+                                @permission('combinacionClientes.editarCombinacion')
                                 <div class="form-group col-md-1 @if($errors->has('grado_id')) has-error @endif">
                                     <br/><input type="button" id="actualizarCombinacion" class="btn btn-xs btn-block btn-success" value="Guardar" onclick="ActualizarCombinacionCliente()" style="display:none;" />
-                                    
                                 </div>
-                            @endpermission
+                                @endpermission
                             @endif
                         @endif
                         @endpermission    
@@ -1294,13 +1295,13 @@
                             <td colspan="2">
                                 <table class="table table-condensed table-striped">
                                     <thead>
-                                    <td>Examen</td><td>CalificaciOn</td><td></td>
+                                    <td>[L]Examen</td><td>CalificaciOn</td><td></td>
                                     </thead>
                                     <tbody>
                                         @foreach($a->calificaciones as $cali)
                                         <tr>
                                             <td>
-                                                {{$cali->tpoExamen->name}}
+                                                [{{$cali->lectivo_id}}] {{$cali->tpoExamen->name}}
                                             </td>
                                             <td>
                                                 @if($cali->calificacion>6)
@@ -2159,7 +2160,7 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
 
                         $('.editar_combinacion').click(function(){
                             
-                            if($(this).is(':checked')==true){    
+                            if($(this).is(':checked')==true){
                                 $('#combinacion-field').val($(this).data('combinacion'));
                                 $('#especialidad_id-field').val(0).change();
                                 $('#nivel_id-field').val(0).change();

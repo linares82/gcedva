@@ -30,13 +30,7 @@
                     <span class="help-block">{{ $errors->first("plantel_f") }}</span>
                     @endif
                 </div>
-                <div class="form-group col-md-6 @if($errors->has('empleado_f')) has-error @endif">
-                    <label for="empleado_f-field">Colaborador de:</label>
-                    {!! Form::select("empleado_f[]", $empleados, null, array("class" => "form-control select_seguridad", "id" => "empleado_f-field", 'multiple'=>true)) !!}
-                    @if($errors->has("empleado_f"))
-                    <span class="help-block">{{ $errors->first("empleado_f") }}</span>
-                    @endif
-                </div>
+                
 <!--                <div class="form-group col-md-6 @if($errors->has('plantel_t')) has-error @endif">
                     <label for="plantel_t-field">Plantel a:</label>
                     {!! Form::select("plantel_t", $list["Plantel"], null, array("class" => "form-control select_seguridad", "id" => "plantel_t-field")) !!}
@@ -60,12 +54,14 @@
                     @endif
                 </div>-->
                 <div class="form-group col-md-6 @if($errors->has('fecha_pago')) has-error @endif">
-                    {!!Form::radio('fecha_pago', '1')!!} <label>Fecha Pago</label>
-                    {!!Form::radio('fecha_pago', '2')!!} <label>Fecha Pago Creacion</label>
+                     <label>Fecha Pago {!!Form::radio('fecha_pago', '1')!!}</label>
+                     <label>Fecha Pago Creacion {!!Form::radio('fecha_pago', '2')!!}</label>
                     @if($errors->has("fecha_pago"))
                     <span class="help-block">{{ $errors->first("fecha_pago") }}</span>
                     @endif
                 </div>
+
+                <div class="row"></div>
                 
                 <div class="form-group col-md-6 @if($errors->has('fecha_f')) has-error @endif">
                     <label for="fecha_f-field">Fecha de:</label>
@@ -81,7 +77,30 @@
                     <span class="help-block">{{ $errors->first("fecha_t") }}</span>
                     @endif
                 </div>
-            
+                
+                <div class="form-group col-md-12 @if($errors->has('empleado_f')) has-error @endif">
+                    <label for="empleado_f-field">Colaborador de:</label>
+                    <a href='#' id='select-all-empleados'>Seleccionar todos</a> / 
+                    <a href='#' id='deselect-all-empleados'>Deseleccionar todos</a>
+                    <div id="select_empleado">
+                    {!! Form::select("empleado_f[]", $empleados, null, array("class" => "form-control select_seguridad", "id" => "empleado_f-field", 'multiple'=>true)) !!}
+                    </div>
+                    @if($errors->has("empleado_f"))
+                    <span class="help-block">{{ $errors->first("empleado_f") }}</span>
+                    @endif
+                </div>
+                <div class="form-group col-md-12 @if($errors->has('concepto_f')) has-error @endif">
+                    <label for="concepto_f-field">Concepto:</label>
+                    <a href='#' id='select-all-conceptos'>Seleccionar todos</a> /
+                    <a href='#' id='deselect-all-conceptos'>Deseleccionar todos</a>
+                    <div id="select_conceptos">
+                    {!! Form::select("concepto_f[]", $conceptos, null, array("class" => "form-control select_seguridad", "id" => "concepto_f-field", 'multiple'=>true)) !!}
+                    </div>
+                    @if($errors->has("concepto_f"))
+                    <span class="help-block">{{ $errors->first("concepto_f") }}</span>
+                    @endif
+                </div>
+
                 <div class="row">
                 </div>
                 <div class="well well-sm">
@@ -94,7 +113,27 @@
 @push('scripts')
   <script type="text/javascript">
     $(document).ready(function() {
-        
+        $('#select-all-empleados').click(function(){
+            $('select#empleado_f-field').multiSelect('select_all');
+            return false;
+        });
+
+        $('#deselect-all-empleados').click(function(){
+            $('select#empleado_f-field').multiSelect('deselect_all');
+            return false;
+        });
+
+        $('#select-all-conceptos').click(function(){
+            $('select#concepto_f-field').multiSelect('select_all');
+            return false;
+        });
+
+        $('#deselect-all-conceptos').click(function(){
+            $('select#concepto_f-field').multiSelect('deselect_all');
+            return false;
+        });
+
+
         @permission('IreporteFiltroXplantel')
         $("#plantel_f-field").prop("disabled", true);
         //$("#plantel_t-field").prop("disabled", true);
