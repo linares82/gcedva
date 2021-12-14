@@ -27,14 +27,35 @@
                         <span class="help-block">{{ $errors->first("cliente_id") }}</span>
                        @endif
                     </div>
+
+                    <div class="row"></div>
+
                     <div class="form-group col-md-4 @if($errors->has('lectivo_id')) has-error @endif">
                      <label for="lectivo_id-field">Lectivo:</label>
                      {!! Form::select("lectivo_id", $lectivos, null, array("class" => "form-control select_seguridad", "id" => "lectivo_id-field")) !!}
                      @if($errors->has("lectivo_id"))
                       <span class="help-block">{{ $errors->first("lectivo_id") }}</span>
                      @endif
-                  </div>
-                    
+                     </div>
+
+                     @permission('autorizacionBecas.manejaVigencia')
+                     <div class="form-group col-md-3 @if($errors->has('bnd_tiene_vigencia')) has-error @endif">
+                        <label for="bnd_tiene_vigencia-field">Tiene Vigencia?
+                           {!! Form::checkbox("bnd_tiene_vigencia", 1, null, [ "id" => "bnd_tiene_vigencia-field", 'class'=>'minimal']) !!}
+                        </label>
+                        @if($errors->has("bnd_tiene_vigencia"))
+                        <span class="help-block">{{ $errors->first("bnd_tiene_vigencia") }}</span>
+                        @endif
+                    </div>
+
+                     <div class="form-group col-md-4 @if($errors->has('vigencia')) has-error @endif">
+                        <label for="vigencia-field">Fecha vigencia</label>
+                        {!! Form::text("vigencia", null, array("class" => "form-control fecha", "id" => "vigencia-field")) !!}
+                        @if($errors->has("vigencia"))
+                         <span class="help-block">{{ $errors->first("vigencia") }}</span>
+                        @endif
+                     </div>
+                    @endif
                     <div class="form-group col-md-4 @if($errors->has('monto_mensualidad')) has-error @endif">
                        <label for="monto_mensualidad-field">Porcentaje Beca (formato decimal 0.00)</label>
                        @if(isset($autorizacionBeca) and $autorizacionBeca->st_beca_id==4)

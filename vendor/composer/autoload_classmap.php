@@ -241,6 +241,7 @@ return array(
     'AddUsuDeleteIdToPagosTable' => $baseDir . '/database/migrations/2020_09_30_135910_add_usu_delete_id_to_pagos_table.php',
     'AddUuidCbbXmlToPagosTable' => $baseDir . '/database/migrations/2020_09_04_172320_add_uuid_cbb_xml_to_pagos_table.php',
     'AddVencimientoRvoeEspecialidadsTable' => $baseDir . '/database/migrations/2019_07_24_133707_add_vencimiento_rvoe_especialidads_table.php',
+    'AddVigenciaToAutorizacionBecasTable' => $baseDir . '/database/migrations/2021_12_14_123153_add_vigencia_to_autorizacion_becas_table.php',
     'AddfieldsInscripcionTable' => $baseDir . '/database/migrations/2017_12_07_134646_addfields_inscripcion_table.php',
     'Attribute' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
     'CajaConceptoReglaRecargo' => $baseDir . '/database/migrations/2020_03_27_174049_caja_concepto_regla_recargo.php',

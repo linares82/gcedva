@@ -74,7 +74,7 @@
                     
                     <div class='row'></div>
                     <div id="comprobar_div" class="form-group col-md-4 @if($errors->has('comprobacion')) has-error @endif">
-                     <label for="comprobacion-field">Saldo Comprobado</label>
+                     <label for="comprobacion-field">Saldo Comprobado(ingreso + transferencias_ingreso - egreso - transferencias_egreso)</label>
                      {!! Form::text("comprobacion", null, array("class" => "form-control", "id" => "comprobacion-field")) !!}
                      <button type="button" id="btn_comprobar" class="btn btn-success btn-sm">Comprobar</button>
                      

@@ -136,8 +136,8 @@ class PagoObserver
                 
                 }
 
-                $cuentas_efectivo->saldo_actualizado = $cuentas_efectivo->saldo_actualizado + $this->pago->monto;
-                $cuentas_efectivo->save();
+                //$cuentas_efectivo->saldo_actualizado = $cuentas_efectivo->saldo_actualizado + $this->pago->monto;
+                //$cuentas_efectivo->save();
 
                 $ingreso = array();
                 $ingreso['plantel_id'] = $this->pago->caja->plantel_id;
@@ -170,8 +170,8 @@ class PagoObserver
                 $this->pago->bnd_referenciado == 1 and
                 is_null($ingreso_egreso)
             ) {
-                $cuentas_efectivo->saldo_actualizado = $cuentas_efectivo->saldo_actualizado + $this->pago->monto;
-                $cuentas_efectivo->save();
+                //$cuentas_efectivo->saldo_actualizado = $cuentas_efectivo->saldo_actualizado + $this->pago->monto;
+                //$cuentas_efectivo->save();
 
                 $ingreso = array();
                 $ingreso['plantel_id'] = $this->pago->caja->plantel_id;
@@ -197,8 +197,8 @@ class PagoObserver
         if ($this->pago->cuenta_efectivo_id > 0) {
             $cuentas_efectivo = CuentasEfectivo::where('id', $this->pago->cuenta_efectivo_id)->first();
             if ($cuentas_efectivo->saldo_inicial > 0 and $this->pago->fecha >= $cuentas_efectivo->fecha_saldo_inicial) {
-                $cuentas_efectivo->saldo_actualizado = $cuentas_efectivo->saldo_actualizado - $this->pago->monto;
-                $cuentas_efectivo->save();
+                //$cuentas_efectivo->saldo_actualizado = $cuentas_efectivo->saldo_actualizado - $this->pago->monto;
+                //$cuentas_efectivo->save();
 
                 $pago = IngresoEgreso::where('pago_id', $this->pago->id)->where('egreso_id', 0)->whereNull('deleted_at')->first();
                 if (!is_null($pago) and $pago->count() > 0) {

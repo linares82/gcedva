@@ -215,7 +215,7 @@
                                 
                                 <td>{{$cuentasEfectivo->saldo_inicial}}</td>
                                 <td>{{$cuentasEfectivo->fecha_saldo_inicial}}</td>
-                                <td>{{$cuentasEfectivo->saldo_actualizado}}</td>
+                                <td>{{number_format($cuentasEfectivo->saldo_actualizado,2)}}</td>
                                 <td class="text-right">
                                     @permission('cuentasEfectivos.edit')
                                     <a class="btn btn-xs btn-primary" href="{{ route('cuentasEfectivos.duplicate', $cuentasEfectivo->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>

@@ -78,7 +78,9 @@ class AtrazoPagos extends Command
                 ->whereNull('c.deleted_at')
                 //->where('c.st_cliente_id', '<>', 25)
                 ->where('c.st_cliente_id', '<>', 3)
+                ->groupBy('p.razon')
                 ->groupBy('adeudos.cliente_id')
+                ->groupBy('stc.name')
                 ->having('adeudos_cantidad', '>=', 2)
                 ->get();
 

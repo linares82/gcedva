@@ -2,30 +2,31 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
-use App\Hacademica;
-use App\Materium;
-use App\AsignacionAcademica;
-use App\Calificacion;
-use App\Ponderacion;
-use App\CalificacionPonderacion;
-use App\CargaPonderacion;
-use App\Cliente;
-use App\TpoExamen;
-use App\Inscripcion;
-use App\Grado;
-use PDF;
-use App\Param;
-use Illuminate\Http\Request;
-use Auth;
-use App\Http\Requests\updateHacademica;
-use App\Http\Requests\createHacademica;
-use App\Lectivo;
-use App\PeriodoExamen;
 use DB;
-use Carbon\Carbon;
+use PDF;
+use Auth;
 use Session;
+use App\Grado;
+use App\Param;
+use App\Cliente;
+use App\Lectivo;
+use App\Plantel;
+use App\Materium;
+use App\TpoExamen;
+use Carbon\Carbon;
+use App\Hacademica;
+use App\Inscripcion;
+use App\Ponderacion;
+use App\Calificacion;
+use App\Http\Requests;
+use App\PeriodoExamen;
+use App\CargaPonderacion;
+use App\AsignacionAcademica;
+use Illuminate\Http\Request;
+use App\CalificacionPonderacion;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\createHacademica;
+use App\Http\Requests\updateHacademica;
 
 class HacademicasController extends Controller
 {
@@ -393,10 +394,13 @@ class HacademicasController extends Controller
                 $g = Grado::find($input['grado_id'])->first();
                 $extra_bachillerato=Param::where('llave','extra_bachillerato')->first();
                 $extra_no_bachillerato=Param::where('llave','extra_no_bachillerato')->first();
+                $final=Param::where('llave','final')->first();
                 if ($input['examen_id'] == 2 and $g->name == "BACHILLERATO") {
                     $ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $extra_bachillerato->valor)->get();
                 } elseif ($input['examen_id'] == 2 and $g->name <> "BACHILLERATO") {
                     $ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $extra_no_bachillerato->valor)->get();
+                } elseif($input['examen_id'] == 3){
+                    $ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $final->valor)->get();
                 }
                 //dd($ponderaciones);
                 foreach ($ponderaciones as $p) {
@@ -769,6 +773,7 @@ class HacademicasController extends Controller
             //dd($g->toArray());
             $extra_bachillerato=Param::where('llave','extra_bachillerato')->first();
             $extra_no_bachillerato=Param::where('llave','extra_no_bachillerato')->first();
+            $final=Param::where('llave','final')->first();
             if ($tpo_examen_id == 2 and $g->name == "BACHILLERATO") {
                 $carga_ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $extra_bachillerato->valor)
                     ->where('tiene_detalle', '=', 0)
@@ -776,6 +781,11 @@ class HacademicasController extends Controller
                     ->get();
             } elseif ($tpo_examen_id == 2 and $g->name <> "BACHILLERATO") {
                 $carga_ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $extra_no_bachillerato->valor)
+                    ->where('tiene_detalle', '=', 0)
+                    ->where('bnd_activo', 1)
+                    ->get();
+            }elseif ($tpo_examen_id == 3) {
+                $carga_ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $final->valor)
                     ->where('tiene_detalle', '=', 0)
                     ->where('bnd_activo', 1)
                     ->get();
@@ -866,5 +876,95 @@ class HacademicasController extends Controller
             array_push($registros, array('id' => $materia->id, 'materia' => $materia->name));
         }
         return response()->json(['resultado' => $registros]);
+    }
+
+    public function examenesVarios()
+    {
+        $examen = TpoExamen::where('id', '>', 1)->pluck('name', 'id');
+        //$examen->reverse();
+        //$examen->put(0,'Seleccionar OpciÃ³n');
+        //$examen->reverse();
+        $plantels=Plantel::pluck('razon','id');
+        $lectivos=Lectivo::pluck('name','id');
+        return view('hacademicas.examenesVarios', compact('examen','lectivos', 'plantels'))
+            ->with('list', Hacademica::getListFromAllRelationApps());
+    }
+    
+    public function examenesVariosR(Request $request )
+    {
+        $datos=$request->all();
+        $alumnos=Hacademica::select('hacademicas.*','cali.calificacion')->join('calificacions as cali', 'cali.hacademica_id','hacademicas.id')
+        ->where('hacademicas.plantel_id',$datos['plantel_id'])
+        ->where('hacademicas.especialidad_id',$datos['especialidad_id'])
+        ->where('hacademicas.nivel_id',$datos['nivel_id'])
+        ->where('hacademicas.grado_id',$datos['grado_id'])
+        ->where('hacademicas.lectivo_id',$datos['lectivo_id'])
+        ->where('cali.tpo_examen_id',1)
+        ->where('hacademicas.st_materium_id',2)
+        ->with('cliente')
+        ->with('calificaciones')
+        ->get();
+        //dd($alumnos->toArray());
+        $lectivos=Lectivo::pluck('name','id');
+        $tpo_examen=TpoExamen::where('id','>',1)->pluck('name','id');
+        return view('hacademicas.examenesVariosR', compact('alumnos','tpo_examen','lectivos'))
+            ->with('list', Hacademica::getListFromAllRelationApps());
+    }
+
+    public function crearEvaluacion(Request $request)
+    {
+        
+        $datos=$request->all();
+        //dd($datos);
+        $hacademica=Hacademica::find($datos['hacademica']);
+                $c = new Calificacion;
+                $c->hacademica_id = $datos['hacademica'];
+                $c->tpo_examen_id = $datos['tpo_examen'];
+                if($datos['bnd_lectivo']==1){
+                    $c->lectivo_id = $datos['lectivo'];
+                }else{
+                    $c->lectivo_id = $hacademica->lectivo_id;
+                }
+                
+                $c->calificacion = 0;
+                $c->fecha = date('Y-m-d');
+                $c->reporte_bnd = 0;
+                if (isset($input['reporte_bnd'])) {
+                    $c->reporte_bnd = 1;
+                }
+                $c->usu_alta_id = Auth::user()->id;
+                $c->usu_mod_id = Auth::user()->id;
+                $c->save();
+                //dd($c->toArray());
+
+                $g = Grado::find($hacademica->grado_id)->first();
+                $extra_bachillerato=Param::where('llave','extra_bachillerato')->first();
+                $extra_no_bachillerato=Param::where('llave','extra_no_bachillerato')->first();
+                $final=Param::where('llave','final')->first();
+                if (($datos['tpo_examen'] == 2 ) and $g->name == "BACHILLERATO") {
+                    $ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $extra_bachillerato->valor)->get();
+                } elseif (($datos['tpo_examen'] == 2) and $g->name <> "BACHILLERATO") {
+                    $ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $extra_no_bachillerato->valor)->get();
+                } elseif($datos['tpo_examen'] == 3){
+                    $ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $final->valor)->get();
+                }
+                //dd($ponderaciones);
+                foreach ($ponderaciones as $p) {
+                    $ponde['calificacion_id'] = $c->id;
+                    $ponde['carga_ponderacion_id'] = $p->id;
+                    $ponde['calificacion_parcial'] = 0;
+                    $ponde['ponderacion'] = $p->porcentaje;
+                    $ponde['usu_alta_id'] = Auth::user()->id;
+                    $ponde['usu_mod_id'] = Auth::user()->id;
+                    $ponde['tiene_detalle'] = $p->tiene_detalle;
+                    $ponde['padre_id'] = $p->padre_id;
+                    $c_nueva = CalificacionPonderacion::create($ponde);
+
+                    //Log::info($c_nueva->id . "- nuevo registro de ponderacion");
+                }
+            //}
+        return $c;
+        
+        
     }
 }

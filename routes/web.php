@@ -5780,6 +5780,30 @@ Route::get(
         'uses' => 'HacademicasController@getExamenes'
     )
 )->middleware('auth');
+Route::get(
+    '/hacademicas/examenesVarios',
+    array(
+        'as' => 'hacademicas.examenesVarios',
+        'middleware' => 'permission:hacademicas.examenesVarios',
+        'uses' => 'HacademicasController@examenesVarios'
+    )
+)->middleware('auth');
+Route::post(
+    '/hacademicas/examenesVariosR',
+    array(
+        'as' => 'hacademicas.examenesVariosR',
+        'middleware' => 'permission:hacademicas.examenesVarios',
+        'uses' => 'HacademicasController@examenesVariosR'
+    )
+)->middleware('auth');
+Route::get(
+    '/hacademicas/crearEvaluacion',
+    array(
+        'as' => 'hacademicas.crearEvaluacion',
+        'middleware' => 'permission:hacademicas.examenesVarios',
+        'uses' => 'HacademicasController@crearEvaluacion'
+    )
+)->middleware('auth');
 Route::post(
     '/hacademicas/examenes',
     array(

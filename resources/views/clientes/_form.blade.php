@@ -1301,7 +1301,8 @@
                                         @foreach($a->calificaciones as $cali)
                                         <tr>
                                             <td>
-                                                [{{$cali->lectivo_id}}] {{$cali->tpoExamen->name}}
+                                                <a href="{{ route('lectivos.show',$cali->lectivo_id) }}">[{{$cali->lectivo_id}}]</a>  
+                                                {{$cali->tpoExamen->name}}
                                             </td>
                                             <td>
                                                 @if($cali->calificacion>6)
@@ -1312,7 +1313,7 @@
                                             </td>
                                             <td>
                                                 @permission('calificacions.destroy')
-                                                @if($cali->tpo_examen_id==2)
+                                                @if($cali->tpo_examen_id<>1 )
                                                 <a href="{{ route('calificacions.destroy', $cali->id) }}" class="btn btn-xs btn-danger" ><i class="glyphicon glyphicon-trash"></i> Eliminar</a>
                                                 @endif
                                                 @endpermission

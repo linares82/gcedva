@@ -79,6 +79,10 @@ class AutorizacionBecasController extends Controller
 		$input['usu_alta_id'] = Auth::user()->id;
 		$input['usu_mod_id'] = Auth::user()->id;
 
+		if(!isset($input['bnd_tiene_vigencia'])){
+			$input['bnd_tiene_vigencia']=0;
+		}
+
 		$r = $request->hasFile('archivo_file');
 		//dd($r);
 		if ($r) {
@@ -161,6 +165,9 @@ class AutorizacionBecasController extends Controller
 	{
 		$input = $request->all();
 		$input['usu_mod_id'] = Auth::user()->id;
+		if(!isset($input['bnd_tiene_vigencia'])){
+			$input['bnd_tiene_vigencia']=0;
+		}
 
 		$r = $request->hasFile('archivo_file');
 		//dd($r);

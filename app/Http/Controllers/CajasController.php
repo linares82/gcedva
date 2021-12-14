@@ -283,11 +283,11 @@ class CajasController extends Controller
         foreach ($empleado->plantels as $p) {
             array_push($planteles, $p->id);
         }
-        
+
         $empleados = Empleado::select(DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name, id'))->pluck('name', 'id');
 
         //dd($empleados);
-        $cliente = Cliente::where('id',$request['cliente_id'])->whereIn('plantel_id',$planteles)->first();
+        $cliente = Cliente::where('id', $request['cliente_id'])->whereIn('plantel_id', $planteles)->first();
         if (!is_object($cliente)) {
             Session::flash('msj', 'Cliente no existe');
             return view('cajas.caja', compact('empleados'))->with('list', Caja::getListFromAllRelationApps())->with('list1', CajaLn::getListFromAllRelationApps());
@@ -315,7 +315,7 @@ class CajasController extends Controller
         //dd(Caja::getListFromAllRelationApps());
         //dd("fil");
         $permiso_caja_buscarCliente = Auth::user()->can('permiso_caja_buscarCliente');
-        
+
         //dd($planteles);
         //dd($cliente->plantel_id);
         //dd(array_search($cliente->plantel_id, $planteles) <> false);
@@ -354,11 +354,11 @@ class CajasController extends Controller
             //dd($p->id);
             array_push($planteles, $p->id);
         }
-        
+
         $empleados = Empleado::select(DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name, id'))->pluck('name', 'id');
         //dd($empleado->toArray());
         //$caja = Caja::where('consecutivo', '=', $data['consecutivo'])->where('plantel_id', '=', $data['plantel_id'])->where('st_caja_id', '<>', 2)->first();
-        $caja_aux = Caja::where('consecutivo', '=', $data['consecutivo'])->where('st_caja_id', '<>', 2)->whereIn('plantel_id',$planteles);
+        $caja_aux = Caja::where('consecutivo', '=', $data['consecutivo'])->where('st_caja_id', '<>', 2)->whereIn('plantel_id', $planteles);
         if (isset($data['plantel_id']) and $data['plantel_id'] <> 0) {
             $caja_aux->where('plantel_id', $data['plantel_id']);
         }
@@ -474,36 +474,47 @@ class CajasController extends Controller
                         //Calcula descuento por beca
                         //********************************* */
                         $beca_a = 0;
-                        //dd($cliente->autorizacionBecas->toArray());
+                        //dd($cliente->autorizacionBecas);
                         foreach ($cliente->autorizacionBecas as $beca) {
                             //dd(is_null($beca->deleted_at));
                             //$diaAdeudo = Carbon::createFromFormat('Y-m-d', $adeudo->fecha_pago)->dia;
-                            $mesAdeudo = Carbon::createFromFormat('Y-m-d', $adeudo->fecha_pago)->month;
-                            $anioAdeudo = Carbon::createFromFormat('Y-m-d', $adeudo->fecha_pago)->year;
-                            $mesInicio = Carbon::createFromFormat('Y-m-d', $beca->lectivo->inicio)->month;
-                            $anioInicio = Carbon::createFromFormat('Y-m-d', $beca->lectivo->inicio)->year;
-                            $mesFin = Carbon::createFromFormat('Y-m-d', $beca->lectivo->fin)->month;
-                            //$diaFin = Carbon::createFromFormat('Y-m-d', $beca->lectivo->fin)->day;
-                            $anioFin = Carbon::createFromFormat('Y-m-d', $beca->lectivo->fin)->year;
+                            if (is_null($beca->deleted_at)) {
+                                //dd($beca->toArray());
+                                if ($beca->bnd_tiene_vigencia == 1 and !is_null($beca->vigencia)) {
+                                    $fechaAdeudo = Carbon::createFromFormat('Y-m-d', $adeudo->fecha_pago);
+                                    $fechaVigenciaBeca = Carbon::createFromFormat('Y-m-d', $beca->vigencia);
+                                    if ($fechaAdeudo->lessThanOrEqualTo($fechaVigenciaBeca)) {
+                                        $beca_a = $beca->id;
+                                    }
+                                } elseif ($beca->bnd_tiene_vigencia == 0 and is_null($beca->vigencia)) {
+                                    $mesAdeudo = Carbon::createFromFormat('Y-m-d', $adeudo->fecha_pago)->month;
+                                    $anioAdeudo = Carbon::createFromFormat('Y-m-d', $adeudo->fecha_pago)->year;
+                                    $mesInicio = Carbon::createFromFormat('Y-m-d', $beca->lectivo->inicio)->month;
+                                    $anioInicio = Carbon::createFromFormat('Y-m-d', $beca->lectivo->inicio)->year;
+                                    $mesFin = Carbon::createFromFormat('Y-m-d', $beca->lectivo->fin)->month;
+                                    //$diaFin = Carbon::createFromFormat('Y-m-d', $beca->lectivo->fin)->day;
+                                    $anioFin = Carbon::createFromFormat('Y-m-d', $beca->lectivo->fin)->year;
 
-                            //dd($anioInicio."-".$anioAdeudo."-".$mesInicio."-".$mesAdeudo."-".);
-                            //dd(($beca->lectivo->inicio <= $adeudo->fecha_pago and $beca->lectivo->fin >= $adeudo->fecha_pago));
-                            //dd(($anioInicio == $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin == $anioAdeudo and $mesFin >= $mesAdeudo));
-                            //dd(($anioInicio < $anioAdeudo or $mesInicio >= $mesAdeudo) and ($anioFin >= $anioAdeudo and $mesFin <= $mesAdeudo));
-                            //dd();
-                            if (
-                                (($beca->lectivo->inicio <= $adeudo->fecha_pago and $beca->lectivo->fin >= $adeudo->fecha_pago) or
-                                (($anioInicio == $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin == $anioAdeudo and $mesFin >= $mesAdeudo)) or
-                                (($anioInicio == $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin > $anioAdeudo)) or
-                                (($anioInicio < $anioAdeudo) and ($anioFin == $anioAdeudo and $mesFin >= $mesAdeudo))) and
-                                $beca->aut_dueno == 4 and is_null($beca->deleted_at)
-                            ) {
-                                
-                                //dd(($beca->lectivo->inicio <= $adeudo->fecha_pago and $beca->lectivo->fin >= $adeudo->fecha_pago));
-                                //dd(($anioInicio == $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin == $anioAdeudo and $mesFin >= $mesAdeudo));
-                                //dd(($anioInicio < $anioAdeudo or $mesInicio >= $mesAdeudo) and ($anioFin >= $anioAdeudo and $mesFin <= $mesAdeudo));
-                                $beca_a = $beca->id;
-                                //dd($beca);
+                                    //dd($anioInicio."-".$anioAdeudo."-".$mesInicio."-".$mesAdeudo."-".);
+                                    //dd(($beca->lectivo->inicio <= $adeudo->fecha_pago and $beca->lectivo->fin >= $adeudo->fecha_pago));
+                                    //dd(($anioInicio == $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin == $anioAdeudo and $mesFin >= $mesAdeudo));
+                                    //dd(($anioInicio < $anioAdeudo or $mesInicio >= $mesAdeudo) and ($anioFin >= $anioAdeudo and $mesFin <= $mesAdeudo));
+                                    //dd();
+                                    if (
+                                        (($beca->lectivo->inicio <= $adeudo->fecha_pago and $beca->lectivo->fin >= $adeudo->fecha_pago) or
+                                            (($anioInicio == $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin == $anioAdeudo and $mesFin >= $mesAdeudo)) or
+                                            (($anioInicio == $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin > $anioAdeudo)) or
+                                            (($anioInicio < $anioAdeudo) and ($anioFin == $anioAdeudo and $mesFin >= $mesAdeudo))) and
+                                        $beca->aut_dueno == 4 and is_null($beca->deleted_at)
+                                    ) {
+
+                                        //dd(($beca->lectivo->inicio <= $adeudo->fecha_pago and $beca->lectivo->fin >= $adeudo->fecha_pago));
+                                        //dd(($anioInicio == $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin == $anioAdeudo and $mesFin >= $mesAdeudo));
+                                        //dd(($anioInicio < $anioAdeudo or $mesInicio >= $mesAdeudo) and ($anioFin >= $anioAdeudo and $mesFin <= $mesAdeudo));
+                                        $beca_a = $beca->id;
+                                        //dd($beca);
+                                    }
+                                }
                             }
                         }
 
@@ -1044,9 +1055,9 @@ class CajasController extends Controller
             ->whereNull('cajas.deleted_at')
             ->whereNull('ln.deleted_at')
             ->get();
-            $empleados = Empleado::select(DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name, id'))->pluck('name', 'id');
+        $empleados = Empleado::select(DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name, id'))->pluck('name', 'id');
 
-        return view('cajas.caja', compact('cliente', 'caja', 'combinaciones', 'cajas','empleados'))
+        return view('cajas.caja', compact('cliente', 'caja', 'combinaciones', 'cajas', 'empleados'))
             ->with('list', Caja::getListFromAllRelationApps())
             ->with('list1', CajaLn::getListFromAllRelationApps());
     }
@@ -2062,7 +2073,7 @@ class CajasController extends Controller
             ->whereNull('cajas.deleted_at')
             ->whereNull('ln.deleted_at')
             ->get();
-        
+
 
         return view('cajas.caja', compact('cliente', 'caja', 'combinaciones', 'cajas', 'empleados'))
             ->with('list', Caja::getListFromAllRelationApps())
@@ -2126,13 +2137,13 @@ class CajasController extends Controller
     public function actualizarAdeudosPagos(Request $request)
     {
 
-        $datos=$request->all();
+        $datos = $request->all();
         //$plantel = Plantel::find($plantel);
 
         $adeudos = Adeudo::where('id', $datos['adeudo'])->get();
         //dd($adeudos->toArray());
         foreach ($adeudos as $adeudo) {
-            $adeudo_pago_online=AdeudoPagoOnLine::where('adeudo_id',$adeudo->id)->orderBy('id','desc')->first();
+            $adeudo_pago_online = AdeudoPagoOnLine::where('adeudo_id', $adeudo->id)->orderBy('id', 'desc')->first();
             //dd($adeudo_pago_online);
             //$adeudo_pago_online = optional($adeudo)->pagoOnLine;
 
@@ -2155,10 +2166,10 @@ class CajasController extends Controller
 
 
         $combinaciones = CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
-        $cliente=$caja->cliente;
+        $cliente = $caja->cliente;
         //dd($combinaciones);
         $empleados = Empleado::select(DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name, id'))->pluck('name', 'id');
-        
+
         $cajas = Caja::select('cajas.consecutivo as caja', 'cajas.fecha', 'ln.caja_concepto_id as concepto_id', 'cc.name as concepto', 'ln.total', 'st.name as estatus')
             ->join('caja_lns as ln', 'ln.caja_id', '=', 'cajas.id')
             ->join('caja_conceptos as cc', 'cc.id', '=', 'ln.caja_concepto_id')
@@ -2167,7 +2178,7 @@ class CajasController extends Controller
             ->whereNull('cajas.deleted_at')
             ->whereNull('ln.deleted_at')
             ->get();
-        $caja=Caja::find($caja->id); //se vuelve a buscar para que actualice informacion
+        $caja = Caja::find($caja->id); //se vuelve a buscar para que actualice informacion
         // dd($caja);
         return view('cajas.caja', compact('cliente', 'caja', 'combinaciones', 'cajas', 'empleados'))
             ->with('list', Caja::getListFromAllRelationApps())
@@ -2201,7 +2212,6 @@ class CajasController extends Controller
             ($adeudo->caja_concepto_id == 1 or $adeudo->caja_concepto_id == 23 or $adeudo->caja_concepto_id == 25)
         ) {
             $caja_ln['descuento'] = $caja_ln['subtotal'] * $adeudo->descuento->porcentaje;
-            
         } else {
             //********************************* */
             //Calcula descuento por beca
@@ -2219,9 +2229,9 @@ class CajasController extends Controller
 
                 if (
                     (($beca->lectivo->inicio <= $adeudo->fecha_pago and $beca->lectivo->fin >= $adeudo->fecha_pago) or
-                    (($anioInicio == $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin == $anioAdeudo and $mesFin >= $mesAdeudo)) or
-                    (($anioInicio == $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin > $anioAdeudo)) or
-                    (($anioInicio < $anioAdeudo) and ($anioFin == $anioAdeudo and $mesFin >= $mesAdeudo))) and
+                        (($anioInicio == $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin == $anioAdeudo and $mesFin >= $mesAdeudo)) or
+                        (($anioInicio == $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin > $anioAdeudo)) or
+                        (($anioInicio < $anioAdeudo) and ($anioFin == $anioAdeudo and $mesFin >= $mesAdeudo))) and
                     $beca->aut_dueno == 4 and is_null($beca->deleted_at)
                 ) {
                     $beca_a = $beca->id;
@@ -2265,7 +2275,7 @@ class CajasController extends Controller
                         $inicio = Carbon::createFromFormat('Y-m-d', $promocion->fec_inicio);
                         $fin = Carbon::createFromFormat('Y-m-d', $promocion->fec_fin);
                         //$hoy = Carbon::createFromFormat('Y-m-d', Date('Y-m-d'));
-                        $hoy=Carbon::createFromFormat('Y-m-d', $caja->fecha);
+                        $hoy = Carbon::createFromFormat('Y-m-d', $caja->fecha);
                         $monto_promocion = 0;
                         //dd($hoy);
                         if ($inicio->lessThanOrEqualTo($hoy) and $fin->greaterThanOrEqualTo($hoy) and $caja_ln['promo_plan_ln_id'] == 0) {
@@ -2462,7 +2472,6 @@ class CajasController extends Controller
 
         //Se crea registro de caja si no tiene
         if ($adeudo_pago_online->caja_id == 0 or is_null($adeudo_pago_online->caja_id)) {
-            
         } else {
             $caja = $adeudo_pago_online->caja;
             //Caja::find($adeudo_pago_online->caja_id);
@@ -2479,11 +2488,10 @@ class CajasController extends Controller
         //dd($caja);
         //Se crea linea de caja si no la tiene
         if ($adeudo_pago_online->caja_ln_id == 0 or is_null($adeudo_pago_online->caja_ln_id)) {
-            
         } else {
             //$cajaLn = $adeudo_pago_online->cajaLn;
             //dd();
-            $cajaLn=CajaLn::find($adeudo_pago_online->caja_ln_id);
+            $cajaLn = CajaLn::find($adeudo_pago_online->caja_ln_id);
             $inputCajaLn['subtotal'] = $adeudo_pago_online->subtotal;
             $inputCajaLn['descuento'] = $adeudo_pago_online->descuento;
             $inputCajaLn['recargo'] = $adeudo_pago_online->recargo;
@@ -2494,7 +2502,6 @@ class CajasController extends Controller
 
         //Se crea registro de pago si no lo tiene
         if ($adeudo_pago_online->pago_id == 0 or is_null($adeudo_pago_online->pago_id)) {
-            
         } else {
             $pago = $adeudo_pago_online->pago;
             //dd($pago);
@@ -2509,12 +2516,11 @@ class CajasController extends Controller
 
         //Se genera el registro peticion de pago
         if ($adeudo_pago_online->peticion_multipago_id == 0 or is_null($adeudo_pago_online->peticion_multipago_id)) {
-            
         } else {
             $peticion_multipagos = $adeudo_pago_online->peticionMultipago;
             //$peticion_multipagos->contador_peticiones++;
             //$peticion_multipagos->save();
-            
+
 
             //$parametros = Param::where('llave', 'mp_account')->first();
             //$datosMultipagos['mp_account'] = $parametros->valor;
@@ -2526,7 +2532,7 @@ class CajasController extends Controller
             //$datosMultipagos['mp_concept'] = 1; //Valor depende del caja_conceptos por ahora default
 
             $datosMultipagos['mp_amount'] = number_format((float) $pago->monto, 2, '.', '');
-            
+
             /*$datosMultipagos['mp_currency'] = 1;
             $cadenaCifrar = $datosMultipagos['mp_order'] . $datosMultipagos['mp_reference'] . $datosMultipagos['mp_amount'];
             $parametros = Param::where('llave', 'cifrado_multipagos')->first();
@@ -2543,15 +2549,15 @@ class CajasController extends Controller
             */
             //dd($adeudo_pago_online);
             $datosMultipagos['mp_datereference'] = $adeudo_pago_online->fecha_limite;
-            
+
             $peticion_multipagos->update($datosMultipagos);
             //dd($peticion_multipagos);
         }
-
     }
 
-    public function consultaStBs(Request $request){
-        $data=$request->all();
+    public function consultaStBs(Request $request)
+    {
+        $data = $request->all();
         $param = Param::where('llave', 'apiVersion_bSpace')->first();
         $bs_activo = Param::where('llave', 'api_brightSpace_activa')->first();
         try {
@@ -2564,7 +2570,7 @@ class CajasController extends Controller
             $r = $resultado[0];
             $datos = ['isActive' => True];
             if (!isset($r['UserId'])) {
-                return json_encode(array('resultado'=>'no encontrado'));
+                return json_encode(array('resultado' => 'no encontrado'));
             } else {
                 return $resultado;
             }

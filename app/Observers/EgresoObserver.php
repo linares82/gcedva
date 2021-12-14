@@ -21,8 +21,8 @@ class EgresoObserver
         if($this->egreso->cuentas_efectivo_id>0){
             $cuentas_efectivo=CuentasEfectivo::where('id',$this->egreso->cuentas_efectivo_id)->first();
             if($cuentas_efectivo->saldo_inicial>0 and $this->egreso->fecha>=$cuentas_efectivo->fecha_saldo_inicial){
-                $cuentas_efectivo->saldo_actualizado=$cuentas_efectivo->saldo_actualizado-$this->egreso->monto;
-                $cuentas_efectivo->save();
+                //$cuentas_efectivo->saldo_actualizado=$cuentas_efectivo->saldo_actualizado-$this->egreso->monto;
+                //$cuentas_efectivo->save();
                 
                 $egreso=array();
                 $egreso['plantel_id']=$this->egreso->plantel_id;
@@ -49,11 +49,11 @@ class EgresoObserver
         if($this->egreso->cuentas_efectivo_id>0){
             $cuentas_efectivo=CuentasEfectivo::where('id',$this->egreso->cuentas_efectivo_id)->first();
             if($cuentas_efectivo->saldo_inicial>0 and $this->egreso->fecha>=$cuentas_efectivo->fecha_saldo_inicial){
-                $cuentas_efectivo->saldo_actualizado=$cuentas_efectivo->saldo_actualizado+$this->egreso->monto;
-                $cuentas_efectivo->save();
+                //$cuentas_efectivo->saldo_actualizado=$cuentas_efectivo->saldo_actualizado+$this->egreso->monto;
+                //$cuentas_efectivo->save();
                 
                 $egreso= IngresoEgreso::where('egreso_id',$this->egreso->id)->where('pago_id',0)->first();
-                $egreso->delete();
+                //$egreso->delete();
             }
         }
     }

@@ -26,8 +26,8 @@
     <div class="">
         <h3>
             <i class="glyphicon glyphicon-align-justify"></i> @yield('calificacionsAppTitle')
-            @permission('calificacions.create')
-            <a class="btn btn-success pull-right" href="{{ route('calificacions.create') }}"><i class="glyphicon glyphicon-plus"></i> Crear</a>
+            @permission('hacademicas.examenesVarios')
+            <a class="btn btn-success pull-right" href="{{ route('hacademicas.examenesVarios') }}"><i class="glyphicon glyphicon-plus"></i> Generar Evaluaciones</a>
             @endpermission
         </h3>
 

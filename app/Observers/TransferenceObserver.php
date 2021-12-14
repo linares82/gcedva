@@ -22,9 +22,9 @@ class TransferenceObserver
         if($this->transference->origen_id>0 and $this->transference->destino_id>0 and $this->transference->monto>0){
             $cuentas_efectivo=CuentasEfectivo::where('id',$this->transference->origen_id)->first();
             if($cuentas_efectivo->saldo_inicial>0 and $this->transference->fecha>=$cuentas_efectivo->fecha_saldo_inicial){
-                $cuentas_efectivo->saldo_actualizado=$cuentas_efectivo->saldo_actualizado-$this->transference->monto;
+                //$cuentas_efectivo->saldo_actualizado=$cuentas_efectivo->saldo_actualizado-$this->transference->monto;
                 //dd($cuentas_efectivo);
-                $cuentas_efectivo->save();
+                //$cuentas_efectivo->save();
                 
                 $egreso=array();
                 $egreso['plantel_id']=$this->transference->plantel_id;
@@ -43,8 +43,8 @@ class TransferenceObserver
             
             $cuentas_efectivo=CuentasEfectivo::where('id',$this->transference->destino_id)->first();
             if($cuentas_efectivo->saldo_inicial>0 and $this->transference->fecha>=$cuentas_efectivo->fecha_saldo_inicial){
-                $cuentas_efectivo->saldo_actualizado=$cuentas_efectivo->saldo_actualizado+$this->transference->monto;
-                $cuentas_efectivo->save();
+                //$cuentas_efectivo->saldo_actualizado=$cuentas_efectivo->saldo_actualizado+$this->transference->monto;
+                //$cuentas_efectivo->save();
                 
                 $ingreso=array();
                 $ingreso['plantel_id']=$this->transference->plantel_destino_id;
@@ -72,8 +72,8 @@ class TransferenceObserver
         if($this->transference->origen_id>0 and $this->transference->destino_id>0 and $this->transference->monto>0){
             $cuentas_efectivo=CuentasEfectivo::where('id',$this->transference->origen_id)->first();
             if($cuentas_efectivo->saldo_inicial>0 and $this->transference->fecha>=$cuentas_efectivo->fecha_saldo_inicial){
-                $cuentas_efectivo->saldo_actualizado=$cuentas_efectivo->saldo_actualizado+$this->transference->monto;
-                $cuentas_efectivo->save();
+                //$cuentas_efectivo->saldo_actualizado=$cuentas_efectivo->saldo_actualizado+$this->transference->monto;
+                //$cuentas_efectivo->save();
                 
                 $egreso= IngresoEgreso::where('transference_id',$this->transference->id)->where('concepto','transferencia:egreso')->first();
                 $egreso->delete();
@@ -81,8 +81,8 @@ class TransferenceObserver
             
             $cuentas_efectivo=CuentasEfectivo::where('id',$this->transference->destino_id)->first();
             if($cuentas_efectivo->saldo_inicial>0 and $this->transference->fecha>=$cuentas_efectivo->fecha_saldo_inicial){
-                $cuentas_efectivo->saldo_actualizado=$cuentas_efectivo->saldo_actualizado-$this->transference->monto;
-                $cuentas_efectivo->save();
+                //$cuentas_efectivo->saldo_actualizado=$cuentas_efectivo->saldo_actualizado-$this->transference->monto;
+                //$cuentas_efectivo->save();
                 
                 $pago= IngresoEgreso::where('transference_id',$this->transference->id)->where('concepto','transferencia:ingreso')->first();
                 $pago->delete();
