@@ -87,11 +87,10 @@ class CajaObserver
                 $seguimiento->st_seguimiento_id = 2;
                 $seguimiento->save();
             } elseif ($this->caja->cliente->st_cliente_id == 3) {
-
+                
             } elseif ($this->caja->cliente->st_cliente_id <> 3) {
                 
-                $seguimiento->st_seguimiento_id = 2;
-                $seguimiento->save();
+                
 
                 if ($this->caja->cliente->st_cliente_id == 26) {
                     $diaFechaActual=Carbon::createFromFormat('Y-m-d', Date('Y-m-d'))->day;
@@ -109,6 +108,9 @@ class CajaObserver
                     if ($adeudos <= 1) {
                         $cliente->st_cliente_id = 4;
                         $cliente->save();
+
+                        $seguimiento->st_seguimiento_id = 2;
+                        $seguimiento->save();
 
                         $param = Param::where('llave', 'apiVersion_bSpace')->first();
                         $bs_activo = Param::where('llave', 'api_brightSpace_activa')->first();
@@ -151,8 +153,12 @@ class CajaObserver
                         }
                     }
                 } else {
+                    
                     $cliente->st_cliente_id = 4;
                     $cliente->save();
+
+                    $seguimiento->st_seguimiento_id = 2;
+                    $seguimiento->save();
 
                     $param = Param::where('llave', 'apiVersion_bSpace')->first();
                     $bs_activo = Param::where('llave', 'api_brightSpace_activa')->first();
@@ -197,6 +203,7 @@ class CajaObserver
                 }
             }
         }
+        //dd("pasa Bs y cambia estatus de cja");
         if ($this->caja->st_caja_id == 1) {
             $adeudos = Adeudo::where('cliente_id', $this->caja->cliente_id)->where('pagado_bnd', 0)
                 ->whereNull('deleted_at')

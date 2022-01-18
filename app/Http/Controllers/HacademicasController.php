@@ -535,19 +535,23 @@ class HacademicasController extends Controller
         //$calificacion_inicio=Carbon::createFromFormat('Y-m-d',$lectivo->calificacion_inicio);
         //$calificacion_fin = Carbon::createFromFormat('Y-m-d', $lectivo->calificacion_fin);
         $dentroPeriodoExamenes = 0;
+        $dentroPeriodoExamenesAsignacion = 0;
         $hoy = Carbon::createFromFormat('Y-m-d', Date('Y-m-d'));
         $periodos_capturados_total = 0;
         //dd($lectivo->periodoExamens->ToArray());
         foreach ($lectivo->periodoExamens as $periodoExamen) {
+            //periodos de examen asociados al lectivo            
             $calificacion_inicio = Carbon::createFromFormat('Y-m-d', $periodoExamen->inicio);
             $calificacion_fin = Carbon::createFromFormat('Y-m-d', $periodoExamen->fin);
             //dd($periodoExamen);
             if ($calificacion_inicio->lessThanOrEqualTo($hoy)  and $calificacion_fin->greaterThanOrEqualTo($hoy)) {
-                $dentroPeriodoExamenes = $periodoExamen->id;
+                $dentroPeriodoExamenesAsignacion = $periodoExamen->id;
                 
             }
+
             $periodos_capturados_total++;
         }
+	//dd($dentroPeriodoExamenes);
         //dd($lectivo->calendarioEvaluacions->toArray());
         foreach($lectivo->calendarioEvaluacions as $fechaCalendario){
             $calificacion_inicio = Carbon::createFromFormat('Y-m-d', $fechaCalendario->v_inicio);
@@ -569,7 +573,7 @@ class HacademicasController extends Controller
         $hacademicas=null;
         //dd($periodos_capturados_total);
         //if (isset($data['excepcion']) or $periodos_capturados_total == 0) {
-            if (isset($data['excepcion'])) {    
+            if (isset($data['excepcion']) or $dentroPeriodoExamenesAsignacion > 0) {    
             //dd('flc');
             $hacademicas = HAcademica::select(
                 'cli.id',

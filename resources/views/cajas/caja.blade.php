@@ -1437,7 +1437,7 @@ Agregar nuevo registro
         @if($caja->forma_pago_id==1)
            $('#fecha_ln-field').prop('disabled', true);
         @else
-           $('#fecha_ln-field').prop('disabled', false);
+           $('#fecha_ln-field').prop('disabled', true);
         @endif
         
         @if(isset($caja) )

@@ -68,7 +68,7 @@ class SerieFolioSimplificadosController extends Controller
 		SerieFolioSimplificado::create($input);
 
 		//return redirect()->route('serieFolioSimplificados.index')->with('message', 'Registro Creado.');
-		return redirect('serieFolioSimplificados/index' . "?q%5Bs%5D=&q%5Bcuenta_ps.cuenta_p_id_lt%5D=" . $cuentap . "&q%5Bserie_cont%5D=&q%5Bfolio_inicial_cont%5D=&q%5Bfolio_actual_cont%5D=&q%5Banio_cont%5D=&q%5Bmes_id_cont%5D=&q%5Bbnd_activo_cont%5D=&q%5Busu_alta_id_cont%5D=&q%5Busu_mod_id_cont%5D=&commit=Buscar&cuentap=" . $cuentap)->with('message', 'Registro Creado.');
+		return redirect('serieFolioSimplificados/index' . "?q%5Bs%5D=&q%5Bcuenta_ps.id_lt%5D=" . $cuentap . "&q%5Bserie_cont%5D=&q%5Bfolio_inicial_cont%5D=&q%5Bfolio_actual_cont%5D=&q%5Banio_cont%5D=&q%5Bmes_id_cont%5D=&q%5Bbnd_activo_cont%5D=&q%5Busu_alta_id_cont%5D=&q%5Busu_mod_id_cont%5D=&commit=Buscar&cuentap=" . $cuentap)->with('message', 'Registro Creado.');
 	}
 
 	/**

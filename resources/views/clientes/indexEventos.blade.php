@@ -220,7 +220,8 @@
                             <th>@include('plantillas.getOrderLink', ['column' => 'clientes.pais_id', 'title' => 'PAIS'])</th>
                             <th>@include('plantillas.getOrderLink', ['column' => 'clientes.st_cliente_id', 'title' => 'ESTATUS CLIENTE'])</th>
                             <th>Eventos</th>
-                            <th>Vinculacion</th>
+                            <th>Vinculación</th>
+                            <th>Titulación</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
@@ -248,6 +249,12 @@
                                     <a class="btn btn-xs btn-warning" href="{{ route('vinculacions.index',array('q[cliente_id_lt]'=>$cliente->cliente->id)) }}" target='_blank'><i class="glyphicon glyphicon-plus"></i> Ver</a>
                                     @endpermission
                                 </td>
+                                <td>
+                                    @permission('titulacions.index')
+                                    <a class="btn btn-xs btn-success" href="{{ route('titulacions.create',array('cliente'=>$cliente->cliente->id)) }}"><i class="glyphicon glyphicon-plus"></i> Crear</a>
+                                    <a class="btn btn-xs btn-info" href="{{ route('titulacions.index',array('q[cliente_id_lt]'=>$cliente->cliente->id)) }}" target="_blank"><i class="glyphicon glyphicon-plus"></i> Titulación</a>
+                                    @endpermission
+                                </td>
                                 <td class="text-right">
                                     <a class="btn btn-xs bg-maroon" href="{{ route('clientes.boleta', array('id'=>$cliente->cliente->id)) }}"><i class="glyphicon glyphicon-calendar"></i> Boleta</a>
                                     <a class="btn btn-xs bg-purple" href="{{ route('autorizacionBecas.findByClienteId', array('cliente_id'=>$cliente->cliente->id)) }}">
@@ -266,6 +273,7 @@
                                     @permission('seguimientos.show')
                                     <a class="btn btn-xs btn-default" href="{{ route('seguimientos.show', $cliente->cliente->id) }}"><i class="glyphicon glyphicon-edit"></i> Seguimiento</a>
                                     @endpermission
+                                    
                                     @php
                                     $planteles = array();
                                     foreach ($empleado->plantels as $plantel) {

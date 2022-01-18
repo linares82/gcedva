@@ -269,11 +269,11 @@ class CuentasEfectivosController extends Controller
 	public function calculaSaldoCuenta(CuentasEfectivo $cuenta){
 
 		$ingresos= Pago::join('cajas as c','c.id','pagos.caja_id')
-			->join('plantels as plan','plan.id','c.plantel_id')
-			->join('cuentas_efectivo_plantels as cep','cep.plantel_id','plan.id')
-			->join('cuentas_efectivos as ce','ce.id','cep.cuentas_efectivo_id')
-			->where('cep.cuentas_efectivo_id',$cuenta->id)
-			->whereDate('pagos.fecha','>', $cuenta->fecha_saldo_inicial)
+			//->join('plantels as plan','plan.id','c.plantel_id')
+			//->join('cuentas_efectivo_plantels as cep','cep.plantel_id','plan.id')
+			->join('cuentas_efectivos as ce','ce.id','pagos.cuenta_efectivo_id')
+			->where('ce.id',$cuenta->id)
+			//->whereDate('pagos.fecha','>', $cuenta->fecha_saldo_inicial)
 			->whereNull('pagos.deleted_at')
 			->where('c.st_caja_id',1)
 			->whereNull('c.deleted_at')	
@@ -288,7 +288,7 @@ class CuentasEfectivosController extends Controller
 				->whereDate('fecha', '>=', $cuenta->fecha_saldo_inicial)
 				->sum('monto');*/
 			$tingreso=Transference::where('destino_id', $cuenta->id)
-			->whereDate('fecha', '>=', $cuenta->fecha_saldo_inicial)
+			//->whereDate('fecha', '>=', $cuenta->fecha_saldo_inicial)
 			->sum('monto');
 			//dd($tingreso);
 
@@ -299,7 +299,7 @@ class CuentasEfectivosController extends Controller
 			$egresos=Egreso::join('cuentas_efectivos as ce','ce.id','egresos.cuentas_efectivo_id')
 			->where('cuentas_efectivo_id',$cuenta->id)
 			->whereNull('egresos.deleted_at')
-			->whereDate('egresos.fecha','>', $cuenta->fecha_saldo_inicial)
+			//->whereDate('egresos.fecha','>', $cuenta->fecha_saldo_inicial)
 			->sum('egresos.monto');
 
 			//dd($egreso);
@@ -309,7 +309,7 @@ class CuentasEfectivosController extends Controller
 				->whereDate('fecha', '>=', $cuenta->fecha_saldo_inicial)
 				->sum('monto');*/
 			$tegreso=Transference::where('origen_id', $cuenta->id)
-				->whereDate('fecha', '>=', $cuenta->fecha_saldo_inicial)
+				//->whereDate('fecha', '>=', $cuenta->fecha_saldo_inicial)
 				->sum('monto');
 
 			$resultado=$ingresos + $tingreso - $egresos - $tegreso;

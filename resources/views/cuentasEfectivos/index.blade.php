@@ -181,6 +181,7 @@
                             $plantels=App\Plantel::where('director_id',$empleado->id)
                             ->orWhere('responsable_id',$empleado->id)
                             ->get();
+                            
                             $marcador=0;
                             if(count($plantels)>0){
                                 foreach($plantels as $plantel){
@@ -191,12 +192,14 @@
                                     }
 
                                 }
-                            }elseif(Auth::user()->id==1 or Auth::user()->id==3){
-                                $marcador=1;
-                            }elseif($empleado->puesto_id==24){
+                            }
+                            if(Auth::user()->id==1 or Auth::user()->id==3){
                                 $marcador=1;
                             }
-
+                            if($empleado->puesto_id==24){
+                                $marcador=1;
+                            }
+                            
                             ?>
                             @if($marcador>0)
                             <tr>
