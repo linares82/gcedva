@@ -946,6 +946,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'AddEtapaToRegistroHistoriaClientesTable' => __DIR__ . '/../..' . '/database/migrations/2021_06_10_161026_add_etapa_to_registro_historia_clientes_table.php',
         'AddExcepcionesDescuentosToAdeudosTable' => __DIR__ . '/../..' . '/database/migrations/2020_07_17_133014_add_excepciones_descuentos_to_adeudos_table.php',
         'AddFecAutorizacionToHistoriaClientesTable' => __DIR__ . '/../..' . '/database/migrations/2021_06_10_161213_add_fec_autorizacion_to_historia_clientes_table.php',
+        'AddFecIngresoEmpleadosTable' => __DIR__ . '/../..' . '/database/migrations/2022_01_31_174811_add_fec_ingreso_empleados_table.php',
         'AddFecReactivadoToHistoriaClientesTable' => __DIR__ . '/../..' . '/database/migrations/2020_10_29_084312_add_fec_reactivado_to_historia_clientes_table.php',
         'AddFecRvoeToGradosTable' => __DIR__ . '/../..' . '/database/migrations/2020_06_30_133537_add_fec_rvoe_to_grados_table.php',
         'AddFechaPagoToImpresionTicketsTable' => __DIR__ . '/../..' . '/database/migrations/2020_02_21_111204_add_fecha_pago_to_impresion_tickets_table.php',

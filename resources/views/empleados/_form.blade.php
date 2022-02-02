@@ -211,6 +211,13 @@
                             <span class="help-block">{{ $errors->first("pertenece_a") }}</span>
                           @endif
                         </div>
+                        <div class="form-group col-md-4 @if($errors->has('fec_ingreso')) has-error @endif">
+                          <label for="fec_ingreso-field">F. Ingreso</label>
+                          {!! Form::text("fec_ingreso", null, array("class" => "form-control input-sm fecha", "id" => "fec_ingreso-field")) !!}
+                          @if($errors->has("fec_ingreso"))
+                            <span class="help-block">{{ $errors->first("fec_ingreso") }}</span>
+                          @endif
+                        </div>
                         <div class="row"></div>
                         <div class="form-group col-md-12 @if($errors->has('plantel_id')) has-error @endif">
                           <label for="plantel_id-field">Planteles *<input type="checkbox" id="seleccionar_planteles">Seleccionar Todo</label>

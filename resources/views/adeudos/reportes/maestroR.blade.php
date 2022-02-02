@@ -155,7 +155,7 @@
                 $caja_aux="";
             @endphp 
             @foreach($lineas_detalle as $detalle)
-                @if($caja_aux<>$detalle['caja'] or $detalle['caja']==0)
+                @if($caja_aux<>$detalle['caja_id'] or $detalle['caja_id']==0)
                     @php
                         $beca=App\AutorizacionBeca::where('cliente_id',$detalle['id'])
                         ->orderBy('autorizacion_becas.id','Desc')
@@ -183,7 +183,7 @@
                     <td>{{$detalle['razon']}}</td>
                     <td>{{$detalle['id']}}</td>
                     <td>{{ $detalle['nombre'] }} {{ $detalle['nombre2'] }} {{ $detalle['ape_paterno'] }} {{ $detalle['ape_materno'] }}</td>
-                    <td> {{$detalle['especialidad']}} </td>
+                    <td> {{$detalle['especialidad_id']}} </td>
                     <td>{{ $detalle['matricula'] }}</td>
                     <td>{{ $detalle['turno'] }}</td>
                     <td>{{ $detalle['fecha_pago'] }}</td>

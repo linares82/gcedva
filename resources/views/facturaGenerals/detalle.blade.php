@@ -70,6 +70,10 @@
                     <th>No.</th><th>Cliente Id</th><th>Cliente</th><th>Fecha Pago</th><th>Caja</th><th>Concepto(s)</th><th>Monto Pago</th><th>UUID</th><th>Incluir</th>
                 </thead>
                 <tbody>
+                    @php
+                    $i=0;
+                    $suma=0;
+                    @endphp
                     @foreach($lineas as $registro)
                     <tr>
                         <td>{{ ++$i }}</td>
