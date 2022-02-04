@@ -22,7 +22,7 @@ class FacturaGeneralLinea extends Model
     } 
 
 	//Mass Assignment
-	protected $fillable = ['factura_general_id','cliente_id','caja_id','pago_id','bnd_incluido','usu_alta_id','usu_mod_id','monto'];
+	protected $fillable = ['factura_general_id','cliente_id','caja_id','pago_id','bnd_incluido','usu_alta_id','usu_mod_id','monto','bnd_manual','serie_factura','folio_facturado'];
 
 	public function usu_alta() {
 		return $this->hasOne('App\User', 'id', 'usu_alta_id');

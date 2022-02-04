@@ -16,6 +16,7 @@
     "bogardo/mailgun": "^5.0",
     "chumper/zipper": "1.0.x",
     "cossou/jasperphp": "^2.8",
+    "doctrine/dbal": "2.*",
     "dog-ears/crud-d-scaffold": "1.*",
     "fideloper/proxy": "^4.0",
     "fruitcake/laravel-cors": "^2.0",
@@ -35,9 +36,9 @@
     "studio/laravel-totem": "5.0",
     "twilio/sdk": "^6.1",
     "usmanhalalit/laracsv": "1.*@dev",
+    "venturecraft/revisionable": "1.*",
     "webklex/laravel-imap": "^1.4",
-    "zizaco/entrust": "5.2.x-dev",
-	"venturecraft/revisionable": "1.*"
+    "zizaco/entrust": "5.2.x-dev"
   },
   "require-dev": {
     "barryvdh/laravel-debugbar": "^3.2",

@@ -1,1 +1,1 @@
-@section('facturaGeneralsAppTitle','FacturaGeneral')
+@section('facturaGeneralsAppTitle','Factura General')

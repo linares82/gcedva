@@ -210,17 +210,23 @@ class FacturaGeneralsController extends Controller
 	{
 		$facturaGeneral = FacturaGeneral::find($id);
 		$lineas = FacturaGeneralLinea::where('factura_general_id', $facturaGeneral->id)
+			->where('bnd_manual','<>',1)
+			->orWhereNull('bnd_manual')
 			->with('caja')
 			->with('pago')
 			->with('cliente')
 			->with('facturaGeneral')
 			->get();
+		//dd($lineas);
+		$lineas_manuales=FacturaGeneralLinea::where('factura_general_id', $facturaGeneral->id)
+		->where('bnd_manual',1)
+		->get();
 
 		//dd($facturaGeneral);
 
 		//dd($registrosSinFactura->toArray());
 
-		return view('facturaGenerals.detalle', compact('lineas', 'facturaGeneral'));
+		return view('facturaGenerals.detalle', compact('lineas','lineas_manuales', 'facturaGeneral'));
 	}
 
 	public function total(Request $request)
@@ -233,12 +239,17 @@ class FacturaGeneralsController extends Controller
 		$facturaGeneral->save();
 
 		$lineas = FacturaGeneralLinea::where('factura_general_id', $facturaGeneral->id)
+			->where('bnd_manual','<>',1)
+			->orWhereNull('bnd_manual')
 			->with('caja')
 			->with('pago')
 			->with('cliente')
 			->with('facturaGeneral')
 			->get();
-		return view('facturaGenerals.detalle', compact('lineas', 'facturaGeneral'));
+		$lineas_manuales=FacturaGeneralLinea::where('factura_general_id', $facturaGeneral->id)
+			->where('bnd_manual',1)
+			->get();
+		return view('facturaGenerals.detalle', compact('lineas','lineas_manuales', 'facturaGeneral'));
 	}
 
 	public function generarFactura(Request $request)
@@ -281,16 +292,30 @@ class FacturaGeneralsController extends Controller
 		$conceptos = array();
 		//dd($facturaGeneral->facturaGeneralLineas->toArray());
 		foreach($lineas as $linea){
-			$concepto=array(
-				'ClaveProdServ' => '01010101',
-				'NoIdentificacion' => $linea->pago->serie_factura." ".$linea->pago->folio_facturado,
-				'Cantidad' => '1',
-				'ClaveUnidad' => 'ACT',
-				'Unidad' => 'ACT',
-				'Descripcion' => 'VENTA',
-				'ValorUnitario' => $linea->monto,
-				'Importe' => $linea->monto);
-			array_push($conceptos, $concepto);
+			if($linea->bnd_manual==1){
+				$concepto=array(
+					'ClaveProdServ' => '01010101',
+					'NoIdentificacion' => $linea->serie_factura." ".$linea->folio_facturado,
+					'Cantidad' => '1',
+					'ClaveUnidad' => 'ACT',
+					'Unidad' => 'ACT',
+					'Descripcion' => 'VENTA',
+					'ValorUnitario' => $linea->monto,
+					'Importe' => $linea->monto);
+				array_push($conceptos, $concepto);
+			}else{
+				$concepto=array(
+					'ClaveProdServ' => '01010101',
+					'NoIdentificacion' => $linea->pago->serie_factura." ".$linea->pago->folio_facturado,
+					'Cantidad' => '1',
+					'ClaveUnidad' => 'ACT',
+					'Unidad' => 'ACT',
+					'Descripcion' => 'VENTA',
+					'ValorUnitario' => $linea->monto,
+					'Importe' => $linea->monto);
+				array_push($conceptos, $concepto);
+			}
+			
 		}
 		
 		$impuestos = array('TotalImpuestosTrasladados' => 0.0);
@@ -340,7 +365,7 @@ class FacturaGeneralsController extends Controller
 		$objetoXML->writeAttribute("xmlns:xsi", $comprobante["xmlns:xsi"]);
 		$objetoXML->writeAttribute("xsi:schemaLocation", $comprobante["xsi:schemaLocation"]);
 		$objetoXML->writeAttribute("xmlns:iedu", $comprobante["xmlns:iedu"]);
-		$objetoXML->writeAttribute("Version=", $comprobante["Version="]);
+		$objetoXML->writeAttribute("Version", $comprobante["Version"]);
 		$objetoXML->writeAttribute("Folio", $comprobante["Folio"]);
 		$objetoXML->writeAttribute("Fecha", $fecha_solicitud_factura_service);
 		$objetoXML->writeAttribute("FormaPago", $comprobante["FormaPago"]);

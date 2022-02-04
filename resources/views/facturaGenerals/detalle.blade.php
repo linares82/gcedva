@@ -61,13 +61,16 @@
 
             <a class="btn btn-link" href="{{ route('facturaGenerals.index') }}"><i class="glyphicon glyphicon-backward"></i>  Regresar</a>
             <a class="btn btn-success" href="{{ route('facturaGenerals.recargarLineas', $facturaGeneral->id) }}">  Recargar Lineas</a>
+            @permission('facturaGeneralLineas.create')
+            <a class="btn btn-info" href="{{ route('facturaGeneralLineas.create', array('facturaGeneral'=>$facturaGeneral->id)) }}">  Crear Linea Manual</a>
+            @endpermission
         </div>
     </div>
     <div class="row">
         <div class="col-md-12">
             <table class="table table-condensed table-striped">
                 <thead>
-                    <th>No.</th><th>Cliente Id</th><th>Cliente</th><th>Fecha Pago</th><th>Caja</th><th>Concepto(s)</th><th>Monto Pago</th><th>UUID</th><th>Incluir</th>
+                    <th>No.</th><th>Cliente Id</th><th>Cliente</th><th>Fecha Pago</th><th>Caja</th><th>Concepto(s)</th><th>Monto Pago</th><th>UUID</th><th>Incluir</th><td>Otros datos</td>
                 </thead>
                 <tbody>
                     @php
@@ -93,13 +96,39 @@
                             value="1">Si</label>
                             <div class='loading' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div>    
                         </td>
+                        <td></td>
                     </tr>
                     @php
                         if($registro->bnd_incluido==1){
                             $suma=$suma+$registro->monto;
                         }
                         
-
+                    @endphp
+                    @endforeach
+                    @foreach($lineas_manuales as $registro)
+                    <tr>
+                        <td>{{ ++$i }}</td>
+                        <td>{{ $registro->cliente->id }}</td><td>{{ $registro->cliente->nombre }} {{ $registro->cliente->nombre2 }} {{ $registro->cliente->ape_paterno }} {{ $registro->cliente->materno }}</td>
+                        <td></td><td></td>
+                        <td>
+                        </td>
+                        <td align="right">{{ number_format($registro->monto) }}</td><td> </td>
+                        <td>
+                            Si
+                        </td>
+                        <td>Manual-{{ $registro->serie_factura }}-{{ $registro->folio_facturado }}
+                            @permission('facturaGeneralLineas.destroy')
+                            {!! Form::model($registro, array('route' => array('facturaGeneralLineas.destroy', $registro->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}
+                                <button type="submit" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> Borrar</button>
+                            {!! Form::close() !!}
+                            @endpermission
+                        </td>
+                    </tr>
+                    @php
+                        if($registro->bnd_incluido==1){
+                            $suma=$suma+$registro->monto;
+                        }
+                        
                     @endphp
                     @endforeach
                     <tr>

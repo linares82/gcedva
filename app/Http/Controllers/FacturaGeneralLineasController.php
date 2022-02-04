@@ -28,9 +28,12 @@ class FacturaGeneralLineasController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function create()
+	public function create(Request $request)
 	{
-		return view('facturaGeneralLineas.create')
+		$datos=$request->all();
+		
+		$facturaGeneral=$datos['facturaGeneral'];
+		return view('facturaGeneralLineas.create', compact('facturaGeneral'))
 			->with( 'list', FacturaGeneralLinea::getListFromAllRelationApps() );
 	}
 
@@ -44,13 +47,17 @@ class FacturaGeneralLineasController extends Controller {
 	{
 
 		$input = $request->all();
+		//dd($input);
 		$input['usu_alta_id']=Auth::user()->id;
 		$input['usu_mod_id']=Auth::user()->id;
+		$input['bnd_incluido']=1;
+		$input['bnd_manual']=1;
 
 		//create data
-		FacturaGeneralLinea::create( $input );
+		$facturaGeneralLinea=FacturaGeneralLinea::create( $input );
 
-		return redirect()->route('facturaGeneralLineas.index')->with('message', 'Registro Creado.');
+		return redirect()->route('facturaGenerals.detalle',$facturaGeneralLinea->factura_general_id)
+		->with('message', 'Registro Creado.');
 	}
 
 	/**
@@ -118,9 +125,10 @@ class FacturaGeneralLineasController extends Controller {
 	public function destroy($id,FacturaGeneralLinea $facturaGeneralLinea)
 	{
 		$facturaGeneralLinea=$facturaGeneralLinea->find($id);
+		$facturaGeneral=$facturaGeneralLinea->factura_general_id;
 		$facturaGeneralLinea->delete();
 
-		return redirect()->route('facturaGeneralLineas.index')->with('message', 'Registro Borrado.');
+		return redirect()->route('facturaGenerals.detalle', $facturaGeneral)->with('message', 'Registro Borrado.');
 	}
 
 	public function bndIncluir(Request $request){
