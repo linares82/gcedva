@@ -267,6 +267,7 @@ class PlanPagoLnsController extends Controller
         //dd($adeudos);
         foreach($adeudos as $adeudo){
             $adeudo->monto=$linea->monto;
+            $adeudo->fecha_pago=$linea->fecha_pago;
             $adeudo->save();
         }
         //dd('fil');

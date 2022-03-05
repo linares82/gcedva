@@ -183,7 +183,7 @@
                     <td>{{$detalle['razon']}}</td>
                     <td>{{$detalle['id']}}</td>
                     <td>{{ $detalle['nombre'] }} {{ $detalle['nombre2'] }} {{ $detalle['ape_paterno'] }} {{ $detalle['ape_materno'] }}</td>
-                    <td> {{$detalle['especialidad_id']}} </td>
+                    <td> {{$detalle['especialidad']}} </td>
                     <td>{{ $detalle['matricula'] }}</td>
                     <td>{{ $detalle['turno'] }}</td>
                     <td>{{ $detalle['fecha_pago'] }}</td>

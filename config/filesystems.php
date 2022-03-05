@@ -84,6 +84,12 @@ return [
             'url' => env('APP_URL').'/storage/conciliaciones',
             'visibility' => 'public',
         ],
+        'files_facturacion' => [
+            'driver' => 'local',
+            'root' => storage_path('files_facturacion'),
+            'url' => env('APP_URL').'/storage/files_facturacion',
+            'visibility' => 'public',
+        ],
 
         'local' => [
             'driver' => 'local',

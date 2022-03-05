@@ -10904,6 +10904,14 @@ Route::post(
         'uses' => 'VinculacionsController@cargarImg'
     )
 )->middleware('auth');
+Route::post(
+    '/vinculacions/cargarImgEditar',
+    array(
+        'as' => 'vinculacions.cargarImgEditar',
+        //'middleware' => 'permission:vinculacions.cargarImg',
+        'uses' => 'VinculacionsController@cargarImgEditar'
+    )
+)->middleware('auth');
 Route::get(
     '/vinculacions/listaVinculacion',
     array(

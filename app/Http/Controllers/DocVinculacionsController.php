@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\updateDocVinculacion;
 use App\Http\Requests\createDocVinculacion;
+use App\Clasificacion;
 
 class DocVinculacionsController extends Controller {
 
@@ -30,7 +31,8 @@ class DocVinculacionsController extends Controller {
 	 */
 	public function create()
 	{
-		return view('docVinculacions.create')
+		$clasificacions=Clasificacion::pluck('name','id');
+		return view('docVinculacions.create', compact('clasificacions'))
 			->with( 'list', DocVinculacion::getListFromAllRelationApps() );
 	}
 
@@ -77,7 +79,8 @@ class DocVinculacionsController extends Controller {
 	public function edit($id, DocVinculacion $docVinculacion)
 	{
 		$docVinculacion=$docVinculacion->find($id);
-		return view('docVinculacions.edit', compact('docVinculacion'))
+		$clasificacions=Clasificacion::pluck('name','id');
+		return view('docVinculacions.edit', compact('docVinculacion','clasificacions'))
 			->with( 'list', DocVinculacion::getListFromAllRelationApps() );
 	}
 

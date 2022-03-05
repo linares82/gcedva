@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Auth;
 use App\Turno;
 use App\Adeudo;
+use App\Cliente;
 use App\Plantel;
 use App\CombinacionCliente;
 use Illuminate\Http\Request;
@@ -58,7 +59,9 @@ class CombinacionClientesController extends Controller
         }
 
         //create data
-        CombinacionCliente::create($input);
+        $combinacion=CombinacionCliente::create($input);
+        $cliente=Cliente::find($combinacion->cliente_id);
+        $cliente->save();
 
         //return redirect()->route('combinacionClientes.index')->with('message', 'Registro Creado.');
     }

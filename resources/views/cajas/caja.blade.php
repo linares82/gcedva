@@ -1762,7 +1762,8 @@ Agregar nuevo registro
     $('#comentario-adeudo').val($(this).data('comentario'));
     
     
-    if($(this).data('caja_concepto')==1 || 
+    if($(this).data('caja_concepto')==1 ||
+    $(this).data('caja_concepto')==22 || 
     $(this).data('caja_concepto')==23 || 
     $(this).data('caja_concepto')==25){
         $('#descuento_inscripcion').show();

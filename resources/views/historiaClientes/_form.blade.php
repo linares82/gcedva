@@ -20,6 +20,7 @@
                         <span class="help-block">{{ $errors->first("fecha") }}</span>
                        @endif
                     </div>
+                    @permission('historiaClientes.fecha_vigencia')
                     <div class="form-group col-md-4 @if($errors->has('fec_vigencia')) has-error @endif">
                        <label for="fec_vigencia-field">Fecha Vigencia</label>
                        {!! Form::text("fec_vigencia", null, array("class" => "form-control", "id" => "fec_vigencia-field")) !!}
@@ -27,6 +28,7 @@
                         <span class="help-block">{{ $errors->first("fec_vigencia") }}</span>
                        @endif
                     </div>
+                    @endpermission
                     <div class="form-group col-md-4 @if($errors->has('archivo')) has-error @endif">
                        <label for="archivo-field">Archivo</label>
                        {!! Form::text("archivo", null, array("class" => "form-control input-sm", "id" => "archivo-field", 'readonly'=>'readonly')) !!}

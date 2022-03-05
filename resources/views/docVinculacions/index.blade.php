@@ -144,6 +144,8 @@
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
                             <th>@include('plantillas.getOrderLink', ['column' => 'name', 'title' => 'DOCUMENTO'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'clasificacion_id', 'title' => 'CLASIFICACION'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'orden', 'title' => 'ORDEN'])</th>
                         <th>@include('plantillas.getOrderLink', ['column' => 'bnd_obligatorio', 'title' => 'OBLIGATORIO'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
@@ -154,6 +156,8 @@
                             <tr>
                                 <td><a href="{{ route('docVinculacions.show', $docVinculacion->id) }}">{{$docVinculacion->id}}</a></td>
                                 <td>{{$docVinculacion->name}}</td>
+                                <td>{{ $docVinculacion->clasificacion->name ?? null }}</td>
+                                <td>{{$docVinculacion->orden}}</td>
                                 <td>
                                     @if($docVinculacion->bnd_obligatorio==1)
                                     SI

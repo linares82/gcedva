@@ -88,6 +88,7 @@ class HomeController extends Controller
             ->whereNotIn('st_historia_cliente_id', array(0, 2, 5))
             ->where('evento_cliente_id', 2)
             ->whereNotIn('st_historia_cliente_id', array(2, 4, 5))
+            ->whereNull('c.deleted_at')
             //->whereRaw('(aut_ser_esc <> 2 or aut_caja <> 2 or aut_ser_esc_corp <>2) ')
             ->whereIn('c.plantel_id', $planteles)
             ->with('cliente');
@@ -1806,5 +1807,9 @@ class HomeController extends Controller
             ->with('datos2', json_encode($datos2))
             ->with('grfDir1', json_encode($lineas))
             ->with('grfDir2', json_encode($tabla_estatus));
+    }
+
+    public function sesiones(Request $request){
+        $data = $request->session()->all();
     }
 }

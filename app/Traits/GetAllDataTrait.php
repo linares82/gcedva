@@ -190,6 +190,11 @@ trait GetAllDataTrait
                     $myQuery = $myQuery->whereIn('calendario_evaluacions.plantel_id', $planteles);
                 }
                 break;
+                case "doc_vinculacions":
+                    
+                    $myQuery = $myQuery->orderBy('clasificacion_id')->orderBy('orden');
+                    
+                    break;
             case "empleados":
                 if ($baseTable == "empleados") { // and Auth::user()->can('IfiltroEmpleadosXPlantel')
                     $myQuery = $myQuery->whereIn('empleados.plantel_id', $planteles);
@@ -310,6 +315,11 @@ trait GetAllDataTrait
                 }
 
                 break;
+            /*case "historia_clientes":
+                if ($baseTable == "historia_clientes") { //and Auth::user()->can('IfiltroClientesXPlantel')
+                    $myQuery = $myQuery->whereIn('clientes.plantel_id', $planteles);
+                }
+                break;*/
             case "tickets":
                 if (Auth::user()->can('tickets.usuarioTickets')) {
                     $myQuery = $myQuery->orWhere('tickets.asignado_a', Auth::user()->id)

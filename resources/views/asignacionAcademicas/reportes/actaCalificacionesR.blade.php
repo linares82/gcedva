@@ -196,9 +196,14 @@
                                 
                             }elseif($datos['ponderacion_f']==0){
                                 //$promedio=$a->calificaciones->max()->calificacion;
-                                //dd($a->calificaciones->max());
+                                //dd($a->calificaciones->where('tpo_examen_id',1)->whereNotIn('deleted_at', NULL)->max());
+                                
                                 $calificacion_id=$a->calificaciones->where('tpo_examen_id',1)->whereNotIn('deleted_at', NULL)->max()->id;
+                                $calificacion=$a->calificaciones->where('tpo_examen_id',1)->whereNotIn('deleted_at', NULL)->max()->calificacion;
+                                
+                                $promedio=$calificacion;
                                 //dd($calificacion_id);
+                                /*
                                 array_push($calificacionesArray, $calificacion_id);
                                 $ponderaciones=App\CalificacionPonderacion::where('calificacion_id', $calificacion_id)
                                 //->whereIn('carga_ponderacion_id',$array_ponderaciones)
@@ -225,7 +230,7 @@
                                     $calificacion->calificacion=$promedio;
                                     Log::info($calificacion->id);
                                     $calificacion->save();
-                                }
+                                }*/
                                 
                             }
                             

@@ -99,12 +99,18 @@ class VinculacionsController extends Controller
             //dd($de_array);
         }
 
-        $documentos_faltantes = DB::table('doc_plantels')
-            ->select()
+        $documentos_faltantes = DB::table('doc_vinculacions')
+            ->where('clasificacion_id', $vinculacion->clasificacion_id)
             ->whereNotIn('id', $de_array)
+            ->orderBy('orden')
             ->get();
 
-        return view('vinculacions.edit', compact('vinculacion', 'cliente', 'documentos_faltantes'))
+        $documentos_vinculacion=DB::table('doc_vinculacions')
+        ->where('clasificacion_id', $vinculacion->clasificacion_id)
+        ->orderBy('orden')
+        ->pluck('name','id');
+
+        return view('vinculacions.edit', compact('vinculacion', 'cliente', 'documentos_faltantes','documentos_vinculacion'))
             ->with('list', Vinculacion::getListFromAllRelationApps())
             ->with('list1', DocVinculacionVinculacion::getListFromAllRelationApps());
     }
@@ -183,12 +189,14 @@ class VinculacionsController extends Controller
                 $documento->vinculacion_id = $datos['vinculacion'];
                 $documento->doc_vinculacion_id = $datos['doc_vinculacion_id'];
                 $documento->archivo = $input['file'];
+                $documento->fec_inicio=$datos['fec_inicio'];
+                $documento->fec_fin=$datos['fec_fin'];
                 $documento->usu_alta_id = Auth::user()->id;
                 $documento->usu_mod_id = Auth::user()->id;
                 $documento->save();
 
                 $vinculacion = Vinculacion::find($documento->vinculacion_id);
-                if (($documento->doc_vinculacion_id == 18 or $documento->doc_vinculacion_id == 11) and
+                /*if (($documento->doc_vinculacion_id == 18 or $documento->doc_vinculacion_id == 11) and
                     $vinculacion->csc_vinculacion == 0 and
                     $vinculacion->clasificacion_id > 1) {
                     $tieneDocs = DocVinculacionVinculacion::where('vinculacion_id', $datos['vinculacion'])
@@ -222,12 +230,113 @@ class VinculacionsController extends Controller
 
                     $vinculacion->csc_vinculacion = $csc_str;
                     $vinculacion->save();
-                }
+                }*/
 
                 echo json_encode($ruta_web . "/" . $input['file']);
             } else {
+                
                 echo json_encode(0);
+                
             }
+        }else{
+        
+            $documento = new DocVinculacionVinculacion();
+            $documento->vinculacion_id = $datos['vinculacion'];
+            $documento->doc_vinculacion_id = $datos['doc_vinculacion_id'];
+            $documento->fec_inicio=$datos['fec_inicio'];
+            $documento->fec_fin=$datos['fec_fin'];
+            $documento->usu_alta_id = Auth::user()->id;
+            $documento->usu_mod_id = Auth::user()->id;
+            
+            $nuevo=$documento->save();
+            
+            echo $documento->toJson();
+        }
+        //echo json_encode(0);
+    }
+
+    public function cargarImgEditar(Request $request)
+    {
+
+        $r = $request->hasFile('file');
+        $datos = $request->all();
+        //dd($request->all());
+        if ($r) {
+            $logo_file = $request->file('file');
+            $input['file'] = $logo_file->getClientOriginalName();
+            $ruta_web = asset("/imagenes/vinculacions/" . $datos['vinculacion']);
+            //dd($ruta_web);
+            $ruta = public_path() . "/imagenes/vinculacions/" . $datos['vinculacion'] . "/";
+            if (!file_exists($ruta)) {
+                File::makedirectory($ruta, 0777, true, true);
+            }
+            if ($request->file('file')->move($ruta, $input['file'])) {
+                $documento = DocVinculacionVinculacion::find($datos['id']);
+                $documento->vinculacion_id = $datos['vinculacion'];
+                $documento->doc_vinculacion_id = $datos['doc_vinculacion_id'];
+                $documento->archivo = $input['file'];
+                $documento->fec_inicio=$datos['fec_inicio'];
+                $documento->fec_fin=$datos['fec_fin'];
+                $documento->usu_alta_id = Auth::user()->id;
+                $documento->usu_mod_id = Auth::user()->id;
+                $documento->save();
+
+                $vinculacion = Vinculacion::find($documento->vinculacion_id);
+                /*if (($documento->doc_vinculacion_id == 18 or $documento->doc_vinculacion_id == 11) and
+                    $vinculacion->csc_vinculacion == 0 and
+                    $vinculacion->clasificacion_id > 1) {
+                    $tieneDocs = DocVinculacionVinculacion::where('vinculacion_id', $datos['vinculacion'])
+                        ->whereRaw('(doc_vinculacion_id=? or doc_vinculacion_id=?)', [18, 11])
+                        ->get();
+                    //dd($tieneDocs->toArray());
+                    if (count($tieneDocs) == 2) {
+                        $plantel = Plantel::find($vinculacion->cliente->plantel_id);
+                        $plantel->csc_vinculacion = $plantel->csc_vinculacion + 1;
+                        $plantel->save();
+                        $cadena = "00000";
+                        $csc_numero = $plantel->csc_vinculacion;
+
+                        //Log::info('flc-'.strlen($cadena)-strlen($csc_numero)."-".substr($cadena,(strlen($cadena)-strlen($csc_numero))));
+                        $csc_str = $plantel->cve_vinculacion . substr($cadena, 0, (5 - strlen($csc_numero))) . $csc_numero;
+
+                        $vinculacion->csc_vinculacion = $csc_str;
+                        $vinculacion->save();
+                    }
+                } else if ($documento->doc_vinculacion_id == 11 and
+                    $vinculacion->csc_vinculacion == 0 and
+                    $vinculacion->clasificacion_id == 1) {
+                    $plantel = Plantel::find($vinculacion->cliente->plantel_id);
+                    $plantel->csc_vinculacion = $plantel->csc_vinculacion + 1;
+                    $plantel->save();
+                    $cadena = "00000";
+                    $csc_numero = $plantel->csc_vinculacion;
+
+                    //Log::info('flc-'.strlen($cadena)-strlen($csc_numero)."-".substr($cadena,(strlen($cadena)-strlen($csc_numero))));
+                    $csc_str = $plantel->cve_vinculacion . substr($cadena, 0, (5 - strlen($csc_numero))) . $csc_numero;
+
+                    $vinculacion->csc_vinculacion = $csc_str;
+                    $vinculacion->save();
+                }*/
+
+                echo json_encode($ruta_web . "/" . $input['file']);
+            } else {
+                
+                echo json_encode(0);
+                
+            }
+        }else{
+        
+            $documento = DocVinculacionVinculacion::find($datos['id']);
+            $documento->vinculacion_id = $datos['vinculacion'];
+            $documento->doc_vinculacion_id = $datos['doc_vinculacion_id'];
+            $documento->fec_inicio=$datos['fec_inicio'];
+            $documento->fec_fin=$datos['fec_fin'];
+            $documento->usu_alta_id = Auth::user()->id;
+            $documento->usu_mod_id = Auth::user()->id;
+            
+            $nuevo=$documento->save();
+            
+            echo $documento->toJson();
         }
         //echo json_encode(0);
     }
