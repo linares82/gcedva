@@ -118,7 +118,7 @@ class TitulacionPagosController extends Controller {
 	public function destroy($id,TitulacionPago $titulacionPago)
 	{
 		$titulacionPago=$titulacionPago->find($id);
-		$titulacion=$titulacionPago->titulacionIntento->titulacion_id;
+		$titulacion=$titulacionPago->titulacion_id;
 		$titulacionPago->delete();
 
 		return redirect()->route('titulacions.edit',$titulacion)->with('message', 'Registro Borrado.');

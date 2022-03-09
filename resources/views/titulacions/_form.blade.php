@@ -100,6 +100,93 @@
       </div>
    </div>
    @if (isset($titulacion))
+   <div class="row">
+    <div class="col-md-6">
+        <div class="box">
+            <div class="box-body">
+                <div class="form-group col-md-4 @if ($errors->has('fecha')) has-error @endif">
+                    <label for="intento-field">Fecha</label>
+                    {!! Form::hidden('pago_id', null, ['class' => 'form-control', 'id' => 'pago_id-field']) !!}
+                    {!! Form::hidden('titulacion_id', $titulacion->id, ['class' => 'form-control', 'id' => 'titulacion_id-field']) !!}
+                    {!! Form::text('fecha', null, ['class' => 'form-control fecha', 'id' => 'fecha-field']) !!}
+                    @if ($errors->has('fecha'))
+                        <span
+                            class="help-block">{{ $errors->first('fecha') }}</span>
+                    @endif
+                </div>
+                <div class="form-group col-md-3 @if ($errors->has('monto')) has-error @endif">
+                    <label for="monto-field">Monto</label>
+                    {!! Form::text('monto', null, ['class' => 'form-control', 'id' => 'monto-field']) !!}
+                    @if ($errors->has('monto'))
+                        <span
+                            class="help-block">{{ $errors->first('monto') }}</span>
+                    @endif
+                </div>
+                <div class="form-group col-md-5 @if ($errors->has('observaciones')) has-error @endif">
+                    <label for="observaciones-field">Observaciones</label>
+                    {!! Form::text('observaciones', null, ['class' => 'form-control', 'id' => 'observaciones-field']) !!}
+                    @if ($errors->has('observaciones'))
+                        <span
+                            class="help-block">{{ $errors->first('observaciones') }}</span>
+                    @endif
+                </div>
+                <div class="row"></div>
+                <button class="btn btn-xs btn-success" id="btn-guardar-pago">Crear</button>
+                <button class="btn btn-xs btn-warning" id="btn-update-pago" style="display:none">Guardar</button>
+                <button class="btn btn-xs btn-danger btn-cancelar-pago">Cancelar</button>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="box">
+            <div class="box-body">
+                <table class="table table-condensed table-striped">
+                    <thead>
+                        <th>Fecha</th>
+                        <th>Monto</th>
+                        <th>Obs.</th>
+                        <th>O. Pagos</th>
+                    </thead>
+                    <tbody>
+                        @foreach ($titulacion->titulacionPagos as $pago)
+                            <tr>
+                                <td>{{ $pago->fecha }}</td>
+                                <td>{{ $pago->monto }}</td>
+                                <td>{{ $pago->observaciones }}</td>
+                                <td>
+                                    
+                                    <button
+                                        class="btn btn-xs btn-warning btn-editar-pago"
+                                        data-pago_id="{{ $pago->id }}"
+                                        data-titulacion_id="{{ $pago->titulacion_id }}"
+                                        data-fecha="{{ $pago->fecha }}"
+                                        data-monto="{{ $pago->monto }}"
+                                        data-observaciones="{{ $pago->observaciones }}"
+                                        >
+                                        Editar
+                                    </button>
+                                    <a class="btn btn-xs btn-danger"
+                                                                               id="btn-eliminar-pago"
+                                                                               href="{{ route('titulacionPagos.destroy', $pago->id) }}"
+                                                                               method="delete">Eliminar</a>
+                                </td>
+                            </tr>
+                        @endforeach
+                        <tr><td></td><td>{{ $titulacion->titulacionPagos->where('titulacion_id', $titulacion->id)->sum('monto') }}</td><td></td><td></td></tr>
+                    </tbody>
+                </table>
+                
+                                            
+                                
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
        <div class="row">
            <div class="col-md-4">
                <div class="box">
@@ -146,7 +233,6 @@
                                <th>Intento</th>
                                <th>Fecha</th>
                                <th>Titulado</th>
-                               <th>Pagos</th>
                                <th>O. Intentos</th>
                            </thead>
                            <tbody>
@@ -156,43 +242,7 @@
                                        <td>{{ $intento->fec_examen }}</td>
                                        <td>@if ($intento->bnd_titulado == 1) SI @else NO @endif</td>
                                        <td>
-                                           @if ($intento->titulacionPagos->count() > 0)
-                                               <div class="box box-success">
-                                                   <div class="box-body">
-
-
-                                                       <table class="table table-condensed table-striped">
-                                                           <thead>
-                                                               <th>Fecha</th>
-                                                               <th>Monto</th>
-                                                               <th>O. Pagos</th>
-                                                           </thead>
-                                                           <tbody>
-                                                               @foreach ($intento->titulacionPagos as $pago)
-                                                                   <tr>
-                                                                       <td>{{ $pago->fecha }}</td>
-                                                                       <td>{{ $pago->monto }}</td>
-                                                                       <td>
-                                                                           <button
-                                                                               class="btn btn-xs btn-warning btn-editar-pago"
-                                                                               data-titulacion_pago_id="{{ $pago->id }}"
-                                                                               data-titulacion_intento_id="{{ $pago->titulacion_intento_id }}"
-                                                                               data-fecha="{{ $pago->fecha }}"
-                                                                               data-monto="{{ $pago->monto }}">
-                                                                               Editar
-                                                                           </button>
-                                                                           <a class="btn btn-xs btn-danger"
-                                                                               id="btn-eliminar-intento"
-                                                                               href="{{ route('titulacionPagos.destroy', $pago->id) }}"
-                                                                               method="delete">Eliminar Pago</a>
-                                                                       </td>
-                                                                   </tr>
-                                                               @endforeach
-                                                           </tbody>
-                                                       </table>
-                                                   </div>
-                                               </div>
-                                           @endif
+                                          
                                        </td>
                                        <td>
                                            <button class="btn btn-xs btn-warning btn-editar-intento"
@@ -205,39 +255,7 @@
                                            <a class="btn btn-xs btn-danger" id="btn-eliminar-intento"
                                                href="{{ route('titulacionIntentos.destroy', $intento->id) }}"
                                                method="delete">Eliminar</a>
-                                           <button class="btn btn-xs btn-success btn-agregar-pago"
-                                               data-intento="{{ $intento->id }}">Agregar Pago</button>
-
-
-                                           <div id="datosPago{{ $intento->id }}" style="display:none">
-                                               <div class="form-group col-md-7 @if ($errors->has('fecha')) has-error @endif">
-                                                   <label for="intento-field">Fecha</label>
-                                                   {!! Form::hidden('titulacion_pago_id', $intento->id, ['class' => 'form-control', 'id' => 'titulacion_pago_id-field']) !!}
-                                                   {!! Form::hidden('titulacion_intento_id', $intento->id, ['class' => 'form-control', 'id' => 'titulacion_intento_id-field']) !!}
-                                                   {!! Form::text('fecha', null, ['class' => 'form-control fecha', 'id' => 'fecha-field']) !!}
-                                                   @if ($errors->has('fecha'))
-                                                       <span
-                                                           class="help-block">{{ $errors->first('fecha') }}</span>
-                                                   @endif
-                                               </div>
-                                               <div class="form-group col-md-5 @if ($errors->has('monto')) has-error @endif">
-                                                   <label for="monto-field">Monto</label>
-                                                   {!! Form::text('monto', null, ['class' => 'form-control', 'id' => 'monto-field']) !!}
-                                                   @if ($errors->has('monto'))
-                                                       <span
-                                                           class="help-block">{{ $errors->first('monto') }}</span>
-                                                   @endif
-                                               </div>
-                                               <div class="row"></div>
-                                               <button class="btn btn-xs btn-success" id="btn-guardar-pago">Guardar
-                                                   Pago</button>
-                                               <button class="btn btn-xs btn-warning btn-update-pago"
-                                                   style="display:none;" data-intento="{{ $intento->id }}">Editar
-                                                   Pago</button>
-                                           </div>
-
-                                           <button class="btn btn-xs btn-danger btn-cancelar-pago"
-                                               data-intento="{{ $intento->id }}">Cancelar Pago</button>
+                                          
                                        </td>
                                    </tr>
                                @endforeach
@@ -341,23 +359,24 @@
                            });
                        });
 
-
+                       /*
                        $('.btn-agregar-pago').click(function(event) {
                            event.preventDefault();
                            $('#datosPago' + $(this).data('intento')).show();
-                       });
+                       });*/
 
                        $('#btn-guardar-pago').click(function(event) {
                            event.preventDefault();
+                           
 
                            $.ajax({
                                url: '{{ route('titulacionPagos.store') }}',
                                type: 'GET',
                                data: {
-                                   'titulacion_intento_id': $(this).parent().find(
-                                       '#titulacion_intento_id-field').val(),
-                                   'fecha': $(this).parent().find('#fecha-field').val(),
-                                   'monto': $(this).parent().find('#monto-field').val(),
+                                   'titulacion_id': {{ $titulacion->id }},
+                                   'fecha': $('#fecha-field').val(),
+                                   'monto': $('#monto-field').val(),
+                                   'observaciones': $('#observaciones-field').val(),
                                },
                                dataType: 'json',
                                success: function(data) {
@@ -368,43 +387,44 @@
 
                        $('.btn-editar-pago').click(function(event) {
                            event.preventDefault();
-                           divPago = $('#datosPago' + $(this).data('titulacion_intento_id'));
-                           divPago.show();
-                           divPago.find('#titulacion_pago_id-field').val($(this).data('titulacion_pago_id'));
-                           divPago.find('#fecha-field').val($(this).data('fecha'));
-                           divPago.find('#monto-field').val($(this).data('monto'));
+                           $('#pago_id-field').val($(this).data('pago_id'));
+                           $('#titulacion_id-field').val($(this).data('titulacion_id'));
+                           $('#fecha-field').val($(this).data('fecha'));
+                           $('#monto-field').val($(this).data('monto'));
+                           $('#observaciones-field').val($(this).data('observaciones'));
 
-                           divPago.parent().find('.btn-agregar-pago').hide();
-
-                           divPago.find('#btn-guardar-pago').hide();
-                           divPago.find('.btn-update-pago').show();
+                           $('#btn-update-pago').show();
+                           $('#btn-guardar-pago').hide();
                        });
 
                        $('.btn-cancelar-pago').click(function(event) {
                            event.preventDefault();
-                           divPago = $('#datosPago' + $(this).data('intento'));
-                           divPago.hide();
-                           divPago.find('#titulacion_pago_id-field').val('');
-                           divPago.find('#fecha-field').val('');
-                           divPago.find('#monto-field').val('');
+                           $('#pago_id-field').val('');
+                           $('#titulacion_pago_id-field').val('');
+                           $('#fecha-field').val('');
+                           $('#observaciones-field').val('');
+                           $('#monto-field').val('');
 
                            divPago.parent().find('.btn-agregar-pago').show();
                        });
 
-                       $('.btn-update-pago').click(function(event) {
+                       $('#btn-update-pago').click(function(event) {
                            event.preventDefault();
 
                            $.ajax({
-                               url: '{{ url('titulacionPagos/update') }}' + '/' + $(this).parent().find(
-                                   '#titulacion_pago_id-field').val(),
+                               url: '{{ url('titulacionPagos/update') }}' + '/' + $(
+                                   '#pago_id-field').val(),
                                type: 'GET',
                                data: {
                                    'fecha': $(this).parent().find('#fecha-field').val(),
                                    'monto': $(this).parent().find('#monto-field').val(),
+                                   'observaciones': $(this).parent().find('#observaciones-field').val(),
                                },
                                dataType: 'json',
                                success: function(data) {
                                    location.reload();
+                                   $('#btn-update-pago').hide();
+                                    $('#btn-guardar-pago').show();
                                }
                            });
                        });
