@@ -22,7 +22,7 @@
         <table class="table table-condensed table-striped">
             <thead>
                 <tr>
-                  <th>id</th><th>Cliente</th><th>Seccion</th><th>Caja</th><th>Cobrado Por</th><!--<th>Estatus</th>--><th>Fecha Pago</th><th>Fecha Creacion</th><th>Concepto</th><th>Monto Pago</th><th>Forma Pago</th><th>Beca</th>
+                  <th>id</th><th>Cliente</th><th>Matricula</th><th>Caja</th><th>Cobrado Por</th><!--<th>Estatus</th>--><th>Fecha Pago</th><th>Fecha Creacion</th><th>Concepto</th><th>Monto Pago</th><th>Forma Pago</th><th>Beca</th>
                 </tr> 
             </thead>
             <tbody>
@@ -74,7 +74,7 @@
                     <tr>
                       <td>{{$registro->id}} </td> 
                       <td>{{$registro->ape_paterno}} {{$registro->ape_materno}} {{$registro->nombre}} {{$registro->nombre2}}</td>
-                      <td>{{ $registro->seccion }}</td>
+                      <td>{{ $registro->matricula }}</td>
                         <!--<td>
                             @if($registro->beca_bnd==1)
                                 SI
