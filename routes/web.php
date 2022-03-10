@@ -8405,6 +8405,23 @@ Route::post(
     )
 )->middleware('auth');
 Route::get(
+    '/adeudos/maestroEjecutivo',
+    array(
+        'as' => 'adeudos.maestroEjecutivo',
+        'middleware' => 'permission:adeudos.maestroEjecutivo',
+        'uses' => 'AdeudosController@maestroEjecutivo'
+    )
+)->middleware('auth');
+Route::post(
+    '/adeudos/maestroEjecutivoR',
+    array(
+        'as' => 'adeudos.maestroEjecutivoR',
+        'middleware' => 'permission:adeudos.maestroEjecutivo',
+        'uses' => 'AdeudosController@maestroEjecutivoR',
+    )
+)->middleware('auth');
+
+Route::get(
     '/adeudos/maestroIndicador',
     array(
         'as' => 'adeudos.maestroIndicador',

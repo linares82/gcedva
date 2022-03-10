@@ -131,7 +131,7 @@
                     @endif
                 </div>
                 <div class="row"></div>
-                <button class="btn btn-xs btn-success" id="btn-guardar-pago">Crear</button>
+                <button class="btn btn-xs btn-success" id="btn-guardar-pago" data-titulacion="{{ $titulacion->id }}">Crear</button>
                 <button class="btn btn-xs btn-warning" id="btn-update-pago" style="display:none">Guardar</button>
                 <button class="btn btn-xs btn-danger btn-cancelar-pago">Cancelar</button>
                 
@@ -373,7 +373,7 @@
                                url: '{{ route('titulacionPagos.store') }}',
                                type: 'GET',
                                data: {
-                                   'titulacion_id': {{ $titulacion->id }},
+                                   'titulacion_id': $('#titulacion-field').val(),
                                    'fecha': $('#fecha-field').val(),
                                    'monto': $('#monto-field').val(),
                                    'observaciones': $('#observaciones-field').val(),
