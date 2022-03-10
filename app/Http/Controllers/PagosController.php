@@ -1021,9 +1021,11 @@ class PagosController extends Controller
                 . 'c.nombre, c.nombre2, c.ape_paterno, c.ape_materno, cajas.id as caja, cajas.consecutivo,'
                 . 'c.beca_bnd, st.name as estatus_caja, fp.id as forma_pago_id, cajas.st_caja_id,'
                 . 'pag.monto as monto_pago, fp.name as forma_pago, pag.fecha as fecha_pago, pag.created_at, cajas.fecha as fecha_caja,'
-                . 'up.name as creador_pago, cln.caja_concepto_id')
+                . 'up.name as creador_pago, cln.caja_concepto_id, g.seccion')
         )
             ->join('clientes as c', 'c.id', '=', 'cajas.cliente_id')
+            ->join('combinacion_clientes as cc','cc.cliente_id','c.id')
+            ->join('grados as g', 'g.id','cc.grado_id')
             ->join('plantels as pla', 'pla.id', '=', 'c.plantel_id')
             ->join('st_cajas as st', 'st.id', '=', 'cajas.st_caja_id')
             ->join('pagos as pag', 'pag.caja_id', '=', 'cajas.id')
@@ -1053,7 +1055,7 @@ class PagosController extends Controller
         $registros_pagados = $registros_pagados_aux2->unique(function ($item) {
             return $item['consecutivo'] . $item['monto_pago'] . $item['created_at'];
         })->values()->all();
-        //dd($registros_pagados);
+        //dd($registros_pagados->toArray());
         $empleado = Empleado::where('user_id', Auth::user()->id)->first();
 
         $transferencias = Transference::select(
