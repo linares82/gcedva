@@ -105,7 +105,10 @@
                              $r->estatus_cliente_id==26 or
                              $r->estatus_cliente_id==27 or 
                              $r->estatus_cliente_id==28)
-                             
+                             	@permission('hacademicas.calificacionBaja')
+                                {!! Form::number("calificacion", null, array("class" => "form-control input-sm col-md-6", 
+                                "id" => "calificacion_parcial".$r->id, 'min' => 0, 'max' =>10)) !!}
+                                @endpermission
                              @else
                                 {!! Form::number("calificacion", null, array("class" => "form-control input-sm col-md-6", 
                                                                         "id" => "calificacion_parcial".$r->id, 'min' => 0, 'max' =>10)) !!}
@@ -118,7 +121,17 @@
                                  $r->estatus_cliente_id==26 or
                                  $r->estatus_cliente_id==27 or 
                                  $r->estatus_cliente_id==28)
-                             
+                             	@permission('hacademicas.calificacionBaja')
+                                <button type="button"  
+                                class="btn btn-primary btn-xs btn-guardar_caificacion" 
+                                data-calificacion_ponderacion_id="{{ $r->calificacion_ponderacion_id }}"
+                                data-cliente_id="{{$r->id}}"
+                            >Actualizar</button>
+				@endpermission
+                            @permission('hCalificacions.index')
+                            <a href="{{ url('hCalificacions/index') }}?q%5Bs%5D=&q%5Bclientes.nombre_cont%5D=&q%5Bcalificacions.calificacion_cont%5D=&q%5Bh_calificacions.calificacion_ponderacion_id_cont%5D={{ $r->calificacion_ponderacion_id }}&q%5Bcarga_ponderacions.name_cont%5D=&q%5Bcalificacion_parcial_anterior_cont%5D=&q%5Bcalificacion_parcial_actual_cont%5D=&q%5Busu_alta_id_cont%5D=&q%5Busu_mod_id_cont%5D=&commit=Buscar" class="btn btn-success btn-xs" target="_blank">Historia</a>
+                            @endpermission
+                                
                              @else
                                 <button type="button"  
                                      class="btn btn-primary btn-xs btn-guardar_caificacion" 

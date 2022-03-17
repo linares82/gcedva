@@ -1,0 +1,1 @@
+@section('empresasVinculacionsAppTitle','Empresas Vinculacion')

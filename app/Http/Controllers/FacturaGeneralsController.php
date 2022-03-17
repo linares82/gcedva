@@ -442,7 +442,7 @@ class FacturaGeneralsController extends Controller
 		
 		//dd($content);
 		//comentando lineas que generan una descarga de archivo
-		/*
+		
 		
 		ob_end_clean();
 		ob_start();
@@ -453,46 +453,9 @@ class FacturaGeneralsController extends Controller
 		header('Pragma: cache');
 		header('Cache-Control: private');
 		echo $content;
-		*/
 		
 		
 		
-	}
-}
-
-class Comprobante {
-	var $NIC = "";
-	var $Licencia = "";
-	var $XmlMetaData; //collection
-	var $XSLT_CadenaOriginal="";
-	var $tagName ="";
-	var $Version;
-	var $Fecha; //date time
-	var $Serie="";
-	var $Folio="";
-	var $Sello="";
-	var $FormaPago="";
-	var $NoCertificado="";
-	var $Receptor=new Receptor();
-}
-
-class Receptor{
-	var $tagName="";
-	var $Rfc="";
-	var $Nombre="";
-	var $DomicilioFiscalReceptor="";
-	var $ResidenciaFiscal="";
-	var $NumRegIdTrib="";
-	var $RegimenFiscalReceptor="";
-	var $UsoCFDI="";
-
-	function __construct($tagName, $Rfc, $Nombre, $DomicilioFiscalReceptor, $ResidenciaFiscal, $NumRegIdTrib, $RegimenFiscalReceptor, $UsoCFDI){
-		$this->tagName = $tagName;
-		$this->Rfc = $Rfc;
-		$this->Nombre = $Nombre;
-		$this->DomicilioFiscalReceptor = $DomicilioFiscalReceptor;
-		$this->ResidenciaFiscal = $ResidenciaFiscal;
-		$this->NumRegIdTrib = $NumRegIdTrib;
-		$this->UsoCFDI = $UsoCFDI;
+		
 	}
 }

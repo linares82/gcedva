@@ -1,12 +1,32 @@
 <div class="box box-default">
-                <div class="box-body"> 
-                    <div class="form-group col-md-4 @if($errors->has('empresa_id')) has-error @endif">
-                        <label for="empresa_id-field">Eempresa</label>
-                        {!! Form::select("empresa_id", $list["Empresa"], null, array("class" => "form-control select_seguridad", "id" => "empresa_id-field", 'style'=>'width:100%')) !!}
-                        @if($errors->has("empresa_id"))
-                        <span class="help-block">{{ $errors->first("empresa_id") }}</span>
+                <div class="box-body">
+                    
+                    <div class="form-group col-md-4 @if($errors->has('empresas_vinculacion_id')) has-error @endif">
+                        <label for="empresa_id-field">Empresa</label>
+                        <a href="{{ route('empresasVinculacions.show', $vinculacion->empresas_vinculacion_id) }}" target="_blank">Ver</a>
+                        {!! Form::select("empresas_vinculacion_id", $list["EmpresasVinculacion"], null, array("class" => "form-control select_seguridad", "id" => "empresas_vinculacion_id-field", 'style'=>'width:100%')) !!}
+                        @if(isset($vinculacion))
+                        
+                        @endif
+                        @if($errors->has("empresas_vinculacion_id"))
+                        <span class="help-block">{{ $errors->first("empresas_vinculacion_id") }}</span>
                         @endif
                     </div>
+                    @if(isset($vinculacion))
+                    <div class="form-group col-md-4 @if($errors->has('area')) has-error @endif">
+                        @php
+                            $combinacion=\App\CombinacionCliente::where('cliente_id',$vinculacion->cliente_id)->first();
+                        @endphp
+                        <label for="area-field">Especialidad: {{ $combinacion->especialidad->name }}</label>
+                     </div>
+                     @endif
+                    <div class="form-group col-md-4 @if($errors->has('area')) has-error @endif">
+                        <label for="area-field">Area</label>
+                        {!! Form::text("area", null, array("class" => "form-control", "id" => "area-field")) !!}
+                        @if($errors->has("area"))
+                         <span class="help-block">{{ $errors->first("area") }}</span>
+                        @endif
+                     </div>
                     <div class="form-group col-md-4 @if($errors->has('lugar_practica')) has-error @endif">
                        <label for="lugar_practica-field">Lugar Practica</label>
                        {!! Form::text("lugar_practica", null, array("class" => "form-control", "id" => "lugar_practica-field")) !!}
@@ -15,6 +35,7 @@
                         <span class="help-block">{{ $errors->first("lugar_practica") }}</span>
                        @endif
                     </div>
+                    
                     <div class="form-group col-md-4 @if($errors->has('tel_fijo')) has-error @endif">
                        <label for="tel_fijo-field">Tel. Fijo</label>
                        {!! Form::text("tel_fijo", null, array("class" => "form-control", "id" => "tel_fijo-field")) !!}
@@ -36,6 +57,13 @@
                         <span class="help-block">{{ $errors->first("nombre_contacto") }}</span>
                        @endif
                     </div>
+                    <div class="form-group col-md-4 @if($errors->has('puesto')) has-error @endif">
+                        <label for="area-field">Puesto</label>
+                        {!! Form::text("puesto", null, array("class" => "form-control", "id" => "puesto-field")) !!}
+                        @if($errors->has("puesto"))
+                         <span class="help-block">{{ $errors->first("puesto") }}</span>
+                        @endif
+                     </div>
                     <div class="form-group col-md-4 @if($errors->has('mail_contacto')) has-error @endif">
                        <label for="mail_contacto-field">Mail Contacto</label>
                        {!! Form::text("mail_contacto", null, array("class" => "form-control", "id" => "mail_contacto-field")) !!}
@@ -43,6 +71,7 @@
                         <span class="help-block">{{ $errors->first("mail_contacto") }}</span>
                        @endif
                     </div>
+                    
                     <div class="form-group col-md-4 @if($errors->has('fec_inicio')) has-error @endif">
                        <label for="fec_inicio-field">Fecha Inicio</label>
                        {!! Form::text("fec_inicio", null, array("class" => "form-control", "id" => "fec_inicio-field")) !!}
@@ -57,6 +86,20 @@
                         <span class="help-block">{{ $errors->first("fec_fin") }}</span>
                        @endif
                     </div>
+                    <div class="form-group col-md-4 @if($errors->has('aseguradora')) has-error @endif">
+                        <label for="aseguradora-field">Aseguradora</label>
+                        {!! Form::text("aseguradora", null, array("class" => "form-control", "id" => "aseguradora-field")) !!}
+                        @if($errors->has("aseguradora"))
+                         <span class="help-block">{{ $errors->first("aseguradora") }}</span>
+                        @endif
+                     </div>
+                     <div class="form-group col-md-4 @if($errors->has('no_poliza')) has-error @endif">
+                        <label for="no_poliza-field">No. Poliza</label>
+                        {!! Form::text("no_poliza", null, array("class" => "form-control", "id" => "no_poliza-field")) !!}
+                        @if($errors->has("no_poliza"))
+                         <span class="help-block">{{ $errors->first("no_poliza") }}</span>
+                        @endif
+                     </div>
                     <div class="form-group col-md-4 @if($errors->has('st_vinculacion_id')) has-error @endif">
                         <label for="st_vinculacion_id-field">Estatus</label>
                         {!! Form::select("st_vinculacion_id", $list["StVinculacion"], null, array("class" => "form-control select_seguridad", "id" => "st_vinculacion_id-field", 'style'=>'width:100%')) !!}
