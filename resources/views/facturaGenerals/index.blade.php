@@ -234,6 +234,7 @@
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
                             <th>@include('plantillas.getOrderLink', ['column' => 'plantels.razon', 'title' => 'PLANTEL'])</th>
+                        <th>@include('plantillas.getOrderLink', ['column' => 'fecha_factura', 'title' => 'F. FACTURA'])</th>
                         <th>@include('plantillas.getOrderLink', ['column' => 'fec_inicio', 'title' => 'F. INICIO'])</th>
                         <th>@include('plantillas.getOrderLink', ['column' => 'fec_fin', 'title' => 'F. FIN'])</th>
                         <th>@include('plantillas.getOrderLink', ['column' => 'total', 'title' => 'TOTAL'])</th>
@@ -247,6 +248,7 @@
                             <tr>
                                 <td><a href="{{ route('facturaGenerals.show', $facturaGeneral->id) }}">{{$facturaGeneral->id}}</a></td>
                                 <td>{{$facturaGeneral->plantel->razon}}</td>
+                                <td>{{$facturaGeneral->fecha_factura}}</td>
                                 <td>{{$facturaGeneral->fec_inicio}}</td>
                                 <td>{{$facturaGeneral->fec_fin}}</td>
                                 <td>{{$facturaGeneral->total}}</td>

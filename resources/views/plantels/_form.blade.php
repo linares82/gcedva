@@ -477,43 +477,100 @@
                     <span class="help-block">{{ $errors->first("meta_total") }}</span>
                     @endif
                 </div>
-                <div class="form-group col-md-4 @if($errors->has('fcuenta')) has-error @endif">
-                    <label for="fcuenta-field">Cuenta Facturacion</label>
-                    {!! Form::text("fcuenta", null, array("class" => "form-control input-sm", "id" => "fcuenta-field")) !!}
-                    @if($errors->has("meta_total"))
-                    <span class="help-block">{{ $errors->first("fcuenta") }}</span>
-                    @endif
-                </div>
-                <div class="form-group col-md-4 @if($errors->has('fusuario')) has-error @endif">
-                    <label for="fusuario-field">Usuario Facturacion</label>
-                    {!! Form::text("fusuario", null, array("class" => "form-control input-sm", "id" => "fusuario-field")) !!}
-                    @if($errors->has("fusuario"))
-                    <span class="help-block">{{ $errors->first("fusuario") }}</span>
-                    @endif
-                </div>
-                <div class="form-group col-md-4 @if($errors->has('fpassword')) has-error @endif">
-                    <label for="fpassword-field">Password Facturación</label>
-                    {!! Form::text("fpassword", null, array("class" => "form-control input-sm", "id" => "fpassword-field")) !!}
-                    @if($errors->has("fpassword"))
-                    <span class="help-block">{{ $errors->first("fpassword") }}</span>
-                    @endif
-                </div>
-                <div class="form-group col-md-4 @if($errors->has('serie_factura')) has-error @endif">
-                    <label for="serie_factura-field">Serie Factura</label>
-                    {!! Form::text("serie_factura", null, array("class" => "form-control input-sm", "id" => "serie_factura-field")) !!}
-                    @if($errors->has("serie_factura"))
-                    <span class="help-block">{{ $errors->first("serie_factura") }}</span>
-                    @endif
-                </div>
-                <div class="form-group col-md-4 @if($errors->has('folio_facturados')) has-error @endif">
-                    <label for="folio_facturados-field">Folio Factura</label>
-                    {!! Form::text("folio_facturados", null, array("class" => "form-control input-sm", "id" => "folio_facturados-field")) !!}
-                    @if($errors->has("folio_facturados"))
-                    <span class="help-block">{{ $errors->first("folio_facturados") }}</span>
-                    @endif
-                </div>
                 
             </fieldset>
+            <div class="box box-default">
+                <div class="box-header"><h3>Facturacion Portal de Alumnos (Folios digitales)</h3></div>
+                <div class="box-body">
+                    <div class="form-group col-md-4 @if($errors->has('fcuenta')) has-error @endif">
+                        <label for="fcuenta-field">Cuenta Facturacion</label>
+                        {!! Form::text("fcuenta", null, array("class" => "form-control input-sm", "id" => "fcuenta-field")) !!}
+                        @if($errors->has("meta_total"))
+                        <span class="help-block">{{ $errors->first("fcuenta") }}</span>
+                        @endif
+                    </div>
+                    <div class="form-group col-md-4 @if($errors->has('fusuario')) has-error @endif">
+                        <label for="fusuario-field">Usuario Facturacion</label>
+                        {!! Form::text("fusuario", null, array("class" => "form-control input-sm", "id" => "fusuario-field")) !!}
+                        @if($errors->has("fusuario"))
+                        <span class="help-block">{{ $errors->first("fusuario") }}</span>
+                        @endif
+                    </div>
+                    <div class="form-group col-md-4 @if($errors->has('fpassword')) has-error @endif">
+                        <label for="fpassword-field">Password Facturación</label>
+                        {!! Form::text("fpassword", null, array("class" => "form-control input-sm", "id" => "fpassword-field")) !!}
+                        @if($errors->has("fpassword"))
+                        <span class="help-block">{{ $errors->first("fpassword") }}</span>
+                        @endif
+                    </div>
+                    <div class="form-group col-md-4 @if($errors->has('serie_factura')) has-error @endif">
+                        <label for="serie_factura-field">Serie Factura</label>
+                        {!! Form::text("serie_factura", null, array("class" => "form-control input-sm", "id" => "serie_factura-field")) !!}
+                        @if($errors->has("serie_factura"))
+                        <span class="help-block">{{ $errors->first("serie_factura") }}</span>
+                        @endif
+                    </div>
+                    <div class="form-group col-md-4 @if($errors->has('folio_facturados')) has-error @endif">
+                        <label for="folio_facturados-field">Folio Factura</label>
+                        {!! Form::text("folio_facturados", null, array("class" => "form-control input-sm", "id" => "folio_facturados-field")) !!}
+                        @if($errors->has("folio_facturados"))
+                        <span class="help-block">{{ $errors->first("folio_facturados") }}</span>
+                        @endif
+                    </div>
+                
+                </div>
+            </div>
+            <div class="box box-default">
+                <div class="box-header"><h3>Facturacion Global (Factudesk)</h3></div>
+                <div class="box-body">
+                    <div class="row">
+                        <div class="form-group col-md-4 @if($errors->has('fact_global_id_cuenta')) has-error @endif">
+                            <label for="fact_global_id_cuenta-field">Id Cuenta</label>
+                            {!! Form::text("fact_global_id_cuenta", null, array("class" => "form-control input-sm", "id" => "fact_global_id_cuenta-field")) !!}
+                            @if($errors->has("fact_global_id_cuenta"))
+                            <span class="help-block">{{ $errors->first("fact_global_id_cuenta") }}</span>
+                            @endif
+                        </div>
+                        <div class="form-group col-md-4 @if($errors->has('fact_global_pass_cuenta')) has-error @endif">
+                            <label for="fact_global_pass_cuenta-field">Contraseña Cuenta</label>
+                            {!! Form::text("fact_global_pass_cuenta", null, array("class" => "form-control input-sm", "id" => "fact_global_pass_cuenta-field")) !!}
+                            @if($errors->has("fact_global_pass_cuenta"))
+                            <span class="help-block">{{ $errors->first("fact_global_pass_cuenta") }}</span>
+                            @endif
+                        </div>
+                        @if(isset($plantel))
+                        <div class="form-group col-md-4 @if($errors->has('fact_global_pass_cuenta')) has-error @endif">
+                            <button class="btn btn-success" id='fact_cuenta'>Replicar Para Todos Los Planteles</button>
+                        </div>
+                        @endif
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-4 @if($errors->has('fact_global_id_usu')) has-error @endif">
+                            <label for="fact_global_id_usu-field">Id Usuario(Tel. o Email)</label>
+                            {!! Form::text("fact_global_id_usu", null, array("class" => "form-control input-sm", "id" => "fact_global_id_usu-field")) !!}
+                            @if($errors->has("fact_global_id_usu"))
+                            <span class="help-block">{{ $errors->first("fact_global_id_usu") }}</span>
+                            @endif
+                        </div> 
+                        <div class="form-group col-md-4 @if($errors->has('fact_global_pass_usu')) has-error @endif">
+                            <label for="fact_global_pass_usu-field">Contraseña Usuario(Tel. o Email)</label>
+                            {!! Form::text("fact_global_pass_usu", null, array("class" => "form-control input-sm", "id" => "fact_global_pass_usu-field")) !!}
+                            @if($errors->has("fact_global_id_usu"))
+                            <span class="help-block">{{ $errors->first("fact_global_pass_usu") }}</span>
+                            @endif
+                        </div>
+                        @if(isset($plantel))
+                        <div class="form-group col-md-4 @if($errors->has('fact_global_pass_cuenta')) has-error @endif">
+                            <button class="btn btn-success" id='fact_usuario'>Replicar Para Todos Los Planteles</button>
+                        </div> 
+                        @endif
+                    
+                    </div>
+                    
+
+                    
+                </div>
+            </div>
             <div class="box box-default">
                 <div class="box-body">
                 
@@ -615,5 +672,47 @@
         });
 
     });
+
+    @if(isset($plantel))
+    $("#fact_cuenta").click(function(event) {
+        event.preventDefault();
+        $.ajax({
+                  url: '{{ route("plantels.replicarCuentaFactudesk") }}',
+                  type: 'GET',
+                  data: {
+                      'fact_global_id_cuenta': $('#fact_global_id_cuenta-field').val(), 
+                      'fact_global_pass_cuenta': $('#fact_global_pass_cuenta-field').val()
+                  },
+                  dataType: 'json',
+                  beforeSend : function(){$("#fact_cuenta").text('Procesando');},
+                  complete : function(){$("#fact_cuenta").text('OK');},
+                  success: function(data){
+                    
+                  }
+              });
+      
+      
+   });
+
+   $("#fact_usuario").click(function(event) {
+        event.preventDefault();
+        
+        $.ajax({
+                  url: '{{ route("plantels.replicarUsuarioFactudesk") }}',
+                  type: 'GET',
+                  data: {
+                      'fact_global_id_usu': $('#fact_global_id_usu-field').val(), 
+                      'fact_global_pass_usu': $('#fact_global_pass_usu-field').val()
+                  },
+                  dataType: 'json',
+                  beforeSend : function(){$("#fact_usuario").text('Procesando');},
+                  complete : function(){$("#fact_usuario").text('OK');},
+                  success: function(data){
+                    
+                  }
+              });
+      
+   });
+   @endif
     </script>
 @endpush

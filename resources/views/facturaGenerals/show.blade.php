@@ -42,12 +42,16 @@
                      <label for="plantel_razon">PLANTEL_RAZON</label>
                      <p class="form-control-static">{{$facturaGeneral->plantel->razon}}</p>
                 </div>
+                <div class="form-group">
+                    <label for="fecha_factura">F. FACTURA</label>
+                    <p class="form-control-static">{{$facturaGeneral->fec_inicio}}</p>
+               </div>
                     <div class="form-group">
-                     <label for="fec_inicio">FEC_INICIO</label>
+                     <label for="fec_inicio">F. INICIO</label>
                      <p class="form-control-static">{{$facturaGeneral->fec_inicio}}</p>
                 </div>
                     <div class="form-group">
-                     <label for="fec_fin">FEC_FIN</label>
+                     <label for="fec_fin">F. FIN</label>
                      <p class="form-control-static">{{$facturaGeneral->fec_fin}}</p>
                 </div>
                     <div class="form-group">

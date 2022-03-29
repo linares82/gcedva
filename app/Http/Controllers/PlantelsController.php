@@ -47,7 +47,7 @@ class PlantelsController extends Controller
 	{
 		//dd("fil");
 		$directores = Empleado::select(DB::raw("CONCAT(nombre,' ',ape_paterno,' ',ape_materno) AS name"), 'id')
-			->where('puesto_id', 4)->pluck('name', 'id');
+			->whereIn('puesto_id', array(4,24))->pluck('name', 'id');
 		//dd($directores);
 		$responsables = Empleado::select(DB::raw("CONCAT(nombre,' ',ape_paterno,' ',ape_materno) AS name"), 'id')
 			->where('puesto_id', 23)->pluck('name', 'id');
@@ -157,7 +157,7 @@ class PlantelsController extends Controller
 	{
 		$plantel = $plantel->find($id);
 		$directores = Empleado::select(DB::raw("CONCAT(nombre,' ',ape_paterno,' ',ape_materno) AS name"), 'id')
-			->where('puesto_id', 4)->pluck('name', 'id');
+			->whereIn('puesto_id', array(4,24))->pluck('name', 'id');
 		//dd($directores);
 		$responsables = Empleado::select(DB::raw("CONCAT(nombre,' ',ape_paterno,' ',ape_materno) AS name"), 'id')
 			->whereIn('puesto_id', array(4,23))->pluck('name', 'id');
@@ -668,5 +668,29 @@ class PlantelsController extends Controller
 				return view('plantels.reportes.madre', compact('alumnosCalificaciones', 'planteles'));
 				break;
 		}
+	}
+
+	public function replicarCuentaFactudesk(Request $request){
+		$datos=$request->all();
+		$plantels=Plantel::get();
+		foreach($plantels as $plantel){
+			$plantel->fact_global_id_cuenta=$datos['fact_global_pass_cuenta'];
+			$plantel->fact_global_pass_cuenta=$datos['fact_global_pass_cuenta'];
+			$plantel->save();
+		}
+		return $plantels;
+		//return redirect()->route('edit', array('id'=>$datos['plantel']));
+	}
+
+	public function replicarUsuarioFactudesk(Request $request){
+		$datos=$request->all();
+		$plantels=Plantel::get();
+		foreach($plantels as $plantel){
+			$plantel->fact_global_id_usu=$datos['fact_global_id_usu'];
+			$plantel->fact_global_pass_usu=$datos['fact_global_pass_usu'];
+			$plantel->save();
+		}
+		return $plantels;
+		//return redirect()->route('edit', array('id'=>$datos['plantel']));
 	}
 }

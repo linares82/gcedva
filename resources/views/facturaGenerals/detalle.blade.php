@@ -42,6 +42,10 @@
                      <label for="plantel_razon">PLANTEL</label>
                      <p class="form-control-static">{{$facturaGeneral->plantel->razon}}</p>
                 </div>
+                <div class="form-group col-sm-4">
+                    <label for="fecha_facrtura">F. FACTURA</label>
+                    <p class="form-control-static">{{$facturaGeneral->fecha_factura}}</p>
+               </div>
                     <div class="form-group col-sm-4">
                      <label for="fec_inicio">F. INICIO</label>
                      <p class="form-control-static">{{$facturaGeneral->fec_inicio}}</p>
@@ -59,10 +63,16 @@
             <div class="row">
                 </div>
 
-            <a class="btn btn-link" href="{{ route('facturaGenerals.index') }}"><i class="glyphicon glyphicon-backward"></i>  Regresar</a>
-            <a class="btn btn-success" href="{{ route('facturaGenerals.recargarLineas', $facturaGeneral->id) }}">  Recargar Lineas</a>
+            <a class="btn btn-link btn-xs" href="{{ route('facturaGenerals.index') }}"><i class="glyphicon glyphicon-backward"></i>  Regresar</a>
+            <a class="btn btn-success btn-xs" href="{{ route('facturaGenerals.recargarLineas', $facturaGeneral->id) }}">  Recargar Lineas</a>
+            
             @permission('facturaGeneralLineas.create')
-            <a class="btn btn-info" href="{{ route('facturaGeneralLineas.create', array('facturaGeneral'=>$facturaGeneral->id)) }}">  Crear Linea Manual</a>
+            <a class="btn btn-xs btn-info" href="{{ route('facturaGeneralLineas.create', array('facturaGeneral'=>$facturaGeneral->id)) }}">  Crear Linea Manual</a>
+            @endpermission
+            @permission('facturaGenerals.descargarFactura')
+            @if(isset($facturaGeneral) and isset($facturaGeneral->uuid))
+            <a class="btn btn-warning btn-xs" href="{{ route('facturaGenerals.descargarFactura', array('id'=>$facturaGeneral->id)) }}"> Descargar PDF/XML</a>
+            @endif
             @endpermission
         </div>
     </div>
@@ -141,7 +151,9 @@
                     <tr>
                         <td colspan="6"></td>
                         <td colspan="2">
+                            @permission('facturaGenerals.generarFactura')
                             <a href="{{ route('facturaGenerals.generarFactura', array('id'=>$facturaGeneral->id)) }}"  class="btn btn-xs btn-success btn-block" >Generar Factura</a>
+                            @endpermission
                         </td>
                     </tr>
                 </tbody>

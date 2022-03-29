@@ -125,6 +125,7 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'costo', 'title' => 'COSTO'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'name', 'title' => 'NAME'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
@@ -135,7 +136,7 @@
                             <tr>
                                 <td><a href="{{ route('opcionTitulacions.show', $opcionTitulacion->id) }}">{{$opcionTitulacion->id}}</a></td>
                                 <td>{{$opcionTitulacion->name}}</td>
-                    
+                                <td>{{$opcionTitulacion->costo}}</td>
                                 <td class="text-right">
                                     @permission('opcionTitulacions.edit')
                                     <a class="btn btn-xs btn-primary" href="{{ route('opcionTitulacions.duplicate', $opcionTitulacion->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>

@@ -315,11 +315,13 @@ trait GetAllDataTrait
                 }
 
                 break;
-            /*case "historia_clientes":
-                if ($baseTable == "historia_clientes") { //and Auth::user()->can('IfiltroClientesXPlantel')
-                    $myQuery = $myQuery->whereIn('clientes.plantel_id', $planteles);
+            case "historia_clientes":
+                if (Auth::user()->can('autorizacionBajas.filtroPlantels')) {
+                    if ($baseTable == "historia_clientes") { //and Auth::user()->can('IfiltroClientesXPlantel')
+                        $myQuery = $myQuery->whereIn('clientes.plantel_id', $planteles);
+                    }
                 }
-                break;*/
+                break;
             case "tickets":
                 if (Auth::user()->can('tickets.usuarioTickets')) {
                     $myQuery = $myQuery->orWhere('tickets.asignado_a', Auth::user()->id)

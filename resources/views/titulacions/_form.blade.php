@@ -174,7 +174,7 @@
                                 </td>
                             </tr>
                         @endforeach
-                        <tr><td></td><td>{{ $titulacion->titulacionPagos->where('titulacion_id', $titulacion->id)->sum('monto') }}</td><td></td><td></td></tr>
+                        <tr><td></td><td>{{ $suma_pagos=$titulacion->titulacionPagos->where('titulacion_id', $titulacion->id)->sum('monto') }}</td><td></td><td></td></tr>
                     </tbody>
                 </table>
                 
@@ -186,7 +186,7 @@
 </div>
 
 
-
+@if($titulacion->opcionTitulacion->costo==$suma_pagos)
        <div class="row">
            <div class="col-md-4">
                <div class="box">
@@ -265,7 +265,7 @@
                </div>
            </div>
        </div>
-
+@endif
 
 
    @endif
@@ -373,7 +373,7 @@
                                url: '{{ route('titulacionPagos.store') }}',
                                type: 'GET',
                                data: {
-                                   'titulacion_id': $('#titulacion-field').val(),
+                                   'titulacion_id': {{ $titulacion->id }},
                                    'fecha': $('#fecha-field').val(),
                                    'monto': $('#monto-field').val(),
                                    'observaciones': $('#observaciones-field').val(),

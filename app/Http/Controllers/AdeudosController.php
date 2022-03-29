@@ -3256,10 +3256,11 @@ class AdeudosController extends Controller
                 }
                 array_push($lineas_procesadas, $calculo);
     
-                return view('adeudos.reportes.maestroEjecutivoAdeudosR', compact('lineas_procesadas', 'lineas_detalle', 'datos'));
+                
                 //dd($secciones);
                 
             }
+            return view('adeudos.reportes.maestroEjecutivoAdeudosR', compact('lineas_procesadas', 'lineas_detalle', 'datos'));
         }else{
             foreach ($datos['plantel_f'] as $plantel) {
                 $cajas_sin_adeudos = Caja::select(
@@ -3290,7 +3291,9 @@ class AdeudosController extends Controller
                     'cc.name as mensualidad',
                     DB::raw('1 as pagado_bnd'),
                     't.name as turno',
-                    'pag.monto as monto_pago'
+                    'pag.monto as monto_pago',
+                    'pag.fecha as fecha_pago',
+                    'cajas.created_at as fec_creacion_caja'
                 )
                     ->join('clientes as c', 'c.id', '=', 'cajas.cliente_id')
                     ->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
@@ -3362,7 +3365,9 @@ class AdeudosController extends Controller
                         'adeudo_concepto.bnd_mensualidad as mensualidad',
                         'adeudos.pagado_bnd',
                         't.name as turno',
-                        'pag.monto as monto_pago'
+                        'pag.monto as monto_pago',
+                        'pag.fecha as fecha_pago',
+                        'caj.created_at as fec_creacion_caja'
                         //DB::raw('(select sum(pp.monto) as monto_pago from pagos as pp where pp.caja_id=caj.id and pp.deleted_at is null and pp.bnd_pagado=1)')
                     )
                     ->whereNull('caj.deleted_at')
@@ -3400,6 +3405,7 @@ class AdeudosController extends Controller
                         is_null($registro->borrado_c) and is_null($registro->borrado_cln) and
                         $registro->st_cliente_id <> 3
                     ) {
+                        
                         array_push($lineas_detalle, $registro->toArray());
                     }
                 }

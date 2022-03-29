@@ -209,6 +209,7 @@
                         <th>CAJA</th>
                         <th>DIRECTOR</th>
                         <th>CAJA CORP.</th>
+                        <th>PLANTEL</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
@@ -292,6 +293,13 @@
                                     @endpermission
                                     @endif
                                 </td>
+                                <td>
+                                    @php
+                                        $cliente=\App\Cliente::find($historiaCliente->cliente_id);
+                                    @endphp
+                                    {{ $cliente->plantel->razon }}
+                                </td>
+
                                             <td class="text-right">
                                                 @permission('historiaClientes.edit')
                                                 @if($historiaCliente->st_historia_cliente_id<>2)

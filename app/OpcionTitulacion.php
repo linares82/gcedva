@@ -18,7 +18,7 @@ class OpcionTitulacion extends Model
     } 
 
 	//Mass Assignment
-	protected $fillable = ['name','usu_alta_id','usu_mod_id'];
+	protected $fillable = ['name','costo','usu_alta_id','usu_mod_id'];
 
 	public function usu_alta() {
 		return $this->hasOne('App\User', 'id', 'usu_alta_id');

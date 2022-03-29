@@ -111,9 +111,9 @@
                 <th>{{$total['clientes_activos']}}</th>
                 <th></th>
                 <th>{{$total['clientes_pagados']}}</th>
-                @permission('adeudos.maestroPagosConMontos')
+                
                 <th> {{number_format($total['total_monto_pagado'],2)}}</th>
-                @endpermission
+                
                 <th> </th>
                 <th> {{$total['deudores']}}</th>
                 <th> {{number_format($total['monto_deuda'],2)}}</th>
@@ -123,7 +123,7 @@
         </tbody>
     </table>
     <br/>
-    
+    @if(isset($datos['con_detalle']))
     <table border="1" width="100%" >
         <thead>
             <tr>
@@ -135,11 +135,12 @@
                 <th>Seccion</th>
                 <th>Matricula</th>
                 <th>Turno</th>
-                <th>F. Planeada Pago</th>
+                <th>F. Creacion Registro Pago</th>
+                <th>F. Pago</th>
                 <th>Concepto</th>
-                @permission('adeudos.maestroPagosConMontos')
+                
                 <th>Pago Recibido</th>
-                @endpermission
+                
                 <th>Csc. Caja</th>
                 <th>Beca</th>
                 <th>Estatus Cliente</th>
@@ -190,11 +191,12 @@
                 <td> {{ $detalle['seccion'] }} </td>
                 <td>{{ $detalle['matricula'] }}</td>
                 <td>{{ $detalle['turno'] }}</td>
+                <td>{{ $detalle['fec_creacion_caja'] }}</td>
                 <td>{{ $detalle['fecha_pago'] }}</td>
                 <td>{{$detalle['concepto']}}</td>
-                @permission('adeudos.maestroPagosConMontos')
+                
                 <td><!--@{{$detalle['monto_pago']}}-->{{ $sum_pagos }}</td>
-                @endpermission
+                
                 <td>{{$detalle['consecutivo']}}</td>
                 @if(!is_null($beca)) 
                 
@@ -229,7 +231,7 @@
             @endforeach
         </tbody>
     </table>
-    
+    @endif
 </div>
 
   </body>

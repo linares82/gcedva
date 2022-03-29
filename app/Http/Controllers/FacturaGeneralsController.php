@@ -23,6 +23,9 @@ use XMLWriter;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 
+use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Client;
+
 class FacturaGeneralsController extends Controller
 {
 
@@ -211,7 +214,7 @@ class FacturaGeneralsController extends Controller
 	{
 		$facturaGeneral = FacturaGeneral::find($id);
 		$lineas = FacturaGeneralLinea::where('factura_general_id', $facturaGeneral->id)
-			->where('bnd_manual','<>',1)
+			->where('bnd_manual', '<>', 1)
 			->orWhereNull('bnd_manual')
 			->with('caja')
 			->with('pago')
@@ -219,15 +222,15 @@ class FacturaGeneralsController extends Controller
 			->with('facturaGeneral')
 			->get();
 		//dd($lineas);
-		$lineas_manuales=FacturaGeneralLinea::where('factura_general_id', $facturaGeneral->id)
-		->where('bnd_manual',1)
-		->get();
+		$lineas_manuales = FacturaGeneralLinea::where('factura_general_id', $facturaGeneral->id)
+			->where('bnd_manual', 1)
+			->get();
 
 		//dd($facturaGeneral);
 
 		//dd($registrosSinFactura->toArray());
 
-		return view('facturaGenerals.detalle', compact('lineas','lineas_manuales', 'facturaGeneral'));
+		return view('facturaGenerals.detalle', compact('lineas', 'lineas_manuales', 'facturaGeneral'));
 	}
 
 	public function total(Request $request)
@@ -240,17 +243,17 @@ class FacturaGeneralsController extends Controller
 		$facturaGeneral->save();
 
 		$lineas = FacturaGeneralLinea::where('factura_general_id', $facturaGeneral->id)
-			->where('bnd_manual','<>',1)
+			->where('bnd_manual', '<>', 1)
 			->orWhereNull('bnd_manual')
 			->with('caja')
 			->with('pago')
 			->with('cliente')
 			->with('facturaGeneral')
 			->get();
-		$lineas_manuales=FacturaGeneralLinea::where('factura_general_id', $facturaGeneral->id)
-			->where('bnd_manual',1)
+		$lineas_manuales = FacturaGeneralLinea::where('factura_general_id', $facturaGeneral->id)
+			->where('bnd_manual', 1)
 			->get();
-		return view('facturaGenerals.detalle', compact('lineas','lineas_manuales', 'facturaGeneral'));
+		return view('facturaGenerals.detalle', compact('lineas', 'lineas_manuales', 'facturaGeneral'));
 	}
 
 	public function generarFactura(Request $request)
@@ -258,102 +261,324 @@ class FacturaGeneralsController extends Controller
 		$datos = $request->all();
 		$facturaGeneral = FacturaGeneral::with('plantel')->with('facturaGeneralLineas')->find($datos['id']);
 
-		$comprobante = array(
-			'xmlns:cfdi' => 'http://www.sat.gob.mx/cfd/3',
-			'xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
-			'xsi:schemaLocation' => 'http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv33.xsd',
-			'xmlns:iedu' => 'http://www.sat.gob.mx/iedu',
-			'Version' => '3.3',
-			'Folio' => '0',
-			'Fecha' => '2020-05-18T23:50:00',
-			'FormaPago' => '01',
-			'CondicionesDePago' => 'CONTADO',
-			'SubTotal' => $facturaGeneral->total,
-			'Moneda' => 'MXN',
-			'Total' => $facturaGeneral->total,
-			'TipoDeComprobante' => 'I',
-			'MetodoPago' => 'PUE',
-			'LugarExpedicion' => $facturaGeneral->plantel->cp
-		);
-		$emisor = array(
-			'Rfc' => $facturaGeneral->plantel->rfc,
-			'Nombre' => $facturaGeneral->plantel->nombre_corto,
-			'RegimenFiscal' => $facturaGeneral->plantel->regimen_fiscal
-		);
-		$receptor = array(
-			'Rfc' => 'XAXX010101000',
-			'Nombre' => 'PUBLICO EN GENERAL',
-			'UsoCFDI' => 'P01'
-		);
+		$url = Param::where('llave', 'fact_global_url')->first();
 		
-		$lineas=FacturaGeneralLinea::where('factura_general_id',$facturaGeneral->id)
-		->where('bnd_incluido',1)
-		->get();
-		
-		$conceptos = array();
-		//dd($facturaGeneral->facturaGeneralLineas->toArray());
-		foreach($lineas as $linea){
-			if($linea->bnd_manual==1){
-				$concepto=array(
-					'ClaveProdServ' => '01010101',
-					'NoIdentificacion' => $linea->serie_factura." ".$linea->folio_facturado,
-					'Cantidad' => '1',
-					'ClaveUnidad' => 'ACT',
-					'Unidad' => 'ACT',
-					'Descripcion' => 'VENTA',
-					'ValorUnitario' => $linea->monto,
-					'Importe' => $linea->monto);
-				array_push($conceptos, $concepto);
-			}else{
-				$concepto=array(
-					'ClaveProdServ' => '01010101',
-					'NoIdentificacion' => $linea->pago->serie_factura." ".$linea->pago->folio_facturado,
-					'Cantidad' => '1',
-					'ClaveUnidad' => 'ACT',
-					'Unidad' => 'ACT',
-					'Descripcion' => 'VENTA',
-					'ValorUnitario' => $linea->monto,
-					'Importe' => $linea->monto);
-				array_push($conceptos, $concepto);
+		$fact_global_prb_activa = Param::where('llave', 'fact_global_prb_activa')->first();
+
+		$data = array();
+
+		if ($fact_global_prb_activa->valor == 1) {
+			//'xmlns:iedu' => 'http://www.sat.gob.mx/iedu',
+			$comprobante = array(
+				'Version' => '4.0',
+				'xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
+				'xmlns:cfdi' => 'http://www.sat.gob.mx/cfd/4',
+				'xmlns:divisas' => 'http://www.sat.gob.mx/divisas',
+				'xmlns:donat' => 'http://www.sat.gob.mx/donat',
+				'xmlns:notariospublicos' => 'http://www.sat.gob.mx/notariospublicos',
+				'xmlns:implocal' => 'http://www.sat.gob.mx/implocal',
+				'xmlns:ine' => 'http://www.sat.gob.mx/ine',
+				'xmlns:cartaporte20' => 'http://www.sat.gob.mx/CartaPorte20',
+				'xmlns:nomina12' => 'http://www.sat.gob.mx/nomina12',
+				'xsi:schemaLocation' => 'http://www.sat.gob.mx/cfd/4 http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd http://www.sat.gob.mx/divisas http://www.sat.gob.mx/sitio_internet/cfd/divisas/divisas.xsd http://www.sat.gob.mx/donat http://www.sat.gob.mx/sitio_internet/cfd/donat/donat11.xsd http://www.sat.gob.mx/notariospublicos http://www.sat.gob.mx/sitio_internet/cfd/notariospublicos/notariospublicos.xsd http://www.sat.gob.mx/implocal http://www.sat.gob.mx/sitio_internet/cfd/implocal/implocal.xsd http://www.sat.gob.mx/ine http://www.sat.gob.mx/sitio_internet/cfd/ine/ine11.xsd http://www.sat.gob.mx/CartaPorte20 http://www.sat.gob.mx/sitio_internet/cfd/CartaPorte/CartaPorte20.xsd http://www.sat.gob.mx/nomina12 http://www.sat.gob.mx/sitio_internet/cfd/nomina/nomina12.xsd',
+				'Certificado' => '', //?
+				'NoCertificado' => '', //?
+				'Serie' => '', //?
+				'Folio' => '', //?
+				'Fecha' => Carbon::createFromFormat('Y-m-d h:i:s', $facturaGeneral->fecha_factura)->format('Y-m-d\TH:i:s'),
+				'FormaPago' => '01',
+				'CondicionesDePago' => 'CONTADO',
+				'TipoDeComprobante' => 'I',
+				'Moneda' => 'MXN',
+				'LugarExpedicion' => '29000', //$facturaGeneral->plantel->cp,
+				'Exportacion' => '01',
+				'SubTotal' => $facturaGeneral->total,
+				'Total' => $facturaGeneral->total,
+				'MetodoPago' => 'PUE',
+				'Sello' => ''
+			);
+
+			$informacionGlobal = array(
+				'Periodicidad' => '04',
+				'Meses' => Carbon::createFromFormat('Y-m-d h:i:s', $facturaGeneral->fecha_factura)->format('m'),
+				'Anio' => carbon::createFromFormat('Y-m-d h:i:s', $facturaGeneral->fecha_factura)->format('Y')
+			);
+
+			$emisor = array(
+				'Rfc' => 'FILE7010034T9', //$facturaGeneral->plantel->rfc,
+				'Nombre' => 'prueba flc', //$facturaGeneral->plantel->nombre_corto,
+				'RegimenFiscal' => '612' //$facturaGeneral->plantel->regimen_fiscal
+			);
+			$receptor = array(
+				'Rfc' => 'RECE8002036T7', //'XAXX010101000',
+				'Nombre' => 'RECEPTOR DE PRUEBAS', //'PUBLICO EN GENERAL',
+				'DomicilioFiscalReceptor' => '29000', //$facturaGeneral->plantel->cp, //Por definir
+				'UsoCFDI' => 'S01', //Por definir
+				'RegimenFiscalReceptor' => "616" //Definir default
+			);
+
+			$lineas = FacturaGeneralLinea::where('factura_general_id', $facturaGeneral->id)
+				->where('bnd_incluido', 1)
+				->get();
+
+			$conceptos = array();
+			//dd($facturaGeneral->facturaGeneralLineas->toArray());
+			foreach ($lineas as $linea) {
+				if ($linea->bnd_manual == 1) {
+					$concepto = array(
+						'ClaveProdServ' => '01010101',
+						'NoIdentificacion' => $linea->serie_factura . " " . $linea->folio_facturado,
+						'Cantidad' => '1',
+						'ClaveUnidad' => 'ACT',
+						'Unidad' => 'ACT',
+						'Descripcion' => 'VENTA',
+						'ValorUnitario' => $linea->monto,
+						'Importe' => $linea->monto,
+						'ObjetoImp' => "01"
+					);
+					array_push($conceptos, $concepto);
+				} else {
+					$concepto = array(
+						'ClaveProdServ' => '01010101',
+						'NoIdentificacion' => $linea->pago->serie_factura . " " . $linea->pago->folio_facturado,
+						'Cantidad' => '1',
+						'ClaveUnidad' => 'ACT',
+						'Unidad' => 'ACT',
+						'Descripcion' => 'VENTA',
+						'ValorUnitario' => $linea->monto,
+						'Importe' => $linea->monto,
+						'Descuento' => '0.00',
+						'ObjetoImp' => "01"
+					);
+					array_push($conceptos, $concepto);
+				}
 			}
+			/*
+			$impuestos = array('TotalImpuestosTrasladados' => 0.0);
+			
+			$mes = Carbon::createFromFormat('Y-m-d', $facturaGeneral->fec_inicio)->month;
+			$mesLetra = Mese::find($mes);
+			$anio = Carbon::createFromFormat('Y-m-d', $facturaGeneral->fec_inicio)->year;
+			$adenda = array(
+				'xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
+				'xsi:schemaLocation' => 'http://dev.induxsoft.net/xsd/cfdi/addendas/addendabasica.xsd http://dev.induxsoft.net/xsd/cfdi/addendas/addendabasica.xsd',
+				'xmlns:induxsoft' => 'http://dev.induxsoft.net/xsd/cfdi/addendas/addendabasica.xsd',
+				'notas' => 'Este comprobante corresponde a los ingresos globales de ' . $mesLetra->name . " " . $anio
+			);
+
+			$formatter = new NumeroALetras;
+			$totalEntero = intdiv($facturaGeneral->total, 1);
+			$centavos = round((round($facturaGeneral->total, 2) - $totalEntero) * 100);
+			//dd($centavos);
+			$totalLetra = $formatter->toMoney($totalEntero, 2, "", 'Centavos');
+			//dd($totalLetra);
+
+			$adendaEtiquetas = array(
+				array(
+					'id' => 'NumLetraTotalDocumento',
+					'titulo' => 'Total con letras',
+					'valor' => '(' . $totalLetra . 'PESO MEXICANO ' . $centavos . '/100 MXN)'
+				),
+				array(
+					'id' => 'DirEmisor',
+					'titulo' => 'Domicilio de expedición',
+					'valor' => $facturaGeneral->plantel->calle . " " . $facturaGeneral->plantel->no_ext . " " . $facturaGeneral->plantel->colonia,
+					'valor2' => $facturaGeneral->plantel->municipio . " " . $facturaGeneral->plantel->estado . " Mexico"
+				)
+			);*/
+			$fecha_solicitud_factura_service = date('Y-m-d\TH:i:s');
+		} else {
+			//'xmlns:iedu' => 'http://www.sat.gob.mx/iedu',
+			$comprobante = array(
+				'Version' => '4.0',
+				'xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
+				'xmlns:cfdi' => 'http://www.sat.gob.mx/cfd/4',
+				'xmlns:divisas' => 'http://www.sat.gob.mx/divisas',
+				'xmlns:donat' => 'http://www.sat.gob.mx/donat',
+				'xmlns:notariospublicos' => 'http://www.sat.gob.mx/notariospublicos',
+				'xmlns:implocal' => 'http://www.sat.gob.mx/implocal',
+				'xmlns:ine' => 'http://www.sat.gob.mx/ine',
+				'xmlns:cartaporte20' => 'http://www.sat.gob.mx/CartaPorte20',
+				'xmlns:nomina12' => 'http://www.sat.gob.mx/nomina12',
+				'xsi:schemaLocation' => 'http://www.sat.gob.mx/cfd/4 http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd http://www.sat.gob.mx/divisas http://www.sat.gob.mx/sitio_internet/cfd/divisas/divisas.xsd http://www.sat.gob.mx/donat http://www.sat.gob.mx/sitio_internet/cfd/donat/donat11.xsd http://www.sat.gob.mx/notariospublicos http://www.sat.gob.mx/sitio_internet/cfd/notariospublicos/notariospublicos.xsd http://www.sat.gob.mx/implocal http://www.sat.gob.mx/sitio_internet/cfd/implocal/implocal.xsd http://www.sat.gob.mx/ine http://www.sat.gob.mx/sitio_internet/cfd/ine/ine11.xsd http://www.sat.gob.mx/CartaPorte20 http://www.sat.gob.mx/sitio_internet/cfd/CartaPorte/CartaPorte20.xsd http://www.sat.gob.mx/nomina12 http://www.sat.gob.mx/sitio_internet/cfd/nomina/nomina12.xsd',
+				'Serie' => '', //?
+				'Folio' => '', //?
+				'Fecha' => Carbon::createFromFormat('Y-m-d h:i:s', $facturaGeneral->fecha_factura)->format('Y-m-d\TH:i:s'),
+				'NoCertificado' => '', //?
+				'Moneda' => 'MXN',
+				'SubTotal' => $facturaGeneral->total,
+				'TipoDeComprobante' => 'I',
+				'LugarExpedicion' => $facturaGeneral->plantel->cp,
+				'Exportacion' => '01',
+				'Total' => $facturaGeneral->total,
+				'FormaPago' => '01',
+				'MetodoPago' => 'PUE',
+				'CondicionesDePago' => 'CONTADO',
+				'Certificado' => '',
+				'Sello' => ''
+			);
+
+			$informacionGlobal = array(
+				'Periodicidad' => '04',
+				'Meses' => Carbon::createFromFormat('Y-m-d h:i:s', $facturaGeneral->fecha_factura)->format('m'),
+				'Anio' => carbon::createFromFormat('Y-m-d h:i:s', $facturaGeneral->fecha_factura)->format('Y')
+			);
+
+			$emisor = array(
+				'Rfc' => $facturaGeneral->plantel->rfc,
+				'Nombre' => $facturaGeneral->plantel->nombre_corto,
+				'RegimenFiscal' => $facturaGeneral->plantel->regimen_fiscal
+			);
+			$receptor = array(
+				'Rfc' => 'XAXX010101000',
+				'Nombre' => 'PUBLICO EN GENERAL',
+				'DomicilioFiscalReceptor' => $facturaGeneral->plantel->cp, //Por definir
+				'UsoCFDI' => 'S01', //Por definir
+				'RegimenFiscalReceptor' => "616" //Definir default
+			);
+
+			$lineas = FacturaGeneralLinea::where('factura_general_id', $facturaGeneral->id)
+				->where('bnd_incluido', 1)
+				->get();
+
+			$conceptos = array();
+			//dd($facturaGeneral->facturaGeneralLineas->toArray());
+			foreach ($lineas as $linea) {
+				if ($linea->bnd_manual == 1) {
+					$concepto = array(
+						'ClaveProdServ' => '01010101',
+						'NoIdentificacion' => $linea->serie_factura . " " . $linea->folio_facturado,
+						'Cantidad' => '1',
+						'ClaveUnidad' => 'ACT',
+						'Unidad' => 'ACT',
+						'Descripcion' => 'VENTA',
+						'ValorUnitario' => $linea->monto,
+						'Importe' => $linea->monto,
+						'ObjetoImp' => "01"
+					);
+					array_push($conceptos, $concepto);
+				} else {
+					$concepto = array(
+						'ClaveProdServ' => '01010101',
+						'NoIdentificacion' => $linea->pago->serie_factura . " " . $linea->pago->folio_facturado,
+						'Cantidad' => '1',
+						'ClaveUnidad' => 'ACT',
+						'Unidad' => 'ACT',
+						'Descripcion' => 'VENTA',
+						'ValorUnitario' => $linea->monto,
+						'Importe' => $linea->monto,
+						'Descuento' => '0.00',
+						'ObjetoImp' => "01"
+					);
+					array_push($conceptos, $concepto);
+				}
+			}
+			/*
+			$impuestos = array('TotalImpuestosTrasladados' => 0.0);
+
+			$mes = Carbon::createFromFormat('Y-m-d', $facturaGeneral->fec_inicio)->month;
+			$mesLetra = Mese::find($mes);
+			$anio = Carbon::createFromFormat('Y-m-d', $facturaGeneral->fec_inicio)->year;
+			$adenda = array(
+				'xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
+				'xsi:schemaLocation' => 'http://dev.induxsoft.net/xsd/cfdi/addendas/addendabasica.xsd http://dev.induxsoft.net/xsd/cfdi/addendas/addendabasica.xsd',
+				'xmlns:induxsoft' => 'http://dev.induxsoft.net/xsd/cfdi/addendas/addendabasica.xsd',
+				'notas' => 'Este comprobante corresponde a los ingresos globales de ' . $mesLetra->name . " " . $anio
+			);
+
+			$formatter = new NumeroALetras;
+			$totalEntero = intdiv($facturaGeneral->total, 1);
+			$centavos = round((round($facturaGeneral->total, 2) - $totalEntero) * 100);
+			$totalLetra = $formatter->toMoney($totalEntero, 2, "", 'Centavos');
+		
+
+			$adendaEtiquetas = array(
+				array(
+					'id' => 'NumLetraTotalDocumento',
+					'titulo' => 'Total con letras',
+					'valor' => '(' . $totalLetra . 'PESO MEXICANO ' . $centavos . '/100 MXN)'
+				),
+				array(
+					'id' => 'DirEmisor',
+					'titulo' => 'Domicilio de expedición',
+					'valor' => $facturaGeneral->plantel->calle . " " . $facturaGeneral->plantel->no_ext . " " . $facturaGeneral->plantel->colonia,
+					'valor2' => $facturaGeneral->plantel->municipio . " " . $facturaGeneral->plantel->estado . " Mexico"
+				)
+			);*/
+			$fecha_solicitud_factura_service = date('Y-m-d\TH:i:s');
+		}
+
+		$content = $this->crearXmlFactura($comprobante, $fecha_solicitud_factura_service, $informacionGlobal, $emisor, $receptor, $conceptos);
+
+		/*echo "<pre>";
+		var_export($content);
+		echo "</pre>";
+		*/
+
+		//dd($content);
+		//comentando lineas que generan una descarga de archivo
+
+		/*
+		ob_end_clean();
+		ob_start();
+		header('Content-Type: application/xml; charset=UTF-8');
+		header('Content-Encoding: UTF-8');
+		header("Content-Disposition: attachment;filename=" . $facturaGeneral->plantel_id . $facturaGeneral->fec_inicio . $facturaGeneral->fec_fin . ".xml");
+		header('Expires: 0');
+		header('Pragma: cache');
+		header('Cache-Control: private');
+		echo $content;
+		*/
+		$data=array();
+		//dd($fact_global_prb_activa->valor);
+		if($fact_global_prb_activa->valor==1){
+			$fact_global_id_cuenta_prb = Param::where('llave', 'fact_global_id_cuenta_prb')->first();
+			$fact_global_pass_cuenta_prb = Param::where('llave', 'fact_global_pass_cuenta_prb')->first();
+			$data = array(
+				"cti" => $fact_global_id_cuenta_prb->valor,
+				"pwd" => $fact_global_pass_cuenta_prb->valor,
+				"idd" => "", //
+				"ncer" => "",
+				"nb64" => false, //si se establece en true el xml debe ser una cadena en formato json y si es false en base64
+				//en el xml debe colocar los espacios de nombres
+				"xml" => base64_encode($content)
+			);
+		}else{
+			$data = array(
+				"cti" => $facturaGeneral->plantel->fact_global_id_cuenta,
+				"pwd" => $facturaGeneral->plantel->fact_global_pass_cuenta,
+				"idd" => "",
+				"ncer" => "",
+				"nb64" => "false",
+				"xml" => base64_encode($content)
+			);
 			
 		}
-		
-		$impuestos = array('TotalImpuestosTrasladados' => 0.0);
-		
-		$mes=Carbon::createFromFormat('Y-m-d', $facturaGeneral->fec_inicio)->month;
-		$mesLetra=Mese::find($mes);
-		$anio=Carbon::createFromFormat('Y-m-d', $facturaGeneral->fec_inicio)->year;
-		$adenda = array(
-			'xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
-			'xsi:schemaLocation' => 'http://dev.induxsoft.net/xsd/cfdi/addendas/addendabasica.xsd http://dev.induxsoft.net/xsd/cfdi/addendas/addendabasica.xsd',
-			'xmlns:induxsoft' => 'http://dev.induxsoft.net/xsd/cfdi/addendas/addendabasica.xsd',
-			'notas' => 'Este comprobante corresponde a los ingresos globales de '.$mesLetra->name." ".$anio
-		);
+		//dd($data);
 
-		$formatter = new NumeroALetras;
-		$totalEntero = intdiv($facturaGeneral->total, 1);
-		$centavos = round((round($facturaGeneral->total,2) - $totalEntero) * 100);
-		//dd($centavos);
-		$totalLetra = $formatter->toMoney($totalEntero, 2, "", 'Centavos');
-		//dd($totalLetra);
+		$client = new Client(['base_uri' => $url->valor]);
+		$response = $client->post("sellar-y-timbrar/", [
+			// un array con la data de los headers como tipo de peticion, etc.
+			//'headers' => ['foo' => 'bar'],
+			// array de datos del formulario
+			'json' => $data
+		]);
+		$objR = json_decode($response->getBody()->getContents());
+		//dd($objR);
+		if ($objR->success == 0) {
+			$facturaGeneral->error_last = $objR->data;
+			$facturaGeneral->save();
+		} else {
+			$facturaGeneral->uuid = $objR->data->uuid;
+			$facturaGeneral->xml = base64_decode($objR->data->xml);
+			$facturaGeneral->save();
+		}
 
-		$adendaEtiquetas = array(
-			array(
-				'id' => 'NumLetraTotalDocumento',
-				'titulo' => 'Total con letras',
-				'valor' => '('.$totalLetra.'PESO MEXICANO '.$centavos.'/100 MXN)'
-			),
-			array(
-				'id' => 'DirEmisor',
-				'titulo' => 'Domicilio de expedición',
-				'valor' => $facturaGeneral->plantel->calle." ".$facturaGeneral->plantel->no_ext." ".$facturaGeneral->plantel->colonia,
-				'valor2' => $facturaGeneral->plantel->municipio." ".$facturaGeneral->plantel->estado." Mexico"
-			)
-		);
-		$fecha_solicitud_factura_service = date('Y-m-d\TH:i:s');
-		
+		return redirect()->route('facturaGenerals.detalle', $facturaGeneral->id);
+	}
 
+	public function crearXmlFactura($comprobante, $fecha_solicitud_factura_service, $informacionGlobal, $emisor, $receptor, $conceptos)
+	{
 		$objetoXML = new XMLWriter();
 		//$objetoXML->openURI($facturaGeneral->plantel_id.$facturaGeneral->fec_inicio.$facturaGeneral->fec_fin.".xml");
 		$objetoXML->openMemory();
@@ -362,21 +587,37 @@ class FacturaGeneralsController extends Controller
 		$objetoXML->startDocument('1.0', 'utf-8');
 
 		$objetoXML->startElement("cfdi:Comprobante");
-		$objetoXML->writeAttribute("xmlns:cfdi", $comprobante["xmlns:cfdi"]);
-		$objetoXML->writeAttribute("xmlns:xsi", $comprobante["xmlns:xsi"]);
-		$objetoXML->writeAttribute("xsi:schemaLocation", $comprobante["xsi:schemaLocation"]);
-		$objetoXML->writeAttribute("xmlns:iedu", $comprobante["xmlns:iedu"]);
 		$objetoXML->writeAttribute("Version", $comprobante["Version"]);
+		$objetoXML->writeAttribute("xmlns:xsi", $comprobante["xmlns:xsi"]);
+		$objetoXML->writeAttribute("xmlns:cfdi", $comprobante["xmlns:cfdi"]);
+		$objetoXML->writeAttribute("xmlns:divisas", $comprobante["xmlns:divisas"]);
+		$objetoXML->writeAttribute("xmlns:donat", $comprobante["xmlns:donat"]);
+		$objetoXML->writeAttribute("xmlns:notariospublicos", $comprobante["xmlns:notariospublicos"]);
+		$objetoXML->writeAttribute("xmlns:implocal", $comprobante["xmlns:implocal"]);
+		$objetoXML->writeAttribute("xmlns:ine", $comprobante["xmlns:ine"]);
+		$objetoXML->writeAttribute("xmlns:cartaporte20", $comprobante["xmlns:cartaporte20"]);
+		$objetoXML->writeAttribute("xmlns:nomina12", $comprobante["xmlns:nomina12"]);
+		$objetoXML->writeAttribute("xsi:schemaLocation", $comprobante["xsi:schemaLocation"]);
+		$objetoXML->writeAttribute("Certificado", $comprobante["Certificado"]);
+		$objetoXML->writeAttribute("NoCertificado", $comprobante["NoCertificado"]);
+		$objetoXML->writeAttribute("Serie", $comprobante["Serie"]);
 		$objetoXML->writeAttribute("Folio", $comprobante["Folio"]);
 		$objetoXML->writeAttribute("Fecha", $fecha_solicitud_factura_service);
 		$objetoXML->writeAttribute("FormaPago", $comprobante["FormaPago"]);
 		$objetoXML->writeAttribute("CondicionesDePago", $comprobante["CondicionesDePago"]);
-		$objetoXML->writeAttribute("SubTotal", $comprobante["SubTotal"]);
-		$objetoXML->writeAttribute("Moneda", $comprobante["Moneda"]);
-		$objetoXML->writeAttribute("Total", $comprobante["Total"]);
 		$objetoXML->writeAttribute("TipoDeComprobante", $comprobante["TipoDeComprobante"]);
-		$objetoXML->writeAttribute("MetodoPago", $comprobante["MetodoPago"]);
+		$objetoXML->writeAttribute("Moneda", $comprobante["Moneda"]);
 		$objetoXML->writeAttribute("LugarExpedicion", $comprobante["LugarExpedicion"]);
+		$objetoXML->writeAttribute("Exportacion", $comprobante["Exportacion"]);
+		$objetoXML->writeAttribute("SubTotal", $comprobante["SubTotal"]);
+		$objetoXML->writeAttribute("Total", $comprobante["Total"]);
+		$objetoXML->writeAttribute("MetodoPago", $comprobante["MetodoPago"]);
+
+		$objetoXML->startElement('cfdi:InformacionGlobal');
+		$objetoXML->writeAttribute("Periodicidad", $informacionGlobal["Periodicidad"]);
+		$objetoXML->writeAttribute("Meses", $informacionGlobal["Meses"]);
+		$objetoXML->writeAttribute("Años", $informacionGlobal["Anio"]);
+		$objetoXML->endElement();
 
 		$objetoXML->startElement('cfdi:Emisor');
 		$objetoXML->writeAttribute("Rfc", $emisor["Rfc"]);
@@ -385,9 +626,11 @@ class FacturaGeneralsController extends Controller
 		$objetoXML->endElement(); // Final del elemento que cubre todos los miembros técnicos.
 
 		$objetoXML->startElement('cfdi:Receptor');
-		$objetoXML->writeAttribute("Rfc", $receptor["Rfc"]);
 		$objetoXML->writeAttribute("Nombre", $receptor["Nombre"]);
+		$objetoXML->writeAttribute("DomicilioFiscalReceptor", $receptor["DomicilioFiscalReceptor"]);
+		$objetoXML->writeAttribute("Rfc", $receptor["Rfc"]);
 		$objetoXML->writeAttribute("UsoCFDI", $receptor["UsoCFDI"]);
+		$objetoXML->writeAttribute("RegimenFiscalReceptor", $receptor["RegimenFiscalReceptor"]);
 		$objetoXML->endElement(); // Final del elemento que cubre todos los miembros técnicos.
 
 		$objetoXML->startElement('cfdi:Conceptos');
@@ -401,14 +644,16 @@ class FacturaGeneralsController extends Controller
 			$objetoXML->writeAttribute("Descripcion", $concepto["Descripcion"]);
 			$objetoXML->writeAttribute("ValorUnitario", $concepto["ValorUnitario"]);
 			$objetoXML->writeAttribute("Importe", $concepto["Importe"]);
+			$objetoXML->writeAttribute("ObjetoImp", $concepto["ObjetoImp"]);
 			$objetoXML->endElement(); // Final del elemento que cubre todos los miembros técnicos.
 		}
 		$objetoXML->endElement(); // Final del elemento que cubre todos los miembros técnicos.
-
+		/*
 		$objetoXML->startElement('cfdi:Impuestos');
 		$objetoXML->writeAttribute("TotalImpuestosTrasladados", $impuestos["TotalImpuestosTrasladados"]);
 		$objetoXML->endElement(); // Final del elemento que cubre todos los miembros técnicos.
-
+		*/
+		/*
 		$objetoXML->startElement('cfdi:Addenda');
 		$objetoXML->startElement('induxsoft:addenda');
 		$objetoXML->writeAttribute("xmlns:xsi", $adenda["xmlns:xsi"]);
@@ -428,34 +673,87 @@ class FacturaGeneralsController extends Controller
 
 		$objetoXML->endElement(); // Final del elemento que cubre todos los miembros técnicos.
 		$objetoXML->endElement(); // Final del elemento que cubre todos los miembros técnicos.
-
+		*/
 		$objetoXML->fullEndElement(); // Final del elemento "obra" que cubre cada obra de la matriz.
 		$objetoXML->endElement(); // Final del nodo raíz, "obras"
 		$objetoXML->endDocument(); // Final del documento
 
 		$content = $objetoXML->outputMemory();
-		
-		/*echo "<pre>";
-		var_export($content);
-		echo "</pre>";
-		*/
-		
-		//dd($content);
-		//comentando lineas que generan una descarga de archivo
-		
-		
-		ob_end_clean();
-		ob_start();
-		header('Content-Type: application/xml; charset=UTF-8');
-		header('Content-Encoding: UTF-8');
-		header("Content-Disposition: attachment;filename=" . $facturaGeneral->plantel_id . $facturaGeneral->fec_inicio . $facturaGeneral->fec_fin . ".xml");
-		header('Expires: 0');
-		header('Pragma: cache');
-		header('Cache-Control: private');
-		echo $content;
-		
-		
-		
-		
+		return $content;
+	}
+
+	public function descargarFactura(Request $request)
+	{
+		$datos = $request->all();
+		$facturaGeneral = FacturaGeneral::find($datos['id']);
+		$url_aux = Param::where('llave', 'fact_global_url')->first();
+		$url = $url_aux->valor . "descargar/";
+		//dd($url);
+		$fact_prb_activa = Param::where('llave', 'fact_prb_activa')->first();
+
+		$data = array();
+
+		if ($fact_prb_activa->valor == 1) {
+			$fact_global_id_usu_prb = Param::where('llave', 'fact_global_id_usu_prb')->first();
+			$fact_global_pass_usu_prb = Param::where('llave', 'fact_global_pass_usu_prb')->first();
+			$data = array(
+				"uid" => $fact_global_id_usu_prb->valor,
+				"pwd" => $fact_global_pass_usu_prb->valor,
+				"doc" => $facturaGeneral->uuid,
+				"res" => "ziplnk",
+				"tpo" => "",
+				"pln" => ""
+			);
+		} else {
+			$data = array(
+				"uid" => $facturaGeneral->plantel->fact_global_id_usu,
+				"pwd" => $facturaGeneral->plantel->fact_global_pass_usu,
+				"doc" => $facturaGeneral->uuid,
+				"res" => "ziplnk",
+				"tpo" => "",
+				"pln" => ""
+			);
+		}
+
+		//dd($data);
+		$opciones = array(
+			"http" => array(
+				"header" => "Content-type: application/x-www-form-urlencoded\r\n",
+				"method" => "POST",
+				"content" => http_build_query($data), # Agregar el contenido definido antes
+			),
+		);
+		# Preparar petición
+		$contexto = stream_context_create($opciones);
+
+		//*****para ver el flujo durante la invocación
+		$flujo = fopen($url, 'r', false, $contexto);
+		stream_set_blocking($flujo, false);
+		//***************
+
+		//*******************respuestas en formato json
+		$resultado = file_get_contents($url, false, $contexto);
+		//dd($contexto);
+
+		$data = json_decode($resultado, true);
+
+		echo json_encode($data);
+
+		if ($data["success"] == false) {
+			echo "Error:" . $data["message"];
+			exit;
+		}
+
+		# si fue existoso
+		if ($data["success"] == true) {
+			/*echo "<br>";
+			echo "<br>";
+			echo "<label>Puede descargar el zip dando click en el botón </label>";
+			echo "<a href='".$data["data"]["link"]."'><button style='background:green;'>Descargar</button></a>";
+			*/
+			return redirect()->away($data["data"]["link"]);
+		} {
+			dd('Recurso no encontrado');
+		}
 	}
 }

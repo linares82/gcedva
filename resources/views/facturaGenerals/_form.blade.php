@@ -5,6 +5,13 @@
                         <span class="help-block">{{ $errors->first("plantel_id") }}</span>
                        @endif
                     </div>
+                    <div class="form-group col-md-4 @if($errors->has('fecha_factura')) has-error @endif">
+                     <label for="fecha_factura-field">F. factura (formato aaaa-mm-dd hh:mm:ss)</label>
+                     {!! Form::text("fecha_factura", null, array("class" => "form-control", "id" => "fecha_factura-field")) !!}
+                     @if($errors->has("fecha_factura"))
+                      <span class="help-block">{{ $errors->first("fecha_factura") }}</span>
+                     @endif
+                  </div>
                     <div class="form-group col-md-4 @if($errors->has('fec_inicio')) has-error @endif">
                        <label for="fec_inicio-field">F. Inicio</label>
                        {!! Form::text("fec_inicio", null, array("class" => "form-control fecha", "id" => "fec_inicio-field")) !!}

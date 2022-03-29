@@ -123,6 +123,7 @@
     </table>
     <br/>
     
+    @if(isset($datos['con_detalle']))
     <table border="1" width="100%" >
         <thead>
             <tr>
@@ -136,9 +137,9 @@
                 <th>F. Planeada Pago</th>
                 <th>Concepto</th>
                 <!--<th>Pago Planeado</th>-->
-                @permission('adeudos.maestroAdeudoConMontos')
+                
                 <th>Pago Planeado</th>
-                @endpermission
+                
                 <!--<th>Csc. Caja</th>-->
                 <th>Beca</th>
                 <th>Estatus Cliente</th>
@@ -186,9 +187,9 @@
             <td>{{ $detalle['fecha_pago'] }}</td>
             <td>{{$detalle['concepto']}}</td>
             
-            @permission('adeudos.maestroAdeudoConMontos')    
+            
             <td>{{ round($detalle['adeudo_planeado'])}}</td>
-            @endpermission
+            
         @if(!is_null($beca)) 
         
         @if(
@@ -210,7 +211,7 @@
             @endforeach
         </tbody>
     </table>
-    
+    @endif    
 </div>
 
   </body>

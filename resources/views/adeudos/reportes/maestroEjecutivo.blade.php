@@ -30,6 +30,13 @@
                 <span class="help-block">{{ $errors->first("tipo_reporte") }}</span>
                 @endif
             </div>
+            <div class="form-group col-md-6 @if($errors->has('con_detalle')) has-error @endif">
+                <label for="con_detalle-field">Con Detalle</label>
+                {!! Form::checkbox("con_detalle", 1, null, [ "id" => "con_detalle-field", 'class'=>'minimal']) !!}
+                @if($errors->has("con_detalle"))
+                <span class="help-block">{{ $errors->first("con_detalle") }}</span>
+                @endif
+            </div>
             <div class="row"></div>
                 <div class="form-group col-md-6 @if($errors->has('fecha_f')) has-error @endif">
                     <label for="fecha_f-field">Fecha de:</label>
@@ -52,6 +59,7 @@
                     <span class="help-block">{{ $errors->first("plantel_f") }}</span>
                     @endif
                 </div>
+                
                 <!--
                 <div class="form-group col-md-6 @if($errors->has('detalle_f')) has-error @endif">
                     <label for="detalle_f-field">Con detalle:</label>
