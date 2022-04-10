@@ -258,3 +258,11 @@ Route::get(
         'uses' => 'AsignacionAcademicasController@asistenciasXAsignacion',
     )
 );
+
+Route::post(
+    '/captacion/apiCreate',
+    array(
+        'as' => 'captacions.apiCreate',
+        'uses' => 'CaptacionsController@apiStore',
+    )
+);

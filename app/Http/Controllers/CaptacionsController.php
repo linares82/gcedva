@@ -199,4 +199,27 @@ class CaptacionsController extends Controller {
         return view('captacions.carga', compact('procesados'));
     }
 
+	public function apiStore(Request $request)
+    {
+        //dd($_REQUEST);
+        $id = 0;
+        $input = $request->all();
+        
+        $input['usu_alta_id'] = 1;
+        $input['usu_mod_id'] = 1;
+        
+        //dd($input);
+        //create data
+        try {
+            //dd($input);
+            $c = Captacion::create($input);
+            $id = $c->id;
+            
+        } catch (\PDOException $e) {
+            //dd($e);
+            return response()->json(['msj' => 'Fallo, exception: ' . $e->getMessage()]);
+        }
+        return response()->json(['msj' => 'Registro creado con id: '.$id]);
+    }
+
 }

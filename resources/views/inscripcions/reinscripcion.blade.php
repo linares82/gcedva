@@ -91,7 +91,11 @@
                         
                         @foreach($resultados as $c)
                         <tr>
-                            <td>{{ Form::checkbox("id[]", $c['id']) }}</td>
+                            <td>
+                                @if($c['no_aprobadas']<$bloqueo_materias_desaprobadas->valor)
+                                {{ Form::checkbox("id[]", $c['id']) }}
+                                @endif
+                            </td>
                             <td>{{ $c['cliente'] }} - {{ $c['nombre'] }}</td>
                             <td>{{$c['st_cliente']}}</td>
                             <td>{{ $c['periodo_estudio'] }}</td>

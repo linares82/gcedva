@@ -3,11 +3,11 @@
                     
                     <div class="form-group col-md-4 @if($errors->has('empresas_vinculacion_id')) has-error @endif">
                         <label for="empresa_id-field">Empresa</label>
-                        <a href="{{ route('empresasVinculacions.show', $vinculacion->empresas_vinculacion_id) }}" target="_blank">Ver</a>
-                        {!! Form::select("empresas_vinculacion_id", $list["EmpresasVinculacion"], null, array("class" => "form-control select_seguridad", "id" => "empresas_vinculacion_id-field", 'style'=>'width:100%')) !!}
                         @if(isset($vinculacion))
-                        
+                        <a href="{{ route('empresasVinculacions.show', $vinculacion->empresas_vinculacion_id) }}" target="_blank">Ver</a>
                         @endif
+                        {!! Form::select("empresas_vinculacion_id", $list["EmpresasVinculacion"], null, array("class" => "form-control select_seguridad", "id" => "empresas_vinculacion_id-field", 'style'=>'width:100%')) !!}
+
                         @if($errors->has("empresas_vinculacion_id"))
                         <span class="help-block">{{ $errors->first("empresas_vinculacion_id") }}</span>
                         @endif

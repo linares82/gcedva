@@ -3316,6 +3316,8 @@ class AdeudosController extends Controller
                     ->whereNull('p.deleted_at')
                     ->whereNull('cajas.deleted_at')
                     ->whereNull('ccli.deleted_at')
+                    ->whereDate('pag.fecha', '>=', $datos['fecha_f'])
+                    ->whereDate('pag.fecha', '<=', $datos['fecha_t'])
                     ->orderBy('c.id');
     
                 $registros_totales_aux = Adeudo::join('clientes as c', 'c.id', '=', 'adeudos.cliente_id')
@@ -3402,12 +3404,13 @@ class AdeudosController extends Controller
                 foreach ($registros_totales as $registro) {
     
                     if (
-                        is_null($registro->borrado_c) and is_null($registro->borrado_cln) and
-                        $registro->st_cliente_id <> 3
+                        is_null($registro->borrado_c) and is_null($registro->borrado_cln) /*and
+                        $registro->st_cliente_id <> 3*/
                     ) {
                         
                         array_push($lineas_detalle, $registro->toArray());
                     }
+                    
                 }
                 //dd($lineas_detalle);
     
@@ -3423,8 +3426,8 @@ class AdeudosController extends Controller
                     $calculo['plantel'] = $registro->razon;
     
                     if (
-                        is_null($registro->borrado_c) and is_null($registro->borrado_cln) and
-                        $registro->st_cliente_id <> 3
+                        is_null($registro->borrado_c) and is_null($registro->borrado_cln) /*and
+                        $registro->st_cliente_id <> 3*/
     
                     ) {
     
@@ -3450,7 +3453,8 @@ class AdeudosController extends Controller
                         $calculo['porcentaje_pagado'] = ($calculo['clientes_pagados'] * 100) / $calculo['clientes_activos'];
                         $calculo['deudores'] = $calculo['clientes_activos'] - $calculo['clientes_pagados'];
                         $calculo['porcentaje_deudores'] = ($calculo['deudores'] * 100) / $calculo['clientes_activos'];
-                    } elseif (is_null($registro->borrado_c) and is_null($registro->borrado_cln) and $registro->st_cliente_id == 3) {
+                    } //antes else if
+                    if (is_null($registro->borrado_c) and is_null($registro->borrado_cln) and $registro->st_cliente_id == 3) {
                         $baja = HistoriaCliente::where('cliente_id', $registro->id)
                             ->where('evento_cliente_id', 2)
                             ->where('fecha', '>=', $datos['fecha_f'])
@@ -3476,8 +3480,8 @@ class AdeudosController extends Controller
                 $caja_aux2 = "";
                 foreach ($registros_totales as $registro) {
                     if (
-                        is_null($registro->borrado_c) and is_null($registro->borrado_cln) and
-                        $registro->st_cliente_id <> 3
+                        is_null($registro->borrado_c) and is_null($registro->borrado_cln) /*and
+                        $registro->st_cliente_id <> 3*/
     
                     ) {
                         if ($seccion_aux <> "" and $concepto_aux <> "" and $calculo['clientes_activos'] > 0) {
@@ -3518,7 +3522,8 @@ class AdeudosController extends Controller
                         $calculo['porcentaje_deudores'] = ($calculo['deudores'] * 100) / $calculo['clientes_activos'];
                         $concepto_aux = $registro->concepto;
                         $seccion_aux = $registro->seccion;
-                    } elseif (is_null($registro->borrado_c) and is_null($registro->borrado_cln) and $registro->st_cliente_id == 3) {
+                    } //antes else if
+                    if (is_null($registro->borrado_c) and is_null($registro->borrado_cln) and $registro->st_cliente_id == 3) {
                         $baja = HistoriaCliente::where('cliente_id', $registro->id)
                             ->where('evento_cliente_id', 2)
                             ->where('fecha', '>=', $datos['fecha_f'])

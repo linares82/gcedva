@@ -1011,7 +1011,7 @@ class PagosController extends Controller
 
         $plantel = Plantel::find($data['plantel_f']);
         //dd($data);
-        $usuario = Empleado::whereIn('id', $data['empleado_f'])->pluck('user_id');
+        
         //dd($usuario);
 
         $registros_pagados_aux = Caja::select(
@@ -1033,7 +1033,6 @@ class PagosController extends Controller
             ->join('forma_pagos as fp', 'fp.id', '=', 'pag.forma_pago_id')
             ->join('caja_lns as cln', 'cln.caja_id', '=', 'cajas.id')
             ->where('cajas.plantel_id', '=', $data['plantel_f'])
-            ->whereIn('cajas.usu_alta_id', $usuario)
             ->whereIn('cln.caja_concepto_id', $data['concepto_f'])
             ->whereNull('pag.deleted_at')
             ->whereNull('cajas.deleted_at')
@@ -1042,6 +1041,10 @@ class PagosController extends Controller
             ->orderBy('cln.caja_concepto_id')
             //->orderBy('pag.fecha')
             ->distinct();
+        if(!isset($data['bnd-todos-empleados'])){
+            $usuario = Empleado::whereIn('id', $data['empleado_f'])->pluck('user_id');
+            $registros_pagados_aux->whereIn('cajas.usu_alta_id', $usuario);
+        }
         if ($data['fecha_pago'] == 1) {
             $registros_pagados_aux->where('pag.fecha', '>=', $data['fecha_f'])
                 ->whereDate('pag.fecha', '<=', $data['fecha_t']);
@@ -1099,13 +1102,17 @@ class PagosController extends Controller
             ->whereIn('cln.caja_concepto_id', $data['concepto_f'])
             //->where('pag.fecha', '>=', $data['fecha_f'])
             //->where('pag.fecha', '<=', $data['fecha_t'])
-            ->whereIn('cajas.usu_alta_id',  $usuario)
+            
             ->whereNull('pag.deleted_at')
             ->where('cajas.st_caja_id', '=', 3)
             ->orderBy('fp.id')
             ->orderBy('pag.fecha')
             ->distinct();
         //->get();
+        if(!isset($data['bnd-todos-empleados'])){
+            $usuario = Empleado::whereIn('id', $data['empleado_f'])->pluck('user_id');
+            $registros_pagados_aux->whereIn('cajas.usu_alta_id',  $usuario);
+        }
         if ($data['fecha_pago'] == 1) {
             $registros_parciales_aux->where('pag.fecha', '>=', $data['fecha_f'])
                 ->whereDate('pag.fecha', '<=', $data['fecha_t']);

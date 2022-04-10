@@ -70,6 +70,7 @@
                          <th>id</th>
                          <th>Alumno</th>
                          <th>Estatus Cliente</th>
+                         <th>Doc. Entregados</th>
                          <th>Acta Final</th>
                          <th>Ponderacion</th>
                          <th>Calificacion Total</th>
@@ -86,6 +87,14 @@
                          <td>{{$r->id}}</td>
                          <td>{{$r->ape_paterno." ".$r->ape_materno." ".$r->nombre." ".$r->nombre2}}</td>
                          <td>{{$r->estatus_cliente}}</td>
+                         <td>
+                             @if($r->bnd_doc_oblig_entregados==1)
+                             SI
+                             @else
+                             <strong>NO</strong>
+                             
+                             @endif
+                        </td>
                          <td>
                              @php
                                  if(isset($r->fecha_acta)){

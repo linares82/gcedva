@@ -203,9 +203,9 @@
                                 
                                 $promedio=$calificacion;
                                 //dd($calificacion_id);
-                                /*
+                                
                                 array_push($calificacionesArray, $calificacion_id);
-                                $ponderaciones=App\CalificacionPonderacion::where('calificacion_id', $calificacion_id)
+                                /*$ponderaciones=App\CalificacionPonderacion::where('calificacion_id', $calificacion_id)
                                 //->whereIn('carga_ponderacion_id',$array_ponderaciones)
                                 ->get();
                                 //dd($ponderaciones->toArray());

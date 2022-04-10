@@ -438,6 +438,7 @@
                                         <td>
                                            <!--@{!! Form::select("plan_pago_id", $c->turno->planes->pluck('name','id'),$c->plan_pago_id,array("class"=>"form-control select_seguridad plan_pago","id"=>"plan_pago_id-field","style"=>"width:75%;",'data-combinacion'=>$c->id)) !!} -->
                                            
+                                           @if($cliente->adeudos->count()==0)
                                            <select class="form-control select_seguridad plan_pago" id="plan_pago_id-field" name="plan_pago_id" data-combinacion="{{$c->id}}">
                                             <option data-combinacion="{{$c->id}}" value="" style="display: none;" {{ old('plan_pago_id', optional($c)->plan_pago_id ?: '') == '' ? 'selected' : '' }} disabled selected>Seleccionar opcion </option>
                                                 @foreach (optional($c->turno->planes())->get() as $plan)
@@ -447,6 +448,18 @@
                                                 @endforeach
                                                 
                                             </select>
+                                            @endif
+                                            @permission('clientes.editarPlanPagosAsignado'):
+                                            <select class="form-control select_seguridad plan_pago" id="plan_pago_id-field" name="plan_pago_id" data-combinacion="{{$c->id}}">
+                                                <option data-combinacion="{{$c->id}}" value="" style="display: none;" {{ old('plan_pago_id', optional($c)->plan_pago_id ?: '') == '' ? 'selected' : '' }} disabled selected>Seleccionar opcion </option>
+                                                    @foreach (optional($c->turno->planes())->get() as $plan)
+                                                        <option data-combinacion="{{$c->id}}" value="{{ $plan->id }}" {{ old('plan_pago_id', optional($c)->plan_pago_id) == $plan->id ? 'selected' : '' }}>
+                                                            {{ $plan->name }}
+                                                        </option>
+                                                    @endforeach
+                                                    
+                                                </select>
+                                            @endpermission
 
                                            {{ optional($c->planPago)->name }} <br>
                                             <div id='loading120' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
@@ -1338,6 +1351,13 @@
             @if(isset($cliente))
             <div class="box box-default">
                 <div class="box-body">
+                    <div class="row">
+
+                        <a class="btn btn-xs btn-primary" href="{{ route('pivotDocClientes.crearListaCheck', array('cliente_id'=>$cliente->id)) }}" >Generar lista</a>
+
+                    </div>
+
+                    <!--
                     <div class="form-group col-md-6 @if($errors->has('doc_cliente_id')) has-error @endif">
                         <label for="doc_cliente_id-field">Documento</label>
                         {!! Form::select("doc_cliente_id", $list1["DocAlumno"], null, array("class" => "form-control select_seguridad", "id" => "doc_cliente_id-field", 'style'=>'width:100%')) !!}
@@ -1345,13 +1365,7 @@
                         <span class="help-block">{{ $errors->first("doc_cliente_id") }}</span>
                         @endif
                     </div>
-<!--                    <div class="form-group col-md-6 @if($errors->has('archivo')) has-error @endif">
-                        <button type="button" onclick="BrowseServer('archivo-field');">Elegir Archivo</button>
-                        {!! Form::text("archivo", null, array("class" => "form-control input-sm", "id" => "archivo-field")) !!}
-                        @if($errors->has("archivo"))
-                        <span class="help-block">{{ $errors->first("archivo") }}</span>
-                        @endif
-                    </div>-->
+
                     <div class="form-group col-md-6">
                         <div class="btn btn-default btn-file">
                             <i class="fa fa-paperclip"></i> Adjuntar Archivo
@@ -1365,12 +1379,12 @@
                         <div id="texto_notificacion">
 
                         </div>
-                    </div>
-                    <div class="form-group col-md-6">
+                    </div>-->
+                    <div class="form-group col-md-8">
                         <table class="table table-condensed table-striped">
                             <thead>
                                 <tr>
-                                    <th>Documento Agregados</th><th>Link</th><th></th>
+                                    <th>Documentos</th><th>Recibido</th><th>Obligatorio</th><th>Link</th><th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -1380,10 +1394,52 @@
                                         {{$doc->docAlumno->name}}
                                     </td>
                                     <td>
+                                        @if($doc->doc_entregado==1)
+                                        SI
+                                        @else
+                                        <div id='doc_recibido'>
+                                            <a class="btn btn-warning btn-xs btn_recibir_doc" 
+                                                data-documento='{{ $doc->id }}'> Recibir
+                                            </a>
+                                            <div id="spinner_doc_recibido" style="display:none;">
+                                                ...guardando
+                                            </div>
+                                        </div>
+                                        
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if($doc->docAlumno->doc_obligatorio==1)
+                                        SI
+                                        @else
+                                        NO
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if(!is_null($doc->archivo))
                                         @php
                                             $cadena_img = explode('/', $doc->archivo);
                                         @endphp
                                         <a href="{{asset("imagenes/clientes/".$cliente->id."/".end($cadena_img))}}" target="_blank">Ver</a>
+                                        @else
+                                            <div id="div_archivo{{ $doc->id }}">
+                                            <div class="btn btn-xs btn-file">
+                                                <i class="fa fa-paperclip"></i> Adjuntar
+                                                <input type="file"  id="file{{ $doc->id }}" name="file" class="cliente_archivo" >
+                                                <input type="hidden" name="_token" id="_token"  value="<?= csrf_token(); ?>"> 
+                                                <input type="hidden"  id="file_hidden" name="file_hidden" >
+                                            </div>
+                                            <button class="btn btn-success btn-xs btn_archivo" id="btn_archivo{{ $doc->id }}"
+                                                data-doc_id="{{ $doc->doc_alumno_id }}"
+                                                data-documento='{{ $doc->id }}'> 
+                                                <span class="glyphicon glyphicon-ok">Max. 20MB</span> 
+                                            </button>
+                                            <br/>
+                                            <div id="texto_notificacion{{ $doc->id }}">
+                    
+                                            </div>
+                                            </div>
+                                        @endif
                                     </td>
                                     <td>
                                         <a class="btn btn-xs btn-danger" href="{{route('pivotDocClientes.destroy', $doc->id)}}">Eliminar</a>
@@ -1393,11 +1449,11 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-4">
                         <table class="table table-condensed table-striped">
                             <thead>
                                 <tr>
-                                    <th>Documentos Faltantes</th><th>Obligatorio</th>
+                                    <th>Documentos</th><th>Obligatorio</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -1559,18 +1615,20 @@ if(isset($cliente)){
 @if((isset($cliente) and $pagos_validar->count()>0) or (isset($combinaciones) and $combinaciones->count()>=1))
     document.getElementById("plantel_id-field").disabled=true;
 @endif
-$(document).on("click", "#btn_archivo", function (e) {
+$(document).on("click", ".btn_archivo", function (e) {
     e.preventDefault();
-    if($('#doc_cliente_id-field option:selected').val()==0){
-        alert("Elegir Documento para Cargar");
-    }
+    
     var miurl = "{{route('clientes.cargarImg')}}";
     // var fileup=$("#file").val();
-    var divresul = "texto_notificacion";
+    var divresul = "texto_notificacion"+$(this).data('documento');
 
     var data = new FormData();
-    data.append('file', $('#file')[0].files[0]);
-    data.append('doc_cliente_id', $('#doc_cliente_id-field option:selected').val());
+    data.append('file', $('#file'+$(this).data('documento'))[0].files[0]);
+    data.append('doc_cliente_id', $(this).data('doc_id'));
+    data.append('documento', $(this).data('documento'));
+    
+    documento=$(this).data('documento');
+    
     @if(isset($cliente))
 	data.append('cliente', {{$cliente->id}});
     @endif
@@ -1593,18 +1651,20 @@ $(document).on("click", "#btn_archivo", function (e) {
         processData: false,
         //mientras enviamos el archivo
         beforeSend: function () {
-            $("#" + divresul + "").html($("#cargador_empresa").html());
+            $("#" + divresul + "").html('guardando...');
+        },
+        complete: function () {
+            $("#" + divresul + "").html('ok');
         },
         //una vez finalizado correctamente
         success: function (data) {
-            if (confirm('Â¿Deseas Actualizar la PÃ¡gina?')){
+            if (confirm('¿Deseas Actualizar la Página?')){
                 location.reload();
             }
-
+            $(this).text('OK');
         },
         //si ha ocurrido un error
         error: function (data) {
-
 
         }
     });
@@ -2749,6 +2809,27 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                                 //complete : function(){$("#loading3").hide(); },
                                 success: function(data) {
                                     location.reload(); 
+                                }
+                                }); 
+                            
+                        });
+
+                        $('.btn_recibir_doc').on('click', function (e) {
+                            e.preventDefault;
+                            
+                            $.ajax({
+                                type: 'GET',
+                                url: '{{route("pivotDocClientes.recibirDocumento")}}',
+                                data: {
+                                    'documento': $(this).data('documento'),
+                                },
+                                dataType:"json",
+                                beforeSend : function(){$("#spinner_doc_recibido").show(); },
+                                complete : function(){$("#spinner_doc_recibido").hide(); },
+                                success: function(data) {
+                                    if (confirm('¿Deseas Actualizar la Página?')){
+                                        location.reload();
+                                    }
                                 }
                                 }); 
                             

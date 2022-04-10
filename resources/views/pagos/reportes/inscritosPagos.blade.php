@@ -79,9 +79,10 @@
                 </div>
                 
                 <div class="form-group col-md-12 @if($errors->has('empleado_f')) has-error @endif">
-                    <label for="empleado_f-field">Colaborador de:</label>
+                    <label for="empleado_f-field">Colaborador(s):</label>
                     <a href='#' id='select-all-empleados'>Seleccionar todos</a> / 
                     <a href='#' id='deselect-all-empleados'>Deseleccionar todos</a>
+                    <label>{!! Form::checkbox("bnd-todos-empleados", 1, null, [ "id" => "bnd-todos-empleados-field", 'class'=>'minimal']) !!} Todos</label>
                     <div id="select_empleado">
                     {!! Form::select("empleado_f[]", $empleados, null, array("class" => "form-control select_seguridad", "id" => "empleado_f-field", 'multiple'=>true)) !!}
                     </div>

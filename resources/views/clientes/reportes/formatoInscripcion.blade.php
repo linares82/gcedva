@@ -245,7 +245,38 @@
             </tr>
                 <TD style="width:40%;"></TD><td></td><TD style="width:40%;"> {{$cliente->plantel->municipio}}, {{$cliente->plantel->estado}}; a {{Date('d')}} de {{ App\Mese::where('id', Date('m'))->value('name') }} de {{Date('Y')}}</TD>
         </table>
-    </div>                     
+    </div>
+    <HR></HR>                
+    <div class="tablediv">
+        <table>
+            <thead>
+                <th>Documento</th><th>Obligatorio</th><th>Entregado</th>    
+            </thead>    
+            <tbody>
+                @foreach($documentos as $documento)
+                <tr>
+                    <td>{{ $documento->name }}</td>
+                    <td>
+                        
+                        @if($documento->doc_obligatorio==1)
+                        SI
+                        @else
+                        NO
+                        @endif
+                    </td>
+                    <td>
+                        @if(!is_null($documento->archivo))
+                        SI
+                        @else
+                        NO
+                        @endif
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>    
+    </div>   
+    <HR></HR>  
     <div class="tablediv" style="font-size: 12px;">
         <ul>
             <li>La información de pago está calculada a pagos seriados mes a mes, en caso de optar por uno diferente solicitarlo.</li>

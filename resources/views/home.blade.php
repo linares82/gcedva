@@ -57,7 +57,8 @@
      
     @if (Auth::user()->can('autorizacionBaja.aut_servicios_escolares') or 
     Auth::user()->can('autorizacionBaja.aut_caja') or
-    Auth::user()->can('autorizacionBaja.aut_servicios_escolares_c'))
+    Auth::user()->can('autorizacionBaja.aut_servicios_escolares_c') or 
+    Auth::user()->can('autorizacionBaja.ver'))
     <div class="form-group col-md-12 col-sm-12 col-xs-12">
         <div class="box box-primary">
             <div class="box-header with-border">
@@ -81,7 +82,13 @@
                             <td>{{optional($baja->autCaja)->name}}</td>
                             <td>{{optional($baja->autDirector)->name}}</td>
                             <td>{{optional($baja->autCajaCorp)->name}}</td>
-                            <td><a class="btn btn-xs btn-warning" href="{{ route('historiaClientes.index',array('q[cliente_id_lt]'=>optional($baja->cliente)->id)) }}" target='_blank'><i class="glyphicon glyphicon-plus"></i> Ver</a></td>
+                            <td>
+                                @if (Auth::user()->can('autorizacionBaja.aut_servicios_escolares') or 
+                                Auth::user()->can('autorizacionBaja.aut_caja') or
+                                Auth::user()->can('autorizacionBaja.aut_servicios_escolares_c'))
+                                <a class="btn btn-xs btn-warning" href="{{ route('historiaClientes.index',array('q[cliente_id_lt]'=>optional($baja->cliente)->id)) }}" target='_blank'><i class="glyphicon glyphicon-plus"></i> Ver</a>
+                                @endif
+                            </td>
                             </tr>
                         @endif
                         
@@ -94,7 +101,9 @@
     </div>
     @endif
 
-    @permission('wd-autorizacion-becas')
+    
+    @if (Auth::user()->can('wd-autorizacion-becas') or Auth::user()->can('wd-autorizacion-becas-ver'))
+    
      <div class="form-group col-md-12">
             <div class="box box-success">
                 <div class="box-header with-border">
@@ -146,9 +155,11 @@
                                     <td>{{$beca->aut_ser_esc}}</td>
                                     <td>{{$beca->aut_dueno}}</td>
                                     <td>
+                                        @if (Auth::user()->can('wd-autorizacion-becas'))
                                     <a class="btn btn-xs bg-purple" target=_blank href="{{ route('autorizacionBecas.findByClienteId', array('cliente_id'=>$beca->cliente)) }}">
                                         <i class="fa fa-eye"></i> S. Becas
                                     </a>
+                                        @endif
                                     </td>
                                 </tr>
                                 
@@ -159,7 +170,7 @@
                 </div>
             </div>
         </div>
-    @endpermission
+    @endif
     
     <div class="row">
         @permission('avisos.create')

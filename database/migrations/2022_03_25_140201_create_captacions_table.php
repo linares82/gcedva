@@ -14,16 +14,16 @@ class CreateCaptacionsTable extends Migration {
 	{
 		Schema::create('captacions', function(Blueprint $table) {
             $table->increments('id');
-            $table->string('plantel');
-            $table->string('nombre');
-            $table->string('nombre2');
-            $table->string('ape_paterno');
-            $table->string('ape_materno');
-            $table->string('mail');
-            $table->string('tel_cel');
-            $table->string('tel_fijo');
-            $table->string('pais');
-			$table->text('comen_obs');
+            $table->string('plantel')->nullable();
+            $table->string('nombre')->nullable();
+            $table->string('nombre2')->nullable();
+            $table->string('ape_paterno')->nullable();
+            $table->string('ape_materno')->nullable();
+            $table->string('mail')->nullable();
+            $table->string('tel_cel')->nullable();
+            $table->string('tel_fijo')->nullable();
+            $table->string('pais')->nullable();
+			$table->text('comen_obs')->nullable();
             $table->integer('medio_id')->unsigned();
             $table->integer('usu_alta_id')->unsigned();
             $table->integer('usu_mod_id')->unsigned();

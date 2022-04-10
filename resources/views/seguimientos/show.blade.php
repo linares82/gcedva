@@ -6,8 +6,8 @@
 
 <ol class="breadcrumb">
 	<li><a href="{{ route('home') }}"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></a></li>
-    <li><a href="{{ route('seguimientos.index') }}">@yield('seguimientosAppTitle')</a></li>
-    <li class="active">{{ $seguimiento->id }}</li>
+    <li>Cliente</li>
+    <li class="active">{{ $seguimiento->cliente_id }}</li>
 </ol>
 
 <div class="page-header">

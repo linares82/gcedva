@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use DB;
+use Log;
 use Auth;
 use Hash;
-use Log;
 use App\Mese;
 use App\Grado;
 use App\Grupo;
+use App\Param;
 use App\Adeudo;
 use App\Cliente;
 use App\Lectivo;
@@ -432,6 +433,7 @@ class InscripcionsController extends Controller
 
         $empleado= Empleado::where('user_id', Auth::user()->id)->first();
         $planteles=$empleado->plantels->pluck('razon', 'id');
+        $bloqueo_materias_desaprobadas=Param::where('llave','bloqueo_materias_desaprobadas')->first();
 
         //dd($input);
         if (isset($input['id']) and isset($input['grupo_to']) and isset($input['lectivo_to'])) {
@@ -601,7 +603,7 @@ class InscripcionsController extends Controller
 
         //dd($clientes->toArray());
         //dd($resultados);
-        return view('inscripcions.reinscripcion', compact('resultados', 'input', 'planteles'))
+        return view('inscripcions.reinscripcion', compact('resultados', 'input', 'planteles','bloqueo_materias_desaprobadas'))
             ->with('list', Hacademica::getListFromAllRelationApps());
 
         /*return redirect('/inscripcions/reinscripcion', compact('resultados'))

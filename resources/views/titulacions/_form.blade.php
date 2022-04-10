@@ -145,7 +145,7 @@
                 <table class="table table-condensed table-striped">
                     <thead>
                         <th>Fecha</th>
-                        <th>Monto</th>
+                        <th>Monto ({{ $titulacion->opcionTitulacion->costo }})</th>
                         <th>Obs.</th>
                         <th>O. Pagos</th>
                     </thead>
@@ -186,13 +186,13 @@
 </div>
 
 
-@if($titulacion->opcionTitulacion->costo==$suma_pagos)
+@if($suma_pagos >= $titulacion->opcionTitulacion->costo)
        <div class="row">
            <div class="col-md-4">
                <div class="box">
                    <div class="box-body">
                        <div class="form-group col-md-6 @if ($errors->has('intento')) has-error @endif">
-                           <label for="intento-field">Intento</label>
+                           <label for="intento-field">Intento </label>
                            {!! Form::hidden('intento_id', null, ['class' => 'form-control', 'id' => 'intento_id-field']) !!}
                            {!! Form::hidden('titulacion_id', $titulacion->id, ['class' => 'form-control', 'id' => 'titulacion_id-field']) !!}
                            {!! Form::text('intento', null, ['class' => 'form-control', 'id' => 'intento-field']) !!}
@@ -365,6 +365,7 @@
                            $('#datosPago' + $(this).data('intento')).show();
                        });*/
 
+                       @isset($titulacion)
                        $('#btn-guardar-pago').click(function(event) {
                            event.preventDefault();
                            
@@ -384,6 +385,7 @@
                                }
                            });
                        });
+                       @endif
 
                        $('.btn-editar-pago').click(function(event) {
                            event.preventDefault();

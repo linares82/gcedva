@@ -1572,19 +1572,46 @@ class ClientesController extends Controller
                 File::makedirectory($ruta, 0777, true, true);
             }
             if ($request->file('file')->move($ruta, $input['file'])) {
-                $documento = new PivotDocCliente();
+                $documento = PivotDocCliente::find($datos['documento']);
                 $documento->cliente_id = $datos['cliente'];
                 $documento->doc_alumno_id = $datos['doc_cliente_id'];
                 $documento->archivo = $ruta_web . "/" . $input['file'];
-                $documento->usu_alta_id = Auth::user()->id;
+                //$documento->usu_alta_id = Auth::user()->id;
                 $documento->usu_mod_id = Auth::user()->id;
                 $documento->save();
+
+                $this->docObligatoriosEntregados($documento->cliente_id);                
+
                 echo json_encode($ruta_web . "/" . $input['file']);
             } else {
                 echo json_encode(0);
             }
         }
         //echo json_encode(0);
+    }
+
+    public function docObligatoriosEntregados($cliente_id){
+                $cliente=Cliente::find($cliente_id);
+                $documentos=PivotDocCliente::join('doc_alumnos as da','da.id','pivot_doc_clientes.doc_alumno_id')
+                ->where('cliente_id',$cliente_id)->where('doc_obligatorio', 1)->get();
+                //dd($documentos);
+                $documentos_total=0;
+                $documentos_entregados=0;
+                foreach($documentos as $documento){
+                    if($documento->doc_obligatorio==1){
+                        $documentos_total++;
+                    }
+                    if(!is_null($documento->archivo)){
+                        $documentos_entregados++;
+                    }
+                }
+                if($documentos_entregados==$documentos_total){
+                    $cliente->bnd_doc_oblig_entregados=1;
+                    $cliente->save();
+                }else{
+                    $cliente->bnd_doc_oblig_entregados=0;
+                    $cliente->save();
+                }
     }
 
     public function credencialAnverso(Request $request)
@@ -2089,7 +2116,9 @@ class ClientesController extends Controller
         $datos = $request->all();
         $cliente = Cliente::find($datos['cliente_id']);
         $combinacion = CombinacionCliente::where('cliente_id', $cliente->id)->first();
-        return view('clientes.reportes.formatoInscripcion', compact('cliente', 'combinacion'));
+        $documentos=PivotDocCliente::join('doc_alumnos as da','da.id','pivot_doc_clientes.doc_alumno_id')
+                ->where('cliente_id',$cliente->id)->get();
+        return view('clientes.reportes.formatoInscripcion', compact('cliente', 'combinacion','documentos'));
     }
 
     public function alumnosConceptoPlaneado(){

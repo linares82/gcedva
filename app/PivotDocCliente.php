@@ -20,7 +20,7 @@ class PivotDocCliente extends Model
     } 
 
 	//Mass Assignment
-	protected $fillable = ['cliente_id','doc_alumno_id','archivo','usu_alta_id','usu_mod_id'];
+	protected $fillable = ['cliente_id','doc_alumno_id','archivo','usu_alta_id','usu_mod_id','doc_entregado'];
 
 	public function usu_alta() {
 		return $this->hasOne('App\User', 'id', 'usu_alta_id');
