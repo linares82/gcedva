@@ -25,6 +25,7 @@ return [
     'paths' => [
         'api/planteles/*', 'api/especialidades/*', 'api/niveles/*', 'api/grados/*', 'api/turnos/*',
         'api/medios/*', 'api/estados/*', 'api/municipios/*', 'api/clientes/*', 'api/multipagos/*',
+        '/api/captacion/apiCreate'
     ],
 
     /*

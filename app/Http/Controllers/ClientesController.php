@@ -2136,7 +2136,7 @@ class ClientesController extends Controller
         $datos=$request->all();
         $registros=Cliente::select('p.razon', 'clientes.id', 'clientes.matricula', 'clientes.nombre', 'clientes.nombre2', 
         'clientes.ape_paterno', 'clientes.ape_materno', 'stc.name AS estatus_cliente','sts.name AS estatus_seguimiento', 
-        'cc.name AS concepto','clientes.fec_nacimiento','esp.name as especialidad')
+        'cc.name AS concepto','clientes.fec_nacimiento','esp.name as especialidad', 'clientes.curp', 'clientes.genero') //curp, sexo
         ->join('especialidads as esp','esp.id','=','clientes.especialidad_id')
         ->join('adeudos AS a', 'a.cliente_id','=','clientes.id')
         ->join('seguimientos AS s','s.cliente_id','=','clientes.id')
@@ -2558,4 +2558,50 @@ class ClientesController extends Controller
     
     }
 
+    public function recuperacion(Request $request)
+    {
+        $filtros=$request->all();
+        //dd($filtros);
+        $filtrado=Cliente::query();
+        $filtrado->whereIn('st_cliente_id', array(3,15,26,27,28));
+        if(isset($filtros['q'])){
+            if($filtros['q']['clientes.id_lt']<>null){
+                $filtrado->where('id',$filtros['q']['clientes.id_lt']);
+            }
+            if($filtros['q']['clientes.nombre_cont']<>null){
+                $filtrado->where('nombre',$filtros['q']['clientes.nombre_cont']);
+            }
+            if($filtros['q']['clientes.nombre2_cont']<>null){
+                $filtrado->where('nombre2',$filtros['q']['clientes.nombre2_cont']);
+            }
+            if($filtros['q']['clientes.ape_paterno_cont']<>null){
+                $filtrado->where('ape_paterno',$filtros['q']['clientes.ape_paterno_cont']);
+            }
+            if($filtros['q']['clientes.ape_materno_cont']<>null){
+                $filtrado->where('ape_materno',$filtros['q']['clientes.ape_materno_cont']);
+            }
+            if($filtros['q']['clientes.st_cliente_id_lt']<>0){
+                $filtrado->where('st_cliente_id',$filtros['q']['clientes.st_cliente_id_lt']);
+            }
+            if($filtros['q']['clientes.plantel_id_lt']<>0){
+                $filtrado->where('plantel_id',$filtros['q']['clientes.plantel_id_lt']);
+            }
+            if($filtros['q']['clientes_updated_at_mayorq']<>null){
+                $filtrado->where('updated_at','>',$filtros['q']['clientes_updated_at_mayorq']);
+            }
+        }
+        $clientes=$filtrado->paginate(20);
+        
+        $users = User::pluck('name', 'id');
+        $users->prepend('Seleccionar opción', 0);
+
+        //dd($request);
+        //$clientes = Seguimiento::getAllData($request, 10, session('filtro_clientes'));
+        $empleado = Empleado::where('user_id', '=', Auth::user()->id)->first();
+
+
+        return view('clientes.recuperacion', compact('clientes', 'empleado', 'users'))
+        ->with('list', Seguimiento::getListFromAllRelationApps())
+        ->with('list1', Cliente::getListFromAllRelationApps());
+    }
 }

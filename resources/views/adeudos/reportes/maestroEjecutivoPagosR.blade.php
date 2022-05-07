@@ -142,6 +142,7 @@
                 <th>Pago Recibido</th>
                 
                 <th>Csc. Caja</th>
+                <th>Forma Pago</th>
                 <th>Beca</th>
                 <th>Estatus Cliente</th>
             </tr>
@@ -198,6 +199,7 @@
                 <td><!--@{{$detalle['monto_pago']}}-->{{ $sum_pagos }}</td>
                 
                 <td>{{$detalle['consecutivo']}}</td>
+                <td>{{$detalle['forma_pago']}}</td>
                 @if(!is_null($beca)) 
                 
                 @if(

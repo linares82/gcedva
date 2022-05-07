@@ -3293,7 +3293,8 @@ class AdeudosController extends Controller
                     't.name as turno',
                     'pag.monto as monto_pago',
                     'pag.fecha as fecha_pago',
-                    'cajas.created_at as fec_creacion_caja'
+                    'cajas.created_at as fec_creacion_caja',
+                    'fp.name as forma_pago'
                 )
                     ->join('clientes as c', 'c.id', '=', 'cajas.cliente_id')
                     ->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
@@ -3307,6 +3308,7 @@ class AdeudosController extends Controller
                     ->join('especialidads as esp', 'esp.id', 'ccli.especialidad_id')
                     ->join('grados as g', 'g.id', '=', 'ccli.grado_id')
                     ->join('turnos as t', 't.id', '=', 'ccli.turno_id')
+                    ->join('forma_pagos as fp','fp.id','cajas.forma_pago_id')
                     ->where('cajas.plantel_id', $plantel)
                     ->where('cajas.st_caja_id', 1)
                     ->where('cln.adeudo_id', 0)
@@ -3331,6 +3333,7 @@ class AdeudosController extends Controller
                     ->join('turnos as t', 't.id', '=', 'ccli.turno_id')
                     ->join('caja_lns as cln', 'cln.adeudo_id', '=', 'adeudos.id')
                     ->join('cajas as caj', 'caj.id', '=', 'adeudos.caja_id')
+                    ->join('forma_pagos as fp','fp.id','caj.forma_pago_id')
                     ->join('pagos as pag', 'pag.caja_id', '=', 'caj.id')
                     ->join('plantels as p', 'p.id', '=', 'caj.plantel_id')
                     ->whereDate('pag.fecha', '>=', $datos['fecha_f'])
@@ -3369,7 +3372,8 @@ class AdeudosController extends Controller
                         't.name as turno',
                         'pag.monto as monto_pago',
                         'pag.fecha as fecha_pago',
-                        'caj.created_at as fec_creacion_caja'
+                        'caj.created_at as fec_creacion_caja',
+                        'fp.name as forma_pago'
                         //DB::raw('(select sum(pp.monto) as monto_pago from pagos as pp where pp.caja_id=caj.id and pp.deleted_at is null and pp.bnd_pagado=1)')
                     )
                     ->whereNull('caj.deleted_at')

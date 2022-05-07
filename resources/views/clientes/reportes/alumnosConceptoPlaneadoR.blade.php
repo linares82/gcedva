@@ -18,7 +18,7 @@
       <table class="table table-condensed table-striped">
         <thead><th>No.</th>
             <th>Plantel</th><th>Id</th><th>Matricula</th><th>P. Nombre</th><th>S. Nombre</th><th>A. Paterno</th><th>A. Materno</th>
-            <th>F. Nacimiento</th><th>Especialidad</th>
+            <th>F. Nacimiento</th><th>Sexo</th><th>CURP</th><th>Especialidad</th>
             <th>Estatus Cliente</th><th>Estatus Seguimiento</th><th>Concepto</th>
         </thead>
         <tbody>    
@@ -33,7 +33,14 @@
             <td>{{ $registro->razon }}</td><td>{{ $registro->id }}</td><td>{{ $registro->matricula }}</td>
             <td>{{ $registro->nombre }}</td><td>{{ $registro->nombre2 }}</td>
             <td>{{ $registro->ape_paterno }}</td><td> {{ $registro->ape_materno }}  </td>
-            <td>{{ $registro->fec_nacimiento }}</td><td>{{ $registro->especialidad }}</td>
+            <td>{{ $registro->fec_nacimiento }}</td>
+            <td>
+              @if($registro->genero==1) Masculino
+              @elseif ($registro->genero==2) Femenino
+              @endif
+            </td>
+            <td>{{ $registro->curp }}</td>
+            <td>{{ $registro->especialidad }}</td>
             <td>{{ $registro->estatus_cliente }}</td><td>{{ $registro->estatus_seguimiento }}</td><td>{{ $registro->concepto }}</td>
           </tr>
         

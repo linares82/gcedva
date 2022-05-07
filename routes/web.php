@@ -1091,6 +1091,14 @@ Route::get(
     )
 )->middleware('auth');
 Route::get(
+    'clientes/recuperacion',
+    array(
+        'as' => 'clientes.recuperacion',
+        'middleware' => 'permission:clientes.recuperacion',
+        'uses' => 'ClientesController@recuperacion'
+    )
+)->middleware('auth');
+Route::get(
     'clientes/indexEventos',
     array(
         'as' => 'clientes.indexEventos',

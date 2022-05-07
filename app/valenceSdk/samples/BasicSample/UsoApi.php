@@ -69,12 +69,17 @@ class UsoApi{
     );*/
 
     public function getPageURL() {
+        
         $portString = '';
+        /*
         if (($_SERVER['HTTPS'] == 'on' && $_SERVER['SERVER_PORT'] != 443)
          || ($_SERVER['HTTPS'] == 'off' && $_SERVER['SERVER_PORT'] != 80)) {
                 $portString = ':' . $_SERVER['SERVER_PORT'];
         }
         return "http" . ($_SERVER['HTTPS'] == 'on' ? 's' : '') . '://' . $_SERVER['SERVER_NAME'] . $portString . $_SERVER['REQUEST_URI'];
+        */
+        return "http" . '://' . $_SERVER['SERVER_NAME'] . $portString . $_SERVER['REQUEST_URI'];
+        
     }
 
     public function deauthenticate(){
