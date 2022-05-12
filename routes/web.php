@@ -1467,6 +1467,30 @@ Route::post(
     )
 )->middleware('auth');
 Route::get(
+    '/clientes/documentosRecibidos/',
+    array(
+        'as' => 'clientes.documentosRecibidos',
+        'middleware' => 'permission:clientes.documentosRecibidos',
+        'uses' => 'ClientesController@documentosRecibidos'
+    )
+)->middleware('auth');
+Route::post(
+    '/clientes/documentosRecibidosR/',
+    array(
+        'as' => 'clientes.documentosRecibidosR',
+        'middleware' => 'permission:clientes.documentosRecibidos',
+        'uses' => 'ClientesController@documentosRecibidosR'
+    )
+)->middleware('auth');
+Route::post(
+    '/clientes/docRecibidosManual/',
+    array(
+        'as' => 'clientes.docRecibidosManual',
+        'middleware' => 'permission:clientes.documentosRecibidos',
+        'uses' => 'ClientesController@docRecibidosManual'
+    )
+)->middleware('auth');
+Route::get(
     '/clientes/matrizDocumentos/',
     array(
         'as' => 'clientes.matrizDocumentos',

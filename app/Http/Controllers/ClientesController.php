@@ -640,6 +640,12 @@ class ClientesController extends Controller
         } else {
             $input['bnd_regingreso'] = 1;
         }
+
+        if(isset($input['bnd_doc_oblig_entregados'])){
+            $input['bnd_doc_oblig_entregados']=1;
+        }else{
+            $input['bnd_doc_oblig_entregados']=0;
+        }
         //dd($input);
         //update data
         $cliente = $cliente->find($id);
@@ -2603,5 +2609,102 @@ class ClientesController extends Controller
         return view('clientes.recuperacion', compact('clientes', 'empleado', 'users'))
         ->with('list', Seguimiento::getListFromAllRelationApps())
         ->with('list1', Cliente::getListFromAllRelationApps());
+    }
+
+    public function documentosRecibidos()
+    {
+        $empleado = Empleado::where('user_id', Auth::user()->id)->first();
+        $planteles = $empleado->plantels->pluck('razon', 'id');
+        //$stClientes=StCliente::pluck('name','id');
+        $stSeguimientos=StSeguimiento::pluck('name','id');
+        return view('clientes.reportes.documentosRecibidos', compact('planteles','stSeguimientos'))
+            ->with('list', Cliente::getListFromAllRelationApps());
+    }
+
+    public function documentosRecibidosR(Request $request)
+    {
+        $datos = $request->all();
+        $documentos_recibidos=array();
+        $documentos_obligatorios = DocAlumno::where('doc_obligatorio', 1)->get();
+        $clientes = Cliente::select(
+            'clientes.id',
+            'clientes.nombre',
+            'clientes.nombre2',
+            'clientes.ape_paterno',
+            'clientes.ape_materno',
+            'clientes.bnd_doc_oblig_entregados as doc_recibidos',
+            'stc.name as estatus_cliente',
+            'sts.name as estatus_seguimiento',
+            'p.razon as plantel'
+        )
+            ->join('st_clientes as stc', 'stc.id', '=', 'clientes.st_cliente_id')
+            ->join('seguimientos as s', 's.cliente_id', '=', 'clientes.id')
+            ->join('st_seguimientos as sts', 'sts.id', '=', 's.st_seguimiento_id')
+            ->join('plantels as p','p.id','clientes.plantel_id')
+            //->join('pivot_doc_clientes as pdc','pdc.cliente_id','c.id')
+            //->join('doc_alumnos as da','da.id','pdc.doc_alumno_id')
+            ->where('st_cliente_id', $datos['estatus_f'])
+            ->where('st_seguimiento_id', $datos['estatus_seguimiento_f'])
+            ->where('clientes.plantel_id', $datos['plantel_f'])
+            //->where('da.doc_obligatorio',1)
+            ->groupBy('clientes.id','clientes.nombre','clientes.nombre2','clientes.ape_paterno',
+            'clientes.ape_materno','estatus_cliente','estatus_seguimiento')
+            ->get();
+        $total_documentos = array();
+
+        foreach ($clientes as $cliente) {
+            $docsPorCliente = PivotDocCliente::select('da.*')
+            ->join('doc_alumnos as da','da.id','pivot_doc_clientes.doc_alumno_id')
+            ->where('cliente_id', $cliente->id)
+            ->whereNull('pivot_doc_clientes.deleted_at')
+            ->where('doc_obligatorio',1)
+            ->get();
+            $totalDocsPorCliente = PivotDocCliente::select('doc_alumno_id')
+            ->join('doc_alumnos as da','da.id','pivot_doc_clientes.doc_alumno_id')
+            ->whereNull('pivot_doc_clientes.deleted_at')
+            ->where('cliente_id', $cliente->id)
+            ->where('doc_obligatorio',1)
+            ->count();
+            if($totalDocsPorCliente==0){
+                array_push($documentos_recibidos, array(
+                    'cliente' => $cliente->id,
+                    'nombre' => $cliente->nombre . ' ' . $cliente->nombre2 . ' ' . $cliente->ape_paterno . ' ' . $cliente->ape_materno,
+                    'total_documentos' => 0,
+                    'documentos' => array(),
+                    'estatus_cliente' => $cliente->estatus_cliente,
+                    'estatus_seguimiento' => $cliente->estatus_seguimiento,
+                    'plantel'=>$cliente->plantel,
+                    'doc_recibidos'=>$cliente->doc_recibidos
+                ));
+            }else{
+                array_push($documentos_recibidos, array(
+                    'cliente' => $cliente->id,
+                    'nombre' => $cliente->nombre . ' ' . $cliente->nombre2 . ' ' . $cliente->ape_paterno . ' ' . $cliente->ape_materno,
+                    'total_documentos' => $totalDocsPorCliente,
+                    'documentos' => $docsPorCliente->toArray(),
+                    'estatus_cliente' => $cliente->estatus_cliente,
+                    'estatus_seguimiento' => $cliente->estatus_seguimiento,
+                    'plantel'=>$cliente->plantel,
+                    'doc_recibidos'=>$cliente->doc_recibidos
+                ));
+            }
+        }
+        //dd($documentos_recibidos);
+        //dd($documentos_faltantes);
+        //return view('clientes.reportes.listaDocumentosR', compact('documentos_faltantes'));
+        return view('clientes.reportes.documentosRecibidosR', compact('documentos_recibidos'));
+    }
+
+    public function docRecibidosManual(Request $request){
+        $datos=$request->all();
+        //dd($datos['clientes']);
+        foreach($datos['clientes'] as $cliente){
+            
+            $clienteR=Cliente::find($cliente);
+            //dd($clienteR);
+            $clienteR->bnd_doc_oblig_entregados=1;
+            $clienteR->save();
+        }
+        return redirect()->route('clientes.documentosRecibidos');
     }
 }

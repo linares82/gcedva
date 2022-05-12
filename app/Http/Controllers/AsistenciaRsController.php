@@ -99,7 +99,7 @@ class AsistenciaRsController extends Controller
 			) {
 				
 				if (in_array($hoyCarbon->dayOfWeekIso, $dias_validos)) {
-					$asistencias = AsistenciaR::select('asistencia_rs.*', 'c.nombre', 'c.nombre2', 'c.ape_paterno', 'c.ape_materno')
+					$asistencias = AsistenciaR::select('asistencia_rs.*', 'c.nombre', 'c.nombre2', 'c.ape_paterno', 'c.ape_materno','bnd_doc_oblig_entregados')
 						->where('fecha', '=', $input['fecha'])
 						->join('clientes as c', 'c.id', '=', 'asistencia_rs.cliente_id')
 						->where('asignacion_academica_id', '=', $input['asignacion_academica_id'])
@@ -140,7 +140,7 @@ class AsistenciaRsController extends Controller
 
 						}
 						$asignacion_academica_id = $input['asignacion_academica_id'];
-						$asistencias = AsistenciaR::select('asistencia_rs.*', 'c.nombre', 'c.nombre2', 'c.ape_paterno', 'c.ape_materno')
+						$asistencias = AsistenciaR::select('asistencia_rs.*', 'c.nombre', 'c.nombre2', 'c.ape_paterno', 'c.ape_materno','bnd_doc_oblig_entregados')
 							->where('fecha', '=', $input['fecha'])
 							->join('clientes as c', 'c.id', '=', 'asistencia_rs.cliente_id')
 							->where('asignacion_academica_id', '=', $input['asignacion_academica_id'])
@@ -177,7 +177,7 @@ class AsistenciaRsController extends Controller
 							}
 						}
 						$asignacion_academica_id = $input['asignacion_academica_id'];
-						$asistencias = AsistenciaR::select('asistencia_rs.*', 'c.nombre', 'c.nombre2', 'c.ape_paterno', 'c.ape_materno')
+						$asistencias = AsistenciaR::select('asistencia_rs.*', 'c.nombre', 'c.nombre2', 'c.ape_paterno', 'c.ape_materno','bnd_doc_oblig_entregados')
 							->where('fecha', '=', $input['fecha'])
 							->join('clientes as c', 'c.id', '=', 'asistencia_rs.cliente_id')
 							->where('asignacion_academica_id', '=', $input['asignacion_academica_id'])

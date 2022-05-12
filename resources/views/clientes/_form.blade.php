@@ -1356,6 +1356,16 @@
                         <a class="btn btn-xs btn-primary" href="{{ route('pivotDocClientes.crearListaCheck', array('cliente_id'=>$cliente->id)) }}" >Generar lista</a>
 
                     </div>
+                    @permission('clientes.todos_docs_entegados')
+                    <div class="form-group col-md-3 @if($errors->has('bnd_doc_oblig_entregados')) has-error @endif">
+                        <label for="bnd_doc_oblig_entregados-field">Todos los documentos entregados</label>
+                        {!! Form::checkbox("bnd_doc_oblig_entregados", 1, null, [ "id" => "bnd_doc_oblig_entregados-field", 'class'=>'minimal']) !!}
+                        @if($errors->has("bnd_doc_oblig_entregados"))
+                        <span class="help-block">{{ $errors->first("bnd_doc_oblig_entregados") }}</span>
+                        @endif
+                    </div>
+                    @endpermission
+                    <div class="row"></div>
 
                     <!--
                     <div class="form-group col-md-6 @if($errors->has('doc_cliente_id')) has-error @endif">

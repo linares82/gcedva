@@ -400,7 +400,7 @@ class FacturaGeneralsController extends Controller
 				'xmlns:ine' => 'http://www.sat.gob.mx/ine',
 				'xmlns:cartaporte20' => 'http://www.sat.gob.mx/CartaPorte20',
 				'xmlns:nomina12' => 'http://www.sat.gob.mx/nomina12',
-				'xsi:schemaLocation' => 'http://www.sat.gob.mx/cfd/4 http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd http://www.sat.gob.mx/divisas http://www.sat.gob.mx/sitio_internet/cfd/divisas/divisas.xsd http://www.sat.gob.mx/donat http://www.sat.gob.mx/sitio_internet/cfd/donat/donat11.xsd http://www.sat.gob.mx/notariospublicos http://www.sat.gob.mx/sitio_internet/cfd/notariospublicos/notariospublicos.xsd http://www.sat.gob.mx/implocal http://www.sat.gob.mx/sitio_internet/cfd/implocal/implocal.xsd http://www.sat.gob.mx/ine http://www.sat.gob.mx/sitio_internet/cfd/ine/ine11.xsd http://www.sat.gob.mx/CartaPorte20 http://www.sat.gob.mx/sitio_internet/cfd/CartaPorte/CartaPorte20.xsd http://www.sat.gob.mx/nomina12 http://www.sat.gob.mx/sitio_internet/cfd/nomina/nomina12.xsd',
+				'xsi:schemaLocation' => 'http://www.sat.gob.mx/cfd/4 http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd',
 				'Serie' => '', //?
 				'Folio' => '', //?
 				'Fecha' => Carbon::createFromFormat('Y-m-d h:i:s', $facturaGeneral->fecha_factura)->format('Y-m-d\TH:i:s'),
@@ -590,13 +590,13 @@ class FacturaGeneralsController extends Controller
 		$objetoXML->writeAttribute("Version", $comprobante["Version"]);
 		$objetoXML->writeAttribute("xmlns:xsi", $comprobante["xmlns:xsi"]);
 		$objetoXML->writeAttribute("xmlns:cfdi", $comprobante["xmlns:cfdi"]);
-		$objetoXML->writeAttribute("xmlns:divisas", $comprobante["xmlns:divisas"]);
-		$objetoXML->writeAttribute("xmlns:donat", $comprobante["xmlns:donat"]);
-		$objetoXML->writeAttribute("xmlns:notariospublicos", $comprobante["xmlns:notariospublicos"]);
-		$objetoXML->writeAttribute("xmlns:implocal", $comprobante["xmlns:implocal"]);
-		$objetoXML->writeAttribute("xmlns:ine", $comprobante["xmlns:ine"]);
-		$objetoXML->writeAttribute("xmlns:cartaporte20", $comprobante["xmlns:cartaporte20"]);
-		$objetoXML->writeAttribute("xmlns:nomina12", $comprobante["xmlns:nomina12"]);
+		//$objetoXML->writeAttribute("xmlns:divisas", $comprobante["xmlns:divisas"]);
+		//$objetoXML->writeAttribute("xmlns:donat", $comprobante["xmlns:donat"]);
+		//$objetoXML->writeAttribute("xmlns:notariospublicos", $comprobante["xmlns:notariospublicos"]);
+		//$objetoXML->writeAttribute("xmlns:implocal", $comprobante["xmlns:implocal"]);
+		//$objetoXML->writeAttribute("xmlns:ine", $comprobante["xmlns:ine"]);
+		//$objetoXML->writeAttribute("xmlns:cartaporte20", $comprobante["xmlns:cartaporte20"]);
+		//$objetoXML->writeAttribute("xmlns:nomina12", $comprobante["xmlns:nomina12"]);
 		$objetoXML->writeAttribute("xsi:schemaLocation", $comprobante["xsi:schemaLocation"]);
 		$objetoXML->writeAttribute("Certificado", $comprobante["Certificado"]);
 		$objetoXML->writeAttribute("NoCertificado", $comprobante["NoCertificado"]);

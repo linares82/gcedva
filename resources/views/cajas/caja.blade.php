@@ -143,12 +143,15 @@
                     {!! Form::open(array('route' => 'cajas.store','id'=>'frmCrearVenta')) !!} 
                     @permission('cajas.store')
                     <div class="input-group form-group col-md-12 @if($errors->has('cliente_id')) has-error @endif">
-                        
+                        @if($cliente->bnd_doc_oblig_entregados==1)
                         <div class="input-group-btn">
                             <button type="submit" class="btn btn-warning" data-toggle="tooltip" title="Crear Venta" id="btnCrearVenta">
                                 <i class='glyphicon glyphicon-plus-sign'></i>
                             </button>
                         </div>
+                        @else
+                            <span class="bg-red">Sin docs. entregados<span>
+                        @endif
                         
                         {!! Form::select("forma_pago_id", $list["FormaPago"], null, array("class" => "form-control", "id" => "forma_pago_id1-field")) !!}
                         {!! Form::text("fecha", null, array("class" => "form-control fecha", "id" => "fecha-field", 'placeholder'=>'Fecha de Venta', 'style'=>"100%")) !!}

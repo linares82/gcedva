@@ -49,13 +49,20 @@
                 @if(isset($asistencias))
                 <table class="table table-condensed table-striped">
                     <thead>
-                        <th>Alumno</th><th>Estatus Cliente</th><th>Fecha</th><th>Asistencia</th><th></th>
+                        <th>Alumno</th><th>Doc. Entregados</th><th>Estatus Cliente</th><th>Fecha</th><th>Asistencia</th><th></th>
                     </thead>
                         @foreach($asistencias as $s)
                         
                         <tr>
                             <td>
                                 {{$s->cliente_id}} - {{ optional($s->cliente)->ape_paterno." ".optional($s->cliente)->ape_materno." ".optional($s->cliente)->nombre." ".optional($s->cliente)->nombre2 }}
+                            </td>
+                            <td>
+                                @if($s->bnd_doc_oblig_entregados==1)
+                                    SI
+                                @else
+                                    NO
+                                @endif
                             </td>
                             <td>{{ optional($s->cliente->stCliente)->name }}</td>
                             <td>{{ $s->fecha }}</td>
@@ -72,9 +79,11 @@
                                  </div> 
                             </td>
                             <td>
+                                @if($s->bnd_doc_oblig_entregados==1)
                                 <a href="#" onclick="modificarAsistencia({{$s->id}})" class="btn btn-success">Modificar</a>
                                 <div id='loading3' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                                 <label id="etq_msj"></label>
+                                @endif
                             </td>
                         </tr>
                         @endforeach
