@@ -24,7 +24,9 @@ class updateVinculacion extends FormRequest
     public function rules()
     {
         return [
-            //
+            'fec_inicio'=>"required",
+            'area'=>'required'
         ];
     }
+   
 }

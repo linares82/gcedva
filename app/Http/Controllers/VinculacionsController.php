@@ -1,16 +1,19 @@
 <?php namespace App\Http\Controllers;
 
+use DB;
+use Auth;
+use File;
+use App\Cliente;
+use App\Plantel;
+use App\Vinculacion;
+use App\StVinculacion;
+use App\CombinacionCliente;
+use App\EmpresasVinculacion;
+use Illuminate\Http\Request;
 use App\DocVinculacionVinculacion;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\createVinculacion;
 use App\Http\Requests\updateVinculacion;
-use App\Plantel;
-use App\StVinculacion;
-use App\Vinculacion;
-use Auth;
-use DB;
-use File;
-use Illuminate\Http\Request;
 
 class VinculacionsController extends Controller
 {
@@ -36,7 +39,10 @@ class VinculacionsController extends Controller
     public function create(Request $request)
     {
         $cliente = $request->input('cliente');
-        return view('vinculacions.create', compact('cliente'))
+        $cli=Cliente::find($cliente);
+        $empresas=EmpresasVinculacion::where('plantel_id',$cli->plantel_id)->pluck('razon_social','id');
+        
+        return view('vinculacions.create', compact('cliente','empresas'))
             ->with('list', Vinculacion::getListFromAllRelationApps());
     }
 
@@ -84,6 +90,8 @@ class VinculacionsController extends Controller
     {
         $vinculacion = $vinculacion->find($id);
         $cliente = $vinculacion->cliente_id;
+        $cli=Cliente::find($cliente);
+        $empresas=EmpresasVinculacion::where('plantel_id',$cli->plantel_id)->pluck('razon_social','id');
 
         $doc_existentes = DB::table('doc_vinculacion_vinculacions as dpp')->select('doc_vinculacion_id')
             ->join('vinculacions as p', 'p.id', '=', 'dpp.vinculacion_id')
@@ -110,7 +118,7 @@ class VinculacionsController extends Controller
         ->orderBy('orden')
         ->pluck('name','id');
 
-        return view('vinculacions.edit', compact('vinculacion', 'cliente', 'documentos_faltantes','documentos_vinculacion'))
+        return view('vinculacions.edit', compact('vinculacion', 'cliente', 'documentos_faltantes','documentos_vinculacion','empresas'))
             ->with('list', Vinculacion::getListFromAllRelationApps())
             ->with('list1', DocVinculacionVinculacion::getListFromAllRelationApps());
     }
@@ -143,6 +151,16 @@ class VinculacionsController extends Controller
         if (!isset($input['bnd_constacia_entregada'])) {
             $input['bnd_constacia_entregada'] = 0;
         }
+        if (!isset($input['bnd_busca_trabajo'])) {
+            $input['bnd_busca_trabajo'] = 0;
+        }
+        if (!isset($input['bnd_requiere_empleo'])) {
+            $input['bnd_requiere_empleo'] = 0;
+        }
+        if (!isset($input['bnd_cv_actualizado'])) {
+            $input['bnd_cv_actualizado'] = 0;
+        }
+        
         //update data
         $vinculacion = $vinculacion->find($id);
         $vinculacion->update($input);
@@ -369,5 +387,13 @@ class VinculacionsController extends Controller
             ->where('vinculacions.st_vinculacion_id', $data['estatus_f'])
             ->get();
         return view('vinculacions.reportes.listaVinculacionR', compact('registros'));
+    }
+
+    public function formatoCartaPresentacion(Request $request){
+        $datos=$request->all();
+        $vinculacion=Vinculacion::find($datos['vinculacion']);
+        $cliente=$vinculacion->cliente;
+        $combinacion=CombinacionCliente::where('cliente_id',$cliente->id)->first();
+        return view('vinculacions.reportes.formatoCartaPresentacion', compact('vinculacion','cliente','combinacion'));
     }
 }

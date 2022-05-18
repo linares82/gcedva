@@ -1,13 +1,14 @@
 <?php namespace App\Http\Controllers;
 
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
+use Auth;
+use App\Plantel;
 
+use App\Http\Requests;
 use App\EmpresasVinculacion;
 use Illuminate\Http\Request;
-use Auth;
-use App\Http\Requests\updateEmpresasVinculacion;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\createEmpresasVinculacion;
+use App\Http\Requests\updateEmpresasVinculacion;
 
 class EmpresasVinculacionsController extends Controller {
 
@@ -30,7 +31,8 @@ class EmpresasVinculacionsController extends Controller {
 	 */
 	public function create()
 	{
-		return view('empresasVinculacions.create')
+		$plantels=Plantel::pluck('razon','id');
+		return view('empresasVinculacions.create', compact('plantels'))
 			->with( 'list', EmpresasVinculacion::getListFromAllRelationApps() );
 	}
 
@@ -74,7 +76,8 @@ class EmpresasVinculacionsController extends Controller {
 	public function edit($id, EmpresasVinculacion $empresasVinculacion)
 	{
 		$empresasVinculacion=$empresasVinculacion->find($id);
-		return view('empresasVinculacions.edit', compact('empresasVinculacion'))
+		$plantels=Plantel::pluck('razon','id');
+		return view('empresasVinculacions.edit', compact('empresasVinculacion','plantels'))
 			->with( 'list', EmpresasVinculacion::getListFromAllRelationApps() );
 	}
 

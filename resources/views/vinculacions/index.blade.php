@@ -263,12 +263,13 @@
                             <tr>
                                 <td>{{$vinculacion->cliente->id}}</td>
                                 <td>{{$vinculacion->cliente->nombre}} {{$vinculacion->cliente->ape_paterno}} {{$vinculacion->cliente->ape_materno}}</td>
-                                <td>{{$vinculacion->empresasVinculacion->razon_social}}</td>
+                                <td>{{optional($vinculacion->empresasVinculacion)->razon_social}}</td>
                                 <td>{{$vinculacion->tel_fijo}}</td>
                                 <td>{{$vinculacion->nombre_contacto}}</td>
                                 <td>{{$vinculacion->mail_contacto}}</td>
                     
                                 <td class="text-right">
+                                    <a class="btn btn-xs btn-info" href="{{ route('vinculacions.formatoCartaPresentacion', array('vinculacion'=>$vinculacion->id)) }}"><i class="glyphicon glyphicon-paper"></i> Carta Presentacion</a>
                                     @permission('vinculacions.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('vinculacions.edit', $vinculacion->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
                                     @endpermission

@@ -253,22 +253,23 @@
                 <th>Documento</th><th>Obligatorio</th><th>Entregado</th>    
             </thead>    
             <tbody>
-                @foreach($documentos as $documento)
+                @foreach($lista_mostrar as $documento)
                 <tr>
-                    <td>{{ $documento->name }}</td>
+                    <td>{{ $documento['documento'] }}</td>
                     <td>
                         
-                        @if($documento->doc_obligatorio==1)
-                        SI
-                        @else
-                        NO
-                        @endif
+                        {{ $documento['obligatorio'] }}
+                        
                     </td>
                     <td>
-                        @if(!is_null($documento->archivo))
-                        SI
+                        @if(!isset($documento['archivo']))
+                            NO
                         @else
-                        NO
+                            @if(is_null($documento['archivo']))
+                            NO 
+                            @else
+                            SI
+                            @endif
                         @endif
                     </td>
                 </tr>

@@ -6,7 +6,7 @@
                         @if(isset($vinculacion))
                         <a href="{{ route('empresasVinculacions.show', $vinculacion->empresas_vinculacion_id) }}" target="_blank">Ver</a>
                         @endif
-                        {!! Form::select("empresas_vinculacion_id", $list["EmpresasVinculacion"], null, array("class" => "form-control select_seguridad", "id" => "empresas_vinculacion_id-field", 'style'=>'width:100%')) !!}
+                        {!! Form::select("empresas_vinculacion_id", $empresas, null, array("class" => "form-control select_seguridad", "id" => "empresas_vinculacion_id-field", 'style'=>'width:100%')) !!}
 
                         @if($errors->has("empresas_vinculacion_id"))
                         <span class="help-block">{{ $errors->first("empresas_vinculacion_id") }}</span>
@@ -17,7 +17,7 @@
                         @php
                             $combinacion=\App\CombinacionCliente::where('cliente_id',$vinculacion->cliente_id)->first();
                         @endphp
-                        <label for="area-field">Especialidad: {{ $combinacion->especialidad->name }}</label>
+                        <label for="area-field">Especialidad: {{ optional($combinacion->especialidad)->name }}</label>
                      </div>
                      @endif
                     <div class="form-group col-md-4 @if($errors->has('area')) has-error @endif">
@@ -71,7 +71,13 @@
                         <span class="help-block">{{ $errors->first("mail_contacto") }}</span>
                        @endif
                     </div>
-                    
+                    <div class="form-group col-md-4 @if($errors->has('jefe_directo')) has-error @endif">
+                        <label for="jefe_directo-field">Jefe Directo</label>
+                        {!! Form::text("jefe_directo", null, array("class" => "form-control", "id" => "jefe_directo-field")) !!}
+                        @if($errors->has("jefe_directo"))
+                         <span class="help-block">{{ $errors->first("jefe_directo") }}</span>
+                        @endif
+                     </div>
                     <div class="form-group col-md-4 @if($errors->has('fec_inicio')) has-error @endif">
                        <label for="fec_inicio-field">Fecha Inicio</label>
                        {!! Form::text("fec_inicio", null, array("class" => "form-control", "id" => "fec_inicio-field")) !!}
@@ -337,6 +343,112 @@
     </div>
     </div>
 @endpermission
+@if(isset($vinculacion))
+<div class="box box-default">
+    <div class="box-body"> 
+        <strong>Seccion pra egresados</strong>
+        <div class="row"></div>  
+        <div class="form-group col-md-3 @if($errors->has('bnd_busca_trabajo')) has-error @endif">
+            <label for="bnd_busca_trabajo-field">¿Busca Trabajo?</label>
+            {!! Form::checkbox("bnd_busca_trabajo", 1, null, [ "id" => "bnd_busca_trabajo-field", 'class'=>'minimal']) !!}
+            @if($errors->has("bnd_busca_trabajo"))
+            <span class="help-block">{{ $errors->first("bnd_busca_trabajo") }}</span>
+            @endif
+        </div>
+        <div class="form-group col-md-4 @if($errors->has('tel_fijo_actualizado')) has-error @endif">
+            <label for="tel_fijo_actualizado-field">Tel. Fijo Actualizado</label>
+            {!! Form::text("tel_fijo_actualizado", null, array("class" => "form-control", "id" => "tel_fijo_actualizado-field")) !!}
+            @if($errors->has("tel_fijo_actualizado"))
+             <span class="help-block">{{ $errors->first("tel_fijo_actualizado") }}</span>
+            @endif
+         </div>
+         <div class="form-group col-md-4 @if($errors->has('mail_actualizado')) has-error @endif">
+            <label for="mail_actualizado-field">Mail Actualizado</label>
+            {!! Form::text("mail_actualizado", null, array("class" => "form-control", "id" => "mail_actualizado-field")) !!}
+            @if($errors->has("mail_actualizado"))
+             <span class="help-block">{{ $errors->first("mail_actualizado") }}</span>
+            @endif
+         </div>
+         <div class="form-group col-md-3 @if($errors->has('bnd_requiere_empleo')) has-error @endif">
+            <label for="bnd_requiere_empleo-field">¿Requiere Empleo?</label>
+            {!! Form::checkbox("bnd_requiere_empleo", 1, null, [ "id" => "bnd_requiere_empleo-field", 'class'=>'minimal']) !!}
+            @if($errors->has("bnd_requiere_empleo"))
+            <span class="help-block">{{ $errors->first("bnd_requiere_empleo") }}</span>
+            @endif
+        </div>
+        <div class="form-group col-md-3 @if($errors->has('bnd_cv_actualizado')) has-error @endif">
+            <label for="bnd_cv_actualizado-field">¿CV Actualizado?</label>
+            {!! Form::checkbox("bnd_cv_actualizado", 1, null, [ "id" => "bnd_cv_actualizado-field", 'class'=>'minimal']) !!}
+            @if($errors->has("bnd_cv_actualizado"))
+            <span class="help-block">{{ $errors->first("bnd_requiere_empleo") }}</span>
+            @endif
+        </div>
+        <div class="form-group col-md-4 @if($errors->has('empresa')) has-error @endif">
+            <label for="empresa-field">Empresa</label>
+            {!! Form::text("empresa", null, array("class" => "form-control", "id" => "empresa-field")) !!}
+            @if($errors->has("empresa"))
+             <span class="help-block">{{ $errors->first("empresa") }}</span>
+            @endif
+         </div>
+         <div class="form-group col-md-4 @if($errors->has('direccion')) has-error @endif">
+            <label for="direccion-field">Direccion</label>
+            {!! Form::text("direccion", null, array("class" => "form-control", "id" => "direccion-field")) !!}
+            @if($errors->has("direccion"))
+             <span class="help-block">{{ $errors->first("direccion") }}</span>
+            @endif
+         </div>
+         <div class="form-group col-md-4 @if($errors->has('jefe_directo_trabajo')) has-error @endif">
+            <label for="jefe_directo_trabajo-field">Jefe Directo</label>
+            {!! Form::text("jefe_directo_trabajo", null, array("class" => "form-control", "id" => "jefe_directo_trabajo-field")) !!}
+            @if($errors->has("jefe_directo_trabajo"))
+             <span class="help-block">{{ $errors->first("jefe_directo_trabajo") }}</span>
+            @endif
+         </div>
+         <div class="form-group col-md-4 @if($errors->has('tel_fijo_trabajo')) has-error @endif">
+            <label for="tel_fijo_trabajo-field">Tel. fijo</label>
+            {!! Form::text("tel_fijo_trabajo", null, array("class" => "form-control", "id" => "tel_fijo_trabajo-field")) !!}
+            @if($errors->has("tel_fijo_trabajo"))
+             <span class="help-block">{{ $errors->first("tel_fijo_trabajo") }}</span>
+            @endif
+         </div>
+         <div class="form-group col-md-4 @if($errors->has('puesto_trabajo')) has-error @endif">
+            <label for="puesto-field">Puesto</label>
+            {!! Form::text("puesto", null, array("class" => "form-control", "id" => "puesto-field")) !!}
+            @if($errors->has("puesto"))
+             <span class="help-block">{{ $errors->first("puesto") }}</span>
+            @endif
+         </div>
+         <div class="form-group col-md-4 @if($errors->has('puesto_trabajo')) has-error @endif">
+            <label for="puesto-field">Puesto</label>
+            {!! Form::text("puesto", null, array("class" => "form-control", "id" => "puesto-field")) !!}
+            @if($errors->has("puesto"))
+             <span class="help-block">{{ $errors->first("puesto") }}</span>
+            @endif
+         </div>
+         <div class="form-group col-md-4 @if($errors->has('sueldo_id')) has-error @endif">
+            <label for="sueldo_id-field">Sueldo</label>
+            {!! Form::select("sueldo_id", $list["Sueldo"], null, array("class" => "form-control select_seguridad", "id" => "sueldo_id-field", 'style'=>'width:100%')) !!}
+            @if($errors->has("sueldo_id"))
+            <span class="help-block">{{ $errors->first("sueldo_id") }}</span>
+            @endif
+        </div>
+        <div class="form-group col-md-4 @if($errors->has('empresas_interes')) has-error @endif" style="clear:left;">
+            <label for="empresas_interes-field">Empresas de interes</label>
+            {!! Form::text("empresas_interes", null, array("class" => "form-control", "id" => "empresas_intereso-field")) !!}
+            @if($errors->has("empresas_interes"))
+             <span class="help-block">{{ $errors->first("empresas_interes") }}</span>
+            @endif
+         </div>
+         <div class="form-group col-md-4 @if($errors->has('areas_interes')) has-error @endif">
+            <label for="areas_interes-field">Areas de interes</label>
+            {!! Form::text("areas_interes", null, array("class" => "form-control", "id" => "areas_intereso-field")) !!}
+            @if($errors->has("areas_interes"))
+             <span class="help-block">{{ $errors->first("areas_interes") }}</span>
+            @endif
+         </div>
+    </div>
+</div>
+@endif
 
 @permission('vinculacion.controlCargaDocumentos')        
 

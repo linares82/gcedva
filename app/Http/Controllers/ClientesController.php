@@ -1600,6 +1600,7 @@ class ClientesController extends Controller
                 $cliente=Cliente::find($cliente_id);
                 $documentos=PivotDocCliente::join('doc_alumnos as da','da.id','pivot_doc_clientes.doc_alumno_id')
                 ->where('cliente_id',$cliente_id)->where('doc_obligatorio', 1)->get();
+                $total_doc_obligatorios=DocAlumno::select('doc_obligatorio')->where('doc_obligatorio',1)->count();
                 //dd($documentos);
                 $documentos_total=0;
                 $documentos_entregados=0;
@@ -1611,7 +1612,7 @@ class ClientesController extends Controller
                         $documentos_entregados++;
                     }
                 }
-                if($documentos_entregados==$documentos_total){
+                if($total_doc_obligatorios==$documentos_total){
                     $cliente->bnd_doc_oblig_entregados=1;
                     $cliente->save();
                 }else{
@@ -2122,9 +2123,28 @@ class ClientesController extends Controller
         $datos = $request->all();
         $cliente = Cliente::find($datos['cliente_id']);
         $combinacion = CombinacionCliente::where('cliente_id', $cliente->id)->first();
-        $documentos=PivotDocCliente::join('doc_alumnos as da','da.id','pivot_doc_clientes.doc_alumno_id')
-                ->where('cliente_id',$cliente->id)->get();
-        return view('clientes.reportes.formatoInscripcion', compact('cliente', 'combinacion','documentos'));
+        $lista_documentos=DocAlumno::get();
+        $documentos_entregados=PivotDocCliente::where('cliente_id',$cliente->id)
+                ->wherenotNull('archivo')
+                ->wherenull('deleted_at')->get();
+                
+        $lista_mostrar=array();
+        //dd($documentos_entregados->toArray());
+        foreach($lista_documentos as $ld){
+            $item['documento']=$ld->name;
+            $item['obligatorio']=($ld->doc_obligatorio==1 ? "SI" : "NO");
+            foreach($documentos_entregados as $de){
+                if($de->doc_alumno_id==$ld->id){
+                    $item['archivo']=$de->archivo;
+                }
+            }
+            array_push($lista_mostrar, $item);
+            $item['archivo']=null;
+        }
+        
+        //dd($lista_mostrar);
+        
+        return view('clientes.reportes.formatoInscripcion', compact('cliente', 'combinacion','lista_mostrar'));
     }
 
     public function alumnosConceptoPlaneado(){
@@ -2596,7 +2616,7 @@ class ClientesController extends Controller
                 $filtrado->where('updated_at','>',$filtros['q']['clientes_updated_at_mayorq']);
             }
         }
-        $clientes=$filtrado->paginate(20);
+        $clientes=$filtrado->orderBy('id','desc')->paginate(20);
         
         $users = User::pluck('name', 'id');
         $users->prepend('Seleccionar opción', 0);
@@ -2657,11 +2677,13 @@ class ClientesController extends Controller
             ->join('doc_alumnos as da','da.id','pivot_doc_clientes.doc_alumno_id')
             ->where('cliente_id', $cliente->id)
             ->whereNull('pivot_doc_clientes.deleted_at')
+            ->whereNotNull('pivot_doc_clientes.archivo')
             ->where('doc_obligatorio',1)
             ->get();
             $totalDocsPorCliente = PivotDocCliente::select('doc_alumno_id')
             ->join('doc_alumnos as da','da.id','pivot_doc_clientes.doc_alumno_id')
             ->whereNull('pivot_doc_clientes.deleted_at')
+            ->whereNotNull('pivot_doc_clientes.archivo')
             ->where('cliente_id', $cliente->id)
             ->where('doc_obligatorio',1)
             ->count();

@@ -1,4 +1,18 @@
-                <div class="form-group col-md-4 @if($errors->has('razon_social')) has-error @endif">
+<div class="form-group col-md-4 @if($errors->has('plantel_id')) has-error @endif">
+   <label for="plantel_id-field">Plantel</label>
+   {!! Form::select("plantel_id", $plantels, null, array("class" => "form-control select_seguridad", "id" => "plantel_id-field")) !!}
+   @if($errors->has("plantel_id"))
+   <span class="help-block">{{ $errors->first("plantel_id") }}</span>
+   @endif
+</div>
+<div class="form-group col-md-4 @if($errors->has('sucursal')) has-error @endif">
+   <label for="sucursal-field">Sucursal</label>
+   {!! Form::text("sucursal", null, array("class" => "form-control", "id" => "sucursal-field")) !!}
+   @if($errors->has("sucursal"))
+    <span class="help-block">{{ $errors->first("sucursal") }}</span>
+   @endif
+</div>
+                     <div class="form-group col-md-4 @if($errors->has('razon_social')) has-error @endif">
                        <label for="razon_social-field">Razon Social</label>
                        {!! Form::text("razon_social", null, array("class" => "form-control", "id" => "razon_social-field")) !!}
                        @if($errors->has("razon_social"))

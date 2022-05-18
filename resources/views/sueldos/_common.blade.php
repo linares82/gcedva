@@ -1,0 +1,1 @@
+@section('sueldosAppTitle','Sueldo')

@@ -24,7 +24,7 @@ class updateEmpresasVinculacion extends FormRequest
     public function rules()
     {
         return [
-            //
+            
         ];
     }
 }
