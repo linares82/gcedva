@@ -313,6 +313,9 @@ class EmpleadosController extends Controller
         }
         
         $input['usu_mod_id'] = Auth::user()->id;
+        if (!isset($input['bnd_recontratable'])) {
+            $input['jefe_bnd'] = 0;
+        } 
         if (!isset($input['jefe_bnd'])) {
             $input['jefe_bnd'] = 0;
         } else {

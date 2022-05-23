@@ -15,9 +15,11 @@ use App\Empleado;
 use App\StCliente;
 use Carbon\Carbon;
 use App\PromoPlanLn;
+use App\Seguimiento;
 use App\CajaConcepto;
 use App\Http\Requests;
 use App\CicloMatricula;
+use App\AsignacionTarea;
 use App\HistoriaCliente;
 use App\AutorizacionBeca;
 use Illuminate\Http\Request;
@@ -387,7 +389,7 @@ class ReportesCedvaController extends Controller
             case 5:
                 $bajas=HistoriaCliente::select('historia_clientes.id as historia_cliente','c.id as cliente_id',
                 'c.nombre','c.nombre2','c.ape_paterno','c.ape_materno','c.tel_fijo','c.tel_cel','c.calle','c.no_exterior',
-                'stc.name as st_cliente', 'historia_clientes.updated_at as fecha_baja')
+                'stc.name as st_cliente', 'historia_clientes.updated_at as fecha_baja','descripcion')
                 ->whereDate('historia_clientes.updated_at','>=',$datos['fecha_f'])
                 ->join('clientes as c','c.id','historia_clientes.cliente_id')
                 ->join('st_clientes as stc','stc.id','c.st_cliente_id')
@@ -417,6 +419,10 @@ class ReportesCedvaController extends Controller
                     ->take(1)
                     ->first();
 
+                    $tarea=AsignacionTarea::where('cliente_id',$baja->cliente_id)->orderBy('id','desc')->first();
+                    $seguimiento=Seguimiento::where('cliente_id',$baja->cliente_id)->first();
+
+
                     if(!is_null($ultimo_adeudo_pagado)){
                         array_push($registros, array('cliente_id'=>$baja->cliente_id,
                         'nombre'=>$baja->nombre,
@@ -437,8 +443,12 @@ class ReportesCedvaController extends Controller
                         'concepto'=>$ultimo_adeudo_pagado->concepto,
                         'monto'=>$ultimo_adeudo_pagado->monto,
                         'forma_pago'=>$ultimo_adeudo_pagado->forma_pago,
-                        'fecha_baja'=>$baja->fecha_baja
-                        ));    
+                        'fecha_baja'=>$baja->fecha_baja,
+                        'justificacion'=>$baja->descripcion,
+                        'ultima_tarea'=>$tarea,//->asunto,//->name." - ".optional($tarea)->detalle,
+                        'sts'=>$seguimiento->stSeguimiento->name
+                        ));  
+                        
                     }
 
                     

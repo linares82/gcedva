@@ -2260,7 +2260,309 @@ class AdeudosController extends Controller
         return view('adeudos.reportes.maestroAdeudos', compact('planteles', 'conceptos'));
     }
 
-    public function getMontoPlaneadoCalculado($adeudo, $cliente)
+    
+    //Para reporte de ejecutivo Adeudos
+    public function getMontoPlaneadoCalculadoAdeudos($adeudo, $cliente)
+    {
+        $adeudos = Adeudo::where('id', '=', $adeudo)->get();
+
+        $cliente = Cliente::find($cliente);
+
+        $subtotal = 0;
+        $recargo = 0;
+        $descuento = 0;
+        //dd($adeudos->toArray());
+
+        foreach ($adeudos as $adeudo) {
+
+            //$existe_linea = CajaLn::where('adeudo_id', '=', $adeudo->id)->first();
+            //dd($existe_linea->toArray());
+            //if (!is_object($existe_linea)) {
+            //$adeudo->caja_id = $caja->id;
+            //$adeudo->save();
+            //$caja_ln['caja_id'] = $caja->id;
+            $caja_ln['cliente'] = $cliente->id;
+            $caja_ln['caja_concepto_id'] = $adeudo->caja_concepto_id;
+            $caja_ln['subtotal'] = $adeudo->monto;
+            $caja_ln['total'] = 0;
+            $caja_ln['recargo'] = 0;
+            $caja_ln['descuento'] = 0;
+
+            //Realiza descuento para inscripciones
+            if (
+                isset(optional($adeudo->descuento)->id) and
+                ($adeudo->caja_concepto_id == 1 or $adeudo->caja_concepto_id == 23 or $adeudo->caja_concepto_id == 25)
+            ) {
+                $caja_ln['descuento'] = $caja_ln['subtotal'] * $adeudo->descuento->porcentaje;
+            } else {
+                //********************************* */
+                //Calcula descuento por beca
+                //********************************* */
+                $beca_a = 0;
+                foreach ($cliente->autorizacionBecas as $beca) {
+                    //dd(is_null($beca->deleted_at));
+                    $mesAdeudo = Carbon::createFromFormat('Y-m-d', $adeudo->fecha_pago)->month;
+                    $anioAdeudo = Carbon::createFromFormat('Y-m-d', $adeudo->fecha_pago)->year;
+                    $mesInicio = Carbon::createFromFormat('Y-m-d', $beca->lectivo->inicio)->month;
+                    $anioInicio = Carbon::createFromFormat('Y-m-d', $beca->lectivo->inicio)->year;
+                    $mesFin = Carbon::createFromFormat('Y-m-d', $beca->lectivo->fin)->month;
+                    $anioFin = Carbon::createFromFormat('Y-m-d', $beca->lectivo->fin)->year;
+
+                    //dd($anioInicio."-".$anioAdeudo."-".$mesInicio."-".$mesAdeudo."-".);
+                    //dd(($anioInicio == $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin == $anioAdeudo and $mesFin >= $mesAdeudo));
+                    //dd(($anioInicio < $anioAdeudo or $mesInicio >= $mesAdeudo) and ($anioFin >= $anioAdeudo and $mesFin <= $mesAdeudo));
+
+                    if (
+                        (($beca->lectivo->inicio <= $adeudo->fecha_pago and $beca->lectivo->fin >= $adeudo->fecha_pago) or
+                            (($anioInicio == $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin == $anioAdeudo and $mesFin >= $mesAdeudo)) or
+                            (($anioInicio == $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin > $anioAdeudo)) or
+                            (($anioInicio < $anioAdeudo) and ($anioFin == $anioAdeudo and $mesFin >= $mesAdeudo))) and
+                        $beca->aut_dueno == 4 and is_null($beca->deleted_at)
+                    ) {
+                        $beca_a = $beca->id;
+                        //dd($beca);
+                    }
+                }
+
+                $beca_autorizada = AutorizacionBeca::find($beca_a);
+                //dd($beca_autorizada);
+                if (
+                    !is_null($beca_autorizada) and
+                    $beca_autorizada->monto_mensualidad > 0 and
+                    $adeudo->cajaConcepto->bnd_mensualidad == 1 and
+                    ($adeudo->bnd_eximir_descuento_beca == 0 or is_null($adeudo->bnd_eximir_descuento_beca))
+                ) {
+                    $calculo_monto_mensualidad = $caja_ln['subtotal'] * $beca->monto_mensualidad;
+                    $caja_ln['descuento'] = $caja_ln['descuento'] + $calculo_monto_mensualidad;
+                    $caja_ln['total'] = $caja_ln['subtotal'] - $caja_ln['descuento'];
+                } else {
+                    $caja_ln['total'] = $caja_ln['subtotal'] - $caja_ln['descuento'];
+                }
+                //dd($caja_ln);
+                //********************************* */
+                //Fin Calculo descuento por beca
+                //********************************* */
+
+                //********************************* */
+                //calcula descuento segun promocion ligada a 
+                //la linea del plan considerando la fecha de pago de la
+                //inscripcion del cliente
+                //********************************* */
+                try {
+                    $promociones = PromoPlanLn::where('plan_pago_ln_id', $adeudo->plan_pago_ln_id)->get();
+                    $caja_ln['promo_plan_ln_id'] = 0;
+                    //if ($beca_a == 0 and $adeudo->bnd_eximir_descuentos == 0) {
+                    if ($adeudo->bnd_eximir_descuentos == 0 or is_null($adeudo->bnd_eximir_descuentos)) {
+                        foreach ($promociones as $promocion) {
+                            /*
+                                    $inscripcion = Adeudo::where('cliente_id', $adeudo->cliente_id)
+                                        //->where('plan_pago_ln_id',$adeudo->plan_pago_ln_id)
+                                        ->where('caja_concepto_id', 1)
+                                        ->where('combinacion_cliente_id', $adeudo->combinacion_cliente_id)
+                                        ->where('pagado_bnd', 1)
+                                        ->first();
+
+                                    //dd($inscripcion);
+                                    if (is_object($inscripcion)) {
+                                        $inicio = Carbon::createFromFormat('Y-m-d', $promocion->fec_inicio);
+                                        $fin = Carbon::createFromFormat('Y-m-d', $promocion->fec_fin);
+
+                                        $caja_inscripcion = Caja::find($inscripcion->caja_id);
+                                        //dd($caja);
+                                        $hoy = Carbon::createFromFormat('Y-m-d', $caja_inscripcion->fecha);
+                                        //dd($hoy);
+                                        $monto_promocion = 0;
+                                        //dd($hoy);
+                                        if ($inicio->lessThanOrEqualTo($hoy) and $fin->greaterThanOrEqualTo($hoy) and $caja_ln['promo_plan_ln_id'] == 0) {
+
+                                            $monto_promocion = $promocion->descuento * $caja_ln['total'];
+                                            $caja_ln['descuento'] = $caja_ln['descuento'] + $monto_promocion;
+                                            $caja_ln['total'] = $caja_ln['subtotal'] - $caja_ln['descuento'];
+
+                                            $caja_ln['promo_plan_ln_id'] = $promocion->id;
+                                        }
+                                    } else {
+                                        */
+                            $inicio = Carbon::createFromFormat('Y-m-d', $promocion->fec_inicio);
+                            $fin = Carbon::createFromFormat('Y-m-d', $promocion->fec_fin);
+                            //$hoy = Carbon::createFromFormat('Y-m-d', $caja->fecha);
+                            $hoy = Carbon::createFromFormat('Y-m-d', date('Y-m-d'));
+                            $monto_promocion = 0;
+                            //dd($hoy);
+                            if ($inicio->lessThanOrEqualTo($hoy) and $fin->greaterThanOrEqualTo($hoy) and $caja_ln['promo_plan_ln_id'] == 0) {
+
+                                $monto_promocion = $promocion->descuento * $caja_ln['total'];
+                                $caja_ln['descuento'] = $caja_ln['descuento'] + $monto_promocion;
+                                $caja_ln['total'] = $caja_ln['subtotal'] - $caja_ln['descuento'];
+
+                                $caja_ln['promo_plan_ln_id'] = $promocion->id;
+                            }
+                            //}
+                        }
+                    } else {
+                        //$caja_ln['total'] = $caja_ln['subtotal'] - $caja_ln['descuento'];
+                    }
+                } catch (Exception $e) {
+                    dd($e);
+                }
+                //********************************* */
+                //Fin calculo descuento por promocion
+                //********************************* */    
+
+
+                //********************************* */
+                //Calcula regla descuento recargo
+                //********************************* */
+                $regla_recargo = 0;
+                $regla_descuento = 0;
+                //dd($caja_ln);
+                //dd($adeudo->planPagoLn->reglaRecargos->toArray());
+                //Log::info("Adeudo-".$adeudo->id);
+                //Log::info("linea plan pago-".$adeudo->planPagoLn->id);
+                //$planPagoLn=PlanPagoLn::whereNull('deleted_at')->where('id',$adeudo->plan_pago_ln_id)->first();
+                //$reglas=ReglaRecargo::whereNull('deleted_at')->where('')
+                //$adeudo->planPagoLn->whereNull('plan_pago_lns.deleted_at')->get();
+                $reglas = optional($adeudo->planPagoLn)->reglaRecargos;
+                if (is_null($reglas)) {
+                    //dd($reglas);
+                }
+                if (!is_null($reglas)) {
+                    foreach ($reglas as $regla) {
+                        if (($adeudo->bnd_eximir_descuento_regla == 0 or is_null($adeudo->bnd_eximir_descuento_regla)) and $adeudo->cajaConcepto->bnd_mensualidad == 1) {
+                            //dd($adeudo->planPagoLn->reglaRecargos->toArray());
+                            //$fecha_caja = Carbon::createFromFormat('Y-m-d', $caja->fecha);
+                            $fecha_caja = Carbon::createFromFormat('Y-m-d', date('Y-m-d'));
+                            $fecha_adeudo = Carbon::createFromFormat('Y-m-d', $adeudo->fecha_pago);
+                            //dd($fecha_caja->greaterThanOrEqualTo($fecha_adeudo));
+                            if ($fecha_caja->greaterThanOrEqualTo($fecha_adeudo)) {
+
+                                $dias = $fecha_caja->diffInDays($fecha_adeudo);
+                                if ($fecha_caja < $fecha_adeudo) {
+                                    $dias = $dias * -1;
+                                }
+                                //dd($dias);
+
+                                //calcula recargo o descuento segun regla y aplica
+                                if ($dias >= $regla->dia_inicio and $dias <= $regla->dia_fin) {
+                                    if ($regla->tipo_regla_id == 1) {
+                                        //dd($regla->porcentaje);
+
+                                        if ($regla->porcentaje > 0) {
+                                            //dd($regla->porcentaje);
+                                            $regla_recargo = $caja_ln['subtotal'] * $regla->porcentaje;
+                                            $caja_ln['recargo'] = $caja_ln['recargo'] + $regla_recargo;
+                                            //$caja_ln['recargo'] = $adeudo->monto * $regla->porcentaje;
+                                            //echo $caja_ln['recargo'];
+                                        } else {
+                                            if ($adeudo->bnd_eximir_descuento_regla == 0) {
+                                                $regla_descuento = $caja_ln['total'] * $regla->porcentaje * -1;
+                                                $caja_ln['descuento'] = $caja_ln['descuento'] + $regla_descuento;
+                                                $caja_ln['total'] = $caja_ln['total'] - $caja_ln['descuento'];
+
+                                                //$caja_ln['descuento'] = $adeudo->monto * $regla->porcentaje * -1;
+                                                //echo $caja_ln['descuento'];
+                                            }
+                                        }
+                                    } elseif ($regla->tipo_regla_id == 2) {
+                                        //dd($regla->porcentaje);
+                                        if ($regla->monto > 0) {
+                                            $regla_recargo = $regla->monto;
+                                            $caja_ln['recargo'] = $caja_ln['recargo'] + $regla_recargo;
+                                            //$caja_ln['recargo'] = $regla->monto;
+                                        } else {
+                                            if ($adeudo->bnd_eximir_descuento_regla == 0) {
+                                                $regla_descuento = $regla->monto * -1;
+                                                $caja_ln['descuento'] = $caja_ln['descuento'] + $regla_descuento;
+                                                $caja_ln['total'] = $caja_ln['subtotal'] - $caja_ln['descuento'];
+
+                                                //$caja_ln['descuento'] = $regla->monto * -1;
+                                            }
+                                        }
+                                    }
+                                }
+                            } else {
+                                $dias = $fecha_caja->diffInDays($fecha_adeudo);
+                                if ($fecha_caja < $fecha_adeudo) {
+                                    $dias = $dias * -1;
+                                }
+                                //dd($dias);
+
+                                //calcula recargo o descuento segun regla y aplica
+                                if ($dias >= $regla->dia_inicio and $dias <= $regla->dia_fin) {
+                                    if ($regla->tipo_regla_id == 1) {
+                                        //dd($regla->porcentaje);
+
+                                        if ($regla->porcentaje > 0) {
+                                            //dd($regla->porcentaje);
+                                            $regla_recargo = $adeudo->monto * $regla->porcentaje;
+                                            $caja_ln['recargo'] = $caja_ln['recargo'] + $regla_recargo;
+                                            //$caja_ln['recargo'] = $adeudo->monto * $regla->porcentaje;
+                                            //echo $caja_ln['recargo'];
+                                        } else {
+                                            if ($adeudo->bnd_eximir_descuento_regla == 0) {
+                                                $regla_descuento = $caja_ln['subtotal'] * $regla->porcentaje * -1;
+                                                $caja_ln['descuento'] = $caja_ln['descuento'] + $regla_descuento;
+                                                $caja_ln['total'] = $caja_ln['subtotal'] - $caja_ln['descuento'];
+
+                                                //$caja_ln['descuento'] = $adeudo->monto * $regla->porcentaje * -1;
+                                                //echo $caja_ln['descuento'];
+                                            }
+                                        }
+                                    } elseif ($regla->tipo_regla_id == 2) {
+                                        //dd($regla->porcentaje);
+                                        if ($regla->monto > 0) {
+                                            $regla_recargo = $regla->monto;
+                                            $caja_ln['recargo'] = $caja_ln['recargo'] + $regla_recargo;
+                                            //$caja_ln['recargo'] = $regla->monto;
+                                        } else {
+                                            if ($adeudo->bnd_eximir_descuento_regla == 0) {
+                                                $regla_descuento = $regla->monto * -1;
+                                                $caja_ln['descuento'] = $caja_ln['descuento'] + $regla_descuento;
+                                                $caja_ln['total'] = $caja_ln['subtotal'] - $caja_ln['descuento'];
+
+                                                //$caja_ln['descuento'] = $regla->monto * -1;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            //$caja_ln['total'] = $caja_ln['subtotal'] - $caja_ln['descuento'];
+                        }
+                    }
+                } //end regla recargo descuento
+                //dd($caja_ln);
+                //$caja_ln['total'] = 0;
+                //$monto_regla = $promocion->descuento * $caja_ln['total'];
+                //$caja_ln['recargo']=$caja_ln['recargo']+$regla_recargo;
+                //$caja_ln['descuento']=$caja_ln['descuento']+$regla_descuento;
+                //$caja_ln['total'] = $caja_ln['subtotal'] + $caja_ln['recargo'] - $caja_ln['descuento'];
+
+                //********************************* */
+                //Fin calculo descuento por regla 
+                //********************************* */
+
+
+                //}
+
+                //$caja_ln['total'] = $caja_ln['subtotal'] + $caja_ln['recargo'] - $caja_ln['descuento'];
+                $caja_ln['total'] = $caja_ln['subtotal'] - $caja_ln['descuento'];
+
+                $caja_ln['adeudo_id'] = $adeudo->id;
+
+                $caja_ln['subtotal'] = round($caja_ln['subtotal'], 0);
+                $caja_ln['total'] = round($caja_ln['total'], 0);
+                $caja_ln['recargo'] = round($caja_ln['recargo'], 0);
+                $caja_ln['descuento'] = round($caja_ln['descuento'], 0);
+
+                //dd($caja_ln);
+                return $caja_ln['total'];
+            }
+        }
+    }
+
+    //functioncalcula pra ejecutivo Pagos
+    public function getMontoPlaneadoCalculadoPagos($adeudo, $cliente)
     {
         $adeudos = Adeudo::where('id', '=', $adeudo)->get();
 
@@ -2544,6 +2846,7 @@ class AdeudosController extends Controller
                 //}
 
                 $caja_ln['total'] = $caja_ln['subtotal'] + $caja_ln['recargo'] - $caja_ln['descuento'];
+                
 
                 $caja_ln['adeudo_id'] = $adeudo->id;
 
@@ -2653,7 +2956,8 @@ class AdeudosController extends Controller
 
                 ) {
                     //Armado de detalle
-                    $registro->adeudo_planeado = $this->getMontoPlaneadoCalculado($registro->adeudo, $registro->id);
+                    //Solo considera aplicacion de beca y no recargos
+                    $registro->adeudo_planeado = $this->getMontoPlaneadoCalculadoPagos($registro->adeudo, $registro->id);
                     //dd($registro);
                     array_push($lineas_detalle, $registro->toArray());
                     //dd($lineas_detalle);
@@ -3155,7 +3459,7 @@ class AdeudosController extends Controller
     
                     ) {
                         //Armado de detalle
-                        $registro->adeudo_planeado = $this->getMontoPlaneadoCalculado($registro->adeudo, $registro->id);
+                        $registro->adeudo_planeado = $this->getMontoPlaneadoCalculadoAdeudos($registro->adeudo, $registro->id);
                         //dd($registro);
                         array_push($lineas_detalle, $registro->toArray());
                         //dd($lineas_detalle);

@@ -15,6 +15,7 @@ use App\Traits\NameSolverTrait;
 use App\Empleado;
 use App\Plantel;
 use Auth;
+use Log;
 
 trait GetAllDataTrait
 {
@@ -40,6 +41,7 @@ trait GetAllDataTrait
         if ($baseTable == 'est_asistencia') {
             $baseTable = $baseTable . 's';
         }
+        //Log:info($baseTable);
 
         //(i) join relation table
 
@@ -343,11 +345,11 @@ trait GetAllDataTrait
 
         //dd(Auth::user()->can('IfiltroAvisosXempleado'));
 
-
+        
         $myQuery = $myQuery->orderBy($column, $order_dir);
 
         //(iv) get base table data
-
+        
         $myQuery = $myQuery->select([$baseTable . '.*']);
 
         //(v) pagenate

@@ -56,7 +56,7 @@
 <table border="0" width="100%" >
             <td border="0" align="center"  >
                 <h3>
-                    Maestro Ejecutivo Pagos
+                    Maestro Ejecutivo Adeudos
                 </h3>
             </td>
 </table>

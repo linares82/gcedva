@@ -82,6 +82,10 @@
                 <th>F. Creacion Pago</th>
                 <th>F. Pago</th>
                 <th>F. Baja</th>
+                <th>Justificacion</th>
+                <th>Seguimiento T.</th>
+                <th>Estatus Seguimiento</th>
+
             </tr>
         </thead>
         <tbody>
@@ -115,6 +119,13 @@
                 <td>{{$detalle['fecha_creacion']}}</td>
                 <td>{{$detalle['fecha_pago']}}</td>
                 <td>{{$detalle['fecha_baja']}}</td>
+                <td>{{$detalle['justificacion']}}</td>
+                <td>
+                    @if(!is_null($detalle['ultima_tarea']))
+                    {{$detalle['ultima_tarea']->asunto->name}} {{$detalle['ultima_tarea']->detalle}}
+                    @endif
+                </td>
+                <td>{{$detalle['sts']}}</td>
                 </tr>
                 
                 

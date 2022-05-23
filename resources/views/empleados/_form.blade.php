@@ -316,7 +316,20 @@
                             <span class="help-block">{{ $errors->first("dias_alerta") }}</span>
                           @endif
                         </div>
-
+                        <div class="form-group col-md-1 @if($errors->has('bnd_recontratable')) has-error @endif">
+                          <label for="bnd_recontratable-field">Es Recontratable?</label>
+                          {!! Form::checkbox("bnd_recontratable", 1, null, [ "id" => "bnd_recontratable-field"]) !!}
+                          @if($errors->has("bnd_recontratable"))
+                            <span class="help-block">{{ $errors->first("bnd_recontratable") }}</span>
+                          @endif
+                        </div>
+                        <div class="form-group col-md-11 @if($errors->has('just_recontratable')) has-error @endif">
+                          <label for="just_recontratable-field">Justificacion</label>
+                          {!! Form::text("just_recontratable", null, array("class" => "form-control input-sm", "id" => "just_recontratable-field")) !!}
+                          @if($errors->has("just_recontratable"))
+                            <span class="help-block">{{ $errors->first("just_recontratable") }}</span>
+                          @endif
+                        </div>
                       
                       </div>
                     </div>

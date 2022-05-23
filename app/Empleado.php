@@ -33,7 +33,8 @@ class Empleado extends Model
 		'dias_alerta', 'resp_alerta_id', 'fin_contrato', 'extranjero_bnd', 'genero', 'alimenticia_bnd',
 		'tipo_contrato_id', 'fec_nacimiento', 'estado_nacimiento_id', 'pais_nacimiento', 'nivel_estudio_id',
 		'profesion', 'cedula', 'anios_servicio_escuela', 'fec_inicio_experiencia_academicas', 'profordems',
-		'contacto_emergencia','tel_emergencia', 'parentesco','fec_ingreso'
+		'contacto_emergencia','tel_emergencia', 'parentesco','fec_ingreso','bnd_recontratable',
+		'just_recontratable'
 	];
 
 	public function usu_alta()

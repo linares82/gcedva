@@ -412,7 +412,7 @@ class FacturaGeneralsController extends Controller
 				'Exportacion' => '01',
 				'Total' => $facturaGeneral->total,
 				'FormaPago' => '01',
-				'MetodoPago' => 'PUE',
+				//'MetodoPago' => 'PUE',
 				'CondicionesDePago' => 'CONTADO',
 				'Certificado' => '',
 				'Sello' => ''
@@ -604,7 +604,7 @@ class FacturaGeneralsController extends Controller
 		$objetoXML->writeAttribute("Folio", $comprobante["Folio"]);
 		$objetoXML->writeAttribute("Fecha", $fecha_solicitud_factura_service);
 		$objetoXML->writeAttribute("FormaPago", $comprobante["FormaPago"]);
-		$objetoXML->writeAttribute("CondicionesDePago", $comprobante["CondicionesDePago"]);
+		//$objetoXML->writeAttribute("CondicionesDePago", $comprobante["CondicionesDePago"]);
 		$objetoXML->writeAttribute("TipoDeComprobante", $comprobante["TipoDeComprobante"]);
 		$objetoXML->writeAttribute("Moneda", $comprobante["Moneda"]);
 		$objetoXML->writeAttribute("LugarExpedicion", $comprobante["LugarExpedicion"]);

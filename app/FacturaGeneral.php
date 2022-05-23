@@ -11,6 +11,7 @@ class FacturaGeneral extends Model
 {
     use RelationManagerTrait,GetAllDataTrait;
     use SoftDeletes;
+	
 
     public function __construct(array $attributes = array())
     {
