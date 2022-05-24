@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class CuentasEfectivoPlantel extends Model
 {
     use RelationManagerTrait,GetAllDataTrait;
-    use SoftDeletes;
+    //use SoftDeletes;
 
     public function __construct(array $attributes = array())
     {

@@ -6,8 +6,8 @@
 
 	<ol class="breadcrumb">
 	    <li><a href="{{ route('home') }}"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></a></li>
-	    <li><a href="{{ route('consultaCalificacions.index') }}">@yield('consultaCalificacionsAppTitle')</a></li>
-	    <li><a href="{{ route('consultaCalificacions.show', $consultaCalificacion->id) }}">{{ $consultaCalificacion->id }}</a></li>
+	    
+	    
 	    <li class="active">Editar</li>
 	</ol>
 
@@ -24,14 +24,14 @@
 
             {!! Form::model($consultaCalificacion, array('route' => array('consultaCalificacions.update', $consultaCalificacion->id),'method' => 'post')) !!}
 
-@include('consultaCalificacions._form')
+@include('consultaCalificacions._form_update')
 
                 <div class="row">
                 </div>
 
                 <div class="well well-sm">
                     <button type="submit" class="btn btn-primary">Guardar</button>
-                    <a class="btn btn-link pull-right" href="{{ route('consultaCalificacions.index') }}"><i class="glyphicon glyphicon-backward"></i>  Regresar</a>
+                    <a class="btn btn-link pull-right" href="{{ route('clientes.edit', $cliente->id) }}"><i class="glyphicon glyphicon-backward"></i>  Regresar</a>
                 </div>
             {!! Form::close() !!}
 

@@ -6,7 +6,7 @@
 
 	<ol class="breadcrumb">
 		<li><a href="{{ route('home') }}"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></a></li>
-	    <li><a href="{{ route('consultaCalificacions.index') }}">@yield('consultaCalificacionsAppTitle')</a></li>
+	    
 	    <li class="active">Crear</li>
 	</ol>
 
@@ -23,13 +23,13 @@
 
             {!! Form::open(array('route' => 'consultaCalificacions.store')) !!}
 
-@include('consultaCalificacions._form')
+@include('consultaCalificacions._form_create')
 
                 <div class="row">
                 </div>
                 <div class="well well-sm">
                     <button type="submit" class="btn btn-primary">Crear</button>
-                    <a class="btn btn-link pull-right" href="{{ route('consultaCalificacions.index') }}"><i class="glyphicon glyphicon-backward"></i> Regresar</a>
+                    <a class="btn btn-link pull-right" href="{{ route('clientes.edit', 6) }}"><i class="glyphicon glyphicon-backward"></i> Regresar</a>
                 </div>
             {!! Form::close() !!}
 

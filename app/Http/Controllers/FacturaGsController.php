@@ -6,21 +6,23 @@ use Log;
 use Auth;
 
 use App\Param;
+use XMLWriter;
+use App\Plantel;
 use App\FacturaG;
 use Carbon\Carbon;
 use App\FacturaGLinea;
 use App\Http\Requests;
+use GuzzleHttp\Client;
 use App\CuentasEfectivo;
 use Illuminate\Http\Request;
+use App\CuentasEfectivoPlantel;
+
 use App\Http\Controllers\Controller;
 use App\Http\Requests\createFacturaG;
+
 use App\Http\Requests\updateFacturaG;
 use Illuminate\Support\Facades\Storage;
-
 use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\Client;
-
-use XMLWriter;
 
 class FacturaGsController extends Controller
 {
@@ -252,15 +254,23 @@ class FacturaGsController extends Controller
 	{
 		$datos = $request->all();
 		if ($request->ajax()) {
-			$matriz = CuentasEfectivo::find($datos['cuenta'])
-				->join('cuentas_efectivo_plantels as cep', 'cep.cuentas_efectivo_id', 'cuentas_efectivos.id')
-				->join('plantels as p', 'p.id', 'cep.plantel_id')
+			$plantel = CuentasEfectivoPlantel::where('cuentas_efectivo_id',$datos['cuenta'])
+				->join('plantels as p', 'p.id', 'cuentas_efectivo_plantels.plantel_id')
 				->join('plantels as matriz', 'matriz.id', 'p.matriz_id')
-				->select('matriz.*')
+				->select('cuentas_efectivo_plantels.cuentas_efectivo_id', 'p.id as plantel', 'p.matriz_id')
 				->distinct()
 				->first();
+				$matriz=Plantel::find($plantel->matriz_id);
+			//dd($matriz->toArray());
 
-			return $matriz;
+			return json_encode(array(
+				'plantel_id'=>$plantel->plantel,
+				'matriz_id'=>$plantel->matriz_id,
+				'lugar_expedicion'=>$matriz->cp,
+				'emisor_nombre'=>$matriz->nombre_corto,
+				'emisor_rfc'=>$matriz->rfc,
+				'emisor_regimen_fiscal'=>$matriz->regimen_fiscal,
+			));
 		}
 	}
 

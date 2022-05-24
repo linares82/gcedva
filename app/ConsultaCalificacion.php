@@ -18,7 +18,7 @@ class ConsultaCalificacion extends Model
 	}
 
 	//Mass Assignment
-	protected $fillable = ['matricula', 'materia', 'codigo', 'creditos', 'lectivo', 'calificacion', 'tipo_calificacion', 'usu_alta_id', 'usu_mod_id', 'grupo'];
+	protected $fillable = ['matricula','periodo_escolar', 'materia', 'codigo', 'creditos', 'lectivo', 'calificacion', 'tipo_examen', 'grupo', 'usu_alta_id', 'usu_mod_id', 'grupo'];
 
 	public function usu_alta()
 	{

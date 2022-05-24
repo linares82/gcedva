@@ -3,6 +3,7 @@
                        {!! Form::select("cuentas_efectivo_id", $cuentas, null, array("class" => "form-control select_seguridad", "id" => "cuentas_efectivo_id-field")) !!}
                        {!! Form::hidden("plantel_id", null, array("class" => "form-control", "id" => "plantel_id-field")) !!}
                        <div id="loading" style="display: none">Buscando...</div>
+                       <div id="msj"></div>
                        @if($errors->has("cuentas_efectivo_id"))
                         <span class="help-block">{{ $errors->first("cuentas_efectivo_id") }}</span>
                        @endif
@@ -114,7 +115,7 @@
                     <script>
                       $(document).ready(function() {
                         getPlantel();
-                        $('#cuenta_efectivo_id-field').change(function(){
+                        $('#cuentas_efectivo_id-field').change(function(){
                             getPlantel();
                         });
                         function getPlantel(){
@@ -122,17 +123,19 @@
                                     url: '{{ route("facturaGs.getPlantel") }}',
                                     type: 'GET',
                                     data: 
-                                       'cuenta='+$('#cuenta_efectivo_id-field selected:option').val()
+                                       'cuenta='+$('#cuentas_efectivo_id-field option:selected').val()
                                     ,
                                     dataType: 'json',
                                     beforeSend : function(){$("#loading").show();},
                                     complete : function(){$("#loading").hide();},
                                     success: function(data){
-                                       $('#plantel_id-field').val(data.id);
-                                        $('#lugar_expedicion-field').val(data.cp);
-                                        $('#emisor_rfc-field').val(data.rfc);
-                                        $('#emisor_nombre-field').val(data.nombre_corto);
-                                        $('#emisor_regimen_fiscal-field').val(data.regimen_fiscal);
+                                       console.log(data)
+                                       $("#msj").html('plantel con id:'+data.plantel_id+' y matriz: '+data.matriz_id);
+                                       $('#plantel_id-field').val(data.plantel_id);
+                                        $('#lugar_expedicion-field').val(data.lugar_expedicion);
+                                        $('#emisor_rfc-field').val(data.emisor_rfc);
+                                        $('#emisor_nombre-field').val(data.emisor_nombre);
+                                        $('#emisor_regimen_fiscal-field').val(data.emisor_regimen_fiscal);
                                     }
                                 });       
                         }

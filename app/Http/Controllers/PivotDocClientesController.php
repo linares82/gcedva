@@ -150,6 +150,7 @@ class PivotDocClientesController extends Controller {
 		$documento=PivotDocCliente::find($data['documento']);
 		$documento->doc_entregado=1;
 		$documento->save();
+		$this->docObligatoriosEntregados($documento->cliente_id);
 
 		return $documento->toJson();
 	}
@@ -158,7 +159,8 @@ class PivotDocClientesController extends Controller {
 		$cliente=Cliente::find($cliente_id);
 		$documentos=PivotDocCliente::join('doc_alumnos as da','da.id','pivot_doc_clientes.doc_alumno_id')
 		->where('cliente_id',$cliente_id)->where('doc_obligatorio', 1)->get();
-		//dd($documentos);
+		$documentos_obligatorios_total=DocAlumno::where('doc_obligatorio',1)->count();
+		//dd($documentos->toArray());
 		$documentos_total=0;
 		$documentos_entregados=0;
 		foreach($documentos as $documento){
@@ -169,7 +171,8 @@ class PivotDocClientesController extends Controller {
 				$documentos_entregados++;
 			}
 		}
-		if($documentos_entregados==$documentos_total){
+		//dd("doc obligatorios ".$documentos_obligatorios_total."-- doc recibidos ".$documentos_entregados);
+		if($documentos_entregados >= $documentos_obligatorios_total){
 			$cliente->bnd_doc_oblig_entregados=1;
 			$cliente->save();
 		}else{

@@ -1189,18 +1189,32 @@
                             <a aria-controls="collapseOne" aria-expanded="true" href="#collapseOne" data-parent="#accordion" data-toggle="collapse" role="button">
                                 <span aria-hidden="true" class="glyphicon glyphicon-search"></span> Historia Sistema Anterior
                             </a>
+                            @permission('consultaCalificacions.create')
+                            <a class="btn btn-success btn-xs pull-right" href="{{ route('consultaCalificacions.create',array('cliente'=>$cliente->id)) }}" target="_blank"><i class="glyphicon glyphicon-plus"></i> Crear</a>
+                            @endpermission
                             </h4>
                         </div>
                         <div aria-labelledby="headingOne" role="tabpanel" class="panel-collapse collapse" id="collapseOne">
                             <div class="panel-body">
                                 <table class="table table-condensed table-striped">
                                     <head>
+                                        <th>
+                                            
+                                        </th>
                                     <th>Periodo Escolar</th><th>Asignatura</th><th>Clave</th><th>Creditos</th><th>Periodo</th><th>Calificacion</th>
                                     <th>Estado</th>
                                     </head>
                                     <body>
                                     @foreach($historia as $registro)
                                         <tr>
+                                            <td>
+                                                @permission('consultaCalificacions.edit')
+                                                <a class="btn btn-xs btn-warning" href="{{ route('consultaCalificacions.edit', array('id'=>$registro->id, 'cliente'=>$cliente->id)) }}" target="_blank"><i class="glyphicon glyphicon-edit"></i> Editar</a>
+                                                @endpermission
+                                                @permission('consultaCalificacions.destroy')
+                                                <a class="btn btn-xs btn-danger eliminar_consulta_calificacion" href="{{ route('consultaCalificacions.destroy', $registro->id) }}" onclick="return confirm('Estas seguro?')"><i class="glyphicon glyphicon-edit"></i> Eliminar</a>
+                                                @endpermission
+                                            </td>
                                             <td>{{$registro->periodo_escolar}}</td>
                                             <td>{{$registro->materia}}</td>
                                             <td>{{$registro->codigo}}</td>
@@ -2844,6 +2858,16 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                                 }); 
                             
                         });
+
+                        $(".eliminar_consulta_calificacion1").click( function(e) {
+                            e.preventDefault;
+                            var url = this.href;
+                            result=confirm('Estas seguro que deseas eliminar este registro?');
+                            if(result==true){
+                                location.href = url;
+                            }
+                        });
+                        
                         
     
 </script>
