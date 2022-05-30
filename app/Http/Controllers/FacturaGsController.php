@@ -481,7 +481,7 @@ class FacturaGsController extends Controller
 		if ($objR->success == 0) {
 			//$facturaG->error_last = $objR->data;
 			//$facturaG->save();
-			dd($objR->data);
+			dd($objR);
 		} else {
 			$facturaG->uuid = $objR->data->uuid;
 			$facturaG->xml = base64_decode($objR->data->xml);

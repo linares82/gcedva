@@ -1408,12 +1408,13 @@
                         <table class="table table-condensed table-striped">
                             <thead>
                                 <tr>
-                                    <th>Documentos</th><th>Recibido</th><th>Obligatorio</th><th>Link</th><th></th>
+                                    <th>Subido por</th><th>Documentos</th><th>Recibido</th><th>Obligatorio</th><th>Link</th><th></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach($cliente->pivotDocCliente as $doc)
                                 <tr>
+                                    <td>{{ $doc->usu_alta->name }}</td>
                                     <td>
                                         {{$doc->docAlumno->name}}
                                     </td>

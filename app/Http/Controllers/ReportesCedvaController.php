@@ -32,13 +32,13 @@ class ReportesCedvaController extends Controller
         $reportes = array(1 => 'Activos', 2 => 'Adeudos', 3 => 'Pagados', 4 => 'Inscritos Por Ciclo', 5 => 'Pagos con Baja');
         $empleado = Empleado::where('user_id', Auth::user()->id)->first();
         $planteles = $empleado->plantels->pluck('razon', 'id');
-        $estatus = array('0' => 'Todos', '1' => 'Vigente', '2'=>"Baja");
+        $estatus = array('0' => 'Todos', '1' => 'Vigente', '2' => "Baja");
         $pagos = array('0' => 'Todos', '1' => 'Pagado', '2' => 'Pendiente');
         $caja_conceptos = CajaConcepto::pluck('name', 'id');
         $caja_conceptos->prepend('Todos');
-        $ciclos=CicloMatricula::pluck('name','id');
+        $ciclos = CicloMatricula::pluck('name', 'id');
         //dd($caja_conceptos);
-        return view('reportesCedva.varios', compact('reportes', 'planteles', 'estatus', 'pagos', 'caja_conceptos','ciclos'));
+        return view('reportesCedva.varios', compact('reportes', 'planteles', 'estatus', 'pagos', 'caja_conceptos', 'ciclos'));
     }
 
     public function reportesCedvaR(Request $request)
@@ -46,86 +46,282 @@ class ReportesCedvaController extends Controller
         $datos = $request->all();
         //dd($datos);
         $estatus = array();
-        if($datos['estatus_f']==0){
-            $estatus=StCliente::pluck('id');
-        }elseif($datos['estatus_f']==1){
-            $estatus=array(4,20,22,25,26);
-        }elseif($datos['estatus_f']==2){
-            $estatus=array('3', '27','28');
+        if ($datos['estatus_f'] == 0) {
+            $estatus = StCliente::pluck('id');
+        } elseif ($datos['estatus_f'] == 1) {
+            $estatus = array(4, 20, 22, 25, 26);
+        } elseif ($datos['estatus_f'] == 2) {
+            $estatus = array('3', '27', '28');
         }
-        if($datos['pagos_f']==0){
-            $pagos=array(0,1);
-        }elseif($datos['pagos_f']==1){
-            $pagos=array(1);
-        }elseif($datos['pagos_f']==2){
-            $pagos=array(0);
+        if ($datos['pagos_f'] == 0) {
+            $pagos = array(0, 1);
+        } elseif ($datos['pagos_f'] == 1) {
+            $pagos = array(1);
+        } elseif ($datos['pagos_f'] == 2) {
+            $pagos = array(0);
         }
 
-        if(in_array(0, $datos['concepto_caja_f'])){
-            $concepto_caja=CajaConcepto::pluck('id');
-        }else{
-            $concepto_caja=$datos['concepto_caja_f'];
+        if (in_array(0, $datos['concepto_caja_f'])) {
+            $concepto_caja = CajaConcepto::pluck('id');
+        } else {
+            $concepto_caja = $datos['concepto_caja_f'];
         }
         //dd($concepto_caja);
         switch ($datos['reportes_f']) {
-            //Filtros que operan
+                //Filtros que operan
             case 1:
-                $registros = Cliente::select(
-                    'p.razon',
-                    'clientes.id as cliente',
-                    'clientes.matricula',
-                    'g.seccion',
-                    'clientes.ape_paterno',
-                    'clientes.ape_materno',
-                    'clientes.nombre',
-                    'clientes.nombre2',
-                    'stc.name as estatus_cliente',
-                    'sts.name as estatus_seguimiento',
-                    'cc.name as concepto',
-                    'caj.id as caja_id',
-                    'caj.consecutivo',
-                    'caj.fecha as fecha_caja',
-                    'caj.total as total_caja',
-                    'ad.fecha_pago',
-                    'ad.monto',
-                    'ad.pagado_bnd',
-                    'cm.name as ciclo'
-                )
-                    ->join('adeudos as ad','ad.cliente_id','=','clientes.id')
-                    ->join('plan_pago_lns as ppl','ppl.id','=','ad.plan_pago_ln_id')
-                    ->join('plan_pagos as pp','pp.id','=','ppl.plan_pago_id')
-                    ->join('ciclo_matriculas as cm','cm.id','=','pp.ciclo_matricula_id')
-                    ->leftJoin('cajas as caj','caj.id','=','ad.caja_id')
-                    ->join('caja_conceptos as cc','cc.id','=','ad.caja_concepto_id')
-                    ->join('seguimientos as s','s.cliente_id','=','clientes.id')
-                    ->join('st_clientes as stc','stc.id','=','clientes.st_cliente_id')
-                    ->join('st_seguimientos as sts','sts.id','=','s.st_seguimiento_id')
-                    ->join('plantels as p','p.id','=','clientes.plantel_id')
-                    ->join('combinacion_clientes as ccli', 'ccli.cliente_id', '=', 'clientes.id')
-                    ->join('grados as g', 'g.id', '=', 'ccli.grado_id')
-                    ->where('ccli.especialidad_id','>',0)
-                    ->where('ccli.nivel_id','>',0)
-                    ->where('ccli.grado_id','>',0)
-                    ->where('ccli.turno_id','>',0)
-                    ->whereIn('clientes.st_cliente_id',$estatus)
-                    ->whereIn('ad.pagado_bnd',$pagos)
-                    ->whereIn('clientes.plantel_id', $datos['plantel_f'])
-                    ->whereIn('ad.caja_concepto_id', $concepto_caja)
-                    ->whereIn('cm.id', $datos['ciclo_f'])
-                    //->where('clientes.matricula','like',$datos['ciclo_f'].'%')
-                    ->whereDate('ad.fecha_pago','>=',$datos['fecha_f'])
-                    ->whereDate('ad.fecha_pago','<=',$datos['fecha_t'])
-                    ->whereNull('ccli.deleted_at')
-                    ->whereNull('ad.deleted_at')
-                    ->orderBy('p.razon')
-                    ->orderBy('cm.name')
-                    ->orderBy('cc.name')
-                    ->orderBy('clientes.ape_paterno')
-                    ->orderBy('clientes.ape_materno')
-                    ->orderBy('clientes.nombre')
-                    ->orderBy('clientes.nombre')
-                    ->get();
-        
+                //Pendiente de pago
+                if ($pagos == array(0)) {
+                    $registros = Cliente::select(
+                        'p.razon',
+                        'clientes.id as cliente',
+                        'clientes.matricula',
+                        'g.seccion',
+                        'clientes.ape_paterno',
+                        'clientes.ape_materno',
+                        'clientes.nombre',
+                        'clientes.nombre2',
+                        'stc.name as estatus_cliente',
+                        'sts.name as estatus_seguimiento',
+                        'cc.name as concepto',
+                        'caj.id as caja_id',
+                        'caj.consecutivo',
+                        'caj.fecha as fecha_caja',
+                        //'pag.monto as total_caja',
+                        //'pag.deleted_at',
+                        //'pag.id as pago_id',
+                        'ad.fecha_pago',
+                        'ad.monto',
+                        'ad.pagado_bnd',
+                        'cm.name as ciclo'
+                    )
+                        ->join('adeudos as ad', 'ad.cliente_id', '=', 'clientes.id')
+                        ->join('plan_pago_lns as ppl', 'ppl.id', '=', 'ad.plan_pago_ln_id')
+                        ->join('plan_pagos as pp', 'pp.id', '=', 'ppl.plan_pago_id')
+                        ->join('ciclo_matriculas as cm', 'cm.id', '=', 'pp.ciclo_matricula_id')
+                        ->leftJoin('cajas as caj', 'caj.id', '=', 'ad.caja_id')
+                        ->join('caja_conceptos as cc', 'cc.id', '=', 'ad.caja_concepto_id')
+                        ->join('seguimientos as s', 's.cliente_id', '=', 'clientes.id')
+                        ->join('st_clientes as stc', 'stc.id', '=', 'clientes.st_cliente_id')
+                        ->join('st_seguimientos as sts', 'sts.id', '=', 's.st_seguimiento_id')
+                        ->join('plantels as p', 'p.id', '=', 'clientes.plantel_id')
+                        ->join('combinacion_clientes as ccli', 'ccli.cliente_id', '=', 'clientes.id')
+                        ->join('grados as g', 'g.id', '=', 'ccli.grado_id')
+                        //->join('pagos as pag','pag.caja_id','caj.id')
+                        //->whereNull('pag.deleted_at)
+                        ->where('ccli.especialidad_id', '>', 0)
+                        ->where('ccli.nivel_id', '>', 0)
+                        ->where('ccli.grado_id', '>', 0)
+                        ->where('ccli.turno_id', '>', 0)
+                        ->whereIn('clientes.st_cliente_id', $estatus)
+                        ->whereIn('ad.pagado_bnd', $pagos)
+                        ->whereIn('clientes.plantel_id', $datos['plantel_f'])
+                        ->whereIn('ad.caja_concepto_id', $concepto_caja)
+                        ->whereIn('cm.id', $datos['ciclo_f'])
+                        //->where('clientes.matricula','like',$datos['ciclo_f'].'%')
+                        ->whereDate('ad.fecha_pago', '>=', $datos['fecha_f'])
+                        ->whereDate('ad.fecha_pago', '<=', $datos['fecha_t'])
+                        ->whereNull('ccli.deleted_at')
+                        ->whereNull('ad.deleted_at')
+                        ->orderBy('p.razon')
+                        ->orderBy('cm.name')
+                        ->orderBy('cc.name')
+                        ->orderBy('clientes.ape_paterno')
+                        ->orderBy('clientes.ape_materno')
+                        ->orderBy('clientes.nombre')
+                        ->orderBy('clientes.nombre')
+                        ->get();
+                    //pagados
+                } elseif ($pagos == array(1)) {
+                    $registros = Cliente::select(
+                        'p.razon',
+                        'clientes.id as cliente',
+                        'clientes.matricula',
+                        'g.seccion',
+                        'clientes.ape_paterno',
+                        'clientes.ape_materno',
+                        'clientes.nombre',
+                        'clientes.nombre2',
+                        'stc.name as estatus_cliente',
+                        'sts.name as estatus_seguimiento',
+                        'cc.name as concepto',
+                        'caj.id as caja_id',
+                        'caj.consecutivo',
+                        'caj.fecha as fecha_caja',
+                        'pag.monto as total_caja',
+                        'pag.deleted_at',
+                        'pag.id as pago_id',
+                        'ad.fecha_pago',
+                        'ad.monto',
+                        'ad.pagado_bnd',
+                        'cm.name as ciclo'
+                    )
+                        ->join('adeudos as ad', 'ad.cliente_id', '=', 'clientes.id')
+                        ->join('plan_pago_lns as ppl', 'ppl.id', '=', 'ad.plan_pago_ln_id')
+                        ->join('plan_pagos as pp', 'pp.id', '=', 'ppl.plan_pago_id')
+                        ->join('ciclo_matriculas as cm', 'cm.id', '=', 'pp.ciclo_matricula_id')
+                        ->leftJoin('cajas as caj', 'caj.id', '=', 'ad.caja_id')
+                        ->join('caja_conceptos as cc', 'cc.id', '=', 'ad.caja_concepto_id')
+                        ->join('seguimientos as s', 's.cliente_id', '=', 'clientes.id')
+                        ->join('st_clientes as stc', 'stc.id', '=', 'clientes.st_cliente_id')
+                        ->join('st_seguimientos as sts', 'sts.id', '=', 's.st_seguimiento_id')
+                        ->join('plantels as p', 'p.id', '=', 'clientes.plantel_id')
+                        ->join('combinacion_clientes as ccli', 'ccli.cliente_id', '=', 'clientes.id')
+                        ->join('grados as g', 'g.id', '=', 'ccli.grado_id')
+                        ->join('pagos as pag', 'pag.caja_id', 'caj.id')
+                        //->whereNull('pag.deleted_at)
+                        ->where('ccli.especialidad_id', '>', 0)
+                        ->where('ccli.nivel_id', '>', 0)
+                        ->where('ccli.grado_id', '>', 0)
+                        ->where('ccli.turno_id', '>', 0)
+                        ->whereIn('clientes.st_cliente_id', $estatus)
+                        ->whereIn('ad.pagado_bnd', $pagos)
+                        ->whereIn('clientes.plantel_id', $datos['plantel_f'])
+                        ->whereIn('ad.caja_concepto_id', $concepto_caja)
+                        ->whereIn('cm.id', $datos['ciclo_f'])
+                        //->where('clientes.matricula','like',$datos['ciclo_f'].'%')
+                        ->whereDate('ad.fecha_pago', '>=', $datos['fecha_f'])
+                        ->whereDate('ad.fecha_pago', '<=', $datos['fecha_t'])
+                        ->whereNull('ccli.deleted_at')
+                        ->whereNull('ad.deleted_at')
+                        ->orderBy('p.razon')
+                        ->orderBy('cm.name')
+                        ->orderBy('cc.name')
+                        ->orderBy('clientes.ape_paterno')
+                        ->orderBy('clientes.ape_materno')
+                        ->orderBy('clientes.nombre')
+                        ->orderBy('clientes.nombre')
+                        ->get();
+                    //pagados y pendientes en una union
+                } else {
+                    $registros_pendientes = Cliente::select(
+                        'p.razon',
+                        'clientes.id as cliente',
+                        'clientes.matricula',
+                        'g.seccion',
+                        'clientes.ape_paterno',
+                        'clientes.ape_materno',
+                        'clientes.nombre',
+                        'clientes.nombre2',
+                        'stc.name as estatus_cliente',
+                        'sts.name as estatus_seguimiento',
+                        'cc.name as concepto',
+                        'caj.id as caja_id',
+                        'caj.consecutivo',
+                        'caj.fecha as fecha_caja',
+                        DB::raw('0 as total_caja'),
+                        DB::raw('0 as deleted_at'),
+                        DB::raw('0 as pago_id'),
+                        'ad.fecha_pago',
+                        'ad.monto',
+                        'ad.pagado_bnd',
+                        'cm.name as ciclo'
+                    )
+                        ->join('adeudos as ad', 'ad.cliente_id', '=', 'clientes.id')
+                        ->join('plan_pago_lns as ppl', 'ppl.id', '=', 'ad.plan_pago_ln_id')
+                        ->join('plan_pagos as pp', 'pp.id', '=', 'ppl.plan_pago_id')
+                        ->join('ciclo_matriculas as cm', 'cm.id', '=', 'pp.ciclo_matricula_id')
+                        ->leftJoin('cajas as caj', 'caj.id', '=', 'ad.caja_id')
+                        ->join('caja_conceptos as cc', 'cc.id', '=', 'ad.caja_concepto_id')
+                        ->join('seguimientos as s', 's.cliente_id', '=', 'clientes.id')
+                        ->join('st_clientes as stc', 'stc.id', '=', 'clientes.st_cliente_id')
+                        ->join('st_seguimientos as sts', 'sts.id', '=', 's.st_seguimiento_id')
+                        ->join('plantels as p', 'p.id', '=', 'clientes.plantel_id')
+                        ->join('combinacion_clientes as ccli', 'ccli.cliente_id', '=', 'clientes.id')
+                        ->join('grados as g', 'g.id', '=', 'ccli.grado_id')
+                        //->join('pagos as pag','pag.caja_id','caj.id')
+                        //->whereNull('pag.deleted_at)
+                        ->where('ccli.especialidad_id', '>', 0)
+                        ->where('ccli.nivel_id', '>', 0)
+                        ->where('ccli.grado_id', '>', 0)
+                        ->where('ccli.turno_id', '>', 0)
+                        ->whereIn('clientes.st_cliente_id', $estatus)
+                        ->whereIn('ad.pagado_bnd', array(0))
+                        ->whereIn('clientes.plantel_id', $datos['plantel_f'])
+                        ->whereIn('ad.caja_concepto_id', $concepto_caja)
+                        ->whereIn('cm.id', $datos['ciclo_f'])
+                        //->where('clientes.matricula','like',$datos['ciclo_f'].'%')
+                        ->whereDate('ad.fecha_pago', '>=', $datos['fecha_f'])
+                        ->whereDate('ad.fecha_pago', '<=', $datos['fecha_t'])
+                        ->whereNull('ccli.deleted_at')
+                        ->whereNull('ad.deleted_at')
+                        ->orderBy('p.razon')
+                        ->orderBy('cm.name')
+                        ->orderBy('cc.name')
+                        ->orderBy('clientes.ape_paterno')
+                        ->orderBy('clientes.ape_materno')
+                        ->orderBy('clientes.nombre')
+                        ->orderBy('clientes.nombre');
+                        //->get();
+                    //registros pagados
+                    $registros = Cliente::select(
+                        'p.razon',
+                        'clientes.id as cliente',
+                        'clientes.matricula',
+                        'g.seccion',
+                        'clientes.ape_paterno',
+                        'clientes.ape_materno',
+                        'clientes.nombre',
+                        'clientes.nombre2',
+                        'stc.name as estatus_cliente',
+                        'sts.name as estatus_seguimiento',
+                        'cc.name as concepto',
+                        'caj.id as caja_id',
+                        'caj.consecutivo',
+                        'caj.fecha as fecha_caja',
+                        'pag.monto as total_caja',
+                        'pag.deleted_at',
+                        'pag.id as pago_id',
+                        'ad.fecha_pago',
+                        'ad.monto',
+                        'ad.pagado_bnd',
+                        'cm.name as ciclo'
+                    )
+                        ->join('adeudos as ad', 'ad.cliente_id', '=', 'clientes.id')
+                        ->join('plan_pago_lns as ppl', 'ppl.id', '=', 'ad.plan_pago_ln_id')
+                        ->join('plan_pagos as pp', 'pp.id', '=', 'ppl.plan_pago_id')
+                        ->join('ciclo_matriculas as cm', 'cm.id', '=', 'pp.ciclo_matricula_id')
+                        ->leftJoin('cajas as caj', 'caj.id', '=', 'ad.caja_id')
+                        ->join('caja_conceptos as cc', 'cc.id', '=', 'ad.caja_concepto_id')
+                        ->join('seguimientos as s', 's.cliente_id', '=', 'clientes.id')
+                        ->join('st_clientes as stc', 'stc.id', '=', 'clientes.st_cliente_id')
+                        ->join('st_seguimientos as sts', 'sts.id', '=', 's.st_seguimiento_id')
+                        ->join('plantels as p', 'p.id', '=', 'clientes.plantel_id')
+                        ->join('combinacion_clientes as ccli', 'ccli.cliente_id', '=', 'clientes.id')
+                        ->join('grados as g', 'g.id', '=', 'ccli.grado_id')
+                        ->join('pagos as pag', 'pag.caja_id', 'caj.id')
+                        //->whereNull('pag.deleted_at)
+                        ->where('ccli.especialidad_id', '>', 0)
+                        ->where('ccli.nivel_id', '>', 0)
+                        ->where('ccli.grado_id', '>', 0)
+                        ->where('ccli.turno_id', '>', 0)
+                        ->whereIn('clientes.st_cliente_id', $estatus)
+                        ->whereIn('ad.pagado_bnd', array(1))
+                        ->whereIn('clientes.plantel_id', $datos['plantel_f'])
+                        ->whereIn('ad.caja_concepto_id', $concepto_caja)
+                        ->whereIn('cm.id', $datos['ciclo_f'])
+                        //->where('clientes.matricula','like',$datos['ciclo_f'].'%')
+                        ->whereDate('ad.fecha_pago', '>=', $datos['fecha_f'])
+                        ->whereDate('ad.fecha_pago', '<=', $datos['fecha_t'])
+                        ->whereNull('ccli.deleted_at')
+                        ->whereNull('ad.deleted_at')
+                        ->orderBy('p.razon')
+                        ->orderBy('cm.name')
+                        ->orderBy('cc.name')
+                        ->orderBy('clientes.ape_paterno')
+                        ->orderBy('clientes.ape_materno')
+                        ->orderBy('clientes.nombre')
+                        ->orderBy('clientes.nombre')
+                        ->union($registros_pendientes)
+                        ->get();
+                }
+
+
+                /*    
+		foreach($registros as $r){
+			Log::info('consecutivo'.$r->consecutivo.'pago'.$r->pago_id.'borrado'.$r->deleted_at);
+		}*/
+                //dd($registros->toArray());
                 $plantel = Plantel::find($datos['plantel_f']);
                 //dd($registros->toArray());
                 return view('reportesCedva.activos', compact('registros', 'plantel', 'datos'));
@@ -136,9 +332,9 @@ class ReportesCedvaController extends Controller
                 $lineas_detalle = array();
                 foreach ($datos['plantel_f'] as $plantel) {
                     $registros_totales = Adeudo::join('clientes as c', 'c.id', '=', 'adeudos.cliente_id')
-                        ->join('plan_pago_lns as ppl','ppl.id','=','adeudos.plan_pago_ln_id')
-                        ->join('plan_pagos as pp','pp.id','=','ppl.plan_pago_id')
-                        ->join('ciclo_matriculas as cm','cm.id','=','pp.ciclo_matricula_id')
+                        ->join('plan_pago_lns as ppl', 'ppl.id', '=', 'adeudos.plan_pago_ln_id')
+                        ->join('plan_pagos as pp', 'pp.id', '=', 'ppl.plan_pago_id')
+                        ->join('ciclo_matriculas as cm', 'cm.id', '=', 'pp.ciclo_matricula_id')
                         ->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
                         ->join('caja_conceptos as adeudo_concepto', 'adeudo_concepto.id', '=', 'adeudos.caja_concepto_id')
                         ->join('combinacion_clientes as ccli', 'ccli.id', '=', 'adeudos.combinacion_cliente_id')
@@ -201,9 +397,9 @@ class ReportesCedvaController extends Controller
                 foreach ($datos['plantel_f'] as $plantel) {
 
                     $registros_totales_aux = Adeudo::join('clientes as c', 'c.id', '=', 'adeudos.cliente_id')
-                        ->join('plan_pago_lns as ppl','ppl.id','=','adeudos.plan_pago_ln_id')
-                        ->join('plan_pagos as pp','pp.id','=','ppl.plan_pago_id')
-                        ->join('ciclo_matriculas as cm','cm.id','=','pp.ciclo_matricula_id')
+                        ->join('plan_pago_lns as ppl', 'ppl.id', '=', 'adeudos.plan_pago_ln_id')
+                        ->join('plan_pagos as pp', 'pp.id', '=', 'ppl.plan_pago_id')
+                        ->join('ciclo_matriculas as cm', 'cm.id', '=', 'pp.ciclo_matricula_id')
                         ->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
                         ->join('seguimientos as s', 's.cliente_id', '=', 'c.id')
                         ->join('st_seguimientos as sts', 'sts.id', '=', 's.st_seguimiento_id')
@@ -260,7 +456,9 @@ class ReportesCedvaController extends Controller
                         ->where('cln.adeudo_id', 0)
                         ->whereNull('cln.deleted_at')
                         ->whereNull('pag.deleted_at')
-                        //->whereIn('cc.id', $datos['concepto_caja_f'])
+                        ->whereIn('cc.id', $datos['concepto_caja_f'])
+                        ->whereDate('pag.fecha', '>=', $datos['fecha_f'])
+                        ->whereDate('pag.fecha', '<=', $datos['fecha_t'])
                         ->whereNull('p.deleted_at')
                         ->whereNull('cajas.deleted_at')
                         ->whereNull('ccli.deleted_at')
@@ -271,8 +469,10 @@ class ReportesCedvaController extends Controller
                         ->join('cajas as caj', 'caj.id', '=', 'adeudos.caja_id')
                         ->join('pagos as pag', 'pag.caja_id', '=', 'caj.id')
                         ->join('plantels as p', 'p.id', '=', 'caj.plantel_id')
-                        ->whereDate('pag.fecha', '>=', $datos['fecha_f'])
-                        ->whereDate('pag.fecha', '<=', $datos['fecha_t'])
+                        //->whereDate('pag.fecha', '>=', $datos['fecha_f'])
+                        //->whereDate('pag.fecha', '<=', $datos['fecha_t'])
+                        ->whereDate('adeudos.fecha_pago', '>=', $datos['fecha_f'])
+                        ->whereDate('adeudos.fecha_pago', '<=', $datos['fecha_t'])
                         ->join('caja_conceptos as cc', 'cc.id', '=', 'adeudos.caja_concepto_id')
                         ->where('caj.st_caja_id', 1)
                         ->whereNull('cln.deleted_at')
@@ -329,11 +529,9 @@ class ReportesCedvaController extends Controller
 
 
                     //recorrido linea de totales
-                    foreach ($registros_totales as $registro) {                            
+                    foreach ($registros_totales as $registro) {
                         array_push($lineas_detalle, $registro->toArray());
                     }
-                    
-
                 }
                 //dd($lineas_detalle);
                 return view('reportesCedva.pagados', compact('lineas_procesadas', 'pagos', 'lineas_detalle', 'datos'));
@@ -353,22 +551,22 @@ class ReportesCedvaController extends Controller
                     'cc.name as concepto',
                     'cm.name as ciclo_matricula'
                 )
-                    ->join('adeudos as a','a.cliente_id','=','clientes.id')
-                    ->join('plan_pago_lns as ppl','ppl.id','=','a.plan_pago_ln_id')
-                    ->join('plan_pagos as pp','pp.id','=','ppl.plan_pago_id')
-                    ->join('ciclo_matriculas as cm','cm.id','=','pp.ciclo_matricula_id')
-                    ->join('caja_conceptos as cc','cc.id','=','a.caja_concepto_id')
-                    ->join('seguimientos as s','s.cliente_id','=','clientes.id')
-                    ->join('st_clientes as stc','stc.id','=','clientes.st_cliente_id')
-                    ->join('plantels as p','p.id','=','clientes.plantel_id')
+                    ->join('adeudos as a', 'a.cliente_id', '=', 'clientes.id')
+                    ->join('plan_pago_lns as ppl', 'ppl.id', '=', 'a.plan_pago_ln_id')
+                    ->join('plan_pagos as pp', 'pp.id', '=', 'ppl.plan_pago_id')
+                    ->join('ciclo_matriculas as cm', 'cm.id', '=', 'pp.ciclo_matricula_id')
+                    ->join('caja_conceptos as cc', 'cc.id', '=', 'a.caja_concepto_id')
+                    ->join('seguimientos as s', 's.cliente_id', '=', 'clientes.id')
+                    ->join('st_clientes as stc', 'stc.id', '=', 'clientes.st_cliente_id')
+                    ->join('plantels as p', 'p.id', '=', 'clientes.plantel_id')
                     ->join('combinacion_clientes as ccli', 'ccli.cliente_id', '=', 'clientes.id')
                     ->join('grados as g', 'g.id', '=', 'ccli.grado_id')
-                    ->where('a.pagado_bnd',1)
+                    ->where('a.pagado_bnd', 1)
                     ->whereDate('a.fecha_pago', '>=', $datos['fecha_f'])
                     ->whereDate('a.fecha_pago', '<=', $datos['fecha_t'])
                     //->whereIn('s.st_seguimiento_id',$estatus)
                     ->whereIn('clientes.plantel_id', $datos['plantel_f'])
-                    ->whereIn('a.caja_concepto_id', array(1,23,25))
+                    ->whereIn('a.caja_concepto_id', array(1, 23, 25))
                     //->where('clientes.matricula','like',$datos['ciclo_f']."%")
                     ->whereIn('cm.id', $datos['ciclo_f'])
                     ->whereNull('ccli.deleted_at')
@@ -380,82 +578,99 @@ class ReportesCedvaController extends Controller
                     ->orderBy('clientes.nombre')
                     ->orderBy('clientes.nombre2')
                     ->get();
-                    //dd($registros->toArray());
-        
+                //dd($registros->toArray());
+
                 $plantel = Plantel::find($datos['plantel_f']);
                 //dd($registros->toArray());
                 return view('reportesCedva.inscritosPorCiclo', compact('registros', 'plantel', 'datos'));
                 break;
             case 5:
-                $bajas=HistoriaCliente::select('historia_clientes.id as historia_cliente','c.id as cliente_id',
-                'c.nombre','c.nombre2','c.ape_paterno','c.ape_materno','c.tel_fijo','c.tel_cel','c.calle','c.no_exterior',
-                'stc.name as st_cliente', 'historia_clientes.updated_at as fecha_baja','descripcion')
-                ->whereDate('historia_clientes.updated_at','>=',$datos['fecha_f'])
-                ->join('clientes as c','c.id','historia_clientes.cliente_id')
-                ->join('st_clientes as stc','stc.id','c.st_cliente_id')
-                ->whereDate('historia_clientes.updated_at','<=',$datos['fecha_t'])
-                ->where('historia_clientes.evento_cliente_id',2)
-                ->where('historia_clientes.st_historia_cliente_id',2)
-                ->where('historia_clientes.reactivado',0)
-                ->where('c.st_cliente_id',3)
-                ->get();
+                $bajas = HistoriaCliente::select(
+                    'historia_clientes.id as historia_cliente',
+                    'c.id as cliente_id',
+                    'c.nombre',
+                    'c.nombre2',
+                    'c.ape_paterno',
+                    'c.ape_materno',
+                    'c.tel_fijo',
+                    'c.tel_cel',
+                    'c.calle',
+                    'c.no_exterior',
+                    'stc.name as st_cliente',
+                    'historia_clientes.updated_at as fecha_baja',
+                    'descripcion'
+                )
+                    ->whereDate('historia_clientes.updated_at', '>=', $datos['fecha_f'])
+                    ->join('clientes as c', 'c.id', 'historia_clientes.cliente_id')
+                    ->join('st_clientes as stc', 'stc.id', 'c.st_cliente_id')
+                    ->whereDate('historia_clientes.updated_at', '<=', $datos['fecha_t'])
+                    ->where('historia_clientes.evento_cliente_id', 2)
+                    ->where('historia_clientes.st_historia_cliente_id', 2)
+                    ->where('historia_clientes.reactivado', 0)
+                    ->where('c.st_cliente_id', 3)
+                    ->get();
 
-                $registros=array();
+                $registros = array();
 
-                foreach($bajas as $baja){
-                    $ultimo_adeudo_pagado=Adeudo::select(
-                    'cln.total','p.created_at as fecha_creacion','p.fecha as fecha_pago','cajas.consecutivo','pla.razon',
-                    'cc.name as concepto','p.monto','fp.name as forma_pago')
-                    ->join('caja_conceptos as cc','cc.id','adeudos.caja_concepto_id')
-                    ->join('cajas as cajas','cajas.id','adeudos.caja_id')
-                    ->join('caja_lns as cln','cln.caja_id','cajas.id')
-                    ->join('pagos as p','p.caja_id','cajas.id')
-                    ->join('forma_pagos as fp','fp.id','p.forma_pago_id')
-                    ->join('plantels as pla','pla.id','cajas.plantel_id')
-                    ->join('historia_clientes as hc','hc.cliente_id','adeudos.cliente_id')
-                    ->where('adeudos.cliente_id',$baja->cliente_id)
-                    ->whereIn('cajas.plantel_id', $datos['plantel_f'])
-                    ->orderBy('adeudos.id','desc')
-                    ->take(1)
-                    ->first();
+                foreach ($bajas as $baja) {
+                    $ultimo_adeudo_pagado = Adeudo::select(
+                        'cln.total',
+                        'p.created_at as fecha_creacion',
+                        'p.fecha as fecha_pago',
+                        'cajas.consecutivo',
+                        'pla.razon',
+                        'cc.name as concepto',
+                        'p.monto',
+                        'fp.name as forma_pago'
+                    )
+                        ->join('caja_conceptos as cc', 'cc.id', 'adeudos.caja_concepto_id')
+                        ->join('cajas as cajas', 'cajas.id', 'adeudos.caja_id')
+                        ->join('caja_lns as cln', 'cln.caja_id', 'cajas.id')
+                        ->join('pagos as p', 'p.caja_id', 'cajas.id')
+                        ->join('forma_pagos as fp', 'fp.id', 'p.forma_pago_id')
+                        ->join('plantels as pla', 'pla.id', 'cajas.plantel_id')
+                        ->join('historia_clientes as hc', 'hc.cliente_id', 'adeudos.cliente_id')
+                        ->where('adeudos.cliente_id', $baja->cliente_id)
+                        ->whereIn('cajas.plantel_id', $datos['plantel_f'])
+                        ->orderBy('adeudos.id', 'desc')
+                        ->take(1)
+                        ->first();
 
-                    $tarea=AsignacionTarea::where('cliente_id',$baja->cliente_id)->orderBy('id','desc')->first();
-                    $seguimiento=Seguimiento::where('cliente_id',$baja->cliente_id)->first();
+                    $tarea = AsignacionTarea::where('cliente_id', $baja->cliente_id)->orderBy('id', 'desc')->first();
+                    $seguimiento = Seguimiento::where('cliente_id', $baja->cliente_id)->first();
 
 
-                    if(!is_null($ultimo_adeudo_pagado)){
-                        array_push($registros, array('cliente_id'=>$baja->cliente_id,
-                        'nombre'=>$baja->nombre,
-                        'nombre2'=>$baja->nombre2,
-                        'ape_paterno'=>$baja->ape_paterno,
-                        'ape_materno'=>$baja->ape_materno,
-                        'tel_fijo'=>$baja->tel_fijo,
-                        'tel_cel'=>$baja->tel_cel,
-                        'calle'=>$baja->calle,
-                        'no_exterior'=>$baja->no_exterior,
-                        'fecha_baja'=>$baja->fecha_baja,
-                        'st_cliente'=>$baja->st_cliente,
-                        'cln.total'=>$ultimo_adeudo_pagado->total,
-                        'fecha_creacion'=>$ultimo_adeudo_pagado->fecha_creacion,
-                        'fecha_pago'=>$ultimo_adeudo_pagado->fecha_pago,
-                        'consecutivo'=>$ultimo_adeudo_pagado->consecutivo,
-                        'razon'=>$ultimo_adeudo_pagado->razon,
-                        'concepto'=>$ultimo_adeudo_pagado->concepto,
-                        'monto'=>$ultimo_adeudo_pagado->monto,
-                        'forma_pago'=>$ultimo_adeudo_pagado->forma_pago,
-                        'fecha_baja'=>$baja->fecha_baja,
-                        'justificacion'=>$baja->descripcion,
-                        'ultima_tarea'=>$tarea,//->asunto,//->name." - ".optional($tarea)->detalle,
-                        'sts'=>$seguimiento->stSeguimiento->name
-                        ));  
-                        
+                    if (!is_null($ultimo_adeudo_pagado)) {
+                        array_push($registros, array(
+                            'cliente_id' => $baja->cliente_id,
+                            'nombre' => $baja->nombre,
+                            'nombre2' => $baja->nombre2,
+                            'ape_paterno' => $baja->ape_paterno,
+                            'ape_materno' => $baja->ape_materno,
+                            'tel_fijo' => $baja->tel_fijo,
+                            'tel_cel' => $baja->tel_cel,
+                            'calle' => $baja->calle,
+                            'no_exterior' => $baja->no_exterior,
+                            'fecha_baja' => $baja->fecha_baja,
+                            'st_cliente' => $baja->st_cliente,
+                            'cln.total' => $ultimo_adeudo_pagado->total,
+                            'fecha_creacion' => $ultimo_adeudo_pagado->fecha_creacion,
+                            'fecha_pago' => $ultimo_adeudo_pagado->fecha_pago,
+                            'consecutivo' => $ultimo_adeudo_pagado->consecutivo,
+                            'razon' => $ultimo_adeudo_pagado->razon,
+                            'concepto' => $ultimo_adeudo_pagado->concepto,
+                            'monto' => $ultimo_adeudo_pagado->monto,
+                            'forma_pago' => $ultimo_adeudo_pagado->forma_pago,
+                            'fecha_baja' => $baja->fecha_baja,
+                            'justificacion' => $baja->descripcion,
+                            'ultima_tarea' => $tarea, //->asunto,//->name." - ".optional($tarea)->detalle,
+                            'sts' => $seguimiento->stSeguimiento->name
+                        ));
                     }
-
-                    
                 }
 
                 //dd($registros);
-                               
+
 
                 /*
                 $registros=Caja::select('c.id as cliente_id','c.nombre','c.nombre2','c.ape_paterno','c.ape_materno',
@@ -485,17 +700,17 @@ class ReportesCedvaController extends Controller
                 ->groupBy()
                 ->get();
                 */
-		//dd($registros->toArray());
+                //dd($registros->toArray());
                 return view('reportesCedva.pagosBajas', compact('registros'));
                 break;
         }
     }
 
-    
+
     public function getMontoPlaneadoCalculado($adeudo, $cliente)
     {
         $adeudos = Adeudo::where('id', '=', $adeudo)->get();
-        
+
         $cliente = Cliente::find($cliente);
 
 
@@ -545,9 +760,9 @@ class ReportesCedvaController extends Controller
 
                     if (
                         (($beca->lectivo->inicio <= $adeudo->fecha_pago and $beca->lectivo->fin >= $adeudo->fecha_pago) or
-                        (($anioInicio == $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin == $anioAdeudo and $mesFin >= $mesAdeudo)) or
-                        (($anioInicio == $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin > $anioAdeudo)) or
-                        (($anioInicio < $anioAdeudo) and ($anioFin == $anioAdeudo and $mesFin >= $mesAdeudo))) and
+                            (($anioInicio == $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin == $anioAdeudo and $mesFin >= $mesAdeudo)) or
+                            (($anioInicio == $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin > $anioAdeudo)) or
+                            (($anioInicio < $anioAdeudo) and ($anioFin == $anioAdeudo and $mesFin >= $mesAdeudo))) and
                         $beca->aut_dueno == 4 and is_null($beca->deleted_at)
                     ) {
                         $beca_a = $beca->id;

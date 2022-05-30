@@ -50,6 +50,7 @@ return array(
     'AddBndEximirDescuentoToAdeudosTable' => $baseDir . '/database/migrations/2020_07_03_104152_add_bnd_eximir_descuento_to_adeudos_table.php',
     'AddBndGeneraMatriculaToCajaConceptosTable' => $baseDir . '/database/migrations/2021_09_03_081521_add_bnd_genera_matricula_to_caja_conceptos_table.php',
     'AddBndGraficaLectivosTable' => $baseDir . '/database/migrations/2018_06_19_145551_add_bnd_grafica_lectivos_table.php',
+    'AddBndInscripcionToProspectosTable' => $baseDir . '/database/migrations/2022_05_27_152629_add_bnd_inscripcion_to_prospectos_table.php',
     'AddBndLigaEnviadaToProspectosTable' => $baseDir . '/database/migrations/2021_03_11_120904_add_bnd_liga_enviada_to_prospectos_table.php',
     'AddBndManualToFacturaGeneralLineas' => $baseDir . '/database/migrations/2022_02_02_124137_add_bnd_manual_to_factura_general_lineas.php',
     'AddBndMensualidadCajaConceptosTable' => $baseDir . '/database/migrations/2019_03_25_142826_add_bnd_mensualidad_caja_conceptos_table.php',

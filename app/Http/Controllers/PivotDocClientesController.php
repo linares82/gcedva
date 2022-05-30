@@ -150,7 +150,7 @@ class PivotDocClientesController extends Controller {
 		$documento=PivotDocCliente::find($data['documento']);
 		$documento->doc_entregado=1;
 		$documento->save();
-		$this->docObligatoriosEntregados($documento->cliente_id);
+		//$this->docObligatoriosEntregados($documento->cliente_id);
 
 		return $documento->toJson();
 	}

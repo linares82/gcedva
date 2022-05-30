@@ -86,7 +86,15 @@
    <span class="help-block">{{ $errors->first("medio_id") }}</span>
    @endif
 </div>
-                    
+@permission('prospectos.inscripcion_campo')
+<div class="form-group col-md-3 @if($errors->has('bnd_inscripcion')) has-error @endif">
+   <label for="bnd_inscripcion-field">Inscripcion</label>
+   {!! Form::checkbox("bnd_inscripcion", 1, null, [ "id" => "bnd_inscripcion-field", 'class'=>'minimal']) !!}
+   @if($errors->has("bnd_inscripcion"))
+   <span class="help-block">{{ $errors->first("bnd_inscripcion") }}</span>
+   @endif
+</div>
+@endpermission
 @push('scripts')
 <script src="{{ asset ('/bower_components/AdminLTE/plugins/input-mask/jquery.inputmask.js') }}"></script>
 <script src="{{ asset ('/bower_components/AdminLTE/plugins/input-mask/jquery.inputmask.extensions.js') }}"></script>

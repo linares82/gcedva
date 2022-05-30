@@ -58,6 +58,9 @@ class ProspectosController extends Controller {
 		if(!isset($input['bnd_liga_enviada'])){
 			$input['bnd_liga_enviada']=0;
 		}
+		if(!isset($input['bnd_inscripcion'])){
+			$input['bnd_inscripcion']=0;
+		}
 
 		//create data
 		$registro=Prospecto::create( $input );
@@ -125,6 +128,9 @@ class ProspectosController extends Controller {
 		$input['usu_mod_id']=Auth::user()->id;
 		//update data
 		$prospecto=$prospecto->find($id);
+		if(!isset($input['bnd_inscripcion'])){
+			$input['bnd_inscripcion']=0;
+		}
 		$prospecto->update( $input );
 
 		return redirect()->route('prospectos.index')->with('message', 'Registro Actualizado.');

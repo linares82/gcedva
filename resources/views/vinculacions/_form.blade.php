@@ -57,11 +57,11 @@
                         <span class="help-block">{{ $errors->first("nombre_contacto") }}</span>
                        @endif
                     </div>
-                    <div class="form-group col-md-4 @if($errors->has('puesto')) has-error @endif">
-                        <label for="area-field">Puesto</label>
-                        {!! Form::text("puesto", null, array("class" => "form-control", "id" => "puesto-field")) !!}
-                        @if($errors->has("puesto"))
-                         <span class="help-block">{{ $errors->first("puesto") }}</span>
+                    <div class="form-group col-md-4 @if($errors->has('puesto_trabajo')) has-error @endif">
+                        <label for="puesto_trabajo-field">Puesto</label>
+                        {!! Form::text("puesto_trabajo", null, array("class" => "form-control", "id" => "puesto_trabajo-field")) !!}
+                        @if($errors->has("puesto_trabajo"))
+                         <span class="help-block">{{ $errors->first("puesto_trabajo") }}</span>
                         @endif
                      </div>
                     <div class="form-group col-md-4 @if($errors->has('mail_contacto')) has-error @endif">

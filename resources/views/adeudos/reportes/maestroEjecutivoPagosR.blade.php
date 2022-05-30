@@ -202,27 +202,27 @@
                 <td>{{$detalle['forma_pago']}}</td>
                 @if(!is_null($beca)) 
                 
-                @if(
-                    (($beca->lectivo->inicio <= $fecha_adeudo and $beca->lectivo->fin >= $fecha_adeudo) or
-                    (($anioInicio = $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin = $anioAdeudo and $mesFin >= $mesAdeudo)) or
-                    (($anioInicio < $anioAdeudo or $mesInicio >= $mesAdeudo) and ($anioFin >= $anioAdeudo and $mesFin >= $mesAdeudo))) and
-                    $beca->aut_dueno == 4 and
-                    is_null($beca->deleted_at)
-                )
-                <td>
-                    <!--@{{$beca->monto_mensualidad}}-->
-                    @php
-                        $caja=\App\Caja::with('pagos')->find($detalle['caja']);
-                        $suma_pagos=$caja['pagos']->sum('monto');
-                        
-                    @endphp
-                    {{ $suma_pagos }}
-                </td>
+                    @if(
+                        (($beca->lectivo->inicio <= $fecha_adeudo and $beca->lectivo->fin >= $fecha_adeudo) or
+                        (($anioInicio = $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin = $anioAdeudo and $mesFin >= $mesAdeudo)) or
+                        (($anioInicio < $anioAdeudo or $mesInicio >= $mesAdeudo) and ($anioFin >= $anioAdeudo and $mesFin >= $mesAdeudo))) and
+                        $beca->aut_dueno == 4 and
+                        is_null($beca->deleted_at)
+                    )
+                        <td>
+                            {{ number_format($beca->monto_mensualidad, 2)}}
+                            @php
+                                $caja=\App\Caja::with('pagos')->find($detalle['caja']);
+                                $suma_pagos=$caja['pagos']->sum('monto');
+                                
+                            @endphp
+                            <!--{{ $suma_pagos }}-->
+                        </td>
+                    @else
+                    <td></td>
+                    @endif
                 @else
-                <td></td>
-                @endif
-                @else
-                <td></td>
+                    <td></td>
                 @endif
                 <td>{{ $detalle['st_cliente'] }}</td>
                 </tr>
