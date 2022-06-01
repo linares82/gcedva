@@ -1,3 +1,5 @@
+@inject('cli_funciones','App\Http\Controllers\ClientesController')
+
 @extends('plantillas.admin_template')
 
 @include('hacademicas._common')
@@ -84,12 +86,15 @@
                          
                          @foreach($hacademicas as $r)
                          <tr>
+                         @php
+                             $validaEntregaDocs3Meses=$cli_funciones->validaEntregaDocs3Meses($r->id);
+                         @endphp
                          <td>{{$r->id}}</td>
                          <td>{{$r->ape_paterno." ".$r->ape_materno." ".$r->nombre." ".$r->nombre2}}</td>
                          <td>{{$r->estatus_cliente}}</td>
                          <td>
-                             @if($r->bnd_doc_oblig_entregados==1)
-                             SI
+                             @if($r->bnd_doc_oblig_entregados==1 or $validaEntregaDocs3Meses)
+                             SI o dentro de plazo valido
                              @else
                              <strong>NO</strong>
                              
@@ -118,7 +123,7 @@
                              $r->estatus_cliente_id==27 or 
                              $r->estatus_cliente_id==28)
                              @if($param_bloqueoXdoc->valor==1)
-                             @if($r->bnd_doc_oblig_entregados==1)
+                             @if($r->bnd_doc_oblig_entregados==1 or $validaEntregaDocs3Meses)
                              	@permission('hacademicas.calificacionBaja')
                                 {!! Form::number("calificacion", null, array("class" => "form-control input-sm col-md-6", 
                                 "id" => "calificacion_parcial".$r->id, 'min' => 0, 'max' =>10)) !!}
@@ -137,7 +142,7 @@
                                 
                             @else
                                 @if($param_bloqueoXdoc->valor==1)
-                                @if($r->bnd_doc_oblig_entregados==1)
+                                @if($r->bnd_doc_oblig_entregados==1 or $validaEntregaDocs3Meses)
                                 {!! Form::number("calificacion", null, array("class" => "form-control input-sm col-md-6", 
                                 "id" => "calificacion_parcial".$r->id, 'min' => 0, 'max' =>10)) !!}
                                 @endif
@@ -155,7 +160,7 @@
                                  $r->estatus_cliente_id==27 or 
                                  $r->estatus_cliente_id==28)
                             @if($param_bloqueoXdoc->valor==1)
-                             @if($r->bnd_doc_oblig_entregados==1)
+                             @if($r->bnd_doc_oblig_entregados==1 or $validaEntregaDocs3Meses)
                              	@permission('hacademicas.calificacionBaja')
                                     <button type="button"  
                                     class="btn btn-primary btn-xs btn-guardar_caificacion" 
@@ -190,7 +195,7 @@
                                 @endpermission
                              @else
                                 @if($param_bloqueoXdoc->valor==1)
-                                @if($r->bnd_doc_oblig_entregados==1)
+                                @if($r->bnd_doc_oblig_entregados==1 or $validaEntregaDocs3Meses)
                                 <button type="button"  
                                      class="btn btn-primary btn-xs btn-guardar_caificacion" 
                                      data-calificacion_ponderacion_id="{{ $r->calificacion_ponderacion_id }}"

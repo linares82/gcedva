@@ -48,8 +48,9 @@
         $plantel_adeudo_suma=0;
         @endphp
         @foreach ($registros as $registro)
+          
           @if($plantel<>"" and $ciclo<>"" and $concepto<>"")
-              @if($concepto<>$registro->concepto)
+              @if($concepto<>$registro[0]['concepto'])
               <tr>
                 <td>Totales Concepto</td><td colspan='11'>
                 </td><td>{{ number_format($planeado_suma,2) }}</td>
@@ -64,7 +65,7 @@
                   $adeudo_suma=0;
               @endphp
               @endif
-              @if($ciclo<>$registro->ciclo)
+              @if($ciclo<>$registro[0]['ciclo'])
               <tr>
                 <td>Totales Ciclo</td><td colspan='11'>
                 </td><td>{{ number_format($ciclo_planeado_suma,2) }}</td>
@@ -79,7 +80,7 @@
                   $ciclo_adeudo_suma=0;
               @endphp
               @endif
-              @if($plantel<>$registro->razon)
+              @if($plantel<>$registro[0]['razon'])
               <tr>
                 <td>Totales Plantel</td><td colspan='11'>
                 </td><td>{{ number_format($plantel_planeado_suma,2) }}</td>
@@ -98,16 +99,16 @@
               
           @endif
           <tr>
-            <td>{{ ++$csc }}</td><td>{{ $registro->razon }}</td><td>{{ $registro->ciclo }}</td><td>{{ $registro->cliente }}</td><td>{{ $registro->matricula }}</td><td>{{ $registro->seccion }}</td>
-            <td>{{ $registro->ape_paterno }} </td><td>{{ $registro->ape_materno }}</td><td>{{ $registro->nombre }} {{ $registro->nombre2 }}</td>
-            <td>{{ $registro->estatus_cliente }}</td><td>{{ $registro->estatus_seguimiento }}</td>
-            <td>{{ $registro->fecha_pago }}</td><td>{{ number_format($registro->monto,2) }}</td>
-            <td>{{ $registro->concepto }}</td><td>{{ $registro->consecutivo }}</td><td>{{ $registro->fecha_caja }}</td>
-            <td>{{ number_format($registro->total_caja,2) }}</td>
+            <td>{{ ++$csc }}</td><td>{{ $registro[0]['razon'] }}</td><td>{{ $registro[0]['ciclo'] }}</td><td>{{ $registro[0]['cliente'] }}</td><td>{{ $registro[0]['matricula'] }}</td><td>{{ $registro[0]['seccion'] }}</td>
+            <td>{{ $registro[0]['ape_paterno'] }} </td><td>{{ $registro[0]['ape_materno'] }}</td><td>{{ $registro[0]['nombre'] }} {{ $registro[0]['nombre2'] }}</td>
+            <td>{{ $registro[0]['estatus_cliente'] }}</td><td>{{ $registro[0]['estatus_seguimiento'] }}</td>
+            <td>{{ $registro[0]['fecha_pago'] }}</td><td>{{ number_format($registro[0]['monto'],2) }}</td>
+            <td>{{ $registro[0]['concepto'] }}</td><td>{{ $registro[0]['consecutivo'] }}</td><td>{{ $registro[0]['fecha_caja'] }}</td>
+            <td>{{ number_format($registro[0]['total_caja'],2) }}</td>
             <td>
               @php
-                if(is_int($registro->caja_id)){
-                  $pago=App\Pago::where('caja_id', $registro->caja_id)->first();    
+                if(is_int($registro[0]['caja_id'])){
+                  $pago=App\Pago::where('caja_id', $registro[0]['caja_id'])->first();    
                 }
                 if(!is_null($pago)){
                   echo $pago->usu_alta->name;
@@ -115,14 +116,14 @@
               @endphp
                 
             </td>
-            <td>@if($registro->pagado_bnd==1) Si @else No @endif</td>
+            <td>@if($registro[0]['pagado_bnd']==1) Si @else No @endif</td>
             <td>
-              @if($registro->pagado_bnd==0)
-              {{ number_format($registro->monto,2) }}
+              @if($registro[0]['pagado_bnd']==0)
+              {{ number_format($registro[0]['monto'],2) }}
               @php
-                $adeudo_suma=$adeudo_suma+$registro->monto;    
-                $ciclo_adeudo_suma=$ciclo_adeudo_suma+$registro->monto;    
-                $plantel_adeudo_suma=$plantel_adeudo_suma+$registro->monto;    
+                $adeudo_suma=$adeudo_suma+$registro[0]['monto'];    
+                $ciclo_adeudo_suma=$ciclo_adeudo_suma+$registro[0]['monto'];    
+                $plantel_adeudo_suma=$plantel_adeudo_suma+$registro[0]['monto'];    
               @endphp
 
               
@@ -134,20 +135,21 @@
         @php
             //$especialidad=$registro->especialidad;
             $cantidad=$cantidad+1;
-            $suma_planeada=$suma_planeada+$registro->monto;
-            $suma_caja=$suma_caja+$registro->total_caja;
-            if($registro->pagado_bnd==0){
-              $suma_adeudos=$suma_adeudos+$registro->monto;
+            $suma_planeada=$suma_planeada+$registro[0]['monto'];
+            $suma_caja=$suma_caja+$registro[0]['total_caja'];
+            if($registro[0]['pagado_bnd']==0){
+              $suma_adeudos=$suma_adeudos+$registro[0]['monto'];
             }
-            $plantel=$registro->razon;
-            $planeado_suma=$planeado_suma+$registro->monto;
-            $ciclo_planeado_suma=$ciclo_planeado_suma+$registro->monto;
-            $plantel_planeado_suma=$plantel_planeado_suma+$registro->monto;
-            $ciclo=$registro->ciclo;
-            $caja_suma=$caja_suma+$registro->total_caja;
-            $ciclo_caja_suma=$ciclo_caja_suma+$registro->total_caja;
-            $plantel_caja_suma=$plantel_caja_suma+$registro->total_caja;
-            $concepto=$registro->concepto;
+            $plantel=$registro[0]['razon'];
+            $planeado_suma=$planeado_suma+$registro[0]['monto'];
+            $ciclo_planeado_suma=$ciclo_planeado_suma+$registro[0]['monto'];
+            $plantel_planeado_suma=$plantel_planeado_suma+$registro[0]['monto'];
+            $ciclo=$registro[0]['ciclo'];
+            $caja_suma=$caja_suma+$registro[0]['total_caja'];
+            $ciclo_caja_suma=$ciclo_caja_suma+$registro[0]['total_caja'];
+            $plantel_caja_suma=$plantel_caja_suma+$registro[0]['total_caja'];
+            $concepto=$registro[0]['concepto'];
+            
             
         @endphp
         @endforeach

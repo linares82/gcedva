@@ -130,6 +130,7 @@ return array(
     'AddFecAutorizacionToHistoriaClientesTable' => $baseDir . '/database/migrations/2021_06_10_161213_add_fec_autorizacion_to_historia_clientes_table.php',
     'AddFecIngresoEmpleadosTable' => $baseDir . '/database/migrations/2022_01_31_174811_add_fec_ingreso_empleados_table.php',
     'AddFecInicioFinToDocVinculacionVinculacionsTable' => $baseDir . '/database/migrations/2022_02_28_130315_add_fec_inicio_fin_to_doc_vinculacion_vinculacions_table.php',
+    'AddFecLimiteEntregaDocsToClientesTable' => $baseDir . '/database/migrations/2022_05_30_155818_add_fec_limite_entrega_docs_to_clientes_table.php',
     'AddFecReactivadoToHistoriaClientesTable' => $baseDir . '/database/migrations/2020_10_29_084312_add_fec_reactivado_to_historia_clientes_table.php',
     'AddFecRvoeToGradosTable' => $baseDir . '/database/migrations/2020_06_30_133537_add_fec_rvoe_to_grados_table.php',
     'AddFechaFacturaToFacturaGeneralsTable' => $baseDir . '/database/migrations/2022_03_17_131417_add_fecha_factura_to_factura_generals_table.php',

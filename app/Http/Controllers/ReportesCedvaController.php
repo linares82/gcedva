@@ -47,7 +47,7 @@ class ReportesCedvaController extends Controller
         //dd($datos);
         $estatus = array();
         if ($datos['estatus_f'] == 0) {
-            $estatus = StCliente::pluck('id');
+            $estatus = StCliente::whereNotIn('id', array(19))->pluck('id');
         } elseif ($datos['estatus_f'] == 1) {
             $estatus = array(4, 20, 22, 25, 26);
         } elseif ($datos['estatus_f'] == 2) {
@@ -161,6 +161,7 @@ class ReportesCedvaController extends Controller
                         ->join('plan_pagos as pp', 'pp.id', '=', 'ppl.plan_pago_id')
                         ->join('ciclo_matriculas as cm', 'cm.id', '=', 'pp.ciclo_matricula_id')
                         ->leftJoin('cajas as caj', 'caj.id', '=', 'ad.caja_id')
+                        ->join('caja_lns as cln', 'cln.caja_id', '=', 'caj.id')
                         ->join('caja_conceptos as cc', 'cc.id', '=', 'ad.caja_concepto_id')
                         ->join('seguimientos as s', 's.cliente_id', '=', 'clientes.id')
                         ->join('st_clientes as stc', 'stc.id', '=', 'clientes.st_cliente_id')
@@ -174,6 +175,7 @@ class ReportesCedvaController extends Controller
                         ->where('ccli.nivel_id', '>', 0)
                         ->where('ccli.grado_id', '>', 0)
                         ->where('ccli.turno_id', '>', 0)
+                        //->where('clientes.id', 47884)
                         ->whereIn('clientes.st_cliente_id', $estatus)
                         ->whereIn('ad.pagado_bnd', $pagos)
                         ->whereIn('clientes.plantel_id', $datos['plantel_f'])
@@ -192,6 +194,7 @@ class ReportesCedvaController extends Controller
                         ->orderBy('clientes.nombre')
                         ->orderBy('clientes.nombre')
                         ->get();
+
                     //pagados y pendientes en una union
                 } else {
                     $registros_pendientes = Cliente::select(
@@ -252,7 +255,7 @@ class ReportesCedvaController extends Controller
                         ->orderBy('clientes.ape_materno')
                         ->orderBy('clientes.nombre')
                         ->orderBy('clientes.nombre');
-                        //->get();
+                    //->get();
                     //registros pagados
                     $registros = Cliente::select(
                         'p.razon',
@@ -269,13 +272,13 @@ class ReportesCedvaController extends Controller
                         'caj.id as caja_id',
                         'caj.consecutivo',
                         'caj.fecha as fecha_caja',
-                        'pag.monto as total_caja',
                         'pag.deleted_at',
                         'pag.id as pago_id',
                         'ad.fecha_pago',
                         'ad.monto',
                         'ad.pagado_bnd',
-                        'cm.name as ciclo'
+                        'cm.name as ciclo',
+                        'pag.monto as total_caja',
                     )
                         ->join('adeudos as ad', 'ad.cliente_id', '=', 'clientes.id')
                         ->join('plan_pago_lns as ppl', 'ppl.id', '=', 'ad.plan_pago_ln_id')
@@ -323,8 +326,34 @@ class ReportesCedvaController extends Controller
 		}*/
                 //dd($registros->toArray());
                 $plantel = Plantel::find($datos['plantel_f']);
-                //dd($registros->toArray());
-                return view('reportesCedva.activos', compact('registros', 'plantel', 'datos'));
+
+                $r = $registros->groupBy('caja_id');
+                //dd($registros);
+                $resultado2 = array();
+                foreach ($r as $registro) {
+
+                    if (count($registro) == 1) {
+                        //$resultado2->push($registro);
+                        array_push($resultado2, $registro->toArray());
+                    } else {
+                        $suma = 0;
+                        foreach ($registro as $reg) {
+                            $suma = $suma + $reg->total_caja;
+                        }
+                        $i = 0;
+                        foreach ($registro as $reg) {
+                            $i++;
+                            $reg->total_caja = $suma;
+                            if ($i == 1) {
+                                array_push($resultado2, array($reg->toArray()));
+                            }
+                        }
+                    }
+                }
+
+                
+                //dd($resultado2);
+                return view('reportesCedva.activos', array('registros'=>$resultado2, 'plantel'=>$plantel, 'datos'=>$datos));
                 break;
             case 2:
                 $hoy = Carbon::createFromFormat('Y-m-d', Date('Y-m-d'));

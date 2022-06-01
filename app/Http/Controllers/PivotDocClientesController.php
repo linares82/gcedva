@@ -1,7 +1,10 @@
-<?php namespace App\Http\Controllers;
+<?php
+
+namespace App\Http\Controllers;
 
 use Auth;
 use App\Cliente;
+use Carbon\Carbon;
 
 use App\DocAlumno;
 use App\Http\Requests;
@@ -11,7 +14,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\createPivotDocCliente;
 use App\Http\Requests\updatePivotDocCliente;
 
-class PivotDocClientesController extends Controller {
+class PivotDocClientesController extends Controller
+{
 
 	/**
 	 * Display a listing of the resource.
@@ -33,7 +37,7 @@ class PivotDocClientesController extends Controller {
 	public function create()
 	{
 		return view('pivotDocEmpleados.create')
-			->with( 'list', PivotDocEmpleado::getListFromAllRelationApps() );
+			->with('list', PivotDocEmpleado::getListFromAllRelationApps());
 	}
 
 	/**
@@ -46,11 +50,11 @@ class PivotDocClientesController extends Controller {
 	{
 
 		$input = $request->all();
-		$input['usu_alta_id']=Auth::user()->id;
-		$input['usu_mod_id']=Auth::user()->id;
+		$input['usu_alta_id'] = Auth::user()->id;
+		$input['usu_mod_id'] = Auth::user()->id;
 
 		//create data
-		PivotDocEmpleado::create( $input );
+		PivotDocEmpleado::create($input);
 
 		return redirect()->route('pivotDocEmpleados.index')->with('message', 'Registro Creado.');
 	}
@@ -63,7 +67,7 @@ class PivotDocClientesController extends Controller {
 	 */
 	public function show($id, PivotDocEmpleado $pivotDocEmpleado)
 	{
-		$pivotDocEmpleado=$pivotDocEmpleado->find($id);
+		$pivotDocEmpleado = $pivotDocEmpleado->find($id);
 		return view('pivotDocEmpleados.show', compact('pivotDocEmpleado'));
 	}
 
@@ -75,9 +79,9 @@ class PivotDocClientesController extends Controller {
 	 */
 	public function edit($id, PivotDocEmpleado $pivotDocEmpleado)
 	{
-		$pivotDocEmpleado=$pivotDocEmpleado->find($id);
+		$pivotDocEmpleado = $pivotDocEmpleado->find($id);
 		return view('pivotDocEmpleados.edit', compact('pivotDocEmpleado'))
-			->with( 'list', PivotDocEmpleado::getListFromAllRelationApps() );
+			->with('list', PivotDocEmpleado::getListFromAllRelationApps());
 	}
 
 	/**
@@ -88,9 +92,9 @@ class PivotDocClientesController extends Controller {
 	 */
 	public function duplicate($id, PivotDocEmpleado $pivotDocEmpleado)
 	{
-		$pivotDocEmpleado=$pivotDocEmpleado->find($id);
+		$pivotDocEmpleado = $pivotDocEmpleado->find($id);
 		return view('pivotDocEmpleados.duplicate', compact('pivotDocEmpleado'))
-			->with( 'list', PivotDocEmpleado::getListFromAllRelationApps() );
+			->with('list', PivotDocEmpleado::getListFromAllRelationApps());
 	}
 
 	/**
@@ -103,10 +107,10 @@ class PivotDocClientesController extends Controller {
 	public function update($id, PivotDocEmpleado $pivotDocEmpleado, updatePivotDocEmpleado $request)
 	{
 		$input = $request->all();
-		$input['usu_mod_id']=Auth::user()->id;
+		$input['usu_mod_id'] = Auth::user()->id;
 		//update data
-		$pivotDocEmpleado=$pivotDocEmpleado->find($id);
-		$pivotDocEmpleado->update( $input );
+		$pivotDocEmpleado = $pivotDocEmpleado->find($id);
+		$pivotDocEmpleado->update($input);
 
 		return redirect()->route('pivotDocEmpleados.index')->with('message', 'Registro Actualizado.');
 	}
@@ -117,10 +121,10 @@ class PivotDocClientesController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id,PivotDocCliente $pivotDocCliente)
+	public function destroy($id, PivotDocCliente $pivotDocCliente)
 	{
-		$pivotDocCliente=$pivotDocCliente->find($id);
-		$cliente=$pivotDocCliente->cliente_id;
+		$pivotDocCliente = $pivotDocCliente->find($id);
+		$cliente = $pivotDocCliente->cliente_id;
 		$pivotDocCliente->delete();
 		$this->docObligatoriosEntregados($cliente);
 
@@ -128,57 +132,60 @@ class PivotDocClientesController extends Controller {
 		return redirect()->route('clientes.edit', $cliente)->with('message', 'Registro Borrado.');
 	}
 
-	public function crearListaCheck(Request $request){
-		$datos=$request->all();
-		$documentos=DocAlumno::get();
-		foreach($documentos as $doc){
-			$buscarRegistro=PivotDocCliente::where('cliente_id', $datos['cliente_id'])->where('doc_alumno_id', $doc->id)->first();
-			if(is_null($buscarRegistro)){
-				$input['doc_alumno_id']=$doc->id;
-				$input['cliente_id']=$datos['cliente_id'];
-				$input['usu_alta_id']=Auth::user()->id;
-				$input['usu_mod_id']=Auth::user()->id;
+	public function crearListaCheck(Request $request)
+	{
+		$datos = $request->all();
+		$documentos = DocAlumno::get();
+		foreach ($documentos as $doc) {
+			$buscarRegistro = PivotDocCliente::where('cliente_id', $datos['cliente_id'])->where('doc_alumno_id', $doc->id)->first();
+			if (is_null($buscarRegistro)) {
+				$input['doc_alumno_id'] = $doc->id;
+				$input['cliente_id'] = $datos['cliente_id'];
+				$input['usu_alta_id'] = Auth::user()->id;
+				$input['usu_mod_id'] = Auth::user()->id;
 				PivotDocCliente::create($input);
 			}
 		}
 		return redirect()->route('clientes.edit', $datos['cliente_id'])->with('message', 'Registro Borrado.');
 	}
 
-	public function recibirDocumento(Request $request){
-		$data=$request->all();
+	public function recibirDocumento(Request $request)
+	{
+		$data = $request->all();
 
-		$documento=PivotDocCliente::find($data['documento']);
-		$documento->doc_entregado=1;
+		$documento = PivotDocCliente::find($data['documento']);
+		$documento->doc_entregado = 1;
 		$documento->save();
 		//$this->docObligatoriosEntregados($documento->cliente_id);
 
 		return $documento->toJson();
 	}
 
-	public function docObligatoriosEntregados($cliente_id){
-		$cliente=Cliente::find($cliente_id);
-		$documentos=PivotDocCliente::join('doc_alumnos as da','da.id','pivot_doc_clientes.doc_alumno_id')
-		->where('cliente_id',$cliente_id)->where('doc_obligatorio', 1)->get();
-		$documentos_obligatorios_total=DocAlumno::where('doc_obligatorio',1)->count();
+	public function docObligatoriosEntregados($cliente_id)
+	{
+		$cliente = Cliente::find($cliente_id);
+		$documentos = PivotDocCliente::join('doc_alumnos as da', 'da.id', 'pivot_doc_clientes.doc_alumno_id')
+			->where('cliente_id', $cliente_id)->where('doc_obligatorio', 1)->get();
+		$documentos_obligatorios_total = DocAlumno::where('doc_obligatorio', 1)->count();
 		//dd($documentos->toArray());
-		$documentos_total=0;
-		$documentos_entregados=0;
-		foreach($documentos as $documento){
-			if($documento->doc_obligatorio==1){
-				$documentos_total++;
-			}
-			if(!is_null($documento->archivo)){
+		$documentos_total = 0;
+		$documentos_entregados = 0;
+		foreach ($documentos as $documento) {
+			if (!is_null($documento->archivo)) {
 				$documentos_entregados++;
 			}
 		}
+
 		//dd("doc obligatorios ".$documentos_obligatorios_total."-- doc recibidos ".$documentos_entregados);
-		if($documentos_entregados >= $documentos_obligatorios_total){
-			$cliente->bnd_doc_oblig_entregados=1;
-			$cliente->save();
-		}else{
-			$cliente->bnd_doc_oblig_entregados=0;
-			$cliente->save();
-		}
-}
+		
+			if ($documentos_entregados >= $documentos_obligatorios_total) {
+				$cliente->bnd_doc_oblig_entregados = 1;
+				$cliente->save();
+			} else {
+				$cliente->bnd_doc_oblig_entregados = 0;
+				$cliente->save();
+			}
+		
+	}
 
 }

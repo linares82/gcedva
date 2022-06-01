@@ -38,6 +38,7 @@ class ClienteObserver
     {
         $this->cliente = $cliente;
         $vcliente = Cliente::find($cliente->id);
+        //historico de estatus
         if ($vcliente->st_cliente_id <> $this->cliente->st_cliente_id) {
             $st_cliente = StCliente::find($this->cliente->st_cliente_id);
             $input['tabla'] = 'clientes';
@@ -49,6 +50,13 @@ class ClienteObserver
             $input['usu_alta_id'] = isset(Auth::user()->id) ? Auth::user()->id : 1;
             $input['usu_mod_id'] = isset(Auth::user()->id) ? Auth::user()->id : 1;
             HEstatus::create($input);
+        }
+
+        //Llenando de fecha limite de entrega de docs en base a matricula
+        if($vcliente->matricula<>$cliente->matricula){
+            $mesMatricula=intval(substr($cliente->matricula,0,2))+2;
+		    $anioMatricula="20".substr($cliente->matricula,2,2);            
+            $this->cliente->fec_limite_entrega_docs=date_create_from_format('Y-m-d', $anioMatricula."-".$mesMatricula."-01");
         }
         //dd($this->cliente->nombre."-".$vcliente->nombre);
     }

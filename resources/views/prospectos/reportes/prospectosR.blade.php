@@ -18,13 +18,22 @@
         <h3>General</h3>
         <table>
             <thead>
-                    <th>F. Alta</th><th>Plantel</th><th>Usuario Alta</th><th>Estatus</th><th>Cantidad</th>
+                    <th>F. Alta</th><th>Plantel</th><th>Usuario Alta</th><th>Estatus</th><th>Cantidad</th><th>Inscripcion</th>
             </thead>
             <tbody>
             @foreach ($resumen as $registro)
             <tr>
                 <td>{{ $registro->fecha }}</td><td>{{ $registro->razon }}</td><td>{{ $registro->usuario_alta }}</td>
                 <td>{{ $registro->estatus }} </td><td>{{ $registro->total }} </td> 
+                @permission('prospectos.inscripcion_campo')
+                <td>
+                  @if(!is_null($registro->bnd_inscripcion))
+                  SI
+                  @else
+                  NO
+                  @endif
+                </td>
+                @endpermission
             </tr>
             @endforeach
         

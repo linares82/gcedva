@@ -1,3 +1,5 @@
+@inject('cli_funciones','App\Http\Controllers\ClientesController')
+
 @extends('plantillas.admin_template')
 
 @include('asistenciaRs._common')
@@ -52,14 +54,16 @@
                         <th>Alumno</th><th>Doc. Entregados</th><th>Estatus Cliente</th><th>Fecha</th><th>Asistencia</th><th></th>
                     </thead>
                         @foreach($asistencias as $s)
-                        
+                        @php
+                            $validaEntregaDocs3Meses=$cli_funciones->validaEntregaDocs3Meses($s->cliente_id);
+                        @endphp
                         <tr>
                             <td>
                                 {{$s->cliente_id}} - {{ optional($s->cliente)->ape_paterno." ".optional($s->cliente)->ape_materno." ".optional($s->cliente)->nombre." ".optional($s->cliente)->nombre2 }}
                             </td>
                             <td>
-                                @if($s->bnd_doc_oblig_entregados==1)
-                                    SI
+                                @if($s->bnd_doc_oblig_entregados==1 or $validaEntregaDocs3Meses)
+                                    SI o dentro del plazo
                                 @else
                                     NO
                                 @endif
@@ -81,9 +85,11 @@
                             <td>
                                 @php
                                     $param_bloqueoXdoc=\App\Param::where('llave','bloqueo_caja_calif_asistenciasXDoc')->first();
+                                    
+                                    
                                 @endphp
                                 @if($param_bloqueoXdoc->valor==1)
-                                @if($s->bnd_doc_oblig_entregados==1 or $s->cliente->st_cliente_id==1 or $s->cliente->st_cliente_id==22)
+                                @if($s->bnd_doc_oblig_entregados==1 or $s->cliente->st_cliente_id==1 or $s->cliente->st_cliente_id==22 or $validaEntregaDocs3Meses)
                                 <a href="#" onclick="modificarAsistencia({{$s->id}})" class="btn btn-success">Modificar</a>
                                 <div id='loading3' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                                 <label id="etq_msj"></label>

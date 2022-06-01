@@ -1,3 +1,5 @@
+@inject('cli_funciones','App\Http\Controllers\ClientesController')
+
 @extends('plantillas.admin_template')
 
 @include('cajas._common')
@@ -145,16 +147,17 @@
                     <div class="input-group form-group col-md-12 @if($errors->has('cliente_id')) has-error @endif">
                         @php
                             $param_bloqueoXdoc=\App\Param::where('llave','bloqueo_caja_calif_asistenciasXDoc')->first();
+                            $validaEntregaDocs3Meses=$cli_funciones->validaEntregaDocs3Meses($cliente->id);
                         @endphp
                         @if($param_bloqueoXdoc->valor==1)
-                        @if($cliente->bnd_doc_oblig_entregados==1 or $cliente->st_cliente_id==1 or $cliente->st_cliente_id==22)
+                        @if($cliente->bnd_doc_oblig_entregados==1 or $cliente->st_cliente_id==1 or $cliente->st_cliente_id==22 or $validaEntregaDocs3Meses)
                         <div class="input-group-btn">
                             <button type="submit" class="btn btn-warning" data-toggle="tooltip" title="Crear Venta" id="btnCrearVenta">
                                 <i class='glyphicon glyphicon-plus-sign'></i>
                             </button>
                         </div>
                         @else
-                            <span class="bg-red">Sin docs. entregados<span>
+                            <span class="bg-red">Sin docs. entregados o fuera del plazo<span>
                         @endif
                         @else
                         <div class="input-group-btn">
