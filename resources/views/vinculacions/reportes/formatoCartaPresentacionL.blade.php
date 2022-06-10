@@ -52,10 +52,13 @@
     <div class="tablediv">
         <table>
             <tr>
+                <td width="30%"></td><td width="30%"></td><td class="" align="right">Fecha: {{ $vinculacion->fec_carta }}</td>
+            </tr>
+            <tr>
                 <td width="30%"></td><td width="30%"></td><td class="" align="right">ASUNTO: CARTA DE PRESENTACION</td>
             </tr>
             <tr>
-                <td width="30%"></td><td width="30%"></td><td class="" align="right">PRÁCTICAS DE CAMPO</td>
+                <td width="30%"></td><td width="30%"></td><td class="" align="right">PRÁCTICAS PROFESIONALES</td>
             </tr>
         </table>
     </div>
@@ -67,7 +70,7 @@
                 <TD>{{ $vinculacion->nombre_contacto }}</TD>
             </tr>
             <tr>
-                <TD>{{ $vinculacion->puesto }}</TD>
+                <TD width="100px">{{ $vinculacion->puesto_trabajo }}, {{ $vinculacion->empresasVinculacion->razon_social }}</TD>
             </tr>
             <tr>
                 <TD>PRESENTE</TD>
@@ -80,9 +83,9 @@
                 <td width="20px">
                     <p align="justify">Por este medio me permito presentar al C. {{ $cliente->nombre }} {{ $cliente->nombre2 }} {{ $cliente->ape_paterno }} 
                     {{ $cliente->ape_materno }} alumno de la carrera de {{ $combinacion->grado->name }}, con número de control: {{ $cliente->matricula }} 
-                    quien desea realizar sus Prácticas de campo en el área de {{ $vinculacion->area }} que usted dignamente 
-                    representa, hasta cubrir un total de 240 Hrs, en
-                      un periodo no mayor a 3 meses. Su numero de poliza es: {{ $vinculacion->no_poliza }} de la compañía de seguros {{ $vinculacion->aseguradora }}
+                    quien desea realizar sus Prácticas Profesionales en el área de {{ $vinculacion->area }} que usted dignamente 
+                    representa, hasta cubrir un total de 600 Hrs, en
+                      un periodo no mayor a 6 meses. Su numero de poliza es: {{ $vinculacion->no_poliza }} de la compañía de seguros {{ $vinculacion->aseguradora }}
                     </p> 
                     <p align="justify">
                         Agradeciendo sus atenciones prestadas a la presente, quedo de a sus órdenes.
@@ -99,25 +102,24 @@
                 <td width=30% height=40px></td><td height=40px align="center">Atentamente:</td><td height=40px width=30%></td>
             </tr>
             <tr>
-                <td width=30%></td><td class="td_contenido"></td><td width=30%></td>
+                <td colspan=3 height=100px></td>
             </tr>
             <tr>
-                <td width=30%></td><td align="center"> Vinculación </td><td width=30%></td>
+                <td width=30%></td><td class="td_contenido">{{ $vinculacion->empleado->nombre }} {{ $vinculacion->empleado->ape_paterno }} {{ $vinculacion->empleado->ape_materno }}</td><td width=30%></td>
             </tr>
             <tr>
-                <td width=30%></td><td align="center"> Tél. </td><td width=30%></td>
+                <td width=30%></td><td align="center"> {{ $vinculacion->empleado->puesto->name }} </td><td width=30%></td>
+            </tr>
+            <tr>
+                <td width=30%></td><td align="center"> Tél. {{ $vinculacion->empleado->tel_fijo }} </td><td width=30%></td>
+            </tr>
+            <tr>
+                <td width=30%></td><td align="center"> Email {{ $vinculacion->empleado->mail_empresa }} </td><td width=30%></td>
             </tr>
         </table>
     </div>
     <br><br>
-    <div class="tablediv">
-        <table>
-            <tr>
-                <td width=30% height=40px>Email:</td><td height=40px></td><td height=40px width=30%></td>
-            </tr>
-            
-        </table>
-    </div>
+    
     
 </body>
 </html>

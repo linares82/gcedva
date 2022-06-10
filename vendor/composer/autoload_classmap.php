@@ -113,6 +113,7 @@ return array(
     'AddEmpleadoIdCotizacionLnsTable' => $baseDir . '/database/migrations/2019_04_08_144922_add_empleado_id_cotizacion_lns_table.php',
     'AddEmpleadoIdEmpresasTable' => $baseDir . '/database/migrations/2019_02_05_132229_add_empleado_id_empresas_table.php',
     'AddEmpleadoIdIndexEmpresasTable' => $baseDir . '/database/migrations/2019_02_05_132245_add_empleado_id_index_empresas_table.php',
+    'AddEmpleadoIdToVinculacionsTable' => $baseDir . '/database/migrations/2022_06_09_122426_add_empleado_id_to_vinculacions_table.php',
     'AddEmpresaBndAsuntosTable' => $baseDir . '/database/migrations/2019_02_01_130811_add_empresa_bnd_asuntos_table.php',
     'AddEmpresaBndStTareasTable' => $baseDir . '/database/migrations/2019_02_01_140028_add_empresa_bnd_st_tareas_table.php',
     'AddEmpresaBndTareasTable' => $baseDir . '/database/migrations/2019_02_01_130800_add_empresa_bnd_tareas_table.php',

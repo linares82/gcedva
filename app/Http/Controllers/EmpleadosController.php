@@ -772,7 +772,7 @@ class EmpleadosController extends Controller
         $empleados=Empleado::select('pla.razon','empleados.id', 'empleados.nombre', 'empleados.ape_paterno', 
         'empleados.ape_materno', 'empleados.curp', 'empleados.rfc', 'empleados.direccion', 'p.name AS puesto', 
         'empleados.mail_empresa', 'empleados.tel_cel', 'empleados.tel_emergencia', 'empleados.parentesco', 
-        'empleados.fin_contrato','stc.name as estatus')
+        'empleados.fin_contrato','stc.name as estatus','empleados.fec_nacimiento','empleados.fec_ingreso')
         ->join('puestos as p','p.id','empleados.puesto_id')
         ->join('plantels as pla','pla.id','empleados.plantel_id')
         ->join('st_empleados as stc','stc.id','empleados.st_empleado_id')

@@ -394,6 +394,21 @@ class VinculacionsController extends Controller
         $vinculacion=Vinculacion::find($datos['vinculacion']);
         $cliente=$vinculacion->cliente;
         $combinacion=CombinacionCliente::where('cliente_id',$cliente->id)->first();
-        return view('vinculacions.reportes.formatoCartaPresentacion', compact('vinculacion','cliente','combinacion'));
+        if($vinculacion->clasificacion_id==1){
+            return view('vinculacions.reportes.formatoCartaPresentacionL', compact('vinculacion','cliente','combinacion'));
+        }elseif($vinculacion->clasificacion_id==2){
+            return view('vinculacions.reportes.formatoCartaPresentacionB', compact('vinculacion','cliente','combinacion'));
+        }
+        
+    }
+
+    public function formatoCartaPresentacionSS(Request $request){
+        $datos=$request->all();
+        $vinculacion=Vinculacion::find($datos['vinculacion']);
+        $cliente=$vinculacion->cliente;
+        $combinacion=CombinacionCliente::where('cliente_id',$cliente->id)->first();
+        
+            return view('vinculacions.reportes.formatoCartaPresentacionSS', compact('vinculacion','cliente','combinacion'));
+        
     }
 }

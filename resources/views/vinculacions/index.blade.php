@@ -269,7 +269,8 @@
                                 <td>{{$vinculacion->mail_contacto}}</td>
                     
                                 <td class="text-right">
-                                    <a class="btn btn-xs btn-info" href="{{ route('vinculacions.formatoCartaPresentacion', array('vinculacion'=>$vinculacion->id)) }}"><i class="glyphicon glyphicon-paper"></i> Carta Presentacion</a>
+                                    <a class="btn btn-xs btn-info" href="{{ route('vinculacions.formatoCartaPresentacion', array('vinculacion'=>$vinculacion->id)) }}"><i class="glyphicon glyphicon-paper"></i> Carta Presentacion P.</a>
+                                    <a class="btn btn-xs btn-info" href="{{ route('vinculacions.formatoCartaPresentacionSS', array('vinculacion'=>$vinculacion->id)) }}"><i class="glyphicon glyphicon-paper"></i> Carta Presentacion S.S.</a>
                                     @permission('vinculacions.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('vinculacions.edit', $vinculacion->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
                                     @endpermission

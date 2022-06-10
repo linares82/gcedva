@@ -103,7 +103,7 @@
             <td>{{ $registro[0]['ape_paterno'] }} </td><td>{{ $registro[0]['ape_materno'] }}</td><td>{{ $registro[0]['nombre'] }} {{ $registro[0]['nombre2'] }}</td>
             <td>{{ $registro[0]['estatus_cliente'] }}</td><td>{{ $registro[0]['estatus_seguimiento'] }}</td>
             <td>{{ $registro[0]['fecha_pago'] }}</td><td>{{ number_format($registro[0]['monto'],2) }}</td>
-            <td>{{ $registro[0]['concepto'] }}</td><td>{{ $registro[0]['consecutivo'] }}</td><td>{{ $registro[0]['fecha_caja'] }}</td>
+            <td>{{ $registro[0]['concepto'] }}</td><td>{{ $registro[0]['consecutivo'] }}</td><td>{{ $registro[0]['fecha_caja']==0 ? "" :$registro[0]['fecha_caja'] }}</td>
             <td>{{ number_format($registro[0]['total_caja'],2) }}</td>
             <td>
               @php

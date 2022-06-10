@@ -2811,6 +2811,8 @@ class ClientesController extends Controller
             ) {
                 $dentro3Meses = true;
             }
+        }else{
+            $dentro3Meses = true;
         }
 
         return $dentro3Meses;

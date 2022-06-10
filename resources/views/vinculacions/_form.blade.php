@@ -113,13 +113,34 @@
                         <span class="help-block">{{ $errors->first("st_vinculacion_id") }}</span>
                         @endif
                     </div>
-                    <div class="form-group col-md-4 @if($errors->has('clasificacion_id')) has-error @endif">
+                    <div class="form-group col-md-4 @if($errors->has('clasificacion_id')) has-error @endif" style="clear:left;">
                         <label for="clasificacion_id-field">Clasificación</label>
                         {!! Form::select("clasificacion_id", $list["Clasificacion"], null, array("class" => "form-control select_seguridad", "id" => "clasificacion_id-field", 'style'=>'width:100%')) !!}
                         @if($errors->has("clasificacion_id"))
                         <span class="help-block">{{ $errors->first("clasificacion_id") }}</span>
                         @endif
                     </div>
+                    <div class="form-group col-md-4 @if($errors->has('empleado_id')) has-error @endif">
+                        <label for="empleado_id-field">Vinculador</label>
+                        {!! Form::select("empleado_id", $list["Empleado"], null, array("class" => "form-control select_seguridad", "id" => "clasificacion_id-field", 'style'=>'width:100%')) !!}
+                        @if($errors->has("empleado_id"))
+                        <span class="help-block">{{ $errors->first("empleado_id") }}</span>
+                        @endif
+                    </div>
+                    <div class="form-group col-md-4 @if($errors->has('fec_carta')) has-error @endif">
+                        <label for="fec_carta-field">Fecha Carta Presentacion</label>
+                        {!! Form::text("fec_carta", null, array("class" => "form-control fecha", "id" => "fec_carta-field")) !!}
+                        @if($errors->has("fec_carta"))
+                         <span class="help-block">{{ $errors->first("fec_carta") }}</span>
+                        @endif
+                     </div>
+                     <div class="form-group col-md-4 @if($errors->has('fec_carta_ss')) has-error @endif">
+                        <label for="fec_carta_ss-field">Fecha Carta Presentacion S.S.</label>
+                        {!! Form::text("fec_carta_ss", null, array("class" => "form-control fecha", "id" => "fec_carta_ss-field")) !!}
+                        @if($errors->has("fec_carta_ss"))
+                         <span class="help-block">{{ $errors->first("fec_carta_ss") }}</span>
+                        @endif
+                     </div>
                     <div class="form-group col-md-4 @if($errors->has('csc_vinculacion')) has-error @endif">
                         <label for="csc_vinculacion-field">Consecutivo Vinculacion</label>
                         {!! Form::text("csc_vinculacion", null, array("class" => "form-control input-sm", "id" => "csc_vinculacion-field", 'disabled'=>true)) !!}
@@ -346,7 +367,7 @@
 @if(isset($vinculacion))
 <div class="box box-default">
     <div class="box-body"> 
-        <strong>Seccion pra egresados</strong>
+        <strong>Seccion para egresados</strong>
         <div class="row"></div>  
         <div class="form-group col-md-3 @if($errors->has('bnd_busca_trabajo')) has-error @endif">
             <label for="bnd_busca_trabajo-field">¿Busca Trabajo?</label>
@@ -369,13 +390,14 @@
              <span class="help-block">{{ $errors->first("mail_actualizado") }}</span>
             @endif
          </div>
+         <!--
          <div class="form-group col-md-3 @if($errors->has('bnd_requiere_empleo')) has-error @endif">
             <label for="bnd_requiere_empleo-field">¿Requiere Empleo?</label>
-            {!! Form::checkbox("bnd_requiere_empleo", 1, null, [ "id" => "bnd_requiere_empleo-field", 'class'=>'minimal']) !!}
+            @{!! Form::checkbox("bnd_requiere_empleo", 1, null, [ "id" => "bnd_requiere_empleo-field", 'class'=>'minimal']) !!}
             @if($errors->has("bnd_requiere_empleo"))
             <span class="help-block">{{ $errors->first("bnd_requiere_empleo") }}</span>
             @endif
-        </div>
+        </div>-->
         <div class="form-group col-md-3 @if($errors->has('bnd_cv_actualizado')) has-error @endif">
             <label for="bnd_cv_actualizado-field">¿CV Actualizado?</label>
             {!! Form::checkbox("bnd_cv_actualizado", 1, null, [ "id" => "bnd_cv_actualizado-field", 'class'=>'minimal']) !!}
@@ -411,20 +433,14 @@
              <span class="help-block">{{ $errors->first("tel_fijo_trabajo") }}</span>
             @endif
          </div>
-         <div class="form-group col-md-4 @if($errors->has('puesto_trabajo')) has-error @endif">
+         <div class="form-group col-md-4 @if($errors->has('puesto')) has-error @endif">
             <label for="puesto-field">Puesto</label>
             {!! Form::text("puesto", null, array("class" => "form-control", "id" => "puesto-field")) !!}
             @if($errors->has("puesto"))
              <span class="help-block">{{ $errors->first("puesto") }}</span>
             @endif
          </div>
-         <div class="form-group col-md-4 @if($errors->has('puesto_trabajo')) has-error @endif">
-            <label for="puesto-field">Puesto</label>
-            {!! Form::text("puesto", null, array("class" => "form-control", "id" => "puesto-field")) !!}
-            @if($errors->has("puesto"))
-             <span class="help-block">{{ $errors->first("puesto") }}</span>
-            @endif
-         </div>
+         
          <div class="form-group col-md-4 @if($errors->has('sueldo_id')) has-error @endif">
             <label for="sueldo_id-field">Sueldo</label>
             {!! Form::select("sueldo_id", $list["Sueldo"], null, array("class" => "form-control select_seguridad", "id" => "sueldo_id-field", 'style'=>'width:100%')) !!}

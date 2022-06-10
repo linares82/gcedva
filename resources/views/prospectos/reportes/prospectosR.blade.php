@@ -18,22 +18,14 @@
         <h3>General</h3>
         <table>
             <thead>
-                    <th>F. Alta</th><th>Plantel</th><th>Usuario Alta</th><th>Estatus</th><th>Cantidad</th><th>Inscripcion</th>
+                    <th>F. Alta</th><th>Plantel</th><th>Usuario Alta</th><th>Estatus</th><th>Cantidad</th>
             </thead>
             <tbody>
             @foreach ($resumen as $registro)
             <tr>
                 <td>{{ $registro->fecha }}</td><td>{{ $registro->razon }}</td><td>{{ $registro->usuario_alta }}</td>
                 <td>{{ $registro->estatus }} </td><td>{{ $registro->total }} </td> 
-                @permission('prospectos.inscripcion_campo')
-                <td>
-                  @if(!is_null($registro->bnd_inscripcion))
-                  SI
-                  @else
-                  NO
-                  @endif
-                </td>
-                @endpermission
+                
             </tr>
             @endforeach
         
@@ -45,7 +37,7 @@
                     <th>F. Alta</th><th>Nombre(s)</th><th>A. Paterno</th><th>A. Materno</th>
                     <th>Teléfono</th><th>Celular</th><th>Mail</th><th>Plantel</th><th>Especialidad</th>
                     <th>Nivel</th><th>Medio</th><th>Usuario Alta</th><th>Usuario U. Modificación</th>
-                    <th>Estatus</th><th>Cliente Id</th>
+                    <th>Estatus</th><th>Cliente Id</th><th>Inscripcion</th>
             </thead>
             <tbody>
             @foreach ($registros as $registro)
@@ -57,6 +49,15 @@
                 <td>{{ $registro->nivel->name }}</td>
                 <td>{{ $registro->medio->name }}</td><td>{{ $registro->usu_alta->name }}</td><td>{{ $registro->usu_mod->name }}</td>
                 <td>{{ $registro->stProspecto->name }}</td><td>{{ $registro->cliente_id }}</td>
+                @permission('prospectos.inscripcion_campo')
+                <td>
+                  @if($registro->bnd_inscripcion==1)
+                  SI
+                  @else
+                  NO
+                  @endif
+                </td>
+                @endpermission
             </tr>
             @endforeach
         

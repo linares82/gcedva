@@ -88,7 +88,7 @@
                 <head>
                     <th>Plantel</th><th>Id</th><th>Nombre</th><th>Puesto</th><th>RFC</th><th>CURP</th><th>Domicilio</th>
                     <th>Mail Empresarial</th><th>Tel. Celular</th><th>Contacto Emergencia</th><th>Tel. Emergencia</th><th>Parentesco</th>
-                    <th>Fecha Vencimiento Contrato</th><th>Estatus</th>
+                    <th>Fecha Vencimiento Contrato</th><th>Estatus</th><th>F. Nacimiento</th><th>F. Ingreso</th>
                 </head>
                 <body>
                     @foreach($empleados as $e)
@@ -97,7 +97,7 @@
                     <td>{{$e->puesto}}</td><td>{{ $e->rfc }}</td><td>{{ $e->curp }}</td><td>{{ $e->direccion }}</td>
                     <td>{{ $e->mail_empresa }}</td><td>{{ $e->tel_cel }}</td>
                     <td>{{ $e->contacto_emergencia }}</td><td>{{ $e->tel_emergencia }}</td><td>{{ $e->parentesco }}</td>
-                    <td>{{ $e->fin_contrato }}</td><td>{{ $e->estatus }}</td>
+                    <td>{{ $e->fin_contrato }}</td><td>{{ $e->estatus }}</td><td>{{ $e->fec_nacimiento }}</td>{{ $e->fec_ingreso }}<td></td>
                     </tr>
                 @endforeach    
                 </body>
