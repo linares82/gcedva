@@ -19,7 +19,7 @@ class FacturaGLinea extends Model
     } 
 
 	//Mass Assignment
-	protected $fillable = ['factura_g_id','fecha_operacion','concepto','referencia','referencia_ampliada','cargo','abono','saldo','usu_alta_id','usu_mod_id', 'bnd_incluido'];
+	protected $fillable = ['factura_g_id','fecha_operacion','concepto','referencia','referencia_ampliada','cargo','abono','saldo','usu_alta_id','usu_mod_id', 'bnd_incluido','folio','origen'];
 
 	public function usu_alta() {
 		return $this->hasOne('App\User', 'id', 'usu_alta_id');

@@ -97,7 +97,7 @@ class FacturaGsController extends Controller
 			$linea_aux = fgets($fp);
 			$linea = utf8_decode($linea_aux);
 			//dd(utf8_encode($linea));
-			Log::info("linea " . $i . ": " . $linea);
+			//Log::info("linea " . $i . ": " . $linea);
 			if ($i > 1) {
 				if (trim($linea) <> "") {
 					$resultado = explode(',', $linea);
@@ -112,6 +112,7 @@ class FacturaGsController extends Controller
 					$input['saldo'] = ($resultado[6] == "" ? 0 : trim($resultado[6]));
 					$input['usu_alta_id'] = Auth::user()->id;
 					$input['usu_mod_id'] = Auth::user()->id;
+					$input['origen']='Archivo';
 
 					FacturaGLinea::create($input);
 				}
@@ -205,7 +206,7 @@ class FacturaGsController extends Controller
 				$linea_aux = fgets($fp);
 				$linea = utf8_decode($linea_aux);
 				//dd(utf8_encode($linea));
-				Log::info("linea " . $i . ": " . $linea);
+				//Log::info("linea " . $i . ": " . $linea);
 				if ($i > 1) {
 					if (trim($linea) <> "") {
 						$resultado = explode(',', $linea);
@@ -220,6 +221,7 @@ class FacturaGsController extends Controller
 						$input['saldo'] = ($resultado[6] == "" ? 0 : trim($resultado[6]));
 						$input['usu_alta_id'] = Auth::user()->id;
 						$input['usu_mod_id'] = Auth::user()->id;
+						$input['origen']='Archivo';
 
 						FacturaGLinea::create($input);
 					}
@@ -229,9 +231,6 @@ class FacturaGsController extends Controller
 
 			fclose($fp);
 		}
-
-
-
 
 		return redirect()->route('facturaGs.index')->with('message', 'Registro Actualizado.');
 	}
@@ -282,6 +281,14 @@ class FacturaGsController extends Controller
 
 		$facturaG->total = $suma;
 		$facturaG->save();
+
+		$lineas=FacturaGLinea::where('factura_g_id', $datos['id'])->where('bnd_incluido', 1)->get();
+		$i=1;
+		foreach($lineas as $linea){
+			$linea->folio=$i;
+			$linea->save();
+			$i++;
+		}
 
 		return redirect()->route('facturaGs.show', $facturaG->id)->with('message', 'Registro Borrado.');
 	}
@@ -366,10 +373,22 @@ class FacturaGsController extends Controller
 					'ValorUnitario' => $linea->abono,
 					'Importe' => $linea->abono,
 					'Descuento' => '0.00',
-					'ObjetoImp' => "01"
+					'ObjetoImp' => "02",
+					'Base' => $linea->abono,
+					'Impuesto'=>'002',
+					'TipoFactor'=>'Exento'
 				);
 				array_push($conceptos, $concepto);
 			}
+
+			$impuestos=array(
+				'TotalImpuestosTrasladados'=> '0.00',
+				'Base' => number_format($facturaG->total, 2, '.', ''),
+				'Importe' => '0.00',
+				'Impuesto' => '002',
+				'TasaOCuota' => '0.000000',
+				'TipoFactor' => 'Exento'
+			);
 
 			$fecha_solicitud_factura_service = date('Y-m-d\TH:i:s');
 		} else {
@@ -423,6 +442,7 @@ class FacturaGsController extends Controller
 			//dd($facturaGeneral->facturaGeneralLineas->toArray());
 			foreach ($lineas as $linea) {
 
+				
 				$concepto = array(
 					'ClaveProdServ' => '01010101',
 					'NoIdentificacion' => $linea->referencia,
@@ -433,15 +453,28 @@ class FacturaGsController extends Controller
 					'ValorUnitario' => $linea->abono,
 					'Importe' => $linea->abono,
 					'Descuento' => '0.00',
-					'ObjetoImp' => "01"
+					'ObjetoImp' => "02",
+					'Base' => $linea->abono, // desglose de impuestos por concepto
+					'Impuesto'=>'002', // desglose de impuestos por concepto
+					'TipoFactor'=>'Exento' // desglose de impuestos por concepto
 				);
 				array_push($conceptos, $concepto);
 			}
 
 			$fecha_solicitud_factura_service = date('Y-m-d\TH:i:s');
-		}
 
-		$content = $this->crearXmlFactura($comprobante, $fecha_solicitud_factura_service, $informacionGlobal, $emisor, $receptor, $conceptos);
+			// desglose de impuestos de la factura
+			$impuestos=array(
+				'TotalImpuestosTrasladados'=> '0.00',
+				'Base' => number_format($facturaG->total, 2, '.', ''),
+				'Importe' => '0.00',
+				'Impuesto' => '002',
+				'TasaOCuota' => '0.000000',
+				'TipoFactor' => 'Exento'
+			);
+		}
+		
+		$content = $this->crearXmlFactura($comprobante, $fecha_solicitud_factura_service, $informacionGlobal, $emisor, $receptor, $conceptos, $impuestos);
 
 		$data = array();
 		//dd($fact_global_prb_activa->valor);
@@ -491,8 +524,9 @@ class FacturaGsController extends Controller
 		return redirect()->route('facturaGs.show', $facturaG->id);
 	}
 
-	public function crearXmlFactura($comprobante, $fecha_solicitud_factura_service, $informacionGlobal, $emisor, $receptor, $conceptos)
+	public function crearXmlFactura($comprobante, $fecha_solicitud_factura_service, $informacionGlobal, $emisor, $receptor, $conceptos, $impuestos)
 	{
+		//dd($impuestos);
 		$objetoXML = new XMLWriter();
 		//$objetoXML->openURI($facturaGeneral->plantel_id.$facturaGeneral->fec_inicio.$facturaGeneral->fec_fin.".xml");
 		$objetoXML->openMemory();
@@ -550,18 +584,42 @@ class FacturaGsController extends Controller
 		$objetoXML->startElement('cfdi:Conceptos');
 		foreach ($conceptos as $concepto) {
 			$objetoXML->startElement('cfdi:Concepto');
-			$objetoXML->writeAttribute("ClaveProdServ", $concepto["ClaveProdServ"]);
-			$objetoXML->writeAttribute("NoIdentificacion", $concepto["NoIdentificacion"]);
-			$objetoXML->writeAttribute("Cantidad", $concepto["Cantidad"]);
-			$objetoXML->writeAttribute("ClaveUnidad", $concepto["ClaveUnidad"]);
-			//$objetoXML->writeAttribute("Unidad", $concepto["Unidad"]);
-			$objetoXML->writeAttribute("Descripcion", $concepto["Descripcion"]);
-			$objetoXML->writeAttribute("ValorUnitario", $concepto["ValorUnitario"]);
-			$objetoXML->writeAttribute("Importe", $concepto["Importe"]);
-			$objetoXML->writeAttribute("ObjetoImp", $concepto["ObjetoImp"]);
+				$objetoXML->writeAttribute("ClaveProdServ", $concepto["ClaveProdServ"]);
+				$objetoXML->writeAttribute("NoIdentificacion", $concepto["NoIdentificacion"]);
+				$objetoXML->writeAttribute("Cantidad", $concepto["Cantidad"]);
+				$objetoXML->writeAttribute("ClaveUnidad", $concepto["ClaveUnidad"]);
+				//$objetoXML->writeAttribute("Unidad", $concepto["Unidad"]);
+				$objetoXML->writeAttribute("Descripcion", $concepto["Descripcion"]);
+				$objetoXML->writeAttribute("ValorUnitario", $concepto["ValorUnitario"]);
+				$objetoXML->writeAttribute("Importe", $concepto["Importe"]);
+				$objetoXML->writeAttribute("ObjetoImp", $concepto["ObjetoImp"]);
+				$objetoXML->startElement('cfdi:Impuestos');
+					$objetoXML->startElement('cfdi:Traslados');
+						$objetoXML->startElement('cfdi:Traslado');
+						$objetoXML->writeAttribute("Base", $concepto["Base"]);
+						$objetoXML->writeAttribute("Impuesto", $concepto["Impuesto"]);
+						$objetoXML->writeAttribute("TipoFactor", $concepto["TipoFactor"]);
+						$objetoXML->endElement();
+					$objetoXML->endElement();
+				$objetoXML->endElement();
 			$objetoXML->endElement(); // Final del elemento que cubre todos los miembros técnicos.
+			
+			
+
 		}
 		$objetoXML->endElement(); // Final del elemento que cubre todos los miembros técnicos.
+		$objetoXML->startElement('cfdi:Impuestos');
+		$objetoXML->writeAttribute("TotalImpuestosTrasladados", $impuestos["TotalImpuestosTrasladados"]);
+			$objetoXML->startElement('cfdi:Traslados');
+				$objetoXML->startElement('cfdi:Traslado');
+				$objetoXML->writeAttribute("Base", $impuestos["Base"]);
+				$objetoXML->writeAttribute("Impuesto", $impuestos["Impuesto"]);
+				$objetoXML->writeAttribute("TipoFactor", $impuestos["TipoFactor"]);
+				$objetoXML->writeAttribute("TasaOCuota", $impuestos["TasaOCuota"]);
+				$objetoXML->writeAttribute("Importe", $impuestos["Importe"]);
+				$objetoXML->endElement();
+			$objetoXML->endElement();
+		$objetoXML->endElement();
 
 		$objetoXML->fullEndElement(); // Final del elemento "obra" que cubre cada obra de la matriz.
 		$objetoXML->endElement(); // Final del nodo raíz, "obras"
@@ -644,14 +702,26 @@ class FacturaGsController extends Controller
 				'ValorUnitario' => $linea->abono,
 				'Importe' => $linea->abono,
 				'Descuento' => '0.00',
-				'ObjetoImp' => "01"
+				'ObjetoImp' => "02",
+				'Base' => $linea->abono, // desglose de impuestos por concepto
+				'Impuesto'=>'002', // desglose de impuestos por concepto
+				'TipoFactor'=>'Exento' // desglose de impuestos por concepto
 			);
 			array_push($conceptos, $concepto);
 		}
 
 		$fecha_solicitud_factura_service = date('Y-m-d\TH:i:s');
+		// desglose de impuestos de la factura
+		$impuestos=array(
+			'TotalImpuestosTrasladados'=> '0.00',
+			'Base' => number_format($facturaG->total, 2, '.', ''),
+			'Importe' => '0.00',
+			'Impuesto' => '002',
+			'TasaOCuota' => '0.000000',
+			'TipoFactor' => 'Exento'
+		);
 
-		$content = $this->crearXmlFactura($comprobante, $fecha_solicitud_factura_service, $informacionGlobal, $emisor, $receptor, $conceptos);
+		$content = $this->crearXmlFactura($comprobante, $fecha_solicitud_factura_service, $informacionGlobal, $emisor, $receptor, $conceptos, $impuestos);
 
 		/*echo "<pre>";
 		var_export($content);

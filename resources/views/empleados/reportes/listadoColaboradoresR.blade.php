@@ -97,7 +97,7 @@
                     <td>{{$e->puesto}}</td><td>{{ $e->rfc }}</td><td>{{ $e->curp }}</td><td>{{ $e->direccion }}</td>
                     <td>{{ $e->mail_empresa }}</td><td>{{ $e->tel_cel }}</td>
                     <td>{{ $e->contacto_emergencia }}</td><td>{{ $e->tel_emergencia }}</td><td>{{ $e->parentesco }}</td>
-                    <td>{{ $e->fin_contrato }}</td><td>{{ $e->estatus }}</td><td>{{ $e->fec_nacimiento }}</td>{{ $e->fec_ingreso }}<td></td>
+                    <td>{{ $e->fin_contrato }}</td><td>{{ $e->estatus }}</td><td>{{ $e->fec_nacimiento }}</td><td>{{ $e->fec_ingreso }}</td>
                     </tr>
                 @endforeach    
                 </body>

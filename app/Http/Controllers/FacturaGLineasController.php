@@ -28,9 +28,11 @@ class FacturaGLineasController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function create()
+	public function create(Request $request)
 	{
-		return view('facturaGLineas.create')
+		$datos=$request->all();
+		$factura_g=$datos['factura_g'];
+		return view('facturaGLineas.create', compact('factura_g'))
 			->with( 'list', FacturaGLinea::getListFromAllRelationApps() );
 	}
 
@@ -44,13 +46,15 @@ class FacturaGLineasController extends Controller {
 	{
 
 		$input = $request->all();
+		$input['origen']='Manual';
+		$input['bnd_incluido']=1;
 		$input['usu_alta_id']=Auth::user()->id;
 		$input['usu_mod_id']=Auth::user()->id;
 
 		//create data
 		FacturaGLinea::create( $input );
 
-		return redirect()->route('facturaGLineas.index')->with('message', 'Registro Creado.');
+		return redirect()->route('facturaGs.show', $input['factura_g_id'])->with('message', 'Registro Creado.');
 	}
 
 	/**
@@ -115,12 +119,13 @@ class FacturaGLineasController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id,FacturaGLinea $facturaGLinea)
+	public function destroy($id)
 	{
-		$facturaGLinea=$facturaGLinea->find($id);
+		$facturaGLinea=FacturaGLinea::find($id);
+		$factura_g_id=$facturaGLinea->factura_g_id;
 		$facturaGLinea->delete();
 
-		return redirect()->route('facturaGLineas.index')->with('message', 'Registro Borrado.');
+		return redirect()->route('facturaGs.show',$factura_g_id)->with('message', 'Registro Borrado.');
 	}
 
 	public function bndIncluir(Request $request){

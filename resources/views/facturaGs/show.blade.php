@@ -104,13 +104,16 @@
                 </div>
 
             <a class="btn btn-link" href="{{ route('facturaGs.index') }}"><i class="glyphicon glyphicon-backward"></i>  Regresar</a>
-
+            @permission('facturaGLineas.create')
+            <a class="btn btn-success btn-md pull-right" href="{{ route('facturaGLineas.create', array('factura_g'=>$facturaG->id)) }}"><i class="glyphicon glyphicon-plus"></i> Crear </a>
+            @endpermission
+            
         </div>
         <div class="col-md-12">
         <table class="table table-condensed table-striped">
             <thead>
-                <th>Consecutivo</th><th>F. Operación</th><th>Concepto</th><th>Referencia</th><th>R. Ampliada</th>
-                <th>Cargo</th><th>Abono</th><th>Saldo</th><th>Incluir</th>
+                <th>Csc.</th><th>F. Operación</th><th>Concepto</th><th>Referencia</th><th>R. Ampliada</th>
+                <th>Cargo</th><th>Abono</th><th>Saldo</th><th>Folio</th><th>Origen</th><th>Incluir</th>
             </thead>
             <tbody>
                 @php
@@ -122,13 +125,26 @@
                     <td>{{ ++$i }}</td>
                     <td>{{ $linea->fecha_operacion }}</td><td>{{ $linea->concepto }}</td><td>{{ $linea->referencia }}</td><td>{{ $linea->referencia_ampliada }}</td>
                     <td>{{ $linea->cargo }}</td><td>{{ $linea->abono }}</td><td>{{ $linea->saldo }}</td>
+                    <td>{{ $linea->folio }}</td><td>{{ $linea->origen }}</td>
                     <td>
-                        <label><input class="bnd_incluir" data-id_linea={{ $linea->id }} type="checkbox" 
+                        @if($linea->origen<>"Manual")
+                            <input class="bnd_incluir" data-id_linea={{ $linea->id }} type="checkbox" 
                             @if($linea->bnd_incluido==1)
                             checked
                             @endif
-                            value="1">Si</label>
+                            value="1">
+                        @endif    
+                            <label>Si</label>
+                            
                             <div class='loading' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div>    
+                            
+                            @if($linea->origen=="Manual")
+                            @permission('facturaGLineas.destroy')
+                                {!! Form::model($linea, array('route' => array('facturaGLineas.destroy', $linea->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}
+                                    <button type="submit" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> </button>
+                                {!! Form::close() !!}
+                            @endpermission
+                            @endif
                     </td>
                 </tr>
                    @php
