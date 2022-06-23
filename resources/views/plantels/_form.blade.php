@@ -539,9 +539,11 @@
                             @endif
                         </div>
                         @if(isset($plantel))
+                        @permission('plantels.replicar_induxoft')
                         <div class="form-group col-md-4 @if($errors->has('fact_global_pass_cuenta')) has-error @endif">
                             <button class="btn btn-success" id='fact_cuenta'>Replicar Para Todos Los Planteles</button>
                         </div>
+                        @endpermission
                         @endif
                     </div>
                     <div class="row">
@@ -559,12 +561,13 @@
                             <span class="help-block">{{ $errors->first("fact_global_pass_usu") }}</span>
                             @endif
                         </div>
+                        @permission('plantels.replicar_induxoft')
                         @if(isset($plantel))
                         <div class="form-group col-md-4 @if($errors->has('fact_global_pass_cuenta')) has-error @endif">
                             <button class="btn btn-success" id='fact_usuario'>Replicar Para Todos Los Planteles</button>
                         </div> 
                         @endif
-                    
+                        @endpermission
                     </div>
                     
 

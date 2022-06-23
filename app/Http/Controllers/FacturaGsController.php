@@ -282,13 +282,13 @@ class FacturaGsController extends Controller
 		$facturaG->total = $suma;
 		$facturaG->save();
 
-		$lineas=FacturaGLinea::where('factura_g_id', $datos['id'])->where('bnd_incluido', 1)->get();
+		/*$lineas=FacturaGLinea::where('factura_g_id', $datos['id'])->where('bnd_incluido', 1)->get();
 		$i=1;
 		foreach($lineas as $linea){
 			$linea->folio=$i;
 			$linea->save();
 			$i++;
-		}
+		}*/
 
 		return redirect()->route('facturaGs.show', $facturaG->id)->with('message', 'Registro Borrado.');
 	}
@@ -365,7 +365,7 @@ class FacturaGsController extends Controller
 
 				$concepto = array(
 					'ClaveProdServ' => '01010101',
-					'NoIdentificacion' => $linea->referencia,
+					'NoIdentificacion' => $linea->folio,
 					'Cantidad' => '1',
 					'ClaveUnidad' => 'ACT',
 					'Unidad' => 'ACT',
@@ -445,7 +445,7 @@ class FacturaGsController extends Controller
 				
 				$concepto = array(
 					'ClaveProdServ' => '01010101',
-					'NoIdentificacion' => $linea->referencia,
+					'NoIdentificacion' => $linea->folio,
 					'Cantidad' => '1',
 					'ClaveUnidad' => 'ACT',
 					//'Unidad' => 'ACT',
@@ -694,7 +694,7 @@ class FacturaGsController extends Controller
 
 			$concepto = array(
 				'ClaveProdServ' => '01010101',
-				'NoIdentificacion' => $linea->referencia,
+				'NoIdentificacion' => $linea->folio,
 				'Cantidad' => '1',
 				'ClaveUnidad' => 'ACT',
 				//'Unidad' => 'ACT',

@@ -128,6 +128,11 @@ class AsistenciaRsController extends Controller
 								$asistencia['asignacion_academica_id'] = $input['asignacion_academica_id'];
 								$asistencia['fecha'] = $input['fecha'];
 								$asistencia['cliente_id'] = $i->cliente_id;
+								if($i->cliente->st_cliente_id==25 or $i->cliente->st_cliente_id==26){
+									$asistencia['est_asistencia_id'] = 2;
+								}else{
+									$asistencia['est_asistencia_id'] = 1;
+								}
 								$asistencia['est_asistencia_id'] = 1;
 								$asistencia['usu_alta_id'] = Auth::user()->id;
 								$asistencia['usu_mod_id'] = Auth::user()->id;

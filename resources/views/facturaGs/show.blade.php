@@ -113,7 +113,7 @@
         <table class="table table-condensed table-striped">
             <thead>
                 <th>Csc.</th><th>F. Operación</th><th>Concepto</th><th>Referencia</th><th>R. Ampliada</th>
-                <th>Cargo</th><th>Abono</th><th>Saldo</th><th>Folio</th><th>Origen</th><th>Incluir</th>
+                <th>Cargo</th><th>Abono</th><th>Saldo</th><th>No. Id.</th><th>Origen</th><th>Incluir</th>
             </thead>
             <tbody>
                 @php
@@ -125,16 +125,37 @@
                     <td>{{ ++$i }}</td>
                     <td>{{ $linea->fecha_operacion }}</td><td>{{ $linea->concepto }}</td><td>{{ $linea->referencia }}</td><td>{{ $linea->referencia_ampliada }}</td>
                     <td>{{ $linea->cargo }}</td><td>{{ $linea->abono }}</td><td>{{ $linea->saldo }}</td>
-                    <td>{{ $linea->folio }}</td><td>{{ $linea->origen }}</td>
                     <td>
-                        @if($linea->origen<>"Manual")
+                        
+                        @if($linea->bnd_incluido==1)
+
+                        <div class='editable'>
+                            @if(!is_null($linea->folio))
+                            {{ $linea->folio }}
+                            @else
+                            Asignar
+                            @endif
+                            
+                            <input class='noIdentificacion_editable form-control' value='{{$linea->folio}}' data-id="{{$linea->id}}"></input>
+                        </div>
+                        
+                            
+                        @endif
+                    </td>
+                    <td>{{ $linea->origen }}</td>
+                    <td>
+                        @if($linea->origen<>"Manual" and $linea->abono<>0)
                             <input class="bnd_incluir" data-id_linea={{ $linea->id }} type="checkbox" 
                             @if($linea->bnd_incluido==1)
                             checked
                             @endif
                             value="1">
                         @endif    
-                            <label>Si</label>
+                        @if($linea->bnd_incluido==1)
+                        <label>Si</label>
+                        @else
+                        <label>No</label>
+                        @endif
                             
                             <div class='loading' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div>    
                             
@@ -186,7 +207,37 @@
     </div>
     @push('scripts')
     <script type="text/javascript">
+    $('.noIdentificacion_editable').hide();
+    $('.editable').dblclick(function(){
+    //console.log('qui fl');
+    captura=$(this).children("input");
+    //console.log(captura);
+    captura.show();
+    });
+
+    $('.noIdentificacion_editable').on('keypress', function (e) {
+         if(e.which === 13){
+             captura=$(this);
+           $.ajax({
+                type: 'GET',
+                        url: '{{route("facturaGLineas.editFolio")}}',
+                        data: {
+                            'id': captura.attr('data-id'),
+                            'noIdentificacion': captura.val(),
+                        },
+                        dataType:"json",
+                        beforeSend : function(){$(".loading").show(); },
+                        complete : function(){$(".loading").hide(); },
+                        success: function(data) {
+                            location.reload(); 
+                           
+                        }
+                }); 
+            }
+        });
+
     $(document).on("click", ".bnd_incluir", function (e) {
+        
         linea=$(this).data('id_linea');
         let valor=0;
         if($(this).is(':checked')){
@@ -216,6 +267,8 @@
     
             }
         });
+
+        
     })
     
     </script>

@@ -138,4 +138,14 @@ class FacturaGLineasController extends Controller {
 		return $linea;
 	}
 
+	public function editFolio(Request $request){
+		$datos=$request->all();
+		if($request->ajax()){
+			$linea=FacturaGLinea::find($datos['id']);
+			$linea->folio=$datos['noIdentificacion'];
+			$linea->save();
+			return $linea;
+		}
+
+	}
 }
