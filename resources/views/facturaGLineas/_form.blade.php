@@ -2,7 +2,7 @@
                     <div class="form-group col-md-4 @if($errors->has('fecha_operacion')) has-error @endif">
                        <label for="fecha_operacion-field">Fecha Operacion</label>
                        {!! Form::hidden("factura_g_id", $factura_g, array("class" => "form-control ", "id" => "fcatura_g_id-field")) !!}
-                       {!! Form::text("fecha_operacion", null, array("class" => "form-control fecha", "id" => "fecha_operacion-field")) !!}
+                       {!! Form::text("fecha_operacion", null, array("class" => "form-control", "id" => "fecha_operacion-field")) !!}
                        @if($errors->has("fecha_operacion"))
                         <span class="help-block">{{ $errors->first("fecha_operacion") }}</span>
                        @endif
@@ -49,4 +49,30 @@
                         <span class="help-block">{{ $errors->first("saldo") }}</span>
                        @endif
                     </div>
-                    
+
+@push('scripts')                    
+<script type="text/javascript">
+   @php
+   $fecha=\Carbon\Carbon::createFromFormat('Y-m-d H:i:s',$facturaCabecera->fecha);
+   $mes=$fecha->month;
+   $anio=$fecha->year;
+   $fecha_inicial=\Carbon\Carbon::now();
+   $fecha_inicial->year=$anio;
+   $fecha_inicial->month=$mes;
+   $fecha_inicial->day=1;
+   
+
+   @endphp
+   $('#fecha_operacion-field').Zebra_DatePicker({
+      direction: ['{{ $fecha_inicial->toDateString() }}', false],
+      days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
+      months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+      readonly_element: false,
+      lang_clear_date: 'Limpiar',
+      show_select_today: 'Hoy',
+      
+   });
+                 
+</script>
+@endpush
+                 

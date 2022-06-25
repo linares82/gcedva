@@ -355,7 +355,7 @@
                             <tr>
                                 <td><a href="{{ route('facturaGs.show', $facturaG->id) }}">{{$facturaG->id}}</a></td>
                                 <td>{{$facturaG->cuentasEfectivo->no_cuenta}}</td>
-                    <td>{{$facturaG->serie_string}}</td>
+                    <td>{{$facturaG->serie}}</td>
                     <td>{{$facturaG->folio}}</td>
                     <td>{{$facturaG->fecha}}</td>
                                 <td>{{ $facturaG->facturaGLineas->count() }}</td>

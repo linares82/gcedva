@@ -405,6 +405,7 @@ class HomeController extends Controller
 
     public function tieneAvisos()
     {
+        if(Auth::check()){
         $total_msj = 0;
         $id = Auth::user()->id;
         if (isset($id)) {
@@ -419,6 +420,9 @@ class HomeController extends Controller
             }
         }
         return $total_msj;
+        }else{
+            return redirect()->route('login');
+        }
     }
 
     public function wConcretados(Request $request)

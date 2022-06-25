@@ -1,13 +1,14 @@
 <?php namespace App\Http\Controllers;
 
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
+use Auth;
+use App\FacturaG;
 
 use App\FacturaGLinea;
+use App\Http\Requests;
 use Illuminate\Http\Request;
-use Auth;
-use App\Http\Requests\updateFacturaGLinea;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\createFacturaGLinea;
+use App\Http\Requests\updateFacturaGLinea;
 
 class FacturaGLineasController extends Controller {
 
@@ -32,7 +33,9 @@ class FacturaGLineasController extends Controller {
 	{
 		$datos=$request->all();
 		$factura_g=$datos['factura_g'];
-		return view('facturaGLineas.create', compact('factura_g'))
+		$facturaCabecera=FacturaG::find($datos['factura_g']);
+	
+		return view('facturaGLineas.create', compact('factura_g', 'facturaCabecera'))
 			->with( 'list', FacturaGLinea::getListFromAllRelationApps() );
 	}
 

@@ -1606,13 +1606,11 @@ class ClientesController extends Controller
         $documentos_total = 0;
         $documentos_entregados = 0;
         foreach ($documentos as $documento) {
-            if ($documento->doc_obligatorio == 1) {
-                $documentos_total++;
-            }
             if (!is_null($documento->archivo)) {
                 $documentos_entregados++;
             }
         }
+        //dd($total_doc_obligatorios."-".$documentos_total);
         if ($total_doc_obligatorios == $documentos_total) {
             $cliente->bnd_doc_oblig_entregados = 1;
             $cliente->save();

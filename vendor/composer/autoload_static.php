@@ -1034,6 +1034,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'AddStEmpresaIdIndexEmpresasTable' => __DIR__ . '/../..' . '/database/migrations/2019_02_01_120755_add_st_empresa_id_index_empresas_table.php',
         'AddStInscripcionTable' => __DIR__ . '/../..' . '/database/migrations/2019_05_16_131849_add_st_inscripcion_table.php',
         'AddStVinculacionIdToVinculacionsTable' => __DIR__ . '/../..' . '/database/migrations/2019_12_04_133531_add_st_vinculacion_id_to_vinculacions_table.php',
+        'AddSumaManualToFacturaGsTable' => __DIR__ . '/../..' . '/database/migrations/2022_06_24_113427_add_suma_manual_to_factura_gs_table.php',
         'AddTipoBecaIdToAutorizacionBecasTable' => __DIR__ . '/../..' . '/database/migrations/2020_06_09_121746_add_tipo_beca_id_to_autorizacion_becas_table.php',
         'AddTipoContratoIdToEmpleadosTable' => __DIR__ . '/../..' . '/database/migrations/2020_06_16_125333_add_tipo_contrato_id_to_empleados_table.php',
         'AddToFacturaGenralLineasTable' => __DIR__ . '/../..' . '/database/migrations/2022_02_02_131216_add_to_factura_genral_lineas_table.php',

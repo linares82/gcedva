@@ -519,16 +519,19 @@ class CajasController extends Controller
                         }
 
                         $beca_autorizada = AutorizacionBeca::find($beca_a);
-                        //dd($beca_a);
+                        //dd($beca->toArray());
+                        
                         if (
                             !is_null($beca_autorizada) and
                             $beca_autorizada->monto_mensualidad > 0 and
                             $adeudo->cajaConcepto->bnd_mensualidad == 1 and
                             ($adeudo->bnd_eximir_descuento_beca == 0 or is_null($adeudo->bnd_eximir_descuento_beca))
                         ) {
-                            $calculo_monto_mensualidad = $caja_ln['subtotal'] * $beca->monto_mensualidad;
+                            $calculo_monto_mensualidad = $caja_ln['subtotal'] * $beca_autorizada->monto_mensualidad;
+                            //dd($caja_ln['subtotal'].'*'.$beca_autorizada->monto_mensualidad."=".$calculo_monto_mensualidad);
                             $caja_ln['descuento'] = $caja_ln['descuento'] + $calculo_monto_mensualidad;
                             $caja_ln['total'] = $caja_ln['subtotal'] - $caja_ln['descuento'];
+                            
                         } else {
                             $caja_ln['total'] = $caja_ln['subtotal'] - $caja_ln['descuento'];
                         }

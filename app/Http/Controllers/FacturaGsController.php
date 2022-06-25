@@ -134,7 +134,11 @@ class FacturaGsController extends Controller
 	public function show($id)
 	{
 		$facturaG = FacturaG::find($id);
-		return view('facturaGs.show', compact('facturaG'));
+		$lineas=FacturaGLinea::where('factura_g_id',$facturaG->id)
+		->orderBy('fecha_operacion','desc')
+		->get();
+		//dd($lineas->toArray());
+		return view('facturaGs.show', compact('facturaG','lineas'));
 	}
 
 	/**
@@ -282,13 +286,34 @@ class FacturaGsController extends Controller
 		$facturaG->total = $suma;
 		$facturaG->save();
 
-		/*$lineas=FacturaGLinea::where('factura_g_id', $datos['id'])->where('bnd_incluido', 1)->get();
+		$lineas=FacturaGLinea::where('factura_g_id', $datos['id'])
+		->where('bnd_incluido', 1)
+		->orderBy('fecha_operacion','desc')
+		->get();
+		//dd($lineas);
 		$i=1;
+		$ciclo=1;
 		foreach($lineas as $linea){
-			$linea->folio=$i;
-			$linea->save();
-			$i++;
-		}*/
+			if($ciclo==1){
+				if(!is_null($linea->folio) or $linea->folio<>""){
+					$i=$linea->folio;
+					$linea->save();
+					$i++;
+				}else{
+					$linea->folio=$i;
+					$linea->save();
+					$i++;
+				}
+				$ciclo++;
+			}
+			else{
+				$linea->folio=$i;
+				$linea->save();
+				$i++;
+				
+			}
+			
+		}
 
 		return redirect()->route('facturaGs.show', $facturaG->id)->with('message', 'Registro Borrado.');
 	}
@@ -296,6 +321,7 @@ class FacturaGsController extends Controller
 	public function generarFactura(Request $request)
 	{
 		$datos = $request->all();
+		
 		$facturaG = FacturaG::with('facturaGLineas')->find($datos['id']);
 
 		$url = Param::where('llave', 'fact_global_url')->first();
@@ -321,8 +347,8 @@ class FacturaGsController extends Controller
 				'xsi:schemaLocation' => 'http://www.sat.gob.mx/cfd/4 http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd',
 				'Certificado' => '', //?
 				'NoCertificado' => '', //?
-				'Serie' => '', //?
-				'Folio' => '', //?
+				'Serie' => $facturaG->serie, //?
+				'Folio' => $facturaG->folio, //?
 				'Fecha' => Carbon::createFromFormat('Y-m-d h:i:s', $facturaG->fecha)->format('Y-m-d\TH:i:s'),
 				'FormaPago' => $facturaG->forma_pago,
 				//'CondicionesDePago' => 'CONTADO',
@@ -400,8 +426,8 @@ class FacturaGsController extends Controller
 				'xsi:schemaLocation' => 'http://www.sat.gob.mx/cfd/4 http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd',
 				'Certificado' => '', //?
 				'NoCertificado' => '', //?
-				'Serie' => '', //?
-				'Folio' => '', //?
+				'Serie' => $facturaG->serie, //?
+				'Folio' => $facturaG->folio, //?
 				'Fecha' => Carbon::createFromFormat('Y-m-d h:i:s', $facturaG->fecha)->format('Y-m-d\TH:i:s'),
 				'FormaPago' => $facturaG->forma_pago,
 				//'CondicionesDePago' => 'CONTADO',
@@ -632,7 +658,7 @@ class FacturaGsController extends Controller
 	public function descargarFactura(Request $request)
 	{
 		$datos = $request->all();
-		
+		$this->total($request);
 		$facturaG = FacturaG::with('facturaGLineas')->find($datos['id']);
 
 		$url = Param::where('llave', 'fact_global_url')->first();
@@ -650,8 +676,8 @@ class FacturaGsController extends Controller
 			'xsi:schemaLocation' => 'http://www.sat.gob.mx/cfd/4 http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd',
 			'Certificado' => '', //?
 			'NoCertificado' => '', //?
-			'Serie' => '', //?
-			'Folio' => '', //?
+			'Serie' => $facturaG->serie, //?
+			'Folio' => $facturaG->folio, //?
 			'Fecha' => Carbon::createFromFormat('Y-m-d h:i:s', $facturaG->fecha)->format('Y-m-d\TH:i:s'),
 			'FormaPago' => $facturaG->forma_pago,
 			//'CondicionesDePago' => 'CONTADO',
@@ -818,5 +844,16 @@ class FacturaGsController extends Controller
 		} {
 			dd('Recurso no encontrado');
 		}
+	}
+
+	public function diferenciaSumas(Request $request){
+		$datos=$request->all();
+		if($request->ajax()){
+			$factura=FacturaG::find($datos['id']);
+			$factura->suma_manual=$datos['suma_manual'];
+			$factura->diferencia_sumas=$factura->total-$factura->suma_manual;
+			$factura->save();
+		}
+		return $factura;
 	}
 }

@@ -44,7 +44,7 @@
                 </div>
                     <div class="form-group col-sm-3">
                      <label for="serie_string">SERIE</label>
-                     <p class="form-control-static">{{$facturaG->serie_string}}</p>
+                     <p class="form-control-static">{{$facturaG->serie}}</p>
                 </div>
                     <div class="form-group col-sm-3">
                      <label for="folio">FOLIO</label>
@@ -120,7 +120,7 @@
                     $i=0;
                     $suma=0;
                 @endphp
-                @foreach($facturaG->facturaGLineas as $linea)
+                @foreach($lineas as $linea)
                 <tr>
                     <td>{{ ++$i }}</td>
                     <td>{{ $linea->fecha_operacion }}</td><td>{{ $linea->concepto }}</td><td>{{ $linea->referencia }}</td><td>{{ $linea->referencia_ampliada }}</td>
@@ -175,9 +175,14 @@
                         
                     @endphp
                 @endforeach
-                <tr>
-                    <td colspan="6" align="right">Suma Total</td>
-                    <td align="right">{{ number_format($suma,2) }}</td>
+                <tr style="background-color: rgb(105, 127, 159)">
+                    <td>Suma Manual</td>
+                    <td><input class='form-control' value='{{ $facturaG->suma_manual }}' id="suma_manual"></input></td>
+                    <td>Diferencia</td>
+                    <td><input class='form-control' readonly value='{{ $facturaG->diferencia_sumas }}' id="diferencia_sumas"></input></td>
+                    <td></td>
+                    <td align="right">Suma Total</td>
+                    <td align="right">{{ number_format($facturaG->total,2) }}</td>
                     <td colspan="2">
                         <a href="{{ route('facturaGs.total', array('id'=>$facturaG->id)) }}" class="btn btn-xs btn-warning btn-block" >Guardar y Recalcular</a>
                     </td>
@@ -231,6 +236,26 @@
                         success: function(data) {
                             location.reload(); 
                            
+                        }
+                }); 
+            }
+        });
+
+        $('#suma_manual').on('keypress', function (e) {
+         if(e.which === 13){
+             captura=$(this);
+           $.ajax({
+                type: 'GET',
+                        url: '{{route("facturaGs.diferenciaSumas")}}',
+                        data: {
+                            'id': {{ $facturaG->id }},
+                            'suma_manual': $('#suma_manual').val()
+                        },
+                        dataType:"json",
+                        beforeSend : function(){$(".loading").show(); },
+                        complete : function(){$(".loading").hide(); },
+                        success: function(data) {
+                            $('#diferencia_sumas').val(data.diferencia_sumas);
                         }
                 }); 
             }
