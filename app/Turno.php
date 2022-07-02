@@ -23,7 +23,7 @@ class Turno extends Model
     }
 
     //Mass Assignment
-    protected $fillable = ['plantel_id', 'especialidad_id', 'nivel_id', 'grado_id', 'name', 'usu_alta_id', 'usu_mod_id'];
+    protected $fillable = ['plantel_id', 'especialidad_id', 'nivel_id', 'grado_id', 'name', 'usu_alta_id', 'usu_mod_id','plan_pago_id'];
 
     public function usu_alta()
     {

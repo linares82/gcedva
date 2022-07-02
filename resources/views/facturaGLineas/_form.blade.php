@@ -1,7 +1,7 @@
 
                     <div class="form-group col-md-4 @if($errors->has('fecha_operacion')) has-error @endif">
                        <label for="fecha_operacion-field">Fecha Operacion</label>
-                       {!! Form::hidden("factura_g_id", $factura_g, array("class" => "form-control ", "id" => "fcatura_g_id-field")) !!}
+                       {!! Form::hidden("factura_g_id", isset($factura_g) ? $factura_g : null, array("class" => "form-control ", "id" => "fcatura_g_id-field")) !!}
                        {!! Form::text("fecha_operacion", null, array("class" => "form-control", "id" => "fecha_operacion-field")) !!}
                        @if($errors->has("fecha_operacion"))
                         <span class="help-block">{{ $errors->first("fecha_operacion") }}</span>

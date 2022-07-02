@@ -12,6 +12,8 @@ class UbicacionArt extends Model
     use RelationManagerTrait,GetAllDataTrait;
     use SoftDeletes;
 
+	protected $table = 'ubicacion_arts';
+
     public function __construct(array $attributes = array())
     {
         parent::__construct($attributes);

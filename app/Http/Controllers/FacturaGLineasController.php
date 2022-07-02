@@ -81,7 +81,8 @@ class FacturaGLineasController extends Controller {
 	public function edit($id, FacturaGLinea $facturaGLinea)
 	{
 		$facturaGLinea=$facturaGLinea->find($id);
-		return view('facturaGLineas.edit', compact('facturaGLinea'))
+		$facturaCabecera=FacturaG::find($facturaGLinea->factura_g_id);
+		return view('facturaGLineas.edit', compact('facturaGLinea', 'facturaCabecera'))
 			->with( 'list', FacturaGLinea::getListFromAllRelationApps() );
 	}
 
@@ -94,8 +95,12 @@ class FacturaGLineasController extends Controller {
 	public function duplicate($id, FacturaGLinea $facturaGLinea)
 	{
 		$facturaGLinea=$facturaGLinea->find($id);
-		return view('facturaGLineas.duplicate', compact('facturaGLinea'))
+		$new_facturaGLinea=$facturaGLinea->replicate();
+		$new_facturaGLinea->save();
+		return redirect()->route('facturaGs.show',$facturaGLinea->factura_g_id)->with('message', 'Registro Actualizado.');
+		/*return view('facturaGLineas.duplicate', compact('facturaGLinea'))
 			->with( 'list', FacturaGLinea::getListFromAllRelationApps() );
+			*/
 	}
 
 	/**
@@ -107,13 +112,14 @@ class FacturaGLineasController extends Controller {
 	 */
 	public function update($id, FacturaGLinea $facturaGLinea, updateFacturaGLinea $request)
 	{
+		
 		$input = $request->all();
 		$input['usu_mod_id']=Auth::user()->id;
 		//update data
 		$facturaGLinea=$facturaGLinea->find($id);
 		$facturaGLinea->update( $input );
 
-		return redirect()->route('facturaGLineas.index')->with('message', 'Registro Actualizado.');
+		return redirect()->route('facturaGs.show',$facturaGLinea->factura_g_id)->with('message', 'Registro Actualizado.');
 	}
 
 	/**

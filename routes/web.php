@@ -15037,7 +15037,7 @@ Route::get(
     '/facturaGLineas/edit/{id}',
     array(
         'as' => 'facturaGLineas.edit',
-        'middleware' => 'permission:facturaGLineas.edit',
+        //'middleware' => 'permission:facturaGLineas.edit',
         'uses' => 'FacturaGLineasController@edit',
     )
 )->middleware('auth');
@@ -15045,7 +15045,7 @@ Route::post(
     '/facturaGLineas/update/{id}',
     array(
         'as' => 'facturaGLineas.update',
-        'middleware' => 'permission:facturaGLineas.update',
+        //'middleware' => 'permission:facturaGLineas.update',
         'uses' => 'FacturaGLineasController@update',
     )
 )->middleware('auth');
@@ -15055,5 +15055,13 @@ Route::get(
         'as' => 'facturaGLineas.destroy',
         'middleware' => 'permission:facturaGLineas.destroy',
         'uses' => 'FacturaGLineasController@destroy',
+    )
+)->middleware('auth');
+Route::get(
+    '/facturaGLineas/duplicate/{id}',
+    array(
+        'as' => 'facturaGLineas.duplicate',
+        //'middleware' => 'permission:facturaGlineas.duplicate',
+        'uses' => 'FacturaGLineasController@duplicate',
     )
 )->middleware('auth');

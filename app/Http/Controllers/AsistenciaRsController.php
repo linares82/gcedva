@@ -169,7 +169,8 @@ class AsistenciaRsController extends Controller
 								$asistencia['asignacion_academica_id'] = $input['asignacion_academica_id'];
 								$asistencia['fecha'] = $input['fecha'];
 								$asistencia['cliente_id'] = $i->cliente_id;
-								if (optional($i->cliente)->st_cliente_id == 25) {
+								if (optional($i->cliente)->st_cliente_id == 25 or 
+									optional($i->cliente)->st_cliente_id == 26) {
 									$asistencia['est_asistencia_id'] = 2;
 								} else {
 									$asistencia['est_asistencia_id'] = 1;

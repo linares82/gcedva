@@ -122,7 +122,10 @@
                 @endphp
                 @foreach($lineas as $linea)
                 <tr>
-                    <td>{{ ++$i }}</td>
+                    <td>{{ ++$i }}
+                        <a href="{{ route('facturaGLineas.duplicate', $linea->id) }}" data-toggle="tooltip" title="Duplicar"><i class="glyphicon glyphicon-duplicate"></i></a>
+                        <a href="{{ route('facturaGLineas.edit', $linea->id) }}" data-toggle="tooltip" title="Editar"><i class="glyphicon glyphicon-edit"></i></a>
+                    </td>
                     <td>{{ $linea->fecha_operacion }}</td><td>{{ $linea->concepto }}</td><td>{{ $linea->referencia }}</td><td>{{ $linea->referencia_ampliada }}</td>
                     <td>{{ $linea->cargo }}</td><td>{{ $linea->abono }}</td><td>{{ $linea->saldo }}</td>
                     <td>
@@ -219,6 +222,10 @@
     //console.log(captura);
     captura.show();
     });
+
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+        })
 
     $('.noIdentificacion_editable').on('keypress', function (e) {
          if(e.which === 13){

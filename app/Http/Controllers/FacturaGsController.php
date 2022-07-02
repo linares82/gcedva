@@ -135,7 +135,7 @@ class FacturaGsController extends Controller
 	{
 		$facturaG = FacturaG::find($id);
 		$lineas=FacturaGLinea::where('factura_g_id',$facturaG->id)
-		->orderBy('fecha_operacion','desc')
+		->orderBy('fecha_operacion','asc')
 		->get();
 		//dd($lineas->toArray());
 		return view('facturaGs.show', compact('facturaG','lineas'));
