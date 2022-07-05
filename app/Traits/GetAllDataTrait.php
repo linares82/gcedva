@@ -192,7 +192,7 @@ trait GetAllDataTrait
                     $myQuery = $myQuery->whereIn('calendario_evaluacions.plantel_id', $planteles);
                 }
                 break;
-                case "doc_vinculacions":
+            case "doc_vinculacions":
                     
                     $myQuery = $myQuery->orderBy('clasificacion_id')->orderBy('orden');
                     
@@ -206,7 +206,9 @@ trait GetAllDataTrait
                 }
 
                 break;
-
+            case "empresas_vinculacions":
+                $myQuery = $myQuery->whereIn('empresas_vinculacions.plantel_id', $planteles);
+                break;
             case "egresos":
                 if ($empleado->puesto_id == 23) {
                     $planteles_rl = Plantel::where('responsable_id', $empleado->id)->pluck('id');

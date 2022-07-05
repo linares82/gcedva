@@ -61,6 +61,7 @@ class ProspectosController extends Controller {
 		if(!isset($input['bnd_inscripcion'])){
 			$input['bnd_inscripcion']=0;
 		}
+		
 
 		//create data
 		$registro=Prospecto::create( $input );

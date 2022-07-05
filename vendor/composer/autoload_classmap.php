@@ -128,6 +128,7 @@ return array(
     'AddEtapaToRegistroHistoriaClientesTable' => $baseDir . '/database/migrations/2021_06_10_161026_add_etapa_to_registro_historia_clientes_table.php',
     'AddExcepcionesDescuentosToAdeudosTable' => $baseDir . '/database/migrations/2020_07_17_133014_add_excepciones_descuentos_to_adeudos_table.php',
     'AddFacturaGeneralFieldsToPlantelsTable' => $baseDir . '/database/migrations/2022_03_22_093622_add_factura_general_fields_to_plantels_table.php',
+    'AddFecApartadoToProspectosTable' => $baseDir . '/database/migrations/2022_07_04_142733_add_fec_apartado_to_prospectos_table.php',
     'AddFecAutorizacionToHistoriaClientesTable' => $baseDir . '/database/migrations/2021_06_10_161213_add_fec_autorizacion_to_historia_clientes_table.php',
     'AddFecIngresoEmpleadosTable' => $baseDir . '/database/migrations/2022_01_31_174811_add_fec_ingreso_empleados_table.php',
     'AddFecInicioFinToDocVinculacionVinculacionsTable' => $baseDir . '/database/migrations/2022_02_28_130315_add_fec_inicio_fin_to_doc_vinculacion_vinculacions_table.php',

@@ -81,6 +81,7 @@ class FacturaGLineasController extends Controller {
 	public function edit($id, FacturaGLinea $facturaGLinea)
 	{
 		$facturaGLinea=$facturaGLinea->find($id);
+		//dd($facturaGLinea->toArray());
 		$facturaCabecera=FacturaG::find($facturaGLinea->factura_g_id);
 		return view('facturaGLineas.edit', compact('facturaGLinea', 'facturaCabecera'))
 			->with( 'list', FacturaGLinea::getListFromAllRelationApps() );
@@ -96,7 +97,9 @@ class FacturaGLineasController extends Controller {
 	{
 		$facturaGLinea=$facturaGLinea->find($id);
 		$new_facturaGLinea=$facturaGLinea->replicate();
+		$new_facturaGLinea->origen="Manual D";
 		$new_facturaGLinea->save();
+		
 		return redirect()->route('facturaGs.show',$facturaGLinea->factura_g_id)->with('message', 'Registro Actualizado.');
 		/*return view('facturaGLineas.duplicate', compact('facturaGLinea'))
 			->with( 'list', FacturaGLinea::getListFromAllRelationApps() );

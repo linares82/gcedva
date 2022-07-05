@@ -89,7 +89,10 @@
                                     
                                 @endphp
                                 @if($param_bloqueoXdoc->valor==1)
-                                @if($s->bnd_doc_oblig_entregados==1 or $s->cliente->st_cliente_id==1 or $s->cliente->st_cliente_id==22 or $validaEntregaDocs3Meses)
+                                @if($s->bnd_doc_oblig_entregados==1 or 
+                                    $s->cliente->st_cliente_id==1 or 
+                                    $s->cliente->st_cliente_id==22 or 
+                                    $validaEntregaDocs3Meses)
                                 <a href="#" onclick="modificarAsistencia({{$s->id}})" class="btn btn-success">Modificar</a>
                                 <div id='loading3' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                                 <label id="etq_msj"></label>

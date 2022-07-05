@@ -86,6 +86,22 @@
    <span class="help-block">{{ $errors->first("medio_id") }}</span>
    @endif
 </div>
+
+<div class="form-group col-md-4 @if($errors->has('fec_apartado')) has-error @endif">
+   <label for="fec_apartado-field">Fec. Apartado</label>
+   @permission('prospectos.fec_apartado')
+   {!! Form::text("fec_apartado", null, array("class" => "form-control fecha", "id" => "fec_apartado-field")) !!}
+   @endpermission
+   @if(isset($prospecto))
+   @if(!is_null($prospecto->fec_apartado))
+      {{ $prospecto->fec_apartado }}
+   @endif
+   @endif
+   @if($errors->has("fec_apartado"))
+    <span class="help-block">{{ $errors->first("fec_apartado") }}</span>
+   @endif
+</div>
+
 @permission('prospectos.inscripcion_campo')
 <div class="form-group col-md-3 @if($errors->has('bnd_inscripcion')) has-error @endif">
    <label for="bnd_inscripcion-field">Inscripcion</label>

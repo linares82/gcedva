@@ -121,14 +121,16 @@ class AsistenciaRsController extends Controller
 						->whereNull('i.deleted_at')
 						->get();
 					//dd($asistencias);
-
+					/*
 					if ($asistencias->isEmpty()) {
 						foreach ($inscripciones as $i) {
 							if ($i->cliente->st_cliente_id <> 3) {
 								$asistencia['asignacion_academica_id'] = $input['asignacion_academica_id'];
 								$asistencia['fecha'] = $input['fecha'];
 								$asistencia['cliente_id'] = $i->cliente_id;
-								if($i->cliente->st_cliente_id==25 or $i->cliente->st_cliente_id==26){
+								if($i->cliente->st_cliente_id==25 or 
+									$i->cliente->st_cliente_id==26 or 
+									$i->cliente->bnd_doc_oblig_entregados == 0){
 									$asistencia['est_asistencia_id'] = 2;
 								}else{
 									$asistencia['est_asistencia_id'] = 1;
@@ -158,6 +160,7 @@ class AsistenciaRsController extends Controller
 						return view('asistenciaRs.buscar', compact('asignacion_academica_id', 'asistencias', 'as'))
 							->with('list', AsistenciaR::getListFromAllRelationApps());
 					} elseif (count($asistencias) <> count($inscripciones)) {
+						*/
 						foreach ($inscripciones as $i) {
 							$encontrado = 0;
 							foreach ($asistencias as $a) {
@@ -170,7 +173,9 @@ class AsistenciaRsController extends Controller
 								$asistencia['fecha'] = $input['fecha'];
 								$asistencia['cliente_id'] = $i->cliente_id;
 								if (optional($i->cliente)->st_cliente_id == 25 or 
-									optional($i->cliente)->st_cliente_id == 26) {
+									optional($i->cliente)->st_cliente_id == 26 or 
+									optional($i->cliente)->bnd_doc_oblig_entregados == 0)
+									 {
 									$asistencia['est_asistencia_id'] = 2;
 								} else {
 									$asistencia['est_asistencia_id'] = 1;
@@ -181,6 +186,7 @@ class AsistenciaRsController extends Controller
 								//dd($asistencia);
 								AsistenciaR::create($asistencia);
 							}
+						
 						}
 						$asignacion_academica_id = $input['asignacion_academica_id'];
 						$asistencias = AsistenciaR::select('asistencia_rs.*', 'c.nombre', 'c.nombre2', 'c.ape_paterno', 'c.ape_materno','bnd_doc_oblig_entregados')
@@ -195,11 +201,12 @@ class AsistenciaRsController extends Controller
 							->get();
 						return view('asistenciaRs.buscar', compact('asignacion_academica_id', 'asistencias', 'as'))
 							->with('list', AsistenciaR::getListFromAllRelationApps());
-					} else {
+					/*
+						} else {
 						$asignacion_academica_id = $input['asignacion_academica_id'];
 						return view('asistenciaRs.buscar', compact('asignacion_academica_id', 'asistencias', 'as'))
 							->with('list', AsistenciaR::getListFromAllRelationApps());
-					}
+					}*/
 				}
 			}
 		}

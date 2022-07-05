@@ -41,7 +41,9 @@ class ProspectoToAsesores extends Command
      */
     public function handle()
     {
-        $prospectos=Prospecto::where('st_prospecto_id',1)->get();
+        
+        $prospectos=Prospecto::where('st_prospecto_id',1)->whereNull('fec_apartado')->get();
+        
         //dd($prospectos->toArray());
         $hoy=Carbon::createFromFormat('Y-m-d',date('Y-m-d'));
         
@@ -70,6 +72,28 @@ class ProspectoToAsesores extends Command
 
                 }    
             }
+            
+            
+            //dd($creacion);
+            
+            //dd($hoy->diffInDays($creacion));
+            
+        }
+
+        $prospectos_postpuestos=Prospecto::where('st_prospecto_id',1)->whereNotNull('fec_apartado')->get();
+        //dd($prospectos_postpuestos->toArray());
+        foreach($prospectos_postpuestos as $prospecto){
+            $fec_apartado=Carbon::createFromFormat('Y-m-d', $prospecto->fec_apartado);
+            $hoy=Carbon::createFromFormat('Y-m-d', date('Y-m-d'));
+            //dd($fec_apartado);
+            //dd($hoy->greaterThanOrEqualTo($fec_apartado));
+            
+            if($hoy->greaterThanOrEqualTo($fec_apartado)){
+                $prospecto->st_prospecto_id=2;
+                $prospecto->save();
+            }
+                            
+            
             
             //dd($creacion);
             

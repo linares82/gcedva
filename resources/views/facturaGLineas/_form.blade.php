@@ -30,21 +30,21 @@
                     </div>
                     <div class="form-group col-md-4 @if($errors->has('cargo')) has-error @endif">
                        <label for="cargo-field">Cargo </label>
-                       {!! Form::text("cargo", 0, array("class" => "form-control", "id" => "cargo-field")) !!}
+                       {!! Form::text("cargo", null, array("class" => "form-control", "id" => "cargo-field")) !!}
                        @if($errors->has("cargo"))
                         <span class="help-block">{{ $errors->first("cargo") }}</span>
                        @endif
                     </div>
                     <div class="form-group col-md-4 @if($errors->has('abono')) has-error @endif">
                        <label for="abono-field">Abono</label>
-                       {!! Form::text("abono", 0, array("class" => "form-control", "id" => "abono-field")) !!}
+                       {!! Form::text("abono", null, array("class" => "form-control", "id" => "abono-field")) !!}
                        @if($errors->has("abono"))
                         <span class="help-block">{{ $errors->first("abono") }}</span>
                        @endif
                     </div>
                     <div class="form-group col-md-4 @if($errors->has('saldo')) has-error @endif">
                        <label for="saldo-field">Saldo</label>
-                       {!! Form::text("saldo", 0, array("class" => "form-control", "id" => "saldo-field")) !!}
+                       {!! Form::text("saldo", null, array("class" => "form-control", "id" => "saldo-field")) !!}
                        @if($errors->has("saldo"))
                         <span class="help-block">{{ $errors->first("saldo") }}</span>
                        @endif

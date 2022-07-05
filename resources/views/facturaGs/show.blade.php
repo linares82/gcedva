@@ -145,7 +145,15 @@
                             
                         @endif
                     </td>
-                    <td>{{ $linea->origen }}</td>
+                    <td>
+                        @if($linea->origen=="Archivo")
+                        <span class="bg-purple color-palette">{{ $linea->origen }}</span>
+                        @elseif($linea->origen=="Manual")
+                        <span class="bg-teal color-palette">{{ $linea->origen }}</span>
+                        @else
+                        <span class="bg-green color-palette">{{ $linea->origen }}</span>
+                        @endif
+                    </td>
                     <td>
                         @if($linea->origen<>"Manual" and $linea->abono<>0)
                             <input class="bnd_incluir" data-id_linea={{ $linea->id }} type="checkbox" 
