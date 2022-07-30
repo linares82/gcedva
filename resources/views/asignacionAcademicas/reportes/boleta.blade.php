@@ -93,7 +93,7 @@
                         <td>{{$c->grupo}}</td>
                         <td>{{date_format($inscripcion->created_at,'d-m-Y')}}</td>
                         <td>{{$c->lectivo}}</td>
-                        <td>{{$inscripcion->matricula}}</td>
+                        <td>{{$c->matricula}}</td>
                     </tr>
                     <tr>
                         <td colspan='8'>

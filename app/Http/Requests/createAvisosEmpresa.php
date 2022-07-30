@@ -24,7 +24,7 @@ class createAvisosEmpresa extends FormRequest
     public function rules()
     {
         return [
-            //
+            
         ];
     }
 }

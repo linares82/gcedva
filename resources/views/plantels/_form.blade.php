@@ -64,13 +64,26 @@
                           <span class="help-block">{{ $errors->first("cve_incorporacion") }}</span>
                          @endif
                       </div>
-                      <div class="form-group col-md-4 @if($errors->has('rvoe')) has-error @endif">
-                         <label for="rvoe-field">Banco y cuenta </label>
+                      <div class="form-group col-md-8 @if($errors->has('rvoe')) has-error @endif">
+                        <table class="table table-condensed table-striped">
+                            <thead><th>Nombre</th><th>Cuenta</th><th>Clave</th><th></th></thead>
+                            <tbody>
+                                @foreach($plantel->cuentasEfectivo as $cuenta)
+                                <tr> 
+                                    </tr><td>{{$cuenta->name}}</td><td>{{$cuenta->no_cuenta}}</td><td>{{$cuenta->clabe}}</td>
+                                    <td><a class="btn btn-info btn-xs" href="{{route('cuentasEfectivos.edit', $cuenta->id)}}" target="_blank">Editar</a></td>
+                                </tr>
+                                @endforeach
+                                </tbody>
+                        </table>
+                         <!--<label for="rvoe-field">Banco y cuenta </label>
                          {!! Form::text("rvoe", null, array("class" => "form-control input-sm", "id" => "cve_incorporacion-field")) !!}
                          @if($errors->has("rvoe"))
                           <span class="help-block">{{ $errors->first("rvoe") }}</span>
                          @endif
+-->
                       </div>
+                      <!--
                       <div class="form-group col-md-4 @if($errors->has('cct')) has-error @endif">
                          <label for="cct-field">Cuenta CLABE</label>
                          {!! Form::text("cct", null, array("class" => "form-control input-sm", "id" => "cct-field")) !!}
@@ -78,6 +91,7 @@
                           <span class="help-block">{{ $errors->first("cct") }}</span>
                          @endif
                       </div>
+-->
                       <!--<div class="form-group col-md-4 @if($errors->has('cuenta_contable')) has-error @endif">
                         <label for="cuenta_contable-field">Cuenta Contable</label>
                         {!! Form::text("cuenta_contable", null, array("class" => "form-control input-sm", "id" => "cuenta_contable-field")) !!}

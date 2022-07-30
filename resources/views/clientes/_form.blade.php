@@ -986,6 +986,14 @@
                     <span class="help-block">{{ $errors->first("pagador_id") }}</span>
                     @endif
                 </div>
+
+                <div class="form-group col-md-4 @if($errors->has('fec_vencimiento_cred')) has-error @endif">
+                            <label for="fec_vencimiento_cred-field">Fecha Vencimiento Cred.</label>
+                            {!! Form::text("fec_vencimiento_cred", null, array("class" => "form-control input-sm fecha", "id" => "fec_vencimiento_cred-field")) !!}
+                            @if($errors->has("fec_vencimiento_cred"))
+                            <span class="help-block">{{ $errors->first("fec_vencimiento_cred") }}</span>
+                            @endif
+                        </div>
                 <div class="form-group col-md-12 @if($errors->has('observaciones')) has-error @endif">
                     <label for="observaciones-field">Observaciones</label>
                     {!! Form::textArea("observaciones", null, array("class" => "form-control input-sm", "id" => "observaciones-field")) !!}

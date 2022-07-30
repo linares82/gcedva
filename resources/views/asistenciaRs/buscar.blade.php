@@ -32,7 +32,7 @@
                     <div class="form-group col-md-4 @if($errors->has('fecha')) has-error @endif">
                        <label for="fecha-field">Fecha</label>
                        {!! Form::hidden("asignacion_academica_id", $asignacion_academica_id, array("class" => "form-control input-sm", "id" => "asignacion_academica_id-field")) !!}
-                       {!! Form::text("fecha", null, array("class" => "form-control input-sm", "id" => "fecha-field")) !!}
+                       {!! Form::text("fecha", null, array("class" => "form-control input-sm", "id" => "fecha-field", 'readonly'=>true)) !!}
                        @if($errors->has("fecha"))
                         <span class="help-block">{{ $errors->first("fecha") }}</span>
                        @endif
@@ -129,8 +129,28 @@
       // assuming the controls you want to attach the plugin to
       // have the "datepicker" class set
       //Campo de fecha
+  
+      @php
+   
+   $fecha=\Carbon\Carbon::now();
+   $fecha_final=$fecha->toDateString();
+    $fecha_inicial=$fecha->subDays(10)->toDateString();
+   
+   
+
+   @endphp
+   $('#fecha-field').Zebra_DatePicker({
+      direction: ['{{ $fecha_inicial }}', '{{  $fecha_final  }}'],
+      days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
+      months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+      readonly_element: false,
+      lang_clear_date: 'Limpiar',
+      show_select_today: 'Hoy',
       
-      $('#fecha-field').Zebra_DatePicker({
+   });
+
+
+      $('#fecha1-field').Zebra_DatePicker({
         days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
         months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
         readonly_element: false,
@@ -164,3 +184,8 @@
 </script>
 
 @endpush
+
+
+
+        
+    

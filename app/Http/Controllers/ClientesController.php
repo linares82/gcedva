@@ -1624,20 +1624,28 @@ class ClientesController extends Controller
     {
         $datos = $request->all();
         $cliente = Cliente::find($datos['id']);
+        $combinacion=CombinacionCliente::where('cliente_id', $cliente->id)->first();
+        $grado=$combinacion->grado;
         $plantel = Plantel::find($cliente->plantel_id);
         $inscripcion = Inscripcion::find($datos['inscripcion']);
-        $img = PivotDocCliente::where('cliente_id', $datos['id'])->where('doc_alumno_id', 11)->first();
-        $cadena_img = "";
-        //dd(count($img));
-        if (count($img) == 0) {
-            $cadena_img = explode('/', asset('images/sin_foto.png'));
-        } else {
-            $cadena_img = explode('/', $img->archivo);
+        $id_foto_doc_alumnos = Param::where('llave', 'id_foto_doc_alumos')->first();
+        if (!is_null($id_foto_doc_alumnos)) {
+            $img = PivotDocCliente::where('cliente_id', $datos['id'])->where('doc_alumno_id', $id_foto_doc_alumnos->valor)->first();
+
+            $cadena_img = "";
+            if(is_null($img)){
+                dd('sin foto cargada');    
+            }else {
+                $cadena_img = explode('/', $img->archivo);
+            }
+            //dd($cadena_img);
+            //dd($cadena_img[count($cadena_img) - 1]);
+            //dd(base_path() . '/vendor/cossou/jasperphp/examples/' . $cadena_img[count($cadena_img) - 1]);
+            return view('clientes.reportes.credencial_anverso', compact('cliente', 'inscripcion', 'cadena_img', 'plantel', 'grado'));
+        }else{
+            dd("Sin id de foto identificado, informar al administrador");
         }
-        //dd($cadena_img);
-        //dd($cadena_img[count($cadena_img) - 1]);
-        //dd(base_path() . '/vendor/cossou/jasperphp/examples/' . $cadena_img[count($cadena_img) - 1]);
-        return view('clientes.reportes.credencial_anverso', compact('cliente', 'inscripcion', 'cadena_img', 'plantel'));
+
 
         /* PDF::setOptions(['defaultFont' => 'arial']);
         $pdf = PDF::loadView('clientes.reportes.credencial_anverso', array('cliente' => $cliente,
@@ -2781,8 +2789,8 @@ class ClientesController extends Controller
             $anioActual = Carbon::createFromFormat('Y-m-d', date('Y-m-d'))->year;
 
             $mesMatricula = intval(substr($cliente->matricula, 0, 2));
-            $anioMatricula = intval("20".substr($cliente->matricula, 2, 2));
-            
+            $anioMatricula = intval("20" . substr($cliente->matricula, 2, 2));
+
             if (
                 $anioActual == $anioMatricula and
                 $mesActual <= $mesMatricula
@@ -2796,12 +2804,12 @@ class ClientesController extends Controller
                 $dentro3Meses = true;
             } elseif (
                 $anioActual > $anioMatricula and
-                $mesActual < $mesMatricula and $mesActual<=3 and
+                $mesActual < $mesMatricula and $mesActual <= 3 and
                 ($anioActual - $anioMatricula) == 1 and
-                ($mesActual - $mesMatricula)*-1 <= 3
+                ($mesActual - $mesMatricula) * -1 <= 3
             ) {
                 $dentro3Meses = true;
-            }elseif(
+            } elseif (
                 $anioActual > $anioMatricula and
                 $mesActual > $mesMatricula and
                 ($anioActual - $anioMatricula) == 1 and
@@ -2809,7 +2817,7 @@ class ClientesController extends Controller
             ) {
                 $dentro3Meses = true;
             }
-        }else{
+        } else {
             $dentro3Meses = true;
         }
 

@@ -39,7 +39,33 @@
 
                       </div>
               </div>
-              
+              @php
+           $vinculacion=\App\Vinculacion::where('cliente_id', $titulacion->cliente_id)->orderBy('id','desc')->first();
+           
+           @endphp
+           
+              <div class="form-group col-md-12 @if($errors->has('bnd_doc_vinc_revisados')) has-error @endif">
+              @if(isset($vinculacion))
+                <a class="btn btn-xs btn-info" href="{{route('vinculacions.edit',$vinculacion->id)}}" target="_bank">Vinculacion Docs.</a>
+                @endif
+                <label for="bnd_doc_vinc_revisados-field">Doc. Vinc. Revisados</label>
+                
+                {!! Form::checkbox("bnd_doc_vinc_revisados", 1, null, [ "id" => "bnd_doc_vinc_revisados-field", 'class'=>'minimal']) !!}
+                @if($errors->has("bnd_doc_vinc_revisados"))
+                <span class="help-block">{{ $errors->first("bnd_doc_vinc_revisados") }}</span>
+                @endif
+            </div>
+            <div class="form-group @if ($errors->has('obs_doc_vinc')) has-error @endif">
+                   <label for="obs_doc_vinc-field">Observaciones Docs. Vinc.</label>
+                   {!! Form::textArea('obs_doc_vinc', null, ['class' => 'form-control', 'id' => 'obs_doc_vinc-field', 'rows'=>4]) !!}
+                   @if ($errors->has('obs_doc_vinc'))
+                       <span class="help-block">{{ $errors->first('obs_doc_vinc') }}</span>
+                   @endif
+               </div>
+           </div>
+           <div>
+           
+           
            </div>
            @if(isset($titulacion))
            <div class="col-md-8">  

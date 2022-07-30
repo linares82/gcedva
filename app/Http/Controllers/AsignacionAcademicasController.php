@@ -375,6 +375,7 @@ class AsignacionAcademicasController extends Controller
             */
 		$clientes = Cliente::select(
 			'clientes.id',
+			'clientes.matricula',
 			'h.inscripcion_id',
 			'e.imagen',
 			'e.name as especialidad',
@@ -426,6 +427,7 @@ class AsignacionAcademicasController extends Controller
             */
 		$clientes = Cliente::select(
 			'clientes.id',
+			'clientes.matricula',
 			'h.inscripcion_id',
 			'e.imagen',
 			'e.name as especialidad',

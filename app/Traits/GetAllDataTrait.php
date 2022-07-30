@@ -222,6 +222,9 @@ trait GetAllDataTrait
             case "especialidads":
                 $myQuery = $myQuery->whereIn('especialidads.plantel_id', $planteles);
                 break;
+            case "factura_gs":
+                $myQuery = $myQuery->whereNull('factura_gs.deleted_at');
+                break;
             case "grados":
                 $myQuery = $myQuery->whereIn('grados.plantel_id', $planteles);
                 break;

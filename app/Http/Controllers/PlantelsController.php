@@ -674,7 +674,7 @@ class PlantelsController extends Controller
 		$datos=$request->all();
 		$plantels=Plantel::get();
 		foreach($plantels as $plantel){
-			$plantel->fact_global_id_cuenta=$datos['fact_global_pass_cuenta'];
+			$plantel->fact_global_id_cuenta=$datos['fact_global_id_cuenta'];
 			$plantel->fact_global_pass_cuenta=$datos['fact_global_pass_cuenta'];
 			$plantel->save();
 		}

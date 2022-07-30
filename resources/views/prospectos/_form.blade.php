@@ -88,9 +88,9 @@
 </div>
 
 <div class="form-group col-md-4 @if($errors->has('fec_apartado')) has-error @endif">
-   <label for="fec_apartado-field">Fec. Apartado</label>
+   <label for="fec_apartado-field" id="lbl_fec_apartado">Fec. Apartado</label>
    @permission('prospectos.fec_apartado')
-   {!! Form::text("fec_apartado", null, array("class" => "form-control fecha", "id" => "fec_apartado-field")) !!}
+   {!! Form::text("fec_apartado", null, array("class" => "form-control fecha", "id" => "fec_apartado-field", 'disabled'=>true)) !!}
    @endpermission
    @if(isset($prospecto))
    @if(!is_null($prospecto->fec_apartado))
@@ -122,6 +122,15 @@ $(document).ready(function() {
    });
    $('#especialidad_id-field').change(function(){
       getCmbNivel();
+   });
+
+   $("#lbl_fec_apartado").dblclick(function(){
+      if($("#fec_apartado-field").is(':disabled')){
+         $("#fec_apartado-field").prop( "disabled", false );
+      }else{
+         $("#fec_apartado-field").prop( "disabled", true );
+      }
+      
    });
 });   
 

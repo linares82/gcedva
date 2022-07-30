@@ -105,7 +105,9 @@
 
             <a class="btn btn-link" href="{{ route('facturaGs.index') }}"><i class="glyphicon glyphicon-backward"></i>  Regresar</a>
             @permission('facturaGLineas.create')
+            @if(is_null($facturaG->uuid))
             <a class="btn btn-success btn-md pull-right" href="{{ route('facturaGLineas.create', array('factura_g'=>$facturaG->id)) }}"><i class="glyphicon glyphicon-plus"></i> Crear </a>
+            @endif
             @endpermission
             
         </div>
@@ -123,8 +125,10 @@
                 @foreach($lineas as $linea)
                 <tr>
                     <td>{{ ++$i }}
+                        @if(is_null($facturaG->uuid))
                         <a href="{{ route('facturaGLineas.duplicate', $linea->id) }}" data-toggle="tooltip" title="Duplicar"><i class="glyphicon glyphicon-duplicate"></i></a>
                         <a href="{{ route('facturaGLineas.edit', $linea->id) }}" data-toggle="tooltip" title="Editar"><i class="glyphicon glyphicon-edit"></i></a>
+                        @endif
                     </td>
                     <td>{{ $linea->fecha_operacion }}</td><td>{{ $linea->concepto }}</td><td>{{ $linea->referencia }}</td><td>{{ $linea->referencia_ampliada }}</td>
                     <td>{{ $linea->cargo }}</td><td>{{ $linea->abono }}</td><td>{{ $linea->saldo }}</td>
@@ -195,7 +199,9 @@
                     <td align="right">Suma Total</td>
                     <td align="right">{{ number_format($facturaG->total,2) }}</td>
                     <td colspan="2">
+                    @if(is_null($facturaG->uuid))
                         <a href="{{ route('facturaGs.total', array('id'=>$facturaG->id)) }}" class="btn btn-xs btn-warning btn-block" >Guardar y Recalcular</a>
+                    @endif
                     </td>
                 </tr>
                 <tr>
@@ -213,7 +219,9 @@
                     </td>
                     <td colspan="1">
                         @permission('facturaGs.generarFactura')
+                        @if(is_null($facturaG->uuid))
                         <a href="{{ route('facturaGs.generarFactura', array('id'=>$facturaG->id)) }}"  class="btn btn-xs btn-success btn-block" >Generar Factura</a>
+                        @endif
                         @endpermission
                     </td>
                 </tr>

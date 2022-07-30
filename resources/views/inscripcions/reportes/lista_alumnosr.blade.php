@@ -120,8 +120,19 @@
                                 <td>{{ $r->cliente }}</td>
                                 <td>{{$r->ape_paterno}}</td><td>{{$r->ape_materno}}</td><td>{{$r->nombre." ".$r->nombre2}}</td>
                                 <?php
+                                /*
                                     $fechas=\App\AsistenciaR::where('asignacion_academica_id',$r->asignacion)
                                             ->where('cliente_id',$r->cliente)
+                                            ->distinct()
+                                            ->whereNull('deleted_at')
+                                            //->whereNotIn('cliente_id',[0,2])
+                                            ->get();
+                                            */
+                                    $fechas=\App\AsistenciaR::select('asignacion_academica_id','fecha','cliente_id','est_asistencia_id')
+                                            ->where('asignacion_academica_id',$r->asignacion)
+                                            ->where('cliente_id',$r->cliente)
+                                            ->distinct()
+                                            ->whereNull('deleted_at')
                                             //->whereNotIn('cliente_id',[0,2])
                                             ->get();
                                  

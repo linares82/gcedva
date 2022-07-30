@@ -285,14 +285,17 @@
                             <input type="hidden" name="_token" id="_token"  value="<?= csrf_token(); ?>"> 
                             <input type="hidden"  id="file_hidden" name="file_hidden" >
                         </div>
+                        @permission('vinculacions.update')
                         <button class="btn btn-success btn-xs" id="btn_archivo"> <span class="glyphicon glyphicon-ok">Cargar/Crear</span> </btn>
                         <button class="btn btn-warning btn-xs" id="btn_archivoEditar"> <span class="glyphicon glyphicon-ok">Cargar/Editar</span> </btn>
-                        
+                        @endpermission
                         <div id="texto_notificacion">
                         </div>
                 </div>
 
-                <div class="row"></div>
+                <div class="row">
+                    
+                </div>
                 <div class="form-group col-md-6">
                         <table class="table table-condensed table-striped">
                             <thead>
@@ -314,6 +317,7 @@
                                     </td>
                                     
                                     <td>
+                                        @permission('vinculacions.update')
                                         <a class="btn btn-xs btn-danger" href="{{url('docVinculacionVinculacions/destroy', $doc->id)}}">Eliminar</a>
                                         <button class="btn btn-info btn-xs" id="btn_editar_archivo" 
                                             data-id="{{ $doc->id }}"
@@ -324,6 +328,7 @@
                                             > 
                                             <span class="glyphicon glyphicon-ok">Editar</span> 
                                         </button>
+                                        @endpermission
                                     </td>
                                 </tr>
                                 @endforeach

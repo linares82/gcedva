@@ -3,11 +3,15 @@
       <style>
         @media print {
         th { background: #0046c3; color: #fff; max-width: 400px; padding: 0px 0px; }
-        td { font-family: arial; font-size: 7px; color: #000; text-align:center;width: 100%;}
+        td { font-family: arial; font-size: 5pt; color: #000; text-align:center;width: 100%;}
         table { padding: 2px 2px;width: 100%;}
-        #td_frontal { font-family: arial; font-size: 7px; padding: 1px 1px; color: #000; text-align:center;}
+        #td_frontal { font-family: arial; font-size: 5pt; padding: 1px 1px; color: #000; text-align:center;}
         #tbl_frontal { background: url({{asset('images/cred_frontal.jpg')}}) no-repeat;
                             background-size:200px 307px;}
+	div.saltopagina{
+      display:block;
+      page-break-before:always;
+   }
         }
         
           
@@ -39,7 +43,7 @@
             </td>
           </tr>
           <tr>
-              <td id="td_frontal">
+              <td >
                 {{$inscripcion->matricula}} <br/>
                 {{$cliente->nombre}} {{$cliente->nombre2}} {{$cliente->ape_paterno}} {{$cliente->ape_materno}}
               </td>
@@ -48,20 +52,25 @@
               @php
               $vencimiento=\Carbon\Carbon::createFromFormat('Y-m-d', $inscripcion->fec_inscripcion)->addYear();
               @endphp   
-              <td id="td_frontal">Vencimiento:{{$vencimiento->toDateString('d-m-Y')}}</td>
+              <td>Vencimiento:{{$cliente->fec_vencimiento_cred->toDateString('d-m-Y')}}</td>
           </tr>
-          <tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>
-          
+	  <tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>
+	<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>
+	<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>
+	<tr><td></td></tr><tr><td></td></tr><tr>
+                    
           </tbody>
       </table>
-      
+      <div class="saltopagina"></div>
+
       <table>
           <tbody>
-          <tr><td><h4>{{$cliente->plantel->razon}}</h4></td></tr>
-          <tr><td>Acuerdo: <strong>{{$inscripcion->especialidad->rvoe}}</strong>  CCT: <strong>{{$inscripcion->especialidad->ccte}}</strong></td></tr>
+          <tr><td><h4>{{$grado->denominacion}}</h4></td></tr>
+          <tr><td>Acuerdo: <strong>{{$grado->rvoe}}</strong>  CCT: <strong>{{$grado->cct}}</strong></td></tr>
           <tr><td>{{$cliente->plantel->calle}} # {{$cliente->plantel->no_int}}, COL. {{$cliente->plantel->colonia}}, {{$cliente->plantel->municipio}},
-                       {{$cliente->plantel->estado}}, C.P. {{$cliente->plantel->cp}} 
+                       {{$cliente->plantel->estado}}, C.P. {{$cliente->plantel->cp}}, tel {{$cliente->plantel->tel}}  
           </td></tr>
+
           <tr>
             <td>
             @if($plantel->img_firma<>"")
@@ -69,13 +78,15 @@
             @endif
             </td>
           </tr>
+          <tr><td>___________________________________</td></tr>
           <tr>
             <td>
-                <u>{{$cliente->plantel->director->nombre}} {{$cliente->plantel->director->ape_paterno}} {{$cliente->plantel->director->ape_materno}}</u>
+                {{$cliente->plantel->director->nombre}} {{$cliente->plantel->director->ape_paterno}} {{$cliente->plantel->director->ape_materno}}
                 <br/>
                 DIRECTOR(A)
             </td>
           </tr>
+          <tr><td></td></tr><tr><td></td></tr>
           <tr>
               <td>En Caso de Emergencia llamar: </td>
           </tr>
@@ -118,15 +129,19 @@
             @endif
             <tr>
                 <td>
-                    <img src="data:image/png;base64, 
-                                {!! base64_encode(QrCode::format('png')->size(80)->generate('Id:'.$cliente->id.
-                                                                                                                            '; Nombre:'.$cliente->nombre.' '.$cliente->nombre2.' '.$cliente->ape_paterno.' '.$cliente->ape_materno.
-                                                                                                                            '; Matricula:'.$inscripcion->matricula.
-                                                                                                                            '; Plantel:'.$plantel->razon)) !!} ">
                 </td>
             </tr>    
-          <tr><td>ESTA CREDENCIAL ES ÚNICA E INTRANSFERIBLE YA QUE ACREDITA AL PORTADOR COMO ALUMNO DE ÉSTA
-                       INSTITUCIÓN, EL TITULAR ES RESPONSABLE DEL BUEN USO DE LA MISMA.</td></tr>
+          <tr><td>ESTA CREDENCIAL ES ÃšNICA E INTRANSFERIBLE YA QUE ACREDITA AL PORTADOR COMO ALUMNO DE Ã‰STA
+                       INSTITUCIÃ“N, EL TITULAR ES RESPONSABLE DEL BUEN USO DE LA MISMA.</td></tr>
+	  <tr>
+                <td>
+                    <img src="data:image/png;base64, 
+                                {!! base64_encode(QrCode::format('png')->size(80)->generate('Id:'.$cliente->id.
+                                '; Nombre:'.$cliente->nombre.' '.$cliente->nombre2.' '.$cliente->ape_paterno.' '.$cliente->ape_materno.
+                                '; Matricula:'.$inscripcion->matricula.
+                                '; Plantel:'.$plantel->razon)) !!} ">
+                </td>
+            </tr>    
           </tbody>
       </table>
   </body>

@@ -20,7 +20,7 @@ class FacturaG extends Model
     } 
 
 	//Mass Assignment
-	protected $fillable = ['cuentas_efectivo_id','serie','folio','fecha','tipo_comprobante','lugar_expedicion','exportacion','periodicidad','meses','anio','emisor_rfc','emisor_nombre','emisor_regimen_fiscal','usu_alta_id','usu_mod_id','plantel_id', 'suma_manual','diferencia_sumas'];
+	protected $fillable = ['cuentas_efectivo_id','serie','folio','fecha','tipo_comprobante','lugar_expedicion','exportacion','periodicidad','meses','anio','emisor_rfc','emisor_nombre','emisor_regimen_fiscal','usu_alta_id','usu_mod_id','plantel_id', 'suma_manual','diferencia_sumas','uuid'];
 
 	public function usu_alta() {
 		return $this->hasOne('App\User', 'id', 'usu_alta_id');

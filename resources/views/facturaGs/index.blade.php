@@ -345,6 +345,7 @@
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'serie_string', 'title' => 'SERIE'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'folio', 'title' => 'FOLIO'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'fecha', 'title' => 'FECHA'])</th>
+                        <th>DESCARGAR</th>
                         <th>Lineas</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
@@ -358,19 +359,29 @@
                     <td>{{$facturaG->serie}}</td>
                     <td>{{$facturaG->folio}}</td>
                     <td>{{$facturaG->fecha}}</td>
+                    <td>
+                        @if(!is_null($facturaG->uuid))
+                        <a href="{{ route('facturaGs.solicitarFactura', array('id'=>$facturaG->id)) }}"  class="btn btn-xs btn-success" >D. Factura</a>
+                        @endif
+                        
+                    </td>
                                 <td>{{ $facturaG->facturaGLineas->count() }}</td>
                                 <td class="text-right">
                                     @permission('facturaGs.show')
                                     <a class="btn btn-xs btn-primary" href="{{ route('facturaGs.show', $facturaG->id) }}"><i class="glyphicon glyphicon-duplicate"></i>Detalle</a>
                                     @endpermission
+                                    @if(is_null($facturaG->uuid))
                                     @permission('facturaGs.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('facturaGs.edit', $facturaG->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
                                     @endpermission
+                                    @endif
+                                    @if(is_null($facturaG->uuid))
                                     @permission('facturaGs.destroy')
                                     {!! Form::model($facturaG, array('route' => array('facturaGs.destroy', $facturaG->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}
                                         <button type="submit" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> Borrar</button>
                                     {!! Form::close() !!}
                                     @endpermission
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach

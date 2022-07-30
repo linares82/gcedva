@@ -132,6 +132,9 @@ class TitulacionsController extends Controller {
 		$input['usu_mod_id']=Auth::user()->id;
 		//update data
 		$titulacion=$titulacion->find($id);
+		if(!isset($input['bnd_doc_vinc_revisados'])){
+			$input['bnd_doc_vinc_revisados']=0;
+		}
 		$titulacion->update( $input );
 
 		return redirect()->route('titulacions.index',array('q[cliente_id_lt]'=>$titulacion->cliente_id))->with('message', 'Registro Actualizado.');

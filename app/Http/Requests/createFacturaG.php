@@ -24,7 +24,10 @@ class createFacturaG extends FormRequest
     public function rules()
     {
         return [
-            //
+            'archivo'=>[
+                'file',
+                'mimes:csv,txt'
+            ],
         ];
     }
 }
