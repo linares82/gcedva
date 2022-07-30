@@ -52,7 +52,8 @@
               @php
               $vencimiento=\Carbon\Carbon::createFromFormat('Y-m-d', $inscripcion->fec_inscripcion)->addYear();
               @endphp   
-              <td>Vencimiento:{{$cliente->fec_vencimiento_cred->toDateString('d-m-Y')}}</td>
+              <td>Vencimiento:{{date("d-m-Y", strtotime($cliente->fec_vencimiento_cred))}}</td>
+
           </tr>
 	  <tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>
 	<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>
