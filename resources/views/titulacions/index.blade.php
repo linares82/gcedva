@@ -26,9 +26,7 @@
     <div class="">
         <h3>
             <i class="glyphicon glyphicon-align-justify"></i> @yield('titulacionsAppTitle')
-            @permission('titulacions.create')
-            <a class="btn btn-success pull-right" href="{{ route('titulacions.create') }}"><i class="glyphicon glyphicon-plus"></i> Crear</a>
-            @endpermission
+            
         </h3>
 
     </div>

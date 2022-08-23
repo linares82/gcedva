@@ -16,6 +16,14 @@
                        <span class="help-block">{{ $errors->first('opcion_titulacion_id') }}</span>
                    @endif
                </div>
+
+               <div class="form-group @if ($errors->has('titulacion_grupo_id')) has-error @endif">
+                   <label for="titulacion_grupo_id-field">Grupo</label>
+                   {!! Form::select('titulacion_grupo_id', $list['TitulacionGrupo'], null, ['class' => 'form-control select_seguridad', 'id' => 'titulacion_grupo_id-field']) !!}
+                   @if ($errors->has('titulacion_grupo_id'))
+                       <span class="help-block">{{ $errors->first('titulacion_grupo_id') }}</span>
+                   @endif
+               </div>
                
                <div class="form-group @if ($errors->has('titulacion_documento_id')) has-error @endif">
                   <label for="titulacion_documento_id-field">Documento</label>
@@ -40,7 +48,10 @@
                       </div>
               </div>
               @php
-           $vinculacion=\App\Vinculacion::where('cliente_id', $titulacion->cliente_id)->orderBy('id','desc')->first();
+              if(isset($titulacion)){
+                $vinculacion=\App\Vinculacion::where('cliente_id', $titulacion->cliente_id)->orderBy('id','desc')->first();	
+                }
+
            
            @endphp
            
@@ -126,6 +137,7 @@
       </div>
    </div>
    @if (isset($titulacion))
+
    <div class="row">
     <div class="col-md-6">
         <div class="box">
@@ -157,10 +169,11 @@
                     @endif
                 </div>
                 <div class="row"></div>
+                @permission('titulacions.CRUDIngresos')
                 <button class="btn btn-xs btn-success" id="btn-guardar-pago" data-titulacion="{{ $titulacion->id }}">Crear</button>
                 <button class="btn btn-xs btn-warning" id="btn-update-pago" style="display:none">Guardar</button>
                 <button class="btn btn-xs btn-danger btn-cancelar-pago">Cancelar</button>
-                
+                @endpermission
             </div>
         </div>
     </div>
@@ -182,7 +195,7 @@
                                 <td>{{ $pago->monto }}</td>
                                 <td>{{ $pago->observaciones }}</td>
                                 <td>
-                                    
+                                @permission('titulacions.CRUDIngresos')
                                     <button
                                         class="btn btn-xs btn-warning btn-editar-pago"
                                         data-pago_id="{{ $pago->id }}"
@@ -197,6 +210,7 @@
                                                                                id="btn-eliminar-pago"
                                                                                href="{{ route('titulacionPagos.destroy', $pago->id) }}"
                                                                                method="delete">Eliminar</a>
+                                @endpermission
                                 </td>
                             </tr>
                         @endforeach

@@ -132,8 +132,8 @@
                 <td>
                 </td>
             </tr>    
-          <tr><td>ESTA CREDENCIAL ES ÃšNICA E INTRANSFERIBLE YA QUE ACREDITA AL PORTADOR COMO ALUMNO DE Ã‰STA
-                       INSTITUCIÃ“N, EL TITULAR ES RESPONSABLE DEL BUEN USO DE LA MISMA.</td></tr>
+          <tr><td>ESTA CREDENCIAL ES ÚNICA E INTRANSFERIBLE YA QUE ACREDITA AL PORTADOR COMO ALUMNO DE ÉSTA
+                       INSTITUCIÓN, EL TITULAR ES RESPONSABLE DEL BUEN USO DE LA MISMA.</td></tr>
 	  <tr>
                 <td>
                     <img src="data:image/png;base64, 

@@ -1,6 +1,6 @@
 @extends('plantillas.admin_template')
 
-@include('titulacionDocumentos._common')
+@include('titulacionConceptos._common')
 
 @section('header')
 
@@ -9,7 +9,7 @@
         <!--
         @if ( $query_params = Request::input('q') )
 
-            <li class="active"><a href="{{ route('titulacionDocumentos.index') }}">@yield('titulacionDocumentosAppTitle')</a></li>
+            <li class="active"><a href="{{ route('titulacionConceptos.index') }}">@yield('titulacionConceptosAppTitle')</a></li>
             <li class="active">condition(  
 
             @foreach( $query_params as $key => $value )
@@ -17,17 +17,17 @@
             @endforeach
             )</li>
         @else
-            <li class="active">@yield('titulacionDocumentosAppTitle')</li>
+            <li class="active">@yield('titulacionConceptosAppTitle')</li>
         @endif
         -->
-        <li class="active">@yield('titulacionDocumentosAppTitle')</li>
+        <li class="active">@yield('titulacionConceptosAppTitle')</li>
     </ol>
 
     <div class="">
         <h3>
-            <i class="glyphicon glyphicon-align-justify"></i> @yield('titulacionDocumentosAppTitle')
-            @permission('titulacionDocumentos.create')
-            <a class="btn btn-success pull-right" href="{{ route('titulacionDocumentos.create') }}"><i class="glyphicon glyphicon-plus"></i> Crear</a>
+            <i class="glyphicon glyphicon-align-justify"></i> @yield('titulacionConceptosAppTitle')
+            @permission('titulacionConceptos.create')
+            <a class="btn btn-success pull-right" href="{{ route('titulacionConceptos.create') }}"><i class="glyphicon glyphicon-plus"></i> Crear</a>
             @endpermission
         </h3>
 
@@ -44,7 +44,7 @@
             </div>
             <div aria-labelledby="headingOne" role="tabpanel" class="panel-collapse collapse" id="collapseOne">
                 <div class="panel-body">
-                    <form class="TitulacionDocumento_search" id="search" action="{{ route('titulacionDocumentos.index') }}" accept-charset="UTF-8" method="get">
+                    <form class="TitulacionConcepto_search" id="search" action="{{ route('titulacionConceptos.index') }}" accept-charset="UTF-8" method="get">
                         <input type="hidden" name="q[s]" value="{{ @(Request::input('q')['s']) ?: '' }}" />
                         <div class="form-horizontal">
 
@@ -120,30 +120,28 @@
 @section('content')
     <div class="row">
         <div class="col-md-12">
-            @if($titulacionDocumentos->count())
+            @if($titulacionConceptos->count())
                 <table class="table table-condensed table-striped">
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'name', 'title' => 'NAME'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'name', 'title' => 'CONCEPTO'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
 
                     <tbody>
-                        @foreach($titulacionDocumentos as $titulacionDocumento)
+                        @foreach($titulacionConceptos as $titulacionConcepto)
                             <tr>
-                                <td><a href="{{ route('titulacionDocumentos.show', $titulacionDocumento->id) }}">{{$titulacionDocumento->id}}</a></td>
-                                <td>{{$titulacionDocumento->name}}</td>
+                                <td><a href="{{ route('titulacionConceptos.show', $titulacionConcepto->id) }}">{{$titulacionConcepto->id}}</a></td>
+                                <td>{{$titulacionConcepto->name}}</td>
                                 <td class="text-right">
-                                    @permission('titulacionDocumentos.edit')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('titulacionDocumentos.duplicate', $titulacionDocumento->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
+                                    
+                                    @permission('titulacionConceptos.edit')
+                                    <a class="btn btn-xs btn-warning" href="{{ route('titulacionConceptos.edit', $titulacionConcepto->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
                                     @endpermission
-                                    @permission('titulacionDocumentos.edit')
-                                    <a class="btn btn-xs btn-warning" href="{{ route('titulacionDocumentos.edit', $titulacionDocumento->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
-                                    @endpermission
-                                    @permission('titulacionDocumentos.destroy')
-                                    {!! Form::model($titulacionDocumento, array('route' => array('titulacionDocumentos.destroy', $titulacionDocumento->id),'method' => 'get', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}
+                                    @permission('titulacionConceptos.destroy')
+                                    {!! Form::model($titulacionConcepto, array('route' => array('titulacionConceptos.destroy', $titulacionConcepto->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}
                                         <button type="submit" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> Borrar</button>
                                     {!! Form::close() !!}
                                     @endpermission
@@ -152,7 +150,7 @@
                         @endforeach
                     </tbody>
                 </table>
-                {!! $titulacionDocumentos->appends(Request::except('page'))->render() !!}
+                {!! $titulacionConceptos->appends(Request::except('page'))->render() !!}
             @else
                 <h3 class="text-center alert alert-info">Vacio!</h3>
             @endif

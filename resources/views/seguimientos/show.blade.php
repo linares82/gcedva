@@ -415,6 +415,11 @@
         @permission('seguimiento.opcionConcretado')
         $("#st_seguimiento_id-field option[value='2']").prop('disabled',true); 
         @endpermission
+        @permission('seguimiento.estatusLibre')
+        @foreach($sts as $key=>$item)
+            $("#st_seguimiento_id-field option[value*={{ $key }}]").prop('disabled', false);
+        @endforeach
+        @endpermission
     $('#fecha-field').Zebra_DatePicker({
         days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
         months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
