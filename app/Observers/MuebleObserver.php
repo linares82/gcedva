@@ -24,7 +24,7 @@ class MuebleObserver
 
     public function updating(Mueble $mueble)
     {
-        $mueble_antes = Mueble::find($this->mueble->id);
+        $mueble_antes = Mueble::find($mueble->id);
         $this->mueble = $mueble;
 
         if ($mueble_antes->st_mueble_id <> $this->mueble->st_mueble_id) {

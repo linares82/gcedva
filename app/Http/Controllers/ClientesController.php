@@ -2296,7 +2296,8 @@ class ClientesController extends Controller
             'g.seccion',
             DB::raw('concat(emp.nombre, " ",emp.ape_paterno, " ",emp.ape_materno) as empleado_nombre'),
             'cc.name as concepto',
-            'c.fecha as fecha_caja'
+            'c.fecha as fecha_caja',
+            'clientes.bnd_doc_oblig_entregados',
         )
             ->join('seguimientos as s', 's.cliente_id', '=', 'clientes.id')
             ->join('st_seguimientos as sts', 'sts.id', '=', 's.st_seguimiento_id')
@@ -2327,7 +2328,11 @@ class ClientesController extends Controller
         //dd($detalle->toArray());
         $registros = array();
         foreach ($detalle->toArray() as $d) {
-            //dd($d);
+            if($d['bnd_doc_oblig_entregados']==1){
+                $d['bnd_doc_oblig_entregados']='Si';
+            }else{
+                $d['bnd_doc_oblig_entregados']='No';
+            }
             $tramites = Caja::select('cajas.fecha as fecha_caja', 'cc.name as concepto')
                 ->join('caja_lns as cln', 'cln.caja_id', '=', 'cajas.id')
                 ->join('caja_conceptos as cc', 'cc.id', '=', 'cln.caja_concepto_id')
@@ -2361,6 +2366,7 @@ class ClientesController extends Controller
                 $d['primera_mensualidad'] = "Si";
                 $d['primera_mensualidad_fecha'] = $primera_mensualidad->fecha_caja;
             }
+            //dd($d);
             array_push($registros, $d);
         }
         //dd($registros);

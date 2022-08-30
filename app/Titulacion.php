@@ -21,7 +21,7 @@ class Titulacion extends Model
     } 
 
 	//Mass Assignment
-	protected $fillable = ['cliente_id','fec_inicio','opcion_titulacion_id','usu_alta_id','usu_mod_id','bnd_titulado','bnd_doc_vinc_revisados','obs_doc_vinc','titulacion_grupo_id'];
+	protected $fillable = ['cliente_id','fec_inicio','opcion_titulacion_id','usu_alta_id','usu_mod_id','bnd_titulado','bnd_doc_vinc_revisados','obs_doc_vinc','titulacion_grupo_id','bnd_revision_director'];
 
 	public function usu_alta() {
 		return $this->hasOne('App\User', 'id', 'usu_alta_id');

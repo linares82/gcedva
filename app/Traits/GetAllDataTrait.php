@@ -91,7 +91,8 @@ trait GetAllDataTrait
                     $myQuery = $myQuery->Where($column, 'LIKE', '%' . $value . '%');
                     
                 } elseif ($operator === 'lt' and $value <> 0) {
-                    $myQuery = $myQuery->Where($column, '=', $value);
+                    //dd($column);
+                    $myQuery = $myQuery->Where($column, $value);
                 } elseif ($operator === 'menorq' and $value <> "") {
                     str_replace("%3A", ":", $value);
                     str_replace("+", " ", $value);
@@ -234,6 +235,12 @@ trait GetAllDataTrait
                 $myQuery = $myQuery->whereIn('grupos.plantel_id', $planteles);
                 //}
                 break;
+                case "inventarios":
+                    //if (Auth::user()->can('IFiltroEmpleadosXPlantel')) {
+                    //dd("fil");
+                    $myQuery = $myQuery->whereIn('inventarios.plantel_id', $planteles);
+                    //}
+                    break;
             case "materia":
                 //if (Auth::user()->can('IFiltroEmpleadosXPlantel')) {
                 $myQuery = $myQuery->whereIn('materia.plantel_id', $planteles);
@@ -360,7 +367,7 @@ trait GetAllDataTrait
         $myQuery = $myQuery->select([$baseTable . '.*']);
 
         //(v) pagenate
-
+        //dd($myQuery->paginate($paginate));
         return $myQuery->paginate($paginate);
     }
 

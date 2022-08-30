@@ -24,7 +24,14 @@ class createArticulo extends FormRequest
     public function rules()
     {
         return [
-            //
+            'name'=>'unique:articulos'
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'name.unique'=>"Valor ya existe"
         ];
     }
 }

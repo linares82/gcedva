@@ -174,6 +174,7 @@ class TitulacionGruposController extends Controller {
 			->where('c.plantel_id',$plantel->id)
 			->where('titulacion_grupo_id',$grupo->id)
 			->where('titulacions.opcion_titulacion_id',$concepto->opcion_titulacion_id)
+			->whereNull('tp.deleted_at')
 			->orderBy('opcion_titulacion_id', 'asc') 
 			->orderBy('titulacions.cliente_id', 'asc')
 			->first();

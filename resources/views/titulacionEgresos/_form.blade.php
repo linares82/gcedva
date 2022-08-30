@@ -68,12 +68,13 @@
 @push('scripts')
 <script type="text/javascript">
 $(document).ready(function() {
+   @if(!isset($titulacionEgreso))
    $('#no_alumnos-field').val(0);
    $('#cantidad-field').val(0);
    $('#no_horas-field').val(0);
    $('#costo_unitario-field').val(0);
    $('#monto_total-field').val(0);
-
+   @endif
 });                    
 
 $('#no_alumnos-field').change(function(){

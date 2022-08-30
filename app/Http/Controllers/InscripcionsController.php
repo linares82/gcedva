@@ -3070,7 +3070,7 @@ class InscripcionsController extends Controller
                 . 'inscripcions.fec_inscripcion, p.razon as plantel, pe.name as periodo_estudio,'
                 . 't.name as turno, pe.name as periodo_estudio, '
                 . 'gru.name as grupo, gru.id as gru, stc.id as estatus_cliente_id, stc.name as estatus_cliente, '
-                . 'l.name as lectivo, c.matricula'))
+                . 'l.name as lectivo, c.matricula, c.tel_cel'))
                 ->join('clientes as c', 'c.id', '=', 'inscripcions.cliente_id')
                 ->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
                 ->join('medios as m', 'm.id', '=', 'c.medio_id')

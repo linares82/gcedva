@@ -90,6 +90,12 @@ return [
             'url' => env('APP_URL').'/storage/facturacion_global',
             'visibility' => 'public',
         ],
+        'inventario' => [
+            'driver' => 'local',
+            'root' => storage_path('inventario'),
+            'url' => env('APP_URL').'/storage/inventario',
+            'visibility' => 'public',
+        ],
         'files_facturacion' => [
             'driver' => 'local',
             'root' => storage_path('files_facturacion'),

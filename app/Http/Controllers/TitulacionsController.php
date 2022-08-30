@@ -135,6 +135,9 @@ class TitulacionsController extends Controller {
 		if(!isset($input['bnd_doc_vinc_revisados'])){
 			$input['bnd_doc_vinc_revisados']=0;
 		}
+		if(!isset($input['bnd_revision_director'])){
+			$input['bnd_revision_director']=0;
+		}
 		$titulacion->update( $input );
 
 		return redirect()->route('titulacions.index',array('q[cliente_id_lt]'=>$titulacion->cliente_id))->with('message', 'Registro Actualizado.');

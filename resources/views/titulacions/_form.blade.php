@@ -66,6 +66,15 @@
                 <span class="help-block">{{ $errors->first("bnd_doc_vinc_revisados") }}</span>
                 @endif
             </div>
+            @permission('titulacions.revision_director')
+            <div class="form-group col-md-12 @if($errors->has('bnd_revision_director')) has-error @endif">
+                <label for="bnd_revision_director-field">Revision Director</label>
+                {!! Form::checkbox("bnd_revision_director", 1, null, [ "id" => "bnd_revision_director-field", 'class'=>'minimal']) !!}
+                @if($errors->has("bnd_revision_director"))
+                <span class="help-block">{{ $errors->first("bnd_revision_director") }}</span>
+                @endif
+            </div>
+            @endpermission
             <div class="form-group @if ($errors->has('obs_doc_vinc')) has-error @endif">
                    <label for="obs_doc_vinc-field">Observaciones Docs. Vinc.</label>
                    {!! Form::textArea('obs_doc_vinc', null, ['class' => 'form-control', 'id' => 'obs_doc_vinc-field', 'rows'=>4]) !!}
