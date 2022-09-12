@@ -1,5 +1,5 @@
                   <div class="form-group col-md-4 @if($errors->has('entrada_salida_id')) has-error @endif">
-                     <label for="entrada_salida_id-field">Tipo</label>
+                     <label for="entrada_salida_id-field">Tipo Movimiento</label>
                      {!! Form::select("entrada_salida_id", $list["EntradaSalida"], null, array("class" => "form-control select_seguridad", "id" => "entrada_salida_id-field")) !!}
                      @if($errors->has("entrada_salida_id"))
                      <span class="help-block">{{ $errors->first("entrada_salida_id") }}</span>

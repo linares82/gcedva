@@ -4,6 +4,7 @@ use Auth;
 use App\Cliente;
 
 use App\Empleado;
+use App\Seguimiento;
 use App\Http\Requests;
 use App\AsignacionTarea;
 use Illuminate\Http\Request;
@@ -68,8 +69,16 @@ class AsignacionTareasController extends Controller {
 		//create data
 		$a=AsignacionTarea::create( $input );
 		$cliente=Cliente::find($a->cliente_id);
-		$cliente->empleado_id=$empleado->id;
-		$cliente->save();
+		$seguimiento=Seguimiento::where('cliente_id', $cliente->id)->first();
+		if($seguimiento->st_seguimiento_id<>2 and 
+		   $seguimiento->st_seguimiento_id<>7 and
+		   $seguimiento->st_seguimiento_id<>9 and
+		   $seguimiento->st_seguimiento_id<>10){
+			$cliente->empleado_id=$empleado->id;
+			$cliente->save();
+		}
+		
+		
 		
 		return redirect()->route('seguimientos.show', $a->cliente_id)->with('message', 'Registro Creado.');
 	}

@@ -66,13 +66,20 @@
                 <span class="help-block">{{ $errors->first("bnd_doc_vinc_revisados") }}</span>
                 @endif
             </div>
-            @permission('titulacions.revision_director')
+            
             <div class="form-group col-md-12 @if($errors->has('bnd_revision_director')) has-error @endif">
                 <label for="bnd_revision_director-field">Revision Director</label>
+                @permission('titulacions.revision_director')
                 {!! Form::checkbox("bnd_revision_director", 1, null, [ "id" => "bnd_revision_director-field", 'class'=>'minimal']) !!}
+                @endif
+                @if(!isset($titulacion) or $titulacion->bnd_revision_director<>1)
+                    NO
+                @else
+                    SI
+                @endif
                 @if($errors->has("bnd_revision_director"))
                 <span class="help-block">{{ $errors->first("bnd_revision_director") }}</span>
-                @endif
+                
             </div>
             @endpermission
             <div class="form-group @if ($errors->has('obs_doc_vinc')) has-error @endif">
@@ -215,10 +222,12 @@
                                         >
                                         Editar
                                     </button>
+                                @endpermission
+                                @permission('titulacions.EliminarIngreso')
                                     <a class="btn btn-xs btn-danger"
-                                                                               id="btn-eliminar-pago"
-                                                                               href="{{ route('titulacionPagos.destroy', $pago->id) }}"
-                                                                               method="delete">Eliminar</a>
+                                        id="btn-eliminar-pago"
+                                        href="{{ route('titulacionPagos.destroy', $pago->id) }}"
+                                        method="delete">Eliminar</a>
                                 @endpermission
                                 </td>
                             </tr>
@@ -265,10 +274,12 @@
                        </div>
                        <div class="row"></div>
                        <div class="form-group col-md-6">
+                            @permission('titulacions.CRUDintentos')
                            <button class="btn btn-xs btn-success" id="btn-agregar-intento">Agregar Intento</button>
                            <button class="btn btn-xs btn-warning" id="btn-update-intento" style="display:none;">Guardar
                                Intento</button>
                            <button class="btn btn-xs btn-danger" id="btn-cancelar-intento">Cancelar Intento</button>
+                           @endpermission
                        </div>
                    </div>
                </div>
@@ -294,6 +305,7 @@
                                           
                                        </td>
                                        <td>
+                                            @permission('titulacions.CRUDintentos')
                                            <button class="btn btn-xs btn-warning btn-editar-intento"
                                                data-intento_id="{{ $intento->id }}"
                                                data-intento="{{ $intento->intento }}"
@@ -304,7 +316,7 @@
                                            <a class="btn btn-xs btn-danger" id="btn-eliminar-intento"
                                                href="{{ route('titulacionIntentos.destroy', $intento->id) }}"
                                                method="delete">Eliminar</a>
-                                          
+                                            @endpermission
                                        </td>
                                    </tr>
                                @endforeach

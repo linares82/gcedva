@@ -25,7 +25,7 @@
         <table class="table table-condensed table-striped SaltoDePagina">
             <thead>
                 <th></th><th>Plantel</th><th>Responsable</th><th>No. Inventario</th><th>Articulo</th><th>Ubicacion</th><th>Marca</th><th>Modelo</th><th>No. Serie</th>
-                <th>Estatus Uso</th><th>Estatus Uso</th><th>Fecha Alta</th>
+                <th>Estatus Uso</th><th>Estatus Uso</th><th>Fecha Alta</th><th>Obs.</th>
             </thead>
             <tbody>
                 <?php $consecutivo_linea=1; 
@@ -51,7 +51,7 @@
                 <table class="table table-condensed table-striped SaltoDePagina">
                 <thead>
                     <th></th><th>Plantel</th><th>Responsable</th><th>No. Inventario</th><th>Articulo</th><th>Ubicacion</th><th>Marca</th><th>Modelo</th><th>No. Serie</th>
-                    <th>Estatus Uso</th><th>Estatus Uso</th><th>Fecha Alta</th>
+                    <th>Estatus Uso</th><th>Estatus Uso</th><th>Fecha Alta</th><th>Obs.</th>
                 </thead>
                 <tbody>
                 @endif
@@ -59,7 +59,7 @@
                 <td>{{$consecutivo_linea++}}</td><td>{{ $registro->razon }}</td><td>{{$registro->nombre}} {{$registro->ape_paterno}} {{$registro->ape_materno}}</td>
                 <td>{{ \App\Mueble::find($registro->id)->getNoInv()}}</td><td>{{$registro->articulo}}</td><td>{{$registro->ubicacion}}</td>
                 <td>{{$registro->marca}}</td><td>{{$registro->modelo}}</td><td>{{$registro->no_serie}}</td><td>{{$registro->estatus_uso}}</td>
-                <td>{{$registro->estatus}}</td><td>{{$registro->fecha_alta}}</td>
+                <td>{{$registro->estatus}}</td><td>{{$registro->fecha_alta}}</td><td>{{$registro->observaciones}}</td>
                 </tr>
                 <?php 
                 $responsable=$registro->empleado;

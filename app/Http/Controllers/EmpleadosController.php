@@ -305,7 +305,8 @@ class EmpleadosController extends Controller
     public function update($id, Empleado $empleado, updateEmpleado $request)
     {
         $input = $request->except(['doc_empleado_id', 'archivo', 'plantel_id']);
-        
+        //dd($input);
+
         $input2 = $request->only(['plantel_id']);
         //dd($input2['plantel_id']);
         if(isset($input['pertenece_a'])){
@@ -314,8 +315,9 @@ class EmpleadosController extends Controller
         
         $input['usu_mod_id'] = Auth::user()->id;
         if (!isset($input['bnd_recontratable'])) {
-            $input['jefe_bnd'] = 0;
+            $input['bnd_recontratable'] = 0;
         } 
+        //dd($input['jefe_bnd']);
         if (!isset($input['jefe_bnd'])) {
             $input['jefe_bnd'] = 0;
         } else {
@@ -328,6 +330,7 @@ class EmpleadosController extends Controller
         }
         //dd($input);
         $empleado = $empleado->find($id);
+
         $e = $empleado->update($input);
         
         //dd($input['plantel_id']);

@@ -2221,7 +2221,7 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                         
                         //trabaja el campo plantel 
                         @permission('Icliente.modificarPlantel')
-                                $('#plantel_id-field').prop('disabled', true);
+                                $('#plantel_id-field').prop('disabled', false);
                         @endpermission
                         /*$("#frm_cliente").submit(function() {
                             $('#plantel_id-field').prop('disabled', false);

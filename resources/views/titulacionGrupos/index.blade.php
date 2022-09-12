@@ -149,6 +149,7 @@
                     <th>@include('CrudDscaffold::getOrderlink', ['column' => 'name', 'title' => 'NAME'])</th>
                     <th>@include('CrudDscaffold::getOrderlink', ['column' => 'fecha', 'title' => 'FECHA'])</th>
                     <th>Egresos</th>
+                    <th>Ingresos</th>
                     <th class="text-right">OPCIONES</th>
                 </tr>
             </thead>
@@ -170,6 +171,28 @@
                         {!! Form::model($titulacionGrupo,
                         array(
                             'route' => array('titulacionGrupos.reporte', $titulacionGrupo->id),
+                            'method' => 'get',
+                            'style' => 'display: inline;'
+                        )) !!}
+                        <div class="form-group col-md-4 @if($errors->has('plantel_id')) has-error @endif">
+                            <label for="plantel_id-field">Plantel</label>
+                            {!! Form::select("plantel_id", $planteles, null, array("class" => "form-control select_seguridad", "id" => "plantel_id-field")) !!}
+                            {!! Form::hidden("id", $titulacionGrupo->id, array("class" => "form-control", "id" => "id-field")) !!}
+                            @if($errors->has("plantel_id"))
+                            <span class="help-block">{{ $errors->first("plantel_id") }}</span>
+                            @endif
+                        </div>
+                        <button type="submit" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> Reporte</button>
+                        {!! Form::close() !!}
+
+                        <!--<a class="btn btn-xs btn-warning" target="_blank" href="{{ route('titulacionGrupos.reporte', array('grupo'=>$titulacionGrupo->id)) }}" target="_blank"><i class="glyphicon glyphicon-plus"></i> Reporte</a>-->
+                        @endpermission
+                    </td>
+                    <td>
+                    @permission('titulacionGrupos.rptIngresos')
+                        {!! Form::model($titulacionGrupo,
+                        array(
+                            'route' => array('titulacionGrupos.rptIngresos', $titulacionGrupo->id),
                             'method' => 'get',
                             'style' => 'display: inline;'
                         )) !!}

@@ -116,7 +116,29 @@
                     <th>MATRICULA</th><th>ASIGNATURA</th><th>CLAVE</th><th>CRÉDITOS</th><th>PERIODO</th><th>CALIFICACION</th><TH>TIPO EVALUACION</TH>
                     </thead>
                     <tbody>
+                        @php
+                            $total_creditos=0;
+                            $suma_calificaciones=0;
+                            $total_materias=0;
+                        @endphp
                         
+                        @if($consulta_calificaciones->count())
+                        @foreach($consulta_calificaciones as $a)
+                        
+                        <tr>
+                            <td>{{ $cliente->matricula }}</td>
+                            <td>{{$a->materia}}</td><td>{{$a->codigo}}</td><td>{{$a->creditos}}</td>
+                            <td>{{$a->lectivo}}</td>
+                            <td> {{ $cali_redondeada=($a->calificacion<6 ? ($a->calificacion % 1) : round($a->calificacion,0)) }}</td>
+                            <td>{{$a->tipo_examen}}</td>
+                            @php
+                                $total_creditos=$total_creditos+$a->creditos;
+                                $suma_calificaciones=$suma_calificaciones+$cali_redondeada;
+                                $total_materias=$total_materias+1;
+                            @endphp
+                        </tr>
+                        @endforeach
+                        @endif
                         @foreach($hacademicas as $a)
                         
                         <tr>
@@ -125,13 +147,17 @@
                             <td>{{$a['lectivo']}}</td>
                             <td>{{$cali_redondeada= ($a['calificacion']<6 ? ($a['calificacion'] % 1) : round($a['calificacion'],0)) }}</td>
                                 <td>{{$a['tipo_examen']}}</td>
-                            
+                            @php
+                                $total_creditos=$total_creditos+$a['creditos'];
+                                $suma_calificaciones=$suma_calificaciones+$cali_redondeada;
+                                $total_materias=$total_materias+1;
+                            @endphp
                         </tr>
                         @endforeach
                         
                         <tr>
                             <td colspan="2" class="td_derecho">TOTAL DE CREDITOS</td><td>{{ $total_creditos }}</td>
-                            <td colspan="2" rowspan='2' class="td_centro">PROMEDIO GENERAL </td><td rowspan='2'> {{ $total_materias==0 ? 0 : round(($suma_calificaciones/$total_materias),2) }}</td>
+                            <td colspan="2" rowspan='2' class="td_centro">PROMEDIO GENERAL</td><td rowspan='2'> {{ $total_materias==0 ? 0 : round(($suma_calificaciones/$total_materias),2) }}</td>
                         </tr>
                         <tr>
                             <td colspan="2" class="td_derecho">%</td><td></td>

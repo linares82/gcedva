@@ -36,7 +36,7 @@ class MueblesController extends Controller
 	 */
 	public function create()
 	{
-		$articulos = Articulo::where('tpo_articulo_id', 2)->pluck('name', 'id');
+		$articulos = Articulo::where('tpo_articulo_id', 1)->pluck('name', 'id');
 		return view('muebles.create', compact('articulos'))
 			->with('list', Mueble::getListFromAllRelationApps());
 	}

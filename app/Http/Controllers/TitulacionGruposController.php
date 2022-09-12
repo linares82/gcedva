@@ -1,8 +1,9 @@
 <?php namespace App\Http\Controllers;
 
 use Auth;
-use App\Plantel;
+use App\Cliente;
 
+use App\Plantel;
 use App\Empleado;
 use App\Titulacion;
 use App\Http\Requests;
@@ -187,6 +188,32 @@ class TitulacionGruposController extends Controller {
 		$egresos=TitulacionEgreso::where('titulacion_grupo_id', $datos['id'])->get();
 		//dd($egresos);
 		return view('titulacionGrupos.reporte', compact('ingresos', 'egresos','plantel','grupo'));
+	}
+
+	public function rptIngresos(Request $request){
+		//dd($request->all());
+		$datos=$request->all();
+		$plantel=Plantel::find($datos['plantel_id']);
+		//dd($plantel->toArray());
+		$grupo=TitulacionGrupo::find($datos['id']);
+		
+		$ingresos=Cliente::select('p.razon','clientes.id as cliente_id','clientes.matricula','clientes.nombre',
+		'clientes.nombre2','clientes.ape_paterno','clientes.ape_materno','ot.name as opcion_titulacion',
+		'tp.fecha','tp.monto','tp.observaciones','ot.costo')
+		->join('plantels as p', 'p.id','clientes.plantel_id')
+		->join('titulacions as t', 't.cliente_id','clientes.id')
+		->join('opcion_titulacions as ot','ot.id','t.opcion_titulacion_id')
+		->join('titulacion_grupos as tg', 'tg.id','t.titulacion_grupo_id')
+		->join('titulacion_pagos as tp','tp.titulacion_id','t.id')
+		->where('plantel_id',$datos['plantel_id'])
+		->where('tg.id',$datos['id'])
+		->get();
+		
+		
+		//dd($ingresos);
+		
+		//dd($egresos);
+		return view('titulacionGrupos.rptIngresos', compact('ingresos','plantel','grupo'));
 	}
 
 }

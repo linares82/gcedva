@@ -1565,7 +1565,9 @@ class InscripcionsController extends Controller
             'm.codigo',
             'm.creditos',
             'l.name as lectivo',
-            'hacademicas.id'
+            'hacademicas.id',
+            'hacademicas.materium_id',
+            //'hacademicas.cliente_id'
         )
             ->join('lectivos as l', 'l.id', '=', 'hacademicas.lectivo_id')
             ->join('materia as m', 'm.id', '=', 'hacademicas.materium_id')
@@ -1574,7 +1576,21 @@ class InscripcionsController extends Controller
             ->with('cliente')
             ->orderBy('hacademicas.id')
             ->get();
-        //dd($hacademicas->toArray());
+        //dd($hacademicas->count()); 38
+
+        $consulta_calificaciones = ConsultaCalificacion::where('matricula', 'like', "%" . $cliente->matricula . "%")->get();
+        //dd($consulta_calificaciones->count()); 72
+
+        foreach($consulta_calificaciones as $c){
+            array_push($resultados, array('materia' => $c->materia,
+            'codigo' => $c->codigo,
+            'creditos' => $c->creditos,
+            'lectivo' => $c->lectivo,
+            'calificacion' => $c->calificacion,
+            'tipo_examen' => $c->tipo_examen,
+            'materia_id' => ""));
+        }
+        //dd(count($resultados));
 
         foreach ($hacademicas as $hacademica) {
             $tpo_examen_max = Calificacion::where('hacademica_id', $hacademica->id)->max('tpo_examen_id');
@@ -1584,7 +1600,6 @@ class InscripcionsController extends Controller
                 ->where('tpo_examen_id', $tpo_examen_max)
                 ->first();
             
-            
             $resultado = array(
                 'materia' => $hacademica->materia,
                 'codigo' => $hacademica->codigo,
@@ -1592,14 +1607,37 @@ class InscripcionsController extends Controller
                 'lectivo' => $hacademica->lectivo,
                 'calificacion' => $calificacion->calificacion,
                 'tipo_examen' => $calificacion->tipo_examen,
+                'materia_id' => $hacademica->materium_id
             );
             //dd($resultado);
             array_push($resultados, $resultado);
         }
-        //dd($resultados);
-        $consulta_calificaciones = ConsultaCalificacion::where('matricula', 'like', "%" . $cliente->matricula . "%")->get();
+        //dd(count($resultados));
+                
+        $total_creditos=0;
+        $suma_calificaciones=0;
+        $total_materias=0;
+        //dd($resultados[9]);
+        $rechazados=array();
+        foreach($resultados as $resultado){
+            if(strval($resultado['calificacion'])>=6){
+                $total_creditos=$total_creditos+$resultado['creditos'];
+                $suma_calificaciones=$suma_calificaciones+$resultado['calificacion'];
+                $total_materias=$total_materias+1;
+            }else{
+                $r=$this->existeMateriaAprobadaPosterior($resultado['codigo'], $resultados);
+                if(!$r){
+                    //dd($resultado['codigo']);
+                    $total_creditos=$total_creditos+$resultado['creditos'];
+                    $suma_calificaciones=$suma_calificaciones+$resultado['calificacion'];
+                    $total_materias=$total_materias+1;
+                }else{
+                    array_push($rechazados, $resultado);
+                }
+            }
+        }
         //dd($consulta_calificaciones->toArray());
-        //dd($inscripcion);
+        //dd($rechazados);
         /*return view('inscripcions.reportes.lista_alumnosr',compact('registros'))
         ->with( 'list', Inscripcion::getListFromAllRelationApps() );
          * */
@@ -1613,7 +1651,21 @@ class InscripcionsController extends Controller
          */
 
 
-        return view('inscripcions.reportes.historial', compact('inscripcion', 'cliente', 'plantel', 'grado', 'consulta_calificaciones'))->with('hacademicas', $resultados);
+        return view('inscripcions.reportes.historial', 
+        compact('inscripcion', 'cliente', 'plantel', 'grado', 'consulta_calificaciones','total_materias','total_creditos','suma_calificaciones'))
+        ->with('hacademicas', $resultados);
+    }
+
+    public function existeMateriaAprobadaPosterior($codigo, $matriz){
+        //dd($matriz); //744
+        $resultado=false;
+        $matriz_invertida=array_reverse($matriz);
+        //dd($matriz_invertida);
+        $r=array_search($codigo, array_column($matriz_invertida, 'codigo'));
+        //dd($r); //18
+        if(strval($matriz_invertida[$r]['calificacion'])>=6)
+        $resultado=true;
+        return $resultado;   
     }
 
     public function sepICP08Boletas()
@@ -3505,7 +3557,7 @@ class InscripcionsController extends Controller
         ->setPaper('legal', 'landscape');
         return $pdf->download('reporte.pdf');
          */
-        return view('inscripcions.reportes.historial', compact('inscripcion', 'cliente', 'plantel', 'grado', 'consulta_calificaciones'))->with('hacademicas', $resultados);
+        return view('inscripcions.reportes.historialOficial', compact('inscripcion', 'cliente', 'plantel', 'grado', 'consulta_calificaciones'))->with('hacademicas', $resultados);
     }
 
     public function inspeccionVigilancia()

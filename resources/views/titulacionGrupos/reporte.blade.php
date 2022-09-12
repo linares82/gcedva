@@ -96,7 +96,11 @@
                 </tr>
                 <tr>
                     <td>PORCENTAJE DE UTILIDAD</td>
-                    <td>{{number_format(($suma_ingresos-$suma_egresos)/$suma_ingresos,2)}} %</td>
+                    <td>
+                        @if($suma_ingresos>0)
+                        {{number_format(($suma_ingresos-$suma_egresos)/$suma_ingresos,2)}} %
+                        @endif
+                    </td>
                 </tr>
             
             </tbody>
