@@ -15,15 +15,15 @@
     
   </head>
   <body>
-      <h3>{{$plantel->razon}}</h3>
-      <h3>{{$grupo->name}}</h3>
+      <h3>Ingresos de titulacion</h3>
+      
       
     <div class="datagrid">
         
         <table class="table table-condensed table-striped">
             <thead >
                 <tr>
-                    <th>No.</th><th>PLANTEL</th><th>ID</th><th>MATRICULA</th><th>ALUMNO</th><th>OPCION</th>
+                    <th>No.</th><th>GRUPO</th><th>PLANTEL</th><th>ID</th><th>MATRICULA</th><th>ALUMNO</th><th>OPCION</th>
                     <th>MONTO</th><th>FECHA</th><th>OBSERVACIONES</th><th>Adeudo</th>
                 </tr> 
             </thead>
@@ -35,7 +35,7 @@
                 @endphp
                 @foreach($ingresos as $ingreso)
                 <tr>
-                    <td>{{++$i}}</td><td>{{$ingreso->razon}}</td><td>{{$ingreso->cliente_id}}</td><td>{{$ingreso->matricula}}</td>
+                    <td>{{++$i}}</td><td>{{$ingreso->grupo}}</td><td>{{$ingreso->razon}}</td><td>{{$ingreso->cliente_id}}</td><td>{{$ingreso->matricula}}</td>
                     <td>{{$ingreso->nombre}} {{$ingreso->nombre2}} {{$ingreso->ape_paterno}} {{$ingreso->ape_materno}}</td>
                     <td>{{$ingreso->opcion_titulacion}}</td><td>{{$ingreso->monto}}</td><td>{{$ingreso->fecha}}</td>
                     <td>{{$ingreso->observaciones}}</td>

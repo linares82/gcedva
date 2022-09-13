@@ -15076,7 +15076,8 @@ Route::prefix('/titulacionGrupos')
     Route::get('/edit/{id}', 'TitulacionGruposController@edit')->name('edit')->middleware('permission:titulacionGrupos.edit');
     Route::get('/show/{id}', 'TitulacionGruposController@show')->name('show')->middleware('permission:titulacionGrupos.show');
     Route::get('/reporte/{id}', 'TitulacionGruposController@reporte')->name('reporte')->middleware('permission:titulacionGrupos.reporte');
-    Route::get('/rptIngresos/{id}', 'TitulacionGruposController@rptIngresos')->name('rptIngresos')->middleware('permission:titulacionGrupos.rptIngresos');
+    Route::get('/rptIngresos', 'TitulacionGruposController@rptIngresos')->name('rptIngresos')->middleware('permission:titulacionGrupos.rptIngresos');
+    Route::post('/rptIngresosR', 'TitulacionGruposController@rptIngresosR')->name('rptIngresosR')->middleware('permission:titulacionGrupos.rptIngresos');
     Route::post('/store', 'TitulacionGruposController@store')->name('store')->middleware('permission:titulacionGrupos.store');
     Route::post('/edit/{id}', 'TitulacionGruposController@update')->name('update')->middleware('permission:titulacionGrupos.update');
     Route::delete('/delete/{id}', 'TitulacionGruposController@destroy')->name('destroy')->middleware('permission:titulacionGrupos.destroy');

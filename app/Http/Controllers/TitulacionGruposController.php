@@ -190,14 +190,29 @@ class TitulacionGruposController extends Controller {
 		return view('titulacionGrupos.reporte', compact('ingresos', 'egresos','plantel','grupo'));
 	}
 
-	public function rptIngresos(Request $request){
+	public function rptIngresos(){
+		$planteles = array();
+		$empleado=Empleado::where('user_id', Auth::user()->id)->first();
+        foreach ($empleado->plantels as $p) {
+            //dd($p->id);
+            array_push($planteles, $p->id);
+        }
+
+		$plantels=Plantel::whereIn('id', $planteles)->pluck('razon','id');
+		//dd($plantels);
+		$grupos=TitulacionGrupo::pluck('name','id');
+		
+		return view('titulacionGrupos.reportes.rptIngresos', compact('plantels','grupos'));
+	}
+
+	public function rptIngresosR(Request $request){
 		//dd($request->all());
 		$datos=$request->all();
-		$plantel=Plantel::find($datos['plantel_id']);
-		//dd($plantel->toArray());
-		$grupo=TitulacionGrupo::find($datos['id']);
 		
-		$ingresos=Cliente::select('p.razon','clientes.id as cliente_id','clientes.matricula','clientes.nombre',
+		//dd($datos);
+		
+		
+		$ingresos=Cliente::select('p.razon','tg.name as grupo','clientes.id as cliente_id','clientes.matricula','clientes.nombre',
 		'clientes.nombre2','clientes.ape_paterno','clientes.ape_materno','ot.name as opcion_titulacion',
 		'tp.fecha','tp.monto','tp.observaciones','ot.costo')
 		->join('plantels as p', 'p.id','clientes.plantel_id')
@@ -205,15 +220,15 @@ class TitulacionGruposController extends Controller {
 		->join('opcion_titulacions as ot','ot.id','t.opcion_titulacion_id')
 		->join('titulacion_grupos as tg', 'tg.id','t.titulacion_grupo_id')
 		->join('titulacion_pagos as tp','tp.titulacion_id','t.id')
-		->where('plantel_id',$datos['plantel_id'])
-		->where('tg.id',$datos['id'])
+		->whereIn('plantel_id',$datos['plantel_f'])
+		->whereIn('tg.id',$datos['titulacion_grupo_f'])
 		->get();
 		
 		
 		//dd($ingresos);
 		
 		//dd($egresos);
-		return view('titulacionGrupos.rptIngresos', compact('ingresos','plantel','grupo'));
+		return view('titulacionGrupos.reportes.rptIngresosR', compact('ingresos'));
 	}
 
 }
