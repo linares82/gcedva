@@ -262,14 +262,12 @@
                         
                     </td>
                     <td>
-                        @if(!isset($documento['archivo']))
+                        @if($documento['doc_entregado']==1)
+                            SI
+                        @elseif(!isset($documento['doc_entregado']))
                             NO
                         @else
-                            @if(is_null($documento['archivo']))
                             NO 
-                            @else
-                            SI
-                            @endif
                         @endif
                     </td>
                 </tr>

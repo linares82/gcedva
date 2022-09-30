@@ -30,8 +30,6 @@
             <tbody>
                 @php
                 $i=0;
-                $monto_alumno=0;
-                $cliente=0;
                 @endphp
                 @foreach($ingresos as $ingreso)
                 <tr>
@@ -40,17 +38,49 @@
                     <td>{{$ingreso->opcion_titulacion}}</td><td>{{$ingreso->monto}}</td><td>{{$ingreso->fecha}}</td>
                     <td>{{$ingreso->observaciones}}</td>
                     @php
-                        $monto_alumno=$monto_alumno+$ingreso->monto;
-                        $cliente=$ingreso->cliente_id;
+                    $adeudo=App\Cliente::select('clientes.id as cliente_id','ot.costo', DB::raw('sum(tp.monto) as suma_pagos'))
+                        ->join('titulacions as t', 't.cliente_id','clientes.id')
+                        ->join('opcion_titulacions as ot','ot.id','t.opcion_titulacion_id')
+                        ->join('titulacion_pagos as tp','tp.titulacion_id','t.id')
+                        ->where('t.cliente_id', $ingreso->cliente_id)
+                        ->where('t.titulacion_grupo_id', $ingreso->grupo_id)
+                        ->whereNull('tp.deleted_at')
+                        ->groupBy('clientes.id')
+                        ->groupBy('ot.costo')
+                        ->first();
+                        
                     @endphp
-                    <td>{{$ingreso->costo-$monto_alumno}}</td>
+                    <td>{{$adeudo->costo - $adeudo->suma_pagos}}</td>
                 </tr>
                 @endforeach
                 
             </tbody>
         </table>
         
+        <p><h3>Adeudos</h3></p>
 
+        <table class="table table-condensed table-striped">
+            <thead >
+                <tr>
+                    <th>No.</th><th>GRUPO</th><th>PLANTEL</th><th>ID</th><th>MATRICULA</th><th>ALUMNO</th><th>OPCION</th>
+                    <th>Adeudo</th>
+                </tr> 
+            </thead>
+            <tbody>
+                @php
+                $i=0;
+                @endphp
+                @foreach($adeudos as $adeudo)
+                <tr>
+                    <td>{{++$i}}</td><td>{{$adeudo->grupo}}</td><td>{{$adeudo->razon}}</td><td>{{$adeudo->cliente_id}}</td><td>{{$adeudo->matricula}}</td>
+                    <td>{{$adeudo->nombre}} {{$adeudo->nombre2}} {{$adeudo->ape_paterno}} {{$adeudo->ape_materno}}</td>
+                    <td>{{$adeudo->opcion_titulacion}}</td>
+                    <td>{{$adeudo->costo - $adeudo->suma_pagos}}</td>
+                </tr>
+                @endforeach
+                
+            </tbody>
+        </table>
         
     </div>
     <div id="wdr-component"></div>  

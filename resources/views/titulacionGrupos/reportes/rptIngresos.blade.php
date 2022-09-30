@@ -21,7 +21,6 @@
         <div class="col-md-12">
 
             {!! Form::open(array('route' => 'titulacionGrupos.rptIngresosR')) !!}
-
                 
                 <div class="form-group col-md-6 @if($errors->has('plantel_f')) has-error @endif">
                     <label for="plantel_f-field">Plantel de:</label>
@@ -30,12 +29,38 @@
                     <span class="help-block">{{ $errors->first("plantel_f") }}</span>
                     @endif
                 </div>
+
                 
+                
+                <div class="form-group col-md-6 @if($errors->has('fecha_t')) has-error @endif">
+                    <label for="fecha_grupo_f-field">Fecha grupo:</label>
+                    {!! Form::text("fecha_grupo_f", null, array("class" => "form-control input-sm fecha", "id" => "fecha_grupo_f-field")) !!}
+                    @if($errors->has("fecha_t"))
+                    <span class="help-block">{{ $errors->first("fecha_t") }}</span>
+                    @endif
+                </div>
+                <!--
                 <div class="form-group col-md-6 @if($errors->has('titulacion_grupo_f')) has-error @endif">
                     <label for="titulacion_grupo_f-field">Grupo:</label>
                     {!! Form::select("titulacion_grupo_f[]", $grupos, null, array("class" => "form-control select_seguridad", "id" => "titulacion_grupo_f-field",'multiple'=>true)) !!}
                     @if($errors->has("plantel_t"))
                     <span class="help-block">{{ $errors->first("titulacion_grupo_f") }}</span>
+                    @endif
+                </div>
+-->
+                <div class="form-group col-md-6 @if($errors->has('fecha_pagos_f')) has-error @endif">
+                    <label for="fecha_grupo_t-field">Fecha Pagos De:</label>
+                    {!! Form::text("fecha_pago_f", null, array("class" => "form-control input-sm fecha", "id" => "fecha_pago_f-field")) !!}
+                    @if($errors->has("fecha_t"))
+                    <span class="help-block">{{ $errors->first("fecha_t") }}</span>
+                    @endif
+                </div>
+
+                <div class="form-group col-md-6 @if($errors->has('fecha_pagos_f')) has-error @endif">
+                    <label for="fecha_grupo_t-field">Fecha Pagos A:</label>
+                    {!! Form::text("fecha_pago_t", null, array("class" => "form-control input-sm fecha", "id" => "fecha_pago_t-field")) !!}
+                    @if($errors->has("fecha_t"))
+                    <span class="help-block">{{ $errors->first("fecha_t") }}</span>
                     @endif
                 </div>
                 

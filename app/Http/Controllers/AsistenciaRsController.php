@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Auth;
 use Carbon\Carbon;
+use App\Http\Controllers\ClientesaController;
 
 use App\Hacademica;
 use App\AsistenciaR;
@@ -172,11 +173,16 @@ class AsistenciaRsController extends Controller
 								$asistencia['asignacion_academica_id'] = $input['asignacion_academica_id'];
 								$asistencia['fecha'] = $input['fecha'];
 								$asistencia['cliente_id'] = $i->cliente_id;
+								$cliController=new ClientesController();
 								if (optional($i->cliente)->st_cliente_id == 25 or 
 									optional($i->cliente)->st_cliente_id == 26 or 
-									optional($i->cliente)->bnd_doc_oblig_entregados == 0)
-									 {
-									$asistencia['est_asistencia_id'] = 2;
+									optional($i->cliente)->st_cliente_id == 3 or 
+									optional($i->cliente)->bnd_doc_oblig_entregados = 0 ){
+									if($cliController->validaEntregaDocs3Meses($i->cliente_id)){
+										$asistencia['est_asistencia_id'] = 1;
+									}else{
+										$asistencia['est_asistencia_id'] = 2;
+									}
 								} else {
 									$asistencia['est_asistencia_id'] = 1;
 								}

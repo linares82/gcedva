@@ -757,6 +757,39 @@ Route::post(
         'uses' => 'EmpleadosController@listadoColaboradoresR'
     )
 )->middleware('auth');
+Route::get(
+    '/empleados/listadoCumples/',
+    array(
+        'as' => 'empleados.listadoCumples',
+        'middleware' => 'permission:empleados.listadoCumples',
+        'uses' => 'EmpleadosController@listadoCumples'
+    )
+)->middleware('auth');
+Route::post(
+    '/empleados/listadoCumplesR/',
+    array(
+        'as' => 'empleados.listadoCumplesR',
+        'middleware' => 'permission:empleados.listadoCumples',
+        'uses' => 'EmpleadosController@listadoCumplesR'
+    )
+)->middleware('auth');
+
+Route::get(
+    '/empleados/listadoAniversarios/',
+    array(
+        'as' => 'empleados.listadoAniversarios',
+        'middleware' => 'permission:empleados.listadoAniversarios',
+        'uses' => 'EmpleadosController@listadoAniversarios'
+    )
+)->middleware('auth');
+Route::post(
+    '/empleados/listadoAniversariosR/',
+    array(
+        'as' => 'empleados.listadoAniversariosR',
+        'middleware' => 'permission:empleados.listadoAniversarios',
+        'uses' => 'EmpleadosController@listadoAniversariosR'
+    )
+)->middleware('auth');
 ///////////////////////////////////////////////////////////////////////////////////////////
 /*Route::get('zip/imagenes', function () {
 $files = glob(public_path('imagenes'));
@@ -14615,7 +14648,7 @@ Route::post(
         'uses' => 'TitulacionsController@update',
     )
 )->middleware('auth');
-Route::get(
+Route::delete(
     '/titulacions/destroy/{id}',
     array(
         'as' => 'titulacions.destroy',

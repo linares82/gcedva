@@ -212,23 +212,65 @@ class TitulacionGruposController extends Controller {
 		//dd($datos);
 		
 		
-		$ingresos=Cliente::select('p.razon','tg.name as grupo','clientes.id as cliente_id','clientes.matricula','clientes.nombre',
+		$ingresos=Cliente::select('t.id','p.razon','tg.name as grupo','clientes.id as cliente_id','clientes.matricula','clientes.nombre',
 		'clientes.nombre2','clientes.ape_paterno','clientes.ape_materno','ot.name as opcion_titulacion',
-		'tp.fecha','tp.monto','tp.observaciones','ot.costo')
+		'tp.fecha','tp.monto','tp.observaciones','ot.costo', 'tg.id as grupo_id')
 		->join('plantels as p', 'p.id','clientes.plantel_id')
 		->join('titulacions as t', 't.cliente_id','clientes.id')
 		->join('opcion_titulacions as ot','ot.id','t.opcion_titulacion_id')
 		->join('titulacion_grupos as tg', 'tg.id','t.titulacion_grupo_id')
-		->join('titulacion_pagos as tp','tp.titulacion_id','t.id')
+		->leftJoin('titulacion_pagos as tp','tp.titulacion_id','t.id')
 		->whereIn('plantel_id',$datos['plantel_f'])
-		->whereIn('tg.id',$datos['titulacion_grupo_f'])
+		//->whereIn('tg.id',$datos['titulacion_grupo_f'])
+		->whereBetween('tp.fecha',[$datos['fecha_pago_f'], $datos['fecha_pago_t']])
+		->where('tg.fecha',$datos['fecha_grupo_f'])
+		->get();
+
+		$adeudos=Cliente::select('t.id as titulacion_id','p.razon','tg.name as grupo','clientes.id as cliente_id','clientes.matricula','clientes.nombre',
+		'clientes.nombre2','clientes.ape_paterno','clientes.ape_materno','ot.name as opcion_titulacion',
+		'ot.costo',DB::raw('sum(tp.monto) as suma_pagos'))
+		->join('plantels as p', 'p.id','clientes.plantel_id')
+		->join('titulacions as t', 't.cliente_id','clientes.id')
+		->join('opcion_titulacions as ot','ot.id','t.opcion_titulacion_id')
+		->join('titulacion_grupos as tg', 'tg.id','t.titulacion_grupo_id')
+		->leftJoin('titulacion_pagos as tp','tp.titulacion_id','t.id')
+		->whereIn('plantel_id',$datos['plantel_f'])
+		//->whereIn('tg.id',$datos['titulacion_grupo_f'])
+		->whereNull('tp.deleted_at')
+		->where('tg.fecha',$datos['fecha_grupo_f'])
+		//->whereBetween('tp.fecha',[$datos['fecha_pago_f'], $datos['fecha_pago_t']])
+		->groupBy('t.id')
+		->groupBy('p.razon')
+		->groupBy('tg.name')
+		->groupBy('clientes.id',)
+		->groupBy('clientes.matricula')
+		->groupBy('clientes.nombre',)
+		->groupBy('clientes.nombre2')
+		->groupBy('clientes.ape_paterno')
+		->groupBy('clientes.ape_materno')
+		->groupBy('ot.name',)
+		->groupBy('ot.costo')
 		->get();
 		
 		
-		//dd($ingresos);
+		/*foreach($ingresos as $ingreso){
+			$adeudo=Cliente::select('clientes.id as cliente_id','ot.costo', DB::raw('sum(tp.monto) as suma_pagos'))
+			->join('titulacions as t', 't.cliente_id','clientes.id')
+			->join('opcion_titulacions as ot','ot.id','t.opcion_titulacion_id')
+			->leftJoin('titulacion_pagos as tp','tp.titulacion_id','t.id')
+			->where('t.cliente_id', $ingreso->cliente_id)
+			->where('t.titulacion_grupo_id', $ingreso->grupo_id)
+			->groupBy('clientes.id')
+			->groupBy('ot.costo')
+			->get();
+			dd($adeudo->toArray());
+		}*/
+
+		
+		//dd($ingresos->toArray());
 		
 		//dd($egresos);
-		return view('titulacionGrupos.reportes.rptIngresosR', compact('ingresos'));
+		return view('titulacionGrupos.reportes.rptIngresosR', compact('ingresos','adeudos'));
 	}
 
 }

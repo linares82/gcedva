@@ -49,6 +49,9 @@ class MediosController extends Controller
 		$input = $request->all();
 		$input['usu_alta_id'] = Auth::user()->id;
 		$input['usu_mod_id'] = Auth::user()->id;
+		if(!isset($input['bnd_prospectos'])){
+			$input['bnd_prospectos']=0;
+		}
 
 		//create data
 		Medio::create($input);
@@ -105,7 +108,12 @@ class MediosController extends Controller
 	{
 		$input = $request->all();
 		$input['usu_mod_id'] = Auth::user()->id;
+		//dd($input);
+		if(!isset($input['bnd_prospectos'])){
+			$input['bnd_prospectos']=0;
+		}
 		//update data
+		//dd($input);
 		$medio = $medio->find($id);
 		$medio->update($input);
 

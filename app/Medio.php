@@ -18,7 +18,7 @@ class Medio extends Model
     } 
 
 	//Mass Assignment
-	protected $fillable = ['name','usu_alta_id','usu_mod_id'];
+	protected $fillable = ['name','bnd_prospectos','usu_alta_id','usu_mod_id'];
 
 	public function usu_alta() {
 		return $this->hasOne('App\User', 'id', 'usu_alta_id');

@@ -2,26 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\DocEmpleado;
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
+use DB;
+use Auth;
 use File;
-use App\Empleado;
+use Hash;
+use App\User;
 
 use App\Estado;
 use App\Lectivo;
-use App\NivelEstudio;
-use App\PivotDocEmpleado;
 use App\Plantel;
-use App\TipoContrato;
-use App\User;
+use App\Empleado;
 use App\Historial;
+use Carbon\Carbon;
+use App\DocEmpleado;
+use App\NivelEstudio;
+use App\TipoContrato;
+use App\Http\Requests;
+use App\PivotDocEmpleado;
 use Illuminate\Http\Request;
-use Auth;
-use App\Http\Requests\updateEmpleado;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\createEmpleado;
-use DB;
-use Hash;
+use App\Http\Requests\updateEmpleado;
 
 class EmpleadosController extends Controller
 {
@@ -784,4 +785,63 @@ class EmpleadosController extends Controller
         ->get();
         return view('empleados.reportes.listadoColaboradoresR',compact('empleados'));
     }
+
+    public function listadoCumples(){
+        $e = Empleado::where('user_id', Auth::user()->id)->first();
+            $plantels = array();
+            foreach ($e->plantels as $p) {
+                array_push($plantels, $p->id);
+            }
+        $planteles=Plantel::whereIn('id',$plantels)->pluck('razon','id');
+        return view('empleados.reportes.listadoCumples',compact('planteles'))
+        ->with('list', Empleado::getListFromAllRelationApps());
+    }
+
+
+
+    public function listadoCumplesR(Request $request){
+        $datos=$request->all();
+        $fecha=Carbon::createFromFormat('Y-m-d',$datos['fecha_f']);
+        $empleados=Empleado::select('pla.razon','empleados.id', 'empleados.nombre', 'empleados.ape_paterno', 
+        'empleados.ape_materno', 'empleados.curp', 'empleados.rfc', 'empleados.direccion', 'p.name AS puesto', 
+        'empleados.mail_empresa', 'empleados.tel_cel', 'empleados.tel_emergencia', 'empleados.parentesco', 
+        'empleados.fin_contrato','stc.name as estatus','empleados.fec_nacimiento','empleados.fec_ingreso')
+        ->join('puestos as p','p.id','empleados.puesto_id')
+        ->join('plantels as pla','pla.id','empleados.plantel_id')
+        ->join('st_empleados as stc','stc.id','empleados.st_empleado_id')
+        ->whereIn('plantel_id', $datos['plantel_f']) 
+        ->whereMonth('fec_nacimiento', $fecha->month) 
+        ->get();
+        return view('empleados.reportes.listadoCumplesR',compact('empleados'));
+    }
+
+    public function listadoAniversarios(){
+        $e = Empleado::where('user_id', Auth::user()->id)->first();
+            $plantels = array();
+            foreach ($e->plantels as $p) {
+                array_push($plantels, $p->id);
+            }
+        $planteles=Plantel::whereIn('id',$plantels)->pluck('razon','id');
+        return view('empleados.reportes.listadoAniversarios',compact('planteles'))
+        ->with('list', Empleado::getListFromAllRelationApps());
+    }
+
+
+
+    public function listadoAniversariosR(Request $request){
+        $datos=$request->all();
+        $fecha=Carbon::createFromFormat('Y-m-d',$datos['fecha_f']);
+        $empleados=Empleado::select('pla.razon','empleados.id', 'empleados.nombre', 'empleados.ape_paterno', 
+        'empleados.ape_materno', 'empleados.curp', 'empleados.rfc', 'empleados.direccion', 'p.name AS puesto', 
+        'empleados.mail_empresa', 'empleados.tel_cel', 'empleados.tel_emergencia', 'empleados.parentesco', 
+        'empleados.fin_contrato','stc.name as estatus','empleados.fec_nacimiento','empleados.fec_ingreso')
+        ->join('puestos as p','p.id','empleados.puesto_id')
+        ->join('plantels as pla','pla.id','empleados.plantel_id')
+        ->join('st_empleados as stc','stc.id','empleados.st_empleado_id')
+        ->whereIn('plantel_id', $datos['plantel_f']) 
+        ->whereMonth('fec_ingreso', $fecha->month) 
+        ->get();
+        return view('empleados.reportes.listadoAniversariosR',compact('empleados'));
+    }
+
 }

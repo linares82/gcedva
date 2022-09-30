@@ -291,7 +291,7 @@ if(!is_null($cliente->plantel->matriz_id) and $cliente->plantel->matriz_id>0){
     
     <tr>
         <td colspan="2">
-            Atendido por: {{ $atendio_pago->nombre." ".$atendio_pago->ape_paterno." ".$atendio_pago->ape_materno }}
+            Atendido por: {{ $atendio_pago->id }}
         </td>
     </tr>
     <tr>

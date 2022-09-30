@@ -72,7 +72,7 @@
                             <td>{{ $s->fecha }}</td>
                             <td>
                                 <div class="form-group col-md-4  @if($errors->has('est_asistencia_id')) has-error @endif" >
-                                    @if(optional($s->cliente)->st_cliente_id==25 or optional($s->cliente)->st_cliente_id==3)                                    
+                                    @if(optional($s->cliente)->st_cliente_id==25 or optional($s->cliente)->st_cliente_id==26 or optional($s->cliente)->st_cliente_id==3 or optional($s->cliente)->st_cliente_id==3)                                    
                                     @else
                                         {!! Form::select("est_asistencia_id", $list["EstAsistencium"], $s->est_asistencia_id, array("class" => "select_seguridad1", "id" => "est_asistencia_id".$s->id."-field", "name" => "est_asistencia_id".$s->id."-field")) !!}
                                     @endif
@@ -134,13 +134,13 @@
    
    $fecha=\Carbon\Carbon::now();
    $fecha_final=$fecha->toDateString();
-    $fecha_inicial=$fecha->subDays(10)->toDateString();
+    $fecha_inicial=$fecha->subDays(180)->toDateString();
    
-   
-
    @endphp
    $('#fecha-field').Zebra_DatePicker({
-      direction: ['{{ $fecha_inicial }}', '{{  $fecha_final  }}'],
+      //direction: ['{{ $fecha_inicial }}', '{{  $fecha_final  }}'],
+      direction: false,
+      disabled_dates: ['* * * *,*'],
       days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
       months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
       readonly_element: false,

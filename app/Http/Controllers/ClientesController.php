@@ -2132,7 +2132,7 @@ class ClientesController extends Controller
         $combinacion = CombinacionCliente::where('cliente_id', $cliente->id)->first();
         $lista_documentos = DocAlumno::get();
         $documentos_entregados = PivotDocCliente::where('cliente_id', $cliente->id)
-            ->wherenotNull('archivo')
+            ->where('doc_entregado',1)
             ->wherenull('deleted_at')->get();
 
         $lista_mostrar = array();
@@ -2143,10 +2143,12 @@ class ClientesController extends Controller
             foreach ($documentos_entregados as $de) {
                 if ($de->doc_alumno_id == $ld->id) {
                     $item['archivo'] = $de->archivo;
+                    $item['doc_entregado']=$de->doc_entregado;
                 }
             }
             array_push($lista_mostrar, $item);
             $item['archivo'] = null;
+            $item['doc_entregado'] =0;
         }
 
         //dd($lista_mostrar);
