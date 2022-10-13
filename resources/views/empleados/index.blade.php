@@ -197,9 +197,14 @@
                                 <td>{{$empleado->puesto->name}}</td>
                                 <td>{{$empleado->st_empleado->name}}</td>
                                 <td class="text-right">
+                                    @php
+                                        $cuentaEventos=App\Historial::where('empleado_id', $empleado->id)->count();
+                                    @endphp
                                     @permission('historials.create')
                                     <a class="btn btn-xs btn-success" href="{{ route('historials.create',array('empleado'=>$empleado->id)) }}"><i class="glyphicon glyphicon-plus"></i> Crear</a>
-                                    <a class="btn btn-xs btn-warning" href="{{ route('historials.index',array('q[empleado_id_lt]'=>$empleado->id)) }}" target='_blank'><i class="glyphicon glyphicon-plus"></i> Ver</a>
+                                    @if($cuentaEventos>0)
+                                    <a class="btn btn-xs btn-warning" href="{{ route('historials.index',array('q[empleado_id_lt]'=>$empleado->id)) }}" target='_blank'><i class="glyphicon glyphicon-plus"></i> Ver {{$cuentaEventos}}</a>
+                                    @endif
                                     @endpermission
                                 </td>
                                 <td class="text-right">

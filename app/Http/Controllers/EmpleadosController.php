@@ -810,6 +810,7 @@ class EmpleadosController extends Controller
         ->join('plantels as pla','pla.id','empleados.plantel_id')
         ->join('st_empleados as stc','stc.id','empleados.st_empleado_id')
         ->whereIn('plantel_id', $datos['plantel_f']) 
+        ->whereNotIn('empleados.st_empleado_id',[2,3,])
         ->whereMonth('fec_nacimiento', $fecha->month) 
         ->get();
         return view('empleados.reportes.listadoCumplesR',compact('empleados'));
@@ -840,6 +841,7 @@ class EmpleadosController extends Controller
         ->join('st_empleados as stc','stc.id','empleados.st_empleado_id')
         ->whereIn('plantel_id', $datos['plantel_f']) 
         ->whereMonth('fec_ingreso', $fecha->month) 
+        ->whereNotIn('empleados.st_empleado_id',[2,3,])
         ->get();
         return view('empleados.reportes.listadoAniversariosR',compact('empleados'));
     }

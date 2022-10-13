@@ -262,10 +262,10 @@
                         
                     </td>
                     <td>
-                        @if($documento['doc_entregado']==1)
-                            SI
-                        @elseif(!isset($documento['doc_entregado']))
+                        @if(!isset($documento['doc_entregado']))
                             NO
+                        @elseif($documento['doc_entregado']==1)
+                            SI
                         @else
                             NO 
                         @endif

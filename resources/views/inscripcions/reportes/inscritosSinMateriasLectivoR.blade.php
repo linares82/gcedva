@@ -47,7 +47,7 @@
                         <td>{{$registro->especialidad}}</td><td>{{$registro->nivel}}</td><td>{{$registro->grado}}</td>
                         <td>{{$registro->grupo}} {{$registro->asignacion}}</td>
                         <td>{{ $registro->turno  }}</td><td>{{ $registro->periodo_estudio }}</td><td>{{ $registro->matricula }}</td>
-                        <td>{{$registro->id}}</td><td>{{$registro->nombre}} {{$registro->nombre2}} {{$registro->ape_paterno}} {{$registro->ape_materno}}</td>
+                        <td>{{$registro->id}}</td><td>{{$registro->ape_paterno}} {{$registro->ape_materno}} {{$registro->nombre}} {{$registro->nombre2}} </td>
                         <td>{{$registro->tel_cel}}</td>
                         <td>{{$registro->fec_inscripcion}}</td>
                         <td>{{$registro->estatus_cliente}}</td>

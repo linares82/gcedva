@@ -520,7 +520,7 @@ class CajasController extends Controller
 
                         $beca_autorizada = AutorizacionBeca::find($beca_a);
                         //dd($beca->toArray());
-                        
+
                         if (
                             !is_null($beca_autorizada) and
                             $beca_autorizada->monto_mensualidad > 0 and
@@ -531,7 +531,6 @@ class CajasController extends Controller
                             //dd($caja_ln['subtotal'].'*'.$beca_autorizada->monto_mensualidad."=".$calculo_monto_mensualidad);
                             $caja_ln['descuento'] = $caja_ln['descuento'] + $calculo_monto_mensualidad;
                             $caja_ln['total'] = $caja_ln['subtotal'] - $caja_ln['descuento'];
-                            
                         } else {
                             $caja_ln['total'] = $caja_ln['subtotal'] - $caja_ln['descuento'];
                         }
@@ -867,28 +866,31 @@ class CajasController extends Controller
     {
         //dd($request->get('caja'));
         $caja = Caja::find($request->get('caja'));
-        $caja->st_caja_id = 2;
-        $caja->usu_cancelar_id = Auth::user()->id;
-        $caja->subtotal = 0;
-        $caja->descuento = 0;
-        $caja->recargo = 0;
-        $caja->total = 0;
-        $caja->save();
-        foreach ($caja->cajaLns as $ln) {
-            $ln->adeudo_id = 0;
-            $ln->save();
-            $ln->delete();
+        if ($caja->st_caja_id <> 1 and $caja->st_caja_id <> 3) {
+            $caja->st_caja_id = 2;
+            $caja->usu_cancelar_id = Auth::user()->id;
+            $caja->subtotal = 0;
+            $caja->descuento = 0;
+            $caja->recargo = 0;
+            $caja->total = 0;
+            $caja->save();
+            foreach ($caja->cajaLns as $ln) {
+                $ln->adeudo_id = 0;
+                $ln->save();
+                $ln->delete();
+            }
+            foreach ($caja->pagos as $pago) {
+                $pc = new PagosController();
+                $pc->destroy($pago->id, new Pago());
+            }
+            $adeudos = Adeudo::where('caja_id', $caja->id)->get();
+            foreach ($adeudos as $adeudo) {
+                $adeudo->caja_id = 0;
+                $adeudo->pagado_bnd = 0;
+                $adeudo->save();
+            }
         }
-        foreach ($caja->pagos as $pago) {
-            $pc = new PagosController();
-            $pc->destroy($pago->id, new Pago());
-        }
-        $adeudos = Adeudo::where('caja_id', $caja->id)->get();
-        foreach ($adeudos as $adeudo) {
-            $adeudo->caja_id = 0;
-            $adeudo->pagado_bnd = 0;
-            $adeudo->save();
-        }
+
         $empleados = Empleado::select(DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name, id'))->pluck('name', 'id');
         return view('cajas.caja', compact('empleados'))
             ->with('list', Caja::getListFromAllRelationApps())

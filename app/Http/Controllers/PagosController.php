@@ -995,7 +995,15 @@ class PagosController extends Controller
     {
         $empleados = Empleado::select(DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name, id'))->pluck('name', 'id');
         $conceptos = CajaConcepto::pluck('name', 'id');
-        return view('pagos.reportes.inscritosPagos', compact('empleados','conceptos'))
+        $empleado = Empleado::where('user_id', '=', Auth::user()->id)->where('st_empleado_id','<>',3)->first();
+        
+        $planteles = array();
+        foreach ($empleado->plantels as $p) {
+            //dd($p->id);
+            array_push($planteles, $p->id);
+        }
+        $plantels=Plantel::whereIn('id',$planteles)->pluck('razon','id');
+        return view('pagos.reportes.inscritosPagos', compact('empleados','conceptos','plantels'))
             ->with('list', Inscripcion::getListFromAllRelationApps());
     }
 

@@ -176,12 +176,16 @@ class AsistenciaRsController extends Controller
 								$cliController=new ClientesController();
 								if (optional($i->cliente)->st_cliente_id == 25 or 
 									optional($i->cliente)->st_cliente_id == 26 or 
-									optional($i->cliente)->st_cliente_id == 3 or 
-									optional($i->cliente)->bnd_doc_oblig_entregados = 0 ){
+									optional($i->cliente)->st_cliente_id == 3 /*or 
+									optional($i->cliente)->bnd_doc_oblig_entregados == 0*/ ){
+									/*if($cliController->validaEntregaDocs3Meses($i->cliente_id)){
+										$asistencia['est_asistencia_id'] = 1;
+									}else{*/
+										$asistencia['est_asistencia_id'] = 2;
+									//}
+								}elseif(optional($i->cliente)->bnd_doc_oblig_entregados == 0){
 									if($cliController->validaEntregaDocs3Meses($i->cliente_id)){
 										$asistencia['est_asistencia_id'] = 1;
-									}else{
-										$asistencia['est_asistencia_id'] = 2;
 									}
 								} else {
 									$asistencia['est_asistencia_id'] = 1;

@@ -3149,6 +3149,10 @@ class InscripcionsController extends Controller
                 //->orderBy('aa.id', 'asc')
                 ->orderBy('esp.name', 'asc')
                 ->orderBy('gru.id', 'asc')
+                ->orderBy('c.ape_paterno', 'asc')
+                ->orderBy('c.ape_materno', 'asc')
+                ->orderBy('c.nombre', 'asc')
+                ->orderBy('c.nombre2', 'asc')
                 ->distinct()
                 ->get();
         } catch (Exception $e) {

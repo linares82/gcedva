@@ -125,7 +125,7 @@
                              @if($param_bloqueoXdoc->valor==1)
                              @if($r->bnd_doc_oblig_entregados==1 or $validaEntregaDocs3Meses)
                              	@permission('hacademicas.calificacionBaja')
-                                {!! Form::number("calificacion", null, array("class" => "form-control input-sm col-md-6", 
+                                {!! Form::number("calificacion", null, array("class" => "form-control input-sm col-md-6 input_calificacion", 
                                 "id" => "calificacion_parcial".$r->id, 'min' => 0, 'max' =>10)) !!}
                                 @endpermission
                              @else
@@ -244,8 +244,10 @@
      
      $(document).on("click", ".btn-guardar_caificacion", function (e) {
         //alert($('#calificacion_parcial'+$(this).data('cliente_id')).val()); 
-        
-        var miurl = "{{route('hacademicas.actualizarCalificacion')}}";
+        if($('#calificacion_parcial'+$(this).data('cliente_id')).val()>=1 && $('#calificacion_parcial'+$(this).data('cliente_id')).val()<=4.9){
+            alert("Calificacion invalida");
+        }else{
+            var miurl = "{{route('hacademicas.actualizarCalificacion')}}";
         var id=$(this).data('cliente_id');
         var data = new FormData();
         data.append('calificacion_ponderacion', $(this).data('calificacion_ponderacion_id'));
@@ -283,6 +285,8 @@
 
             }
         });
+        }
+        
     })
     
     cmbPonderaciones();
