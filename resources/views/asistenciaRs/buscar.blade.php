@@ -72,7 +72,21 @@
                             <td>{{ $s->fecha }}</td>
                             <td>
                                 <div class="form-group col-md-4  @if($errors->has('est_asistencia_id')) has-error @endif" >
-                                    @if(optional($s->cliente)->st_cliente_id==25 or optional($s->cliente)->st_cliente_id==26 or optional($s->cliente)->st_cliente_id==3 or optional($s->cliente)->st_cliente_id==3)                                    
+                                @php
+                                    $param_bloqueoXdoc=\App\Param::where('llave','bloqueo_caja_calif_asistenciasXDoc')->first();
+                                    
+                                @endphp
+                                
+                                    @if(optional($s->cliente)->st_cliente_id==25 or 
+                                    optional($s->cliente)->st_cliente_id==26 or 
+                                    optional($s->cliente)->st_cliente_id==3 )                                    
+                                        {!! Form::select("est_asistencia_id", $list["EstAsistencium"], $s->est_asistencia_id, array("class" => "select_seguridad1", "id" => "est_asistencia_id".$s->id."-field", "name" => "est_asistencia_id".$s->id."-field", 'disabled'=>true)) !!}    
+                                    @elseif(optional($s->cliente)->bnd_doc_oblig_entregados == 0)
+                                        @if($validaEntregaDocs3Meses)
+                                        {!! Form::select("est_asistencia_id", $list["EstAsistencium"], $s->est_asistencia_id, array("class" => "select_seguridad1", "id" => "est_asistencia_id".$s->id."-field", "name" => "est_asistencia_id".$s->id."-field")) !!}    
+                                        @else
+                                        {!! Form::select("est_asistencia_id", $list["EstAsistencium"], $s->est_asistencia_id, array("class" => "select_seguridad1", "id" => "est_asistencia_id".$s->id."-field", "name" => "est_asistencia_id".$s->id."-field", 'disabled'=>true)) !!}        
+                                        @endif
                                     @else
                                         {!! Form::select("est_asistencia_id", $list["EstAsistencium"], $s->est_asistencia_id, array("class" => "select_seguridad1", "id" => "est_asistencia_id".$s->id."-field", "name" => "est_asistencia_id".$s->id."-field")) !!}
                                     @endif
@@ -83,25 +97,25 @@
                                  </div> 
                             </td>
                             <td>
-                                @php
-                                    $param_bloqueoXdoc=\App\Param::where('llave','bloqueo_caja_calif_asistenciasXDoc')->first();
-                                    
-                                    
-                                @endphp
-                                @if($param_bloqueoXdoc->valor==1)
-                                @if($s->bnd_doc_oblig_entregados==1 or 
-                                    $s->cliente->st_cliente_id==1 or 
-                                    $s->cliente->st_cliente_id==22 or 
-                                    $validaEntregaDocs3Meses)
-                                <a href="#" onclick="modificarAsistencia({{$s->id}})" class="btn btn-success">Modificar</a>
+                                
+                                
+                                @if(optional($s->cliente)->st_cliente_id==25 or 
+                                    optional($s->cliente)->st_cliente_id==26 or 
+                                    optional($s->cliente)->st_cliente_id==3 )                                    
+                                        
+                                    @elseif(optional($s->cliente)->bnd_doc_oblig_entregados == 0)
+                                        @if($validaEntregaDocs3Meses)
+                                        <a href="#" onclick="modificarAsistencia({{$s->id}})" class="btn btn-success">Modificar</a>
                                 <div id='loading3' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                                 <label id="etq_msj"></label>
-                                @endif
-                                @else
-                                <a href="#" onclick="modificarAsistencia({{$s->id}})" class="btn btn-success">Modificar</a>
+                                        @else
+                                        
+                                        @endif
+                                    @else
+                                    <a href="#" onclick="modificarAsistencia({{$s->id}})" class="btn btn-success">Modificar</a>
                                 <div id='loading3' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                                 <label id="etq_msj"></label>
-                                @endif
+                                    @endif
                             </td>
                         </tr>
                         @endforeach

@@ -332,6 +332,7 @@
                         <th>@include('plantillas.getOrderLink', ['column' => 'plantels.razon', 'title' => 'PLANTEL'])</th>
                         <th>Liga Enviada</th>
                         <th>@include('plantillas.getOrderLink', ['column' => 'st_prospectos.name', 'title' => 'ESTATUS'])</th>
+                        <th>St. Seguimiento</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
@@ -362,6 +363,23 @@
                                     @endif
                                     {{ $prospecto->cliente_id }}
                                 </td>
+                                <td>
+                                    @if(isset($prospecto->prospectoSeguimiento))
+                                    <span class="@if($prospecto->prospectoSeguimiento->prospecto_st_seg_id==1)
+                                     badge bg-red 
+                                     @elseif($prospecto->prospectoSeguimiento->prospecto_st_seg_id==2)
+                                     badge bg-yellow
+                                     @elseif($prospecto->prospectoSeguimiento->prospecto_st_seg_id==3)
+                                     badge bg-orange 
+                                     @elseif($prospecto->prospectoSeguimiento->prospecto_st_seg_id==4)
+                                     badge bg-purple
+                                     @elseif($prospecto->prospectoSeguimiento->prospecto_st_seg_id==5)
+                                     badge bg-green 
+                                     @endif">
+                                    {{$prospecto->prospectoSeguimiento->prospectoStSeg->name}}
+                                    </span>
+                                    @endif
+                                </td>
                     
                                 <td class="text-right">
                                     @permission('prospectos.aceptar')
@@ -391,6 +409,9 @@
                                     {!! Form::model($prospecto, array('route' => array('prospectos.destroy', $prospecto->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}
                                         <button type="submit" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> Borrar</button>
                                     {!! Form::close() !!}
+                                    @endpermission
+                                    @permission('prospectoSeguimientos.show')
+                                    <a class="btn btn-xs btn-info" href="{{ route('prospectoSeguimientos.show', $prospecto->id) }}"><i class="glyphicon glyphicon-edit"></i> Seguimiento</a>
                                     @endpermission
                                 </td>
                             </tr>

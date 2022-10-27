@@ -253,4 +253,151 @@ class ProspectosController extends Controller {
         Log::info("Adwords");
 		Log::info($request);
     }
+
+	public function reporteGeneral(){
+		return view('Prospectos/reportes/reporteGeneral')
+		->with( 'list', Prospecto::getListFromAllRelationApps() );
+	}
+
+	public function reporteGeneralR(Request $request){
+
+		$datos=$request->all();
+		//Resumen de actividades por empleado
+		$tareas=Prospecto::select(DB::raw('1 as bnd_tarea'),'prospectos.nombre', 'prospectos.nombre2', 'prospectos.ape_paterno', 
+		'prospectos.ape_materno','prospectos.tel_cel','prospectos.mail', 'p.razon', 'stp.name as st_prospecto',
+		'psts.name as st_seguimiento', DB::raw('concat(e.nombre, " ",e.ape_paterno, " ",e.ape_materno) as empleado'), 
+		'pt.name as tarea','pstt.name as st_tarea',
+		'pa.name as asunto','pat.detalle', DB::raw('0 as fecha'), 'pat.created_at')
+		->join('plantels as p','p.id','prospectos.plantel_id')
+		->join('st_prospectos as stp','stp.id','prospectos.st_prospecto_id')
+		->leftJoin('prospecto_seguimientos as ps', 'ps.prospecto_id','prospectos.id')
+		->leftJoin('prospecto_st_segs as psts', 'psts.id','ps.prospecto_st_seg_id')
+		->join('prospecto_asignacion_tareas as pat','pat.prospecto_id','prospectos.id')
+		->join('empleados as e','e.id','pat.empleado_id')
+		->join('prospecto_tareas as pt','pt.id','pat.prospecto_tarea_id')
+		->join('prospecto_st_tareas as pstt','pstt.id','pat.prospecto_st_tarea_id')
+		->join('prospecto_asuntos as pa','pa.id', 'pat.prospecto_asunto_id')
+		->whereIn('prospectos.st_prospecto_id',[1,2])
+		->whereIn('prospectos.plantel_id', $datos['plantel_f'])
+		->whereNull('pat.deleted_at')
+		->whereDate('pat.created_at','>',$datos['fecha_f'])
+		->whereDate('pat.created_at','<',$datos['fecha_t'])
+		->orderBy('prospectos.id')
+		->orderBy('pat.prospecto_tarea_id');
+		
+		//->get();
+		//dd($tareas->toArray());
+
+		$avisos=Prospecto::select(DB::raw('0 as bnd_tarea'),'prospectos.nombre', 'prospectos.nombre2', 'prospectos.ape_paterno', 
+		'prospectos.ape_materno','prospectos.tel_cel','prospectos.mail', 'p.razon', 'stp.name as st_prospecto',
+		'psts.name as st_seguimiento', DB::raw('concat(e.nombre, " ",e.ape_paterno, " ",e.ape_materno) as empleado'), DB::raw('"Aviso" as tarea'),
+		DB::raw('if(pa.activo=0, "INACTIVO", "ACTIVO") as st_tarea'),
+		'pas.name as asunto','pa.detalle', 'pa.fecha','pa.created_at')
+		->join('plantels as p','p.id','prospectos.plantel_id')
+		->join('st_prospectos as stp','stp.id','prospectos.st_prospecto_id')
+		->join('prospecto_seguimientos as ps', 'ps.prospecto_id','prospectos.id')
+		->join('prospecto_st_segs as psts', 'psts.id','ps.prospecto_st_seg_id')
+		->join('prospecto_avisos as pa','pa.prospecto_seguimiento_id','ps.id')
+		->join('users as u','u.id','pa.usu_alta_id')
+		->join('empleados as e','e.user_id','u.id')
+		//->join('prospecto_tareas as pt','pt.id','pat.prospecto_tarea_id')
+		//->join('prospecto_st_tareas as pstt','pstt.id','pat.prospecto_st_tarea_id')
+		->join('prospecto_asuntos as pas','pas.id', 'pa.prospecto_asunto_id')
+		->whereIn('prospectos.st_prospecto_id',[1,2])
+		->whereIn('prospectos.plantel_id', $datos['plantel_f'])
+		->whereNull('pa.deleted_at')
+		->whereDate('pa.created_at','>=',$datos['fecha_f'])
+		->whereDate('pa.created_at','<=',$datos['fecha_t'])
+		->orderBy('prospectos.id')
+		->union($tareas)
+		->get();
+		//dd($avisos->toArray());
+
+		$regs_empleado=$avisos->sortBy('empleado')->groupBy('empleado');
+		//dd($regs_empleado);
+		$resumen_totales=array();
+		foreach($regs_empleado as $llave=>$regs){
+			//dd($regs);
+			$resumen=array();
+			$resumen['empleado']=$llave;
+			$resumen_actividades=$regs->groupBy('tarea');
+			//dd($resumen_actividades);
+			foreach($resumen_actividades as $llave=>$regs){
+			//dd($llave);
+			$resumen['actividad']=$llave;
+			
+			$resumen['cantidad']=count($regs);
+			//dd($resumen);
+			array_push($resumen_totales, $resumen);
+			}
+		}
+		//Fin Resumen de actividades por empleado
+		//dd($resumen_totales);
+
+		$prospectos_nuevos=Prospecto::select('prospectos.id','prospectos.nombre', 'prospectos.nombre2', 'prospectos.ape_paterno', 
+		'prospectos.ape_materno','prospectos.tel_cel','prospectos.mail', 'p.razon', 'stp.name as st_prospecto',
+		'psts.name as st_seguimiento', DB::raw('concat(e.nombre, " ",e.ape_paterno, " ",e.ape_materno) as empleado'), 
+		'prospectos.created_at')
+		->join('plantels as p','p.id','prospectos.plantel_id')
+		->join('st_prospectos as stp','stp.id','prospectos.st_prospecto_id')
+		->join('prospecto_seguimientos as ps', 'ps.prospecto_id','prospectos.id')
+		->join('prospecto_st_segs as psts', 'psts.id','ps.prospecto_st_seg_id')
+		->join('users as u','u.id','prospectos.usu_alta_id')
+		->join('empleados as e','e.user_id','u.id')
+		->whereIn('prospectos.plantel_id', $datos['plantel_f'])
+		->whereNull('prospectos.deleted_at')
+		->whereDate('prospectos.created_at','>=',$datos['fecha_f'])
+		->whereDate('prospectos.created_at','<=',$datos['fecha_t'])
+		->orderBy('prospectos.id')
+		->get();
+		//dd($prospectos_nuevos->toArray());
+
+		$regs_empleado=$prospectos_nuevos->sortBy('empleado')->groupBy('empleado');
+		//dd($regs_empleado);
+		$resumen_nuevos=array();
+		foreach($regs_empleado as $llave=>$regs){
+			$resumen=array();
+			$resumen['empleado']=$llave;
+			$resumen['actividad']='Creacion';
+			$resumen['cantidad']=count($regs);
+			array_push($resumen_nuevos, $resumen);
+		}
+		//dd($resumen_nuevos);
+		$prospectos_clientes=Prospecto::select('prospectos.id','prospectos.nombre', 'prospectos.nombre2', 'prospectos.ape_paterno', 
+		'prospectos.ape_materno','prospectos.tel_cel','prospectos.mail', 'p.razon', 'stp.name as st_prospecto',
+		'psts.name as st_seguimiento', DB::raw('concat(e.nombre, " ",e.ape_paterno, " ",e.ape_materno) as empleado'), 
+		'hst.created_at')
+		->join('plantels as p','p.id','prospectos.plantel_id')
+		->join('st_prospectos as stp','stp.id','prospectos.st_prospecto_id')
+		->join('h_st_prospectos as hst','hst.prospecto_id','prospectos.id')
+		->leftJoin('prospecto_seguimientos as ps', 'ps.prospecto_id','prospectos.id')
+		->leftJoin('prospecto_st_segs as psts', 'psts.id','ps.prospecto_st_seg_id')
+		->join('users as u','u.id','hst.usu_alta_id')
+		->join('empleados as e','e.user_id','u.id')
+		->whereIn('prospectos.plantel_id', $datos['plantel_f'])
+		->whereNull('prospectos.deleted_at')
+		->whereDate('hst.created_at','>=',$datos['fecha_f'])
+		->whereDate('hst.created_at','<=',$datos['fecha_t'])
+		->where('prospectos.st_prospecto_id', 3)
+		->where('hst.st_prospecto_id', 3)
+		->whereNotNull('prospectos.cliente_id')
+		->orderBy('prospectos.id')
+		->get();
+
+		$regs_empleado=$prospectos_clientes->sortBy('empleado')->groupBy('empleado');
+		//dd($regs_empleado);
+		$resumen_aceptados=array();
+		foreach($regs_empleado as $llave=>$regs){
+			$resumen=array();
+			$resumen['empleado']=$llave;
+			$resumen['actividad']='Aceptado Cliente';
+			$resumen['cantidad']=count($regs);
+			array_push($resumen_aceptados, $resumen);
+		}
+
+		//dd($resumen_aceptados);
+		return view('Prospectos/reportes/reporteGeneralR', compact('avisos', 'resumen_totales', 
+		'prospectos_nuevos','resumen_nuevos', 
+		'prospectos_clientes','resumen_aceptados'));
+	}
 }

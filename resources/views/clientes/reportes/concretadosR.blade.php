@@ -71,14 +71,17 @@
           <thead>
               <th>No.</th><th>Plantel</th><th>Matricula</th><th>Id</th>
               <th>Nombre</th><th>E. Cliente</th><th>E. Seguimiento</th><th>Seccion</th><th>Empleado</th>
-              <th>InscripciÃ³n/S. Escolares</th><th>Fecha Pago</th><th>TrÃ¡mites</th><th>Fecha Pago</th>
+              <th>Inscripción/S. Escolares</th><th>Fecha Caja</th><th>Trámites</th><th>Fecha Pago Tramites</th>
               <th>P. Mensualidad</th><th>Fecha Pago</th><th>Ultima Tarea Seguimiento</th><th>Doc. Oblig. Entregados</th><th>Documentos</th>
           </thead>
           <tbody>
             @php
              $i=0;   
+             $cliente_temporal="";
             @endphp    
             @foreach($registros as $rs)
+            @if($cliente_temporal<>$rs['matricula'])
+            
             <tr>
               <td>{{ ++$i }}</td>
               
@@ -127,7 +130,11 @@
               </td>
               
               
-            </tr>  
+            </tr>
+            @endif  
+            @php
+              $cliente_temporal=$rs['matricula'];
+            @endphp
             @endforeach
           </tbody>
         </table>

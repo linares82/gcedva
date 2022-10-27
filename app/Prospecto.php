@@ -60,4 +60,14 @@ class Prospecto extends Model
 	public function medio() {
 		return $this->belongsTo('App\Medio');
 	}// end
+
+	public function prospectoSeguimiento(){
+		return $this->hasOne('App\ProspectoSeguimiento');
+	}
+
+	public function prospectoAsignacionTareas(){
+		return $this->hasMany('App\ProspectoAsignacionTarea');
+	}
+
+	
 }

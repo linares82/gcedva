@@ -14,7 +14,7 @@
   </head>
   <body>
     <div class="datagrid">
-        <h2>Altas de Prospectos</h2>
+        <h2>Prospectos</h2>
         <h3>General</h3>
         <table>
             <thead>

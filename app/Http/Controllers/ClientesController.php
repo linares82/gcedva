@@ -212,10 +212,12 @@ class ClientesController extends Controller
             array_push($planteles, $p->id);
             //}
         }
+        //dd($planteles);
         $empleados = Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
             ->whereIn('plantel_id', $planteles)
             //->where('puesto_id', '=', 2)
             ->pluck('name', 'id');
+            //dd($empleados);
         /*} else {
         $empleados = Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
         //->where('puesto_id', '=', 2)
@@ -2238,7 +2240,6 @@ class ClientesController extends Controller
             ->join('grados as g', 'g.id', '=', 'ccli.grado_id')
             ->where('a.pagado_bnd', 1)
             ->where('c.st_caja_id', 1)
-            ->whereIn('a.caja_concepto_id', array(1, 23, 25))
             ->where('clientes.st_cliente_id', '<>', 3)
             ->whereIn('clientes.plantel_id', $datos['plantel_f'])
             ->where('clientes.matricula', 'like', $datos['inicio_matricula'] . "%")
@@ -2250,6 +2251,7 @@ class ClientesController extends Controller
             ->where('ccli.nivel_id', '>', 0)
             ->where('ccli.grado_id', '>', 0)
             ->where('ccli.turno_id', '>', 0)
+            ->whereRaw('(a.caja_concepto_id = 1 or a.caja_concepto_id = 22 or a.caja_concepto_id = 23 or a.caja_concepto_id = 25)')
             ->groupBy('p.razon')
             ->groupBy('g.seccion')
             ->groupBy('sts.name')
@@ -2267,7 +2269,7 @@ class ClientesController extends Controller
             ->join('grados as g', 'g.id', '=', 'ccli.grado_id')
             ->where('a.pagado_bnd', 1)
             ->where('c.st_caja_id', 1)
-            ->whereIn('a.caja_concepto_id', array(1, 23, 25))
+            //->whereIn('a.caja_concepto_id', array(1, 22,23, 25))// se quito concepto 22 tramites adelante se hace especificamente este trabajo
             ->where('clientes.st_cliente_id', '<>', 3)
             ->whereIn('clientes.plantel_id', $datos['plantel_f'])
             ->where('clientes.matricula', 'like', $datos['inicio_matricula'] . "%")
@@ -2279,6 +2281,7 @@ class ClientesController extends Controller
             ->where('ccli.nivel_id', '>', 0)
             ->where('ccli.grado_id', '>', 0)
             ->where('ccli.turno_id', '>', 0)
+            ->whereRaw('(a.caja_concepto_id = 1 or a.caja_concepto_id = 22 or a.caja_concepto_id = 23 or a.caja_concepto_id = 25)')
             ->groupBy('p.razon')
             //->groupBy('g.seccion')
             ->groupBy('sts.name')
@@ -2313,7 +2316,7 @@ class ClientesController extends Controller
             ->join('grados as g', 'g.id', '=', 'ccli.grado_id')
             ->where('a.pagado_bnd', 1)
             ->where('c.st_caja_id', 1)
-            ->whereIn('a.caja_concepto_id', array(1, 23, 25))
+            //->whereIn('a.caja_concepto_id', array(1,22,23, 25)) // se quito concepto 22 tramites adelante se hace especificamente este trabajo
             ->where('clientes.st_cliente_id', '<>', 3)
             ->whereIn('clientes.plantel_id', $datos['plantel_f'])
             ->where('clientes.matricula', 'like', $datos['inicio_matricula'] . "%")
@@ -2325,6 +2328,7 @@ class ClientesController extends Controller
             ->where('ccli.nivel_id', '>', 0)
             ->where('ccli.grado_id', '>', 0)
             ->where('ccli.turno_id', '>', 0)
+            ->whereRaw('(a.caja_concepto_id = 1 or a.caja_concepto_id = 22 or a.caja_concepto_id = 23 or a.caja_concepto_id = 25)')
             ->orderBy('p.razon')
             ->get();
         //dd($detalle->toArray());

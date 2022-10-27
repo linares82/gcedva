@@ -1,0 +1,1 @@
+@section('prospectoStTareasAppTitle','ProspectoStTarea')

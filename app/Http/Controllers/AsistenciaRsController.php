@@ -186,6 +186,8 @@ class AsistenciaRsController extends Controller
 								}elseif(optional($i->cliente)->bnd_doc_oblig_entregados == 0){
 									if($cliController->validaEntregaDocs3Meses($i->cliente_id)){
 										$asistencia['est_asistencia_id'] = 1;
+									}else{
+										$asistencia['est_asistencia_id'] = 2;
 									}
 								} else {
 									$asistencia['est_asistencia_id'] = 1;
