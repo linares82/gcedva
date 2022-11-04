@@ -19,23 +19,23 @@
         <table class="table table-condensed table-striped">
           
           <thead>
-              <th>Plantel</th><th>Seccion</th><th>Estatus</th><th>Total</th>
+              <th>Plantel</th><th>Estatus</th><th>Total</th>
           </thead>
           <tbody>
             @php
                 $total_suma=0;
             @endphp
-            @foreach($totales->toArray() as $total)
+            @foreach($totales_plantel_estatus as $total)
             <tr>
-              @foreach($total as $celda)
-              <td>{{ $celda }}</td>
-              @endforeach
+              <td>{{ $total['razon'] }}</td>
+              <td>{{ $total['estatus'] }}</td>
+              <td>{{ $total['total'] }}</td>
               @php
-                  $total_suma=$total_suma+$total['total_estatus']
+                $total_suma=$total_suma+$total['total']
               @endphp
             </tr>  
             @endforeach
-            <tr><td colspan="3">Total</td><td>{{ $total_suma }}</td></tr>
+            <tr><td colspan="2">Total</td><td>{{ $total_suma }}</td></tr>
           </tbody>
         </table>
 
@@ -44,23 +44,24 @@
         <table class="table table-condensed table-striped">
           
           <thead>
-              <th>Plantel</th><th>Estatus</th><th>Total</th>
+              <th>Plantel</th><th>Seccion</th><th>Estatus</th><th>Total</th>
           </thead>
           <tbody>
             @php
                 $total_suma=0;
             @endphp
-            @foreach($totales2->toArray() as $total)
+            @foreach($totales_plantel_seccion_estatus as $total)
             <tr>
-              @foreach($total as $celda)
-              <td>{{ $celda }}</td>
-              @endforeach
+              <td>{{ $total['razon'] }}</td>
+              <td>{{ $total['seccion'] }}</td>
+              <td>{{ $total['estatus'] }}</td>
+              <td>{{ $total['total'] }}</td>
               @php
-                  $total_suma=$total_suma+$total['total_estatus']
+                  $total_suma=$total_suma+$total['total']
               @endphp
             </tr>  
             @endforeach
-            <tr><td colspan="2">Total</td><td>{{ $total_suma }}</td></tr>
+            <tr><td colspan="3">Total</td><td>{{ $total_suma }}</td></tr>
           </tbody>
         </table>
 

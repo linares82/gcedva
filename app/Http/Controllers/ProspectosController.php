@@ -1,20 +1,22 @@
 <?php namespace App\Http\Controllers;
 
+use Log;
 use Auth;
-use App\Medio;
 
+use App\Medio;
 use App\Cliente;
 use App\Empleado;
 use App\Prospecto;
 use App\Seguimiento;
 use App\HStProspecto;
 use App\Http\Requests;
+use App\ProspectoAviso;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\createProspecto;
 use App\Http\Requests\updateProspecto;
-use Log;
+
 class ProspectosController extends Controller {
 
 	/**
@@ -255,7 +257,7 @@ class ProspectosController extends Controller {
     }
 
 	public function reporteGeneral(){
-		return view('Prospectos/reportes/reporteGeneral')
+		return view('prospectos.reportes.reporteGeneral')
 		->with( 'list', Prospecto::getListFromAllRelationApps() );
 	}
 
@@ -396,8 +398,25 @@ class ProspectosController extends Controller {
 		}
 
 		//dd($resumen_aceptados);
-		return view('Prospectos/reportes/reporteGeneralR', compact('avisos', 'resumen_totales', 
+		return view('prospectos.reportes.reporteGeneralR', compact('avisos', 'resumen_totales', 
 		'prospectos_nuevos','resumen_nuevos', 
 		'prospectos_clientes','resumen_aceptados'));
+	}
+
+	public function widgetAvisosProspectos(){
+		$empleado = Empleado::where('user_id', Auth::user()->id)->first();
+		$avisos = ProspectoAviso::select('prospecto_avisos.id', 'a.name', 'prospecto_avisos.detalle', 
+				'prospecto_avisos.fecha', 's.prospecto_id')
+                ->join('prospecto_asuntos as a', 'a.id', '=', 'prospecto_avisos.prospecto_asunto_id')
+                ->join('prospecto_seguimientos as s', 's.id', '=', 'prospecto_avisos.prospecto_seguimiento_id')
+                ->join('prospectos as c', 'c.id', '=', 's.prospecto_id')
+                ->where('prospecto_avisos.activo', '=', '1')
+                //->where('avisos.fecha', '>=', Db::Raw('CURDATE()'))
+                //->where('c.empleado_id', '=', $empleado->id)
+                ->where('prospecto_avisos.usu_alta_id', '=', $empleado->user_id)
+                ->orderBy('prospecto_avisos.fecha')
+                ->get();
+		//dd($avisos);
+		return view('prospectos.reportes.widgetAvisosProspectos', compact('avisos'));
 	}
 }

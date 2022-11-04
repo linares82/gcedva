@@ -157,7 +157,7 @@
                                 <span class="help-block">{{ $errors->first("plantel_id") }}</span>
                                 @endif
                             </div>
-                            <button type="submit" class="btn btn-xs btn-success"><i class="glyphicon glyphicon-print"></i> Descargar</button>
+                            <button type="submit" class="btn btn-xs btn-success" id="btn-enviar"><i class="glyphicon glyphicon-print"></i> Descargar</button>
                             {!! Form::close() !!}
 
 
@@ -220,3 +220,19 @@
 </div>
 
 @endsection
+
+@push('scripts')
+  <script type="text/javascript">
+    $(document).ready(function() {
+        
+    });
+
+    $("#btn-enviar").click(function(){{
+        setTimeout(() => {  $(this).prop('disabled', false); }, 5000);
+    }
+    
+});
+    
+    </script>
+@endpush
+    

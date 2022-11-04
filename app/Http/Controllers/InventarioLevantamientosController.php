@@ -188,7 +188,8 @@ class InventarioLevantamientosController extends Controller {
 			$linea = utf8_encode($linea_aux);
 			//dd(utf8_encode($linea));
 			//Log::info("linea " . $i . ": " . $linea);
-			if ($i > 1) {
+			if ($i >= 1) {
+				//dd($linea);
 				if (trim($linea) <> "") {
 					//dd($linea);
 					$resultado = explode(',', $linea);
@@ -232,7 +233,7 @@ class InventarioLevantamientosController extends Controller {
 			->where('plantel_id', $datos['plantel_id'])
 			->get();	
 		if(isset($datos['csv'])){
-			$filename = "Inventario.csv";
+			$filename = storage_path('app') . "/public/Inventario".$datos['plantel_id'].".csv";
 			$handle = fopen($filename, 'w+');
 			fputcsv($handle, array("ID","PLANTEL_ID","AREA","ESCUELA","TIPO INVENTARIO","UBICACION","CANTIDAD","NOMBRE","MEDIDA","MARCA","OBSERVACIONES","EXISTE-SI","EXISTE-NO","ESTADO-BUENO","ESTADO-MALO"));
 
@@ -248,7 +249,7 @@ class InventarioLevantamientosController extends Controller {
 			$headers = array(
 				'Content-Type' => 'text/csv',
 			);
-			return response()->download($filename, 'Inventario.csv', $headers);
+			return response()->download($filename, 'Inventario'.$datos['plantel_id'].'.csv', $headers);
 		}else{
 			return view('inventarioLevantamientos.reportes.formato', compact('table'));	
 		}

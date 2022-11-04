@@ -2330,6 +2330,7 @@ class ClientesController extends Controller
             ->where('ccli.turno_id', '>', 0)
             ->whereRaw('(a.caja_concepto_id = 1 or a.caja_concepto_id = 22 or a.caja_concepto_id = 23 or a.caja_concepto_id = 25)')
             ->orderBy('p.razon')
+            ->orderBy('g.seccion')
             ->get();
         //dd($detalle->toArray());
         $registros = array();
@@ -2399,7 +2400,92 @@ class ClientesController extends Controller
         ->get();
         */
         //dd($totales->toArray());
-        return view('clientes.reportes.concretadosR', compact('registros', 'totales', 'totales2'));
+        $totales_seccion=array();
+        $seccion="";
+        $contador_seccion=0;
+
+        $plantel="";
+        $estatus="";
+        $matricula="";
+        $contador_plantel_estatus=0;
+        $totales_plantel_estatus=array();
+        //dd();
+        foreach($registros as $r){
+            //dd($r);
+            if($matricula==$r['matricula']){
+                continue;
+            }
+            if($plantel!=$r['razon'] and $plantel!="" ){
+                array_push(
+                $totales_plantel_estatus,
+                array("razon"=>$plantel, "estatus"=>$estatus, "total"=>$contador_plantel_estatus)
+                );
+                $contador_plantel_estatus=0;
+            }
+            if($estatus!=$r['st_seguimiento'] and $estatus!="" ){
+                array_push(
+                    $totales_plantel_estatus,
+                    array("razon"=>$plantel, "estatus"=>$estatus, "total"=>$contador_plantel_estatus)
+                );
+                $contador_plantel_estatus=0;
+            }
+            $contador_seccion++;
+            $contador_plantel_estatus++;
+            $plantel=$r['razon'];
+            $estatus=$r['st_seguimiento'];
+            $matricula=$r['matricula'];
+        }
+        array_push(
+            $totales_plantel_estatus,
+            array("razon"=>$plantel, "estatus"=>$estatus, "total"=>$contador_plantel_estatus)
+        );
+        //dd($totales_plantel_estatus);
+
+        
+        $plantel="";
+        $seccion="";
+        $estatus="";    
+        $matricula="";
+        $contador_plantel_seccion_estatus=0;
+        $totales_plantel_seccion_estatus=array();
+        foreach($registros as $r){
+            //dd($r);
+            if($matricula==$r['matricula']){
+                continue;
+            }
+            if($plantel!=$r['razon'] and $plantel!="" ){
+                array_push(
+                    $totales_plantel_seccion_estatus,
+                    array("razon"=>$plantel,"seccion"=>$seccion, "estatus"=>$estatus, "total"=>$contador_plantel_seccion_estatus)
+                    );
+                $contador_plantel_seccion_estatus=0;
+            }
+            if($seccion!=$r['seccion'] and $seccion!="" ){
+                array_push(
+                $totales_plantel_seccion_estatus,
+                array("razon"=>$plantel,"seccion"=>$seccion, "estatus"=>$estatus, "total"=>$contador_plantel_seccion_estatus)
+                );
+                $contador_plantel_seccion_estatus=0;
+            }
+            if($estatus!=$r['st_seguimiento'] and $estatus!="" ){
+                array_push(
+                    $totales_plantel_seccion_estatus,
+                    array("razon"=>$plantel,"seccion"=>$seccion, "estatus"=>$estatus, "total"=>$contador_plantel_seccion_estatus)
+                    );
+                $contador_plantel_seccion_estatus=0;
+            }
+            $contador_plantel_seccion_estatus++;
+            $plantel=$r['razon'];
+            $seccion=$r['seccion'];
+            $estatus=$r['st_seguimiento'];
+            $matricula=$r['matricula'];
+        }
+        array_push(
+            $totales_plantel_seccion_estatus,
+            array("razon"=>$plantel,"seccion"=>$seccion, "estatus"=>$estatus, "total"=>$contador_plantel_seccion_estatus)
+        );
+        //dd($totales_plantel_seccion_estatus);
+        return view('clientes.reportes.concretadosR', compact('registros', 'totales_plantel_estatus', 'totales_plantel_seccion_estatus'));
     }
 
     public function generarMatricula(Request $request)

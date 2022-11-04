@@ -11,6 +11,7 @@ use App\ProspectoAviso;
 use App\ProspectoStSeg;
 use App\ProspectoTarea;
 use App\ProspectoAsunto;
+use App\ProspectoStTarea;
 use Illuminate\Http\Request;
 use App\ProspectoSeguimiento;
 use App\ProspectoAsignacionTarea;
@@ -84,6 +85,7 @@ class ProspectoSeguimientosController extends Controller {
 		}
 		//dd($prospectoSeguimiento);
 		$prospectoAsignacionTareas = ProspectoAsignacionTarea::where('prospecto_id', '=', $prospectoSeguimiento->prospecto_id)->orderBy('created_at', 'desc')->get();
+		//dd($prospectoAsignacionTareas->toArray());
         $prospectoAvisos = ProspectoAviso::select('prospecto_avisos.id', 'prospecto_avisos.activo', 
 		'a.name', 'prospecto_avisos.detalle', 'prospecto_avisos.fecha', DB::Raw('DATEDIFF(prospecto_avisos.fecha,CURDATE()) as dias_restantes'))
             ->join('prospecto_asuntos as a', 'a.id', '=', 'prospecto_avisos.prospecto_asunto_id')
@@ -92,7 +94,7 @@ class ProspectoSeguimientosController extends Controller {
 
 		$tareas=ProspectoTarea::pluck('name','id');
 		$asuntos=ProspectoAsunto::pluck('name','id');
-		$estatusTareas=StTarea::where('bnd_empresa', 0)->pluck('name', 'id');
+		$estatusTareas=ProspectoStTarea::pluck('name', 'id');
 		$prospectoStSeg=ProspectoStSeg::pluck('name', 'id');
 		return view('prospectoSeguimientos.show', 
 		compact('prospectoSeguimiento', 'tareas', 'asuntos','estatusTareas','prospectoAsignacionTareas','prospectoAvisos','prospectoStSeg'));
