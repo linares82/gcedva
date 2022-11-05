@@ -36,6 +36,7 @@
                 @foreach($ingresos as $ingreso)
                 <tr>
                     <td>{{$ingreso['concepto']}}</td><td>{{$ingreso['total_alumnos']}}</td><td>{{number_format($ingreso['total_ingreso'], 2)}}</td>
+                    
                 </tr>
                 @php
                     $suma_ingresos=$suma_ingresos+$ingreso['total_ingreso'];

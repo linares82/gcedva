@@ -315,9 +315,13 @@ trait GetAllDataTrait
                 if ($baseTable == "seguimientos") { //and Auth::user()->can('IfiltroClientesXPlantel')
                     $myQuery = $myQuery->whereIn('clientes.plantel_id', $planteles);
                 }
+                if (Auth::user()->can('filtro.corporativo_control_escolar')) {
+                    $myQuery = $myQuery->whereIn('st_seguimiento_id', array(2,6,7,9,10));
+                }
                 if ($baseTable == "seguimientos") { //and Auth::user()->can('IfiltroClientesXPlantel')
                     $myQuery = $myQuery->whereIn('clientes.plantel_id', $planteles)
-                        ->where('st_seguimiento_id', '<>', '3');
+                        ->where('st_seguimiento_id', '<>', '3')
+                        ->where('st_seguimiento_id', '<>', '8');
                 }
                 if ($baseTable == "seguimientos" and Auth::user()->can('IfiltroRechazados')) {
                     $myQuery = $myQuery->where('st_seguimiento_id', '<>', '3');

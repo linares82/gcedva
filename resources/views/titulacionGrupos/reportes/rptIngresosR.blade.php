@@ -24,7 +24,7 @@
             <thead >
                 <tr>
                     <th>No.</th><th>GRUPO</th><th>PLANTEL</th><th>ID</th><th>MATRICULA</th><th>ALUMNO</th><th>OPCION</th>
-                    <th>MONTO</th><th>FECHA</th><th>OBSERVACIONES</th><th>Adeudo</th>
+                    <th>MONTO</th><th>FECHA</th><th>OBSERVACIONES</th><th>Adeudo</th><th>Alta</th>
                 </tr> 
             </thead>
             <tbody>
@@ -51,6 +51,15 @@
                         
                     @endphp
                     <td>{{$adeudo->costo - $adeudo->suma_pagos}}</td>
+                    <td>
+                        @php
+                            if(isset($ingreso->usu_alta)){
+                                $user=App\User::find($ingreso->usu_alta);
+                                echo $user->name;
+                            }
+                            
+                        @endphp    
+                    </td>
                 </tr>
                 @endforeach
                 

@@ -214,7 +214,7 @@ class TitulacionGruposController extends Controller {
 		
 		$ingresos=Cliente::select('t.id','p.razon','tg.name as grupo','clientes.id as cliente_id','clientes.matricula','clientes.nombre',
 		'clientes.nombre2','clientes.ape_paterno','clientes.ape_materno','ot.name as opcion_titulacion',
-		'tp.fecha','tp.monto','tp.observaciones','ot.costo', 'tg.id as grupo_id')
+		'tp.fecha','tp.monto','tp.observaciones','ot.costo', 'tg.id as grupo_id', 'tp.usu_alta_id as usu_alta')
 		->join('plantels as p', 'p.id','clientes.plantel_id')
 		->join('titulacions as t', 't.cliente_id','clientes.id')
 		->join('opcion_titulacions as ot','ot.id','t.opcion_titulacion_id')
@@ -226,7 +226,8 @@ class TitulacionGruposController extends Controller {
 		->whereBetween('tp.fecha',[$datos['fecha_pago_f'], $datos['fecha_pago_t']])
 		->where('tg.fecha',$datos['fecha_grupo_f'])
 		->get();
-
+		//dd($ingresos);
+		
 		$adeudos=Cliente::select('t.id as titulacion_id','p.razon','tg.name as grupo','clientes.id as cliente_id','clientes.matricula','clientes.nombre',
 		'clientes.nombre2','clientes.ape_paterno','clientes.ape_materno','ot.name as opcion_titulacion',
 		'ot.costo',DB::raw('sum(tp.monto) as suma_pagos'))

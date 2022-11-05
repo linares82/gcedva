@@ -181,6 +181,7 @@
                             <th>@include('plantillas.getOrderLink', ['column' => 'ape_materno', 'title' => 'A. MATERNO'])</th>
                             <th>@include('plantillas.getOrderLink', ['column' => 'puestos.name', 'title' => 'PUESTO'])</th>
                             <th>@include('plantillas.getOrderLink', ['column' => 'st_empleados.name', 'title' => 'ESTATUS'])</th>
+                            <th>RECONTRATABLE</th>
                             <th class="text-right">EVENTOS</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
@@ -196,6 +197,15 @@
                                 <td>{{$empleado->ape_materno}}</td>
                                 <td>{{$empleado->puesto->name}}</td>
                                 <td>{{$empleado->st_empleado->name}}</td>
+                                <td>
+                                @if($empleado->st_empleado_id==3)
+                                @if($empleado->bnd_recontratable==1)
+                                    <span class="bg-green">SI</span>
+                                @else
+                                <span class="bg-red">NO</span>
+                                @endif
+                                @endif
+                                </td>
                                 <td class="text-right">
                                     @php
                                         $cuentaEventos=App\Historial::where('empleado_id', $empleado->id)->count();

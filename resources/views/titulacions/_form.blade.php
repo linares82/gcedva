@@ -202,6 +202,7 @@
                         <th>Fecha</th>
                         <th>Monto ({{ $titulacion->opcionTitulacion->costo }})</th>
                         <th>Obs.</th>
+                        <th>Alta</th>
                         <th>O. Pagos</th>
                     </thead>
                     <tbody>
@@ -210,6 +211,7 @@
                                 <td>{{ $pago->fecha }}</td>
                                 <td>{{ $pago->monto }}</td>
                                 <td>{{ $pago->observaciones }}</td>
+                                <td>{{ $pago->usu_alta->name }}</td>
                                 <td>
                                 @permission('titulacions.CRUDIngresos')
                                     <button
