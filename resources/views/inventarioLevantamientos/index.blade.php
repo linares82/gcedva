@@ -127,7 +127,7 @@
                     <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
                     <th>@include('CrudDscaffold::getOrderlink', ['column' => 'fecha', 'title' => 'FECHA'])</th>
                     <th>@include('CrudDscaffold::getOrderlink', ['column' => 'inventario_levantamiento_id', 'title' => 'ESTATUS'])</th>
-                    <th>DESCARGA</th>
+                    <!--<th>DESCARGA</th>-->
                     <th>Observaciones</th>
                     <th class="text-right">OPCIONES</th>
                 </tr>
@@ -139,7 +139,9 @@
                     <td><a href="{{ route('inventarioLevantamientos.show', array('q[inventario_levantamiento_id_lt]'=>$inventarioLevantamiento->id)) }}">{{$inventarioLevantamiento->id}}</a></td>
                     <td>{{$inventarioLevantamiento->fecha}}</td>
                     <td>{{$inventarioLevantamiento->inventarioLevantamientoSt->name}}</td>
+                    <!--
                     <td>
+                        
                         @permission('inventarioLevantamientos.descargarCsv')
                             {!! Form::model($inventarioLevantamiento,
                             array(
@@ -163,6 +165,7 @@
 
                         @endpermission
                     </td>
+                            -->
                     <td>
                     @permission('inventarioObservacions.create')
                     <a class="btn btn-success btn-xs" href="{{ route('inventarioObservacions.create', array('inventarioLevantamiento'=>$inventarioLevantamiento->id)) }}"><i class="glyphicon glyphicon-plus"></i> Crear</a>
@@ -193,13 +196,16 @@
                     <td class="text-right">
                         @if($inventarioLevantamiento->inventario_levantamiento_st_id==1)
                         @permission('inventarioLevantamientos.cargarCsv')
-                        <a class="btn btn-xs btn-info" href="{{ route('inventarioLevantamientos.cargarCsv', array('inventario_levantamiento_id'=>$inventarioLevantamiento->id)) }}"><i class="glyphicon glyphicon-edit"></i> Cargar Csv</a>
+                        <a class="btn btn-xs btn-info" href="{{ route('inventarioLevantamientos.cargarCsv', array('inventario_levantamiento_id'=>$inventarioLevantamiento->id)) }}"><i class="glyphicon glyphicon-edit"></i> Crear con Csv</a>
+                        
                         <a class="btn btn-xs btn-success" href="{{ route('inventarioLevantamientos.copiarAnterior', array('destino'=>$inventarioLevantamiento->id)) }}"><i class="glyphicon glyphicon-duplicate"></i> Copiar</a>
                         @endpermission
+                        <a class="btn btn-xs btn-info" href="{{ route('inventarioLevantamientos.actualizarCsv', array('inventario_levantamiento_id'=>$inventarioLevantamiento->id)) }}"><i class="glyphicon glyphicon-edit"></i> Actualizar con Csv</a>
                         @endif
                         @permission('inventarioLevantamientos.edit')
+                        @permission('inventarioLevantamientos.actualizarCsv')
                         <a class="btn btn-xs btn-warning" href="{{ route('inventarioLevantamientos.edit', $inventarioLevantamiento->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
-                        
+                        @endpermission
                         @endpermission
                         @permission('inventarioLevantamientos.destroy')
                         {!! Form::model($inventarioLevantamiento, array('route' => array('inventarioLevantamientos.destroy', $inventarioLevantamiento->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}

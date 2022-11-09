@@ -6,6 +6,7 @@ use Exception;
 use App\Plantel;
 use App\Inventario;
 use App\Http\Requests;
+use App\PlantelInventario;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\InventarioObservacion;
@@ -14,6 +15,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\createInventarioLevantamiento;
 use App\Http\Requests\updateInventarioLevantamiento;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class InventarioLevantamientosController extends Controller {
 
@@ -25,7 +27,7 @@ class InventarioLevantamientosController extends Controller {
 	public function index(Request $request)
 	{
 		$inventarioLevantamientos = InventarioLevantamiento::getAllData($request);
-		$planteles=Plantel::pluck('razon','id');
+		$planteles=PlantelInventario::pluck('name','id');
 
 		return view('inventarioLevantamientos.index', compact('inventarioLevantamientos','planteles'));
 	}
@@ -70,10 +72,13 @@ class InventarioLevantamientosController extends Controller {
 	public function show(Request $request)
 	{
 		//dd($request);
-		//dd($datos['q']["inventario_levantamiento_id_lt"]);
-		$inventarios = Inventario::getAllData($request);
+		
+		
 		$datos=$request->all();
+		//dd($datos['q']["inventario_levantamiento_id_lt"]);
 		$inventarioLevantamiento=InventarioLevantamiento::find($datos['q']["inventario_levantamiento_id_lt"]);
+		$inventarios = Inventario::getAllData($request);
+		//$inventarios = Inventario::where('inventario_levantamiento_id',$datos['q']["inventario_levantamiento_id_lt"])->get();
 		
 		
 		
@@ -142,7 +147,7 @@ class InventarioLevantamientosController extends Controller {
 	public function cargarCsv(Request $request){
 		$datos=$request->all();
 		$inventario_levantamiento_id=$datos['inventario_levantamiento_id'];
-		$plantels=Plantel::pluck('razon','id');
+		$plantels=PlantelInventario::pluck('name','id');
 		return view('inventarioLevantamientos.cargarCsv', compact('inventario_levantamiento_id','plantels'));
 	}
 
@@ -196,7 +201,7 @@ class InventarioLevantamientosController extends Controller {
 					//dd($resultado);
 					$input = array();
 					$input['inventario_levantamiento_id'] = $datos['inventario_levantamiento_id'];
-					$input['plantel_id'] = $datos['plantel_id'];
+					$input['plantel_inventario_id'] = $datos['plantel_id'];
 					$input['area'] = trim(str_replace('"','',$resultado[1]));
 					$input['escuela'] = trim(str_replace('"','',$resultado[2]));
 					$input['tipo_inventario'] = trim(str_replace('"','',$resultado[3]));
@@ -226,19 +231,149 @@ class InventarioLevantamientosController extends Controller {
 		return view('inventarioLevantamientos.cargarCsv', compact('inventario_levantamiento_id','plantels', 'nombre', 'total_lineas'));
 	}
 
+	public function actualizarCsv(Request $request){
+		$datos=$request->all();
+		$inventario_levantamiento_id=$datos['inventario_levantamiento_id'];
+		return view('inventarioLevantamientos.actualizarCsv', compact('inventario_levantamiento_id'));
+	}
+
+	public function actualizarLineas(Request $request){
+		$datos=$request->all();
+		//dd($datos);
+		$r = $request->hasFile('archivo');
+		//dd($r);
+		if ($r) {
+			$archivo = $request->file('archivo');
+			$input['archivo'] = $archivo->getClientOriginalName();
+		}
+
+		//create data
+		//$e = FacturaG::create($input);
+		//dd($request->hasFile('archivo'));
+		if ($request->hasFile('archivo')) {
+			$file = $request->file('archivo');
+			$extension = $file->getClientOriginalExtension();
+			$nombre = "actualizar".date('dmYhmi') . $file->getClientOriginalName();
+			
+			try{
+				$r = Storage::disk('inventario')->put($nombre, \File::get($file));
+			}catch(Exception $e){
+				dd($e);
+			}
+			
+
+			//$e->archivo = $nombre;
+			//$e->save();
+		}
+
+		//dd($file);
+		$fp = fopen($file, "r");
+		$i = 0;
+		$total_lineas=0;
+		$total_campos=0;
+		while (!feof($fp)) {
+			$registro = array();
+			//$file=storage_path('conciliaciones\\'.$nombre);
+
+
+			$linea_aux = fgets($fp);
+			$linea = utf8_encode($linea_aux);
+			//dd(utf8_encode($linea));
+			//Log::info("linea " . $i . ": " . $linea);
+			if ($i >= 1) {
+				//dd($linea);
+				if (trim($linea) <> "") {
+					//dd($linea);
+					
+					$resultado = explode(',', $linea);
+					//dd($resultado);
+					try{
+						$registroExistente=Inventario::findOrFail(trim(str_replace('"','',$resultado[0])));
+						$inventario_levantamiento_id=$registroExistente->inventario_levantamiento_id;
+					}catch(ModelNotFoundException $e){
+						dd('Registro con id '.$resultado[0].' no encontrado, recuerde que el valor de la columna id no debe ser modificado en el archivo .csv');
+					}
+					
+					//dd($registroExistente);
+					if($registroExistente->area!=trim(str_replace('"','',$resultado[2]))){
+						$registroExistente->area=trim(str_replace('"','',$resultado[2]));
+						$total_campos++;
+					}
+					if($registroExistente->escuela!=trim(str_replace('"','',$resultado[3]))){
+						$registroExistente->escuela=trim(str_replace('"','',$resultado[3]));
+						$total_campos++;
+					}
+					if($registroExistente->tipo_inventario!=trim(str_replace('"','',$resultado[4]))){
+						$registroExistente->tipo_inventario=trim(str_replace('"','',$resultado[4]));
+						$total_campos++;
+					}
+					if($registroExistente->ubicacion!=trim(str_replace('"','',$resultado[5]))){
+						$registroExistente->ubicacion=trim(str_replace('"','',$resultado[5]));
+						$total_campos++;
+					}
+					if($registroExistente->cantidad!=trim(str_replace('"','',$resultado[6]))){
+						$registroExistente->cantidad=trim(str_replace('"','',$resultado[6]));
+						$total_campos++;
+					}
+					if($registroExistente->nombre!=trim(str_replace('"','',$resultado[7]))){
+						$registroExistente->nombre=trim(str_replace('"','',$resultado[7]));
+						$total_campos++;
+					}
+					if($registroExistente->medida!=trim(str_replace('"','',$resultado[8]))){
+						$registroExistente->medida=trim(str_replace('"','',$resultado[8]));
+						$total_campos++;
+					}
+					if($registroExistente->marca!=trim(str_replace('"','',$resultado[9]))){
+						$registroExistente->marca=trim(str_replace('"','',$resultado[9]));
+						$total_campos++;
+					}
+					if($registroExistente->observaciones!=trim(str_replace('"','',$resultado[10]))){
+						$registroExistente->observaciones=trim(str_replace('"','',$resultado[10]));
+						$total_campos++;
+					}
+					if($registroExistente->existe_si!=trim(str_replace('"','',$resultado[11]))){
+						$registroExistente->existe_si=trim(str_replace('"','',$resultado[11]));
+						$total_campos++;
+					}
+					if($registroExistente->existe_no!=trim(str_replace('"','',$resultado[12]))){
+						$registroExistente->existe_no=trim(str_replace('"','',$resultado[12]));
+						$total_campos++;
+					}
+					if($registroExistente->estado_bueno!=trim(str_replace('"','',$resultado[13]))){
+						$registroExistente->estado_bueno=trim(str_replace('"','',$resultado[13]));
+						$total_campos++;
+					}
+					if($registroExistente->estado_malo!=trim(str_replace('"','',$resultado[14]))){
+						$registroExistente->estado_malo=trim(str_replace('"','',$resultado[14]));
+						$total_campos++;
+					}
+					$registroExistente->origen=$nombre;
+					$registroExistente->save();
+					
+					$total_lineas++;
+				}
+			}
+			$i++;
+		}
+		
+		//return redirect()->route('inventarioLevantamientos.index');
+		return view('inventarioLevantamientos.actualizarCsv', compact('inventario_levantamiento_id', 'nombre', 'total_lineas','total_campos'));
+	}
+
 	public function descargarCsv(Request $request){
 		$datos=$request->all();
 		//dd($datos);
 		$table = Inventario::where('inventario_levantamiento_id', $datos['id'])
-			->where('plantel_id', $datos['plantel_id'])
+			->where('plantel_inventario_id', $datos['plantel_id'])
 			->get();	
+		//dd($table);
 		if(isset($datos['csv'])){
 			$filename = storage_path('app') . "/public/Inventario".$datos['plantel_id'].".csv";
 			$handle = fopen($filename, 'w+');
 			fputcsv($handle, array("ID","PLANTEL_ID","AREA","ESCUELA","TIPO INVENTARIO","UBICACION","CANTIDAD","NOMBRE","MEDIDA","MARCA","OBSERVACIONES","EXISTE-SI","EXISTE-NO","ESTADO-BUENO","ESTADO-MALO"));
 
 			foreach($table as $row) {
-				fputcsv($handle, array($row->id,$row->plantel_id, $row->area, $row->escuela, $row->tipo_inventario,$row->ubicacion,
+				fputcsv($handle, array($row->id,$row->plantel_inventario_id, $row->area, $row->escuela, $row->tipo_inventario,$row->ubicacion,
 									$row->cantidad,$row->nombre,$row->medida,$row->marca,
 									$row->observaciones,$row->existe_si,$row->existe_no,$row->estado_bueno,
 									$row->estado_malo));
@@ -293,10 +428,85 @@ class InventarioLevantamientosController extends Controller {
 
 	public function dictamen(Request $request){
 		$datos=$request->all();
-		$plantel=Plantel::find($datos['plantel_id']);
+		$plantel=PlantelInventario::find($datos['plantel_id']);
 		$inventarioLevantamiento=InventarioLevantamiento::find($datos['id']);
 		$inventarioObservaciones=InventarioObservacion::where('inventario_levantamiento_id', $datos['id'])
 		->where('plantel_id', $datos['plantel_id'])->get();
 		return view('inventarioLevantamientos.reportes.dictamen', compact('plantel', 'inventarioObservaciones','inventarioLevantamiento'));
+	}
+
+	public function inicioLevantamiento(){
+		$planteles=PlantelInventario::pluck('name','id');
+		return view('inventarioLevantamientos.reportes.inicioLevantamiento', compact('planteles'));
+	}
+
+	public function inicioLevantamientoLista(Request $request){
+		$datos=$request->all();
+		//dd($datos);
+		$resultado=Inventario::select('pi.id as plantel_id','pi.name as plantel','il.fecha','inventarios.area')
+		->join('inventario_levantamientos as il','il.id','inventarios.inventario_levantamiento_id')
+		->join('plantel_inventarios as pi','pi.id','inventarios.plantel_inventario_id')
+		->whereIn('inventarios.plantel_inventario_id',$datos['plantel_f'])
+		->where('inventarios.area', 'like', '%'.$datos['area'].'%')
+		->whereDate('il.fecha','>=', $datos['fecha_f'])
+		->whereDate('il.fecha','<=', $datos['fecha_t'])
+		->distinct()
+		->orderBy('il.fecha','desc')
+		->get();
+		$planteles=PlantelInventario::pluck('name','id');
+		//dd($resultado);
+		return view('inventarioLevantamientos.reportes.inicioLevantamiento', compact('resultado','planteles'));
+	}
+
+	public function inicioLevantamientoCsv(Request $request){
+		$datos=$request->all();
+		//dd($datos);
+		$resultado=Inventario::select('il.fecha','pi.name as plantel', 'inventarios.*')
+		->join('inventario_levantamientos as il','il.id','inventarios.inventario_levantamiento_id')
+		->join('plantel_inventarios as pi','pi.id','inventarios.plantel_inventario_id')
+		->where('inventarios.plantel_inventario_id',$datos['plantel'])
+		->where('inventarios.area',$datos['area'])
+		->where('il.fecha',$datos['fecha'])
+		->get();
+
+/*		$table = Inventario::where('inventario_levantamiento_id', $datos['id'])
+			->where('plantel_inventario_id', $datos['plantel'])
+			->get();
+*/
+		$filename = storage_path('app') . "/public/Inventario".$datos['plantel'].".csv";
+			$handle = fopen($filename, 'w+');
+			fputcsv($handle, array("ID","PLANTEL_ID","AREA","ESCUELA","TIPO INVENTARIO","UBICACION","CANTIDAD","NOMBRE","MEDIDA","MARCA","OBSERVACIONES","EXISTE-SI","EXISTE-NO","ESTADO-BUENO","ESTADO-MALO"));
+
+			foreach($resultado as $row) {
+				fputcsv($handle, array($row->id,$row->plantel_inventario_id, $row->area, $row->escuela, $row->tipo_inventario,$row->ubicacion,
+									$row->cantidad,$row->nombre,$row->medida,$row->marca,
+									$row->observaciones,$row->existe_si,$row->existe_no,$row->estado_bueno,
+									$row->estado_malo));
+			}
+
+			fclose($handle);
+
+			$headers = array(
+				'Content-Type' => 'text/csv',
+			);
+			return response()->download($filename, 'Inventario'.$datos['plantel'].'.csv', $headers);
+
+		//dd($resultado);
+		//return view('inventarioLevantamientos.reportes.inicioLevantamiento', compact('planteles'));
+	}
+
+	public function inicioLevantamientoFormato(Request $request){
+		$datos=$request->all();
+		//dd($datos);
+		$resultado=Inventario::select('il.fecha','pi.name as plantel', 'inventarios.*')
+		->join('inventario_levantamientos as il','il.id','inventarios.inventario_levantamiento_id')
+		->join('plantel_inventarios as pi','pi.id','inventarios.plantel_inventario_id')
+		->where('inventarios.plantel_inventario_id',$datos['plantel'])
+		->where('il.fecha',$datos['fecha'])
+		->where('inventarios.area',$datos['area'])
+		->get();
+		//dd($resultado);
+		//return view('inventarioLevantamientos.reportes.inicioLevantamiento', compact('planteles'));
+		return view('inventarioLevantamientos.reportes.formato', array('table'=>$resultado));	
 	}
 }

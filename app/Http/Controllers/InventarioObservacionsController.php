@@ -1,13 +1,14 @@
 <?php namespace App\Http\Controllers;
 
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
-
-use App\InventarioObservacion;
-use Illuminate\Http\Request;
 use Auth;
-use App\Http\Requests\updateInventarioObservacion;
+use App\Http\Requests;
+
+use App\PlantelInventario;
+use Illuminate\Http\Request;
+use App\InventarioObservacion;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\createInventarioObservacion;
+use App\Http\Requests\updateInventarioObservacion;
 
 class InventarioObservacionsController extends Controller {
 
@@ -30,10 +31,10 @@ class InventarioObservacionsController extends Controller {
 	 */
 	public function create(Request $request)
 	{
-		
 		$inventarioLevantamiento=$request->input('inventarioLevantamiento');
 		
-		return view('inventarioObservacions.create', compact('inventarioLevantamiento'))
+		$planteles=PlantelInventario::pluck('name','id');
+		return view('inventarioObservacions.create', compact('inventarioLevantamiento','planteles'))
 			->with( 'list', InventarioObservacion::getListFromAllRelationApps() );
 	}
 

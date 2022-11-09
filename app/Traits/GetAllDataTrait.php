@@ -89,7 +89,7 @@ trait GetAllDataTrait
 
                 if ($operator === 'cont' and ($value <> "" or $value <> 0)) {
                     $myQuery = $myQuery->Where($column, 'LIKE', '%' . $value . '%');
-                    
+                    //dd($myQuery);
                 } elseif ($operator === 'lt' and $value <> 0) {
                     //dd($column);
                     $myQuery = $myQuery->Where($column, $value);
@@ -238,7 +238,7 @@ trait GetAllDataTrait
                 case "inventarios":
                     //if (Auth::user()->can('IFiltroEmpleadosXPlantel')) {
                     //dd("fil");
-                    $myQuery = $myQuery->whereIn('inventarios.plantel_id', $planteles);
+                    //$myQuery = $myQuery->whereIn('inventarios.plantel_id', $planteles);
                     //}
                     break;
             case "materia":
@@ -369,7 +369,7 @@ trait GetAllDataTrait
         //(iv) get base table data
         
         $myQuery = $myQuery->select([$baseTable . '.*']);
-
+        //dd($myQuery);
         //(v) pagenate
         //dd($myQuery->paginate($paginate));
         return $myQuery->paginate($paginate);

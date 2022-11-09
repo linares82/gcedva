@@ -52,7 +52,7 @@
             </thead>               
                 @foreach($inventarioObservaciones as $obs)
                 <tr>
-                    <td>{{$obs->plantel->razon}}</td><td>{{$obs->observacion}}</td><td>{{$obs->usu_alta->name}}</td>
+                    <td>{{$obs->plantelInventario->name}}</td><td>{{$obs->observacion}}</td><td>{{$obs->usu_alta->name}}</td>
                 </tr>
                 @endforeach
         </table>

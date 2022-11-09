@@ -1,0 +1,1 @@
+@section('plantelInventariosAppTitle','Plantel Inventario')
