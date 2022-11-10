@@ -1557,6 +1557,9 @@ class InscripcionsController extends Controller
         $datos = $request->all();
         $inscripcion = Inscripcion::find($datos['inscripcion']);
         $cliente = Cliente::find($inscripcion->cliente_id);
+        if($cliente->matricula==""){
+            dd("Cliente sin matricula, no se puede emitir historial");
+        }
         $plantel = Plantel::find($inscripcion->plantel_id);
         $grado = Grado::find($inscripcion->grado_id);
         $resultados = array();
@@ -1576,10 +1579,10 @@ class InscripcionsController extends Controller
             ->with('cliente')
             ->orderBy('hacademicas.id')
             ->get();
-        //dd($hacademicas->count()); 38
+        //dd($hacademicas->toArray()); 8
 
         $consulta_calificaciones = ConsultaCalificacion::where('matricula', 'like', "%" . $cliente->matricula . "%")->get();
-        //dd($consulta_calificaciones->count()); 72
+        //dd($consulta_calificaciones->count()); 
 
         foreach($consulta_calificaciones as $c){
             array_push($resultados, array('materia' => $c->materia,
@@ -1621,6 +1624,7 @@ class InscripcionsController extends Controller
         $rechazados=array();
         foreach($resultados as $resultado){
             if(strval($resultado['calificacion'])>=6){
+                Log::info($resultado['creditos']);
                 $total_creditos=$total_creditos+$resultado['creditos'];
                 $suma_calificaciones=$suma_calificaciones+$resultado['calificacion'];
                 $total_materias=$total_materias+1;

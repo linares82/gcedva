@@ -61,15 +61,9 @@
                             </div>
                             -->
                         <div class="form-group">
-                            <label class="col-sm-2 control-label" for="q_fecha_cont">ENTRE FECHA</label>
+                            <label class="col-sm-2 control-label" for="q_fecha_cont">FECHA</label>
                             <div class=" col-sm-9">
-                                <input class="form-control input-sm fecha" type="search" value="{{ @(Request::input('q')['fecha_f']) ?: '' }}" name="q[fecha_f]" id="q_fecha_f" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label" for="q_fecha_cont"> Y FECHA</label>
-                            <div class=" col-sm-9">
-                                <input class="form-control input-sm fecha" type="search" value="{{ @(Request::input('q')['fecha_t']) ?: '' }}" name="q[fecha_t]" id="q_fecha_t" />
+                                <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['fecha_cont']) ?: '' }}" name="q[fecha_cont]" id="q_fecha_cont" />
                             </div>
                         </div>
                         <!--
@@ -84,7 +78,31 @@
                                 </div>
                             </div>
                             -->
-                        
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="q_usu_alta_id_cont">USU_ALTA_ID</label>
+                            <div class=" col-sm-9">
+                                <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['usu_alta_id_cont']) ?: '' }}" name="q[usu_alta_id_cont]" id="q_usu_alta_id_cont" />
+                            </div>
+                        </div>
+                        <!--
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="q_usu_mod_id_gt">USU_MOD_ID</label>
+                                <div class=" col-sm-4">
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['usu_mod_id_gt']) ?: '' }}" name="q[usu_mod_id_gt]" id="q_usu_mod_id_gt" />
+                                </div>
+                                <div class=" col-sm-1 text-center"> - </div>
+                                <div class=" col-sm-4">
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['usu_mod_id_lt']) ?: '' }}" name="q[usu_mod_id_lt]" id="q_usu_mod_id_lt" />
+                                </div>
+                            </div>
+                            -->
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="q_usu_mod_id_cont">USU_MOD_ID</label>
+                            <div class=" col-sm-9">
+                                <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['usu_mod_id_cont']) ?: '' }}" name="q[usu_mod_id_cont]" id="q_usu_mod_id_cont" />
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <div class="col-sm-10 col-sm-offset-2">
                                 <input type="submit" name="commit" value="Buscar" class="btn btn-default btn-xs" />
@@ -108,7 +126,6 @@
                 <tr>
                     <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
                     <th>@include('CrudDscaffold::getOrderlink', ['column' => 'fecha', 'title' => 'FECHA'])</th>
-                    <th>Plantel</th>
                     <th>@include('CrudDscaffold::getOrderlink', ['column' => 'inventario_levantamiento_id', 'title' => 'ESTATUS'])</th>
                     <!--<th>DESCARGA</th>-->
                     <th>Observaciones</th>
@@ -121,8 +138,7 @@
                 <tr>
                     <td><a href="{{ route('inventarioLevantamientos.show', array('q[inventario_levantamiento_id_lt]'=>$inventarioLevantamiento->id)) }}">{{$inventarioLevantamiento->id}}</a></td>
                     <td>{{$inventarioLevantamiento->fecha}}</td>
-                    <td>{{$inventarioLevantamiento->plantel}}</td>
-                    <td>{{$inventarioLevantamiento->st_il}}</td>
+                    <td>{{$inventarioLevantamiento->inventarioLevantamientoSt->name}}</td>
                     <!--
                     <td>
                         
@@ -201,7 +217,7 @@
                 @endforeach
             </tbody>
         </table>
-        
+        {!! $inventarioLevantamientos->appends(Request::except('page'))->render() !!}
         @else
         <h3 class="text-center alert alert-info">Vacio!</h3>
         @endif

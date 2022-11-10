@@ -4,6 +4,7 @@ use Auth;
 use Exception;
 
 use App\Plantel;
+use Carbon\Carbon;
 use App\Inventario;
 use App\Http\Requests;
 use App\PlantelInventario;
@@ -24,14 +25,43 @@ class InventarioLevantamientosController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function index(Request $request)
+	/*
+	 public function index(Request $request)
 	{
 		$inventarioLevantamientos = InventarioLevantamiento::getAllData($request);
 		$planteles=PlantelInventario::pluck('name','id');
 
 		return view('inventarioLevantamientos.index', compact('inventarioLevantamientos','planteles'));
-	}
+	}*/
 
+	public function index(Request $request)
+	{
+		$datos=$request->all();
+		//dd($datos["q"]["fecha_f"]);
+		//$inventarioLevantamientos_aux=InventarioLevantamiento::query();
+		$inventarioLevantamientos_aux=InventarioLevantamiento::select('inventario_levantamientos.id',
+		'pi.name as plantel','st_il.name as st_il',
+		'inventario_levantamientos.fecha')
+		->join('inventarios as i','i.inventario_levantamiento_id','inventario_levantamientos.id')
+		->join('plantel_inventarios as pi','pi.id','i.plantel_inventario_id')
+		->join('inventario_levantamiento_sts as st_il','st_il.id','inventario_levantamientos.inventario_levantamiento_st_id')
+		->distinct();
+
+		if(isset($datos["q"]["fecha_f"]) and isset($datos["q"]["fecha_f"])){
+			$inventarioLevantamientos=$inventarioLevantamientos_aux->whereDate('inventario_levantamientos.fecha','>=',$datos["q"]["fecha_f"])
+			->whereDate('inventario_levantamientos.fecha','<=',$datos["q"]["fecha_t"]);
+		}else{
+			$fecha=Carbon::createFromFormat('Y-m-d',date('Y-m-d'))->subYear()->toDateString();
+			$inventarioLevantamientos=$inventarioLevantamientos_aux->whereDate('inventario_levantamientos.fecha', '>=', $fecha);
+		}
+		$inventarioLevantamientos=$inventarioLevantamientos_aux->get();
+		//dd($inventarioLevantamientos);
+		
+		
+		$planteles=PlantelInventario::pluck('name','id');
+
+		return view('inventarioLevantamientos.index', compact('inventarioLevantamientos','planteles'));
+	}
 	/**
 	 * Show the form for creating a new resource.
 	 *
@@ -403,7 +433,7 @@ class InventarioLevantamientosController extends Controller {
 		$datos=$request->all();
 		$origen=InventarioLevantamiento::find($datos['origen']);
 		foreach($origen->inventarios as $inventario){
-			$input['plantel_id']=$inventario->plantel_id;
+			$input['plantel_inventario_id']=$inventario->plantel_inventario_id;
 			$input['area']=$inventario->area;
 			$input['escuela']=$inventario->escuela;
 			$input['tipo_inventario']=$inventario->tipo_inventario;
