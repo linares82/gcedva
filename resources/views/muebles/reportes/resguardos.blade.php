@@ -22,22 +22,24 @@
         <div class="col-md-12">
 
             {!! Form::open(array('route' => 'muebles.resguardosR', 'id'=>'frm_reporte')) !!}
-
-                <div class="form-group col-md-6 @if($errors->has('plantel_f')) has-error @endif">
-                    <label for="plantel_f-field">Plantel de:</label>
-                    {!! Form::select("plantel_f", $plantels, null, array("class" => "form-control select_seguridad", "id" => "plantel_f-field")) !!}
-                    @if($errors->has("plantel_f"))
-                    <span class="help-block">{{ $errors->first("plantel_f") }}</span>
-                    @endif
-                </div>
+<!--
                 
+-->
+                <div class="form-group col-md-4 @if($errors->has('empleado_id')) has-error @endif">
+                       <label for="empleado_id-field">Responsable</label>
+                       {!! Form::select("empleado_id", $empleados, null, array("class" => "form-control select_seguridad", "id" => "empleado_id-field")) !!}
+                       @if($errors->has("empleado_id"))
+                        <span class="help-block">{{ $errors->first("empleado_id") }}</span>
+                       @endif
+                    </div>
+                <!--
                 <div class="form-group col-md-4 @if($errors->has('ubicacion_art_id')) has-error @endif">
                     <label for="ubicacion_art_id-field">Ubicacion</label>
                     {!! Form::select("ubicacion_art_id[]", array(), null, array("class" => "form-control select_seguridad", "id" => "ubicacion_art_id-field",'multiple'=>true)) !!}
                     @if($errors->has("ubicacion_art_id"))
                      <span class="help-block">{{ $errors->first("ubicacion_art_id") }}</span>
                     @endif
-                 </div>
+                 </div>-->
 
                 <div class="row">
                 </div>
@@ -55,27 +57,42 @@
         $("#plantel_f-field").prop("disabled", true);
         //$("#plantel_t-field").prop("disabled", true);
     @endpermission
-    $('#fecha_f-field').Zebra_DatePicker({
-        days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
-        months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-        readonly_element: false,
-        lang_clear_date: 'Limpiar',
-        show_select_today: 'Hoy',
-      });
-      $('#fecha_t-field').Zebra_DatePicker({
-        days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
-        months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-        readonly_element: false,
-        lang_clear_date: 'Limpiar',
-        show_select_today: 'Hoy',
-      });
+   
     
-      getUbicaciones();
+      /*getUbicaciones();
       $('#plantel_f-field').change(function(){
          getUbicaciones();
          
+      });*/
+      
+      $('#plantel_id-field').change(function(){
+         //getEmpleados();
       });
     });
+
+    function getEmpleados(){
+      $.ajax({
+                url: '{{ route("empleados.getEmpleadosXplantel") }}',
+                type: 'GET',
+                data: {
+                   'empleado_id':$('#empleado_id-field option:selected').val(),
+                   'plantel_id':$('#plantel_f-field option:selected').val()
+                },
+                dataType: 'json',
+                beforeSend : function(){$("#loading1").show();},
+                complete : function(){$("#loading1").hide();},
+                success: function(data){
+                   
+                      $('#empleado_id-field').html('');
+                      $('#empleado_id-field').append($('<option></option>').text('Seleccionar').val('0'));
+                      
+                      $.each(data, function(i) {
+                          $('#empleado_id-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].nombre+"<\/option>");
+                      });
+                      
+                }
+            });
+   }
 
     function getUbicaciones(){
       $.ajax({

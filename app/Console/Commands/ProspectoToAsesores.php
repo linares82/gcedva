@@ -41,64 +41,76 @@ class ProspectoToAsesores extends Command
      */
     public function handle()
     {
-        
-        $prospectos=Prospecto::where('st_prospecto_id',1)->whereNull('fec_apartado')->get();
-        
-        //dd($prospectos->toArray());
-        $hoy=Carbon::createFromFormat('Y-m-d',date('Y-m-d'));
-        
-        foreach($prospectos as $prospecto){
-            $creacion=Carbon::createFromFormat('Y-m-d', $prospecto->fecha);
-            $dias=0;
-            while($hoy->greaterThan($creacion)){
-                $creacion->addDay();
-                if($creacion->dayOfWeek==1 or 
-                    $creacion->dayOfWeek==2 or 
-                    $creacion->dayOfWeek==3 or 
-                    $creacion->dayOfWeek==4 or 
-                    $creacion->dayOfWeek==5){
 
-                    $dias_no_habiles=DiaNoHabil::where('fecha',$creacion->toDateString())->first();    
-                    if(is_null($dias_no_habiles)){
+        $prospectos = Prospecto::where('st_prospecto_id', 1)->whereNull('fec_apartado')->get();
+
+        //dd($prospectos->toArray());
+        $hoy = Carbon::createFromFormat('Y-m-d', date('Y-m-d'));
+
+        foreach ($prospectos as $prospecto) {
+            $creacion = Carbon::createFromFormat('Y-m-d', $prospecto->fecha);
+            $dias = 0;
+            while ($hoy->greaterThan($creacion)) {
+                $creacion->addDay();
+                if (
+                    $creacion->dayOfWeek == 1 or
+                    $creacion->dayOfWeek == 2 or
+                    $creacion->dayOfWeek == 3 or
+                    $creacion->dayOfWeek == 4 or
+                    $creacion->dayOfWeek == 5
+                ) {
+
+                    $dias_no_habiles = DiaNoHabil::where('fecha', $creacion->toDateString())->first();
+                    if (is_null($dias_no_habiles)) {
                         $dias++;
                         //echo $prospecto->id."--".$dias."**";
-                        if($dias>=3){
+                        if (
+                            $dias >= 3
+                            and $prospecto->tel_cel <> "" and !is_null($prospecto->tel_cel)
+                            and $prospecto->mail <> "" and !is_null($prospecto->mail)
+                        ) {
                             //Log::info($hoy->diffInDays($creacion));
                             //dd($hoy->diffInDays($creacion));
-                            $prospecto->st_prospecto_id=2;
+                            //dd($prospecto->toArray());
+                            $prospecto->st_prospecto_id = 2;
                             $prospecto->save();
                         }
                     }
-
-                }    
+                }
             }
-            
-            
+
+
             //dd($creacion);
-            
+
             //dd($hoy->diffInDays($creacion));
-            
+
         }
 
-        $prospectos_postpuestos=Prospecto::where('st_prospecto_id',1)->whereNotNull('fec_apartado')->get();
+        $prospectos_postpuestos = Prospecto::where('st_prospecto_id', 1)->whereNotNull('fec_apartado')->get();
         //dd($prospectos_postpuestos->toArray());
-        foreach($prospectos_postpuestos as $prospecto){
-            $fec_apartado=Carbon::createFromFormat('Y-m-d', $prospecto->fec_apartado);
-            $hoy=Carbon::createFromFormat('Y-m-d', date('Y-m-d'));
+        foreach ($prospectos_postpuestos as $prospecto) {
+            $fec_apartado = Carbon::createFromFormat('Y-m-d', $prospecto->fec_apartado);
+            $hoy = Carbon::createFromFormat('Y-m-d', date('Y-m-d'));
             //dd($fec_apartado);
             //dd($hoy->greaterThanOrEqualTo($fec_apartado));
-            
-            if($hoy->greaterThanOrEqualTo($fec_apartado)){
-                $prospecto->st_prospecto_id=2;
-                $prospecto->save();
+
+            if ($hoy->greaterThanOrEqualTo($fec_apartado)) {
+                if (
+                    $dias >= 3
+                    and $prospecto->tel_cel <> "" and !is_null($prospecto->tel_cel)
+                    and $prospecto->mail <> "" and !is_null($prospecto->mail)
+                ) {
+                    $prospecto->st_prospecto_id = 2;
+                    $prospecto->save();
+                }
             }
-                            
-            
-            
+
+
+
             //dd($creacion);
-            
+
             //dd($hoy->diffInDays($creacion));
-            
+
         }
     }
 }

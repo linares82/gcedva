@@ -466,7 +466,9 @@ class EmpleadosController extends Controller
                 //->where('e.puesto_id', 3)
                 ->whereOr('e.id', '0')
                 ->whereNotIn('st_empleado_id', array(3, 2, 10))
+                ->distinct()
                 ->get();
+            //dd($r->toArray());
 
             if (isset($empleado) and $empleado <> 0) {
                 foreach ($r as $r1) {

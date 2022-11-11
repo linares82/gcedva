@@ -218,8 +218,11 @@
                                     @endpermission
                                 </td>
                                 <td class="text-right">
-                                    @permission('empleados.edit')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('empleados.duplicate', $empleado->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>
+                                    @permission('muebles.resguardos')
+                                    {!! Form::model($empleado, array('route' => array('muebles.resguardosR'),'method' => 'post', 'target'=>'_blank')) !!}
+                                    {!! Form::hidden("empleado_id", $empleado->id, array("class" => "form-control input-sm", "id" => "empleado_id-field")) !!}
+                                        <button type="submit" class="btn btn-xs btn-info"><i class="fa fa-cubes"></i> Bienes</button>
+                                    {!! Form::close() !!}
                                     @endpermission
                                     @permission('empleados.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('empleados.edit', $empleado->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>

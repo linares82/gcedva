@@ -46,7 +46,7 @@
             <div class="panel-body">
                 <form class="InventarioLevantamiento_search" id="search" action="{{ route('inventarioLevantamientos.index') }}" accept-charset="UTF-8" method="get">
                     <input type="hidden" name="q[s]" value="{{ @(Request::input('q')['s']) ?: '' }}" />
-                    <div class="form-horizontal">
+                    <div >
 
                         <!--
                             <div class="form-group">
@@ -72,6 +72,11 @@
                                 <input class="form-control input-sm fecha" type="search" value="{{ @(Request::input('q')['fecha_t']) ?: '' }}" name="q[fecha_t]" id="q_fecha_t" />
                             </div>
                         </div>
+
+                        <div class="form-group col-md-4" >
+                                <label for="q_clientes.plantel_inventario_id_lt">PLANTEL</label>
+                                    {!! Form::select("clientes.plantel_inventario_id", $planteles, "{{ @(Request::input('q')['clientes.plantel_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[clientes.plantel_inventario_id_lt]", "id"=>"q_clientes.plantel_inventario_id_lt", "style"=>"width:100%;")) !!}
+                            </div>
                         <!--
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_usu_alta_id_gt">USU_ALTA_ID</label>

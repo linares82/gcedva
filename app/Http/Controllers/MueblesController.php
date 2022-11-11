@@ -2,17 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Articulo;
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
-
-use App\Mueble;
-use Illuminate\Http\Request;
 use Auth;
-use App\Http\Requests\updateMueble;
-use App\Http\Requests\createMueble;
+use App\Mueble;
 use App\Plantel;
+
+use App\Articulo;
+use App\Empleado;
 use App\UbicacionArt;
+use App\Http\Requests;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Requests\createMueble;
+use App\Http\Requests\updateMueble;
+use App\Http\Controllers\Controller;
 
 class MueblesController extends Controller
 {
@@ -92,8 +94,9 @@ class MueblesController extends Controller
 	 */
 	public function edit($id, Mueble $mueble)
 	{
-		$articulos = Articulo::where('tpo_articulo_id', 2)->pluck('name', 'id');
+		$articulos = Articulo::where('tpo_articulo_id', 1)->pluck('name', 'id');
 		$mueble = $mueble->find($id);
+		
 
 		return view('muebles.edit', compact('mueble', 'articulos'))
 			->with('list', Mueble::getListFromAllRelationApps());
@@ -147,21 +150,19 @@ class MueblesController extends Controller
 	public function resguardos()
 	{
 
-		$plantels = Plantel::pluck('razon', 'id');
+		$empleados = Empleado::select('id', 
+		DB::raw('concat(nombre, " ",ape_paterno, " ",ape_materno) as nombre'))
+		->pluck('nombre', 'id');
+		//dd($empleados);
 		$articulos=Mueble::get();
-		return view('muebles.reportes.resguardos', compact('articulos', 'plantels'))
+		return view('muebles.reportes.resguardos', compact('articulos', 'empleados'))
 			->with('list', Articulo::getListFromAllRelationApps());
 	}
 
 	public function resguardosR(Request $request)
 	{
 		$datos = $request->all();
-		if (!$request->has('plantel_f')) {
-			$datos['plantel_f'] = DB::table('empleados as e')
-				->where('e.user_id', Auth::user()->id)->value('plantel_id');
-			//$datos['plantel_t'] = $datos['plantel_f'];
-		}
-		//dd($datos);
+		
 		$registros = Mueble::select(
 			'muebles.id',
 			'p.razon',
@@ -185,8 +186,9 @@ class MueblesController extends Controller
 			->join('empleados as e', 'e.id', '=', 'muebles.empleado_id')
 			->join('st_muebles as stm', 'stm.id', '=', 'muebles.st_mueble_id')
 			->join('st_mueble_usos as stmu', 'stmu.id', '=', 'muebles.st_mueble_uso_id')
-			->where('muebles.plantel_id', $datos['plantel_f'])
-			->whereIn('muebles.ubicacion_art_id', $datos['ubicacion_art_id'])
+			//->where('muebles.plantel_id', $datos['plantel_f']);
+			->where('muebles.empleado_id', $datos['empleado_id'])
+			//->whereIn('muebles.ubicacion_art_id', $datos['ubicacion_art_id'])
 			->get();
 
 		//dd($registros);
