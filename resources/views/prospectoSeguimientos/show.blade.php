@@ -11,7 +11,7 @@
 </ol>
 
 <div class="page-header">
-    <h1>@yield('prospectoSeguimientosAppTitle') / Mostrar {{$prospectoSeguimiento->id}}
+    <h1>@yield('prospectoSeguimientosAppTitle') / Mostrar {{$prospectoSeguimiento->prospecto->id}}
 
         {!! Form::model($prospectoSeguimiento, array('route' => array('prospectoSeguimientos.destroy', $prospectoSeguimiento->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? Estas seguro?')) { return true } else {return false };")) !!}
         <div class="btn-group pull-right" role="group" aria-label="...">

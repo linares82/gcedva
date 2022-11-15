@@ -243,8 +243,11 @@
       });
      
      $(document).on("click", ".btn-guardar_caificacion", function (e) {
-        //alert($('#calificacion_parcial'+$(this).data('cliente_id')).val()); 
-        if($('#calificacion_parcial'+$(this).data('cliente_id')).val()>=1 && $('#calificacion_parcial'+$(this).data('cliente_id')).val()<=4.9){
+        //alert($('#calificacion_parcial'+$(this).data('cliente_id')).val());
+        @php
+            $calificacion_prohibida=\App\Param::where('llave', 'calificacion_prohibida')->first();
+        @endphp 
+        if({{$calificacion_prohibida->valor}} && $('#calificacion_parcial'+$(this).data('cliente_id')).val()>=1 && $('#calificacion_parcial'+$(this).data('cliente_id')).val()<=4.9){
             alert("Calificacion invalida");
         }else{
             var miurl = "{{route('hacademicas.actualizarCalificacion')}}";

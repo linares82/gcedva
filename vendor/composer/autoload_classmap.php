@@ -177,6 +177,7 @@ return array(
     'AddIndexAreaToInventariosTable' => $baseDir . '/database/migrations/2022_11_08_134040_add_index_area_to_inventarios_table.php',
     'AddIndexCombinacionIdAdeudosTable' => $baseDir . '/database/migrations/2018_04_17_133606_add_index_combinacion_id_adeudos_table.php',
     'AddIndexCuentaFormaPagoTable' => $baseDir . '/database/migrations/2018_05_14_182431_add_index_cuenta_forma_pago_table.php',
+    'AddIndexFechaPagoToAdeudosTable' => $baseDir . '/database/migrations/2022_11_11_125626_add_index_fecha_pago_to_adeudos_table.php',
     'AddIndexInscripcionTable' => $baseDir . '/database/migrations/2017_12_07_134650_addindex_inscripcion_table.php',
     'AddIndexModulo0MateriasTable' => $baseDir . '/database/migrations/2017_12_08_141343_add_index_modulo0_materias_table.php',
     'AddIndexPagosTable' => $baseDir . '/database/migrations/2019_07_01_151059_add_index_pagos_table.php',

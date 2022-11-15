@@ -80,10 +80,18 @@
    @endif
 </div>
 <div class="form-group col-md-4 @if($errors->has('medio_id')) has-error @endif">
-   <label for="medio_id-field">Medio por el que se enterO</label>
+   <label for="medio_id-field">Medio por el que se entero</label>
    {!! Form::select("medio_id", $medios, null, array("class" => "form-control select_seguridad", "id" => "medio_id-field")) !!}
    @if($errors->has("medio_id"))
    <span class="help-block">{{ $errors->first("medio_id") }}</span>
+   @endif
+</div>
+
+<div class="form-group col-md-4 @if($errors->has('st_prospecto_id')) has-error @endif">
+   <label for="st_prospecto_id-field">Prospecto</label>
+   {!! Form::select("st_prospecto_id", $list['StProspecto'], null, array("class" => "form-control select_seguridad", "id" => "st_prospecto_id-field")) !!}
+   @if($errors->has("st_prospecto_id"))
+   <span class="help-block">{{ $errors->first("st_prospecto_id") }}</span>
    @endif
 </div>
 

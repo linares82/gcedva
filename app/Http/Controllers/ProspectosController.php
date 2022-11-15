@@ -11,6 +11,7 @@ use App\Seguimiento;
 use App\HStProspecto;
 use App\Http\Requests;
 use App\ProspectoAviso;
+use App\ProspectoStSeg;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -27,8 +28,11 @@ class ProspectosController extends Controller {
 	public function index(Request $request)
 	{
 		$prospectos = Prospecto::getAllData($request);
+		$estatus=ProspectoStSeg::pluck('name','id');
+		
 
-		return view('prospectos.index', compact('prospectos'));
+		return view('prospectos.index', compact('prospectos','estatus'))
+		->with( 'list', Prospecto::getListFromAllRelationApps() );
 	}
 
 	/**

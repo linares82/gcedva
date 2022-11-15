@@ -12,7 +12,7 @@
 	</ol>
 
     <div class="page-header">
-        <h3><i class="glyphicon glyphicon-edit"></i> @yield('prospectoSeguimientosAppTitle') / Editar {{$prospectoSeguimiento->id}}</h3>
+        <h3><i class="glyphicon glyphicon-edit"></i> @yield('prospectoSeguimientosAppTitle') / Editar {{$prospectoSeguimiento->prospecto->id}}</h3>
     </div>
 @endsection
 

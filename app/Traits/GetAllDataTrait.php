@@ -164,7 +164,8 @@ trait GetAllDataTrait
                 $user = Auth::user()->id;
                 $empleado = Empleado::where('user_id', $user)->where('st_empleado_id','<>',3)->first();
                 
-                if ($empleado->puesto_id == 3) {
+                //if ($empleado->puesto_id == 3) {
+                if (Auth::user()->can('asignaciones_academicas.filtroDocenteAsignado')) {    
                     
                     $myQuery = $myQuery->where('asignacion_academicas.empleado_id', '=', $empleado->id);
                 }
@@ -294,6 +295,7 @@ trait GetAllDataTrait
             case "prospectos":
                 //dd($planteles);
                 $myQuery = $myQuery->whereIn('prospectos.plantel_id', $planteles);
+                $myQuery->leftJoin('prospecto_seguimientos', 'prospecto_seguimientos.prospecto_id','prospectos.id');
                 if (Auth::user()->can('prospectos.CallCenter')) {
                     $myQuery = $myQuery->where('prospectos.st_prospecto_id', '<>', 2);
                 }

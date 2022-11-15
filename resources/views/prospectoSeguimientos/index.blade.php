@@ -50,20 +50,20 @@
 
                             <!--
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_prospecto_id_gt">PROSPECTO_ID</label>
+                                <label class="col-sm-2 control-label" for="q_prospectos.Nombre_gt">PROSPECTO_NOMBRE</label>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['prospecto_id_gt']) ?: '' }}" name="q[prospecto_id_gt]" id="q_prospecto_id_gt" />
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['prospectos.Nombre_gt']) ?: '' }}" name="q[prospectos.Nombre_gt]" id="q_prospectos.Nombre_gt" />
                                 </div>
                                 <div class=" col-sm-1 text-center"> - </div>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['prospecto_id_lt']) ?: '' }}" name="q[prospecto_id_lt]" id="q_prospecto_id_lt" />
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['prospectos.Nombre_lt']) ?: '' }}" name="q[prospectos.Nombre_lt]" id="q_prospectos.Nombre_lt" />
                                 </div>
                             </div>
                             -->
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_prospecto_id_cont">PROSPECTO_ID</label>
+                                <label class="col-sm-2 control-label" for="q_prospectos.Nombre_cont">PROSPECTO_NOMBRE</label>
                                 <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['prospecto_id_cont']) ?: '' }}" name="q[prospecto_id_cont]" id="q_prospecto_id_cont" />
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['prospectos.Nombre_cont']) ?: '' }}" name="q[prospectos.Nombre_cont]" id="q_prospectos.Nombre_cont" />
                                 </div>
                             </div>
                                                     <!--
@@ -179,7 +179,7 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'prospecto_id', 'title' => 'PROSPECTO_ID'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'prospectos.Nombre', 'title' => 'PROSPECTO_NOMBRE'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'prospecto_st_seg_id', 'title' => 'PROSPECTO_ST_SEG_ID'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'mes', 'title' => 'MES'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'contador_sms', 'title' => 'CONTADOR_SMS'])</th>
@@ -193,7 +193,7 @@
                         @foreach($prospectoSeguimientos as $prospectoSeguimiento)
                             <tr>
                                 <td><a href="{{ route('prospectoSeguimientos.show', $prospectoSeguimiento->id) }}">{{$prospectoSeguimiento->id}}</a></td>
-                                <td>{{$prospectoSeguimiento->prospecto_id}}</td>
+                                <td>{{$prospectoSeguimiento->prospecto->Nombre}}</td>
                     <td>{{$prospectoSeguimiento->prospecto_st_seg_id}}</td>
                     <td>{{$prospectoSeguimiento->mes}}</td>
                     <td>{{$prospectoSeguimiento->contador_sms}}</td>
