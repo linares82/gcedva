@@ -8,6 +8,7 @@ use App\Cliente;
 use App\Empleado;
 use App\Prospecto;
 use App\Seguimiento;
+use App\StProspecto;
 use App\HStProspecto;
 use App\Http\Requests;
 use App\ProspectoAviso;
@@ -43,7 +44,8 @@ class ProspectosController extends Controller {
 	public function create()
 	{
 		$medios=Medio::where('bnd_prospectos', 1)->pluck('name','id');
-		return view('prospectos.create', compact('medios'))
+		$estatus=StProspecto::whereIn('id',array(1,2))->pluck('name','id');
+		return view('prospectos.create', compact('medios','estatus'))
 			->with( 'list', Prospecto::getListFromAllRelationApps() );
 	}
 
@@ -59,7 +61,7 @@ class ProspectosController extends Controller {
 		$input = $request->all();
 		$input['usu_alta_id']=Auth::user()->id;
 		$input['usu_mod_id']=Auth::user()->id;
-		$input['st_prospecto_id']=1;
+		//$input['st_prospecto_id']=1;
 		$input['fecha']=date('Y-m-d');
 		if(!isset($input['bnd_liga_enviada'])){
 			$input['bnd_liga_enviada']=0;
@@ -105,7 +107,8 @@ class ProspectosController extends Controller {
 	{
 		$prospecto=$prospecto->find($id);
 		$medios=Medio::where('bnd_prospectos', 1)->pluck('name','id');
-		return view('prospectos.edit', compact('prospecto', 'medios'))
+		$estatus=StProspecto::whereIn('id',array(1,2))->pluck('name','id');
+		return view('prospectos.edit', compact('prospecto', 'medios','estatus'))
 			->with( 'list', Prospecto::getListFromAllRelationApps() );
 	}
 

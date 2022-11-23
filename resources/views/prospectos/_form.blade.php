@@ -88,8 +88,8 @@
 </div>
 
 <div class="form-group col-md-4 @if($errors->has('st_prospecto_id')) has-error @endif">
-   <label for="st_prospecto_id-field">Prospecto</label>
-   {!! Form::select("st_prospecto_id", $list['StProspecto'], null, array("class" => "form-control select_seguridad", "id" => "st_prospecto_id-field")) !!}
+   <label for="st_prospecto_id-field">Estatus Prospecto</label>
+   {!! Form::select("st_prospecto_id", $estatus, !isset($prospecto) ? 1 : null, array("class" => "form-control select_seguridad", "id" => "st_prospecto_id-field")) !!}
    @if($errors->has("st_prospecto_id"))
    <span class="help-block">{{ $errors->first("st_prospecto_id") }}</span>
    @endif
@@ -98,7 +98,7 @@
 <div class="form-group col-md-4 @if($errors->has('fec_apartado')) has-error @endif">
    <label for="fec_apartado-field" id="lbl_fec_apartado">Fec. Apartado</label>
    @permission('prospectos.fec_apartado')
-   {!! Form::text("fec_apartado", null, array("class" => "form-control fecha", "id" => "fec_apartado-field", 'disabled'=>true)) !!}
+   {!! Form::text("fec_apartado", null, array("class" => "form-control fecha", "id" => "fec_apartado-field")) !!}
    @endpermission
    @if(isset($prospecto))
    @if(!is_null($prospecto->fec_apartado))

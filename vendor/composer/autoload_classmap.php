@@ -477,6 +477,8 @@ return array(
     'CreateProspectoAsignacionTareasTable' => $baseDir . '/database/migrations/2022_10_18_113951_create_prospecto_asignacion_tareas_table.php',
     'CreateProspectoAsuntosTable' => $baseDir . '/database/migrations/2022_10_18_113308_create_prospecto_asuntos_table.php',
     'CreateProspectoAvisosTable' => $baseDir . '/database/migrations/2022_10_19_113213_create_prospecto_avisos_table.php',
+    'CreateProspectoHEstatusesTable' => $baseDir . '/database/migrations/2022_11_17_143440_create_prospecto_h_estatuses_table.php',
+    'CreateProspectoHactividadsTable' => $baseDir . '/database/migrations/2022_11_17_124332_create_prospecto_hactividads_table.php',
     'CreateProspectoSeguimientosTable' => $baseDir . '/database/migrations/2022_10_19_100838_create_prospecto_seguimientos_table.php',
     'CreateProspectoStSegsTable' => $baseDir . '/database/migrations/2022_10_18_112840_create_prospecto_st_segs_table.php',
     'CreateProspectoStTareasTable' => $baseDir . '/database/migrations/2022_10_18_113950_create_prospecto_st_tareas_table.php',

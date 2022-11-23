@@ -33,6 +33,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Requests\createSeguimiento;
 use App\Http\Requests\updateSeguimiento;
 use App\Http\Requests\updateAsignacionTarea;
+use App\ProspectoHEstatuse;
 
 class SeguimientosController extends Controller
 {
@@ -1536,5 +1537,75 @@ class SeguimientosController extends Controller
             'plantel' => $plantel,
             'data' => $data,
         ));
+    }
+
+    public function analitica_actividadesP()
+    {
+        $empleado = Empleado::where('user_id', Auth::user()->id)->first();
+        $planteles_validos = $empleado->plantels->pluck('razon', 'id');
+        return view('seguimientos.reportes.analitica_actividadesP', compact('planteles_validos'))
+            ->with('list', Cliente::getListFromAllRelationApps());
+    }
+
+    public function analitica_actividadesPr(Request $request)
+    {
+        $input = $request->all();
+        //dd($input);
+        $fecha_inicio = date('Y-m-j', strtotime('-8 day', strtotime(date('Y-m-j'))));
+        //dd($fecha_inicio);
+        $e = Empleado::where('user_id', '=', Auth::user()->id)->first();
+        $plantel = $e->plantel_id;
+        $planteles = array();
+        foreach ($e->plantels as $p) {
+            //dd($p->id);
+            array_push($planteles, $p->id);
+        }
+        $ds_actividades_aux = DB::table('prospecto_hactividads as has')
+            ->select(
+                'p.razon as plantel',
+                //DB::raw('concat(e.nombre," ",e.ape_paterno," ",e.ape_materno) as empleado'),
+                "c.id as cli",
+                DB::raw('concat(c.nombre," ",c.ape_paterno," ",c.ape_materno) as cliente'),
+                'has.tarea',
+                'has.fecha',
+                'has.detalle'
+            )
+            ->join('prospectos as c', 'c.id', '=', 'has.prospecto_id')
+            //->join('empleados as e', 'e.id', '=', 'c.empleado_id')
+            ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
+            //->where('has.asunto', '=', 'Cambio estatus ')
+            ->where('has.fecha', '>=', $input['fecha_f'])
+            ->where('has.fecha', '<=', $input['fecha_t']);
+        if (isset($input['plantel_f'])) {
+            $ds_actividades_aux->whereIn('c.plantel_id', $input['plantel_f']);
+        } else {
+            $ds_actividades_aux->wherein('c.plantel_id', $planteles);
+        }
+        if($input['detalle_f']<>""){
+            $ds_actividades_aux->where('has.detalle', $input['detalle_f']);
+        }
+
+        $ds_actividades = $ds_actividades_aux->distinct()->get();
+        //dd($ds_actividades->toJson());
+
+        $hestatus=ProspectoHEstatuse::select('c.id as cliente','p.razon','prospecto_h_estatuses.estatus','prospecto_h_estatuses.fecha',
+        'u.name as usuario')/*,DB::raw('concat(e.nombre," ",e.ape_paterno," ",e.ape_materno) as colaborador'))*/
+        ->join('prospectos as c','c.id','prospecto_h_estatuses.prospecto_id')
+        //->join('empleados as e','e.id','c.empleado_id')
+        ->join('plantels as p','p.id','c.plantel_id')
+        ->join('st_prospectos as stc','stc.id','c.st_prospecto_id')
+        ->join('users as u','u.id','c.usu_alta_id')
+        ->where('prospecto_h_estatuses.prospecto_id','>',0)
+        ->where('prospecto_h_estatuses.fecha','<=', $input['fecha_t'])
+        ->where('prospecto_h_estatuses.fecha','>=', $input['fecha_f'])
+        ->whereIn('c.plantel_id', $input['plantel_f'])
+        ->orderBy('p.razon')
+        ->get();
+
+        //dd($hestatus);
+
+        return view('seguimientos.reportes.analitica_actividadesPr')
+            ->with('actividades', json_encode($ds_actividades))
+            ->with('cambios_estatus', json_encode($hestatus));
     }
 }

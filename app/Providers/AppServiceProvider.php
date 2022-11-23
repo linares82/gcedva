@@ -18,12 +18,14 @@ use App\AsistenciaR;
 use App\Inscripcion;
 use App\Seguimiento;
 use App\Transference;
+use App\ProspectoAviso;
 use Studio\Totem\Totem;
 use App\AsignacionTarea;
 use App\CuentasEfectivo;
 use App\HistoriaCliente;
 use App\HCalifPonderacion;
 use App\PeticionMultipago;
+use App\ProspectoSeguimiento;
 use App\Observers\CajaObserver;
 use App\Observers\PagoObserver;
 use App\CalificacionPonderacion;
@@ -32,7 +34,7 @@ use App\Observers\AdeudoObserver;
 use App\Observers\AlumnoObserver;
 use App\Observers\EgresoObserver;
 use App\Observers\MuebleObserver;
-use App\Observers\HistoriaClienteObserver;
+use App\ProspectoAsignacionTarea;
 use App\Observers\ClienteObserver;
 use Illuminate\Support\Collection;
 use App\Observers\EmpleadoObserver;
@@ -42,11 +44,15 @@ use App\Observers\InscripcionObserver;
 use App\Observers\SeguimientoObserver;
 use App\Observers\TransferenceObserver;
 use Illuminate\Support\ServiceProvider;
+use App\Observers\ProspectoAvisoObserver;
+use App\Observers\ProspectoSeguimientoObserver;
 use App\Observers\AsignacionTareaObserver;
 use App\Observers\CuentasEfectivoObserver;
+use App\Observers\HistoriaClienteObserver;
 use App\Observers\PeticionMultipagoObserver;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Observers\CalificacionPonderacionObserver;
+use App\Observers\ProspectoAsignacionTareaObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -77,6 +83,9 @@ class AppServiceProvider extends ServiceProvider
         Mueble::observe(MuebleObserver::class);
         Seguimiento::observe(SeguimientoObserver::class);
         Transference::observe(TransferenceObserver::class);
+        ProspectoAsignacionTarea::observe(ProspectoAsignaciontareaObserver::class);
+        ProspectoAviso::observe(ProspectoAvisoObserver::class);
+        ProspectoSeguimiento::observe(ProspectoSeguimientoObserver::class);
         Totem::auth(function ($request) {
             // return true / false . For e.g.
             return Auth::check();
@@ -91,7 +100,7 @@ class AppServiceProvider extends ServiceProvider
          * @param string $pageName
          * @return array
          */
-        Collection::macro('paginate', function($perPage, $total = null, $page = null, $pageName = 'page') {
+        Collection::macro('paginate', function ($perPage, $total = null, $page = null, $pageName = 'page') {
             $page = $page ?: LengthAwarePaginator::resolveCurrentPage($pageName);
 
             return new LengthAwarePaginator(

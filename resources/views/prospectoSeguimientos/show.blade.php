@@ -43,6 +43,12 @@
                     {{$prospectoSeguimiento->prospecto->ape_materno}}
                     <label for="prospecto_id">Estatus: </label>
                     {{$prospectoSeguimiento->prospectoStSeg->name}}
+                    <label for="prospecto_id">Tel.: </label>
+                    {{$prospectoSeguimiento->prospecto->tel_fijo}}
+                    <label for="prospecto_id">Cel.: </label>
+                    {{$prospectoSeguimiento->prospecto->tel_cel}}
+                    <label for="prospecto_id">Mail: </label>
+                    {{$prospectoSeguimiento->prospecto->mail}}
                     <label for="prospecto_id">Alta: </label>
                     {{$prospectoSeguimiento->created_at}} / {{$prospectoSeguimiento->usu_alta->name}}
                     <label for="prospecto_id">U. Modificacion: </label>

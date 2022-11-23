@@ -47,7 +47,12 @@
                     <form class="Prospecto_search" id="search" action="{{ route('prospectos.index') }}" accept-charset="UTF-8" method="get">
                         <input type="hidden" name="q[s]" value="{{ @(Request::input('q')['s']) ?: '' }}" />
                         <div class="">
-
+                        <div class="form-group col-md-4">
+                            <label class=" control-label" for="q_id_cont">Id</label>
+                                <div class="">
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['id_cont']) ?: '' }}" name="q[id_cont]" id="q_id_cont" />
+                                </div>
+                            </div>
                             <!--
                             <div class="form-group">
                                 <label class=" control-label" for="q_nombre_gt">NOMBRE</label>

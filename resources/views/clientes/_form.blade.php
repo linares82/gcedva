@@ -1705,6 +1705,13 @@ $(document).on("click", ".btn_archivo", function (e) {
 $(document).ready(function() {
     
     deshabilitarNombre();
+    @if(!isset($cliente))
+        $('#especialidad_id-field').prop('disabled',true);
+        $('#nivel_id-field').prop('disabled',true);
+        $('#grado_id-field').prop('disabled',true);
+        $('#turno_id-field').prop('disabled',true);
+    @endif
+
     function deshabilitarNombre(){
         @if(isset($cliente))
         @if($cliente->st_cliente_id<>0 and $cliente->st_cliente_id<>1 and $cliente->st_cliente_id<>22)
@@ -2330,6 +2337,10 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                                 complete : function(){$("#loading10").hide(); },
                                 success: function(data){
                                 //$example.select2("destroy");
+                                if($('#plantel_id-field option:selected').val()!=0){
+                                    $('#especialidad_id-field').prop('disabled',false);
+                                }
+                                
                                 $('#especialidad_id-field').empty();
                                 $('#especialidad_id-field').append($('<option></option>').text('Seleccionar').val('0'));
                                 $.each(data, function(i) {
@@ -2491,6 +2502,10 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                                 success: function(data){
                                 //alert(data);
                                 //$example.select2("destroy");
+                                if($('#especialidad_id-field option:selected').val()!=0){
+                                    $('#nivel_id-field').prop('disabled',false);
+                                }
+                                
                                 $('#nivel_id-field').html('');
                                 //$('#especialidad_id-field').empty();
                                 $('#nivel_id-field').append($('<option></option>').text('Seleccionar').val('0'));
@@ -2568,6 +2583,10 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                                 success: function(data){
                                 //alert(data);
                                 //$example.select2("destroy");
+                                if($('#nivel_id-field option:selected').val()!=0){
+                                    $('#grado_id-field').prop('disabled',false);
+                                }
+                                
                                 $('#grado_id-field').html('');
                                 //$('#especialidad_id-field').empty();
                                 $('#grado_id-field').append($('<option></option>').text('Seleccionar').val('0'));
@@ -2643,6 +2662,10 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                                 success: function(data){
                                 //alert(data);
                                 //$example.select2("destroy");
+                                if($('#grado_id-field option:selected').val()!=0){
+                                    $('#turno_id-field').prop('disabled',false);
+                                }
+                                
                                 $('#turno_id-field').html('');
                                 //$('#especialidad_id-field').empty();
                                 $('#turno_id-field').append($('<option></option>').text('Seleccionar').val('0'));

@@ -191,7 +191,7 @@ trait GetAllDataTrait
                 break;
             case "calendario_evaluacions":
                 if ($baseTable == "calendario_evaluacions") {
-                    $myQuery = $myQuery->whereIn('calendario_evaluacions.plantel_id', $planteles);
+                    //$myQuery = $myQuery->whereIn('calendario_evaluacions.plantel_id', $planteles);
                 }
                 break;
             case "doc_vinculacions":

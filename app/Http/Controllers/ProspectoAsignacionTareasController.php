@@ -76,7 +76,7 @@ class ProspectoAsignacionTareasController extends Controller {
 			$prospecto->save();
 		}revisar si se asigna un empleado en particular y cuando
 		*/
-		return redirect()->route('prospectoSeguimientos.show', $prospectoSeguimiento->id)->with('message', 'Registro Creado.');
+		return redirect()->route('prospectoSeguimientos.show', $prospecto->id)->with('message', 'Registro Creado.');
 	}
 
 	/**

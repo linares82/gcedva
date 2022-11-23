@@ -1265,6 +1265,8 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'CreateProspectoAsignacionTareasTable' => __DIR__ . '/../..' . '/database/migrations/2022_10_18_113951_create_prospecto_asignacion_tareas_table.php',
         'CreateProspectoAsuntosTable' => __DIR__ . '/../..' . '/database/migrations/2022_10_18_113308_create_prospecto_asuntos_table.php',
         'CreateProspectoAvisosTable' => __DIR__ . '/../..' . '/database/migrations/2022_10_19_113213_create_prospecto_avisos_table.php',
+        'CreateProspectoHEstatusesTable' => __DIR__ . '/../..' . '/database/migrations/2022_11_17_143440_create_prospecto_h_estatuses_table.php',
+        'CreateProspectoHactividadsTable' => __DIR__ . '/../..' . '/database/migrations/2022_11_17_124332_create_prospecto_hactividads_table.php',
         'CreateProspectoSeguimientosTable' => __DIR__ . '/../..' . '/database/migrations/2022_10_19_100838_create_prospecto_seguimientos_table.php',
         'CreateProspectoStSegsTable' => __DIR__ . '/../..' . '/database/migrations/2022_10_18_112840_create_prospecto_st_segs_table.php',
         'CreateProspectoStTareasTable' => __DIR__ . '/../..' . '/database/migrations/2022_10_18_113950_create_prospecto_st_tareas_table.php',

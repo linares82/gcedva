@@ -122,19 +122,19 @@
                              $r->estatus_cliente_id==26 or
                              $r->estatus_cliente_id==27 or 
                              $r->estatus_cliente_id==28)
-                             @if($param_bloqueoXdoc->valor==1)
-                             @if($r->bnd_doc_oblig_entregados==1 or $validaEntregaDocs3Meses)
-                             	@permission('hacademicas.calificacionBaja')
-                                {!! Form::number("calificacion", null, array("class" => "form-control input-sm col-md-6 input_calificacion", 
-                                "id" => "calificacion_parcial".$r->id, 'min' => 0, 'max' =>10)) !!}
-                                @endpermission
-                             @else
-                                @permission('hacademicas.calificacionBaja')
-                                {!! Form::number("calificacion", null, array("class" => "form-control input-sm col-md-6", 
-                                "id" => "calificacion_parcial".$r->id, 'min' => 0, 'max' =>10)) !!}
-                                @endpermission
-                             @endif
-                             @endif
+                                @if($param_bloqueoXdoc->valor==1)
+                                    @if($r->bnd_doc_oblig_entregados==1 or $validaEntregaDocs3Meses)
+                                        @permission('hacademicas.calificacionBaja')
+                                        {!! Form::number("calificacion", null, array("class" => "form-control input-sm col-md-6 input_calificacion", 
+                                        "id" => "calificacion_parcial".$r->id, 'min' => 0, 'max' =>10)) !!}
+                                        @endpermission
+                                    @else
+                                        @permission('hacademicas.calificacionBaja')
+                                        {!! Form::number("calificacion", null, array("class" => "form-control input-sm col-md-6", 
+                                        "id" => "calificacion_parcial".$r->id, 'min' => 0, 'max' =>10)) !!}
+                                        @endpermission
+                                    @endif
+                                @endif
                              @elseif($r->estatus_cliente_id==1 or $r->estatus_cliente_id==22)
                                 
                                 {!! Form::number("calificacion", null, array("class" => "form-control input-sm col-md-6", 
@@ -142,13 +142,13 @@
                                 
                             @else
                                 @if($param_bloqueoXdoc->valor==1)
-                                @if($r->bnd_doc_oblig_entregados==1 or $validaEntregaDocs3Meses)
-                                {!! Form::number("calificacion", null, array("class" => "form-control input-sm col-md-6", 
-                                "id" => "calificacion_parcial".$r->id, 'min' => 0, 'max' =>10)) !!}
-                                @endif
+                                    @if($r->bnd_doc_oblig_entregados==1 or $validaEntregaDocs3Meses)
+                                    {!! Form::number("calificacion", null, array("class" => "form-control input-sm col-md-6", 
+                                    "id" => "calificacion_parcial".$r->id, 'min' => 0, 'max' =>10)) !!}
+                                    @endif
                                 @else
-                                {!! Form::number("calificacion", null, array("class" => "form-control input-sm col-md-6", 
-                                "id" => "calificacion_parcial".$r->id, 'min' => 0, 'max' =>10)) !!}
+                                    {!! Form::number("calificacion", null, array("class" => "form-control input-sm col-md-6", 
+                                    "id" => "calificacion_parcial".$r->id, 'min' => 0, 'max' =>10)) !!}
                                 @endif
                              @endif
                              

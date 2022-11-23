@@ -7,7 +7,7 @@ use App\Traits\GetAllDataTrait;
 use App\Traits\RelationManagerTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ProspectoAviso extends Model
+class ProspectoHEstatuse extends Model
 {
     use RelationManagerTrait,GetAllDataTrait;
     use SoftDeletes;
@@ -18,7 +18,7 @@ class ProspectoAviso extends Model
     } 
 
 	//Mass Assignment
-	protected $fillable = ['prospecto_seguimiento_id','prospecto_asunto_id','detalle','fecha','activo','usu_alta_id','usu_mod_id'];
+	protected $fillable = ['tabla','prospecto_id','prospecto_seguimiento_id','estatus','estatus_id','fecha','usu_alta_id','usu_mod_id'];
 
 	public function usu_alta() {
 		return $this->hasOne('App\User', 'id', 'usu_alta_id');
@@ -28,13 +28,6 @@ class ProspectoAviso extends Model
 		return $this->hasOne('App\User', 'id', 'usu_mod_id');
 	}// end
 
-	public function prospectoSeguimiento() {
-		return $this->belongsTo('App\ProspectoSeguimiento');
-	}// end
-
-	public function prospectoAsunto() {
-		return $this->belongsTo('App\ProspectoAsunto');
-	}// end
 
     protected $dates = ['deleted_at'];
 }
