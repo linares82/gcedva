@@ -30,8 +30,8 @@ class ProspectoObserver
         if ($prospecto_antes->st_prospecto_id <> $this->prospecto->st_prospecto_id) {
             $st_prospecto = StProspecto::find($this->prospecto->st_prospecto_id);
             $input['tabla'] = 'prospectos';
-            $input['cliente_id'] = $prospecto_antes->id;
-            $input['seguimiento_id'] = 0;
+            $input['prospecto_id'] = $prospecto_antes->id;
+            //$input['prospecto_seguimiento_id'] = 0;
             $input['estatus'] = $st_prospecto->name;
             $input['estatus_id'] = $st_prospecto->id;
             $input['fecha'] = Date('Y-m-d');

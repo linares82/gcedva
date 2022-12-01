@@ -14,6 +14,7 @@ use App\Http\Requests;
 use App\ProspectoAviso;
 use App\ProspectoStSeg;
 use Illuminate\Http\Request;
+use App\ProspectoSeguimiento;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\createProspecto;
@@ -74,6 +75,14 @@ class ProspectosController extends Controller {
 		//create data
 		$registro=Prospecto::create( $input );
 
+		$input['prospecto_id']=$registro->id;
+		$input['mes']=$registro->created_at->month;
+		$input['contador_sms']=0;
+		$input['prospecto_st_seg_id']=1;
+		$input['usu_alta_id']=Auth::user()->id;
+		$input['usu_mod_id']=Auth::user()->id;
+		$prospectoSeguimiento=ProspectoSeguimiento::create($input);
+
 		$historico['prospecto_id']=$registro->id;
 		$historico['st_prospecto_id']=$registro->st_prospecto_id;
 		$historico['st_anterior_id']=$registro->st_prospecto_id;
@@ -82,7 +91,7 @@ class ProspectosController extends Controller {
 
 		HStProspecto::create($historico);
 
-		return redirect()->route('prospectos.index')->with('message', 'Registro Creado.');
+		return redirect()->route('prospectoSeguimientos.show', $registro->id)->with('message', 'Registro Creado.');
 	}
 
 	/**
@@ -231,11 +240,13 @@ class ProspectosController extends Controller {
 	public function prospectos(Request $request){
 		$empleado=Empleado::where('user_id', Auth::user()->id)->first();
 		$planteles=$empleado->plantels->pluck('razon','id');
-		return view('prospectos.reportes.prospectos', compact('planteles'));
+		$estatus=StProspecto::pluck('name','id');
+		return view('prospectos.reportes.prospectos', compact('planteles','estatus'));
 	}
 
 	public function prospectosR(Request $request){
 		$datos=$request->all();
+		
 		$resumen=Prospecto::select(DB::raw('prospectos.fecha, p.razon, ua.name as usuario_alta, stp.name as estatus, count(ua.name) as total'))
 		->join('users as ua','ua.id','=','prospectos.usu_alta_id')
 		->join('plantels as p','p.id','=','prospectos.plantel_id')
@@ -244,6 +255,7 @@ class ProspectosController extends Controller {
 		->whereDate('prospectos.fecha','>=', $datos['fecha_f'])
 		->whereDate('prospectos.fecha','<=', $datos['fecha_t'])
 		->whereIn('prospectos.plantel_id', $datos['plantel_f'])
+		->whereIn('prospectos.st_prospecto_id', $datos['estatus_f'])
 		//->groupBy('p.razon')
 		->groupBy('prospectos.fecha')
 		->groupBy('p.razon')
@@ -254,6 +266,7 @@ class ProspectosController extends Controller {
 		$registros=Prospecto::whereDate('created_at','>=', $datos['fecha_f'])
 		->whereDate('created_at','<=', $datos['fecha_t'])
 		->whereIn('plantel_id', $datos['plantel_f'])
+		->whereIn('prospectos.st_prospecto_id', $datos['estatus_f'])
 		->get();
 		return view('prospectos.reportes.prospectosR', compact('registros', 'resumen'));
 	}
@@ -426,4 +439,39 @@ class ProspectosController extends Controller {
 		//dd($avisos);
 		return view('prospectos.reportes.widgetAvisosProspectos', compact('avisos'));
 	}
+
+
+	//No esta concluida
+	public function apiStore(createProspecto $request)
+	{
+
+		$input = $request->all();
+		$input['usu_alta_id']=1;
+		$input['usu_mod_id']=1;
+		//$input['st_prospecto_id']=1;
+		$input['fecha']=date('Y-m-d');
+		if(!isset($input['bnd_liga_enviada'])){
+			$input['bnd_liga_enviada']=0;
+		}
+		if(!isset($input['bnd_inscripcion'])){
+			$input['bnd_inscripcion']=0;
+		}
+		
+
+		//create data
+		$registro=Prospecto::create( $input );
+
+		$historico['prospecto_id']=$registro->id;
+		$historico['st_prospecto_id']=$registro->st_prospecto_id;
+		$historico['st_anterior_id']=$registro->st_prospecto_id;
+		$historico['usu_alta_id']=1;
+		$historico['usu_mod_id']=1;
+
+		HStProspecto::create($historico);
+
+		return redirect()->route('prospectos.index')->with('message', 'Registro Creado.');
+	}
+
 }
+
+	

@@ -1562,7 +1562,7 @@ class SeguimientosController extends Controller
         }
         $ds_actividades_aux = DB::table('prospecto_hactividads as has')
             ->select(
-                'p.razon as plantel',
+                'p.razon as plantel', 'ua.name as usuario',
                 //DB::raw('concat(e.nombre," ",e.ape_paterno," ",e.ape_materno) as empleado'),
                 "c.id as cli",
                 DB::raw('concat(c.nombre," ",c.ape_paterno," ",c.ape_materno) as cliente'),
@@ -1572,6 +1572,7 @@ class SeguimientosController extends Controller
             )
             ->join('prospectos as c', 'c.id', '=', 'has.prospecto_id')
             //->join('empleados as e', 'e.id', '=', 'c.empleado_id')
+            ->join('users as ua', 'ua.id', '=', 'has.usu_alta_id')
             ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
             //->where('has.asunto', '=', 'Cambio estatus ')
             ->where('has.fecha', '>=', $input['fecha_f'])

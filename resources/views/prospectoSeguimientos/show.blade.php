@@ -50,7 +50,7 @@
                     <label for="prospecto_id">Mail: </label>
                     {{$prospectoSeguimiento->prospecto->mail}}
                     <label for="prospecto_id">Alta: </label>
-                    {{$prospectoSeguimiento->created_at}} / {{$prospectoSeguimiento->usu_alta->name}}
+                    {{$prospectoSeguimiento->prospecto->created_at}} / {{$prospectoSeguimiento->prospecto->usu_alta->name}}
                     <label for="prospecto_id">U. Modificacion: </label>
                     {{$prospectoSeguimiento->usu_mod->name}}
                     {!!Form::model($prospectoSeguimiento, array('route' => array('prospectoSeguimientos.update', $prospectoSeguimiento->id),'method' => 'post','class'=>'form-inline')) !!}
@@ -163,6 +163,7 @@
         </div>
 
         <a class="btn btn-link" href="{{ route('prospectos.index') }}"><i class="glyphicon glyphicon-backward"></i> Regresar</a>
+        <a class="btn btn-link" href="{{ route('prospectos.create') }}"><i class="glyphicon glyphicon-backward"></i> Crear Nuevo Prospecto</a>
 
     </div>
 </div>

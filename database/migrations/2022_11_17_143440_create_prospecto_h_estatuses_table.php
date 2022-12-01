@@ -15,8 +15,8 @@ class CreateProspectoHEstatusesTable extends Migration {
 		Schema::create('prospecto_h_estatuses', function(Blueprint $table) {
             $table->increments('id');
             $table->string('tabla');
-            $table->integer('prospecto_id')->unsigned();
-            $table->integer('prospecto_seguimiento_id')->unsigned();
+            $table->integer('prospecto_id')->nullable()->unsigned();
+            $table->integer('prospecto_seguimiento_id')->nullable()->unsigned();
             $table->string('estatus');
             $table->integer('estatus_id')->unsigned();
             $table->date('fecha');

@@ -94,6 +94,7 @@ class UsoApi{
     public function authenticate(){
 	//dd($this->config);
 	if($this->config['idUser']==0 and $this->config['keyUser']==0){
+        
 		$redirectPage = str_replace('authenticateUser.php', 'postLogin.php', $this->getPageURL());
 	        $authContextFactory = new D2LAppContextFactory();
         	$authContext = $authContextFactory->createSecurityContext($this->config['appId'], $this->config['appKey']);

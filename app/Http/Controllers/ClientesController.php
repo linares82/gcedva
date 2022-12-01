@@ -82,7 +82,7 @@ class ClientesController extends Controller
         }
 
         $users = User::pluck('name', 'id');
-        $users->prepend('Seleccionar opciÃ³n', 0);
+        $users->prepend('Seleccionar opciÃƒÂ³n', 0);
         if (isset($_REQUEST["p"])) {
             if (session()->has('filtro_clientes')) {
                 session(['filtro_clientes' => 1]);
@@ -110,7 +110,7 @@ class ClientesController extends Controller
     public function indexEventos(Request $request)
     {
         $users = User::pluck('name', 'id');
-        $users->prepend('Seleccionar opciÃ³n', 0);
+        $users->prepend('Seleccionar opciÃƒÂ³n', 0);
         //dd($request);
         if (isset($_REQUEST["p"])) {
             if (session()->has('filtro_clientes')) {
@@ -224,7 +224,7 @@ class ClientesController extends Controller
         ->pluck('name', 'id');
         }*/
         $empleados = $empleados->reverse();
-        $empleados->put(0, 'Seleccionar OpciÃ³n');
+        $empleados->put(0, 'Seleccionar OpciÃƒÂ³n');
         $empleados = $empleados->reverse();
         //dd($empleados);
         $estado_civiles = EstadoCivil::pluck('name', 'id');
@@ -418,7 +418,7 @@ class ClientesController extends Controller
                 ->pluck('name', 'id');
         }
         $empleados = $empleados->reverse();
-        $empleados->put(0, 'Seleccionar OpciÃ³n');
+        $empleados->put(0, 'Seleccionar OpciÃƒÂ³n');
         $empleados = $empleados->reverse();
         //dd($empleados);
         $cp = PreguntaCliente::where('cliente_id', '=', $id)->get();
@@ -1146,7 +1146,7 @@ class ClientesController extends Controller
             ->get();
         //dd($clientes);
         /* $clientes_array=array();
-        $encabezados=array('Fecha', 'P. Nombre', 'S. Nombre', 'A. Paterno', 'A. Materno', 'TelÃ©fono',
+        $encabezados=array('Fecha', 'P. Nombre', 'S. Nombre', 'A. Paterno', 'A. Materno', 'TelÃƒÂ©fono',
         'Celular', 'Mail', 'Escuela Procedencia', 'Medio');
         array_push($clientes_array, $encabezados);
         //dd($clientes_array);
@@ -1664,11 +1664,11 @@ class ClientesController extends Controller
     $jasper->process(
     // Ruta y nombre de archivo de entrada del reporte
     base_path() . '/vendor/cossou/jasperphp/examples/credencial.jasper',
-    false, // Ruta y nombre de archivo de salida del reporte (sin extensiÃ³n)
+    false, // Ruta y nombre de archivo de salida del reporte (sin extensiÃƒÂ³n)
     array('pdf'), // Formatos de salida del reporte
     array('cliente' => $cliente->id,
     'inscripcion' => $inscripcion->id,
-    'imagen' => base_path() . '/vendor/cossou/jasperphp/examples/'. $cadena_img[count($cadena_img) - 1]), // ParÃ¡metros del reporte
+    'imagen' => base_path() . '/vendor/cossou/jasperphp/examples/'. $cadena_img[count($cadena_img) - 1]), // ParÃƒÂ¡metros del reporte
     array(
     'driver' => 'mysql',
     'username' => 'root',
@@ -1964,10 +1964,14 @@ class ClientesController extends Controller
 
     public function apiStore(Request $request)
     {
-        //dd($_REQUEST);
+        //dd($request->all());
         $id = 0;
         $input = $request->all();
+	//dd($input);
         $empleado = Empleado::where('mail_empresa', $input['mail_empleado_asignado'])->first();
+	if(is_null($empleado)){
+		return response()->json(['msj' => $input['mail_empleado_asignado'].' No existe asignado a ningun empleado ']);
+	}
         //dd($empleado);
         //$empleado=Empleado::find($request->input('empleado_id'));
         //$input['plantelplantel_id']=$empleado->plantel->id;
@@ -1999,20 +2003,24 @@ class ClientesController extends Controller
         $input['paise_id'] = 22;
 
         $input['turno_id'] = 0;
+	//dd($input);
         if (is_null($input['ape_materno'])) {
             $input['ape_materno'] = " ";
         }
         if (is_null($input['nombre2'])) {
             $input['nombre2'] = " ";
         }
-        if (is_null($input['matricula'])) {
+	
+        if (!isset($input['matricula'])) {
             $input['matricula'] = " ";
         }
+	
         $param = Param::where('llave', '=', 'msj_text')->first();
-        if ($input['cve_cliente'] == "") {
+        if (!isset($input['cve_cliente'])) {
             //$input['cve_cliente'] = 'Codigo: ' . substr(Hash::make(rand(0, 1000)), 2, 8) . $param->valor;
             $input['cve_cliente'] = $param->valor;
         }
+
         if (!isset($input['promociones'])) {
             $input['promociones'] = 0;
         } else {
@@ -2048,6 +2056,17 @@ class ClientesController extends Controller
         } else {
             $input['bnd_reingreso'] = 1;
         }
+	if (!isset($input['pagador_id'])) {
+            $input['pagador_id'] = 0;
+        } else {
+            $input['pagador_id'] = 1;
+        }
+	if (!isset($input['uso_factura_id'])) {
+            $input['uso_factura_id'] = 21;
+        } else {
+            $input['uso_factura_id'] = 21;
+        }
+
         //dd($input);
         //create data
         try {
@@ -2076,6 +2095,7 @@ class ClientesController extends Controller
             //dd($e);
             return response()->json(['msj' => 'Fallo, exception: ' . $e->getMessage()]);
         }
+	//dd($c);
         return response()->json(['id_cliente' => $c->id]);
     }
 
@@ -2755,7 +2775,7 @@ class ClientesController extends Controller
         $clientes = $filtrado->orderBy('id', 'desc')->paginate(20);
 
         $users = User::pluck('name', 'id');
-        $users->prepend('Seleccionar opción', 0);
+        $users->prepend('Seleccionar opciÃ³n', 0);
 
         //dd($request);
         //$clientes = Seguimiento::getAllData($request, 10, session('filtro_clientes'));

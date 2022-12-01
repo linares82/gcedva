@@ -16,8 +16,8 @@ class Cliente extends Model
 	use SoftDeletes;
 	use RevisionableTrait;
 
-	protected $revisionCleanup = true; //Remove old revisions (works only when used with $historyLimit)
-    protected $historyLimit = 1000;
+	//protected $revisionCleanup = true; //Remove old revisions (works only when used with $historyLimit)
+    //protected $historyLimit = 1000;
 
 	protected $events = [
 		'created' => ClienteCreated::class,

@@ -37,7 +37,7 @@
                 rawData.forEach(function (element, index) {
                     callback({
                         Plantel: element.plantel,
-                        Empleado: element.empleado,
+                        Usuario: element.usuario,
                         IdCliente: element.cli,
                         Cliente: element.cliente,
                         Actividad: element.tarea,
@@ -53,7 +53,7 @@
             });*/
             $("#output").pivotUI(inputFunction, {
                 renderers: renderers,
-                rows: ["Plantel","Empleado"], 
+                rows: ["Plantel","Usuario"], 
                 cols: ['Fecha'],
             },false, "es");
 

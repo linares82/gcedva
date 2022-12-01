@@ -266,3 +266,12 @@ Route::post(
         'uses' => 'CaptacionsController@apiStore',
     )
 );
+
+//Crear prospectos
+Route::post(
+    '/prospectos/apiCreate',
+    array(
+        'as' => 'prospectos.apiCreate',
+        'uses' => 'ProspectosController@apiStore',
+    )
+);
