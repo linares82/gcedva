@@ -74,14 +74,20 @@ class CajaObserver
         $this->caja = $caja;
         $cliente = Cliente::find($this->caja->cliente_id);
         $seguimiento = Seguimiento::where('cliente_id', $this->caja->cliente_id)->first();
+        
 
         //$cajas=Caja::where('cliente_id',$this->caja->cliente_id)->where('id','<>',$this->caja->id)->get();
         //dd($this->caja);
         if ($this->caja->st_caja_id == 1 or $this->caja->st_caja_id == 3) {
             
-
             $inscripcions = Inscripcion::where('cliente_id', $cliente->id)->whereNull('inscripcions.deleted_at')->get();
-            if ($inscripcions->isEmpty()) {
+            $adeudos = Adeudo::where('cliente_id', $this->caja->cliente_id)->where('pagado_bnd', 0)
+                ->whereDate('fecha_pago','<=', Date('Y-m-d'))
+                ->whereNull('deleted_at')
+                ->count();
+                
+            if ($inscripcions->isEmpty() and $adeudos==0) {
+            //if ($inscripcions->isEmpty()) {
                 $cliente->st_cliente_id = 22;
                 $cliente->save();
                 $seguimiento->st_seguimiento_id = 2;

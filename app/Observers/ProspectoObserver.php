@@ -12,6 +12,20 @@ use App\ProspectoHEstatuse;
 class ProspectoObserver
 { 
     public $prospecto;
+
+    public function created(Prospecto $prospecto){
+        
+        $st_prospecto = StProspecto::find($prospecto->st_prospecto_id);
+        $input['tabla'] = 'prospectos';
+        $input['prospecto_id'] = $prospecto->id;
+        //$input['prospecto_seguimiento_id'] = 0;
+        $input['estatus'] = $st_prospecto->name;
+        $input['estatus_id'] = $st_prospecto->id;
+        $input['fecha'] = Date('Y-m-d');
+        $input['usu_alta_id'] = isset(Auth::user()->id) ? Auth::user()->id : 1;
+        $input['usu_mod_id'] = isset(Auth::user()->id) ? Auth::user()->id : 1;
+        ProspectoHEstatuse::create($input);
+    }
     
     public function updating(Prospecto $prospecto)
     {

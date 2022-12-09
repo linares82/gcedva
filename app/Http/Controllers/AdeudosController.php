@@ -33,12 +33,14 @@ use App\UsuarioCliente;
 use App\HistoriaCliente;
 use App\AutorizacionBeca;
 use App\CombinacionCliente;
+use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use App\ConsecutivoMatricula;
 use App\Http\Requests\createAdeudo;
 use App\Http\Requests\updateAdeudo;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
+
 
 class AdeudosController extends Controller
 {
@@ -3893,7 +3895,7 @@ class AdeudosController extends Controller
             ->join('caja_conceptos as cc', 'cc.id', 'adeudos.caja_concepto_id')
             ->join('clientes as cli', 'cli.id', 'adeudos.cliente_id')
             ->join('st_clientes as stc', 'stc.id', 'cli.st_cliente_id')
-            ->join('inscripcions as i', 'i.cliente_id', 'cli.id')
+            ->leftJoin('inscripcions as i', 'i.cliente_id', 'cli.id')
             ->join('plantels as p', 'p.id', 'i.plantel_id')
             ->join('grupos as g', 'g.id', 'i.grupo_id')
             ->join('lectivos as l', 'l.id', 'i.lectivo_id')
@@ -3903,6 +3905,7 @@ class AdeudosController extends Controller
             ->whereIn('stc.id', $datos['estatus_f'])
             ->whereDate('adeudos.fecha_pago', '>=', $datos['fecha_f'])
             ->whereDate('adeudos.fecha_pago', '<=', $datos['fecha_t'])
+            ->whereNull('i.deleted_at')
             ->orderBy('p.razon')
             ->orderBy('cc.id')
             ->orderBy('cli.ape_paterno')
@@ -3911,111 +3914,427 @@ class AdeudosController extends Controller
             ->orderBy('cli.nombre2')
             ->get();
         //dd($registros->toArray());
-        $planteles = Plantel::where('id', '>',0)->get();
-        $hoy = Carbon::createFromFormat('Y-m-d', Date('Y-m-d'));
-        $hoy->day = 1;
-        $fecha_planeada = $hoy;
-        //dd($fecha_planeada->toDateString());
-        $mesNumero = $hoy->month;
-        $mes = Mese::find($mesNumero);
-        //dd($mes);
-        $resumen = array();
-        $registro = array();
-        $estatus= StCliente::whereIn('id',$datos['estatus_f'])->get();
-        foreach ($planteles as $plantel) {
-            $registro['plantel'] = $plantel->razon;
-            $suma_estatus = 0;
-            //calcula cantidad de clientes con adeudos planeado segun estatus recibidos
-            foreach ($estatus as $st) {
-                $cuenta = Adeudo::join('clientes as cli', 'cli.id', 'adeudos.cliente_id')
-                    ->join('caja_conceptos as cc', 'cc.id', 'adeudos.caja_concepto_id')
-                    ->where('cli.plantel_id', $plantel->id)
-                    ->where('cc.name', 'like', '%' . $mes->name . '%')
-                    ->where('adeudos.fecha_pago', $fecha_planeada->toDateString())
-                    ->where('cli.st_cliente_id',$st->id)
-                    ->count();
-                //dd($cuenta);
-                $registro['cuenta_'.$st->name] = $cuenta;
-                $suma_estatus = $suma_estatus + $cuenta;
-            }
-            $registro['suma_estatus'] = $suma_estatus;
-            //dd($datos['estatus_f']);
-            //cuenta los clientes con un pago realizado
-            $cuenta_pagados = Adeudo::join('clientes as cli', 'cli.id', 'adeudos.cliente_id')
-                ->join('caja_conceptos as cc', 'cc.id', 'adeudos.caja_concepto_id')
-                ->where('cli.plantel_id', $plantel->id)
-                ->where('cc.name', 'like', '%' . $mes->name . '%')
-                ->whereDate('adeudos.fecha_pago', $fecha_planeada->toDateString())
-                ->where('adeudos.pagado_bnd', 1)
-                ->whereIn('cli.st_cliente_id',$datos['estatus_f'])
-                ->count();
-            $registro['cuenta_pagados'] = $cuenta_pagados;
-            //Cuenta clientes con pagos no reealizados
-            $cuenta_no_pagados = Adeudo::join('clientes as cli', 'cli.id', 'adeudos.cliente_id')
-                ->join('caja_conceptos as cc', 'cc.id', 'adeudos.caja_concepto_id')
-                ->where('cli.plantel_id', $plantel->id)
-                ->where('cc.name', 'like', '%' . $mes->name . '%')
-                ->whereDate('adeudos.fecha_pago', $fecha_planeada->toDateString())
-                ->where('adeudos.pagado_bnd', '<>', 1)
-                ->whereIn('cli.st_cliente_id',$datos['estatus_f'])
-                ->count();
-            $registro['cuenta_no_pagados'] = $cuenta_no_pagados;
-            //calcula suma de dinero de clientes con adeudos planeado segun estatus recibidos
-            $suma_estatus_monto=0;
-            foreach ($estatus as $st) {
-                $suma = Adeudo::join('clientes as cli', 'cli.id', 'adeudos.cliente_id')
-                    ->join('caja_conceptos as cc', 'cc.id', 'adeudos.caja_concepto_id')
-                    ->where('cli.plantel_id', $plantel->id)
-                    ->where('cc.name', 'like', '%' . $mes->name . '%')
-                    ->where('adeudos.fecha_pago', $fecha_planeada->toDateString())
-                    ->where('cli.st_cliente_id',$st->id)
-                    ->sum('adeudos.monto');
-                //dd($cuenta);
-                $registro['suma_'.$st->name] = $suma;
-                $suma_estatus_monto = $suma_estatus_monto + $suma;
-            }
-            $registro['suma_estatus_monto'] = $suma_estatus_monto;
-            //suma el dinero de los clientes con un pago realizado
-            $suma_pagados = Adeudo::join('clientes as cli', 'cli.id', 'adeudos.cliente_id')
-                ->join('caja_conceptos as cc', 'cc.id', 'adeudos.caja_concepto_id')
-                ->where('cli.plantel_id', $plantel->id)
-                ->where('cc.name', 'like', '%' . $mes->name . '%')
-                ->whereDate('adeudos.fecha_pago', $fecha_planeada->toDateString())
-                ->where('adeudos.pagado_bnd', 1)
-                ->whereIn('cli.st_cliente_id',$datos['estatus_f'])
-                ->sum('adeudos.monto');
-            $registro['suma_pagados'] = $suma_pagados;
-            //Suma del dinero de los clientes con pagos no reealizados
-            $suma_no_pagados = Adeudo::join('clientes as cli', 'cli.id', 'adeudos.cliente_id')
-                ->join('caja_conceptos as cc', 'cc.id', 'adeudos.caja_concepto_id')
-                ->where('cli.plantel_id', $plantel->id)
-                ->where('cc.name', 'like', '%' . $mes->name . '%')
-                ->whereDate('adeudos.fecha_pago', $fecha_planeada->toDateString())
-                ->where('adeudos.pagado_bnd', '<>', 1)
-                ->whereIn('cli.st_cliente_id',$datos['estatus_f'])
-                ->sum('adeudos.monto');
-            $registro['suma_no_pagados'] = $suma_no_pagados;
-            array_push($resumen, $registro);
-        }
-        //dd($resumen);
-        
-        return view('adeudos.reportes.alumnosActivosAdeudosR', compact('registros','resumen','estatus'));
-    }
 
-    public function alumnosActivosAdeudosPlantel()
-    {
-        $planteles = Plantel::pluck('razon', 'id');
-        $conceptos = CajaConcepto::pluck('name', 'id');
-        $estatus = StCliente::pluck('name', 'id');
-        return view('adeudos.reportes.alumnosActivosAdeudosPlantel', compact('planteles', 'conceptos', 'estatus'));
+        //dd($resumen);
+
+        return view('adeudos.reportes.alumnosActivosAdeudosR', compact('registros'));
     }
 
     public function alumnosActivosAdeudosPlantelR(Request $request)
     {
         $datos = $request->all();
         //dd($datos);
+        $hoy = Carbon::createFromFormat('Y-m-d', Date('Y-m-d'));
+        $hoy->day = 1;
+        $fecha_planeada = $hoy;
+        $fecha_4meses_atras = Carbon::createFromFormat('Y-m-d', Date('Y-m-d'));
+        $fecha_4meses_atras->subMonth(4);
 
-        //dd($registros->toArray());
-        return view('adeudos.reportes.alumnosActivosAdeudosPlantelR', compact('registros'));
+        //dd($fecha_planeada->toDateString());
+        $mesNumero = $hoy->month;
+        $mes = Mese::find($mesNumero);
+        $cuenta_detalle = Adeudo::select(DB::raw('IF(adeudos.pagado_bnd=1, "SI", "NO") as pagado_bnd'), 
+        'p.razon', 'cli.id as cliente_id', 'stc.name as estatus', 'adeudos.monto')
+            ->join('clientes as cli', 'cli.id', 'adeudos.cliente_id')
+            ->join('caja_conceptos as cc', 'cc.id', 'adeudos.caja_concepto_id')
+            ->join('st_clientes as stc', 'stc.id', 'cli.st_cliente_id')
+            ->join('plantels as p', 'p.id', 'cli.plantel_id')
+            ->where('cli.plantel_id', $datos['plantel'])
+            ->where('cc.name', 'like', '%' . $mes->name . '%')
+            ->where('adeudos.fecha_pago', $fecha_planeada->toDateString())
+            ->whereIn('cli.st_cliente_id', array(4,20,22, 25, 26))
+            ->orderBy('stc.id')
+            ->get();
+
+            $detalle_bajas = Adeudo::select(
+                'p.razon',
+                'cli.id as cliente_id',
+                'stc.name as estatus',
+                'stc.id as st_cliente_id',
+                'cc.name as concepto',
+                'adeudos.fecha_pago as fecha_planeada',
+                DB::raw('IF(adeudos.pagado_bnd=1, "SI", "NO") as pagado_bnd'),
+                'adeudos.id as adeudo_id',
+                'adeudos.caja_id'
+            )
+                ->join('clientes as cli', 'cli.id', 'adeudos.cliente_id')
+                ->join('caja_conceptos as cc', 'cc.id', 'adeudos.caja_concepto_id')
+                ->join('plantels as p', 'p.id', 'cli.plantel_id')
+                ->join('st_clientes as stc', 'stc.id', 'cli.st_cliente_id')
+                ->where('cli.plantel_id', $datos['plantel'])
+                ->where('adeudos.pagado_bnd', 0)
+                ->whereDate('adeudos.fecha_pago', '>=', $fecha_4meses_atras->toDateString())
+                ->whereDate('adeudos.fecha_pago', '<=', $fecha_planeada->toDateString())
+                ->whereIn('cli.st_cliente_id', array(25, 26))
+                ->whereNull('cli.deleted_at')
+                ->orderBy('p.id')
+                ->orderBy('cli.st_cliente_id')
+                ->orderBy('cli.id')
+                ->orderBy('adeudos.fecha_pago')
+                ->get();
+            $tabla = array();
+            $linea = array();
+            foreach ($detalle_bajas as $detalle) {
+                $linea['razon'] = $detalle->razon;
+                $linea['cliente_id'] = $detalle->cliente_id;
+                $linea['estatus'] = $detalle->estatus;
+                $linea['st_cliente_id'] = $detalle->st_cliente_id;
+                $linea['concepto'] = $detalle->concepto;
+                $linea['fecha_planeada'] = $detalle->fecha_planeada;
+                $linea['pagado_bnd'] = $detalle->pagado_bnd;
+                $linea['adeudo_id'] = $detalle->adeudo_id;
+                $linea['caja_id'] = $detalle->caja_id;
+                if ($detalle->pagado_bnd == "NO") {
+                    $linea['adeudo_calculado'] = $this->getMontoPlaneadoCalculadoAdeudos($detalle->adeudo_id, $detalle->cliente_id);
+                    $linea['pago_caja'] = 0;
+                    $linea['monto'] = $linea['adeudo_calculado'];
+                } else {
+                    $linea['pago_caja'] = Pago::where('caja_id', $detalle->caja_id)->sum('monto');
+                    $linea['adeudo_calculado'] = 0;
+                    $linea['monto'] = $linea['pago_caja'];
+                }
+                array_push($tabla, $linea);
+            }
+            //dd($tabla);
+            $detalle_activos_vigentes = Adeudo::select(
+                'p.razon',
+                'cli.id as cliente_id',
+                'stc.name as estatus',
+                'stc.id as st_cliente_id',
+                'cc.name as concepto',
+                'adeudos.fecha_pago as fecha_planeada',
+                DB::raw('IF(adeudos.pagado_bnd=1, "SI", "NO") as pagado_bnd'),
+                'adeudos.id as adeudo_id',
+                'adeudos.caja_id'
+            )
+                ->join('clientes as cli', 'cli.id', 'adeudos.cliente_id')
+                ->join('caja_conceptos as cc', 'cc.id', 'adeudos.caja_concepto_id')
+                ->join('plantels as p', 'p.id', 'cli.plantel_id')
+                ->join('st_clientes as stc', 'stc.id', 'cli.st_cliente_id')
+                ->where('cli.plantel_id', $datos['plantel'])
+                //->where('adeudos.pagado_bnd', 0)
+                ->whereDate('adeudos.fecha_pago', $fecha_planeada->toDateString())
+                ->whereIn('cli.st_cliente_id', array(4, 20, 22))
+                ->whereNull('cli.deleted_at')
+                ->orderBy('p.id')
+                ->orderBy('cli.st_cliente_id')
+                ->orderBy('cli.id')
+                ->orderBy('adeudos.fecha_pago')
+                ->get();
+            //dd($detalle_dinero->toArray());    
+
+            foreach ($detalle_activos_vigentes as $detalle) {
+                $linea['razon'] = $detalle->razon;
+                $linea['cliente_id'] = $detalle->cliente_id;
+                $linea['estatus'] = $detalle->estatus;
+                $linea['st_cliente_id'] = $detalle->st_cliente_id;
+                $linea['concepto'] = $detalle->concepto;
+                $linea['fecha_planeada'] = $detalle->fecha_planeada;
+                $linea['pagado_bnd'] = $detalle->pagado_bnd;
+                $linea['adeudo_id'] = $detalle->adeudo_id;
+                $linea['caja_id'] = $detalle->caja_id;
+                if ($detalle->pagado_bnd == "NO") {
+                    $linea['adeudo_calculado'] = $this->getMontoPlaneadoCalculadoAdeudos($detalle->adeudo_id, $detalle->cliente_id);
+                    $linea['pago_caja'] = 0;
+                    $linea['monto'] = $linea['adeudo_calculado'];
+                } else {
+                    $linea['pago_caja'] = Pago::where('caja_id', $detalle->caja_id)->sum('monto');
+                    $linea['adeudo_calculado'] = 0;
+                    $linea['monto'] = $linea['pago_caja'];
+                }
+                array_push($tabla, $linea);
+            }
+
+
+            //dd($tabla);
+        //dd($cuenta_detalle->toArray());
+        return view('adeudos.reportes.alumnosActivosAdeudosPlantelR', compact('cuenta_detalle', 'tabla'));
+    }
+
+    public function globalFinanciero()
+    {
+        $planteles = Plantel::pluck('razon', 'id');
+        $conceptos = CajaConcepto::pluck('name', 'id');
+        $estatus = StCliente::pluck('name', 'id');
+        return view('adeudos.reportes.globalFinanciero', compact('planteles', 'conceptos', 'estatus'));
+    }
+
+    public function globalFinancieroR(Request $request)
+    {
+        $datos = $request->all();
+        $planteles = Plantel::whereIn('id', $datos['plantel_f'])->get();
+        $hoy = Carbon::createFromFormat('Y-m-d', Date('Y-m-d'));
+        $hoy->day = 1;
+        $fecha_planeada = $hoy;
+        $fecha_4meses_atras = Carbon::createFromFormat('Y-m-d', Date('Y-m-d'));
+        $fecha_4meses_atras->subMonth(4);
+        //dd($fecha_4meses_atras);
+        //dd($fecha_planeada->toDateString());
+        $mesNumero = $hoy->month;
+        $mes = Mese::find($mesNumero);
+        //dd($mes);
+        $resumen = array();
+        $registro = array();
+
+        foreach ($planteles as $plantel) {
+            $registro['plantel_id'] = $plantel->id;
+            $registro['plantel'] = $plantel->razon;
+            $suma_estatus = 0;
+            //calcula cantidad de clientes con adeudos planeado segun estatus recibidos
+
+            $cuenta = Adeudo::join('clientes as cli', 'cli.id', 'adeudos.cliente_id')
+                ->join('caja_conceptos as cc', 'cc.id', 'adeudos.caja_concepto_id')
+                ->where('cli.plantel_id', $plantel->id)
+                ->where('cc.name', 'like', '%' . $mes->name . '%')
+                ->whereDate('adeudos.fecha_pago', '=', $fecha_planeada->toDateString())
+                ->where('cli.st_cliente_id', 26)
+                ->count();
+            //dd($cuenta);
+            $registro['baja_administrativa'] = $cuenta;
+            $suma_estatus = $suma_estatus + $cuenta;
+
+            $cuenta = Adeudo::join('clientes as cli', 'cli.id', 'adeudos.cliente_id')
+                ->join('caja_conceptos as cc', 'cc.id', 'adeudos.caja_concepto_id')
+                ->where('cli.plantel_id', $plantel->id)
+                ->where('cc.name', 'like', '%' . $mes->name . '%')
+                ->whereDate('adeudos.fecha_pago', '=', $fecha_planeada->toDateString())
+                ->where('cli.st_cliente_id', 25)
+                ->count();
+            //dd($cuenta);
+            $registro['baja_temporal_por_pago'] = $cuenta;
+            $suma_estatus = $suma_estatus + $cuenta;
+
+            $cuenta = Adeudo::join('clientes as cli', 'cli.id', 'adeudos.cliente_id')
+                ->join('caja_conceptos as cc', 'cc.id', 'adeudos.caja_concepto_id')
+                ->where('cli.plantel_id', $plantel->id)
+                ->where('cc.name', 'like', '%' . $mes->name . '%')
+                ->whereDate('adeudos.fecha_pago', '=', $fecha_planeada->toDateString())
+                ->whereIn('cli.st_cliente_id', array(4, 20, 22))
+                ->count();
+            //dd($cuenta);
+            $registro['activos_vigentes'] = $cuenta;
+            $suma_estatus = $suma_estatus + $cuenta;
+
+            $registro['suma_estatus'] = $suma_estatus;
+
+            $cuenta = Adeudo::join('clientes as cli', 'cli.id', 'adeudos.cliente_id')
+                ->join('caja_conceptos as cc', 'cc.id', 'adeudos.caja_concepto_id')
+                ->where('cli.plantel_id', $plantel->id)
+                ->where('cc.name', 'like', '%' . $mes->name . '%')
+                ->whereDate('adeudos.fecha_pago', '=', $fecha_planeada->toDateString())
+                ->where('cli.st_cliente_id', 22)
+                ->count();
+            //dd($cuenta);
+            $registro['preinscritos'] = $cuenta;
+
+            $cuenta_pagados = Adeudo::join('clientes as cli', 'cli.id', 'adeudos.cliente_id')
+                ->join('caja_conceptos as cc', 'cc.id', 'adeudos.caja_concepto_id')
+                ->where('cli.plantel_id', $plantel->id)
+                ->where('cc.name', 'like', '%' . $mes->name . '%')
+                ->whereDate('adeudos.fecha_pago', $fecha_planeada->toDateString())
+                ->where('adeudos.pagado_bnd', 1)
+                ->whereIn('cli.st_cliente_id', array(4, 20, 22, 25, 26))
+                ->count();
+            $registro['cuenta_pagados'] = $cuenta_pagados;
+
+            $cuenta_no_pagados = Adeudo::join('clientes as cli', 'cli.id', 'adeudos.cliente_id')
+                ->join('caja_conceptos as cc', 'cc.id', 'adeudos.caja_concepto_id')
+                ->where('cli.plantel_id', $plantel->id)
+                ->where('cc.name', 'like', '%' . $mes->name . '%')
+                ->whereDate('adeudos.fecha_pago', $fecha_planeada->toDateString())
+                ->where('adeudos.pagado_bnd', '<>', 1)
+                ->whereIn('cli.st_cliente_id', array(4, 20, 22, 25, 26))
+                ->count();
+            $registro['cuenta_no_pagados'] = $cuenta_no_pagados;
+
+            
+            //Se obtiene el universo de registros con su pago o monto planeado calculado
+            
+            $detalle_bajas = Adeudo::select(
+                'p.razon',
+                'cli.id as cliente_id',
+                'stc.name as estatus',
+                'stc.id as st_cliente_id',
+                'cc.name as concepto',
+                'adeudos.fecha_pago as fecha_planeada',
+                DB::raw('IF(adeudos.pagado_bnd=1, "SI", "NO") as pagado_bnd'),
+                'adeudos.id as adeudo_id',
+                'adeudos.caja_id'
+            )
+                ->join('clientes as cli', 'cli.id', 'adeudos.cliente_id')
+                ->join('caja_conceptos as cc', 'cc.id', 'adeudos.caja_concepto_id')
+                ->join('plantels as p', 'p.id', 'cli.plantel_id')
+                ->join('st_clientes as stc', 'stc.id', 'cli.st_cliente_id')
+                ->where('cli.plantel_id', $plantel->id)
+                ->where('adeudos.pagado_bnd', 0)
+                ->whereDate('adeudos.fecha_pago', '>=', $fecha_4meses_atras->toDateString())
+                ->whereDate('adeudos.fecha_pago', '<=', $fecha_planeada->toDateString())
+                ->whereIn('cli.st_cliente_id', array(25, 26))
+                ->whereNull('cli.deleted_at')
+                ->orderBy('p.id')
+                ->orderBy('cli.st_cliente_id')
+                ->orderBy('cli.id')
+                ->orderBy('adeudos.fecha_pago')
+                ->get();
+            $tabla = array();
+            $linea = array();
+            foreach ($detalle_bajas as $detalle) {
+                $linea['razon'] = $detalle->razon;
+                $linea['cliente_id'] = $detalle->cliente_id;
+                $linea['estatus'] = $detalle->estatus;
+                $linea['st_cliente_id'] = $detalle->st_cliente_id;
+                $linea['concepto'] = $detalle->concepto;
+                $linea['fecha_planeada'] = $detalle->fecha_planeada;
+                $linea['pagado_bnd'] = $detalle->pagado_bnd;
+                $linea['adeudo_id'] = $detalle->adeudo_id;
+                $linea['caja_id'] = $detalle->caja_id;
+                if ($detalle->pagado_bnd == "NO") {
+                    $linea['adeudo_calculado'] = $this->getMontoPlaneadoCalculadoAdeudos($detalle->adeudo_id, $detalle->cliente_id);
+                    $linea['pago_caja'] = 0;
+                    $linea['monto'] = $linea['adeudo_calculado'];
+                } else {
+                    $linea['pago_caja'] = Pago::where('caja_id', $detalle->caja_id)->sum('monto');
+                    $linea['adeudo_calculado'] = 0;
+                    $linea['monto'] = $linea['pago_caja'];
+                }
+                array_push($tabla, $linea);
+            }
+            //dd($tabla);
+            $detalle_activos_vigentes = Adeudo::select(
+                'p.razon',
+                'cli.id as cliente_id',
+                'stc.name as estatus',
+                'stc.id as st_cliente_id',
+                'cc.name as concepto',
+                'adeudos.fecha_pago as fecha_planeada',
+                DB::raw('IF(adeudos.pagado_bnd=1, "SI", "NO") as pagado_bnd'),
+                'adeudos.id as adeudo_id',
+                'adeudos.caja_id'
+            )
+                ->join('clientes as cli', 'cli.id', 'adeudos.cliente_id')
+                ->join('caja_conceptos as cc', 'cc.id', 'adeudos.caja_concepto_id')
+                ->join('plantels as p', 'p.id', 'cli.plantel_id')
+                ->join('st_clientes as stc', 'stc.id', 'cli.st_cliente_id')
+                ->where('cli.plantel_id', $plantel->id)
+                //->where('adeudos.pagado_bnd', 0)
+                ->whereDate('adeudos.fecha_pago', $fecha_planeada->toDateString())
+                ->whereIn('cli.st_cliente_id', array(4, 20, 22))
+                ->whereNull('cli.deleted_at')
+                ->orderBy('p.id')
+                ->orderBy('cli.st_cliente_id')
+                ->orderBy('cli.id')
+                ->orderBy('adeudos.fecha_pago')
+                ->get();
+            //dd($detalle_dinero->toArray());    
+
+            foreach ($detalle_activos_vigentes as $detalle) {
+                $linea['razon'] = $detalle->razon;
+                $linea['cliente_id'] = $detalle->cliente_id;
+                $linea['estatus'] = $detalle->estatus;
+                $linea['st_cliente_id'] = $detalle->st_cliente_id;
+                $linea['concepto'] = $detalle->concepto;
+                $linea['fecha_planeada'] = $detalle->fecha_planeada;
+                $linea['pagado_bnd'] = $detalle->pagado_bnd;
+                $linea['adeudo_id'] = $detalle->adeudo_id;
+                $linea['caja_id'] = $detalle->caja_id;
+                if ($detalle->pagado_bnd == "NO") {
+                    $linea['adeudo_calculado'] = $this->getMontoPlaneadoCalculadoAdeudos($detalle->adeudo_id, $detalle->cliente_id);
+                    $linea['pago_caja'] = 0;
+                    $linea['monto'] = $linea['adeudo_calculado'];
+                } else {
+                    $linea['pago_caja'] = Pago::where('caja_id', $detalle->caja_id)->sum('monto');
+                    $linea['adeudo_calculado'] = 0;
+                    $linea['monto'] = $linea['pago_caja'];
+                }
+                array_push($tabla, $linea);
+            }
+
+
+            //Filtro del universo para bajas administrativas
+            $conjunto_ba = Arr::where($tabla, function ($r, $key) {
+                if ($r['st_cliente_id'] == 26) {
+                    return $r;
+                }
+            });
+            $suma_ba = 0;
+            foreach ($conjunto_ba as $r) {
+                $suma_ba = $suma_ba + $r['monto'];
+            }
+            $registro['suma_ba'] = $suma_ba;
+            
+            //Filtro del universo para baja temporal por pago
+            $conjunto_btp = Arr::where($tabla, function ($r, $key) {
+                if ($r['st_cliente_id'] == 25) {
+                    return $r;
+                }
+            });
+            $suma_btp = 0;
+            foreach ($conjunto_btp as $r) {
+                $suma_btp = $suma_btp + $r['monto'];
+            }
+            $registro['suma_btp'] = $suma_btp;
+
+            //Filtro del universo para activos vigentes
+            $conjunto_activos_vigentes = Arr::where($tabla, function ($r, $key) {
+                if ($r['st_cliente_id'] == 4 or $r['st_cliente_id'] == 20 or $r['st_cliente_id'] == 22) {
+                    return $r;
+                }
+            });
+
+            $suma_activos_vigentes = 0;
+            foreach ($conjunto_activos_vigentes as $r) {
+                $suma_activos_vigentes = $suma_activos_vigentes + $r['monto'];
+            }
+            $registro['suma_activos_vigentes'] = $suma_activos_vigentes;
+
+            //suma de bajas y activos vigentes
+            $suma = $suma_ba + $suma_btp + $suma_activos_vigentes;
+            $registro['suma'] = $suma;
+
+            //Filtro del universo para no pagados
+            $conjunto_no_pagados = Arr::where($tabla, function ($r, $key) {
+                if ($r['pagado_bnd'] == 'NO') {
+                    return $r;
+                }
+            });
+
+            $suma_no_pagados = 0;
+            foreach ($conjunto_no_pagados as $r) {
+                $suma_no_pagados = $suma_no_pagados + $r['monto'];
+            }
+            $registro['suma_no_pagados'] = $suma_no_pagados;
+
+            //Filtro del universo para pagados
+            $conjunto_pagados = Arr::where($tabla, function ($r, $key) {
+                if ($r['pagado_bnd'] <> 'NO') {
+                    return $r;
+                }
+            });
+
+            $suma_pagados = 0;
+            foreach ($conjunto_pagados as $r) {
+                $suma_pagados = $suma_pagados + $r['monto'];
+            }
+            $registro['suma_pagados'] = $suma_pagados;
+            //dd($registro);
+            //Filtro del universo para preinscritos
+            $conjunto_preinscritos = Arr::where($tabla, function ($r, $key) {
+                if ($r['st_cliente_id'] == 22) {
+                    return $r;
+                }
+            });
+            $suma_preinscritos = 0;
+            foreach ($conjunto_preinscritos as $r) {
+                $suma_preinscritos = $suma_preinscritos + $r['monto'];
+            }
+            $registro['suma_preinscritos'] = $suma_preinscritos;
+            
+            array_push($resumen, $registro);
+        }
+
+        //dd($tabla);
+
+        //dd($resumen);
+        return view('adeudos.reportes.globalFinancieroR', compact('resumen','tabla'));
     }
 }

@@ -7,12 +7,14 @@ use App\Medio;
 use App\Cliente;
 use App\Empleado;
 use App\Prospecto;
+use Carbon\Carbon;
 use App\Seguimiento;
 use App\StProspecto;
 use App\HStProspecto;
 use App\Http\Requests;
 use App\ProspectoAviso;
 use App\ProspectoStSeg;
+use App\ProspectoHEstatuse;
 use Illuminate\Http\Request;
 use App\ProspectoSeguimiento;
 use Illuminate\Support\Facades\DB;
@@ -32,8 +34,81 @@ class ProspectosController extends Controller {
 		$prospectos = Prospecto::getAllData($request);
 		$estatus=ProspectoStSeg::pluck('name','id');
 		
+		$hoy=Carbon::createFromFormat('Y-m-d', Date('Y-m-d'));
+		//dd($hoy);
+		$ayer=Carbon::createFromFormat('Y-m-d', Date('Y-m-d'))->subDay();
+		
+		$empleado = Empleado::where('user_id', '=', Auth::user()->id)->where('st_empleado_id','<>',3)->first();
+        
+        
+		$resumen=array();
+		$registro=array();
+		foreach($empleado->plantels as $plantel){
+			$registro['plantel']=$plantel->razon;
+			/*$asesoresHoy=ProspectoHEstatuse::where('tabla','prospectos')
+			->join('prospectos as pro', 'pro.id','prospecto_h_estatuses.prospecto_id')
+			->join('plantels as p','p.id','pro.plantel_id')
+			->whereDate('prospecto_h_estatuses.fecha',$hoy->toDateString())
+			->where('p.id',$plantel->id)
+			->where('estatus','Asesores')
+			->count();
+			$registro['asesoresHoy']=$asesoresHoy;
 
-		return view('prospectos.index', compact('prospectos','estatus'))
+			$asesoresAyer=ProspectoHEstatuse::where('tabla','prospectos')
+			->join('prospectos as pro', 'pro.id','prospecto_h_estatuses.prospecto_id')
+			->join('plantels as p','p.id','pro.plantel_id')
+			->whereDate('prospecto_h_estatuses.fecha',$ayer->toDateString())
+			->where('p.id',$plantel->id)
+			->where('estatus','Asesores')
+			->count();
+			$registro['asesoresAyer']=$asesoresAyer;
+			*/
+
+			$asesoresHoy=HStProspecto::whereColumn('h_st_prospectos.st_prospecto_id','h_st_prospectos.st_anterior_id')
+			->join('prospectos as pro', 'pro.id','h_st_prospectos.prospecto_id')
+			->join('plantels as p','p.id','pro.plantel_id')
+			->whereDate('h_st_prospectos.created_at',$hoy->toDateString())
+			->where('p.id',$plantel->id)
+			->where('h_st_prospectos.st_prospecto_id',2)
+			->count();
+			$registro['asesoresHoy']=$asesoresHoy;
+
+			$asesoresAyer=HStProspecto::whereColumn('h_st_prospectos.st_prospecto_id','h_st_prospectos.st_anterior_id')
+			->join('prospectos as pro', 'pro.id','h_st_prospectos.prospecto_id')
+			->join('plantels as p','p.id','pro.plantel_id')
+			->whereDate('h_st_prospectos.created_at',$ayer->toDateString())
+			->where('p.id',$plantel->id)
+			->where('h_st_prospectos.st_prospecto_id',2)
+			->count();
+			$registro['asesoresAyer']=$asesoresAyer;
+
+			$callToAsesorHoy=HStProspecto::where('h_st_prospectos.st_prospecto_id',2)->where('h_st_prospectos.st_anterior_id',1)
+			->join('prospectos as pro', 'pro.id','h_st_prospectos.prospecto_id')
+			->join('plantels as p','p.id','pro.plantel_id')
+			->whereDate('h_st_prospectos.created_at',$hoy->toDateString())
+			->where('p.id',$plantel->id)
+			->count();
+			$registro['callToAsesorHoy']=$callToAsesorHoy;
+
+			$callToAsesorAyer=HStProspecto::where('h_st_prospectos.st_prospecto_id',2)->where('h_st_prospectos.st_anterior_id',1)
+			->join('prospectos as pro', 'pro.id','h_st_prospectos.prospecto_id')
+			->join('plantels as p','p.id','pro.plantel_id')
+			->whereDate('h_st_prospectos.created_at',$ayer->toDateString())
+			->where('p.id',$plantel->id)
+			->count();
+			$registro['callToAsesorAyer']=$callToAsesorAyer;
+			if($callToAsesorHoy>0 or
+				$callToAsesorAyer>0 or
+				$registro['asesoresHoy']>0 or
+				$registro['asesoresAyer']>0
+			){
+				array_push($resumen, $registro);
+			}
+			
+		}
+		
+
+		return view('prospectos.index', compact('prospectos','estatus', 'resumen'))
 		->with( 'list', Prospecto::getListFromAllRelationApps() );
 	}
 
@@ -152,7 +227,7 @@ class ProspectosController extends Controller {
 		}
 		$prospecto->update( $input );
 
-		return redirect()->route('prospectos.index')->with('message', 'Registro Actualizado.');
+		return redirect()->route('prospectoSeguimientos.show', $prospecto->id)->with('message', 'Registro Actualizado.');
 	}
 
 	/**

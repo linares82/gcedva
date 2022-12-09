@@ -12,6 +12,7 @@ use App\ProspectoStSeg;
 use App\ProspectoTarea;
 use App\ProspectoAsunto;
 use App\ProspectoStTarea;
+use App\ProspectoHactividad;
 use Illuminate\Http\Request;
 use App\ProspectoSeguimiento;
 use App\ProspectoAsignacionTarea;
@@ -96,8 +97,9 @@ class ProspectoSeguimientosController extends Controller {
 		$asuntos=ProspectoAsunto::pluck('name','id');
 		$estatusTareas=ProspectoStTarea::pluck('name', 'id');
 		$prospectoStSeg=ProspectoStSeg::pluck('name', 'id');
+		$actividades = ProspectoHactividad::where('prospecto_seguimiento_id', '=', $prospectoSeguimiento->id)->get();
 		return view('prospectoSeguimientos.show', 
-		compact('prospectoSeguimiento', 'tareas', 'asuntos','estatusTareas','prospectoAsignacionTareas','prospectoAvisos','prospectoStSeg'));
+		compact('prospectoSeguimiento', 'tareas', 'asuntos','estatusTareas','prospectoAsignacionTareas','prospectoAvisos','prospectoStSeg', 'actividades'));
 	}
 
 	/**

@@ -125,6 +125,8 @@
 <script src="{{ asset ('/bower_components/AdminLTE/plugins/input-mask/jquery.inputmask.phone.extensions.js') }}"></script>
 <script type="text/javascript">
 $(document).ready(function() {
+   getCmbEspecialidad();
+   getCmbNivel();
    $('#plantel_id-field').change(function(){
       getCmbEspecialidad();
    });

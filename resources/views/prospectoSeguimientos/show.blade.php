@@ -49,6 +49,8 @@
                     {{$prospectoSeguimiento->prospecto->tel_cel}}
                     <label for="prospecto_id">Mail: </label>
                     {{$prospectoSeguimiento->prospecto->mail}}
+                    <label for="prospecto_id">Especialidad: </label>
+                    {{$prospectoSeguimiento->prospecto->especialidad->name}}
                     <label for="prospecto_id">Alta: </label>
                     {{$prospectoSeguimiento->prospecto->created_at}} / {{$prospectoSeguimiento->prospecto->usu_alta->name}}
                     <label for="prospecto_id">U. Modificacion: </label>
@@ -164,6 +166,49 @@
 
         <a class="btn btn-link" href="{{ route('prospectos.index') }}"><i class="glyphicon glyphicon-backward"></i> Regresar</a>
         <a class="btn btn-link" href="{{ route('prospectos.create') }}"><i class="glyphicon glyphicon-backward"></i> Crear Nuevo Prospecto</a>
+
+        @if(isset($actividades))
+
+    <div class="row">
+        <div class="col-md-12">
+            <ul class="timeline">
+                @foreach($actividades as $a)
+
+                <li class="time-label">
+                    <span class="bg-red">
+                        {{$a->fecha }}
+                    </span>
+                </li>
+                <li>
+                    @if($a->tarea=='Seguimiento')
+                    <i class="fa  fa-check-square-o bg-blue"></i>
+                    @elseif($a->tarea=='Aviso')
+                    <i class="fa fa-envelope bg-green"></i>
+                    @else
+                    <i class="fa fa-tasks bg-orange"></i>
+                    @endif
+
+
+                    <div class="timeline-item">
+                        <span class="time"><i class="fa fa-clock-o"></i> {{$a->hora }}</span>
+                        <h3 class="timeline-header"><strong>Actividad:</strong> {{$a->tarea }}</h3>
+                        <div class="timeline-body">
+                            <b>{{$a->asunto}}</b> : {{$a->detalle }}
+                        </div>
+                    </div>
+                </li>
+                @endforeach
+
+                <!-- END timeline item -->
+                <li>
+                    <i class="fa fa-clock-o bg-gray"></i>
+                </li>
+            </ul>
+            <!--        Termina time line-->
+        </div>
+    </div>
+
+    @endif
 
     </div>
 </div>

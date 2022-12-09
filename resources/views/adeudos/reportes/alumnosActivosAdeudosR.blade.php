@@ -110,6 +110,7 @@
                 $concepto="";
                 @endphp
                 @foreach($registros as $registro)
+                
                 @if($concepto<>$registro->concepto and $concepto<>"")
                         <tr>
                             <td colspan="8">Totales {{$concepto}}</td>
@@ -192,93 +193,6 @@
             </tbody>
         </table>
 
-        <br/>
-        <h3>Global Plantel</h3>
-        <table>
-            <thead>
-                <th>Plantel</th>
-                @foreach($estatus as $st)
-                <th>{{$st->name}}</th>        
-                @endforeach
-                <th>Suma Estatus</th>
-                <th>Pagados</th>
-                <th>Deudores</th>
-                @foreach($estatus as $st)
-                <th class="th-jefe">{{$st->name}}</th>        
-                @endforeach
-                <th class="th-jefe">Suma Estatus</th>
-                <th class="th-jefe">Pagados</th>
-                <th class="th-jefe">Deudores</th>
-            </thead>
-            <tbody>
-                @php
-                    $totales=array();
-                    for($i=0;$i<12;$i++){
-                        $totales[$i]=0;
-                    }
-                    $i=0;
-                @endphp
-                @foreach($resumen as $r)
-                <tr>
-                    <td>{{$r['plantel']}}</td>
-                    @foreach($estatus as $st)
-                    <td>{{$r['cuenta_'.$st->name]}}</td>        
-                    @php
-                    $totales[$i]=$totales[$i]+$r['cuenta_'.$st->name];
-                    $i++;   
-                    @endphp
-                    @endforeach
-                    <td>{{$r['suma_estatus']}}</td>
-                    @php
-                    $totales[$i]=$totales[$i]+$r['suma_estatus'];
-                    $i++;   
-                    @endphp
-                    <td>{{$r['cuenta_pagados']}}</td>
-                    @php
-                    $totales[$i]=$totales[$i]+$r['cuenta_pagados'];
-                    $i++;   
-                    @endphp
-                    <td>{{$r['cuenta_no_pagados']}}</td>
-                    @php
-                    $totales[$i]=$totales[$i]+$r['cuenta_no_pagados'];
-                    $i++;   
-                    @endphp    
-                    @foreach($estatus as $st)
-                    <td class="jefe">{{number_format($r['suma_'.$st->name],2)}}</td>        
-                    @php
-                    $totales[$i]=$totales[$i]+$r['suma_'.$st->name];
-                    $i++;   
-                    @endphp
-                    @endforeach
-                    <td class="jefe">{{number_format($r['suma_estatus_monto'],2)}}</td>
-                    @php
-                    $totales[$i]=$totales[$i]+$r['suma_estatus_monto'];
-                    $i++;   
-                    @endphp
-                    <td class="jefe">{{number_format($r['suma_pagados'],2)}}</td>
-                    @php
-                    $totales[$i]=$totales[$i]+$r['suma_pagados'];
-                    $i++;   
-                    @endphp
-                    <td class="jefe">{{number_format($r['suma_no_pagados'],2)}}</td>
-                    @php
-                    $totales[$i]=$totales[$i]+$r['suma_no_pagados'];
-                    $i++;   
-                    @endphp
-                </tr>
-                @php
-                    $i=0;   
-                    @endphp
-                @endforeach
-                <tr>
-                    <td>Totales</td>
-                    @foreach($totales as $t)
-                        <td>{{number_format($t,2)}}</td>
-                    @endforeach
-                </tr>
-            </tbody>
-        </table>
-        <br/>
     </div>
 
 

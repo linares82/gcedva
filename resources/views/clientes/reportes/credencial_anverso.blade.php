@@ -128,16 +128,13 @@
                 </td>
             </tr>  
             @endif
-            <tr>
-                <td>
-                </td>
-            </tr>    
+                
           <tr><td>ESTA CREDENCIAL ES ÚNICA E INTRANSFERIBLE YA QUE ACREDITA AL PORTADOR COMO ALUMNO DE ÉSTA
                        INSTITUCIÓN, EL TITULAR ES RESPONSABLE DEL BUEN USO DE LA MISMA.</td></tr>
 	  <tr>
                 <td>
                     <img src="data:image/png;base64, 
-                                {!! base64_encode(QrCode::format('png')->size(80)->generate('Id:'.$cliente->id.
+                                {!! base64_encode(QrCode::format('png')->size(60)->generate('Id:'.$cliente->id.
                                 '; Nombre:'.$cliente->nombre.' '.$cliente->nombre2.' '.$cliente->ape_paterno.' '.$cliente->ape_materno.
                                 '; Matricula:'.$inscripcion->matricula.
                                 '; Plantel:'.$plantel->razon)) !!} ">

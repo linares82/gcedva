@@ -67,7 +67,7 @@ class AtrazoPagos extends Command
                 ->where('cc.nivel_id', '>', 0)
                 ->where('cc.grado_id', '>', 0)
                 ->where('cc.turno_id', '>', 0)
-                //->whereIn('c.id', array(43303,43305))
+                //->whereIn('c.id', array(79240))
                 ->whereColumn('adeudos.combinacion_cliente_id', 'cc.id')
                 ->join('caja_conceptos as caj_con', 'caj_con.id', '=', 'adeudos.caja_concepto_id')
                 //->where('caj_con.bnd_mensualidad', 1)
