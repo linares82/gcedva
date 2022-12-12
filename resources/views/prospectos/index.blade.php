@@ -309,30 +309,7 @@
 
 @section('content')
 <div class="row">
-    <div class="col-md-12">
-        @permission('prospectos.resumen')
-        <table class="table table-striped table-condensed">
-            <thead>
-                <th>Plantel</span></th>
-                <th><span class="label bg-purple"> Asesores Hoy</span></th>
-                <th><span class="label bg-purple"> Asesores Ayer</span></th>
-                <th><span class="label label-info">Call Center -> Asesores Hoy</span></th>
-                <th><span class="label label-info">Call Center -> Asesores Ayer</span></th>
-            </thead>
-            <tbody>
-                @foreach($resumen as $registro)
-                <tr>
-                    <td>{{$registro['plantel']}}</td>
-                    <td><span class="label label-success">{{$registro['asesoresHoy']}}</span></td>
-                    <td><span class="label label-warning">{{$registro['asesoresAyer']}}</span></td>
-                    <td><span class="label label-warning">{{$registro['callToAsesorHoy']}}</span></td>
-                    <td><span class="label label-success">{{$registro['callToAsesorAyer']}}</span></td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
-        @endpermission
-    </div>
+    
     <div class="col-md-12">
         @if($prospectos->count())
         <table class="table table-condensed table-striped">
