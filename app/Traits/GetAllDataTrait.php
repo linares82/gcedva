@@ -236,12 +236,6 @@ trait GetAllDataTrait
                 $myQuery = $myQuery->whereIn('grupos.plantel_id', $planteles);
                 //}
                 break;
-                case "inventarios":
-                    //if (Auth::user()->can('IFiltroEmpleadosXPlantel')) {
-                    //dd("fil");
-                    //$myQuery = $myQuery->whereIn('inventarios.plantel_id', $planteles);
-                    //}
-                    break;
             case "materia":
                 //if (Auth::user()->can('IFiltroEmpleadosXPlantel')) {
                 $myQuery = $myQuery->whereIn('materia.plantel_id', $planteles);
@@ -371,9 +365,10 @@ trait GetAllDataTrait
         //(iv) get base table data
         
         $myQuery = $myQuery->select([$baseTable . '.*']);
-        //dd($myQuery);
+        //dd($myQuery->toSql());
         //(v) pagenate
         //dd($myQuery->paginate($paginate));
+        //Log::info($myQuery->sql);
         return $myQuery->paginate($paginate);
     }
 

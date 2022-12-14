@@ -68,11 +68,12 @@ class RegistroHistoriaClientesController extends Controller
 			$historiaCliente->st_historia_cliente_id = 6;
 		} elseif ($campo_autorizacion['autorizacion'] == 'aut_director') {
 			$historiaCliente->aut_director = $r->st_historia_cliente_id;
-			$historiaCliente->st_historia_cliente_id = 6;
-		} elseif ($campo_autorizacion['autorizacion'] == 'aut_caja_corp') {
+			//$historiaCliente->st_historia_cliente_id = 6;
+			$historiaCliente->st_historia_cliente_id = $r->st_historia_cliente_id;
+		}/* elseif ($campo_autorizacion['autorizacion'] == 'aut_caja_corp') {
 			$historiaCliente->aut_caja_corp = $r->st_historia_cliente_id;
 			$historiaCliente->st_historia_cliente_id = $r->st_historia_cliente_id;
-		}
+		}*/
 		if($historiaCliente->st_historia_cliente_id==2){
 			$historiaCliente->fec_autorizacion=date('Y-m-d');
 		}
@@ -81,7 +82,7 @@ class RegistroHistoriaClientesController extends Controller
 		if (
 			$historiaCliente->aut_caja == 2 and
 			$historiaCliente->aut_director == 2 and
-			$historiaCliente->aut_caja_corp == 2 and
+			//$historiaCliente->aut_caja_corp == 2 and
 			$historiaCliente->st_historia_cliente_id == 2
 		) {
 			if ($e->evento_cliente_id == 4) {

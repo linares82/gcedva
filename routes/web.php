@@ -18,11 +18,11 @@ if (version_compare(PHP_VERSION, '7.2.0', '>=')) {
 }
 
 \Event::listen('Illuminate\Database\Events\QueryExecuted', function ($query) {
-    //echo'<pre>';
-    //var_dump($query->sql);
-    //var_dump($query->bindings);
-    //var_dump($query->time);
-    //echo'</pre>';
+    /*echo'<pre>';
+    var_dump($query->sql);
+    var_dump($query->bindings);
+    var_dump($query->time);
+    echo'</pre>';*/
     //Log::info($query->sql);
     //Log::info($query->bindings);
 });

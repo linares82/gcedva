@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\createInventarioLevantamiento;
 use App\Http\Requests\updateInventarioLevantamiento;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use DB;
 
 class InventarioLevantamientosController extends Controller {
 
@@ -38,8 +39,9 @@ class InventarioLevantamientosController extends Controller {
 	{
 		$datos=$request->all();
 		//dd($datos["q"]["fecha_f"]);
-		//$inventarioLevantamientos_aux=InventarioLevantamiento::query();
-		$inventarioLevantamientos_aux=InventarioLevantamiento::select('inventario_levantamientos.id',
+		$inventarioLevantamientos=InventarioLevantamiento::getAllData($request);
+		//dd($inventarioLevantamientos);
+		/*$inventarioLevantamientos_aux=InventarioLevantamiento::select('inventario_levantamientos.id',
 		'pi.name as plantel','st_il.name as st_il',
 		'inventario_levantamientos.fecha')
 		->join('inventarios as i','i.inventario_levantamiento_id','inventario_levantamientos.id')
@@ -55,6 +57,7 @@ class InventarioLevantamientosController extends Controller {
 			$inventarioLevantamientos=$inventarioLevantamientos_aux->whereDate('inventario_levantamientos.fecha', '>=', $fecha);
 		}
 		$inventarioLevantamientos=$inventarioLevantamientos_aux->get();
+		*/
 		//dd($inventarioLevantamientos);
 		
 		
@@ -69,7 +72,8 @@ class InventarioLevantamientosController extends Controller {
 	 */
 	public function create()
 	{
-		return view('inventarioLevantamientos.create')
+		$planteles=PlantelInventario::pluck('name','id');
+		return view('inventarioLevantamientos.create', compact('planteles'))
 			->with( 'list', InventarioLevantamiento::getListFromAllRelationApps() );
 	}
 
@@ -110,9 +114,10 @@ class InventarioLevantamientosController extends Controller {
 		$inventarios = Inventario::getAllData($request);
 		//$inventarios = Inventario::where('inventario_levantamiento_id',$datos['q']["inventario_levantamiento_id_lt"])->get();
 		
+		$planteles=PlantelInventario::pluck('name','id');
+		$planteles->prepend('Seleccionar opcion', 0);
 		
-		
-		return view('inventarioLevantamientos.show', compact('inventarioLevantamiento', 'inventarios'))
+		return view('inventarioLevantamientos.show', compact('inventarioLevantamiento', 'inventarios','planteles'))
 		->with( 'list', Inventario::getListFromAllRelationApps() );
 	}
 
@@ -125,7 +130,8 @@ class InventarioLevantamientosController extends Controller {
 	public function edit($id, InventarioLevantamiento $inventarioLevantamiento)
 	{
 		$inventarioLevantamiento=$inventarioLevantamiento->find($id);
-		return view('inventarioLevantamientos.edit', compact('inventarioLevantamiento'))
+		$planteles=PlantelInventario::pluck('name','id');
+		return view('inventarioLevantamientos.edit', compact('inventarioLevantamiento','planteles'))
 			->with( 'list', InventarioLevantamiento::getListFromAllRelationApps() );
 	}
 
@@ -248,6 +254,7 @@ class InventarioLevantamientosController extends Controller {
 					$input['usu_alta_id'] = Auth::user()->id;
 					$input['usu_mod_id'] = Auth::user()->id;
 					$input['origen']=$nombre;
+					$input['no_inventario']=$this->generarNoInventarioPlantel($datos['plantel_id'])+1;
 					//dd($input);
 					$total_lineas++;
 					Inventario::create($input);
@@ -256,7 +263,7 @@ class InventarioLevantamientosController extends Controller {
 			$i++;
 		}
 		$inventario_levantamiento_id=$datos['inventario_levantamiento_id'];
-		$plantels=Plantel::pluck('razon','id');
+		$plantels=PlantelInventario::pluck('name','id');
 		//return redirect()->route('inventarioLevantamientos.index');
 		return view('inventarioLevantamientos.cargarCsv', compact('inventario_levantamiento_id','plantels', 'nombre', 'total_lineas'));
 	}
@@ -400,10 +407,10 @@ class InventarioLevantamientosController extends Controller {
 		if(isset($datos['csv'])){
 			$filename = storage_path('app') . "/public/Inventario".$datos['plantel_id'].".csv";
 			$handle = fopen($filename, 'w+');
-			fputcsv($handle, array("ID","PLANTEL_ID","AREA","ESCUELA","TIPO INVENTARIO","UBICACION","CANTIDAD","NOMBRE","MEDIDA","MARCA","OBSERVACIONES","EXISTE-SI","EXISTE-NO","ESTADO-BUENO","ESTADO-MALO"));
+			fputcsv($handle, array("NO_ID","PLANTEL_ID","AREA","ESCUELA","TIPO INVENTARIO","UBICACION","CANTIDAD","NOMBRE","MEDIDA","MARCA","OBSERVACIONES","EXISTE-SI","EXISTE-NO","ESTADO-BUENO","ESTADO-MALO"));
 
 			foreach($table as $row) {
-				fputcsv($handle, array($row->id,$row->plantel_inventario_id, $row->area, $row->escuela, $row->tipo_inventario,$row->ubicacion,
+				fputcsv($handle, array($row->no_inventario,$row->plantel_inventario_id, $row->area, $row->escuela, $row->tipo_inventario,$row->ubicacion,
 									$row->cantidad,$row->nombre,$row->medida,$row->marca,
 									$row->observaciones,$row->existe_si,$row->existe_no,$row->estado_bueno,
 									$row->estado_malo));
@@ -424,7 +431,9 @@ class InventarioLevantamientosController extends Controller {
 	}
 
 	public function copiarAnterior(Request $request){
-		$inventarioLevantamiento=InventarioLevantamiento::pluck('fecha','id');
+		$inventarioLevantamiento=InventarioLevantamiento::join('plantel_inventarios as pi','pi.id','inventario_levantamientos.plantel_inventario_id')
+		->select('inventario_levantamientos.id', DB::raw('concat(pi.name,"-",inventario_levantamientos.fecha) as fecha'))
+		->pluck('fecha','inventario_levantamientos.id');
 		$destino=$request->input('destino');
 		return view('inventarioLevantamientos.copiarAnterior', compact('inventarioLevantamiento','destino'));	
 	}
@@ -451,6 +460,7 @@ class InventarioLevantamientosController extends Controller {
 			$input['origen']='copia';
 			$input['usu_alta_id']=Auth::user()->id;
 			$input['usu_mod_id']=Auth::user()->id;
+			$input['no_inventario']=$inventario->no_inventario;
 			Inventario::create($input);
 		}
 		return redirect()->route('inventarioLevantamientos.index');
@@ -538,5 +548,10 @@ class InventarioLevantamientosController extends Controller {
 		//dd($resultado);
 		//return view('inventarioLevantamientos.reportes.inicioLevantamiento', compact('planteles'));
 		return view('inventarioLevantamientos.reportes.formato', array('table'=>$resultado));	
+	}
+
+	public function generarNoInventarioPlantel($plantel_id){
+		$no_inventario=Inventario::where('plantel_inventario_id',$plantel_id)->max('no_inventario');
+		return intVal($no_inventario);
 	}
 }

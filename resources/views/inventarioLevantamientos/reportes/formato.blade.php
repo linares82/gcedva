@@ -46,7 +46,7 @@
         <table class="table table-condensed table-striped">
             <thead>
                 <tr>
-                    <th ROWSPAN="2">ID</th><th ROWSPAN="2">CANTIDAD</th><th ROWSPAN="2">NOMBRE</th><th ROWSPAN="2">MEDIDA</th><TH ROWSPAN="2">MARCA</TH>
+                    <th ROWSPAN="2">No. Id.</th><th ROWSPAN="2">CANTIDAD</th><th ROWSPAN="2">NOMBRE</th><th ROWSPAN="2">MEDIDA</th><TH ROWSPAN="2">MARCA</TH>
                     <TH ROWSPAN="2">OBSERVACIONES</TH><TH COLspan="2">EXISTENCIA</TH><TH COLspan="2">ESTADO</TH>
                 </tr> 
                 <TR><TH>SI</TH><TH>NO</TH><TH>BUENO</TH><TH>MALO</TH></TR>
@@ -66,7 +66,7 @@
                 
                 @endif
                 <tr>
-                    <td>{{$row->id}}</td><td>{{$row->cantidad}}</td><td>{{$row->nombre}}</td><td>{{$row->medida}}</td><td>{{$row->marca}}</td>
+                    <td>{{$row->no_inventario}}</td><td>{{$row->cantidad}}</td><td>{{$row->nombre}}</td><td>{{$row->medida}}</td><td>{{$row->marca}}</td>
                     <td>{{$row->observaciones}}</td><td>{{$row->existencia_si}}</td><td>{{$row->existencia_no}}</td>
                     <td>{{$row->estado_bueno}}</td><td>{{$row->estado_malo}}</td>
                 </tr>

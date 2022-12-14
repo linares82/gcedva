@@ -75,9 +75,9 @@
                         <input type="hidden" name="q[s]" value="{{ @(Request::input('q')['s']) ?: '' }}" />
                         <div class="">
                             <div class="form-group col-md-4">
-                                <label class="col-sm-2 control-label" for="q_area_cont">ID</label>
+                                <label class="col-sm-2 control-label" for="q_inventarios.no_inventario_lt">No. Inventario</label>
                                 
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['id_cont']) ?: '' }}" name="q[id_cont]" id="q_id_cont" />
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['inventarios.no_inventario_lt']) ?: '' }}" name="q[inventarios.no_inventario_lt]" id="q_inventarios.no_inventario_lt" />
                                     
                             </div>
                             <!--
@@ -95,7 +95,7 @@
                             <div class="form-group col-md-4" >
                                 <label for="q_inventarios.plantel_inventario_id_lt">PLANTEL</label>
                                 <input class="form-control input-sm" type="hidden" value="{{ @(Request::input('q')['inventario_levantamiento_id_lt']) ?: '' }}" name="q[inventario_levantamiento_id_lt]" id="q_inventario_levantamiento_id_lt" />
-                                    {!! Form::select("inventarios.plantel_inventario_id", $list["PlantelInventario"], "{{ @(Request::input('q')['inventarios.plantel_inventario_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[inventarios.plantel_inventario_id_lt]", "id"=>"q_inventarios.plantel_inventario_id_lt", "style"=>"width:100%;")) !!}
+                                    {!! Form::select("inventarios.plantel_inventario_id", $planteles, "{{ @(Request::input('q')['inventarios.plantel_inventario_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[inventarios.plantel_inventario_id_lt]", "id"=>"q_inventarios.plantel_inventario_id_lt", "style"=>"width:100%;")) !!}
                                     <div id='loading10' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                             </div>
                                                     <!--
@@ -185,7 +185,7 @@
     {!! $inventarios->appends(Request::except('page'))->render() !!}
     <table class="table table-condensed table-striped">
         <thead>
-            <th>Id</th><th>Plantel</th><th>Area</th><th>Escuela</th><th>Tipo Inventario</th><th>Ubicacion</th>
+            <th>No. Inventario</th><th>Plantel</th><th>Area</th><th>Escuela</th><th>Tipo Inventario</th><th>Ubicacion</th>
             <th>Cantidad</th><th>Nombre</th><th>Medida</th><th>Marca</th><th>Observaciones</th><th>Existe Si</th>
             <th>Existe No</th><th>Estado Bueno</th><th>Estado Malo</th><th></th>
         </thead>
@@ -193,7 +193,7 @@
             
             @foreach($inventarios as $inventario)
             <tr>
-                <td>{{$inventario->id}}</td><td>{{$inventario->plantelInventario->name}}</td><td>{{$inventario->area}}</td><td>{{$inventario->escuela}}</td>
+                <td>{{$inventario->no_inventario}}</td><td>{{$inventario->plantelInventario->name}}</td><td>{{$inventario->area}}</td><td>{{$inventario->escuela}}</td>
                 <td>{{$inventario->tipo_inventario}}</td><td>{{$inventario->ubicacion}}</td><td>{{$inventario->cantidad}}</td><td>{{$inventario->nombre}}</td>
                 <td>{{$inventario->medida}}</td><td>{{$inventario->marca}}</td><td>{{$inventario->observaciones}}</td><td>{{$inventario->existe_si}}</td>
                 <td>{{$inventario->existe_no}}</td><td>{{$inventario->estado_bueno}}</td><td>{{$inventario->estado_malo}}</td>
