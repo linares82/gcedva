@@ -31,12 +31,14 @@
             @endif
         </div>
 
+        @permission('globalFinanciero.dinero')
         <div class="form-group col-md-6 @if($errors->has('plantel_f')) has-error @endif">
             <label for="bnd_suma_monetaria-field">Incluir Suma Monetaria:
                 {!! Form::checkbox("bnd_suma_monetaria", 1, null, [ "id" => "bnd_suma_monetaria-field", 'class'=>'minimal']) !!}
             </label>
             
         </div>
+        @endpermission
         <!--
         <div class="form-group col-md-6 @if($errors->has('fecha_f')) has-error @endif">
             <label for="fecha_f-field">Fecha de:</label>

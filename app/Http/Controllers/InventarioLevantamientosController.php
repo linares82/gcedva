@@ -90,6 +90,7 @@ class InventarioLevantamientosController extends Controller {
 		
 		$input['usu_alta_id']=Auth::user()->id;
 		$input['usu_mod_id']=Auth::user()->id;
+		$input['inventario_levantamiento_st_id']=1;
 
 		//create data
 		InventarioLevantamiento::create( $input );

@@ -665,7 +665,12 @@
                                     ?>
                                     
                                 @endif
+                                
                                 @if(isset($caja) and $adeudo->caja->consecutivo==0 and $regla_pago_seriado==0 and $caja->st_caja_id==0)
+                                @php
+                                $lns = App\CajaLn::where('caja_id',$caja->id)->whereNull('deleted_at')->count();
+                                @endphp
+
                                 {!! Form::open(array('route' => 'cajas.guardaAdeudoPredefinido','method' => 'post')) !!}
                                 <input class="form-control" id="adeudo-field" name="adeudo" value="{{$adeudo->id}}" type="hidden">
                                 <input class="form-control" id="cliente_id-field" name="cliente_id" value="{{$adeudo->cliente_id}}" type="hidden">
@@ -677,14 +682,15 @@
                                 @if($adeudo->cajaConcepto->id==1 or 
                                 $adeudo->cajaConcepto->id==23 or 
                                 $adeudo->cajaConcepto->id==25)
-                                     
+                                @if($lns==0) <!--solo una linea en la caja    -->
                                     <input type="checkbox" class="adeudos_tomados" value="{{$adeudo->id}}" />
+                                    @endif
                                 @endif
                                 @endpermission
                                 @permission('cajas.no_inscripcion')
-                                
+                                @if($lns==0) <!--solo una linea en la caja    -->
                                 <input type="checkbox" class="adeudos_tomados" value="{{$adeudo->id}}" />
-                                
+                                @endif
                                 @endpermission
                                 
                                 @endif

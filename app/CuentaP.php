@@ -20,7 +20,7 @@ class CuentaP extends Model
 	}
 
 	//Mass Assignment
-	protected $fillable = ['name', 'clave', 'usu_alta_id', 'usu_mod_id'];
+	protected $fillable = ['name', 'clave','serie','anio', 'usu_alta_id', 'usu_mod_id'];
 
 	public function usu_alta()
 	{

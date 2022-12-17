@@ -2323,6 +2323,7 @@ class ClientesController extends Controller
             'cc.name as concepto',
             'c.fecha as fecha_caja',
             'clientes.bnd_doc_oblig_entregados',
+            'tu.name as turno'
         )
             ->join('seguimientos as s', 's.cliente_id', '=', 'clientes.id')
             ->join('st_seguimientos as sts', 'sts.id', '=', 's.st_seguimiento_id')
@@ -2333,6 +2334,7 @@ class ClientesController extends Controller
             ->join('empleados as emp', 'emp.id', '=', 'clientes.empleado_id')
             ->join('cajas as c', 'c.id', '=', 'a.caja_id')
             ->join('combinacion_clientes as ccli', 'ccli.cliente_id', '=', 'clientes.id')
+            ->join('turnos as tu','tu.id','ccli.turno_id')
             ->join('grados as g', 'g.id', '=', 'ccli.grado_id')
             ->where('a.pagado_bnd', 1)
             ->where('c.st_caja_id', 1)

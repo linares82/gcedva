@@ -147,6 +147,7 @@
             </tbody>
         </table>
 
+        @if(count($tabla)>0)
         <h3>Global plantel adeudos</h3>
 
         <table width="50%">
@@ -217,6 +218,8 @@
                 </tr>
             </tbody>
         </table>
+
+        @endif
         <!--        
         <table>
             <thead>

@@ -1047,6 +1047,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'AddSegmentoMercadoClientesTable' => __DIR__ . '/../..' . '/database/migrations/2018_04_12_143415_add_segmento_mercado_clientes_table.php',
         'AddSeguridadFacturasToPlantelsTable' => __DIR__ . '/../..' . '/database/migrations/2020_09_21_103329_add_seguridad_facturas_to_plantels_table.php',
         'AddSeriaFolioToFacturaGeneralLineasTable' => __DIR__ . '/../..' . '/database/migrations/2022_02_02_134235_add_seria_folio_to_factura_general_lineas_table.php',
+        'AddSerieAnioToCuentaPsTable' => __DIR__ . '/../..' . '/database/migrations/2022_12_16_112115_add_serie_anio_to_cuenta_ps_table.php',
         'AddStEmpresaIdEmpresasTable' => __DIR__ . '/../..' . '/database/migrations/2019_02_01_120531_add_st_empresa_id_empresas_table.php',
         'AddStEmpresaIdIndexEmpresasTable' => __DIR__ . '/../..' . '/database/migrations/2019_02_01_120755_add_st_empresa_id_index_empresas_table.php',
         'AddStInscripcionTable' => __DIR__ . '/../..' . '/database/migrations/2019_05_16_131849_add_st_inscripcion_table.php',

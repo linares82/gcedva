@@ -133,13 +133,21 @@ class CuentaPsController extends Controller
 		$cuentas = CuentaP::all();
 		$meses = Mese::where('id', '<', 13)->get();
 
-		$anio_siguiente=Date('Y')+1;
+		
 
 		foreach ($cuentas as $cuenta) {
+			
+			$anio_siguiente=0;
+			if($cuenta->anio<>""){
+				$anio_siguiente=$cuenta->anio;
+			}else{
+				$anio_siguiente=Date('Y')+1;
+			}
+			
 			$anio_generado = SerieFolioSimplificado::where('anio', $anio_siguiente)->where('cuenta_p_id', $cuenta->id)->get();
 			if ($anio_generado->count() == 0) {
 				$datos['cuenta_p_id'] = $cuenta->id;
-				$datos['serie'] = 'AB';
+				$datos['serie'] = ($cuenta->serie=="" ? 'AB' : $cuenta->serie);
 				$datos['folio_inicial'] = '0';
 				$datos['folio_actual'] = '0';
 				$datos['anio'] = $anio_siguiente;
@@ -151,7 +159,7 @@ class CuentaPsController extends Controller
 				SerieFolioSimplificado::create($datos);
 				foreach ($meses as $mes) {
 					$datos['cuenta_p_id'] = $cuenta->id;
-					$datos['serie'] = 'AB';
+					$datos['serie'] = ($cuenta->serie=="" ? 'AB' : $cuenta->serie);
 					$datos['folio_inicial'] = '0';
 					$datos['folio_actual'] = '0';
 					$datos['anio'] = $anio_siguiente;

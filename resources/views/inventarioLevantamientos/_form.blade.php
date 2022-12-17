@@ -12,6 +12,7 @@
                             <span class="help-block">{{ $errors->first("plantel_inventario_id") }}</span>
                             @endif
                         </div>
+                    @permission('inventarioLevantamientos.cambioEstatus')
                     <div class="form-group col-md-4 @if($errors->has('inventario_levantamiento_st_id')) has-error @endif">
                             <label for="inventario_levantamiento_st_id-field">Estatus</label>
                             {!! Form::select("inventario_levantamiento_st_id", $list['InventarioLevantamientoSt'], null, array("class" => "form-control select_seguridad", "id" => "inventario_levantamiento_st_id-field")) !!}
@@ -19,4 +20,4 @@
                             <span class="help-block">{{ $errors->first("inventario_levantamiento_st_id") }}</span>
                             @endif
                         </div>
-                    
+                    @endpermission
