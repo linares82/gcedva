@@ -147,6 +147,8 @@
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
                             <th>@include('plantillas.getOrderLink', ['column' => 'name', 'title' => 'NOMBRE'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'anio', 'title' => 'Año'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'serie', 'title' => 'serie'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
@@ -156,6 +158,8 @@
                             <tr>
                                 <td><a href="{{ route('cuentaPs.show', $cuentaP->id) }}">{{$cuentaP->id}}</a></td>
                                 <td>{{$cuentaP->name}}</td>
+                                <td>{{$cuentaP->anio}}</td>
+                                <td>{{$cuentaP->serie}}</td>
                                 
                                 <td class="text-right">
                                     @permission('serieFolioSimplificados.index')

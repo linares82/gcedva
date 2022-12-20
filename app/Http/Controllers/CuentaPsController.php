@@ -152,7 +152,7 @@ class CuentaPsController extends Controller
 				$datos['folio_actual'] = '0';
 				$datos['anio'] = $anio_siguiente;
 				$datos['mese_id'] = 13;
-				$datos['bnd_activo'] = '0';
+				$datos['bnd_activo'] = '1';
 				$datos['bnd_fiscal'] = '1';
 				$datos['usu_alta_id'] = '1';
 				$datos['usu_mod_id'] = '1';
@@ -164,7 +164,7 @@ class CuentaPsController extends Controller
 					$datos['folio_actual'] = '0';
 					$datos['anio'] = $anio_siguiente;
 					$datos['mese_id'] = $mes->id;
-					$datos['bnd_activo'] = '0';
+					$datos['bnd_activo'] = '1';
 					$datos['bnd_fiscal'] = '0';
 					$datos['usu_alta_id'] = '1';
 					$datos['usu_mod_id'] = '1';

@@ -70,10 +70,10 @@ class RegistroHistoriaClientesController extends Controller
 			$historiaCliente->aut_director = $r->st_historia_cliente_id;
 			//$historiaCliente->st_historia_cliente_id = 6;
 			$historiaCliente->st_historia_cliente_id = $r->st_historia_cliente_id;
-		}/* elseif ($campo_autorizacion['autorizacion'] == 'aut_caja_corp') {
+		}elseif ($campo_autorizacion['autorizacion'] == 'aut_caja_corp') {
 			$historiaCliente->aut_caja_corp = $r->st_historia_cliente_id;
 			$historiaCliente->st_historia_cliente_id = $r->st_historia_cliente_id;
-		}*/
+		}
 		if($historiaCliente->st_historia_cliente_id==2){
 			$historiaCliente->fec_autorizacion=date('Y-m-d');
 		}
