@@ -2915,26 +2915,30 @@ class ClientesController extends Controller
                 $anioActual == $anioMatricula and
                 $mesActual <= $mesMatricula
             ) {
+                
                 $dentro3Meses = true;
             } elseif (
                 $anioActual == $anioMatricula and
                 $mesActual > $mesMatricula and
                 ($mesActual - $mesMatricula) <= 3
             ) {
+                
                 $dentro3Meses = true;
             } elseif (
                 $anioActual > $anioMatricula and
                 $mesActual < $mesMatricula and $mesActual <= 3 and
                 ($anioActual - $anioMatricula) == 1 and
-                ($mesActual - $mesMatricula) * -1 <= 3
+                ($mesActual - $mesMatricula) * -1 >= 3
             ) {
+                //dd("a_actual:".$anioActual."-a_matricula:".$anioMatricula."-m_actual:".$mesActual."-m_matricula".$mesMatricula);
                 $dentro3Meses = true;
             } elseif (
                 $anioActual > $anioMatricula and
                 $mesActual > $mesMatricula and
                 ($anioActual - $anioMatricula) == 1 and
-                ($mesActual - $mesMatricula) <= 3
+                ($mesActual - $mesMatricula) >= 3
             ) {
+                
                 $dentro3Meses = true;
             }
         } else {

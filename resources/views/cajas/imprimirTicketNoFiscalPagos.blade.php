@@ -75,7 +75,7 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_
     <tr>
         <td colspan="2" >
             @if($caja->st_caja_id==1)
-                Ticket {{$caja->consecutivo}} pagado el {{$caja->fecha}}
+                Ticket {{$caja->consecutivo}} pagado el {{$caja->fecha}}, @foreach($pagos as $pago) {{$pago->csc_simplificado}} @endforeach
             @elseif($caja->st_caja_id==2)
                 Ticket {{$caja->consecutivo}} cancelado el {{$caja->fecha}}
             @else
@@ -282,7 +282,7 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_
     <tr>
         <td colspan="2" >
             @if($caja->st_caja_id==1)
-                Ticket {{$caja->consecutivo}} pagado el {{$caja->fecha}}
+                Ticket {{$caja->consecutivo}} pagado el {{$caja->fecha}}, @foreach($pagos as $pago) {{$pago->csc_simplificado}} @endforeach
             @elseif($caja->st_caja_id==2)
                 Ticket {{$caja->consecutivo}} cancelado el {{$caja->fecha}}
             @else

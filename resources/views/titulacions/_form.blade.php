@@ -211,7 +211,7 @@
                                 <td>{{ $pago->fecha }}</td>
                                 <td>{{ $pago->monto }}</td>
                                 <td>{{ $pago->observaciones }}</td>
-                                <td>{{ $pago->usu_alta->name }}</td>
+                                <td>{{ $pago->usu_alta->name }} / {{$pago->created_at}}</td>
                                 <td>
                                 @permission('titulacions.CRUDIngresos')
                                     <button

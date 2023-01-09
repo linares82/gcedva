@@ -15,14 +15,14 @@ use App\HistoriaCliente;
 use Illuminate\Console\Command;
 use App\valenceSdk\samples\BasicSample\UsoApi;
 
-class AtrazoPagos extends Command
+class AtrazoPagos4Adeudos extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'ian:AtrazoPagos';
+    protected $signature = 'ian:AtrazoPagos4Adeudos';
 
     /**
      * The console command description.
@@ -81,8 +81,7 @@ class AtrazoPagos extends Command
                 ->groupBy('p.razon')
                 ->groupBy('adeudos.cliente_id')
                 ->groupBy('stc.name')
-                ->having('adeudos_cantidad', '>=', 1)
-                ->having('adeudos_cantidad', '<=', 3)
+                ->having('adeudos_cantidad', '>=', 4)
                 ->get();
 
 
@@ -99,8 +98,8 @@ class AtrazoPagos extends Command
                 //dd(count($eventos));
                 if (count($eventos) == 0) {
                     if ($registro->adeudos_cantidad == 1) {
-                        $this->bajaBs($registro->cliente_id);
-                        /*$cliente = Cliente::find($registro->cliente_id);
+                        /*$this->bajaBs($registro->cliente_id);
+                        $cliente = Cliente::find($registro->cliente_id);
                         $cliente->st_cliente_id = 25;
                         $cliente->save();
 
@@ -110,7 +109,7 @@ class AtrazoPagos extends Command
                         */
                     } elseif ($registro->adeudos_cantidad == 2) {
                         //echo $registro->cliente_id . '-';
-                        $this->bajaBs($registro->cliente_id);
+                        /*$this->bajaBs($registro->cliente_id);
                         fputcsv($file, array(
                             'plantel' => $registro->razon,
                             'id_cliente' => $registro->cliente_id,
@@ -127,7 +126,9 @@ class AtrazoPagos extends Command
                         Log::info("seguimiento-" . $seguimiento->id . "-st" . $seguimiento->st_seguimiento_id);
                         $seguimiento->st_seguimiento_id = 2;
                         $seguimiento->save();
-                    } elseif ($registro->adeudos_cantidad == 3) {
+                        */
+                    } elseif ($registro->adeudos_cantidad >= 3) {
+                        /*
                         $this->bajaBs($registro->cliente_id);
                         fputcsv($file, array(
                             'plantel' => $registro->razon,
@@ -153,6 +154,36 @@ class AtrazoPagos extends Command
                         $seguimiento = Seguimiento::where('cliente_id', $cliente->id)->first();
                         $seguimiento->st_seguimiento_id = 6;
                         $seguimiento->save();
+                        */
+                    }
+                    elseif ($registro->adeudos_cantidad >= 4) {
+                        $this->bajaBs($registro->cliente_id);
+                        fputcsv($file, array(
+                            'plantel' => $registro->razon,
+                            'id_cliente' => $registro->cliente_id,
+                            'estatus' => $registro->estatus,
+                            'adeudos_cantidad' => $registro->adeudos_cantidad
+                        ));
+    
+                        $cliente = Cliente::find($registro->cliente_id);
+                        $cliente->st_cliente_id = 27;
+                        $cliente->save();
+    
+                        $adeudos = Adeudo::where('cliente_id', $cliente->cliente_id)
+                                ->where('caja_id', 0)
+                                ->where('pagado_bnd', 0)
+                                ->whereDate('adeudos.fecha_pago', '>', Date('Y-m-d'))
+                                ->get();
+                            //dd($adeudos->toArray());
+                            foreach ($adeudos as $adeudo) {
+                                $adeudo->delete();
+                            }
+    
+                        $seguimiento = Seguimiento::where('cliente_id', $cliente->id)->first();
+                            $seguimiento->st_seguimiento_id = 6;
+                            $seguimiento->save();
+    
+                    
                     }
                 }
             }

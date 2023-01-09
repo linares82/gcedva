@@ -84,7 +84,7 @@ if(!is_null($cliente->plantel->matriz_id) and $cliente->plantel->matriz_id>0){
         <tr>
             <td colspan="2" >
                 @if($caja->st_caja_id==1)
-                    Ticket {{$caja->consecutivo}} pagado el {{$caja->fecha}}
+                    Ticket {{$caja->consecutivo}} pagado el {{$caja->fecha}}, @foreach($pagos as $pago) {{$pago->csc_simplificado}} @endforeach
                 @elseif($caja->st_caja_id==2)
                     Ticket {{$caja->consecutivo}} cancelado el {{$caja->fecha}}
                 @else
@@ -280,7 +280,7 @@ if(!is_null($cliente->plantel->matriz_id) and $cliente->plantel->matriz_id>0){
     <tr>
         <td colspan="2" >
             @if($caja->st_caja_id==1)
-                Ticket {{$caja->consecutivo}} pagado el {{$caja->fecha}}
+                Ticket {{$caja->consecutivo}} pagado el {{$caja->fecha}}, @foreach($pagos as $pago) {{$pago->csc_simplificado}} @endforeach
             @elseif($caja->st_caja_id==2)
                 Ticket {{$caja->consecutivo}} cancelado el {{$caja->fecha}}
             @else

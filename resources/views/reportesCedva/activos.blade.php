@@ -14,7 +14,23 @@
   </head>
   <body>
     <div class="datagrid">
-        
+    <table class="table table-condensed table-striped">
+            <h4>Resumen</h4>
+            <thead>
+              <th>Plantel</th><th>Matricula Total Activa</th><th>Activos Vigentes Sin Adeudo</th>
+              <th>Activos Vigentes Con 1 Adeudo</th><th>BTP</th><th>BA</th>
+              <th>Preinscritos</th>
+            </thead>
+            <tbody>
+              @foreach($resumen as $linea)
+              <tr>
+                <td>{{$linea['razon']}}</td><td>{{$linea['matricula_total_activa']}}</td><td>{{$linea['vigentes_sin_adeudos']}}</td>
+                <td>{{$linea['vigentes_con_1_adeudos']}}</td><td>{{$linea['baja_temporal_por_pago']}}</td><td>{{$linea['baja_administrativa']}}</td>
+                <td>{{$linea['preinscrito']}}</td>
+              </tr>
+              @endforeach
+            </tbody>
+    </table>    
         
         <table class="table table-condensed table-striped">
             <h4>Activos</h4>
