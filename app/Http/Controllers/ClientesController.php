@@ -643,11 +643,7 @@ class ClientesController extends Controller
             $input['bnd_regingreso'] = 1;
         }
 
-        if (isset($input['bnd_doc_oblig_entregados'])) {
-            $input['bnd_doc_oblig_entregados'] = 1;
-        } else {
-            $input['bnd_doc_oblig_entregados'] = 0;
-        }
+       
         //dd($input);
         //update data
         $cliente = $cliente->find($id);
@@ -2207,8 +2203,10 @@ class ClientesController extends Controller
             'clientes.fec_nacimiento',
             'esp.name as especialidad',
             'clientes.curp',
-            'clientes.genero'
+            'clientes.genero',
+            'muni.name as municipio'
         ) //curp, sexo
+            ->join('municipios as muni','muni.id','clientes.municipio_id')
             ->join('especialidads as esp', 'esp.id', '=', 'clientes.especialidad_id')
             ->join('adeudos AS a', 'a.cliente_id', '=', 'clientes.id')
             ->join('seguimientos AS s', 's.cliente_id', '=', 'clientes.id')

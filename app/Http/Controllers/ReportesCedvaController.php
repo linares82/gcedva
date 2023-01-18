@@ -73,7 +73,7 @@ class ReportesCedvaController extends Controller
                 //Filtros que operan
             case 1:
                 //planeados Pendiente de pago
-                if ($pagos == array(0)) {
+                if ($pagos == array(0)) {  
                     $registros = Cliente::select(
                         'p.id as plantel_id',
                         'p.razon',
@@ -148,6 +148,7 @@ class ReportesCedvaController extends Controller
                     //dd($resultado2);
                     //planeados y pagados
                 } elseif ($pagos == array(1)) {
+                    
                     //planeado y pagado, pero sin caja tienen monto 0
                     $pagos0_sin_caja = Cliente::select(
                         'p.id as plantel_id',
@@ -469,7 +470,7 @@ class ReportesCedvaController extends Controller
                     //dd($r->toArray());
 
                     foreach ($r as $registro) {
-
+                        
                         if (count($registro) == 1) {
                             //$resultado2->push($registro);
                             array_push($resultado2, $registro->toArray());
@@ -760,45 +761,129 @@ class ReportesCedvaController extends Controller
                 //dd($linea);
                 array_push($resumen,$linea);
                 */
+                //dd($resultado2);
+                $combinaciones_plantel_seccion=array();
+                foreach($resultado2 as $r){ 
+                    $linea = Arr::only($r[0], ['plantel_id', 'seccion']);
+                    $marcador=0;
+                    foreach($combinaciones_plantel_seccion as $revision){
+                        if($revision['plantel_id']== $linea['plantel_id'] and $revision['seccion']==$linea['seccion']){
+                            $marcador=1;
+                        }
+                    }
+                    if($marcador==0){
+                        array_push($combinaciones_plantel_seccion, $linea);
+                    }
+                    
+                }
+                //dd($combinaciones_plantel_seccion);
 
                 $resumen=array();
-                foreach($datos['plantel_f'] as $plantel){
+                $resumen_dinero=array();
+                
+                foreach($combinaciones_plantel_seccion as $combinacion_plantel_seccion){
                     $linea=array();
+                    
+                    $linea['razon']="";
+                    $linea['seccion']="";
                     $linea['matricula_total_activa']=0;
                     $linea['vigentes_sin_adeudos']=0;
                     $linea['vigentes_con_1_adeudos']=0;
                     $linea['baja_temporal_por_pago']=0;
                     $linea['baja_administrativa']=0;
                     $linea['preinscrito']=0;
+                    $linea['razon']="";
                     $aplantel="";
 
+                    $linea_dinero=array();
+                    $linea_dinero['razon']="";
+                    $linea_dinero['seccion']="";
+                    $linea_dinero['matricula_total_activa']=0;
+                    $linea_dinero['vigentes_sin_adeudos']=0;
+                    $linea_dinero['vigentes_con_1_adeudos']=0;
+                    $linea_dinero['baja_temporal_por_pago']=0;
+                    $linea_dinero['baja_administrativa']=0;
+                    $linea_dinero['preinscrito']=0;
+                    $linea_dinero['razon']="";
+                    //$i=1;
                     foreach($resultado2 as $r){    
                         $registro=$r[0];
                         //dd($registro);
-                        if($registro['plantel_id']==$plantel){
+                        /*if($registro['cliente']==80985 and $combinacion_plantel_seccion['plantel_id']==13 and
+                        $combinacion_plantel_seccion['seccion']=="MGS"){
+                            //dd($combinacion_plantel_seccion);
+                            dd($registro);
+                            //dd($registro['plantel_id']==$combinacion_plantel_seccion['plantel_id'] and
+                            //$registro['seccion']==$combinacion_plantel_seccion['seccion']);
+                            
+                        }*/
+                        if($registro['plantel_id']==$combinacion_plantel_seccion['plantel_id'] and
+                        $registro['seccion']==$combinacion_plantel_seccion['seccion']){
                             $linea['razon']=$registro['razon'];
-                            if($registro['estatus_cliente_id']==4){
+                            $linea['seccion']=$registro['seccion'];
+
+                            $linea_dinero['razon']=$registro['razon'];
+                            $linea_dinero['seccion']=$registro['seccion'];
+                            
+                            if($registro['estatus_cliente_id']==25 or $registro['estatus_cliente_id']==26 or
+                                ($registro['estatus_cliente_id']==4 and $registro['estatus_seguimiento_id']==2) or 
+                               ($registro['estatus_cliente_id']==20 and $registro['estatus_seguimiento_id']==7) or 
+                               ($registro['estatus_cliente_id']==4 and $registro['estatus_seguimiento_id']==9)){
                                 $linea['matricula_total_activa']=$linea['matricula_total_activa']+1;
-                            }elseif($registro['estatus_cliente_id']==25){
-                                $linea['baja_temporal_por_pago']=$linea['baja_temporal_por_pago']+1;
-                            }if($registro['estatus_cliente_id']==26){
-                                $linea['baja_administrativa']=$linea['baja_administrativa']+1;
-                            }if($registro['estatus_cliente_id']==22){
-                                $linea['preinscrito']=$linea['preinscrito']+1;
+                                if($registro['total_caja']==0){
+                                    $linea_dinero['matricula_total_activa']=$linea_dinero['matricula_total_activa']+$registro['monto'];
+                                }else{
+                                    $linea_dinero['matricula_total_activa']=$linea_dinero['matricula_total_activa']+$registro['total_caja'];
+                                }
+                                
+                                /*echo $i."__";
+                                echo $registro['cliente']."--";
+                                echo $registro['seccion'];
+                                $i++;
+                                */
                             }
-                            if($registro['estatus_cliente_id']==4 and $registro['pagado_bnd']==1){
+                            if($registro['estatus_cliente_id']==25){
+                                $linea['baja_temporal_por_pago']=$linea['baja_temporal_por_pago']+1;
+                                $linea_dinero['baja_temporal_por_pago']=$linea_dinero['baja_temporal_por_pago']+$registro['monto'];
+                            }
+                            if($registro['estatus_cliente_id']==26){
+                                $linea['baja_administrativa']=$linea['baja_administrativa']+1;
+                                $linea_dinero['baja_administrativa']=$linea_dinero['baja_administrativa']+$registro['monto'];
+                            }
+                            if($registro['estatus_cliente_id']==22 or $registro['estatus_cliente_id']==5){
+                                $linea['preinscrito']=$linea['preinscrito']+1;
+                                $linea_dinero['preinscrito']=$linea_dinero['preinscrito']+$registro['monto'];
+                            }
+                            if((//$registro['estatus_cliente_id']==25 or $registro['estatus_cliente_id']==26 or 
+                                ($registro['estatus_cliente_id']==4 and $registro['estatus_seguimiento_id']==2) or 
+                            ($registro['estatus_cliente_id']==20 and $registro['estatus_seguimiento_id']==7) or 
+                            ($registro['estatus_cliente_id']==4 and $registro['estatus_seguimiento_id']==9)) and 
+                            $registro['pagado_bnd']==1){
                                 $linea['vigentes_sin_adeudos']=$linea['vigentes_sin_adeudos']+1;
-                            }elseif($registro['estatus_cliente_id']==4 and $registro['pagado_bnd']==0){
+                                $linea_dinero['vigentes_sin_adeudos']=$linea_dinero['vigentes_sin_adeudos']+$registro['total_caja'];
+                            }
+                            if((//$registro['estatus_cliente_id']==25 or $registro['estatus_cliente_id']==26 or
+                                ($registro['estatus_cliente_id']==4 and $registro['estatus_seguimiento_id']==2) or 
+                            ($registro['estatus_cliente_id']==20 and $registro['estatus_seguimiento_id']==7) or 
+                            ($registro['estatus_cliente_id']==4 and $registro['estatus_seguimiento_id']==9)) and 
+                            $registro['pagado_bnd']==0){
                                 $linea['vigentes_con_1_adeudos']=$linea['vigentes_con_1_adeudos']+1;
+                                $linea_dinero['vigentes_con_1_adeudos']=$linea_dinero['vigentes_con_1_adeudos']+$registro['monto'];
                             }
                         }
                         
                     }
-                    array_push($resumen,$linea);
+                    if($linea['matricula_total_activa']>0){
+                        array_push($resumen,$linea);
+                    }
+                    if($linea_dinero['matricula_total_activa']>0){
+                        array_push($resumen_dinero,$linea_dinero);
+                    }
+                    
                 }
                 
                 
-                //dd($linea);
+                //dd($resumen);
                 
 
 
@@ -806,7 +891,7 @@ class ReportesCedvaController extends Controller
 
                 //dd($resultado2);
                 //dd($resumen);
-                return view('reportesCedva.activos', array('registros' => $resultado2, 'plantel' => $plantel, 'datos' => $datos,'resumen'=>$resumen));
+                return view('reportesCedva.activos', array('registros' => $resultado2, 'plantel' => $plantel, 'datos' => $datos,'resumen'=>$resumen,'resumen_dinero'=>$resumen_dinero));
                 break;
             case 2:
                 $hoy = Carbon::createFromFormat('Y-m-d', Date('Y-m-d'));
@@ -1187,6 +1272,8 @@ class ReportesCedvaController extends Controller
                 break;
         }
     }
+
+    
 
 
     public function getMontoPlaneadoCalculado($adeudo, $cliente)

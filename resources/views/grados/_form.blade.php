@@ -78,7 +78,7 @@
                         @endif
                      </div>
                      <div class="form-group col-md-4 @if($errors->has('clave_servicio')) has-error @endif">
-                        <label for="clave_servicio-field">C. Servicio Facturacion</label>
+                        <label for="clave_servicio-field">C. Producto o Servicio(Facturacion)</label>
                         {!! Form::text("clave_servicio", null, array("class" => "form-control input-sm", "id" => "clave_servicio-field")) !!}
                         @if($errors->has("clave_servicio"))
                          <span class="help-block">{{ $errors->first("clave_servicio") }}</span>

@@ -4110,6 +4110,7 @@ class AdeudosController extends Controller
             $suma_estatus = $suma_estatus + $cuenta;
 
             $cuenta = Adeudo::join('clientes as cli', 'cli.id', 'adeudos.cliente_id')
+                ->join('seguimientos as s','s.cliente_id','cli.id')
                 ->join('caja_conceptos as cc', 'cc.id', 'adeudos.caja_concepto_id')
                 ->where('cli.plantel_id', $plantel->id)
                 ->where('cc.name', 'like', '%' . $mes->name . '%')

@@ -29,7 +29,7 @@ class AtrazoPagos4Adeudos extends Command
      *
      * @var string
      */
-    protected $description = 'Revisa retrazo en pagos y cambia estatus de cliente y seguimiento';
+    protected $description = 'Revisa retrazo en pagos, con cuatro adeudos se da de baja el cliente';
 
     /**
      * Create a new command instance.

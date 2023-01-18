@@ -108,10 +108,11 @@
                 $suma_concepto_adeudos=0;
                 $suma_concepto_planeada=0;
                 $concepto="";
+                $cliente="";
                 @endphp
                 @foreach($registros as $registro)
-                
-                @if($concepto<>$registro->concepto and $concepto<>"")
+ 
+                    @if($concepto<>$registro->concepto and $concepto<>"")
                         <tr>
                             <td colspan="8">Totales {{$concepto}}</td>
                             <td>{{number_format($suma_concepto_planeada, 2) }}</td>
@@ -140,11 +141,13 @@
                             <th><strong>Pago</strong></th>
                             <th><strong>Adeudo</strong></th>
                         </thead>
-                        @endif
+                    @endif
+			
+                    @if( $cliente<>$registro->cliente_id)
                         <tr>
                             <td>{{++$i}}</td>
                             <td>{{$registro->razon}}</td>
-                            <td>{{$registro->periodo_escolar}}{{$registro->ciclo_escolar}}</td>
+                            <td>{{$registro->periodo_escolar}} - {{$registro->ciclo_escolar}}</td>
                             <td>{{$registro->cliente_id}}</td>
                             <td>{{$registro->matricula}}</td>
                             <td>{{$registro->seccion}}</td>
@@ -174,8 +177,10 @@
                         $suma_concepto_adeudos=$suma_concepto_adeudos+$registro->monto;
                         }
                         $suma_concepto_planeada=$suma_concepto_planeada+$registro->monto;
+                        $cliente=$registro->cliente_id;
                         @endphp
-                        @endforeach
+                    @endif
+                @endforeach
                         <tr>
                             <td colspan="8">Totales {{$concepto}}</td>
                             <td>{{number_format($suma_concepto_planeada, 2) }}</td>

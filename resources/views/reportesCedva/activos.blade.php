@@ -17,18 +17,78 @@
     <table class="table table-condensed table-striped">
             <h4>Resumen</h4>
             <thead>
-              <th>Plantel</th><th>Matricula Total Activa</th><th>Activos Vigentes Sin Adeudo</th>
+              <th>Plantel</th><th>Seccion</th><th>Activos Vigentes Sin Adeudo</th>
               <th>Activos Vigentes Con 1 Adeudo</th><th>BTP</th><th>BA</th>
-              <th>Preinscritos</th>
+              <th>Suma (Matricula Total Activa)</th><th>Preinscritos</th>
             </thead>
             <tbody>
+              @php
+              $t1=0;
+              $t2=0;
+              $t3=0;
+              $t4=0;
+              $t5=0;
+              $t6=0;
+              @endphp
               @foreach($resumen as $linea)
               <tr>
-                <td>{{$linea['razon']}}</td><td>{{$linea['matricula_total_activa']}}</td><td>{{$linea['vigentes_sin_adeudos']}}</td>
+                <td>{{$linea['razon']}}</td><td>{{$linea['seccion']}}</td><td>{{ $linea['vigentes_sin_adeudos']}}</td>
                 <td>{{$linea['vigentes_con_1_adeudos']}}</td><td>{{$linea['baja_temporal_por_pago']}}</td><td>{{$linea['baja_administrativa']}}</td>
+                <td>{{$linea['matricula_total_activa']}}</td>
                 <td>{{$linea['preinscrito']}}</td>
               </tr>
+              @php
+              $t1=$t1+$linea['vigentes_sin_adeudos'];
+              $t2=$t2+$linea['vigentes_con_1_adeudos'];
+              $t3=$t3+$linea['baja_temporal_por_pago'];
+              $t4=$t4+$linea['baja_administrativa'];
+              $t5=$t5+$linea['matricula_total_activa'];
+              $t6=$t6+$linea['preinscrito'];
+              @endphp
               @endforeach
+              <tr><td>Totales</td><td></td>
+                  <td>{{$t1}}</td><td>{{$t2}}</td><td>{{$t3}}</td>
+                  <td>{{$t4}}</td><td>{{$t5}}</td><td>{{$t6}}</td>
+              </tr>
+            </tbody>
+    </table>    
+
+    <table class="table table-condensed table-striped">
+            <h4>Resumen Monetario</h4>
+            <thead>
+              <th>Plantel</th><th>Seccion</th><th>Activos Vigentes Sin Adeudo</th>
+              <th>Activos Vigentes Con 1 Adeudo</th><th>BTP</th><th>BA</th>
+              <th>Suma (Matricula Total Activa)</th><th>Preinscritos</th>
+            </thead>
+            <tbody>
+              @php
+              $t1=0;
+              $t2=0;
+              $t3=0;
+              $t4=0;
+              $t5=0;
+              $t6=0;
+              @endphp
+              @foreach($resumen_dinero as $linea)
+              <tr>
+                <td>{{$linea['razon']}}</td><td>{{$linea['seccion']}}</td><td align="right">{{number_format($linea['vigentes_sin_adeudos'],2)}}</td>
+                <td align="right">{{number_format($linea['vigentes_con_1_adeudos'],2)}}</td><td align="right">{{number_format($linea['baja_temporal_por_pago'],2)}}</td><td align="right">{{number_format($linea['baja_administrativa'],2)}}</td>
+                <td align="right">{{number_format($linea['matricula_total_activa'],2)}}</td>
+                <td align="right">{{number_format($linea['preinscrito'],2)}}</td>
+              </tr>
+              @php
+              $t1=$t1+$linea['vigentes_sin_adeudos'];
+              $t2=$t2+$linea['vigentes_con_1_adeudos'];
+              $t3=$t3+$linea['baja_temporal_por_pago'];
+              $t4=$t4+$linea['baja_administrativa'];
+              $t5=$t5+$linea['matricula_total_activa'];
+              $t6=$t6+$linea['preinscrito'];
+              @endphp
+              @endforeach
+              <tr><td>Totales</td><td></td>
+                  <td align="right">{{number_format($t1,2)}}</td><td align="right">{{number_format($t2,2)}}</td><td align="right">{{number_format($t3,2)}}</td>
+                  <td align="right">{{number_format($t4,2)}}</td><td align="right">{{number_format($t5,2)}}</td><td align="right">{{number_format($t6,2)}}</td>
+              </tr>
             </tbody>
     </table>    
         
@@ -68,7 +128,7 @@
           @if($plantel<>"" and $ciclo<>"" and $concepto<>"")
               @if($concepto<>$registro[0]['concepto'])
               <tr>
-                <td>Totales Concepto</td><td colspan='11'>
+                <td>Totales Concepto</td><td colspan='12'>
                 </td><td>{{ number_format($planeado_suma,2) }}</td>
                 <td colspan='3'></td>
                 <td>{{ number_format($caja_suma,2) }}</td>
@@ -83,7 +143,7 @@
               @endif
               @if($ciclo<>$registro[0]['ciclo'])
               <tr>
-                <td>Totales Ciclo</td><td colspan='11'>
+                <td>Totales Ciclo</td><td colspan='12'>
                 </td><td>{{ number_format($ciclo_planeado_suma,2) }}</td>
                 <td colspan='3'></td>
                 <td>{{ number_format($ciclo_caja_suma,2) }}</td>
@@ -98,7 +158,7 @@
               @endif
               @if($plantel<>$registro[0]['razon'])
               <tr>
-                <td>Totales Plantel</td><td colspan='11'>
+                <td>Totales Plantel</td><td colspan='12'>
                 </td><td>{{ number_format($plantel_planeado_suma,2) }}</td>
                 <td colspan='3'></td>
                 <td>{{ number_format($plantel_caja_suma,2) }}</td>
@@ -170,21 +230,21 @@
             
         @endphp
         @endforeach
-        <tr><td>Totales Concepto</td><td colspan='11'>
+        <tr><td>Totales Concepto</td><td colspan='12'>
           </td><td>{{ number_format($planeado_suma,2) }}</td>
           <td colspan='3'></td>
           <td>{{ number_format($caja_suma,2) }}</td>
           <td></td>
           <td>{{ number_format($adeudo_suma,2) }}</td>
         </tr>
-        <tr><td>Totales Ciclo</td><td colspan='11'>
+        <tr><td>Totales Ciclo</td><td colspan='12'>
           </td><td>{{ number_format($ciclo_planeado_suma,2) }}</td>
           <td colspan='3'></td>
           <td>{{ number_format($ciclo_caja_suma,2) }}</td>
           <td></td>
           <td>{{ number_format($ciclo_adeudo_suma,2) }}</td>
         </tr>
-        <tr><td>Totales Plantel</td><td colspan='11'>
+        <tr><td>Totales Plantel</td><td colspan='12'>
           </td><td>{{ number_format($plantel_planeado_suma,2) }}</td>
           <td colspan='3'></td>
           <td>{{ number_format($plantel_caja_suma,2) }}</td>
