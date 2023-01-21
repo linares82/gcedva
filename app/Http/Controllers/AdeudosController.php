@@ -3906,6 +3906,7 @@ class AdeudosController extends Controller
             ->whereDate('adeudos.fecha_pago', '>=', $datos['fecha_f'])
             ->whereDate('adeudos.fecha_pago', '<=', $datos['fecha_t'])
             ->whereNull('i.deleted_at')
+            ->whereNull('cli.deleted_at')
             ->orderBy('p.razon')
             ->orderBy('cc.id')
             ->orderBy('cli.ape_paterno')
@@ -3948,6 +3949,7 @@ class AdeudosController extends Controller
             ->where('cc.name', 'like', '%' . $mes->name . '%')
             ->where('adeudos.fecha_pago', $fecha_planeada->toDateString())
             ->whereIn('cli.st_cliente_id', array(4, 20, 22, 25, 26))
+            ->whereNull('cli.deleted_at')
             ->orderBy('stc.id')
             ->get();
 
@@ -4093,6 +4095,7 @@ class AdeudosController extends Controller
                 ->where('cc.name', 'like', '%' . $mes->name . '%')
                 ->whereDate('adeudos.fecha_pago', '=', $fecha_planeada->toDateString())
                 ->where('cli.st_cliente_id', 26)
+                ->whereNull('cli.deleted_at')
                 ->count();
             //dd($cuenta);
             $registro['baja_administrativa'] = $cuenta;
@@ -4104,6 +4107,7 @@ class AdeudosController extends Controller
                 ->where('cc.name', 'like', '%' . $mes->name . '%')
                 ->whereDate('adeudos.fecha_pago', '=', $fecha_planeada->toDateString())
                 ->where('cli.st_cliente_id', 25)
+                ->whereNull('cli.deleted_at')
                 ->count();
             //dd($cuenta);
             $registro['baja_temporal_por_pago'] = $cuenta;
@@ -4114,6 +4118,7 @@ class AdeudosController extends Controller
                 ->join('caja_conceptos as cc', 'cc.id', 'adeudos.caja_concepto_id')
                 ->where('cli.plantel_id', $plantel->id)
                 ->where('cc.name', 'like', '%' . $mes->name . '%')
+                ->whereNull('cli.deleted_at')
                 ->whereDate('adeudos.fecha_pago', '=', $fecha_planeada->toDateString())
                 ->whereIn('cli.st_cliente_id', array(4, 20, 22))
                 ->count();
@@ -4127,6 +4132,7 @@ class AdeudosController extends Controller
                 ->join('caja_conceptos as cc', 'cc.id', 'adeudos.caja_concepto_id')
                 ->where('cli.plantel_id', $plantel->id)
                 ->where('cc.name', 'like', '%' . $mes->name . '%')
+                ->whereNull('cli.deleted_at')
                 ->whereDate('adeudos.fecha_pago', '=', $fecha_planeada->toDateString())
                 ->where('cli.st_cliente_id', 22)
                 ->count();
@@ -4139,6 +4145,7 @@ class AdeudosController extends Controller
                 ->where('cc.name', 'like', '%' . $mes->name . '%')
                 ->whereDate('adeudos.fecha_pago', $fecha_planeada->toDateString())
                 ->where('adeudos.pagado_bnd', 1)
+                ->whereNull('cli.deleted_at')
                 ->whereIn('cli.st_cliente_id', array(4, 20, 22, 25, 26))
                 ->count();
             $registro['cuenta_pagados'] = $cuenta_pagados;
@@ -4149,6 +4156,7 @@ class AdeudosController extends Controller
                 ->where('cc.name', 'like', '%' . $mes->name . '%')
                 ->whereDate('adeudos.fecha_pago', $fecha_planeada->toDateString())
                 ->where('adeudos.pagado_bnd', '<>', 1)
+                ->whereNull('cli.deleted_at')
                 ->whereIn('cli.st_cliente_id', array(4, 20, 22, 25, 26))
                 ->count();
             $registro['cuenta_no_pagados'] = $cuenta_no_pagados;

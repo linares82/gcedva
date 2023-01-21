@@ -150,6 +150,7 @@ class ReportesCedvaController extends Controller
                 } elseif ($pagos == array(1)) {
                     
                     //planeado y pagado, pero sin caja tienen monto 0
+                    /*
                     $pagos0_sin_caja = Cliente::select(
                         'p.id as plantel_id',
                         'p.razon',
@@ -221,10 +222,11 @@ class ReportesCedvaController extends Controller
                         ->orderBy('clientes.nombre')
                         ->orderBy('clientes.nombre')
                         ->get();
+                        
                     //dd($pagos0_sin_caja->toArray());
                     foreach ($pagos0_sin_caja->toArray() as $registro) {
                         array_push($resultado2, array($registro));
-                    }
+                    }*/
 
                     //$pagos no planeados con caja
                     $pagos_no_planeados = Cliente::select(
@@ -274,7 +276,8 @@ class ReportesCedvaController extends Controller
                         ->join('turnos as tur','tur.id','ccli.turno_id')
                         ->join('grados as g', 'g.id', '=', 'ccli.grado_id')
                         ->join('pagos as pag', 'pag.caja_id', 'caj.id')
-                        //->whereNull('pag.deleted_at)
+                        ->whereNull('pag.deleted_at')
+                        ->whereNull('cln.deleted_at')
                         ->where('ccli.especialidad_id', '>', 0)
                         ->where('ccli.nivel_id', '>', 0)
                         ->where('ccli.grado_id', '>', 0)
@@ -347,7 +350,7 @@ class ReportesCedvaController extends Controller
                         ->join('turnos as tur','tur.id','ccli.turno_id')
                         ->join('grados as g', 'g.id', '=', 'ccli.grado_id')
                         ->join('pagos as pag', 'pag.caja_id', 'caj.id')
-                        //->whereNull('pag.deleted_at)
+                        ->whereNull('pag.deleted_at')
                         ->where('ccli.especialidad_id', '>', 0)
                         ->where('ccli.nivel_id', '>', 0)
                         ->where('ccli.grado_id', '>', 0)
@@ -441,7 +444,7 @@ class ReportesCedvaController extends Controller
                         ->join('turnos as tur','tur.id','ccli.turno_id')
                         ->join('grados as g', 'g.id', '=', 'ccli.grado_id')
                         ->join('pagos as pag', 'pag.caja_id', 'caj.id')
-                        //->whereNull('pag.deleted_at)
+                        ->whereNull('pag.deleted_at')
                         ->where('ccli.especialidad_id', '>', 0)
                         ->where('ccli.nivel_id', '>', 0)
                         ->where('ccli.grado_id', '>', 0)
@@ -538,7 +541,8 @@ class ReportesCedvaController extends Controller
                         ->join('turnos as tur','tur.id','ccli.turno_id')
                         ->join('grados as g', 'g.id', '=', 'ccli.grado_id')
                         ->join('pagos as pag', 'pag.caja_id', 'caj.id')
-                        //->whereNull('pag.deleted_at)
+                        ->whereNull('pag.deleted_at')
+                        ->whereNull('cln.deleted_at')
                         ->where('ccli.especialidad_id', '>', 0)
                         ->where('ccli.nivel_id', '>', 0)
                         ->where('ccli.grado_id', '>', 0)
@@ -570,6 +574,7 @@ class ReportesCedvaController extends Controller
                     
 
                     //registro sin caja, adeudo pagado y monto 0
+                    /*
                     $pagos0_sin_caja = Cliente::select(
                         'p.id as plantel_id',
                         'p.razon',
@@ -646,6 +651,7 @@ class ReportesCedvaController extends Controller
                     foreach ($pagos0_sin_caja->toArray() as $registro) {
                         array_push($resultado2, array($registro));
                     }
+                    */
 
                     $registros_pendientes = Cliente::select(
                         'p.id as plantel_id',

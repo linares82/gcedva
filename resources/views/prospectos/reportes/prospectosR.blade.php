@@ -37,7 +37,7 @@
                     <th>F. Alta</th><th>Nombre(s)</th><th>A. Paterno</th><th>A. Materno</th>
                     <th>Teléfono</th><th>Celular</th><th>Mail</th><th>Plantel</th><th>Especialidad</th>
                     <th>Nivel</th><th>Medio</th><th>Usuario Alta</th><th>Usuario U. Modificación</th>
-                    <th>Estatus</th><th>Cliente Id</th><th>Inscripcion</th>
+                    <th>Estatus Prospecto</th><th>Estatus Seguimiento</th><th>Cliente Id</th><th>Inscripcion</th>
             </thead>
             <tbody>
             @foreach ($registros as $registro)
@@ -48,7 +48,9 @@
                 <td>{{ $registro->plantel->razon }}</td><td>{{ $registro->especialidad->name }}</td>
                 <td>{{ $registro->nivel->name }}</td>
                 <td>{{ $registro->medio->name }}</td><td>{{ $registro->usu_alta->name }}</td><td>{{ $registro->usu_mod->name }}</td>
-                <td>{{ $registro->stProspecto->name }}</td><td>{{ $registro->cliente_id }}</td>
+                <td>{{ $registro->stProspecto->name }}</td>
+                <td>{{ $registro->prospectoSeguimiento->prospectoStSeg->name }}</td>
+                <td>{{ $registro->cliente_id }}</td>
                 @permission('prospectos.inscripcion_campo')
                 <td>
                   @if($registro->bnd_inscripcion==1)

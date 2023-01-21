@@ -5,6 +5,7 @@ use Auth;
 
 use App\Medio;
 use App\Cliente;
+use App\Plantel;
 use App\Empleado;
 use App\Prospecto;
 use Carbon\Carbon;
@@ -15,6 +16,7 @@ use App\Http\Requests;
 use App\ProspectoAviso;
 use App\ProspectoStSeg;
 use App\ProspectoHEstatuse;
+use App\ProspectoHactividad;
 use Illuminate\Http\Request;
 use App\ProspectoSeguimiento;
 use Illuminate\Support\Facades\DB;
@@ -553,6 +555,246 @@ class ProspectosController extends Controller {
 		}
 		return view('prospectos.reportes.creadosAyerHoy', compact('resumen'))
 		->with( 'list', Prospecto::getListFromAllRelationApps() );
+	}
+
+	public function resumenProspectosTareasAvisos(){
+		$empleado=Empleado::where('user_id',Auth::user()->id)->first();
+		$planteles_validos=$empleado->plantels->pluck('id');
+		$planteles=Plantel::whereIn('id', $planteles_validos)->pluck('razon','id');
+		
+		return view('prospectos.reportes.ResumenProspectosTareasAvisos', compact('planteles'));
+	}
+
+	public function resumenProspectosTareasAvisosR(Request $request){
+		$datos=$request->all();
+		//dd($datos);
+		$resumen=array();
+		$hoy=Carbon::createFromFormat('Y-m-d',$datos['fecha_f'])->toDateString();
+		$ayer=Carbon::createFromFormat('Y-m-d',$datos['fecha_f'])->subDay()->toDateString();
+		$plantel_usuarios=ProspectoHactividad::select('p.plantel_id','plantels.razon','prospecto_hactividads.usu_alta_id','u.name as user')
+		->join('prospectos as p','p.id','prospecto_hactividads.prospecto_id')
+		->join('plantels','plantels.id','p.plantel_id')
+		->join('users as u','u.id','prospecto_hactividads.usu_alta_id')
+		->whereIn('p.plantel_id', $datos['plantel_f'])
+		->whereDate('prospecto_hactividads.created_at','>=', $ayer)
+		->whereDate('prospecto_hactividads.created_at', '<=',$hoy)
+		->distinct()
+		->get();
+		//dd($plantel_usuarios->toArray());
+
+		foreach($plantel_usuarios as $plantel_usuario){
+			$linea=array();
+			$linea['plantel']=$plantel_usuario->razon;
+			$linea['usuario']=$plantel_usuario->user;
+			$linea['plantel_id']=$plantel_usuario->plantel_id;
+			$linea['user_id']=$plantel_usuario->usu_alta_id;
+			$linea['hoy']=$hoy;
+			$linea['ayer']=$ayer;
+			$linea['clientes_concretados']=Cliente::select(DB::raw('count(distinct(clientes.id)) as total'))
+			->join('seguimientos as s','s.cliente_id','clientes.id')
+			->join('h_estatuses as h', 'h.seguimiento_id','s.id')
+			->where('h.tabla','seguimientos')
+			->where('h.estatus_id',2)
+			->where('clientes.plantel_id',$plantel_usuario->plantel_id)
+			->where('h.usu_alta_id',$plantel_usuario->usu_alta_id)
+			->whereDate('h.fecha',$ayer)
+			->value('total');
+
+			
+			$linea['prospectos_convertidos']=Prospecto::select(DB::raw('count(distinct(prospectos.id)) as total'))
+			->join('prospecto_seguimientos as s','s.prospecto_id','prospectos.id')
+			->join('prospecto_h_estatuses as h', 'h.prospecto_seguimiento_id','s.id')
+			->where('h.tabla','seguimientos')
+			->where('h.estatus_id',5)
+			->where('prospectos.plantel_id',$plantel_usuario->plantel_id)
+			->where('h.usu_alta_id',$plantel_usuario->usu_alta_id)
+			->whereDate('h.fecha',$ayer)
+			->whereNull('prospectos.deleted_at')
+			->value('total');
+			
+			
+
+			$linea['prospectos_creados']=Prospecto::whereDate('created_at',$ayer)
+			->where('prospectos.plantel_id',$plantel_usuario->plantel_id)
+			->where('prospectos.usu_alta_id',$plantel_usuario->usu_alta_id)
+			->whereNull('prospectos.deleted_at')
+			->count();
+
+			
+
+			$linea['prospectos_tocados']=Prospecto::select(DB::raw('count(distinct(prospectos.id)) as total'))
+			->join('prospecto_seguimientos as s','s.prospecto_id','prospectos.id')
+			->join('prospecto_hactividads as h', 'h.prospecto_seguimiento_id','s.id')
+			->whereDate('h.fecha',$ayer)
+			->where('prospectos.plantel_id',$plantel_usuario->plantel_id)
+			->where('h.usu_alta_id',$plantel_usuario->usu_alta_id)
+			->whereNull('prospectos.deleted_at')
+			->value('total');
+
+			$linea['avisos_creados']=ProspectoSeguimiento::join('prospecto_avisos as pa','pa.prospecto_seguimiento_id','prospecto_seguimientos.id')
+			->join('prospectos as p','p.id','prospecto_seguimientos.prospecto_id')
+			->whereDate('pa.created_at',$ayer)
+			->where('p.plantel_id',$plantel_usuario->plantel_id)
+			->where('pa.usu_alta_id',$plantel_usuario->usu_alta_id)
+			->whereNull('p.deleted_at')
+			->count();
+
+			$linea['avisos_cerrados']=ProspectoSeguimiento::join('prospecto_avisos as pa','pa.prospecto_seguimiento_id','prospecto_seguimientos.id')
+			->join('prospectos as p','p.id','prospecto_seguimientos.prospecto_id')
+			->whereDate('pa.updated_at',$ayer)
+			->where('pa.activo',0)
+			->where('p.plantel_id',$plantel_usuario->plantel_id)
+			->where('pa.usu_alta_id',$plantel_usuario->usu_alta_id)
+			->whereNull('p.deleted_at')
+			->count();
+
+			$linea['tarea_informe_presencial']=Prospecto::join('prospecto_asignacion_tareas as pat','pat.prospecto_id','prospectos.id')
+			->whereDate('pat.created_at',$ayer)
+			->where('pat.prospecto_tarea_id',4)
+			->where('prospectos.plantel_id',$plantel_usuario->plantel_id)
+			->where('pat.usu_alta_id',$plantel_usuario->usu_alta_id)
+			->whereNull('prospectos.deleted_at')
+			->count();
+
+			$linea['tarea_informe_telefonico']=Prospecto::join('prospecto_asignacion_tareas as pat','pat.prospecto_id','prospectos.id')
+			->whereDate('pat.created_at',$ayer)
+			->where('pat.prospecto_tarea_id',8)
+			->where('prospectos.plantel_id',$plantel_usuario->plantel_id)
+			->where('pat.usu_alta_id',$plantel_usuario->usu_alta_id)
+			->whereNull('prospectos.deleted_at')
+			->count();
+
+			$linea['tarea_cita_plantel']=Prospecto::join('prospecto_asignacion_tareas as pat','pat.prospecto_id','prospectos.id')
+			->whereDate('pat.created_at',$ayer)
+			->where('pat.prospecto_tarea_id',3)
+			->where('prospectos.plantel_id',$plantel_usuario->plantel_id)
+			->where('pat.usu_alta_id',$plantel_usuario->usu_alta_id)
+			->whereNull('prospectos.deleted_at')
+			->count();
+
+			$linea['base_total']=Prospecto::join('prospecto_seguimientos as s','s.prospecto_id','prospectos.id')
+			->join('prospecto_h_estatuses as h', 'h.prospecto_seguimiento_id','s.id')
+			->where('h.tabla','seguimientos')
+			->whereIn('h.estatus_id',array(2,3,4))
+			//->whereDate('h.fecha',$hoy)
+			->where('prospectos.plantel_id',$plantel_usuario->plantel_id)
+			->where('h.usu_alta_id',$plantel_usuario->usu_alta_id)
+			->whereNull('prospectos.deleted_at')
+			->count();
+
+			array_push($resumen, $linea);
+
+		}
+		
+		return view('prospectos.reportes.resumenProspectosTareasAvisosR', compact('resumen','datos'));
+	}
+
+	public function detalleProspectosTareasAvisosR(Request $request){
+		$datos=$request->all();
+		
+		$clientes=Cliente::select(DB::raw('p.razon, clientes.id, h.fecha, h.estatus, u.name as usu_alta'))
+			->join('seguimientos as s','s.cliente_id','clientes.id')
+			->join('h_estatuses as h', 'h.seguimiento_id','s.id')
+			->join('plantels as p','p.id','clientes.plantel_id')
+			->join('users as u','u.id','h.usu_alta_id')
+			->where('h.tabla','seguimientos')
+			->where('h.estatus_id',2)
+			->where('clientes.plantel_id',$datos['plantel'])
+			->where('h.usu_alta_id',$datos['user'])
+			->whereDate('h.fecha',$datos['ayer'])
+			->get();
+
+			$prospectos_convertidos=Prospecto::select('p.razon', 'prospectos.id','h.estatus','prospectos.cliente_id', 'u.name')
+			->join('prospecto_seguimientos as s','s.prospecto_id','prospectos.id')
+			->join('prospecto_h_estatuses as h', 'h.prospecto_seguimiento_id','s.id')
+			->join('plantels as p','p.id','prospectos.plantel_id')
+			->join('users as u','u.id','h.usu_alta_id')
+			->where('h.tabla','seguimientos')
+			->where('h.estatus_id',5)
+			->where('prospectos.plantel_id',$datos['plantel'])
+			->where('h.usu_alta_id',$datos['user'])
+			->whereDate('h.fecha',$datos['ayer'])
+			->whereNull('prospectos.deleted_at')
+			->get();
+
+			$prospectos_creados=Prospecto::select('pla.razon','prospectos.id','prospectos.created_at','u.name as usu_alta')
+			->join('plantels as pla','pla.id','prospectos.plantel_id')
+			->join('users as u','u.id','prospectos.usu_alta_id')
+			->whereDate('prospectos.created_at',$datos['ayer'])
+			->where('prospectos.plantel_id',$datos['plantel'])
+			->where('prospectos.usu_alta_id',$datos['user'])
+			->whereNull('prospectos.deleted_at')
+			->get();
+
+			$prospectos_tocados=Prospecto::select('pla.razon','prospectos.id','h.tarea','h.asunto','h.detalle','h.created_at','u.name as usu_alta')
+			->join('prospecto_seguimientos as s','s.prospecto_id','prospectos.id')
+			->join('prospecto_hactividads as h', 'h.prospecto_seguimiento_id','s.id')
+			->join('plantels as pla','pla.id','prospectos.plantel_id')
+			->join('users as u','u.id','h.usu_alta_id')
+			->whereDate('h.fecha',$datos['ayer'])
+			->where('prospectos.plantel_id',$datos['plantel'])
+			->where('h.usu_alta_id',$datos['user'])
+			->whereNull('prospectos.deleted_at')
+			->get();
+
+			$avisos_creados=ProspectoSeguimiento::select('pla.razon','p.id','pa.detalle as detalle','pa.created_at','u.name','pa.activo')
+			->join('prospecto_avisos as pa','pa.prospecto_seguimiento_id','prospecto_seguimientos.id')
+			->join('prospectos as p','p.id','prospecto_seguimientos.prospecto_id')
+			->join('plantels as pla','pla.id','p.plantel_id')
+			->join('prospecto_asuntos as proa','proa.id','pa.prospecto_asunto_id')
+			->join('users as u','u.id','pa.usu_alta_id')
+			->where('p.plantel_id',$datos['plantel'])
+			->where('pa.usu_alta_id',$datos['user'])
+			->whereDate('pa.created_at',$datos['ayer'])
+			->whereNull('p.deleted_at')
+			->get();
+
+			$avisos_cerrados=ProspectoSeguimiento::select('pla.razon','p.id','pa.detalle as detalle','pa.created_at','u.name','pa.activo')
+			->join('prospecto_avisos as pa','pa.prospecto_seguimiento_id','prospecto_seguimientos.id')
+			->join('prospectos as p','p.id','prospecto_seguimientos.prospecto_id')
+			->join('plantels as pla','pla.id','p.plantel_id')
+			->join('prospecto_asuntos as proa','proa.id','pa.prospecto_asunto_id')
+			->join('users as u','u.id','pa.usu_alta_id')
+			->whereDate('pa.updated_at',$datos['ayer'])
+			->where('pa.activo',0)
+			->where('p.plantel_id',$datos['plantel'])
+			->where('pa.usu_alta_id',$datos['user'])
+			->whereNull('p.deleted_at')
+			->get();
+
+			$tareas=Prospecto::select('pla.razon','prospectos.id', 'pt.name as prospecto_tarea',
+			'pat.created_at','u.name as usu_alta')
+			->join('prospecto_asignacion_tareas as pat','pat.prospecto_id','prospectos.id')
+			->join('plantels as pla','pla.id','prospectos.plantel_id')
+			->join('prospecto_tareas as pt','pt.id','pat.prospecto_tarea_id')
+			->join('users as u','u.id','pat.usu_alta_id')
+			->whereDate('pat.created_at',$datos['ayer'])
+			->whereIn('pat.prospecto_tarea_id',array(3,4,8))
+			->where('prospectos.plantel_id',$datos['plantel'])
+			->where('pat.usu_alta_id',$datos['user'])
+			->whereNull('prospectos.deleted_at')
+			->orderBy('pat.prospecto_tarea_id')
+			->get();
+
+			$base_total=Prospecto::select('pla.razon','prospectos.id','h.estatus', 
+			'h.created_at','u.name as usu_alta')
+			->join('prospecto_seguimientos as s','s.prospecto_id','prospectos.id')
+			->join('prospecto_h_estatuses as h', 'h.prospecto_seguimiento_id','s.id')
+			->join('plantels as pla','pla.id','prospectos.plantel_id')
+			->join('users as u','u.id','h.usu_alta_id')
+			->join('prospecto_st_segs as psts','psts.id','s.prospecto_st_seg_id')
+			->where('h.tabla','seguimientos')
+			->whereIn('h.estatus_id',array(2,3,4))
+			//->whereDate('h.fecha',$datos['hoy'])
+			->where('prospectos.plantel_id',$datos['plantel'])
+			->where('h.usu_alta_id',$datos['user'])
+			->whereNull('prospectos.deleted_at')
+			->get();
+
+			//dd($prospectos_convertidos);
+		return view('prospectos.reportes.detalleProspectosTareasAvisosR', 
+		compact('clientes','prospectos_convertidos','avisos_creados', 'prospectos_creados',
+		'prospectos_tocados','avisos_cerrados','tareas','base_total'));
 	}
 }
 

@@ -333,7 +333,7 @@
                             @endif
                         </div>
                         <div class="form-group col-md-4 @if($errors->has('grado_id')) has-error @endif">
-                            <label for="grado_id-field">Grado</label>
+                            <label for="grado_id-field">Grado </label>
                             {!! Form::select("grado_id", $list["Grado"], null, array("class" => "form-control select_seguridad", "id" => "grado_id-field")) !!}
                             <div id='loading12' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                             @if($errors->has("grado_id"))
@@ -2492,6 +2492,7 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                         //var $example = $("#especialidad_id-field").select2();
                         //alert($('#especialidad_id-field option:selected').val());
                         var a = $('#frm_cliente').serialize();
+                        $("#grado_id-field option[value=0]").attr('selected', 'selected');
                         $.ajax({
                         url: '{{ route("nivels.getCmbNivels") }}',
                                 type: 'GET',
@@ -2513,7 +2514,7 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                                 //alert(data[i].name);
                                 $('#nivel_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
                                 });
-                                //$example.select2();
+                                //$('#nivel_id-field').trigger('change');
                                 }
                         });
                         }
@@ -2594,7 +2595,7 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                                 //alert(data[i].name);
                                 $('#grado_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
                                 });
-                                //$example.select2();
+                                //$('#grado_id-field').trigger('change');
                                 }
                         });
                         }

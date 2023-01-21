@@ -461,6 +461,7 @@ class ClientesController extends Controller
             ->where('plantel_id', $cliente->plantel_id)
             ->pluck('name', 'id');
         $plantels = Plantel::where('st_plantel_id', 1)->pluck('razon', 'id');
+        
         return view('clientes.edit', compact(
             'cliente',
             'materias',

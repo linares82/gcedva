@@ -62,6 +62,14 @@ class HistoriaClientesController extends Controller
 			->whereNull('deleted_at')
 			->get();
 		//dd($bajas_existentes);
+		$hoy=Carbon::createFromFormat('Y-m-d',Date('Y-m-d'))->day;
+		$dias_habiles_aux=Param::where('llave','dias_para_bajas')->value('valor');
+		$dias_habiles=explode(',',$dias_habiles_aux);
+		if(in_array($hoy,$dias_habiles)){
+			$eventos=EventoCliente::pluck('name','id');
+		}else{
+			$eventos=EventoCliente::where('id','<>', 2)->pluck('name','id');
+		}
 
 		$inscripcions = Inscripcion::select(DB::raw('inscripcions.id, concat(p.razon," / ",e.name," / ",n.name," / ",g.name," / ",gru.name," / ",l.name," / ",pe.name) as inscripcion'))
 			->join('plantels as p', 'p.id', '=', 'inscripcions.plantel_id')
@@ -76,7 +84,7 @@ class HistoriaClientesController extends Controller
 			->whereNull('inscripcions.deleted_at')
 			->pluck('inscripcion', 'id');
 		//dd($inscripcions);
-		return view('historiaClientes.create', compact('cliente', 'inscripcions', 'bajas_existentes'))
+		return view('historiaClientes.create', compact('cliente', 'inscripcions', 'bajas_existentes','eventos'))
 			->with('list', HistoriaCliente::getListFromAllRelationApps());
 	}
 
@@ -192,6 +200,7 @@ class HistoriaClientesController extends Controller
 	{
 		$historiaCliente = $historiaCliente->find($id);
 		$cliente = $historiaCliente->cliente_id;
+		$eventos=EventoCliente::pluck('name','id');
 		$inscripcions = Inscripcion::select(DB::raw('inscripcions.id, concat(p.razon," / ",e.name," / ",n.name," / ",g.name," / ",gru.name," / ",l.name," / ",pe.name) as inscripcion'))
 			->join('plantels as p', 'p.id', '=', 'inscripcions.plantel_id')
 			->join('especialidads as e', 'e.id', '=', 'inscripcions.especialidad_id')
@@ -204,7 +213,7 @@ class HistoriaClientesController extends Controller
 			->whereNull('inscripcions.deleted_at')
 			->pluck('inscripcion', 'id');
 
-		return view('historiaClientes.edit', compact('historiaCliente', 'cliente', 'inscripcions'))
+		return view('historiaClientes.edit', compact('historiaCliente', 'cliente', 'inscripcions', 'eventos'))
 			->with('list', HistoriaCliente::getListFromAllRelationApps());
 	}
 
