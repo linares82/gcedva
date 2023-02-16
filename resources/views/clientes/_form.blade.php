@@ -2248,10 +2248,15 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                         
                         //combos dependientes
                         getCmbEspecialidad();
+                        
                         getCmbEspecialidad2();
+                        
                         getCmbNivel();
+                        
                         getCmbGrado();
+                        
                         getCmbTurno();
+                        
                         $('#plantel_id-field').change(function(){
                         getCmbEspecialidad();
                         });
@@ -2491,8 +2496,8 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                         function getCmbNivel(){
                         //var $example = $("#especialidad_id-field").select2();
                         //alert($('#especialidad_id-field option:selected').val());
-                        var a = $('#frm_cliente').serialize();
-                        $("#grado_id-field option[value=0]").attr('selected', 'selected');
+                        
+                        //$("#grado_id-field option[value=0]").attr('selected', 'selected');
                         $.ajax({
                         url: '{{ route("nivels.getCmbNivels") }}',
                                 type: 'GET',
@@ -2514,7 +2519,7 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                                 //alert(data[i].name);
                                 $('#nivel_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
                                 });
-                                //$('#nivel_id-field').trigger('change');
+                                $('#nivel_id-field').trigger('change');
                                 }
                         });
                         }
@@ -2595,7 +2600,7 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                                 //alert(data[i].name);
                                 $('#grado_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
                                 });
-                                //$('#grado_id-field').trigger('change');
+                                $('#grado_id-field').trigger('change');
                                 }
                         });
                         }
@@ -2674,7 +2679,7 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                                 //alert(data[i].name);
                                 $('#turno_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
                                 });
-                                //$example.select2();
+                                $('#turno_id-field').trigger('change');
                                 }
                         });
                         }

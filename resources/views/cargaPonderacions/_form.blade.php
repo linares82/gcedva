@@ -34,6 +34,13 @@
                             <span class="help-block">{{ $errors->first("tiene_detalle") }}</span>
                             @endif
                         </div>
+                  <div class="form-group col-md-4 @if($errors->has('bnd_excepcion_calificacion_prohibida')) has-error @endif">
+                     <label for="bnd_excepcion_calificacion_prohibida-field">Excepcion Calificacion Prohibida</label>
+                     {!! Form::checkbox("bnd_excepcion_calificacion_prohibida", 1, null, [ "id" => "bnd_excepcion_calificacion_prohibida-field", 'class'=>'minimal']) !!}
+                     @if($errors->has("bnd_excepcion_calificacion_prohibida"))
+                     <span class="help-block">{{ $errors->first("bnd_excepcion_calificacion_prohibida") }}</span>
+                     @endif
+                 </div>
                     <div class="form-group col-md-4 @if($errors->has('padre_id')) has-error @endif">
                          <label for="padre_id-field">Padre</label>
                          {!! Form::select("padre_id", $padre, null, array("class" => "form-control select_seguridad", "id" => "padre_id-field")) !!}

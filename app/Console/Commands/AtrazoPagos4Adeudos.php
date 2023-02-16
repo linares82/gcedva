@@ -51,18 +51,19 @@ class AtrazoPagos4Adeudos extends Command
         //dd(storage_path('app/public/atrazoPagos'));
 
         $fechaActual = Carbon::createFromFormat('Y-m-d', Date('Y-m-d'));
-        if ($fechaActual->day == 11 or $fechaActual->day == 12 or $fechaActual->day == 13) {
+        if ($fechaActual->day == 1 or $fechaActual->day == 2 or $fechaActual->day == 3) {
             $ruta = storage_path('app/public/atrazoPagos/');
             $archivo = date('dmY') . "_" . date('Hsi') . ".csv";
             $file = fopen($ruta . $archivo, 'w');
             $columns = array('plantel', 'id_cliente', 'estatus', 'total_adeudos');
             fputcsv($file, $columns);
-            $registros = Adeudo::select(DB::raw('p.razon,adeudos.cliente_id,stc.name as estatus, count(adeudos.cliente_id) as adeudos_cantidad'))
+            $registros = Adeudo::select(DB::raw('p.razon,adeudos.cliente_id, stc.id ,stc.name as estatus, count(adeudos.cliente_id) as adeudos_cantidad'))
                 ->join('clientes as c', 'c.id', '=', 'adeudos.cliente_id')
                 ->join('combinacion_clientes as cc', 'cc.cliente_id', '=', 'c.id')
                 ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
                 ->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
                 ->join('caja_conceptos as caj_con', 'caj_con.id', '=', 'adeudos.caja_concepto_id')
+                ->where('c.id', '>', 0)
                 ->where('cc.plantel_id', '>', 0)
                 ->where('cc.especialidad_id', '>', 0)
                 ->where('cc.nivel_id', '>', 0)
@@ -73,13 +74,14 @@ class AtrazoPagos4Adeudos extends Command
                 ->where('caj_con.bnd_mensualidad', 1)
                 ->where('fecha_pago', '<', $fechaActual)
                 ->where('pagado_bnd', 0)
-                ->whereNotIn('c.plantel_id', array(54))
+                ->whereNotIn('c.plantel_id', array(54,48,26,19))
                 ->whereNull('cc.deleted_at')
                 ->whereNull('c.deleted_at')
                 //->where('c.st_cliente_id', '<>', 25)
-                ->where('c.st_cliente_id', '<>', 3)
+                ->where('c.st_cliente_id', 26)
                 ->groupBy('p.razon')
                 ->groupBy('adeudos.cliente_id')
+                ->groupBy('stc.id')
                 ->groupBy('stc.name')
                 ->having('adeudos_cantidad', '>=', 4)
                 ->get();
@@ -90,73 +92,9 @@ class AtrazoPagos4Adeudos extends Command
             foreach ($registros as $registro) {
                 $hoy = date('Y-m-d');
 
-                $eventos = HistoriaCliente::where('cliente_id', $registro->cliente_id)
-                    ->where('evento_cliente_id', 5)
-                    ->whereDate('fec_vigencia', '>=', $hoy)
-                    ->whereNull('historia_clientes.deleted_at')
-                    ->get();
                 //dd(count($eventos));
-                if (count($eventos) == 0) {
-                    if ($registro->adeudos_cantidad == 1) {
-                        /*$this->bajaBs($registro->cliente_id);
-                        $cliente = Cliente::find($registro->cliente_id);
-                        $cliente->st_cliente_id = 25;
-                        $cliente->save();
-
-                        $seguimiento = Seguimiento::where('cliente_id', $cliente->id)->first();
-                        $seguimiento->st_seguimiento_id = 2;
-                        $seguimiento->save();
-                        */
-                    } elseif ($registro->adeudos_cantidad == 2) {
-                        //echo $registro->cliente_id . '-';
-                        /*$this->bajaBs($registro->cliente_id);
-                        fputcsv($file, array(
-                            'plantel' => $registro->razon,
-                            'id_cliente' => $registro->cliente_id,
-                            'estatus' => $registro->estatus,
-                            'adeudos_cantidad' => $registro->adeudos_cantidad
-                        ));
-
-                        $cliente = Cliente::find($registro->cliente_id);
-                        Log::info("cliente-" . $cliente->id . "-st" . $cliente->st_cliente_id);
-                        $cliente->st_cliente_id = 25;
-                        $cliente->save();
-
-                        $seguimiento = Seguimiento::where('cliente_id', $cliente->id)->first();
-                        Log::info("seguimiento-" . $seguimiento->id . "-st" . $seguimiento->st_seguimiento_id);
-                        $seguimiento->st_seguimiento_id = 2;
-                        $seguimiento->save();
-                        */
-                    } elseif ($registro->adeudos_cantidad >= 3) {
-                        /*
-                        $this->bajaBs($registro->cliente_id);
-                        fputcsv($file, array(
-                            'plantel' => $registro->razon,
-                            'id_cliente' => $registro->cliente_id,
-                            'estatus' => $registro->estatus,
-                            'adeudos_cantidad' => $registro->adeudos_cantidad
-                        ));
-
-                        $cliente = Cliente::find($registro->cliente_id);
-                        $cliente->st_cliente_id = 26;
-                        $cliente->save();
-
-                        $adeudos = Adeudo::where('cliente_id', $cliente->cliente_id)
-                            ->where('caja_id', 0)
-                            ->where('pagado_bnd', 0)
-                            ->whereDate('adeudos.fecha_pago', '>', Date('Y-m-d'))
-                            ->get();
-                        //dd($adeudos->toArray());
-                        foreach ($adeudos as $adeudo) {
-                            $adeudo->delete();
-                        }
-
-                        $seguimiento = Seguimiento::where('cliente_id', $cliente->id)->first();
-                        $seguimiento->st_seguimiento_id = 6;
-                        $seguimiento->save();
-                        */
-                    }
-                    elseif ($registro->adeudos_cantidad >= 4) {
+                //if (count($eventos) == 0) {
+                //    if ($registro->adeudos_cantidad >= 4) {
                         $this->bajaBs($registro->cliente_id);
                         fputcsv($file, array(
                             'plantel' => $registro->razon,
@@ -184,8 +122,8 @@ class AtrazoPagos4Adeudos extends Command
                             $seguimiento->save();
     
                     
-                    }
-                }
+                    //}
+                //}
             }
 
             fclose($file);

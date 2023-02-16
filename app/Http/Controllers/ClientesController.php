@@ -2259,7 +2259,7 @@ class ClientesController extends Controller
             ->join('grados as g', 'g.id', '=', 'ccli.grado_id')
             ->where('a.pagado_bnd', 1)
             ->where('c.st_caja_id', 1)
-            ->where('clientes.st_cliente_id', '<>', 3)
+            //->where('clientes.st_cliente_id', '<>', 3)
             ->whereIn('clientes.plantel_id', $datos['plantel_f'])
             ->where('clientes.matricula', 'like', $datos['inicio_matricula'] . "%")
             ->whereNull('a.deleted_at')
@@ -2289,7 +2289,7 @@ class ClientesController extends Controller
             ->where('a.pagado_bnd', 1)
             ->where('c.st_caja_id', 1)
             //->whereIn('a.caja_concepto_id', array(1, 22,23, 25))// se quito concepto 22 tramites adelante se hace especificamente este trabajo
-            ->where('clientes.st_cliente_id', '<>', 3)
+            //->where('clientes.st_cliente_id', '<>', 3)
             ->whereIn('clientes.plantel_id', $datos['plantel_f'])
             ->where('clientes.matricula', 'like', $datos['inicio_matricula'] . "%")
             ->whereNull('a.deleted_at')
@@ -2338,7 +2338,7 @@ class ClientesController extends Controller
             ->where('a.pagado_bnd', 1)
             ->where('c.st_caja_id', 1)
             //->whereIn('a.caja_concepto_id', array(1,22,23, 25)) // se quito concepto 22 tramites adelante se hace especificamente este trabajo
-            ->where('clientes.st_cliente_id', '<>', 3)
+            //->where('clientes.st_cliente_id', '<>', 3)
             ->whereIn('clientes.plantel_id', $datos['plantel_f'])
             ->where('clientes.matricula', 'like', $datos['inicio_matricula'] . "%")
             ->whereNull('a.deleted_at')

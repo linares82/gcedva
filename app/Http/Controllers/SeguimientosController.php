@@ -625,11 +625,16 @@ class SeguimientosController extends Controller
                 DB::raw('concat(c.nombre," ",c.ape_paterno," ",c.ape_materno) as cliente'),
                 'has.tarea',
                 'has.fecha',
-                'has.detalle'
+                'has.detalle',
+                'hc.reactivado',
+                'hc.fec_reactivado',
+                'm.name as medio'
             )
             ->join('clientes as c', 'c.id', '=', 'has.cliente_id')
+            ->join('medios as m', 'm.id', '=', 'c.medio_id')
             ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
             ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
+            ->leftJoin('historia_clientes as hc','hc.cliente_id','c.id')
             //->where('has.asunto', '=', 'Cambio estatus ')
             ->where('has.fecha', '>=', $input['fecha_f'])
             ->where('has.fecha', '<=', $input['fecha_t']);
@@ -643,7 +648,13 @@ class SeguimientosController extends Controller
         }
 
         $ds_actividades = $ds_actividades_aux->distinct()->get();
-        //dd($ds_actividades->toJson());
+        $ds_actividades_filtradas=array();;
+        foreach($ds_actividades as $ds_actividad){
+            if(is_null($ds_actividad->reactivado)){
+                array_push($ds_actividades_filtradas, $ds_actividad);
+            }
+        }
+        //dd($ds_actividades_filtradas);
 
         $hestatus=HEstatus::select('c.id as cliente','p.razon','h_estatuses.estatus','h_estatuses.fecha',
         'u.name as usuario',DB::raw('concat(e.nombre," ",e.ape_paterno," ",e.ape_materno) as colaborador'))
@@ -662,7 +673,7 @@ class SeguimientosController extends Controller
         //dd($hestatus);
 
         return view('seguimientos.reportes.analitica_actividadesr')
-            ->with('actividades', json_encode($ds_actividades))
+            ->with('actividades', json_encode($ds_actividades_filtradas))
             ->with('cambios_estatus', json_encode($hestatus));
     }
 
@@ -1568,9 +1579,11 @@ class SeguimientosController extends Controller
                 DB::raw('concat(c.nombre," ",c.ape_paterno," ",c.ape_materno) as cliente'),
                 'has.tarea',
                 'has.fecha',
-                'has.detalle'
+                'has.detalle',
+                'm.name as medio'
             )
             ->join('prospectos as c', 'c.id', '=', 'has.prospecto_id')
+            ->join('medios as m', 'm.id', '=', 'c.medio_id')
             //->join('empleados as e', 'e.id', '=', 'c.empleado_id')
             ->join('users as ua', 'ua.id', '=', 'has.usu_alta_id')
             ->join('plantels as p', 'p.id', '=', 'c.plantel_id')

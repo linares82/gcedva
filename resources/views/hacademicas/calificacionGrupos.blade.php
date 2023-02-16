@@ -246,8 +246,14 @@
         //alert($('#calificacion_parcial'+$(this).data('cliente_id')).val());
         @php
             $calificacion_prohibida=\App\Param::where('llave', 'calificacion_prohibida')->first();
+            //dd($ponderacion_seleccionada->bnd_excepcion_calificacion_prohibida);
         @endphp 
-        if({{$calificacion_prohibida->valor}} && $('#calificacion_parcial'+$(this).data('cliente_id')).val()>=1 && $('#calificacion_parcial'+$(this).data('cliente_id')).val()<=4.9){
+        
+        
+        if({{$calificacion_prohibida->valor}} && 
+            !{{$ponderacion_seleccionada->bnd_excepcion_calificacion_prohibida}} &&
+            $('#calificacion_parcial'+$(this).data('cliente_id')).val()>=1 && 
+            $('#calificacion_parcial'+$(this).data('cliente_id')).val()<=4.9){
             alert("Calificacion invalida");
         }else{
             var miurl = "{{route('hacademicas.actualizarCalificacion')}}";

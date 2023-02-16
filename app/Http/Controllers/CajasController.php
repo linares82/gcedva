@@ -616,6 +616,7 @@ class CajasController extends Controller
                             $regla_descuento = 0;
                             //dd($caja_ln);
                             //dd($adeudo);
+                            
                             foreach ($adeudo->planPagoLn->reglaRecargos as $regla) {
                                 //dd($regla->toArray());
                                 if (($adeudo->bnd_eximir_descuento_regla == 0 or is_null($adeudo->bnd_eximir_descuento_regla)) and

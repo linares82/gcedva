@@ -28,7 +28,10 @@
             <tbody>
                 @foreach($registros as $registro)
                     @php
-                        $beca=\App\AutorizacionBeca::where('cliente_id',$registro->cliente_id)->where('lectivo_id',$registro->lectivo_id)->first();                        
+                        $beca=\App\AutorizacionBeca::where('cliente_id',$registro->cliente_id)
+                        ->where('lectivo_id',$registro->lectivo_id)
+                        ->where('st_beca_id',4)
+                        ->first();                        
                         //if(isset($beca)) dd($beca);
                     @endphp
                     <tr>

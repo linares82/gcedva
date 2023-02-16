@@ -526,6 +526,7 @@ class HacademicasController extends Controller
     public function postCalificacionGrupo(Request $request)
     {
         $data = $request->all();
+        $ponderacion_seleccionada=CargaPonderacion::find($data['carga_ponderacion_id']);
         //dd($data);
         $asignacion = $data['asignacion'];
         $examen = TpoExamen::pluck('name', 'id');
@@ -686,7 +687,7 @@ class HacademicasController extends Controller
             ->where('bnd_activo', 1)
             ->pluck('name', 'id');
 
-            return view('hacademicas.calificacionGrupos', compact('asignacion', 'examen', 'carga_ponderaciones'))
+            return view('hacademicas.calificacionGrupos', compact('asignacion', 'examen', 'carga_ponderaciones','ponderacion_seleccionada'))
                 ->with('list', Hacademica::getListFromAllRelationApps())
                 ->with('msj', $msj);
         }
@@ -709,7 +710,7 @@ class HacademicasController extends Controller
 
 
         //dd($hacademicas->toArray());
-        return view('hacademicas.calificacionGrupos', compact('asignacion', 'examen', 'carga_ponderaciones', 'hacademicas'))
+        return view('hacademicas.calificacionGrupos', compact('asignacion', 'examen', 'carga_ponderaciones', 'hacademicas','ponderacion_seleccionada'))
             ->with('list', Hacademica::getListFromAllRelationApps())
             ->with('msj', $msj);
     }

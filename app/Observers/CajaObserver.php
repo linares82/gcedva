@@ -86,7 +86,7 @@ class CajaObserver
                 ->whereNull('deleted_at')
                 ->count();
                 
-            if ($inscripcions->isEmpty() and $adeudos==0) {
+            if ($inscripcions->isEmpty() and $adeudos==0 and $this->caja->cliente->st_cliente_id <> 3) {
             //if ($inscripcions->isEmpty()) {
                 $cliente->st_cliente_id = 22;
                 $cliente->save();

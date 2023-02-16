@@ -33,12 +33,27 @@
                 
                 <div class="form-group col-md-6 @if($errors->has('plantel_f')) has-error @endif">
                     <label for="plantel_f-field">Plantel de:</label>
-                    {!! Form::select("plantel_f[]", $planteles, null, array("class" => "form-control select_seguridad", "id" => "plantel_f-field", 'multiple'=>true)) !!}
+                    {!! Form::select("plantel_f[]", $planteles, $planteles_seleccionados, array("class" => "form-control select_seguridad", "id" => "plantel_f-field", 'multiple'=>true)) !!}
                     @if($errors->has("plantel_f"))
                     <span class="help-block">{{ $errors->first("plantel_f") }}</span>
                     @endif
                 </div>
-                
+
+                <div class="form-group col-md-6 @if($errors->has('empleado_f')) has-error @endif">
+                    <label for="plantel_f-field">Empleados:</label>
+                    {!! Form::select("empleado_f[]", $empleados, $empleados_seleccionados, array("class" => "form-control select_seguridad", "id" => "empleado_f-field", 'multiple'=>true)) !!}
+                    @if($errors->has("plantel_f"))
+                    <span class="help-block">{{ $errors->first("plantel_f") }}</span>
+                    @endif
+                </div>
+
+                <div class="form-group col-md-6 @if($errors->has('inicio_matricula')) has-error @endif">
+                    <label for="inicio_matricula-field">Inicio Matricula (4 digitos separados por comas, 9999,9999...):</label>
+                    {!! Form::text("inicio_matricula", null, array("class" => "form-control input-sm", "id" => "inicio_matricula-field")) !!}
+                    @if($errors->has("inicio_matricula"))
+                    <span class="help-block">{{ $errors->first("inicio_matricula") }}</span>
+                    @endif
+                </div>
                 
                 <div class="row">
                 </div>
@@ -67,12 +82,36 @@
         show_select_today: 'Hoy',
       });
     
-    @permission('IreporteFiltroXplantel')
-        $("#plantel_f-field").prop("disabled", true);
-        $("#plantel_t-field").prop("disabled", true);
-    @endpermission
+    $('#plantel_f-field').change(function(){
+        
+    });
         
     });
     
+    function getCmbEmpleados(){
+        $.ajax({
+        url: '{{ route("empleados.getAsesoresXplantel") }}',
+        type: 'GET',
+        data: "empleado_id="+$('#empleado_f-field option:selected').val()+"&plantel_id=" + $('#plantel_f-field option:selected').val()  + "",
+        dataType: 'json',
+        beforeSend : function(){$("#loading3").show();},
+        complete : function(){$("#loading3").hide();},
+        success: function(data){
+
+            $('#empleado_f-field').html('');
+            //$('#especialidad_id-field').empty();
+            $('#empleado_f-field').append($('<option></option>').text('Seleccionar Opción').val('0'));
+
+
+            $.each(data, function(i) {
+
+                $('#empleado_f-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].nombre+"<\/option>");
+
+            });
+
+        }
+        });       
+    }
+
     </script>
 @endpush

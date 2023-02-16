@@ -18,9 +18,10 @@
         <h3>General</h3>
         <table>
             <thead>
-              <tr><th colspan="11">Ayer</th><th>Hoy</th></tr>
-                    <th>Plantel</th><th>Usuario</th><th>Clientes Concretados</th><th>Prosp. Convertidos</th>
-                    <th>Prosp. Nuevos</th><th>Prosp. Tocados</th><th>Avisos Creados</th><th>Prosp. Cerrados</th>
+              <tr><th colspan="12">Ayer</th><th>Hoy</th></tr>
+                    <th>Plantel</th><th>Usuario</th><th>Call Center -> Asesores</th>
+                    <th>Clientes Concretados</th><th>Avisos Convertidos</th>
+                    <th>Prosp. Nuevos</th><th>Prosp. Tocados</th><th>Avisos Creados</th><th>Avisos Cerrados</th>
                     <th>Informes Presenciales</th><th>Informes Telefonicos</th><th>Cita Plantel</th>
                     <th>Base Total</th>
             </thead>
@@ -32,12 +33,15 @@
                     'plantel'=>$registro['plantel_id'], 
                     'user'=>$registro['user_id'],
                     'ayer'=>$registro['ayer'],
-                    'hoy'=>$registro['hoy']
+                    'hoy'=>$registro['hoy'],
+                    'empleado'=>$registro['empleado_id'],
+                    'inicio_matricula'=>$registro['inicio_matricula']
                     ]) }}" target="_blank">
                   {{ $registro['plantel'] }}
                   </a>
                 </td>
-                <td>{{ $registro['usuario'] }}</td><td>{{ $registro['clientes_concretados'] }}</td>
+                <td>{{ $registro['usuario'] }}</td><td>{{$registro['callToAsesorAyer']}}</td>
+                <td>{{ $registro['clientes_concretados'] }}</td>
                 <td>{{ $registro['prospectos_convertidos'] }}</td><td>{{ $registro['prospectos_creados'] }}</td><td>{{ $registro['prospectos_tocados'] }}</td>
                 <td>{{ $registro['avisos_creados'] }}</td><td>{{ $registro['avisos_cerrados'] }}</td><td>{{ $registro['tarea_informe_presencial'] }}</td>
                 <td>{{ $registro['tarea_informe_telefonico'] }}</td><td>{{ $registro['tarea_cita_plantel'] }}</td><td>{{ $registro['base_total'] }}</td> 

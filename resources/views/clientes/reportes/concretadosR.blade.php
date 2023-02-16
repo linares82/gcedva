@@ -74,6 +74,7 @@
               <th>Nombre</th><th>E. Cliente</th><th>E. Seguimiento</th><th>Seccion</th><th>Turno</th><th>Empleado</th>
               <th>Inscripción/S. Escolares</th><th>Fecha Caja</th><th>Trámites</th><th>Fecha Pago Tramites</th>
               <th>P. Mensualidad</th><th>Fecha Pago</th><th>Ultima Tarea Seguimiento</th><th>Doc. Oblig. Entregados</th><th>Documentos</th>
+              <th>Prospecto/Creado Por</th>
           </thead>
           <tbody>
             @php
@@ -103,7 +104,7 @@
                 @endif
               </td>
               <td>
-		{{$rs['bnd_doc_oblig_entregados']}}                
+          		{{$rs['bnd_doc_oblig_entregados']}}                
               </td>
               
               <td>
@@ -125,11 +126,17 @@
                     <td>{{$documento->docAlumno->name}}</td>
                     <td>Entregado:{{$documento->doc_entregado==1 ? 'SI' : 'NO'}}</td>
                     <td><a href="{{asset("imagenes/clientes/".$cliente."/".end($cadena_img))}}" target="_blank">Ver</a></td>
-                    
                   </table>
                 @endforeach
               </td>
-              
+              <td>
+                @php
+                  $prospecto=App\Prospecto::where('cliente_id', $rs['cliente_id'])->first();
+                @endphp
+                @if(!is_null($prospecto))
+                  {{$prospecto->id}} / {{$prospecto->usu_alta->name}}
+                @endif
+              </td>
               
             </tr>
             @endif  

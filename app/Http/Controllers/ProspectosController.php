@@ -36,9 +36,6 @@ class ProspectosController extends Controller {
 		$prospectos = Prospecto::getAllData($request);
 		$estatus=ProspectoStSeg::pluck('name','id');
 		
-        
-		
-
 		return view('prospectos.index', compact('prospectos','estatus'))
 		->with( 'list', Prospecto::getListFromAllRelationApps() );
 	}
@@ -559,10 +556,15 @@ class ProspectosController extends Controller {
 
 	public function resumenProspectosTareasAvisos(){
 		$empleado=Empleado::where('user_id',Auth::user()->id)->first();
+		$empleados_seleccionados=array(821,1101,1102,37,879,878,1096,28,564,1069,527,13,769,525);
 		$planteles_validos=$empleado->plantels->pluck('id');
+		$planteles_seleccionados=Plantel::whereIn('id', array(32,
+		30,43,24,18,45,22,10,46,25,47,17,49,50,21,13,15,29,12))
+		->pluck('id');
 		$planteles=Plantel::whereIn('id', $planteles_validos)->pluck('razon','id');
-		
-		return view('prospectos.reportes.ResumenProspectosTareasAvisos', compact('planteles'));
+		$empleados=Empleado::select('id',DB::raw('concat(nombre, " ",ape_paterno, " ",ape_materno) as nombre'))->pluck('nombre','id');
+		return view('prospectos.reportes.resumenProspectosTareasAvisos', 
+		compact('planteles', 'empleados', 'planteles_seleccionados', 'empleados_seleccionados'));
 	}
 
 	public function resumenProspectosTareasAvisosR(Request $request){
@@ -571,11 +573,15 @@ class ProspectosController extends Controller {
 		$resumen=array();
 		$hoy=Carbon::createFromFormat('Y-m-d',$datos['fecha_f'])->toDateString();
 		$ayer=Carbon::createFromFormat('Y-m-d',$datos['fecha_f'])->subDay()->toDateString();
-		$plantel_usuarios=ProspectoHactividad::select('p.plantel_id','plantels.razon','prospecto_hactividads.usu_alta_id','u.name as user')
+		$plantel_usuarios=ProspectoHactividad::select('p.plantel_id','plantels.razon','prospecto_hactividads.usu_alta_id',
+		'u.name as user', 'e.id as empleado_id')
 		->join('prospectos as p','p.id','prospecto_hactividads.prospecto_id')
 		->join('plantels','plantels.id','p.plantel_id')
 		->join('users as u','u.id','prospecto_hactividads.usu_alta_id')
+		->join('empleados as e','e.user_id','u.id')
 		->whereIn('p.plantel_id', $datos['plantel_f'])
+		->whereIn('e.id', $datos['empleado_f'])
+		//->where('tarea','<>', 'Seguimiento')
 		->whereDate('prospecto_hactividads.created_at','>=', $ayer)
 		->whereDate('prospecto_hactividads.created_at', '<=',$hoy)
 		->distinct()
@@ -588,27 +594,88 @@ class ProspectosController extends Controller {
 			$linea['usuario']=$plantel_usuario->user;
 			$linea['plantel_id']=$plantel_usuario->plantel_id;
 			$linea['user_id']=$plantel_usuario->usu_alta_id;
+			$linea['empleado_id']=$plantel_usuario->empleado_id;
+			$linea['inicio_matricula']=$datos['inicio_matricula'];
 			$linea['hoy']=$hoy;
 			$linea['ayer']=$ayer;
+			
+			$linea['callToAsesorAyer']=HStProspecto::where('h_st_prospectos.st_prospecto_id',2)
+				->where('h_st_prospectos.st_anterior_id',1)
+				->join('prospectos as pro', 'pro.id','h_st_prospectos.prospecto_id')
+				->join('plantels as p','p.id','pro.plantel_id')
+				->whereDate('h_st_prospectos.created_at',$ayer)
+				->where('p.id',$plantel_usuario->plantel_id)
+				//->where('h_st_prospectos.usu_alta_id',$plantel_usuario->usu_alta_id)
+				->count();
+
+			/*	
 			$linea['clientes_concretados']=Cliente::select(DB::raw('count(distinct(clientes.id)) as total'))
 			->join('seguimientos as s','s.cliente_id','clientes.id')
-			->join('h_estatuses as h', 'h.seguimiento_id','s.id')
-			->where('h.tabla','seguimientos')
-			->where('h.estatus_id',2)
+			->join('hactividades as h', 'h.seguimiento_id','s.id')
+			->join('users as u','u.id','h.usu_alta_id')
+			->where('h.asunto','Cambio estatus ')
+			->where('h.detalle','Concretado 100%')
 			->where('clientes.plantel_id',$plantel_usuario->plantel_id)
 			->where('h.usu_alta_id',$plantel_usuario->usu_alta_id)
 			->whereDate('h.fecha',$ayer)
 			->value('total');
-
-			
-			$linea['prospectos_convertidos']=Prospecto::select(DB::raw('count(distinct(prospectos.id)) as total'))
-			->join('prospecto_seguimientos as s','s.prospecto_id','prospectos.id')
-			->join('prospecto_h_estatuses as h', 'h.prospecto_seguimiento_id','s.id')
-			->where('h.tabla','seguimientos')
-			->where('h.estatus_id',5)
-			->where('prospectos.plantel_id',$plantel_usuario->plantel_id)
-			->where('h.usu_alta_id',$plantel_usuario->usu_alta_id)
+			*/
+			$clientes=Cliente::select(DB::raw('p.razon, clientes.id, h.fecha, h.detalle as estatus, 
+			concat(e.nombre, " ",e.ape_paterno, " ",e.ape_materno) as empleado, e.id as empleado_id,
+			hc.reactivado, hc.fec_reactivado'))
+			->join('seguimientos as s','s.cliente_id','clientes.id')
+			//->join('h_estatuses as h', 'h.seguimiento_id','s.id')
+			->leftJoin('historia_clientes as hc','hc.cliente_id','clientes.id')
+			->join('hactividades as h', 'h.seguimiento_id','s.id')
+			->join('plantels as p','p.id','clientes.plantel_id')
+			//->join('users as u','u.id','h.usu_alta_id')
+			->join('empleados as e','e.id','clientes.empleado_id')
+			->where('h.asunto','Cambio estatus ')
+			->where('h.detalle','Concretado 100%')
+			//->where('clientes.matricula','like', $datos['inicio_matricula'].'%')
+			->when($datos['inicio_matricula'], function($query, $datos){
+				$inicios=explode(",",$datos);
+				$cadena="(";
+				$cantidad=count($inicios);
+				$i=1;
+				foreach($inicios as $inicio){
+					if($i==$cantidad){
+						$cadena=$cadena."clientes.matricula like '".$inicio."%'";
+					}elseif($i==1){
+						$cadena=$cadena."clientes.matricula like '".$inicio."%' or ";
+					}else{
+						$cadena=$cadena."clientes.matricula like '".$inicio."%' or ";
+					}
+					$i++;
+				}
+				$cadena=$cadena.")";
+				//dd($cadena);
+				return $query->whereRaw($cadena);
+			})
+			->where('clientes.plantel_id',$plantel_usuario->plantel_id)
+			//->where('h.usu_alta_id',$plantel_usuario->usu_alta_id)
+			->where('e.id',$plantel_usuario->empleado_id)
 			->whereDate('h.fecha',$ayer)
+			->get();
+
+			//dd($clientes);
+			
+			$linea['clientes_concretados']=0;
+			foreach($clientes as $cliente){
+				if(is_null($cliente->reactivado)){
+					$linea['clientes_concretados']=$linea['clientes_concretados']+1;
+				}
+			}
+
+			$linea['prospectos_convertidos']=Prospecto::select(DB::raw('count(distinct(prospectos.id)) as total'))
+			->join('clientes as c', 'c.id','prospectos.cliente_id')
+			//->join('prospecto_seguimientos as s','s.prospecto_id','prospectos.id')
+			//->join('prospecto_h_estatuses as h', 'h.prospecto_id','prospectos.id')
+			//->where('h.tabla','seguimientos')
+			//->where('h.estatus_id',5) 
+			->where('prospectos.plantel_id',$plantel_usuario->plantel_id)
+			->where('c.usu_alta_id',$plantel_usuario->usu_alta_id)
+			->whereDate('c.created_at',$ayer)
 			->whereNull('prospectos.deleted_at')
 			->value('total');
 			
@@ -673,12 +740,13 @@ class ProspectosController extends Controller {
 			->count();
 
 			$linea['base_total']=Prospecto::join('prospecto_seguimientos as s','s.prospecto_id','prospectos.id')
-			->join('prospecto_h_estatuses as h', 'h.prospecto_seguimiento_id','s.id')
-			->where('h.tabla','seguimientos')
-			->whereIn('h.estatus_id',array(2,3,4))
+			//->join('prospecto_h_estatuses as h', 'h.prospecto_seguimiento_id','s.id')
+			//->where('h.tabla','seguimientos')
+			->whereIn('s.prospecto_st_seg_id',array(2,3,4))
+			->where('prospectos.st_prospecto_id', 2)
 			//->whereDate('h.fecha',$hoy)
 			->where('prospectos.plantel_id',$plantel_usuario->plantel_id)
-			->where('h.usu_alta_id',$plantel_usuario->usu_alta_id)
+			//->where('h.usu_alta_id',$plantel_usuario->usu_alta_id)
 			->whereNull('prospectos.deleted_at')
 			->count();
 
@@ -691,29 +759,85 @@ class ProspectosController extends Controller {
 
 	public function detalleProspectosTareasAvisosR(Request $request){
 		$datos=$request->all();
-		
-		$clientes=Cliente::select(DB::raw('p.razon, clientes.id, h.fecha, h.estatus, u.name as usu_alta'))
+		//dd($datos);
+		$callToAsesorAyer=HStProspecto::select('p.razon','pro.id','sta.name as estatus_aterior',
+			'std.name as estatus_despues', 'u.name as usu_alta', 'h_st_prospectos.created_at')
+			->where('h_st_prospectos.st_prospecto_id',2)
+			->join('st_prospectos as std','std.id','h_st_prospectos.st_prospecto_id')
+			->where('h_st_prospectos.st_anterior_id',1)
+			->join('st_prospectos as sta','sta.id','h_st_prospectos.st_anterior_id')
+			->join('prospectos as pro', 'pro.id','h_st_prospectos.prospecto_id')
+			->join('plantels as p','p.id','pro.plantel_id')
+			->join('users as u','u.id','h_st_prospectos.usu_alta_id')
+			->whereDate('h_st_prospectos.created_at',$datos['ayer'])
+			->where('p.id',$datos['plantel'])
+			//->where('h_st_prospectos.usu_alta_id',$datos['user'])
+			->get();
+
+		/*$clientes=Cliente::select(DB::raw('p.razon, clientes.id, h.fecha, h.detalle as estatus, u.name as usu_alta,
+			hc.reactivado, hc.fec_reactivado'))
 			->join('seguimientos as s','s.cliente_id','clientes.id')
-			->join('h_estatuses as h', 'h.seguimiento_id','s.id')
+			//->join('h_estatuses as h', 'h.seguimiento_id','s.id')
+			->leftJoin('historia_clientes as hc','hc.cliente_id','clientes.id')
+			->join('hactividades as h', 'h.seguimiento_id','s.id')
 			->join('plantels as p','p.id','clientes.plantel_id')
 			->join('users as u','u.id','h.usu_alta_id')
-			->where('h.tabla','seguimientos')
-			->where('h.estatus_id',2)
+			->where('h.asunto','Cambio estatus ')
+			->where('h.detalle','Concretado 100%')
 			->where('clientes.plantel_id',$datos['plantel'])
 			->where('h.usu_alta_id',$datos['user'])
 			->whereDate('h.fecha',$datos['ayer'])
-			->get();
-
-			$prospectos_convertidos=Prospecto::select('p.razon', 'prospectos.id','h.estatus','prospectos.cliente_id', 'u.name')
-			->join('prospecto_seguimientos as s','s.prospecto_id','prospectos.id')
-			->join('prospecto_h_estatuses as h', 'h.prospecto_seguimiento_id','s.id')
-			->join('plantels as p','p.id','prospectos.plantel_id')
-			->join('users as u','u.id','h.usu_alta_id')
-			->where('h.tabla','seguimientos')
-			->where('h.estatus_id',5)
-			->where('prospectos.plantel_id',$datos['plantel'])
-			->where('h.usu_alta_id',$datos['user'])
+			->get();*/
+			$clientes=Cliente::select(DB::raw('p.razon, clientes.id, h.fecha, h.detalle as estatus, 
+			concat(e.nombre, " ",e.ape_paterno, " ",e.ape_materno) as empleado,
+			hc.reactivado, hc.fec_reactivado'))
+			->join('seguimientos as s','s.cliente_id','clientes.id')
+			//->join('h_estatuses as h', 'h.seguimiento_id','s.id')
+			->leftJoin('historia_clientes as hc','hc.cliente_id','clientes.id')
+			->join('hactividades as h', 'h.seguimiento_id','s.id')
+			->join('plantels as p','p.id','clientes.plantel_id')
+			//->join('users as u','u.id','h.usu_alta_id')
+			->join('empleados as e','e.id','clientes.empleado_id')
+			->where('h.asunto','Cambio estatus ')
+			->where('h.detalle','Concretado 100%')
+			->where('clientes.plantel_id',$datos['plantel'])
+			//->where('clientes.matricula','like', $datos['inicio_matricula'].'%')
+			->when($datos['inicio_matricula'], function($query, $datos){
+				$inicios=explode(",",$datos);
+				$cadena="(";
+				$cantidad=count($inicios);
+				$i=1;
+				foreach($inicios as $inicio){
+					if($i==$cantidad){
+						$cadena=$cadena."clientes.matricula like '".$inicio."%'";
+					}elseif($i==1){
+						$cadena=$cadena."clientes.matricula like '".$inicio."%' or ";
+					}else{
+						$cadena=$cadena."clientes.matricula like '".$inicio."%' or ";
+					}
+					$i++;
+				}
+				$cadena=$cadena.")";
+				//dd($cadena);
+				return $query->whereRaw($cadena);
+			})
+			//->where('h.usu_alta_id',$plantel_usuario->usu_alta_id)
+			->where('e.id',$datos['empleado'])
 			->whereDate('h.fecha',$datos['ayer'])
+			->get();
+			//dd($clientes);
+
+			$prospectos_convertidos=Prospecto::select('p.razon', 'prospectos.id','c.id as cliente_id', 'u.name')
+			//->join('prospecto_seguimientos as s','s.prospecto_id','prospectos.id')
+			//->join('prospecto_h_estatuses as h', 'h.prospecto_id','prospectos.id')
+			->join('clientes as c', 'c.id','prospectos.cliente_id')
+			->join('plantels as p','p.id','prospectos.plantel_id')
+			->join('users as u','u.id','c.usu_alta_id')
+			//->where('h.tabla','seguimientos')
+			//->where('h.estatus_id',5)
+			->where('prospectos.plantel_id',$datos['plantel'])
+			->where('c.usu_alta_id',$datos['user'])
+			->whereDate('c.created_at',$datos['ayer'])
 			->whereNull('prospectos.deleted_at')
 			->get();
 
@@ -776,25 +900,26 @@ class ProspectosController extends Controller {
 			->orderBy('pat.prospecto_tarea_id')
 			->get();
 
-			$base_total=Prospecto::select('pla.razon','prospectos.id','h.estatus', 
-			'h.created_at','u.name as usu_alta')
+			$base_total=Prospecto::select('pla.razon','prospectos.id','psts.name as estatus')
 			->join('prospecto_seguimientos as s','s.prospecto_id','prospectos.id')
-			->join('prospecto_h_estatuses as h', 'h.prospecto_seguimiento_id','s.id')
+			//->join('prospecto_h_estatuses as h', 'h.prospecto_seguimiento_id','s.id')
 			->join('plantels as pla','pla.id','prospectos.plantel_id')
-			->join('users as u','u.id','h.usu_alta_id')
+			//->join('users as u','u.id','h.usu_alta_id')
 			->join('prospecto_st_segs as psts','psts.id','s.prospecto_st_seg_id')
-			->where('h.tabla','seguimientos')
-			->whereIn('h.estatus_id',array(2,3,4))
+			//->where('h.tabla','seguimientos')
+			->whereIn('s.prospecto_st_seg_id',array(2,3,4))
+			->where('prospectos.st_prospecto_id', 2)
 			//->whereDate('h.fecha',$datos['hoy'])
 			->where('prospectos.plantel_id',$datos['plantel'])
-			->where('h.usu_alta_id',$datos['user'])
+			//->where('h.usu_alta_id',$datos['user'])
 			->whereNull('prospectos.deleted_at')
+			->orderBy('s.prospecto_st_seg_id')
 			->get();
 
 			//dd($prospectos_convertidos);
 		return view('prospectos.reportes.detalleProspectosTareasAvisosR', 
 		compact('clientes','prospectos_convertidos','avisos_creados', 'prospectos_creados',
-		'prospectos_tocados','avisos_cerrados','tareas','base_total'));
+		'prospectos_tocados','avisos_cerrados','tareas','base_total','callToAsesorAyer'));
 	}
 }
 

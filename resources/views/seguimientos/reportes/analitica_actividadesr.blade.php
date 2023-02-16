@@ -42,7 +42,8 @@
                         Cliente: element.cliente,
                         Actividad: element.tarea,
                         Fecha: element.fecha,
-                        Estatus: element.detalle
+                        Estatus: element.detalle,
+                        Medio: element.medio
                     });
                 });
             };

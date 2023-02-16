@@ -143,6 +143,11 @@ class CargaPonderacionsController extends Controller
         } else {
             $input['bnd_activo'] = 0;
         }
+        if (isset($input['bnd_excepcion_calificacion_prohibida'])) {
+            $input['bnd_excepcion_calificacion_prohibida'] = 1;
+        } else {
+            $input['bnd_excepcion_calificacion_prohibida'] = 0;
+        }
         //update data
         $cargaPonderacion = $cargaPonderacion->find($id);
         $cargaPonderacion->update($input);

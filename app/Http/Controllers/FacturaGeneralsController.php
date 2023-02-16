@@ -2,29 +2,31 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
+use Auth;
+use Session;
 
 use App\Caja;
-use App\FacturaGeneral;
-use App\FacturaGeneralLinea;
 use App\Mese;
 use App\Param;
-use Illuminate\Http\Request;
-use Auth;
-use App\Http\Requests\updateFacturaGeneral;
-use App\Http\Requests\createFacturaGeneral;
-use Luecano\NumeroALetras\NumeroALetras;
-use SoapClient;
-use Session;
-use SimpleXMLElement;
-use DOMDocument;
+use Exception;
 use XMLWriter;
+use SoapClient;
+use DOMDocument;
 use Carbon\Carbon;
-use Illuminate\Support\Collection;
-
-use GuzzleHttp\Exception\GuzzleException;
+use SimpleXMLElement;
+use App\Http\Requests;
 use GuzzleHttp\Client;
+use App\FacturaGeneral;
+use App\FacturaGeneralLinea;
+use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
+
+use Luecano\NumeroALetras\NumeroALetras;
+use GuzzleHttp\Exception\GuzzleException;
+use App\Http\Requests\createFacturaGeneral;
+use App\Http\Requests\updateFacturaGeneral;
 
 class FacturaGeneralsController extends Controller
 {
@@ -262,7 +264,7 @@ class FacturaGeneralsController extends Controller
 		$facturaGeneral = FacturaGeneral::with('plantel')->with('facturaGeneralLineas')->find($datos['id']);
 
 		$url = Param::where('llave', 'fact_global_url')->first();
-		
+
 		$fact_global_prb_activa = Param::where('llave', 'fact_global_prb_activa')->first();
 
 		$data = array();
@@ -509,7 +511,7 @@ class FacturaGeneralsController extends Controller
 		}
 
 		$content = $this->crearXmlFactura($comprobante, $fecha_solicitud_factura_service, $informacionGlobal, $emisor, $receptor, $conceptos);
-
+		Log::info($content);
 		/*echo "<pre>";
 		var_export($content);
 		echo "</pre>";
@@ -529,9 +531,9 @@ class FacturaGeneralsController extends Controller
 		header('Cache-Control: private');
 		echo $content;
 		*/
-		$data=array();
+		$data = array();
 		//dd($fact_global_prb_activa->valor);
-		if($fact_global_prb_activa->valor==1){
+		if ($fact_global_prb_activa->valor == 1) {
 			$fact_global_id_cuenta_prb = Param::where('llave', 'fact_global_id_cuenta_prb')->first();
 			$fact_global_pass_cuenta_prb = Param::where('llave', 'fact_global_pass_cuenta_prb')->first();
 			$data = array(
@@ -543,7 +545,7 @@ class FacturaGeneralsController extends Controller
 				//en el xml debe colocar los espacios de nombres
 				"xml" => base64_encode($content)
 			);
-		}else{
+		} else {
 			$data = array(
 				"cti" => $facturaGeneral->plantel->fact_global_id_cuenta,
 				"pwd" => $facturaGeneral->plantel->fact_global_pass_cuenta,
@@ -552,29 +554,32 @@ class FacturaGeneralsController extends Controller
 				"nb64" => "false",
 				"xml" => base64_encode($content)
 			);
-			
 		}
 		//dd($data);
+		try {
 
-		$client = new Client(['base_uri' => $url->valor]);
-		$response = $client->post("sellar-y-timbrar/", [
-			// un array con la data de los headers como tipo de peticion, etc.
-			//'headers' => ['foo' => 'bar'],
-			// array de datos del formulario
-			'json' => $data
-		]);
-		$objR = json_decode($response->getBody()->getContents());
-		//dd($objR);
-		if ($objR->success == 0) {
-			$facturaGeneral->error_last = $objR->data;
-			$facturaGeneral->save();
-		} else {
-			$facturaGeneral->uuid = $objR->data->uuid;
-			$facturaGeneral->xml = base64_decode($objR->data->xml);
-			$facturaGeneral->save();
+			$client = new Client(['base_uri' => $url->valor]);
+			$response = $client->post("sellar-y-timbrar/", [
+				// un array con la data de los headers como tipo de peticion, etc.
+				//'headers' => ['foo' => 'bar'],
+				// array de datos del formulario
+				'json' => $data
+			]);
+			$objR = json_decode($response->getBody()->getContents());
+			//dd($objR);
+			if ($objR->success == 0) {
+				$facturaGeneral->error_last = $objR->data;
+				$facturaGeneral->save();
+			} else {
+				$facturaGeneral->uuid = $objR->data->uuid;
+				$facturaGeneral->xml = base64_decode($objR->data->xml);
+				$facturaGeneral->save();
+			}
+
+			return redirect()->route('facturaGenerals.detalle', $facturaGeneral->id);
+		} catch (Exception $e) {
+			dd($e);
 		}
-
-		return redirect()->route('facturaGenerals.detalle', $facturaGeneral->id);
 	}
 
 	public function crearXmlFactura($comprobante, $fecha_solicitud_factura_service, $informacionGlobal, $emisor, $receptor, $conceptos)

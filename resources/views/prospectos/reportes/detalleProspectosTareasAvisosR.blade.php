@@ -15,19 +15,40 @@
   <body>
     <div class="datagrid">
         <h2>Detalle</h2>
+        
+        <h3>Call Center A Asesores</h3>
+        <table>
+            <thead>
+                    <th>Plantel</th><th>Prospecto Id</th><th>St. Anterior</th><th>St. Despues</th>
+                    <th>Creado El</th><th>U. Alta</th>
+            </thead>
+            <tbody>
+            @foreach ($callToAsesorAyer as $ca)
+            <tr>
+                <td>{{ $ca->razon }}</td><td>{{ $ca->id }}</td>
+                <td>{{ $ca->estatus_aterior }}</td><td>{{ $ca->estatus_despues }}</td>
+                <td>{{ $ca->created_at }}</td><td>{{ $ca->usu_alta }}</td>
+            </tr>
+            @endforeach
+        
+            </tbody>
+        </table>
+        
         <h3>Clientes</h3>
         <table>
             <thead>
                     <th>Plantel</th><th>Cliente Id</th><th>Creado el</th><th>Estatus</th>
-                    <th>U. Alta</th>
+                    <th>Empleado</th>
             </thead>
             <tbody>
             @foreach ($clientes as $cliente)
+            @if(is_null($cliente->reactivado))
             <tr>
                 <td>{{ $cliente->razon }}</td><td>{{ $cliente->id }}</td>
                 <td>{{ $cliente->fecha }}</td><td>{{ $cliente->estatus }}</td>
-                <td>{{ $cliente->usu_alta }}</td>
+                <td>{{ $cliente->empleado }}</td>
             </tr>
+            @endif
             @endforeach
         
             </tbody>
@@ -36,14 +57,14 @@
         <h3>Prospectos Convertidos</h3>
         <table>
             <thead>
-                    <th>Plantel</th><th>Prospecto Id</th><th>Estatus</th><th>Cliente Id</th>
+                    <th>Plantel</th><th>Prospecto Id</th><th>Cliente Id</th>
                     <th>U. Alta</th>
             </thead>
             <tbody>
             @foreach ($prospectos_convertidos as $prospecto_convertido)
             <tr>
                 <td>{{ $prospecto_convertido->razon }}</td><td>{{ $prospecto_convertido->id }}</td>
-                <td>{{ $prospecto_convertido->estatus }}</td><td>{{ $prospecto_convertido->cliente_id }}</td>
+                <td>{{ $prospecto_convertido->cliente_id }}</td>
                 <td>{{ $prospecto_convertido->name }}</td>
             </tr>
             @endforeach

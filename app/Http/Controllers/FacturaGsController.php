@@ -6,6 +6,7 @@ use Log;
 use Auth;
 
 use App\Param;
+use Exception;
 use XMLWriter;
 use App\Plantel;
 use App\FacturaG;
@@ -15,11 +16,11 @@ use App\Http\Requests;
 use GuzzleHttp\Client;
 use App\CuentasEfectivo;
 use Illuminate\Http\Request;
+
 use App\CuentasEfectivoPlantel;
-
 use App\Http\Controllers\Controller;
-use App\Http\Requests\createFacturaG;
 
+use App\Http\Requests\createFacturaG;
 use App\Http\Requests\updateFacturaG;
 use Illuminate\Support\Facades\Storage;
 use GuzzleHttp\Exception\GuzzleException;
@@ -510,7 +511,8 @@ class FacturaGsController extends Controller
 		}
 
 		$content = $this->crearXmlFactura($comprobante, $fecha_solicitud_factura_service, $informacionGlobal, $emisor, $receptor, $conceptos, $impuestos);
-
+		//dd($content);
+		Log::info($content);
 		$data = array();
 		//dd($fact_global_prb_activa->valor);
 		if ($fact_global_prb_activa->valor == 1) {
@@ -536,8 +538,8 @@ class FacturaGsController extends Controller
 			);
 		}
 		//dd($data);
-
-		$client = new Client(['base_uri' => $url->valor]);
+		try{
+			$client = new Client(['base_uri' => $url->valor]);
 		$response = $client->post("sellar-y-timbrar/", [
 			// un array con la data de los headers como tipo de peticion, etc.
 			//'headers' => ['foo' => 'bar'],
@@ -557,6 +559,10 @@ class FacturaGsController extends Controller
 		}
 
 		return redirect()->route('facturaGs.show', $facturaG->id);
+		}catch(Exception $e){
+			dd($e);
+		}
+		
 	}
 
 	public function crearXmlFactura($comprobante, $fecha_solicitud_factura_service, $informacionGlobal, $emisor, $receptor, $conceptos, $impuestos)
@@ -644,7 +650,7 @@ class FacturaGsController extends Controller
 		}
 		$objetoXML->endElement(); // Final del elemento que cubre todos los miembros técnicos.
 		$objetoXML->startElement('cfdi:Impuestos');
-		$objetoXML->writeAttribute("TotalImpuestosTrasladados", $impuestos["TotalImpuestosTrasladados"]);
+		//$objetoXML->writeAttribute("TotalImpuestosTrasladados", $impuestos["TotalImpuestosTrasladados"]);
 		$objetoXML->startElement('cfdi:Traslados');
 		$objetoXML->startElement('cfdi:Traslado');
 		$objetoXML->writeAttribute("Base", $impuestos["Base"]);
@@ -661,6 +667,7 @@ class FacturaGsController extends Controller
 		$objetoXML->endDocument(); // Final del documento
 
 		$content = $objetoXML->outputMemory();
+		
 		return $content;
 	}
 
@@ -757,7 +764,7 @@ class FacturaGsController extends Controller
 		);
 
 		$content = $this->crearXmlFactura($comprobante, $fecha_solicitud_factura_service, $informacionGlobal, $emisor, $receptor, $conceptos, $impuestos);
-
+		
 		/*echo "<pre>";
 		var_export($content);
 		echo "</pre>";

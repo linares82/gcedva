@@ -62,6 +62,7 @@ return array(
     'AddBndPromoCajaLnsTable' => $baseDir . '/database/migrations/2019_01_25_125534_add_bnd_promo_caja_lns_table.php',
     'AddBndProspectosToMediosTable' => $baseDir . '/database/migrations/2022_09_13_111804_add_bnd_prospectos_to_medios_table.php',
     'AddBndReactivacionToCajasTable' => $baseDir . '/database/migrations/2020_10_16_110149_add_bnd_reactivacion_to_cajas_table.php',
+    'AddBndRedondeoToCargaPonderacions' => $baseDir . '/database/migrations/2023_02_15_101626_add_bnd_redondeo_to_carga_ponderacions.php',
     'AddBndReferenciadoToPagosTable' => $baseDir . '/database/migrations/2020_07_01_113041_add_bnd_referenciado_to_pagos_table.php',
     'AddBndReingresoClientesTable' => $baseDir . '/database/migrations/2019_07_24_115002_add_bnd_reingreso_clientes_table.php',
     'AddBndRevisionDirectorToTitulacionsTable' => $baseDir . '/database/migrations/2022_08_24_105901_add_bnd_revision_director_to_titulacions_table.php',

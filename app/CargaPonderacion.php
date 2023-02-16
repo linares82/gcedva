@@ -20,7 +20,7 @@ class CargaPonderacion extends Model
 	}
 
 	//Mass Assignment
-	protected $fillable = ['ponderacion_id', 'name', 'porcentaje', 'usu_alta_id', 'usu_mod_id', 'tiene_detalle', 'padre_id', 'bnd_activo'];
+	protected $fillable = ['ponderacion_id', 'name', 'porcentaje', 'usu_alta_id', 'usu_mod_id', 'tiene_detalle', 'padre_id', 'bnd_activo', 'bnd_excepcion_calificacion_prohibida'];
 
 	public function usu_alta()
 	{
