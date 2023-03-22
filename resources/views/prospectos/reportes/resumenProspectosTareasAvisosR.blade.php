@@ -18,9 +18,9 @@
         <h3>General</h3>
         <table>
             <thead>
-              <tr><th colspan="12">Ayer</th><th>Hoy</th></tr>
+              <tr><th colspan="13">{{$hoy}}</th></tr>
                     <th>Plantel</th><th>Usuario</th><th>Call Center -> Asesores</th>
-                    <th>Clientes Concretados</th><th>Avisos Convertidos</th>
+                    <th>Clientes Concretados</th><th>Prospectos Convertidos</th>
                     <th>Prosp. Nuevos</th><th>Prosp. Tocados</th><th>Avisos Creados</th><th>Avisos Cerrados</th>
                     <th>Informes Presenciales</th><th>Informes Telefonicos</th><th>Cita Plantel</th>
                     <th>Base Total</th>

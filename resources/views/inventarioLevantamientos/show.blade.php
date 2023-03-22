@@ -127,14 +127,14 @@
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['escuela_lt']) ?: '' }}" name="q[escuela_lt]" id="q_escuela_lt" />
                                 </div>
                             </div>
-                            -->
+                            
                             <div class="form-group col-md-4">
                                 <label class="col-sm-2 control-label" for="q_escuela_cont">ESCUELA</label>
                                 
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['escuela_cont']) ?: '' }}" name="q[escuela_cont]" id="q_escuela_cont" />
                                 
                             </div>
-                                                    <!--
+                                                    
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_tipo_inventario_gt">TIPO_INVENTARIO</label>
                                 <div class=" col-sm-4">
@@ -145,14 +145,14 @@
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['tipo_inventario_lt']) ?: '' }}" name="q[tipo_inventario_lt]" id="q_tipo_inventario_lt" />
                                 </div>
                             </div>
-                            -->
+                            
                             <div class="form-group col-md-4">
                                 <label class="col-sm-2 control-label" for="q_tipo_inventario_cont">TIPO INVENTARIO</label>
                                 
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['tipo_inventario_cont']) ?: '' }}" name="q[tipo_inventario_cont]" id="q_tipo_inventario_cont" />
                                 
                             </div>
-                                                    <!--
+                                                    
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_ubicacion_gt">UBICACION</label>
                                 <div class=" col-sm-4">
@@ -185,7 +185,7 @@
     {!! $inventarios->appends(Request::except('page'))->render() !!}
     <table class="table table-condensed table-striped">
         <thead>
-            <th>No. Inventario</th><th>Plantel</th><th>Area</th><th>Escuela</th><th>Tipo Inventario</th><th>Ubicacion</th>
+            <th>No. Inventario</th><th>Plantel</th><th>Area</th><th>Ubicacion</th>
             <th>Cantidad</th><th>Nombre</th><th>Medida</th><th>Marca</th><th>Observaciones</th><th>Existe Si</th>
             <th>Existe No</th><th>Estado Bueno</th><th>Estado Malo</th><th></th>
         </thead>
@@ -193,8 +193,8 @@
             
             @foreach($inventarios as $inventario)
             <tr>
-                <td>{{$inventario->no_inventario}}</td><td>{{$inventario->plantelInventario->name}}</td><td>{{$inventario->area}}</td><td>{{$inventario->escuela}}</td>
-                <td>{{$inventario->tipo_inventario}}</td><td>{{$inventario->ubicacion}}</td><td>{{$inventario->cantidad}}</td><td>{{$inventario->nombre}}</td>
+                <td>{{$inventario->no_inventario}}</td><td>{{$inventario->plantelInventario->name}}</td><td>{{$inventario->area}}</td>
+                <td>{{$inventario->ubicacion}}</td><td>{{$inventario->cantidad}}</td><td>{{$inventario->nombre}}</td>
                 <td>{{$inventario->medida}}</td><td>{{$inventario->marca}}</td><td>{{$inventario->observaciones}}</td><td>{{$inventario->existe_si}}</td>
                 <td>{{$inventario->existe_no}}</td><td>{{$inventario->estado_bueno}}</td><td>{{$inventario->estado_malo}}</td>
                 <td>

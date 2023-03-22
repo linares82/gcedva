@@ -9,6 +9,7 @@ use App\InventarioObservacion;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\createInventarioObservacion;
 use App\Http\Requests\updateInventarioObservacion;
+use App\InventarioLevantamiento;
 
 class InventarioObservacionsController extends Controller {
 
@@ -32,9 +33,11 @@ class InventarioObservacionsController extends Controller {
 	public function create(Request $request)
 	{
 		$inventarioLevantamiento=$request->input('inventarioLevantamiento');
+		$cabecera=InventarioLevantamiento::find($request->input('inventarioLevantamiento'));
+		//dd($cabecera);
 		
 		$planteles=PlantelInventario::pluck('name','id');
-		return view('inventarioObservacions.create', compact('inventarioLevantamiento','planteles'))
+		return view('inventarioObservacions.create', compact('inventarioLevantamiento','planteles','cabecera'))
 			->with( 'list', InventarioObservacion::getListFromAllRelationApps() );
 	}
 
@@ -78,7 +81,9 @@ class InventarioObservacionsController extends Controller {
 	public function edit($id, InventarioObservacion $inventarioObservacion)
 	{
 		$inventarioObservacion=$inventarioObservacion->find($id);
-		return view('inventarioObservacions.edit', compact('inventarioObservacion'))
+		$planteles=PlantelInventario::pluck('name','id');
+		
+		return view('inventarioObservacions.edit', compact('inventarioObservacion','planteles'))
 			->with( 'list', InventarioObservacion::getListFromAllRelationApps() );
 	}
 

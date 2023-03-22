@@ -98,7 +98,7 @@ class AtrazoPagos extends Command
                     ->get();
                 //dd(count($eventos));
                 if (count($eventos) == 0) {
-                    if ($registro->adeudos_cantidad == 1) {
+                    if ($registro->adeudos_cantidad == 0) {
                         $this->bajaBs($registro->cliente_id);
                         /*$cliente = Cliente::find($registro->cliente_id);
                         $cliente->st_cliente_id = 25;
@@ -108,7 +108,7 @@ class AtrazoPagos extends Command
                         $seguimiento->st_seguimiento_id = 2;
                         $seguimiento->save();
                         */
-                    } elseif ($registro->adeudos_cantidad == 2) {
+                    } elseif ($registro->adeudos_cantidad == 1 or $registro->adeudos_cantidad == 2) {
                         //echo $registro->cliente_id . '-';
                         $this->bajaBs($registro->cliente_id);
                         fputcsv($file, array(

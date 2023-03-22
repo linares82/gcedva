@@ -247,11 +247,16 @@
         @php
             $calificacion_prohibida=\App\Param::where('llave', 'calificacion_prohibida')->first();
             //dd($ponderacion_seleccionada->bnd_excepcion_calificacion_prohibida);
+            if(!isset($ponderacion_seleccionada)){
+                $excepcion_calificacion_prohibida=0;
+            }else{
+                $excepcion_calificacion_prohibida=$ponderacion_seleccionada->bnd_excepcion_calificacion_prohibida;
+            }
         @endphp 
         
         
         if({{$calificacion_prohibida->valor}} && 
-            !{{$ponderacion_seleccionada->bnd_excepcion_calificacion_prohibida}} &&
+            !{{$excepcion_calificacion_prohibida}} &&
             $('#calificacion_parcial'+$(this).data('cliente_id')).val()>=1 && 
             $('#calificacion_parcial'+$(this).data('cliente_id')).val()<=4.9){
             alert("Calificacion invalida");

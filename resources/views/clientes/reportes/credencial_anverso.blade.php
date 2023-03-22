@@ -3,15 +3,16 @@
       <style>
         @media print {
         th { background: #0046c3; color: #fff; max-width: 400px; padding: 0px 0px; }
-        td { font-family: arial; font-size: 5pt; color: #000; text-align:center;width: 100%;}
-        table { padding: 2px 2px;width: 100%;}
-        #td_frontal { font-family: arial; font-size: 5pt; padding: 1px 1px; color: #000; text-align:center;}
+	td { font-family: arial; font-size: 5pt; color: #000; text-align:center;width: 100%;}
+	table { padding: 2px 2px;width: 100%;}
+	#td_frontal { font-family: arial; font-size: 10pt; color: #000; text-align:center;width: 100%;}
         #tbl_frontal { background: url({{asset('images/cred_frontal.jpg')}}) no-repeat;
                             background-size:200px 307px;}
 	div.saltopagina{
-      display:block;
-      page-break-before:always;
-   }
+        display:block;
+        page-break-before:always;
+   	}
+
         }
         
           
@@ -20,7 +21,8 @@
         #td_frontal { font-family: arial; font-size: 9px; padding: 15px 15px; color: #000; text-align:center;}
         /*table { padding: 1px 1px; width: 100%;}*/
         #tbl_frontal { background: url({{asset('storage/especialidads/'.$inscripcion->especialidad->fondo_credencial)}}) no-repeat;
-                            background-size:200px 307px;}
+                            background-size:200px 307px;
+			    font-size: 2em;}
       </style>
     
     
@@ -38,12 +40,12 @@
               <td >	
               <br/>	
                 @if(isset($cadena_img))
-                    <img src="{{asset("imagenes/clientes/".$cliente->id."/".end($cadena_img))}}" alt="Sin foto" width="60px" height="80px"></img> 
+                    <img src="{{asset("imagenes/clientes/".$cliente->id."/".end($cadena_img))}}" alt="Sin foto" width="85px" height="105px"></img> 
                 @endif
             </td>
           </tr>
           <tr>
-              <td >
+              <td style="font-size:10px;">
                 {{$inscripcion->matricula}} <br/>
                 {{$cliente->nombre}} {{$cliente->nombre2}} {{$cliente->ape_paterno}} {{$cliente->ape_materno}}
               </td>

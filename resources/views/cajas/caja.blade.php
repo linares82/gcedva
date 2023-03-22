@@ -800,15 +800,7 @@
                             <td>{{$dia}}</td>
 	
                         </tr>
-        		<?php
-                        
-                        foreach($combinacion->adeudos as $adeudo){
-                            //if($adeudo->caja_concepto_id==$ln->caja_concepto_id){
-                                $valores->push($adeudo->caja_concepto_id);
-                                $vfechas->push(optional($adeudo->caja)->fecha);
-                            //}
-                        }
-                        ?>                
+        		
                         @endforeach
                         @endif
                         
@@ -826,17 +818,15 @@
                             </thead>
                             <tbody>
                                 @php
-                                    //dd($vfechas);
+                                    //dd($cajas->toArray());
                                 @endphp
                                 @foreach($cajas as $ln)
-                                    @if(isset($valores))
-                                    @if(!is_int($valores->search($ln->concepto_id)) or !is_int($vfechas->search($ln->fecha)))
+                                    
                                     <tr>
                                         
                                     <td> {{$ln->concepto}}</td> <td>{{$ln->fecha}}</td> <td>{{$ln->total}}</td><td>{{$ln->caja}}</td><td>{{$ln->estatus}}</td>
                                     </tr>
-                                    @endif
-                                    @endif
+                                    
                                 @endforeach
                                 
                                 

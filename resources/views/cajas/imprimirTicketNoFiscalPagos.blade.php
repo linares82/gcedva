@@ -35,7 +35,7 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_
             $cadena='Id:'.$cliente->id.
                     '; Nombre:'.$cliente->nombre.' '.$cliente->nombre2.' '.$cliente->ape_paterno.' '.$cliente->ape_materno.
                     '; Plantel:'.$cliente->plantel->razon;
-            $cadena_pie='cliente:'.$cliente->id.'; Plantel:'.$cliente->plantel->id.";Caja:".$caja->consecutivo;
+            $cadena_pie='cliente:'.$cliente->id.'; Plantel:'.$cliente->plantel->id.";Caja:".$caja->consecutivo."; Token: ".$impresion_token->toke_unico;
             foreach($caja->cajaLns as $caja_linea){
                 if($caja_linea->cajaConcepto->id==1){
                     $cadena=$cadena.';'.$caja_linea->cajaConcepto->name." (".$caja_linea->adeudo->fecha_pago.")";
@@ -242,7 +242,7 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_
             $cadena='Id:'.$cliente->id.
                     '; Nombre:'.$cliente->nombre.' '.$cliente->nombre2.' '.$cliente->ape_paterno.' '.$cliente->ape_materno.
                     '; Plantel:'.$cliente->plantel->razon;
-            $cadena_pie='cliente:'.$cliente->id.'; Plantel:'.$cliente->plantel->id.";Caja:".$caja->consecutivo;
+            $cadena_pie='cliente:'.$cliente->id.'; Plantel:'.$cliente->plantel->id.";Caja:".$caja->consecutivo."; Token: ".$impresion_token->toke_unico;
             foreach($caja->cajaLns as $caja_linea){
                 if($caja_linea->cajaConcepto->id==1){
                     $cadena=$cadena.';'.$caja_linea->cajaConcepto->name." (".$caja_linea->adeudo->fecha_pago.")";

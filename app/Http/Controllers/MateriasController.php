@@ -164,7 +164,7 @@ class MateriasController extends Controller
                 ->select('m.id', 'm.name')
                 ->where('gpe.grupo_id', $grupo)
                 ->where('m.plantel_id', '=', $plantel)
-                ->where('m.id', '>', '0')
+                ->where('m.i', '>', '0')
                 ->get();
 
             //dd($r);

@@ -556,10 +556,9 @@ class ProspectosController extends Controller {
 
 	public function resumenProspectosTareasAvisos(){
 		$empleado=Empleado::where('user_id',Auth::user()->id)->first();
-		$empleados_seleccionados=array(821,1101,1102,37,879,878,1096,28,564,1069,527,13,769,525);
+		$empleados_seleccionados=array(13,23,28,37,84,525,527,564,769,821,879,878,883,963,1096,1101,1102,1103,1132,1133,1069,1121,1134,1140,1146,1147);
 		$planteles_validos=$empleado->plantels->pluck('id');
-		$planteles_seleccionados=Plantel::whereIn('id', array(32,
-		30,43,24,18,45,22,10,46,25,47,17,49,50,21,13,15,29,12))
+		$planteles_seleccionados=Plantel::whereIn('id', array(5,6,10,12,13,15,17,18,21,22,23,24,25,29,30,32,36,37,39,40,41,42,43,45,46,47,49,50))
 		->pluck('id');
 		$planteles=Plantel::whereIn('id', $planteles_validos)->pluck('razon','id');
 		$empleados=Empleado::select('id',DB::raw('concat(nombre, " ",ape_paterno, " ",ape_materno) as nombre'))->pluck('nombre','id');
@@ -572,8 +571,8 @@ class ProspectosController extends Controller {
 		//dd($datos);
 		$resumen=array();
 		$hoy=Carbon::createFromFormat('Y-m-d',$datos['fecha_f'])->toDateString();
-		$ayer=Carbon::createFromFormat('Y-m-d',$datos['fecha_f'])->subDay()->toDateString();
-		$plantel_usuarios=ProspectoHactividad::select('p.plantel_id','plantels.razon','prospecto_hactividads.usu_alta_id',
+		$ayer=Carbon::createFromFormat('Y-m-d',$datos['fecha_f'])/*->subDay()*/->toDateString();
+		$plantel_usuarios1=ProspectoHactividad::select('p.plantel_id','plantels.razon','prospecto_hactividads.usu_alta_id',
 		'u.name as user', 'e.id as empleado_id')
 		->join('prospectos as p','p.id','prospecto_hactividads.prospecto_id')
 		->join('plantels','plantels.id','p.plantel_id')
@@ -581,11 +580,24 @@ class ProspectosController extends Controller {
 		->join('empleados as e','e.user_id','u.id')
 		->whereIn('p.plantel_id', $datos['plantel_f'])
 		->whereIn('e.id', $datos['empleado_f'])
-		//->where('tarea','<>', 'Seguimiento')
 		->whereDate('prospecto_hactividads.created_at','>=', $ayer)
 		->whereDate('prospecto_hactividads.created_at', '<=',$hoy)
+		->distinct();
+		//->get();
+
+		$plantel_usuarios=Empleado::select('plantels.id as plantel_id','plantels.razon','empleados.user_id as usu_alta_id',
+		'u.name as user', 'empleados.id as empleado_id')
+		->join('empleado_plantel as ep','ep.empleado_id','empleados.id')
+		->join('plantels','plantels.id','ep.plantel_id')
+		->join('users as u','u.id','empleados.user_id')
+		->whereIn('plantels.id', $datos['plantel_f'])
+		->whereIn('empleados.id', $datos['empleado_f'])
+		->orderBy('plantels.razon')
+		->union($plantel_usuarios1)
 		->distinct()
+		->orderBy('plantels.razon')
 		->get();
+
 		//dd($plantel_usuarios->toArray());
 
 		foreach($plantel_usuarios as $plantel_usuario){
@@ -750,11 +762,13 @@ class ProspectosController extends Controller {
 			->whereNull('prospectos.deleted_at')
 			->count();
 
-			array_push($resumen, $linea);
+			if($linea['callToAsesorAyer']<>0){
+				array_push($resumen, $linea);
+			}
 
 		}
 		
-		return view('prospectos.reportes.resumenProspectosTareasAvisosR', compact('resumen','datos'));
+		return view('prospectos.reportes.resumenProspectosTareasAvisosR', compact('resumen','datos','hoy'));
 	}
 
 	public function detalleProspectosTareasAvisosR(Request $request){
@@ -920,6 +934,45 @@ class ProspectosController extends Controller {
 		return view('prospectos.reportes.detalleProspectosTareasAvisosR', 
 		compact('clientes','prospectos_convertidos','avisos_creados', 'prospectos_creados',
 		'prospectos_tocados','avisos_cerrados','tareas','base_total','callToAsesorAyer'));
+	}
+
+	public function prospectosL(Request $request){
+		$empleados=Empleado::select('id',DB::raw('concat(nombre, " ",ape_paterno, " ",ape_materno) as nombre'))->pluck('nombre','id');
+		$empleados_seleccionados=array(4,5,7,8,10,11,219,312,313,314,563,883);
+		$empleado=Empleado::where('user_id', Auth::user()->id)->first();
+		$planteles=$empleado->plantels->pluck('razon','id');
+		//$estatus=StProspecto::pluck('name','id');
+		return view('prospectos.reportes.prospectosL', compact('planteles','empleados','empleados_seleccionados','empleado'));
+	}
+
+	public function prospectosLR(Request $request){
+		$datos=$request->all();
+		
+		$resumen=Prospecto::select(DB::raw('prospectos.fecha, p.razon, ua.name as usuario_alta, stp.name as estatus, count(ua.name) as total'))
+		->join('users as ua','ua.id','=','prospectos.usu_alta_id')
+		->join('empleados as e','e.user_id','ua.id')
+		->join('plantels as p','p.id','=','prospectos.plantel_id')
+		->join('st_prospectos as stp','stp.id','=','prospectos.st_prospecto_id')
+		//->join('plantels as p','p.id','=','prospectos.plantel_id')
+		->whereDate('prospectos.fecha','>=', $datos['fecha_f'])
+		->whereDate('prospectos.fecha','<=', $datos['fecha_t'])
+		->whereIn('prospectos.plantel_id', $datos['plantel_f'])
+		->whereIn('e.id', $datos['empleado_f'])
+		//->groupBy('p.razon')
+		->groupBy('prospectos.fecha')
+		->groupBy('p.razon')
+		->groupBy('stp.name')
+		->groupBy('ua.name')
+		->get();
+		//dd($resumen->toArray());
+		$registros=Prospecto::join('users as ua','ua.id','=','prospectos.usu_alta_id')
+		->join('empleados as e','e.user_id','ua.id')
+		->whereDate('prospectos.created_at','>=', $datos['fecha_f'])
+		->whereDate('prospectos.created_at','<=', $datos['fecha_t'])
+		->whereIn('prospectos.plantel_id', $datos['plantel_f'])
+		->whereIn('e.id', $datos['empleado_f'])
+		->get();
+		return view('prospectos.reportes.prospectosLR', compact('registros', 'resumen'));
 	}
 }
 
