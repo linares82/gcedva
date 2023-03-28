@@ -10,6 +10,7 @@ use App\HCambiosCaja;
 use App\Param;
 use App\Seguimiento;
 use Log;
+use Mail;
 use App\Inscripcion;
 use Auth;
 use Exception;
@@ -153,6 +154,7 @@ class CajaObserver
                                     }
                                 }
                             } catch (Exception $e) {
+                                $this->enviarMailFallaBs($e->getMessage(), 'Error al activar cliente en BS desde pago de caja');
                                 Log::info("cliente no encontrado en Brigth Space u otro error: " . $cliente->matricula . " - " . $e->getMessage());
                                 //return false;
                             }
@@ -177,6 +179,7 @@ class CajaObserver
                             $resultado = $apiBs->doValence2('GET', '/d2l/api/lp/' . $param->valor . '/users/?orgDefinedId=' . $cliente->matricula);
                             //Muestra resultado
                             $r = $resultado[0];
+                            //dd($r);
                             $datos = ['isActive' => True];
                             if (isset($r['UserId'])) {
                                 $resultado2 = $apiBs->doValence2('PUT', '/d2l/api/lp/' . $param->valor . '/users/' . $r['UserId'] . '/activation', $datos);
@@ -202,7 +205,9 @@ class CajaObserver
                                 }
                             }
                         } catch (Exception $e) {
+                            //$this->enviarMailFallaBs($e->getMessage(), 'Error al activar cliente en BS desde pago de caja');
                             Log::info("cliente no encontrado en Brigth Space u otro error: " . $cliente->matricula . " - " . $e->getMessage());
+                            //dd($e->getMessage());
                             //return false;
                         }
                     }
@@ -227,4 +232,23 @@ class CajaObserver
             }
         }
     }
+
+    public function enviarMailFallaBs($msj, $asunto)
+    {
+        $from = "ohpelayo@gmail.com";
+        $destinatario = "linares82@gmail.com";
+        $contenido = $msj;
+        $n = Auth::user()->name;
+        
+        //dd(env('MAIL_FROM_ADDRESS'));
+
+        $data = array('contenido' => $msj, 'nombre' => $n, 'correo' => $from);
+        $r = \Mail::send('correos.errorBs', $data, function ($message)
+        use ($asunto, $destinatario, $n, $from) {
+            $message->from(env('MAIL_FROM_ADDRESS', 'hola@grupocedva.com'), env('MAIL_FROM_NAME', 'Grupo CEDVA'));
+            $message->to($destinatario, $n)->subject($asunto);
+            $message->replyTo($from);
+        });
+    }
+
 }

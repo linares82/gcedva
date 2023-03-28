@@ -118,7 +118,7 @@ class ActivarBs extends Command
             ->whereNull('c.deleted_at')
             ->where('c.st_cliente_id', '=', 4)
             ->groupBy('adeudos.cliente_id')
-            ->having('adeudos_cantidad', '<=', 1)
+            ->having('adeudos_cantidad', '<', 1)
             ->get();
         //dd('fil');
         //dd($registros->toArray());
@@ -157,6 +157,8 @@ class ActivarBs extends Command
                     //Muestra resultado
                     //dd($resultado);
                     $r = $resultado[0];
+                    Log::info('-----------------Consulta Cliente en BS-------------------');
+                    Log::info($r);
                     $datos = ['isActive' => True];
                     if (isset($r['UserId'])) {
                         $resultado2 = $apiBs->doValence2('PUT', '/d2l/api/lp/' . $param->valor . '/users/' . $r['UserId'] . '/activation', $datos);
@@ -182,7 +184,7 @@ class ActivarBs extends Command
                         }
                     }
                 } catch (Exception $e) {
-                    Log::info("cliente no encontrado en Brigth Space u otro error: " . $cliente->matricula . " - " . $e->getMessage());
+                    Log::info("cliente no encontrado en Brigth Space u otro error: " . $cliente->id. "--" . $cliente->matricula . " - " . $e->getMessage());
                     //return false;
                 }
             }

@@ -595,7 +595,7 @@ class ProspectosController extends Controller {
 		->orderBy('plantels.razon')
 		->union($plantel_usuarios1)
 		->distinct()
-		->orderBy('plantels.razon')
+		//->orderBy('plantels.razon')
 		->get();
 
 		//dd($plantel_usuarios->toArray());
@@ -761,8 +761,18 @@ class ProspectosController extends Controller {
 			//->where('h.usu_alta_id',$plantel_usuario->usu_alta_id)
 			->whereNull('prospectos.deleted_at')
 			->count();
-
-			if($linea['callToAsesorAyer']<>0){
+			//dd($linea);
+			if($linea['callToAsesorAyer']>0 or 
+				$linea['clientes_concretados']>0 or
+				$linea['prospectos_convertidos']>0 or
+				$linea['prospectos_creados']>0 or
+				$linea['prospectos_tocados']>0 or
+				$linea['avisos_creados']>0 or
+				$linea['avisos_cerrados']>0 or
+				$linea['tarea_informe_presencial']>0 or
+				$linea['tarea_informe_telefonico']>0 or
+				$linea['tarea_cita_plantel']>0 or
+				$linea['base_total']>0){
 				array_push($resumen, $linea);
 			}
 

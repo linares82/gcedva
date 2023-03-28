@@ -8,7 +8,7 @@ use App\Traits\RelationManagerTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Venturecraft\Revisionable\RevisionableTrait;
 
-class UnidadUso extends Model
+class UserRole extends Model
 {
     use RelationManagerTrait,GetAllDataTrait;
     use SoftDeletes;

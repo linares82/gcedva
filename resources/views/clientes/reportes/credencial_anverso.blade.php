@@ -46,8 +46,9 @@
           </tr>
           <tr>
               <td style="font-size:10px;">
-                {{$inscripcion->matricula}} <br/>
-                {{$cliente->nombre}} {{$cliente->nombre2}} {{$cliente->ape_paterno}} {{$cliente->ape_materno}}
+                {{$cliente->matricula}} <br/>
+                {{$cliente->nombre}} {{$cliente->nombre2}} <br/>
+                {{$cliente->ape_paterno}} {{$cliente->ape_materno}}
               </td>
           </tr>
           <tr>
@@ -60,7 +61,7 @@
 	  <tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>
 	<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>
 	<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>
-	<tr><td></td></tr><tr><td></td></tr><tr>
+	<tr><td></td></tr><tr><td></td>
                     
           </tbody>
       </table>
@@ -138,7 +139,7 @@
                     <img src="data:image/png;base64, 
                                 {!! base64_encode(QrCode::format('png')->size(60)->generate('Id:'.$cliente->id.
                                 '; Nombre:'.$cliente->nombre.' '.$cliente->nombre2.' '.$cliente->ape_paterno.' '.$cliente->ape_materno.
-                                '; Matricula:'.$inscripcion->matricula.
+                                '; Matricula:'.$cliente->matricula.
                                 '; Plantel:'.$plantel->razon)) !!} ">
                 </td>
             </tr>    

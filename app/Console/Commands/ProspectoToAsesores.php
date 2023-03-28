@@ -22,7 +22,7 @@ class ProspectoToAsesores extends Command
      *
      * @var string
      */
-    protected $description = 'Verifica prospectos capturados y 72 horas transcurridas para asignarlos a asesores';
+    protected $description = 'Verifica prospectos capturados y 24 horas transcurridas para asignarlos a asesores';
 
     /**
      * Create a new command instance.
@@ -65,7 +65,7 @@ class ProspectoToAsesores extends Command
                         $dias++;
                         //echo $prospecto->id."--".$dias."**";
                         if (
-                            $dias >= 3
+                            $dias >= 1
                             and $prospecto->tel_cel <> "" and !is_null($prospecto->tel_cel)
                             and $prospecto->mail <> "" and !is_null($prospecto->mail)
                         ) {

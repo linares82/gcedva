@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use DB;
 use Log;
 use Auth;
+use Mail;
 use Session;
 use App\Caja;
 use App\Pago;
@@ -105,12 +106,12 @@ class CajasController extends Controller
             }
         }
 
-        $cajas = Caja::select('cajas.consecutivo as caja', 'cajas.fecha', 'ln.caja_concepto_id as concepto_id', 'cc.name as concepto', 'ln.total', 'st.name as estatus','ln.adeudo_id')
+        $cajas = Caja::select('cajas.consecutivo as caja', 'cajas.fecha', 'ln.caja_concepto_id as concepto_id', 'cc.name as concepto', 'ln.total', 'st.name as estatus', 'ln.adeudo_id')
             ->join('caja_lns as ln', 'ln.caja_id', '=', 'cajas.id')
             ->join('caja_conceptos as cc', 'cc.id', '=', 'ln.caja_concepto_id')
             ->join('st_cajas as st', 'st.id', '=', 'cajas.st_caja_id')
             ->where('cliente_id', $cliente->id)
-            ->where('ln.adeudo_id','0')
+            ->where('ln.adeudo_id', '0')
             ->whereNull('cajas.deleted_at')
             ->whereNull('ln.deleted_at')
             ->get();
@@ -202,12 +203,12 @@ class CajasController extends Controller
     {
         $caja = $caja->find($id);
         $cliente = Cliente::find($caja->cliente_id);
-        $cajas = Caja::select('cajas.consecutivo as caja', 'cajas.fecha', 'ln.caja_concepto_id as concepto_id', 'cc.name as concepto', 'ln.total', 'st.name as estatus','ln.adeudo_id')
+        $cajas = Caja::select('cajas.consecutivo as caja', 'cajas.fecha', 'ln.caja_concepto_id as concepto_id', 'cc.name as concepto', 'ln.total', 'st.name as estatus', 'ln.adeudo_id')
             ->join('caja_lns as ln', 'ln.caja_id', '=', 'cajas.id')
             ->join('caja_conceptos as cc', 'cc.id', '=', 'ln.caja_concepto_id')
             ->join('st_cajas as st', 'st.id', '=', 'cajas.st_caja_id')
             ->where('cliente_id', $cliente->id)
-            ->where('ln.adeudo_id','0')
+            ->where('ln.adeudo_id', '0')
             ->whereNull('cajas.deleted_at')
             ->whereNull('ln.deleted_at')
             ->get();
@@ -302,14 +303,20 @@ class CajasController extends Controller
             return view('cajas.caja', compact('empleados'))->with('list', Caja::getListFromAllRelationApps())->with('list1', CajaLn::getListFromAllRelationApps());
         }
 
-        $cajas = Caja::select('cajas.consecutivo as caja', 'cajas.fecha', 
-        'ln.caja_concepto_id as concepto_id', 'cc.name as concepto', 'ln.total', 
-        'st.name as estatus', 'ln.adeudo_id')
+        $cajas = Caja::select(
+            'cajas.consecutivo as caja',
+            'cajas.fecha',
+            'ln.caja_concepto_id as concepto_id',
+            'cc.name as concepto',
+            'ln.total',
+            'st.name as estatus',
+            'ln.adeudo_id'
+        )
             ->join('caja_lns as ln', 'ln.caja_id', '=', 'cajas.id')
             ->join('caja_conceptos as cc', 'cc.id', '=', 'ln.caja_concepto_id')
             ->join('st_cajas as st', 'st.id', '=', 'cajas.st_caja_id')
             ->where('cliente_id', $cliente->id)
-            ->where('ln.adeudo_id',0)
+            ->where('ln.adeudo_id', 0)
             ->whereNull('cajas.deleted_at')
             ->whereNull('ln.deleted_at')
             ->get();
@@ -331,7 +338,7 @@ class CajasController extends Controller
             count($combinaciones) > 0 and
             array_search($cliente->plantel_id, $planteles) <> false
         ) {
-            
+
             return view('cajas.caja', compact('cliente', 'combinaciones', 'cajas', 'empleados'))
                 ->with('list', Caja::getListFromAllRelationApps())
                 ->with('list1', CajaLn::getListFromAllRelationApps());
@@ -341,7 +348,7 @@ class CajasController extends Controller
             array_search($cliente->plantel_id, $planteles) == false and
             $permiso_caja_buscarCliente
         ) {
-            
+
             return view('cajas.caja', compact('cliente', 'combinaciones', 'cajas', 'empleados'))
                 ->with('list', Caja::getListFromAllRelationApps())
                 ->with('list1', CajaLn::getListFromAllRelationApps());
@@ -380,12 +387,12 @@ class CajasController extends Controller
         }
         //dd($caja);
         $combinaciones = CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
-        $cajas = Caja::select('cajas.consecutivo as caja', 'cajas.fecha', 'ln.caja_concepto_id as concepto_id', 'cc.name as concepto', 'ln.total', 'st.name as estatus','ln.adeudo_id')
+        $cajas = Caja::select('cajas.consecutivo as caja', 'cajas.fecha', 'ln.caja_concepto_id as concepto_id', 'cc.name as concepto', 'ln.total', 'st.name as estatus', 'ln.adeudo_id')
             ->join('caja_lns as ln', 'ln.caja_id', '=', 'cajas.id')
             ->join('caja_conceptos as cc', 'cc.id', '=', 'ln.caja_concepto_id')
             ->join('st_cajas as st', 'st.id', '=', 'cajas.st_caja_id')
             ->where('cliente_id', $caja->cliente->id)
-            ->where('ln.adeudo_id','0')
+            ->where('ln.adeudo_id', '0')
             ->whereNull('cajas.deleted_at')
             ->whereNull('ln.deleted_at')
             ->get();
@@ -433,17 +440,17 @@ class CajasController extends Controller
 
         $caja = Caja::find($data['caja']);
         $cliente = Cliente::find($data['cliente_id']);
-        $cajas = Caja::select('cajas.consecutivo as caja', 'cajas.fecha', 'ln.caja_concepto_id as concepto_id', 'cc.name as concepto', 'ln.total', 'st.name as estatus','ln.adeudo_id')
+        $cajas = Caja::select('cajas.consecutivo as caja', 'cajas.fecha', 'ln.caja_concepto_id as concepto_id', 'cc.name as concepto', 'ln.total', 'st.name as estatus', 'ln.adeudo_id')
             ->join('caja_lns as ln', 'ln.caja_id', '=', 'cajas.id')
             ->join('caja_conceptos as cc', 'cc.id', '=', 'ln.caja_concepto_id')
             ->join('st_cajas as st', 'st.id', '=', 'cajas.st_caja_id')
             ->where('cliente_id', $cliente->id)
-            ->where('ln.adeudo_id','0')
+            ->where('ln.adeudo_id', '0')
             ->whereNull('cajas.deleted_at')
             ->whereNull('ln.deleted_at')
             ->get();
 
-        $lns = CajaLn::where('caja_id',$caja->id)->whereNull('deleted_at')->count();
+        $lns = CajaLn::where('caja_id', $caja->id)->whereNull('deleted_at')->count();
         if ($lns == 0) {
             $conceptosValidos = $caja->plantel->conceptoMultipagos->toArray();
             //dd($conceptosValidos);
@@ -625,7 +632,7 @@ class CajasController extends Controller
                             $regla_descuento = 0;
                             //dd($caja_ln);
                             //dd($adeudo);
-                            
+
                             foreach ($adeudo->planPagoLn->reglaRecargos as $regla) {
                                 //dd($regla->toArray());
                                 if (($adeudo->bnd_eximir_descuento_regla == 0 or is_null($adeudo->bnd_eximir_descuento_regla)) and
@@ -850,12 +857,12 @@ class CajasController extends Controller
         $caja = Caja::find($request->get('caja'));
 
         $cliente = Cliente::find($caja->cliente_id);
-        $cajas = Caja::select('cajas.consecutivo as caja', 'cajas.fecha', 'ln.caja_concepto_id as concepto_id', 'cc.name as concepto', 'ln.total', 'st.name as estatus','ln.adeudo_id')
+        $cajas = Caja::select('cajas.consecutivo as caja', 'cajas.fecha', 'ln.caja_concepto_id as concepto_id', 'cc.name as concepto', 'ln.total', 'st.name as estatus', 'ln.adeudo_id')
             ->join('caja_lns as ln', 'ln.caja_id', '=', 'cajas.id')
             ->join('caja_conceptos as cc', 'cc.id', '=', 'ln.caja_concepto_id')
             ->join('st_cajas as st', 'st.id', '=', 'cajas.st_caja_id')
             ->where('cliente_id', $cliente->id)
-            ->where('ln.adeudo_id','0')
+            ->where('ln.adeudo_id', '0')
             ->whereNull('cajas.deleted_at')
             ->whereNull('ln.deleted_at')
             ->get();
@@ -1069,12 +1076,12 @@ class CajasController extends Controller
 
         $cliente = Cliente::find($caja->cliente_id);
         $combinaciones = CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
-        $cajas = Caja::select('cajas.consecutivo as caja', 'cajas.fecha', 'ln.caja_concepto_id as concepto_id', 'cc.name as concepto', 'ln.total', 'st.name as estatus','ln.adeudo_id')
+        $cajas = Caja::select('cajas.consecutivo as caja', 'cajas.fecha', 'ln.caja_concepto_id as concepto_id', 'cc.name as concepto', 'ln.total', 'st.name as estatus', 'ln.adeudo_id')
             ->join('caja_lns as ln', 'ln.caja_id', '=', 'cajas.id')
             ->join('caja_conceptos as cc', 'cc.id', '=', 'ln.caja_concepto_id')
             ->join('st_cajas as st', 'st.id', '=', 'cajas.st_caja_id')
             ->where('cliente_id', $cliente->id)
-            ->where('ln.adeudo_id','0')
+            ->where('ln.adeudo_id', '0')
             ->whereNull('cajas.deleted_at')
             ->whereNull('ln.deleted_at')
             ->get();
@@ -1098,12 +1105,12 @@ class CajasController extends Controller
             $caja->save();
         }
         $combinaciones = CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
-        $cajas = Caja::select('cajas.consecutivo as caja', 'cajas.fecha', 'ln.caja_concepto_id as concepto_id', 'cc.name as concepto', 'ln.total', 'st.name as estatus','ln.adeudo_id')
+        $cajas = Caja::select('cajas.consecutivo as caja', 'cajas.fecha', 'ln.caja_concepto_id as concepto_id', 'cc.name as concepto', 'ln.total', 'st.name as estatus', 'ln.adeudo_id')
             ->join('caja_lns as ln', 'ln.caja_id', '=', 'cajas.id')
             ->join('caja_conceptos as cc', 'cc.id', '=', 'ln.caja_concepto_id')
             ->join('st_cajas as st', 'st.id', '=', 'cajas.st_caja_id')
             ->where('cliente_id', $caja->cliente_id)
-            ->where('ln.adeudo_id','0')
+            ->where('ln.adeudo_id', '0')
             ->whereNull('cajas.deleted_at')
             ->whereNull('ln.deleted_at')
             ->get();
@@ -1135,12 +1142,12 @@ class CajasController extends Controller
         }
 
         $combinaciones = CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
-        $cajas = Caja::select('cajas.consecutivo as caja', 'cajas.fecha', 'ln.caja_concepto_id as concepto_id', 'cc.name as concepto', 'ln.total', 'st.name as estatus','ln.adeudo_id')
+        $cajas = Caja::select('cajas.consecutivo as caja', 'cajas.fecha', 'ln.caja_concepto_id as concepto_id', 'cc.name as concepto', 'ln.total', 'st.name as estatus', 'ln.adeudo_id')
             ->join('caja_lns as ln', 'ln.caja_id', '=', 'cajas.id')
             ->join('caja_conceptos as cc', 'cc.id', '=', 'ln.caja_concepto_id')
             ->join('st_cajas as st', 'st.id', '=', 'cajas.st_caja_id')
             ->where('cliente_id', $caja->cliente_id)
-            ->where('ln.adeudo_id','0')
+            ->where('ln.adeudo_id', '0')
             ->whereNull('cajas.deleted_at')
             ->whereNull('ln.deleted_at')
             ->get();
@@ -1861,12 +1868,12 @@ class CajasController extends Controller
             $adeudos = Adeudo::where('id', '=', $adeudo_tomado->adeudo_id)->get();
 
             $cliente = Cliente::find($caja->cliente_id);
-            $cajas = Caja::select('cajas.consecutivo as caja', 'cajas.fecha', 'ln.caja_concepto_id as concepto_id', 'cc.name as concepto', 'ln.total', 'st.name as estatus','ln.adeudo_id')
+            $cajas = Caja::select('cajas.consecutivo as caja', 'cajas.fecha', 'ln.caja_concepto_id as concepto_id', 'cc.name as concepto', 'ln.total', 'st.name as estatus', 'ln.adeudo_id')
                 ->join('caja_lns as ln', 'ln.caja_id', '=', 'cajas.id')
                 ->join('caja_conceptos as cc', 'cc.id', '=', 'ln.caja_concepto_id')
                 ->join('st_cajas as st', 'st.id', '=', 'cajas.st_caja_id')
                 ->where('cliente_id', $cliente->id)
-                ->where('ln.adeudo_id','0')
+                ->where('ln.adeudo_id', '0')
                 ->whereNull('cajas.deleted_at')
                 ->whereNull('ln.deleted_at')
                 ->get();
@@ -2057,6 +2064,7 @@ class CajasController extends Controller
                     $resultado = $apiBs->doValence2('GET', '/d2l/api/lp/' . $param->valor . '/users/?orgDefinedId=' . $cliente->matricula);
                     //Muestra resultado
                     $r = $resultado[0];
+                    
                     $datos = ['isActive' => True];
                     if (isset($r['UserId'])) {
                         $resultado2 = $apiBs->doValence2('PUT', '/d2l/api/lp/' . $param->valor . '/users/' . $r['UserId'] . '/activation', $datos);
@@ -2082,6 +2090,7 @@ class CajasController extends Controller
                         }
                     }
                 } catch (Exception $e) {
+                    //$this->enviarMailFallaBs($e->getMessage(), "Error al repetir activar BS dede caja");
                     Log::info("cliente no encontrado en Brigth Space u otro error: " . $cliente->matricula . " - " . $e->getMessage());
                     //return false;
                 }
@@ -2091,12 +2100,12 @@ class CajasController extends Controller
         $combinaciones = CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
         $empleados = Empleado::select(DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name, id'))->pluck('name', 'id');
 
-        $cajas = Caja::select('cajas.consecutivo as caja', 'cajas.fecha', 'ln.caja_concepto_id as concepto_id', 'cc.name as concepto', 'ln.total', 'st.name as estatus','ln.adeudo_id')
+        $cajas = Caja::select('cajas.consecutivo as caja', 'cajas.fecha', 'ln.caja_concepto_id as concepto_id', 'cc.name as concepto', 'ln.total', 'st.name as estatus', 'ln.adeudo_id')
             ->join('caja_lns as ln', 'ln.caja_id', '=', 'cajas.id')
             ->join('caja_conceptos as cc', 'cc.id', '=', 'ln.caja_concepto_id')
             ->join('st_cajas as st', 'st.id', '=', 'cajas.st_caja_id')
             ->where('cliente_id', $cliente->id)
-            ->where('ln.adeudo_id','0')
+            ->where('ln.adeudo_id', '0')
             ->whereNull('cajas.deleted_at')
             ->whereNull('ln.deleted_at')
             ->get();
@@ -2105,6 +2114,24 @@ class CajasController extends Controller
         return view('cajas.caja', compact('cliente', 'caja', 'combinaciones', 'cajas', 'empleados'))
             ->with('list', Caja::getListFromAllRelationApps())
             ->with('list1', CajaLn::getListFromAllRelationApps());
+    }
+
+    public function enviarMailFallaBs($msj, $asunto)
+    {
+        $from = "ohpelayo@gmail.com";
+        $destinatario = "linares82@gmail.com";
+        $contenido = $msj;
+        $n = Auth::user()->name;
+        
+        //dd(env('MAIL_FROM_ADDRESS'));
+
+        $data = array('contenido' => $msj, 'nombre' => $n, 'correo' => $from);
+        $r = \Mail::send('correos.errorBs', $data, function ($message)
+        use ($asunto, $destinatario, $n, $from) {
+            $message->from(env('MAIL_FROM_ADDRESS', 'hola@grupocedva.com'), env('MAIL_FROM_NAME', 'Grupo CEDVA'));
+            $message->to($destinatario, $n)->subject($asunto);
+            $message->replyTo($from);
+        });
     }
 
     public function cajaGeneral()
@@ -2197,12 +2224,12 @@ class CajasController extends Controller
         //dd($combinaciones);
         $empleados = Empleado::select(DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name, id'))->pluck('name', 'id');
 
-        $cajas = Caja::select('cajas.consecutivo as caja', 'cajas.fecha', 'ln.caja_concepto_id as concepto_id', 'cc.name as concepto', 'ln.total', 'st.name as estatus','ln.adeudo_id')
+        $cajas = Caja::select('cajas.consecutivo as caja', 'cajas.fecha', 'ln.caja_concepto_id as concepto_id', 'cc.name as concepto', 'ln.total', 'st.name as estatus', 'ln.adeudo_id')
             ->join('caja_lns as ln', 'ln.caja_id', '=', 'cajas.id')
             ->join('caja_conceptos as cc', 'cc.id', '=', 'ln.caja_concepto_id')
             ->join('st_cajas as st', 'st.id', '=', 'cajas.st_caja_id')
             ->where('cliente_id', $caja->cliente_id)
-            ->where('ln.adeudo_id','0')
+            ->where('ln.adeudo_id', '0')
             ->whereNull('cajas.deleted_at')
             ->whereNull('ln.deleted_at')
             ->get();
