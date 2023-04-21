@@ -790,6 +790,15 @@ Route::post(
         'uses' => 'EmpleadosController@listadoAniversariosR'
     )
 )->middleware('auth');
+Route::get(
+    '/empleados/getEmpleadosStProspectos/',
+    array(
+        'as' => 'empleados.getEmpleadosStProspectos',
+        //'middleware' => 'permission:empleados.getEmpleadosStProspectos',
+        'uses' => 'EmpleadosController@getEmpleadosStProspectos'
+    )
+)->middleware('auth');
+
 ///////////////////////////////////////////////////////////////////////////////////////////
 /*Route::get('zip/imagenes', function () {
 $files = glob(public_path('imagenes'));

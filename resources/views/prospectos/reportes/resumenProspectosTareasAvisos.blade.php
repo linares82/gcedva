@@ -39,23 +39,31 @@
                     @endif
                 </div>
                 
-                <div class="form-group col-md-6 @if($errors->has('plantel_f')) has-error @endif">
+                
+                <div class="form-group col-md-3 @if($errors->has('st_prospecto_f')) has-error @endif">
+                    <label for="st_prospecto_f-field">Etapa Prospectos:</label>
+                    {!! Form::select("st_prospecto_f", $st_prospectos, null, array("class" => "form-control select_seguridad", "id" => "st_prospecto_f-field")) !!}
+                    @if($errors->has("st_prospecto_f"))
+                    <span class="help-block">{{ $errors->first("st_prospecto_f") }}</span>
+                    @endif
+                </div>
+
+
+                <div class="form-group col-md-9 @if($errors->has('empleado_f')) has-error @endif">
+                    <label for="plantel_f-field">Empleados:</label>
+                    {!! Form::select("empleado_f[]", $empleados, null, array("class" => "form-control select_seguridad", "id" => "empleado_f-field", 'multiple'=>true)) !!}
+                    @if($errors->has("plantel_f"))
+                    <span class="help-block">{{ $errors->first("plantel_f") }}</span>
+                    @endif
+                </div>
+
+                <div class="form-group col-md-12 @if($errors->has('plantel_f')) has-error @endif">
                     <label for="plantel_f-field">Plantel de:</label>
                     {!! Form::select("plantel_f[]", $planteles, $planteles_seleccionados, array("class" => "form-control select_seguridad", "id" => "plantel_f-field", 'multiple'=>true)) !!}
                     @if($errors->has("plantel_f"))
                     <span class="help-block">{{ $errors->first("plantel_f") }}</span>
                     @endif
                 </div>
-
-                <div class="form-group col-md-6 @if($errors->has('empleado_f')) has-error @endif">
-                    <label for="plantel_f-field">Empleados:</label>
-                    {!! Form::select("empleado_f[]", $empleados, $empleados_seleccionados, array("class" => "form-control select_seguridad", "id" => "empleado_f-field", 'multiple'=>true)) !!}
-                    @if($errors->has("plantel_f"))
-                    <span class="help-block">{{ $errors->first("plantel_f") }}</span>
-                    @endif
-                </div>
-
-                
                 
                 <div class="row">
                 </div>
@@ -69,6 +77,7 @@
 @push('scripts')
   <script type="text/javascript">
     $(document).ready(function() {
+        //getEmpleadosStProspecto();
     $('#fecha_f-field').Zebra_DatePicker({
         days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
         months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
@@ -84,12 +93,32 @@
         show_select_today: 'Hoy',
       });
     
-    $('#plantel_f-field').change(function(){
-        
+    $('#st_prospecto_f-field').change(function(){
+        getEmpleadosStProspecto();
     });
         
     });
     
+    function getEmpleadosStProspecto(){
+        $.ajax({
+        url: '{{ route("empleados.getEmpleadosStProspectos") }}',
+        type: 'GET',
+        data: "st_prospecto_id="+$('#st_prospecto_f-field option:selected').val()+ "",
+        dataType: 'json',
+        beforeSend : function(){$("#loading3").show();},
+        complete : function(){$("#loading3").hide();},
+        success: function(data){
+            console.log(data);
+            if(data.length==0){
+                $('#empleado_f-field').val(null).trigger('change');
+            }else{
+                $('#empleado_f-field').val(data).trigger('change');
+            }
+        }
+        });       
+    }
+
+
     function getCmbEmpleados(){
         $.ajax({
         url: '{{ route("empleados.getAsesoresXplantel") }}',

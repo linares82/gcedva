@@ -51,6 +51,8 @@
                     {{$prospectoSeguimiento->prospecto->mail}}
                     <label for="prospecto_id">Especialidad: </label>
                     {{$prospectoSeguimiento->prospecto->especialidad->name}}
+                    <label for="prospecto_id">Grado: </label>
+                    {{$prospectoSeguimiento->prospecto->grado->name}}
                     <label for="prospecto_id">Alta: </label>
                     {{$prospectoSeguimiento->prospecto->created_at}} / {{$prospectoSeguimiento->prospecto->usu_alta->name}}
                     <label for="prospecto_id">U. Modificacion: </label>

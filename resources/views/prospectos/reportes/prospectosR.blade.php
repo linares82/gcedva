@@ -49,7 +49,7 @@
                 <td>{{ $registro->nivel->name }}</td>
                 <td>{{ $registro->medio->name }}</td><td>{{ $registro->usu_alta->name }}</td><td>{{ $registro->usu_mod->name }}</td>
                 <td>{{ $registro->stProspecto->name }}</td>
-                <td>{{ $registro->prospectoSeguimiento->prospectoStSeg->name }}</td>
+                <td>{{ isset($registro->prospectoSeguimiento->prospectoStSeg->name) ? $registro->prospectoSeguimiento->prospectoStSeg->name : null }}</td>
                 <td>{{ $registro->cliente_id }}</td>
                 @permission('prospectos.inscripcion_campo')
                 <td>

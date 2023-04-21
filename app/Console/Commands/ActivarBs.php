@@ -58,7 +58,7 @@ class ActivarBs extends Command
         }*/
         $fechaActual = $aux->toDateString();
         
-	    $fechaAnterior = $aux->subDays(7)->toDateString();
+	    $fechaAnterior = $aux->subDays(17)->toDateString();
 	    //dd($fechaActual);
         //Query para identificar clientes con cajas pagadas
         
@@ -70,6 +70,7 @@ class ActivarBs extends Command
           ->where('cli.st_cliente_id', 4)
 		  ->where('st_caja_id',1)
  		  ->get();
+        //dd($cajasHoy->toArray());
         
         $clientes=array();
         foreach($cajasHoy as $caja){
@@ -77,11 +78,13 @@ class ActivarBs extends Command
             array_push($clientes, $caja->cliente_id);
             }
         }
+        //dd($clientes);
 
         $clientesActivosHoy=HEstatus::where('fecha',$fechaActual)
         ->where('tabla','clientes')
         ->where('estatus_id',4)
         ->get();
+        //dd($clientesActivosHoy);
         foreach($clientesActivosHoy as $cliente){
             if(!in_array($cliente->id, $clientes)){
                 array_push($clientes, $cliente->cliente_id);
@@ -91,10 +94,11 @@ class ActivarBs extends Command
         Log::info("clientes proceso activacion BS nocturno");
         Log::info($clientes);
 	    //dd($clientes);
-        
+        $cli_proceso=Cliente::select('id','st_cliente_id')->whereIn('id', $clientes)->get();
+        //dd($cli_proceso->toArray());
 	//dd($cajasHoy->toArray());
         
-
+        /*
         $registros = Adeudo::select(DB::raw('p.razon,adeudos.cliente_id,stc.name as estatus, count(adeudos.cliente_id) as adeudos_cantidad'))
             ->join('clientes as c', 'c.id', '=', 'adeudos.cliente_id')
             ->join('combinacion_clientes as cc', 'cc.cliente_id', '=', 'c.id')
@@ -108,22 +112,23 @@ class ActivarBs extends Command
             ->whereColumn('adeudos.combinacion_cliente_id', 'cc.id')
             ->join('caja_conceptos as caj_con', 'caj_con.id', '=', 'adeudos.caja_concepto_id')
             ->where('caj_con.bnd_mensualidad', 1)
-            //->where('fecha_pago', '<=', $fechaActual)
-	        //->where('fecha_pago', '>=', $fechaAnterior)
+            ->where('fecha_pago', '<=', $fechaActual)
+	        ->where('fecha_pago', '>=', $fechaAnterior)
             ->where('pagado_bnd', 0)
             //->where('c.id', 4443)
             ->whereIn('c.id', $clientes)
             ->whereNotIn('c.plantel_id', array(54))
             ->whereNull('cc.deleted_at')
             ->whereNull('c.deleted_at')
-            ->where('c.st_cliente_id', '=', 4)
+            ->where('c.st_cliente_id', 4)
             ->groupBy('adeudos.cliente_id')
-            ->having('adeudos_cantidad', '<', 1)
-            ->get();
+            ->having('adeudos_cantida', '<=', 1)
+            ->get();*/
+            
         //dd('fil');
         //dd($registros->toArray());
 
-        foreach ($registros as $registro) {
+        foreach ($cli_proceso as $cliente) {
             //$hoy = date('Y-m-d');
             //dd($registro->toArray());
             /*
@@ -134,7 +139,7 @@ class ActivarBs extends Command
             $seguimiento = Seguimiento::where('cliente_id', $cliente->id)->first();
             $seguimiento->st_seguimiento_id = 2;
             $seguimiento->save();*/
-            $this->repetirActivarBs($registro->cliente_id);
+            $this->repetirActivarBs($cliente->id);
             
         }
     }
@@ -143,6 +148,7 @@ class ActivarBs extends Command
     {
 
         $cliente = Cliente::find($cliente);
+        //echo $cliente->id."-".$cliente->st_cliente_id;
         //$caja = Caja::find($caja);
         //if ($cliente->st_cliente_id == 4) {
             $param = Param::where('llave', 'apiVersion_bSpace')->first();
@@ -155,12 +161,12 @@ class ActivarBs extends Command
                     //Log::info('matricula bs reactivar en caja:'.$cliente->matricula);
                     $resultado = $apiBs->doValence2('GET', '/d2l/api/lp/' . $param->valor . '/users/?orgDefinedId=' . $cliente->matricula);
                     //Muestra resultado
-                    //dd($resultado);
+                    //dd($resultado[0]['Activation']['IsActive']);
                     $r = $resultado[0];
                     Log::info('-----------------Consulta Cliente en BS-------------------');
                     Log::info($r);
                     $datos = ['isActive' => True];
-                    if (isset($r['UserId'])) {
+                    if (isset($r['UserId']) and !$resultado[0]['Activation']['IsActive']) {
                         $resultado2 = $apiBs->doValence2('PUT', '/d2l/api/lp/' . $param->valor . '/users/' . $r['UserId'] . '/activation', $datos);
                         $bsBaja = BsBaja::where('cliente_id', $cliente->id)
                             ->where('bnd_baja', 1)

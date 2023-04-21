@@ -183,7 +183,7 @@
                             <span class="help-block">{{ $errors->first("puesto_id") }}</span>
                           @endif
                         </div>
-                        <div class="form-group col-md-4 @if($errors->has('area_id')) has-error @endif">
+                        <div class="form-group col-md-3 @if($errors->has('area_id')) has-error @endif">
                           <label for="area_id-field">Area</label>
                           {!! Form::select("area_id", $list["Area"], null, array("class" => "form-control select_seguridad", "id" => "area_id-field")) !!}
                           @if($errors->has("area_id"))
@@ -195,6 +195,13 @@
                           {!! Form::checkbox("jefe_bnd", 1, null, [ "id" => "jefe_bnd-field"]) !!}
                           @if($errors->has("jefe_bnd"))
                             <span class="help-block">{{ $errors->first("jefe_bnd") }}</span>
+                          @endif
+                        </div>
+                        <div class="form-group col-md-2 @if($errors->has('st_prospecto_id')) has-error @endif">
+                          <label for="st_prospecto_id-field">Etapa Prospectos</label>
+                          {!! Form::select("st_prospecto_id", $list["StProspecto"], null, array("class" => "form-control select_seguridad", "id" => "st_prospecto_id-field")) !!}
+                          @if($errors->has("st_prospecto_id"))
+                            <span class="help-block">{{ $errors->first("st_prospecto_id") }}</span>
                           @endif
                         </div>
                         <div class="form-group col-md-4 @if($errors->has('jefe_id')) has-error @endif">

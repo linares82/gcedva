@@ -97,7 +97,7 @@ class ProspectoSeguimientosController extends Controller {
 		$asuntos=ProspectoAsunto::pluck('name','id');
 		$estatusTareas=ProspectoStTarea::pluck('name', 'id');
 		$prospectoStSeg=ProspectoStSeg::pluck('name', 'id');
-		$actividades = ProspectoHactividad::where('prospecto_seguimiento_id', '=', $prospectoSeguimiento->id)->get();
+		$actividades = ProspectoHactividad::where('prospecto_seguimiento_id', '=', $prospectoSeguimiento->id)->orderBy('fecha')->orderBy('hora')->get();
 		return view('prospectoSeguimientos.show', 
 		compact('prospectoSeguimiento', 'tareas', 'asuntos','estatusTareas','prospectoAsignacionTareas','prospectoAvisos','prospectoStSeg', 'actividades'));
 	}

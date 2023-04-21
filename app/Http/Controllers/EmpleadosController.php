@@ -848,4 +848,23 @@ class EmpleadosController extends Controller
         return view('empleados.reportes.listadoAniversariosR',compact('empleados'));
     }
 
+    public function getEmpleadosStProspectos(Request $request)
+    {
+        if ($request->ajax()) {
+            //dd($request->all());
+            
+            $st_prospecto = $request->get('st_prospecto_id');
+            
+            $final = array();
+            $r = DB::table('empleados as e')
+                ->select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as nombre'))
+                ->where('e.st_prospecto_id', '=', $st_prospecto)
+                ->where('e.id', '>', '0')
+                ->pluck('id');
+            return $r;
+            
+        }
+    }
+
+
 }

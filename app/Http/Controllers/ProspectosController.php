@@ -556,14 +556,15 @@ class ProspectosController extends Controller {
 
 	public function resumenProspectosTareasAvisos(){
 		$empleado=Empleado::where('user_id',Auth::user()->id)->first();
-		$empleados_seleccionados=array(13,23,28,37,84,525,527,564,769,821,879,878,883,963,1096,1101,1102,1103,1132,1133,1069,1121,1134,1140,1146,1147);
+		$empleados_seleccionados=array(13,23,28,84,525,527,564,821,879,964,973,1096,1101,1102,1133,1069,1134,1140,1147, 1174,1179);
 		$planteles_validos=$empleado->plantels->pluck('id');
 		$planteles_seleccionados=Plantel::whereIn('id', array(5,6,10,12,13,15,17,18,21,22,23,24,25,29,30,32,36,37,39,40,41,42,43,45,46,47,49,50))
 		->pluck('id');
 		$planteles=Plantel::whereIn('id', $planteles_validos)->pluck('razon','id');
 		$empleados=Empleado::select('id',DB::raw('concat(nombre, " ",ape_paterno, " ",ape_materno) as nombre'))->pluck('nombre','id');
+		$st_prospectos=StProspecto::pluck('name','id');
 		return view('prospectos.reportes.resumenProspectosTareasAvisos', 
-		compact('planteles', 'empleados', 'planteles_seleccionados', 'empleados_seleccionados'));
+		compact('planteles', 'empleados', 'planteles_seleccionados', 'empleados_seleccionados','st_prospectos'));
 	}
 
 	public function resumenProspectosTareasAvisosR(Request $request){
@@ -572,6 +573,7 @@ class ProspectosController extends Controller {
 		$resumen=array();
 		$hoy=Carbon::createFromFormat('Y-m-d',$datos['fecha_f'])->toDateString();
 		$ayer=Carbon::createFromFormat('Y-m-d',$datos['fecha_f'])/*->subDay()*/->toDateString();
+		
 		$plantel_usuarios1=ProspectoHactividad::select('p.plantel_id','plantels.razon','prospecto_hactividads.usu_alta_id',
 		'u.name as user', 'e.id as empleado_id')
 		->join('prospectos as p','p.id','prospecto_hactividads.prospecto_id')
@@ -597,8 +599,24 @@ class ProspectosController extends Controller {
 		->distinct()
 		//->orderBy('plantels.razon')
 		->get();
-
+		
+		/*
+		$plantel_usuarios=Empleado::select('plantels.id as plantel_id','plantels.razon','empleados.user_id as usu_alta_id',
+		'u.name as user', 'empleados.id as empleado_id')
+		->join('empleado_plantel as ep','ep.empleado_id','empleados.id')
+		->join('plantels','plantels.id','ep.plantel_id')
+		->join('users as u','u.id','empleados.user_id')
+		->whereIn('plantels.id', $datos['plantel_f'])
+		->whereIn('empleados.id', $datos['empleado_f'])
+		->orderBy('plantels.razon')
+		->distinct()
+		//->orderBy('plantels.razon')
+		->get();
+		*/
 		//dd($plantel_usuarios->toArray());
+		//$sorted=$plantel_usuarios->sortBy('plantels.id');
+
+		//dd($sorted->values()->all());
 
 		foreach($plantel_usuarios as $plantel_usuario){
 			$linea=array();
