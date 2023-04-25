@@ -578,6 +578,7 @@ class HacademicasController extends Controller
             //dd('flc');
             $hacademicas = HAcademica::select(
                 'cli.id',
+                'cli.plantel_id',
                 'cli.nombre',
                 'cli.nombre2',
                 'cli.ape_paterno',
@@ -625,6 +626,7 @@ class HacademicasController extends Controller
             if ($dentroPeriodoExamenes > 0) {
                 $hacademicas = HAcademica::select(
                     'cli.id',
+                    'cli.plantel_id',
                     'cli.nombre',
                     'cli.nombre2',
                     'cli.ape_paterno',

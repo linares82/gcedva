@@ -77,6 +77,9 @@ class PlantelsController extends Controller
 		$formas_pago = $request->only('forma_pago_id');
 		$input['usu_alta_id'] = Auth::user()->id;
 		$input['usu_mod_id'] = Auth::user()->id;
+		if(!isset($input['bnd_excepcion_documentos'])){
+			$input['bnd_excepcion_documentos']=0;
+		}
 		//$input['logo']="";
 		$r = $request->hasFile('logo_file');
 		if ($r) {
@@ -229,7 +232,9 @@ class PlantelsController extends Controller
 		$conceptos = $request->only('concepto_multipagos_id');
 		$formas_pago = $request->only('forma_pago_id');
 		$input['usu_mod_id'] = Auth::user()->id;
-
+		if(!isset($input['bnd_excepcion_documentos'])){
+			$input['bnd_excepcion_documentos']=0;
+		}
 		//$input['logo']="";
 		$r = $request->hasFile('logo_file');
 		if ($r) {

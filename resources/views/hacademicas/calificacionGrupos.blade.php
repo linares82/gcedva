@@ -115,14 +115,21 @@
                          <td><div id="div_cp{{$r->id}}">{{ $r->calificacion_parcial_calculada }}</div></td>
                          <td>
                             @php
-                                $param_bloqueoXdoc=\App\Param::where('llave','bloqueo_caja_calif_asistenciasXDoc')->first();
+                                $param_bloqueoXdoc=\App\Param::where('llave','bloqueo_caja_calif_asistenciasXDoc')->value('valor');
+                                $excepcion_documentos=\App\Plantel::find($r->plantel_id);
+                                
+                                if($excepcion_documentos->bnd_excepcion_documentos==1){
+                                    $param_bloqueoXdoc=0;
+                                
+                                }
+                                
                             @endphp
                             @if($r->estatus_cliente_id==3 or 
                             $r->estatus_cliente_id==25 or 
                              $r->estatus_cliente_id==26 or
                              $r->estatus_cliente_id==27 or 
                              $r->estatus_cliente_id==28)
-                                @if($param_bloqueoXdoc->valor==1)
+                                @if($param_bloqueoXdoc==1)
                                     @if($r->bnd_doc_oblig_entregados==1 or $validaEntregaDocs3Meses)
                                         @permission('hacademicas.calificacionBaja')
                                         {!! Form::number("calificacion", null, array("class" => "form-control input-sm col-md-6 input_calificacion", 
@@ -141,7 +148,7 @@
                                                                         "id" => "calificacion_parcial".$r->id, 'min' => 0, 'max' =>10)) !!}
                                 
                             @else
-                                @if($param_bloqueoXdoc->valor==1)
+                                @if($param_bloqueoXdoc==1)
                                     @if($r->bnd_doc_oblig_entregados==1 or $validaEntregaDocs3Meses)
                                     {!! Form::number("calificacion", null, array("class" => "form-control input-sm col-md-6", 
                                     "id" => "calificacion_parcial".$r->id, 'min' => 0, 'max' =>10)) !!}
@@ -159,7 +166,7 @@
                                  $r->estatus_cliente_id==26 or
                                  $r->estatus_cliente_id==27 or 
                                  $r->estatus_cliente_id==28)
-                            @if($param_bloqueoXdoc->valor==1)
+                            @if($param_bloqueoXdoc==1)
                              @if($r->bnd_doc_oblig_entregados==1 or $validaEntregaDocs3Meses)
                              	@permission('hacademicas.calificacionBaja')
                                     <button type="button"  
@@ -194,7 +201,7 @@
                                 <a href="{{ url('hCalificacions/index') }}?q%5Bs%5D=&q%5Bclientes.nombre_cont%5D=&q%5Bcalificacions.calificacion_cont%5D=&q%5Bh_calificacions.calificacion_ponderacion_id_cont%5D={{ $r->calificacion_ponderacion_id }}&q%5Bcarga_ponderacions.name_cont%5D=&q%5Bcalificacion_parcial_anterior_cont%5D=&q%5Bcalificacion_parcial_actual_cont%5D=&q%5Busu_alta_id_cont%5D=&q%5Busu_mod_id_cont%5D=&commit=Buscar" class="btn btn-success btn-xs" target="_blank">Historia</a>
                                 @endpermission
                              @else
-                                @if($param_bloqueoXdoc->valor==1)
+                                @if($param_bloqueoXdoc==1)
                                 @if($r->bnd_doc_oblig_entregados==1 or $validaEntregaDocs3Meses)
                                 <button type="button"  
                                      class="btn btn-primary btn-xs btn-guardar_caificacion" 

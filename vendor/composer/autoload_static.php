@@ -836,6 +836,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'AddBndCortoToNivelsTable' => __DIR__ . '/../..' . '/database/migrations/2020_02_24_103913_add_bnd_corto_to_nivels_table.php',
         'AddBndDocObligEntregadosToClientesTable' => __DIR__ . '/../..' . '/database/migrations/2022_04_08_094522_add_bnd_doc_oblig_entregados_to_clientes_table.php',
         'AddBndDocVincRevisadosToTitulacionsTable' => __DIR__ . '/../..' . '/database/migrations/2022_07_29_115747_add_bnd_doc_vinc_revisados_to_titulacions_table.php',
+        'AddBndExcepcionDocumentosToPlantelsTable' => __DIR__ . '/../..' . '/database/migrations/2023_04_21_155410_add_bnd_excepcion_documentos_to_plantels_table.php',
         'AddBndEximirDescuentoToAdeudosTable' => __DIR__ . '/../..' . '/database/migrations/2020_07_03_104152_add_bnd_eximir_descuento_to_adeudos_table.php',
         'AddBndGeneraMatriculaToCajaConceptosTable' => __DIR__ . '/../..' . '/database/migrations/2021_09_03_081521_add_bnd_genera_matricula_to_caja_conceptos_table.php',
         'AddBndGraficaLectivosTable' => __DIR__ . '/../..' . '/database/migrations/2018_06_19_145551_add_bnd_grafica_lectivos_table.php',

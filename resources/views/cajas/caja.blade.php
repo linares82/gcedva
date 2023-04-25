@@ -146,10 +146,16 @@
                     @permission('cajas.store')
                     <div class="input-group form-group col-md-12 @if($errors->has('cliente_id')) has-error @endif">
                         @php
-                            $param_bloqueoXdoc=\App\Param::where('llave','bloqueo_caja_calif_asistenciasXDoc')->first();
+                            $param_bloqueoXdoc=\App\Param::where('llave','bloqueo_caja_calif_asistenciasXDoc')->value('valor');
+                            $excepcion_documentos=\App\Plantel::find($cliente->plantel_id);
+                                
+                                if($excepcion_documentos->bnd_excepcion_documentos==1){
+                                    $param_bloqueoXdoc=0;
+                                
+                                }
                             $validaEntregaDocs3Meses=$cli_funciones->validaEntregaDocs3Meses($cliente->id);
                         @endphp
-                        @if($param_bloqueoXdoc->valor==1)
+                        @if($param_bloqueoXdoc==1)
                         @if($cliente->bnd_doc_oblig_entregados==1 or $cliente->st_cliente_id==1 or $cliente->st_cliente_id==22 or $validaEntregaDocs3Meses)
                         <div class="input-group-btn">
                             <button type="submit" class="btn btn-warning" data-toggle="tooltip" title="Crear Venta" id="btnCrearVenta">

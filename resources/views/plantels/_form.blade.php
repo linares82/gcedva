@@ -492,6 +492,14 @@
                     @endif
                 </div>
                 
+                <div class="form-group col-md-3 @if($errors->has('bnd_excepcion_documentos')) has-error @endif">
+                            <label for="bnd_excepcion_documentos-field">Excepcion Documentos</label>
+                            {!! Form::checkbox("bnd_excepcion_documentos", 1, null, [ "id" => "bnd_excepcion_documentos-field", 'class'=>'minimal']) !!}
+                            @if($errors->has("bnd_excepcion_documentos"))
+                            <span class="help-block">{{ $errors->first("bnd_trabaja") }}</span>
+                            @endif
+                        </div>
+
             </fieldset>
             <div class="box box-default">
                 <div class="box-header"><h3>Facturacion Portal de Alumnos (Folios digitales)</h3></div>

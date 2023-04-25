@@ -73,15 +73,20 @@
                             <td>
                                 <div class="form-group col-md-4  @if($errors->has('est_asistencia_id')) has-error @endif" >
                                 @php
-                                    $param_bloqueoXdoc=\App\Param::where('llave','bloqueo_caja_calif_asistenciasXDoc')->first();
+                                    $param_bloqueoXdoc=\App\Param::where('llave','bloqueo_caja_calif_asistenciasXDoc')->value('valor');
+                                    $excepcion_documentos=\App\Plantel::find($s->cliente->plantel_id);
                                     
+                                    if($excepcion_documentos->bnd_excepcion_documentos==1){
+                                        $param_bloqueoXdoc=0;
+                                    
+                                    }
                                 @endphp
                                 
                                     @if(optional($s->cliente)->st_cliente_id==25 or 
                                     optional($s->cliente)->st_cliente_id==26 or 
                                     optional($s->cliente)->st_cliente_id==3 )                                    
                                         {!! Form::select("est_asistencia_id", $list["EstAsistencium"], $s->est_asistencia_id, array("class" => "select_seguridad1", "id" => "est_asistencia_id".$s->id."-field", "name" => "est_asistencia_id".$s->id."-field", 'disabled'=>true)) !!}    
-                                    @elseif(optional($s->cliente)->bnd_doc_oblig_entregados == 0  and !$param_bloqueoXdoc)
+                                    @elseif(optional($s->cliente)->bnd_doc_oblig_entregados == 0  and $param_bloqueoXdoc)
                                         @if($validaEntregaDocs3Meses)
                                         {!! Form::select("est_asistencia_id", $list["EstAsistencium"], $s->est_asistencia_id, array("class" => "select_seguridad1", "id" => "est_asistencia_id".$s->id."-field", "name" => "est_asistencia_id".$s->id."-field")) !!}    
                                         @else
@@ -103,7 +108,7 @@
                                     optional($s->cliente)->st_cliente_id==26 or 
                                     optional($s->cliente)->st_cliente_id==3 )                                    
                                         
-                                    @elseif(optional($s->cliente)->bnd_doc_oblig_entregados == 0 and !$param_bloqueoXdoc)
+                                    @elseif(optional($s->cliente)->bnd_doc_oblig_entregados == 0 and $param_bloqueoXdoc)
                                         @if($validaEntregaDocs3Meses)
                                         <a href="#" onclick="modificarAsistencia({{$s->id}})" class="btn btn-success">Modificar</a>
                                         <div id='loading3' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
