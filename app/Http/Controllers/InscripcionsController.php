@@ -391,8 +391,8 @@ class InscripcionsController extends Controller
     public function destroy($id, Inscripcion $inscripcion)
     {
         $inscripcion = $inscripcion->find($id);
-        if($inscripcion->hacademicas()->coubnt()>0){
-            foreach($inscripcion->hacademicas() as $materia){
+        if ($inscripcion->hacademicas()->coubnt() > 0) {
+            foreach ($inscripcion->hacademicas() as $materia) {
                 $materia->delete();
             }
         }
@@ -421,8 +421,8 @@ class InscripcionsController extends Controller
 
     public function getReinscripcion()
     {
-        $empleado= Empleado::where('user_id', Auth::user()->id)->first();
-        $planteles=$empleado->plantels->pluck('razon', 'id');
+        $empleado = Empleado::where('user_id', Auth::user()->id)->first();
+        $planteles = $empleado->plantels->pluck('razon', 'id');
         return view('inscripcions.reinscripcion', compact('planteles'))
             ->with('list', Inscripcion::getListFromAllRelationApps());
     }
@@ -431,9 +431,9 @@ class InscripcionsController extends Controller
     {
         $input = $request->all();
 
-        $empleado= Empleado::where('user_id', Auth::user()->id)->first();
-        $planteles=$empleado->plantels->pluck('razon', 'id');
-        $bloqueo_materias_desaprobadas=Param::where('llave','bloqueo_materias_desaprobadas')->first();
+        $empleado = Empleado::where('user_id', Auth::user()->id)->first();
+        $planteles = $empleado->plantels->pluck('razon', 'id');
+        $bloqueo_materias_desaprobadas = Param::where('llave', 'bloqueo_materias_desaprobadas')->first();
 
         //dd($input);
         if (isset($input['id']) and isset($input['grupo_to']) and isset($input['lectivo_to'])) {
@@ -603,7 +603,7 @@ class InscripcionsController extends Controller
 
         //dd($clientes->toArray());
         //dd($resultados);
-        return view('inscripcions.reinscripcion', compact('resultados', 'input', 'planteles','bloqueo_materias_desaprobadas'))
+        return view('inscripcions.reinscripcion', compact('resultados', 'input', 'planteles', 'bloqueo_materias_desaprobadas'))
             ->with('list', Hacademica::getListFromAllRelationApps());
 
         /*return redirect('/inscripcions/reinscripcion', compact('resultados'))
@@ -903,7 +903,7 @@ class InscripcionsController extends Controller
         //dd($registros->toArray());
         $carga_ponderacion = collect();
         $asignacion = AsignacionAcademica::find($data['asignacion']);
-        $plantel=$asignacion->plantel;
+        $plantel = $asignacion->plantel;
         //                $asignacion=collect();
         foreach ($registros as $registro) {
             //$carga_ponderacion = CargaPonderacion::where('ponderacion_id', $registro->ponderacion)->get();
@@ -944,7 +944,7 @@ class InscripcionsController extends Controller
             'contador' => $contador,
             'data' => $data,
             'total_alumnos' => $total_alumnos,
-            'plantel_id'=>$plantel->id,
+            'plantel_id' => $plantel->id,
         ));
     }
 
@@ -1557,7 +1557,7 @@ class InscripcionsController extends Controller
         $datos = $request->all();
         $inscripcion = Inscripcion::find($datos['inscripcion']);
         $cliente = Cliente::find($inscripcion->cliente_id);
-        if($cliente->matricula==""){
+        if ($cliente->matricula == "") {
             dd("Cliente sin matricula, no se puede emitir historial");
         }
         $plantel = Plantel::find($inscripcion->plantel_id);
@@ -1584,14 +1584,16 @@ class InscripcionsController extends Controller
         $consulta_calificaciones = ConsultaCalificacion::where('matricula', 'like', "%" . $cliente->matricula . "%")->get();
         //dd($consulta_calificaciones->count()); 
 
-        foreach($consulta_calificaciones as $c){
-            array_push($resultados, array('materia' => $c->materia,
-            'codigo' => $c->codigo,
-            'creditos' => $c->creditos,
-            'lectivo' => $c->lectivo,
-            'calificacion' => $c->calificacion,
-            'tipo_examen' => $c->tipo_examen,
-            'materia_id' => ""));
+        foreach ($consulta_calificaciones as $c) {
+            array_push($resultados, array(
+                'materia' => $c->materia,
+                'codigo' => $c->codigo,
+                'creditos' => $c->creditos,
+                'lectivo' => $c->lectivo,
+                'calificacion' => $c->calificacion,
+                'tipo_examen' => $c->tipo_examen,
+                'materia_id' => ""
+            ));
         }
         //dd(count($resultados));
 
@@ -1602,7 +1604,7 @@ class InscripcionsController extends Controller
                 ->where('hacademica_id', $hacademica->id)
                 ->where('tpo_examen_id', $tpo_examen_max)
                 ->first();
-            
+
             $resultado = array(
                 'materia' => $hacademica->materia,
                 'codigo' => $hacademica->codigo,
@@ -1616,26 +1618,26 @@ class InscripcionsController extends Controller
             array_push($resultados, $resultado);
         }
         //dd(count($resultados));
-                
-        $total_creditos=0;
-        $suma_calificaciones=0;
-        $total_materias=0;
+
+        $total_creditos = 0;
+        $suma_calificaciones = 0;
+        $total_materias = 0;
         //dd($resultados[9]);
-        $rechazados=array();
-        foreach($resultados as $resultado){
-            if(strval($resultado['calificacion'])>=6){
+        $rechazados = array();
+        foreach ($resultados as $resultado) {
+            if (strval($resultado['calificacion']) >= 6) {
                 Log::info($resultado['creditos']);
-                $total_creditos=$total_creditos+$resultado['creditos'];
-                $suma_calificaciones=$suma_calificaciones+$resultado['calificacion'];
-                $total_materias=$total_materias+1;
-            }else{
-                $r=$this->existeMateriaAprobadaPosterior($resultado['codigo'], $resultados);
-                if(!$r){
+                $total_creditos = $total_creditos + $resultado['creditos'];
+                $suma_calificaciones = $suma_calificaciones + $resultado['calificacion'];
+                $total_materias = $total_materias + 1;
+            } else {
+                $r = $this->existeMateriaAprobadaPosterior($resultado['codigo'], $resultados);
+                if (!$r) {
                     //dd($resultado['codigo']);
-                    $total_creditos=$total_creditos+$resultado['creditos'];
-                    $suma_calificaciones=$suma_calificaciones+$resultado['calificacion'];
-                    $total_materias=$total_materias+1;
-                }else{
+                    $total_creditos = $total_creditos + $resultado['creditos'];
+                    $suma_calificaciones = $suma_calificaciones + $resultado['calificacion'];
+                    $total_materias = $total_materias + 1;
+                } else {
                     array_push($rechazados, $resultado);
                 }
             }
@@ -1655,21 +1657,24 @@ class InscripcionsController extends Controller
          */
 
 
-        return view('inscripcions.reportes.historial', 
-        compact('inscripcion', 'cliente', 'plantel', 'grado', 'consulta_calificaciones','total_materias','total_creditos','suma_calificaciones'))
-        ->with('hacademicas', $resultados);
+        return view(
+            'inscripcions.reportes.historial',
+            compact('inscripcion', 'cliente', 'plantel', 'grado', 'consulta_calificaciones', 'total_materias', 'total_creditos', 'suma_calificaciones')
+        )
+            ->with('hacademicas', $resultados);
     }
 
-    public function existeMateriaAprobadaPosterior($codigo, $matriz){
+    public function existeMateriaAprobadaPosterior($codigo, $matriz)
+    {
         //dd($matriz); //744
-        $resultado=false;
-        $matriz_invertida=array_reverse($matriz);
+        $resultado = false;
+        $matriz_invertida = array_reverse($matriz);
         //dd($matriz_invertida);
-        $r=array_search($codigo, array_column($matriz_invertida, 'codigo'));
+        $r = array_search($codigo, array_column($matriz_invertida, 'codigo'));
         //dd($r); //18
-        if(strval($matriz_invertida[$r]['calificacion'])>=6)
-        $resultado=true;
-        return $resultado;   
+        if (strval($matriz_invertida[$r]['calificacion']) >= 6)
+            $resultado = true;
+        return $resultado;
     }
 
     public function sepICP08Boletas()
@@ -2026,7 +2031,7 @@ class InscripcionsController extends Controller
                         $total_asistencias++;
                     }
                 }
-    
+
                 $pinicio->addDay();
                 //dd($fechas);
             }
@@ -2308,7 +2313,7 @@ class InscripcionsController extends Controller
                         $total_asistencias++;
                     }
                 }
-    
+
                 $pinicio->addDay();
                 //dd($fechas);
             }
@@ -2351,7 +2356,7 @@ class InscripcionsController extends Controller
             } else {
                 $resul = 0;
             }
-            
+
             array_push($resumen, array(
                 'asignacion' => $asignacion->id,
                 'plantel' => $asignacion->plantel->razon,
@@ -2571,7 +2576,7 @@ class InscripcionsController extends Controller
                         $total_asistencias++;
                     }
                 }
-    
+
                 $pinicio->addDay();
                 //dd($fechas);
             }
@@ -3292,7 +3297,7 @@ class InscripcionsController extends Controller
 
     public function inscripcionReinscripcion()
     {
-        
+
         $empleado = Empleado::where('user_id', Auth::user()->id)->first();
         $planteles_validos = $empleado->plantels->pluck('razon', 'id');
         return view('inscripcions.reportes.inscripcionReinscripcion', compact('planteles_validos'))
@@ -3302,7 +3307,7 @@ class InscripcionsController extends Controller
     public function inscripcionReinscripcionR(Request $request)
     {
         $datos = $request->all();
-        
+
         $empleado = Empleado::where('user_id', Auth::user()->id)->first();
         $planteles = $empleado->plantels->pluck('razon', 'id');
         /*$registros = Inscripcion::select(
@@ -3366,9 +3371,9 @@ class InscripcionsController extends Controller
 
 
         //dd($registros->toArray());
-        
+
         return view('inscripcions.reportes.inscripcionReinscripcionR', compact('registros', 'planteles'))
-        ->with('list', Inscripcion::getListFromAllRelationApps());
+            ->with('list', Inscripcion::getListFromAllRelationApps());
     }
 
     public function evaluacionOE()
@@ -3413,7 +3418,7 @@ class InscripcionsController extends Controller
                 ->whereColumn('aa.grupo_id', 'hacademicas.grupo_id')
                 ->whereColumn('aa.lectivo_id', 'hacademicas.lectivo_id')
                 ->whereColumn('aa.materium_id', 'hacademicas.materium_id')
-                ->join('plantels as p','p.id','i.plantel_id')
+                ->join('plantels as p', 'p.id', 'i.plantel_id')
                 ->join('empleados as e', 'e.id', '=', 'aa.docente_oficial_id')
                 ->join('calificacions as c', 'c.hacademica_id', '=', 'hacademicas.id')
                 ->leftJoin('acta_finals as af', 'af.id', '=', 'c.acta_final_id')
@@ -3463,7 +3468,7 @@ class InscripcionsController extends Controller
                 ->whereColumn('aa.grupo_id', 'hacademicas.grupo_id')
                 ->whereColumn('aa.lectivo_id', 'hacademicas.lectivo_id')
                 ->whereColumn('aa.materium_id', 'hacademicas.materium_id')
-                ->join('plantels as p','p.id','i.plantel_id')
+                ->join('plantels as p', 'p.id', 'i.plantel_id')
                 ->join('empleados as e', 'e.id', '=', 'aa.docente_oficial_id')
                 ->join('calificacions as c', 'c.hacademica_id', '=', 'hacademicas.id')
                 ->leftJoin('acta_finals as af', 'af.id', '=', 'c.acta_final_id')
@@ -3490,7 +3495,7 @@ class InscripcionsController extends Controller
         foreach ($registros as $registro) {
             array_push($idCalificacionesArray, $registro->calificacion_id);
             $fecha_acta = $registro->fecha_acta;
-	    //Log::info('fecha_acta: '.$registro->fecha_acta);
+            //Log::info('fecha_acta: '.$registro->fecha_acta);
         }
         //dd($registros->toArray());
 
@@ -3501,7 +3506,7 @@ class InscripcionsController extends Controller
     {
         $datos = $request->all();
         $inscripcion = Inscripcion::find($datos['inscripcion']);
-        
+
         $cliente = Cliente::find($inscripcion->cliente_id);
         //dd($cliente->toArray());
         $plantel = Plantel::find($inscripcion->plantel_id);
@@ -3532,7 +3537,7 @@ class InscripcionsController extends Controller
             ->orderBy('hacademicas.id')
             //->orderBy('te.id')
             ->get();
-            //dd($hacademicas->toArray());
+        //dd($hacademicas->toArray());
         foreach ($hacademicas as $hacademica) {
             $tpo_examen_max = Calificacion::where('hacademica_id', $hacademica->id)->max('tpo_examen_id');
             $calificacion = Calificacion::select('calificacions.calificacion', 'te.name as tipo_examen')
@@ -3831,11 +3836,11 @@ class InscripcionsController extends Controller
 
     public function registrarMateriaAdicional(Request $request)
     {
-        
+
         $datos = $request->all();
         //dd($datos);
         $i = Inscripcion::find($datos['inscripcion_id']);
-        $m= Materium::find($datos['materia_id']);
+        $m = Materium::find($datos['materia_id']);
         //dd($materias->toArray());
         $h['inscripcion_id'] = $i->id;
         $h['cliente_id'] = $i->cliente_id;
@@ -3879,5 +3884,41 @@ class InscripcionsController extends Controller
             CalificacionPonderacion::create($ponde);
         }
         return 1;
+    }
+
+    public function regenerarCalificacionPonderacion($id)
+    {
+        $hacademicas = Hacademica::find($id);
+        $m = Materium::find($hacademicas->materium_id);
+        //dd($m);
+        $calificacions = Calificacion::where('hacademica_id', $id)->get();
+        //dd($calificacions->toArray());
+        foreach ($calificacions as $calificacion) {
+            $calificacion_ponderacions = CalificacionPonderacion::where('calificacion_id', $calificacion->id)->get();
+            //dd($calificacion_ponderacions);
+            if (count($calificacion_ponderacions) < 0) {
+                foreach ($calificacion_ponderacions as $cp) {
+                    $cp->delete();
+                }
+            }
+            //dd($m);
+            $ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $m->ponderacion_id)
+                ->where('bnd_activo', 1)
+                ->get();
+            //dd($ponderaciones);
+            foreach ($ponderaciones as $p) {
+                $ponde['calificacion_id'] = $calificacion->id;
+                $ponde['carga_ponderacion_id'] = $p->id;
+                $ponde['calificacion_parcial'] = 0;
+                $ponde['ponderacion'] = $p->porcentaje;
+                $ponde['usu_alta_id'] = Auth::user()->id;
+                $ponde['usu_mod_id'] = Auth::user()->id;
+                $ponde['tiene_detalle'] = $p->tiene_detalle;
+                $ponde['padre_id'] = $p->padre_id;
+                CalificacionPonderacion::create($ponde);
+            }
+        }
+
+        return redirect()->route('clientes.edit', $hacademicas->cliente_id)->with('message', 'Registro Actualizado.');
     }
 }

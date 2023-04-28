@@ -4926,6 +4926,14 @@ Route::get(
     )
 )->middleware('auth');
 Route::get(
+    '/inscripcions/regenerarCalificacionPonderacion/{id}',
+    array(
+        'as' => 'inscripcions.regenerarCalificacionPonderacion',
+        'middleware' => 'permission:inscripcions.regenerarCalificacionPonderacion',
+        'uses' => 'InscripcionsController@regenerarCalificacionPonderacion'
+    )
+)->middleware('auth');
+Route::get(
     '/inscripcions/lista',
     array(
         'as' => 'inscripcions.lista',

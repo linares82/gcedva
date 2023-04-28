@@ -648,9 +648,10 @@ class ClientesController extends Controller
         //dd($input);
         //update data
         $cliente = $cliente->find($id);
-        //if($cliente->ccuestionario_id>0){
+        $cantidad_preguntas=0;
+        if($cliente->ccuestionario_id>0){
         $cantidad_preguntas = $cliente->ccuestionario->ccuestionarioPreguntas->count();
-        //}
+        }
 
         //dd($input);
         $cliente->update($input);
