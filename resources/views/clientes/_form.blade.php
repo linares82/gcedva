@@ -1325,7 +1325,9 @@
                             <td>{{optional($a->stMateria)->name}}</td>
 
                             <td>
+                            @permission('inscripcions.regenerarCalificacionPonderacion')
                             <a href="{{ route('inscripcions.regenerarCalificacionPonderacion', $a->id) }}" class="btn btn-xs btn-warning" ><i class="glyphicon glyphicon-loading"></i> Regenerar Ponderacion</a>
+                            @endpermission
                                 <a href="{{ route('hacademicas.destroy', $a->id) }}" class="btn btn-xs btn-danger" ><i class="glyphicon glyphicon-trash"></i> Eliminar</a>
                             </td>
                             <td colspan="2">

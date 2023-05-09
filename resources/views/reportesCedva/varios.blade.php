@@ -104,6 +104,18 @@
         $('select#ciclo_f-field').multiSelect('select_all');
         return false;
     });
+
+    $('#reportes_f-field').change(function(){
+        if($('#reportes_f-field option:selected').val()==6 || $('#reportes_f-field option:selected').val()==7){
+            $('#concepto_caja_f-field').val(['5','6','7','8','9','10','11','12','13','14','15','16']).trigger('change');
+            $('select#ciclo_f-field').multiSelect('select_all');
+            $('#estatus_f-field').val('1').trigger('change');
+            $('#pagos_f-field').val('1').trigger('change');
+        }
+        
+        
+    });
+
     $('#fecha_f-field').Zebra_DatePicker({
         days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
         months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
