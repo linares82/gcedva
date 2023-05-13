@@ -104,7 +104,7 @@ class HomeController extends Controller
 
         $contratosVencidos = Empleado::where('st_empleado_id', '<>', 3)
             ->where('dias_alerta', '>', 0)
-            ->whereRaw('DATEDIFF(fin_contrato, "' . Date("Y-m-d") . '") <= dias_alerta')
+            ->whereRaw('DATEDIFF(fin_contrato, "' . Date("Y-m-d") . '") <= dias_alerta or DATEDIFF(fec_fin_contrato2, "' . Date("Y-m-d") . '") <= dias_alerta')
             ->orderBy('plantel_id')
             ->get();
         

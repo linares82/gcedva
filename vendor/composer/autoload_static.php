@@ -944,6 +944,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'AddFieldTpoArticuloIdArticulosTable' => __DIR__ . '/../..' . '/database/migrations/2019_10_03_103342_add_field_tpo_articulo_id_articulos_table.php',
         'AddFieldsCalificacionLectivosTable' => __DIR__ . '/../..' . '/database/migrations/2019_09_18_152904_add_fields_calificacion_lectivos_table.php',
         'AddFieldsCedvaToClientesTable' => __DIR__ . '/../..' . '/database/migrations/2020_06_23_101034_add_fields_cedva_to_clientes_table.php',
+        'AddFieldsContrato2ToEmpleadosTable' => __DIR__ . '/../..' . '/database/migrations/2023_05_12_083214_add_fields_contrato2_to_empleados_table.php',
         'AddFieldsCuentasEfectivosTable' => __DIR__ . '/../..' . '/database/migrations/2019_07_11_125550_add_fields_cuentas_efectivos_table.php',
         'AddFieldsLectivosTable' => __DIR__ . '/../..' . '/database/migrations/2018_02_14_150006_add_fields_lectivos_table.php',
         'AddFieldsPlantelsTable' => __DIR__ . '/../..' . '/database/migrations/2017_06_16_222542_Add_fields_Plantels_Table.php',

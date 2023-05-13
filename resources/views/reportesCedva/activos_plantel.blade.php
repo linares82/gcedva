@@ -74,6 +74,47 @@
             </tbody>
     </table>    
 
+    <table class="table table-condensed table-striped">
+            @php
+              function getRowBy($arreglo, $plantel, $seccion, $anio, $concepto){
+                foreach($arreglo as $row){
+                  if($row['razon']== $plantel and $row['seccion']==$seccion and
+                  $row['anio_planeado']== $anio and $row['concepto']==$concepto){
+                    return $row;
+                  }
+                }
+                return array('vigentes_sin_adeudos'=>0, 'vigentes_con_1_adeudos'=>0, 'baja_temporal_por_pago'=>0, 'baja_administrativa'=>0);
+              }
+            @endphp 
+            <h4>Resumen</h4>
+            <thead>
+              <th rowspan="2">Plantel</th><th rowspan="2">Seccion</th>
+              @foreach($combinaciones_anio_concepto as $anio_concepto)
+                <th colspan="2">{{$anio_concepto['anio_planeado']}} - {{$anio_concepto['concepto']}}</th>
+              @endforeach
+              <tr>
+              @foreach($combinaciones_anio_concepto as $anio_concepto)
+              <th>Activos Vigentes Sin Adeudo</th><th>Matricula Total Activa</th>
+              @endforeach
+              </tr>
+                
+            </thead>
+            <tbody>
+              @foreach($combinaciones_plantel_seccion as $plantel_seccion)
+               <tr>
+                <td>{{$plantel_seccion['razon']}}</td><td>{{$plantel_seccion['seccion']}}</td>
+                @foreach($combinaciones_anio_concepto as $anio_concepto)
+                @php
+                  $row=getRowBy($resumen, $plantel_seccion['razon'], $plantel_seccion['seccion'], $anio_concepto['anio_planeado'], $anio_concepto['concepto']);
+                @endphp
+                <td>{{$row['vigentes_sin_adeudos']}}</td>
+                <td>{{$row['vigentes_sin_adeudos']+$row['vigentes_con_1_adeudos']+$row['baja_temporal_por_pago']+$row['baja_administrativa']}}</td>
+                @endforeach
+               </tr> 
+               @endforeach
+            </tbody>
+    </table>
+
     <!--
     <table class="table table-condensed table-striped">
             <h4>Resumen Monetario</h4>

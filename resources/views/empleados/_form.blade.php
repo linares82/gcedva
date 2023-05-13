@@ -288,13 +288,7 @@
                     @permission('empleados.verDatosContrato')
                     <div class="box box-default">
                       <div class="box-body">
-                        <div class="form-group col-md-3 @if($errors->has('tipo_contrato_id')) has-error @endif">
-                          <label for="tipo_contrato_id-field">Tipo Contrato</label>
-                          {!! Form::select("tipo_contrato_id", $tipoContratos, isset($empleado->tipo_contrato_id) ? $empleado->tipo_contrato_id : null, array("class" => "form-control select_seguridad", "id" => "tipo_contrato_id-field")) !!}
-                          @if($errors->has("tipo_contrato_id"))
-                            <span class="help-block">{{ $errors->first("tipo_contrato_id") }}</span>
-                          @endif
-                        </div>
+                        
                         <div class="form-group col-md-1 @if($errors->has('alerta_bnd')) has-error @endif">
                           <label for="alerta_bnd-field">Alerta</label>
                           {!! Form::checkbox("alerta_bnd", 1, null, [ "id" => "alerta_bnd-field"]) !!}
@@ -302,20 +296,8 @@
                             <span class="help-block">{{ $errors->first("alerta_bnd") }}</span>
                           @endif
                         </div>
-                        <div class="form-group col-md-3 @if($errors->has('fin_contrato')) has-error @endif">
-                          <label for="fin_contrato-field">Fin Contrato</label>
-                          {!! Form::text("fin_contrato", null, array("class" => "form-control input-sm", "id" => "fin_contrato-field")) !!}
-                          @if($errors->has("fin_contrato"))
-                            <span class="help-block">{{ $errors->first("fin_contrato") }}</span>
-                          @endif
-                        </div>
-                        <div class="form-group col-md-4 @if($errors->has('resp_alerta_id')) has-error @endif">
-                          <label for="resp_alerta_id-field">Reponsable</label>
-                          {!! Form::select("resp_alerta_id", $responsables, null, array("class" => "form-control select_seguridad", "id" => "resp_alerta_id-field")) !!}
-                          @if($errors->has("resp_alerta_id"))
-                            <span class="help-block">{{ $errors->first("resp_alerta_id") }}</span>
-                          @endif
-                        </div>
+                        
+                        
                         <div class="form-group col-md-1 @if($errors->has('dias_alerta')) has-error @endif">
                           <label for="dias_alerta-field">Dias Alerta</label>
                           {!! Form::text("dias_alerta", (isset($empleado->dias_alerta) and is_null($empleado->dias_alerta)) ? 0 : null, array("class" => "form-control input-sm", "id" => "dias_alerta-field")) !!}
@@ -330,14 +312,72 @@
                             <span class="help-block">{{ $errors->first("bnd_recontratable") }}</span>
                           @endif
                         </div>
-                        <div class="form-group col-md-11 @if($errors->has('just_recontratable')) has-error @endif">
+                        <div class="form-group col-md-9 @if($errors->has('just_recontratable')) has-error @endif">
                           <label for="just_recontratable-field">Justificacion</label>
                           {!! Form::text("just_recontratable", null, array("class" => "form-control input-sm", "id" => "just_recontratable-field")) !!}
                           @if($errors->has("just_recontratable"))
                             <span class="help-block">{{ $errors->first("just_recontratable") }}</span>
                           @endif
                         </div>
-                      
+                        <div class="form-group col-md-3 @if($errors->has('plantel_contrato1_id')) has-error @endif" style="clear:left;">
+                          <label for="plantel_contrato1_id-field">Plantel contrato 1</label>
+                          {!! Form::select("plantel_contrato1_id", $list["Plantel"], isset($empleado->plantel_contrato1_id) ? $empleado->plantel_contrato1_id : null, array("class" => "form-control select_seguridad", "id" => "plantel_contrato1_id-field")) !!}
+                          @if($errors->has("plantel_contrato1_id"))
+                            <span class="help-block">{{ $errors->first("plantel_contrato1_id") }}</span>
+                          @endif
+                        </div>
+                        <div class="form-group col-md-3 @if($errors->has('tipo_contrato_id')) has-error @endif" >
+                          <label for="tipo_contrato_id-field">Tipo Contrato</label>
+                          {!! Form::select("tipo_contrato_id", $tipoContratos, isset($empleado->tipo_contrato_id) ? $empleado->tipo_contrato_id : null, array("class" => "form-control select_seguridad", "id" => "tipo_contrato_id-field")) !!}
+                          @if($errors->has("tipo_contrato_id"))
+                            <span class="help-block">{{ $errors->first("tipo_contrato_id") }}</span>
+                          @endif
+                        </div>
+                        <div class="form-group col-md-2 @if($errors->has('fin_contrato')) has-error @endif">
+                          <label for="fin_contrato-field">Fin Contrato</label>
+                          {!! Form::text("fin_contrato", null, array("class" => "form-control input-sm", "id" => "fin_contrato-field")) !!}
+                          @if($errors->has("fin_contrato"))
+                            <span class="help-block">{{ $errors->first("fin_contrato") }}</span>
+                          @endif
+                        </div>
+
+                        <div class="form-group col-md-3 @if($errors->has('resp_alerta_id')) has-error @endif">
+                          <label for="resp_alerta_id-field">Reponsable</label>
+                          {!! Form::select("resp_alerta_id", $responsables, null, array("class" => "form-control select_seguridad", "id" => "resp_alerta_id-field")) !!}
+                          @if($errors->has("resp_alerta_id"))
+                            <span class="help-block">{{ $errors->first("resp_alerta_id") }}</span>
+                          @endif
+                        </div>
+
+                        <div class="form-group col-md-3 @if($errors->has('plantel_contrato2_id')) has-error @endif" style="clear:left;">
+                          <label for="plantel_contrato2_id-field">Plantel contrato 2</label>
+                          {!! Form::select("plantel_contrato2_id", $list["Plantel"], isset($empleado->plantel_contrato2_id) ? $empleado->plantel_contrato1_id : null, array("class" => "form-control select_seguridad", "id" => "plantel_contrato2_id-field")) !!}
+                          @if($errors->has("plantel_contrato2_id"))
+                            <span class="help-block">{{ $errors->first("plantel_contrato2_id") }}</span>
+                          @endif
+                        </div>
+                        <div class="form-group col-md-3 @if($errors->has('tipo_contrato2_id')) has-error @endif" >
+                          <label for="tipo_contrato2_id-field">Tipo Contrato</label>
+                          {!! Form::select("tipo_contrato2_id", $tipoContratos, isset($empleado->tipo_contrato2_id) ? $empleado->tipo_contrato2_id : null, array("class" => "form-control select_seguridad", "id" => "tipo_contrato2_id-field")) !!}
+                          @if($errors->has("tipo_contrato2_id"))
+                            <span class="help-block">{{ $errors->first("tipo_contrato2_id") }}</span>
+                          @endif
+                        </div>
+                        <div class="form-group col-md-2 @if($errors->has('fec_fin_contrato2')) has-error @endif">
+                          <label for="fec_fin_contrato2-field">Fin Contrato</label>
+                          {!! Form::text("fec_fin_contrato2", null, array("class" => "form-control input-sm fecha", "id" => "fec_fin_contrato2-field")) !!}
+                          @if($errors->has("fec_fin_contrato2"))
+                            <span class="help-block">{{ $errors->first("fec_fin_contrato2") }}</span>
+                          @endif
+                        </div>
+
+                        <div class="form-group col-md-3 @if($errors->has('resp_alerta2_id')) has-error @endif">
+                          <label for="resp_alerta_id2-field">Reponsable</label>
+                          {!! Form::select("resp_alerta2_id", $responsables, null, array("class" => "form-control select_seguridad", "id" => "resp_alerta2_id-field")) !!}
+                          @if($errors->has("resp_alerta2_id"))
+                            <span class="help-block">{{ $errors->first("resp_alerta2_id") }}</span>
+                          @endif
+                        </div>
                       </div>
                     </div>
                     @endpermission

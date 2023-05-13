@@ -63,8 +63,7 @@
       $("#output").pivotUI(inputFunction, {
         renderers: renderers,
         rows: ["Plantel"],
-        cols: ['Anio', 'Concepto'],
-        filters: 
+        cols: ['Anio', 'Concepto']
       }, false, "es");
 
     });

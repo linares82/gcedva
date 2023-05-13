@@ -2414,7 +2414,7 @@ class ReportesCedvaController extends Controller
             
             $combinaciones_plantel_seccion = array();
             foreach ($resultado2 as $r) {
-                $linea = Arr::only($r, ['plantel_id', 'seccion']);
+                $linea = Arr::only($r, ['razon','plantel_id', 'seccion']);
                 $marcador = 0;
                 foreach ($combinaciones_plantel_seccion as $revision) {
                     if ($revision['plantel_id'] == $linea['plantel_id'] and $revision['seccion'] == $linea['seccion']) {
@@ -2567,7 +2567,13 @@ class ReportesCedvaController extends Controller
 
             //dd($resultado2);
             //dd($resumen);
-        return view('reportesCedva.activos_plantel', array('registros' => json_encode($resultado2), 'plantel' => $plantel, 'datos' => $datos, 'resumen' => $resumen, 'resumen_dinero' => $resumen_dinero));
+        return view('reportesCedva.activos_plantel', 
+            array('registros' => json_encode($resultado2), 
+                  'plantel' => $plantel, 
+                  'datos' => $datos, 'resumen' => $resumen, 
+                  'resumen_dinero' => $resumen_dinero,
+                    'combinaciones_plantel_seccion'=>$combinaciones_plantel_seccion,
+                    'combinaciones_anio_concepto'=>$combinaciones_anio_concepto));
             break;
         }
     }
