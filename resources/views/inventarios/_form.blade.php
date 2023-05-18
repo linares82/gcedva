@@ -70,30 +70,18 @@
                     </div>
                     <div class="form-group col-md-4 @if($errors->has('existe_si')) has-error @endif">
                        <label for="existe_si-field">Existe si</label>
-                       {!! Form::text("existe_si", null, array("class" => "form-control", "id" => "existe_si-field")) !!}
+                       {!! Form::select("existe_si", $catExiste, null, array("class" => "form-control", "id" => "existe_si-field")) !!}
                        @if($errors->has("existe_si"))
                         <span class="help-block">{{ $errors->first("existe_si") }}</span>
                        @endif
                     </div>
-                    <div class="form-group col-md-4 @if($errors->has('existe_no')) has-error @endif">
-                       <label for="existe_no-field">Existe no</label>
-                       {!! Form::text("existe_no", null, array("class" => "form-control", "id" => "existe_no-field")) !!}
-                       @if($errors->has("existe_no"))
-                        <span class="help-block">{{ $errors->first("existe_no") }}</span>
-                       @endif
-                    </div>
+                    
                     <div class="form-group col-md-4 @if($errors->has('estado_bueno')) has-error @endif">
                        <label for="estado_bueno-field">Estado bueno</label>
-                       {!! Form::text("estado_bueno", null, array("class" => "form-control", "id" => "estado_bueno-field")) !!}
+                       {!! Form::select("estado_bueno", $catEstado, null, array("class" => "form-control", "id" => "estado_bueno-field")) !!}
                        @if($errors->has("estado_bueno"))
                         <span class="help-block">{{ $errors->first("estado_bueno") }}</span>
                        @endif
                     </div>
-                    <div class="form-group col-md-4 @if($errors->has('estado_malo')) has-error @endif">
-                       <label for="estado_malo-field">Estado malo</label>
-                       {!! Form::text("estado_malo", null, array("class" => "form-control", "id" => "estado_malo-field")) !!}
-                       @if($errors->has("estado_malo"))
-                        <span class="help-block">{{ $errors->first("estado_malo") }}</span>
-                       @endif
-                    </div>
+                    
                     

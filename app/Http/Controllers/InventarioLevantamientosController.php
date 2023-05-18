@@ -117,8 +117,11 @@ class InventarioLevantamientosController extends Controller {
 		
 		$planteles=PlantelInventario::pluck('name','id');
 		$planteles->prepend('Seleccionar opcion', 0);
+		$catEstado=array('BUENO'=>'BUENO', 'MALO'=>'MALO');
+		$catExiste=array('SI'=>'SI', 'NO'=>'NO');
 		
-		return view('inventarioLevantamientos.show', compact('inventarioLevantamiento', 'inventarios','planteles'))
+		
+		return view('inventarioLevantamientos.show', compact('inventarioLevantamiento', 'inventarios','planteles','catEstado','catExiste'))
 		->with( 'list', Inventario::getListFromAllRelationApps() );
 	}
 
@@ -249,9 +252,9 @@ class InventarioLevantamientosController extends Controller {
 					$input['marca'] = trim(str_replace('"','',$resultado[6]));
 					$input['observaciones'] = trim(str_replace('"','',$resultado[7]));
 					$input['existe_si'] = trim(str_replace('"','',$resultado[8]));
-					$input['existe_no'] = trim(str_replace('"','',$resultado[9]));
-					$input['estado_bueno'] = trim(str_replace('"','',$resultado[10]));
-					$input['estado_malo'] = trim(str_replace('"','',$resultado[11]));
+					//$input['existe_no'] = trim(str_replace('"','',$resultado[9]));
+					$input['estado_bueno'] = trim(str_replace('"','',$resultado[9]));
+					//$input['estado_malo'] = trim(str_replace('"','',$resultado[11]));
 					$input['usu_alta_id'] = Auth::user()->id;
 					$input['usu_mod_id'] = Auth::user()->id;
 					$input['origen']=$nombre;
@@ -521,8 +524,7 @@ class InventarioLevantamientosController extends Controller {
 			foreach($resultado as $row) {
 				fputcsv($handle, array($row->id,$row->plantel_inventario_id, $row->area, $row->escuela, $row->tipo_inventario,$row->ubicacion,
 									$row->cantidad,$row->nombre,$row->medida,$row->marca,
-									$row->observaciones,$row->existe_si,$row->existe_no,$row->estado_bueno,
-									$row->estado_malo));
+									$row->observaciones,$row->existe_si,$row->estado_bueno));
 			}
 
 			fclose($handle);

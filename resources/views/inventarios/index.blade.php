@@ -370,9 +370,9 @@
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'marca', 'title' => 'MARCA'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'observaciones', 'title' => 'OBSERVACIONES'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'existe_si', 'title' => 'EXISTE_SI'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'existe_no', 'title' => 'EXISTE_NO'])</th>
+                        
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'estado_bueno', 'title' => 'ESTADO_BUENO'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'estado_malo', 'title' => 'ESTADO_MALO'])</th>
+                        
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
                             <th class="text-right">OPCIONES</th>
@@ -394,9 +394,9 @@
                     <td>{{$inventario->marca}}</td>
                     <td>{{$inventario->observaciones}}</td>
                     <td>{{$inventario->existe_si}}</td>
-                    <td>{{$inventario->existe_no}}</td>
+                    
                     <td>{{$inventario->estado_bueno}}</td>
-                    <td>{{$inventario->estado_malo}}</td>
+                    
                     <td>{{$inventario->usu_alta_id}}</td>
                     <td>{{$inventario->usu_mod_id}}</td>
                                 <td class="text-right">

@@ -91,7 +91,7 @@ trait GetAllDataTrait
                     $myQuery = $myQuery->Where($column, 'LIKE', '%' . $value . '%');
                     //dd($myQuery);
                 } elseif ($operator === 'lt' and $value <> 0) {
-                    //dd($column);
+                    //dd($value);
                     $myQuery = $myQuery->Where($column, $value);
                 } elseif ($operator === 'menorq' and $value <> "") {
                     str_replace("%3A", ":", $value);

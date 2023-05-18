@@ -1415,7 +1415,7 @@ class ReportesCedvaController extends Controller
                         ->where('ccli.turno_id', '>', 0)
                         //->where('clientes.id', 47884)
                         //->whereIn('clientes.st_cliente_id', $estatus)
-                        ->whereIn('clientes.st_cliente_id', array(4,20))
+                        //->whereIn('clientes.st_cliente_id', array(4,20,3,25,26,27))
                         ->whereIn('caj.st_caja_id', $pagos) //array pagos, 0 abierta, 1 pagado
                         ->where('cln.adeudo_id', 0)
                         ->whereIn('clientes.plantel_id', $datos['plantel_f'])
@@ -1491,7 +1491,7 @@ class ReportesCedvaController extends Controller
                         ->where('ccli.turno_id', '>', 0)
                         //->where('clientes.id', 47884)
                         //->whereIn('clientes.st_cliente_id', $estatus)
-                        ->whereIn('clientes.st_cliente_id', array(4,20))
+                        //->whereIn('clientes.st_cliente_id', array(4,20,3,25,26,27))
                         ->whereIn('ad.pagado_bnd', $pagos)
                         ->whereIn('clientes.plantel_id', $datos['plantel_f'])
                         ->whereIn('ad.caja_concepto_id', $concepto_caja)
@@ -2040,7 +2040,7 @@ class ReportesCedvaController extends Controller
                     ->where('ccli.grado_id', '>', 0)
                     ->where('ccli.turno_id', '>', 0)
                     //->where('clientes.id', 47884)
-                    ->whereIn('clientes.st_cliente_id', $estatus)
+                    //->whereIn('clientes.st_cliente_id', $estatus)
                     //->whereIn('clientes.st_cliente_id', array(4,20))
                     ->whereIn('caj.st_caja_id', $pagos) //array pagos, 0 abierta, 1 pagado
                     ->where('cln.adeudo_id', 0)
@@ -2116,7 +2116,7 @@ class ReportesCedvaController extends Controller
                     ->where('ccli.grado_id', '>', 0)
                     ->where('ccli.turno_id', '>', 0)
                     //->where('clientes.id', 47884)
-                    ->whereIn('clientes.st_cliente_id', $estatus)
+                    //->whereIn('clientes.st_cliente_id', $estatus)
                     //->whereIn('clientes.st_cliente_id', array(4,20))
                     ->whereIn('ad.pagado_bnd', $pagos)
                     ->whereIn('clientes.plantel_id', $datos['plantel_f'])
@@ -2450,6 +2450,7 @@ class ReportesCedvaController extends Controller
 
             $resumen = array();
             $resumen_dinero = array();
+
             foreach($combinaciones_anio_concepto as $combinacion_anio_concepto){
                 foreach ($combinaciones_plantel_seccion as $combinacion_plantel_seccion) {
                     $linea = array();
@@ -2465,6 +2466,7 @@ class ReportesCedvaController extends Controller
                     $linea['razon'] = "";
                     $linea['anio']="";
                     $linea["concepto"]="";
+		            $linea["total"]=0;
                     $aplantel = "";
 
                     $linea_dinero = array();
@@ -2502,6 +2504,8 @@ class ReportesCedvaController extends Controller
                             $linea_dinero['anio_planeado'] = $registro['anio_planeado'];
                             $linea_dinero['concepto'] = $registro['concepto'];
 
+			                $linea['total']=$linea['total']+1;
+/*
                             if (
                                 $registro['estatus_cliente_id'] == 25 or $registro['estatus_cliente_id'] == 26 or
                                 ($registro['estatus_cliente_id'] == 4 and $registro['estatus_seguimiento_id'] == 2) or
@@ -2547,9 +2551,15 @@ class ReportesCedvaController extends Controller
                                 $linea['vigentes_con_1_adeudos'] = $linea['vigentes_con_1_adeudos'] + 1;
                                 $linea_dinero['vigentes_con_1_adeudos'] = $linea_dinero['vigentes_con_1_adeudos'] + $registro['monto'];
                             }
+*/
                         }
                     }
+/*
                     if ($linea['matricula_total_activa'] > 0) {
+                        array_push($resumen, $linea);
+                    }
+*/
+		    if ($linea['total'] > 0) {
                         array_push($resumen, $linea);
                     }
                     if ($linea_dinero['matricula_total_activa'] > 0) {

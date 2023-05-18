@@ -69,7 +69,7 @@ class AtrazoPagos4Adeudos extends Command
                 ->where('cc.nivel_id', '>', 0)
                 ->where('cc.grado_id', '>', 0)
                 ->where('cc.turno_id', '>', 0)
-                //->whereIn('c.id', array(79240))
+                //->whereIn('c.id', array(79572))
                 ->whereColumn('adeudos.combinacion_cliente_id', 'cc.id')
                 ->where('caj_con.bnd_mensualidad', 1)
                 ->where('fecha_pago', '<', $fechaActual)

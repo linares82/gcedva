@@ -19,6 +19,7 @@ class InventariosController extends Controller {
 	public function index(Request $request)
 	{
 		$inventarios = Inventario::getAllData($request);
+		
 
 		return view('inventarios.index', compact('inventarios'));
 	}
@@ -74,7 +75,9 @@ class InventariosController extends Controller {
 	public function edit($id, Inventario $inventario)
 	{
 		$inventario=$inventario->find($id);
-		return view('inventarios.edit', compact('inventario'))
+		$catExiste=array('SI'=>'SI', 'NO'=>'NO');
+		$catEstado=array('BUENO'=>'BUENO', 'MALO'=>'MALO');
+		return view('inventarios.edit', compact('inventario','catExiste', 'catEstado'))
 			->with( 'list', Inventario::getListFromAllRelationApps() );
 	}
 
@@ -122,6 +125,20 @@ class InventariosController extends Controller {
 		$inventario->delete();
 		dd('Registro borrado');
 		//return redirect()->route('inventarioLevantamientos.show', array('q[inventario_levantamiento_id_lt]'=>$inventarioLevantamiento) )->with('message', 'Registro Borrado.');
+	}
+
+	public function editEstado(Request $request){
+		$inventario=Inventario::find($request['id']);
+		$inventario->estado_bueno=$request['estado_bueno'];
+		$inventario->save();
+		return $inventario;
+	}
+
+	public function editExiste(Request $request){
+		$inventario=Inventario::find($request['id']);
+		$inventario->existe_si=$request['existe_si'];
+		$inventario->save();
+		return $inventario;
 	}
 
 }

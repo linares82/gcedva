@@ -70,10 +70,10 @@ class SeguimientoObserver
 
     public function updating(Seguimiento $seguimiento)
     {
-        $this->seguimiento = $seguimiento;
+        $this->Seguimiento = $seguimiento;
         $vseguimiento = Seguimiento::find($seguimiento->id);
-        if ($vseguimiento->st_seguimiento_id != $this->seguimiento->st_seguimiento_id) {
-            $st_seguimiento = StSeguimiento::find($this->seguimiento->st_seguimiento_id);
+        if ($vseguimiento->st_seguimiento_id != $this->Seguimiento->st_seguimiento_id) {
+            $st_seguimiento = StSeguimiento::find($this->Seguimiento->st_seguimiento_id);
             $input['tabla'] = 'seguimientos';
             $input['cliente_id'] = $vseguimiento->cliente_id;
             $input['seguimiento_id'] = $vseguimiento->id;
@@ -100,8 +100,8 @@ class SeguimientoObserver
         $h->detalle = $Seguimiento->stSeguimiento->name;
         //$h->usu_alta_id = $this->Seguimiento->usu_alta_id;
         //$h->usu_mod_id = $this->Seguimiento->usu_mod_id;
-        $h->usu_alta_id = Auth::user()->id;
-        $h->usu_mod_id = Auth::user()->id;
+        $h->usu_alta_id = isset(Auth::user()->id) ? Auth::user()->id : 1;
+        $h->usu_mod_id = isset(Auth::user()->id) ? Auth::user()->id : 1;
 
         //dd($hactividad);
 

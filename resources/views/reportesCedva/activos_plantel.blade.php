@@ -35,13 +35,12 @@
             <h4>Resumen</h4>
             <thead>
               <th>Plantel</th><th>Seccion</th>
-              <th>Año</th><th>Concepto</th>
-              <th>Activos Vigentes Sin Adeudo</th>
-              <th>Activos Vigentes Con 1 Adeudo</th><th>BTP</th><th>BA</th>
-              <th>Suma (Matricula Total Activa)</th><th>Preinscritos</th>
+              <th>AÃ±o</th><th>Concepto</th>
+              <th>Suma (Matricula Total Activa)</th>
             </thead>
             <tbody>
               @php
+              $t0=0;
               $t1=0;
               $t2=0;
               $t3=0;
@@ -53,12 +52,10 @@
               <tr>
                 <td>{{$linea['razon']}}</td><td>{{$linea['seccion']}}</td>
                 <td>{{$linea['anio_planeado']}}</td><td>{{$linea['concepto']}}</td>
-                <td>{{ $linea['vigentes_sin_adeudos']}}</td>
-                <td>{{$linea['vigentes_con_1_adeudos']}}</td><td>{{$linea['baja_temporal_por_pago']}}</td><td>{{$linea['baja_administrativa']}}</td>
-                <td>{{$linea['matricula_total_activa']}}</td>
-                <td>{{$linea['preinscrito']}}</td>
+                <td>{{$linea['total']}}</td>
               </tr>
               @php
+              $t0=$t0+$linea['total'];
               $t1=$t1+$linea['vigentes_sin_adeudos'];
               $t2=$t2+$linea['vigentes_con_1_adeudos'];
               $t3=$t3+$linea['baja_temporal_por_pago'];
@@ -68,9 +65,7 @@
               @endphp
               @endforeach
               <tr><td>Totales</td><td></td><td></td><td></td>
-                  <td>{{$t1}}</td><td>{{$t2}}</td><td>{{$t3}}</td>
-                  <td>{{$t4}}</td><td>{{$t5}}</td><td>{{$t6}}</td>
-              </tr>
+                  <td>{{$t0}}</td></tr>
             </tbody>
     </table>    
 
@@ -83,18 +78,18 @@
                     return $row;
                   }
                 }
-                return array('vigentes_sin_adeudos'=>0, 'vigentes_con_1_adeudos'=>0, 'baja_temporal_por_pago'=>0, 'baja_administrativa'=>0);
+                return array('vigentes_sin_adeudos'=>0, 'vigentes_con_1_adeudos'=>0, 'baja_temporal_por_pago'=>0, 'baja_administrativa'=>0, 'total'=>0);
               }
             @endphp 
             <h4>Resumen</h4>
             <thead>
               <th rowspan="2">Plantel</th><th rowspan="2">Seccion</th>
               @foreach($combinaciones_anio_concepto as $anio_concepto)
-                <th colspan="2">{{$anio_concepto['anio_planeado']}} - {{$anio_concepto['concepto']}}</th>
+                <th>{{$anio_concepto['anio_planeado']}} - {{$anio_concepto['concepto']}}</th>
               @endforeach
               <tr>
               @foreach($combinaciones_anio_concepto as $anio_concepto)
-              <th>Activos Vigentes Sin Adeudo</th><th>Matricula Total Activa</th>
+		<th>Matricula Total Activa</th>
               @endforeach
               </tr>
                 
@@ -107,8 +102,8 @@
                 @php
                   $row=getRowBy($resumen, $plantel_seccion['razon'], $plantel_seccion['seccion'], $anio_concepto['anio_planeado'], $anio_concepto['concepto']);
                 @endphp
-                <td>{{$row['vigentes_sin_adeudos']}}</td>
-                <td>{{$row['vigentes_sin_adeudos']+$row['vigentes_con_1_adeudos']+$row['baja_temporal_por_pago']+$row['baja_administrativa']}}</td>
+
+                <td>{{$row['total']}}</td>
                 @endforeach
                </tr> 
                @endforeach
