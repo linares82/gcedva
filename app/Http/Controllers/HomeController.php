@@ -102,11 +102,24 @@ class HomeController extends Controller
 
         $plantels = Plantel::where('id', '>', 1)->get();
 
-        $contratosVencidos = Empleado::where('st_empleado_id', '<>', 3)->whereNull('deleted_at')
+        $contratosVencidos1 = Db::table('empleados as c1')->where('st_empleado_id', '<>', 3)->whereNull('deleted_at')
             ->where('dias_alerta', '>', 0)
-            ->whereRaw('DATEDIFF(fin_contrato, "' . Date("Y-m-d") . '") <= dias_alerta or DATEDIFF(fec_fin_contrato2, "' . Date("Y-m-d") . '") <= dias_alerta')
+            ->whereRaw('DATEDIFF(fin_contrato, "' . Date("Y-m-d") . '") <= dias_alerta');
+            //->orderBy('plantel_id');
+            //->orderBy('fin_contrato')
+            //->get();
+
+        $contratosVencidos = Db::table('empleados as c2')->where('st_empleado_id', '<>', 3)->whereNull('deleted_at')
+            ->where('dias_alerta', '>', 0)
+            ->where('plantel_contrato2_id','<>','0')
+            ->where('tipo_contrato2_id','<>','10')
+            ->whereRaw('DATEDIFF(fec_fin_contrato2, "' . Date("Y-m-d") . '") <= dias_alerta')
+            ->union($contratosVencidos1)
+            ->orderBy('fin_contrato')
             ->orderBy('plantel_id')
             ->get();
+
+        //dd($contratosVencidos2->toArray());
         
             //$e = Empleado::where('user_id', '=', Auth::user()->id)->first();
             //dd($e);
