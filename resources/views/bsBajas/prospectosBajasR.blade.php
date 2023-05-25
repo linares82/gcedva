@@ -50,13 +50,14 @@
                             <td>{{ $cliente->ape_paterno }} {{ $cliente->ape_materno }} {{ $cliente->nombre }} {{ $cliente->nombre2 }}</td>
                             <td>{{ $cliente->stCliente->name }}</td>
 			    <td>
-			    @if($r['estatusBs']=="N/A")
-				{{ $r['estatusBs'] }}
-			    @elseif(!$r['estatusBs'])
-				I
-			    @else
+			    @if(!$r['estatusBs'])
+				I 
+			    @elseif($r['estatusBs']==1)
 				A
+			    @elseif($r['estatusBs']==="N/A")
+				{{ $r['estatusBs'] }}
 			    @endif
+
 			    </td>
                             <td>
                                 <a href="#" class="btn btn-warning btn-xs linkAdeudos" data-cliente="{{ $cliente->id }}">

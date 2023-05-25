@@ -85,13 +85,15 @@
                         @endforeach
                     </td>
                     <td>
-                    <form action="{{ route('usuariosF.destroy', $user->id) }}" method="post">
                     @role('superadmin')
+                    <form action="{{ route('usuariosF.destroy', $user->id) }}" method="post">
+                    
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     <a class="btn btn-labeled btn-default" href="{{ route('usuariosF.edit', $user->id) }}"><span class="btn-label"><i class="fa fa-pencil"></i></span>Editar</a>
-                    @endrole
+                    
                     <button type="submit" class="btn btn-labeled btn-danger"><span class="btn-label"><i class="fa fa-trash"></i></span>Borrar</button>
                     </form>
+                    @endrole
                     </td>
                 </tr>
             @endforeach

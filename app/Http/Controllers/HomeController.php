@@ -102,7 +102,7 @@ class HomeController extends Controller
 
         $plantels = Plantel::where('id', '>', 1)->get();
 
-        $contratosVencidos = Empleado::where('st_empleado_id', '<>', 3)
+        $contratosVencidos = Empleado::where('st_empleado_id', '<>', 3)->whereNull('deleted_at')
             ->where('dias_alerta', '>', 0)
             ->whereRaw('DATEDIFF(fin_contrato, "' . Date("Y-m-d") . '") <= dias_alerta or DATEDIFF(fec_fin_contrato2, "' . Date("Y-m-d") . '") <= dias_alerta')
             ->orderBy('plantel_id')

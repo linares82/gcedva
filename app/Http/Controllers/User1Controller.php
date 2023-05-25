@@ -168,6 +168,7 @@ class User1Controller extends Controller
 
     public function update($id, Request $request){
         $datos=$request->except('password');
+        
         //dd($request->all());
         $pas=$request->only('password');
         //dd($pas['password']);
@@ -192,7 +193,9 @@ class User1Controller extends Controller
 
     public function destroy($id, Request $request){
         $usuario=User::find($id);
+        
         $usuario->delete();
+        //dd('fil');
         return redirect()->route('usuariosF.index')->with('message', 'Registro Borrado.');
     }
 }

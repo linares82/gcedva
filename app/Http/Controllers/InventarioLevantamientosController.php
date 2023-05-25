@@ -117,8 +117,8 @@ class InventarioLevantamientosController extends Controller {
 		
 		$planteles=PlantelInventario::pluck('name','id');
 		$planteles->prepend('Seleccionar opcion', 0);
-		$catEstado=array('BUENO'=>'BUENO', 'MALO'=>'MALO');
-		$catExiste=array('SI'=>'SI', 'NO'=>'NO');
+		$catEstado=array('0'=>'SELECCIONAR', 'BUENO'=>'BUENO', 'MALO'=>'MALO');
+		$catExiste=array('0'=>'SELECCIONAR','SI'=>'SI', 'NO'=>'NO');
 		
 		
 		return view('inventarioLevantamientos.show', compact('inventarioLevantamiento', 'inventarios','planteles','catEstado','catExiste'))

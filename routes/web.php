@@ -673,7 +673,7 @@ Route::get(
     '/users/cUsers',
     array(
         'as' => 'users.cUsers',
-        //'middleware' => 'permission:users.cUsers',
+        'middleware' => 'permission:users.cUsers',
         'uses' => 'User1Controller@index'
     )
 )->middleware('auth');

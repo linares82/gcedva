@@ -351,7 +351,7 @@
 
                         <div class="form-group col-md-3 @if($errors->has('plantel_contrato2_id')) has-error @endif" style="clear:left;">
                           <label for="plantel_contrato2_id-field">Plantel contrato 2</label>
-                          {!! Form::select("plantel_contrato2_id", $list["Plantel"], isset($empleado->plantel_contrato2_id) ? $empleado->plantel_contrato1_id : null, array("class" => "form-control select_seguridad", "id" => "plantel_contrato2_id-field")) !!}
+                          {!! Form::select("plantel_contrato2_id", $list["Plantel"], isset($empleado->plantel_contrato2_id) ? $empleado->plantel_contrato2_id : null, array("class" => "form-control select_seguridad", "id" => "plantel_contrato2_id-field")) !!}
                           @if($errors->has("plantel_contrato2_id"))
                             <span class="help-block">{{ $errors->first("plantel_contrato2_id") }}</span>
                           @endif

@@ -4,21 +4,51 @@ namespace App;
 
 use Hash;
 use Illuminate\Auth\Authenticatable;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Zizaco\Entrust\Traits\EntrustUserTrait;
 use Esensi\Model\Traits\ValidatingModelTrait;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Esensi\Model\Contracts\ValidatingModelInterface;
 use Acoustep\EntrustGui\Contracts\HashMethodInterface;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Venturecraft\Revisionable\RevisionableTrait;
 
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract, ValidatingModelInterface, HashMethodInterface
 {
     use Authenticatable, CanResetPassword, ValidatingModelTrait, EntrustUserTrait, Notifiable;
+    use SoftDeletes { SoftDeletes::restore insteadof EntrustUserTrait; }
+    use RevisionableTrait;
 
     protected $throwValidationExceptions = true;
+
+    public static function boot()
+	{
+		parent::boot();
+
+	    static::creating(function ($model) {
+	            // Remember that $model here is an instance of Article
+	            $model->usu_alta_id = Auth::user()->id;
+				$model->usu_mod_id = Auth::user()->id;
+        });
+
+		static::updating(function ($model) {
+			// Remember that $model here is an instance of Article
+			$model->usu_mod_id = Auth::user()->id;
+            
+		});
+
+		static::deleting(function ($model) {
+			// Remember that $model here is an instance of Article
+            //dd('borrando');
+			$model->usu_delete_id = Auth::user()->id;
+            $model->save();
+		});
+
+	}
 
     /**
      * The database table used by the model.

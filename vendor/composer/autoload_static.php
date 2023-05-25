@@ -855,6 +855,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'AddBndReferenciadoToPagosTable' => __DIR__ . '/../..' . '/database/migrations/2020_07_01_113041_add_bnd_referenciado_to_pagos_table.php',
         'AddBndReingresoClientesTable' => __DIR__ . '/../..' . '/database/migrations/2019_07_24_115002_add_bnd_reingreso_clientes_table.php',
         'AddBndRevisionDirectorToTitulacionsTable' => __DIR__ . '/../..' . '/database/migrations/2022_08_24_105901_add_bnd_revision_director_to_titulacions_table.php',
+        'AddBorradoSuaveToUsersTable' => __DIR__ . '/../..' . '/database/migrations/2023_05_24_165659_add_borrado_suave_to_users_table.php',
         'AddCamposToConciliacionMultiDetallesTable' => __DIR__ . '/../..' . '/database/migrations/2020_07_07_163931_add_campos_to_conciliacion_multi_detalles_table.php',
         'AddCctToGradosTable' => __DIR__ . '/../..' . '/database/migrations/2020_07_06_172236_add_cct_to_grados_table.php',
         'AddCedvaFieldsToEmpleadosTable' => __DIR__ . '/../..' . '/database/migrations/2020_06_22_162242_add_cedva_fields_to_empleados_table.php',

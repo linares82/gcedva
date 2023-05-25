@@ -216,15 +216,15 @@
             <td>{{$inventario->marca}}</td>
             <td>{{$inventario->observaciones}}</td>
             <td>
-                <div ondblclick="editExiste()">{{$inventario->existe_si}}</div>
+                <div class="editExiste">{{$inventario->existe_si}}</div>
                 <div id="existeEditable" style="display:none;">
-                    {!! Form::select("existe_si", $catExiste, null, array("class" => "form-control", "id" => "existe_si_edit-field", 'data-id' => $inventario->id )) !!}
+                    {!! Form::select("existe_si", $catExiste, null, array("class" => "form-control existe_si_edit-field",  'data-id' => $inventario->id )) !!}
                 </div>
             </td>
             <td>
-                <div ondblclick="editEstado()">{{$inventario->estado_bueno}}</div>
+                <div class="editEstado">{{$inventario->estado_bueno}}</div>
                 <div id="estadoEditable" style="display:none;">
-                    {!! Form::select("estado_bueno", $catEstado, $inventario->estado_bueno, array("class" => "form-control", "id" => "estado_bueno_edit-field", 'data-id'=> $inventario->id )) !!}
+                    {!! Form::select("estado_bueno", $catEstado, $inventario->estado_bueno, array("class" => "form-control estado_bueno_edit-field", 'data-id'=> $inventario->id )) !!}
                 </div>
             </td>
             <td>
@@ -252,7 +252,30 @@
 <script type="text/javascript">
     $(document).ready(function() {
 
-        $('#estado_bueno_edit-field').change(function (){
+        $(".editExiste").dblclick(function(){
+            $(this).next().show();
+        });
+
+        $(".existe_si_edit-field").change(function() {
+            $.ajax({
+                    url: '{{ route("inventarios.editExiste") }}',
+                    type: 'GET',
+                    data: {
+                        'id':$(this).data('id'),
+                        'existe_si': $(this).val()
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        location.reload();
+                    }
+                });
+        });
+
+        $(".editEstado").dblclick(function(){
+            $(this).next().show();
+        });
+
+        $('.estado_bueno_edit-field').change(function (){
             
                 $.ajax({
                     url: '{{ route("inventarios.editEstado") }}',
@@ -268,28 +291,8 @@
                 });
         });
 
-        $("#existe_si_edit-field").change(function() {
-            $.ajax({
-                    url: '{{ route("inventarios.editExiste") }}',
-                    type: 'GET',
-                    data: {
-                        'id':$(this).data('id'),
-                        'existe_si': $(this).val()
-                    },
-                    dataType: 'json',
-                    success: function(data) {
-                        location.reload();
-                    }
-                });
-        });
+        
     });
 
-    function editExiste() {
-        $("#existeEditable").show();
-    }
-
-    function editEstado() {
-        $("#estadoEditable").show();
-    }
 </script>
 @endpush
