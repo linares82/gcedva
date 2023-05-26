@@ -185,23 +185,25 @@
                     </td>
                     <td class="text-right">
                         @if($inventarioLevantamiento->inventario_levantamiento_st_id==1)
-                        @permission('inventarioLevantamientos.cargarCsv')
-                        <a class="btn btn-xs btn-info" href="{{ route('inventarioLevantamientos.cargarCsv', array('inventario_levantamiento_id'=>$inventarioLevantamiento->id)) }}"><i class="glyphicon glyphicon-edit"></i> Crear con Csv</a>
+                            @permission('inventarioLevantamientos.cargarCsv')
+                            <a class="btn btn-xs btn-info" href="{{ route('inventarioLevantamientos.cargarCsv', array('inventario_levantamiento_id'=>$inventarioLevantamiento->id)) }}"><i class="glyphicon glyphicon-edit"></i> Crear con Csv</a>
+                            
+                            <a class="btn btn-xs btn-success" href="{{ route('inventarioLevantamientos.copiarAnterior', array('destino'=>$inventarioLevantamiento->id)) }}"><i class="glyphicon glyphicon-duplicate"></i> Copiar</a>
+                            @endpermission
+                            <a class="btn btn-xs btn-info" href="{{ route('inventarioLevantamientos.actualizarCsv', array('inventario_levantamiento_id'=>$inventarioLevantamiento->id)) }}"><i class="glyphicon glyphicon-edit"></i> Actualizar con Csv</a>
+                            @permission('inventarioLevantamientos.edit')
+                            @permission('inventarioLevantamientos.actualizarCsv')
+                            <a class="btn btn-xs btn-warning" href="{{ route('inventarioLevantamientos.edit', $inventarioLevantamiento->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
+                            @endpermission
+                            @endpermission
                         
-                        <a class="btn btn-xs btn-success" href="{{ route('inventarioLevantamientos.copiarAnterior', array('destino'=>$inventarioLevantamiento->id)) }}"><i class="glyphicon glyphicon-duplicate"></i> Copiar</a>
-                        @endpermission
-                        <a class="btn btn-xs btn-info" href="{{ route('inventarioLevantamientos.actualizarCsv', array('inventario_levantamiento_id'=>$inventarioLevantamiento->id)) }}"><i class="glyphicon glyphicon-edit"></i> Actualizar con Csv</a>
-                        @endif
-                        @permission('inventarioLevantamientos.edit')
-                        @permission('inventarioLevantamientos.actualizarCsv')
-                        <a class="btn btn-xs btn-warning" href="{{ route('inventarioLevantamientos.edit', $inventarioLevantamiento->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
-                        @endpermission
-                        @endpermission
+                        
                         @permission('inventarioLevantamientos.destroy')
                         {!! Form::model($inventarioLevantamiento, array('route' => array('inventarioLevantamientos.destroy', $inventarioLevantamiento->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}
                         <button type="submit" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> Borrar</button>
                         {!! Form::close() !!}
                         @endpermission
+                        @endif
                     </td>
                 </tr>
                 @endforeach

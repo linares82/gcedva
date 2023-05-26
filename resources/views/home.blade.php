@@ -30,18 +30,13 @@
                         @foreach ($contratosVencidos as $contrato)
                             <tr>
                                 <td>
-                                @php
-                                    $plantel=\App\Plantel::find($contrato->plantel_id);
-                                @endphp    
-                                {{optional($plantel)->razon}}</td>    
+                                {{$contrato->razon}}</td>    
                             <td>{{$contrato->id}}</td>
                             <td>{{ $contrato->nombre }} {{ $contrato->ape_paterno }} {{ $contrato->ape_materno }}</td>
                             <td>{{ $contrato->rfc }}</td>
                             <td>
-                                @php
-                                    $puesto=\App\Puesto::find($contrato->puesto_id);
-                                @endphp    
-                            {{ $puesto->name }}</td>
+                                
+                            {{ $contrato->puesto }}</td>
                             <td>{{ $contrato->direccion }}</td>
                             <td>{{$contrato->fin_contrato}}</td>
                             <td>

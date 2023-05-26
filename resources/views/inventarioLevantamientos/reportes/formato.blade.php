@@ -47,7 +47,7 @@
             <thead>
                 <tr>
                     <th >No. Id.</th><th >CANTIDAD</th><th >NOMBRE</th><th >MEDIDA</th><TH >MARCA</TH>
-                    <TH >OBSERVACIONES</TH><TH >EXISTENCIA</TH><TH >ESTADO</TH>
+                    <TH >OBSERVACIONES</TH><TH >EXISTE(SI/NO)</TH><TH >ESTADO(BUENO/MALO)</TH>
                 </tr> 
             </thead>    
                 @php
@@ -59,7 +59,7 @@
                     <th colspan="10" id="th_general">{{$row->escuela}}</th>
                 </tr>
                 <tr>
-                    <th colspan="10" id="th_general">{{$row->tipo_inventario}}   -   {{$row->ubicacion}}</th>
+                    <th colspan="10" id="th_general">{{$row->area}} - {{$row->tipo_inventario}}   -   {{$row->ubicacion}}</th>
                 </tr>
                 
                 

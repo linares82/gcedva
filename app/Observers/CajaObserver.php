@@ -97,8 +97,6 @@ class CajaObserver
                 
             } elseif ($this->caja->cliente->st_cliente_id <> 3) {
                 
-                
-
                 if ($this->caja->cliente->st_cliente_id == 26) {
                     $diaFechaActual=Carbon::createFromFormat('Y-m-d', Date('Y-m-d'))->day;
                     $aux=Carbon::createFromFormat('Y-m-d', Date('Y-m-d'));
@@ -160,7 +158,7 @@ class CajaObserver
                             }
                         }
                     }
-                } else {
+                } elseif($adeudos==0) {
                     
                     $cliente->st_cliente_id = 4;
                     $cliente->save();

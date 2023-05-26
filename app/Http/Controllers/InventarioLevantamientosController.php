@@ -112,9 +112,10 @@ class InventarioLevantamientosController extends Controller {
 		$datos=$request->all();
 		//dd($datos['q']["inventario_levantamiento_id_lt"]);
 		$inventarioLevantamiento=InventarioLevantamiento::find($datos['q']["inventario_levantamiento_id_lt"]);
+		//dd($request);
 		$inventarios = Inventario::getAllData($request);
 		//$inventarios = Inventario::where('inventario_levantamiento_id',$datos['q']["inventario_levantamiento_id_lt"])->get();
-		
+		//dd($datos);
 		$planteles=PlantelInventario::pluck('name','id');
 		$planteles->prepend('Seleccionar opcion', 0);
 		$catEstado=array('0'=>'SELECCIONAR', 'BUENO'=>'BUENO', 'MALO'=>'MALO');
@@ -474,32 +475,42 @@ class InventarioLevantamientosController extends Controller {
 		$datos=$request->all();
 		$plantel=PlantelInventario::find($datos['plantel_id']);
 		$inventarioLevantamiento=InventarioLevantamiento::find($datos['id']);
+
+		//dd($datos);
 		$inventarioObservaciones=InventarioObservacion::where('inventario_levantamiento_id', $datos['id'])
-		->where('plantel_id', $datos['plantel_id'])->get();
+		->where('plantel_inventario_id', $datos['plantel_id'])->get();
 		return view('inventarioLevantamientos.reportes.dictamen', compact('plantel', 'inventarioObservaciones','inventarioLevantamiento'));
 	}
 
 	public function inicioLevantamiento(){
 		$planteles=PlantelInventario::pluck('name','id');
-		return view('inventarioLevantamientos.reportes.inicioLevantamiento', compact('planteles'));
+		$catEstado=array('0'=>'SELECCIONAR', 'BUENO'=>'BUENO', 'MALO'=>'MALO');
+		$catExiste=array('0'=>'SELECCIONAR','SI'=>'SI', 'NO'=>'NO');
+		
+		return view('inventarioLevantamientos.reportes.inicioLevantamiento', compact('planteles','catExiste','catEstado'));
 	}
 
 	public function inicioLevantamientoLista(Request $request){
 		$datos=$request->all();
 		//dd($datos);
-		$resultado=Inventario::select('pi.id as plantel_id','pi.name as plantel','il.fecha','inventarios.area')
+		$resultado=Inventario::select('pi.id as plantel_id','pi.name as plantel','il.fecha','inventarios.area',
+		'estado_bueno', 'existe_si')
 		->join('inventario_levantamientos as il','il.id','inventarios.inventario_levantamiento_id')
 		->join('plantel_inventarios as pi','pi.id','inventarios.plantel_inventario_id')
 		->whereIn('inventarios.plantel_inventario_id',$datos['plantel_f'])
 		->where('inventarios.area', 'like', '%'.$datos['area'].'%')
+		->where('inventarios.estado_bueno', $datos['estado_bueno'])
+		->where('inventarios.existe_si', $datos['existe_si'])
 		->whereDate('il.fecha','>=', $datos['fecha_f'])
 		->whereDate('il.fecha','<=', $datos['fecha_t'])
 		->distinct()
 		->orderBy('il.fecha','desc')
 		->get();
 		$planteles=PlantelInventario::pluck('name','id');
+		$catEstado=array('0'=>'SELECCIONAR', 'BUENO'=>'BUENO', 'MALO'=>'MALO');
+		$catExiste=array('0'=>'SELECCIONAR','SI'=>'SI', 'NO'=>'NO');
 		//dd($resultado);
-		return view('inventarioLevantamientos.reportes.inicioLevantamiento', compact('resultado','planteles'));
+		return view('inventarioLevantamientos.reportes.inicioLevantamiento', compact('resultado','planteles','catExiste','catEstado'));
 	}
 
 	public function inicioLevantamientoCsv(Request $request){
@@ -511,6 +522,8 @@ class InventarioLevantamientosController extends Controller {
 		->where('inventarios.plantel_inventario_id',$datos['plantel'])
 		->where('inventarios.area',$datos['area'])
 		->where('il.fecha',$datos['fecha'])
+		->where('inventarios.estado_bueno',$datos['estado_bueno'])
+		->where('inventarios.existe_si',$datos['existe_si'])
 		->get();
 
 /*		$table = Inventario::where('inventario_levantamiento_id', $datos['id'])
@@ -519,7 +532,7 @@ class InventarioLevantamientosController extends Controller {
 */
 		$filename = storage_path('app') . "/public/Inventario".$datos['plantel'].".csv";
 			$handle = fopen($filename, 'w+');
-			fputcsv($handle, array("ID","PLANTEL_ID","AREA","ESCUELA","TIPO INVENTARIO","UBICACION","CANTIDAD","NOMBRE","MEDIDA","MARCA","OBSERVACIONES","EXISTE-SI","EXISTE-NO","ESTADO-BUENO","ESTADO-MALO"));
+			fputcsv($handle, array("ID","PLANTEL_ID","AREA","ESCUELA","TIPO INVENTARIO","UBICACION","CANTIDAD","NOMBRE","MEDIDA","MARCA","OBSERVACIONES","EXISTE-SI/NO","ESTADO-BUENO/MALO"));
 
 			foreach($resultado as $row) {
 				fputcsv($handle, array($row->id,$row->plantel_inventario_id, $row->area, $row->escuela, $row->tipo_inventario,$row->ubicacion,
@@ -547,6 +560,8 @@ class InventarioLevantamientosController extends Controller {
 		->where('inventarios.plantel_inventario_id',$datos['plantel'])
 		->where('il.fecha',$datos['fecha'])
 		->where('inventarios.area',$datos['area'])
+		->where('inventarios.estado_bueno',$datos['estado_bueno'])
+		->where('inventarios.existe_si',$datos['existe_si'])
 		->get();
 		//dd($resultado);
 		//return view('inventarioLevantamientos.reportes.inicioLevantamiento', compact('planteles'));

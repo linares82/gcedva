@@ -32,27 +32,43 @@
         </div>
 
         <div class="form-group col-md-6 @if($errors->has('area')) has-error @endif">
-                    <label for="area-field">Area:</label>
-                    {!! Form::text("area", null, array("class" => "form-control input-sm", "id" => "area-field")) !!}
-                    @if($errors->has("area"))
-                    <span class="help-block">{{ $errors->first("area") }}</span>
-                    @endif
-                </div>
+            <label for="area-field">Area:</label>
+            {!! Form::text("area", null, array("class" => "form-control input-sm", "id" => "area-field")) !!}
+            @if($errors->has("area"))
+            <span class="help-block">{{ $errors->first("area") }}</span>
+            @endif
+        </div>
+
+        <div class="form-group col-md-6 @if($errors->has('existe_si')) has-error @endif" style="clear:left;">
+            <label for="existe_si-field">Existe si</label>
+            {!! Form::select("existe_si", $catExiste, null, array("class" => "form-control", "id" => "existe_si-field")) !!}
+            @if($errors->has("existe_si"))
+            <span class="help-block">{{ $errors->first("existe_si") }}</span>
+            @endif
+        </div>
+
+        <div class="form-group col-md-6 @if($errors->has('estado_bueno')) has-error @endif">
+            <label for="estado_bueno-field">Estado bueno</label>
+            {!! Form::select("estado_bueno", $catEstado, null, array("class" => "form-control", "id" => "estado_bueno-field")) !!}
+            @if($errors->has("estado_bueno"))
+            <span class="help-block">{{ $errors->first("estado_bueno") }}</span>
+            @endif
+        </div>
 
         <div class="form-group col-md-6 @if($errors->has('fecha_f')) has-error @endif" style="clear:left;">
-                    <label for="fecha_f-field">Fecha de:</label>
-                    {!! Form::text("fecha_f", null, array("class" => "form-control input-sm fecha", "id" => "fecha_f-field")) !!}
-                    @if($errors->has("fecha_f"))
-                    <span class="help-block">{{ $errors->first("fecha_f") }}</span>
-                    @endif
-                </div>
-                <div class="form-group col-md-6 @if($errors->has('fecha_t')) has-error @endif">
-                    <label for="fecha_t-field">Fecha a:</label>
-                    {!! Form::text("fecha_t", null, array("class" => "form-control input-sm fecha", "id" => "fecha_t-field")) !!}
-                    @if($errors->has("fecha_t"))
-                    <span class="help-block">{{ $errors->first("fecha_t") }}</span>
-                    @endif
-                </div>
+            <label for="fecha_f-field">Fecha de:</label>
+            {!! Form::text("fecha_f", null, array("class" => "form-control input-sm fecha", "id" => "fecha_f-field")) !!}
+            @if($errors->has("fecha_f"))
+            <span class="help-block">{{ $errors->first("fecha_f") }}</span>
+            @endif
+        </div>
+        <div class="form-group col-md-6 @if($errors->has('fecha_t')) has-error @endif">
+            <label for="fecha_t-field">Fecha a:</label>
+            {!! Form::text("fecha_t", null, array("class" => "form-control input-sm fecha", "id" => "fecha_t-field")) !!}
+            @if($errors->has("fecha_t"))
+            <span class="help-block">{{ $errors->first("fecha_t") }}</span>
+            @endif
+        </div>
 
 
         <div class="row">
@@ -71,6 +87,8 @@
                     <th>Plantel</th>
                     <th>Fecha</th>
                     <th>Area</th>
+                    <th>Estado</th>
+                    <th>Existe</th>
                     <th></th>
                 </thead>
                 <tbody>
@@ -79,16 +97,18 @@
                         <td>{{$r->plantel}}</td>
                         <td>{{$r->fecha}}</td>
                         <td>{{$r->area}}</td>
+                        <td>{{$r->estado_bueno}}</td>
+                        <td>{{$r->existe_si}}</td>
                         <td>
-                            <a 
-                            href="{{route('inventarioLevantamientos.inicioLevantamientoCsv', 
-                                array('plantel'=>$r->plantel_id,'fecha'=>$r->fecha, 'area'=>$r->area))}}" target="_blank">
+                            <a href="{{route('inventarioLevantamientos.inicioLevantamientoCsv', 
+                                array('plantel'=>$r->plantel_id,'fecha'=>$r->fecha, 'area'=>$r->area, 
+                                'estado_bueno'=>$r->estado_bueno, 'existe_si'=>$r->existe_si))}}" target="_blank">
                                 Csv
                             </a>
                             |
-                            <a 
-                            href="{{route('inventarioLevantamientos.inicioLevantamientoFormato', 
-                                array('plantel'=>$r->plantel_id,'fecha'=>$r->fecha, 'area'=>$r->area))}}" target="_blank">
+                            <a href="{{route('inventarioLevantamientos.inicioLevantamientoFormato', 
+                                array('plantel'=>$r->plantel_id,'fecha'=>$r->fecha, 'area'=>$r->area,
+                                'estado_bueno'=>$r->estado_bueno, 'existe_si'=>$r->existe_si))}}" target="_blank">
                                 Formato
                             </a>
                         </td>

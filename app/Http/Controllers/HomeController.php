@@ -102,24 +102,32 @@ class HomeController extends Controller
 
         $plantels = Plantel::where('id', '>', 1)->get();
 
-        $contratosVencidos1 = Db::table('empleados as c1')->where('st_empleado_id', '<>', 3)->whereNull('deleted_at')
+        $contratosVencidos1 = Db::table('empleados as c1')->select('p.razon', 'c1.id','c1.nombre','c1.ape_paterno',
+        'c1.ape_materno', 'c1.rfc', 'pu.name as puesto', 'c1.direccion', 'c1.fin_contrato')
+            ->join('plantels as p','p.id','c1.plantel_contrato1_id')
+            ->join('puestos as pu','pu.id','c1.puesto_id')
+            ->where('c1.st_empleado_id', '<>', 3)->whereNull('c1.deleted_at')
             ->where('dias_alerta', '>', 0)
             ->whereRaw('DATEDIFF(fin_contrato, "' . Date("Y-m-d") . '") <= dias_alerta');
             //->orderBy('plantel_id');
             //->orderBy('fin_contrato')
             //->get();
 
-        $contratosVencidos = Db::table('empleados as c2')->where('st_empleado_id', '<>', 3)->whereNull('deleted_at')
+        $contratosVencidos = Db::table('empleados as c2')->select('p.razon', 'c2.id','c2.nombre','c2.ape_paterno',
+        'c2.ape_materno', 'c2.rfc', 'pu.name as puesto', 'c2.direccion', 'c2.fec_fin_contrato2 as fin_contrato')
+            ->join('plantels as p','p.id','c2.plantel_contrato2_id')
+            ->join('puestos as pu','pu.id','c2.puesto_id')
+            ->where('c2.st_empleado_id', '<>', 3)->whereNull('c2.deleted_at')
             ->where('dias_alerta', '>', 0)
             ->where('plantel_contrato2_id','<>','0')
             ->where('tipo_contrato2_id','<>','10')
             ->whereRaw('DATEDIFF(fec_fin_contrato2, "' . Date("Y-m-d") . '") <= dias_alerta')
             ->union($contratosVencidos1)
             ->orderBy('fin_contrato')
-            ->orderBy('plantel_id')
+            //->orderBy('plantel_id')
             ->get();
 
-        //dd($contratosVencidos2->toArray());
+        //dd($contratosVencidos->toArray());
         
             //$e = Empleado::where('user_id', '=', Auth::user()->id)->first();
             //dd($e);

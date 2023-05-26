@@ -43,6 +43,14 @@
                 <p class="form-control-static">{{$inventarioLevantamiento->fecha}}</p>
             </div>
             <div class="form-group col-sm-3">
+                <label for="fecha">PLANTEL</label>
+                <p class="form-control-static">{{$inventarioLevantamiento->plantelInventario->name}}</p>
+            </div>
+            <div class="form-group col-sm-3">
+                <label for="fecha">Estatus</label>
+                <p class="form-control-static">{{$inventarioLevantamiento->inventarioLevantamientoSt->name}}</p>
+            </div>
+            <div class="form-group col-sm-3">
                 <label for="usu_alta_id">ALTA</label>
                 <p class="form-control-static">{{$inventarioLevantamiento->usu_alta->name}}</p>
             </div>
@@ -75,9 +83,8 @@
                     <input type="hidden" name="q[s]" value="{{ @(Request::input('q')['s']) ?: '' }}" />
                     <div class="">
                         <div class="form-group col-md-4">
-                            <label class="col-sm-2 control-label" for="q_inventarios.no_inventario_lt">No. Inventario</label>
-
-                            <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['inventarios.no_inventario_lt']) ?: '' }}" name="q[inventarios.no_inventario_lt]" id="q_inventarios.no_inventario_lt" />
+                            <label class="col-sm-2 control-label" for="q_inventarios.no_inventario_cont">No. Inventario</label>
+                            <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['inventarios.no_inventario_cont']) ?: '' }}" name="q[inventarios.no_inventario_cont]" id="q_inventarios.no_inventario_cont" />
 
                         </div>
                         <!--
@@ -94,7 +101,7 @@
                             -->
                         <div class="form-group col-md-4">
                             <label for="q_inventarios.estado_bueno_lt">ESTADO</label>
-                            {!! Form::select("inventarios.estado_bueno", $catEstado, "{{ @(Request::input('q')['inventarios.estado_bueno_cont']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[inventarios.estado_bueno_cont]", "id"=>"q_inventarios.estado_bueno_cont", "style"=>"width:100%;")) !!}
+                            {!! Form::select("inventarios.estado_bueno", $catEstado, "{{ @(Request::input('q')['inventarios.estado_bueno_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[inventarios.estado_bueno_lt]", "id"=>"q_inventarios.estado_bueno_lt", "style"=>"width:100%;")) !!}
                         </div>
                         <div class="form-group col-md-4">
                             <label for="q_inventarios.plantel_inventario_id_lt">PLANTEL</label>
@@ -230,12 +237,16 @@
             <td>
 
                 @permission('inventarios.edit')
+                @if($inventarioLevantamiento->inventario_levantamiento_st_id==1)
                 <a class="btn btn-xs btn-warning" target="_blank" href="{{ route('inventarios.edit', $inventario->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
+                @endif
                 @endpermission
                 @permission('inventarios.destroy')
+                @if($inventarioLevantamiento->inventario_levantamiento_st_id==1)
                 {!! Form::model($inventario, array('route' => array('inventarios.destroy', $inventario->id),'method' => 'delete', 'style' => 'display: inline;', 'target'=>'_blank', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}
                 <button type="submit" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> Borrar</button>
                 {!! Form::close() !!}
+                @endif
                 @endpermission
 
             </td>
@@ -253,7 +264,9 @@
     $(document).ready(function() {
 
         $(".editExiste").dblclick(function(){
+            @if($inventarioLevantamiento->inventario_levantamiento_st_id==1)
             $(this).next().show();
+            @endif
         });
 
         $(".existe_si_edit-field").change(function() {
@@ -272,7 +285,9 @@
         });
 
         $(".editEstado").dblclick(function(){
+            @if($inventarioLevantamiento->inventario_levantamiento_st_id==1)
             $(this).next().show();
+            @endif
         });
 
         $('.estado_bueno_edit-field').change(function (){
