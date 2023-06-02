@@ -62,7 +62,7 @@ trait GetAllDataTrait
         //(ii) add Constrain
 
         if (is_array($request->input('q'))) {
-            //dd($request->input('q'));
+
             foreach ($request->input('q') as $key => $value) {
 
                 //skip s value that is for ordering
@@ -90,8 +90,8 @@ trait GetAllDataTrait
                 if ($operator === 'cont' and ($value <> "" or $value <> 0)) {
                     $myQuery = $myQuery->Where($column, 'LIKE', '%' . $value . '%');
                     //dd($myQuery);
-                } elseif ($operator === 'lt' and $value <> '0') {
-                    //dd($value);
+                } elseif ($operator === 'lt' and $value <> 0) {
+                    //dd($column);
                     $myQuery = $myQuery->Where($column, $value);
                 } elseif ($operator === 'menorq' and $value <> "") {
                     str_replace("%3A", ":", $value);
@@ -374,3 +374,4 @@ trait GetAllDataTrait
 
     
 }
+

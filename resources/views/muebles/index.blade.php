@@ -29,6 +29,9 @@
             @permission('muebles.create')
             <a class="btn btn-success pull-right" href="{{ route('muebles.create') }}"><i class="glyphicon glyphicon-plus"></i> Crear</a>
             @endpermission
+            @permission('muebles.transferenciaMuebles')
+            <a class="btn btn-success pull-right" href="{{ route('muebles.transferenciaMuebles') }}"><i class="glyphicon glyphicon-users"></i> Trasnferir</a>
+            @endpermission
         </h3>
 
     </div>

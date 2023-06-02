@@ -3896,7 +3896,7 @@ class InscripcionsController extends Controller
         foreach ($calificacions as $calificacion) {
             $calificacion_ponderacions = CalificacionPonderacion::where('calificacion_id', $calificacion->id)->get();
             //dd($calificacion_ponderacions);
-            if (count($calificacion_ponderacions) < 0) {
+            if (count($calificacion_ponderacions) > 0) {
                 foreach ($calificacion_ponderacions as $cp) {
                     $cp->delete();
                 }

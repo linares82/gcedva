@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Requests\createMueble;
 use App\Http\Requests\updateMueble;
 use App\Http\Controllers\Controller;
+use Illuminate\Database\Eloquent\Collection;
 
 class MueblesController extends Controller
 {
@@ -193,5 +194,37 @@ class MueblesController extends Controller
 
 		//dd($registros);
 		return view('muebles.reportes.resguardosR', compact('registros'));
+	}
+
+	public function transferenciaMuebles(Request $request){
+		$responsables=Empleado::select('id', DB::raw('concat(ape_paterno, " ",ape_materno, " ",nombre) as nombre_completo'))->pluck('nombre_completo', 'id');
+		return view('muebles.transferencia', compact('responsables'));
+	}
+
+	public function consultaBienesXResponsable(Request $request){
+		$datos=$request->all();
+		//dd($datos);
+		$muebles=Mueble::select('muebles.id', DB::raw('concat(a.name, "-",ua.ubicacion) as articulo'))
+		->join('articulos as a', 'a.id','muebles.articulo_id')
+		->join('ubicacion_arts as ua','ua.id','muebles.ubicacion_art_id')
+		->where('empleado_id', $datos['responsable_origen'])->get();
+		//dd($muebles->toArray());
+		return $muebles->toJson();
+	}
+
+	public function transferenciaMueblesR(Request $request){
+		$datos=$request->all();
+		
+		$destino=$datos['responsable_destino'];
+
+		$muebles_actuales=array();
+		foreach($datos['muebles'] as $mueble){
+			array_push($muebles_actuales,$mueble['id']);
+		}
+		Mueble::whereIn('id', $muebles_actuales)
+		->update(['empleado_id'=>$destino]);
+		return json_encode(array('destino'=>$destino));
+		//$responsables=Empleado::select('id', DB::raw('concat(ape_paterno, " ",ape_materno, " ",nombre) as nombre_completo'))->pluck('nombre_completo', 'id');
+		//return view('muebles.transferenciaResponsable', compact('responsables'));
 	}
 }

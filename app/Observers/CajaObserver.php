@@ -158,7 +158,8 @@ class CajaObserver
                             }
                         }
                     }
-                } elseif($adeudos==0) {
+                //} elseif($adeudos==0) {
+                } else {
                     
                     $cliente->st_cliente_id = 4;
                     $cliente->save();

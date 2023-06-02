@@ -203,7 +203,15 @@
                         <button type="submit" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> Borrar</button>
                         {!! Form::close() !!}
                         @endpermission
+                        @else
+                        @permission('inventarioLevantamientos.editExcepcionEstatus')
+                        <a class="btn btn-xs btn-warning" href="{{ route('inventarioLevantamientos.edit', $inventarioLevantamiento->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
+                        @endpermission
                         @endif
+
+                        
+                        
+                            
                     </td>
                 </tr>
                 @endforeach
