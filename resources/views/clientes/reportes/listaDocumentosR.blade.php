@@ -86,14 +86,16 @@
             
             <table>
                 <tr>
-                    <th>No.</th><th><strong>Id</strong></th><th><strong>Estatus</strong></th><th><strong>Cliente</strong></th><th><strong>Documento Faltante</strong></th>
+                    <th>No.</th><th><strong>Id</strong></th><th>Matricula</th><th>Todos los documentos Recibidos</th>
+                    <th><strong>Estatus</strong></th><th><strong>Cliente</strong></th><th><strong>Documento / Entregado</strong></th>
                 </tr>
                 @php
                     $i=1;
                 @endphp
                 @foreach($documentos_faltantes as $documento)
                     <tr>
-                    <td>{{$i++}}</td><td>{{$documento['cliente']}}</td><td>{{$documento['estatus']}}</td><td>{{$documento['nombre']}}</td><td>{{$documento['documento']}}</td>
+                    <td>{{$i++}}</td><td>{{$documento['cliente']}}</td><td>{{$documento['matricula']}}</td>
+                    <td>{{$documento['bnd_doc_oblig_entregados']==1 ? "Si" : "No"}}</td><td>{{$documento['estatus']}}</td><td>{{$documento['nombre']}}</td><td>{{$documento['documento']}} / {{$documento['obligatorio_entregado']}}</td>
                     </tr>
                 @endforeach
             </table>

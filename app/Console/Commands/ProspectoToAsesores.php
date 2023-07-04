@@ -96,7 +96,7 @@ class ProspectoToAsesores extends Command
 
             if ($hoy->greaterThanOrEqualTo($fec_apartado)) {
                 if (
-                    $dias >= 3
+                    $dias >= 2
                     and $prospecto->tel_cel <> "" and !is_null($prospecto->tel_cel)
                     and $prospecto->mail <> "" and !is_null($prospecto->mail)
                 ) {

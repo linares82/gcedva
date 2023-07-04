@@ -86,7 +86,7 @@
                 {!! Form::open(array('route' => 'clientes.docRecibidosManual')) !!}
             <table>
                 <tr>
-                    <th>No.</th><th>Plantel</th><th><strong>Id</strong></th><th>S. cliente</th>
+                    <th>No.</th><th>Plantel</th><th><strong>Id</strong></th><th>Matricula</th><th>S. cliente</th>
                     <th>S. Seguimiento</th>
                     <th><strong>Cliente</strong></th>
                     <th colspan="2">Doc. Recibidos
@@ -102,6 +102,7 @@
                     <tr>
                     <td>{{$i++}}</td><td>{{$documento_recibido['plantel']}}</td>
                     <td><a href="{{ route('clientes.edit',$documento_recibido['cliente']) }}" target="_blank"> {{$documento_recibido['cliente']}} </a> </td>
+                    <td>{{$documento_recibido['matricula']}}</td>
                     <td>{{$documento_recibido['estatus_cliente']}}</td><td>{{$documento_recibido['estatus_seguimiento']}}</td>
                     <td>{{$documento_recibido['nombre']}}</td><td>@if($documento_recibido['doc_recibidos']==1) SI @else NO @endif </td>
                     <td>

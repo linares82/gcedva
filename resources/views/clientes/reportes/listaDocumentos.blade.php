@@ -31,6 +31,14 @@
             @endif
         </div>
 
+        <div class="form-group col-md-6 @if($errors->has('inicio_matricula')) has-error @endif">
+            <label for="inicio_matricula-field">Inicio Matricula:</label>
+            {!! Form::text("inicio_matricula", null, array("class" => "form-control input-sm", "id" => "inicio_matricula-field")) !!}
+            @if($errors->has("inicio_matricula"))
+            <span class="help-block">{{ $errors->first("inicio_matricula") }}</span>
+            @endif
+        </div>
+        <!--
         <div class="form-group col-md-6 @if($errors->has('estatus_f')) has-error @endif">
             <label for="estatus_f-field">Estatus de:</label>
             {!! Form::select("estatus_f", $list["StCliente"], null, array("class" => "form-control select_seguridad", "id" => "estatus_f-field")) !!}
@@ -38,7 +46,7 @@
             <span class="help-block">{{ $errors->first("estatus_f") }}</span>
             @endif
         </div>
-        
+-->
         <div class="row">
         </div>
         <div class="well well-sm">

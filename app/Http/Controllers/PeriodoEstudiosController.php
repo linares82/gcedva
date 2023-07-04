@@ -129,8 +129,8 @@ class PeriodoEstudiosController extends Controller
         $materias = $request->get('materia_id-field');
         //dd($input);
         $input['usu_mod_id'] = Auth::user()->id;
-        if(!isset($input['bnd_activo'])){
-            $input['bnd_activo']=0;
+        if (!isset($input['bnd_activo'])) {
+            $input['bnd_activo'] = 0;
         }
         //update data
         $periodoEstudio = $periodoEstudio->find($id);
@@ -459,7 +459,7 @@ class PeriodoEstudiosController extends Controller
     }
 */
 
-/*
+    /*
     public function sabanaCalificacionesR(Request $request)
     {
         $datos = $request->all();
@@ -672,7 +672,7 @@ class PeriodoEstudiosController extends Controller
             ->where('hacademicas.lectivo_id', $datos['lectivo_f'])
             ->where('hacademicas.grupo_id', $datos['grupo_f'])
             ->whereNull('hacademicas.deleted_at')
-            ->orderBy('cliente_id','desc')
+            ->orderBy('cliente_id', 'desc')
             ->groupBy('hacademicas.plantel_id')
             ->groupBy('p.razon')
             ->groupBy('hacademicas.especialidad_id')
@@ -688,38 +688,38 @@ class PeriodoEstudiosController extends Controller
             ->groupBy('cliente_id')
             ->distinct()
             ->first();
-         
-            //dd($cliente_base);
+
+        //dd($cliente_base);
 
         $periodo_base = Hacademica::select('pe.*')
             ->join('clientes as c', 'c.id', '=', 'hacademicas.cliente_id')
-            ->join('materia as m','m.id','hacademicas.materium_id')
+            ->join('materia as m', 'm.id', 'hacademicas.materium_id')
             ->join('materium_periodos as mp', 'mp.materium_id', '=', 'm.id')
-            ->join('periodo_estudios as pe','pe.id','mp.periodo_estudio_id')
-            ->join('grupo_periodo_estudios as gpe','gpe.periodo_estudio_id','pe.id')
-            ->join('grupos as g','g.id','gpe.grupo_id')
+            ->join('periodo_estudios as pe', 'pe.id', 'mp.periodo_estudio_id')
+            ->join('grupo_periodo_estudios as gpe', 'gpe.periodo_estudio_id', 'pe.id')
+            ->join('grupos as g', 'g.id', 'gpe.grupo_id')
             ->where('hacademicas.cliente_id', $cliente_base->cliente_id)
-            ->whereColumn('g.id','hacademicas.grupo_id')
-            ->where('pe.bnd_activo',1)
+            ->whereColumn('g.id', 'hacademicas.grupo_id')
+            ->where('pe.bnd_activo', 1)
             ->whereNull('pe.deleted_at')
             ->whereNull('m.deleted_at')
             ->distinct()
             ->first();
         //dd($periodo_base->toArray());
 
-        $periodos_parametro = PeriodoEstudio::select('id', 'name as periodo_estudio','orden')
-        ->where('plan_estudio_id', $periodo_base->plan_estudio_id)
-        ->where('bnd_activo',1)
-        ->whereNull('deleted_at')
-        ->orderBy('orden')
-        ->distinct()
-        ->pluck('pe.id');
+        $periodos_parametro = PeriodoEstudio::select('id', 'name as periodo_estudio', 'orden')
+            ->where('plan_estudio_id', $periodo_base->plan_estudio_id)
+            ->where('bnd_activo', 1)
+            ->whereNull('deleted_at')
+            ->orderBy('orden')
+            ->distinct()
+            ->pluck('pe.id');
         //->get();
         //dd($periodos_parametro->toArray());
 
-        
 
-        
+
+
         //dd($periodos_parametro->toArray());
         $materias = PeriodoEstudio::select('periodo_estudios.name as periodo', 'm.id', 'm.name as materia', 'm.codigo')
             ->join('materium_periodos as mp', 'mp.periodo_estudio_id', '=', 'periodo_estudios.id')
@@ -805,7 +805,7 @@ class PeriodoEstudiosController extends Controller
                         if (!is_null($calificacion->calificaciones)) {
                             array_push($registro, optional($calificacion->calificaciones)->max('calificacion'));
                         }
-                    }else{
+                    } else {
                         array_push($registro, 'N/A');
                     }
                 } else {
@@ -845,7 +845,7 @@ class PeriodoEstudiosController extends Controller
 
 
 
-        $periodosEstudio = Hacademica::select('pe.id','pe.name as periodo')
+        $periodosEstudio = Hacademica::select('pe.id', 'pe.name as periodo')
             ->join('clientes as c', 'c.id', '=', 'hacademicas.cliente_id')
             ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
             ->join('materia as m', 'm.id', 'hacademicas.materium_id')
@@ -857,15 +857,16 @@ class PeriodoEstudiosController extends Controller
             //->where('hacademicas.grado_id', $datos['grado_f'])
             ->where('hacademicas.lectivo_id', $datos['lectivo_f'])
             ->where('hacademicas.grupo_id', $datos['grupo_f'])
+            ->whereColumn('hacademicas.periodo_estudio_id','pe.id')
             //->whereIn('pe.id', array(592, 593))
             ->whereNull('i.deleted_at')
             ->whereNull('hacademicas.deleted_at')
             ->distinct()
             ->get();
 
-        //dd($periodosEstudio);
+        //dd($periodosEstudio->toArray());
 
-        
+
 
         $resultado = array();
         foreach ($periodosEstudio as $periodoEstudio) {
@@ -898,46 +899,47 @@ class PeriodoEstudiosController extends Controller
                 ->orderBy('c.nombre2')
                 ->get();
                 */
-                $clientes = Hacademica::select(
-                    'c.id',
-                    'c.matricula',
-                    'c.nombre',
-                    'c.nombre2',
-                    'c.ape_paterno',
-                    'c.ape_materno'
-                )
-                    ->join('clientes as c', 'c.id', '=', 'hacademicas.cliente_id')
-                    //->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
-                    ->join('grupos as g', 'g.id', '=', 'hacademicas.grupo_id')
-                    ->join('grupo_periodo_estudios as gpe', 'gpe.grupo_id', '=', 'g.id')
-                    ->join('materia as m','m.id','hacademicas.materium_id')
-                    ->join('materium_periodos as mp','mp.materium_id','m.id')
-                    //->join('periodo_estudios as pe','pe.id','mp.periodo_estudio_id')
-                    ->where('hacademicas.plantel_id', $datos['plantel_f'])
-                    //->where('hacademicas.especialidad_id', $datos['especialidad_f'])
-                    //->where('hacademicas.nivel_id', $datos['nivel_f'])
-                    //->where('hacademicas.grado_id', $datos['grado_f'])
-                    ->where('hacademicas.lectivo_id', $datos['lectivo_f'])
-                    ->where('hacademicas.grupo_id', $datos['grupo_f'])
-                    ->where('gpe.periodo_estudio_id', $periodoEstudio->id)
-                    //->whereNull('i.deleted_at')
-                    ->whereNull('hacademicas.deleted_at')
-                    ->distinct()
-                    ->orderBy('c.ape_paterno')
-                    ->orderBy('c.ape_materno')
-                    ->orderBy('c.nombre')
-                    ->orderBy('c.nombre2')
-                    ->get();
-            $registros=$this->armaTabla($clientes, $periodoEstudio);
-            if(count($registros)>2){
-                array_push($resultado,$registros);
+            $clientes = Hacademica::select(
+                'c.id',
+                'c.matricula',
+                'c.nombre',
+                'c.nombre2',
+                'c.ape_paterno',
+                'c.ape_materno'
+            )
+                ->join('clientes as c', 'c.id', '=', 'hacademicas.cliente_id')
+                //->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
+                ->join('grupos as g', 'g.id', '=', 'hacademicas.grupo_id')
+                ->join('grupo_periodo_estudios as gpe', 'gpe.grupo_id', '=', 'g.id')
+                ->join('materia as m', 'm.id', 'hacademicas.materium_id')
+                ->join('materium_periodos as mp', 'mp.materium_id', 'm.id')
+                //->join('periodo_estudios as pe','pe.id','mp.periodo_estudio_id')
+                ->where('hacademicas.plantel_id', $datos['plantel_f'])
+                //->where('hacademicas.especialidad_id', $datos['especialidad_f'])
+                //->where('hacademicas.nivel_id', $datos['nivel_f'])
+                //->where('hacademicas.grado_id', $datos['grado_f'])
+                ->where('hacademicas.lectivo_id', $datos['lectivo_f'])
+                ->where('hacademicas.grupo_id', $datos['grupo_f'])
+                ->where('gpe.periodo_estudio_id', $periodoEstudio->id)
+                //->whereNull('i.deleted_at')
+                ->whereNull('hacademicas.deleted_at')
+                ->distinct()
+                ->orderBy('c.ape_paterno')
+                ->orderBy('c.ape_materno')
+                ->orderBy('c.nombre')
+                ->orderBy('c.nombre2')
+                ->get();
+            $registros = $this->armaTabla($clientes, $periodoEstudio);
+            //dd($registros);
+            if (count($registros) > 2) {
+                array_push($resultado, $registros);
             }
-            
+
             //break;
             //dd($registros);
         }
         //dd($resultado);
-        
+
 
         return view("periodoEstudios.reportes.concentradoParcialesR", compact('resultado'));
     }
@@ -970,7 +972,7 @@ class PeriodoEstudiosController extends Controller
             ->orderBy('m.codigo')
             ->orderBy('cp.id')
             ->get();
-
+        //dd($ponderaciones);
 
         /*
     $materias = PeriodoEstudio::select('m.id', 'm.name as materia', 'm.codigo', DB::raw('count(cp.name) as total_ponderaciones'))
@@ -1021,16 +1023,16 @@ class PeriodoEstudiosController extends Controller
         */
         //dd($clientes->ToArray());
 
-        $registros=array();
-        $encabezado0=array();
+        $registros = array();
+        $encabezado0 = array();
         array_push($encabezado0, 'encabezado0');
-        foreach($materias as $m){
+        foreach ($materias as $m) {
             array_push($encabezado0, $m->codigo);
             array_push($encabezado0, $m->materia);
             array_push($encabezado0, $m->total_ponderaciones);
         }
         array_push($registros, $encabezado0);
-        
+
 
         $encabezado = array();
         array_push($encabezado, 'Periodo Estudio');
@@ -1050,7 +1052,8 @@ class PeriodoEstudiosController extends Controller
             $sumatoria_cali = 0;
             $cantidad_cali = 0;
 
-            $contador=0;
+            $contador = 0;
+            //dd($ponderaciones);
             foreach ($ponderaciones as $ponderacion) {
                 //Obtener calificacion por parcial
                 $calificacion = Hacademica::select('cc.calificacion_parcial')
@@ -1065,12 +1068,15 @@ class PeriodoEstudiosController extends Controller
                     ->whereNull('c.deleted_at')
                     ->whereNull('cc.deleted_at')
                     ->first();
-                
+                //dd($calificacion->toArray());
+
                 if (is_null($calificacion)) {
+                    //dd($registros);
                     array_push($registro, 0);
                     //array_push($registro, 0);
                 } else {
                     array_push($registro, $calificacion->calificacion_parcial);
+                    //dd($registro);
 
                     if ($calificacion->calificacion_parcial > 0) {
                         $sumatoria_cali = $sumatoria_cali + $calificacion->calificacion_parcial;
@@ -1078,40 +1084,42 @@ class PeriodoEstudiosController extends Controller
                     }
                     //
                 }
-                
+
                 //dd($cliente->id . "-" . $materia->id);
             }
+            //dd($sumatoria_cali ."/". $cantidad_cali);
             if ($cantidad_cali > 0) {
+                //dd($sumatoria_cali ."/". $cantidad_cali);
                 array_push($registro, round($sumatoria_cali / $cantidad_cali, 1));
             } else {
                 array_push($registro, 0);
             }
-
+            //dd($registro);
 
 
             //array_push($registro, $cantidad_calificaciones);
             array_push($registros, $registro);
-            //dd($registro);
+            //dd($registros);
         }
         //dd($registros);
         $suma_calificaciones = array();
         $cantidad = array();
         $promedios = array();
         $i = 0;
-        
+
         foreach ($registros as $registro) {
             $j = 0;
             //dd($registro);
             foreach ($registro as $celda) {
                 //dd($registro);
-                if(!is_string($celda)){
+                if (!is_string($celda)) {
                     //dd($celda);
-                    if(!array_key_exists($j, $suma_calificaciones)){
-                        $suma_calificaciones[$j]=0;    
+                    if (!array_key_exists($j, $suma_calificaciones)) {
+                        $suma_calificaciones[$j] = 0;
                     }
-                    $suma_calificaciones[$j] = $suma_calificaciones[$j] + floatval($celda);    
-                    if(!array_key_exists($j, $cantidad)){
-                        $cantidad[$j]=0;    
+                    $suma_calificaciones[$j] = $suma_calificaciones[$j] + floatval($celda);
+                    if (!array_key_exists($j, $cantidad)) {
+                        $cantidad[$j] = 0;
                     }
                     $cantidad[$j]++;
                     $j++;
@@ -1124,9 +1132,9 @@ class PeriodoEstudiosController extends Controller
             $promedios[$i] = round($suma / $cantidad[$i], 1);
             $i++;
         }
-        
+
         //dd($registros);
-        
+
         return $registros;
     }
 

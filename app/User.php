@@ -17,11 +17,13 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Venturecraft\Revisionable\RevisionableTrait;
 
+
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract, ValidatingModelInterface, HashMethodInterface
 {
     use Authenticatable, CanResetPassword, ValidatingModelTrait, EntrustUserTrait, Notifiable;
     use SoftDeletes { SoftDeletes::restore insteadof EntrustUserTrait; }
     use RevisionableTrait;
+    
 
     protected $throwValidationExceptions = true;
 

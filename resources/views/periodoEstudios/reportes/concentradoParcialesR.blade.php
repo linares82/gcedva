@@ -67,7 +67,9 @@
     <body>
         <div id="printeArea">
             <h3>Concentrado Parciales  </h3>
-            
+            @php
+                //dd($resultado);
+            @endphp
             @foreach($resultado as $registros)
             <table>
             @php
@@ -113,11 +115,11 @@
                     }
                     $i++;
                 }
-                //dd($cantidad);
+                //dd($suma_calificaciones);
                 $i = 3;
                 
                 foreach ($suma_calificaciones as $suma) {
-                    
+                    //dd($suma);
                     $promedios[$i] = round($suma / $cantidad[$i], 1);
                     $i++;
                 }

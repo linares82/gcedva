@@ -217,7 +217,7 @@ class ClientesController extends Controller
             ->whereIn('plantel_id', $planteles)
             //->where('puesto_id', '=', 2)
             ->pluck('name', 'id');
-            //dd($empleados);
+        //dd($empleados);
         /*} else {
         $empleados = Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
         //->where('puesto_id', '=', 2)
@@ -461,7 +461,7 @@ class ClientesController extends Controller
             ->where('plantel_id', $cliente->plantel_id)
             ->pluck('name', 'id');
         $plantels = Plantel::where('st_plantel_id', 1)->pluck('razon', 'id');
-        
+
         return view('clientes.edit', compact(
             'cliente',
             'materias',
@@ -644,13 +644,13 @@ class ClientesController extends Controller
             $input['bnd_regingreso'] = 1;
         }
 
-       
+
         //dd($input);
         //update data
         $cliente = $cliente->find($id);
-        $cantidad_preguntas=0;
-        if($cliente->ccuestionario_id>0){
-        $cantidad_preguntas = $cliente->ccuestionario->ccuestionarioPreguntas->count();
+        $cantidad_preguntas = 0;
+        if ($cliente->ccuestionario_id > 0) {
+            $cantidad_preguntas = $cliente->ccuestionario->ccuestionarioPreguntas->count();
         }
 
         //dd($input);
@@ -1624,8 +1624,8 @@ class ClientesController extends Controller
     {
         $datos = $request->all();
         $cliente = Cliente::find($datos['id']);
-        $combinacion=CombinacionCliente::where('cliente_id', $cliente->id)->first();
-        $grado=$combinacion->grado;
+        $combinacion = CombinacionCliente::where('cliente_id', $cliente->id)->first();
+        $grado = $combinacion->grado;
         $plantel = Plantel::find($cliente->plantel_id);
         $inscripcion = Inscripcion::find($datos['inscripcion']);
         $id_foto_doc_alumnos = Param::where('llave', 'id_foto_doc_alumos')->first();
@@ -1633,16 +1633,16 @@ class ClientesController extends Controller
             $img = PivotDocCliente::where('cliente_id', $datos['id'])->where('doc_alumno_id', $id_foto_doc_alumnos->valor)->first();
 
             $cadena_img = "";
-            if(is_null($img)){
-                dd('sin foto cargada');    
-            }else {
+            if (is_null($img)) {
+                dd('sin foto cargada');
+            } else {
                 $cadena_img = explode('/', $img->archivo);
             }
             //dd($cadena_img);
             //dd($cadena_img[count($cadena_img) - 1]);
             //dd(base_path() . '/vendor/cossou/jasperphp/examples/' . $cadena_img[count($cadena_img) - 1]);
             return view('clientes.reportes.credencial_anverso', compact('cliente', 'inscripcion', 'cadena_img', 'plantel', 'grado'));
-        }else{
+        } else {
             dd("Sin id de foto identificado, informar al administrador");
         }
 
@@ -1760,17 +1760,29 @@ class ClientesController extends Controller
             'clientes.nombre2',
             'clientes.ape_paterno',
             'clientes.ape_materno',
-            'stc.name as estatus'
+            'stc.name as estatus',
+            'clientes.matricula',
+            'clientes.bnd_doc_oblig_entregados'
         )
             ->where('clientes.plantel_id', $datos['plantel_f'])
+            //->where('matricula', '0923CB06011')
+            ->whereNotNull('clientes.matricula')
+            ->where('clientes.matricula', '<>', " ")
             ->join('st_clientes as stc', 'stc.id', '=', 'clientes.st_cliente_id')
-            ->where('st_cliente_id', $datos['estatus_f'])
+            //->where('st_cliente_id', $datos['estatus_f'])
             ->get();
+        //dd($clientes->toArray());
         $documentos_faltantes = array();
 
         foreach ($clientes as $cliente) {
-            $docsPorCliente = PivotDocCliente::where('cliente_id', $cliente->id)->select('doc_alumno_id')->get();
-            //dd($docsPorEmpleado);
+            $docsPorCliente = PivotDocCliente::where('cliente_id', $cliente->id)
+            ->join('doc_alumnos as da','da.id','pivot_doc_clientes.doc_alumno_id')
+            ->where('da.doc_obligatorio', 1)
+            ->select('doc_alumno_id','da.name', 'doc_entregado', 'archivo')
+            //->whereNull('archivo')
+            //->where('doc_entregado', '<>', 1)
+            ->get();
+            //dd($docsPorCliente->toArray());
             if (!is_null($docsPorCliente)) {
                 $array_docsPorCliente = array();
                 $i = 0;
@@ -1780,15 +1792,22 @@ class ClientesController extends Controller
                     $i++;
                 }
                 //dd($array_docsPorCliente);
-                foreach ($documentos_obligatorios as $do) {
-                    if (!in_array($do->id, $array_docsPorCliente)) {
-                        //dd($do->id);
-                        array_push($documentos_faltantes, array(
-                            'cliente' => $cliente->id,
-                            'nombre' => $cliente->nombre . ' ' . $cliente->nombre2 . ' ' . $cliente->ape_paterno . ' ' . $cliente->ape_materno,
-                            'documento' => $do->name,
-                            'estatus' => $cliente->estatus,
-                        ));
+                if (substr($cliente->matricula, 0, 4) == $datos['inicio_matricula']) {
+                    //dd($array_docsPorCliente);
+                    foreach ($docsPorCliente as $do) {
+
+                        //if (!in_array($do->id, $array_docsPorCliente)) {
+                            //dd($do);
+                            array_push($documentos_faltantes, array(
+                                'cliente' => $cliente->id,
+                                'nombre' => $cliente->nombre . ' ' . $cliente->nombre2 . ' ' . $cliente->ape_paterno . ' ' . $cliente->ape_materno,
+                                'matricula' => $cliente->matricula,
+                                'bnd_doc_oblig_entregados' => $cliente->bnd_doc_oblig_entregados,
+                                'documento' => $do->name,
+                                'estatus' => $cliente->estatus,
+                                'obligatorio_entregado'=>$do->doc_entregado==1 ? "Si" : "No"
+                            ));
+                        //}
                     }
                 }
             }
@@ -1965,11 +1984,11 @@ class ClientesController extends Controller
         //dd($request->all());
         $id = 0;
         $input = $request->all();
-	//dd($input);
+        //dd($input);
         $empleado = Empleado::where('mail_empresa', $input['mail_empleado_asignado'])->first();
-	if(is_null($empleado)){
-		return response()->json(['msj' => $input['mail_empleado_asignado'].' No existe asignado a ningun empleado ']);
-	}
+        if (is_null($empleado)) {
+            return response()->json(['msj' => $input['mail_empleado_asignado'] . ' No existe asignado a ningun empleado ']);
+        }
         //dd($empleado);
         //$empleado=Empleado::find($request->input('empleado_id'));
         //$input['plantelplantel_id']=$empleado->plantel->id;
@@ -2001,18 +2020,18 @@ class ClientesController extends Controller
         $input['paise_id'] = 22;
 
         $input['turno_id'] = 0;
-	//dd($input);
+        //dd($input);
         if (is_null($input['ape_materno'])) {
             $input['ape_materno'] = " ";
         }
         if (is_null($input['nombre2'])) {
             $input['nombre2'] = " ";
         }
-	
+
         if (!isset($input['matricula'])) {
             $input['matricula'] = " ";
         }
-	
+
         $param = Param::where('llave', '=', 'msj_text')->first();
         if (!isset($input['cve_cliente'])) {
             //$input['cve_cliente'] = 'Codigo: ' . substr(Hash::make(rand(0, 1000)), 2, 8) . $param->valor;
@@ -2054,12 +2073,12 @@ class ClientesController extends Controller
         } else {
             $input['bnd_reingreso'] = 1;
         }
-	if (!isset($input['pagador_id'])) {
+        if (!isset($input['pagador_id'])) {
             $input['pagador_id'] = 0;
         } else {
             $input['pagador_id'] = 1;
         }
-	if (!isset($input['uso_factura_id'])) {
+        if (!isset($input['uso_factura_id'])) {
             $input['uso_factura_id'] = 21;
         } else {
             $input['uso_factura_id'] = 21;
@@ -2093,7 +2112,7 @@ class ClientesController extends Controller
             //dd($e);
             return response()->json(['msj' => 'Fallo, exception: ' . $e->getMessage()]);
         }
-	//dd($c);
+        //dd($c);
         return response()->json(['id_cliente' => $c->id]);
     }
 
@@ -2152,7 +2171,7 @@ class ClientesController extends Controller
         $combinacion = CombinacionCliente::where('cliente_id', $cliente->id)->first();
         $lista_documentos = DocAlumno::get();
         $documentos_entregados = PivotDocCliente::where('cliente_id', $cliente->id)
-            ->where('doc_entregado',1)
+            ->where('doc_entregado', 1)
             ->wherenull('deleted_at')->get();
 
         $lista_mostrar = array();
@@ -2163,12 +2182,12 @@ class ClientesController extends Controller
             foreach ($documentos_entregados as $de) {
                 if ($de->doc_alumno_id == $ld->id) {
                     $item['archivo'] = $de->archivo;
-                    $item['doc_entregado']=$de->doc_entregado;
+                    $item['doc_entregado'] = $de->doc_entregado;
                 }
             }
             array_push($lista_mostrar, $item);
             $item['archivo'] = null;
-            $item['doc_entregado'] =0;
+            $item['doc_entregado'] = 0;
         }
 
         //dd($lista_mostrar);
@@ -2208,7 +2227,7 @@ class ClientesController extends Controller
             'clientes.genero',
             'muni.name as municipio'
         ) //curp, sexo
-            ->join('municipios as muni','muni.id','clientes.municipio_id')
+            ->join('municipios as muni', 'muni.id', 'clientes.municipio_id')
             ->join('especialidads as esp', 'esp.id', '=', 'clientes.especialidad_id')
             ->join('adeudos AS a', 'a.cliente_id', '=', 'clientes.id')
             ->join('seguimientos AS s', 's.cliente_id', '=', 'clientes.id')
@@ -2334,7 +2353,7 @@ class ClientesController extends Controller
             ->join('empleados as emp', 'emp.id', '=', 'clientes.empleado_id')
             ->join('cajas as c', 'c.id', '=', 'a.caja_id')
             ->join('combinacion_clientes as ccli', 'ccli.cliente_id', '=', 'clientes.id')
-            ->join('turnos as tu','tu.id','ccli.turno_id')
+            ->join('turnos as tu', 'tu.id', 'ccli.turno_id')
             ->join('grados as g', 'g.id', '=', 'ccli.grado_id')
             ->where('a.pagado_bnd', 1)
             ->where('c.st_caja_id', 1)
@@ -2357,10 +2376,10 @@ class ClientesController extends Controller
         //dd($detalle->toArray());
         $registros = array();
         foreach ($detalle->toArray() as $d) {
-            if($d['bnd_doc_oblig_entregados']==1){
-                $d['bnd_doc_oblig_entregados']='Si';
-            }else{
-                $d['bnd_doc_oblig_entregados']='No';
+            if ($d['bnd_doc_oblig_entregados'] == 1) {
+                $d['bnd_doc_oblig_entregados'] = 'Si';
+            } else {
+                $d['bnd_doc_oblig_entregados'] = 'No';
             }
             $tramites = Caja::select('cajas.fecha as fecha_caja', 'cc.name as concepto')
                 ->join('caja_lns as cln', 'cln.caja_id', '=', 'cajas.id')
@@ -2422,89 +2441,89 @@ class ClientesController extends Controller
         ->get();
         */
         //dd($totales->toArray());
-        $totales_seccion=array();
-        $seccion="";
-        $contador_seccion=0;
+        $totales_seccion = array();
+        $seccion = "";
+        $contador_seccion = 0;
 
-        $plantel="";
-        $estatus="";
-        $matricula="";
-        $contador_plantel_estatus=0;
-        $totales_plantel_estatus=array();
+        $plantel = "";
+        $estatus = "";
+        $matricula = "";
+        $contador_plantel_estatus = 0;
+        $totales_plantel_estatus = array();
         //dd();
-        foreach($registros as $r){
+        foreach ($registros as $r) {
             //dd($r);
-            if($matricula==$r['matricula']){
+            if ($matricula == $r['matricula']) {
                 continue;
             }
-            if($plantel!=$r['razon'] and $plantel!="" ){
-                array_push(
-                $totales_plantel_estatus,
-                array("razon"=>$plantel, "estatus"=>$estatus, "total"=>$contador_plantel_estatus)
-                );
-                $contador_plantel_estatus=0;
-            }
-            if($estatus!=$r['st_seguimiento'] and $estatus!="" ){
+            if ($plantel != $r['razon'] and $plantel != "") {
                 array_push(
                     $totales_plantel_estatus,
-                    array("razon"=>$plantel, "estatus"=>$estatus, "total"=>$contador_plantel_estatus)
+                    array("razon" => $plantel, "estatus" => $estatus, "total" => $contador_plantel_estatus)
                 );
-                $contador_plantel_estatus=0;
+                $contador_plantel_estatus = 0;
+            }
+            if ($estatus != $r['st_seguimiento'] and $estatus != "") {
+                array_push(
+                    $totales_plantel_estatus,
+                    array("razon" => $plantel, "estatus" => $estatus, "total" => $contador_plantel_estatus)
+                );
+                $contador_plantel_estatus = 0;
             }
             $contador_seccion++;
             $contador_plantel_estatus++;
-            $plantel=$r['razon'];
-            $estatus=$r['st_seguimiento'];
-            $matricula=$r['matricula'];
+            $plantel = $r['razon'];
+            $estatus = $r['st_seguimiento'];
+            $matricula = $r['matricula'];
         }
         array_push(
             $totales_plantel_estatus,
-            array("razon"=>$plantel, "estatus"=>$estatus, "total"=>$contador_plantel_estatus)
+            array("razon" => $plantel, "estatus" => $estatus, "total" => $contador_plantel_estatus)
         );
         //dd($totales_plantel_estatus);
 
-        
-        $plantel="";
-        $seccion="";
-        $estatus="";    
-        $matricula="";
-        $contador_plantel_seccion_estatus=0;
-        $totales_plantel_seccion_estatus=array();
-        foreach($registros as $r){
+
+        $plantel = "";
+        $seccion = "";
+        $estatus = "";
+        $matricula = "";
+        $contador_plantel_seccion_estatus = 0;
+        $totales_plantel_seccion_estatus = array();
+        foreach ($registros as $r) {
             //dd($r);
-            if($matricula==$r['matricula']){
+            if ($matricula == $r['matricula']) {
                 continue;
             }
-            if($plantel!=$r['razon'] and $plantel!="" ){
+            if ($plantel != $r['razon'] and $plantel != "") {
                 array_push(
                     $totales_plantel_seccion_estatus,
-                    array("razon"=>$plantel,"seccion"=>$seccion, "estatus"=>$estatus, "total"=>$contador_plantel_seccion_estatus)
-                    );
-                $contador_plantel_seccion_estatus=0;
-            }
-            if($seccion!=$r['seccion'] and $seccion!="" ){
-                array_push(
-                $totales_plantel_seccion_estatus,
-                array("razon"=>$plantel,"seccion"=>$seccion, "estatus"=>$estatus, "total"=>$contador_plantel_seccion_estatus)
+                    array("razon" => $plantel, "seccion" => $seccion, "estatus" => $estatus, "total" => $contador_plantel_seccion_estatus)
                 );
-                $contador_plantel_seccion_estatus=0;
+                $contador_plantel_seccion_estatus = 0;
             }
-            if($estatus!=$r['st_seguimiento'] and $estatus!="" ){
+            if ($seccion != $r['seccion'] and $seccion != "") {
                 array_push(
                     $totales_plantel_seccion_estatus,
-                    array("razon"=>$plantel,"seccion"=>$seccion, "estatus"=>$estatus, "total"=>$contador_plantel_seccion_estatus)
-                    );
-                $contador_plantel_seccion_estatus=0;
+                    array("razon" => $plantel, "seccion" => $seccion, "estatus" => $estatus, "total" => $contador_plantel_seccion_estatus)
+                );
+                $contador_plantel_seccion_estatus = 0;
+            }
+            if ($estatus != $r['st_seguimiento'] and $estatus != "") {
+                array_push(
+                    $totales_plantel_seccion_estatus,
+                    array("razon" => $plantel, "seccion" => $seccion, "estatus" => $estatus, "total" => $contador_plantel_seccion_estatus)
+                );
+                $contador_plantel_seccion_estatus = 0;
             }
             $contador_plantel_seccion_estatus++;
-            $plantel=$r['razon'];
-            $seccion=$r['seccion'];
-            $estatus=$r['st_seguimiento'];
-            $matricula=$r['matricula'];
+            $plantel = $r['razon'];
+            $seccion = $r['seccion'];
+            $estatus = $r['st_seguimiento'];
+            $matricula = $r['matricula'];
         }
         array_push(
             $totales_plantel_seccion_estatus,
-            array("razon"=>$plantel,"seccion"=>$seccion, "estatus"=>$estatus, "total"=>$contador_plantel_seccion_estatus)
+            array("razon" => $plantel, "seccion" => $seccion, "estatus" => $estatus, "total" => $contador_plantel_seccion_estatus)
         );
         //dd($totales_plantel_seccion_estatus);
         return view('clientes.reportes.concretadosR', compact('registros', 'totales_plantel_estatus', 'totales_plantel_seccion_estatus'));
@@ -2802,6 +2821,8 @@ class ClientesController extends Controller
     public function documentosRecibidosR(Request $request)
     {
         $datos = $request->all();
+
+        //dd($datos);
         $documentos_recibidos = array();
         $documentos_obligatorios = DocAlumno::where('doc_obligatorio', 1)->get();
         $clientes = Cliente::select(
@@ -2813,17 +2834,30 @@ class ClientesController extends Controller
             'clientes.bnd_doc_oblig_entregados as doc_recibidos',
             'stc.name as estatus_cliente',
             'sts.name as estatus_seguimiento',
-            'p.razon as plantel'
+            'p.razon as plantel',
+            'clientes.matricula'
         )
             ->join('st_clientes as stc', 'stc.id', '=', 'clientes.st_cliente_id')
             ->join('seguimientos as s', 's.cliente_id', '=', 'clientes.id')
             ->join('st_seguimientos as sts', 'sts.id', '=', 's.st_seguimiento_id')
             ->join('plantels as p', 'p.id', 'clientes.plantel_id')
+            ->whereNotNull('clientes.matricula')
+            ->where('clientes.matricula', '<>', " ")
             //->join('pivot_doc_clientes as pdc','pdc.cliente_id','c.id')
             //->join('doc_alumnos as da','da.id','pdc.doc_alumno_id')
-            ->where('st_cliente_id', $datos['estatus_f'])
-            ->where('st_seguimiento_id', $datos['estatus_seguimiento_f'])
+            //->where('st_cliente_id', $datos['estatus_f'])
+            //->where('st_seguimiento_id', $datos['estatus_seguimiento_f'])
             ->where('clientes.plantel_id', $datos['plantel_f'])
+            //->whereRaw('clientes.matricula like "?%"', [$datos['inicio_matricula']])
+            /*->when($datos['estatus_seguimiento_f']>0, function ($q, $estatus_seguimiento_f){
+                $q->where('s.st_seguimiento_id', $estatus_seguimiento_f);
+            })
+            ->when($datos['estatus_f']>0, function ($q, $estatus_f){
+                $q->where('cliente.st_cliente_id', $estatus_f);
+            })
+            /*->when($datos['inicio_matricula'], function($q, $inicio_matricula){
+                $q->whereRaw('clientes.matricula like "?%"', [$inicio_matricula]);
+            })*/
             //->where('da.doc_obligatorio',1)
             ->groupBy(
                 'clientes.id',
@@ -2835,45 +2869,54 @@ class ClientesController extends Controller
                 'estatus_seguimiento'
             )
             ->get();
+        //dd($clientes);
+
+        //$filtrados=$clientes->where('matricula', 'like', $datos['inicio_matricula']."%" );
+        //dd($filtrados);
         $total_documentos = array();
 
         foreach ($clientes as $cliente) {
-            $docsPorCliente = PivotDocCliente::select('da.*')
-                ->join('doc_alumnos as da', 'da.id', 'pivot_doc_clientes.doc_alumno_id')
-                ->where('cliente_id', $cliente->id)
-                ->whereNull('pivot_doc_clientes.deleted_at')
-                ->whereNotNull('pivot_doc_clientes.archivo')
-                ->where('doc_obligatorio', 1)
-                ->get();
-            $totalDocsPorCliente = PivotDocCliente::select('doc_alumno_id')
-                ->join('doc_alumnos as da', 'da.id', 'pivot_doc_clientes.doc_alumno_id')
-                ->whereNull('pivot_doc_clientes.deleted_at')
-                ->whereNotNull('pivot_doc_clientes.archivo')
-                ->where('cliente_id', $cliente->id)
-                ->where('doc_obligatorio', 1)
-                ->count();
-            if ($totalDocsPorCliente == 0) {
-                array_push($documentos_recibidos, array(
-                    'cliente' => $cliente->id,
-                    'nombre' => $cliente->nombre . ' ' . $cliente->nombre2 . ' ' . $cliente->ape_paterno . ' ' . $cliente->ape_materno,
-                    'total_documentos' => 0,
-                    'documentos' => array(),
-                    'estatus_cliente' => $cliente->estatus_cliente,
-                    'estatus_seguimiento' => $cliente->estatus_seguimiento,
-                    'plantel' => $cliente->plantel,
-                    'doc_recibidos' => $cliente->doc_recibidos
-                ));
-            } else {
-                array_push($documentos_recibidos, array(
-                    'cliente' => $cliente->id,
-                    'nombre' => $cliente->nombre . ' ' . $cliente->nombre2 . ' ' . $cliente->ape_paterno . ' ' . $cliente->ape_materno,
-                    'total_documentos' => $totalDocsPorCliente,
-                    'documentos' => $docsPorCliente->toArray(),
-                    'estatus_cliente' => $cliente->estatus_cliente,
-                    'estatus_seguimiento' => $cliente->estatus_seguimiento,
-                    'plantel' => $cliente->plantel,
-                    'doc_recibidos' => $cliente->doc_recibidos
-                ));
+            //dd(substr($cliente->matricula, 0, 4)."--".$datos['inicio_matricula']);
+            if (substr($cliente->matricula, 0, 4) == $datos['inicio_matricula']) {
+                $docsPorCliente = PivotDocCliente::select('da.*')
+                    ->join('doc_alumnos as da', 'da.id', 'pivot_doc_clientes.doc_alumno_id')
+                    ->where('cliente_id', $cliente->id)
+                    ->whereNull('pivot_doc_clientes.deleted_at')
+                    ->whereNotNull('pivot_doc_clientes.archivo')
+                    ->where('doc_obligatorio', 1)
+                    ->get();
+                $totalDocsPorCliente = PivotDocCliente::select('doc_alumno_id')
+                    ->join('doc_alumnos as da', 'da.id', 'pivot_doc_clientes.doc_alumno_id')
+                    ->whereNull('pivot_doc_clientes.deleted_at')
+                    ->whereNotNull('pivot_doc_clientes.archivo')
+                    ->where('cliente_id', $cliente->id)
+                    ->where('doc_obligatorio', 1)
+                    ->count();
+                if ($totalDocsPorCliente == 0) {
+                    array_push($documentos_recibidos, array(
+                        'cliente' => $cliente->id,
+                        'matricula' => $cliente->matricula,
+                        'nombre' => $cliente->nombre . ' ' . $cliente->nombre2 . ' ' . $cliente->ape_paterno . ' ' . $cliente->ape_materno,
+                        'total_documentos' => 0,
+                        'documentos' => array(),
+                        'estatus_cliente' => $cliente->estatus_cliente,
+                        'estatus_seguimiento' => $cliente->estatus_seguimiento,
+                        'plantel' => $cliente->plantel,
+                        'doc_recibidos' => $cliente->doc_recibidos
+                    ));
+                } else {
+                    array_push($documentos_recibidos, array(
+                        'cliente' => $cliente->id,
+                        'matricula' => $cliente->matricula,
+                        'nombre' => $cliente->nombre . ' ' . $cliente->nombre2 . ' ' . $cliente->ape_paterno . ' ' . $cliente->ape_materno,
+                        'total_documentos' => $totalDocsPorCliente,
+                        'documentos' => $docsPorCliente->toArray(),
+                        'estatus_cliente' => $cliente->estatus_cliente,
+                        'estatus_seguimiento' => $cliente->estatus_seguimiento,
+                        'plantel' => $cliente->plantel,
+                        'doc_recibidos' => $cliente->doc_recibidos
+                    ));
+                }
             }
         }
         //dd($documentos_recibidos);
@@ -2915,14 +2958,14 @@ class ClientesController extends Controller
                 $anioActual == $anioMatricula and
                 $mesActual <= $mesMatricula
             ) {
-                
+
                 $dentro3Meses = true;
             } elseif (
                 $anioActual == $anioMatricula and
                 $mesActual > $mesMatricula and
                 ($mesActual - $mesMatricula) <= 3
             ) {
-                
+
                 $dentro3Meses = true;
             } elseif (
                 $anioActual > $anioMatricula and
@@ -2938,7 +2981,7 @@ class ClientesController extends Controller
                 ($anioActual - $anioMatricula) == 1 and
                 ($mesActual - $mesMatricula) >= 3
             ) {
-                
+
                 $dentro3Meses = true;
             }
         } else {
