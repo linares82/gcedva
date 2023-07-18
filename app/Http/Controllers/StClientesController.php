@@ -1,13 +1,14 @@
 <?php namespace App\Http\Controllers;
 
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
-
-use App\StCliente;
-use Illuminate\Http\Request;
 use Auth;
-use App\Http\Requests\updateStCliente;
+use App\StCliente;
+
+use App\Http\Requests;
+use App\StSeguimiento;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\createStCliente;
+use App\Http\Requests\updateStCliente;
 
 class StClientesController extends Controller {
 
@@ -74,7 +75,9 @@ class StClientesController extends Controller {
 	public function edit($id, StCliente $stCliente)
 	{
 		$stCliente=$stCliente->find($id);
-		return view('stClientes.edit', compact('stCliente'))
+		$stClientes=StCliente::pluck('name','id');
+		$stSeguimientos=StSeguimiento::pluck('name','id');
+		return view('stClientes.edit', compact('stCliente','stClientes','stSeguimientos'))
 			->with( 'list', StCliente::getListFromAllRelationApps() );
 	}
 

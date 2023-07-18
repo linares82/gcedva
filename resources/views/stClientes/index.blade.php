@@ -91,6 +91,10 @@
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
                             <th>@include('plantillas.getOrderLink', ['column' => 'name', 'title' => 'ESTATUS CLIENTES'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'bnd_automatizar_baja', 'title' => 'AUTOMATIZAR BAJA'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'orden_ejecucion', 'title' => 'ORDEN EJECUCION'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'cantidad_adeudos', 'title' => 'CANTIDAD ADEUDOS'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'dias_ejecucion', 'title' => 'DIAS EJECUCION'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
@@ -100,6 +104,16 @@
                             <tr>
                                 <td><a href="{{ route('stClientes.show', $stCliente->id) }}">{{$stCliente->id}}</a></td>
                                 <td>{{$stCliente->name}}</td>
+                                <td>
+                                    @if($stCliente->bnd_automatizar_baja==1)
+                                    Si
+                                    @else
+                                    No
+                                    @endif
+                                </td>
+                                <td>{{$stCliente->orden_ejecucion}}</td>
+                                <td>{{$stCliente->cantidad_adeudos}}</td>
+                                <td>{{$stCliente->dias_ejecucion}}</td>
                                 <td class="text-right">
                                     @permission('stClientes.edit')
                                     <a class="btn btn-xs btn-primary" href="{{ route('stClientes.duplicate', $stCliente->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>

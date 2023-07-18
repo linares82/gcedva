@@ -78,7 +78,7 @@ class AtrazoPagos4Adeudos extends Command
                 ->whereNull('cc.deleted_at')
                 ->whereNull('c.deleted_at')
                 //->where('c.st_cliente_id', '<>', 25)
-                ->where('c.st_cliente_id', 26)
+                ->whereIn('c.st_cliente_id', array(25,26))
                 ->groupBy('p.razon')
                 ->groupBy('adeudos.cliente_id')
                 ->groupBy('stc.id')

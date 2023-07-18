@@ -18,7 +18,7 @@ class StCliente extends Model
     } 
 
 	//Mass Assignment
-	protected $fillable = ['name','usu_alta_id','usu_mod_id'];
+	protected $fillable = ['name','bnd_automatizar_baja','orden_ejecucion','bnd_mensualidades','cantidad_adeudos','siguiente_cliente_id','siguiente_seguimiento_id', 'dias_ejecucion','usu_alta_id','usu_mod_id'];
 
 	public function usu_alta() {
 		return $this->hasOne('App\User', 'id', 'usu_alta_id');

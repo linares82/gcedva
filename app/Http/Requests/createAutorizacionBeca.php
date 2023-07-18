@@ -27,7 +27,7 @@ class createAutorizacionBeca extends FormRequest
             'archivo_file' => "required",
             'cliente_id'=> "required",
             'monto_mensualidad'=> "required",
-            'lectivo_id'=> "required",
+            'lectivo_id'=> "required_if:bnd_tiene_vigencia-field,1",
             'tipo_beca_id'=> "required",
             'motivo_beca_id'=> "required",
             'mensualidad_sep'=> "required",

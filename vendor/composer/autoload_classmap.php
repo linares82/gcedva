@@ -155,6 +155,7 @@ return array(
     'AddFieldIndexClienteIdEbanxesTable' => $baseDir . '/database/migrations/2018_12_17_153737_add_field_index_cliente_id_ebanxes_table.php',
     'AddFieldModuloMateriasTable' => $baseDir . '/database/migrations/2017_12_08_141207_add_field_modulo_materias_table.php',
     'AddFieldTpoArticuloIdArticulosTable' => $baseDir . '/database/migrations/2019_10_03_103342_add_field_tpo_articulo_id_articulos_table.php',
+    'AddFieldsBajaAutomaticaStClientesTable' => $baseDir . '/database/migrations/2023_07_13_162224_add_fields_baja_automatica_st_clientes_table.php',
     'AddFieldsCalificacionLectivosTable' => $baseDir . '/database/migrations/2019_09_18_152904_add_fields_calificacion_lectivos_table.php',
     'AddFieldsCedvaToClientesTable' => $baseDir . '/database/migrations/2020_06_23_101034_add_fields_cedva_to_clientes_table.php',
     'AddFieldsContrato2ToEmpleadosTable' => $baseDir . '/database/migrations/2023_05_12_083214_add_fields_contrato2_to_empleados_table.php',

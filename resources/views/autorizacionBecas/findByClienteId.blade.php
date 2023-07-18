@@ -80,7 +80,7 @@
                                 </td>
                                 <td>{{$autorizacionBeca->cliente->plantel->razon}}</td>
                                 <td>{{$autorizacionBeca->solicitud}}</td>
-                                <td>{{$autorizacionBeca->lectivo->name}}</td>
+                                <td>{{optional($autorizacionBeca->lectivo)->name}}</td>
                                 <td>
                                     <a href="{{ route('clientes.edit', $autorizacionBeca->cliente->id) }}" target="_blank">
                                         {{$autorizacionBeca->cliente->nombre." ".$autorizacionBeca->cliente->nombre2." ".$autorizacionBeca->cliente->ape_paterno." ".$autorizacionBeca->cliente->ape_materno}}

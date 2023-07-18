@@ -68,14 +68,14 @@ class AtrazoPagos extends Command
                 ->where('cc.nivel_id', '>', 0)
                 ->where('cc.grado_id', '>', 0)
                 ->where('cc.turno_id', '>', 0)
-                ->whereIn('c.id', array(87566))
+                //->whereIn('c.id', array(87566))
                 ->whereColumn('adeudos.combinacion_cliente_id', 'cc.id')
                 ->where('caj_con.bnd_mensualidad', 1)
                 ->where('fecha_pago', '<', $fechaActual)
                 ->where('pagado_bnd', 0)
                 ->whereNotIn('c.plantel_id', array(54))
                 ->whereNull('cc.deleted_at')
-                ->whereNull('c.deleted_a')
+                ->whereNull('c.deleted_at')
                 //->where('c.st_cliente_id', '<>', 25)
                 ->where('c.st_cliente_id', '<>', 3)
                 ->groupBy('p.razon')
@@ -86,7 +86,7 @@ class AtrazoPagos extends Command
                 ->get();
 
 
-            dd($registros->toArray());
+            //dd($registros->toArray());
 
             foreach ($registros as $registro) {
                 $hoy = date('Y-m-d');
@@ -119,12 +119,12 @@ class AtrazoPagos extends Command
                         ));
 
                         $cliente = Cliente::find($registro->cliente_id);
-                        Log::info("cliente-" . $cliente->id . "-st" . $cliente->st_cliente_id);
+                        
                         $cliente->st_cliente_id = 25;
                         $cliente->save();
 
                         $seguimiento = Seguimiento::where('cliente_id', $cliente->id)->first();
-                        Log::info("seguimiento-" . $seguimiento->id . "-st" . $seguimiento->st_seguimiento_id);
+                        
                         $seguimiento->st_seguimiento_id = 2;
                         $seguimiento->save();
                     } elseif ($registro->adeudos_cantidad == 3) {

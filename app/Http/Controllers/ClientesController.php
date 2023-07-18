@@ -2340,6 +2340,7 @@ class ClientesController extends Controller
             'g.seccion',
             DB::raw('concat(emp.nombre, " ",emp.ape_paterno, " ",emp.ape_materno) as empleado_nombre'),
             'cc.name as concepto',
+            'a.caja_concepto_id',
             'c.fecha as fecha_caja',
             'clientes.bnd_doc_oblig_entregados',
             'tu.name as turno'
@@ -2369,7 +2370,7 @@ class ClientesController extends Controller
             ->where('ccli.nivel_id', '>', 0)
             ->where('ccli.grado_id', '>', 0)
             ->where('ccli.turno_id', '>', 0)
-            ->whereRaw('(a.caja_concepto_id = 1 or a.caja_concepto_id = 22 or a.caja_concepto_id = 23 or a.caja_concepto_id = 25)')
+            ->whereRaw('(a.caja_concepto_id = 1 or a.caja_concepto_id = 23 or a.caja_concepto_id = 25)')
             ->orderBy('p.razon')
             ->orderBy('g.seccion')
             ->get();
