@@ -42,7 +42,9 @@ class ProspectoToAsesores extends Command
     public function handle()
     {
 
-        $prospectos = Prospecto::where('st_prospecto_id', 1)->whereNull('fec_apartado')->get();
+        $prospectos = Prospecto::join('prospecto_seguimientos as ps','ps.prospecto_id','prospectos.id')
+        ->where('ps.prospecto_st_seg_id',3)->whereDate('fecha','>','2023-05-01')
+        ->where('st_prospecto_id', 1)->whereNull('fec_apartado')->get();
 
         //dd($prospectos->toArray());
         $hoy = Carbon::createFromFormat('Y-m-d', date('Y-m-d'));
@@ -65,9 +67,9 @@ class ProspectoToAsesores extends Command
                         $dias++;
                         //echo $prospecto->id."--".$dias."**";
                         if (
-                            $dias >= 1
-                            and $prospecto->tel_cel <> "" and !is_null($prospecto->tel_cel)
-                            and $prospecto->mail <> "" and !is_null($prospecto->mail)
+                            $dias >= 2 
+                            and (($prospecto->tel_cel <> "" and !is_null($prospecto->tel_cel))
+                                or ($prospecto->mail <> "" and !is_null($prospecto->mail)))
                         ) {
                             //Log::info($hoy->diffInDays($creacion));
                             //dd($hoy->diffInDays($creacion));
@@ -86,7 +88,9 @@ class ProspectoToAsesores extends Command
 
         }
 
-        $prospectos_postpuestos = Prospecto::where('st_prospecto_id', 1)->whereNotNull('fec_apartado')->get();
+        $prospectos_postpuestos = Prospecto::join('prospecto_seguimientos as ps','ps.prospecto_id','prospectos.id')
+        ->where('ps.prospecto_st_seg_id',3)->whereDate('fecha','>','2023-05-01')
+        ->where('st_prospecto_id', 1)->whereNotNull('fec_apartado')->get();
         //dd($prospectos_postpuestos->toArray());
         foreach ($prospectos_postpuestos as $prospecto) {
             $fec_apartado = Carbon::createFromFormat('Y-m-d', $prospecto->fec_apartado);
@@ -96,9 +100,9 @@ class ProspectoToAsesores extends Command
 
             if ($hoy->greaterThanOrEqualTo($fec_apartado)) {
                 if (
-                    $dias >= 2
-                    and $prospecto->tel_cel <> "" and !is_null($prospecto->tel_cel)
-                    and $prospecto->mail <> "" and !is_null($prospecto->mail)
+                    $dias >= 2 
+                    and (($prospecto->tel_cel <> "" and !is_null($prospecto->tel_cel))
+                        or ($prospecto->mail <> "" and !is_null($prospecto->mail)))
                 ) {
                     $prospecto->st_prospecto_id = 2;
                     $prospecto->save();

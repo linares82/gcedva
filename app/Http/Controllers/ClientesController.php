@@ -2339,44 +2339,57 @@ class ClientesController extends Controller
             'sts.name as st_seguimiento',
             'g.seccion',
             DB::raw('concat(emp.nombre, " ",emp.ape_paterno, " ",emp.ape_materno) as empleado_nombre'),
-            'cc.name as concepto',
-            'a.caja_concepto_id',
-            'c.fecha as fecha_caja',
+            //'cc.name as concepto',
+            //'a.caja_concepto_id',
+            //'c.fecha as fecha_caja',
             'clientes.bnd_doc_oblig_entregados',
             'tu.name as turno'
         )
             ->join('seguimientos as s', 's.cliente_id', '=', 'clientes.id')
             ->join('st_seguimientos as sts', 'sts.id', '=', 's.st_seguimiento_id')
-            ->join('adeudos as a', 'a.cliente_id', '=', 'clientes.id')
-            ->join('caja_conceptos as cc', 'cc.id', '=', 'a.caja_concepto_id')
+            //->join('adeudos as a', 'a.cliente_id', '=', 'clientes.id')
+            //->join('caja_conceptos as cc', 'cc.id', '=', 'a.caja_concepto_id')
             ->join('plantels as p', 'p.id', '=', 'clientes.plantel_id')
             ->join('st_clientes as stc', 'stc.id', '=', 'clientes.st_cliente_id')
             ->join('empleados as emp', 'emp.id', '=', 'clientes.empleado_id')
-            ->join('cajas as c', 'c.id', '=', 'a.caja_id')
+            //->join('cajas as c', 'c.id', '=', 'a.caja_id')
             ->join('combinacion_clientes as ccli', 'ccli.cliente_id', '=', 'clientes.id')
             ->join('turnos as tu', 'tu.id', 'ccli.turno_id')
             ->join('grados as g', 'g.id', '=', 'ccli.grado_id')
-            ->where('a.pagado_bnd', 1)
-            ->where('c.st_caja_id', 1)
+            //->where('a.pagado_bnd', 1)
+            //->where('c.st_caja_id', 1)
+            //->where('clientes.id', 88063)
             //->whereIn('a.caja_concepto_id', array(1,22,23, 25)) // se quito concepto 22 tramites adelante se hace especificamente este trabajo
             //->where('clientes.st_cliente_id', '<>', 3)
             ->whereIn('clientes.plantel_id', $datos['plantel_f'])
             ->where('clientes.matricula', 'like', $datos['inicio_matricula'] . "%")
-            ->whereNull('a.deleted_at')
-            ->whereNull('c.deleted_at')
+            //->whereNull('a.deleted_at')
+            //->whereNull('c.deleted_at')
             ->whereNull('ccli.deleted_at')
             ->where('ccli.plantel_id', '>', 0)
             ->where('ccli.especialidad_id', '>', 0)
             ->where('ccli.nivel_id', '>', 0)
             ->where('ccli.grado_id', '>', 0)
             ->where('ccli.turno_id', '>', 0)
-            ->whereRaw('(a.caja_concepto_id = 1 or a.caja_concepto_id = 23 or a.caja_concepto_id = 25)')
+            //->whereRaw('(a.caja_concepto_id = 1 or a.caja_concepto_id = 22 or a.caja_concepto_id = 23 or a.caja_concepto_id = 25)')
             ->orderBy('p.razon')
             ->orderBy('g.seccion')
             ->get();
         //dd($detalle->toArray());
         $registros = array();
         foreach ($detalle->toArray() as $d) {
+            //dd($d['cliente_id']);
+            $adeudos12325=Adeudo::where('cliente_id', $d['cliente_id'])
+            ->where('pagado_bnd', 1)
+            ->whereIn('caja_concepto_id', array(1,23,25))->get();
+            $d['12325']="";
+            $d['fecha_caja_12325']="";
+            foreach($adeudos12325 as $adeudo){
+                $d['12325']=$adeudo->cajaConcepto->name;
+                $d['fecha_caja_12325']=$adeudo->caja->fecha;
+                break;
+            }
+
             if ($d['bnd_doc_oblig_entregados'] == 1) {
                 $d['bnd_doc_oblig_entregados'] = 'Si';
             } else {

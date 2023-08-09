@@ -91,11 +91,9 @@
               {{ $rs['ape_materno'] }} {{ $rs['nombre'] }} {{ $rs['nombre2'] }}</td><td>{{ $rs['st_cliente'] }}</td>
               <td>{{ $rs['st_seguimiento'] }}</td><td>{{ $rs['seccion'] }}</td><td>{{$rs['turno']}}</td><td>{{ $rs['empleado_nombre'] }}</td>
               <td>
-                
-                {{ $rs['concepto'] }}
-                
+                {{$rs['12325']}}
               </td>
-              <td>{{ $rs['fecha_caja'] }}</td><td>{{$rs['tramites']}}</td><td>{{$rs['tramites_fecha']}}</td>
+              <td>{{ $rs['fecha_caja_12325'] }}</td><td>{{$rs['tramites']}}</td><td>{{$rs['tramites_fecha']}}</td>
               <td>{{$rs['primera_mensualidad']}}</td><td>{{$rs['primera_mensualidad_fecha']}}</td>
               <td>
                 @php

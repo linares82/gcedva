@@ -57,7 +57,7 @@
 </div>
 <div class="form-group col-md-4 @if($errors->has('plantel_id')) has-error @endif">
    <label for="plantel_id-field">Plantel</label>
-   {!! Form::select("plantel_id", $list["Plantel"], null, array("class" => "form-control select_seguridad", "id" => "plantel_id-field")) !!}
+   {!! Form::select("plantel_id", $planteles, null, array("class" => "form-control select_seguridad", "id" => "plantel_id-field")) !!}
    @if($errors->has("plantel_id"))
    <span class="help-block">{{ $errors->first("plantel_id") }}</span>
    @endif
@@ -109,7 +109,7 @@
 <div class="form-group col-md-4 @if($errors->has('fec_apartado')) has-error @endif">
    <label for="fec_apartado-field" id="lbl_fec_apartado">Fec. Apartado</label>
    @permission('prospectos.fec_apartado')
-   {!! Form::text("fec_apartado", null, array("class" => "form-control fecha", "id" => "fec_apartado-field")) !!}
+   {!! Form::text("fec_apartado", null, array("class" => "form-control", "id" => "fec_apartado-field")) !!}
    @endpermission
    @if(isset($prospecto))
    @if(!is_null($prospecto->fec_apartado))
@@ -135,6 +135,14 @@
 <script src="{{ asset ('/bower_components/AdminLTE/plugins/input-mask/jquery.inputmask.extensions.js') }}"></script>
 <script src="{{ asset ('/bower_components/AdminLTE/plugins/input-mask/jquery.inputmask.phone.extensions.js') }}"></script>
 <script type="text/javascript">
+   $('#fec_apartado-field').Zebra_DatePicker({
+        days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
+        months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+        readonly_element: false,
+        lang_clear_date: 'Limpiar',
+        show_select_today: 'Hoy',
+        direction: [1, 5]
+      });
    $(document).ready(function() {
       $('#tel_cel-field').inputmask({
          "mask": "(999) 999-9999"

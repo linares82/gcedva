@@ -129,6 +129,9 @@ class MateriasController extends Controller
         if (!isset($input['bnd_oficial'])) {
             $input['bnd_oficial'] = 0;
         }
+        if (!isset($input['bnd_tiene_nombre_oficial'])) {
+            $input['bnd_tiene_nombre_oficial'] = 0;
+        }
         $materium->update($input);
 
         return redirect()->route('materias.index')->with('message', 'Registro Actualizado.');

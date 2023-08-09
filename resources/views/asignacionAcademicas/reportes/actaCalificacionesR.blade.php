@@ -219,11 +219,12 @@
                                 }
                                 //dd($cantidad_calificaciones);
                                 if($cantidad_calificaciones>0){
+                                    
                                     $promedio=$suma_calificaciones/$cantidad_calificaciones;
+                                    
                                     //dd($promedio);
                                 }else{
                                     $promedio=0;
-                                    
                                 }
                                 if($calificacion_id<>0){
                                     $calificacion=\App\Calificacion::find($calificacion_id);
@@ -234,10 +235,15 @@
                                 
                             }
                             
-                            if($promedio>6){
-                                $promedio=round($promedio,0);
+                            if($promedio>=6){
+                                if($a->cliente->st_cliente_id==3){
+                                    $promedio=5;
+                                }else{
+                                    $promedio=round($promedio,0);
+                                }
                             }else{
-                                $promedio=intdiv($promedio,1);
+                                $promedio=5;
+                                //$promedio=intdiv($promedio,1);
                             }
                             
                             @endphp

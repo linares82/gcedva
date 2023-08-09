@@ -778,12 +778,30 @@ class EmpleadosController extends Controller
         $empleados=Empleado::select('pla.razon','empleados.id', 'empleados.nombre', 'empleados.ape_paterno', 
         'empleados.ape_materno', 'empleados.curp', 'empleados.rfc', 'empleados.direccion', 'p.name AS puesto', 
         'empleados.mail_empresa', 'empleados.tel_cel', 'empleados.tel_emergencia', 'empleados.parentesco', 
-        'empleados.fin_contrato','stc.name as estatus','empleados.fec_nacimiento','empleados.fec_ingreso')
+        'empleados.contacto_emergencia','empleados.tel_fijo',
+        'stc.name as estatus','empleados.fec_nacimiento','empleados.fec_ingreso',
+        'empleados.cve_empleado','empleados.cel_empresa','empleados.mail','u.name as user',
+        'empleados.extranjero_bnd','empleados.genero','empleados.alimenticia_bnd','empleados.jefe_bnd', 
+        'j.nombre as nombre_jefe','j.ape_paterno as ape_paterno_jefe','j.ape_materno as ape_materno_jefe',
+        'e.name as estado_nacimiento',
+        'empleados.pais_nacimiento','ne.name as nivel_estudio', 'empleados.profesion','empleados.cedula',
+        'empleados.anios_servicio_escuela','empleados.fec_inicio_experiencia_academicas',
+        'empleados.profordems','empleados.bnd_recontratable','empleados.just_recontratable',
+        'tc.name as tipo_contrato','pla_contrato1.razon as pla_contrato1','empleados.fin_contrato',
+        'tc2.name as tipo_contrato2','pla_contrato2.razon as pla_contrato2','empleados.fec_fin_contrato2')
         ->join('puestos as p','p.id','empleados.puesto_id')
         ->join('plantels as pla','pla.id','empleados.plantel_id')
+        ->join('plantels as pla_contrato1','pla_contrato1.id','empleados.plantel_contrato1_id')
+        ->join('plantels as pla_contrato2','pla_contrato2.id','empleados.plantel_contrato2_id')
         ->join('st_empleados as stc','stc.id','empleados.st_empleado_id')
-        ->whereIn('plantel_id', $datos['plantel_f']) 
-        ->whereIn('st_empleado_id', $datos['estatus_f']) 
+        ->join('users as u','u.id','empleados.user_id')
+        ->join('empleados as j','j.id', 'empleados.jefe_id')
+        ->join('tipo_contratos as tc','tc.id', 'empleados.tipo_contrato_id')
+        ->join('tipo_contratos as tc2','tc2.id', 'empleados.tipo_contrato2_id')
+        ->join('estados as e','e.id', 'empleados.estado_nacimiento_id')
+        ->join('nivel_estudios as ne','ne.id', 'empleados.nivel_estudio_id')
+        ->whereIn('empleados.plantel_id', $datos['plantel_f']) 
+        ->whereIn('empleados.st_empleado_id', $datos['estatus_f']) 
         ->get();
         return view('empleados.reportes.listadoColaboradoresR',compact('empleados'));
     }

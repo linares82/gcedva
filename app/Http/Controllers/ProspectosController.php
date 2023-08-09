@@ -49,7 +49,9 @@ class ProspectosController extends Controller {
 	{
 		$medios=Medio::where('bnd_prospectos', 1)->pluck('name','id');
 		$estatus=StProspecto::whereIn('id',array(1,2))->pluck('name','id');
-		return view('prospectos.create', compact('medios','estatus'))
+		$planteles = Empleado::where('user_id',Auth::user()->id)->first()->plantels()->pluck('razon','id');
+
+		return view('prospectos.create', compact('medios','estatus', 'planteles'))
 			->with( 'list', Prospecto::getListFromAllRelationApps() );
 	}
 
@@ -120,7 +122,8 @@ class ProspectosController extends Controller {
 		$prospecto=$prospecto->find($id);
 		$medios=Medio::where('bnd_prospectos', 1)->pluck('name','id');
 		$estatus=StProspecto::whereIn('id',array(1,2))->pluck('name','id');
-		return view('prospectos.edit', compact('prospecto', 'medios','estatus'))
+		$planteles = Empleado::where('user_id',Auth::user()->id)->first()->plantels()->pluck('razon','id');
+		return view('prospectos.edit', compact('prospecto', 'medios','estatus', 'planteles'))
 			->with( 'list', Prospecto::getListFromAllRelationApps() );
 	}
 
@@ -280,7 +283,9 @@ class ProspectosController extends Controller {
     }
 
 	public function reporteGeneral(){
-		return view('prospectos.reportes.reporteGeneral')
+		$planteles = Empleado::where('user_id',Auth::user()->id)->first()->plantels()->pluck('razon','id');
+		
+		return view('prospectos.reportes.reporteGeneral', compact('planteles'))
 		->with( 'list', Prospecto::getListFromAllRelationApps() );
 	}
 

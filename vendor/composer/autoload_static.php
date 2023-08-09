@@ -1012,6 +1012,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'AddNoPolizaToClientesTable' => __DIR__ . '/../..' . '/database/migrations/2020_03_19_122343_add_no_poliza_to_clientes_table.php',
         'AddNombre2GradosTable' => __DIR__ . '/../..' . '/database/migrations/2019_08_23_093321_add_nombre2_grados_table.php',
         'AddNombreCortoToPlantelsTable' => __DIR__ . '/../..' . '/database/migrations/2020_04_23_130534_add_nombre_corto_to_plantels_table.php',
+        'AddNombreOficialToMateriaTable' => __DIR__ . '/../..' . '/database/migrations/2023_07_20_124335_add_nombre_oficial_to_materia_table.php',
         'AddOrdenClasificacionToDocVinculacionsTable' => __DIR__ . '/../..' . '/database/migrations/2022_02_28_130028_add_orden_clasificacion_to_doc_vinculacions_table.php',
         'AddOrdenPeriodoEstudiosTable' => __DIR__ . '/../..' . '/database/migrations/2020_02_25_094544_add_orden_periodo_estudios_table.php',
         'AddOrdenToMateriaTable' => __DIR__ . '/../..' . '/database/migrations/2021_03_26_143154_add_orden_to_materia_table.php',

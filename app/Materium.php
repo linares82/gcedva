@@ -26,7 +26,8 @@ class Materium extends Model
     //Mass Assignment
     protected $fillable = [
         'ponderacion_id', 'name', 'abreviatura', 'seriada_bnd', 'serie_anterior', 'plantel_id',
-        'usu_alta_id', 'usu_mod_id', 'modulo_id', 'codigo', 'creditos', 'bnd_oficial','orden'
+        'usu_alta_id', 'usu_mod_id', 'modulo_id', 'codigo', 'creditos', 'bnd_oficial','orden',
+        'bnd_tiene_nombre_oficial', 'nombre_oficial'
     ];
 
     public function usu_alta()

@@ -345,7 +345,11 @@ class AdeudosController extends Controller
             $cliente->save();
         }
 
-        $adeudos = Adeudo::where('cliente_id', '=', $cliente->id)->where('combinacion_cliente_id', '=', $combinacion->id)->get();
+        $adeudos = Adeudo::where('cliente_id', '=', $cliente->id)
+        ->where('combinacion_cliente_id', '=', $combinacion->id)
+        ->where('inicial_bnd',1)
+        ->get();
+
         $empleado = Empleado::where('user_id', '=', Auth::user()->id)->first();
         $carbon = new \Carbon\Carbon();
         $date = $carbon->now();
