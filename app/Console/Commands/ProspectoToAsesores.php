@@ -41,9 +41,12 @@ class ProspectoToAsesores extends Command
      */
     public function handle()
     {
+        
 
-        $prospectos = Prospecto::join('prospecto_seguimientos as ps','ps.prospecto_id','prospectos.id')
+        $prospectos = Prospecto::select('prospectos.*','ps.prospecto_st_seg_id')
+        ->join('prospecto_seguimientos as ps','ps.prospecto_id','prospectos.id')
         ->where('ps.prospecto_st_seg_id',3)->whereDate('fecha','>','2023-05-01')
+        //->where('prospectos.id', 298984)
         ->where('st_prospecto_id', 1)->whereNull('fec_apartado')->get();
 
         //dd($prospectos->toArray());
@@ -65,17 +68,20 @@ class ProspectoToAsesores extends Command
                     $dias_no_habiles = DiaNoHabil::where('fecha', $creacion->toDateString())->first();
                     if (is_null($dias_no_habiles)) {
                         $dias++;
-                        //echo $prospecto->id."--".$dias."**";
+                        //echo $prospecto->tel_cel."--".$prospecto->mail."--".$dias."**";
+                        
                         if (
                             $dias >= 2 
-                            and (($prospecto->tel_cel <> "" and !is_null($prospecto->tel_cel))
-                                or ($prospecto->mail <> "" and !is_null($prospecto->mail)))
+                            and (($prospecto->tel_cel <> "" or !is_null($prospecto->tel_cel))
+                                or ($prospecto->mail <> "" or !is_null($prospecto->mail)))
                         ) {
                             //Log::info($hoy->diffInDays($creacion));
                             //dd($hoy->diffInDays($creacion));
                             //dd($prospecto->toArray());
+                            echo $prospecto->id."--".$prospecto->tel_cel."--".$prospecto->mail."--".$dias."**";
                             $prospecto->st_prospecto_id = 2;
                             $prospecto->save();
+                            //print_r($prospecto->toArray());
                         }
                     }
                 }
@@ -87,9 +93,11 @@ class ProspectoToAsesores extends Command
             //dd($hoy->diffInDays($creacion));
 
         }
-
-        $prospectos_postpuestos = Prospecto::join('prospecto_seguimientos as ps','ps.prospecto_id','prospectos.id')
+        
+        $prospectos_postpuestos = Prospecto::select('prospectos.*','ps.prospecto_st_seg_id')
+        ->join('prospecto_seguimientos as ps','ps.prospecto_id','prospectos.id')
         ->where('ps.prospecto_st_seg_id',3)->whereDate('fecha','>','2023-05-01')
+        //->where('prospectos.id', 292289)
         ->where('st_prospecto_id', 1)->whereNotNull('fec_apartado')->get();
         //dd($prospectos_postpuestos->toArray());
         foreach ($prospectos_postpuestos as $prospecto) {
@@ -99,13 +107,16 @@ class ProspectoToAsesores extends Command
             //dd($hoy->greaterThanOrEqualTo($fec_apartado));
 
             if ($hoy->greaterThanOrEqualTo($fec_apartado)) {
+                //dd($dias);
                 if (
-                    $dias >= 2 
-                    and (($prospecto->tel_cel <> "" and !is_null($prospecto->tel_cel))
+                    //$dias >= 2 and
+                    (($prospecto->tel_cel <> "" and !is_null($prospecto->tel_cel))
                         or ($prospecto->mail <> "" and !is_null($prospecto->mail)))
                 ) {
+                    echo $prospecto->id."--".$prospecto->tel_cel."--".$prospecto->mail."**";
                     $prospecto->st_prospecto_id = 2;
                     $prospecto->save();
+                    //print_r($prospecto->toArray());
                 }
             }
 
@@ -116,5 +127,6 @@ class ProspectoToAsesores extends Command
             //dd($hoy->diffInDays($creacion));
 
         }
+        
     }
 }

@@ -6,7 +6,7 @@
                        @endif
                     </div>
                     <div class="form-group col-md-4 @if($errors->has('name')) has-error @endif">
-                       <label for="name-field">Materia</label>
+                       <label for="name-field">Materia(Oficial)</label>
                        {!! Form::text("name", null, array("class" => "form-control input-sm", "id" => "name-field")) !!}
                        @if($errors->has("name"))
                        <span class="help-block">{{ $errors->first("name") }}</span>
@@ -55,14 +55,14 @@
                        @endif
                     </div>
                     <div class="form-group col-md-4 @if($errors->has('bnd_tiene_nombre_oficial')) has-error @endif">
-                       <label for="bnd_tiene_nombre_oficial-field">Tiene Nombre Oficial</label>
+                       <label for="bnd_tiene_nombre_oficial-field">Tiene Nombre Operativo</label>
                        {!! Form::checkbox("bnd_tiene_nombre_oficial", 1, null, [ "id" => "bnd_tiene_nombre_oficial-field"]) !!}
                        @if($errors->has("bnd_tiene_nombre_oficial"))
                        <span class="help-block">{{ $errors->first("bnd_tiene_nombre_oficial") }}</span>
                        @endif
                     </div>
                     <div class="form-group col-md-4 @if($errors->has('nombre_oficial')) has-error @endif">
-                       <label for="nombre_oficial-field">Nombre Oficial</label>
+                       <label for="nombre_oficial-field">Nombre Operativo</label>
                        {!! Form::text("nombre_oficial", null, array("class" => "form-control input-sm", "id" => "nombre_oficial-field")) !!}
                        @if($errors->has("nombre_oficial"))
                        <span class="help-block">{{ $errors->first("nombre_oficial") }}</span>
