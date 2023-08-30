@@ -709,7 +709,7 @@
                                          @endif
                                          @endif
                                     </td>
-                                    <td>{{ $beca->lectivo->name }}</td>
+                                    <td>{{ optional($beca->lectivo)->name }}</td>
                                 </tr>
                                 @endforeach
                             </tbody>

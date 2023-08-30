@@ -121,7 +121,15 @@
                         
                         <tr>
                             <td>{{ $cliente->matricula }}</td>
-                            <td>{{$a['materia']}}</td><td>{{$a['codigo']}}</td><td>{{$a['creditos']}}</td>
+                            <td>
+                                @if(isset($a['bnd_tiene_nombre_oficial']) and $a['bnd_tiene_nombre_oficial']==1)
+                                {{$a['nombre_oficial']}}
+                                @else
+                                {{$a['materia']}}
+                                @endif
+                                
+                            </td>
+                            <td>{{$a['codigo']}}</td><td>{{$a['creditos']}}</td>
                             <td>{{$a['lectivo']}}</td>
                             <td>{{$cali_redondeada= ($a['calificacion']<6 ? ($a['calificacion'] % 1) : round($a['calificacion'],0)) }}</td>
                                 <td>{{$a['tipo_examen']}}</td>

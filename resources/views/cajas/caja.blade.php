@@ -1669,7 +1669,7 @@ Agregar nuevo registro
     beforeSend : function(){$("#loadingValidar").show(); },
     complete : function(){$("#loadingValidar").hide(); },
     success: function(data) {
-        console.log(data);
+        //console.log(data);
         if(data[0].Activation.IsActive){
             $('#estatusBs').text('BS-Activo');
         }else{

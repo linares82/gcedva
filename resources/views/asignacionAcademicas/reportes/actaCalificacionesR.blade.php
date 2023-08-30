@@ -139,7 +139,14 @@
                         <td>Grupo</td><td colspan='3'>{{ $encabezado->grupo->name }}</td>
                     </tr>
                     <tr>
-                        <td>Materia</td><td colspan='3'>{{ $encabezado->materia->name }}</td>
+                        <td>Materia</td><td colspan='3'>
+                            @if($encabezado->materia->bnd_tiene_nombre_oficial==1)
+                            {{ $encabezado->materia->nombre_oficial }}
+                            @else
+                            {{ $encabezado->materia->name }}
+                            @endif
+                            
+                        </td>
                     </tr>
                     <tr>
                         <td>Nombre del Docente</td><td><br/>{{ $asignacion_academica->docenteOficial->nombre }} {{ $asignacion_academica->docenteOficial->ape_paterno }} {{ $asignacion_academica->docenteOficial->ape_materno }}<br/><br/></td><td>Firma</td><td></td>

@@ -1568,13 +1568,15 @@ class InscripcionsController extends Controller
         if ($fecha_lectivo_fin->lessThanOrEqualTo($hoy)) {
         $hacademicas = Hacademica::select(
             'm.name as materia',
+            'm.bnd_tiene_nombre_oficial',
+            'm.nombre_oficial',
             'm.codigo',
             'm.creditos',
             'l.name as lectivo',
             'hacademicas.id',
             'hacademicas.materium_id',
             //'hacademicas.cliente_id'
-        )
+            )
             ->join('lectivos as l', 'l.id', '=', 'hacademicas.lectivo_id')
             ->join('materia as m', 'm.id', '=', 'hacademicas.materium_id')
             ->where('cliente_id', $inscripcion->cliente_id)
@@ -1585,6 +1587,8 @@ class InscripcionsController extends Controller
         }else{
             $hacademicas = Hacademica::select(
                 'm.name as materia',
+                'm.bnd_tiene_nombre_oficial',
+                'm.nombre_oficial',
                 'm.codigo',
                 'm.creditos',
                 'l.name as lectivo',
@@ -1605,7 +1609,7 @@ class InscripcionsController extends Controller
 
         $consulta_calificaciones = ConsultaCalificacion::where('matricula', 'like', "%" . $cliente->matricula . "%")->get();
         //dd($consulta_calificaciones->count()); 
-
+        
         foreach ($consulta_calificaciones as $c) {
             array_push($resultados, array(
                 'materia' => $c->materia,
@@ -1629,6 +1633,8 @@ class InscripcionsController extends Controller
 
             $resultado = array(
                 'materia' => $hacademica->materia,
+                'bnd_tiene_nombre_oficial' => $hacademica->bnd_tiene_nombre_oficial,
+                'nombre_oficial' => $hacademica->nombre_oficial,
                 'codigo' => $hacademica->codigo,
                 'creditos' => $hacademica->creditos,
                 'lectivo' => $hacademica->lectivo,
