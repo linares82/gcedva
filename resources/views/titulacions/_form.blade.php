@@ -315,9 +315,10 @@
                                                data-bnd_titulado="{{ $intento->bnd_titulado }}">
                                                Editar
                                            </button>
-                                           <a class="btn btn-xs btn-danger" id="btn-eliminar-intento"
+                                           <!--<a class="btn btn-xs btn-danger" id="btn-eliminar-intento"
                                                href="{{ route('titulacionIntentos.destroy', $intento->id) }}"
                                                method="delete">Eliminar</a>
+            -->
                                             @endpermission
                                        </td>
                                    </tr>

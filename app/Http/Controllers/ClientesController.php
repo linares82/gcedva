@@ -2651,8 +2651,12 @@ class ClientesController extends Controller
 
                     if (!is_null($cliente->matricula)) {
                         $buscarMatricula = UsuarioCliente::where('name', $cliente->matricula)->first();
+                        /*
                         $buscarMail = UsuarioCliente::where('email', $cliente->mail)->first();
-                        if (is_null($buscarMatricula) and is_null($buscarMail)) {
+                        if(!is_null($buscarMail)){
+                            $buscarMail->delete();
+                        }*/
+                        if (is_null($buscarMatricula) /*and is_null($buscarMail)*/) {
                             $usuario_cliente['name'] = $cliente->matricula;
                             if (is_null($cliente->mail) or $cliente->mail == "") {
                                 $usuario_cliente['email'] = "Sin correo";
@@ -2679,7 +2683,11 @@ class ClientesController extends Controller
         $cliente = Cliente::find($datos['cliente']);
         if (!is_null($cliente->matricula)) {
             $buscarMatricula = UsuarioCliente::where('name', $cliente->matricula)->first();
-            //$buscarMail = UsuarioCliente::where('email', $cliente->mail)->first();
+            /*
+            $buscarMail = UsuarioCliente::where('email', $cliente->mail)->first();
+            if(!is_null($buscarMail)){
+                $buscarMail->delete();
+            }*/
             if (is_null($buscarMatricula)/* and is_null($buscarMail)*/) {
                 $usuario_cliente['name'] = $cliente->matricula;
                 if (is_null($cliente->mail) or $cliente->mail == "") {

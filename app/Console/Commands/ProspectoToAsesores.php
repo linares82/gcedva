@@ -71,7 +71,7 @@ class ProspectoToAsesores extends Command
                         //echo $prospecto->tel_cel."--".$prospecto->mail."--".$dias."**";
                         
                         if (
-                            $dias >= 2 
+                            $dias >= 3 
                             and (($prospecto->tel_cel <> "" or !is_null($prospecto->tel_cel))
                                 or ($prospecto->mail <> "" or !is_null($prospecto->mail)))
                         ) {
@@ -109,7 +109,7 @@ class ProspectoToAsesores extends Command
             if ($hoy->greaterThanOrEqualTo($fec_apartado)) {
                 //dd($dias);
                 if (
-                    //$dias >= 2 and
+                    //$dias >= 3 and
                     (($prospecto->tel_cel <> "" and !is_null($prospecto->tel_cel))
                         or ($prospecto->mail <> "" and !is_null($prospecto->mail)))
                 ) {

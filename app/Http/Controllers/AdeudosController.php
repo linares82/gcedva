@@ -209,6 +209,7 @@ class AdeudosController extends Controller
                     if (!is_null($cliente->matricula)) {
                         $buscarMatricula = UsuarioCliente::where('name', $cliente->matricula)->first();
                         $buscarMail = UsuarioCliente::where('email', $cliente->mail)->first();
+                        
                         if (is_null($buscarMatricula) and is_null($buscarMail)) {
                             $usuario_cliente['name'] = $cliente->matricula;
                             $usuario_cliente['email'] = $cliente->mail;
@@ -346,9 +347,9 @@ class AdeudosController extends Controller
         }
 
         $adeudos = Adeudo::where('cliente_id', '=', $cliente->id)
-        ->where('combinacion_cliente_id', '=', $combinacion->id)
-        ->where('inicial_bnd',1)
-        ->get();
+            ->where('combinacion_cliente_id', '=', $combinacion->id)
+            ->where('inicial_bnd', 1)
+            ->get();
 
         $empleado = Empleado::where('user_id', '=', Auth::user()->id)->first();
         $carbon = new \Carbon\Carbon();
@@ -436,8 +437,15 @@ class AdeudosController extends Controller
 
     public function reporteAdeudosPlan()
     {
+        $empleado = Empleado::where('user_id', '=', Auth::user()->id)->where('st_empleado_id', '<>', 3)->first();
 
-        $planteles = Plantel::pluck('razon', 'id');
+        $plantels = array();
+        foreach ($empleado->plantels as $p) {
+            //dd($p->id);
+            array_push($plantels, $p->id);
+        }
+
+        $planteles = Plantel::whereIn('id', $plantels)->pluck('razon', 'id');
         $planes = PlanPago::pluck('name', 'id');
         $conceptos = CajaConcepto::pluck('name', 'id');
         //dd($conceptos);
@@ -2611,24 +2619,32 @@ class AdeudosController extends Controller
                     //dd(is_null($beca->deleted_at));
                     $mesAdeudo = Carbon::createFromFormat('Y-m-d', $adeudo->fecha_pago)->month;
                     $anioAdeudo = Carbon::createFromFormat('Y-m-d', $adeudo->fecha_pago)->year;
-                    $mesInicio = Carbon::createFromFormat('Y-m-d', $beca->lectivo->inicio)->month;
-                    $anioInicio = Carbon::createFromFormat('Y-m-d', $beca->lectivo->inicio)->year;
-                    $mesFin = Carbon::createFromFormat('Y-m-d', $beca->lectivo->fin)->month;
-                    $anioFin = Carbon::createFromFormat('Y-m-d', $beca->lectivo->fin)->year;
+                    if (isset($beca->lectivo) and !is_null($beca->lectivo)) {
+                        $mesInicio = Carbon::createFromFormat('Y-m-d', optional($beca->lectivo)->inicio)->month;
+                        $anioInicio = Carbon::createFromFormat('Y-m-d', optional($beca->lectivo)->inicio)->year;
+                        $mesFin = Carbon::createFromFormat('Y-m-d', $beca->lectivo->fin)->month;
+                        $anioFin = Carbon::createFromFormat('Y-m-d', $beca->lectivo->fin)->year;
 
-                    //dd($anioInicio."-".$anioAdeudo."-".$mesInicio."-".$mesAdeudo."-".);
-                    //dd(($anioInicio == $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin == $anioAdeudo and $mesFin >= $mesAdeudo));
-                    //dd(($anioInicio < $anioAdeudo or $mesInicio >= $mesAdeudo) and ($anioFin >= $anioAdeudo and $mesFin <= $mesAdeudo));
+                        //dd($anioInicio."-".$anioAdeudo."-".$mesInicio."-".$mesAdeudo."-".);
+                        //dd(($anioInicio == $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin == $anioAdeudo and $mesFin >= $mesAdeudo));
+                        //dd(($anioInicio < $anioAdeudo or $mesInicio >= $mesAdeudo) and ($anioFin >= $anioAdeudo and $mesFin <= $mesAdeudo));
 
-                    if (
-                        (($beca->lectivo->inicio <= $adeudo->fecha_pago and $beca->lectivo->fin >= $adeudo->fecha_pago) or
-                            (($anioInicio == $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin == $anioAdeudo and $mesFin >= $mesAdeudo)) or
-                            (($anioInicio == $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin > $anioAdeudo)) or
-                            (($anioInicio < $anioAdeudo) and ($anioFin == $anioAdeudo and $mesFin >= $mesAdeudo))) and
-                        $beca->aut_dueno == 4 and is_null($beca->deleted_at)
-                    ) {
-                        $beca_a = $beca->id;
-                        //dd($beca);
+                        if (
+                            (($beca->lectivo->inicio <= $adeudo->fecha_pago and $beca->lectivo->fin >= $adeudo->fecha_pago) or
+                                (($anioInicio == $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin == $anioAdeudo and $mesFin >= $mesAdeudo)) or
+                                (($anioInicio == $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin > $anioAdeudo)) or
+                                (($anioInicio < $anioAdeudo) and ($anioFin == $anioAdeudo and $mesFin >= $mesAdeudo))) and
+                            $beca->aut_dueno == 4 and is_null($beca->deleted_at)
+                        ) {
+                            $beca_a = $beca->id;
+                            //dd($beca);
+                        }
+                    } elseif ($beca->bnd_tiene_vigencia == 1 and !is_null($beca->vigencia)) {
+                        $fechaAdeudo = Carbon::createFromFormat('Y-m-d', $adeudo->fecha_pago);
+                        $fechaVigenciaBeca = Carbon::createFromFormat('Y-m-d', $beca->vigencia);
+                        if ($fechaAdeudo->lessThanOrEqualTo($fechaVigenciaBeca)) {
+                            $beca_a = $beca->id;
+                        }
                     }
                 }
 
@@ -4118,7 +4134,7 @@ class AdeudosController extends Controller
             $suma_estatus = $suma_estatus + $cuenta;
 
             $cuenta = Adeudo::join('clientes as cli', 'cli.id', 'adeudos.cliente_id')
-                ->join('seguimientos as s','s.cliente_id','cli.id')
+                ->join('seguimientos as s', 's.cliente_id', 'cli.id')
                 ->join('caja_conceptos as cc', 'cc.id', 'adeudos.caja_concepto_id')
                 ->where('cli.plantel_id', $plantel->id)
                 ->where('cc.name', 'like', '%' . $mes->name . '%')
@@ -4196,7 +4212,7 @@ class AdeudosController extends Controller
                     ->orderBy('cli.id')
                     ->orderBy('adeudos.fecha_pago')
                     ->get();
-                
+
                 foreach ($detalle_bajas as $detalle) {
                     $linea['razon'] = $detalle->razon;
                     $linea['cliente_id'] = $detalle->cliente_id;

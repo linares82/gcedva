@@ -308,11 +308,21 @@
                     @endif
                     
                     @if(isset($caja) and ($caja->st_caja_id==0 or $caja->st_caja_id==3))
+                    @if(count($caja->cajaLns)==0)
                     <div class="form-group col-md-4">
                         <div class='text-center'>
                             <a href="#" class="add-modal btn btn-success btn-sm"><i class="glyphicon glyphicon-plus-sign"></i>Agregar Linea</a> 
                         </div>
                     </div>
+                    @else
+                    @permission('cajas.masDeUnaLinea')
+                    <div class="form-group col-md-4">
+                        <div class='text-center'>
+                            <a href="#" class="add-modal btn btn-success btn-sm"><i class="glyphicon glyphicon-plus-sign"></i>Agregar Linea</a> 
+                        </div>
+                    </div>
+                    @endpermission
+                    @endif
                     
                     <div class="form-group col-md-4">
                         <div class='text-center'>

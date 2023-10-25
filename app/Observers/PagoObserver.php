@@ -124,6 +124,11 @@ class PagoObserver
 
                     if (!is_null($cliente->matricula)) {
                         $buscarMatricula = UsuarioCliente::where('name', $cliente->matricula)->where('email', $cliente->mail)->first();
+                        /*
+                        $buscarMail = UsuarioCliente::where('email', $cliente->mail)->first();
+                        if(!is_null($buscarMail)){
+                            $buscarMail->delete();
+                        }*/
 
                         if (is_null($buscarMatricula)) {
                             $usuario_cliente['name'] = $cliente->matricula;

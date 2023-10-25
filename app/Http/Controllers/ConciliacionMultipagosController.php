@@ -20,6 +20,7 @@ use Illuminate\Http\Request;
 use App\ConciliacionMultipago;
 use App\SerieFolioSimplificado;
 use App\ConciliacionMultiDetalle;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\createConciliacionMultipago;
 use App\Http\Requests\updateConciliacionMultipago;
@@ -598,5 +599,55 @@ class ConciliacionMultipagosController extends Controller
 		return view('conciliacionMultipagos.reportes.rptConciliacion', compact('registrosConciliados', 'lineasConciliacionExtra'));
 	}
 
-	
+	public function getEmpleadosXplantelXpuesto(Request $request)
+    {
+        if ($request->ajax()) {
+            //dd($request->all());
+            $plantel = $request->get('plantel_id');
+            $puesto = $request->get('puesto_id');
+            $empleado = $request->get('empleado_id');
+
+            $final = array();
+            if ($plantel <> 0) {
+                $r = DB::table('empleados as e')
+                    ->select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as nombre'))
+                    ->join('empleado_plantel as ep', 'ep.empleado_id', '=', 'e.id')
+                    ->where('ep.plantel_id', '=', $plantel)
+                    ->where('e.puesto_id', '=', $puesto)
+                    ->where('e.id', '>', '0')
+                    ->get();
+            } else {
+                $r = DB::table('empleados as e')
+                    ->select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as nombre'))
+                    ->where('e.puesto_id', '=', $puesto)
+                    ->where('e.id', '>', '0')
+                    ->get();
+            }
+
+            //dd($r);
+            if (isset($empleado) and $empleado <> 0) {
+                foreach ($r as $r1) {
+                    if ($r1->id == $empleado) {
+                        array_push($final, array(
+                            'id' => $r1->id,
+                            'nombre' => $r1->nombre,
+                            'selectec' => 'Selected'
+                        ));
+                    } else {
+                        array_push($final, array(
+                            'id' => $r1->id,
+                            'nombre' => $r1->nombre,
+                            'selectec' => ''
+                        ));
+                    }
+                }
+                return $final;
+            } else {
+                return $r;
+            }
+        }
+    }
+
+
+
 }

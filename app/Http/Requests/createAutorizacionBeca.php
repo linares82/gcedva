@@ -31,6 +31,7 @@ class createAutorizacionBeca extends FormRequest
             'tipo_beca_id'=> "required",
             'motivo_beca_id'=> "required",
             'mensualidad_sep'=> "required",
+            'lectivo_id'=>"required_unless:bnd_tiene_vigencia,1"
 
         ];
     }
@@ -38,7 +39,8 @@ class createAutorizacionBeca extends FormRequest
     public function messages()
     {
         return [
-            'archivo_file.required' =>  'Necesita cargar un archivo'
+            'archivo_file.required' =>  'Necesita cargar un archivo',
+            'lectivo_id.required_unless'=> "Campo requerido"
         ];
     }
 }
