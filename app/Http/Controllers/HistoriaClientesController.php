@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use Log;
 use Auth;
 use App\Mese;
 use App\Param;
 use Exception;
-use Log;
 
 use App\Adeudo;
 use App\BsBaja;
 use App\Cliente;
+use App\Plantel;
 use App\StCliente;
 use Carbon\Carbon;
 use File as Archi;
@@ -593,5 +594,71 @@ class HistoriaClientesController extends Controller
 			'datos' => $datos
 		))
 			->with('list', Cliente::getListFromAllRelationApps());;
+	}
+
+	public function bajasSegementado()
+	{
+		$plantels = Plantel::pluck('razon', 'id');
+		
+		return view('historiaClientes.reportes.bajasSegmentado', compact('plantels'))
+			->with('list', Cliente::getListFromAllRelationApps());;
+	}
+
+	public function bajasSegementadoR(Request $request)
+	{
+		$datos = $request->all();
+		//dd($datos);
+
+		$historia_clientes = HistoriaCliente::select(
+			'c.id as cliente',
+			'c.nombre',
+			'c.nombre2',
+			'c.ape_paterno',
+			'historia_clientes.descripcion',
+			'c.ape_materno',
+			'p.razon',
+			'stc.name as estatus',
+			'historia_clientes.fecha',
+			'c.tel_cel',
+			'ec.name as evento',
+			'g.seccion',
+			'g.name as grado',
+			'c.calle',
+			'c.no_interior',
+			'c.colonia',
+			'muni.name as municipio',
+			'est.name as estado',
+			'c.cp',
+			'c.tel_cel',
+			'c.tel_fijo',
+			'historia_clientes.reactivado',
+			'historia_clientes.fec_reactivado',
+			'historia_clientes.fec_autorizacion'
+		)
+			->join('clientes as c', 'c.id', '=', 'historia_clientes.cliente_id')
+			->join('estados as est', 'est.id', 'c.estado_id')
+			->join('municipios as muni', 'muni.id', 'c.municipio_id')
+			->join('plantels as p', 'p.id', '=', 'c.plantel_id')
+			->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
+			->join('evento_clientes as ec', 'ec.id', '=', 'historia_clientes.evento_cliente_id')
+			->join('combinacion_clientes as cc', 'cc.cliente_id', 'c.id')
+			->join('grados as g', 'g.id', 'cc.grado_id')
+			->whereDate('fecha', '>=', $datos['fecha_f'])
+			->whereDate('fecha', '<=', $datos['fecha_t'])
+			->where('evento_cliente_id', 2)
+			->whereIn('p.id', $datos['plantel_f'])
+			//->where('c.st_cliente_id', $datos['st_cliente_f'])
+			->whereNull('cc.deleted_at')
+			->orderBy('p.id')
+			->orderBy('g.id')
+			->orderBy('c.id')
+			->get();
+		//dd($historia_clientes->toArray());
+
+		return view('historiaClientes.reportes.bajasSegmentadoR', array(
+			'registros' => $historia_clientes,
+			'datos' => $datos
+		))
+			->with('list', Cliente::getListFromAllRelationApps());
 	}
 }

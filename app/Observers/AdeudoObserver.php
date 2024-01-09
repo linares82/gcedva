@@ -22,8 +22,8 @@ class AdeudoObserver
                 $input['campo'] = $propiedad;
                 $input['valor_anterior'] = is_null($valor) ? 'nulo' : $valor;
                 $input['valor_nuevo'] = $adeudo->$propiedad;
-                $input['usu_alta_id'] = Auth::user()->id;
-                $input['usu_mod_id'] = Auth::user()->id;
+                $input['usu_alta_id'] = isset(Auth::user()->id) ? Auth::user()->id : 1;
+                $input['usu_mod_id'] = isset(Auth::user()->id) ? Auth::user()->id : 1;
                 Hadeudo::create($input);
             }
         }

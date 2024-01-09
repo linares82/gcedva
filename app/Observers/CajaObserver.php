@@ -48,7 +48,7 @@ class CajaObserver
                 $input['campo']=$campo;
                 $input['valor_anterior']=$caja_anterior->$campo;
                 $input['valor_nuevo']=$caja->$campo;
-                $input['user_id']=Auth::user()->id;
+                $input['user_id']=isset(Auth::user()->id) ? Auth::user()->id : 1;
                 $input['usu_mod_id']=$this->caja->usu_mod_id;
                 $input['usu_alta_id']=$this->caja->usu_alta_id;
                 //dd($input);

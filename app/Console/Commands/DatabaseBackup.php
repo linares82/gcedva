@@ -20,7 +20,7 @@ class DatabaseBackup extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'respaldo de la base de datos a un archivo';
 
     /**
      * Create a new command instance.
@@ -53,7 +53,7 @@ class DatabaseBackup extends Command
     # Generamos el comando con mysqldump para exportar los datos
     //dd($host);
     $command = sprintf(
-        'mysqldump --host="%s" --user="%s" '
+        'mysqldump --host="%s" --user="%s" gcedva'
         , $host, $username
         );
     if (!empty($password)) {

@@ -98,7 +98,7 @@
                             <tr>
                                 <td>
                                     @if(optional($a->materia)->bnd_tiene_nombre_oficial==1)
-                                    {{optional($a->materia)->nombre_oficial}}
+                                    {{optional($a->materia)->name}}
                                     @else
                                     {{optional($a->materia)->name}}
                                     @endif

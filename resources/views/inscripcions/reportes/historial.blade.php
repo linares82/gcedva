@@ -98,7 +98,7 @@
                             $mes=date('m',$fechaEntero);
                             $dia=date('d',$fechaEntero);
                             $mesLetra=\App\Mese::find($mes);
-                            @endphp
+                        @endphp
                         RVOE S.E.P. NO {{ $grado->rvoe }} de fecha {{ $dia }} de {{ $mesLetra->name }} de {{ $anio }}<br/>
                         
                     </td>

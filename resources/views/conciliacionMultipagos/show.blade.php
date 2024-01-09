@@ -13,7 +13,7 @@
 <div class="page-header">
         <h1>@yield('conciliacionMultipagosAppTitle') / Mostrar {{$conciliacionMultipago->id}}
 
-            {!! Form::model($conciliacionMultipago, array('route' => array('conciliacionMultipagos.destroy', $conciliacionMultipago->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? Estas seguro?')) { return true } else {return false };")) !!}
+            {!! Form::model($conciliacionMultipago, array('route' => array('conciliacionMultipagos.destroy', $conciliacionMultipago->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('Â¿Borrar? Estas seguro?')) { return true } else {return false };")) !!}
                 <div class="btn-group pull-right" role="group" aria-label="...">
                     @permission('conciliacionMultipago.edit')
                     <a class="btn btn-warning btn-group" role="group" href="{{ route('conciliacionMultipagos.edit', $conciliacionMultipago->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
@@ -56,7 +56,7 @@
                 </div>
                 <div class="form-group col-sm-3">
                     <label for="contador_ejecucion">Cuenta</label>
-                    <p class="form-control-static">{{$conciliacionMultipago->cuentaP->name}}</p>
+                    <p class="form-control-static">{{optional($conciliacionMultipago->cuentaP)->name}}</p>
                </div>
                <div class="form-group col-sm-3">
                     <label for="fec_inicio">F. Inicio</label>
@@ -124,10 +124,10 @@
                     <table class="table table-bordered table-striped dataTable" id="dtHorizontalExample">
                         <thead>
                             <th>Caja afectada</th><th>Plantel Afectado</th>
-                            <th>Fecha Pago</th><th>Razón Social</th><th>Unidad Negocio</th><th>Categoria Cobranza</th>
-                            <th>Tipo Pago</th><th>Referencia</th><th>No. Orden</th><th>No. Aprobación</th>
-                            <th>Id. Venta</th><th>Referencia Medio Pago</th><th>Importe</th><th>Comisión</th>
-                            <th>Iva Comisión</th><th>Fecha Dispersión</th><th>Periodo Financiamiento</th>
+                            <th>Fecha Pago</th><th>RazÃ³n Social</th><th>Unidad Negocio</th><th>Categoria Cobranza</th>
+                            <th>Tipo Pago</th><th>Referencia</th><th>No. Orden</th><th>No. AprobaciÃ³n</th>
+                            <th>Id. Venta</th><th>Referencia Medio Pago</th><th>Importe</th><th>ComisiÃ³n</th>
+                            <th>Iva ComisiÃ³n</th><th>Fecha DispersiÃ³n</th><th>Periodo Financiamiento</th>
                             <th>Moneda</th><th>Banco Emisor</th><th>Nombre Pagador</th><th>MAil</th><th>Tel.</th>
                             
                         </thead>

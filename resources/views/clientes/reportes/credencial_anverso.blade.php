@@ -7,7 +7,8 @@
 	table { padding: 2px 2px;width: 100%;}
 	#td_frontal { font-family: arial; font-size: 10pt; color: #000; text-align:center;width: 100%;}
         #tbl_frontal { background: url({{asset('images/cred_frontal.jpg')}}) no-repeat;
-                            background-size:200px 307px;}
+                            background-size:200px 307px;width: 100%;
+                height: 100%;}
 	div.saltopagina{
         display:block;
         page-break-before:always;
@@ -22,7 +23,13 @@
         /*table { padding: 1px 1px; width: 100%;}*/
         #tbl_frontal { background: url({{asset('storage/especialidads/'.$inscripcion->especialidad->fondo_credencial)}}) no-repeat;
                             background-size:200px 307px;
-			    font-size: 2em;}
+			    font-size: 2em;width: 100%;
+                height: 100%;}
+
+	body {
+        margin:3px;
+        padding:3px;
+        }
       </style>
     
     

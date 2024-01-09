@@ -2,11 +2,16 @@
 
 namespace App\Console\Commands;
 
+use App\Caja;
+use App\Pago;
+use App\Adeudo;
 use App\Plantel;
+use Carbon\Carbon;
 use App\SuccessMultipago;
 use App\PeticionMultipago;
 use Illuminate\Support\Arr;
 use App\ConciliacionMultipago;
+use App\SerieFolioSimplificado;
 use Illuminate\Console\Command;
 use App\ConciliacionMultiDetalle;
 use Illuminate\Support\Facades\Log;
@@ -46,7 +51,9 @@ class ConciliacionAutomatica extends Command
      */
     public function handle()
     {
-        $directorio = storage_path('conciliaciones\sftp\workarea');
+	$directorio = storage_path('conciliaciones/sftp');
+        $directorio_origen = storage_path('conciliaciones/sftp/workarea');
+	$directorio_destino = storage_path('conciliaciones_realizadas');
         //dd($directorio);
         //obtener lista de archivos recibidos
         $archivos = [];
@@ -56,7 +63,7 @@ class ConciliacionAutomatica extends Command
             }
             closedir($handler);
         }
-
+	
         //validar archivos con extension .des
         $archivos_bancarios = Arr::where($archivos, function ($registro) {
             if (substr($registro, -4) == ".des") {
@@ -64,19 +71,23 @@ class ConciliacionAutomatica extends Command
             }
         });
 
+	//dd($archivos_bancarios);
         foreach ($archivos_bancarios as $archivo) {
-            $cuenta_p="";
+            $cuenta_p="procesados";
             $input['fecha_carga'] = date('Y-m-d');
+	    $input['fec_inicio'] = date("Y-m-d",strtotime($input['fecha_carga']."- 10 days"));
+	    $input['fec_fin'] = date('Y-m-d');
             $input['registros'] = 0;
             $input['contador_ejecucion'] = 0;
             $input['usu_alta_id'] = 1;
             $input['usu_mod_id'] = 1;
             $input['archivo'] = $archivo;
+	    //dd($input);
             $cabecera = ConciliacionMultipago::create($input);
             //dd(Storage::disk('conciliaciones')->path('sftp\\'.$archivo));
-            $fp = fopen(Storage::disk('conciliaciones')->path('sftp\workarea\\'.$archivo), "r");
+            $fp = fopen(Storage::disk('conciliaciones')->path('sftp//'.$archivo), "r");
             $i = 0;
-
+	    
             while (!feof($fp)) {
                 $registro = array();
                 //$file=storage_path('conciliaciones\\'.$nombre);
@@ -157,12 +168,12 @@ class ConciliacionAutomatica extends Command
                     $registro['usu_mod_id'] = 1;
                     //dd($registro);
                     ConciliacionMultiDetalle::create($registro);
-                    if($i==0){
+                    /*if($i==0){
                         $plantel=Plantel::where('nombre_corto', 'like', $registro['razon_social'])->first();
                         $cuenta_p=$plantel->cuentaP->name;
                         $cabecera->cuenta_p_id=$plantel->cuentaP->id;
                         $cabecera->save();
-                    }
+                    }*/
                     $i++;
                     //dd($registro['archivo']);
                 }
@@ -172,9 +183,11 @@ class ConciliacionAutomatica extends Command
 
             fclose($fp);
 
-            Storage::disk('conciliaciones')->move('sftp/workarea/'.$archivo, 'sftp/'.$cuenta_p."/".$archivo);
+            Storage::disk('conciliaciones')->move('sftp//'.$archivo, 'sftp//'.$cuenta_p."//".$archivo);
+	    //Storage::move($directorio_origen.'//'.$archivo, $directorio_destino.'//'.$cuenta_p."//".$archivo);
+	    //Storage::disk('conciliaciones')->path('sftp//'.$archivo)
             $this->ejecutarConciliacion($cabecera->id);
-            sleep(60);
+            sleep(120);
         }
     }
 
@@ -257,4 +270,123 @@ class ConciliacionAutomatica extends Command
 		$conciliacion->save();
 		
 	}
+
+	public function actualizaEstatusCaja($caja_id)
+	{
+		//$pago = Pago::find($pago_id);
+        $caja = Caja::find($caja_id);
+
+        $suma_pagos = Pago::select('monto')
+            ->where('caja_id', '=', $caja->id)
+            ->where('bnd_referenciado', 0)
+            ->sum('monto');
+
+        $suma_pagos_referenciados = Pago::select('monto')
+            ->where('caja_id', '=', $caja->id)
+            ->where('bnd_referenciado', 1)
+            ->where('bnd_pagado', 1)
+            ->sum('monto');
+
+        $suma = $suma_pagos + $suma_pagos_referenciados;
+
+        if ($suma >= ($caja->total - 1) and $suma <= ($caja->total + 100)) {
+
+            foreach ($caja->cajaLns as $ln) {
+                if ($ln->adeudo_id > 0) {
+                    //Adeudo::where('id', '=', $ln->adeudo_id)->update(['pagado_bnd' => 1]);
+                    $adeudo = Adeudo::find($ln->adeudo_id);
+					if(!is_null($adeudo)){
+						$adeudo->pagado_bnd = 1;
+                    	$adeudo->save();
+					}
+                }
+            }
+
+            $caja->st_caja_id = 1;
+            //$caja->fecha=date_create(date_format(date_create(date('Y/m/d')),'Y/m/d'));
+            $caja->save();
+
+            //Generar consecutivo pago simplificado
+            $plantel = Plantel::find($caja->plantel_id);
+            $pago_final = Pago::where('caja_id', '=', $caja->id)->orderBy('id', 'desc')->first();
+            $pagos = Pago::where('caja_id', '=', $caja->id)->orderBy('id', 'desc')->whereNull('deleted_at')->get();
+            //dd($pagos->toArray());
+
+            $mes = Carbon::createFromFormat('Y-m-d', $pago_final->fecha)->month;
+            $anio = Carbon::createFromFormat('Y-m-d', $pago_final->fecha)->year;
+
+            $concepto = 0;
+            foreach ($caja->cajaLns as $ln) {
+                $concepto = $ln->cajaConcepto->bnd_mensualidad;
+            }
+            //dd($concepto);
+            if ($concepto == 1 and is_null($pago_final->csc_simplificado)) {
+                if ($plantel->cuenta_p_id <> 0) {
+                    $serie_folio_simplificado = SerieFolioSimplificado::where('cuenta_p_id', $plantel->cuenta_p_id)
+                        ->where('anio', $anio)
+                        ->where('mese_id', 13)
+                        ->where('bnd_activo', 1)
+                        ->where('bnd_fiscal', 1)
+                        ->first();
+
+                    $serie_folio_simplificado->folio_actual = $serie_folio_simplificado->folio_actual + 1;
+                    $folio_actual = $serie_folio_simplificado->folio_actual;
+                    $serie = $serie_folio_simplificado->serie;
+                    $serie_folio_simplificado->save();
+
+                    $relleno = "0000";
+                    $consecutivo = substr($relleno, 0, 4 - strlen($folio_actual)) . $folio_actual;
+                    foreach ($pagos as $pago) {
+                        $pago->csc_simplificado = $serie . "-" . $consecutivo;
+                        $pago->save();
+                        //dd($pago);
+                    }
+                }
+            } elseif ($concepto == 0 and is_null($pago_final->csc_simplificado)) {
+                if ($plantel->cuenta_p_id <> 0) {
+                    $serie_folio_simplificado = SerieFolioSimplificado::where('cuenta_p_id', $plantel->cuenta_p_id)
+                        ->where('anio', $anio)
+                        ->where('mese_id', $mes)
+                        ->where('bnd_activo', 1)
+                        ->where('bnd_fiscal', 0)
+                        ->first();
+                    //dd($serie_folio_simplificado);
+                    $serie_folio_simplificado->folio_actual = $serie_folio_simplificado->folio_actual + 1;
+                    $serie_folio_simplificado->save();
+                    $folio_actual = $serie_folio_simplificado->folio_actual;
+                    $mes_prefijo = $serie_folio_simplificado->mes1->abreviatura;
+                    $anio_prefijo = $anio - 2000;
+                    $serie = $serie_folio_simplificado->serie;
+
+
+                    $relleno = "0000";
+                    $consecutivo = substr($relleno, 0, 4 - strlen($folio_actual)) . $folio_actual;
+                    foreach ($pagos as $pago) {
+                        $pago->csc_simplificado = $serie . "-" . $mes_prefijo . $anio_prefijo . "-" . $consecutivo;
+                        $pago->save();
+                    }
+                }
+            }
+            //Fin crear consecutivo simplificado
+
+        } elseif ($suma > 0 and $suma < ($caja->total - 1)) {
+            $caja->st_caja_id = 3;
+            $caja->save();
+            foreach ($caja->cajaLns as $ln) {
+                if ($ln->adeudo_id > 0) {
+                    Adeudo::where('id', '=', $ln->adeudo_id)->update(['pagado_bnd' => 0]);
+                }
+            }
+        } else {
+            $caja->st_caja_id = 0;
+            $caja->save();
+
+            foreach ($caja->cajaLns as $ln) {
+                if ($ln->adeudo_id > 0) {
+                    Adeudo::where('id', '=', $ln->adeudo_id)->update(['pagado_bnd' => 0]);
+                }
+            }
+        }
+    }
+	
 }

@@ -2996,7 +2996,7 @@ class InscripcionsController extends Controller
             ->where('periodo_estudio_id', $inscripcion->periodo_estudio_id)
             ->with('cliente')
             ->get();
-
+        
         return view('inscripcions.agregarMaterias', compact('inscripcions', 'inscripcion'));
     }
 

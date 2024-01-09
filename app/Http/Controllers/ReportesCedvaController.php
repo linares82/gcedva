@@ -145,12 +145,14 @@ class ReportesCedvaController extends Controller
                     foreach ($registros->toArray() as $registro) {
                         array_push($resultado2, array($registro));
                     }
+
+                
                     //dd($resultado2);
                     //planeados y pagados
                 } elseif ($pagos == array(1)) {
 
                     //planeado y pagado, pero sin caja tienen monto 0
-                    /*
+                    
                     $pagos0_sin_caja = Cliente::select(
                         'p.id as plantel_id',
                         'p.razon',
@@ -226,7 +228,7 @@ class ReportesCedvaController extends Controller
                     //dd($pagos0_sin_caja->toArray());
                     foreach ($pagos0_sin_caja->toArray() as $registro) {
                         array_push($resultado2, array($registro));
-                    }*/
+                    }
 
                     //$pagos no planeados con caja
                     $pagos_no_planeados = Cliente::select(
@@ -574,7 +576,7 @@ class ReportesCedvaController extends Controller
 
 
                     //registro sin caja, adeudo pagado y monto 0
-                    /*
+                    
                     $pagos0_sin_caja = Cliente::select(
                         'p.id as plantel_id',
                         'p.razon',
@@ -651,7 +653,7 @@ class ReportesCedvaController extends Controller
                     foreach ($pagos0_sin_caja->toArray() as $registro) {
                         array_push($resultado2, array($registro));
                     }
-                    */
+                    
 
                     $registros_pendientes = Cliente::select(
                         'p.id as plantel_id',

@@ -319,6 +319,7 @@ class ConciliacionMultipagosController extends Controller
 		//dd($registros->toArray());
 
 		foreach ($registros as $pagoConciliacion) {
+			Log::info("linea detallade conciliacion id:".$pagoConciliacion->id."-".$pagoConciliacion->mp_reference);
 			//Busca la peticion inicial
 			$peticionBuscado = PeticionMultipago::where('mp_reference', $pagoConciliacion->mp_reference)
 				->where('mp_order', $pagoConciliacion->mp_order)
@@ -380,7 +381,12 @@ class ConciliacionMultipagosController extends Controller
 
 				$caja = $peticionBuscado->pago->caja;
 				if($caja->st_caja_id==0){
-					$this->actualizaEstatusCaja($caja->id);
+					try{
+						$this->actualizaEstatusCaja($caja->id);
+					}catch (Exception $e) {
+						Log::info($e->getMessage());
+					}
+					
 				}
 			}
 		}
@@ -413,10 +419,12 @@ class ConciliacionMultipagosController extends Controller
 
             foreach ($caja->cajaLns as $ln) {
                 if ($ln->adeudo_id > 0) {
-                    Adeudo::where('id', '=', $ln->adeudo_id)->update(['pagado_bnd' => 1]);
+                    //Adeudo::where('id', '=', $ln->adeudo_id)->update(['pagado_bnd' => 1]);
                     $adeudo = Adeudo::find($ln->adeudo_id);
-                    $adeudo->pagado_bnd = 1;
-                    $adeudo->save();
+		    if(!is_null($adeudo)){
+			$adeudo->pagado_bnd = 1;
+                    	$adeudo->save();
+		    }
                 }
             }
 
