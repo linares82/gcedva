@@ -6,12 +6,12 @@
 
 	<ol class="breadcrumb">
 		<li><a href="{{ route('home') }}"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></a></li>
-	    <li><a href="{{ route('asignacionAcademicas.index') }}">Clientes</a></li>
-	    <li class="active">Bajas</li>
+	    <li><a href="{{ route('asignacionAcademicas.index') }}">Prospectos</a></li>
+	    <li class="active">Segmentos</li>
 	</ol>
 
     <div class="page-header">
-        <h3><i class="glyphicon glyphicon-plus"></i> Análisis de Bajas </h3>
+        <h3><i class="glyphicon glyphicon-plus"></i> Prospectos Segmentados </h3>
     </div>
 @endsection
 
@@ -21,7 +21,7 @@
     <div class="row">
         <div class="col-md-12">
 
-            {!! Form::open(array('route' => 'historiaClientes.bajasSegementadoR', 'id'=>'frm_seguimiento')) !!}
+            {!! Form::open(array('route' => 'prospectos.prospectosSegmentadosR', 'id'=>'frm_seguimiento')) !!}
 
                 <div class="form-group col-md-6 @if($errors->has('plantel_f')) has-error @endif">
                     <label for="plantel_f-field">Plantel</label>

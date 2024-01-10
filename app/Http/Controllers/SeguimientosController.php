@@ -1580,6 +1580,7 @@ class SeguimientosController extends Controller
                 'has.tarea',
                 'has.fecha',
                 'has.detalle',
+                'has.asunto',
                 'm.name as medio'
             )
             ->join('prospectos as c', 'c.id', '=', 'has.prospecto_id')

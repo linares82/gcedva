@@ -49,7 +49,8 @@
             Actividad: element.tarea,
             Fecha: element.fecha,
             Estatus: element.detalle,
-            Medio: element.medio
+            Medio: element.medio,
+            Asunto: element.asunto
           });
         });
       };

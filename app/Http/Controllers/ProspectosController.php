@@ -1007,6 +1007,82 @@ class ProspectosController extends Controller {
 		->get();
 		return view('prospectos.reportes.prospectosLR', compact('registros', 'resumen'));
 	}
+
+	public function prospectosSegmentados()
+    {
+        $empleado = Empleado::where('user_id', Auth::user()->id)->first();
+        $plantels = $empleado->plantels->pluck('razon', 'id');
+        return view('prospectos.reportes.prospectosSegmentados', compact('plantels'))
+            ->with('list', Cliente::getListFromAllRelationApps());
+    }
+
+    public function prospectosSegmentadosR(Request $request)
+    {
+        $input = $request->all();
+        //dd($input);
+        $fecha_inicio = date('Y-m-j', strtotime('-8 day', strtotime(date('Y-m-j'))));
+        //dd($fecha_inicio);
+        $e = Empleado::where('user_id', '=', Auth::user()->id)->first();
+        $plantel = $e->plantel_id;
+        $planteles = array();
+        foreach ($e->plantels as $p) {
+            //dd($p->id);
+            array_push($planteles, $p->id);
+        }
+		/*
+        $ds_actividades_aux = DB::table('prospecto_hactividads as has')
+            ->select(
+                'p.razon as plantel', 'ua.name as usuario',
+                //DB::raw('concat(e.nombre," ",e.ape_paterno," ",e.ape_materno) as empleado'),
+                "c.id as cli",
+                DB::raw('concat(c.nombre," ",c.ape_paterno," ",c.ape_materno) as cliente'),
+                'has.tarea',
+                'has.fecha',
+                'has.detalle',
+                'has.asunto',
+                'm.name as medio'
+            )
+            ->join('prospectos as c', 'c.id', '=', 'has.prospecto_id')
+            ->join('medios as m', 'm.id', '=', 'c.medio_id')
+            ->join('users as ua', 'ua.id', '=', 'has.usu_alta_id')
+            ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
+            ->where('has.fecha', '>=', $input['fecha_f'])
+            ->where('has.fecha', '<=', $input['fecha_t']);
+        if (isset($input['plantel_f'])) {
+            $ds_actividades_aux->whereIn('c.plantel_id', $input['plantel_f']);
+        } else {
+            $ds_actividades_aux->wherein('c.plantel_id', $planteles);
+        }
+        if($input['detalle_f']<>""){
+            $ds_actividades_aux->where('has.detalle', $input['detalle_f']);
+        }
+
+        $ds_actividades = $ds_actividades_aux->distinct()->get();
+        */
+
+        $hestatus=ProspectoHEstatuse::select('c.id as cliente','p.razon', 
+		DB::raw('concat(prospecto_h_estatuses.estatus_id,"-",prospecto_h_estatuses.estatus) as estatus_historico'),
+		'c.updated_at as ultima_actualizacion','u.name as usuario','stc.name as estatus_actual',
+		'prospecto_h_estatuses.fecha as fecha_estatus')
+		/*,DB::raw('concat(e.nombre," ",e.ape_paterno," ",e.ape_materno) as colaborador'))*/
+        ->join('prospectos as c','c.id','prospecto_h_estatuses.prospecto_id')
+        //->join('empleados as e','e.id','c.empleado_id')
+        ->join('plantels as p','p.id','c.plantel_id')
+        ->join('st_prospectos as stc','stc.id','c.st_prospecto_id')
+        ->join('users as u','u.id','c.usu_mod_id')
+        ->where('prospecto_h_estatuses.prospecto_id','>',0)
+        ->where('c.updated_at','<=', $input['fecha_t'])
+        ->where('c.updated_at','>=', $input['fecha_f'])
+        ->whereIn('c.plantel_id', $input['plantel_f'])
+        ->orderBy('p.razon')
+        ->get();
+
+        //dd($hestatus->toArray());
+
+        return view('prospectos.reportes.prospectosSegmentadosR')
+            ->with('cambios', $hestatus)
+            ->with('cambios_estatus', json_encode($hestatus));
+    }
 }
 
 	
