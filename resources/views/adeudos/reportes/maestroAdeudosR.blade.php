@@ -130,6 +130,8 @@
                 <th>Plantel</th>
                 <th>Cliente Id</th>
                 <th>Cliente</th>
+                <th>Email</th>
+                <th>Tel. Fijo</th>
 		        <th>Seccion</th>
                 <th>Matricula</th>
                 <th>Turno</th>
@@ -180,6 +182,7 @@
             <td>{{$detalle['razon']}}</td>
             <td>{{$detalle['id']}}</td>
             <td>{{ $detalle['nombre'] }} {{ $detalle['nombre2'] }} {{ $detalle['ape_paterno'] }} {{ $detalle['ape_materno'] }}</td>
+            <td> {{$detalle['mail']}} </td><td> {{$detalle['tel_fijo']}} </td>
             <td> {{$detalle['seccion']}} </td>
             <td>{{ $detalle['matricula'] }}</td>
             <td>{{ $detalle['turno'] }}</td>

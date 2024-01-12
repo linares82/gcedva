@@ -2916,6 +2916,8 @@ class AdeudosController extends Controller
                     'c.ape_paterno',
                     'c.ape_materno',
                     'c.matricula',
+                    'c.mail',
+                    'c.tel_fijo',
                     'adeudos.pagado_bnd',
                     'adeudos.monto as adeudo_planeado',
                     DB::raw('0 as adeudo_planeado_calculado'),

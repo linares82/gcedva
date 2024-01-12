@@ -12,6 +12,7 @@ use App\Adeudo;
 use App\BsBaja;
 use App\Cliente;
 use App\Plantel;
+use App\Empleado;
 use App\StCliente;
 use Carbon\Carbon;
 use File as Archi;
@@ -598,7 +599,10 @@ class HistoriaClientesController extends Controller
 
 	public function bajasSegementado()
 	{
-		$plantels = Plantel::pluck('razon', 'id');
+		$planteles_activos=Empleado::where('user_id', Auth::user()->id)->first()->plantels()->pluck('id');
+		//dd($planteles_activos);
+		$plantels = Plantel::whereIn('id', $planteles_activos)->pluck('razon', 'id');
+		//dd($plantels);
 		
 		return view('historiaClientes.reportes.bajasSegmentado', compact('plantels'))
 			->with('list', Cliente::getListFromAllRelationApps());;
@@ -633,7 +637,8 @@ class HistoriaClientesController extends Controller
 			'c.tel_fijo',
 			'historia_clientes.reactivado',
 			'historia_clientes.fec_reactivado',
-			'historia_clientes.fec_autorizacion'
+			'historia_clientes.fec_autorizacion',
+			DB::raw('(select monto from adeudos as a where a.cliente_id=c.id and a.deleted_at is null and pagado_bnd=0 order by fecha_pago asc limit 1) as adeudo_pendiente')
 		)
 			->join('clientes as c', 'c.id', '=', 'historia_clientes.cliente_id')
 			->join('estados as est', 'est.id', 'c.estado_id')

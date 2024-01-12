@@ -79,6 +79,7 @@
                 <th><strong>Descripcion</strong></th>
                 <th><strong>Fecha</strong></th>
                 <th><strong>Seccion</strong></th>
+                <th><strong>Adeudo Pendiente</strong></th>
             </thead>
             <tbody>
                 @foreach($registros as $registro)
@@ -90,6 +91,8 @@
                     <td> {{$registro->descripcion}}</td>
                     <td> {{$registro->fecha}}</td>
                     <td>{{$registro->seccion}}</td>
+                    <td>{{$registro->adeudo_pendiente}}</td>
+                    
                 </tr>
                 @endforeach
                 <div id="wdr-component"></div>
