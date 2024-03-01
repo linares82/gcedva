@@ -1382,7 +1382,7 @@
 
                     </div>
                     @permission('clientes.todos_docs_entegados')
-                    <div class="form-group col-md-6 @if($errors->has('bnd_doc_oblig_entregados')) has-error @endif">
+                    <div class="form-group col-md-4 @if($errors->has('bnd_doc_oblig_entregados')) has-error @endif">
                         <label for="bnd_doc_oblig_entregados-field">Todos los documentos entregados: @if(isset($cliente->bnd_doc_oblig_entregados) and $cliente->bnd_doc_oblig_entregados==1) SI @else NO @endif</label>
                         
                         {!! Form::select("bnd_doc_oblig_entregados", array(0=>'No', 1=>"Si"), null, array("class" => "form-control select_seguridad", "id" => "bnd_doc_oblig_entregados-field", 'style'=>'width:100%')) !!}
@@ -1391,6 +1391,13 @@
                         <span class="help-block">{{ $errors->first("bnd_doc_oblig_entregados") }}</span>
                         @endif
                     </div>
+                    <div class="form-group col-md-8 @if($errors->has('obs_docs')) has-error @endif">
+                            <label for="obs_docs-field">Observaciones Documentos</label>
+                            {!! Form::text("obs_docs", null, array("class" => "form-control input-sm", "id" => "obs_docs-field")) !!}
+                            @if($errors->has("obs_docs"))
+                            <span class="help-block">{{ $errors->first("obs_docs") }}</span>
+                            @endif
+                        </div>
                     @endpermission
                     <div class="row"></div>
 

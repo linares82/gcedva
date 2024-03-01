@@ -1060,7 +1060,7 @@ class ProspectosController extends Controller {
         $ds_actividades = $ds_actividades_aux->distinct()->get();
         */
 
-        $hestatus=ProspectoHEstatuse::select('c.id as cliente','p.razon', 
+        $hestatus=ProspectoHEstatuse::select('c.id as cliente', 'c.id as cliente_id','p.razon', 
 		DB::raw('concat(prospecto_h_estatuses.estatus_id,"-",prospecto_h_estatuses.estatus) as estatus_historico'),
 		'c.updated_at as ultima_actualizacion','u.name as usuario','stc.name as estatus_actual',
 		'prospecto_h_estatuses.fecha as fecha_estatus')

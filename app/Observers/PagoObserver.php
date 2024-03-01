@@ -82,7 +82,7 @@ class PagoObserver
                 $cajaLn->caja_concepto_id==24 or 
                 $cajaLn->caja_concepto_id==25){*/
                 if($cajaLn->cajaConcepto->bnd_genera_matricula==1){
-                    if (($grado->seccion != "" or !is_null($grado->seccion)) and ($cliente->matricula == "" or $cliente->matricula == " ")) {
+                    if (($grado->seccion != "" or !is_null($grado->seccion)) and ($cliente->matricula == "" or $cliente->matricula == " " or is_null($cliente->matricula))) {
                         $consecutivo = ConsecutivoMatricula::where('plantel_id', $combinacion->plantel_id)
                             ->where('anio', $fecha->year)
                             ->where('mes', $fecha->month)

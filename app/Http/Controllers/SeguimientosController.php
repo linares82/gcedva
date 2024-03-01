@@ -633,6 +633,7 @@ class SeguimientosController extends Controller
             ->join('clientes as c', 'c.id', '=', 'has.cliente_id')
             ->join('medios as m', 'm.id', '=', 'c.medio_id')
             ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
+            ->whereNotIn('e.st_empleado_id', array(2,3))
             ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
             ->leftJoin('historia_clientes as hc','hc.cliente_id','c.id')
             //->where('has.asunto', '=', 'Cambio estatus ')

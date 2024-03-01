@@ -221,8 +221,14 @@ class MueblesController extends Controller
 		foreach($datos['muebles'] as $mueble){
 			array_push($muebles_actuales,$mueble['id']);
 		}
-		Mueble::whereIn('id', $muebles_actuales)
+		/*Mueble::whereIn('id', $muebles_actuales)
 		->update(['empleado_id'=>$destino]);
+		*/
+		$consulta=Mueble::whereIn('id', $muebles_actuales)->get();
+		foreach($consulta as $m){
+			$m->empleado_id=$destino;
+			$m->save();
+		}
 		return json_encode(array('destino'=>$destino));
 		//$responsables=Empleado::select('id', DB::raw('concat(ape_paterno, " ",ape_materno, " ",nombre) as nombre_completo'))->pluck('nombre_completo', 'id');
 		//return view('muebles.transferenciaResponsable', compact('responsables'));

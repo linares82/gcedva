@@ -183,7 +183,7 @@ class ConciliacionAutomatica extends Command
 
             fclose($fp);
 
-            Storage::disk('conciliaciones')->move('sftp//'.$archivo, 'sftp//'.$cuenta_p."//".$archivo);
+            Storage::disk('conciliaciones')->move('sftp//'.$archivo, 'sftp//'.$cuenta_p."//".date('YmdHis').$archivo);
 	    //Storage::move($directorio_origen.'//'.$archivo, $directorio_destino.'//'.$cuenta_p."//".$archivo);
 	    //Storage::disk('conciliaciones')->path('sftp//'.$archivo)
             $this->ejecutarConciliacion($cabecera->id);

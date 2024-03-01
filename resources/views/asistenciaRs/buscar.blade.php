@@ -84,6 +84,7 @@
                                 
                                     @if(optional($s->cliente)->st_cliente_id==25 or 
                                     optional($s->cliente)->st_cliente_id==26 or 
+                                    optional($s->cliente)->st_cliente_id==27 or 
                                     optional($s->cliente)->st_cliente_id==3 )                                    
                                         {!! Form::select("est_asistencia_id", $list["EstAsistencium"], $s->est_asistencia_id, array("class" => "select_seguridad1", "id" => "est_asistencia_id".$s->id."-field", "name" => "est_asistencia_id".$s->id."-field", 'disabled'=>true)) !!}    
                                     @elseif(optional($s->cliente)->bnd_doc_oblig_entregados == 0  and $param_bloqueoXdoc)
@@ -106,6 +107,7 @@
                                 
                                 @if(optional($s->cliente)->st_cliente_id==25 or 
                                     optional($s->cliente)->st_cliente_id==26 or 
+                                    optional($s->cliente)->st_cliente_id==27 or 
                                     optional($s->cliente)->st_cliente_id==3 )                                    
                                         
                                     @elseif(optional($s->cliente)->bnd_doc_oblig_entregados == 0 and $param_bloqueoXdoc)

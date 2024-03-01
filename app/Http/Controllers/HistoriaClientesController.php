@@ -615,6 +615,7 @@ class HistoriaClientesController extends Controller
 
 		$historia_clientes = HistoriaCliente::select(
 			'c.id as cliente',
+			'c.id as id_cliente',
 			'c.nombre',
 			'c.nombre2',
 			'c.ape_paterno',

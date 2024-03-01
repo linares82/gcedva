@@ -592,7 +592,7 @@ class AsignacionAcademicasController extends Controller
 
 	public function actaExtraordinariosR(Request $request){
 		$datos=$request->all();
-		$encabezado=Hacademica::select('hacademicas.materium_id','m.name as materia','cali.fecha','m.codigo',
+		$encabezado=Hacademica::select('hacademicas.materium_id','m.bnd_tiene_nombre_oficial','m.nombre_oficial','m.name as materia','cali.fecha','m.codigo',
 		'l.periodo_escolar','l.ciclo_escolar','e.imagen','g.denominacion', 'g.name as grado','g.fec_rvoe',
 		'g.rvoe','g.cct','hacademicas.plantel_id','cali.lectivo_id','hacademicas.id as hacademica_id','l.fin')
 		->join('materia as m','m.id','=','hacademicas.materium_id')

@@ -1776,12 +1776,12 @@ class ClientesController extends Controller
 
         foreach ($clientes as $cliente) {
             $docsPorCliente = PivotDocCliente::where('cliente_id', $cliente->id)
-            ->join('doc_alumnos as da','da.id','pivot_doc_clientes.doc_alumno_id')
-            ->where('da.doc_obligatorio', 1)
-            ->select('doc_alumno_id','da.name', 'doc_entregado', 'archivo')
-            //->whereNull('archivo')
-            //->where('doc_entregado', '<>', 1)
-            ->get();
+                ->join('doc_alumnos as da', 'da.id', 'pivot_doc_clientes.doc_alumno_id')
+                ->where('da.doc_obligatorio', 1)
+                ->select('doc_alumno_id', 'da.name', 'doc_entregado', 'archivo')
+                //->whereNull('archivo')
+                //->where('doc_entregado', '<>', 1)
+                ->get();
             //dd($docsPorCliente->toArray());
             if (!is_null($docsPorCliente)) {
                 $array_docsPorCliente = array();
@@ -1797,16 +1797,16 @@ class ClientesController extends Controller
                     foreach ($docsPorCliente as $do) {
 
                         //if (!in_array($do->id, $array_docsPorCliente)) {
-                            //dd($do);
-                            array_push($documentos_faltantes, array(
-                                'cliente' => $cliente->id,
-                                'nombre' => $cliente->nombre . ' ' . $cliente->nombre2 . ' ' . $cliente->ape_paterno . ' ' . $cliente->ape_materno,
-                                'matricula' => $cliente->matricula,
-                                'bnd_doc_oblig_entregados' => $cliente->bnd_doc_oblig_entregados,
-                                'documento' => $do->name,
-                                'estatus' => $cliente->estatus,
-                                'obligatorio_entregado'=>$do->doc_entregado==1 ? "Si" : "No"
-                            ));
+                        //dd($do);
+                        array_push($documentos_faltantes, array(
+                            'cliente' => $cliente->id,
+                            'nombre' => $cliente->nombre . ' ' . $cliente->nombre2 . ' ' . $cliente->ape_paterno . ' ' . $cliente->ape_materno,
+                            'matricula' => $cliente->matricula,
+                            'bnd_doc_oblig_entregados' => $cliente->bnd_doc_oblig_entregados,
+                            'documento' => $do->name,
+                            'estatus' => $cliente->estatus,
+                            'obligatorio_entregado' => $do->doc_entregado == 1 ? "Si" : "No"
+                        ));
                         //}
                     }
                 }
@@ -2379,14 +2379,14 @@ class ClientesController extends Controller
         $registros = array();
         foreach ($detalle->toArray() as $d) {
             //dd($d['cliente_id']);
-            $adeudos12325=Adeudo::where('cliente_id', $d['cliente_id'])
-            ->where('pagado_bnd', 1)
-            ->whereIn('caja_concepto_id', array(1,23,25))->get();
-            $d['12325']="";
-            $d['fecha_caja_12325']="";
-            foreach($adeudos12325 as $adeudo){
-                $d['12325']=$adeudo->cajaConcepto->name;
-                $d['fecha_caja_12325']=$adeudo->caja->fecha;
+            $adeudos12325 = Adeudo::where('cliente_id', $d['cliente_id'])
+                ->where('pagado_bnd', 1)
+                ->whereIn('caja_concepto_id', array(1, 23, 25))->get();
+            $d['12325'] = "";
+            $d['fecha_caja_12325'] = "";
+            foreach ($adeudos12325 as $adeudo) {
+                $d['12325'] = $adeudo->cajaConcepto->name;
+                $d['fecha_caja_12325'] = $adeudo->caja->fecha;
                 break;
             }
 
@@ -2970,11 +2970,14 @@ class ClientesController extends Controller
         $dentro3Meses = false;
 
         if (!is_null($cliente->matricula) or $cliente->matricula <> "") {
+            $diaActual = Carbon::createFromFormat('Y-m-d', date('Y-m-d'))->day;
             $mesActual = Carbon::createFromFormat('Y-m-d', date('Y-m-d'))->month;
             $anioActual = Carbon::createFromFormat('Y-m-d', date('Y-m-d'))->year;
 
             $mesMatricula = intval(substr($cliente->matricula, 0, 2));
             $anioMatricula = intval("20" . substr($cliente->matricula, 2, 2));
+
+            
 
             if (
                 $anioActual == $anioMatricula and
@@ -2985,15 +2988,15 @@ class ClientesController extends Controller
             } elseif (
                 $anioActual == $anioMatricula and
                 $mesActual > $mesMatricula and
-                ($mesActual - $mesMatricula) <= 3
+                ($mesActual - $mesMatricula) <= 6
             ) {
 
                 $dentro3Meses = true;
             } elseif (
                 $anioActual > $anioMatricula and
-                $mesActual < $mesMatricula and $mesActual <= 3 and
+                $mesActual < $mesMatricula and $mesActual <= 6 and
                 ($anioActual - $anioMatricula) == 1 and
-                ($mesActual - $mesMatricula) * -1 >= 3
+                ($mesActual - $mesMatricula) * -1 >= 6
             ) {
                 //dd("a_actual:".$anioActual."-a_matricula:".$anioMatricula."-m_actual:".$mesActual."-m_matricula".$mesMatricula);
                 $dentro3Meses = true;
@@ -3001,15 +3004,36 @@ class ClientesController extends Controller
                 $anioActual > $anioMatricula and
                 $mesActual > $mesMatricula and
                 ($anioActual - $anioMatricula) == 1 and
-                ($mesActual - $mesMatricula) >= 3
+                ($mesActual - $mesMatricula) >= 6
             ) {
-
                 $dentro3Meses = true;
+            }elseif (
+                $anioActual > $anioMatricula and
+                $mesActual > $mesMatricula and
+                ($anioActual - $anioMatricula) == 1 and
+                ($mesActual - $mesMatricula) == 7
+            ) {
+                if($diaActual>=1 and $diaActual<=11){
+                    $dentro3Meses = true;
+                }
+            }elseif (
+                $anioActual > $anioMatricula and
+                $mesActual < $mesMatricula and $mesActual <= 7 and
+                ($anioActual - $anioMatricula) == 1 and
+                ($mesActual - $mesMatricula) * -1 <= 7
+            ) {
+                //dd("a_actual:".$anioActual."-a_matricula:".$anioMatricula."-m_actual:".$mesActual."-m_matricula".$mesMatricula);
+                if($diaActual>=1 and $diaActual<=11){
+                    $dentro3Meses = true;
+                }
             }
         } else {
             $dentro3Meses = true;
         }
-
+        /*if($cliente->id==66493){
+            dd("a_actual:".$anioActual."-a_matricula:".$anioMatricula."-m_actual:".$mesActual."-m_matricula".$mesMatricula);
+        }*/
+        
         return $dentro3Meses;
     }
 }

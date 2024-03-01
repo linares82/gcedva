@@ -168,7 +168,13 @@
             <table>
                 <tbody>
                     <tr>
-                        <td>Asignatura</td><td colspan='3'>{{ $encabezado->materia }}</td>
+                        <td>Asignatura</td><td colspan='3'>
+                            @if($encabezado->bnd_tiene_nombre_oficial==1)
+                            {{ $encabezado->nombre_oficial }}
+                            @else
+                            {{ $encabezado->materia }}
+                            @endif
+                        </td>
                         <td>F. de Extraordinario</td>
                         <td colspan='3'>
                             @php

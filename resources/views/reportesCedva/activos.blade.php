@@ -113,7 +113,7 @@
             <h4>Activos</h4>
             <thead>
                 <th>No.</th><th>Plantel</th><th>Ciclo</th><th>Id</th><th>Matricula</th><th>Seccion</th>
-                <th>A. Paterno</th><th>A. Materno</th><th>Nombre(s)</th><th>Estatus C.</th>
+                <th>A. Paterno</th><th>A. Materno</th><th>Nombre(s)</th><th>Tel. Fijo</th><th>Celular</th><th>Estatus C.</th>
                 <th>Estatus S.</th><th>Turno</th>
                 <th>F. Planeada</th><th>Monto Planeado</th><th>Concepto</th><th>Ticket</th>
                 <th>F. Caja</th><th>Total Caja</th><th>Usuario Pago</th><th>Pagado</th><th>Total Adeudo</th>
@@ -194,6 +194,7 @@
           <tr>
             <td>{{ ++$csc }}</td><td>{{ $registro[0]['razon'] }}</td><td>{{ $registro[0]['ciclo'] }}</td><td>{{ $registro[0]['cliente'] }}</td><td>{{ $registro[0]['matricula'] }}</td><td>{{ $registro[0]['seccion'] }}</td>
             <td>{{ $registro[0]['ape_paterno'] }} </td><td>{{ $registro[0]['ape_materno'] }}</td><td>{{ $registro[0]['nombre'] }} {{ $registro[0]['nombre2'] }}</td>
+            <td>{{ $registro[0]['tel_fijo'] }}</td><td>{{ $registro[0]['tel_cel'] }}</td>
             <td>{{ $registro[0]['estatus_cliente'] }}</td><td>{{ $registro[0]['estatus_seguimiento'] }}</td>
             <td>{{ $registro[0]['turno'] }}</td>
             <td>{{ $registro[0]['fecha_pago'] }}</td><td>{{ number_format($registro[0]['monto'],2) }}</td>

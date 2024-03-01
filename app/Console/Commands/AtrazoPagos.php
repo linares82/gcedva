@@ -72,7 +72,7 @@ class AtrazoPagos extends Command
                 ->where('cc.turno_id', '>', 0)
             //    ->whereIn('c.id', array(71605))
                 ->whereColumn('adeudos.combinacion_cliente_id', 'cc.id')
-                ->where('caj_con.bnd_mensualidad', 1)
+                //->where('caj_con.bnd_mensualidad', 1)
                 ->where('fecha_pago', '<', $fechaActual)
                 ->where('pagado_bnd', 0)
                 ->whereNotIn('c.plantel_id', array(54))
@@ -100,7 +100,7 @@ class AtrazoPagos extends Command
                     ->get();
                 //dd(count($eventos));
                 if (count($eventos) == 0) {
-                    if ($registro->adeudos_cantidad == 0) {
+                    if ($registro->adeudos_cantidad == 1) {
                         $this->bajaBs($registro->cliente_id);
                         /*$cliente = Cliente::find($registro->cliente_id);
                         $cliente->st_cliente_id = 25;
