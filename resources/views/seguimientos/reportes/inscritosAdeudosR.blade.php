@@ -69,7 +69,8 @@
                         <td>{{$registro['fecha_real_pago']}}</td>
                         <td style="align:right;">{{number_format($registro['total'],2)}}</td>
                         <?php
-                        $evento=\App\HistoriaCliente::where('cliente_id',$registro['cliente_id'])
+                        $evento=\App\HistoriaCliente::select('descripcion','fecha','fec_vigencia')->where('cliente_id',$registro['cliente_id'])
+                                                     ->where('cliente_id',$registro['cliente_id'])
                                                      ->where('evento_cliente_id',6)
                                                      ->whereDate('fec_vigencia','>=',$data['fecha_f'])
                                                      ->whereDate('fec_vigencia','<=',$data['fecha_t'])

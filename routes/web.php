@@ -8537,6 +8537,22 @@ Route::post(
     )
 )->middleware('auth');
 Route::get(
+    '/adeudos/ingresosTotales',
+    array(
+        'as' => 'adeudos.ingresosTotales',
+        'middleware' => 'permission:adeudos.ingresosTotales',
+        'uses' => 'AdeudosController@ingresosTotales'
+    )
+)->middleware('auth');
+Route::post(
+    '/adeudos/ingresosTotalesR',
+    array(
+        'as' => 'adeudos.ingresosTotalesR',
+        'middleware' => 'permission:adeudos.ingresosTotales',
+        'uses' => 'AdeudosController@ingresosTotalesR',
+    )
+)->middleware('auth');
+Route::get(
     '/adeudos/maestroEjecutivo',
     array(
         'as' => 'adeudos.maestroEjecutivo',

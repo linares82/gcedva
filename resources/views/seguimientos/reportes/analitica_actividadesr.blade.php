@@ -40,6 +40,7 @@
                         Empleado: element.empleado,
                         IdCliente: element.cli,
                         Cliente: element.cliente,
+                        Matricula: element.matricula,
                         Actividad: element.tarea,
                         Fecha: element.fecha,
                         Estatus: element.detalle,

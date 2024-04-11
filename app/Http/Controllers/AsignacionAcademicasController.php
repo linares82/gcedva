@@ -93,6 +93,7 @@ class AsignacionAcademicasController extends Controller
 	{
 		$asignacionAcademica = $asignacionAcademica->find($id);
 
+		
 		return view('asignacionAcademicas.edit', compact('asignacionAcademica'))
 			->with('list', AsignacionAcademica::getListFromAllRelationApps())
 			->with('list1', Horario::getListFromAllRelationApps());

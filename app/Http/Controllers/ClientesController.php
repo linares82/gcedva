@@ -36,6 +36,7 @@ use App\Seguimiento;
 use App\AvisosInicio;
 use App\CajaConcepto;
 use App\Especialidad;
+use App\Rules\IsCurp;
 use App\AlumnosActivo;
 use App\Ccuestionario;
 use App\StSeguimiento;
@@ -47,6 +48,7 @@ use App\PreguntaCliente;
 use App\IncidenceCliente;
 use App\CcuestionarioDato;
 use App\CombinacionCliente;
+use App\Helpers\ValidaCurp;
 use Illuminate\Support\Str;
 use App\Http\Requests\Carga;
 use Illuminate\Http\Request;
@@ -204,6 +206,7 @@ class ClientesController extends Controller
         //dd(Municipio::get());
         //$p = Auth::user()->can('IfiltroEmpleadosXPlantel');
         //if ($p) {
+        
         $e = Empleado::where('user_id', '=', Auth::user()->id)->first();
         $planteles = array();
         foreach ($e->plantels as $p) {
@@ -245,8 +248,12 @@ class ClientesController extends Controller
     public function store(createCliente $request)
     {
         $id = 0;
+        
         $input = $request->all();
         //dd($input);
+        //$validaCurp=new ValidaCurp();
+        //$validaCurp->validate_curp($input['curp']);
+        //dd($validaCurp);
         //$empleado=Empleado::find($request->input('empleado_id'));
         //$input['plantelplantel_id']=$empleado->plantel->id;
         $input['usu_alta_id'] = Auth::user()->id;
@@ -2335,6 +2342,8 @@ class ClientesController extends Controller
             'clientes.ape_materno',
             'clientes.nombre',
             'clientes.nombre2',
+            'clientes.tel_fijo',
+            'clientes.tel_cel',
             'stc.name as st_cliente',
             'sts.name as st_seguimiento',
             'g.seccion',

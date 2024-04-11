@@ -4374,4 +4374,55 @@ class AdeudosController extends Controller
         //dd($resumen);
         return view('adeudos.reportes.globalFinancieroR', compact('resumen', 'tabla'));
     }
+
+    public function ingresosTotales()
+    {
+        if (Auth::user()->can('adeudos.maestroXPlantel')) {
+            $empleado = Empleado::where('user_id', Auth::user()->id)->first();
+            $planteles = array();
+            foreach ($empleado->plantels as $p) {
+                //dd($p->id);
+                array_push($planteles, $p->id);
+            }
+
+            $planteles = Plantel::whereIn('id', $planteles)->pluck('razon', 'id');
+        } else {
+            $planteles = Plantel::pluck('razon', 'id');
+        }
+
+        $conceptos = CajaConcepto::pluck('name', 'id');
+
+        //dd($stCajas);
+        return view('adeudos.reportes.ingresosTotales', compact('planteles', 'conceptos'));
+    }
+
+    public function ingresosTotalesR(Request $request)
+    {
+        $datos = $request->all();
+        //dd($datos);
+        $hoy = Carbon::createFromFormat('Y-m-d', Date('Y-m-d'));
+        $lineas_procesadas = array();
+        $lineas_detalle = array();
+        $planteles=Plantel::where('id','>',1)->get();
+        
+        $totales=Pago::select('p.razon','c.id','c.nombre','c.nombre2', 'c.ape_paterno', 'c.ape_materno',
+        'caj.consecutivo','pagos.created_at','pagos.fecha','pagos.monto', 'fm.name as forma_pago')
+        ->join('cajas as caj', 'caj.id','pagos.caja_id')
+        ->join('forma_pagos as fm', 'fm.id', 'caj.forma_pago_id')
+        ->join('plantels as p','p.id','caj.plantel_id')
+        //->join('caja_lns as cln','cln.caja_id','caj.id' )
+        ->join('clientes as c','c.id','caj.cliente_id')
+        ->where('pagos.fecha','>=', $datos['fecha_f'])
+        ->where('pagos.fecha','<=', $datos['fecha_t'])
+        ->where('bnd_pagado',1)
+        ->whereIn('caj.st_caja_id',array(1,3))
+        ->orderBy('p.razon')
+        ->orderBy('pagos.fecha')
+        ->get();
+        //dd($totales->toArray());
+
+
+        return view('adeudos.reportes.ingresosTotalesR', compact('totales'));
+    }
+
 }

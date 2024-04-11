@@ -97,6 +97,8 @@ class CajaObserver
             if($inscripcions->isEmpty() and $this->caja->cliente->st_cliente_id == 1 and $seguimiento->st_seguimiento_id ==5){
                 $cliente->st_cliente_id = 5;
                 $cliente->save();    
+                $seguimiento->st_seguimiento_id = 2;
+                $seguimiento->save();
             }elseif ($inscripcions->isEmpty() and $mensualidades==0 and $this->caja->cliente->st_cliente_id <> 3) {
             //if ($inscripcions->isEmpty()) {
                 $cliente->st_cliente_id = 22;
@@ -115,7 +117,56 @@ class CajaObserver
                 ->whereNull('deleted_at')
                 ->whereDate('fecha_pago','<=', $fechaActual)
                 ->count();
-                if($this->caja->cliente->st_cliente_id == 27){
+                if ($adeudos == 0 and $cliente->st_cliente<>20){
+                    if ($adeudos == 0) {
+                        $cliente->st_cliente_id = 4;
+                        $cliente->save();
+
+                        $seguimiento->st_seguimiento_id = 2;
+                        $seguimiento->save();
+
+                        $param = Param::where('llave', 'apiVersion_bSpace')->first();
+                        $bs_activo = Param::where('llave', 'api_brightSpace_activa')->first();
+                        if ($bs_activo->valor == 1) {
+                            try {
+                                $apiBs = new UsoApi();
+
+                                //dd($datos);
+                                $resultado = $apiBs->doValence2('GET', '/d2l/api/lp/' . $param->valor . '/users/?orgDefinedId=' . $cliente->matricula);
+                                //Muestra resultado
+                                $r = $resultado[0];
+                                $datos = ['isActive' => True];
+                                if (isset($r['UserId'])) {
+                                    $resultado2 = $apiBs->doValence2('PUT', '/d2l/api/lp/' . $param->valor . '/users/' . $r['UserId'] . '/activation', $datos);
+                                    $bsBaja = BsBaja::where('cliente_id', $cliente->id)
+                                        ->where('bnd_baja', 1)
+                                        ->where('bnd_reactivar', '<>', 1)
+                                        ->first();
+                                    if (!is_null($bsBaja)) {
+                                        if (isset($resultado2['IsActive']) and $resultado2['IsActive'] and !is_null($bsBaja)) {
+                                            $input['cliente_id'] = $cliente->id;
+                                            $input['fecha_reactivar'] = Date('Y-m-d');
+                                            $input['bnd_reactivar'] = 1;
+                                            $input['usu_mod_id'] = Auth::user()->id;
+                                            $bsBaja->update($input);
+                                        } else {
+                                            $input['cliente_id'] = $cliente->id;
+                                            $input['fecha_reactivar'] = Date('Y-m-d');
+                                            $input['bnd_reactivar'] = 0;
+                                            $input['usu_mod_id'] = Auth::user()->id;
+                                            $bsBaja->update($input);
+                                            
+                                        }
+                                    }
+                                }
+                            } catch (Exception $e) {
+                                $this->enviarMailFallaBs($e->getMessage(), 'Error al activar cliente en BS desde pago de caja');
+                                Log::info("cliente no encontrado en Brigth Space u otro error: " . $cliente->matricula . " - " . $e->getMessage());
+                                //return false;
+                            }
+                        }
+                    }
+                }elseif($this->caja->cliente->st_cliente_id == 27){
                     if ($mensualidades == 3) {
                         $cliente->st_cliente_id = 26;
                         $cliente->save();
@@ -313,7 +364,9 @@ class CajaObserver
                             }
                         }
                     }
-                }/*else {
+                }
+                
+                /*else {
                     
                     $cliente->st_cliente_id = 4;
                     $cliente->save();
@@ -375,7 +428,7 @@ class CajaObserver
             //->get();
             //dd($adeudos->toArray());
             //Log::info('Adeudos:' . $adeudos);
-            if ($adeudos == 0) {
+            if ($adeudos == 0 and $cliente->st_cliente<>20) {
                 if ($cliente->st_cliente_id <> 3) {
                     $cliente->st_cliente_id = 20;
                     $cliente->save();

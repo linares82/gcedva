@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Rules\isCurp;
 
 class createCliente extends FormRequest
 {
@@ -29,6 +30,7 @@ class createCliente extends FormRequest
             'nombre' => 'required',
             'ape_paterno' => 'required',
             'ape_materno' => 'required',
+            //'curp'=>['required',new IsCurp],
             //'fec_registro',
             'tel_fijo' => 'required',
             'tel_cel' => 'required',

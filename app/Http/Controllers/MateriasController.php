@@ -176,13 +176,13 @@ class MateriasController extends Controller
                     if ($r1->id == $materia) {
                         array_push($final, array(
                             'id' => $r1->id,
-                            'name' => $r1->name,
+                            'name' => $r1->id."-".$r1->name,
                             'selectec' => 'Selected'
                         ));
                     } else {
                         array_push($final, array(
                             'id' => $r1->id,
-                            'name' => $r1->name,
+                            'name' => $r1->id."-".$r1->name,
                             'selectec' => ''
                         ));
                     }

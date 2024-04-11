@@ -71,7 +71,7 @@
           
           <thead>
               <th>No.</th><th>Plantel</th><th>Matricula</th><th>Id</th>
-              <th>Nombre</th><th>E. Cliente</th><th>E. Seguimiento</th><th>Seccion</th><th>Turno</th><th>Empleado</th>
+              <th>Nombre</th><th>Tel. Celular</th><th>E. Cliente</th><th>E. Seguimiento</th><th>Seccion</th><th>Turno</th><th>Empleado</th>
               <th>Inscripción/S. Escolares</th><th>Fecha Caja</th><th>Trámites</th><th>Fecha Pago Tramites</th>
               <th>P. Mensualidad</th><th>Fecha Pago</th><th>Ultima Tarea Seguimiento</th><th>Doc. Oblig. Entregados</th><th>Documentos</th>
               <th>Prospecto/Creado Por</th>
@@ -88,7 +88,7 @@
               <td>{{ ++$i }}</td>
               
               <td>{{ $rs['razon'] }}</td><td>{{ $rs['matricula'] }}</td><td>{{ $rs['cliente_id'] }}</td><td>{{ $rs['ape_paterno'] }}
-              {{ $rs['ape_materno'] }} {{ $rs['nombre'] }} {{ $rs['nombre2'] }}</td><td>{{ $rs['st_cliente'] }}</td>
+              {{ $rs['ape_materno'] }} {{ $rs['nombre'] }} {{ $rs['nombre2'] }}</td><td>{{$rs['tel_cel']}}</td><td>{{ $rs['st_cliente'] }}</td>
               <td>{{ $rs['st_seguimiento'] }}</td><td>{{ $rs['seccion'] }}</td><td>{{$rs['turno']}}</td><td>{{ $rs['empleado_nombre'] }}</td>
               <td>
                 {{$rs['12325']}}

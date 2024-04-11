@@ -214,7 +214,7 @@
                     @if(isset($caja))
                     
                     
-                        @if($caja->st_caja_id==1 and $cliente->st_cliente_id==4)
+                        @if($caja->st_caja_id==1 and ($cliente->st_cliente_id==4 or $cliente->st_cliente_id==22))
                         @permission('cajas.repetirActivarBs')
                         <div class="form-group col-md-4">
                             <div class='text-center'>

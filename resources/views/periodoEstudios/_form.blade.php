@@ -109,7 +109,7 @@
                         <tbody>
                             @foreach($materias as $m)
                             <tr>
-                                <td>{{ $m->id }}</td>
+                                <td>{{ $m->id }} - {{ $m->materia_id }}</td>
                                 <td>{{ $m->codigo }}</td>
                                 <td>{{$m->materia}}</td>
                                 <td><a href="{{route('periodoEstudios.destroyMateria', $m->id)}}" class="btn btn-xs btn-danger">Eliminar</a></td>

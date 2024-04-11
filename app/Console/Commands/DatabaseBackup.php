@@ -53,7 +53,7 @@ class DatabaseBackup extends Command
     # Generamos el comando con mysqldump para exportar los datos
     //dd($host);
     $command = sprintf(
-        'mysqldump --host="%s" --user="%s" gcedva'
+        'mysqldump --host="%s" --user="%s" '
         , $host, $username
         );
     if (!empty($password)) {

@@ -13,9 +13,9 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'e69f7f6ee287b969198c3c9d6777bd38' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/bootstrap.php',
         'f598d06aa772fa33d905e87be6398fb1' => __DIR__ . '/..' . '/symfony/polyfill-intl-idn/bootstrap.php',
         '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
-        '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         '0d59ee240a4cd96ddbb4ff164fccea4d' => __DIR__ . '/..' . '/symfony/polyfill-php73/bootstrap.php',
         '667aeda72477189d0494fecd327c3641' => __DIR__ . '/..' . '/symfony/var-dumper/Resources/functions/dump.php',
+        '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
         'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
         'c964ee0ededf28c96ebd9db5099ef910' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
@@ -128,6 +128,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
             'PhpOption\\' => 10,
             'PhpOffice\\PhpSpreadsheet\\' => 25,
             'PhpImap\\' => 8,
+            'PHPStan\\PhpDocParser\\' => 21,
         ),
         'O' => 
         array (
@@ -174,6 +175,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
             'Http\\Promise\\' => 13,
             'Http\\Message\\MultipartStream\\' => 29,
             'Http\\Message\\' => 13,
+            'Http\\Factory\\Guzzle\\' => 20,
             'Http\\Discovery\\' => 15,
             'Http\\Client\\Common\\' => 19,
             'Http\\Client\\' => 12,
@@ -215,6 +217,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'C' => 
         array (
             'Cron\\' => 5,
+            'Composer\\Semver\\' => 16,
             'Complex\\' => 8,
             'Collective\\Html\\' => 16,
             'Clue\\StreamFilter\\' => 18,
@@ -471,6 +474,10 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         array (
             0 => __DIR__ . '/..' . '/php-imap/php-imap/src/PhpImap',
         ),
+        'PHPStan\\PhpDocParser\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpstan/phpdoc-parser/src',
+        ),
         'Opis\\Closure\\' => 
         array (
             0 => __DIR__ . '/..' . '/opis/closure/src',
@@ -559,6 +566,10 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         array (
             0 => __DIR__ . '/..' . '/php-http/message/src',
             1 => __DIR__ . '/..' . '/php-http/message-factory/src',
+        ),
+        'Http\\Factory\\Guzzle\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/http-interop/http-factory-guzzle/src',
         ),
         'Http\\Discovery\\' => 
         array (
@@ -650,7 +661,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         ),
         'Doctrine\\Common\\' => 
         array (
-            0 => __DIR__ . '/..' . '/doctrine/event-manager/lib/Doctrine/Common',
+            0 => __DIR__ . '/..' . '/doctrine/event-manager/src',
         ),
         'DeepCopy\\' => 
         array (
@@ -663,6 +674,10 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'Cron\\' => 
         array (
             0 => __DIR__ . '/..' . '/dragonmantank/cron-expression/src/Cron',
+        ),
+        'Composer\\Semver\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/composer/semver/src',
         ),
         'Complex\\' => 
         array (
@@ -1274,7 +1289,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'CreatePreguntaClientesTable' => __DIR__ . '/../..' . '/database/migrations/2017_05_04_144933_create_pregunta_clientes_table.php',
         'CreatePreguntasTable' => __DIR__ . '/../..' . '/database/migrations/2017_04_18_144907_create_preguntas_table.php',
         'CreatePrioridadTicketsTable' => __DIR__ . '/../..' . '/database/migrations/2021_01_04_093200_create_prioridad_tickets_table.php',
-        'CreateProcesoActivoABajasTable' => __DIR__ . '/../..' . '/database/migrations/2024_02_27_144409_create_proceso_activo_a_bajas_table.php',
+        'CreateProcesoActivoABajasTable' => __DIR__ . '/../..' . '/database/migrations/2024_02_27_142605_create_proceso_activo_a_bajas_table.php',
         'CreatePromoPlanLnsTable' => __DIR__ . '/../..' . '/database/migrations/2019_01_23_142924_create_promo_plan_lns_table.php',
         'CreatePromocionsTable' => __DIR__ . '/../..' . '/database/migrations/2017_05_02_204052_create_promocions_table.php',
         'CreateProspectoAsignacionTareasTable' => __DIR__ . '/../..' . '/database/migrations/2022_10_18_113951_create_prospecto_asignacion_tareas_table.php',
@@ -1326,7 +1341,6 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'CreateSubotrosTable' => __DIR__ . '/../..' . '/database/migrations/2017_05_02_203951_create_subotros_table.php',
         'CreateSuccessMultipagosTable' => __DIR__ . '/../..' . '/database/migrations/2020_06_15_123838_create_success_multipagos_table.php',
         'CreateSueldosTable' => __DIR__ . '/../..' . '/database/migrations/2022_05_16_132137_create_sueldos_table.php',
-        'CreateTableProcesoActivoABajasTable' => __DIR__ . '/../..' . '/database/migrations/2024_02_27_142605_create_table_proceso_activo_a_bajas_table.php',
         'CreateTareasEmpresasTable' => __DIR__ . '/../..' . '/database/migrations/2019_02_01_145617_create_tareas_empresas_table.php',
         'CreateTareasTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_30_224257_create_tareas_table.php',
         'CreateTicketsTable' => __DIR__ . '/../..' . '/database/migrations/2021_01_04_093216_create_tickets_table.php',
@@ -1884,6 +1898,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'PharIo\\Version\\VersionConstraintParser' => __DIR__ . '/..' . '/phar-io/version/src/VersionConstraintParser.php',
         'PharIo\\Version\\VersionConstraintValue' => __DIR__ . '/..' . '/phar-io/version/src/VersionConstraintValue.php',
         'PharIo\\Version\\VersionNumber' => __DIR__ . '/..' . '/phar-io/version/src/VersionNumber.php',
+        'PhpToken' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/PhpToken.php',
         'PlanPagoLnReglaRecargo' => __DIR__ . '/../..' . '/database/migrations/2018_04_05_161625_plan_pago_ln_regla_recargo.php',
         'PlantelCursoTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_06_123740_plantel_curso_table.php',
         'PlantelDiplomadoTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_06_123801_plantel_diplomado_table.php',
@@ -1994,7 +2009,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'SebastianBergmann\\Timer\\RuntimeException' => __DIR__ . '/..' . '/phpunit/php-timer/src/RuntimeException.php',
         'SebastianBergmann\\Timer\\Timer' => __DIR__ . '/..' . '/phpunit/php-timer/src/Timer.php',
         'SebastianBergmann\\Version' => __DIR__ . '/..' . '/sebastian/version/src/Version.php',
-        'Stringable' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
+        'Stringable' => __DIR__ . '/..' . '/myclabs/php-enum/stubs/Stringable.php',
         'Text_Template' => __DIR__ . '/..' . '/phpunit/php-text-template/src/Template.php',
         'TheSeer\\Tokenizer\\Exception' => __DIR__ . '/..' . '/theseer/tokenizer/src/Exception.php',
         'TheSeer\\Tokenizer\\NamespaceUri' => __DIR__ . '/..' . '/theseer/tokenizer/src/NamespaceUri.php',

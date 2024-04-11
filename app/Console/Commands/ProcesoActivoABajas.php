@@ -82,7 +82,7 @@ class ProcesoActivoABajas extends Command
                     ->where('cc.nivel_id', '>', 0)
                     ->where('cc.grado_id', '>', 0)
                     ->where('cc.turno_id', '>', 0)
-                    ->whereIn('c.id', array(95103))
+                    //->whereIn('c.id', array(95103))
                     ->whereColumn('adeudos.combinacion_cliente_id', 'cc.id')
                     ->where('fecha_pago', '<', $fechaActual)
                     ->where('pagado_bnd', 0)

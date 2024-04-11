@@ -831,6 +831,7 @@ class ReportesCedvaController extends Controller
                     $linea_dinero['preinscrito'] = 0;
                     $linea_dinero['razon'] = "";
                     //$i=1;
+		    //dd($resultado2);
                     foreach ($resultado2 as $r) {
                         $registro = $r[0];
                         //dd($registro);
@@ -853,7 +854,8 @@ class ReportesCedvaController extends Controller
                             $linea_dinero['seccion'] = $registro['seccion'];
 
                             if (
-                                $registro['estatus_cliente_id'] == 25 or $registro['estatus_cliente_id'] == 26 or
+                                ($registro['estatus_cliente_id'] == 17 and $registro['pagado_bnd'] == 0) or 
+				                $registro['estatus_cliente_id'] == 25 or $registro['estatus_cliente_id'] == 26 or
                                 ($registro['estatus_cliente_id'] == 4 and $registro['estatus_seguimiento_id'] == 2) or
                                 ($registro['estatus_cliente_id'] == 20 and $registro['estatus_seguimiento_id'] == 7) or
                                 ($registro['estatus_cliente_id'] == 4 and $registro['estatus_seguimiento_id'] == 9)
@@ -893,11 +895,13 @@ class ReportesCedvaController extends Controller
                                 $linea_dinero['vigentes_sin_adeudos'] = $linea_dinero['vigentes_sin_adeudos'] + $registro['total_caja'];
                             }
                             if (( //$registro['estatus_cliente_id']==25 or $registro['estatus_cliente_id']==26 or
+				    ($registro['estatus_cliente_id'] == 17 and $registro['pagado_bnd'] == 0) or
                                     ($registro['estatus_cliente_id'] == 4 and $registro['estatus_seguimiento_id'] == 2) or
                                     ($registro['estatus_cliente_id'] == 20 and $registro['estatus_seguimiento_id'] == 7) or
                                     ($registro['estatus_cliente_id'] == 4 and $registro['estatus_seguimiento_id'] == 9)) and
                                 $registro['pagado_bnd'] == 0
                             ) {
+				//dd($registro);
                                 $linea['vigentes_con_1_adeudos'] = $linea['vigentes_con_1_adeudos'] + 1;
                                 $linea_dinero['vigentes_con_1_adeudos'] = $linea_dinero['vigentes_con_1_adeudos'] + $registro['monto'];
                             }

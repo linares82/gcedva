@@ -21,6 +21,7 @@
     "fideloper/proxy": "^4.0",
     "fruitcake/laravel-cors": "^2.0",
     "guzzlehttp/guzzle": "^6.5",
+    "http-interop/http-factory-guzzle": "^1.2",
     "intervention/image": "^2.5",
     "kim/activity": "^1.1",
     "laravel/framework": "5.8.*",
@@ -84,7 +85,8 @@
     "preferred-install": "dist",
     "sort-packages": true,
     "allow-plugins": {
-      "kylekatarnls/update-helper": true
+      "kylekatarnls/update-helper": true,
+      "php-http/discovery": true
     }
   }
 }

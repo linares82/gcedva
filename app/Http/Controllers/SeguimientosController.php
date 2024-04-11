@@ -623,6 +623,7 @@ class SeguimientosController extends Controller
                 DB::raw('concat(e.nombre," ",e.ape_paterno," ",e.ape_materno) as empleado'),
                 "c.id as cli",
                 DB::raw('concat(c.nombre," ",c.ape_paterno," ",c.ape_materno) as cliente'),
+                'c.matricula',
                 'has.tarea',
                 'has.fecha',
                 'has.detalle',

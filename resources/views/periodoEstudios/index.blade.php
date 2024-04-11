@@ -69,6 +69,7 @@
                             <div class="form-group especialidad col-md-4" >
                                 <label for="q_periodo_estudios.especialidad_id_lt">ESPECIALIDAD</label> 
                                     {!! Form::select("periodo_estudios.especialidad_id", $list["Especialidad"], "{{ @(Request::input('q')['periodo_estudios.especialidad_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[periodo_estudios.especialidad_id_lt]", "id"=>"q_periodo_estudios.especialidad_id_lt", "style"=>"width:100%;")) !!}
+                                    <div id='loading11' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                             </div>
                             <div class="form-group nivel col-md-4" >
                                 <label for="q_periodo_estudios.nivel_id_lt">NIVEL</label> 
