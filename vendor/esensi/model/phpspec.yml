@@ -1,5 +1,0 @@
-suites:
-    main:
-        namespace: "Esensi\\Model"
-        psr4_prefix: "Esensi\\Model"
-        src_path: src

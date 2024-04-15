@@ -75,56 +75,9 @@
 @push('scripts')
   <script type="text/javascript">
     $(document).ready(function() {
-        
-        $('#seleccionar_conceptos').change(function(){
-            if( $(this).is(':checked') ) {
-            $("#concepto_f-field > option").prop("selected","selected");
-                    $("#concepto_f-field").trigger("change");
-            }else{
-            $("#concepto_f-field > option").prop("selected","selected");
-                    $('#concepto_f-field').val(null).trigger('change');
-            }
-        });
-
-        $('#seleccionar_planteles').change(function(){
-            if( $(this).is(':checked') ) {
-            $("#plantel_f-field > option").prop("selected","selected");
-                    $("#plantel_f-field").trigger("change");
-            }else{
-            $("#plantel_f-field > option").prop("selected","selected");
-                    $('#plantel_f-field').val(null).trigger('change');
-            }
-        });
-
-    $('#concepto_f-field').select2();
-
-    @permission('maestro.detalleTodo')
-        let opciones=new Array(5);
-        opciones[1]= 'Ambos';
-        opciones[2]='Pagos';
-        opciones[3]='Adeudos';
-        opciones[4]='Sin Detalle';
-        $('#detalle_f-field').empty();
-        for(i=1;i<opciones.length;i++){
-            $('#detalle_f-field').append("<option value='" + i + "'>" + opciones[i] + "</option>");
-        }
-        $('#detalle_f-field').val(1);
-        $('#detalle_f-field').trigger('change');
-    @endpermission
-
-    @permission('maestro.detalleAdeudos')
-    console.log('adeudos');
-        let opciones=new Array(5);
-        opciones[3]='Adeudos';
-        $('#detalle_f-field').empty();
-        //for(i=0;i<opciones.length;i++){
-            $('#detalle_f-field').append("<option value='3'>" + opciones[3] + "</option>");
-        //}
-        $('#detalle_f-field').val(3);
-        $('#detalle_f-field').trigger('change');
-    @endpermission
-
-
+    
+    
+    
     $('#fecha_f-field').Zebra_DatePicker({
         days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
         months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
