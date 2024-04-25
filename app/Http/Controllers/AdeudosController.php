@@ -22,6 +22,7 @@ use App\Plantel;
 use App\Empleado;
 use App\PlanPago;
 use App\Descuento;
+use App\FormaPago;
 use App\StCliente;
 use Carbon\Carbon;
 use App\PlanPagoLn;
@@ -4405,8 +4406,9 @@ class AdeudosController extends Controller
         $lineas_detalle = array();
         $planteles=Plantel::where('id','>',1)->get();
         
-        $totales=Pago::select('p.razon','c.id','c.nombre','c.nombre2', 'c.ape_paterno', 'c.ape_materno',
-        'caj.consecutivo','pagos.created_at','pagos.fecha','pagos.monto', 'fm.name as forma_pago')
+        $totales=Pago::select('p.id as plantel_id','p.razon','c.id','c.nombre','c.nombre2', 'c.ape_paterno', 'c.ape_materno',
+        'caj.consecutivo','pagos.created_at','pagos.fecha','pagos.monto', 'fm.id as forma_pago_id',
+        'fm.name as forma_pago')
         ->join('cajas as caj', 'caj.id','pagos.caja_id')
         ->join('forma_pagos as fm', 'fm.id', 'caj.forma_pago_id')
         ->join('plantels as p','p.id','caj.plantel_id')
@@ -4420,9 +4422,52 @@ class AdeudosController extends Controller
         ->orderBy('pagos.fecha')
         ->get();
         //dd($totales->toArray());
+        $resultado=array();
+        $registro=array();
+        $formas_pago=FormaPago::where('id','>',0)->get();
+        
+        foreach($planteles as $plantel){
+            $registro['razon']=$plantel->razon;
+            $sumaTotal=0;
+            foreach($formas_pago as $forma_pago){
+                $suma=0;
+                foreach($totales as $total){
+                    if($forma_pago->id==$total->forma_pago_id and $plantel->id==$total->plantel_id){
+                        $suma=$suma+$total->monto;
+                        $sumaTotal=$sumaTotal+$total->monto;
+                    }
+                }
+                $registro[$forma_pago->name]=$suma;
+            }
+            $registro['suma_total']=$sumaTotal;
+            array_push($resultado, $registro);
+        }
+        //dd($resultado);
 
-
-        return view('adeudos.reportes.ingresosTotalesR', compact('totales'));
+        return view('adeudos.reportes.ingresosTotalesR', compact('formas_pago', 'resultado', 'totales'));
     }
 
+    public function ingresosTotalesDetalle(Request $request){
+        $datos=$request->all();
+        
+        $formas_pago_aux=Arr::pluck($datos['formas_pago'],'name');
+        
+        $i=0;
+        //dd($datos);
+        foreach($formas_pago_aux as $forma_pago){
+            $formas_pago[$i]=$forma_pago."-".$datos['datos'][$forma_pago];
+            //dd($datos['datos'][$forma_pago]);
+            $data[$formas_pago[$i]]=$datos['datos'][$forma_pago];
+            $i++;
+        }
+        $data['Total']=$datos['datos']['suma_total'];
+        //dd($data);
+        //dd($formas_pago);
+        $plantel=$datos['datos']['razon'];
+        $data=json_encode($data);
+        $formas_pago=json_encode($formas_pago);
+        //dd($formas_pago);
+        
+        return view('adeudos.reportes.ingresosTotalesDetalle', compact('formas_pago', 'data','plantel'));
+    }
 }

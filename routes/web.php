@@ -8544,6 +8544,14 @@ Route::get(
         'uses' => 'AdeudosController@ingresosTotales'
     )
 )->middleware('auth');
+Route::get(
+    '/adeudos/ingresosTotalesDetalle',
+    array(
+        'as' => 'adeudos.ingresosTotalesDetalle',
+        'middleware' => 'permission:adeudos.ingresosTotales',
+        'uses' => 'AdeudosController@ingresosTotalesDetalle'
+    )
+)->middleware('auth');
 Route::post(
     '/adeudos/ingresosTotalesR',
     array(

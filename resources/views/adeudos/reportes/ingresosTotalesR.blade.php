@@ -61,9 +61,35 @@
 
 <body>
     <h3>Total de Ingresos por Plantel</h3>
+    <table>
+        <thead>
+            <th>Plantel</th>
+            @foreach($formas_pago as $forma_pago)
+            <th>{{$forma_pago->name}}</th>
+            @endforeach
+            <th>Suma Total</th>
+            <th>Gráfica</th>
+        </thead>
+        <tbody>
+            @foreach($resultado as $registro)
+            <tr>
+                <td>{{$registro['razon']}}</td>
+                <td>{{number_format($registro['EFECTIVO'],2)}}</td>
+                <td>{{number_format($registro['TRANSFERENCIA'], 2)}}</td>
+                <td>{{number_format($registro['DEPOSITO'], 2)}}</td>
+                <td>{{number_format($registro['OXXO'], 2)}}</td>
+                <td>{{number_format($registro['TARJETA CREDITO'], 2)}}</td>
+                <td>{{number_format($registro['T. CLABE INTERBANCARIA'], 2)}}</td>
+                <td>{{number_format($registro['T. CHEQUE ELECTRONICO SOLO CLIENTES BBVA'], 2)}}</td>
+                <td>{{number_format($registro['TARJETA DEBITO'], 2)}}</td>
+                <td>{{number_format($registro['suma_total'], 2)}}</td>
+                <td><a target="_blank" href="{{ route('adeudos.ingresosTotalesDetalle', array('formas_pago'=>$formas_pago->toArray(), 'datos'=>$registro))}}" >Ver</a></td>
+            </tr>
+            @endforeach
+        
+        </tbody>
+    </table>
     <div id="ingresos_totales"></div>
-
-
     <script src="{{asset('bower_components\AdminLTE\plugins\webdatarocks\webdatarocks.toolbar.min.js')}}"></script>
     <script src="{{asset('bower_components\AdminLTE\plugins\webdatarocks\webdatarocks.js')}}"></script>
     <script type="text/javascript">
@@ -93,23 +119,13 @@
                             "uniqueName": "Measures"
                         },
                         {
-                            "uniqueName": "created_at.Year"
-                        },
-                        {
-                            "uniqueName": "created_at.Month"
+                            "uniqueName": "forma_pago"
                         }
                     ],
                     "measures": [{
                         "uniqueName": "monto",
                         "aggregation": "sum"
-                    }],
-                    "expands": {
-                        "columns": [{
-                            "tuple": [
-                                "created_at.Year.2024"
-                            ]
-                        }]
-                    }
+                    }]
                 }
             },
             global: {

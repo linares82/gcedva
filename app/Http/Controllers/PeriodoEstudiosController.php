@@ -175,7 +175,7 @@ class PeriodoEstudiosController extends Controller
 
             $final = array();
             $r = DB::table('periodo_estudios as p')
-                ->select('p.id', 'p.name')
+                ->select('p.id', DB::raw('concat(p.id, "-", p.name) as name'))
                 ->where('p.plantel_id', '=', $plantel)
                 ->where('p.id', '>', '0')
                 ->whereNull('p.deleted_at')
@@ -195,8 +195,10 @@ class PeriodoEstudiosController extends Controller
                             'name' => $r1->name,
                             'selectec' => ''
                         ));
+                        
                     }
                 }
+                
                 return $final;
             } else {
                 return $r;

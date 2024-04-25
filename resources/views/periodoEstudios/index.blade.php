@@ -60,22 +60,28 @@
                                 </div>
                             </div>
                             -->
+                            <div class="form-group col-md-2">
+                                <label class="col-sm-2 control-label" for="q_id_lt">ID</label>
+                                
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['id_lt']) ?: '' }}" name="q[id_lt]" id="q_id_lt" />
+                                
+                            </div>
                             <div class="form-group plantel col-md-4" >
                                 <label for="q_periodo_estudios.plantel_id_lt">PLANTEL</label>
                                     {!! Form::select("periodo_estudios.plantel_id", $list["Plantel"], "{{ @(Request::input('q')['clientes.plantel_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[periodo_estudios.plantel_id_lt]", "id"=>"q_periodo_estudios.plantel_id_lt", "style"=>"width:100%;", "onchange"=>"cambioOpcion()")) !!}
                                     <div id='loading10' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                             </div>
                             
-                            <div class="form-group especialidad col-md-4" >
+                            <div class="form-group especialidad col-md-3" >
                                 <label for="q_periodo_estudios.especialidad_id_lt">ESPECIALIDAD</label> 
                                     {!! Form::select("periodo_estudios.especialidad_id", $list["Especialidad"], "{{ @(Request::input('q')['periodo_estudios.especialidad_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[periodo_estudios.especialidad_id_lt]", "id"=>"q_periodo_estudios.especialidad_id_lt", "style"=>"width:100%;")) !!}
                                     <div id='loading11' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                             </div>
-                            <div class="form-group nivel col-md-4" >
+                            <div class="form-group nivel col-md-3" >
                                 <label for="q_periodo_estudios.nivel_id_lt">NIVEL</label> 
                                     {!! Form::select("periodo_estudios.nivel_id", $list["Nivel"], "{{ @(Request::input('q')['periodo_estudios.nivel_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[periodo_estudios.nivel_id_lt]", "id"=>"q_periodo_estudios.nivel_id_lt", "style"=>"width:100%;")) !!}
                             </div>
-                            <div class="form-group grado col-md-4" >
+                            <div class="form-group grado col-md-3" style="clear:left;">
                                 <label for="q_periodo_estudios.grado_id_lt">GRADO</label> 
                                     {!! Form::select("periodo_estudios.grado_id", $list["Especialidad"], "{{ @(Request::input('q')['periodo_estudios.grado_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[periodo_estudios.grado_id_lt]", "id"=>"q_periodo_estudios.grado_id_lt", "style"=>"width:100%;")) !!}
                             </div>

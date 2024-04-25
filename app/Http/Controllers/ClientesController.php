@@ -469,7 +469,12 @@ class ClientesController extends Controller
             ->pluck('name', 'id');
         $plantels = Plantel::where('st_plantel_id', 1)->pluck('razon', 'id');
 
-        return view('clientes.edit', compact(
+        $curp_token=Param::where('llave', 'token_curp')->first();
+        $curp_url=Param::where('llave', 'url_curp')->first();
+        $api_valida_curp=['token'=> $curp_token->valor,
+        'url'=>$curp_url->valor,];
+
+        return view('clientes.edit', compact('api_valida_curp',
             'cliente',
             'materias',
             'preguntas',

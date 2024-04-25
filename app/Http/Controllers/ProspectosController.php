@@ -246,7 +246,12 @@ class ProspectosController extends Controller {
 	public function prospectos(Request $request){
 		$empleado=Empleado::where('user_id', Auth::user()->id)->first();
 		$planteles=$empleado->plantels->pluck('razon','id');
-		$estatus=StProspecto::pluck('name','id');
+		if($empleado->st_prospecto_id==2){
+			$estatus=StProspecto::where('id',2)->pluck('name','id');
+		}else{
+			$estatus=StProspecto::pluck('name','id');
+		}
+		
 		return view('prospectos.reportes.prospectos', compact('planteles','estatus'));
 	}
 

@@ -36,12 +36,17 @@
                         </div>
                     </div>
                     <div class="box-body">
-                        <div class="form-group col-md-4 @if($errors->has('curp')) has-error @endif">
+                        <div class="form-group col-md-2 @if($errors->has('curp')) has-error @endif">
                             <label for="curp-field">CURP</label>
                             {!! Form::text("curp", null, array("class" => "form-control input-sm", "id" => "curp-field")) !!}
                             @if($errors->has("curp"))
                             <span class="help-block">{{ $errors->first("curp") }}</span>
                             @endif
+                        </div>
+                        <div class="form-group col-md-2 @if($errors->has('curp')) has-error @endif">
+                            @permission('clientes.apiValidaCurp')
+                            <input type="button" id="btnValidarCurp" value="Validar">
+                            @endpermission
                         </div>
                         <div class="form-group col-md-4 @if($errors->has('escuela_procedencia')) has-error @endif">
                             <label for="escuela_procedencia-field">Escuela Procedencia</label><div id="contador"></div>
@@ -1766,6 +1771,67 @@ $(document).ready(function() {
                   }
               });
       
+      return false;
+   });
+
+   $("#btnValidarCurp").click(function(event) {
+        
+        event.preventDefault();
+        if($('#curp-field').val()===""){
+            alert('CURP necesaria para validar');    
+        }else{
+            $('#curp-field').val($('#curp-field').val().toUpperCase());
+            $.ajax({
+                  url: '{{ $api_valida_curp["url"]."validar" }}',
+                  type: 'GET',
+                  data: {
+                      'token':'{{$api_valida_curp["token"]}}',
+                      'curp': $('#curp-field').val()
+                  },
+                  dataType: 'json',
+                  beforeSend:function(){$("#btnValidarCurp").attr('disabled', true);},
+                  complete: function(){$("#btnValidarCurp").attr('disabled', false);},
+                  success: function(data){
+                    if(data.response.valido){
+                        if (window.confirm("¿Desea tomar datos de curp para el sistema?")) {
+                            
+                            $.ajax({
+                                url: '{{ $api_valida_curp["url"]."obtener_datos" }}',
+                                type: 'GET',
+                                data: {
+                                    'token':'{{$api_valida_curp["token"]}}',
+                                    'curp': $('#curp-field').val()
+                                },
+                                dataType: 'json',
+                                beforeSend:function(){$("#btnValidarCurp").attr('disabled', true);},
+                                complete: function(){$("#btnValidarCurp").attr('disabled', false);},
+                                success: function(data){
+                                    
+                                    let solicitante=data.response.Solicitante;
+                                    
+                                    $('#nombre-field').val(solicitante.Nombres);
+                                    $('#ape_paterno-field').val(solicitante.ApellidoPaterno);
+                                    $('#ape_materno-field').val(solicitante.ApellidoMaterno);
+                                    if(solicitante.ClaveSexo=="H"){
+                                        $('input[name=genero][value=1]').attr('checked', true);
+                                    }else{
+                                        $('input[name=genero][value=2]').attr('checked', true);
+                                    }
+                                    $('#nacionalidad-field').val(solicitante.Nacionalidad);
+                                }
+                            });
+                        }
+                        
+                    }else{
+                        alert('Curp invalido');
+                        //alert('Respuesta API: codigo de error '+data.code_error+" "+data.error_message)
+                    }
+                    
+                  }
+              });
+      
+        }
+        
       return false;
    });
 

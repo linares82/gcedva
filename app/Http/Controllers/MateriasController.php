@@ -164,7 +164,7 @@ class MateriasController extends Controller
                 ->join('materium_periodos as mp', 'mp.materium_id', '=', 'm.id')
                 ->join('periodo_estudios as pe', 'pe.id', '=', 'mp.periodo_estudio_id')
                 ->join('grupo_periodo_estudios as gpe', 'gpe.periodo_estudio_id', '=', 'pe.id')
-                ->select('m.id', 'm.name')
+                ->select('m.id', DB::raw('concat(m.id, "-",m.name) as name' ))
                 ->where('gpe.grupo_id', $grupo)
                 ->where('m.plantel_id', '=', $plantel)
                 ->where('m.id', '>', '0')
@@ -176,13 +176,13 @@ class MateriasController extends Controller
                     if ($r1->id == $materia) {
                         array_push($final, array(
                             'id' => $r1->id,
-                            'name' => $r1->id."-".$r1->name,
+                            'name' => $r1->name,
                             'selectec' => 'Selected'
                         ));
                     } else {
                         array_push($final, array(
                             'id' => $r1->id,
-                            'name' => $r1->id."-".$r1->name,
+                            'name' => $r1->name,
                             'selectec' => ''
                         ));
                     }
