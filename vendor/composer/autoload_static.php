@@ -1057,6 +1057,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'AddPuestoEmpresasTable' => __DIR__ . '/../..' . '/database/migrations/2019_02_07_110533_add_puesto_empresas_table.php',
         'AddQuienPagaToClientesTable' => __DIR__ . '/../..' . '/database/migrations/2020_08_10_122352_add_quien_paga_to_clientes_table.php',
         'AddReactivadoToHistoriaClientesTable' => __DIR__ . '/../..' . '/database/migrations/2020_10_29_072548_add_reactivado_to_historia_clientes_table.php',
+        'AddReclasificacionToClientesTable' => __DIR__ . '/../..' . '/database/migrations/2024_04_25_150509_add_reclasificacion_to_clientes_table.php',
         'AddRecontratacionToEmpleadosTable' => __DIR__ . '/../..' . '/database/migrations/2022_05_19_123838_add_recontratacion_to_empleados_table.php',
         'AddRecursivoCalificacionPonderacionsTable' => __DIR__ . '/../..' . '/database/migrations/2019_01_17_114733_add_recursivo_calificacion_ponderacions_table.php',
         'AddRecursivoCargaPonderacionsTable' => __DIR__ . '/../..' . '/database/migrations/2019_01_17_113213_add_recursivo_carga_ponderacions_table.php',

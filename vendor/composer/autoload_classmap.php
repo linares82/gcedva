@@ -254,6 +254,7 @@ return array(
     'AddPuestoEmpresasTable' => $baseDir . '/database/migrations/2019_02_07_110533_add_puesto_empresas_table.php',
     'AddQuienPagaToClientesTable' => $baseDir . '/database/migrations/2020_08_10_122352_add_quien_paga_to_clientes_table.php',
     'AddReactivadoToHistoriaClientesTable' => $baseDir . '/database/migrations/2020_10_29_072548_add_reactivado_to_historia_clientes_table.php',
+    'AddReclasificacionToClientesTable' => $baseDir . '/database/migrations/2024_04_25_150509_add_reclasificacion_to_clientes_table.php',
     'AddRecontratacionToEmpleadosTable' => $baseDir . '/database/migrations/2022_05_19_123838_add_recontratacion_to_empleados_table.php',
     'AddRecursivoCalificacionPonderacionsTable' => $baseDir . '/database/migrations/2019_01_17_114733_add_recursivo_calificacion_ponderacions_table.php',
     'AddRecursivoCargaPonderacionsTable' => $baseDir . '/database/migrations/2019_01_17_113213_add_recursivo_carga_ponderacions_table.php',

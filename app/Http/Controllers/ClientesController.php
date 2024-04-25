@@ -643,6 +643,7 @@ class ClientesController extends Controller
         } else {
             $input['extranjero'] = 1;
         }
+        
 
         if (!isset($input['bnd_beca'])) {
             $input['bnd_beca'] = 0;
@@ -2347,6 +2348,7 @@ class ClientesController extends Controller
             'clientes.ape_materno',
             'clientes.nombre',
             'clientes.nombre2',
+            'clientes.bnd_reclasificado',
             'clientes.tel_fijo',
             'clientes.tel_cel',
             'stc.name as st_cliente',
