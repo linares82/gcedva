@@ -68,6 +68,7 @@ return array(
     'AddBndReingresoClientesTable' => $baseDir . '/database/migrations/2019_07_24_115002_add_bnd_reingreso_clientes_table.php',
     'AddBndRevisionDirectorToTitulacionsTable' => $baseDir . '/database/migrations/2022_08_24_105901_add_bnd_revision_director_to_titulacions_table.php',
     'AddBorradoSuaveToUsersTable' => $baseDir . '/database/migrations/2023_05_24_165659_add_borrado_suave_to_users_table.php',
+    'AddCalificacionAprobatoriaToPlantelsTable' => $baseDir . '/database/migrations/2024_04_29_105044_add_calificacion_aprobatoria_to_plantels_table.php',
     'AddCamposToConciliacionMultiDetallesTable' => $baseDir . '/database/migrations/2020_07_07_163931_add_campos_to_conciliacion_multi_detalles_table.php',
     'AddCctToGradosTable' => $baseDir . '/database/migrations/2020_07_06_172236_add_cct_to_grados_table.php',
     'AddCedvaFieldsToEmpleadosTable' => $baseDir . '/database/migrations/2020_06_22_162242_add_cedva_fields_to_empleados_table.php',

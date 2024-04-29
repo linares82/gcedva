@@ -110,9 +110,9 @@
                              
                          </td>
                          <td>{{$r->ponderacion}}</td>
-                         <td><div id="div_c{{$r->id}}">{{$r->calificacion}}</div></td>
-                         <td><div id="div_par{{$r->id}}">{{ $r->calificacion_parcial }}</div></td>
-                         <td><div id="div_cp{{$r->id}}">{{ $r->calificacion_parcial_calculada }}</div></td>
+                         <td><div id="div_c{{$r->id}}{{$r->calificacion_ponderacion_id}}">{{$r->calificacion}}</div></td>
+                         <td><div id="div_par{{$r->id}}{{$r->calificacion_ponderacion_id}}">{{ $r->calificacion_parcial }}</div></td>
+                         <td><div id="div_cp{{$r->id}}{{$r->calificacion_ponderacion_id}}">{{ $r->calificacion_parcial_calculada }}</div></td>
                          <td>
                             @php
                                 $param_bloqueoXdoc=\App\Param::where('llave','bloqueo_caja_calif_asistenciasXDoc')->value('valor');
@@ -133,29 +133,29 @@
                                     @if($r->bnd_doc_oblig_entregados==1 or $validaEntregaDocs3Meses)
                                         @permission('hacademicas.calificacionBaja')
                                         {!! Form::number("calificacion", null, array("class" => "form-control input-sm col-md-6 input_calificacion", 
-                                        "id" => "calificacion_parcial".$r->id, 'min' => 0, 'max' =>10)) !!}
+                                        "id" => "calificacion_parcial".$r->id.$r->calificacion_ponderacion_id, 'min' => 0, 'max' =>10)) !!}
                                         @endpermission
                                     @else
                                         @permission('hacademicas.calificacionBaja')
                                         {!! Form::number("calificacion", null, array("class" => "form-control input-sm col-md-6", 
-                                        "id" => "calificacion_parcial".$r->id, 'min' => 0, 'max' =>10)) !!}
+                                        "id" => "calificacion_parcial".$r->id.$r->calificacion_ponderacion_id, 'min' => 0, 'max' =>10)) !!}
                                         @endpermission
                                     @endif
                                 @endif
                              @elseif($r->estatus_cliente_id==1 or $r->estatus_cliente_id==22)
                                 
                                 {!! Form::number("calificacion", null, array("class" => "form-control input-sm col-md-6", 
-                                                                        "id" => "calificacion_parcial".$r->id, 'min' => 0, 'max' =>10)) !!}
+                                                                        "id" => "calificacion_parcial".$r->id.$r->calificacion_ponderacion_id, 'min' => 0, 'max' =>10)) !!}
                                 
                             @else
                                 @if($param_bloqueoXdoc==1)
                                     @if($r->bnd_doc_oblig_entregados==1 or $validaEntregaDocs3Meses)
                                     {!! Form::number("calificacion", null, array("class" => "form-control input-sm col-md-6", 
-                                    "id" => "calificacion_parcial".$r->id, 'min' => 0, 'max' =>10)) !!}
+                                    "id" => "calificacion_parcial".$r->id.$r->calificacion_ponderacion_id, 'min' => 0, 'max' =>10)) !!}
                                     @endif
                                 @else
                                     {!! Form::number("calificacion", null, array("class" => "form-control input-sm col-md-6", 
-                                    "id" => "calificacion_parcial".$r->id, 'min' => 0, 'max' =>10)) !!}
+                                    "id" => "calificacion_parcial".$r->id.$r->calificacion_ponderacion_id, 'min' => 0, 'max' =>10)) !!}
                                 @endif
                              @endif
                              
@@ -269,10 +269,11 @@
             alert("Calificacion invalida");
         }else{
             var miurl = "{{route('hacademicas.actualizarCalificacion')}}";
-        var id=$(this).data('cliente_id');
+        let id=$(this).data('cliente_id');
+        let calificacion_ponderacion=$(this).data('calificacion_ponderacion_id')
         var data = new FormData();
         data.append('calificacion_ponderacion', $(this).data('calificacion_ponderacion_id'));
-        data.append('calificacion_parcial', $('#calificacion_parcial'+$(this).data('cliente_id')).val());
+        data.append('calificacion_parcial', $('#calificacion_parcial'+$(this).data('cliente_id')+$(this).data('calificacion_ponderacion_id')).val());
 
         $.ajaxSetup({
             headers: {
@@ -286,7 +287,7 @@
             // Form data
             //datos del formulario
             data: "calificacion_ponderacion=" + $(this).data('calificacion_ponderacion_id') +
-                  "&calificacion_parcial=" + $('#calificacion_parcial'+$(this).data('cliente_id')).val() + "",
+                  "&calificacion_parcial=" + $('#calificacion_parcial'+$(this).data('cliente_id')+$(this).data('calificacion_ponderacion_id')).val() + "",
             //necesario para subir archivos via ajax
             dataType: 'json',
             //mientras enviamos el archivo
@@ -296,9 +297,9 @@
             success: function (data) {
                 //location.reload();
                 //console.log(data.calificacion);
-                $('#div_c'+id).html(data.calificacion);
-                $('#div_par'+id).html(data.calificacion_parcial);
-                $('#div_cp'+id).html(data.calificacion_parcial_calculada);
+                $('#div_c'+id+calificacion_ponderacion).html(data.calificacion);
+                $('#div_par'+id+calificacion_ponderacion).html(data.calificacion_parcial);
+                $('#div_cp'+id+calificacion_ponderacion).html(data.calificacion_parcial_calculada);
             },
             //si ha ocurrido un error
             error: function (data) {

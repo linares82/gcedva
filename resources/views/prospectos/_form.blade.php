@@ -153,6 +153,13 @@
          "mask": "(999) 999-9999"
       });
 */
+      @permission("prospectos.editarTelefonos")
+      $("#tel_cel-field").dblclick(function() {
+         $('#tel_cel-field').attr('readonly', false);
+         $('#tel_cel-field').val("");
+      });
+      @endpermission
+
       longitudTelCel();
       $('#tel_cel-field').on('keydown', function(){
          longitudTelCel();
@@ -165,6 +172,12 @@
          }
       }
 
+      @permission("prospectos.editarTelefonos")
+      $("#tel_fijo-field").dblclick(function() {
+         $('#tel_fijo-field').attr('readonly', false);
+         $('#tel_fijo-field').val("");
+      });
+      @endpermission
       longitudTelFijo();
       $('#tel_fijo-field').on('keydown', function(){
          longitudTelFijo();

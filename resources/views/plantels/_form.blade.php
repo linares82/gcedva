@@ -491,6 +491,13 @@
                     <span class="help-block">{{ $errors->first("meta_total") }}</span>
                     @endif
                 </div>
+                <div class="form-group col-md-4 @if($errors->has('calificacion_aprobatoria')) has-error @endif">
+                    <label for="calificacion_aprobatoria-field">Calificacion Aprobatoria</label>
+                    {!! Form::text("calificacion_aprobatoria", null, array("class" => "form-control input-sm", "id" => "meta_total-field")) !!}
+                    @if($errors->has("calificacion_aprobatoria"))
+                    <span class="help-block">{{ $errors->first("calificacion_aprobatoria") }}</span>
+                    @endif
+                </div>
                 
                 <div class="form-group col-md-3 @if($errors->has('bnd_excepcion_documentos')) has-error @endif">
                             <label for="bnd_excepcion_documentos-field">Excepcion Documentos</label>

@@ -167,6 +167,12 @@ class HacademicasController extends Controller
         //dd($hacademicas);
         
         $aprobatoria = Param::where('llave', 'calificacion_aprobatoria')->value('valor');
+        $c = Cliente::where('id', '=', $input['alumno_id'])->first();
+        if($aprobatoria==0){
+            $plantel=Plantel::find($c->plantel_id);
+            $aprobatoria=$plantel->calificacion_aprobatoria;
+        }
+
         if (isset($input['calificacion_parcial_id'])) {
             foreach ($input['calificacion_parcial_id'] as $key => $value) {
                 //dd($key . "->" . $value);
@@ -228,7 +234,7 @@ class HacademicasController extends Controller
             isset($input['tpo_examen_id']) and
             isset($input['materium_id']) and !isset($input['excepcion'])
         ) {
-            $c = Cliente::where('id', '=', $input['alumno_id'])->first();
+            
             $hacademicas = Hacademica::select(
                 'calif.id',
                 DB::raw('concat(c.nombre, " ", c.ape_paterno," ", c.ape_materno) as nombre'),
@@ -746,7 +752,14 @@ class HacademicasController extends Controller
         $calificacion = Calificacion::find($calificacion_ponderacion->calificacion_id);
         //dd($calificacion->toArray());
         $calificacion->calificacion = $suma;
+        
         $aprobatoria = Param::where('llave', 'calificacion_aprobatoria')->value('valor');
+        
+        if($aprobatoria==0){
+            $plantel=Plantel::find($calificacion->hacademica->plantel_id);
+            $aprobatoria=$plantel->calificacion_aprobatoria;
+        }
+
         $h = Hacademica::find($calificacion->hacademica_id);
         if ($calificacion->calificacion >= $aprobatoria) {
             $h->st_materium_id = 1;
