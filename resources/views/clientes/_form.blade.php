@@ -1794,19 +1794,8 @@ $(document).ready(function() {
             alert('CURP necesaria para validar');    
         }else{
             $('#curp-field').val($('#curp-field').val().toUpperCase());
-            $.ajax({
-                  url: '{{ $api_valida_curp["url"]."validar" }}',
-                  type: 'GET',
-                  data: {
-                      'token':'{{$api_valida_curp["token"]}}',
-                      'curp': $('#curp-field').val()
-                  },
-                  dataType: 'json',
-                  beforeSend:function(){$("#btnValidarCurp").attr('disabled', true);},
-                  complete: function(){$("#btnValidarCurp").attr('disabled', false);},
-                  success: function(data){
-                    if(data.response.valido){
-                        if (window.confirm("¿Desea tomar datos de curp para el sistema?")) {
+            
+                        
                             
                             $.ajax({
                                 url: '{{ $api_valida_curp["url"]."obtener_datos" }}',
@@ -1818,30 +1807,36 @@ $(document).ready(function() {
                                 dataType: 'json',
                                 beforeSend:function(){$("#btnValidarCurp").attr('disabled', true);},
                                 complete: function(){$("#btnValidarCurp").attr('disabled', false);},
+                                error: function(data){
+                                    alert('Curp invalida');
+                                    //console.log(data.responseJson.error_message);
+                                    //alert(data.responseJson.error_message);
+                                },
                                 success: function(data){
-                                    
-                                    let solicitante=data.response.Solicitante;
-                                    
-                                    $('#nombre-field').val(solicitante.Nombres);
-                                    $('#ape_paterno-field').val(solicitante.ApellidoPaterno);
-                                    $('#ape_materno-field').val(solicitante.ApellidoMaterno);
-                                    if(solicitante.ClaveSexo=="H"){
-                                        $('input[name=genero][value=1]').attr('checked', true);
+                                    console.log(data);
+
+                                    if(data.error){
+                                        alert(data.error_message);
                                     }else{
-                                        $('input[name=genero][value=2]').attr('checked', true);
-                                    }
-                                    $('#nacionalidad-field').val(solicitante.Nacionalidad);
+                                        let solicitante=data.response.Solicitante;
+                                    
+                                        $('#nombre-field').val(solicitante.Nombres);
+                                        $('#ape_paterno-field').val(solicitante.ApellidoPaterno);
+                                        $('#ape_materno-field').val(solicitante.ApellidoMaterno);
+                                        if(solicitante.ClaveSexo=="H"){
+                                            $('input[name=genero][value=1]').attr('checked', true);
+                                        }else{
+                                            $('input[name=genero][value=2]').attr('checked', true);
+                                        }
+                                        $('#nacionalidad-field').val(solicitante.Nacionalidad);
+                                        alert('Datos consultados y copiados correctamente');
+                                        }
+                                    
                                 }
                             });
-                        }
                         
-                    }else{
-                        alert('Curp invalido');
-                        //alert('Respuesta API: codigo de error '+data.code_error+" "+data.error_message)
-                    }
-                    
-                  }
-              });
+                       
+                 
       
         }
         

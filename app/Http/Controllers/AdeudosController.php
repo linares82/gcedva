@@ -4429,15 +4429,21 @@ class AdeudosController extends Controller
         foreach($planteles as $plantel){
             $registro['razon']=$plantel->razon;
             $sumaTotal=0;
+            $sumaEfectivo=0;
+            $sumaResto=0;
             foreach($formas_pago as $forma_pago){
-                $suma=0;
+                
                 foreach($totales as $total){
-                    if($forma_pago->id==$total->forma_pago_id and $plantel->id==$total->plantel_id){
-                        $suma=$suma+$total->monto;
+                    if($forma_pago->id==1 and $plantel->id==$total->plantel_id){
+                        $sumaEfectivo=$sumaEfectivo+$total->monto;
+                        $sumaTotal=$sumaTotal+$total->monto;
+                    }elseif($forma_pago->id<>1 and $plantel->id==$total->plantel_id){
+                        $sumaResto=$sumaResto+$total->monto;
                         $sumaTotal=$sumaTotal+$total->monto;
                     }
                 }
-                $registro[$forma_pago->name]=$suma;
+                $registro['efectivo']=$sumaEfectivo;
+                $registro['resto']=$sumaResto;
             }
             $registro['suma_total']=$sumaTotal;
             array_push($resultado, $registro);
@@ -4449,22 +4455,15 @@ class AdeudosController extends Controller
 
     public function ingresosTotalesDetalle(Request $request){
         $datos=$request->all();
-        
-        $formas_pago_aux=Arr::pluck($datos['formas_pago'],'name');
-        
-        $i=0;
         //dd($datos);
-        foreach($formas_pago_aux as $forma_pago){
-            $formas_pago[$i]=$forma_pago."-".$datos['datos'][$forma_pago];
-            //dd($datos['datos'][$forma_pago]);
-            $data[$formas_pago[$i]]=$datos['datos'][$forma_pago];
-            $i++;
-        }
-        $data['Total']=$datos['datos']['suma_total'];
-        //dd($data);
-        //dd($formas_pago);
+        $data=$datos['datos'];
+        $formas_pago=array('efectivo'."-".$datos['datos']['efectivo'], 'resto'."-".$datos['datos']['resto'], 'suma_total'."-".$datos['datos']['suma_total']);
+        $data=array('efectivo'."-".$datos['datos']['efectivo']=>$datos['datos']['efectivo'], 
+                    'resto'."-".$datos['datos']['resto']=>$datos['datos']['resto'], 
+                    'suma_total'."-".$datos['datos']['suma_total']=>$datos['datos']['suma_total']);
         $plantel=$datos['datos']['razon'];
-        $data=json_encode($data);
+
+        $data=json_encode(Arr::except($data,['razon']));
         $formas_pago=json_encode($formas_pago);
         //dd($formas_pago);
         

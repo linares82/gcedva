@@ -64,9 +64,8 @@
     <table>
         <thead>
             <th>Plantel</th>
-            @foreach($formas_pago as $forma_pago)
-            <th>{{$forma_pago->name}}</th>
-            @endforeach
+            <th>Efectivo </th>
+            <th>Resto Formas de Pago </th>
             <th>Suma Total</th>
             <th>Gráfica</th>
         </thead>
@@ -74,14 +73,8 @@
             @foreach($resultado as $registro)
             <tr>
                 <td>{{$registro['razon']}}</td>
-                <td>{{number_format($registro['EFECTIVO'],2)}}</td>
-                <td>{{number_format($registro['TRANSFERENCIA'], 2)}}</td>
-                <td>{{number_format($registro['DEPOSITO'], 2)}}</td>
-                <td>{{number_format($registro['OXXO'], 2)}}</td>
-                <td>{{number_format($registro['TARJETA CREDITO'], 2)}}</td>
-                <td>{{number_format($registro['T. CLABE INTERBANCARIA'], 2)}}</td>
-                <td>{{number_format($registro['T. CHEQUE ELECTRONICO SOLO CLIENTES BBVA'], 2)}}</td>
-                <td>{{number_format($registro['TARJETA DEBITO'], 2)}}</td>
+                <td>{{number_format($registro['efectivo'],2)}}</td>
+                <td>{{number_format($registro['resto'], 2)}}</td>
                 <td>{{number_format($registro['suma_total'], 2)}}</td>
                 <td><a target="_blank" href="{{ route('adeudos.ingresosTotalesDetalle', array('formas_pago'=>$formas_pago->toArray(), 'datos'=>$registro))}}" >Ver</a></td>
             </tr>

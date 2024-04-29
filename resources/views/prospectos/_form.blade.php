@@ -135,6 +135,7 @@
 <script src="{{ asset ('/bower_components/AdminLTE/plugins/input-mask/jquery.inputmask.extensions.js') }}"></script>
 <script src="{{ asset ('/bower_components/AdminLTE/plugins/input-mask/jquery.inputmask.phone.extensions.js') }}"></script>
 <script type="text/javascript">
+
    $('#fec_apartado-field').Zebra_DatePicker({
         days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
         months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
@@ -144,12 +145,39 @@
         direction: [1, 5]
       });
    $(document).ready(function() {
+      /*
       $('#tel_cel-field').inputmask({
          "mask": "(999) 999-9999"
       });
       $('#tel_fijo-field').inputmask({
          "mask": "(999) 999-9999"
       });
+*/
+      longitudTelCel();
+      $('#tel_cel-field').on('keydown', function(){
+         longitudTelCel();
+      });
+
+      function longitudTelCel(){
+         //console.log($('#tel_cel-field').val().length);
+         if($('#tel_cel-field').val().length>=10){
+            $('#tel_cel-field').attr('readonly', true);
+         }
+      }
+
+      longitudTelFijo();
+      $('#tel_fijo-field').on('keydown', function(){
+         longitudTelFijo();
+      });
+
+      function longitudTelFijo(){
+         //console.log($('#tel_fijo-field').val().length);
+         if($('#tel_fijo-field').val().length>=10){
+            $('#tel_fijo-field').attr('readonly', true);
+         }
+      }
+      
+
       getCmbEspecialidad();
       getCmbNivel();
       getCmbGrado();

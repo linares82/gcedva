@@ -84,7 +84,7 @@ class ClientesController extends Controller
         }
 
         $users = User::pluck('name', 'id');
-        $users->prepend('Seleccionar opciÃƒÂ³n', 0);
+        $users->prepend('Seleccionar opciÃƒÆ’Ã‚Â³n', 0);
         if (isset($_REQUEST["p"])) {
             if (session()->has('filtro_clientes')) {
                 session(['filtro_clientes' => 1]);
@@ -112,7 +112,7 @@ class ClientesController extends Controller
     public function indexEventos(Request $request)
     {
         $users = User::pluck('name', 'id');
-        $users->prepend('Seleccionar opciÃƒÂ³n', 0);
+        $users->prepend('Seleccionar opciÃƒÆ’Ã‚Â³n', 0);
         //dd($request);
         if (isset($_REQUEST["p"])) {
             if (session()->has('filtro_clientes')) {
@@ -227,14 +227,19 @@ class ClientesController extends Controller
         ->pluck('name', 'id');
         }*/
         $empleados = $empleados->reverse();
-        $empleados->put(0, 'Seleccionar OpciÃƒÂ³n');
+        $empleados->put(0, 'Seleccionar OpciÃƒÆ’Ã‚Â³n');
         $empleados = $empleados->reverse();
         //dd($empleados);
         $estado_civiles = EstadoCivil::pluck('name', 'id');
         $cuestionarios = Ccuestionario::where('st_cuestionario_id', '=', '1')->pluck('name', 'id');
         $incidencias = IncidenceCliente::pluck('name', 'id');
         $plantels = Plantel::where('st_plantel_id', 1)->pluck('razon', 'id');
-        return view('clientes.create', compact('empleados', 'cuestionarios', 'estado_civiles', 'incidencias', 'plantels'))
+	$curp_token=Param::where('llave', 'token_curp')->first();
+        $curp_url=Param::where('llave', 'url_curp')->first();
+        $api_valida_curp=['token'=> $curp_token->valor,
+        'url'=>$curp_url->valor,];
+
+        return view('clientes.create', compact('empleados', 'cuestionarios', 'estado_civiles', 'incidencias', 'plantels','api_valida_curp'))
             ->with('list', Cliente::getListFromAllRelationApps())
             ->with('list3', Inscripcion::getListFromAllRelationApps());
     }
@@ -425,7 +430,7 @@ class ClientesController extends Controller
                 ->pluck('name', 'id');
         }
         $empleados = $empleados->reverse();
-        $empleados->put(0, 'Seleccionar OpciÃƒÂ³n');
+        $empleados->put(0, 'Seleccionar OpciÃƒÆ’Ã‚Â³n');
         $empleados = $empleados->reverse();
         //dd($empleados);
         $cp = PreguntaCliente::where('cliente_id', '=', $id)->get();
@@ -1157,7 +1162,7 @@ class ClientesController extends Controller
             ->get();
         //dd($clientes);
         /* $clientes_array=array();
-        $encabezados=array('Fecha', 'P. Nombre', 'S. Nombre', 'A. Paterno', 'A. Materno', 'TelÃƒÂ©fono',
+        $encabezados=array('Fecha', 'P. Nombre', 'S. Nombre', 'A. Paterno', 'A. Materno', 'TelÃƒÆ’Ã‚Â©fono',
         'Celular', 'Mail', 'Escuela Procedencia', 'Medio');
         array_push($clientes_array, $encabezados);
         //dd($clientes_array);
@@ -1675,11 +1680,11 @@ class ClientesController extends Controller
     $jasper->process(
     // Ruta y nombre de archivo de entrada del reporte
     base_path() . '/vendor/cossou/jasperphp/examples/credencial.jasper',
-    false, // Ruta y nombre de archivo de salida del reporte (sin extensiÃƒÂ³n)
+    false, // Ruta y nombre de archivo de salida del reporte (sin extensiÃƒÆ’Ã‚Â³n)
     array('pdf'), // Formatos de salida del reporte
     array('cliente' => $cliente->id,
     'inscripcion' => $inscripcion->id,
-    'imagen' => base_path() . '/vendor/cossou/jasperphp/examples/'. $cadena_img[count($cadena_img) - 1]), // ParÃƒÂ¡metros del reporte
+    'imagen' => base_path() . '/vendor/cossou/jasperphp/examples/'. $cadena_img[count($cadena_img) - 1]), // ParÃƒÆ’Ã‚Â¡metros del reporte
     array(
     'driver' => 'mysql',
     'username' => 'root',
@@ -2834,7 +2839,7 @@ class ClientesController extends Controller
         $clientes = $filtrado->orderBy('id', 'desc')->paginate(20);
 
         $users = User::pluck('name', 'id');
-        $users->prepend('Seleccionar opciÃ³n', 0);
+        $users->prepend('Seleccionar opciÃƒÂ³n', 0);
 
         //dd($request);
         //$clientes = Seguimiento::getAllData($request, 10, session('filtro_clientes'));

@@ -177,13 +177,16 @@ class ProspectosController extends Controller {
 
 	public function Aceptar(Request $request){
 		$datos=$request->all();
+		//dd($datos);
 		$prospecto=Prospecto::find($datos['prospecto']);
+		//dd($prospecto);
 		$prospecto->st_prospecto_id=3;
 		$prospecto->save();
 
 		$empleado=Empleado::where('user_id', Auth::user()->id)->first();
 
 		$input=$prospecto->toArray();
+		//dd($input);
 		$input['municipio_id']=0;
 		$input['estado_id']=0;
 		$input['st_cliente_id']=1;
