@@ -772,8 +772,11 @@
                                 //$linea_caja= \App\CajaLn::where('adeudo_id',$adeudo->id)->whereNull('deleted_at')->first();    
                                 $suma_pagos=0;
                                 $pagos=App\Pago::where('caja_id', $adeudo->caja_id)->get();
+                                $contador_pagos=0;
                                 foreach($pagos as $pago){
+                                    $contador_pagos++;
                                     $suma_pagos=$suma_pagos+$pago->monto;
+                                    //dd($pago);
                                 }
                                 ?>
                                 @if(isset($linea_caja) and !is_null($linea_caja))
@@ -808,7 +811,13 @@
                             @endif
                                 @if($adeudo->pagado_bnd==1) SI @else NO @endif
                                 @if($adeudo->caja->consecutivo<>0)
-                                @if(isset($pago) and is_null($pago->uuid)) / NO @else / SI @endif   
+                                @if($contador_pagos>1)
+                                /Problema-Varios Pagos
+                                @elseif(isset($pago) and is_null($pago->uuid)) 
+                                / NO 
+                                @else 
+                                / SI 
+                                @endif   
                                 @endif
                                  
                             </td>

@@ -84,7 +84,8 @@ class Cliente extends Model
 		'pagador_id', 'discapacidad_id', 'bnd_trabaja', 'bnd_indigena', 'tipo_persona_id', 'frfc', 'frazon',
 		'fcalle', 'fno_exterior', 'fno_interior', 'fcolonia', 'fciudad','fmunicipio', 'festado', 'fpais', 'fcp',
 		'fmail','observaciones','uso_factura_id','regimen_fiscal_id','bnd_doc_oblig_entregados',
-		'fec_limite_entrega_docs','fec_vencimiento_cred','obs_docs','bnd_reclasificado'
+		'fec_limite_entrega_docs','fec_vencimiento_cred','obs_docs','bnd_reclasificado',
+		'bnd_consulta_curp'
 	];
 
 	public function usu_alta()

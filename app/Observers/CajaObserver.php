@@ -99,7 +99,7 @@ class CajaObserver
                 $cliente->save();    
                 $seguimiento->st_seguimiento_id = 2;
                 $seguimiento->save();
-            }elseif ($inscripcions->isEmpty() and $mensualidades==0 and $this->caja->cliente->st_cliente_id <> 3) {
+            }elseif ($inscripcions->isEmpty() and $mensualidades==0 and $this->caja->cliente->st_cliente_id <> 3 /*and $this->caja->cliente->seguimiento->st_seguimiento_id==2*/) {
             //if ($inscripcions->isEmpty()) {
                 $cliente->st_cliente_id = 22;
                 $cliente->save();

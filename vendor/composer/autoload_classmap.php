@@ -45,6 +45,7 @@ return array(
     'AddBndBecaCombinacionClientesTable' => $baseDir . '/database/migrations/2019_05_27_162240_add_bnd_beca_combinacion_clientes_table.php',
     'AddBndConceptoSinPlanToCajaConceptosTable' => $baseDir . '/database/migrations/2021_02_12_145503_add_bnd_concepto_sin_plan_to_caja_conceptos_table.php',
     'AddBndConciliacionToSuccessMultipagosTable' => $baseDir . '/database/migrations/2020_07_07_154144_add_bnd_conciliacion_to_success_multipagos_table.php',
+    'AddBndConsultaCurpToClientesTable' => $baseDir . '/database/migrations/2024_05_03_113434_add_bnd_consulta_curp_to_clientes_table.php',
     'AddBndCortoToNivelsTable' => $baseDir . '/database/migrations/2020_02_24_103913_add_bnd_corto_to_nivels_table.php',
     'AddBndDocObligEntregadosToClientesTable' => $baseDir . '/database/migrations/2022_04_08_094522_add_bnd_doc_oblig_entregados_to_clientes_table.php',
     'AddBndDocVincRevisadosToTitulacionsTable' => $baseDir . '/database/migrations/2022_07_29_115747_add_bnd_doc_vinc_revisados_to_titulacions_table.php',

@@ -3057,4 +3057,12 @@ class ClientesController extends Controller
         
         return $dentro3Meses;
     }
+
+    public function historiaMatricula(Request $request){
+        $datos=$request->all();
+        $cliente=Cliente::find($datos['cliente']);
+        //dd($cliente->revisionHistory->toArray());
+        return view('clientes.reportes.historiaMatricula', compact('cliente'));
+    }
+
 }

@@ -46,6 +46,7 @@
                         <div class="form-group col-md-2 @if($errors->has('curp')) has-error @endif">
                             @permission('clientes.apiValidaCurp')
                             <input type="button" id="btnValidarCurp" value="Validar">
+                            {!! Form::hidden("bnd_consulta_curp", null, array("class" => "form-control input-sm", "id" => "bnd_consulta_curp-field")) !!}
                             @endpermission
                         </div>
                         <div class="form-group col-md-4 @if($errors->has('escuela_procedencia')) has-error @endif">
@@ -849,8 +850,14 @@
                     @endif
                 </div>
                                             
-                
-                <div class="form-group col-md-4 @if($errors->has('bnd_reclasificado')) has-error @endif">
+                @permission('clientes.historiaMatricula')
+                <div class="form-group col-md-2 @if($errors->has('bnd_reclasificado')) has-error @endif">
+                    <a href="{{route('clientes.historiaMatricula', array('cliente'=>$cliente->id))}}" class="btn btn-default" target="_blank">Cambios Matricula</a>
+                </div>
+                @endpermission
+
+
+                <div class="form-group col-md-2 @if($errors->has('bnd_reclasificado')) has-error @endif">
                     <label for="bnd_reclasificado-field">Reclasificado: @if(isset($cliente->bnd_reclasificado) and $cliente->bnd_reclasificado==1) SI @else NO @endif</label>
                     @permission('clientes.reclasificado')
                     {!! Form::select("bnd_reclasificado", array(0=>'No', 1=>"Si"), null, array("class" => "form-control select_seguridad", "id" => "bnd_reclasificado-field", 'style'=>'width:100%')) !!}
@@ -1787,6 +1794,23 @@ $(document).ready(function() {
       return false;
    });
 
+    longitudCurp();
+      $('#curp-field').on('keydown', function(){
+         longitudCurp();
+      });
+
+      function longitudCurp(){
+         //console.log($('#tel_cel-field').val().length);
+         if($('#curp-field').val().length>=18 && $('#bnd_consulta_curp-field').val()==1){
+            $('#nombre-field').attr('readonly', true);
+            $('#ape_paterno-field').attr('readonly', true);
+            $('#ape_materno-field').attr('readonly', true);
+            $('#nacionalidad-field').attr('readonly', true);
+            $('#fec_nacimiento-field').attr('readonly', true);
+            $('#lugar_nacimiento-field').attr('readonly', true);
+         }
+      }
+
    $("#btnValidarCurp").click(function(event) {
         
         event.preventDefault();
@@ -1797,44 +1821,46 @@ $(document).ready(function() {
             
                         
                             
-                            $.ajax({
-                                url: '{{ $api_valida_curp["url"]."obtener_datos" }}',
-                                type: 'GET',
-                                data: {
-                                    'token':'{{$api_valida_curp["token"]}}',
-                                    'curp': $('#curp-field').val()
-                                },
-                                dataType: 'json',
-                                beforeSend:function(){$("#btnValidarCurp").attr('disabled', true);},
-                                complete: function(){$("#btnValidarCurp").attr('disabled', false);},
-                                error: function(data){
-                                    alert('Curp invalida');
-                                    //console.log(data.responseJson.error_message);
-                                    //alert(data.responseJson.error_message);
-                                },
-                                success: function(data){
-                                    console.log(data);
+        $.ajax({
+            url: '{{ $api_valida_curp["url"]."obtener_datos" }}',
+            type: 'GET',
+            data: {
+                'token':'{{$api_valida_curp["token"]}}',
+                'curp': $('#curp-field').val()
+            },
+            dataType: 'json',
+            beforeSend:function(){$("#btnValidarCurp").attr('disabled', true);},
+            complete: function(){$("#btnValidarCurp").attr('disabled', false);},
+            error: function(data){
+                alert('Curp invalida');
+                //console.log(data.responseJson.error_message);
+                //alert(data.responseJson.error_message);
+            },
+            success: function(data){
+                //console.log(data);
 
-                                    if(data.error){
-                                        alert(data.error_message);
-                                    }else{
-                                        let solicitante=data.response.Solicitante;
-                                    
-                                        $('#nombre-field').val(solicitante.Nombres);
-                                        $('#ape_paterno-field').val(solicitante.ApellidoPaterno);
-                                        $('#ape_materno-field').val(solicitante.ApellidoMaterno);
-                                        if(solicitante.ClaveSexo=="H"){
-                                            $('input[name=genero][value=1]').attr('checked', true);
-                                        }else{
-                                            $('input[name=genero][value=2]').attr('checked', true);
-                                        }
-                                        $('#nacionalidad-field').val(solicitante.Nacionalidad);
-                                        alert('Datos consultados y copiados correctamente');
-                                        }
-                                    
-                                }
-                            });
-                        
+                if(data.error){
+                    alert(data.error_message);
+                }else{
+                    let solicitante=data.response.Solicitante;
+                    $('#bnd_consulta_curp-field').val(1);
+                    $('#nombre-field').val(solicitante.Nombres);
+                    $('#ape_paterno-field').val(solicitante.ApellidoPaterno);
+                    $('#ape_materno-field').val(solicitante.ApellidoMaterno);
+                    if(solicitante.ClaveSexo=="H"){
+                        $('input[name=genero][value=1]').attr('checked', true);
+                    }else{
+                        $('input[name=genero][value=2]').attr('checked', true);
+                    }
+                    $('#nacionalidad-field').val(solicitante.Nacionalidad);
+                    $('#fec_nacimiento-field').val(solicitante.FechaNacimiento);
+                    $('#lugar_nacimiento-field').val(solicitante.EntidadNacimiento);
+                    alert('Datos consultados y copiados correctamente');
+                    }
+                
+            }
+        });
+    
                        
                  
       
