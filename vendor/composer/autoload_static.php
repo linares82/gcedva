@@ -893,6 +893,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'AddContSmsSeguimientosTable' => __DIR__ . '/../..' . '/database/migrations/2018_03_05_170112_add_contSms_seguimientos_table.php',
         'AddControlFieldInscripcionsTable' => __DIR__ . '/../..' . '/database/migrations/2019_08_23_121031_add_control_field_inscripcions_table.php',
         'AddCostoToOpcionTitulacionsTable' => __DIR__ . '/../..' . '/database/migrations/2022_03_25_124004_add_costo_to_opcion_titulacions_table.php',
+        'AddCostoToTitulacionsTable' => __DIR__ . '/../..' . '/database/migrations/2024_05_14_165150_add_costo_to_titulacions_table.php',
         'AddCscCotiClausulasPlantelTable' => __DIR__ . '/../..' . '/database/migrations/2019_04_02_102245_add_csc_coti_clausulas_plantel_table.php',
         'AddCscSimplificadoToPagosTable' => __DIR__ . '/../..' . '/database/migrations/2020_08_27_155421_add_csc_simplificado_to_pagos_table.php',
         'AddCscVinculacionVinculacionsTable' => __DIR__ . '/../..' . '/database/migrations/2019_12_04_095621_add_csc_vinculacion_vinculacions_table.php',

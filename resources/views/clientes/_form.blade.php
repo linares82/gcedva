@@ -48,6 +48,9 @@
                             <input type="button" id="btnValidarCurp" value="Validar">
                             {!! Form::hidden("bnd_consulta_curp", null, array("class" => "form-control input-sm", "id" => "bnd_consulta_curp-field")) !!}
                             @endpermission
+                            @permission('clientes.desbloqueoCurp')
+                            <input type="button" id="btnDesbloqueoCurp" value="Desbloquear Curp">
+                            @endpermission
                         </div>
                         <div class="form-group col-md-4 @if($errors->has('escuela_procedencia')) has-error @endif">
                             <label for="escuela_procedencia-field">Escuela Procedencia</label><div id="contador"></div>
@@ -1802,7 +1805,9 @@ $(document).ready(function() {
       function longitudCurp(){
          //console.log($('#tel_cel-field').val().length);
          if($('#curp-field').val().length>=18 && $('#bnd_consulta_curp-field').val()==1){
+            $('#curp-field').attr('readonly', true);
             $('#nombre-field').attr('readonly', true);
+            $('#nombre2-field').attr('readonly', true);
             $('#ape_paterno-field').attr('readonly', true);
             $('#ape_materno-field').attr('readonly', true);
             $('#nacionalidad-field').attr('readonly', true);
@@ -1810,6 +1815,13 @@ $(document).ready(function() {
             $('#lugar_nacimiento-field').attr('readonly', true);
          }
       }
+
+      @permission('clientes.desbloqueoCurp')
+      $("#btnDesbloqueoCurp").click(function(event) {
+        $('#curp-field').attr('readonly', false);
+        $('#bnd_consulta_curp-field').val(0);
+      });
+      @endpermission
 
    $("#btnValidarCurp").click(function(event) {
         
@@ -1845,6 +1857,7 @@ $(document).ready(function() {
                     let solicitante=data.response.Solicitante;
                     $('#bnd_consulta_curp-field').val(1);
                     $('#nombre-field').val(solicitante.Nombres);
+                    $('#nombre2-field').val("");
                     $('#ape_paterno-field').val(solicitante.ApellidoPaterno);
                     $('#ape_materno-field').val(solicitante.ApellidoMaterno);
                     if(solicitante.ClaveSexo=="H"){

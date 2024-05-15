@@ -59,6 +59,11 @@ class TitulacionsController extends Controller {
 		//create data
 		$titulacion=Titulacion::create( $input );
 
+		if($titulacion->opcion_titulacion_id<>0){
+			$titulacion->costo=$titulacion->opcionTitulacion->costo;
+			$titulacion->save();
+		}
+
 		$seguimiento=$titulacion->cliente->seguimiento;
 		$seguimiento->st_seguimiento_id=9;
 		$seguimiento->save();
