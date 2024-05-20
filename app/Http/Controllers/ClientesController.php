@@ -3065,4 +3065,25 @@ class ClientesController extends Controller
         return view('clientes.reportes.historiaMatricula', compact('cliente'));
     }
 
+    public function verificaMateriasAdeudosPendientes(Request $request){
+        $datos=$request->all();
+        $cliente=Cliente::find($datos['id']);
+        $seguimiento=Seguimiento::where('cliente_id', $cliente->id)->first();
+        if ($cliente->st_cliente_id == 31) {
+            $cliente->st_cliente_id = 30;
+            $cliente->save();
+            $cliente->st_cliente_id = 20;
+            $cliente->save();
+            $seguimiento->st_seguimiento_id = 7;
+            $seguimiento->save();
+        }else{
+            $cliente->st_cliente_id = 30;
+            $cliente->save();
+            //$seguimiento->st_seguimiento_id = 7;
+            //$seguimiento->save();
+            
+        }
+        return redirect()->route('clientes.edit', $cliente->id)->with('message', 'Registro Actualizado.');
+    }
+
 }

@@ -117,8 +117,9 @@ class CajaObserver
                 ->whereNull('deleted_at')
                 ->whereDate('fecha_pago','<=', $fechaActual)
                 ->count();
-                if ($adeudos == 0 and $cliente->st_cliente<>20){
+                if ($adeudos == 0 and $cliente->st_cliente_id<>20 and $cliente->st_cliente_id<>30 and $cliente->st_cliente_id<>31){
                     if ($adeudos == 0) {
+                        
                         $cliente->st_cliente_id = 4;
                         $cliente->save();
 
@@ -317,6 +318,7 @@ class CajaObserver
                     }
                 }elseif ($this->caja->cliente->st_cliente_id == 17){
                     if ($adeudos == 0) {
+                        
                         $cliente->st_cliente_id = 4;
                         $cliente->save();
 
@@ -430,10 +432,20 @@ class CajaObserver
             //Log::info('Adeudos:' . $adeudos);
             if ($adeudos == 0 and $cliente->st_cliente<>20) {
                 if ($cliente->st_cliente_id <> 3) {
-                    $cliente->st_cliente_id = 20;
-                    $cliente->save();
-                    $seguimiento->st_seguimiento_id = 7;
-                    $seguimiento->save();
+                    if ($cliente->st_cliente_id == 30) {
+                        
+                        $cliente->st_cliente_id = 31;
+                        $cliente->save();
+                        $cliente->st_cliente_id = 20;
+                        $cliente->save();
+                        $seguimiento->st_seguimiento_id = 7;
+                        $seguimiento->save();
+                    }elseif($cliente->st_cliente_id == 4){
+                        $cliente->st_cliente_id = 31;
+                        $cliente->save();
+                        //$seguimiento->st_seguimiento_id = 7;
+                        //$seguimiento->save();
+                    }
                 }
             }
         }

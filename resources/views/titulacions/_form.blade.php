@@ -200,7 +200,7 @@
                 <table class="table table-condensed table-striped">
                     <thead>
                         <th>Fecha</th>
-                        <th>Monto ({{ $titulacion->opcionTitulacion->costo }})</th>
+                        <th>Monto ({{ $titulacion->costo }})</th>
                         <th>Obs.</th>
                         <th>Alta</th>
                         <th>O. Pagos</th>
@@ -246,7 +246,7 @@
 </div>
 
 
-@if($suma_pagos >= $titulacion->opcionTitulacion->costo)
+@if($suma_pagos >= $titulacion->costo)
        <div class="row">
            <div class="col-md-4">
                <div class="box">

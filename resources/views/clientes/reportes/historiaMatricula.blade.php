@@ -15,12 +15,21 @@
   <body>
     <h1>Historia de cambios matricula</h1>
     <table>
-      <thead><th>fecha</th><th>Valor Anterior</th><th>Valor Nuevo</th></thead>
+      <thead><th>fecha</th><th>Campo</th><th>Responsable</th><th>Valor Anterior</th><th>Valor Nuevo</th></thead>
       <tbody>
         @foreach($cliente->revisionHistory as $history)
+        
         @if($history->fieldName()=="matricula")
-        <td>{{$history->created_at}}</td><td>{{ $history->oldValue() }}</td><td>{{ $history->newValue() }}</td>  
+        <tr>
+        <td>{{$history->created_at}}</td><td>{{$history->fieldName()}}</td><td>{{optional($history->userResponsible())->name}}</td><td>{{ $history->oldValue() }}</td><td>{{ $history->newValue() }}</td>  
+        </tr>
         @endif
+
+        @permission('clientes.historia')
+        <tr>
+        <td>{{$history->created_at}}</td><td>{{$history->fieldName()}}</td><td>{{optional($history->userResponsible())->name}}</td><td>{{ $history->oldValue() }}</td><td>{{ $history->newValue() }}</td>  
+        </tr>
+        @endpermission
         @endforeach
       </tbody>
     </table>

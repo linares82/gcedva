@@ -1699,12 +1699,22 @@ Route::post(
         'uses' => 'ClientesController@comprobanteEstudiosR'
     )
 )->middleware('auth');
+
+
 Route::get(
     '/clientes/historiaMatricula/',
     array(
         'as' => 'clientes.historiaMatricula',
         'middleware' => 'permission:clientes.historiaMatricula',
         'uses' => 'ClientesController@historiaMatricula'
+    )
+)->middleware('auth');
+Route::get(
+    '/clientes/verificaMateriasAdeudosPendientes/',
+    array(
+        'as' => 'clientes.verificaMateriasAdeudosPendientes',
+        'middleware' => 'permission:clientes.verificaMateriasAdeudosPendientes',
+        'uses' => 'ClientesController@verificaMateriasAdeudosPendientes'
     )
 )->middleware('auth');
 ////////////////////////////////////

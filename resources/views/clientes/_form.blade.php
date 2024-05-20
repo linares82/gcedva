@@ -1323,6 +1323,11 @@
                             @permission('inscripcions.registrarMaterias')
                             <a class="btn btn-xs btn-warning" href="{{ route('inscripcions.registrarMaterias', $i->id) }}"><i class="glyphicon glyphicon-edit"></i>Registrar Materias</a>
                             @endpermission
+                            @permission('clientes.verificaMateriasAdeudosPendientes')
+                            @if($cliente->st_cliente_id==4 or $cliente->st_cliente_id==31)
+                            <a class="btn btn-xs btn-warning" href="{{ route('clientes.verificaMateriasAdeudosPendientes', array('id'=>$cliente->id)) }}"><i class="glyphicon glyphicon-edit"></i>Plan E. Completo</a>
+                            @endif
+                            @endpermission
                             <a class="btn btn-xs btn-default" href='{{route("inscripcions.historial", array('inscripcion'=>$i))}}' target="_blank">Historial</a>
                             <a class="btn btn-xs btn-success" href='{{route("inscripcions.historialOficial", array('inscripcion'=>$i))}}' target="_blank">Historial O.</a>
                             @permission('inscripcions.destroy')
