@@ -210,7 +210,7 @@
         <th></th>
     </thead>
     <tbody>
-
+        
         @foreach($inventarios as $inventario)
         <tr>
             <td>{{$inventario->no_inventario}}</td>

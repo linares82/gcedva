@@ -188,8 +188,9 @@ class InventarioLevantamientosController extends Controller {
 	public function cargarCsv(Request $request){
 		$datos=$request->all();
 		$inventario_levantamiento_id=$datos['inventario_levantamiento_id'];
+		$cabecera=InventarioLevantamiento::find($datos['inventario_levantamiento_id']);
 		$plantels=PlantelInventario::pluck('name','id');
-		return view('inventarioLevantamientos.cargarCsv', compact('inventario_levantamiento_id','plantels'));
+		return view('inventarioLevantamientos.cargarCsv', compact('inventario_levantamiento_id','plantels','cabecera'));
 	}
 
 	public function cargarLineas(Request $request){
@@ -493,14 +494,24 @@ class InventarioLevantamientosController extends Controller {
 	public function inicioLevantamientoLista(Request $request){
 		$datos=$request->all();
 		//dd($datos);
-		$resultado=Inventario::select('pi.id as plantel_id','pi.name as plantel','il.fecha','inventarios.area',
+		$areas=explode(',', $datos['area']);
+		$cadena_areas="";
+		foreach($areas as $llave=>$valor){
+			$areas[$llave]="%".trim($valor)."%";
+		}
+		//dd($areas);
+		$resultado_aux=Inventario::select('pi.id as plantel_id','pi.name as plantel','il.fecha','inventarios.area',
 		'estado_bueno', 'existe_si')
 		->join('inventario_levantamientos as il','il.id','inventarios.inventario_levantamiento_id')
 		->join('plantel_inventarios as pi','pi.id','inventarios.plantel_inventario_id')
-		->whereIn('inventarios.plantel_inventario_id',$datos['plantel_f'])
-		->where('inventarios.area', 'like', '%'.$datos['area'].'%')
-		->where('inventarios.estado_bueno', $datos['estado_bueno'])
-		->where('inventarios.existe_si', $datos['existe_si'])
+		->whereIn('inventarios.plantel_inventario_id',$datos['plantel_f']);
+		//->whereIn('inventarios.area', 'like', $areas)
+		foreach($areas as $area){	
+			$resultado_aux->where('area','like', $area);
+		}
+
+		$resultado= $resultado_aux->whereIn('inventarios.estado_bueno', $datos['estado_bueno'])
+		->whereIn('inventarios.existe_si', $datos['existe_si'])
 		->whereDate('il.fecha','>=', $datos['fecha_f'])
 		->whereDate('il.fecha','<=', $datos['fecha_t'])
 		->distinct()

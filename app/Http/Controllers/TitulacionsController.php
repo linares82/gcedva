@@ -162,4 +162,13 @@ class TitulacionsController extends Controller {
 		return redirect()->route('titulacions.index')->with('message', 'Registro Borrado.');
 	}
 
+	public function actualizarCosto(Request $request){
+		$datos=$request->all();
+		$titulacion=Titulacion::find($datos['id']);
+		$opcion_titulacion=OpcionTitulacion::find($titulacion->opcion_titulacion_id);
+		$titulacion->costo=$opcion_titulacion->costo;
+		$titulacion->save();
+		return redirect()->route('titulacions.index')->with('message', 'Registro Borrado.');
+	}
+
 }

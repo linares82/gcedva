@@ -237,7 +237,7 @@ class ClientesController extends Controller
 	$curp_token=Param::where('llave', 'token_curp')->first();
         $curp_url=Param::where('llave', 'url_curp')->first();
         $api_valida_curp=['token'=> $curp_token->valor,
-        'url'=>$curp_url->valor,];
+        'url'=>$curp_url->valor];
 
         return view('clientes.create', compact('empleados', 'cuestionarios', 'estado_civiles', 'incidencias', 'plantels','api_valida_curp'))
             ->with('list', Cliente::getListFromAllRelationApps())
@@ -3084,6 +3084,283 @@ class ClientesController extends Controller
             
         }
         return redirect()->route('clientes.edit', $cliente->id)->with('message', 'Registro Actualizado.');
+    }
+
+    public function nict()
+    {
+        $e = Empleado::where('user_id', Auth::user()->id)->first();
+        $plantels = array();
+        foreach ($e->plantels as $p) {
+            array_push($plantels, $p->id);
+        }
+        $planteles = Plantel::whereIn('id', $plantels)->pluck('razon', 'id');
+        return view('clientes.reportes.nict', compact('planteles'))
+            ->with('list', Cliente::getListFromAllRelationApps());
+    }
+
+    public function nictR(Request $request)
+    {
+        $datos = $request->all();
+        $param = Param::where('llave', 'prefijo_matricula_instalacion')->first();
+        if ($param->valor <> 0) {
+            $datos['inicio_matricula'] = $param->valor . $datos['inicio_matricula'];
+        }
+        $planteles = Plantel::select('plantels.id', 'plantels.meta_total')->whereIn('plantels.id', $datos['plantel_f'])->get();
+        $totales = Cliente::select('p.razon', 'g.seccion', 'sts.name as estatus', DB::raw('count(sts.name) as total_estatus'))
+            ->join('seguimientos as s', 's.cliente_id', '=', 'clientes.id')
+            ->join('st_seguimientos as sts', 'sts.id', '=', 's.st_seguimiento_id')
+            ->join('adeudos as a', 'a.cliente_id', '=', 'clientes.id')
+            ->join('caja_conceptos as cc', 'cc.id', '=', 'a.caja_concepto_id')
+            ->join('plantels as p', 'p.id', '=', 'clientes.plantel_id')
+            ->join('st_clientes as stc', 'stc.id', '=', 'clientes.st_cliente_id')
+            ->join('cajas as c', 'c.id', '=', 'a.caja_id')
+            ->join('combinacion_clientes as ccli', 'ccli.cliente_id', '=', 'clientes.id')
+            ->join('grados as g', 'g.id', '=', 'ccli.grado_id')
+            ->where('a.pagado_bnd', 1)
+            ->where('c.st_caja_id', 1)
+            //->where('clientes.st_cliente_id', '<>', 3)
+            ->whereIn('clientes.plantel_id', $datos['plantel_f'])
+            ->where('clientes.matricula', 'like', $datos['inicio_matricula'] . "%")
+            ->whereNull('a.deleted_at')
+            ->whereNull('c.deleted_at')
+            ->whereNull('ccli.deleted_at')
+            ->where('ccli.plantel_id', '>', 0)
+            ->where('ccli.especialidad_id', '>', 0)
+            ->where('ccli.nivel_id', '>', 0)
+            ->where('ccli.grado_id', '>', 0)
+            ->where('ccli.turno_id', '>', 0)
+            ->whereRaw('(a.caja_concepto_id = 1 or a.caja_concepto_id = 22 or a.caja_concepto_id = 23 or a.caja_concepto_id = 25)')
+            ->groupBy('p.razon')
+            ->groupBy('g.seccion')
+            ->groupBy('sts.name')
+            ->get();
+
+        $totales2 = Cliente::select('p.razon', 'sts.name as estatus', DB::raw('count(sts.name) as total_estatus'))
+            ->join('seguimientos as s', 's.cliente_id', '=', 'clientes.id')
+            ->join('st_seguimientos as sts', 'sts.id', '=', 's.st_seguimiento_id')
+            ->join('adeudos as a', 'a.cliente_id', '=', 'clientes.id')
+            ->join('caja_conceptos as cc', 'cc.id', '=', 'a.caja_concepto_id')
+            ->join('plantels as p', 'p.id', '=', 'clientes.plantel_id')
+            ->join('st_clientes as stc', 'stc.id', '=', 'clientes.st_cliente_id')
+            ->join('cajas as c', 'c.id', '=', 'a.caja_id')
+            ->join('combinacion_clientes as ccli', 'ccli.cliente_id', '=', 'clientes.id')
+            ->join('grados as g', 'g.id', '=', 'ccli.grado_id')
+            ->where('a.pagado_bnd', 1)
+            ->where('c.st_caja_id', 1)
+            //->whereIn('a.caja_concepto_id', array(1, 22,23, 25))// se quito concepto 22 tramites adelante se hace especificamente este trabajo
+            //->where('clientes.st_cliente_id', '<>', 3)
+            ->whereIn('clientes.plantel_id', $datos['plantel_f'])
+            ->where('clientes.matricula', 'like', $datos['inicio_matricula'] . "%")
+            ->whereNull('a.deleted_at')
+            ->whereNull('c.deleted_at')
+            ->whereNull('ccli.deleted_at')
+            ->where('ccli.plantel_id', '>', 0)
+            ->where('ccli.especialidad_id', '>', 0)
+            ->where('ccli.nivel_id', '>', 0)
+            ->where('ccli.grado_id', '>', 0)
+            ->where('ccli.turno_id', '>', 0)
+            ->whereRaw('(a.caja_concepto_id = 1 or a.caja_concepto_id = 22 or a.caja_concepto_id = 23 or a.caja_concepto_id = 25)')
+            ->groupBy('p.razon')
+            //->groupBy('g.seccion')
+            ->groupBy('sts.name')
+            ->get();
+        //dd($totales->toArray());
+
+        $detalle = Cliente::select(
+            'p.razon',
+            'clientes.matricula',
+            'clientes.id as cliente_id',
+            'clientes.ape_paterno',
+            'clientes.ape_materno',
+            'clientes.nombre',
+            'clientes.nombre2',
+            'clientes.bnd_reclasificado',
+            'clientes.tel_fijo',
+            'clientes.tel_cel',
+            'stc.name as st_cliente',
+            'sts.name as st_seguimiento',
+            'g.seccion',
+            DB::raw('concat(emp.nombre, " ",emp.ape_paterno, " ",emp.ape_materno) as empleado_nombre'),
+            //'cc.name as concepto',
+            //'a.caja_concepto_id',
+            //'c.fecha as fecha_caja',
+            'clientes.bnd_doc_oblig_entregados',
+            'tu.name as turno'
+        )
+            ->join('seguimientos as s', 's.cliente_id', '=', 'clientes.id')
+            ->join('st_seguimientos as sts', 'sts.id', '=', 's.st_seguimiento_id')
+            //->join('adeudos as a', 'a.cliente_id', '=', 'clientes.id')
+            //->join('caja_conceptos as cc', 'cc.id', '=', 'a.caja_concepto_id')
+            ->join('plantels as p', 'p.id', '=', 'clientes.plantel_id')
+            ->join('st_clientes as stc', 'stc.id', '=', 'clientes.st_cliente_id')
+            ->join('empleados as emp', 'emp.id', '=', 'clientes.empleado_id')
+            //->join('cajas as c', 'c.id', '=', 'a.caja_id')
+            ->join('combinacion_clientes as ccli', 'ccli.cliente_id', '=', 'clientes.id')
+            ->join('turnos as tu', 'tu.id', 'ccli.turno_id')
+            ->join('grados as g', 'g.id', '=', 'ccli.grado_id')
+            //->where('a.pagado_bnd', 1)
+            //->where('c.st_caja_id', 1)
+            //->where('clientes.id', 88063)
+            //->whereIn('a.caja_concepto_id', array(1,22,23, 25)) // se quito concepto 22 tramites adelante se hace especificamente este trabajo
+            //->where('clientes.st_cliente_id', '<>', 3)
+            ->whereIn('clientes.plantel_id', $datos['plantel_f'])
+            ->where('clientes.matricula', 'like', $datos['inicio_matricula'] . "%")
+            //->whereNull('a.deleted_at')
+            //->whereNull('c.deleted_at')
+            ->whereNull('ccli.deleted_at')
+            ->where('ccli.plantel_id', '>', 0)
+            ->where('ccli.especialidad_id', '>', 0)
+            ->where('ccli.nivel_id', '>', 0)
+            ->where('ccli.grado_id', '>', 0)
+            ->where('ccli.turno_id', '>', 0)
+            //->whereRaw('(a.caja_concepto_id = 1 or a.caja_concepto_id = 22 or a.caja_concepto_id = 23 or a.caja_concepto_id = 25)')
+            ->orderBy('p.razon')
+            ->orderBy('g.seccion')
+            ->get();
+        //dd($detalle->toArray());
+        $registros = array();
+        foreach ($detalle->toArray() as $d) {
+            //dd($d['cliente_id']);
+            $adeudos12325 = Adeudo::where('cliente_id', $d['cliente_id'])
+                ->where('pagado_bnd', 1)
+                ->whereIn('caja_concepto_id', array(1, 23, 25))->get();
+            $d['12325'] = "";
+            $d['fecha_caja_12325'] = "";
+            foreach ($adeudos12325 as $adeudo) {
+                $d['12325'] = $adeudo->cajaConcepto->name;
+                $d['fecha_caja_12325'] = $adeudo->caja->fecha;
+                break;
+            }
+
+            if ($d['bnd_doc_oblig_entregados'] == 1) {
+                $d['bnd_doc_oblig_entregados'] = 'Si';
+            } else {
+                $d['bnd_doc_oblig_entregados'] = 'No';
+            }
+            $tramites = Caja::select('cajas.fecha as fecha_caja', 'cc.name as concepto')
+                ->join('caja_lns as cln', 'cln.caja_id', '=', 'cajas.id')
+                ->join('caja_conceptos as cc', 'cc.id', '=', 'cln.caja_concepto_id')
+                //->whereDate('fecha','>=',$d['fecha_caja'])
+                ->where('cajas.st_caja_id', 1)
+                ->where('cln.caja_concepto_id', 22)
+                ->where('cliente_id', $d['cliente_id'])
+                ->first();
+
+            if (is_null($tramites)) {
+                $d['tramites'] = "No";
+                $d['tramites_fecha'] = "";
+            } else {
+                //dd($tramites->toArray());    
+                $d['tramites'] = "Si";
+                $d['tramites_fecha'] = $tramites->fecha_caja;
+            }
+            $primera_mensualidad = Caja::select('cajas.fecha as fecha_caja', 'cc.name as concepto')
+                ->where('cliente_id', $d['cliente_id'])
+                ->join('caja_lns as cln', 'cln.caja_id', '=', 'cajas.id')
+                ->join('caja_conceptos as cc', 'cc.id', '=', 'cln.caja_concepto_id')
+                //->whereDate('fecha','>=',$d['fecha_caja'])
+                ->where('cajas.st_caja_id', 1)
+                ->where('cc.bnd_mensualidad', 1)
+                ->first();
+            if (is_null($primera_mensualidad)) {
+                $d['primera_mensualidad'] = "No";
+                $d['primera_mensualidad_fecha'] = "";
+                //dd($primera_mensualidad);
+            } else {
+                $d['primera_mensualidad'] = "Si";
+                $d['primera_mensualidad_fecha'] = $primera_mensualidad->fecha_caja;
+            }
+            //dd($d);
+            array_push($registros, $d);
+        }
+        //dd($registros);
+
+        $totales_seccion = array();
+        $seccion = "";
+        $contador_seccion = 0;
+
+        $plantel = "";
+        $estatus = "";
+        $matricula = "";
+        $contador_plantel_estatus = 0;
+        $totales_plantel_estatus = array();
+        //dd();
+        foreach ($registros as $r) {
+            //dd($r);
+            if ($matricula == $r['matricula']) {
+                continue;
+            }
+            if ($plantel != $r['razon'] and $plantel != "") {
+                array_push(
+                    $totales_plantel_estatus,
+                    array("razon" => $plantel, "estatus" => $estatus, "total" => $contador_plantel_estatus)
+                );
+                $contador_plantel_estatus = 0;
+            }
+            if ($estatus != $r['st_seguimiento'] and $estatus != "") {
+                array_push(
+                    $totales_plantel_estatus,
+                    array("razon" => $plantel, "estatus" => $estatus, "total" => $contador_plantel_estatus)
+                );
+                $contador_plantel_estatus = 0;
+            }
+            $contador_seccion++;
+            $contador_plantel_estatus++;
+            $plantel = $r['razon'];
+            $estatus = $r['st_seguimiento'];
+            $matricula = $r['matricula'];
+        }
+        array_push(
+            $totales_plantel_estatus,
+            array("razon" => $plantel, "estatus" => $estatus, "total" => $contador_plantel_estatus)
+        );
+        //dd($totales_plantel_estatus);
+
+
+        $plantel = "";
+        $seccion = "";
+        $estatus = "";
+        $matricula = "";
+        $contador_plantel_seccion_estatus = 0;
+        $totales_plantel_seccion_estatus = array();
+        foreach ($registros as $r) {
+            //dd($r);
+            if ($matricula == $r['matricula']) {
+                continue;
+            }
+            if ($plantel != $r['razon'] and $plantel != "") {
+                array_push(
+                    $totales_plantel_seccion_estatus,
+                    array("razon" => $plantel, "seccion" => $seccion, "estatus" => $estatus, "total" => $contador_plantel_seccion_estatus)
+                );
+                $contador_plantel_seccion_estatus = 0;
+            }
+            if ($seccion != $r['seccion'] and $seccion != "") {
+                array_push(
+                    $totales_plantel_seccion_estatus,
+                    array("razon" => $plantel, "seccion" => $seccion, "estatus" => $estatus, "total" => $contador_plantel_seccion_estatus)
+                );
+                $contador_plantel_seccion_estatus = 0;
+            }
+            if ($estatus != $r['st_seguimiento'] and $estatus != "") {
+                array_push(
+                    $totales_plantel_seccion_estatus,
+                    array("razon" => $plantel, "seccion" => $seccion, "estatus" => $estatus, "total" => $contador_plantel_seccion_estatus)
+                );
+                $contador_plantel_seccion_estatus = 0;
+            }
+            $contador_plantel_seccion_estatus++;
+            $plantel = $r['razon'];
+            $seccion = $r['seccion'];
+            $estatus = $r['st_seguimiento'];
+            $matricula = $r['matricula'];
+        }
+        array_push(
+            $totales_plantel_seccion_estatus,
+            array("razon" => $plantel, "seccion" => $seccion, "estatus" => $estatus, "total" => $contador_plantel_seccion_estatus)
+        );
+        //dd($totales_plantel_seccion_estatus);
+        return view('clientes.reportes.nictR', compact('registros', 'totales_plantel_estatus', 'totales_plantel_seccion_estatus'));
     }
 
 }

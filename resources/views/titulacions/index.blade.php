@@ -186,6 +186,9 @@
                                     @permission('titulacions.edit')
                                     <a class="btn btn-xs btn-primary" href="{{ route('titulacions.duplicate', $titulacion->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
                                     @endpermission
+                                    @permission('titulacions.actualizarCosto')
+                                    <a class="btn btn-xs btn-default" href="{{ route('titulacions.actualizarCosto', array('id'=>$titulacion->id)) }}"><i class="glyphicon glyphicon-duplicate"></i> Actualizar Costo</a>
+                                    @endpermission
                                     @permission('titulacions.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('titulacions.edit', $titulacion->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
                                     @endpermission

@@ -127,7 +127,7 @@ class ProcesoActivoABajas extends Command
                         $seguimiento->save();
 
                         if ($paso->bnd_borrar_adeudos == 1) {
-                            $adeudos = Adeudo::where('cliente_id', $cliente->cliente_id)
+                            $adeudos = Adeudo::where('cliente_id', $cliente->id)
                                 ->where('caja_id', 0)
                                 ->where('pagado_bnd', 0)
                                 ->whereDate('adeudos.fecha_pago', '>', Date('Y-m-d'))

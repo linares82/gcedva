@@ -30,9 +30,11 @@
 
             {!! Form::open(array('route' => 'inventarioLevantamientos.cargarLineas', 'files'=>true)) !!}
             <div class="form-group col-md-4 @if($errors->has('plantel_id')) has-error @endif">
-                            <label for="plantel_id-field">Plantel</label>
+                            <label for="plantel_id-field" class="col-md-3">Plantel</label>
                             {!! Form::hidden("inventario_levantamiento_id", $inventario_levantamiento_id, array("class" => "form-control input-sm", "id" => "inventario_levantamiento_id-field")) !!}
-                            {!! Form::select("plantel_id", $plantels, null, array("class" => "form-control select_seguridad", "id" => "plantel_id-field")) !!}
+                            {!! Form::text("plantel_id", isset($cabecera) ? $cabecera->plantel_inventario_id : null, array("class" => "form-control", "id" => "plantel_inventario_id-field", 'readonly'=>true, 'class'=>'col-md-3')) !!}
+                            {!! Form::select("plantel", $plantels, isset($cabecera) ? $cabecera->plantel_inventario_id : null, array("class" => "form-control", "id" => "plantel-field", 'readonly'=>true, 'class'=>'col-md-6')) !!}
+                            
                             @if($errors->has("plantel_id"))
                             <span class="help-block">{{ $errors->first("plantel_id") }}</span>
                             @endif

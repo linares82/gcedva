@@ -236,6 +236,12 @@ trait GetAllDataTrait
                 $myQuery = $myQuery->whereIn('grupos.plantel_id', $planteles);
                 //}
                 break;
+            case "inventarios":
+                //if (Auth::user()->can('IFiltroEmpleadosXPlantel')) {
+                //dd("fil");
+                $myQuery = $myQuery->orderBy('no_inventario', 'asc');
+                //}
+                break;
             case "materia":
                 //if (Auth::user()->can('IFiltroEmpleadosXPlantel')) {
                 $myQuery = $myQuery->whereIn('materia.plantel_id', $planteles);

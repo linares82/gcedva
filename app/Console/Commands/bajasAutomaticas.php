@@ -82,7 +82,7 @@ class bajasAutomaticas extends Command
                     ->where('cc.nivel_id', '>', 0)
                     ->where('cc.grado_id', '>', 0)
                     ->where('cc.turno_id', '>', 0)
-                    ->whereIn('c.id', array(8111,12843,18284, 45432))
+                    //->whereIn('c.id', array(8111,12843,18284, 45432))
                     ->whereColumn('adeudos.combinacion_cliente_id', 'cc.id')
                     ->when($bnd_mensualidad, function($q, $bnd_mensualidad){
                         return $q->where('caj_con.bnd_mensualidad', $bnd_mensualidad);
@@ -101,7 +101,7 @@ class bajasAutomaticas extends Command
                     //->having('adeudos_cantidad', '>=', 1)
                     //->having('adeudos_cantidad', '<=', 3)
                     ->get();
-                dd($registros->toArray());
+                //dd($registros->toArray());
                 foreach ($registros as $registro) {
                     $hoy = date('Y-m-d');
                     $eventos = HistoriaCliente::where('cliente_id', $registro->cliente_id)

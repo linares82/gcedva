@@ -32,7 +32,7 @@
         </div>
 
         <div class="form-group col-md-6 @if($errors->has('area')) has-error @endif">
-            <label for="area-field">Area:</label>
+            <label for="area-field">Area(varias opciones, separadas por comas ","):</label>
             {!! Form::text("area", null, array("class" => "form-control input-sm", "id" => "area-field")) !!}
             @if($errors->has("area"))
             <span class="help-block">{{ $errors->first("area") }}</span>
@@ -41,7 +41,7 @@
 
         <div class="form-group col-md-6 @if($errors->has('existe_si')) has-error @endif" style="clear:left;">
             <label for="existe_si-field">Existe si</label>
-            {!! Form::select("existe_si", $catExiste, null, array("class" => "form-control", "id" => "existe_si-field")) !!}
+            {!! Form::select("existe_si[]", $catExiste, null, array("class" => "form-control select_seguridad", "id" => "existe_si-field", "multiple"=>true)) !!}
             @if($errors->has("existe_si"))
             <span class="help-block">{{ $errors->first("existe_si") }}</span>
             @endif
@@ -49,7 +49,7 @@
 
         <div class="form-group col-md-6 @if($errors->has('estado_bueno')) has-error @endif">
             <label for="estado_bueno-field">Estado bueno</label>
-            {!! Form::select("estado_bueno", $catEstado, null, array("class" => "form-control", "id" => "estado_bueno-field")) !!}
+            {!! Form::select("estado_bueno[]", $catEstado, null, array("class" => "form-control select_seguridad", "id" => "estado_bueno-field", "multiple"=>true)) !!}
             @if($errors->has("estado_bueno"))
             <span class="help-block">{{ $errors->first("estado_bueno") }}</span>
             @endif
