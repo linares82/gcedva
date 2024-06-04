@@ -29,6 +29,7 @@ return array(
     'AWS\\CRT\\NativeResource' => $vendorDir . '/aws/aws-crt-php/src/AWS/CRT/NativeResource.php',
     'AWS\\CRT\\OptionValue' => $vendorDir . '/aws/aws-crt-php/src/AWS/CRT/Options.php',
     'AWS\\CRT\\Options' => $vendorDir . '/aws/aws-crt-php/src/AWS/CRT/Options.php',
+    'AddAbreviaturaEstadoToClientesTable' => $baseDir . '/database/migrations/2024_06_03_165920_add_abreviatura_estado_to_clientes_table.php',
     'AddAbreviaturaToEstadosTable' => $baseDir . '/database/migrations/2020_06_23_113026_add_abreviatura_to_estados_table.php',
     'AddAbreviaturaToMeseTable' => $baseDir . '/database/migrations/2020_08_27_165953_add_abreviatura_to_mese_table.php',
     'AddActaFinalToCalificacionsTable' => $baseDir . '/database/migrations/2021_04_12_143147_add_acta_final_to_calificacions_table.php',

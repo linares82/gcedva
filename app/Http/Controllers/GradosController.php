@@ -136,7 +136,7 @@ class GradosController extends Controller
     public function destroy($id, Grado $grado)
     {
         $grado = $grado->find($id);
-        if($grado->combinacionClientes->count==0){
+        if(count($grado->combinacionClientes)==0){
             $grado->delete();
         }
         

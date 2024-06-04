@@ -19,6 +19,7 @@ use App\Paise;
 use App\Param;
 use App\Adeudo;
 use App\Correo;
+use App\Estado;
 use App\Cliente;
 use App\Lectivo;
 use App\Plantel;
@@ -344,6 +345,10 @@ class ClientesController extends Controller
         } else {
             $input['bnd_reingreso'] = 1;
         }
+        if(!is_null($input['abreviatura_estado'])){
+            $estado= Estado::where('abreviatura', $input['abreviatura_estado'])->first();
+            $input['estado_nacimiento_id']=$estado->id;
+        }
         //dd($input);
         //create data
         try {
@@ -660,6 +665,11 @@ class ClientesController extends Controller
             $input['bnd_regingreso'] = 0;
         } else {
             $input['bnd_regingreso'] = 1;
+        }
+
+        if(!is_null($input['abreviatura_estado'])){
+            $estado= Estado::where('abreviatura', $input['abreviatura_estado'])->first();
+            $input['estado_nacimiento_id']=$estado->id;
         }
 
 

@@ -911,7 +911,8 @@
                 </div>
                 <div class="form-group col-md-4 @if($errors->has('estado_nacimiento_id')) has-error @endif">
                     <label for="estado_nacimiento_id-field">Estado Nacimiento</label>
-                    {!! Form::select("estado_nacimiento_id", $list["Estado"], null, array("class" => "form-control select_seguridad", "id" => "estado_nacimiento_id-field")) !!}
+                    {!! Form::text("abreviatura_estado", null, array("class" => "form-control input-sm", "id" => "abreviatura_estado-field", 'readonly'=>true)) !!}
+                    {!! Form::select("estado_nacimiento_id", $list["Estado"], null, array("class" => "form-control select_seguridad", "id" => "estado_nacimiento_id-field", 'disabled'=>true)) !!}
                     @if($errors->has("estado_nacimiento_id"))
                     <span class="help-block">{{ $errors->first("estado_nacimiento_id") }}</span>
                     @endif
@@ -1854,8 +1855,6 @@ $(document).ready(function() {
                 //alert(data.responseJson.error_message);
             },
             success: function(data){
-                //console.log(data);
-
                 if(data.error){
                     alert(data.error_message);
                 }else{
@@ -1873,6 +1872,8 @@ $(document).ready(function() {
                     $('#nacionalidad-field').val(solicitante.Nacionalidad);
                     $('#fec_nacimiento-field').val(solicitante.FechaNacimiento);
                     $('#lugar_nacimiento-field').val(solicitante.EntidadNacimiento);
+                    $('#abreviatura_estado-field').val(solicitante.ClaveEntidadNacimiento);
+                    
                     alert('Datos consultados y copiados correctamente');
                     }
                 

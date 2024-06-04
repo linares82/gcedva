@@ -143,4 +143,11 @@ class EstadosController extends Controller
 		//dd($municipios);
 		return response()->json(['resultado' => $lista]);
 	}
+
+	public function findByAbreviatura(Request $request){
+		//dd($request->input('ClaveEntidadNacimiento'));
+		$estado= Estado::where('abreviatura', $request->input('ClaveEntidadNacimiento'))->first();
+		//dd($estado);
+		return $estado;
+	}
 }

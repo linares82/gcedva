@@ -832,6 +832,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'AWS\\CRT\\NativeResource' => __DIR__ . '/..' . '/aws/aws-crt-php/src/AWS/CRT/NativeResource.php',
         'AWS\\CRT\\OptionValue' => __DIR__ . '/..' . '/aws/aws-crt-php/src/AWS/CRT/Options.php',
         'AWS\\CRT\\Options' => __DIR__ . '/..' . '/aws/aws-crt-php/src/AWS/CRT/Options.php',
+        'AddAbreviaturaEstadoToClientesTable' => __DIR__ . '/../..' . '/database/migrations/2024_06_03_165920_add_abreviatura_estado_to_clientes_table.php',
         'AddAbreviaturaToEstadosTable' => __DIR__ . '/../..' . '/database/migrations/2020_06_23_113026_add_abreviatura_to_estados_table.php',
         'AddAbreviaturaToMeseTable' => __DIR__ . '/../..' . '/database/migrations/2020_08_27_165953_add_abreviatura_to_mese_table.php',
         'AddActaFinalToCalificacionsTable' => __DIR__ . '/../..' . '/database/migrations/2021_04_12_143147_add_acta_final_to_calificacions_table.php',

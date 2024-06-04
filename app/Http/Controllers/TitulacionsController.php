@@ -168,7 +168,7 @@ class TitulacionsController extends Controller {
 		$opcion_titulacion=OpcionTitulacion::find($titulacion->opcion_titulacion_id);
 		$titulacion->costo=$opcion_titulacion->costo;
 		$titulacion->save();
-		return redirect()->route('titulacions.index')->with('message', 'Registro Borrado.');
+		return redirect()->route('titulacions.index',array('q[cliente_id_lt]'=>$titulacion->cliente_id));
 	}
 
 }
