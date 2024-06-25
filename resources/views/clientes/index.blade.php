@@ -132,12 +132,12 @@
                             
                             <div class="form-group col-md-4">
                                 <label for="q_clientes.medio_id_lt">MEDIO</label>
-                                    {!! Form::select("medio_id", $list1["Medio"], "{{ @(Request::input('q')['clientes.medio_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[clientes.medio_id_lt]", "id"=>"q_clientes.medio_id_lt", "style"=>"width:100%;" )) !!}
+                                    {!! Form::select("medio_id", $medios, "{{ @(Request::input('q')['clientes.medio_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[clientes.medio_id_lt]", "id"=>"q_clientes.medio_id_lt", "style"=>"width:100%;" )) !!}
                             </div>
                             
                             <div class="form-group col-md-4" style="clear:left;">
                                 <label for="q_clientes.st_cliente_id_lt">ESTATUS</label>
-                                    {!! Form::select("st_cliente_id", $list1["StCliente"], "{{ @(Request::input('q')['clientes.st_cliente_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[clientes.st_cliente_id_lt]", "id"=>"q_clientes.st_cliente_id_lt", "style"=>"width:100%;" )) !!}
+                                    {!! Form::select("st_cliente_id", $stClientes, "{{ @(Request::input('q')['clientes.st_cliente_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[clientes.st_cliente_id_lt]", "id"=>"q_clientes.st_cliente_id_lt", "style"=>"width:100%;" )) !!}
                             </div>
                         
                             <div class="form-group col-md-4">
@@ -149,38 +149,38 @@
                             <div class="form-group col-md-4" >
                                 <label for="q_clientes.plantel_id_lt">PLANTEL</label>
                                 
-                                    {!! Form::select("clientes.plantel_id", $list1["Plantel"], "{{ @(Request::input('q')['clientes.plantel_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[clientes.plantel_id_lt]", "id"=>"q_clientes.plantel_id_lt", "style"=>"width:100%;", "onchange"=>"cambioOpcion()")) !!}
+                                    {!! Form::select("clientes.plantel_id", $planteles, "{{ @(Request::input('q')['clientes.plantel_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[clientes.plantel_id_lt]", "id"=>"q_clientes.plantel_id_lt", "style"=>"width:100%;", "onchange"=>"cambioOpcion()")) !!}
                                     <div id='loading10' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                             </div>
                             
                             <div class="form-group col-md-4" >
                                 <label for="q_clientes.especialidad_id_lt">ESPECIALIDAD</label>
-                                    {!! Form::select("clientes.especialidad_id", $list1["Especialidad"], "{{ @(Request::input('q')['clientes.especialidad_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[clientes.especialidad_id_lt]", "id"=>"q_clientes.especialidad_id_lt", "style"=>"width:100%;", "onchange"=>"getCmbNivel()")) !!}
+                                    {!! Form::select("clientes.especialidad_id", [], "{{ @(Request::input('q')['clientes.especialidad_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[clientes.especialidad_id_lt]", "id"=>"q_clientes.especialidad_id_lt", "style"=>"width:100%;", "onchange"=>"getCmbNivel()")) !!}
                             </div>
 
                             <div class="form-group col-md-4" >
                                 <label for="q_clientes.nivel_id_lt">nivel</label>
-                                    {!! Form::select("clientes.nivel_id", $list1["Nivel"], "{{ @(Request::input('q')['clientes.nivel_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[clientes.nivel_id_lt]", "id"=>"q_clientes.nivel_id_lt", "style"=>"width:100%;", "onchange"=>"getCmbGrado()")) !!}
+                                    {!! Form::select("clientes.nivel_id", [], "{{ @(Request::input('q')['clientes.nivel_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[clientes.nivel_id_lt]", "id"=>"q_clientes.nivel_id_lt", "style"=>"width:100%;", "onchange"=>"getCmbGrado()")) !!}
                             </div>
 
                             <div class="form-group col-md-4" >
                                 <label for="q_clientes.grado_id_lt">Grado</label>
-                                    {!! Form::select("clientes.grado_id", $list1["Grado"], "{{ @(Request::input('q')['clientes.grado_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[clientes.grado_id_lt]", "id"=>"q_clientes.grado_id_lt", "style"=>"width:100%;")) !!}
+                                    {!! Form::select("clientes.grado_id", [], "{{ @(Request::input('q')['clientes.grado_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[clientes.grado_id_lt]", "id"=>"q_clientes.grado_id_lt", "style"=>"width:100%;")) !!}
                             </div>
                             
                             <div class="form-group col-md-4">
                                 <label for="q_clientes.empleado_id_lt">EMPLEADO</label>
-                                    {!! Form::select("clientes.empleado_id", $list1["Empleado"], "{{ @(Request::input('q')['clientes.empleado_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[clientes.empleado_id_lt]", "id"=>"q_clientes.empleado_id_lt", "style"=>"width:100%;" )) !!}
+                                    {!! Form::select("clientes.empleado_id", $empleados, "{{ @(Request::input('q')['clientes.empleado_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[clientes.empleado_id_lt]", "id"=>"q_clientes.empleado_id_lt", "style"=>"width:100%;" )) !!}
                             </div>
                             
                             <div class="form-group col-md-4">
                                 <label for="q_clientes.tpo_informe_id_lt">TIPO INFORME</label>
-                                    {!! Form::select("clientes.tpo_informe_id", $list1["TpoInforme"], "{{ @(Request::input('q')['clientes.tpo_informe_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[clientes.tpo_informe_id_lt]", "id"=>"q_clientes.tpo_informe_id_lt", "style"=>"width:100%;" )) !!}
+                                    {!! Form::select("clientes.tpo_informe_id", $tpoInformes, "{{ @(Request::input('q')['clientes.tpo_informe_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[clientes.tpo_informe_id_lt]", "id"=>"q_clientes.tpo_informe_id_lt", "style"=>"width:100%;" )) !!}
                             </div>
                             
                             <div class="form-group col-md-4">
                                 <label for="q_clientes.usu_alta_id_cont">Usuario Alta</label>
-                                {!! Form::select("usu_alta_id", $users, "{{ @(Request::input('q')['clientes.usu_alta_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[clientes.usu_alta_id_lt]", "id"=>"q_clientes.usu_alta_id_lt", "style"=>"width:100%;" )) !!}    
+                                {!! Form::select("usu_alta_id", $usuarios, "{{ @(Request::input('q')['clientes.usu_alta_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[clientes.usu_alta_id_lt]", "id"=>"q_clientes.usu_alta_id_lt", "style"=>"width:100%;" )) !!}    
                             </div>
                             
                             <div class="form-group col-md-4 fec @if($errors->has('created_at_mayorq')) has-error @endif">
@@ -266,9 +266,9 @@
                                 </td>
                                 <td>{{$cliente->cliente->stCliente->name}}</td>
                                 <td>
-                                @if(isset($cliente->cliente->plantel))
-                                {{$cliente->cliente->plantel->razon}}
-                                @endif
+                                
+                                {{optional($cliente->cliente->plantel)->razon}}
+                                
                                 </td>
                                 
                                 <td>
@@ -306,11 +306,14 @@
                                     <a class="btn btn-xs btn-primary" href="{{ route('clientes.duplicate', $cliente->cliente->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>
                                     @endpermission
                                     @php
-                                    $planteles = array();
+
+                                    $planteles=$empleado->plantels->pluck('id')->toArray();
+                                    //dd($planteles->toArray());
+                                    /*$planteles = array();
                 				    array_push($planteles, intval(0));
                                     foreach ($empleado->plantels as $plantel) {
                                         array_push($planteles, intval($plantel->id));
-                                    }
+                                    }*/
                                     @endphp
 
                                     @if(array_search(intval($cliente->cliente->plantel_id),$planteles)<>false)
@@ -328,12 +331,12 @@
                                     @endpermission
                                     @permission('cajas.buscarVenta')
                                     @php
-                                        $combinacion=App\CombinacionCliente::where('cliente_id',$cliente->cliente->id)->whereNull('deleted_at')->get();
+                                        $combinacion=App\CombinacionCliente::where('cliente_id',$cliente->cliente->id)->whereNull('deleted_at')->count();
                                         //dd($combinacion->count());
-                                        $adeudos=App\Adeudo::where('cliente_id',$cliente->cliente->id)->whereNull('deleted_at')->get();
+                                        $adeudos=App\Adeudo::where('cliente_id',$cliente->cliente->id)->whereNull('deleted_at')->count();
                                         //dd($adeudos->count());
                                     @endphp
-                                    @if($adeudos->count()>0 and $combinacion->count()>0)
+                                    @if($adeudos>0 and $combinacion>0)
                                     {!! Form::model($cliente, array('route' => array('cajas.buscarCliente'),'method' => 'post', 'style' => 'display: inline;')) !!}
                                         {!! Form::hidden("cliente_id", null, array("class" => "form-control input-sm", "id" => "cliente_id-field")) !!}
                                         <button type="submit" class="btn btn-xs btn-info"><i class="glyphicon glyphicon-trash"></i> Caja</button>
@@ -397,7 +400,7 @@
             $.ajax({
             url: '{{ route("especialidads.getCmbEspecialidad") }}',
                     type: 'GET',
-                    data: "plantel_id=" + plantel.options[plantel.selectedIndex].value + "&especialidad_id=" + especialidad.options[especialidad.selectedIndex].value + "",
+                    data: "plantel_id=" + plantel.options[plantel.selectedIndex].value,
                     dataType: 'json',
                     beforeSend : function(){$("#loading10").show(); },
                     complete : function(){$("#loading10").hide(); },
@@ -459,8 +462,7 @@
                 data: {
                         'plantel_id':plantel.options[plantel.selectedIndex].value,
                         'especialidad_id':especialidad.options[especialidad.selectedIndex].value,
-                        'nivel_id':nivel.options[nivel.selectedIndex].value,
-                        'grado_id':grado.options[grado.selectedIndex].value,
+                        'nivel_id':nivel.options[nivel.selectedIndex].value
                     },
                 dataType: 'json',
                 beforeSend : function(){$("#loading10").show(); },

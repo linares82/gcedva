@@ -33,6 +33,8 @@
 
             <div class="form-group col-md-6 @if($errors->has('plantel_f')) has-error @endif">
                 <label for="plantel_f-field">Plantel de:</label>
+                <a href='#' id='select-all'>Seleccionar todos</a> / 
+                <a href='#' id='deselect-all'>Deseleccionar todos</a>
                 {!! Form::select("plantel_f[]", $planteles, null, array("class" => "form-control select_seguridad", "id" => "plantel_f-field", 'multiple'=>true)) !!}
                 @if($errors->has("plantel_f"))
                 <span class="help-block">{{ $errors->first("plantel_f") }}</span>
@@ -104,6 +106,15 @@
         $('select#ciclo_f-field').multiSelect('select_all');
         return false;
     });
+
+    $('#select-all').click(function(){
+            $('select#plantel_f-field').multiSelect('select_all');
+            return false;
+        });
+        $('#deselect-all').click(function(){
+            $('select#plantel_f-field').multiSelect('deselect_all');
+            return false;
+        });
 
     $('#reportes_f-field').change(function(){
         if($('#reportes_f-field option:selected').val()==6 || $('#reportes_f-field option:selected').val()==7){

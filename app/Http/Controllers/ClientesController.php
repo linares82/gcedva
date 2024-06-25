@@ -15,6 +15,8 @@ use App\User;
 use App\Aviso;
 use App\Grado;
 use App\Grupo;
+use App\Medio;
+use App\Nivel;
 use App\Paise;
 use App\Param;
 use App\Adeudo;
@@ -29,8 +31,10 @@ use App\DocAlumno;
 use App\Municipio;
 use App\Plantilla;
 use App\Preguntum;
+use App\StCliente;
 use Carbon\Carbon;
 use App\PlanPagoLn;
+use App\TpoInforme;
 use App\EstadoCivil;
 use App\Inscripcion;
 use App\Seguimiento;
@@ -85,7 +89,7 @@ class ClientesController extends Controller
         }
 
         $users = User::pluck('name', 'id');
-        $users->prepend('Seleccionar opciÃƒÆ’Ã‚Â³n', 0);
+        $users->prepend('Seleccionar opción', 0);
         if (isset($_REQUEST["p"])) {
             if (session()->has('filtro_clientes')) {
                 session(['filtro_clientes' => 1]);
@@ -103,11 +107,22 @@ class ClientesController extends Controller
         //dd($request);
         $clientes = Seguimiento::getAllData($request, 10, session('filtro_clientes'));
         $empleado = Empleado::where('user_id', '=', Auth::user()->id)->first();
+        $medios= Medio::pluck('name','id');
+        $stClientes= StCliente::pluck('name','id');
+        $planteles= Plantel::pluck('razon','id');
+        /*$especialidades= Especialidad::pluck('name','id');
+        $niveles= Nivel::pluck('name','id');
+        $grados= Grado::pluck('name','id');*/
+        $empleados=Empleado::select(DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name, id'))->pluck('name','id');
+        $tpoInformes=TpoInforme::pluck('name','id');
+        $usuarios=User::pluck('name','id');
+        
 
-
-        return view('clientes.index', compact('clientes', 'users', 'empleado', 'fecha_superada'))
-            ->with('list', Seguimiento::getListFromAllRelationApps())
-            ->with('list1', Cliente::getListFromAllRelationApps());
+        return view('clientes.index', compact('clientes', 'users', 'empleado', 'fecha_superada','medios','stClientes',
+        'planteles','empleados','tpoInformes','usuarios'
+        ))
+            ->with('list', Seguimiento::getListFromAllRelationApps());
+            //->with('list1', Cliente::getListFromAllRelationApps());
     }
 
     public function indexEventos(Request $request)

@@ -146,13 +146,14 @@ trait GetAllDataTrait
         }
         //dd(Auth::user()->can('IfiltroClientesXPlantel'));
         //dd();
-        $empleado = Empleado::where('user_id', '=', Auth::user()->id)->where('st_empleado_id','<>',3)->first();
-        
+        $planteles = Empleado::where('user_id', '=', Auth::user()->id)->where('st_empleado_id','<>',3)->first()->plantels->pluck('id');
+        //dd($empleado);
+        /*
         $planteles = array();
         foreach ($empleado->plantels as $p) {
             //dd($p->id);
             array_push($planteles, $p->id);
-        }
+        }*/
 
         //dd($empleado);
         //dd($baseTable);
@@ -314,17 +315,17 @@ trait GetAllDataTrait
                 if ($baseTable == "seguimientos" and Auth::user()->can('IfiltroClientesXEmpleado')) {
                     $myQuery = $myQuery->where('clientes.empleado_id', '=', $empleado->id);
                 }
-                if ($baseTable == "seguimientos") { //and Auth::user()->can('IfiltroClientesXPlantel')
+                //if ($baseTable == "seguimientos") { //and Auth::user()->can('IfiltroClientesXPlantel')
                     $myQuery = $myQuery->whereIn('clientes.plantel_id', $planteles);
-                }
+                //}
                 if (Auth::user()->can('filtro.corporativo_control_escolar')) {
                     $myQuery = $myQuery->whereIn('st_seguimiento_id', array(2,6,7,9,10));
                 }
-                if ($baseTable == "seguimientos") { //and Auth::user()->can('IfiltroClientesXPlantel')
+                //if ($baseTable == "seguimientos") { //and Auth::user()->can('IfiltroClientesXPlantel')
                     $myQuery = $myQuery->whereIn('clientes.plantel_id', $planteles)
                         ->where('st_seguimiento_id', '<>', '3')
                         ->where('st_seguimiento_id', '<>', '8');
-                }
+                //}
                 if ($baseTable == "seguimientos" and Auth::user()->can('IfiltroRechazados')) {
                     $myQuery = $myQuery->where('st_seguimiento_id', '<>', '3');
                 }

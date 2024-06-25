@@ -281,11 +281,14 @@ class CajasController extends Controller
 
     public function buscarCliente(Request $request)
     {
-        $empleado = Empleado::where('user_id', Auth::user()->id)->first();
+        //$empleado = Empleado::where('user_id', Auth::user()->id)->first();
+        $planteles = Empleado::where('user_id', '=', Auth::user()->id)->first()->plantels->pluck('id')->toArray();
+        /*
         $planteles = array();
         foreach ($empleado->plantels as $p) {
             array_push($planteles, $p->id);
-        }
+        }*/
+        //dd($planteles);
 
         $empleados = Empleado::select(DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name, id'))->pluck('name', 'id');
 
@@ -981,7 +984,7 @@ class CajasController extends Controller
 
             $carbon = new \Carbon\Carbon();
             $date = $carbon->now();
-            $date = $date->format('d-m-Y h:i:s');
+            $date = $date->format('d-m-Y H:i:s');
 
             $atendio_pago = Empleado::where('user_id', $caja->pagos->pluck('usu_alta_id')->first())->first();
             //dd($atendio_pago);
@@ -1002,7 +1005,7 @@ class CajasController extends Controller
 
             $carbon = new \Carbon\Carbon();
             $date = $carbon->now();
-            $date = $date->format('d-m-Y h:i:s');
+            $date = $date->format('d-m-Y H:i:s');
 
             $atendio_pago = Empleado::where('user_id', $caja->pagos->pluck('usu_alta_id')->first())->first();
             //dd($atendio_pago);

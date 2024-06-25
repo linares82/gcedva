@@ -36,6 +36,27 @@
     </div>
 @endif
 
+@php
+//$suma_pagos=0;
+//$contador_pagos=0;
+    if(isset($caja)){
+        $caja->load('cajaLns');
+        $caja->load('plantel');
+        $caja->load('pagos');
+        $valores=$caja->plantel->conceptoMultipagos->pluck('id');
+        //$contador_pagos=App\Pago::where('caja_id', $adeudo->caja_id)->count();
+        
+        //$suma_pagos=App\Pago::where('caja_id', $adeudo->caja_id)->sum('monto');
+        //dd($caja->cajaLns->toArray());
+    }
+    if(isset($cliente)){
+        $cliente->load('incidencesClientes');
+        $cliente->load('autorizacionBecas');
+        
+    }
+    
+@endphp
+
 <div class="row">
     <div class="col-md-6">
         <div class="box box-info">
@@ -393,15 +414,20 @@
                             {{ csrf_field() }}
                         </thead>
                         <tbody>
-			    @php
-			    $caja->load('cajaLns');
-				//dd($caja->cajaLns->toArray());
-			    @endphp
+                        @php
+                        /*$caja->load('cajaLns');
+                        $caja->load('plantel');
+                        $caja->load('pagos');
+                        */
+                        //dd($caja->cajaLns->toArray());
+                        
+                        //dd($lineas);
+                        @endphp
                             @foreach($caja->cajaLns as $linea)
                             <tr>
                                 @php
                                     $valor=$linea->cajaConcepto->cve_multipagos;
-                                    $valores=$caja->plantel->conceptoMultipagos->pluck('id');
+                                    //$valores=$caja->plantel->conceptoMultipagos->pluck('id');
                                     $indicador=0;
                                     foreach($valores as $v){
                                         if($v==$valor){
@@ -656,6 +682,9 @@
                         ->orderBy('fecha_pago')
                         ->orderBy('id')
                         ->whereNull('deleted_at')
+                        ->with('descuento')
+                        ->with('caja')
+                        ->with('cajaConcepto')
                         ->get();
                         ?>
                         @foreach($adeudos_lineas as $adeudo)
@@ -712,7 +741,8 @@
                                 @endif
                                 @endif
                                 @php
-                                $adeudo->load('descuento');
+                                //$adeudo->load('descuento');
+                                //$adeudo->load('caja');
                                 @endphp
                             <td 
                                 @permission('cajas.adeudo_descripcion')
@@ -771,13 +801,14 @@
                                 
                                 //$linea_caja= \App\CajaLn::where('adeudo_id',$adeudo->id)->whereNull('deleted_at')->first();    
                                 $suma_pagos=0;
+                                $contador_pagos=0;
                                 $pagos=App\Pago::where('caja_id', $adeudo->caja_id)->get();
                                 $contador_pagos=0;
                                 foreach($pagos as $pago){
                                     $contador_pagos++;
                                     $suma_pagos=$suma_pagos+$pago->monto;
-                                    //dd($pago);
                                 }
+                                
                                 ?>
                                 @if(isset($linea_caja) and !is_null($linea_caja))
                                 {{$linea_caja->total}}

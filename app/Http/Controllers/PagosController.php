@@ -785,7 +785,7 @@ class PagosController extends Controller
 
             $carbon = new \Carbon\Carbon();
             $date = $carbon->now();
-            $date = $date->format('d-m-Y h:i:s');
+            $date = $date->format('d-m-Y H:i:s');
         } else {
             $combinacion = 0;
             $cliente = Cliente::find($caja->cliente_id);
@@ -793,7 +793,7 @@ class PagosController extends Controller
 
             $carbon = new \Carbon\Carbon();
             $date = $carbon->now();
-            $date = $date->format('d-m-Y h:i:s');
+            $date = $date->format('d-m-Y H:i:s');
 
             //dd($adeudo->toArray());
 
@@ -866,7 +866,7 @@ class PagosController extends Controller
 
             $carbon = new \Carbon\Carbon();
             $date = $carbon->now();
-            $date = $date->format('d-m-Y h:i:s');
+            $date = $date->format('d-m-Y H:i:s');
         } else {
             $combinacion = 0;
             $cliente = Cliente::find($caja->cliente_id);
@@ -874,7 +874,8 @@ class PagosController extends Controller
 
             $carbon = new \Carbon\Carbon();
             $date = $carbon->now();
-            $date = $date->format('d-m-Y h:i:s');
+            $date = $date->format('d-m-Y H:i:s');
+            
 
             //dd($adeudo->toArray());
 
@@ -894,7 +895,7 @@ class PagosController extends Controller
         $totalEntero = intdiv($suma_pagos, 1);
         $centavos = ($suma_pagos - $totalEntero) * 100;
         $totalLetra = $formatter->toMoney($totalEntero, 2, "Pesos", 'Centavos');
-
+        
 
         return view('cajas.imprimirTicketNoFiscalPagos', array(
             'cliente' => $cliente,

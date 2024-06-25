@@ -28,9 +28,11 @@
           
           <thead>
               <th>No.</th><th>Plantel</th><th>Matricula</th><th>Id</th>
-              <th>A. Paterno</th><th>A. Materno</th><th>Nombre(s)</th><th>Reclasificado</th><th>Tel. Celular</th><th>E. Cliente</th>  <th>E. Seguimiento</th><th>Seccion</th><th>Turno</th><th>Empleado</th>
-              <th>Inscripción/S. Escolares</th><th>Fecha Caja</th><th>Trámites</th><th>Fecha Pago Tramites</th>
-              <th>P. Mensualidad</th><th>Fecha Pago</th>
+              <th>Nombre(s)</th><th>Apellidos</th><th>Seccion</th><th>Turno</th>
+              <th>Inscripción/S. Escolares</th><th>Fecha Caja</th><th>P. Mensualidad</th><th>Fecha Pago</th>
+              <th>Reclasificado</th><th>Tel. Celular</th><th>E. Cliente</th><th>E. Seguimiento</th>
+              <th>Empleado</th><th>Trámites</th><th>Fecha Pago Tramites</th>
+              
           </thead>
           <tbody>
             @php
@@ -44,8 +46,11 @@
               <td>{{ ++$i }}</td>
               
               <td>{{ $rs['razon'] }}</td><td>{{ $rs['matricula'] }}</td><td>{{ $rs['cliente_id'] }}</td>
-              <td>{{ $rs['ape_paterno'] }}</td>
-              <td>{{ $rs['ape_materno'] }}</td><td>{{ $rs['nombre'] }} {{ $rs['nombre2'] }}</td>
+              <td>{{ $rs['nombre'] }} {{ $rs['nombre2'] }}</td>
+              <td>{{ $rs['ape_paterno'] }} {{ $rs['ape_materno'] }}</td>
+              <td>{{ $rs['seccion'] }}</td><td>{{$rs['turno']}}</td>
+              <td>{{$rs['12325']}}</td><td>{{ $rs['fecha_caja_12325'] }}</td>
+              <td>{{$rs['primera_mensualidad']}}</td><td>{{$rs['primera_mensualidad_fecha']}}</td>
               <td>
               @if($rs['bnd_reclasificado']==1)
               Si
@@ -54,12 +59,9 @@
               @endif
               </td>
               <td>{{$rs['tel_cel']}}</td><td>{{ $rs['st_cliente'] }}</td>
-              <td>{{ $rs['st_seguimiento'] }}</td><td>{{ $rs['seccion'] }}</td><td>{{$rs['turno']}}</td><td>{{ $rs['empleado_nombre'] }}</td>
-              <td>
-                {{$rs['12325']}}
-              </td>
-              <td>{{ $rs['fecha_caja_12325'] }}</td><td>{{$rs['tramites']}}</td><td>{{$rs['tramites_fecha']}}</td>
-              <td>{{$rs['primera_mensualidad']}}</td><td>{{$rs['primera_mensualidad_fecha']}}</td>
+              <td>{{ $rs['st_seguimiento'] }}</td><td>{{ $rs['empleado_nombre'] }}</td>
+              <td>{{$rs['tramites']}}</td><td>{{$rs['tramites_fecha']}}</td>
+              
               
               
             </tr>

@@ -50,7 +50,7 @@ class ReportesCedvaController extends Controller
         if ($datos['estatus_f'] == 0) {
             $estatus = StCliente::whereNotIn('id', array(19))->pluck('id');
         } elseif ($datos['estatus_f'] == 1) {
-            $estatus = array(4,5,17,20, 22, 25, 26);
+            $estatus = array(4,5,17,20, 22, 25, 26, 31);
         } elseif ($datos['estatus_f'] == 2) {
             $estatus = array('3', '27', '28');
         }
@@ -886,6 +886,7 @@ class ReportesCedvaController extends Controller
                                 $linea_dinero['preinscrito'] = $linea_dinero['preinscrito'] + $registro['monto'];
                             }
                             if (( //$registro['estatus_cliente_id']==25 or $registro['estatus_cliente_id']==26 or 
+                                    $registro['estatus_cliente_id'] == 31 or
                                     ($registro['estatus_cliente_id'] == 4 and $registro['estatus_seguimiento_id'] == 2) or
                                     ($registro['estatus_cliente_id'] == 20 and $registro['estatus_seguimiento_id'] == 7) or
                                     ($registro['estatus_cliente_id'] == 4 and $registro['estatus_seguimiento_id'] == 9)) and
