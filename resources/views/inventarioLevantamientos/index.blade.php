@@ -172,8 +172,7 @@
                             'style' => 'display: inline;'
                             )) !!}
                             <div class="form-group col-md-4 @if($errors->has('plantel_id')) has-error @endif">
-                                <label for="plantel_id-field">Plantel</label>
-                                {!! Form::select("plantel_id", $planteles, null, array("class" => "form-control select_seguridad", "id" => "plantel_id-field")) !!}
+                                {!! Form::hidden("plantel_id", $inventarioLevantamiento->plantel_inventario_id, array("class" => "form-control", "id" => "id-field")) !!}
                                 {!! Form::hidden("id", $inventarioLevantamiento->id, array("class" => "form-control", "id" => "id-field")) !!}
                                 @if($errors->has("plantel_id"))
                                 <span class="help-block">{{ $errors->first("plantel_id") }}</span>

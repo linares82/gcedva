@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class updateCliente extends FormRequest
@@ -47,6 +48,18 @@ class updateCliente extends FormRequest
             //'promociones',
             //'promo_cel',
             //'promo_correo'
+            /*'especialidad_id'=>[
+                'required',
+                Rule::notIn([0]),
+            ],
+            'nivel_id'=>[
+                'required',
+                Rule::notIn([0]),
+            ],
+            'grado_id'=>[
+                'required',
+                Rule::notIn([0]),
+            ],*/
             'archivo'=>'requiredif:doc_cliente_id,1,2,3,4,5,6,7,8,9',
             'obs_docs'=>'requiredif:bnd_doc_oblig_entregados,1'
         ];
@@ -58,7 +71,10 @@ class updateCliente extends FormRequest
         'st_cliente_id.required'=>'El campo es requerido!',
         'empleado_id.required'=>'El campo es requerido!',
         'mail.email'=>'Formato de email incorrecto',
-        'obs_docs.requiredif'=>"Campo Obs. Docs. es requerido"
+        'obs_docs.requiredif'=>"Campo Obs. Docs. es requerido",
+        'especialidad_id.required'=>'El campo es requerido!',
+        'nivel_id.required'=>'El campo es requerido!',
+        'grado_id.required'=>'El campo es requerido!',
         ];
     }
 }

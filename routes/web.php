@@ -15486,6 +15486,8 @@ Route::prefix('/inventarioLevantamientos')
     Route::get('/dictamen', 'InventarioLevantamientosController@dictamen')->name('dictamen')->middleware('permission:inventarioLevantamientos.dictamen');
     Route::get('/inicioLevantamiento', 'InventarioLevantamientosController@inicioLevantamiento')->name('inicioLevantamiento')->middleware('permission:inventarioLevantamientos.inicioLevantamiento');
     Route::post('/inicioLevantamientoLista', 'InventarioLevantamientosController@inicioLevantamientoLista')->name('inicioLevantamientoLista')->middleware('permission:inventarioLevantamientos.inicioLevantamiento');
+    Route::get('/inicioLevantamientoC', 'InventarioLevantamientosController@inicioLevantamientoC')->name('inicioLevantamientoC')->middleware('permission:inventarioLevantamientos.inicioLevantamiento');
+    Route::post('/inicioLevantamientoListaC', 'InventarioLevantamientosController@inicioLevantamientoListaC')->name('inicioLevantamientoListaC')->middleware('permission:inventarioLevantamientos.inicioLevantamiento');
     Route::get('/inicioLevantamientoCsv', 'InventarioLevantamientosController@inicioLevantamientoCsv')->name('inicioLevantamientoCsv')->middleware('permission:inventarioLevantamientos.inicioLevantamiento');
     Route::get('/inicioLevantamientoFormato', 'InventarioLevantamientosController@inicioLevantamientoFormato')->name('inicioLevantamientoFormato')->middleware('permission:inventarioLevantamientos.inicioLevantamiento');
     Route::get('/actualizarCsv', 'InventarioLevantamientosController@actualizarCsv')->name('actualizarCsv')->middleware('permission:inventarioLevantamientos.actualizarCsv');

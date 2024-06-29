@@ -524,17 +524,78 @@ class InventarioLevantamientosController extends Controller {
 		return view('inventarioLevantamientos.reportes.inicioLevantamiento', compact('resultado','planteles','catExiste','catEstado'));
 	}
 
+	public function inicioLevantamientoC(){
+		$planteles=PlantelInventario::pluck('name','id');
+		$catEstado=array('0'=>'SELECCIONAR', 'BUENO'=>'BUENO', 'MALO'=>'MALO','ESPECIAL'=>'SEGMENTACION ESPECIAL');
+		$catExiste=array('0'=>'SELECCIONAR','SI'=>'SI', 'NO'=>'NO');
+		$sinSegmentos=array('0'=>'SELECCIONAR','SI'=>'SI', 'NO'=>'NO');
+		
+		return view('inventarioLevantamientos.reportes.inicioLevantamientoC', compact('planteles','catExiste','catEstado','sinSegmentos'));
+	}
+
+	public function inicioLevantamientoListaC(Request $request){
+		$datos=$request->all();
+		//dd($datos);
+		
+		//dd($areas);
+		$resultado_aux=Inventario::join('inventario_levantamientos as il','il.id','inventarios.inventario_levantamiento_id')
+		->join('plantel_inventarios as pi','pi.id','inventarios.plantel_inventario_id')
+		->whereIn('inventarios.plantel_inventario_id',$datos['plantel_f']);
+		//->whereIn('inventarios.area', 'like', $areas)
+		if($datos['incluir_segmentos_existe_estado']=='SI' and !in_array("ESPECIAL",$datos['estado_bueno'])){
+			$resultado_aux->whereIn('inventarios.estado_bueno', $datos['estado_bueno'])
+				->whereIn('inventarios.existe_si', $datos['existe_si'])
+				->select('pi.id as plantel_id','pi.name as plantel','il.fecha',
+				'estado_bueno', 'existe_si');		
+		}elseif($datos['incluir_segmentos_existe_estado']=='SI' and in_array("ESPECIAL",$datos['estado_bueno'])){
+			$resultado_aux->whereIn('inventarios.existe_si', $datos['existe_si'])
+				->select('pi.id as plantel_id','pi.name as plantel','il.fecha',
+				'existe_si');	
+		}else{
+			$resultado_aux->select('pi.id as plantel_id','pi.name as plantel','il.fecha');		
+		}
+		//dd(in_array("ESPECIAL",$datos['estado_bueno']));
+		
+		
+		$resultado= $resultado_aux->whereDate('il.fecha','>=', $datos['fecha_f'])
+		->whereDate('il.fecha','<=', $datos['fecha_t'])
+		->distinct()
+		->orderBy('il.fecha','desc')
+		->get();
+		$planteles=PlantelInventario::pluck('name','id');
+		$catEstado=array('0'=>'SELECCIONAR', 'BUENO'=>'BUENO', 'MALO'=>'MALO','ESPECIAL'=>'SEGMENTACION ESPECIAL');
+		$catExiste=array('0'=>'SELECCIONAR','SI'=>'SI', 'NO'=>'NO');
+		$sinSegmentos=array('0'=>'SELECCIONAR','SI'=>'SI', 'NO'=>'NO');
+		
+		return view('inventarioLevantamientos.reportes.inicioLevantamientoC', compact('resultado','planteles','catExiste','catEstado','sinSegmentos'));
+	}
+
 	public function inicioLevantamientoCsv(Request $request){
 		$datos=$request->all();
 		//dd($datos);
-		$resultado=Inventario::select('il.fecha','pi.name as plantel', 'inventarios.*')
+		$resultado_aux=Inventario::select('il.fecha','pi.name as plantel', 'inventarios.*')
 		->join('inventario_levantamientos as il','il.id','inventarios.inventario_levantamiento_id')
 		->join('plantel_inventarios as pi','pi.id','inventarios.plantel_inventario_id')
-		->where('inventarios.plantel_inventario_id',$datos['plantel'])
-		->where('inventarios.area',$datos['area'])
-		->where('il.fecha',$datos['fecha'])
-		->where('inventarios.estado_bueno',$datos['estado_bueno'])
-		->where('inventarios.existe_si',$datos['existe_si'])
+		->where('inventarios.plantel_inventario_id',$datos['plantel']);
+		if(isset($datos['area'])){
+			$resultado_aux->where('inventarios.area',$datos['area']);
+		}
+		if(isset($datos['estado_bueno'])){
+			$resultado_aux->where('inventarios.estado_bueno',$datos['estado_bueno']);
+		}
+		if(isset($datos['existe_si']) and isset($datos['estado_bueno'])){
+			$resultado_aux->where('inventarios.existe_si',$datos['existe_si']);
+		}elseif(isset($datos['existe_si']) and !isset($datos['estado_bueno'])){
+			if($datos['existe_si']=='SI'){
+				$resultado_aux->where('inventarios.estado_bueno',['MALO']);
+			}else{
+			$resultado_aux->where('inventarios.estado_bueno',['MALO','BUENO']);
+			}
+		}
+
+		$resultado=$resultado_aux->where('il.fecha',$datos['fecha'])
+		//->where('inventarios.estado_bueno',$datos['estado_bueno'])
+		//->where('inventarios.existe_si',$datos['existe_si'])
 		->get();
 
 /*		$table = Inventario::where('inventario_levantamiento_id', $datos['id'])
@@ -565,15 +626,25 @@ class InventarioLevantamientosController extends Controller {
 	public function inicioLevantamientoFormato(Request $request){
 		$datos=$request->all();
 		//dd($datos);
-		$resultado=Inventario::select('il.fecha','pi.name as plantel', 'inventarios.*')
+		$resultado_aux=Inventario::select('il.fecha','pi.name as plantel', 'inventarios.*')
 		->join('inventario_levantamientos as il','il.id','inventarios.inventario_levantamiento_id')
 		->join('plantel_inventarios as pi','pi.id','inventarios.plantel_inventario_id')
 		->where('inventarios.plantel_inventario_id',$datos['plantel'])
-		->where('il.fecha',$datos['fecha'])
-		->where('inventarios.area',$datos['area'])
+		->where('il.fecha',$datos['fecha']);
+		if(isset($datos['area'])){
+			$resultado_aux->where('inventarios.area',$datos['area']);
+		}
+		if(isset($datos['estado_bueno'])){
+			$resultado_aux->where('inventarios.estado_bueno',$datos['estado_bueno']);
+		}
+		if(isset($datos['existe_si'])){
+			$resultado_aux->where('inventarios.existe_si',$datos['existe_si']);
+		}
+		/*
 		->where('inventarios.estado_bueno',$datos['estado_bueno'])
 		->where('inventarios.existe_si',$datos['existe_si'])
-		->get();
+		*/
+		$resultado=$resultado_aux->get();
 		//dd($resultado);
 		//return view('inventarioLevantamientos.reportes.inicioLevantamiento', compact('planteles'));
 		return view('inventarioLevantamientos.reportes.formato', array('table'=>$resultado));	

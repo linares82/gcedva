@@ -604,6 +604,38 @@
                 </div>
             </div>
             <div class="box box-default">
+                <div class="box-header"><h3>Openpay</h3></div>
+                <div class="box-body">
+                    <div class="row">
+                        <div class="form-group col-md-4 @if($errors->has('oid')) has-error @endif">
+                            <label for="oid-field">Id</label>
+                            {!! Form::text("oid", null, array("class" => "form-control input-sm", "id" => "oid-field")) !!}
+                            @if($errors->has("oid"))
+                            <span class="help-block">{{ $errors->first("oid") }}</span>
+                            @endif
+                        </div>
+                        <div class="form-group col-md-4 @if($errors->has('opublica')) has-error @endif">
+                            <label for="opublica-field">Publica</label>
+                            {!! Form::text("opublica", null, array("class" => "form-control input-sm", "id" => "opublica-field")) !!}
+                            @if($errors->has("opublica"))
+                            <span class="help-block">{{ $errors->first("opublica") }}</span>
+                            @endif
+                        </div>
+                        <div class="form-group col-md-4 @if($errors->has('oprivada')) has-error @endif">
+                            <label for="oprivada-field">Privada</label>
+                            {!! Form::text("oprivada", null, array("class" => "form-control input-sm", "id" => "oprivada-field")) !!}
+                            @if($errors->has("oprivada"))
+                            <span class="help-block">{{ $errors->first("oprivada") }}</span>
+                            @endif
+                        </div> 
+                        
+                    </div>
+                    
+
+                    
+                </div>
+            </div>
+            <div class="box box-default">
                 <div class="box-body">
                 
                 <div class="form-group col-md-12 @if($errors->has('clausulas_cotizacion')) has-error @endif">

@@ -27,7 +27,7 @@
         <table class="table table-condensed table-striped">
           
           <thead>
-              <th>No.</th><th>Plantel</th><th>Matricula</th><th>Id</th>
+              <th>No.</th><th>Plantel</th><th>Id</th><th>Matricula</th>
               <th>Nombre(s)</th><th>Apellidos</th><th>Seccion</th><th>Turno</th>
               <th>Inscripción/S. Escolares</th><th>Fecha Caja</th><th>P. Mensualidad</th><th>Fecha Pago</th>
               <th>Reclasificado</th><th>Tel. Celular</th><th>E. Cliente</th><th>E. Seguimiento</th>
@@ -45,7 +45,7 @@
             <tr>
               <td>{{ ++$i }}</td>
               
-              <td>{{ $rs['razon'] }}</td><td>{{ $rs['matricula'] }}</td><td>{{ $rs['cliente_id'] }}</td>
+              <td>{{ $rs['razon'] }}</td><td>{{ $rs['cliente_id'] }}</td><td>{{ $rs['matricula'] }}</td>
               <td>{{ $rs['nombre'] }} {{ $rs['nombre2'] }}</td>
               <td>{{ $rs['ape_paterno'] }} {{ $rs['ape_materno'] }}</td>
               <td>{{ $rs['seccion'] }}</td><td>{{$rs['turno']}}</td>

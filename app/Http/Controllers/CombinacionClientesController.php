@@ -61,6 +61,10 @@ class CombinacionClientesController extends Controller
         //create data
         $combinacion=CombinacionCliente::create($input);
         $cliente=Cliente::find($combinacion->cliente_id);
+        $cliente->especialidad_id=$input['especialidad_id'];
+        $cliente->nivel_id=$input['nivel_id'];
+        $cliente->grado_id=$input['grado_id'];
+        $cliente->turno_id=$input['turno_id'];
         $cliente->save();
 
         //return redirect()->route('combinacionClientes.index')->with('message', 'Registro Creado.');

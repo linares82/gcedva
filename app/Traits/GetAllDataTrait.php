@@ -237,12 +237,6 @@ trait GetAllDataTrait
                 $myQuery = $myQuery->whereIn('grupos.plantel_id', $planteles);
                 //}
                 break;
-            case "inventarios":
-                //if (Auth::user()->can('IFiltroEmpleadosXPlantel')) {
-                //dd("fil");
-                $myQuery = $myQuery->orderBy('no_inventario', 'asc');
-                //}
-                break;
             case "materia":
                 //if (Auth::user()->can('IFiltroEmpleadosXPlantel')) {
                 $myQuery = $myQuery->whereIn('materia.plantel_id', $planteles);
@@ -315,17 +309,17 @@ trait GetAllDataTrait
                 if ($baseTable == "seguimientos" and Auth::user()->can('IfiltroClientesXEmpleado')) {
                     $myQuery = $myQuery->where('clientes.empleado_id', '=', $empleado->id);
                 }
-                //if ($baseTable == "seguimientos") { //and Auth::user()->can('IfiltroClientesXPlantel')
+                if ($baseTable == "seguimientos") { //and Auth::user()->can('IfiltroClientesXPlantel')
                     $myQuery = $myQuery->whereIn('clientes.plantel_id', $planteles);
-                //}
+                }
                 if (Auth::user()->can('filtro.corporativo_control_escolar')) {
                     $myQuery = $myQuery->whereIn('st_seguimiento_id', array(2,6,7,9,10));
                 }
-                //if ($baseTable == "seguimientos") { //and Auth::user()->can('IfiltroClientesXPlantel')
+                if ($baseTable == "seguimientos") { //and Auth::user()->can('IfiltroClientesXPlantel')
                     $myQuery = $myQuery->whereIn('clientes.plantel_id', $planteles)
                         ->where('st_seguimiento_id', '<>', '3')
                         ->where('st_seguimiento_id', '<>', '8');
-                //}
+                }
                 if ($baseTable == "seguimientos" and Auth::user()->can('IfiltroRechazados')) {
                     $myQuery = $myQuery->where('st_seguimiento_id', '<>', '3');
                 }
