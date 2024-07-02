@@ -853,7 +853,7 @@ class ReportesCedvaController extends Controller
                             $linea_dinero['razon'] = $registro['razon'];
                             $linea_dinero['seccion'] = $registro['seccion'];
 
-                            if (
+                            if ($registro['estatus_cliente_id'] == 31 or
                                 ($registro['estatus_cliente_id'] == 17 and $registro['pagado_bnd'] == 0) or 
 				                $registro['estatus_cliente_id'] == 25 or $registro['estatus_cliente_id'] == 26 or
                                 ($registro['estatus_cliente_id'] == 4 and $registro['estatus_seguimiento_id'] == 2) or

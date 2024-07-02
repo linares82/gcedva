@@ -106,6 +106,9 @@
 @endsection
 
 @section('content')
+@php
+    
+@endphp
 <div class="row">
     <div class="col-md-12">
         @if($inventarioLevantamientos->count())
@@ -216,7 +219,7 @@
                 @endforeach
             </tbody>
         </table>
-        
+        {!! $inventarioLevantamientos->appends(Request::except('page'))->render() !!}
         @else
         <h3 class="text-center alert alert-info">Vacio!</h3>
         @endif

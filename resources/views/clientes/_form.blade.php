@@ -863,7 +863,7 @@
 
 
                 <div class="form-group col-md-2 @if($errors->has('bnd_reclasificado')) has-error @endif">
-                  iflabel for="bnd_reclasificado-field">Reclasificado: @if(isset($cliente->bnd_reclasificado) and $cliente->bnd_reclasificado==1) SI @else NO @endif</label>
+                  <label for="bnd_reclasificado-field">Reclasificado: @if(isset($cliente->bnd_reclasificado) and $cliente->bnd_reclasificado==1) SI @else NO @endif</label>
                     @permission('clientes.reclasificado')
                     {!! Form::select("bnd_reclasificado", array(0=>'No', 1=>"Si"), null, array("class" => "form-control select_seguridad", "id" => "bnd_reclasificado-field", 'style'=>'width:100%')) !!}
                     @endpermission

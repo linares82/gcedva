@@ -116,6 +116,7 @@ class ClientesController extends Controller
         $empleados=Empleado::select(DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name, id'))->pluck('name','id');
         $tpoInformes=TpoInforme::pluck('name','id');
         $usuarios=User::pluck('name','id');
+        $usuarios->prepend('Seleccionar opción', 0);
         
 
         return view('clientes.index', compact('clientes', 'users', 'empleado', 'fecha_superada','medios','stClientes',
@@ -128,7 +129,7 @@ class ClientesController extends Controller
     public function indexEventos(Request $request)
     {
         $users = User::pluck('name', 'id');
-        $users->prepend('Seleccionar opciÃƒÆ’Ã‚Â³n', 0);
+        $users->prepend('Seleccionar opción', 0);
         //dd($request);
         if (isset($_REQUEST["p"])) {
             if (session()->has('filtro_clientes')) {
