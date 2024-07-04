@@ -29,7 +29,7 @@ class CreatePeticionOpenpaysTable extends Migration
             $table->string('predirect_url')->nullable();
             $table->string('ppreferencia')->nullable();
             $table->string('porder_id')->nullable();
-            $table->date('fecha_limite')->nullable();
+            $table->datetime('fecha_limite')->nullable();
             $table->string('rid')->nullable();
             $table->string('rauthorization')->nullable();
             $table->string('rmethod')->nullable();
