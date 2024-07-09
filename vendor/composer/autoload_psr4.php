@@ -65,6 +65,7 @@ return array(
     'PhpImap\\' => array($vendorDir . '/php-imap/php-imap/src/PhpImap'),
     'PHPStan\\PhpDocParser\\' => array($vendorDir . '/phpstan/phpdoc-parser/src'),
     'Opis\\Closure\\' => array($vendorDir . '/opis/closure/src'),
+    'Openpay\\' => array($vendorDir . '/openpay/sdk/Openpay'),
     'NunoMaduro\\Collision\\' => array($vendorDir . '/nunomaduro/collision/src'),
     'MyCLabs\\Enum\\' => array($vendorDir . '/myclabs/php-enum/src'),
     'Monolog\\' => array($vendorDir . '/monolog/monolog/src/Monolog'),

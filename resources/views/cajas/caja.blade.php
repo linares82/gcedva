@@ -529,7 +529,14 @@
                             @foreach($caja->pagos as $pago)
                             @if(is_null($pago->deleted_at))
                             <tr>
-                                <td> {{$pago->consecutivo}} </td>
+                                <td> 
+                                    {{$pago->consecutivo}} <br/>
+                                    @if($pago->bnd_pagado<>1)
+                                    @permission('conciliacionOpenpay.peticionExistente')
+                                    <button class="btn btn-xs btn-warning" id="btn_conciliar" data-pago_id="{{$pago->id}}">Conciliar</button>
+                                    @endpermission
+                                    @endif
+                                </td>
                                 <td><strong>Monto:</strong>{{ $pago->monto }} <br>
                                     <strong>Fecha:</strong> {{ $pago->fecha }} <br>
                                     @permission('ticket.fechaPago')
@@ -539,10 +546,15 @@
                                     <strong>Folio y Serie:</strong> {{$pago->csc_simplificado}}<br>
                                     <strong>Referencia:</strong> {{ $pago->referencia }} <br>
                                     <strong>UUID:</strong> {{ $pago->uuid }} <br>
-                                    @if($pago->cuenta_efectivo_id<>0)
+                                    @if($pago->cuenta_efectivo_id>0)
                                     <strong>C. Efectivo:</strong>{{ App\CuentasEfectivo::where('id', $pago->cuenta_efectivo_id)->value('name')}}
                                     @endif
-                                    <strong>Referencia EL:</strong>{{ optional($pago->peticionMultipago)->mp_reference }}
+                                    <br>
+                                    <strong>Referencia EL:</strong>{{ optional($pago->peticionMultipago)->mp_reference }}<br>
+                                    <strong>Referencia Openpay:</strong>
+                                    @foreach($pago->peticionOpenpays as $peticion)
+                                    {{ optional($peticion)->rorder_id }} - {{ optional($peticion)->rstatus }} </br>
+                                    @endforeach
                                 </td>
 
                                 <!--<td>
@@ -580,6 +592,7 @@
                                     @endif
                                     @endif
                                 </td>
+                                
                                 @if(optional($pago->peticionMultipago)->count()>0)
                                     
                                 <tr>
@@ -1897,6 +1910,24 @@ Agregar nuevo registro
                     }
             });        
         }
+        
+    });
+
+    //$('#btn_conciliar').on('click', '#btnEditarAdeudo', function() {
+    $(document).on('click', '#btn_conciliar', function(e) {
+            $.ajax({
+            type: 'GET',
+                    url: "{{route('peticionOpenpays.peticionExistente')}}",
+                    data: {
+                        'pago_id': $(this).data('pago_id')
+                    },
+                    beforeSend : function(){$("#loading3").show(); },
+                    complete : function(){$("#loading3").hide(); },
+                    success: function(data) {
+                        //location.reload();
+                    }
+            });        
+        
         
     });
 

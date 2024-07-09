@@ -133,6 +133,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'O' => 
         array (
             'Opis\\Closure\\' => 13,
+            'Openpay\\' => 8,
         ),
         'N' => 
         array (
@@ -481,6 +482,10 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'Opis\\Closure\\' => 
         array (
             0 => __DIR__ . '/..' . '/opis/closure/src',
+        ),
+        'Openpay\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/openpay/sdk/Openpay',
         ),
         'NunoMaduro\\Collision\\' => 
         array (
@@ -1275,7 +1280,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'CreatePeriodoExamensTable' => __DIR__ . '/../..' . '/database/migrations/2019_10_30_130355_create_periodo_examens_table.php',
         'CreatePeriodosTable' => __DIR__ . '/../..' . '/database/migrations/2017_04_18_144945_create_periodos_table.php',
         'CreatePeticionMultipagosTable' => __DIR__ . '/../..' . '/database/migrations/2020_06_15_123615_create_peticion_multipagos_table.php',
-        'CreatePeticionOpenpayTable' => __DIR__ . '/../..' . '/database/migrations/2024_06_27_173606_create_peticion_openpay_table.php',
+        'CreatePeticionOpenpaysTable' => __DIR__ . '/../..' . '/database/migrations/2024_06_27_173606_create_peticion_openpays_table.php',
         'CreatePivotAvisoGralEmpleadosTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_03_131514_create_pivot_aviso_gral_empleados_table.php',
         'CreatePivotDocClientesTable' => __DIR__ . '/../..' . '/database/migrations/2017_09_06_135040_create_pivot_doc_clientes_table.php',
         'CreatePivotDocEmpleadosTable' => __DIR__ . '/../..' . '/database/migrations/2017_07_28_001608_create_pivot_doc_empleados_table.php',

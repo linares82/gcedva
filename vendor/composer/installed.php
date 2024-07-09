@@ -3,7 +3,7 @@
         'name' => 'laravel/laravel',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '60082e38a10560f646232922408533a0b9559dde',
+        'reference' => '46f84ba198fd7ef12c08bae50f3f0d802326edc2',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -607,7 +607,7 @@
         'laravel/laravel' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '60082e38a10560f646232922408533a0b9559dde',
+            'reference' => '46f84ba198fd7ef12c08bae50f3f0d802326edc2',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -802,6 +802,17 @@
             'aliases' => array(),
             'dev_requirement' => true,
         ),
+        'openpay/sdk' => array(
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'reference' => '65e42b040d1631aec34af54d8cc00a70eac72d50',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../openpay/sdk',
+            'aliases' => array(
+                0 => '9999999-dev',
+            ),
+            'dev_requirement' => false,
+        ),
         'opis/closure' => array(
             'pretty_version' => '3.6.3',
             'version' => '3.6.3.0',
@@ -868,8 +879,8 @@
         'php-http/async-client-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '1.0',
-                1 => '*',
+                0 => '*',
+                1 => '1.0',
             ),
         ),
         'php-http/client-common' => array(
@@ -884,8 +895,8 @@
         'php-http/client-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '1.0',
-                1 => '*',
+                0 => '*',
+                1 => '1.0',
             ),
         ),
         'php-http/discovery' => array(
@@ -1161,8 +1172,8 @@
         'psr/http-factory-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '*',
-                1 => '^1.0',
+                0 => '^1.0',
+                1 => '*',
             ),
         ),
         'psr/http-message' => array(

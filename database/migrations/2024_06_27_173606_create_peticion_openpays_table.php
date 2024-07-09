@@ -17,6 +17,7 @@ class CreatePeticionOpenpaysTable extends Migration
             $table->bigIncrements('id');
             $table->integer('pago_id')->unsigned()->nullable();
             $table->integer('cliente_id')->unsigned()->nullable();
+            $table->integer('forma_id')->unsigned()->nullable();
             $table->string('pname')->nullable();
             $table->string('plast_name')->nullable();
             $table->string('pphone_number')->nullable();
@@ -51,6 +52,8 @@ class CreatePeticionOpenpaysTable extends Migration
             $table->string('rpayment_method_name')->nullable();
             $table->string('rpayment_method_barcode_url')->nullable();
             $table->string('rpayment_method_reference')->nullable();
+            $table->string('rpayment_method_paybin_reference')->nullable();
+            $table->string('rpayment_method_barcode_paybin_url')->nullable();
             $table->text('rcustomer')->nullable();
             $table->string('rorder_id')->nullable();
             $table->integer('bnd_pagado')->nullable();
@@ -66,6 +69,7 @@ class CreatePeticionOpenpaysTable extends Migration
             $table->foreign('usu_mod_id')->references('id')->on('usuario_clientes');
             $table->foreign('pago_id')->references('id')->on('pagos');
             $table->foreign('cliente_id')->references('id')->on('clientes');
+            $table->foreign('forma_pago_id')->references('id')->on('forma_pagos');
         });
     }
 
