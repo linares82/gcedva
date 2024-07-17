@@ -230,6 +230,7 @@ class PlantelsController extends Controller
 		//dd($request->all());
 		$input = $request->except('concepto_multipagos_id', 'forma_pago_id');
 		$conceptos = $request->only('concepto_multipagos_id');
+		dd($conceptos);
 		$formas_pago = $request->only('forma_pago_id');
 		$input['usu_mod_id'] = Auth::user()->id;
 		if(!isset($input['bnd_excepcion_documentos'])){

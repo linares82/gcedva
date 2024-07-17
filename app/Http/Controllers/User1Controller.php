@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Cliente;
-use App\User;
-use App\Role;
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Hash;
+use App\Role;
+use App\User;
+use App\Cliente;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\UserUpdateRequest;
 
 class User1Controller extends Controller
 {
@@ -166,7 +167,7 @@ class User1Controller extends Controller
         return view('users.edit', compact('roles', 'model'));
     }
 
-    public function update($id, Request $request){
+    public function update($id, UserUpdateRequest $request){
         $datos=$request->except('password');
         
         //dd($request->all());

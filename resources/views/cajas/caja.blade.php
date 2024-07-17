@@ -552,9 +552,23 @@
                                     <br>
                                     <strong>Referencia EL:</strong>{{ optional($pago->peticionMultipago)->mp_reference }}<br>
                                     <strong>Referencia Openpay:</strong>
+                                    <table class="table table-striped table-bordered table-hover" >
+                                        <thead><th>Order</th><th></th><th>Estatus</th> <th>Limite</th></thead>
                                     @foreach($pago->peticionOpenpays as $peticion)
-                                    {{ optional($peticion)->rorder_id }} - {{ optional($peticion)->rstatus }} </br>
+                                    
+                                    
+                                        <tr>
+                                            <td> {{ optional($peticion)->rorder_id }} </td>
+                                            <td>
+                                                @permission('conciliacionOpenpay.peticionExistente')
+                                                <a href="{{route('peticionOpenpays.peticionExistente', array('id'=>$peticion->rid,'limite'=>$peticion->fecha_limite))}}" class="btn btn-xs btn-info">Conciliar</a>
+                                                @endpermission
+                                            </td>
+                                            <td> {{ optional($peticion)->rstatus }} </td><td> {{$peticion->fecha_limite}} </td>
+                                        </tr>
+                                    
                                     @endforeach
+                                    </table>
                                 </td>
 
                                 <!--<td>

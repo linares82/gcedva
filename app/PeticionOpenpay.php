@@ -5,11 +5,13 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Venturecraft\Revisionable\RevisionableTrait;
 
 class PeticionOpenpay extends Model
 {
 
     use SoftDeletes;
+    use RevisionableTrait;
 
     public function __construct(array $attributes = array())
     {

@@ -34,7 +34,9 @@ class MuebleObserver
             $datos['usu_alta_id'] = Auth::user()->id;
             $datos['usu_mod_id'] = Auth::user()->id;
             ComenMueble::create($datos);
-        }else if($mueble_antes->empleado_id <> $this->mueble->empleado_id){
+        }
+        
+        if($mueble_antes->empleado_id <> $this->mueble->empleado_id){
             $datos['mueble_id'] = $this->mueble->id;
             $datos['st_mueble_id'] = $this->mueble->st_mueble_id;
             $datos['obs'] = "responsable anterior ".$mueble_antes->empleado_id." ".

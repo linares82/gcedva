@@ -1,9 +1,11 @@
 <?php
 namespace App\Http\Controllers;
 
+use Log;
 use Auth;
-use App\Caja;
+use DB;
 
+use App\Caja;
 use App\Pago;
 use App\Param;
 use Exception;
@@ -11,55 +13,22 @@ use App\Adeudo;
 use App\CajaLn;
 use App\Cliente;
 use App\Plantel;
+use App\Empleado;
 use Carbon\Carbon;
 use App\Http\Requests;
+use App\CuentasEfectivo;
 use App\PeticionOpenpay;
 use Openpay\Data\Openpay;
 use App\PeticionMultipago;
+use App\CombinacionCliente;
 use Illuminate\Http\Request;
 use App\SerieFolioSimplificado;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\createPeticionMultipago;
 use App\Http\Requests\updatePeticionMultipago;
-use Log;
 
 class PeticionOpenpaysController extends Controller
 {
-    public function peticionExistente(Request $request)
-    {
-        //dd($peticionExistente);
-        $datos = $request->all();
-        try {
-            // create instance OpenPay
-            $peticiones = PeticionOpenpay::where('pago_id', $datos['pago_id'])
-                ->where('rstatus', '<>', 'completed')
-                ->whereDate('fecha_limite', '>=', date('Y-m-d'))
-                ->get();
-
-            //dd($peticiones->toArray());
-
-            foreach ($peticiones as $peticion) {
-                $plantel = $peticion->cliente->plantel;
-                //dd($plantel);
-                $resultado=$this->buscarOpenpay($peticion, $plantel);
-                if ($resultado->rstatus == "completed") {
-                    $this->successOpenpay($resultado->rid);
-                }
-            }
-
-            return response()->json(['msg' => 'conciliacion realizada']);
-
-        } catch (Exception $e) {
-
-            return response()->json([
-                'error' => [
-                    'error_code' => $e->getCode(),
-                    'description' => $e->getMessage()
-                ]
-            ]);
-        }
-    }
-
     public function buscarOpenpay($peticion, $plantel)
     {
         $ip = Param::where('llave', 'ip_localhost')->first();
@@ -84,8 +53,8 @@ class PeticionOpenpaysController extends Controller
         //dd($findDataRequest);
 
         $chargeList = $openpay->charges->getList($findDataRequest);
-        //dd($chargeList[0]);
-        if ($peticion->pmethod == "bank_account") {
+        //dd($chargeList);
+        if($peticion->pmethod=="bank_account"){
             $peticion->rid = $chargeList[0]->id;
             $peticion->rauthorization = $chargeList[0]->authorization;
             $peticion->rmethod = $chargeList[0]->method;
@@ -106,7 +75,7 @@ class PeticionOpenpaysController extends Controller
             $peticion->rpayment_method_clabe = $chargeList[0]->payment_method->clabe;
             $peticion->rpayment_method_name = $chargeList[0]->payment_method->name;
             $peticion->rorder_id = $chargeList[0]->order_id;
-        } elseif ($peticion->pmethod == "card") {
+        }elseif($peticion->pmethod=="card"){
             $peticion->rid = $chargeList[0]->id;
             $peticion->rauthorization = $chargeList[0]->authorization;
             $peticion->rmethod = $chargeList[0]->method;
@@ -123,7 +92,7 @@ class PeticionOpenpaysController extends Controller
             $peticion->rpayment_method_type = $chargeList[0]->payment_method->type;
             $peticion->rpayment_method_url = $chargeList[0]->payment_method->url;
             $peticion->rorder_id = $chargeList[0]->order_id;
-        } elseif ($peticion->pmethod == "store") {
+        }elseif($peticion->pmethod=="store"){
             $peticion->rid = $chargeList[0]->id;
             $peticion->rauthorization = $chargeList[0]->authorization;
             $peticion->rmethod = $chargeList[0]->method;
@@ -147,25 +116,27 @@ class PeticionOpenpaysController extends Controller
         return $peticion;
     }
 
-    public function successOpenpay($id)
+    public function successOpenpay(Request $request)
     {
+        $id=$request->input('id');
+        $limite=$request->input('limite');
+        $peticion = PeticionOpenpay::where('rid', $id)->where('fecha_limite',$limite)->first();
+        //dd($peticion);
+        $plantel =Cliente::find($peticion->cliente_id)->plantel;
+
+        $peticion=$this->buscarOpenpay($peticion, $plantel);
         try {
-            //$success = SuccessMultipago::create($crearRegistro);
-            $peticion = PeticionOpenpay::where('rid', $id)->first();
-            $plantel = Cliente::find($peticion->cliente_id)->plantel;
-
-            $peticion = $this->buscarOpenpay($peticion, $plantel);
-            //dd($peticion);
-
-            if (!is_null($peticion) and $peticion->rstatus == "completed") {
+        
+            if (!is_null($peticion) and $peticion->rstatus=="completed") {
                 //$peticion->bnd_pagado = 1;
                 //$peticion->notificacion_pagado = date('Y-m-d H:i:s');
                 //$peticion->save();
                 $pago = Pago::find($peticion->pago_id);
                 $caja = Caja::find($pago->caja_id);
                 $cajaLn = CajaLn::where('caja_id', $caja->id)->first();
-                $adeudo = Adeudo::where('id', $cajaLn->adeudo_id)->first();
                 //dd($cajaLn);
+                $adeudo = Adeudo::where('id', $cajaLn->adeudo_id)->first();
+
                 //dd($peticion->toArray());
 
 
@@ -184,7 +155,7 @@ class PeticionOpenpaysController extends Controller
 
                 $mes = Carbon::createFromFormat('Y-m-d', $pago_final->fecha)->month;
                 $anio = Carbon::createFromFormat('Y-m-d', $pago_final->fecha)->year;
-                
+
                 if ($cajaLn->cajaConcepto->bnd_mensualidad == 1 and is_null($pago_final->csc_simplificado)) {
                     $serie_folio_simplificado = SerieFolioSimplificado::where('cuenta_p_id', $plantel->cuenta_p_id)
                         ->where('anio', $anio)
@@ -203,7 +174,7 @@ class PeticionOpenpaysController extends Controller
                         $pago->csc_simplificado = $serie . "-" . $consecutivo;
                         $pago->save();
                     }
-                } elseif ($caja->cajaLn->cajaConcepto->bnd_mensualidad == 0 and is_null($pago_final->csc_simplificado)) {
+                } elseif ($cajaLn->cajaConcepto->bnd_mensualidad == 0 and is_null($pago_final->csc_simplificado)) {
                     $serie_folio_simplificado = SerieFolioSimplificado::where('cuenta_p_id', $plantel->cuenta_p_id)
                         ->where('anio', $anio)
                         ->where('mese_id', $mes)
@@ -228,11 +199,31 @@ class PeticionOpenpaysController extends Controller
                 //Fin crear consecutivo simplificado
 
             }
+
         } catch (Exception $e) {
             dd($e);
             Log::info($e->getMessage());
         }
-        //return redirect()->route('fichaAdeudos.index');
+
+        $planteles = Empleado::where('user_id', '=', Auth::user()->id)->where('st_empleado_id','<>',3)->first()->plantels->pluck('id');
+        $empleados = Empleado::select(DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name, id'))->pluck('name', 'id');
+        $caja=$peticion->pago->caja;
+        $combinaciones = CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
+        $cajas = Caja::select('cajas.consecutivo as caja', 'cajas.fecha', 'ln.caja_concepto_id as concepto_id', 'cc.name as concepto', 'ln.total', 'st.name as estatus', 'ln.adeudo_id')
+            ->join('caja_lns as ln', 'ln.caja_id', '=', 'cajas.id')
+            ->join('caja_conceptos as cc', 'cc.id', '=', 'ln.caja_concepto_id')
+            ->join('st_cajas as st', 'st.id', '=', 'cajas.st_caja_id')
+            ->where('cliente_id', $caja->cliente->id)
+            ->where('ln.adeudo_id', '0')
+            ->whereNull('cajas.deleted_at')
+            ->whereNull('ln.deleted_at')
+            ->get();
+        $cuentasEfectivo = CuentasEfectivo::pluck('name', 'id');
+        $cliente=$peticion->cliente;
+        
+        return view('cajas.caja', compact('cliente', 'caja', 'combinaciones', 'cajas', 'cuentasEfectivo', 'empleados'))
+                ->with('list', Caja::getListFromAllRelationApps())
+                ->with('list1', CajaLn::getListFromAllRelationApps());
     }
 
 }
