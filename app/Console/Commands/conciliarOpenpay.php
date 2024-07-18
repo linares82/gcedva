@@ -30,7 +30,7 @@ class conciliarOpenpay extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Concilia informacion de peticiones con openpay para actualizar informacion';
 
     /**
      * Create a new command instance.
@@ -52,9 +52,11 @@ class conciliarOpenpay extends Command
         $peticionesCard = PeticionOpenpay::whereNotIn('rstatus', array('cancelled', 'completed'))
             ->whereIn('pmethod', array('card', 'store'))
             ->whereMonth('created_at', date('m'))
+            //->where('id',69)
             ->whereYear('created_at', date('Y'));
         $peticiones = PeticionOpenpay::whereNotIn('rstatus', array('cancelled', 'completed'))
             ->whereIn('pmethod', array('bank_account', 'store'))
+            //->where('id',69)
             ->union($peticionesCard)
             ->get();
         //dd($peticiones->toArray());

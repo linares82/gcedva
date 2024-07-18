@@ -560,9 +560,11 @@
                                         <tr>
                                             <td> {{ optional($peticion)->rorder_id }} </td>
                                             <td>
+                                                @if(isset($caja) and $caja->st_caja_id==0)
                                                 @permission('conciliacionOpenpay.peticionExistente')
                                                 <a href="{{route('peticionOpenpays.peticionExistente', array('id'=>$peticion->rid,'limite'=>$peticion->fecha_limite))}}" class="btn btn-xs btn-info">Conciliar</a>
                                                 @endpermission
+                                                @endif
                                             </td>
                                             <td> {{ optional($peticion)->rstatus }} </td><td> {{$peticion->fecha_limite}} </td>
                                         </tr>
