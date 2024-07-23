@@ -41,7 +41,7 @@ class Plantel extends Model
 		'cve_multipagos', 'cuenta_p_id', 'regimen_fiscal', 'fcuenta', 'fpassword', 'fusuario',
 		'serie_factura', 'folio_facturados', 'matriz_id','fact_global_id_cuenta','fact_global_pass_cuenta',
 		'fact_global_id_usu', 'fact_global_pass_usu','bnd_excepcion_documentos','calificacion_aprobatoria',
-		'oid','opublica','oprivada'
+		'oid','opublica','oprivada','bnd_multipagos_activo','bnd_openpay_activo'
 	];
 
 	protected $dates = ['deleted_at'];

@@ -230,13 +230,23 @@ class PlantelsController extends Controller
 		//dd($request->all());
 		$input = $request->except('concepto_multipagos_id', 'forma_pago_id');
 		$conceptos = $request->only('concepto_multipagos_id');
-		dd($conceptos);
+		
 		$formas_pago = $request->only('forma_pago_id');
 		$input['usu_mod_id'] = Auth::user()->id;
 		if(!isset($input['bnd_excepcion_documentos'])){
 			$input['bnd_excepcion_documentos']=0;
 		}
-		//$input['logo']="";
+		if(isset($input['bnd_multipagos_activo']) and $input['bnd_multipagos_activo']=="on"){
+			$input['bnd_multipagos_activo']=1;
+		}else{
+			$input['bnd_multipagos_activo']=0;
+		}
+		if(isset($input['bnd_openpay_activo']) and $input['bnd_openpay_activo']=="on"){
+			$input['bnd_openpay_activo']=1;
+		}else{
+			$input['bnd_openpay_activo']=0;
+		}
+				//$input['logo']="";
 		$r = $request->hasFile('logo_file');
 		if ($r) {
 			$logo_file = $request->file('logo_file');

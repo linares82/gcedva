@@ -922,7 +922,7 @@ class AdeudosController extends Controller
                 try {
                     $promociones = PromoPlanLn::where('plan_pago_ln_id', $adeudo->plan_pago_ln_id)->get();
                     $caja_ln['promo_plan_ln_id'] = 0;
-                    Log::info($cliente->id . "FLC:" . $cliente->beca_bnd . "-" . $adeudo->combinacionCliente->bnd_beca);
+                    //Log::info($cliente->id . "FLC:" . $cliente->beca_bnd . "-" . $adeudo->combinacionCliente->bnd_beca);
                     if ($cliente->beca_bnd != 1 and $adeudo->combinacionCliente->bnd_beca != 1) {
                         foreach ($promociones as $promocion) {
                             $inscripcion = Adeudo::where('cliente_id', $adeudo->cliente_id)
@@ -2306,7 +2306,8 @@ class AdeudosController extends Controller
             $caja_ln['descuento'] = 0;
 
             //Realiza descuento para inscripciones
-            if (
+            $param=Param::where('llave','prefijo_matricula_instalacion')->first();
+            if (($param->valor==0 or $param->valor=="AZ") and
                 isset(optional($adeudo->descuento)->id) and
                 ($adeudo->caja_concepto_id == 1 or $adeudo->caja_concepto_id == 23 or $adeudo->caja_concepto_id == 25)
             ) {
@@ -2606,7 +2607,8 @@ class AdeudosController extends Controller
             $caja_ln['descuento'] = 0;
 
             //Realiza descuento para inscripciones
-            if (
+            $param=Param::where('llave','prefijo_matricula_instalacion')->first();
+            if (($param->valor==0 or $param->valor=="AZ") and
                 isset(optional($adeudo->descuento)->id) and
                 ($adeudo->caja_concepto_id == 1 or $adeudo->caja_concepto_id == 23 or $adeudo->caja_concepto_id == 25)
             ) {

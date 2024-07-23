@@ -17,7 +17,7 @@ class CreatePeticionOpenpaysTable extends Migration
             $table->bigIncrements('id');
             $table->integer('pago_id')->unsigned()->nullable();
             $table->integer('cliente_id')->unsigned()->nullable();
-            $table->integer('forma_id')->unsigned()->nullable();
+            $table->integer('forma_pago_id')->unsigned()->nullable();
             $table->string('pname')->nullable();
             $table->string('plast_name')->nullable();
             $table->string('pphone_number')->nullable();

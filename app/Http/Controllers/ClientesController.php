@@ -244,7 +244,7 @@ class ClientesController extends Controller
         ->pluck('name', 'id');
         }*/
         $empleados = $empleados->reverse();
-        $empleados->put(0, 'Seleccionar OpciÃƒÆ’Ã‚Â³n');
+        $empleados->put(0, 'Seleccionar Opción');
         $empleados = $empleados->reverse();
         //dd($empleados);
         $estado_civiles = EstadoCivil::pluck('name', 'id');

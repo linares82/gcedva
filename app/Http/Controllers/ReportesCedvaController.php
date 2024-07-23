@@ -6,8 +6,8 @@ use DB;
 use Log;
 use Auth;
 
-use Illuminate\Support\Arr;
 use App\Caja;
+use App\Param;
 use Exception;
 use App\Adeudo;
 use App\Cliente;
@@ -23,6 +23,7 @@ use App\CicloMatricula;
 use App\AsignacionTarea;
 use App\HistoriaCliente;
 use App\AutorizacionBeca;
+use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -5114,7 +5115,8 @@ class ReportesCedvaController extends Controller
             $caja_ln['descuento'] = 0;
 
             //Realiza descuento para inscripciones
-            if (
+            $param=Param::where('llave','prefijo_matricula_instalacion')->first();
+            if (($param->valor==0 or $param->valor=="AZ") and
                 isset(optional($adeudo->descuento)->id) and
                 ($adeudo->caja_concepto_id == 1 or $adeudo->caja_concepto_id == 23 or $adeudo->caja_concepto_id == 25)
             ) {

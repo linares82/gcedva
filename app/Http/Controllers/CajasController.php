@@ -486,7 +486,8 @@ class CajasController extends Controller
                         $caja_ln['descuento'] = 0;
 
                         //Realiza descuento para inscripciones
-                        if (
+                        $param=Param::where('llave','prefijo_matricula_instalacion')->first();
+                        if (($param->valor==0 or $param->valor=="AZ") and
                             isset(optional($adeudo->descuento)->id) and
                             ($adeudo->caja_concepto_id == 1 or $adeudo->caja_concepto_id == 23 or $adeudo->caja_concepto_id == 25)
                         ) {
@@ -2265,11 +2266,19 @@ class CajasController extends Controller
         //dd($caja_ln);
 
         //Realiza descuento para inscripciones
-        if (
+        $param=Param::where('llave','prefijo_matricula_instalacion')->first();
+        if (($param->valor==0 or $param->valor=="AZ") and
             isset(optional($adeudo->descuento)->id) and
             ($adeudo->caja_concepto_id == 1 or $adeudo->caja_concepto_id == 23 or $adeudo->caja_concepto_id == 25)
-        ) {
+        ){
             $caja_ln['descuento'] = $caja_ln['subtotal'] * $adeudo->descuento->porcentaje;
+        /*}elseif (($param->valor=="TL")and
+            isset(optional($adeudo->descuento)->id) and
+            ($adeudo->caja_concepto_id == 1 or $adeudo->caja_concepto_id == 23 or $adeudo->caja_concepto_id == 25)
+        ){
+            //$caja_ln['descuento'] = $caja_ln['subtotal'] * $adeudo->descuento->porcentaje;
+            //Por ahora tlane no hace nada
+            */
         } else {
             //********************************* */
             //Calcula descuento por beca

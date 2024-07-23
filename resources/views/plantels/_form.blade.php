@@ -607,6 +607,20 @@
                 <div class="box-header"><h3>Openpay</h3></div>
                 <div class="box-body">
                     <div class="row">
+                        <div class="form-group col-md-3 @if($errors->has('bnd_multipagos_activo')) has-error @endif">
+                            <label for="bnd_multipagos_activo-field">Multipagos Activo</label>
+                            {!! Form::checkbox("bnd_multipagos_activo", null, null, [ "id" => "bnd_multipagos_activo-field", 'class'=>'minimal']) !!}
+                            @if($errors->has("bnd_multipagos_activo"))
+                            <span class="help-block">{{ $errors->first("bnd_multipagos_activo") }}</span>
+                            @endif
+                        </div>
+                        <div class="form-group col-md-3 @if($errors->has('bnd_openpay_activo')) has-error @endif">
+                            <label for="bnd_openpay_activo-field">Openpay Activo</label>
+                            {!! Form::checkbox("bnd_openpay_activo", null, null, [ "id" => "bnd_openpay_activo-field", 'class'=>'minimal']) !!}
+                            @if($errors->has("bnd_openpay_activo"))
+                            <span class="help-block">{{ $errors->first("bnd_openpay_activo") }}</span>
+                            @endif
+                        </div>
                         <div class="form-group col-md-4 @if($errors->has('oid')) has-error @endif">
                             <label for="oid-field">Id</label>
                             {!! Form::text("oid", null, array("class" => "form-control input-sm", "id" => "oid-field")) !!}
