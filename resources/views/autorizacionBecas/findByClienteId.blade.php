@@ -90,7 +90,7 @@
                                 <td>{{$autorizacionBeca->monto_mensualidad}}</td>
                                 <td>{{$autorizacionBeca->stBeca->name}}</td>
                                 <td>{{ optional($autorizacionBeca->autCajaPlantel)->name }}
-                                    @if($autorizacionBeca->aut_caja_plantel<>4)
+                                    @if($autorizacionBeca->aut_caja_plantel<>4 and $autorizacionBeca->st_beca_id<>4)
                                     @permission('autorizacionBecas.aut_caja_plantel')
                                     <button type="button" class="btn btn-primary btn-xs create_comentario"  
                                             data-toggle="modal" data-autorizacion_beca_id="{{ $autorizacionBeca->id }}"
@@ -103,8 +103,9 @@
                                     @endif
                                 </td>
                                 <td>{{ optional($autorizacionBeca->autDirPlantel)->name }}
-                                    @if($autorizacionBeca->aut_caja_plantel==4)
-                                    @if($autorizacionBeca->aut_dir_plantel<>4)
+                                    @if($autorizacionBeca->aut_caja_plantel==4 and 
+                                        $autorizacionBeca->st_beca_id<>4)
+                                    @if($autorizacionBeca->aut_dir_plantel<>4 )
                                     @permission('autorizacionBecas.aut_dir_plantel')
                                     <button type="button" class="btn btn-primary btn-xs create_comentario"  
                                             data-toggle="modal" data-autorizacion_beca_id="{{ $autorizacionBeca->id }}"
@@ -118,7 +119,9 @@
                                     @endif
                                 </td>
                                 <td>{{ optional($autorizacionBeca->autSerEsc)->name }}
-                                    @if($autorizacionBeca->aut_caja_plantel==4 and $autorizacionBeca->aut_dir_plantel==4)
+                                    @if($autorizacionBeca->aut_caja_plantel==4 and 
+                                    $autorizacionBeca->aut_dir_plantel==4 and 
+                                    $autorizacionBeca->st_beca_id<>4)
                                     @if($autorizacionBeca->aut_ser_esc<>4)
                                     @permission('autorizacionBecas.aut_ser_esc')
                                     <button type="button" class="btn btn-primary btn-xs create_comentario"  
@@ -133,8 +136,10 @@
                                     @endif
                                 </td>
                                 <td>{{ optional($autorizacionBeca->autDueno)->name }}
-                                    @if($autorizacionBeca->aut_caja_plantel==4 and $autorizacionBeca->aut_dir_plantel==4
-                                     and $autorizacionBeca->aut_ser_esc==4) 
+                                    @if($autorizacionBeca->aut_caja_plantel==4 and 
+                                     $autorizacionBeca->aut_dir_plantel==4 and 
+                                     $autorizacionBeca->aut_ser_esc==4 and 
+                                     $autorizacionBeca->st_beca_id<>4) 
                                     @if($autorizacionBeca->aut_dueno<>4)
                                     @permission('autorizacionBecas.aut_dueno')
                                     <button type="button" class="btn btn-primary btn-xs create_comentario"  

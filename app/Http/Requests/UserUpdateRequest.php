@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\UserMailUnique;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UserUpdateRequest extends FormRequest
@@ -24,7 +25,7 @@ class UserUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'email'=>'unique:users,email'
+            //'email'=>[new UserMailUnique]
         ];
     }
 

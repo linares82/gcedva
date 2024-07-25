@@ -1,15 +1,16 @@
 <?php namespace App\Http\Controllers;
 
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
-
-use App\AutorizacionBeca;
-use App\AutorizacionBecaComentario;
-use App\Cliente;
-use Illuminate\Http\Request;
 use Auth;
-use App\Http\Requests\updateAutorizacionBecaComentario;
+use App\Param;
+
+use App\Cliente;
+use App\Http\Requests;
+use App\AutorizacionBeca;
+use Illuminate\Http\Request;
+use App\AutorizacionBecaComentario;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\createAutorizacionBecaComentario;
+use App\Http\Requests\updateAutorizacionBecaComentario;
 
 class AutorizacionBecaComentariosController extends Controller {
 
@@ -47,7 +48,7 @@ class AutorizacionBecaComentariosController extends Controller {
 
 		$input = $request->except('autorizacion');
 		$autorizacion=$request->only('autorizacion');
-		//dd($autorizacion);
+		//dd($request->all());
 		$input['usu_alta_id']=Auth::user()->id;
 		$input['usu_mod_id']=Auth::user()->id;
 
@@ -55,8 +56,17 @@ class AutorizacionBecaComentariosController extends Controller {
 		AutorizacionBecaComentario::create( $input );
                 
     	$autorizacionBeca=AutorizacionBeca::find($input['autorizacion_beca_id']);
-                
-		if($autorizacion['autorizacion']=='aut_caja_plantel'){
+		$etapa_final_autorizacion=Param::where('llave','becas_etapa_autorizadora')->first();
+        //dd($autorizacion['autorizacion']);
+		if($autorizacion['autorizacion']<>$etapa_final_autorizacion->valor){
+			$autorizacionBeca->st_beca_id = 3;
+			$autorizacionBeca[$autorizacion['autorizacion']] = $input['st_beca_id'];
+		}elseif($autorizacion['autorizacion']==$etapa_final_autorizacion->valor){
+			$autorizacionBeca->st_beca_id = $input['st_beca_id'];
+			$autorizacionBeca[$autorizacion['autorizacion']] = $input['st_beca_id'];
+		}
+
+		/*if($autorizacion['autorizacion']=='aut_caja_plantel'){
 			$autorizacionBeca->st_beca_id = 3;
 			$autorizacionBeca->aut_caja_plantel = $input['st_beca_id'];
 		}elseif ($autorizacion['autorizacion']=='aut_dir_plantel') {
@@ -71,19 +81,23 @@ class AutorizacionBecaComentariosController extends Controller {
 		} elseif ($autorizacion['autorizacion'] == 'aut_dueno') {
 			$autorizacionBeca->st_beca_id = $input['st_beca_id'];
 			$autorizacionBeca->aut_dueno = $input['st_beca_id'];
-		}
+		}*/
 
 		$autorizacionBeca->monto_inscripcion = $input['monto_mensualidad'];
 		$autorizacionBeca->monto_mensualidad = $input['monto_mensualidad'];
 		$autorizacionBeca->save();
+		
 
-		if($autorizacion['autorizacion']=='aut_dueno' and $autorizacionBeca->st_beca_id==4){
+		//if($autorizacion['autorizacion']=='aut_dueno' and $autorizacionBeca->st_beca_id==4){
+		if($autorizacion['autorizacion']==$etapa_final_autorizacion->valor and $autorizacionBeca->st_beca_id==4){
 			$cliente = Cliente::find($autorizacionBeca->cliente_id);
 			$cliente->monto_mensualidad = $input['monto_mensualidad'];
 			$cliente->beca_porcentaje = $input['monto_mensualidad'];
 			$cliente->beca_bnd = 1;
 			$cliente->save();
 		}
+
+		//dd($autorizacionBeca);
 
                /* 
                 if($input['st_beca_id']==4){

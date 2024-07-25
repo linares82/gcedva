@@ -74,7 +74,8 @@ class HomeController extends Controller
             ->leftJoin('st_becas as adp', 'adp.id', '=', 'autorizacion_becas.aut_dir_plantel')
             ->leftJoin('st_becas as ase', 'ase.id', '=', 'autorizacion_becas.aut_ser_esc')
             ->leftJoin('st_becas as ad', 'ad.id', '=', 'autorizacion_becas.aut_dueno')
-            ->whereRaw('(aut_caja_plantel <> 4 or aut_dir_plantel<> 4 or aut_ser_esc<> 4 or aut_dueno<> 4)');
+            ->where('autorizacion_becas.st_beca_id','<>',4);
+            //->whereRaw('(aut_caja_plantel <> 4 or aut_dir_plantel<> 4 or aut_ser_esc<> 4 or aut_dueno<> 4)');
         if (Auth::user()->can('autorizacionBecas.filtroPlantels')) {
             $becas_aux->whereIn('cli.plantel_id', $planteles);
         }

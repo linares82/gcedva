@@ -6,9 +6,11 @@
         <li class="">
             <a data-toggle="tab" href="#tab2">Documentos</a>
         </li>
+        @permission('plantels.parametros')
         <li class="">
             <a data-toggle="tab" href="#tab3">Parametros</a>
         </li>
+        @endpermission
     </ul>
     <div class="tab-content">
         <div id="tab1" class="tab-pane active">

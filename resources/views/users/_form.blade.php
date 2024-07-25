@@ -1,4 +1,6 @@
-
+@php
+    //dd($errors);
+@endphp
 <input type="hidden" name="_token" value="{{ csrf_token() }}">
 <div class="col-md-4 form-group">
     <label for="name">Nombre</label>
@@ -8,6 +10,10 @@
     <label for="email">Email</label>
     <input type="email" class="form-control" id="email" placeholder="Email" name="email" value="{{ (Session::has('errors')) ? old('email', '') : $model->email }}">
     {!! $errors->first('email', '<p class="help-block">:message</p>') !!}
+    @if(session('validaEmail'))
+    <p class="help-block">{{session('validaEmail')}}</p>
+    @endif
+    
 </div>
 <div class="col-md-4 form-group">
     <label for="password">Password</label>

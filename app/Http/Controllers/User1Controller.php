@@ -181,6 +181,12 @@ class User1Controller extends Controller
         $roles=$request->only('roles');
         
         $usuario=User::find($id);
+        $validaMail=User::where('email', $datos['email'])->where('id','<>', $id)->count();
+        if($validaMail>0){
+            
+            return redirect()->back()->withInput()->with('validaEmail', 'Correo en uso por otro usuario.');
+            
+        }
         $usuario->update($datos);
 
         if(count($roles)>0){

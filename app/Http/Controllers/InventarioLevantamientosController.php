@@ -508,29 +508,29 @@ class InventarioLevantamientosController extends Controller
 		//dd($datos);
 		$areas = explode(',', $datos['area']);
 		$cadena_areas = "";
-		foreach ($areas as $llave => $valor) {
+		/*foreach ($areas as $llave => $valor) {
 			$areas[$llave] = "%" . trim($valor) . "%";
-		}
+		}*/
 		//dd($areas);
 		$resultado_aux = Inventario::select(
 			'pi.id as plantel_id',
 			'pi.name as plantel',
 			'il.fecha',
 			'inventarios.area',
-			'estado_bueno',
-			'existe_si'
+			//'estado_bueno',
+			//'existe_si'
 		)
 			->join('inventario_levantamientos as il', 'il.id', 'inventarios.inventario_levantamiento_id')
 			->join('plantel_inventarios as pi', 'pi.id', 'inventarios.plantel_inventario_id')
-			->whereIn('inventarios.plantel_inventario_id', $datos['plantel_f']);
-		//->whereIn('inventarios.area', 'like', $areas)
-		foreach ($areas as $area) {
+			->whereIn('inventarios.plantel_inventario_id', $datos['plantel_f'])
+			->whereIn('inventarios.area', $areas);
+		/*foreach ($areas as $area) {
 			$resultado_aux->where('area', 'like', $area);
-		}
+		}*/
 
-		$resultado = $resultado_aux->whereIn('inventarios.estado_bueno', $datos['estado_bueno'])
-			->whereIn('inventarios.existe_si', $datos['existe_si'])
-			->whereDate('il.fecha', '>=', $datos['fecha_f'])
+		$resultado = //$resultado_aux->whereIn('inventarios.estado_bueno', $datos['estado_bueno'])
+			//->whereIn('inventarios.existe_si', $datos['existe_si'])
+			$resultado_aux->whereDate('il.fecha', '>=', $datos['fecha_f'])
 			->whereDate('il.fecha', '<=', $datos['fecha_t'])
 			->distinct()
 			->orderBy('il.fecha', 'desc')
@@ -539,7 +539,7 @@ class InventarioLevantamientosController extends Controller
 		$catEstado = array('0' => 'SELECCIONAR', 'BUENO' => 'BUENO', 'MALO' => 'MALO');
 		$catExiste = array('0' => 'SELECCIONAR', 'SI' => 'SI', 'NO' => 'NO');
 		//dd($resultado);
-		return view('inventarioLevantamientos.reportes.inicioLevantamiento', compact('resultado', 'planteles', 'catExiste', 'catEstado'));
+		return view('inventarioLevantamientos.reportes.inicioLevantamiento', compact('resultado', 'planteles', 'catExiste', 'catEstado'))->withInput($request->all());
 	}
 
 	public function inicioLevantamientoC()

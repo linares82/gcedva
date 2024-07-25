@@ -38,7 +38,7 @@
             <span class="help-block">{{ $errors->first("area") }}</span>
             @endif
         </div>
-
+        <!--
         <div class="form-group col-md-6 @if($errors->has('existe_si')) has-error @endif" style="clear:left;">
             <label for="existe_si-field">Existe si</label>
             {!! Form::select("existe_si[]", $catExiste, null, array("class" => "form-control select_seguridad", "id" => "existe_si-field", "multiple"=>true)) !!}
@@ -54,7 +54,7 @@
             <span class="help-block">{{ $errors->first("estado_bueno") }}</span>
             @endif
         </div>
-
+        -->
         <div class="form-group col-md-6 @if($errors->has('fecha_f')) has-error @endif" style="clear:left;">
             <label for="fecha_f-field">Fecha de:</label>
             {!! Form::text("fecha_f", null, array("class" => "form-control input-sm fecha", "id" => "fecha_f-field")) !!}

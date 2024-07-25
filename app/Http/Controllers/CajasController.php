@@ -528,7 +528,7 @@ class CajasController extends Controller
                                                 (($anioInicio == $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin == $anioAdeudo and $mesFin >= $mesAdeudo)) or
                                                 (($anioInicio == $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin > $anioAdeudo)) or
                                                 (($anioInicio < $anioAdeudo) and ($anioFin == $anioAdeudo and $mesFin >= $mesAdeudo))) and
-                                            $beca->aut_dueno == 4 and is_null($beca->deleted_at)
+                                            $beca->st_beca_id == 4 and is_null($beca->deleted_at)
                                         ) {
 
                                             //dd(($beca->lectivo->inicio <= $adeudo->fecha_pago and $beca->lectivo->fin >= $adeudo->fecha_pago));
@@ -2299,7 +2299,7 @@ class CajasController extends Controller
                         (($anioInicio == $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin == $anioAdeudo and $mesFin >= $mesAdeudo)) or
                         (($anioInicio == $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin > $anioAdeudo)) or
                         (($anioInicio < $anioAdeudo) and ($anioFin == $anioAdeudo and $mesFin >= $mesAdeudo))) and
-                    $beca->aut_dueno == 4 and is_null($beca->deleted_at)
+                    $beca->st_beca_id == 4 and is_null($beca->deleted_at)
                 ) {
                     $beca_a = $beca->id;
                     //dd($beca);
