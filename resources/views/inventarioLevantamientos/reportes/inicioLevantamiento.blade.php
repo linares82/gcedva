@@ -11,7 +11,7 @@
 </ol>
 
 <div class="page-header">
-    <h3><i class="glyphicon glyphicon-plus"></i> Inventario / Formato para levantamiento </h3>
+    <h3><i class="glyphicon glyphicon-plus"></i> Inventario / F. Levantamiento Faltantes </h3>
 </div>
 @endsection
 

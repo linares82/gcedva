@@ -518,7 +518,7 @@ class InventarioLevantamientosController extends Controller
 			'il.fecha',
 			'inventarios.area',
 			//'estado_bueno',
-			//'existe_si'
+			'existe_si'
 		)
 			->join('inventario_levantamientos as il', 'il.id', 'inventarios.inventario_levantamiento_id')
 			->join('plantel_inventarios as pi', 'pi.id', 'inventarios.plantel_inventario_id')
@@ -527,6 +527,8 @@ class InventarioLevantamientosController extends Controller
 		/*foreach ($areas as $area) {
 			$resultado_aux->where('area', 'like', $area);
 		}*/
+		$resultado_aux->whereIn('inventarios.existe_si', array('SI','NO'));
+				//->select('pi.id as plantel_id', 'pi.name as plantel', 'il.fecha', 'existe_si');
 
 		$resultado = //$resultado_aux->whereIn('inventarios.estado_bueno', $datos['estado_bueno'])
 			//->whereIn('inventarios.existe_si', $datos['existe_si'])

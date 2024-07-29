@@ -440,6 +440,7 @@ class CajasController extends Controller
     {
         //dd($request->get('adeudo'));
         $data = $request->all();
+        //dd($data);
 
         $caja = Caja::find($data['caja']);
         $cliente = Cliente::find($data['cliente_id']);
@@ -497,7 +498,7 @@ class CajasController extends Controller
                             //Calcula descuento por beca
                             //********************************* */
                             $beca_a = 0;
-                            //dd($cliente->autorizacionBecas);
+                            //dd($cliente->autorizacionBecas->toArray());
                             foreach ($cliente->autorizacionBecas as $beca) {
                                 //dd(is_null($beca->deleted_at));
                                 //$diaAdeudo = Carbon::createFromFormat('Y-m-d', $adeudo->fecha_pago)->dia;
@@ -506,6 +507,7 @@ class CajasController extends Controller
                                     if ($beca->bnd_tiene_vigencia == 1 and !is_null($beca->vigencia)) {
                                         $fechaAdeudo = Carbon::createFromFormat('Y-m-d', $adeudo->fecha_pago);
                                         $fechaVigenciaBeca = Carbon::createFromFormat('Y-m-d', $beca->vigencia);
+                                        //dd($fechaAdeudo->lessThanOrEqualTo($fechaVigenciaBeca));
                                         if ($fechaAdeudo->lessThanOrEqualTo($fechaVigenciaBeca)) {
                                             $beca_a = $beca->id;
                                         }
@@ -542,7 +544,7 @@ class CajasController extends Controller
                             }
 
                             $beca_autorizada = AutorizacionBeca::find($beca_a);
-                            //dd($beca->toArray());
+                            //dd($beca_autorizada->toArray());
 
                             if (
                                 !is_null($beca_autorizada) and
