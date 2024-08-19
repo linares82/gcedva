@@ -1093,6 +1093,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'AddTipoContratoIdToEmpleadosTable' => __DIR__ . '/../..' . '/database/migrations/2020_06_16_125333_add_tipo_contrato_id_to_empleados_table.php',
         'AddTitulacionGrupoIdToTitulacionsTable' => __DIR__ . '/../..' . '/database/migrations/2022_08_19_102522_add_titulacion_grupo_id_to_titulacions_table.php',
         'AddToFacturaGenralLineasTable' => __DIR__ . '/../..' . '/database/migrations/2022_02_02_131216_add_to_factura_genral_lineas_table.php',
+        'AddTokenCardToPeticionOpenpaysTable' => __DIR__ . '/../..' . '/database/migrations/2024_08_15_115717_add_token_card_to_peticion_openpays_table.php',
         'AddTpoExamenIdToActaFinalsTable' => __DIR__ . '/../..' . '/database/migrations/2021_04_14_113800_add_tpo_examen_id_to_acta_finals_table.php',
         'AddTpoInformeClientesTable' => __DIR__ . '/../..' . '/database/migrations/2018_03_12_111837_add_tpo_informe_clientes_table.php',
         'AddTransferenceIdIngresoEgresosTable' => __DIR__ . '/../..' . '/database/migrations/2019_07_02_152821_add_transference_id_ingreso_egresos_table.php',

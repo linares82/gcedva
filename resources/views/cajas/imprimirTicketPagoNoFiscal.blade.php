@@ -25,7 +25,7 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_
             @endif
         
             @php
-            $cadena='Id:'.$cliente->id.
+            $cadena='Id:'.$cliente->id."; Matricula:".$cliente->matricula.
                     '; Nombre:'.$cliente->nombre.' '.$cliente->nombre2.' '.$cliente->ape_paterno.' '.$cliente->ape_materno.
                     '; Plantel:'.$cliente->plantel->razon;
             $cadena_pie='cliente:'.$cliente->id.'; Plantel:'.$cliente->plantel->id.";Caja:".$caja->consecutivo;
@@ -233,7 +233,7 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_
             @endif
         
             @php
-            $cadena='Id:'.$cliente->id.
+            $cadena='Id:'.$cliente->id."; Matricula:".$cliente->matricula.
                     '; Nombre:'.$cliente->nombre.' '.$cliente->nombre2.' '.$cliente->ape_paterno.' '.$cliente->ape_materno.
                     '; Plantel:'.$cliente->plantel->razon;
             $cadena_pie='cliente:'.$cliente->id.'; Plantel:'.$cliente->plantel->id.";Caja:".$caja->consecutivo;

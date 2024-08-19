@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use Auth;
+use App\Grado;
+use App\Nivel;
 use App\Turno;
 use App\Adeudo;
 use App\Cliente;
 use App\Plantel;
+use App\Especialidad;
 use App\CombinacionCliente;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -58,14 +61,46 @@ class CombinacionClientesController extends Controller
             break;
         }
 
+        //valida combinacion
+        $plantel=Plantel::find($input['cliente_id']);
+        $especialidad=Especialidad::find($input['especialidad_id']);
+        $nivel=Nivel::find($input['nivel_id']);
+        $grado=Grado::find($input['grado_id']);
+        if($plantel->id==$especialidad->plantel_id and 
+        $plantel->id==$nivel->plantel_id and 
+        $plantel->id==$grado->plantel_id and 
+        $plantel->id==$turno->plantel_id){
+            if($especialidad->id==$nivel->especialidad_id and
+            $especialidad->id==$grado->especialidad_id and
+            $especialidad->id==$turno->especialidad_id){
+                if($nivel->id==$grado->nivel_id and 
+                $nivel->id==$turno->nivel_id
+                ){
+                    $combinacion=CombinacionCliente::create($input);
+                    $cliente=Cliente::find($combinacion->cliente_id);
+                    $cliente->especialidad_id=$input['especialidad_id'];
+                    $cliente->nivel_id=$input['nivel_id'];
+                    $cliente->grado_id=$input['grado_id'];
+                    $cliente->turno_id=$input['turno_id'];
+                    $cliente->save();            
+                }else{
+                    return response()->json([
+                        'validaCombinacion' => 'Valor en combinacion es incorrecto.',
+                    ]);
+                }
+            }else{
+                return response()->json([
+                    'validaCombinacion' => 'Valor en combinacion es incorrecto.',
+                ]);
+            }
+        }else{
+            return response()->json([
+                'validaCombinacion' => 'Valor en combinacion es incorrecto.',
+            ]);
+        }
+
         //create data
-        $combinacion=CombinacionCliente::create($input);
-        $cliente=Cliente::find($combinacion->cliente_id);
-        $cliente->especialidad_id=$input['especialidad_id'];
-        $cliente->nivel_id=$input['nivel_id'];
-        $cliente->grado_id=$input['grado_id'];
-        $cliente->turno_id=$input['turno_id'];
-        $cliente->save();
+        
 
         //return redirect()->route('combinacionClientes.index')->with('message', 'Registro Creado.');
     }

@@ -456,7 +456,12 @@ class CajaObserver
         $from = "ohpelayo@gmail.com";
         $destinatario = "linares82@gmail.com";
         $contenido = $msj;
-        $n = Auth::user()->name;
+        if(Auth::check()){
+            $n = Auth::user()->name;
+        }else{
+            $n = "Tarea Automatica";
+        }
+        
         
         //dd(env('MAIL_FROM_ADDRESS'));
 

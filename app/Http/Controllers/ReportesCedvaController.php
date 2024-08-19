@@ -68,7 +68,7 @@ class ReportesCedvaController extends Controller
         } else {
             $concepto_caja = $datos['concepto_caja_f'];
         }
-        //dd($concepto_caja);
+        //dd($pagos);
         $resultado2 = array();
         switch ($datos['reportes_f']) {
                 //Filtros que operan
@@ -143,7 +143,6 @@ class ReportesCedvaController extends Controller
                         ->orderBy('cc.name')
                         ->orderBy('clientes.ape_paterno')
                         ->orderBy('clientes.ape_materno')
-                        ->orderBy('clientes.nombre')
                         ->orderBy('clientes.nombre')
                         ->get();
 
@@ -385,7 +384,6 @@ class ReportesCedvaController extends Controller
                         ->orderBy('clientes.ape_paterno')
                         ->orderBy('clientes.ape_materno')
                         ->orderBy('clientes.nombre')
-                        ->orderBy('clientes.nombre')
                         ->get();
 
                     $r = $registros->groupBy('caja_id');
@@ -479,7 +477,6 @@ class ReportesCedvaController extends Controller
                         ->orderBy('cc.name')
                         ->orderBy('clientes.ape_paterno')
                         ->orderBy('clientes.ape_materno')
-                        ->orderBy('clientes.nombre')
                         ->orderBy('clientes.nombre')
                         //->union($registros_pendientes)
                         ->get();
@@ -897,7 +894,7 @@ class ReportesCedvaController extends Controller
                                 $linea_dinero['vigentes_sin_adeudos'] = $linea_dinero['vigentes_sin_adeudos'] + $registro['total_caja'];
                             }
                             if (( //$registro['estatus_cliente_id']==25 or $registro['estatus_cliente_id']==26 or
-				    ($registro['estatus_cliente_id'] == 17 and $registro['pagado_bnd'] == 0) or
+				                    ($registro['estatus_cliente_id'] == 17 and $registro['pagado_bnd'] == 0) or
                                     ($registro['estatus_cliente_id'] == 4 and $registro['estatus_seguimiento_id'] == 2) or
                                     ($registro['estatus_cliente_id'] == 20 and $registro['estatus_seguimiento_id'] == 7) or
                                     ($registro['estatus_cliente_id'] == 4 and $registro['estatus_seguimiento_id'] == 9)) and

@@ -91,7 +91,7 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_
     </tr>
     <tr>
         <td colspan="2">
-            Alumno:{{$cliente->id."-".$cliente->nombre." ".$cliente->nombre2." ".$cliente->ape_paterno." ".$cliente->ape_materno}}
+            Alumno:{{$cliente->id."-".$cliente->matricula."-".$cliente->nombre." ".$cliente->nombre2." ".$cliente->ape_paterno." ".$cliente->ape_materno}}
         </td>
     </tr>
     <tr></tr>
@@ -298,7 +298,7 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_
     </tr>
     <tr>
         <td colspan="2">
-            Alumno:{{$cliente->id."-".$cliente->nombre." ".$cliente->nombre2." ".$cliente->ape_paterno." ".$cliente->ape_materno}}
+        Alumno:{{$cliente->id."-".$cliente->matricula."-".$cliente->nombre." ".$cliente->nombre2." ".$cliente->ape_paterno." ".$cliente->ape_materno}}
         </td>
     </tr>
     <tr></tr>

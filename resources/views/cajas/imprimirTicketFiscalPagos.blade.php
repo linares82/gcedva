@@ -35,7 +35,7 @@ if(!is_null($cliente->plantel->matriz_id) and $cliente->plantel->matriz_id>0){
                 @endif
             
                 @php
-                $cadena='Id:'.$cliente->id.
+                $cadena='Id:'.$cliente->id."; Matricula:".$cliente->matricula.
                         '; Nombre:'.$cliente->nombre.' '.$cliente->nombre2.' '.$cliente->ape_paterno.' '.$cliente->ape_materno.
                         '; Plantel:'.$cliente->plantel->razon;
                 $cadena_pie='cliente:'.$cliente->id.'; Plantel:'.$cliente->plantel->id.";Caja:".$caja->consecutivo."; Token: ".$impresion_token->toke_unico;
@@ -231,7 +231,7 @@ if(!is_null($cliente->plantel->matriz_id) and $cliente->plantel->matriz_id>0){
             @endif
         
             @php
-            $cadena='Id:'.$cliente->id.
+            $cadena='Id:'.$cliente->id."; Matricula:".$cliente->matricula.
                     '; Nombre:'.$cliente->nombre.' '.$cliente->nombre2.' '.$cliente->ape_paterno.' '.$cliente->ape_materno.
                     '; Plantel:'.$cliente->plantel->razon;
                     $cadena_pie='cliente:'.$cliente->id.'; Plantel:'.$cliente->plantel->id.";Caja:".$caja->consecutivo."; Token: ".$impresion_token->toke_unico;

@@ -335,7 +335,7 @@
                         </div>
                         <div class="form-group col-md-2 @if($errors->has('nivel_id')) has-error @endif">
                             <label for="nivel_id-field">Nivel</label>
-                            {!! Form::select("nivel_id", $list["Nivel"], null, array("class" => "form-control select_seguridad", "id" => "nivel_id-field")) !!}
+                            {!! Form::select("nivel_id", (isset($cliente->nivel_id) and $cliente->nivel_id<>0) ? $list["Nivel"] : [], null, array("class" => "form-control select_seguridad", "id" => "nivel_id-field")) !!}
                             <div id='loading11' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                             @if($errors->has("nivel_id"))
                             <span class="help-block">{{ $errors->first("nivel_id") }}</span>
@@ -343,7 +343,7 @@
                         </div>
                         <div class="form-group col-md-4 @if($errors->has('grado_id')) has-error @endif">
                             <label for="grado_id-field">Grado </label>
-                            {!! Form::select("grado_id", $list["Grado"], null, array("class" => "form-control select_seguridad", "id" => "grado_id-field")) !!}
+                            {!! Form::select("grado_id", (isset($cliente->grado_id) and $cliente->grado_id<>0) ? $list["Grado"] : [], null, array("class" => "form-control select_seguridad", "id" => "grado_id-field")) !!}
                             <div id='loading12' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                             @if($errors->has("grado_id"))
                             <span class="help-block">{{ $errors->first("grado_id") }}</span>
@@ -351,7 +351,7 @@
                         </div>
                         <div class="form-group col-md-2 @if($errors->has('turno_id')) has-error @endif">
                             <label for="turno_id-field">Turno</label>
-                            {!! Form::select("turno_id", $list["Turno"], null, array("class" => "form-control select_seguridad", "id" => "turno_id-field")) !!}
+                            {!! Form::select("turno_id", (isset($cliente->turno_id) and $cliente->turno_id<>0) ? $list["Turno"] : [], null, array("class" => "form-control select_seguridad", "id" => "turno_id-field")) !!}
                             <div id='loading12' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                             @if($errors->has("turno_id"))
                             <span class="help-block">{{ $errors->first("turno_id") }}</span>
