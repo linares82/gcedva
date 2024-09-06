@@ -51,6 +51,7 @@ class GruposController extends Controller
 	{
 
 		$input = $request->all();
+		
 		$input['usu_alta_id'] = Auth::user()->id;
 		$input['usu_mod_id'] = Auth::user()->id;
 		$periodo_estudio = $input['periodo_estudio_id'];

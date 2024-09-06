@@ -131,8 +131,10 @@
                 $suma_concepto=$suma_concepto+round($detalle['adeudo_planeado']);
             @endphp
             @endforeach
+            @permission('adeudos.maestroAdeudoConMontos')    
             <tr><td>Total Alumnos Con Adeudo</td><td>{{ $consecutivo_linea }}</td></tr>
             <tr><td>Total Adeudo</td><td>{{ number_format($suma,2) }}</td></tr>
+            @endpermission
         </tbody>
     </table>
     

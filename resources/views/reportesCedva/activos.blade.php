@@ -70,6 +70,7 @@
             </tbody>
     </table>    
 
+    @permission('reportesCedva.activosSinDinero')
     <table class="table table-condensed table-striped">
             <h4>Resumen Monetario</h4>
             <thead>
@@ -108,6 +109,7 @@
               </tr>
             </tbody>
     </table>    
+    @endif
         
         <table class="table table-condensed table-striped">
             <h4>Activos</h4>
@@ -115,8 +117,15 @@
                 <th>No.</th><th>Plantel</th><th>Ciclo</th><th>Id</th><th>Matricula</th><th>Seccion</th>
                 <th>A. Paterno</th><th>A. Materno</th><th>Nombre(s)</th><th>Tel. Fijo</th><th>Celular</th><th>Estatus C.</th>
                 <th>Estatus S.</th><th>Turno</th>
-                <th>F. Planeada</th><th>Monto Planeado</th><th>Concepto</th><th>Ticket</th>
-                <th>F. Caja</th><th>Total Caja</th><th>Usuario Pago</th><th>Pagado</th><th>Total Adeudo</th>
+                <th>F. Planeada</th>
+                @permission('reportesCedva.activosSinDinero')<th>Monto Planeado</th>@endpermission
+                <th>Concepto</th><th>Ticket</th>
+                <th>F. Caja</th>
+                @permission('reportesCedva.activosSinDinero')<th>Total Caja</th>@endpermission
+                <th>Usuario Pago</th><th>Pagado</th>
+                @permission('reportesCedva.activosSinDinero')<th>Total Adeudo</th>@endpermission
+                
+
             </thead>
             <tbody>    
         @php
@@ -141,7 +150,7 @@
         $plantel_adeudo_suma=0;
         @endphp
         @foreach ($registros as $registro)
-          
+          @permission('reportesCedva.activosSinDinero')
           @if($plantel<>"" and $ciclo<>"" and $concepto<>"")
               @if($concepto<>$registro[0]['concepto'])
               <tr>
@@ -191,15 +200,18 @@
               @endif
               
           @endif
+          @endpermission
           <tr>
             <td>{{ ++$csc }}</td><td>{{ $registro[0]['razon'] }}</td><td>{{ $registro[0]['ciclo'] }}</td><td>{{ $registro[0]['cliente'] }}</td><td>{{ $registro[0]['matricula'] }}</td><td>{{ $registro[0]['seccion'] }}</td>
             <td>{{ $registro[0]['ape_paterno'] }} </td><td>{{ $registro[0]['ape_materno'] }}</td><td>{{ $registro[0]['nombre'] }} {{ $registro[0]['nombre2'] }}</td>
             <td>{{ $registro[0]['tel_fijo'] }}</td><td>{{ $registro[0]['tel_cel'] }}</td>
             <td>{{ $registro[0]['estatus_cliente'] }}</td><td>{{ $registro[0]['estatus_seguimiento'] }}</td>
             <td>{{ $registro[0]['turno'] }}</td>
-            <td>{{ $registro[0]['fecha_pago'] }}</td><td>{{ number_format($registro[0]['monto'],2) }}</td>
-            <td>{{ $registro[0]['concepto'] }}</td><td>{{ $registro[0]['consecutivo'] }}</td><td>{{ $registro[0]['fecha_caja']==0 ? "" :$registro[0]['fecha_caja'] }}</td>
-            <td>{{ number_format($registro[0]['total_caja'],2) }}</td>
+            <td>{{ $registro[0]['fecha_pago'] }}</td>
+            @permission('reportesCedva.activosSinDinero')<td>{{ number_format($registro[0]['monto'],2) }}</td>@endpermission
+            <td>{{ $registro[0]['concepto'] }}</td><td>{{ $registro[0]['consecutivo'] }}</td>
+            <td>{{ $registro[0]['fecha_caja']==0 ? "" :$registro[0]['fecha_caja'] }}</td>
+            @permission('reportesCedva.activosSinDinero')<td>{{ number_format($registro[0]['total_caja'],2) }}</td>@endpermission
             <td>
               @php
                 if(is_int($registro[0]['caja_id'])){
@@ -212,7 +224,9 @@
                 
             </td>
             <td>@if($registro[0]['pagado_bnd']==1) Si @else No @endif</td>
+            @permission('reportesCedva.activosSinDinero')
             <td>
+              
               @if($registro[0]['pagado_bnd']==0)
               {{ number_format($registro[0]['monto'],2) }}
               @php
@@ -225,7 +239,9 @@
               @else
                 0
               @endif
+              
             </td>
+            @endpermission
           </tr>
         @php
             //$especialidad=$registro->especialidad;
@@ -248,6 +264,7 @@
             
         @endphp
         @endforeach
+        @permission('reportesCedva.activosSinDinero')
         <tr><td>Totales Concepto</td><td colspan='12'>
           </td><td>{{ number_format($planeado_suma,2) }}</td>
           <td colspan='3'></td>
@@ -269,7 +286,7 @@
           <td></td>
           <td>{{ number_format($plantel_adeudo_suma,2) }}</td>
         </tr>
-          
+        @endpermission  
             </tbody>
         </table>
     </div>

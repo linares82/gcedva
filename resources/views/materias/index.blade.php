@@ -47,7 +47,12 @@
                     <form class="Materium_search" id="search" action="{{ route('materias.index') }}" accept-charset="UTF-8" method="get">
                         <input type="hidden" name="q[s]" value="{{ @(Request::input('q')['s']) ?: '' }}" />
                         <div class="form-horizontal">
-
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="q_id_cont">ID</label>
+                                <div class=" col-sm-9">
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['id_cont']) ?: '' }}" name="q[id_cont]" id="q_id_cont" />
+                                </div>
+                            </div>
                             <!--
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_name_gt">NAME</label>

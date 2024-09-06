@@ -123,7 +123,7 @@
                             <td>{{ $cliente->matricula }}</td>
                             <td>
                                 @if(isset($a['bnd_tiene_nombre_oficial']) and $a['bnd_tiene_nombre_oficial']==1)
-                                {{$a['nombre_oficial']}}
+                                {{$a['materia']}}
                                 @else
                                 {{$a['materia']}}
                                 @endif

@@ -221,7 +221,7 @@
             <td>{{$inventario->nombre}}</td>
             <td>{{$inventario->medida}}</td>
             <td>{{$inventario->marca}}</td>
-            <td>{{$inventario->observaciones}}</td>
+            <td>{{substr($inventario->observaciones, 0,10)}}...</td>
             <td>
                 <div class="editExiste">{{$inventario->existe_si}}</div>
                 <div id="existeEditable" style="display:none;">

@@ -8,6 +8,7 @@ use Auth;
 use Session;
 use App\Grado;
 use App\Param;
+use Exception;
 use App\Cliente;
 use App\Lectivo;
 use App\Plantel;
@@ -165,12 +166,12 @@ class HacademicasController extends Controller
         $input = $request->all();
         //dd($input['calificacion_parcial_id']);
         //dd($hacademicas);
-        
+
         $aprobatoria = Param::where('llave', 'calificacion_aprobatoria')->value('valor');
         $c = Cliente::where('id', '=', $input['alumno_id'])->first();
-        if($aprobatoria==0){
-            $plantel=Plantel::find($c->plantel_id);
-            $aprobatoria=$plantel->calificacion_aprobatoria;
+        if ($aprobatoria == 0) {
+            $plantel = Plantel::find($c->plantel_id);
+            $aprobatoria = $plantel->calificacion_aprobatoria;
         }
 
         if (isset($input['calificacion_parcial_id'])) {
@@ -234,7 +235,7 @@ class HacademicasController extends Controller
             isset($input['tpo_examen_id']) and
             isset($input['materium_id']) and !isset($input['excepcion'])
         ) {
-            
+
             $hacademicas = Hacademica::select(
                 'calif.id',
                 DB::raw('concat(c.nombre, " ", c.ape_paterno," ", c.ape_materno) as nombre'),
@@ -317,7 +318,7 @@ class HacademicasController extends Controller
         $examen = TpoExamen::pluck('name', 'id');
 
 
-        return view('hacademicas.calificaciones', compact('hacademicas', 'examen','input'))
+        return view('hacademicas.calificaciones', compact('hacademicas', 'examen', 'input'))
             ->with('list', Hacademica::getListFromAllRelationApps());
     }
 
@@ -349,8 +350,8 @@ class HacademicasController extends Controller
         //$examen->reverse();
         //$examen->put(0,'Seleccionar OpciÃ³n');
         //$examen->reverse();
-        $lectivos=Lectivo::pluck('name','id');
-        return view('hacademicas.examen', compact('examen','lectivos'))
+        $lectivos = Lectivo::pluck('name', 'id');
+        return view('hacademicas.examen', compact('examen', 'lectivos'))
             ->with('list', Hacademica::getListFromAllRelationApps());
     }
 
@@ -383,45 +384,45 @@ class HacademicasController extends Controller
 
             //dd($h->id);
             //if (!is_object($calificacion_extraordinaria)) {
-                $c = new Calificacion;
-                $c->hacademica_id = $h->id;
-                $c->tpo_examen_id = $input['examen_id'];
-                $c->lectivo_id = $input['lectivo_id'];
-                $c->calificacion = 0;
-                $c->fecha = date('Y-m-d');
-                $c->reporte_bnd = 0;
-                if (isset($input['reporte_bnd'])) {
-                    $c->reporte_bnd = 1;
-                }
-                $c->usu_alta_id = Auth::user()->id;
-                $c->usu_mod_id = Auth::user()->id;
-                $c->save();
+            $c = new Calificacion;
+            $c->hacademica_id = $h->id;
+            $c->tpo_examen_id = $input['examen_id'];
+            $c->lectivo_id = $input['lectivo_id'];
+            $c->calificacion = 0;
+            $c->fecha = date('Y-m-d');
+            $c->reporte_bnd = 0;
+            if (isset($input['reporte_bnd'])) {
+                $c->reporte_bnd = 1;
+            }
+            $c->usu_alta_id = Auth::user()->id;
+            $c->usu_mod_id = Auth::user()->id;
+            $c->save();
 
-                $g = Grado::find($input['grado_id'])->first();
-                $extra_bachillerato=Param::where('llave','extra_bachillerato')->first();
-                $extra_no_bachillerato=Param::where('llave','extra_no_bachillerato')->first();
-                $final=Param::where('llave','final')->first();
-                if ($input['examen_id'] == 2 and $g->name == "BACHILLERATO") {
-                    $ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $extra_bachillerato->valor)->get();
-                } elseif ($input['examen_id'] == 2 and $g->name <> "BACHILLERATO") {
-                    $ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $extra_no_bachillerato->valor)->get();
-                } elseif($input['examen_id'] == 3){
-                    $ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $final->valor)->get();
-                }
-                //dd($ponderaciones);
-                foreach ($ponderaciones as $p) {
-                    $ponde['calificacion_id'] = $c->id;
-                    $ponde['carga_ponderacion_id'] = $p->id;
-                    $ponde['calificacion_parcial'] = 0;
-                    $ponde['ponderacion'] = $p->porcentaje;
-                    $ponde['usu_alta_id'] = Auth::user()->id;
-                    $ponde['usu_mod_id'] = Auth::user()->id;
-                    $ponde['tiene_detalle'] = $p->tiene_detalle;
-                    $ponde['padre_id'] = $p->padre_id;
-                    $c_nueva = CalificacionPonderacion::create($ponde);
+            $g = Grado::find($input['grado_id'])->first();
+            $extra_bachillerato = Param::where('llave', 'extra_bachillerato')->first();
+            $extra_no_bachillerato = Param::where('llave', 'extra_no_bachillerato')->first();
+            $final = Param::where('llave', 'final')->first();
+            if ($input['examen_id'] == 2 and $g->name == "BACHILLERATO") {
+                $ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $extra_bachillerato->valor)->get();
+            } elseif ($input['examen_id'] == 2 and $g->name <> "BACHILLERATO") {
+                $ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $extra_no_bachillerato->valor)->get();
+            } elseif ($input['examen_id'] == 3) {
+                $ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $final->valor)->get();
+            }
+            //dd($ponderaciones);
+            foreach ($ponderaciones as $p) {
+                $ponde['calificacion_id'] = $c->id;
+                $ponde['carga_ponderacion_id'] = $p->id;
+                $ponde['calificacion_parcial'] = 0;
+                $ponde['ponderacion'] = $p->porcentaje;
+                $ponde['usu_alta_id'] = Auth::user()->id;
+                $ponde['usu_mod_id'] = Auth::user()->id;
+                $ponde['tiene_detalle'] = $p->tiene_detalle;
+                $ponde['padre_id'] = $p->padre_id;
+                $c_nueva = CalificacionPonderacion::create($ponde);
 
-                    //Log::info($c_nueva->id . "- nuevo registro de ponderacion");
-                }
+                //Log::info($c_nueva->id . "- nuevo registro de ponderacion");
+            }
             //}
         }
         /* if(isset($input['cve_alumno']) and isset($input['grado_id']) and isset($input['materium_id'])){
@@ -532,7 +533,7 @@ class HacademicasController extends Controller
     public function postCalificacionGrupo(Request $request)
     {
         $data = $request->all();
-        $ponderacion_seleccionada=CargaPonderacion::find($data['carga_ponderacion_id']);
+        $ponderacion_seleccionada = CargaPonderacion::find($data['carga_ponderacion_id']);
         //dd($data);
         $asignacion = $data['asignacion'];
         $examen = TpoExamen::pluck('name', 'id');
@@ -553,19 +554,17 @@ class HacademicasController extends Controller
             //dd($periodoExamen);
             if ($calificacion_inicio->lessThanOrEqualTo($hoy)  and $calificacion_fin->greaterThanOrEqualTo($hoy)) {
                 $dentroPeriodoExamenesAsignacion = $periodoExamen->id;
-                
             }
 
             $periodos_capturados_total++;
         }
-	//dd($dentroPeriodoExamenes);
+        //dd($dentroPeriodoExamenes);
         //dd($lectivo->calendarioEvaluacions->toArray());
-        foreach($lectivo->calendarioEvaluacions as $fechaCalendario){
+        foreach ($lectivo->calendarioEvaluacions as $fechaCalendario) {
             $calificacion_inicio = Carbon::createFromFormat('Y-m-d', $fechaCalendario->v_inicio);
             $calificacion_fin = Carbon::createFromFormat('Y-m-d', $fechaCalendario->v_fin);
             if ($calificacion_inicio->lessThanOrEqualTo($hoy)  and $calificacion_fin->greaterThanOrEqualTo($hoy)) {
                 $dentroPeriodoExamenes = $fechaCalendario->id;
-                
             }
         }
 
@@ -577,10 +576,10 @@ class HacademicasController extends Controller
         //$carga_ponderaciones=CargaPonderacion::where('ponderacion_id','=',$materia->ponderacion_id)->pluck('name','id');
         //dd($carga_ponderaciones->toArray());
         $msj = "";
-        $hacademicas=null;
+        $hacademicas = null;
         //dd($periodos_capturados_total);
         //if (isset($data['excepcion']) or $periodos_capturados_total == 0) {
-            if (isset($data['excepcion']) or $dentroPeriodoExamenesAsignacion > 0) {    
+        if (isset($data['excepcion']) or $dentroPeriodoExamenesAsignacion > 0) {
             //dd('flc');
             $hacademicas = HAcademica::select(
                 'cli.id',
@@ -603,7 +602,7 @@ class HacademicasController extends Controller
                 ->where('hacademicas.grupo_id', '=', $asignacionAcademica->grupo_id)
                 ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
                 ->join('calificacions as c', 'c.hacademica_id', '=', 'hacademicas.id')
-                ->leftJoin('acta_finals as af','af.id','c.acta_final_id')
+                ->leftJoin('acta_finals as af', 'af.id', 'c.acta_final_id')
                 ->join('calificacion_ponderacions as cp', 'cp.calificacion_id', '=', 'c.id')
                 ->join('carga_ponderacions as cpo', 'cpo.id', '=', 'cp.carga_ponderacion_id')
                 ->join('clientes as cli', 'cli.id', '=', 'hacademicas.cliente_id')
@@ -625,7 +624,7 @@ class HacademicasController extends Controller
                 ->orderBy('cli.nombre')
                 ->orderBy('cli.nombre2')
                 ->get();
-                //dd($hacademicas);
+            //dd($hacademicas);
         } else {
             //if($calificacion_inicio<=$hoy and $calificacion_fin>=$hoy){
 
@@ -642,7 +641,7 @@ class HacademicasController extends Controller
                     'cp.calificacion_parcial_calculada',
                     'cp.id as calificacion_ponderacion_id',
                     'cp.calificacion_parcial',
-                    'stc.name as estatus_cliente', 
+                    'stc.name as estatus_cliente',
                     'stc.id as estatus_cliente_id',
                     'cpo.name as ponderacion'
                 )
@@ -692,10 +691,10 @@ class HacademicasController extends Controller
             $asignacionAcademica = AsignacionAcademica::find($data['asignacion']);
             $materia = Materium::find($asignacionAcademica->materium_id);
             $carga_ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $materia->ponderacion_id)
-            ->where('bnd_activo', 1)
-            ->pluck('name', 'id');
+                ->where('bnd_activo', 1)
+                ->pluck('name', 'id');
 
-            return view('hacademicas.calificacionGrupos', compact('asignacion', 'examen', 'carga_ponderaciones','ponderacion_seleccionada'))
+            return view('hacademicas.calificacionGrupos', compact('asignacion', 'examen', 'carga_ponderaciones', 'ponderacion_seleccionada'))
                 ->with('list', Hacademica::getListFromAllRelationApps())
                 ->with('msj', $msj);
         }
@@ -718,7 +717,7 @@ class HacademicasController extends Controller
 
 
         //dd($hacademicas->toArray());
-        return view('hacademicas.calificacionGrupos', compact('asignacion', 'examen', 'carga_ponderaciones', 'hacademicas','ponderacion_seleccionada'))
+        return view('hacademicas.calificacionGrupos', compact('asignacion', 'examen', 'carga_ponderaciones', 'hacademicas', 'ponderacion_seleccionada'))
             ->with('list', Hacademica::getListFromAllRelationApps())
             ->with('msj', $msj);
     }
@@ -727,52 +726,56 @@ class HacademicasController extends Controller
     {
         $data = $request->all();
         //calcula calificacion de la linea
-        $calificacion_ponderacion = CalificacionPonderacion::find($data['calificacion_ponderacion']);
-        //dd($calificacion_ponderacion);
-        $calificacion_ponderacion->calificacion_parcial = $data['calificacion_parcial'];
-        $calificacion_ponderacion->calificacion_parcial_calculada = $data['calificacion_parcial'] * $calificacion_ponderacion->ponderacion;
-        $calificacion_ponderacion->save();
+        try {
+            $calificacion_ponderacion = CalificacionPonderacion::find($data['calificacion_ponderacion']);
+            //dd($calificacion_ponderacion);
+            $calificacion_ponderacion->calificacion_parcial = $data['calificacion_parcial'];
+            $calificacion_ponderacion->calificacion_parcial_calculada = $data['calificacion_parcial'] * $calificacion_ponderacion->ponderacion;
+            $calificacion_ponderacion->save();
 
-        //Calula calificacion del padre
-        if ($calificacion_ponderacion->padre_id > 0) {
-            //dd($c->padre_id);
-            $suma_calificacion_padre = $this->calculoCalificacionPadre($calificacion_ponderacion->padre_id, $calificacion_ponderacion->calificacion_id);
-            $calif_padre = CalificacionPonderacion::where('carga_ponderacion_id', $calificacion_ponderacion->padre_id)->where('calificacion_id', $calificacion_ponderacion->calificacion_id)->first();
-            //dd($calif_padre->toArray());
-            $calif_padre->calificacion_parcial = $suma_calificacion_padre;
-            $calif_padre->calificacion_parcial_calculada = round(($suma_calificacion_padre * $calif_padre->ponderacion), 2);
-            $calif_padre->save();
+            //Calula calificacion del padre
+            if ($calificacion_ponderacion->padre_id > 0) {
+                //dd($c->padre_id);
+                $suma_calificacion_padre = $this->calculoCalificacionPadre($calificacion_ponderacion->padre_id, $calificacion_ponderacion->calificacion_id);
+                $calif_padre = CalificacionPonderacion::where('carga_ponderacion_id', $calificacion_ponderacion->padre_id)->where('calificacion_id', $calificacion_ponderacion->calificacion_id)->first();
+                //dd($calif_padre->toArray());
+                $calif_padre->calificacion_parcial = $suma_calificacion_padre;
+                $calif_padre->calificacion_parcial_calculada = round(($suma_calificacion_padre * $calif_padre->ponderacion), 2);
+                $calif_padre->save();
+            }
+
+            //Calcula la calificacion en la tabla de calificaciones
+            $suma = $this->calculoCalificacionTotal($calificacion_ponderacion->calificacion_id);
+
+            //dd($suma);
+            //dd($calificacion_ponderacion->calificacion_id);
+            $calificacion = Calificacion::find($calificacion_ponderacion->calificacion_id);
+            //dd($calificacion->toArray());
+            $calificacion->calificacion = $suma;
+
+            $aprobatoria = Param::where('llave', 'calificacion_aprobatoria')->value('valor');
+
+            if ($aprobatoria == 0) {
+                $plantel = Plantel::find($calificacion->hacademica->plantel_id);
+                $aprobatoria = $plantel->calificacion_aprobatoria;
+            }
+
+            $h = Hacademica::find($calificacion->hacademica_id);
+            if ($calificacion->calificacion >= $aprobatoria) {
+                $h->st_materium_id = 1;
+            } else {
+                $h->st_materium_id = 2;
+            }
+            $calificacion->save();
+            $h->save();
+            return json_encode(array(
+                'calificacion' => $calificacion->calificacion,
+                'calificacion_parcial_calculada' => round($calificacion_ponderacion->calificacion_parcial_calculada, 2),
+                'calificacion_parcial' => $calificacion_ponderacion->calificacion_parcial
+            ));
+        } catch (Exception $e) {
+            dd($e);
         }
-
-        //Calcula la calificacion en la tabla de calificaciones
-        $suma = $this->calculoCalificacionTotal($calificacion_ponderacion->calificacion_id);
-
-        //dd($suma);
-        //dd($calificacion_ponderacion->calificacion_id);
-        $calificacion = Calificacion::find($calificacion_ponderacion->calificacion_id);
-        //dd($calificacion->toArray());
-        $calificacion->calificacion = $suma;
-        
-        $aprobatoria = Param::where('llave', 'calificacion_aprobatoria')->value('valor');
-        
-        if($aprobatoria==0){
-            $plantel=Plantel::find($calificacion->hacademica->plantel_id);
-            $aprobatoria=$plantel->calificacion_aprobatoria;
-        }
-
-        $h = Hacademica::find($calificacion->hacademica_id);
-        if ($calificacion->calificacion >= $aprobatoria) {
-            $h->st_materium_id = 1;
-        } else {
-            $h->st_materium_id = 2;
-        }
-        $calificacion->save();
-        $h->save();
-        return json_encode(array(
-            'calificacion' => $calificacion->calificacion,
-            'calificacion_parcial_calculada' => round($calificacion_ponderacion->calificacion_parcial_calculada, 2),
-            'calificacion_parcial' => $calificacion_ponderacion->calificacion_parcial
-        ));
     }
 
     public function cmbPonderaciones(Request $request)
@@ -793,9 +796,9 @@ class HacademicasController extends Controller
             $g = Grado::find($hacademica->grado_id)->first();
 
             //dd($g->toArray());
-            $extra_bachillerato=Param::where('llave','extra_bachillerato')->first();
-            $extra_no_bachillerato=Param::where('llave','extra_no_bachillerato')->first();
-            $final=Param::where('llave','final')->first();
+            $extra_bachillerato = Param::where('llave', 'extra_bachillerato')->first();
+            $extra_no_bachillerato = Param::where('llave', 'extra_no_bachillerato')->first();
+            $final = Param::where('llave', 'final')->first();
             if ($tpo_examen_id == 2 and $g->name == "BACHILLERATO") {
                 $carga_ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $extra_bachillerato->valor)
                     ->where('tiene_detalle', '=', 0)
@@ -806,7 +809,7 @@ class HacademicasController extends Controller
                     ->where('tiene_detalle', '=', 0)
                     ->where('bnd_activo', 1)
                     ->get();
-            }elseif ($tpo_examen_id == 3) {
+            } elseif ($tpo_examen_id == 3) {
                 $carga_ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $final->valor)
                     ->where('tiene_detalle', '=', 0)
                     ->where('bnd_activo', 1)
@@ -906,87 +909,85 @@ class HacademicasController extends Controller
         //$examen->reverse();
         //$examen->put(0,'Seleccionar OpciÃ³n');
         //$examen->reverse();
-        $plantels=Plantel::pluck('razon','id');
-        $lectivos=Lectivo::pluck('name','id');
-        return view('hacademicas.examenesVarios', compact('examen','lectivos', 'plantels'))
+        $plantels = Plantel::pluck('razon', 'id');
+        $lectivos = Lectivo::pluck('name', 'id');
+        return view('hacademicas.examenesVarios', compact('examen', 'lectivos', 'plantels'))
             ->with('list', Hacademica::getListFromAllRelationApps());
     }
-    
-    public function examenesVariosR(Request $request )
+
+    public function examenesVariosR(Request $request)
     {
-        $datos=$request->all();
-        $alumnos=Hacademica::select('hacademicas.*','cali.calificacion')->join('calificacions as cali', 'cali.hacademica_id','hacademicas.id')
-        ->where('hacademicas.plantel_id',$datos['plantel_id'])
-        ->where('hacademicas.especialidad_id',$datos['especialidad_id'])
-        ->where('hacademicas.nivel_id',$datos['nivel_id'])
-        ->where('hacademicas.grado_id',$datos['grado_id'])
-        ->where('hacademicas.lectivo_id',$datos['lectivo_id'])
-        ->where('cali.tpo_examen_id',1)
-        ->where('hacademicas.st_materium_id',2)
-        ->with('cliente')
-        ->with('calificaciones')
-        ->get();
+        $datos = $request->all();
+        $alumnos = Hacademica::select('hacademicas.*', 'cali.calificacion')->join('calificacions as cali', 'cali.hacademica_id', 'hacademicas.id')
+            ->where('hacademicas.plantel_id', $datos['plantel_id'])
+            ->where('hacademicas.especialidad_id', $datos['especialidad_id'])
+            ->where('hacademicas.nivel_id', $datos['nivel_id'])
+            ->where('hacademicas.grado_id', $datos['grado_id'])
+            ->where('hacademicas.lectivo_id', $datos['lectivo_id'])
+            ->where('cali.tpo_examen_id', 1)
+            ->where('hacademicas.st_materium_id', 2)
+            ->with('cliente')
+            ->with('calificaciones')
+            ->get();
         //dd($alumnos->toArray());
-        $lectivos=Lectivo::pluck('name','id');
-        $tpo_examen=TpoExamen::where('id','>',1)->pluck('name','id');
-        return view('hacademicas.examenesVariosR', compact('alumnos','tpo_examen','lectivos'))
+        $lectivos = Lectivo::pluck('name', 'id');
+        $tpo_examen = TpoExamen::where('id', '>', 1)->pluck('name', 'id');
+        return view('hacademicas.examenesVariosR', compact('alumnos', 'tpo_examen', 'lectivos'))
             ->with('list', Hacademica::getListFromAllRelationApps());
     }
 
     public function crearEvaluacion(Request $request)
     {
-        
-        $datos=$request->all();
+
+        $datos = $request->all();
         //dd($datos);
-        $hacademica=Hacademica::find($datos['hacademica']);
-                $c = new Calificacion;
-                $c->hacademica_id = $datos['hacademica'];
-                $c->tpo_examen_id = $datos['tpo_examen'];
-                if($datos['bnd_lectivo']==1){
-                    $c->lectivo_id = $datos['lectivo'];
-                }else{
-                    $c->lectivo_id = $hacademica->lectivo_id;
-                }
-                
-                $c->calificacion = 0;
-                $c->fecha = date('Y-m-d');
-                $c->reporte_bnd = 0;
-                if (isset($input['reporte_bnd'])) {
-                    $c->reporte_bnd = 1;
-                }
-                $c->usu_alta_id = Auth::user()->id;
-                $c->usu_mod_id = Auth::user()->id;
-                $c->save();
-                //dd($c->toArray());
+        $hacademica = Hacademica::find($datos['hacademica']);
+        $c = new Calificacion;
+        $c->hacademica_id = $datos['hacademica'];
+        $c->tpo_examen_id = $datos['tpo_examen'];
+        if ($datos['bnd_lectivo'] == 1) {
+            $c->lectivo_id = $datos['lectivo'];
+        } else {
+            $c->lectivo_id = $hacademica->lectivo_id;
+        }
 
-                $g = Grado::find($hacademica->grado_id)->first();
-                $extra_bachillerato=Param::where('llave','extra_bachillerato')->first();
-                $extra_no_bachillerato=Param::where('llave','extra_no_bachillerato')->first();
-                $final=Param::where('llave','final')->first();
-                if (($datos['tpo_examen'] == 2 ) and $g->name == "BACHILLERATO") {
-                    $ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $extra_bachillerato->valor)->get();
-                } elseif (($datos['tpo_examen'] == 2) and $g->name <> "BACHILLERATO") {
-                    $ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $extra_no_bachillerato->valor)->get();
-                } elseif($datos['tpo_examen'] == 3){
-                    $ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $final->valor)->get();
-                }
-                //dd($ponderaciones);
-                foreach ($ponderaciones as $p) {
-                    $ponde['calificacion_id'] = $c->id;
-                    $ponde['carga_ponderacion_id'] = $p->id;
-                    $ponde['calificacion_parcial'] = 0;
-                    $ponde['ponderacion'] = $p->porcentaje;
-                    $ponde['usu_alta_id'] = Auth::user()->id;
-                    $ponde['usu_mod_id'] = Auth::user()->id;
-                    $ponde['tiene_detalle'] = $p->tiene_detalle;
-                    $ponde['padre_id'] = $p->padre_id;
-                    $c_nueva = CalificacionPonderacion::create($ponde);
+        $c->calificacion = 0;
+        $c->fecha = date('Y-m-d');
+        $c->reporte_bnd = 0;
+        if (isset($input['reporte_bnd'])) {
+            $c->reporte_bnd = 1;
+        }
+        $c->usu_alta_id = Auth::user()->id;
+        $c->usu_mod_id = Auth::user()->id;
+        $c->save();
+        //dd($c->toArray());
 
-                    //Log::info($c_nueva->id . "- nuevo registro de ponderacion");
-                }
-            //}
+        $g = Grado::find($hacademica->grado_id)->first();
+        $extra_bachillerato = Param::where('llave', 'extra_bachillerato')->first();
+        $extra_no_bachillerato = Param::where('llave', 'extra_no_bachillerato')->first();
+        $final = Param::where('llave', 'final')->first();
+        if (($datos['tpo_examen'] == 2) and $g->name == "BACHILLERATO") {
+            $ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $extra_bachillerato->valor)->get();
+        } elseif (($datos['tpo_examen'] == 2) and $g->name <> "BACHILLERATO") {
+            $ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $extra_no_bachillerato->valor)->get();
+        } elseif ($datos['tpo_examen'] == 3) {
+            $ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $final->valor)->get();
+        }
+        //dd($ponderaciones);
+        foreach ($ponderaciones as $p) {
+            $ponde['calificacion_id'] = $c->id;
+            $ponde['carga_ponderacion_id'] = $p->id;
+            $ponde['calificacion_parcial'] = 0;
+            $ponde['ponderacion'] = $p->porcentaje;
+            $ponde['usu_alta_id'] = Auth::user()->id;
+            $ponde['usu_mod_id'] = Auth::user()->id;
+            $ponde['tiene_detalle'] = $p->tiene_detalle;
+            $ponde['padre_id'] = $p->padre_id;
+            $c_nueva = CalificacionPonderacion::create($ponde);
+
+            //Log::info($c_nueva->id . "- nuevo registro de ponderacion");
+        }
+        //}
         return $c;
-        
-        
     }
 }

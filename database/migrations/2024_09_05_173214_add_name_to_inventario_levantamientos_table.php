@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddTokenCardToPeticionOpenpaysTable extends Migration
+class AddNameToInventarioLevantamientosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,8 @@ class AddTokenCardToPeticionOpenpaysTable extends Migration
      */
     public function up()
     {
-        Schema::table('peticion_openpays', function (Blueprint $table) {
-            $table->boolean('use_3d_secure')->nullable();
-            $table->string('token_3d_secure')->nullable();
-			$table->string('device')->nullable();
+        Schema::table('inventario_levantamientos', function (Blueprint $table) {
+            $table->string('name')->nullable();
         });
     }
 
@@ -27,7 +25,7 @@ class AddTokenCardToPeticionOpenpaysTable extends Migration
      */
     public function down()
     {
-        Schema::table('peticion_openpays', function (Blueprint $table) {
+        Schema::table('inventario_levantamientos', function (Blueprint $table) {
             //
         });
     }

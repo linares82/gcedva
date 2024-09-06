@@ -33,12 +33,13 @@ class ReportesCedvaController extends Controller
     {
         $reportes = array(1 => 'Activos', 2 => 'Adeudos', 3 => 'Pagados', 4 => 'Inscritos Por Ciclo', 5 => 'Pagos con Baja', 6=>"Activos X Mes" , 7=>"Activos X Plantel");
         $empleado = Empleado::where('user_id', Auth::user()->id)->first();
-        $planteles = $empleado->plantels->pluck('razon', 'id');
+        $planteles=Empleado::where('user_id', '=', Auth::user()->id)->where('st_empleado_id','<>',3)->first()->plantels->pluck('razon','id');
         $estatus = array('0' => 'Todos', '1' => 'Vigente', '2' => "Baja");
         $pagos = array('0' => 'Todos', '1' => 'Pagado', '2' => 'Pendiente');
         $caja_conceptos = CajaConcepto::pluck('name', 'id');
         $caja_conceptos->prepend('Todos');
         $ciclos = CicloMatricula::pluck('name', 'id');
+
         //dd($caja_conceptos);
         return view('reportesCedva.varios', compact('reportes', 'planteles', 'estatus', 'pagos', 'caja_conceptos', 'ciclos'));
     }

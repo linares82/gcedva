@@ -65,6 +65,7 @@ class InventarioLevantamientosController extends Controller
 
 
 		$planteles = PlantelInventario::pluck('name', 'id');
+		$planteles->prepend('Seleccionar opcion', '0');
 
 		return view('inventarioLevantamientos.index', compact('inventarioLevantamientos', 'planteles'));
 	}
@@ -113,10 +114,11 @@ class InventarioLevantamientosController extends Controller
 
 
 		$datos = $request->all();
-		//dd($datos['q']["inventario_levantamiento_id_lt"]);
+		//dd($datos);
 		$inventarioLevantamiento = InventarioLevantamiento::find($datos['q']["inventario_levantamiento_id_lt"]);
 		//dd($request);
 		$inventarios = Inventario::getAllData($request);
+		
 		//$inventarios = Inventario::where('inventario_levantamiento_id',$datos['q']["inventario_levantamiento_id_lt"])->get();
 		//dd($datos);
 		$planteles = PlantelInventario::pluck('name', 'id');

@@ -194,8 +194,10 @@
                 @endif
                 
             @endforeach
+            @permission('adeudos.maestroPagosConMontos')
             <tr><td>Total Alumnos Pagados</td><td>{{ $consecutivo_linea }}</td></tr>
             <tr><td>Total monto pagado</td><td>{{ number_format($suma, 2) }}</td></tr>
+            @endpermission
         </tbody>
     </table>
     

@@ -1579,10 +1579,15 @@ class InscripcionsController extends Controller
             )
             ->join('lectivos as l', 'l.id', '=', 'hacademicas.lectivo_id')
             ->join('materia as m', 'm.id', '=', 'hacademicas.materium_id')
+            ->join('periodo_estudios as pe', 'pe.id', '=', 'hacademicas.periodo_estudio_id')
             ->where('cliente_id', $inscripcion->cliente_id)
             ->whereNull('hacademicas.deleted_at')
             ->with('cliente')
-            ->orderBy('hacademicas.id')
+            //->orderBy('pe.orden')
+	    ->orderBy('l.id')
+	    ->orderBy('m.codigo')
+            //->orderBy('m.orden')
+            //->orderBy('hacademicas.id')
             ->get();
         }else{
             $hacademicas = Hacademica::select(
@@ -1602,7 +1607,9 @@ class InscripcionsController extends Controller
                 ->whereNull('hacademicas.deleted_at')
                 ->whereDate('l.fin','<', $fecha_lectivo_fin->toDateString())
                 ->with('cliente')
-                ->orderBy('hacademicas.id')
+                //->orderBy('hacademicas.id')
+		->orderBy('l.id')
+     	        ->orderBy('m.codigo')
                 ->get();
         }
         //dd($hacademicas->toArray()); 8
@@ -3546,6 +3553,8 @@ class InscripcionsController extends Controller
         if ($fecha_lectivo_fin->lessThanOrEqualTo($hoy)) {
             $hacademicas = Hacademica::select(
                 'm.name as materia',
+                'm.bnd_tiene_nombre_oficial',
+                'm.nombre_oficial',
                 'm.codigo',
                 'm.creditos',
                 'l.name as lectivo',
@@ -3560,17 +3569,24 @@ class InscripcionsController extends Controller
                 ->join('materia as m', 'm.id', '=', 'hacademicas.materium_id')
                 //->join('calificacions as c', 'c.hacademica_id', 'hacademicas.id')
                 //->join('tpo_examens as te', 'te.id', '=', 'c.tpo_examen_id')
+                ->join('periodo_estudios as pe', 'pe.id', '=', 'hacademicas.periodo_estudio_id')
                 ->where('cliente_id', $inscripcion->cliente_id)
                 ->where('m.bnd_oficial', 1)
                 ->whereNull('hacademicas.deleted_at')
                 //->whereNull('c.deleted_at')
                 ->with('cliente')
-                ->orderBy('hacademicas.id')
+                //->orderBy('hacademicas.id')
+                //->orderBy('pe.orden')
+		->orderBy('l.id')
+		->orderBy('m.codigo')
+                //->orderBy('m.orden')
                 //->orderBy('te.id')
                 ->get();
         }else{
             $hacademicas = Hacademica::select(
                 'm.name as materia',
+                'm.bnd_tiene_nombre_oficial',
+                'm.nombre_oficial',
                 'm.codigo',
                 'm.creditos',
                 'l.name as lectivo',
@@ -3591,7 +3607,9 @@ class InscripcionsController extends Controller
                 ->whereNull('hacademicas.deleted_at')
                 //->whereNull('c.deleted_at')
                 ->with('cliente')
-                ->orderBy('hacademicas.id')
+                //->orderBy('hacademicas.id')
+		->orderBy('l.id')
+	        ->orderBy('m.codigo')
                 //->orderBy('te.id')
                 ->get();
         }
@@ -3606,6 +3624,8 @@ class InscripcionsController extends Controller
             $resultado = array(
                 'materia' => $hacademica->materia,
                 'codigo' => $hacademica->codigo,
+                'bnd_tiene_nombre_oficial'=>$hacademica->bnd_tiene_nombre_oficial,
+                'nombre_oficial'=>$hacademica->nombre_oficial,
                 'creditos' => $hacademica->creditos,
                 'lectivo' => $hacademica->lectivo,
                 'calificacion' => $calificacion->calificacion,

@@ -1030,6 +1030,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'AddMpDatereferenceToPeticionMultipagosTable' => __DIR__ . '/../..' . '/database/migrations/2020_07_30_083455_add_mp_datereference_to_peticion_multipagos_table.php',
         'AddMpPaymentMethodToSuccessMultipagosTable' => __DIR__ . '/../..' . '/database/migrations/2020_06_29_075349_add_mp_payment_method_to_success_multipagos_table.php',
         'AddMpPaymentmethodToPeticionMultipagosTable' => __DIR__ . '/../..' . '/database/migrations/2020_07_07_103316_add_mp_paymentmethod_to_peticion_multipagos_table.php',
+        'AddNameToInventarioLevantamientosTable' => __DIR__ . '/../..' . '/database/migrations/2024_09_05_173214_add_name_to_inventario_levantamientos_table.php',
         'AddNavegadorDispositivoToPeticionMultipagosTable' => __DIR__ . '/../..' . '/database/migrations/2021_06_07_191445_add_navegador_dispositivo_to_peticion_multipagos_table.php',
         'AddNivelEducativoSatIdToGradosTable' => __DIR__ . '/../..' . '/database/migrations/2020_09_10_152108_add_nivel_educativo_sat_id_to_grados_table.php',
         'AddNivelToUsuarioClientesTable' => __DIR__ . '/../..' . '/database/migrations/2020_08_31_182428_add_nivel_to_usuario_clientes_table.php',

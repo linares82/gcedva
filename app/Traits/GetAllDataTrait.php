@@ -118,6 +118,7 @@ trait GetAllDataTrait
         if ($baseTable == "serie_folio_simplificados") {
             $myQuery = $myQuery->orderBy('serie_folio_simplificados.anio', 'desc')->orderBy('serie_folio_simplificados.mese_id');
         }
+        
 
         if (is_array($request->input('q')) && array_key_exists('s', $request->input('q')) && $request->input('q')['s'] !== '') {
 
@@ -146,6 +147,7 @@ trait GetAllDataTrait
         }
         //dd(Auth::user()->can('IfiltroClientesXPlantel'));
         //dd();
+        
         $planteles = Empleado::where('user_id', '=', Auth::user()->id)->where('st_empleado_id','<>',3)->first()->plantels->pluck('id');
         //dd($empleado);
         /*
@@ -237,6 +239,9 @@ trait GetAllDataTrait
                 $myQuery = $myQuery->whereIn('grupos.plantel_id', $planteles);
                 //}
                 break;
+                case "inventarios":
+                    $myQuery = $myQuery->orderBy('no_inventario', 'asc');
+                    break;
             case "materia":
                 //if (Auth::user()->can('IFiltroEmpleadosXPlantel')) {
                 $myQuery = $myQuery->whereIn('materia.plantel_id', $planteles);

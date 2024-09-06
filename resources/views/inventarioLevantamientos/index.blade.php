@@ -47,7 +47,10 @@
                 <form class="InventarioLevantamiento_search" id="search" action="{{ route('inventarioLevantamientos.index') }}" accept-charset="UTF-8" method="get">
                     <input type="hidden" name="q[s]" value="{{ @(Request::input('q')['s']) ?: '' }}" />
                     <div >
-
+                            <div class="form-group col-md-4" >
+                                <label for="q_inventario_levantamientos.name_lt">NOMBRE</label>
+                                <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['name_cont']) ?: '' }}" name="q[name_cont]" id="q_name_cont" />
+                            </div>
                         
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_fecha_gt">FECHA</label>
@@ -76,7 +79,7 @@
                         
                         <div class="form-group col-md-4" >
                                 <label for="q_inventario_levantamientos.plantel_inventario_id_cont">PLANTEL</label>
-                                    {!! Form::select("plantel_inventario_id", $planteles, "{{ @(Request::input('q')['inventario_levantamiento_id_cont']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[plantel_inventario_id_cont]", "id"=>"q_plantel_inventario_id_cont", "style"=>"width:100%;")) !!}
+                                    {!! Form::select("plantel_inventario_id", $planteles, "{{ @(Request::input('q')['inventario_levantamiento_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[plantel_inventario_id_lt]", "id"=>"q_plantel_inventario_id_lt", "style"=>"width:100%;")) !!}
                             </div>
                         <!--
                             <div class="form-group">
@@ -116,6 +119,7 @@
             <thead>
                 <tr>
                     <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
+                    <th>@include('CrudDscaffold::getOrderlink', ['column' => 'name', 'title' => 'NOMBRE'])</th>
                     <th>@include('CrudDscaffold::getOrderlink', ['column' => 'fecha', 'title' => 'FECHA'])</th>
                     <th>@include('CrudDscaffold::getOrderlink', ['column' => 'plantel_inventario_id', 'title' => 'PLANTEL'])</th>
                     <th>@include('CrudDscaffold::getOrderlink', ['column' => 'inventario_levantamiento_id', 'title' => 'ESTATUS'])</th>
@@ -129,6 +133,7 @@
                 @foreach($inventarioLevantamientos as $inventarioLevantamiento)
                 <tr>
                     <td><a href="{{ route('inventarioLevantamientos.show', array('q[inventario_levantamiento_id_lt]'=>$inventarioLevantamiento->id)) }}">{{$inventarioLevantamiento->id}}</a></td>
+                    <td>{{$inventarioLevantamiento->name}}</td>
                     <td>{{$inventarioLevantamiento->fecha}}</td>
                     <td>{{optional($inventarioLevantamiento->plantelInventario)->name}}</td>
                     <td>{{$inventarioLevantamiento->inventarioLevantamientoSt->name}}</td>

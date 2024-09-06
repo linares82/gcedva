@@ -76,7 +76,9 @@
                 <th>Calle y No.</th>
                 <th>Estatus Cliente</th>
                 <th>Concepto</th>
+                @permission('reportesCedva.restringido')
                 <th>Pago Recibido</th>
+                @endpermission
                 <th>Csc. Caja</th>
                 <th>Forma Pago</th>
                 <th>F. Creacion Pago</th>
@@ -113,7 +115,9 @@
                 <td>{{ $detalle['calle'] }} {{ $detalle['no_exterior'] }}</td>
                 <td>{{ $detalle['st_cliente'] }}</td>
                 <td>{{$detalle['concepto']}}</td>
+                @permission('reportesCedva.restringido')
                 <td>{{ $detalle['monto'] }}</td>
+                @endpermission
                 <td>{{$detalle['consecutivo']}}</td>
                 <td>{{$detalle['forma_pago']}}</td>
                 <td>{{$detalle['fecha_creacion']}}</td>
@@ -131,8 +135,10 @@
                 
                 
             @endforeach
+            @permission('reportesCedva.restringido')
             <tr><td>Total Alumnos Pagados</td><td></td></tr>
             <tr><td>Total monto pagado</td><td></td></tr>
+            @endpermission
         </tbody>
     </table>
     
