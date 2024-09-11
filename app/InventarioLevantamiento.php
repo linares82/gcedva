@@ -20,7 +20,7 @@ class InventarioLevantamiento extends Model
     } 
 
 	//Mass Assignment
-	protected $fillable = ['fecha','plantel_inventario_id','inventario_levantamiento_st_id','usu_alta_id','usu_mod_id','name'];
+	protected $fillable = ['fecha','plantel_inventario_id','inventario_levantamiento_st_id','usu_alta_id','usu_mod_id','name','archivo_sformato'];
 
 	public function usu_alta() {
 		return $this->hasOne('App\User', 'id', 'usu_alta_id');

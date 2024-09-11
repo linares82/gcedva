@@ -36,7 +36,7 @@
         <form action="#">
             <div class="form-group col-sm-3">
                 <label for="nome">ID</label>
-                <p class="form-control-static">{{$inventarioLevantamiento->id}}</p>
+                <p class="form-control-static">{{$inventarioLevantamiento->id}} </p>
             </div>
             <div class="form-group col-sm-3">
                 <label for="fecha">FECHA</label>
@@ -58,6 +58,7 @@
                 <label for="usu_mod_id">U. MODIFICACION</label>
                 <p class="form-control-static">{{$inventarioLevantamiento->usu_mod->name}}</p>
             </div>
+            
         </form>
 
         <div class="row">

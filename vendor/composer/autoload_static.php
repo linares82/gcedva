@@ -843,6 +843,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'AddActaFinalToCalificacionsTable' => __DIR__ . '/../..' . '/database/migrations/2021_04_12_143147_add_acta_final_to_calificacions_table.php',
         'AddApiTokenClientesTable' => __DIR__ . '/../..' . '/database/migrations/2020_02_13_093137_add_api_token_clientes_table.php',
         'AddApiTokenUsersTable' => __DIR__ . '/../..' . '/database/migrations/2020_02_12_154521_add_api_token_users_table.php',
+        'AddArchivoSformatoToInventarioLevantamientosTable' => __DIR__ . '/../..' . '/database/migrations/2024_09_10_115215_add_archivo_sformato_to_inventario_levantamientos_table.php',
         'AddArchivoTransferencesTable' => __DIR__ . '/../..' . '/database/migrations/2019_10_30_113553_add_archivo_transferences_table.php',
         'AddAutFieldsToAutorizacionBecas' => __DIR__ . '/../..' . '/database/migrations/2019_11_19_143629_add_aut_fields_to_autorizacion_becas.php',
         'AddAutFieldsToHistoriaClientesTable' => __DIR__ . '/../..' . '/database/migrations/2019_11_13_134936_add_aut_fields_to_historia_clientes_table.php',

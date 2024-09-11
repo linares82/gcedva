@@ -114,10 +114,14 @@ class InventarioLevantamientosController extends Controller
 
 
 		$datos = $request->all();
-		//dd($datos);
+		//dd($datos['q']['inventario_levantamiento_id_lt']);
 		$inventarioLevantamiento = InventarioLevantamiento::find($datos['q']["inventario_levantamiento_id_lt"]);
 		//dd($request);
 		$inventarios = Inventario::getAllData($request);
+
+		$archivos=Inventario::distinct()->where('inventario_levantamiento_id',$datos['q']['inventario_levantamiento_id_lt'])->value('origen');
+		//Storage::disk('do')->download('inventarios/'.$inventarioLevantamiento->plantel_inventario_id.'/'.$archivos);
+		//dd($archivos);
 		
 		//$inventarios = Inventario::where('inventario_levantamiento_id',$datos['q']["inventario_levantamiento_id_lt"])->get();
 		//dd($datos);
@@ -127,7 +131,7 @@ class InventarioLevantamientosController extends Controller
 		$catExiste = array('0' => 'SELECCIONAR', 'SI' => 'SI', 'NO' => 'NO');
 
 
-		return view('inventarioLevantamientos.show', compact('inventarioLevantamiento', 'inventarios', 'planteles', 'catEstado', 'catExiste'))
+		return view('inventarioLevantamientos.show', compact('inventarioLevantamiento', 'inventarios', 'planteles', 'catEstado', 'catExiste','archivos'))
 			->with('list', Inventario::getListFromAllRelationApps());
 	}
 
@@ -168,9 +172,31 @@ class InventarioLevantamientosController extends Controller
 	public function update($id, InventarioLevantamiento $inventarioLevantamiento, updateInventarioLevantamiento $request)
 	{
 		$input = $request->all();
+		//dd($input);
 		$input['usu_mod_id'] = Auth::user()->id;
 		//update data
 		$inventarioLevantamiento = $inventarioLevantamiento->find($id);
+
+		if ($request->hasFile('archivo_sformato')) {
+			$archivo = $request->file('archivo_sformato');
+			$file = $request->file('archivo_sformato');
+			$extension = $file->getClientOriginalExtension();
+			$nombre = date('dmYhmi') . $file->getClientOriginalName();
+			$input['archivo_sformato'] = $nombre;
+
+			try {
+				
+				$ruta = "/inventarios/".$input['plantel_inventario_id']."/";
+				//$path=$request->file('archivo')->storePubliclyAs($ruta, $nombre,"do");
+				$r = Storage::disk('do')->put($ruta.$nombre, \File::get($file));
+				Storage::disk('do')->setVisibility($ruta.$nombre,'public');
+				//dd('do realizado');
+
+			} catch (Exception $e) {
+				dd($e);
+			}
+		}
+
 		$inventarioLevantamiento->update($input);
 
 		return redirect()->route('inventarioLevantamientos.index')->with('message', 'Registro Actualizado.');
@@ -201,7 +227,7 @@ class InventarioLevantamientosController extends Controller
 
 	public function cargarLineas(Request $request)
 	{
-		$datos = $request->all();
+		$datos=$request->all();
 		//dd($datos);
 		$r = $request->hasFile('archivo');
 		//dd($r);
@@ -217,17 +243,19 @@ class InventarioLevantamientosController extends Controller
 			$file = $request->file('archivo');
 			$extension = $file->getClientOriginalExtension();
 			$nombre = date('dmYhmi') . $file->getClientOriginalName();
-
-			try {
+			
+			try{
 				$r = Storage::disk('inventario')->put($nombre, \File::get($file));
-			} catch (Exception $e) {
+			}catch(Exception $e){
 				dd($e);
 			}
-
+			
 
 			//$e->archivo = $nombre;
 			//$e->save();
 		}
+
+
 
 		//dd($file);
 		$fp = fopen($file, "r");

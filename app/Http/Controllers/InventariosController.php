@@ -1,13 +1,14 @@
 <?php namespace App\Http\Controllers;
 
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
-
-use App\Inventario;
-use Illuminate\Http\Request;
 use Auth;
-use App\Http\Requests\updateInventario;
+use App\Inventario;
+
+use App\Http\Requests;
+use Illuminate\Http\Request;
+use App\InventarioLevantamiento;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\createInventario;
+use App\Http\Requests\updateInventario;
 
 class InventariosController extends Controller {
 
@@ -63,6 +64,7 @@ class InventariosController extends Controller {
 	public function show($id, Inventario $inventario)
 	{
 		$inventario=$inventario->find($id);
+		
 		return view('inventarios.show', compact('inventario'));
 	}
 

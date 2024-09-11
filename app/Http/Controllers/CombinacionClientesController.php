@@ -62,7 +62,7 @@ class CombinacionClientesController extends Controller
         }
 
         //valida combinacion
-        $plantel=Plantel::find($input['cliente_id']);
+        $plantel=Plantel::find($input['plantel_id']);
         $especialidad=Especialidad::find($input['especialidad_id']);
         $nivel=Nivel::find($input['nivel_id']);
         $grado=Grado::find($input['grado_id']);

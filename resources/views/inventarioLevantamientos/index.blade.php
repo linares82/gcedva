@@ -119,7 +119,7 @@
             <thead>
                 <tr>
                     <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                    <th>@include('CrudDscaffold::getOrderlink', ['column' => 'name', 'title' => 'NOMBRE'])</th>
+                    <th>@include('CrudDscaffold::getOrderlink', ['column' => 'name', 'title' => 'NOMBRE/A'])</th>
                     <th>@include('CrudDscaffold::getOrderlink', ['column' => 'fecha', 'title' => 'FECHA'])</th>
                     <th>@include('CrudDscaffold::getOrderlink', ['column' => 'plantel_inventario_id', 'title' => 'PLANTEL'])</th>
                     <th>@include('CrudDscaffold::getOrderlink', ['column' => 'inventario_levantamiento_id', 'title' => 'ESTATUS'])</th>
@@ -133,7 +133,7 @@
                 @foreach($inventarioLevantamientos as $inventarioLevantamiento)
                 <tr>
                     <td><a href="{{ route('inventarioLevantamientos.show', array('q[inventario_levantamiento_id_lt]'=>$inventarioLevantamiento->id)) }}">{{$inventarioLevantamiento->id}}</a></td>
-                    <td>{{$inventarioLevantamiento->name}}</td>
+                    <td>{{$inventarioLevantamiento->name}} / {{substr($inventarioLevantamiento->archivo_sformato,0,8)}}</td>
                     <td>{{$inventarioLevantamiento->fecha}}</td>
                     <td>{{optional($inventarioLevantamiento->plantelInventario)->name}}</td>
                     <td>{{$inventarioLevantamiento->inventarioLevantamientoSt->name}}</td>

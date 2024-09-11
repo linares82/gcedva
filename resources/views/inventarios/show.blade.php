@@ -102,6 +102,8 @@
                      <label for="usu_mod_id">USU_MOD_ID</label>
                      <p class="form-control-static">{{$inventario->usu_mod_id}}</p>
                 </div>
+                </div>
+                    
             </form>
 
             <div class="row">
