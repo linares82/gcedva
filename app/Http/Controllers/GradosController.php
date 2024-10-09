@@ -7,6 +7,7 @@ use Auth;
 use App\Grado;
 use App\Modulo;
 use App\Plantel;
+use App\Seccion;
 use App\Http\Requests;
 use Illuminate\Http\Request;
 use App\Http\Requests\createGrado;
@@ -57,6 +58,8 @@ class GradosController extends Controller
         }
         $input['usu_alta_id'] = Auth::user()->id;
         $input['usu_mod_id'] = Auth::user()->id;
+
+        //$input['seccion']=Seccion::where('id',$input['seccion_id'])->value('name');
 
         //create data
         Grado::create($input);
@@ -120,6 +123,7 @@ class GradosController extends Controller
         } else {
             $input['mexico_bnd'] = 0;
         }
+        //$input['seccion']=Seccion::where('id',$input['seccion_id'])->value('name');
         //update data
         $grado = $grado->find($id);
         $grado->update($input);

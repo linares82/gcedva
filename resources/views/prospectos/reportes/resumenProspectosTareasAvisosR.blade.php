@@ -18,10 +18,10 @@
         <h3>General</h3>
         <table>
             <thead>
-              <tr><th colspan="13">{{$hoy}}</th></tr>
+              <tr><th colspan="14">{{$hoy}}</th></tr>
                     <th>Plantel</th><th>Usuario</th><th>Call Center -> Asesores</th>
                     <th>Clientes Concretados</th><th>Prospectos Convertidos</th>
-                    <th>Prosp. Nuevos</th><th>Prosp. Tocados</th><th>Avisos Creados</th><th>Avisos Cerrados</th>
+                    <th>Prosp. Nuevos</th><th>Prosp. Tocados</th><th>Prosp. Tocados Nuevos</th><th>Avisos Creados</th><th>Avisos Cerrados</th>
                     <th>Informes Presenciales</th><th>Informes Telefonicos</th><th>Cita Plantel</th>
                     <th>Base Total</th>
             </thead>
@@ -43,6 +43,7 @@
                 <td>{{ $registro['usuario'] }}</td><td>{{$registro['callToAsesorAyer']}}</td>
                 <td>{{ $registro['clientes_concretados'] }}</td>
                 <td>{{ $registro['prospectos_convertidos'] }}</td><td>{{ $registro['prospectos_creados'] }}</td><td>{{ $registro['prospectos_tocados'] }}</td>
+		<td>{{ $registro['prospectos_tocados_nuevos'] }}</td>
                 <td>{{ $registro['avisos_creados'] }}</td><td>{{ $registro['avisos_cerrados'] }}</td><td>{{ $registro['tarea_informe_presencial'] }}</td>
                 <td>{{ $registro['tarea_informe_telefonico'] }}</td><td>{{ $registro['tarea_cita_plantel'] }}</td><td>{{ $registro['base_total'] }}</td> 
                 

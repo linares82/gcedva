@@ -349,9 +349,6 @@ class ReportesCedvaController extends Controller
                         'tur.name as turno'
                     )
                         ->join('adeudos as ad', 'ad.cliente_id', '=', 'clientes.id')
-                        ->join('plan_pago_lns as ppl', 'ppl.id', '=', 'ad.plan_pago_ln_id')
-                        ->join('plan_pagos as pp', 'pp.id', '=', 'ppl.plan_pago_id')
-                        ->join('ciclo_matriculas as cm', 'cm.id', '=', 'pp.ciclo_matricula_id')
                         ->leftJoin('cajas as caj', 'caj.id', '=', 'ad.caja_id')
                         ->join('caja_lns as cln', 'cln.caja_id', '=', 'caj.id')
                         ->join('caja_conceptos as cc', 'cc.id', '=', 'ad.caja_concepto_id')
@@ -360,6 +357,9 @@ class ReportesCedvaController extends Controller
                         ->join('st_seguimientos as sts', 'sts.id', '=', 's.st_seguimiento_id')
                         ->join('plantels as p', 'p.id', '=', 'clientes.plantel_id')
                         ->join('combinacion_clientes as ccli', 'ccli.cliente_id', '=', 'clientes.id')
+                        //->join('plan_pago_lns as ppl', 'ppl.id', '=', 'ad.plan_pago_ln_id')
+                        ->join('plan_pagos as pp', 'pp.id', '=', 'ccli.plan_pago_id')
+                        ->join('ciclo_matriculas as cm', 'cm.id', '=', 'pp.ciclo_matricula_id')
                         ->join('turnos as tur', 'tur.id', 'ccli.turno_id')
                         ->join('grados as g', 'g.id', '=', 'ccli.grado_id')
                         ->join('pagos as pag', 'pag.caja_id', 'caj.id')
@@ -414,7 +414,7 @@ class ReportesCedvaController extends Controller
                     //pagados y pendientes en una union
                 } else {
 
-                    //registros pagados
+                    //registros planeados y pagados
                     $registros = Cliente::select(
                         'p.id as plantel_id',
                         'p.razon',
@@ -445,9 +445,6 @@ class ReportesCedvaController extends Controller
                         'tur.name as turno'
                     )
                         ->join('adeudos as ad', 'ad.cliente_id', '=', 'clientes.id')
-                        ->join('plan_pago_lns as ppl', 'ppl.id', '=', 'ad.plan_pago_ln_id')
-                        ->join('plan_pagos as pp', 'pp.id', '=', 'ppl.plan_pago_id')
-                        ->join('ciclo_matriculas as cm', 'cm.id', '=', 'pp.ciclo_matricula_id')
                         ->leftJoin('cajas as caj', 'caj.id', '=', 'ad.caja_id')
                         ->join('caja_conceptos as cc', 'cc.id', '=', 'ad.caja_concepto_id')
                         ->join('seguimientos as s', 's.cliente_id', '=', 'clientes.id')
@@ -455,6 +452,9 @@ class ReportesCedvaController extends Controller
                         ->join('st_seguimientos as sts', 'sts.id', '=', 's.st_seguimiento_id')
                         ->join('plantels as p', 'p.id', '=', 'clientes.plantel_id')
                         ->join('combinacion_clientes as ccli', 'ccli.cliente_id', '=', 'clientes.id')
+                        ->join('plan_pagos as pp', 'pp.id', '=', 'ccli.plan_pago_id')
+                        ->join('ciclo_matriculas as cm', 'cm.id', '=', 'pp.ciclo_matricula_id')
+                        //->join('plan_pago_lns as ppl', 'ppl.id', '=', 'ad.plan_pago_ln_id')
                         ->join('turnos as tur', 'tur.id', 'ccli.turno_id')
                         ->join('grados as g', 'g.id', '=', 'ccli.grado_id')
                         ->join('pagos as pag', 'pag.caja_id', 'caj.id')
@@ -1200,10 +1200,16 @@ class ReportesCedvaController extends Controller
                     'c.no_exterior',
                     'stc.name as st_cliente',
                     'historia_clientes.updated_at as fecha_baja',
-                    'descripcion'
+                    'descripcion',
+                    'cm.name as ciclo_matricula',
+                    'g.seccion'
                 )
                     ->whereDate('historia_clientes.updated_at', '>=', $datos['fecha_f'])
                     ->join('clientes as c', 'c.id', 'historia_clientes.cliente_id')
+                    ->join('combinacion_clientes as cc', 'cc.cliente_id', 'c.id')
+                    ->join('plan_pagos as plp', 'plp.id', 'cc.plan_pago_id')
+                    ->join('ciclo_matriculas as cm', 'cm.id', 'plp.ciclo_matricula_id')
+                    ->join('grados as g', 'g.id', 'cc.grado_id')
                     ->join('st_clientes as stc', 'stc.id', 'c.st_cliente_id')
                     ->whereDate('historia_clientes.updated_at', '<=', $datos['fecha_t'])
                     ->where('historia_clientes.evento_cliente_id', 2)
@@ -1266,7 +1272,9 @@ class ReportesCedvaController extends Controller
                             'fecha_baja' => $baja->fecha_baja,
                             'justificacion' => $baja->descripcion,
                             'ultima_tarea' => $tarea, //->asunto,//->name." - ".optional($tarea)->detalle,
-                            'sts' => $seguimiento->stSeguimiento->name
+                            'sts' => $seguimiento->stSeguimiento->name,
+                            'ciclo_matricula'=>$baja->ciclo_matricula,
+                            'seccion'=>$baja->seccion
                         ));
                     }
                 }

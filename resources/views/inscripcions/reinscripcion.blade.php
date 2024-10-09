@@ -134,6 +134,7 @@
                             <span class="help-block">{{ $errors->first("activar") }}</span>
                             @endif
                         </div>
+                        
                         <div class="form-group col-md-4 @if($errors->has('especialidad_to')) has-error @endif">
                         <label for="especialidad_to-field">Especialidad</label>
                         {!! Form::select("especialidad_to", $list["Especialidad"], null, array("class" => "form-control select_seguridad", "id" => "especialidad_to-field")) !!}

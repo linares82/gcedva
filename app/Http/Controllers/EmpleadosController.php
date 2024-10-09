@@ -878,6 +878,7 @@ class EmpleadosController extends Controller
                 ->select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as nombre'))
                 ->where('e.st_prospecto_id', '=', $st_prospecto)
                 ->where('e.id', '>', '0')
+                ->whereNotIn('st_empleado_id',array(3))
                 ->pluck('id');
             return $r;
             

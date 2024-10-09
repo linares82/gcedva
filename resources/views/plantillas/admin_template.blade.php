@@ -78,7 +78,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
 </head>
-<body class="hold-transition skin-purple-light sidebar-mini sidebar-collapse">
+<body class="hold-transition skin-purple-light sidebar-mini sidebar-collapse" >
 <div class="wrapper">
     <div class="spinner"></div>
     
@@ -147,11 +147,16 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="{{ asset ('/bower_components/AdminLTE/plugins/select2/select2.js') }}"></script>
 <script src="{{ asset ('/bower_components/AdminLTE/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js') }}"></script>
 <script>
+    
  jQuery(window).load(function() {				
        jQuery('.spinner').animate({
                'opacity':0},1000,'easeOutCubic',function (){jQuery(this).css('display','none')
                });	
+               
+               
        });
+
+    
 
 (function() {
   $('.select_seguridad').select2({ width: '100%' });
@@ -162,6 +167,16 @@ $("button[type=submit]").click(function(){
     $(this).closest('form').submit();
     //$('#formulario').submit();
 });
+
+function nobackbutton(){
+	
+   window.location.hash="no-back-button";
+	
+   window.location.hash="Again-No-back-button" //chrome
+	
+   window.onhashchange=function(){window.location.hash="no-back-button";}
+	
+}
 
 $('.fecha').Zebra_DatePicker({
     days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
@@ -184,7 +199,7 @@ $('.fecha').Zebra_DatePicker({
 
   gtag('config', 'UA-179639818-1');
   
-
+  
   
 </script>
 

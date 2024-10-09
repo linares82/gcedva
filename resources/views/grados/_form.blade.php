@@ -112,6 +112,8 @@
                          <span class="help-block">{{ $errors->first("mexico_bnd") }}</span>
                         @endif
                      </div>
+                     
+                     
 @push('scripts')                    
 <script>
   $(document).ready(function() {

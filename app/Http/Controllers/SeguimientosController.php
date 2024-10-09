@@ -639,6 +639,7 @@ class SeguimientosController extends Controller
             ->leftJoin('historia_clientes as hc','hc.cliente_id','c.id')
             //->where('has.asunto', '=', 'Cambio estatus ')
             ->where('has.fecha', '>=', $input['fecha_f'])
+            //->where('e.id',85)
             ->where('has.fecha', '<=', $input['fecha_t']);
         if (isset($input['plantel_f'])) {
             $ds_actividades_aux->whereIn('c.plantel_id', $input['plantel_f']);
@@ -650,11 +651,30 @@ class SeguimientosController extends Controller
         }
 
         $ds_actividades = $ds_actividades_aux->distinct()->get();
-        $ds_actividades_filtradas=array();;
+        $ds_actividades_filtradas=array();
+        $ds_actividades_unConcretado=array();
         foreach($ds_actividades as $ds_actividad){
             if(is_null($ds_actividad->reactivado)){
                 array_push($ds_actividades_filtradas, $ds_actividad);
+                $concretadoAntes=Hactividade::where('cliente_id',$ds_actividad->cli)
+                                        ->whereDate('fecha','<',$ds_actividad->fecha)
+                                        ->where('detalle','Concretado 100%')
+                                        ->whereNull('deleted_at')
+                                        ->count();
+                /*if($ds_actividad->cli){
+                    $concretadoAntes=Hactividade::where('cliente_id',$ds_actividad->cli)
+                                        ->whereDate('fecha','<',$ds_actividad->fecha)
+                                        ->where('detalle','Concretado 100%')
+                                        ->whereNull('deleted_at')
+                                        ->count();
+                    dd($concretadoAntes);
+                }*/
+                                        //
+                if($concretadoAntes==0){
+                    array_push($ds_actividades_unConcretado, $ds_actividad);
+                }
             }
+            
         }
         //dd($ds_actividades_filtradas);
 
@@ -675,7 +695,8 @@ class SeguimientosController extends Controller
         //dd($hestatus);
 
         return view('seguimientos.reportes.analitica_actividadesr')
-            ->with('actividades', json_encode($ds_actividades_filtradas))
+            //->with('actividades', json_encode($ds_actividades_filtradas))
+            ->with('actividades', json_encode($ds_actividades_unConcretado))
             ->with('cambios_estatus', json_encode($hestatus));
     }
 

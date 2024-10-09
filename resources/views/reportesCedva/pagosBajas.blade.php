@@ -87,7 +87,8 @@
                 <th>Justificacion</th>
                 <th>Seguimiento T.</th>
                 <th>Estatus Seguimiento</th>
-
+                <th>Ciclo</th>
+                <th>Seccion</th>
             </tr>
         </thead>
         <tbody>
@@ -130,6 +131,8 @@
                     @endif
                 </td>
                 <td>{{$detalle['sts']}}</td>
+                <td>{{$detalle['ciclo_matricula']}}</td>
+                <td>{{$detalle['seccion']}}</td>
                 </tr>
                 
                 

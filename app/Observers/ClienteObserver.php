@@ -60,4 +60,12 @@ class ClienteObserver
         }
         //dd($this->cliente->nombre."-".$vcliente->nombre);
     }
+
+    public function updated(Cliente $cliente)
+    {
+        if($cliente->bnd_doc_oblig_entregados==1){
+            $cliente->fec_docs_oblig_entregados=date('Y-m-d');
+            $cliente->save();
+        }
+    }
 }

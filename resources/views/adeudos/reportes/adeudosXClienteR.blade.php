@@ -88,7 +88,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                    <?php $regla_pago_seriado=0; ?>
+                    <?php $regla_pago_seriado=0; //dd($combinacion->adeudos->toArray()); ?>
                     @foreach($combinacion->adeudos as $adeudo)
                     <?php
                     $dias = date_diff(date_create(), date_create($adeudo->fecha_pago));
@@ -118,8 +118,10 @@
                             <?php
                             
                             $linea_caja= \App\CajaLn::where('adeudo_id',$adeudo->id)->whereNull('deleted_at')->first();    
+			    $linea_caja_count= \App\CajaLn::where('adeudo_id',$adeudo->id)->whereNull('deleted_at')->count();    
+					
                             ?>
-                            @if(count($linea_caja)>0)
+                            @if($linea_caja_count>0)
                             {{$linea_caja->total}}
                             @php
                                 $suma_pagos_reales=$suma_pagos_reales+$linea_caja->total;

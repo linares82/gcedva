@@ -8,6 +8,7 @@ use App\Cliente;
 use App\Plantel;
 use App\Empleado;
 use App\Prospecto;
+use App\Hactividade;
 use Carbon\Carbon;
 use App\Seguimiento;
 use App\StProspecto;
@@ -571,7 +572,7 @@ class ProspectosController extends Controller {
 		$empleado=Empleado::where('user_id',Auth::user()->id)->first();
 		$empleados_seleccionados=array(13,23,28,84,525,527,564,821,879,964,973,1096,1101,1102,1133,1069,1134,1140,1147, 1174,1179);
 		$planteles_validos=$empleado->plantels->pluck('id');
-		$planteles_seleccionados=Plantel::whereIn('id', array(5,6,10,12,13,15,17,18,21,22,23,24,25,29,30,32,36,37,38,39,40,41,42,43,45,46,47,49,50))
+		$planteles_seleccionados=Plantel::whereIn('id', array(5,6,10,12,13,15,17,18,21,22,23,24,25,29,30,32,36,37,38,39,40,41,42,43,45,46,47,49,50,87))
 		->pluck('id');
 		$planteles=Plantel::whereIn('id', $planteles_validos)->pluck('razon','id');
 		$empleados=Empleado::select('id',DB::raw('concat(nombre, " ",ape_paterno, " ",ape_materno) as nombre'))->pluck('nombre','id');
@@ -702,13 +703,27 @@ class ProspectosController extends Controller {
 			->get();
 
 			//dd($clientes);
+			//Log::info("empleado-".$plantel_usuario->empleado_id);
+			if($plantel_usuario->empleado_id==1599){
+				//dd($clientes->toArray());
+			}
+			
 			
 			$linea['clientes_concretados']=0;
 			foreach($clientes as $cliente){
-				if(is_null($cliente->reactivado)){
+				$concretadoAntes=Hactividade::where('cliente_id',$cliente->id)
+                                        ->whereDate('fecha','<',$cliente->fecha)
+                                        ->where('detalle','Concretado 100%')
+                                        ->whereNull('deleted_at')
+                                        ->count();
+			
+
+				if(is_null($cliente->reactivado) and $concretadoAntes==0){
 					$linea['clientes_concretados']=$linea['clientes_concretados']+1;
 				}
 			}
+			//Log::info("clientes_concretados-".$linea['clientes_concretados']);
+
 
 			$linea['prospectos_convertidos']=Prospecto::select(DB::raw('count(distinct(prospectos.id)) as total'))
 			->join('clientes as c', 'c.id','prospectos.cliente_id')
@@ -739,6 +754,26 @@ class ProspectosController extends Controller {
 			->where('prospectos.plantel_id',$plantel_usuario->plantel_id)
 			->where('h.usu_alta_id',$plantel_usuario->usu_alta_id)
 			->whereNull('prospectos.deleted_at')
+			->value('total');
+
+	   	   	$tocados_nuevos=HStProspecto::where('h_st_prospectos.st_prospecto_id',2)
+				->where('h_st_prospectos.st_anterior_id',1)
+				->join('prospectos as pro', 'pro.id','h_st_prospectos.prospecto_id')
+				->join('plantels as p','p.id','pro.plantel_id')
+				->whereDate('h_st_prospectos.created_at',$ayer)
+				->where('p.id',$plantel_usuario->plantel_id)
+				//->where('h_st_prospectos.usu_alta_id',$plantel_usuario->usu_alta_id)
+				->pluck('pro.id');
+			//dd($tocados_nuevos);	
+
+			$linea['prospectos_tocados_nuevos']=Prospecto::select(DB::raw('count(distinct(prospectos.id)) as total'))
+			->join('prospecto_seguimientos as s','s.prospecto_id','prospectos.id')
+			->join('prospecto_hactividads as h', 'h.prospecto_seguimiento_id','s.id')
+			->whereDate('h.fecha',$ayer)
+			->where('prospectos.plantel_id',$plantel_usuario->plantel_id)
+			->where('h.usu_alta_id',$plantel_usuario->usu_alta_id)
+			->whereNull('prospectos.deleted_at')
+			->whereIn('prospectos.id', $tocados_nuevos)
 			->value('total');
 
 			$linea['avisos_creados']=ProspectoSeguimiento::join('prospecto_avisos as pa','pa.prospecto_seguimiento_id','prospecto_seguimientos.id')

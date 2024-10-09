@@ -1620,6 +1620,24 @@ Route::post(
         'uses' => 'ClientesController@concretadosR'
     )
 )->middleware('auth');
+
+Route::get(
+    '/clientes/concretadosComisiones/',
+    array(
+        'as' => 'clientes.concretadosComisiones',
+        'middleware' => 'permission:clientes.concretadosComisiones',
+        'uses' => 'ClientesController@concretadosComisiones'
+    )
+)->middleware('auth');
+Route::post(
+    '/clientes/concretadosComisionesR/',
+    array(
+        'as' => 'clientes.concretadosComisionesR',
+        'middleware' => 'permission:clientes.concretadosComisiones',
+        'uses' => 'ClientesController@concretadosComisionesR'
+    )
+)->middleware('auth');
+
 Route::get(
     '/clientes/nict/',
     array(
