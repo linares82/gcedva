@@ -3531,7 +3531,7 @@ class ClientesController extends Controller
             //->whereDate('clientes.fec_docs_oblig_entregados','<=',$datos['menor_igual_fecha'])
             //->whereRaw('(a.caja_concepto_id = 1 or a.caja_concepto_id = 22 or a.caja_concepto_id = 23 or a.caja_concepto_id = 25)')
             ->orderBy('p.razon')
-            ->orderBy('stp.name')
+            //->orderBy('stp.name')
             ->orderBy('g.seccion')
             ->get();
         //dd($detalle->toArray());
@@ -3606,35 +3606,43 @@ class ClientesController extends Controller
             }
         }
         //dd($registros);
-        $carreras=array();
-        $diplomadosCursos=array();
+        $carreras1=array();
+        $carreras2=array();
+        $carreras3=array();
+        $diplomadosCursos1=array();
+        $diplomadosCursos2=array();
+        $diplomadosCursos3=array();
         foreach($registros as $r){
-            if(($r['bnd_doc_oblig_entregados']=="Si" and
+            if($r['bnd_doc_oblig_entregados']=="Si" and
             $r[12325]<>"" and 
             $r['tramites']=="Si" and 
-            $r['primera_mensualidad']== "Si") or
-            ($r['bnd_doc_oblig_entregados']=="Si" and
+            $r['primera_mensualidad']== "Si"){
+                array_push($carreras1, $r);
+            }elseif($r['bnd_doc_oblig_entregados']=="Si" and
             $r[12325]<>"" and 
             $r['tramites']=="Si" and 
-            $r['primera_mensualidad']== "No") or
-            ($r['bnd_doc_oblig_entregados']=="No" and
+            $r['primera_mensualidad']== "No"){
+                array_push($carreras2, $r);
+            } elseif($r['bnd_doc_oblig_entregados']=="No" and
             $r[12325]<>"" and 
             $r['tramites']=="Si" and 
-            $r['primera_mensualidad']== "Si")){
-                array_push($carreras, $r);
-            }elseif(($r['bnd_doc_oblig_entregados']=="Si" and
+            $r['primera_mensualidad']== "Si"){
+                array_push($carreras3, $r);
+            }elseif($r['bnd_doc_oblig_entregados']=="Si" and
             $r[12325]<>"" and 
             $r['tramites']=="No" and 
-            $r['primera_mensualidad']== "Si") or
-            ($r['bnd_doc_oblig_entregados']=="Si" and
+            $r['primera_mensualidad']== "Si"){
+                array_push($diplomadosCursos1, $r);
+            }elseif($r['bnd_doc_oblig_entregados']=="Si" and
             $r[12325]<>"" and 
             $r['tramites']=="No" and 
-            $r['primera_mensualidad']== "No") or
-            ($r['bnd_doc_oblig_entregados']=="No" and
+            $r['primera_mensualidad']== "No"){
+                array_push($diplomadosCursos2, $r);
+            }elseif($r['bnd_doc_oblig_entregados']=="No" and
             $r[12325]<>"" and 
             $r['tramites']=="No" and 
-            $r['primera_mensualidad']== "Si")){
-                array_push($diplomadosCursos, $r);
+            $r['primera_mensualidad']== "Si"){
+                array_push($diplomadosCursos3, $r);
             }
         }
         
@@ -3724,6 +3732,11 @@ class ClientesController extends Controller
             array("razon" => $plantel, "seccion" => $seccion, "estatus" => $estatus, "total" => $contador_plantel_seccion_estatus)
         );
         //dd($totales_plantel_seccion_estatus);
-        return view('clientes.reportes.concretadosComisionesR', compact('registros', 'totales_plantel_estatus', 'totales_plantel_seccion_estatus','carreras','diplomadosCursos'));
+        return view('clientes.reportes.concretadosComisionesR', 
+        compact('registros', 'totales_plantel_estatus', 
+        'totales_plantel_seccion_estatus','carreras1','diplomadosCursos1'
+        ,'carreras2','diplomadosCursos2'
+        ,'carreras3','diplomadosCursos3'
+    ));
     }
 }

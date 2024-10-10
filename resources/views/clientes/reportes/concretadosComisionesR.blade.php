@@ -139,7 +139,7 @@
 
         <br>
 
-        <h3>Carreras</h3>
+        <h3>Carreras 1</h3>
         <table class="table table-condensed table-striped">
           
           <thead>
@@ -155,7 +155,7 @@
              $i=0;   
              $cliente_temporal="";
             @endphp    
-            @foreach($carreras as $rs)
+            @foreach($carreras1 as $rs)
             @if($cliente_temporal<>$rs['matricula'])
             
             <tr>
@@ -210,7 +210,7 @@
           </tbody>
         </table>
 
-        <h3>Diplomados Cursos</h3>
+        <h3>Carreras 2</h3>
         <table class="table table-condensed table-striped">
           
           <thead>
@@ -226,7 +226,292 @@
              $i=0;   
              $cliente_temporal="";
             @endphp    
-            @foreach($diplomadosCursos as $rs)
+            @foreach($carreras2 as $rs)
+            @if($cliente_temporal<>$rs['matricula'])
+            
+            <tr>
+              <td>{{ ++$i }}</td>
+              
+              <td>{{ $rs['razon'] }}</td><td>{{ $rs['matricula'] }}</td><td>{{ $rs['cliente_id'] }}</td><td>{{ $rs['ape_paterno'] }}
+              {{ $rs['ape_materno'] }} {{ $rs['nombre'] }} {{ $rs['nombre2'] }}</td>
+              <td>
+              @if($rs['bnd_reclasificado']==1)
+              Si
+              @else
+              No
+              @endif
+              </td>
+              <td>{{$rs['tel_cel']}}</td><td>{{ $rs['st_cliente'] }}</td>
+              <td>{{ $rs['st_seguimiento'] }}</td><td>{{ $rs['seccion'] }}</td><td>{{$rs['turno']}}</td><td>{{ $rs['empleado_nombre'] }}</td>
+              <td>
+                {{$rs['12325']}}
+              </td>
+              <td>{{ $rs['fecha_caja_12325'] }}</td><td>{{$rs['tramites']}}</td><td>{{$rs['tramites_fecha']}}</td>
+              <td>{{$rs['primera_mensualidad']}}</td><td>{{$rs['primera_mensualidad_fecha']}}</td>
+              <td>
+                @php
+                    $tarea=App\AsignacionTarea::where('cliente_id',$rs['cliente_id'])
+                    ->orderBy('id','desc')
+                    ->whereNull('deleted_at')
+                    ->first();
+                @endphp
+                @if(!is_null($tarea))
+                  {{ $tarea->usu_alta->name }} ({{ $tarea->tarea->name }})
+                @endif
+              </td>
+              <td>
+          		{{$rs['bnd_doc_oblig_entregados']}}                
+              </td>
+              
+              <td>
+                @php
+                  $prospecto=App\Prospecto::where('cliente_id', $rs['cliente_id'])->first();
+                @endphp
+                @if(!is_null($prospecto))
+                  {{$prospecto->id}} / {{$prospecto->usu_alta->name}}
+                @endif
+              </td>
+              <td>{{$rs['etapa_prospecto']}}</td>
+            </tr>
+            @endif  
+            @php
+              $cliente_temporal=$rs['matricula'];
+            @endphp
+            @endforeach
+          </tbody>
+        </table>
+
+        <h3>Carreras 3</h3>
+        <table class="table table-condensed table-striped">
+          
+          <thead>
+              <th>No.</th><th>Plantel</th><th>Matricula</th><th>Id</th>
+              <th>Nombre</th><th>Reclasificado</th><th>Tel. Celular</th><th>E. Cliente</th>  <th>E. Seguimiento</th><th>Seccion</th>
+              <th>Turno</th><th>Empleado/Inscrito Por</th>
+              <th>Inscripción/S. Escolares</th><th>Fecha Caja</th><th>Trámites</th><th>Fecha Pago Tramites</th>
+              <th>P. Mensualidad</th><th>Fecha Pago</th><th>Ultima Tarea Seguimiento</th><th>Doc. Oblig. Entregados</th>
+              <th>Prospecto/Creado Por</th><th>Etapa Prospecto</th>
+          </thead>
+          <tbody>
+            @php
+             $i=0;   
+             $cliente_temporal="";
+            @endphp    
+            @foreach($carreras3 as $rs)
+            @if($cliente_temporal<>$rs['matricula'])
+            
+            <tr>
+              <td>{{ ++$i }}</td>
+              
+              <td>{{ $rs['razon'] }}</td><td>{{ $rs['matricula'] }}</td><td>{{ $rs['cliente_id'] }}</td><td>{{ $rs['ape_paterno'] }}
+              {{ $rs['ape_materno'] }} {{ $rs['nombre'] }} {{ $rs['nombre2'] }}</td>
+              <td>
+              @if($rs['bnd_reclasificado']==1)
+              Si
+              @else
+              No
+              @endif
+              </td>
+              <td>{{$rs['tel_cel']}}</td><td>{{ $rs['st_cliente'] }}</td>
+              <td>{{ $rs['st_seguimiento'] }}</td><td>{{ $rs['seccion'] }}</td><td>{{$rs['turno']}}</td><td>{{ $rs['empleado_nombre'] }}</td>
+              <td>
+                {{$rs['12325']}}
+              </td>
+              <td>{{ $rs['fecha_caja_12325'] }}</td><td>{{$rs['tramites']}}</td><td>{{$rs['tramites_fecha']}}</td>
+              <td>{{$rs['primera_mensualidad']}}</td><td>{{$rs['primera_mensualidad_fecha']}}</td>
+              <td>
+                @php
+                    $tarea=App\AsignacionTarea::where('cliente_id',$rs['cliente_id'])
+                    ->orderBy('id','desc')
+                    ->whereNull('deleted_at')
+                    ->first();
+                @endphp
+                @if(!is_null($tarea))
+                  {{ $tarea->usu_alta->name }} ({{ $tarea->tarea->name }})
+                @endif
+              </td>
+              <td>
+          		{{$rs['bnd_doc_oblig_entregados']}}                
+              </td>
+              
+              <td>
+                @php
+                  $prospecto=App\Prospecto::where('cliente_id', $rs['cliente_id'])->first();
+                @endphp
+                @if(!is_null($prospecto))
+                  {{$prospecto->id}} / {{$prospecto->usu_alta->name}}
+                @endif
+              </td>
+              <td>{{$rs['etapa_prospecto']}}</td>
+            </tr>
+            @endif  
+            @php
+              $cliente_temporal=$rs['matricula'];
+            @endphp
+            @endforeach
+          </tbody>
+        </table>
+        
+
+        <h3>Diplomados Cursos 1</h3>
+        <table class="table table-condensed table-striped">
+          
+          <thead>
+              <th>No.</th><th>Plantel</th><th>Matricula</th><th>Id</th>
+              <th>Nombre</th><th>Reclasificado</th><th>Tel. Celular</th><th>E. Cliente</th>  <th>E. Seguimiento</th><th>Seccion</th>
+              <th>Turno</th><th>Empleado/Inscrito Por</th>
+              <th>Inscripción/S. Escolares</th><th>Fecha Caja</th><th>Trámites</th><th>Fecha Pago Tramites</th>
+              <th>P. Mensualidad</th><th>Fecha Pago</th><th>Ultima Tarea Seguimiento</th><th>Doc. Oblig. Entregados</th>
+              <th>Prospecto/Creado Por</th><th>Etapa Prospecto</th>
+          </thead>
+          <tbody>
+            @php
+             $i=0;   
+             $cliente_temporal="";
+            @endphp    
+            @foreach($diplomadosCursos1 as $rs)
+            @if($cliente_temporal<>$rs['matricula'])
+            
+            <tr>
+              <td>{{ ++$i }}</td>
+              
+              <td>{{ $rs['razon'] }}</td><td>{{ $rs['matricula'] }}</td><td>{{ $rs['cliente_id'] }}</td><td>{{ $rs['ape_paterno'] }}
+              {{ $rs['ape_materno'] }} {{ $rs['nombre'] }} {{ $rs['nombre2'] }}</td>
+              <td>
+              @if($rs['bnd_reclasificado']==1)
+              Si
+              @else
+              No
+              @endif
+              </td>
+              <td>{{$rs['tel_cel']}}</td><td>{{ $rs['st_cliente'] }}</td>
+              <td>{{ $rs['st_seguimiento'] }}</td><td>{{ $rs['seccion'] }}</td><td>{{$rs['turno']}}</td><td>{{ $rs['empleado_nombre'] }}</td>
+              <td>
+                {{$rs['12325']}}
+              </td>
+              <td>{{ $rs['fecha_caja_12325'] }}</td><td>{{$rs['tramites']}}</td><td>{{$rs['tramites_fecha']}}</td>
+              <td>{{$rs['primera_mensualidad']}}</td><td>{{$rs['primera_mensualidad_fecha']}}</td>
+              <td>
+                @php
+                    $tarea=App\AsignacionTarea::where('cliente_id',$rs['cliente_id'])
+                    ->orderBy('id','desc')
+                    ->whereNull('deleted_at')
+                    ->first();
+                @endphp
+                @if(!is_null($tarea))
+                  {{ $tarea->usu_alta->name }} ({{ $tarea->tarea->name }})
+                @endif
+              </td>
+              <td>
+          		{{$rs['bnd_doc_oblig_entregados']}}                
+              </td>
+              
+              <td>
+                @php
+                  $prospecto=App\Prospecto::where('cliente_id', $rs['cliente_id'])->first();
+                @endphp
+                @if(!is_null($prospecto))
+                  {{$prospecto->id}} / {{$prospecto->usu_alta->name}}
+                @endif
+              </td>
+              <td>{{$rs['etapa_prospecto']}}</td>
+            </tr>
+            @endif  
+            @php
+              $cliente_temporal=$rs['matricula'];
+            @endphp
+            @endforeach
+          </tbody>
+        </table>
+
+        <h3>Diplomados Cursos 2</h3>
+        <table class="table table-condensed table-striped">
+          
+          <thead>
+              <th>No.</th><th>Plantel</th><th>Matricula</th><th>Id</th>
+              <th>Nombre</th><th>Reclasificado</th><th>Tel. Celular</th><th>E. Cliente</th>  <th>E. Seguimiento</th><th>Seccion</th>
+              <th>Turno</th><th>Empleado/Inscrito Por</th>
+              <th>Inscripción/S. Escolares</th><th>Fecha Caja</th><th>Trámites</th><th>Fecha Pago Tramites</th>
+              <th>P. Mensualidad</th><th>Fecha Pago</th><th>Ultima Tarea Seguimiento</th><th>Doc. Oblig. Entregados</th>
+              <th>Prospecto/Creado Por</th><th>Etapa Prospecto</th>
+          </thead>
+          <tbody>
+            @php
+             $i=0;   
+             $cliente_temporal="";
+            @endphp    
+            @foreach($diplomadosCursos2 as $rs)
+            @if($cliente_temporal<>$rs['matricula'])
+            
+            <tr>
+              <td>{{ ++$i }}</td>
+              
+              <td>{{ $rs['razon'] }}</td><td>{{ $rs['matricula'] }}</td><td>{{ $rs['cliente_id'] }}</td><td>{{ $rs['ape_paterno'] }}
+              {{ $rs['ape_materno'] }} {{ $rs['nombre'] }} {{ $rs['nombre2'] }}</td>
+              <td>
+              @if($rs['bnd_reclasificado']==1)
+              Si
+              @else
+              No
+              @endif
+              </td>
+              <td>{{$rs['tel_cel']}}</td><td>{{ $rs['st_cliente'] }}</td>
+              <td>{{ $rs['st_seguimiento'] }}</td><td>{{ $rs['seccion'] }}</td><td>{{$rs['turno']}}</td><td>{{ $rs['empleado_nombre'] }}</td>
+              <td>
+                {{$rs['12325']}}
+              </td>
+              <td>{{ $rs['fecha_caja_12325'] }}</td><td>{{$rs['tramites']}}</td><td>{{$rs['tramites_fecha']}}</td>
+              <td>{{$rs['primera_mensualidad']}}</td><td>{{$rs['primera_mensualidad_fecha']}}</td>
+              <td>
+                @php
+                    $tarea=App\AsignacionTarea::where('cliente_id',$rs['cliente_id'])
+                    ->orderBy('id','desc')
+                    ->whereNull('deleted_at')
+                    ->first();
+                @endphp
+                @if(!is_null($tarea))
+                  {{ $tarea->usu_alta->name }} ({{ $tarea->tarea->name }})
+                @endif
+              </td>
+              <td>
+          		{{$rs['bnd_doc_oblig_entregados']}}                
+              </td>
+              
+              <td>
+                @php
+                  $prospecto=App\Prospecto::where('cliente_id', $rs['cliente_id'])->first();
+                @endphp
+                @if(!is_null($prospecto))
+                  {{$prospecto->id}} / {{$prospecto->usu_alta->name}}
+                @endif
+              </td>
+              <td>{{$rs['etapa_prospecto']}}</td>
+            </tr>
+            @endif  
+            @php
+              $cliente_temporal=$rs['matricula'];
+            @endphp
+            @endforeach
+          </tbody>
+        </table>
+
+        <h3>Diplomados Cursos 3</h3>
+        <table class="table table-condensed table-striped">
+          
+          <thead>
+              <th>No.</th><th>Plantel</th><th>Matricula</th><th>Id</th>
+              <th>Nombre</th><th>Reclasificado</th><th>Tel. Celular</th><th>E. Cliente</th>  <th>E. Seguimiento</th><th>Seccion</th>
+              <th>Turno</th><th>Empleado/Inscrito Por</th>
+              <th>Inscripción/S. Escolares</th><th>Fecha Caja</th><th>Trámites</th><th>Fecha Pago Tramites</th>
+              <th>P. Mensualidad</th><th>Fecha Pago</th><th>Ultima Tarea Seguimiento</th><th>Doc. Oblig. Entregados</th>
+              <th>Prospecto/Creado Por</th><th>Etapa Prospecto</th>
+          </thead>
+          <tbody>
+            @php
+             $i=0;   
+             $cliente_temporal="";
+            @endphp    
+            @foreach($diplomadosCursos3 as $rs)
             @if($cliente_temporal<>$rs['matricula'])
             
             <tr>
