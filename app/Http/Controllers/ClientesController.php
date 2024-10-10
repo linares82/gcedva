@@ -3469,7 +3469,7 @@ class ClientesController extends Controller
             ->get();
         //dd($totales->toArray());
 
-        $secciones=explode(',',$datos['secciones']);
+        //$secciones=explode(',',$datos['secciones']);
         
         $detalle = Cliente::select(
             'p.razon',
@@ -3592,9 +3592,14 @@ class ClientesController extends Controller
             ($d['tramites_fecha']<=$datos['menor_igual_fecha'] and $d['tramites_fecha']<>'') or 
             ($d['primera_mensualidad_fecha']<=$datos['menor_igual_fecha'] and $d['primera_mensualidad_fecha']<>"")){
                 //dd($secciones);
-                if($secciones[0]==""){
+                /*if($secciones[0]==""){
                     array_push($registros, $d);
                 }elseif(in_array($d['seccion'], $secciones)){
+                    array_push($registros, $d);
+                }*/
+                if(isset($datos['bnd_tramite']) and $d['tramites']=="Si"){
+                    array_push($registros, $d);
+                }elseif(!isset($datos['bnd_tramite']) and $d['tramites']=="No"){
                     array_push($registros, $d);
                 }
                 

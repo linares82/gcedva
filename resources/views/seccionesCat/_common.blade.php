@@ -1,0 +1,1 @@
+@section('seccionsAppTitle','Seccion')

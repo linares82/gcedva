@@ -520,6 +520,7 @@ return array(
     'CreateReglaRecargosTable' => $baseDir . '/database/migrations/2018_04_05_123031_create_regla_recargos_table.php',
     'CreateRevisionsTable' => $baseDir . '/database/migrations/2013_04_09_062329_create_revisions_table.php',
     'CreateSalonsTable' => $baseDir . '/database/migrations/2017_08_17_164957_create_salons_table.php',
+    'CreateSeccionesCatTable' => $baseDir . '/database/migrations/2024_10_10_160452_create_secciones_cat_table.php',
     'CreateSeccionsTable' => $baseDir . '/database/migrations/2020_09_11_142246_create_seccions_table.php',
     'CreateSegmentoMercadosTable' => $baseDir . '/database/migrations/2018_04_12_141340_create_segmento_mercados_table.php',
     'CreateSeguimientoTareasTable' => $baseDir . '/database/migrations/2017_05_17_212428_create_seguimiento_tareas_table.php',

@@ -64,13 +64,22 @@
                     @endif
                 </div>
 
+                <!--
                 <div class="form-group col-md-6 @if($errors->has('secciones')) has-error @endif">
                     <label for="secciones-field">Secciones(separadas por ","):</label>
                     {!! Form::text("secciones", null, array("class" => "form-control input-sm", "id" => "secciones-field")) !!}
                     @if($errors->has("secciones"))
                     <span class="help-block">{{ $errors->first("secciones") }}</span>
                     @endif
-                </div>
+                </div>-->
+
+                <div class="form-group col-md-6 @if($errors->has('bnd_tramite')) has-error @endif">
+                            <label for="bnd_tramite-field">Tiene Tramite</label>
+                            {!! Form::checkbox("bnd_tramite", 1, null, [ "id" => "bnd_tramite-field", 'class'=>'minimal']) !!}
+                            @if($errors->has("bnd_tramite"))
+                            <span class="help-block">{{ $errors->first("bnd_tramite") }}</span>
+                            @endif
+                        </div>
                
                 
                 
