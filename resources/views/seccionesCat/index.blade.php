@@ -9,7 +9,7 @@
         <!--
         @if ( $query_params = Request::input('q') )
 
-            <li class="active"><a href="{{ route('seccionesCat.index') }}">@yield('seccionsAppTitle')</a></li>
+            <li class="active"><a href="{{ route('seccionesCats.index') }}">@yield('seccionsAppTitle')</a></li>
             <li class="active">condition(  
 
             @foreach( $query_params as $key => $value )

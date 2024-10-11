@@ -42,6 +42,7 @@ use App\AvisosInicio;
 use App\CajaConcepto;
 use App\Especialidad;
 use App\Rules\IsCurp;
+use App\SeccionesCat;
 use App\AlumnosActivo;
 use App\Ccuestionario;
 use App\StSeguimiento;
@@ -3469,7 +3470,13 @@ class ClientesController extends Controller
             ->get();
         //dd($totales->toArray());
 
-        //$secciones=explode(',',$datos['secciones']);
+        $secciones=array();
+        if(isset($datos['bnd_tramite'])){
+            $secciones=SeccionesCat::where('bnd_tramite',1)->pluck('name');
+        }else{
+            $secciones=SeccionesCat::where('bnd_tramite',0)->pluck('name');
+        }
+        
         
         $detalle = Cliente::select(
             'p.razon',
@@ -3518,7 +3525,7 @@ class ClientesController extends Controller
             //->whereIn('a.caja_concepto_id', array(1,22,23, 25)) // se quito concepto 22 tramites adelante se hace especificamente este trabajo
             //->where('clientes.st_cliente_id', '<>', 3)
             ->whereIn('clientes.plantel_id', $datos['plantel_f'])
-            //->whereIn('g.seccion', $secciones)
+            ->whereIn('g.seccion', $secciones)
             ->where('clientes.matricula', 'like', $datos['inicio_matricula'] . "%")
             //->whereNull('a.deleted_at')
             //->whereNull('c.deleted_at')
@@ -3597,11 +3604,13 @@ class ClientesController extends Controller
                 }elseif(in_array($d['seccion'], $secciones)){
                     array_push($registros, $d);
                 }*/
+                /*
                 if(isset($datos['bnd_tramite']) and $d['tramites']=="Si"){
                     array_push($registros, $d);
                 }elseif(!isset($datos['bnd_tramite']) and $d['tramites']=="No"){
                     array_push($registros, $d);
-                }
+                }*/
+                array_push($registros, $d);
                 
             }
         }
