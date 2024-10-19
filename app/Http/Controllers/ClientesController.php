@@ -38,6 +38,7 @@ use App\TpoInforme;
 use App\EstadoCivil;
 use App\Inscripcion;
 use App\Seguimiento;
+use App\StProspecto;
 use App\AvisosInicio;
 use App\CajaConcepto;
 use App\Especialidad;
@@ -2267,6 +2268,7 @@ class ClientesController extends Controller
             'sts.name AS estatus_seguimiento',
             'cc.name AS concepto',
             'clientes.fec_nacimiento',
+            'clientes.edad',
             'esp.name as especialidad',
             'clientes.curp',
             'clientes.genero',
@@ -2282,7 +2284,8 @@ class ClientesController extends Controller
             ->join('plantels as p', 'p.id', '=', 'clientes.plantel_id')
             ->where('a.caja_concepto_id', $datos['concepto_f'])
             ->whereIn('clientes.plantel_id', $datos['plantel_f'])
-            ->where('a.fecha_pago', $datos['fecha_f'])
+            ->whereDate('a.fecha_pago','>=', $datos['fecha_f'])
+            ->whereDate('a.fecha_pago','<=', $datos['fecha_t'])
             ->where('clientes.st_cliente_id', '<>', 3)
             //->where('pagado_bnd',1)
             ->whereNull('a.deleted_at')
@@ -3398,7 +3401,9 @@ class ClientesController extends Controller
             array_push($plantels, $p->id);
         }
         $planteles = Plantel::whereIn('id', $plantels)->pluck('razon', 'id');
-        return view('clientes.reportes.concretadosComisiones', compact('planteles'))
+        $stProspectos=StProspecto::pluck('name','id');
+        //dd($stProspectos);
+        return view('clientes.reportes.concretadosComisiones', compact('planteles','stProspectos'))
             ->with('list', Cliente::getListFromAllRelationApps());
     }
 
@@ -3410,66 +3415,7 @@ class ClientesController extends Controller
             $datos['inicio_matricula'] = $param->valor . $datos['inicio_matricula'];
         }
         $planteles = Plantel::select('plantels.id', 'plantels.meta_total')->whereIn('plantels.id', $datos['plantel_f'])->get();
-        $totales = Cliente::select('p.razon', 'g.seccion', 'sts.name as estatus', DB::raw('count(sts.name) as total_estatus'))
-            ->join('seguimientos as s', 's.cliente_id', '=', 'clientes.id')
-            ->join('st_seguimientos as sts', 'sts.id', '=', 's.st_seguimiento_id')
-            ->join('adeudos as a', 'a.cliente_id', '=', 'clientes.id')
-            ->join('caja_conceptos as cc', 'cc.id', '=', 'a.caja_concepto_id')
-            ->join('plantels as p', 'p.id', '=', 'clientes.plantel_id')
-            ->join('st_clientes as stc', 'stc.id', '=', 'clientes.st_cliente_id')
-            ->join('cajas as c', 'c.id', '=', 'a.caja_id')
-            ->join('combinacion_clientes as ccli', 'ccli.cliente_id', '=', 'clientes.id')
-            ->join('grados as g', 'g.id', '=', 'ccli.grado_id')
-            ->where('a.pagado_bnd', 1)
-            ->where('c.st_caja_id', 1)
-            //->where('clientes.st_cliente_id', '<>', 3)
-            ->whereIn('clientes.plantel_id', $datos['plantel_f'])
-            ->where('clientes.matricula', 'like', $datos['inicio_matricula'] . "%")
-            ->whereNull('a.deleted_at')
-            ->whereNull('c.deleted_at')
-            ->whereNull('ccli.deleted_at')
-            ->where('ccli.plantel_id', '>', 0)
-            ->where('ccli.especialidad_id', '>', 0)
-            ->where('ccli.nivel_id', '>', 0)
-            ->where('ccli.grado_id', '>', 0)
-            ->where('ccli.turno_id', '>', 0)
-            ->whereRaw('(a.caja_concepto_id = 1 or a.caja_concepto_id = 22 or a.caja_concepto_id = 23 or a.caja_concepto_id = 25)')
-            ->groupBy('p.razon')
-            ->groupBy('g.seccion')
-            ->groupBy('sts.name')
-            ->get();
-
-        $totales2 = Cliente::select('p.razon', 'sts.name as estatus', DB::raw('count(sts.name) as total_estatus'))
-            ->join('seguimientos as s', 's.cliente_id', '=', 'clientes.id')
-            ->join('st_seguimientos as sts', 'sts.id', '=', 's.st_seguimiento_id')
-            ->join('adeudos as a', 'a.cliente_id', '=', 'clientes.id')
-            ->join('caja_conceptos as cc', 'cc.id', '=', 'a.caja_concepto_id')
-            ->join('plantels as p', 'p.id', '=', 'clientes.plantel_id')
-            ->join('st_clientes as stc', 'stc.id', '=', 'clientes.st_cliente_id')
-            ->join('cajas as c', 'c.id', '=', 'a.caja_id')
-            ->join('combinacion_clientes as ccli', 'ccli.cliente_id', '=', 'clientes.id')
-            ->join('grados as g', 'g.id', '=', 'ccli.grado_id')
-            ->where('a.pagado_bnd', 1)
-            ->where('c.st_caja_id', 1)
-            //->whereIn('a.caja_concepto_id', array(1, 22,23, 25))// se quito concepto 22 tramites adelante se hace especificamente este trabajo
-            //->where('clientes.st_cliente_id', '<>', 3)
-            ->whereIn('clientes.plantel_id', $datos['plantel_f'])
-            ->where('clientes.matricula', 'like', $datos['inicio_matricula'] . "%")
-            ->whereNull('a.deleted_at')
-            ->whereNull('c.deleted_at')
-            ->whereNull('ccli.deleted_at')
-            ->where('ccli.plantel_id', '>', 0)
-            ->where('ccli.especialidad_id', '>', 0)
-            ->where('ccli.nivel_id', '>', 0)
-            ->where('ccli.grado_id', '>', 0)
-            ->where('ccli.turno_id', '>', 0)
-            ->whereRaw('(a.caja_concepto_id = 1 or a.caja_concepto_id = 22 or a.caja_concepto_id = 23 or a.caja_concepto_id = 25)')
-            ->groupBy('p.razon')
-            //->groupBy('g.seccion')
-            ->groupBy('sts.name')
-            ->get();
-        //dd($totales->toArray());
-
+        
         $secciones=array();
         if(isset($datos['bnd_tramite'])){
             $secciones=SeccionesCat::where('bnd_tramite',1)->pluck('name');
@@ -3477,7 +3423,7 @@ class ClientesController extends Controller
             $secciones=SeccionesCat::where('bnd_tramite',0)->pluck('name');
         }
         
-        
+        //dd(in_array(1,$datos['st_prospectos']));
         $detalle = Cliente::select(
             'p.razon',
             'clientes.matricula',
@@ -3501,7 +3447,8 @@ class ClientesController extends Controller
             'tu.name as turno',
             //'sec.name as seccion',
             //'csec.name as clasificacion_seccion',
-            'stp.name as etapa_prospecto'
+            'stp.name as etapa_prospecto',
+            'stp.id as st_prospecto_id'
             //'gra.seccion'
         )
             ->join('seguimientos as s', 's.cliente_id', '=', 'clientes.id')
@@ -3525,6 +3472,7 @@ class ClientesController extends Controller
             //->whereIn('a.caja_concepto_id', array(1,22,23, 25)) // se quito concepto 22 tramites adelante se hace especificamente este trabajo
             //->where('clientes.st_cliente_id', '<>', 3)
             ->whereIn('clientes.plantel_id', $datos['plantel_f'])
+            ->whereIn('stp.id', $datos['st_prospectos'])
             ->whereIn('g.seccion', $secciones)
             ->where('clientes.matricula', 'like', $datos['inicio_matricula'] . "%")
             //->whereNull('a.deleted_at')
@@ -3538,7 +3486,7 @@ class ClientesController extends Controller
             //->whereDate('clientes.fec_docs_oblig_entregados','<=',$datos['menor_igual_fecha'])
             //->whereRaw('(a.caja_concepto_id = 1 or a.caja_concepto_id = 22 or a.caja_concepto_id = 23 or a.caja_concepto_id = 25)')
             ->orderBy('p.razon')
-            //->orderBy('stp.name')
+            ->orderBy('stp.name')
             ->orderBy('g.seccion')
             ->get();
         //dd($detalle->toArray());
@@ -3561,6 +3509,7 @@ class ClientesController extends Controller
             } else {
                 $d['bnd_doc_oblig_entregados'] = 'No';
             }
+            //$d['tramites']=NULL;
             $tramites = Caja::select('cajas.fecha as fecha_caja', 'cc.name as concepto')
                 ->join('caja_lns as cln', 'cln.caja_id', '=', 'cajas.id')
                 ->join('caja_conceptos as cc', 'cc.id', '=', 'cln.caja_concepto_id')
@@ -3598,19 +3547,19 @@ class ClientesController extends Controller
             if(($d['fecha_caja_12325']<=$datos['menor_igual_fecha'] and $d['fecha_caja_12325']<>"") or 
             ($d['tramites_fecha']<=$datos['menor_igual_fecha'] and $d['tramites_fecha']<>'') or 
             ($d['primera_mensualidad_fecha']<=$datos['menor_igual_fecha'] and $d['primera_mensualidad_fecha']<>"")){
+                
+                if(isset($datos['bnd_tramite']) and $d['tramites'] == "Si"){
+                    array_push($registros, $d);
+                }elseif(!isset($datos['bnd_tramite']) and $d['tramites'] == "No"){
+                    array_push($registros, $d);
+                }
                 //dd($secciones);
                 /*if($secciones[0]==""){
                     array_push($registros, $d);
                 }elseif(in_array($d['seccion'], $secciones)){
                     array_push($registros, $d);
                 }*/
-                /*
-                if(isset($datos['bnd_tramite']) and $d['tramites']=="Si"){
-                    array_push($registros, $d);
-                }elseif(!isset($datos['bnd_tramite']) and $d['tramites']=="No"){
-                    array_push($registros, $d);
-                }*/
-                array_push($registros, $d);
+                //array_push($registros, $d);
                 
             }
         }

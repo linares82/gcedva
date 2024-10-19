@@ -81,7 +81,14 @@
                             @endif
                         </div>
                
-                
+                <div class="form-group col-md-6 @if($errors->has('st_prospectos')) has-error @endif">
+                    <label for="st_prospectos-field">Etapa Prospecto:</label>
+                    {!! Form::select("st_prospectos[]", $stProspectos, null, array("class" => "form-control select_seguridad", "id" => "st_prospectos-field",'multiple'=>true)) !!}
+                    <div id='loading10' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
+                    @if($errors->has("st_prospectos"))
+                    <span class="help-block">{{ $errors->first("st_prospectos") }}</span>
+                    @endif
+                </div>
                 
                 
                 

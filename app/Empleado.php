@@ -38,7 +38,9 @@ class Empleado extends Model
 		'profesion', 'cedula', 'anios_servicio_escuela', 'fec_inicio_experiencia_academicas', 'profordems',
 		'contacto_emergencia','tel_emergencia', 'parentesco','fec_ingreso','bnd_recontratable',
 		'just_recontratable','st_prospecto_id', 'plantel_contrato1_id','plantel_contrato2_id',
-		'tipo_contrato2_id','resp_alerta2_id','fec_fin_contrato2'
+		'tipo_contrato2_id','resp_alerta2_id','fec_fin_contrato2',
+		'plantel_contrato3_id',
+		'tipo_contrato3_id','resp_alerta3_id','fec_fin_contrato3'
 	];
 
 	public function usu_alta()

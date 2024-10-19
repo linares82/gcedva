@@ -110,6 +110,15 @@ class HomeController extends Controller
             ->where('c1.st_empleado_id', '<>', 3)->whereNull('c1.deleted_at')
             ->where('dias_alerta', '>', 0)
             ->whereRaw('DATEDIFF(fin_contrato, "' . Date("Y-m-d") . '") <= dias_alerta');
+
+        $contratosVencidos3 = Db::table('empleados as c3')->select('p.razon', 'c3.id','c3.nombre','c3.ape_paterno',
+            'c3.ape_materno', 'c3.rfc', 'pu.name as puesto', 'c3.direccion', 'c3.fin_contrato')
+                ->join('plantels as p','p.id','c3.plantel_contrato3_id')
+                ->join('puestos as pu','pu.id','c3.puesto_id')
+                ->where('c3.st_empleado_id', '<>', 3)
+                ->whereNull('c3.deleted_at')
+                ->where('dias_alerta', '>', 0)
+                ->whereRaw('DATEDIFF(fec_fin_contrato3, "' . Date("Y-m-d") . '") <= dias_alerta');
             //->orderBy('plantel_id');
             //->orderBy('fin_contrato')
             //->get();
@@ -124,6 +133,7 @@ class HomeController extends Controller
             ->where('tipo_contrato2_id','<>','10')
             ->whereRaw('DATEDIFF(fec_fin_contrato2, "' . Date("Y-m-d") . '") <= dias_alerta')
             ->union($contratosVencidos1)
+            ->union($contratosVencidos3)
             ->orderBy('fin_contrato')
             //->orderBy('plantel_id')
             ->get();

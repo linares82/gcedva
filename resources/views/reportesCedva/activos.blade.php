@@ -34,7 +34,8 @@
     <table class="table table-condensed table-striped">
             <h4>Resumen</h4>
             <thead>
-              <th>Plantel</th><th>Seccion</th><th>Activos Vigentes Sin Adeudo</th>
+              <th>Plantel</th><th>Seccion</th><th>Nueva Inscripcion</th>
+              <th>Activos Vigentes Sin Adeudo</th>
               <th>Activos Vigentes Con 1 Adeudo</th><th>BTP</th><th>BA</th>
               <th>Suma (Matricula Total Activa)</th><th>Preinscritos</th>
             </thead>
@@ -49,7 +50,9 @@
               @endphp
               @foreach($resumen as $linea)
               <tr>
-                <td>{{$linea['razon']}}</td><td>{{$linea['seccion']}}</td><td>{{ $linea['vigentes_sin_adeudos']}}</td>
+                <td>{{$linea['razon']}}</td><td>{{$linea['seccion']}}</td>
+                <td>{{ $linea['nueva_inscripcion']}}</td>
+                <td>{{ $linea['vigentes_sin_adeudos']}}</td>
                 <td>{{$linea['vigentes_con_1_adeudos']}}</td><td>{{$linea['baja_temporal_por_pago']}}</td><td>{{$linea['baja_administrativa']}}</td>
                 <td>{{$linea['matricula_total_activa']}}</td>
                 <td>{{$linea['preinscrito']}}</td>
@@ -74,7 +77,8 @@
     <table class="table table-condensed table-striped">
             <h4>Resumen Monetario</h4>
             <thead>
-              <th>Plantel</th><th>Seccion</th><th>Activos Vigentes Sin Adeudo</th>
+              <th>Plantel</th><th>Seccion</th><th>Nueva Inscripcion</th>
+              <th>Activos Vigentes Sin Adeudo</th>
               <th>Activos Vigentes Con 1 Adeudo</th><th>BTP</th><th>BA</th>
               <th>Suma (Matricula Total Activa)</th><th>Preinscritos</th>
             </thead>
@@ -89,7 +93,9 @@
               @endphp
               @foreach($resumen_dinero as $linea)
               <tr>
-                <td>{{$linea['razon']}}</td><td>{{$linea['seccion']}}</td><td align="right">{{number_format($linea['vigentes_sin_adeudos'],2)}}</td>
+                <td>{{$linea['razon']}}</td><td>{{$linea['seccion']}}</td>
+                <td align="right">{{number_format($linea['nueva_inscripcion'],2)}}</td>
+                <td align="right">{{number_format($linea['vigentes_sin_adeudos'],2)}}</td>
                 <td align="right">{{number_format($linea['vigentes_con_1_adeudos'],2)}}</td><td align="right">{{number_format($linea['baja_temporal_por_pago'],2)}}</td><td align="right">{{number_format($linea['baja_administrativa'],2)}}</td>
                 <td align="right">{{number_format($linea['matricula_total_activa'],2)}}</td>
                 <td align="right">{{number_format($linea['preinscrito'],2)}}</td>
@@ -110,7 +116,7 @@
             </tbody>
     </table>    
     @endif
-        
+        <!--
         <table class="table table-condensed table-striped">
             <h4>Activos</h4>
             <thead>
@@ -263,6 +269,188 @@
             
             
         @endphp
+        @endforeach
+        @permission('reportesCedva.activosSinDinero')
+        <tr><td>Totales Concepto</td><td colspan='12'>
+          </td><td>{{ number_format($planeado_suma,2) }}</td>
+          <td colspan='3'></td>
+          <td>{{ number_format($caja_suma,2) }}</td>
+          <td></td>
+          <td>{{ number_format($adeudo_suma,2) }}</td>
+        </tr>
+        <tr><td>Totales Ciclo</td><td colspan='12'>
+          </td><td>{{ number_format($ciclo_planeado_suma,2) }}</td>
+          <td colspan='3'></td>
+          <td>{{ number_format($ciclo_caja_suma,2) }}</td>
+          <td></td>
+          <td>{{ number_format($ciclo_adeudo_suma,2) }}</td>
+        </tr>
+        <tr><td>Totales Plantel</td><td colspan='12'>
+          </td><td>{{ number_format($plantel_planeado_suma,2) }}</td>
+          <td colspan='3'></td>
+          <td>{{ number_format($plantel_caja_suma,2) }}</td>
+          <td></td>
+          <td>{{ number_format($plantel_adeudo_suma,2) }}</td>
+        </tr>
+        @endpermission  
+            </tbody>
+        </table>
+          -->
+
+        <table class="table table-condensed table-striped">
+            <h4>Activos 2</h4>
+            <thead>
+                <th>No.</th><th>Plantel</th><th>Ciclo</th><th>Id</th><th>Matricula</th><th>Seccion</th>
+                <th>A. Paterno</th><th>A. Materno</th><th>Nombre(s)</th><th>Tel. Fijo</th><th>Celular</th><th>Estatus C.</th>
+                <th>Estatus S.</th><th>Turno</th>
+                <th>F. Planeada</th>
+                @permission('reportesCedva.activosSinDinero')<th>Monto Planeado</th>@endpermission
+                <th>Concepto</th><th>Ticket</th>
+                <th>F. Caja</th>
+                @permission('reportesCedva.activosSinDinero')<th>Total Caja</th>@endpermission
+                <th>Usuario Pago</th><th>Pagado</th>
+                @permission('reportesCedva.activosSinDinero')<th>Total Adeudo</th>@endpermission
+                
+
+            </thead>
+            <tbody>    
+        @php
+        $cantidad=0;
+        $suma_planeada=0;
+        $suma_adeudos=0;
+        $suma_caja=0;
+        $csc=0;
+        $matricula="";
+
+        $plantel="";
+        $ciclo="";
+        $concepto="";
+        $planeado_suma=0;
+        $caja_suma=0;
+        $adeudo_suma=0;
+        $ciclo_planeado_suma=0;
+        $ciclo_caja_suma=0;
+        $ciclo_adeudo_suma=0;
+        $plantel_planeado_suma=0;
+        $plantel_caja_suma=0;
+        $plantel_adeudo_suma=0;
+        @endphp
+        @foreach ($registros_ordenados as $seccion)
+          @foreach($seccion as $registro)
+          @permission('reportesCedva.activosSinDinero')
+          @if($plantel<>"" and $ciclo<>"" and $concepto<>"")
+              @if($concepto<>$registro['concepto'])
+              <tr>
+                <td>Totales Concepto</td><td colspan='12'>
+                </td><td>{{ number_format($planeado_suma,2) }}</td>
+                <td colspan='3'></td>
+                <td>{{ number_format($caja_suma,2) }}</td>
+                <td></td>
+                <td>{{ number_format($adeudo_suma,2) }}</td>
+              </tr>
+              @php
+                  $planeado_suma=0;
+                  $caja_suma=0;
+                  $adeudo_suma=0;
+              @endphp
+              @endif
+              @if($ciclo<>$registro['ciclo'])
+              <tr>
+                <td>Totales Ciclo</td><td colspan='12'>
+                </td><td>{{ number_format($ciclo_planeado_suma,2) }}</td>
+                <td colspan='3'></td>
+                <td>{{ number_format($ciclo_caja_suma,2) }}</td>
+                <td></td>
+                <td>{{ number_format($ciclo_adeudo_suma,2) }}</td>
+              </tr>
+              @php
+                  $ciclo_planeado_suma=0;
+                  $ciclo_caja_suma=0;
+                  $ciclo_adeudo_suma=0;
+              @endphp
+              @endif
+              @if($plantel<>$registro['razon'])
+              <tr>
+                <td>Totales Plantel</td><td colspan='12'>
+                </td><td>{{ number_format($plantel_planeado_suma,2) }}</td>
+                <td colspan='3'></td>
+                <td>{{ number_format($plantel_caja_suma,2) }}</td>
+                <td></td>
+                <td>{{ number_format($plantel_adeudo_suma,2) }}</td>
+              </tr>
+              @php
+                  $plantel_planeado_suma=0;
+                  $plantel_caja_suma=0;
+                  $plantel_adeudo_suma=0;
+                  
+              @endphp
+              @endif
+              
+          @endif
+          @endpermission
+          <tr>
+            <td>{{ ++$csc }}</td><td>{{ $registro['razon'] }}</td><td>{{ $registro['ciclo'] }}</td><td>{{ $registro['cliente'] }}</td><td>{{ $registro['matricula'] }}</td><td>{{ $registro['seccion'] }}</td>
+            <td>{{ $registro['ape_paterno'] }} </td><td>{{ $registro['ape_materno'] }}</td><td>{{ $registro['nombre'] }} {{ $registro['nombre2'] }}</td>
+            <td>{{ $registro['tel_fijo'] }}</td><td>{{ $registro['tel_cel'] }}</td>
+            <td>{{ $registro['estatus_cliente'] }}</td><td>{{ $registro['estatus_seguimiento'] }}</td>
+            <td>{{ $registro['turno'] }}</td>
+            <td>{{ $registro['fecha_pago'] }}</td>
+            @permission('reportesCedva.activosSinDinero')<td>{{ number_format($registro['monto'],2) }}</td>@endpermission
+            <td>{{ $registro['concepto'] }}</td><td>{{ $registro['consecutivo'] }}</td>
+            <td>{{ $registro['fecha_caja']==0 ? "" :$registro['fecha_caja'] }}</td>
+            @permission('reportesCedva.activosSinDinero')<td>{{ number_format($registro['total_caja'],2) }}</td>@endpermission
+            <td>
+              @php
+                if(is_int($registro['caja_id'])){
+                  $pago=App\Pago::where('caja_id', $registro['caja_id'])->first();    
+                }
+                if(!is_null($pago)){
+                  echo $pago->usu_alta->name;
+                }
+              @endphp
+                
+            </td>
+            <td>@if($registro['pagado_bnd']==1) Si @else No @endif</td>
+            @permission('reportesCedva.activosSinDinero')
+            <td>
+              
+              @if($registro['pagado_bnd']==0)
+              {{ number_format($registro['monto'],2) }}
+              @php
+                $adeudo_suma=$adeudo_suma+$registro['monto'];    
+                $ciclo_adeudo_suma=$ciclo_adeudo_suma+$registro['monto'];    
+                $plantel_adeudo_suma=$plantel_adeudo_suma+$registro['monto'];    
+              @endphp
+
+              
+              @else
+                0
+              @endif
+              
+            </td>
+            @endpermission
+          </tr>
+        @php
+            //$especialidad=$registro->especialidad;
+            $cantidad=$cantidad+1;
+            $suma_planeada=$suma_planeada+$registro['monto'];
+            $suma_caja=$suma_caja+$registro['total_caja'];
+            if($registro['pagado_bnd']==0){
+              $suma_adeudos=$suma_adeudos+$registro['monto'];
+            }
+            $plantel=$registro['razon'];
+            $planeado_suma=$planeado_suma+$registro['monto'];
+            $ciclo_planeado_suma=$ciclo_planeado_suma+$registro['monto'];
+            $plantel_planeado_suma=$plantel_planeado_suma+$registro['monto'];
+            $ciclo=$registro['ciclo'];
+            $caja_suma=$caja_suma+$registro['total_caja'];
+            $ciclo_caja_suma=$ciclo_caja_suma+$registro['total_caja'];
+            $plantel_caja_suma=$plantel_caja_suma+$registro['total_caja'];
+            $concepto=$registro['concepto'];
+            
+            
+        @endphp
+        @endforeach
         @endforeach
         @permission('reportesCedva.activosSinDinero')
         <tr><td>Totales Concepto</td><td colspan='12'>
