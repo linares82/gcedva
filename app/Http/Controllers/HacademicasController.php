@@ -553,7 +553,7 @@ class HacademicasController extends Controller
             $calificacion_fin = Carbon::createFromFormat('Y-m-d', $periodoExamen->fin);
             //dd($periodoExamen);
             if ($calificacion_inicio->lessThanOrEqualTo($hoy)  and $calificacion_fin->greaterThanOrEqualTo($hoy)) {
-                $dentroPeriodoExamenesAsignacion = $periodoExamen->id;
+                //$dentroPeriodoExamenesAsignacion = $periodoExamen->id; Se deshabilita la opcion de periodos de examen directo en el lectivo
             }
 
             $periodos_capturados_total++;

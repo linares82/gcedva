@@ -39,11 +39,15 @@
                         <div class="form-group col-md-2 @if($errors->has('curp')) has-error @endif">
                             <label for="curp-field">CURP</label>
                             {!! Form::text("curp", null, array("class" => "form-control input-sm", "id" => "curp-field")) !!}
+                            {!! Form::hidden("fec_valida_curp", null, array("class" => "form-control input-sm", "id" => "fec_valida_curp-field", 'readonly'=>true)) !!}
                             @if($errors->has("curp"))
                             <span class="help-block">{{ $errors->first("curp") }}</span>
                             @endif
                         </div>
                         <div class="form-group col-md-2 @if($errors->has('curp')) has-error @endif">
+                            @if(!is_null($cliente->fec_valida_curp))
+                            Validacion:{{$cliente->fec_valida_curp}}
+                            @endif
                             @permission('clientes.apiValidaCurp')
                             <input type="button" id="btnValidarCurp" value="Validar">
                             {!! Form::hidden("bnd_consulta_curp", null, array("class" => "form-control input-sm", "id" => "bnd_consulta_curp-field")) !!}
@@ -1875,6 +1879,7 @@ $(document).ready(function() {
                     $('#fec_nacimiento-field').val(solicitante.FechaNacimiento);
                     $('#lugar_nacimiento-field').val(solicitante.EntidadNacimiento);
                     $('#abreviatura_estado-field').val(solicitante.ClaveEntidadNacimiento);
+                    $('#fec_valida_curp-field').val('{{date('Y-m-d')}}');
                     
                     alert('Datos consultados y copiados correctamente');
                     }

@@ -62,6 +62,100 @@
 </table>
 
 <div class="datagrid">
+    <h3>
+        Bajas X Plantel
+    </h3>
+    <table border="1" width="100%" >
+        <thead>
+            <th>Plantel</th><th>Bajas</th><th>Plantel</th><th>Call Center</th>
+        </thead>
+        <tbody>
+            @php
+                $plantel="";
+                $bajas=0;
+                $bajas_callcenter=0;
+                $bajas_otras=0;
+            @endphp
+            @foreach($registros as $registro)
+            @if($registro['razon']<>$plantel and !$loop->first)
+            <tr>
+                <td>{{$plantel}}</td><td>{{$bajas}}</td><td>{{$bajas_otras}}</td><td>{{$bajas_callcenter}}</td>
+            </tr>
+            @php
+                $bajas=0;
+                $bajas_callcenter=0;
+                $bajas_otras=0;
+            @endphp
+            @endif
+            @php
+                $plantel=$registro['razon'];
+                $bajas=$bajas+1;    
+                if($registro['st_prospecto_id']==1){
+                    $bajas_callcenter=$bajas_callcenter+1;
+                }else{
+                    $bajas_otras=$bajas_otras+1;
+                }
+            @endphp
+            @endforeach
+            <tr>
+                <td>{{$registro['razon']}}</td><td>{{$bajas}}</td><td>{{$bajas_otras}}</td><td>{{$bajas_callcenter}}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>
+        Bajas X Plantel, Seccion y Ciclo
+    </h3>
+    <table border="1" width="100%" >
+        <thead>
+            <th>Plantel</th><th>Ciclo</th><th>Seccion</th><th>Bajas</th>
+        </thead>
+        <tbody>
+            @php
+                $plantel="";
+                $seccion="";
+                $ciclo="";
+                $combinacion="";
+                $bajas=0;
+                $bajas_plantel=0;
+            @endphp
+            @foreach($registros as $registro)
+            @if($registro['razon'].$registro['ciclo_matricula'].$registro['seccion']<>$combinacion and !$loop->first)
+            <tr>
+                <td>{{$plantel}}</td><td>{{$ciclo}}</td><td>{{$seccion}}</td><td>{{$bajas}}</td>
+            </tr>
+            @php
+                $bajas=0;
+            @endphp
+            @endif
+            @if($registro['razon']<>$plantel and !$loop->first)
+            <tr>
+                <td><strong>{{$plantel}}</strong></td><td></td><td></td><td><strong>{{$bajas_plantel}}</strong></td>
+            </tr>
+            @php
+                $bajas_plantel=0;
+            @endphp
+            @endif
+            @php
+                $plantel=$registro['razon'];
+                $seccion=$registro['seccion'];
+                $ciclo=$registro['ciclo_matricula'];
+                $combinacion=$registro['razon'].$registro['ciclo_matricula'].$registro['seccion'];
+                $bajas=$bajas+1;    
+                $bajas_plantel=$bajas_plantel+1;
+            @endphp
+            @endforeach
+            <tr>
+            <td>{{$plantel}}</td><td>{{$ciclo}}</td><td>{{$seccion}}</td><td>{{$bajas}}</td>
+            </tr>
+            <tr><td><strong>{{$plantel}}</strong></td><td></td><td></td><td><strong>{{$bajas_plantel}}</strong></td></tr>
+        </tbody>
+    </table>
+
+    <h3>
+        Bajas Detalle
+    </h3>
+
     <table border="1" width="100%" >
         <thead>
             <tr>
@@ -89,6 +183,8 @@
                 <th>Estatus Seguimiento</th>
                 <th>Ciclo</th>
                 <th>Seccion</th>
+                <th>Asesor inscripcion</th>
+                <th>Etapa Prospecto</th>
             </tr>
         </thead>
         <tbody>
@@ -133,6 +229,8 @@
                 <td>{{$detalle['sts']}}</td>
                 <td>{{$detalle['ciclo_matricula']}}</td>
                 <td>{{$detalle['seccion']}}</td>
+                <td>{{$detalle['emp_nombre']}} {{$detalle['emp_ape_paterno']}} {{$detalle['emp_ape_materno']}}</td>
+                <td>{{$detalle['st_prospecto']}}</td>
                 </tr>
                 
                 

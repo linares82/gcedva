@@ -133,7 +133,7 @@
                             <td> {{ $cali_redondeada=($a->calificacion<6 ? ($a->calificacion % 1) : round($a->calificacion,0)) }}</td>
                             <td>{{$a->tipo_examen}}</td>
                             @php
-                                $total_creditos=$total_creditos+$a->creditos;
+                                $total_creditos=$total_creditos+trim($a->creditos);
                                 $suma_calificaciones=$suma_calificaciones+$cali_redondeada;
                                 $total_materias=$total_materias+1;
                             @endphp

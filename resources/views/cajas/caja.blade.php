@@ -426,6 +426,7 @@
                             @foreach($caja->cajaLns as $linea)
                             <tr>
                                 @php
+                                    //dd($linea);
                                     $valor=$linea->cajaConcepto->cve_multipagos;
                                     //$valores=$caja->plantel->conceptoMultipagos->pluck('id');
                                     $indicador=0;
@@ -437,7 +438,8 @@
                                     
                                 
                                     @endphp    
-                                <td> {{$linea->cajaConcepto->name}} </td>
+                                <td> 
+                                {{$linea->cajaConcepto->name}} </td>
                                 <td>{{ $linea->subtotal }}</td>
                                 <td>{{ $linea->descuento }}</td>
                                 <td>

@@ -71,7 +71,7 @@
           
           <thead>
               <th>No.</th><th>Plantel</th><th>Matricula</th><th>Id</th>
-              <th>Nombre</th><th>Reclasificado</th><th>Tel. Celular</th><th>E. Cliente</th>  <th>E. Seguimiento</th><th>Seccion</th><th>Turno</th><th>Empleado</th>
+              <th>Nombre</th><th>Consulta CURP</th><th>Reclasificado</th><th>Tel. Celular</th><th>E. Cliente</th>  <th>E. Seguimiento</th><th>Seccion</th><th>Turno</th><th>Empleado</th>
               <th>Inscripción/S. Escolares</th><th>Fecha Caja</th><th>Trámites</th><th>Fecha Pago Tramites</th>
               <th>P. Mensualidad</th><th>Fecha Pago</th><th>Ultima Tarea Seguimiento</th><th>Doc. Oblig. Entregados</th><th>Documentos</th>
               <th>Prospecto/Creado Por</th>
@@ -89,6 +89,13 @@
               
               <td>{{ $rs['razon'] }}</td><td>{{ $rs['matricula'] }}</td><td>{{ $rs['cliente_id'] }}</td><td>{{ $rs['ape_paterno'] }}
               {{ $rs['ape_materno'] }} {{ $rs['nombre'] }} {{ $rs['nombre2'] }}</td>
+              <td>
+              @if($rs['bnd_consulta_curp']==1)
+              Si
+              @else
+              No
+              @endif  
+              </td>
               <td>
               @if($rs['bnd_reclasificado']==1)
               Si

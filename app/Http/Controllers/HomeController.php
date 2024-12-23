@@ -112,7 +112,7 @@ class HomeController extends Controller
             ->whereRaw('DATEDIFF(fin_contrato, "' . Date("Y-m-d") . '") <= dias_alerta');
 
         $contratosVencidos3 = Db::table('empleados as c3')->select('p.razon', 'c3.id','c3.nombre','c3.ape_paterno',
-            'c3.ape_materno', 'c3.rfc', 'pu.name as puesto', 'c3.direccion', 'c3.fin_contrato')
+            'c3.ape_materno', 'c3.rfc', 'pu.name as puesto', 'c3.direccion', 'c3.fec_fin_contrato3 as fin_contrato')
                 ->join('plantels as p','p.id','c3.plantel_contrato3_id')
                 ->join('puestos as pu','pu.id','c3.puesto_id')
                 ->where('c3.st_empleado_id', '<>', 3)

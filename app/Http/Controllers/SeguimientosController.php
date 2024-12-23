@@ -1257,9 +1257,10 @@ class SeguimientosController extends Controller
             //foreach($adeudos as $adeudo){
             $existe_linea = CajaLn::where('adeudo_id', '=', $adeudo_tomado->adeudo)->whereNull('caja_lns.deleted_at')->first();
             //dd($existe_linea);
+            //if($adeudo_tomado->adeudo==104050){dd($existe_linea->caja);}
 
             if (!is_object($existe_linea)) {
-
+                
                 $caja_ln['grupo'] = $adeudo_tomado->grupo;
                 $caja_ln['concepto'] = $adeudo_tomado->cajaConcepto->name;
                 $caja_ln['cliente'] = $cliente->id . '-' . $cliente->nombre . ' ' . $cliente->nombre2 . " " . $cliente->ape_paterno . ' ' . $cliente->ape_materno;
@@ -1392,10 +1393,10 @@ class SeguimientosController extends Controller
                 $caja_ln['bnd_pagado'] = $adeudo_tomado->pagado_bnd;
                 $caja_ln['fecha_pago'] = $adeudo_tomado->fecha_pago;
                 //                    dd($adeudo->planPagoLn->reglaRecargos);
-                $caja_ln['subtotal'] = $existe_linea->subtotal;
-                $caja_ln['total'] = $existe_linea->total;
-                $caja_ln['recargo'] = $existe_linea->recargo;
-                $caja_ln['descuento'] = $existe_linea->descuento;
+                $caja_ln['subtotal'] = $existe_linea->caja->subtotal;
+                $caja_ln['total'] = $existe_linea->caja->total;
+                $caja_ln['recargo'] = $existe_linea->caja->recargo;
+                $caja_ln['descuento'] = $existe_linea->caja->descuento;
                 $caja_ln['especialidad'] = $adeudo_tomado->especialidad;
                 $caja_ln['st_cliente'] = $adeudo_tomado->st_cliente;
                 $caja_ln['st_seguimiento'] = $adeudo_tomado->st_seguimiento;
@@ -1421,10 +1422,10 @@ class SeguimientosController extends Controller
                 $caja_ln['bnd_pagado'] = $adeudo_tomado->pagado_bnd;
                 $caja_ln['fecha_pago'] = $adeudo_tomado->fecha_pago;
                 //                    dd($adeudo->planPagoLn->reglaRecargos);
-                $caja_ln['subtotal'] = $existe_linea->subtotal;
-                $caja_ln['total'] = $existe_linea->total;
-                $caja_ln['recargo'] = $existe_linea->recargo;
-                $caja_ln['descuento'] = $existe_linea->descuento;
+                $caja_ln['subtotal'] = $existe_linea->caja->subtotal;
+                $caja_ln['total'] = $existe_linea->caja->total;
+                $caja_ln['recargo'] = $existe_linea->caja->recargo;
+                $caja_ln['descuento'] = $existe_linea->caja->descuento;
                 $caja_ln['especialidad'] = $adeudo_tomado->especialidad;
                 $caja_ln['st_cliente'] = $adeudo_tomado->st_cliente;
                 $caja_ln['st_seguimiento'] = $adeudo_tomado->st_seguimiento;

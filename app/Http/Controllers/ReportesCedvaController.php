@@ -158,7 +158,7 @@ class ReportesCedvaController extends Controller
                 } elseif ($pagos == array(1)) {
 
                     //planeado y pagado, pero sin caja tienen monto 0
-
+		    	
                     $pagos0_sin_caja = Cliente::select(
                         'p.id as plantel_id',
                         'p.razon',
@@ -382,6 +382,7 @@ class ReportesCedvaController extends Controller
                         ->whereDate('ad.fecha_pago', '<=', $datos['fecha_t'])
                         ->whereNull('ccli.deleted_at')
                         ->whereNull('ad.deleted_at')
+                        ->whereNull('cln.deleted_at')
                         ->orderBy('p.razon')
                         ->orderBy('g.seccion')
                         ->orderBy('cm.name')
@@ -488,7 +489,7 @@ class ReportesCedvaController extends Controller
                         ->get();
 
                     $r = $registros->groupBy('caja_id');
-                    //dd($r->toArray());
+                    //($r->toArray());
 
                     foreach ($r as $registro) {
 
@@ -588,14 +589,14 @@ class ReportesCedvaController extends Controller
                         ->orderBy('clientes.nombre')
                         ->orderBy('clientes.nombre')
                         ->get();
-                    //dd($pagos_no_planeados->toArray());
+                    //($pagos_no_planeados->toArray());
                     foreach ($pagos_no_planeados->toArray() as $registro) {
                         array_push($resultado2, array($registro));
                     }
 
 
                     //registro sin caja, adeudo pagado y monto 0
-
+		    	
                     $pagos0_sin_caja = Cliente::select(
                         'p.id as plantel_id',
                         'p.razon',
@@ -674,8 +675,9 @@ class ReportesCedvaController extends Controller
                     //dd($pagos0_sin_caja->toArray());
                     foreach ($pagos0_sin_caja->toArray() as $registro) {
                         array_push($resultado2, array($registro));
-                    }
 
+                    }
+		    	
 
                     $registros_pendientes = Cliente::select(
                         'p.id as plantel_id',
@@ -744,7 +746,7 @@ class ReportesCedvaController extends Controller
                         ->orderBy('clientes.nombre')
                         ->orderBy('clientes.nombre')
                         ->get();
-                    //dd($registros_pendientes);
+                    //dd($registros_pendientes->toArray());
                     foreach ($registros_pendientes->toArray() as $registro) {
                         array_push($resultado2, array($registro));
                     }
@@ -876,43 +878,59 @@ class ReportesCedvaController extends Controller
 
                             if ($registro['estatus_cliente_id'] == 5) {
                                 $linea['nueva_inscripcion'] = $linea['nueva_inscripcion'] + 1;
-                                $linea_dinero['nueva_inscripcion'] = $linea_dinero['nueva_inscripcion'] + $registro['monto'];
+                                $linea_dinero['nueva_inscripcion'] = $linea_dinero['nueva_inscripcion'] + $registro['total_caja'];
                                 array_push($combinacion_plantel_seccion['nueva_inscripcion'],$registro);
                             }
 
-                            if (( //$registro['estatus_cliente_id']==25 or $registro['estatus_cliente_id']==26 or 
+                            if (//( $registro['estatus_cliente_id']==25 or $registro['estatus_cliente_id']==26 or 
                                     $registro['estatus_cliente_id'] == 31 or
-                                    ($registro['estatus_cliente_id'] == 4 and $registro['estatus_seguimiento_id'] == 2) or
-                                    ($registro['estatus_cliente_id'] == 20 and $registro['estatus_seguimiento_id'] == 7) or
-                                    ($registro['estatus_cliente_id'] == 4 and $registro['estatus_seguimiento_id'] == 9)) and
-                                $registro['pagado_bnd'] == 1
+                                    ($registro['estatus_cliente_id'] == 4 and $registro['estatus_seguimiento_id'] == 2) //or
+                                    //($registro['estatus_cliente_id'] == 20 and $registro['estatus_seguimiento_id'] == 7) or estus egresado se ingnora
+                                    //($registro['estatus_cliente_id'] == 4 and $registro['estatus_seguimiento_id'] == 9)) and activo con titulacion en proceso se ignora
+                                //$registro['pagado_bnd'] == 1
                             ) {
                                 $linea['vigentes_sin_adeudos'] = $linea['vigentes_sin_adeudos'] + 1;
                                 $linea_dinero['vigentes_sin_adeudos'] = $linea_dinero['vigentes_sin_adeudos'] + $registro['total_caja'];
                                 array_push($combinacion_plantel_seccion['activos_sin_adeudo'],$registro);
                             }
-                            if (( //$registro['estatus_cliente_id']==25 or $registro['estatus_cliente_id']==26 or
-                                    ($registro['estatus_cliente_id'] == 17 and $registro['pagado_bnd'] == 0) or
-                                    ($registro['estatus_cliente_id'] == 4 and $registro['estatus_seguimiento_id'] == 2) or
-                                    ($registro['estatus_cliente_id'] == 20 and $registro['estatus_seguimiento_id'] == 7) or
-                                    ($registro['estatus_cliente_id'] == 4 and $registro['estatus_seguimiento_id'] == 9)) and
-                                $registro['pagado_bnd'] == 0
+                            if (//( $registro['estatus_cliente_id']==25 or $registro['estatus_cliente_id']==26 or
+                                    ($registro['estatus_cliente_id'] == 17) //or
+                                    //($registro['estatus_cliente_id'] == 4 and $registro['estatus_seguimiento_id'] == 2) or
+                                    //($registro['estatus_cliente_id'] == 20 and $registro['estatus_seguimiento_id'] == 7) or
+                                    //($registro['estatus_cliente_id'] == 4 and $registro['estatus_seguimiento_id'] == 9)) and
+                                //$registro['pagado_bnd'] == 0
                             ) {
                                 //dd($registro);
                                 $linea['vigentes_con_1_adeudos'] = $linea['vigentes_con_1_adeudos'] + 1;
-                                $linea_dinero['vigentes_con_1_adeudos'] = $linea_dinero['vigentes_con_1_adeudos'] + $registro['monto'];
+                                $linea_dinero['vigentes_con_1_adeudos'] = $linea_dinero['vigentes_con_1_adeudos'] + $registro['total_caja'];
                                 array_push($combinacion_plantel_seccion['activos_1_adeudo'],$registro);
                             }
 
+                            if ($registro['estatus_cliente_id'] == 25) {
+                                $linea['baja_temporal_por_pago'] = $linea['baja_temporal_por_pago'] + 1;
+                                $linea_dinero['baja_temporal_por_pago'] = $linea_dinero['baja_temporal_por_pago'] + $registro['total_caja'];
+                                array_push($combinacion_plantel_seccion['baja_temporal_por_pago'],$registro);
+                            }
+                            if ($registro['estatus_cliente_id'] == 26) {
+                                $linea['baja_administrativa'] = $linea['baja_administrativa'] + 1;
+                                $linea_dinero['baja_administrativa'] = $linea_dinero['baja_administrativa'] + $registro['total_caja'];
+                                array_push($combinacion_plantel_seccion['baja_administrativa'],$registro);
+                            }
+                            if ($registro['estatus_cliente_id'] == 22 /*or $registro['estatus_cliente_id'] == 5*/) {
+                                $linea['preinscrito'] = $linea['preinscrito'] + 1;
+                                $linea_dinero['preinscrito'] = $linea_dinero['preinscrito'] + $registro['total_caja'];
+                                array_push($combinacion_plantel_seccion['preinscrito'],$registro);
+                            }
+
                             if (
-                                $registro['estatus_cliente_id'] == 5 or
-                                ($registro['estatus_cliente_id'] == 22 or $registro['estatus_cliente_id'] == 5) or
+                                ($registro['estatus_cliente_id'] == 5) or
+                                ($registro['estatus_cliente_id'] == 22) or
                                 $registro['estatus_cliente_id'] == 31 or
-                                ($registro['estatus_cliente_id'] == 17 and $registro['pagado_bnd'] == 0) or
+                                ($registro['estatus_cliente_id'] == 17) or
                                 $registro['estatus_cliente_id'] == 25 or $registro['estatus_cliente_id'] == 26 or
-                                ($registro['estatus_cliente_id'] == 4 and $registro['estatus_seguimiento_id'] == 2) or
-                                ($registro['estatus_cliente_id'] == 20 and $registro['estatus_seguimiento_id'] == 7) or
-                                ($registro['estatus_cliente_id'] == 4 and $registro['estatus_seguimiento_id'] == 9)
+                                ($registro['estatus_cliente_id'] == 4 and $registro['estatus_seguimiento_id'] == 2) //or
+                                /*($registro['estatus_cliente_id'] == 20 and $registro['estatus_seguimiento_id'] == 7) or
+                                ($registro['estatus_cliente_id'] == 4 and $registro['estatus_seguimiento_id'] == 9)*/
                             ) {
                                 $linea['matricula_total_activa'] = $linea['matricula_total_activa'] + 1;
                                 if ($registro['total_caja'] == 0) {
@@ -928,21 +946,7 @@ class ReportesCedvaController extends Controller
                                 $i++;
                                 */
                             }
-                            if ($registro['estatus_cliente_id'] == 25) {
-                                $linea['baja_temporal_por_pago'] = $linea['baja_temporal_por_pago'] + 1;
-                                $linea_dinero['baja_temporal_por_pago'] = $linea_dinero['baja_temporal_por_pago'] + $registro['monto'];
-                                array_push($combinacion_plantel_seccion['baja_temporal_por_pago'],$registro);
-                            }
-                            if ($registro['estatus_cliente_id'] == 26) {
-                                $linea['baja_administrativa'] = $linea['baja_administrativa'] + 1;
-                                $linea_dinero['baja_administrativa'] = $linea_dinero['baja_administrativa'] + $registro['monto'];
-                                array_push($combinacion_plantel_seccion['baja_administrativa'],$registro);
-                            }
-                            if ($registro['estatus_cliente_id'] == 22 /*or $registro['estatus_cliente_id'] == 5*/) {
-                                $linea['preinscrito'] = $linea['preinscrito'] + 1;
-                                $linea_dinero['preinscrito'] = $linea_dinero['preinscrito'] + $registro['monto'];
-                                array_push($combinacion_plantel_seccion['preinscrito'],$registro);
-                            }
+                            
                         }
                     }
                     if ($linea['matricula_total_activa'] > 0) {
@@ -950,10 +954,6 @@ class ReportesCedvaController extends Controller
                     }
                     if ($linea_dinero['matricula_total_activa'] > 0) {
                         array_push($resumen_dinero, $linea_dinero);
-                    }
-                    
-                    if(count($combinacion_plantel_seccion['nueva_inscripcion']) > 0){
-                        array_push($registros_ordenados, $combinacion_plantel_seccion['nueva_inscripcion']);
                     }
                     
                     if(count($combinacion_plantel_seccion['activos_sin_adeudo']) > 0){
@@ -972,22 +972,19 @@ class ReportesCedvaController extends Controller
                     if(count($combinacion_plantel_seccion['preinscrito']) > 0){
                         array_push($registros_ordenados, $combinacion_plantel_seccion['preinscrito']);
                     }
-                    
-                    
-                    
-                    
-                    
+                    if(count($combinacion_plantel_seccion['nueva_inscripcion']) > 0){
+                        array_push($registros_ordenados, $combinacion_plantel_seccion['nueva_inscripcion']);
+                    }
                     
                 }
 
 
-                //dd($resumen);
-
+                
 
 
                 $plantel = Plantel::find($datos['plantel_f']);
 
-                //dd($registros);
+                //dd($registros->toArray());
                 //dd($resumen);
                 //dd($registros_ordenados);
                 return view('reportesCedva.activos', array('registros' => $resultado2, 'plantel' => $plantel, 'datos' => $datos, 'resumen' => $resumen, 'resumen_dinero' => $resumen_dinero, 'registros_ordenados'=>$registros_ordenados));
@@ -1268,10 +1265,17 @@ class ReportesCedvaController extends Controller
                     'historia_clientes.updated_at as fecha_baja',
                     'descripcion',
                     'cm.name as ciclo_matricula',
-                    'g.seccion'
+                    'g.seccion',
+                    'emp.nombre as emp_nombre',
+                    'emp.ape_paterno as emp_ape_paterno',
+                    'emp.ape_materno as emp_ape_materno',
+                    'emp.st_prospecto_id',
+                    'stp.name as st_prospecto'
                 )
                     ->whereDate('historia_clientes.updated_at', '>=', $datos['fecha_f'])
                     ->join('clientes as c', 'c.id', 'historia_clientes.cliente_id')
+                    ->join('empleados as emp','emp.id','c.empleado_id')
+                    ->join('st_prospectos as stp','stp.id','emp.st_prospecto_id')
                     ->join('combinacion_clientes as cc', 'cc.cliente_id', 'c.id')
                     ->join('plan_pagos as plp', 'plp.id', 'cc.plan_pago_id')
                     ->join('ciclo_matriculas as cm', 'cm.id', 'plp.ciclo_matricula_id')
@@ -1282,6 +1286,9 @@ class ReportesCedvaController extends Controller
                     ->where('historia_clientes.st_historia_cliente_id', 2)
                     ->where('historia_clientes.reactivado', 0)
                     ->where('c.st_cliente_id', 3)
+                    ->orderBy('c.plantel_id')
+                    ->orderBy('cm.name')
+                    ->orderBy('g.seccion')
                     ->get();
 
                 $registros = array();
@@ -1340,14 +1347,18 @@ class ReportesCedvaController extends Controller
                             'ultima_tarea' => $tarea, //->asunto,//->name." - ".optional($tarea)->detalle,
                             'sts' => $seguimiento->stSeguimiento->name,
                             'ciclo_matricula' => $baja->ciclo_matricula,
-                            'seccion' => $baja->seccion
+                            'seccion' => $baja->seccion,
+                            'emp_nombre' =>$baja->emp_nombre ,
+                            'emp_ape_paterno'=>$baja->emp_ape_paterno,
+                            'emp_ape_materno'=>$baja->emp_ape_materno,
+                            'st_prospecto_id'=>$baja->st_prospecto_id,
+                            'st_prospecto'=>$baja->st_prospecto
                         ));
                     }
                 }
 
                 //dd($registros);
-
-
+                
                 /*
                 $registros=Caja::select('c.id as cliente_id','c.nombre','c.nombre2','c.ape_paterno','c.ape_materno',
                 'cln.total','p.created_at as fecha_creacion','p.fecha as fecha_pago','cajas.consecutivo','pla.razon',

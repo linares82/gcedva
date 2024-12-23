@@ -38,7 +38,7 @@
                     <td>{{$ingreso->opcion_titulacion}}</td><td>{{$ingreso->monto}}</td><td>{{$ingreso->fecha}}</td>
                     <td>{{$ingreso->observaciones}}</td>
                     @php
-                    $adeudo=App\Cliente::select('clientes.id as cliente_id','ot.costo', DB::raw('sum(tp.monto) as suma_pagos'))
+                    $adeudo=App\Cliente::select('clientes.id as cliente_id','t.costo', DB::raw('sum(tp.monto) as suma_pagos'))
                         ->join('titulacions as t', 't.cliente_id','clientes.id')
                         ->join('opcion_titulacions as ot','ot.id','t.opcion_titulacion_id')
                         ->join('titulacion_pagos as tp','tp.titulacion_id','t.id')
@@ -46,7 +46,7 @@
                         ->where('t.titulacion_grupo_id', $ingreso->grupo_id)
                         ->whereNull('tp.deleted_at')
                         ->groupBy('clientes.id')
-                        ->groupBy('ot.costo')
+                        ->groupBy('t.costo')
                         ->first();
                         
                     @endphp

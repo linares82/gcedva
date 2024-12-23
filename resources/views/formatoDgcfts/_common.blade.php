@@ -1,0 +1,1 @@
+@section('formaPagosAppTitle','Forma Pago')

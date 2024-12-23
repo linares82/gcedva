@@ -85,7 +85,7 @@ class Cliente extends Model
 		'fcalle', 'fno_exterior', 'fno_interior', 'fcolonia', 'fciudad','fmunicipio', 'festado', 'fpais', 'fcp',
 		'fmail','observaciones','uso_factura_id','regimen_fiscal_id','bnd_doc_oblig_entregados',
 		'fec_limite_entrega_docs','fec_vencimiento_cred','obs_docs','bnd_reclasificado',
-		'bnd_consulta_curp', 'abreviatura_estado','fec_docs_oblig_entregados'
+		'bnd_consulta_curp', 'abreviatura_estado','fec_docs_oblig_entregados','fec_valida_curp'
 	];
 
 	public function usu_alta()

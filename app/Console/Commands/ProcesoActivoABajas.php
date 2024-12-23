@@ -64,7 +64,7 @@ class ProcesoActivoABajas extends Command
                 $file = fopen($ruta . $archivo, 'w');
                 $columns = array('plantel', 'id_cliente', 'estatus', 'total_adeudos');
                 fputcsv($file, $columns);
-                $resultado = Adeudo::query();
+                $resultado = DB::table('adeudos');
                 if ($paso->bnd_mensualidades == 1) {
                     $resultado->where('caj_con.bnd_mensualidad', 1);
                 }
@@ -82,7 +82,85 @@ class ProcesoActivoABajas extends Command
                     ->where('cc.nivel_id', '>', 0)
                     ->where('cc.grado_id', '>', 0)
                     ->where('cc.turno_id', '>', 0)
-                    //->whereIn('c.id', array(95103))
+                    //->whereIn('c.id', array(102139))
+                    ->whereColumn('adeudos.combinacion_cliente_id', 'cc.id')
+                    ->where('fecha_pago', '<', $fechaActual)
+                    ->where('pagado_bnd', 0)
+                    ->whereNotIn('c.plantel_id', array(54))
+                    ->whereNull('cc.deleted_at')
+                    ->whereNull('c.deleted_at')
+		    ->whereNull('adeudos.deleted_at')
+                    ->whereNotIn('c.st_cliente_id', $excepcionEstatusArray)
+                    ->groupBy('p.razon')
+                    ->groupBy('adeudos.cliente_id')
+                    ->groupBy('stc.name')
+                    ->having('adeudos_cantidad', $paso->simbolo_cantidad_adeudos, $paso->cantidad_adeudos);
+                $registros = $resultado->orderBy('cliente_id')->get();
+                    foreach ($registros as $registro) {
+                        echo $registro->cliente_id."-";
+
+                        $hoy = date('Y-m-d');
+    
+                        $eventos = HistoriaCliente::where('cliente_id', $registro->cliente_id)
+                            ->where('evento_cliente_id', 5)
+                            ->whereDate('fec_vigencia', '>=', $hoy)
+                            ->whereNull('historia_clientes.deleted_at')
+                            ->count();
+                            //echo "eventos".$eventos;
+                        if ($eventos == 0) {
+                            $this->bajaBs($registro->cliente_id);
+                            //echo "baja bs ";
+    
+                            fputcsv($file, array(
+                                'plantel' => $registro->razon,
+                                'id_cliente' => $registro->cliente_id,
+                                'estatus' => $registro->estatus,
+                                'adeudos_cantidad' => $registro->adeudos_cantidad
+                            ));
+                            //echo "escritura archivo ";
+                            //dd($paso);
+                            $cliente = Cliente::where('id',$registro->cliente_id)->update(['st_cliente_id'=>$paso->st_cliente_id]);
+                            //$cliente->st_cliente_id = $paso->st_cliente_id;
+                            //$cliente->save();
+    
+                            $seguimiento = Seguimiento::where('cliente_id', $registro->cliente_id)->update(['st_seguimiento_id'=>$paso->st_seguimiento_id]);
+                            //$seguimiento->st_seguimiento_id = $paso->st_seguimiento_id;
+                            //$seguimiento->save();
+                            //echo "actualiza ambos estatus ";
+    
+                            if ($paso->bnd_borrar_adeudos == 1) {
+                                $adeudos = Adeudo::where('cliente_id', $registro->cliente_id)
+                                    ->where('caja_id', 0)
+                                    ->where('pagado_bnd', 0)
+                                    ->whereDate('adeudos.fecha_pago', '>', Date('Y-m-d'))
+                                    ->get();
+                                //dd($adeudos->toArray());
+                                foreach ($adeudos as $adeudo) {
+                                    $adeudo->delete();
+                                }
+                            }
+                            //echo "borra adeudos ";
+    
+                        }
+                        //echo "procesado-";
+                    }
+                
+
+                /*
+                $resultado->select(DB::raw('p.razon,adeudos.cliente_id,stc.name as estatus, count(adeudos.cliente_id) as adeudos_cantidad'))
+                    ->join('clientes as c', 'c.id', '=', 'adeudos.cliente_id')
+                    ->join('combinacion_clientes as cc', 'cc.cliente_id', '=', 'c.id')
+                    ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
+                    ->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
+                    ->join('caja_conceptos as caj_con', 'caj_con.id', '=', 'adeudos.caja_concepto_id')
+                    ->join('seguimientos as ss', 'ss.cliente_id', '=', 'c.id')
+                    ->whereIn('ss.st_seguimiento_id', array(2,6))
+                    ->where('cc.plantel_id', '>', 0)
+                    ->where('cc.especialidad_id', '>', 0)
+                    ->where('cc.nivel_id', '>', 0)
+                    ->where('cc.grado_id', '>', 0)
+                    ->where('cc.turno_id', '>', 0)
+                    ->whereIn('c.id', array(102139))
                     ->whereColumn('adeudos.combinacion_cliente_id', 'cc.id')
                     ->where('fecha_pago', '<', $fechaActual)
                     ->where('pagado_bnd', 0)
@@ -96,28 +174,72 @@ class ProcesoActivoABajas extends Command
                     ->having('adeudos_cantidad', $paso->simbolo_cantidad_adeudos, $paso->cantidad_adeudos);
                 $registros = $resultado->get();
 
-                if($paso->cantidad_adeudos>=4){
-                    //dd($registros->toArray());
-                }
-                
 
-                foreach ($registros as $registro) {
+                $registros->each(function ($registro, $key) use($file, $paso){
+                    echo $registro->cliente_id;
                     $hoy = date('Y-m-d');
 
                     $eventos = HistoriaCliente::where('cliente_id', $registro->cliente_id)
                         ->where('evento_cliente_id', 5)
                         ->whereDate('fec_vigencia', '>=', $hoy)
                         ->whereNull('historia_clientes.deleted_at')
-                        ->get();
-                    //dd(count($eventos));
-                    if (count($eventos) == 0) {
-                        $this->bajaBs($registro->cliente_id);
+                        ->count();
+                    
+                    if ($eventos == 0) {
+                        //$this->bajaBs($registro->cliente_id);
+
                         fputcsv($file, array(
                             'plantel' => $registro->razon,
                             'id_cliente' => $registro->cliente_id,
                             'estatus' => $registro->estatus,
                             'adeudos_cantidad' => $registro->adeudos_cantidad
                         ));
+			
+                        $cliente = Cliente::find($registro->cliente_id);
+                        $cliente->st_cliente_id = $paso->st_cliente_id;
+                        $cliente->save();
+
+                        $seguimiento = Seguimiento::where('cliente_id', $cliente->id)->first();
+                        $seguimiento->st_seguimiento_id = $paso->st_seguimiento_id;
+                        $seguimiento->save();
+
+                        if ($paso->bnd_borrar_adeudos == 1) {
+                            $adeudos = Adeudo::where('cliente_id', $cliente->id)
+                                ->where('caja_id', 0)
+                                ->where('pagado_bnd', 0)
+                                ->whereDate('adeudos.fecha_pago', '>', Date('Y-m-d'))
+                                ->get();
+                            //dd($adeudos->toArray());
+                            foreach ($adeudos as $adeudo) {
+                                $adeudo->delete();
+                            }
+                        }
+                    }
+                    echo "procesado-";
+                });
+                */
+
+                /*foreach ($registros as $registro) {
+		        
+
+                    $hoy = date('Y-m-d');
+
+                    $eventos = HistoriaCliente::where('cliente_id', $registro->cliente_id)
+                        ->where('evento_cliente_id', 5)
+                        ->whereDate('fec_vigencia', '>=', $hoy)
+                        ->whereNull('historia_clientes.deleted_at')
+                        ->count();
+                    //dd(count($eventos));
+                    if ($eventos == 0) {
+                        $this->bajaBs($registro->cliente_id);
+
+                        fputcsv($file, array(
+                            'plantel' => $registro->razon,
+                            'id_cliente' => $registro->cliente_id,
+                            'estatus' => $registro->estatus,
+                            'adeudos_cantidad' => $registro->adeudos_cantidad
+                        ));
+			//dd('escritura archivo');
                         $cliente = Cliente::find($registro->cliente_id);
                         $cliente->st_cliente_id = $paso->st_cliente_id;
                         $cliente->save();
@@ -139,7 +261,8 @@ class ProcesoActivoABajas extends Command
                         }
 
                     }
-                }
+		        
+                }*/
                 fclose($file);
             }
         }

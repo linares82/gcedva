@@ -310,6 +310,53 @@ class LectivosController extends Controller
         }
     }
 
+    public function getLectivosXGrado(Request $request)
+    {
+        if ($request->ajax()) {
+            //dd($request->all());
+            $plantel = $request->get('plantel_id');
+            $especialidad = $request->get('especialidad_id');
+            $nivel = $request->get('nivel_id');
+            $grado = $request->get('grado_id');
+            $lectivo = $request->get('lectivo_id');
+
+            $final = array();
+            $r = DB::table('lectivos as l')
+                ->join('inscripcions as i', 'i.lectivo_id', '=', 'l.id')
+                ->where('i.plantel_id',$plantel)
+				->where('i.especialidad_id',$especialidad)
+				->where('i.nivel_id',$nivel)
+				->where('i.grado_id', '=', $grado)
+                ->select('l.id', 'l.name')
+                ->where('l.activo', 1)
+                ->where('l.id', '>', '0')
+                ->distinct()
+                ->get();
+
+            //dd($r);
+            if (isset($lectivo) and $lectivo != 0) {
+                foreach ($r as $r1) {
+                    if ($r1->id == $lectivo) {
+                        array_push($final, array(
+                            'id' => $r1->id,
+                            'name' => $r1->name,
+                            'selectec' => 'Selected',
+                        ));
+                    } else {
+                        array_push($final, array(
+                            'id' => $r1->id,
+                            'name' => $r1->name,
+                            'selectec' => '',
+                        ));
+                    }
+                }
+                return $final;
+            } else {
+                return $r;
+            }
+        }
+    }
+
     public function lectivoOXplantelXasignacion(Request $request)
     {
         if ($request->ajax()) {

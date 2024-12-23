@@ -71,7 +71,7 @@ class prbBS extends Command
 		->get();*/
 	//dd($clientes->toArray());
         $clientes=array(
-			13231,19657);
+			29044);
 
         $bs_activo=$param=Param::where('llave','api_brightSpace_activa')->first();
         if($bs_activo->valor==1){

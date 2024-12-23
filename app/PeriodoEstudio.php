@@ -25,7 +25,8 @@ class PeriodoEstudio extends Model
 	//Mass Assignment
 	protected $fillable = [
 		'name', 'plantel_id', 'nivel_id', 'especialidad_id', 'grado_id', 'usu_alta_id', 'usu_mod_id',
-		'bnd_activo', 'orden', 'plan_estudio_id', 'rvoe', 'cct', 'fec_vigencia_rvoe', 'desc_certificado'
+		'bnd_activo', 'orden', 'plan_estudio_id', 'rvoe', 'cct', 'fec_vigencia_rvoe', 'desc_certificado',
+		'bnd_carrera_tecnica','order_carrera_tecnica'
 	];
 
 	public function usu_alta()

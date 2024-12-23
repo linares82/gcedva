@@ -73,7 +73,7 @@ class CajaObserver
     public function updated(Caja $caja)
     {
         $this->caja = $caja;
-        $cliente = Cliente::find($this->caja->cliente_id);
+        $cliente = Cliente::select('id','st_cliente_id')->where('id',$this->caja->cliente_id)->first();
         $seguimiento = Seguimiento::where('cliente_id', $this->caja->cliente_id)->first();
         
 

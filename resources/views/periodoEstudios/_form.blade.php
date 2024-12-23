@@ -65,6 +65,7 @@
                         <span class="help-block">{{ $errors->first("bnd_activo") }}</span>
                         @endif
                     </div> 
+                    <!--
                     <div class="form-group col-md-4 @if($errors->has('rvoe')) has-error @endif">
                         <label for="rvoe-field">RVOE</label>
                         {!! Form::text("rvoe", null, array("class" => "form-control input-sm", "id" => "rvoe-field")) !!}
@@ -84,6 +85,22 @@
                         {!! Form::text("fec_vigencia_rvoe", null, array("class" => "fecha form-control input-sm", "id" => "fec_vigencia_rvoe-field")) !!}
                         @if($errors->has("fec_vigencia_rvoe"))
                          <span class="help-block">{{ $errors->first("fec_vigencia_rvoe") }}</span>
+                        @endif
+                     </div>
+                    -->
+                    <div class="row"></div>
+                    <div class="form-group col-md-4 @if($errors->has('bnd_carrera_tecnica')) has-error @endif">
+                        <label for="bnd_carrera_tecnica-field">Carrera Tecnica</label>
+                        {!! Form::checkbox("bnd_carrera_tecnica", 1, null, [ "id" => "bnd_carrera_tecnica-field"]) !!}
+                        @if($errors->has("bnd_carrera_tecnica"))
+                        <span class="help-block">{{ $errors->first("bnd_carrera_tecnica") }}</span>
+                        @endif
+                    </div>
+                    <div class="form-group col-md-4 @if($errors->has('orden_carrera_tecnica')) has-error @endif">
+                        <label for="orden_carrera_tecnica-field">Orden Carrera Tecnica</label>
+                        {!! Form::text("orden_carrera_tecnica", null, array("class" => "form-control input-sm", "id" => "orden_carrera_tecnica-field")) !!}
+                        @if($errors->has("orden_carrera_tecnica"))
+                         <span class="help-block">{{ $errors->first("orden_carrera_tecnica") }}</span>
                         @endif
                      </div>
                     <div class="row"></div>

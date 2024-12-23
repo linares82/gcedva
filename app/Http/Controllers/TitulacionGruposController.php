@@ -214,14 +214,16 @@ class TitulacionGruposController extends Controller {
 		
 		$ingresos=Cliente::select('t.id','p.razon','tg.name as grupo','clientes.id as cliente_id','clientes.matricula','clientes.nombre',
 		'clientes.nombre2','clientes.ape_paterno','clientes.ape_materno','ot.name as opcion_titulacion',
-		'tp.fecha','tp.monto','tp.observaciones','ot.costo', 'tg.id as grupo_id', 'tp.usu_alta_id as usu_alta')
+		'tp.fecha','tp.monto','tp.observaciones','t.costo', 'tg.id as grupo_id', 'tp.usu_alta_id as usu_alta')
 		->join('plantels as p', 'p.id','clientes.plantel_id')
 		->join('titulacions as t', 't.cliente_id','clientes.id')
 		->join('opcion_titulacions as ot','ot.id','t.opcion_titulacion_id')
 		->join('titulacion_grupos as tg', 'tg.id','t.titulacion_grupo_id')
-		->leftJoin('titulacion_pagos as tp','tp.titulacion_id','t.id')
+		//->leftJoin('titulacion_pagos as tp','tp.titulacion_id','t.id')
+		->join('titulacion_pagos as tp','tp.titulacion_id','t.id')
 		->whereIn('plantel_id',$datos['plantel_f'])
 		->whereNull('t.deleted_at')
+		->whereNull('tp.deleted_at')
 		//->whereIn('tg.id',$datos['titulacion_grupo_f'])
 		->whereBetween('tp.fecha',[$datos['fecha_pago_f'], $datos['fecha_pago_t']])
 		->where('tg.fecha',$datos['fecha_grupo_f'])
@@ -230,7 +232,7 @@ class TitulacionGruposController extends Controller {
 		
 		$adeudos=Cliente::select('t.id as titulacion_id','p.razon','tg.name as grupo','clientes.id as cliente_id','clientes.matricula','clientes.nombre',
 		'clientes.nombre2','clientes.ape_paterno','clientes.ape_materno','ot.name as opcion_titulacion',
-		'ot.costo',DB::raw('sum(tp.monto) as suma_pagos'))
+		't.costo',DB::raw('sum(tp.monto) as suma_pagos'))
 		->join('plantels as p', 'p.id','clientes.plantel_id')
 		->join('titulacions as t', 't.cliente_id','clientes.id')
 		->join('opcion_titulacions as ot','ot.id','t.opcion_titulacion_id')

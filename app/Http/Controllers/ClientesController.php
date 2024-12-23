@@ -2394,7 +2394,8 @@ class ClientesController extends Controller
             //'a.caja_concepto_id',
             //'c.fecha as fecha_caja',
             'clientes.bnd_doc_oblig_entregados',
-            'tu.name as turno'
+            'tu.name as turno',
+            'clientes.bnd_consulta_curp'
         )
             ->join('seguimientos as s', 's.cliente_id', '=', 'clientes.id')
             ->join('st_seguimientos as sts', 'sts.id', '=', 's.st_seguimiento_id')
@@ -3077,6 +3078,8 @@ class ClientesController extends Controller
                 if($diaActual>=1 and $diaActual<=11){
                     $dentro3Meses = true;
                 }
+            }elseif($anioActual < $anioMatricula){
+                $dentro3Meses = true;
             }
         } else {
             $dentro3Meses = true;
@@ -3491,6 +3494,7 @@ class ClientesController extends Controller
             ->get();
         //dd($detalle->toArray());
         $registros = array();
+        $descartados=array();
         foreach ($detalle->toArray() as $d) {
             //dd($d['cliente_id']);
             $adeudos12325 = Adeudo::where('cliente_id', $d['cliente_id'])
@@ -3552,6 +3556,8 @@ class ClientesController extends Controller
                     array_push($registros, $d);
                 }elseif(!isset($datos['bnd_tramite']) and $d['tramites'] == "No"){
                     array_push($registros, $d);
+                }else{
+                    array_push($descartados, $d);
                 }
                 //dd($secciones);
                 /*if($secciones[0]==""){
@@ -3689,9 +3695,9 @@ class ClientesController extends Controller
             $totales_plantel_seccion_estatus,
             array("razon" => $plantel, "seccion" => $seccion, "estatus" => $estatus, "total" => $contador_plantel_seccion_estatus)
         );
-        //dd($totales_plantel_seccion_estatus);
+        //dd($resgistros);
         return view('clientes.reportes.concretadosComisionesR', 
-        compact('registros', 'totales_plantel_estatus', 
+        compact('registros','descartados', 'totales_plantel_estatus', 
         'totales_plantel_seccion_estatus','carreras1','diplomadosCursos1'
         ,'carreras2','diplomadosCursos2'
         ,'carreras3','diplomadosCursos3'

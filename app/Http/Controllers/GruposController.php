@@ -321,4 +321,49 @@ class GruposController extends Controller
 			$plantels=Plantel::pluck('razon','id');
 		return view('combinacionClientes.reportes.cargas', compact('lista','plantels'));
 	}
+
+	public function getCmbGrupoXGrado(Request $request)
+	{
+		if ($request->ajax()) {
+			//dd($request->get('plantel_id'));
+			$plantel = $request->get('plantel_id');
+			$especialidad = $request->get('especialidad_id');
+			$nivel = $request->get('nivel_id');
+			$grado = $request->get('grado_id');
+			$grupo = $request->get('grupo_id');
+			$final = array();
+			$r = DB::table('grupos as g')
+				->select('g.id', 'g.name')
+				->join('inscripcions as i','i.grupo_id','g.id')
+				->where('i.plantel_id',$plantel)
+				->where('i.especialidad_id',$especialidad)
+				->where('i.nivel_id',$nivel)
+				->where('i.grado_id', '=', $grado)
+				->whereNull('g.deleted_at')
+				->where('g.id', '>', '0')
+				->distinct()
+				->get();
+			//dd($r);
+			if (isset($grupo) and $grupo <> 0) {
+				foreach ($r as $r1) {
+					if ($r1->id == $grupo) {
+						array_push($final, array(
+							'id' => $r1->id,
+							'name' => $r1->name,
+							'selectec' => 'Selected'
+						));
+					} else {
+						array_push($final, array(
+							'id' => $r1->id,
+							'name' => $r1->name,
+							'selectec' => ''
+						));
+					}
+				}
+				return $final;
+			} else {
+				return $r;
+			}
+		}
+	}
 }

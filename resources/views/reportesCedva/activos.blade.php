@@ -34,13 +34,16 @@
     <table class="table table-condensed table-striped">
             <h4>Resumen</h4>
             <thead>
-              <th>Plantel</th><th>Seccion</th><th>Nueva Inscripcion</th>
+              <th>Plantel</th><th>Seccion</th>
+              <th>Nueva Inscripcion</th>
               <th>Activos Vigentes Sin Adeudo</th>
               <th>Activos Vigentes Con 1 Adeudo</th><th>BTP</th><th>BA</th>
-              <th>Suma (Matricula Total Activa)</th><th>Preinscritos</th>
+              <th>Preinscritos</th><th>Suma (Matricula Total Activa)</th>
+              
             </thead>
             <tbody>
               @php
+              $t0=0;
               $t1=0;
               $t2=0;
               $t3=0;
@@ -54,21 +57,26 @@
                 <td>{{ $linea['nueva_inscripcion']}}</td>
                 <td>{{ $linea['vigentes_sin_adeudos']}}</td>
                 <td>{{$linea['vigentes_con_1_adeudos']}}</td><td>{{$linea['baja_temporal_por_pago']}}</td><td>{{$linea['baja_administrativa']}}</td>
-                <td>{{$linea['matricula_total_activa']}}</td>
                 <td>{{$linea['preinscrito']}}</td>
+                <td>{{$linea['matricula_total_activa']}}</td>
+                
               </tr>
               @php
+              $t0=$t0+$linea['nueva_inscripcion'];
               $t1=$t1+$linea['vigentes_sin_adeudos'];
               $t2=$t2+$linea['vigentes_con_1_adeudos'];
               $t3=$t3+$linea['baja_temporal_por_pago'];
               $t4=$t4+$linea['baja_administrativa'];
-              $t5=$t5+$linea['matricula_total_activa'];
-              $t6=$t6+$linea['preinscrito'];
+              $t5=$t5+$linea['preinscrito'];
+              $t6=$t6+$linea['matricula_total_activa'];
+              
               @endphp
               @endforeach
               <tr><td>Totales</td><td></td>
+                  <td>{{$t0}}</td>
                   <td>{{$t1}}</td><td>{{$t2}}</td><td>{{$t3}}</td>
                   <td>{{$t4}}</td><td>{{$t5}}</td><td>{{$t6}}</td>
+                  
               </tr>
             </tbody>
     </table>    
@@ -77,13 +85,16 @@
     <table class="table table-condensed table-striped">
             <h4>Resumen Monetario</h4>
             <thead>
-              <th>Plantel</th><th>Seccion</th><th>Nueva Inscripcion</th>
+              <th>Plantel</th><th>Seccion</th>
+              <th>Nueva Inscripcion</th>
               <th>Activos Vigentes Sin Adeudo</th>
               <th>Activos Vigentes Con 1 Adeudo</th><th>BTP</th><th>BA</th>
-              <th>Suma (Matricula Total Activa)</th><th>Preinscritos</th>
+              <th>Preinscritos</th>
+              <th>Suma (Matricula Total Activa)</th>
             </thead>
             <tbody>
               @php
+              $t0=0;
               $t1=0;
               $t2=0;
               $t3=0;
@@ -96,22 +107,29 @@
                 <td>{{$linea['razon']}}</td><td>{{$linea['seccion']}}</td>
                 <td align="right">{{number_format($linea['nueva_inscripcion'],2)}}</td>
                 <td align="right">{{number_format($linea['vigentes_sin_adeudos'],2)}}</td>
-                <td align="right">{{number_format($linea['vigentes_con_1_adeudos'],2)}}</td><td align="right">{{number_format($linea['baja_temporal_por_pago'],2)}}</td><td align="right">{{number_format($linea['baja_administrativa'],2)}}</td>
-                <td align="right">{{number_format($linea['matricula_total_activa'],2)}}</td>
+                <td align="right">{{number_format($linea['vigentes_con_1_adeudos'],2)}}</td>
+                <td align="right">{{number_format($linea['baja_temporal_por_pago'],2)}}</td>
+                <td align="right">{{number_format($linea['baja_administrativa'],2)}}</td>
                 <td align="right">{{number_format($linea['preinscrito'],2)}}</td>
+                <td align="right">{{number_format($linea['matricula_total_activa'],2)}}</td>
+                
               </tr>
               @php
+              $t0=$t0+$linea['nueva_inscripcion'];
               $t1=$t1+$linea['vigentes_sin_adeudos'];
               $t2=$t2+$linea['vigentes_con_1_adeudos'];
               $t3=$t3+$linea['baja_temporal_por_pago'];
               $t4=$t4+$linea['baja_administrativa'];
-              $t5=$t5+$linea['matricula_total_activa'];
-              $t6=$t6+$linea['preinscrito'];
+              $t5=$t5+$linea['preinscrito'];
+              $t6=$t6+$linea['matricula_total_activa'];
+              
               @endphp
               @endforeach
               <tr><td>Totales</td><td></td>
-                  <td align="right">{{number_format($t1,2)}}</td><td align="right">{{number_format($t2,2)}}</td><td align="right">{{number_format($t3,2)}}</td>
+              <td align="right">{{number_format($t0,2)}}</td>  
+                <td align="right">{{number_format($t1,2)}}</td><td align="right">{{number_format($t2,2)}}</td><td align="right">{{number_format($t3,2)}}</td>
                   <td align="right">{{number_format($t4,2)}}</td><td align="right">{{number_format($t5,2)}}</td><td align="right">{{number_format($t6,2)}}</td>
+                  
               </tr>
             </tbody>
     </table>    
@@ -298,7 +316,7 @@
           -->
 
         <table class="table table-condensed table-striped">
-            <h4>Activos 2</h4>
+            <h4>Detalle</h4>
             <thead>
                 <th>No.</th><th>Plantel</th><th>Ciclo</th><th>Id</th><th>Matricula</th><th>Seccion</th>
                 <th>A. Paterno</th><th>A. Materno</th><th>Nombre(s)</th><th>Tel. Fijo</th><th>Celular</th><th>Estatus C.</th>

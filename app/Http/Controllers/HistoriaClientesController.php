@@ -57,7 +57,8 @@ class HistoriaClientesController extends Controller
 	{
 		$data = $request->all();
 		$cliente = $data['cliente'];
-		//$cliente_actual = Cliente::find($data['cliente']);
+		
+		$cliente_actual = Cliente::find($data['cliente']);
 		$bajas_existentes = HistoriaCliente::where('cliente_id', $data['cliente'])
 			->where('evento_cliente_id', 2)
 			->where('st_historia_cliente_id', '<>', 2)
@@ -67,7 +68,7 @@ class HistoriaClientesController extends Controller
 		$hoy=Carbon::createFromFormat('Y-m-d',Date('Y-m-d'))->day;
 		$dias_habiles_aux=Param::where('llave','dias_para_bajas')->value('valor');
 		$dias_habiles=explode(',',$dias_habiles_aux);
-		if(in_array($hoy,$dias_habiles)){
+		if(in_array($hoy,$dias_habiles) and $cliente_actual->st_cliente_id<>3){
 			$eventos=EventoCliente::pluck('name','id');
 		}else{
 			$eventos=EventoCliente::where('id','<>', 2)->pluck('name','id');
@@ -205,7 +206,7 @@ class HistoriaClientesController extends Controller
 		$hoy=Carbon::createFromFormat('Y-m-d',Date('Y-m-d'))->day;
 		$dias_habiles_aux=Param::where('llave','dias_para_bajas')->value('valor');
 		$dias_habiles=explode(',',$dias_habiles_aux);
-		if(in_array($hoy,$dias_habiles)){
+		if(in_array($hoy,$dias_habiles ) and $cliente->st_cliente_id<>3){
 			$eventos=EventoCliente::pluck('name','id');
 		}else{
 			$eventos=EventoCliente::where('id','<>', 2)->pluck('name','id');

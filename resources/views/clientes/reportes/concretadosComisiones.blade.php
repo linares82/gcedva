@@ -41,6 +41,8 @@
             
                 <div class="form-group col-md-6 @if($errors->has('plantel_f')) has-error @endif">
                     <label for="plantel_f-field">Plantel de:</label>
+                    <a href='#' id='select-allPlanteles'>Seleccionar todos</a> /
+                    <a href='#' id='diselect-allPlanteles'>Quitar seleccion</a>
                     {!! Form::select("plantel_f[]", $planteles, null, array("class" => "form-control select_seguridad", "id" => "plantel_f-field",'multiple'=>true)) !!}
                     <div id='loading10' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                     @if($errors->has("plantel_f"))
@@ -104,6 +106,17 @@
 @push('scripts')
   <script type="text/javascript">
     $(document).ready(function() {
+
+    $('#select-allPlanteles').click(function(){
+        $('select#plantel_f-field').multiSelect('select_all');
+        return false;
+    });
+
+    $('#diselect-allPlanteles').click(function(){
+        $('select#plantel_f-field').multiSelect('deselect_all');
+        return false;
+    });
+
     $('#fecha_f-field').Zebra_DatePicker({
         days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
         months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
