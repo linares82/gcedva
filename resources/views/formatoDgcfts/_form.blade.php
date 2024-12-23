@@ -284,7 +284,7 @@
             $materias=explode(',',$formatoDgcft->materias);
          @endphp
          @foreach($materias as $materia)
-            <th>{{$materia}}</th>
+            <th><a class="btn btn-xs btn-default" href="{{route('formatoDgcfts.icp08XMateria',array('id'=>$formatoDgcft->id,'materia'=>$materia))}}" target="blank">ICP-08 {{$materia}}</a> </th>
          @endforeach
       @endif
       <th>RESULTADO</th>

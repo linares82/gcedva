@@ -265,4 +265,17 @@ class FormatoDgcftsController extends Controller
 		$materias=explode(',',$formatoDgcft->materias);
 		return view('formatoDgcfts.reportes.icp08', compact('formatoDgcft','materias','detalles'));
 	}
+
+	public function icp08XMateria(Request $request){
+		$datos=$request->all();
+		$formatoDgcft=FormatoDgcft::find($datos['id']);
+		$detalles=FormatoDgcftDetalle::select()
+		->join('formato_dgcft_mat_califs as mc','mc.formato_dgcft_detalle_id','formato_dgcft_detalles.id')
+		->where('mc.materia', $datos['materia'])
+		->where('formato_dgcft_detalles.formato_dgcft_id',$datos['id'])
+		->get();
+
+		$materias=explode(',',$formatoDgcft->materias);
+		return view('formatoDgcfts.reportes.icp08XMateria', compact('formatoDgcft','detalles'));
+	}
 }

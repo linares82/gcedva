@@ -15723,6 +15723,7 @@ Route::prefix('/formatoDgcfts')
     Route::get('/ieap04', 'FormatoDgcftsController@ieap04')->name('ieap04')->middleware('permission:formatoDgcfts.generarLineas');
     Route::get('/riap02', 'FormatoDgcftsController@riap02')->name('riap02')->middleware('permission:formatoDgcfts.generarLineas');
     Route::get('/icp08', 'FormatoDgcftsController@icp08')->name('icp08')->middleware('permission:formatoDgcfts.generarLineas');
+    Route::get('/icp08XMateria', 'FormatoDgcftsController@icp08XMateria')->name('icp08XMateria')->middleware('permission:formatoDgcfts.generarLineas');
     Route::post('/store', 'FormatoDgcftsController@store')->name('store')->middleware('permission:formatoDgcfts.store');
     Route::post('/edit/{id}', 'FormatoDgcftsController@update')->name('update')->middleware('permission:formatoDgcfts.update');
     Route::post('/delete/{id}', 'FormatoDgcftsController@destroy')->name('destroy')->middleware('permission:formatoDgcfts.destroy');
