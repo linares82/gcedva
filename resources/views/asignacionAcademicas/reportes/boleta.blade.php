@@ -120,7 +120,7 @@
                                 $cantidad_materias=0;
                                 $sumatoria_calificaciones=0;
                             @endphp
-                            
+                            @foreach($hacademicas as $a)
                             <tr>
                                 <td colspan='3'>
                                     @if(optional($a->materia)->bnd_tiene_nombre_oficial==1)

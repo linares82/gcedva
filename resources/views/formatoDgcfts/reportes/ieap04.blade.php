@@ -96,14 +96,20 @@
             <br/>
             <table width="100%">
                 <tr>
-                    <td>ENLACE OPERATIVO:<strong>{{$formatoDgcft->enlace_operativo}}</strong></td>
-                    <td colspan="2">PLANTEL PARTICULAR: <strong>{{$formatoDgcft->plantel}}</strong></td>
-                    <td>CLAVE CCT: {{$formatoDgcft->cct}} </td>
+                    <td>ENLACE OPERATIVO:<strong>{{$formatoDgcft->plantelR->enlace}}</strong></td>
+                    <td colspan="2">PLANTEL PARTICULAR: <strong>{{$formatoDgcft->plantelR->denominacion}}</strong></td>
+                    <td>CLAVE CCT: {{$formatoDgcft->plantelR->cct}} </td>
                 </tr>
                 <tr>
-                    <td colspan="2">Ubicacion:<strong>{{$formatoDgcft->direccion}}</strong></td>
-                    <td>FECHA ELABORACION: {{$formatoDgcft->fec_elaboracion}} </td>
-                    <td>CICLO ESCOLAR:{{$formatoDgcft->fec_ciclo_escolar}}</td>
+                    <td colspan="2">UBICACION:
+                        <strong>
+                            {{$formatoDgcft->plantelR->calle}} {{$formatoDgcft->plantelR->no_int}}, 
+                            Col. {{$formatoDgcft->plantelR->colonia}}, {{$formatoDgcft->plantelR->municipio}}, 
+                            {{$formatoDgcft->plantelR->estado}}, C.P. {{$formatoDgcft->plantelR->cp}}
+                        </strong>
+                    </td>
+                    <td>FECHA ELABORACION: {{explode(',',$formatoDgcft->fechas_emision)[0]}} </td>
+                    <td>CICLO ESCOLAR:{{$formatoDgcft->ciclo_escolar}}</td>
                 </tr>
                 
             </table>
@@ -155,25 +161,43 @@
                 </thead>
                 <tr>
                     <tr>
-                        <td align="center" valign="bottom" width="25%" height="100"><span style="font-weight: bold"><u>{{$formatoDgcft->directora_nombre}}</u></span><br>
-                              NOMBRE Y FIRMA DEL DIRECTOR</td> 
+                        <td align="center" valign="bottom" width="25%" height="100">
+                            <span style="font-weight: bold">
+                                <u>
+                                {{$formatoDgcft->plantelR->director->nombre}} {{$formatoDgcft->plantelR->director->ape_paterno}} {{$formatoDgcft->plantelR->director->ape_materno}}
+                                </u>
+                            </span>
+                            <br>
+                              @if($formatoDgcft->plantelR->director->genero==1)
+                              NOMBRE Y FIRMA DEL DIRECTOR
+                              @else
+                              NOMBRE Y FIRMA DE LA DIRECTORA
+                              @endif
+                        </td> 
                         <td align="center" valign="bottom" width="25%" height="50" >
                             <table width="100%"><tr><td style="border-bottom: 1px solid black;"></td></tr></table>
                               SELLO
                         </td> 
-                        <td align="center" valign="bottom" width="25%" height="50"><span style="font-weight: bold"><u>{{$formatoDgcft->directora_nombre}}</u></span><br>
-                              NOMBRE Y FIRMA DEL DIRECTOR</td> 
+                        <td align="center" valign="bottom" width="25%" height="50"><span style="font-weight: bold"><u>
+                        {{$formatoDgcft->plantelR->director->nombre}} {{$formatoDgcft->plantelR->director->ape_paterno}} {{$formatoDgcft->plantelR->director->ape_materno}}
+                        </u></span><br>
+                            @if($formatoDgcft->plantelR->director->genero==1)
+                              NOMBRE Y FIRMA DEL DIRECTOR
+                              @else
+                              NOMBRE Y FIRMA DE LA DIRECTORA
+                              @endif
+                            </td> 
                         <td align="center" valign="bottom" width="25%" height="50">
                         <table width="100%"><tr><td style="border-bottom: 1px solid black;"></td></tr></table>
                               SELLO</td> 
                     </tr>
                     <tr>
-                        <td align="center" valign="bottom" height="100"><span style="font-weight: bold"><u>{{$formatoDgcft->sceo_nombre}}</u></span><br>
+                        <td align="center" valign="bottom" height="100"><span style="font-weight: bold"><u>{{$formatoDgcft->plantelR->enlace}}</u></span><br>
                               NOMBRE Y FIRMA DEL ENLACE OPERATIVO</td> 
                         <td align="center" valign="bottom" height="">
                         <table width="100%"><tr><td style="border-bottom: 1px solid black;"></td></tr></table>
                                 SELLO</td> 
-                        <td align="center" valign="bottom" height="50"><span style="font-weight: bold"><u>{{$formatoDgcft->sceo_nombre}}</u></span><br>
+                        <td align="center" valign="bottom" height="50"><span style="font-weight: bold"><u>{{$formatoDgcft->plantelR->enlace}}</u></span><br>
                               NOMBRE Y FIRMA DEL ENLACE OPERATIVO</td> 
                         <td align="center" valign="bottom" height="">
                         <table width="100%"><tr><td style="border-bottom: 1px solid black;"></td></tr></table>

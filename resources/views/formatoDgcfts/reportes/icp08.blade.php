@@ -85,7 +85,7 @@
             <br/>
             <table width="95%">
                 <tr>
-                    <td> EL PLANTEL PARTICULAR:<strong>{{$formatoDgcft->plantel}}</strong></td><td>CLAVE CCT: <strong>{{$formatoDgcft->cct}}</strong></td>
+                    <td> EL PLANTEL PARTICULAR:<strong>{{$formatoDgcft->plantelR->denominacion}}</strong></td><td>CLAVE CCT: <strong>{{$formatoDgcft->plantelR->cct}}</strong></td>
                 </tr>
                 <tr>
                     <td> HACE CONSTAR QUE EL ALUMNO:<strong>{{$registro->nombre}} </strong> </td><td>CON NÚMERO DE CONTROL: <strong>{{$registro->control}}</strong></td>
@@ -135,15 +135,22 @@
             <br/>
             <table width="95%" border="0" cellpadding="10" cellspacing="0" bordercolor="#FFFFFF" class="Texto1" align="center">      
                 <tr>
-                    <td align="center" valign="bottom" width="25%" height="100"><span style="font-weight: bold"><u>{{$formatoDgcft->directora_nombre}}</u></span><br>
-                            NOMBRE Y FIRMA DEL DIRECTOR</td> 
+                <td align="center" valign="bottom" width="25%" height="50"><span style="font-weight: bold"><u>
+                        {{$formatoDgcft->plantelR->director->nombre}} {{$formatoDgcft->plantelR->director->ape_paterno}} {{$formatoDgcft->plantelR->director->ape_materno}}
+                        </u></span><br>
+                            @if($formatoDgcft->plantelR->director->genero==1)
+                              NOMBRE Y FIRMA DEL DIRECTOR
+                              @else
+                              NOMBRE Y FIRMA DE LA DIRECTORA
+                              @endif
+                            </td>  
                     <td align="center" valign="bottom" width="25%" height="50" >
                         <table width="100%" ><tr><td style="border-bottom: 1px solid black;"></td></tr></table>
                             SELLO
                     </td> 
                 </tr>
                 <tr>
-                    <td align="center" valign="bottom" height="100"><span style="font-weight: bold"><u>{{$formatoDgcft->sceo_nombre}}</u></span><br>
+                    <td align="center" valign="bottom" height="100"><span style="font-weight: bold"><u>{{$formatoDgcft->plantelR->enlace}}</u></span><br>
                             NOMBRE Y FIRMA DEL ENLACE OPERATIVO</td> 
                     <td align="center" valign="bottom" height="">
                     <table width="100%"><tr><td style="border-bottom: 1px solid black;"></td></tr></table>

@@ -1060,6 +1060,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'AddPlanInscripcionsTable' => __DIR__ . '/../..' . '/database/migrations/2019_03_28_131419_add_plan_inscripcions_table.php',
         'AddPlanPagoCombinacionTable' => __DIR__ . '/../..' . '/database/migrations/2018_04_09_085152_add_plan_pago_combinacion_table.php',
         'AddPlantelEspecialidadTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_11_142022_add_plantel_especialidad_table.php',
+        'AddPlantelIdFieldToFormatoDgcftsTable' => __DIR__ . '/../..' . '/database/migrations/2025_01_07_100148_add_plantel_id_field_to_formato_dgcfts_table.php',
         'AddPlantelIdToActaFinalsTable' => __DIR__ . '/../..' . '/database/migrations/2021_06_09_130759_add_plantel_id_to_acta_finals_table.php',
         'AddPlantelIdToInventarioObservacionsTable' => __DIR__ . '/../..' . '/database/migrations/2022_08_29_115310_add_plantel_id_to_inventario_observacions_table.php',
         'AddPlantelIdToPlanEstudiosTable' => __DIR__ . '/../..' . '/database/migrations/2021_05_19_090223_add_plantel_id_to_plan_estudios_table.php',

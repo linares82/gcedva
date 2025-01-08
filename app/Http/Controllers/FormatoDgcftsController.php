@@ -13,8 +13,8 @@ use Illuminate\Http\Request;
 use App\FormatoDgcftMatCalif;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\createFormaPago;
-use App\Http\Requests\updateFormaPago;
+use App\Http\Requests\createFormatoDgcft;
+use App\Http\Requests\updateFormatoDgcft;
 
 class FormatoDgcftsController extends Controller
 {
@@ -49,7 +49,7 @@ class FormatoDgcftsController extends Controller
 	 * @param Request $request
 	 * @return Response
 	 */
-	public function store(createFormaPago $request)
+	public function store(createFormatoDgcft $request)
 	{
 
 		$input = $request->all();
@@ -108,7 +108,7 @@ class FormatoDgcftsController extends Controller
 	 * @param Request $request
 	 * @return Response
 	 */
-	public function update($id, FormatoDgcft $formatoDgcft, updateFormaPago $request)
+	public function update($id, FormatoDgcft $formatoDgcft, updateFormatoDgcft $request)
 	{
 		$input = $request->all();
 		$input['usu_mod_id'] = Auth::user()->id;
@@ -136,14 +136,16 @@ class FormatoDgcftsController extends Controller
 	public function generarLineas(Request $request)
 	{
 		$datos = $request->all();
+		//dd($datos);
 		$formatoDgcft = FormatoDgcft::find($datos['id']);
 		$clientes_id = explode(",", $formatoDgcft->clientes);
-		$controls = explode(",", $formatoDgcft->control);
-		$escolaridads = explode(",", $formatoDgcft->escolaridad);
-		$becas = explode(",", $formatoDgcft->beca);
+		//$controls = explode(",", $formatoDgcft->control);
+		//$escolaridads = explode(",", $formatoDgcft->escolaridad);
+		//$becas = explode(",", $formatoDgcft->beca);
 		//$resultados = explode(",", $formatoDgcft->resultados);
 		//$finals = explode(",", $formatoDgcft->final);
 		$contador = 1;
+		$control_inicio=$datos['control_inicio'];
 		//dd($clientes_id);
 		foreach ($clientes_id as $llave => $cliente_id) {
 			//dd($llave."-".$cliente_id);
@@ -156,7 +158,8 @@ class FormatoDgcftsController extends Controller
 				$cliente = Cliente::find(trim($cliente_id));
 				$inputFormatoDgcftdetalle['formato_dgcft_id'] = $formatoDgcft->id;
 				$inputFormatoDgcftdetalle['num'] = $contador;
-				$inputFormatoDgcftdetalle['control'] = trim($controls[$llave]);
+				//$inputFormatoDgcftdetalle['control'] = trim($controls[$llave]);
+				$inputFormatoDgcftdetalle['control']=$datos['control_parte_fija'].str_pad($control_inicio,7,"0",STR_PAD_LEFT); 
 				$inputFormatoDgcftdetalle['cliente_id'] = $cliente->id;
 				$inputFormatoDgcftdetalle['nombre'] = $cliente->ape_paterno . " " . $cliente->ape_materno . " " . $cliente->nombre . " " . $cliente->nombre2;
 				$inputFormatoDgcftdetalle['curp'] = $cliente->curp;
@@ -164,8 +167,15 @@ class FormatoDgcftsController extends Controller
 				$edad = Carbon::createFromFormat("Y-m-d", $cliente->fec_nacimiento)->diffInYears($fecha_referencia);
 				$inputFormatoDgcftdetalle['edad'] = $edad;
 				$inputFormatoDgcftdetalle['fec_sexo'] = $cliente->genero == 1 ? "H" : "M";
-				$inputFormatoDgcftdetalle['escolaridad'] = trim($escolaridads[$llave]);
-				$inputFormatoDgcftdetalle['beca'] = trim($becas[$llave]);
+				//$inputFormatoDgcftdetalle['escolaridad'] = trim($escolaridads[$llave]);
+				$inputFormatoDgcftdetalle['escolaridad'] = $cliente->escolaridad_id;
+				//$inputFormatoDgcftdetalle['beca'] = trim($becas[$llave]);
+				$beca=$cliente->autorizacionBecas->where('st_beca_id',4)->last();
+				$inputFormatoDgcftdetalle['beca'] = "-";
+				if(!is_null($beca)){
+					$inputFormatoDgcftdetalle['beca'] = ($beca->monto_inscripcion*100)."%";
+				}
+				
 				//$inputFormatoDgcftdetalle['resultado'] = trim($resultados[$llave]);
 				//$inputFormatoDgcftdetalle['final'] = trim($finals[$llave]);
 				$inputFormatoDgcftdetalle['usu_alta_id'] = Auth::user()->id;
@@ -173,10 +183,13 @@ class FormatoDgcftsController extends Controller
 				//dd($inputFormatoDgcftdetalle);
 				FormatoDgcftDetalle::create($inputFormatoDgcftdetalle);
 				$contador++;
+				$control_inicio++;
 			}
 		}
 		return redirect()->route('formatoDgcfts.edit', $datos['id']);
 	}
+
+
 
 	public function generarCalificaciones(Request $request)
 	{
@@ -212,6 +225,7 @@ class FormatoDgcftsController extends Controller
 			}
 		}
 
+		/*
 		$resultados = explode(",", $formatoDgcft->resultados);
 		$finals = explode(",", $formatoDgcft->final);
 
@@ -222,7 +236,9 @@ class FormatoDgcftsController extends Controller
 			$detalle->update(
 				['final' => trim($finals[$detalle->num - 1])]
 			);
-		}
+		}*/
+		
+
 
 		return redirect()->route('formatoDgcfts.edit', $datos['id']);
 	}

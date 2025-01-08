@@ -137,9 +137,7 @@ class PeriodoEstudiosController extends Controller
         if (!isset($input['bnd_activo'])) {
             $input['bnd_activo'] = 0;
         }
-        if(!isset($input['bnd_carrera_tecnica'])){
-            $input['bnd_carrera_tecnica']==0;
-        }
+        
         //update data
         $periodoEstudio = $periodoEstudio->find($id);
         $periodoEstudio->update($input);

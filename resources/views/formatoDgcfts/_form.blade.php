@@ -5,13 +5,42 @@
       <span class="help-block">{{ $errors->first("name") }}</span>
       @endif
    </div>
+
+   <div class="form-group col-md-4 @if($errors->has('plantel_id')) has-error @endif">
+   <label for="plantel_id-field">Plantel</label>
+   {!! Form::select("plantel_id", $list['Plantel'], null, array("class" => "form-control select_seguridad", "id" => "plantel_id-field")) !!}
+   @if(isset($formatoDgcft))
+         @if($formatoDgcft->plantel_id==0)
+         <code>*Campo requerido, seleccionar opcion</code>
+         @endif
+      @endif
+   @if($errors->has("plantel_id"))
+   <span class="help-block">{{ $errors->first("plantel_id") }}</span>
+   @endif
+</div>
+   <!--
 <div class="form-group col-md-4 @if($errors->has('enlace_operativo')) has-error @endif">
    <label for="enlace_operativo-field">Enlace Operativo</label>
    {!! Form::text("enlace_operativo", null, array("class" => "form-control", "id" => "enlace_operativo-field")) !!}
    @if($errors->has("enlace_operativo"))
       <span class="help-block">{{ $errors->first("enlace_operativo") }}</span>
    @endif
-</div>
+</div>-->
+<div class="form-group col-md-4 @if($errors->has('control_parte_fija')) has-error @endif">
+      <label for="control_parte_fija-field">Parte Fija Control</label>
+      {!! Form::text("control_parte_fija", null, array("class" => "form-control", "id" => "control_parte_fija-field")) !!}
+      @if($errors->has("control_parte_fija"))
+      <span class="help-block">{{ $errors->first("control_parte_fija") }}</span>
+      @endif
+   </div>
+   <div class="form-group col-md-4 @if($errors->has('control_inicio')) has-error @endif">
+      <label for="control_inicio-field">Inicio Control</label>
+      {!! Form::text("control_inicio", null, array("class" => "form-control", "id" => "control_inicio-field")) !!}
+      @if($errors->has("control_inicio"))
+      <span class="help-block">{{ $errors->first("control_inicio") }}</span>
+      @endif
+   </div>
+<!--
 <div class="form-group col-md-4 @if($errors->has('directora_nombre')) has-error @endif">
    <label for="directora_nombre-field">Director</label>
    {!! Form::text("directora_nombre", null, array("class" => "form-control", "id" => "directora_nombre-field")) !!}
@@ -32,22 +61,26 @@
    @if($errors->has("cct"))
       <span class="help-block">{{ $errors->first("cct") }}</span>
    @endif
-</div>  
-
+</div>
+-->  
+<!--
 <div class="form-group col-md-5 @if($errors->has('plantel')) has-error @endif">
    <label for="plantel-field">Plantel</label>
    {!! Form::text("plantel", null, array("class" => "form-control", "id" => "plantel-field")) !!}
    @if($errors->has("plantel"))
       <span class="help-block">{{ $errors->first("plantel") }}</span>
    @endif
-</div>  
+</div>-->  
+
+<!--
 <div class="form-group col-md-6 @if($errors->has('direccion')) has-error @endif">
    <label for="direccion-field">Direccion</label>
    {!! Form::text("direccion", null, array("class" => "form-control", "id" => "direccion-field")) !!}
    @if($errors->has("direccion"))
       <span class="help-block">{{ $errors->first("direccion") }}</span>
    @endif
-</div>  
+</div>
+-->  
 <div class="form-group col-md-3 @if($errors->has('especialidad')) has-error @endif">
    <label for="especialidad-field">Especialidad</label>
    {!! Form::text("especialidad", null, array("class" => "form-control", "id" => "especialidad-field")) !!}
@@ -62,13 +95,15 @@
       <span class="help-block">{{ $errors->first("grupo") }}</span>
    @endif
 </div> 
+<!--
 <div class="form-group col-md-3 @if($errors->has('fec_elaboracion')) has-error @endif">
    <label for="fec_elaboracion-field">F. Elaboracion</label>
    {!! Form::text("fec_elaboracion", null, array("class" => "form-control fecha", "id" => "fec_elaboracion-field")) !!}
    @if($errors->has("fec_elaboracion"))
       <span class="help-block">{{ $errors->first("fec_elaboracion") }}</span>
    @endif
-</div>   
+</div>
+-->   
 <div class="form-group col-md-3 @if($errors->has('fec_inicio')) has-error @endif">
    <label for="fec_inicio-field">F. Inicio</label>
    {!! Form::text("fec_inicio", null, array("class" => "form-control fecha", "id" => "fec_inicio-field")) !!}
@@ -148,7 +183,8 @@
    @if($errors->has("clientes"))
       <span class="help-block">{{ $errors->first("clientes") }}</span>
    @endif
-</div> 
+</div>
+<!-- 
 <div class="form-group col-md-4 @if($errors->has('control')) has-error @endif">
    <label for="control-field">No. Control (separados por ",")
    @if(isset($formatoDgcft))
@@ -174,7 +210,9 @@
    @if($errors->has("escolaridad"))
       <span class="help-block">{{ $errors->first("escolaridad") }}</span>
    @endif
-</div> 
+</div>
+--> 
+<!--
 <div class="form-group col-md-4 @if($errors->has('beca')) has-error @endif">
    <label for="beca-field">Beca (separados por ",")
    @if(isset($formatoDgcft))
@@ -188,6 +226,7 @@
       <span class="help-block">{{ $errors->first("beca") }}</span>
    @endif
 </div>
+-->
 <div class="form-group col-md-4 @if($errors->has('materias')) has-error @endif">
    <label for="materias-field">Materias(separados por ",")
    </label>
@@ -204,11 +243,19 @@
       <span class="help-block">{{ $errors->first("grados") }}</span>
    @endif
 </div> 
-<div class="form-group col-md-3 @if($errors->has('duracion_materias')) has-error @endif">
+<div class="form-group col-md-4 @if($errors->has('duracion_materias')) has-error @endif">
    <label for="duracion_materias-field">Duracion Horas por Materia(separados por ",")</label>
    {!! Form::textArea("duracion_materias", null, array("class" => "form-control", "id" => "duracion_materias-field", 'rows'=>3)) !!}
    @if($errors->has("duracion_materias"))
       <span class="help-block">{{ $errors->first("duracion_materias") }}</span>
+   @endif
+</div>
+<div class="form-group col-md-4 @if($errors->has('fechas_emision')) has-error @endif">
+   <label for="fechas_emision-field">Fechas Emision(separados por ",")</label>
+   {!! Form::textArea("fechas_emision", null, array("class" => "form-control", "id" => "fechas_emision-field", 'rows'=>3)) !!}
+   
+   @if($errors->has("fechas_emision"))
+      <span class="help-block">{{ $errors->first("fechas_emision") }}</span>
    @endif
 </div>
 <div class="form-group col-md-4 @if($errors->has('calificaciones')) has-error @endif">
@@ -238,6 +285,7 @@
       <span class="help-block">{{ $errors->first("calificaciones") }}</span>
    @endif
 </div> 
+<!--
 <div class="form-group col-md-4 @if($errors->has('resultados')) has-error @endif">
    <label for="resultados-field">Resultados(separados por ",")
    @if(isset($formatoDgcft))
@@ -263,12 +311,16 @@
    @if($errors->has("final"))
       <span class="help-block">{{ $errors->first("final") }}</span>
    @endif
-</div> 
+</div>
+         --> 
 @php
    $contador=0;
 @endphp
-@if(isset($formatoDgcft->formatoDgcftDetalles))
-<table class="table table-condensed table-striped">
+
+<div class="row">
+   <div class="col-md-12 table-responsive">
+   @if(isset($formatoDgcft->formatoDgcftDetalles))
+   <table class="table table-condensed table-striped">
    <thead>
       <th>NUM</th>
       <th>NUMERO DE CONTROL</th>
@@ -322,4 +374,7 @@
    </tbody>
 </table>                  
 @endif
+   </div>
+</div>
+
                   

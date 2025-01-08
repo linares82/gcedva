@@ -98,7 +98,7 @@
             @endphp
             @endforeach
             <tr>
-                <td>{{$registro['razon']}}</td><td>{{$bajas}}</td><td>{{$bajas_otras}}</td><td>{{$bajas_callcenter}}</td>
+                <td>{{$plantel}}</td><td>{{$bajas}}</td><td>{{$bajas_otras}}</td><td>{{$bajas_callcenter}}</td>
             </tr>
         </tbody>
     </table>

@@ -80,130 +80,331 @@
 
     </head>
     <body>
-        
-        <div id="printeArea" class='SaltoDePagina'>
-            <table width="100%">
-                <tr>
-                    <th><img src="{{asset('images/sep.jpg')}}" alt='logo_sep' width="250px;"></img></th>
-                    <th align='center'>SUBSECRETARÍA DE EDUCACIÓN MEDIA SUPERIOR <br/>
-                        DIRECCIÓN GENERAL DE CENTROS DE FORMACIÓN PARA EL TRABAJO <br/>
-                        DIRECCIÓN TÉCNICA <br/>
-                        SUBDIRECCIÓN DE VINCULACIÓN Y APOYO ACADÉMICO <br/>
-                        REGISTRO DE INSCRIPCIÓN Y ACREDITACIÓN (RIAP-02) <br/>
-                    </th>
-                </tr>
-            </table>
-            <br/>
-            <table width="100%">
-                <tr>
-                    <td>ENLACE OPERATIVO SCEO:<strong>{{$formatoDgcft->enlace_operativo}}</strong></td>
-                    <td colspan="2">PLANTEL PARTICULAR: <strong>{{$formatoDgcft->plantel}}</strong></td>
-                    <td>CLAVE CCT: {{$formatoDgcft->cct}} </td>
-                </tr>
-                <tr>
-                    <td colspan="2">ESPECIALIDAD:<strong>{{$formatoDgcft->especialidad}}</strong></td>
-                    <td>GRUPO: <strong>{{$formatoDgcft->grupo}}</strong></td>
-                    <td>FECHA: {{$formatoDgcft->fec_elaboracion}} </td>
-                </tr>
-                <tr>
-                    <td> FECHA DE INICIO:<strong>{{$formatoDgcft->fec_inicio}}</strong></td>
-                    <td>FECHA DE FIN: <strong>{{$formatoDgcft->fec_fin}}</strong></td>
-                    <td>DURACION EN HRS.: {{$formatoDgcft->duracion}} </td>
-                    <td>HORARIO.: {{$formatoDgcft->horario}} </td>
-                </tr>
-                
-            </table>
-            <br/>
-            <table>
-                <tr>
-                    <th colspan="7" width="40%">INSCRIPCION</th><th colspan="{{count($materias)}}" width="60%">ACREDITACION</th><th colspan="2"></th>
-                </tr>
-                <tr>
-                    <th rowspan="3" >N<br/>U<br/>M<br/>.</th><th rowspan="3">NUMERO DE CONTROL</th>
-                    <th rowspan="3">NOMBRE DEL ALUMNO</th><th rowspan="3">EDAD</th>
-                    <th  rowspan="3">SEXO</th><th rowspan="3">ESCOLARIDAD</th>
-                    <th rowspan="3">BECA %</th>
-                    <th colspan="{{count($materias)}}"> NOMBRE DE LA MATERIA</th>
-                    <th rowspan="3">RESULTADO </th><th rowspan="3">FINAL</th>
-                </tr>
-                <tr>
-                    @foreach($materias as $materia)
-                    <th>{{$materia}}</th>
-                    @endforeach
-                </tr>
-                <tr>
-                    <th colspan="{{count($materias)}}">EVALUACIONES</th>
-                </tr>
-                
-                @php
-                    $i=1;
-                @endphp
+        @php
+            $emisiones = explode(',',$formatoDgcft->fechas_emision)
+        @endphp
+        @foreach($emisiones as $emision)
+            @php
+                $iteracion_emision=$loop->index
+            @endphp
+            @if($loop->first)
+                <div id="printeArea" class='SaltoDePagina'>
+                <table width="100%">
+                    <tr>
+                        <th><img src="{{asset('images/sep.jpg')}}" alt='logo_sep' width="250px;"></img></th>
+                        <th align='center'>SUBSECRETARÍA DE EDUCACIÓN MEDIA SUPERIOR <br/>
+                            DIRECCIÓN GENERAL DE CENTROS DE FORMACIÓN PARA EL TRABAJO <br/>
+                            DIRECCIÓN TÉCNICA <br/>
+                            SUBDIRECCIÓN DE VINCULACIÓN Y APOYO ACADÉMICO <br/>
+                            REGISTRO DE INSCRIPCIÓN Y ACREDITACIÓN (RIAP-02) <br/>
+                        </th>
+                    </tr>
+                </table>
+                <br/>
+                <table width="100%">
+                    <tr>
+                        <td>ENLACE OPERATIVO SCEO:<strong>{{$formatoDgcft->plantelR->enlace}}</strong></td>
+                        <td colspan="2">PLANTEL PARTICULAR: <strong>{{$formatoDgcft->plantelR->denominacion}}</strong></td>
+                        <td>CLAVE CCT: {{$formatoDgcft->plantelR->cct}} </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">ESPECIALIDAD:<strong>{{$formatoDgcft->especialidad}}</strong></td>
+                        <td>GRUPO: <strong>{{$formatoDgcft->grupo}}</strong></td>
+                        <td>FECHA: {{$emision}} </td>
+                    </tr>
+                    <tr>
+                        <td> FECHA DE INICIO:<strong>{{$formatoDgcft->fec_inicio}}</strong></td>
+                        <td>FECHA DE FIN: <strong>{{$formatoDgcft->fec_fin}}</strong></td>
+                        <td>DURACION EN HRS.: {{$formatoDgcft->duracion}} </td>
+                        <td>HORARIO.: {{$formatoDgcft->horario}} </td>
+                    </tr>
+                    
+                </table>
+                <br/>
+                <table>
+                    <tr>
+                        <th colspan="7" width="40%">INSCRIPCION</th><th colspan="{{count($materias)}}" width="60%">ACREDITACION</th><th colspan="2"></th>
+                    </tr>
+                    <tr>
+                        <th rowspan="3" >N<br/>U<br/>M<br/>.</th><th rowspan="3">NUMERO DE CONTROL</th>
+                        <th rowspan="3">NOMBRE DEL ALUMNO</th><th rowspan="3">EDAD</th>
+                        <th  rowspan="3">SEXO</th><th rowspan="3">ESCOLARIDAD</th>
+                        <th rowspan="3">BECA %</th>
+                        <th colspan="{{count($materias)}}"> NOMBRE DE LA MATERIA</th>
+                        <th rowspan="3">RESULTADO </th><th rowspan="3">FINAL</th>
+                    </tr>
+                    <tr>
+                        @foreach($materias as $materia)
+                        <th>{{$materia}}</th>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <th colspan="{{count($materias)}}">EVALUACIONES</th>
+                    </tr>
+                    
+                    @php
+                        $i=1;
+                    @endphp
 
-                @foreach($formatoDgcft->formatoDgcftDetalles as $registro)
-                <tr>
-                    <td>{{$i++}}</td><td>{{$registro->control}}</td><td>{{$registro->nombre}}</td>
-                    <td>
-                        {{$registro->edad}}
-                    </td>
-                    <td>{{$registro->fec_sexo}}</td><td>{{$registro->escolaridad}}</td><td>-</td>
-                    @foreach($materias as $materia)
-                        <?php 
-                        $calificacion=App\FormatoDgcftMatCalif::where('materia',trim($materia))
-                        ->where('formato_dgcft_detalle_id',$registro->id)
-                        ->first();
-                        ?>
+                    @foreach($formatoDgcft->formatoDgcftDetalles as $registro)
+                    <tr>
+                        <td>{{$i++}}</td><td>{{$registro->control}}</td><td>{{$registro->nombre}}</td>
                         <td>
-                            @if(!is_null($calificacion))
-                                {{$calificacion->calificacion }}
-                            @endif
+                            {{$registro->edad}}
                         </td>
+                        <td>{{$registro->fec_sexo}}</td><td>{{$registro->escolaridad}}</td><td>{{$registro->beca}}</td>
+                        @foreach($materias as $materia)
+                            <td>
+                                -
+                            </td>
+                        @endforeach
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
                     @endforeach
-                    <td></td>
-                    <td></td>
-                </tr>
-                @endforeach
-            </table>
-            
-            <table width="100%" border="0" cellpadding="10" cellspacing="0" bordercolor="#FFFFFF" class="Texto1" align="center">
-                <thead>
-                    <th colspan="2" width="50%"> INSCRIPCION </th><th colspan="2" width="50%"> ACREDITACION </th>
-                </thead>
-                <tr>
+                </table>
+                
+                <table width="100%" border="0" cellpadding="10" cellspacing="0" bordercolor="#FFFFFF" class="Texto1" align="center">
+                    <thead>
+                        <th colspan="2" width="50%"> INSCRIPCION </th><th colspan="2" width="50%"> ACREDITACION </th>
+                    </thead>
                     <tr>
-                        <td align="center" valign="bottom" width="25%" height="100"><span style="font-weight: bold"><u>{{$formatoDgcft->directora_nombre}}</u></span><br>
-                              NOMBRE Y FIRMA DEL DIRECTOR</td> 
-                        <td align="center" valign="bottom" width="25%" height="50" >
+                        <tr>
+                        <td align="center" valign="bottom" width="25%" height="100">
+                            <span style="font-weight: bold">
+                                <u>
+                                {{$formatoDgcft->plantelR->director->nombre}} {{$formatoDgcft->plantelR->director->ape_paterno}} {{$formatoDgcft->plantelR->director->ape_materno}}
+                                </u>
+                            </span>
+                            <br>
+                              @if($formatoDgcft->plantelR->director->genero==1)
+                              NOMBRE Y FIRMA DEL DIRECTOR
+                              @else
+                              NOMBRE Y FIRMA DE LA DIRECTORA
+                              @endif
+                        </td>  
+                            <td align="center" valign="bottom" width="25%" height="50" >
+                                <table width="100%"><tr><td style="border-bottom: 1px solid black;"></td></tr></table>
+                                SELLO
+                            </td> 
+                            <td align="center" valign="bottom" width="25%" height="100">
+                            <span style="font-weight: bold">
+                                <u>
+                                {{$formatoDgcft->plantelR->director->nombre}} {{$formatoDgcft->plantelR->director->ape_paterno}} {{$formatoDgcft->plantelR->director->ape_materno}}
+                                </u>
+                            </span>
+                            <br>
+                              @if($formatoDgcft->plantelR->director->genero==1)
+                              NOMBRE Y FIRMA DEL DIRECTOR
+                              @else
+                              NOMBRE Y FIRMA DE LA DIRECTORA
+                              @endif
+                        </td>  
+                            <td align="center" valign="bottom" width="25%" height="50">
                             <table width="100%"><tr><td style="border-bottom: 1px solid black;"></td></tr></table>
-                              SELLO
-                        </td> 
-                        <td align="center" valign="bottom" width="25%" height="50"><span style="font-weight: bold"><u>{{$formatoDgcft->directora_nombre}}</u></span><br>
-                              NOMBRE Y FIRMA DEL DIRECTOR</td> 
-                        <td align="center" valign="bottom" width="25%" height="50">
-                        <table width="100%"><tr><td style="border-bottom: 1px solid black;"></td></tr></table>
-                              SELLO</td> 
+                                SELLO</td> 
+                        </tr>
+                        <tr>
+                            <td align="center" valign="bottom" height="100"><span style="font-weight: bold"><u>{{$formatoDgcft->plantelR->enlace}}</u></span><br>
+                                NOMBRE Y FIRMA DEL ENLACE OPERATIVO</td> 
+                            <td align="center" valign="bottom" height="">
+                            <table width="100%"><tr><td style="border-bottom: 1px solid black;"></td></tr></table>
+                                    SELLO</td> 
+                            <td align="center" valign="bottom" height="50"><span style="font-weight: bold"><u>{{$formatoDgcft->plantelR->enlace}}</u></span><br>
+                                NOMBRE Y FIRMA DEL ENLACE OPERATIVO</td> 
+                            <td align="center" valign="bottom" height="">
+                            <table width="100%"><tr><td style="border-bottom: 1px solid black;"></td></tr></table>
+                                    SELLO</td> 
+                        </tr>
+                    </tbody>
+                </table>    
+                <br/>
+                <table width="45%" border="0" cellpadding="10" cellspacing="0" bordercolor="#FFFFFF" class="Texto1" align="center">
+                    <tbody><tr>
+                        
+                    </tr>
+                    </tbody>
+                </table>    
+            </div>
+            @endif
+            <div id="printeArea" class='SaltoDePagina'>
+                <table width="100%">
+                    <tr>
+                        <th><img src="{{asset('images/sep.jpg')}}" alt='logo_sep' width="250px;"></img></th>
+                        <th align='center'>SUBSECRETARÍA DE EDUCACIÓN MEDIA SUPERIOR <br/>
+                            DIRECCIÓN GENERAL DE CENTROS DE FORMACIÓN PARA EL TRABAJO <br/>
+                            DIRECCIÓN TÉCNICA <br/>
+                            SUBDIRECCIÓN DE VINCULACIÓN Y APOYO ACADÉMICO <br/>
+                            REGISTRO DE INSCRIPCIÓN Y ACREDITACIÓN (RIAP-02) <br/>
+                        </th>
+                    </tr>
+                </table>
+                <br/>
+                <table width="100%">
+                    <tr>
+                        <td>ENLACE OPERATIVO SCEO:<strong>{{$formatoDgcft->plantelR->enlace}}</strong></td>
+                        <td colspan="2">PLANTEL PARTICULAR: <strong>{{$formatoDgcft->plantelR->denominacion}}</strong></td>
+                        <td>CLAVE CCT: {{$formatoDgcft->plantelR->cct}} </td>
                     </tr>
                     <tr>
-                        <td align="center" valign="bottom" height="100"><span style="font-weight: bold"><u>{{$formatoDgcft->sceo_nombre}}</u></span><br>
-                              NOMBRE Y FIRMA DEL ENLACE OPERATIVO</td> 
-                        <td align="center" valign="bottom" height="">
-                        <table width="100%"><tr><td style="border-bottom: 1px solid black;"></td></tr></table>
-                                SELLO</td> 
-                        <td align="center" valign="bottom" height="50"><span style="font-weight: bold"><u>{{$formatoDgcft->sceo_nombre}}</u></span><br>
-                              NOMBRE Y FIRMA DEL ENLACE OPERATIVO</td> 
-                        <td align="center" valign="bottom" height="">
-                        <table width="100%"><tr><td style="border-bottom: 1px solid black;"></td></tr></table>
-                                SELLO</td> 
+                        <td colspan="2">ESPECIALIDAD:<strong>{{$formatoDgcft->especialidad}}</strong></td>
+                        <td>GRUPO: <strong>{{$formatoDgcft->grupo}}</strong></td>
+                        <td>FECHA: {{$emision}} </td>
                     </tr>
-                </tbody>
-            </table>    
-            <br/>
-            <table width="45%" border="0" cellpadding="10" cellspacing="0" bordercolor="#FFFFFF" class="Texto1" align="center">
-                <tbody><tr>
-                      
-                </tr>
-                </tbody>
-            </table>    
-        </div>
+                    <tr>
+                        <td> FECHA DE INICIO:<strong>{{$formatoDgcft->fec_inicio}}</strong></td>
+                        <td>FECHA DE FIN: <strong>{{$formatoDgcft->fec_fin}}</strong></td>
+                        <td>DURACION EN HRS.: {{$formatoDgcft->duracion}} </td>
+                        <td>HORARIO.: {{$formatoDgcft->horario}} </td>
+                    </tr>
+                    
+                </table>
+                <br/>
+                <table>
+                    <tr>
+                        <th colspan="7" width="40%">INSCRIPCION</th><th colspan="{{count($materias)}}" width="60%">ACREDITACION</th><th colspan="2"></th>
+                    </tr>
+                    <tr>
+                        <th rowspan="3" >N<br/>U<br/>M<br/>.</th><th rowspan="3">NUMERO DE CONTROL</th>
+                        <th rowspan="3">NOMBRE DEL ALUMNO</th><th rowspan="3">EDAD</th>
+                        <th  rowspan="3">SEXO</th><th rowspan="3">ESCOLARIDAD</th>
+                        <th rowspan="3">BECA %</th>
+                        <th colspan="{{count($materias)}}"> NOMBRE DE LA MATERIA</th>
+                        <th rowspan="3">RESULTADO </th><th rowspan="3">FINAL</th>
+                    </tr>
+                    <tr>
+                        @foreach($materias as $materia)
+                        <th>{{$materia}}</th>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <th colspan="{{count($materias)}}">EVALUACIONES</th>
+                    </tr>
+                    
+                    @php
+                        $i=1;
+                    @endphp
+
+                    @foreach($formatoDgcft->formatoDgcftDetalles as $registro)
+                    <tr>
+                        <td>{{$i++}}</td><td>{{$registro->control}}</td><td>{{$registro->nombre}}</td>
+                        <td>
+                            {{$registro->edad}}
+                        </td>
+                        <td>{{$registro->fec_sexo}}</td><td>{{$registro->escolaridad}}</td><td>{{$registro->beca}}</td>
+                        
+                        @foreach($materias as $materia)
+                            @if($loop->iteration==$iteracion_emision)
+                            <?php 
+                            $calificacion=App\FormatoDgcftMatCalif::where('materia',trim($materia))
+                            ->where('formato_dgcft_detalle_id',$registro->id)
+                            ->first();
+                            ?>
+                            <td>
+                                @if(!is_null($calificacion))
+                                    {{$calificacion->calificacion }}
+                                @endif
+                            </td>
+                            @else
+                            <td>-</td>
+                            @endif
+                        @endforeach
+                        @foreach($materias as $materia)
+                            @if($loop->iteration==$iteracion_emision)
+                            <?php 
+                            $calificacion=App\FormatoDgcftMatCalif::where('materia',trim($materia))
+                            ->where('formato_dgcft_detalle_id',$registro->id)
+                            ->first();
+                            ?>
+                            <td>
+                                @if(!is_null($calificacion))
+                                    {{$calificacion->calificacion }}
+                                @endif
+                            </td>
+                            @endif
+                        @endforeach
+                        @foreach($materias as $materia)
+                            @if($loop->iteration==$iteracion_emision)
+                            <?php 
+                            $calificacion=App\FormatoDgcftMatCalif::where('materia',trim($materia))
+                            ->where('formato_dgcft_detalle_id',$registro->id)
+                            ->first();
+                            ?>
+                            <td>
+                                @if(!is_null($calificacion))
+                                    {{$calificacion->calificacion }}
+                                @endif
+                            </td>
+                            
+                            @endif
+                        @endforeach
+                    </tr>
+                    @endforeach
+                </table>
+                
+                <table width="100%" border="0" cellpadding="10" cellspacing="0" bordercolor="#FFFFFF" class="Texto1" align="center">
+                    <thead>
+                        <th colspan="2" width="50%"> INSCRIPCION </th><th colspan="2" width="50%"> ACREDITACION </th>
+                    </thead>
+                    <tr>
+                        <tr>
+                        <td align="center" valign="bottom" width="25%" height="100">
+                            <span style="font-weight: bold">
+                                <u>
+                                {{$formatoDgcft->plantelR->director->nombre}} {{$formatoDgcft->plantelR->director->ape_paterno}} {{$formatoDgcft->plantelR->director->ape_materno}}
+                                </u>
+                            </span>
+                            <br>
+                              @if($formatoDgcft->plantelR->director->genero==1)
+                              NOMBRE Y FIRMA DEL DIRECTOR
+                              @else
+                              NOMBRE Y FIRMA DE LA DIRECTORA
+                              @endif
+                        </td>  
+                            <td align="center" valign="bottom" width="25%" height="50" >
+                                <table width="100%"><tr><td style="border-bottom: 1px solid black;"></td></tr></table>
+                                SELLO
+                            </td> 
+                            <td align="center" valign="bottom" width="25%" height="100">
+                            <span style="font-weight: bold">
+                                <u>
+                                {{$formatoDgcft->plantelR->director->nombre}} {{$formatoDgcft->plantelR->director->ape_paterno}} {{$formatoDgcft->plantelR->director->ape_materno}}
+                                </u>
+                            </span>
+                            <br>
+                              @if($formatoDgcft->plantelR->director->genero==1)
+                              NOMBRE Y FIRMA DEL DIRECTOR
+                              @else
+                              NOMBRE Y FIRMA DE LA DIRECTORA
+                              @endif
+                        </td>  
+                            <td align="center" valign="bottom" width="25%" height="50">
+                            <table width="100%"><tr><td style="border-bottom: 1px solid black;"></td></tr></table>
+                                SELLO</td> 
+                        </tr>
+                        <tr>
+                            <td align="center" valign="bottom" height="100"><span style="font-weight: bold"><u>{{$formatoDgcft->plantelR->enlace}}</u></span><br>
+                                NOMBRE Y FIRMA DEL ENLACE OPERATIVO</td> 
+                            <td align="center" valign="bottom" height="">
+                            <table width="100%"><tr><td style="border-bottom: 1px solid black;"></td></tr></table>
+                                    SELLO</td> 
+                            <td align="center" valign="bottom" height="50"><span style="font-weight: bold"><u>{{$formatoDgcft->plantelR->enlace}}</u></span><br>
+                                NOMBRE Y FIRMA DEL ENLACE OPERATIVO</td> 
+                            <td align="center" valign="bottom" height="">
+                            <table width="100%"><tr><td style="border-bottom: 1px solid black;"></td></tr></table>
+                                    SELLO</td> 
+                        </tr>
+                    </tbody>
+                </table>     
+                <br/>
+                <table width="45%" border="0" cellpadding="10" cellspacing="0" bordercolor="#FFFFFF" class="Texto1" align="center">
+                    <tbody><tr>
+                        
+                    </tr>
+                    </tbody>
+                </table>    
+            </div>
+        @endforeach
         
         <script type="text/php">
             /*if (isset($pdf))

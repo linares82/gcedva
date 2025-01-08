@@ -38,7 +38,13 @@
                     <a class="btn btn-link pull-right" href="{{ route('formatoDgcfts.index') }}"><i class="glyphicon glyphicon-backward"></i>  Regresar</a>
                     <a class="btn btn-info pull-right" href="{{ route('formatoDgcfts.limpiarLineas', array('id'=>$formatoDgcft->id)) }}"> Limpiar Lineas </a>
                     <a class="btn btn-warning pull-right" href="{{ route('formatoDgcfts.generarCalificaciones',array('id'=>$formatoDgcft->id)) }}">  Generar Calificaciones</a>
-                    <a class="btn btn-primary pull-right" href="{{ route('formatoDgcfts.generarLineas',array('id'=>$formatoDgcft->id)) }}">  Generar Lineas</a>
+                    <a class="btn btn-primary pull-right" 
+                    href="{{ route('formatoDgcfts.generarLineas',
+                        array('id'=>$formatoDgcft->id,
+                                          'control_parte_fija'=>$formatoDgcft->control_parte_fija,
+                                          'control_inicio'=>$formatoDgcft->control_inicio)) }}">  
+                                          Generar Lineas
+                    </a>
                     
                     
                     

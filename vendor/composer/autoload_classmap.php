@@ -252,6 +252,7 @@ return array(
     'AddPlanInscripcionsTable' => $baseDir . '/database/migrations/2019_03_28_131419_add_plan_inscripcions_table.php',
     'AddPlanPagoCombinacionTable' => $baseDir . '/database/migrations/2018_04_09_085152_add_plan_pago_combinacion_table.php',
     'AddPlantelEspecialidadTable' => $baseDir . '/database/migrations/2017_08_11_142022_add_plantel_especialidad_table.php',
+    'AddPlantelIdFieldToFormatoDgcftsTable' => $baseDir . '/database/migrations/2025_01_07_100148_add_plantel_id_field_to_formato_dgcfts_table.php',
     'AddPlantelIdToActaFinalsTable' => $baseDir . '/database/migrations/2021_06_09_130759_add_plantel_id_to_acta_finals_table.php',
     'AddPlantelIdToInventarioObservacionsTable' => $baseDir . '/database/migrations/2022_08_29_115310_add_plantel_id_to_inventario_observacions_table.php',
     'AddPlantelIdToPlanEstudiosTable' => $baseDir . '/database/migrations/2021_05_19_090223_add_plantel_id_to_plan_estudios_table.php',
