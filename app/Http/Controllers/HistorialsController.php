@@ -63,7 +63,7 @@ class HistorialsController extends Controller {
 
 		if($e->historia_evento_id==2){
 			$empleado=Empleado::find($e->empleado_id);
-			$empleado->st_empleado_id=3;
+			//$empleado->st_empleado_id=3;
 			$empleado->save();
 		}
 

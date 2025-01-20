@@ -46,6 +46,7 @@ class ReportesCedvaController extends Controller
 
     public function reportesCedvaR(Request $request)
     {
+        //ini_set('memory_limit', '-1');
         $datos = $request->all();
         //dd($datos);
         $estatus = array();
@@ -822,7 +823,11 @@ class ReportesCedvaController extends Controller
                 //dd($combinaciones_plantel_seccion[0]);
 
                 $resumen = array();
+                $resumen_pagados=array();
+                $resumen_no_pagados=array();
                 $resumen_dinero = array();
+                $resumen_dinero_pagados = array();
+                $resumen_dinero_no_pagados = array();
                 $registros_ordenados=array();
 
 
@@ -830,28 +835,64 @@ class ReportesCedvaController extends Controller
                     $linea = array();
 
                     $linea['razon'] = "";
+                    $linea['razon_pagados'] = "";
+                    $linea['razon_no_pagados'] = "";
                     $linea['seccion'] = "";
+                    $linea['seccion_pagados'] = "";
+                    $linea['seccion_no_pagados'] = "";
                     $linea['nueva_inscripcion'] = 0;
+                    $linea['nueva_inscripcion_pagados'] = 0;
+                    $linea['nueva_inscripcion_no_pagados'] = 0;
                     $linea['matricula_total_activa'] = 0;
+                    $linea['matricula_total_activa_pagados'] = 0;
+                    $linea['matricula_total_activa_no_pagados'] = 0;
                     $linea['vigentes_sin_adeudos'] = 0;
+                    $linea['vigentes_sin_adeudos_pagados'] = 0;
+                    $linea['vigentes_sin_adeudos_no_pagados'] = 0;
                     $linea['vigentes_con_1_adeudos'] = 0;
+                    $linea['vigentes_con_1_adeudos_pagados'] = 0;
+                    $linea['vigentes_con_1_adeudos_no_pagados'] = 0;
                     $linea['baja_temporal_por_pago'] = 0;
+                    $linea['baja_temporal_por_pago_pagados'] = 0;
+                    $linea['baja_temporal_por_pago_no_pagados'] = 0;
                     $linea['baja_administrativa'] = 0;
+                    $linea['baja_administrativa_pagados'] = 0;
+                    $linea['baja_administrativa_no_pagados'] = 0;
                     $linea['preinscrito'] = 0;
-                    $linea['razon'] = "";
+                    $linea['preinscrito_pagados'] = 0;
+                    $linea['preinscrito_no_pagados'] = 0;
+                    //$linea['razon'] = "";
                     $aplantel = "";
 
                     $linea_dinero = array();
                     $linea_dinero['razon'] = "";
+                    $linea_dinero['razon_pagados'] = "";
+                    $linea_dinero['razon_no_pagados'] = "";
                     $linea_dinero['seccion'] = "";
+                    $linea_dinero['seccion_pagados'] = "";
+                    $linea_dinero['seccion_no_pagados'] = "";
                     $linea_dinero['nueva_inscripcion'] = 0;
+                    $linea_dinero['nueva_inscripcion_pagados'] = 0;
+                    $linea_dinero['nueva_inscripcion_no_pagados'] = 0;
                     $linea_dinero['matricula_total_activa'] = 0;
+                    $linea_dinero['matricula_total_activa_pagados'] = 0;
+                    $linea_dinero['matricula_total_activa_no_pagados'] = 0;
                     $linea_dinero['vigentes_sin_adeudos'] = 0;
+                    $linea_dinero['vigentes_sin_adeudos_pagados'] = 0;
+                    $linea_dinero['vigentes_sin_adeudos_no_pagados'] = 0;
                     $linea_dinero['vigentes_con_1_adeudos'] = 0;
+                    $linea_dinero['vigentes_con_1_adeudos_pagados'] = 0;
+                    $linea_dinero['vigentes_con_1_adeudos_no_pagados'] = 0;
                     $linea_dinero['baja_temporal_por_pago'] = 0;
+                    $linea_dinero['baja_temporal_por_pago_pagados'] = 0;
+                    $linea_dinero['baja_temporal_por_pago_no_pagados'] = 0;
                     $linea_dinero['baja_administrativa'] = 0;
+                    $linea_dinero['baja_administrativa_pagados'] = 0;
+                    $linea_dinero['baja_administrativa_no_pagados'] = 0;
                     $linea_dinero['preinscrito'] = 0;
-                    $linea_dinero['razon'] = "";
+                    $linea_dinero['preinscrito_pagados'] = 0;
+                    $linea_dinero['preinscrito_no_pagados'] = 0;
+                    //$linea_dinero['razon'] = "";
                     //$i=1;
                     //dd($resultado2);
                     foreach ($resultado2 as $r) {
@@ -865,20 +906,36 @@ class ReportesCedvaController extends Controller
                             //$registro['seccion']==$combinacion_plantel_seccion['seccion']);
                             
                         }*/
-
+                        //dd($registro);
                         if (
                             $registro['plantel_id'] == $combinacion_plantel_seccion['plantel_id'] and
                             $registro['seccion'] == $combinacion_plantel_seccion['seccion']
                         ) {
                             $linea['razon'] = $registro['razon'];
+                            $linea['razon_pagados'] = $registro['razon'];
+                            $linea['razon_no_pagados'] = $registro['razon'];
                             $linea['seccion'] = $registro['seccion'];
+                            $linea['seccion_pagados'] = $registro['seccion'];
+                            $linea['seccion_no_pagados'] = $registro['seccion'];
 
                             $linea_dinero['razon'] = $registro['razon'];
+                            $linea_dinero['razon_pagados'] = $registro['razon'];
+                            $linea_dinero['razon_no_pagados'] = $registro['razon'];
                             $linea_dinero['seccion'] = $registro['seccion'];
+                            $linea_dinero['seccion_pagados'] = $registro['seccion'];
+                            $linea_dinero['seccion_no_pagados'] = $registro['seccion'];
 
                             if ($registro['estatus_cliente_id'] == 5) {
                                 $linea['nueva_inscripcion'] = $linea['nueva_inscripcion'] + 1;
-                                $linea_dinero['nueva_inscripcion'] = $linea_dinero['nueva_inscripcion'] + $registro['total_caja'];
+                                if($registro['pagado_bnd']==1){ $linea['nueva_inscripcion_pagado'] = $linea['nueva_inscripcion_pagados'] + 1; }
+                                else{ $linea['nueva_inscripcion_no_pagado'] = $linea['nueva_inscripcion_no_pagados'] + 1;}
+                                
+                                if($registro['pagado_bnd']==1){$linea_dinero['nueva_inscripcion'] = $linea_dinero['nueva_inscripcion'] + $registro['total_caja'];}
+                                else{$linea_dinero['nueva_inscripcion'] = $linea_dinero['nueva_inscripcion'] + $registro['monto']; }
+
+                                if($registro['pagado_bnd']==1){ $linea_dinero['nueva_inscripcion_pagados'] = $linea_dinero['nueva_inscripcion_pagados'] + $registro['total_caja']; }
+                                else{ $linea_dinero['nueva_inscripcion_no_pagados'] = $linea_dinero['nueva_inscripcion_no_pagados'] + $registro['monto']; }
+                                
                                 array_push($combinacion_plantel_seccion['nueva_inscripcion'],$registro);
                             }
 
@@ -890,8 +947,18 @@ class ReportesCedvaController extends Controller
                                 //$registro['pagado_bnd'] == 1
                             ) {
                                 $linea['vigentes_sin_adeudos'] = $linea['vigentes_sin_adeudos'] + 1;
-                                $linea_dinero['vigentes_sin_adeudos'] = $linea_dinero['vigentes_sin_adeudos'] + $registro['total_caja'];
+                                if($registro['pagado_bnd']==1){ $linea['vigentes_sin_adeudos_pagados'] = $linea['vigentes_sin_adeudos_pagados'] + 1; }
+                                else{ $linea['vigentes_sin_adeudos_no_pagados'] = $linea['vigentes_sin_adeudos_no_pagados'] + 1; }
+
+                                if($registro['pagado_bnd']==1){$linea_dinero['vigentes_sin_adeudos'] = $linea_dinero['vigentes_sin_adeudos'] + $registro['total_caja'];}
+                                else{$linea_dinero['vigentes_sin_adeudos'] = $linea_dinero['vigentes_sin_adeudos'] + $registro['monto'];}
+                                
+                                if($registro['pagado_bnd']==1){ $linea_dinero['vigentes_sin_adeudos_pagados'] = $linea_dinero['vigentes_sin_adeudos_pagados'] + $registro['total_caja']; }
+                                else{ $linea_dinero['vigentes_sin_adeudos_no_pagados'] = $linea_dinero['vigentes_sin_adeudos_no_pagados'] + $registro['monto']; }
+                                
                                 array_push($combinacion_plantel_seccion['activos_sin_adeudo'],$registro);
+                                //array_push($combinacion_plantel_seccion['activos_sin_adeudo_pagados'],$registro);
+                                //array_push($combinacion_plantel_seccion['activos_sin_adeudo_no_pagados'],$registro);
                             }
                             if (//( $registro['estatus_cliente_id']==25 or $registro['estatus_cliente_id']==26 or
                                     ($registro['estatus_cliente_id'] == 17) //or
@@ -902,23 +969,55 @@ class ReportesCedvaController extends Controller
                             ) {
                                 //dd($registro);
                                 $linea['vigentes_con_1_adeudos'] = $linea['vigentes_con_1_adeudos'] + 1;
-                                $linea_dinero['vigentes_con_1_adeudos'] = $linea_dinero['vigentes_con_1_adeudos'] + $registro['total_caja'];
+                                if($registro['pagado_bnd']==1){ $linea['vigentes_con_1_adeudos_pagados'] = $linea['vigentes_con_1_adeudos_pagados'] + 1; }
+                                else{ $linea['vigentes_con_1_adeudos_no_pagados'] = $linea['vigentes_con_1_adeudos_no_pagados'] + 1; }
+
+                                if($registro['pagado_bnd']==1){$linea_dinero['vigentes_con_1_adeudos'] = $linea_dinero['vigentes_con_1_adeudos'] + $registro['total_caja'];}
+                                else{$linea_dinero['vigentes_con_1_adeudos'] = $linea_dinero['vigentes_con_1_adeudos'] + $registro['monto'];}
+
+                                if($registro['pagado_bnd']==1){ $linea_dinero['vigentes_con_1_adeudos_pagados'] = $linea_dinero['vigentes_con_1_adeudos_pagados'] + $registro['total_caja']; }
+                                else{ $linea_dinero['vigentes_con_1_adeudos_no_pagados'] = $linea_dinero['vigentes_con_1_adeudos_no_pagados'] + $registro['monto']; }
+
                                 array_push($combinacion_plantel_seccion['activos_1_adeudo'],$registro);
                             }
 
                             if ($registro['estatus_cliente_id'] == 25) {
                                 $linea['baja_temporal_por_pago'] = $linea['baja_temporal_por_pago'] + 1;
-                                $linea_dinero['baja_temporal_por_pago'] = $linea_dinero['baja_temporal_por_pago'] + $registro['total_caja'];
+                                if($registro['pagado_bnd']==1){ $linea['baja_temporal_por_pago_pagados'] = $linea['baja_temporal_por_pago_pagados'] + 1; }
+                                else{ $linea['baja_temporal_por_pago_no_pagados'] = $linea['baja_temporal_por_pago_no_pagados'] + 1; }
+
+                                if($registro['pagado_bnd']==1){$linea_dinero['baja_temporal_por_pago'] = $linea_dinero['baja_temporal_por_pago'] + $registro['total_caja'];}
+                                else{$linea_dinero['baja_temporal_por_pago'] = $linea_dinero['baja_temporal_por_pago'] + $registro['monto'];}
+
+                                if($registro['pagado_bnd']==1){ $linea_dinero['baja_temporal_por_pago_pagados'] = $linea_dinero['baja_temporal_por_pago_pagados'] + $registro['total_caja']; }
+                                else{ $linea_dinero['baja_temporal_por_pago_no_pagados'] = $linea_dinero['baja_temporal_por_pago_no_pagados'] + $registro['monto']; }
+
                                 array_push($combinacion_plantel_seccion['baja_temporal_por_pago'],$registro);
                             }
                             if ($registro['estatus_cliente_id'] == 26) {
                                 $linea['baja_administrativa'] = $linea['baja_administrativa'] + 1;
-                                $linea_dinero['baja_administrativa'] = $linea_dinero['baja_administrativa'] + $registro['total_caja'];
+                                if($registro['pagado_bnd']==1){ $linea['baja_administrativa_pagados'] = $linea['baja_administrativa_pagados'] + 1; }
+                                else{ $linea['baja_administrativa_no_pagados'] = $linea['baja_administrativa_no_pagados'] + 1; }
+
+                                if($registro['pagado_bnd']==1){$linea_dinero['baja_administrativa'] = $linea_dinero['baja_administrativa'] + $registro['total_caja'];}
+                                else{$linea_dinero['baja_administrativa'] = $linea_dinero['baja_administrativa'] + $registro['monto'];}
+
+                                if($registro['pagado_bnd']==1){ $linea_dinero['baja_administrativa_pagados'] = $linea_dinero['baja_administrativa_pagados'] + $registro['total_caja']; }
+                                else{ $linea_dinero['baja_administrativa_no_pagados'] = $linea_dinero['baja_administrativa_no_pagados'] + $registro['monto']; }
+                                
                                 array_push($combinacion_plantel_seccion['baja_administrativa'],$registro);
                             }
                             if ($registro['estatus_cliente_id'] == 22 /*or $registro['estatus_cliente_id'] == 5*/) {
                                 $linea['preinscrito'] = $linea['preinscrito'] + 1;
-                                $linea_dinero['preinscrito'] = $linea_dinero['preinscrito'] + $registro['total_caja'];
+                                if($registro['pagado_bnd']==1){ $linea['preinscrito_pagados'] = $linea['preinscrito_pagados'] + 1; }
+                                else{ $linea['preinscrito_no_pagados'] = $linea['preinscrito_no_pagados'] + 1; }
+
+                                if($registro['pagado_bnd']==1){$linea_dinero['preinscrito'] = $linea_dinero['preinscrito'] + $registro['total_caja'];}
+                                else{$linea_dinero['preinscrito'] = $linea_dinero['preinscrito'] + $registro['monto'];}
+
+                                if($registro['pagado_bnd']==1){ $linea_dinero['preinscrito_pagados'] = $linea_dinero['preinscrito_pagados'] + $registro['total_caja']; }
+                                else{ $linea_dinero['preinscrito_no_pagados'] = $linea_dinero['preinscrito_no_pagados'] + $registro['monto']; }
+
                                 array_push($combinacion_plantel_seccion['preinscrito'],$registro);
                             }
 
@@ -933,12 +1032,17 @@ class ReportesCedvaController extends Controller
                                 ($registro['estatus_cliente_id'] == 4 and $registro['estatus_seguimiento_id'] == 9)*/
                             ) {
                                 $linea['matricula_total_activa'] = $linea['matricula_total_activa'] + 1;
-                                if ($registro['total_caja'] == 0) {
+                                if($registro['pagado_bnd']==1){ $linea['matricula_total_activa_pagados'] = $linea['matricula_total_activa_pagados'] + 1; }
+                                else{ $linea['matricula_total_activa_no_pagados'] = $linea['matricula_total_activa_no_pagados'] + 1; }
+
+                                if ($registro['pagado_bnd']==0) {
                                     $linea_dinero['matricula_total_activa'] = $linea_dinero['matricula_total_activa'] + $registro['monto'];
                                 } else {
                                     $linea_dinero['matricula_total_activa'] = $linea_dinero['matricula_total_activa'] + $registro['total_caja'];
                                 }
-                                
+
+                                if($registro['pagado_bnd']==1){ $linea_dinero['matricula_total_activa_pagados'] = $linea_dinero['matricula_total_activa_pagados'] + $registro['total_caja']; }
+                                else{ $linea_dinero['matricula_total_activa_no_pagados'] = $linea_dinero['matricula_total_activa_no_pagados'] + $registro['monto']; }
 
                                 /*echo $i."__";
                                 echo $registro['cliente']."--";
@@ -952,28 +1056,41 @@ class ReportesCedvaController extends Controller
                     if ($linea['matricula_total_activa'] > 0) {
                         array_push($resumen, $linea);
                     }
+                    
                     if ($linea_dinero['matricula_total_activa'] > 0) {
                         array_push($resumen_dinero, $linea_dinero);
                     }
                     
                     if(count($combinacion_plantel_seccion['activos_sin_adeudo']) > 0){
                         array_push($registros_ordenados, $combinacion_plantel_seccion['activos_sin_adeudo']);
+                        //array_push($registros_ordenados, $combinacion_plantel_seccion['activos_sin_adeudo_pagados']);
+                        //array_push($registros_ordenados, $combinacion_plantel_seccion['activos_sin_adeudo_no_pagados']);
                     }
                     //dd($registros_ordenados);
                     if(count($combinacion_plantel_seccion['activos_1_adeudo']) > 0){
                         array_push($registros_ordenados, $combinacion_plantel_seccion['activos_1_adeudo']);
+                        //array_push($registros_ordenados, $combinacion_plantel_seccion['activos_1_adeudo_pagados']);
+                        //array_push($registros_ordenados, $combinacion_plantel_seccion['activos_1_adeudo_no_pagados']);
                     }
                     if(count($combinacion_plantel_seccion['baja_temporal_por_pago']) > 0){
                         array_push($registros_ordenados, $combinacion_plantel_seccion['baja_temporal_por_pago']);
+                        //array_push($registros_ordenados, $combinacion_plantel_seccion['baja_temporal_por_pago_pagados']);
+                        //array_push($registros_ordenados, $combinacion_plantel_seccion['baja_temporal_por_pago_no_pagados']);
                     }
                     if(count($combinacion_plantel_seccion['baja_administrativa']) > 0){
                         array_push($registros_ordenados, $combinacion_plantel_seccion['baja_administrativa']);    
+                        //array_push($registros_ordenados, $combinacion_plantel_seccion['baja_administrativa_pagados']);
+                        //array_push($registros_ordenados, $combinacion_plantel_seccion['baja_administrativa_no_pagados']);        
                     }
                     if(count($combinacion_plantel_seccion['preinscrito']) > 0){
                         array_push($registros_ordenados, $combinacion_plantel_seccion['preinscrito']);
+                        //array_push($registros_ordenados, $combinacion_plantel_seccion['preinscrito_pagados']);
+                        //array_push($registros_ordenados, $combinacion_plantel_seccion['preinscrito_no_pagados']);
                     }
                     if(count($combinacion_plantel_seccion['nueva_inscripcion']) > 0){
                         array_push($registros_ordenados, $combinacion_plantel_seccion['nueva_inscripcion']);
+                        //array_push($registros_ordenados, $combinacion_plantel_seccion['nueva_inscripcion_pagados']);
+                        //array_push($registros_ordenados, $combinacion_plantel_seccion['nueva_inscripcion_no_pagados']);
                     }
                     
                 }

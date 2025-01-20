@@ -44,18 +44,21 @@
                             <span class="help-block">{{ $errors->first("curp") }}</span>
                             @endif
                         </div>
+                        @if(isset($cliente))
                         <div class="form-group col-md-2 @if($errors->has('curp')) has-error @endif">
                             @if(!is_null($cliente->fec_valida_curp))
                             Validacion:{{$cliente->fec_valida_curp}}
                             @endif
                             @permission('clientes.apiValidaCurp')
                             <input type="button" id="btnValidarCurp" value="Validar">
+                            {{$cliente->bnd_consulta_curp==1 ? '-Si validado' : 'No validado'}}
                             {!! Form::hidden("bnd_consulta_curp", null, array("class" => "form-control input-sm", "id" => "bnd_consulta_curp-field")) !!}
                             @endpermission
                             @permission('clientes.desbloqueoCurp')
                             <input type="button" id="btnDesbloqueoCurp" value="Desbloquear Curp">
                             @endpermission
                         </div>
+                        @endif
                         <div class="form-group col-md-4 @if($errors->has('escuela_procedencia')) has-error @endif">
                             <label for="escuela_procedencia-field">Escuela Procedencia</label><div id="contador"></div>
                             {!! Form::text("escuela_procedencia", null, array("class" => "form-control input-sm", "id" => "escuela_procedencia-field")) !!}

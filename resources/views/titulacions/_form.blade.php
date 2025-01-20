@@ -113,7 +113,7 @@
                                   <a href="{{asset("imagenes/titulacion/".$titulacion->id."/".$doc->archivo)}}" target="_blank">Ver</a>
                               </td>
                               <td>
-                                  <a class="btn btn-xs btn-danger" href="{{route('titulacionDocumentacions.destroy', $doc->id)}}">Eliminar</a>
+                                  <a class="btn btn-xs btn-danger" href="{{route('titulacionDocumentacions.destroy', array('id'=>$doc->id))}}">Eliminar</a>
                               </td>
                           </tr>
                           @endforeach

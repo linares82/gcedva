@@ -116,12 +116,13 @@ class TitulacionDocumentacionsController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id,TitulacionDocumentacion $titulacionDocumentacion)
+	public function destroy(Request $request)
 	{
-		$titulacionDocumentacion=$titulacionDocumentacion->find($id);
+		$titulacionDocumentacion=TitulacionDocumentacion::find($request['id']);
+		$titulacion_id=$titulacionDocumentacion->titulacion_id;
 		$titulacionDocumentacion->delete();
 
-		return redirect()->route('titulacionDocumentacions.index')->with('message', 'Registro Borrado.');
+		return redirect()->route('titulacions.edit',$titulacion_id)->with('message', 'Registro Borrado.');
 	}
 
 	public function cargarImg(Request $request)

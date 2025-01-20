@@ -60,8 +60,8 @@
 
          }
               h1, h3, h5, th { text-align: center; }
-        table, #chart_div { margin: auto; font-family: Segoe UI; border: thin ridge gray; }*/
-        th { font-size: 10px; background: #0046c3; color: #fff; max-width: 400px; padding: 2px 5px; }
+        table, #chart_div { margin: auto; font-family: Segoe UI; border: thin ridge gray; border-collapse: collapse;}
+        th { font-size: 10px; max-width: 400px; padding: 2px 5px; }
         td { font-size: 10px; padding: 2px 10px; color: #000; }
         tr { background: #b8d1f3; }
         tr:nth-child(even) { background: #dae5f4; }

@@ -60,11 +60,7 @@ class PeriodoEstudiosController extends Controller
         $input = $request->all();
         $input['usu_alta_id'] = Auth::user()->id;
         $input['usu_mod_id'] = Auth::user()->id;
-        if(isset($input['bnd_carrera_tecnica'])){
-            $input['bnd_carrera_tecnica']==1;
-        }else{
-            $input['bnd_carrera_tecnica']==0;
-        }
+        
 
         //create data
         $p = PeriodoEstudio::create($input);

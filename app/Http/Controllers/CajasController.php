@@ -643,7 +643,8 @@ class CajasController extends Controller
                                 //dd($regla->toArray());
                                 if (($adeudo->bnd_eximir_descuento_regla == 0 or is_null($adeudo->bnd_eximir_descuento_regla)) and
                                     //$adeudo->cajaConcepto->bnd_mensualidad == 1 or
-                                    $adeudo->caja_concepto_id <= 26
+                                    //$adeudo->caja_concepto_id <= 26
+                                    $adeudo->caja_concepto_id <= 33
                                 ) {
                                     //dd($adeudo->planPagoLn->reglaRecargos->toArray());
                                     $fecha_caja = Carbon::createFromFormat('Y-m-d', $caja->fecha);

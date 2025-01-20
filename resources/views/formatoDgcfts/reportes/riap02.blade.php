@@ -59,6 +59,13 @@
           padding:10px;
 
          }
+
+         table {
+                    font-family: arial, sans-serif;
+                    border-collapse: collapse;
+                    width: 100%;
+                    font-size: 10px;
+                }
          
         .verticalText {
             writing-mode: vertical-lr;

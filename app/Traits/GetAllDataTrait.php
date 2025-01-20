@@ -149,6 +149,7 @@ trait GetAllDataTrait
         //dd();
         
         $planteles = Empleado::where('user_id', '=', Auth::user()->id)->where('st_empleado_id','<>',3)->first()->plantels->pluck('id');
+        $empleado = Empleado::where('user_id', Auth::user()->id)->where('st_empleado_id','<>',3)->first();
         //dd($empleado);
         /*
         $planteles = array();
