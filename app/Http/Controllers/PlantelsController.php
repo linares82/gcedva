@@ -2,26 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
-use File as Archi;
-use App\AsignacionAcademica;
-use App\ConceptoMultipago;
-use App\Cliente;
-use App\DocPlantelPlantel;
+use DB;
+use Auth;
 use App\Grado;
-use App\FormaPago;
-use App\Hacademica;
+use App\Cliente;
 use App\Plantel;
 use App\Empleado;
+use App\FormaPago;
+use File as Archi;
+use App\Hacademica;
+use App\Http\Requests;
+use App\ConceptoMultipago;
+use App\DocPlantelPlantel;
+use App\AsignacionAcademica;
+use App\PlantelAgrupamiento;
 use Illuminate\Http\Request;
-use Auth;
-use App\Http\Requests\updatePlantel;
-use App\Http\Requests\createPlantel;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\File;
 use Illuminate\Http\Response;
-use DB;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\createPlantel;
+use App\Http\Requests\updatePlantel;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class PlantelsController extends Controller
 {
@@ -708,5 +709,14 @@ class PlantelsController extends Controller
 		}
 		return $plantels;
 		//return redirect()->route('edit', array('id'=>$datos['plantel']));
+	}
+
+	public function PlantelXAgrupamiento(Request $request){
+		$datos=$request->all();
+		
+			$agrupamiento=PlantelAgrupamiento::find($datos['plantel_agrupamiento_id']);
+			return json_encode($agrupamiento->plantels()->pluck('id'));
+			
+		
 	}
 }

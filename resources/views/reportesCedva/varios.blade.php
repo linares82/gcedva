@@ -31,6 +31,15 @@
                 @endif
             </div>
 
+            <div class="form-group col-md-6 @if($errors->has('agrupamiento_plantel_id')) has-error @endif">
+                <label for="agrupamiento_plantel_id-field">Agrupamiento Planteles<i id="lbl_trabajando"></i></label>
+                {!! Form::select("agrupamiento_plantel_id", $agrupamientoPlantels, null, array("class" => "form-control select_seguridad", "id" => "agrupamiento_plantel_id-field")) !!}
+                @if($errors->has("agrupamiento_plantel_id"))
+                    <span class="help-block">{{ $errors->first("agrupamiento_plantel_id") }}</span>
+                @endif
+            </div>
+
+
             <div class="form-group col-md-6 @if($errors->has('plantel_f')) has-error @endif">
                 <label for="plantel_f-field">Plantel de:</label>
                 {!! Form::select("plantel_f[]", $planteles, null, array("class" => "form-control select_seguridad", "id" => "plantel_f-field", 'multiple'=>true)) !!}
@@ -100,6 +109,9 @@
 @push('scripts')
   <script type="text/javascript">
     $(document).ready(function() {
+
+    cambioAgrupamiento();
+
     $('#select-allCiclos').click(function(){
         $('select#ciclo_f-field').multiSelect('select_all');
         return false;
@@ -115,6 +127,34 @@
         
         
     });
+
+    $("#agrupamiento_plantel_id-field").change(function(event) {
+        cambioAgrupamiento();
+   });
+
+   function cambioAgrupamiento(){
+    $.ajax({
+                  url: '{{ route("plantels.PlantelXAgrupamiento") }}',
+                  type: 'GET',
+                  data: {
+                      'plantel_agrupamiento_id': $("#agrupamiento_plantel_id-field option:selected").val(), 
+                  },
+                  dataType: 'json',
+                  beforeSend : function(){
+                    $('#lbl_trabajando').html('...');
+                    $("#fact_usuario").text('Procesando');
+                    
+                },
+                  complete : function(datos){
+                    $('#lbl_trabajando').html('');
+                    $("#plantel_f-field").val(datos.responseJSON).change();
+
+                  },
+                  success: function(data){
+                    
+                  }
+              });
+   }
 
     $('#fecha_f-field').Zebra_DatePicker({
         days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],

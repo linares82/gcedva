@@ -31,7 +31,7 @@
   </head>
   <body>
     <div class="datagrid">
-<!--      
+     
     <table class="table table-condensed table-striped">
             <h4>Resumen Pagados y No Pagados</h4>
             <thead>
@@ -53,7 +53,7 @@
               $t6=0;
               @endphp
               @foreach($resumen as $linea)
-              <tr>
+              <!--<tr>
                 <td>{{$linea['razon']}}</td><td>{{$linea['seccion']}}</td>
                 <td>{{ $linea['nueva_inscripcion']}}</td>
                 <td>{{ $linea['vigentes_sin_adeudos']}}</td>
@@ -61,7 +61,7 @@
                 <td>{{$linea['preinscrito']}}</td>
                 <td>{{$linea['matricula_total_activa']}}</td>
                 
-              </tr>
+              </tr>-->
               @php
               $t0=$t0+$linea['nueva_inscripcion'];
               $t1=$t1+$linea['vigentes_sin_adeudos'];
@@ -81,7 +81,7 @@
               </tr>
             </tbody>
     </table>    
--->
+
     @if($datos['pagos_f']==0 or $datos['pagos_f']==1)
     <table class="table table-condensed table-striped">
             <h4>Resumen Pagados</h4>

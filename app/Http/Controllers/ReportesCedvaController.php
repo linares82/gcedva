@@ -26,6 +26,7 @@ use App\AutorizacionBeca;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\PlantelAgrupamiento;
 
 class ReportesCedvaController extends Controller
 {
@@ -33,6 +34,7 @@ class ReportesCedvaController extends Controller
     {
         $reportes = array(1 => 'Activos', 2 => 'Adeudos', 3 => 'Pagados', 4 => 'Inscritos Por Ciclo', 5 => 'Pagos con Baja', 6 => "Activos X Mes", 7 => "Activos X Plantel");
         $empleado = Empleado::where('user_id', Auth::user()->id)->first();
+        $agrupamientoPlantels=PlantelAgrupamiento::pluck('name','id');
         $planteles = Empleado::where('user_id', '=', Auth::user()->id)->where('st_empleado_id', '<>', 3)->first()->plantels->pluck('razon', 'id');
         $estatus = array('0' => 'Todos', '1' => 'Vigente', '2' => "Baja");
         $pagos = array('0' => 'Todos', '1' => 'Pagado', '2' => 'Pendiente');
@@ -40,8 +42,9 @@ class ReportesCedvaController extends Controller
         $caja_conceptos->prepend('Todos');
         $ciclos = CicloMatricula::pluck('name', 'id');
 
+
         //dd($caja_conceptos);
-        return view('reportesCedva.varios', compact('reportes', 'planteles', 'estatus', 'pagos', 'caja_conceptos', 'ciclos'));
+        return view('reportesCedva.varios', compact('reportes', 'planteles', 'estatus', 'pagos', 'caja_conceptos', 'ciclos','agrupamientoPlantels'));
     }
 
     public function reportesCedvaR(Request $request)
@@ -928,7 +931,7 @@ class ReportesCedvaController extends Controller
                             if ($registro['estatus_cliente_id'] == 5) {
                                 $linea['nueva_inscripcion'] = $linea['nueva_inscripcion'] + 1;
                                 if($registro['pagado_bnd']==1){ $linea['nueva_inscripcion_pagado'] = $linea['nueva_inscripcion_pagados'] + 1; }
-                                else{ $linea['nueva_inscripcion_no_pagado'] = $linea['nueva_inscripcion_no_pagados'] + 1;}
+                                else{ $linea['nueva_inscripcion_no_pagados'] = $linea['nueva_inscripcion_no_pagados'] + 1;}
                                 
                                 if($registro['pagado_bnd']==1){$linea_dinero['nueva_inscripcion'] = $linea_dinero['nueva_inscripcion'] + $registro['total_caja'];}
                                 else{$linea_dinero['nueva_inscripcion'] = $linea_dinero['nueva_inscripcion'] + $registro['monto']; }
