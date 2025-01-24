@@ -38,7 +38,7 @@ trait GetAllDataTrait
         $names = explode('\\', get_class($myObj));
         //dd(end($names));
         $baseTable = $myObj->solveName(end($names), 'name_names');    //ex).apples
-        if ($baseTable == 'est_asistencia') {
+        if ($baseTable == 'est_asistencia' or $baseTable == 'sep_materia') {
             $baseTable = $baseTable . 's';
         }
         //Log:info($baseTable);

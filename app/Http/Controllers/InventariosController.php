@@ -1,14 +1,16 @@
 <?php namespace App\Http\Controllers;
 
 use Auth;
-use App\Inventario;
+use Exception;
 
+use App\Inventario;
 use App\Http\Requests;
 use Illuminate\Http\Request;
 use App\InventarioLevantamiento;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\createInventario;
 use App\Http\Requests\updateInventario;
+use Illuminate\Support\Facades\Storage;
 
 class InventariosController extends Controller {
 
@@ -109,9 +111,100 @@ class InventariosController extends Controller {
 		$input['usu_mod_id']=Auth::user()->id;
 		//update data
 		$inventario=$inventario->find($id);
+		//dd($input);
+
+		/*
+		if ($request->hasFile('video')) {
+			$archivo = $request->file('video');
+			$file = $request->file('video');
+			$extension = $file->getClientOriginalExtension();
+			$nombre = date('dmYhmi') . $file->getClientOriginalName();
+			$ruta = "inventarios_multimedia/".$id."/";
+			$input['video'] = $ruta.$nombre;
+			//dd($input);
+			try {
+				
+				
+				//$path=$request->file('archivo')->storePubliclyAs($ruta, $nombre,"do");
+				$r = Storage::disk('do')->put($ruta.$nombre, \File::get($file));
+				Storage::disk('do')->setVisibility($ruta.$nombre,'public');
+				//dd('do realizado');
+
+			} catch (Exception $e) {
+				dd($e);
+			}
+		}*/
+
+		if(is_null($inventario->video1)){
+			$input['video1'] = $this->cargaArchivo($request, 'video1', $id);	
+		}
+		if(is_null($inventario->video2)){
+			$input['video2'] = $this->cargaArchivo($request, 'video2', $id);	
+		}
+		if(is_null($inventario->img1)){
+			$input['img1'] = $this->cargaArchivo($request, 'img1', $id);	
+		}
+		if(is_null($inventario->img2)){
+			$input['img1'] = $this->cargaArchivo($request, 'img2', $id);	
+		}
+		if(is_null($inventario->img3)){
+			$input['img1'] = $this->cargaArchivo($request, 'img3', $id);	
+		}
+		if(is_null($inventario->img4)){
+			$input['img1'] = $this->cargaArchivo($request, 'img4', $id);	
+		}
+		if(is_null($inventario->img5)){
+			$input['img1'] = $this->cargaArchivo($request, 'img5', $id);	
+		}
+		if(is_null($inventario->img6)){
+			$input['img1'] = $this->cargaArchivo($request, 'img6', $id);	
+		}
+		
+		/*if ($request->hasFile('pdf')) {
+			$archivo = $request->file('pdf');
+			$file = $request->file('pdf');
+			$extension = $file->getClientOriginalExtension();
+			$nombre = date('dmYhmi') . $file->getClientOriginalName();
+			$ruta = "inventarios_multimedia/".$id."/";
+			$input['pdf'] = $ruta.$nombre;
+			
+			try {
+				$r = Storage::disk('do')->put($ruta.$nombre, \File::get($file));
+				Storage::disk('do')->setVisibility($ruta.$nombre,'public');
+				//dd('do realizado');
+
+			} catch (Exception $e) {
+				dd($e);
+			}
+		}*/
+		
 		$inventario->update( $input );
-		dd('Registro guardado');
+		//dd('Registro guardado');
 		return redirect()->route('inventarioLevantamientos.show', array('q[inventario_levantamiento_id_lt]'=>$inventario->inventario_levantamiento_id))->with('message', 'Registro Actualizado.');
+	}
+
+	public function cargaArchivo(Request $request, $campo, $inventario_id){
+		if ($request->hasFile($campo)) {
+			$archivo = $request->file($campo);
+			$file = $request->file($campo);
+			$extension = $file->getClientOriginalExtension();
+			$nombre = date('dmYhmi') . $file->getClientOriginalName();
+			$ruta = "inventarios_multimedia/".$inventario_id."/";
+			
+			//dd($input);
+			try {
+				
+				
+				//$path=$request->file('archivo')->storePubliclyAs($ruta, $nombre,"do");
+				$r = Storage::disk('do')->put($ruta.$nombre, \File::get($file));
+				Storage::disk('do')->setVisibility($ruta.$nombre,'public');
+				//dd('do realizado');
+
+			} catch (Exception $e) {
+				dd($e);
+			}
+			return $ruta.$nombre;
+		}
 	}
 
 	/**

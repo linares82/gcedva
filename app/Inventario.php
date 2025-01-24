@@ -22,7 +22,10 @@ class Inventario extends Model
 
 	//Mass Assignment 
 	
-	protected $fillable = ['plantel_id','area','escuela','tipo_inventario','ubicacion','cantidad','nombre','medida','marca','observaciones','existe_si','existe_no','estado_bueno','estado_malo','usu_alta_id','usu_mod_id','inventario_levantamiento_id','origen','plantel_inventario_id','no_inventario'];
+	protected $fillable = ['plantel_id','area','escuela','tipo_inventario','ubicacion','cantidad',
+	'nombre','medida','marca','observaciones','existe_si','existe_no','estado_bueno','estado_malo',
+	'usu_alta_id','usu_mod_id','inventario_levantamiento_id','origen','plantel_inventario_id',
+	'no_inventario','video1','video2','img1','img2','img3','img4','img5','img6'];
 
 	public function usu_alta() {
 		return $this->hasOne('App\User', 'id', 'usu_alta_id');

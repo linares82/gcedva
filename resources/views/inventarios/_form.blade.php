@@ -83,5 +83,142 @@
                         <span class="help-block">{{ $errors->first("estado_bueno") }}</span>
                        @endif
                     </div>
+                    @if(isset($inventario))
+                    <div class="form-group col-md-6 @if($errors->has('video1')) has-error @endif">
+                        <div class="form-group col-sm-8">
+                           <label for="video1-field">Archivo Video MP4 1</label>
+                           {!! Form::file('video1', array('accept'=>"video/mp4")) !!}
+                           @if($errors->has("video1"))
+                           <span class="help-block">{{ $errors->first("video1") }}</span>
+                           @endif
+                        </div>
+                        @if(!is_null($inventario->video1))
+                        <div class="form-group col-sm-4">
+                              <label for="origen">Ver</label>
+                              <p class="form-control-static">
+                              <a href="{{Storage::disk('do')->url($inventario->video1)}}" target="_blank">Ver</a>
+                              </p>
+                        </div>
+                        @endif
+                     </div>
+                    <div class="form-group col-md-6 @if($errors->has('video2')) has-error @endif">
+                        <div class="form-group col-sm-8">
+                           <label for="video2-field">Archivo Video MP4 2</label>
+                           {!! Form::file('video2', array('accept'=>"video/mp4")) !!}
+                           @if($errors->has("video2"))
+                           <span class="help-block">{{ $errors->first("video2") }}</span>
+                           @endif
+                        </div>
+                        @if(!is_null($inventario->video2))
+                        <div class="form-group col-sm-4">
+                              <label for="origen">Ver</label>
+                              <p class="form-control-static">
+                              <a href="{{Storage::disk('do')->url($inventario->video2)}}" target="_blank">Ver</a>
+                              </p>
+                        </div>
+                        @endif
+                     </div>
+                    <div class="form-group col-md-6 @if($errors->has('img1')) has-error @endif">
+                        <div class="form-group col-sm-8">
+                           <label for="img1-field">Imagen 1</label>
+                           {!! Form::file('img1', array('accept'=>"image/jpeg")) !!}
+                           @if($errors->has("img1"))
+                           <span class="help-block">{{ $errors->first("img1") }}</span>
+                           @endif
+                        </div>
+                        @if(!is_null($inventario->img1))
+                        <div class="form-group col-sm-4">
+                              <label for="origen">Ver</label>
+                              <p class="form-control-static">
+                              <a href="{{Storage::disk('do')->url($inventario->img1)}}"  target="_blank">Ver</a>
+                              </p>
+                        </div>
+                        @endif
+                    </div>
                     
-                    
+                    <div class="form-group col-md-6 @if($errors->has('img2')) has-error @endif">
+                        <div class="form-group col-sm-8">
+                           <label for="img2-field">Imagen 2</label>
+                           {!! Form::file('img2', array('accept'=>"image/jpeg")) !!}
+                           @if($errors->has("img2"))
+                           <span class="help-block">{{ $errors->first("img2") }}</span>
+                           @endif
+                        </div>
+                        @if(!is_null($inventario->img2))
+                        <div class="form-group col-sm-2">
+                              <label for="origen">Ver</label>
+                              <p class="form-control-static">
+                              <a href="{{Storage::disk('do')->url($inventario->img2)}}"  target="_blank">Ver</a>
+                              </p>
+                        </div>
+                        @endif
+                     </div>
+                    <div class="form-group col-md-6 @if($errors->has('img3')) has-error @endif">
+                        <div class="form-group col-sm-8">
+                           <label for="img3-field">Imagen 3</label>
+                           {!! Form::file('img3', array('accept'=>"image/jpeg")) !!}
+                           @if($errors->has("img3"))
+                           <span class="help-block">{{ $errors->first("img3") }}</span>
+                           @endif
+                        </div>
+                        @if(!is_null($inventario->img3))
+                        <div class="form-group col-sm-2">
+                              <label for="origen">Ver</label>
+                              <p class="form-control-static">
+                              <a href="{{Storage::disk('do')->url($inventario->img3)}}"  target="_blank">Ver</a>
+                              </p>
+                        </div>
+                        @endif
+                     </div>
+                    <div class="form-group col-md-6 @if($errors->has('img4')) has-error @endif">
+                        <div class="form-group col-sm-8">
+                           <label for="img4-field">Imagen 4</label>
+                           {!! Form::file('img4', array('accept'=>"image/jpeg")) !!}
+                           @if($errors->has("img4"))
+                           <span class="help-block">{{ $errors->first("img4") }}</span>
+                           @endif
+                        </div>
+                        @if(!is_null($inventario->img4))
+                        <div class="form-group col-sm-2">
+                              <label for="origen">Ver</label>
+                              <p class="form-control-static">
+                              <a href="{{Storage::disk('do')->url($inventario->img4)}}"  target="_blank">Ver</a>
+                              </p>
+                        </div>
+                        @endif
+                     </div>
+                    <div class="form-group col-md-6 @if($errors->has('img5')) has-error @endif">
+                        <div class="form-group col-sm-8">
+                           <label for="img5-field">Imagen 5</label>
+                           {!! Form::file('img5', array('accept'=>"image/jpeg")) !!}
+                           @if($errors->has("img5"))
+                           <span class="help-block">{{ $errors->first("img5") }}</span>
+                           @endif
+                        </div>
+                        @if(!is_null($inventario->img5))
+                        <div class="form-group col-sm-2">
+                              <label for="origen">Ver</label>
+                              <p class="form-control-static">
+                              <a href="{{Storage::disk('do')->url($inventario->img5)}}"  target="_blank">Ver</a>
+                              </p>
+                        </div>
+                        @endif
+                    </div>
+                    <div class="form-group col-md-6 @if($errors->has('img6')) has-error @endif">
+                        <div class="form-group col-sm-8">
+                              <label for="img6-field">Imagen 6</label>
+                              {!! Form::file('img6', array('accept'=>"image/jpeg")) !!}
+                              @if($errors->has("img6"))
+                              <span class="help-block">{{ $errors->first("img6") }}</span>
+                              @endif
+                        </div>
+                        @if(!is_null($inventario->img6))
+                        <div class="form-group col-sm-2">
+                              <label for="origen">Ver</label>
+                              <p class="form-control-static">
+                              <a href="{{Storage::disk('do')->url($inventario->img6)}}"  target="_blank">Ver</a>
+                              </p>
+                        </div>
+                        @endif
+                     </div>
+                    @endif

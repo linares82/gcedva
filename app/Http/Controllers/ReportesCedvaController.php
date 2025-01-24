@@ -35,7 +35,9 @@ class ReportesCedvaController extends Controller
         $reportes = array(1 => 'Activos', 2 => 'Adeudos', 3 => 'Pagados', 4 => 'Inscritos Por Ciclo', 5 => 'Pagos con Baja', 6 => "Activos X Mes", 7 => "Activos X Plantel");
         $empleado = Empleado::where('user_id', Auth::user()->id)->first();
         $agrupamientoPlantels=PlantelAgrupamiento::pluck('name','id');
+        $agrupamientoPlantels->prepend('Seleccionar Opcion',0);
         $planteles = Empleado::where('user_id', '=', Auth::user()->id)->where('st_empleado_id', '<>', 3)->first()->plantels->pluck('razon', 'id');
+        
         $estatus = array('0' => 'Todos', '1' => 'Vigente', '2' => "Baja");
         $pagos = array('0' => 'Todos', '1' => 'Pagado', '2' => 'Pendiente');
         $caja_conceptos = CajaConcepto::pluck('name', 'id');
@@ -658,6 +660,7 @@ class ReportesCedvaController extends Controller
                         ->where('ccli.turno_id', '>', 0)
                         ->whereIn('clientes.st_cliente_id', $estatus)
                         ->where('ad.monto', 0)
+                        ->where('ad.caja_id', 0)
                         ->whereIn('ad.pagado_bnd', array(1))
                         ->whereIn('clientes.plantel_id', $datos['plantel_f'])
                         ->whereIn('ad.caja_concepto_id', $concepto_caja)
@@ -3467,6 +3470,7 @@ class ReportesCedvaController extends Controller
                         ->where('ccli.turno_id', '>', 0)
                         ->whereIn('clientes.st_cliente_id', $estatus)
                         ->where('ad.monto', 0)
+                        ->where('ad.caja_id', 0)
                         ->whereIn('ad.pagado_bnd', array(1))
                         ->whereIn('clientes.plantel_id', $datos['plantel_f'])
                         ->whereIn('ad.caja_concepto_id', $concepto_caja)

@@ -140,6 +140,17 @@ return [
             'endpoint' => env('DIGITALOCEAN_SPACES_ENDPOINT'),
             'region' => env('DIGITALOCEAN_SPACES_REGION'),
             'bucket' => env('DIGITALOCEAN_SPACES_BUCKET'),
+            'visiblity' => 'public'
+        ],
+
+        'do_inv' => [
+            'driver' => 's3',
+            'key' => env('DIGITALOCEAN_SPACES_KEY_I'),
+            'secret' => env('DIGITALOCEAN_SPACES_SECRET_I'),
+            'endpoint' => env('DIGITALOCEAN_SPACES_ENDPOINT_I'),
+            'region' => env('DIGITALOCEAN_SPACES_REGION_I'),
+            'bucket' => env('DIGITALOCEAN_SPACES_BUCKET_I'),
+            'visiblity' => 'public'
         ],
 
     ],
