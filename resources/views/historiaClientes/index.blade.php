@@ -218,7 +218,11 @@
                         @foreach($historiaClientes as $historiaCliente)
                             <tr>
                                 <td><a href="{{ route('historiaClientes.show', $historiaCliente->id) }}">{{$historiaCliente->id}}</a></td>
-                                <td>{{$historiaCliente->eventoCliente->name}}</td>
+                                <td>{{$historiaCliente->eventoCliente->name}} 
+                                    @if($historiaCliente->bnd_prematuro==1)
+                                        Baja Prematura
+                                    @endif
+                                </td>
                                 <td>{{$historiaCliente->fecha}}</td>
                                 <td>{{$historiaCliente->fec_vigencia}}</td>
                                 <td><a href='{!! asset("/imagenes/historia_clientes/".$historiaCliente->id."/".$historiaCliente->archivo) !!}' target='_blank'>Ver</a></td>

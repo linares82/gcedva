@@ -15,7 +15,9 @@ class CreateSepGruposTable extends Migration {
 		Schema::create('sep_grupos', function(Blueprint $table) {
             $table->increments('id');
             $table->text('name');
+			$table->text('secciones')->nullable();
             $table->integer('plantel_id')->unsigned();
+			$table->integer('cantidad_materias_para_aprobar')->nullable();
             $table->integer('usu_alta_id')->unsigned();
             $table->integer('usu_mod_id')->unsigned();
             $table->timestamps();

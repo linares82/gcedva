@@ -3,9 +3,11 @@
 use Auth;
 use App\Plantel;
 
+use App\Materium;
 use App\SepMaterium;
 use App\Http\Requests;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\createSepMaterium;
 use App\Http\Requests\updateSepMaterium;
@@ -46,12 +48,17 @@ class SepMateriasController extends Controller {
 	public function store(createSepMaterium $request)
 	{
 
-		$input = $request->all();
+		$input = $request->except('materia_id');
+		$materias=$request->only('materia_id');
 		$input['usu_alta_id']=Auth::user()->id;
 		$input['usu_mod_id']=Auth::user()->id;
 
 		//create data
-		SepMaterium::create( $input );
+		$e=SepMaterium::create( $input );
+
+		if (!is_null($materias['materia_id'])) {
+			$e->materias()->sync($materias['materia_id']);
+		}
 
 		return redirect()->route('sepMaterias.index')->with('message', 'Registro Creado.');
 	}
@@ -77,8 +84,11 @@ class SepMateriasController extends Controller {
 	public function edit($id, SepMaterium $sepMaterium)
 	{
 		$plantels=Plantel::pluck('razon','id');
-		$sepMaterium=$sepMaterium->find($id);
-		return view('sepMaterias.edit', compact('sepMaterium','plantels'))
+		$sepMaterium=$sepMaterium->with('materias')->find($id);
+		$materias=Materium::pluck('name','id');
+
+		//dd($sepMaterium->materias);
+		return view('sepMaterias.edit', compact('sepMaterium','plantels','materias'))
 			->with( 'list', SepMaterium::getListFromAllRelationApps() );
 	}
 
@@ -104,11 +114,16 @@ class SepMateriasController extends Controller {
 	 */
 	public function update($id, SepMaterium $sepMaterium, updateSepMaterium $request)
 	{
-		$input = $request->all();
+		$input = $request->except('materia_id');
+		$materias=$request->only('materia_id');
 		$input['usu_mod_id']=Auth::user()->id;
 		//update data
 		$sepMaterium=$sepMaterium->find($id);
 		$sepMaterium->update( $input );
+
+		if (!is_null($materias['materia_id'])) {
+			$sepMaterium->materias()->sync($materias['materia_id']);
+		}
 
 		return redirect()->route('sepMaterias.index')->with('message', 'Registro Actualizado.');
 	}
@@ -124,7 +139,47 @@ class SepMateriasController extends Controller {
 		$sepMaterium=$sepMaterium->find($id);
 		$sepMaterium->delete();
 
+		
+
 		return redirect()->route('sepMaterias.index')->with('message', 'Registro Borrado.');
 	}
+
+	public function materias_sepXPlantel(Request $request){
+        if ($request->ajax()) {
+            //dd($request->all());
+            $plantel = $request->get('plantel_id');
+            
+
+            $final = array();
+            $r = DB::table('sep_materias as m')
+                ->select('m.id', 'm.name')
+                ->where('plantel_id', $plantel)
+                ->whereNull('deleted_at')
+                ->get();
+
+            //dd($materias);
+            if (isset($materias) and count($materias) > 0) {
+                foreach ($r as $r1) {
+                    //dd(in_array($r1->id, $materias));
+                    if (in_array($r1->id, $materias)) {
+                        array_push($final, array(
+                            'id' => $r1->id,
+                            'name' => $r1->id."-".$r1->name,
+                            'selectec' => 'Selected',
+                        ));
+                    } else {
+                        array_push($final, array(
+                            'id' => $r1->id,
+                            'name' => $r1->id."-".$r1->name,
+                            'selectec' => '',
+                        ));
+                    }
+                }
+                return $final;
+            } else {
+                return $r;
+            }
+        }
+    }
 
 }

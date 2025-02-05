@@ -549,4 +549,42 @@ class MateriasController extends Controller
             }
         }
     }
+
+    public function materiasXPlantel(Request $request){
+        if ($request->ajax()) {
+            //dd($request->all());
+            $plantel = $request->get('plantel_id');
+            $materias = $request->get('materias');
+
+            $final = array();
+            $r = DB::table('materia as m')
+                ->select('m.id', 'm.name')
+                ->where('plantel_id', $plantel)
+                ->whereNull('deleted_at')
+                ->get();
+
+            //dd($materias);
+            if (isset($materias) and count($materias) > 0) {
+                foreach ($r as $r1) {
+                    //dd(in_array($r1->id, $materias));
+                    if (in_array($r1->id, $materias)) {
+                        array_push($final, array(
+                            'id' => $r1->id,
+                            'name' => $r1->id."-".$r1->name,
+                            'selectec' => 'Selected',
+                        ));
+                    } else {
+                        array_push($final, array(
+                            'id' => $r1->id,
+                            'name' => $r1->id."-".$r1->name,
+                            'selectec' => '',
+                        ));
+                    }
+                }
+                return $final;
+            } else {
+                return $r;
+            }
+        }
+    }
 }

@@ -1,1 +1,1 @@
-@section('sepGruposAppTitle','SepGrupo')
+@section('sepGruposAppTitle','Sep Grupos')

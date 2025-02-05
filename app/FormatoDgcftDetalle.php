@@ -18,7 +18,7 @@ class FormatoDgcftDetalle extends Model
 	}
 
     protected $fillable = ['formato_dgcft_id','num','control','cliente_id','nombre','curp','edad','fec_sexo',
-    'beca','resultado','final', 'escolaridad','usu_alta_id', 'usu_mod_id'];
+    'beca','resultado','final', 'escolaridad','usu_alta_id', 'usu_mod_id','bnd_satisfactorio'];
 
 	public function usu_alta()
 	{

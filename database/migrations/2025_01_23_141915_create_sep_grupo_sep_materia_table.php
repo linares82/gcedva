@@ -19,6 +19,7 @@ class CreateSepGrupoSepMateriaTable extends Migration
             $table->integer('sep_materia_id')->unsigned()->nullable();
             $table->string('grado')->nullable();
             $table->string('duracion_horas')->nullable();
+            $table->string('acuerdo')->nullable();
             $table->integer('usu_alta_id')->unsigned();
             $table->integer('usu_mod_id')->unsigned();
             $table->timestamps();

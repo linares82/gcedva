@@ -2,23 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\AutorizacionBeca;
-use App\Aviso;
-use App\AvisosEmpresa;
-use App\Lectivo;
-use App\AvisoGral;
-use App\PivotAvisoGralEmpleado;
-use App\Seguimiento;
-use App\StSeguimiento;
-use App\Empleado;
-use App\Plantel;
-use App\Menu;
 use DB;
+use Log;
 use Auth;
 use Activity;
+use App\Menu;
+use App\Aviso;
+use App\Lectivo;
+use App\Plantel;
+use App\Empleado;
+use App\HEstatus;
+use App\AvisoGral;
+use App\Seguimiento;
+use App\AvisosEmpresa;
+use App\StSeguimiento;
 use App\HistoriaCliente;
-use Log;
+use App\AutorizacionBeca;
+use Illuminate\Http\Request;
+use App\PivotAvisoGralEmpleado;
 
 class HomeController extends Controller
 {
@@ -154,13 +155,21 @@ class HomeController extends Controller
                 ->get();
         
         //dd($contratosVencidos->toArray());
+        $bajas_automaticas_ultimo_mes=HEstatus::select('h_estatuses.*','c.st_cliente_id')
+        ->join('clientes as c','c.id', 'h_estatuses.cliente_id')
+        ->where('tabla','clientes')
+        ->whereRaw('day(fecha) in (1,2,3) and month(fecha)=? and year(fecha)=?',[date('m'),date('Y')])
+        ->where('estatus_id',27)
+        ->get();
+        //dd($bajas_automaticas_ultimo_mes->toArray());
 
         return view('home', compact(
             'becas',
             'bajas',
             'plantels',
             'contratosVencidos',
-            'avisos'
+            'avisos',
+            'bajas_automaticas_ultimo_mes'
         ));
     }
 

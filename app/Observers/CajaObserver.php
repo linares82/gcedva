@@ -167,12 +167,12 @@ class CajaObserver
                             }
                         }
                     }
-                }elseif($this->caja->cliente->st_cliente_id == 27){
-                    if ($mensualidades == 3) {
-                        $cliente->st_cliente_id = 26;
+                }elseif($mensualidades>=4){
+                    if ($mensualidades>= 4) {
+                        $cliente->st_cliente_id = 27;
                         $cliente->save();
 
-                        $seguimiento->st_seguimiento_id = 2;
+                        $seguimiento->st_seguimiento_id = 6;
                         $seguimiento->save();
 
                         $param = Param::where('llave', 'apiVersion_bSpace')->first();
@@ -216,7 +216,58 @@ class CajaObserver
                             }
                         }
                     }
-                }elseif ($this->caja->cliente->st_cliente_id == 26) {
+                //}elseif($this->caja->cliente->st_cliente_id == 27){
+                }elseif($adeudos==3){
+                    if ($adeudos== 3) {
+                        $cliente->st_cliente_id = 26;
+                        $cliente->save();
+
+                        $seguimiento->st_seguimiento_id = 6;
+                        $seguimiento->save();
+
+                        $param = Param::where('llave', 'apiVersion_bSpace')->first();
+                        $bs_activo = Param::where('llave', 'api_brightSpace_activa')->first();
+                        if ($bs_activo->valor == 1) {
+                            try {
+                                $apiBs = new UsoApi();
+
+                                //dd($datos);
+                                $resultado = $apiBs->doValence2('GET', '/d2l/api/lp/' . $param->valor . '/users/?orgDefinedId=' . $cliente->matricula);
+                                //Muestra resultado
+                                $r = $resultado[0];
+                                $datos = ['isActive' => False];
+                                if (isset($r['UserId'])) {
+                                    $resultado2 = $apiBs->doValence2('PUT', '/d2l/api/lp/' . $param->valor . '/users/' . $r['UserId'] . '/activation', $datos);
+                                    $bsBaja = BsBaja::where('cliente_id', $cliente->id)
+                                        ->where('bnd_baja', 1)
+                                        ->where('bnd_reactivar', '<>', 1)
+                                        ->first();
+                                    if (!is_null($bsBaja)) {
+                                        if (isset($resultado2['IsActive']) and $resultado2['IsActive'] and !is_null($bsBaja)) {
+                                            $input['cliente_id'] = $cliente->id;
+                                            $input['fecha_reactivar'] = Date('Y-m-d');
+                                            $input['bnd_reactivar'] = 1;
+                                            $input['usu_mod_id'] = Auth::user()->id;
+                                            $bsBaja->update($input);
+                                        } else {
+                                            $input['cliente_id'] = $cliente->id;
+                                            $input['fecha_reactivar'] = Date('Y-m-d');
+                                            $input['bnd_reactivar'] = 0;
+                                            $input['usu_mod_id'] = Auth::user()->id;
+                                            $bsBaja->update($input);
+                                            
+                                        }
+                                    }
+                                }
+                            } catch (Exception $e) {
+                                $this->enviarMailFallaBs($e->getMessage(), 'Error al activar cliente en BS desde pago de caja');
+                                Log::info("cliente no encontrado en Brigth Space u otro error: " . $cliente->matricula . " - " . $e->getMessage());
+                                //return false;
+                            }
+                        }
+                    }
+                //}elseif ($this->caja->cliente->st_cliente_id == 26) {
+                }elseif ($adeudos == 2) {
                     //dd($adeudos);
                     if ($adeudos == 2) {
                         $cliente->st_cliente_id = 25;
@@ -267,7 +318,8 @@ class CajaObserver
                         }
                     }
                 //} elseif($adeudos==0) {
-                }elseif ($this->caja->cliente->st_cliente_id == 25){
+                //}elseif ($this->caja->cliente->st_cliente_id == 25){
+                }elseif ($adeudos == 1){
                     if ($adeudos == 1) {
                         $cliente->st_cliente_id = 17;
                         $cliente->save();
@@ -316,7 +368,8 @@ class CajaObserver
                             }
                         }
                     }
-                }elseif ($this->caja->cliente->st_cliente_id == 17){
+                //}elseif ($this->caja->cliente->st_cliente_id == 17){
+                }elseif ($adeudos == 0){
                     if ($adeudos == 0) {
                         
                         $cliente->st_cliente_id = 4;

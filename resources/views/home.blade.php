@@ -223,6 +223,69 @@
         </div>
         @endpermission
     </div>
+
+    <div class="row">
+        @php
+            $dias_habiles_aux=App\Param::where('llave','dias_para_bajas')->value('valor');
+            $dias_habiles=explode(',',$dias_habiles_aux);
+        @endphp
+        @if(in_array(date('d'), $dias_habiles))
+        @permission('historiaClientes.create')
+        <div class="form-group col-md-6 col-sm-6 col-xs-12">
+            <div class="box box-danger">
+                <div class="box-header with-border">
+                    <h3 class="box-title">
+                        Clientes con baja automatica del mes en curso
+                    </h3>
+                </div>
+                <div class="box-body">
+                    <div class="table">
+                        <table class="table table-bordered table-striped dataTable">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Cliente</th>
+                                    <th>Estatus Actual</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($bajas_automaticas_ultimo_mes as $ba)
+                                @if($ba->st_cliente_id==27)
+                                <tr>
+                                    <td>
+                                        {{$ba->fecha}}
+                                    </td>
+                                    <td><a href="{{route('clientes.edit',array($ba->cliente_id))}}" target="blank">
+                                        {{$ba->cliente_id}}
+                                        </a>
+                                    </td>
+                                    <td>{{$ba->estatus}}</td>
+                                    <td>
+                                        <!--
+                                    {!! Form::model(null,array('route' => array('historiaClientes.store'),'method' => 'post', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Crear Baja de cliente? ¿Esta seguro?')) { return true } else {return false };")) !!}
+                                    {!! Form::hidden("cliente_id", $ba->cliente_id, array("id" => "cliente_id-field")) !!}
+                                    {!! Form::hidden("evento_cliente_id", 2, array("id" => "evento_cliente_id-field")) !!}
+                                    {!! Form::hidden("descripcion", $ba->estatus, array("id" => "descripcion-field")) !!}
+                                    {!! Form::hidden("fecha", Date('Y-m-d'), array("id" => "fecha-field")) !!}
+                                    {!! Form::hidden("st_historia_cliente_id", 2, array("id" => "st_historia_cliente_id-field")) !!}
+                                        <button type="submit" class="btn btn-xs btn-success"> Crear Baja</button>
+                                    {!! Form::close() !!}
+                                    -->
+                                    <a class="btn btn-xs btn-success" href="{{ route('historiaClientes.create',array('cliente'=>$ba->cliente_id)) }}" target="blank"><i class="glyphicon glyphicon-plus"></i> Crear</a>
+                                    </td>
+                                </tr>
+                                @endif
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endpermission
+        @endif
+    </div>
     
 
     

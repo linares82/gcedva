@@ -101,9 +101,21 @@ class HistoriaClientesController extends Controller
 	{
 
 		$input = $request->all();
+		
 		$input['usu_alta_id'] = Auth::user()->id;
 		$input['usu_mod_id'] = Auth::user()->id;
-		$input['st_historia_cliente_id'] = 1;
+		
+		if(!isset($input['st_historia_cliente_id'])){
+			$input['st_historia_cliente_id'] = 1;
+		}
+		//dd($input);
+
+		$primer_adeudo=Adeudo::where('cliente_id', $input['cliente_id'])->first();
+		$mes_primer_adeudo=Carbon::createFromFormat('Y-m-d', $primer_adeudo->fecha_pago)->month;
+		$mes_actual=Carbon::createFromFormat('Y-m-d', date('Y-m-d'))->month;
+		if($mes_primer_adeudo==$mes_actual){
+			$input['bnd_prematuro']=1;
+		}
 
 		$r = $request->hasFile('archivo_file');
 		//dd($r);
@@ -176,6 +188,14 @@ class HistoriaClientesController extends Controller
 				//Storage::disk('img_plantels')->put($input['logo'],  File::get($logo_file));
 				$request->file('archivo_file')->move($ruta, $input['archivo']);
 			}
+		}
+
+		if($input['st_historia_cliente_id']==2){
+			$cliente=Cliente::select('id','st_cliente_id')->find($input['cliente_id']);
+			$cliente->st_cliente_id=3;
+			$cliente->save();
+			//dd($cliente);
+			return redirect()->route('home');
 		}
 
 		return redirect()->route('clientes.indexEventos')->with('message', 'Registro Creado.');

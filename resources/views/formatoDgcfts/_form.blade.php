@@ -9,6 +9,7 @@
    <div class="form-group col-md-4 @if($errors->has('plantel_id')) has-error @endif">
    <label for="plantel_id-field">Plantel</label>
    {!! Form::select("plantel_id", $list['Plantel'], null, array("class" => "form-control select_seguridad", "id" => "plantel_id-field")) !!}
+   <div id="loading" style="visible:none;">Cargando Grupos...</div>
    @if(isset($formatoDgcft))
          @if($formatoDgcft->plantel_id==0)
          <code>*Campo requerido, seleccionar opcion</code>
@@ -16,6 +17,25 @@
       @endif
    @if($errors->has("plantel_id"))
    <span class="help-block">{{ $errors->first("plantel_id") }}</span>
+   @endif
+</div>
+<div class="form-group col-md-4 @if($errors->has('inicio_matricula')) has-error @endif">
+   <label for="inicio_matricula-field">Inicio Matricula (mmaa)</label>
+   {!! Form::text("inicio_matricula", null, array("class" => "form-control", "id" => "inicio_matricula-field")) !!}
+   @if($errors->has("inicio_matricula"))
+      <span class="help-block">{{ $errors->first("inicio_matricula") }}</span>
+   @endif
+</div>
+<div class="form-group col-md-4 @if($errors->has('sep_grupo_id')) has-error @endif">
+   <label for="sep_grupo_id-field">Grupo Sep</label>
+   {!! Form::select("sep_grupo_id", $list['SepGrupo'], null, array("class" => "form-control select_seguridad", "id" => "sep_grupo_id-field")) !!}
+   @if(isset($formatoDgcft))
+         @if($formatoDgcft->plantel_id==0)
+         <code>*Campo requerido, seleccionar opcion</code>
+         @endif
+      @endif
+   @if($errors->has("sep_grupo_id"))
+   <span class="help-block">{{ $errors->first("sep_grupo_id") }}</span>
    @endif
 </div>
    <!--
@@ -313,68 +333,52 @@
    @endif
 </div>
          --> 
-@php
-   $contador=0;
-@endphp
 
-<div class="row">
-   <div class="col-md-12 table-responsive">
-   @if(isset($formatoDgcft->formatoDgcftDetalles))
-   <table class="table table-condensed table-striped">
-   <thead>
-      <th>NUM</th>
-      <th>NUMERO DE CONTROL</th>
-      <th>NOMBRE DEL ALUMNO</th>
-      <th>CURP</th>
-      <th>EDAD</th>
-      <th>SEXO</th>
-      <th>ESCOLARIDAD</th>
-      <th>BECA %</th>
-      <th>Calificaciones</th>
-      @if($formatoDgcft->materias)
-         @php
-            $materias=explode(',',$formatoDgcft->materias);
-         @endphp
-         @foreach($materias as $materia)
-            <th><a class="btn btn-xs btn-default" href="{{route('formatoDgcfts.icp08XMateria',array('id'=>$formatoDgcft->id,'materia'=>$materia))}}" target="blank">ICP-08 {{$materia}}</a> </th>
-         @endforeach
-      @endif
-      <th>RESULTADO</th>
-      <th>FINAL</th>
-   </thead>
-   <tbody>
-      @foreach($formatoDgcft->formatoDgcftDetalles as $detalle)
-         <tr>
-            <td>{{++$contador}}</td>
-            <td>{{$detalle->control}}</td>
-            <td>{{$detalle->nombre}}</td>
-            <td>{{$detalle->curp}}</td>
-            <td>{{$detalle->edad}}</td>
-            <td>{{$detalle->fec_sexo}}</td>
-            <td>{{$detalle->escolaridad}}</td>
-            <td>{{$detalle->beca}}</td>
-            <td><a href="{{route('clientes.edit',$detalle->cliente_id)}}" target="blank">Ver</a></td>
-            @foreach($materias as $materia)
-               @php
-                  $calificacion=App\FormatoDgcftMatCalif::where('materia',trim($materia))
-                  ->where('formato_dgcft_detalle_id',$detalle->id)
-                  ->first();
-               @endphp
-               <td>
-                  @if(!is_null($calificacion))
-                     {{$calificacion->calificacion }}
-                     <a href="{{route('formatoDgcfts.destroyCalificacion',array('id'=>$calificacion->id,'formato_dgcft_id'=>$formatoDgcft->id))}}" class="btn btn-danger btn-xs" tooltip="Eliminar">X</a>
-                  @endif
-               </td>
-            @endforeach
-            <td>{{$detalle->resultado}}</td>
-            <td>{{$detalle->final}}</td>
-         </tr>
-      @endforeach
-   </tbody>
-</table>                  
-@endif
-   </div>
-</div>
 
-                  
+@push('scripts')
+<script type="text/javascript">
+   
+$(document).ready(function() {
+   
+   if($('#plantel_id-field').val()!=0){
+      getGrupos();
+   }
+   
+
+   $('#plantel_id-field').change(function(){
+      getGrupos();
+   });
+   
+});
+
+
+   function getGrupos(){
+//var $example = $("#especialidad_id-field").select2();
+   
+
+
+   //console.log($id_seleccionados);
+$.ajax({
+   url: '{{ route("sepGrupos.gruposXPlantel") }}',
+   type: 'GET',
+   data: {
+      'plantel_id':$('#plantel_id-field option:selected').val(),
+      'grupo':$('#sep_grupo_id-field option:selected').val(),
+   },
+   dataType: 'json',
+   beforeSend : function(){$("#loading").show(); },
+   complete : function(){$("#loading").hide(); },
+   success: function(data){
+      $('#sep_grupo_id-field').empty();
+      $('#sep_grupo_id-field').append($('<option></option>').text('Seleccionar').val('0'));
+      $.each(data, function(i) {
+      //alert(data[i].selectec);
+      $('#sep_grupo_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
+      });
+      $('#sep_grupo_id-field').change();
+   }
+});
+}
+
+</script>
+@endpush            

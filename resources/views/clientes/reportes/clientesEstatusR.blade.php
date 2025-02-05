@@ -17,7 +17,7 @@
         <h3>Consulta de eventos de Bajas del {{$datos['fecha_f']}} al {{$datos['fecha_t']}}</h3>
         <table class="table table-condensed table-striped">
             <thead>
-                <th>Plantel</th><th>Alumno</th><th>Grado</th><th>Fecha</th><th>Estatus</th><th>F. Reactivado</th><th>Tel. Cel.</th><th>Descripción</th><th>Inscripciones Activas</th>
+                <th>Plantel</th><th>Alumno</th><th>Grado</th><th>Fecha</th><th>Estatus</th><th>F. Reactivado</th><th>Tel. Cel.</th><th>Descripción</th><th>Inscripciones Activas</th><th>B. Prematura </th>
             </thead>
             <tbody>
                 <?php $cont=0; ?>
@@ -31,6 +31,13 @@
                       ->whereNull('deleted_at')->where('st_inscripcion_id',1)->count();    
                     @endphp
                     <td>{{$cuenta_inscripciones}}</td>
+                    <td>
+                      @if($registro->bnd_prematuro==1)
+                      SI
+                      @else
+                      NO
+                      @endif
+                    </td>
                 </tr>
                 <?php $cont++; ?>
                 @endforeach

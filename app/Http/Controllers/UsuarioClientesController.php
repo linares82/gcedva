@@ -110,7 +110,8 @@ class UsuarioClientesController extends Controller
 		//update data
 		$usuarioCliente = $usuarioCliente->find($id);
 		$usuarioCliente->update($input);
-		$cliente=Cliente::where('matricula',$usuarioCliente->name)->first();
+		$cliente=Cliente::select('mail','id','st_cliente_id')->where('matricula',$usuarioCliente->name)->first();
+
 		$cliente->mail=$usuarioCliente->email;
 		$cliente->save();
 

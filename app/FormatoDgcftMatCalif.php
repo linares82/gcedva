@@ -17,7 +17,7 @@ class FormatoDgcftMatCalif extends Model
 		parent::__construct($attributes);
 	}
 
-    protected $fillable = ['formato_dgcft_detalle_id','grado','materia','calificacion','usu_alta_id', 'usu_mod_id'];
+    protected $fillable = ['formato_dgcft_detalle_id','grado','materia','calificacion','usu_alta_id', 'usu_mod_id','sep_materia_id'];
 
 	public function usu_alta()
 	{

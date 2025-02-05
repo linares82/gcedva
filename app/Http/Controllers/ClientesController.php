@@ -1763,7 +1763,8 @@ class ClientesController extends Controller
             'c.tel_cel',
             'reactivado',
             'fec_reactivado',
-            'g.name as grado'
+            'g.name as grado',
+            'bnd_prematuro'
         )
             ->join('clientes as c', 'c.id', '=', 'historia_clientes.cliente_id')
             ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
@@ -3470,11 +3471,12 @@ class ClientesController extends Controller
             ->join('grados as g', 'g.id', '=', 'ccli.grado_id')
             //->where('a.pagado_bnd', 1)
             //->where('c.st_caja_id', 1)
-            //->where('clientes.id', 88063)
+            ->where('clientes.id', 99889)
             //->whereIn('a.caja_concepto_id', array(1,22,23, 25)) // se quito concepto 22 tramites adelante se hace especificamente este trabajo
             //->where('clientes.st_cliente_id', '<>', 3)
             ->whereIn('clientes.plantel_id', $datos['plantel_f'])
             ->whereIn('stp.id', $datos['st_prospectos'])
+            ->where('stc.id','<>', 19)
             ->whereIn('g.seccion', $secciones)
             ->where('clientes.matricula', 'like', $datos['inicio_matricula'] . "%")
             //->whereNull('a.deleted_at')
@@ -3546,15 +3548,27 @@ class ClientesController extends Controller
                 $d['primera_mensualidad'] = "Si";
                 $d['primera_mensualidad_fecha'] = $primera_mensualidad->fecha_caja;
             }
+
+            
             //dd($d);
             if(($d['fecha_caja_12325']<=$datos['menor_igual_fecha'] and $d['fecha_caja_12325']<>"") or 
             ($d['tramites_fecha']<=$datos['menor_igual_fecha'] and $d['tramites_fecha']<>'') or 
-            ($d['primera_mensualidad_fecha']<=$datos['menor_igual_fecha'] and $d['primera_mensualidad_fecha']<>"")){
+            ($d['primera_mensualidad_fecha']<=$datos['menor_igual_fecha'] and $d['primera_mensualidad_fecha']<>"")
+            ){
                 
                 if(isset($datos['bnd_tramite']) and $d['tramites'] == "Si"){
-                    array_push($registros, $d);
+                    if($d['primera_mensualidad']=='No' and $d['bnd_doc_oblig_entregados']=='No' ){
+                        array_push($descartados, $d);
+                    }else{
+                        array_push($registros, $d);
+                    }
                 }elseif(!isset($datos['bnd_tramite']) and $d['tramites'] == "No"){
-                    array_push($registros, $d);
+                    if($d['primera_mensualidad']=='No' and $d['bnd_doc_oblig_entregados']=='No' ){
+                        array_push($descartados, $d);
+                    }else{
+                        array_push($registros, $d);
+                    }
+                    //array_push($registros, $d);
                 }else{
                     array_push($descartados, $d);
                 }
@@ -3572,9 +3586,12 @@ class ClientesController extends Controller
         $carreras1=array();
         $carreras2=array();
         $carreras3=array();
+        $carreras4=array();
         $diplomadosCursos1=array();
         $diplomadosCursos2=array();
         $diplomadosCursos3=array();
+        $diplomadosCursos4=array();
+        $carreras4=array();
         foreach($registros as $r){
             if($r['bnd_doc_oblig_entregados']=="Si" and
             $r[12325]<>"" and 
@@ -3591,6 +3608,11 @@ class ClientesController extends Controller
             $r['tramites']=="Si" and 
             $r['primera_mensualidad']== "Si"){
                 array_push($carreras3, $r);
+            }elseif($r['bnd_doc_oblig_entregados']=="No" and
+            $r[12325]<>"" and 
+            $r['tramites']=="Si" and 
+            $r['primera_mensualidad']== "No"){
+                array_push($carreras4, $r);
             }elseif($r['bnd_doc_oblig_entregados']=="Si" and
             $r[12325]<>"" and 
             $r['tramites']=="No" and 
@@ -3606,6 +3628,11 @@ class ClientesController extends Controller
             $r['tramites']=="No" and 
             $r['primera_mensualidad']== "Si"){
                 array_push($diplomadosCursos3, $r);
+            }elseif($r['bnd_doc_oblig_entregados']=="No" and
+            $r[12325]<>"" and 
+            $r['tramites']=="No" and 
+            $r['primera_mensualidad']== "No"){
+                array_push($diplomadosCursos4, $r);
             }
         }
         

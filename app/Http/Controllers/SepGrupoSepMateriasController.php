@@ -8,12 +8,11 @@ use App\SepMaterium;
 use App\Http\Requests;
 use App\SepGrupoSepMateria;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\createSepGrupo;
 use App\Http\Requests\updateSepGrupo;
 
-class SepGruposController extends Controller {
+class SepGrupoSepMateriasController extends Controller {
 
 	/**
 	 * Display a listing of the resource.
@@ -35,7 +34,6 @@ class SepGruposController extends Controller {
 	public function create()
 	{
 		$plantels=Plantel::pluck('razon','id');
-		
 		return view('sepGrupos.create',compact('plantels'))
 			->with( 'list', SepGrupo::getListFromAllRelationApps() );
 	}
@@ -79,7 +77,7 @@ class SepGruposController extends Controller {
 	 */
 	public function edit($id, SepGrupo $sepGrupo)
 	{
-		$sepGrupo=$sepGrupo->with('sepMateriasRels')->find($id);
+		$sepGrupo=$sepGrupo->with('materias')->find($id);
 		//dd($sepGrupo);
 		$sepMaterias=SepMaterium::where('plantel_id',$sepGrupo->plantel_id)->pluck('name','id');
 		$plantels=Plantel::pluck('razon','id');
@@ -114,22 +112,18 @@ class SepGruposController extends Controller {
 		//update data
 		$sepGrupo=$sepGrupo->find($id);
 		$sepGrupo->update( $input );
-		
+
 		if(!is_null($input['sep_materia_id']) and !is_null($input['grado']) and !is_null($input['duracion_horas'])){
 			$inputGM['sep_grupo_id']=$id;
 			$inputGM['sep_materia_id']=$input['sep_materia_id'];
 			$inputGM['grado']=$input['grado'];
 			$inputGM['duracion_horas']=$input['duracion_horas'];
-			$inputGM['acuerdo']=$input['acuerdo'];
 			$inputGM['usu_alta_id']=Auth::user()->id;
 			$inputGM['usu_mod_id']=Auth::user()->id;
-			
-			$r=SepGrupoSepMateria::create($inputGM);
-			//dd($r);
-
+			SepGrupoSepMateria::create($inputGM);
 		}
 
-		return redirect()->route('sepGrupos.edit',$id)->with('message', 'Registro Actualizado.');
+		return redirect()->route('sepGrupos.index')->with('message', 'Registro Actualizado.');
 	}
 
 	/**
@@ -138,51 +132,13 @@ class SepGruposController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id,SepGrupo $sepGrupo)
+	public function destroy($id,SepGrupoSepMateria $sepGrupoSepMateria)
 	{
-		$sepGrupo=$sepGrupo->find($id);
-		$sepGrupo->delete();
+		$sepGrupoSepMateria=$sepGrupoSepMateria->find($id);
+		$grupo=$sepGrupoSepMateria->sep_grupo_id;
+		$sepGrupoSepMateria->delete();
 
-		return redirect()->route('sepGrupos.index')->with('message', 'Registro Borrado.');
+		return redirect()->route('sepGrupos.edit', $grupo)->with('message', 'Registro Borrado.');
 	}
-
-	public function gruposXPlantel(Request $request){
-        if ($request->ajax()) {
-            //dd($request->all());
-            $plantel = $request->get('plantel_id');
-            $grupo = $request->get('grupo');
-
-            $final = array();
-            $r = DB::table('sep_grupos as sg')
-                ->select('sg.id', 'sg.name')
-                ->where('plantel_id', $plantel)
-                ->whereNull('deleted_at')
-                ->get();
-
-            //dd($materias);
-            if (isset($grupo) and $grupo > 0) {
-                foreach ($r as $r1) {
-                    //dd(in_array($r1->id, $materias));
-                    if ($r1->id== $grupo) {
-                        array_push($final, array(
-                            'id' => $r1->id,
-                            'name' => $r1->name,
-                            'selectec' => 'Selected',
-                        ));
-                    } else {
-                        array_push($final, array(
-                            'id' => $r1->id,
-                            'name' => $r1->name,
-                            'selectec' => '',
-                        ));
-                    }
-                }
-                return $final;
-            } else {
-                return $r;
-            }
-        }
-    }
-
 
 }

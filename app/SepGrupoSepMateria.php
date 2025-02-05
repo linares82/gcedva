@@ -7,11 +7,12 @@ use App\Traits\GetAllDataTrait;
 use App\Traits\RelationManagerTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class SepMaterium extends Model
+class SepGrupoSepMateria extends Model
 {
     use RelationManagerTrait,GetAllDataTrait;
     use SoftDeletes;
-	public $table="sep_materias";
+
+	public $table="sep_grupo_sep_materia";
 
     public function __construct(array $attributes = array())
     {
@@ -19,7 +20,7 @@ class SepMaterium extends Model
     } 
 
 	//Mass Assignment
-	protected $fillable = ['name','plantel_id','cantidad_materias_para_aprobar','usu_alta_id','usu_mod_id'];
+	protected $fillable = ['sep_grupo_id','sep_materia_id','grado','duracion_horas','acuerdo','usu_alta_id','usu_mod_id'];
 
 	public function usu_alta() {
 		return $this->hasOne('App\User', 'id', 'usu_alta_id');
@@ -29,14 +30,14 @@ class SepMaterium extends Model
 		return $this->hasOne('App\User', 'id', 'usu_mod_id');
 	}// end
 
-	public function plantel() {
-		return $this->hasOne('App\Plantel', 'id', 'plantel_id');
+	public function sepGrupo() {
+		return $this->belongsTo('App\SepGrupo');
 	}
 
-	public function materias()
-	{
-		return $this->belongsToMany('App\Materium', 'materia_sep_materia', 'sep_materia_id', 'materia_id');
-	} // end
+	public function sepMateria() {
+		return $this->belongsTo('App\SepMaterium');
+	}
+
 
     protected $dates = ['deleted_at'];
 }

@@ -121,6 +121,8 @@
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'name', 'title' => 'MATERIA'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'plantel_id', 'title' => 'PLANTEL'])</th>
+                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'cantidad_materias_para_aprobar', 'title' => 'CANTIDAD MATERIAS PARA APROBAR'])</th>
+                            <th>Materias</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
@@ -130,7 +132,13 @@
                             <tr>
                                 <td><a href="{{ route('sepMaterias.show', $sepMaterium->id) }}">{{$sepMaterium->id}}</a></td>
                                 <td>{{$sepMaterium->name}}</td>
-                    <td>{{$sepMaterium->plantel->razon}}</td>
+                                <td>{{$sepMaterium->plantel->razon}}</td>
+                                <td>{{$sepMaterium->cantidad_materias_para_aprobar}}</td>
+                                <td>
+                                    @foreach($sepMaterium->materias as $materia)
+                                        <i class="label label-default">{{$materia->id}}-{{$materia->name}}</i>
+                                    @endforeach
+                                </td>
                                 <td class="text-right">
                                     
                                     @permission('sepMaterias.edit')

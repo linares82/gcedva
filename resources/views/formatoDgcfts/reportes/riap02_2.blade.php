@@ -88,11 +88,13 @@
     </head>
     <body>
         @php
-            $emisiones = explode(',',$formatoDgcft->fechas_emision)
+            $emisiones = explode(',',$formatoDgcft->fechas_emision);
+            //dd($emisiones);
         @endphp
         @foreach($emisiones as $emision)
             @php
-                $iteracion_emision=$loop->index
+                $iteracion_emision=$loop->index;
+                $consecutivo_control=$formatoDgcft->control_inicio;
             @endphp
             @if($loop->first)
                 <div id="printeArea" class='SaltoDePagina'>
@@ -142,7 +144,7 @@
                     </tr>
                     <tr>
                         @foreach($materias as $materia)
-                        <th>{{$materia}}</th>
+                        <th>{{$materia->name}}</th>
                         @endforeach
                     </tr>
                     <tr>
@@ -154,8 +156,13 @@
                     @endphp
 
                     @foreach($formatoDgcft->formatoDgcftDetalles as $registro)
+                    @if($registro->bnd_satisfactorio==1)
                     <tr>
-                        <td>{{$i++}}</td><td>{{$registro->control}}</td><td>{{$registro->nombre}}</td>
+                        <td>{{$i++}}</td>
+                        <td>
+                        {{ $formatoDgcft->control_parte_fija }}{{ $registro->control }}
+                        </td>
+                        <td>{{$registro->nombre}}</td>
                         <td>
                             {{$registro->edad}}
                         </td>
@@ -168,6 +175,7 @@
                         <td>-</td>
                         <td>-</td>
                     </tr>
+                    @endif
                     @endforeach
                 </table>
                 
@@ -233,6 +241,7 @@
                     </tbody>
                 </table>    
             </div>
+            
             @else
             <div id="printeArea" class='SaltoDePagina'>
                 <table width="100%">
@@ -281,7 +290,7 @@
                     </tr>
                     <tr>
                         @foreach($materias as $materia)
-                        <th>{{$materia}}</th>
+                        <th>{{$materia->name}}</th>
                         @endforeach
                     </tr>
                     <tr>
@@ -293,8 +302,13 @@
                     @endphp
 
                     @foreach($formatoDgcft->formatoDgcftDetalles as $registro)
+                    @if($registro->bnd_satisfactorio==1)
                     <tr>
-                        <td>{{$i++}}</td><td>{{$registro->control}}</td><td>{{$registro->nombre}}</td>
+                        <td>{{$i++}}</td>
+                        <td>
+                        {{ $formatoDgcft->control_parte_fija }}{{ $registro->control }}
+                        </td>
+                        <td>{{$registro->nombre}}</td>
                         <td>
                             {{$registro->edad}}
                         </td>
@@ -303,11 +317,14 @@
                         @foreach($materias as $materia)
                             @if($loop->iteration==$iteracion_emision)
                             <?php 
-                            $calificacion=App\FormatoDgcftMatCalif::where('materia',trim($materia))
+                            $calificacion=App\FormatoDgcftMatCalif::where('sep_materia_id',trim($materia->sep_materia_id))
                             ->where('formato_dgcft_detalle_id',$registro->id)
                             ->first();
                             ?>
                             <td>
+                                @php
+                                    
+                                @endphp
                                 @if(!is_null($calificacion))
                                     {{$calificacion->calificacion }}
                                 @endif
@@ -319,7 +336,7 @@
                         @foreach($materias as $materia)
                             @if($loop->iteration==$iteracion_emision)
                             <?php 
-                            $calificacion=App\FormatoDgcftMatCalif::where('materia',trim($materia))
+                            $calificacion=App\FormatoDgcftMatCalif::where('sep_materia_id',trim($materia->sep_materia_id))
                             ->where('formato_dgcft_detalle_id',$registro->id)
                             ->first();
                             ?>
@@ -333,7 +350,7 @@
                         @foreach($materias as $materia)
                             @if($loop->iteration==$iteracion_emision)
                             <?php 
-                            $calificacion=App\FormatoDgcftMatCalif::where('materia',trim($materia))
+                            $calificacion=App\FormatoDgcftMatCalif::where('sep_materia_id',trim($materia->sep_materia_id))
                             ->where('formato_dgcft_detalle_id',$registro->id)
                             ->first();
                             ?>
@@ -346,6 +363,7 @@
                             @endif
                         @endforeach
                     </tr>
+                    @endif
                     @endforeach
                 </table>
                 
@@ -412,6 +430,7 @@
                 </table>    
             </div>
             @endif
+
             
         @endforeach
         
