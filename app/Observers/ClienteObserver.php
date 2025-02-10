@@ -39,7 +39,7 @@ class ClienteObserver
         $this->cliente = $cliente;
         $vcliente = Cliente::find($cliente->id);
         //historico de estatus
-        dd($this->cliente);
+        //dd($this->cliente);
         if ($vcliente->st_cliente_id <> $this->cliente->st_cliente_id) {
             $st_cliente = StCliente::find($this->cliente->st_cliente_id);
             $input['tabla'] = 'clientes';

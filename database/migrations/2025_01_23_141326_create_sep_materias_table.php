@@ -16,7 +16,7 @@ class CreateSepMateriasTable extends Migration {
             $table->increments('id');
             $table->text('name');
             $table->integer('plantel_id')->unsigned(); 
-			$table->integer('cantidad_materias_para_aprobar')->nullable()
+			$table->integer('cantidad_materias_para_aprobar')->nullable();
             $table->integer('usu_alta_id')->unsigned();
             $table->integer('usu_mod_id')->unsigned();
             $table->timestamps();

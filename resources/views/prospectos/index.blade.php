@@ -358,7 +358,8 @@
                         @else
                         {{$prospecto->stProspecto->name}}
                         @endif
-                        {{ $prospecto->cliente_id }}
+                        
+                        <div id="vcliente">{{ $prospecto->cliente_id }}</div>
                     </td>
                     <td>
                         @if(isset($prospecto->prospectoSeguimiento))
@@ -381,7 +382,7 @@
                     <td class="text-right">
                         @permission('prospectos.aceptar')
                         @if($prospecto->st_prospecto_id==1 or $prospecto->st_prospecto_id==2)
-                        <a class="btn btn-xs btn-success" target="_blank" href="{{ route('prospectos.aceptar', array('prospecto'=>$prospecto->id)) }}"><i class="fa fa-thumbs-o-up"></i> Aceptar</a>
+                        <a class="btn btn-xs btn-success btn_autorizador" target="_blank" href="{{ route('prospectos.aceptar', array('prospecto'=>$prospecto->id)) }}"><i class="fa fa-thumbs-o-up"></i> Aceptar</a>
                         @endif
                         @endpermission
                         @permission('prospectos.rechazar')
@@ -424,3 +425,44 @@
 </div>
 
 @endsection
+
+@push('scripts')
+<script type="text/javascript">
+   
+$(document).ready(function() {
+   $(".btn_autorizador").click(function(event){
+    event.preventDefault();
+    //console.log( $(this).attr('href'));
+    location.reload();
+    $(this).attr('disabled', true);
+    window.open($(this).attr('href'), 'Nombre Ventana');
+    return false;
+    /*
+    $.ajax({
+            url: $(this).attr('href'),
+            type: 'GET',
+            dataType: 'json',
+            beforeSend: function () {
+                $("#loading").show();
+            },
+            afterSend: function () {
+                $("#loading").hide();
+            },
+            complete: function (datos) {
+                //console.log(datos.responseJSON.cliente_id);
+                $('#vcliente').html(`<a target="blank" href="{{url('clientes/edit/')}}datos.responseJSON.cliente_id">datos.responseJSON.cliente_id</a>`);
+            },
+    });
+*/
+   });
+    
+        
+   
+   
+});
+
+
+   
+
+</script>
+@endpush            

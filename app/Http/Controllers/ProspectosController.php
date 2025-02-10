@@ -216,7 +216,9 @@ class ProspectosController extends Controller {
 		));
 		$prospecto->cliente_id=$cliente->id;
 		$prospecto->save();
+		
 		//dd($cliente);
+		//return json_encode($prospecto->toArray());
 		return redirect()->route('clientes.edit', $cliente->id);
 	}
 
