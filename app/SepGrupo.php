@@ -18,7 +18,7 @@ class SepGrupo extends Model
     } 
 
 	//Mass Assignment
-	protected $fillable = ['name','secciones','plantel_id','cantidad_materias_para_aprobar','usu_alta_id','usu_mod_id'];
+	protected $fillable = ['name','secciones','plantel_id','cantidad_materias_para_aprobar','bnd_tiene_otro_grupo','usu_alta_id','usu_mod_id'];
 
 	public function usu_alta() {
 		return $this->hasOne('App\User', 'id', 'usu_alta_id');

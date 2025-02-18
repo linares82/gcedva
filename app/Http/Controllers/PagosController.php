@@ -1004,6 +1004,8 @@ class PagosController extends Controller
             array_push($planteles, $p->id);
         }
         $plantels=Plantel::whereIn('id',$planteles)->pluck('razon','id');
+        $plantels->prepend('SEleccionar Opción', 0);
+
         return view('pagos.reportes.inscritosPagos', compact('empleados','conceptos','plantels'))
             ->with('list', Inscripcion::getListFromAllRelationApps());
     }

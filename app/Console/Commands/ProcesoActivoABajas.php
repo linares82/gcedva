@@ -64,7 +64,7 @@ class ProcesoActivoABajas extends Command
                 $file = fopen($ruta . $archivo, 'w');
                 $columns = array('plantel', 'id_cliente', 'estatus', 'total_adeudos');
                 fputcsv($file, $columns);
-                $resultado = DB::table('adeudos');
+                $resultado = Adeudo::query(); //DB::table('adeudos');
                 if ($paso->bnd_mensualidades == 1) {
                     $resultado->where('caj_con.bnd_mensualidad', 1);
                 }
@@ -82,7 +82,7 @@ class ProcesoActivoABajas extends Command
                     ->where('cc.nivel_id', '>', 0)
                     ->where('cc.grado_id', '>', 0)
                     ->where('cc.turno_id', '>', 0)
-                    //->whereIn('c.id', array(69974))
+                    //->whereIn('c.id', array(97702))
                     ->whereColumn('adeudos.combinacion_cliente_id', 'cc.id')
                     ->where('fecha_pago', '<', $fechaActual)
                     ->where('pagado_bnd', 0)
@@ -94,10 +94,12 @@ class ProcesoActivoABajas extends Command
                     ->groupBy('p.razon')
                     ->groupBy('adeudos.cliente_id')
                     ->groupBy('stc.name')
-                    ->having('adeudos_cantidad', $paso->simbolo_cantidad_adeudos, $paso->cantidad_adeudos);
+                    ->having('adeudos_cantida', $paso->simbolo_cantidad_adeudos, $paso->cantidad_adeudos);
                 $registros = $resultado->orderBy('cliente_id')->get();
+		            //dd($registros);
                     foreach ($registros as $registro) {
                         echo $registro->cliente_id."-";
+//dd('cursor');
 
                         $hoy = date('Y-m-d');
     

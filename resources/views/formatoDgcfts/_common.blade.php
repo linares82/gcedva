@@ -1,1 +1,1 @@
-@section('formaPagosAppTitle','Forma Pago')
+@section('formaPagosAppTitle','Formato DGCFT')

@@ -112,6 +112,9 @@
                                 <td><a href="{{ route('formatoDgcfts.show', $formatoDgcft->id) }}">{{$formatoDgcft->id}}</a></td>
                                 <td>{{$formatoDgcft->name}}</td>
                                 <td class="text-right">
+                                    @permission('formatoDgcfts.create')
+                                    <a class="btn btn-xs btn-primary" href="{{ route('formatoDgcfts.duplicate', $formatoDgcft->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>
+                                    @endpermission
                                     @permission('formatoDgcfts.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('formatoDgcfts.edit', $formatoDgcft->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
                                     @endpermission

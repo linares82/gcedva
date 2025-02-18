@@ -10,7 +10,6 @@
         tr:nth-child(odd) { background: #b8d1f3; }
       </style>
     
-    
   </head>
   <body>
     <div class="datagrid">
@@ -78,6 +77,8 @@
               <th>Inscripción/S. Escolares</th><th>Fecha Caja</th><th>Trámites</th><th>Fecha Pago Tramites</th>
               <th>P. Mensualidad</th><th>Fecha Pago</th><th>Doc. Oblig. Entregados</th>
               <th>Etapa Prospecto</th>
+              <th>Existe Modelo Educativo Especial</th>
+              <th>Modelo Educativo Especialidad</th><th>Fecha Modelo Educativo Especialidad</th>
           </thead>
           <tbody>
             @php
@@ -113,6 +114,9 @@
               
               
               <td>{{$rs['etapa_prospecto']}}</td>
+              <td>{{$rs['existe_modelo_educativo_especialidad']}}</td>
+              <td>{{$rs['modelo_educativo_especialidad']}}</td>
+              <td>{{$rs['modelo_educativo_especialidad_fecha']}}</td>
             </tr>
             @endif  
             @php
@@ -132,6 +136,8 @@
               <th>Inscripción/S. Escolares</th><th>Fecha Caja</th><th>Trámites</th><th>Fecha Pago Tramites</th>
               <th>P. Mensualidad</th><th>Fecha Pago</th><th>Doc. Oblig. Entregados</th>
               <th>Etapa Prospecto</th>
+              <th>Existe Modelo Educativo Especial</th>
+              <th>Modelo Educativo Especialidad</th><th>Fecha Modelo Educativo Especialidad</th>
           </thead>
           <tbody>
             @php
@@ -165,8 +171,10 @@
           		{{$rs['bnd_doc_oblig_entregados']}}                
               </td>
               
-              
               <td>{{$rs['etapa_prospecto']}}</td>
+              <td>{{$rs['existe_modelo_educativo_especialidad']}}</td>
+              <td>{{$rs['modelo_educativo_especialidad']}}</td>
+              <td>{{$rs['modelo_educativo_especialidad_fecha']}}</td>
             </tr>
             @endif  
             @php
@@ -186,6 +194,8 @@
               <th>Inscripción/S. Escolares</th><th>Fecha Caja</th><th>Trámites</th><th>Fecha Pago Tramites</th>
               <th>P. Mensualidad</th><th>Fecha Pago</th><th>Doc. Oblig. Entregados</th>
               <th>Etapa Prospecto</th>
+              <th>Existe Modelo Educativo Especial</th>
+              <th>Modelo Educativo Especialidad</th><th>Fecha Modelo Educativo Especialidad</th>
           </thead>
           <tbody>
             @php
@@ -218,9 +228,10 @@
               <td>
           		{{$rs['bnd_doc_oblig_entregados']}}                
               </td>
-              
-              
               <td>{{$rs['etapa_prospecto']}}</td>
+              <td>{{$rs['existe_modelo_educativo_especialidad']}}</td>
+              <td>{{$rs['modelo_educativo_especialidad']}}</td>
+              <td>{{$rs['modelo_educativo_especialidad_fecha']}}</td>
             </tr>
             @endif  
             @php
@@ -241,6 +252,8 @@
               <th>Inscripción/S. Escolares</th><th>Fecha Caja</th><th>Trámites</th><th>Fecha Pago Tramites</th>
               <th>P. Mensualidad</th><th>Fecha Pago</th><th>Doc. Oblig. Entregados</th>
               <th>Etapa Prospecto</th>
+              <th>Existe Modelo Educativo Especial</th>
+              <th>Modelo Educativo Especialidad</th><th>Fecha Modelo Educativo Especialidad</th>
           </thead>
           <tbody>
             @php
@@ -273,9 +286,10 @@
               <td>
           		{{$rs['bnd_doc_oblig_entregados']}}                
               </td>
-              
-              
               <td>{{$rs['etapa_prospecto']}}</td>
+              <td>{{$rs['existe_modelo_educativo_especialidad']}}</td>
+              <td>{{$rs['modelo_educativo_especialidad']}}</td>
+              <td>{{$rs['modelo_educativo_especialidad_fecha']}}</td>
             </tr>
             @endif  
             @php
@@ -295,6 +309,8 @@
               <th>Inscripción/S. Escolares</th><th>Fecha Caja</th><th>Trámites</th><th>Fecha Pago Tramites</th>
               <th>P. Mensualidad</th><th>Fecha Pago</th><th>Doc. Oblig. Entregados</th>
               <th>Etapa Prospecto</th>
+              <th>Existe Modelo Educativo Especial</th>
+              <th>Modelo Educativo Especialidad</th><th>Fecha Modelo Educativo Especialidad</th>
           </thead>
           <tbody>
             @php
@@ -327,9 +343,10 @@
               <td>
           		{{$rs['bnd_doc_oblig_entregados']}}                
               </td>
-              
-              
               <td>{{$rs['etapa_prospecto']}}</td>
+              <td>{{$rs['existe_modelo_educativo_especialidad']}}</td>
+              <td>{{$rs['modelo_educativo_especialidad']}}</td>
+              <td>{{$rs['modelo_educativo_especialidad_fecha']}}</td>
             </tr>
             @endif  
             @php
@@ -349,6 +366,8 @@
               <th>Inscripción/S. Escolares</th><th>Fecha Caja</th><th>Trámites</th><th>Fecha Pago Tramites</th>
               <th>P. Mensualidad</th><th>Fecha Pago</th><th>Doc. Oblig. Entregados</th>
               <th>Etapa Prospecto</th>
+              <th>Existe Modelo Educativo Especial</th>
+              <th>Modelo Educativo Especialidad</th><th>Fecha Modelo Educativo Especialidad</th>
           </thead>
           <tbody>
             @php
@@ -382,8 +401,10 @@
           		{{$rs['bnd_doc_oblig_entregados']}}                
               </td>
               
-              
               <td>{{$rs['etapa_prospecto']}}</td>
+              <td>{{$rs['existe_modelo_educativo_especialidad']}}</td>
+              <td>{{$rs['modelo_educativo_especialidad']}}</td>
+              <td>{{$rs['modelo_educativo_especialidad_fecha']}}</td>
             </tr>
             @endif  
             @php
@@ -404,6 +425,9 @@
               <th>Inscripción/S. Escolares</th><th>Fecha Caja</th><th>Trámites</th><th>Fecha Pago Tramites</th>
               <th>P. Mensualidad</th><th>Fecha Pago</th><th>Doc. Oblig. Entregados</th>
               <th>Etapa Prospecto</th>
+              <th>Existe Modelo Educativo Especial</th>
+              <th>Modelo Educativo Especial</th>
+              <th>Fecha Modelo Educativo Especialidad</th>
           </thead>
           <tbody>
             @php
@@ -437,8 +461,10 @@
           		{{$rs['bnd_doc_oblig_entregados']}}                
               </td>
               
-              
               <td>{{$rs['etapa_prospecto']}}</td>
+              <td>{{$rs['existe_modelo_educativo_especialidad']}}</td>
+              <td>{{$rs['modelo_educativo_especialidad']}}</td>
+              <td>{{$rs['modelo_educativo_especialidad_fecha']}}</td>
             </tr>
             @endif  
             @php
@@ -458,6 +484,8 @@
               <th>Inscripción/S. Escolares</th><th>Fecha Caja</th><th>Trámites</th><th>Fecha Pago Tramites</th>
               <th>P. Mensualidad</th><th>Fecha Pago</th><th>Doc. Oblig. Entregados</th>
               <th>Etapa Prospecto</th>
+              <th>Existe Modelo Educativo Especial</th>
+              <th>Modelo Educativo Especialidad</th><th>Fecha Modelo Educativo Especialidad</th>
           </thead>
           <tbody>
             @php
@@ -491,8 +519,10 @@
           		{{$rs['bnd_doc_oblig_entregados']}}                
               </td>
               
-              
               <td>{{$rs['etapa_prospecto']}}</td>
+              <td>{{$rs['existe_modelo_educativo_especialidad']}}</td>
+              <td>{{$rs['modelo_educativo_especialidad']}}</td>
+              <td>{{$rs['modelo_educativo_especialidad_fecha']}}</td>
             </tr>
             @endif  
             @php

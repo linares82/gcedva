@@ -433,7 +433,7 @@ $(document).ready(function() {
    $(".btn_autorizador").click(function(event){
     event.preventDefault();
     //console.log( $(this).attr('href'));
-    location.reload();
+    
     $(this).attr('disabled', true);
     window.open($(this).attr('href'), 'Nombre Ventana');
     return false;

@@ -41,7 +41,7 @@
 @endphp
 
 
-
+<!--
 <div class="row">
    <div class="well well-sm">
    
@@ -73,7 +73,7 @@
       <th>ESCOLARIDAD</th>
       <th>BECA %</th>
       <th>Ver Cliente</th>
-      @if($formatoDgcft->materias)
+      @if(!is_null($formatoDgcft->materias))
          @php
             $materias=explode(',',$formatoDgcft->materias);
          @endphp
@@ -95,6 +95,7 @@
             <td>{{$detalle->escolaridad}}</td>
             <td>{{$detalle->beca}}</td>
             <td><a href="{{route('clientes.edit',$detalle->cliente_id)}}" target="blank">{{$detalle->cliente_id}}</a></td>
+            @if(!is_null($formatoDgcft->materias))
             @foreach($materias as $materia)
                @php
                   $calificacion=App\FormatoDgcftMatCalif::where('materia',trim($materia))
@@ -108,6 +109,7 @@
                   @endif
                </td>
             @endforeach
+            @endif
          </tr>
       @endforeach
    </tbody>
@@ -115,7 +117,7 @@
 @endif
    </div>
 </div>
-
+-->
 @php
 $contador=0;
 @endphp

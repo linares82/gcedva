@@ -100,6 +100,7 @@
                     <th>Usuario</th><th>Proporciona Pensión Alimenticia</th><th>Es Jefe</th>
                     <th>Jefe</th>
                     <th>PROFORDEMS</th><th>Género</th>
+                    <th>EVENTO(BAJA)</th><th>F. EVENTO(BAJA)</th>
                 </head>
                 <body>
                     @foreach($empleados as $e)
@@ -118,6 +119,7 @@
                     <td>{{$e->user}}</td><td>{{$e->alimenticia_bnd ? 'Si' : 'No'}}</td><td>{{$e->jefe_bnd ? 'Si' : 'No'}}</td>
                     <td>{{$e->nombre_jefe}}{{$e->ape_paterno_jefe}}{{$e->ape_materno_jefe}}</td>
                     <td>{{$e->profordems}}</td><td>{{$e->genero==1 ? 'Hombre' : 'Mujer'}}</td>
+                    <td>{{$e->evento_descripcion}}</td><td>{{$e->evento_fecha}}</td>
                     </tr>
                 @endforeach    
                 </body>

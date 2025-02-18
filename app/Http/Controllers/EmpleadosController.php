@@ -59,6 +59,7 @@ class EmpleadosController extends Controller
             ->pluck('name', 'id');
         $estados = Estado::pluck('name', 'id');
         $nivel_estudios = NivelEstudio::pluck('name', 'id');
+        
         return view('empleados.create', compact('estados', 'jefes', 'responsables', 'tipoContratos', 'nivel_estudios'))
             ->with('list', Empleado::getListFromAllRelationApps())
             ->with('list1', PivotDocEmpleado::getListFromAllRelationApps());
@@ -369,7 +370,7 @@ class EmpleadosController extends Controller
     public function usuarios(Request $request)
     {
         //dd($_REQUEST);
-        $data = User::select('id as d', "name as n")
+        $data = User::select(DB::raw('concat(name, " - ", email) as n, id as d'))
             ->where("name", "LIKE", "%" . $request->input('term') . "%")
             ->get();
         //dd($data);
@@ -788,7 +789,9 @@ class EmpleadosController extends Controller
         'empleados.anios_servicio_escuela','empleados.fec_inicio_experiencia_academicas',
         'empleados.profordems','empleados.bnd_recontratable','empleados.just_recontratable',
         'tc.name as tipo_contrato','pla_contrato1.razon as pla_contrato1','empleados.fin_contrato',
-        'tc2.name as tipo_contrato2','pla_contrato2.razon as pla_contrato2','empleados.fec_fin_contrato2')
+        'tc2.name as tipo_contrato2','pla_contrato2.razon as pla_contrato2','empleados.fec_fin_contrato2',
+        'his.descripcion as evento_descripcion','his.fecha as evento_fecha'
+        )
         ->join('puestos as p','p.id','empleados.puesto_id')
         ->join('plantels as pla','pla.id','empleados.plantel_id')
         ->join('plantels as pla_contrato1','pla_contrato1.id','empleados.plantel_contrato1_id')
@@ -800,6 +803,7 @@ class EmpleadosController extends Controller
         ->join('tipo_contratos as tc2','tc2.id', 'empleados.tipo_contrato2_id')
         ->join('estados as e','e.id', 'empleados.estado_nacimiento_id')
         ->join('nivel_estudios as ne','ne.id', 'empleados.nivel_estudio_id')
+        ->leftJoin('historials as his','his.empleado_id', 'empleados.id')
         ->whereIn('empleados.plantel_id', $datos['plantel_f']) 
         ->whereIn('empleados.st_empleado_id', $datos['estatus_f']) 
         ->get();

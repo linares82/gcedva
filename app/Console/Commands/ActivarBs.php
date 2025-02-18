@@ -65,8 +65,8 @@ class ActivarBs extends Command
         $cajasHoy=Caja::select('cajas.*')
           ->join('pagos as p','p.caja_id','cajas.id')
           ->join('clientes as cli','cli.id','cajas.cliente_id')
-          ->where('p.fecha','<=',$fechaActual)
-		  ->where('p.fecha','>=',$fechaAnterior)
+          ->where('p.created_at','<=',$fechaActual)
+		  ->where('p.created_at','>=',$fechaAnterior)
           ->where('cli.st_cliente_id', 4)
 		  ->where('st_caja_id',1)
  		  ->get();
@@ -76,9 +76,10 @@ class ActivarBs extends Command
         foreach($cajasHoy as $caja){
             if(!in_array($caja->cliente_id, $clientes)){
             array_push($clientes, $caja->cliente_id);
+	    //echo $caja->cliente_id."-";
             }
         }
-        //dd($clientes);
+        //dd('clientes');
 
         $clientesActivosHoy=HEstatus::where('fecha',$fechaActual)
         ->where('tabla','clientes')

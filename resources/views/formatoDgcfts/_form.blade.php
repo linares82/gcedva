@@ -20,7 +20,7 @@
    @endif
 </div>
 <div class="form-group col-md-4 @if($errors->has('inicio_matricula')) has-error @endif">
-   <label for="inicio_matricula-field">Inicio Matricula (mmaa)</label>
+   <label for="inicio_matricula-field">Inicio Matricula (mmaa, separados por "," y sin espacios)</label>
    {!! Form::text("inicio_matricula", null, array("class" => "form-control", "id" => "inicio_matricula-field")) !!}
    @if($errors->has("inicio_matricula"))
       <span class="help-block">{{ $errors->first("inicio_matricula") }}</span>
@@ -115,7 +115,7 @@
       <span class="help-block">{{ $errors->first("grupo") }}</span>
    @endif
 </div> 
-<!--
+
 <div class="form-group col-md-3 @if($errors->has('fec_elaboracion')) has-error @endif">
    <label for="fec_elaboracion-field">F. Elaboracion</label>
    {!! Form::text("fec_elaboracion", null, array("class" => "form-control fecha", "id" => "fec_elaboracion-field")) !!}
@@ -123,7 +123,7 @@
       <span class="help-block">{{ $errors->first("fec_elaboracion") }}</span>
    @endif
 </div>
--->   
+
 <div class="form-group col-md-3 @if($errors->has('fec_inicio')) has-error @endif">
    <label for="fec_inicio-field">F. Inicio</label>
    {!! Form::text("fec_inicio", null, array("class" => "form-control fecha", "id" => "fec_inicio-field")) !!}
@@ -131,6 +131,13 @@
       <span class="help-block">{{ $errors->first("fec_inicio") }}</span>
    @endif
 </div> 
+<div class="form-group col-md-3 @if($errors->has('duracion')) has-error @endif">
+   <label for="duracion-field">Duracion Horas</label>
+   {!! Form::text("duracion", null, array("class" => "form-control", "id" => "duracion-field", "onblur"=>"calculaFechaFin()")) !!}
+   @if($errors->has("duracion"))
+      <span class="help-block">{{ $errors->first("duracion") }}</span>
+   @endif
+</div>
 <div class="form-group col-md-3 @if($errors->has('fec_fin')) has-error @endif">
    <label for="fec_fin-field">F. Fin</label>
    {!! Form::text("fec_fin", null, array("class" => "form-control fecha", "id" => "fec_fin-field")) !!}
@@ -153,13 +160,7 @@
    @endif
 </div> 
 
-<div class="form-group col-md-3 @if($errors->has('duracion')) has-error @endif">
-   <label for="duracion-field">Duracion Horas</label>
-   {!! Form::text("duracion", null, array("class" => "form-control", "id" => "duracion-field")) !!}
-   @if($errors->has("duracion"))
-      <span class="help-block">{{ $errors->first("duracion") }}</span>
-   @endif
-</div>
+
 
 <div class="form-group col-md-3 @if($errors->has('horario')) has-error @endif">
    <label for="horario-field">Horario</label>
@@ -183,6 +184,7 @@
    @endif
 </div> 
 
+<!--
 <div class="form-group col-md-3 @if($errors->has('cantidad_clientes')) has-error @endif">
    <label for="cantidad_clientes-field">Cantidad Clientes</label>
    {!! Form::text("cantidad_clientes", null, array("class" => "form-control", "id" => "cantidad_clientes-field")) !!}
@@ -204,6 +206,7 @@
       <span class="help-block">{{ $errors->first("clientes") }}</span>
    @endif
 </div>
+-->
 <!-- 
 <div class="form-group col-md-4 @if($errors->has('control')) has-error @endif">
    <label for="control-field">No. Control (separados por ",")
@@ -247,6 +250,7 @@
    @endif
 </div>
 -->
+<!--
 <div class="form-group col-md-4 @if($errors->has('materias')) has-error @endif">
    <label for="materias-field">Materias(separados por ",")
    </label>
@@ -270,6 +274,7 @@
       <span class="help-block">{{ $errors->first("duracion_materias") }}</span>
    @endif
 </div>
+-->
 <div class="form-group col-md-4 @if($errors->has('fechas_emision')) has-error @endif">
    <label for="fechas_emision-field">Fechas Emision(separados por ",")</label>
    {!! Form::textArea("fechas_emision", null, array("class" => "form-control", "id" => "fechas_emision-field", 'rows'=>3)) !!}
@@ -278,6 +283,7 @@
       <span class="help-block">{{ $errors->first("fechas_emision") }}</span>
    @endif
 </div>
+<!--
 <div class="form-group col-md-4 @if($errors->has('calificaciones')) has-error @endif">
    <label for="calificaciones-field">Calificaciones(Series separadas por "-" y calificaciones separadas por ",")
    @if(isset($formatoDgcft))
@@ -304,7 +310,8 @@
    @if($errors->has("calificaciones"))
       <span class="help-block">{{ $errors->first("calificaciones") }}</span>
    @endif
-</div> 
+</div>
+--> 
 <!--
 <div class="form-group col-md-4 @if($errors->has('resultados')) has-error @endif">
    <label for="resultados-field">Resultados(separados por ",")
@@ -336,10 +343,13 @@
 
 
 @push('scripts')
+<script src="
+https://cdn.jsdelivr.net/npm/dayjs@1.11.13/dayjs.min.js
+"></script>
 <script type="text/javascript">
    
 $(document).ready(function() {
-   
+
    if($('#plantel_id-field').val()!=0){
       getGrupos();
    }
@@ -351,6 +361,14 @@ $(document).ready(function() {
    
 });
 
+function calculaFechaFin(){
+      cantidad_semanas=$('#duracion-field').val()/25;
+      //console.log(cantidad_semanas);
+      //console.log($('#fec_inicio-field').val());
+      ff=dayjs($('#fec_inicio-field').val()).add(cantidad_semanas, 'week').format('YYYY-MM-DD').toString();
+      //console.log(ff);
+      $('#fec_fin-field').val(ff);
+   }
 
    function getGrupos(){
 //var $example = $("#especialidad_id-field").select2();

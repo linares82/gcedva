@@ -23,6 +23,13 @@
          <span class="help-block">{{ $errors->first("plantel_id") }}</span>
          @endif
       </div>
+      <div class="form-group col-md-6 @if($errors->has('bnd_tiene_otro_grupo')) has-error @endif">
+         <label for="bnd_tiene_otro_grupo-field">Las materias de este grupo existen en otro grupo</label>
+         {!! Form::checkbox("bnd_tiene_otro_grupo", 1, null, [ "id" => "bnd_tiene_otro_grupo-field", 'class'=>'minimal']) !!}
+         @if($errors->has("bnd_tiene_otro_grupo"))
+         <span class="help-block">{{ $errors->first("bnd_tiene_otro_grupo") }}</span>
+         @endif
+     </div>
    </div>
 
 </div>

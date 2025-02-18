@@ -63,9 +63,9 @@ class FormatoDgcftsController extends Controller
 		$input['usu_mod_id'] = Auth::user()->id;
 
 		//create data
-		FormatoDgcft::create($input);
+		$registro=FormatoDgcft::create($input);
 
-		return redirect()->route('formatoDgcfts.index')->with('message', 'Registro Creado.');
+		return redirect()->route('formatoDgcfts.edit', $registro->id)->with('message', 'Registro Creado.');
 	}
 
 	/**
@@ -106,7 +106,9 @@ class FormatoDgcftsController extends Controller
 	public function duplicate($id, FormatoDgcft $formatoDgcft)
 	{
 		$formatoDgcft = $formatoDgcft->find($id);
-		return view('formatoDgcfts.duplicate', compact('formatoDgcft'))
+		$sep_materias=SepMaterium::whereIn('id',$formatoDgcft->sepGrupo->sepMateriasRels->pluck('sep_materia_id'))->get();
+		
+		return view('formatoDgcfts.duplicate', compact('formatoDgcft','sep_materias'))
 			->with('list', FormatoDgcft::getListFromAllRelationApps());
 	}
 
@@ -352,17 +354,24 @@ class FormatoDgcftsController extends Controller
 	}
 
 	public function buscarAlumnos(Request $request){
-		$formatoDgcft=FormatoDgcft::find($request['id']);
+		$formatoDgcft=FormatoDgcft::with('sepGrupo')->find($request['id']);
+		//dd($formatoDgcft->sepGrupo);
 		$matricula_mes_anio=$formatoDgcft->inicio_matricula;
 		//dd($formatoDgcfts->sepGrupo->secciones);
 		$secciones=explode(',',$formatoDgcft->sepGrupo->secciones);
+		$mesanio_matricula=explode(',',$formatoDgcft->inicio_matricula);
+		//dd($mesanio_matricula);
 		$inicios_matricula=array();
 		$i=0;
 		
-		foreach($secciones as $seccion){
-			$inicios_matricula[$i]=$matricula_mes_anio.$seccion;
-			$i++;
+		foreach($mesanio_matricula as $mes_anio){
+			foreach($secciones as $seccion){
+				$inicios_matricula[$i]=$mes_anio.$seccion;
+				$i++;
+			}
 		}
+		//dd($inicios_matricula);
+		
 		$alumnos_aux=Cliente::query();
 		$cadenaLike="";
 		foreach($inicios_matricula as $inicio_matricula){
@@ -384,14 +393,22 @@ class FormatoDgcftsController extends Controller
 			$existe_cliente_formato_actual = FormatoDgcftDetalle::where('formato_dgcft_id', $formatoDgcft->id)
 				->where('cliente_id', trim($cliente_id))
 				->first();
-			
+			//dd($existe_cliente_formato_actual);	
+			//$existe_cliente_formato_anterior=null;
+			//if($formatoDgcft->sepGupo->bnd_tiene_otro_grupo==1){
 			$existe_cliente_formato_anterior = FormatoDgcftDetalle::where('cliente_id', trim($cliente_id))
 			    ->where('bnd_satisfactorio',1)
 				->first();
+			//}
+			//dd($existe_cliente_formato_anterior);
+			//dd($formatoDgcft->sepGrupo);			
+			if (
+				(is_null($existe_cliente_formato_actual) and is_null($existe_cliente_formato_anterior)) or 
+				(is_null($existe_cliente_formato_actual) and !is_null($existe_cliente_formato_anterior) and $formatoDgcft->sepGrupo->bnd_tiene_otro_grupo==1) 
+			) {
 				
-			if (is_null($existe_cliente_formato_actual) and is_null($existe_cliente_formato_anterior)) {
-
 				$cliente = Cliente::find(trim($cliente_id));
+				//dd($cliente);
 				$inputFormatoDgcftdetalle['formato_dgcft_id'] = $formatoDgcft->id;
 				$inputFormatoDgcftdetalle['num'] = $contador;
 				//$inputFormatoDgcftdetalle['control'] = trim($controls[$llave]);
@@ -422,11 +439,17 @@ class FormatoDgcftsController extends Controller
 				//dd($inputFormatoDgcftdetalle);
 				
 				$formatoDgcftDetalle=FormatoDgcftDetalle::create($inputFormatoDgcftdetalle);
+				
 				$satisfactorio=$this->calcularCalificaciones($formatoDgcft,$formatoDgcftDetalle,$cliente_id);
 				$formatoDgcftDetalle->bnd_satisfactorio=$satisfactorio;
 				if($formatoDgcftDetalle->bnd_satisfactorio==1){
-					$formatoDgcftDetalle->control=$formatoDgcft->control_parte_fija.str_pad($control_inicio,7,"0",STR_PAD_LEFT); 
-					$control_inicio++;
+					//dd($formatoDgcft->sepGrupo);
+					if(!is_null($existe_cliente_formato_anterior) and $formatoDgcft->sepGrupo->bnd_tiene_otro_grupo==1){
+						$formatoDgcftDetalle->control=$existe_cliente_formato_anterior->control;	
+					}else{
+						$formatoDgcftDetalle->control=$formatoDgcft->control_parte_fija.str_pad($control_inicio,7,"0",STR_PAD_LEFT); 
+						$control_inicio++;
+					}
 				}else{
 					$formatoDgcftDetalle->control="";
 				}

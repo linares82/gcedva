@@ -579,7 +579,7 @@ class HacademicasController extends Controller
         $hacademicas = null;
         //dd($periodos_capturados_total);
         //if (isset($data['excepcion']) or $periodos_capturados_total == 0) {
-        if (isset($data['excepcion']) or $dentroPeriodoExamenesAsignacion > 0) {
+        if (isset($data['excepcion']) /*or $dentroPeriodoExamenesAsignacion > 0*/) {
             //dd('flc');
             $hacademicas = HAcademica::select(
                 'cli.id',
