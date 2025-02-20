@@ -38,4 +38,8 @@ class PlanEstudio extends Model
 	public function plantel() {
 		return $this->belongsTo('App\Plantel');
 	}// end
+
+	public function periodosEstudio() {
+		return $this->belongsToMany('App\PeriodoEstudio');
+	}// end
 }

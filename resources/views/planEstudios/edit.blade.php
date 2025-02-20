@@ -24,7 +24,7 @@
 
             {!! Form::model($planEstudio, array('route' => array('planEstudios.update', $planEstudio->id),'method' => 'post')) !!}
 
-@include('planEstudios._form')
+    @include('planEstudios._form')
 
                 <div class="row">
                 </div>
@@ -37,4 +37,49 @@
 
         </div>
     </div>
+    @php
+    //dd($planEstudio->periodosEstudio->count());
+    @endphp
+    @if($planEstudio->periodosEstudio->count()>0)
+    <table class="table table-condensed table-striped">
+        <thead>
+            <tr>
+                <th>Periodo</th>
+                <th>Materias</th>
+                <th class="text-right">OPCIONES</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach($planEstudio->periodosEstudio as $periodo)
+                <tr>
+                    <td>{{$periodo->name}}</td>
+                    <td>
+                    @php
+                    $materias=App\Materium::join('materium_periodos as mp','mp.materium_id','materia.id')
+                        ->where('mp.periodo_estudio_id',$periodo->id)
+                        ->get();
+                    @endphp
+                    @foreach($materias as $materia)
+                    <i class="label label-default">{{$materia->materium_id}}-{{$materia->name}}</i>
+                    @endforeach
+                    </td>
+                    <td>
+                        <td class="text-right">
+                            @permission('planEstudios.destroy')
+                            {!! Form::model($planEstudio, array('route' => array('planEstudios.destroyPeriodo'),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}
+                            {!! Form::hidden("periodo_estudio_id",$periodo->id, array("class" => "form-control", "id" => "periodo_estudio_id-field")) !!}
+                            {!! Form::hidden("plan_estudio_id",$planEstudio->id, array("class" => "form-control", "id" => "plan_estudio_id-field")) !!}
+                            
+                                <button type="submit" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> Borrar</button>
+                            {!! Form::close() !!}
+                            @endpermission
+                        </td>
+                    </td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+    @endif
 @endsection
+

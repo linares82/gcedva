@@ -1,14 +1,19 @@
 <?php namespace App\Http\Controllers;
 
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
-
-use App\PlanEstudio;
-use Illuminate\Http\Request;
-use Auth;
 use DB;
-use App\Http\Requests\updatePlanEstudio;
+use Auth;
+
+use App\Cliente;
+use App\Plantel;
+use App\Hacademica;
+use App\PlanEstudio;
+use App\Calificacion;
+use App\Http\Requests;
+use Illuminate\Http\Request;
+use App\PeriodoEstudioPlanEstudio;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\createPlanEstudio;
+use App\Http\Requests\updatePlanEstudio;
 
 class PlanEstudiosController extends Controller {
 
@@ -20,8 +25,9 @@ class PlanEstudiosController extends Controller {
 	public function index(Request $request)
 	{
 		$planEstudios = PlanEstudio::getAllData($request);
+		$planteles= Plantel::pluck('razon','id');
 		
-		return view('planEstudios.index', compact('planEstudios'));
+		return view('planEstudios.index', compact('planEstudios','planteles'));
 	}
 
 	/**
@@ -74,7 +80,7 @@ class PlanEstudiosController extends Controller {
 	 */
 	public function edit($id, PlanEstudio $planEstudio)
 	{
-		$planEstudio=$planEstudio->find($id);
+		$planEstudio=$planEstudio->with('periodosEstudio')->find($id);
 		return view('planEstudios.edit', compact('planEstudio'))
 			->with( 'list', PlanEstudio::getListFromAllRelationApps() );
 	}
@@ -107,7 +113,14 @@ class PlanEstudiosController extends Controller {
 		$planEstudio=$planEstudio->find($id);
 		$planEstudio->update( $input );
 
-		return redirect()->route('planEstudios.index')->with('message', 'Registro Actualizado.');
+		if(isset($input['periodo_estudio_id'])){
+			PeriodoEstudioPlanEstudio::create(array(
+				'plan_estudio_id'=>$planEstudio->id, 
+				'periodo_estudio_id'=>$input['periodo_estudio_id']
+			));
+		}
+
+		return redirect()->route('planEstudios.edit',$planEstudio->id)->with('message', 'Registro Actualizado.');
 	}
 
 	/**
@@ -163,5 +176,136 @@ class PlanEstudiosController extends Controller {
             }
         }
 	}
+
+	public function destroyPeriodo(Request $request){
+		//dd($request->all());
+		$datos=$request->all();
+		$plan_estudios=PlanEstudio::find($datos['plan_estudio_id']);
+		$plan_estudios->periodosEstudio()->detach($datos['periodo_estudio_id']);
+		return redirect()->route('planEstudios.edit', $datos['plan_estudio_id'])->with('message', 'Registro Borrado.');
+	}
+
+	public function egresadosTecnica(){
+		$planteles= Plantel::pluck('razon','id');
+		return view('planEstudios.reportes.egresadosTecnica', compact('planteles'));
+	}
+
+	public function egresadosTecnicaR(Request $request){
+		$datos=$request->all();
+
+		$plantel=Plantel::find($datos['plantel_f']);
+		$plan_estudio=PlanEstudio::find($datos['plan_estudio_f']);
+		//dd($formatoDgcfts->sepGrupo->secciones);
+		$secciones=explode(',',$datos['secciones']);
+		$mesanio_matricula=explode(',',$datos['inicio_matricula']);
+		//dd($mesanio_matricula);
+		$inicios_matricula=array();
+		$i=0;
+		
+		foreach($mesanio_matricula as $mes_anio){
+			foreach($secciones as $seccion){
+				$inicios_matricula[$i]=$mes_anio.$seccion;
+				$i++;
+			}
+		}
+
+		$alumnos_aux=Cliente::select('id','nombre','nombre2','ape_paterno','ape_materno','matricula');
+
+		$cadenaLike="";
+		foreach($inicios_matricula as $inicio_matricula){
+			$cadenaLike=$cadenaLike."matricula like '".$inicio_matricula."%' or ";
+		}
+		//dd(substr($cadenaLike, 0, strlen($cadenaLike)-4));
+		$clientes=$alumnos_aux
+		->whereRaw("(".substr($cadenaLike, 0, strlen($cadenaLike)-4).
+						') and plantel_id=?',[$datos['plantel_f']])
+		->get();
+
+		$materias=PlanEstudio::select('m.id','m.name as materia')
+		->join('periodo_estudio_plan_estudio as pepe','pepe.plan_estudio_id', 'plan_estudios.id')
+		->join('periodo_estudios as pe','pe.id','pepe.periodo_estudio_id')
+		->join('materium_periodos as mp','mp.periodo_estudio_id','pe.id')
+		->join('materia as m','m.id','mp.materium_id')
+		->where('plan_estudios.id',$datos['plan_estudio_f'])
+		->whereNull('m.deleted_at')
+		->get();
+		//dd($materias->toArray());
+		
+		$resultados=array();
+		foreach($clientes as $cliente){
+			$row=array();
+			$row['matricula']=$cliente->matricula;
+			$row['nombre']=$cliente->nombre." ".$cliente->nombre2;
+			$row['apellidos']=$cliente->ape_paterno." ".$cliente->ape_materno;
+			$suma_calificaciones=0;
+			$cuenta_materias=0;
+			foreach($materias as $materia){
+				$hacademica=Hacademica::where('cliente_id',$cliente->id)->where('materium_id',$materia->id)->whereNull('deleted_at')->first();
+				//dd($hacademica);
+				//dd($hacademica->st_materium_id<>1);
+				if(is_null($hacademica)){
+					$row[$materia->materia]="N/A";	
+				}elseif($hacademica->st_materium_id<>1){
+					$row[$materia->materia]="N/A";	
+				}elseif($hacademica->st_materium_id==1){
+					$calificacion=Calificacion::where('hacademica_id',$hacademica->id)->orderBy('id','desc')->first();
+					$row[$materia->materia]=$calificacion->calificacion;
+					$suma_calificaciones=$suma_calificaciones+$calificacion->calificacion;
+					$cuenta_materias++;
+				}
+				
+			}
+			if($cuenta_materias==0){
+				$row['promedio']="N/A";	
+			}else{
+				$row['promedio']=$suma_calificaciones/$cuenta_materias;
+			}
+			
+			
+			array_push($resultados,$row);
+		}
+
+		//dd($resultados);
+		return view('planEstudios.reportes.egresadosTecnicaR', compact('resultados','plantel','plan_estudio','materias'));
+	}
+
+	public function planesEstudioXPlantel(Request $request)
+    {
+        if ($request->ajax()) {
+            //dd($request->get('plantel_id'));
+            $plantel = $request->get('plantel_id');
+            
+
+            $final = array();
+            $r = DB::table('plan_estudios as pe')
+                ->select('pe.id', 'pe.name')
+                ->where('pe.plantel_id', '=', $plantel)
+                ->whereNull('pe.deleted_at')
+                ->get();
+            //dd($r);
+            if (isset($periodo) and $periodo <> 0) {
+                foreach ($r as $r1) {
+                    if ($r1->id == $periodo) {
+                        array_push($final, array(
+                            'id' => $r1->id,
+                            'name' => $r1->name,
+                            'selectec' => 'Selected'
+                        ));
+                    } else {
+                        array_push($final, array(
+                            'id' => $r1->id,
+                            'name' => $r1->name,
+                            'selectec' => ''
+                        ));
+                        
+                    }
+                }
+                
+                return $final;
+            } else {
+                return $r;
+            }
+        }
+    }
 
 }

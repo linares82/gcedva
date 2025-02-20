@@ -58,6 +58,7 @@ class ProcesoActivoABajas extends Command
             if($paso->cantidad_adeudos==4){
                 //dd(in_array($fechaActual->day, $diasArray));
             }
+            
             if (in_array($fechaActual->day, $diasArray)) {
                 $ruta = storage_path('app/public/atrazoPagos/');
                 $archivo = $fechaActual->day . "_" . date('dmY') . "_" . date('Hsi') . ".csv";
@@ -69,7 +70,8 @@ class ProcesoActivoABajas extends Command
                     $resultado->where('caj_con.bnd_mensualidad', 1);
                 }
 
-                $resultado->select(DB::raw('p.razon,adeudos.cliente_id,stc.name as estatus, count(adeudos.cliente_id) as adeudos_cantidad'))
+                $resultado->select(DB::raw('p.razon,adeudos.cliente_id,stc.name as estatus, 
+                    sum(caj_con.bnd_mensualidad) as mensualidades, count(adeudos.cliente_id) as adeudos_cantidad'))
                     ->join('clientes as c', 'c.id', '=', 'adeudos.cliente_id')
                     ->join('combinacion_clientes as cc', 'cc.cliente_id', '=', 'c.id')
                     ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
@@ -82,7 +84,7 @@ class ProcesoActivoABajas extends Command
                     ->where('cc.nivel_id', '>', 0)
                     ->where('cc.grado_id', '>', 0)
                     ->where('cc.turno_id', '>', 0)
-                    //->whereIn('c.id', array(97702))
+                    //->whereIn('c.id', array(6977))
                     ->whereColumn('adeudos.combinacion_cliente_id', 'cc.id')
                     ->where('fecha_pago', '<', $fechaActual)
                     ->where('pagado_bnd', 0)
@@ -94,9 +96,9 @@ class ProcesoActivoABajas extends Command
                     ->groupBy('p.razon')
                     ->groupBy('adeudos.cliente_id')
                     ->groupBy('stc.name')
-                    ->having('adeudos_cantida', $paso->simbolo_cantidad_adeudos, $paso->cantidad_adeudos);
+                    ->having('adeudos_cantidad', $paso->simbolo_cantidad_adeudos, $paso->cantidad_adeudos);
                 $registros = $resultado->orderBy('cliente_id')->get();
-		            //dd($registros);
+		            //dd($registros->toArray());
                     foreach ($registros as $registro) {
                         echo $registro->cliente_id."-";
 //dd('cursor');
@@ -109,7 +111,11 @@ class ProcesoActivoABajas extends Command
                             ->whereNull('historia_clientes.deleted_at')
                             ->count();
                             //echo "eventos".$eventos;
-                        if ($eventos == 0) {
+                        if ($eventos == 0 and 
+                            (($paso->cantidad_adeudos<=3 and $registro->mensualidades<=$paso->cantidad_adeudos) or
+                            ($paso->bnd_mensualidades==1)
+                            )) {
+                            //dd($registro->cliente_id);
                             $this->bajaBs($registro->cliente_id);
                             //echo "baja bs ";
     

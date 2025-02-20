@@ -158,7 +158,7 @@ class HomeController extends Controller
         $bajas_automaticas_ultimo_mes=HEstatus::select('h_estatuses.*','c.st_cliente_id')
         ->join('clientes as c','c.id', 'h_estatuses.cliente_id')
         ->where('tabla','clientes')
-        ->whereRaw('day(fecha) in (1,2,3) and month(fecha)=? and year(fecha)=?',[date('m'),date('Y')])
+        ->whereRaw('month(fecha)=? and year(fecha)=?',[date('m'),date('Y')])
         ->where('estatus_id',27)
         ->get();
         //dd($bajas_automaticas_ultimo_mes->toArray());

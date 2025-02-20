@@ -1207,4 +1207,48 @@ class PeriodoEstudiosController extends Controller
 
         return view('periodoEstudios.reportes.gruposOrdinariosR', compact('registros'));
     }
+
+    public function periodosEstudioXPlantel(Request $request)
+    {
+        if ($request->ajax()) {
+            //dd($request->get('plantel_id'));
+            $plantel = $request->get('plantel_id');
+            
+
+            $final = array();
+            $r = DB::table('periodo_estudios as pe')
+                ->join('materium_periodos as pm','pm.periodo_estudio_id','pe.id')
+                ->join('materia as m','m.id','pm.materium_id')
+                ->select('pe.id', DB::raw('concat(pe.id,"-",pe.name,"-",m.id,"-",m.name) as name'))
+                ->where('pe.plantel_id', '=', $plantel)
+                ->where('pe.id', '>', '0')
+                ->whereNull('pe.deleted_at')
+                ->whereNull('m.deleted_at')
+                ->get();
+            //dd($r);
+            if (isset($periodo) and $periodo <> 0) {
+                foreach ($r as $r1) {
+                    if ($r1->id == $periodo) {
+                        array_push($final, array(
+                            'id' => $r1->id,
+                            'name' => $r1->name,
+                            'selectec' => 'Selected'
+                        ));
+                    } else {
+                        array_push($final, array(
+                            'id' => $r1->id,
+                            'name' => $r1->name,
+                            'selectec' => ''
+                        ));
+                        
+                    }
+                }
+                
+                return $final;
+            } else {
+                return $r;
+            }
+        }
+    }
 }
+

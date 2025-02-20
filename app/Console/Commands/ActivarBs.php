@@ -58,7 +58,7 @@ class ActivarBs extends Command
         }*/
         $fechaActual = $aux->toDateString();
         
-	    $fechaAnterior = $aux->subDays(17)->toDateString();
+	    $fechaAnterior = $aux->subDays(15)->toDateString();
 	    //dd($fechaActual);
         //Query para identificar clientes con cajas pagadas
         
@@ -67,7 +67,7 @@ class ActivarBs extends Command
           ->join('clientes as cli','cli.id','cajas.cliente_id')
           ->where('p.created_at','<=',$fechaActual)
 		  ->where('p.created_at','>=',$fechaAnterior)
-          ->where('cli.st_cliente_id', 4)
+          ->whereIn('cli.st_cliente_id', array(4,31))
 		  ->where('st_caja_id',1)
  		  ->get();
         //dd($cajasHoy->toArray());
