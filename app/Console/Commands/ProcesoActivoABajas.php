@@ -84,7 +84,7 @@ class ProcesoActivoABajas extends Command
                     ->where('cc.nivel_id', '>', 0)
                     ->where('cc.grado_id', '>', 0)
                     ->where('cc.turno_id', '>', 0)
-                    //->whereIn('c.id', array(6977))
+                    //->whereIn('c.id', array(23468))
                     ->whereColumn('adeudos.combinacion_cliente_id', 'cc.id')
                     ->where('fecha_pago', '<', $fechaActual)
                     ->where('pagado_bnd', 0)
@@ -111,6 +111,7 @@ class ProcesoActivoABajas extends Command
                             ->whereNull('historia_clientes.deleted_at')
                             ->count();
                             //echo "eventos".$eventos;
+                            //dd($paso->bnd_mensualidades==1);
                         if ($eventos == 0 and 
                             (($paso->cantidad_adeudos<=3 and $registro->mensualidades<=$paso->cantidad_adeudos) or
                             ($paso->bnd_mensualidades==1)

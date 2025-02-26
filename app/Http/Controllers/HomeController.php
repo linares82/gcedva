@@ -18,6 +18,7 @@ use App\AvisosEmpresa;
 use App\StSeguimiento;
 use App\HistoriaCliente;
 use App\AutorizacionBeca;
+use Zizaco\Entrust\Entrust;
 use Illuminate\Http\Request;
 use App\PivotAvisoGralEmpleado;
 
@@ -41,6 +42,9 @@ class HomeController extends Controller
      */
     public function index()
     {
+        if (Auth::user()->can('directores.reportes')) {
+            return redirect()->route('adeudos.ingresosTotales');
+        }
         $f = date("Y-m-d");
         $l = Lectivo::find(0)->first();
 

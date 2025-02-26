@@ -575,7 +575,7 @@ class AdeudosController extends Controller
             $i = 0;
             $descarte_inicial = 0;
             foreach ($lineas as $adeudo) {
-                //conceptos diferentes de mensualidad, se ignoran los Ã‚Â´primeros 3
+                //conceptos diferentes de mensualidad, se ignoran los Ãƒâ€šÃ‚Â´primeros 3
                 //if($adeudo->cajaConcepto->bnd_mensualidad<>1 and $descarte_inicial>3){
                 $mensualidad_pagada = Adeudo::where('cliente_id', $data['cliente'])
                     ->where('caja_concepto_id', $adeudo->caja_concepto_id)
@@ -4406,6 +4406,110 @@ class AdeudosController extends Controller
         $hoy = Carbon::createFromFormat('Y-m-d', Date('Y-m-d'));
         $lineas_procesadas = array();
         $lineas_detalle = array();
+        $formas_pago=FormaPago::where('id','>',0)->get();
+        $planteles=Plantel::where('id','>',1)
+        ->orderBy('plantels.id')
+        ->orderBy('plantels.razon')
+        ->cursor();
+        
+        $resultado=array();
+        $grafica=array();
+        
+        foreach($planteles as $plantel){
+            $registro=array();
+            $totales_efectivo=Pago::join('cajas as caj', 'caj.id','pagos.caja_id')
+            ->join('forma_pagos as fm', 'fm.id', 'caj.forma_pago_id')
+            ->where('pagos.created_at','>=', $datos['fecha_f'])
+            ->where('pagos.created_at','<=', $datos['fecha_t'])
+            ->where('pagos.forma_pago_id',1)
+            ->where('bnd_pagado',1)
+            ->where('caj.plantel_id', $plantel->id)
+            ->whereIn('caj.st_caja_id',array(1,3))
+            ->sum('pagos.monto');
+            $totales_otros=Pago::join('cajas as caj', 'caj.id','pagos.caja_id')
+            ->join('forma_pagos as fm', 'fm.id', 'caj.forma_pago_id')
+            ->where('pagos.created_at','>=', $datos['fecha_f'])
+            ->where('pagos.created_at','<=', $datos['fecha_t'])
+            ->where('pagos.forma_pago_id','<>',1)
+            ->where('bnd_pagado',1)
+            ->where('caj.plantel_id', $plantel->id)
+            ->whereIn('caj.st_caja_id',array(1,3))
+            ->sum('pagos.monto');
+            $registro['razon']=$plantel->razon;
+            $registro['efectivo']=$totales_efectivo;
+            $registro['resto']=$totales_otros;
+            $registro['suma_total']=$registro['efectivo']+$registro['resto'];
+            if($registro['efectivo']>0 and $registro['resto']>0){
+                array_push($resultado, $registro);
+                array_push($grafica, array('x'=>$registro['razon'], 'value'=>$registro['suma_total'], 'fill'=>$this->randomColor()));
+            }
+            
+                //dd($registro);
+            }
+        //dd($resultado);
+        /*
+        
+
+        $totales_otros=Pago::select('p.id as plantel_id','p.razon','c.id','c.nombre','c.nombre2', 'c.ape_paterno', 'c.ape_materno',
+        'caj.consecutivo','pagos.created_at','pagos.fecha','pagos.monto', 'fm.id as forma_pago_id',
+        'fm.name as forma_pago')
+        ->join('cajas as caj', 'caj.id','pagos.caja_id')
+        ->join('forma_pagos as fm', 'fm.id', 'caj.forma_pago_id')
+        ->join('plantels as p','p.id','caj.plantel_id')
+        //->join('caja_lns as cln','cln.caja_id','caj.id' )
+        ->join('clientes as c','c.id','caj.cliente_id')
+        ->where('pagos.created_at','>=', $datos['fecha_f'])
+        ->where('pagos.created_at','<=', $datos['fecha_t'])
+        ->where('pagos.forma_pago_id',"<>",1)
+        ->where('bnd_pagado',1)
+        ->whereIn('caj.st_caja_id',array(1,3))
+        ->orderBy('p.razon')
+        ->orderBy('pagos.fecha')
+        ->get();
+
+        }
+        
+        */
+        //dd($totales->toArray());
+        /*
+        $resultado=array();
+        $registro=array();
+        $formas_pago=FormaPago::where('id','>',0)->get();
+        
+        foreach($planteles as $plantel){
+            $registro['razon']=$plantel->razon;
+            $sumaTotal=0;
+            $sumaEfectivo=0;
+            $sumaResto=0;
+            foreach($formas_pago as $forma_pago){
+                
+                foreach($totales as $total){
+                    if($forma_pago->id==1 and $plantel->id==$total->plantel_id){
+                        $sumaEfectivo=$sumaEfectivo+$total->monto;
+                        $sumaTotal=$sumaTotal+$total->monto;
+                    }elseif($forma_pago->id<>1 and $plantel->id==$total->plantel_id){
+                        $sumaResto=$sumaResto+$total->monto;
+                        $sumaTotal=$sumaTotal+$total->monto;
+                    }
+                }
+                $registro['efectivo']=$sumaEfectivo;
+                $registro['resto']=$sumaResto;
+            }
+            $registro['suma_total']=$sumaTotal;
+            array_push($resultado, $registro);
+        }
+        //dd($resultado);
+        */
+        return view('adeudos.reportes.ingresosTotalesR', compact('formas_pago', 'resultado','grafica'));
+    }
+
+    /*public function ingresosTotalesR(Request $request)
+    {
+        $datos = $request->all();
+        //dd($datos);
+        $hoy = Carbon::createFromFormat('Y-m-d', Date('Y-m-d'));
+        $lineas_procesadas = array();
+        $lineas_detalle = array();
         $planteles=Plantel::where('id','>',1)->get();
         
         $totales=Pago::select('p.id as plantel_id','p.razon','c.id','c.nombre','c.nombre2', 'c.ape_paterno', 'c.ape_materno',
@@ -4453,7 +4557,7 @@ class AdeudosController extends Controller
         //dd($resultado);
 
         return view('adeudos.reportes.ingresosTotalesR', compact('formas_pago', 'resultado', 'totales'));
-    }
+    }*/
 
     public function ingresosTotalesDetalle(Request $request){
         $datos=$request->all();
@@ -4471,4 +4575,27 @@ class AdeudosController extends Controller
         
         return view('adeudos.reportes.ingresosTotalesDetalle', compact('formas_pago', 'data','plantel'));
     }
+
+    function randomColor(){
+        $str = "#";
+        for($i = 0 ; $i < 6 ; $i++){
+        $randNum = rand(0, 15);
+        switch ($randNum) {
+        case 10: $randNum = "A"; 
+        break;
+        case 11: $randNum = "B"; 
+        break;
+        case 12: $randNum = "C"; 
+        break;
+        case 13: $randNum = "D"; 
+        break;
+        case 14: $randNum = "E"; 
+        break;
+        case 15: $randNum = "F"; 
+        break; 
+        }
+        $str .= $randNum;
+        }
+        return $str;
+       }
 }

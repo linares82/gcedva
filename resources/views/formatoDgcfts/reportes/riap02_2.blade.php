@@ -113,8 +113,8 @@
                 <table width="100%">
                     <tr>
                         <td>ENLACE OPERATIVO SCEO:<strong>{{$formatoDgcft->plantelR->enlace}}</strong></td>
-                        <td colspan="2">PLANTEL PARTICULAR: <strong>{{$formatoDgcft->plantelR->denominacion}}</strong></td>
-                        <td>CLAVE CCT: {{$formatoDgcft->plantelR->cct}} </td>
+                        <td colspan="2">PLANTEL PARTICULAR: <strong>{{$grado->denominacion}}</strong></td>
+                        <td>CLAVE CCT: {{$grado->cct}} </td>
                     </tr>
                     <tr>
                         <td colspan="2">ESPECIALIDAD:<strong>{{$formatoDgcft->especialidad}}</strong></td>
@@ -259,8 +259,8 @@
                 <table width="100%">
                     <tr>
                         <td>ENLACE OPERATIVO SCEO:<strong>{{$formatoDgcft->plantelR->enlace}}</strong></td>
-                        <td colspan="2">PLANTEL PARTICULAR: <strong>{{$formatoDgcft->plantelR->denominacion}}</strong></td>
-                        <td>CLAVE CCT: {{$formatoDgcft->plantelR->cct}} </td>
+                        <td colspan="2">PLANTEL PARTICULAR: <strong>{{$grado->denominacion}}</strong></td>
+                        <td>CLAVE CCT: {{$grado->cct}} </td>
                     </tr>
                     <tr>
                         <td colspan="2">ESPECIALIDAD:<strong>{{$formatoDgcft->especialidad}}</strong></td>

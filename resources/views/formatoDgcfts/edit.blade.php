@@ -183,7 +183,6 @@ $contador=0;
                <td>
                   @if(!is_null($calificacion))
                      {{$calificacion->calificacion }}
-                     <a href="{{route('formatoDgcfts.destroyCalificacion',array('id'=>$calificacion->id,'formato_dgcft_id'=>$formatoDgcft->id))}}" class="btn btn-danger btn-xs" tooltip="Eliminar">X</a>
                   @endif
                </td>
             @endforeach

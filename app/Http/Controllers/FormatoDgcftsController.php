@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use Auth;
-use App\Cliente;
+use App\Grado;
 
+use App\Cliente;
 use Carbon\Carbon;
 use App\Hacademica;
 use App\SepMaterium;
@@ -12,8 +13,8 @@ use App\Calificacion;
 use App\FormatoDgcft;
 use App\Http\Requests;
 use App\FormatoDgcftDetalle;
-use Illuminate\Http\Request;
 
+use Illuminate\Http\Request;
 use App\FormatoDgcftMatCalif;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -274,6 +275,9 @@ class FormatoDgcftsController extends Controller
 	public function ieap04(Request $request){
 		$datos=$request->all();
 		$formatoDgcft=FormatoDgcft::find($datos['id']);
+		$secciones=explode(',',$formatoDgcft->sepGrupo->secciones);
+		$grado=Grado::where('plantel_id',$formatoDgcft->plantel_id)->whereIn('seccion', $secciones)->first();
+		//dd($grado);
 		$materias=explode(',',$formatoDgcft->materias);
 		if($datos['v']==1){
 			
@@ -290,7 +294,7 @@ class FormatoDgcftsController extends Controller
 			->distinct()
 			->get();
 			//dd($materias);
-			return view('formatoDgcfts.reportes.ieap04_2', compact('formatoDgcft','materias'));
+			return view('formatoDgcfts.reportes.ieap04_2', compact('formatoDgcft','materias','grado'));
 
 		}
 	}
@@ -299,6 +303,9 @@ class FormatoDgcftsController extends Controller
 		$datos=$request->all();
 		$formatoDgcft=FormatoDgcft::find($datos['id']);
 		$materias=explode(',',$formatoDgcft->materias);
+		$secciones=explode(',',$formatoDgcft->sepGrupo->secciones);
+		$grado=Grado::where('plantel_id',$formatoDgcft->plantel_id)->whereIn('seccion', $secciones)->first();
+		//dd($grado);
 		if($datos['v']==1){
 
 			return view('formatoDgcfts.reportes.riap02', compact('formatoDgcft','materias'));
@@ -313,7 +320,7 @@ class FormatoDgcftsController extends Controller
 			->distinct()
 			->get();
 			//dd($materias->toArray());
-			return view('formatoDgcfts.reportes.riap02_2', compact('formatoDgcft','materias'));
+			return view('formatoDgcfts.reportes.riap02_2', compact('formatoDgcft','materias','grado'));
 		}
 		
 	}
@@ -323,13 +330,14 @@ class FormatoDgcftsController extends Controller
 		
 		$formatoDgcft=FormatoDgcft::find($datos['id']);
 		$detalles=$formatoDgcft->formatoDgcftDetalles;
-
+		$secciones=explode(',',$formatoDgcft->sepGrupo->secciones);
+		$grado=Grado::where('plantel_id',$formatoDgcft->plantel_id)->whereIn('seccion', $secciones)->first();
 		$materias=explode(',',$formatoDgcft->materias);
 		if($datos['v']==1){
 			return view('formatoDgcfts.reportes.icp08', compact('formatoDgcft','materias','detalles'));
 		}else{
 			$sep_materias=SepMaterium::whereIn('id',$formatoDgcft->sepGrupo->sepMateriasRels->pluck('sep_materia_id'))->get();
-			return view('formatoDgcfts.reportes.icp08_2', compact('formatoDgcft','sep_materias','detalles'));
+			return view('formatoDgcfts.reportes.icp08_2', compact('formatoDgcft','sep_materias','detalles','grado'));
 		}
 		
 	}
@@ -342,13 +350,15 @@ class FormatoDgcftsController extends Controller
 		->where('mc.sep_materia_id', $datos['sep_materia_id'])
 		->where('formato_dgcft_detalles.formato_dgcft_id',$datos['id'])
 		->get();
+		$secciones=explode(',',$formatoDgcft->sepGrupo->secciones);
+		$grado=Grado::where('plantel_id',$formatoDgcft->plantel_id)->whereIn('seccion', $secciones)->first();
 
 		$materias=explode(',',$formatoDgcft->materias);
 		if($datos['v']==1){
 			return view('formatoDgcfts.reportes.icp08XMateria', compact('formatoDgcft','detalles'));
 		}else{
 			$sep_materias=SepMaterium::whereIn('id',$formatoDgcft->sepGrupo->sepMateriasRels->pluck('sep_materia_id'))->get();
-			return view('formatoDgcfts.reportes.icp08XMateria_2', compact('formatoDgcft','detalles'));
+			return view('formatoDgcfts.reportes.icp08XMateria_2', compact('formatoDgcft','detalles','grado'));
 		}
 		
 	}
@@ -440,7 +450,11 @@ class FormatoDgcftsController extends Controller
 				
 				$formatoDgcftDetalle=FormatoDgcftDetalle::create($inputFormatoDgcftdetalle);
 				
-				$satisfactorio=$this->calcularCalificaciones($formatoDgcft,$formatoDgcftDetalle,$cliente_id);
+				$this->calcularCalificaciones($formatoDgcft,$formatoDgcftDetalle,$cliente_id);
+				$satisfactorio=0;
+				if($formatoDgcftDetalle->formatoDgcftMatCalifs->count()>0){
+					$satisfactorio=1;
+				}
 				$formatoDgcftDetalle->bnd_satisfactorio=$satisfactorio;
 				if($formatoDgcftDetalle->bnd_satisfactorio==1){
 					//dd($formatoDgcft->sepGrupo);
@@ -477,8 +491,9 @@ class FormatoDgcftsController extends Controller
 		->distinct()
 		->get();
 		//dd($rel_sep_materias);
-		$satisfactorio=1;
+		$satisfactorio=0;
 		foreach ($rel_sep_materias as $rel_sep_materia) {
+			$satisfactorio=1;
 			$sep_materia=SepMaterium::with('materias')->find($rel_sep_materia->sep_materia_id);	
 			//dd($sep_materia);
 			
@@ -501,11 +516,15 @@ class FormatoDgcftsController extends Controller
 					$cuenta_calificaciones++;
 				}
 			}
+			
+			if($cuenta_calificaciones==0){
+				$satisfactorio=0;
+				return $satisfactorio;
+			}
 			$input['formato_dgcft_detalle_id'] = $formatoDgcftDetalle->id;
 			$input['grado'] = $rel_sep_materia->grado;
 			$input['materia'] = $sep_materia->name;
 			$input['sep_materia_id'] = $sep_materia->id;
-			$input['bnd_satisfactorio']=$satisfactorio;
 			$input['calificacion'] = $suma_calificaciones/$cuenta_calificaciones;
 			$input['usu_alta_id'] = Auth::user()->id;
 			$input['usu_mod_id'] = Auth::user()->id;

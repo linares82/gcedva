@@ -2,7 +2,7 @@
 
 <head>
     <link href="{{asset('bower_components\AdminLTE\plugins\webdatarocks\webdatarocks.min.css')}}" rel="stylesheet" />
-
+    <link href="https://cdn.anychart.com/releases/8.13.0/css/anychart-ui.min.css?hcode=a0c21fc77e1449cc86299c5faa067dc4" rel="stylesheet" type="text/css">
     <style>
         @media print {
             table {
@@ -61,13 +61,17 @@
 
 <body>
     <h3>Total de Ingresos por Plantel</h3>
-    <table>
+    <div id="container_chart" style="width: 90%;
+    height: 70%;
+    margin: 10;
+    padding: 10;"></div>
+    <table id="origin_chart">
         <thead>
             <th>Plantel</th>
             <th>Efectivo </th>
             <th>Resto Formas de Pago </th>
             <th>Suma Total</th>
-            <th>Gráfica</th>
+            <th>Grafica</th>
         </thead>
         <tbody>
             @foreach($resultado as $registro)
@@ -82,9 +86,28 @@
         
         </tbody>
     </table>
+    
     <div id="ingresos_totales"></div>
     <script src="{{asset('bower_components\AdminLTE\plugins\webdatarocks\webdatarocks.toolbar.min.js')}}"></script>
     <script src="{{asset('bower_components\AdminLTE\plugins\webdatarocks\webdatarocks.js')}}"></script>
+    <script src="https://cdn.anychart.com/releases/8.13.0/js/anychart-base.min.js?hcode=a0c21fc77e1449cc86299c5faa067dc4"></script>
+  <script src="https://cdn.anychart.com/releases/8.13.0/js/anychart-exports.min.js?hcode=a0c21fc77e1449cc86299c5faa067dc4"></script>
+  <script src="https://cdn.anychart.com/releases/8.13.0/js/anychart-data-adapter.min.js?hcode=a0c21fc77e1449cc86299c5faa067dc4"></script>
+  <script src="https://cdn.anychart.com/releases/8.13.0/js/anychart-ui.min.js?hcode=a0c21fc77e1449cc86299c5faa067dc4"></script>
+  <script type="text/javascript">
+  anychart.onDocumentReady(function () {
+
+    // create a chart and set the data
+    var chart = anychart.column();
+    //chart.title('prb');
+    chart.data(<?php echo json_encode($grafica); ?>);
+    
+  
+    // set chart container and draw
+    chart.container("container_chart");
+    chart.draw();
+  });</script>
+
     <script type="text/javascript">
         function customizeToolbar(toolbar) {
             var tabs = toolbar.getTabs(); // get all tabs from the toolbar
@@ -102,7 +125,7 @@
             toolbar: true,
             report: {
                 dataSource: {
-                    data: <?php echo $totales; ?>,
+                    data: <?php //echo $totales; ?>,
                 },
                 "slice": {
                     "rows": [{
@@ -136,7 +159,7 @@
                         "rows": "Filas",
                         "columns": "Columnas",
                         "filters": "Filtros",
-                        "dropField": "Campo de caída aquí",
+                        "dropField": "Campo de caÃ­da aquÃ­",
                         "addCalculatedMeasure": "Agregar medida calculada",
                         "expandAll": "+ Abre todos",
                         "collapseAll": "- Contraer Todo",
@@ -152,15 +175,15 @@
                         "top": "Superior",
                         "bottom": "Fondo",
                         "measuresPrompt": "Seleccione la medida",
-                        "search": "Búsqueda",
+                        "search": "BÃºsqueda",
                         "selectAll": "Seleccionar todo",
                         "selectAllResults": "Seleccione todos los resultados",
                         "amountSelected": "{0} de {1} selecionados",
                         "amountFound": "{0} de {1} encontrado se seleccionan",
-                        "multipleItems": "Artículos múltiples",
+                        "multipleItems": "ArtÃ­culos mÃºltiples",
                         "all": "Todo",
                         "sort": "Sort:",
-                        "addGroup": "Añadir grupo",
+                        "addGroup": "AÃ±adir grupo",
                         "groupName": "Grupo 1",
                         "ungroup": "Desagrupar"
                     },
@@ -174,13 +197,13 @@
                         "title": "Valor calculado",
                         "measureBox": "Arrastre medidas a la formula",
                         "measureName": "Nombre de Medida",
-                        "formula": "Fórmula",
-                        "formulaPrompt": "Eliminar valores y editar fórmula aquí",
+                        "formula": "FÃ³rmula",
+                        "formulaPrompt": "Eliminar valores y editar fÃ³rmula aquÃ­",
                         "calculateIndividualValues": "Calcular los valores individuales",
                         "removeValue": "Retirar",
                         "removeValueTitle": "Retirar {0}?",
                         "removeValueMessage": "Seguro que desea eliminar este valor calculado?",
-                        "header": "Añadir valor calculado",
+                        "header": "AÃ±adir valor calculado",
                         "allValues": "Todos los valores"
                     },
                     "grid": {
@@ -238,19 +261,19 @@
                             "grandTotalCaption": "Distinto conteo de {0}"
                         },
                         "index": {
-                            "caption": "Índice",
-                            "totalCaption": "Índice de {0}",
-                            "grandTotalCaption": "Índice de {0}"
+                            "caption": "Ãndice",
+                            "totalCaption": "Ãndice de {0}",
+                            "grandTotalCaption": "Ãndice de {0}"
                         },
                         "max": {
-                            "caption": "Máximo",
+                            "caption": "MÃ¡ximo",
                             "totalCaption": "Maximo de {0}",
-                            "grandTotalCaption": "Total máximo de {0}"
+                            "grandTotalCaption": "Total mÃ¡ximo de {0}"
                         },
                         "min": {
-                            "caption": "Mínimo",
+                            "caption": "MÃ­nimo",
                             "totalCaption": "Minimo de {0}",
-                            "grandTotalCaption": "Total mínimo de {0}"
+                            "grandTotalCaption": "Total mÃ­nimo de {0}"
                         },
                         "none": {
                             "caption": "No Calculation"
@@ -288,18 +311,18 @@
                     },
                     "messages": {
                         "error": "Error!",
-                        "warning": "Precaución",
+                        "warning": "PrecauciÃ³n",
                         "limitation": "Limitation!",
                         "browse": "Explorar",
-                        "confirmation": "Confirmación",
+                        "confirmation": "ConfirmaciÃ³n",
                         "reportFileType": "Flexmonster report file",
                         "loading": "Cargando...",
-                        "loadingConfiguration": "Cargando configuración...",
+                        "loadingConfiguration": "Cargando configuraciÃ³n...",
                         "loadingData": "Cargando datos...",
                         "uploading": "Actualizando el servidor...",
                         "waiting": "{0} seg",
-                        "progress": "{0}К of {1}К",
-                        "progressUnknown": "leído {0}К",
+                        "progress": "{0}Ðš of {1}Ðš",
+                        "progressUnknown": "leÃ­do {0}Ðš",
                         "analyzing": "Analizando datos...",
                         "analyzingProgress": "{0} registros de {1} ({2}%)",
                         "analyzingRecords": "{0}% records",
@@ -312,15 +335,15 @@
                         "loadingProperties": "Loading properties...",
                         "loadingLevels": "Cargando niveles...",
                         "fullscreen": "Desea abrirlo en pantalla completa?",
-                        "exportComplete": "La exportación de datos ha sido creada, por favor pulse el boton \"Guardar\" para guardar los datos.",
+                        "exportComplete": "La exportaciÃ³n de datos ha sido creada, por favor pulse el boton \"Guardar\" para guardar los datos.",
                         "generatingPDF": "Generando PDF",
                         "pleaseWait": "Por favor, espere.",
-                        "pagesWereGenerated": "páginas se generaron.",
-                        "exportProgress": "Exportación en progreso...",
+                        "pagesWereGenerated": "pÃ¡ginas se generaron.",
+                        "exportProgress": "ExportaciÃ³n en progreso...",
                         "exportError": "Failed to export. An unexpected error occurred.",
                         "cantSaveFile": "Error: No se puede guardar el fichero.",
                         "cantSaveToClipboard": "Error: No puedo escribir en el portapapeles.",
-                        "saveReportToFile": "Informe está listo para ser guardados en un archivo, haga clic en \"Guardar\" para guardar el informe.",
+                        "saveReportToFile": "Informe estÃ¡ listo para ser guardados en un archivo, haga clic en \"Guardar\" para guardar el informe.",
                         "saveDataToFile": "Data is ready to be saved to file, please click \"Save\" button to save the file.",
                         "loadReportFromFile": "Seleccione el fichero de informe para ser cargado",
                         "inputNewName": "Entrada de un nuevo nombre",
@@ -375,10 +398,10 @@
                         "sortColumnAsc": "Sort column asc"
                     },
                     "date": {
-                        "year": "Año",
+                        "year": "AÃ±o",
                         "quarter": "Trimestre",
                         "month": "Mes",
-                        "day": "Día"
+                        "day": "DÃ­a"
                     },
                     "quarters": {
                         "q1": "Q1",
@@ -451,18 +474,18 @@
                         "load_json": "Informe JSON",
                         "grid": "Tabla",
                         "grid_flat": "Plana",
-                        "grid_classic": "Clásico",
+                        "grid_classic": "ClÃ¡sico",
                         "grid_compact": "Compacto",
-                        "charts": "Gráficos",
+                        "charts": "GrÃ¡ficos",
                         "charts_bar": "Columna",
                         "charts_bar_horizontal": "Barras",
                         "charts_line": "Linea",
-                        "charts_scatter": "Dispersión",
+                        "charts_scatter": "DispersiÃ³n",
                         "charts_pie": "Circular",
                         "charts_bar_stack": "Pila de barras",
-                        "charts_bar_line": "Líneas de barras",
-                        "charts_multiple": "Valores múltiples",
-                        "charts_multiple_disabled": "Los valores múltiples no se aplican a ",
+                        "charts_bar_line": "LÃ­neas de barras",
+                        "charts_multiple": "Valores mÃºltiples",
+                        "charts_multiple_disabled": "Los valores mÃºltiples no se aplican a ",
                         "format": "Formato",
                         "format_cells": "Formato de celdas",
                         "format_cells_mobile": "Formato",
@@ -489,17 +512,17 @@
                         "open_remote_csv": "Abrir CSV remoto",
                         "open_remote_json": "Abrir JSON remoto",
                         "csv": "CSV",
-                        "olap_connection_tool": "Herramienta de conexión OLAP",
+                        "olap_connection_tool": "Herramienta de conexiÃ³n OLAP",
                         "select_data_source": "Seleccionar fuente de datos",
-                        "select_catalog": "Seleccionar catálogo",
+                        "select_catalog": "Seleccionar catÃ¡logo",
                         "select_cube": "Seleccionar cubo",
                         "proxy_url": "URL de proxy",
-                        "data_source_info": "Información de fuentes de datos",
+                        "data_source_info": "InformaciÃ³n de fuentes de datos",
                         "catalog": "Catalogar",
                         "cube": "Cubo",
                         "credentials": "cartas credenciales",
                         "username": "Nombre de usuario",
-                        "password": "Contraseña",
+                        "password": "ContraseÃ±a",
                         "open_remote_report": "Abrir informe remoto",
                         "choose_value": "Elegir valor",
                         "text_align": "Texto alineado",
@@ -510,31 +533,31 @@
                         "thousand_separator": "Mil separadores",
                         "decimal_separator": "Separador decimal",
                         "decimal_places": "Lugares decimales",
-                        "currency_symbol": "Símbolo de moneda",
+                        "currency_symbol": "SÃ­mbolo de moneda",
                         "currency_align": "La moneda se alinea",
                         "null_value": "Valor nulo",
                         "is_percent": "Formato como porcentaje",
                         "true_value": "cierto",
                         "false_value": "falso",
                         "conditional": "Condicional",
-                        "add_condition": "Añadir condición",
+                        "add_condition": "AÃ±adir condiciÃ³n",
                         "less_than": "Menos que",
                         "less_than_or_equal": "Menos que o igual a",
                         "greater_than": "Mas grande que",
-                        "greater_than_or_equal": "Mayor qué o igual a",
+                        "greater_than_or_equal": "Mayor quÃ© o igual a",
                         "equal_to": "Igual a",
                         "not_equal_to": "No igual a",
                         "between": "Entre",
-                        "is_empty": "Vacío",
+                        "is_empty": "VacÃ­o",
                         "all_values": "Todos los valores",
                         "and": "y",
                         "and_symbole": "&",
                         "cp_text": "Texto",
                         "cp_highlight": "Realce",
-                        "layout_options": "Opciones de diseño",
-                        "layout": "Diseño",
+                        "layout_options": "Opciones de diseÃ±o",
+                        "layout": "DiseÃ±o",
                         "compact_view": "Forma compacta",
-                        "classic_view": "Forma clásica",
+                        "classic_view": "Forma clÃ¡sica",
                         "flat_view": "Forma plana",
                         "grand_totals": "Totales generales",
                         "grand_totals_off": "No mostrar los totales generales",
@@ -546,13 +569,13 @@
                         "subtotals_on": "Mostrar subtotales",
                         "subtotals_on_rows": "Mostrar solo filas subtotales",
                         "subtotals_on_columns": "Mostrar solo columnas subtotales",
-                        "choose_page_orientation": "Elegir la orientación de la página",
+                        "choose_page_orientation": "Elegir la orientaciÃ³n de la pÃ¡gina",
                         "landscape": "Paisaje",
                         "portrait": "Retrato",
                         "off_for_rows_and_columns": "Desactivado para filas y columnas",
                         "on_for_rows_and_columns": "Activado para filas y columnas",
-                        "on_for_rows": "Sólo para filas",
-                        "on_for_columns": "Sólo para columnas",
+                        "on_for_rows": "SÃ³lo para filas",
+                        "on_for_columns": "SÃ³lo para columnas",
                         "do_not_show_subtotals": "No mostrar subtotales",
                         "show_all_subtotals": "Mostrar todos los subtotales"
                     }

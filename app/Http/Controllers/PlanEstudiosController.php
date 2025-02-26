@@ -244,9 +244,9 @@ class PlanEstudiosController extends Controller {
 				//dd($hacademica);
 				//dd($hacademica->st_materium_id<>1);
 				if(is_null($hacademica)){
-					$row[$materia->materia]="N/A";	
+					$row[$materia->materia]="En Curso";	
 				}elseif($hacademica->st_materium_id<>1){
-					$row[$materia->materia]="N/A";	
+					$row[$materia->materia]="En Curso";	
 				}elseif($hacademica->st_materium_id==1){
 					$calificacion=Calificacion::where('hacademica_id',$hacademica->id)->orderBy('id','desc')->first();
 					$row[$materia->materia]=$calificacion->calificacion;

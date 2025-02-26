@@ -85,7 +85,7 @@
             <br/>
             <table width="95%">
                 <tr>
-                    <td> EL PLANTEL PARTICULAR:<strong>{{$formatoDgcft->plantelR->denominacion}}</strong></td><td>CLAVE CCT: <strong>{{$formatoDgcft->plantelR->cct}}</strong></td>
+                    <td> EL PLANTEL PARTICULAR:<strong>{{$grado->denominacion}}</strong></td><td>CLAVE CCT: <strong>{{$grado->cct}}</strong></td>
                 </tr>
                 <tr>
                     <td> HACE CONSTAR QUE EL ALUMNO:<strong>{{$registro->nombre}} </strong> </td><td>CON NÚMERO DE CONTROL: <strong>{{$registro->control}}</strong></td>

@@ -73,7 +73,7 @@ class CajaObserver
     public function updated(Caja $caja)
     {
         $this->caja = $caja;
-        $cliente = Cliente::select('id','st_cliente_id')->where('id',$this->caja->cliente_id)->first();
+        $cliente = Cliente::select('id','st_cliente_id','matricula')->where('id',$this->caja->cliente_id)->first();
         $seguimiento = Seguimiento::where('cliente_id', $this->caja->cliente_id)->first();
         
 
@@ -153,7 +153,7 @@ class CajaObserver
                                         } else {
                                             $input['cliente_id'] = $cliente->id;
                                             $input['fecha_reactivar'] = Date('Y-m-d');
-                                            $input['bnd_reactivar'] = 0;
+                                            $input['bnd_reactivar'] = 1;
                                             $input['usu_mod_id'] = Auth::user()->id;
                                             $bsBaja->update($input);
                                             
@@ -405,7 +405,7 @@ class CajaObserver
                                         } else {
                                             $input['cliente_id'] = $cliente->id;
                                             $input['fecha_reactivar'] = Date('Y-m-d');
-                                            $input['bnd_reactivar'] = 0;
+                                            $input['bnd_reactivar'] = 1;
                                             $input['usu_mod_id'] = Auth::user()->id;
                                             $bsBaja->update($input);
                                             
