@@ -238,6 +238,8 @@ class AutorizacionBecasController extends Controller
 	{
 		$empleado = Empleado::where('user_id', Auth::user()->id)->first();
 		$planteles = $empleado->plantels->pluck('razon', 'id');
+		//dd($planteles);
+		$planteles->prepend('Seleccionar opción');
 
 		//dd($planteles);
 		return view('autorizacionBecas.reportes.becasAutorizadas', compact('planteles'));
@@ -246,7 +248,8 @@ class AutorizacionBecasController extends Controller
 	public function becasAutorizadasR(Request $request)
 	{
 		$datos = $request->all();
-		$registros = AutorizacionBeca::select(
+		//dd($datos);
+		$registros_aux = AutorizacionBeca::select(
 			'p.razon as plantel',
 			'e.name as especialidad',
 			'n.name as nivel',
@@ -273,12 +276,17 @@ class AutorizacionBecasController extends Controller
 			//->where('n.id', $datos['nivel_f'])
 			//->where('e.id', $datos['especialidad_f'])
 			//->where('g.id', $datos['grado_f'])
-			->where('i.lectivo_id', $datos['lectivo_f'])
 			->where('autorizacion_becas.lectivo_id', $datos['lectivo_f'])
 			->where('autorizacion_becas.st_beca_id', 4)
 			->whereNull('i.deleted_at')
-			->whereNull('autorizacion_becas.deleted_at')
-			->get();
+			->whereNull('autorizacion_becas.deleted_at');
+			if(!is_null($datos['fecha_f']) and !is_null($datos['fecha_t'])){
+				$registros_aux->whereDate('vigencia','>=', $datos['fecha_f'])
+							->whereDate('vigencia','<=', $datos['fecha_t']);
+			}else{
+				$registros_aux->where('i.lectivo_id', $datos['lectivo_f']);
+			}
+			$registros=$registros_aux->get();
 		//dd($registros->toArray());
 		return view('autorizacionBecas.reportes.becasAutorizadasR', compact('registros'));
 	}

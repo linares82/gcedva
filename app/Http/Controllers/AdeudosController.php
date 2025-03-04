@@ -4407,10 +4407,11 @@ class AdeudosController extends Controller
         $lineas_procesadas = array();
         $lineas_detalle = array();
         $formas_pago=FormaPago::where('id','>',0)->get();
-        $planteles=Plantel::where('id','>',1)
+        $planteles=Plantel::with('cuentaP')->where('id','>',1)
         ->orderBy('plantels.id')
         ->orderBy('plantels.razon')
-        ->cursor();
+        ->get();
+        
         
         $resultado=array();
         $grafica=array();
@@ -4439,14 +4440,15 @@ class AdeudosController extends Controller
             $registro['efectivo']=$totales_efectivo;
             $registro['resto']=$totales_otros;
             $registro['suma_total']=$registro['efectivo']+$registro['resto'];
+            //dd($plantel);
             if($registro['efectivo']>0 and $registro['resto']>0){
                 array_push($resultado, $registro);
-                array_push($grafica, array('x'=>$registro['razon'], 'value'=>$registro['suma_total'], 'fill'=>$this->randomColor()));
+                array_push($grafica, array('x'=>optional($plantel->cuentaP)->name, 'value'=>round($registro['suma_total'],2), 'fill'=>$this->randomColor()));
             }
             
-                //dd($registro);
-            }
-        //dd($resultado);
+                //dd($grafica);
+        }
+        //dd($grafica);
         /*
         
 

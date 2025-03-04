@@ -82,11 +82,40 @@
                             </div>
                             
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_clientes.nombre_cont">NOMBRE</label>
+                                <label class="col-sm-2 control-label" for="q_clientes.id_lt">Id Cliente</label>
+                                <div class=" col-sm-9">
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['clientes.id_lt']) ?: '' }}" name="q[clientes.id_lt]" id="q_clientes.id_lt" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="q_clientes.nombre_cont">NOMBRE </label>
                                 <div class=" col-sm-9">
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['clientes.nombre_cont']) ?: '' }}" name="q[clientes.nombre_cont]" id="q_clientes.nombre_cont" />
                                 </div>
                             </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="q_clientes.nombre2_cont">NOMBRE 2</label>
+                                <div class=" col-sm-9">
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['clientes.nombre2_cont']) ?: '' }}" name="q[clientes.nombre2_cont]" id="q_clientes.nombre2_cont" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="q_clientes.ape_paterno_cont">A. Paterno</label>
+                                <div class=" col-sm-9">
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['clientes.ape_paterno_cont']) ?: '' }}" name="q[clientes.ape_paterno_cont]" id="q_clientes.ape_paterno_cont" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="q_clientes.ape_materno_cont">A. Materno</label>
+                                <div class=" col-sm-9">
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['clientes.ape_materno_cont']) ?: '' }}" name="q[clientes.ape_materno_cont]" id="q_clientes.ape_materno_cont" />
+                                </div>
+                            </div>
+                            
                                                     <!--
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_monto_inscripcion_gt">MONTO_INSCRIPCION</label>
@@ -113,9 +142,9 @@
                             </div>
                             -->
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_autorizacion_becas.st_beca_id_cont">ESTATUS</label>
+                                <label class="col-sm-2 control-label" for="q_autorizacion_becas.st_beca_id_lt">ESTATUS</label>
                                 <div class=" col-sm-9">
-                                    {!! Form::select("st_clientes.nombre", $estatus, "{{ @(Request::input('q')['autorizacion_becas.st_beca_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[autorizacion_becas.st_beca_id_lt]", "id"=>"q_autorizacion_becas.st_beca_id_lt", "style"=>"width:100%;" )) !!}
+                                    {!! Form::select("st_clientes.nombre", $estatus->prepend('Seleccionar'), "{{ @(Request::input('q')['autorizacion_becas.st_beca_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[autorizacion_becas.st_beca_id_lt]", "id"=>"q_autorizacion_becas.st_beca_id_lt", "style"=>"width:100%;" )) !!}
                                 </div>
                             </div>
                                       

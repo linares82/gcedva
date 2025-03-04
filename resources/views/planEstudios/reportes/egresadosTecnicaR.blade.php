@@ -91,7 +91,7 @@
                     <th>{{$materia->materia}}</th>
                     @endforeach
                     <th>Promedio</th>
-                    
+                    <th>Estatus</th>
                 </head>
                 <body>
                     @php
@@ -105,10 +105,12 @@
                     @endforeach
                     <td>
                         @if(is_numeric($r['promedio']))
-                        {{ round($r['promedio'],2)}} </td>
+                        {{ round($r['promedio'],2)}} 
                         @else
                             {{$r['promedio']}}
                         @endif
+                    </td>
+                    <td>{{$r['st_cliente']}}</td>
                     </tr>
                 @endforeach    
                 </body>

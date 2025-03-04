@@ -155,7 +155,7 @@ class ReportesCedvaController extends Controller
                         ->get();
 
                     foreach ($registros->toArray() as $registro) {
-                        array_push($resultado2, array($registro));
+                        array_push($resultado2, $registro);
                     }
 
 
@@ -242,7 +242,7 @@ class ReportesCedvaController extends Controller
 
                     //dd($pagos0_sin_caja->toArray());
                     foreach ($pagos0_sin_caja->toArray() as $registro) {
-                        array_push($resultado2, array($registro));
+                        array_push($resultado2, $registro);
                     }
 
                     //$pagos no planeados con caja
@@ -324,7 +324,7 @@ class ReportesCedvaController extends Controller
                         ->get();
                     //dd($pagos_no_planeados->toArray());
                     foreach ($pagos_no_planeados->toArray() as $registro) {
-                        array_push($resultado2, array($registro));
+                        array_push($resultado2, $registro);
                     }
 
                     //planeados y pagados con caja
@@ -401,20 +401,20 @@ class ReportesCedvaController extends Controller
                     $r = $registros->groupBy('caja_id');
                     //dd($r->toArray());
 
-                    foreach ($r as $registro) {
+                    foreach ($r->toArray() as $registro) {
 
                         if (count($registro) == 1) {
                             //$resultado2->push($registro);
-                            array_push($resultado2, $registro->toArray());
+                            array_push($resultado2, $registro[0]);
                         } else {
                             $suma = 0;
                             foreach ($registro as $reg) {
-                                $suma = $suma + $reg->total_caja;
+                                $suma = $suma + $reg['total_caja'];
                             }
                             $i = 0;
                             foreach ($registro as $reg) {
                                 $i++;
-                                $reg->total_caja = $suma;
+                                $reg['total_caja'] = $suma;
                                 if ($i == 1) {
                                     array_push($resultado2, array($reg->toArray()));
                                 }
@@ -497,20 +497,20 @@ class ReportesCedvaController extends Controller
                     $r = $registros->groupBy('caja_id');
                     //($r->toArray());
 
-                    foreach ($r as $registro) {
+                    foreach ($r->toArray() as $registro) {
 
                         if (count($registro) == 1) {
                             //$resultado2->push($registro);
-                            array_push($resultado2, $registro->toArray());
+                            array_push($resultado2, $registro[0]);
                         } else {
                             $suma = 0;
                             foreach ($registro as $reg) {
-                                $suma = $suma + $reg->total_caja;
+                                $suma = $suma + $reg['total_caja'];
                             }
                             $i = 0;
                             foreach ($registro as $reg) {
                                 $i++;
-                                $reg->total_caja = $suma;
+                                $reg['total_caja'] = $suma;
                                 if ($i == 1) {
                                     array_push($resultado2, array($reg->toArray()));
                                 }
@@ -597,7 +597,7 @@ class ReportesCedvaController extends Controller
                         ->get();
                     //($pagos_no_planeados->toArray());
                     foreach ($pagos_no_planeados->toArray() as $registro) {
-                        array_push($resultado2, array($registro));
+                        array_push($resultado2, $registro);
                     }
 
 
@@ -681,7 +681,7 @@ class ReportesCedvaController extends Controller
                         ->get();
                     //dd($pagos0_sin_caja->toArray());
                     foreach ($pagos0_sin_caja->toArray() as $registro) {
-                        array_push($resultado2, array($registro));
+                        array_push($resultado2, $registro);
 
                     }
 		    	
@@ -755,7 +755,7 @@ class ReportesCedvaController extends Controller
                         ->get();
                     //dd($registros_pendientes->toArray());
                     foreach ($registros_pendientes->toArray() as $registro) {
-                        array_push($resultado2, array($registro));
+                        array_push($resultado2, $registro);
                     }
                 }
 
@@ -806,7 +806,7 @@ class ReportesCedvaController extends Controller
                 //dd($resultado2);
                 $combinaciones_plantel_seccion = array();
                 foreach ($resultado2 as $r) {
-                    $linea = Arr::only($r[0], ['plantel_id', 'seccion']);
+                    $linea = Arr::only($r, ['plantel_id', 'seccion']);
                     $marcador = 0;
                     foreach ($combinaciones_plantel_seccion as $revision) {
                         if ($revision['plantel_id'] == $linea['plantel_id'] and $revision['seccion'] == $linea['seccion']) {
@@ -902,7 +902,7 @@ class ReportesCedvaController extends Controller
                     //$i=1;
                     //dd($resultado2);
                     foreach ($resultado2 as $r) {
-                        $registro = $r[0];
+                        $registro = $r;
                         //dd($registro);
                         /*if($registro['cliente']==80985 and $combinacion_plantel_seccion['plantel_id']==13 and
                         $combinacion_plantel_seccion['seccion']=="MGS"){

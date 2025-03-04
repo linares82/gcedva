@@ -5,6 +5,7 @@ use Auth;
 
 use App\Cliente;
 use App\Plantel;
+use Carbon\Carbon;
 use App\Hacademica;
 use App\PlanEstudio;
 use App\Calificacion;
@@ -209,7 +210,7 @@ class PlanEstudiosController extends Controller {
 			}
 		}
 
-		$alumnos_aux=Cliente::select('id','nombre','nombre2','ape_paterno','ape_materno','matricula');
+		$alumnos_aux=Cliente::select('id','nombre','nombre2','ape_paterno','ape_materno','matricula','st_cliente_id')->with('stCliente');
 
 		$cadenaLike="";
 		foreach($inicios_matricula as $inicio_matricula){
@@ -243,10 +244,17 @@ class PlanEstudiosController extends Controller {
 				$hacademica=Hacademica::where('cliente_id',$cliente->id)->where('materium_id',$materia->id)->whereNull('deleted_at')->first();
 				//dd($hacademica);
 				//dd($hacademica->st_materium_id<>1);
+				$hoy=Carbon::createFromFormat('Y-m-d', Date('Y-m-d'));
 				if(is_null($hacademica)){
-					$row[$materia->materia]="En Curso";	
+					$row[$materia->materia]="Pendiente";	
 				}elseif($hacademica->st_materium_id<>1){
-					$row[$materia->materia]="En Curso";	
+					$lectivo_inicio=Carbon::createFromFormat('Y-m-d',$hacademica->lectivo->inicio);
+					$lectivo_fin=Carbon::createFromFormat('Y-m-d',$hacademica->lectivo->fin);
+					if($lectivo_inicio->lessThanOrEqualTo($hoy) and $lectivo_fin->greaterThanOrEqualTo($hoy)){
+						$row[$materia->materia]="En Curso";		
+					}else{
+						$row[$materia->materia]="Pendiente";		
+					}	
 				}elseif($hacademica->st_materium_id==1){
 					$calificacion=Calificacion::where('hacademica_id',$hacademica->id)->orderBy('id','desc')->first();
 					$row[$materia->materia]=$calificacion->calificacion;
@@ -260,7 +268,7 @@ class PlanEstudiosController extends Controller {
 			}else{
 				$row['promedio']=$suma_calificaciones/$cuenta_materias;
 			}
-			
+			$row['st_cliente']=$cliente->stCliente->name;
 			
 			array_push($resultados,$row);
 		}

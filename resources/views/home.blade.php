@@ -229,7 +229,7 @@
             $dias_habiles_aux=App\Param::where('llave','dias_para_bajas')->value('valor');
             $dias_habiles=explode(',',$dias_habiles_aux);
         @endphp
-        @if(in_array(date('d'), $dias_habiles))
+        
         @permission('historiaClientes.create')
         <div class="form-group col-md-6 col-sm-6 col-xs-12">
             <div class="box box-danger">
@@ -243,7 +243,10 @@
                         <table class="table table-bordered table-striped dataTable">
                             <thead>
                                 <tr>
+                                    <th>Plantel</th>
                                     <th>Fecha</th>
+                                    <th>id</th>
+                                    <th>Matricula</th>
                                     <th>Cliente</th>
                                     <th>Estatus Actual</th>
                                     <th></th>
@@ -253,11 +256,14 @@
                                 @foreach($bajas_automaticas_ultimo_mes as $ba)
                                 @if($ba->st_cliente_id==27)
                                 <tr>
+                                    <td>{{$ba->razon}}</td>
                                     <td>
                                         {{$ba->fecha}}
                                     </td>
+                                    <td>{{$ba->cliente_id}}</td>
+                                    <td>{{$ba->matricula}}</td>
                                     <td><a href="{{route('clientes.edit',array($ba->cliente_id))}}" target="blank">
-                                        {{$ba->cliente_id}}
+                                        {{$ba->nombre}} {{$ba->nombre2}} {{$ba->ape_paterno}} {{$ba->ape_materno}}
                                         </a>
                                     </td>
                                     <td>{{$ba->estatus}}</td>
@@ -272,7 +278,9 @@
                                         <button type="submit" class="btn btn-xs btn-success"> Crear Baja</button>
                                     {!! Form::close() !!}
                                     -->
+                                    @if(in_array(date('d'), $dias_habiles))
                                     <a class="btn btn-xs btn-success" href="{{ route('historiaClientes.create',array('cliente'=>$ba->cliente_id)) }}" target="blank"><i class="glyphicon glyphicon-plus"></i> Crear</a>
+                                    @endif
                                     </td>
                                 </tr>
                                 @endif
@@ -283,7 +291,7 @@
                 </div>
             </div>
         </div>
-        @endpermission
+        
         @endif
     </div>
     

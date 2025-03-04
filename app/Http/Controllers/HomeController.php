@@ -159,11 +159,14 @@ class HomeController extends Controller
                 ->get();
         
         //dd($contratosVencidos->toArray());
-        $bajas_automaticas_ultimo_mes=HEstatus::select('h_estatuses.*','c.st_cliente_id')
+        $bajas_automaticas_ultimo_mes=HEstatus::select('h_estatuses.*','c.st_cliente_id','c.nombre','c.nombre2','c.ape_paterno','c.ape_materno','c.matricula','p.razon','c.id as cliente_id')
         ->join('clientes as c','c.id', 'h_estatuses.cliente_id')
+        ->join('plantels as p','p.id','c.plantel_id')
         ->where('tabla','clientes')
         ->whereRaw('month(fecha)=? and year(fecha)=?',[date('m'),date('Y')])
         ->where('estatus_id',27)
+        ->orderBy('p.id')
+        ->orderBy('c.id')
         ->get();
         //dd($bajas_automaticas_ultimo_mes->toArray());
 
