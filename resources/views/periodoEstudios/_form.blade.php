@@ -115,55 +115,33 @@
                             <span class="help-block">{{ $errors->first("materia_id") }}</span>
                         @endif
                     </div>
-                    <div class="row"></div>
-                    <div class="form-group col-md-6">
-                    <table class="table table-condensed table-striped">
-                        <thead>
-                            <tr>
-                                <th>id</th><th>Codigo</th><th>Materia</th><th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($materias as $m)
-                            <tr>
-                                <td>{{ $m->id }} - {{ $m->materia_id }}</td>
-                                <td>{{ $m->codigo }}</td>
-                                <td>{{$m->materia}}</td>
-                                <td><a href="{{route('periodoEstudios.destroyMateria', $m->id)}}" class="btn btn-xs btn-danger">Eliminar</a></td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                    </div>
+                    <!--
+                    <div class="form-group col-md-4 @if($errors->has('duracion_clase')) has-error @endif">
+                        <label for="duracion_clase-field">Duracion Clase</label>
+                        {!! Form::text("duracion_clase", null, array("class" => "form-control input-sm", "id" => "duracion_clase-field")) !!}
+                        @if($errors->has("duracion_clase"))
+                         <span class="help-block">{{ $errors->first("duracion_clase") }}</span>
+                        @endif
+                     </div>
+                     <div class="form-group col-md-4 @if($errors->has('horas_jornada')) has-error @endif">
+                        <label for="horas_jornada-field">Horas Jornada</label>
+                        {!! Form::text("horas_jornada", null, array("class" => "form-control input-sm", "id" => "horas_jornada-field")) !!}
+                        @if($errors->has("horas_jornada"))
+                         <span class="help-block">{{ $errors->first("horas_jornada") }}</span>
+                        @endif
+                     </div>
+                    -->
                     @endif
-                    @if(isset($periodoEstudio->grupos))
-                    <div class="col-md-6">
-                    <table class="table table-condensed table-striped">
-                        <thead>
-                        <th>Grupos Vinculados</th><th></th>
-                        </thead>
-                        <tbody>
-                            @foreach($periodoEstudio->grupos as $g)
-                            <tr>
-                            <td> {{$g->name}} </td>
-                            <td>
-                                
-                            </td>
-                            </tr>
-                            @endforeach
-                            
-                        </tbody>
-                    </table>    
-                </div>
-                    @endif                
-
                     
 
 @push('scripts')
   
   <script type="text/javascript">
+
     
     $(document).ready(function() {
+
+    
       getCmbEspecialidad();
       getCmbNivel();
       getCmbGrado();
@@ -173,6 +151,8 @@
           getCmbEspecialidad();
           getCmbMateria();
       });
+
+      
       function getCmbMateria(){
           var $example = $("#especialidad_id-field").select2();
           var a= $('#frm_periodo_estudios').serialize();

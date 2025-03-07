@@ -18,7 +18,7 @@ class MateriumPeriodo extends Model
     } 
 
 	//Mass Assignment
-	protected $fillable = ['materium_id','periodo_estudio_id','usu_alta_id','usu_mod_id'];
+	protected $fillable = ['materium_id','periodo_estudio_id','usu_alta_id','usu_mod_id','duracion_clase','horas_jornada'];
 
 	public function usu_alta() {
 		return $this->hasOne('App\User', 'id', 'usu_alta_id');

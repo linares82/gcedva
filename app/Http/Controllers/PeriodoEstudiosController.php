@@ -94,9 +94,11 @@ class PeriodoEstudiosController extends Controller
         });
         $periodoEstudio = $periodoEstudio->find($id);
         //dd($periodoEstudio->materias->toArray());
-        $list = DB::table('materia')->where('id', '>', '0')->where('plantel_id', '=', $p)->pluck('name', 'id')->toArray();
-        $materias_ls = array_merge(['0' => 'Seleccionar Opción'], $list);
-        $materias = MateriumPeriodo::select('materium_periodos.id', 'm.id as materia_id', 'm.codigo', 'm.name as materia')
+        $list = DB::table('materia')->where('id', '>', '0')->where('plantel_id', $periodoEstudio->plantel_id)->pluck('name', 'id');
+        //dd($list);
+        $materias_ls = $list->prepend('Seleccionar Opción');
+        //dd($materias_ls);
+        $materias = MateriumPeriodo::select('materium_periodos.id', 'm.id as materia_id', 'm.codigo', 'm.name as materia','materium_periodos.duracion_clase','materium_periodos.horas_jornada')
             ->join('materia as m', 'm.id', '=', 'materium_periodos.materium_id')
             ->where('periodo_estudio_id', '=', $id)->get();
         //dd($materias);
@@ -128,7 +130,7 @@ class PeriodoEstudiosController extends Controller
     {
         $input = $request->except('materia_id-field');
         $materias = $request->get('materia_id-field');
-        //dd($input);
+        
         $input['usu_mod_id'] = Auth::user()->id;
         if (!isset($input['bnd_activo'])) {
             $input['bnd_activo'] = 0;
@@ -137,11 +139,18 @@ class PeriodoEstudiosController extends Controller
         //update data
         $periodoEstudio = $periodoEstudio->find($id);
         $periodoEstudio->update($input);
-        if ($request->has('materia_id-field')) {
+        if ($request->has('materia_id-field') ) {
             foreach ($materias as $m) {
                 $periodoEstudio->materias()->attach($m);
             }
+            /*
+            foreach($periodoEstudio->materias as $materia){
+                $materia->horas_jornada=$input['horas_jornada'];
+                $materia->duracion_clase=$input['duracion_clase'];
+                $materia->save();
+            }*/
         }
+        //return json_encode(array('msj'=>'listo'));
         return redirect()->route('periodoEstudios.edit', $id)->with('message', 'Registro Actualizado.');
     }
 

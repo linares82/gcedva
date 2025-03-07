@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use DB;
 use Auth;
 
+use App\Dium;
 use App\Grupo;
 use App\Cliente;
 use App\Horario;
@@ -16,6 +17,7 @@ use App\Hacademica;
 use App\AsistenciaR;
 use App\Inscripcion;
 use App\Http\Requests;
+use App\PeriodoEstudio;
 use App\CargaPonderacion;
 use App\AsignacionAcademica;
 use Illuminate\Http\Request;
@@ -171,48 +173,149 @@ class AsignacionAcademicasController extends Controller
 	public function horarioGrupoR(Request $request)
 	{
 		$input = $request->all();
+		//dd($input);
 		$fecha = date('d-m-Y');
-		//dd($request->all());
-		$horarios = AsignacionAcademica::select(
-			DB::raw("concat(e.nombre,' ',e.ape_paterno,' ',e.ape_materno) as empleado"),
-			'p.razon as plantel',
-			'm.name as materia',
-			'g.name as grupo',
-			'l.name as lectivo',
-			DB::raw('concat(d.id,"-",d.name) as dia'),
+		$dias=Dium::where('id','>',0)->get();
+		$horario_armado=array();
+		$encabezado=array();
+		array_push($encabezado, 'Horas');
+		$periodo_estudio=PeriodoEstudio::find($input['periodo_estudio_id']);
+		$grupo=Grupo::find($input['grupo_f']);
+		$lectivo=Lectivo::find($input['lectivo_f']);
+		foreach($dias as $dia){
+			array_push($encabezado, $dia->name);
+		}
+		array_push($horario_armado, $encabezado);
+		//dd($encabezado);
+		
+		$horas = AsignacionAcademica::select(
 			'h.hora'
 		)
-			->join('empleados as e', 'e.id', '=', 'asignacion_academicas.empleado_id')
+			//->join('empleados as e', 'e.id', '=', 'asignacion_academicas.empleado_id')
 			->join('plantels as p', 'p.id', '=', 'asignacion_academicas.plantel_id')
 			->join('materia as m', 'm.id', '=', 'asignacion_academicas.materium_id')
 			->join('grupos as g', 'g.id', '=', 'asignacion_academicas.grupo_id')
 			->join('lectivos as l', 'l.id', '=', 'asignacion_academicas.lectivo_id')
 			->join('horarios as h', 'h.asignacion_academica_id', '=', 'asignacion_academicas.id')
 			->join('dias as d', 'd.id', '=', 'h.dia_id')
+			->join('periodo_estudios as pe','pe.plantel_id','asignacion_academicas.plantel_id')
+			->join('materium_periodos as mp','mp.periodo_estudio_id','pe.id')
+			->whereColumn('m.id','mp.materium_id')
+			//->where('asignacion_academicas.plantel_id', '>=', $input['plantel_f'])
+			->where('asignacion_academicas.grupo_id', '=', $input['grupo_f'])
+			->where('l.id', '=', $input['lectivo_f'])
+			->where('pe.plantel_id', '=', $input['plantel_f'])
+			->where('pe.especialidad_id', '=', $input['especialidad_id'])
+			->where('pe.nivel_id', '=', $input['nivel_id'])
+			->where('pe.grado_id', '=', $input['grado_id'])
+			->whereNull('h.deleted_at')
+			->whereNull('h.deleted_at')
+			->whereNull('pe.deleted_at')
+			->orderBy('hora')
+			->distinct()
+			//->groupBy('esp.meta','e.nombre', 'e.ape_paterno', 'e.ape_materno')
+			->get();
+			//dd($horas->toArray());
+			foreach($horas as $hora){
+				//dd($hora->hora);
+				$registro=array();
+				array_push($registro, $hora->hora);
+				foreach($dias as $dia){
+					$materia = AsignacionAcademica::select(
+						//DB::raw("concat(e.nombre,' ',e.ape_paterno,' ',e.ape_materno) as empleado"),
+						'asignacion_academicas.id as asignacion_academica_id',
+						'pe.id as periodo_estudio_id',
+						'p.razon as plantel',
+						'm.name as materia',
+						'g.name as grupo',
+						'l.name as lectivo',
+						DB::raw('d.name as dia'),
+						'h.hora',
+						'pe.name as periodo_estudio'
+					)
+						//->join('empleados as e', 'e.id', '=', 'asignacion_academicas.empleado_id')
+						->join('plantels as p', 'p.id', '=', 'asignacion_academicas.plantel_id')
+						->join('materia as m', 'm.id', '=', 'asignacion_academicas.materium_id')
+						->join('grupos as g', 'g.id', '=', 'asignacion_academicas.grupo_id')
+						->join('lectivos as l', 'l.id', '=', 'asignacion_academicas.lectivo_id')
+						->join('horarios as h', 'h.asignacion_academica_id', '=', 'asignacion_academicas.id')
+						->join('dias as d', 'd.id', '=', 'h.dia_id')
+						->join('periodo_estudios as pe','pe.plantel_id','asignacion_academicas.plantel_id')
+						->join('materium_periodos as mp','mp.periodo_estudio_id','pe.id')
+						->whereColumn('m.id','mp.materium_id')
+						->where('asignacion_academicas.grupo_id', '=', $input['grupo_f'])
+						->where('l.id', '=', $input['lectivo_f'])
+						->where('pe.plantel_id', '=', $input['plantel_f'])
+						->where('pe.especialidad_id', '=', $input['especialidad_id'])
+						->where('pe.nivel_id', '=', $input['nivel_id'])
+						->where('pe.grado_id', '=', $input['grado_id'])			
+						->whereNull('h.deleted_at')
+						->whereNull('pe.deleted_at')
+						->whereNull('asignacion_academicas.deleted_at')
+						->where('h.hora', $hora->hora)
+						->where('d.id', $dia->id)
+						->distinct()
+						->get();
+						//dd($materia->materia);
+					if($materia->count()==0){
+						array_push($registro, '');
+					}else{
+						$cadena_materias="";
+						foreach($materia as $m){
+							//dd($m);
+							$cadena_materias=$cadena_materias." asignacion-".$m->asignacion_academica_id." periodo-".$m->periodo_estudio_id." materia-".$m->materia;
+						}
+						array_push($registro, $cadena_materias);
+					}
+					//dd($registro);	
+				}
+				array_push($horario_armado, $registro);
+			}
+			//dd($horario_armado);
+				
+
+		//dd($request->all());
+		$horarios = AsignacionAcademica::select(
+			//DB::raw("concat(e.nombre,' ',e.ape_paterno,' ',e.ape_materno) as empleado"),
+			'asignacion_academicas.id as asignacion_academica_id',
+			'pe.id as periodo_estudio_id',
+			'p.razon as plantel',
+			'm.name as materia',
+			'g.name as grupo',
+			'l.name as lectivo',
+			DB::raw('concat(d.id,"-",d.name) as dia'),
+			'h.hora',
+			'pe.name as periodo_estudio'
+		)
+			//->join('empleados as e', 'e.id', '=', 'asignacion_academicas.empleado_id')
+			->join('plantels as p', 'p.id', '=', 'asignacion_academicas.plantel_id')
+			->join('materia as m', 'm.id', '=', 'asignacion_academicas.materium_id')
+			->join('grupos as g', 'g.id', '=', 'asignacion_academicas.grupo_id')
+			->join('lectivos as l', 'l.id', '=', 'asignacion_academicas.lectivo_id')
+			->join('horarios as h', 'h.asignacion_academica_id', '=', 'asignacion_academicas.id')
+			->join('dias as d', 'd.id', '=', 'h.dia_id')
+			->join('periodo_estudios as pe','pe.plantel_id','asignacion_academicas.plantel_id')
+			->join('materium_periodos as mp','mp.periodo_estudio_id','pe.id')
+			->whereColumn('m.id','mp.materium_id')
 			//->where('asignacion_academicas.plantel_id', '>=', $input['plantel_f'])
 			->where('asignacion_academicas.grupo_id', '=', $input['grupo_f'])
 			//->where('asignacion_academicas.lectivo_id', '<=', $input['lectivo_f'])
 			->whereNull('h.deleted_at')
+			->orderBy('plantel')
+			->orderBy('grupo')
 			->orderBy('d.id')
-			->orderBy('Plantel')
+			->orderBy('hora')
+			
 			//->groupBy('esp.meta','e.nombre', 'e.ape_paterno', 'e.ape_materno')
 			->get();
 
 		//dd($horarios->toArray());
-		/*PDF::setOptions(['defaultFont' => 'arial']);
-			$pdf = PDF::loadView('seguimientos.reportes.seguimientosXespecialidadGr', array('seguimientos'=>$seguimientos, 'fecha'=>$fecha, 'datos'=>json_encode($datos)))
-						->setPaper('letter', 'landscape');
-			return $pdf->download('reporte.pdf');
-			*/
-		return view('asignacionAcademicas.reportes.horarioGrupoR', array('fecha' => $fecha))
+		
+		return view('asignacionAcademicas.reportes.horarioGrupoR', 
+		compact('fecha','horario_armado','periodo_estudio','grupo','lectivo'))
 			->with('datos', json_encode($horarios));
 
-		/*Excel::create('Laravel Excel', function($excel) use($seguimientos) {
-				$excel->sheet('Productos', function($sheet) use($seguimientos) {
-					$sheet->fromArray($seguimientos);
-				});
-			})->export('xls');
-			*/
+		
 	}
 
 
@@ -645,5 +748,15 @@ class AsignacionAcademicasController extends Controller
 			//dd($asignaciones);
 			$plantels=Plantel::pluck('razon','id');
 		return view('combinacionClientes.reportes.cargas', compact('asignaciones','plantels'));
+	}
+
+	public function formatoHorario(){
+		$plantels = Plantel::pluck('razon','id');
+		return view('asignacionAcademcas.reportes.formatoHorario', compact('plantels'));
+	}
+
+	public function formatoHorarioR(Request $request){
+
+		return view('asignacionAcademcas.reportes.formatoHorarioR', compact('plantels'));
 	}
 }

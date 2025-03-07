@@ -252,8 +252,8 @@ class ClientesController extends Controller
         $estado_civiles = EstadoCivil::pluck('name', 'id');
         $cuestionarios = Ccuestionario::where('st_cuestionario_id', '=', '1')->pluck('name', 'id');
         $incidencias = IncidenceCliente::pluck('name', 'id');
-        $plantels = Plantel::where('st_plantel_id', 1)->pluck('razon', 'id');
-	$curp_token=Param::where('llave', 'token_curp')->first();
+        $plantels = Plantel::where('st_plantel_id', 1)->whereIn('id',$planteles)->pluck('razon', 'id');
+	    $curp_token=Param::where('llave', 'token_curp')->first();
         $curp_url=Param::where('llave', 'url_curp')->first();
         $api_valida_curp=['token'=> $curp_token->valor,
         'url'=>$curp_url->valor];

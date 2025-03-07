@@ -416,7 +416,7 @@ class ReportesCedvaController extends Controller
                                 $i++;
                                 $reg['total_caja'] = $suma;
                                 if ($i == 1) {
-                                    array_push($resultado2, array($reg->toArray()));
+                                    array_push($resultado2, $reg);
                                 }
                             }
                         }
@@ -512,7 +512,7 @@ class ReportesCedvaController extends Controller
                                 $i++;
                                 $reg['total_caja'] = $suma;
                                 if ($i == 1) {
-                                    array_push($resultado2, array($reg->toArray()));
+                                    array_push($resultado2, $reg);
                                 }
                             }
                         }
@@ -806,6 +806,8 @@ class ReportesCedvaController extends Controller
                 //dd($resultado2);
                 $combinaciones_plantel_seccion = array();
                 foreach ($resultado2 as $r) {
+		//dd($r);
+			//Log::info($r);
                     $linea = Arr::only($r, ['plantel_id', 'seccion']);
                     $marcador = 0;
                     foreach ($combinaciones_plantel_seccion as $revision) {

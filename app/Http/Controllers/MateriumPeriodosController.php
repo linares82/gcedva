@@ -44,13 +44,27 @@ class MateriumPeriodosController extends Controller {
 	{
 
 		$input = $request->all();
-		$input['usu_alta_id']=Auth::user()->id;
-		$input['usu_mod_id']=Auth::user()->id;
+		//dd($input['registro']);
+		$periodo_estudios=0;
+		foreach($input['registro'] as $registro){
+			//dd($registro);
+			if($periodo_estudios==0){
+				$periodo_estudios=$registro['periodo_estudio_id'];
+			}
+			$inputR['periodo_estudio_id']=$periodo_estudios;
+			$inputR['materium_id']=$registro['materia_id'];
+			$inputR['horas_jornada']=$registro['horas_jornada'];
+			$inputR['duracion_clase']=$registro['duracion_clase'];
+			$inputR['usu_alta_id']=Auth::user()->id;
+			$inputR['usu_mod_id']=Auth::user()->id;
+			MateriumPeriodo::create( $inputR );
+		}
+		
 
 		//create data
-		MateriumPeriodo::create( $input );
+		
 
-		return redirect()->route('materiumPeriodos.index')->with('message', 'Registro Creado.');
+		return redirect()->route('periodoEstudios.edit',$periodo_estudios)->with('message', 'Registro Creado.');
 	}
 
 	/**
@@ -105,6 +119,7 @@ class MateriumPeriodosController extends Controller {
 		//update data
 		$materiumPeriodo=$materiumPeriodo->find($id);
 		$materiumPeriodo->update( $input );
+		//return json_encode(array('msj'=>'listo'));
 
 		return redirect()->route('materiumPeriodos.index')->with('message', 'Registro Actualizado.');
 	}

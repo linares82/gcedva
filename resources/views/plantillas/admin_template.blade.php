@@ -52,6 +52,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 	  <link rel="stylesheet" href=" {{ asset('/zebra_datepicker/public/css/bootstrap.css') }} ">
     <!-- Select2 -->
     <link rel="stylesheet" href="{{ asset('/bower_components/AdminLTE/plugins/select2/select2.min.css')}}">
+    <!-- Bootstrap time Picker -->
+    <link rel="stylesheet" href={{asset("/bower_components/AdminLTE/plugins/timepicker/bootstrap-timepicker.min.css")}}>
     
     <style>
         .spinner {
@@ -146,6 +148,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="{{ asset ('/bower_components/AdminLTE/plugins/select2/select2.min.js') }}"></script>
 <script src="{{ asset ('/bower_components/AdminLTE/plugins/select2/select2.js') }}"></script>
 <script src="{{ asset ('/bower_components/AdminLTE/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js') }}"></script>
+<!-- bootstrap time picker -->
+<script src={{ asset("/bower_components/AdminLTE/plugins/timepicker/bootstrap-timepicker.min.js") }} ></script>
+
 <script>
     
  jQuery(window).load(function() {				

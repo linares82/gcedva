@@ -1,0 +1,1 @@
+@section('scholarDaysAppTitle','Dias Escolares')

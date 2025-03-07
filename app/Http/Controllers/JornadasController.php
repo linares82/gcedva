@@ -1,13 +1,15 @@
 <?php namespace App\Http\Controllers;
 
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
+use Auth;
+use App\Dium;
 
 use App\Jornada;
+use App\ScholarDay;
+use App\Http\Requests;
 use Illuminate\Http\Request;
-use Auth;
-use App\Http\Requests\updateJornada;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\createJornada;
+use App\Http\Requests\updateJornada;
 
 class JornadasController extends Controller {
 
@@ -73,8 +75,10 @@ class JornadasController extends Controller {
 	 */
 	public function edit($id, Jornada $jornada)
 	{
-		$jornada=$jornada->find($id);
-		return view('jornadas.edit', compact('jornada'))
+		$jornada=$jornada->with('scholarDays')->find($id);
+		//dd($jornada);
+		$dias=Dium::pluck('name','id');
+		return view('jornadas.edit', compact('jornada','dias'))
 			->with( 'list', Jornada::getListFromAllRelationApps() );
 	}
 
@@ -106,7 +110,16 @@ class JornadasController extends Controller {
 		$jornada=$jornada->find($id);
 		$jornada->update( $input );
 
-		return redirect()->route('jornadas.index')->with('message', 'Registro Actualizado.');
+		if($input['dia_id']>0 and !is_null($input['h_inicio']) and !is_null($input['h_fin'])){
+			ScholarDay::create(array('jornada_id'=>$jornada->id,
+				'dia_id'=>$input['dia_id'],
+				'h_inicio'=>$input['h_inicio'],
+				'h_fin'=>$input['h_fin'],
+				'usu_alta_id'=>Auth::user()->id,
+				'usu_mod_id'=>Auth::user()->id));
+		}
+
+		return redirect()->route('jornadas.edit', $jornada->id)->with('message', 'Registro Actualizado.');
 	}
 
 	/**
