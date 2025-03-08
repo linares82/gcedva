@@ -73,9 +73,24 @@
                         <td >
                             @if($loop->first)
                             {{$celda}}
-                            @elseif(isset($celda['materia']))
+                            @elseif(is_null($celda) or $celda=="")
+
+                            @else
                             <div style="background-color:{{$colores[$i]}}">_</div> 
-                            <a href="{{route('asignacionAcademicas.edit', $celda['asignacion'])}}" target="blank"> {{$celda['materia']}} </a> 
+                            @foreach($celda as $valor)
+                                @php
+                                    //dd($valor);
+                                @endphp
+                                @if(is_null($valor) or $valor=="")
+
+                                @else
+                                    <p>
+                                        <a href="{{route('asignacionAcademicas.edit', $valor['asignacion'])}}" target="blank"> {{$valor['materia']}} </a>
+                                    </p>
+                                    
+                                @endif
+                            @endforeach
+                            
                             @endif
                         </td>
                         @endif

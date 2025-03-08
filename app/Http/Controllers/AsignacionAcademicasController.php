@@ -296,18 +296,21 @@ class AsignacionAcademicasController extends Controller
 						array_push($registro, '');
 					}else{
 						$cadena_materias="";
+						$cadenas=array();
 						foreach($materia as $m){
 							//dd($m);
+							
 							$hora_fin=$m->duracion_clase*50;
-							$cadena_materias=$cadena_materias." asignacion-".$m->asignacion_academica_id.
+							$cadena_materias=" asignacion-".$m->asignacion_academica_id.
 															  " periodo-".$m->periodo_estudio_id.
 															  " docente-".$m->empleado_id.
 															  " materia-".$m->materia.
 															  " duracion clase-".$m->duracion_clase." horas(".
 															  date('H:i:s',strtotime('+'.$hora_fin." minutes",strtotime($m->hora)))
 															  .")";
+							array_push($cadenas, array('materia'=>$cadena_materias, 'asignacion'=>$m->asignacion_academica_id));
 						}
-						array_push($registro, array('materia'=>$cadena_materias, 'asignacion'=>$m->asignacion_academica_id));
+						array_push($registro, $cadenas);
 					}
 					//dd($registro);	
 				}
