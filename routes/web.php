@@ -5546,6 +5546,15 @@ Route::get(
         'uses' => 'AsignacionAcademicasController@create'
     )
 )->middleware('auth');
+
+Route::get(
+    '/asignacionAcademicas/createfromHorario',
+    array(
+        'as' => 'asignacionAcademicas.createfromHorario',
+        'middleware' => 'permission:asignacionAcademicas.create',
+        'uses' => 'AsignacionAcademicasController@createfromHorario'
+    )
+)->middleware('auth');
 Route::post(
     'asignacionAcademicas/store',
     array(

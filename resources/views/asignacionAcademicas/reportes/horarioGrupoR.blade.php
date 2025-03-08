@@ -56,6 +56,7 @@
         <h1>Horario de clases</h1>
         <h3>Grado {{$periodo_estudio->grado->name}}</h3>
         <h3>Grupo {{$grupo->name}}  Del {{$lectivo->inicio}} Al {{$lectivo->fin}}</h3>
+        <a href="{{route('asignacionAcademicas.createfromHorario', $input)}}" target="blank">Crear Asignacion</a>
         <table class="tbl1">
             @php
                 $i=0;
@@ -69,7 +70,14 @@
                         @if($i==1)
                         <th>{{$celda}}</th>
                         @else
-                        <td>{{$celda}}</td>
+                        <td >
+                            @if($loop->first)
+                            {{$celda}}
+                            @elseif(isset($celda['materia']))
+                            <div style="background-color:{{$colores[$i]}}">_</div> 
+                            <a href="{{route('asignacionAcademicas.edit', $celda['asignacion'])}}" target="blank"> {{$celda['materia']}} </a> 
+                            @endif
+                        </td>
                         @endif
                         
                     @endforeach
@@ -84,12 +92,14 @@
                 $.pivotUtilities.gchart_renderers);
 
             var rawData=<?php 
-                //echo $datos;
+                echo $datos;
             ?>;
             var inputFunction = function (callback) {
                 rawData.forEach(function (element, index) {
                     callback({
                         Plantel: element.plantel,
+                        Periodo: element.periodo_estudio_id
+                        Asignacion: element.asignacion_academica_id
                         Empleado: element.empleado,
                         Grupo: element.grupo,
                         Materia: element.materia,

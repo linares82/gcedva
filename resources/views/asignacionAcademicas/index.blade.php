@@ -191,9 +191,6 @@
                                     <a class="btn btn-xs btn-default" href="{{ route('asignacionAcademica.boletasGrupo', array('asignacion'=>$asignacionAcademica->id)) }}"><i class=' fa fa-list-alt'></i> Boletas</a>
                                     <a class="btn btn-xs btn-default" href="{{ route('asignacionAcademica.boletasGrupoO', array('asignacion'=>$asignacionAcademica->id)) }}"><i class=' fa fa-list'></i> Boletas O.</a>
                                     @endpermission
-                                    @permission('asignacionAcademicas.duplicate')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('asignacionAcademicas.duplicate', $asignacionAcademica->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>
-                                    @endpermission
                                     @permission('asignacionAcademicas.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('asignacionAcademicas.edit', $asignacionAcademica->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
                                     @endpermission

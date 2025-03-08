@@ -50,8 +50,38 @@ class AsignacionAcademicasController extends Controller
 	 */
 	public function create()
 	{
+		$asignacionAcademica=new AsignacionAcademica;
+		
 		return view('asignacionAcademicas.create')
 			->with('list', AsignacionAcademica::getListFromAllRelationApps());
+	}
+
+	public function createfromHorario(AsignacionAcademica $asignacionAcademica, Request $request){
+		$datos=$request->all();
+		
+		
+			$asignacionAcademica->empleado_id=null;
+			$asignacionAcademica->materium_id=null;
+			$asignacionAcademica->grupo_id=$datos['grupo_f'];
+			$asignacionAcademica->horas=null;
+			$asignacionAcademica->plantel_id=$datos['plantel_f'];
+			$asignacionAcademica->lectivo_id=$datos['lectivo_f'];
+			$asignacionAcademica->usu_alta_id=Auth::user()->id;
+			$asignacionAcademica->usu_mod_id=Auth::user()->id;
+			$asignacionAcademica->asistencias_max=null;
+			$asignacionAcademica->fec_inicio=null;
+			$asignacionAcademica->fec_fin=null;
+			$asignacionAcademica->docente_oficial=null;
+			$asignacionAcademica->horas=null;
+			$asignacionAcademica->lectivo_oficial_id=null;
+			$asignacionAcademica->docente_oficial_id=null;
+			
+			//dd($datos);
+		
+		//dd($asignacionAcademica);
+		return view('asignacionAcademicas.createFromHorario', compact('asignacionAcademica'))
+			->with('list', AsignacionAcademica::getListFromAllRelationApps())
+			->with('list1', Horario::getListFromAllRelationApps());
 	}
 
 	/**
@@ -107,11 +137,13 @@ class AsignacionAcademicasController extends Controller
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function duplicate($id, AsignacionAcademica $asignacionAcademica)
+	public function duplicate($id, AsignacionAcademica $asignacionAcademica, Request $request)
 	{
 		$asignacionAcademica = $asignacionAcademica->find($id);
+		
 		return view('asignacionAcademicas.duplicate', compact('asignacionAcademica'))
-			->with('list', AsignacionAcademica::getListFromAllRelationApps());
+			->with('list', AsignacionAcademica::getListFromAllRelationApps())
+			->with('list1', Horario::getListFromAllRelationApps());
 	}
 
 	/**
@@ -225,12 +257,14 @@ class AsignacionAcademicasController extends Controller
 						//DB::raw("concat(e.nombre,' ',e.ape_paterno,' ',e.ape_materno) as empleado"),
 						'asignacion_academicas.id as asignacion_academica_id',
 						'pe.id as periodo_estudio_id',
+						'emp.id as empleado_id',
 						'p.razon as plantel',
 						'm.name as materia',
 						'g.name as grupo',
 						'l.name as lectivo',
 						DB::raw('d.name as dia'),
 						'h.hora',
+						'h.duracion_clase',
 						'pe.name as periodo_estudio'
 					)
 						//->join('empleados as e', 'e.id', '=', 'asignacion_academicas.empleado_id')
@@ -242,6 +276,7 @@ class AsignacionAcademicasController extends Controller
 						->join('dias as d', 'd.id', '=', 'h.dia_id')
 						->join('periodo_estudios as pe','pe.plantel_id','asignacion_academicas.plantel_id')
 						->join('materium_periodos as mp','mp.periodo_estudio_id','pe.id')
+						->join('empleados as emp','emp.id','asignacion_academicas.empleado_id')
 						->whereColumn('m.id','mp.materium_id')
 						->where('asignacion_academicas.grupo_id', '=', $input['grupo_f'])
 						->where('l.id', '=', $input['lectivo_f'])
@@ -263,9 +298,16 @@ class AsignacionAcademicasController extends Controller
 						$cadena_materias="";
 						foreach($materia as $m){
 							//dd($m);
-							$cadena_materias=$cadena_materias." asignacion-".$m->asignacion_academica_id." periodo-".$m->periodo_estudio_id." materia-".$m->materia;
+							$hora_fin=$m->duracion_clase*50;
+							$cadena_materias=$cadena_materias." asignacion-".$m->asignacion_academica_id.
+															  " periodo-".$m->periodo_estudio_id.
+															  " docente-".$m->empleado_id.
+															  " materia-".$m->materia.
+															  " duracion clase-".$m->duracion_clase." horas(".
+															  date('H:i:s',strtotime('+'.$hora_fin." minutes",strtotime($m->hora)))
+															  .")";
 						}
-						array_push($registro, $cadena_materias);
+						array_push($registro, array('materia'=>$cadena_materias, 'asignacion'=>$m->asignacion_academica_id));
 					}
 					//dd($registro);	
 				}
@@ -297,7 +339,8 @@ class AsignacionAcademicasController extends Controller
 			->join('periodo_estudios as pe','pe.plantel_id','asignacion_academicas.plantel_id')
 			->join('materium_periodos as mp','mp.periodo_estudio_id','pe.id')
 			->whereColumn('m.id','mp.materium_id')
-			//->where('asignacion_academicas.plantel_id', '>=', $input['plantel_f'])
+			->where('pe.plantel_id', '=', $input['plantel_f'])
+			->where('pe.grado_id', '=', $input['grado_id'])			
 			->where('asignacion_academicas.grupo_id', '=', $input['grupo_f'])
 			//->where('asignacion_academicas.lectivo_id', '<=', $input['lectivo_f'])
 			->whereNull('h.deleted_at')
@@ -310,9 +353,21 @@ class AsignacionAcademicasController extends Controller
 			->get();
 
 		//dd($horarios->toArray());
+		$colores=[12=>"#42FF33",
+				  11=>"#FF3333",
+				  10=>"#FFFF33",
+				  9=>"#33FFE6",
+				  8=>"#335EFF",
+				  7=>"#FF33F6",
+				  6=>"#FF8D33",
+				  5=>"#068800",
+				  4=>"#008FFF",
+				  3=>"#5D00FF",
+				  2=>"#FF007C",
+				  1=>"#838082"];
 		
 		return view('asignacionAcademicas.reportes.horarioGrupoR', 
-		compact('fecha','horario_armado','periodo_estudio','grupo','lectivo'))
+		compact('fecha','horario_armado','periodo_estudio','grupo','lectivo','colores','input'))
 			->with('datos', json_encode($horarios));
 
 		

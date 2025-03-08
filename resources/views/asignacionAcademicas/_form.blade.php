@@ -153,7 +153,7 @@
  
          getCmbInstructores();
          getCmbGrupos();
-	 getCmbMaterias();
+	     getCmbMaterias();
        
        $('#plantel_id-field').change(function(){
            getCmbInstructores();
@@ -164,6 +164,7 @@
         getCmbMaterias();
        });
 
+       getDatosLectivo();
        $('#lectivo_id-field').change(function(){
            getDatosLectivo();
        });
