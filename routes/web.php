@@ -5804,6 +5804,22 @@ Route::post(
         'uses' => 'AsignacionAcademicasController@horarioGrupoR'
     )
 )->middleware('auth');
+Route::get(
+    '/horarios/clasesDocentes',
+    array(
+        'as' => 'horarios.clasesDocentes',
+        'middleware' => 'permission:horarios.clasesDocentes',
+        'uses' => 'AsignacionAcademicasController@clasesDocentes'
+    )
+)->middleware('auth');
+Route::post(
+    '/horarios/clasesDocentesR',
+    array(
+        'as' => 'horarios.clasesDocentesR',
+        'middleware' => 'permission:horarios.clasesDocentes',
+        'uses' => 'AsignacionAcademicasController@clasesDocentesR'
+    )
+)->middleware('auth');
 Route::post('/mailgun/webhooks', array(
     'as' => 'mailgun.webhooks',
     'middleware' => 'webhook',
