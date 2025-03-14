@@ -80,6 +80,12 @@ class PagosController extends Controller
         $input = $request->all();
         //dd($input);
         $caja = Caja::find($input['caja_id']);
+
+        if($caja->st_caja_id==1 or $caja->st_caja_id==2){
+            session(['msj' => 'No es posible registrar pagos con el estatus actual']);
+            return response()->json(['msj' => 'No es posible registrar pagos con el estatus actual']);
+        }
+
         $input['usu_alta_id'] = Auth::user()->id;
         $input['usu_mod_id'] = Auth::user()->id;
 

@@ -1595,7 +1595,7 @@ Agregar nuevo registro
             if( $('#bnd_referenciado-field').prop('checked') ) {
                 referencia_check=1
             }    
-            console.log(referencia_check);
+            //console.log(referencia_check);
         if(parseFloat($('#monto-field').val())>{{$monto_max_pago+100}} ){
             alert('Monto de pagos excede monto de caja total');
         }else{

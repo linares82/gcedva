@@ -996,7 +996,7 @@ class AsignacionAcademicasController extends Controller
 						->count();
 						if($asistencias>0){
 							$horarios = Horario::where('asignacion_academica_id', $horario->asignacion_academica_id)
-							->where('dia_id', 1)
+							->where('dia_id', 2)
 							->get();
 							foreach($horarios as $horario){
 								$registro['duracion_clases_total']=$registro['duracion_clases_total']+$horario->duracion_clase;
@@ -1014,7 +1014,7 @@ class AsignacionAcademicasController extends Controller
 						->count();
 						if($asistencias>0){
 							$horarios = Horario::where('asignacion_academica_id', $horario->asignacion_academica_id)
-							->where('dia_id', 1)
+							->where('dia_id', 3)
 							->get();
 							foreach($horarios as $horario){
 								$registro['duracion_clases_total']=$registro['duracion_clases_total']+$horario->duracion_clase;
@@ -1032,7 +1032,7 @@ class AsignacionAcademicasController extends Controller
 						->count();
 						if($asistencias>0){
 							$horarios = Horario::where('asignacion_academica_id', $horario->asignacion_academica_id)
-							->where('dia_id', 1)
+							->where('dia_id', 4)
 							->get();
 							foreach($horarios as $horario){
 								$registro['duracion_clases_total']=$registro['duracion_clases_total']+$horario->duracion_clase;
@@ -1053,7 +1053,7 @@ class AsignacionAcademicasController extends Controller
 						if($asistencias>0){
 							//dd($horario);
 							$horarios = Horario::where('asignacion_academica_id', $horario->asignacion_academica_id)
-							->where('dia_id', 1)
+							->where('dia_id', 5)
 							->get();
 							foreach($horarios as $horario){
 								$registro['duracion_clases_total']=$registro['duracion_clases_total']+$horario->duracion_clase;
@@ -1071,7 +1071,7 @@ class AsignacionAcademicasController extends Controller
 						->count();
 						if($asistencias>0){
 							$horarios = Horario::where('asignacion_academica_id', $horario->asignacion_academica_id)
-							->where('dia_id', 1)
+							->where('dia_id', 6)
 							->get();
 							foreach($horarios as $horario){
 								$registro['duracion_clases_total']=$registro['duracion_clases_total']+$horario->duracion_clase;
@@ -1089,7 +1089,7 @@ class AsignacionAcademicasController extends Controller
 						->count();
 						if($asistencias>0){
 							$horarios = Horario::where('asignacion_academica_id', $horario->asignacion_academica_id)
-							->where('dia_id', 1)
+							->where('dia_id', 7)
 							->get();
 							foreach($horarios as $horario){
 								$registro['duracion_clases_total']=$registro['duracion_clases_total']+$horario->duracion_clase;

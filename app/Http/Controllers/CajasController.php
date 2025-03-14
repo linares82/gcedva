@@ -897,6 +897,9 @@ class CajasController extends Controller
     {
         //dd($request->get('caja'));
         $caja = Caja::find($request->get('caja'));
+        if(!Auth::user()->can('cajas.cancelar')){
+            return response()->json(['msj' => 'No tiene permisos para cancelar']);
+        }
         if ($caja->st_caja_id <> 1 and $caja->st_caja_id <> 3) {
             $caja->st_caja_id = 2;
             $caja->usu_cancelar_id = Auth::user()->id;
