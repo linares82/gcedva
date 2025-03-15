@@ -850,7 +850,7 @@
 
                     @if(isset($cliente))
                     @permission('clientes.generarMatricula')
-                    <a href="{{ route('clientes.generarMatricula', array('cliente'=>$cliente->id)) }}" class="btn">Crear</a>
+                    <a href="{{ route('clientes.generarMatricula', array('cliente'=>$cliente->id)) }}" class="btn">Crear Matricula-Usuario</a>
                     @endpermission
                     @if($cliente->matricula<>"")
                     @permission('clientes.generarUsuarioPortal')
