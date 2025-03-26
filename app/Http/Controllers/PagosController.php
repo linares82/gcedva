@@ -82,7 +82,7 @@ class PagosController extends Controller
         $caja = Caja::find($input['caja_id']);
 
         if($caja->st_caja_id==1 or $caja->st_caja_id==2){
-            session(['msj' => 'No es posible registrar pagos con el estatus actual']);
+            //session(['msj' => 'No es posible registrar pagos con el estatus actual']);
             return response()->json(['msj' => 'No es posible registrar pagos con el estatus actual']);
         }
 

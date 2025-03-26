@@ -1435,13 +1435,19 @@
                         @endif
                     </div>
                     <div class="form-group col-md-8 @if($errors->has('obs_docs')) has-error @endif">
-                            <label for="obs_docs-field">Observaciones Documentos</label>
-                            {!! Form::text("obs_docs", null, array("class" => "form-control input-sm", "id" => "obs_docs-field")) !!}
-                            @if($errors->has("obs_docs"))
-                            <span class="help-block">{{ $errors->first("obs_docs") }}</span>
-                            @endif
-                        </div>
+                        <label for="obs_docs-field">Observaciones Documentos</label>
+                        {!! Form::text("obs_docs", null, array("class" => "form-control input-sm", "id" => "obs_docs-field")) !!}
+                        @if($errors->has("obs_docs"))
+                        <span class="help-block">{{ $errors->first("obs_docs") }}</span>
+                        @endif
+                    </div>
                     @endpermission
+                    @if(isset($cliente))
+                    <div class="form-group col-md-8 @if($errors->has('obs_docs')) has-error @endif">
+                        <label for="obs_docs-field">Observaciones Documentos: {{$cliente->obs_docs}}</label>
+                    </div>
+                    @endif
+                    
                     <div class="row"></div>
 
                     <!--

@@ -574,7 +574,7 @@ class ProspectosController extends Controller {
 		$empleado=Empleado::where('user_id',Auth::user()->id)->first();
 		$empleados_seleccionados=array(13,23,28,84,525,527,564,821,879,964,973,1096,1101,1102,1133,1069,1134,1140,1147, 1174,1179);
 		$planteles_validos=$empleado->plantels->pluck('id');
-		$planteles_seleccionados=Plantel::whereIn('id', array(5,6,10,12,13,15,17,18,21,22,23,24,25,29,30,32,36,37,38,39,40,41,42,43,45,46,47,49,50,87))
+		$planteles_seleccionados=Plantel::whereIn('id', array(5,6,7,10,12,13,15,17,18,21,22,23,24,25,26,29,30,32,36,37,38,39,40,41,42,43,45,46,47,49,50,86,87,89))
 		->pluck('id');
 		$planteles=Plantel::whereIn('id', $planteles_validos)->pluck('razon','id');
 		$empleados=Empleado::select('id',DB::raw('concat(nombre, " ",ape_paterno, " ",ape_materno) as nombre'))->pluck('nombre','id');

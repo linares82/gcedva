@@ -536,7 +536,9 @@
             <h4>Detalle</h4>
             <thead>
                 <th>No.</th><th>Plantel</th><th>Ciclo</th><th>Id</th><th>Matricula</th><th>Seccion</th>
-                <th>A. Paterno</th><th>A. Materno</th><th>Nombre(s)</th><th>Tel. Fijo</th><th>Celular</th><th>Estatus C.</th>
+                <th>A. Paterno</th><th>A. Materno</th><th>Nombre(s)</th>
+                <th>Genero</th>
+                <th>Tel. Fijo</th><th>Celular</th><th>Estatus C.</th>
                 <th>Estatus S.</th><th>Turno</th>
                 <th>F. Planeada</th>
                 @permission('reportesCedva.activosSinDinero')<th>Monto Planeado</th>@endpermission
@@ -629,6 +631,16 @@
           <tr>
             <td>{{ ++$csc }}</td><td>{{ $registro['razon'] }}</td><td>{{ $registro['ciclo'] }}</td><td>{{ $registro['cliente'] }}</td><td>{{ $registro['matricula'] }}</td><td>{{ $registro['seccion'] }}</td>
             <td>{{ $registro['ape_paterno'] }} </td><td>{{ $registro['ape_materno'] }}</td><td>{{ $registro['nombre'] }} {{ $registro['nombre2'] }}</td>
+            <td> 
+              @if($registro['genero']==1)
+                Hombre
+              @elseif(is_null($registro['genero']))
+              
+              @else
+                Mujer
+              @endif
+            
+            </td>
             <td>{{ $registro['tel_fijo'] }}</td><td>{{ $registro['tel_cel'] }}</td>
             <td>{{ $registro['estatus_cliente'] }}</td><td>{{ $registro['estatus_seguimiento'] }}</td>
             <td>{{ $registro['turno'] }}</td>

@@ -246,14 +246,16 @@ class PlanEstudiosController extends Controller {
 				//dd($hacademica->st_materium_id<>1);
 				$hoy=Carbon::createFromFormat('Y-m-d', Date('Y-m-d'));
 				if(is_null($hacademica)){
-					$row[$materia->materia]="Pendiente";	
+					$row[$materia->materia]="Pendiente por Cursar";	
+				}elseif($row['st_cliente_id']==3){
+					$row[$materia->materia]="N/A";
 				}elseif($hacademica->st_materium_id<>1){
 					$lectivo_inicio=Carbon::createFromFormat('Y-m-d',$hacademica->lectivo->inicio);
 					$lectivo_fin=Carbon::createFromFormat('Y-m-d',$hacademica->lectivo->fin);
 					if($lectivo_inicio->lessThanOrEqualTo($hoy) and $lectivo_fin->greaterThanOrEqualTo($hoy)){
-						$row[$materia->materia]="En Curso";		
+						$row[$materia->materia]="Cursando";		
 					}else{
-						$row[$materia->materia]="Pendiente";		
+						$row[$materia->materia]="Pendiente por Cursar";		
 					}	
 				}elseif($hacademica->st_materium_id==1){
 					$calificacion=Calificacion::where('hacademica_id',$hacademica->id)->orderBy('id','desc')->first();

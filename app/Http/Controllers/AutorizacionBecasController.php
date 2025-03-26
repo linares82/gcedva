@@ -2,22 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
+use Auth;
+use App\Param;
 
-use App\AutorizacionBeca;
+use App\Adeudo;
+use App\StBeca;
 use App\Cliente;
-use App\Empleado;
 use App\Lectivo;
 use App\Plantel;
-use App\StBeca;
+use App\Empleado;
 use App\TipoBeca;
-use App\Param;
-use Illuminate\Http\Request;
-use Auth;
-use App\Http\Requests\updateAutorizacionBeca;
-use App\Http\Requests\createAutorizacionBeca;
 use File as Archi;
+use App\CajaConcepto;
+use App\Http\Requests;
+use App\AutorizacionBeca;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\createAutorizacionBeca;
+use App\Http\Requests\updateAutorizacionBeca;
 
 class AutorizacionBecasController extends Controller
 {
@@ -249,45 +252,204 @@ class AutorizacionBecasController extends Controller
 	{
 		$datos = $request->all();
 		//dd($datos);
-		$registros_aux = AutorizacionBeca::select(
-			'p.razon as plantel',
-			'e.name as especialidad',
-			'n.name as nivel',
-			'g.name as grado',
-			'l.name as lectivo',
-			'c.matricula',
-			'c.id',
-			'c.nombre',
-			'c.nombre2',
-			'c.ape_paterno',
-			'c.ape_materno',
-			'autorizacion_becas.solicitud',
-			'autorizacion_becas.monto_mensualidad as porcentaje'
-		)
+		$registros_aux = AutorizacionBeca::query();
+		if(!is_null($datos['fecha_f']) and !is_null($datos['fecha_t'])){
+			$registros_aux->select(
+				'p.razon as plantel',
+				'e.name as especialidad',
+				'n.name as nivel',
+				'g.name as grado',
+				DB::raw('0 as lectivo'),
+				'c.matricula',
+				'c.id',
+				'c.nombre',
+				'c.nombre2',
+				'c.ape_paterno',
+				'c.ape_materno',
+				'autorizacion_becas.solicitud',
+				'autorizacion_becas.monto_mensualidad as porcentaje'
+			)
+				->join('clientes as c', 'c.id', '=', 'autorizacion_becas.cliente_id')
+				->join('combinacion_clientes as cc', 'cc.cliente_id', 'c.id')
+				->join('plantels as p', 'p.id', '=', 'c.plantel_id')
+				->join('especialidads as e', 'e.id', '=', 'cc.especialidad_id')
+				->join('nivels as n', 'n.id', '=', 'cc.nivel_id')
+				->join('grados as g', 'g.id', '=', 'cc.grado_id')
+				->where('p.id', $datos['plantel_f'])
+				->whereDate('vigencia','>=', $datos['fecha_f'])
+				->whereDate('vigencia','<=', $datos['fecha_t'])
+				->where('autorizacion_becas.st_beca_id', 4)
+				->whereNull('cc.deleted_at')
+				->whereNull('autorizacion_becas.deleted_at');
+		}else{
+			$registros_aux->select(
+				'p.razon as plantel',
+				'e.name as especialidad',
+				'n.name as nivel',
+				'g.name as grado',
+				'l.name as lectivo',
+				'c.matricula',
+				'c.id',
+				'c.nombre',
+				'c.nombre2',
+				'c.ape_paterno',
+				'c.ape_materno',
+				'autorizacion_becas.solicitud',
+				'autorizacion_becas.monto_mensualidad as porcentaje'
+			)
 			->join('clientes as c', 'c.id', '=', 'autorizacion_becas.cliente_id')
-			->join('inscripcions as i', 'i.cliente_id', '=', 'c.id')
-			->join('plantels as p', 'p.id', '=', 'c.plantel_id')
-			->join('especialidads as e', 'e.id', '=', 'i.especialidad_id')
-			->join('nivels as n', 'n.id', '=', 'i.nivel_id')
-			->join('grados as g', 'g.id', '=', 'i.grado_id')
-			->join('lectivos as l', 'l.id', '=', 'i.lectivo_id')
-			//->whereColumn('autorizacion_becas.lectivo_id', 'i.lectivo_id')
-			->where('p.id', $datos['plantel_f'])
-			//->where('n.id', $datos['nivel_f'])
-			//->where('e.id', $datos['especialidad_f'])
-			//->where('g.id', $datos['grado_f'])
-			->where('autorizacion_becas.lectivo_id', $datos['lectivo_f'])
-			->where('autorizacion_becas.st_beca_id', 4)
-			->whereNull('i.deleted_at')
-			->whereNull('autorizacion_becas.deleted_at');
-			if(!is_null($datos['fecha_f']) and !is_null($datos['fecha_t'])){
-				$registros_aux->whereDate('vigencia','>=', $datos['fecha_f'])
-							->whereDate('vigencia','<=', $datos['fecha_t']);
-			}else{
-				$registros_aux->where('i.lectivo_id', $datos['lectivo_f']);
-			}
-			$registros=$registros_aux->get();
+				->join('inscripcions as i', 'i.cliente_id', '=', 'c.id')
+				->join('plantels as p', 'p.id', '=', 'c.plantel_id')
+				->join('especialidads as e', 'e.id', '=', 'i.especialidad_id')
+				->join('nivels as n', 'n.id', '=', 'i.nivel_id')
+				->join('grados as g', 'g.id', '=', 'i.grado_id')
+				->join('lectivos as l', 'l.id', '=', 'i.lectivo_id')
+				//->whereColumn('autorizacion_becas.lectivo_id', 'i.lectivo_id')
+				->where('p.id', $datos['plantel_f'])
+				//->where('n.id', $datos['nivel_f'])
+				//->where('e.id', $datos['especialidad_f'])
+				//->where('g.id', $datos['grado_f'])
+				->where('autorizacion_becas.st_beca_id', 4)
+				->whereNull('i.deleted_at')
+				->whereNull('autorizacion_becas.deleted_at')
+				->where('i.lectivo_id', $datos['lectivo_f'])
+				->where('autorizacion_becas.lectivo_id', $datos['lectivo_f']);
+		}
+		$registros=$registros_aux->get();
 		//dd($registros->toArray());
 		return view('autorizacionBecas.reportes.becasAutorizadasR', compact('registros'));
+	}
+
+	public function becasAutorizadasMes()
+	{
+		$empleado = Empleado::where('user_id', Auth::user()->id)->first();
+		$planteles = $empleado->plantels->pluck('razon', 'id');
+		$conceptos= CajaConcepto::pluck('name','id');
+		//dd($planteles);
+		$planteles->prepend('Seleccionar opción');
+
+		//dd($planteles);
+		return view('autorizacionBecas.reportes.becasAutorizadasMes', compact('planteles','conceptos'));
+	}
+
+	public function becasAutorizadasMesR(Request $request)
+	{
+		$datos = $request->all();
+		//dd($datos);
+		$registros_aux = AutorizacionBeca::query();
+		if(!is_null($datos['fecha_f']) and !is_null($datos['fecha_t'])){
+			$registros_aux->select(
+				'p.razon as plantel',
+				'e.name as especialidad',
+				'n.name as nivel',
+				'g.name as grado',
+				DB::raw('0 as lectivo'),
+				'c.matricula',
+				'c.id',
+				'c.nombre',
+				'c.nombre2',
+				'c.ape_paterno',
+				'c.ape_materno',
+				'c.genero',
+				'autorizacion_becas.solicitud',
+				'autorizacion_becas.monto_mensualidad as porcentaje',
+				//'co.name as concepto'
+			)
+				->join('clientes as c', 'c.id', '=', 'autorizacion_becas.cliente_id')
+				->join('combinacion_clientes as cc', 'cc.cliente_id', 'c.id')
+				//->join('adeudos as a','a.cliente_id','c.id')
+				//->join('caja_conceptos as co','co.id','a.caja_concepto_id')
+				->join('plantels as p', 'p.id', '=', 'c.plantel_id')
+				->join('especialidads as e', 'e.id', '=', 'cc.especialidad_id')
+				->join('nivels as n', 'n.id', '=', 'cc.nivel_id')
+				->join('grados as g', 'g.id', '=', 'cc.grado_id')
+				->where('p.id', $datos['plantel_f'])
+				//->where('a.caja_concepto_id', $datos['concepto_f'])
+				->whereDate('vigencia','>=', $datos['fecha_f'])
+				->whereDate('vigencia','<=', $datos['fecha_t'])
+				->where('autorizacion_becas.st_beca_id', 4)
+				->whereNull('cc.deleted_at')
+				->whereNull('autorizacion_becas.deleted_at');
+		}else{
+			$registros_aux->select(
+				'p.razon as plantel',
+				'e.name as especialidad',
+				'n.name as nivel',
+				'g.name as grado',
+				'l.name as lectivo',
+				'c.matricula',
+				'c.id',
+				'c.nombre',
+				'c.nombre2',
+				'c.ape_paterno',
+				'c.ape_materno',
+				'c.genero',
+				'autorizacion_becas.solicitud',
+				'autorizacion_becas.monto_mensualidad as porcentaje'
+			)
+			->join('clientes as c', 'c.id', '=', 'autorizacion_becas.cliente_id')
+				->join('inscripcions as i', 'i.cliente_id', '=', 'c.id')
+				->join('plantels as p', 'p.id', '=', 'c.plantel_id')
+				->join('especialidads as e', 'e.id', '=', 'i.especialidad_id')
+				->join('nivels as n', 'n.id', '=', 'i.nivel_id')
+				->join('grados as g', 'g.id', '=', 'i.grado_id')
+				->join('lectivos as l', 'l.id', '=', 'i.lectivo_id')
+				//->whereColumn('autorizacion_becas.lectivo_id', 'i.lectivo_id')
+				->where('p.id', $datos['plantel_f'])
+				//->where('n.id', $datos['nivel_f'])
+				//->where('e.id', $datos['especialidad_f'])
+				//->where('g.id', $datos['grado_f'])
+				->where('autorizacion_becas.st_beca_id', 4)
+				->whereNull('i.deleted_at')
+				->whereNull('autorizacion_becas.deleted_at')
+				->where('i.lectivo_id', $datos['lectivo_f'])
+				->where('autorizacion_becas.lectivo_id', $datos['lectivo_f']);
+		}
+		$registros=$registros_aux->get();
+		$resultados=array();
+		foreach($registros as $registro){
+			$linea=array();
+			$concepto=Adeudo::where('cliente_id',$registro->id)
+			->where('caja_concepto_id',$datos['concepto_f'])
+			->whereDate('fecha_pago','>=', $datos['fecha_f'])
+			->whereDate('fecha_pago','<=', $datos['fecha_t'])
+			->with('caja')
+			->with('cajaConcepto')
+			->first();
+			//dd($concepto->caja);
+			$linea['plantel']=$registro->plantel;
+			$linea['especialidad']=$registro->especialidad;
+			$linea['nivel']=$registro->nivel;
+			$linea['grado']=$registro->grado;
+			$linea['matricula']=$registro->matricula;
+			$linea['id']=$registro->id;
+			$linea['nombre']=$registro->nombre;
+			$linea['nombre2']=$registro->nombre2;
+			$linea['ape_paterno']=$registro->ape_paterno;
+			$linea['ape_materno']=$registro->ape_materno;
+			$linea['genero']=$registro->genero;
+			$linea['solicitud']=$registro->solicitud;
+			$linea['porcentaje']=$registro->porcentaje;
+			$linea['bnd_pagado']=$concepto->pagado_bnd;
+			if($concepto->pagado_bnd==1){
+				$linea['concepto']=$concepto->cajaConcepto->name;
+				$linea['fecha_pago']=$concepto->caja->fecha;
+				$linea['subtotal']=$concepto->caja->subtotal;
+				$linea['descuento']=$concepto->caja->descuento;
+				$linea['recargo']=$concepto->caja->recargo;
+				$linea['total']=$concepto->caja->total;
+			}else{
+				$linea['concepto']="";
+				$linea['fecha_pago']="";
+				$linea['subtotal']="";
+				$linea['descuento']="";
+				$linea['recargo']="";
+				$linea['total']="";
+			}
+			//dd($linea);
+			array_push($resultados, $linea);
+		}
+		//dd($registros->toArray());
+		return view('autorizacionBecas.reportes.becasAutorizadasMesR', compact('registros','resultados'));
 	}
 }
