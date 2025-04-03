@@ -85,13 +85,22 @@
         <tr>
             <td>{{ $model->id }}</th>
             <td>{{ $model->name }}</th>
+            <td>
+                @foreach($model->usuarios as $user)
+                            <!--<a class="btn btn-success btn-xs" href="">-->
+                                <span class="btn-xs btn-info">{{ $user->name }}</span>
+                            <!--</a>    -->
+                        @endforeach
+            </th>
             <td class="col-xs-3">
+
                 <form action="{{ route('rolesF.destroy', $model->id) }}" method="post">
                     @role('superadmin')
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     <a class="btn btn-labeled btn-default" href="{{ route('rolesF.edit', $model->id) }}"><span class="btn-label"><i class="fa fa-pencil"></i></span>Editar</a>
-                    @endrole
+                    
                     <button type="submit" class="btn btn-labeled btn-danger"><span class="btn-label"><i class="fa fa-trash"></i></span>Borrar</button>
+                    @endrole
                 </form>
             </td>
         </tr>

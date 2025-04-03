@@ -482,4 +482,44 @@ class PlanPagosController extends Controller
             }
         }
     }
+
+    public function getPlanPagosPlantel(Request $request)
+    {
+        if ($request->ajax()) {
+            //dd($request->all());
+            $plantel = $request->get('plantel_id');
+            
+            $final = array();
+            //dd(Auth::user()->can('IPlanPagosXPlantel'));
+            $r = DB::table('plan_pagos as pp')
+                ->select('pp.id', 'pp.name');
+                $r=$r->where('pp.plantel_id', '=', $plantel);
+                $r=$r->where('pp.id', '>', '0')
+                ->whereNull('deleted_at')
+                ->get();
+                //dd($r->toArray());
+                if (isset($plantel) and $plantel <> 0) {
+                    foreach ($r as $r1) {
+                        if ($r1->id == $plantel) {
+                            array_push($final, array(
+                                'id' => $r1->id,
+                                'name' => $r1->name,
+                                'selectec' => 'Selected'
+                            ));
+                        } else {
+                            array_push($final, array(
+                                'id' => $r1->id,
+                                'name' => $r1->name,
+                                'selectec' => ''
+                            ));
+                        }
+                    }
+                    return $final;
+                } else {
+                    return $r;
+                }
+            
+            
+        }
+    }
 }

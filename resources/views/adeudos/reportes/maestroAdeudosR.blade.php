@@ -194,7 +194,7 @@
             @endpermission
         @if(!is_null($beca)) 
         
-        @if(
+        @if(!is_null($beca->lectivo) and
             (($beca->lectivo->inicio <= $fecha_adeudo and $beca->lectivo->fin >= $fecha_adeudo) or
                 (($anioInicio == $anioAdeudo or $mesInicio <= $mesAdeudo) and ($anioFin == $anioAdeudo and $mesFin >= $mesAdeudo)) or
                 (($anioInicio < $anioAdeudo or $mesInicio >= $mesAdeudo) and ($anioFin >= $anioAdeudo and $mesFin >= $mesAdeudo))) and

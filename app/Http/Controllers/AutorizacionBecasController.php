@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Auth;
 use App\Param;
+use Log;
 
 use App\Adeudo;
 use App\StBeca;
@@ -242,7 +243,7 @@ class AutorizacionBecasController extends Controller
 		$empleado = Empleado::where('user_id', Auth::user()->id)->first();
 		$planteles = $empleado->plantels->pluck('razon', 'id');
 		//dd($planteles);
-		$planteles->prepend('Seleccionar opción');
+		//$planteles->prepend('Seleccionar opciÃ³n');
 
 		//dd($planteles);
 		return view('autorizacionBecas.reportes.becasAutorizadas', compact('planteles'));
@@ -326,7 +327,7 @@ class AutorizacionBecasController extends Controller
 		$planteles = $empleado->plantels->pluck('razon', 'id');
 		$conceptos= CajaConcepto::pluck('name','id');
 		//dd($planteles);
-		$planteles->prepend('Seleccionar opción');
+		$planteles->prepend('Seleccionar opciÃ³n');
 
 		//dd($planteles);
 		return view('autorizacionBecas.reportes.becasAutorizadasMes', compact('planteles','conceptos'));
@@ -430,7 +431,17 @@ class AutorizacionBecasController extends Controller
 			$linea['genero']=$registro->genero;
 			$linea['solicitud']=$registro->solicitud;
 			$linea['porcentaje']=$registro->porcentaje;
-			$linea['bnd_pagado']=$concepto->pagado_bnd;
+			if(is_null($concepto)){
+				$linea['bnd_pagado']="";
+				$linea['concepto']="";
+				$linea['fecha_pago']="";
+				$linea['subtotal']="";
+				$linea['descuento']="";
+				$linea['recargo']="";
+				$linea['total']="";
+
+			}else{
+				$linea['bnd_pagado']=$concepto->pagado_bnd;
 			if($concepto->pagado_bnd==1){
 				$linea['concepto']=$concepto->cajaConcepto->name;
 				$linea['fecha_pago']=$concepto->caja->fecha;
@@ -446,6 +457,10 @@ class AutorizacionBecasController extends Controller
 				$linea['recargo']="";
 				$linea['total']="";
 			}
+			}	
+			
+			
+			
 			//dd($linea);
 			array_push($resultados, $linea);
 		}

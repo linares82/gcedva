@@ -1,155 +1,157 @@
    <div class="box">
        <div class="box-body">
-           <div class="col-md-4">
-               <div class="form-group @if ($errors->has('fec_inicio')) has-error @endif">
-                   <label for="fec_inicio-field">F. inicio proceso</label>
-                   {!! Form::hidden('cliente_id', isset($cliente) ? $cliente : null, ['class' => 'form-control', 'id' => 'cliente_id-field']) !!}
-                   {!! Form::text('fec_inicio', null, ['class' => 'form-control fecha', 'id' => 'fec_inicio-field']) !!}
-                   @if ($errors->has('fec_inicio'))
-                       <span class="help-block">{{ $errors->first('fec_inicio') }}</span>
-                   @endif
-               </div>
-               <div class="form-group @if ($errors->has('opcion_titulacion_id')) has-error @endif">
-                   <label for="opcion_titulacion_id-field">Opcion Titulacion</label>
-                   {!! Form::select('opcion_titulacion_id', $opciones_titulacion, null, ['class' => 'form-control select_seguridad', 'id' => 'opcion_titulacion_id-field']) !!}
-                   @if ($errors->has('opcion_titulacion_id'))
-                       <span class="help-block">{{ $errors->first('opcion_titulacion_id') }}</span>
-                   @endif
-               </div>
-
-               <div class="form-group @if ($errors->has('titulacion_grupo_id')) has-error @endif">
-                   <label for="titulacion_grupo_id-field">Grupo</label>
-                   {!! Form::select('titulacion_grupo_id', $list['TitulacionGrupo'], null, ['class' => 'form-control select_seguridad', 'id' => 'titulacion_grupo_id-field']) !!}
-                   @if ($errors->has('titulacion_grupo_id'))
-                       <span class="help-block">{{ $errors->first('titulacion_grupo_id') }}</span>
-                   @endif
-               </div>
-               
-               <div class="form-group @if ($errors->has('titulacion_documento_id')) has-error @endif">
-                  <label for="titulacion_documento_id-field">Documento</label>
-                  {!! Form::select('titulacion_documento_id', $documentos, null, ['class' => 'form-control select_seguridad', 'id' => 'titulacion_documento_id-field', 'style' => 'width:100%']) !!}
-                  @if ($errors->has('titulacion_documento_id'))
-                      <span class="help-block">{{ $errors->first('titulacion_documento_id') }}</span>
-                  @endif
-              </div>
-              <div class="form-group">
-                  <div class="btn btn-default btn-file">
-                      <i class="fa fa-paperclip"></i> Adjuntar Archivo
-                      <input type="file" id="file" name="file" class="cliente_archivo">
-                      <input type="hidden" name="_token" id="_token" value="<?= csrf_token() ?>">
-                      <input type="hidden" id="file_hidden" name="file_hidden">
-                  </div>
-                  <button class="btn btn-success btn-xs" id="btn_archivo"> <span
-                          class="glyphicon glyphicon-ok">Cargar</span> </btn>
-                      <br />
-                      <p class="help-block">Max. 20MB</p>
-                      <div id="texto_notificacion">
-
-                      </div>
-              </div>
-              @php
-              if(isset($titulacion)){
-                $vinculacion=\App\Vinculacion::where('cliente_id', $titulacion->cliente_id)->orderBy('id','desc')->first();	
-                }
-
-           
-           @endphp
-           
-              <div class="form-group col-md-12 @if($errors->has('bnd_doc_vinc_revisados')) has-error @endif">
-              @if(isset($vinculacion))
-                <a class="btn btn-xs btn-info" href="{{route('vinculacions.edit',$vinculacion->id)}}" target="_bank">Vinculacion Docs.</a>
-                @endif
-                <label for="bnd_doc_vinc_revisados-field">Doc. Vinc. Revisados</label>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group @if ($errors->has('fec_inicio')) has-error @endif">
+                        <label for="fec_inicio-field">F. inicio proceso</label>
+                        {!! Form::hidden('cliente_id', isset($cliente) ? $cliente : null, ['class' => 'form-control', 'id' => 'cliente_id-field']) !!}
+                        {!! Form::text('fec_inicio', null, ['class' => 'form-control fecha', 'id' => 'fec_inicio-field']) !!}
+                        @if ($errors->has('fec_inicio'))
+                            <span class="help-block">{{ $errors->first('fec_inicio') }}</span>
+                        @endif
+                    </div>
+                    <div class="form-group @if ($errors->has('opcion_titulacion_id')) has-error @endif">
+                        <label for="opcion_titulacion_id-field">Opcion Titulacion</label>
+                        {!! Form::select('opcion_titulacion_id', $opciones_titulacion, null, ['class' => 'form-control select_seguridad', 'id' => 'opcion_titulacion_id-field']) !!}
+                        @if ($errors->has('opcion_titulacion_id'))
+                            <span class="help-block">{{ $errors->first('opcion_titulacion_id') }}</span>
+                        @endif
+                    </div>
+     
+                    <div class="form-group @if ($errors->has('titulacion_grupo_id')) has-error @endif">
+                        <label for="titulacion_grupo_id-field">Grupo</label>
+                        {!! Form::select('titulacion_grupo_id', $list['TitulacionGrupo'], null, ['class' => 'form-control select_seguridad', 'id' => 'titulacion_grupo_id-field']) !!}
+                        @if ($errors->has('titulacion_grupo_id'))
+                            <span class="help-block">{{ $errors->first('titulacion_grupo_id') }}</span>
+                        @endif
+                    </div>
+                    
+                    <div class="form-group @if ($errors->has('titulacion_documento_id')) has-error @endif">
+                       <label for="titulacion_documento_id-field">Documento</label>
+                       {!! Form::select('titulacion_documento_id', $documentos, null, ['class' => 'form-control select_seguridad', 'id' => 'titulacion_documento_id-field', 'style' => 'width:100%']) !!}
+                       @if ($errors->has('titulacion_documento_id'))
+                           <span class="help-block">{{ $errors->first('titulacion_documento_id') }}</span>
+                       @endif
+                   </div>
+                   <div class="form-group">
+                       <div class="btn btn-default btn-file">
+                           <i class="fa fa-paperclip"></i> Adjuntar Archivo
+                           <input type="file" id="file" name="file" class="cliente_archivo">
+                           <input type="hidden" name="_token" id="_token" value="<?= csrf_token() ?>">
+                           <input type="hidden" id="file_hidden" name="file_hidden">
+                       </div>
+                       <button class="btn btn-success btn-xs" id="btn_archivo"> <span
+                               class="glyphicon glyphicon-ok">Cargar</span> </btn>
+                           <br />
+                           <p class="help-block">Max. 20MB</p>
+                           <div id="texto_notificacion">
+     
+                           </div>
+                   </div>
+                   @php
+                   if(isset($titulacion)){
+                     $vinculacion=\App\Vinculacion::where('cliente_id', $titulacion->cliente_id)->orderBy('id','desc')->first();	
+                     }
+     
                 
-                {!! Form::checkbox("bnd_doc_vinc_revisados", 1, null, [ "id" => "bnd_doc_vinc_revisados-field", 'class'=>'minimal']) !!}
-                @if($errors->has("bnd_doc_vinc_revisados"))
-                <span class="help-block">{{ $errors->first("bnd_doc_vinc_revisados") }}</span>
+                @endphp
+                
+                   <div class="form-group col-md-12 @if($errors->has('bnd_doc_vinc_revisados')) has-error @endif">
+                   @if(isset($vinculacion))
+                     <a class="btn btn-xs btn-info" href="{{route('vinculacions.edit',$vinculacion->id)}}" target="_bank">Vinculacion Docs.</a>
+                     @endif
+                     <label for="bnd_doc_vinc_revisados-field">Doc. Vinc. Revisados</label>
+                     
+                     {!! Form::checkbox("bnd_doc_vinc_revisados", 1, null, [ "id" => "bnd_doc_vinc_revisados-field", 'class'=>'minimal']) !!}
+                     @if($errors->has("bnd_doc_vinc_revisados"))
+                     <span class="help-block">{{ $errors->first("bnd_doc_vinc_revisados") }}</span>
+                     @endif
+                 </div>
+                 
+                 <div class="form-group col-md-12 @if($errors->has('bnd_revision_director')) has-error @endif">
+                     <label for="bnd_revision_director-field">Revision Director</label>
+                     @permission('titulacions.revision_director')
+                     {!! Form::checkbox("bnd_revision_director", 1, null, [ "id" => "bnd_revision_director-field", 'class'=>'minimal']) !!}
+                     @endif
+                     @if(!isset($titulacion) or $titulacion->bnd_revision_director<>1)
+                         NO
+                     @else
+                         SI
+                     @endif
+                     @if($errors->has("bnd_revision_director"))
+                     <span class="help-block">{{ $errors->first("bnd_revision_director") }}</span>
+                     
+                 </div>
+                 @endpermission
+                 <div class="form-group @if ($errors->has('obs_doc_vinc')) has-error @endif">
+                        <label for="obs_doc_vinc-field">Observaciones Docs. Vinc.</label>
+                        {!! Form::textArea('obs_doc_vinc', null, ['class' => 'form-control', 'id' => 'obs_doc_vinc-field', 'rows'=>4]) !!}
+                        @if ($errors->has('obs_doc_vinc'))
+                            <span class="help-block">{{ $errors->first('obs_doc_vinc') }}</span>
+                        @endif
+                    </div>
+                </div>
+                
+                
+            </div>
+            <div class="col-md-8">
+                @if(isset($titulacion))
+                
+                    <div class="form-group col-md-4">
+                       <table class="table table-condensed table-striped">
+                           <thead>
+                               <tr>
+                                   <th>Documento Agregados</th><th>Link</th><th></th>
+                               </tr>
+                           </thead>
+                           <tbody>
+                               @foreach($titulacion->titulacionDocumentacions as $doc)
+                               <tr>
+                                   <td>
+                                       {{$doc->titulacionDocumento->name}}
+                                   </td>
+                                   <td>
+                                       <a href="{{asset("imagenes/titulacion/".$titulacion->id."/".$doc->archivo)}}" target="_blank">Ver</a>
+                                   </td>
+                                   <td>
+                                       <a class="btn btn-xs btn-danger" href="{{route('titulacionDocumentacions.destroy', array('id'=>$doc->id))}}">Eliminar</a>
+                                   </td>
+                               </tr>
+                               @endforeach
+                           </tbody>
+                       </table>
+                    </div>
+                   <div class="form-group col-md-4">
+                       <table class="table table-condensed table-striped">
+                          <thead>
+                             <tr>
+                                   <th>Documentos Faltantes</th>
+                             </tr>
+                          </thead>
+                          <tbody>
+                             @foreach($documentos_faltantes as $df)
+                             <tr>
+                                   <td>
+                                      {{ $df->name }}
+                                   </td>
+                                   <td>
+                                      @if($df->doc_obligatorio == 1)
+                                      <button class="btn btn-success btn-xs"><span class="glyphicon glyphicon-ok"></span></button>
+                                      @else
+                                      <button class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-remove"></span></button>
+                                      
+     
+                                      @endif
+                                   </td>
+     
+                             </tr>
+                             @endforeach
+                          </tbody>
+                       </table>
+                    </div>
+                
                 @endif
             </div>
-            
-            <div class="form-group col-md-12 @if($errors->has('bnd_revision_director')) has-error @endif">
-                <label for="bnd_revision_director-field">Revision Director</label>
-                @permission('titulacions.revision_director')
-                {!! Form::checkbox("bnd_revision_director", 1, null, [ "id" => "bnd_revision_director-field", 'class'=>'minimal']) !!}
-                @endif
-                @if(!isset($titulacion) or $titulacion->bnd_revision_director<>1)
-                    NO
-                @else
-                    SI
-                @endif
-                @if($errors->has("bnd_revision_director"))
-                <span class="help-block">{{ $errors->first("bnd_revision_director") }}</span>
-                
-            </div>
-            @endpermission
-            <div class="form-group @if ($errors->has('obs_doc_vinc')) has-error @endif">
-                   <label for="obs_doc_vinc-field">Observaciones Docs. Vinc.</label>
-                   {!! Form::textArea('obs_doc_vinc', null, ['class' => 'form-control', 'id' => 'obs_doc_vinc-field', 'rows'=>4]) !!}
-                   @if ($errors->has('obs_doc_vinc'))
-                       <span class="help-block">{{ $errors->first('obs_doc_vinc') }}</span>
-                   @endif
-               </div>
-           </div>
-           <div>
-           
-           
-           </div>
-           @if(isset($titulacion))
-           <div class="col-md-8">  
-               <div class="form-group col-md-6">
-                  <table class="table table-condensed table-striped">
-                      <thead>
-                          <tr>
-                              <th>Documento Agregados</th><th>Link</th><th></th>
-                          </tr>
-                      </thead>
-                      <tbody>
-                          @foreach($titulacion->titulacionDocumentacions as $doc)
-                          <tr>
-                              <td>
-                                  {{$doc->titulacionDocumento->name}}
-                              </td>
-                              <td>
-                                  <a href="{{asset("imagenes/titulacion/".$titulacion->id."/".$doc->archivo)}}" target="_blank">Ver</a>
-                              </td>
-                              <td>
-                                  <a class="btn btn-xs btn-danger" href="{{route('titulacionDocumentacions.destroy', array('id'=>$doc->id))}}">Eliminar</a>
-                              </td>
-                          </tr>
-                          @endforeach
-                      </tbody>
-                  </table>
-               </div>
-              <div class="form-group col-md-6">
-                  <table class="table table-condensed table-striped">
-                     <thead>
-                        <tr>
-                              <th>Documentos Faltantes</th>
-                        </tr>
-                     </thead>
-                     <tbody>
-                        @foreach($documentos_faltantes as $df)
-                        <tr>
-                              <td>
-                                 {{ $df->name }}
-                              </td>
-                              <td>
-                                 @if($df->doc_obligatorio == 1)
-                                 <button class="btn btn-success btn-xs"><span class="glyphicon glyphicon-ok"></span></button>
-                                 @else
-                                 <button class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-remove"></span></button>
-                                 
-
-                                 @endif
-                              </td>
-
-                        </tr>
-                        @endforeach
-                     </tbody>
-                  </table>
-               </div>
-           </div>
-           @endif
       </div>
    </div>
    @if (isset($titulacion))

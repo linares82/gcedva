@@ -17,7 +17,7 @@ class RolesController extends Controller
     {
         
         $roles = Role::getAllData($request);
-
+        
         return view('roles.index', compact('roles'));
     }
 

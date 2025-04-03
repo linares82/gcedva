@@ -2,6 +2,7 @@
 
 use DB;
 use Auth;
+use Log;
 
 use App\Cliente;
 use App\Plantel;
@@ -238,12 +239,14 @@ class PlanEstudiosController extends Controller {
 			$row['matricula']=$cliente->matricula;
 			$row['nombre']=$cliente->nombre." ".$cliente->nombre2;
 			$row['apellidos']=$cliente->ape_paterno." ".$cliente->ape_materno;
+			$row['st_cliente_id']=$cliente->st_cliente_id;
 			$suma_calificaciones=0;
 			$cuenta_materias=0;
 			foreach($materias as $materia){
 				$hacademica=Hacademica::where('cliente_id',$cliente->id)->where('materium_id',$materia->id)->whereNull('deleted_at')->first();
 				//dd($hacademica);
-				//dd($hacademica->st_materium_id<>1);
+				//dd($row);
+				//Log::info($hacademica->id);
 				$hoy=Carbon::createFromFormat('Y-m-d', Date('Y-m-d'));
 				if(is_null($hacademica)){
 					$row[$materia->materia]="Pendiente por Cursar";	

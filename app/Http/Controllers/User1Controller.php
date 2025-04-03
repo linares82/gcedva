@@ -115,7 +115,7 @@ class User1Controller extends Controller
     public function index(Request $request)
 	{
         $input=$request->all();
-		$r=User::where('id', '<>', '0');
+		$r=User::where('id', '<>', '0')->with('roles1');
 		if(isset($input['name']) and $input['name']<>""){
 			$r->where('name', 'like', "%".$input['name']."%");
 		}

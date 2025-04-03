@@ -1814,7 +1814,7 @@ class ClientesController extends Controller
             ->where('clientes.plantel_id', $datos['plantel_f'])
             //->where('matricula', '0923CB06011')
             ->whereNotNull('clientes.matricula')
-            ->where('clientes.matricula', '<>', " ")
+            ->where('clientes.matricula', '<>', "")
             ->join('st_clientes as stc', 'stc.id', '=', 'clientes.st_cliente_id')
             //->where('st_cliente_id', $datos['estatus_f'])
             ->get();
@@ -1839,7 +1839,14 @@ class ClientesController extends Controller
                     $i++;
                 }
                 //dd($array_docsPorCliente);
-                if (substr($cliente->matricula, 0, 4) == $datos['inicio_matricula']) {
+                $prefijo_len=0;
+                $param_prefijo=Param::where('llave', 'prefijo_matricula_instalacion')->first();
+                //dd($param_prefijo->toArray());
+                if(!is_null($param_prefijo) and $param_prefijo->valor<>'0'){
+                    $prefijo_len=strlen($param_prefijo->valor);
+                }
+                //dd(substr($cliente->matricula, 0, (4+$prefijo_len)));
+                if (substr($cliente->matricula, 0, (4+$prefijo_len)) == $datos['inicio_matricula']) {
                     //dd($array_docsPorCliente);
                     foreach ($docsPorCliente as $do) {
 
@@ -2311,9 +2318,9 @@ class ClientesController extends Controller
     {
         $datos = $request->all();
         $param = Param::where('llave', 'prefijo_matricula_instalacion')->first();
-        if ($param->valor <> 0) {
+        /*if ($param->valor <> 0) {
             $datos['inicio_matricula'] = $param->valor . $datos['inicio_matricula'];
-        }
+        }*/
         $planteles = Plantel::select('plantels.id', 'plantels.meta_total')->whereIn('plantels.id', $datos['plantel_f'])->get();
         $totales = Cliente::select('p.razon', 'g.seccion', 'sts.name as estatus', DB::raw('count(sts.name) as total_estatus'))
             ->join('seguimientos as s', 's.cliente_id', '=', 'clientes.id')
