@@ -8719,6 +8719,22 @@ Route::post(
     )
 )->middleware('auth');
 Route::get(
+    '/adeudos/adeudosXConcepto',
+    array(
+        'as' => 'adeudos.adeudosXConcepto',
+        'middleware' => 'permission:adeudos.adeudosXConcepto',
+        'uses' => 'AdeudosController@adeudosXConcepto'
+    )
+)->middleware('auth');
+Route::post(
+    '/adeudos/adeudosXConceptoR',
+    array(
+        'as' => 'adeudos.adeudosXConceptoR',
+        'middleware' => 'permission:adeudos.adeudosXConcepto',
+        'uses' => 'AdeudosController@adeudosXConceptoR',
+    )
+)->middleware('auth');
+Route::get(
     '/adeudos/ingresosTotales',
     array(
         'as' => 'adeudos.ingresosTotales',

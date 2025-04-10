@@ -119,7 +119,7 @@
                     <td>{{$e->user}}</td><td>{{$e->alimenticia_bnd ? 'Si' : 'No'}}</td><td>{{$e->jefe_bnd ? 'Si' : 'No'}}</td>
                     <td>{{$e->nombre_jefe}}{{$e->ape_paterno_jefe}}{{$e->ape_materno_jefe}}</td>
                     <td>{{$e->profordems}}</td><td>{{$e->genero==1 ? 'Hombre' : 'Mujer'}}</td>
-                    <td>{{$e->evento_descripcion}}</td><td>{{$e->evento_fecha}}</td>
+                    <td>{{optional($e->historials->last())->descripcion}}</td><td>{{optional($e->historials->last())->fecha}}</td>
                     </tr>
                 @endforeach    
                 </body>

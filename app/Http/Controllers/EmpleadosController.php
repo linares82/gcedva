@@ -789,8 +789,8 @@ class EmpleadosController extends Controller
         'empleados.anios_servicio_escuela','empleados.fec_inicio_experiencia_academicas',
         'empleados.profordems','empleados.bnd_recontratable','empleados.just_recontratable',
         'tc.name as tipo_contrato','pla_contrato1.razon as pla_contrato1','empleados.fin_contrato',
-        'tc2.name as tipo_contrato2','pla_contrato2.razon as pla_contrato2','empleados.fec_fin_contrato2',
-        'his.descripcion as evento_descripcion','his.fecha as evento_fecha'
+        'tc2.name as tipo_contrato2','pla_contrato2.razon as pla_contrato2','empleados.fec_fin_contrato2'
+        //'his.descripcion as evento_descripcion','his.fecha as evento_fecha'
         )
         ->join('puestos as p','p.id','empleados.puesto_id')
         ->leftJoin('plantels as pla','pla.id','empleados.plantel_id')
@@ -803,10 +803,15 @@ class EmpleadosController extends Controller
         ->leftJoin('tipo_contratos as tc2','tc2.id', 'empleados.tipo_contrato2_id')
         ->leftJoin('estados as e','e.id', 'empleados.estado_nacimiento_id')
         ->leftJoin('nivel_estudios as ne','ne.id', 'empleados.nivel_estudio_id')
-        ->leftJoin('historials as his','his.empleado_id', 'empleados.id')
+        //->leftJoin('historials as his','his.empleado_id', 'empleados.id')
         ->whereIn('empleados.plantel_id', $datos['plantel_f']) 
         ->whereIn('empleados.st_empleado_id', $datos['estatus_f']) 
+        ->with('historials')
         ->get();
+        /*foreach($empleados as $e){
+            if($e->id==2) dd($e->historials->last());
+        }*/
+        
         return view('empleados.reportes.listadoColaboradoresR',compact('empleados'));
     }
 

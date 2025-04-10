@@ -58,7 +58,7 @@
                             <th>PLANTEL</th>
                             <th>SOLICITUD</th>
                             <th>LECTIVO</th>
-                            <th>FEC. VIGENCIA</th>
+                            <th>VIGENCIA</th>
                         <th>CLIENTE</th>
                         <th>PORCENTAJE BECA</th>
                         <th>ESTATUS</th>
@@ -82,7 +82,7 @@
                                 <td>{{$autorizacionBeca->cliente->plantel->razon}}</td>
                                 <td>{{$autorizacionBeca->solicitud}}</td>
                                 <td>{{optional($autorizacionBeca->lectivo)->name}}</td>
-                                <td>{{$autorizacionBeca->vigencia}}</td>
+                                <td>{{$autorizacionBeca->inicio_vigencia}} - {{$autorizacionBeca->vigencia}}</td>
                                 <td>
                                     <a href="{{ route('clientes.edit', $autorizacionBeca->cliente->id) }}" target="_blank">
                                         {{$autorizacionBeca->cliente->nombre." ".$autorizacionBeca->cliente->nombre2." ".$autorizacionBeca->cliente->ape_paterno." ".$autorizacionBeca->cliente->ape_materno}}

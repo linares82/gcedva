@@ -39,6 +39,7 @@
                      </div>
 
                      @permission('autorizacionBecas.manejaVigencia')
+                     
                      <div class="form-group col-md-3 @if($errors->has('bnd_tiene_vigencia')) has-error @endif">
                         <label for="bnd_tiene_vigencia-field">Tiene Vigencia?
                            {!! Form::checkbox("bnd_tiene_vigencia", 1, null, [ "id" => "bnd_tiene_vigencia-field", 'class'=>'minimal']) !!}
@@ -47,6 +48,14 @@
                         <span class="help-block">{{ $errors->first("bnd_tiene_vigencia") }}</span>
                         @endif
                     </div>
+
+                    <div class="form-group col-md-4 @if($errors->has('inicio_vigencia')) has-error @endif">
+                     <label for="inicio_vigencia-field">Fecha inicio vigencia</label>
+                     {!! Form::text("inicio_vigencia", null, array("class" => "form-control fecha", "id" => "inicio_vigencia-field")) !!}
+                     @if($errors->has("inicio_vigencia"))
+                      <span class="help-block">{{ $errors->first("inicio_vigencia") }}</span>
+                     @endif
+                  </div>
 
                      <div class="form-group col-md-4 @if($errors->has('vigencia')) has-error @endif">
                         <label for="vigencia-field">Fecha vigencia</label>

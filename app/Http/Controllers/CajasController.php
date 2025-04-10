@@ -506,9 +506,10 @@ class CajasController extends Controller
                                     //dd($beca->toArray());
                                     if ($beca->bnd_tiene_vigencia == 1 and !is_null($beca->vigencia)) {
                                         $fechaAdeudo = Carbon::createFromFormat('Y-m-d', $adeudo->fecha_pago);
-                                        $fechaVigenciaBeca = Carbon::createFromFormat('Y-m-d', $beca->vigencia);
+                                        $fechaInicioVigenciaBeca = Carbon::createFromFormat('Y-m-d', $beca->inicio_vigencia);
+                                        $fechaFinVigenciaBeca = Carbon::createFromFormat('Y-m-d', $beca->vigencia);
                                         //dd($fechaAdeudo->lessThanOrEqualTo($fechaVigenciaBeca));
-                                        if ($fechaAdeudo->lessThanOrEqualTo($fechaVigenciaBeca)) {
+                                        if ($fechaAdeudo->greaterThanOrEqualTo($fechaInicioVigenciaBeca) and $fechaAdeudo->lessThanOrEqualTo($fechaFinVigenciaBeca)) {
                                             $beca_a = $beca->id;
                                         }
                                     } elseif ($beca->bnd_tiene_vigencia == 0 and is_null($beca->vigencia)) {

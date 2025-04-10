@@ -1015,6 +1015,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'AddIndexTpoInformeClientesTable' => __DIR__ . '/../..' . '/database/migrations/2018_03_12_111856_add_index_tpo_informe_clientes_table.php',
         'AddIndexTurnoClientesTable' => __DIR__ . '/../..' . '/database/migrations/2017_11_13_111422_add_index_turno_clientes_table.php',
         'AddInicioMatriculaGrupoSepToFormatoDgcftsTable' => __DIR__ . '/../..' . '/database/migrations/2025_01_29_171419_add_inicio_matricula_grupo_sep_to_formato_dgcfts_table.php',
+        'AddInicioVigenciaToautorizacionBecasTable' => __DIR__ . '/../..' . '/database/migrations/2025_04_09_150948_add_inicio_vigencia_toautorizacion_becas_table.php',
         'AddInicionFinToJornadasTable' => __DIR__ . '/../..' . '/database/migrations/2025_03_04_101357_add_inicion_fin_to_jornadas_table.php',
         'AddInscripcionIdHistoriaClientesTable' => __DIR__ . '/../..' . '/database/migrations/2019_10_17_122135_add_inscripcion_id_historia_clientes_table.php',
         'AddInteresEstudioClientesTable' => __DIR__ . '/../..' . '/database/migrations/2019_11_29_144637_add_interes_estudio_clientes_table.php',

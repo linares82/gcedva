@@ -207,6 +207,7 @@ return array(
     'AddIndexTpoInformeClientesTable' => $baseDir . '/database/migrations/2018_03_12_111856_add_index_tpo_informe_clientes_table.php',
     'AddIndexTurnoClientesTable' => $baseDir . '/database/migrations/2017_11_13_111422_add_index_turno_clientes_table.php',
     'AddInicioMatriculaGrupoSepToFormatoDgcftsTable' => $baseDir . '/database/migrations/2025_01_29_171419_add_inicio_matricula_grupo_sep_to_formato_dgcfts_table.php',
+    'AddInicioVigenciaToautorizacionBecasTable' => $baseDir . '/database/migrations/2025_04_09_150948_add_inicio_vigencia_toautorizacion_becas_table.php',
     'AddInicionFinToJornadasTable' => $baseDir . '/database/migrations/2025_03_04_101357_add_inicion_fin_to_jornadas_table.php',
     'AddInscripcionIdHistoriaClientesTable' => $baseDir . '/database/migrations/2019_10_17_122135_add_inscripcion_id_historia_clientes_table.php',
     'AddInteresEstudioClientesTable' => $baseDir . '/database/migrations/2019_11_29_144637_add_interes_estudio_clientes_table.php',

@@ -4600,4 +4600,106 @@ class AdeudosController extends Controller
         }
         return $str;
        }
+
+       public function adeudosXConcepto()
+       {
+           if (Auth::user()->can('adeudos.maestroXPlantel')) {
+               $empleado = Empleado::where('user_id', Auth::user()->id)->first();
+               $planteles = array();
+               foreach ($empleado->plantels as $p) {
+                   //dd($p->id);
+                   array_push($planteles, $p->id);
+               }
+   
+               $planteles = Plantel::whereIn('id', $planteles)->pluck('razon', 'id');
+           } else {
+               $planteles = Plantel::pluck('razon', 'id');
+           }
+   
+           $conceptos = CajaConcepto::pluck('name', 'id');
+   
+           //dd($stCajas);
+           return view('adeudos.reportes.adeudosXConcepto', compact('planteles', 'conceptos'));
+       }
+   
+       public function adeudosXConceptoR(Request $request)
+       {
+            $datos=$request->all();
+
+            $secciones=Adeudo::select('p.razon','p.id as plantel_id','g.seccion')
+            ->join('clientes as c','c.id','adeudos.cliente_id')
+            ->join('combinacion_clientes as comb','comb.cliente_id','c.id')
+            ->join('grados as g','g.id','comb.grado_id')
+            ->join('plantels as p','p.id','c.plantel_id')
+            ->join('caja_conceptos as cc','cc.id','adeudos.caja_concepto_id')
+            ->whereIn('c.plantel_id', $datos['plantel_f'])
+            ->where('adeudos.caja_concepto_id', $datos['concepto_f'])
+            ->whereRaw('year(adeudos.fecha_pago)=?', [$datos['fecha_f']])
+            ->distinct()
+            ->orderBy('p.id')
+            ->orderBy('g.seccion')
+            ->get();
+            
+            $totales=array();
+
+            $totales_no_pagados=array();
+
+            foreach($secciones as $seccion){
+                //dd($seccion);
+                $linea=array();
+                $linea['plantel']=$seccion->razon;
+                $linea['seccion']=$seccion->seccion;
+                $calculo=Adeudo::select('adeudos.caja_concepto_id')
+                ->join('clientes as c','c.id','adeudos.cliente_id')
+                ->join('combinacion_clientes as comb','comb.cliente_id','c.id')
+                ->join('grados as g','g.id','comb.grado_id')
+                ->join('plantels as p','p.id','c.plantel_id')
+                ->join('caja_conceptos as cc','cc.id','adeudos.caja_concepto_id')
+                ->where('c.plantel_id', $seccion->plantel_id)
+                ->where('adeudos.caja_concepto_id', $datos['concepto_f'])
+                ->where('adeudos.pagado_bnd', 1)
+                ->where('g.seccion', $seccion->seccion)
+                ->whereRaw('year(adeudos.fecha_pago)=?', [$datos['fecha_f']])
+                ->distinct()
+                ->count();
+                $linea['total_pagados']=$calculo;
+                $calculo=Adeudo::select('adeudos.caja_concepto_id')
+                ->join('clientes as c','c.id','adeudos.cliente_id')
+                ->join('combinacion_clientes as comb','comb.cliente_id','c.id')
+                ->join('grados as g','g.id','comb.grado_id')
+                ->join('plantels as p','p.id','c.plantel_id')
+                ->join('caja_conceptos as cc','cc.id','adeudos.caja_concepto_id')
+                ->where('c.plantel_id', $seccion->plantel_id)
+                ->where('adeudos.caja_concepto_id', $datos['concepto_f'])
+                ->where('adeudos.pagado_bnd', "<>",1)
+                ->where('g.seccion', $seccion->seccion)
+                ->whereRaw('year(adeudos.fecha_pago)=?', [$datos['fecha_f']])
+                ->distinct()
+                ->count();
+                $linea['total_no_pagados']=$calculo;
+                array_push($totales, $linea);
+
+            }
+
+            //dd($totales);
+
+            $detalle=Adeudo::select('c.id as cliente_id','c.nombre', 'c.nombre2','c.ape_paterno','c.ape_materno','c.matricula',
+            'p.razon','g.seccion','cc.name as concepto','adeudos.pagado_bnd','adeudos.monto','caj.total','caj.fecha as caja_fecha')
+            ->join('clientes as c','c.id','adeudos.cliente_id')
+            ->join('combinacion_clientes as comb','comb.cliente_id','c.id')
+            ->join('grados as g','g.id','comb.grado_id')
+            ->join('plantels as p','p.id','c.plantel_id')
+            ->join('caja_conceptos as cc','cc.id','adeudos.caja_concepto_id')
+            ->whereIn('c.plantel_id', $datos['plantel_f'])
+            ->where('adeudos.caja_concepto_id', $datos['concepto_f'])
+            ->whereRaw('year(adeudos.fecha_pago)=?', [$datos['fecha_f']])
+            ->leftJoin('cajas as caj','caj.id','adeudos.caja_id')
+            ->orderBy('p.id')
+            ->orderBy('g.seccion')
+            ->get();
+            //dd($adeudos);
+          
+           return view('adeudos.reportes.adeudosXConceptoR', compact('totales','detalle'));
+       }
+   
 }

@@ -29,7 +29,9 @@ class AutorizacionBeca extends Model
 	}
 
 	//Mass Assignment
-	protected $fillable = ['solicitud', 'cliente_id', 'monto_inscripcion', 'monto_mensualidad', 'st_beca_id', 'usu_alta_id', 'usu_mod_id', 'file', 'lectivo_id', 'tipo_beca_id', 'motivo_beca_id', 'mensualidad_sep','vigencia','bnd_tiene_vigencia'];
+	protected $fillable = ['solicitud', 'cliente_id', 'monto_inscripcion', 'monto_mensualidad', 
+	'st_beca_id', 'usu_alta_id', 'usu_mod_id', 'file', 'lectivo_id', 'tipo_beca_id', 
+	'motivo_beca_id', 'mensualidad_sep','inicio_vigencia','vigencia','bnd_tiene_vigencia'];
 
 	public function usu_alta()
 	{
