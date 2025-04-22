@@ -537,7 +537,7 @@
             <thead>
                 <th>No.</th><th>Plantel</th><th>Ciclo</th><th>Id</th><th>Matricula</th><th>Seccion</th>
                 <th>A. Paterno</th><th>A. Materno</th><th>Nombre(s)</th>
-                <th>Genero</th>
+                <th>Genero</th><th>F. Nacimiento</th>
                 <th>Tel. Fijo</th><th>Celular</th><th>Estatus C.</th>
                 <th>Estatus S.</th><th>Turno</th>
                 <th>F. Planeada</th>
@@ -641,6 +641,7 @@
               @endif
             
             </td>
+            <td>{{ $registro['fec_nacimiento'] }}</td>
             <td>{{ $registro['tel_fijo'] }}</td><td>{{ $registro['tel_cel'] }}</td>
             <td>{{ $registro['estatus_cliente'] }}</td><td>{{ $registro['estatus_seguimiento'] }}</td>
             <td>{{ $registro['turno'] }}</td>
