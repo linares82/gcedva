@@ -4684,9 +4684,12 @@ class AdeudosController extends Controller
             //dd($totales);
 
             $detalle=Adeudo::select('c.id as cliente_id','c.nombre', 'c.nombre2','c.ape_paterno','c.ape_materno','c.matricula',
-            'p.razon','g.seccion','cc.name as concepto','adeudos.pagado_bnd','adeudos.monto','caj.total','caj.fecha as caja_fecha')
+            'p.razon','g.seccion','cc.name as concepto','adeudos.pagado_bnd','adeudos.monto','caj.total','caj.fecha as caja_fecha',
+            'stc.name as estatus', 't.name as turno')
             ->join('clientes as c','c.id','adeudos.cliente_id')
+            ->join('st_clientes as stc','stc.id','c.st_cliente_id')
             ->join('combinacion_clientes as comb','comb.cliente_id','c.id')
+            ->join('turnos as t','t.id','comb.turno_id')
             ->join('grados as g','g.id','comb.grado_id')
             ->join('plantels as p','p.id','c.plantel_id')
             ->join('caja_conceptos as cc','cc.id','adeudos.caja_concepto_id')
@@ -4770,7 +4773,7 @@ class AdeudosController extends Controller
                 ->where('adeudos.pagado_bnd', 1)
                 ->where('g.seccion', $seccion->seccion)
                 ->whereRaw('year(adeudos.fecha_pago)=?', [$fecha->year])
-                ->whereRaw('year(caj.fecha)<=?', [$datos['fecha_f']])
+                ->whereRaw('caj.fecha<=?', [$datos['fecha_f']])
                 ->distinct()
                 ->count();
                 $linea['total_pagados']=$calculo;
@@ -4796,9 +4799,12 @@ class AdeudosController extends Controller
             //dd($totales);
 
             $detalle_lineas=Adeudo::select('c.id as cliente_id','c.nombre', 'c.nombre2','c.ape_paterno','c.ape_materno','c.matricula',
-            'p.razon','g.seccion','cc.name as concepto','adeudos.pagado_bnd','adeudos.monto','caj.total','caj.fecha as caja_fecha')
+            'p.razon','g.seccion','cc.name as concepto','adeudos.pagado_bnd','adeudos.monto','caj.total','caj.fecha as caja_fecha',
+            'stc.name as estatus', 't.name as turno')
             ->join('clientes as c','c.id','adeudos.cliente_id')
+            ->join('st_clientes as stc','stc.id','c.st_cliente_id')
             ->join('combinacion_clientes as comb','comb.cliente_id','c.id')
+            ->join('turnos as t','t.id','comb.turno_id')
             ->join('grados as g','g.id','comb.grado_id')
             ->join('plantels as p','p.id','c.plantel_id')
             ->join('caja_conceptos as cc','cc.id','adeudos.caja_concepto_id')

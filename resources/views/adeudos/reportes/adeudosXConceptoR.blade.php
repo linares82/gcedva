@@ -98,6 +98,7 @@
                 <th>No.</th>
                 <th>Plantel</th>
                 <th>Seccion</th>
+                <th>Turno</th>
                 <th>Cliente Id</th>
                 <th>Cliente</th>
                 <th>Matricula</th>
@@ -106,6 +107,7 @@
                 <th>F. Caja</th>
                 <th>Monto Planeado</th>
                 <th>Monto Caja</th>
+                <th>Estatus</th>
             </tr>
         </thead>
         <tbody>
@@ -115,7 +117,7 @@
             @foreach($detalle as $linea)
             <tr>
                 <td>{{++$i}}</td><td>{{$linea->razon}}</td><td>{{$linea->seccion}}</td>
-                <td>{{$linea->cliente_id}}</td>
+                <td>{{$linea['turno']}}</td><td>{{$linea->cliente_id}}</td>
                 <td>{{$linea->nombre}} {{$linea->nombre2}} {{$linea->ape_paterno}} {{$linea->ape_materno}}</td>
                 <td>{{$linea->matricula}}</td><td>{{$linea->concepto}}</td>
                 <td>
@@ -129,7 +131,7 @@
                     {{$linea->caja_fecha}}</td>
                 @endif
                     
-                <td>{{$linea->monto}}</td><td>{{$linea->total}}</td>
+                <td>{{$linea->monto}}</td><td>{{$linea->total}}</td><td>{{$linea['estatus']}}</td>
             </tr>
             @endforeach
         </tbody>
