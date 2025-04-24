@@ -27,7 +27,7 @@ class Materium extends Model
     protected $fillable = [
         'ponderacion_id', 'name', 'abreviatura', 'seriada_bnd', 'serie_anterior', 'plantel_id',
         'usu_alta_id', 'usu_mod_id', 'modulo_id', 'codigo', 'creditos', 'bnd_oficial','orden',
-        'bnd_tiene_nombre_oficial', 'nombre_oficial'
+        'bnd_tiene_nombre_oficial', 'nombre_oficial','bnd_ponderacion'
     ];
 
     public function usu_alta()
@@ -70,6 +70,16 @@ class Materium extends Model
     public function ponderacion()
     {
         return $this->belongsToMany('App\Ponderacion');
+    }
+
+    public function ponderacionMaterias()
+    {
+        //return $this->belongsToMany('App\PeriodoEstudio', 'periodo_materium', 'materium_id', 'periodo_estudio_id');
+        return $this->belongsToMany('App\Materium', 'materiap_materiah', 'materiump_id', 'materiumh_id');
+    }
+
+    public function padre(){
+        return $this->belongsToMany('App\Materium', 'materiap_materiah', 'materiumh_id', 'materiump_id');
     }
 
     public function modulo()

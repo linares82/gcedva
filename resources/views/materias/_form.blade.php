@@ -84,20 +84,56 @@
                        @endif
                     </div>
 
-                    <div class="form-group col-md-4 @if($errors->has('ponderacion_id')) has-error @endif">
-                       <label for="ponderacion_id-field">Ponderacion</label>
+                    <div class="form-group col-md-4 @if($errors->has('ponderacion_id')) has-error @endif" style="clear:left;">
+                       <label for="ponderacion_id-field">Ponderacion basada en porcentaje</label>
                        {!! Form::select("ponderacion_id", $list["Ponderacion"], null, array("class" => "form-control select_seguridad", "id" => "ponderacion_id-field")) !!}
                        @if($errors->has("ponderacion_id"))
                        <span class="help-block">{{ $errors->first("ponderacion_id") }}</span>
                        @endif
                     </div>
+                    
+                    @permission('materias.ponderacionBasadaEnMaterias')
+                    <div class="form-group col-md-4 @if($errors->has('bnd_ponderacion')) has-error @endif">
+                     <label for="bnd_ponderacion-field">Ponderacion Para Otra Materia: </label>
+                     {!! Form::checkbox("bnd_ponderacion", true, null, [ "id" => "bnd_ponderacion-field", 'class'=>'minimal']) !!}
+                     @if($errors->has("bnd_ponderacion"))
+                     <span class="help-block">{{ $errors->first("bnd_ponderacion") }}</span>
+                     @endif
+                 </div>
+
+                  <div class="form-group col-md-4 @if($errors->has('hijos')) has-error @endif">
+                     <label for="hijos-field">Ponderacion basada en Materias</label>
+                     {!! Form::select("hijos[]", isset($ponderacionMaterias) ? $ponderacionMaterias : array(), isset($materium) ? $materium->ponderacionMaterias->pluck('id') : null, array("class" => "form-control select_seguridad", "id" => "hijos-field", 'multiple'=>true)) !!}
+                     @if($errors->has("hijos"))
+                     <span class="help-block">{{ $errors->first("hijos") }}</span>
+                     @endif
+                  </div>
+                  
+                  @if(isset($materium))
+                  <div class="form-group col-md-4 @if($errors->has('hijos')) has-error @endif">
+                     <label for="hijos-field">Ponderacion de: </label>
+                  <ul>
+                     @foreach($materium->padre as $padre)
+                     <li><a href="{{ route('materias.edit', $padre->id) }}" target="blank"> {{ $padre->name }} </a> </li>
+                     @endforeach
+                  </ul>
+                  </div>
+                  @endif
+                  @endpermission
+                  
                     @push('scripts')
 
                     <script type="text/javascript">
                        $(document).ready(function() {
                           getCmbMateria();
+                          @if(!isset($ponderacionMaterias))
+                          getPonderacionMaterias();
+                          @endif
+                          
                           $('#plantel_id-field').change(function() {
+                              console.log('fil');
                              getCmbMateria();
+                             getPonderacionMaterias();
                           });
                        });
 
@@ -131,5 +167,35 @@
                              }
                           });
                        }
+
+                       function getPonderacionMaterias() {
+
+                        $.ajax({
+                           url: '{{ route("materias.getMateriasParaPonderacion") }}',
+                           type: 'GET',
+                           data: "plantel_id=" + $('#plantel_id-field option:selected').val(),
+                           dataType: 'json',
+                           beforeSend: function() {
+                              $("#loading3").show();
+                           },
+                           complete: function() {
+                              $("#loading3").hide();
+                           },
+                           success: function(data) {
+                              //$example.select2("destroy");
+                              //$('#serie_anterior-field').html('');
+                              $('#hijos-field').empty();
+                              //$('#especialidad_id-field').empty();
+                              $('#hijos-field').append($('<option></option>').text('Seleccionar Opción').val('0'));
+
+                              $.each(data, function(i) {
+                                 //alert(data[i].name);
+                                 $('#hijos-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
+
+                              });
+                              $('#hijos-field').change();
+                           }
+                        });
+                        }
                     </script>
                     @endpush

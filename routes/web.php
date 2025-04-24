@@ -4643,6 +4643,15 @@ Route::get(
         'uses' => 'MateriasController@getCmbMateria'
     )
 )->middleware('auth');
+
+Route::get(
+    '/materias/getMateriasParaPonderacion',
+    array(
+        'as' => 'materias.getMateriasParaPonderacion',
+        //'middleware' => 'permission:especialidads.getCmbEspecialidad',
+        'uses' => 'MateriasController@getMateriasParaPonderacion'
+    )
+)->middleware('auth');
 Route::get(
     '/materias/getCmbMateria2',
     array(

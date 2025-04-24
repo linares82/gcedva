@@ -87,11 +87,14 @@ class MateriasController extends Controller
      */
     public function edit($id, Materium $materium)
     {
-        $materium = $materium->find($id);
+        $materium = $materium->with('ponderacionMaterias')->find($id);
         $list = Materium::where('id', '>', '0')->where('seriada_bnd', '=', '1')->pluck('name', 'id')->toArray();
         $materiales_ls = array_merge(['0' => 'Seleccionar Opción'], $list);
+        $ponderacionMaterias=Materium::where('plantel_id', $materium->plantel_id)
+        ->where('bnd_ponderacion',true)
+        ->pluck('name','id');
         //dd($materiales_ls);
-        return view('materias.edit', compact('materium', 'materiales_ls'))
+        return view('materias.edit', compact('materium', 'materiales_ls','ponderacionMaterias'))
             ->with('list', Materium::getListFromAllRelationApps());
     }
 
@@ -118,6 +121,7 @@ class MateriasController extends Controller
     public function update($id, Materium $materium, updateMaterium $request)
     {
         $input = $request->all();
+        //dd($input);
         $input['usu_mod_id'] = Auth::user()->id;
         //update data
         $materium = $materium->find($id);
@@ -132,7 +136,17 @@ class MateriasController extends Controller
         if (!isset($input['bnd_tiene_nombre_oficial'])) {
             $input['bnd_tiene_nombre_oficial'] = 0;
         }
+
+        if (!isset($input['bnd_ponderacion'])) {
+            $input['bnd_ponderacion'] = 0;
+        }
+
         $materium->update($input);
+        //dd($input['hijos']);
+        if(isset($input['hijos'])){
+            $materium->ponderacionMaterias()->sync($input['hijos']);
+        }
+        
 
         return redirect()->route('materias.index')->with('message', 'Registro Actualizado.');
     }
@@ -578,6 +592,46 @@ class MateriasController extends Controller
                             'id' => $r1->id,
                             'name' => $r1->id."-".$r1->name,
                             'selectec' => '',
+                        ));
+                    }
+                }
+                return $final;
+            } else {
+                return $r;
+            }
+        }
+    }
+
+    public function getMateriasParaPonderacion(Request $request)
+    {
+        if ($request->ajax()) {
+            //dd($request->all());
+            $plantel = $request->get('plantel_id');
+            
+            //dd("FLC:".$materia);
+            $final = array();
+            $r = DB::table('materia as m')
+                ->select('m.id', 'm.name')
+                ->where('m.plantel_id', '=', $plantel)
+                ->where('m.id', '>', '0')
+                ->where('m.bnd_ponderacion', true)
+                ->whereNull('deleted_at')
+                ->get();
+
+            //dd($r);
+            if (isset($materia) and $materia <> 0) {
+                foreach ($r as $r1) {
+                    if ($r1->id == $materia) {
+                        array_push($final, array(
+                            'id' => $r1->id,
+                            'name' => $r1->name,
+                            'selectec' => 'Selected'
+                        ));
+                    } else {
+                        array_push($final, array(
+                            'id' => $r1->id,
+                            'name' => $r1->name,
+                            'selectec' => ''
                         ));
                     }
                 }

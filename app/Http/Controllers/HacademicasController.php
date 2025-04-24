@@ -768,6 +768,44 @@ class HacademicasController extends Controller
             }
             $calificacion->save();
             $h->save();
+
+            //Revisar si la materia es ponderacion de otra materia, calcular la calificacion de la materia padre
+            if($h->st_materium_id == 1){
+                $materia=$h->materia;
+                if($materia->bnd_ponderacion==true){
+                    //dd($materia->padres);
+                    foreach($materia->padre as $padre){
+                        $padreHacademicas=Hacademica::where('cliente_id', $h->cliente_id)->where('materium_id',$padre->id)->first();
+                        if(!is_null($padreHacademicas)){
+                            $ponderacionesMateriasAprobadas=1;
+                            $sumaCalificaciones=0;
+                            foreach($padre->ponderacionMaterias as $materiaH){
+                                $hijaHacademicas=Hacademica::where('cliente_id', $h->cliente_id)->where('materium_id',$materiaH->id)->first();
+                                //dd($hijaHacademicas->toArray());
+                                if($hijaHacademicas->st_materium_id<>1){
+                                    $ponderacionesMateriasAprobadas=0;
+                                }else{
+                                    $calificacionAprobatoria=$hijaHacademicas->calificaciones->last();
+                                    $sumaCalificaciones=$sumaCalificaciones+$calificacionAprobatoria->calificacion;
+                                }
+                            }
+                            //dd($ponderacionesMateriasAprobadas);
+                            if($ponderacionesMateriasAprobadas==1){
+                                $calificacionPromedio=$sumaCalificaciones/$padre->ponderacionMaterias->count();
+                                
+                                $padreHacademicas->st_materium_id=1;
+                                $padreHacademicas->save();
+                                //dd($padreHacademicas->calificaciones->first()->toArray());
+                                $calificacionPadre=$padreHacademicas->calificaciones->first();
+                                $calificacionPadre->calificacion=$calificacionPromedio;
+                                $calificacionPadre->save();
+                            }
+                        }
+                    }
+                }
+            }
+            
+
             return json_encode(array(
                 'calificacion' => $calificacion->calificacion,
                 'calificacion_parcial_calculada' => round($calificacion_ponderacion->calificacion_parcial_calculada, 2),

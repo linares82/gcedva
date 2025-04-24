@@ -4660,6 +4660,7 @@ class AdeudosController extends Controller
                 ->where('adeudos.pagado_bnd', 1)
                 ->where('g.seccion', $seccion->seccion)
                 ->whereRaw('year(adeudos.fecha_pago)=?', [$datos['fecha_f']])
+                ->whereNull('comb.deleted_at')
                 ->distinct()
                 ->count();
                 $linea['total_pagados']=$calculo;
@@ -4674,6 +4675,7 @@ class AdeudosController extends Controller
                 ->where('adeudos.pagado_bnd', "<>",1)
                 ->where('g.seccion', $seccion->seccion)
                 ->whereRaw('year(adeudos.fecha_pago)=?', [$datos['fecha_f']])
+                ->whereNull('comb.deleted_at')
                 ->distinct()
                 ->count();
                 $linea['total_no_pagados']=$calculo;
@@ -4696,6 +4698,7 @@ class AdeudosController extends Controller
             ->whereIn('c.plantel_id', $datos['plantel_f'])
             ->where('adeudos.caja_concepto_id', $datos['concepto_f'])
             ->whereRaw('year(adeudos.fecha_pago)=?', [$datos['fecha_f']])
+            ->whereNull('comb.deleted_at')
             ->leftJoin('cajas as caj','caj.id','adeudos.caja_id')
             ->orderBy('p.id')
             ->orderBy('g.seccion')
@@ -4772,6 +4775,7 @@ class AdeudosController extends Controller
                 ->where('adeudos.caja_concepto_id', $datos['concepto_f'])
                 ->where('adeudos.pagado_bnd', 1)
                 ->where('g.seccion', $seccion->seccion)
+                ->whereNull('comb.deleted_at')
                 ->whereRaw('year(adeudos.fecha_pago)=?', [$fecha->year])
                 ->whereRaw('caj.fecha<=?', [$datos['fecha_f']])
                 ->distinct()
@@ -4788,6 +4792,7 @@ class AdeudosController extends Controller
                 ->where('adeudos.pagado_bnd', "<>",1)
                 ->where('g.seccion', $seccion->seccion)
                 ->whereRaw('year(adeudos.fecha_pago)=?', [$fecha->year])
+                ->whereNull('comb.deleted_at')
                 //->whereRaw('year(adeudos.fecha_pago)<=?', [$datos['fecha_f']])
                 ->distinct()
                 ->count();
@@ -4814,6 +4819,7 @@ class AdeudosController extends Controller
             ->where('adeudos.caja_concepto_id', $datos['concepto_f'])
             ->whereRaw('year(adeudos.fecha_pago)=?', [$fecha->year])
             //->leftJoin('cajas as caj','caj.id','adeudos.caja_id')
+            ->whereNull('comb.deleted_at')
             ->orderBy('p.id')
             ->orderBy('g.seccion')
             ->orderBy('c.id')
