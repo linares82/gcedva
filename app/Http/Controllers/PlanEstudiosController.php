@@ -237,6 +237,7 @@ class PlanEstudiosController extends Controller {
 		foreach($clientes as $cliente){
 			$row=array();
 			$row['matricula']=$cliente->matricula;
+			$row['cliente_id']=$cliente->id;
 			$row['nombre']=$cliente->nombre." ".$cliente->nombre2;
 			$row['apellidos']=$cliente->ape_paterno." ".$cliente->ape_materno;
 			$row['st_cliente_id']=$cliente->st_cliente_id;
@@ -248,17 +249,24 @@ class PlanEstudiosController extends Controller {
 				//dd($row);
 				//Log::info($hacademica->id);
 				$hoy=Carbon::createFromFormat('Y-m-d', Date('Y-m-d'));
-				if(is_null($hacademica)){
+				if($row['st_cliente_id']==3 or $row['st_cliente_id']==27){
+					$row[$materia->materia]="N/A";	
+				}elseif(is_null($hacademica) and $row['st_cliente_id']<>3 and $row['st_cliente_id']<>27){
 					$row[$materia->materia]="Pendiente por Cursar";	
-				}elseif($row['st_cliente_id']==3){
-					$row[$materia->materia]="N/A";
 				}elseif($hacademica->st_materium_id<>1){
 					$lectivo_inicio=Carbon::createFromFormat('Y-m-d',$hacademica->lectivo->inicio);
 					$lectivo_fin=Carbon::createFromFormat('Y-m-d',$hacademica->lectivo->fin);
+				
+					$calificacion_revision=0;
+					$calificacion=Calificacion::where('hacademica_id',$hacademica->id)->orderBy('id','desc')->first();
+					$calificacion_revision=$calificacion->calificacion;
+
 					if($lectivo_inicio->lessThanOrEqualTo($hoy) and $lectivo_fin->greaterThanOrEqualTo($hoy)){
 						$row[$materia->materia]="Cursando";		
-					}else{
+					}elseif($calificacion_revision==0){
 						$row[$materia->materia]="Pendiente por Cursar";		
+					}elseif($calificacion_revision>0){
+						$row[$materia->materia]="Reprobada";		
 					}	
 				}elseif($hacademica->st_materium_id==1){
 					$calificacion=Calificacion::where('hacademica_id',$hacademica->id)->orderBy('id','desc')->first();

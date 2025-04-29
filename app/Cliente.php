@@ -373,4 +373,6 @@ class Cliente extends Model
 	public function regimenFiscal() {
 		return $this->belongsTo('App\RegimenFiscal');
 	}// end
+
+	
 }

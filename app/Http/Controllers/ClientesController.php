@@ -33,6 +33,7 @@ use App\Plantilla;
 use App\Preguntum;
 use App\StCliente;
 use Carbon\Carbon;
+use App\Hacademica;
 use App\PlanPagoLn;
 use App\TpoInforme;
 use App\EstadoCivil;
@@ -3796,5 +3797,95 @@ class ClientesController extends Controller
         ,'carreras2','diplomadosCursos2'
         ,'carreras3','diplomadosCursos3'
     ));
+    }
+
+    public function getFichaInscripcionGrupo(){
+        //dd(Auth::user());
+        $plantels=Empleado::where('user_id', Auth::user()->id)->first()->plantels->pluck('razon','id');
+        $lectivos=Lectivo::pluck('name','id');
+        
+        return view('clientes.reportes.getFichaInscripcionGrupo', compact('plantels','lectivos'));
+    }
+
+    public function getFichaInscripcionGrupoR(Request $request){
+        $datos=$request->all();
+
+        
+        //dd($datos);
+        $clientes=Hacademica::select('c.id as cliente_id','c.nombre','c.nombre2','c.ape_paterno',
+        'c.ape_materno','p.razon as plantel', 'p.id as plantel_id','e.name as especialidad', 'e.id as especialidad_id',
+        'n.name as nivel','n.id as nivel_id','gr.name as grado', 'gr.id as grado_id',
+        'l.name as lectivo', 'l.id as lectivo_id','g.name as grupo','g.id as grupo_id')
+        ->join('clientes as c','c.id','hacademicas.cliente_id')
+        ->join('plantels as p','p.id','hacademicas.plantel_id')
+        ->join('especialidads as e','e.id','hacademicas.especialidad_id')
+        ->join('nivels as n','n.id','hacademicas.nivel_id')
+        ->join('grados as gr','gr.id','hacademicas.grado_id')
+        ->join('lectivos as l','l.id','hacademicas.lectivo_id')
+        ->join('grupos as g','g.id','hacademicas.grupo_id')
+        ->where('hacademicas.plantel_id', $datos['plantel_id'])
+        ->where('hacademicas.especialidad_id', $datos['especialidad_id'])
+        ->where('hacademicas.nivel_id', $datos['nivel_id'])
+        ->where('hacademicas.grado_id', $datos['grado_id'])
+        ->where('hacademicas.lectivo_id', $datos['lectivo_id'])
+        ->where('hacademicas.grupo_id', $datos['grupo_id'])
+        ->distinct()
+        ->get();
+        //dd($clientes);
+
+        return view('clientes.reportes.getFichaInscripcionGrupoR', compact('clientes'));
+    }
+
+    public function formatoFichaInscripcionIndividual(Request $request){
+        $datos=$request->all();
+
+        $cliente = Cliente::find($datos['cliente_id']);
+        $especialidad=Especialidad::find($datos['especialidad_id']);
+        $plantel=Plantel::find($datos['plantel_id']);
+        $lectivo=Lectivo::find($datos['lectivo_id']);
+        $grado=Grado::find($datos['grado_id']);
+        $inscripcion=Inscripcion::where('inscripcions.plantel_id', $datos['plantel_id'])
+        ->where('inscripcions.especialidad_id', $datos['especialidad_id'])
+        ->where('inscripcions.nivel_id', $datos['nivel_id'])
+        ->where('inscripcions.grado_id', $datos['grado_id'])
+        ->where('inscripcions.lectivo_id', $datos['lectivo_id'])
+        ->where('inscripcions.grupo_id', $datos['grupo_id'])
+        ->with(['grupo'])
+        ->first();
+        $materias=Hacademica::select('m.name as materia','m.id as materia_id','m.codigo')
+        ->join('materia as m','m.id','hacademicas.materium_id')
+        ->where('hacademicas.plantel_id', $datos['plantel_id'])
+        ->where('hacademicas.especialidad_id', $datos['especialidad_id'])
+        ->where('hacademicas.nivel_id', $datos['nivel_id'])
+        ->where('hacademicas.grado_id', $datos['grado_id'])
+        ->where('hacademicas.lectivo_id', $datos['lectivo_id'])
+        ->where('hacademicas.grupo_id', $datos['grupo_id'])
+        ->distinct()
+        ->get();
+        //dd($materias->toArray());
+        $combinacion = CombinacionCliente::where('cliente_id', $cliente->id)->first();
+        $lista_documentos = DocAlumno::get();
+        $documentos_entregados = PivotDocCliente::where('cliente_id', $cliente->id)
+            ->where('doc_entregado', 1)
+            ->wherenull('deleted_at')->get();
+
+        $lista_mostrar = array();
+        //dd($documentos_entregados->toArray());
+        foreach ($lista_documentos as $ld) {
+            $item['documento'] = $ld->name;
+            $item['obligatorio'] = ($ld->doc_obligatorio == 1 ? "SI" : "NO");
+            foreach ($documentos_entregados as $de) {
+                if ($de->doc_alumno_id == $ld->id) {
+                    $item['archivo'] = $de->archivo;
+                    $item['doc_entregado'] = $de->doc_entregado;
+                }
+            }
+            array_push($lista_mostrar, $item);
+            $item['archivo'] = null;
+            $item['doc_entregado'] = 0;
+        }
+        //dd($inscripcion->grupo->name);
+
+        return view('clientes.reportes.formatoFichaInscripcionIndividual', compact('cliente', 'combinacion', 'lista_mostrar','especialidad','plantel','lectivo','materias','inscripcion','grado'));
     }
 }

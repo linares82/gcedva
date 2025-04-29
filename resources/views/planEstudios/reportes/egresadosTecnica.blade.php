@@ -6,12 +6,12 @@
 
 	<ol class="breadcrumb">
 		<li><a href="{{ route('home') }}"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></a></li>
-	    <li><a href="{{ route('pagos.index') }}">@yield('pagosAppTitle')</a></li>
+	    <li><a href="{{ route('pagos.index') }}">Egresados de Tecnica</a></li>
 	    <li class="active">Pagos</li>
 	</ol>
 
     <div class="page-header">
-        <h3><i class="glyphicon glyphicon-plus"></i> @yield('pagosAppTitle') / Pagos En Linea </h3>
+        <h3><i class="glyphicon glyphicon-plus"></i> Egresados de Tecnica </h3>
     </div>
 @endsection
 

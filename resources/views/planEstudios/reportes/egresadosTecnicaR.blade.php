@@ -83,10 +83,9 @@
         
         <div id="printeArea" class='SaltoDePagina'>
                 <h3>Egresados de Tecnica</h3>
-            
             <table>
                 <head>
-                    <th>No.</th><th>Matricula</th><th colspan="2" >Nombre</th>
+                    <th>No.</th><th>Matricula</th><th>Id</th><th colspan="2" >Nombre</th>
                     @foreach($materias as $materia)
                     <th>{{$materia->materia}}</th>
                     @endforeach
@@ -99,7 +98,7 @@
                     @endphp
                     @foreach($resultados as $r)
                     <tr>
-                    <td>{{++$i}}</td><td>{{$r['matricula']}}</td><td>{{$r['nombre']}}</td><td>{{$r['apellidos']}}</td>
+                    <td>{{++$i}}</td><td>{{$r['matricula']}}</td><td>{{$r['cliente_id']}}</td><td>{{$r['nombre']}}</td><td>{{$r['apellidos']}}</td>
                     @foreach ($materias as $materia)
                         <td>{{$r[$materia->materia]}}</td> 
                     @endforeach

@@ -77,6 +77,14 @@
                          <span class="help-block">{{ $errors->first("seccion") }}</span>
                         @endif
                      </div>
+                     <div class="form-group col-md-4 @if($errors->has('duracion_periodo_id')) has-error @endif">
+                        <label for="duracion_periodo_id-field">Duracion Periodo</label>
+                        {!! Form::select("duracion_periodo_id", $list["DuracionPeriodo"], null, array("class" => "form-control select_seguridad", "id" => "duracion_periodo_id-field")) !!}
+                        <div id='loading3' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
+                        @if($errors->has("duracion_periodo_id"))
+                         <span class="help-block">{{ $errors->first("duracion_periodo_id") }}</span>
+                        @endif
+                     </div>
                      <div class="form-group col-md-4 @if($errors->has('clave_servicio')) has-error @endif">
                         <label for="clave_servicio-field">C. Producto o Servicio(Facturacion)</label>
                         {!! Form::text("clave_servicio", null, array("class" => "form-control input-sm", "id" => "clave_servicio-field")) !!}
