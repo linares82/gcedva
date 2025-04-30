@@ -106,10 +106,11 @@ class ProcesoActivoABajas extends Command
                         $hoy = date('Y-m-d');
     
                         $eventos = HistoriaCliente::where('cliente_id', $registro->cliente_id)
-                            ->where('evento_cliente_id', 5)
+                            ->where('evento_cliente_id', 6)
                             ->whereDate('fec_vigencia', '>=', $hoy)
                             ->whereNull('historia_clientes.deleted_at')
                             ->count();
+
                             //echo "eventos".$eventos;
                             //dd($paso->bnd_mensualidades==1);
                         if ($eventos == 0 and 

@@ -734,7 +734,7 @@ class PeriodoEstudiosController extends Controller
 
 
         //dd($periodos_parametro->toArray());
-        $materias = PeriodoEstudio::select('periodo_estudios.name as periodo', 'm.id', 'm.name as materia', 'm.codigo')
+        $materias = PeriodoEstudio::select('periodo_estudios.name as periodo', 'periodo_estudios.orden','m.id', 'm.name as materia', 'm.codigo')
             ->join('materium_periodos as mp', 'mp.periodo_estudio_id', '=', 'periodo_estudios.id')
             ->join('materia as m', 'm.id', '=', 'mp.materium_id')
             ->whereIn('periodo_estudios.id', $periodos_parametro)
@@ -742,9 +742,12 @@ class PeriodoEstudiosController extends Controller
             ->where('periodo_estudios.especialidad_id', $datos['especialidad_f'])
             ->where('periodo_estudios.nivel_id', $datos['nivel_f'])
             ->where('periodo_estudios.grado_id', $datos['grado_f'])
+	        ->whereNull('m.deleted_at')
             ->orderBy('periodo_estudios.orden')
             ->orderBy('m.id')
+            //->orderBy('m.codigo')
             ->get();
+	//dd($materias->toArray());
 
         $periodos = PeriodoEstudio::select(
             'periodo_estudios.name as periodo',
@@ -770,7 +773,7 @@ class PeriodoEstudiosController extends Controller
         foreach ($materias as $m) {
             array_push($materias_array, $m->id);
         }
-        //dd($materias);
+        
 
         $clientes = Hacademica::select('c.id', 'c.matricula', 'c.nombre', 'c.nombre2', 'c.ape_paterno', 'c.ape_materno')
             ->join('clientes as c', 'c.id', '=', 'hacademicas.cliente_id')

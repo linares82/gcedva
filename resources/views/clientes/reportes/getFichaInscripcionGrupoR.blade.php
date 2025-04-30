@@ -45,7 +45,7 @@
                                'nivel_id'=>$cliente->nivel_id,
                                'grado_id'=>$cliente->grado_id,
                                'lectivo_id'=>$cliente->lectivo_id,
-                               'grupo_id'=>$cliente->grupo_id)) }}">Imprimir</a></td>
+                               'grupo_id'=>$cliente->grupo_id)) }}" target="blank">Imprimir</a></td>
                 </tr>
             @endforeach
         </tbody>
