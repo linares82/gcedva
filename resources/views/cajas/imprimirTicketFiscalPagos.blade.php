@@ -150,7 +150,7 @@ if(!is_null($cliente->plantel->matriz_id) and $cliente->plantel->matriz_id>0){
         <tr>
             <td>
                 Total:{{ number_format($suma_pagos, 2) }}
-                <br/>{{$totalLetra}} {{round($centavos)."/100 M.N."}}
+                <br/>{{$totalLetra}} 00/100 M.N.
             </td>
             
             <td align="right">  </td>
@@ -347,7 +347,7 @@ if(!is_null($cliente->plantel->matriz_id) and $cliente->plantel->matriz_id>0){
     <tr>
         <td>
             Total:{{ number_format($suma_pagos, 2) }}
-            <br/>{{$totalLetra}} {{round($centavos)."/100 M.N."}}
+            <br/>{{$totalLetra}} 00/100 M.N.
         </td>
         
         <td align="right">  </td>

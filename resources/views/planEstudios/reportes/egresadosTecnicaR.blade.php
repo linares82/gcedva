@@ -90,7 +90,9 @@
                     <th>{{$materia->materia}}</th>
                     @endforeach
                     <th>Promedio</th>
+                    <th>Estatus Caja</th>
                     <th>Estatus</th>
+                    <th>Estatus Documentos</th>
                 </head>
                 <body>
                     @php
@@ -102,6 +104,7 @@
                     @foreach ($materias as $materia)
                         <td>{{$r[$materia->materia]}}</td> 
                     @endforeach
+                    
                     <td>
                         @if(is_numeric($r['promedio']))
                         {{ round($r['promedio'],2)}} 
@@ -109,7 +112,11 @@
                             {{$r['promedio']}}
                         @endif
                     </td>
+                    <td>
+                        {{$r['estatus_caja']}}
+                    </td>
                     <td>{{$r['st_cliente']}}</td>
+                    <td>{{ $r['documentos_faltantes'] }}</td>
                     </tr>
                 @endforeach    
                 </body>

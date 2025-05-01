@@ -1,9 +1,10 @@
 <?php namespace App\Http\Controllers;
 
 use DB;
-use Auth;
 use Log;
+use Auth;
 
+use App\Adeudo;
 use App\Cliente;
 use App\Plantel;
 use Carbon\Carbon;
@@ -11,6 +12,7 @@ use App\Hacademica;
 use App\PlanEstudio;
 use App\Calificacion;
 use App\Http\Requests;
+use App\PivotDocCliente;
 use Illuminate\Http\Request;
 use App\PeriodoEstudioPlanEstudio;
 use App\Http\Controllers\Controller;
@@ -282,6 +284,43 @@ class PlanEstudiosController extends Controller {
 				$row['promedio']=$suma_calificaciones/$cuenta_materias;
 			}
 			$row['st_cliente']=$cliente->stCliente->name;
+
+			//Estatus para caja
+			$cantidad_adeudos_pendientes=Adeudo::where('cliente_id', $cliente->id)->where('pagado_bnd', 0)->whereNull('deleted_at')->count();
+			//dd($cantidad_adeudos_pendientes);
+			$adeudos_pendientes=Adeudo::with('cajaConcepto')->where('cliente_id', $cliente->id)->where('pagado_bnd', 0)->whereNull('deleted_at')->get();
+			$row['estatus_caja']="";
+			if($cantidad_adeudos_pendientes==0){
+				$row['estatus_caja']="Sin Adeudo";
+			}else{
+				foreach($adeudos_pendientes as $adeudo_pendiente){
+					$row['estatus_caja']=$row['estatus_caja']." ".$adeudo_pendiente->cajaConcepto->name;
+				}
+				
+			}
+			//Documentos faltantes
+			$row['documentos_faltantes']="";
+			$cantidad_documentos_pendientes=PivotDocCliente::join('doc_alumnos as da','da.id','pivot_doc_clientes.doc_alumno_id')
+			->where('cliente_id',$cliente->id)
+			->where('doc_obligatorio',1)
+			->whereNull('doc_entregado')
+			->count();
+			//dd($cantidad_documentos_pendientes);
+			$documentos_pendientes=PivotDocCliente::join('doc_alumnos as da','da.id','pivot_doc_clientes.doc_alumno_id')
+			->where('cliente_id',$cliente->id)
+			->where('doc_obligatorio',1)
+			->whereNull('doc_entregado')
+			->get();
+			//dd($documentos_pendientes);
+			if($cantidad_documentos_pendientes==0){
+				$row['documentos_faltantes']="Documentos Completos";
+			}else{
+				foreach($documentos_pendientes as $documento_pendiente){
+					$row['documentos_faltantes']=$row['documentos_faltantes']." ".$documento_pendiente->name;	
+				}
+				
+			}
+			
 			
 			array_push($resultados,$row);
 		}

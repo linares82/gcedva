@@ -119,8 +119,8 @@ class prbBS extends Command
 					//if($alumno->matricula<>"" and !is_null($alumno->matricula)){
 						//Se invoca el metodo doValence con los parametros del verbo y la url igual que en el ejemplo del SDK
 						//$resultado=$apiBs->doValence('GET','/d2l/api/lp/' . $param->valor . '/users/?orgDefinedId='.$alumno->matricula);
-						$resultado=$apiBs->doValence2('GET','/d2l/api/lp/' . $param->valor . '/users/?orgDefinedId='.$alumno->matricula);
-			
+						$resultado=$apiBs->doValence('GET','/d2l/api/lp/1.46/users/?orgDefinedId='.$alumno->matricula);
+						//dd($resultado);
 						//Muestra resultado
 						$r=$resultado[0];
 						
@@ -133,8 +133,16 @@ class prbBS extends Command
 						//dd($datos);
 						//dd($r);
 						//if(isset($r['UserId'])){
-							$resultado2=$apiBs->doValence2('PUT','/d2l/api/lp/' . $param->valor . '/users/'.$r['UserId'].'/activation',$datos);
-							echo 'cliente:'.$alumno->id.'matricula:'.$alumno->matricula;	
+							
+							//$resultado2=$apiBs->doValence2('PUT','/d2l/api/lp/' . $param->valor . '/users/'.$r['UserId'].'/activation',$datos);
+							//echo 'cliente:'.$alumno->id.'matricula:'.$alumno->matricula;	
+							//dd($r['UserId']);
+							//dd('fil');
+							
+							$prueba=$apiBs->doValence('GET','/d2l/api/le/1.83/grades/values/'.$r['UserId']);
+							//$prueba=$apiBs->doValence('GET','/d2l/api/le/1.83/grades/values/32135');
+							//$prueba=$apiBs->doValence2('GET','/d2l/api/le/1.75/grades/final/values/myGradeVAlues');
+							dd($prueba);
 							//sleep(4);
 							//dd($resultado2);
 							/*if(isset($resultado2['IsActive']) and !$resultado2['IsActive']){

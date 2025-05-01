@@ -147,13 +147,19 @@ class UsoApi{
         curl_setopt_array($ch, $options);
     
         // Do call
+        Log::info($uri);
         $response = curl_exec($ch);
+        //dd($response);
+        Log::info($response);
     
         $httpCode  = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $contentType = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
         $responseCode = $userContext->handleResult($response, $httpCode, $contentType);
-   
+        //dd($response);
+        Log::info($responseCode);
         if ($responseCode == D2LUserContext::RESULT_OKAY) {
+            return json_decode($response, true);
+        }else{
             return json_decode($response, true);
         }
     
@@ -183,6 +189,7 @@ class UsoApi{
             $uri = $userContext->createAuthenticatedUri($route, $verb);
             //dd($uri);
             $client = new \GuzzleHttp\Client();
+            //dd($uri);
 	    switch ($verb) {
 	    	case 'GET':
 			$response = $client->request('GET', $uri, [
@@ -192,6 +199,7 @@ class UsoApi{
                     ]);
             //if($response->getStatusCode()==200){
                 $response = $response->getBody()->getContents();
+                //dd(json_decode($response));
 			    return json_decode($response, true);
             //}        
 	            	

@@ -158,7 +158,7 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_
         </td>
         <td></td>
         <td align="right"> {{ number_format($pago->monto, 2) }}
-        <br/>{{$totalLetra}} {{round($centavos)."/100 M.N."}} </td>
+        <br/>{{$totalLetra}} 00/100 M.N. </td>
     </tr>
     <tr>
         <tr><td colspan="2">Fecha Impresion: {{$fecha}}</td></tr>
