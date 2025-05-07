@@ -15,5 +15,6 @@ permisos.csv
 .env
 /public/filemanager
 /public/imagenes
+/vendor
 
 /nbproject/private/
