@@ -84,7 +84,7 @@
                     <thead>
                         <tr>
                             <td><input type="checkbox" id="select-all" /> Todos<br/></td>
-                            <td>Cliente</td><td>Estatus Cliente</td><td>Periodo Estudios</td><td>Aprobadas</td><td>No Aprobadas</td>
+                            <td>Cliente</td><td>Estatus Cliente</td><td>Periodo Estudios(Duracion)</td><td>Aprobadas</td><td>No Aprobadas</td>
                         </tr>
                     </thead>
                     <tbody>
@@ -92,13 +92,17 @@
                         @foreach($resultados as $c)
                         <tr>
                             <td>
-                                @if($c['no_aprobadas']<$bloqueo_materias_desaprobadas->valor)
-                                {{ Form::checkbox("id[]", $c['id']) }}
+                                @if(!is_null($c['bloqueo_cantidad_reprobadas']))
+                                    @if($c['no_aprobadas']<$c['bloqueo_cantidad_reprobadas'])
+                                        {{ Form::checkbox("id[]", $c['id']) }}
+                                    @endif
+                                @elseif($c['no_aprobadas']<$bloqueo_materias_desaprobadas->valor)
+                                    {{ Form::checkbox("id[]", $c['id']) }}
                                 @endif
                             </td>
                             <td>{{ $c['cliente'] }} - {{ $c['nombre'] }}</td>
                             <td>{{$c['st_cliente']}}</td>
-                            <td>{{ $c['periodo_estudio'] }}</td>
+                            <td>{{ $c['periodo_estudio'] }} ({{ $c['duracion_periodo'] }})</td>
                             <td> {{ $c['aprobadas'] }} 
                                 <table id='aprobadas_modulo' style='display: none;'>
                                     <thead>

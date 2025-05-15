@@ -1,6 +1,6 @@
 @extends('plantillas.admin_template')
 
-@include('duracionPeriodos._common')
+@include('sepTipoCertificados._common')
 
 @section('header')
 
@@ -9,7 +9,7 @@
         <!--
         @if ( $query_params = Request::input('q') )
 
-            <li class="active"><a href="{{ route('duracionPeriodos.index') }}">@yield('duracionPeriodosAppTitle')</a></li>
+            <li class="active"><a href="{{ route('sepTipoCertificados.index') }}">@yield('sepTipoCertificadosAppTitle')</a></li>
             <li class="active">condition(  
 
             @foreach( $query_params as $key => $value )
@@ -17,17 +17,17 @@
             @endforeach
             )</li>
         @else
-            <li class="active">@yield('duracionPeriodosAppTitle')</li>
+            <li class="active">@yield('sepTipoCertificadosAppTitle')</li>
         @endif
         -->
-        <li class="active">@yield('duracionPeriodosAppTitle')</li>
+        <li class="active">@yield('sepTipoCertificadosAppTitle')</li>
     </ol>
 
     <div class="">
         <h3>
-            <i class="glyphicon glyphicon-align-justify"></i> @yield('duracionPeriodosAppTitle')
-            @permission('duracionPeriodos.create')
-            <a class="btn btn-success pull-right" href="{{ route('duracionPeriodos.create') }}"><i class="glyphicon glyphicon-plus"></i> Crear</a>
+            <i class="glyphicon glyphicon-align-justify"></i> @yield('sepTipoCertificadosAppTitle')
+            @permission('sepTipoCertificados.create')
+            <a class="btn btn-success pull-right" href="{{ route('sepTipoCertificados.create') }}"><i class="glyphicon glyphicon-plus"></i> Crear</a>
             @endpermission
         </h3>
 
@@ -44,26 +44,26 @@
             </div>
             <div aria-labelledby="headingOne" role="tabpanel" class="panel-collapse collapse" id="collapseOne">
                 <div class="panel-body">
-                    <form class="DuracionPeriodo_search" id="search" action="{{ route('duracionPeriodos.index') }}" accept-charset="UTF-8" method="get">
+                    <form class="SepTipoCertificado_search" id="search" action="{{ route('sepTipoCertificados.index') }}" accept-charset="UTF-8" method="get">
                         <input type="hidden" name="q[s]" value="{{ @(Request::input('q')['s']) ?: '' }}" />
                         <div class="form-horizontal">
 
                             <!--
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_name_gt">NAME</label>
+                                <label class="col-sm-2 control-label" for="q_ name_gt"> NAME</label>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['name_gt']) ?: '' }}" name="q[name_gt]" id="q_name_gt" />
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')[' name_gt']) ?: '' }}" name="q[ name_gt]" id="q_ name_gt" />
                                 </div>
                                 <div class=" col-sm-1 text-center"> - </div>
                                 <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['name_lt']) ?: '' }}" name="q[name_lt]" id="q_name_lt" />
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')[' name_lt']) ?: '' }}" name="q[ name_lt]" id="q_ name_lt" />
                                 </div>
                             </div>
                             -->
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_name_cont">NAME</label>
+                                <label class="col-sm-2 control-label" for="q_ name_cont"> NAME</label>
                                 <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['name_cont']) ?: '' }}" name="q[name_cont]" id="q_name_cont" />
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')[' name_cont']) ?: '' }}" name="q[ name_cont]" id="q_ name_cont" />
                                 </div>
                             </div>
                                                     <!--
@@ -120,29 +120,34 @@
 @section('content')
     <div class="row">
         <div class="col-md-12">
-            @if($duracionPeriodos->count())
+            @if($sepTipoCertificados->count())
                 <table class="table table-condensed table-striped">
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'name', 'title' => 'Duracion Periodo'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'bloqueo_cantidad_reprobadas', 'title' => 'Bloqueo por Materias Reprobadas'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => ' name', 'title' => ' NAME'])</th>
+                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
+                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
 
                     <tbody>
-                        @foreach($duracionPeriodos as $duracionPeriodo)
+                        @foreach($sepTipoCertificados as $sepTipoCertificado)
                             <tr>
-                                <td><a href="{{ route('duracionPeriodos.show', $duracionPeriodo->id) }}">{{$duracionPeriodo->id}}</a></td>
-                                <td>{{$duracionPeriodo->name}}</td>
-                                <td>{{$duracionPeriodo->bloqueo_cantidad_reprobadas}}</td>
+                                <td><a href="{{ route('sepTipoCertificados.show', $sepTipoCertificado->id) }}">{{$sepTipoCertificado->id}}</a></td>
+                                <td>{{$sepTipoCertificado-> name}}</td>
+                    <td>{{$sepTipoCertificado->usu_alta_id}}</td>
+                    <td>{{$sepTipoCertificado->usu_mod_id}}</td>
                                 <td class="text-right">
-                                    @permission('duracionPeriodos.edit')
-                                    <a class="btn btn-xs btn-warning" href="{{ route('duracionPeriodos.edit', $duracionPeriodo->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
+                                    @permission('sepTipoCertificados.edit')
+                                    <a class="btn btn-xs btn-primary" href="{{ route('sepTipoCertificados.duplicate', $sepTipoCertificado->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
                                     @endpermission
-                                    @permission('duracionPeriodos.destroy')
-                                    {!! Form::model($duracionPeriodo, array('route' => array('duracionPeriodos.destroy', $duracionPeriodo->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}
+                                    @permission('sepTipoCertificados.edit')
+                                    <a class="btn btn-xs btn-warning" href="{{ route('sepTipoCertificados.edit', $sepTipoCertificado->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
+                                    @endpermission
+                                    @permission('sepTipoCertificados.destroy')
+                                    {!! Form::model($sepTipoCertificado, array('route' => array('sepTipoCertificados.destroy', $sepTipoCertificado->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}
                                         <button type="submit" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> Borrar</button>
                                     {!! Form::close() !!}
                                     @endpermission
@@ -151,7 +156,7 @@
                         @endforeach
                     </tbody>
                 </table>
-                {!! $duracionPeriodos->appends(Request::except('page'))->render() !!}
+                {!! $sepTipoCertificados->appends(Request::except('page'))->render() !!}
             @else
                 <h3 class="text-center alert alert-info">Vacio!</h3>
             @endif

@@ -7,6 +7,7 @@ namespace Composer\Autoload;
 class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
 {
     public static $files = array (
+        '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
         'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
         'e69f7f6ee287b969198c3c9d6777bd38' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/bootstrap.php',
@@ -30,13 +31,12 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'e39a8b23c42d4e1452234d762b03835a' => __DIR__ . '/..' . '/ramsey/uuid/src/functions.php',
         'f0906e6318348a765ffb6eb24e0d0938' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Foundation/helpers.php',
         '58571171fd5812e6e447dce228f52f4d' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Support/helpers.php',
-        'f18cc91337d49233e5754e93f3ed9ec3' => __DIR__ . '/..' . '/laravelcollective/html/src/helpers.php',
         '2cffec82183ee1cea088009cef9a6fc3' => __DIR__ . '/..' . '/ezyang/htmlpurifier/library/HTMLPurifier.composer.php',
+        'f18cc91337d49233e5754e93f3ed9ec3' => __DIR__ . '/..' . '/laravelcollective/html/src/helpers.php',
         'e803af0597ea9e5b518c7d090fb85601' => __DIR__ . '/..' . '/arcanedev/support/constants.php',
         '5323a5cb5bb1bab9b2f24566beed262a' => __DIR__ . '/..' . '/arcanedev/support/helpers.php',
         '9e4824c5afbdc1482b6025ce3d4dfde8' => __DIR__ . '/..' . '/league/csv/src/functions_include.php',
         '801c31d8ed748cfa537fa45402288c95' => __DIR__ . '/..' . '/psy/psysh/src/functions.php',
-        '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
         'd04e9322f14ab3e66b5b68c6d1e15433' => __DIR__ . '/..' . '/arcanedev/log-viewer/constants.php',
         '24be6d98d7c305f36699ba4e34b6df3c' => __DIR__ . '/..' . '/arcanedev/log-viewer/helpers.php',
         '4a1f389d6ce373bda9e57857d3b61c84' => __DIR__ . '/..' . '/barryvdh/laravel-debugbar/src/helpers.php',
@@ -246,8 +246,8 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'phpDocumentor\\Reflection\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
-            1 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
-            2 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+            1 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+            2 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
         ),
         'dogears\\CrudDscaffold\\' => 
         array (
@@ -431,8 +431,8 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         ),
         'Psr\\Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/http-message/src',
-            1 => __DIR__ . '/..' . '/psr/http-factory/src',
+            0 => __DIR__ . '/..' . '/psr/http-factory/src',
+            1 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
         'Psr\\Http\\Client\\' => 
         array (
@@ -564,8 +564,8 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         ),
         'Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/php-http/message-factory/src',
-            1 => __DIR__ . '/..' . '/php-http/message/src',
+            0 => __DIR__ . '/..' . '/php-http/message/src',
+            1 => __DIR__ . '/..' . '/php-http/message-factory/src',
         ),
         'Http\\Factory\\Guzzle\\' => 
         array (
@@ -849,6 +849,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'AddAutToHistoriaClientesTable' => __DIR__ . '/../..' . '/database/migrations/2020_09_28_130643_add_aut_to_historia_clientes_table.php',
         'AddBecaPorcentajeClientesTable' => __DIR__ . '/../..' . '/database/migrations/2018_05_07_114940_add_beca_porcentaje_clientes_table.php',
         'AddBecadoBndCajasTable' => __DIR__ . '/../..' . '/database/migrations/2018_11_01_133610_add_becado_bnd_cajas_table.php',
+        'AddBloqueoCantidadReprobadasDuracionPeriodosTable' => __DIR__ . '/../..' . '/database/migrations/2025_05_14_182842_add_bloqueo_cantidad_reprobadas_duracion_periodos_table.php',
         'AddBndActivoOpenToPlantelsTable' => __DIR__ . '/../..' . '/database/migrations/2024_07_23_131526_add_bnd_activo_open_to_plantels_table.php',
         'AddBndActivoToCargaPonderacions' => __DIR__ . '/../..' . '/database/migrations/2020_06_10_092359_add_bnd_activo_to_carga_ponderacions.php',
         'AddBndAplicarBecaCajaConceptoTable' => __DIR__ . '/../..' . '/database/migrations/2019_02_25_115155_add_bnd_aplicar_beca_caja_concepto_table.php',
@@ -1355,9 +1356,13 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'CreateSegmentoMercadosTable' => __DIR__ . '/../..' . '/database/migrations/2018_04_12_141340_create_segmento_mercados_table.php',
         'CreateSeguimientoTareasTable' => __DIR__ . '/../..' . '/database/migrations/2017_05_17_212428_create_seguimiento_tareas_table.php',
         'CreateSeguimientosTable' => __DIR__ . '/../..' . '/database/migrations/2017_07_17_160300_create_seguimientos_table.php',
+        'CreateSepCargosTable' => __DIR__ . '/../..' . '/database/migrations/2025_05_14_165214_create_sep_cargos_table.php',
+        'CreateSepCertificadoCsTable' => __DIR__ . '/../..' . '/database/migrations/2025_05_14_171202_create_sep_certificado_cs_table.php',
         'CreateSepGrupoSepMateriaTable' => __DIR__ . '/../..' . '/database/migrations/2025_01_23_141915_create_sep_grupo_sep_materia_table.php',
         'CreateSepGruposTable' => __DIR__ . '/../..' . '/database/migrations/2025_01_23_140025_create_sep_grupos_table.php',
         'CreateSepMateriasTable' => __DIR__ . '/../..' . '/database/migrations/2025_01_23_141326_create_sep_materias_table.php',
+        'CreateSepObservacionsTable' => __DIR__ . '/../..' . '/database/migrations/2025_05_14_165528_create_sep_observacions_table.php',
+        'CreateSepTipoCertificadosTable' => __DIR__ . '/../..' . '/database/migrations/2025_05_14_165321_create_sep_tipo_certificados_table.php',
         'CreateSerieFolioSimplificadosTable' => __DIR__ . '/../..' . '/database/migrations/2020_08_27_123647_create_serie_folio_simplificados_table.php',
         'CreateSessionsTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_31_232619_create_sessions_table.php',
         'CreateSmsPredefinidosTable' => __DIR__ . '/../..' . '/database/migrations/2018_03_22_082751_create_sms_predefinidos_table.php',

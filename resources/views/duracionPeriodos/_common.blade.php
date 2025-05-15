@@ -1,1 +1,1 @@
-@section('duracionPeriodosAppTitle','DuracionPeriodo')
+@section('duracionPeriodosAppTitle','Duracion Periodo')

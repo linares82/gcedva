@@ -7,7 +7,7 @@ use App\Traits\GetAllDataTrait;
 use App\Traits\RelationManagerTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class DuracionPeriodo extends Model
+class SepCargo extends Model
 {
 	use RelationManagerTrait, GetAllDataTrait;
 	use SoftDeletes;
@@ -18,7 +18,7 @@ class DuracionPeriodo extends Model
 	}
 
 	//Mass Assignment
-	protected $fillable = ['name', 'bloqueo_cantidad_reprobadas', 'usu_alta_id', 'usu_mod_id'];
+	protected $fillable = ['name', '', 'usu_alta_id', 'usu_mod_id'];
 
 	public function usu_alta()
 	{

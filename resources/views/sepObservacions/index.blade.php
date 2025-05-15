@@ -1,6 +1,6 @@
 @extends('plantillas.admin_template')
 
-@include('duracionPeriodos._common')
+@include('sepObservacions._common')
 
 @section('header')
 
@@ -9,7 +9,7 @@
         <!--
         @if ( $query_params = Request::input('q') )
 
-            <li class="active"><a href="{{ route('duracionPeriodos.index') }}">@yield('duracionPeriodosAppTitle')</a></li>
+            <li class="active"><a href="{{ route('sepObservacions.index') }}">@yield('sepObservacionsAppTitle')</a></li>
             <li class="active">condition(  
 
             @foreach( $query_params as $key => $value )
@@ -17,17 +17,17 @@
             @endforeach
             )</li>
         @else
-            <li class="active">@yield('duracionPeriodosAppTitle')</li>
+            <li class="active">@yield('sepObservacionsAppTitle')</li>
         @endif
         -->
-        <li class="active">@yield('duracionPeriodosAppTitle')</li>
+        <li class="active">@yield('sepObservacionsAppTitle')</li>
     </ol>
 
     <div class="">
         <h3>
-            <i class="glyphicon glyphicon-align-justify"></i> @yield('duracionPeriodosAppTitle')
-            @permission('duracionPeriodos.create')
-            <a class="btn btn-success pull-right" href="{{ route('duracionPeriodos.create') }}"><i class="glyphicon glyphicon-plus"></i> Crear</a>
+            <i class="glyphicon glyphicon-align-justify"></i> @yield('sepObservacionsAppTitle')
+            @permission('sepObservacions.create')
+            <a class="btn btn-success pull-right" href="{{ route('sepObservacions.create') }}"><i class="glyphicon glyphicon-plus"></i> Crear</a>
             @endpermission
         </h3>
 
@@ -44,7 +44,7 @@
             </div>
             <div aria-labelledby="headingOne" role="tabpanel" class="panel-collapse collapse" id="collapseOne">
                 <div class="panel-body">
-                    <form class="DuracionPeriodo_search" id="search" action="{{ route('duracionPeriodos.index') }}" accept-charset="UTF-8" method="get">
+                    <form class="SepObservacion_search" id="search" action="{{ route('sepObservacions.index') }}" accept-charset="UTF-8" method="get">
                         <input type="hidden" name="q[s]" value="{{ @(Request::input('q')['s']) ?: '' }}" />
                         <div class="form-horizontal">
 
@@ -120,29 +120,34 @@
 @section('content')
     <div class="row">
         <div class="col-md-12">
-            @if($duracionPeriodos->count())
+            @if($sepObservacions->count())
                 <table class="table table-condensed table-striped">
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'name', 'title' => 'Duracion Periodo'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'bloqueo_cantidad_reprobadas', 'title' => 'Bloqueo por Materias Reprobadas'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'name', 'title' => 'NAME'])</th>
+                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
+                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
 
                     <tbody>
-                        @foreach($duracionPeriodos as $duracionPeriodo)
+                        @foreach($sepObservacions as $sepObservacion)
                             <tr>
-                                <td><a href="{{ route('duracionPeriodos.show', $duracionPeriodo->id) }}">{{$duracionPeriodo->id}}</a></td>
-                                <td>{{$duracionPeriodo->name}}</td>
-                                <td>{{$duracionPeriodo->bloqueo_cantidad_reprobadas}}</td>
+                                <td><a href="{{ route('sepObservacions.show', $sepObservacion->id) }}">{{$sepObservacion->id}}</a></td>
+                                <td>{{$sepObservacion->name}}</td>
+                    <td>{{$sepObservacion->usu_alta_id}}</td>
+                    <td>{{$sepObservacion->usu_mod_id}}</td>
                                 <td class="text-right">
-                                    @permission('duracionPeriodos.edit')
-                                    <a class="btn btn-xs btn-warning" href="{{ route('duracionPeriodos.edit', $duracionPeriodo->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
+                                    @permission('sepObservacions.edit')
+                                    <a class="btn btn-xs btn-primary" href="{{ route('sepObservacions.duplicate', $sepObservacion->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
                                     @endpermission
-                                    @permission('duracionPeriodos.destroy')
-                                    {!! Form::model($duracionPeriodo, array('route' => array('duracionPeriodos.destroy', $duracionPeriodo->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}
+                                    @permission('sepObservacions.edit')
+                                    <a class="btn btn-xs btn-warning" href="{{ route('sepObservacions.edit', $sepObservacion->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
+                                    @endpermission
+                                    @permission('sepObservacions.destroy')
+                                    {!! Form::model($sepObservacion, array('route' => array('sepObservacions.destroy', $sepObservacion->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}
                                         <button type="submit" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> Borrar</button>
                                     {!! Form::close() !!}
                                     @endpermission
@@ -151,7 +156,7 @@
                         @endforeach
                     </tbody>
                 </table>
-                {!! $duracionPeriodos->appends(Request::except('page'))->render() !!}
+                {!! $sepObservacions->appends(Request::except('page'))->render() !!}
             @else
                 <h3 class="text-center alert alert-info">Vacio!</h3>
             @endif
