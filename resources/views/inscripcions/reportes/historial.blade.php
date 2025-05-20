@@ -116,7 +116,9 @@
                     <th>MATRICULA</th><th>ASIGNATURA</th><th>CLAVE</th><th>CRÉDITOS</th><th>PERIODO</th><th>CALIFICACION</th><TH>TIPO EVALUACION</TH>
                     </thead>
                     <tbody>
-                        
+                        @php
+                            $total_califiaciones_redondeadas=0;
+                        @endphp
                         @foreach($hacademicas as $a)
                         
                         <tr>
@@ -131,7 +133,11 @@
                             </td>
                             <td>{{$a['codigo']}}</td><td>{{$a['creditos']}}</td>
                             <td>{{$a['lectivo']}}</td>
-                            <td>{{$cali_redondeada= ($a['calificacion']<6 ? ($a['calificacion'] % 1) : round($a['calificacion'],0)) }}</td>
+                            @php
+                                $cali_redondeada= ($a['calificacion']<6 ? ($a['calificacion'] % 1) : round($a['calificacion'],0));
+                                $total_califiaciones_redondeadas=$total_califiaciones_redondeadas+$cali_redondeada;
+                            @endphp
+                            <td>{{ $cali_redondeada }}</td>
                                 <td>{{$a['tipo_examen']}}</td>
                             
                         </tr>
@@ -139,7 +145,7 @@
                         
                         <tr>
                             <td colspan="2" class="td_derecho">TOTAL DE CREDITOS</td><td>{{ $total_creditos }}</td>
-                            <td colspan="2" rowspan='2' class="td_centro">PROMEDIO GENERAL </td><td rowspan='2'> {{ $total_materias==0 ? 0 : round(($suma_calificaciones/$total_materias),2) }}</td>
+                            <td colspan="2" rowspan='2' class="td_centro">PROMEDIO GENERAL </td><td rowspan='2'> {{ $total_materias==0 ? 0 : round(($total_califiaciones_redondeadas/$total_materias),2) }}</td>
                         </tr>
                         <tr>
                             <td colspan="2" class="td_derecho">%</td><td></td>
