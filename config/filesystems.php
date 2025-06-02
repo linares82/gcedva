@@ -45,25 +45,31 @@ return [
         'atrazoPagos' => [
             'driver' => 'local',
             'root' => storage_path('app/public/atrazoPagos'),
-            'url' => env('APP_URL').'/storage',
+            'url' => env('APP_URL') . '/storage',
             'visibility' => 'public',
         ],
         'img_plantels' => [
             'driver' => 'local',
             'root' => storage_path('app/public/imagenes/plantels'),
-            'url' => env('APP_URL').'/storage',
+            'url' => env('APP_URL') . '/storage',
             'visibility' => 'public',
         ],
         'img_especialidads' => [
             'driver' => 'local',
             'root' => storage_path('app/public/especialidads'),
-            'url' => env('APP_URL').'/storage',
+            'url' => env('APP_URL') . '/storage',
+            'visibility' => 'public',
+        ],
+        'img_grados' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/grados'),
+            'url' => env('APP_URL') . '/storage',
             'visibility' => 'public',
         ],
         'plantillas_correos' => [
             'driver' => 'local',
             'root' => storage_path('app/public/imagenes/plantillas_correos'),
-            'url' => env('APP_URL').'/storage',
+            'url' => env('APP_URL') . '/storage',
             'visibility' => 'public',
         ],
         'plantillas_correos_empresas' => [
@@ -75,31 +81,31 @@ return [
         'cotizaciones' => [
             'driver' => 'local',
             'root' => storage_path('pdf/cotizaciones'),
-            'url' => env('APP_URL').'/storage/pdf/cotizaciones',
+            'url' => env('APP_URL') . '/storage/pdf/cotizaciones',
             'visibility' => 'public',
         ],
         'conciliaciones' => [
             'driver' => 'local',
             'root' => storage_path('conciliaciones'),
-            'url' => env('APP_URL').'/storage/conciliaciones',
+            'url' => env('APP_URL') . '/storage/conciliaciones',
             'visibility' => 'public',
         ],
         'facturacion_global' => [
             'driver' => 'local',
             'root' => storage_path('facturacion_global'),
-            'url' => env('APP_URL').'/storage/facturacion_global',
+            'url' => env('APP_URL') . '/storage/facturacion_global',
             'visibility' => 'public',
         ],
         'inventario' => [
             'driver' => 'local',
             'root' => storage_path('inventario'),
-            'url' => env('APP_URL').'/storage/inventario',
+            'url' => env('APP_URL') . '/storage/inventario',
             'visibility' => 'public',
         ],
         'files_facturacion' => [
             'driver' => 'local',
             'root' => storage_path('files_facturacion'),
-            'url' => env('APP_URL').'/storage/files_facturacion',
+            'url' => env('APP_URL') . '/storage/files_facturacion',
             'visibility' => 'public',
         ],
 
@@ -107,7 +113,7 @@ return [
             'driver' => 'local',
             'root' => storage_path('app'),
         ],
-        
+
         'tmp_correos' => [
             'driver' => 'local',
             'root' => storage_path('app/tmp_correos'),
@@ -121,7 +127,7 @@ return [
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
-            'url' => env('APP_URL').'/storage',
+            'url' => env('APP_URL') . '/storage',
             'visibility' => 'public',
         ],
 

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Formato Inscripción</title>
+    <title>Ficha Inscripción</title>
     <style>
         h1, h2, H3, h4, h5, h6 th { text-align: center;font-family: Segoe UI; }
         /*table { margin: auto; font-family: Segoe UI; box-shadow: 10px 10px 5px #888; border: thin ridge grey; }*/
@@ -66,8 +66,8 @@
     </div>
     <table style="width: 100%;">
         <tr>
-            <td style="width: 50%;" align="left"><img src="{{asset('storage/especialidads/'.$especialidad->imagen)}}" alt="Logo" height="42" width="100" ></td>
-            <td style="width: 50%;" align="rigth">{{ $plantel->denominacion }}</td>
+            <td style="width: 50%;" align="left"><img src="{{asset('storage/grados/'.$grado->imagen)}}" alt="Logo" height="42" width="100" ></td>
+            <td style="width: 50%;" align="rigth">{{ $grado->denominacion }}</td>
         </tr>
         <tr>
             <td colspan="2" alignment="left">
@@ -102,7 +102,19 @@
                 <div class="tablediv">
                     <table>
                         <tr>
-                            <td width="350px">MARQUE CON UNA “X” EL GRADO AL QUE SE VA A INSCRIBIR:</td><TD class="td_contenido">1 O  2 O  3 O  4 O  5 O  6 O  7 O  8 O  9 O </TD>
+                            <td width="280px">MARQUE CON UNA “X” EL GRADO AL QUE SE VA A INSCRIBIR:</td>
+                            <TD class="td_contenido">
+                                <span style="padding:5px;">1 O</span>  
+                                <span style="padding:5px;">2 O </span> 
+                                <span style="padding:5px;">3 O </span> 
+                                <span style="padding:5px;">4 O </span> 
+                                <span style="padding:5px;">5 O </span> 
+                                <span style="padding:5px;">6 O </span> 
+                                <span style="padding:5px;">7 O </span> 
+                                <span style="padding:5px;">8 O </span> 
+                                <span style="padding:5px;">9 O </span>
+
+                                </TD>
                         </tr>
                     </table>
                 </div>
@@ -412,12 +424,12 @@
             <tr>
                 <TD class="descripcion_pequenia">
                     <p>
-                        El {{ $plantel->denominacion }} con domicilio en {{ $plantel->calle }} {{ $plantel->no_ext }} {{ $plantel->colonia }} {{ $plantel->municipio }} {{ $plantel->estado }}, 
-                        propietario del utilizará sus datos personales aqui recabados para fines académicos, de seguimiento y promoción de eventos exclusivos del {{ $plantel->denominacion }}
+                        El {{ $grado->denominacion }} con domicilio en {{ $plantel->calle }} {{ $plantel->no_ext }} {{ $plantel->colonia }} {{ $plantel->municipio }} {{ $plantel->estado }}, 
+                        propietario del utilizará sus datos personales aqui recabados para fines académicos, de seguimiento y promoción de eventos exclusivos del {{ $grado->denominacion }}
                         asi como para dar seguimiento al proceso de admisión, inscripción, reinscripción y acreditación.
                     </p>
                     <p>Para mayor información a cerca del tratamiento y de de los derechos que puede ejercer, puede acceder al Aviso de privacidad.</p>
-                    <p>Acepto y autorizo que el {{$plantel->denominacion}} utiulice la información aqui proporcionada para los fines anteriormente señalados.</p>
+                    <p>Acepto y autorizo que el {{$grado->denominacion}} utiulice la información aqui proporcionada para los fines anteriormente señalados.</p>
                 </TD>
             </tr>
         </table>
@@ -448,8 +460,8 @@
     </div>
     <table style="width: 100%;">
         <tr>
-            <td style="width: 50%;" align="left"><img src="{{asset('storage/especialidads/'.$especialidad->imagen)}}" alt="Logo" height="42" width="100" ></td>
-            <td style="width: 50%;" align="rigth">{{ $plantel->denominacion }}</td>
+            <td style="width: 50%;" align="left"><img src="{{asset('storage/grados/'.$grado->imagen)}}" alt="Logo" height="42" width="100" ></td>
+            <td style="width: 50%;" align="rigth">{{ $grado->denominacion }}</td>
         </tr>
         <tr>
             <td style="width:50%;" ></td>
@@ -473,7 +485,7 @@
         <table style="width:50%">
             <tr>
                 @php
-                    $inscripcion_concepto=$combinacion->adeudos->whereIn('caja_concepto_id',array(1,23))->first();
+                    $inscripcion_concepto=$combinacion->adeudos->whereIn('caja_concepto_id',array(1,4,23))->first();
                 @endphp
                 <TD width="150px">INSCRIPCIÓN:</TD><TD class="td_contenido">$ {{number_format($inscripcion_concepto->monto)}}</TD>
             </tr>
@@ -502,7 +514,7 @@
                     @endphp
                     <p class="descripcion_clausulas">
                         Yo <u> {{ $cliente->ape_paterno }} {{ $cliente->ape_materno }} {{ $cliente->nombre }} {{ $cliente->nombre2 }} </u> 
-                        solicito mi Trámite de Inscripción para continuar formando parte de la comunidad educativa del <u>{{ $plantel->denominacion }}</u>, 
+                        solicito mi Trámite de Inscripción para continuar formando parte de la comunidad educativa del <u>{{ $grado->denominacion }}</u>, 
                         dispuesto a cumplir los requisitos necesarios y en su caso, a seguir las disposiciones tomadas para la transparencia 
                         del proceso de selección y autorización para la inscripción al {{ substr($inscripcion->grupo->name, 0, (strlen($inscripcion->grupo->name)-1)) }}            
                         semestre, del ciclo <u>{{$lectivo->ciclo_escolar}}</u>, turno <u>{{ $inscripcion->grupo->jornada->name }}</u>, <u>{{ $grado->nombre2 }}</u>.
@@ -525,37 +537,37 @@
                 <TD class="descripcion_clausulas">
                     <ol type="A">
                         <li>
-                            Sujetarme a lo establecido por el reglamento interno del {{ $plantel->denominacion }}, del cual entregué responsiva al inscribirme en esta institución.
+                            Sujetarme a lo establecido por el reglamento interno del {{ $grado->denominacion }}, del cual entregué responsiva al inscribirme en esta institución.
                         </li>
                         <li>Aceptar las disposiciones que marca la Secretaría de Educación Pública y la DGAIR.</li>
-                        <li>Pagar la colegiatura puntualmente, durante el periodo del día 28 del mes anterior y hasta el día 10 del mes corriente, de no ser así, se me cobrarán recargos moratorios del 10% adicionales (Acorde al artículo 94° Reglamento General del {{ $plantel->denominacion }}) que deberé cubrir al mismo tiempo que la colegiatura.</li>
-                        <li>Todo integrante de la comunidad estudiantil que se atrase en una colegiatura causará que su nombre no aparezca en listas y se computarán como inasistencias para efecto del examen final (Acorde al artículo 109° Reglamento General del {{ $plantel->denominacion }}).</li>
-                        <li>Efectuar el pago referenciado o canjear el Boucher bancario original en la caja de la Institución (Acorde al artículo 75° inciso XXII y 99°, Reglamento General del {{ $plantel->denominacion }}), siempre y cuando no rebase el día 10 de cada mes para que no te afecte la ausencia del comprobante o ticket en tu control de asistencia.</li>
+                        <li>Pagar la colegiatura puntualmente, durante el periodo del día 28 del mes anterior y hasta el día 10 del mes corriente, de no ser así, se me cobrarán recargos moratorios del 10% adicionales (Acorde al artículo 94° Reglamento General del {{ $grado->denominacion }}) que deberé cubrir al mismo tiempo que la colegiatura.</li>
+                        <li>Todo integrante de la comunidad estudiantil que se atrase en una colegiatura causará que su nombre no aparezca en listas y se computarán como inasistencias para efecto del examen final (Acorde al artículo 109° Reglamento General del {{ $grado->denominacion }}).</li>
+                        <li>Efectuar el pago referenciado o canjear el Boucher bancario original en la caja de la Institución (Acorde al artículo 75° inciso XXII y 99°, Reglamento General del {{ $grado->denominacion }}), siempre y cuando no rebase el día 10 de cada mes para que no te afecte la ausencia del comprobante o ticket en tu control de asistencia.</li>
                         <li>Cubrir el costo del concepto de inscripción al <u>{{ substr($inscripcion->grupo->name, 0, (strlen($inscripcion->grupo->name)-1)) }}</u> semestre de la licenciatura que es de <u>$ {{number_format($inscripcion_concepto->monto)}}</u> pesos moneda nacional.</li>
                         <li>Cada semestre se realizará un gasto correspondiente a la reinscripción, esto durante los cuatro años que dure la carrera.</li>
                         <li>Para poder reinscribirme deberé de cubrir el requisito de no adeudar más de dos materias que obligatoriamente deberán de corresponder exclusivamente al semestre anterior.
-                            En caso de que alguna de las materias adeudadas sea seriada sólo se podrá inscribir a las materias que tenga derecho (Acorde al artículo 84°, Reglamento General del {{ $plantel->denominacion }}).
+                            En caso de que alguna de las materias adeudadas sea seriada sólo se podrá inscribir a las materias que tenga derecho (Acorde al artículo 84°, Reglamento General del {{ $grado->denominacion }}).
                         </li>
                         <li>Tomar en cuenta que para acreditar alguna materia en extraordinario sólo cuento con dos oportunidades: una al final de semestre correspondiente y la otra al término del siguiente. De no acreditarlo en éstas, la materia pasará a ser de recursamiento.</li>
-                        <li>Cuando el alumno adeude cuatro o más materias sólo podrá ser reinscrito a éstas (Acorde al artículo 85°, Reglamento General del {{ $plantel->denominacion }}) por lo que se volverá un alumno de recursamiento.</li>
+                        <li>Cuando el alumno adeude cuatro o más materias sólo podrá ser reinscrito a éstas (Acorde al artículo 85°, Reglamento General del {{ $grado->denominacion }}) por lo que se volverá un alumno de recursamiento.</li>
                         <li>Cubrir el concepto de cursos especiales requeridos, proceso indispensable para tu titulación.</li>
                         <li>Adquirir los manuales de trabajo correspondientes a los programas especiales con el proveedor externo autorizado por la Institución, los cuales son instrumentos de trabajo y sin ellos no se me permitirá la entrada a clase. Los manuales cambian cada módulo y se deben de presentar a más tardar una semana posterior al inicio del curso.</li>
-                        <li>Avisar la separación temporal o definitiva de la Institución, así como pagar la colegiatura del mes corriente y presentar el recibo, de lo contrario las colegiaturas se seguirán acumulando, hasta presentar la baja por escrito a la institución. (Acorde al artículo 110°, Reglamento General del {{ $plantel->denominacion }}).</li>
-                        <li>Portar diariamente su credencial en un lugar visible como gafete de identificación (Acorde al artículo 75° inciso VI, Reglamento General del {{ $plantel->denominacion }}) y entregar el ticket o comprobante de asistencia correspondiente al mes en curso para su asistencia diaria. Ambos documentos serán presentados al ingreso a cualquiera de las unidades del {{ $plantel->denominacion }}.</li>
-                        <li>Para poder acreditar las materias de cada semestre es indispensable contar con el 80% de asistencia en cada una de ellas, de no ser así, sólo tendrán derecho a exámenes extraordinarios siempre y cuando cuenten con un mínimo del 60% de asistencia, de lo contrario será materia(s) para recursamiento; generando un atraso académico (Acorde al artículo 31° y 37° inciso IV, Reglamento General del {{ $plantel->denominacion }}).</li>
+                        <li>Avisar la separación temporal o definitiva de la Institución, así como pagar la colegiatura del mes corriente y presentar el recibo, de lo contrario las colegiaturas se seguirán acumulando, hasta presentar la baja por escrito a la institución. (Acorde al artículo 110°, Reglamento General del {{ $grado->denominacion }}).</li>
+                        <li>Portar diariamente su credencial en un lugar visible como gafete de identificación (Acorde al artículo 75° inciso VI, Reglamento General del {{ $grado->denominacion }}) y entregar el ticket o comprobante de asistencia correspondiente al mes en curso para su asistencia diaria. Ambos documentos serán presentados al ingreso a cualquiera de las unidades del {{ $grado->denominacion }}.</li>
+                        <li>Para poder acreditar las materias de cada semestre es indispensable contar con el 80% de asistencia en cada una de ellas, de no ser así, sólo tendrán derecho a exámenes extraordinarios siempre y cuando cuenten con un mínimo del 60% de asistencia, de lo contrario será materia(s) para recursamiento; generando un atraso académico (Acorde al artículo 31° y 37° inciso IV, Reglamento General del {{ $grado->denominacion }}).</li>
                         <li>Sólo se podrán justificar faltas si se presentan recetas médicas de instituciones gubernamentales a más tardar tres días hábiles después de la falta, permitiendo con ello que el docente reciba los trabajos, tareas y/o actividades generadas durante su ausencia, dejando a consideración de cada docente el efecto de la misma.
                             La justificación de las faltas no implica la anulación de la inasistencia por lo que todas las faltas serán computadas para efectos de derecho a examen final o extraordinario.
                         </li>
-                        <li>Tres retardos se consideran como una falta (Acorde al artículo 121°, Reglamento General del {{ $plantel->denominacion }}).</li>
-                        <li>El tiempo máximo de tolerancia para asistir a la primera hora de clases es de 10 minutos (Acorde al artículo 122°, Reglamento General del {{ $plantel->denominacion }}). Cualquier situación particular que afecte el retraso en acceso a clases deberá tratarse directamente en coordinación y/o dirección.</li>
-                        <li>Realizar 600 horas de Prácticas Profesionales en un lugar en el que desempeñes adecuadamente el conocimiento adquirido, acorde al perfil profesional de la Licenciatura, habiendo cubierto el 50% de créditos. (Acorde al artículo 158°, Reglamento General del {{ $plantel->denominacion }}).</li>
-                        <li>Realizar 480 horas de Servicio Social en un tiempo no menor a 6 meses, teniendo como requisito el 70% de créditos, dentro de una dependencia gubernamental (Acorde al artículo 137°, Reglamento General del {{ $plantel->denominacion }}).</li>
-                        <li>Al término de la carrera, deberé pagar la Revisión de estudios y proceso de certificación (Acorde al artículo 101°, Reglamento General del {{ $plantel->denominacion }}).</li>
+                        <li>Tres retardos se consideran como una falta (Acorde al artículo 121°, Reglamento General del {{ $grado->denominacion }}).</li>
+                        <li>El tiempo máximo de tolerancia para asistir a la primera hora de clases es de 10 minutos (Acorde al artículo 122°, Reglamento General del {{ $grado->denominacion }}). Cualquier situación particular que afecte el retraso en acceso a clases deberá tratarse directamente en coordinación y/o dirección.</li>
+                        <li>Realizar 600 horas de Prácticas Profesionales en un lugar en el que desempeñes adecuadamente el conocimiento adquirido, acorde al perfil profesional de la Licenciatura, habiendo cubierto el 50% de créditos. (Acorde al artículo 158°, Reglamento General del {{ $grado->denominacion }}).</li>
+                        <li>Realizar 480 horas de Servicio Social en un tiempo no menor a 6 meses, teniendo como requisito el 70% de créditos, dentro de una dependencia gubernamental (Acorde al artículo 137°, Reglamento General del {{ $grado->denominacion }}).</li>
+                        <li>Al término de la carrera, deberé pagar la Revisión de estudios y proceso de certificación (Acorde al artículo 101°, Reglamento General del {{ $grado->denominacion }}).</li>
                         <li>La Institución tendrá la obligación de entregar un recibo oficial de todos los pagos que se realicen en caja al momento mismo de efectuarlo.</li>
-                        <li>La Institución no se hará responsable de ningún pago efectuado fuera de caja (Acorde al artículo 97°, Reglamento General del {{ $plantel->denominacion }}) a terceras personas distintas a la cajera, aunque sea personal que labore en la Institución o dé recibos que no sean los oficiales del cual se enseña muestra.</li>
+                        <li>La Institución no se hará responsable de ningún pago efectuado fuera de caja (Acorde al artículo 97°, Reglamento General del {{ $grado->denominacion }}) a terceras personas distintas a la cajera, aunque sea personal que labore en la Institución o dé recibos que no sean los oficiales del cual se enseña muestra.</li>
                         <li>La Institución por ningún motivo aceptará parcialidades de ningún pago.</li>
-                        <li>El incremento de la colegiatura mensual será anual de un 10%, con base en el periodo de ingreso (Acorde al artículo 104°, Reglamento General del {{ $plantel->denominacion }}).</li>
-                        <li>La institución no se hace responsable por la pérdida o extravío de ningún Boucher por el concepto de algún pago (Acorde al artículo 95° y 96°, Reglamento General del {{ $plantel->denominacion }}).</li>
+                        <li>El incremento de la colegiatura mensual será anual de un 10%, con base en el periodo de ingreso (Acorde al artículo 104°, Reglamento General del {{ $grado->denominacion }}).</li>
+                        <li>La institución no se hace responsable por la pérdida o extravío de ningún Boucher por el concepto de algún pago (Acorde al artículo 95° y 96°, Reglamento General del {{ $grado->denominacion }}).</li>
                         <li>Acuso de recibo el Reglamento Institucional, por lo que manifiesto haberlo leído y tener conocimiento de su contenido, mismo que acepto estar de acuerdo con las disposiciones en él establecidas. BB. De acuerdo con la especialidad o curso en el que me encuentro inscrito recibiré los diplomas correspondientes al o los RVOE(s) de la especialidad o cursos correspondientes.</li>
                         <li>En caso de ser acreedor a algún tipo de descuento o beca me comprometo a cumplir con los requisitos en tiempo y forma establecidos en convocatoria, reglamento y/o convenio institucional. DD. El Reembolso de los conceptos pagados para inscripción únicamente aplica al 100% por causas imputables a la institución.</li>
                         <li>Cuando sea por causas o decisiones imputables al alumno, padre o tutor, y si no han iniciado las clases, solo se reembolsará el 70% de lo pagado por conceptos de inscripción, tramites, servicios escolares o colegiaturas.</li>
@@ -606,8 +618,8 @@
     </div>
     <table style="width: 100%;">
         <tr>
-            <td style="width: 50%;" align="left"><img src="{{asset('storage/especialidads/'.$especialidad->imagen)}}" alt="Logo" height="42" width="100" ></td>
-            <td style="width: 50%;" align="rigth">{{ $plantel->denominacion }}</td>
+            <td style="width: 50%;" align="left"><img src="{{asset('storage/grados/'.$grado->imagen)}}" alt="Logo" height="42" width="100" ></td>
+            <td style="width: 50%;" align="rigth">{{ $grado->denominacion }}</td>
         </tr>
         <tr>
             <td style="width:50%;" >FICHA DE IDENTIFICACIÓN INSTITUCIONAL</td>
@@ -934,7 +946,7 @@
 
     <table style="width: 100%;">
         <tr>
-            <td style="width: 50%;" align="left"><img src="{{asset('storage/especialidads/'.$especialidad->imagen)}}" alt="Logo" height="42" width="100" ></td>
+            <td style="width: 50%;" align="left"><img src="{{asset('storage/grados/'.$grado->imagen)}}" alt="Logo" height="42" width="100" ></td>
             <td style="width: 50%;" align="rigth"></td>
         </tr>
         
@@ -948,13 +960,13 @@
                             y con el fin de asegurar la protección y privacidad de los datos personales, asi 
                             como regular el acceso, rectificación, cancelación y opocision del manejo de los 
                             mismos</strong> (Fundamento jurídico: Art. 15 Constitucional Art. 1 y 2 ) En El 
-                            {{ $plantel->denominacion }}, establece lo siguiente:
+                            {{ $grado->denominacion }}, establece lo siguiente:
                     </p>
                     <p>
                         Aviso de privacidad:
                     </p>
                     <p>
-                        En {{ $plantel->denominacion }}, ubicado en domicilio en 
+                        En {{ $grado->denominacion }}, ubicado en domicilio en 
                         {{$plantel->calle}} {{$plantel->calle}} {{$plantel->colonia}} <br> {{$plantel->municipio}} {{$plantel->estado}}, 
                         propietario del www.grupocedva.com, le informa que utilizará sus datos personales sensibles para fines 
                         académicos, de seguimiento, administrativos y de promoción exclusivos, así como para dar seguimineto a su proceso de admisión,

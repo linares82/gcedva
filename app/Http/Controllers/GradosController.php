@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use DB;
 use Auth;
+use File;
 use App\Grado;
 use App\Modulo;
 use App\Plantel;
@@ -13,6 +14,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\createGrado;
 use App\Http\Requests\updateGrado;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 
 class GradosController extends Controller
 {
@@ -140,10 +142,10 @@ class GradosController extends Controller
     public function destroy($id, Grado $grado)
     {
         $grado = $grado->find($id);
-        if(count($grado->combinacionClientes)==0){
+        if (count($grado->combinacionClientes) == 0) {
             $grado->delete();
         }
-        
+
 
         return redirect()->route('grados.index')->with('message', 'Registro Borrado.');
     }
@@ -274,9 +276,9 @@ class GradosController extends Controller
 
     public function listaGrados(Request $request)
     {
-        $grados = Grado::whereIn('plantel_id',$request->input('plantel'))->orderBy('plantel_id')->orderBy('especialidad_id')->orderBy('nivel_id')->orderBy('id')->get();
-        $plantels=Plantel::pluck('razon','id');
-        return view('combinacionClientes.reportes.cargas', compact('grados','plantels'));
+        $grados = Grado::whereIn('plantel_id', $request->input('plantel'))->orderBy('plantel_id')->orderBy('especialidad_id')->orderBy('nivel_id')->orderBy('id')->get();
+        $plantels = Plantel::pluck('razon', 'id');
+        return view('combinacionClientes.reportes.cargas', compact('grados', 'plantels'));
     }
 
     public function apiListaXplantelYespecialidadYgrado(Request $request)
@@ -306,7 +308,7 @@ class GradosController extends Controller
 
             $final = array();
             $r = DB::table('grados as g')
-            ->join('hacademicas as h','h.grado_id','=','g.id')
+                ->join('hacademicas as h', 'h.grado_id', '=', 'g.id')
                 ->select('g.id', 'g.name')
                 ->where('g.plantel_id', '=', $plantel)
                 ->where('g.especialidad_id', '=', $especialidad)
@@ -350,6 +352,33 @@ class GradosController extends Controller
             } else {
                 return $r;
             }
+        }
+    }
+
+    public function cargaArchivo(Request $request)
+    {
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $extension = $file->getClientOriginalExtension();
+            $nombre = date('dmYhmi') . $file->getClientOriginalName();
+            $r = Storage::disk('img_grados')->put($nombre, File::get($file));
+            $grado = Grado::find($request->get('grado'));
+            if ($grado->imagen != "") {
+                Storage::disk('img_grados')->delete($grado->imagen);
+                $grado->imagen = $nombre;
+            } else {
+                $grado->imagen = $nombre;
+            }
+            $grado->save();
+        } else {
+
+            return "no";
+        }
+
+        if ($r) {
+            return $nombre;
+        } else {
+            return "Error vuelva a intentarlo";
         }
     }
 }

@@ -137,6 +137,7 @@
                             <th>@include('plantillas.getOrderLink', ['column' => 'especialidad_id', 'title' => 'ESPECIALIDAD'])</th>
                             <th>@include('plantillas.getOrderLink', ['column' => 'nivel_id', 'title' => 'NIVEL'])</th>
                             <th>@include('plantillas.getOrderLink', ['column' => 'name', 'title' => 'GRADO'])</th>
+                            <th>Imagen</th>
                             
                         
                             <th class="text-right">OPCIONES</th>
@@ -151,6 +152,7 @@
                                 <td>{{$grado->especialidad->name}}</td>
                                 <td>{{$grado->nivel->name}}</td>
                                 <td>{{$grado->name}}</td>
+                                <td><img src="{{asset('storage/grados/'.$grado->imagen)}}" alt="Logo" height="42" width="42" > </td>
                                 
                                 <td class="text-right">
                                     @permission('grados.edit')

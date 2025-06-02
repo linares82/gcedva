@@ -110,23 +110,32 @@ class ClientesController extends Controller
         //dd($request);
         $clientes = Seguimiento::getAllData($request, 10, session('filtro_clientes'));
         $empleado = Empleado::where('user_id', '=', Auth::user()->id)->first();
-        $medios= Medio::pluck('name','id');
-        $stClientes= StCliente::pluck('name','id');
-        $planteles= Plantel::pluck('razon','id');
+        $medios = Medio::pluck('name', 'id');
+        $stClientes = StCliente::pluck('name', 'id');
+        $planteles = Plantel::pluck('razon', 'id');
         /*$especialidades= Especialidad::pluck('name','id');
         $niveles= Nivel::pluck('name','id');
         $grados= Grado::pluck('name','id');*/
-        $empleados=Empleado::select(DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name, id'))->pluck('name','id');
-        $tpoInformes=TpoInforme::pluck('name','id');
-        $usuarios=User::pluck('name','id');
+        $empleados = Empleado::select(DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name, id'))->pluck('name', 'id');
+        $tpoInformes = TpoInforme::pluck('name', 'id');
+        $usuarios = User::pluck('name', 'id');
         $usuarios->prepend('Seleccionar opción', 0);
-        
 
-        return view('clientes.index', compact('clientes', 'users', 'empleado', 'fecha_superada','medios','stClientes',
-        'planteles','empleados','tpoInformes','usuarios'
+
+        return view('clientes.index', compact(
+            'clientes',
+            'users',
+            'empleado',
+            'fecha_superada',
+            'medios',
+            'stClientes',
+            'planteles',
+            'empleados',
+            'tpoInformes',
+            'usuarios'
         ))
             ->with('list', Seguimiento::getListFromAllRelationApps());
-            //->with('list1', Cliente::getListFromAllRelationApps());
+        //->with('list1', Cliente::getListFromAllRelationApps());
     }
 
     public function indexEventos(Request $request)
@@ -226,7 +235,7 @@ class ClientesController extends Controller
         //dd(Municipio::get());
         //$p = Auth::user()->can('IfiltroEmpleadosXPlantel');
         //if ($p) {
-        
+
         $e = Empleado::where('user_id', '=', Auth::user()->id)->first();
         $planteles = array();
         foreach ($e->plantels as $p) {
@@ -253,13 +262,15 @@ class ClientesController extends Controller
         $estado_civiles = EstadoCivil::pluck('name', 'id');
         $cuestionarios = Ccuestionario::where('st_cuestionario_id', '=', '1')->pluck('name', 'id');
         $incidencias = IncidenceCliente::pluck('name', 'id');
-        $plantels = Plantel::where('st_plantel_id', 1)->whereIn('id',$planteles)->pluck('razon', 'id');
-	    $curp_token=Param::where('llave', 'token_curp')->first();
-        $curp_url=Param::where('llave', 'url_curp')->first();
-        $api_valida_curp=['token'=> $curp_token->valor,
-        'url'=>$curp_url->valor];
+        $plantels = Plantel::where('st_plantel_id', 1)->whereIn('id', $planteles)->pluck('razon', 'id');
+        $curp_token = Param::where('llave', 'token_curp')->first();
+        $curp_url = Param::where('llave', 'url_curp')->first();
+        $api_valida_curp = [
+            'token' => $curp_token->valor,
+            'url' => $curp_url->valor
+        ];
 
-        return view('clientes.create', compact('empleados', 'cuestionarios', 'estado_civiles', 'incidencias', 'plantels','api_valida_curp'))
+        return view('clientes.create', compact('empleados', 'cuestionarios', 'estado_civiles', 'incidencias', 'plantels', 'api_valida_curp'))
             ->with('list', Cliente::getListFromAllRelationApps())
             ->with('list3', Inscripcion::getListFromAllRelationApps());
     }
@@ -273,7 +284,7 @@ class ClientesController extends Controller
     public function store(createCliente $request)
     {
         $id = 0;
-        
+
         $input = $request->all();
         //dd($input);
         //$validaCurp=new ValidaCurp();
@@ -364,9 +375,9 @@ class ClientesController extends Controller
         } else {
             $input['bnd_reingreso'] = 1;
         }
-        if(!is_null($input['abreviatura_estado'])){
-            $estado= Estado::where('abreviatura', $input['abreviatura_estado'])->first();
-            $input['estado_nacimiento_id']=$estado->id;
+        if (!is_null($input['abreviatura_estado'])) {
+            $estado = Estado::where('abreviatura', $input['abreviatura_estado'])->first();
+            $input['estado_nacimiento_id'] = $estado->id;
         }
         //dd($input);
         //create data
@@ -496,14 +507,18 @@ class ClientesController extends Controller
         $materias = Materium::where('materia.bnd_oficial', 0)
             ->where('plantel_id', $cliente->plantel_id)
             ->pluck('name', 'id');
+        //dd($materias);
         $plantels = Plantel::where('st_plantel_id', 1)->pluck('razon', 'id');
 
-        $curp_token=Param::where('llave', 'token_curp')->first();
-        $curp_url=Param::where('llave', 'url_curp')->first();
-        $api_valida_curp=['token'=> $curp_token->valor,
-        'url'=>$curp_url->valor,];
+        $curp_token = Param::where('llave', 'token_curp')->first();
+        $curp_url = Param::where('llave', 'url_curp')->first();
+        $api_valida_curp = [
+            'token' => $curp_token->valor,
+            'url' => $curp_url->valor,
+        ];
 
-        return view('clientes.edit', compact('api_valida_curp',
+        return view('clientes.edit', compact(
+            'api_valida_curp',
             'cliente',
             'materias',
             'preguntas',
@@ -604,15 +619,89 @@ class ClientesController extends Controller
         //$input = $request->all();
 
         $input = $request->except([
-            '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15',
-            '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28',
-            '29', '30', '31', '32', '33', '34', '35', '36', '37', '38', '39', '40',
+            '1',
+            '2',
+            '3',
+            '4',
+            '5',
+            '6',
+            '7',
+            '8',
+            '9',
+            '10',
+            '11',
+            '12',
+            '13',
+            '14',
+            '15',
+            '16',
+            '17',
+            '18',
+            '19',
+            '20',
+            '21',
+            '22',
+            '23',
+            '24',
+            '25',
+            '26',
+            '27',
+            '28',
+            '29',
+            '30',
+            '31',
+            '32',
+            '33',
+            '34',
+            '35',
+            '36',
+            '37',
+            '38',
+            '39',
+            '40',
         ]);
         //dd($input);
         $preguntas = $request->only([
-            '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15',
-            '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28',
-            '29', '30', '31', '32', '33', '34', '35', '36', '37', '38', '39', '40',
+            '1',
+            '2',
+            '3',
+            '4',
+            '5',
+            '6',
+            '7',
+            '8',
+            '9',
+            '10',
+            '11',
+            '12',
+            '13',
+            '14',
+            '15',
+            '16',
+            '17',
+            '18',
+            '19',
+            '20',
+            '21',
+            '22',
+            '23',
+            '24',
+            '25',
+            '26',
+            '27',
+            '28',
+            '29',
+            '30',
+            '31',
+            '32',
+            '33',
+            '34',
+            '35',
+            '36',
+            '37',
+            '38',
+            '39',
+            '40',
         ]);
         //dd($preguntas);
         $input['usu_mod_id'] = Auth::user()->id;
@@ -672,7 +761,7 @@ class ClientesController extends Controller
         } else {
             $input['extranjero'] = 1;
         }
-        
+
 
         if (!isset($input['bnd_beca'])) {
             $input['bnd_beca'] = 0;
@@ -686,9 +775,9 @@ class ClientesController extends Controller
             $input['bnd_regingreso'] = 1;
         }
 
-        if(!is_null($input['abreviatura_estado'])){
-            $estado= Estado::where('abreviatura', $input['abreviatura_estado'])->first();
-            $input['estado_nacimiento_id']=$estado->id;
+        if (!is_null($input['abreviatura_estado'])) {
+            $estado = Estado::where('abreviatura', $input['abreviatura_estado'])->first();
+            $input['estado_nacimiento_id'] = $estado->id;
         }
 
 
@@ -1552,7 +1641,8 @@ class ClientesController extends Controller
         //dd($registros->toArray());
         $csvExporter = new \Laracsv\Export();
         $csvExporter->build($registros, [
-            'id' => 'ID', 'nombre' => 'PRIMER NOMBRE',
+            'id' => 'ID',
+            'nombre' => 'PRIMER NOMBRE',
             'nombre2' => 'SEGUNDO NOMBRE',
             'ape_paterno' => 'A. PATERNO',
             'ape_materno' => 'A. MATERNO',
@@ -1840,14 +1930,14 @@ class ClientesController extends Controller
                     $i++;
                 }
                 //dd($array_docsPorCliente);
-                $prefijo_len=0;
-                $param_prefijo=Param::where('llave', 'prefijo_matricula_instalacion')->first();
+                $prefijo_len = 0;
+                $param_prefijo = Param::where('llave', 'prefijo_matricula_instalacion')->first();
                 //dd($param_prefijo->toArray());
-                if(!is_null($param_prefijo) and $param_prefijo->valor<>'0'){
-                    $prefijo_len=strlen($param_prefijo->valor);
+                if (!is_null($param_prefijo) and $param_prefijo->valor <> '0') {
+                    $prefijo_len = strlen($param_prefijo->valor);
                 }
                 //dd(substr($cliente->matricula, 0, (4+$prefijo_len)));
-                if (substr($cliente->matricula, 0, (4+$prefijo_len)) == $datos['inicio_matricula']) {
+                if (substr($cliente->matricula, 0, (4 + $prefijo_len)) == $datos['inicio_matricula']) {
                     //dd($array_docsPorCliente);
                     foreach ($docsPorCliente as $do) {
 
@@ -2292,8 +2382,8 @@ class ClientesController extends Controller
             ->join('plantels as p', 'p.id', '=', 'clientes.plantel_id')
             ->where('a.caja_concepto_id', $datos['concepto_f'])
             ->whereIn('clientes.plantel_id', $datos['plantel_f'])
-            ->whereDate('a.fecha_pago','>=', $datos['fecha_f'])
-            ->whereDate('a.fecha_pago','<=', $datos['fecha_t'])
+            ->whereDate('a.fecha_pago', '>=', $datos['fecha_f'])
+            ->whereDate('a.fecha_pago', '<=', $datos['fecha_t'])
             ->where('clientes.st_cliente_id', '<>', 3)
             //->where('pagado_bnd',1)
             ->whereNull('a.deleted_at')
@@ -3037,7 +3127,7 @@ class ClientesController extends Controller
             $mesMatricula = intval(substr($cliente->matricula, 0, 2));
             $anioMatricula = intval("20" . substr($cliente->matricula, 2, 2));
 
-            
+
 
             if (
                 $anioActual == $anioMatricula and
@@ -3067,26 +3157,26 @@ class ClientesController extends Controller
                 ($mesActual - $mesMatricula) >= 6
             ) {
                 $dentro3Meses = true;
-            }elseif (
+            } elseif (
                 $anioActual > $anioMatricula and
                 $mesActual > $mesMatricula and
                 ($anioActual - $anioMatricula) == 1 and
                 ($mesActual - $mesMatricula) == 7
             ) {
-                if($diaActual>=1 and $diaActual<=11){
+                if ($diaActual >= 1 and $diaActual <= 11) {
                     $dentro3Meses = true;
                 }
-            }elseif (
+            } elseif (
                 $anioActual > $anioMatricula and
                 $mesActual < $mesMatricula and $mesActual <= 7 and
                 ($anioActual - $anioMatricula) == 1 and
                 ($mesActual - $mesMatricula) * -1 <= 7
             ) {
                 //dd("a_actual:".$anioActual."-a_matricula:".$anioMatricula."-m_actual:".$mesActual."-m_matricula".$mesMatricula);
-                if($diaActual>=1 and $diaActual<=11){
+                if ($diaActual >= 1 and $diaActual <= 11) {
                     $dentro3Meses = true;
                 }
-            }elseif($anioActual < $anioMatricula){
+            } elseif ($anioActual < $anioMatricula) {
                 $dentro3Meses = true;
             }
         } else {
@@ -3095,21 +3185,23 @@ class ClientesController extends Controller
         /*if($cliente->id==66493){
             dd("a_actual:".$anioActual."-a_matricula:".$anioMatricula."-m_actual:".$mesActual."-m_matricula".$mesMatricula);
         }*/
-        
+
         return $dentro3Meses;
     }
 
-    public function historiaMatricula(Request $request){
-        $datos=$request->all();
-        $cliente=Cliente::find($datos['cliente']);
+    public function historiaMatricula(Request $request)
+    {
+        $datos = $request->all();
+        $cliente = Cliente::find($datos['cliente']);
         //dd($cliente->revisionHistory->toArray());
         return view('clientes.reportes.historiaMatricula', compact('cliente'));
     }
 
-    public function verificaMateriasAdeudosPendientes(Request $request){
-        $datos=$request->all();
-        $cliente=Cliente::find($datos['id']);
-        $seguimiento=Seguimiento::where('cliente_id', $cliente->id)->first();
+    public function verificaMateriasAdeudosPendientes(Request $request)
+    {
+        $datos = $request->all();
+        $cliente = Cliente::find($datos['id']);
+        $seguimiento = Seguimiento::where('cliente_id', $cliente->id)->first();
         if ($cliente->st_cliente_id == 31) {
             $cliente->st_cliente_id = 30;
             $cliente->save();
@@ -3117,12 +3209,12 @@ class ClientesController extends Controller
             $cliente->save();
             $seguimiento->st_seguimiento_id = 7;
             $seguimiento->save();
-        }else{
+        } else {
             $cliente->st_cliente_id = 30;
             $cliente->save();
             //$seguimiento->st_seguimiento_id = 7;
             //$seguimiento->save();
-            
+
         }
         return redirect()->route('clientes.edit', $cliente->id)->with('message', 'Registro Actualizado.');
     }
@@ -3412,9 +3504,9 @@ class ClientesController extends Controller
             array_push($plantels, $p->id);
         }
         $planteles = Plantel::whereIn('id', $plantels)->pluck('razon', 'id');
-        $stProspectos=StProspecto::pluck('name','id');
+        $stProspectos = StProspecto::pluck('name', 'id');
         //dd($stProspectos);
-        return view('clientes.reportes.concretadosComisiones', compact('planteles','stProspectos'))
+        return view('clientes.reportes.concretadosComisiones', compact('planteles', 'stProspectos'))
             ->with('list', Cliente::getListFromAllRelationApps());
     }
 
@@ -3426,16 +3518,16 @@ class ClientesController extends Controller
             $datos['inicio_matricula'] = $param->valor . $datos['inicio_matricula'];
         }
         $planteles = Plantel::select('plantels.id', 'plantels.meta_total')->whereIn('plantels.id', $datos['plantel_f'])->get();
-        
-        $secciones=array();
-        $seccionesCarreras=array();
-        $seccionesDiplomados=array();
-        if(isset($datos['bnd_tramite'])){
-            $secciones=SeccionesCat::where('bnd_tramite',1)->pluck('name');
-            $seccionesCarreras=$secciones;
-        }else{
-            $secciones=SeccionesCat::where('bnd_tramite',0)->pluck('name');
-            $seccionesDiplomados=$secciones;
+
+        $secciones = array();
+        $seccionesCarreras = array();
+        $seccionesDiplomados = array();
+        if (isset($datos['bnd_tramite'])) {
+            $secciones = SeccionesCat::where('bnd_tramite', 1)->pluck('name');
+            $seccionesCarreras = $secciones;
+        } else {
+            $secciones = SeccionesCat::where('bnd_tramite', 0)->pluck('name');
+            $seccionesDiplomados = $secciones;
         }
         //dd($seccionesCarreras);
         //dd(in_array(1,$datos['st_prospectos']));
@@ -3473,10 +3565,10 @@ class ClientesController extends Controller
             ->join('plantels as p', 'p.id', '=', 'clientes.plantel_id')
             ->join('st_clientes as stc', 'stc.id', '=', 'clientes.st_cliente_id')
             ->join('empleados as emp', 'emp.id', '=', 'clientes.empleado_id')
-            ->join('st_prospectos as stp','stp.id','emp.st_prospecto_id')
+            ->join('st_prospectos as stp', 'stp.id', 'emp.st_prospecto_id')
             //->join('cajas as c', 'c.id', '=', 'a.caja_id')
             ->join('combinacion_clientes as ccli', 'ccli.cliente_id', '=', 'clientes.id')
-            ->join('grados as gra','gra.id','ccli.grado_id')
+            ->join('grados as gra', 'gra.id', 'ccli.grado_id')
             //->join('seccions as sec','sec.id','gra.seccion_id')
             //->join('clasificacion_seccions as csec','csec.id','sec.clasificacion_seccion_id')
             ->join('turnos as tu', 'tu.id', 'ccli.turno_id')
@@ -3488,7 +3580,7 @@ class ClientesController extends Controller
             //->where('clientes.st_cliente_id', '<>', 3)
             ->whereIn('clientes.plantel_id', $datos['plantel_f'])
             ->whereIn('stp.id', $datos['st_prospectos'])
-            ->where('stc.id','<>', 19)
+            ->where('stc.id', '<>', 19)
             ->whereIn('g.seccion', $secciones)
             ->where('clientes.matricula', 'like', $datos['inicio_matricula'] . "%")
             //->whereNull('a.deleted_at')
@@ -3507,7 +3599,7 @@ class ClientesController extends Controller
             ->get();
         //dd($detalle->toArray());
         $registros = array();
-        $descartados=array();
+        $descartados = array();
         foreach ($detalle->toArray() as $d) {
             //dd($d['cliente_id']);
             $adeudos12325 = Adeudo::where('cliente_id', $d['cliente_id'])
@@ -3569,15 +3661,15 @@ class ClientesController extends Controller
                 ->where('cln.caja_concepto_id', 252)
                 ->where('cliente_id', $d['cliente_id'])
                 ->first();
-            $existe_modelo_educativo_especialidad=Adeudo::where('adeudos.caja_concepto_id', 252)
+            $existe_modelo_educativo_especialidad = Adeudo::where('adeudos.caja_concepto_id', 252)
                 ->where('cliente_id', $d['cliente_id'])
                 ->first();
 
-            if(is_null($existe_modelo_educativo_especialidad)){
+            if (is_null($existe_modelo_educativo_especialidad)) {
                 $d['existe_modelo_educativo_especialidad'] = "No";
                 $d['modelo_educativo_especialidad'] = "";
                 $d['modelo_educativo_especialidad_fecha'] = "";
-            }else{
+            } else {
                 $d['existe_modelo_educativo_especialidad'] = "SI";
                 if (is_null($modelo_educativo_especialidad)) {
                     $d['modelo_educativo_especialidad'] = "No";
@@ -3588,29 +3680,28 @@ class ClientesController extends Controller
                     $d['modelo_educativo_especialidad_fecha'] = $modelo_educativo_especialidad->fecha_caja;
                 }
             }
-            
-            
+
+
             //dd($d);
-            if(($d['fecha_caja_12325']<=$datos['menor_igual_fecha'] and $d['fecha_caja_12325']<>"") or 
-            ($d['tramites_fecha']<=$datos['menor_igual_fecha'] and $d['tramites_fecha']<>'') or 
-            ($d['primera_mensualidad_fecha']<=$datos['menor_igual_fecha'] and $d['primera_mensualidad_fecha']<>"") or 
-            ($d['existe_modelo_educativo_especialidad']=="Si" and $d['modelo_educativo_especialidad_fecha']<=$datos['menor_igual_fecha'])
-            ){
+            if (($d['fecha_caja_12325'] <= $datos['menor_igual_fecha'] and $d['fecha_caja_12325'] <> "") or
+                ($d['tramites_fecha'] <= $datos['menor_igual_fecha'] and $d['tramites_fecha'] <> '') or
+                ($d['primera_mensualidad_fecha'] <= $datos['menor_igual_fecha'] and $d['primera_mensualidad_fecha'] <> "") or
+                ($d['existe_modelo_educativo_especialidad'] == "Si" and $d['modelo_educativo_especialidad_fecha'] <= $datos['menor_igual_fecha'])
+            ) {
                 //dd($seccionesDiplomados);
-                if((isset($datos['bnd_tramite']) and $d['tramites'] == "Si") or count($seccionesCarreras)>0){
-                    if($d['primera_mensualidad']=='No' and $d['bnd_doc_oblig_entregados']=='No' ){
+                if ((isset($datos['bnd_tramite']) and $d['tramites'] == "Si") or count($seccionesCarreras) > 0) {
+                    if ($d['primera_mensualidad'] == 'No' and $d['bnd_doc_oblig_entregados'] == 'No') {
                         array_push($descartados, $d);
-                    }else{
+                    } else {
                         array_push($registros, $d);
                     }
-                }elseif((!isset($datos['bnd_tramite']) and $d['tramites'] == "No") or count($seccionesDiplomados)>0){
-                    if($d['primera_mensualidad']=='No' and $d['bnd_doc_oblig_entregados']=='No' ){
+                } elseif ((!isset($datos['bnd_tramite']) and $d['tramites'] == "No") or count($seccionesDiplomados) > 0) {
+                    if ($d['primera_mensualidad'] == 'No' and $d['bnd_doc_oblig_entregados'] == 'No') {
                         array_push($descartados, $d);
-                    }else{
+                    } else {
                         array_push($registros, $d);
                     }
-                    
-                }else{
+                } else {
                     array_push($descartados, $d);
                 }
                 //dd($secciones);
@@ -3620,91 +3711,91 @@ class ClientesController extends Controller
                     array_push($registros, $d);
                 }*/
                 //array_push($registros, $d);
-                
+
             }
         }
         //dd($registros);
-        $carreras1=array();
-        $carreras2=array();
-        $carreras3=array();
-        $carreras4=array();
-        $diplomadosCursos1=array();
-        $diplomadosCursos2=array();
-        $diplomadosCursos3=array();
-        $diplomadosCursos4=array();
-        $carreras4=array();
-        
-        foreach($registros as $r){
+        $carreras1 = array();
+        $carreras2 = array();
+        $carreras3 = array();
+        $carreras4 = array();
+        $diplomadosCursos1 = array();
+        $diplomadosCursos2 = array();
+        $diplomadosCursos3 = array();
+        $diplomadosCursos4 = array();
+        $carreras4 = array();
+
+        foreach ($registros as $r) {
             //dd($r);
-            if(
-                ($r['bnd_doc_oblig_entregados']=="Si" and
-                $r[12325]<>"" and 
-                $r['tramites']=="Si" and 
-                $r['primera_mensualidad']== "Si"
+            if (
+                ($r['bnd_doc_oblig_entregados'] == "Si" and
+                    $r[12325] <> "" and
+                    $r['tramites'] == "Si" and
+                    $r['primera_mensualidad'] == "Si"
                 ) or (
-                $r['bnd_doc_oblig_entregados']=="Si" and 
-                count($seccionesCarreras)>0 and
-                $r['primera_mensualidad']== "Si")
-            ){
+                    $r['bnd_doc_oblig_entregados'] == "Si" and
+                    count($seccionesCarreras) > 0 and
+                    $r['primera_mensualidad'] == "Si")
+            ) {
                 array_push($carreras1, $r);
-            }elseif(
-                ($r['bnd_doc_oblig_entregados']=="Si" and
-                $r[12325]<>"" and 
-                $r['tramites']=="Si" and 
-                $r['primera_mensualidad']== "No"
+            } elseif (
+                ($r['bnd_doc_oblig_entregados'] == "Si" and
+                    $r[12325] <> "" and
+                    $r['tramites'] == "Si" and
+                    $r['primera_mensualidad'] == "No"
                 ) or (
-                $r['bnd_doc_oblig_entregados']=="Si" and 
-                count($seccionesCarreras)>0 and
-                $r['primera_mensualidad']== "No")
-            ){
+                    $r['bnd_doc_oblig_entregados'] == "Si" and
+                    count($seccionesCarreras) > 0 and
+                    $r['primera_mensualidad'] == "No")
+            ) {
                 array_push($carreras2, $r);
-            } elseif(
-                ($r['bnd_doc_oblig_entregados']=="No" and
-                $r[12325]<>"" and 
-                $r['tramites']=="Si" and 
-                $r['primera_mensualidad']== "Si"
+            } elseif (
+                ($r['bnd_doc_oblig_entregados'] == "No" and
+                    $r[12325] <> "" and
+                    $r['tramites'] == "Si" and
+                    $r['primera_mensualidad'] == "Si"
                 ) or (
-                $r['bnd_doc_oblig_entregados']=="No" and 
-                count($seccionesCarreras)>0 and
-                $r['primera_mensualidad']== "Si") 
-                ){
+                    $r['bnd_doc_oblig_entregados'] == "No" and
+                    count($seccionesCarreras) > 0 and
+                    $r['primera_mensualidad'] == "Si")
+            ) {
                 array_push($carreras3, $r);
-            }elseif(
-                ($r['bnd_doc_oblig_entregados']=="Si" and
-                $r[12325]<>"" and 
-                $r['tramites']=="No" and 
-                $r['primera_mensualidad']== "Si"
+            } elseif (
+                ($r['bnd_doc_oblig_entregados'] == "Si" and
+                    $r[12325] <> "" and
+                    $r['tramites'] == "No" and
+                    $r['primera_mensualidad'] == "Si"
                 ) or (
-                $r['bnd_doc_oblig_entregados']=="Si" and 
-                count($seccionesDiplomados)>0 and
-                $r['primera_mensualidad']== "Si")
-            ){
+                    $r['bnd_doc_oblig_entregados'] == "Si" and
+                    count($seccionesDiplomados) > 0 and
+                    $r['primera_mensualidad'] == "Si")
+            ) {
                 array_push($diplomadosCursos1, $r);
-            }elseif(
-                ($r['bnd_doc_oblig_entregados']=="Si" and
-                $r[12325]<>"" and 
-                $r['tramites']=="No" and 
-                $r['primera_mensualidad']== "No"
+            } elseif (
+                ($r['bnd_doc_oblig_entregados'] == "Si" and
+                    $r[12325] <> "" and
+                    $r['tramites'] == "No" and
+                    $r['primera_mensualidad'] == "No"
                 ) or (
-                $r['bnd_doc_oblig_entregados']=="Si" and 
-                count($seccionesCarreras)>0 and
-                $r['primera_mensualidad']== "No")
-                ){
+                    $r['bnd_doc_oblig_entregados'] == "Si" and
+                    count($seccionesCarreras) > 0 and
+                    $r['primera_mensualidad'] == "No")
+            ) {
                 array_push($diplomadosCursos2, $r);
-            }elseif(
-                ($r['bnd_doc_oblig_entregados']=="No" and
-                $r[12325]<>"" and 
-                $r['tramites']=="No" and 
-                $r['primera_mensualidad']== "Si"
+            } elseif (
+                ($r['bnd_doc_oblig_entregados'] == "No" and
+                    $r[12325] <> "" and
+                    $r['tramites'] == "No" and
+                    $r['primera_mensualidad'] == "Si"
                 ) or (
-                $r['bnd_doc_oblig_entregados']=="No" and 
-                count($seccionesCarreras)>0 and
-                $r['primera_mensualidad']== "Si")
-            ){
+                    $r['bnd_doc_oblig_entregados'] == "No" and
+                    count($seccionesCarreras) > 0 and
+                    $r['primera_mensualidad'] == "Si")
+            ) {
                 array_push($diplomadosCursos3, $r);
             }
         }
-        
+
         $totales_seccion = array();
         $seccion = "";
         $contador_seccion = 0;
@@ -3744,7 +3835,7 @@ class ClientesController extends Controller
             $totales_plantel_estatus,
             array("razon" => $plantel, "estatus" => $estatus, "total" => $contador_plantel_estatus)
         );
-        
+
 
 
 
@@ -3791,77 +3882,105 @@ class ClientesController extends Controller
             array("razon" => $plantel, "seccion" => $seccion, "estatus" => $estatus, "total" => $contador_plantel_seccion_estatus)
         );
         //dd($resgistros);
-        return view('clientes.reportes.concretadosComisionesR', 
-        compact('registros','descartados', 'totales_plantel_estatus', 
-        'totales_plantel_seccion_estatus','carreras1','diplomadosCursos1'
-        ,'carreras2','diplomadosCursos2'
-        ,'carreras3','diplomadosCursos3'
-    ));
+        return view(
+            'clientes.reportes.concretadosComisionesR',
+            compact(
+                'registros',
+                'descartados',
+                'totales_plantel_estatus',
+                'totales_plantel_seccion_estatus',
+                'carreras1',
+                'diplomadosCursos1',
+                'carreras2',
+                'diplomadosCursos2',
+                'carreras3',
+                'diplomadosCursos3'
+            )
+        );
     }
 
-    public function getFichaInscripcionGrupo(){
+    public function getFichaInscripcionGrupo()
+    {
         //dd(Auth::user());
-        $plantels=Empleado::where('user_id', Auth::user()->id)->first()->plantels->pluck('razon','id');
-        $lectivos=Lectivo::pluck('name','id');
-        
-        return view('clientes.reportes.getFichaInscripcionGrupo', compact('plantels','lectivos'));
+        $plantels = Empleado::where('user_id', Auth::user()->id)->first()->plantels->pluck('razon', 'id');
+        $lectivos = Lectivo::pluck('name', 'id');
+
+        return view('clientes.reportes.getFichaInscripcionGrupo', compact('plantels', 'lectivos'));
     }
 
-    public function getFichaInscripcionGrupoR(Request $request){
-        $datos=$request->all();
+    public function getFichaInscripcionGrupoR(Request $request)
+    {
+        $datos = $request->all();
 
-        
+
         //dd($datos);
-        $clientes=Hacademica::select('c.id as cliente_id','c.nombre','c.nombre2','c.ape_paterno',
-        'c.ape_materno','p.razon as plantel', 'p.id as plantel_id','e.name as especialidad', 'e.id as especialidad_id',
-        'n.name as nivel','n.id as nivel_id','gr.name as grado', 'gr.id as grado_id',
-        'l.name as lectivo', 'l.id as lectivo_id','g.name as grupo','g.id as grupo_id')
-        ->join('clientes as c','c.id','hacademicas.cliente_id')
-        ->join('plantels as p','p.id','hacademicas.plantel_id')
-        ->join('especialidads as e','e.id','hacademicas.especialidad_id')
-        ->join('nivels as n','n.id','hacademicas.nivel_id')
-        ->join('grados as gr','gr.id','hacademicas.grado_id')
-        ->join('lectivos as l','l.id','hacademicas.lectivo_id')
-        ->join('grupos as g','g.id','hacademicas.grupo_id')
-        ->where('hacademicas.plantel_id', $datos['plantel_id'])
-        ->where('hacademicas.especialidad_id', $datos['especialidad_id'])
-        ->where('hacademicas.nivel_id', $datos['nivel_id'])
-        ->where('hacademicas.grado_id', $datos['grado_id'])
-        ->where('hacademicas.lectivo_id', $datos['lectivo_id'])
-        ->where('hacademicas.grupo_id', $datos['grupo_id'])
-        ->distinct()
-        ->get();
+        $clientes = Hacademica::select(
+            'c.id as cliente_id',
+            'c.nombre',
+            'c.nombre2',
+            'c.ape_paterno',
+            'c.ape_materno',
+            'p.razon as plantel',
+            'p.id as plantel_id',
+            'e.name as especialidad',
+            'e.id as especialidad_id',
+            'n.name as nivel',
+            'n.id as nivel_id',
+            'gr.name as grado',
+            'gr.id as grado_id',
+            'l.name as lectivo',
+            'l.id as lectivo_id',
+            'g.name as grupo',
+            'g.id as grupo_id'
+        )
+            ->join('clientes as c', 'c.id', 'hacademicas.cliente_id')
+            ->join('plantels as p', 'p.id', 'hacademicas.plantel_id')
+            ->join('especialidads as e', 'e.id', 'hacademicas.especialidad_id')
+            ->join('nivels as n', 'n.id', 'hacademicas.nivel_id')
+            ->join('grados as gr', 'gr.id', 'hacademicas.grado_id')
+            ->join('lectivos as l', 'l.id', 'hacademicas.lectivo_id')
+            ->join('grupos as g', 'g.id', 'hacademicas.grupo_id')
+            ->where('hacademicas.plantel_id', $datos['plantel_id'])
+            ->where('hacademicas.especialidad_id', $datos['especialidad_id'])
+            ->where('hacademicas.nivel_id', $datos['nivel_id'])
+            ->where('hacademicas.grado_id', $datos['grado_id'])
+            ->where('hacademicas.lectivo_id', $datos['lectivo_id'])
+            ->where('hacademicas.grupo_id', $datos['grupo_id'])
+            ->distinct()
+            ->get();
         //dd($clientes);
 
         return view('clientes.reportes.getFichaInscripcionGrupoR', compact('clientes'));
     }
 
-    public function formatoFichaInscripcionIndividual(Request $request){
-        $datos=$request->all();
+    public function formatoFichaInscripcionIndividual(Request $request)
+    {
+        $datos = $request->all();
 
         $cliente = Cliente::find($datos['cliente_id']);
-        $especialidad=Especialidad::find($datos['especialidad_id']);
-        $plantel=Plantel::find($datos['plantel_id']);
-        $lectivo=Lectivo::find($datos['lectivo_id']);
-        $grado=Grado::find($datos['grado_id']);
-        $inscripcion=Inscripcion::where('inscripcions.plantel_id', $datos['plantel_id'])
-        ->where('inscripcions.especialidad_id', $datos['especialidad_id'])
-        ->where('inscripcions.nivel_id', $datos['nivel_id'])
-        ->where('inscripcions.grado_id', $datos['grado_id'])
-        ->where('inscripcions.lectivo_id', $datos['lectivo_id'])
-        ->where('inscripcions.grupo_id', $datos['grupo_id'])
-        ->with(['grupo'])
-        ->first();
-        $materias=Hacademica::select('m.name as materia','m.id as materia_id','m.codigo')
-        ->join('materia as m','m.id','hacademicas.materium_id')
-        ->where('hacademicas.plantel_id', $datos['plantel_id'])
-        ->where('hacademicas.especialidad_id', $datos['especialidad_id'])
-        ->where('hacademicas.nivel_id', $datos['nivel_id'])
-        ->where('hacademicas.grado_id', $datos['grado_id'])
-        ->where('hacademicas.lectivo_id', $datos['lectivo_id'])
-        ->where('hacademicas.grupo_id', $datos['grupo_id'])
-        ->distinct()
-        ->get();
+        $especialidad = Especialidad::find($datos['especialidad_id']);
+        $plantel = Plantel::find($datos['plantel_id']);
+        $lectivo = Lectivo::find($datos['lectivo_id']);
+        $grado = Grado::find($datos['grado_id']);
+        $inscripcion = Inscripcion::where('inscripcions.plantel_id', $datos['plantel_id'])
+            ->where('inscripcions.especialidad_id', $datos['especialidad_id'])
+            ->where('inscripcions.nivel_id', $datos['nivel_id'])
+            ->where('inscripcions.grado_id', $datos['grado_id'])
+            ->where('inscripcions.lectivo_id', $datos['lectivo_id'])
+            ->where('inscripcions.grupo_id', $datos['grupo_id'])
+            ->with(['grupo'])
+            ->first();
+        $materias = Hacademica::select('m.name as materia', 'm.nombre_oficial', 'm.id as materia_id', 'm.codigo')
+            ->join('materia as m', 'm.id', 'hacademicas.materium_id')
+            ->where('hacademicas.plantel_id', $datos['plantel_id'])
+            ->where('hacademicas.especialidad_id', $datos['especialidad_id'])
+            ->where('hacademicas.nivel_id', $datos['nivel_id'])
+            ->where('hacademicas.grado_id', $datos['grado_id'])
+            ->where('hacademicas.lectivo_id', $datos['lectivo_id'])
+            ->where('hacademicas.grupo_id', $datos['grupo_id'])
+            ->where('m.bnd_oficial', 1)
+            ->distinct()
+            ->get();
         //dd($materias->toArray());
         $combinacion = CombinacionCliente::where('cliente_id', $cliente->id)->first();
         $lista_documentos = DocAlumno::get();
@@ -3886,6 +4005,19 @@ class ClientesController extends Controller
         }
         //dd($inscripcion->grupo->name);
 
-        return view('clientes.reportes.formatoFichaInscripcionIndividual', compact('cliente', 'combinacion', 'lista_mostrar','especialidad','plantel','lectivo','materias','inscripcion','grado'));
+        return view(
+            'clientes.reportes.formatoFichaInscripcionIndividual',
+            compact(
+                'cliente',
+                'combinacion',
+                'lista_mostrar',
+                'especialidad',
+                'plantel',
+                'lectivo',
+                'materias',
+                'inscripcion',
+                'grado'
+            )
+        );
     }
 }

@@ -112,6 +112,8 @@
                             <th>@include('plantillas.getOrderLink', ['column' => 'activo', 'title' => 'ACTIVO'])</th>
                             <th>@include('plantillas.getOrderLink', ['column' => 'total_asistencias_lv', 'title' => 'Asistencias L-V'])</th>
                             <th>@include('plantillas.getOrderLink', ['column' => 'total_asistencias_s', 'title' => 'Asistencias S'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'inicio', 'title' => 'Inicio'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'fin', 'title' => 'Fin'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
@@ -130,6 +132,8 @@
                                 </td>
                                 <td>{{$lectivo->total_asistencias_lv}}</td>
                                 <td>{{$lectivo->total_asistencias_s}}</td>
+                                <td>{{$lectivo->inicio}}</td>
+                                <td>{{$lectivo->fin}}</td>
                                 <!--<td>
                                     @if ($lectivo->id==1) 
                                         <SPAN CLASS="label label-success"> 

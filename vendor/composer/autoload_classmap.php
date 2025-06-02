@@ -194,6 +194,7 @@ return array(
     'AddIdMapaToGradosTable' => $baseDir . '/database/migrations/2020_08_07_092216_add_id_mapa_to_grados_table.php',
     'AddIdTelegramToUsersTable' => $baseDir . '/database/migrations/2021_01_05_101807_add_id_telegram_to_users_table.php',
     'AddImagenEspecialidadTable' => $baseDir . '/database/migrations/2018_05_17_142252_add_imagen_especialidad_table.php',
+    'AddImagenToGradosTable' => $baseDir . '/database/migrations/2025_05_30_084207_add_imagen_to_grados_table.php',
     'AddImgFirmaPlantelsTable' => $baseDir . '/database/migrations/2019_10_29_115039_add_img_firma_plantels_table.php',
     'AddIndexAreaToInventariosTable' => $baseDir . '/database/migrations/2022_11_08_134040_add_index_area_to_inventarios_table.php',
     'AddIndexCombinacionIdAdeudosTable' => $baseDir . '/database/migrations/2018_04_17_133606_add_index_combinacion_id_adeudos_table.php',

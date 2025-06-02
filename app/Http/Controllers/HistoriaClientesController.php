@@ -57,7 +57,7 @@ class HistoriaClientesController extends Controller
 	{
 		$data = $request->all();
 		$cliente = $data['cliente'];
-		
+
 		$cliente_actual = Cliente::find($data['cliente']);
 		$bajas_existentes = HistoriaCliente::where('cliente_id', $data['cliente'])
 			->where('evento_cliente_id', 2)
@@ -65,13 +65,13 @@ class HistoriaClientesController extends Controller
 			->whereNull('deleted_at')
 			->get();
 		//dd($bajas_existentes);
-		$hoy=Carbon::createFromFormat('Y-m-d',Date('Y-m-d'))->day;
-		$dias_habiles_aux=Param::where('llave','dias_para_bajas')->value('valor');
-		$dias_habiles=explode(',',$dias_habiles_aux);
-		if(in_array($hoy,$dias_habiles) and $cliente_actual->st_cliente_id<>3){
-			$eventos=EventoCliente::pluck('name','id');
-		}else{
-			$eventos=EventoCliente::where('id','<>', 2)->pluck('name','id');
+		$hoy = Carbon::createFromFormat('Y-m-d', Date('Y-m-d'))->day;
+		$dias_habiles_aux = Param::where('llave', 'dias_para_bajas')->value('valor');
+		$dias_habiles = explode(',', $dias_habiles_aux);
+		if (in_array($hoy, $dias_habiles) and $cliente_actual->st_cliente_id <> 3) {
+			$eventos = EventoCliente::pluck('name', 'id');
+		} else {
+			$eventos = EventoCliente::where('id', '<>', 2)->pluck('name', 'id');
 		}
 
 		$inscripcions = Inscripcion::select(DB::raw('inscripcions.id, concat(p.razon," / ",e.name," / ",n.name," / ",g.name," / ",gru.name," / ",l.name," / ",pe.name) as inscripcion'))
@@ -87,7 +87,7 @@ class HistoriaClientesController extends Controller
 			->whereNull('inscripcions.deleted_at')
 			->pluck('inscripcion', 'id');
 		//dd($inscripcions);
-		return view('historiaClientes.create', compact('cliente', 'inscripcions', 'bajas_existentes','eventos'))
+		return view('historiaClientes.create', compact('cliente', 'inscripcions', 'bajas_existentes', 'eventos'))
 			->with('list', HistoriaCliente::getListFromAllRelationApps());
 	}
 
@@ -101,20 +101,20 @@ class HistoriaClientesController extends Controller
 	{
 
 		$input = $request->all();
-		
+
 		$input['usu_alta_id'] = Auth::user()->id;
 		$input['usu_mod_id'] = Auth::user()->id;
-		
-		if(!isset($input['st_historia_cliente_id'])){
+
+		if (!isset($input['st_historia_cliente_id'])) {
 			$input['st_historia_cliente_id'] = 1;
 		}
 		//dd($input);
 
-		$primer_adeudo=Adeudo::where('cliente_id', $input['cliente_id'])->first();
-		$mes_primer_adeudo=Carbon::createFromFormat('Y-m-d', $primer_adeudo->fecha_pago)->month;
-		$mes_actual=Carbon::createFromFormat('Y-m-d', date('Y-m-d'))->month;
-		if($mes_primer_adeudo==$mes_actual){
-			$input['bnd_prematuro']=1;
+		$primer_adeudo = Adeudo::where('cliente_id', $input['cliente_id'])->first();
+		$mes_primer_adeudo = Carbon::createFromFormat('Y-m-d', $primer_adeudo->fecha_pago)->month;
+		$mes_actual = Carbon::createFromFormat('Y-m-d', date('Y-m-d'))->month;
+		if ($mes_primer_adeudo == $mes_actual) {
+			$input['bnd_prematuro'] = 1;
 		}
 
 		$r = $request->hasFile('archivo_file');
@@ -135,6 +135,15 @@ class HistoriaClientesController extends Controller
 		//dd($registroHistoriaCliente);
 		RegistroHistoriaCliente::create($registroHistoriaCliente);
 
+		if ($e->evento_cliente_id == 6) {
+			$cliente = Cliente::find($e->cliente_id);
+			$cliente->st_cliente_id = 4;
+			$cliente->save();
+
+			$seguimiento = Seguimiento::where('cliente_id', $cliente->id)->first();
+			$seguimiento->st_seguimiento_id = 2;
+			$seguimiento->save();
+		}
 
 		/*              
                 if($e->evento_cliente_id==4){
@@ -190,9 +199,9 @@ class HistoriaClientesController extends Controller
 			}
 		}
 
-		if($input['st_historia_cliente_id']==2){
-			$cliente=Cliente::select('id','st_cliente_id')->find($input['cliente_id']);
-			$cliente->st_cliente_id=3;
+		if ($input['st_historia_cliente_id'] == 2) {
+			$cliente = Cliente::select('id', 'st_cliente_id')->find($input['cliente_id']);
+			$cliente->st_cliente_id = 3;
 			$cliente->save();
 			//dd($cliente);
 			return redirect()->route('home');
@@ -223,13 +232,13 @@ class HistoriaClientesController extends Controller
 	{
 		$historiaCliente = $historiaCliente->find($id);
 		$cliente = $historiaCliente->cliente_id;
-		$hoy=Carbon::createFromFormat('Y-m-d',Date('Y-m-d'))->day;
-		$dias_habiles_aux=Param::where('llave','dias_para_bajas')->value('valor');
-		$dias_habiles=explode(',',$dias_habiles_aux);
-		if(in_array($hoy,$dias_habiles ) and $cliente->st_cliente_id<>3){
-			$eventos=EventoCliente::pluck('name','id');
-		}else{
-			$eventos=EventoCliente::where('id','<>', 2)->pluck('name','id');
+		$hoy = Carbon::createFromFormat('Y-m-d', Date('Y-m-d'))->day;
+		$dias_habiles_aux = Param::where('llave', 'dias_para_bajas')->value('valor');
+		$dias_habiles = explode(',', $dias_habiles_aux);
+		if (in_array($hoy, $dias_habiles) and $cliente->st_cliente_id <> 3) {
+			$eventos = EventoCliente::pluck('name', 'id');
+		} else {
+			$eventos = EventoCliente::where('id', '<>', 2)->pluck('name', 'id');
 		}
 		$inscripcions = Inscripcion::select(DB::raw('inscripcions.id, concat(p.razon," / ",e.name," / ",n.name," / ",g.name," / ",gru.name," / ",l.name," / ",pe.name) as inscripcion'))
 			->join('plantels as p', 'p.id', '=', 'inscripcions.plantel_id')
@@ -627,11 +636,11 @@ class HistoriaClientesController extends Controller
 
 	public function bajasSegementado()
 	{
-		$planteles_activos=Empleado::where('user_id', Auth::user()->id)->first()->plantels()->pluck('id');
+		$planteles_activos = Empleado::where('user_id', Auth::user()->id)->first()->plantels()->pluck('id');
 		//dd($planteles_activos);
 		$plantels = Plantel::whereIn('id', $planteles_activos)->pluck('razon', 'id');
 		//dd($plantels);
-		
+
 		return view('historiaClientes.reportes.bajasSegmentado', compact('plantels'))
 			->with('list', Cliente::getListFromAllRelationApps());;
 	}

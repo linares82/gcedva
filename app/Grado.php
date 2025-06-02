@@ -25,9 +25,29 @@ class Grado extends ModeloBase
 
 	//Mass Assignment
 	protected $fillable = [
-		'nivel_id', 'name', 'especialidad_id', 'plantel_id', 'usu_alta_id', 'usu_mod_id', 'cct', 'seccion',
-		'precio_online', 'mexico_bnd', 'nombre2', 'modulo_final_id', 'rvoe', 'denominacion', 'fec_rvoe', 'id_mapa',
-		'clave_servicio', 'nivel_educativo_sat_id','seccion_id','duracion_periodo_id'
+		'nivel_id',
+		'name',
+		'especialidad_id',
+		'plantel_id',
+		'usu_alta_id',
+		'usu_mod_id',
+		'cct',
+		'seccion',
+		'precio_online',
+		'mexico_bnd',
+		'nombre2',
+		'modulo_final_id',
+		'rvoe',
+		'denominacion',
+		'fec_rvoe',
+		'id_mapa',
+		'clave_servicio',
+		'nivel_educativo_sat_id',
+		'seccion_id',
+		'duracion_periodo_id',
+		'emision_rvoe',
+		'imagen',
+		'url_reglamento'
 	];
 
 	public function usu_alta()
@@ -85,11 +105,10 @@ class Grado extends ModeloBase
 	{
 		return $this->belongsTo('App\DuracionPeriodo');
 	} // end
-/*
+	/*
 	public function seccion()
 	{
 		return $this->belongsTo('App\Seccion');
 	} // end
 */
-	
 }
