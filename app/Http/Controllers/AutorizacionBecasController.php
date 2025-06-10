@@ -331,7 +331,7 @@ class AutorizacionBecasController extends Controller
 		$planteles = $empleado->plantels->pluck('razon', 'id');
 		$conceptos = CajaConcepto::pluck('name', 'id');
 		//dd($planteles);
-		$planteles->prepend('Seleccionar opciÃ³n');
+		$planteles->prepend('Seleccionar opcion');
 
 		//dd($planteles);
 		return view('autorizacionBecas.reportes.becasAutorizadasMes', compact('planteles', 'conceptos'));

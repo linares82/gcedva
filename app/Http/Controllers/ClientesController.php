@@ -55,6 +55,7 @@ use App\PivotDocCliente;
 use App\PreguntaCliente;
 use App\IncidenceCliente;
 use App\CcuestionarioDato;
+use App\ProcedenciaAlumno;
 use App\CombinacionCliente;
 use App\Helpers\ValidaCurp;
 use Illuminate\Support\Str;
@@ -63,6 +64,7 @@ use Illuminate\Http\Request;
 use App\ConsecutivoMatricula;
 use App\ConsultaCalificacion;
 use App\ImpresionComprobanteE;
+use App\SepTEstudioAntecedente;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\createCliente;
 use App\Http\Requests\updateCliente;
@@ -384,6 +386,13 @@ class ClientesController extends Controller
         try {
             //dd($input);
             $c = Cliente::create($input);
+
+            $input_procedencia['cliente_id'] = $c->id;
+            $input_procedencia['usu_alta_id'] = Auth::user()->id;
+            $input_procedencia['usu_mod_id'] = Auth::user()->id;
+
+            ProcedenciaAlumno::create($input_procedencia);
+
             $id = $c->id;
             $input_seguimiento['cliente_id'] = $c->id;
             $input_seguimiento['st_seguimiento_id'] = 1;
@@ -435,6 +444,13 @@ class ClientesController extends Controller
     public function edit($id, Cliente $cliente)
     {
         $cliente = $cliente->with(['ccuestionario'])->find($id);
+        if (!isset($cliente->procedenciaAlumno)) {
+            $input_procedencia['cliente_id'] = $cliente->id;
+            $input_procedencia['usu_alta_id'] = Auth::user()->id;
+            $input_procedencia['usu_mod_id'] = Auth::user()->id;
+
+            ProcedenciaAlumno::create($input_procedencia);
+        }
         //dd($cliente->ccuestionario->ccuestionarioPreguntas);
         $p = Auth::user()->can('IfiltroEmpleadosXPlantel');
         //dd($p);
@@ -465,7 +481,7 @@ class ClientesController extends Controller
                 ->pluck('name', 'id');
         }
         $empleados = $empleados->reverse();
-        $empleados->put(0, 'Seleccionar OpciÃƒÆ’Ã‚Â³n');
+        $empleados->put("", 'Seleccionar Opción');
         $empleados = $empleados->reverse();
         //dd($empleados);
         $cp = PreguntaCliente::where('cliente_id', '=', $id)->get();
@@ -517,6 +533,12 @@ class ClientesController extends Controller
             'url' => $curp_url->valor,
         ];
 
+        $sepTipoEstudioAntecedente = SepTEstudioAntecedente::select(DB::raw('concat(id_t_estudio_antecedente,"-",t_estudio_antecedente) as name, id'))
+            ->pluck('name', 'id');
+
+        $sepTipoEstudioAntecedente->prepend('Seleccionar Opcion', '');
+        //dd($sepTipoEstudioAntecedente);
+
         return view('clientes.edit', compact(
             'api_valida_curp',
             'cliente',
@@ -529,7 +551,8 @@ class ClientesController extends Controller
             'historia',
             'estado_civiles',
             'incidencias',
-            'plantels'
+            'plantels',
+            'sepTipoEstudioAntecedente'
         ))
             ->with('list', Cliente::getListFromAllRelationApps())
             ->with('list1', PivotDocCliente::getListFromAllRelationApps())
@@ -617,6 +640,18 @@ class ClientesController extends Controller
     {
         //dd("fil");
         //$input = $request->all();
+        $input_procedencia = $request->only(
+            'institucion_procedencia',
+            'sep_t_estudio_antecedente_id',
+            'estado_procedencia_id',
+            'fecha_inicio',
+            'fecha_terminacion',
+            'numero_cedula'
+        );
+        $input_procedencia['estado_id'] = $input_procedencia['estado_procedencia_id'];
+        $procedenciaAlumno = ProcedenciaAlumno::where('cliente_id', $id)->first();
+        $procedenciaAlumno->update($input_procedencia);
+
 
         $input = $request->except([
             '1',
@@ -3200,7 +3235,7 @@ class ClientesController extends Controller
     public function verificaMateriasAdeudosPendientes(Request $request)
     {
         $datos = $request->all();
-        $cliente = Cliente::find($datos['id']);
+        $cliente = Cliente::select('id', 'st_cliente_id')->find($datos['id']);
         $seguimiento = Seguimiento::where('cliente_id', $cliente->id)->first();
         if ($cliente->st_cliente_id == 31) {
             $cliente->st_cliente_id = 30;

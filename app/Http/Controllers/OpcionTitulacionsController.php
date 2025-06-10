@@ -1,15 +1,20 @@
-<?php namespace App\Http\Controllers;
+<?php
 
+namespace App\Http\Controllers;
+
+use Auth;
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
 
 use App\OpcionTitulacion;
 use Illuminate\Http\Request;
-use Auth;
-use App\Http\Requests\updateOpcionTitulacion;
+use App\SepModalidadTitulacion;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\createOpcionTitulacion;
+use App\Http\Requests\updateOpcionTitulacion;
 
-class OpcionTitulacionsController extends Controller {
+class OpcionTitulacionsController extends Controller
+{
 
 	/**
 	 * Display a listing of the resource.
@@ -30,8 +35,11 @@ class OpcionTitulacionsController extends Controller {
 	 */
 	public function create()
 	{
-		return view('opcionTitulacions.create')
-			->with( 'list', OpcionTitulacion::getListFromAllRelationApps() );
+		$sep_modalidads = SepModalidadTitulacion::select(DB::raw('concat(id_modalidad,"-",descripcion) as name, id'))
+			->pluck('name', 'id');
+		$sep_modalidads->prepend('Seleccionar opcion', NULL);
+		return view('opcionTitulacions.create', compact('sep_modalidads'))
+			->with('list', OpcionTitulacion::getListFromAllRelationApps());
 	}
 
 	/**
@@ -44,11 +52,11 @@ class OpcionTitulacionsController extends Controller {
 	{
 
 		$input = $request->all();
-		$input['usu_alta_id']=Auth::user()->id;
-		$input['usu_mod_id']=Auth::user()->id;
+		$input['usu_alta_id'] = Auth::user()->id;
+		$input['usu_mod_id'] = Auth::user()->id;
 
 		//create data
-		OpcionTitulacion::create( $input );
+		OpcionTitulacion::create($input);
 
 		return redirect()->route('opcionTitulacions.index')->with('message', 'Registro Creado.');
 	}
@@ -61,7 +69,7 @@ class OpcionTitulacionsController extends Controller {
 	 */
 	public function show($id, OpcionTitulacion $opcionTitulacion)
 	{
-		$opcionTitulacion=$opcionTitulacion->find($id);
+		$opcionTitulacion = $opcionTitulacion->find($id);
 		return view('opcionTitulacions.show', compact('opcionTitulacion'));
 	}
 
@@ -73,9 +81,12 @@ class OpcionTitulacionsController extends Controller {
 	 */
 	public function edit($id, OpcionTitulacion $opcionTitulacion)
 	{
-		$opcionTitulacion=$opcionTitulacion->find($id);
-		return view('opcionTitulacions.edit', compact('opcionTitulacion'))
-			->with( 'list', OpcionTitulacion::getListFromAllRelationApps() );
+		$opcionTitulacion = $opcionTitulacion->find($id);
+		$sep_modalidads = SepModalidadTitulacion::select(DB::raw('concat(id_modalidad,"-",descripcion) as name, id'))
+			->pluck('name', 'id');
+		$sep_modalidads->prepend('Seleccionar opcion', NULL);
+		return view('opcionTitulacions.edit', compact('opcionTitulacion', 'sep_modalidads'))
+			->with('list', OpcionTitulacion::getListFromAllRelationApps());
 	}
 
 	/**
@@ -86,9 +97,9 @@ class OpcionTitulacionsController extends Controller {
 	 */
 	public function duplicate($id, OpcionTitulacion $opcionTitulacion)
 	{
-		$opcionTitulacion=$opcionTitulacion->find($id);
+		$opcionTitulacion = $opcionTitulacion->find($id);
 		return view('opcionTitulacions.duplicate', compact('opcionTitulacion'))
-			->with( 'list', OpcionTitulacion::getListFromAllRelationApps() );
+			->with('list', OpcionTitulacion::getListFromAllRelationApps());
 	}
 
 	/**
@@ -101,10 +112,10 @@ class OpcionTitulacionsController extends Controller {
 	public function update($id, OpcionTitulacion $opcionTitulacion, updateOpcionTitulacion $request)
 	{
 		$input = $request->all();
-		$input['usu_mod_id']=Auth::user()->id;
+		$input['usu_mod_id'] = Auth::user()->id;
 		//update data
-		$opcionTitulacion=$opcionTitulacion->find($id);
-		$opcionTitulacion->update( $input );
+		$opcionTitulacion = $opcionTitulacion->find($id);
+		$opcionTitulacion->update($input);
 
 		return redirect()->route('opcionTitulacions.index')->with('message', 'Registro Actualizado.');
 	}
@@ -115,12 +126,11 @@ class OpcionTitulacionsController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id,OpcionTitulacion $opcionTitulacion)
+	public function destroy($id, OpcionTitulacion $opcionTitulacion)
 	{
-		$opcionTitulacion=$opcionTitulacion->find($id);
+		$opcionTitulacion = $opcionTitulacion->find($id);
 		$opcionTitulacion->delete();
 
 		return redirect()->route('opcionTitulacions.index')->with('message', 'Registro Borrado.');
 	}
-
 }

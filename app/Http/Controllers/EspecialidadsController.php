@@ -127,17 +127,17 @@ class EspecialidadsController extends Controller
     public function destroy($id, Especialidad $especialidad)
     {
         $especialidad = $especialidad->find($id);
-        if($especialidad->combinacionClientes->count==0){
+        if ($especialidad->combinacionClientes->count == 0) {
             $especialidad->delete();
             return redirect()->route('especialidads.index')->with('message', 'Registro Borrado.');
         }
-        
+
         return redirect()->route('especialidads.index')->with('message', 'Registro en uso, no se pudo borrar.');
-        
     }
 
     public function getCmbEspecialidad(Request $request)
     {
+
         if ($request->ajax()) {
             //dd($request->all());
             $plantel = $request->get('plantel_id');
@@ -237,9 +237,9 @@ class EspecialidadsController extends Controller
 
     public function listaEspecialidades(Request $request)
     {
-        $especialidades = Especialidad::whereIn('plantel_id',$request->input('plantel'))->orderBy('plantel_id')->orderBy('id')->get();
-        $plantels=Plantel::pluck('razon','id');
-        return view('combinacionClientes.reportes.cargas', compact('especialidades','plantels'));
+        $especialidades = Especialidad::whereIn('plantel_id', $request->input('plantel'))->orderBy('plantel_id')->orderBy('id')->get();
+        $plantels = Plantel::pluck('razon', 'id');
+        return view('combinacionClientes.reportes.cargas', compact('especialidades', 'plantels'));
     }
 
     public function apiListaXPlantel(Request $request)
@@ -262,7 +262,7 @@ class EspecialidadsController extends Controller
 
             $final = array();
             $r2 = DB::table('especialidads as e')
-                ->join('hacademicas as h','h.especialidad_id','=','e.id')
+                ->join('hacademicas as h', 'h.especialidad_id', '=', 'e.id')
                 ->select('e.id', 'e.name')
                 ->where('e.plantel_id', '=', $plantel)
                 ->where('h.grupo_id', '=', $grupo)
@@ -311,5 +311,4 @@ class EspecialidadsController extends Controller
             }
         }
     }
-
 }

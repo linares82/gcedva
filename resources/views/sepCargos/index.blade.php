@@ -143,10 +143,8 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => ' name', 'title' => ' NAME'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => '', 'title' => ''])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'id_cargo', 'title' => 'ID Cargo'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'cargo', 'title' => 'Cargo'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
@@ -154,11 +152,10 @@
                     <tbody>
                         @foreach($sepCargos as $sepCargo)
                             <tr>
-                                <td><a href="{{ route('sepCargos.show', $sepCargo->id) }}">{{$sepCargo->id}}</a></td>
-                                <td>{{$sepCargo-> name}}</td>
-                    <td>{{$sepCargo->}}</td>
-                    <td>{{$sepCargo->usu_alta_id}}</td>
-                    <td>{{$sepCargo->usu_mod_id}}</td>
+                                <td>{{$sepCargo->id}}</td>
+                                <td>{{$sepCargo->id_cargo}}</td>
+                                <td>{{$sepCargo->cargo}}</td>
+                    
                                 <td class="text-right">
                                     @permission('sepCargos.edit')
                                     <a class="btn btn-xs btn-primary" href="{{ route('sepCargos.duplicate', $sepCargo->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>

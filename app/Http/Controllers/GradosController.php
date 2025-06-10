@@ -9,12 +9,17 @@ use App\Grado;
 use App\Modulo;
 use App\Plantel;
 use App\Seccion;
+use App\SepCarrera;
+use App\PlanEstudio;
 use App\Http\Requests;
+use App\DuracionPeriodo;
 use Illuminate\Http\Request;
 use App\Http\Requests\createGrado;
 use App\Http\Requests\updateGrado;
 use App\Http\Controllers\Controller;
+use App\SepAutorizacionReconocimiento;
 use Illuminate\Support\Facades\Storage;
+use App\SepFundamentoLegalServicioSocial;
 
 class GradosController extends Controller
 {
@@ -39,7 +44,21 @@ class GradosController extends Controller
     public function create()
     {
         $modulos = Modulo::pluck('name', 'id');
-        return view('grados.create', compact('modulos'))
+        $sep_carreras = SepCarrera::select(DB::raw('concat(cve_carrera,"-",descripcion) as name, id'))
+            ->pluck('name', 'id');
+        $sep_carreras->prepend("Seleccionar opcion", NULL);
+        $sep_autorizacion_reconocimientos = SepAutorizacionReconocimiento::select(DB::raw('concat(id_autorizacion_reconocimiento,"-",autorizacion_reconocimiento) as name, id'))
+            ->pluck('name', 'id');
+        $sep_autorizacion_reconocimientos->prepend("Seleccionar opcion", NULL);
+        $sep_fundamento_legal = SepFundamentoLegalServicioSocial::select(DB::raw('concat(id_fundamento_legal_servicio_social,"-",fundamento_legal_servicio_social) as name, id'))
+            ->pluck('name', 'id');
+        $sep_fundamento_legal->prepend("Seleccionar opcion", NULL);
+        return view('grados.create', compact(
+            'modulos',
+            'sep_carreras',
+            'sep_fundamento_legal',
+            'sep_autorizacion_reconocimientos'
+        ))
             ->with('list', Grado::getListFromAllRelationApps());
     }
 
@@ -53,6 +72,7 @@ class GradosController extends Controller
     {
 
         $input = $request->all();
+
         if (isset($input['mexico_bnd'])) {
             $input['mexico_bnd'] = 1;
         } else {
@@ -90,8 +110,32 @@ class GradosController extends Controller
     public function edit($id, Grado $grado)
     {
         $grado = $grado->find($id);
+        //dd($grado->toArray());
         $modulos = Modulo::pluck('name', 'id');
-        return view('grados.edit', compact('grado', 'modulos'))
+        $duracion_periodo = DuracionPeriodo::pluck('name', 'id');
+        $duracion_periodo->prepend('Seleccionar opcion', "");
+        $plan_estudio = PlanEstudio::pluck('name', 'id');
+        $plan_estudio->prepend('Seleccionar opcion', "");
+        //dd($plan_estudio);
+        $sep_carreras = SepCarrera::select(DB::raw('concat(cve_carrera,"-",descripcion) as name, id'))
+            ->pluck('name', 'id');
+        $sep_carreras->prepend("Seleccionar opcion", "");
+        //dd($sep_carreras);
+        $sep_autorizacion_reconocimientos = SepAutorizacionReconocimiento::select(DB::raw('concat(id_autorizacion_reconocimiento,"-",autorizacion_reconocimiento) as name, id'))
+            ->pluck('name', 'id');
+        $sep_autorizacion_reconocimientos->prepend("Seleccionar opcion", "");
+        $sep_fundamento_legal = SepFundamentoLegalServicioSocial::select(DB::raw('concat(id_fundamento_legal_servicio_social,"-",fundamento_legal_servicio_social) as name, id'))
+            ->pluck('name', 'id');
+        $sep_fundamento_legal->prepend("Seleccionar opcion", "");
+        return view('grados.edit', compact(
+            'grado',
+            'modulos',
+            'sep_carreras',
+            'sep_fundamento_legal',
+            'sep_autorizacion_reconocimientos',
+            'duracion_periodo',
+            'plan_estudio'
+        ))
             ->with('list', Grado::getListFromAllRelationApps());
     }
 
@@ -124,6 +168,9 @@ class GradosController extends Controller
             $input['mexico_bnd'] = 1;
         } else {
             $input['mexico_bnd'] = 0;
+        }
+        if (!isset($input['bnd_servicio_social'])) {
+            $input['bnd_servicio_social'] = 0;
         }
         //$input['seccion']=Seccion::where('id',$input['seccion_id'])->value('name');
         //update data

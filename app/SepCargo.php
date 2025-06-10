@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class SepCargo extends Model
 {
 	use RelationManagerTrait, GetAllDataTrait;
-	use SoftDeletes;
 
 	public function __construct(array $attributes = array())
 	{
@@ -18,18 +17,5 @@ class SepCargo extends Model
 	}
 
 	//Mass Assignment
-	protected $fillable = ['name', '', 'usu_alta_id', 'usu_mod_id'];
-
-	public function usu_alta()
-	{
-		return $this->hasOne('App\User', 'id', 'usu_alta_id');
-	} // end
-
-	public function usu_mod()
-	{
-		return $this->hasOne('App\User', 'id', 'usu_mod_id');
-	} // end
-
-
-	protected $dates = ['deleted_at'];
+	protected $fillable = ['id', 'id_cargo', 'cargo'];
 }

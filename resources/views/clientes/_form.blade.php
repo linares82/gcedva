@@ -23,7 +23,9 @@
         <li class="">
             <a data-toggle="tab" href="#tab7">Facturación</a>
         </li>
-        
+        <li class="">
+            <a data-toggle="tab" href="#tab8">Procedencia</a>
+        </li>
     </ul>
     <div class="tab-content">
         <div id="tab1" class="tab-pane active">
@@ -1691,6 +1693,54 @@
             </fieldset>
         </div>
 
+        <div id="tab8" class="tab-pane">
+            @if(isset($cliente->procedenciaAlumno))
+                <fieldset>
+                    <div class="form-group col-md-4 @if($errors->has('institucion_procedencia')) has-error @endif">
+                       <label for="institucion_procedencia-field">Institucion Procedencia</label>
+                       {!! Form::text("institucion_procedencia", $cliente->procedenciaAlumno->institucion_procedencia, array("class" => "form-control", "id" => "institucion_procedencia-field")) !!}
+                       @if($errors->has("institucion_procedencia"))
+                        <span class="help-block">{{ $errors->first("institucion_procedencia") }}</span>
+                       @endif
+                    </div>
+                    <div class="form-group col-md-4 @if($errors->has('sep_t_estudio_antecedente_id')) has-error @endif">
+                       <label for="sep_t_estudio_antecedente_id-field">Sep Tipo Estudio</label>
+                       {!! Form::select("sep_t_estudio_antecedente_id", $sepTipoEstudioAntecedente, $cliente->procedenciaAlumno->sep_t_estudio_antecedente_id, array("class" => "form-control select_seguridad", "id" => "sep_t_estudio_antecedente_id-field")) !!}
+                       @if($errors->has("sep_t_estudio_antecedente_id"))
+                        <span class="help-block">{{ $errors->first("sep_t_estudio_antecedente_id") }}</span>
+                       @endif
+                    </div>
+                    <div class="form-group col-md-4 @if($errors->has('estado_procedencia_id')) has-error @endif">
+                       <label for="estado_procedencia_id-field">Estado</label>
+                       {!! Form::select("estado_procedencia_id", $list["Estado"], $cliente->procedenciaAlumno->estado_id, array("class" => "form-control select_seguridad", "id" => "estado_procedencia_id-field")) !!}
+                       @if($errors->has("estado_procedencia_id"))
+                        <span class="help-block">{{ $errors->first("estado_procedencia_id") }}</span>
+                       @endif
+                    </div>
+                    <div class="form-group col-md-4 @if($errors->has('fecha_inicio')) has-error @endif">
+                       <label for="fecha_inicio-field">Fecha Inicio</label>
+                       {!! Form::text("fecha_inicio", $cliente->procedenciaAlumno->fecha_inicio, array("class" => "form-control fecha", "id" => "fecha_inicio-field")) !!}
+                       @if($errors->has("fecha_inicio"))
+                        <span class="help-block">{{ $errors->first("fecha_inicio") }}</span>
+                       @endif
+                    </div>
+                    <div class="form-group col-md-4 @if($errors->has('fecha_terminacion')) has-error @endif">
+                       <label for="fecha_terminacion-field">Fecha Terminación</label>
+                       {!! Form::text("fecha_terminacion", $cliente->procedenciaAlumno->fecha_terminacion, array("class" => "form-control fecha", "id" => "fecha_terminacion-field")) !!}
+                       @if($errors->has("fecha_terminacion"))
+                        <span class="help-block">{{ $errors->first("fecha_terminacion") }}</span>
+                       @endif
+                    </div>
+                    <div class="form-group col-md-4 @if($errors->has('numero_cedula')) has-error @endif">
+                       <label for="numero_cedula-field">Numero Cedula</label>
+                       {!! Form::text("numero_cedula", $cliente->procedenciaAlumno->numero_cedula, array("class" => "form-control", "id" => "numero_cedula-field")) !!}
+                       @if($errors->has("numero_cedula"))
+                        <span class="help-block">{{ $errors->first("numero_cedula") }}</span>
+                       @endif
+                    </div>            
+                </fieldset>
+            @endif
+        </div>
     </div>
 </div>    
 

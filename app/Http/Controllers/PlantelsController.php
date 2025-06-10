@@ -14,10 +14,12 @@ use App\Hacademica;
 use App\Http\Requests;
 use App\ConceptoMultipago;
 use App\DocPlantelPlantel;
+use App\SepCertInstitucion;
 use App\AsignacionAcademica;
 use App\PlantelAgrupamiento;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use App\SepInstitucionEducativa;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\createPlantel;
 use App\Http\Requests\updatePlantel;
@@ -48,7 +50,7 @@ class PlantelsController extends Controller
 	{
 		//dd("fil");
 		$directores = Empleado::select(DB::raw("CONCAT(nombre,' ',ape_paterno,' ',ape_materno) AS name"), 'id')
-			->whereIn('puesto_id', array(4,24))->pluck('name', 'id');
+			->whereIn('puesto_id', array(4, 24))->pluck('name', 'id');
 		//dd($directores);
 		$responsables = Empleado::select(DB::raw("CONCAT(nombre,' ',ape_paterno,' ',ape_materno) AS name"), 'id')
 			->where('puesto_id', 23)->pluck('name', 'id');
@@ -57,10 +59,24 @@ class PlantelsController extends Controller
 		$lista_conceptosMultipago = ConceptoMultipago::pluck('name', 'id');
 		$lista_formaPagos = FormaPago::pluck('name', 'id');
 		$matrices = Plantel::pluck('razon', 'id');
-		$plantel=new Plantel;
-		$documentos_faltantes=null;
-		return view('plantels.create', compact('matrices', 'directores', 'responsables', 'enlaces', 'lista_conceptosMultipago', 'lista_formaPagos','plantel',
-		'documentos_faltantes'))
+		$plantel = new Plantel;
+		$documentos_faltantes = null;
+		$sep_instituciones = SepInstitucionEducativa::select(DB::raw('concat(cve_institucion,"-",descripcion) as name, id'))
+			->pluck('name', 'id');
+		$sep_cert_instituciones = SepCertInstitucion::select(DB::raw('concat(id_institucion,"-",descripcion) as name, id'))
+			->pluck('name', 'id');
+		return view('plantels.create', compact(
+			'matrices',
+			'directores',
+			'responsables',
+			'enlaces',
+			'lista_conceptosMultipago',
+			'lista_formaPagos',
+			'plantel',
+			'documentos_faltantes',
+			'sep_instituciones',
+			'sep_cert_instituciones'
+		))
 			->with('list', Plantel::getListFromAllRelationApps())
 			->with('list1', DocPlantelPlantel::getListFromAllRelationApps());
 	}
@@ -78,8 +94,8 @@ class PlantelsController extends Controller
 		$formas_pago = $request->only('forma_pago_id');
 		$input['usu_alta_id'] = Auth::user()->id;
 		$input['usu_mod_id'] = Auth::user()->id;
-		if(!isset($input['bnd_excepcion_documentos'])){
-			$input['bnd_excepcion_documentos']=0;
+		if (!isset($input['bnd_excepcion_documentos'])) {
+			$input['bnd_excepcion_documentos'] = 0;
 		}
 		//$input['logo']="";
 		$r = $request->hasFile('logo_file');
@@ -148,7 +164,7 @@ class PlantelsController extends Controller
 		$plantel = $plantel->find($id);
 		$registrosHistoricos = $plantel->revisionHistory->reverse()->paginate(30);
 		//dd($registrosHistoricos->paginate(5));
-		return view('plantels.show', compact('plantel','registrosHistoricos'));
+		return view('plantels.show', compact('plantel', 'registrosHistoricos'));
 	}
 
 	/**
@@ -161,10 +177,10 @@ class PlantelsController extends Controller
 	{
 		$plantel = $plantel->find($id);
 		$directores = Empleado::select(DB::raw("CONCAT(nombre,' ',ape_paterno,' ',ape_materno) AS name"), 'id')
-			->whereIn('puesto_id', array(4,24))->pluck('name', 'id');
+			->whereIn('puesto_id', array(4, 24))->pluck('name', 'id');
 		//dd($directores);
 		$responsables = Empleado::select(DB::raw("CONCAT(nombre,' ',ape_paterno,' ',ape_materno) AS name"), 'id')
-			->whereIn('puesto_id', array(4,23))->pluck('name', 'id');
+			->whereIn('puesto_id', array(4, 23))->pluck('name', 'id');
 		$enlaces = Empleado::select(DB::raw("CONCAT(nombre,' ',ape_paterno,' ',ape_materno) AS name"), 'id')
 			->where('puesto_id', 15)->pluck('name', 'id');
 		$ruta = public_path() . "\\imagenes\\planteles\\" . $id . "\\";
@@ -191,6 +207,13 @@ class PlantelsController extends Controller
 
 		$lista_conceptosMultipago = ConceptoMultipago::pluck('name', 'id');
 
+		$sep_instituciones = SepInstitucionEducativa::select(DB::raw('concat(cve_institucion,"-",descripcion) as name, id'))
+			->pluck('name', 'id');
+		$sep_instituciones->prepend('Seleccionar Opción', "");
+		$sep_cert_instituciones = SepCertInstitucion::select(DB::raw('concat(id_institucion,"-",descripcion) as name, id'))
+			->pluck('name', 'id');
+		$sep_cert_instituciones->prepend('Seleccionar Opción', "");
+
 		return view('plantels.edit', compact(
 			'plantel',
 			'ruta',
@@ -200,7 +223,9 @@ class PlantelsController extends Controller
 			'enlaces',
 			'lista_conceptosMultipago',
 			'lista_formaPagos',
-			'matrices'
+			'matrices',
+			'sep_instituciones',
+			'sep_cert_instituciones'
 		))
 			->with('list', Plantel::getListFromAllRelationApps())
 			->with('list1', DocPlantelPlantel::getListFromAllRelationApps());
@@ -231,23 +256,23 @@ class PlantelsController extends Controller
 		//dd($request->all());
 		$input = $request->except('concepto_multipagos_id', 'forma_pago_id');
 		$conceptos = $request->only('concepto_multipagos_id');
-		
+
 		$formas_pago = $request->only('forma_pago_id');
 		$input['usu_mod_id'] = Auth::user()->id;
-		if(!isset($input['bnd_excepcion_documentos'])){
-			$input['bnd_excepcion_documentos']=0;
+		if (!isset($input['bnd_excepcion_documentos'])) {
+			$input['bnd_excepcion_documentos'] = 0;
 		}
-		if(isset($input['bnd_multipagos_activo']) and $input['bnd_multipagos_activo']=="on"){
-			$input['bnd_multipagos_activo']=1;
-		}else{
-			$input['bnd_multipagos_activo']=0;
+		if (isset($input['bnd_multipagos_activo']) and $input['bnd_multipagos_activo'] == "on") {
+			$input['bnd_multipagos_activo'] = 1;
+		} else {
+			$input['bnd_multipagos_activo'] = 0;
 		}
-		if(isset($input['bnd_openpay_activo']) and $input['bnd_openpay_activo']=="on"){
-			$input['bnd_openpay_activo']=1;
-		}else{
-			$input['bnd_openpay_activo']=0;
+		if (isset($input['bnd_openpay_activo']) and $input['bnd_openpay_activo'] == "on") {
+			$input['bnd_openpay_activo'] = 1;
+		} else {
+			$input['bnd_openpay_activo'] = 0;
 		}
-				//$input['logo']="";
+		//$input['logo']="";
 		$r = $request->hasFile('logo_file');
 		if ($r) {
 			$logo_file = $request->file('logo_file');
@@ -273,6 +298,7 @@ class PlantelsController extends Controller
 
 		//update data
 		$e = $plantel->update($input);
+
 
 		if (isset($conceptos['concepto_multipagos_id']) or isset($formas_pago['forma_pago_id'])) {
 			$plantel->conceptoMultipagos()->sync($conceptos['concepto_multipagos_id']);
@@ -370,8 +396,8 @@ class PlantelsController extends Controller
 	public function listaPlanteles()
 	{
 		$planteles = Plantel::all();
-		$plantels=Plantel::pluck('razon','id');
-		return view('combinacionClientes.reportes.cargas', compact('planteles','plantels'));
+		$plantels = Plantel::pluck('razon', 'id');
+		return view('combinacionClientes.reportes.cargas', compact('planteles', 'plantels'));
 	}
 
 	public function apiLista()
@@ -687,36 +713,37 @@ class PlantelsController extends Controller
 		}
 	}
 
-	public function replicarCuentaFactudesk(Request $request){
-		$datos=$request->all();
-		$plantels=Plantel::get();
-		foreach($plantels as $plantel){
-			$plantel->fact_global_id_cuenta=$datos['fact_global_id_cuenta'];
-			$plantel->fact_global_pass_cuenta=$datos['fact_global_pass_cuenta'];
+	public function replicarCuentaFactudesk(Request $request)
+	{
+		$datos = $request->all();
+		$plantels = Plantel::get();
+		foreach ($plantels as $plantel) {
+			$plantel->fact_global_id_cuenta = $datos['fact_global_id_cuenta'];
+			$plantel->fact_global_pass_cuenta = $datos['fact_global_pass_cuenta'];
 			$plantel->save();
 		}
 		return $plantels;
 		//return redirect()->route('edit', array('id'=>$datos['plantel']));
 	}
 
-	public function replicarUsuarioFactudesk(Request $request){
-		$datos=$request->all();
-		$plantels=Plantel::get();
-		foreach($plantels as $plantel){
-			$plantel->fact_global_id_usu=$datos['fact_global_id_usu'];
-			$plantel->fact_global_pass_usu=$datos['fact_global_pass_usu'];
+	public function replicarUsuarioFactudesk(Request $request)
+	{
+		$datos = $request->all();
+		$plantels = Plantel::get();
+		foreach ($plantels as $plantel) {
+			$plantel->fact_global_id_usu = $datos['fact_global_id_usu'];
+			$plantel->fact_global_pass_usu = $datos['fact_global_pass_usu'];
 			$plantel->save();
 		}
 		return $plantels;
 		//return redirect()->route('edit', array('id'=>$datos['plantel']));
 	}
 
-	public function PlantelXAgrupamiento(Request $request){
-		$datos=$request->all();
-		
-			$agrupamiento=PlantelAgrupamiento::find($datos['plantel_agrupamiento_id']);
-			return json_encode($agrupamiento->plantels()->pluck('id'));
-			
-		
+	public function PlantelXAgrupamiento(Request $request)
+	{
+		$datos = $request->all();
+
+		$agrupamiento = PlantelAgrupamiento::find($datos['plantel_agrupamiento_id']);
+		return json_encode($agrupamiento->plantels()->pluck('id'));
 	}
 }
