@@ -153,10 +153,10 @@
                         <td>{{$sepTitulo->r2Cargo->cargo}}</td><td>{{$sepTitulo->r2_titulo}}</td>
                         <td>{{$sepTitulo->r2->nombre}}</td><td>{{$sepTitulo->r2->ape_paterno}}</td>
                         <td>{{$sepTitulo->r2->ape_materno}}</td><td>{{$sepTitulo->r2->curp}}</td>
-                        <td>{{$sepTitulo->plantel->sepInstitucionEducativa->cve_institucion}}</td>
-                        <td>{{$sepTitulo->plantel->sepInstitucionEducativa->descripcion}}</td>
-                        <td>{{$sepTitulo->grado->carrera->cve_carrera}}</td>
-                        <td>{{$sepTitulo->grado->carrera->descripcion}}</td>
+                        <td>{{optional($sepTitulo->plantel->sepInstitucionEducativa)->cve_institucion}}</td>
+                        <td>{{optional($sepTitulo->plantel->sepInstitucionEducativa)->descripcion}}</td>
+                        <td>{{optional($sepTitulo->grado->carrera)->cve_carrera}}</td>
+                        <td>{{optional($sepTitulo->grado->carrera)->descripcion}}</td>
                         @php
                             $primeraMateria=App\Hacademica::where('cliente_id', $linea->cliente_id)
                             ->with('lectivo')
@@ -173,8 +173,8 @@
                         <td>
                             {{ $ultimaMateria->lectivo->fin }}    
                         </td>
-                        <td>{{$sepTitulo->grado->autorizacionReconocimiento->id_autorizacion_reconocimiento}}</td>
-                        <td>{{$sepTitulo->grado->autorizacionReconocimiento->autorizacion_reconocimiento}}</td>
+                        <td>{{optional($sepTitulo->grado->autorizacionReconocimiento)->id_autorizacion_reconocimiento}}</td>
+                        <td>{{optional($sepTitulo->grado->autorizacionReconocimiento)->autorizacion_reconocimiento}}</td>
                         <td>{{ $sepTitulo->grado->rvoe }}</td>
                         <td>
                             <a href="{{ route('clientes.edit', $linea->cliente_id) }}" target="_blank">

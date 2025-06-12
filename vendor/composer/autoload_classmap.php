@@ -473,6 +473,7 @@ return array(
     'CreateImpresionTicketsTable' => $baseDir . '/database/migrations/2020_02_20_182907_create_impresion_tickets_table.php',
     'CreateIncidenceClientesTable' => $baseDir . '/database/migrations/2020_12_28_080235_create_incidence_clientes_table.php',
     'CreateIncidencesClientesTable' => $baseDir . '/database/migrations/2020_12_28_081241_create_incidences_clientes_table.php',
+    'CreateIncidenciasCalificacionsTable' => $baseDir . '/database/migrations/2025_06_12_104755_create_incidencias_calificacions_table.php',
     'CreateIngresoEgresosTable' => $baseDir . '/database/migrations/2019_06_26_151903_create_ingreso_egresos_table.php',
     'CreateInscripcionsTable' => $baseDir . '/database/migrations/2017_09_06_133842_create_inscripcions_table.php',
     'CreateInteresEstudiosTable' => $baseDir . '/database/migrations/2019_11_29_144907_create_interes_estudios_table.php',

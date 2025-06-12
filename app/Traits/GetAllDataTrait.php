@@ -48,7 +48,7 @@ trait GetAllDataTrait
         if (is_array($myObj->relationApps)) {
             //dd($myObj->relationApps);
             foreach ($myObj->relationApps as $className => $classObj) {
-                
+
                 $relationTable = $myObj->solveName($className, 'name_names');    //ex).apple_types
                 $relationColumnInBaseTable = $myObj->solveName($className, 'name_name') . '_id';    //ex).apple_type_id
                 //dd($relationTable);
@@ -118,7 +118,7 @@ trait GetAllDataTrait
         if ($baseTable == "serie_folio_simplificados") {
             $myQuery = $myQuery->orderBy('serie_folio_simplificados.anio', 'desc')->orderBy('serie_folio_simplificados.mese_id');
         }
-        
+
 
         if (is_array($request->input('q')) && array_key_exists('s', $request->input('q')) && $request->input('q')['s'] !== '') {
 
@@ -147,9 +147,9 @@ trait GetAllDataTrait
         }
         //dd(Auth::user()->can('IfiltroClientesXPlantel'));
         //dd();
-        
-        $planteles = Empleado::where('user_id', '=', Auth::user()->id)->where('st_empleado_id','<>',3)->first()->plantels->pluck('id');
-        $empleado = Empleado::where('user_id', Auth::user()->id)->where('st_empleado_id','<>',3)->first();
+
+        $planteles = Empleado::where('user_id', '=', Auth::user()->id)->where('st_empleado_id', '<>', 3)->first()->plantels->pluck('id');
+        $empleado = Empleado::where('user_id', Auth::user()->id)->where('st_empleado_id', '<>', 3)->first();
         //dd($empleado);
         /*
         $planteles = array();
@@ -161,16 +161,18 @@ trait GetAllDataTrait
         //dd($empleado);
         //dd($baseTable);
         switch ($baseTable) {
+            case "incidencias_calificacion":
+                $myQuery = $myQuery->whereIn('asignacion_academicas.plantel_id', $planteles);
             case "asignacion_academicas":
                 //if (Auth::user()->can('IFiltroEmpleadosXPlantel')) {
                 $myQuery = $myQuery->whereIn('asignacion_academicas.plantel_id', $planteles);
                 //}
                 $user = Auth::user()->id;
-                $empleado = Empleado::where('user_id', $user)->where('st_empleado_id','<>',3)->first();
-                
+                $empleado = Empleado::where('user_id', $user)->where('st_empleado_id', '<>', 3)->first();
+
                 //if ($empleado->puesto_id == 3) {
-                if (Auth::user()->can('asignaciones_academicas.filtroDocenteAsignado')) {    
-                    
+                if (Auth::user()->can('asignaciones_academicas.filtroDocenteAsignado')) {
+
                     $myQuery = $myQuery->where('asignacion_academicas.empleado_id', '=', $empleado->id);
                 }
                 //dd($request);
@@ -199,10 +201,10 @@ trait GetAllDataTrait
                 }
                 break;
             case "doc_vinculacions":
-                    
-                    $myQuery = $myQuery->orderBy('clasificacion_id')->orderBy('orden');
-                    
-                    break;
+
+                $myQuery = $myQuery->orderBy('clasificacion_id')->orderBy('orden');
+
+                break;
             case "empleados":
                 if ($baseTable == "empleados") { // and Auth::user()->can('IfiltroEmpleadosXPlantel')
                     $myQuery = $myQuery->whereIn('empleados.plantel_id', $planteles);
@@ -240,9 +242,9 @@ trait GetAllDataTrait
                 $myQuery = $myQuery->whereIn('grupos.plantel_id', $planteles);
                 //}
                 break;
-                case "inventarios":
-                    $myQuery = $myQuery->orderBy('no_inventario', 'asc');
-                    break;
+            case "inventarios":
+                $myQuery = $myQuery->orderBy('no_inventario', 'asc');
+                break;
             case "materia":
                 //if (Auth::user()->can('IFiltroEmpleadosXPlantel')) {
                 $myQuery = $myQuery->whereIn('materia.plantel_id', $planteles);
@@ -276,18 +278,18 @@ trait GetAllDataTrait
                 break;
             case "plan_pagos":
                 if (Auth::user()->can('IPlanPagosXPlantel')) {
-                $myQuery = $myQuery->whereIn('plan_pagos.plantel_id', $planteles);
+                    $myQuery = $myQuery->whereIn('plan_pagos.plantel_id', $planteles);
                 }
                 break;
             case "plan_estudios":
                 //dd(Auth::user()->can('IPlanEstudiosXPlantel'));
                 if (Auth::user()->can('IPlanEstudiosXPlantel')) {
-                $myQuery = $myQuery->whereIn('plan_estudios.plantel_id', $planteles);
+                    $myQuery = $myQuery->whereIn('plan_estudios.plantel_id', $planteles);
                 }
                 break;
             case "periodo_estudios":
                 if (Auth::user()->can('IPlanEstudiosXPlantel')) {
-                $myQuery = $myQuery->whereIn('periodo_estudios.plantel_id', $planteles);
+                    $myQuery = $myQuery->whereIn('periodo_estudios.plantel_id', $planteles);
                 }
                 break;
             case "plantels":
@@ -296,7 +298,7 @@ trait GetAllDataTrait
             case "prospectos":
                 //dd($planteles);
                 $myQuery = $myQuery->whereIn('prospectos.plantel_id', $planteles);
-                $myQuery->leftJoin('prospecto_seguimientos', 'prospecto_seguimientos.prospecto_id','prospectos.id');
+                $myQuery->leftJoin('prospecto_seguimientos', 'prospecto_seguimientos.prospecto_id', 'prospectos.id');
                 if (Auth::user()->can('prospectos.CallCenter')) {
                     $myQuery = $myQuery->where('prospectos.st_prospecto_id', '<>', 2);
                 }
@@ -319,7 +321,7 @@ trait GetAllDataTrait
                     $myQuery = $myQuery->whereIn('clientes.plantel_id', $planteles);
                 }
                 if (Auth::user()->can('filtro.corporativo_control_escolar')) {
-                    $myQuery = $myQuery->whereIn('st_seguimiento_id', array(2,6,7,9,10));
+                    $myQuery = $myQuery->whereIn('st_seguimiento_id', array(2, 6, 7, 9, 10));
                 }
                 if ($baseTable == "seguimientos") { //and Auth::user()->can('IfiltroClientesXPlantel')
                     $myQuery = $myQuery->whereIn('clientes.plantel_id', $planteles)
@@ -354,23 +356,23 @@ trait GetAllDataTrait
                 //dd($planteles);
                 if (Auth::user()->can('transferencia.filtroPlantel')) {
                     //$myQuery = $myQuery->whereRaw('(plantel_id in (?) or plantel_destino_id in (?))', [$planteles, $planteles]);
-                    $myQuery = $myQuery->whereIn('plantel_id', $planteles)->orWhereIn('plantel_destino_id',$planteles);
+                    $myQuery = $myQuery->whereIn('plantel_id', $planteles)->orWhereIn('plantel_destino_id', $planteles);
                 }
                 break;
-                case "turnos":
-                    $myQuery = $myQuery->whereIn('turnos.plantel_id', $planteles);
-                    break;
+            case "turnos":
+                $myQuery = $myQuery->whereIn('turnos.plantel_id', $planteles);
+                break;
         }
 
 
 
         //dd(Auth::user()->can('IfiltroAvisosXempleado'));
 
-        
+
         $myQuery = $myQuery->orderBy($column, $order_dir);
 
         //(iv) get base table data
-        
+
         $myQuery = $myQuery->select([$baseTable . '.*']);
         //dd($myQuery->toSql(), $myQuery->getBindings());
         //(v) pagenate
@@ -378,7 +380,4 @@ trait GetAllDataTrait
         //Log::info($myQuery->sql);
         return $myQuery->paginate($paginate);
     }
-
-    
 }
-

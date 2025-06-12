@@ -67,6 +67,7 @@
                 </div>
             {!! Form::close() !!}
             @if(isset($hacademicas))
+                <div class="table-responsive">
                  <table class="table table-condensed table-striped">
                      <thead>
                          <th>id</th>
@@ -161,33 +162,36 @@
                              
                          </td>
                          <td>
-                             @if($r->estatus_cliente_id==3 or 
+                            @if($r->estatus_cliente_id==3 or 
                                 $r->estatus_cliente_id==25 or 
                                  $r->estatus_cliente_id==26 or
                                  $r->estatus_cliente_id==27 or 
                                  $r->estatus_cliente_id==28)
-                            @if($param_bloqueoXdoc==1)
-                             @if($r->bnd_doc_oblig_entregados==1 or $validaEntregaDocs3Meses)
-                             	@permission('hacademicas.calificacionBaja')
-                                    <button type="button"  
-                                    class="btn btn-primary btn-xs btn-guardar_caificacion" 
-                                    data-calificacion_ponderacion_id="{{ $r->calificacion_ponderacion_id }}"
-                                    data-cliente_id="{{$r->id}}"
-                                >Actualizar</button>
+                                @if($param_bloqueoXdoc==1)
+                                    @if($r->bnd_doc_oblig_entregados==1 or $validaEntregaDocs3Meses)
+                                        @permission('hacademicas.calificacionBaja')
+                                            <button type="button"  
+                                            class="btn btn-primary btn-xs btn-guardar_caificacion" 
+                                            data-calificacion_ponderacion_id="{{ $r->calificacion_ponderacion_id }}"
+                                            data-cliente_id="{{$r->id}}"
+                                        >Actualizar</button>
+                                        @endpermission
+                                    @endif
+                                @else
+                                    @permission('hacademicas.calificacionBaja')
+                                        <button type="button"  
+                                        class="btn btn-primary btn-xs btn-guardar_caificacion" 
+                                        data-calificacion_ponderacion_id="{{ $r->calificacion_ponderacion_id }}"
+                                        data-cliente_id="{{$r->id}}"
+                                    >Actualizar</button>
+                                    @endpermission
+                                @endif
+                                @permission('hCalificacions.index')
+                                <a href="{{ url('hCalificacions/index') }}?q%5Bs%5D=&q%5Bclientes.nombre_cont%5D=&q%5Bcalificacions.calificacion_cont%5D=&q%5Bh_calificacions.calificacion_ponderacion_id_cont%5D={{ $r->calificacion_ponderacion_id }}&q%5Bcarga_ponderacions.name_cont%5D=&q%5Bcalificacion_parcial_anterior_cont%5D=&q%5Bcalificacion_parcial_actual_cont%5D=&q%5Busu_alta_id_cont%5D=&q%5Busu_mod_id_cont%5D=&commit=Buscar" class="btn btn-success btn-xs" target="_blank">Historia</a>
                                 @endpermission
-                            @endif
-                            @else
-                            @permission('hacademicas.calificacionBaja')
-                                <button type="button"  
-                                class="btn btn-primary btn-xs btn-guardar_caificacion" 
-                                data-calificacion_ponderacion_id="{{ $r->calificacion_ponderacion_id }}"
-                                data-cliente_id="{{$r->id}}"
-                            >Actualizar</button>
-                            @endpermission
-                            @endif
-                            @permission('hCalificacions.index')
-                            <a href="{{ url('hCalificacions/index') }}?q%5Bs%5D=&q%5Bclientes.nombre_cont%5D=&q%5Bcalificacions.calificacion_cont%5D=&q%5Bh_calificacions.calificacion_ponderacion_id_cont%5D={{ $r->calificacion_ponderacion_id }}&q%5Bcarga_ponderacions.name_cont%5D=&q%5Bcalificacion_parcial_anterior_cont%5D=&q%5Bcalificacion_parcial_actual_cont%5D=&q%5Busu_alta_id_cont%5D=&q%5Busu_mod_id_cont%5D=&commit=Buscar" class="btn btn-success btn-xs" target="_blank">Historia</a>
-                            @endpermission
+                                
+                                
+
                                 
                              @elseif($r->estatus_cliente_id==1 or $r->estatus_cliente_id==22)
                                 
@@ -220,7 +224,9 @@
                                  <a href="{{ url('hCalificacions/index') }}?q%5Bs%5D=&q%5Bclientes.nombre_cont%5D=&q%5Bcalificacions.calificacion_cont%5D=&q%5Bh_calificacions.calificacion_ponderacion_id_cont%5D={{ $r->calificacion_ponderacion_id }}&q%5Bcarga_ponderacions.name_cont%5D=&q%5Bcalificacion_parcial_anterior_cont%5D=&q%5Bcalificacion_parcial_actual_cont%5D=&q%5Busu_alta_id_cont%5D=&q%5Busu_mod_id_cont%5D=&commit=Buscar" class="btn btn-success btn-xs" target="_blank">Historia</a>
                                  @endpermission
                              @endif
-                             
+                            @permission('incidenciasCalificacions.create')
+                            <a target="_blank" href="{{ route('incidenciasCalificacions.create', array('calificacion_ponderacion_id'=>$r->calificacion_ponderacion_id)) }}" class="btn btn-warning btn-xs" target="_blank">Incidencia</a>     
+                            @endpermission
                          </td>
                          <td>
                              <div id='loading{{$r->id}}}' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
@@ -229,6 +235,7 @@
                          @endforeach
                      </tbody>
                  </table>
+                </div>
             @endif
             @if(!isset($hacademicas))
                 Lo sentimos usted no es el profesor de la materia o la fecha limite del perido lectivo ha finalizado.
