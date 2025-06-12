@@ -79,9 +79,29 @@ class SepTitulosController extends Controller
 	 */
 	public function show($id, SepTitulo $sepTitulo)
 	{
-		$sepTitulo = $sepTitulo->find($id);
+		$sepTitulo = $sepTitulo->with(
+			'grado',
+			'grado.carrera',
+			'grado.autorizacionReconocimiento',
+			'grado.sepFundamentoLegalServicioSocial',
+			'lectivo',
+			'r1',
+			'r1Cargo',
+			'r2',
+			'r2Cargo',
+			'plantel',
+			'plantel.sepInstitucionEducativa'
+		)->find($id);
+		$lineas = SepTituloL::where('sep_titulo_id', $sepTitulo->id)
+			->with(
+				'cliente',
+				'cliente.titulacions',
+				'cliente.procedenciaAlumno',
+				'cliente.procedenciaAlumno.sepTEstudioAntecedente'
+			)
+			->get();
 		$this->addAlumnos($sepTitulo);
-		return view('sepTitulos.show', compact('sepTitulo'));
+		return view('sepTitulos.show', compact('sepTitulo', 'lineas'));
 	}
 
 	/**
@@ -182,5 +202,11 @@ class SepTitulosController extends Controller
 				SepTituloL::create($inputLinea);
 			}
 		}
+	}
+
+	public function limpiarLineas($id)
+	{
+		$sepTituloL = SepTituloL::where('sep_titulo_id', $id)->delete();
+		return redirect()->route('sepTitulos.show', $id)->with('message', 'Registro Creado.');
 	}
 }

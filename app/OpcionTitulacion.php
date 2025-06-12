@@ -38,4 +38,9 @@ class OpcionTitulacion extends Model
 	{
 		return $this->hasMany('App\Titulacion');
 	} // end
+
+	public function sepModalidadTitulacion()
+	{
+		return $this->hasOne('App\SepModalidadTitulacion', 'id', 'sep_modalidad_titulacion_id');
+	} // end
 }

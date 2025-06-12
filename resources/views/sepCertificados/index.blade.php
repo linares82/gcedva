@@ -302,12 +302,12 @@
                         @foreach($sepCertificados as $sepCertificado)
                             <tr>
                                 <td><a href="{{ route('sepCertificados.show', $sepCertificado->id) }}">{{$sepCertificado->id}}</a></td>
-                                <td>{{$sepCertificado->plantel_id}}</td>
-                    <td>{{$sepCertificado->especialidad_id}}</td>
-                    <td>{{$sepCertificado->nivel_id}}</td>
-                    <td>{{$sepCertificado->grado_id}}</td>
-                    <td>{{$sepCertificado->lectivo_id}}</td>
-                    <td>{{$sepCertificado->grupo_id}}</td>
+                                <td>{{$sepCertificado->plantel->razon}}</td>
+                    <td>{{$sepCertificado->especialidad->name}}</td>
+                    <td>{{$sepCertificado->nivel->name}}</td>
+                    <td>{{$sepCertificado->grado->name}}</td>
+                    <td>{{$sepCertificado->lectivo->name}}</td>
+                    <td>{{$sepCertificado->grupo->name}}</td>
                                 <td class="text-right">
                                     
                                     @permission('sepCertificados.edit')

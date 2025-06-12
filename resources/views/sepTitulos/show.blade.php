@@ -45,7 +45,11 @@
                 </div>
                 <div class="form-group col-sm-4">
                     <label for="plantel_id">PLANTEL</label>
-                    <p class="form-control-static">{{ $sepTitulo->plantel->razon }}</p>
+                    <p class="form-control-static">
+                        <a href="{{ route('plantels.edit', $sepTitulo->plantel_id) }}" target="_blank">
+                            {{ $sepTitulo->plantel->razon }}
+                        </a>
+                    </p>
                 </div>
                 <div class="form-group col-sm-4">
                     <label for="especialidad_id">ESPECIALIDAD</label>
@@ -57,7 +61,11 @@
                 </div>
                 <div class="form-group col-sm-4">
                     <label for="grado_id">GRADO</label>
-                    <p class="form-control-static">{{ $sepTitulo->grado->name }}</p>
+                    <p class="form-control-static">
+                        <a href="{{ route('grados.edit', $sepTitulo->grado_id) }}" target="_blank">
+                            {{ $sepTitulo->grado->name }}
+                        </a>
+                    </p>
                 </div>
                 <div class="form-group col-sm-4">
                     <label for="lectivo">LECTIVO</label>
@@ -106,37 +114,173 @@
 
             <a class="btn btn-link" href="{{ route('sepTitulos.index') }}"><i class="glyphicon glyphicon-backward"></i>
                 Regresar</a>
-
+            <a class="btn btn-danger" href="{{ route('sepTitulos.limpiarLineas',$sepTitulo->id) }}"><i class="glyphicon glyphicon-trash"></i>  Eliminar Lineas</a>
+            <a class="btn btn-success" href="#" onclick="location.reload();"><i class="glyphicon glyphicon-check"></i>  Cargar Lineas</a>
         </div>
     </div>
     <div class="table-responsive">
         <table class="table table-condensed table-striped">
             <thead>
-                <th>CLAVE_INSTITUCIÓN</th><th>NOMBRE_INSTITUCIÓN</th><th>CLAVE_CARRERA</th>
+                <th>FOLIO_CONTROL</th>
+                <th>ID_CARGO</th><th>CARGO</th><th>ABR_TÍTULO_RESPONSABLE</th>
+                <th>NOMBRE_RESPONSABLE</th><th>PRIMER_APELLIDO_RESPONSABLE</th>
+                <th>SEGUNDO_APELLIDO_RESPONSABLE</th><th>CURP_RESPONSABLE</th>
+                <th>ID_CARGO</th><th>CARGO</th><th>ABR_TÍTULO_RESPONSABLE</th>
+                <th>NOMBRE_RESPONSABLE</th><th>PRIMER_APELLIDO_RESPONSABLE</th>
+                <th>SEGUNDO_APELLIDO_RESPONSABLE</th>
+                <th>CURP_RESPONSABLE</th><th>CLAVE_INSTITUCIÓN</th>
+                <th>NOMBRE_INSTITUCIÓN</th><th>CLAVE_CARRERA</th>
                 <th>NOMBRE_CARRERA</th><th>FECHA_INICIO</th><th>FECHA_TERMINACIÓN</th>
                 <th>ID_AUTORIZACION_RECONOCIMIENTO</th><th>AUTORIZACION_RECONOCIMIENTO</th><th>NÚMERO_Acuerdo o RVOE</th>
                 <th>CURP</th><th>NOMBRE</th><th>PRIMER_APELLIDO</th>
                 <th>SEGUNDO_APELLIDO</th><th>CORREO_ELECTRÓNICO</th><th>FECHA_EXPEDICIÓN</th>
                 <th>ID_MODALIDAD_TITULACION</th><th>MODALIDAD_TITULACIÓN</th><th>FECHA_EXAMEN_PROFESIONAL</th>
-                <th>FECHA_EXENCIÓN_EXAMEN_PROFESIONAL</th><th>SERVICIO_SOCIAL</th><th>ID_FUNDAMENTO_LEGAL_SERVICIO_SOCIAL</th>
+                <th>FECHA_EXENCIÓN_EXAMEN_PROFESIONAL</th><th>SERVICIO_SOCIAL</th>
+                <th>ID_FUNDAMENTO_LEGAL_SERVICIO_SOCIAL</th><th>FUNDAMENTO_LEGAL_SERVICIO_SOCIAL</th>
                 <th>ID_ENTIDAD_FEDERATIVA</th><th>ENTIDAD_FEDERATIVA</th><th>INSTITUCIÓN_PROCEDENCIA</th>
                 <th>ID_TIPO_ESTUDIO_ANTECEDENTE</th><th>TIPO_ESTUDIO_ANTECEDENTE</th><th>ID_ENTIDAD_FEDERATIVA</th>
                 <th>ENTIDAD_FEDERATIVA</th><th>FECHA_INICIO</th><th>FECHA_TERMINACIÓN</th>
                 <th>NÚMERO_CÉDULA</th>
             </thead>
             <tbody>
-                @foreach ($sepTitulo->lineas as $linea)
+                @foreach ($lineas as $linea)
                     <tr>
-                        <td></td><td></td><td></td>
-                        <td></td><td></td><td></td>
-                        <td></td><td></td><td></td>
-                        <td></td><td></td><td></td>
-                        <td></td><td></td><td></td>
-                        <td></td><td></td><td></td>
-                        <td></td><td></td><td></td>
-                        <td></td><td></td><td></td>    
-                        <td></td><td></td><td></td>
-                        <td></td><td></td><td></td>
+                        <td>{{$linea->cliente->matricula}}</td><td>{{$sepTitulo->r1Cargo->id_cargo}}</td>
+                        <td>{{$sepTitulo->r1Cargo->cargo}}</td><td>{{$sepTitulo->r1_titulo}}</td>
+                        <td>{{$sepTitulo->r1->nombre}}</td><td>{{$sepTitulo->r1->ape_paterno}}</td>
+                        <td>{{$sepTitulo->r1->ape_materno}}</td><td>{{$sepTitulo->r1->curp}}</td>
+                        <td>{{$sepTitulo->r2Cargo->id_cargo}}</td>
+                        <td>{{$sepTitulo->r2Cargo->cargo}}</td><td>{{$sepTitulo->r2_titulo}}</td>
+                        <td>{{$sepTitulo->r2->nombre}}</td><td>{{$sepTitulo->r2->ape_paterno}}</td>
+                        <td>{{$sepTitulo->r2->ape_materno}}</td><td>{{$sepTitulo->r2->curp}}</td>
+                        <td>{{$sepTitulo->plantel->sepInstitucionEducativa->cve_institucion}}</td>
+                        <td>{{$sepTitulo->plantel->sepInstitucionEducativa->descripcion}}</td>
+                        <td>{{$sepTitulo->grado->carrera->cve_carrera}}</td>
+                        <td>{{$sepTitulo->grado->carrera->descripcion}}</td>
+                        @php
+                            $primeraMateria=App\Hacademica::where('cliente_id', $linea->cliente_id)
+                            ->with('lectivo')
+                            ->orderBy('id', 'asc')
+                            ->first();
+                            $ultimaMateria=App\Hacademica::where('cliente_id', $linea->cliente_id)
+                            ->with('lectivo')
+                            ->orderBy('id', 'desc')
+                            ->first();
+                        @endphp
+                        <td>
+                            {{ $primeraMateria->lectivo->inicio }}    
+                        </td>
+                        <td>
+                            {{ $ultimaMateria->lectivo->fin }}    
+                        </td>
+                        <td>{{$sepTitulo->grado->autorizacionReconocimiento->id_autorizacion_reconocimiento}}</td>
+                        <td>{{$sepTitulo->grado->autorizacionReconocimiento->autorizacion_reconocimiento}}</td>
+                        <td>{{ $sepTitulo->grado->rvoe }}</td>
+                        <td>
+                            <a href="{{ route('clientes.edit', $linea->cliente_id) }}" target="_blank">
+                            {{$linea->cliente->curp}}
+                            </a>
+                        </td>
+                        <td>{{$linea->cliente->nombre}} {{$linea->cliente->nombre2}}</td>
+                        <td>{{$linea->cliente->ape_paterno}}</td><td>{{$linea->cliente->ape_materno}}</td>
+                        <td>{{$linea->cliente->mail}}</td>
+                        <td>
+                            @if($linea->cliente->titulacions->where('bnd_titulado',1)->first()!==null)
+                            @php
+                                $fecha_excepcion_examen_profesional=optional($linea->cliente->titulacions->where('bnd_titulado',1))->first();
+                                echo '<a href="'.route('titulacions.edit', $fecha_excepcion_examen_profesional->id).'" target="_blank">';    
+                                echo $fecha_excepcion_examen_profesional->fecha_expedicion;
+                                echo "</a>";
+                            @endphp
+                            @endif  
+                        </td>
+                        <td>
+                            @if(optional($linea->cliente->titulacions->where('bnd_titulado',1))->load('opcionTitulacion','opcionTitulacion.sepModalidadTitulacion')->first()!==null)
+                            @php
+                                $fecha_excepcion_examen_profesional=optional($linea->cliente->titulacions->where('bnd_titulado',1))->load('opcionTitulacion','opcionTitulacion.sepModalidadTitulacion')->first();
+                                echo optional($fecha_excepcion_examen_profesional->opcionTitulacion->sepModalidadTitulacion)->id_modalidad;
+                            @endphp
+                            @endif        
+                        </td>
+                        <td>
+                            @if(optional($linea->cliente->titulacions->where('bnd_titulado',1))->load('opcionTitulacion','opcionTitulacion.sepModalidadTitulacion')->first()!==null)
+                            @php
+                                $fecha_excepcion_examen_profesional=optional($linea->cliente->titulacions->where('bnd_titulado',1))->load('opcionTitulacion','opcionTitulacion.sepModalidadTitulacion')->first();
+                                echo optional($fecha_excepcion_examen_profesional->opcionTitulacion->sepModalidadTitulacion)->descripcion;
+                            @endphp
+                            @endif        
+                        </td>
+                        <td>
+                            @if($linea->cliente->titulacions->where('bnd_titulado',1)->first()!==null)
+                            @php
+                                $fecha_excepcion_examen_profesional=optional($linea->cliente->titulacions->where('bnd_titulado',1))->first();
+                                echo $fecha_excepcion_examen_profesional->fecha_examen_profesional;
+                            @endphp
+                            @endif  
+                        </td>
+                        <td>
+                            @if($linea->cliente->titulacions->where('bnd_titulado',1)->first()!==null)
+                            @php
+                                $fecha_excepcion_examen_profesional=optional($linea->cliente->titulacions->where('bnd_titulado',1))->first();
+                                echo $fecha_excepcion_examen_profesional->fecha_excencion_examen_profesional;
+                            @endphp
+                            @endif        
+                        </td>
+                        <td>
+                            @if($sepTitulo->grado->bnd_servicio_social==1)
+                                SI
+                            @else
+                                No
+                            @endif
+                        </td>    
+                        <td>{{optional($sepTitulo->grado->sepFundamentoLegalServicioSocial)->id_fundamento_legal_servicio_social}}</td>
+                        <td>{{optional($sepTitulo->grado->sepFundamentoLegalServicioSocial)->fundamento_legal_servicio_social}}</td>
+                        <td>{{$sepTitulo->plantel->estadoCatalogo->cve_inegi}}</td>
+                        <td>{{$sepTitulo->plantel->estadoCatalogo->name}}</td>
+                        <td>{{optional($linea->cliente->procedenciaAlumno)->institucion_procedencia}}</td>
+                        @php
+                            $antecedente=App\ProcedenciaAlumno::where('cliente_id', $linea->cliente->id)
+                            ->with('sepTEstudioAntecedente','estado')
+                            ->first();
+                            //dd($antecedente);
+                        @endphp
+                        <td>
+                            @if($antecedente!==null)
+                            {{optional($antecedente->sepTEstudioAntecedente)->id_t_estudio_antecedente}}
+                            @endif
+                        </td>
+                        <td>
+                            @if($antecedente!==null)
+                            {{optional($antecedente->sepTEstudioAntecedente)->t_estudio_antecedente}}
+                            @endif
+                        </td>
+                        <td>
+                            @if($antecedente!==null)
+                            {{optional($antecedente->estado)->cve_inegi}}
+                            @endif
+                        </td>
+                        <td>
+                            @if($antecedente!==null)
+                            {{optional($antecedente->estado)->name}}
+                            @endif
+                        </td>
+                        <td>
+                            @if($antecedente!==null)
+                            {{optional($antecedente)->fecha_inicio}}
+                            @endif    
+                        </td>
+                        <td>
+                            @if($antecedente!==null)
+                            {{optional($antecedente)->fecha_terminacion}}
+                            @endif    
+
+                        </td>
+                        <td>
+                            @if($antecedente!==null)
+                            {{optional($antecedente)->numero_cedula}}
+                            @endif    
+
+                        </td>
                     </tr>    
                 @endforeach
             </tbody>

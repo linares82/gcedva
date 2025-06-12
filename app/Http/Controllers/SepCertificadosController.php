@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use DB;
 use Auth;
+use Log;
 
 use App\Empleado;
 use App\SepCargo;
@@ -243,6 +244,7 @@ class SepCertificadosController extends Controller
 
 		foreach ($hacademicas as $hacademica) {
 			$tpo_examen_max = Calificacion::where('hacademica_id', $hacademica->id)->max('tpo_examen_id');
+			Log::info("hacademicas" . $hacademica->id);
 			$calificacion = Calificacion::select(
 				'calificacions.calificacion',
 				'te.sep_cert_observacion_id',
@@ -251,7 +253,7 @@ class SepCertificadosController extends Controller
 				'te.name as tipo_examen'
 			)
 				->join('tpo_examens as te', 'te.id', 'calificacions.tpo_examen_id')
-				->join('sep_cert_observacions as sco', 'sco.id', 'te.sep_cert_observacion_id')
+				->leftJoin('sep_cert_observacions as sco', 'sco.id', 'te.sep_cert_observacion_id')
 				//->with(['tpoExamen', 'tpoExamen.sepCertObservacion'])
 				->where('hacademica_id', $hacademica->id)
 				->where('tpo_examen_id', $tpo_examen_max)

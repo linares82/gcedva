@@ -189,14 +189,14 @@
                             @endif
                         </div>
                         <div class="form-group col-md-3 @if($errors->has('bnd_trabaja')) has-error @endif">
-                            <label for="bnd_trabaja-field">¿Trabaja?</label>
+                            <label for="bnd_trabaja-field">Â¿Trabaja?</label>
                             {!! Form::checkbox("bnd_trabaja", 1, null, [ "id" => "bnd_trabaja-field", 'class'=>'minimal']) !!}
                             @if($errors->has("bnd_trabaja"))
                             <span class="help-block">{{ $errors->first("bnd_trabaja") }}</span>
                             @endif
                         </div>
                         <div class="form-group col-md-3 @if($errors->has('bnd_indigena')) has-error @endif">
-                            <label for="bnd_indigena-field">¿Es indigena?</label>
+                            <label for="bnd_indigena-field">Â¿Es indigena?</label>
                             {!! Form::checkbox("bnd_indigena", 1, null, [ "id" => "bnd_indigena-field", 'class'=>'minimal']) !!}
                             @if($errors->has("bnd_indigena"))
                             <span class="help-block">{{ $errors->first("bnd_indigena") }}</span>
@@ -288,7 +288,7 @@
                     <div class="box-body">
                         
                         <div class="form-group col-md-4 @if($errors->has('interes_estudio_id')) has-error @endif">
-                            <label for="interes_estudio_id-field">Â¿Por que te interesa estudiar nuestra carrera tecnica?</label>
+                            <label for="interes_estudio_id-field">Ã‚Â¿Por que te interesa estudiar nuestra carrera tecnica?</label>
                             {!! Form::select("interes_estudio_id", $list["InteresEstudio"], null, array("class" => "form-control select_seguridad", "id" => "interes_estudio_id-field")) !!}
                             @if($errors->has("interes_estudio_id"))
                             <span class="help-block">{{ $errors->first("interes_estudio_id") }}</span>
@@ -414,7 +414,7 @@
                                     <th>Nivel</th>
                                     <th>Grado</th>
                                     <th>Turno</th>
-                                    <th>Inscripción</th>
+                                    <th>InscripciÃ³n</th>
                                     <th>Plan Pago</th>
                                     <th>beca</th>
                                     <th></th>
@@ -1013,7 +1013,7 @@
                     @endif
                 </div>
                 <div class="form-group col-md-4 @if($errors->has('senas_particulares')) has-error @endif">
-                    <label for="senas_particulares-field">Señas Particulares</label>
+                    <label for="senas_particulares-field">SeÃ±as Particulares</label>
                     {!! Form::text("senas_particulares", null, array("class" => "form-control input-sm", "id" => "senas_particulares-field")) !!}
                     @if($errors->has("senas_particulares"))
                     <span class="help-block">{{ $errors->first("senas_particulares") }}</span>
@@ -1584,7 +1584,7 @@
             <fieldset>
                 <div class="box box-default box-solid">
                     <div class="box-header">
-                        <h3 class="box-title">Facturación</h3>
+                        <h3 class="box-title">Facturacion</h3>
                         <div class="box-tools">
                             <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                         </div>
@@ -1804,7 +1804,7 @@ $(document).on("click", ".btn_archivo", function (e) {
         },
         //una vez finalizado correctamente
         success: function (data) {
-            if (confirm('¿Deseas Actualizar la Página?')){
+            if (confirm('Â¿Deseas Actualizar la PÃ¡gina?')){
                 location.reload();
             }
             $(this).text('OK');
@@ -2282,13 +2282,17 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
 
 			            @if(isset($cliente) and $cliente->seguimiento->st_seguimiento_id==2)
                             @foreach($empleados as $key=>$item)
+				@if($key<>"")
                                 $("#empleado_id-field option[value*={{ $key }}]").prop('disabled', true);
+				@endif
                             @endforeach
                         @endif
 
                         @permission('clientes.cambiarEmpleado')
                             @foreach($empleados as $key=>$item)
+				@if($key<>"")
                                 $("#empleado_id-field option[value*={{ $key }}]").prop('disabled', false);
+				@endif
                             @endforeach
                         @endpermission
                         
@@ -3088,7 +3092,7 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                                 beforeSend : function(){$("#spinner_doc_recibido").show(); },
                                 complete : function(){$("#spinner_doc_recibido").hide(); },
                                 success: function(data) {
-                                    if (confirm('¿Deseas Actualizar la Página?')){
+                                    if (confirm('Â¿Deseas Actualizar la PÃ¡gina?')){
                                         location.reload();
                                     }
                                 }

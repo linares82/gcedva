@@ -117,6 +117,21 @@ class Grado extends ModeloBase
 	{
 		return $this->belongsTo('App\PlanEStudio');
 	} // end
+
+	public function carrera()
+	{
+		return $this->belongsTo('App\SepCarrera', 'sep_carrera_id', 'id');
+	} // end
+
+	public function autorizacionReconocimiento()
+	{
+		return $this->belongsTo('App\SepAutorizacionReconocimiento', 'sep_autorizacion_reconocimiento_id', 'id');
+	} // end
+
+	public function sepFundamentoLegalServicioSocial()
+	{
+		return $this->hasOne('App\SepFundamentoLegalServicioSocial', 'id', 'sep_fundamento_legal_servicio_social_id');
+	} // end
 	/*
 	public function seccion()
 	{

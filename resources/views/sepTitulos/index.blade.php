@@ -300,13 +300,13 @@
                     <tbody>
                         @foreach($sepTitulos as $sepTitulo)
                             <tr>
-                                <td>{{$sepTitulo->id}}</td>
-                                <td>{{$sepTitulo->plantel_id}}</td>
-                    <td>{{$sepTitulo->especialidad_id}}</td>
-                    <td>{{$sepTitulo->nivel_id}}</td>
-                    <td>{{$sepTitulo->grado_id}}</td>
-                    <td>{{$sepTitulo->lectivo->name}}</td>
-                    <td>{{$sepTitulo->grupo->name}}</td>
+                                <td><a href="{{ route('sepTitulos.show', $sepTitulo->id) }}">{{$sepTitulo->id}}</a></td>
+                                <td>{{$sepTitulo->plantel->razon}}</td>
+                                <td>{{$sepTitulo->especialidad->name}}</td>
+                                <td>{{$sepTitulo->nivel->name}}</td>
+                                <td>{{$sepTitulo->grado->name}}</td>
+                                <td>{{$sepTitulo->lectivo->name}}</td>
+                                <td>{{$sepTitulo->grupo->name}}</td>
                                 <td class="text-right">
                                     @permission('sepTitulos.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('sepTitulos.edit', $sepTitulo->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>

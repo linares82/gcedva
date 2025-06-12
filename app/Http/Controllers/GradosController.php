@@ -44,6 +44,10 @@ class GradosController extends Controller
     public function create()
     {
         $modulos = Modulo::pluck('name', 'id');
+        $duracion_periodo = DuracionPeriodo::pluck('name', 'id');
+        $duracion_periodo->prepend('Seleccionar opcion', "");
+        $plan_estudio = PlanEstudio::pluck('name', 'id');
+        $plan_estudio->prepend('Seleccionar opcion', "");
         $sep_carreras = SepCarrera::select(DB::raw('concat(cve_carrera,"-",descripcion) as name, id'))
             ->pluck('name', 'id');
         $sep_carreras->prepend("Seleccionar opcion", NULL);
@@ -57,7 +61,9 @@ class GradosController extends Controller
             'modulos',
             'sep_carreras',
             'sep_fundamento_legal',
-            'sep_autorizacion_reconocimientos'
+            'sep_autorizacion_reconocimientos',
+            'duracion_periodo',
+            'plan_estudio'
         ))
             ->with('list', Grado::getListFromAllRelationApps());
     }

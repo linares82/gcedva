@@ -493,7 +493,7 @@ class Cliente extends Model
 
 	public function procedenciaAlumno()
 	{
-		return $this->hasOne('App\ProcedenciaAlumno');
+		return $this->belongsTo('App\ProcedenciaAlumno', 'id', 'cliente_id');
 	} // end
 
 }

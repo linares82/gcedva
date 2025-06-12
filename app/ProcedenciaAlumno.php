@@ -30,6 +30,20 @@ class ProcedenciaAlumno extends Model
 		return $this->hasOne('App\User', 'id', 'usu_mod_id');
 	} // end
 
+	public function sepTEstudioAntecedente()
+	{
+		return $this->hasOne('App\SepTEstudioAntecedente', 'id', 'sep_t_estudio_antecedente_id');
+	} // end
+
+	public function cliente()
+	{
+		return $this->hasOne('App\Cliente', 'id', 'cliente_id');
+	} // end
+
+	public function estado()
+	{
+		return $this->hasOne('App\Estado', 'id', 'estado_id');
+	} // end
 
 	protected $dates = ['deleted_at'];
 }

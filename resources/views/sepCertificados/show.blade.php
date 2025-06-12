@@ -104,7 +104,8 @@
                 </div>
 
             <a class="btn btn-link" href="{{ route('sepCertificados.index') }}"><i class="glyphicon glyphicon-backward"></i>  Regresar</a>
-            <a class="btn btn-danger" href="{{ route('sepCertificados.limpiarLineas',$sepCertificado->id) }}"><i class="glyphicon glyphicon-trash"></i>  Limpiar Lineas</a>
+            <a class="btn btn-danger" href="{{ route('sepCertificados.limpiarLineas',$sepCertificado->id) }}"><i class="glyphicon glyphicon-trash"></i>  Eliminar Lineas</a>
+            <a class="btn btn-success" href="#" onclick="location.reload();"><i class="glyphicon glyphicon-check"></i>  Cargar Lineas</a>
 
         </div>
     </div>
@@ -174,16 +175,16 @@
                         <td>{{$linea->id_carrera}}</td><td>{{ $linea->numero_asignaturas_cursadas }}</td>
                         <td>{{$linea->promedio_general}}</td><td>{{$linea->id_asignatura}}</td>
                         <td>
-                            @if($linea->hacademica->materia->bnd_oficial==1)
-                                {{$linea->hacademica->materia->nombre_oficial}}
-                            @else
+                            @if($linea->hacademica->materia->nombre_oficial=="")
                                 {{$linea->hacademica->materia->name}}
+                            @else
+                                {{$linea->hacademica->materia->nombre_oficial}}
                             @endif
                         </td>
                         <td><a href="{{route('lectivos.edit',$linea->lectivo_id)}}" target="_blank">{{$linea->lectivo->ciclo_escolar}}-{{$linea->lectivo->periodo_escolar}}</a></td>
                         <td>{{$linea->calificacion_materia}}</td>
-                        <td>{{$linea->sepCertObservacion->id_observacion}}</td>
-                        <td>{{$linea->sepCertObservacion->descripcion}}</td>
+                        <td>{{optional($linea->sepCertObservacion)->id_observacion}}</td>
+                        <td>{{optional($linea->sepCertObservacion)->descripcion}}</td>
                     </tr>    
                 @endforeach
             </tbody>

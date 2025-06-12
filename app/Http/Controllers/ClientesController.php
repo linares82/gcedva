@@ -443,14 +443,16 @@ class ClientesController extends Controller
      */
     public function edit($id, Cliente $cliente)
     {
-        $cliente = $cliente->with(['ccuestionario'])->find($id);
+        $cliente = $cliente->with(['ccuestionario', 'procedenciaAlumno'])->find($id);
         if (!isset($cliente->procedenciaAlumno)) {
             $input_procedencia['cliente_id'] = $cliente->id;
             $input_procedencia['usu_alta_id'] = Auth::user()->id;
             $input_procedencia['usu_mod_id'] = Auth::user()->id;
 
             ProcedenciaAlumno::create($input_procedencia);
+            $cliente->load('procedenciaAlumno');
         }
+
         //dd($cliente->ccuestionario->ccuestionarioPreguntas);
         $p = Auth::user()->can('IfiltroEmpleadosXPlantel');
         //dd($p);
@@ -538,6 +540,7 @@ class ClientesController extends Controller
 
         $sepTipoEstudioAntecedente->prepend('Seleccionar Opcion', '');
         //dd($sepTipoEstudioAntecedente);
+        //dd($cliente->procedenciaAlumno);
 
         return view('clientes.edit', compact(
             'api_valida_curp',
