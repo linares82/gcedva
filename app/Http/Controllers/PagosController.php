@@ -81,7 +81,7 @@ class PagosController extends Controller
         //dd($input);
         $caja = Caja::find($input['caja_id']);
 
-        if($caja->st_caja_id==1 or $caja->st_caja_id==2){
+        if ($caja->st_caja_id == 1 or $caja->st_caja_id == 2) {
             //session(['msj' => 'No es posible registrar pagos con el estatus actual']);
             return response()->json(['msj' => 'No es posible registrar pagos con el estatus actual']);
         }
@@ -458,9 +458,7 @@ class PagosController extends Controller
         }
     }
 
-    public function conciliacionMultipagos()
-    {
-    }
+    public function conciliacionMultipagos() {}
 
     /**
      * Display the specified resource.
@@ -881,7 +879,7 @@ class PagosController extends Controller
             $carbon = new \Carbon\Carbon();
             $date = $carbon->now();
             $date = $date->format('d-m-Y H:i:s');
-            
+
 
             //dd($adeudo->toArray());
 
@@ -901,7 +899,7 @@ class PagosController extends Controller
         $totalEntero = intdiv($suma_pagos, 1);
         $centavos = ($suma_pagos - $totalEntero) * 100;
         $totalLetra = $formatter->toMoney($totalEntero, 2, "Pesos", 'Centavos');
-        
+
 
         return view('cajas.imprimirTicketNoFiscalPagos', array(
             'cliente' => $cliente,
@@ -1002,17 +1000,17 @@ class PagosController extends Controller
     {
         $empleados = Empleado::select(DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name, id'))->pluck('name', 'id');
         $conceptos = CajaConcepto::pluck('name', 'id');
-        $empleado = Empleado::where('user_id', '=', Auth::user()->id)->where('st_empleado_id','<>',3)->first();
-        
+        $empleado = Empleado::where('user_id', '=', Auth::user()->id)->where('st_empleado_id', '<>', 3)->first();
+
         $planteles = array();
         foreach ($empleado->plantels as $p) {
             //dd($p->id);
             array_push($planteles, $p->id);
         }
-        $plantels=Plantel::whereIn('id',$planteles)->pluck('razon','id');
+        $plantels = Plantel::whereIn('id', $planteles)->pluck('razon', 'id');
         $plantels->prepend('SEleccionar Opción', 0);
 
-        return view('pagos.reportes.inscritosPagos', compact('empleados','conceptos','plantels'))
+        return view('pagos.reportes.inscritosPagos', compact('empleados', 'conceptos', 'plantels'))
             ->with('list', Inscripcion::getListFromAllRelationApps());
     }
 
@@ -1028,7 +1026,7 @@ class PagosController extends Controller
 
         $plantel = Plantel::find($data['plantel_f']);
         //dd($data);
-        
+
         //dd($usuario);
 
         $registros_pagados_aux = Caja::select(
@@ -1038,11 +1036,11 @@ class PagosController extends Controller
                 . 'c.nombre, c.nombre2, c.ape_paterno, c.ape_materno, cajas.id as caja, cajas.consecutivo,'
                 . 'c.beca_bnd, st.name as estatus_caja, fp.id as forma_pago_id, cajas.st_caja_id,'
                 . 'pag.monto as monto_pago, fp.name as forma_pago, pag.fecha as fecha_pago, pag.created_at, cajas.fecha as fecha_caja,'
-                . 'up.name as creador_pago, cln.caja_concepto_id, c.matricula')
+                . 'up.name as creador_pago, cln.caja_concepto_id, c.matricula, g.seccion',)
         )
             ->join('clientes as c', 'c.id', '=', 'cajas.cliente_id')
-            //->join('combinacion_clientes as cc','cc.cliente_id','c.id')
-            //->join('grados as g', 'g.id','cc.grado_id')
+            ->join('combinacion_clientes as cc', 'cc.cliente_id', 'c.id')
+            ->join('grados as g', 'g.id', 'cc.grado_id')
             ->join('plantels as pla', 'pla.id', '=', 'c.plantel_id')
             ->join('st_cajas as st', 'st.id', '=', 'cajas.st_caja_id')
             ->join('pagos as pag', 'pag.caja_id', '=', 'cajas.id')
@@ -1058,7 +1056,7 @@ class PagosController extends Controller
             ->orderBy('cln.caja_concepto_id')
             //->orderBy('pag.fecha')
             ->distinct();
-        if(!isset($data['bnd-todos-empleados'])){
+        if (!isset($data['bnd-todos-empleados'])) {
             $usuario = Empleado::whereIn('id', $data['empleado_f'])->pluck('user_id');
             $registros_pagados_aux->whereIn('cajas.usu_alta_id', $usuario);
         }
@@ -1075,7 +1073,7 @@ class PagosController extends Controller
         $registros_pagados = $registros_pagados_aux2->unique(function ($item) {
             return $item['consecutivo'] . $item['monto_pago'] . $item['created_at'];
         })->values()->all();
-        //dd($registros_pagados->toArray());
+        //dd($registros_pagados[0]);
         $empleado = Empleado::where('user_id', Auth::user()->id)->first();
 
         $transferencias = Transference::select(
@@ -1119,14 +1117,14 @@ class PagosController extends Controller
             ->whereIn('cln.caja_concepto_id', $data['concepto_f'])
             //->where('pag.fecha', '>=', $data['fecha_f'])
             //->where('pag.fecha', '<=', $data['fecha_t'])
-            
+
             ->whereNull('pag.deleted_at')
             ->where('cajas.st_caja_id', '=', 3)
             ->orderBy('fp.id')
             ->orderBy('pag.fecha')
             ->distinct();
         //->get();
-        if(!isset($data['bnd-todos-empleados'])){
+        if (!isset($data['bnd-todos-empleados'])) {
             $usuario = Empleado::whereIn('id', $data['empleado_f'])->pluck('user_id');
             $registros_pagados_aux->whereIn('cajas.usu_alta_id',  $usuario);
         }
@@ -1203,6 +1201,7 @@ class PagosController extends Controller
                         ->setPaper('legal', 'landscape');
                 return $pdf->download('reporte.pdf');
                 */
+        //dd($registros_pagados[0]);
         return view('pagos.reportes.inscritosPagosR', array(
             'registros_pagados' => $registros_pagados,
             'registros_parciales' => $registros_parciales,
@@ -1680,6 +1679,4 @@ class PagosController extends Controller
             'registros_parciales' => $registros_parciales
         ));
     }
-
-    
 }

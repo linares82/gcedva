@@ -535,23 +535,6 @@ class InscripcionsController extends Controller
                     ->get();
                 //dd($aprobadas_modulo);
 
-                /*$no_aprobadas=Cliente::join('inscripcions as i', 'i.cliente_id', '=', 'clientes.id')
-                ->join('periodo_estudios as p','p.id','=','i.periodo_estudio_id')
-                ->join('hacademicas as h', 'h.inscripcion_id', 'i.id')
-                ->select(DB::raw('count(h.materium_id) as no_aprobadas'))
-                //->whereColumn('h.lectivo_id','i.lectivo_id')
-                ->where('i.plantel_id', '=', $input['plantel_id'])
-                ->where('i.especialidad_id', '=', $input['especialidad_id'])
-                ->where('i.nivel_id', '=', $input['nivel_id'])
-                ->where('i.grupo_id', '=', $input['grupo_id'])
-                ->where('i.lectivo_id', '=', $input['lectivo_id'])
-                ->where('i.plantel_id', '=', $input['plantel_id'])
-                ->where('clientes.id', '=', $c->cliente)
-                ->where('h.st_materium_id', '<>', 1)
-                ->whereNull('h.deleted_at')
-                ->first('no_aprobadas');
-                 */
-
                 $no_aprobadas_modulo = Cliente::join('inscripcions as i', 'i.cliente_id', '=', 'clientes.id')
                     ->join('periodo_estudios as p', 'p.id', '=', 'i.periodo_estudio_id')
                     ->join('hacademicas as h', 'h.inscripcion_id', 'i.id')
@@ -568,6 +551,8 @@ class InscripcionsController extends Controller
                     ->where('h.st_materium_id', '<>', 1)
                     ->whereNull('h.deleted_at')
                     ->get();
+
+
                 //                        $resultado->put('id',$c->id);
                 //                        $resultado->put('nombre',$c->nombre);
                 //                        $resultado->put('periodo_estudio',$c->periodo_estudio);
