@@ -313,7 +313,7 @@ trait GetAllDataTrait
                 //}
                 break;
             case "seguimientos":
-                $myQuery = $myQuery->with(['cliente', 'stSeguimiento']);
+                $myQuery = $myQuery->with(['cliente', 'stSeguimiento', 'cliente.plantel', 'cliente.especialidad', 'cliente.empleado', 'cliente.stCliente']);
                 $myQuery = $myQuery->whereNull('clientes.deleted_at');
                 if ($baseTable == "seguimientos" and Auth::user()->can('IfiltroClientesXEmpleado')) {
                     $myQuery = $myQuery->where('clientes.empleado_id', '=', $empleado->id);

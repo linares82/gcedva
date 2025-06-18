@@ -62,4 +62,54 @@
                         <span class="help-block">{{ $errors->first("grupo") }}</span>
                        @endif
                     </div>
+
+                    <div class="form-group col-md-3 @if($errors->has('bnd_oficial')) has-error @endif">
+                            <label for="bnd_oficial-field">¿Materia Oficial?</label>
+                            {!! Form::checkbox("bnd_oficial", 1, null, [ "id" => "bnd_oficial-field", 'class'=>'minimal']) !!}
+                            @if($errors->has("bnd_oficial"))
+                            <span class="help-block">{{ $errors->first("bnd_oficial") }}</span>
+                            @endif
+                        </div>
+                    <div class="form-group col-md-4 @if($errors->has('nombre_oficial')) has-error @endif">
+                       <label for="nombre_oficial-field">Nombre Oficial</label>
+                       {!! Form::text("nombre_oficial", null, array("class" => "form-control", "id" => "nombre_oficial-field")) !!}
+                       @if($errors->has("nombre_oficial"))
+                        <span class="help-block">{{ $errors->first("nombre_oficial") }}</span>
+                       @endif
+                    </div>
+                    <div class="form-group col-md-4 @if($errors->has('id_asignatura')) has-error @endif">
+                       <label for="id_asignatura-field">Id Asignatura</label>
+                       {!! Form::text("id_asignatura", null, array("class" => "form-control", "id" => "id_asignatura-field")) !!}
+                       @if($errors->has("id_asignatura"))
+                        <span class="help-block">{{ $errors->first("id_asignatura") }}</span>
+                       @endif
+                    </div>
+                    <div class="form-group col-md-4 @if($errors->has('nombre_asignatura')) has-error @endif">
+                       <label for="nombre_asignatura-field">Nombre Asignatura</label>
+                       {!! Form::text("nombre_asignatura", null, array("class" => "form-control", "id" => "nombre_asignatura-field")) !!}
+                       @if($errors->has("nombre_asignatura"))
+                        <span class="help-block">{{ $errors->first("nombre_asignatura") }}</span>
+                       @endif
+                    </div>
+                    <div class="form-group col-md-4 @if($errors->has('ciclo')) has-error @endif">
+                       <label for="ciclo-field">Ciclo</label>
+                       {!! Form::text("ciclo", null, array("class" => "form-control", "id" => "ciclo-field")) !!}
+                       @if($errors->has("ciclo"))
+                        <span class="help-block">{{ $errors->first("ciclo") }}</span>
+                       @endif
+                    </div>
+                    <div class="form-group col-md-4 @if($errors->has('id_observaciones')) has-error @endif">
+                       <label for="id_observaciones-field">Id Observaciones</label>
+                       {!! Form::text("id_observaciones", null, array("class" => "form-control", "id" => "id_observaciones-field")) !!}
+                       @if($errors->has("id_observaciones"))
+                        <span class="help-block">{{ $errors->first("id_observaciones") }}</span>
+                       @endif
+                    </div>
+                    <div class="form-group col-md-4 @if($errors->has('observaciones')) has-error @endif">
+                       <label for="observaciones-field">Observaciones</label>
+                       {!! Form::text("observaciones", null, array("class" => "form-control", "id" => "observaciones-field")) !!}
+                       @if($errors->has("observaciones"))
+                        <span class="help-block">{{ $errors->first("observaciones") }}</span>
+                       @endif
+                    </div>
                     

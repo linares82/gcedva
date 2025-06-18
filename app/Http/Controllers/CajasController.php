@@ -487,8 +487,8 @@ class CajasController extends Controller
                         $caja_ln['descuento'] = 0;
 
                         //Realiza descuento para inscripciones
-                        $param=Param::where('llave','prefijo_matricula_instalacion')->first();
-                        if (($param->valor==0 or $param->valor=="AZ") and
+                        $param = Param::where('llave', 'prefijo_matricula_instalacion')->first();
+                        if (($param->valor == 0 or $param->valor == "AZ") and
                             isset(optional($adeudo->descuento)->id) and
                             ($adeudo->caja_concepto_id == 1 or $adeudo->caja_concepto_id == 23 or $adeudo->caja_concepto_id == 25)
                         ) {
@@ -898,7 +898,7 @@ class CajasController extends Controller
     {
         //dd($request->get('caja'));
         $caja = Caja::find($request->get('caja'));
-        if(!Auth::user()->can('cajas.cancelar')){
+        if (!Auth::user()->can('cajas.cancelar')) {
             return response()->json(['msj' => 'No tiene permisos para cancelar']);
         }
         if ($caja->st_caja_id <> 1 and $caja->st_caja_id <> 3) {
@@ -1236,7 +1236,7 @@ class CajasController extends Controller
         //$user=Auth::user()->id;
         $empleado = Empleado::where('user_id', Auth::user()->id)->first();
 
-        //$plantel = Plantel::find($empleado->plantel_id);
+        $plantel = Plantel::find($empleado->plantel_id);
         $planteles = array();
         foreach ($empleado->plantels as $p) {
             //dd($p->id);
@@ -2075,7 +2075,7 @@ class CajasController extends Controller
                     $resultado = $apiBs->doValence2('GET', '/d2l/api/lp/' . $param->valor . '/users/?orgDefinedId=' . $cliente->matricula);
                     //Muestra resultado
                     $r = $resultado[0];
-                    
+
                     $datos = ['isActive' => True];
                     if (isset($r['UserId'])) {
                         $resultado2 = $apiBs->doValence2('PUT', '/d2l/api/lp/' . $param->valor . '/users/' . $r['UserId'] . '/activation', $datos);
@@ -2133,7 +2133,7 @@ class CajasController extends Controller
         $destinatario = "linares82@gmail.com";
         $contenido = $msj;
         $n = Auth::user()->name;
-        
+
         //dd(env('MAIL_FROM_ADDRESS'));
 
         $data = array('contenido' => $msj, 'nombre' => $n, 'correo' => $from);
@@ -2273,13 +2273,13 @@ class CajasController extends Controller
         //dd($caja_ln);
 
         //Realiza descuento para inscripciones
-        $param=Param::where('llave','prefijo_matricula_instalacion')->first();
-        if (($param->valor==0 or $param->valor=="AZ") and
+        $param = Param::where('llave', 'prefijo_matricula_instalacion')->first();
+        if (($param->valor == 0 or $param->valor == "AZ") and
             isset(optional($adeudo->descuento)->id) and
             ($adeudo->caja_concepto_id == 1 or $adeudo->caja_concepto_id == 23 or $adeudo->caja_concepto_id == 25)
-        ){
+        ) {
             $caja_ln['descuento'] = $caja_ln['subtotal'] * $adeudo->descuento->porcentaje;
-        /*}elseif (($param->valor=="TL")and
+            /*}elseif (($param->valor=="TL")and
             isset(optional($adeudo->descuento)->id) and
             ($adeudo->caja_concepto_id == 1 or $adeudo->caja_concepto_id == 23 or $adeudo->caja_concepto_id == 25)
         ){

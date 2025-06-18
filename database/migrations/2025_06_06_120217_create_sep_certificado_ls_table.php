@@ -22,8 +22,8 @@ class CreateSepCertificadoLsTable extends Migration
 			$table->integer('lectivo_id')->unsigned()->nullable();
 			$table->integer('sep_cert_tipo_id')->unsigned()->nullable();
 			$table->date('fecha_expedicion')->nullable();
-			$table->string('id_carrera');
-			$table->string('id_asignatura');
+			$table->string('id_carrera')->nullable();
+			$table->string('id_asignatura')->nullable();
 			$table->string('numero_asignaturas_cursadas')->nullable();
 			$table->string('promedio_general')->nullable();
 			$table->integer('sep_cert_observacion_id')->unsigned()->nullable();

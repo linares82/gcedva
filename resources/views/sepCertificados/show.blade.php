@@ -173,18 +173,61 @@
                         <td>{{optional($sepCertificado->grado)->rvoe}}</td>
                         <td>{{optional($sepCertificado->grado)->emision_rvoe}}</td>
                         <td>{{$linea->id_carrera}}</td><td>{{ $linea->numero_asignaturas_cursadas }}</td>
-                        <td>{{$linea->promedio_general}}</td><td>{{$linea->id_asignatura}}</td>
+                        <td>{{$linea->promedio_general}}</td>
                         <td>
-                            @if($linea->hacademica->materia->nombre_oficial=="")
-                                {{$linea->hacademica->materia->name}}
+                            @if(!is_null($linea->hacademica_id))
+                            <a target="_blank" href="{{route('materias.edit', $linea->hacademica->materium_id)}}">
+                            {{$linea->hacademica->materia->id_asignatura_certificado}}
+                            </a>
                             @else
-                                {{$linea->hacademica->materia->nombre_oficial}}
+                            {{ $linea->consultaCalificacion->id_asignatura }}
                             @endif
                         </td>
-                        <td><a href="{{route('lectivos.edit',$linea->lectivo_id)}}" target="_blank">{{$linea->lectivo->ciclo_escolar}}-{{$linea->lectivo->periodo_escolar}}</a></td>
+                        <td>
+                            @if(!is_null($linea->hacademica_id))
+                                @if($linea->hacademica->materia->nombre_oficial=="")
+                                    <a target="_blank" href="{{route('materias.edit', $linea->hacademica->materium_id)}}">
+                                    {{$linea->hacademica->materia->name}}
+                                    </a>
+                                @else
+                                    <a target="_blank" href="{{route('materias.edit', $linea->hacademica->materium_id)}}">
+                                    {{$linea->hacademica->materia->nombre_oficial}}
+                                    </a>    
+                                @endif
+                            @else
+                                @if($linea->consultaCalificacion->nombre_oficial=="")
+                                    {{ $linea->consultaCalificacion->materia }}
+                                @else
+                                    {{ $linea->consultaCalificacion->nombre_oficial }}
+                                @endif
+                            
+                            @endif
+                        </td>
+                        <td>
+                            @if(!is_null($linea->lectivo_id))   
+                                <a href="{{route('lectivos.edit',$linea->lectivo_id)}}" target="_blank">{{$linea->lectivo->ciclo_escolar}}-{{$linea->lectivo->periodo_escolar}}</a>
+                            @else
+                            {{ $linea->consultaCalificacion->ciclo }}
+                            @endif
+                        </td>
                         <td>{{$linea->calificacion_materia}}</td>
-                        <td>{{optional($linea->sepCertObservacion)->id_observacion}}</td>
-                        <td>{{optional($linea->sepCertObservacion)->descripcion}}</td>
+                        <td>
+                            @if(!is_null($linea->sep_cert_observacion_id))
+                            {{optional($linea->sepCertObservacion)->id_observacion}}
+                            @else
+                            {{ $linea->consultaCalificacion->id_observaciones }}
+                            @endif
+                        </td>
+                        <td>
+                            @if(!is_null($linea->sep_cert_observacion_id))
+                               {{optional($linea->sepCertObservacion)->descripcion}}
+                            @else
+                            <a target="_blank" href="{{route('consultaCalificacions.edit', 
+                            array('id'=>$linea->consulta_calificacion_id, 'cliente'=>$linea->cliente_id))}}">
+                            {{ $linea->consultaCalificacion->observaciones }}
+                            </a>
+                            @endif
+                        </td>
                     </tr>    
                 @endforeach
             </tbody>

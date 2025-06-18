@@ -98,7 +98,7 @@
                 </div>
                     <div class="form-group col-sm-4">
                      <label for="usu_alta_id">ALTA</label>
-                     <p class="form-control-static">{{$incidenciasCalificacion->usu_alta->name}}</p>
+                     <p class="form-control-static"> {{$incidenciasCalificacion->created_at->format('d-m-Y')}} {{$incidenciasCalificacion->usu_alta->name}}</p>
                 </div>
                     <div class="form-group col-sm-4">
                      <label for="usu_mod_id">U. MODIFICACION</label>

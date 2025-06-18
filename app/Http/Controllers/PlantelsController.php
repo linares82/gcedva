@@ -272,6 +272,11 @@ class PlantelsController extends Controller
 		} else {
 			$input['bnd_openpay_activo'] = 0;
 		}
+		if (isset($input['bnd_opencode']) and $input['bnd_opencode'] == 1) {
+			$input['bnd_opencode'] = 1;
+		} else {
+			$input['bnd_opencode'] = 0;
+		}
 		//$input['logo']="";
 		$r = $request->hasFile('logo_file');
 		if ($r) {

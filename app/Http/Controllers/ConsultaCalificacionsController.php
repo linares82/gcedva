@@ -1,4 +1,6 @@
-<?php namespace App\Http\Controllers;
+<?php
+
+namespace App\Http\Controllers;
 
 use Auth;
 use App\Cliente;
@@ -10,7 +12,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\createConsultaCalificacion;
 use App\Http\Requests\updateConsultaCalificacion;
 
-class ConsultaCalificacionsController extends Controller {
+class ConsultaCalificacionsController extends Controller
+{
 
 	/**
 	 * Display a listing of the resource.
@@ -31,9 +34,9 @@ class ConsultaCalificacionsController extends Controller {
 	 */
 	public function create(Request $request)
 	{
-		$cliente=Cliente::find($request->input('cliente'));
+		$cliente = Cliente::find($request->input('cliente'));
 		return view('consultaCalificacions.create', compact('cliente'))
-			->with( 'list', ConsultaCalificacion::getListFromAllRelationApps() );
+			->with('list', ConsultaCalificacion::getListFromAllRelationApps());
 	}
 
 	/**
@@ -46,12 +49,12 @@ class ConsultaCalificacionsController extends Controller {
 	{
 
 		$input = $request->all();
-		$input['usu_alta_id']=Auth::user()->id;
-		$input['usu_mod_id']=Auth::user()->id;
+		$input['usu_alta_id'] = Auth::user()->id;
+		$input['usu_mod_id'] = Auth::user()->id;
 
-		$cliente=Cliente::where('matricula',$input['matricula'])->first();
+		$cliente = Cliente::where('matricula', $input['matricula'])->first();
 		//create data
-		ConsultaCalificacion::create( $input );
+		ConsultaCalificacion::create($input);
 
 		return redirect()->route('clientes.edit', $cliente->id)->with('message', 'Registro Creado.');
 	}
@@ -64,7 +67,7 @@ class ConsultaCalificacionsController extends Controller {
 	 */
 	public function show($id, ConsultaCalificacion $consultaCalificacion)
 	{
-		$consultaCalificacion=$consultaCalificacion->find($id);
+		$consultaCalificacion = $consultaCalificacion->find($id);
 		return view('consultaCalificacions.show', compact('consultaCalificacion'));
 	}
 
@@ -76,17 +79,17 @@ class ConsultaCalificacionsController extends Controller {
 	 */
 	public function edit(Request $request, ConsultaCalificacion $consultaCalificacion)
 	{
-		$datos=$request->all();
-		$consultaCalificacion=ConsultaCalificacion::find($datos['id']);
-		$cliente=Cliente::find($datos['cliente']);
+		$datos = $request->all();
+		$consultaCalificacion = ConsultaCalificacion::find($datos['id']);
+		$cliente = Cliente::find($datos['cliente']);
 		//dd($cliente->matricula<>"");
-		if(!is_null($cliente->matricula) and $cliente->matricula<>""){
-			$consultaCalificacion->matricula=$cliente->matricula;
+		if (!is_null($cliente->matricula) and $cliente->matricula <> "") {
+			$consultaCalificacion->matricula = $cliente->matricula;
 			$consultaCalificacion->save();
 		}
-		
+
 		return view('consultaCalificacions.edit', compact('consultaCalificacion', 'cliente'))
-			->with( 'list', ConsultaCalificacion::getListFromAllRelationApps() );
+			->with('list', ConsultaCalificacion::getListFromAllRelationApps());
 	}
 
 	/**
@@ -97,9 +100,9 @@ class ConsultaCalificacionsController extends Controller {
 	 */
 	public function duplicate($id, ConsultaCalificacion $consultaCalificacion)
 	{
-		$consultaCalificacion=$consultaCalificacion->find($id);
+		$consultaCalificacion = $consultaCalificacion->find($id);
 		return view('consultaCalificacions.duplicate', compact('consultaCalificacion'))
-			->with( 'list', ConsultaCalificacion::getListFromAllRelationApps() );
+			->with('list', ConsultaCalificacion::getListFromAllRelationApps());
 	}
 
 	/**
@@ -112,11 +115,14 @@ class ConsultaCalificacionsController extends Controller {
 	public function update($id, ConsultaCalificacion $consultaCalificacion, updateConsultaCalificacion $request)
 	{
 		$input = $request->all();
-		$input['usu_mod_id']=Auth::user()->id;
+		$input['usu_mod_id'] = Auth::user()->id;
 		//update data
-		$consultaCalificacion=$consultaCalificacion->find($id);
-		$consultaCalificacion->update( $input );
-		$cliente=Cliente::where('matricula',$consultaCalificacion->matricula)->first();
+		if (!isset($input['bnd_oficial'])) {
+			$input['bnd_oficial'] = 0;
+		}
+		$consultaCalificacion = $consultaCalificacion->find($id);
+		$consultaCalificacion->update($input);
+		$cliente = Cliente::where('matricula', $consultaCalificacion->matricula)->first();
 
 		return redirect()->route('clientes.edit', $cliente->id)->with('message', 'Registro Actualizado.');
 	}
@@ -127,14 +133,13 @@ class ConsultaCalificacionsController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id,ConsultaCalificacion $consultaCalificacion)
+	public function destroy($id, ConsultaCalificacion $consultaCalificacion)
 	{
-		
-		$consultaCalificacion=$consultaCalificacion->find($id);
-		$cliente=Cliente::where('matricula', $consultaCalificacion->matricula)->first();
+
+		$consultaCalificacion = $consultaCalificacion->find($id);
+		$cliente = Cliente::where('matricula', $consultaCalificacion->matricula)->first();
 		$consultaCalificacion->delete();
 
 		return redirect()->route('clientes.edit', $cliente->id)->with('message', 'Registro Borrado.');
 	}
-
 }

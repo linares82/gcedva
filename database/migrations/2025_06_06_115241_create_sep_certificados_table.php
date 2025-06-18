@@ -23,8 +23,8 @@ class CreateSepCertificadosTable extends Migration
 			$table->integer('grupo_id')->unsigned()->nullable();
 			$table->integer('r_sep_cargo_id')->unsigned()->nullable();
 			$table->integer('responsable_id')->unsigned()->nullable();
-			$table->string('id_carrera');
-			$table->string('id_asignatura');
+			$table->string('id_carrera')->nullable();
+			$table->string('id_asignatura')->nullable();
 			$table->date('fecha_expedicion')->nullable();
 			$table->integer('usu_alta_id')->unsigned();
 			$table->integer('usu_mod_id')->unsigned();

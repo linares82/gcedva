@@ -189,7 +189,7 @@
                             @endif
                         </div>
                         <div class="form-group col-md-3 @if($errors->has('bnd_trabaja')) has-error @endif">
-                            <label for="bnd_trabaja-field">Â¿Trabaja?</label>
+                            <label for="bnd_trabaja-field">¿Trabaja?</label>
                             {!! Form::checkbox("bnd_trabaja", 1, null, [ "id" => "bnd_trabaja-field", 'class'=>'minimal']) !!}
                             @if($errors->has("bnd_trabaja"))
                             <span class="help-block">{{ $errors->first("bnd_trabaja") }}</span>
@@ -1250,7 +1250,7 @@
                                             
                                         </th>
                                     <th>Periodo Escolar</th><th>Asignatura</th><th>Clave</th><th>Creditos</th><th>Periodo</th><th>Calificacion</th>
-                                    <th>Estado</th>
+                                    <th>Tipo Evaluacion</th><th>Oficial</th>
                                     </head>
                                     <body>
                                     @foreach($historia as $registro)
@@ -1270,6 +1270,13 @@
                                             <td>{{$registro->lectivo}}</td>
                                             <td>{{$registro->calificacion}}</td>
                                             <td>{{$registro->tipo_examen}}</td>
+                                            <td>
+                                                @if($registro->bnd_oficial==1)
+                                                SI
+                                                @else
+                                                NO
+                                                @endif
+                                            </td>
                                         </tr>
                                     @endforeach
                                     </body>
@@ -1359,12 +1366,19 @@
                     </tr>
                 <table class="table table-condensed table-striped">
                     <thead style="color: #ffffff;background: #27ae60;">
-                    <td>Materia</td><td>Grupo</td><td>Lectivo</td><td>Estatus</td><td></td><td></td>
+                    <td>Materia</td><td>Oficial</td><td>Grupo</td><td>Lectivo</td><td>Estatus</td><td></td><td></td>
                     </thead>
                     <tbody>
                         @foreach($i->hacademicas as $a)
                         <tr>
                             <td><a href='{{url("asignacionAcademicas/index")}}?&q%5Basignacion_academicas.lectivo_id_lt%5D={{$a->lectivo_id}}&q%5Basignacion_academicas.plantel_id_lt%5D={{$a->plantel_id}}&q%5Basignacion_academicas.empleado_id_lt%5D={{$a->empleado_id}}&q%5Basignacion_academicas.materium_id_lt%5D={{$a->materium_id}}&q%5Basignacion_academicas.grupo_id_lt%5D={{$a->grupo_id}}' target='_blank'>{{optional($a->materia)->id}}-{{optional($a->materia)->codigo}}-{{optional($a->materia)->name}}</a></td>
+                            <td>
+                                @if($a->materia->bnd_oficial==1)
+                                SI
+                                @else
+                                NO
+                                @endif
+                            </td>
                             <td>{{optional($a->grupo)->name}}</td>
                             <td>{{optional($a->lectivo)->name}}</td>
                             <td>{{optional($a->stMateria)->name}}</td>

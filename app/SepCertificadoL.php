@@ -37,7 +37,8 @@ class SepCertificadoL extends Model
 		'usu_mod_id',
 		'usu_alta_id',
 		'materium_id',
-		'lectivo_id'
+		'lectivo_id',
+		'consulta_calificacion_id'
 	];
 
 	public function usu_alta()
@@ -78,5 +79,10 @@ class SepCertificadoL extends Model
 	public function lectivo()
 	{
 		return $this->hasOne('App\Lectivo', 'id', 'lectivo_id');
+	} // end
+
+	public function consultaCalificacion()
+	{
+		return $this->hasOne('App\ConsultaCalificacion', 'id', 'consulta_calificacion_id');
 	} // end
 }

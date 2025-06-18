@@ -751,6 +751,7 @@
                                     <span class="help-block">{{ $errors->first('bnd_multipagos_activo') }}</span>
                                 @endif
                             </div>
+                            <div class="row"></div>
                             <div class="form-group col-md-3 @if ($errors->has('bnd_openpay_activo')) has-error @endif">
                                 <label for="bnd_openpay_activo-field">Openpay Activo</label>
                                 {!! Form::checkbox('bnd_openpay_activo', null, null, ['id' => 'bnd_openpay_activo-field', 'class' => 'minimal']) !!}
@@ -779,7 +780,28 @@
                                     <span class="help-block">{{ $errors->first('oprivada') }}</span>
                                 @endif
                             </div>
-
+                            <div class="row"></div>
+                            <div class="form-group col-md-3 @if ($errors->has('bnd_paycode')) has-error @endif">
+                                <label for="bnd_paycode-field">Paycode Activo</label>
+                                {!! Form::checkbox('bnd_paycode', 1, null, ['id' => 'bnd_paycode-field', 'class' => 'minimal']) !!}
+                                @if ($errors->has('bnd_paycode'))
+                                    <span class="help-block">{{ $errors->first('bnd_paycode') }}</span>
+                                @endif
+                            </div>
+                            <div class="form-group col-md-4 @if ($errors->has('password_paycode')) has-error @endif">
+                                <label for="password_paycode-field">Contraseña Paycode</label>
+                                {!! Form::text('password_paycode', null, ['class' => 'form-control input-sm', 'id' => 'password_paycode-field']) !!}
+                                @if ($errors->has('password_paycode'))
+                                    <span class="help-block">{{ $errors->first('password_paycode') }}</span>
+                                @endif
+                            </div>
+                            <div class="form-group col-md-4 @if ($errors->has('api_key_paycode')) has-error @endif">
+                                <label for="api_key_paycode-field">Key Paycode</label>
+                                {!! Form::text('api_key_paycode', null, ['class' => 'form-control input-sm', 'id' => 'api_key_paycode-field']) !!}
+                                @if ($errors->has('api_key_paycode'))
+                                    <span class="help-block">{{ $errors->first('api_key_paycode') }}</span>
+                                @endif
+                            </div>
                         </div>
 
 

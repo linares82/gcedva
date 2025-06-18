@@ -68,6 +68,13 @@
                        <span class="help-block">{{ $errors->first("nombre_oficial") }}</span>
                        @endif
                     </div>
+                    <div class="form-group col-md-4 @if($errors->has('id_asignatura_certificado')) has-error @endif">
+                       <label for="id_asignatura_certificado-field">Id Asignatura Certificado</label>
+                       {!! Form::text("id_asignatura_certificado", null, array("class" => "form-control input-sm", "id" => "id_asignatura_certificado-field")) !!}
+                       @if($errors->has("id_asignatura_certificado"))
+                       <span class="help-block">{{ $errors->first("id_asignatura_certificado") }}</span>
+                       @endif
+                    </div>
                     <div class="form-group col-md-4 @if($errors->has('serie_anterior')) has-error @endif">
                        <label for="serie_anterior-field">Serie anterior</label>
                        {!! Form::select("serie_anterior", $materiales_ls, null, array("class" => "form-control select_seguridad", "id" => "serie_anterior-field")) !!}

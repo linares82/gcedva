@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use DB;
-use Auth;
 use Log;
+use Auth;
 
+use App\Cliente;
 use App\Empleado;
 use App\SepCargo;
 use App\TpoExamen;
@@ -17,6 +18,7 @@ use App\SepCertificado;
 use App\SepCertificadoL;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
+use App\ConsultaCalificacion;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\createSepCertificado;
 use App\Http\Requests\updateSepCertificado;
@@ -100,7 +102,8 @@ class SepCertificadosController extends Controller
 				'hacademica',
 				'lectivo',
 				'hacademica.materia',
-				'sepCertObservacion'
+				'sepCertObservacion',
+				'consultaCalificacion'
 			])
 			->get();
 		//dd($lineas);
@@ -112,6 +115,7 @@ class SepCertificadosController extends Controller
 
 	public function crearLineas(SepCertificado $sepCertificado)
 	{
+
 		$consultarInscripciones = Inscripcion::where('plantel_id', $sepCertificado->plantel_id)
 			//->left('titulacions as t', 't.cliente_id', 'inscripcions.cliente_id')
 			//->left('procedencia_alumnos as pa', 'pa.cliente_id', 'inscripcions.cliente_id')
@@ -128,73 +132,105 @@ class SepCertificadosController extends Controller
 		//dd($consultarInscripciones);
 		$hacademicas_existentes = SepCertificadoL::where('sep_certificado_id', $sepCertificado->id)->pluck('hacademica_id');
 		foreach ($consultarInscripciones as $inscripcion) {
-			$consultaMaterias = Hacademica::select('hacademicas.id', 'hacademicas.cliente_id', 'hacademicas.lectivo_id', 'hacademicas.materium_id')
-				->where('inscripcion_id', $inscripcion->id)
-				->join('materia as m', 'm.id', 'hacademicas.materium_id')
-				->where('m.bnd_oficial', 1)
-				->whereNotIn('hacademicas.id', $hacademicas_existentes)
-				//where('plantel_id', $sepCertificado->plantel_id)
-				//->left('titulacions as t', 't.cliente_id', 'inscripcions.cliente_id')
-				//->left('procedencia_alumnos as pa', 'pa.cliente_id', 'inscripcions.cliente_id')
-				//->where('especialidad_id', $sepCertificado->especialidad_id)
-				//->where('nivel_id', $sepCertificado->nivel_id)
-				//->where('grado_id', $sepCertificado->grado_id)
-				//->where('lectivo_id', $sepCertificado->lectivo_id)
-				//->where('grupo_id', $sepCertificado->grupo_id)
-				->get();
-			//dd($consultaMaterias->toArray());
-			$contador = $sepCertificado->id_asignatura;
+
+			$totales_materias = $this->materiasOficialesTotales($inscripcion->cliente_id);
+
 			$cliente = 0;
 			$contarMaterias = 0;
 			$promedioGeneral = array();
 			$calificacion_materia = array();
+
+
+			$consulta_calificaciones = ConsultaCalificacion::where('matricula', 'like', "%" . $inscripcion->cliente->matricula . "%")
+				->where('bnd_oficial', 1)
+				->get();
+			//dd($consulta_calificaciones);
+			foreach ($consulta_calificaciones as $linea) {
+				$cliente_registro = Cliente::select('id')->where('matricula', trim($linea->matricula))->first();
+
+				$inputLinea = array();
+				$inputLinea['sep_certificado_id'] = $sepCertificado->id;
+				$inputLinea['cliente_id'] = $cliente_registro->id;
+				$inputLinea['hacademica_id'] = NULL;
+				$inputLinea['consulta_calificacion_id'] = $linea->id;
+				$inputLinea['materium_id'] = NULL;
+				$inputLinea['lectivo_id'] = NULL;
+				$inputLinea['sep_cert_tipo_id'] = 1;
+				$inputLinea['fecha_expedicion'] = $sepCertificado->fecha_expedicion;
+				$inputLinea['id_carrera'] = $sepCertificado->id_carrera;
+				$inputLinea['numero_asignaturas_cursadas'] = $totales_materias['total_materias'];
+				$inputLinea['promedio_general'] = round($totales_materias['suma_calificaciones'] / $totales_materias['total_materias'], 2);
+				$inputLinea['calificacion_materia'] = $linea['calificacion'];
+				$inputLinea['sep_cert_observacion_id'] = NULL;
+				$inputLinea['bnd_descargar'] = 0;
+				$inputLinea['usu_alta_id'] = Auth::user()->id;
+				$inputLinea['usu_mod_id'] = Auth::user()->id;
+				//dd($inputLinea);
+				SepCertificadoL::create($inputLinea);
+			}
+
+			$consultaMaterias = Hacademica::select('hacademicas.id', 'hacademicas.cliente_id', 'hacademicas.lectivo_id', 'hacademicas.materium_id')
+				//->where('inscripcion_id', $inscripcion->id)
+				->where('cliente_id', $inscripcion->cliente_id)
+				->join('materia as m', 'm.id', 'hacademicas.materium_id')
+				->where('m.bnd_oficial', 1)
+				->where('st_materium_id', 1)
+				->whereNotIn('hacademicas.id', $hacademicas_existentes)
+				->get();
+			//dd($consultaMaterias->toArray());
 			foreach ($consultaMaterias as $linea) {
-				$contador++;
 				//dd($linea);
-				/*$validar_existencia = SepCertificadoL::where('sep_certificado_id', $sepCertificado->id)
-					->where('cliente_id', $linea->cliente_id)
-					->where('hacademica_id', $linea->id)
-					->first();
-					*/
-				//if (is_null($validar_existencia)) {
-				if ($cliente <> $linea->cliente_id) {
-					$contarMaterias = $this->contarMateriasOficiales($linea->cliente_id);
-					$promedioGeneral = $this->calcularPromedioGeneral($inscripcion->id);
+				/*if ($cliente <> $linea->cliente_id) {
+					$totales_materias = $this->materiasOficialesTotales($linea->cliente_id);
 					$cliente = $linea->cliente_id;
-				}
+				}*/
 
 				//dd($promedioGeneral);
-				/*$tipoEvaluacion = TpoExamen::with('sepCertObservacion')->find(Calificacion::where('hacademica_id', $linea->id)
-					->max('tpo_examen_id'));
-					*/
+
 				//dd($promedioGeneral[0]['detalle_calificaciones']);
 				//dd($linea);
-				$calificacion_materia = array_filter($promedioGeneral[0]['detalle_calificaciones'], function ($calificacion) use ($linea) {
-					//dd($calificacion);
+				/*$calificacion_materia = array_filter($promedioGeneral[0]['detalle_calificaciones'], function ($calificacion) use ($linea) {
 					if ($calificacion['hacademica_id'] === $linea->id) {
 						return $calificacion;
 					}
 				});
-				//dd($calificacion_materia);
+				
 				$registro_detalle = array();
 				foreach ($calificacion_materia as $calificacion) {
 					$registro_detalle = $calificacion;
 				}
-				//dd($registro_detalle);
+				*/
 
+				$tpo_examen_max = Calificacion::where('hacademica_id', $linea->id)->max('tpo_examen_id');
+				//Log::info("hacademicas" . $hacademica->id);
+				$calificacion = Calificacion::select(
+					'calificacions.calificacion',
+					'te.sep_cert_observacion_id',
+					'sco.id_observacion',
+					'sco.descripcion as observacion',
+					'te.name as tipo_examen'
+				)
+					->join('tpo_examens as te', 'te.id', 'calificacions.tpo_examen_id')
+					->leftJoin('sep_cert_observacions as sco', 'sco.id', 'te.sep_cert_observacion_id')
+					//->with(['tpoExamen', 'tpoExamen.sepCertObservacion'])
+					->where('hacademica_id', $linea->id)
+					->where('tpo_examen_id', $tpo_examen_max)
+					->first();
+
+				$inputLinea = array();
 				$inputLinea['sep_certificado_id'] = $sepCertificado->id;
 				$inputLinea['cliente_id'] = $linea->cliente_id;
 				$inputLinea['hacademica_id'] = $linea->id;
+				$inputLinea['consulta_calificacion_id'] = NULL;
 				$inputLinea['materium_id'] = $linea->materium_id;
 				$inputLinea['lectivo_id'] = $linea->lectivo_id;
 				$inputLinea['sep_cert_tipo_id'] = 1;
 				$inputLinea['fecha_expedicion'] = $sepCertificado->fecha_expedicion;
 				$inputLinea['id_carrera'] = $sepCertificado->id_carrera;
-				$inputLinea['id_asignatura'] = $contador;
-				$inputLinea['numero_asignaturas_cursadas'] = $contarMaterias;
-				$inputLinea['promedio_general'] = $promedioGeneral[0]['promedio_general'];
-				$inputLinea['calificacion_materia'] = $registro_detalle['calificacion'];
-				$inputLinea['sep_cert_observacion_id'] = $registro_detalle['sep_cert_observacion_id']; //isset($tipoEvaluacion->sepCertObservacion) ? $tipoEvaluacion->sepCertObservacion->id : "";
+				$inputLinea['numero_asignaturas_cursadas'] = $totales_materias['total_materias'];
+				$inputLinea['promedio_general'] = round($totales_materias['suma_calificaciones'] / $totales_materias['total_materias'], 2);
+				$inputLinea['calificacion_materia'] = ($calificacion->calificacion < 6 ? ($calificacion->calificacion % 1) : round($calificacion->calificacion, 0));
+				$inputLinea['sep_cert_observacion_id'] = $calificacion->sep_cert_observacion_id;
 				$inputLinea['bnd_descargar'] = 0;
 				$inputLinea['usu_alta_id'] = Auth::user()->id;
 				$inputLinea['usu_mod_id'] = Auth::user()->id;
@@ -208,22 +244,76 @@ class SepCertificadosController extends Controller
 		//dd($consultaLineas);
 	}
 
+	public function materiasOficialesTotales($cliente_id)
+	{
+		$cliente = Cliente::select('id', 'matricula')->find($cliente_id);
+		$anteriores = ConsultaCalificacion::where('matricula', 'like', "%" . $cliente->matricula . "%")
+			->where('bnd_oficial', 1)
+			->get();
+		//dd($anteriores->toArray());
+		$propias = Hacademica::select('hacademicas.*')->where('cliente_id', $cliente->id)
+			->join('materia as m', 'm.id', 'hacademicas.materium_id')
+			->where('m.bnd_oficial', 1)
+			->where('st_materium_id', 1)
+			->orderBy('hacademicas.id', 'desc')
+			->get();
+		//dd($propias->toArray());
+		$total_materias = 0;
+		$suma_calificaciones = 0;
+		foreach ($anteriores as $calificacion) {
+			$total_materias++;
+			$suma_calificaciones = $suma_calificaciones + $calificacion->calificacion;
+			//echo $calificacion->calificacion . "-";
+		}
+
+		foreach ($propias as $hacademica) {
+			$total_materias++;
+			//dd($hacademica);
+			$tpo_examen_max = Calificacion::where('hacademica_id', $hacademica->id)->max('tpo_examen_id');
+			//Log::info("hacademicas" . $hacademica->id);
+			$calificacion = Calificacion::select(
+				'calificacions.calificacion',
+				'te.sep_cert_observacion_id',
+				'sco.id_observacion',
+				'sco.descripcion as observacion',
+				'te.name as tipo_examen'
+			)
+				->join('tpo_examens as te', 'te.id', 'calificacions.tpo_examen_id')
+				->leftJoin('sep_cert_observacions as sco', 'sco.id', 'te.sep_cert_observacion_id')
+				//->with(['tpoExamen', 'tpoExamen.sepCertObservacion'])
+				->where('hacademica_id', $hacademica->id)
+				->where('tpo_examen_id', $tpo_examen_max)
+				->first();
+			//echo $calificacion->calificacion . "-";
+			$suma_calificaciones = $suma_calificaciones + ($calificacion->calificacion < 6 ? ($calificacion->calificacion % 1) : round($calificacion->calificacion, 0));
+		}
+		//dd(array('total_materias' => $total_materias, 'suma_calificaciones' => $suma_calificaciones));
+		return array('total_materias' => $total_materias, 'suma_calificaciones' => $suma_calificaciones);
+	}
+
 	public function contarMateriasOficiales($cliente)
 	{
-		return Hacademica::where('cliente_id', $cliente)
+		$anteriores = ConsultaCalificacion::where('matricula', 'like', "%" . $cliente->matricula . "%")
+			->where('bnd_oficial', 1)
+			->count();
+		$propias = Hacademica::where('cliente_id', $cliente)
 			->join('materia as m', 'm.id', 'hacademicas.materium_id')
 			->where('m.bnd_oficial', 1)
 			->where('st_materium_id', 1)
 			->count();
+
+		return  $anteriores + $propias;
 	}
 
 	public function calcularPromedioGeneral($inscripcionId)
 	{
-
 		$inscripcion = Inscripcion::find($inscripcionId);
 
 		$resultados = array();
 		//dd($inscripcion->toArray());
+		$anteriores = ConsultaCalificacion::where('matricula', 'like', "%" . $inscripcion->cliente->matricula . "%")
+			->where('bnd_oficial', 1)
+			->get();
 
 		$hacademicas = Hacademica::select(
 			/*'m.name as materia',
@@ -244,7 +334,7 @@ class SepCertificadosController extends Controller
 
 		foreach ($hacademicas as $hacademica) {
 			$tpo_examen_max = Calificacion::where('hacademica_id', $hacademica->id)->max('tpo_examen_id');
-			Log::info("hacademicas" . $hacademica->id);
+			//Log::info("hacademicas" . $hacademica->id);
 			$calificacion = Calificacion::select(
 				'calificacions.calificacion',
 				'te.sep_cert_observacion_id',

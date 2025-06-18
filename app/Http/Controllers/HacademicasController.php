@@ -770,41 +770,41 @@ class HacademicasController extends Controller
             $h->save();
 
             //Revisar si la materia es ponderacion de otra materia, calcular la calificacion de la materia padre
-            if($h->st_materium_id == 1){
-                $materia=$h->materia;
-                if($materia->bnd_ponderacion==true){
+            if ($h->st_materium_id == 1) {
+                $materia = $h->materia;
+                if ($materia->bnd_ponderacion == true) {
                     //dd($materia->padres);
-                    foreach($materia->padre as $padre){
-                        $padreHacademicas=Hacademica::where('cliente_id', $h->cliente_id)->where('materium_id',$padre->id)->first();
-                        if(!is_null($padreHacademicas)){
-                            $ponderacionesMateriasAprobadas=1;
-                            $sumaCalificaciones=0;
-                            foreach($padre->ponderacionMaterias as $materiaH){
-                                $hijaHacademicas=Hacademica::where('cliente_id', $h->cliente_id)->where('materium_id',$materiaH->id)->first();
+                    foreach ($materia->padre as $padre) {
+                        $padreHacademicas = Hacademica::where('cliente_id', $h->cliente_id)->where('materium_id', $padre->id)->first();
+                        if (!is_null($padreHacademicas)) {
+                            $ponderacionesMateriasAprobadas = 1;
+                            $sumaCalificaciones = 0;
+                            foreach ($padre->ponderacionMaterias as $materiaH) {
+                                $hijaHacademicas = Hacademica::where('cliente_id', $h->cliente_id)->where('materium_id', $materiaH->id)->first();
                                 //dd($hijaHacademicas->toArray());
-                                if($hijaHacademicas->st_materium_id<>1){
-                                    $ponderacionesMateriasAprobadas=0;
-                                }else{
-                                    $calificacionAprobatoria=$hijaHacademicas->calificaciones->last();
-                                    $sumaCalificaciones=$sumaCalificaciones+$calificacionAprobatoria->calificacion;
+                                if ($hijaHacademicas->st_materium_id <> 1) {
+                                    $ponderacionesMateriasAprobadas = 0;
+                                } else {
+                                    $calificacionAprobatoria = $hijaHacademicas->calificaciones->last();
+                                    $sumaCalificaciones = $sumaCalificaciones + $calificacionAprobatoria->calificacion;
                                 }
                             }
                             //dd($ponderacionesMateriasAprobadas);
-                            if($ponderacionesMateriasAprobadas==1){
-                                $calificacionPromedio=$sumaCalificaciones/$padre->ponderacionMaterias->count();
-                                
-                                $padreHacademicas->st_materium_id=1;
+                            if ($ponderacionesMateriasAprobadas == 1) {
+                                $calificacionPromedio = $sumaCalificaciones / $padre->ponderacionMaterias->count();
+
+                                $padreHacademicas->st_materium_id = 1;
                                 $padreHacademicas->save();
                                 //dd($padreHacademicas->calificaciones->first()->toArray());
-                                $calificacionPadre=$padreHacademicas->calificaciones->first();
-                                $calificacionPadre->calificacion=$calificacionPromedio;
+                                $calificacionPadre = $padreHacademicas->calificaciones->first();
+                                $calificacionPadre->calificacion = $calificacionPromedio;
                                 $calificacionPadre->save();
                             }
                         }
                     }
                 }
             }
-            
+
 
             return json_encode(array(
                 'calificacion' => $calificacion->calificacion,
@@ -1027,5 +1027,165 @@ class HacademicasController extends Controller
         }
         //}
         return $c;
+    }
+
+    public function getCalificacionIncidencia(Request $request)
+    {
+        $data = $request->all();
+        //dd($data);
+        $asignacion = $data['asignacion'];
+        $examen = TpoExamen::pluck('name', 'id');
+
+        $asignacionAcademica = AsignacionAcademica::find($data['asignacion']);
+        $materia = Materium::find($asignacionAcademica->materium_id);
+        //dd($asignacionAcademica);
+        $carga_ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $materia->ponderacion_id)
+            ->where('bnd_activo', 1)
+            ->pluck('name', 'id');
+
+
+        return view('hacademicas.calificacionIncidencias', compact('asignacion', 'examen', 'carga_ponderaciones'))
+            ->with('list', Hacademica::getListFromAllRelationApps());
+    }
+
+    public function postCalificacionIncidencia(Request $request)
+    {
+        $data = $request->all();
+        $ponderacion_seleccionada = CargaPonderacion::find($data['carga_ponderacion_id']);
+        //dd($data);
+        $asignacion = $data['asignacion'];
+        $examen = TpoExamen::pluck('name', 'id');
+        $asignacionAcademica = AsignacionAcademica::find($data['asignacion']);
+        $lectivo = Lectivo::find($asignacionAcademica->lectivo_id);
+        //dd($lectivo);
+        //$calificacion_inicio=Carbon::createFromFormat('Y-m-d',$lectivo->calificacion_inicio);
+        //$calificacion_fin = Carbon::createFromFormat('Y-m-d', $lectivo->calificacion_fin);
+        $dentroPeriodoExamenes = 0;
+        $dentroPeriodoExamenesAsignacion = 0;
+        $hoy = Carbon::createFromFormat('Y-m-d', Date('Y-m-d'));
+        $periodos_capturados_total = 0;
+        //dd($lectivo->periodoExamens->ToArray());
+        foreach ($lectivo->periodoExamens as $periodoExamen) {
+            //periodos de examen asociados al lectivo            
+            $calificacion_inicio = Carbon::createFromFormat('Y-m-d', $periodoExamen->inicio);
+            $calificacion_fin = Carbon::createFromFormat('Y-m-d', $periodoExamen->fin);
+            //dd($periodoExamen);
+            if ($calificacion_inicio->lessThanOrEqualTo($hoy)  and $calificacion_fin->greaterThanOrEqualTo($hoy)) {
+                //$dentroPeriodoExamenesAsignacion = $periodoExamen->id; Se deshabilita la opcion de periodos de examen directo en el lectivo
+            }
+
+            $periodos_capturados_total++;
+        }
+        //dd($dentroPeriodoExamenes);
+        //dd($lectivo->calendarioEvaluacions->toArray());
+        foreach ($lectivo->calendarioEvaluacions as $fechaCalendario) {
+            $calificacion_inicio = Carbon::createFromFormat('Y-m-d', $fechaCalendario->v_inicio);
+            $calificacion_fin = Carbon::createFromFormat('Y-m-d', $fechaCalendario->v_fin);
+            if ($calificacion_inicio->lessThanOrEqualTo($hoy)  and $calificacion_fin->greaterThanOrEqualTo($hoy)) {
+                $dentroPeriodoExamenes = $fechaCalendario->id;
+            }
+        }
+
+        //dd($periodos_capturados_total);
+        //$periodo_examen = PeriodoExamen::find($dentroPeriodoExamenes);
+
+        $materia = Materium::find($asignacionAcademica->materium_id);
+        //dd($asignacionAcademica);
+        //$carga_ponderaciones=CargaPonderacion::where('ponderacion_id','=',$materia->ponderacion_id)->pluck('name','id');
+        //dd($carga_ponderaciones->toArray());
+        $msj = "";
+        $hacademicas = null;
+
+        $hacademicas = HAcademica::select(
+            'cli.id',
+            'cli.plantel_id',
+            'cli.nombre',
+            'cli.nombre2',
+            'cli.ape_paterno',
+            'cli.ape_materno',
+            'cli.bnd_doc_oblig_entregados',
+            'c.calificacion',
+            'cp.calificacion_parcial_calculada',
+            'cp.id as calificacion_ponderacion_id',
+            'cp.calificacion_parcial',
+            'cpo.name as ponderacion',
+            'stc.name as estatus_cliente',
+            'stc.id as estatus_cliente_id',
+            'af.fecha as fecha_acta',
+            'af.consecutivo as consecutivo_acta'
+        )
+            ->where('hacademicas.grupo_id', '=', $asignacionAcademica->grupo_id)
+            ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
+            ->join('calificacions as c', 'c.hacademica_id', '=', 'hacademicas.id')
+            ->leftJoin('acta_finals as af', 'af.id', 'c.acta_final_id')
+            ->join('calificacion_ponderacions as cp', 'cp.calificacion_id', '=', 'c.id')
+            ->join('carga_ponderacions as cpo', 'cpo.id', '=', 'cp.carga_ponderacion_id')
+            ->join('clientes as cli', 'cli.id', '=', 'hacademicas.cliente_id')
+            ->join('st_clientes as stc', 'stc.id', '=', 'cli.st_cliente_id')
+            ->where('hacademicas.lectivo_id', '=', $asignacionAcademica->lectivo_id)
+            ->where('hacademicas.materium_id', '=', $asignacionAcademica->materium_id)
+            ->where('c.tpo_examen_id', '=', $data['tpo_examen_id'])
+            ->where('cp.carga_ponderacion_id', '=', $data['carga_ponderacion_id'])
+            ->orderBy('cli.ape_paterno')
+            ->orderBy('cli.ape_materno')
+            ->orderBy('cli.nombre')
+            ->orderBy('cli.nombre2')
+            ->whereNull('hacademicas.deleted_at')
+            ->whereNull('c.deleted_at')
+            ->whereNull('i.deleted_at')
+            ->whereNull('cp.deleted_at')
+            ->orderBy('cli.ape_paterno')
+            ->orderBy('cli.ape_materno')
+            ->orderBy('cli.nombre')
+            ->orderBy('cli.nombre2')
+            ->get();
+        //dd($hacademicas);
+
+
+        /*if(!is_object($hacademicas)){
+                $msj= "Lo sentimos usted no es el profesor de la materia o la fecha limite del perido lectivo ha finalizado";
+            }*/
+
+        $hacademica = HAcademica::where('grupo_id', '=', $asignacionAcademica->grupo_id)
+            ->where('lectivo_id', '=', $asignacionAcademica->lectivo_id)
+            ->where('materium_id', '=', $asignacionAcademica->materium_id)
+            ->first();
+
+        if (is_null($hacademica)) {
+            $asignacion = $data['asignacion'];
+            $examen = TpoExamen::pluck('name', 'id');
+
+            $asignacionAcademica = AsignacionAcademica::find($data['asignacion']);
+            $materia = Materium::find($asignacionAcademica->materium_id);
+            $carga_ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $materia->ponderacion_id)
+                ->where('bnd_activo', 1)
+                ->pluck('name', 'id');
+
+            return view('hacademicas.calificacionIncidencias', compact('asignacion', 'examen', 'carga_ponderaciones', 'ponderacion_seleccionada'))
+                ->with('list', Hacademica::getListFromAllRelationApps())
+                ->with('msj', $msj);
+        }
+
+        $g = Grado::find($hacademica->grado_id)->first();
+        //dd($g->toArray());
+        $carga_ponderaciones = collect();
+        if (isset($data['tpo_examen_id'])) {
+            if ($data['tpo_examen_id'] == 2 and $g->name == "BACHILLERATO") {
+                $carga_ponderaciones = CargaPonderacion::where('ponderacion_id', '=', 1)->pluck('name', 'id');
+            } elseif ($data['tpo_examen_id'] == 2 and $g->name <> "BACHILLERATO") {
+                $carga_ponderaciones = CargaPonderacion::where('ponderacion_id', '=', 2)->pluck('name', 'id');
+            } elseif ($data['tpo_examen_id'] == 1) {
+                $carga_ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $materia->ponderacion_id)->pluck('name', 'id');
+            }
+        } else {
+            $carga_ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $materia->ponderacion_id)->pluck('name', 'id');
+        }
+
+
+
+        //dd($hacademicas->toArray());
+        return view('hacademicas.calificacionIncidencias', compact('asignacion', 'examen', 'carga_ponderaciones', 'hacademicas', 'ponderacion_seleccionada'))
+            ->with('list', Hacademica::getListFromAllRelationApps())
+            ->with('msj', $msj);
     }
 }

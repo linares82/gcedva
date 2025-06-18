@@ -96,7 +96,10 @@ class Plantel extends Model
 		'bnd_multipagos_activo',
 		'bnd_openpay_activo',
 		'sep_institucion_educativa_id',
-		'sep_cert_institucion_id'
+		'sep_cert_institucion_id',
+		'bnd_paycode',
+		'password_paycode',
+		'api_key_paycode'
 	];
 
 	protected $dates = ['deleted_at'];

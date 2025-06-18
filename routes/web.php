@@ -6097,6 +6097,22 @@ Route::post(
     )
 )->middleware('auth');
 Route::get(
+    '/hacademicas/calificacionIncidencia',
+    array(
+        'as' => 'hacademicas.calificacionIncidencia',
+        'middleware' => 'permission:hacademicas.calificacionIncidencia',
+        'uses' => 'HacademicasController@getCalificacionIncidencia'
+    )
+)->middleware('auth');
+Route::post(
+    '/hacademicas/calificacionIncidencia',
+    array(
+        'as' => 'hacademicas.calificacionIncidencia',
+        'middleware' => 'permission:hacademicas.calificacionIncidencia',
+        'uses' => 'HacademicasController@postCalificacionIncidencia'
+    )
+)->middleware('auth');
+Route::get(
     '/hacademicas/actualizarCalificacion',
     array(
         'as' => 'hacademicas.actualizarCalificacion',
