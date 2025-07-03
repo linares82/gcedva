@@ -50,13 +50,13 @@ class GradosController extends Controller
         $plan_estudio->prepend('Seleccionar opcion', "");
         $sep_carreras = SepCarrera::select(DB::raw('concat(cve_carrera,"-",descripcion) as name, id'))
             ->pluck('name', 'id');
-        $sep_carreras->prepend("Seleccionar opcion", NULL);
+        $sep_carreras->prepend("Seleccionar opcion", "");
         $sep_autorizacion_reconocimientos = SepAutorizacionReconocimiento::select(DB::raw('concat(id_autorizacion_reconocimiento,"-",autorizacion_reconocimiento) as name, id'))
             ->pluck('name', 'id');
-        $sep_autorizacion_reconocimientos->prepend("Seleccionar opcion", NULL);
+        $sep_autorizacion_reconocimientos->prepend("Seleccionar opcion", "");
         $sep_fundamento_legal = SepFundamentoLegalServicioSocial::select(DB::raw('concat(id_fundamento_legal_servicio_social,"-",fundamento_legal_servicio_social) as name, id'))
             ->pluck('name', 'id');
-        $sep_fundamento_legal->prepend("Seleccionar opcion", NULL);
+        $sep_fundamento_legal->prepend("Seleccionar opcion", "");
         return view('grados.create', compact(
             'modulos',
             'sep_carreras',
@@ -78,6 +78,7 @@ class GradosController extends Controller
     {
 
         $input = $request->all();
+        //dd($input);
 
         if (isset($input['mexico_bnd'])) {
             $input['mexico_bnd'] = 1;

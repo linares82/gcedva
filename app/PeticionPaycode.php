@@ -39,6 +39,10 @@ class PeticionPaycode extends Model
         'usu_alta_id',
         'usu_mod_id',
         'bnd_pagado',
+        'card_type',
+        'result_code',
+        'bnd_conciliado',
+        'card_4_digits'
     ];
 
 

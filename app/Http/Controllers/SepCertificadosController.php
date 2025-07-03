@@ -131,6 +131,7 @@ class SepCertificadosController extends Controller
 			->get();
 		//dd($consultarInscripciones);
 		$hacademicas_existentes = SepCertificadoL::where('sep_certificado_id', $sepCertificado->id)->pluck('hacademica_id');
+		$hacademicas_existentes_consulta_calificacion = SepCertificadoL::where('sep_certificado_id', $sepCertificado->id)->distinct()->pluck('consulta_calificacion_id');
 		foreach ($consultarInscripciones as $inscripcion) {
 
 			$totales_materias = $this->materiasOficialesTotales($inscripcion->cliente_id);
@@ -143,6 +144,7 @@ class SepCertificadosController extends Controller
 
 			$consulta_calificaciones = ConsultaCalificacion::where('matricula', 'like', "%" . $inscripcion->cliente->matricula . "%")
 				->where('bnd_oficial', 1)
+				->whereNotIn('id', $hacademicas_existentes_consulta_calificacion)
 				->get();
 			//dd($consulta_calificaciones);
 			foreach ($consulta_calificaciones as $linea) {

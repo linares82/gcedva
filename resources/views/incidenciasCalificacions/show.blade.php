@@ -104,6 +104,14 @@
                      <label for="usu_mod_id">U. MODIFICACION</label>
                      <p class="form-control-static">{{$incidenciasCalificacion->usu_mod->name}}</p>
                 </div>
+                <div class="form-group col-sm-4">
+                     <label for="usu_mod_id">Evidencia</label>
+                     <p class="form-control-static">
+                        <a target="_blank" href="{{ asset('storage/incidencias_calificacions/' . $incidenciasCalificacion->imagen) }}">
+                            Ver
+                        </a>
+                     </p>
+                </div>
             </form>
 
             <div class="row">

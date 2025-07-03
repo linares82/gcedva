@@ -1,6 +1,6 @@
                     <div class="form-group col-md-4 @if($errors->has('plantel_id')) has-error @endif">
                     <label for="plantel_id-field">Plantel</label>
-                    {!! Form::select("plantel_id", $list["Plantel"], null, array("class" => "form-control select_seguridad", "id" => "plantel_id-field", 'readonly'=>'readonly')) !!}
+                    {!! Form::select("plantel_id", $planteles, null, array("class" => "form-control select_seguridad", "id" => "plantel_id-field", 'readonly'=>'readonly')) !!}
                     @if($errors->has("plantel_id"))
                         <span class="help-block">{{ $errors->first("plantel_id") }}</span>
                     @endif
@@ -35,6 +35,7 @@
                     </div>
                     <div class="form-group col-md-4 @if($errors->has('cuentas_efectivo_id')) has-error @endif">
                        <label for="cuentas_efectivo_id-field">Cuenta Efectivo</label>
+                       <div id='loading3' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                        {!! Form::select("cuentas_efectivo_id", $list["CuentasEfectivo"], null, array("class" => "form-control select_seguridad", "id" => "cuentas_efectivo_id-field")) !!}
                        Saldo Actualizado:<div id="origen"></div>
                        @if($errors->has("cuentas_efectivo_id"))

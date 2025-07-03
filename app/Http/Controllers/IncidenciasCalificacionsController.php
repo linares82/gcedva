@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Auth;
 use Mail;
+use File;
 
 use App\Param;
 use Exception;
@@ -16,6 +17,7 @@ use App\Mail\AvisoIncidencia;
 use App\CalificacionPonderacion;
 use App\IncidenciasCalificacion;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\createIncidenciasCalificacion;
 use App\Http\Requests\updateIncidenciasCalificacion;
 
@@ -58,6 +60,7 @@ class IncidenciasCalificacionsController extends Controller
 	{
 
 		$input = $request->all();
+		//dd($input);
 		$calificacionPonderacion = CalificacionPonderacion::find($input['calificacion_ponderacion_id']);
 		$input['calificacion_id'] = $calificacionPonderacion->calificacion_id;
 		$input['materium_id'] = $calificacionPonderacion->calificacion->hacademica->materium_id;
@@ -67,7 +70,23 @@ class IncidenciasCalificacionsController extends Controller
 		$input['usu_mod_id'] = Auth::user()->id;
 
 		//create data
-		IncidenciasCalificacion::create($input);
+		$incidenciaCalificacion = IncidenciasCalificacion::create($input);
+		if ($request->hasFile('file')) {
+			$file = $request->file('file');
+			$extension = $file->getClientOriginalExtension();
+			$nombre = date('dmYhmi') . $file->getClientOriginalName();
+
+			$r = Storage::disk('img_incidencias_calificacions')->put($nombre, File::get($file));
+
+			//$incidenciaCalificacion = IncidenciasCalificacion::find($request->get('incidencia_calificacion'));
+			if ($incidenciaCalificacion->imagen != "") {
+				Storage::disk('img_incidencias_calificacions')->delete($incidenciaCalificacion->imagen);
+				$incidenciaCalificacion->imagen = $nombre;
+			} else {
+				$incidenciaCalificacion->imagen = $nombre;
+			}
+			$incidenciaCalificacion->save();
+		}
 
 		return redirect()->route('incidenciasCalificacions.index')->with('message', 'Registro Creado.');
 	}
@@ -294,5 +313,32 @@ class IncidenciasCalificacionsController extends Controller
 			$suma = $suma + $cp->calificacion_parcial_calculada;
 		}
 		return $suma;
+	}
+
+	public function cargaArchivo(Request $request)
+	{
+		if ($request->hasFile('file')) {
+			$file = $request->file('file');
+			$extension = $file->getClientOriginalExtension();
+			$nombre = date('dmYhmi') . $file->getClientOriginalName();
+			$r = Storage::disk('img_incidencias_calificacions')->put($nombre, File::get($file));
+			$incidenciaCalificacion = IncidenciasCalificacion::find($request->get('incidencia_calificacion'));
+			if ($incidenciaCalificacion->imagen != "") {
+				Storage::disk('img_incidencias_calificacions')->delete($incidenciaCalificacion->imagen);
+				$incidenciaCalificacion->imagen = $nombre;
+			} else {
+				$incidenciaCalificacion->imagen = $nombre;
+			}
+			$incidenciaCalificacion->save();
+		} else {
+
+			return "no";
+		}
+
+		if ($r) {
+			return $nombre;
+		} else {
+			return "Error vuelva a intentarlo";
+		}
 	}
 }

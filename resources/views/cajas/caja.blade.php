@@ -553,6 +553,7 @@
                                     @endif
                                     <br>
                                     <strong>Referencia EL:</strong>{{ optional($pago->peticionMultipago)->mp_reference }}<br>
+                                    <strong>Referencia PC:</strong>{{ optional($pago->peticionPaycode)->rreference_number }}<br>
                                     <strong>Referencia Openpay:</strong>
                                     <table class="table table-striped table-bordered table-hover" >
                                         <thead><th>Order</th><th></th><th>Estatus</th> <th>Limite</th></thead>

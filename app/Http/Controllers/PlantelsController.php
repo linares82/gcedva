@@ -177,7 +177,7 @@ class PlantelsController extends Controller
 	{
 		$plantel = $plantel->find($id);
 		$directores = Empleado::select(DB::raw("CONCAT(nombre,' ',ape_paterno,' ',ape_materno) AS name"), 'id')
-			->whereIn('puesto_id', array(4, 24))->pluck('name', 'id');
+			->whereIn('puesto_id', array(4, 24, 67, 32, 1))->pluck('name', 'id');
 		//dd($directores);
 		$responsables = Empleado::select(DB::raw("CONCAT(nombre,' ',ape_paterno,' ',ape_materno) AS name"), 'id')
 			->whereIn('puesto_id', array(4, 23))->pluck('name', 'id');

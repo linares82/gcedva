@@ -1105,8 +1105,11 @@ class ReportesCedvaController extends Controller
                                 ($registro['estatus_cliente_id'] == 22) or
                                 $registro['estatus_cliente_id'] == 31 or
                                 ($registro['estatus_cliente_id'] == 17) or
-                                $registro['estatus_cliente_id'] == 25 or $registro['estatus_cliente_id'] == 26 or
-                                ($registro['estatus_cliente_id'] == 4 and $registro['estatus_seguimiento_id'] == 2) //or
+                                $registro['estatus_cliente_id'] == 25 or
+                                $registro['estatus_cliente_id'] == 26 or
+                                $registro['estatus_cliente_id'] == 4
+                                //($registro['estatus_cliente_id'] == 4 and $registro['estatus_seguimiento_id'] == 2) 
+                                //or
                                 /*($registro['estatus_cliente_id'] == 20 and $registro['estatus_seguimiento_id'] == 7) or
                                 ($registro['estatus_cliente_id'] == 4 and $registro['estatus_seguimiento_id'] == 9)*/
                             ) {

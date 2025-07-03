@@ -49,56 +49,73 @@ class ActivarBs extends Command
      */
     public function handle()
     {
+        //Revisa adeudos pagado_bnd=0 con caja que si este pagada
+        $adeudos_sin_pagado = Adeudo::select('adeudos.*')
+            ->join('cajas as c', 'c.id', 'adeudos.caja_id')
+            ->join('clientes as cli', 'cli.id', 'c.cliente_id')
+            ->where('pagado_bnd', '<>', 1)
+            ->whereNotNull('adeudos.caja_id')
+            ->whereNull('c.deleted_at')
+            ->where('c.st_caja_id', 1)
+            ->get();
+
+        //dd($adeudos_sin_pagado->toArray());
+        foreach ($adeudos_sin_pagado as $adeudo) {
+            $adeudo->pagado_bnd = 1;
+            $adeudo->save();
+            Log::info("Adeudo con pandera de pago sin marcar");
+            Log::info($adeudo);
+        }
 
         //$diaFechaActual=Carbon::createFromFormat('Y-m-d', Date('Y-m-d'))->day;
-        $aux=Carbon::createFromFormat('Y-m-d', Date('Y-m-d'));
+        $aux = Carbon::createFromFormat('Y-m-d', Date('Y-m-d'));
         /*if($diaFechaActual<=11 and $diaFechaActual>=1){
             $aux->month=Carbon::createFromFormat('Y-m-d', Date('Y-m-d'))->month-1;
             $aux->day=$aux->daysInMonth;
         }*/
         $fechaActual = $aux->toDateString();
-        
-	    $fechaAnterior = $aux->subDays(15)->toDateString();
-	    //dd($fechaActual);
+
+        $fechaAnterior = $aux->subDays(15)->toDateString();
+        //dd($fechaActual);
         //Query para identificar clientes con cajas pagadas
-        
-        $cajasHoy=Caja::select('cajas.*')
-          ->join('pagos as p','p.caja_id','cajas.id')
-          ->join('clientes as cli','cli.id','cajas.cliente_id')
-          ->where('p.created_at','<=',$fechaActual)
-		  ->where('p.created_at','>=',$fechaAnterior)
-          ->whereIn('cli.st_cliente_id', array(4,31))
-		  ->where('st_caja_id',1)
- 		  ->get();
+
+        $cajasHoy = Caja::select('cajas.*')
+            ->join('pagos as p', 'p.caja_id', 'cajas.id')
+            ->join('clientes as cli', 'cli.id', 'cajas.cliente_id')
+            ->where('p.created_at', '<=', $fechaActual)
+            ->where('p.created_at', '>=', $fechaAnterior)
+            ->whereIn('cli.st_cliente_id', array(4, 31))
+            ->where('st_caja_id', 1)
+            ->get();
         //dd($cajasHoy->toArray());
-        
-        $clientes=array();
-        foreach($cajasHoy as $caja){
-            if(!in_array($caja->cliente_id, $clientes)){
-            array_push($clientes, $caja->cliente_id);
-	    //echo $caja->cliente_id."-";
+
+        $clientes = array();
+        foreach ($cajasHoy as $caja) {
+            if (!in_array($caja->cliente_id, $clientes)) {
+                array_push($clientes, $caja->cliente_id);
+                //echo $caja->cliente_id."-";
             }
         }
         //dd('clientes');
 
-        $clientesActivosHoy=HEstatus::where('fecha',$fechaActual)
-        ->where('tabla','clientes')
-        ->where('estatus_id',4)
-        ->get();
+        $clientesActivosHoy = HEstatus::where('fecha', $fechaActual)
+            ->where('tabla', 'clientes')
+            ->where('estatus_id', 4)
+            ->get();
         //dd($clientesActivosHoy);
-        foreach($clientesActivosHoy as $cliente){
-            if(!in_array($cliente->id, $clientes)){
+        foreach ($clientesActivosHoy as $cliente) {
+            if (!in_array($cliente->id, $clientes)) {
                 array_push($clientes, $cliente->cliente_id);
             }
         }
         sort($clientes);
         Log::info("clientes proceso activacion BS nocturno");
         Log::info($clientes);
-	    //dd($clientes);
-        $cli_proceso=Cliente::select('id','st_cliente_id')->whereIn('id', $clientes)->get();
+        //dd($clientes);
+        $cli_proceso = Cliente::select('id', 'st_cliente_id')->whereIn('id', $clientes)->get();
         //dd($cli_proceso->toArray());
-	//dd($cajasHoy->toArray());
-        
+        //dd($cajasHoy->toArray());
+
         /*
         $registros = Adeudo::select(DB::raw('p.razon,adeudos.cliente_id,stc.name as estatus, count(adeudos.cliente_id) as adeudos_cantidad'))
             ->join('clientes as c', 'c.id', '=', 'adeudos.cliente_id')
@@ -125,7 +142,7 @@ class ActivarBs extends Command
             ->groupBy('adeudos.cliente_id')
             ->having('adeudos_cantida', '<=', 1)
             ->get();*/
-            
+
         //dd('fil');
         //dd($registros->toArray());
 
@@ -141,7 +158,6 @@ class ActivarBs extends Command
             $seguimiento->st_seguimiento_id = 2;
             $seguimiento->save();*/
             $this->repetirActivarBs($cliente->id);
-            
         }
     }
 
@@ -152,49 +168,49 @@ class ActivarBs extends Command
         //echo $cliente->id."-".$cliente->st_cliente_id;
         //$caja = Caja::find($caja);
         //if ($cliente->st_cliente_id == 4) {
-            $param = Param::where('llave', 'apiVersion_bSpace')->first();
-            $bs_activo = Param::where('llave', 'api_brightSpace_activa')->first();
-            if ($bs_activo->valor == 1) {
-                try {
-                    $apiBs = new UsoApi();
+        $param = Param::where('llave', 'apiVersion_bSpace')->first();
+        $bs_activo = Param::where('llave', 'api_brightSpace_activa')->first();
+        if ($bs_activo->valor == 1) {
+            try {
+                $apiBs = new UsoApi();
 
-                    //dd($datos);
-                    //Log::info('matricula bs reactivar en caja:'.$cliente->matricula);
-                    $resultado = $apiBs->doValence2('GET', '/d2l/api/lp/' . $param->valor . '/users/?orgDefinedId=' . $cliente->matricula);
-                    //Muestra resultado
-                    //dd($resultado[0]['Activation']['IsActive']);
-                    $r = $resultado[0];
-                    Log::info('-----------------Consulta Cliente en BS-------------------');
-                    Log::info($r);
-                    $datos = ['isActive' => True];
-                    if (isset($r['UserId']) and !$resultado[0]['Activation']['IsActive']) {
-                        $resultado2 = $apiBs->doValence2('PUT', '/d2l/api/lp/' . $param->valor . '/users/' . $r['UserId'] . '/activation', $datos);
-                        $bsBaja = BsBaja::where('cliente_id', $cliente->id)
-                            ->where('bnd_baja', 1)
-                            ->whereNull('bnd_reactivar')
-                            ->first();
-                        //dd($bsBaja->toArray());
-                        if (!is_null($bsBaja)) {
-                            if (isset($resultado2['IsActive']) and $resultado2['IsActive'] and !is_null($bsBaja)) {
-                                $input['cliente_id'] = $cliente->id;
-                                $input['fecha_reactivar'] = Date('Y-m-d');
-                                $input['bnd_reactivar'] = 1;
-                                $input['usu_mod_id'] = Auth::user()->id;
-                                $bsBaja->update($input);
-                            } else {
-                                $input['cliente_id'] = $cliente->id;
-                                $input['fecha_reactivar'] = Date('Y-m-d');
-                                $input['bnd_reactivar'] = 0;
-                                $input['usu_mod_id'] = Auth::user()->id;
-                                $bsBaja->update($input);
-                            }
+                //dd($datos);
+                //Log::info('matricula bs reactivar en caja:'.$cliente->matricula);
+                $resultado = $apiBs->doValence2('GET', '/d2l/api/lp/' . $param->valor . '/users/?orgDefinedId=' . $cliente->matricula);
+                //Muestra resultado
+                //dd($resultado[0]['Activation']['IsActive']);
+                $r = $resultado[0];
+                Log::info('-----------------Consulta Cliente en BS-------------------');
+                Log::info($r);
+                $datos = ['isActive' => True];
+                if (isset($r['UserId']) and !$resultado[0]['Activation']['IsActive']) {
+                    $resultado2 = $apiBs->doValence2('PUT', '/d2l/api/lp/' . $param->valor . '/users/' . $r['UserId'] . '/activation', $datos);
+                    $bsBaja = BsBaja::where('cliente_id', $cliente->id)
+                        ->where('bnd_baja', 1)
+                        ->whereNull('bnd_reactivar')
+                        ->first();
+                    //dd($bsBaja->toArray());
+                    if (!is_null($bsBaja)) {
+                        if (isset($resultado2['IsActive']) and $resultado2['IsActive'] and !is_null($bsBaja)) {
+                            $input['cliente_id'] = $cliente->id;
+                            $input['fecha_reactivar'] = Date('Y-m-d');
+                            $input['bnd_reactivar'] = 1;
+                            $input['usu_mod_id'] = Auth::user()->id;
+                            $bsBaja->update($input);
+                        } else {
+                            $input['cliente_id'] = $cliente->id;
+                            $input['fecha_reactivar'] = Date('Y-m-d');
+                            $input['bnd_reactivar'] = 0;
+                            $input['usu_mod_id'] = Auth::user()->id;
+                            $bsBaja->update($input);
                         }
                     }
-                } catch (Exception $e) {
-                    Log::info("cliente no encontrado en Brigth Space u otro error: " . $cliente->id. "--" . $cliente->matricula . " - " . $e->getMessage());
-                    //return false;
                 }
+            } catch (Exception $e) {
+                Log::info("cliente no encontrado en Brigth Space u otro error: " . $cliente->id . "--" . $cliente->matricula . " - " . $e->getMessage());
+                //return false;
             }
+        }
         //}
     }
 }

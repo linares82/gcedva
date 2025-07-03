@@ -112,7 +112,16 @@
                                 <td>{{$incidenciasCalificacion->materium->name}}</td>
                                 <td>{{$incidenciasCalificacion->calificacionPonderacion->calificacion_parcial}}</td>
                                 <td>{{$incidenciasCalificacion->calificacion_nueva}}</td>
-                                <td>{{$incidenciasCalificacion->justificacion}}</td>
+                                <td>
+                                    @if(!is_null($incidenciasCalificacion->imagen))
+                                    <a target="_blank" href="{{ asset('storage/incidencias_calificacions/' . $incidenciasCalificacion->imagen) }}">
+                                        {{$incidenciasCalificacion->justificacion}}
+                                    </a>
+                                    @else
+                                        {{$incidenciasCalificacion->justificacion}}
+                                    @endif
+                                    
+                                </td>
                                 <td>{{$incidenciasCalificacion->usu_alta->name}}</td>
                                 <td>
                                     @if($incidenciasCalificacion->bnd_autorizada==1)

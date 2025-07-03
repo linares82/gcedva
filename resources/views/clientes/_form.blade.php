@@ -1373,7 +1373,7 @@
                         <tr>
                             <td><a href='{{url("asignacionAcademicas/index")}}?&q%5Basignacion_academicas.lectivo_id_lt%5D={{$a->lectivo_id}}&q%5Basignacion_academicas.plantel_id_lt%5D={{$a->plantel_id}}&q%5Basignacion_academicas.empleado_id_lt%5D={{$a->empleado_id}}&q%5Basignacion_academicas.materium_id_lt%5D={{$a->materium_id}}&q%5Basignacion_academicas.grupo_id_lt%5D={{$a->grupo_id}}' target='_blank'>{{optional($a->materia)->id}}-{{optional($a->materia)->codigo}}-{{optional($a->materia)->name}}</a></td>
                             <td>
-                                @if($a->materia->bnd_oficial==1)
+                                @if(isset($a->materia) and $a->materia->bnd_oficial==1)
                                 SI
                                 @else
                                 NO
@@ -1442,10 +1442,16 @@
                     </div>
                     @permission('clientes.todos_docs_entegados')
                     <div class="form-group col-md-4 @if($errors->has('bnd_doc_oblig_entregados')) has-error @endif">
-                        <label for="bnd_doc_oblig_entregados-field">Todos los documentos entregados: @if(isset($cliente->bnd_doc_oblig_entregados) and $cliente->bnd_doc_oblig_entregados==1) SI @else NO @endif</label>
-                        
+                        <label for="bnd_doc_oblig_entregados-field">Todos los documentos entregados: 
+                            @if(isset($cliente->bnd_doc_oblig_entregados) and $cliente->bnd_doc_oblig_entregados==1) 
+                                SI 
+                            @else
+                                NO 
+                            @endif
+                        </label>
+                        @if($cliente->bnd_doc_oblig_entregados<>1)
                         {!! Form::select("bnd_doc_oblig_entregados", array(0=>'No', 1=>"Si"), null, array("class" => "form-control select_seguridad", "id" => "bnd_doc_oblig_entregados-field", 'style'=>'width:100%')) !!}
-                        
+                        @endif
                         @if($errors->has("bnd_doc_oblig_entregados"))
                         <span class="help-block">{{ $errors->first("bnd_doc_oblig_entregados") }}</span>
                         @endif
@@ -1507,6 +1513,7 @@
                                         @if($doc->doc_entregado==1)
                                         SI
                                         @else
+                                        @if(isset($cliente->bnd_doc_oblig_entregados) and $cliente->bnd_doc_oblig_entregados<>1) 
                                         <div id='doc_recibido'>
                                             <a class="btn btn-warning btn-xs btn_recibir_doc" 
                                                 data-documento='{{ $doc->id }}'> Recibir
@@ -1515,7 +1522,7 @@
                                                 ...guardando
                                             </div>
                                         </div>
-                                        
+                                        @endif
                                         @endif
                                     </td>
                                     <td>
@@ -1532,6 +1539,7 @@
                                         @endphp
                                         <a href="{{asset("imagenes/clientes/".$cliente->id."/".end($cadena_img))}}" target="_blank">Ver</a>
                                         @else
+                                            @if(isset($cliente->bnd_doc_oblig_entregados) and $cliente->bnd_doc_oblig_entregados<>1) 
                                             <div id="div_archivo{{ $doc->id }}">
                                             <div class="btn btn-xs btn-file">
                                                 <i class="fa fa-paperclip"></i> Adjuntar
@@ -1549,12 +1557,13 @@
                     
                                             </div>
                                             </div>
+                                            @endif
                                         @endif
                                     </td>
                                     <td>
-                                    
+                                        @if(isset($cliente->bnd_doc_oblig_entregados) and $cliente->bnd_doc_oblig_entregados<>1) 
                                         <a class="btn btn-xs btn-danger" href="{{route('pivotDocClientes.destroy', $doc->id)}}">Eliminar</a>
-                                    
+                                        @endif
                                     </td>
                                 </tr>
                                 @endforeach

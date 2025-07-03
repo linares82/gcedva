@@ -31,7 +31,8 @@ class IncidenciasCalificacion extends Model
 		'usu_mod_id',
 		'hacademica_id',
 		'materium_id',
-		'observacion'
+		'observacion',
+		'imagen'
 	];
 
 	public function usu_alta()

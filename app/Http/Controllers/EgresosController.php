@@ -1,20 +1,24 @@
-<?php namespace App\Http\Controllers;
+<?php
 
+namespace App\Http\Controllers;
+
+use Auth;
+use App\Pago;
+
+use App\Egreso;
+use App\Plantel;
+use App\Empleado;
+use File as Archi;
 use App\Http\Requests;
+use App\IngresoEgreso;
+use App\CuentasEfectivo;
+use Illuminate\Http\Request;
+use App\Http\Requests\createEgreso;
+use App\Http\Requests\updateEgreso;
 use App\Http\Controllers\Controller;
 
-use App\CuentasEfectivo;
-use App\Egreso;
-use App\IngresoEgreso;
-use App\Plantel;
-use App\Pago;
-use Illuminate\Http\Request;
-use Auth;
-use App\Http\Requests\updateEgreso;
-use App\Http\Requests\createEgreso;
-use File as Archi;
-
-class EgresosController extends Controller {
+class EgresosController extends Controller
+{
 
 	/**
 	 * Display a listing of the resource.
@@ -35,8 +39,9 @@ class EgresosController extends Controller {
 	 */
 	public function create()
 	{
-		return view('egresos.create')
-			->with( 'list', Egreso::getListFromAllRelationApps() );
+		$planteles = Empleado::where('user_id', '=', Auth::user()->id)->where('st_empleado_id', '<>', 3)->first()->plantels->pluck('razon', 'id');
+		return view('egresos.create', compact('planteles'))
+			->with('list', Egreso::getListFromAllRelationApps());
 	}
 
 	/**
@@ -49,27 +54,27 @@ class EgresosController extends Controller {
 	{
 
 		$input = $request->all();
-		$input['usu_alta_id']=Auth::user()->id;
-		$input['usu_mod_id']=Auth::user()->id;
+		$input['usu_alta_id'] = Auth::user()->id;
+		$input['usu_mod_id'] = Auth::user()->id;
 
-		$r=$request->hasFile('comprobante_file');
-		if($r){
+		$r = $request->hasFile('comprobante_file');
+		if ($r) {
 			$comprobante_file = $request->file('comprobante_file');
 			$input['archivo'] = $comprobante_file->getClientOriginalName();
 		}
-                
+
 		//create data
-		$e=Egreso::create( $input );
-                if($e){
-                    $ruta=public_path()."/imagenes/egresos/".$e->id."/";
-			if(!file_exists($ruta)){
+		$e = Egreso::create($input);
+		if ($e) {
+			$ruta = public_path() . "/imagenes/egresos/" . $e->id . "/";
+			if (!file_exists($ruta)) {
 				Archi::makedirectory($ruta, 0777, true, true);
 			}
-			if($request->file('comprobante_file')){
+			if ($request->file('comprobante_file')) {
 				//Storage::disk('img_plantels')->put($input['logo'],  File::get($logo_file));
 				$request->file('comprobante_file')->move($ruta, $input['archivo']);
 			}
-                }
+		}
 
 		return redirect()->route('egresos.index')->with('message', 'Registro Creado.');
 	}
@@ -82,7 +87,7 @@ class EgresosController extends Controller {
 	 */
 	public function show($id, Egreso $egreso)
 	{
-		$egreso=$egreso->find($id);
+		$egreso = $egreso->find($id);
 		return view('egresos.show', compact('egreso'));
 	}
 
@@ -94,9 +99,10 @@ class EgresosController extends Controller {
 	 */
 	public function edit($id, Egreso $egreso)
 	{
-		$egreso=$egreso->find($id);
-		return view('egresos.edit', compact('egreso'))
-			->with( 'list', Egreso::getListFromAllRelationApps() );
+		$egreso = $egreso->find($id);
+		$planteles = Empleado::where('user_id', '=', Auth::user()->id)->where('st_empleado_id', '<>', 3)->first()->plantels->pluck('razon', 'id');
+		return view('egresos.edit', compact('egreso', 'planteles'))
+			->with('list', Egreso::getListFromAllRelationApps());
 	}
 
 	/**
@@ -107,9 +113,9 @@ class EgresosController extends Controller {
 	 */
 	public function duplicate($id, Egreso $egreso)
 	{
-		$egreso=$egreso->find($id);
+		$egreso = $egreso->find($id);
 		return view('egresos.duplicate', compact('egreso'))
-			->with( 'list', Egreso::getListFromAllRelationApps() );
+			->with('list', Egreso::getListFromAllRelationApps());
 	}
 
 	/**
@@ -122,29 +128,29 @@ class EgresosController extends Controller {
 	public function update($id, Egreso $egreso, updateEgreso $request)
 	{
 		$input = $request->all();
-                //dd($request->all());
-		$input['usu_mod_id']=Auth::user()->id;
-                
-        $r=$request->hasFile('comprobante_file');
-		if($r){
+		//dd($request->all());
+		$input['usu_mod_id'] = Auth::user()->id;
+
+		$r = $request->hasFile('comprobante_file');
+		if ($r) {
 			$comprobante_file = $request->file('comprobante_file');
 			$input['archivo'] = $comprobante_file->getClientOriginalName();
 		}
-                
+
 		//update data
-		$egreso=$egreso->find($id);
-		$e=$egreso->update( $input );
-                
-            if($e){
-                    $ruta=public_path()."/imagenes/egresos/".$egreso->id."/";
-			if(!file_exists($ruta)){
+		$egreso = $egreso->find($id);
+		$e = $egreso->update($input);
+
+		if ($e) {
+			$ruta = public_path() . "/imagenes/egresos/" . $egreso->id . "/";
+			if (!file_exists($ruta)) {
 				Archi::makedirectory($ruta, 0777, true, true);
 			}
-			if($request->file('comprobante_file')){
+			if ($request->file('comprobante_file')) {
 				//Storage::disk('img_plantels')->put($input['logo'],  File::get($logo_file));
 				$request->file('comprobante_file')->move($ruta, $input['archivo']);
 			}
-                }
+		}
 
 		return redirect()->route('egresos.index')->with('message', 'Registro Actualizado.');
 	}
@@ -155,74 +161,90 @@ class EgresosController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id,Egreso $egreso)
+	public function destroy($id, Egreso $egreso)
 	{
-		$egreso=$egreso->find($id);
-		$egreso->usu_mod_id=Auth::user()->id;
+		$egreso = $egreso->find($id);
+		$egreso->usu_mod_id = Auth::user()->id;
 		$egreso->save();
 		$egreso->delete();
 
 		return redirect()->route('egresos.index')->with('message', 'Registro Borrado.');
 	}
 
-        public function egresosIngresos(){
-            $plantels=Plantel::pluck('razon','id');
-            return view('egresos.reportes.ingresosEgresos', array('plantels'=>$plantels));
-        }
-        
-        public function egresosIngresosR(Request $request){
-            $datos=$request->all();
-            
-            $registros= IngresoEgreso::select('ce.id','ce.name as cuenta','ce.saldo_inicial','ce.fecha_saldo_inicial','ce.saldo_actualizado',
-                                              'ingreso_egresos.consecutivo_caja','ingreso_egresos.egreso_id','ingreso_egresos.fecha',
-                                              'p.razon','ingreso_egresos.monto','ingreso_egresos.concepto','ingreso_egresos.transference_id')
-                                       ->join('cuentas_efectivos as ce','ce.id','=','ingreso_egresos.cuenta_efectivo_id')
-                                       ->join('plantels as p','p.id','=','ingreso_egresos.plantel_id')
-                                       ->whereIn('p.id',$datos['plantel_f'])
-                                       //->where('p.id','<=',$datos['plantel_t'])
-                                       ->where('ingreso_egresos.cuenta_efectivo_id','>',0)
-                                       ->whereNull('ingreso_egresos.deleted_at')
-                                       ->whereDate('ingreso_egresos.fecha','>=',$datos['fecha_f'])
-                                       ->whereDate('ingreso_egresos.fecha','<=',$datos['fecha_t'])
-                                       ->orderBy('ce.id')
-                                       ->orderBy('p.id')
-                                       ->orderBy('ingreso_egresos.fecha')
-                                       ->get();
-            
-            //dd($registros->ToArray());
-            
-            return view('egresos.reportes.ingresosEgresosR', array('registros'=>$registros));
-        }
-        
-        public function recibo(Request $request){
-            $datos=$request->all();
-            //dd($datos);
-            $egreso=Egreso::find($datos['egreso']);
-            /*return view('inscripcions.reportes.lista_alumnosr',compact('registros'))
+	public function egresosIngresos()
+	{
+		$plantels = Plantel::pluck('razon', 'id');
+		return view('egresos.reportes.ingresosEgresos', array('plantels' => $plantels));
+	}
+
+	public function egresosIngresosR(Request $request)
+	{
+		$datos = $request->all();
+
+		$registros = IngresoEgreso::select(
+			'ce.id',
+			'ce.name as cuenta',
+			'ce.saldo_inicial',
+			'ce.fecha_saldo_inicial',
+			'ce.saldo_actualizado',
+			'ingreso_egresos.consecutivo_caja',
+			'ingreso_egresos.egreso_id',
+			'ingreso_egresos.fecha',
+			'p.razon',
+			'ingreso_egresos.monto',
+			'ingreso_egresos.concepto',
+			'ingreso_egresos.transference_id'
+		)
+			->join('cuentas_efectivos as ce', 'ce.id', '=', 'ingreso_egresos.cuenta_efectivo_id')
+			->join('plantels as p', 'p.id', '=', 'ingreso_egresos.plantel_id')
+			->whereIn('p.id', $datos['plantel_f'])
+			//->where('p.id','<=',$datos['plantel_t'])
+			->where('ingreso_egresos.cuenta_efectivo_id', '>', 0)
+			->whereNull('ingreso_egresos.deleted_at')
+			->whereDate('ingreso_egresos.fecha', '>=', $datos['fecha_f'])
+			->whereDate('ingreso_egresos.fecha', '<=', $datos['fecha_t'])
+			->orderBy('ce.id')
+			->orderBy('p.id')
+			->orderBy('ingreso_egresos.fecha')
+			->get();
+
+		//dd($registros->ToArray());
+
+		return view('egresos.reportes.ingresosEgresosR', array('registros' => $registros));
+	}
+
+	public function recibo(Request $request)
+	{
+		$datos = $request->all();
+		//dd($datos);
+		$egreso = Egreso::find($datos['egreso']);
+		/*return view('inscripcions.reportes.lista_alumnosr',compact('registros'))
 			->with( 'list', Inscripcion::getListFromAllRelationApps() );
                  * */
-                
-/*                PDF::setOptions(['defaultFont' => 'arial']);
+
+		/*                PDF::setOptions(['defaultFont' => 'arial']);
 
                 $pdf = PDF::loadView('inscripcions.reportes.lista_alumnosr', array('registros'=>$registros,'fechas_enc'=>$fechas))
                         ->setPaper('legal', 'landscape');
                 return $pdf->download('reporte.pdf');
-  */              
-                return view('egresos.reportes.recibo', array('egreso'=>$egreso));
-        }
-        
-        public function rptEgresos(){
-            $plantels=Plantel::pluck('razon','id');
-            return view('egresos.reportes.egresos',array('plantels'=>$plantels));
-        }
-        
-        public function rptEgresosR(Request $request){
-            $data=$request->all();
-            $egresos=Egreso::whereIn('egresos.plantel_id',$data['plantel_f'])
-                           ->whereDate('egresos.fecha','>=',$data['fecha_f'])
-                           ->whereDate('egresos.fecha','<=',$data['fecha_t'])
-                           ->whereNull('deleted_at')
-                           ->get();
-            return view('egresos.reportes.egresosR',array('egresos'=>$egresos));
-        }
+  */
+		return view('egresos.reportes.recibo', array('egreso' => $egreso));
+	}
+
+	public function rptEgresos()
+	{
+		$plantels = Plantel::pluck('razon', 'id');
+		return view('egresos.reportes.egresos', array('plantels' => $plantels));
+	}
+
+	public function rptEgresosR(Request $request)
+	{
+		$data = $request->all();
+		$egresos = Egreso::whereIn('egresos.plantel_id', $data['plantel_f'])
+			->whereDate('egresos.fecha', '>=', $data['fecha_f'])
+			->whereDate('egresos.fecha', '<=', $data['fecha_t'])
+			->whereNull('deleted_at')
+			->get();
+		return view('egresos.reportes.egresosR', array('egresos' => $egresos));
+	}
 }
