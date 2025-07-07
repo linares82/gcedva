@@ -1513,7 +1513,7 @@
                                         @if($doc->doc_entregado==1)
                                         SI
                                         @else
-                                        @if(isset($cliente->bnd_doc_oblig_entregados) and $cliente->bnd_doc_oblig_entregados<>1) 
+                                        @if($cliente->bnd_doc_oblig_entregados<>1) 
                                         <div id='doc_recibido'>
                                             <a class="btn btn-warning btn-xs btn_recibir_doc" 
                                                 data-documento='{{ $doc->id }}'> Recibir
@@ -1539,7 +1539,7 @@
                                         @endphp
                                         <a href="{{asset("imagenes/clientes/".$cliente->id."/".end($cadena_img))}}" target="_blank">Ver</a>
                                         @else
-                                            @if(isset($cliente->bnd_doc_oblig_entregados) and $cliente->bnd_doc_oblig_entregados<>1) 
+                                            @if($cliente->bnd_doc_oblig_entregados<>1) 
                                             <div id="div_archivo{{ $doc->id }}">
                                             <div class="btn btn-xs btn-file">
                                                 <i class="fa fa-paperclip"></i> Adjuntar
@@ -1561,7 +1561,7 @@
                                         @endif
                                     </td>
                                     <td>
-                                        @if(isset($cliente->bnd_doc_oblig_entregados) and $cliente->bnd_doc_oblig_entregados<>1) 
+                                        @if($cliente->bnd_doc_oblig_entregados<>1) 
                                         <a class="btn btn-xs btn-danger" href="{{route('pivotDocClientes.destroy', $doc->id)}}">Eliminar</a>
                                         @endif
                                     </td>

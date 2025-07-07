@@ -732,11 +732,25 @@ class AsignacionAcademicasController extends Controller
 			->whereNull('deleted_at')
 			->first();
 		//dd($encabezado);
-		$alumnos = Hacademica::where('plantel_id', $datos['plantel_f'])
+		$alumnos = Hacademica::select(
+			'hacademicas.*',
+			'cli.matricula',
+			'cli.curp',
+			'cli.nombre',
+			'cli.nombre2',
+			'cli.ape_paterno',
+			'cli.ape_materno',
+			'cli.st_cliente_id'
+		)->where('hacademicas.plantel_id', $datos['plantel_f'])
+			->join('clientes as cli', 'cli.id', 'hacademicas.cliente_id')
 			->where('lectivo_id', $datos['lectivo_f'])
 			->where('grupo_id', $datos['grupo_f'])
 			->where('materium_id', $datos['materia_f'])
-			->whereNull('deleted_at')
+			->whereNull('hacademicas.deleted_at')
+			->orderBy('ape_paterno')
+			->orderBy('ape_materno')
+			->orderBy('nombre')
+			->orderBy('nombre2')
 			->get();
 		$formatter = new NumeroALetras;
 		//dd($alumnos);
@@ -931,15 +945,15 @@ class AsignacionAcademicasController extends Controller
 			$registro['grupo'] = $horario->grupo;
 			$registro['materia'] = $horario->materia;
 			//dd($horario->horarios);
-			$registro['duracion_clases_total']=0;
+			$registro['duracion_clases_total'] = 0;
 			//dd($horarios);
-			
-			$registro['fecha_clase']=array();
+
+			$registro['fecha_clase'] = array();
 
 			////
 			$dias = array();
 			$horarios = Horario::where('asignacion_academica_id', $horario->asignacion_academica_id)
-							->get();
+				->get();
 			//dd($asignacion);
 			foreach ($horarios as $h) {
 				array_push($dias, $h->dia->name);
@@ -947,7 +961,7 @@ class AsignacionAcademicasController extends Controller
 			//dd($dias);
 
 			$fechas = array();
-			
+
 			$diasNoHabiles = DiaNoHabil::distinct()
 				->where('fecha', '>=', $registro['inicio'])
 				->where('fecha', '<=', $registro['fin'])
@@ -961,27 +975,27 @@ class AsignacionAcademicasController extends Controller
 			$pinicio = Carbon::createFromFormat('Y-m-d', $horario->asignacion_inicio);
 			$pfin = Carbon::createFromFormat('Y-m-d', $horario->asignacion_fin);
 
-			
+
 			while ($pfin->greaterThanOrEqualTo($pinicio)) {
 				//dd($pinicio);
 				if (in_array('Lunes', $dias)) {
 					//dd($horario);
-					if($horario->asignacion_academica_id==19984 and $pinicio->toDateString()=="2025-03-03"){
+					if ($horario->asignacion_academica_id == 19984 and $pinicio->toDateString() == "2025-03-03") {
 						//dd($pinicio);
 					}
 					if ($pinicio->isMonday() and !in_array($pinicio, $no_habiles)) {
-						$asistencias=AsistenciaR::where('fecha', $pinicio->toDateString())
-						->where('asignacion_academica_id', $horario->asignacion_academica_id)
-						->where('est_asistencia_id',1)
-						->count();
-						if($asistencias>0){
+						$asistencias = AsistenciaR::where('fecha', $pinicio->toDateString())
+							->where('asignacion_academica_id', $horario->asignacion_academica_id)
+							->where('est_asistencia_id', 1)
+							->count();
+						if ($asistencias > 0) {
 							$horarios = Horario::where('asignacion_academica_id', $horario->asignacion_academica_id)
-							->where('dia_id', 1)
-							->get();
-							foreach($horarios as $horario){
-								$registro['duracion_clases_total']=$registro['duracion_clases_total']+$horario->duracion_clase;
+								->where('dia_id', 1)
+								->get();
+							foreach ($horarios as $horario) {
+								$registro['duracion_clases_total'] = $registro['duracion_clases_total'] + $horario->duracion_clase;
 							}
-							
+
 							array_push($fechas, $pinicio->toDateString());
 						}
 					}
@@ -990,16 +1004,16 @@ class AsignacionAcademicasController extends Controller
 				if (in_array('Martes', $dias)) {
 					//dd("hay martes");
 					if ($pinicio->isTuesday() and !in_array($pinicio, $no_habiles)) {
-						$asistencias=AsistenciaR::where('fecha', $pinicio->toDateString())
-						->where('asignacion_academica_id', $horario->asignacion_academica_id)
-						->where('est_asistencia_id',1)
-						->count();
-						if($asistencias>0){
+						$asistencias = AsistenciaR::where('fecha', $pinicio->toDateString())
+							->where('asignacion_academica_id', $horario->asignacion_academica_id)
+							->where('est_asistencia_id', 1)
+							->count();
+						if ($asistencias > 0) {
 							$horarios = Horario::where('asignacion_academica_id', $horario->asignacion_academica_id)
-							->where('dia_id', 2)
-							->get();
-							foreach($horarios as $horario){
-								$registro['duracion_clases_total']=$registro['duracion_clases_total']+$horario->duracion_clase;
+								->where('dia_id', 2)
+								->get();
+							foreach ($horarios as $horario) {
+								$registro['duracion_clases_total'] = $registro['duracion_clases_total'] + $horario->duracion_clase;
 							}
 							array_push($fechas, $pinicio->toDateString());
 						}
@@ -1008,16 +1022,16 @@ class AsignacionAcademicasController extends Controller
 				if (in_array('Miercoles', $dias)) {
 					//dd("hay miercoles");
 					if ($pinicio->isWednesday() and !in_array($pinicio, $no_habiles)) {
-						$asistencias=AsistenciaR::where('fecha', $pinicio->toDateString())
-						->where('asignacion_academica_id', $horario->asignacion_academica_id)
-						->where('est_asistencia_id',1)
-						->count();
-						if($asistencias>0){
+						$asistencias = AsistenciaR::where('fecha', $pinicio->toDateString())
+							->where('asignacion_academica_id', $horario->asignacion_academica_id)
+							->where('est_asistencia_id', 1)
+							->count();
+						if ($asistencias > 0) {
 							$horarios = Horario::where('asignacion_academica_id', $horario->asignacion_academica_id)
-							->where('dia_id', 3)
-							->get();
-							foreach($horarios as $horario){
-								$registro['duracion_clases_total']=$registro['duracion_clases_total']+$horario->duracion_clase;
+								->where('dia_id', 3)
+								->get();
+							foreach ($horarios as $horario) {
+								$registro['duracion_clases_total'] = $registro['duracion_clases_total'] + $horario->duracion_clase;
 							}
 							array_push($fechas, $pinicio->toDateString());
 						}
@@ -1026,16 +1040,16 @@ class AsignacionAcademicasController extends Controller
 				if (in_array('Jueves', $dias)) {
 					//dd("hay jueves");
 					if ($pinicio->isThursday() and !in_array($pinicio, $no_habiles)) {
-						$asistencias=AsistenciaR::where('fecha', $pinicio->toDateString())
-						->where('asignacion_academica_id', $horario->asignacion_academica_id)
-						->where('est_asistencia_id',1)
-						->count();
-						if($asistencias>0){
+						$asistencias = AsistenciaR::where('fecha', $pinicio->toDateString())
+							->where('asignacion_academica_id', $horario->asignacion_academica_id)
+							->where('est_asistencia_id', 1)
+							->count();
+						if ($asistencias > 0) {
 							$horarios = Horario::where('asignacion_academica_id', $horario->asignacion_academica_id)
-							->where('dia_id', 4)
-							->get();
-							foreach($horarios as $horario){
-								$registro['duracion_clases_total']=$registro['duracion_clases_total']+$horario->duracion_clase;
+								->where('dia_id', 4)
+								->get();
+							foreach ($horarios as $horario) {
+								$registro['duracion_clases_total'] = $registro['duracion_clases_total'] + $horario->duracion_clase;
 							}
 							array_push($fechas, $pinicio->toDateString());
 						}
@@ -1043,20 +1057,20 @@ class AsignacionAcademicasController extends Controller
 				}
 				if (in_array('Viernes', $dias)) {
 					//dd($pinicio->toDateString());
-					
+
 					if ($pinicio->isFriday() and !in_array($pinicio, $no_habiles)) {
-						$asistencias=AsistenciaR::where('fecha', $pinicio->toDateString())
-						->where('asignacion_academica_id', $horario->asignacion_academica_id)
-						->where('est_asistencia_id',1)
-						->count();
+						$asistencias = AsistenciaR::where('fecha', $pinicio->toDateString())
+							->where('asignacion_academica_id', $horario->asignacion_academica_id)
+							->where('est_asistencia_id', 1)
+							->count();
 						//dd($asistencias);
-						if($asistencias>0){
+						if ($asistencias > 0) {
 							//dd($horario);
 							$horarios = Horario::where('asignacion_academica_id', $horario->asignacion_academica_id)
-							->where('dia_id', 5)
-							->get();
-							foreach($horarios as $horario){
-								$registro['duracion_clases_total']=$registro['duracion_clases_total']+$horario->duracion_clase;
+								->where('dia_id', 5)
+								->get();
+							foreach ($horarios as $horario) {
+								$registro['duracion_clases_total'] = $registro['duracion_clases_total'] + $horario->duracion_clase;
 							}
 							array_push($fechas, $pinicio->toDateString());
 						}
@@ -1065,16 +1079,16 @@ class AsignacionAcademicasController extends Controller
 				if (in_array('Sabado', $dias)) {
 
 					if ($pinicio->isSaturday() and !in_array($pinicio, $no_habiles)) {
-						$asistencias=AsistenciaR::where('fecha', $pinicio->toDateString())
-						->where('asignacion_academica_id', $horario->asignacion_academica_id)
-						->where('est_asistencia_id',1)
-						->count();
-						if($asistencias>0){
+						$asistencias = AsistenciaR::where('fecha', $pinicio->toDateString())
+							->where('asignacion_academica_id', $horario->asignacion_academica_id)
+							->where('est_asistencia_id', 1)
+							->count();
+						if ($asistencias > 0) {
 							$horarios = Horario::where('asignacion_academica_id', $horario->asignacion_academica_id)
-							->where('dia_id', 6)
-							->get();
-							foreach($horarios as $horario){
-								$registro['duracion_clases_total']=$registro['duracion_clases_total']+$horario->duracion_clase;
+								->where('dia_id', 6)
+								->get();
+							foreach ($horarios as $horario) {
+								$registro['duracion_clases_total'] = $registro['duracion_clases_total'] + $horario->duracion_clase;
 							}
 							array_push($fechas, $pinicio->toDateString());
 						}
@@ -1083,16 +1097,16 @@ class AsignacionAcademicasController extends Controller
 				if (in_array('Domingo', $dias)) {
 
 					if ($pinicio->isSunday() and !in_array($pinicio, $no_habiles)) {
-						$asistencias=AsistenciaR::where('fecha', $pinicio->toDateString())
-						->where('asignacion_academica_id', $horario->asignacion_academica_id)
-						->where('est_asistencia_id',1)
-						->count();
-						if($asistencias>0){
+						$asistencias = AsistenciaR::where('fecha', $pinicio->toDateString())
+							->where('asignacion_academica_id', $horario->asignacion_academica_id)
+							->where('est_asistencia_id', 1)
+							->count();
+						if ($asistencias > 0) {
 							$horarios = Horario::where('asignacion_academica_id', $horario->asignacion_academica_id)
-							->where('dia_id', 7)
-							->get();
-							foreach($horarios as $horario){
-								$registro['duracion_clases_total']=$registro['duracion_clases_total']+$horario->duracion_clase;
+								->where('dia_id', 7)
+								->get();
+							foreach ($horarios as $horario) {
+								$registro['duracion_clases_total'] = $registro['duracion_clases_total'] + $horario->duracion_clase;
 							}
 							array_push($fechas, $pinicio->toDateString());
 						}
@@ -1103,11 +1117,11 @@ class AsignacionAcademicasController extends Controller
 			}
 			//dd($fechas);
 			//if(is_array($fechas)){
-				array_push($registro['fecha_clase'], $fechas);	
+			array_push($registro['fecha_clase'], $fechas);
 			//}
-			
+
 			//dd($fechas);
-			array_push($resultados, $registro);////
+			array_push($resultados, $registro); ////
 		}
 		//dd($resultados);
 		return view(
