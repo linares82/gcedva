@@ -1348,6 +1348,8 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'CreatePlantillasEstatusTable' => __DIR__ . '/../..' . '/database/migrations/2017_05_12_143816_create_plantillas_estatus_table.php',
         'CreatePlantillasTable' => __DIR__ . '/../..' . '/database/migrations/2017_05_11_241401_create_plantillas_table.php',
         'CreatePonderacionsTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_24_143804_create_ponderacions_table.php',
+        'CreatePorcentajeBecasTable' => __DIR__ . '/../..' . '/database/migrations/2025_07_08_151417_create_porcentaje_becas_table.php',
+        'CreatePrebecasTable' => __DIR__ . '/../..' . '/database/migrations/2025_07_08_151609_create_prebecas_table.php',
         'CreatePreguntaClientesTable' => __DIR__ . '/../..' . '/database/migrations/2017_05_04_144933_create_pregunta_clientes_table.php',
         'CreatePreguntasTable' => __DIR__ . '/../..' . '/database/migrations/2017_04_18_144907_create_preguntas_table.php',
         'CreatePrioridadTicketsTable' => __DIR__ . '/../..' . '/database/migrations/2021_01_04_093200_create_prioridad_tickets_table.php',

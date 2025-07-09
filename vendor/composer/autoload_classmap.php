@@ -541,6 +541,8 @@ return array(
     'CreatePlantillasEstatusTable' => $baseDir . '/database/migrations/2017_05_12_143816_create_plantillas_estatus_table.php',
     'CreatePlantillasTable' => $baseDir . '/database/migrations/2017_05_11_241401_create_plantillas_table.php',
     'CreatePonderacionsTable' => $baseDir . '/database/migrations/2017_08_24_143804_create_ponderacions_table.php',
+    'CreatePorcentajeBecasTable' => $baseDir . '/database/migrations/2025_07_08_151417_create_porcentaje_becas_table.php',
+    'CreatePrebecasTable' => $baseDir . '/database/migrations/2025_07_08_151609_create_prebecas_table.php',
     'CreatePreguntaClientesTable' => $baseDir . '/database/migrations/2017_05_04_144933_create_pregunta_clientes_table.php',
     'CreatePreguntasTable' => $baseDir . '/database/migrations/2017_04_18_144907_create_preguntas_table.php',
     'CreatePrioridadTicketsTable' => $baseDir . '/database/migrations/2021_01_04_093200_create_prioridad_tickets_table.php',

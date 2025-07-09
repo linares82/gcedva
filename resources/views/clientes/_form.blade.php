@@ -26,6 +26,9 @@
         <li class="">
             <a data-toggle="tab" href="#tab8">Procedencia</a>
         </li>
+        <li class="">
+            <a data-toggle="tab" href="#tab9">Primera Beca</a>
+        </li>
     </ul>
     <div class="tab-content">
         <div id="tab1" class="tab-pane active">
@@ -1449,8 +1452,8 @@
                                 NO 
                             @endif
                         </label>
-                        @if($cliente->bnd_doc_oblig_entregados<>1)
-                        {!! Form::select("bnd_doc_oblig_entregados", array(0=>'No', 1=>"Si"), null, array("class" => "form-control select_seguridad", "id" => "bnd_doc_oblig_entregados-field", 'style'=>'width:100%')) !!}
+                        @if($cliente->bnd_doc_oblig_entregados<>1 or Auth::user()->can('clientes.edit_bnd_doc_oblig_entregados'))
+                        {!! Form::select("bnd_doc_oblig_entregados", array(0=>'No', 1=>"Si"), null, array("class" => "form-control select_seguridad", "id" => "bnd_doc_oblig_entregados-field", 'style'=>'width:100%')) !!} 
                         @endif
                         @if($errors->has("bnd_doc_oblig_entregados"))
                         <span class="help-block">{{ $errors->first("bnd_doc_oblig_entregados") }}</span>
@@ -1513,7 +1516,7 @@
                                         @if($doc->doc_entregado==1)
                                         SI
                                         @else
-                                        @if($cliente->bnd_doc_oblig_entregados<>1) 
+                                        @if($cliente->bnd_doc_oblig_entregados<>1 or Auth::user()->can('clientes.edit_bnd_doc_oblig_entregados')) 
                                         <div id='doc_recibido'>
                                             <a class="btn btn-warning btn-xs btn_recibir_doc" 
                                                 data-documento='{{ $doc->id }}'> Recibir
@@ -1539,7 +1542,7 @@
                                         @endphp
                                         <a href="{{asset("imagenes/clientes/".$cliente->id."/".end($cadena_img))}}" target="_blank">Ver</a>
                                         @else
-                                            @if($cliente->bnd_doc_oblig_entregados<>1) 
+                                            @if($cliente->bnd_doc_oblig_entregados<>1 or Auth::user()->can('clientes.edit_bnd_doc_oblig_entregados')) 
                                             <div id="div_archivo{{ $doc->id }}">
                                             <div class="btn btn-xs btn-file">
                                                 <i class="fa fa-paperclip"></i> Adjuntar
@@ -1561,7 +1564,7 @@
                                         @endif
                                     </td>
                                     <td>
-                                        @if($cliente->bnd_doc_oblig_entregados<>1) 
+                                        @if(!is_null($doc->archivo) and ($cliente->bnd_doc_oblig_entregados<>1 or Auth::user()->can('clientes.edit_bnd_doc_oblig_entregados'))) 
                                         <a class="btn btn-xs btn-danger" href="{{route('pivotDocClientes.destroy', $doc->id)}}">Eliminar</a>
                                         @endif
                                     </td>
@@ -1761,6 +1764,34 @@
                         <span class="help-block">{{ $errors->first("numero_cedula") }}</span>
                        @endif
                     </div>            
+                </fieldset>
+            @endif
+        </div>
+
+        <div id="tab9" class="tab-pane">
+            @if(isset($cliente->prebeca))
+                <fieldset>
+                    <div class="form-group col-md-4 @if($errors->has('motivo_beca_id')) has-error @endif">
+                       <label for="motivo_beca_id-field">Motivo Beca</label>
+                       {!! Form::select("motivo_beca_id", $motivosBeca, $cliente->prebeca->motivo_beca_id, array("class" => "form-control select_seguridad", "id" => "motivo_beca_id-field")) !!}
+                       @if($errors->has("motivo_beca_id"))
+                        <span class="help-block">{{ $errors->first("motivo_beca_id") }}</span>
+                       @endif
+                    </div>
+                    <div class="form-group col-md-4 @if($errors->has('porcentaje_beca_id')) has-error @endif">
+                       <label for="porcentaje_beca_id-field">Porcentaje Beca</label>
+                       {!! Form::select("porcentaje_beca_id", $porcentajeBeca, $cliente->prebeca->porcentaje_beca_id, array("class" => "form-control select_seguridad", "id" => "porcentaje_beca_id-field")) !!}
+                       @if($errors->has("porcentaje_beca_id"))
+                        <span class="help-block">{{ $errors->first("porcentaje_beca_id") }}</span>
+                       @endif
+                    </div>
+                    <div class="form-group col-md-4 @if($errors->has('obs_prebeca')) has-error @endif">
+                       <label for="obs_prebeca-field">Obs.</label>
+                       {!! Form::textArea("obs_prebeca", $cliente->prebeca->obs_prebeca, array("class" => "form-control", "id" => "obs_prebeca-field",'rows'=>3)) !!}
+                       @if($errors->has("obs_prebeca"))
+                        <span class="help-block">{{ $errors->first("obs_prebeca") }}</span>
+                       @endif
+                    </div>
                 </fieldset>
             @endif
         </div>
@@ -2313,9 +2344,9 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
 
                         @permission('clientes.cambiarEmpleado')
                             @foreach($empleados as $key=>$item)
-				@if($key<>"")
+				                @if($key<>"")
                                 $("#empleado_id-field option[value*={{ $key }}]").prop('disabled', false);
-				@endif
+				                @endif
                             @endforeach
                         @endpermission
                         

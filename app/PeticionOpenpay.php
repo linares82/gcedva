@@ -6,12 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Venturecraft\Revisionable\RevisionableTrait;
+use App\Traits\GetAllDataTrait;
+use App\Traits\RelationManagerTrait;
 
 class PeticionOpenpay extends Model
 {
 
     use SoftDeletes;
     use RevisionableTrait;
+    use RelationManagerTrait, GetAllDataTrait;
 
     public function __construct(array $attributes = array())
     {
@@ -19,19 +22,58 @@ class PeticionOpenpay extends Model
     }
 
     //Mass Assignment
-    protected $fillable = ['pago_id', 'cliente_id','forma_pago_id','pname','plast_name',
-    'pphone_number','pemail',
-    'pmethod','pamount','pdescription','psend_mail','pconfirm','predirect_url','ppreferencia',
-    'porder_id','fecha_limite',
-    'rid','rauthorization','rmethod','roperation_type','rtransaction_type','rstatus',
-    'rconciliated','rcreation_date','roperation_date','rdescription','rerror_message','ramount',
-    'rcurrency','rpayment_method_type','rpayment_method_bank','rpayment_method_agreement',
-    'rpayment_method_clabe','rpayment_method_name',
-    'rpayment_method_url','rpayment_method_barcode_url','rpayment_method_paybin_reference',
-    'rpayment_method_barcode_paybin_url',
-    'rpayment_method_reference','rcustomer','rorder_id','dispositivo','navegador',
-    'contador_peticiones','usu_alta_id', 'usu_mod_id','bnd_pagado','notificacion_pagado',
-    'use_3d_secure','token_3d_secure'];
+    protected $fillable = [
+        'pago_id',
+        'cliente_id',
+        'forma_pago_id',
+        'pname',
+        'plast_name',
+        'pphone_number',
+        'pemail',
+        'pmethod',
+        'pamount',
+        'pdescription',
+        'psend_mail',
+        'pconfirm',
+        'predirect_url',
+        'ppreferencia',
+        'porder_id',
+        'fecha_limite',
+        'rid',
+        'rauthorization',
+        'rmethod',
+        'roperation_type',
+        'rtransaction_type',
+        'rstatus',
+        'rconciliated',
+        'rcreation_date',
+        'roperation_date',
+        'rdescription',
+        'rerror_message',
+        'ramount',
+        'rcurrency',
+        'rpayment_method_type',
+        'rpayment_method_bank',
+        'rpayment_method_agreement',
+        'rpayment_method_clabe',
+        'rpayment_method_name',
+        'rpayment_method_url',
+        'rpayment_method_barcode_url',
+        'rpayment_method_paybin_reference',
+        'rpayment_method_barcode_paybin_url',
+        'rpayment_method_reference',
+        'rcustomer',
+        'rorder_id',
+        'dispositivo',
+        'navegador',
+        'contador_peticiones',
+        'usu_alta_id',
+        'usu_mod_id',
+        'bnd_pagado',
+        'notificacion_pagado',
+        'use_3d_secure',
+        'token_3d_secure'
+    ];
 
 
     public function usu_alta()
@@ -54,7 +96,7 @@ class PeticionOpenpay extends Model
     } // end
 
 
-	public function cliente()
+    public function cliente()
     {
         return $this->belongsTo('App\Cliente');
     } // end

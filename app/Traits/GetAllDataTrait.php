@@ -267,6 +267,8 @@ trait GetAllDataTrait
                 $myQuery = $myQuery->whereIn('nivels.plantel_id', $planteles);
                 //}
                 break;
+            case "peticion_openpays":
+                $myQuery = $myQuery->where('rstatus', '<>', 'completed');
             case "pivot_aviso_gral_empleados":
                 if ($baseTable == "pivot_aviso_gral_empleados" and Auth::user()->can('IfiltroAvisosXempleado')) {
                     $myQuery = $myQuery->where('pivot_aviso_gral_empleados.empleado_id', '=', $empleado->id);

@@ -496,4 +496,9 @@ class Cliente extends Model
 		return $this->belongsTo('App\ProcedenciaAlumno', 'id', 'cliente_id');
 	} // end
 
+	public function prebeca()
+	{
+		return $this->belongsTo('App\Prebeca', 'id', 'cliente_id');
+	} // end
+
 }

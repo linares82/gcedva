@@ -25,6 +25,7 @@ use App\Estado;
 use App\Cliente;
 use App\Lectivo;
 use App\Plantel;
+use App\Prebeca;
 use App\Empleado;
 use App\Materium;
 use App\DocAlumno;
@@ -34,6 +35,7 @@ use App\Preguntum;
 use App\StCliente;
 use Carbon\Carbon;
 use App\Hacademica;
+use App\MotivoBeca;
 use App\PlanPagoLn;
 use App\TpoInforme;
 use App\EstadoCivil;
@@ -48,6 +50,7 @@ use App\SeccionesCat;
 use App\AlumnosActivo;
 use App\Ccuestionario;
 use App\StSeguimiento;
+use App\PorcentajeBeca;
 use App\UsuarioCliente;
 use Twilio\Rest\Client;
 use App\HistoriaCliente;
@@ -453,6 +456,15 @@ class ClientesController extends Controller
             $cliente->load('procedenciaAlumno');
         }
 
+        if (!isset($cliente->prebeca)) {
+            $input_prebeca['cliente_id'] = $cliente->id;
+            $input_prebeca['usu_alta_id'] = Auth::user()->id;
+            $input_prebeca['usu_mod_id'] = Auth::user()->id;
+
+            Prebeca::create($input_prebeca);
+            $cliente->load('prebeca');
+        }
+
         //dd($cliente->ccuestionario->ccuestionarioPreguntas);
         $p = Auth::user()->can('IfiltroEmpleadosXPlantel');
         //dd($p);
@@ -537,8 +549,13 @@ class ClientesController extends Controller
 
         $sepTipoEstudioAntecedente = SepTEstudioAntecedente::select(DB::raw('concat(id_t_estudio_antecedente,"-",t_estudio_antecedente) as name, id'))
             ->pluck('name', 'id');
-
         $sepTipoEstudioAntecedente->prepend('Seleccionar Opcion', '');
+
+        $motivosBeca = MotivoBeca::pluck('name', 'id');
+        $motivosBeca->prepend('Seleccionar Opcion', '');
+        $porcentajeBeca = PorcentajeBeca::pluck('name', 'id');
+        $porcentajeBeca->prepend('Seleccionar Opcion', '');
+
         //dd($sepTipoEstudioAntecedente);
         //dd($cliente->procedenciaAlumno);
 
@@ -555,7 +572,9 @@ class ClientesController extends Controller
             'estado_civiles',
             'incidencias',
             'plantels',
-            'sepTipoEstudioAntecedente'
+            'sepTipoEstudioAntecedente',
+            'motivosBeca',
+            'porcentajeBeca'
         ))
             ->with('list', Cliente::getListFromAllRelationApps())
             ->with('list1', PivotDocCliente::getListFromAllRelationApps())
@@ -655,6 +674,10 @@ class ClientesController extends Controller
         $procedenciaAlumno = ProcedenciaAlumno::where('cliente_id', $id)->first();
         $procedenciaAlumno->update($input_procedencia);
 
+        $input_prebeca = $request->only('motivo_beca_id', 'porcentaje_beca_id', 'obs_prebeca');
+        $prebeca = Prebeca::where('cliente_id', $id)->first();
+        //dd($prebeca);
+        $prebeca->update($input_prebeca);
 
         $input = $request->except([
             '1',
@@ -3006,7 +3029,7 @@ class ClientesController extends Controller
         $clientes = $filtrado->orderBy('id', 'desc')->paginate(20);
 
         $users = User::pluck('name', 'id');
-        $users->prepend('Seleccionar opciÃƒÂ³n', 0);
+        $users->prepend('Seleccionar opción', 0);
 
         //dd($request);
         //$clientes = Seguimiento::getAllData($request, 10, session('filtro_clientes'));
