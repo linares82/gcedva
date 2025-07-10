@@ -27,7 +27,7 @@
             <a data-toggle="tab" href="#tab8">Procedencia</a>
         </li>
         <li class="">
-            <a data-toggle="tab" href="#tab9">Primera Beca</a>
+            <a data-toggle="tab" href="#tab9">Solicitud de Beca</a>
         </li>
     </ul>
     <div class="tab-content">
@@ -1771,14 +1771,14 @@
         <div id="tab9" class="tab-pane">
             @if(isset($cliente->prebeca))
                 <fieldset>
-                    <div class="form-group col-md-4 @if($errors->has('motivo_beca_id')) has-error @endif">
+                    <div class="form-group col-md-2 @if($errors->has('motivo_beca_id')) has-error @endif">
                        <label for="motivo_beca_id-field">Motivo Beca</label>
                        {!! Form::select("motivo_beca_id", $motivosBeca, $cliente->prebeca->motivo_beca_id, array("class" => "form-control select_seguridad", "id" => "motivo_beca_id-field")) !!}
                        @if($errors->has("motivo_beca_id"))
                         <span class="help-block">{{ $errors->first("motivo_beca_id") }}</span>
                        @endif
                     </div>
-                    <div class="form-group col-md-4 @if($errors->has('porcentaje_beca_id')) has-error @endif">
+                    <div class="form-group col-md-6 @if($errors->has('porcentaje_beca_id')) has-error @endif">
                        <label for="porcentaje_beca_id-field">Porcentaje Beca</label>
                        {!! Form::select("porcentaje_beca_id", $porcentajeBeca, $cliente->prebeca->porcentaje_beca_id, array("class" => "form-control select_seguridad", "id" => "porcentaje_beca_id-field")) !!}
                        @if($errors->has("porcentaje_beca_id"))

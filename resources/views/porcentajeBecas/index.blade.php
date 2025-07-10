@@ -126,8 +126,7 @@
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'name', 'title' => 'NAME'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
+
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
@@ -137,12 +136,8 @@
                             <tr>
                                 <td><a href="{{ route('porcentajeBecas.show', $porcentajeBeca->id) }}">{{$porcentajeBeca->id}}</a></td>
                                 <td>{{$porcentajeBeca->name}}</td>
-                    <td>{{$porcentajeBeca->usu_alta_id}}</td>
-                    <td>{{$porcentajeBeca->usu_mod_id}}</td>
+                    
                                 <td class="text-right">
-                                    @permission('porcentajeBecas.edit')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('porcentajeBecas.duplicate', $porcentajeBeca->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
-                                    @endpermission
                                     @permission('porcentajeBecas.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('porcentajeBecas.edit', $porcentajeBeca->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
                                     @endpermission
