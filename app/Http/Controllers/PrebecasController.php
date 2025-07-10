@@ -161,6 +161,22 @@ class PrebecasController extends Controller
 			->where('inscripcions.grupo_id', $datos['grupo_id'])
 			->get();
 		//dd($registros);
-		return view('prebecas.reportes.prebecas-becasR', compact('registros'));
+		$prebeca_sin_inscripcion = Prebeca::select(
+			'c.plantel_id',
+			'prebecas.*',
+			'i.id as inscripcion_id',
+			'i.deleted_at as deleted_at_i'
+		)
+			->join('clientes as c', 'c.id', 'prebecas.cliente_id')
+			->leftJoin('inscripcions as i', 'i.cliente_id', 'prebecas.cliente_id')
+			->with('cliente')
+			->with('cliente.plantel')
+			->where('c.plantel_id', $datos['plantel_id'])
+			->whereRaw('i.id is null or i.deleted_at is not null')
+			//->whereNull('i.id')
+			//->whereNotNull('i.deleted_at')
+			->get();
+		//dd($prebeca_sin_inscripcion->toArray());
+		return view('prebecas.reportes.prebecas-becasR', compact('registros', 'prebeca_sin_inscripcion'));
 	}
 }

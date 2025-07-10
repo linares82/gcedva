@@ -82,6 +82,67 @@
                         @endforeach
                     </tbody>
                 </table>
+
+                <table class="table table-condensed table-striped">
+                    <thead>
+                        @php
+                            //dd($registro);
+                            $i=0;
+                        @endphp
+                        <tr>
+                            <th></th>
+                            <th>Plantel - No hay inscripcion a materias</th><th>Cliente Id</th><th>Cliente</th>
+                            <th>Motivo</th><th>Observaciones</th><th>Porcentaje</th>
+                            <th>Beca</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($prebeca_sin_inscripcion as $registro)
+                        @php
+                            //dd($registro);
+                            
+                        @endphp
+                            <tr>
+                                <td>{{++$i}}</td>
+                                <td>{{$registro->cliente->plantel->razon}} / Sin inscripcion a materias
+                                </td>
+                                <td>
+                                    @if(isset($registro->cliente))
+                                    <a target="_blank" href="{{route('clientes.edit', $registro->cliente->id)}}">
+                                    {{$registro->cliente->id}}
+                                    </a>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if(isset($registro->cliente))
+                                    {{$registro->cliente->nombre}} {{$registro->cliente->nombre2}} {{$registro->cliente->ape_paterno}} {{$registro->cliente->ape_materno}}</td>
+                                    @endif
+                                <td>
+                                    @if(isset($registro->cliente->prebeca))
+                                    {{optional($registro->cliente->prebeca->motivoBeca)->name}}
+                                    @endif
+                                </td>
+                                <td>
+                                    @if(isset($registro->cliente->prebeca))
+                                    {{optional($registro->cliente->prebeca)->obs_prebeca}}
+                                    @endif
+                                </td>
+                                <td>
+                                    @if(isset($registro->cliente->prebeca))
+                                    {{optional($registro->cliente->prebeca->porcentajeBeca)->name}}
+                                    @endif
+                                </td>
+                                <td>
+                                    @if(isset($registro->cliente->autorizacionBeca))
+                                    <a class="btn btn-info btn-xs pull-right" target="_blank" href="{{ route('autorizacionBecas.findByClienteId',array('cliente_id'=>$registro->cliente_id)) }}"><i class="glyphicon glyphicon-eye"></i> Ver </a>
+                                    @else
+                                    <a class="btn btn-success btn-xs pull-right" target="_blank" href="{{ route('autorizacionBecas.create',array('id'=>$registro->cliente_id)) }}"><i class="glyphicon glyphicon-plus"></i> Crear</a>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
         </div>
     </div>
 @endsection

@@ -35,6 +35,11 @@ class Prebeca extends Model
 		return $this->hasOne('App\MotivoBeca', 'id', 'motivo_beca_id');
 	} // end
 
+	public function cliente()
+	{
+		return $this->hasOne('App\Cliente', 'id', 'cliente_id');
+	} // end
+
 	public function porcentajeBeca()
 	{
 		return $this->hasOne('App\PorcentajeBeca', 'id', 'porcentaje_beca_id');
