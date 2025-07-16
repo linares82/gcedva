@@ -192,6 +192,7 @@ return array(
     'AddFieldsToVinculacionsTable' => $baseDir . '/database/migrations/2022_03_15_161502_add_fields_to_vinculacions_table.php',
     'AddFileToAutorizacionBecasTable' => $baseDir . '/database/migrations/2019_11_29_130802_add_file_to_autorizacion_becas_table.php',
     'AddFinscripcionToHacademicasTable' => $baseDir . '/database/migrations/2021_05_20_111944_add_finscripcion_to_hacademicas_table.php',
+    'AddFkClienteIdToPrecedenciaAlumnosTable' => $baseDir . '/database/migrations/2025_07_15_223343_add_fk_cliente_id_to_precedencia_alumnos_table.php',
     'AddFmailToClientesTable' => $baseDir . '/database/migrations/2020_11_10_134733_add_fmail_to_clientes_table.php',
     'AddFolioFacturaToPagosTable' => $baseDir . '/database/migrations/2020_09_22_162636_add_folio_factura_to_pagos_table.php',
     'AddFolioFacturaToPlantelsTable' => $baseDir . '/database/migrations/2020_09_22_161826_add_folio_factura_to_plantels_table.php',
