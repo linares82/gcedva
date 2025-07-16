@@ -110,12 +110,16 @@ class HistoriaClientesController extends Controller
 		}
 		//dd($input);
 
+
 		$primer_adeudo = Adeudo::where('cliente_id', $input['cliente_id'])->first();
-		$mes_primer_adeudo = Carbon::createFromFormat('Y-m-d', $primer_adeudo->fecha_pago)->month;
-		$mes_actual = Carbon::createFromFormat('Y-m-d', date('Y-m-d'))->month;
-		if ($mes_primer_adeudo == $mes_actual) {
-			$input['bnd_prematuro'] = 1;
+		if (!is_null($primer_adeudo)) {
+			$mes_primer_adeudo = Carbon::createFromFormat('Y-m-d', $primer_adeudo->fecha_pago)->month;
+			$mes_actual = Carbon::createFromFormat('Y-m-d', date('Y-m-d'))->month;
+			if ($mes_primer_adeudo == $mes_actual) {
+				$input['bnd_prematuro'] = 1;
+			}
 		}
+
 
 		$r = $request->hasFile('archivo_file');
 		//dd($r);

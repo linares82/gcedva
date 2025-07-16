@@ -780,6 +780,17 @@
                                     <span class="help-block">{{ $errors->first('oprivada') }}</span>
                                 @endif
                             </div>
+                            <div class="form-group col-md-4 @if ($errors->has('webhook_openpay_id')) has-error @endif">
+                            <label for="webhook_openpay_id-field">Webhook Openpay</label>
+                            {!! Form::select('webhook_openpay_id', $webhookOpenpays, null, [
+                                'class' => 'form-control select_seguridad',
+                                'id' => 'webhook_openpay_id-field',
+                            ]) !!}
+                            <div id="webhook_openpay_id_selected"></div>
+                            @if ($errors->has('webhook_openpay_id'))
+                                <span class="help-block">{{ $errors->first('webhook_openpay_id') }}</span>
+                            @endif
+                        </div>
                             <div class="row"></div>
                             <div class="form-group col-md-3 @if ($errors->has('bnd_paycode')) has-error @endif">
                                 <label for="bnd_paycode-field">Paycode Activo</label>
@@ -851,6 +862,8 @@
                 show_select_today: 'Hoy',
             });
 
+            
+
             $(document).on("click", "#btn_archivo", function(e) {
                 e.preventDefault();
                 if ($('#doc_plantel_id-field option:selected').val() == 0) {
@@ -903,6 +916,11 @@
                 });
             })
             $(document).ready(function() {
+                $('#webhook_openpay_id-field').change(function(){
+                    textos=$('#webhook_openpay_id-field option:selected').text().split(' ');
+                    $('#webhook_openpay_id_selected').html("Codigo de verificacion: "+ textos[1]);
+                    
+                });
                 $('#seleccionar_conceptos').change(function() {
                     if ($(this).is(':checked')) {
                         $("#concepto_multipagos_id-field > option").prop("selected", "selected");

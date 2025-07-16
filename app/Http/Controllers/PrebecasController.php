@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Auth;
 use App\Prebeca;
+use DB;
 
 use App\Empleado;
 use App\Inscripcion;
@@ -130,7 +131,10 @@ class PrebecasController extends Controller
 
 	public function prebecaBeca()
 	{
-		$planteles = Empleado::where('user_id', '=', Auth::user()->id)->where('st_empleado_id', '<>', 3)->first()->plantels->pluck('razon', 'id');
+		$planteles = Empleado::where('user_id', '=', Auth::user()->id)
+			->where('st_empleado_id', '<>', 3)
+			->first()->plantels->pluck('razon', 'id');
+		$planteles->prepend('Seleccionar Opcion', "");
 		return view('prebecas.reportes.prebecas-becas', compact('planteles'));
 	}
 
@@ -164,17 +168,15 @@ class PrebecasController extends Controller
 		$prebeca_sin_inscripcion = Prebeca::select(
 			'c.plantel_id',
 			'prebecas.*',
-			'i.id as inscripcion_id',
-			'i.deleted_at as deleted_at_i'
+			DB::raw('(select count(i.id) from inscripcions as i 
+					where i.cliente_id=prebecas.cliente_id and 
+					i.deleted_at is null) as cuenta_inscripcion')
 		)
 			->join('clientes as c', 'c.id', 'prebecas.cliente_id')
-			->leftJoin('inscripcions as i', 'i.cliente_id', 'prebecas.cliente_id')
 			->with('cliente')
 			->with('cliente.plantel')
 			->where('c.plantel_id', $datos['plantel_id'])
-			->whereRaw('i.id is null or i.deleted_at is not null')
-			//->whereNull('i.id')
-			//->whereNotNull('i.deleted_at')
+			->havingRaw('cuenta_inscripcion=0')
 			->get();
 		//dd($prebeca_sin_inscripcion->toArray());
 		return view('prebecas.reportes.prebecas-becasR', compact('registros', 'prebeca_sin_inscripcion'));

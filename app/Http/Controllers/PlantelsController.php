@@ -12,6 +12,7 @@ use App\FormaPago;
 use File as Archi;
 use App\Hacademica;
 use App\Http\Requests;
+use App\WebhookOpenpay;
 use App\ConceptoMultipago;
 use App\DocPlantelPlantel;
 use App\SepCertInstitucion;
@@ -213,6 +214,8 @@ class PlantelsController extends Controller
 		$sep_cert_instituciones = SepCertInstitucion::select(DB::raw('concat(id_institucion,"-",descripcion) as name, id'))
 			->pluck('name', 'id');
 		$sep_cert_instituciones->prepend('Seleccionar Opción', "");
+		$webhookOpenpays = WebhookOpenpay::select(DB::raw('id, concat(openpay_id," ",verification_code," ",event_date) as name'))->pluck('name', 'id');
+		$webhookOpenpays->prepend('Seleccionar Opción', "");
 
 		return view('plantels.edit', compact(
 			'plantel',
@@ -225,7 +228,8 @@ class PlantelsController extends Controller
 			'lista_formaPagos',
 			'matrices',
 			'sep_instituciones',
-			'sep_cert_instituciones'
+			'sep_cert_instituciones',
+			'webhookOpenpays'
 		))
 			->with('list', Plantel::getListFromAllRelationApps())
 			->with('list1', DocPlantelPlantel::getListFromAllRelationApps());

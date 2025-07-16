@@ -27,6 +27,7 @@
                     'class' => 'form-control select_seguridad',
                     'id' => 'plantel_id-field',
                 ]) !!}
+                <div id='loading' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                 @if ($errors->has('plantel_id'))
                     <span class="help-block">{{ $errors->first('plantel_id') }}</span>
                 @endif
@@ -120,8 +121,8 @@
                            'plantel_id':$('#plantel_id-field option:selected').val()
                         },
                         dataType: 'json',
-                        beforeSend : function(){$("#loading2").show();},
-                        complete : function(){$("#loading2").hide();},
+                        beforeSend : function(){$("#loading").show();},
+                        complete : function(){$("#loading").hide();},
                         success: function(data){
                            //$example.select2("destroy");
                            $('#grupo_id-field').html('');
@@ -148,10 +149,10 @@
                   },
                   dataType: 'json',
                   beforeSend: function() {
-                        $("#loading2").show();
+                        $("#loading").show();
                   },
                   complete: function() {
-                        $("#loading2").hide();
+                        $("#loading").hide();
                   },
                   success: function(data) {
                         //$example.select2("destroy");
@@ -186,10 +187,10 @@
                   },
                   dataType: 'json',
                   beforeSend: function() {
-                        $("#loading3").show();
+                        $("#loading").show();
                   },
                   complete: function() {
-                        $("#loading3").hide();
+                        $("#loading").hide();
                   },
                   success: function(data) {
                         //alert(data);
@@ -227,10 +228,10 @@
                     },
                     dataType: 'json',
                     beforeSend: function() {
-                        $("#loading12").show();
+                        $("#loading").show();
                     },
                     complete: function() {
-                        $("#loading12").hide();
+                        $("#loading").hide();
                     },
                     success: function(data) {
                         //alert(data);
@@ -269,10 +270,10 @@
                     },
                     dataType: 'json',
                     beforeSend: function() {
-                        $("#loading13").show();
+                        $("#loading").show();
                     },
                     complete: function() {
-                        $("#loading13").hide();
+                        $("#loading").hide();
                     },
                     success: function(data) {
                         //$example.select2("destroy");

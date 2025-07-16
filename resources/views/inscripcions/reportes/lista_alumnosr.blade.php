@@ -172,10 +172,12 @@
                                 ?>
                                 <td>{{$asistencias." - ".$porcentaje}}</td>
                                 <?php 
-                                $caja=\App\Caja::where('cliente_id',$r->id)->latest()->first();
+                                $caja=\App\Caja::where('cliente_id',$r->cliente)->latest()->first();
                                 ?>
                                 @if(is_object($caja))
-                                <td>{{$caja->id."-".$caja->stCaja->name." - ".$caja->total." - ".$caja->fecha}}</td>
+                                <td>
+                                    {{$caja->consecutivo."-".$caja->stCaja->name." - ".$caja->total." - ".$caja->fecha}}
+                                </td>
                                 @endif
                                 <?php 
                                 $asistencias=0;

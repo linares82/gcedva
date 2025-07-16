@@ -835,6 +835,7 @@
                                 $suma_pagos=0;
                                 $contador_pagos=0;
                                 $pagos=App\Pago::where('caja_id', $adeudo->caja_id)->get();
+                                
                                 $contador_pagos=0;
                                 foreach($pagos as $pago){
                                     $contador_pagos++;
@@ -878,7 +879,7 @@
                                 /Problema-Varios Pagos
                                 @elseif(isset($pago) and is_null($pago->uuid)) 
                                 / NO 
-                                @else 
+                                @elseif(isset($pago) and !is_null($pago->uuid))
                                 / SI 
                                 @endif   
                                 @endif

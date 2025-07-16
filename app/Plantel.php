@@ -99,7 +99,8 @@ class Plantel extends Model
 		'sep_cert_institucion_id',
 		'bnd_paycode',
 		'password_paycode',
-		'api_key_paycode'
+		'api_key_paycode',
+		'webhook_openpay_id'
 	];
 
 	protected $dates = ['deleted_at'];
