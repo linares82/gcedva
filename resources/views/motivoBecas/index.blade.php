@@ -126,8 +126,7 @@
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
                             <th>@include('plantillas.getOrderLink', ['column' => 'name', 'title' => 'NAME'])</th>
-                        <th>@include('plantillas.getOrderLink', ['column' => 'usu_alta_id', 'title' => 'USU_ALTA_ID'])</th>
-                        <th>@include('plantillas.getOrderLink', ['column' => 'usu_mod_id', 'title' => 'USU_MOD_ID'])</th>
+                        
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
@@ -137,12 +136,9 @@
                             <tr>
                                 <td><a href="{{ route('motivoBecas.show', $motivoBeca->id) }}">{{$motivoBeca->id}}</a></td>
                                 <td>{{$motivoBeca->name}}</td>
-                    <td>{{$motivoBeca->usu_alta_id}}</td>
-                    <td>{{$motivoBeca->usu_mod_id}}</td>
+                    
                                 <td class="text-right">
-                                    @permission('motivoBecas.edit')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('motivoBecas.duplicate', $motivoBeca->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>
-                                    @endpermission
+                                    
                                     @permission('motivoBecas.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('motivoBecas.edit', $motivoBeca->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
                                     @endpermission

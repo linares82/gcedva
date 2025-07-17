@@ -551,7 +551,7 @@ class ClientesController extends Controller
             ->pluck('name', 'id');
         $sepTipoEstudioAntecedente->prepend('Seleccionar Opcion', '');
 
-        $motivosBeca = MotivoBeca::pluck('name', 'id');
+        $motivosBeca = MotivoBeca::where('bnd_solicitud_beca', 1)->pluck('name', 'id');
         $motivosBeca->prepend('Seleccionar Opcion', '');
         $porcentajeBeca = PorcentajeBeca::pluck('name', 'id');
         $porcentajeBeca->prepend('Seleccionar Opcion', '');
