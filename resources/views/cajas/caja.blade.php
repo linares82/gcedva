@@ -1355,11 +1355,15 @@ Agregar nuevo registro
     
     $(document).ready(function(){
         $('#forma_pago_id1-field').change(function(){
-            if($(this).val()==1 || $(this).val()==6 || $(this).val()==9){
-                $('#fecha-field').prop('disabled',true);
-            }else{
-                $('#fecha-field').prop('disabled',false);
-            }
+                
+            @if(!Auth::user()->can('cajas.ignorarFormaPagoParaFecha'))
+                
+                if(($(this).val()==1 || $(this).val()==6 || $(this).val()==9)){
+                    $('#fecha-field').prop('disabled',true);
+                }else{
+                    $('#fecha-field').prop('disabled',false);
+                }
+            @endif
             
         }); 
         

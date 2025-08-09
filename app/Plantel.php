@@ -100,7 +100,9 @@ class Plantel extends Model
 		'bnd_paycode',
 		'password_paycode',
 		'api_key_paycode',
-		'webhook_openpay_id'
+		'webhook_openpay_id',
+		'bnd_mattilda',
+		'archivo_pem'
 	];
 
 	protected $dates = ['deleted_at'];

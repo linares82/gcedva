@@ -250,7 +250,7 @@ class SeguimientosController extends Controller
         $mes = (int) date('m');
         $fecha = date('d-m-Y');
 
-        $seguimientos = Seguimiento::select('c.nombre as Nombre', 'c.nombre2 as Segundo Nombre', 'c.ape_paterno as Apellido_Paterno', 'c.ape_materno as Apellido_Materno', 'c.calle as Calle', 'c.no_interior as No_Interior', 'c.no_exterior as No_Exterior', 'm.name as Municipio', 'e.name as Estado', 'c.tel_fijo as TelÃ©fono_Fijo', 'tel_cel as TelÃ©fono_Celular', 'mail as Correo_ElectrÃ³nico', 'sts.name as Estatus_Seguimiento', 'stc.name as Estatus_Cliente')
+        $seguimientos = Seguimiento::select('c.nombre as Nombre', 'c.nombre2 as Segundo Nombre', 'c.ape_paterno as Apellido_Paterno', 'c.ape_materno as Apellido_Materno', 'c.calle as Calle', 'c.no_interior as No_Interior', 'c.no_exterior as No_Exterior', 'm.name as Municipio', 'e.name as Estado', 'c.tel_fijo as TelÃ©fono_Fijo', 'tel_cel as TelÃ©fono_Celular', 'mail as Correo_Electrónico', 'sts.name as Estatus_Seguimiento', 'stc.name as Estatus_Cliente')
             ->join('st_seguimientos as sts', 'sts.id', '=', 'seguimientos.estatus_id')
             ->join('clientes as c', 'c.id', '=', 'seguimientos.cliente_id')
             ->join('municipios as m', 'm.id', '=', 'c.municipio_id')
@@ -605,7 +605,7 @@ class SeguimientosController extends Controller
     public function analitica_actividadesr(Request $request)
     {
         $input = $request->all();
-        
+
         //$fecha_inicio = date('Y-m-j', strtotime('-8 day', strtotime(date('Y-m-j'))));
         //dd($fecha_inicio);
         $e = Empleado::where('user_id', '=', Auth::user()->id)->first();
@@ -642,7 +642,7 @@ class SeguimientosController extends Controller
             $ds_actividades_aux->wherein('c.plantel_id', $planteles);
         }
         $ds_actividades = $ds_actividades_aux->get();
-        
+
         //dd($ds_actividades->toArray());
         return view('seguimientos.reportes.analitica_actividadesr')
             ->with('actividades', json_encode($ds_actividades));
@@ -650,7 +650,7 @@ class SeguimientosController extends Controller
 
     public function analitica_actividadesf()
     {
-        
+
         $fecha_inicio = date('Y-m-j', strtotime('-15 day', strtotime(date('Y-m-j'))));
         $e = Empleado::where('user_id', '=', Auth::user()->id)->first();
         $plantel = $e->plantel_id;

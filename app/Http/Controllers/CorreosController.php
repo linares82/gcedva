@@ -205,17 +205,17 @@ class CorreosController extends Controller
 
         $data = array('contenido' => $contenido, 'nombre' => $n, 'correo' => $from);
         $r = \Mail::send('correos.version2.correo_individual', $data, function ($message)
-             use ($asunto, $destinatario, $containfile, $paths, $n, $from) {
-                $message->from(env('MAIL_FROM_ADDRESS','hola@grupocedva.com'), env('MAIL_FROM_NAME','Grupo CEDVA'));
-                $message->to($destinatario, $n)->subject($asunto);
-                $message->replyTo($from);
-                if ($containfile) {
-                    foreach ($paths as $path) {
-                        //dd($path);
-                        $message->attach($path);
-                    }
+        use ($asunto, $destinatario, $containfile, $paths, $n, $from) {
+            $message->from(env('MAIL_FROM_ADDRESS', 'hola@grupocedva.com'), env('MAIL_FROM_NAME', 'Grupo CEDVA'));
+            $message->to($destinatario, $n)->subject($asunto);
+            $message->replyTo($from);
+            if ($containfile) {
+                foreach ($paths as $path) {
+                    //dd($path);
+                    $message->attach($path);
                 }
-            });
+            }
+        });
         /*
         if(isset($f['empresa_bnd']) and $f['empresa_bnd']==1){
         $e=Empresa::where('correo1', '=', $destinatario)->first();
@@ -243,7 +243,7 @@ class CorreosController extends Controller
         }
         return view("correos.version2.msj_correcto")->with("msj", "Correo enviado correctamente");
         /*} else {
-    return view("correos.version2.msj_rechazado")->with("msj", "Se presentÃ³ un error vuelva a intentarlo");
+    return view("correos.version2.msj_rechazado")->with("msj", "Se presentó un error vuelva a intentarlo");
     }*/
     }
 

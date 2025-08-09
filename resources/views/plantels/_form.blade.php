@@ -737,7 +737,7 @@
                 </div>
                 <div class="box box-default">
                     <div class="box-header">
-                        <h3>Openpay</h3>
+                        <h3>Multipagos</h3>
                     </div>
                     <div class="box-body">
                         <div class="row">
@@ -751,7 +751,15 @@
                                     <span class="help-block">{{ $errors->first('bnd_multipagos_activo') }}</span>
                                 @endif
                             </div>
-                            <div class="row"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="box box-default">
+                    <div class="box-header">
+                        <h3>Openpay</h3>
+                    </div>
+                    <div class="box-body">
+                        <div class="row">
                             <div class="form-group col-md-3 @if ($errors->has('bnd_openpay_activo')) has-error @endif">
                                 <label for="bnd_openpay_activo-field">Openpay Activo</label>
                                 {!! Form::checkbox('bnd_openpay_activo', null, null, ['id' => 'bnd_openpay_activo-field', 'class' => 'minimal']) !!}
@@ -781,61 +789,98 @@
                                 @endif
                             </div>
                             <div class="form-group col-md-4 @if ($errors->has('webhook_openpay_id')) has-error @endif">
-                            <label for="webhook_openpay_id-field">Webhook Openpay</label>
-                            {!! Form::select('webhook_openpay_id', $webhookOpenpays, null, [
-                                'class' => 'form-control select_seguridad',
-                                'id' => 'webhook_openpay_id-field',
-                            ]) !!}
-                            <div id="webhook_openpay_id_selected"></div>
-                            @if ($errors->has('webhook_openpay_id'))
-                                <span class="help-block">{{ $errors->first('webhook_openpay_id') }}</span>
-                            @endif
-                        </div>
-                            <div class="row"></div>
-                            <div class="form-group col-md-3 @if ($errors->has('bnd_paycode')) has-error @endif">
-                                <label for="bnd_paycode-field">Paycode Activo</label>
-                                {!! Form::checkbox('bnd_paycode', 1, null, ['id' => 'bnd_paycode-field', 'class' => 'minimal']) !!}
-                                @if ($errors->has('bnd_paycode'))
-                                    <span class="help-block">{{ $errors->first('bnd_paycode') }}</span>
+                                <label for="webhook_openpay_id-field">Webhook Openpay</label>
+                                {!! Form::select('webhook_openpay_id', $webhookOpenpays, null, [
+                                    'class' => 'form-control select_seguridad',
+                                    'id' => 'webhook_openpay_id-field',
+                                ]) !!}
+                                <div id="webhook_openpay_id_selected"></div>
+                                @if ($errors->has('webhook_openpay_id'))
+                                    <span class="help-block">{{ $errors->first('webhook_openpay_id') }}</span>
                                 @endif
                             </div>
-                            <div class="form-group col-md-4 @if ($errors->has('password_paycode')) has-error @endif">
-                                <label for="password_paycode-field">Contraseña Paycode</label>
-                                {!! Form::text('password_paycode', null, ['class' => 'form-control input-sm', 'id' => 'password_paycode-field']) !!}
-                                @if ($errors->has('password_paycode'))
-                                    <span class="help-block">{{ $errors->first('password_paycode') }}</span>
-                                @endif
-                            </div>
-                            <div class="form-group col-md-4 @if ($errors->has('api_key_paycode')) has-error @endif">
-                                <label for="api_key_paycode-field">Key Paycode</label>
-                                {!! Form::text('api_key_paycode', null, ['class' => 'form-control input-sm', 'id' => 'api_key_paycode-field']) !!}
-                                @if ($errors->has('api_key_paycode'))
-                                    <span class="help-block">{{ $errors->first('api_key_paycode') }}</span>
-                                @endif
-                            </div>
-                        </div>
 
 
 
-                    </div>
-                </div>
-                <div class="box box-default">
-                    <div class="box-body">
-
-                        <div class="form-group col-md-12 @if ($errors->has('clausulas_cotizacion')) has-error @endif">
-                            <label for="clausulas_cotizacion-field">Clausulas Cotizacion</label>
-                            {!! Form::textArea('clausulas_cotizacion', null, [
-                                'class' => 'form-control input-sm',
-                                'id' => 'clausulas_cotizacion-field',
-                                'rows' => 5,
-                            ]) !!}
-                            @if ($errors->has('clausulas_cotizacion'))
-                                <span class="help-block">{{ $errors->first('clausulas_cotizacion') }}</span>
-                            @endif
                         </div>
                     </div>
+                    <div class="box box-default">
+                        <div class="box-header">
+                            <h3>Paycode</h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="form-group col-md-3 @if ($errors->has('bnd_paycode')) has-error @endif">
+                                    <label for="bnd_paycode-field">Paycode Activo</label>
+                                    {!! Form::checkbox('bnd_paycode', 1, null, ['id' => 'bnd_paycode-field', 'class' => 'minimal']) !!}
+                                    @if ($errors->has('bnd_paycode'))
+                                        <span class="help-block">{{ $errors->first('bnd_paycode') }}</span>
+                                    @endif
+                                </div>
+                                <div class="form-group col-md-4 @if ($errors->has('password_paycode')) has-error @endif">
+                                    <label for="password_paycode-field">Contraseña Paycode</label>
+                                    {!! Form::text('password_paycode', null, ['class' => 'form-control input-sm', 'id' => 'password_paycode-field']) !!}
+                                    @if ($errors->has('password_paycode'))
+                                        <span class="help-block">{{ $errors->first('password_paycode') }}</span>
+                                    @endif
+                                </div>
+                                <div class="form-group col-md-4 @if ($errors->has('api_key_paycode')) has-error @endif">
+                                    <label for="api_key_paycode-field">Key Paycode</label>
+                                    {!! Form::text('api_key_paycode', null, ['class' => 'form-control input-sm', 'id' => 'api_key_paycode-field']) !!}
+                                    @if ($errors->has('api_key_paycode'))
+                                        <span class="help-block">{{ $errors->first('api_key_paycode') }}</span>
+                                    @endif
+                                </div>
+                            </div>
 
-                </div>
+
+
+                        </div>
+                    </div>
+                    <div class="box box-default">
+                        <div class="box-header">
+                            <h3>Mattilda</h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="form-group col-md-3 @if ($errors->has('bnd_mattilda')) has-error @endif">
+                                    <label for="bnd_mattilda-field">Mattilda Activo</label>
+                                    {!! Form::checkbox('bnd_mattilda', 1, null, ['id' => 'bnd_mattilda-field', 'class' => 'minimal']) !!}
+                                    @if ($errors->has('bnd_mattilda'))
+                                        <span class="help-block">{{ $errors->first('bnd_mattilda') }}</span>
+                                    @endif
+                                </div>
+                                <div class="form-group col-md-4 @if ($errors->has('archivo_pem')) has-error @endif">
+                                    <label for="archivo_pem-field">Archivo Pem</label>
+                                    {!! Form::text('archivo_pem', null, ['class' => 'form-control input-sm', 'id' => 'archivo_pem-field']) !!}
+                                    @if ($errors->has('archivo_pem'))
+                                        <span class="help-block">{{ $errors->first('archivo_pem') }}</span>
+                                    @endif
+                                </div>
+                                
+                            </div>
+
+
+
+                        </div>
+                    </div>
+                    <div class="box box-default">
+                        <div class="box-body">
+
+                            <div class="form-group col-md-12 @if ($errors->has('clausulas_cotizacion')) has-error @endif">
+                                <label for="clausulas_cotizacion-field">Clausulas Cotizacion</label>
+                                {!! Form::textArea('clausulas_cotizacion', null, [
+                                    'class' => 'form-control input-sm',
+                                    'id' => 'clausulas_cotizacion-field',
+                                    'rows' => 5,
+                                ]) !!}
+                                @if ($errors->has('clausulas_cotizacion'))
+                                    <span class="help-block">{{ $errors->first('clausulas_cotizacion') }}</span>
+                                @endif
+                            </div>
+                        </div>
+
+                    </div>
             @endif
 
 
@@ -862,7 +907,7 @@
                 show_select_today: 'Hoy',
             });
 
-            
+
 
             $(document).on("click", "#btn_archivo", function(e) {
                 e.preventDefault();
@@ -916,10 +961,10 @@
                 });
             })
             $(document).ready(function() {
-                $('#webhook_openpay_id-field').change(function(){
-                    textos=$('#webhook_openpay_id-field option:selected').text().split(' ');
-                    $('#webhook_openpay_id_selected').html("Codigo de verificacion: "+ textos[1]);
-                    
+                $('#webhook_openpay_id-field').change(function() {
+                    textos = $('#webhook_openpay_id-field option:selected').text().split(' ');
+                    $('#webhook_openpay_id_selected').html("Codigo de verificacion: " + textos[1]);
+
                 });
                 $('#seleccionar_conceptos').change(function() {
                     if ($(this).is(':checked')) {

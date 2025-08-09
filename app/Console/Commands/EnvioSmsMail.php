@@ -61,8 +61,10 @@ class EnvioSmsMail extends Command
                     //dd($p->toArray());
                     if ($dia == $p->dia) {
                         $condiciones = PlanCondicionFiltro::where('plantilla_id', '=', $p->id)->get();
-                        $resultado = Cliente::select(DB::raw('concat(nombre," ",nombre2," ",ape_paterno," ",ape_materno) as nombre'),
-                            'nombre')
+                        $resultado = Cliente::select(
+                            DB::raw('concat(nombre," ",nombre2," ",ape_paterno," ",ape_materno) as nombre'),
+                            'nombre'
+                        )
                             ->join('seguimientos as s', 's.cliente_id', '=', 'clientes.id')
                             ->join('st_seguimientos as st', 'st.id', '=', 's.st_seguimiento_id')
                             ->join('combinacion_clientes as cc', 'cc.cliente_id', '=', 'clientes.id')
@@ -74,7 +76,7 @@ class EnvioSmsMail extends Command
                         foreach ($condiciones as $c) {
                             switch ($c->campo->campo) {
                                 case 'Estatus':
-                                    if ($c->operador_condicion == "and" or $c->operador_condicion == "Primera CondiciÃ³n") {
+                                    if ($c->operador_condicion == "and" or $c->operador_condicion == "Primera Condición") {
                                         $resultado->where('st.id', $c->signo_comparacion, $c->valor_condicion);
                                     } else {
                                         $resultado->orWhere('st.id', $c->signo_comparacion, $c->valor_condicion);
@@ -82,14 +84,14 @@ class EnvioSmsMail extends Command
 
                                     break;
                                 case 'Plantel':
-                                    if ($c->operador_condicion == "and" or $c->operador_condicion == "Primera CondiciÃ³n") {
+                                    if ($c->operador_condicion == "and" or $c->operador_condicion == "Primera Condición") {
                                         $resultado->where('cc.plantel_id', $c->signo_comparacion, $c->valor_condicion);
                                     } else {
                                         $resultado->orWhere('cc.plantel_id', $c->signo_comparacion, $c->valor_condicion);
                                     }
                                     break;
                                 case 'Especialidad':
-                                    if ($c->operador_condicion == "and" or $c->operador_condicion == "Primera CondiciÃ³n") {
+                                    if ($c->operador_condicion == "and" or $c->operador_condicion == "Primera Condición") {
                                         if ($c->signo_comparacion == "like") {
                                             $resultado->where('e.name', $c->signo_comparacion, $c->interpretacion);
                                         } else {
@@ -105,7 +107,7 @@ class EnvioSmsMail extends Command
 
                                     break;
                                 case 'Nivel':
-                                    if ($c->operador_condicion == "and" or $c->operador_condicion == "Primera CondiciÃ³n") {
+                                    if ($c->operador_condicion == "and" or $c->operador_condicion == "Primera Condición") {
                                         if ($c->signo_comparacion == "like") {
                                             $resultado->where('n.name', $c->signo_comparacion, $c->interpretacion);
                                         } else {
@@ -121,7 +123,7 @@ class EnvioSmsMail extends Command
 
                                     break;
                                 case 'Grado':
-                                    if ($c->operador_condicion == "and" or $c->operador_condicion == "Primera CondiciÃ³n") {
+                                    if ($c->operador_condicion == "and" or $c->operador_condicion == "Primera Condición") {
                                         if ($c->signo_comparacion == "like") {
                                             $resultado->where('g.name', $c->signo_comparacion, $c->interpretacion);
                                         } else {
@@ -136,7 +138,7 @@ class EnvioSmsMail extends Command
                                     }
                                     break;
                                 case 'Segmento Mercado':
-                                    if ($c->operador_condicion == "and" or $c->operador_condicion == "Primera CondiciÃ³n") {
+                                    if ($c->operador_condicion == "and" or $c->operador_condicion == "Primera Condición") {
                                         $resultado->where('sm.id', $c->signo_comparacion, $c->valor_condicion);
                                     } else {
                                         $resultado->orWhere('sm.id', $c->signo_comparacion, $c->valor_condicion);
@@ -156,7 +158,6 @@ class EnvioSmsMail extends Command
                                     $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
                                     $message->subject($p->asunto);
                                 });
-
                             }
                             //$m->queue(new Correo($p));
                             dd('correo enviado');
@@ -168,9 +169,9 @@ class EnvioSmsMail extends Command
                     $hoy = date('Y-m-d');
                     $inicio = Carbon::createFromFormat('Y-m-d', $p->inicio)->toDateTimeString();
                     $fin = Carbon::createFromFormat('Y-m-d', $p->fin)->toDateTimeString();
-//dd($inicio);
+                    //dd($inicio);
                     if ($p->inicio <= $hoy and $p->fin >= $hoy) {
-//dd($p->toArray());
+                        //dd($p->toArray());
                         $condiciones = PlanCondicionFiltro::where('plantilla_id', '=', $p->id)->get();
                         $resultado = Cliente::join('seguimientos as s', 's.cliente_id', '=', 'clientes.id')
                             ->join('st_seguimientos as st', 'st.id', '=', 's.st_seguimiento_id')
@@ -179,11 +180,11 @@ class EnvioSmsMail extends Command
                             ->join('especialidads as e', 'e.id', '=', 'cc.especialidad_id')
                             ->join('nivels as n', 'n.id', '=', 'cc.nivel_id')
                             ->join('grados as g', 'g.id', '=', 'cc.grado_id');
-//dd($condiciones->toArray());
+                        //dd($condiciones->toArray());
                         foreach ($condiciones as $c) {
                             switch ($c->campo->campo) {
                                 case 'Estatus':
-                                    if ($c->operador_condicion == "and" or $c->operador_condicion == "Primera CondiciÃ³n") {
+                                    if ($c->operador_condicion == "and" or $c->operador_condicion == "Primera Condición") {
                                         $resultado->where('st.id', $c->signo_comparacion, $c->valor_condicion);
                                     } else {
                                         $resultado->orWhere('st.id', $c->signo_comparacion, $c->valor_condicion);
@@ -191,14 +192,14 @@ class EnvioSmsMail extends Command
 
                                     break;
                                 case 'Plantel':
-                                    if ($c->operador_condicion == "and" or $c->operador_condicion == "Primera CondiciÃ³n") {
+                                    if ($c->operador_condicion == "and" or $c->operador_condicion == "Primera Condición") {
                                         $resultado->where('cc.plantel_id', $c->signo_comparacion, $c->valor_condicion);
                                     } else {
                                         $resultado->orWhere('cc.plantel_id', $c->signo_comparacion, $c->valor_condicion);
                                     }
                                     break;
                                 case 'Especialidad':
-                                    if ($c->operador_condicion == "and" or $c->operador_condicion == "Primera CondiciÃ³n") {
+                                    if ($c->operador_condicion == "and" or $c->operador_condicion == "Primera Condición") {
                                         if ($c->signo_comparacion == "like") {
                                             $resultado->where('e.name', $c->signo_comparacion, $c->interpretacion);
                                         } else {
@@ -214,7 +215,7 @@ class EnvioSmsMail extends Command
 
                                     break;
                                 case 'Nivel':
-                                    if ($c->operador_condicion == "and" or $c->operador_condicion == "Primera CondiciÃ³n") {
+                                    if ($c->operador_condicion == "and" or $c->operador_condicion == "Primera Condición") {
                                         if ($c->signo_comparacion == "like") {
                                             $resultado->where('n.name', $c->signo_comparacion, $c->interpretacion);
                                         } else {
@@ -230,7 +231,7 @@ class EnvioSmsMail extends Command
 
                                     break;
                                 case 'Grado':
-                                    if ($c->operador_condicion == "and" or $c->operador_condicion == "Primera CondiciÃ³n") {
+                                    if ($c->operador_condicion == "and" or $c->operador_condicion == "Primera Condición") {
                                         if ($c->signo_comparacion == "like") {
                                             $resultado->where('g.name', $c->signo_comparacion, $c->interpretacion);
                                         } else {
@@ -266,7 +267,6 @@ class EnvioSmsMail extends Command
                         }
                     }
                 }
-
             }
         }
         if ($sms_bnd = 'activo') {
@@ -292,7 +292,7 @@ class EnvioSmsMail extends Command
                         foreach ($condiciones as $c) {
                             switch ($c->campo->campo) {
                                 case 'Estatus':
-                                    if ($c->operador_condicion == "and" or $c->operador_condicion == "Primera CondiciÃ³n") {
+                                    if ($c->operador_condicion == "and" or $c->operador_condicion == "Primera Condición") {
                                         $resultado->where('st.id', $c->signo_comparacion, $c->valor_condicion);
                                     } else {
                                         $resultado->orWhere('st.id', $c->signo_comparacion, $c->valor_condicion);
@@ -300,14 +300,14 @@ class EnvioSmsMail extends Command
 
                                     break;
                                 case 'Plantel':
-                                    if ($c->operador_condicion == "and" or $c->operador_condicion == "Primera CondiciÃ³n") {
+                                    if ($c->operador_condicion == "and" or $c->operador_condicion == "Primera Condición") {
                                         $resultado->where('cc.plantel_id', $c->signo_comparacion, $c->valor_condicion);
                                     } else {
                                         $resultado->orWhere('cc.plantel_id', $c->signo_comparacion, $c->valor_condicion);
                                     }
                                     break;
                                 case 'Especialidad':
-                                    if ($c->operador_condicion == "and" or $c->operador_condicion == "Primera CondiciÃ³n") {
+                                    if ($c->operador_condicion == "and" or $c->operador_condicion == "Primera Condición") {
                                         if ($c->signo_comparacion == "like") {
                                             $resultado->where('e.name', $c->signo_comparacion, $c->interpretacion);
                                         } else {
@@ -323,7 +323,7 @@ class EnvioSmsMail extends Command
 
                                     break;
                                 case 'Nivel':
-                                    if ($c->operador_condicion == "and" or $c->operador_condicion == "Primera CondiciÃ³n") {
+                                    if ($c->operador_condicion == "and" or $c->operador_condicion == "Primera Condición") {
                                         if ($c->signo_comparacion == "like") {
                                             $resultado->where('n.name', $c->signo_comparacion, $c->interpretacion);
                                         } else {
@@ -339,7 +339,7 @@ class EnvioSmsMail extends Command
 
                                     break;
                                 case 'Grado':
-                                    if ($c->operador_condicion == "and" or $c->operador_condicion == "Primera CondiciÃ³n") {
+                                    if ($c->operador_condicion == "and" or $c->operador_condicion == "Primera Condición") {
                                         if ($c->signo_comparacion == "like") {
                                             $resultado->where('g.name', $c->signo_comparacion, $c->interpretacion);
                                         } else {
@@ -374,9 +374,9 @@ class EnvioSmsMail extends Command
                     $hoy = date('Y-m-d');
                     $inicio = Carbon::createFromFormat('Y-m-d', $p->inicio)->toDateTimeString();
                     $fin = Carbon::createFromFormat('Y-m-d', $p->fin)->toDateTimeString();
-//dd($inicio);
+                    //dd($inicio);
                     if ($p->inicio <= $hoy and $p->fin >= $hoy) {
-//dd($p->toArray());
+                        //dd($p->toArray());
 
                         $condiciones = PlanCondicionFiltro::where('plantilla_id', '=', $p->id)->get();
                         $resultado = Cliente::select('tel_cel')
@@ -390,7 +390,7 @@ class EnvioSmsMail extends Command
                         foreach ($condiciones as $c) {
                             switch ($c->campo->campo) {
                                 case 'Estatus':
-                                    if ($c->operador_condicion == "and" or $c->operador_condicion == "Primera CondiciÃ³n") {
+                                    if ($c->operador_condicion == "and" or $c->operador_condicion == "Primera Condición") {
                                         $resultado->where('st.id', $c->signo_comparacion, $c->valor_condicion);
                                     } else {
                                         $resultado->orWhere('st.id', $c->signo_comparacion, $c->valor_condicion);
@@ -398,14 +398,14 @@ class EnvioSmsMail extends Command
 
                                     break;
                                 case 'Plantel':
-                                    if ($c->operador_condicion == "and" or $c->operador_condicion == "Primera CondiciÃ³n") {
+                                    if ($c->operador_condicion == "and" or $c->operador_condicion == "Primera Condición") {
                                         $resultado->where('cc.plantel_id', $c->signo_comparacion, $c->valor_condicion);
                                     } else {
                                         $resultado->orWhere('cc.plantel_id', $c->signo_comparacion, $c->valor_condicion);
                                     }
                                     break;
                                 case 'Especialidad':
-                                    if ($c->operador_condicion == "and" or $c->operador_condicion == "Primera CondiciÃ³n") {
+                                    if ($c->operador_condicion == "and" or $c->operador_condicion == "Primera Condición") {
                                         if ($c->signo_comparacion == "like") {
                                             $resultado->where('e.name', $c->signo_comparacion, $c->interpretacion);
                                         } else {
@@ -421,7 +421,7 @@ class EnvioSmsMail extends Command
 
                                     break;
                                 case 'Nivel':
-                                    if ($c->operador_condicion == "and" or $c->operador_condicion == "Primera CondiciÃ³n") {
+                                    if ($c->operador_condicion == "and" or $c->operador_condicion == "Primera Condición") {
                                         if ($c->signo_comparacion == "like") {
                                             $resultado->where('n.name', $c->signo_comparacion, $c->interpretacion);
                                         } else {
@@ -437,7 +437,7 @@ class EnvioSmsMail extends Command
 
                                     break;
                                 case 'Grado':
-                                    if ($c->operador_condicion == "and" or $c->operador_condicion == "Primera CondiciÃ³n") {
+                                    if ($c->operador_condicion == "and" or $c->operador_condicion == "Primera Condición") {
                                         if ($c->signo_comparacion == "like") {
                                             $resultado->where('g.name', $c->signo_comparacion, $c->interpretacion);
                                         } else {
@@ -485,7 +485,9 @@ class EnvioSmsMail extends Command
         $twilio_number = Param::where('llave', '=', 'TWILIO_FROM')->first();
 
         $client = new Client($account_sid->valor, $auth_token->valor);
-        $client->messages->create($telefonos,
-            ['from' => $twilio_number->valor, 'body' => $message]);
+        $client->messages->create(
+            $telefonos,
+            ['from' => $twilio_number->valor, 'body' => $message]
+        );
     }
 }

@@ -173,7 +173,7 @@
 
             $('#empleado_f-field').html('');
             //$('#especialidad_id-field').empty();
-            $('#empleado_f-field').append($('<option></option>').text('Seleccionar OpciÃ³n').val('0'));
+            $('#empleado_f-field').append($('<option></option>').text('Seleccionar Opción').val('0'));
 
 
             $.each(data, function(i) {

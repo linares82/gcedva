@@ -243,7 +243,7 @@ class AutorizacionBecasController extends Controller
 		$empleado = Empleado::where('user_id', Auth::user()->id)->first();
 		$planteles = $empleado->plantels->pluck('razon', 'id');
 		//dd($planteles);
-		//$planteles->prepend('Seleccionar opciÃ³n');
+		//$planteles->prepend('Seleccionar opción');
 
 		//dd($planteles);
 		return view('autorizacionBecas.reportes.becasAutorizadas', compact('planteles'));

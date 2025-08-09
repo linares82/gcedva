@@ -660,8 +660,9 @@ class ClientesController extends Controller
      */
     public function update($id, Cliente $cliente, updateCliente $request)
     {
-        //dd("fil");
+
         //$input = $request->all();
+        //dd($request->all());
         $input_procedencia = $request->only(
             'institucion_procedencia',
             'sep_t_estudio_antecedente_id',
@@ -1784,7 +1785,7 @@ class ClientesController extends Controller
                 $documento->usu_mod_id = Auth::user()->id;
                 $documento->save();
 
-                $this->docObligatoriosEntregados($documento->cliente_id);
+                //$this->docObligatoriosEntregados($documento->cliente_id);
 
                 echo json_encode($ruta_web . "/" . $input['file']);
             } else {

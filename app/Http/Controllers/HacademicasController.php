@@ -348,7 +348,7 @@ class HacademicasController extends Controller
     {
         $examen = TpoExamen::where('id', '>', 1)->pluck('name', 'id');
         //$examen->reverse();
-        //$examen->put(0,'Seleccionar OpciÃ³n');
+        //$examen->put(0,'Seleccionar Opción');
         //$examen->reverse();
         $lectivos = Lectivo::pluck('name', 'id');
         return view('hacademicas.examen', compact('examen', 'lectivos'))
@@ -445,7 +445,7 @@ class HacademicasController extends Controller
         //dd($hacademicas->toArray());
         $examen = TpoExamen::where('id', '>', 1)->pluck('name', 'id');
         //$examen->reverse();
-        //$examen->put(0,'Seleccionar OpciÃ³n');
+        //$examen->put(0,'Seleccionar Opción');
         //$examen->reverse();
         Session::flash('msj', 'Registro Creado');
         /*return view('hacademicas.examen', compact('examen'))
@@ -945,7 +945,7 @@ class HacademicasController extends Controller
     {
         $examen = TpoExamen::where('id', '>', 1)->pluck('name', 'id');
         //$examen->reverse();
-        //$examen->put(0,'Seleccionar OpciÃ³n');
+        //$examen->put(0,'Seleccionar Opción');
         //$examen->reverse();
         $plantels = Plantel::pluck('razon', 'id');
         $lectivos = Lectivo::pluck('name', 'id');

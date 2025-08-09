@@ -58,7 +58,7 @@ class ReportesCedvaController extends Controller
         if ($datos['estatus_f'] == 0) {
             $estatus = StCliente::whereNotIn('id', array(19))->pluck('id');
         } elseif ($datos['estatus_f'] == 1) {
-            $estatus = array(4, 5, 17, 20, 22, 25, 26, 31);
+            $estatus = array(4, 5, 17, 20, 22, 25, 26, 30, 31);
         } elseif ($datos['estatus_f'] == 2) {
             $estatus = array(3, 27, 28);
         }

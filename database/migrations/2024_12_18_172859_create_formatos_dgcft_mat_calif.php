@@ -25,7 +25,7 @@ class CreateFormatosDgcftMatCalif extends Migration
             $table->softDeletes();
             $table->foreign('usu_alta_id')->references('id')->on('users');
             $table->foreign('usu_mod_id')->references('id')->on('users');
-            $table->foreign('formato_dgcft_detalle_id')->references('id')->on('formatos_dgcft_detalles');
+            $table->foreign('formato_dgcft_detalle_id')->references('id')->on('formato_dgcft_detalles');
         });
     }
 
