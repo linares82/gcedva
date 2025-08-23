@@ -126,7 +126,7 @@ class PivotDocClientesController extends Controller
 		$pivotDocCliente = $pivotDocCliente->find($id);
 		$cliente = $pivotDocCliente->cliente_id;
 		$pivotDocCliente->delete();
-		$this->docObligatoriosEntregados($cliente);
+		//$this->docObligatoriosEntregados($cliente);
 
 
 		return redirect()->route('clientes.edit', $cliente)->with('message', 'Registro Borrado.');
@@ -177,15 +177,13 @@ class PivotDocClientesController extends Controller
 		}
 
 		//dd("doc obligatorios ".$documentos_obligatorios_total."-- doc recibidos ".$documentos_entregados);
-		
-			if ($documentos_entregados >= $documentos_obligatorios_total) {
-				$cliente->bnd_doc_oblig_entregados = 1;
-				$cliente->save();
-			} else {
-				$cliente->bnd_doc_oblig_entregados = 0;
-				$cliente->save();
-			}
-		
-	}
 
+		if ($documentos_entregados >= $documentos_obligatorios_total) {
+			$cliente->bnd_doc_oblig_entregados = 1;
+			$cliente->save();
+		} else {
+			$cliente->bnd_doc_oblig_entregados = 0;
+			$cliente->save();
+		}
+	}
 }

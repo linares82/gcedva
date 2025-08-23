@@ -2051,8 +2051,10 @@ class CajasController extends Controller
         }
 
         $combinaciones = CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
+        $empleados = Empleado::select(DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name, id'))->pluck('name', 'id');
 
-        return view('cajas.caja', compact('cliente', 'caja', 'combinaciones', 'cajas'))
+
+        return view('cajas.caja', compact('cliente', 'caja', 'combinaciones', 'cajas', 'empleados'))
             ->with('list', Caja::getListFromAllRelationApps())
             ->with('list1', CajaLn::getListFromAllRelationApps());
     }

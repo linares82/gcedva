@@ -66,6 +66,8 @@ class PlantelsController extends Controller
 			->pluck('name', 'id');
 		$sep_cert_instituciones = SepCertInstitucion::select(DB::raw('concat(id_institucion,"-",descripcion) as name, id'))
 			->pluck('name', 'id');
+		$webhookOpenpays = WebhookOpenpay::select(DB::raw('id, concat(openpay_id," ",verification_code," ",event_date) as name'))->pluck('name', 'id');
+		$webhookOpenpays->prepend('Seleccionar Opción', "");
 		return view('plantels.create', compact(
 			'matrices',
 			'directores',
@@ -76,7 +78,8 @@ class PlantelsController extends Controller
 			'plantel',
 			'documentos_faltantes',
 			'sep_instituciones',
-			'sep_cert_instituciones'
+			'sep_cert_instituciones',
+			'webhookOpenpays'
 		))
 			->with('list', Plantel::getListFromAllRelationApps())
 			->with('list1', DocPlantelPlantel::getListFromAllRelationApps());

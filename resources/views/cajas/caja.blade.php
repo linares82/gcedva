@@ -552,8 +552,13 @@
                                     <strong>C. Efectivo:</strong>{{ App\CuentasEfectivo::where('id', $pago->cuenta_efectivo_id)->value('name')}}
                                     @endif
                                     <br>
+                                    @php
+                                        $pago->load(['peticionMattilda','peticionPaycode']);
+                                        //dd($pago->peticionMattilda->id_transaction);
+                                    @endphp
                                     <strong>Referencia EL:</strong>{{ optional($pago->peticionMultipago)->mp_reference }}<br>
                                     <strong>Referencia PC:</strong>{{ optional($pago->peticionPaycode)->rreference_number }}<br>
+                                    <strong>Ref. Mattilda:</strong>{{ optional($pago->peticionMattilda)->id_transaction }}<br>
                                     <strong>Referencia Openpay:</strong>
                                     <table class="table table-striped table-bordered table-hover" >
                                         <thead><th>Order</th><th></th><th>Estatus</th> <th>Limite</th></thead>

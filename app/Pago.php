@@ -107,4 +107,9 @@ class Pago extends Model
 	{
 		return $this->belongsTo('App\PeticionPaycode', 'id', 'pago_id');
 	} // end
+
+	public function peticionMattilda()
+	{
+		return $this->belongsTo('App\PeticionMattilda', 'id', 'pago_id');
+	} // end
 }
