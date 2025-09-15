@@ -51,7 +51,7 @@ class GruposController extends Controller
 	{
 
 		$input = $request->all();
-		
+
 		$input['usu_alta_id'] = Auth::user()->id;
 		$input['usu_mod_id'] = Auth::user()->id;
 		$periodo_estudio = $input['periodo_estudio_id'];
@@ -166,13 +166,13 @@ class GruposController extends Controller
 					if ($r1->id == $grupo) {
 						array_push($final, array(
 							'id' => $r1->id,
-							'name' => $r1->name,
+							'name' => "-" . $r1->id . "- " . $r1->name,
 							'selectec' => 'Selected'
 						));
 					} else {
 						array_push($final, array(
 							'id' => $r1->id,
-							'name' => $r1->name,
+							'name' => "-" . $r1->id . "- " . $r1->name,
 							'selectec' => ''
 						));
 					}
@@ -187,14 +187,14 @@ class GruposController extends Controller
 	public function getDisponibles(Request $request)
 	{
 		$r = DB::table('grupos as g')->find($request->input('grupo_id'));
-		$alumnosInscritos=Inscripcion::where('plantel_id',$request->input('plantel_id'))
-		->where('especialidad_id',$request->input('especialidad_id'))
-		->where('nivel_id',$request->input('nivel_id'))
-		->where('grado_id',$request->input('grado_id'))
-		->where('lectivo_id',$request->input('lectivo_id'))
-		->where('grupo_id',$request->input('grupo_id'))
-		->whereNull('inscripcions.deleted_at')
-		->count();
+		$alumnosInscritos = Inscripcion::where('plantel_id', $request->input('plantel_id'))
+			->where('especialidad_id', $request->input('especialidad_id'))
+			->where('nivel_id', $request->input('nivel_id'))
+			->where('grado_id', $request->input('grado_id'))
+			->where('lectivo_id', $request->input('lectivo_id'))
+			->where('grupo_id', $request->input('grupo_id'))
+			->whereNull('inscripcions.deleted_at')
+			->count();
 		//dd($alumnosInscritos);
 		return $r->limite_alumnos - $alumnosInscritos;
 	}
@@ -254,9 +254,9 @@ class GruposController extends Controller
 
 	public function listaGrupos(Request $request)
 	{
-		$grupos = Grupo::whereIn('plantel_id',$request->input('plantel'))->orderBy('plantel_id')->orderBy('id')->get();
-		$plantels=Plantel::pluck('razon','id');
-		return view('combinacionClientes.reportes.cargas', compact('grupos','plantels'));
+		$grupos = Grupo::whereIn('plantel_id', $request->input('plantel'))->orderBy('plantel_id')->orderBy('id')->get();
+		$plantels = Plantel::pluck('razon', 'id');
+		return view('combinacionClientes.reportes.cargas', compact('grupos', 'plantels'));
 	}
 
 	public function gruposXplantelXasignacion(Request $request)
@@ -302,24 +302,35 @@ class GruposController extends Controller
 		}
 	}
 
-	public function listaMateriasXGrupo(Request $request){
-		$lista= Plantel::select('plantels.id as plantel_id', 'plantels.razon', 'g.id as grupo_id', 'g.name AS grupo', 
-		'pe.id as periodo_estudio_id', 'pe.name AS periodo_estudio', 'plan.id as plan_estudio_id', 
-		'plan.name AS plan_estudio', 'm.id as materia_id', 'm.name AS materia', 'ponde.id AS ponderacion_id',
-		'ponde.name AS ponderacion')
-		->join('grupos as g','g.plantel_id','plantels.id')
-		->join('grupo_periodo_estudios as gpe','gpe.grupo_id','g.id')
-		->join('periodo_estudios as pe','pe.id','gpe.periodo_estudio_id')
-		->join('plan_estudios as plan','plan.id','pe.plan_estudio_id')
-		->join('materium_periodos as mp','mp.periodo_estudio_id','pe.id')
-		->join('materia as m','m.id','mp.materium_id')
-		->join('ponderacions as ponde','ponde.id','m.ponderacion_id')
-		->whereIn('plantels.id',$request->input('plantel'))
-		//->whereNull('asignacion_academicas.deleted_at')
-		->get();
-			//dd($asignaciones);
-			$plantels=Plantel::pluck('razon','id');
-		return view('combinacionClientes.reportes.cargas', compact('lista','plantels'));
+	public function listaMateriasXGrupo(Request $request)
+	{
+		$lista = Plantel::select(
+			'plantels.id as plantel_id',
+			'plantels.razon',
+			'g.id as grupo_id',
+			'g.name AS grupo',
+			'pe.id as periodo_estudio_id',
+			'pe.name AS periodo_estudio',
+			'plan.id as plan_estudio_id',
+			'plan.name AS plan_estudio',
+			'm.id as materia_id',
+			'm.name AS materia',
+			'ponde.id AS ponderacion_id',
+			'ponde.name AS ponderacion'
+		)
+			->join('grupos as g', 'g.plantel_id', 'plantels.id')
+			->join('grupo_periodo_estudios as gpe', 'gpe.grupo_id', 'g.id')
+			->join('periodo_estudios as pe', 'pe.id', 'gpe.periodo_estudio_id')
+			->join('plan_estudios as plan', 'plan.id', 'pe.plan_estudio_id')
+			->join('materium_periodos as mp', 'mp.periodo_estudio_id', 'pe.id')
+			->join('materia as m', 'm.id', 'mp.materium_id')
+			->join('ponderacions as ponde', 'ponde.id', 'm.ponderacion_id')
+			->whereIn('plantels.id', $request->input('plantel'))
+			//->whereNull('asignacion_academicas.deleted_at')
+			->get();
+		//dd($asignaciones);
+		$plantels = Plantel::pluck('razon', 'id');
+		return view('combinacionClientes.reportes.cargas', compact('lista', 'plantels'));
 	}
 
 	public function getCmbGrupoXGrado(Request $request)
@@ -334,10 +345,10 @@ class GruposController extends Controller
 			$final = array();
 			$r = DB::table('grupos as g')
 				->select('g.id', 'g.name')
-				->join('inscripcions as i','i.grupo_id','g.id')
-				->where('i.plantel_id',$plantel)
-				->where('i.especialidad_id',$especialidad)
-				->where('i.nivel_id',$nivel)
+				->join('inscripcions as i', 'i.grupo_id', 'g.id')
+				->where('i.plantel_id', $plantel)
+				->where('i.especialidad_id', $especialidad)
+				->where('i.nivel_id', $nivel)
 				->where('i.grado_id', '=', $grado)
 				->whereNull('g.deleted_at')
 				->where('g.id', '>', '0')

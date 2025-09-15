@@ -275,3 +275,11 @@ Route::post(
         'uses' => 'ProspectosController@apiStore',
     )
 );
+
+Route::post(
+    '/prospectos/botCreate',
+    array(
+        'as' => 'prospectos.botCreate',
+        'uses' => 'ProspectosController@botStore',
+    )
+);

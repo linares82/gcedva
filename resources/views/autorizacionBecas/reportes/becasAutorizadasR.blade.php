@@ -71,6 +71,7 @@
                         <th>Lectivo</th>
                         <th>Inicio Vigencia</th>
                         <th>Fin Vigencia</th>
+                        <th>Estatus</th>
                         <th>Matricula</th>
                         <th>Id</th>
                         <th>Alumno</th>
@@ -93,6 +94,7 @@
                         <td>{{$r->lectivo}}</td>
                         <td>{{$r->inicio_vigencia}}</td>
                         <td>{{$r->vigencia}}</td>
+                        <td>{{$r->estatus}}</td>
                         <td>{{$r->matricula}}</td>
                         <td>{{$r->id}}</td>
                         <td>{{$r->ape_paterno}} {{$r->ape_materno}} {{$r->nombre}} {{$r->nombre2}}</td>

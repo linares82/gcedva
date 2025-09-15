@@ -112,12 +112,14 @@ class HistoriaClientesController extends Controller
 
 
 		$primer_adeudo = Adeudo::where('cliente_id', $input['cliente_id'])->first();
-		if (!is_null($primer_adeudo)) {
+		if (!is_null($primer_adeudo) and $input['evento_cliente_id'] == 2) {
 			$mes_primer_adeudo = Carbon::createFromFormat('Y-m-d', $primer_adeudo->fecha_pago)->month;
 			$mes_actual = Carbon::createFromFormat('Y-m-d', date('Y-m-d'))->month;
 			if ($mes_primer_adeudo == $mes_actual) {
 				$input['bnd_prematuro'] = 1;
 			}
+		} else {
+			$input['bnd_prematuro'] = null;
 		}
 
 
@@ -236,10 +238,11 @@ class HistoriaClientesController extends Controller
 	{
 		$historiaCliente = $historiaCliente->find($id);
 		$cliente = $historiaCliente->cliente_id;
+		$cli = $historiaCliente->cliente;
 		$hoy = Carbon::createFromFormat('Y-m-d', Date('Y-m-d'))->day;
 		$dias_habiles_aux = Param::where('llave', 'dias_para_bajas')->value('valor');
 		$dias_habiles = explode(',', $dias_habiles_aux);
-		if (in_array($hoy, $dias_habiles) and $cliente->st_cliente_id <> 3) {
+		if (in_array($hoy, $dias_habiles) and $cli->st_cliente_id <> 3) {
 			$eventos = EventoCliente::pluck('name', 'id');
 		} else {
 			$eventos = EventoCliente::where('id', '<>', 2)->pluck('name', 'id');
@@ -290,6 +293,17 @@ class HistoriaClientesController extends Controller
 		if ($r) {
 			$archivo_file = $request->file('archivo_file');
 			$input['archivo'] = $archivo_file->getClientOriginalName();
+		}
+
+		$primer_adeudo = Adeudo::where('cliente_id', $input['cliente_id'])->first();
+		if (!is_null($primer_adeudo) and $input['evento_cliente_id'] == 2) {
+			$mes_primer_adeudo = Carbon::createFromFormat('Y-m-d', $primer_adeudo->fecha_pago)->month;
+			$mes_actual = Carbon::createFromFormat('Y-m-d', date('Y-m-d'))->month;
+			if ($mes_primer_adeudo == $mes_actual) {
+				$input['bnd_prematuro'] = 1;
+			}
+		} else {
+			$input['bnd_prematuro'] = 0;
 		}
 
 		//update data
@@ -609,7 +623,8 @@ class HistoriaClientesController extends Controller
 			'c.tel_fijo',
 			'historia_clientes.reactivado',
 			'historia_clientes.fec_reactivado',
-			'historia_clientes.fec_autorizacion'
+			'historia_clientes.fec_autorizacion',
+			'historia_clientes.fec_vigencia'
 		)
 			->join('clientes as c', 'c.id', '=', 'historia_clientes.cliente_id')
 			->join('estados as est', 'est.id', 'c.estado_id')

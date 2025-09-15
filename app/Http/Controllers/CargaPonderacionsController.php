@@ -180,6 +180,8 @@ class CargaPonderacionsController extends Controller
             $r = DB::table('carga_ponderacions as cp')
                 ->select('cp.id', 'cp.name')
                 ->where('cp.ponderacion_id', '=', $ponderacion)
+                ->where('cp.bnd_Activo', 1)
+                ->whereNull('cp.deleted_at')
                 ->where('cp.id', '>', '0')
                 ->get();
             //dd($r);
@@ -218,16 +220,16 @@ class CargaPonderacionsController extends Controller
             }
         }
         //dd($carga_ponderacions_borrar);
-        $currentDate=Date('Y-m-d');
+        $currentDate = Date('Y-m-d');
 
-        $calificacion_ponderacions_borrar = CalificacionPonderacion::select('calificacion_ponderacions.*')->join('calificacions as cali','cali.id','calificacion_ponderacions.calificacion_id')
-            ->join('hacademicas as h','h.id','cali.hacademica_id')
-            ->join('lectivos as l','l.id','h.lectivo_id')
+        $calificacion_ponderacions_borrar = CalificacionPonderacion::select('calificacion_ponderacions.*')->join('calificacions as cali', 'cali.id', 'calificacion_ponderacions.calificacion_id')
+            ->join('hacademicas as h', 'h.id', 'cali.hacademica_id')
+            ->join('lectivos as l', 'l.id', 'h.lectivo_id')
             ->whereIn('carga_ponderacion_id', $carga_ponderacions_borrar)
-            ->whereDate('l.fin', '>=', $currentDate) 
+            ->whereDate('l.fin', '>=', $currentDate)
             ->whereNull('calificacion_ponderacions.deleted_at')
             ->get();
-        
+
         //dd($calificacion_ponderacions_borrar->toArray());
         if ($calificacion_ponderacions_borrar->count() > 0) {
             foreach ($calificacion_ponderacions_borrar as $calificacion_ponderacion_borrar) {
@@ -373,10 +375,11 @@ class CargaPonderacionsController extends Controller
         }
     }
 
-    public function descargarCsv(){
-        $registros=CargaPonderacion::select('id','name','porcentaje','padre_id','tiene_detalle')->where('bnd_activo',1)->get();
+    public function descargarCsv()
+    {
+        $registros = CargaPonderacion::select('id', 'name', 'porcentaje', 'padre_id', 'tiene_detalle')->where('bnd_activo', 1)->get();
         //dd($registros->toArray());
-        $encabezado=array('ID','NOMBRE','PORCENTAJE','PADRE','TIENE DETALLE');
+        $encabezado = array('ID', 'NOMBRE', 'PORCENTAJE', 'PADRE', 'TIENE DETALLE');
         $handle = fopen('ponderaciones.csv', 'w');
         fputcsv($handle, $encabezado, ',');
         foreach ($registros as $registro) {
@@ -385,13 +388,11 @@ class CargaPonderacionsController extends Controller
         fclose($handle);
         $headers = array(
             'Content-Type' => 'text/csv',
-            'charset'=>'utf-8',
-            'lang'=>'es'
+            'charset' => 'utf-8',
+            'lang' => 'es'
         );
         return Response::download('ponderaciones.csv', 'ponderaciones.csv', $headers);
     }
 
-    public function cargarCsv(){
-        
-    }
+    public function cargarCsv() {}
 }

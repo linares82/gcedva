@@ -5692,11 +5692,27 @@ Route::get(
     )
 )->middleware('auth');
 Route::get(
+    '/asignacionAcademica/boletasGrupoNauc',
+    array(
+        'as' => 'asignacionAcademica.boletasGrupoNauc',
+        'middleware' => 'permission:asignacionAcademica.boletasGrupoNauc',
+        'uses' => 'AsignacionAcademicasController@boletasGrupoNauc'
+    )
+)->middleware('auth');
+Route::get(
     '/asignacionAcademica/boletasGrupoO',
     array(
         'as' => 'asignacionAcademica.boletasGrupoO',
         'middleware' => 'permission:asignacionAcademica.boletasGrupo',
         'uses' => 'AsignacionAcademicasController@boletasGrupoO'
+    )
+)->middleware('auth');
+Route::get(
+    '/asignacionAcademica/boletasGrupoONauc',
+    array(
+        'as' => 'asignacionAcademica.boletasGrupoONauc',
+        'middleware' => 'permission:asignacionAcademica.boletasGrupoNauc',
+        'uses' => 'AsignacionAcademicasController@boletasGrupoONauc'
     )
 )->middleware('auth');
 

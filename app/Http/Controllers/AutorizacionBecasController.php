@@ -242,11 +242,12 @@ class AutorizacionBecasController extends Controller
 	{
 		$empleado = Empleado::where('user_id', Auth::user()->id)->first();
 		$planteles = $empleado->plantels->pluck('razon', 'id');
+		$estatus = StBeca::pluck('name', 'id');
 		//dd($planteles);
 		//$planteles->prepend('Seleccionar opción');
 
 		//dd($planteles);
-		return view('autorizacionBecas.reportes.becasAutorizadas', compact('planteles'));
+		return view('autorizacionBecas.reportes.becasAutorizadas', compact('planteles', 'estatus'));
 	}
 
 	public function becasAutorizadasR(Request $request)
@@ -260,6 +261,7 @@ class AutorizacionBecasController extends Controller
 				'e.name as especialidad',
 				'n.name as nivel',
 				'g.name as grado',
+				'stb.name as estatus',
 				DB::raw('0 as lectivo'),
 				'c.matricula',
 				'c.id',
@@ -278,10 +280,12 @@ class AutorizacionBecasController extends Controller
 				->join('especialidads as e', 'e.id', '=', 'cc.especialidad_id')
 				->join('nivels as n', 'n.id', '=', 'cc.nivel_id')
 				->join('grados as g', 'g.id', '=', 'cc.grado_id')
+				->join('st_becas as stb', 'stb.id', '=', 'autorizacion_becas.st_beca_id')
 				->where('p.id', $datos['plantel_f'])
+				->whereIn('autorizacion_becas.st_beca_id', $datos['estatus_f'])
 				->whereDate('vigencia', '>=', $datos['fecha_f'])
 				->whereDate('vigencia', '<=', $datos['fecha_t'])
-				->where('autorizacion_becas.st_beca_id', 4)
+				//->where('autorizacion_becas.st_beca_id', 4)
 				->whereNull('cc.deleted_at')
 				->whereNull('autorizacion_becas.deleted_at');
 		} else {
@@ -291,6 +295,7 @@ class AutorizacionBecasController extends Controller
 				'n.name as nivel',
 				'g.name as grado',
 				'l.name as lectivo',
+				'stb.name as estatus',
 				'c.matricula',
 				'c.id',
 				'c.nombre',
@@ -309,12 +314,14 @@ class AutorizacionBecasController extends Controller
 				->join('nivels as n', 'n.id', '=', 'i.nivel_id')
 				->join('grados as g', 'g.id', '=', 'i.grado_id')
 				->join('lectivos as l', 'l.id', '=', 'i.lectivo_id')
+				->join('st_becas as stb', 'stb.id', '=', 'autorizacion_becas.st_beca_id')
 				//->whereColumn('autorizacion_becas.lectivo_id', 'i.lectivo_id')
 				->where('p.id', $datos['plantel_f'])
+				->whereIn('autorizacion_becas.st_beca_id', $datos['estatus_f'])
 				//->where('n.id', $datos['nivel_f'])
 				//->where('e.id', $datos['especialidad_f'])
 				//->where('g.id', $datos['grado_f'])
-				->where('autorizacion_becas.st_beca_id', 4)
+				//->where('autorizacion_becas.st_beca_id', 4)
 				->whereNull('i.deleted_at')
 				->whereNull('autorizacion_becas.deleted_at')
 				->where('i.lectivo_id', $datos['lectivo_f'])

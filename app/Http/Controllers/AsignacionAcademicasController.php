@@ -1130,4 +1130,92 @@ class AsignacionAcademicasController extends Controller
 		)
 			->with('datos', json_encode($horarios));
 	}
+
+	public function boletasGrupoONauc(Request $request)
+	{
+		$datos = $request->all();
+		$asignacion = AsignacionAcademica::find($datos['asignacion']);
+
+		$clientes = Cliente::select(
+			'clientes.id',
+			'clientes.matricula',
+			'h.inscripcion_id',
+			'e.imagen',
+			'e.name as especialidad',
+			'h.especialidad_id',
+			'n.name as nivel',
+			'h.nivel_id',
+			'g.name as grado',
+			'g.rvoe',
+			'h.grado_id',
+			'p.razon as plantel',
+			'h.plantel_id',
+			'gr.name as grupo',
+			'h.grupo_id',
+			'h.lectivo_id',
+			'l.name as lectivo'
+		)
+			->join('hacademicas as h', 'h.cliente_id', '=', 'clientes.id')
+			->join('inscripcions as i', 'i.id', '=', 'h.inscripcion_id')
+			->join('plantels as p', 'p.id', '=', 'h.plantel_id')
+			->join('especialidads as e', 'e.id', '=', 'h.especialidad_id')
+			->join('nivels as n', 'n.id', '=', 'h.nivel_id')
+			->join('grados as g', 'g.id', '=', 'h.grado_id')
+			->join('grupos as gr', 'gr.id', '=', 'h.grupo_id')
+			->join('lectivos as l', 'l.id', '=', 'h.lectivo_id')
+			->where('h.lectivo_id', '=', $asignacion->lectivo_id)
+			->where('h.grupo_id', '=', $asignacion->grupo_id)
+			->where('h.plantel_id', '=', $asignacion->plantel_id)
+			->whereNull('h.deleted_at')
+			->whereNull('i.deleted_at')
+			->distinct()
+			->get();
+		//dd($clientes->toArray());
+		return view('asignacionAcademicas.reportes.boletaONauc', compact('clientes'))
+			->with('');
+	}
+
+	public function boletasGrupoNauc(Request $request)
+	{
+		$datos = $request->all();
+		$asignacion = AsignacionAcademica::find($datos['asignacion']);
+
+		$clientes = Cliente::select(
+			'clientes.id',
+			'clientes.matricula',
+			'h.inscripcion_id',
+			'e.imagen',
+			'e.name as especialidad',
+			'h.especialidad_id',
+			'n.name as nivel',
+			'h.nivel_id',
+			'g.name as grado',
+			'g.rvoe',
+			'h.grado_id',
+			'p.razon as plantel',
+			'h.plantel_id',
+			'gr.name as grupo',
+			'h.grupo_id',
+			'h.lectivo_id',
+			'l.name as lectivo'
+		)
+			->join('hacademicas as h', 'h.cliente_id', '=', 'clientes.id')
+			->join('inscripcions as i', 'i.id', '=', 'h.inscripcion_id')
+			->join('plantels as p', 'p.id', '=', 'h.plantel_id')
+			->join('especialidads as e', 'e.id', '=', 'h.especialidad_id')
+			->join('nivels as n', 'n.id', '=', 'h.nivel_id')
+			->join('grados as g', 'g.id', '=', 'h.grado_id')
+			->join('grupos as gr', 'gr.id', '=', 'h.grupo_id')
+			->join('lectivos as l', 'l.id', '=', 'h.lectivo_id')
+			->where('h.lectivo_id', '=', $asignacion->lectivo_id)
+			->where('h.grupo_id', '=', $asignacion->grupo_id)
+			->where('h.plantel_id', '=', $asignacion->plantel_id)
+			->whereNull('h.deleted_at')
+			->whereNull('i.deleted_at')
+			->distinct()
+			->get();
+		//dd($clientes->toArray());
+		return view('asignacionAcademicas.reportes.boletaNauc', compact('clientes'))
+			->with('');
+	}
 }

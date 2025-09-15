@@ -19,7 +19,7 @@
             <thead>
               <th>No.</th>
               <th>Evento</th><th>Plantel</th><th>Seccion</th><th>Grado</th><th>F. Aplicacion</th><th>Alumno</th>
-              <th>Fecha</th><th>Estatus Cliente</th><th>Direccion</th><th>Tel. Fijo</th><th>Tel. Cel.</th>
+              <th>Fecha</th><th>F. Vigencia</th><th>Estatus Cliente</th><th>Direccion</th><th>Tel. Fijo</th><th>Tel. Cel.</th>
               <th>D. Baja</th>
               <th>U. Pago</th><th>Reactivacion/F. Ultima</th>
             </thead>
@@ -52,7 +52,7 @@
                     <td>{{ $registro->razon }}</td><td>{{ $registro->seccion }}</td><td>{{ $registro->grado }}</td>
                     <td>{{ $registro->fec_autorizacion }}</td>
                     <td>{{$registro->cliente."-".$registro->nombre." ".$registro->ape_paterno." ".$registro->ape_materno}}</td>
-                    <td>{{$registro->fecha}}</td><td>{{$registro->estatus}}</td>
+                    <td>{{$registro->fecha}}</td><td>{{$registro->fec_vigencia}}</td><td>{{$registro->estatus}}</td>
                     <td>{{ $registro->calle }} {{ $registro->no_interior}}, Colonia {{ $registro->colonia }}, {{ $registro->municipio }},
                        {{ $registro->estado }}, CP {{ $registro->cp }}</td>
                     <td>{{ $registro->tel_fijo }}</td>

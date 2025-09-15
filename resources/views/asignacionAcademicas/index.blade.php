@@ -191,6 +191,10 @@
                                     <a class="btn btn-xs btn-default" href="{{ route('asignacionAcademica.boletasGrupo', array('asignacion'=>$asignacionAcademica->id)) }}"><i class=' fa fa-list-alt'></i> Boletas</a>
                                     <a class="btn btn-xs btn-default" href="{{ route('asignacionAcademica.boletasGrupoO', array('asignacion'=>$asignacionAcademica->id)) }}"><i class=' fa fa-list'></i> Boletas O.</a>
                                     @endpermission
+                                    @permission('asignacionAcademica.boletasGrupoNauc')
+                                    <a class="btn btn-xs btn-default" href="{{ route('asignacionAcademica.boletasGrupoNauc', array('asignacion'=>$asignacionAcademica->id)) }}"><i class=' fa fa-list-alt'></i> Boletas</a>
+                                    <a class="btn btn-xs btn-default" href="{{ route('asignacionAcademica.boletasGrupoONauc', array('asignacion'=>$asignacionAcademica->id)) }}"><i class=' fa fa-list'></i> Boletas O.</a>
+                                    @endpermission
                                     @permission('asignacionAcademicas.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('asignacionAcademicas.edit', $asignacionAcademica->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
                                     @endpermission

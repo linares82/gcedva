@@ -70,7 +70,7 @@ class AtrazoPagos extends Command
                 ->where('cc.nivel_id', '>', 0)
                 ->where('cc.grado_id', '>', 0)
                 ->where('cc.turno_id', '>', 0)
-            //    ->whereIn('c.id', array(71605))
+                //    ->whereIn('c.id', array(71605))
                 ->whereColumn('adeudos.combinacion_cliente_id', 'cc.id')
                 //->where('caj_con.bnd_mensualidad', 1)
                 ->where('fecha_pago', '<', $fechaActual)
@@ -94,7 +94,7 @@ class AtrazoPagos extends Command
                 $hoy = date('Y-m-d');
 
                 $eventos = HistoriaCliente::where('cliente_id', $registro->cliente_id)
-                    ->where('evento_cliente_id', 5)
+                    ->where('evento_cliente_id', 6)
                     ->whereDate('fec_vigencia', '>=', $hoy)
                     ->whereNull('historia_clientes.deleted_at')
                     ->get();
@@ -121,12 +121,12 @@ class AtrazoPagos extends Command
                         ));
 
                         $cliente = Cliente::find($registro->cliente_id);
-                        
+
                         $cliente->st_cliente_id = 25;
                         $cliente->save();
 
                         $seguimiento = Seguimiento::where('cliente_id', $cliente->id)->first();
-                        
+
                         $seguimiento->st_seguimiento_id = 2;
                         $seguimiento->save();
                     } elseif ($registro->adeudos_cantidad == 3) {
@@ -200,7 +200,7 @@ class AtrazoPagos extends Command
                     //dd($datos);
                     if (isset($r['UserId'])) {
                         $resultado2 = $apiBs->doValence2('PUT', '/d2l/api/lp/' . $param->valor . '/users/' . $r['UserId'] . '/activation', $datos);
-			sleep(3);
+                        sleep(3);
                         //dd($resultado2);
                         if (isset($resultado2['IsActive']) and !$resultado2['IsActive']) {
                             $input['cliente_id'] = $alumno->id;

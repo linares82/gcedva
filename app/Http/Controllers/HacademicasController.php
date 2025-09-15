@@ -836,7 +836,7 @@ class HacademicasController extends Controller
             //dd($g->toArray());
             $extra_bachillerato = Param::where('llave', 'extra_bachillerato')->first();
             $extra_no_bachillerato = Param::where('llave', 'extra_no_bachillerato')->first();
-            $final = Param::where('llave', 'final')->first();
+            $titulo_suficiencia = Param::where('llave', 'titulo_suficiencia')->first();
             if ($tpo_examen_id == 2 and $g->name == "BACHILLERATO") {
                 $carga_ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $extra_bachillerato->valor)
                     ->where('tiene_detalle', '=', 0)
@@ -848,7 +848,7 @@ class HacademicasController extends Controller
                     ->where('bnd_activo', 1)
                     ->get();
             } elseif ($tpo_examen_id == 3) {
-                $carga_ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $final->valor)
+                $carga_ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $titulo_suficiencia->valor)
                     ->where('tiene_detalle', '=', 0)
                     ->where('bnd_activo', 1)
                     ->get();

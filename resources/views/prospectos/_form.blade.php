@@ -121,6 +121,14 @@
    @endif
 </div>
 
+<div class="form-group col-md-4 @if($errors->has('bot_resumen')) has-error @endif">
+   <label for="bot_resumen-field">Bot</label>
+   {!! Form::textArea("bot_resumen", null, array("class" => "form-control input-sm", "id" => "bot_resumen-field")) !!}
+   @if($errors->has("bot_resumen"))
+   <span class="help-block">{{ $errors->first("bot_resumen") }}</span>
+   @endif
+</div>
+
 @permission('prospectos.inscripcion_campo')
 <div class="form-group col-md-3 @if($errors->has('bnd_inscripcion')) has-error @endif">
    <label for="bnd_inscripcion-field">Inscripcion</label>
