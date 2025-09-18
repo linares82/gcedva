@@ -21,6 +21,7 @@ use Carbon\Carbon;
 use App\PromoPlanLn;
 use App\CajaConcepto;
 use App\CuentasEfectivo;
+use App\HistoriaCliente;
 use App\AdeudoPagoOnLine;
 use App\AutorizacionBeca;
 use App\CombinacionCliente;
@@ -639,13 +640,22 @@ class CajasController extends Controller
                             $regla_descuento = 0;
                             //dd($caja_ln);
                             //dd($adeudo);
+                            $convenios = 0;
+                            $eliminar_recargos_convenio = Param::where('llave', "eliminar_recargos_convenio")->first();
+                            if ($eliminar_recargos_convenio->valor == 1) {
+                                $convenios = HistoriaCliente::where('cliente_id', $cliente->id)
+                                    ->where('evento_cliente_id', 6)
+                                    ->whereDate('fec_vigencia', ">=", date('Y-m-d'))
+                                    ->count();
+                            }
 
                             foreach ($adeudo->planPagoLn->reglaRecargos as $regla) {
                                 //dd($regla->toArray());
                                 if (($adeudo->bnd_eximir_descuento_regla == 0 or is_null($adeudo->bnd_eximir_descuento_regla)) and
                                     //$adeudo->cajaConcepto->bnd_mensualidad == 1 or
                                     //$adeudo->caja_concepto_id <= 26
-                                    $adeudo->caja_concepto_id <= 33
+                                    $adeudo->caja_concepto_id <= 33 and
+                                    $convenios == 0
                                 ) {
                                     //dd($adeudo->planPagoLn->reglaRecargos->toArray());
                                     $fecha_caja = Carbon::createFromFormat('Y-m-d', $caja->fecha);
