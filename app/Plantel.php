@@ -102,7 +102,10 @@ class Plantel extends Model
 		'api_key_paycode',
 		'webhook_openpay_id',
 		'bnd_mattilda',
-		'archivo_pem'
+		'archivo_pem',
+		'titulos_setyce_apikey',
+		'bnd_titulos_setyce',
+		'titulos_setyce_url',
 	];
 
 	protected $dates = ['deleted_at'];

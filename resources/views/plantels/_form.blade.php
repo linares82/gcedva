@@ -859,6 +859,34 @@
                                 </div>
                                 
                             </div>
+                        <div class="box box-default">
+                        <div class="box-header">
+                            <h3>Titulos SETyCE</h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="form-group col-md-3 @if ($errors->has('bnd_titulos_setyce')) has-error @endif">
+                                    <label for="bnd_titulos_setyce">SETyCE Activo</label>
+                                    {!! Form::checkbox('bnd_titulos_setyce', 1, null, ['id' => 'bnd_titulos_setyce-field', 'class' => 'minimal']) !!}
+                                    @if ($errors->has('bnd_titulos_setyce'))
+                                        <span class="help-block">{{ $errors->first('bnd_titulos_setyce') }}</span>
+                                    @endif
+                                </div>
+                                <div class="form-group col-md-4 @if ($errors->has('titulos_setyce_apikey')) has-error @endif">
+                                    <label for="titulos_setyce_apikey-field">Api key</label>
+                                    {!! Form::text('titulos_setyce_apikey', null, ['class' => 'form-control input-sm', 'id' => 'titulos_setyce_apikey-field']) !!}
+                                    @if ($errors->has('titulos_setyce_apikey'))
+                                        <span class="help-block">{{ $errors->first('titulos_setyce_apikey') }}</span>
+                                    @endif
+                                </div>
+                                <div class="form-group col-md-4 @if ($errors->has('titulos_setyce_url')) has-error @endif">
+                                    <label for="titulos_setyce_url-field">URL base</label>
+                                    {!! Form::text('titulos_setyce_url', null, ['class' => 'form-control input-sm', 'id' => 'titulos_setyce_url-field']) !!}
+                                    @if ($errors->has('titulos_setyce_url'))
+                                        <span class="help-block">{{ $errors->first('titulos_setyce_url') }}</span>
+                                    @endif
+                                </div>
+                            </div>
 
 
 

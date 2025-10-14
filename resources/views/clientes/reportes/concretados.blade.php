@@ -49,7 +49,7 @@
                 </div>
             
                 <div class="form-group col-md-6 @if($errors->has('inicio_matricula')) has-error @endif">
-                    <label for="inicio_matricula-field">Inicio Matricula (4 digitos):</label>
+                    <label for="inicio_matricula-field">Inicio Matricula (4 digitos y en caso de ser varios deben ir sin escpacion y separados por ","):</label>
                     {!! Form::text("inicio_matricula", null, array("class" => "form-control input-sm", "id" => "inicio_matricula-field")) !!}
                     @if($errors->has("inicio_matricula"))
                     <span class="help-block">{{ $errors->first("inicio_matricula") }}</span>

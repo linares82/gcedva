@@ -2475,118 +2475,147 @@ class ClientesController extends Controller
             $datos['inicio_matricula'] = $param->valor . $datos['inicio_matricula'];
         }*/
         $planteles = Plantel::select('plantels.id', 'plantels.meta_total')->whereIn('plantels.id', $datos['plantel_f'])->get();
-        $totales = Cliente::select('p.razon', 'g.seccion', 'sts.name as estatus', DB::raw('count(sts.name) as total_estatus'))
-            ->join('seguimientos as s', 's.cliente_id', '=', 'clientes.id')
-            ->join('st_seguimientos as sts', 'sts.id', '=', 's.st_seguimiento_id')
-            ->join('adeudos as a', 'a.cliente_id', '=', 'clientes.id')
-            ->join('caja_conceptos as cc', 'cc.id', '=', 'a.caja_concepto_id')
-            ->join('plantels as p', 'p.id', '=', 'clientes.plantel_id')
-            ->join('st_clientes as stc', 'stc.id', '=', 'clientes.st_cliente_id')
-            ->join('cajas as c', 'c.id', '=', 'a.caja_id')
-            ->join('combinacion_clientes as ccli', 'ccli.cliente_id', '=', 'clientes.id')
-            ->join('grados as g', 'g.id', '=', 'ccli.grado_id')
-            ->where('a.pagado_bnd', 1)
-            ->where('c.st_caja_id', 1)
-            //->where('clientes.st_cliente_id', '<>', 3)
-            ->whereIn('clientes.plantel_id', $datos['plantel_f'])
-            ->where('clientes.matricula', 'like', $datos['inicio_matricula'] . "%")
-            ->whereNull('a.deleted_at')
-            ->whereNull('c.deleted_at')
-            ->whereNull('ccli.deleted_at')
-            ->where('ccli.plantel_id', '>', 0)
-            ->where('ccli.especialidad_id', '>', 0)
-            ->where('ccli.nivel_id', '>', 0)
-            ->where('ccli.grado_id', '>', 0)
-            ->where('ccli.turno_id', '>', 0)
-            ->whereRaw('(a.caja_concepto_id = 1 or a.caja_concepto_id = 22 or a.caja_concepto_id = 23 or a.caja_concepto_id = 25)')
-            ->groupBy('p.razon')
-            ->groupBy('g.seccion')
-            ->groupBy('sts.name')
-            ->get();
 
-        $totales2 = Cliente::select('p.razon', 'sts.name as estatus', DB::raw('count(sts.name) as total_estatus'))
-            ->join('seguimientos as s', 's.cliente_id', '=', 'clientes.id')
-            ->join('st_seguimientos as sts', 'sts.id', '=', 's.st_seguimiento_id')
-            ->join('adeudos as a', 'a.cliente_id', '=', 'clientes.id')
-            ->join('caja_conceptos as cc', 'cc.id', '=', 'a.caja_concepto_id')
-            ->join('plantels as p', 'p.id', '=', 'clientes.plantel_id')
-            ->join('st_clientes as stc', 'stc.id', '=', 'clientes.st_cliente_id')
-            ->join('cajas as c', 'c.id', '=', 'a.caja_id')
-            ->join('combinacion_clientes as ccli', 'ccli.cliente_id', '=', 'clientes.id')
-            ->join('grados as g', 'g.id', '=', 'ccli.grado_id')
-            ->where('a.pagado_bnd', 1)
-            ->where('c.st_caja_id', 1)
-            //->whereIn('a.caja_concepto_id', array(1, 22,23, 25))// se quito concepto 22 tramites adelante se hace especificamente este trabajo
-            //->where('clientes.st_cliente_id', '<>', 3)
-            ->whereIn('clientes.plantel_id', $datos['plantel_f'])
-            ->where('clientes.matricula', 'like', $datos['inicio_matricula'] . "%")
-            ->whereNull('a.deleted_at')
-            ->whereNull('c.deleted_at')
-            ->whereNull('ccli.deleted_at')
-            ->where('ccli.plantel_id', '>', 0)
-            ->where('ccli.especialidad_id', '>', 0)
-            ->where('ccli.nivel_id', '>', 0)
-            ->where('ccli.grado_id', '>', 0)
-            ->where('ccli.turno_id', '>', 0)
-            ->whereRaw('(a.caja_concepto_id = 1 or a.caja_concepto_id = 22 or a.caja_concepto_id = 23 or a.caja_concepto_id = 25)')
-            ->groupBy('p.razon')
-            //->groupBy('g.seccion')
-            ->groupBy('sts.name')
-            ->get();
-        //dd($totales->toArray());
+        $inicios_matricula = explode(",", $datos['inicio_matricula']);
 
-        $detalle = Cliente::select(
-            'p.razon',
-            'clientes.matricula',
-            'clientes.id as cliente_id',
-            'clientes.ape_paterno',
-            'clientes.ape_materno',
-            'clientes.nombre',
-            'clientes.nombre2',
-            'clientes.bnd_reclasificado',
-            'clientes.tel_fijo',
-            'clientes.tel_cel',
-            'stc.name as st_cliente',
-            'sts.name as st_seguimiento',
-            'g.seccion',
-            DB::raw('concat(emp.nombre, " ",emp.ape_paterno, " ",emp.ape_materno) as empleado_nombre'),
-            //'cc.name as concepto',
-            //'a.caja_concepto_id',
-            //'c.fecha as fecha_caja',
-            'clientes.bnd_doc_oblig_entregados',
-            'tu.name as turno',
-            'clientes.bnd_consulta_curp'
-        )
-            ->join('seguimientos as s', 's.cliente_id', '=', 'clientes.id')
-            ->join('st_seguimientos as sts', 'sts.id', '=', 's.st_seguimiento_id')
-            //->join('adeudos as a', 'a.cliente_id', '=', 'clientes.id')
-            //->join('caja_conceptos as cc', 'cc.id', '=', 'a.caja_concepto_id')
-            ->join('plantels as p', 'p.id', '=', 'clientes.plantel_id')
-            ->join('st_clientes as stc', 'stc.id', '=', 'clientes.st_cliente_id')
-            ->join('empleados as emp', 'emp.id', '=', 'clientes.empleado_id')
-            //->join('cajas as c', 'c.id', '=', 'a.caja_id')
-            ->join('combinacion_clientes as ccli', 'ccli.cliente_id', '=', 'clientes.id')
-            ->join('turnos as tu', 'tu.id', 'ccli.turno_id')
-            ->join('grados as g', 'g.id', '=', 'ccli.grado_id')
-            //->where('a.pagado_bnd', 1)
-            //->where('c.st_caja_id', 1)
-            //->where('clientes.id', 88063)
-            //->whereIn('a.caja_concepto_id', array(1,22,23, 25)) // se quito concepto 22 tramites adelante se hace especificamente este trabajo
-            //->where('clientes.st_cliente_id', '<>', 3)
-            ->whereIn('clientes.plantel_id', $datos['plantel_f'])
-            ->where('clientes.matricula', 'like', $datos['inicio_matricula'] . "%")
-            //->whereNull('a.deleted_at')
-            //->whereNull('c.deleted_at')
-            ->whereNull('ccli.deleted_at')
-            ->where('ccli.plantel_id', '>', 0)
-            ->where('ccli.especialidad_id', '>', 0)
-            ->where('ccli.nivel_id', '>', 0)
-            ->where('ccli.grado_id', '>', 0)
-            ->where('ccli.turno_id', '>', 0)
-            //->whereRaw('(a.caja_concepto_id = 1 or a.caja_concepto_id = 22 or a.caja_concepto_id = 23 or a.caja_concepto_id = 25)')
-            ->orderBy('p.razon')
-            ->orderBy('g.seccion')
-            ->get();
+        $totales = collect();
+        foreach ($inicios_matricula as $inicio) {
+            if ($param->valor <> 0) {
+                $inicio = $param->valor . $inicio;
+            }
+
+            $totales_aux = Cliente::select('p.razon', 'g.seccion', 'sts.name as estatus', DB::raw('count(sts.name) as total_estatus'))
+                ->join('seguimientos as s', 's.cliente_id', '=', 'clientes.id')
+                ->join('st_seguimientos as sts', 'sts.id', '=', 's.st_seguimiento_id')
+                ->join('adeudos as a', 'a.cliente_id', '=', 'clientes.id')
+                ->join('caja_conceptos as cc', 'cc.id', '=', 'a.caja_concepto_id')
+                ->join('plantels as p', 'p.id', '=', 'clientes.plantel_id')
+                ->join('st_clientes as stc', 'stc.id', '=', 'clientes.st_cliente_id')
+                ->join('cajas as c', 'c.id', '=', 'a.caja_id')
+                ->join('combinacion_clientes as ccli', 'ccli.cliente_id', '=', 'clientes.id')
+                ->join('grados as g', 'g.id', '=', 'ccli.grado_id')
+                ->where('a.pagado_bnd', 1)
+                ->where('c.st_caja_id', 1)
+                //->where('clientes.st_cliente_id', '<>', 3)
+                ->whereIn('clientes.plantel_id', $datos['plantel_f'])
+                ->where('clientes.matricula', 'like', $inicio . "%")
+                ->whereNull('a.deleted_at')
+                ->whereNull('c.deleted_at')
+                ->whereNull('ccli.deleted_at')
+                ->where('ccli.plantel_id', '>', 0)
+                ->where('ccli.especialidad_id', '>', 0)
+                ->where('ccli.nivel_id', '>', 0)
+                ->where('ccli.grado_id', '>', 0)
+                ->where('ccli.turno_id', '>', 0)
+                ->whereRaw('(a.caja_concepto_id = 1 or a.caja_concepto_id = 22 or a.caja_concepto_id = 23 or a.caja_concepto_id = 25)')
+                ->groupBy('p.razon')
+                ->groupBy('g.seccion')
+                ->groupBy('sts.name')
+                ->get();
+            $totales = $totales->merge($totales_aux);
+        }
+
+        $inicios_matricula = explode(",", $datos['inicio_matricula']);
+
+        $totales2 = collect();
+        foreach ($inicios_matricula as $inicio) {
+            if ($param->valor <> 0) {
+                $inicio = $param->valor . $inicio;
+            }
+            $totales2_aux = Cliente::select('p.razon', 'sts.name as estatus', DB::raw('count(sts.name) as total_estatus'))
+                ->join('seguimientos as s', 's.cliente_id', '=', 'clientes.id')
+                ->join('st_seguimientos as sts', 'sts.id', '=', 's.st_seguimiento_id')
+                ->join('adeudos as a', 'a.cliente_id', '=', 'clientes.id')
+                ->join('caja_conceptos as cc', 'cc.id', '=', 'a.caja_concepto_id')
+                ->join('plantels as p', 'p.id', '=', 'clientes.plantel_id')
+                ->join('st_clientes as stc', 'stc.id', '=', 'clientes.st_cliente_id')
+                ->join('cajas as c', 'c.id', '=', 'a.caja_id')
+                ->join('combinacion_clientes as ccli', 'ccli.cliente_id', '=', 'clientes.id')
+                ->join('grados as g', 'g.id', '=', 'ccli.grado_id')
+                ->where('a.pagado_bnd', 1)
+                ->where('c.st_caja_id', 1)
+                //->whereIn('a.caja_concepto_id', array(1, 22,23, 25))// se quito concepto 22 tramites adelante se hace especificamente este trabajo
+                //->where('clientes.st_cliente_id', '<>', 3)
+                ->whereIn('clientes.plantel_id', $datos['plantel_f'])
+                ->where('clientes.matricula', 'like', $inicio . "%")
+                ->whereNull('a.deleted_at')
+                ->whereNull('c.deleted_at')
+                ->whereNull('ccli.deleted_at')
+                ->where('ccli.plantel_id', '>', 0)
+                ->where('ccli.especialidad_id', '>', 0)
+                ->where('ccli.nivel_id', '>', 0)
+                ->where('ccli.grado_id', '>', 0)
+                ->where('ccli.turno_id', '>', 0)
+                ->whereRaw('(a.caja_concepto_id = 1 or a.caja_concepto_id = 22 or a.caja_concepto_id = 23 or a.caja_concepto_id = 25)')
+                ->groupBy('p.razon')
+                //->groupBy('g.seccion')
+                ->groupBy('sts.name')
+                ->get();
+            //dd($totales->toArray());
+            $totales2 = $totales2->merge($totales2_aux);
+        }
+
+        $inicios_matricula = explode(",", $datos['inicio_matricula']);
+
+        $detalle = collect();
+        foreach ($inicios_matricula as $inicio) {
+            if ($param->valor <> 0) {
+                $inicio = $param->valor . $inicio;
+            }
+            $detalle_aux = Cliente::select(
+                'p.razon',
+                'clientes.matricula',
+                'clientes.id as cliente_id',
+                'clientes.ape_paterno',
+                'clientes.ape_materno',
+                'clientes.nombre',
+                'clientes.nombre2',
+                'clientes.bnd_reclasificado',
+                'clientes.tel_fijo',
+                'clientes.tel_cel',
+                'stc.name as st_cliente',
+                'sts.name as st_seguimiento',
+                'g.seccion',
+                DB::raw('concat(emp.nombre, " ",emp.ape_paterno, " ",emp.ape_materno) as empleado_nombre'),
+                //'cc.name as concepto',
+                //'a.caja_concepto_id',
+                //'c.fecha as fecha_caja',
+                'clientes.bnd_doc_oblig_entregados',
+                'tu.name as turno',
+                'clientes.bnd_consulta_curp'
+            )
+                ->join('seguimientos as s', 's.cliente_id', '=', 'clientes.id')
+                ->join('st_seguimientos as sts', 'sts.id', '=', 's.st_seguimiento_id')
+                //->join('adeudos as a', 'a.cliente_id', '=', 'clientes.id')
+                //->join('caja_conceptos as cc', 'cc.id', '=', 'a.caja_concepto_id')
+                ->join('plantels as p', 'p.id', '=', 'clientes.plantel_id')
+                ->join('st_clientes as stc', 'stc.id', '=', 'clientes.st_cliente_id')
+                ->join('empleados as emp', 'emp.id', '=', 'clientes.empleado_id')
+                //->join('cajas as c', 'c.id', '=', 'a.caja_id')
+                ->join('combinacion_clientes as ccli', 'ccli.cliente_id', '=', 'clientes.id')
+                ->join('turnos as tu', 'tu.id', 'ccli.turno_id')
+                ->join('grados as g', 'g.id', '=', 'ccli.grado_id')
+                //->where('a.pagado_bnd', 1)
+                //->where('c.st_caja_id', 1)
+                //->where('clientes.id', 88063)
+                //->whereIn('a.caja_concepto_id', array(1,22,23, 25)) // se quito concepto 22 tramites adelante se hace especificamente este trabajo
+                //->where('clientes.st_cliente_id', '<>', 3)
+                ->whereIn('clientes.plantel_id', $datos['plantel_f'])
+                ->where('clientes.matricula', 'like', $inicio . "%")
+                //->whereNull('a.deleted_at')
+                //->whereNull('c.deleted_at')
+                ->whereNull('ccli.deleted_at')
+                ->where('ccli.plantel_id', '>', 0)
+                ->where('ccli.especialidad_id', '>', 0)
+                ->where('ccli.nivel_id', '>', 0)
+                ->where('ccli.grado_id', '>', 0)
+                ->where('ccli.turno_id', '>', 0)
+                //->whereRaw('(a.caja_concepto_id = 1 or a.caja_concepto_id = 22 or a.caja_concepto_id = 23 or a.caja_concepto_id = 25)')
+                ->orderBy('p.razon')
+                ->orderBy('g.seccion')
+                ->get();
+            $detalle = $detalle->merge($detalle_aux);
+        }
         //dd($detalle->toArray());
         $registros = array();
         foreach ($detalle->toArray() as $d) {
@@ -3576,9 +3605,7 @@ class ClientesController extends Controller
     {
         $datos = $request->all();
         $param = Param::where('llave', 'prefijo_matricula_instalacion')->first();
-        if ($param->valor <> 0) {
-            $datos['inicio_matricula'] = $param->valor . $datos['inicio_matricula'];
-        }
+
         $planteles = Plantel::select('plantels.id', 'plantels.meta_total')->whereIn('plantels.id', $datos['plantel_f'])->get();
 
         $secciones = array();
@@ -3593,72 +3620,83 @@ class ClientesController extends Controller
         }
         //dd($seccionesCarreras);
         //dd(in_array(1,$datos['st_prospectos']));
-        $detalle = Cliente::select(
-            'p.razon',
-            'clientes.matricula',
-            'clientes.id as cliente_id',
-            'clientes.ape_paterno',
-            'clientes.ape_materno',
-            'clientes.nombre',
-            'clientes.nombre2',
-            'clientes.bnd_reclasificado',
-            'clientes.tel_fijo',
-            'clientes.tel_cel',
-            'clientes.fec_docs_oblig_entregados',
-            'stc.name as st_cliente',
-            'sts.name as st_seguimiento',
-            'g.seccion',
-            DB::raw('concat(emp.nombre, " ",emp.ape_paterno, " ",emp.ape_materno) as empleado_nombre'),
-            //'cc.name as concepto',
-            //'a.caja_concepto_id',
-            //'c.fecha as fecha_caja',
-            'clientes.bnd_doc_oblig_entregados',
-            'tu.name as turno',
-            //'sec.name as seccion',
-            //'csec.name as clasificacion_seccion',
-            'stp.name as etapa_prospecto',
-            'stp.id as st_prospecto_id'
-            //'gra.seccion'
-        )
-            ->join('seguimientos as s', 's.cliente_id', '=', 'clientes.id')
-            ->join('st_seguimientos as sts', 'sts.id', '=', 's.st_seguimiento_id')
-            //->join('adeudos as a', 'a.cliente_id', '=', 'clientes.id')
-            //->join('caja_conceptos as cc', 'cc.id', '=', 'a.caja_concepto_id')
-            ->join('plantels as p', 'p.id', '=', 'clientes.plantel_id')
-            ->join('st_clientes as stc', 'stc.id', '=', 'clientes.st_cliente_id')
-            ->join('empleados as emp', 'emp.id', '=', 'clientes.empleado_id')
-            ->join('st_prospectos as stp', 'stp.id', 'emp.st_prospecto_id')
-            //->join('cajas as c', 'c.id', '=', 'a.caja_id')
-            ->join('combinacion_clientes as ccli', 'ccli.cliente_id', '=', 'clientes.id')
-            ->join('grados as gra', 'gra.id', 'ccli.grado_id')
-            //->join('seccions as sec','sec.id','gra.seccion_id')
-            //->join('clasificacion_seccions as csec','csec.id','sec.clasificacion_seccion_id')
-            ->join('turnos as tu', 'tu.id', 'ccli.turno_id')
-            ->join('grados as g', 'g.id', '=', 'ccli.grado_id')
-            //->where('a.pagado_bnd', 1)
-            //->where('c.st_caja_id', 1)
-            //->where('clientes.id', 99889)
-            //->whereIn('a.caja_concepto_id', array(1,22,23, 25)) // se quito concepto 22 tramites adelante se hace especificamente este trabajo
-            //->where('clientes.st_cliente_id', '<>', 3)
-            ->whereIn('clientes.plantel_id', $datos['plantel_f'])
-            ->whereIn('stp.id', $datos['st_prospectos'])
-            ->where('stc.id', '<>', 19)
-            ->whereIn('g.seccion', $secciones)
-            ->where('clientes.matricula', 'like', $datos['inicio_matricula'] . "%")
-            //->whereNull('a.deleted_at')
-            //->whereNull('c.deleted_at')
-            ->whereNull('ccli.deleted_at')
-            ->where('ccli.plantel_id', '>', 0)
-            ->where('ccli.especialidad_id', '>', 0)
-            ->where('ccli.nivel_id', '>', 0)
-            ->where('ccli.grado_id', '>', 0)
-            ->where('ccli.turno_id', '>', 0)
-            //->whereDate('clientes.fec_docs_oblig_entregados','<=',$datos['menor_igual_fecha'])
-            //->whereRaw('(a.caja_concepto_id = 1 or a.caja_concepto_id = 22 or a.caja_concepto_id = 23 or a.caja_concepto_id = 25)')
-            ->orderBy('p.razon')
-            ->orderBy('stp.name')
-            ->orderBy('g.seccion')
-            ->get();
+
+        $inicios_matricula = explode(",", $datos['inicio_matricula']);
+        $detalle = collect();
+        foreach ($inicios_matricula as $inicio) {
+            if ($param->valor <> 0) {
+                $inicio = $param->valor . $inicio;
+            }
+            $detalle_aux = Cliente::select(
+                'p.razon',
+                'clientes.matricula',
+                'clientes.id as cliente_id',
+                'clientes.ape_paterno',
+                'clientes.ape_materno',
+                'clientes.nombre',
+                'clientes.nombre2',
+                'clientes.bnd_reclasificado',
+                'clientes.tel_fijo',
+                'clientes.tel_cel',
+                'clientes.fec_docs_oblig_entregados',
+                'stc.name as st_cliente',
+                'sts.name as st_seguimiento',
+                'g.seccion',
+                DB::raw('concat(emp.nombre, " ",emp.ape_paterno, " ",emp.ape_materno) as empleado_nombre'),
+                //'cc.name as concepto',
+                //'a.caja_concepto_id',
+                //'c.fecha as fecha_caja',
+                'clientes.bnd_doc_oblig_entregados',
+                'tu.name as turno',
+                //'sec.name as seccion',
+                //'csec.name as clasificacion_seccion',
+                'stp.name as etapa_prospecto',
+                'stp.id as st_prospecto_id'
+                //'gra.seccion'
+            )
+                ->join('seguimientos as s', 's.cliente_id', '=', 'clientes.id')
+                ->join('st_seguimientos as sts', 'sts.id', '=', 's.st_seguimiento_id')
+                //->join('adeudos as a', 'a.cliente_id', '=', 'clientes.id')
+                //->join('caja_conceptos as cc', 'cc.id', '=', 'a.caja_concepto_id')
+                ->join('plantels as p', 'p.id', '=', 'clientes.plantel_id')
+                ->join('st_clientes as stc', 'stc.id', '=', 'clientes.st_cliente_id')
+                ->join('empleados as emp', 'emp.id', '=', 'clientes.empleado_id')
+                ->join('st_prospectos as stp', 'stp.id', 'emp.st_prospecto_id')
+                //->join('cajas as c', 'c.id', '=', 'a.caja_id')
+                ->join('combinacion_clientes as ccli', 'ccli.cliente_id', '=', 'clientes.id')
+                ->join('grados as gra', 'gra.id', 'ccli.grado_id')
+                //->join('seccions as sec','sec.id','gra.seccion_id')
+                //->join('clasificacion_seccions as csec','csec.id','sec.clasificacion_seccion_id')
+                ->join('turnos as tu', 'tu.id', 'ccli.turno_id')
+                ->join('grados as g', 'g.id', '=', 'ccli.grado_id')
+                //->where('a.pagado_bnd', 1)
+                //->where('c.st_caja_id', 1)
+                //->where('clientes.id', 99889)
+                //->whereIn('a.caja_concepto_id', array(1,22,23, 25)) // se quito concepto 22 tramites adelante se hace especificamente este trabajo
+                //->where('clientes.st_cliente_id', '<>', 3)
+                ->whereIn('clientes.plantel_id', $datos['plantel_f'])
+                ->whereIn('stp.id', $datos['st_prospectos'])
+                ->where('stc.id', '<>', 19)
+                ->whereIn('g.seccion', $secciones)
+                ->where('clientes.matricula', 'like', $inicio . "%")
+                //->whereNull('a.deleted_at')
+                //->whereNull('c.deleted_at')
+                ->whereNull('ccli.deleted_at')
+                ->where('ccli.plantel_id', '>', 0)
+                ->where('ccli.especialidad_id', '>', 0)
+                ->where('ccli.nivel_id', '>', 0)
+                ->where('ccli.grado_id', '>', 0)
+                ->where('ccli.turno_id', '>', 0)
+                //->whereDate('clientes.fec_docs_oblig_entregados','<=',$datos['menor_igual_fecha'])
+                //->whereRaw('(a.caja_concepto_id = 1 or a.caja_concepto_id = 22 or a.caja_concepto_id = 23 or a.caja_concepto_id = 25)')
+                ->orderBy('p.razon')
+                ->orderBy('stp.name')
+                ->orderBy('g.seccion')
+                ->get();
+            $detalle = $detalle->merge($detalle_aux);
+        }
+
+
         //dd($detalle->toArray());
         $registros = array();
         $descartados = array();

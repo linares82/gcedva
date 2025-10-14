@@ -42,7 +42,7 @@
                         <td>{{$contador_linea++}}</td>
                         <td>{{$plantel->razon}} </td>
                         <td>{{$registro->especialidad}}</td><td>{{$registro->grupo}} {{$registro->asignacion}}</td><td>{{$registro->instructor}}</td><td>{{$registro->materi}}</td> 
-                        <td>{{$registro->id}} - {{$registro->cliente}}</td>
+                        <td>{{$registro->id}} - {{$registro->nombre}} {{$registro->nombre2}} {{$registro->ape_paterno}} {{$registro->ape_materno}}</td>
                         <td>{{$registro->fec_inscripcion}}</td>
                         <td>{{$registro->estatus_cliente}}</td>
                         <td>{{$registro->lectivo}}</td>    

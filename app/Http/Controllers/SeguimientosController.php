@@ -634,9 +634,9 @@ class SeguimientosController extends Controller
             ->join('clientes as c', 'c.id', '=', 'has.cliente_id')
             ->join('medios as m', 'm.id', '=', 'c.medio_id')
             ->join('empleados as e', 'e.id', '=', 'c.empleado_id')
-            ->whereNotIn('e.st_empleado_id', array(2,3))
+            ->whereNotIn('e.st_empleado_id', array(2, 3))
             ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
-            ->leftJoin('historia_clientes as hc','hc.cliente_id','c.id')
+            ->leftJoin('historia_clientes as hc', 'hc.cliente_id', 'c.id')
             //->where('has.asunto', '=', 'Cambio estatus ')
             ->where('has.fecha', '>=', $input['fecha_f'])
             //->where('e.id',85)
@@ -646,21 +646,21 @@ class SeguimientosController extends Controller
         } else {
             $ds_actividades_aux->wherein('c.plantel_id', $planteles);
         }
-        if($input['detalle_f']<>""){
+        if ($input['detalle_f'] <> "") {
             $ds_actividades_aux->where('has.detalle', $input['detalle_f']);
         }
 
         $ds_actividades = $ds_actividades_aux->distinct()->get();
-        $ds_actividades_filtradas=array();
-        $ds_actividades_unConcretado=array();
-        foreach($ds_actividades as $ds_actividad){
-            if(is_null($ds_actividad->reactivado)){
+        $ds_actividades_filtradas = array();
+        $ds_actividades_unConcretado = array();
+        foreach ($ds_actividades as $ds_actividad) {
+            if (is_null($ds_actividad->reactivado)) {
                 array_push($ds_actividades_filtradas, $ds_actividad);
-                $concretadoAntes=Hactividade::where('cliente_id',$ds_actividad->cli)
-                                        ->whereDate('fecha','<',$ds_actividad->fecha)
-                                        ->where('detalle','Concretado 100%')
-                                        ->whereNull('deleted_at')
-                                        ->count();
+                $concretadoAntes = Hactividade::where('cliente_id', $ds_actividad->cli)
+                    ->whereDate('fecha', '<', $ds_actividad->fecha)
+                    ->where('detalle', 'Concretado 100%')
+                    ->whereNull('deleted_at')
+                    ->count();
                 /*if($ds_actividad->cli){
                     $concretadoAntes=Hactividade::where('cliente_id',$ds_actividad->cli)
                                         ->whereDate('fecha','<',$ds_actividad->fecha)
@@ -669,28 +669,34 @@ class SeguimientosController extends Controller
                                         ->count();
                     dd($concretadoAntes);
                 }*/
-                                        //
-                if($concretadoAntes==0){
+                //
+                if ($concretadoAntes == 0) {
                     array_push($ds_actividades_unConcretado, $ds_actividad);
                 }
             }
-            
         }
         //dd($ds_actividades_filtradas);
 
-        $hestatus=HEstatus::select('c.id as cliente','p.razon','h_estatuses.estatus','h_estatuses.fecha',
-        'u.name as usuario',DB::raw('concat(e.nombre," ",e.ape_paterno," ",e.ape_materno) as colaborador'))
-        ->join('clientes as c','c.id','h_estatuses.cliente_id')
-        ->join('empleados as e','e.id','c.empleado_id')
-        ->join('plantels as p','p.id','c.plantel_id')
-        ->join('st_clientes as stc','stc.id','c.st_cliente_id')
-        ->join('users as u','u.id','c.usu_alta_id')
-        ->where('h_estatuses.cliente_id','>',0)
-        ->where('h_estatuses.fecha','<=', $input['fecha_t'])
-        ->where('h_estatuses.fecha','>=', $input['fecha_f'])
-        ->whereIn('c.plantel_id', $input['plantel_f'])
-        ->orderBy('p.razon'
-        )->get();
+        $hestatus = HEstatus::select(
+            'c.id as cliente',
+            'p.razon',
+            'h_estatuses.estatus',
+            'h_estatuses.fecha',
+            'u.name as usuario',
+            DB::raw('concat(e.nombre," ",e.ape_paterno," ",e.ape_materno) as colaborador')
+        )
+            ->join('clientes as c', 'c.id', 'h_estatuses.cliente_id')
+            ->join('empleados as e', 'e.id', 'c.empleado_id')
+            ->join('plantels as p', 'p.id', 'c.plantel_id')
+            ->join('st_clientes as stc', 'stc.id', 'c.st_cliente_id')
+            ->join('users as u', 'u.id', 'c.usu_alta_id')
+            ->where('h_estatuses.cliente_id', '>', 0)
+            ->where('h_estatuses.fecha', '<=', $input['fecha_t'])
+            ->where('h_estatuses.fecha', '>=', $input['fecha_f'])
+            ->whereIn('c.plantel_id', $input['plantel_f'])
+            ->orderBy(
+                'p.razon'
+            )->get();
 
         //dd($hestatus);
 
@@ -758,7 +764,7 @@ class SeguimientosController extends Controller
 
     public function analiticaGraficaEmpleado(Request $request)
     {
-        
+
         $parametros = $request->all();
         //dd($parametros);
         $fecha = date('Y-m-d');
@@ -1186,7 +1192,7 @@ class SeguimientosController extends Controller
             ->where('c.plantel_id', '>=', $data['plantel_f'])
             ->where('c.plantel_id', '<=', $data['plantel_t'])
             ->where('i.grupo_id', '>', 0)
-            ->whereIn('stc.id', array(4, 20, 25))
+            //->whereIn('stc.id', array(4, 20, 25))
             ->whereIn('sts.id', array(2, 7))
             ->whereIn('i.lectivo_id', $data['lectivo_f'])
             ->whereNull('cc.deleted_at')
@@ -1260,7 +1266,7 @@ class SeguimientosController extends Controller
             //if($adeudo_tomado->adeudo==104050){dd($existe_linea->caja);}
 
             if (!is_object($existe_linea)) {
-                
+
                 $caja_ln['grupo'] = $adeudo_tomado->grupo;
                 $caja_ln['concepto'] = $adeudo_tomado->cajaConcepto->name;
                 $caja_ln['cliente'] = $cliente->id . '-' . $cliente->nombre . ' ' . $cliente->nombre2 . " " . $cliente->ape_paterno . ' ' . $cliente->ape_materno;
@@ -1270,7 +1276,7 @@ class SeguimientosController extends Controller
                 $caja_ln['estatus_caja'] = "";
                 $caja_ln['caja_concepto_id'] = $adeudo_tomado->caja_concepto_id;
                 $caja_ln['subtotal'] = $adeudo_tomado->monto;
-                $caja_ln['bnd_pagado'] = $adeudo_tomado->bnd_pagado;
+                $caja_ln['bnd_pagado'] = $adeudo_tomado->pagado_bnd;
                 $caja_ln['fecha_pago'] = $adeudo_tomado->fecha_pago;
                 $caja_ln['especialidad'] = $adeudo_tomado->especialidad;
                 $caja_ln['st_cliente'] = $adeudo_tomado->st_cliente;
@@ -1597,7 +1603,8 @@ class SeguimientosController extends Controller
         }
         $ds_actividades_aux = DB::table('prospecto_hactividads as has')
             ->select(
-                'p.razon as plantel', 'ua.name as usuario',
+                'p.razon as plantel',
+                'ua.name as usuario',
                 //DB::raw('concat(e.nombre," ",e.ape_paterno," ",e.ape_materno) as empleado'),
                 "c.id as cli",
                 DB::raw('concat(c.nombre," ",c.ape_paterno," ",c.ape_materno) as cliente'),
@@ -1620,26 +1627,31 @@ class SeguimientosController extends Controller
         } else {
             $ds_actividades_aux->wherein('c.plantel_id', $planteles);
         }
-        if($input['detalle_f']<>""){
+        if ($input['detalle_f'] <> "") {
             $ds_actividades_aux->where('has.detalle', $input['detalle_f']);
         }
 
         $ds_actividades = $ds_actividades_aux->distinct()->get();
         //dd($ds_actividades->toJson());
 
-        $hestatus=ProspectoHEstatuse::select('c.id as cliente','p.razon','prospecto_h_estatuses.estatus','prospecto_h_estatuses.fecha',
-        'u.name as usuario')/*,DB::raw('concat(e.nombre," ",e.ape_paterno," ",e.ape_materno) as colaborador'))*/
-        ->join('prospectos as c','c.id','prospecto_h_estatuses.prospecto_id')
-        //->join('empleados as e','e.id','c.empleado_id')
-        ->join('plantels as p','p.id','c.plantel_id')
-        ->join('st_prospectos as stc','stc.id','c.st_prospecto_id')
-        ->join('users as u','u.id','c.usu_alta_id')
-        ->where('prospecto_h_estatuses.prospecto_id','>',0)
-        ->where('prospecto_h_estatuses.fecha','<=', $input['fecha_t'])
-        ->where('prospecto_h_estatuses.fecha','>=', $input['fecha_f'])
-        ->whereIn('c.plantel_id', $input['plantel_f'])
-        ->orderBy('p.razon')
-        ->get();
+        $hestatus = ProspectoHEstatuse::select(
+            'c.id as cliente',
+            'p.razon',
+            'prospecto_h_estatuses.estatus',
+            'prospecto_h_estatuses.fecha',
+            'u.name as usuario'
+        )/*,DB::raw('concat(e.nombre," ",e.ape_paterno," ",e.ape_materno) as colaborador'))*/
+            ->join('prospectos as c', 'c.id', 'prospecto_h_estatuses.prospecto_id')
+            //->join('empleados as e','e.id','c.empleado_id')
+            ->join('plantels as p', 'p.id', 'c.plantel_id')
+            ->join('st_prospectos as stc', 'stc.id', 'c.st_prospecto_id')
+            ->join('users as u', 'u.id', 'c.usu_alta_id')
+            ->where('prospecto_h_estatuses.prospecto_id', '>', 0)
+            ->where('prospecto_h_estatuses.fecha', '<=', $input['fecha_t'])
+            ->where('prospecto_h_estatuses.fecha', '>=', $input['fecha_f'])
+            ->whereIn('c.plantel_id', $input['plantel_f'])
+            ->orderBy('p.razon')
+            ->get();
 
         //dd($hestatus);
 

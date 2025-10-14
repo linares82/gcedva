@@ -124,7 +124,9 @@
                                             <tr>
                                                 Calificación: {{$cali->calificacion}}
                                                 @foreach($cali->calificacionPonderacions as $calificacionPonderacion)
-                                                <td class="centrar_texto">{{$calificacionPonderacion->calificacion_parcial}}</td>
+                                                <td class="centrar_texto">
+                                                    {{$calificacionPonderacion->calificacion_parcial}}
+                                                </td>
                                                 @endforeach
                                             </tr>
                                             <tr>
