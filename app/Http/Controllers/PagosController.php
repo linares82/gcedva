@@ -583,7 +583,8 @@ class PagosController extends Controller
             }
         */
         $empleados = Empleado::select(DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name, id'))->pluck('name', 'id');
-        return view('cajas.caja', compact('cliente', 'caja', 'combinaciones', 'cajas', 'empleados'))
+        $formasPago = FormaPago::whereRaw('(bnd_en_linea is null or bnd_en_linea=0)')->pluck('name', 'id');
+        return view('cajas.caja', compact('cliente', 'caja', 'combinaciones', 'cajas', 'empleados', 'formasPago'))
             ->with('list', Caja::getListFromAllRelationApps())
             ->with('list1', CajaLn::getListFromAllRelationApps());
     }

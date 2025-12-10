@@ -60,7 +60,7 @@ class PeriodoEstudiosController extends Controller
         $input = $request->all();
         $input['usu_alta_id'] = Auth::user()->id;
         $input['usu_mod_id'] = Auth::user()->id;
-        
+
 
         //create data
         $p = PeriodoEstudio::create($input);
@@ -98,7 +98,7 @@ class PeriodoEstudiosController extends Controller
         //dd($list);
         $materias_ls = $list->prepend('Seleccionar Opción');
         //dd($materias_ls);
-        $materias = MateriumPeriodo::select('materium_periodos.id', 'm.id as materia_id', 'm.codigo', 'm.name as materia','materium_periodos.duracion_clase','materium_periodos.horas_jornada')
+        $materias = MateriumPeriodo::select('materium_periodos.id', 'm.id as materia_id', 'm.codigo', 'm.name as materia', 'materium_periodos.duracion_clase', 'materium_periodos.horas_jornada')
             ->join('materia as m', 'm.id', '=', 'materium_periodos.materium_id')
             ->where('periodo_estudio_id', '=', $id)->get();
         //dd($materias);
@@ -130,16 +130,16 @@ class PeriodoEstudiosController extends Controller
     {
         $input = $request->except('materia_id-field');
         $materias = $request->get('materia_id-field');
-        
+
         $input['usu_mod_id'] = Auth::user()->id;
         if (!isset($input['bnd_activo'])) {
             $input['bnd_activo'] = 0;
         }
-        
+
         //update data
         $periodoEstudio = $periodoEstudio->find($id);
         $periodoEstudio->update($input);
-        if ($request->has('materia_id-field') ) {
+        if ($request->has('materia_id-field')) {
             foreach ($materias as $m) {
                 $periodoEstudio->materias()->attach($m);
             }
@@ -206,10 +206,9 @@ class PeriodoEstudiosController extends Controller
                             'name' => $r1->name,
                             'selectec' => ''
                         ));
-                        
                     }
                 }
-                
+
                 return $final;
             } else {
                 return $r;
@@ -227,7 +226,7 @@ class PeriodoEstudiosController extends Controller
             $final = array();
             $r = DB::table('periodo_estudios as p')
                 ->join('grupo_periodo_estudios as gpe', 'gpe.periodo_estudio_id', '=', 'p.id')
-                ->select('p.id', 'p.name')
+                ->select('p.id', DB::raw('concat(p.id, "-",p.name) as name'))
                 ->where('gpe.grupo_id', '=', $grupo)
                 ->where('p.id', '>', '0')
                 ->get();
@@ -734,7 +733,7 @@ class PeriodoEstudiosController extends Controller
 
 
         //dd($periodos_parametro->toArray());
-        $materias = PeriodoEstudio::select('periodo_estudios.name as periodo', 'periodo_estudios.orden','m.id', 'm.name as materia', 'm.codigo')
+        $materias = PeriodoEstudio::select('periodo_estudios.name as periodo', 'periodo_estudios.orden', 'm.id', 'm.name as materia', 'm.codigo')
             ->join('materium_periodos as mp', 'mp.periodo_estudio_id', '=', 'periodo_estudios.id')
             ->join('materia as m', 'm.id', '=', 'mp.materium_id')
             ->whereIn('periodo_estudios.id', $periodos_parametro)
@@ -742,12 +741,12 @@ class PeriodoEstudiosController extends Controller
             ->where('periodo_estudios.especialidad_id', $datos['especialidad_f'])
             ->where('periodo_estudios.nivel_id', $datos['nivel_f'])
             ->where('periodo_estudios.grado_id', $datos['grado_f'])
-	        ->whereNull('m.deleted_at')
+            ->whereNull('m.deleted_at')
             ->orderBy('periodo_estudios.orden')
             ->orderBy('m.id')
             //->orderBy('m.codigo')
             ->get();
-	//dd($materias->toArray());
+        //dd($materias->toArray());
 
         $periodos = PeriodoEstudio::select(
             'periodo_estudios.name as periodo',
@@ -773,7 +772,7 @@ class PeriodoEstudiosController extends Controller
         foreach ($materias as $m) {
             array_push($materias_array, $m->id);
         }
-        
+
 
         $clientes = Hacademica::select('c.id', 'c.matricula', 'c.nombre', 'c.nombre2', 'c.ape_paterno', 'c.ape_materno')
             ->join('clientes as c', 'c.id', '=', 'hacademicas.cliente_id')
@@ -873,7 +872,7 @@ class PeriodoEstudiosController extends Controller
             //->where('hacademicas.grado_id', $datos['grado_f'])
             ->where('hacademicas.lectivo_id', $datos['lectivo_f'])
             ->where('hacademicas.grupo_id', $datos['grupo_f'])
-            ->whereColumn('hacademicas.periodo_estudio_id','pe.id')
+            ->whereColumn('hacademicas.periodo_estudio_id', 'pe.id')
             //->whereIn('pe.id', array(592, 593))
             ->whereNull('i.deleted_at')
             ->whereNull('hacademicas.deleted_at')
@@ -1225,12 +1224,12 @@ class PeriodoEstudiosController extends Controller
         if ($request->ajax()) {
             //dd($request->get('plantel_id'));
             $plantel = $request->get('plantel_id');
-            
+
 
             $final = array();
             $r = DB::table('periodo_estudios as pe')
-                ->join('materium_periodos as pm','pm.periodo_estudio_id','pe.id')
-                ->join('materia as m','m.id','pm.materium_id')
+                ->join('materium_periodos as pm', 'pm.periodo_estudio_id', 'pe.id')
+                ->join('materia as m', 'm.id', 'pm.materium_id')
                 ->select('pe.id', DB::raw('concat(pe.id,"-",pe.name,"-",m.id,"-",m.name) as name'))
                 ->where('pe.plantel_id', '=', $plantel)
                 ->where('pe.id', '>', '0')
@@ -1252,10 +1251,9 @@ class PeriodoEstudiosController extends Controller
                             'name' => $r1->name,
                             'selectec' => ''
                         ));
-                        
                     }
                 }
-                
+
                 return $final;
             } else {
                 return $r;
@@ -1263,4 +1261,3 @@ class PeriodoEstudiosController extends Controller
         }
     }
 }
-

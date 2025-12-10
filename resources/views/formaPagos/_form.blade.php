@@ -19,5 +19,11 @@
                       <span class="help-block">{{ $errors->first("cve_sat") }}</span>
                      @endif
                   </div>  
-                  
+            <div class="form-group col-md-3 @if($errors->has('bnd_en_linea')) has-error @endif">
+                            <label for="bnd_en_linea-field">¿En Línea?</label>
+                            {!! Form::checkbox("bnd_en_linea", 1, null, [ "id" => "bnd_en_linea-field", 'class'=>'minimal']) !!}
+                            @if($errors->has("bnd_en_linea"))
+                            <span class="help-block">{{ $errors->first("bnd_en_linea") }}</span>
+                            @endif
+                        </div>      
                   

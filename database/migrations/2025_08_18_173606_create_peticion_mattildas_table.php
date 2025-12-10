@@ -20,7 +20,7 @@ class CreatePeticionMattildasTable extends Migration
             $table->integer('forma_pago_id')->unsigned()->nullable();
             $table->string('pnum_cel')->nullable();
             $table->string('pmail')->nullable();
-            $table->string('pfisrt_name')->nullable();
+            $table->string('pfirst_name')->nullable();
             $table->string('plast_name')->nullable();
             $table->string('pconcept')->nullable();
             $table->string('pamount')->nullable();

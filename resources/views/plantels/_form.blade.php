@@ -302,7 +302,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="box box-default" style>
+                    <div class="box box-default">
                         <div class="box-body">
                             <div class="form-group col-md-4 @if ($errors->has('director_id')) has-error @endif">
                                 <label for="director_id-field">Director</label>
@@ -859,7 +859,9 @@
                                 </div>
                                 
                             </div>
-                        <div class="box box-default">
+                        </div>
+                    </div>
+                    <div class="box box-default">
                         <div class="box-header">
                             <h3>Titulos SETyCE</h3>
                         </div>
@@ -910,8 +912,6 @@
 
                     </div>
             @endif
-
-
         </div>
     </div>
     @push('scripts')

@@ -1,4 +1,6 @@
-<?php namespace App\Http\Controllers;
+<?php
+
+namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -9,7 +11,8 @@ use Auth;
 use App\Http\Requests\updateEgresosConcepto;
 use App\Http\Requests\createEgresosConcepto;
 
-class EgresosConceptosController extends Controller {
+class EgresosConceptosController extends Controller
+{
 
 	/**
 	 * Display a listing of the resource.
@@ -30,8 +33,10 @@ class EgresosConceptosController extends Controller {
 	 */
 	public function create()
 	{
-		return view('egresosConceptos.create')
-			->with( 'list', EgresosConcepto::getListFromAllRelationApps() );
+		$padres = EgresosConcepto::where('bnd_agrupador', 1)->pluck('name', 'id');
+		$padres->prepend('Seleccionar Opción', '');
+		return view('egresosConceptos.create', compact('padres'))
+			->with('list', EgresosConcepto::getListFromAllRelationApps());
 	}
 
 	/**
@@ -44,11 +49,11 @@ class EgresosConceptosController extends Controller {
 	{
 
 		$input = $request->all();
-		$input['usu_alta_id']=Auth::user()->id;
-		$input['usu_mod_id']=Auth::user()->id;
+		$input['usu_alta_id'] = Auth::user()->id;
+		$input['usu_mod_id'] = Auth::user()->id;
 
 		//create data
-		EgresosConcepto::create( $input );
+		EgresosConcepto::create($input);
 
 		return redirect()->route('egresosConceptos.index')->with('message', 'Registro Creado.');
 	}
@@ -61,7 +66,7 @@ class EgresosConceptosController extends Controller {
 	 */
 	public function show($id, EgresosConcepto $egresosConcepto)
 	{
-		$egresosConcepto=$egresosConcepto->find($id);
+		$egresosConcepto = $egresosConcepto->find($id);
 		return view('egresosConceptos.show', compact('egresosConcepto'));
 	}
 
@@ -73,9 +78,11 @@ class EgresosConceptosController extends Controller {
 	 */
 	public function edit($id, EgresosConcepto $egresosConcepto)
 	{
-		$egresosConcepto=$egresosConcepto->find($id);
-		return view('egresosConceptos.edit', compact('egresosConcepto'))
-			->with( 'list', EgresosConcepto::getListFromAllRelationApps() );
+		$egresosConcepto = $egresosConcepto->find($id);
+		$padres = EgresosConcepto::where('bnd_agrupador', 1)->pluck('name', 'id');
+		$padres->prepend('Seleccionar Opción', '');
+		return view('egresosConceptos.edit', compact('egresosConcepto', 'padres'))
+			->with('list', EgresosConcepto::getListFromAllRelationApps());
 	}
 
 	/**
@@ -86,9 +93,9 @@ class EgresosConceptosController extends Controller {
 	 */
 	public function duplicate($id, EgresosConcepto $egresosConcepto)
 	{
-		$egresosConcepto=$egresosConcepto->find($id);
+		$egresosConcepto = $egresosConcepto->find($id);
 		return view('egresosConceptos.duplicate', compact('egresosConcepto'))
-			->with( 'list', EgresosConcepto::getListFromAllRelationApps() );
+			->with('list', EgresosConcepto::getListFromAllRelationApps());
 	}
 
 	/**
@@ -101,10 +108,10 @@ class EgresosConceptosController extends Controller {
 	public function update($id, EgresosConcepto $egresosConcepto, updateEgresosConcepto $request)
 	{
 		$input = $request->all();
-		$input['usu_mod_id']=Auth::user()->id;
+		$input['usu_mod_id'] = Auth::user()->id;
 		//update data
-		$egresosConcepto=$egresosConcepto->find($id);
-		$egresosConcepto->update( $input );
+		$egresosConcepto = $egresosConcepto->find($id);
+		$egresosConcepto->update($input);
 
 		return redirect()->route('egresosConceptos.index')->with('message', 'Registro Actualizado.');
 	}
@@ -115,12 +122,11 @@ class EgresosConceptosController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id,EgresosConcepto $egresosConcepto)
+	public function destroy($id, EgresosConcepto $egresosConcepto)
 	{
-		$egresosConcepto=$egresosConcepto->find($id);
+		$egresosConcepto = $egresosConcepto->find($id);
 		$egresosConcepto->delete();
 
 		return redirect()->route('egresosConceptos.index')->with('message', 'Registro Borrado.');
 	}
-
 }

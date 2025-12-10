@@ -125,8 +125,11 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'nivel', 'title' => 'NIVEL'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'orden', 'title' => 'ORDEN'])</th>
                             <th>@include('plantillas.getOrderLink', ['column' => 'name', 'title' => 'NOMBRE'])</th>
-                        
+                            <th>@include('plantillas.getOrderLink', ['column' => 'bnd_agrupador', 'title' => 'AGRUPADORA'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'bnd_final', 'title' => 'FINAL'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
@@ -135,8 +138,23 @@
                         @foreach($egresosConceptos as $egresosConcepto)
                             <tr>
                                 <td><a href="{{ route('egresosConceptos.show', $egresosConcepto->id) }}">{{$egresosConcepto->id}}</a></td>
+                                <td>{{$egresosConcepto->nivel}}</td>
+                                <td>{{$egresosConcepto->orden}}</td>
                                 <td>{{$egresosConcepto->name}}</td>
-                    
+                                <td>
+                                    @if($egresosConcepto->bnd_agrupador)
+                                        Sí
+                                    @else
+                                        No
+                                    @endif
+                                </td>
+                                <td>
+                                    @if($egresosConcepto->bnd_final)
+                                        Sí
+                                    @else
+                                        No
+                                    @endif
+                                </td>
                                 <td class="text-right">
                                     @permission('egresosConceptos.edit')
                                     <a class="btn btn-xs btn-primary" href="{{ route('egresosConceptos.duplicate', $egresosConcepto->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicate</a>

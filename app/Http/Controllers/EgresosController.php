@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Auth;
+use DB;
 use App\Pago;
 
 use App\Egreso;
@@ -12,6 +13,7 @@ use File as Archi;
 use App\Http\Requests;
 use App\IngresoEgreso;
 use App\CuentasEfectivo;
+use App\EgresosConcepto;
 use Illuminate\Http\Request;
 use App\Http\Requests\createEgreso;
 use App\Http\Requests\updateEgreso;
@@ -40,7 +42,12 @@ class EgresosController extends Controller
 	public function create()
 	{
 		$planteles = Empleado::where('user_id', '=', Auth::user()->id)->where('st_empleado_id', '<>', 3)->first()->plantels->pluck('razon', 'id');
-		return view('egresos.create', compact('planteles'))
+		$conceptos = EgresosConcepto::select(DB::raw('egresos_conceptos.id, concat(padres.name," / ",egresos_conceptos.name) as name'))
+			->leftJoin('egresos_conceptos as padres', 'padres.id', 'egresos_conceptos.padre')
+			->where('egresos_conceptos.bnd_final', 1)->pluck('name', 'id');
+		$conceptos->prepend('Seleccionar Opción', '');
+		//dd($conceptos);
+		return view('egresos.create', compact('planteles', 'conceptos'))
 			->with('list', Egreso::getListFromAllRelationApps());
 	}
 
@@ -101,7 +108,11 @@ class EgresosController extends Controller
 	{
 		$egreso = $egreso->find($id);
 		$planteles = Empleado::where('user_id', '=', Auth::user()->id)->where('st_empleado_id', '<>', 3)->first()->plantels->pluck('razon', 'id');
-		return view('egresos.edit', compact('egreso', 'planteles'))
+		$conceptos = EgresosConcepto::select(DB::raw('egresos_conceptos.id, concat(padres.name," / ",egresos_conceptos.name) as name'))
+			->join('egresos_conceptos as padres', 'padres.id', 'egresos_conceptos.padre')
+			->where('egresos_conceptos.bnd_final', 1)->pluck('name', 'id');
+		$conceptos->prepend('Seleccionar Opción', '');
+		return view('egresos.edit', compact('egreso', 'planteles', 'conceptos'))
 			->with('list', Egreso::getListFromAllRelationApps());
 	}
 
@@ -246,5 +257,36 @@ class EgresosController extends Controller
 			->whereNull('deleted_at')
 			->get();
 		return view('egresos.reportes.egresosR', array('egresos' => $egresos));
+	}
+
+	public function rptEgresosArbol()
+	{
+		$plantels = Plantel::pluck('razon', 'id');
+		return view('egresos.reportes.egresosArbol', array('plantels' => $plantels));
+	}
+
+	public function rptEgresosArbolR(Request $request)
+	{
+		$data = $request->all();
+		$conceptos1 = EgresosConcepto::where('nivel', 1)->get();
+		$resultado = array();
+		foreach ($conceptos1 as $concepto1) {
+			$linea = array();
+			$linea['padre'] = $concepto1->name;
+			$linea['padre_id'] = $concepto1->id;
+			$conceptos = EgresosConcepto::where('padre', $concepto1->id)->pluck('id');
+			$egresos = Egreso::whereIn('egresos.plantel_id', $data['plantel_f'])
+				->whereDate('egresos.fecha', '>=', $data['fecha_f'])
+				->whereDate('egresos.fecha', '<=', $data['fecha_t'])
+				->whereIn('egresos.egresos_concepto_id', $conceptos)
+				->whereNull('deleted_at')
+				->orderBy('plantel_id')
+				->with(['plantel', 'egresosConcepto', 'egresosConcepto.padre', 'formaPago', 'cuentasEfectivo', 'empleado'])
+				->get();
+			$linea['detalle'] = $egresos;
+			array_push($resultado, $linea);
+		}
+		//dd($resultado);
+		return view('egresos.reportes.egresosArbolR', compact('resultado', 'conceptos1'));
 	}
 }

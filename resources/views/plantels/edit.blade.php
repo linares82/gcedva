@@ -24,7 +24,7 @@
 
             {!! Form::model($plantel, array('route' => array('plantels.update', $plantel->id),'method' => 'post', 'files'=>true, 'id'=>'frm_plantel')) !!}
 
-@include('plantels._form')
+            @include('plantels._form')
 
                 <div class="row">
                 </div>

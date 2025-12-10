@@ -1,4 +1,6 @@
-<?php namespace App\Http\Controllers;
+<?php
+
+namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -9,7 +11,8 @@ use Auth;
 use App\Http\Requests\updateFormaPago;
 use App\Http\Requests\createFormaPago;
 
-class FormaPagosController extends Controller {
+class FormaPagosController extends Controller
+{
 
 	/**
 	 * Display a listing of the resource.
@@ -31,7 +34,7 @@ class FormaPagosController extends Controller {
 	public function create()
 	{
 		return view('formaPagos.create')
-			->with( 'list', FormaPago::getListFromAllRelationApps() );
+			->with('list', FormaPago::getListFromAllRelationApps());
 	}
 
 	/**
@@ -44,11 +47,11 @@ class FormaPagosController extends Controller {
 	{
 
 		$input = $request->all();
-		$input['usu_alta_id']=Auth::user()->id;
-		$input['usu_mod_id']=Auth::user()->id;
+		$input['usu_alta_id'] = Auth::user()->id;
+		$input['usu_mod_id'] = Auth::user()->id;
 
 		//create data
-		FormaPago::create( $input );
+		FormaPago::create($input);
 
 		return redirect()->route('formaPagos.index')->with('message', 'Registro Creado.');
 	}
@@ -61,7 +64,7 @@ class FormaPagosController extends Controller {
 	 */
 	public function show($id, FormaPago $formaPago)
 	{
-		$formaPago=$formaPago->find($id);
+		$formaPago = $formaPago->find($id);
 		return view('formaPagos.show', compact('formaPago'));
 	}
 
@@ -73,9 +76,9 @@ class FormaPagosController extends Controller {
 	 */
 	public function edit($id, FormaPago $formaPago)
 	{
-		$formaPago=$formaPago->find($id);
+		$formaPago = $formaPago->find($id);
 		return view('formaPagos.edit', compact('formaPago'))
-			->with( 'list', FormaPago::getListFromAllRelationApps() );
+			->with('list', FormaPago::getListFromAllRelationApps());
 	}
 
 	/**
@@ -86,9 +89,9 @@ class FormaPagosController extends Controller {
 	 */
 	public function duplicate($id, FormaPago $formaPago)
 	{
-		$formaPago=$formaPago->find($id);
+		$formaPago = $formaPago->find($id);
 		return view('formaPagos.duplicate', compact('formaPago'))
-			->with( 'list', FormaPago::getListFromAllRelationApps() );
+			->with('list', FormaPago::getListFromAllRelationApps());
 	}
 
 	/**
@@ -101,10 +104,15 @@ class FormaPagosController extends Controller {
 	public function update($id, FormaPago $formaPago, updateFormaPago $request)
 	{
 		$input = $request->all();
-		$input['usu_mod_id']=Auth::user()->id;
+		$input['usu_mod_id'] = Auth::user()->id;
 		//update data
-		$formaPago=$formaPago->find($id);
-		$formaPago->update( $input );
+		if (isset($input['bnd_en_linea'])) {
+			$input['bnd_en_linea'] = 1;
+		} else {
+			$input['bnd_en_linea'] = 0;
+		}
+		$formaPago = $formaPago->find($id);
+		$formaPago->update($input);
 
 		return redirect()->route('formaPagos.index')->with('message', 'Registro Actualizado.');
 	}
@@ -115,12 +123,11 @@ class FormaPagosController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id,FormaPago $formaPago)
+	public function destroy($id, FormaPago $formaPago)
 	{
-		$formaPago=$formaPago->find($id);
+		$formaPago = $formaPago->find($id);
 		$formaPago->delete();
 
 		return redirect()->route('formaPagos.index')->with('message', 'Registro Borrado.');
 	}
-
 }

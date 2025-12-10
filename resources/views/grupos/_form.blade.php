@@ -65,7 +65,7 @@
     <tbody>
         @foreach($grupo->periodosEstudio as $p)
         <tr>
-        <td> {{$p->name}} </td>
+        <td> {{$p->id}} {{$p->name}} </td>
         <td>
             <a href="{{ route('grupos.destroyPeriodo', array('g'=>$grupo->id, 'p'=>$p->id)) }}" class="btn btn-xs btn-danger">Eliminar</a>
         </td>

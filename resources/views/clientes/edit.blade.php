@@ -126,7 +126,7 @@
                        <span class="help-block msjDisponiblesError" ></span>
                     </div>
                     <div class="form-group col-md-6 @if($errors->has('periodo_estudio_id')) has-error @endif">
-                       <label for="periodo_estudio_id-crear" id="lbl_disponibles">Perido Estudio </label>
+                       <label for="periodo_estudio_id-crear" id="lbl_disponibles">Periodo Estudio </label>
                        {!! Form::select("periodo_estudio_id", $list3["PeriodoEstudio"], null, array("class" => "form-control select_seguridad", "id" => "periodo_estudio_id-crear")) !!}
                        @if($errors->has("periodo_estudio_id"))
                         <span class="help-block">{{ $errors->first("periodo_estudio_id") }}</span>

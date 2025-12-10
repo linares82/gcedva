@@ -7,11 +7,10 @@
         <h2 class="headline text-red">503</h2>
         <div class="error-content">
             <h3><i class="fa fa-warning text-red">
-                </i> Oops! Se presento un problema</h3>
+                </i> Estamos en mantenimiento</h3>
                 <p>{{$exception->getMessage()}}</p>
                 <p>
-                Estamos trabajando en ello
-                Mientras tanto <a href='{{ url('/home') }}'>Regresar al tablero principal</a> 
+                Estamos trabajando...
             </p>
            
         </div>

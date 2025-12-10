@@ -9,7 +9,7 @@ use File;
 use Excel;
 use App\Sm;
 use Session;
-use Storage;
+use Illuminate\Support\Facades\Storage;
 use App\Caja;
 use App\User;
 use App\Aviso;
@@ -72,6 +72,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\createCliente;
 use App\Http\Requests\updateCliente;
 use Illuminate\Support\Facades\Hash;
+
 
 class ClientesController extends Controller
 {
@@ -1213,9 +1214,12 @@ class ClientesController extends Controller
             try {
                 $r = Param::where('llave', '=', 'correo_electronico')->first();
                 if ($r->valor == 'activo') {
+                    //$archivo = public_path('storage') . "/app/public/imagenes/plantillas_correos/" . $pla->img1;
+                    //$archivo = Storage::disk('plantillas_correos')->url("app/public/imagenes/plantillas_correos/" . $pla->img1);
+                    //dd($archivo);
                     \Mail::send('emails.2', array('img1' => storage_path('app') . "/public/imagenes/plantillas_correos/" . $pla->img1, 'plantilla' => $pla->plantilla, 'id' => $cli->id), function ($message) use ($request) {
                         $message->to(e($request->mail), e($request->nombre) . " " . e($request->ape_paterno) . " " . e($request->ape_materno));
-                        $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
+                        $message->from(env('MAIL_FROM_ADDRESS', 'hola@grupocedva.com'), env('MAIL_FROM_NAME', 'Grupo CEDVA'));
                         $message->subject("Bienvenido");
                     });
 
@@ -3704,7 +3708,7 @@ class ClientesController extends Controller
             //dd($d['cliente_id']);
             $adeudos12325 = Adeudo::where('cliente_id', $d['cliente_id'])
                 ->where('pagado_bnd', 1)
-                ->whereIn('caja_concepto_id', array(1, 23, 25))->get();
+                ->whereIn('caja_concepto_id', array(1, 23, 25, 251, 252, 343))->get();
             $d['12325'] = "";
             $d['fecha_caja_12325'] = "";
             foreach ($adeudos12325 as $adeudo) {

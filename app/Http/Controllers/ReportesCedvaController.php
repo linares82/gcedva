@@ -77,6 +77,7 @@ class ReportesCedvaController extends Controller
         }
         //dd($pagos);
         $resultado2 = array();
+        //dd($estatus);
         switch ($datos['reportes_f']) {
             //Filtros que operan
             case 1:
@@ -103,6 +104,7 @@ class ReportesCedvaController extends Controller
                         'sts.name as estatus_seguimiento',
                         'sts.id as estatus_seguimiento_id',
                         'cc.name as concepto',
+                        'cc.bnd_mensualidad',
                         'caj.id as caja_id',
                         'caj.consecutivo',
                         'caj.fecha as fecha_caja',
@@ -115,6 +117,7 @@ class ReportesCedvaController extends Controller
                         'ad.fecha_pago',
                         'ad.monto',
                         'ad.pagado_bnd',
+                        'ad.bnd_eximir_descuento_beca',
                         'cm.name as ciclo',
                         'tur.name as turno'
                     )
@@ -186,6 +189,7 @@ class ReportesCedvaController extends Controller
                         'sts.name as estatus_seguimiento',
                         'sts.id as estatus_seguimiento_id',
                         'cc.name as concepto',
+                        'cc.bnd_mensualidad',
                         //'caj.id as caja_id',
                         //'caj.consecutivo',
                         //'caj.fecha as fecha_caja',
@@ -201,6 +205,7 @@ class ReportesCedvaController extends Controller
                         'ad.fecha_pago',
                         'ad.monto',
                         'ad.pagado_bnd',
+                        'ad.bnd_eximir_descuento_beca',
                         'cm.name as ciclo',
                         'tur.name as turno'
                     )
@@ -269,6 +274,7 @@ class ReportesCedvaController extends Controller
                         'sts.name as estatus_seguimiento',
                         'sts.id as estatus_seguimiento_id',
                         'cc.name as concepto',
+                        'cc.bnd_mensualidad',
                         'caj.id as caja_id',
                         'caj.consecutivo',
                         'caj.fecha as fecha_caja',
@@ -353,6 +359,7 @@ class ReportesCedvaController extends Controller
                         'sts.name as estatus_seguimiento',
                         'sts.id as estatus_seguimiento_id',
                         'cc.name as concepto',
+                        'cc.bnd_mensualidad',
                         'caj.id as caja_id',
                         'caj.consecutivo',
                         'caj.fecha as fecha_caja',
@@ -362,6 +369,7 @@ class ReportesCedvaController extends Controller
                         'ad.fecha_pago',
                         'ad.monto',
                         'ad.pagado_bnd',
+                        'ad.bnd_eximir_descuento_beca',
                         'cm.name as ciclo',
                         'tur.name as turno'
                     )
@@ -453,6 +461,7 @@ class ReportesCedvaController extends Controller
                         'sts.name as estatus_seguimiento',
                         'sts.id as estatus_seguimiento_id',
                         'cc.name as concepto',
+                        'cc.bnd_mensualidad',
                         'caj.id as caja_id',
                         'caj.consecutivo',
                         'caj.fecha as fecha_caja',
@@ -461,6 +470,7 @@ class ReportesCedvaController extends Controller
                         'ad.fecha_pago',
                         'ad.monto',
                         'ad.pagado_bnd',
+                        'ad.bnd_eximir_descuento_beca',
                         'cm.name as ciclo',
                         'pag.monto as total_caja',
                         'tur.name as turno'
@@ -548,6 +558,7 @@ class ReportesCedvaController extends Controller
                         'sts.name as estatus_seguimiento',
                         'sts.id as estatus_seguimiento_id',
                         'cc.name as concepto',
+                        'cc.bnd_mensualidad',
                         'caj.id as caja_id',
                         'caj.consecutivo',
                         'caj.fecha as fecha_caja',
@@ -634,6 +645,7 @@ class ReportesCedvaController extends Controller
                         'sts.name as estatus_seguimiento',
                         'sts.id as estatus_seguimiento_id',
                         'cc.name as concepto',
+                        'cc.bnd_mensualidad',
                         //'caj.id as caja_id',
                         //'caj.consecutivo',
                         //'caj.fecha as fecha_caja',
@@ -649,6 +661,7 @@ class ReportesCedvaController extends Controller
                         'ad.fecha_pago',
                         'ad.monto',
                         'ad.pagado_bnd',
+                        'ad.bnd_eximir_descuento_beca',
                         'cm.name as ciclo',
                         'tur.name as turno'
 
@@ -718,6 +731,7 @@ class ReportesCedvaController extends Controller
                         'sts.name as estatus_seguimiento',
                         'sts.id as estatus_seguimiento_id',
                         'cc.name as concepto',
+                        'cc.bnd_mensualidad',
                         'caj.id as caja_id',
                         'caj.consecutivo',
                         'caj.fecha as fecha_caja',
@@ -727,6 +741,7 @@ class ReportesCedvaController extends Controller
                         'ad.fecha_pago',
                         'ad.monto',
                         'ad.pagado_bnd',
+                        'ad.bnd_eximir_descuento_beca',
                         'cm.name as ciclo',
                         'tur.name as turno'
                     )
@@ -840,7 +855,8 @@ class ReportesCedvaController extends Controller
                             'activos_1_adeudo' => array(),
                             'baja_temporal_por_pago' => array(),
                             'baja_administrativa' => array(),
-                            'preinscrito' => array()
+                            'preinscrito' => array(),
+                            'baja' => array(),
                         ));
                     }
                 }
@@ -885,6 +901,9 @@ class ReportesCedvaController extends Controller
                     $linea['preinscrito'] = 0;
                     $linea['preinscrito_pagados'] = 0;
                     $linea['preinscrito_no_pagados'] = 0;
+                    $linea['bajas'] = 0;
+                    $linea['bajas_pagados'] = 0;
+                    $linea['bajas_no_pagados'] = 0;
                     //$linea['razon'] = "";
                     $aplantel = "";
 
@@ -916,6 +935,9 @@ class ReportesCedvaController extends Controller
                     $linea_dinero['preinscrito'] = 0;
                     $linea_dinero['preinscrito_pagados'] = 0;
                     $linea_dinero['preinscrito_no_pagados'] = 0;
+                    $linea_dinero['bajas'] = 0;
+                    $linea_dinero['bajas_pagados'] = 0;
+                    $linea_dinero['bajas_no_pagados'] = 0;
                     //$linea_dinero['razon'] = "";
                     //$i=1;
                     //dd($resultado2);
@@ -948,6 +970,8 @@ class ReportesCedvaController extends Controller
                             $linea_dinero['seccion'] = $registro['seccion'];
                             $linea_dinero['seccion_pagados'] = $registro['seccion'];
                             $linea_dinero['seccion_no_pagados'] = $registro['seccion'];
+
+
 
                             if ($registro['estatus_cliente_id'] == 5) {
                                 $linea['nueva_inscripcion'] = $linea['nueva_inscripcion'] + 1;
@@ -1138,6 +1162,29 @@ class ReportesCedvaController extends Controller
                                 $i++;
                                 */
                             }
+                            if ($registro['estatus_cliente_id'] == 3) {
+                                //dd("si hay baja");
+                                $linea['bajas'] = $linea['bajas'] + 1;
+                                if ($registro['pagado_bnd'] == 1) {
+                                    $linea['bajas_pagados'] = $linea['bajas_pagados'] + 1;
+                                } else {
+                                    $linea['bajas_no_pagados'] = $linea['bajas_no_pagados'] + 1;
+                                }
+
+                                if ($registro['pagado_bnd'] == 1) {
+                                    $linea_dinero['bajas'] = $linea_dinero['bajas'] + $registro['total_caja'];
+                                } else {
+                                    $linea_dinero['bajas'] = $linea_dinero['bajas'] + $registro['monto'];
+                                }
+
+                                if ($registro['pagado_bnd'] == 1) {
+                                    $linea_dinero['bajas_pagados'] = $linea_dinero['bajas_pagados'] + $registro['total_caja'];
+                                } else {
+                                    $linea_dinero['bajas_no_pagados'] = $linea_dinero['bajas_no_pagados'] + $registro['monto'];
+                                }
+
+                                array_push($combinacion_plantel_seccion['baja'], $registro);
+                            }
                         }
                     }
                     if ($linea['matricula_total_activa'] > 0) {
@@ -1178,6 +1225,12 @@ class ReportesCedvaController extends Controller
                         array_push($registros_ordenados, $combinacion_plantel_seccion['nueva_inscripcion']);
                         //array_push($registros_ordenados, $combinacion_plantel_seccion['nueva_inscripcion_pagados']);
                         //array_push($registros_ordenados, $combinacion_plantel_seccion['nueva_inscripcion_no_pagados']);
+                    }
+                    //dd($combinacion_plantel_seccion['baja']);
+                    if (count($combinacion_plantel_seccion['baja']) > 0) {
+                        array_push($registros_ordenados, $combinacion_plantel_seccion['baja']);
+                        //array_push($registros_ordenados, $combinacion_plantel_seccion['bajas_pagados']);
+                        //array_push($registros_ordenados, $combinacion_plantel_seccion['bajas_no_pagados']);
                     }
                 }
 
@@ -1516,7 +1569,7 @@ class ReportesCedvaController extends Controller
                         ->join('historia_clientes as hc', 'hc.cliente_id', 'adeudos.cliente_id')
                         ->where('adeudos.cliente_id', $baja->cliente_id)
                         ->whereIn('cajas.plantel_id', $datos['plantel_f'])
-                        ->orderBy('adeudos.id', 'desc')
+                        ->orderBy('p.fecha', 'desc')
                         ->take(1)
                         ->first();
 

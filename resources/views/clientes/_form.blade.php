@@ -1589,6 +1589,7 @@
                             </thead>
                             <tbody>
                                 @foreach($documentos_faltantes as $df)
+                                @if(is_null($df->deleted_at))
                                 <tr>
                                     <td>
                                         {{ $df->name }}
@@ -1604,6 +1605,7 @@
                                     </td>
 
                                 </tr>
+                                @endif
                                 @endforeach
                             </tbody>
                         </table>

@@ -884,7 +884,7 @@ class InscripcionsController extends Controller
             ->where('aa.empleado_id', $data['instructor_f'])
             ->where('aa.materium_id', $data['materia_f'])
             ->whereIn('s.st_seguimiento_id', array(2, 5, 7, 9))
-            ->whereIn('c.st_cliente_id', array(4, 25, 20, 30, 31))
+            ->whereIn('c.st_cliente_id', array(4, 17, 25, 20, 30, 31))
             ->whereNull('hacademicas.deleted_at')
             ->whereNull('aa.deleted_at')
             ->whereNull('i.deleted_at')

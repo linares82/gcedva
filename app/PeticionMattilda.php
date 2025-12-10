@@ -39,7 +39,9 @@ class PeticionMattilda extends Model
         'id_transaction',
         'bnd_conciliado',
         'usu_alta_id',
-        'usu_mod_id'
+        'usu_mod_id',
+        'expiratiion_date_unix',
+        'expiratiion_date_human'
     ];
 
 

@@ -29,38 +29,35 @@ class CajaObserver
     public $cajas;
     public $caja;
 
-    public function created(Caja $caja){
-        
-    }
+    public function created(Caja $caja) {}
 
-    public function updating(Caja $caja){
-        $caja_anterior=Caja::find($caja->id);
-        $this->caja=$caja;
+    public function updating(Caja $caja)
+    {
+        $caja_anterior = Caja::find($caja->id);
+        $this->caja = $caja;
         //dd($this->caja);
-        
+
         //dd($caja_anterior->toArray());
-        foreach($caja_anterior->toArray() as $campo=>$valor){
+        foreach ($caja_anterior->toArray() as $campo => $valor) {
             //Log::info("Par: ".$campo."-".$valor);
-            if($caja->$campo<>$caja_anterior->$campo){
-                $input=array();
+            if ($caja->$campo <> $caja_anterior->$campo) {
+                $input = array();
                 //Log::info("Par2: ".$campo."-".$valor);
-                $input['caja_id']=$this->caja->id;
-                $input['campo']=$campo;
-                $input['valor_anterior']=$caja_anterior->$campo;
-                $input['valor_nuevo']=$caja->$campo;
-                $input['user_id']=isset(Auth::user()->id) ? Auth::user()->id : 1;
-                $input['usu_mod_id']=$this->caja->usu_mod_id;
-                $input['usu_alta_id']=$this->caja->usu_alta_id;
+                $input['caja_id'] = $this->caja->id;
+                $input['campo'] = $campo;
+                $input['valor_anterior'] = $caja_anterior->$campo;
+                $input['valor_nuevo'] = $caja->$campo;
+                $input['user_id'] = isset(Auth::user()->id) ? Auth::user()->id : 1;
+                $input['usu_mod_id'] = $this->caja->usu_mod_id;
+                $input['usu_alta_id'] = $this->caja->usu_alta_id;
                 //dd($input);
-                try{
+                try {
                     HCambiosCaja::create($input);
-                }catch(Exception $e){
+                } catch (Exception $e) {
                     dd($input);
                 }
-                
             }
         }
-        
     }
 
 
@@ -73,53 +70,57 @@ class CajaObserver
     public function updated(Caja $caja)
     {
         $this->caja = $caja;
-        $cliente = Cliente::select('id','st_cliente_id','matricula')->where('id',$this->caja->cliente_id)->first();
+        $cliente = Cliente::select('id', 'st_cliente_id', 'matricula')->where('id', $this->caja->cliente_id)->first();
         $seguimiento = Seguimiento::where('cliente_id', $this->caja->cliente_id)->first();
-        
+
 
         //$cajas=Caja::where('cliente_id',$this->caja->cliente_id)->where('id','<>',$this->caja->id)->get();
         //dd($this->caja);
         if ($this->caja->st_caja_id == 1 or $this->caja->st_caja_id == 3) {
-            
+
             $inscripcions = Inscripcion::where('cliente_id', $cliente->id)->whereNull('inscripcions.deleted_at')->get();
             $adeudos = Adeudo::where('cliente_id', $this->caja->cliente_id)->where('pagado_bnd', 0)
-                ->whereDate('fecha_pago','<=', Date('Y-m-d'))
+                ->whereDate('fecha_pago', '<=', Date('Y-m-d'))
                 ->whereNull('deleted_at')
                 ->count();
             $mensualidades = Adeudo::where('cliente_id', $this->caja->cliente_id)
                 ->join('caja_conceptos as caj_con', 'caj_con.id', '=', 'adeudos.caja_concepto_id')
                 ->where('pagado_bnd', 0)
                 ->where('caj_con.bnd_mensualidad', 1)
-                ->whereDate('fecha_pago','<=', Date('Y-m-d'))
+                ->whereDate('fecha_pago', '<=', Date('Y-m-d'))
                 ->whereNull('adeudos.deleted_at')
                 ->count();
-            
-            if($inscripcions->isEmpty() and $this->caja->cliente->st_cliente_id == 1 and $seguimiento->st_seguimiento_id ==5){
+
+            if ($inscripcions->isEmpty() and $this->caja->cliente->st_cliente_id == 1 and $seguimiento->st_seguimiento_id == 5) {
                 $cliente->st_cliente_id = 5;
-                $cliente->save();    
+                $cliente->save();
                 $seguimiento->st_seguimiento_id = 2;
                 $seguimiento->save();
-            }elseif ($inscripcions->isEmpty() and $mensualidades==0 and $this->caja->cliente->st_cliente_id <> 3 /*and $this->caja->cliente->seguimiento->st_seguimiento_id==2*/) {
-            //if ($inscripcions->isEmpty()) {
+            } elseif ($inscripcions->isEmpty() and $mensualidades == 0 and $this->caja->cliente->st_cliente_id <> 3 /*and $this->caja->cliente->seguimiento->st_seguimiento_id==2*/) {
+                //if ($inscripcions->isEmpty()) {
                 $cliente->st_cliente_id = 22;
                 $cliente->save();
                 $seguimiento->st_seguimiento_id = 2;
                 $seguimiento->save();
-            }elseif ($this->caja->cliente->st_cliente_id <> 3) {
-                $diaFechaActual=Carbon::createFromFormat('Y-m-d', Date('Y-m-d'))->day;
-                $aux=Carbon::createFromFormat('Y-m-d', Date('Y-m-d'));
-                if($diaFechaActual<=10 and $diaFechaActual>=1){
-                    $aux->month=Carbon::createFromFormat('Y-m-d', Date('Y-m-d'))->month-1;
-                    $aux->day=$aux->daysInMonth;
+            } elseif ($this->caja->cliente->st_cliente_id <> 3) {
+                $diaFechaActual = Carbon::createFromFormat('Y-m-d', Date('Y-m-d'))->day;
+                $aux = Carbon::createFromFormat('Y-m-d', Date('Y-m-d'));
+                if ($diaFechaActual <= 10 and $diaFechaActual >= 1) {
+                    $aux->month = Carbon::createFromFormat('Y-m-d', Date('Y-m-d'))->month - 1;
+                    $aux->day = $aux->daysInMonth;
                 }
                 $fechaActual = $aux->toDateString();
                 $adeudos = Adeudo::where('cliente_id', $this->caja->cliente_id)->where('pagado_bnd', 0)
-                ->whereNull('deleted_at')
-                ->whereDate('fecha_pago','<=', $fechaActual)
-                ->count();
-                if ($adeudos == 0 and $cliente->st_cliente_id<>20 and $cliente->st_cliente_id<>30 and $cliente->st_cliente_id<>31){
-                    if ($adeudos == 0) {
-                        
+                    ->whereNull('deleted_at')
+                    ->whereDate('fecha_pago', '<=', $fechaActual)
+                    ->count();
+                if ($adeudos == 0 and $cliente->st_cliente_id <> 20 and $cliente->st_cliente_id <> 30 and $cliente->st_cliente_id <> 31) {
+                    if ($inscripcions->isEmpty()) {
+                        $cliente->st_cliente_id = 22;
+                        $cliente->save();
+                    }
+                    if ($adeudos == 0 and !$inscripcions->isEmpty()) {
+
                         $cliente->st_cliente_id = 4;
                         $cliente->save();
 
@@ -156,7 +157,6 @@ class CajaObserver
                                             $input['bnd_reactivar'] = 1;
                                             $input['usu_mod_id'] = Auth::user()->id;
                                             $bsBaja->update($input);
-                                            
                                         }
                                     }
                                 }
@@ -167,8 +167,8 @@ class CajaObserver
                             }
                         }
                     }
-                }elseif($mensualidades>=4){
-                    if ($mensualidades>= 4) {
+                } elseif ($mensualidades >= 4) {
+                    if ($mensualidades >= 4) {
                         $cliente->st_cliente_id = 27;
                         $cliente->save();
 
@@ -205,7 +205,6 @@ class CajaObserver
                                             $input['bnd_reactivar'] = 0;
                                             $input['usu_mod_id'] = Auth::user()->id;
                                             $bsBaja->update($input);
-                                            
                                         }
                                     }
                                 }
@@ -216,9 +215,9 @@ class CajaObserver
                             }
                         }
                     }
-                //}elseif($this->caja->cliente->st_cliente_id == 27){
-                }elseif($adeudos==3){
-                    if ($adeudos== 3) {
+                    //}elseif($this->caja->cliente->st_cliente_id == 27){
+                } elseif ($adeudos == 3) {
+                    if ($adeudos == 3) {
                         $cliente->st_cliente_id = 26;
                         $cliente->save();
 
@@ -255,7 +254,6 @@ class CajaObserver
                                             $input['bnd_reactivar'] = 0;
                                             $input['usu_mod_id'] = Auth::user()->id;
                                             $bsBaja->update($input);
-                                            
                                         }
                                     }
                                 }
@@ -266,8 +264,8 @@ class CajaObserver
                             }
                         }
                     }
-                //}elseif ($this->caja->cliente->st_cliente_id == 26) {
-                }elseif ($adeudos == 2) {
+                    //}elseif ($this->caja->cliente->st_cliente_id == 26) {
+                } elseif ($adeudos == 2) {
                     //dd($adeudos);
                     if ($adeudos == 2) {
                         $cliente->st_cliente_id = 25;
@@ -306,7 +304,6 @@ class CajaObserver
                                             $input['bnd_reactivar'] = 0;
                                             $input['usu_mod_id'] = Auth::user()->id;
                                             $bsBaja->update($input);
-                                            
                                         }
                                     }
                                 }
@@ -317,9 +314,9 @@ class CajaObserver
                             }
                         }
                     }
-                //} elseif($adeudos==0) {
-                //}elseif ($this->caja->cliente->st_cliente_id == 25){
-                }elseif ($adeudos == 1){
+                    //} elseif($adeudos==0) {
+                    //}elseif ($this->caja->cliente->st_cliente_id == 25){
+                } elseif ($adeudos == 1) {
                     if ($adeudos == 1) {
                         $cliente->st_cliente_id = 17;
                         $cliente->save();
@@ -357,7 +354,6 @@ class CajaObserver
                                             $input['bnd_reactivar'] = 0;
                                             $input['usu_mod_id'] = Auth::user()->id;
                                             $bsBaja->update($input);
-                                            
                                         }
                                     }
                                 }
@@ -368,10 +364,10 @@ class CajaObserver
                             }
                         }
                     }
-                //}elseif ($this->caja->cliente->st_cliente_id == 17){
-                }elseif ($adeudos == 0){
+                    //}elseif ($this->caja->cliente->st_cliente_id == 17){
+                } elseif ($adeudos == 0) {
                     if ($adeudos == 0) {
-                        
+
                         $cliente->st_cliente_id = 4;
                         $cliente->save();
 
@@ -408,7 +404,6 @@ class CajaObserver
                                             $input['bnd_reactivar'] = 1;
                                             $input['usu_mod_id'] = Auth::user()->id;
                                             $bsBaja->update($input);
-                                            
                                         }
                                     }
                                 }
@@ -420,7 +415,7 @@ class CajaObserver
                         }
                     }
                 }
-                
+
                 /*else {
                     
                     $cliente->st_cliente_id = 4;
@@ -483,10 +478,10 @@ class CajaObserver
             //->get();
             //dd($adeudos->toArray());
             //Log::info('Adeudos:' . $adeudos);
-            if ($adeudos == 0 and $cliente->st_cliente<>20) {
+            if ($adeudos == 0 and $cliente->st_cliente <> 20) {
                 if ($cliente->st_cliente_id <> 3) {
                     if ($cliente->st_cliente_id == 30) {
-                        
+
                         $cliente->st_cliente_id = 31;
                         $cliente->save();
                         $cliente->st_cliente_id = 20;
@@ -524,7 +519,6 @@ class CajaObserver
                                             $input['bnd_reactivar'] = 0;
                                             $input['usu_mod_id'] = Auth::user()->id;
                                             $bsBaja->update($input);
-                                            
                                         }
                                     }
                                 }
@@ -534,7 +528,7 @@ class CajaObserver
                                 //return false;
                             }
                         }
-                    }elseif($cliente->st_cliente_id == 4){
+                    } elseif ($cliente->st_cliente_id == 4) {
                         $cliente->st_cliente_id = 31;
                         $cliente->save();
                         //$seguimiento->st_seguimiento_id = 7;
@@ -569,7 +563,6 @@ class CajaObserver
                                             $input['bnd_reactivar'] = 0;
                                             $input['usu_mod_id'] = Auth::user()->id;
                                             $bsBaja->update($input);
-                                            
                                         }
                                     }
                                 }
@@ -590,13 +583,13 @@ class CajaObserver
         $from = "ohpelayo@gmail.com";
         $destinatario = "linares82@gmail.com";
         $contenido = $msj;
-        if(Auth::check()){
+        if (Auth::check()) {
             $n = Auth::user()->name;
-        }else{
+        } else {
             $n = "Tarea Automatica";
         }
-        
-        
+
+
         //dd(env('MAIL_FROM_ADDRESS'));
 
         $data = array('contenido' => $msj, 'nombre' => $n, 'correo' => $from);
@@ -607,5 +600,4 @@ class CajaObserver
             $message->replyTo($from);
         });
     }
-
 }

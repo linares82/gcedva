@@ -17,6 +17,7 @@ use App\CajaLn;
 use App\Cliente;
 use App\Plantel;
 use App\Empleado;
+use App\FormaPago;
 use Carbon\Carbon;
 use App\PromoPlanLn;
 use App\CajaConcepto;
@@ -33,7 +34,12 @@ use App\valenceSdk\samples\BasicSample\UsoApi;
 
 class CajasController extends Controller
 {
+    public $formasPago;
 
+    public function __construct()
+    {
+        $this->formasPago = FormaPago::whereRaw('(bnd_en_linea is null or bnd_en_linea=0)')->pluck('name', 'id');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -53,8 +59,8 @@ class CajasController extends Controller
      */
     public function create()
     {
-
-        return view('cajas.create')
+        $formasPago = $this->formasPago;
+        return view('cajas.create', compact('formasPago'))
             ->with('list', Caja::getListFromAllRelationApps());
     }
 
@@ -66,6 +72,7 @@ class CajasController extends Controller
      */
     public function store(createCaja $request)
     {
+        $formasPago = $this->formasPago;
         $input = $request->all();
         //dd($input);
         if (!isset($input['fecha'])) {
@@ -177,7 +184,7 @@ class CajasController extends Controller
 
         $combinaciones = CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
 
-        return view('cajas.caja', compact('cliente', 'caja', 'combinaciones', 'cajas', 'empleados'))
+        return view('cajas.caja', compact('cliente', 'caja', 'combinaciones', 'cajas', 'empleados', 'formasPago'))
             ->with('list', Caja::getListFromAllRelationApps())
             ->with('list1', CajaLn::getListFromAllRelationApps());
     }
@@ -202,6 +209,7 @@ class CajasController extends Controller
      */
     public function edit($id, Caja $caja)
     {
+        $formasPago = $this->formasPago;
         $caja = $caja->find($id);
         $cliente = Cliente::find($caja->cliente_id);
         $cajas = Caja::select('cajas.consecutivo as caja', 'cajas.fecha', 'ln.caja_concepto_id as concepto_id', 'cc.name as concepto', 'ln.total', 'st.name as estatus', 'ln.adeudo_id')
@@ -216,7 +224,7 @@ class CajasController extends Controller
         $combinaciones = CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
         $empleados = Empleado::select(DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name, id'))->pluck('name', 'id');
 
-        return view('cajas.caja', compact('caja', 'cliente', 'combinaciones', 'cajas', 'empleados'))
+        return view('cajas.caja', compact('caja', 'cliente', 'combinaciones', 'cajas', 'empleados', 'formasPago'))
             ->with('list', Caja::getListFromAllRelationApps())
             ->with('list1', CajaLn::getListFromAllRelationApps());
     }
@@ -271,17 +279,19 @@ class CajasController extends Controller
     public function getCaja(Request $request)
     {
         $datos = $request->all();
+        $formasPago = $this->formasPago;
         if (isset($datos['plantel']) and isset($datos['consecutivo'])) {
             $vplantel = $datos['plantel'];
             $vconsecutivo = $datos['consecutivo'];
-            return view('cajas.caja', compact('vplantel', 'vconsecutivo'))->with('list', Caja::getListFromAllRelationApps())->with('list1', CajaLn::getListFromAllRelationApps());
+            return view('cajas.caja', compact('vplantel', 'vconsecutivo', 'formasPago'))->with('list', Caja::getListFromAllRelationApps())->with('list1', CajaLn::getListFromAllRelationApps());
         } else {
-            return view('cajas.caja')->with('list', Caja::getListFromAllRelationApps())->with('list1', CajaLn::getListFromAllRelationApps());
+            return view('cajas.caja', compact('formasPago'))->with('list', Caja::getListFromAllRelationApps())->with('list1', CajaLn::getListFromAllRelationApps());
         }
     }
 
     public function buscarCliente(Request $request)
     {
+        $formasPago = $this->formasPago;
         //$empleado = Empleado::where('user_id', Auth::user()->id)->first();
         $planteles = Empleado::where('user_id', '=', Auth::user()->id)->first()->plantels->pluck('id')->toArray();
         /*
@@ -343,7 +353,7 @@ class CajasController extends Controller
             array_search($cliente->plantel_id, $planteles) <> false
         ) {
 
-            return view('cajas.caja', compact('cliente', 'combinaciones', 'cajas', 'empleados'))
+            return view('cajas.caja', compact('formasPago', 'cliente', 'combinaciones', 'cajas', 'empleados'))
                 ->with('list', Caja::getListFromAllRelationApps())
                 ->with('list1', CajaLn::getListFromAllRelationApps());
         } elseif (
@@ -353,17 +363,18 @@ class CajasController extends Controller
             $permiso_caja_buscarCliente
         ) {
 
-            return view('cajas.caja', compact('cliente', 'combinaciones', 'cajas', 'empleados'))
+            return view('cajas.caja', compact('cliente', 'combinaciones', 'cajas', 'empleados', 'formasPago'))
                 ->with('list', Caja::getListFromAllRelationApps())
                 ->with('list1', CajaLn::getListFromAllRelationApps());
         }
         Session::flash('msj', 'Cliente buscado pertenece a otro plantel');
-        return view('cajas.caja', compact('empleados'))->with('list', Caja::getListFromAllRelationApps())->with('list1', CajaLn::getListFromAllRelationApps());
+        return view('cajas.caja', compact('empleados', 'formasPago'))->with('list', Caja::getListFromAllRelationApps())->with('list1', CajaLn::getListFromAllRelationApps());
     }
 
     public function buscarVenta(Request $request)
     {
         $data = $request->all();
+        $formasPago = $this->formasPago;
         //dd($data);
         $empleado = Empleado::where('user_id', '=', Auth::user()->id)->first();
         $planteles = array();
@@ -387,7 +398,7 @@ class CajasController extends Controller
 
         if (!is_object($caja)) {
             Session::flash('msj', 'Caja no existe');
-            return view('cajas.caja')->with('list', Caja::getListFromAllRelationApps())->with('list1', CajaLn::getListFromAllRelationApps());
+            return view('cajas.caja', compact('formasPago'))->with('list', Caja::getListFromAllRelationApps())->with('list1', CajaLn::getListFromAllRelationApps());
         }
         //dd($caja);
         $combinaciones = CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
@@ -415,7 +426,7 @@ class CajasController extends Controller
 
             $cliente = Cliente::find($caja->cliente_id);
 
-            return view('cajas.caja', compact('cliente', 'caja', 'combinaciones', 'cajas', 'cuentasEfectivo', 'empleados'))
+            return view('cajas.caja', compact('formasPago', 'cliente', 'caja', 'combinaciones', 'cajas', 'cuentasEfectivo', 'empleados'))
                 ->with('list', Caja::getListFromAllRelationApps())
                 ->with('list1', CajaLn::getListFromAllRelationApps());
         } elseif (is_object($caja) and $permiso_caja_buscarVenta and array_search($caja->plantel_id, $planteles) == false) { //$caja->plantel_id != $empleado->plantel_id) {
@@ -427,13 +438,13 @@ class CajasController extends Controller
 
             //dd($cuentasEfectivo);
             $cliente = Cliente::find($caja->cliente_id);
-            return view('cajas.caja', compact('cliente', 'caja', 'combinaciones', 'cajas', 'cuentasEfectivo', 'empleados'))
+            return view('cajas.caja', compact('formasPago', 'cliente', 'caja', 'combinaciones', 'cajas', 'cuentasEfectivo', 'empleados'))
                 ->with('list', Caja::getListFromAllRelationApps())
                 ->with('list1', CajaLn::getListFromAllRelationApps());
         }
         Session::flash('msj', 'Informacion buscada pertenece a otro plantel');
 
-        return view('cajas.caja', compact('cuentasEfectivo', 'empleados'))->with('list', Caja::getListFromAllRelationApps())->with('list1', CajaLn::getListFromAllRelationApps());
+        return view('cajas.caja', compact('formasPago', 'cuentasEfectivo', 'empleados'))->with('list', Caja::getListFromAllRelationApps())->with('list1', CajaLn::getListFromAllRelationApps());
     }
 
     //Lineas de la caja con adeudos predefinidos
@@ -828,7 +839,8 @@ class CajasController extends Controller
         $combinaciones = CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
         $empleados = Empleado::select(DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name, id'))->pluck('name', 'id');
 
-        return view('cajas.caja', compact('cliente', 'caja', 'combinaciones', 'cajas', 'empleados'))
+        $formasPago = $this->formasPago;
+        return view('cajas.caja', compact('formasPago', 'cliente', 'caja', 'combinaciones', 'cajas', 'empleados'))
             ->with('list', Caja::getListFromAllRelationApps())
             ->with('list1', CajaLn::getListFromAllRelationApps());
     }
@@ -899,7 +911,8 @@ class CajasController extends Controller
         $caja->forma_pago_id = $request->get('forma_pago_id');
         $caja->save();
 
-        return view('cajas.caja', compact('cliente', 'caja', 'combinaciones', 'cajas'))
+        $formasPago = $this->formasPago;
+        return view('cajas.caja', compact('formasPago', 'cliente', 'caja', 'combinaciones', 'cajas'))
             ->with('list', Caja::getListFromAllRelationApps())
             ->with('list1', CajaLn::getListFromAllRelationApps());
     }
@@ -937,7 +950,8 @@ class CajasController extends Controller
         }
 
         $empleados = Empleado::select(DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name, id'))->pluck('name', 'id');
-        return view('cajas.caja', compact('empleados'))
+        $formasPago = $this->formasPago;
+        return view('cajas.caja', compact('empleados', 'formasPago'))
             ->with('list', Caja::getListFromAllRelationApps())
             ->with('list1', CajaLn::getListFromAllRelationApps());
     }
@@ -982,8 +996,8 @@ class CajasController extends Controller
                 $enLinea->delete();
             }
         }
-
-        return view('cajas.caja')->with('list', Caja::getListFromAllRelationApps())->with('list1', CajaLn::getListFromAllRelationApps());
+        $formasPago = $this->formasPago;
+        return view('cajas.caja', compact('formasPago'))->with('list', Caja::getListFromAllRelationApps())->with('list1', CajaLn::getListFromAllRelationApps());
     }
 
     public function imprimir(Request $request)
@@ -1108,7 +1122,8 @@ class CajasController extends Controller
             ->get();
         $empleados = Empleado::select(DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name, id'))->pluck('name', 'id');
 
-        return view('cajas.caja', compact('cliente', 'caja', 'combinaciones', 'cajas', 'empleados'))
+        $formasPago = $this->formasPago;
+        return view('cajas.caja', compact('formasPago', 'cliente', 'caja', 'combinaciones', 'cajas', 'empleados'))
             ->with('list', Caja::getListFromAllRelationApps())
             ->with('list1', CajaLn::getListFromAllRelationApps());
     }
@@ -1135,7 +1150,8 @@ class CajasController extends Controller
             ->whereNull('cajas.deleted_at')
             ->whereNull('ln.deleted_at')
             ->get();
-        return view('cajas.caja', compact('cliente', 'caja', 'combinaciones', 'cajas'))
+        $formasPago = $this->formasPago;
+        return view('cajas.caja', compact('formasPago', 'cliente', 'caja', 'combinaciones', 'cajas'))
             ->with('list', Caja::getListFromAllRelationApps())
             ->with('list1', CajaLn::getListFromAllRelationApps());
     }
@@ -1172,8 +1188,8 @@ class CajasController extends Controller
             ->whereNull('cajas.deleted_at')
             ->whereNull('ln.deleted_at')
             ->get();
-
-        return view('cajas.caja', compact('cliente', 'caja', 'combinaciones', 'cajas'))
+        $formasPago = $this->formasPago;
+        return view('cajas.caja', compact('formasPago', 'cliente', 'caja', 'combinaciones', 'cajas'))
             ->with('list', Caja::getListFromAllRelationApps())
             ->with('list1', CajaLn::getListFromAllRelationApps());
     }

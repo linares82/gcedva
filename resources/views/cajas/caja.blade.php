@@ -194,7 +194,7 @@
                         </div>        
                         @endif
                         
-                        {!! Form::select("forma_pago_id", $list["FormaPago"], null, array("class" => "form-control", "id" => "forma_pago_id1-field")) !!}
+                        {!! Form::select("forma_pago_id", $formasPago, null, array("class" => "form-control", "id" => "forma_pago_id1-field")) !!}
                         {!! Form::text("fecha", null, array("class" => "form-control fecha", "id" => "fecha-field", 'placeholder'=>'Fecha de Venta', 'style'=>"100%")) !!}
                         @permission('cajas.reactivarCliente')
                         <label>{!! Form::checkbox('bnd_sin_reactivacion', '1', false) !!} No Reactivar</label>
@@ -213,7 +213,7 @@
                                                 {!! Form::open(array('route' => 'cajas.pagar')) !!}
                                                     <div class="form-group @if($errors->has('forma_pago_id')) has-error @endif">
                                                         <label for="forma_pago_id-field">Forma Pago</label>
-                                                        {!! Form::select("forma_pago_id", $list["FormaPago"], null, array("class" => "form-control", "id" => "forma_pago_id-field")) !!}
+                                                        {!! Form::select("forma_pago_id", $formasPago, null, array("class" => "form-control", "id" => "forma_pago_id-field")) !!}
                                                         {!! Form::text("referencia", $caja->referencia, array("class" => "form-control", "id" => "referencia_id-field", 'placeholder'=>'Referencia')) !!}
                                                         @if($errors->has("forma_pago_id"))
                                                         <span class="help-block">{{ $errors->first("forma_pago_id") }}</span>
@@ -256,6 +256,16 @@
                     </div>
                     @endif
                     @if(isset($caja))
+                    @php
+                        $indicadorPeticionenlinea=0;
+                    @endphp
+                    @foreach($caja->pagos as $pago)
+                        @if(isset($pago->peticionMultipago) or isset($pago->peticionOpenpays) or isset($pago->peticionMattildas))
+                            @php
+                                $indicadorPeticionenlinea=1;
+                            @endphp
+                        @endif
+                    @endforeach
                     <div class="form-group col-md-4">
                         <div class='text-center'>
                             @php
@@ -274,6 +284,7 @@
 
                             @endphp
                             @permission('cajas.cancelar')
+                            @if($indicadorPeticionenlinea==0))
                             @if($referencia=="")
                                 @if($caja->st_caja_id<>1 and $caja->st_caja_id<>2)
                                 {!! Form::open(array('route' => 'cajas.cancelar','onsubmit'=> "if(confirm('¿Cancelar Caja? ¿Esta seguro?')) { return true } else {return false };")) !!}
@@ -282,22 +293,15 @@
                                 {!! Form::close() !!}
                                 @endif
                             @endif
+                            @endif
                             @endpermission
                         </div>
                     </div>
                     <div class="form-group col-md-4">
                         <div class='text-center'>
-                            @php
-                                $indicadorPeticionenlinea=0;
-                            @endphp
+                            
                             @permission('cajas.cancelarEnLinea')
-                            @foreach($caja->pagos as $pago)
-                                @if(isset($pago->peticionMultipago))
-                                    @php
-                                        $indicadorPeticionenlinea=1;
-                                    @endphp
-                                @endif
-                            @endforeach
+                            
                             @if($caja->st_caja_id==0 and $indicadorPeticionenlinea==1))
                             <!--@@if($caja->st_caja_id<>1 and $caja->st_caja_id<>2)-->
                             {!! Form::open(array('route' => 'cajas.cancelarEnLinea','onsubmit'=> "if(confirm('¿Cancelar Proceso En Linea? ¿Esta seguro?')) { return true } else {return false };")) !!}
@@ -1041,7 +1045,7 @@ Agregar nuevo registro
                     </div>
                     <div class="form-group col-md-6 @if($errors->has('forma_pago_id')) has-error @endif">
                        <label for="forma_pago_id-field">Forma Pago</label>
-                       {!! Form::select("forma_pago_id", $list["FormaPago"], null, array("class" => "form-control", "id" => "forma_pago_id-field", 'disabled'=>true)) !!}
+                       {!! Form::select("forma_pago_id", $formasPago, null, array("class" => "form-control", "id" => "forma_pago_id-field", 'disabled'=>true)) !!}
                        @if($errors->has("forma_pago_id"))
                         <span class="help-block">{{ $errors->first("forma_pago_id") }}</span>
                        @endif
@@ -1122,7 +1126,7 @@ Agregar nuevo registro
                     </div>
                     <div class="form-group col-md-6 @if($errors->has('forma_pago_id')) has-error @endif">
                        <label for="forma_pago_id-field">Forma Pago</label>
-                       {!! Form::select("forma_pago_id", $list["FormaPago"], null, array("class" => "form-control", "id" => "forma_pago_id-field", 'disabled'=>true)) !!}
+                       {!! Form::select("forma_pago_id", $formasPago, null, array("class" => "form-control", "id" => "forma_pago_id-field", 'disabled'=>true)) !!}
                        @if($errors->has("forma_pago_id"))
                         <span class="help-block">{{ $errors->first("forma_pago_id") }}</span>
                        @endif

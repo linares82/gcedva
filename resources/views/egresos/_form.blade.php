@@ -14,7 +14,7 @@
                     </div>
                     <div class="form-group col-md-4 @if($errors->has('egresos_concepto_id')) has-error @endif">
                        <label for="egresos_concepto_id-field">Egreso Concepto</label>
-                       {!! Form::select("egresos_concepto_id", $list["EgresosConcepto"], null, array("class" => "form-control select_seguridad", "id" => "egresos_concepto_id-field")) !!}
+                       {!! Form::select("egresos_concepto_id", $conceptos, null, array("class" => "form-control select_seguridad", "id" => "egresos_concepto_id-field")) !!}
                        @if($errors->has("egresos_concepto_id"))
                         <span class="help-block">{{ $errors->first("egresos_concepto_id") }}</span>
                        @endif
@@ -114,9 +114,13 @@
             complete : function(){$("#loading13").hide();},
             success: function(data){
                 obj.html("<strong>"+data+"</strong>");
-
+               //console.log(data);
                //alert(saldo);
-               if(data<=0){
+               @php
+               $param=App\Param::where('llave','permitir_saldo_negativo_egresos')->first();
+               @endphp
+
+               if(data<=0 && Number({{ $param->valor }})!== Number(1)){
                   $('.btn').attr("disabled", true);
                   alert('No es posible realizar esta operacion, revise saldos');
                }
