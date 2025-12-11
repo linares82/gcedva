@@ -559,7 +559,9 @@
                 <th>F. Caja</th>
                 @permission('reportesCedva.activosSinDinero')
                 <th>Total Caja</th>
-                <th>Beca</th>
+                <th>Descuentos</th>
+                <th>% Promocion</th>
+                <th>% Beca</th>
                 @endpermission
                 <th>Usuario Pago</th><th>Pagado</th>
                 @permission('reportesCedva.activosSinDinero')<th>Total Adeudo</th>@endpermission
@@ -667,25 +669,75 @@
             <td>{{ $registro['fecha_caja']==0 ? "" :$registro['fecha_caja'] }}</td>
             @permission('reportesCedva.activosSinDinero')
             <td>{{ number_format($registro['total_caja'],2) }}</td>
+            <td>{{ number_format($registro['descuento'],2) }}</td>
+            <td>
+              
+                @php
+                  
+                  if($registro['adeudo_id']>0 and $registro['consecutivo']>0){
+                    $adeudo=\App\Adeudo::find($registro['adeudo_id']);
+                    $adeudo->load(['planPagoLn','planPagoLn.promoPlanLns']);
+                    foreach($adeudo->planPagoLn->promoPlanLns as $ppp){
+                      $inicio= new Datetime($ppp->fec_inicio);
+                      $fin= new Datetime($ppp->fec_fin);
+                      $fecha_caja= new Datetime($registro['fecha_caja']);
+                      if($inicio<=$fecha_caja and $fin>=$fecha_caja){
+                        echo $ppp->descuento;
+                      }else{
+                        echo "0";
+                      }
+                    }
+                  }elseif($registro['adeudo_id']>0 and $registro['consecutivo']==0){
+                    $adeudo=\App\Adeudo::find($registro['adeudo_id']);
+                    $adeudo->load(['planPagoLn','planPagoLn.promoPlanLns']);
+                    foreach($adeudo->planPagoLn->promoPlanLns as $ppp){
+                      $inicio= new Datetime($ppp->fec_inicio);
+                      $fin= new Datetime($ppp->fec_fin);
+                      $fecha_caja= new Datetime(date('Y-m-d'));
+                      if($inicio<=$fecha_caja and $fin>=$fecha_caja){
+                        echo $ppp->descuento;
+                      }else{
+                        echo "0";
+                      }
+                    }
+                  }else{
+                    echo "0";
+                  }
+                @endphp
+              
+            </td>
             <td>
               @php
                 $becas=App\AutorizacionBeca::where('cliente_id', $registro['cliente'])->get();
+                
+                $fecha_caja_hoy= new Datetime(date('Y-m-d'));
+                $fecha_caja= new Datetime($registro['fecha_pago']);
+                
                 if(count($becas)>0){
                   foreach($becas as $beca){
-                    if($beca->lectivo->inicio<$registro['fecha_pago'] and 
-                       $beca->lectivo->fin>$registro['fecha_pago'] and 
+                    $inicio= new Datetime($beca->lectivo->inicio);
+                    $fin= new Datetime($beca->lectivo->fin);
+
+                    if($inicio<$fecha_caja_hoy and 
+                       $fin>$fecha_caja_hoy and 
                        $registro['pagado_bnd']<>1 and 
                        $registro['bnd_mensualidad']==1 and 
                        ($registro['bnd_eximir_descuento_beca']==0 or is_null($registro['bnd_eximir_descuento_beca']))){
-                        echo $beca->monto_mensualidad*$registro['monto'];
-                    }elseif($beca->lectivo->inicio<$registro['fecha_pago'] and 
-                       $beca->lectivo->fin>$registro['fecha_pago'] and 
+                        //echo $beca->monto_mensualidad*$registro['monto'];
+                        echo $beca->monto_mensualidad;
+                    }elseif($inicio<$fecha_caja and 
+                       $fin>$fecha_caja and 
                        $registro['pagado_bnd']==1 and 
                        $registro['bnd_mensualidad']==1 and 
                        ($registro['bnd_eximir_descuento_beca']==0 or is_null($registro['bnd_eximir_descuento_beca']))){
-                        echo $beca->monto_mensualidad*$registro['monto'];
+                        //echo $beca->monto_mensualidad*$registro['monto'];
+                        echo $beca->monto_mensualidad;
+                    }else{
+                      echo "0";
                     }
                   }
+                }else{
+                  echo "0";
                 }
               @endphp
             </td>

@@ -567,6 +567,8 @@ class CajasController extends Controller
                             ) {
                                 $calculo_monto_mensualidad = $caja_ln['subtotal'] * $beca_autorizada->monto_mensualidad;
                                 //dd($caja_ln['subtotal'].'*'.$beca_autorizada->monto_mensualidad."=".$calculo_monto_mensualidad);
+                                $caja_ln['desc_beca'] = $calculo_monto_mensualidad;
+                                $caja_ln['autorizacion_beca_id'] = $beca_autorizada->id;
                                 $caja_ln['descuento'] = $caja_ln['descuento'] + $calculo_monto_mensualidad;
                                 $caja_ln['total'] = $caja_ln['subtotal'] - $caja_ln['descuento'];
                             } else {
@@ -626,6 +628,7 @@ class CajasController extends Controller
 
                                             $monto_promocion = $promocion->descuento * $caja_ln['total'];
                                             $caja_ln['descuento'] = $caja_ln['descuento'] + $monto_promocion;
+                                            $caja_ln['desc_promocion'] = $monto_promocion;
                                             $caja_ln['total'] = $caja_ln['subtotal'] - $caja_ln['descuento'];
 
                                             $caja_ln['promo_plan_ln_id'] = $promocion->id;
@@ -2297,6 +2300,8 @@ class CajasController extends Controller
         $caja_ln['total'] = 0;
         $caja_ln['recargo'] = 0;
         $caja_ln['descuento'] = 0;
+        $caja_ln['desc_beca'] = 0;
+        $caja_ln['desc_promocion'] = 0;
         $caja_ln['fecha_limite'] = "";
         //dd($caja_ln);
 
@@ -2349,6 +2354,8 @@ class CajasController extends Controller
                 ($adeudo->bnd_eximir_descuento_beca == 0 or is_null($adeudo->bnd_eximir_descuento_beca))
             ) {
                 $calculo_monto_mensualidad = $caja_ln['subtotal'] * $beca->monto_mensualidad;
+                $caja_ln['autorizacion_beca_id'] = $beca->id;
+                $caja_ln['desc_beca'] = $calculo_monto_mensualidad;
                 $caja_ln['descuento'] = $caja_ln['descuento'] + $calculo_monto_mensualidad;
                 $caja_ln['total'] = $caja_ln['subtotal'] - $caja_ln['descuento'];
             } else {
@@ -2384,6 +2391,7 @@ class CajasController extends Controller
 
                             $monto_promocion = $promocion->descuento * $caja_ln['total'];
                             $caja_ln['descuento'] = $caja_ln['descuento'] + $monto_promocion;
+                            $caja_ln['desc_promocion'] = $monto_promocion;
                             $caja_ln['total'] = $caja_ln['subtotal'] - $caja_ln['descuento'];
 
                             $caja_ln['promo_plan_ln_id'] = $promocion->id;
@@ -2559,6 +2567,7 @@ class CajasController extends Controller
         $caja_ln['recargo'] = round($caja_ln['recargo'], 0);
         $caja_ln['descuento'] = round($caja_ln['descuento'], 0);
 
+        Log::info($caja_ln);
         return $caja_ln;
 
         //}

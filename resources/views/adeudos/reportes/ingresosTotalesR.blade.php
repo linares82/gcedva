@@ -74,7 +74,7 @@
             <th>Grafica</th>
             <th>Ingresos Titulación</th>
             <th>Ingresos Planeados</th>
-            <th>Ingresos No Planeados(Generales)</th>
+            <th>Ingresos No Planeados(Caja General)</th>
             <th>Total Ingresos</th>
         </thead>
         <tbody>
