@@ -567,8 +567,7 @@
                                     <table class="table table-striped table-bordered table-hover" >
                                         <thead><th>Order</th><th></th><th>Estatus</th> <th>Limite</th></thead>
                                     @foreach($pago->peticionOpenpays as $peticion)
-                                    
-                                    
+
                                         <tr>
                                             <td> {{ optional($peticion)->rorder_id }} </td>
                                             <td>

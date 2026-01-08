@@ -105,6 +105,7 @@
                 <th>Concepto</th>
                 <th>Pagado</th>
                 <th>F. Caja</th>
+                <th>Creacion Pago</th>
                 <th>Monto Planeado</th>
                 <th>Monto Caja</th>
                 <th>Estatus</th>
@@ -130,7 +131,7 @@
                 <td>@if($linea->pagado_bnd==1)
                     {{$linea->caja_fecha}}</td>
                 @endif
-                    
+                    <td>{{$linea->pago_created}}</td>
                 <td>{{$linea->monto}}</td><td>{{$linea->total}}</td><td>{{$linea['estatus']}}</td>
             </tr>
             @endforeach

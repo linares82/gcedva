@@ -4556,8 +4556,9 @@ class AdeudosController extends Controller
             $registro = array();
             $totales_efectivo = Pago::join('cajas as caj', 'caj.id', 'pagos.caja_id')
                 ->join('forma_pagos as fm', 'fm.id', 'caj.forma_pago_id')
-                ->where('pagos.created_at', '>=', $datos['fecha_f'])
-                ->where('pagos.created_at', '<=', $datos['fecha_t'])
+                ->join('adeudos as a', 'caj.id', 'a.caja_id')
+                ->whereDate('pagos.created_at', '>=', $datos['fecha_f'] . " 00:00:00")
+                ->whereDate('pagos.created_at', '<=', $datos['fecha_t'] . " 23:59:59")
                 ->where('pagos.forma_pago_id', 1)
                 ->where('bnd_pagado', 1)
                 ->where('caj.plantel_id', $plantel->id)
@@ -4565,8 +4566,9 @@ class AdeudosController extends Controller
                 ->sum('pagos.monto');
             $totales_otros = Pago::join('cajas as caj', 'caj.id', 'pagos.caja_id')
                 ->join('forma_pagos as fm', 'fm.id', 'caj.forma_pago_id')
-                ->where('pagos.created_at', '>=', $datos['fecha_f'])
-                ->where('pagos.created_at', '<=', $datos['fecha_t'])
+                ->join('adeudos as a', 'caj.id', 'a.caja_id')
+                ->whereDate('pagos.created_at', '>=', $datos['fecha_f'] . " 00:00:00")
+                ->whereDate('pagos.created_at', '<=', $datos['fecha_t'] . " 23:59:59")
                 ->where('pagos.forma_pago_id', '<>', 1)
                 ->where('bnd_pagado', 1)
                 ->where('caj.plantel_id', $plantel->id)
@@ -4575,15 +4577,15 @@ class AdeudosController extends Controller
             $totales_titulacion = TitulacionPago::join('titulacions as t', 't.id', 'titulacion_pagos.titulacion_id')
                 ->join('clientes as c', 'c.id', 't.cliente_id')
                 ->join('plantels as p', 'p.id', 'c.plantel_id')
-                ->where('titulacion_pagos.created_at', '>=', $datos['fecha_f'])
-                ->where('titulacion_pagos.created_at', '<=', $datos['fecha_t'])
+                ->whereDate('titulacion_pagos.created_at', '>=', $datos['fecha_f'] . " 00:00:00")
+                ->whereDate('titulacion_pagos.created_at', '<=', $datos['fecha_t'] . " 23:59:59")
                 ->where('p.id', $plantel->id)
                 ->sum('titulacion_pagos.monto');
             $totales_pago_planeado = Pago::join('cajas as caj', 'caj.id', 'pagos.caja_id')
                 //->join('caja_lns as cln', 'cln.caja_id', 'caj.id')
                 ->join('adeudos as a', 'caj.id', 'a.caja_id')
-                ->where('pagos.created_at', '>=', $datos['fecha_f'])
-                ->where('pagos.created_at', '<=', $datos['fecha_t'])
+                ->whereDate('pagos.created_at', '>=', $datos['fecha_f'] . " 00:00:00")
+                ->whereDate('pagos.created_at', '<=', $datos['fecha_t'] . " 23:59:59")
                 ->where('bnd_pagado', 1)
                 ->where('caj.plantel_id', $plantel->id)
                 ->whereIn('caj.st_caja_id', array(1, 3))
@@ -4591,8 +4593,8 @@ class AdeudosController extends Controller
             $totales_pago_no_planeado = Pago::join('cajas as caj', 'caj.id', 'pagos.caja_id')
                 //->join('caja_lns as cln', 'cln.caja_id', 'caj.id')
                 ->leftJoin('adeudos as a', 'caj.id', 'a.caja_id')
-                ->where('pagos.created_at', '>=', $datos['fecha_f'])
-                ->where('pagos.created_at', '<=', $datos['fecha_t'])
+                ->whereDate('pagos.created_at', '>=', $datos['fecha_f'] . " 00:00:00")
+                ->whereDate('pagos.created_at', '<=', $datos['fecha_t'] . " 23:59:59")
                 ->whereNull('a.id')
                 ->where('bnd_pagado', 1)
                 ->where('caj.plantel_id', $plantel->id)
@@ -4601,15 +4603,15 @@ class AdeudosController extends Controller
             $registro['razon'] = $plantel->razon;
             $registro['efectivo'] = $totales_efectivo;
             $registro['resto'] = $totales_otros;
-            $registro['suma_total'] = $registro['efectivo'] + $registro['resto'];
+            //$registro['suma_total'] = $registro['efectivo'] + $registro['resto'];
             $registro['totales_titulacion'] = $totales_titulacion;
-            $registro['pago_planeado'] = $totales_pago_planeado;
+            //$registro['pago_planeado'] = $totales_pago_planeado;
             $registro['pago_no_planeado'] = $totales_pago_no_planeado;
-            $registro['totales_pagos'] = $totales_pago_planeado + $totales_pago_no_planeado;
+            $registro['totales_pagos'] = $registro['efectivo'] + $registro['resto'] + $registro['totales_titulacion'] + $registro['pago_no_planeado'];
             //dd($plantel);
             if ($registro['efectivo'] > 0 and $registro['resto'] > 0) {
                 array_push($resultado, $registro);
-                array_push($grafica, array('x' => optional($plantel->cuentaP)->name, 'value' => round($registro['suma_total'], 2), 'fill' => $this->randomColor()));
+                array_push($grafica, array('x' => optional($plantel->cuentaP)->name, 'value' => round($registro['totales_pagos'], 2), 'fill' => $this->randomColor()));
             }
 
             //dd($grafica);
@@ -4879,6 +4881,7 @@ class AdeudosController extends Controller
             'adeudos.monto',
             'caj.total',
             'caj.fecha as caja_fecha',
+            'pag.created_at as pago_created',
             'stc.name as estatus',
             't.name as turno'
         )
@@ -4895,6 +4898,7 @@ class AdeudosController extends Controller
             ->whereNull('comb.deleted_at')
             ->whereNull('c.deleted_at')
             ->leftJoin('cajas as caj', 'caj.id', 'adeudos.caja_id')
+            ->leftJoin('pagos as pag', 'pag.caja_id', 'caj.id')
             ->orderBy('p.id')
             ->orderBy('g.seccion')
             ->orderBy('c.id')
@@ -5013,6 +5017,7 @@ class AdeudosController extends Controller
             'adeudos.monto',
             'caj.total',
             'caj.fecha as caja_fecha',
+            'pag.created_at as pago_created',
             'stc.name as estatus',
             't.name as turno'
         )
@@ -5024,7 +5029,7 @@ class AdeudosController extends Controller
             ->join('plantels as p', 'p.id', 'c.plantel_id')
             ->join('caja_conceptos as cc', 'cc.id', 'adeudos.caja_concepto_id')
             ->leftJoin('cajas as caj', 'caj.id', 'adeudos.caja_id')
-            //->leftJoin('pagos as pag','pag.caja_id','caj.id')
+            ->leftJoin('pagos as pag', 'pag.caja_id', 'caj.id')
             ->whereIn('c.plantel_id', $datos['plantel_f'])
             ->where('adeudos.caja_concepto_id', $datos['concepto_f'])
             ->whereRaw('year(adeudos.fecha_pago)=?', [$fecha->year])

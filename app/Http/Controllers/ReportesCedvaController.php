@@ -879,6 +879,7 @@ class ReportesCedvaController extends Controller
                             'baja_administrativa' => array(),
                             'preinscrito' => array(),
                             'baja' => array(),
+                            'baja_automatica' => array(),
                         ));
                     }
                 }
@@ -926,6 +927,9 @@ class ReportesCedvaController extends Controller
                     $linea['bajas'] = 0;
                     $linea['bajas_pagados'] = 0;
                     $linea['bajas_no_pagados'] = 0;
+                    $linea['baja_automaticas'] = 0;
+                    $linea['baja_automaticas_pagados'] = 0;
+                    $linea['baja_automaticas_no_pagados'] = 0;
                     //$linea['razon'] = "";
                     $aplantel = "";
 
@@ -960,6 +964,9 @@ class ReportesCedvaController extends Controller
                     $linea_dinero['bajas'] = 0;
                     $linea_dinero['bajas_pagados'] = 0;
                     $linea_dinero['bajas_no_pagados'] = 0;
+                    $linea_dinero['baja_automaticas'] = 0;
+                    $linea_dinero['baja_automaticas_pagados'] = 0;
+                    $linea_dinero['baja_automaticas_no_pagados'] = 0;
                     //$linea_dinero['razon'] = "";
                     //$i=1;
                     //dd($resultado2);
@@ -1184,6 +1191,29 @@ class ReportesCedvaController extends Controller
                                 $i++;
                                 */
                             }
+                            if ($registro['estatus_cliente_id'] == 27) {
+                                //dd("si hay baja");
+                                $linea['baja_automaticas'] = $linea['baja_automaticas'] + 1;
+                                if ($registro['pagado_bnd'] == 1) {
+                                    $linea['baja_automaticas_pagados'] = $linea['baja_automaticas_pagados'] + 1;
+                                } else {
+                                    $linea['baja_automaticas_no_pagados'] = $linea['baja_automaticas_no_pagados'] + 1;
+                                }
+
+                                if ($registro['pagado_bnd'] == 1) {
+                                    $linea_dinero['baja_automaticas'] = $linea_dinero['baja_automaticas'] + $registro['total_caja'];
+                                } else {
+                                    $linea_dinero['baja_automaticas'] = $linea_dinero['baja_automaticas'] + $registro['monto'];
+                                }
+
+                                if ($registro['pagado_bnd'] == 1) {
+                                    $linea_dinero['baja_automaticas_pagados'] = $linea_dinero['baja_automaticas_pagados'] + $registro['total_caja'];
+                                } else {
+                                    $linea_dinero['baja_automaticas_no_pagados'] = $linea_dinero['baja_automaticas_no_pagados'] + $registro['monto'];
+                                }
+                                //dd($registro);
+                                array_push($combinacion_plantel_seccion['baja_automatica'], $registro);
+                            }
                             if ($registro['estatus_cliente_id'] == 3) {
                                 //dd("si hay baja");
                                 $linea['bajas'] = $linea['bajas'] + 1;
@@ -1209,11 +1239,11 @@ class ReportesCedvaController extends Controller
                             }
                         }
                     }
-                    if ($linea['matricula_total_activa'] > 0) {
+                    if ($linea['matricula_total_activa'] > 0 or $linea['bajas'] > 0 or $linea['baja_automaticas'] > 0) {
                         array_push($resumen, $linea);
                     }
 
-                    if ($linea_dinero['matricula_total_activa'] > 0) {
+                    if ($linea_dinero['matricula_total_activa'] > 0 or $linea['bajas'] > 0 or $linea['baja_automaticas'] > 0) {
                         array_push($resumen_dinero, $linea_dinero);
                     }
 
@@ -1251,6 +1281,11 @@ class ReportesCedvaController extends Controller
                     //dd($combinacion_plantel_seccion['baja']);
                     if (count($combinacion_plantel_seccion['baja']) > 0) {
                         array_push($registros_ordenados, $combinacion_plantel_seccion['baja']);
+                        //array_push($registros_ordenados, $combinacion_plantel_seccion['bajas_pagados']);
+                        //array_push($registros_ordenados, $combinacion_plantel_seccion['bajas_no_pagados']);
+                    }
+                    if (count($combinacion_plantel_seccion['baja_automatica']) > 0) {
+                        array_push($registros_ordenados, $combinacion_plantel_seccion['baja_automatica']);
                         //array_push($registros_ordenados, $combinacion_plantel_seccion['bajas_pagados']);
                         //array_push($registros_ordenados, $combinacion_plantel_seccion['bajas_no_pagados']);
                     }

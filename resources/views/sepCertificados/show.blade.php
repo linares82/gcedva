@@ -215,7 +215,7 @@
                             @if(!is_null($linea->sep_cert_observacion_id))
                             {{optional($linea->sepCertObservacion)->id_observacion}}
                             @else
-                            {{ $linea->consultaCalificacion->id_observaciones }}
+                            {{ optional($linea->consultaCalificacion)->id_observaciones }}
                             @endif
                         </td>
                         <td>
@@ -224,7 +224,7 @@
                             @else
                             <a target="_blank" href="{{route('consultaCalificacions.edit', 
                             array('id'=>$linea->consulta_calificacion_id, 'cliente'=>$linea->cliente_id))}}">
-                            {{ $linea->consultaCalificacion->observaciones }}
+                            {{ optional($linea->consultaCalificacion)->observaciones }}
                             </a>
                             @endif
                         </td>

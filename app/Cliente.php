@@ -504,5 +504,8 @@ class Cliente extends Model
 	{
 		return $this->belongsTo('App\Prebeca', 'id', 'cliente_id');
 	} // end
-
+	public function hCurp()
+	{
+		return $this->hasMany('App\HCurp');
+	} // end
 }

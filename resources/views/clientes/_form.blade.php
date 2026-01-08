@@ -1560,7 +1560,7 @@
                                             <button class="btn btn-success btn-xs btn_archivo" id="btn_archivo{{ $doc->id }}"
                                                 data-doc_id="{{ $doc->doc_alumno_id }}"
                                                 data-documento='{{ $doc->id }}'> 
-                                                <span class="glyphicon glyphicon-ok">Max. 20MB</span> 
+                                                <span class="glyphicon glyphicon-ok">Max. 200KB</span> 
                                             </button>
                                             <br/>
                                             <div id="texto_notificacion{{ $doc->id }}">

@@ -1033,6 +1033,7 @@ class PagosController extends Controller
         $registros_pagados_aux = Caja::select(
             'pla.razon',
             'c.id',
+            'ad.id as adeudo_id',
             DB::raw('c.id as cliente_id,'
                 . 'c.nombre, c.nombre2, c.ape_paterno, c.ape_materno, cajas.id as caja, cajas.consecutivo,'
                 . 'c.beca_bnd, st.name as estatus_caja, fp.id as forma_pago_id, cajas.st_caja_id,'
@@ -1048,6 +1049,7 @@ class PagosController extends Controller
             ->join('users as up', 'up.id', 'pag.usu_alta_id')
             ->join('forma_pagos as fp', 'fp.id', '=', 'pag.forma_pago_id')
             ->join('caja_lns as cln', 'cln.caja_id', '=', 'cajas.id')
+            ->leftJoin('adeudos as ad', 'ad.id', 'cln.adeudo_id')
             ->where('cajas.plantel_id', '=', $data['plantel_f'])
             ->whereIn('cln.caja_concepto_id', $data['concepto_f'])
             ->whereNull('pag.deleted_at')
@@ -1062,11 +1064,11 @@ class PagosController extends Controller
             $registros_pagados_aux->whereIn('cajas.usu_alta_id', $usuario);
         }
         if ($data['fecha_pago'] == 1) {
-            $registros_pagados_aux->where('pag.fecha', '>=', $data['fecha_f'])
+            $registros_pagados_aux->whereDate('pag.fecha', '>=', $data['fecha_f'])
                 ->whereDate('pag.fecha', '<=', $data['fecha_t']);
         } else {
-            $registros_pagados_aux->where('pag.created_at', '>=', $data['fecha_f'])
-                ->whereDate('pag.created_at', '<=', $data['fecha_t']);
+            $registros_pagados_aux->whereDate('pag.created_at', '>=', $data['fecha_f'] . " 00:00:00")
+                ->whereDate('pag.created_at', '<=', $data['fecha_t'] . " 23:59:59");
         }
         $registros_pagados_aux2 = $registros_pagados_aux->get();
         //$registros_pagados=$registros_pagados_aux2->unique('consecutivo')->values()->all();
@@ -1103,6 +1105,7 @@ class PagosController extends Controller
         $registros_parciales_aux = Caja::select(
             'pla.razon',
             'c.id',
+            'ad.id as adeudo_id',
             DB::raw(''
                 . 'c.nombre, c.nombre2, c.ape_paterno, c.ape_materno, cajas.id as caja, cajas.consecutivo,'
                 . 'c.beca_bnd, st.name as estatus_caja, cajas.total as total_caja, fp.id as forma_pago_id, cajas.st_caja_id,'
@@ -1114,6 +1117,7 @@ class PagosController extends Controller
             ->join('pagos as pag', 'pag.caja_id', '=', 'cajas.id')
             ->join('forma_pagos as fp', 'fp.id', '=', 'pag.forma_pago_id')
             ->join('caja_lns as cln', 'cln.caja_id', '=', 'cajas.id')
+            ->leftJoin('adeudos as ad', 'ad.id', 'cln.adeudo_id')
             ->where('cajas.plantel_id', '=', $data['plantel_f'])
             ->whereIn('cln.caja_concepto_id', $data['concepto_f'])
             //->where('pag.fecha', '>=', $data['fecha_f'])

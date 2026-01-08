@@ -2425,6 +2425,15 @@ Route::post(
         'uses' => 'GradosController@listaGrados'
     )
 )->middleware('auth');
+Route::post(
+    'grados/listaGradosTodos',
+    array(
+        'as' => 'grados.listaGradosTodos',
+        //'middleware' => 'permission:tareas.show',
+        'uses' => 'GradosController@listaGradosTodos'
+    )
+)->middleware('auth');
+
 Route::post('grados/cargaArchivo', [
     'uses' => 'GradosController@cargaArchivo',
     //'middleware'=>'permission:entities.entity.cargaArchivo',

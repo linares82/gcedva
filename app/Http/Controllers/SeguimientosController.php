@@ -1193,7 +1193,7 @@ class SeguimientosController extends Controller
             ->where('c.plantel_id', '<=', $data['plantel_t'])
             ->where('i.grupo_id', '>', 0)
             //->whereIn('stc.id', array(4, 20, 25))
-            ->whereIn('sts.id', array(2, 7))
+            ->whereIn('sts.id', array(2, 6, 7))
             ->whereIn('i.lectivo_id', $data['lectivo_f'])
             ->whereNull('cc.deleted_at')
             ->whereNull('s.deleted_at')
@@ -1384,7 +1384,7 @@ class SeguimientosController extends Controller
                 array_push($registros, $caja_ln);
             } elseif (is_object($existe_linea) and $existe_linea->caja->st_caja_id == 3) {
                 if ($adeudo_tomado->adeudo == 107301) {
-                    dd($existe_linea->caja->st_caja_id);
+                    //dd($existe_linea->caja->st_caja_id);
                 }
                 //dd($adeudo_tomado->toArray());
                 $caja_ln['grupo'] = $adeudo_tomado->grupo;

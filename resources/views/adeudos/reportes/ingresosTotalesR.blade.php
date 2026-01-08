@@ -70,10 +70,10 @@
             <th>Plantel</th>
             <th>Efectivo </th>
             <th>Resto Formas de Pago </th>
-            <th>Suma Total</th>
+            <!--<th>Suma Total</th>-->
             <th>Grafica</th>
             <th>Ingresos Titulación</th>
-            <th>Ingresos Planeados</th>
+            <!--<th>Ingresos Planeados</th>-->
             <th>Ingresos No Planeados(Caja General)</th>
             <th>Total Ingresos</th>
         </thead>
@@ -83,10 +83,10 @@
                 <td>{{$registro['razon']}}</td>
                 <td>{{number_format($registro['efectivo'],2)}}</td>
                 <td>{{number_format($registro['resto'], 2)}}</td>
-                <td>{{number_format($registro['suma_total'], 2)}}</td>
+                
                 <td><a target="_blank" href="{{ route('adeudos.ingresosTotalesDetalle', array('formas_pago'=>$formas_pago->toArray(), 'datos'=>$registro))}}" >Ver</a></td>
                 <td>{{number_format($registro['totales_titulacion'], 2)}}</td>
-                <td>{{number_format($registro['pago_planeado'], 2)}}</td>
+                
                 <td>{{number_format($registro['pago_no_planeado'], 2)}}</td>
                 <td>{{number_format($registro['totales_pagos'], 2)}}</td>
             </tr>

@@ -2,11 +2,12 @@
 
 namespace App\Observers;
 
-use App\Empleado;
+use Auth;
+use App\HCurp;
 use App\Cliente;
+use App\Empleado;
 use App\HEstatus;
 use App\StCliente;
-use Auth;
 
 class ClienteObserver
 {
@@ -62,6 +63,16 @@ class ClienteObserver
         //dd($this->cliente->nombre."-".$vcliente->nombre);
         if ($cliente->bnd_doc_oblig_entregados == 1) {
             $cliente->fec_docs_oblig_entregados = date('Y-m-d');
+        }
+
+        if ($vcliente->curp <> $this->cliente->curp) {
+            $input['curp_nueva'] = $this->cliente->curp;
+            $input['curp_anterior'] = $vcliente->curp;
+            $input['cliente_id'] = $vcliente->id;
+            $input['usu_alta_id'] = isset(Auth::user()->id) ? Auth::user()->id : 1;
+            $input['usu_mod_id'] = isset(Auth::user()->id) ? Auth::user()->id : 1;
+            //dd($input);
+            HCurp::create($input);
         }
     }
 

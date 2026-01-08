@@ -22,7 +22,8 @@
         <table class="table table-condensed table-striped">
             <thead>
                 <tr>
-                  <th>id</th><th>Cliente</th><th>Matricula</th><th>Seccion</th><th>Caja</th><th>Cobrado Por</th><!--<th>Estatus</th>--><th>Fecha Pago</th><th>Fecha Creacion</th><th>Concepto</th><th>Monto Pago</th><th>Forma Pago</th><th>Beca</th>
+                  <th>id</th><th>Cliente</th><th>Matricula</th><th>Seccion</th><th>Caja</th>
+                  <th>Cobrado Por</th><th>Estatus</th><th>Fecha Pago</th><th>Fecha Creacion</th><th>Concepto</th><th>Adeudo</th><th>Monto Pago</th><th>Forma Pago</th><th>Beca</th>
                 </tr> 
             </thead>
             <tbody>
@@ -84,7 +85,7 @@
                         </td>-->
                         <td>{{$registro->consecutivo}}</td>
                         <td>{{$registro->creador_pago}}</td>
-                        <!--<td>{{$registro->estatus_caja}}</td>-->
+                        <td>{{$registro->estatus_caja}}</td>
                         <td>{{$registro->fecha_pago}}</td>
                         <td>{{$registro->created_at}}</td>
                         <td>
@@ -95,6 +96,7 @@
                                 {{$ln->cajaConcepto->name}}<br/>
                             @endforeach  
                         </td>
+                        <td>{{$ln->adeudo_id}}</td>
                         <td style="text-align:right;">{{number_format($registro->monto_pago,2)}}</td>
                         <td>{{$registro->forma_pago}}</td>
                         @if(!is_null($beca)) 

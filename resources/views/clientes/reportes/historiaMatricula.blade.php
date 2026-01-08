@@ -25,6 +25,8 @@
         </tr>
         @endif
 
+
+
         @permission('clientes.historia')
         <tr>
         <td>{{$history->created_at}}</td><td>{{$history->fieldName()}}</td><td>{{optional($history->userResponsible())->name}}</td><td>{{ $history->oldValue() }}</td><td>{{ $history->newValue() }}</td>  
@@ -34,5 +36,19 @@
       </tbody>
     </table>
     
+    <h1>Historia de cambios CURP</h1>
+    <table>
+      <thead><th>fecha</th><th>CURP anterior</th><th>CURP Nueva</th><th>Creado por</th></thead>
+      <tbody>
+        @foreach($cliente->hCurp as $curp)
+            
+            <tr>
+            <td>{{$curp->created_at}}</td><td>{{$curp->curp_anterior}}</td><td>{{$curp->curp_nueva}}</td><td>{{ $curp->usu_alta->name }}</td>
+            </tr>
+            
+
+            
+        @endforeach
+      </tbody>
   </body>
 </html>

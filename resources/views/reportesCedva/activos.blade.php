@@ -42,6 +42,7 @@
               <th>Preinscritos</th>
               <th>Suma (Matricula Total Activa)</th>
               <th>Bajas</th>
+              <th>Bajas Automaticas Definitivas</th>
             </thead>
             <tbody>
               @php
@@ -53,6 +54,7 @@
               $t5=0;
               $t6=0;
               $t7=0;
+              $t8=0;
               @endphp
               @foreach($resumen as $linea)
               <!--<tr>
@@ -62,7 +64,6 @@
                 <td>{{$linea['vigentes_con_1_adeudos']}}</td><td>{{$linea['baja_temporal_por_pago']}}</td><td>{{$linea['baja_administrativa']}}</td>
                 <td>{{$linea['preinscrito']}}</td>
                 <td>{{$linea['matricula_total_activa']}}</td>
-                
               </tr>-->
               @php
               $t0=$t0+$linea['nueva_inscripcion'];
@@ -73,14 +74,14 @@
               $t5=$t5+$linea['preinscrito'];
               $t6=$t6+$linea['matricula_total_activa'];
               $t7=$t7+$linea['bajas'];
-              
+              $t8=$t8+$linea['baja_automaticas'];
               @endphp
               @endforeach
               <tr><td>Totales</td><td></td>
                   <td>{{$t0}}</td>
                   <td>{{$t1}}</td><td>{{$t2}}</td><td>{{$t3}}</td>
                   <td>{{$t4}}</td><td>{{$t5}}</td><td>{{$t6}}</td>
-                  <td>{{$t7}}</td>
+                  <td>{{$t7}}</td><td>{{$t8}}</td>
               </tr>
             </tbody>
     </table>    
@@ -94,7 +95,7 @@
               <th>Activos Vigentes Sin Adeudo</th>
               <th>Activos Vigentes Con 1 Adeudo</th><th>BTP</th><th>BA</th>
               <th>Preinscritos</th><th>Suma (Matricula Total Activa)</th>
-              <th>Bajas</th>
+              <th>Bajas</th><th>Bajas Automaticas Definitivas</th>
             </thead>
             <tbody>
               @php
@@ -106,6 +107,7 @@
               $t5=0;
               $t6=0;
               $t7=0;
+              $t8=0;
               @endphp
               @foreach($resumen as $linea)
               <tr>
@@ -116,7 +118,7 @@
                 <td>{{$linea['preinscrito_pagados']}}</td>
                 <td>{{$linea['matricula_total_activa_pagados']}}</td>
                 <td>{{$linea['bajas_pagados']}}</td>
-                
+                <td>{{$linea['baja_automaticas_pagados']}}</td>
               </tr>
               @php
               $t0=$t0+$linea['nueva_inscripcion_pagados'];
@@ -127,14 +129,14 @@
               $t5=$t5+$linea['preinscrito_pagados'];
               $t6=$t6+$linea['matricula_total_activa_pagados'];
               $t7=$t7+$linea['bajas_pagados'];
-              
+              $t8=$t8+$linea['baja_automaticas_pagados'];
               @endphp
               @endforeach
               <tr><td>Totales</td><td></td>
                   <td>{{$t0}}</td>
                   <td>{{$t1}}</td><td>{{$t2}}</td><td>{{$t3}}</td>
                   <td>{{$t4}}</td><td>{{$t5}}</td><td>{{$t6}}</td>
-                  <td>{{$t7}}</td>
+                  <td>{{$t7}}</td><td>{{$t8}}</td>
               </tr>
             </tbody>
     </table>
@@ -148,7 +150,7 @@
               <th>Activos Vigentes Sin Adeudo</th>
               <th>Activos Vigentes Con 1 Adeudo</th><th>BTP</th><th>BA</th>
               <th>Preinscritos</th><th>Suma (Matricula Total Activa)</th>
-              <th>Bajas</th>
+              <th>Bajas</th><th>Bajas Automaticas Definitivas</th>
             </thead>
             <tbody>
               @php
@@ -160,6 +162,7 @@
               $t5=0;
               $t6=0;
               $t7=0;
+              $t8=0;
               @endphp
               @foreach($resumen as $linea)
               <tr>
@@ -170,6 +173,7 @@
                 <td>{{$linea['preinscrito_no_pagados']}}</td>
                 <td>{{$linea['matricula_total_activa_no_pagados']}}</td>
                 <td>{{$linea['bajas_no_pagados']}}</td>
+                <td>{{$linea['baja_automaticas_no_pagados']}}</td>
               </tr>
               @php
               $t0=$t0+$linea['nueva_inscripcion_no_pagados'];
@@ -180,13 +184,14 @@
               $t5=$t5+$linea['preinscrito_no_pagados'];
               $t6=$t6+$linea['matricula_total_activa_no_pagados'];
               $t7=$t7+$linea['bajas_no_pagados'];
+              $t8=$t8+$linea['baja_automaticas_no_pagados'];
               @endphp
               @endforeach
               <tr><td>Totales</td><td></td>
                   <td>{{$t0}}</td>
                   <td>{{$t1}}</td><td>{{$t2}}</td><td>{{$t3}}</td>
                   <td>{{$t4}}</td><td>{{$t5}}</td><td>{{$t6}}</td>
-                  <td>{{$t7}}</td>
+                  <td>{{$t7}}</td><td>{{$t8}}</td>
               </tr>
             </tbody>
     </table>
@@ -214,6 +219,7 @@
               $t5=0;
               $t6=0;
               $t7=0;
+              $t8=0;
               @endphp
               @foreach($resumen_dinero as $linea)
               <tr>
@@ -236,6 +242,7 @@
               $t5=$t5+$linea['preinscrito'];
               $t6=$t6+$linea['matricula_total_activa'];
               $t7=$t7+$linea['bajas'];
+              $t8=$t8+$linea['baja_automaticas'];
               @endphp
               @endforeach
               <tr><td>Totales</td><td></td>
@@ -257,7 +264,7 @@
               <th>Activos Vigentes Con 1 Adeudo</th><th>BTP</th><th>BA</th>
               <th>Preinscritos</th>
               <th>Suma (Matricula Total Activa)</th>
-              <th>Bajas</th>
+              <th>Bajas</th><th>Bajas Automaticas Definitivas</th>
             </thead>
             <tbody>
               @php
@@ -269,6 +276,7 @@
               $t5=0;
               $t6=0;
               $t7=0;
+              $t8=0;
               @endphp
               @foreach($resumen_dinero as $linea)
               <tr>
@@ -281,6 +289,7 @@
                 <td align="right">{{number_format($linea['preinscrito_pagados'],2)}}</td>
                 <td align="right">{{number_format($linea['matricula_total_activa_pagados'],2)}}</td>
                 <td align="right">{{number_format($linea['bajas_pagados'],2)}}</td>
+                <td align="right">{{number_format($linea['baja_automaticas_pagados'],2)}}</td>
               </tr>
               @php
               $t0=$t0+$linea['nueva_inscripcion_pagados'];
@@ -291,6 +300,7 @@
               $t5=$t5+$linea['preinscrito_pagados'];
               $t6=$t6+$linea['matricula_total_activa_pagados'];
               $t7=$t7+$linea['bajas_pagados'];
+              $t8=$t8+$linea['baja_automaticas_pagados'];
               @endphp
               @endforeach
               <tr><td>Totales</td><td></td>
@@ -298,6 +308,7 @@
                 <td align="right">{{number_format($t1,2)}}</td><td align="right">{{number_format($t2,2)}}</td><td align="right">{{number_format($t3,2)}}</td>
                   <td align="right">{{number_format($t4,2)}}</td><td align="right">{{number_format($t5,2)}}</td><td align="right">{{number_format($t6,2)}}</td>
                   <td align="right">{{number_format($t7,2)}}</td>
+                  <td align="right">{{number_format($t8,2)}}</td>
               </tr>
             </tbody>
     </table>
@@ -313,7 +324,7 @@
               <th>Activos Vigentes Con 1 Adeudo</th><th>BTP</th><th>BA</th>
               <th>Preinscritos</th>
               <th>Suma (Matricula Total Activa)</th>
-              <th>Bajas</th>
+              <th>Bajas</th><th>Bajas Automaticas Definitivas</th> 
             </thead>
             <tbody>
               @php
@@ -325,6 +336,7 @@
               $t5=0;
               $t6=0;
               $t7=0;
+              $t8=0;
               @endphp
               @foreach($resumen_dinero as $linea)
               <tr>
@@ -337,6 +349,7 @@
                 <td align="right">{{number_format($linea['preinscrito_no_pagados'],2)}}</td>
                 <td align="right">{{number_format($linea['matricula_total_activa_no_pagados'],2)}}</td>
                 <td align="right">{{number_format($linea['bajas_no_pagados'],2)}}</td>
+                <td align="right">{{number_format($linea['baja_automaticas_no_pagados'],2)}}</td>
               </tr>
               @php
               $t0=$t0+$linea['nueva_inscripcion_no_pagados'];
@@ -347,14 +360,14 @@
               $t5=$t5+$linea['preinscrito_no_pagados'];
               $t6=$t6+$linea['matricula_total_activa_no_pagados'];
               $t7=$t7+$linea['bajas_no_pagados'];
-              
+              $t8=$t8+$linea['baja_automaticas_no_pagados'];
               @endphp
               @endforeach
               <tr><td>Totales</td><td></td>
               <td align="right">{{number_format($t0,2)}}</td>  
                 <td align="right">{{number_format($t1,2)}}</td><td align="right">{{number_format($t2,2)}}</td><td align="right">{{number_format($t3,2)}}</td>
                   <td align="right">{{number_format($t4,2)}}</td><td align="right">{{number_format($t5,2)}}</td><td align="right">{{number_format($t6,2)}}</td>
-              <td align="right">{{number_format($t7,2)}}</td>      
+              <td align="right">{{number_format($t7,2)}}</td><td align="right">{{number_format($t8,2)}}</td>      
               </tr>
             </tbody>
     </table>

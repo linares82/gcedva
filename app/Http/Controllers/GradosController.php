@@ -335,6 +335,14 @@ class GradosController extends Controller
         return view('combinacionClientes.reportes.cargas', compact('grados', 'plantels'));
     }
 
+    public function listaGradosTodos(Request $request)
+    {
+        $grados = Grado::orderBy('plantel_id')->orderBy('especialidad_id')->orderBy('nivel_id')->orderBy('id')->get();
+        $plantels = Plantel::pluck('razon', 'id');
+        $todos = true;
+        return view('combinacionClientes.reportes.cargas', compact('grados', 'plantels', 'todos'));
+    }
+
     public function apiListaXplantelYespecialidadYgrado(Request $request)
     {
         //dd($request);

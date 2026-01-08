@@ -161,8 +161,8 @@
                   type: 'GET',
                   data: "plantel_id=" + $('#plantel_id-field option:selected').val(),
                   dataType: 'json',
-                  beforeSend : function(){$("#loading3").show();},
-                  complete : function(){$("#loading3").hide();},
+                  beforeSend : function(){$("#loading10").show();},
+                  complete : function(){$("#loading10").hide();},
                   success: function(data){
                       //$example.select2("destroy");
                       $('#materia_id-field').html('');
@@ -216,8 +216,8 @@
                   type: 'GET',
                   data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad_id-field option:selected').val() + "&nivel_id=" + $('#nivel_id-field option:selected').val() + "",
                   dataType: 'json',
-                  beforeSend : function(){$("#loading11").show();},
-                  complete : function(){$("#loading11").hide();},
+                  beforeSend : function(){$("#loading10").show();},
+                  complete : function(){$("#loading10").hide();},
                   success: function(data){
                       //alert(data);
                       //$example.select2("destroy");
@@ -245,8 +245,8 @@
                   type: 'GET',
                   data: "plantel_id=" + $('#plantel_id-field option:selected').val() + "&especialidad_id=" + $('#especialidad_id-field option:selected').val() + "&nivel_id=" + $('#nivel_id-field option:selected').val() + "&grado_id=" + $('#grado_id-field option:selected').val() +"",
                   dataType: 'json',
-                  beforeSend : function(){$("#loading12").show();},
-                  complete : function(){$("#loading12").hide();},
+                  beforeSend : function(){$("#loading10").show();},
+                  complete : function(){$("#loading10").hide();},
                   success: function(data){
                       //alert(data);
                       //$example.select2("destroy");

@@ -3287,7 +3287,8 @@ class ClientesController extends Controller
     public function historiaMatricula(Request $request)
     {
         $datos = $request->all();
-        $cliente = Cliente::find($datos['cliente']);
+        $cliente = Cliente::with('hCurp')->find($datos['cliente']);
+        //dd($cliente->hCurp);
         //dd($cliente->revisionHistory->toArray());
         return view('clientes.reportes.historiaMatricula', compact('cliente'));
     }
