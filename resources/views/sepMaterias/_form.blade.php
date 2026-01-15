@@ -20,6 +20,13 @@
    <span class="help-block">{{ $errors->first("cantidad_materias_para_aprobar") }}</span>
    @endif
 </div>
+<div class="form-group col-md-6 @if($errors->has('duracion_horas')) has-error @endif">
+<label for="duracion_horas-field">Duracion Total (Horas)</label>
+{!! Form::text("duracion_horas", null, array("class" => "form-control", "id" => "duracion_horas-field")) !!}
+@if($errors->has("duracion_horas"))
+<span class="help-block">{{ $errors->first("duracion_horas") }}</span>
+@endif
+</div>
 <div class="form-group col-md-6 @if($errors->has('materia_id')) has-error @endif">
 <label for="materia_id-field">Materia</label>
 {!! Form::select("materia_id[]", array(), isset($sepMaterium) ? optional($sepMaterium)->materias : null, array("class" => "form-control select_seguridad", "id" => "materia_id-field", 'multiple'=>true)) !!}

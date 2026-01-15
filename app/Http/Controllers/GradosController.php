@@ -85,6 +85,9 @@ class GradosController extends Controller
         } else {
             $input['mexico_bnd'] = 0;
         }
+        if (!isset($input['bnd_rvoe_inactiva'])) {
+            $input['bnd_rvoe_inactiva'] = 0;
+        }
         $input['usu_alta_id'] = Auth::user()->id;
         $input['usu_mod_id'] = Auth::user()->id;
 
@@ -179,6 +182,9 @@ class GradosController extends Controller
         if (!isset($input['bnd_servicio_social'])) {
             $input['bnd_servicio_social'] = 0;
         }
+        if (!isset($input['bnd_rvoe_inactiva'])) {
+            $input['bnd_rvoe_inactiva'] = 0;
+        }
         //$input['seccion']=Seccion::where('id',$input['seccion_id'])->value('name');
         //update data
         $grado = $grado->find($id);
@@ -213,28 +219,46 @@ class GradosController extends Controller
             $nivel = $request->get('nivel_id');
             $grado = $request->get('grado_id');
             $final = array();
-            $r = DB::table('grados as g')
-                ->select('g.id', 'g.name')
-                ->where('g.plantel_id', '=', $plantel)
-                ->where('g.especialidad_id', '=', $especialidad)
-                ->where('g.nivel_id', '=', $nivel)
-                ->where('g.id', '>', '0')
-                ->whereNull('g.deleted_at')
-                ->get();
-            //dd($r);
+
+            if (Auth::user()->can('grados.verInactivos')) {
+                $r = DB::table('grados as g')
+                    ->select('g.id', 'g.name')
+                    ->where('g.plantel_id', '=', $plantel)
+                    ->where('g.especialidad_id', '=', $especialidad)
+                    ->where('g.nivel_id', '=', $nivel)
+                    ->where('g.id', '>', '0')
+                    ->whereNull('g.deleted_at')
+                    ->get();
+            } else {
+                $r = DB::table('grados as g')
+                    ->select('g.id', 'g.name')
+                    ->where('g.plantel_id', '=', $plantel)
+                    ->where('g.especialidad_id', '=', $especialidad)
+                    ->where('g.nivel_id', '=', $nivel)
+                    ->where('g.id', '>', '0')
+                    ->whereNull('g.deleted_at')
+                    ->whereNull('g.bnd_rvoe_inactiva')->orWhere('g.bnd_rvoe_inactiva', 0)
+                    ->get();
+            }
+
+
+
+            //dd($grado);
             if (isset($grado) and $grado <> 0) {
                 foreach ($r as $r1) {
                     if ($r1->id == $grado) {
                         array_push($final, array(
                             'id' => $r1->id,
                             'name' => $r1->name,
-                            'selectec' => 'Selected'
+                            'selectec' => 'Selected',
+                            'inactivo' => $r1->bnd_rvoe_activa
                         ));
                     } else {
                         array_push($final, array(
                             'id' => $r1->id,
                             'name' => $r1->name,
-                            'selectec' => ''
+                            'selectec' => '',
+                            'inactivo' => $r1->bnd_rvoe_activa
                         ));
                     }
                 }

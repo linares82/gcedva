@@ -24,13 +24,16 @@ class updateFormatoDgcft extends FormRequest
     public function rules()
     {
         return [
-            'plantel_id'=>"required"
+            'plantel_id' => "required",
+            'control_parte_fija' => 'required|max:8|min:8',
+            'control_inicio' => 'required|max:4|min:4',
         ];
     }
 
-    public function messages(){
+    public function messages()
+    {
         return [
-            'plantel_id.required'=>"Campo requerido"
+            'plantel_id.required' => "Campo requerido"
         ];
-    }    
+    }
 }

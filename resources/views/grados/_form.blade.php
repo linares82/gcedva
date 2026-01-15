@@ -181,6 +181,13 @@
                 <span class="help-block">{{ $errors->first('emision_rvoe') }}</span>
             @endif
         </div>
+        <div class="form-group col-md-4 @if($errors->has('bnd_rvoe_inactiva')) has-error @endif">
+            <label for="bnd_rvoe_inactiva-field">RVOE Inactiva</label>
+            {!! Form::checkbox("bnd_rvoe_inactiva", 1, null, [ "id" => "bnd_rvoe_inactiva-field", 'class'=>'minimal']) !!}
+            @if($errors->has("bnd_rvoe_inactiva"))
+            <span class="help-block">{{ $errors->first("bnd_rvoe_inactiva") }}</span>
+            @endif
+        </div>
         <div class="form-group col-md-4 @if ($errors->has('sep_carrera_id')) has-error @endif">
             <label for="sep_carrera_id-field">Sep Carrera</label>
             {!! Form::select('sep_carrera_id', $sep_carreras, null, [
@@ -201,7 +208,7 @@
                 <span class="help-block">{{ $errors->first('sep_autorizacion_reconocimiento_id') }}</span>
             @endif
         </div>
-        <div class="form-group col-md-3 @if($errors->has('bnd_servicio_social')) has-error @endif" style="clear:left;">
+        <div class="form-group col-md-4 @if($errors->has('bnd_servicio_social')) has-error @endif" style="clear:left;">
             <label for="bnd_servicio_social-field">Servicio Social Obligatorio</label>
             {!! Form::checkbox("bnd_servicio_social", 1, null, [ "id" => "bnd_servicio_social-field", 'class'=>'minimal']) !!}
             @if($errors->has("bnd_servicio_social"))
@@ -227,6 +234,14 @@
             ]) !!}
             @if ($errors->has('plan_estudio_id'))
                 <span class="help-block">{{ $errors->first('plan_estudio_id') }}</span>
+            @endif
+        </div>
+
+        <div class="form-group col-md-4 @if ($errors->has('enlace_nombre')) has-error @endif">
+            <label for="enlace_nombre-field">Enlace Nombre</label>
+            {!! Form::text('enlace_nombre', null, ['class' => 'form-control input-sm', 'id' => 'enlace_nombre-field']) !!}
+            @if ($errors->has('enlace_nombre'))
+                <span class="help-block">{{ $errors->first('enlace_nombre') }}</span>
             @endif
         </div>
     </div>

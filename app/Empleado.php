@@ -93,7 +93,8 @@ class Empleado extends Model
 		'parentesco2',
 		'fec_inicio_contrato1',
 		'fec_inicio_contrato2',
-		'fec_inicio_contrato3'
+		'fec_inicio_contrato3',
+		'fec_curp_validacion'
 	];
 
 	public function usu_alta()

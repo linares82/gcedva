@@ -103,7 +103,7 @@
             <br/>
             <table width="100%">
                 <tr>
-                    <td>ENLACE OPERATIVO:<strong>{{$formatoDgcft->plantelR->enlace}}</strong></td>
+                    <td>ENLACE OPERATIVO:<strong>{{$grado->enlace_nombre}}</strong></td>
                     <td colspan="2">PLANTEL PARTICULAR: <strong>{{$grado->denominacion}}</strong></td>
                     <td>CLAVE CCT: {{$grado->cct}} </td>
                 </tr>
@@ -199,12 +199,12 @@
                               SELLO</td> 
                     </tr>
                     <tr>
-                        <td align="center" valign="bottom" height="100"><span style="font-weight: bold"><u>{{$formatoDgcft->plantelR->enlace}}</u></span><br>
+                        <td align="center" valign="bottom" height="100"><span style="font-weight: bold"><u>{{$grado->enlace_nombre}}</u></span><br>
                               NOMBRE Y FIRMA DEL ENLACE OPERATIVO</td> 
                         <td align="center" valign="bottom" height="">
                         <table width="100%"><tr><td style="border-bottom: 1px solid black;"></td></tr></table>
                                 SELLO</td> 
-                        <td align="center" valign="bottom" height="50"><span style="font-weight: bold"><u>{{$formatoDgcft->plantelR->enlace}}</u></span><br>
+                        <td align="center" valign="bottom" height="50"><span style="font-weight: bold"><u>{{$grado->enlace_nombre}}</u></span><br>
                               NOMBRE Y FIRMA DEL ENLACE OPERATIVO</td> 
                         <td align="center" valign="bottom" height="">
                         <table width="100%"><tr><td style="border-bottom: 1px solid black;"></td></tr></table>

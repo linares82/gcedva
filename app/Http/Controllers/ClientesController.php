@@ -3214,7 +3214,7 @@ class ClientesController extends Controller
 
         $dentro3Meses = false;
 
-        if (!is_null($cliente->matricula) or $cliente->matricula <> "") {
+        if (!is_null($cliente) and (!is_null($cliente->matricula) or $cliente->matricula <> "")) {
             $diaActual = Carbon::createFromFormat('Y-m-d', date('Y-m-d'))->day;
             $mesActual = Carbon::createFromFormat('Y-m-d', date('Y-m-d'))->month;
             $anioActual = Carbon::createFromFormat('Y-m-d', date('Y-m-d'))->year;

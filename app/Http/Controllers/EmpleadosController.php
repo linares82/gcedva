@@ -8,6 +8,7 @@ use File;
 use Hash;
 use App\User;
 
+use App\Param;
 use App\Estado;
 use App\Lectivo;
 use App\Plantel;
@@ -59,7 +60,7 @@ class EmpleadosController extends Controller
             ->pluck('name', 'id');
         $estados = Estado::pluck('name', 'id');
         $nivel_estudios = NivelEstudio::pluck('name', 'id');
-        
+
         return view('empleados.create', compact('estados', 'jefes', 'responsables', 'tipoContratos', 'nivel_estudios'))
             ->with('list', Empleado::getListFromAllRelationApps())
             ->with('list1', PivotDocEmpleado::getListFromAllRelationApps());
@@ -104,10 +105,10 @@ class EmpleadosController extends Controller
         //dd($input);
         $e = Empleado::create($input);
 
-        if(count($input2)>0){
-            $e->plantels()->sync($input2['plantel_id']);    
+        if (count($input2) > 0) {
+            $e->plantels()->sync($input2['plantel_id']);
         }
-        
+
         if ($request->has('doc_empleado_id') and $request->has('archivo')) {
             $input3['doc_empleado_id'] = $request->get('doc_empleado_id');
             $input3['archivo'] = $request->get('archivo');
@@ -150,7 +151,7 @@ class EmpleadosController extends Controller
             $empleado->cve_empleado = substr(Hash::make(rand(0, 1000)), 2, 8);
         }
         $jefes = Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
-            ->join('empleado_plantel as ep','ep.empleado_id','=','empleados.id')
+            ->join('empleado_plantel as ep', 'ep.empleado_id', '=', 'empleados.id')
             ->where('jefe_bnd', '=', '1')
             ->whereIn('ep.plantel_id', $planteles)
             //->whereIn('plantel_id', $planteles)
@@ -184,7 +185,24 @@ class EmpleadosController extends Controller
             ->whereNotIn('id', $de_array)
             ->get();
         //dd($documentos_faltantes->toArray());
-        return view('empleados.edit', compact('estados', 'tipoContratos', 'empleado', 'pivotDocEmpleado', 'jefes', 'responsables', 'documentos_faltantes', 'nivel_estudios'))
+
+        $curp_token = Param::where('llave', 'token_curp')->first();
+        $curp_url = Param::where('llave', 'url_curp')->first();
+        $api_valida_curp = [
+            'token' => $curp_token->valor,
+            'url' => $curp_url->valor,
+        ];
+        return view('empleados.edit', compact(
+            'estados',
+            'tipoContratos',
+            'empleado',
+            'pivotDocEmpleado',
+            'jefes',
+            'responsables',
+            'documentos_faltantes',
+            'nivel_estudios',
+            'api_valida_curp'
+        ))
             ->with('list', Empleado::getListFromAllRelationApps())
             ->with('list1', PivotDocEmpleado::getListFromAllRelationApps());
     }
@@ -311,14 +329,14 @@ class EmpleadosController extends Controller
 
         $input2 = $request->only(['plantel_id']);
         //dd($input2['plantel_id']);
-        if(isset($input['pertenece_a'])){
+        if (isset($input['pertenece_a'])) {
             $input['plantel_id'] = $input['pertenece_a'];
         }
-        
+
         $input['usu_mod_id'] = Auth::user()->id;
         if (!isset($input['bnd_recontratable'])) {
             $input['bnd_recontratable'] = 0;
-        } 
+        }
         //dd($input['jefe_bnd']);
         if (!isset($input['jefe_bnd'])) {
             $input['jefe_bnd'] = 0;
@@ -330,16 +348,20 @@ class EmpleadosController extends Controller
         } else {
             $input['alerta_bnd'] = 1;
         }
+        if (!is_null($input['abreviatura_estado'])) {
+            $estado = Estado::where('abreviatura', $input['abreviatura_estado'])->first();
+            $input['estado_nacimiento_id'] = $estado->id;
+        }
         //dd($input);
         $empleado = $empleado->find($id);
 
         $e = $empleado->update($input);
-        
+
         //dd($input['plantel_id']);
-        if(count($input2)>0){
+        if (count($input2) > 0) {
             $empleado->plantels()->sync($input2['plantel_id']);
         }
-        
+
 
         if ($request->has('doc_empleado_id') and $request->get('doc_empleado_id') > 0 and $request->has('archivo')) {
             $input3['doc_empleado_id'] = $request->get('doc_empleado_id');
@@ -459,7 +481,7 @@ class EmpleadosController extends Controller
             }
 
             $final = array();
-            
+
             $r = DB::table('empleados as e')
                 ->select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as nombre'))
                 ->join('empleado_plantel as ep', 'ep.empleado_id', '=', 'e.id')
@@ -648,9 +670,9 @@ class EmpleadosController extends Controller
 
     public function registroDocentes()
     {
-        $lectivos=Lectivo::pluck('name','id');
+        $lectivos = Lectivo::pluck('name', 'id');
         return view('empleados.reportes.registroDocentes', compact('lectivos'))
-        ->with('list', Empleado::getListFromAllRelationApps());;
+            ->with('list', Empleado::getListFromAllRelationApps());;
     }
 
     public function registroDocentesR(Request $request)
@@ -674,11 +696,11 @@ class EmpleadosController extends Controller
         )
             ->leftJoin('nivel_estudios as ne', 'ne.id', '=', 'empleados.nivel_estudio_id')
             ->leftJoin('estados as est_nacimiento', 'est_nacimiento.id', '=', 'empleados.estado_nacimiento_id')
-            ->join('asignacion_academicas as aa','aa.docente_oficial_id','=','empleados.id')
-            ->join('materia as m','m.id','aa.materium_id')
+            ->join('asignacion_academicas as aa', 'aa.docente_oficial_id', '=', 'empleados.id')
+            ->join('materia as m', 'm.id', 'aa.materium_id')
             ->where('aa.plantel_id', $datos['plantel_f'])
             //->whereIn('empleados.st_empleado_id', $datos['estatus_f'])
-            ->where('aa.lectivo_id',$datos['lectivo_f'])
+            ->where('aa.lectivo_id', $datos['lectivo_f'])
             //->where('empleados.puesto_id', 3)
             ->where('m.bnd_oficial', 1)
             ->WhereNull('empleados.deleted_at')
@@ -719,10 +741,10 @@ class EmpleadosController extends Controller
             //->whereIn('empleados.st_empleado_id', $datos['estatus_f'])
             //->where('empleados.puesto_id', 3)
             ->WhereNull('empleados.deleted_at');
-            if($datos['oficiales_f']==2){
-                $registros_aux->where('bnd_oficial',1);
-            }
-            $registros=$registros_aux
+        if ($datos['oficiales_f'] == 2) {
+            $registros_aux->where('bnd_oficial', 1);
+        }
+        $registros = $registros_aux
             ->distinct()
             ->get();
         //dd($registros->toArray());
@@ -738,18 +760,20 @@ class EmpleadosController extends Controller
         return redirect(url('/home'));
     }
 
-    public function finContratos(){
+    public function finContratos()
+    {
         $e = Empleado::where('user_id', Auth::user()->id)->first();
-            $plantels = array();
-            foreach ($e->plantels as $p) {
-                array_push($plantels, $p->id);
-            }
-        $planteles=Plantel::whereIn('id',$plantels)->pluck('razon','id');
-        return view('empleados.reportes.finContratos',compact('planteles'));
+        $plantels = array();
+        foreach ($e->plantels as $p) {
+            array_push($plantels, $p->id);
+        }
+        $planteles = Plantel::whereIn('id', $plantels)->pluck('razon', 'id');
+        return view('empleados.reportes.finContratos', compact('planteles'));
     }
 
-    public function finContratosR(Request $request){
-        $datos=$request->all();
+    public function finContratosR(Request $request)
+    {
+        $datos = $request->all();
         //dd($datos);
         $contratosVencidos = Empleado::where('st_empleado_id', '<>', 3)
             ->where('dias_alerta', '>', 0)
@@ -758,141 +782,206 @@ class EmpleadosController extends Controller
             ->orderBy('plantel_id')
             ->orderBy('fin_contrato')
             ->get();
-        return view('empleados.reportes.finContratosR',compact('contratosVencidos'));
+        return view('empleados.reportes.finContratosR', compact('contratosVencidos'));
     }
 
-    public function listadoColaboradores(){
+    public function listadoColaboradores()
+    {
         $e = Empleado::where('user_id', Auth::user()->id)->first();
-            $plantels = array();
-            foreach ($e->plantels as $p) {
-                array_push($plantels, $p->id);
-            }
-        $planteles=Plantel::whereIn('id',$plantels)->pluck('razon','id');
-        return view('empleados.reportes.listadoColaboradores',compact('planteles'))
-        ->with('list', Empleado::getListFromAllRelationApps());
+        $plantels = array();
+        foreach ($e->plantels as $p) {
+            array_push($plantels, $p->id);
+        }
+        $planteles = Plantel::whereIn('id', $plantels)->pluck('razon', 'id');
+        return view('empleados.reportes.listadoColaboradores', compact('planteles'))
+            ->with('list', Empleado::getListFromAllRelationApps());
     }
 
 
 
-    public function listadoColaboradoresR(Request $request){
-        $datos=$request->all();
-        $empleados=Empleado::select('pla.razon','empleados.id', 'empleados.nombre', 'empleados.ape_paterno', 
-        'empleados.ape_materno', 'empleados.curp', 'empleados.rfc', 'empleados.direccion', 'p.name AS puesto', 
-        'empleados.mail_empresa', 'empleados.tel_cel', 'empleados.tel_emergencia', 'empleados.parentesco', 
-        'empleados.contacto_emergencia','empleados.tel_fijo',
-        'stc.name as estatus','empleados.fec_nacimiento','empleados.fec_ingreso',
-        'empleados.cve_empleado','empleados.cel_empresa','empleados.mail','u.name as user',
-        'empleados.extranjero_bnd','empleados.genero','empleados.alimenticia_bnd','empleados.jefe_bnd', 
-        'j.nombre as nombre_jefe','j.ape_paterno as ape_paterno_jefe','j.ape_materno as ape_materno_jefe',
-        'e.name as estado_nacimiento',
-        'empleados.pais_nacimiento','ne.name as nivel_estudio', 'empleados.profesion','empleados.cedula',
-        'empleados.anios_servicio_escuela','empleados.fec_inicio_experiencia_academicas',
-        'empleados.profordems','empleados.bnd_recontratable','empleados.just_recontratable',
-        'tc.name as tipo_contrato','pla_contrato1.razon as pla_contrato1','empleados.fin_contrato',
-        'tc2.name as tipo_contrato2','pla_contrato2.razon as pla_contrato2','empleados.fec_fin_contrato2'
-        //'his.descripcion as evento_descripcion','his.fecha as evento_fecha'
+    public function listadoColaboradoresR(Request $request)
+    {
+        $datos = $request->all();
+        $empleados = Empleado::select(
+            'pla.razon',
+            'empleados.id',
+            'empleados.nombre',
+            'empleados.ape_paterno',
+            'empleados.ape_materno',
+            'empleados.curp',
+            'empleados.rfc',
+            'empleados.direccion',
+            'p.name AS puesto',
+            'empleados.mail_empresa',
+            'empleados.tel_cel',
+            'empleados.tel_emergencia',
+            'empleados.parentesco',
+            'empleados.contacto_emergencia',
+            'empleados.tel_fijo',
+            'stc.name as estatus',
+            'empleados.fec_nacimiento',
+            'empleados.fec_ingreso',
+            'empleados.cve_empleado',
+            'empleados.cel_empresa',
+            'empleados.mail',
+            'u.name as user',
+            'empleados.extranjero_bnd',
+            'empleados.genero',
+            'empleados.alimenticia_bnd',
+            'empleados.jefe_bnd',
+            'j.nombre as nombre_jefe',
+            'j.ape_paterno as ape_paterno_jefe',
+            'j.ape_materno as ape_materno_jefe',
+            'e.name as estado_nacimiento',
+            'empleados.pais_nacimiento',
+            'ne.name as nivel_estudio',
+            'empleados.profesion',
+            'empleados.cedula',
+            'empleados.anios_servicio_escuela',
+            'empleados.fec_inicio_experiencia_academicas',
+            'empleados.profordems',
+            'empleados.bnd_recontratable',
+            'empleados.just_recontratable',
+            'tc.name as tipo_contrato',
+            'pla_contrato1.razon as pla_contrato1',
+            'empleados.fin_contrato',
+            'tc2.name as tipo_contrato2',
+            'pla_contrato2.razon as pla_contrato2',
+            'empleados.fec_fin_contrato2'
+            //'his.descripcion as evento_descripcion','his.fecha as evento_fecha'
         )
-        ->join('puestos as p','p.id','empleados.puesto_id')
-        ->leftJoin('plantels as pla','pla.id','empleados.plantel_id')
-        ->leftJoin('plantels as pla_contrato1','pla_contrato1.id','empleados.plantel_contrato1_id')
-        ->leftJoin('plantels as pla_contrato2','pla_contrato2.id','empleados.plantel_contrato2_id')
-        ->join('st_empleados as stc','stc.id','empleados.st_empleado_id')
-        ->join('users as u','u.id','empleados.user_id')
-        ->join('empleados as j','j.id', 'empleados.jefe_id')
-        ->leftJoin('tipo_contratos as tc','tc.id', 'empleados.tipo_contrato_id')
-        ->leftJoin('tipo_contratos as tc2','tc2.id', 'empleados.tipo_contrato2_id')
-        ->leftJoin('estados as e','e.id', 'empleados.estado_nacimiento_id')
-        ->leftJoin('nivel_estudios as ne','ne.id', 'empleados.nivel_estudio_id')
-        //->leftJoin('historials as his','his.empleado_id', 'empleados.id')
-        ->whereIn('empleados.plantel_id', $datos['plantel_f']) 
-        ->whereIn('empleados.st_empleado_id', $datos['estatus_f']) 
-        ->with('historials')
-        ->get();
+            ->join('puestos as p', 'p.id', 'empleados.puesto_id')
+            ->leftJoin('plantels as pla', 'pla.id', 'empleados.plantel_id')
+            ->leftJoin('plantels as pla_contrato1', 'pla_contrato1.id', 'empleados.plantel_contrato1_id')
+            ->leftJoin('plantels as pla_contrato2', 'pla_contrato2.id', 'empleados.plantel_contrato2_id')
+            ->join('st_empleados as stc', 'stc.id', 'empleados.st_empleado_id')
+            ->join('users as u', 'u.id', 'empleados.user_id')
+            ->join('empleados as j', 'j.id', 'empleados.jefe_id')
+            ->leftJoin('tipo_contratos as tc', 'tc.id', 'empleados.tipo_contrato_id')
+            ->leftJoin('tipo_contratos as tc2', 'tc2.id', 'empleados.tipo_contrato2_id')
+            ->leftJoin('estados as e', 'e.id', 'empleados.estado_nacimiento_id')
+            ->leftJoin('nivel_estudios as ne', 'ne.id', 'empleados.nivel_estudio_id')
+            //->leftJoin('historials as his','his.empleado_id', 'empleados.id')
+            ->whereIn('empleados.plantel_id', $datos['plantel_f'])
+            ->whereIn('empleados.st_empleado_id', $datos['estatus_f'])
+            ->with('historials')
+            ->get();
         /*foreach($empleados as $e){
             if($e->id==2) dd($e->historials->last());
         }*/
-        
-        return view('empleados.reportes.listadoColaboradoresR',compact('empleados'));
+
+        return view('empleados.reportes.listadoColaboradoresR', compact('empleados'));
     }
 
-    public function listadoCumples(){
+    public function listadoCumples()
+    {
         $e = Empleado::where('user_id', Auth::user()->id)->first();
-            $plantels = array();
-            foreach ($e->plantels as $p) {
-                array_push($plantels, $p->id);
-            }
-        $planteles=Plantel::whereIn('id',$plantels)->pluck('razon','id');
-        return view('empleados.reportes.listadoCumples',compact('planteles'))
-        ->with('list', Empleado::getListFromAllRelationApps());
+        $plantels = array();
+        foreach ($e->plantels as $p) {
+            array_push($plantels, $p->id);
+        }
+        $planteles = Plantel::whereIn('id', $plantels)->pluck('razon', 'id');
+        return view('empleados.reportes.listadoCumples', compact('planteles'))
+            ->with('list', Empleado::getListFromAllRelationApps());
     }
 
 
 
-    public function listadoCumplesR(Request $request){
-        $datos=$request->all();
-        $fecha=Carbon::createFromFormat('Y-m-d',$datos['fecha_f']);
-        $empleados=Empleado::select('pla.razon','empleados.id', 'empleados.nombre', 'empleados.ape_paterno', 
-        'empleados.ape_materno', 'empleados.curp', 'empleados.rfc', 'empleados.direccion', 'p.name AS puesto', 
-        'empleados.mail_empresa', 'empleados.tel_cel', 'empleados.tel_emergencia', 'empleados.parentesco', 
-        'empleados.fin_contrato','stc.name as estatus','empleados.fec_nacimiento','empleados.fec_ingreso')
-        ->join('puestos as p','p.id','empleados.puesto_id')
-        ->join('plantels as pla','pla.id','empleados.plantel_id')
-        ->join('st_empleados as stc','stc.id','empleados.st_empleado_id')
-        ->whereIn('plantel_id', $datos['plantel_f']) 
-        ->whereNotIn('empleados.st_empleado_id',[2,3,])
-        ->whereMonth('fec_nacimiento', $fecha->month) 
-        ->get();
-        return view('empleados.reportes.listadoCumplesR',compact('empleados'));
+    public function listadoCumplesR(Request $request)
+    {
+        $datos = $request->all();
+        $fecha = Carbon::createFromFormat('Y-m-d', $datos['fecha_f']);
+        $empleados = Empleado::select(
+            'pla.razon',
+            'empleados.id',
+            'empleados.nombre',
+            'empleados.ape_paterno',
+            'empleados.ape_materno',
+            'empleados.curp',
+            'empleados.rfc',
+            'empleados.direccion',
+            'p.name AS puesto',
+            'empleados.mail_empresa',
+            'empleados.tel_cel',
+            'empleados.tel_emergencia',
+            'empleados.parentesco',
+            'empleados.fin_contrato',
+            'stc.name as estatus',
+            'empleados.fec_nacimiento',
+            'empleados.fec_ingreso'
+        )
+            ->join('puestos as p', 'p.id', 'empleados.puesto_id')
+            ->join('plantels as pla', 'pla.id', 'empleados.plantel_id')
+            ->join('st_empleados as stc', 'stc.id', 'empleados.st_empleado_id')
+            ->whereIn('plantel_id', $datos['plantel_f'])
+            ->whereNotIn('empleados.st_empleado_id', [2, 3,])
+            ->whereMonth('fec_nacimiento', $fecha->month)
+            ->get();
+        return view('empleados.reportes.listadoCumplesR', compact('empleados'));
     }
 
-    public function listadoAniversarios(){
+    public function listadoAniversarios()
+    {
         $e = Empleado::where('user_id', Auth::user()->id)->first();
-            $plantels = array();
-            foreach ($e->plantels as $p) {
-                array_push($plantels, $p->id);
-            }
-        $planteles=Plantel::whereIn('id',$plantels)->pluck('razon','id');
-        return view('empleados.reportes.listadoAniversarios',compact('planteles'))
-        ->with('list', Empleado::getListFromAllRelationApps());
+        $plantels = array();
+        foreach ($e->plantels as $p) {
+            array_push($plantels, $p->id);
+        }
+        $planteles = Plantel::whereIn('id', $plantels)->pluck('razon', 'id');
+        return view('empleados.reportes.listadoAniversarios', compact('planteles'))
+            ->with('list', Empleado::getListFromAllRelationApps());
     }
 
 
 
-    public function listadoAniversariosR(Request $request){
-        $datos=$request->all();
-        $fecha=Carbon::createFromFormat('Y-m-d',$datos['fecha_f']);
-        $empleados=Empleado::select('pla.razon','empleados.id', 'empleados.nombre', 'empleados.ape_paterno', 
-        'empleados.ape_materno', 'empleados.curp', 'empleados.rfc', 'empleados.direccion', 'p.name AS puesto', 
-        'empleados.mail_empresa', 'empleados.tel_cel', 'empleados.tel_emergencia', 'empleados.parentesco', 
-        'empleados.fin_contrato','stc.name as estatus','empleados.fec_nacimiento','empleados.fec_ingreso')
-        ->join('puestos as p','p.id','empleados.puesto_id')
-        ->join('plantels as pla','pla.id','empleados.plantel_id')
-        ->join('st_empleados as stc','stc.id','empleados.st_empleado_id')
-        ->whereIn('plantel_id', $datos['plantel_f']) 
-        ->whereMonth('fec_ingreso', $fecha->month) 
-        ->whereNotIn('empleados.st_empleado_id',[2,3,])
-        ->get();
-        return view('empleados.reportes.listadoAniversariosR',compact('empleados'));
+    public function listadoAniversariosR(Request $request)
+    {
+        $datos = $request->all();
+        $fecha = Carbon::createFromFormat('Y-m-d', $datos['fecha_f']);
+        $empleados = Empleado::select(
+            'pla.razon',
+            'empleados.id',
+            'empleados.nombre',
+            'empleados.ape_paterno',
+            'empleados.ape_materno',
+            'empleados.curp',
+            'empleados.rfc',
+            'empleados.direccion',
+            'p.name AS puesto',
+            'empleados.mail_empresa',
+            'empleados.tel_cel',
+            'empleados.tel_emergencia',
+            'empleados.parentesco',
+            'empleados.fin_contrato',
+            'stc.name as estatus',
+            'empleados.fec_nacimiento',
+            'empleados.fec_ingreso'
+        )
+            ->join('puestos as p', 'p.id', 'empleados.puesto_id')
+            ->join('plantels as pla', 'pla.id', 'empleados.plantel_id')
+            ->join('st_empleados as stc', 'stc.id', 'empleados.st_empleado_id')
+            ->whereIn('plantel_id', $datos['plantel_f'])
+            ->whereMonth('fec_ingreso', $fecha->month)
+            ->whereNotIn('empleados.st_empleado_id', [2, 3,])
+            ->get();
+        return view('empleados.reportes.listadoAniversariosR', compact('empleados'));
     }
 
     public function getEmpleadosStProspectos(Request $request)
     {
         if ($request->ajax()) {
             //dd($request->all());
-            
+
             $st_prospecto = $request->get('st_prospecto_id');
-            
+
             $final = array();
             $r = DB::table('empleados as e')
                 ->select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as nombre'))
                 ->where('e.st_prospecto_id', '=', $st_prospecto)
                 ->where('e.id', '>', '0')
-                ->whereNotIn('st_empleado_id',array(3))
+                ->whereNotIn('st_empleado_id', array(3))
                 ->pluck('id');
             return $r;
-            
         }
     }
-
-
 }

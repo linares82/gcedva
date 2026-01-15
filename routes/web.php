@@ -16244,6 +16244,8 @@ Route::prefix('/sepCertificados')
         Route::get('/create', 'SepCertificadosController@create')->name('create')->middleware('permission:sepCertificados.create');
         Route::get('/edit/{id}', 'SepCertificadosController@edit')->name('edit')->middleware('permission:sepCertificados.edit');
         Route::get('/show/{id}', 'SepCertificadosController@show')->name('show')->middleware('permission:sepCertificados.show');
+        Route::get('/showTotal/{id}', 'SepCertificadosController@showTotal')->name('showTotal')->middleware('permission:sepCertificados.show');
+        Route::get('/showParcial/{id}', 'SepCertificadosController@showParcial')->name('showParcial')->middleware('permission:sepCertificados.show');
         Route::get('/limpiarLineas/{id}', 'SepCertificadosController@limpiarLineas')->name('limpiarLineas')->middleware('permission:sepCertificados.limpiarLineas');
         Route::post('/store', 'SepCertificadosController@store')->name('store')->middleware('permission:sepCertificados.store');
         Route::post('/edit/{id}', 'SepCertificadosController@update')->name('update')->middleware('permission:sepCertificados.update');

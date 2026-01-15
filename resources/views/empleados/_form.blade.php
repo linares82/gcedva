@@ -43,13 +43,29 @@
                           <span class="help-block">{{ $errors->first("rfc") }}</span>
                          @endif
                       </div>
-                      <div class="form-group col-md-4 @if($errors->has('curp')) has-error @endif">
+                      <div class="form-group col-md-2 @if($errors->has('curp')) has-error @endif">
                          <label for="curp-field">CURP</label>
                          {!! Form::text("curp", null, array("class" => "form-control input-sm", "id" => "curp-field")) !!}
+                         {!! Form::hidden("fec_curp_validacion", null, array("class" => "form-control input-sm", "id" => "fec_valida_curp-field", 'readonly'=>true)) !!}
                          @if($errors->has("curp"))
                           <span class="help-block">{{ $errors->first("curp") }}</span>
                          @endif
                       </div>
+                      @if(isset($empleado))
+                        <div class="form-group col-md-2 @if($errors->has('curp')) has-error @endif">
+                            @if(!is_null($empleado->fec_curp_validacion))
+                            Validacion:{{$empleado->fec_curp_validacion}}
+                            @endif
+                            @permission('empleados.apiValidaCurp')
+                            <input type="button" id="btnValidarCurp" value="Validar">
+                            {{!is_null($empleado->fec_curp_validacion) ? '-Si validado' : 'No validado'}}
+                            {!! Form::hidden("fec_curp_validacion", null, array("class" => "form-control input-sm", "id" => "fec_curp_validacion-field")) !!}
+                            @endpermission
+                            @permission('empleados.desbloqueoCurp')
+                            <input type="button" id="btnDesbloqueoCurp" value="Desbloquear Curp">
+                            @endpermission
+                        </div>
+                        @endif
                       <div class="form-group col-md-4 @if($errors->has('direccion')) has-error @endif">
                          <label for="direccion-field">Dirección</label>
                          {!! Form::text("direccion", null, array("class" => "form-control input-sm", "id" => "direccion-field")) !!}
@@ -102,6 +118,7 @@
                    </div>
                     <div class="form-group col-md-4 @if($errors->has('estado_nacimiento_id')) has-error @endif">
                       <label for="estado_nacimiento_id-field">Estado Nacimiento</label>
+                      {!! Form::text("abreviatura_estado", null, array("class" => "form-control input-sm", "id" => "abreviatura_estado-field", 'readonly'=>true)) !!}
                       {!! Form::select("estado_nacimiento_id", $estados, null, array("class" => "form-control select_seguridad", "id" => "estado_nacimiento_id-field")) !!}
                       @if($errors->has("estado_nacimiento_id"))
                       <span class="help-block">{{ $errors->first("estado_nacimiento_id") }}</span>
@@ -566,6 +583,83 @@
 <script type="text/javascript">
 
 $(document).ready(function() {
+
+  longitudCurp();
+      $('#curp-field').on('keydown', function(){
+         longitudCurp();
+      });
+
+      function longitudCurp(){
+        
+         //console.log($('#tel_cel-field').val().length);
+         if($('#curp-field').val().length>=18 && $('#fecha_curp_validacion-field').val()!==null){
+            $('#curp-field').attr('readonly', true);
+            $('#nombre-field').attr('readonly', true);
+            $('#ape_paterno-field').attr('readonly', true);
+            $('#ape_materno-field').attr('readonly', true);
+         }
+      }
+
+      @permission('empleados.desbloqueoCurp')
+      $("#btnDesbloqueoCurp").click(function(event) {
+        $('#curp-field').attr('readonly', false);
+        $('#fec_curp_validacion-field').val("");
+      });
+      @endpermission
+
+   $("#btnValidarCurp").click(function(event) {
+        
+        event.preventDefault();
+        if($('#curp-field').val()===""){
+            alert('CURP necesaria para validar');    
+        }else{
+            $('#curp-field').val($('#curp-field').val().toUpperCase());
+            
+        $.ajax({
+            url: '{{ $api_valida_curp["url"]."obtener_datos" }}',
+            type: 'GET',
+            data: {
+                'token':'{{$api_valida_curp["token"]}}',
+                'curp': $('#curp-field').val()
+            },
+            dataType: 'json',
+            beforeSend:function(){$("#btnValidarCurp").attr('disabled', true);},
+            complete: function(){$("#btnValidarCurp").attr('disabled', false);},
+            error: function(data){
+                alert('Curp invalida');
+                //console.log(data.responseJson.error_message);
+                //alert(data.responseJson.error_message);
+            },
+            success: function(data){
+                if(data.error){
+                    alert(data.error_message);
+                }else{
+                    let solicitante=data.response.Solicitante;
+                    $('#bnd_consulta_curp-field').val(1);
+                    $('#nombre-field').val(solicitante.Nombres);
+                    $('#ape_paterno-field').val(solicitante.ApellidoPaterno);
+                    $('#ape_materno-field').val(solicitante.ApellidoMaterno);
+                    $('#lugar_nacimiento-field').val(solicitante.EntidadNacimiento);
+                    $('#abreviatura_estado-field').val(solicitante.ClaveEntidadNacimiento);
+                    $('#fec_valida_curp-field').val('{{date('Y-m-d')}}');
+                    if(solicitante.Nacionalidad=="MEX"){
+                      $('#pais_nacimiento-field').val("México");
+                    }
+                    
+                    alert('Datos consultados y copiados correctamente');
+                    }
+                
+            }
+        });
+    
+                       
+                 
+      
+        }
+        
+      return false;
+   });
+
   $('#seleccionar_planteles').change(function(){
     if( $(this).is(':checked') ) {
       $("#plantel_id-field > option").prop("selected","selected");

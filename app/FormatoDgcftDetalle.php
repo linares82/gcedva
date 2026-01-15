@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class FormatoDgcftDetalle extends Model
 {
-    use RelationManagerTrait, GetAllDataTrait;
+	use RelationManagerTrait, GetAllDataTrait;
 	use SoftDeletes;
 
 	public function __construct(array $attributes = array())
@@ -17,8 +17,23 @@ class FormatoDgcftDetalle extends Model
 		parent::__construct($attributes);
 	}
 
-    protected $fillable = ['formato_dgcft_id','num','control','cliente_id','nombre','curp','edad','fec_sexo',
-    'beca','resultado','final', 'escolaridad','usu_alta_id', 'usu_mod_id','bnd_satisfactorio'];
+	protected $fillable = [
+		'formato_dgcft_id',
+		'num',
+		'control',
+		'cliente_id',
+		'nombre',
+		'curp',
+		'edad',
+		'fec_sexo',
+		'beca',
+		'resultado',
+		'final',
+		'escolaridad',
+		'usu_alta_id',
+		'usu_mod_id',
+		'bnd_satisfactorio'
+	];
 
 	public function usu_alta()
 	{
@@ -31,10 +46,15 @@ class FormatoDgcftDetalle extends Model
 	} // end
 
 
-    public function formatoDgcftMatCalifs()
+	public function formatoDgcftMatCalifs()
 	{
 		return $this->hasMany('App\FormatoDgcftMatCalif');
 	} // end
-	protected $dates = ['deleted_at'];
 
+	public function formatoDgcft()
+	{
+		return $this->hasOne('App\FormatoDgcft', 'id', 'formato_dgcft_id');
+	} // end
+
+	protected $dates = ['deleted_at'];
 }

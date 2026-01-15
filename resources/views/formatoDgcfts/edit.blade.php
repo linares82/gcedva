@@ -164,7 +164,7 @@ $contador=0;
       @foreach($formatoDgcft->formatoDgcftDetalles as $detalle)
          <tr>
             <td>{{++$contador}}</td>
-            <td>{{$detalle->control}}</td>
+            <td> {{ $formatoDgcft->control_parte_fija }} {{$detalle->control}}</td>
             <td>{{$detalle->nombre}}</td>
             <td>{{$detalle->curp}}</td>
             <td>{{$detalle->edad}}</td>

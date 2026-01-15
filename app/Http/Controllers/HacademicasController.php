@@ -377,6 +377,7 @@ class HacademicasController extends Controller
                 ->where('c.id', '=', $input['cliente_id'])
                 ->where('inscripcions.grado_id', '=', $input['grado_id'])
                 ->where('h.materium_id', '=', $input['materium_id'])
+                //->where('h.lectivo_id', '=', $input['lectivo_id']) // Se comenta para que tome la materia aunque no sea del lectivo actual
                 ->where('h.deleted_at', '=', null)
                 ->first();
             $calificacion_extraordinaria = Calificacion::where('hacademica_id', $h->id)->where('tpo_examen_id', 2)->first();
@@ -611,12 +612,14 @@ class HacademicasController extends Controller
                 ->where('hacademicas.materium_id', '=', $asignacionAcademica->materium_id)
                 ->where('c.tpo_examen_id', '=', $data['tpo_examen_id'])
                 ->where('cp.carga_ponderacion_id', '=', $data['carga_ponderacion_id'])
+                ->where('cli.st_cliente_id', '<>', 27)
                 ->orderBy('cli.ape_paterno')
                 ->orderBy('cli.ape_materno')
                 ->orderBy('cli.nombre')
                 ->orderBy('cli.nombre2')
                 ->whereNull('hacademicas.deleted_at')
                 ->whereNull('c.deleted_at')
+                ->whereNull('cli.deleted_at')
                 ->whereNull('i.deleted_at')
                 ->whereNull('cp.deleted_at')
                 ->orderBy('cli.ape_paterno')

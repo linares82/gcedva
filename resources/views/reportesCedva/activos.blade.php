@@ -567,7 +567,7 @@
                 <th>Tel. Fijo</th><th>Celular</th><th>Estatus C.</th>
                 <th>Estatus S.</th><th>Turno</th>
                 <th>F. Planeada</th>
-                @permission('reportesCedva.activosSinDinero')<th>Monto Planeado</th>@endpermission
+                @permission('reportesCedva.activosSinDinero')<th>Monto Plan Pagos</th>@endpermission
                 <th>Concepto</th><th>Ticket</th>
                 <th>F. Caja</th>
                 @permission('reportesCedva.activosSinDinero')
@@ -575,6 +575,7 @@
                 <th>Descuentos</th>
                 <th>% Promocion</th>
                 <th>% Beca</th>
+                <th>Monto Planeado</th>
                 @endpermission
                 <th>Usuario Pago</th><th>Pagado</th>
                 @permission('reportesCedva.activosSinDinero')<th>Total Adeudo</th>@endpermission
@@ -684,9 +685,8 @@
             <td>{{ number_format($registro['total_caja'],2) }}</td>
             <td>{{ number_format($registro['descuento'],2) }}</td>
             <td>
-              
-                @php
-                  
+                @php  
+                  $descuento_promocion=0;
                   if($registro['adeudo_id']>0 and $registro['consecutivo']>0){
                     $adeudo=\App\Adeudo::find($registro['adeudo_id']);
                     $adeudo->load(['planPagoLn','planPagoLn.promoPlanLns']);
@@ -695,9 +695,8 @@
                       $fin= new Datetime($ppp->fec_fin);
                       $fecha_caja= new Datetime($registro['fecha_caja']);
                       if($inicio<=$fecha_caja and $fin>=$fecha_caja){
-                        echo $ppp->descuento;
-                      }else{
-                        echo "0";
+                        $descuento_promocion=$registro['total_caja']*$ppp->descuento;  
+                        echo number_format($ppp->descuento,2)." (".number_format($descuento_promocion,2).")";
                       }
                     }
                   }elseif($registro['adeudo_id']>0 and $registro['consecutivo']==0){
@@ -708,21 +707,22 @@
                       $fin= new Datetime($ppp->fec_fin);
                       $fecha_caja= new Datetime(date('Y-m-d'));
                       if($inicio<=$fecha_caja and $fin>=$fecha_caja){
-                        echo $ppp->descuento;
-                      }else{
-                        echo "0";
+                        $descuento_promocion=$registro['total_caja']*$ppp->descuento;  
+                        echo number_format($ppp->descuento,2)." (".number_format($descuento_promocion,2).")";
                       }
                     }
-                  }else{
-                    echo "0";
                   }
+                  if($descuento_promocion==0){
+                  echo "0";
+                }
                 @endphp
               
             </td>
             <td>
               @php
                 $becas=App\AutorizacionBeca::where('cliente_id', $registro['cliente'])->get();
-                
+                $descuento_beca=0;
+
                 $fecha_caja_hoy= new Datetime(date('Y-m-d'));
                 $fecha_caja= new Datetime($registro['fecha_pago']);
                 
@@ -737,22 +737,26 @@
                        $registro['bnd_mensualidad']==1 and 
                        ($registro['bnd_eximir_descuento_beca']==0 or is_null($registro['bnd_eximir_descuento_beca']))){
                         //echo $beca->monto_mensualidad*$registro['monto'];
-                        echo $beca->monto_mensualidad;
+                        $descuento_beca=$beca->monto_mensualidad*$registro['monto'];
+                        echo number_format((float)$beca->monto_mensualidad,2)."(".number_format($descuento_beca,2).")";
                     }elseif($inicio<$fecha_caja and 
                        $fin>$fecha_caja and 
                        $registro['pagado_bnd']==1 and 
                        $registro['bnd_mensualidad']==1 and 
                        ($registro['bnd_eximir_descuento_beca']==0 or is_null($registro['bnd_eximir_descuento_beca']))){
                         //echo $beca->monto_mensualidad*$registro['monto'];
-                        echo $beca->monto_mensualidad;
-                    }else{
-                      echo "0";
+                        $descuento_beca=$beca->monto_mensualidad*$registro['monto'];
+                        echo number_format((float)$beca->monto_mensualidad,2)."(".number_format($descuento_beca,2).")";
                     }
                   }
-                }else{
+                }
+                if($descuento_beca==0){
                   echo "0";
                 }
               @endphp
+            </td>
+            <td>
+              {{ number_format($registro['monto']-$descuento_promocion-$descuento_beca,2) }}
             </td>
             @endpermission
             <td>

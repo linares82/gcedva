@@ -89,7 +89,7 @@
                     <td> EL PLANTEL PARTICULAR:<strong>{{$grado->denominacion}}</strong></td><td>CLAVE CCT: <strong>{{$grado->cct}}</strong></td>
                 </tr>
                 <tr>
-                    <td> HACE CONSTAR QUE EL ALUMNO:<strong>{{$registro->nombre}} </strong> </td><td>CON NÚMERO DE CONTROL: <strong>{{$registro->control}}</strong></td>
+                    <td> HACE CONSTAR QUE EL ALUMNO:<strong>{{$registro->nombre}} </strong> </td><td>CON NÚMERO DE CONTROL: <strong>{{ $registro->formatoDgcft->control_parte_fija }}{{$registro->control}}</strong></td>
                 </tr>
                 <tr>
                     <td colspan='2'>  Y CLAVE CURP <strong>{{$registro->curp}}</strong> OBTUVO LAS SIGUIENTES  CALIFICACIONES EN LA ESPECIALIDAD DE: <strong>{{$registro->grado}}</strong></td>
@@ -151,7 +151,7 @@
                     </td> 
                 </tr>
                 <tr>
-                    <td align="center" valign="bottom" height="100"><span style="font-weight: bold"><u>{{$formatoDgcft->plantelR->enlace}}</u></span><br>
+                    <td align="center" valign="bottom" height="100"><span style="font-weight: bold"><u>{{$grado->enlace_nombre}}</u></span><br>
                             NOMBRE Y FIRMA DEL ENLACE OPERATIVO</td> 
                     <td align="center" valign="bottom" height="">
                     <table width="100%"><tr><td style="border-bottom: 1px solid black;"></td></tr></table>

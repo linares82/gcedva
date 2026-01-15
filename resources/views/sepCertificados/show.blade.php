@@ -107,6 +107,9 @@
             <a class="btn btn-danger" href="{{ route('sepCertificados.limpiarLineas',$sepCertificado->id) }}"><i class="glyphicon glyphicon-trash"></i>  Eliminar Lineas</a>
             <a class="btn btn-success" href="#" onclick="location.reload();"><i class="glyphicon glyphicon-check"></i>  Cargar Lineas</a>
 
+            <a class="btn btn-link" href="{{ route('sepCertificados.showTotal', $sepCertificado->id) }}"> C. Total</a>
+            <a class="btn btn-link" href="{{ route('sepCertificados.showParcial', $sepCertificado->id) }}"> C. Parcial</a>
+
         </div>
     </div>
     <div class="table-responsive">

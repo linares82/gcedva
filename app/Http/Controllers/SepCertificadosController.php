@@ -96,6 +96,7 @@ class SepCertificadosController extends Controller
 		])
 			->find($id);
 		$lineas = SepCertificadoL::where('sep_certificado_id', $sepCertificado->id)
+			->orderBy('sep_cert_tipo_id', 'asc')
 			->with([
 				'cliente',
 				'sepCertTipo',
@@ -157,7 +158,9 @@ class SepCertificadosController extends Controller
 				$inputLinea['consulta_calificacion_id'] = $linea->id;
 				$inputLinea['materium_id'] = NULL;
 				$inputLinea['lectivo_id'] = NULL;
-				$inputLinea['sep_cert_tipo_id'] = 1;
+				$inputLinea['sep_cert_tipo_id'] = $sepCertificado->grado->planEstudio->total_materias_100 > $totales_materias['total_materias']
+					? 2
+					: 1;
 				$inputLinea['fecha_expedicion'] = $sepCertificado->fecha_expedicion;
 				$inputLinea['id_carrera'] = $sepCertificado->id_carrera;
 				$inputLinea['numero_asignaturas_cursadas'] = $totales_materias['total_materias'];
@@ -251,6 +254,7 @@ class SepCertificadosController extends Controller
 		$cliente = Cliente::select('id', 'matricula')->find($cliente_id);
 		$anteriores = ConsultaCalificacion::where('matricula', 'like', "%" . $cliente->matricula . "%")
 			->where('bnd_oficial', 1)
+			->where('calificacion', '>=', 6)
 			->get();
 		//dd($anteriores->toArray());
 		$propias = Hacademica::select('hacademicas.*')->where('cliente_id', $cliente->id)
@@ -452,5 +456,67 @@ class SepCertificadosController extends Controller
 	{
 		$sepCertificadoL = SepCertificadoL::where('sep_certificado_id', $id)->delete();
 		return redirect()->route('sepCertificados.show', $id)->with('message', 'Registro Creado.');
+	}
+
+	public function showTotal($id, SepCertificado $sepCertificado)
+	{
+		$sepCertificado = $sepCertificado->with([
+			'plantel',
+			'responsable',
+			'cargo',
+			'grado',
+			'grado.planEstudio',
+			'lectivo'
+		])
+			->find($id);
+		$lineas = SepCertificadoL::where('sep_certificado_id', $sepCertificado->id)
+			->where('sep_cert_tipo_id',  1)
+			->orderBy('sep_cert_tipo_id', 'asc')
+			->with([
+				'cliente',
+				'sepCertTipo',
+				'hacademica',
+				'lectivo',
+				'hacademica.materia',
+				'sepCertObservacion',
+				'consultaCalificacion'
+			])
+			->get();
+		//dd($lineas);
+		//dd($lineas[1]->load('hacademica.lectivo', 'hacademica.materia'));
+		$this->crearLineas($sepCertificado);
+		//dd($sepCertificado);
+		return view('sepCertificados.show', compact('sepCertificado', 'lineas'));
+	}
+
+	public function showParcial($id, SepCertificado $sepCertificado)
+	{
+		$sepCertificado = $sepCertificado->with([
+			'plantel',
+			'responsable',
+			'cargo',
+			'grado',
+			'grado.planEstudio',
+			'lectivo'
+		])
+			->find($id);
+		$lineas = SepCertificadoL::where('sep_certificado_id', $sepCertificado->id)
+			->where('sep_cert_tipo_id',  2)
+			->orderBy('sep_cert_tipo_id', 'asc')
+			->with([
+				'cliente',
+				'sepCertTipo',
+				'hacademica',
+				'lectivo',
+				'hacademica.materia',
+				'sepCertObservacion',
+				'consultaCalificacion'
+			])
+			->get();
+		//dd($lineas);
+		//dd($lineas[1]->load('hacademica.lectivo', 'hacademica.materia'));
+		$this->crearLineas($sepCertificado);
+		//dd($sepCertificado);
+		return view('sepCertificados.show', compact('sepCertificado', 'lineas'));
 	}
 }

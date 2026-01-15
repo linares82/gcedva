@@ -2864,7 +2864,9 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                                 $('#grado_id-field').append($('<option></option>').text('Seleccionar').val('0'));
                                 $.each(data, function(i) {
                                 //alert(data[i].name);
-                                $('#grado_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
+                                $('#grado_id-field').append("<option " + data[i].selectec +
+                                                            " value=\"" + data[i].id + "\">" + 
+                                                            data[i].name + "<\/option>");
                                 });
                                 $('#grado_id-field').trigger('change');
                                 }
