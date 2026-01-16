@@ -46,6 +46,12 @@
     <li class="active">{{ $planPago->name }}</li>
 </ol>
 
+@if(session('message'))
+    <div class="alert alert-success">
+        {!! session('message') !!}
+    </div>
+@endif
+
 <div class="page-header">
         <h1>@yield('planPagosAppTitle') / Mostrar {{$planPago->id}}
 
@@ -106,7 +112,68 @@
             <div class="row">
                 <h3>Pagos</h3>
                 <a href="#" class="add-modal btn btn-success btn-xs">Agregar Pago</a>
-                
+                <div aria-multiselectable="true" role="tablist" id="accordion" class="panel-group">
+        @permission('planPagoLns.editMontoLineas')
+        <div class="panel panel-default">
+            <div id="headingOne" role="tab" class="panel-heading">
+                <h4 class="panel-title">
+                <a aria-controls="collapseOne" aria-expanded="true" href="#collapseOne" data-parent="#accordion" data-toggle="collapse" role="button">
+                    <span aria-hidden="true" class="glyphicon glyphicon-edit"></span> Editar Monto Conceptos Plan
+                </a>
+                </h4>
+            </div>
+            <div aria-labelledby="headingOne" role="tabpanel" class="panel-collapse collapse" id="collapseOne">
+                <div class="panel-body">
+                    <form class="PlanPagoLn_search" id="search" action="{{ route('planPagoLns.editMontoLineas') }}" accept-charset="UTF-8" method="post">
+                        {{ csrf_field() }}
+                        <div class="col-md-4 caja_concepto">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="caja_concepto_id-f">CONCEPTO</label>
+                                    {!! Form::select("caja_concepto_id-f[]", $conceptos, null, array("class" => "form-control select_seguridad", "id" => "caja_concepto_id-f", 'multiple'=>true)) !!}
+                                    {!! Form::hidden("plan_pago_id-f", $planPago->id, array("class" => "form-control input-sm", "id" => "plan_pago_id-f")) !!}
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-2 check_bnd_mensualidad @if($errors->has('bnd_mensualidad-f')) has-error @endif">
+                          <label for="bnd_mensualidad-f">Solo Mensualidades</label>
+                          {!! Form::checkbox("bnd_mensualidad-f", 1, null, [ "id" => "bnd_mensualidad-f"]) !!}
+                          @if($errors->has("bnd_mensualidad-f"))
+                            <span class="help-block">{{ $errors->first("bnd_mensualidad-f") }}</span>
+                          @endif
+                        </div>
+                        
+                        <div class=" col-md-2 fecha_f-f" >
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="fecha_f-f">De fecha</label>
+                                    {!! Form::text("fecha_f-f", null, array("class" => "form-control input-sm fec_calendario", "id" => "fecha_f-f")) !!}
+                            </div>
+                        </div>
+                        <div class=" col-md-2 fecha_t-f">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="fecha_t-f">A fecha</label>
+                                    {!! Form::text("fecha_t-f", null, array("class" => "form-control input-sm fec_calendario", "id" => "fecha_t-f")) !!}
+                            </div>
+                        </div>
+
+                        <div class=" col-md-2">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="monto-f">Nuevo Monto</label>
+                                    {!! Form::text("monto-f", null, array("class" => "form-control input-sm", "id" => "monto-f")) !!}
+                            </div>
+                        </div>
+                                                
+                        <div class="form-group">
+                            <div class="col-sm-10 col-sm-offset-2">
+                                <input type="submit" value="Actualizar Lineas Plan Pago" class="btn btn-info btn-sm" />
+                                <input type="submit" value="Actualizar Adeudos Clientes" class="btn btn-success btn-sm" id="btn_actualizar_adeudos_clientes" />
+                            </div>
+                        </div>                        
+                    </form>
+                </div>
+            </div>
+        </div>
+        @endpermission
+    </div>
                 <div class="row col-md-12" id='loading3' style='display: none'>
                     <h3>Actualizando... Por Favor Espere.</h3>
                     <div class="progress progress-striped active page-progress-bar">
@@ -985,6 +1052,36 @@
     //https://jmkleger.com/post/ajax-crud-for-laravel-5-4 ejemplo
     
     $(document).ready(function () {
+
+        $('#btn_actualizar_adeudos_clientes').on('click', function(){
+            $('#search').attr('action', "{{ route('planPagoLns.extenderEdicionLineasPlan') }}");
+            $('#search').submit();
+        });
+
+        $('#search').children('.check_bnd_mensualidad').children('#bnd_mensualidad-f').on('change', function(e){
+            if($('#search').children('.check_bnd_mensualidad').children('#bnd_mensualidad-f').prop('checked')){
+                
+                $('#search').children('.caja_concepto').children().children('#caja_concepto_id-f').prop('disabled', true);        
+            }
+        });
+        
+
+        $('#search').children('.fecha_f-f').children().children('input').Zebra_DatePicker({
+            days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
+            months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+            readonly_element: false,
+            lang_clear_date: 'Limpiar',
+            show_select_today: 'Hoy',
+          });
+
+        $('#search').children('.fecha_t-f').children().children('input').Zebra_DatePicker({
+            days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
+            months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+            readonly_element: false,
+            lang_clear_date: 'Limpiar',
+            show_select_today: 'Hoy',
+          });
+
         $('#select-reglas_recargos_from').multiselect({
             right: '#select-reglas_recargos_to',
             search: {

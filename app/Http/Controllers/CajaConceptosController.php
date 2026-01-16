@@ -1,4 +1,6 @@
-<?php namespace App\Http\Controllers;
+<?php
+
+namespace App\Http\Controllers;
 
 use App\CajaConcepto;
 use App\Http\Controllers\Controller;
@@ -32,8 +34,8 @@ class CajaConceptosController extends Controller
     public function create()
     {
         $reglas = ReglaRecargo::pluck('name', 'id');
-        $listaMultipagos=ConceptoMultipago::pluck('name','id');
-        return view('cajaConceptos.create', compact('reglas','listaMultipagos'))
+        $listaMultipagos = ConceptoMultipago::pluck('name', 'id');
+        return view('cajaConceptos.create', compact('reglas', 'listaMultipagos'))
             ->with('list', CajaConcepto::getListFromAllRelationApps());
     }
 
@@ -73,10 +75,10 @@ class CajaConceptosController extends Controller
 
         //create data
         $registro = CajaConcepto::create($input);
-        if (isset($reglas['reglas'])){
+        if (isset($reglas['reglas'])) {
             $registro->reglas()->sync($reglas['reglas']);
         }
-        
+
 
         return redirect()->route('cajaConceptos.index')->with('message', 'Registro Creado.');
     }
@@ -103,8 +105,8 @@ class CajaConceptosController extends Controller
     {
         $cajaConcepto = $cajaConcepto->find($id);
         $reglas = ReglaRecargo::pluck('name', 'id');
-        $listaMultipagos=ConceptoMultipago::pluck('name','id');
-        return view('cajaConceptos.edit', compact('cajaConcepto', 'reglas','listaMultipagos'))
+        $listaMultipagos = ConceptoMultipago::pluck('name', 'id');
+        return view('cajaConceptos.edit', compact('cajaConcepto', 'reglas', 'listaMultipagos'))
             ->with('list', CajaConcepto::getListFromAllRelationApps());
     }
 
@@ -154,13 +156,18 @@ class CajaConceptosController extends Controller
         } else {
             $input['bnd_concepto_sin_plan'] = 1;
         }
+        if (!isset($input['bnd_editar_plan_pagos'])) {
+            $input['bnd_editar_plan_pagos'] = 0;
+        } else {
+            $input['bnd_editar_plan_pagos'] = 1;
+        }
         //update data
         $cajaConcepto = $cajaConcepto->find($id);
         $cajaConcepto->update($input);
-        if (isset($reglas['reglas'])){
+        if (isset($reglas['reglas'])) {
             $cajaConcepto->reglas()->sync($reglas['reglas']);
         }
-        
+
 
         return redirect()->route('cajaConceptos.index')->with('message', 'Registro Actualizado.');
     }

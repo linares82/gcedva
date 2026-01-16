@@ -1,9 +1,12 @@
-<?php namespace App\Http\Controllers;
+<?php
+
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\createPlanPagoLn;
 use App\Http\Requests\updatePlanPagoLn;
 use App\Adeudo;
+use App\PlanPago;
 use App\PlanPagoLn;
 use App\ReglaRecargo;
 use Auth;
@@ -15,9 +18,7 @@ use Validator;
 class PlanPagoLnsController extends Controller
 {
     protected $rules =
-        [
-
-    ];
+    [];
     /**
      * Display a listing of the resource.
      *
@@ -246,28 +247,29 @@ class PlanPagoLnsController extends Controller
 
             foreach ($r as $r1) {
 
-                array_push($final, array('id' => $r1->id,
+                array_push($final, array(
+                    'id' => $r1->id,
                     'name' => $r1->name,
-                    'selectec' => ''));
-
+                    'selectec' => ''
+                ));
             }
             return $final;
-
         }
     }
 
-    public function extenderEdicion(Request $request){
-        $datos=$request->all();
-        //dd($datos);
-        $linea=PlanPagoLn::find($datos['linea']);
-        $adeudos=Adeudo::where('plan_pago_ln_id', $datos['linea'])
-        ->where('pagado_bnd','<>',1)
-        ->whereNull('deleted_at')
-        ->get();
+    public function extenderEdicion(Request $request)
+    {
+        $datos = $request->all();
+
+        $linea = PlanPagoLn::find($datos['linea']);
+        $adeudos = Adeudo::where('plan_pago_ln_id', $datos['linea'])
+            ->where('pagado_bnd', '<>', 1)
+            ->whereNull('deleted_at')
+            ->get();
         //dd($adeudos);
-        foreach($adeudos as $adeudo){
-            $adeudo->monto=$linea->monto;
-            $adeudo->fecha_pago=$linea->fecha_pago;
+        foreach ($adeudos as $adeudo) {
+            $adeudo->monto = $linea->monto;
+            $adeudo->fecha_pago = $linea->fecha_pago;
             $adeudo->save();
         }
         //dd('fil');
@@ -275,8 +277,93 @@ class PlanPagoLnsController extends Controller
         //dd($planPago);
         //dd($planPago->lineas->toArray());
         $reglaRecargo = ReglaRecargo::pluck('name', 'id');
-        
+
         return view('planPagos.show', compact('planPago', 'reglaRecargo'))->with('list', PlanPagoLn::getListFromAllRelationApps());
     }
 
+
+
+    public function editMontoLineas(Request $request)
+    {
+        $datos = $request->all();
+        //dd('lineas');
+        if (isset($datos['bnd_mensualidad-f']) and $datos['bnd_mensualidad-f'] == 1) {
+            $lineas = PlanPagoLn::select('plan_pago_lns.*')
+                ->join('caja_conceptos', 'caja_conceptos.id', '=', 'plan_pago_lns.caja_concepto_id')
+                ->where('plan_pago_id', $datos['plan_pago_id-f'])
+                ->where('caja_conceptos.bnd_mensualidad', 1)
+                ->whereBetween('fecha_pago', [$datos['fecha_f-f'], $datos['fecha_t-f']])
+                ->get();
+        } elseif (isset($datos['caja_concepto_id-f'])) {
+            $lineas = PlanPagoLn::where('plan_pago_id', $datos['plan_pago_id-f'])
+                ->whereIn('caja_concepto_id', $datos['caja_concepto_id-f'])
+                ->whereBetween('fecha_pago', [$datos['fecha_f-f'], $datos['fecha_t-f']])
+                ->get();
+        }
+        //dd($lineas);
+
+        foreach ($lineas as $linea) {
+            $linea->monto = $datos['monto-f'];
+            $linea->save();
+        }
+
+        $total_lineas_afectadas = count($lineas);
+
+        $total_adeudos_afectados = 0;
+        foreach ($lineas as $linea) {
+            $adeudos = Adeudo::where('plan_pago_ln_id', $linea->id)
+                ->where('pagado_bnd', '<>', 1)
+                ->whereNull('deleted_at')
+                ->get();
+            foreach ($adeudos as $adeudo) {
+                $total_adeudos_afectados++;
+            }
+        }
+
+        $mensaje = 'Lineas de Plan afectadas: ' . $total_lineas_afectadas . " Total de adeudos vinculados:" . $total_adeudos_afectados;
+        //dd($mensaje);
+
+        return redirect()->route('planPagos.show', $datos['plan_pago_id-f'])->with('message', $mensaje)->withInput();
+    }
+
+    public function extenderEdicionLineasPlan(Request $request)
+    {
+        $datos = $request->all();
+        //dd($datos);
+
+        if (isset($datos['bnd_mensualidad-f']) and $datos['bnd_mensualidad-f'] == 1) {
+            $lineas = PlanPagoLn::select('plan_pago_lns.*')
+                ->join('caja_conceptos', 'caja_conceptos.id', '=', 'plan_pago_lns.caja_concepto_id')
+                ->where('plan_pago_id', $datos['plan_pago_id-f'])
+                ->where('caja_conceptos.bnd_mensualidad', 1)
+                ->whereBetween('fecha_pago', [$datos['fecha_f-f'], $datos['fecha_t-f']])
+                ->get();
+        } elseif (isset($datos['caja_concepto_id-f'])) {
+            $lineas = PlanPagoLn::where('plan_pago_id', $datos['plan_pago_id-f'])
+                ->whereIn('caja_concepto_id', $datos['caja_concepto_id-f'])
+                ->whereBetween('fecha_pago', [$datos['fecha_f-f'], $datos['fecha_t-f']])
+                ->get();
+        }
+
+        $total_lineas_afectadas = count($lineas);
+
+        $total_adeudos_afectados = 0;
+        foreach ($lineas as $linea) {
+            $adeudos = Adeudo::where('plan_pago_ln_id', $linea->id)
+                ->where('pagado_bnd', '<>', 1)
+                ->whereNull('deleted_at')
+                ->get();
+            //dd($adeudos);
+            foreach ($adeudos as $adeudo) {
+                $adeudo->monto = $linea->monto;
+                //$adeudo->fecha_pago = $linea->fecha_pago;
+                $adeudo->save();
+                $total_adeudos_afectados++;
+            }
+        }
+
+        $mensaje = 'Lineas de Plan afectadas: ' . $total_lineas_afectadas . " Total de adeudos vinculados:" . $total_adeudos_afectados;
+
+        return redirect()->route('planPagos.show', $datos['plan_pago_id-f'])->with('message', $mensaje)->withInput();
+    }
 }

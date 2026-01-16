@@ -86,7 +86,7 @@
                         </td>-->
                         <td>{{$registro->consecutivo}}</td>
                         <td>{{$registro->creador_pago}}</td>
-                        <td>{{$registro->estatus_caja}}</td>
+                        <td>{{$registro->fecha_pago}}</td>
                         
                         <td>{{$registro->created_at}}</td>
                         <td>

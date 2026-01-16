@@ -49,6 +49,13 @@ input[id="bnd_genera_matricula-field"][readonly] {
                         <span class="help-block">{{ $errors->first("bnd_aplicar_beca") }}</span>
                        @endif
                     </div>
+                    <div class="form-group col-md-4 @if($errors->has('bnd_editar_plan_pagos')) has-error @endif">
+                       <label for="bnd_editar_plan_pagos-field">Editar Plan Pagos</label>
+                       {!! Form::checkbox("bnd_editar_plan_pagos", 1, null, [ "id" => "bnd_editar_plan_pagos-field"]) !!}
+                       @if($errors->has("bnd_editar_plan_pagos"))
+                        <span class="help-block">{{ $errors->first("bnd_editar_plan_pagos") }}</span>
+                       @endif
+                    </div>
                     <div class="form-group col-md-4 @if($errors->has('bnd_genera_matricula')) has-error @endif">
                      <label for="bnd_genera_matricula-field">Genera Matricula</label>
                      {!! Form::checkbox("bnd_genera_matricula", 1, null, [ "id" => "bnd_genera_matricula-field"]) !!}

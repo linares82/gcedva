@@ -251,14 +251,12 @@ class GradosController extends Controller
                             'id' => $r1->id,
                             'name' => $r1->name,
                             'selectec' => 'Selected',
-                            'inactivo' => $r1->bnd_rvoe_activa
                         ));
                     } else {
                         array_push($final, array(
                             'id' => $r1->id,
                             'name' => $r1->name,
                             'selectec' => '',
-                            'inactivo' => $r1->bnd_rvoe_activa
                         ));
                     }
                 }

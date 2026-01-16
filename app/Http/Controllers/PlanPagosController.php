@@ -28,9 +28,9 @@ class PlanPagosController extends Controller
     public function index(Request $request)
     {
         $planPagos = PlanPago::getAllData($request);
-        $plantels=Plantel::pluck('razon','id');
+        $plantels = Plantel::pluck('razon', 'id');
 
-        return view('planPagos.index', compact('planPagos','plantels'));
+        return view('planPagos.index', compact('planPagos', 'plantels'));
     }
 
     /**
@@ -80,9 +80,10 @@ class PlanPagosController extends Controller
         $planPago = $planPago->find($id);
         //dd($planPago->lineas->toArray());
         $reglaRecargo = ReglaRecargo::pluck('name', 'id');
+        $conceptos = CajaConcepto::where('bnd_editar_plan_pagos', 1)->pluck('name', 'id');
         //$reglaRecargosRelacionados= $planPago->planPagoLn->reglaRecargos();
         //dd($reglaRecargo);
-        return view('planPagos.show', compact('planPago', 'reglaRecargo'))->with('list', PlanPagoLn::getListFromAllRelationApps());
+        return view('planPagos.show', compact('planPago', 'reglaRecargo', 'conceptos'))->with('list', PlanPagoLn::getListFromAllRelationApps());
     }
 
     /**
@@ -192,10 +193,10 @@ class PlanPagosController extends Controller
     public function update($id, PlanPago $planPago, updatePlanPago $request)
     {
         //dd($request->all());
-        $input = $request->only('name', 'activo','ciclo_matricula_id','plantel_id');
+        $input = $request->only('name', 'activo', 'ciclo_matricula_id', 'plantel_id');
         $input['usu_mod_id'] = Auth::user()->id;
         $generar_pagos = $request->only('inscripcion', 'uniforme', 'tramites', 'mensualidad', 'cuantas_mensualidad', 'fecha_pago', 'seguro');
-        $lineas = $request->except('_token','name', 'activo', 'inscripcion', 'uniforme', 'tramites', 'mensualidad', 'cuantas_mensualidad', 'fecha_pago', 'seguro');
+        $lineas = $request->except('_token', 'name', 'activo', 'inscripcion', 'uniforme', 'tramites', 'mensualidad', 'cuantas_mensualidad', 'fecha_pago', 'seguro');
         //dd(count($lineas['plan_pago_id']));
         if (isset($input['activo'])) {
             $input['activo'] = 1;
@@ -366,30 +367,32 @@ class PlanPagosController extends Controller
             $tramites->save();
         } else {
             //dd($lineas);
-            if(isset($lineas['plan_pago_id'])){
-            for ($i = 0; $i < count($lineas['plan_pago_id']); $i++) {
-                if ($lineas['plan_pago_id'][$i] > 0 and
-                    $lineas['caja_concepto_id'][$i] > 0 and
-                    $lineas['cuenta_contable_id'][$i] and
-                    $lineas['cuenta_recargo_id'][$i] and
-                    $lineas['fecha_p'][$i] != 0 and
-                    $lineas['monto'][$i] > 0) {
-                    $ln_input['plan_pago_id'] = $lineas['plan_pago_id'][$i];
-                    $ln_input['caja_concepto_id'] = $lineas['caja_concepto_id'][$i];
-                    $ln_input['cuenta_contable_id'] = $lineas['cuenta_contable_id'][$i];
-                    $ln_input['cuenta_recargo_id'] = $lineas['cuenta_recargo_id'][$i];
-                    $ln_input['fecha_pago'] = $lineas['fecha_p'][$i];
-                    $ln_input['monto'] = $lineas['monto'][$i];
-                    $ln_input['inicial_bnd'] = 0;
-                    $ln_input['usu_alta_id'] = Auth::user()->id;
-                    $ln_input['usu_mod_id'] = Auth::user()->id;
-                    $linea = PlanPagoLn::create($ln_input);
-                    $concepto = CajaConcepto::find($ln_input['caja_concepto_id']);
-                    foreach ($concepto->reglas as $regla) {
-                        $linea->reglaRecargos()->attach($regla->id);
+            if (isset($lineas['plan_pago_id'])) {
+                for ($i = 0; $i < count($lineas['plan_pago_id']); $i++) {
+                    if (
+                        $lineas['plan_pago_id'][$i] > 0 and
+                        $lineas['caja_concepto_id'][$i] > 0 and
+                        $lineas['cuenta_contable_id'][$i] and
+                        $lineas['cuenta_recargo_id'][$i] and
+                        $lineas['fecha_p'][$i] != 0 and
+                        $lineas['monto'][$i] > 0
+                    ) {
+                        $ln_input['plan_pago_id'] = $lineas['plan_pago_id'][$i];
+                        $ln_input['caja_concepto_id'] = $lineas['caja_concepto_id'][$i];
+                        $ln_input['cuenta_contable_id'] = $lineas['cuenta_contable_id'][$i];
+                        $ln_input['cuenta_recargo_id'] = $lineas['cuenta_recargo_id'][$i];
+                        $ln_input['fecha_pago'] = $lineas['fecha_p'][$i];
+                        $ln_input['monto'] = $lineas['monto'][$i];
+                        $ln_input['inicial_bnd'] = 0;
+                        $ln_input['usu_alta_id'] = Auth::user()->id;
+                        $ln_input['usu_mod_id'] = Auth::user()->id;
+                        $linea = PlanPagoLn::create($ln_input);
+                        $concepto = CajaConcepto::find($ln_input['caja_concepto_id']);
+                        foreach ($concepto->reglas as $regla) {
+                            $linea->reglaRecargos()->attach($regla->id);
+                        }
                     }
                 }
-            }
             }
         }
 
@@ -425,34 +428,34 @@ class PlanPagosController extends Controller
             //dd($request->all());
             $plantel = $request->get('plantel_id');
             $turno = $request->get('id');
-            
-            $planes=Turno::find($turno)->planes;
+
+            $planes = Turno::find($turno)->planes;
             //dd($planes->toArray());
 
             $final = array();
             //dd(Auth::user()->can('IPlanPagosXPlantel'));
             $r = DB::table('plan_pagos as pp')
                 ->select('pp.id', 'pp.name');
-                if (Auth::user()->can('IPlanPagosXPlantel')) {
-                    $r=$r->where('pp.plantel_id', '=', $plantel);
-                }
-                $r=$r->where('pp.id', '>', '0')
+            if (Auth::user()->can('IPlanPagosXPlantel')) {
+                $r = $r->where('pp.plantel_id', '=', $plantel);
+            }
+            $r = $r->where('pp.id', '>', '0')
                 ->whereNull('deleted_at')
                 ->get();
-                //dd($r->toArray());
+            //dd($r->toArray());
 
             //    return $r;
             //dd($r);
-		    array_push($final, array(
+            array_push($final, array(
                 'id' => 0,
                 'name' => "",
                 'selectec' => 'Selected',
             ));
-            if (count($planes)>0) {
+            if (count($planes) > 0) {
                 //dd($r);
                 foreach ($r as $r1) {
                     //dd($r->id);
-                    foreach($planes as $plan){
+                    foreach ($planes as $plan) {
                         if ($r1->id == $plan->id) {
                             //dd($plan->id);
                             array_push($final, array(
@@ -460,21 +463,19 @@ class PlanPagosController extends Controller
                                 'name' => $r1->name,
                                 'selectec' => 'Selected',
                             ));
-                        } 
+                        }
                     }
-                    foreach($final as $linea){
-			//dd(array_search($r1->id, array_column($final, 'id'), false));
-                        if(!array_search($r1->id, array_column($final, 'id')))
-                        {		
+                    foreach ($final as $linea) {
+                        //dd(array_search($r1->id, array_column($final, 'id'), false));
+                        if (!array_search($r1->id, array_column($final, 'id'))) {
                             array_push($final, array(
                                 'id' => $r1->id,
                                 'name' => $r1->name,
                                 'selectec' => '',
                             ));
-			//dd($final);
+                            //dd($final);
                         }
                     }
-                    
                 }
                 return $final;
             } else {
@@ -488,38 +489,36 @@ class PlanPagosController extends Controller
         if ($request->ajax()) {
             //dd($request->all());
             $plantel = $request->get('plantel_id');
-            
+
             $final = array();
             //dd(Auth::user()->can('IPlanPagosXPlantel'));
             $r = DB::table('plan_pagos as pp')
                 ->select('pp.id', 'pp.name');
-                $r=$r->where('pp.plantel_id', '=', $plantel);
-                $r=$r->where('pp.id', '>', '0')
+            $r = $r->where('pp.plantel_id', '=', $plantel);
+            $r = $r->where('pp.id', '>', '0')
                 ->whereNull('deleted_at')
                 ->get();
-                //dd($r->toArray());
-                if (isset($plantel) and $plantel <> 0) {
-                    foreach ($r as $r1) {
-                        if ($r1->id == $plantel) {
-                            array_push($final, array(
-                                'id' => $r1->id,
-                                'name' => $r1->name,
-                                'selectec' => 'Selected'
-                            ));
-                        } else {
-                            array_push($final, array(
-                                'id' => $r1->id,
-                                'name' => $r1->name,
-                                'selectec' => ''
-                            ));
-                        }
+            //dd($r->toArray());
+            if (isset($plantel) and $plantel <> 0) {
+                foreach ($r as $r1) {
+                    if ($r1->id == $plantel) {
+                        array_push($final, array(
+                            'id' => $r1->id,
+                            'name' => $r1->name,
+                            'selectec' => 'Selected'
+                        ));
+                    } else {
+                        array_push($final, array(
+                            'id' => $r1->id,
+                            'name' => $r1->name,
+                            'selectec' => ''
+                        ));
                     }
-                    return $final;
-                } else {
-                    return $r;
                 }
-            
-            
+                return $final;
+            } else {
+                return $r;
+            }
         }
     }
 }
