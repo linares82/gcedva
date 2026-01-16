@@ -126,6 +126,33 @@
                 <div class="panel-body">
                     <form class="PlanPagoLn_search" id="search" action="{{ route('planPagoLns.editMontoLineas') }}" accept-charset="UTF-8" method="post">
                         {{ csrf_field() }}
+                        <div class="col-md-3 fecha_f-f" >
+                            <div class="form-group">
+                                <label class=" control-label" for="fecha_f-f">De fecha</label>
+                                    {!! Form::text("fecha_f-f", null, array("class" => "form-control input-sm fec_calendario", "id" => "fecha_f-f")) !!}
+                                    {!! Form::hidden("plan_pago_id-f", $planPago->id, array("class" => "form-control input-sm", "id" => "plan_pago_id-f")) !!}
+                            </div>
+                        </div>
+                        <div class=" col-md-3 fecha_t-f">
+                            <div class="form-group">
+                                <label class=" control-label" for="fecha_t-f">A fecha</label>
+                                    {!! Form::text("fecha_t-f", null, array("class" => "form-control input-sm fec_calendario", "id" => "fecha_t-f")) !!}
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3 check_bnd_mensualidad @if($errors->has('bnd_mensualidad-f')) has-error @endif">
+                          <label for="bnd_mensualidad-f">Mensualidades</label>
+                          {!! Form::checkbox("bnd_mensualidad-f", 1, null, [ "id" => "bnd_mensualidad-f"]) !!}
+                          @if($errors->has("bnd_mensualidad-f"))
+                            <span class="help-block">{{ $errors->first("bnd_mensualidad-f") }}</span>
+                          @endif
+                        </div>
+                        <div class=" col-md-3">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="monto-f">Nuevo Monto</label>
+                                    {!! Form::text("monto_mensualidades-f", 0, array("class" => "form-control input-sm", "id" => "monto_mensualidades-f")) !!}
+                            </div>
+                        </div>
+                        <!--
                         <div class="col-md-4 caja_concepto">
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="caja_concepto_id-f">CONCEPTO</label>
@@ -133,35 +160,114 @@
                                     {!! Form::hidden("plan_pago_id-f", $planPago->id, array("class" => "form-control input-sm", "id" => "plan_pago_id-f")) !!}
                             </div>
                         </div>
-
-                        <div class="form-group col-md-2 check_bnd_mensualidad @if($errors->has('bnd_mensualidad-f')) has-error @endif">
-                          <label for="bnd_mensualidad-f">Solo Mensualidades</label>
-                          {!! Form::checkbox("bnd_mensualidad-f", 1, null, [ "id" => "bnd_mensualidad-f"]) !!}
-                          @if($errors->has("bnd_mensualidad-f"))
-                            <span class="help-block">{{ $errors->first("bnd_mensualidad-f") }}</span>
-                          @endif
+                        -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="control-label" for="caja_concepto_id_1-f">CONCEPTO 1</label>
+                                    {!! Form::select("caja_concepto_id_1-f", $conceptos, 1, array("class" => "form-control select_seguridad", "id" => "caja_concepto_id_1-f")) !!}
+                            </div>
+                        </div>
+                        <div class=" col-md-3">
+                            <div class="form-group">
+                                <label class=" control-label" for="monto-f">Nuevo Monto 1</label>
+                                    {!! Form::text("monto_1-f", 0, array("class" => "form-control input-sm", "id" => "monto_1-f")) !!}
+                            </div>
                         </div>
                         
-                        <div class=" col-md-2 fecha_f-f" >
+                        <div class="col-md-3">
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="fecha_f-f">De fecha</label>
-                                    {!! Form::text("fecha_f-f", null, array("class" => "form-control input-sm fec_calendario", "id" => "fecha_f-f")) !!}
+                                <label class=" control-label" for="caja_concepto_id_1-f">CONCEPTO 2</label>
+                                    {!! Form::select("caja_concepto_id_2-f", $conceptos, 4, array("class" => "form-control select_seguridad", "id" => "caja_concepto_id_2-f")) !!}
                             </div>
                         </div>
-                        <div class=" col-md-2 fecha_t-f">
+                        <div class=" col-md-3">
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="fecha_t-f">A fecha</label>
-                                    {!! Form::text("fecha_t-f", null, array("class" => "form-control input-sm fec_calendario", "id" => "fecha_t-f")) !!}
+                                <label class=" control-label" for="monto-f">Nuevo Monto 2</label>
+                                    {!! Form::text("monto_2-f", 0, array("class" => "form-control input-sm", "id" => "monto_2-f")) !!}
                             </div>
                         </div>
 
-                        <div class=" col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="monto-f">Nuevo Monto</label>
-                                    {!! Form::text("monto-f", null, array("class" => "form-control input-sm", "id" => "monto-f")) !!}
+                                <label class=" control-label" for="caja_concepto_id_1-f">CONCEPTO 3</label>
+                                    {!! Form::select("caja_concepto_id_3-f", $conceptos, 17, array("class" => "form-control select_seguridad", "id" => "caja_concepto_id_3-f")) !!}
                             </div>
                         </div>
-                                                
+                        <div class="col-md-3" >
+                            <div class="form-group">
+                                <label class=" control-label" for="monto-f">Nuevo Monto 3</label>
+                                    {!! Form::text("monto_3-f", 0, array("class" => "form-control input-sm", "id" => "monto_3-f")) !!}
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="control-label" for="caja_concepto_id_1-f">CONCEPTO 4</label>
+                                    {!! Form::select("caja_concepto_id_4-f", $conceptos, 21, array("class" => "form-control select_seguridad", "id" => "caja_concepto_id_4-f")) !!}
+                            </div>
+                        </div>
+                        <div class=" col-md-3">
+                            <div class="form-group">
+                                <label class=" control-label" for="monto-f">Nuevo Monto 4</label>
+                                    {!! Form::text("monto_4-f", 0, array("class" => "form-control input-sm", "id" => "monto_4-f")) !!}
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="control-label" for="caja_concepto_id_1-f">CONCEPTO 5</label>
+                                    {!! Form::select("caja_concepto_id_5-f", $conceptos, 24, array("class" => "form-control select_seguridad", "id" => "caja_concepto_id_5-f")) !!}
+                            </div>
+                        </div>
+                        <div class=" col-md-3">
+                            <div class="form-group">
+                                <label class=" control-label" for="monto-f">Nuevo Monto 5</label>
+                                    {!! Form::text("monto_5-f", 0, array("class" => "form-control input-sm", "id" => "monto_5-f")) !!}
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class=" control-label" for="caja_concepto_id_1-f">CONCEPTO 6</label>
+                                    {!! Form::select("caja_concepto_id_6-f", $conceptos, 25, array("class" => "form-control select_seguridad", "id" => "caja_concepto_id_6-f")) !!}
+                            </div>
+                        </div>
+                        <div class=" col-md-3">
+                            <div class="form-group">
+                                <label class=" control-label" for="monto-f">Nuevo Monto 6</label>
+                                    {!! Form::text("monto_6-f", 0, array("class" => "form-control input-sm", "id" => "monto_6-f")) !!}
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="control-label" for="caja_concepto_id_1-f">CONCEPTO 7</label>
+                                    {!! Form::select("caja_concepto_id_7-f", $conceptos, 26, array("class" => "form-control select_seguridad", "id" => "caja_concepto_id_7-f")) !!}
+                            </div>
+                        </div>
+                        <div class=" col-md-3">
+                            <div class="form-group">
+                                <label class=" control-label" for="monto-f">Nuevo Monto 7</label>
+                                    {!! Form::text("monto_7-f", 0, array("class" => "form-control input-sm", "id" => "monto_7-f")) !!}
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="control-label" for="caja_concepto_id_1-f">CONCEPTO 8 </label>
+                                    {!! Form::select("caja_concepto_id_8-f", $conceptos, 257, array("class" => "form-control select_seguridad", "id" => "caja_concepto_id_8-f")) !!}
+                            </div>
+                        </div>
+                        <div class=" col-md-3">
+                            <div class="form-group">
+                                <label class=" control-label" for="monto-f">Nuevo Monto 8</label>
+                                    {!! Form::text("monto_8-f", 0, array("class" => "form-control input-sm", "id" => "monto_8-f")) !!}
+                            </div>
+                        </div>
+
+                        
+
                         <div class="form-group">
                             <div class="col-sm-10 col-sm-offset-2">
                                 <input type="submit" value="Actualizar Lineas Plan Pago" class="btn btn-info btn-sm" />

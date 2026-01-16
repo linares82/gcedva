@@ -282,45 +282,111 @@ class PlanPagoLnsController extends Controller
     }
 
 
-
     public function editMontoLineas(Request $request)
     {
         $datos = $request->all();
-        //dd('lineas');
-        if (isset($datos['bnd_mensualidad-f']) and $datos['bnd_mensualidad-f'] == 1) {
+        //dd($datos);
+        $total_lineas_afectadas = 0;
+        $total_adeudos_afectados = 0;
+        $conceptos = array(0, 0, 0, 0, 0, 0, 0, 0, 0);
+        if ($datos['monto_1-f'] <> 0) {
+            $conceptos[1] = $datos['caja_concepto_id_1-f'];
+        }
+        if ($datos['monto_2-f'] <> 0) {
+            $conceptos[2] = $datos['caja_concepto_id_2-f'];
+        }
+        if ($datos['monto_3-f'] <> 0) {
+            $conceptos[3] = $datos['caja_concepto_id_3-f'];
+        }
+        if ($datos['monto_4-f'] <> 0) {
+            $conceptos[4] = $datos['caja_concepto_id_4-f'];
+        }
+        if ($datos['monto_5-f'] <> 0) {
+            $conceptos[5] = $datos['caja_concepto_id_5-f'];
+        }
+        if ($datos['monto_6-f'] <> 0) {
+            $conceptos[6] = $datos['caja_concepto_id_6-f'];
+        }
+        if ($datos['monto_7-f'] <> 0) {
+            $conceptos[7] = $datos['caja_concepto_id_7-f'];
+        }
+        if ($datos['monto_8-f'] <> 0) {
+            $conceptos[8] = $datos['caja_concepto_id_8-f'];
+        }
+        //dd($conceptos);
+        if (count($conceptos) > 0) {
+            $lineas = PlanPagoLn::where('plan_pago_id', $datos['plan_pago_id-f'])
+                ->whereIn('caja_concepto_id', $conceptos)
+                ->whereBetween('fecha_pago', [$datos['fecha_f-f'], $datos['fecha_t-f']])
+                ->get();
+
+            foreach ($lineas as $linea) {
+                if ($linea->caja_concepto_id == $conceptos[1]) {
+                    $linea->monto = $datos['monto_1-f'];
+                }
+                if ($linea->caja_concepto_id == $conceptos[2]) {
+                    $linea->monto = $datos['monto_2-f'];
+                }
+                if ($linea->caja_concepto_id == $conceptos[3]) {
+                    $linea->monto = $datos['monto_3-f'];
+                }
+                if ($linea->caja_concepto_id == $conceptos[4]) {
+                    $linea->monto = $datos['monto_4-f'];
+                }
+                if ($linea->caja_concepto_id == $conceptos[5]) {
+                    $linea->monto = $datos['monto_5-f'];
+                }
+                if ($linea->caja_concepto_id == $conceptos[6]) {
+                    $linea->monto = $datos['monto_6-f'];
+                }
+                if ($linea->caja_concepto_id == $conceptos[7]) {
+                    $linea->monto = $datos['monto_7-f'];
+                }
+                if ($linea->caja_concepto_id == $conceptos[8]) {
+                    $linea->monto = $datos['monto_8-f'];
+                }
+                $linea->save();
+                $total_lineas_afectadas++;
+
+                $adeudos = Adeudo::where('plan_pago_ln_id', $linea->id)
+                    ->where('pagado_bnd', '<>', 1)
+                    ->whereNull('deleted_at')
+                    ->get();
+                dd($adeudos);
+                foreach ($adeudos as $adeudo) {
+                    $total_adeudos_afectados++;
+                }
+            }
+        }
+
+        if (
+            isset($datos['bnd_mensualidad-f']) and
+            $datos['bnd_mensualidad-f'] == 1 and
+            $datos['monto_mensualidades-f'] <> 0
+        ) {
             $lineas = PlanPagoLn::select('plan_pago_lns.*')
                 ->join('caja_conceptos', 'caja_conceptos.id', '=', 'plan_pago_lns.caja_concepto_id')
                 ->where('plan_pago_id', $datos['plan_pago_id-f'])
                 ->where('caja_conceptos.bnd_mensualidad', 1)
                 ->whereBetween('fecha_pago', [$datos['fecha_f-f'], $datos['fecha_t-f']])
                 ->get();
-        } elseif (isset($datos['caja_concepto_id-f'])) {
-            $lineas = PlanPagoLn::where('plan_pago_id', $datos['plan_pago_id-f'])
-                ->whereIn('caja_concepto_id', $datos['caja_concepto_id-f'])
-                ->whereBetween('fecha_pago', [$datos['fecha_f-f'], $datos['fecha_t-f']])
-                ->get();
+            foreach ($lineas as $linea) {
+                $linea->monto = $datos['monto_mensualidades-f'];
+                $linea->save();
+                $total_lineas_afectadas++;
+
+                $adeudos = Adeudo::where('plan_pago_ln_id', $linea->id)
+                    ->where('pagado_bnd', '<>', 1)
+                    ->whereNull('deleted_at')
+                    ->get();
+                foreach ($adeudos as $adeudo) {
+                    $total_adeudos_afectados++;
+                }
+            }
         }
         //dd($lineas);
 
-        foreach ($lineas as $linea) {
-            $linea->monto = $datos['monto-f'];
-            $linea->save();
-        }
-
-        $total_lineas_afectadas = count($lineas);
-
-        $total_adeudos_afectados = 0;
-        foreach ($lineas as $linea) {
-            $adeudos = Adeudo::where('plan_pago_ln_id', $linea->id)
-                ->where('pagado_bnd', '<>', 1)
-                ->whereNull('deleted_at')
-                ->get();
-            foreach ($adeudos as $adeudo) {
-                $total_adeudos_afectados++;
-            }
-        }
-
-        $mensaje = 'Lineas de Plan afectadas: ' . $total_lineas_afectadas . " Total de adeudos vinculados:" . $total_adeudos_afectados;
+        $mensaje = 'Lineas de Plan afectadas: ' . $total_lineas_afectadas . "Total de adeudos vinculados: " . $total_adeudos_afectados;
         //dd($mensaje);
 
         return redirect()->route('planPagos.show', $datos['plan_pago_id-f'])->with('message', $mensaje)->withInput();
@@ -330,39 +396,112 @@ class PlanPagoLnsController extends Controller
     {
         $datos = $request->all();
         //dd($datos);
+        $total_lineas_afectadas = 0;
+        $total_adeudos_afectados = 0;
+        $conceptos = array(0, 0, 0, 0, 0, 0, 0, 0, 0);
+        if ($datos['monto_1-f'] <> 0) {
+            $conceptos[1] = $datos['caja_concepto_id_1-f'];
+        }
+        if ($datos['monto_2-f'] <> 0) {
+            $conceptos[2] = $datos['caja_concepto_id_2-f'];
+        }
+        if ($datos['monto_3-f'] <> 0) {
+            $conceptos[3] = $datos['caja_concepto_id_3-f'];
+        }
+        if ($datos['monto_4-f'] <> 0) {
+            $conceptos[4] = $datos['caja_concepto_id_4-f'];
+        }
+        if ($datos['monto_5-f'] <> 0) {
+            $conceptos[5] = $datos['caja_concepto_id_5-f'];
+        }
+        if ($datos['monto_6-f'] <> 0) {
+            $conceptos[6] = $datos['caja_concepto_id_6-f'];
+        }
+        if ($datos['monto_7-f'] <> 0) {
+            $conceptos[7] = $datos['caja_concepto_id_7-f'];
+        }
+        if ($datos['monto_8-f'] <> 0) {
+            $conceptos[8] = $datos['caja_concepto_id_8-f'];
+        }
+        if (count($conceptos) > 0) {
+            $lineas = PlanPagoLn::where('plan_pago_id', $datos['plan_pago_id-f'])
+                ->whereIn('caja_concepto_id', $conceptos)
+                ->whereBetween('fecha_pago', [$datos['fecha_f-f'], $datos['fecha_t-f']])
+                ->get();
 
-        if (isset($datos['bnd_mensualidad-f']) and $datos['bnd_mensualidad-f'] == 1) {
+            foreach ($lineas as $linea) {
+                /*if ($linea->caja_concepto_id == $conceptos[1]) {
+                    $linea->monto = $datos['monto_1-f'];
+                }
+                if ($linea->caja_concepto_id == $conceptos[2]) {
+                    $linea->monto = $datos['monto_2-f'];
+                }
+                if ($linea->caja_concepto_id == $conceptos[3]) {
+                    $linea->monto = $datos['monto_3-f'];
+                }
+                if ($linea->caja_concepto_id == $conceptos[4]) {
+                    $linea->monto = $datos['monto_4-f'];
+                }
+                if ($linea->caja_concepto_id == $conceptos[5]) {
+                    $linea->monto = $datos['monto_5-f'];
+                }
+                if ($linea->caja_concepto_id == $conceptos[6]) {
+                    $linea->monto = $datos['monto_6-f'];
+                }
+                if ($linea->caja_concepto_id == $conceptos[7]) {
+                    $linea->monto = $datos['monto_7-f'];
+                }
+                if ($linea->caja_concepto_id == $conceptos[8]) {
+                    $linea->monto = $datos['monto_8-f'];
+                }
+                $linea->save();*/
+                $total_lineas_afectadas++;
+
+                $adeudos = Adeudo::where('plan_pago_ln_id', $linea->id)
+                    ->where('pagado_bnd', '<>', 1)
+                    ->whereNull('deleted_at')
+                    ->get();
+                foreach ($adeudos as $adeudo) {
+                    $adeudo->monto = $linea->monto;
+                    //$adeudo->fecha_pago = $linea->fecha_pago;
+                    $adeudo->save();
+                    $total_adeudos_afectados++;
+                }
+            }
+        }
+
+        if (
+            isset($datos['bnd_mensualidad-f']) and
+            $datos['bnd_mensualidad-f'] == 1 and
+            $datos['monto_mensualidades-f'] <> 0
+        ) {
             $lineas = PlanPagoLn::select('plan_pago_lns.*')
                 ->join('caja_conceptos', 'caja_conceptos.id', '=', 'plan_pago_lns.caja_concepto_id')
                 ->where('plan_pago_id', $datos['plan_pago_id-f'])
                 ->where('caja_conceptos.bnd_mensualidad', 1)
                 ->whereBetween('fecha_pago', [$datos['fecha_f-f'], $datos['fecha_t-f']])
                 ->get();
-        } elseif (isset($datos['caja_concepto_id-f'])) {
-            $lineas = PlanPagoLn::where('plan_pago_id', $datos['plan_pago_id-f'])
-                ->whereIn('caja_concepto_id', $datos['caja_concepto_id-f'])
-                ->whereBetween('fecha_pago', [$datos['fecha_f-f'], $datos['fecha_t-f']])
-                ->get();
-        }
 
-        $total_lineas_afectadas = count($lineas);
+            foreach ($lineas as $linea) {
+                //$linea->monto = $datos['monto_mensualidades-f'];
+                //$linea->save();
+                $total_lineas_afectadas++;
 
-        $total_adeudos_afectados = 0;
-        foreach ($lineas as $linea) {
-            $adeudos = Adeudo::where('plan_pago_ln_id', $linea->id)
-                ->where('pagado_bnd', '<>', 1)
-                ->whereNull('deleted_at')
-                ->get();
-            //dd($adeudos);
-            foreach ($adeudos as $adeudo) {
-                $adeudo->monto = $linea->monto;
-                //$adeudo->fecha_pago = $linea->fecha_pago;
-                $adeudo->save();
-                $total_adeudos_afectados++;
+                $adeudos = Adeudo::where('plan_pago_ln_id', $linea->id)
+                    ->where('pagado_bnd', '<>', 1)
+                    ->whereNull('deleted_at')
+                    ->get();
+                foreach ($adeudos as $adeudo) {
+                    $adeudo->monto = $linea->monto;
+                    //$adeudo->fecha_pago = $linea->fecha_pago;
+                    $adeudo->save();
+                    $total_adeudos_afectados++;
+                }
             }
         }
+        //dd($lineas);
 
-        $mensaje = 'Lineas de Plan afectadas: ' . $total_lineas_afectadas . " Total de adeudos vinculados:" . $total_adeudos_afectados;
+        $mensaje = "Total de adeudos afectados: " . $total_adeudos_afectados;
 
         return redirect()->route('planPagos.show', $datos['plan_pago_id-f'])->with('message', $mensaje)->withInput();
     }
