@@ -766,16 +766,17 @@
                                 @permission('cajas.inscripcion')
                                 @if($adeudo->cajaConcepto->id==1 or 
                                 $adeudo->cajaConcepto->id==23 or 
-                                $adeudo->cajaConcepto->id==25)
-                                @if($lns==0) <!--solo una linea en la caja    -->
-                                    <input type="checkbox" class="adeudos_tomados" value="{{$adeudo->id}}" />
+                                $adeudo->cajaConcepto->id==25 or 
+                                $adeudo->cajaConcepto->id==438)
+                                    @if($lns==0) <!--solo una linea en la caja    -->
+                                        <input type="checkbox" class="adeudos_tomados" value="{{$adeudo->id}}" />
                                     @endif
                                 @endif
                                 @endpermission
                                 @permission('cajas.no_inscripcion')
-                                @if($lns==0) <!--solo una linea en la caja    -->
-                                <input type="checkbox" class="adeudos_tomados" value="{{$adeudo->id}}" />
-                                @endif
+                                    @if($lns==0) <!--solo una linea en la caja    -->
+                                        <input type="checkbox" class="adeudos_tomados" value="{{$adeudo->id}}" />
+                                    @endif
                                 @endpermission
                                 
                                 @endif
@@ -1879,7 +1880,8 @@ Agregar nuevo registro
     if($(this).data('caja_concepto')==1 ||
     $(this).data('caja_concepto')==22 || 
     $(this).data('caja_concepto')==23 || 
-    $(this).data('caja_concepto')==25){
+    $(this).data('caja_concepto')==25 ||
+    $(this).data('caja_concepto')==438){
         $('#descuento_inscripcion').show();
         $('#porcentaje-adeudo').val($(this).data('porcentaje'));
         $('#autorizado_por-adeudo').val($(this).data('autorizado_por')).change();

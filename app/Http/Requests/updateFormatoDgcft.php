@@ -26,7 +26,7 @@ class updateFormatoDgcft extends FormRequest
         return [
             'plantel_id' => "required",
             'control_parte_fija' => 'required|max:8|min:8',
-            'control_inicio' => 'required|max:4|min:4',
+            //'control_inicio' => 'required|max:4|min:4',
         ];
     }
 

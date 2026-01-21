@@ -172,7 +172,7 @@ class FormatoDgcftsController extends Controller
 				$inputFormatoDgcftdetalle['formato_dgcft_id'] = $formatoDgcft->id;
 				$inputFormatoDgcftdetalle['num'] = $contador;
 				//$inputFormatoDgcftdetalle['control'] = trim($controls[$llave]);
-				$inputFormatoDgcftdetalle['control'] = $datos['control_parte_fija'] . str_pad($control_inicio, 7, "0", STR_PAD_LEFT);
+				$inputFormatoDgcftdetalle['control'] = $datos['control_parte_fija'] . str_pad($control_inicio, 4, "0", STR_PAD_LEFT);
 				$inputFormatoDgcftdetalle['cliente_id'] = $cliente->id;
 				$inputFormatoDgcftdetalle['nombre'] = $cliente->ape_paterno . " " . $cliente->ape_materno . " " . $cliente->nombre . " " . $cliente->nombre2;
 				$inputFormatoDgcftdetalle['curp'] = $cliente->curp;
@@ -309,7 +309,6 @@ class FormatoDgcftsController extends Controller
 		$grado = Grado::where('plantel_id', $formatoDgcft->plantel_id)->whereIn('seccion', $secciones)->first();
 		//dd($grado);
 		if ($datos['v'] == 1) {
-
 			return view('formatoDgcfts.reportes.riap02', compact('formatoDgcft', 'materias'));
 		} else {
 			//$materias=SepMaterium::whereIn('id',$formatoDgcft->sepGrupo->sepMateriasRels->pluck('sep_materia_id'))->get();
@@ -463,7 +462,7 @@ class FormatoDgcftsController extends Controller
 					if (!is_null($existe_cliente_formato_anterior) and $formatoDgcft->sepGrupo->bnd_tiene_otro_grupo == 1) {
 						$formatoDgcftDetalle->control = $existe_cliente_formato_anterior->control;
 					} else {
-						$formatoDgcftDetalle->control = str_pad($control_inicio, 7, "0", STR_PAD_LEFT);
+						$formatoDgcftDetalle->control = str_pad($control_inicio, 4, "0", STR_PAD_LEFT);
 						$control_inicio++;
 					}
 				} else {

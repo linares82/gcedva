@@ -182,7 +182,7 @@ $contador=0;
                @endphp
                <td>
                   @if(!is_null($calificacion))
-                     {{$calificacion->calificacion }}
+                     {{round($calificacion->calificacion) }}
                   @endif
                </td>
             @endforeach

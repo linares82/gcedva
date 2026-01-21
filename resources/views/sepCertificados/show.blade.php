@@ -135,7 +135,7 @@
                     <tr>
                         <td>{{ optional($sepCertificado->plantel->sepCertInstitucion)->id_institucion }}</td>
                         <td>{{ optional($sepCertificado->plantel->sepInstitucionEducativa)->cve_institucion}}</td>
-                        <td>{{ optional($sepCertificado->plantel->estadoCatalogo)->cve_inegi}}</td>
+                        <td>{{ optional($sepCertificado->responsable->estadoCatalogo)->cve_inegi}}</td>
                         <td>{{ optional($sepCertificado->responsable)->curp}}</td>
                         <td>{{ optional($sepCertificado->responsable)->nombre}}</td>
                         <td>{{ optional($sepCertificado->responsable)->ape_paterno}}</td>
@@ -151,7 +151,8 @@
                         <td>{{$linea->cliente->ape_paterno}}</td>
                         <td>{{$linea->cliente->ape_materno}}</td>
                         <td>
-                            @if($linea->cliente->genero_id==1)
+                            
+                            @if($linea->cliente->genero==1)
                                 251
                             @else
                                 250
@@ -175,7 +176,7 @@
                         <td>{{optional($sepCertificado->grado->planEstudio)->nombre_sep_cert}}</td>
                         <td>{{optional($sepCertificado->grado)->rvoe}}</td>
                         <td>{{optional($sepCertificado->grado)->emision_rvoe}}</td>
-                        <td>{{$linea->id_carrera}}</td><td>{{ $linea->numero_asignaturas_cursadas }}</td>
+                        <td>{{$sepCertificado->grado->carrera->cve_carrera}}</td><td>{{ $linea->numero_asignaturas_cursadas }}</td>
                         <td>{{$linea->promedio_general}}</td>
                         <td>
                             @if(!is_null($linea->hacademica_id))

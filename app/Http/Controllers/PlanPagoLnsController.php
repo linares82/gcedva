@@ -352,7 +352,7 @@ class PlanPagoLnsController extends Controller
                     ->where('pagado_bnd', '<>', 1)
                     ->whereNull('deleted_at')
                     ->get();
-                dd($adeudos);
+                //dd($adeudos);
                 foreach ($adeudos as $adeudo) {
                     $total_adeudos_afectados++;
                 }

@@ -502,7 +502,7 @@ class CajasController extends Controller
                         $param = Param::where('llave', 'prefijo_matricula_instalacion')->first();
                         if (($param->valor == 0 or $param->valor == "AZ") and
                             isset(optional($adeudo->descuento)->id) and
-                            ($adeudo->caja_concepto_id == 1 or $adeudo->caja_concepto_id == 23 or $adeudo->caja_concepto_id == 25)
+                            ($adeudo->caja_concepto_id == 1 or $adeudo->caja_concepto_id == 23 or $adeudo->caja_concepto_id == 25 or $adeudo->caja_concepto_id == 438)
                         ) {
                             $caja_ln['descuento'] = $caja_ln['subtotal'] * $adeudo->descuento->porcentaje;
                         } else {

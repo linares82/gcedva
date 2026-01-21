@@ -220,4 +220,9 @@ class Empleado extends Model
 	{
 		return $this->belongsTo('App\StProspecto');
 	} // end
+
+	public function estadoCatalogo()
+	{
+		return $this->belongsTo('App\Estado', 'estado_nacimiento_id', 'id');
+	} // end
 }

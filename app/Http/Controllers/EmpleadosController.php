@@ -61,7 +61,14 @@ class EmpleadosController extends Controller
         $estados = Estado::pluck('name', 'id');
         $nivel_estudios = NivelEstudio::pluck('name', 'id');
 
-        return view('empleados.create', compact('estados', 'jefes', 'responsables', 'tipoContratos', 'nivel_estudios'))
+        $curp_token = Param::where('llave', 'token_curp')->first();
+        $curp_url = Param::where('llave', 'url_curp')->first();
+        $api_valida_curp = [
+            'token' => $curp_token->valor,
+            'url' => $curp_url->valor,
+        ];
+
+        return view('empleados.create', compact('estados', 'jefes', 'responsables', 'tipoContratos', 'nivel_estudios', 'api_valida_curp'))
             ->with('list', Empleado::getListFromAllRelationApps())
             ->with('list1', PivotDocEmpleado::getListFromAllRelationApps());
     }
