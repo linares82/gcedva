@@ -99,6 +99,7 @@
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'justificacion', 'title' => 'JUSTIFICACION'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_alta_id', 'title' => 'ALTA'])</th>
                             <th>Estatus</th>
+                            <th>RESPUESTA</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
@@ -132,9 +133,12 @@
                                     Sin revisar
                                     @endif
                                 </td>
+                                <td>{{$incidenciasCalificacion->respuesta}}</td>
                                 <td class="text-right">
                                     @permission('incidenciasCalificacions.edit')
+                                    @if($incidenciasCalificacion->bnd_autorizada==0 && $incidenciasCalificacion->bnd_rechazada==0)
                                     <a class="btn btn-xs btn-warning" href="{{ route('incidenciasCalificacions.edit', $incidenciasCalificacion->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
+                                    @endif
                                     @endpermission
                                     @permission('incidenciasCalificacions.destroy')
                                     {!! Form::model($incidenciasCalificacion, array('route' => array('incidenciasCalificacions.destroy', $incidenciasCalificacion->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}

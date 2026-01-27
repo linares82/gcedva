@@ -165,11 +165,15 @@ class IncidenciasCalificacionsController extends Controller
 	public function Autorizar(Request $request)
 	{
 		$datos = $request->all();
+
 		$incidenciasCalificacion = IncidenciasCalificacion::find($datos['id']);
+		$input['respuesta'] = $datos['respuesta'];
 		$input['usu_mod_id'] = Auth::user()->id;
 		$input['bnd_autorizada'] = 1;
 		$input['bnd_rechazada'] = 0;
 		$input['fecha_ar'] = date('Y-m-d');
+
+
 
 		$incidenciasCalificacion->update($input);
 
@@ -193,6 +197,7 @@ class IncidenciasCalificacionsController extends Controller
 	{
 		$datos = $request->all();
 		$incidenciasCalificacion = IncidenciasCalificacion::find($datos['id']);
+		$input['respuesta'] = $datos['respuesta'];
 		$input['usu_mod_id'] = Auth::user()->id;
 		$input['bnd_rechazada'] = 1;
 		$input['bnd_autorizada'] = 0;

@@ -25,9 +25,13 @@
                         <td> FECHA DE INICIO:<strong>{{$formatoDgcft->fec_inicio}}</strong></td>
                         <td>FECHA DE FIN: <strong>{{$formatoDgcft->fec_fin}}</strong></td>
                         <td>DURACION EN HRS.: 
-                            @foreach($materias as $materia)
-                            {{$materia->duracion_horas }}
-                            @endforeach
+                            @php
+                                $suma_horas=0;
+                                foreach($materias as $materia){
+                                    $suma_horas=$suma_horas + $materia->duracion_horas;
+                                }
+                            @endphp
+                            {{ $suma_horas }}
                         </td>
                         <td>HORARIO.: {{$formatoDgcft->horario}} </td>
                     </tr>

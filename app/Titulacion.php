@@ -37,7 +37,13 @@ class Titulacion extends Model
 		'costo',
 		'fecha_expedicion',
 		'fecha_examen_profesional',
-		'fecha_excencion_examen_profesional'
+		'fecha_excencion_examen_profesional',
+		'institucion_procedencia',
+		'sep_t_estudio_antecedente_id',
+		'estado_procedencia_id',
+		'fecha_inicio',
+		'fecha_terminacion',
+		'numero_cedula'
 	];
 
 	public function usu_alta()
@@ -87,4 +93,15 @@ class Titulacion extends Model
 	{
 		return $this->belongsTo('App\TitulacionGrupo');
 	} // end
+
+	public function sepTEstudioAntecedente()
+	{
+		return $this->hasOne('App\SepTEstudioAntecedente', 'id', 'sep_t_estudio_antecedente_id');
+	} // end
+
+	public function estadoProcedencia()
+	{
+		return $this->hasOne('App\Estado', 'id', 'estado_procedencia_id');
+	} // end
+
 }

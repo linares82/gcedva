@@ -1,18 +1,24 @@
-<?php namespace App\Http\Controllers;
+<?php
+
+namespace App\Http\Controllers;
 
 use Auth;
-use App\Titulacion;
+use App\Estado;
 
+use App\Titulacion;
 use App\Http\Requests;
 use App\OpcionTitulacion;
 use App\TitulacionDocumento;
 use Illuminate\Http\Request;
+use App\SepTEstudioAntecedente;
+use App\TitulacionDocumentacion;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\createTitulacion;
 use App\Http\Requests\updateTitulacion;
-use App\TitulacionDocumentacion;
 
-class TitulacionsController extends Controller {
+class TitulacionsController extends Controller
+{
 
 	/**
 	 * Display a listing of the resource.
@@ -34,10 +40,14 @@ class TitulacionsController extends Controller {
 	public function create(Request $request)
 	{
 		$cliente = $request->input('cliente');
-		$opciones_titulacion=OpcionTitulacion::pluck('name','id');
-		$documentos=TitulacionDocumento::pluck('name','id');
-		return view('titulacions.create', compact('cliente','opciones_titulacion','documentos'))
-			->with( 'list', Titulacion::getListFromAllRelationApps() );
+		$opciones_titulacion = OpcionTitulacion::pluck('name', 'id');
+		$documentos = TitulacionDocumento::pluck('name', 'id');
+		$sepTipoEstudioAntecedente = SepTEstudioAntecedente::select(DB::raw('concat(id_t_estudio_antecedente,"-",t_estudio_antecedente) as name, id'))
+			->pluck('name', 'id');
+		$sepTipoEstudioAntecedente->prepend('Seleccionar Opcion', '');
+		$estados = Estado::pluck('name', 'id');
+		return view('titulacions.create', compact('cliente', 'opciones_titulacion', 'documentos', 'sepTipoEstudioAntecedente', 'estados'))
+			->with('list', Titulacion::getListFromAllRelationApps());
 	}
 
 	/**
@@ -50,22 +60,22 @@ class TitulacionsController extends Controller {
 	{
 
 		$input = $request->all();
-		
-		
-		$input['usu_alta_id']=Auth::user()->id;
-		$input['usu_mod_id']=Auth::user()->id;
-		$input['bnd_titulado']=0;
+
+
+		$input['usu_alta_id'] = Auth::user()->id;
+		$input['usu_mod_id'] = Auth::user()->id;
+		$input['bnd_titulado'] = 0;
 
 		//create data
-		$titulacion=Titulacion::create( $input );
+		$titulacion = Titulacion::create($input);
 
-		if($titulacion->opcion_titulacion_id<>0){
-			$titulacion->costo=$titulacion->opcionTitulacion->costo;
+		if ($titulacion->opcion_titulacion_id <> 0) {
+			$titulacion->costo = $titulacion->opcionTitulacion->costo;
 			$titulacion->save();
 		}
 
-		$seguimiento=$titulacion->cliente->seguimiento;
-		$seguimiento->st_seguimiento_id=9;
+		$seguimiento = $titulacion->cliente->seguimiento;
+		$seguimiento->st_seguimiento_id = 9;
 		$seguimiento->save();
 		//return $titulacion;
 
@@ -80,7 +90,7 @@ class TitulacionsController extends Controller {
 	 */
 	public function show($id)
 	{
-		$titulacion=Titulacion::find($id);
+		$titulacion = Titulacion::find($id);
 		return view('titulacions.show', compact('titulacion'));
 	}
 
@@ -92,23 +102,27 @@ class TitulacionsController extends Controller {
 	 */
 	public function edit($id)
 	{
-		$titulacion=Titulacion::find($id);
-		$opciones_titulacion=OpcionTitulacion::pluck('name','id');
-		$documentos=TitulacionDocumento::pluck('name','id');
-		$documentos_existentes=TitulacionDocumentacion::select('titulacion_documento_id')
-		->where('titulacion_id',$id)
-		->whereNull('deleted_at')
-		->get();
-		$documentos_existentes_array=array();
-		foreach($documentos_existentes as $doc){
+		$titulacion = Titulacion::find($id);
+		$opciones_titulacion = OpcionTitulacion::pluck('name', 'id');
+		$documentos = TitulacionDocumento::pluck('name', 'id');
+		$documentos_existentes = TitulacionDocumentacion::select('titulacion_documento_id')
+			->where('titulacion_id', $id)
+			->whereNull('deleted_at')
+			->get();
+		$documentos_existentes_array = array();
+		foreach ($documentos_existentes as $doc) {
 			array_push($documentos_existentes_array, $doc->titulacion_documento_id);
 		}
 
-		$documentos_faltantes=TitulacionDocumento::whereNotIn('id',$documentos_existentes_array)
-		->get();
+		$documentos_faltantes = TitulacionDocumento::whereNotIn('id', $documentos_existentes_array)
+			->get();
 		//dd($documentos_existentes_array);
-		return view('titulacions.edit', compact('titulacion','opciones_titulacion','documentos','documentos_faltantes'))
-			->with( 'list', Titulacion::getListFromAllRelationApps() );
+		$sepTipoEstudioAntecedente = SepTEstudioAntecedente::select(DB::raw('concat(id_t_estudio_antecedente,"-",t_estudio_antecedente) as name, id'))
+			->pluck('name', 'id');
+		$sepTipoEstudioAntecedente->prepend('Seleccionar Opcion', '');
+		$estados = Estado::pluck('name', 'id');
+		return view('titulacions.edit', compact('titulacion', 'opciones_titulacion', 'documentos', 'documentos_faltantes', 'sepTipoEstudioAntecedente', 'estados'))
+			->with('list', Titulacion::getListFromAllRelationApps());
 	}
 
 	/**
@@ -119,9 +133,9 @@ class TitulacionsController extends Controller {
 	 */
 	public function duplicate($id, Titulacion $titulacion)
 	{
-		$titulacion=$titulacion->find($id);
+		$titulacion = $titulacion->find($id);
 		return view('titulacions.duplicate', compact('titulacion'))
-			->with( 'list', Titulacion::getListFromAllRelationApps() );
+			->with('list', Titulacion::getListFromAllRelationApps());
 	}
 
 	/**
@@ -134,18 +148,18 @@ class TitulacionsController extends Controller {
 	public function update($id, Titulacion $titulacion, updateTitulacion $request)
 	{
 		$input = $request->all();
-		$input['usu_mod_id']=Auth::user()->id;
+		$input['usu_mod_id'] = Auth::user()->id;
 		//update data
-		$titulacion=$titulacion->find($id);
-		if(!isset($input['bnd_doc_vinc_revisados'])){
-			$input['bnd_doc_vinc_revisados']=0;
+		$titulacion = $titulacion->find($id);
+		if (!isset($input['bnd_doc_vinc_revisados'])) {
+			$input['bnd_doc_vinc_revisados'] = 0;
 		}
-		if(!isset($input['bnd_revision_director'])){
-			$input['bnd_revision_director']=0;
+		if (!isset($input['bnd_revision_director'])) {
+			$input['bnd_revision_director'] = 0;
 		}
-		$titulacion->update( $input );
+		$titulacion->update($input);
 
-		return redirect()->route('titulacions.index',array('q[cliente_id_lt]'=>$titulacion->cliente_id))->with('message', 'Registro Actualizado.');
+		return redirect()->route('titulacions.index', array('q[cliente_id_lt]' => $titulacion->cliente_id))->with('message', 'Registro Actualizado.');
 	}
 
 	/**
@@ -154,21 +168,21 @@ class TitulacionsController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id,Titulacion $titulacion)
+	public function destroy($id, Titulacion $titulacion)
 	{
-		$titulacion=$titulacion->find($id);
+		$titulacion = $titulacion->find($id);
 		$titulacion->delete();
 
 		return redirect()->route('titulacions.index')->with('message', 'Registro Borrado.');
 	}
 
-	public function actualizarCosto(Request $request){
-		$datos=$request->all();
-		$titulacion=Titulacion::find($datos['id']);
-		$opcion_titulacion=OpcionTitulacion::find($titulacion->opcion_titulacion_id);
-		$titulacion->costo=$opcion_titulacion->costo;
+	public function actualizarCosto(Request $request)
+	{
+		$datos = $request->all();
+		$titulacion = Titulacion::find($datos['id']);
+		$opcion_titulacion = OpcionTitulacion::find($titulacion->opcion_titulacion_id);
+		$titulacion->costo = $opcion_titulacion->costo;
 		$titulacion->save();
-		return redirect()->route('titulacions.index',array('q[cliente_id_lt]'=>$titulacion->cliente_id));
+		return redirect()->route('titulacions.index', array('q[cliente_id_lt]' => $titulacion->cliente_id));
 	}
-
 }

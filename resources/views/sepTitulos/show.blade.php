@@ -237,47 +237,61 @@
                         <td>{{optional($sepTitulo->grado->sepFundamentoLegalServicioSocial)->fundamento_legal_servicio_social}}</td>
                         <td>{{$sepTitulo->plantel->estadoCatalogo->cve_inegi}}</td>
                         <td>{{$sepTitulo->plantel->estadoCatalogo->name}}</td>
-                        <td>{{optional($linea->cliente->procedenciaAlumno)->institucion_procedencia}}</td>
-                        @php
-                            $antecedente=App\ProcedenciaAlumno::where('cliente_id', $linea->cliente->id)
-                            ->with('sepTEstudioAntecedente','estado')
-                            ->first();
-                            //dd($antecedente);
-                        @endphp
                         <td>
-                            @if($antecedente!==null)
-                            {{optional($antecedente->sepTEstudioAntecedente)->id_t_estudio_antecedente}}
-                            @endif
+                            @if(optional($linea->cliente->titulacions->where('bnd_titulado',1))->load('opcionTitulacion','opcionTitulacion.sepModalidadTitulacion')->first()!==null)
+                            @php
+                                $titulacion=optional($linea->cliente->titulacions->where('bnd_titulado',1))->first();
+                                echo optional($titulacion)->institucion_procedencia;
+                            @endphp
+                            @endif        
+                        </td>
+                        
+                        <td>
+                            @if(optional($linea->cliente->titulacions->where('bnd_titulado',1))->first()!==null)
+                            @php
+                                $titulacion->load('sepTEstudioAntecedente');
+                                echo optional($titulacion->sepTEstudioAntecedente)->id_t_estudio_antecedente;
+                            @endphp
+                            @endif        
                         </td>
                         <td>
-                            @if($antecedente!==null)
-                            {{optional($antecedente->sepTEstudioAntecedente)->t_estudio_antecedente}}
-                            @endif
+                            @if(optional($linea->cliente->titulacions->where('bnd_titulado',1))->first()!==null)
+                            @php
+                                $titulacion->load('sepTEstudioAntecedente');
+                                echo optional($titulacion->sepTEstudioAntecedente)->t_estudio_antecedente;
+                            @endphp
+                            @endif        
                         </td>
                         <td>
-                            @if($antecedente!==null)
-                            {{optional($antecedente->estado)->cve_inegi}}
-                            @endif
+                            @if(optional($linea->cliente->titulacions->where('bnd_titulado',1))->first()!==null)
+                            @php
+                                $titulacion->load('estadoProcedencia');
+                                echo optional($titulacion->estadoProcedencia)->cve_inegi;
+                            @endphp
+                            @endif        
                         </td>
                         <td>
-                            @if($antecedente!==null)
-                            {{optional($antecedente->estado)->name}}
-                            @endif
+                            @if(optional($linea->cliente->titulacions->where('bnd_titulado',1))->first()!==null)
+                            @php
+                                $titulacion->load('estadoProcedencia');
+                                echo optional($titulacion->estadoProcedencia)->name;
+                            @endphp
+                            @endif        
                         </td>
                         <td>
-                            @if($antecedente!==null)
-                            {{optional($antecedente)->fecha_inicio}}
+                            @if(optional($linea->cliente->titulacions->where('bnd_titulado',1))->first()!==null)
+                            {{$titulacion->fecha_inicio}}
                             @endif    
                         </td>
                         <td>
-                            @if($antecedente!==null)
-                            {{optional($antecedente)->fecha_terminacion}}
+                            @if(optional($linea->cliente->titulacions->where('bnd_titulado',1))->first()!==null)
+                            {{$titulacion->fecha_terminacion}}
                             @endif    
 
                         </td>
                         <td>
-                            @if($antecedente!==null)
-                            {{optional($antecedente)->numero_cedula}}
+                            @if(optional($linea->cliente->titulacions->where('bnd_titulado',1))->first()!==null)
+                            {{$titulacion->numero_cedula}}
                             @endif    
 
                         </td>

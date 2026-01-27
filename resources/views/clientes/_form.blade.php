@@ -57,8 +57,8 @@
                             @permission('clientes.apiValidaCurp')
                             <input type="button" id="btnValidarCurp" value="Validar">
                             {{$cliente->bnd_consulta_curp==1 ? '-Si validado' : 'No validado'}}
-                            {!! Form::hidden("bnd_consulta_curp", null, array("class" => "form-control input-sm", "id" => "bnd_consulta_curp-field")) !!}
                             @endpermission
+                            {!! Form::hidden("bnd_consulta_curp", null, array("class" => "form-control input-sm", "id" => "bnd_consulta_curp-field")) !!}
                             @permission('clientes.desbloqueoCurp')
                             <input type="button" id="btnDesbloqueoCurp" value="Desbloquear Curp">
                             @endpermission

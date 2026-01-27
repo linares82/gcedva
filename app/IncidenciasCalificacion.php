@@ -24,6 +24,7 @@ class IncidenciasCalificacion extends Model
 		'cliente_id',
 		'calificacion_nueva',
 		'justificacion',
+		'respuesta',
 		'bnd_autorizada',
 		'bnd_rechazada',
 		'fecha_ar',

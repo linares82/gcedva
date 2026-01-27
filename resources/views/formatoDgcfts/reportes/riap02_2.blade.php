@@ -150,9 +150,11 @@
                     $i = 1;
                     $contador_registros=0;
                     $registros_por_hoja=25;
+                    $total_registros_actuales=count($formatoDgcft->formatoDgcftDetalles->where('bnd_satisfactorio',1));
+                    //dd($total_registros_actuales);
                     //dd($formatoDgcft->formatoDgcftDetalles->toArray());
                     @endphp
-                    @foreach ($formatoDgcft->formatoDgcftDetalles as $registro)
+                    @foreach ($formatoDgcft->formatoDgcftDetalles->where('bnd_satisfactorio',1) as $registro)
                         @if ($registro->bnd_satisfactorio == 1)
                             <tr>
                                 <td>{{ $i++ }}</td>
@@ -178,7 +180,29 @@
                                 $contador_registros++;
                             @endphp
                         @endif
-                        @if($contador_registros==$registros_por_hoja)
+                        @if($total_registros_actuales<$registros_por_hoja)
+                            @if($contador_registros==$total_registros_actuales)
+                                @while($contador_registros<$registros_por_hoja)
+                                    <tr height="25px">
+                                    <td>{{ $i++ }}</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td><td></td><td></td>
+                                    @foreach($materias as $materia)
+                                        <td>
+                                        </td>
+                                    @endforeach
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                @php
+                                    $contador_registros++;
+                                @endphp
+                                @endwhile
+                            @endif
+                        @endif
+                        @if($contador_registros==$registros_por_hoja and $total_registros_actuales>$registros_por_hoja)
                             @include('formatoDgcfts.reportes.riap02.pie_tabla')
                             @include('formatoDgcfts.reportes.riap02.pie_first')                
                             <div class='SaltoDePagina'></div>
@@ -203,10 +227,11 @@
                     $i = 1;
                     $contador_registros=0;
                     $registros_por_hoja=25;
-                    //dd($formatoDgcft->formatoDgcftDetalles->toArray());
+                    $total_registros_actuales=count($formatoDgcft->formatoDgcftDetalles->where('bnd_satisfactorio',1));
+                    //dd($total_registros_actuales);
                     @endphp            
                 
-                    @foreach ($formatoDgcft->formatoDgcftDetalles as $registro)
+                    @foreach ($formatoDgcft->formatoDgcftDetalles->where('bnd_satisfactorio',1) as $registro)
                         @if ($registro->bnd_satisfactorio == 1)
                             <tr>
                                 <td>{{ $i++ }}</td>
@@ -263,7 +288,7 @@
                                         ?>
                                         <td>
                                             @if (!is_null($calificacion))
-                                                {{ $calificacion->calificacion }}
+                                                {{ round($calificacion->calificacion) }}
                                             @endif
                                         </td>
                                     @endif
@@ -273,7 +298,29 @@
                                 $contador_registros++;
                             @endphp
                         @endif
-                        @if($contador_registros==$registros_por_hoja)
+                        @if($total_registros_actuales<$registros_por_hoja)
+                            @if($contador_registros==$total_registros_actuales)
+                                @while($contador_registros<$registros_por_hoja)
+                                    <tr height="25px">
+                                    <td>{{ $i++ }}</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td><td></td><td></td>
+                                    @foreach($materias as $materia)
+                                        <td>
+                                        </td>
+                                    @endforeach
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                @php
+                                    $contador_registros++;
+                                @endphp
+                                @endwhile
+                            @endif
+                        @endif
+                        @if($contador_registros==$registros_por_hoja and $total_registros_actuales>$registros_por_hoja)
                             @include('formatoDgcfts.reportes.riap02.pie_tabla')
                             @include('formatoDgcfts.reportes.riap02.pie_first')                
                             <div class='SaltoDePagina'></div>

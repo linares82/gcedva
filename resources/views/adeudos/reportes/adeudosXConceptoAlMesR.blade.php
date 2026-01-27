@@ -128,10 +128,16 @@
                         No
                     @endif
                 </td>
-                <td>@if($linea['pagado_bnd']==1)
-                    {{$linea['caja_fecha']}}</td>
-                <td>{{$linea['pago_created']}}</td>
-                @endif
+                <td>
+                    @if($linea['pagado_bnd']==1)
+                    {{$linea['caja_fecha']}}
+                    @endif
+                </td>
+                <td>
+                    @if($linea['pagado_bnd']==1)
+                    {{$linea['pago_created']}}
+                    @endif
+                </td>
                 <td>{{$linea['monto']}}</td><td>{{$linea['total']}}</td><td>{{$linea['estatus']}}</td>
             </tr>
             @endforeach

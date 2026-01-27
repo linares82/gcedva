@@ -13,18 +13,6 @@
 <div class="page-header">
         <h1>@yield('incidenciasCalificacionsAppTitle') / Mostrar {{$incidenciasCalificacion->id}}
 
-            {!! Form::model($incidenciasCalificacion, array('route' => array('incidenciasCalificacions.destroy', $incidenciasCalificacion->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? Estas seguro?')) { return true } else {return false };")) !!}
-                <div class="btn-group pull-right" role="group" aria-label="...">
-                    @permission('incidenciasCalificacion.edit')
-                    <a class="btn btn-warning btn-group" role="group" href="{{ route('incidenciasCalificacions.edit', $incidenciasCalificacion->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
-                    @endpermission
-                    @permission('incidenciasCalificacion.destroy')
-                    <button type="submit" class="btn btn-danger">Borrar <i class="glyphicon glyphicon-trash"></i><
-                    /button>
-                    @endpermission
-                </div>
-            {!! Form::close() !!}
-
         </h1>
     </div>
 @endsection
@@ -96,6 +84,11 @@
                      <label for="fecha_ar">FECHA AUTORIZAR/RECHAZAR</label>
                      <p class="form-control-static">{{$incidenciasCalificacion->fecha_ar}}</p>
                 </div>
+                </div>
+                    <div class="form-group col-sm-4">
+                     <label for="usu_mod_id">RESPUESTA</label>
+                     <p class="form-control-static">{{$incidenciasCalificacion->respuesta}}</p>
+                </div>
                     <div class="form-group col-sm-4">
                      <label for="usu_alta_id">ALTA</label>
                      <p class="form-control-static"> {{$incidenciasCalificacion->created_at->format('d-m-Y')}} {{$incidenciasCalificacion->usu_alta->name}}</p>
@@ -119,15 +112,71 @@
 
             <a class="btn btn-link" href="{{ route('incidenciasCalificacions.index') }}"><i class="glyphicon glyphicon-backward"></i>  Regresar</a>
             @permission('incidenciasCalificacions.edit')
-            <a class="btn btn-warning" href="{{ route('incidenciasCalificacions.edit', $incidenciasCalificacion->id) }}"> Editar</a>
+            <!--<a class="btn btn-warning" href="{{ route('incidenciasCalificacions.edit', $incidenciasCalificacion->id) }}"> Editar</a>-->
             @endpermission
             @permission('incidenciasCalificacions.autorizar')
-            <a class="btn btn-success" href="{{ route('incidenciasCalificacions.autorizar', array('id'=>$incidenciasCalificacion->id)) }}">  Autorizar</a>
+            <!--<a class="btn btn-success" href="{{ route('incidenciasCalificacions.autorizar', array('id'=>$incidenciasCalificacion->id)) }}">  Autorizar</a>-->
             @endpermission
             @permission('incidenciasCalificacions.rechazar')
-            <a class="btn btn-danger" href="{{ route('incidenciasCalificacions.rechazar', array('id'=>$incidenciasCalificacion->id)) }}">  Rechazar</a>
+             <!--<a class="btn btn-danger" href="{{ route('incidenciasCalificacions.rechazar', array('id'=>$incidenciasCalificacion->id)) }}">  Rechazar</a>-->
             @endpermission    
+            
+            <div class="row"></div>
+            @if($incidenciasCalificacion->bnd_autorizada==0 && $incidenciasCalificacion->bnd_rechazada==0)
+            {!! Form::model($incidenciasCalificacion, array('route' => array('incidenciasCalificacions.edit', $incidenciasCalificacion->id),'id' => 'frm_ar', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('Estas seguro de tu evaluación?')) { return true } else {return false };")) !!}
+                <div class="form-group col-md-12 @if ($errors->has('justificacion')) has-error @endif">
+                <label for="justificacion-field">Justificacion</label>
+                {!! Form::hidden('id', $incidenciasCalificacion->id, [
+                        'class' => 'form-control',
+                        'id' => 'incidencias_calificacion_id-field',
+                ]) !!}
+                {!! Form::textArea('respuesta', null, [
+                        'class' => 'form-control',
+                        'id' => 'respuesta-field',
+                        'rows' => 3,
+                ]) !!}
+                @if ($errors->has('justificacion'))
+                        <span class="help-block">{{ $errors->first('justificacion') }}</span>
+                @endif
+                </div>
+                <div class="row"></div>
+                @permission('incidenciasCalificacions.autorizar')
+                <div class="btn-group pull-right" role="group" aria-label="...">
+                    <a class="btn btn-success btn-group" id="btn_autorizar" role="group" href="{{ route('incidenciasCalificacions.edit', $incidenciasCalificacion->id) }}"><i class="glyphicon glyphicon-edit"></i> Autorizar</a>
+                </div>
+                @endpermission
+                @permission('incidenciasCalificacions.rechazar')
+                <div class="btn-group pull-right" role="group" aria-label="...">
+                    <a class="btn btn-danger btn-group" id="btn_rechazar" role="group" href="{{ route('incidenciasCalificacions.edit', $incidenciasCalificacion->id) }}"><i class="glyphicon glyphicon-edit"></i> Rechazar</a>
+                </div>
+                @endpermission
+                
+            {!! Form::close() !!}
+                @endif
         </div>
     </div>
 
 @endsection
+
+@push('scripts')
+   <script>
+         $(document).ready(function() {
+            $('#btn_autorizar').click(function(event){
+                event.preventDefault();
+                var url = "{{ route('incidenciasCalificacions.autorizar') }}";
+                var $miFormulario = $('#frm_ar');
+                $miFormulario.attr('action', url);
+                $miFormulario.submit();
+
+            });
+
+            $('#btn_rechazar').click(function(event){
+                event.preventDefault();
+                var url = "{{ route('incidenciasCalificacions.rechazar') }}";
+                var $miFormulario = $('#frm_ar');
+                $miFormulario.attr('action', url);
+                $miFormulario.submit();
+            });
+         });
+   </script>
+@endpush

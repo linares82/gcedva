@@ -16284,6 +16284,8 @@ Route::prefix('/incidenciasCalificacions')
         Route::get('/rechazar', 'IncidenciasCalificacionsController@rechazar')->name('rechazar')->middleware('permission:incidenciasCalificacions.rechazar');
         Route::post('/store', 'IncidenciasCalificacionsController@store')->name('store')->middleware('permission:incidenciasCalificacions.store');
         Route::post('/edit/{id}', 'IncidenciasCalificacionsController@update')->name('update')->middleware('permission:incidenciasCalificacions.update');
+        Route::post('/autorizar', 'IncidenciasCalificacionsController@autorizar')->name('autorizar')->middleware('permission:incidenciasCalificacions.autorizar');
+        Route::post('/rechazar', 'IncidenciasCalificacionsController@rechazar')->name('rechazar')->middleware('permission:incidenciasCalificacions.rechazar');
         Route::post('/delete/{id}', 'IncidenciasCalificacionsController@destroy')->name('destroy')->middleware('permission:incidenciasCalificacions.destroy');
         Route::post('grados/cargaArchivo', 'IncidenciasCalificacionsController@cargaArchivo')->name('cargaArchivo');
     });

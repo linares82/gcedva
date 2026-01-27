@@ -105,7 +105,7 @@
                 @endphp
                 @foreach($registro->formatoDgcftMatCalifs as $materia)
                 <tr>
-                    <td>{{$materia->materia}}</td><td>{{$materia->calificacion}}</td>
+                    <td>{{$materia->materia}}</td><td>{{round($materia->calificacion)}}</td>
                 </tr>
                 <?php $cantidad_materias++; ?>
                 @endforeach
