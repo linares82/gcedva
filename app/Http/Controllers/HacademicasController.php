@@ -169,7 +169,7 @@ class HacademicasController extends Controller
 
         $aprobatoria = Param::where('llave', 'calificacion_aprobatoria')->value('valor');
         $c = Cliente::where('id', '=', $input['alumno_id'])->first();
-        if ($aprobatoria == 0) {
+        if ($aprobatoria == 0 and !is_null($input['alumno_id'])) {
             $plantel = Plantel::find($c->plantel_id);
             $aprobatoria = $plantel->calificacion_aprobatoria;
         }
@@ -229,6 +229,8 @@ class HacademicasController extends Controller
                 $h->save();
             }
         }
+
+        $hacademicas = null;
 
         if (
             isset($input['alumno_id']) and
@@ -348,7 +350,7 @@ class HacademicasController extends Controller
     {
         $examen = TpoExamen::where('id', '>', 1)->pluck('name', 'id');
         //$examen->reverse();
-        //$examen->put(0,'Seleccionar Opción');
+        //$examen->put(0,'Seleccionar OpciÃ³n');
         //$examen->reverse();
         $lectivos = Lectivo::pluck('name', 'id');
         return view('hacademicas.examen', compact('examen', 'lectivos'))
@@ -377,7 +379,6 @@ class HacademicasController extends Controller
                 ->where('c.id', '=', $input['cliente_id'])
                 ->where('inscripcions.grado_id', '=', $input['grado_id'])
                 ->where('h.materium_id', '=', $input['materium_id'])
-                //->where('h.lectivo_id', '=', $input['lectivo_id']) // Se comenta para que tome la materia aunque no sea del lectivo actual
                 ->where('h.deleted_at', '=', null)
                 ->first();
             $calificacion_extraordinaria = Calificacion::where('hacademica_id', $h->id)->where('tpo_examen_id', 2)->first();
@@ -446,7 +447,7 @@ class HacademicasController extends Controller
         //dd($hacademicas->toArray());
         $examen = TpoExamen::where('id', '>', 1)->pluck('name', 'id');
         //$examen->reverse();
-        //$examen->put(0,'Seleccionar Opción');
+        //$examen->put(0,'Seleccionar OpciÃ³n');
         //$examen->reverse();
         Session::flash('msj', 'Registro Creado');
         /*return view('hacademicas.examen', compact('examen'))
@@ -612,14 +613,12 @@ class HacademicasController extends Controller
                 ->where('hacademicas.materium_id', '=', $asignacionAcademica->materium_id)
                 ->where('c.tpo_examen_id', '=', $data['tpo_examen_id'])
                 ->where('cp.carga_ponderacion_id', '=', $data['carga_ponderacion_id'])
-                ->where('cli.st_cliente_id', '<>', 27)
                 ->orderBy('cli.ape_paterno')
                 ->orderBy('cli.ape_materno')
                 ->orderBy('cli.nombre')
                 ->orderBy('cli.nombre2')
                 ->whereNull('hacademicas.deleted_at')
                 ->whereNull('c.deleted_at')
-                ->whereNull('cli.deleted_at')
                 ->whereNull('i.deleted_at')
                 ->whereNull('cp.deleted_at')
                 ->orderBy('cli.ape_paterno')
@@ -839,7 +838,7 @@ class HacademicasController extends Controller
             //dd($g->toArray());
             $extra_bachillerato = Param::where('llave', 'extra_bachillerato')->first();
             $extra_no_bachillerato = Param::where('llave', 'extra_no_bachillerato')->first();
-            $titulo_suficiencia = Param::where('llave', 'titulo_suficiencia')->first();
+            $final = Param::where('llave', 'final')->first();
             if ($tpo_examen_id == 2 and $g->name == "BACHILLERATO") {
                 $carga_ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $extra_bachillerato->valor)
                     ->where('tiene_detalle', '=', 0)
@@ -851,7 +850,7 @@ class HacademicasController extends Controller
                     ->where('bnd_activo', 1)
                     ->get();
             } elseif ($tpo_examen_id == 3) {
-                $carga_ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $titulo_suficiencia->valor)
+                $carga_ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $final->valor)
                     ->where('tiene_detalle', '=', 0)
                     ->where('bnd_activo', 1)
                     ->get();
@@ -948,7 +947,7 @@ class HacademicasController extends Controller
     {
         $examen = TpoExamen::where('id', '>', 1)->pluck('name', 'id');
         //$examen->reverse();
-        //$examen->put(0,'Seleccionar Opción');
+        //$examen->put(0,'Seleccionar OpciÃ³n');
         //$examen->reverse();
         $plantels = Plantel::pluck('razon', 'id');
         $lectivos = Lectivo::pluck('name', 'id');

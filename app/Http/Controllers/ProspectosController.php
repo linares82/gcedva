@@ -210,6 +210,7 @@ class ProspectosController extends Controller
 		$input['promo_cel'] = 0;
 		$input['promo_correo'] = 0;
 		$input['uso_factura_id'] = 21;
+		$input['escuela_procedencia'] = $prospecto->escuela_procedencia;
 		//dd($input);
 		$cliente = Cliente::create($input);
 		$seguimiento = Seguimiento::create(array(

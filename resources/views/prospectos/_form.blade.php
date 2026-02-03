@@ -48,14 +48,42 @@
    <span class="help-block">{{ $errors->first("tel_cel") }}</span>
    @endif
 </div>
-<div class="form-group col-md-4 @if($errors->has('mail')) has-error @endif" style="clear:left;">
-   <label for="mail-field">Correo ElectrOnico</label>
+<div class="form-group col-md-4 @if($errors->has('mail')) has-error @endif" >
+   <label for="mail-field">Correo Electronico</label>
    {!! Form::text("mail", null, array("class" => "form-control input-sm", "id" => "mail-field")) !!}
    @if($errors->has("mail"))
    <span class="help-block">{{ $errors->first("mail") }}</span>
    @endif
 </div>
-<div class="form-group col-md-4 @if($errors->has('plantel_id')) has-error @endif">
+<div class="form-group col-md-4 @if($errors->has('escuela_procedencia')) has-error @endif" >
+   <label for="escuela_procedencia-field">Escuela Procedencia</label>
+   {!! Form::text("escuela_procedencia", null, array("class" => "form-control input-sm", "id" => "escuela_procedencia-field")) !!}
+   @if($errors->has("escuela_procedencia"))
+   <span class="help-block">{{ $errors->first("escuela_procedencia") }}</span>
+   @endif
+</div>
+<div class="form-group col-md-4 @if($errors->has('ciclo_interesado')) has-error @endif" style="clear:left;">
+   <label for="ciclo_interesado-field">Ciclo Interesado</label>
+   {!! Form::text("ciclo_interesado", null, array("class" => "form-control input-sm", "id" => "ciclo_interesado-field")) !!}
+   @if($errors->has("ciclo_interesado"))
+   <span class="help-block">{{ $errors->first("ciclo_interesado") }}</span>
+   @endif
+</div>
+<div class="form-group col-md-4 @if($errors->has('sep_t_estudio_antecedente_id')) has-error @endif">
+   <label for="sep_t_estudio_antecedente_id-field">T. Estudio Antecedente</label>
+   {!! Form::select("sep_t_estudio_antecedente_id", $list["SepTEstudioAntecedente"], null, array("class" => "form-control select_seguridad", "id" => "sep_t_estudio_antecedente_id-field")) !!}
+   @if($errors->has("sep_t_estudio_antecedente_id"))
+   <span class="help-block">{{ $errors->first("sep_t_estudio_antecedente_id") }}</span>
+   @endif
+</div>
+<div class="form-group col-md-4 @if($errors->has('tipo_escuela_procedencia_id')) has-error @endif">
+   <label for="tipo_escuela_procedencia_id-field">Tipo Escuela Procedencia</label>
+   {!! Form::select("tipo_escuela_procedencia_id", $list["TipoEscuelaProcedencium"], null, array("class" => "form-control select_seguridad", "id" => "tipo_escuela_procedencia_id-field")) !!}
+   @if($errors->has("tipo_escuela_procedencia_id"))
+   <span class="help-block">{{ $errors->first("tipo_escuela_procedencia_id") }}</span>
+   @endif
+</div>
+<div class="form-group col-md-4 @if($errors->has('plantel_id')) has-error @endif" style="clear:left;">
    <label for="plantel_id-field">Plantel</label>
    {!! Form::select("plantel_id", $planteles, null, array("class" => "form-control select_seguridad", "id" => "plantel_id-field")) !!}
    @if($errors->has("plantel_id"))
@@ -71,7 +99,7 @@
    <span class="help-block">{{ $errors->first("especialidad") }}</span>
    @endif
 </div>
-<div class="form-group col-md-4 @if($errors->has('nivel_id')) has-error @endif" style="clear:left;">
+<div class="form-group col-md-4 @if($errors->has('nivel_id')) has-error @endif">
    <label for="nivel_id-field">Nivel</label>
    {!! Form::select("nivel_id", $list["Nivel"], null, array("class" => "form-control select_seguridad", "id" => "nivel_id-field")) !!}
    <div id='loading11' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div>

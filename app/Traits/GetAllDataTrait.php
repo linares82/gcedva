@@ -161,8 +161,8 @@ trait GetAllDataTrait
         //dd($empleado);
         //dd($baseTable);
         switch ($baseTable) {
-            case "incidencias_calificacion":
-                $myQuery = $myQuery->join('hacademicas as h', 'h.id', 'incidencias_calificacion.hacademica_id')
+            case "incidencias_calificacions":
+                $myQuery = $myQuery->join('hacademicas as h', 'h.id', 'incidencias_calificacions.hacademica_id')
                     ->whereIn('h.plantel_id', $planteles);
             case "asignacion_academicas":
                 //if (Auth::user()->can('IFiltroEmpleadosXPlantel')) {

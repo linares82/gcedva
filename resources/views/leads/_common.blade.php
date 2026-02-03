@@ -1,0 +1,1 @@
+@section('leadsAppTitle','Leads')

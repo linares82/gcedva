@@ -92,6 +92,7 @@
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'cliente_id', 'title' => 'CLIENTE'])</th>
+                            <th>PLANTEL</th>
                             <th>CALIFICACION PODERACION</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'materium_id', 'title' => 'MATERIA'])</th>
                             <th>CALIFICACION ANTERIOR</th>
@@ -109,6 +110,7 @@
                             <tr>
                                 <td><a href="{{ route('incidenciasCalificacions.show', $incidenciasCalificacion->id) }}">{{$incidenciasCalificacion->id}}</a></td>
                                 <td>{{$incidenciasCalificacion->cliente_id}} {{$incidenciasCalificacion->cliente->nombre}} {{$incidenciasCalificacion->cliente->nombre2}} {{$incidenciasCalificacion->cliente->ape_paterno}} {{$incidenciasCalificacion->cliente->ape_materno}}</td>
+                                <td>{{$incidenciasCalificacion->cliente->plantel->razon}} </td>
                                 <td>{{$incidenciasCalificacion->calificacionPonderacion->cargaPonderacion->name}}</td>
                                 <td>{{$incidenciasCalificacion->materium->name}}</td>
                                 <td>{{$incidenciasCalificacion->calificacionPonderacion->calificacion_parcial}}</td>

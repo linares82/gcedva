@@ -5,6 +5,7 @@ namespace App\Providers;
 
 use Auth;
 use App\Caja;
+use App\Lead;
 use App\Pago;
 use App\Aviso;
 use App\Adeudo;
@@ -27,6 +28,7 @@ use App\HCalifPonderacion;
 use App\PeticionMultipago;
 use App\ProspectoSeguimiento;
 use App\Observers\CajaObserver;
+use App\Observers\LeadObserver;
 use App\Observers\PagoObserver;
 use App\CalificacionPonderacion;
 use App\Observers\AvisoObserver;
@@ -45,11 +47,11 @@ use App\Observers\SeguimientoObserver;
 use App\Observers\TransferenceObserver;
 use Illuminate\Support\ServiceProvider;
 use App\Observers\ProspectoAvisoObserver;
-use App\Observers\ProspectoSeguimientoObserver;
 use App\Observers\AsignacionTareaObserver;
 use App\Observers\CuentasEfectivoObserver;
 use App\Observers\HistoriaClienteObserver;
 use App\Observers\PeticionMultipagoObserver;
+use App\Observers\ProspectoSeguimientoObserver;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Observers\CalificacionPonderacionObserver;
 use App\Observers\ProspectoAsignacionTareaObserver;
@@ -86,6 +88,7 @@ class AppServiceProvider extends ServiceProvider
         ProspectoAsignacionTarea::observe(ProspectoAsignaciontareaObserver::class);
         ProspectoAviso::observe(ProspectoAvisoObserver::class);
         ProspectoSeguimiento::observe(ProspectoSeguimientoObserver::class);
+        Lead::observe(LeadObserver::class);
         Totem::auth(function ($request) {
             // return true / false . For e.g.
             return Auth::check();

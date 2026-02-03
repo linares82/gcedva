@@ -62,7 +62,7 @@
                 -->
                     <div class="form-group col-md-4 @if($errors->has('alumno_id')) has-error @endif">
                        <label for="alumno_id-field">Alumno</label>
-                       {!! Form::text("alumno_id", null, array("class" => "form-control input-sm", "id" => "alumno_id-field")) !!}
+                       {!! Form::text("alumno_id", isset($input['alumno_id']) ? $input['alumno_id'] : null, array("class" => "form-control input-sm", "id" => "alumno_id-field")) !!}
                        @if($errors->has("alumno_id"))
                         <span class="help-block">{{ $errors->first("alumno_id") }}</span>
                        @endif
@@ -70,7 +70,7 @@
                     
                     <div class="form-group col-md-4 @if($errors->has('materium_id')) has-error @endif">
                        <label for="materium_id-field">Materia</label>
-                       {!! Form::select("materium_id", $list["Materium"], null, array("class" => "form-control select_seguridad", "id" => "materium_id-field")) !!}
+                       {!! Form::select("materium_id", $list["Materium"], isset($input['materium_id']) ? $input['materium_id'] : null, array("class" => "form-control select_seguridad", "id" => "materium_id-field")) !!}
                        <div id='loading3' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                        @if($errors->has("materium_id"))
                         <span class="help-block">{{ $errors->first("materium_id") }}</span>
@@ -78,14 +78,14 @@
                     </div>
                     <div class="form-group col-md-4 @if($errors->has('tpo_examen_id')) has-error @endif">
                        <label for="tpo_examen_id-field">Examen</label>
-                       {!! Form::select("tpo_examen_id", $examen, null, array("class" => "form-control select_seguridad", "id" => "tpo_examen_id-field")) !!}
+                       {!! Form::select("tpo_examen_id", $examen, isset($input['tpo_examen_id']) ? $input['tpo_examen_id'] : null, array("class" => "form-control select_seguridad", "id" => "tpo_examen_id-field")) !!}
                        @if($errors->has("tpo_examen_id"))
                         <span class="help-block">{{ $errors->first("st_materium_id") }}</span>
                        @endif
                     </div>
                     <div class="form-group col-md-4 @if($errors->has('curp')) has-error @endif" style="clear:left;">
                        <label for="curp-field">CURP</label>
-                       {!! Form::text("curp", null, array("class" => "form-control input-sm", "id" => "curp-field")) !!}
+                       {!! Form::text("curp", isset($input['curp']) ? $input['alumno_id'] : null, array("class" => "form-control input-sm", "id" => "curp-field")) !!}
                        @if($errors->has("curp"))
                         <span class="help-block">{{ $errors->first("curp") }}</span>
                        @endif
