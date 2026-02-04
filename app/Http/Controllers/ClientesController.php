@@ -9,7 +9,6 @@ use File;
 use Excel;
 use App\Sm;
 use Session;
-use Illuminate\Support\Facades\Storage;
 use App\Caja;
 use App\User;
 use App\Aviso;
@@ -61,6 +60,7 @@ use App\CcuestionarioDato;
 use App\ProcedenciaAlumno;
 use App\CombinacionCliente;
 use App\Helpers\ValidaCurp;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use App\Http\Requests\Carga;
 use Illuminate\Http\Request;
@@ -72,6 +72,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\createCliente;
 use App\Http\Requests\updateCliente;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 
 class ClientesController extends Controller
@@ -642,15 +643,217 @@ class ClientesController extends Controller
      * @param  int  $id
      * @return Response
      */
+    public function duplicarClienteBaja($id, Cliente $cliente)
+    {
+        $clienteBase = $cliente->find($id);
+        $inputNuevoCliente = Arr::except($clienteBase->toArray(), ['id', 'created_at', 'updated_at', 'deleted_at', 'bnd_doc_oblig_entregados', 'obs_docs']);
+        //dd($inputNuevoCliente);
+
+        $seguimientoBase = Seguimiento::where('cliente_id', $id)->first();
+        $inputNuevoSeguimiento = Arr::except($seguimientoBase->toArray(), ['id', 'cliente_id', 'created_at', 'updated_at', 'deleted_at']);
+
+        //dd($inputNuevoCliente);
+        $cliente = Cliente::create($inputNuevoCliente);
+        $seguimiento = Seguimiento::create($inputNuevoSeguimiento + ['cliente_id' => $cliente->id]);
+
+        if (!isset($cliente->prebeca)) {
+            $input_prebeca['cliente_id'] = $cliente->id;
+            $input_prebeca['usu_alta_id'] = Auth::user()->id;
+            $input_prebeca['usu_mod_id'] = Auth::user()->id;
+
+            Prebeca::create($input_prebeca);
+            $cliente->load('prebeca');
+        }
+
+        //dd($cliente->ccuestionario->ccuestionarioPreguntas);
+        $p = Auth::user()->can('IfiltroEmpleadosXPlantel');
+        //dd($p);
+
+        if ($p) {
+            //$e = Empleado::where('user_id', '=', Auth::user()->id)->first();
+            $e = Empleado::where('user_id', '=', Auth::user()->id)->first();
+            $planteles = array();
+            foreach ($e->plantels as $p) {
+                //dd($p);
+                //if($p->st_plantel_id<>1){
+                array_push($planteles, $p->id);
+                //}
+            }
+            //dd($planteles);
+            $empleados = Empleado::select('empleados.id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
+                ->join('puestos as pu', 'pu.id', 'empleados.puesto_id')
+                //->where('plantel_id', '=', $e->plantel_id)
+                ->whereIn('plantel_id', '=', $planteles)
+                ->where('pu.bnd_permitido_clientes', 1)
+                //->whereIn('puesto_id', array(1,2,3,4,5,7,8,10,18,19,22,23,31,33,35,46))
+                ->pluck('name', 'id');
+        } else {
+            $empleados = Empleado::select('empleados.id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
+                ->join('puestos as pu', 'pu.id', 'empleados.puesto_id')
+                //->whereIn('puesto_id', array(1,2,3,4,5,7,8,10,18,19,22,23,31,33,35,46))
+                ->where('pu.bnd_permitido_clientes', 1)
+                ->pluck('name', 'id');
+        }
+        $empleados = $empleados->reverse();
+        $empleados->put("", 'Seleccionar Opción');
+        $empleados = $empleados->reverse();
+        //dd($empleados);
+        $cp = PreguntaCliente::where('cliente_id', '=', $id)->get();
+        $preguntas = Preguntum::pluck('name', 'id');
+        //dd($cp);
+        //dd($preguntas);
+        $doc_existentes = DB::table('pivot_doc_clientes as pde')->select('doc_alumno_id')
+            ->join('clientes as c', 'c.id', '=', 'pde.cliente_id')
+            ->where('c.id', '=', $id)
+            ->where('pde.deleted_at', '=', null)->get();
+
+        $de_array = array();
+        if ($doc_existentes->isNotEmpty()) {
+            foreach ($doc_existentes as $de) {
+                array_push($de_array, $de->doc_alumno_id);
+            }
+            //dd($de_array);
+        }
+
+        $documentos_faltantes = DB::table('doc_alumnos')
+            ->select()
+            ->whereNotIn('id', $de_array)
+            ->get();
+        //dd($cliente->toArray());
+        $cuestionarios = Ccuestionario::where('st_cuestionario_id', '=', '1')->pluck('name', 'id');
+
+        //dd($cliente->matricula);
+        if (isset($cliente->matricula)) {
+            $historia = ConsultaCalificacion::where('matricula', 'like', "%" . $cliente->matricula . "%")->get();
+            //dd($historia);
+        } else {
+            $historia = collect();
+        }
+
+        //dd($historia->toArray());
+        //count($cliente->adeudos));
+        $estado_civiles = EstadoCivil::pluck('name', 'id');
+        $incidencias = IncidenceCliente::pluck('name', 'id');
+        $materias = Materium::where('materia.bnd_oficial', 0)
+            ->where('plantel_id', $cliente->plantel_id)
+            ->pluck('name', 'id');
+        //dd($materias);
+        $plantels = Plantel::where('st_plantel_id', 1)->pluck('razon', 'id');
+
+        $curp_token = Param::where('llave', 'token_curp')->first();
+        $curp_url = Param::where('llave', 'url_curp')->first();
+        $api_valida_curp = [
+            'token' => $curp_token->valor,
+            'url' => $curp_url->valor,
+        ];
+
+        $sepTipoEstudioAntecedente = SepTEstudioAntecedente::select(DB::raw('concat(id_t_estudio_antecedente,"-",t_estudio_antecedente) as name, id'))
+            ->pluck('name', 'id');
+        $sepTipoEstudioAntecedente->prepend('Seleccionar Opcion', '');
+
+        $motivosBeca = MotivoBeca::where('bnd_solicitud_beca', 1)->pluck('name', 'id');
+        $motivosBeca->prepend('Seleccionar Opcion', '');
+        $porcentajeBeca = PorcentajeBeca::pluck('name', 'id');
+        $porcentajeBeca->prepend('Seleccionar Opcion', '');
+
+
+        return view('clientes.edit', compact(
+            'api_valida_curp',
+            'cliente',
+            'materias',
+            'preguntas',
+            'cp',
+            'documentos_faltantes',
+            'empleados',
+            'cuestionarios',
+            'historia',
+            'estado_civiles',
+            'incidencias',
+            'plantels',
+            'sepTipoEstudioAntecedente',
+            'motivosBeca',
+            'porcentajeBeca'
+        ))
+            ->with('list', Cliente::getListFromAllRelationApps())
+            ->with('list1', PivotDocCliente::getListFromAllRelationApps())
+            ->with('list2', CombinacionCliente::getListFromAllRelationApps())
+            ->with('list3', Inscripcion::getListFromAllRelationApps());
+    }
+
     public function duplicate($id, Cliente $cliente)
     {
         $cliente = $cliente->find($id);
-        $preguntas = Preguntum::pluck('name', 'id');
-        $cp = PreguntaCliente::where('cliente_id', '=', $id)->get();
-        return view('clientes.duplicate', compact('cliente', 'preguntas', 'cp'))
+        //dd($cliente);
+        $cliente->loadMissing('pivotDocCliente');
+        $cliente->bnd_doc_oblig_requeridos = 0;
+
+        $e = Empleado::where('user_id', '=', Auth::user()->id)->first();
+        $planteles = array();
+        foreach ($e->plantels as $p) {
+            //dd($p->id);
+            //if($p->st_plantel_id<>1){
+            array_push($planteles, $p->id);
+            //}
+        }
+        //dd($planteles);
+        $empleados = Empleado::select('id', DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name'))
+            ->whereIn('plantel_id', $planteles)
+            //->where('puesto_id', '=', 2)
+            ->pluck('name', 'id');
+
+        $empleados = $empleados->reverse();
+        $empleados->put(0, 'Seleccionar Opción');
+        $empleados = $empleados->reverse();
+        //dd($empleados);
+        $estado_civiles = EstadoCivil::pluck('name', 'id');
+        $cuestionarios = Ccuestionario::where('st_cuestionario_id', '=', '1')->pluck('name', 'id');
+        $incidencias = IncidenceCliente::pluck('name', 'id');
+        $plantels = Plantel::where('st_plantel_id', 1)->whereIn('id', $planteles)->pluck('razon', 'id');
+        $curp_token = Param::where('llave', 'token_curp')->first();
+        $curp_url = Param::where('llave', 'url_curp')->first();
+        $api_valida_curp = [
+            'token' => $curp_token->valor,
+            'url' => $curp_url->valor
+        ];
+
+        $de_array = array();
+
+        $cliente->bnd_doc_oblig_entregados = 0;
+        $cliente->obs_docs = "";
+
+        $documentos_faltantes = DB::table('doc_alumnos')
+            ->select()
+            ->whereNotIn('id', $de_array)
+            ->get();
+        $sepTipoEstudioAntecedente = SepTEstudioAntecedente::select(DB::raw('concat(id_t_estudio_antecedente,"-",t_estudio_antecedente) as name, id'))
+            ->pluck('name', 'id');
+        $sepTipoEstudioAntecedente->prepend('Seleccionar Opcion', '');
+
+        $motivosBeca = MotivoBeca::where('bnd_solicitud_beca', 1)->pluck('name', 'id');
+        $motivosBeca->prepend('Seleccionar Opcion', '');
+        $porcentajeBeca = PorcentajeBeca::pluck('name', 'id');
+        $porcentajeBeca->prepend('Seleccionar Opcion', '');
+
+
+        return view('clientes.duplicate', compact(
+            'porcentajeBeca',
+            'motivosBeca',
+            'sepTipoEstudioAntecedente',
+            'empleados',
+            'cuestionarios',
+            'estado_civiles',
+            'incidencias',
+            'plantels',
+            'api_valida_curp',
+            'cliente',
+            'documentos_faltantes'
+        ))
             ->with('list', Cliente::getListFromAllRelationApps())
-            ->with('list1', Cliente::getListFromAllRelationApps());
+            ->with('list1', PivotDocCliente::getListFromAllRelationApps())
+            ->with('list2', CombinacionCliente::getListFromAllRelationApps())
+            ->with('list3', Inscripcion::getListFromAllRelationApps());
     }
+
 
     /**
      * Update the specified resource in storage.

@@ -1,4 +1,6 @@
-<?php namespace App\Http\Controllers;
+<?php
+
+namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -9,7 +11,8 @@ use Auth;
 use App\Http\Requests\updateEventoCliente;
 use App\Http\Requests\createEventoCliente;
 
-class EventoClientesController extends Controller {
+class EventoClientesController extends Controller
+{
 
 	/**
 	 * Display a listing of the resource.
@@ -30,8 +33,9 @@ class EventoClientesController extends Controller {
 	 */
 	public function create()
 	{
+
 		return view('eventoClientes.create')
-			->with( 'list', EventoCliente::getListFromAllRelationApps() );
+			->with('list', EventoCliente::getListFromAllRelationApps());
 	}
 
 	/**
@@ -44,11 +48,16 @@ class EventoClientesController extends Controller {
 	{
 
 		$input = $request->all();
-		$input['usu_alta_id']=Auth::user()->id;
-		$input['usu_mod_id']=Auth::user()->id;
+		$input['usu_alta_id'] = Auth::user()->id;
+		$input['usu_mod_id'] = Auth::user()->id;
+		if (isset($input['bnd_duplicar_cliente'])) {
+			$input['bnd_duplicar_cliente'] = 1;
+		} else {
+			$input['bnd_duplicar_cliente'] = 0;
+		}
 
 		//create data
-		EventoCliente::create( $input );
+		EventoCliente::create($input);
 
 		return redirect()->route('eventoClientes.index')->with('message', 'Registro Creado.');
 	}
@@ -61,7 +70,7 @@ class EventoClientesController extends Controller {
 	 */
 	public function show($id, EventoCliente $eventoCliente)
 	{
-		$eventoCliente=$eventoCliente->find($id);
+		$eventoCliente = $eventoCliente->find($id);
 		return view('eventoClientes.show', compact('eventoCliente'));
 	}
 
@@ -73,9 +82,9 @@ class EventoClientesController extends Controller {
 	 */
 	public function edit($id, EventoCliente $eventoCliente)
 	{
-		$eventoCliente=$eventoCliente->find($id);
+		$eventoCliente = $eventoCliente->find($id);
 		return view('eventoClientes.edit', compact('eventoCliente'))
-			->with( 'list', EventoCliente::getListFromAllRelationApps() );
+			->with('list', EventoCliente::getListFromAllRelationApps());
 	}
 
 	/**
@@ -86,9 +95,9 @@ class EventoClientesController extends Controller {
 	 */
 	public function duplicate($id, EventoCliente $eventoCliente)
 	{
-		$eventoCliente=$eventoCliente->find($id);
+		$eventoCliente = $eventoCliente->find($id);
 		return view('eventoClientes.duplicate', compact('eventoCliente'))
-			->with( 'list', EventoCliente::getListFromAllRelationApps() );
+			->with('list', EventoCliente::getListFromAllRelationApps());
 	}
 
 	/**
@@ -101,10 +110,15 @@ class EventoClientesController extends Controller {
 	public function update($id, EventoCliente $eventoCliente, updateEventoCliente $request)
 	{
 		$input = $request->all();
-		$input['usu_mod_id']=Auth::user()->id;
+		$input['usu_mod_id'] = Auth::user()->id;
+		if (isset($input['bnd_duplicar_cliente'])) {
+			$input['bnd_duplicar_cliente'] = 1;
+		} else {
+			$input['bnd_duplicar_cliente'] = 0;
+		}
 		//update data
-		$eventoCliente=$eventoCliente->find($id);
-		$eventoCliente->update( $input );
+		$eventoCliente = $eventoCliente->find($id);
+		$eventoCliente->update($input);
 
 		return redirect()->route('eventoClientes.index')->with('message', 'Registro Actualizado.');
 	}
@@ -115,12 +129,11 @@ class EventoClientesController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id,EventoCliente $eventoCliente)
+	public function destroy($id, EventoCliente $eventoCliente)
 	{
-		$eventoCliente=$eventoCliente->find($id);
+		$eventoCliente = $eventoCliente->find($id);
 		$eventoCliente->delete();
 
 		return redirect()->route('eventoClientes.index')->with('message', 'Registro Borrado.');
 	}
-
 }

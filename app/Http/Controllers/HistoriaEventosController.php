@@ -1,4 +1,6 @@
-<?php namespace App\Http\Controllers;
+<?php
+
+namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -9,7 +11,8 @@ use Auth;
 use App\Http\Requests\updateHistoriaEvento;
 use App\Http\Requests\createHistoriaEvento;
 
-class HistoriaEventosController extends Controller {
+class HistoriaEventosController extends Controller
+{
 
 	/**
 	 * Display a listing of the resource.
@@ -31,7 +34,7 @@ class HistoriaEventosController extends Controller {
 	public function create()
 	{
 		return view('historiaEventos.create')
-			->with( 'list', HistoriaEvento::getListFromAllRelationApps() );
+			->with('list', HistoriaEvento::getListFromAllRelationApps());
 	}
 
 	/**
@@ -44,11 +47,11 @@ class HistoriaEventosController extends Controller {
 	{
 
 		$input = $request->all();
-		$input['usu_alta_id']=Auth::user()->id;
-		$input['usu_mod_id']=Auth::user()->id;
+		$input['usu_alta_id'] = Auth::user()->id;
+		$input['usu_mod_id'] = Auth::user()->id;
 
 		//create data
-		HistoriaEvento::create( $input );
+		HistoriaEvento::create($input);
 
 		return redirect()->route('historiaEventos.index')->with('message', 'Registro Creado.');
 	}
@@ -61,7 +64,7 @@ class HistoriaEventosController extends Controller {
 	 */
 	public function show($id, HistoriaEvento $historiaEvento)
 	{
-		$historiaEvento=$historiaEvento->find($id);
+		$historiaEvento = $historiaEvento->find($id);
 		return view('historiaEventos.show', compact('historiaEvento'));
 	}
 
@@ -73,9 +76,9 @@ class HistoriaEventosController extends Controller {
 	 */
 	public function edit($id, HistoriaEvento $historiaEvento)
 	{
-		$historiaEvento=$historiaEvento->find($id);
+		$historiaEvento = $historiaEvento->find($id);
 		return view('historiaEventos.edit', compact('historiaEvento'))
-			->with( 'list', HistoriaEvento::getListFromAllRelationApps() );
+			->with('list', HistoriaEvento::getListFromAllRelationApps());
 	}
 
 	/**
@@ -86,9 +89,9 @@ class HistoriaEventosController extends Controller {
 	 */
 	public function duplicate($id, HistoriaEvento $historiaEvento)
 	{
-		$historiaEvento=$historiaEvento->find($id);
+		$historiaEvento = $historiaEvento->find($id);
 		return view('historiaEventos.duplicate', compact('historiaEvento'))
-			->with( 'list', HistoriaEvento::getListFromAllRelationApps() );
+			->with('list', HistoriaEvento::getListFromAllRelationApps());
 	}
 
 	/**
@@ -101,10 +104,10 @@ class HistoriaEventosController extends Controller {
 	public function update($id, HistoriaEvento $historiaEvento, updateHistoriaEvento $request)
 	{
 		$input = $request->all();
-		$input['usu_mod_id']=Auth::user()->id;
+		$input['usu_mod_id'] = Auth::user()->id;
 		//update data
-		$historiaEvento=$historiaEvento->find($id);
-		$historiaEvento->update( $input );
+		$historiaEvento = $historiaEvento->find($id);
+		$historiaEvento->update($input);
 
 		return redirect()->route('historiaEventos.index')->with('message', 'Registro Actualizado.');
 	}
@@ -115,12 +118,11 @@ class HistoriaEventosController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id,HistoriaEvento $historiaEvento)
+	public function destroy($id, HistoriaEvento $historiaEvento)
 	{
-		$historiaEvento=$historiaEvento->find($id);
+		$historiaEvento = $historiaEvento->find($id);
 		$historiaEvento->delete();
 
 		return redirect()->route('historiaEventos.index')->with('message', 'Registro Borrado.');
 	}
-
 }

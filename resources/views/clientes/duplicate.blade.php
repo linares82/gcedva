@@ -23,7 +23,7 @@
 
             {!! Form::model($cliente, array('route' => array('clientes.store'))) !!}
 
-@include('clientes._form')
+            @include('clientes._form')
 
                 <div class="row">
                 </div>

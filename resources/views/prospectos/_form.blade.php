@@ -78,7 +78,7 @@
 </div>
 <div class="form-group col-md-4 @if($errors->has('tipo_escuela_procedencia_id')) has-error @endif">
    <label for="tipo_escuela_procedencia_id-field">Tipo Escuela Procedencia</label>
-   {!! Form::select("tipo_escuela_procedencia_id", $list["TipoEscuelaProcedencium"], null, array("class" => "form-control select_seguridad", "id" => "tipo_escuela_procedencia_id-field")) !!}
+   {!! Form::select("tipo_escuela_procedencia_id", $tipo_escuela_procedencia, null, array("class" => "form-control select_seguridad", "id" => "tipo_escuela_procedencia_id-field")) !!}
    @if($errors->has("tipo_escuela_procedencia_id"))
    <span class="help-block">{{ $errors->first("tipo_escuela_procedencia_id") }}</span>
    @endif

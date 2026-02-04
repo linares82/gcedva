@@ -164,6 +164,8 @@ trait GetAllDataTrait
             case "incidencias_calificacions":
                 $myQuery = $myQuery->join('hacademicas as h', 'h.id', 'incidencias_calificacions.hacademica_id')
                     ->whereIn('h.plantel_id', $planteles);
+                break;
+            //dd($myQuery->toSql(), $myQuery->getBindings());
             case "asignacion_academicas":
                 //if (Auth::user()->can('IFiltroEmpleadosXPlantel')) {
                 $myQuery = $myQuery->whereIn('asignacion_academicas.plantel_id', $planteles);

@@ -22,9 +22,12 @@ class LeadsController extends Controller
 	 */
 	public function index(Request $request)
 	{
+		//dd($request->all());
 		$leads = Lead::getAllData($request);
-
-		return view('leads.index', compact('leads'));
+		$medios = \App\Medio::pluck('name', 'id');
+		$st_leads = \App\StLead::pluck('name', 'id');
+		$st_leads->prepend('Selecciona una opción', '');
+		return view('leads.index', compact('leads', 'medios', 'st_leads'));
 	}
 
 	/**
@@ -176,5 +179,13 @@ class LeadsController extends Controller
 		];
 		$prospecto = Prospecto::create($inputProspecto);
 		return redirect()->route('prospectos.edit', $prospecto->id)->with('message', 'Prospecto generado.');
+	}
+
+	public function rechazar(Lead $lead)
+	{
+		$lead->st_lead_id = 2; // Cambiar estatus a "Rechazado"
+		$lead->save();
+
+		return redirect()->route('leads.index')->with('message', 'Lead rechazado.');
 	}
 }

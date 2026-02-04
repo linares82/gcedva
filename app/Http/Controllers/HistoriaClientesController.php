@@ -108,11 +108,17 @@ class HistoriaClientesController extends Controller
 		if (!isset($input['st_historia_cliente_id'])) {
 			$input['st_historia_cliente_id'] = 1;
 		}
+
+		$evento = EventoCliente::find($input['evento_cliente_id']);
+		//dd($evento->toArray());
+		if ($evento->bnd_duplicar_cliente == 1) {
+			$input['st_historia_cliente_id'] = 2;
+		}
 		//dd($input);
 
 
 		$primer_adeudo = Adeudo::where('cliente_id', $input['cliente_id'])->first();
-		if (!is_null($primer_adeudo) and $input['evento_cliente_id'] == 2) {
+		if (!is_null($primer_adeudo) and ($input['evento_cliente_id'] == 2 or $evento->bnd_duplicar_cliente == 1)) {
 			$mes_primer_adeudo = Carbon::createFromFormat('Y-m-d', $primer_adeudo->fecha_pago)->month;
 			$mes_actual = Carbon::createFromFormat('Y-m-d', date('Y-m-d'))->month;
 			if ($mes_primer_adeudo == $mes_actual) {
@@ -131,7 +137,12 @@ class HistoriaClientesController extends Controller
 		}
 
 		//create data
+		//dd($input);
 		$e = HistoriaCliente::create($input);
+
+		if ($evento->bnd_duplicar_cliente == 1) {
+			$this->bajaCliente($e);
+		}
 
 		$registroHistoriaCliente['historia_cliente_id'] = $e->id;
 		$registroHistoriaCliente['st_historia_cliente_id'] = $e->st_historia_cliente_id;
@@ -205,13 +216,14 @@ class HistoriaClientesController extends Controller
 			}
 		}
 
+		/*
 		if ($input['st_historia_cliente_id'] == 2) {
 			$cliente = Cliente::select('id', 'st_cliente_id')->find($input['cliente_id']);
 			$cliente->st_cliente_id = 3;
 			$cliente->save();
 			//dd($cliente);
 			return redirect()->route('home');
-		}
+		}*/
 
 		return redirect()->route('clientes.indexEventos')->with('message', 'Registro Creado.');
 	}
@@ -288,6 +300,12 @@ class HistoriaClientesController extends Controller
 		$input = $request->all();
 		$input['usu_mod_id'] = Auth::user()->id;
 
+		$evento = EventoCliente::find($input['evento_cliente_id']);
+		//dd($evento->toArray());
+		if ($evento->bnd_duplicar_cliente == 1) {
+			$input['st_historia_cliente_id'] = 2;
+		}
+
 		$r = $request->hasFile('archivo_file');
 		//dd($input);
 		if ($r) {
@@ -311,6 +329,10 @@ class HistoriaClientesController extends Controller
 		$historiaCliente->update($input);
 
 		$e = $historiaCliente;
+
+		if ($evento->bnd_duplicar_cliente == 1) {
+			$this->bajaCliente($e);
+		}
 		/*
 		if ($e->evento_cliente_id == 4) {
 			$cliente = Cliente::find($e->cliente_id);
@@ -367,6 +389,43 @@ class HistoriaClientesController extends Controller
 		}
 
 		return redirect()->route('historiaClientes.index', array('q[cliente_id_lt]' => $historiaCliente->cliente_id))->with('message', 'Registro Actualizado.');
+	}
+
+	public function bajaCliente(HistoriaCliente $historiaCliente)
+	{
+		if ($historiaCliente->evento_cliente_id == 2 or $historiaCliente->eventoCliente->bnd_duplicar_cliente == 1) {
+
+			$inscripciones = Inscripcion::where('cliente_id', $historiaCliente->cliente_id)->whereNull('deleted_at')->count();
+			if ($inscripciones > 0) {
+				$inscripcionesR = Inscripcion::where('cliente_id', $historiaCliente->cliente_id)->whereNull('deleted_at')->get();
+				foreach ($inscripcionesR as $inscripcion) {
+					$inscripcion->st_inscripcion_id = 3;
+					$inscripcion->save();
+				}
+			}
+
+			$adeudos = Adeudo::where('cliente_id', $historiaCliente->cliente_id)
+				->where('caja_id', 0)
+				->where('pagado_bnd', 0)
+				->whereDate('adeudos.fecha_pago', '>', Date('Y-m-d'))
+				->get();
+			//dd($adeudos->toArray());
+			foreach ($adeudos as $adeudo) {
+				$adeudo->delete();
+			}
+
+			$inscripcions = Inscripcion::where('cliente_id', $historiaCliente->cliente_id)->where('st_inscripcion_id', '<>', 3)->whereNull('deleted_at')->count();
+
+			if ($inscripcions == 0) {
+				$cliente = Cliente::find($historiaCliente->cliente_id);
+				$cliente->st_cliente_id = 3;
+				$cliente->save();
+
+				$seguimiento = Seguimiento::where('cliente_id', $cliente->id)->first();
+				$seguimiento->st_seguimiento_id = 6;
+				$seguimiento->save();
+			}
+		}
 	}
 
 	/**

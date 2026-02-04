@@ -15,6 +15,7 @@ use Carbon\Carbon;
 use App\Hactividade;
 use App\Seguimiento;
 use App\StProspecto;
+use App\TipoEscuelaProcedencium;
 use App\HStProspecto;
 use App\Http\Requests;
 use App\ProspectoAviso;
@@ -54,9 +55,10 @@ class ProspectosController extends Controller
 	{
 		$medios = Medio::where('bnd_prospectos', 1)->pluck('name', 'id');
 		$estatus = StProspecto::whereIn('id', array(1, 2))->pluck('name', 'id');
+		$tipo_escuela_procedencia = TipoEscuelaProcedencium::pluck('name', 'id');
 		$planteles = Empleado::where('user_id', Auth::user()->id)->first()->plantels()->pluck('razon', 'id');
 
-		return view('prospectos.create', compact('medios', 'estatus', 'planteles'))
+		return view('prospectos.create', compact('medios', 'estatus', 'planteles', 'tipo_escuela_procedencia'))
 			->with('list', Prospecto::getListFromAllRelationApps());
 	}
 
@@ -128,7 +130,9 @@ class ProspectosController extends Controller
 		$medios = Medio::where('bnd_prospectos', 1)->pluck('name', 'id');
 		$estatus = StProspecto::whereIn('id', array(1, 2))->pluck('name', 'id');
 		$planteles = Empleado::where('user_id', Auth::user()->id)->first()->plantels()->pluck('razon', 'id');
-		return view('prospectos.edit', compact('prospecto', 'medios', 'estatus', 'planteles'))
+		$tipo_escuela_procedencia = TipoEscuelaProcedencium::pluck('name', 'id');
+
+		return view('prospectos.edit', compact('prospecto', 'medios', 'estatus', 'planteles', 'tipo_escuela_procedencia'))
 			->with('list', Prospecto::getListFromAllRelationApps());
 	}
 
