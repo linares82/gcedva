@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Auth;
 use App\Lead;
 
+use App\Medio;
+use App\Empleado;
 use App\Prospecto;
 use App\Http\Requests;
 use Illuminate\Http\Request;
@@ -27,7 +29,8 @@ class LeadsController extends Controller
 		$medios = \App\Medio::pluck('name', 'id');
 		$st_leads = \App\StLead::pluck('name', 'id');
 		$st_leads->prepend('Selecciona una opción', '');
-		return view('leads.index', compact('leads', 'medios', 'st_leads'));
+		$planteles = Empleado::where('user_id', '=', Auth::user()->id)->where('st_empleado_id', '<>', 3)->first()->plantels->pluck('razon', 'id');
+		return view('leads.index', compact('leads', 'medios', 'st_leads', 'planteles'));
 	}
 
 	/**
@@ -37,7 +40,10 @@ class LeadsController extends Controller
 	 */
 	public function create()
 	{
-		return view('leads.create')
+		$planteles = Empleado::where('user_id', '=', Auth::user()->id)->where('st_empleado_id', '<>', 3)->first()->plantels->pluck('razon', 'id');
+		$medios = Medio::where('bnd_prospectos', '=', 1)->pluck('name', 'id');
+
+		return view('leads.create', compact('planteles', 'medios'))
 			->with('list', Lead::getListFromAllRelationApps());
 	}
 
@@ -82,7 +88,9 @@ class LeadsController extends Controller
 	public function edit($id, Lead $lead)
 	{
 		$lead = $lead->find($id);
-		return view('leads.edit', compact('lead'))
+		$planteles = Empleado::where('user_id', '=', Auth::user()->id)->where('st_empleado_id', '<>', 3)->first()->plantels->pluck('razon', 'id');
+		$medios = Medio::where('bnd_prospectos', '=', 1)->pluck('name', 'id');
+		return view('leads.edit', compact('lead', 'planteles', 'medios'))
 			->with('list', Lead::getListFromAllRelationApps());
 	}
 

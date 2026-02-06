@@ -162,6 +162,47 @@
                     </div>
                 </div>
             </div>
+
+            <div class="box box-info">
+                <div class="box-body">
+                    <div class="table-responsive">
+                        @permission('prospectoInformes.create')
+                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#informeModal">
+                            Agregar Informe
+                        </button>
+                        @endpermission
+                        <table class="table table-bordered table-striped dataTable">
+                            <thead>
+                                <tr>
+                                    <th>Parte</th>
+                                    <th>Etiq.</th>
+                                    <th>Detalle</th>
+                                    <th>Fecha</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            @foreach($prospectoInformes as $informe)
+                            <tr>
+                                <td>{{$informe->parteInforme->nombre}}</td>
+                                <td>{{$informe->etiqueta->nombre}}</td>
+                                <td>{{$informe->detalle}}</td>
+                                <td>{{$informe->created_at->format('Y-m-d')}}</td>
+                                <td>
+                                    @permission('prospectoInformes.destroy')
+                                        {!! Form::model($informe, array('route' => array('prospectoInformes.destroy', $informe->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}
+                                        <button type="submit" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i></button>
+                                        {!! Form::close() !!}
+                                    @endpermission
+                                </td>
+                            </tr>
+                            @endforeach
+                            <tbody>
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="row">
         </div>
@@ -321,6 +362,56 @@
         </div>
     </div>
 </div>
+
+<!-- Ventana para crear Informe -->
+<div class="modal fade" id="informeModal" tabindex="-1" role="dialog" aria-labelledby="informeModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="informeModalLabel">Agregar Informe</h4>
+            </div>
+            <div class="modal-body">
+                {!! Form::open(array('route' => 'prospectoInformes.store')) !!}
+                <div class="form-group col-md-6 @if($errors->has('prospecto_parte_informe_id')) has-error @endif">
+                    {!! Form::hidden("prospecto_id", $prospectoSeguimiento->prospecto_id, array("class" => "form-control input-sm", "id" => "prospecto_id-field")) !!}
+                    {!! Form::hidden("prospecto_seguimiento_id", $prospectoSeguimiento->id, array("class" => "form-control input-sm", "id" => "prospecto_seguimiento_id-field")) !!}
+                    <label for="prospecto_parte_informe_id-field">Parte Informe</label>
+                    {!! Form::select("prospecto_parte_informe_id", $partesInformes, null, array("class" => "form-control select_seguridad", "id" => "prospecto_parte_informe_id-field", 'style'=>'width:100%')) !!}
+                    @if($errors->has("prospecto_parte_informe_id"))
+                    <span class="help-block">{{ $errors->first("prospecto_parte_informe_id") }}</span>
+                    @endif
+                </div>
+                <div class="form-group col-md-6 @if($errors->has('prospecto_etiqueta_id')) has-error @endif">
+                    <label for="prospecto_etiqueta_id-field">Etiqueta</label>
+                    {!! Form::select("prospecto_etiqueta_id", $etiquetas, null, array("class" => "form-control select_seguridad", "id" => "prospecto_etiqueta_id-field", 'style'=>'width:100%')) !!}
+                    @if($errors->has("prospecto_etiqueta_id"))
+                    <span class="help-block">{{ $errors->first("prospecto_etiqueta_id") }}</span>
+                    @endif
+                </div>
+                <div class="form-group col-md-12 @if($errors->has('detalle')) has-error @endif">
+                    <label for="detalle-field">Detalle</label>
+                    {!! Form::textArea("detalle", null, array("class" => "form-control input-sm", "id" => "detalle-field", 'rows'=>3)) !!}
+                    @if($errors->has("detalle"))
+                    <span class="help-block">{{ $errors->first("detalle") }}</span>
+                    @endif
+                </div>
+
+                <div class="row">
+                </div>
+                <div class="well well-sm">
+                    <button type="submit" class="btn btn-primary">Crear</button>
+                </div>
+                {!! Form::close() !!}
+                <div class="modal-footer">
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @push('scripts')
@@ -333,7 +424,6 @@
         });
 
         $('#sms_predefinido-field').change(function() {
-
             $.ajax({
                 url: '{{ route("smsPredefinidos.getDetalleSms") }}',
                 type: 'GET',

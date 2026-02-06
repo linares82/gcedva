@@ -87,7 +87,6 @@ class ClientesController extends Controller
      */
     public function index(Request $request)
     {
-
         $lectivos_graficas = Lectivo::where('id', '<=', 2)->get();
         $hoy = Carbon::today();
         $fecha_superada = 0;

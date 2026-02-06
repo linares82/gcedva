@@ -38,9 +38,12 @@ trait GetAllDataTrait
         $names = explode('\\', get_class($myObj));
         //dd(end($names));
         $baseTable = $myObj->solveName(end($names), 'name_names');    //ex).apples
-        if ($baseTable == 'est_asistencia' or $baseTable == 'sep_materia') {
+        //dd($baseTable);
+        if ($baseTable == 'est_asistencia' or $baseTable == 'sep_materia' or $baseTable == "prospecto_etiqueta") {
+            //dd($baseTable);
             $baseTable = $baseTable . 's';
         }
+        //dd($baseTable);
         //Log:info($baseTable);
 
         //(i) join relation table
@@ -164,6 +167,9 @@ trait GetAllDataTrait
             case "incidencias_calificacions":
                 $myQuery = $myQuery->join('hacademicas as h', 'h.id', 'incidencias_calificacions.hacademica_id')
                     ->whereIn('h.plantel_id', $planteles);
+                if (Auth::user()->can('incidenciasCalificacions.filtroCreador')) {
+                    $myQuery = $myQuery->where('incidencias_calificacions.usu_alta_id', Auth::user()->id);
+                }
                 break;
             //dd($myQuery->toSql(), $myQuery->getBindings());
             case "asignacion_academicas":

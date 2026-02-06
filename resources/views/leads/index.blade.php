@@ -47,7 +47,12 @@
                     <form class="Lead_search" id="search" action="{{ route('leads.index') }}" accept-charset="UTF-8" method="get">
                         <input type="hidden" name="q[s]" value="{{ @(Request::input('q')['s']) ?: '' }}" />
                         <div class="">
-
+                            <div class="form-group col-md-4" >
+                                <label for="q_leads.plantel_id_lt">PLANTEL</label>
+                                
+                                    {!! Form::select("leads.plantel_id", $planteles, "{{ @(Request::input('q')['leads.plantel_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[leads.plantel_id_lt]", "id"=>"q_leads.plantel_id_lt", "style"=>"width:100%;")) !!}
+                                    <div id='loading10' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
+                            </div>
                             <!--
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_nombre_gt">NOMBRE</label>
@@ -222,6 +227,7 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'plantel_id', 'title' => 'PLANTEL'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'nombre', 'title' => 'NOMBRE'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'tel_cel', 'title' => 'TEL.'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'medios.name', 'title' => 'MEDIO'])</th>
@@ -238,13 +244,31 @@
                         @foreach($leads as $lead)
                             <tr>
                                 <td><a href="{{ route('leads.show', $lead->id) }}">{{$lead->id}}</a></td>
+                    
+                                <td>{{optional($lead->plantel)->razon}}</td>
                                 <td>{{$lead->nombre}} {{$lead->nombre2}} {{$lead->ape_paterno}} {{$lead->ape_materno}}</td>
                     <td>{{$lead->tel_cel}}</td>
                     <td>{{$lead->medio->name}}</td>
                     <td>{{$lead->ciclo_interesado}}</td>
                     <td>{{$lead->observaciones}}</td>
                     <td>{{$lead->stLead->name}}</td>
-                    <td>{{$lead->created_at}}</td>
+                    <td>
+                        {{$lead->created_at}}
+                        
+                        @if($lead->created_at->diffInHours(now()) >= 72)
+                        <span class="badge bg-red">
+                            {{ $lead->created_at->diffInHours(now()) }}
+                        </span>
+                        @elseif($lead->created_at->diffInHours(now())==48)
+                        <span class="badge bg-orange">
+                            {{ $lead->created_at->diffInHours(now()) }}
+                        </span>
+                        @else
+                        <span class="badge bg-green">
+                            {{ $lead->created_at->diffInHours(now()) }}
+                        </span>
+                        @endif
+                    </td>
                     <td>
                         {{$lead->contador_llamadas}}
                         @if($lead->contador_llamadas<10 and $lead->st_lead_id==1)

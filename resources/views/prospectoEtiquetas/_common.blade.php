@@ -1,0 +1,1 @@
+@section('prospectoEtiquetasAppTitle','Prospecto Etiquetas')

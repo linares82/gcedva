@@ -278,7 +278,21 @@
     <HR></HR>  
     <div class="tablediv" style="font-size: 12px;">
         <ul>
-            <li>La información de pago está calculada a pagos seriados mes a mes, en caso de optar por uno diferente solicitarlo.</li>
+            <li>Al inscribirse deben cubrirse todos los conceptos iniciales y la primera colegiatura antes del inicio de clases.</li>
+            <li>El pago de la colegiatura mensual debe realizarse a más tardar los días 5 de cada mes, a partir del día 11 genera un recargo del 10%.</li>
+            <li>Los pagos de reinscripción/servicios escolares por cambio de ciclo o cambios de modulo generan un recargo del 10% en caso de no pagarse antes del primer día de clases.</li>
+            <li>Una vez iniciado clases, no es posible efectuar reembolsos, salvo por causas imputables a la institución. En caso de solicitarlo antes del inicio de clases la devolución se realiza al 70%.</li>
+            <li>Los descuentos o becas no son acumulables.</li>
+            <li>Las becas están sujetas a renovación por promedio y a cumplir con los requisitos estipulados en la convocatoria.</li>
+            <li>En caso de solicitar factura deben solicitarse máximo 24 horas después de realizar el pago y dentro del mismo mes.</li>
+            <li>Las cuotas tienen un incremento anual.</li>
+            <li>Las bajas y cambios de carrera deben ser solicitados por escrito.</li>
+            <li>En caso de no entregar la documentación solicitada completa para concluir el proceso de inscripción, el alumno será baja sin responsabilidad para la institución y sin derecho a reembolso.</li>
+            <li>Cualquier pago realizado fuera de caja del plantel, no será responsabilidad de la institución y estos deben realizarse única y exclusivamente en los canales oficiales que designe la institución. </li>
+            <li>Recibí y comprendí el reglamento de la institución.</li>
+            <li>Los pagos no son transferibles.</li>
+
+            <!--<li>La información de pago está calculada a pagos seriados mes a mes, en caso de optar por uno diferente solicitarlo.</li>
             <li>Debe cubrirse al inscribirse concepto de inscripción, trámites y la mensualidad maximo el dia 10 de cada mes. </li>
             <li>Una vez iniciado clases, no es posible efectuar reembolsos, salvo por causas imputables a la institución.</li>
             <li>Los descuentos ofrecidos por por los diferentes conceptos no son acumulables.</li>
@@ -286,7 +300,16 @@
             <li>Las cuotas tienen un incremento anual.</li>
             <li>Las bajas y cambios de carrera se deben solicitar por escrito.</li>
             <li>Cualquier pago realizado fuera de la caja del plantel, no sera responsabilidad de la institución.</li>
+            -->
         </ul>
+    </div>
+    <div class="tablediv">
+        <div style="height: 100px;"></div>
+        <table >
+            <tr>
+                <TD class="td_contenido" style="width:40%;">Firma del Alumno</TD><td></td><TD class="td_contenido" style="width:40%;"> Firma del Padre o Tutor </TD>
+            </tr>
+        </table>
     </div>
 </body>
 </html>

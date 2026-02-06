@@ -570,6 +570,7 @@
                 @permission('reportesCedva.activosSinDinero')<th>Monto Plan Pagos</th>@endpermission
                 <th>Concepto</th><th>Ticket</th>
                 <th>F. Caja</th>
+                <th>F. Creacion Pago</th>
                 @permission('reportesCedva.activosSinDinero')
                 <th>Total Caja</th>
                 <th>Descuentos</th>
@@ -681,6 +682,7 @@
             @permission('reportesCedva.activosSinDinero')<td>{{ number_format($registro['monto'],2) }}</td>@endpermission
             <td>{{ $registro['concepto'] }}</td><td>{{ $registro['consecutivo'] }}</td>
             <td>{{ $registro['fecha_caja']==0 ? "" :$registro['fecha_caja'] }}</td>
+            <td>{{ isset($registro['fecha_pago_creado']) ? $registro['fecha_pago_creado'] : ""  }}</td>
             @permission('reportesCedva.activosSinDinero')
             <td>{{ number_format($registro['total_caja'],2) }}</td>
             <td>{{ number_format($registro['descuento'],2) }}</td>
