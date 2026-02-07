@@ -113,8 +113,8 @@ class ProspectoSeguimientosController extends Controller
 		$actividades = ProspectoHactividad::where('prospecto_seguimiento_id', '=', $prospectoSeguimiento->id)->orderBy('fecha')->orderBy('hora')->get();
 		$partesInformes = ProspectoParteInforme::pluck('name', 'id');
 		$etiquetas = ProspectoEtiquetum::pluck('name', 'id');
-		$prospectoInformes = ProspectoInforme::where('prospecto_id', $prospectoSeguimiento->prospecto_id)->get();
-		//dd($prospectoInformes->toArray());
+		$prospectoInformes = ProspectoInforme::where('prospecto_id', $prospectoSeguimiento->prospecto_id)->with(['parteInforme', 'etiqueta'])->get();
+		//dd($prospectoInformes);
 
 		return view(
 			'prospectoSeguimientos.show',

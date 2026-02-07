@@ -64,6 +64,14 @@
                             @endpermission
                         </div>
                         @endif
+                        @if(isset($cliente->historiaClienteDuplicado->cliente_id))
+                        <div class="col-md-4">
+                            Cliente Origen(Cambio de plantel)
+                            <a target="_blank" href="{{ route('clientes.edit', optional($cliente->historiaClienteDuplicado)->cliente_id) }}">
+                            {{ optional($cliente->historiaClienteDuplicado)->cliente_id }}
+                            </a>
+                        </div>
+                        @endif
                         <div class="form-group col-md-4 @if($errors->has('escuela_procedencia')) has-error @endif">
                             <label for="escuela_procedencia-field">Escuela Procedencia</label><div id="contador"></div>
                             {!! Form::text("escuela_procedencia", null, array("class" => "form-control input-sm", "id" => "escuela_procedencia-field")) !!}

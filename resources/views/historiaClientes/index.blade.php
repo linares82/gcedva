@@ -307,7 +307,7 @@
                                             <td class="text-right">
                                                 @permission('historiaClientes.duplicateCliente')
                                                 @if($historiaCliente->eventoCliente->bnd_duplicar_cliente ==1 and $historiaCliente->st_historia_cliente_id==2)
-                                                <a class="btn btn-xs btn-primary" target="_blank" href="{{ route('historiaClientes.duplicateCliente', $historiaCliente->cliente_id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar Cliente-Cambio Carrera</a>
+                                                <a class="btn btn-xs btn-primary" target="_blank" href="{{ route('historiaClientes.duplicateCliente', array('cliente_id'=>$historiaCliente->cliente_id, 'historia_cliente_id'=>$historiaCliente->id)) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar Cliente-Cambio Carrera</a>
                                                 @endif
                                                 @endpermission
                                                 @permission('historiaClientes.edit')

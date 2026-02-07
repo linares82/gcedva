@@ -46,11 +46,11 @@
 @endif
                     </div>
                   -->
-                <div class="form-group col-md-4 @if ($errors->has('tel_cel')) has-error @endif">
-                    <label for="tel_cel-field">Tel. Cel</label>
-                    {!! Form::text('tel_cel', null, ['class' => 'form-control', 'id' => 'tel_cel-field']) !!}
-                    @if ($errors->has('tel_cel'))
-                        <span class="help-block">{{ $errors->first('tel_cel') }}</span>
+                <div class="form-group col-md-4 @if($errors->has('tel_cel')) has-error @endif">
+                    <label for="tel_cel-field">Telefono Celular(10 digitos)</label>
+                    {!! Form::text("tel_cel", null, array("class" => "form-control input-sm", "id" => "tel_cel-field")) !!}
+                    @if($errors->has("tel_cel"))
+                    <span class="help-block">{{ $errors->first("tel_cel") }}</span>
                     @endif
                 </div>
                 <!--
@@ -67,6 +67,13 @@
                     {!! Form::select('medio_id', $medios, null, ['class' => 'form-control', 'id' => 'medio_id-field']) !!}
                     @if ($errors->has('medio_id'))
                         <span class="help-block">{{ $errors->first('medio_id') }}</span>
+                    @endif
+                </div>
+                <div class="form-group col-md-4 @if ($errors->has('ciclo_matricula_id')) has-error @endif">
+                    <label for="ciclo_matricula_id-field">Ciclo Interesado</label>
+                    {!! Form::select('ciclo_matricula_id', $cicloMatriculas, null, ['class' => 'form-control', 'id' => 'ciclo_matricula_id-field']) !!}
+                    @if ($errors->has('ciclo_matricula_id'))
+                        <span class="help-block">{{ $errors->first('ciclo_matricula_id') }}</span>
                     @endif
                 </div>
                 <div class="form-group col-md-4 @if ($errors->has('ciclo_interesado')) has-error @endif">

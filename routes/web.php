@@ -10943,7 +10943,7 @@ Route::get(
     )
 )->middleware('auth');
 Route::get(
-    '/historiaClientes/duplicateCliente/{id}',
+    '/historiaClientes/duplicateCliente',
     array(
         'as' => 'historiaClientes.duplicateCliente',
         'middleware' => 'permission:historiaClientes.duplicateCliente',

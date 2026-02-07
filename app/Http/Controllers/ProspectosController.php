@@ -15,15 +15,16 @@ use Carbon\Carbon;
 use App\Hactividade;
 use App\Seguimiento;
 use App\StProspecto;
-use App\TipoEscuelaProcedencium;
 use App\HStProspecto;
 use App\Http\Requests;
+use App\CicloMatricula;
 use App\ProspectoAviso;
 use App\ProspectoStSeg;
 use App\ProspectoHEstatuse;
 use App\ProspectoHactividad;
 use Illuminate\Http\Request;
 use App\ProspectoSeguimiento;
+use App\TipoEscuelaProcedencium;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\createProspecto;
@@ -57,8 +58,15 @@ class ProspectosController extends Controller
 		$estatus = StProspecto::whereIn('id', array(1, 2))->pluck('name', 'id');
 		$tipo_escuela_procedencia = TipoEscuelaProcedencium::pluck('name', 'id');
 		$planteles = Empleado::where('user_id', Auth::user()->id)->first()->plantels()->pluck('razon', 'id');
+		$cicloMatriculas = CicloMatricula::where('bnd_activo', '=', 1)->pluck('name', 'id');
 
-		return view('prospectos.create', compact('medios', 'estatus', 'planteles', 'tipo_escuela_procedencia'))
+		return view('prospectos.create', compact(
+			'medios',
+			'estatus',
+			'planteles',
+			'tipo_escuela_procedencia',
+			'cicloMatriculas'
+		))
 			->with('list', Prospecto::getListFromAllRelationApps());
 	}
 
@@ -131,8 +139,16 @@ class ProspectosController extends Controller
 		$estatus = StProspecto::whereIn('id', array(1, 2))->pluck('name', 'id');
 		$planteles = Empleado::where('user_id', Auth::user()->id)->first()->plantels()->pluck('razon', 'id');
 		$tipo_escuela_procedencia = TipoEscuelaProcedencium::pluck('name', 'id');
+		$cicloMatriculas = CicloMatricula::where('bnd_activo', '=', 1)->pluck('name', 'id');
 
-		return view('prospectos.edit', compact('prospecto', 'medios', 'estatus', 'planteles', 'tipo_escuela_procedencia'))
+		return view('prospectos.edit', compact(
+			'prospecto',
+			'medios',
+			'estatus',
+			'planteles',
+			'tipo_escuela_procedencia',
+			'cicloMatriculas'
+		))
 			->with('list', Prospecto::getListFromAllRelationApps());
 	}
 

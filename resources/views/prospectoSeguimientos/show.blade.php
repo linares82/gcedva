@@ -36,13 +36,17 @@
             <div class="box box-default">
                 <div class="box-body">
                     <p><label for="prospecto_id">PROSPECTO</label></p>
+                    <label>Laad:</label>
+                    <a target="_blank" href="{{ route('leads.edit', $prospectoSeguimiento->prospecto->lead_id) }}">
+                        {{$prospectoSeguimiento->prospecto->lead_id}}
+                    </a>
                     <label for="prospecto_id">Nombre:</label>
                     {{$prospectoSeguimiento->prospecto->nombre}}
                     {{$prospectoSeguimiento->prospecto->nombre2}}
                     {{$prospectoSeguimiento->prospecto->ape_paterno}}
                     {{$prospectoSeguimiento->prospecto->ape_materno}}
                     <label for="prospecto_id">Estatus: </label>
-                    {{$prospectoSeguimiento->prospectoStSeg->name}}
+                    {{optional($prospectoSeguimiento->prospectoStSeg)->name}}
                     <label for="prospecto_id">Tel.: </label>
                     {{$prospectoSeguimiento->prospecto->tel_fijo}}
                     <label for="prospecto_id">Cel.: </label>
@@ -50,9 +54,11 @@
                     <label for="prospecto_id">Mail: </label>
                     {{$prospectoSeguimiento->prospecto->mail}}
                     <label for="prospecto_id">Especialidad: </label>
-                    {{$prospectoSeguimiento->prospecto->especialidad->name}}
+                    {{optional($prospectoSeguimiento->prospecto->especialidad)->name}}
                     <label for="prospecto_id">Grado: </label>
                     {{optional($prospectoSeguimiento->prospecto->grado)->name}}
+                    <label for="prospecto_id">Ciclo Interesado: </label>
+                    {{optional($prospectoSeguimiento->prospecto->cicloMatricula)->name}}
                     <label for="prospecto_id">Alta: </label>
                     {{$prospectoSeguimiento->prospecto->created_at}} / {{$prospectoSeguimiento->prospecto->usu_alta->name}}
                     <label for="prospecto_id">U. Modificacion: </label>
@@ -183,8 +189,9 @@
                             </thead>
                             @foreach($prospectoInformes as $informe)
                             <tr>
-                                <td>{{$informe->parteInforme->nombre}}</td>
-                                <td>{{$informe->etiqueta->nombre}}</td>
+                                
+                                <td>{{$informe->parteInforme->name}}</td>
+                                <td>{{$informe->etiqueta->name}}</td>
                                 <td>{{$informe->detalle}}</td>
                                 <td>{{$informe->created_at->format('Y-m-d')}}</td>
                                 <td>

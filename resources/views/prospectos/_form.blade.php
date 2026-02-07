@@ -62,6 +62,13 @@
    <span class="help-block">{{ $errors->first("escuela_procedencia") }}</span>
    @endif
 </div>
+<div class="form-group col-md-4 @if ($errors->has('ciclo_matricula_id')) has-error @endif">
+   <label for="ciclo_matricula_id-field">Ciclo Interesado</label>
+   {!! Form::select('ciclo_matricula_id', $cicloMatriculas, null, ['class' => 'form-control', 'id' => 'ciclo_matricula_id-field']) !!}
+   @if ($errors->has('ciclo_matricula_id'))
+      <span class="help-block">{{ $errors->first('ciclo_matricula_id') }}</span>
+   @endif
+</div>
 <div class="form-group col-md-4 @if($errors->has('ciclo_interesado')) has-error @endif" style="clear:left;">
    <label for="ciclo_interesado-field">Ciclo Interesado</label>
    {!! Form::text("ciclo_interesado", null, array("class" => "form-control input-sm", "id" => "ciclo_interesado-field")) !!}

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\CicloMatricula;
 use Auth;
 use App\Lead;
 
@@ -42,8 +43,9 @@ class LeadsController extends Controller
 	{
 		$planteles = Empleado::where('user_id', '=', Auth::user()->id)->where('st_empleado_id', '<>', 3)->first()->plantels->pluck('razon', 'id');
 		$medios = Medio::where('bnd_prospectos', '=', 1)->pluck('name', 'id');
+		$cicloMatriculas = CicloMatricula::where('bnd_activo', '=', 1)->pluck('name', 'id');
 
-		return view('leads.create', compact('planteles', 'medios'))
+		return view('leads.create', compact('planteles', 'medios', 'cicloMatriculas'))
 			->with('list', Lead::getListFromAllRelationApps());
 	}
 
@@ -90,7 +92,8 @@ class LeadsController extends Controller
 		$lead = $lead->find($id);
 		$planteles = Empleado::where('user_id', '=', Auth::user()->id)->where('st_empleado_id', '<>', 3)->first()->plantels->pluck('razon', 'id');
 		$medios = Medio::where('bnd_prospectos', '=', 1)->pluck('name', 'id');
-		return view('leads.edit', compact('lead', 'planteles', 'medios'))
+		$cicloMatriculas = CicloMatricula::where('bnd_activo', '=', 1)->pluck('name', 'id');
+		return view('leads.edit', compact('lead', 'planteles', 'medios', 'cicloMatriculas'))
 			->with('list', Lead::getListFromAllRelationApps());
 	}
 
@@ -170,6 +173,7 @@ class LeadsController extends Controller
 		$lead->save();
 
 		$inputProspecto = [
+			'plantel_id' => $lead->plantel_id,
 			'nombre' => $lead->nombre,
 			//'nombre2' => $lead->nombre2,
 			//'ape_paterno' => $lead->ape_paterno,
@@ -179,6 +183,7 @@ class LeadsController extends Controller
 			//'email' => $lead->email,
 			'medio_id' => $lead->medio_id,
 			'ciclo_interesado' => $lead->ciclo_interesado,
+			'ciclo_matricula_id' => $lead->ciclo_matricula_id,
 			'observaciones' => $lead->observaciones,
 			'lead_id' => $lead->id,
 			'st_prospecto_id' => 2, // Estatus "Nuevo"

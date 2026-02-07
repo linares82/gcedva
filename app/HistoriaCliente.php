@@ -21,9 +21,26 @@ class HistoriaCliente extends Model
 
 	//Mass Assignment
 	protected $fillable = [
-		'evento_cliente_id', 'descripcion', 'fecha', 'archivo', 'cliente_id', 'usu_alta_id', 'usu_mod_id', 'fec_vigencia', 'inscripcion_id',
-		'st_historia_cliente_id', 'aut_serv_esc', 'aut_caja', 'aut_serv_esc_corp', 'aut_director', 'aut_caja_corp','reactivado','fec_reactivado',
-		'fec_autorizacion','bnd_prematuro'
+		'evento_cliente_id',
+		'descripcion',
+		'fecha',
+		'archivo',
+		'cliente_id',
+		'usu_alta_id',
+		'usu_mod_id',
+		'fec_vigencia',
+		'inscripcion_id',
+		'st_historia_cliente_id',
+		'aut_serv_esc',
+		'aut_caja',
+		'aut_serv_esc_corp',
+		'aut_director',
+		'aut_caja_corp',
+		'reactivado',
+		'fec_reactivado',
+		'fec_autorizacion',
+		'bnd_prematuro',
+		'cliente_duplicado_id'
 	];
 
 	public function usu_alta()
@@ -49,6 +66,11 @@ class HistoriaCliente extends Model
 	public function cliente()
 	{
 		return $this->belongsTo('App\Cliente');
+	} // end
+
+	public function clienteDuplicado()
+	{
+		return $this->belongsTo('App\Cliente', 'cliente_duplicado_id');
 	} // end
 
 	public function stHistoriaCliente()

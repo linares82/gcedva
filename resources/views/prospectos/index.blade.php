@@ -353,7 +353,7 @@
                         @endif
                     </td>
                     <td>
-                        @if($prospecto->st_prospecto_id==3)
+                        @if($prospecto->st_prospecto_id==3 and isset($prospecto->cliente_id))
                         <a href="{{ route('clientes.edit', $prospecto->cliente_id)}}" target="_blank">{{$prospecto->stProspecto->name}}</a>
                         @else
                         {{$prospecto->stProspecto->name}}

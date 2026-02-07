@@ -642,18 +642,22 @@ class ClientesController extends Controller
      * @param  int  $id
      * @return Response
      */
-    public function duplicarClienteBaja($id, Cliente $cliente)
+    public function duplicarClienteBaja(Request $request)
     {
-        $clienteBase = $cliente->find($id);
+        $datos = $request->all();
+        $historia = HistoriaCliente::find($datos['historia_cliente_id']);
+        $clienteBase = Cliente::find($datos['cliente_id']);
         $inputNuevoCliente = Arr::except($clienteBase->toArray(), ['id', 'created_at', 'updated_at', 'deleted_at', 'bnd_doc_oblig_entregados', 'obs_docs']);
         //dd($inputNuevoCliente);
 
-        $seguimientoBase = Seguimiento::where('cliente_id', $id)->first();
+        $seguimientoBase = Seguimiento::where('cliente_id', $datos['cliente_id'])->first();
         $inputNuevoSeguimiento = Arr::except($seguimientoBase->toArray(), ['id', 'cliente_id', 'created_at', 'updated_at', 'deleted_at']);
 
         //dd($inputNuevoCliente);
         $cliente = Cliente::create($inputNuevoCliente);
         $seguimiento = Seguimiento::create($inputNuevoSeguimiento + ['cliente_id' => $cliente->id]);
+        $historia->cliente_duplicado_id = $cliente->id;
+        $historia->save();
 
         if (!isset($cliente->prebeca)) {
             $input_prebeca['cliente_id'] = $cliente->id;
@@ -697,13 +701,13 @@ class ClientesController extends Controller
         $empleados->put("", 'Seleccionar Opción');
         $empleados = $empleados->reverse();
         //dd($empleados);
-        $cp = PreguntaCliente::where('cliente_id', '=', $id)->get();
+        $cp = PreguntaCliente::where('cliente_id', '=', $datos['cliente_id'])->get();
         $preguntas = Preguntum::pluck('name', 'id');
         //dd($cp);
         //dd($preguntas);
         $doc_existentes = DB::table('pivot_doc_clientes as pde')->select('doc_alumno_id')
             ->join('clientes as c', 'c.id', '=', 'pde.cliente_id')
-            ->where('c.id', '=', $id)
+            ->where('c.id', '=', $datos['cliente_id'])
             ->where('pde.deleted_at', '=', null)->get();
 
         $de_array = array();
