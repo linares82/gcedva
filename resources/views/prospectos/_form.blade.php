@@ -210,7 +210,7 @@
 
       function longitudTelCel(){
          //console.log($('#tel_cel-field').val().length);
-         if($('#tel_cel-field').val().length>=10){
+         if($('#tel_cel-field').val().length==10){
             $('#tel_cel-field').attr('readonly', true);
          }
       }

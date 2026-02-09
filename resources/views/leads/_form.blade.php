@@ -64,14 +64,14 @@
                   -->
                 <div class="form-group col-md-4 @if ($errors->has('medio_id')) has-error @endif">
                     <label for="medio_id-field">Medio</label>
-                    {!! Form::select('medio_id', $medios, null, ['class' => 'form-control', 'id' => 'medio_id-field']) !!}
+                    {!! Form::select('medio_id', $medios, null, ['class' => 'form-control select_seguridad', 'id' => 'medio_id-field']) !!}
                     @if ($errors->has('medio_id'))
                         <span class="help-block">{{ $errors->first('medio_id') }}</span>
                     @endif
                 </div>
                 <div class="form-group col-md-4 @if ($errors->has('ciclo_matricula_id')) has-error @endif">
                     <label for="ciclo_matricula_id-field">Ciclo Interesado</label>
-                    {!! Form::select('ciclo_matricula_id', $cicloMatriculas, null, ['class' => 'form-control', 'id' => 'ciclo_matricula_id-field']) !!}
+                    {!! Form::select('ciclo_matricula_id', $cicloMatriculas, null, ['class' => 'form-control select_seguridad', 'id' => 'ciclo_matricula_id-field']) !!}
                     @if ($errors->has('ciclo_matricula_id'))
                         <span class="help-block">{{ $errors->first('ciclo_matricula_id') }}</span>
                     @endif

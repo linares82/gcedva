@@ -36,7 +36,7 @@
             <div class="box box-default">
                 <div class="box-body">
                     <p><label for="prospecto_id">PROSPECTO</label></p>
-                    <label>Laad:</label>
+                    <label>Lead:</label>
                     <a target="_blank" href="{{ route('leads.edit', $prospectoSeguimiento->prospecto->lead_id) }}">
                         {{$prospectoSeguimiento->prospecto->lead_id}}
                     </a>
