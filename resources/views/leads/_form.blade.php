@@ -76,13 +76,14 @@
                         <span class="help-block">{{ $errors->first('ciclo_matricula_id') }}</span>
                     @endif
                 </div>
-                <div class="form-group col-md-4 @if ($errors->has('ciclo_interesado')) has-error @endif">
+                <!--<div class="form-group col-md-4 @if ($errors->has('ciclo_interesado')) has-error @endif">
                     <label for="ciclo_interesado-field">Ciclo Interesado</label>
                     {!! Form::text('ciclo_interesado', null, ['class' => 'form-control', 'id' => 'ciclo_interesado-field']) !!}
                     @if ($errors->has('ciclo_interesado'))
                         <span class="help-block">{{ $errors->first('ciclo_interesado') }}</span>
                     @endif
                 </div>
+            -->
                 <div class="form-group col-md-12 @if ($errors->has('observaciones')) has-error @endif">
                     <label for="observaciones-field">Observaciones</label>
                     {!! Form::textArea('observaciones', null, [

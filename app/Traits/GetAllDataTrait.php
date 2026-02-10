@@ -308,6 +308,7 @@ trait GetAllDataTrait
                 break;
             case "prospectos":
                 //dd($planteles);
+                $paginate = 10;
                 $myQuery = $myQuery->whereIn('prospectos.plantel_id', $planteles);
                 $myQuery->leftJoin('prospecto_seguimientos', 'prospecto_seguimientos.prospecto_id', 'prospectos.id');
                 if (Auth::user()->can('prospectos.CallCenter')) {

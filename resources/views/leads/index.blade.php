@@ -143,12 +143,13 @@
                                 </div>
                             </div>
                             -->
-                            <div class="form-group col-md-4" style="clear: left;">
-                                <label class=" control-label" for="q_ciclo_interesado_cont">CICLO INTERESADO</label>
+                            <div class="form-group col-md-4">
+                                <label class=" control-label" for="q_medios.name_lt">CICLO INTERESADO</label>
                                 <div class="">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['ciclo_interesado_cont']) ?: '' }}" name="q[ciclo_interesado_cont]" id="q_ciclo_interesado_cont" />
+                                    {!! Form::select("ciclo_interesado_id", $ciclosInteresados, "{{ @(Request::input('q')['leads.ciclo_interesado_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[leads.ciclo_interesado_id_lt]", "id"=>"q_leads.ciclo_interesado_id_lt", "style"=>"width:100%;" )) !!}
                                 </div>
                             </div>
+                            
                                                     <!--
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="q_observaciones_gt">OBSERVACIONES</label>
@@ -231,7 +232,7 @@
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'nombre', 'title' => 'NOMBRE'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'tel_cel', 'title' => 'TEL.'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'medios.name', 'title' => 'MEDIO'])</th>
-                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'ciclo_interesado', 'title' => 'CICLO INTERESADO'])</th>
+                        <th>@include('CrudDscaffold::getOrderlink', ['column' => 'ciclo_matriculas.name', 'title' => 'CICLO INTERESADO'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'observaciones', 'title' => 'OBSERVACIONES'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'st_leads.name', 'title' => 'ESTATUS'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'st_leads.created_at', 'title' => 'CREADO EN'])</th>
@@ -242,6 +243,10 @@
 
                     <tbody>
                         @foreach($leads as $lead)
+                            @php
+                                $lead->load('cicloMatricula');
+                                //dd($lead);
+                            @endphp
                             <tr>
                                 <td><a href="{{ route('leads.show', $lead->id) }}">{{$lead->id}}</a></td>
                     
@@ -249,7 +254,7 @@
                                 <td>{{$lead->nombre}} {{$lead->nombre2}} {{$lead->ape_paterno}} {{$lead->ape_materno}}</td>
                     <td>{{$lead->tel_cel}}</td>
                     <td>{{$lead->medio->name}}</td>
-                    <td>{{$lead->ciclo_interesado}}</td>
+                    <td>{{optional($lead->cicloMatricula)->name}}</td>
                     <td>{{$lead->observaciones}}</td>
                     <td>{{$lead->stLead->name}}</td>
                     <td>

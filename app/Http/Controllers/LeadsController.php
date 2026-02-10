@@ -30,8 +30,10 @@ class LeadsController extends Controller
 		$medios = \App\Medio::pluck('name', 'id');
 		$st_leads = \App\StLead::pluck('name', 'id');
 		$st_leads->prepend('Selecciona una opción', '');
+		$ciclosInteresados = CicloMatricula::pluck('name', 'id');
+		$ciclosInteresados->prepend('Selecciona una opción', '');
 		$planteles = Empleado::where('user_id', '=', Auth::user()->id)->where('st_empleado_id', '<>', 3)->first()->plantels->pluck('razon', 'id');
-		return view('leads.index', compact('leads', 'medios', 'st_leads', 'planteles'));
+		return view('leads.index', compact('leads', 'medios', 'st_leads', 'planteles', 'ciclosInteresados'));
 	}
 
 	/**

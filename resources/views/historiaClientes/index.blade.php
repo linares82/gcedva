@@ -217,10 +217,15 @@
                     <tbody>
                         @foreach($historiaClientes as $historiaCliente)
                             <tr>
-                                <td><a href="{{ route('historiaClientes.show', $historiaCliente->id) }}">{{$historiaCliente->id}}</a></td>
+                                <td>
+                                    <a href="{{ route('historiaClientes.show', $historiaCliente->id) }}">{{$historiaCliente->id}}</a>
+                                </td>
                                 <td>{{$historiaCliente->eventoCliente->name}} 
                                     @if($historiaCliente->bnd_prematuro==1)
                                         Baja Prematura
+                                    @endif
+                                    @if($historiaCliente->cliente_duplicado_id>0)
+                                        <a target="_blank" href="{{ route('clientes.edit', $historiaCliente->cliente_duplicado_id) }}">{{$historiaCliente->cliente_duplicado_id}}</a>
                                     @endif
                                 </td>
                                 <td>{{$historiaCliente->fecha}}</td>
@@ -306,8 +311,10 @@
 
                                             <td class="text-right">
                                                 @permission('historiaClientes.duplicateCliente')
+                                                @if(is_null($historiaCliente->cliente_duplicado_id))
                                                 @if($historiaCliente->eventoCliente->bnd_duplicar_cliente ==1 and $historiaCliente->st_historia_cliente_id==2)
                                                 <a class="btn btn-xs btn-primary" target="_blank" href="{{ route('historiaClientes.duplicateCliente', array('cliente_id'=>$historiaCliente->cliente_id, 'historia_cliente_id'=>$historiaCliente->id)) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar Cliente-Cambio Carrera</a>
+                                                @endif
                                                 @endif
                                                 @endpermission
                                                 @permission('historiaClientes.edit')

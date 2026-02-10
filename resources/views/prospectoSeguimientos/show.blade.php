@@ -36,10 +36,12 @@
             <div class="box box-default">
                 <div class="box-body">
                     <p><label for="prospecto_id">PROSPECTO</label></p>
+                    @if(isset($prospectoSeguimiento->prospecto->lead_id))
                     <label>Lead:</label>
                     <a target="_blank" href="{{ route('leads.edit', $prospectoSeguimiento->prospecto->lead_id) }}">
                         {{$prospectoSeguimiento->prospecto->lead_id}}
                     </a>
+                    @endif
                     <label for="prospecto_id">Nombre:</label>
                     {{$prospectoSeguimiento->prospecto->nombre}}
                     {{$prospectoSeguimiento->prospecto->nombre2}}
@@ -99,10 +101,10 @@
                             <tbody>
                                 @foreach($prospectoAsignacionTareas as $tarea)
                                 <tr>
-                                    <td>{{$tarea->prospectoTarea->name}}</td>
-                                    <td>{{$tarea->prospectoAsunto->name}}</td>
+                                    <td>{{optional($tarea->prospectoTarea)->name}}</td>
+                                    <td>{{optional($tarea->prospectoAsunto)->name}}</td>
                                     <td>{{$tarea->detalle}}</td>
-                                    <td>{{$tarea->prospectoStTarea->name}}</td>
+                                    <td>{{optional($tarea->prospectoStTarea)->name}}</td>
                                     <td>{{$tarea->created_at}}</td>
                                     <td>
                                         @permission('prospectoAsignacionTareas.destroy')
@@ -151,7 +153,7 @@
                                                     {{$a->fecha}}
                                                 </small>
                                     </td>
-                                    <td>{{$a->name}}</td>
+                                    <td>{{optional($a)->name}}</td>
                                     <td>{{$a->detalle}}</td>
                                     <td>
 

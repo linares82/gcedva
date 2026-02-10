@@ -183,6 +183,7 @@ class ProspectosController extends Controller
 		}
 		$prospecto->update($input);
 
+		//return redirect()->route('prospectos.edit', $prospecto->id)->with('message', 'Registro Actualizado.');
 		return redirect()->route('prospectoSeguimientos.show', $prospecto->id)->with('message', 'Registro Actualizado.');
 	}
 
