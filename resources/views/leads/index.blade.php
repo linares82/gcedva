@@ -237,6 +237,7 @@
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'st_leads.name', 'title' => 'ESTATUS'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'st_leads.created_at', 'title' => 'CREADO EN'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'st_leads.contador_llamadas', 'title' => 'LLAMADAS'])</th>
+                        <th>Prospecto</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
@@ -283,6 +284,13 @@
                         @permission('leads.quitarLlamada')
                         <a class="btn btn-xs btn-danger" data-toggle="tooltip" title data-original-title="Quitar llamada" href="{{ route('leads.quitarLlamada', $lead->id) }}"><i class="glyphicon glyphicon-minus"></i> </a>
                         @endpermission
+                        @endif
+                    </td>
+                    <td>
+                        @if(isset($lead->prospecto->id) and is_null($lead->prospecto->deleted_at))
+                        <a target="_blank" href="{{ route('prospectos.show', optional($lead->prospecto)->id) }}">
+                            {{ optional($lead->prospecto)->id }}
+                        </a>  
                         @endif
                     </td>
                                 <td class="text-right">

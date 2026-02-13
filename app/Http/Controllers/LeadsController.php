@@ -27,6 +27,8 @@ class LeadsController extends Controller
 	{
 		//dd($request->all());
 		$leads = Lead::getAllData($request);
+		$leads->load('prospecto');
+		//dd($leads);
 		$medios = \App\Medio::pluck('name', 'id');
 		$st_leads = \App\StLead::pluck('name', 'id');
 		$st_leads->prepend('Selecciona una opción', '');
@@ -176,6 +178,8 @@ class LeadsController extends Controller
 
 		$inputProspecto = [
 			'plantel_id' => $lead->plantel_id,
+			'especialidad_id' => 0,
+			'nivel_id' => 0,
 			'nombre' => $lead->nombre,
 			//'nombre2' => $lead->nombre2,
 			//'ape_paterno' => $lead->ape_paterno,
@@ -184,6 +188,7 @@ class LeadsController extends Controller
 			'tel_cel' => $lead->tel_cel,
 			//'email' => $lead->email,
 			'medio_id' => $lead->medio_id,
+
 			'ciclo_interesado' => $lead->ciclo_interesado,
 			'ciclo_matricula_id' => $lead->ciclo_matricula_id,
 			'observaciones' => $lead->observaciones,

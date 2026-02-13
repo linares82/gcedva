@@ -75,4 +75,9 @@ class Lead extends Model
 	{
 		return $this->belongsTo('App\CicloMatricula');
 	} // end
+
+	public function prospecto()
+	{
+		return $this->hasOne('App\Prospecto', 'lead_id', 'id');
+	} // end
 }

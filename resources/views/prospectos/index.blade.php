@@ -316,6 +316,7 @@
             <thead>
                 <tr>
                     <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
+                    <th>Lead</th>
                     <th>@include('plantillas.getOrderLink', ['column' => 'nombre', 'title' => 'NOMBRE'])</th>
                     <th>@include('plantillas.getOrderLink', ['column' => 'nombre2', 'title' => 'NOMBRE2'])</th>
                     <th>@include('plantillas.getOrderLink', ['column' => 'ape_paterno', 'title' => 'A.PATERNO'])</th>
@@ -336,6 +337,13 @@
                 @foreach($prospectos as $prospecto)
                 <tr>
                     <td><a href="{{ route('prospectos.show', $prospecto->id) }}">{{$prospecto->id}}</a></td>
+                    <td>
+                        @if(isset($prospecto->lead->id))
+                        <a target="_blank" href="{{ route('leads.show', optional($prospecto->lead)->id) }}">
+                            {{optional($prospecto->lead)->id}}
+                        </a>
+                        @endif
+                    </td>
                     <td>{{$prospecto->nombre}}</td>
                     <td>{{$prospecto->nombre2}}</td>
                     <td>{{$prospecto->ape_paterno}}</td>
