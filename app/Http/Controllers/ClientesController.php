@@ -647,15 +647,15 @@ class ClientesController extends Controller
         $datos = $request->all();
         $historia = HistoriaCliente::find($datos['historia_cliente_id']);
         $clienteBase = Cliente::find($datos['cliente_id']);
-        $inputNuevoCliente = Arr::except($clienteBase->toArray(), ['id', 'created_at', 'updated_at', 'deleted_at', 'bnd_doc_oblig_entregados', 'obs_docs']);
+        $inputNuevoCliente = Arr::except($clienteBase->toArray(), ['id', 'created_at', 'updated_at', 'deleted_at', 'bnd_doc_oblig_entregados', 'obs_docs', 'st_cliente_id']);
         //dd($inputNuevoCliente);
 
         $seguimientoBase = Seguimiento::where('cliente_id', $datos['cliente_id'])->first();
-        $inputNuevoSeguimiento = Arr::except($seguimientoBase->toArray(), ['id', 'cliente_id', 'created_at', 'updated_at', 'deleted_at']);
+        $inputNuevoSeguimiento = Arr::except($seguimientoBase->toArray(), ['id', 'cliente_id', 'created_at', 'updated_at', 'deleted_at', 'st_seguimiento_id']);
 
         //dd($inputNuevoCliente);
-        $cliente = Cliente::create($inputNuevoCliente);
-        $seguimiento = Seguimiento::create($inputNuevoSeguimiento + ['cliente_id' => $cliente->id]);
+        $cliente = Cliente::create($inputNuevoCliente + ['st_cliente_id' => 32]);
+        $seguimiento = Seguimiento::create($inputNuevoSeguimiento + ['cliente_id' => $cliente->id] + ['st_seguimiento_id' => 5]);
         $historia->cliente_duplicado_id = $cliente->id;
         $historia->save();
 
