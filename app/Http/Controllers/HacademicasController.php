@@ -627,9 +627,8 @@ class HacademicasController extends Controller
                 ->orderBy('cli.nombre2')
                 ->get();
             //dd($hacademicas);
-        } else {
+        } elseif (!isset($data['excepcion']) and $dentroPeriodoExamenes > 0) {
             //if($calificacion_inicio<=$hoy and $calificacion_fin>=$hoy){
-
             if ($dentroPeriodoExamenes > 0) {
                 $hacademicas = HAcademica::select(
                     'cli.id',
@@ -675,6 +674,52 @@ class HacademicasController extends Controller
                     ->whereNull('cp.deleted_at')
                     ->get();
             }
+        } elseif ($data['tpo_examen_id'] == 2) {
+            //$estatus_excepcion_captura_calificaciones=Param::where('llave','estatus_excepcion_captura_calificaciones')->first();
+            //$estatus=explode(",",$estatus_excepcion_captura_calificaciones->valor);
+            $hacademicas = HAcademica::select(
+                'cli.id',
+                'cli.plantel_id',
+                'cli.nombre',
+                'cli.nombre2',
+                'cli.ape_paterno',
+                'cli.ape_materno',
+                'cli.bnd_doc_oblig_entregados',
+                'c.calificacion',
+                'cp.calificacion_parcial_calculada',
+                'cp.id as calificacion_ponderacion_id',
+                'cp.calificacion_parcial',
+                'cpo.name as ponderacion',
+                'stc.name as estatus_cliente',
+                'stc.id as estatus_cliente_id',
+                'af.fecha as fecha_acta',
+                'af.consecutivo as consecutivo_acta'
+            )
+                ->where('hacademicas.grupo_id', '=', $asignacionAcademica->grupo_id)
+                ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
+                ->join('calificacions as c', 'c.hacademica_id', '=', 'hacademicas.id')
+                ->leftJoin('acta_finals as af', 'af.id', 'c.acta_final_id')
+                ->join('calificacion_ponderacions as cp', 'cp.calificacion_id', '=', 'c.id')
+                ->join('carga_ponderacions as cpo', 'cpo.id', '=', 'cp.carga_ponderacion_id')
+                ->join('clientes as cli', 'cli.id', '=', 'hacademicas.cliente_id')
+                ->join('st_clientes as stc', 'stc.id', '=', 'cli.st_cliente_id')
+                ->where('hacademicas.lectivo_id', '=', $asignacionAcademica->lectivo_id)
+                ->where('hacademicas.materium_id', '=', $asignacionAcademica->materium_id)
+                ->where('c.tpo_examen_id', '=', $data['tpo_examen_id'])
+                ->where('cp.carga_ponderacion_id', '=', $data['carga_ponderacion_id'])
+                ->orderBy('cli.ape_paterno')
+                ->orderBy('cli.ape_materno')
+                ->orderBy('cli.nombre')
+                ->orderBy('cli.nombre2')
+                ->whereNull('hacademicas.deleted_at')
+                ->whereNull('c.deleted_at')
+                ->whereNull('i.deleted_at')
+                ->whereNull('cp.deleted_at')
+                ->orderBy('cli.ape_paterno')
+                ->orderBy('cli.ape_materno')
+                ->orderBy('cli.nombre')
+                ->orderBy('cli.nombre2')
+                ->get();
         }
 
         /*if(!is_object($hacademicas)){

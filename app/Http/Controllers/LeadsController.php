@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\CicloMatricula;
 use Auth;
 use App\Lead;
-
 use App\Medio;
+use Log;
+
 use App\Empleado;
 use App\Prospecto;
 use App\Http\Requests;
+use App\CicloMatricula;
 use Illuminate\Http\Request;
+use App\ProspectoSeguimiento;
 use App\Http\Requests\createLead;
 use App\Http\Requests\updateLead;
 use App\Http\Controllers\Controller;
@@ -207,5 +209,237 @@ class LeadsController extends Controller
 		$lead->save();
 
 		return redirect()->route('leads.index')->with('message', 'Lead rechazado.');
+	}
+
+	public function funnelVenta()
+	{
+		$planteles = Empleado::where('user_id', '=', Auth::user()->id)->where('st_empleado_id', '<>', 3)->first()->plantels->pluck('razon', 'id');
+		return view('leads.reportes.funnelVenta', compact('planteles'));
+	}
+
+	public function funnelVentaR(Request $request)
+	{
+		$datos = $request->all();
+
+		$planteles = Empleado::select(
+			'p.razon as plantel',
+			'p.id as plantel_id'
+		)
+			->join('plantels as p', 'p.id', 'empleados.plantel_id')
+			->where('p.id', '>', 0)
+			->where('empleados.st_prospecto_id', 2)
+			->whereIn('p.id', $datos['plantel_id'])
+			->orderBy('p.id')
+			->distinct()
+			->get();
+		$registros_plantel = array();
+
+		foreach ($planteles as $plantel) {
+			$leads_creados = Lead::where('plantel_id', $plantel->plantel_id)
+				->whereDate('created_at', '>=', $datos['fecha_f'])
+				->whereDate('created_at', '<=', $datos['fecha_t'])
+				->count();
+			$prospectos_creados = ProspectoSeguimiento::join('prospectos as pros', 'pros.id', 'prospecto_seguimientos.prospecto_id')
+				->join('plantels as p', 'p.id', 'pros.plantel_id')
+				->where('pros.plantel_id', $plantel->plantel_id)
+				->whereDate('pros.created_at', '>=', $datos['fecha_f'])
+				->whereDate('pros.created_at', '<=', $datos['fecha_t'])
+				->count();
+			$prospectos_seguimiento = ProspectoSeguimiento::join('prospectos as pros', 'pros.id', 'prospecto_seguimientos.prospecto_id')
+				->join('plantels as p', 'p.id', 'pros.plantel_id')
+				->where('pros.plantel_id', $plantel->plantel_id)
+				->whereDate('pros.created_at', '>=', $datos['fecha_f'])
+				->whereDate('pros.created_at', '<=', $datos['fecha_t'])
+				->where('prospecto_st_seg_id', 3)
+				->count();
+			$prospectos_promesa_pago = ProspectoSeguimiento::join('prospectos as pros', 'pros.id', 'prospecto_seguimientos.prospecto_id')
+				->join('plantels as p', 'p.id', 'pros.plantel_id')
+				->where('pros.plantel_id', $plantel->plantel_id)
+				->whereDate('pros.created_at', '>=', $datos['fecha_f'])
+				->whereDate('pros.created_at', '<=', $datos['fecha_t'])
+				->where('prospecto_st_seg_id', 4)
+				->count();
+			$clientes = ProspectoSeguimiento::join('prospectos as pros', 'pros.id', 'prospecto_seguimientos.prospecto_id')
+				->join('plantels as p', 'p.id', 'pros.plantel_id')
+				->where('pros.plantel_id', $plantel->plantel_id)
+				->whereDate('pros.created_at', '>=', $datos['fecha_f'])
+				->whereDate('pros.created_at', '<=', $datos['fecha_t'])
+				->whereNotNull('cliente_id')
+				->count();
+			$prospectos_descartado = ProspectoSeguimiento::join('prospectos as pros', 'pros.id', 'prospecto_seguimientos.prospecto_id')
+				->join('plantels as p', 'p.id', 'pros.plantel_id')
+				->where('pros.plantel_id', $plantel->plantel_id)
+				->whereDate('pros.created_at', '>=', $datos['fecha_f'])
+				->whereDate('pros.created_at', '<=', $datos['fecha_t'])
+				->where('prospecto_st_seg_id', 1)
+				->count();
+			$leads_rechazado = Lead::where('plantel_id', $plantel->plantel_id)
+				->whereDate('created_at', '>=', $datos['fecha_f'])
+				->whereDate('created_at', '<=', $datos['fecha_t'])
+				->where('st_lead_id', 2)
+				->count();
+			$linea = [
+				'plantel' => $plantel->plantel,
+				'leads_creados' => $leads_creados,
+				'prospectos_creados' => $prospectos_creados,
+				'prospectos_seguimiento' => $prospectos_seguimiento,
+				'prospectos_promesa_pago' => $prospectos_promesa_pago,
+				'clientes' => $clientes,
+				'prospectos_descartado' => $prospectos_descartado,
+				'leads_rechazado' => $leads_rechazado,
+				'total' => $leads_creados + $prospectos_creados + $prospectos_seguimiento + $prospectos_promesa_pago + $clientes + $prospectos_descartado + $leads_rechazado
+			];
+			array_push($registros_plantel, $linea);
+		}
+		//dd($registros_plantel);
+
+		$empleados = Empleado::select(
+			'empleados.id',
+			'empleados.user_id',
+			'empleados.nombre',
+			'empleados.ape_paterno',
+			'empleados.ape_materno',
+			'p.razon as plantel',
+			'p.id as plantel_id'
+		)
+			->join('plantels as p', 'p.id', 'empleados.plantel_id')
+			->where('p.id', '>', 0)
+			->where('empleados.st_prospecto_id', 2)
+			->whereIn('p.id', $datos['plantel_id'])
+			->orderBy('p.id')
+			->orderBy('empleados.id')
+			->get();
+		$registros_plantel_empleado = array();
+		foreach ($empleados as $empleado) {
+			$leads_creados = Lead::where('usu_alta_id', $empleado->user_id)
+				->whereDate('created_at', '>=', $datos['fecha_f'])
+				->whereDate('created_at', '<=', $datos['fecha_t'])
+				->count();
+			$prospectos_creados = ProspectoSeguimiento::where('usu_alta_id', $empleado->user_id)
+				->whereDate('created_at', '>=', $datos['fecha_f'])
+				->whereDate('created_at', '<=', $datos['fecha_t'])
+				->count();
+			$prospectos_seguimiento = ProspectoSeguimiento::where('usu_alta_id', $empleado->user_id)
+				->whereDate('created_at', '>=', $datos['fecha_f'])
+				->whereDate('created_at', '<=', $datos['fecha_t'])
+				->where('prospecto_st_seg_id', 3)
+				->count();
+			$prospectos_promesa_pago = ProspectoSeguimiento::where('usu_alta_id', $empleado->user_id)
+				->whereDate('created_at', '>=', $datos['fecha_f'])
+				->whereDate('created_at', '<=', $datos['fecha_t'])
+				->where('prospecto_st_seg_id', 4)
+				->count();
+			$clientes = ProspectoSeguimiento::join('prospectos as pros', 'pros.id', 'prospecto_seguimientos.prospecto_id')
+				->join('plantels as p', 'p.id', 'pros.plantel_id')
+				->where('prospecto_seguimientos.usu_alta_id', $empleado->user_id)
+				->whereDate('pros.created_at', '>=', $datos['fecha_f'])
+				->whereDate('pros.created_at', '<=', $datos['fecha_t'])
+				->whereNotNull('cliente_id')
+				->count();
+			$prospectos_descartado = ProspectoSeguimiento::where('usu_alta_id', $empleado->user_id)
+				->whereDate('created_at', '>=', $datos['fecha_f'])
+				->whereDate('created_at', '<=', $datos['fecha_t'])
+				->where('prospecto_st_seg_id', 1)
+				->count();
+			$leads_rechazado = Lead::where('usu_alta_id', $empleado->user_id)
+				->whereDate('created_at', '>=', $datos['fecha_f'])
+				->whereDate('created_at', '<=', $datos['fecha_t'])
+				->where('st_lead_id', 2)
+				->count();
+			$linea = [
+				'plantel' => $empleado->plantel,
+				'empleado' => $empleado->nombre . ' ' . $empleado->ape_materno . ' ' . $empleado->ape_paterno,
+				'leads_creados' => $leads_creados,
+				'prospectos_creados' => $prospectos_creados,
+				'prospectos_seguimiento' => $prospectos_seguimiento,
+				'prospectos_promesa_pago' => $prospectos_promesa_pago,
+				'clientes' => $clientes,
+				'prospectos_descartado' => $prospectos_descartado,
+				'leads_rechazado' => $leads_rechazado,
+				'total' => $leads_creados + $prospectos_creados + $prospectos_seguimiento + $prospectos_promesa_pago + $clientes + $prospectos_descartado + $leads_rechazado
+			];
+
+			//Log::info($linea);
+			array_push($registros_plantel_empleado, $linea);
+		}
+		//dd($registros_plantel_empleado);
+
+		$registros_seccion = array();
+		$secciones = Prospecto::select('p.razon', 'p.id as plantel_id', 'g.seccion')
+			->join('grados as g', 'g.id', 'prospectos.grado_id')
+			->join('plantels as p', 'p.id', 'prospectos.plantel_id')
+			->whereDate('prospectos.created_at', '<=', $datos['fecha_t'])
+			->whereDate('prospectos.created_at', '>=', $datos['fecha_f'])
+			->whereIn('p.id', $datos['plantel_id'])
+			->distinct()
+			->get();
+		foreach ($secciones as $seccion) {
+			$prospectos_creados = ProspectoSeguimiento::join('prospectos as pros', 'pros.id', 'prospecto_seguimientos.prospecto_id')
+				->join('grados as g', 'g.id', 'pros.grado_id')
+				->join('plantels as p', 'p.id', 'pros.plantel_id')
+				->where('g.seccion', $seccion->seccion)
+				->where('p.id', $seccion->plantel_id)
+				->whereDate('pros.created_at', '>=', $datos['fecha_f'])
+				->whereDate('pros.created_at', '<=', $datos['fecha_t'])
+				->count();
+			$prospectos_seguimiento = ProspectoSeguimiento::join('prospectos as pros', 'pros.id', 'prospecto_seguimientos.prospecto_id')
+				->join('grados as g', 'g.id', 'pros.grado_id')
+				->join('plantels as p', 'p.id', 'pros.plantel_id')
+				->where('g.seccion', $seccion->seccion)
+				->where('p.id', $seccion->plantel_id)
+				->whereDate('pros.created_at', '>=', $datos['fecha_f'])
+				->whereDate('pros.created_at', '<=', $datos['fecha_t'])
+				->where('prospecto_st_seg_id', 3)
+				->count();
+			$prospectos_promesa_pago = ProspectoSeguimiento::join('prospectos as pros', 'pros.id', 'prospecto_seguimientos.prospecto_id')
+				->join('grados as g', 'g.id', 'pros.grado_id')
+				->join('plantels as p', 'p.id', 'pros.plantel_id')
+				->where('g.seccion', $seccion->seccion)
+				->where('p.id', $seccion->plantel_id)
+				->whereDate('pros.created_at', '>=', $datos['fecha_f'])
+				->whereDate('pros.created_at', '<=', $datos['fecha_t'])
+				->where('prospecto_st_seg_id', 4)
+				->count();
+			$clientes = ProspectoSeguimiento::join('prospectos as pros', 'pros.id', 'prospecto_seguimientos.prospecto_id')
+				->join('grados as g', 'g.id', 'pros.grado_id')
+				->join('plantels as p', 'p.id', 'pros.plantel_id')
+				->where('g.seccion', $seccion->seccion)
+				->where('p.id', $seccion->plantel_id)
+				->whereDate('pros.created_at', '>=', $datos['fecha_f'])
+				->whereDate('pros.created_at', '<=', $datos['fecha_t'])
+				->whereNotNull('cliente_id')
+				->count();
+			$prospectos_descartado = ProspectoSeguimiento::join('prospectos as pros', 'pros.id', 'prospecto_seguimientos.prospecto_id')
+				->join('grados as g', 'g.id', 'pros.grado_id')
+				->join('plantels as p', 'p.id', 'pros.plantel_id')
+				->where('g.seccion', $seccion->seccion)
+				->where('p.id', $seccion->plantel_id)
+				->whereDate('pros.created_at', '>=', $datos['fecha_f'])
+				->whereDate('pros.created_at', '<=', $datos['fecha_t'])
+				->where('prospecto_st_seg_id', 1)
+				->count();
+
+			$linea = [
+				'seccion' => $seccion->seccion,
+				'plantel' => $seccion->razon,
+				'prospectos_creados' => $prospectos_creados,
+				'prospectos_seguimiento' => $prospectos_seguimiento,
+				'prospectos_promesa_pago' => $prospectos_promesa_pago,
+				'clientes' => $clientes,
+				'prospectos_descartado' => $prospectos_descartado,
+				'total' => $prospectos_creados + $prospectos_seguimiento + $prospectos_promesa_pago + $clientes + $prospectos_descartado
+			];
+
+			array_push($registros_seccion, $linea);
+			//Log::info($linea);
+		}
+		//dd($registros_seccion);
+
+		return view('leads.reportes.funnelVentaR', compact(
+			'registros_plantel',
+			'registros_plantel_empleado',
+			'registros_seccion',
+			'datos'
+		));
 	}
 }

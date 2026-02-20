@@ -5,14 +5,17 @@ namespace App\Http\Controllers;
 use DB;
 use Auth;
 
+use App\Lead;
 use Exception;
 use App\StTarea;
+use App\Empleado;
 use App\Prospecto;
 use App\Http\Requests;
 use App\ProspectoAviso;
 use App\ProspectoStSeg;
 use App\ProspectoTarea;
 use App\ProspectoAsunto;
+use App\ProspectoInforme;
 use App\ProspectoStTarea;
 use App\ProspectoEtiquetum;
 use App\ProspectoHactividad;
@@ -23,7 +26,6 @@ use App\ProspectoAsignacionTarea;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\createProspectoSeguimiento;
 use App\Http\Requests\updateProspectoSeguimiento;
-use App\ProspectoInforme;
 
 class ProspectoSeguimientosController extends Controller
 {
@@ -190,5 +192,118 @@ class ProspectoSeguimientosController extends Controller
 		$prospectoSeguimiento->delete();
 
 		return redirect()->route('prospectoSeguimientos.index')->with('message', 'Registro Borrado.');
+	}
+
+	public function kpiRendimiento()
+	{
+		$planteles = Empleado::where('user_id', '=', Auth::user()->id)->where('st_empleado_id', '<>', 3)->first()->plantels->pluck('razon', 'id');
+		return view('prospectoSeguimientos.reportes.kpiRendimiento', compact('planteles'));
+	}
+
+	public function kpiRendimientoR(Request $request)
+	{
+		$datos = $request->all();
+
+		$empleados = Empleado::select(
+			'empleados.id',
+			'empleados.user_id',
+			'empleados.nombre',
+			'empleados.ape_paterno',
+			'empleados.ape_materno',
+			'p.razon as plantel',
+			'p.id as plantel_id'
+		)
+			->join('plantels as p', 'p.id', 'empleados.plantel_id')
+			->where('p.id', '>', 0)
+			->where('empleados.st_prospecto_id', 2)
+			->whereIn('p.id', $datos['plantel_id'])
+			->orderBy('p.id')
+			->orderBy('empleados.id')
+			->get();
+		//dd($empleados->toArray());
+		$registros = array();
+
+		foreach ($empleados as $empleado) {
+			$leads = Lead::where('usu_alta_id', $empleado->user_id)
+				->whereDate('created_at', '>=', $datos['fecha_f'])
+				->whereDate('created_at', '<=', $datos['fecha_t'])
+				->with([
+					'stLead',
+					'plantel',
+					'prospecto',
+					'prospecto.usu_alta',
+					'prospecto.prospectoAsignacionTareas',
+					'prospecto.prospectoAsignacionTareas.usu_alta',
+					'prospecto.prospectoAsignacionTareas.prospectoTarea',
+				])
+				->orderBy('st_lead_id')
+				->get();
+			//dd('fil');
+			foreach ($leads as $lead) {
+				$prospecto = Prospecto::where('lead_id', $lead->id)->first();
+				if (!is_null($prospecto)) {
+					$tareas = ProspectoAsignacionTarea::where('prospecto_id', $prospecto->id)
+						->orderBy('prospecto_st_tarea_id')
+						->get();
+					if (count($tareas) > 0) {
+						foreach ($tareas as $tarea) {
+							array_push($registros, array(
+								"lead_id" => $lead->id,
+								'lead_created_at' => $lead->created_at,
+								"lead_st" => $lead->stLead->name,
+								'lead_plantel' => optional($lead->plantel)->razon,
+								'lead_creador' => $lead->usu_alta->name,
+								'prospecto_id' => $lead->prospecto->id,
+								'prospecto_creador' => $lead->prospecto->usu_alta->name,
+								'prospecto_created_at' => $lead->prospecto->created_at,
+								'tarea' => $tarea->prospectoTarea->name,
+								'tarea_fecha' => $tarea->created_at,
+								'tarea_estatus' => $tarea->prospectoStTarea->name,
+								'tarea_creador' => $tarea->usu_alta->name,
+								'cliente' => $prospecto->cliente_id
+							));
+						}
+					} else {
+						array_push($registros, array(
+							"lead_id" => $lead->id,
+							'lead_created_at' => $lead->created_at,
+							"lead_st" => $lead->stLead->name,
+							'lead_plantel' => optional($lead->plantel)->razon,
+							'lead_creador' => $lead->usu_alta->name,
+							'prospecto_id' => $lead->prospecto->id,
+							'prospecto_creador' => $lead->prospecto->usu_alta->name,
+							'prospecto_created_at' => $lead->prospecto->created_at,
+							'tarea' => '',
+							'tarea_fecha' => '',
+							'tarea_estatus' => '',
+							'tarea_creador' => '',
+							'cliente' => $prospecto->cliente_id
+						));
+					}
+				} else {
+					array_push($registros, array(
+						"lead_id" => $lead->id,
+						'lead_created_at' => $lead->created_at,
+						"lead_st" => $lead->stLead->name,
+						'lead_plantel' => optional($lead->plantel)->razon,
+						'lead_creador' => $lead->usu_alta->name,
+						'prospecto_id' => '',
+						'prospecto_creador' => '',
+						'prospecto_created_at' => '',
+						'tarea' => '',
+						'tarea_fecha' => '',
+						'tarea_estatus' => '',
+						'tarea_creador' => '',
+						'cliente' => ''
+					));
+				}
+			}
+		}
+		//dd($registros);
+
+		return view('prospectoSeguimientos.reportes.kpiRendimientoR', compact(
+			'registros',
+			'datos'
+		));
 	}
 }
