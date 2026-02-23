@@ -693,7 +693,8 @@ class HacademicasController extends Controller
                 'stc.name as estatus_cliente',
                 'stc.id as estatus_cliente_id',
                 'af.fecha as fecha_acta',
-                'af.consecutivo as consecutivo_acta'
+                'af.consecutivo as consecutivo_acta',
+                'c.tpo_examen_id'
             )
                 ->where('hacademicas.grupo_id', '=', $asignacionAcademica->grupo_id)
                 ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')

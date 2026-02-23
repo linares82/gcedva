@@ -103,7 +103,7 @@
                         <td>{{ $registro['prospecto_creador'] }}</td>
                         <td>{{ $registro['prospecto_created_at'] }}</td>
                         <td>{{ $registro['tarea'] }}</td>
-                        <td>{{ $registro['tarea_fecha'] }}</td>
+                        <td>{{ $registro['tarea_created_at'] }}</td>
                         <td>{{ $registro['tarea_estatus'] }}</td>
                         <td>{{ $registro['tarea_creador'] }}</td>
                         <td>{{ $registro['cliente'] }}</td>
@@ -124,54 +124,109 @@
             }
         }
 
+        datos=<?php echo json_encode($registros); ?>;
+        console.log(datos);
+        datos.unshift({
+                        lead_id: {
+                            type: "number"
+                        },
+                        lead_created_at: {
+                            type: "date"
+                        },
+                        lead_st: {
+                            type: "string"
+                        },
+                        lead_plantel: {
+                            type: "string"
+                        },
+                        lead_creador: {
+                            type: "string"
+                        },
+                        prospecto_id: {
+                            type: "number"
+                        },
+                        prospecto_creador: {
+                            type: "string"
+                        },
+                        prospecto_created_at: {
+                            type: "date"
+                        },
+                        tarea: {
+                            type: "string"
+                        },
+                        tarea_estatus: {
+                            type: "string"
+                        },
+                        tarea_creador: {
+                            type: "string"
+                        },
+                        tarea_created_at: {
+                            type: "date"
+                        },
+                        cliente: {
+                            type: "number"
+                        }
+                    });
+        console.log(datos);            
         var pivot = new WebDataRocks({
             container: "#dinamica",
             beforetoolbarcreated: customizeToolbar,
             toolbar: true,
             report: {
+                dataSourceType: "json",
                 dataSource: {
-                    data: <?php echo json_encode($registros); ?>,
+                    data: /*[{
+                        lead_id: {
+                            type: "number"
+                        },
+                        lead_created_at: {
+                            type: "date"
+                        },
+                        lead_st: {
+                            type: "string"
+                        },
+                        lead_plantel: {
+                            type: "string"
+                        },
+                        lead_creador: {
+                            type: "string"
+                        },
+                        prospecto_id: {
+                            type: "number"
+                        },
+                        prospecto_creador: {
+                            type: "string"
+                        },
+                        prospecto_created_at: {
+                            type: "date"
+                        },
+                        tarea: {
+                            type: "string"
+                        },
+                        tarea_fecha: {
+                            type: "date"
+                        },
+                        tarea_estatus: {
+                            type: "string"
+                        },
+                        tarea_creador: {
+                            type: "string"
+                        },
+                        tarea_created_at: {
+                            type: "date"
+                        },
+                        cliente: {
+                            type: "number"
+                        }
+                    },
+                    */
+                    datos
+                    
+                    
+                //]
                 },
                 "slice": {
-                    "rows": [{
-                            "uniqueName": "razon"
-                        },
-                        {
-                            "uniqueName": "concepto"
-                        },
-                        {
-                            "uniqueName": "pagado_bnd"
-                        }
-                    ],
-                    "columns": [{
-                            "uniqueName": "Measures"
-                        },
-                        {
-                            "uniqueName": "st_cliente"
-                        }
-                    ],
-                    "measures": [{
-                        "uniqueName": "st_cliente",
-                        "aggregation": "count",
-                        "availableAggregations": [
-                            "count",
-                            "distinctcount"
-                        ]
-                    }],
-                    "expands": {
-                        "rows": [{
-                                "tuple": [
-                                    "razon.ECATEPEC GASTRONOMIA BACHILLERATO Y TÃ‰CNICOS 75"
-                                ]
-                            },
-                            {
-                                "tuple": [
-                                    "razon.ECATEPEC GASTRONOMIA BACHILLERATO Y TÃ‰CNICOS 75",
-                                    "concepto.MENSUALIDAD NOVIEMBRE"
-                                ]
-                            }
-                        ]
-                    }
+                    
                 }
             },
             global: {

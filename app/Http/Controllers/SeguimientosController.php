@@ -6,6 +6,7 @@ use DB;
 use PDF;
 use Auth;
 use App\Caja;
+use App\Lead;
 use App\Aviso;
 use App\Tarea;
 use App\Adeudo;
@@ -27,13 +28,13 @@ use App\StSeguimiento;
 use App\SmsPredefinido;
 use App\AsignacionTarea;
 use App\CombinacionCliente;
+use App\ProspectoHEstatuse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Requests\createSeguimiento;
 use App\Http\Requests\updateSeguimiento;
 use App\Http\Requests\updateAsignacionTarea;
-use App\ProspectoHEstatuse;
 
 class SeguimientosController extends Controller
 {
@@ -1632,6 +1633,70 @@ class SeguimientosController extends Controller
         }
 
         $ds_actividades = $ds_actividades_aux->distinct()->get();
+
+        $ds_actividades_aux = DB::table('prospecto_hactividads as has')
+            ->select(
+                'p.razon as plantel',
+                'ua.name as usuario',
+                //DB::raw('concat(e.nombre," ",e.ape_paterno," ",e.ape_materno) as empleado'),
+                "c.id as cli",
+                DB::raw('concat(c.nombre," ",c.ape_paterno," ",c.ape_materno) as cliente'),
+                'has.tarea',
+                'has.fecha',
+                'has.detalle',
+                'has.asunto',
+                'm.name as medio',
+                'l.id as lead_id',
+                'stl.name as st_lead',
+                'l.created_at as lead_fecha',
+                'l.contador_llamadas'
+            )
+            ->join('prospectos as c', 'c.id', '=', 'has.prospecto_id')
+            ->leftJoin('leads as l', 'l.id', '=', 'c.lead_id')
+            ->leftJoin('st_leads as stl', 'stl.id', 'l.st_lead_id')
+            ->join('medios as m', 'm.id', '=', 'c.medio_id')
+            //->join('empleados as e', 'e.id', '=', 'c.empleado_id')
+            ->join('users as ua', 'ua.id', '=', 'has.usu_alta_id')
+            ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
+            //->where('has.asunto', '=', 'Cambio estatus ')
+            ->where('has.fecha', '>=', $input['fecha_f'])
+            ->where('has.fecha', '<=', $input['fecha_t']);
+        if (isset($input['plantel_f'])) {
+            $ds_actividades_aux->whereIn('c.plantel_id', $input['plantel_f']);
+        } else {
+            $ds_actividades_aux->wherein('c.plantel_id', $planteles);
+        }
+        if ($input['detalle_f'] <> "") {
+            $ds_actividades_aux->where('has.detalle', $input['detalle_f']);
+        }
+
+        $ds_leads = Lead::select(
+            'p.razon as plantel',
+            'ua.name as usuario',
+            //DB::raw('concat(e.nombre," ",e.ape_paterno," ",e.ape_materno) as empleado'),
+            DB::raw("0 as cli"),
+            DB::raw('0 as cliente'),
+            DB::raw('0 as tarea'),
+            DB::raw('0 as fecha'),
+            DB::raw('0 as detalle'),
+            DB::raw('0 as asunto'),
+            DB::raw('0 as medio'),
+            'leads.id as lead_id',
+            'stl.name as st_lead',
+            'leads.created_at as lead_fecha',
+            'leads.contador_llamadas'
+        )
+            ->join('users as ua', 'ua.id', '=', 'leads.usu_alta_id')
+            ->join('plantels as p', 'p.id', '=', 'leads.plantel_id')
+            ->join('st_leads as stl', 'stl.id', 'leads.st_lead_id')
+            ->where('leads.created_at', '>=', $input['fecha_f'])
+            ->where('leads.created_at', '<=', $input['fecha_t'])
+            ->where('st_lead_id', '<>', 2);
+        //->get();
+        //dd($ds_leads);
+
+        $ds_actividades_prospectos_leads = $ds_actividades_aux->distinct()->union($ds_leads)->get();
+
         //dd($ds_actividades->toJson());
 
         $hestatus = ProspectoHEstatuse::select(
@@ -1657,6 +1722,7 @@ class SeguimientosController extends Controller
 
         return view('seguimientos.reportes.analitica_actividadesPr')
             ->with('actividades', json_encode($ds_actividades))
+            ->with('actividades_prospectos_leads', json_encode($ds_actividades_prospectos_leads))
             ->with('cambios_estatus', json_encode($hestatus));
     }
 }

@@ -125,11 +125,11 @@
                                 }
                                 
                             @endphp
-                            @if($r->estatus_cliente_id==3 or 
+                            @if(($r->estatus_cliente_id==3 or 
                             $r->estatus_cliente_id==25 or 
                              $r->estatus_cliente_id==26 or
                              $r->estatus_cliente_id==27 or 
-                             $r->estatus_cliente_id==28)
+                             $r->estatus_cliente_id==28) and $r->tpo_examen_id==1)
                                 @if($param_bloqueoXdoc==1)
                                     @if($r->bnd_doc_oblig_entregados==1 or $validaEntregaDocs3Meses)
                                         @permission('hacademicas.calificacionBaja')
@@ -143,10 +143,17 @@
                                         @endpermission
                                     @endif
                                 @endif
-                             @elseif($r->estatus_cliente_id==1 or $r->estatus_cliente_id==22)
+                             @elseif($r->estatus_cliente_id==1 or $r->estatus_cliente_id==22 or $r->tpo_examen_id==2)
+                                @if($r->tpo_examen_id==2)
+                                    @permission('hacademicas.calificacionExamenExtra')
+                                    {!! Form::number("calificacion", null, array("class" => "form-control input-sm col-md-6", 
+                                    "id" => "calificacion_parcial".$r->id.$r->calificacion_ponderacion_id, 'min' => 0, 'max' =>10)) !!}
+                                    @endpermission
+                                @else
+                                    {!! Form::number("calificacion", null, array("class" => "form-control input-sm col-md-6", 
+                                    "id" => "calificacion_parcial".$r->id.$r->calificacion_ponderacion_id, 'min' => 0, 'max' =>10)) !!}
+                                @endif
                                 
-                                {!! Form::number("calificacion", null, array("class" => "form-control input-sm col-md-6", 
-                                                                        "id" => "calificacion_parcial".$r->id.$r->calificacion_ponderacion_id, 'min' => 0, 'max' =>10)) !!}
                                 
                             @else
                                 @if($param_bloqueoXdoc==1)
@@ -162,11 +169,12 @@
                              
                          </td>
                          <td>
-                            @if($r->estatus_cliente_id==3 or 
+                            @if(($r->estatus_cliente_id==3 or 
                                 $r->estatus_cliente_id==25 or 
                                  $r->estatus_cliente_id==26 or
                                  $r->estatus_cliente_id==27 or 
-                                 $r->estatus_cliente_id==28)
+                                 $r->estatus_cliente_id==28) and 
+                                 $r->tpo_examen_id==1)
                                 @if($param_bloqueoXdoc==1)
                                     @if($r->bnd_doc_oblig_entregados==1 or $validaEntregaDocs3Meses)
                                         @permission('hacademicas.calificacionBaja')
@@ -190,35 +198,42 @@
                                 <a href="{{ url('hCalificacions/index') }}?q%5Bs%5D=&q%5Bclientes.nombre_cont%5D=&q%5Bcalificacions.calificacion_cont%5D=&q%5Bh_calificacions.calificacion_ponderacion_id_cont%5D={{ $r->calificacion_ponderacion_id }}&q%5Bcarga_ponderacions.name_cont%5D=&q%5Bcalificacion_parcial_anterior_cont%5D=&q%5Bcalificacion_parcial_actual_cont%5D=&q%5Busu_alta_id_cont%5D=&q%5Busu_mod_id_cont%5D=&commit=Buscar" class="btn btn-success btn-xs" target="_blank">Historia</a>
                                 @endpermission
                                 
-                                
-
-                                
-                             @elseif($r->estatus_cliente_id==1 or $r->estatus_cliente_id==22)
-                                
-                                <button type="button"  
+                             @elseif($r->estatus_cliente_id==1 or $r->estatus_cliente_id==22 or $r->tpo_examen_id==2)
+                                @if($r->tpo_examen_id==2)
+                                    @permission('hacademicas.calificacionExamenExtra')
+                                    <button type="button"  
                                     class="btn btn-primary btn-xs btn-guardar_caificacion" 
                                     data-calificacion_ponderacion_id="{{ $r->calificacion_ponderacion_id }}"
                                     data-cliente_id="{{$r->id}}"
-                                >Actualizar</button>
+                                    >Actualizar</button>
+                                    @endpermission
+                                @else
+                                    <button type="button"  
+                                    class="btn btn-primary btn-xs btn-guardar_caificacion" 
+                                    data-calificacion_ponderacion_id="{{ $r->calificacion_ponderacion_id }}"
+                                    data-cliente_id="{{$r->id}}"
+                                    >Actualizar</button>
+                                @endif
+                                
                                 
                                 @permission('hCalificacions.index')
                                 <a href="{{ url('hCalificacions/index') }}?q%5Bs%5D=&q%5Bclientes.nombre_cont%5D=&q%5Bcalificacions.calificacion_cont%5D=&q%5Bh_calificacions.calificacion_ponderacion_id_cont%5D={{ $r->calificacion_ponderacion_id }}&q%5Bcarga_ponderacions.name_cont%5D=&q%5Bcalificacion_parcial_anterior_cont%5D=&q%5Bcalificacion_parcial_actual_cont%5D=&q%5Busu_alta_id_cont%5D=&q%5Busu_mod_id_cont%5D=&commit=Buscar" class="btn btn-success btn-xs" target="_blank">Historia</a>
                                 @endpermission
                              @else
                                 @if($param_bloqueoXdoc==1)
-                                @if($r->bnd_doc_oblig_entregados==1 or $validaEntregaDocs3Meses)
-                                <button type="button"  
-                                     class="btn btn-primary btn-xs btn-guardar_caificacion" 
-                                     data-calificacion_ponderacion_id="{{ $r->calificacion_ponderacion_id }}"
-                                     data-cliente_id="{{$r->id}}"
-                                 >Actualizar</button>
-                                 @endif
+                                    @if($r->bnd_doc_oblig_entregados==1 or $validaEntregaDocs3Meses)
+                                    <button type="button"  
+                                        class="btn btn-primary btn-xs btn-guardar_caificacion" 
+                                        data-calificacion_ponderacion_id="{{ $r->calificacion_ponderacion_id }}"
+                                        data-cliente_id="{{$r->id}}"
+                                    >Actualizar</button>
+                                    @endif
                                  @else
-                                 <button type="button"  
-                                 class="btn btn-primary btn-xs btn-guardar_caificacion" 
-                                 data-calificacion_ponderacion_id="{{ $r->calificacion_ponderacion_id }}"
-                                 data-cliente_id="{{$r->id}}"
-                                >Actualizar</button>
+                                    <button type="button"  
+                                    class="btn btn-primary btn-xs btn-guardar_caificacion" 
+                                    data-calificacion_ponderacion_id="{{ $r->calificacion_ponderacion_id }}"
+                                    data-cliente_id="{{$r->id}}"
+                                    >Actualizar</button>
                                  @endif
                                  @permission('hCalificacions.index')
                                  <a href="{{ url('hCalificacions/index') }}?q%5Bs%5D=&q%5Bclientes.nombre_cont%5D=&q%5Bcalificacions.calificacion_cont%5D=&q%5Bh_calificacions.calificacion_ponderacion_id_cont%5D={{ $r->calificacion_ponderacion_id }}&q%5Bcarga_ponderacions.name_cont%5D=&q%5Bcalificacion_parcial_anterior_cont%5D=&q%5Bcalificacion_parcial_actual_cont%5D=&q%5Busu_alta_id_cont%5D=&q%5Busu_mod_id_cont%5D=&commit=Buscar" class="btn btn-success btn-xs" target="_blank">Historia</a>

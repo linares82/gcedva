@@ -249,41 +249,41 @@ class ProspectoSeguimientosController extends Controller
 						foreach ($tareas as $tarea) {
 							array_push($registros, array(
 								"lead_id" => $lead->id,
-								'lead_created_at' => $lead->created_at,
+								'lead_created_at' => $lead->created_at->toDateString(),
 								"lead_st" => $lead->stLead->name,
 								'lead_plantel' => optional($lead->plantel)->razon,
 								'lead_creador' => $lead->usu_alta->name,
 								'prospecto_id' => $lead->prospecto->id,
 								'prospecto_creador' => $lead->prospecto->usu_alta->name,
-								'prospecto_created_at' => $lead->prospecto->created_at,
+								'prospecto_created_at' => $lead->prospecto->created_at->toDateString(),
 								'tarea' => $tarea->prospectoTarea->name,
-								'tarea_fecha' => $tarea->created_at,
 								'tarea_estatus' => $tarea->prospectoStTarea->name,
 								'tarea_creador' => $tarea->usu_alta->name,
+								'tarea_created_at' => $tarea->created_at->toDateString(),
 								'cliente' => $prospecto->cliente_id
 							));
 						}
 					} else {
 						array_push($registros, array(
 							"lead_id" => $lead->id,
-							'lead_created_at' => $lead->created_at,
+							'lead_created_at' => $lead->created_at->toDateString(),
 							"lead_st" => $lead->stLead->name,
 							'lead_plantel' => optional($lead->plantel)->razon,
 							'lead_creador' => $lead->usu_alta->name,
 							'prospecto_id' => $lead->prospecto->id,
 							'prospecto_creador' => $lead->prospecto->usu_alta->name,
-							'prospecto_created_at' => $lead->prospecto->created_at,
+							'prospecto_created_at' => $lead->prospecto->created_at->toDateString(),
 							'tarea' => '',
-							'tarea_fecha' => '',
 							'tarea_estatus' => '',
 							'tarea_creador' => '',
+							'tarea_created_at' => '',
 							'cliente' => $prospecto->cliente_id
 						));
 					}
 				} else {
 					array_push($registros, array(
 						"lead_id" => $lead->id,
-						'lead_created_at' => $lead->created_at,
+						'lead_created_at' => $lead->created_at->toDateString(),
 						"lead_st" => $lead->stLead->name,
 						'lead_plantel' => optional($lead->plantel)->razon,
 						'lead_creador' => $lead->usu_alta->name,
@@ -291,15 +291,15 @@ class ProspectoSeguimientosController extends Controller
 						'prospecto_creador' => '',
 						'prospecto_created_at' => '',
 						'tarea' => '',
-						'tarea_fecha' => '',
 						'tarea_estatus' => '',
 						'tarea_creador' => '',
+						'tarea_created_at' => '',
 						'cliente' => ''
 					));
 				}
 			}
 		}
-		//dd($registros);
+		//dd(json_encode($registros));
 
 		return view('prospectoSeguimientos.reportes.kpiRendimientoR', compact(
 			'registros',

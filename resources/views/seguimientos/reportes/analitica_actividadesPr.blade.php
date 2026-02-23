@@ -55,11 +55,42 @@
         });
       };
 
-      /*$("#output").pivot(inputFunction, {
-          rows: ["Plantel","Empleado"], 
-          cols: ['Especialidad','Meta', 'Nivel', 'Grado'],
-      });*/
       $("#output").pivotUI(inputFunction, {
+        renderers: renderers,
+        rows: ["Plantel", "Usuario"],
+        cols: ['Fecha'],
+      }, false, "es");
+
+    });
+
+    $(function() {
+      var renderers = $.extend($.pivotUtilities.renderers,
+        $.pivotUtilities.gchart_renderers);
+
+      var rawData = <?php
+                    echo $actividades_prospectos_leads;
+                    ?>;
+      var inputFunction = function(callback) {
+        rawData.forEach(function(element, index) {
+          callback({
+            Plantel: element.plantel,
+            Usuario: element.usuario,
+            IdCliente: element.cli,
+            Cliente: element.cliente,
+            Actividad: element.tarea,
+            Fecha: element.fecha,
+            Estatus: element.detalle,
+            Medio: element.medio,
+            Asunto: element.asunto,
+            Lead:element.lead_id,
+            Lead_Creado:element.lead_fecha,
+            Lead_Estatus:element.st_lead,
+            Lead_Contador_Llamadas:element.contador_llamadas
+          });
+        });
+      };
+
+      $("#output_prospectos_leads").pivotUI(inputFunction, {
         renderers: renderers,
         rows: ["Plantel", "Usuario"],
         cols: ['Fecha'],
@@ -69,6 +100,7 @@
   </script>
 
   <div id="output" style="margin: 30px;"></div>
+  <div id="output_prospectos_leads" style="margin: 30px;"></div>
 
   <!--webdatarocks-->
 
