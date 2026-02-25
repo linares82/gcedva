@@ -689,6 +689,7 @@
             <td>
                 @php  
                   $descuento_promocion=0;
+                  
                   if($registro['adeudo_id']>0 and $registro['consecutivo']>0){
                     $adeudo=\App\Adeudo::find($registro['adeudo_id']);
                     $adeudo->load(['planPagoLn','planPagoLn.promoPlanLns']);
@@ -730,8 +731,14 @@
                 
                 if(count($becas)>0){
                   foreach($becas as $beca){
-                    $inicio= new Datetime($beca->lectivo->inicio);
-                    $fin= new Datetime($beca->lectivo->fin);
+                    if(is_null($beca->lectivo_id)){
+                      $inicio= new Datetime($beca->inicio_vigencia);
+                      $fin= new Datetime($beca->vigencia);
+                    }else{
+                      $inicio= new Datetime($beca->lectivo->inicio);
+                      $fin= new Datetime($beca->lectivo->fin);
+                    }
+                    
 
                     if($inicio<$fecha_caja_hoy and 
                        $fin>$fecha_caja_hoy and 

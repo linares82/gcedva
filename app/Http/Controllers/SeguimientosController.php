@@ -1692,6 +1692,14 @@ class SeguimientosController extends Controller
             ->where('leads.created_at', '>=', $input['fecha_f'])
             ->where('leads.created_at', '<=', $input['fecha_t'])
             ->where('st_lead_id', '<>', 2);
+        if (isset($input['plantel_f'])) {
+            $ds_leads->whereIn('leads.plantel_id', $input['plantel_f']);
+        } else {
+            $ds_leads->wherein('leads.plantel_id', $planteles);
+        }
+        if ($input['detalle_f'] <> "") {
+            $ds_leads->where('has.detalle', $input['detalle_f']);
+        }
         //->get();
         //dd($ds_leads);
 

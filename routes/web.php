@@ -1261,6 +1261,13 @@ Route::post(
         'uses' => 'ClientesController@cargarImg'
     )
 )->middleware('auth');
+Route::post(
+    '/clientes/cargarImgSpace',
+    array(
+        'as' => 'clientes.cargarImgSpace',
+        'uses' => 'ClientesController@cargarImgSpace'
+    )
+)->middleware('auth');
 Route::get(
     '/clientes/show/{id}',
     array(

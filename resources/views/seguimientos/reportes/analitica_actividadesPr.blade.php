@@ -92,7 +92,7 @@
 
       $("#output_prospectos_leads").pivotUI(inputFunction, {
         renderers: renderers,
-        rows: ["Plantel", "Usuario"],
+        rows: ["Plantel", "Usuario","Lead","Lead_Estatus","Lead_Contador_Llamadas","Lead_Creado","IdCliente","Actividad"],
         cols: ['Fecha'],
       }, false, "es");
 

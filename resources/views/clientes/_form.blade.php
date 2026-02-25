@@ -124,7 +124,6 @@
                             @endif
                         </div>
                         
-                        
                         <div class="form-group col-md-4 @if($errors->has('plantel_id')) has-error @endif">
                             <label for="plantel_id-field">Plantel</label>
                             {!! Form::select("plantel_id", $plantels, null, array("class" => "form-control select_seguridad", "id" => "plantel_id-field")) !!}
@@ -520,7 +519,7 @@
                                             @endpermission
 
                                             @permission('inscripcions.create') 
-                                                
+                                                @if(count($cliente->inscripciones)==0)
                                                 
                                                 <!--@@if($cliente->seguimiento->st_seguimiento_id==2 and $cliente->st_cliente_id==22)-->
                                                 <button class="inscribir-create btn btn-primary btn-xs" data-cliente_id="{{$c->cliente_id}}"
@@ -534,6 +533,7 @@
                                                                                                    data-st_cliente="{{$cliente->st_cliente_id}}">
                                                 <span class="glyphicon glyphicon-star"></span> Inscribir </button>
                                                 <!--@@endif-->
+                                                @endif
                                             @endpermission
                                             
                                         </td>
@@ -1514,80 +1514,9 @@
                         </div>
                     </div>-->
                     <div class="form-group col-md-8">
-                        <table class="table table-condensed table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Subido por</th><th>Documentos</th><th>Recibido</th><th>Obligatorio</th><th>Link</th><th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($cliente->pivotDocCliente as $doc)
-                                <tr>
-                                    <td>{{ $doc->usu_alta->name }}</td>
-                                    <td>
-                                        {{$doc->docAlumno->name}}
-                                    </td>
-                                    <td>
-                                        @if($doc->doc_entregado==1)
-                                        SI
-                                        @else
-                                        @if($cliente->bnd_doc_oblig_entregados<>1 or Auth::user()->can('clientes.edit_bnd_doc_oblig_entregados')) 
-                                        <div id='doc_recibido'>
-                                            <a class="btn btn-warning btn-xs btn_recibir_doc" 
-                                                data-documento='{{ $doc->id }}'> Recibir
-                                            </a>
-                                            <div id="spinner_doc_recibido" style="display:none;">
-                                                ...guardando
-                                            </div>
-                                        </div>
-                                        @endif
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @if($doc->docAlumno->doc_obligatorio==1)
-                                        SI
-                                        @else
-                                        NO
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @if(!is_null($doc->archivo))
-                                        @php
-                                            $cadena_img = explode('/', $doc->archivo);
-                                        @endphp
-                                        <a href="{{asset("imagenes/clientes/".$cliente->id."/".end($cadena_img))}}" target="_blank">Ver</a>
-                                        @else
-                                            @if($cliente->bnd_doc_oblig_entregados<>1 or Auth::user()->can('clientes.edit_bnd_doc_oblig_entregados')) 
-                                            <div id="div_archivo{{ $doc->id }}">
-                                            <div class="btn btn-xs btn-file">
-                                                <i class="fa fa-paperclip"></i> Adjuntar
-                                                <input type="file"  id="file{{ $doc->id }}" name="file" class="cliente_archivo" >
-                                                <input type="hidden" name="_token" id="_token"  value="<?= csrf_token(); ?>"> 
-                                                <input type="hidden"  id="file_hidden" name="file_hidden" >
-                                            </div>
-                                            <button class="btn btn-success btn-xs btn_archivo" id="btn_archivo{{ $doc->id }}"
-                                                data-doc_id="{{ $doc->doc_alumno_id }}"
-                                                data-documento='{{ $doc->id }}'> 
-                                                <span class="glyphicon glyphicon-ok">Max. 200KB</span> 
-                                            </button>
-                                            <br/>
-                                            <div id="texto_notificacion{{ $doc->id }}">
-                    
-                                            </div>
-                                            </div>
-                                            @endif
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @if(!is_null($doc->archivo) and ($cliente->bnd_doc_oblig_entregados<>1 or Auth::user()->can('clientes.edit_bnd_doc_oblig_entregados'))) 
-                                        <a class="btn btn-xs btn-danger" href="{{route('pivotDocClientes.destroy', $doc->id)}}">Eliminar</a>
-                                        @endif
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                    @include('clientes._tabla_documentos')
                     </div>
+                    
                     <div class="form-group col-md-4">
                         <table class="table table-condensed table-striped">
                             <thead>
@@ -1885,7 +1814,63 @@ $(document).on("click", ".btn_archivo", function (e) {
 
         }
     });
-})    
+})
+
+$(document).on("click", ".btn_archivo_space", function (e) {
+    e.preventDefault();
+    
+    var miurl = "{{route('clientes.cargarImgSpace')}}";
+    // var fileup=$("#file").val();
+    var divresul = "texto_notificacion"+$(this).data('documento');
+
+    var data = new FormData();
+    data.append('file', $('#file_space'+$(this).data('documento'))[0].files[0]);
+    data.append('doc_cliente_id', $(this).data('doc_id'));
+    data.append('documento', $(this).data('documento'));
+    
+    documento=$(this).data('documento');
+    
+    @if(isset($cliente))
+	data.append('cliente', {{$cliente->id}});
+    @endif
+
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('#_token').val()
+        }
+    });
+    $.ajax({
+        url: miurl,
+        type: 'POST',
+        // Form data
+        //datos del formulario
+        data: data,
+        //dataType: "json",
+        //necesario para subir archivos via ajax
+        cache: false,
+        contentType: false,
+        processData: false,
+        //mientras enviamos el archivo
+        beforeSend: function () {
+            $("#" + divresul + "").html('guardando...');
+        },
+        complete: function () {
+            $("#" + divresul + "").html('ok');
+        },
+        //una vez finalizado correctamente
+        success: function (data) {
+            if (confirm('Â¿Deseas Actualizar la PÃ¡gina?')){
+                location.reload();
+            }
+            $(this).text('OK');
+        },
+        //si ha ocurrido un error
+        error: function (data) {
+
+        }
+    });
+})
+
 $(document).ready(function() {
     
     deshabilitarNombre();

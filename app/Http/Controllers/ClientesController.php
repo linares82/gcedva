@@ -68,6 +68,7 @@ use App\ConsecutivoMatricula;
 use App\ConsultaCalificacion;
 use App\ImpresionComprobanteE;
 use App\SepTEstudioAntecedente;
+use App\Services\UploadService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\createCliente;
 use App\Http\Requests\updateCliente;
@@ -2003,6 +2004,34 @@ class ClientesController extends Controller
             }
         }
         //echo json_encode(0);
+    }
+
+    public function cargarImgSpace(Request $request)
+    {
+
+        $r = $request->hasFile('file');
+        $datos = $request->all();
+
+        $documento = PivotDocCliente::find($datos['documento']);
+        //dd($documento);
+        //Se borra el anterior archivo si existe
+        //dd(!is_null($documento->archivo));
+        if (!is_null($documento->archivo)) {
+            UploadService::delete($datos['cliente'] . "/" . $documento->archivo, "do_doc_alumnos");
+        }
+
+        //Secuarda el nuevo archivo
+        $image = UploadService::upload(data_get($datos, 'file'), $datos['cliente'] . "/", 'do_doc_alumnos');
+
+        //Se actuaizan datos
+        $documento->cliente_id = $datos['cliente'];
+        $documento->doc_alumno_id = $datos['doc_cliente_id'];
+        $documento->archivo = $image;
+        //$documento->usu_alta_id = Auth::user()->id;
+        $documento->usu_mod_id = 1;
+        $documento->save();
+
+        return $documento;
     }
 
     public function docObligatoriosEntregados($cliente_id)
