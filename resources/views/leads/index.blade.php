@@ -47,6 +47,10 @@
                     <form class="Lead_search" id="search" action="{{ route('leads.index') }}" accept-charset="UTF-8" method="get">
                         <input type="hidden" name="q[s]" value="{{ @(Request::input('q')['s']) ?: '' }}" />
                         <div class="">
+                            <div class="form-group col-md-4">
+                                <label for="q_leads.id_cont">ID</label>
+                                    <input class="form-control input-sm", type="search" value="{{ @(Request::input('q')['leads.id_lt']) ?: '' }}" name="q[leads.id_lt]" id="q_leads.id_lt" />
+                            </div>
                             <div class="form-group col-md-4" >
                                 <label for="q_leads.plantel_id_lt">PLANTEL</label>
                                 
@@ -288,7 +292,7 @@
                     </td>
                     <td>
                         @if(isset($lead->prospecto->id) and is_null($lead->prospecto->deleted_at))
-                        <a target="_blank" href="{{ route('prospectos.show', optional($lead->prospecto)->id) }}">
+                        <a target="_blank" href="{{ route('prospectos.edit', optional($lead->prospecto)->id) }}">
                             {{ optional($lead->prospecto)->id }}
                         </a>  
                         @endif

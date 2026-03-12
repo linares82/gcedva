@@ -1,3 +1,4 @@
+@permission('clientes.save_documentos_server')
 <div class="form-group col-md-12">
     <div class="box box-danger">
         <label>Documentos Servidor</label>
@@ -9,6 +10,7 @@
             </thead>
             <tbody>
                 @foreach($cliente->pivotDocCliente as $doc)
+                @if($doc->docAlumno->bnd_portal_alumnos<>1)
                 <tr>
                     <td>{{ $doc->usu_alta->name }}</td>
                     <td>
@@ -39,10 +41,12 @@
                     </td>
                     <td>
                         @if(!is_null($doc->archivo))
-                        @php
-                            $cadena_img = explode('/', $doc->archivo);
-                            $inicio_url=substr($doc->archivo, 0,4);
-                        @endphp
+                            @php
+                                
+                                $cadena_img = explode('/', $doc->archivo);
+                                $inicio_url=substr($doc->archivo, 0,4);
+
+                            @endphp
                             @if($inicio_url=="http")
                                 <a href="{{asset("imagenes/clientes/".$cliente->id."/".end($cadena_img))}}" target="_blank">Ver</a>    
                             @endif
@@ -70,19 +74,22 @@
                         @endif
                     </td>
                     <td>
-                        @if($inicio_url=="http")
+                        @if(isset($inicio_url) and $inicio_url=="http" )
                             @if(!is_null($doc->archivo) and ($cliente->bnd_doc_oblig_entregados<>1 or Auth::user()->can('clientes.edit_bnd_doc_oblig_entregados'))) 
                             <a class="btn btn-xs btn-danger" href="{{route('pivotDocClientes.destroy', $doc->id)}}">Eliminar</a>
                             @endif
                         @endif
                     </td>
                 </tr>
+                @endif
                 @endforeach
             </tbody>
         </table>
     </div>
 </div>
+@endif
 
+@permission('clientes.save_documentos_space')
 <div class="form-group col-md-12">
     <div class="box box-success">
         <label>Documentos Portal Space</label>
@@ -94,6 +101,7 @@
             </thead>
             <tbody>
                 @foreach($cliente->pivotDocCliente as $doc)
+                @if($doc->docAlumno->bnd_portal_alumnos==1)
                 <tr>
                     <td>{{ $doc->usu_alta->name }}</td>
                     <td>
@@ -125,6 +133,7 @@
                     <td>
                         @if(!is_null($doc->archivo))
                         @php
+                            
                             $cadena_img = explode('/', $doc->archivo);
                             $inicio_url=substr($doc->archivo, 0,4);
                         @endphp
@@ -134,12 +143,41 @@
                         @else
                             @if($cliente->bnd_doc_oblig_entregados<>1 or Auth::user()->can('clientes.edit_bnd_doc_oblig_entregados')) 
                             <div id="div_archivo_space{{ $doc->id }}">
+                                <!--
                                 <div class="btn btn-xs btn-file">
                                     <i class="fa fa-paperclip"></i> Seleccionar Archivo
                                     <input type="file"  id="file_space{{ $doc->id }}" name="file" accept=".pdf" class="cliente_archivo" >
                                     <input type="hidden" name="_token" id="_token"  value="<?= csrf_token(); ?>"> 
                                     <input type="hidden"  id="file_hidden" name="file_hidden" >
                                 </div>
+                            -->
+                                @if($doc->docAlumno->bnd_pdf==1)
+                                    <div class="btn btn-xs btn-file">
+                                        <i class="fa fa-paperclip"></i> Seleccionar Archivo PDF
+                                        <input type="file"  id="file_space{{ $doc->id }}"
+                                        accept=".pdf"
+                                        name="file" class="cliente_archivo" >
+                                        <input type="hidden" name="_token" id="_token"  value="<?= csrf_token(); ?>">
+                                        <input type="hidden"  id="file_hidden" name="file_hidden" >
+                                    </div>
+                                @elseif($doc->docAlumno->bnd_imagen==1)
+                                    <div class="btn btn-xs btn-file">
+                                        <i class="fa fa-paperclip"></i> Seleccionar Archivo Imagen
+                                        <input type="file"  id="file_space{{ $doc->id }}"
+                                        accept="image/jpg, image/jpeg"
+                                        name="file" class="cliente_archivo" >
+                                        <input type="hidden" name="_token" id="_token"  value="<?= csrf_token(); ?>">
+                                        <input type="hidden"  id="file_hidden" name="file_hidden" >
+                                    </div>
+                                @else
+                                    <div class="btn btn-xs btn-file">
+                                        <i class="fa fa-paperclip"></i> Seleccionar Archivo
+                                        <input type="file"  id="file_space{{ $doc->id }}"
+                                        name="file" class="cliente_archivo" >
+                                        <input type="hidden" name="_token" id="_token"  value="<?= csrf_token(); ?>">
+                                        <input type="hidden"  id="file_hidden" name="file_hidden" >
+                                    </div>
+                                @endif
 
                                 <button class="btn btn-success btn-xs btn_archivo_space" id="btn_archivo{{ $doc->id }}"
                                     data-doc_id="{{ $doc->doc_alumno_id }}"
@@ -155,15 +193,17 @@
                         @endif
                     </td>
                     <td>
-                        @if($inicio_url<>"http")
+                        @if(isset($inicio_url) and $inicio_url<>"http")
                             @if(!is_null($doc->archivo) and ($cliente->bnd_doc_oblig_entregados<>1 or Auth::user()->can('clientes.edit_bnd_doc_oblig_entregados'))) 
                             <a class="btn btn-xs btn-danger" href="{{route('pivotDocClientes.destroy', $doc->id)}}">Eliminar</a>
                             @endif
                         @endif
                     </td>
                 </tr>
+                @endif
                 @endforeach
             </tbody>
         </table>
     </div>
 </div>
+@endif

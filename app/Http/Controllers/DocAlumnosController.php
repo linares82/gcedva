@@ -1,4 +1,6 @@
-<?php namespace App\Http\Controllers;
+<?php
+
+namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -9,7 +11,8 @@ use Auth;
 use App\Http\Requests\updateDocAlumno;
 use App\Http\Requests\createDocAlumno;
 
-class DocAlumnosController extends Controller {
+class DocAlumnosController extends Controller
+{
 
 	/**
 	 * Display a listing of the resource.
@@ -31,7 +34,7 @@ class DocAlumnosController extends Controller {
 	public function create()
 	{
 		return view('docAlumnos.create')
-			->with( 'list', DocAlumno::getListFromAllRelationApps() );
+			->with('list', DocAlumno::getListFromAllRelationApps());
 	}
 
 	/**
@@ -44,15 +47,31 @@ class DocAlumnosController extends Controller {
 	{
 
 		$input = $request->all();
-		$input['usu_alta_id']=Auth::user()->id;
-		$input['usu_mod_id']=Auth::user()->id;
-		if(!isset($input['doc_obligatorio'])){
-			$input['doc_obligatorio']=0;
-		}else{
-			$input['doc_obligatorio']=1;
+		$input['usu_alta_id'] = Auth::user()->id;
+		$input['usu_mod_id'] = Auth::user()->id;
+		if (!isset($input['doc_obligatorio'])) {
+			$input['doc_obligatorio'] = 0;
+		} else {
+			$input['doc_obligatorio'] = 1;
 		}
+		if (!isset($input['bnd_portal_alumnos'])) {
+			$input['bnd_portal_alumnos'] = 0;
+		} else {
+			$input['bnd_portal_alumnos'] = 1;
+		}
+		if (!isset($input['bnd_pdf'])) {
+			$input['bnd_pdf'] = 0;
+		} else {
+			$input['bnd_pdf'] = 1;
+		}
+		if (!isset($input['bnd_imagen'])) {
+			$input['bnd_imagen'] = 0;
+		} else {
+			$input['bnd_imagen'] = 1;
+		}
+
 		//create data
-		DocAlumno::create( $input );
+		DocAlumno::create($input);
 
 		return redirect()->route('docAlumnos.index')->with('message', 'Registro Creado.');
 	}
@@ -65,7 +84,7 @@ class DocAlumnosController extends Controller {
 	 */
 	public function show($id, DocAlumno $docAlumno)
 	{
-		$docAlumno=$docAlumno->find($id);
+		$docAlumno = $docAlumno->find($id);
 		return view('docAlumnos.show', compact('docAlumno'));
 	}
 
@@ -77,9 +96,9 @@ class DocAlumnosController extends Controller {
 	 */
 	public function edit($id, DocAlumno $docAlumno)
 	{
-		$docAlumno=$docAlumno->find($id);
+		$docAlumno = $docAlumno->find($id);
 		return view('docAlumnos.edit', compact('docAlumno'))
-			->with( 'list', DocAlumno::getListFromAllRelationApps() );
+			->with('list', DocAlumno::getListFromAllRelationApps());
 	}
 
 	/**
@@ -90,9 +109,9 @@ class DocAlumnosController extends Controller {
 	 */
 	public function duplicate($id, DocAlumno $docAlumno)
 	{
-		$docAlumno=$docAlumno->find($id);
+		$docAlumno = $docAlumno->find($id);
 		return view('docAlumnos.duplicate', compact('docAlumno'))
-			->with( 'list', DocAlumno::getListFromAllRelationApps() );
+			->with('list', DocAlumno::getListFromAllRelationApps());
 	}
 
 	/**
@@ -105,15 +124,31 @@ class DocAlumnosController extends Controller {
 	public function update($id, DocAlumno $docAlumno, updateDocAlumno $request)
 	{
 		$input = $request->all();
-		$input['usu_mod_id']=Auth::user()->id;
-		if(!isset($input['doc_obligatorio'])){
-			$input['doc_obligatorio']=0;
-		}else{
-			$input['doc_obligatorio']=1;
+		$input['usu_mod_id'] = Auth::user()->id;
+		if (!isset($input['doc_obligatorio'])) {
+			$input['doc_obligatorio'] = 0;
+		} else {
+			$input['doc_obligatorio'] = 1;
 		}
+		if (!isset($input['bnd_portal_alumnos'])) {
+			$input['bnd_portal_alumnos'] = 0;
+		} else {
+			$input['bnd_portal_alumnos'] = 1;
+		}
+		if (!isset($input['bnd_pdf'])) {
+			$input['bnd_pdf'] = 0;
+		} else {
+			$input['bnd_pdf'] = 1;
+		}
+		if (!isset($input['bnd_imagen'])) {
+			$input['bnd_imagen'] = 0;
+		} else {
+			$input['bnd_imagen'] = 1;
+		}
+
 		//update data
-		$docAlumno=$docAlumno->find($id);
-		$docAlumno->update( $input );
+		$docAlumno = $docAlumno->find($id);
+		$docAlumno->update($input);
 
 		return redirect()->route('docAlumnos.index')->with('message', 'Registro Actualizado.');
 	}
@@ -124,12 +159,11 @@ class DocAlumnosController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id,DocAlumno $docAlumno)
+	public function destroy($id, DocAlumno $docAlumno)
 	{
-		$docAlumno=$docAlumno->find($id);
+		$docAlumno = $docAlumno->find($id);
 		$docAlumno->delete();
 
 		return redirect()->route('docAlumnos.index')->with('message', 'Registro Borrado.');
 	}
-
 }

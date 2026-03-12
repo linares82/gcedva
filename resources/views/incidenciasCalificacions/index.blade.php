@@ -25,10 +25,7 @@
 
     <div class="">
         <h3>
-            <i class="glyphicon glyphicon-align-justify"></i> @yield('incidenciasCalificacionsAppTitle')
-            @permission('incidenciasCalificacions.create')
-            <a class="btn btn-success pull-right" href="{{ route('incidenciasCalificacions.create') }}"><i class="glyphicon glyphicon-plus"></i> Crear</a>
-            @endpermission
+            <i class="glyphicon glyphicon-align-justify"></i> @yield('incidenciasCalificacionsAppTitle') 
         </h3>
 
     </div>
@@ -137,13 +134,18 @@
                                 </td>
                                 <td>{{$incidenciasCalificacion->respuesta}}</td>
                                 <td class="text-right">
+				    @if($incidenciasCalificacion->imagen)
+				    <a target="_blank" href="{{ asset('storage/incidencias_calificacions/' . $incidenciasCalificacion->imagen) }}">
+                                        Ver Evidencia
+                                    </a>
+				    @endif
                                     @permission('incidenciasCalificacions.edit')
                                     @if($incidenciasCalificacion->bnd_autorizada==0 && $incidenciasCalificacion->bnd_rechazada==0)
                                     <a class="btn btn-xs btn-warning" href="{{ route('incidenciasCalificacions.edit', $incidenciasCalificacion->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
                                     @endif
                                     @endpermission
                                     @permission('incidenciasCalificacions.destroy')
-                                    {!! Form::model($incidenciasCalificacion, array('route' => array('incidenciasCalificacions.destroy', $incidenciasCalificacion->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}
+                                    {!! Form::model($incidenciasCalificacion, array('route' => array('incidenciasCalificacions.destroy', $incidenciasCalificacion->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('Â¿Borrar? Â¿Esta seguro?')) { return true } else {return false };")) !!}
                                         <button type="submit" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> Borrar</button>
                                     {!! Form::close() !!}
                                     @endpermission

@@ -254,6 +254,14 @@ trait GetAllDataTrait
             case "inventarios":
                 $myQuery = $myQuery->orderBy('no_inventario', 'asc');
                 break;
+            case "leads":
+                $myQuery = $myQuery->whereIn('leads.plantel_id', $planteles);
+                if ($empleado->st_prospecto_id == 1) {
+                    $myQuery = $myQuery->join('users as u', 'u.id', '=', 'leads.usu_alta_id')
+                        ->Join('empleados as e', 'e.user_id', '=', 'u.id')
+                        ->where('e.st_prospecto_id', 1);
+                }
+                break;
             case "materia":
                 //if (Auth::user()->can('IFiltroEmpleadosXPlantel')) {
                 $myQuery = $myQuery->whereIn('materia.plantel_id', $planteles);

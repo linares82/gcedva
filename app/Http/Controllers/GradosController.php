@@ -227,7 +227,7 @@ class GradosController extends Controller
                     ->where('g.especialidad_id', '=', $especialidad)
                     ->where('g.nivel_id', '=', $nivel)
                     ->where('g.id', '>', '0')
-                    ->whereNull('g.deleted_at')
+                    ->whereNull('g.deleted_a')
                     ->get();
             } else {
                 $r = DB::table('grados as g')
@@ -237,7 +237,8 @@ class GradosController extends Controller
                     ->where('g.nivel_id', '=', $nivel)
                     ->where('g.id', '>', '0')
                     ->whereNull('g.deleted_at')
-                    ->whereNull('g.bnd_rvoe_inactiva')->orWhere('g.bnd_rvoe_inactiva', 0)
+                    //->whereNull('g.bnd_rvoe_inactiva')->orWhere('g.bnd_rvoe_inactiva', 0)
+                    ->whereRaw('(g.bnd_rvoe_inactiva is null or g.bnd_rvoe_inactiva=0)')
                     ->get();
             }
 

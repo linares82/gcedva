@@ -421,9 +421,16 @@ class HistoriaClientesController extends Controller
 			$inscripcions = Inscripcion::where('cliente_id', $historiaCliente->cliente_id)->where('st_inscripcion_id', '<>', 3)->whereNull('deleted_at')->count();
 
 			if ($inscripcions == 0) {
-				$cliente = Cliente::find($historiaCliente->cliente_id);
-				$cliente->st_cliente_id = 3;
-				$cliente->save();
+				if ($historiaCliente->eventoCliente->bnd_duplicar_cliente == 1) {
+					$cliente = Cliente::find($historiaCliente->cliente_id);
+					$cliente->st_cliente_id = 32;
+					$cliente->save();
+				} else {
+					$cliente = Cliente::find($historiaCliente->cliente_id);
+					$cliente->st_cliente_id = 3;
+					$cliente->save();
+				}
+
 
 				$seguimiento = Seguimiento::where('cliente_id', $cliente->id)->first();
 				$seguimiento->st_seguimiento_id = 6;

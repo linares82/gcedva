@@ -137,7 +137,7 @@ class AdeudosController extends Controller
             //Genera la matricula para un cliente si no la tiene.
             //Datos para matricula
 
-            $param=Param::where('llave','prefijo_matricula_instalacion')->first();
+            $param = Param::where('llave', 'prefijo_matricula_instalacion')->first();
             $combinacion = CombinacionCliente::find($adeudo->combinacion_cliente_id);
             //dd($combinacion);
             $planPagoLn = PlanPagoLn::where('plan_pago_id', $combinacion->plan_pago_id)->orderBy('fecha_pago', 'asc')->first();
@@ -183,15 +183,15 @@ class AdeudosController extends Controller
                     $mes = substr($rellenoPlantel, 0, 2 - strlen($fecha->month)) . $fecha->month;
                     $anio = $fecha->year - 2000;
                     $seccion = $grado->seccion;
-                    $plantel = substr($rellenoPlantel, 0, 2 - strlen($combinacion->plantel_id)) . $combinacion->plantel_id;
+                    $plantel = substr($rellenoPlantel, 0, 3 - strlen($combinacion->plantel_id)) . $combinacion->plantel_id;
                     $consecutivoCadena = substr($rellenoConsecutivo, 0, 3 - strlen($consecutivo->consecutivo)) . $consecutivo->consecutivo;
 
-                    if($param<>"0"){
-                        $entrada['matricula'] = $param->valor. $mes . $anio . $seccion . $plantel . $consecutivoCadena;
-                    }else{
+                    if ($param <> "0") {
+                        $entrada['matricula'] = $param->valor . $mes . $anio . $seccion . $plantel . $consecutivoCadena;
+                    } else {
                         $entrada['matricula'] = $mes . $anio . $seccion . $plantel . $consecutivoCadena;
                     }
-                    
+
                     //$i->update($entrada);
 
                     //dd($entrada['matricula']);
@@ -1185,8 +1185,17 @@ class AdeudosController extends Controller
 
             //$calculo = array();
             $calculo = [
-                'plantel' => "", 'concepto' => "", 'clientes_activos' => 0, 'clientes_pagados' => 0, 'total_monto_pagado' => 0, 'suma_deudores' => 0,
-                'monto_deuda' => 0, 'porcentaje_pagado' => 0, 'deudores' => 0, 'bajas_pagadas' => 0, 'porcentaje_deudores' => 0,
+                'plantel' => "",
+                'concepto' => "",
+                'clientes_activos' => 0,
+                'clientes_pagados' => 0,
+                'total_monto_pagado' => 0,
+                'suma_deudores' => 0,
+                'monto_deuda' => 0,
+                'porcentaje_pagado' => 0,
+                'deudores' => 0,
+                'bajas_pagadas' => 0,
+                'porcentaje_deudores' => 0,
             ];
 
             //recorrido linea de totales
@@ -1270,8 +1279,17 @@ class AdeudosController extends Controller
                 //dd($id);
                 //$calculo = array();
                 $calculo = [
-                    'plantel' => "", 'concepto' => $concepto, 'clientes_activos' => 0, 'clientes_pagados' => 0, 'total_monto_pagado' => 0, 'suma_deudores' => 0,
-                    'monto_deuda' => 0, 'porcentaje_pagado' => 0, 'deudores' => 0, 'bajas_pagadas' => 0, 'porcentaje_deudores' => 0,
+                    'plantel' => "",
+                    'concepto' => $concepto,
+                    'clientes_activos' => 0,
+                    'clientes_pagados' => 0,
+                    'total_monto_pagado' => 0,
+                    'suma_deudores' => 0,
+                    'monto_deuda' => 0,
+                    'porcentaje_pagado' => 0,
+                    'deudores' => 0,
+                    'bajas_pagadas' => 0,
+                    'porcentaje_deudores' => 0,
                 ];
                 foreach ($registros_totales as $registro) {
                     // dd($conceptos);
@@ -1654,8 +1672,17 @@ class AdeudosController extends Controller
 
         //$calculo = array();
         $calculo = [
-            'plantel' => "", 'concepto' => "", 'clientes_activos' => 0, 'clientes_pagados' => 0, 'total_monto_pagado' => 0, 'suma_deudores' => 0,
-            'monto_deuda' => 0, 'porcentaje_pagado' => 0, 'deudores' => 0, 'bajas_pagadas' => 0, 'porcentaje_deudores' => 0,
+            'plantel' => "",
+            'concepto' => "",
+            'clientes_activos' => 0,
+            'clientes_pagados' => 0,
+            'total_monto_pagado' => 0,
+            'suma_deudores' => 0,
+            'monto_deuda' => 0,
+            'porcentaje_pagado' => 0,
+            'deudores' => 0,
+            'bajas_pagadas' => 0,
+            'porcentaje_deudores' => 0,
         ];
 
         foreach ($registros_totales as $registro) {
@@ -1700,8 +1727,17 @@ class AdeudosController extends Controller
             //dd($id);
             //$calculo = array();
             $calculo = [
-                'plantel' => "", 'concepto' => $concepto, 'clientes_activos' => 0, 'clientes_pagados' => 0, 'total_monto_pagado' => 0, 'suma_deudores' => 0,
-                'monto_deuda' => 0, 'porcentaje_pagado' => 0, 'deudores' => 0, 'bajas_pagadas' => 0, 'porcentaje_deudores' => 0,
+                'plantel' => "",
+                'concepto' => $concepto,
+                'clientes_activos' => 0,
+                'clientes_pagados' => 0,
+                'total_monto_pagado' => 0,
+                'suma_deudores' => 0,
+                'monto_deuda' => 0,
+                'porcentaje_pagado' => 0,
+                'deudores' => 0,
+                'bajas_pagadas' => 0,
+                'porcentaje_deudores' => 0,
             ];
             foreach ($registros_totales as $registro) {
                 // dd($conceptos);
@@ -1945,7 +1981,7 @@ class AdeudosController extends Controller
                 ->join('st_seguimientos as sts', 'sts.id', '=', 's.st_seguimiento_id')
                 ->join('caja_conceptos as adeudo_concepto', 'adeudo_concepto.id', '=', 'adeudos.caja_concepto_id')
                 ->join('combinacion_clientes as ccli', 'ccli.id', '=', 'adeudos.combinacion_cliente_id')
-                ->join('especialidads as esp','esp.id','ccli.especialidad_id')
+                ->join('especialidads as esp', 'esp.id', 'ccli.especialidad_id')
                 ->join('turnos as t', 't.id', '=', 'ccli.turno_id');
 
             $cajas_sin_adeudos = Caja::select(
@@ -2052,8 +2088,17 @@ class AdeudosController extends Controller
             //dd($registros_totales->toArray());
 
             $calculo = [
-                'plantel' => "", 'concepto' => "", 'clientes_activos' => 0, 'clientes_pagados' => 0, 'total_monto_pagado' => 0, 'suma_deudores' => 0,
-                'monto_deuda' => 0, 'porcentaje_pagado' => 0, 'deudores' => 0, 'bajas_pagadas' => 0, 'porcentaje_deudores' => 0,
+                'plantel' => "",
+                'concepto' => "",
+                'clientes_activos' => 0,
+                'clientes_pagados' => 0,
+                'total_monto_pagado' => 0,
+                'suma_deudores' => 0,
+                'monto_deuda' => 0,
+                'porcentaje_pagado' => 0,
+                'deudores' => 0,
+                'bajas_pagadas' => 0,
+                'porcentaje_deudores' => 0,
             ];
 
             //recorrido linea de totales
@@ -2128,8 +2173,17 @@ class AdeudosController extends Controller
                 //dd($id);
                 //$calculo = array();
                 $calculo = [
-                    'plantel' => "", 'concepto' => $concepto, 'clientes_activos' => 0, 'clientes_pagados' => 0, 'total_monto_pagado' => 0, 'suma_deudores' => 0,
-                    'monto_deuda' => 0, 'porcentaje_pagado' => 0, 'deudores' => 0, 'bajas_pagadas' => 0, 'porcentaje_deudores' => 0,
+                    'plantel' => "",
+                    'concepto' => $concepto,
+                    'clientes_activos' => 0,
+                    'clientes_pagados' => 0,
+                    'total_monto_pagado' => 0,
+                    'suma_deudores' => 0,
+                    'monto_deuda' => 0,
+                    'porcentaje_pagado' => 0,
+                    'deudores' => 0,
+                    'bajas_pagadas' => 0,
+                    'porcentaje_deudores' => 0,
                 ];
                 foreach ($registros_totales as $registro) {
                     // dd($conceptos);
@@ -2269,8 +2323,17 @@ class AdeudosController extends Controller
 
             //$calculo = array();
             $calculo = [
-                'plantel' => "", 'concepto' => "", 'clientes_activos' => 0, 'clientes_pagados' => 0, 'total_monto_pagado' => 0, 'suma_deudores' => 0,
-                'monto_deuda' => 0, 'porcentaje_pagado' => 0, 'deudores' => 0, 'bajas_pagadas' => 0, 'porcentaje_deudores' => 0,
+                'plantel' => "",
+                'concepto' => "",
+                'clientes_activos' => 0,
+                'clientes_pagados' => 0,
+                'total_monto_pagado' => 0,
+                'suma_deudores' => 0,
+                'monto_deuda' => 0,
+                'porcentaje_pagado' => 0,
+                'deudores' => 0,
+                'bajas_pagadas' => 0,
+                'porcentaje_deudores' => 0,
             ];
 
             //recorrido linea de totales
@@ -2347,8 +2410,17 @@ class AdeudosController extends Controller
                 //dd($id);
                 //$calculo = array();
                 $calculo = [
-                    'plantel' => "", 'concepto' => $concepto, 'clientes_activos' => 0, 'clientes_pagados' => 0, 'total_monto_pagado' => 0, 'suma_deudores' => 0,
-                    'monto_deuda' => 0, 'porcentaje_pagado' => 0, 'deudores' => 0, 'bajas_pagadas' => 0, 'porcentaje_deudores' => 0,
+                    'plantel' => "",
+                    'concepto' => $concepto,
+                    'clientes_activos' => 0,
+                    'clientes_pagados' => 0,
+                    'total_monto_pagado' => 0,
+                    'suma_deudores' => 0,
+                    'monto_deuda' => 0,
+                    'porcentaje_pagado' => 0,
+                    'deudores' => 0,
+                    'bajas_pagadas' => 0,
+                    'porcentaje_deudores' => 0,
                 ];
                 foreach ($registros_totales as $registro) {
                     // dd($conceptos);

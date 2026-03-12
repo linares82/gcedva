@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Log;
 use Auth;
 
+use App\Lead;
 use App\Medio;
 use App\Param;
 use App\Cliente;
@@ -754,6 +755,16 @@ class ProspectosController extends Controller
 			$linea['hoy'] = $hoy;
 			$linea['ayer'] = $ayer;
 
+			$linea['leads_creados'] = Lead::whereRaw("date(created_at) = ?", [$hoy])
+				->where('leads.plantel_id', $plantel_usuario->plantel_id)
+				->where('usu_alta_id', $plantel_usuario->usu_alta_id)
+				->count();
+
+			$linea['leads_prospecto'] = Lead::whereRaw("date(created_at) = ?", [$hoy])
+				->where('plantel_id', $plantel_usuario->plantel_id)
+				->where('usu_alta_id', $plantel_usuario->usu_alta_id)
+				->where('st_lead_id', 3)->count();
+
 			$linea['callToAsesorAyer'] = HStProspecto::where('h_st_prospectos.st_prospecto_id', 2)
 				->where('h_st_prospectos.st_anterior_id', 1)
 				->join('prospectos as pro', 'pro.id', 'h_st_prospectos.prospecto_id')
@@ -827,7 +838,6 @@ class ProspectosController extends Controller
 					->where('detalle', 'Concretado 100%')
 					->whereNull('deleted_at')
 					->count();
-
 
 				if (is_null($cliente->reactivado) and $concretadoAntes == 0) {
 					$linea['clientes_concretados'] = $linea['clientes_concretados'] + 1;
@@ -912,6 +922,22 @@ class ProspectosController extends Controller
 				->whereNull('prospectos.deleted_at')
 				->count();
 
+			$linea['tarea_llamada_efectiva'] = Prospecto::join('prospecto_asignacion_tareas as pat', 'pat.prospecto_id', 'prospectos.id')
+				->whereDate('pat.created_at', $ayer)
+				->where('pat.prospecto_tarea_id', 5)
+				->where('prospectos.plantel_id', $plantel_usuario->plantel_id)
+				->where('pat.usu_alta_id', $plantel_usuario->usu_alta_id)
+				->whereNull('prospectos.deleted_at')
+				->count();
+
+			$linea['tarea_llamada_no_efectiva'] = Prospecto::join('prospecto_asignacion_tareas as pat', 'pat.prospecto_id', 'prospectos.id')
+				->whereDate('pat.created_at', $ayer)
+				->where('pat.prospecto_tarea_id', 1)
+				->where('prospectos.plantel_id', $plantel_usuario->plantel_id)
+				->where('pat.usu_alta_id', $plantel_usuario->usu_alta_id)
+				->whereNull('prospectos.deleted_at')
+				->count();
+
 			$linea['tarea_informe_telefonico'] = Prospecto::join('prospecto_asignacion_tareas as pat', 'pat.prospecto_id', 'prospectos.id')
 				->whereDate('pat.created_at', $ayer)
 				->where('pat.prospecto_tarea_id', 8)
@@ -940,15 +966,19 @@ class ProspectosController extends Controller
 				->count();
 			//dd($linea);
 			if (
-				$linea['callToAsesorAyer'] > 0 or
+				$linea['leads_creados'] or
+				$linea['leads_prospecto'] or
+				//$linea['callToAsesorAyer'] > 0 or
 				$linea['clientes_concretados'] > 0 or
-				$linea['prospectos_convertidos'] > 0 or
+				//$linea['prospectos_convertidos'] > 0 or
 				$linea['prospectos_creados'] > 0 or
 				$linea['prospectos_tocados'] > 0 or
 				$linea['avisos_creados'] > 0 or
 				$linea['avisos_cerrados'] > 0 or
 				$linea['tarea_informe_presencial'] > 0 or
-				$linea['tarea_informe_telefonico'] > 0 or
+				$linea['tarea_llamada_efectiva'] > 0 or
+				$linea['tarea_llamada_no_efectiva'] > 0 or
+				//$linea['tarea_informe_telefonico'] > 0 or
 				$linea['tarea_cita_plantel'] > 0 or
 				$linea['base_total'] > 0
 			) {

@@ -2,24 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use Auth;
-use Mail;
-use File;
-
-use App\Param;
-use Exception;
-use App\Plantel;
-use App\Hacademica;
 use App\Calificacion;
-use App\Http\Requests;
-use Illuminate\Http\Request;
-use App\Mail\AvisoIncidencia;
 use App\CalificacionPonderacion;
-use App\IncidenciasCalificacion;
+use App\Hacademica;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Storage;
+use App\Http\Requests;
 use App\Http\Requests\createIncidenciasCalificacion;
 use App\Http\Requests\updateIncidenciasCalificacion;
+use App\IncidenciasCalificacion;
+use App\IncidenciasJustificacion;
+use App\Mail\AvisoIncidencia;
+use App\Param;
+use App\Plantel;
+use Auth;
+use Exception;
+use File;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Mail;
 
 class IncidenciasCalificacionsController extends Controller
 {
@@ -46,7 +46,8 @@ class IncidenciasCalificacionsController extends Controller
 		$datos = $request->all();
 		//dd($datos);
 		$calificacion_ponderacion_id = $datos['calificacion_ponderacion_id'];
-		return view('incidenciasCalificacions.create', compact('calificacion_ponderacion_id'))
+		$justificacion = IncidenciasJustificacion::pluck('name', 'id');
+		return view('incidenciasCalificacions.create', compact('calificacion_ponderacion_id', 'justificacion'))
 			->with('list', IncidenciasCalificacion::getListFromAllRelationApps());
 	}
 
@@ -71,8 +72,8 @@ class IncidenciasCalificacionsController extends Controller
 
 		//create data
 		$incidenciaCalificacion = IncidenciasCalificacion::create($input);
-		if ($request->hasFile('file')) {
-			$file = $request->file('file');
+		if ($request->hasFile('imagen')) {
+			$file = $request->file('imagen');
 			$extension = $file->getClientOriginalExtension();
 			$nombre = date('dmYhmi') . $file->getClientOriginalName();
 
@@ -113,7 +114,8 @@ class IncidenciasCalificacionsController extends Controller
 	{
 		$incidenciasCalificacion = $incidenciasCalificacion->find($id);
 		$calificacion_ponderacion_id = $incidenciasCalificacion->calificacion_ponderacion_id;
-		return view('incidenciasCalificacions.edit', compact('incidenciasCalificacion', 'calificacion_ponderacion_id'))
+		$justificacion = IncidenciasJustificacion::pluck('name', 'id');
+		return view('incidenciasCalificacions.edit', compact('incidenciasCalificacion', 'calificacion_ponderacion_id', 'justificacion'))
 			->with('list', IncidenciasCalificacion::getListFromAllRelationApps());
 	}
 
@@ -144,6 +146,23 @@ class IncidenciasCalificacionsController extends Controller
 		//update data
 		$incidenciasCalificacion = $incidenciasCalificacion->find($id);
 		$incidenciasCalificacion->update($input);
+
+		if ($request->hasFile('imagen')) {
+			$file = $request->file('imagen');
+			$extension = $file->getClientOriginalExtension();
+			$nombre = date('dmYhmi') . $file->getClientOriginalName();
+
+			$r = Storage::disk('img_incidencias_calificacions')->put($nombre, File::get($file));
+
+			//$incidenciaCalificacion = IncidenciasCalificacion::find($request->get('incidencia_calificacion'));
+			if ($incidenciasCalificacion->imagen != "") {
+				Storage::disk('img_incidencias_calificacions')->delete($incidenciasCalificacion->imagen);
+				$incidenciasCalificacion->imagen = $nombre;
+			} else {
+				$incidenciasCalificacion->imagen = $nombre;
+			}
+			$incidenciasCalificacion->save();
+		}
 
 		return redirect()->route('incidenciasCalificacions.show', $incidenciasCalificacion->id)->with('message', 'Registro Actualizado.');
 	}

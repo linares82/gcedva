@@ -135,6 +135,9 @@
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
                             <th>@include('plantillas.getOrderLink', ['column' => 'name', 'title' => 'DOCUMENTO'])</th>
                             <th>@include('plantillas.getOrderLink', ['column' => 'doc_obligatorio', 'title' => 'OBLIGATORIO'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'bnd_portal_alumnos', 'title' => 'PORTAL ALUMNOS'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'bnd_pdf', 'title' => 'PDF'])</th>
+                            <th>@include('plantillas.getOrderLink', ['column' => 'bnd_imagen', 'title' => 'IMAGEN'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
@@ -152,7 +155,27 @@
                                     @endif
 
                                 </td>
-                    
+                                <td>
+                                    @if($docAlumno->bnd_portal_alumnos==1)
+                                    SI
+                                    @else
+                                    NO
+                                    @endif
+                                </td>
+                                <td>
+                                    @if($docAlumno->bnd_pdf==1)
+                                    SI
+                                    @else
+                                    NO
+                                    @endif
+                                </td>
+                                <td>
+                                    @if($docAlumno->bnd_imagen==1)
+                                    SI
+                                    @else
+                                    NO
+                                    @endif
+                                </td>
                                 <td class="text-right">
                                     @permission('docAlumnos.edit')
                                     <a class="btn btn-xs btn-primary" href="{{ route('docAlumnos.duplicate', $docAlumno->id) }}"><i class="glyphicon glyphicon-duplicate"></i> Duplicar</a>

@@ -240,7 +240,7 @@
                                 <td>
                                     @permission('historiaClientes.create')
                                     <a class="btn btn-xs btn-success" href="{{ route('historiaClientes.create',array('cliente'=>$cliente->cliente->id)) }}"><i class="glyphicon glyphicon-plus"></i> Crear</a>
-                                    <a class="btn btn-xs btn-warning" href="{{ route('historiaClientes.index',array('q[cliente_id_lt]'=>$cliente->cliente->id)) }}" target='_blank'><i class="glyphicon glyphicon-plus"></i> Ver</a>
+                                    <a class="btn btn-xs btn-warning" href="{{ route('historiaClientes.index',array('q[cliente_id_lt]'=>$cliente->cliente->id)) }}" target="_blank""><i class="glyphicon glyphicon-plus"></i> Ver</a>
                                     @endpermission
                                 </td>
                                 <td>

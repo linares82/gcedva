@@ -10,6 +10,15 @@
          <span class="help-block">{{ $errors->first('calificacion_nueva') }}</span>
    @endif
 </div>
+
+<div class="form-group col-md-4 @if($errors->has('incidencias_justificacion_id')) has-error @endif">
+      <label for="incidencias_justificacion_id-field">Justificacion</label>
+      {!! Form::select("incidencias_justificacion_id", $justificacion, null, array("class" => "form-control select_seguridad", "id" => "incidencias_justificacion_id-field")) !!}
+      @if($errors->has("incidencias_justificacion_id"))
+      <span class="help-block">{{ $errors->first("incidencias_justificacion_id") }}</span>
+      @endif
+</div>
+
 <div class="form-group col-md-8 @if ($errors->has('justificacion')) has-error @endif">
    <label for="justificacion-field">Justificacion</label>
    {!! Form::textArea('justificacion', null, [
@@ -27,12 +36,12 @@
       
          <div class="btn btn-default btn-file">
             <i class="fa fa-paperclip"></i> Adjuntar Evidencia
-            <input type="file" id="file" name="file" class="email_archivo">
+             {!! Form::file('imagen') !!}
          </div>
          <p class="help-block">Max. 250Kb</p>
          <div id="texto_notificacion">
             @if(isset($incidenciasCalificacion->imagen))
-            <img src="{{ asset('storage/grados/' . $incidenciasCalificacion->imagen) }}" alt="Logo" height="42"
+            <img src="{{ asset('storage/incidencias_calificacions/' . $incidenciasCalificacion->imagen) }}" alt="Logo" height="42"
                width="42">
             @endif
          </div>

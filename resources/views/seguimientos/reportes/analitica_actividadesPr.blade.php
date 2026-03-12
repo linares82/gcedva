@@ -44,8 +44,8 @@
           callback({
             Plantel: element.plantel,
             Usuario: element.usuario,
-            IdCliente: element.cli,
-            Cliente: element.cliente,
+            IdProspecto: element.cli,
+            Prospecto: element.cliente,
             Actividad: element.tarea,
             Fecha: element.fecha,
             Estatus: element.detalle,
@@ -75,24 +75,27 @@
           callback({
             Plantel: element.plantel,
             Usuario: element.usuario,
-            IdCliente: element.cli,
-            Cliente: element.cliente,
+            IdProspecto: element.prospecto_id,
+            Prospecto: element.prospecto_nombre+" "+element.prospecto_ape_paterno+" "+element.prospecto_ape_materno,
+            IdCliente: element.cliente_id,
             Actividad: element.tarea,
             Fecha: element.fecha,
-            Estatus: element.detalle,
+            Detalle: element.detalle,
             Medio: element.medio,
             Asunto: element.asunto,
             Lead:element.lead_id,
+            Lead_Nombre:element.lead_nombre,
             Lead_Creado:element.lead_fecha,
             Lead_Estatus:element.st_lead,
-            Lead_Contador_Llamadas:element.contador_llamadas
+            Lead_Contador_Llamadas:element.contador_llamadas,
+            St_Cliente:element.st_cliente
           });
         });
       };
 
       $("#output_prospectos_leads").pivotUI(inputFunction, {
         renderers: renderers,
-        rows: ["Plantel", "Usuario","Lead","Lead_Estatus","Lead_Contador_Llamadas","Lead_Creado","IdCliente","Actividad"],
+        rows: ["Plantel", "Usuario","Lead","Lead_Estatus","Lead_Contador_Llamadas","Lead_Creado","IdProspecto","Prospecto","IdCliente","Actividad"],
         cols: ['Fecha'],
       }, false, "es");
 

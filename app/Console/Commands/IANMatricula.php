@@ -54,9 +54,7 @@ class IANMatricula extends Command
             ->join('clientes as cli', 'cli.id', '=', 'adeudos.cliente_id')
             ->whereIn('cc.id', array(1, 22, 23, 24, 25))
             //->where('pagado_bnd', 1)->where('fecha_pago', '>=', '2020-09-01')
-            ->whereIn('cli.id', array(
-                
-            ))
+            ->whereIn('cli.id', array())
             ->whereNull('adeudos.deleted_at')
             //->where('cli.matricula', '')
             //->take(5)
@@ -95,7 +93,7 @@ class IANMatricula extends Command
                     //$inscripcionConcepto = $adeudos->where('caja_concepto_id', 1);
                     //$lectivo = Lectivo::find($combinacion->lectivo_id);
                     //dd($planPagoLn);
-                    $param=Param::where('llave','prefijo_matricula_instalacion')->first();
+                    $param = Param::where('llave', 'prefijo_matricula_instalacion')->first();
                     $fecha = Carbon::createFromFormat('Y-m-d', $planPagoLn->fecha_pago);
                     $grado = Grado::find($combinacion->grado_id);
                     //Log::info("grado: " . $grado->id);
@@ -133,16 +131,16 @@ class IANMatricula extends Command
                     }
                     $mes = substr($rellenoPlantel, 0, 2 - strlen($fecha->month)) . $fecha->month;
                     $anio = $fecha->year - 2000;
-                    $plantel = substr($rellenoPlantel, 0, 2 - strlen($combinacion->plantel_id)) . $combinacion->plantel_id;
+                    $plantel = substr($rellenoPlantel, 0, 3 - strlen($combinacion->plantel_id)) . $combinacion->plantel_id;
                     $seccion = $grado->seccion;
                     $consecutivoCadena = substr($rellenoConsecutivo, 0, 3 - strlen($consecutivo->consecutivo)) . $consecutivo->consecutivo;
 
-                    if($param<>0){
-                        $entrada['matricula'] = $param->valor. $mes . $anio . $seccion . $plantel . $consecutivoCadena;
-                    }else{
+                    if ($param <> 0) {
+                        $entrada['matricula'] = $param->valor . $mes . $anio . $seccion . $plantel . $consecutivoCadena;
+                    } else {
                         $entrada['matricula'] = $mes . $anio . $seccion . $plantel . $consecutivoCadena;
                     }
-                    
+
                     //$i->update($entrada);
 
                     //dd($entrada['matricula']);

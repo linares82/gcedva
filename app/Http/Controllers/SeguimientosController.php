@@ -1639,8 +1639,12 @@ class SeguimientosController extends Controller
                 'p.razon as plantel',
                 'ua.name as usuario',
                 //DB::raw('concat(e.nombre," ",e.ape_paterno," ",e.ape_materno) as empleado'),
-                "c.id as cli",
-                DB::raw('concat(c.nombre," ",c.ape_paterno," ",c.ape_materno) as cliente'),
+                "c.nombre as prospecto_nombre",
+                "c.ape_paterno as prospecto_ape_paterno",
+                "c.ape_paterno as prospecto_ape_materno",
+                "c.id as prospecto_id",
+                DB::raw('concat(c.nombre," ",c.ape_paterno," ",c.ape_materno) as prospecto'),
+                'c.cliente_id',
                 'has.tarea',
                 'has.fecha',
                 'has.detalle',
@@ -1649,11 +1653,19 @@ class SeguimientosController extends Controller
                 'l.id as lead_id',
                 'stl.name as st_lead',
                 'l.created_at as lead_fecha',
-                'l.contador_llamadas'
+                'l.contador_llamadas',
+                'l.nombre as lead_nombre',
+                'cli.nombre as cli_nombre',
+                'cli.nombre2 as cli_nombre2',
+                'cli.ape_paterno as cli_ape_paterno',
+                'cli.ape_materno as cli_ape_materno',
+                'stcli.name as st_cliente'
             )
             ->join('prospectos as c', 'c.id', '=', 'has.prospecto_id')
             ->leftJoin('leads as l', 'l.id', '=', 'c.lead_id')
             ->leftJoin('st_leads as stl', 'stl.id', 'l.st_lead_id')
+            ->leftJoin('clientes as cli', 'cli.id', 'c.cliente_id')
+            ->leftJoin('st_clientes as stcli', 'stcli.id', 'cli.st_cliente_id')
             ->join('medios as m', 'm.id', '=', 'c.medio_id')
             //->join('empleados as e', 'e.id', '=', 'c.empleado_id')
             ->join('users as ua', 'ua.id', '=', 'has.usu_alta_id')
@@ -1673,9 +1685,13 @@ class SeguimientosController extends Controller
         $ds_leads = Lead::select(
             'p.razon as plantel',
             'ua.name as usuario',
+            DB::raw("0 as prospecto_nombre"),
+            DB::raw("0 as prospecto_ape_paterno"),
+            DB::raw("0 as prospecto_ape_materno"),
             //DB::raw('concat(e.nombre," ",e.ape_paterno," ",e.ape_materno) as empleado'),
-            DB::raw("0 as cli"),
-            DB::raw('0 as cliente'),
+            DB::raw("0 as prospecto_id"),
+            DB::raw('0 as prospecto'),
+            DB::raw('0 as cliente_id'),
             DB::raw('0 as tarea'),
             DB::raw('0 as fecha'),
             DB::raw('0 as detalle'),
@@ -1684,7 +1700,13 @@ class SeguimientosController extends Controller
             'leads.id as lead_id',
             'stl.name as st_lead',
             'leads.created_at as lead_fecha',
-            'leads.contador_llamadas'
+            'leads.contador_llamadas',
+            'leads.nombre as lead_nombre',
+            DB::raw('0 as cli_nombre'),
+            DB::raw('0 as cli_nombre2'),
+            DB::raw('0 as cli_ape_paterno'),
+            DB::raw('0 as cli_ape_materno'),
+            DB::raw('0 as st_cliente')
         )
             ->join('users as ua', 'ua.id', '=', 'leads.usu_alta_id')
             ->join('plantels as p', 'p.id', '=', 'leads.plantel_id')
@@ -1705,7 +1727,7 @@ class SeguimientosController extends Controller
 
         $ds_actividades_prospectos_leads = $ds_actividades_aux->distinct()->union($ds_leads)->get();
 
-        //dd($ds_actividades->toJson());
+        //dd($ds_actividades_prospectos_leads);
 
         $hestatus = ProspectoHEstatuse::select(
             'c.id as cliente',

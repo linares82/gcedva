@@ -33,7 +33,8 @@ class IncidenciasCalificacion extends Model
 		'hacademica_id',
 		'materium_id',
 		'observacion',
-		'imagen'
+		'imagen',
+		'incidencias_justificacion_id'
 	];
 
 	public function usu_alta()
@@ -70,5 +71,11 @@ class IncidenciasCalificacion extends Model
 	{
 		return $this->hasOne('App\Materium', 'id', 'materium_id');
 	} // end
+
+	public function incidenciasJustificacion()
+	{
+		return $this->hasOne('App\IncidenciasJustificacion', 'id', 'incidencias_justificacion_id');
+	} // end
+
 	protected $dates = ['deleted_at'];
 }

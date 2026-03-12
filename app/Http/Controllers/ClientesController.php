@@ -647,19 +647,20 @@ class ClientesController extends Controller
     {
         $datos = $request->all();
         $historia = HistoriaCliente::find($datos['historia_cliente_id']);
+
         $clienteBase = Cliente::find($datos['cliente_id']);
         $inputNuevoCliente = Arr::except($clienteBase->toArray(), ['id', 'created_at', 'updated_at', 'deleted_at', 'bnd_doc_oblig_entregados', 'obs_docs', 'st_cliente_id']);
+        $cliente = Cliente::firstOrCreate($inputNuevoCliente + ['st_cliente_id' => 4]);
         //dd($inputNuevoCliente);
 
         $seguimientoBase = Seguimiento::where('cliente_id', $datos['cliente_id'])->first();
         $inputNuevoSeguimiento = Arr::except($seguimientoBase->toArray(), ['id', 'cliente_id', 'created_at', 'updated_at', 'deleted_at', 'st_seguimiento_id']);
-
+        $seguimiento = Seguimiento::firstOrCreate($inputNuevoSeguimiento + ['cliente_id' => $cliente->id] + ['st_seguimiento_id' => 5]);
         //dd($inputNuevoCliente);
-        $cliente = Cliente::create($inputNuevoCliente + ['st_cliente_id' => 32]);
-        $seguimiento = Seguimiento::create($inputNuevoSeguimiento + ['cliente_id' => $cliente->id] + ['st_seguimiento_id' => 5]);
+
         $historia->cliente_duplicado_id = $cliente->id;
         $historia->save();
-
+        /*
         if (!isset($cliente->prebeca)) {
             $input_prebeca['cliente_id'] = $cliente->id;
             $input_prebeca['usu_alta_id'] = Auth::user()->id;
@@ -782,6 +783,8 @@ class ClientesController extends Controller
             ->with('list1', PivotDocCliente::getListFromAllRelationApps())
             ->with('list2', CombinacionCliente::getListFromAllRelationApps())
             ->with('list3', Inscripcion::getListFromAllRelationApps());
+            */
+        return redirect()->route('historiaClientes.index', array('q[cliente_id_lt]' => $datos['cliente_id']));
     }
 
     public function duplicate($id, Cliente $cliente)
@@ -2165,7 +2168,7 @@ class ClientesController extends Controller
             ->join('grados as g', 'g.id', '=', 'cc.grado_id')
             ->whereDate('historia_clientes.fecha', '>=', $datos['fecha_f'])
             ->whereDate('historia_clientes.fecha', '<=', $datos['fecha_t'])
-            ->where('evento_cliente_id', 2)
+            ->whereIn('evento_cliente_id', [2, 7])
             ->whereIn('p.id', $datos['plantel_f'])
             ->whereNull('historia_clientes.deleted_at')
             ->whereNull('cc.deleted_at')
@@ -3111,7 +3114,7 @@ class ClientesController extends Controller
                     }
                     $mes = substr($rellenoPlantel, 0, 2 - strlen($fecha->month)) . $fecha->month;
                     $anio = $fecha->year - 2000;
-                    $plantel = substr($rellenoPlantel, 0, 2 - strlen($combinacion->plantel_id)) . $combinacion->plantel_id;
+                    $plantel = substr($rellenoPlantel, 0, 3 - strlen($combinacion->plantel_id)) . $combinacion->plantel_id;
                     $seccion = $grado->seccion;
                     $consecutivoCadena = substr($rellenoConsecutivo, 0, 3 - strlen($consecutivo->consecutivo)) . $consecutivo->consecutivo;
 

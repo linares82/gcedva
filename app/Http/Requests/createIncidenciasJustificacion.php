@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class createIncidenciasCalificacion extends FormRequest
+class createIncidenciasJustificacion extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,14 +24,7 @@ class createIncidenciasCalificacion extends FormRequest
     public function rules()
     {
         return [
-            'imagen' => "required",
-        ];
-    }
-
-    public function messages()
-    {
-        return [
-            'imagen.required' => "Se re quiere evidencia",
+            //
         ];
     }
 }

@@ -193,7 +193,7 @@ class AdeudosController extends Controller
                     $mes = substr($rellenoPlantel, 0, 2 - strlen($fecha->month)) . $fecha->month;
                     $anio = $fecha->year - 2000;
                     $seccion = $grado->seccion;
-                    $plantel = substr($rellenoPlantel, 0, 2 - strlen($combinacion->plantel_id)) . $combinacion->plantel_id;
+                    $plantel = substr($rellenoPlantel, 0, 3 - strlen($combinacion->plantel_id)) . $combinacion->plantel_id;
                     $consecutivoCadena = substr($rellenoConsecutivo, 0, 3 - strlen($consecutivo->consecutivo)) . $consecutivo->consecutivo;
 
                     if ($param->valor <> "0") {
