@@ -620,6 +620,16 @@
                             <span class="help-block">{{ $errors->first('bnd_trabaja') }}</span>
                         @endif
                     </div>
+                    <div class="form-group col-md-3 @if ($errors->has('bnd_docs_portal')) has-error @endif">
+                        <label for="bnd_docs_portal-field">Permitir Carga Docs. Portal</label>
+                        {!! Form::checkbox('bnd_docs_portal', 1, null, [
+                            'id' => 'bnd_docs_portal-field',
+                            'class' => 'minimal',
+                        ]) !!}
+                        @if ($errors->has('bnd_excepcion_documentos'))
+                            <span class="help-block">{{ $errors->first('bnd_trabaja') }}</span>
+                        @endif
+                    </div>
 
                 </fieldset>
                 <div class="box box-default">

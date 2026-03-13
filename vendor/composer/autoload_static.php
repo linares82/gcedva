@@ -859,6 +859,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'AddBndCortoToNivelsTable' => __DIR__ . '/../..' . '/database/migrations/2020_02_24_103913_add_bnd_corto_to_nivels_table.php',
         'AddBndDocObligEntregadosToClientesTable' => __DIR__ . '/../..' . '/database/migrations/2022_04_08_094522_add_bnd_doc_oblig_entregados_to_clientes_table.php',
         'AddBndDocVincRevisadosToTitulacionsTable' => __DIR__ . '/../..' . '/database/migrations/2022_07_29_115747_add_bnd_doc_vinc_revisados_to_titulacions_table.php',
+        'AddBndDocsPortalToPlantelsTable' => __DIR__ . '/../..' . '/database/migrations/2026_03_13_091812_add_bnd_docs_portal_to_plantels_table.php',
         'AddBndDuplicarClienteToEventoClientesTable' => __DIR__ . '/../..' . '/database/migrations/2026_02_03_100016_add_bnd_duplicar_cliente_to_evento_clientes_table.php',
         'AddBndEditarPlanPagosToCajaConceptosTable' => __DIR__ . '/../..' . '/database/migrations/2026_01_15_101625_add_bnd_editar_plan_pagos_to_caja_conceptos_table.php',
         'AddBndEnLineaToFormaPagosTable' => __DIR__ . '/../..' . '/database/migrations/2025_11_21_114631_add_bnd_en_linea_to_forma_pagos_table.php',

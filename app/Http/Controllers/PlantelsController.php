@@ -101,6 +101,9 @@ class PlantelsController extends Controller
 		if (!isset($input['bnd_excepcion_documentos'])) {
 			$input['bnd_excepcion_documentos'] = 0;
 		}
+		if (!isset($input['bnd_docs_portal'])) {
+			$input['bnd_docs_portal'] = 0;
+		}
 		//$input['logo']="";
 		$r = $request->hasFile('logo_file');
 		if ($r) {
@@ -268,6 +271,9 @@ class PlantelsController extends Controller
 		$input['usu_mod_id'] = Auth::user()->id;
 		if (!isset($input['bnd_excepcion_documentos'])) {
 			$input['bnd_excepcion_documentos'] = 0;
+		}
+		if (!isset($input['bnd_docs_portal'])) {
+			$input['bnd_docs_portal'] = 0;
 		}
 		if (isset($input['bnd_multipagos_activo']) and $input['bnd_multipagos_activo'] == "on") {
 			$input['bnd_multipagos_activo'] = 1;

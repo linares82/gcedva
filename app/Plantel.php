@@ -106,6 +106,7 @@ class Plantel extends Model
 		'titulos_setyce_apikey',
 		'bnd_titulos_setyce',
 		'titulos_setyce_url',
+		'bnd_docs_portal'
 	];
 
 	protected $dates = ['deleted_at'];
