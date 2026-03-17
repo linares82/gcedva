@@ -2,35 +2,36 @@
 
 namespace App\Http\Controllers;
 
-use DB;
-use Log;
-use Auth;
-use Mail;
-use Session;
-use App\Caja;
-use App\Pago;
-use App\Param;
-use Exception;
 use App\Adeudo;
-use App\BsBaja;
-use App\CajaLn;
-use App\Cliente;
-use App\Plantel;
-use App\Empleado;
-use App\FormaPago;
-use Carbon\Carbon;
-use App\PromoPlanLn;
-use App\CajaConcepto;
-use App\CuentasEfectivo;
-use App\HistoriaCliente;
 use App\AdeudoPagoOnLine;
 use App\AutorizacionBeca;
+use App\BsBaja;
+use App\Caja;
+use App\CajaConcepto;
+use App\CajaLn;
+use App\CalendarioExaExtra;
+use App\Cliente;
 use App\CombinacionCliente;
-use Illuminate\Http\Request;
+use App\CuentasEfectivo;
+use App\Empleado;
+use App\FormaPago;
+use App\HistoriaCliente;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\createCaja;
 use App\Http\Requests\updateCaja;
-use App\Http\Controllers\Controller;
+use App\Pago;
+use App\Param;
+use App\Plantel;
+use App\PromoPlanLn;
 use App\valenceSdk\samples\BasicSample\UsoApi;
+use Auth;
+use Carbon\Carbon;
+use DB;
+use Exception;
+use Illuminate\Http\Request;
+use Log;
+use Mail;
+use Session;
 
 class CajasController extends Controller
 {
@@ -873,16 +874,50 @@ class CajasController extends Controller
         $registro['adeudo_id'] = 0;
         $registro['usu_alta_id'] = Auth::user()->id;
         $registro['usu_mod_id'] = Auth::user()->id;
-        $linea = CajaLn::create($registro);
 
-        $caja->subtotal = $caja->subtotal + $linea->subtotal;
-        $caja->recargo = $caja->recargo + $linea->recargo;
-        $caja->descuento = $caja->descuento + $linea->descuento;
-        $caja->total = $caja->subtotal + $caja->recargo - $caja->descuento;
+        //dd($concepto->toArray());
+        if ($concepto->bnd_extraordinario == 1) {
+            $calendarioExtras = 0;
+            $combinaciones = CombinacionCliente::where('cliente_id', $cliente->id)->get();
+            //dd($combinaciones->toArray());
+            foreach ($combinaciones as $combinacion) {
+                $calendarioExtras = CalendarioExaExtra::where('plantel_id', $cliente->plantel_id)
+                    ->whereDate('fec_inicio', '<=', date('Y-m-d'))
+                    ->whereDate('fec_fin', '>=', date('Y-m-d'))
+                    ->where('duracion_periodo_id', $combinacion->grado->duracion_periodo_id)
+                    ->count();
+                //dd($calendarioExtras);
+            }
 
-        $caja->save();
+            if ($calendarioExtras > 0) {
+                $linea = CajaLn::create($registro);
 
-        echo json_encode($linea);
+                $caja->subtotal = $caja->subtotal + $linea->subtotal;
+                $caja->recargo = $caja->recargo + $linea->recargo;
+                $caja->descuento = $caja->descuento + $linea->descuento;
+                $caja->total = $caja->subtotal + $caja->recargo - $caja->descuento;
+
+                $caja->save();
+
+                echo json_encode($linea);
+            } else {
+                return response()->json([
+                    'error' => "400",
+                    'msj' => 'No hay calendario de extraordinarios vigente para el grado del cliente'
+                ]);
+            }
+        } else {
+            $linea = CajaLn::create($registro);
+
+            $caja->subtotal = $caja->subtotal + $linea->subtotal;
+            $caja->recargo = $caja->recargo + $linea->recargo;
+            $caja->descuento = $caja->descuento + $linea->descuento;
+            $caja->total = $caja->subtotal + $caja->recargo - $caja->descuento;
+
+            $caja->save();
+
+            echo json_encode($linea);
+        }
     }
 
     public function pagar(Request $request)

@@ -2,32 +2,33 @@
 
 namespace App\Http\Controllers;
 
-use DB;
-use PDF;
-use Auth;
-use Session;
-use App\Grado;
-use App\Param;
-use Exception;
-use App\Cliente;
-use App\Lectivo;
-use App\Plantel;
-use App\Materium;
-use App\TpoExamen;
-use Carbon\Carbon;
-use App\Hacademica;
-use App\Inscripcion;
-use App\Ponderacion;
-use App\Calificacion;
-use App\Http\Requests;
-use App\PeriodoExamen;
-use App\CargaPonderacion;
 use App\AsignacionAcademica;
-use Illuminate\Http\Request;
+use App\CalendarioExaExtra;
+use App\Calificacion;
 use App\CalificacionPonderacion;
+use App\CargaPonderacion;
+use App\Cliente;
+use App\Grado;
+use App\Hacademica;
 use App\Http\Controllers\Controller;
+use App\Http\Requests;
 use App\Http\Requests\createHacademica;
 use App\Http\Requests\updateHacademica;
+use App\Inscripcion;
+use App\Lectivo;
+use App\Materium;
+use App\Param;
+use App\PeriodoExamen;
+use App\Plantel;
+use App\Ponderacion;
+use App\TpoExamen;
+use Auth;
+use Carbon\Carbon;
+use DB;
+use Exception;
+use Illuminate\Http\Request;
+use PDF;
+use Session;
 
 class HacademicasController extends Controller
 {
@@ -346,14 +347,38 @@ class HacademicasController extends Controller
         return $suma;
     }
 
-    public function getExamenes()
+    public function getExamenes(Request $request)
     {
+        $datos = $request->all();
+        //dd($datos);
+        $hacademica = null;
+        $consulta_extras = null;
+        if (isset($datos['hacademica_id'])) {
+            $hacademica = Hacademica::find($datos['hacademica_id']);
+            $consulta_extras = Calificacion::select(
+                'l.name as lectivo',
+                'm.name as materia',
+                'te.name as tipo_evaluacion',
+                'calificacions.fecha',
+                'calificacions.calificacion'
+            )
+                ->join('hacademicas as h', 'h.id', 'calificacions.hacademica_id')
+                ->join('lectivos as l', 'l.id', 'h.lectivo_id')
+                ->join('materia as m', 'm.id', 'h.materium_id')
+                ->join('tpo_examens as te', 'te.id', '=', 'calificacions.tpo_examen_id')
+                ->where('h.materium_id', $hacademica->materium_id)
+                ->where('h.cliente_id', $hacademica->cliente_id)
+                ->where('tpo_examen_id', 2)
+                ->get();
+        }
+
         $examen = TpoExamen::where('id', '>', 1)->pluck('name', 'id');
         //$examen->reverse();
         //$examen->put(0,'Seleccionar OpciÃ³n');
         //$examen->reverse();
+        //dd($hacademica->toArray());
         $lectivos = Lectivo::pluck('name', 'id');
-        return view('hacademicas.examen', compact('examen', 'lectivos'))
+        return view('hacademicas.examen', compact('examen', 'lectivos', 'hacademica', 'consulta_extras'))
             ->with('list', Hacademica::getListFromAllRelationApps());
     }
 
@@ -361,6 +386,7 @@ class HacademicasController extends Controller
     {
         //dd($request->all());
         $input = $request->all();
+
         //dd($input['calificacion'][0]);
         //dd($input);
 
@@ -521,6 +547,12 @@ class HacademicasController extends Controller
         $examen = TpoExamen::pluck('name', 'id');
 
         $asignacionAcademica = AsignacionAcademica::find($data['asignacion']);
+
+        //dd($hacademica->grado->duracion_periodo_id);
+
+
+        //dd($calendarioExtras);
+
         $materia = Materium::find($asignacionAcademica->materium_id);
         //dd($asignacionAcademica);
         $carga_ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $materia->ponderacion_id)
@@ -540,6 +572,19 @@ class HacademicasController extends Controller
         $asignacion = $data['asignacion'];
         $examen = TpoExamen::pluck('name', 'id');
         $asignacionAcademica = AsignacionAcademica::find($data['asignacion']);
+
+        $hacademica = Hacademica::where('plantel_id', $asignacionAcademica->plantel_id)
+            ->where('materium_id', $asignacionAcademica->materium_id)
+            ->where('grupo_id', $asignacionAcademica->grupo_id)
+            ->where('lectivo_id', $asignacionAcademica->lectivo_id)
+            ->first();
+
+        $calendarioExtras = CalendarioExaExtra::where('plantel_id', $asignacionAcademica->plantel_id)
+            ->whereDate('fec_inicio', '<=', date('Y-m-d'))
+            ->whereDate('fec_fin', '>=', date('Y-m-d'))
+            ->where('duracion_periodo_id', $hacademica->grado->duracion_periodo_id)
+            ->count();
+
         $lectivo = Lectivo::find($asignacionAcademica->lectivo_id);
         //dd($lectivo);
         //$calificacion_inicio=Carbon::createFromFormat('Y-m-d',$lectivo->calificacion_inicio);
@@ -599,7 +644,11 @@ class HacademicasController extends Controller
                 'stc.name as estatus_cliente',
                 'stc.id as estatus_cliente_id',
                 'af.fecha as fecha_acta',
-                'af.consecutivo as consecutivo_acta'
+                'af.consecutivo as consecutivo_acta',
+                'hacademicas.st_materium_id',
+                'hacademicas.materium_id as materia_id',
+                'hacademicas.id as hacademica_id',
+                'hacademicas.lectivo_id as lectivo_id'
             )
                 ->where('hacademicas.grupo_id', '=', $asignacionAcademica->grupo_id)
                 ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
@@ -627,6 +676,55 @@ class HacademicasController extends Controller
                 ->orderBy('cli.nombre2')
                 ->get();
             //dd($hacademicas);
+        } elseif (isset($data['no_aprobados'])) {
+            $hacademicas = HAcademica::select(
+                'cli.id',
+                'cli.plantel_id',
+                'cli.nombre',
+                'cli.nombre2',
+                'cli.ape_paterno',
+                'cli.ape_materno',
+                'cli.bnd_doc_oblig_entregados',
+                'c.calificacion',
+                'cp.calificacion_parcial_calculada',
+                'cp.id as calificacion_ponderacion_id',
+                'cp.calificacion_parcial',
+                'cpo.name as ponderacion',
+                'stc.name as estatus_cliente',
+                'stc.id as estatus_cliente_id',
+                'af.fecha as fecha_acta',
+                'af.consecutivo as consecutivo_acta',
+                'hacademicas.st_materium_id',
+                'hacademicas.materium_id as materia_id',
+                'hacademicas.id as hacademica_id',
+                'hacademicas.lectivo_id as lectivo_id'
+            )
+                ->where('hacademicas.grupo_id', '=', $asignacionAcademica->grupo_id)
+                ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
+                ->join('calificacions as c', 'c.hacademica_id', '=', 'hacademicas.id')
+                ->leftJoin('acta_finals as af', 'af.id', 'c.acta_final_id')
+                ->join('calificacion_ponderacions as cp', 'cp.calificacion_id', '=', 'c.id')
+                ->join('carga_ponderacions as cpo', 'cpo.id', '=', 'cp.carga_ponderacion_id')
+                ->join('clientes as cli', 'cli.id', '=', 'hacademicas.cliente_id')
+                ->join('st_clientes as stc', 'stc.id', '=', 'cli.st_cliente_id')
+                ->where('hacademicas.lectivo_id', '=', $asignacionAcademica->lectivo_id)
+                ->where('hacademicas.materium_id', '=', $asignacionAcademica->materium_id)
+                ->where('c.tpo_examen_id', '=', $data['tpo_examen_id'])
+                ->where('cp.carga_ponderacion_id', '=', $data['carga_ponderacion_id'])
+                ->where('hacademicas.st_materium_id', 2)
+                ->orderBy('cli.ape_paterno')
+                ->orderBy('cli.ape_materno')
+                ->orderBy('cli.nombre')
+                ->orderBy('cli.nombre2')
+                ->whereNull('hacademicas.deleted_at')
+                ->whereNull('c.deleted_at')
+                ->whereNull('i.deleted_at')
+                ->whereNull('cp.deleted_at')
+                ->orderBy('cli.ape_paterno')
+                ->orderBy('cli.ape_materno')
+                ->orderBy('cli.nombre')
+                ->orderBy('cli.nombre2')
+                ->get();
         } elseif (!isset($data['excepcion']) and $dentroPeriodoExamenes > 0) {
             //if($calificacion_inicio<=$hoy and $calificacion_fin>=$hoy){
             if ($dentroPeriodoExamenes > 0) {
@@ -644,7 +742,11 @@ class HacademicasController extends Controller
                     'cp.calificacion_parcial',
                     'stc.name as estatus_cliente',
                     'stc.id as estatus_cliente_id',
-                    'cpo.name as ponderacion'
+                    'cpo.name as ponderacion',
+                    'hacademicas.st_materium_id',
+                    'hacademicas.materium_id as materia_id',
+                    'hacademicas.id as hacademica_id',
+                    'hacademicas.lectivo_id as lectivo_id'
                 )
                     ->where('hacademicas.grupo_id', '=', $asignacionAcademica->grupo_id)
                     ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
@@ -694,7 +796,11 @@ class HacademicasController extends Controller
                 'stc.id as estatus_cliente_id',
                 'af.fecha as fecha_acta',
                 'af.consecutivo as consecutivo_acta',
-                'c.tpo_examen_id'
+                'c.tpo_examen_id',
+                'hacademicas.st_materium_id',
+                'hacademicas.materium_id as materia_id',
+                'hacademicas.id as hacademica_id',
+                'hacademicas.lectivo_id as lectivo_id'
             )
                 ->where('hacademicas.grupo_id', '=', $asignacionAcademica->grupo_id)
                 ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
@@ -742,7 +848,7 @@ class HacademicasController extends Controller
                 ->where('bnd_activo', 1)
                 ->pluck('name', 'id');
 
-            return view('hacademicas.calificacionGrupos', compact('asignacion', 'examen', 'carga_ponderaciones', 'ponderacion_seleccionada'))
+            return view('hacademicas.calificacionGrupos', compact('asignacion', 'examen', 'carga_ponderaciones', 'ponderacion_seleccionada', 'asignacionAcademica', 'calendarioExtras'))
                 ->with('list', Hacademica::getListFromAllRelationApps())
                 ->with('msj', $msj);
         }
@@ -762,10 +868,16 @@ class HacademicasController extends Controller
             $carga_ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $materia->ponderacion_id)->pluck('name', 'id');
         }
 
-
-
         //dd($hacademicas->toArray());
-        return view('hacademicas.calificacionGrupos', compact('asignacion', 'examen', 'carga_ponderaciones', 'hacademicas', 'ponderacion_seleccionada'))
+        return view('hacademicas.calificacionGrupos', compact(
+            'asignacion',
+            'examen',
+            'carga_ponderaciones',
+            'hacademicas',
+            'ponderacion_seleccionada',
+            'asignacionAcademica',
+            'calendarioExtras'
+        ))
             ->with('list', Hacademica::getListFromAllRelationApps())
             ->with('msj', $msj);
     }

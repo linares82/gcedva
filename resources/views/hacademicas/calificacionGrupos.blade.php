@@ -52,6 +52,13 @@
                      <span class="help-block">{{ $errors->first("carga_ponderacion_id") }}</span>
                     @endif
                  </div>
+                 <div class="form-group col-md-4 @if($errors->has('no_aprobados')) has-error @endif">
+                       <label for="no_aprobados-field">No Aprobados</label>
+                       {!! Form::checkbox("no_aprobados", 1, false) !!}
+                       @if($errors->has("no_aprobados"))
+                        <span class="help-block">{{ $errors->first("no_aprobados") }}</span>
+                       @endif
+                    </div>
                  @permission('calificacions.excepcion')
                     <div class="form-group col-md-4 @if($errors->has('excepcion')) has-error @endif">
                        <label for="excepcion-field">Exepcion</label>
@@ -71,8 +78,8 @@
                  <table class="table table-condensed table-striped">
                      <thead>
                          <th>id</th>
-                         <th>Alumno</th>
-                         <th>Estatus Cliente</th>
+                         <th>Alumno-Estatus</th>
+                         <th>Materia-Estatus</th>
                          <th>Doc. Entregados</th>
                          <th>Acta Final</th>
                          <th>Ponderacion</th>
@@ -91,8 +98,24 @@
                              $validaEntregaDocs3Meses=$cli_funciones->validaEntregaDocs3Meses($r->id);
                          @endphp
                          <td>{{$r->id}}</td>
-                         <td>{{$r->ape_paterno." ".$r->ape_materno." ".$r->nombre." ".$r->nombre2}}</td>
-                         <td>{{$r->estatus_cliente}}</td>
+                         <td>
+                            {{$r->ape_paterno." ".$r->ape_materno." ".$r->nombre." ".$r->nombre2}} / 
+                            <span class="badge">
+                                {{$r->estatus_cliente}}
+                            </span>
+                        </td>
+                         <td>
+                            {{ $asignacionAcademica->materia->name }}
+                            @if($r->st_materium_id == 1)
+                                <span class="badge bg-green">
+                                Aprobado</td>
+                                </span>
+                            @elseif($r->st_materium_id == 2)
+                                <span class="badge bg-red">
+                                No Aprobado</td>
+                                </span>
+                            @endif
+                            
                          <td>
                              @if($r->bnd_doc_oblig_entregados==1 or $validaEntregaDocs3Meses)
                              SI o dentro de plazo valido
@@ -242,6 +265,13 @@
                             @permission('incidenciasCalificacions.create')
                             <a target="_blank" href="{{ route('incidenciasCalificacions.create', array('calificacion_ponderacion_id'=>$r->calificacion_ponderacion_id)) }}" class="btn btn-warning btn-xs" target="_blank">Incidencia</a>     
                             @endpermission
+                            @if($calendarioExtras>0)
+                                @if($r->st_materium_id == 2)
+                                    @permission('hacademicas.examenes')
+                                    <a target="_blank" href="{{ route('hacademicas.examenes', array('hacademica_id'=>$r->hacademica_id)) }}" class="btn btn-info btn-xs" target="_blank">Crear Extra.</a>     
+                                    @endpermission
+                                @endif
+                            @endif
                          </td>
                          <td>
                              <div id='loading{{$r->id}}}' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 

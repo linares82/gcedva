@@ -90,11 +90,11 @@ class MateriasController extends Controller
         $materium = $materium->with('ponderacionMaterias')->find($id);
         $list = Materium::where('id', '>', '0')->where('seriada_bnd', '=', '1')->pluck('name', 'id')->toArray();
         $materiales_ls = array_merge(['0' => 'Seleccionar Opción'], $list);
-        $ponderacionMaterias=Materium::where('plantel_id', $materium->plantel_id)
-        ->where('bnd_ponderacion',true)
-        ->pluck('name','id');
+        $ponderacionMaterias = Materium::where('plantel_id', $materium->plantel_id)
+            ->where('bnd_ponderacion', true)
+            ->pluck('name', 'id');
         //dd($materiales_ls);
-        return view('materias.edit', compact('materium', 'materiales_ls','ponderacionMaterias'))
+        return view('materias.edit', compact('materium', 'materiales_ls', 'ponderacionMaterias'))
             ->with('list', Materium::getListFromAllRelationApps());
     }
 
@@ -143,10 +143,10 @@ class MateriasController extends Controller
 
         $materium->update($input);
         //dd($input['hijos']);
-        if(isset($input['hijos'])){
+        if (isset($input['hijos'])) {
             $materium->ponderacionMaterias()->sync($input['hijos']);
         }
-        
+
 
         return redirect()->route('materias.index')->with('message', 'Registro Actualizado.');
     }
@@ -178,7 +178,7 @@ class MateriasController extends Controller
                 ->join('materium_periodos as mp', 'mp.materium_id', '=', 'm.id')
                 ->join('periodo_estudios as pe', 'pe.id', '=', 'mp.periodo_estudio_id')
                 ->join('grupo_periodo_estudios as gpe', 'gpe.periodo_estudio_id', '=', 'pe.id')
-                ->select('m.id', DB::raw('concat(m.id, "-",m.name) as name' ))
+                ->select('m.id', DB::raw('concat(m.id, "-",m.name) as name'))
                 ->where('gpe.grupo_id', $grupo)
                 ->where('m.plantel_id', '=', $plantel)
                 ->where('m.id', '>', '0')
@@ -255,7 +255,7 @@ class MateriasController extends Controller
             $cliente_id = $request->get('cliente_id');
 
             $grado = $request->get('grado_id');
-            $materia = $request->get('materia_id');
+            $materia = $request->get('materium_id');
             //dd("FLC:".$materia);
             $final = array();
             $r = DB::table('materia as m')
@@ -520,7 +520,8 @@ class MateriasController extends Controller
         }
     }
 
-    public function materiasExtraordinario(Request $request){
+    public function materiasExtraordinario(Request $request)
+    {
         if ($request->ajax()) {
             //dd($request->all());
             $plantel = $request->get('plantel_id');
@@ -529,11 +530,11 @@ class MateriasController extends Controller
             $final = array();
             $r = DB::table('materia as m')
                 ->select('m.id', 'm.name')
-                ->join('hacademicas as h','h.materium_id','m.id')
-                ->join('calificacions as cali','cali.hacademica_id','=','h.id')
-                ->where('h.plantel_id',$plantel)
-                ->where('cali.lectivo_id',$lectivo)
-                ->where('cali.tpo_examen_id',2)
+                ->join('hacademicas as h', 'h.materium_id', 'm.id')
+                ->join('calificacions as cali', 'cali.hacademica_id', '=', 'h.id')
+                ->where('h.plantel_id', $plantel)
+                ->where('cali.lectivo_id', $lectivo)
+                ->where('cali.tpo_examen_id', 2)
                 ->whereNull('h.deleted_at')
                 ->whereNull('cali.deleted_at')
                 ->orderBy('m.id')
@@ -564,7 +565,8 @@ class MateriasController extends Controller
         }
     }
 
-    public function materiasXPlantel(Request $request){
+    public function materiasXPlantel(Request $request)
+    {
         if ($request->ajax()) {
             //dd($request->all());
             $plantel = $request->get('plantel_id');
@@ -584,13 +586,13 @@ class MateriasController extends Controller
                     if (in_array($r1->id, $materias)) {
                         array_push($final, array(
                             'id' => $r1->id,
-                            'name' => $r1->id."-".$r1->name,
+                            'name' => $r1->id . "-" . $r1->name,
                             'selectec' => 'Selected',
                         ));
                     } else {
                         array_push($final, array(
                             'id' => $r1->id,
-                            'name' => $r1->id."-".$r1->name,
+                            'name' => $r1->id . "-" . $r1->name,
                             'selectec' => '',
                         ));
                     }
@@ -607,7 +609,7 @@ class MateriasController extends Controller
         if ($request->ajax()) {
             //dd($request->all());
             $plantel = $request->get('plantel_id');
-            
+
             //dd("FLC:".$materia);
             $final = array();
             $r = DB::table('materia as m')

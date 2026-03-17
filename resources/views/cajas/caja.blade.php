@@ -1506,7 +1506,13 @@ Agregar nuevo registro
             beforeSend : function(){$("#loading3").show(); },
             complete : function(){$("#loading3").hide(); },
             success: function(data) {
-            window.location.href = "{{ route('cajas.edit', $caja->id) }}";
+                console.log(data);
+                if(data.error==400){
+                    alert(data.msj);
+                }else{
+                    window.location.href = "{{ route('cajas.edit', $caja->id) }}";
+                }
+            //
             }
     });
     });

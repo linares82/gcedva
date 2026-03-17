@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
-
-use App\CajaLn;
-use App\Caja;
 use App\Adeudo;
+use App\Caja;
+use App\CajaLn;
+use App\CalendarioExaExtra;
 use App\Cliente;
 use App\CombinacionCliente;
-use Illuminate\Http\Request;
-use Auth;
-use App\Http\Requests\updateCajaLn;
+use App\Http\Controllers\Controller;
+use App\Http\Requests;
 use App\Http\Requests\createCajaLn;
+use App\Http\Requests\updateCajaLn;
+use Auth;
+use Illuminate\Http\Request;
 
 class CajaLnsController extends Controller
 {
@@ -54,7 +54,10 @@ class CajaLnsController extends Controller
 		$input['usu_alta_id'] = Auth::user()->id;
 		$input['usu_mod_id'] = Auth::user()->id;
 
+
+
 		//create data
+
 		CajaLn::create($input);
 
 		return redirect()->route('cajaLns.index')->with('message', 'Registro Creado.');

@@ -84,6 +84,13 @@ input[id="bnd_genera_matricula-field"][readonly] {
                         <span class="help-block">{{ $errors->first("bnd_mensualidad") }}</span>
                        @endif
                     </div>
+                    <div class="form-group col-md-4 @if($errors->has('bnd_extraordinario')) has-error @endif">
+                       <label for="bnd_extraordinario-field">¿Es examen Extraordinario?</label>
+                       {!! Form::checkbox("bnd_extraordinario", 1, null, [ "id" => "bnd_extraordinario-field",'readonly' =>true]) !!}
+                       @if($errors->has("bnd_extraordinario"))
+                        <span class="help-block">{{ $errors->first("bnd_extraordinario") }}</span>
+                       @endif
+                    </div>
                     <div class="form-group col-md-4 @if($errors->has('reglas')) has-error @endif">
                      <label for="reglas-field">Reglas Descuento/Recargo</label><br/>
                      {!! Form::select("reglas[]", $reglas, null, array("class" => "form-control select_seguridad", 'multiple'=>true, "id" => "reglas-field")) !!}

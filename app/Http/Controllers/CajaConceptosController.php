@@ -72,6 +72,9 @@ class CajaConceptosController extends Controller
         } else {
             $input['bnd_concepto_sin_plan'] = 1;
         }
+        if (!isset($input['bnd_extraordinario'])) {
+            $input['bnd_extraordinario'] = 0;
+        }
 
         //create data
         $registro = CajaConcepto::create($input);
@@ -160,6 +163,9 @@ class CajaConceptosController extends Controller
             $input['bnd_editar_plan_pagos'] = 0;
         } else {
             $input['bnd_editar_plan_pagos'] = 1;
+        }
+        if (!isset($input['bnd_extraordinario'])) {
+            $input['bnd_extraordinario'] = 0;
         }
         //update data
         $cajaConcepto = $cajaConcepto->find($id);

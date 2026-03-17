@@ -35,8 +35,8 @@
             
                     <div class="form-group col-md-4 @if($errors->has('cve_alumno')) has-error @endif">
                        <label for="cliente_id-field">id</label>
-                       {!! Form::text("cliente_id", null, array("class" => "form-control input-sm", "id" => "cliente_id-field")) !!}
-                       {!! Form::hidden("plantel_id", null, array("class" => "form-control input-sm", "id" => "plantel_id-field")) !!}
+                       {!! Form::text("cliente_id", isset($hacademica) ? $hacademica->cliente_id : null, array("class" => "form-control input-sm", "id" => "cliente_id-field")) !!}
+                       {!! Form::hidden("plantel_id", isset($hacademica) ? $hacademica->plantel_id : null, array("class" => "form-control input-sm", "id" => "plantel_id-field")) !!}
                        @if($errors->has("cliente_id"))
                         <span class="help-block">{{ $errors->first("cliente_id") }}</span>
                        @endif
@@ -44,7 +44,7 @@
 
                     <div class="form-group col-md-4 @if($errors->has('grado_id')) has-error @endif">
                        <label for="grado_id-field">Grado</label>
-                       {!! Form::select("grado_id", $list["Grado"], null, array("class" => "form-control select_seguridad", "id" => "grado_id-field")) !!}
+                       {!! Form::select("grado_id", $list["Grado"], isset($hacademica) ? $hacademica->grado_id : null, array("class" => "form-control select_seguridad", "id" => "grado_id-field")) !!}
                        @if($errors->has("grado_id"))
                         <span class="help-block">{{ $errors->first("grado_id") }}</span>
                        @endif
@@ -52,7 +52,7 @@
                     
                     <div class="form-group col-md-4 @if($errors->has('materium_id')) has-error @endif">
                        <label for="materium_id-field">Materia</label>
-                       {!! Form::select("materium_id", $list["Materium"], null, array("class" => "form-control select_seguridad", "id" => "materium_id-field")) !!}
+                       {!! Form::select("materium_id", $list["Materium"], isset($hacademica) ? $hacademica->materium_id : null, array("class" => "form-control select_seguridad", "id" => "materium_id-field")) !!}
                        @if($errors->has("materium_id"))
                         <span class="help-block">{{ $errors->first("materium_id") }}</span>
                        @endif
@@ -64,7 +64,7 @@
 
                     <div class="form-group col-md-4 @if($errors->has('lectivo_id')) has-error @endif">
                         <label for="lectivo_id-field">Lectivo</label>
-                        {!! Form::select("lectivo_id", $lectivos, null, array("class" => "form-control select_seguridad", "id" => "lectivo_id-field")) !!}
+                        {!! Form::select("lectivo_id", $lectivos, isset($hacademica) ? $hacademica->lectivo_id : null, array("class" => "form-control select_seguridad", "id" => "lectivo_id-field")) !!}
                         @if($errors->has("lectivo_id"))
                          <span class="help-block">{{ $errors->first("lectivo_id") }}</span>
                         @endif
@@ -107,6 +107,38 @@
                     <button type="button" class="btn btn-danger" id="btnContarExtras">Contar extras por lectivo</button>
                     <button type="submit" class="btn btn-primary " id="btnSubmitDatos" disabled=true>Procesar y Crear nuevo</button>
                 </div>
+                @if(isset($consulta_extras))
+                    <table class="table table-condensed table-striped">
+                        <theader>
+                            <tr>
+                                <td>
+                                    Lectivo
+                                </td>
+                                <td>Fecha</td><td>Tipo Evaluacion</td><td>Calificacion</td>
+                            </tr>
+                        </theader>
+                        <tbody>
+                            @foreach($consulta_extras as $extra)
+                                <tr>
+                                    <td>
+                                        {{$extra->lectivo}}
+                                    </td>
+                                    <td>
+                                        {{$extra->fecha}}
+                                    </td>
+                                    <td>
+                                        {{$extra->tipo_evaluacion}}
+                                    </td>
+                                    <td>
+                                        {{$extra->calificacion}}
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                @endif
+
+
                 @if(isset($hacademicas))
                     <table class="table table-condensed table-striped">
                         <theader>
@@ -290,10 +322,12 @@
     function CmbMateria(){
           var $example = $("#especialidad_id-field").select2();
           var a= $('#frm_academica').serialize();
+          
+          //console.log($('#materium_id-field option:selected').val());
               $.ajax({
                   url: '{{ route("materias.getCmbMateriaXalumno") }}',
                   type: 'GET',
-                  data: "cliente_id=" + $('#cliente_id-field').val()+"&grado_id="+ $('#grado_id-field option:selected').val()+"&materia_id="+ $('#materia_id-field option:selected').val(),
+                  data: "cliente_id=" + $('#cliente_id-field').val()+"&grado_id="+ $('#grado_id-field option:selected').val()+"&materium_id="+ $('#materium_id-field option:selected').val(),
                   dataType: 'json',
                   beforeSend : function(){$("#loading3").show();},
                   complete : function(){$("#loading3").hide();},
