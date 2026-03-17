@@ -353,8 +353,13 @@ class HacademicasController extends Controller
         //dd($datos);
         $hacademica = null;
         $consulta_extras = null;
+        $calendario_extras = null;
         if (isset($datos['hacademica_id'])) {
             $hacademica = Hacademica::find($datos['hacademica_id']);
+            $calendario_extras = CalendarioExaExtra::where('plantel_id', $hacademica->plantel_id)
+                ->where('duracion_periodo_id', $hacademica->grado->duracion_periodo_id)
+                ->orderBy('id', 'desc')
+                ->first();
             $consulta_extras = Calificacion::select(
                 'l.name as lectivo',
                 'm.name as materia',
@@ -363,11 +368,13 @@ class HacademicasController extends Controller
                 'calificacions.calificacion'
             )
                 ->join('hacademicas as h', 'h.id', 'calificacions.hacademica_id')
-                ->join('lectivos as l', 'l.id', 'h.lectivo_id')
+                ->join('lectivos as l', 'l.id', 'calificacions.lectivo_id')
                 ->join('materia as m', 'm.id', 'h.materium_id')
                 ->join('tpo_examens as te', 'te.id', '=', 'calificacions.tpo_examen_id')
-                ->where('h.materium_id', $hacademica->materium_id)
+                //->where('h.materium_id', $hacademica->materium_id)
                 ->where('h.cliente_id', $hacademica->cliente_id)
+                ->whereDate('calificacions.fecha', '>=', $calendario_extras->fec_inicio)
+                ->whereDate('calificacions.fecha', '<=', $calendario_extras->fec_fin)
                 ->where('tpo_examen_id', 2)
                 ->get();
         }
@@ -378,7 +385,7 @@ class HacademicasController extends Controller
         //$examen->reverse();
         //dd($hacademica->toArray());
         $lectivos = Lectivo::pluck('name', 'id');
-        return view('hacademicas.examen', compact('examen', 'lectivos', 'hacademica', 'consulta_extras'))
+        return view('hacademicas.examen', compact('examen', 'lectivos', 'hacademica', 'consulta_extras', 'calendario_extras'))
             ->with('list', Hacademica::getListFromAllRelationApps());
     }
 

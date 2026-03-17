@@ -49,7 +49,8 @@ class Pago extends Model
 		'serie_factura',
 		'folio_facturados',
 		'usu_delete_id',
-		'bnd_reactivacion'
+		'bnd_reactivacion',
+		'detalle_concepto'
 	];
 
 	public function usu_alta()

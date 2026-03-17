@@ -543,7 +543,8 @@
                                     @endpermission
                                     @endif
                                 </td>
-                                <td><strong>Monto:</strong>{{ $pago->monto }} <br>
+                                <td><strong>Detalle:</strong>{{ $pago->detalle_concepto }} <br>
+                                    <strong>Monto:</strong>{{ $pago->monto }} <br>
                                     <strong>Fecha:</strong> {{ $pago->fecha }} <br>
                                     @permission('ticket.fechaPago')
                                     <strong>Creado:</strong> {{ $pago->created_at }} <br>
@@ -1069,6 +1070,13 @@ Agregar nuevo registro
                        {!! Form::text("referencia", 0, array("class" => "form-control", "id" => "referencia-field")) !!}
                        @if($errors->has("referencia"))
                         <span class="help-block">{{ $errors->first("referencia") }}</span>
+                       @endif
+                    </div>
+                    <div class="form-group col-md-6 @if($errors->has('detalle_concepto')) has-error @endif">
+                       <label for="detalle_concepto-field">Detalle Concepto</label>
+                       {!! Form::text("detalle_concepto", null, array("class" => "form-control", "id" => "detalle_concepto-field")) !!}
+                       @if($errors->has("detalle_concepto"))
+                        <span class="help-block">{{ $errors->first("detalle_concepto") }}</span>
                        @endif
                     </div>
                     
@@ -1630,6 +1638,7 @@ Agregar nuevo registro
                     'fecha': $('#fecha_ln-field').val(),
                     'forma_pago_id': $('#forma_pago_id-field option:selected').val(),
                     'referencia':$('#referencia-field').val(),
+                    'detalle_concepto':$('#detalle_concepto-field').val(),
                     'cuenta_efectivo_id': $('#cuenta_efectivo_id-field').val(),
                     'bnd_referenciado':referencia_check
                 },

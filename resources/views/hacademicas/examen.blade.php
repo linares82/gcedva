@@ -108,6 +108,16 @@
                     <button type="submit" class="btn btn-primary " id="btnSubmitDatos" disabled=true>Procesar y Crear nuevo</button>
                 </div>
                 @if(isset($consulta_extras))
+                <div class="row">
+                    <label>
+                    Calendario Correspondiente Activo: {{$calendario_extras->id}}-
+                                                    {{$calendario_extras->plantel->razon}}
+                                                    {{$calendario_extras->duracionPeriodo->name}}(
+                                                    {{$calendario_extras->fec_inicio}} a 
+                                                    {{$calendario_extras->fec_fin}})
+                    </label>
+                </div>
+                    
                     <table class="table table-condensed table-striped">
                         <theader>
                             <tr>
@@ -115,6 +125,7 @@
                                     Lectivo
                                 </td>
                                 <td>Fecha</td><td>Tipo Evaluacion</td><td>Calificacion</td>
+                                
                             </tr>
                         </theader>
                         <tbody>

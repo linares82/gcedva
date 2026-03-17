@@ -141,6 +141,7 @@ return array(
     'AddDescCertToPlanEstudiosTable' => $baseDir . '/database/migrations/2020_07_22_110816_add_desc_cert_to_plan_estudios_table.php',
     'AddDescToParamsTable' => $baseDir . '/database/migrations/2021_10_29_105407_add_desc_to_params_table.php',
     'AddDescuentosCajaLnsTable' => $baseDir . '/database/migrations/2025_12_10_093202_add_descuentos_caja_lns_table.php',
+    'AddDetalleConceptoToPagosTable' => $baseDir . '/database/migrations/2026_03_17_162945_add_detalle_concepto_to_pagos_table.php',
     'AddDirResPlantelsTable' => $baseDir . '/database/migrations/2019_07_02_120947_add_dir_res_plantels_table.php',
     'AddDocEntregadoToPivotDocClientesTable' => $baseDir . '/database/migrations/2022_04_01_103755_add_doc_entregado_to_pivot_doc_clientes_table.php',
     'AddDocenteLectivoOficialAsignacionAcademicasTable' => $baseDir . '/database/migrations/2020_05_05_120656_add_docente_lectivo_oficial_asignacion_academicas_table.php',
