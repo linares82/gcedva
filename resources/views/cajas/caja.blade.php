@@ -918,12 +918,26 @@
                             <tbody>
                                 @php
                                     //dd($cajas->toArray());
+                                    
                                 @endphp
                                 @foreach($cajas as $ln)
-                                    
+                                    @php
+                                        $pagos=App\Pago::where('caja_id', $ln->caja_id)->get();
+                                    @endphp
                                     <tr>
                                         
-                                    <td> {{$ln->concepto}}</td> <td>{{$ln->fecha}}</td> <td>{{$ln->total}}</td><td>{{$ln->caja}}</td><td>{{$ln->estatus}}</td>
+                                    <td> 
+                                        {{$ln->concepto}} 
+                                        @if(isset($caja->pagos))
+                                        @foreach($pagos as $pago)
+                                        <span class="badge bg-light-blue">{{ $pago->detalle_concepto }}</span>
+                                        @endforeach
+                                        @endif
+                                        <span class="badge bg-gray">{{$ln->fecha}}</span>
+                                    </td> 
+                                    <td>{{$ln->total}}</td>
+                                    <td>{{$ln->caja}}</td>
+                                    <td>{{$ln->estatus}}</td>
                                     </tr>
                                     
                                 @endforeach

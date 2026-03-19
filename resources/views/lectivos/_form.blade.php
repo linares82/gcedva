@@ -12,36 +12,16 @@
                       <span class="help-block">{{ $errors->first("inscripcion") }}</span>
                      @endif
                   </div>  
-                    <div class="form-group col-md-1 @if($errors->has('activo')) has-error @endif">
-                       <label for="activo-field">Activo</label>
-                       {!! Form::checkbox("activo", 1, null, [ "id" => "activo-field"]) !!}
-                       @if($errors->has("activo"))
-                        <span class="help-block">{{ $errors->first("activo") }}</span>
-                       @endif
-                    </div>
-                    <div class="form-group col-md-2 @if($errors->has('bachillerato_bnd')) has-error @endif">
-                       <label for="bachillerato_bnd-field">Bachillerato</label>
-                       {!! Form::checkbox("bachillerato_bnd", 1, null, [ "id" => "bachillerato_bnd-field"]) !!}
-                       @if($errors->has("bachillerato_bnd"))
-                        <span class="help-block">{{ $errors->first("bachillerato_bnd") }}</span>
-                       @endif
-                    </div>
-                    <div class="form-group col-md-1 @if($errors->has('carrera_bnd')) has-error @endif">
-                       <label for="activo-field">Carrera</label>
-                       {!! Form::checkbox("carrera_bnd", 1, null, [ "id" => "activo-field"]) !!}
-                       @if($errors->has("carrera_bnd"))
-                        <span class="help-block">{{ $errors->first("carrera_bnd") }}</span>
-                       @endif
-                    </div>
-                    <div class="form-group col-md-1 @if($errors->has('grafica_bnd')) has-error @endif">
-                       <label for="grafica_bnd-field">Grafica</label>
-                       {!! Form::checkbox("grafica_bnd", 1, null, [ "id" => "grafica_bnd-field"]) !!}
-                       @if($errors->has("grafica_bnd"))
-                        <span class="help-block">{{ $errors->first("grafica_bnd") }}</span>
-                       @endif
-                    </div>
-                    <div class="row"></div>
-                    <div class="form-group col-md-4 @if($errors->has('inicio')) has-error @endif">
+                     <div class="form-group col-md-4 @if($errors->has('lectivo_anterior_id')) has-error @endif">
+                            <label for="lectivo_anterior_id-field">Lectivo Anterior</label>
+                            {!! Form::select("lectivo_anterior_id", $lectivos, null, array("class" => "form-control select_seguridad", "id" => "lectivo_anterior_id-field")) !!}
+                            @if($errors->has("lectivo_anterior_id"))
+                            <span class="help-block">{{ $errors->first("lectivo_anterior_id") }}</span>
+                            @endif
+                        </div>  
+                  
+                    
+                    <div class="form-group col-md-4 @if($errors->has('inicio')) has-error @endif" style="clear:left;">
                        <label for="inicio-field">Inicio</label>
                        {!! Form::text("inicio", null, array("class" => "form-control input-sm", "id" => "inicio-field")) !!}
                        @if($errors->has("inicio"))
@@ -69,6 +49,35 @@
                       <span class="help-block">{{ $errors->first("periodo_escolar") }}</span>
                      @endif
                   </div>
+                  <div class="form-group col-md-1 @if($errors->has('activo')) has-error @endif">
+                       <label for="activo-field">Activo</label>
+                       {!! Form::checkbox("activo", 1, null, [ "id" => "activo-field"]) !!}
+                       @if($errors->has("activo"))
+                        <span class="help-block">{{ $errors->first("activo") }}</span>
+                       @endif
+                    </div>
+                    
+                    <div class="form-group col-md-2 @if($errors->has('bachillerato_bnd')) has-error @endif">
+                       <label for="bachillerato_bnd-field">Bachillerato</label>
+                       {!! Form::checkbox("bachillerato_bnd", 1, null, [ "id" => "bachillerato_bnd-field"]) !!}
+                       @if($errors->has("bachillerato_bnd"))
+                        <span class="help-block">{{ $errors->first("bachillerato_bnd") }}</span>
+                       @endif
+                    </div>
+                    <div class="form-group col-md-1 @if($errors->has('carrera_bnd')) has-error @endif">
+                       <label for="activo-field">Carrera</label>
+                       {!! Form::checkbox("carrera_bnd", 1, null, [ "id" => "activo-field"]) !!}
+                       @if($errors->has("carrera_bnd"))
+                        <span class="help-block">{{ $errors->first("carrera_bnd") }}</span>
+                       @endif
+                    </div>
+                    <div class="form-group col-md-1 @if($errors->has('grafica_bnd')) has-error @endif">
+                       <label for="grafica_bnd-field">Grafica</label>
+                       {!! Form::checkbox("grafica_bnd", 1, null, [ "id" => "grafica_bnd-field"]) !!}
+                       @if($errors->has("grafica_bnd"))
+                        <span class="help-block">{{ $errors->first("grafica_bnd") }}</span>
+                       @endif
+                    </div>
                     <div class="row"></div>
                     @if(isset($lectivo))
                     <div class="form-group col-md-12">

@@ -358,14 +358,17 @@ class HacademicasController extends Controller
             $hacademica = Hacademica::find($datos['hacademica_id']);
             $calendario_extras = CalendarioExaExtra::where('plantel_id', $hacademica->plantel_id)
                 ->where('duracion_periodo_id', $hacademica->grado->duracion_periodo_id)
+                ->where('lectivo_id', $hacademica->lectivo_id)
                 ->orderBy('id', 'desc')
                 ->first();
+            //dd($calendario_extras);
             $consulta_extras = Calificacion::select(
                 'l.name as lectivo',
                 'm.name as materia',
                 'te.name as tipo_evaluacion',
                 'calificacions.fecha',
-                'calificacions.calificacion'
+                'calificacions.calificacion',
+                'h.cliente_id'
             )
                 ->join('hacademicas as h', 'h.id', 'calificacions.hacademica_id')
                 ->join('lectivos as l', 'l.id', 'calificacions.lectivo_id')
@@ -373,10 +376,51 @@ class HacademicasController extends Controller
                 ->join('tpo_examens as te', 'te.id', '=', 'calificacions.tpo_examen_id')
                 //->where('h.materium_id', $hacademica->materium_id)
                 ->where('h.cliente_id', $hacademica->cliente_id)
+                ->where('calificacions.lectivo_id', $hacademica->lectivo_id)
                 ->whereDate('calificacions.fecha', '>=', $calendario_extras->fec_inicio)
                 ->whereDate('calificacions.fecha', '<=', $calendario_extras->fec_fin)
                 ->where('tpo_examen_id', 2)
                 ->get();
+            $conteo_extras_materia_actual = Calificacion::select(
+                'l.name as lectivo',
+                'm.name as materia',
+                'te.name as tipo_evaluacion',
+                'calificacions.fecha',
+                'calificacions.calificacion',
+                'h.cliente_id'
+            )
+                ->join('hacademicas as h', 'h.id', 'calificacions.hacademica_id')
+                ->join('lectivos as l', 'l.id', 'calificacions.lectivo_id')
+                ->join('materia as m', 'm.id', 'h.materium_id')
+                ->join('tpo_examens as te', 'te.id', '=', 'calificacions.tpo_examen_id')
+                ->where('h.materium_id', $hacademica->materium_id)
+                ->where('h.cliente_id', $hacademica->cliente_id)
+                ->where('calificacions.lectivo_id', $hacademica->lectivo_id)
+                ->whereDate('calificacions.fecha', '>=', $calendario_extras->fec_inicio)
+                ->whereDate('calificacions.fecha', '<=', $calendario_extras->fec_fin)
+                ->where('tpo_examen_id', 2)
+                ->count();
+            $limite_extras = $hacademica->grado->duracionPeriodo->bloqueo_cantidad_extras;
+            //dd($hacademica->grado->duracionPeriodo);
+            $conteo_extras = Calificacion::select(
+                'l.name as lectivo',
+                'm.name as materia',
+                'te.name as tipo_evaluacion',
+                'calificacions.fecha',
+                'calificacions.calificacion',
+                'h.cliente_id'
+            )
+                ->join('hacademicas as h', 'h.id', 'calificacions.hacademica_id')
+                ->join('lectivos as l', 'l.id', 'calificacions.lectivo_id')
+                ->join('materia as m', 'm.id', 'h.materium_id')
+                ->join('tpo_examens as te', 'te.id', '=', 'calificacions.tpo_examen_id')
+                //->where('h.materium_id', $hacademica->materium_id)
+                ->where('h.cliente_id', $hacademica->cliente_id)
+                ->where('calificacions.lectivo_id', $hacademica->lectivo_id)
+                ->whereDate('calificacions.fecha', '>=', $calendario_extras->fec_inicio)
+                ->whereDate('calificacions.fecha', '<=', $calendario_extras->fec_fin)
+                ->where('tpo_examen_id', 2)
+                ->count();
         }
 
         $examen = TpoExamen::where('id', '>', 1)->pluck('name', 'id');
@@ -385,7 +429,16 @@ class HacademicasController extends Controller
         //$examen->reverse();
         //dd($hacademica->toArray());
         $lectivos = Lectivo::pluck('name', 'id');
-        return view('hacademicas.examen', compact('examen', 'lectivos', 'hacademica', 'consulta_extras', 'calendario_extras'))
+        return view('hacademicas.examen', compact(
+            'examen',
+            'lectivos',
+            'hacademica',
+            'consulta_extras',
+            'calendario_extras',
+            'conteo_extras_materia_actual',
+            'limite_extras',
+            'conteo_extras'
+        ))
             ->with('list', Hacademica::getListFromAllRelationApps());
     }
 
@@ -718,7 +771,7 @@ class HacademicasController extends Controller
                 ->where('hacademicas.materium_id', '=', $asignacionAcademica->materium_id)
                 ->where('c.tpo_examen_id', '=', $data['tpo_examen_id'])
                 ->where('cp.carga_ponderacion_id', '=', $data['carga_ponderacion_id'])
-                ->where('hacademicas.st_materium_id', 2)
+                ->WhereRaw('(hacademicas.st_materium_id = ? or cli.st_cliente_id=?)', [2, 3])
                 ->orderBy('cli.ape_paterno')
                 ->orderBy('cli.ape_materno')
                 ->orderBy('cli.nombre')

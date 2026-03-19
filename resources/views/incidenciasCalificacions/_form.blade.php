@@ -19,17 +19,6 @@
       @endif
 </div>
 
-<div class="form-group col-md-8 @if ($errors->has('justificacion')) has-error @endif">
-   <label for="justificacion-field">Justificacion</label>
-   {!! Form::textArea('justificacion', null, [
-         'class' => 'form-control',
-         'id' => 'justificacion-field',
-         'rows' => 3,
-   ]) !!}
-   @if ($errors->has('justificacion'))
-         <span class="help-block">{{ $errors->first('justificacion') }}</span>
-   @endif
-</div>
 
    <input type="hidden" name="_token" id="_token" value="<?= csrf_token() ?>">
    <div class="form-group col-md-4">
@@ -47,6 +36,7 @@
          </div>
    </div>
 
+   @permission('incidenciasCalificacions.observacion')
 <div class="form-group col-md-8 @if ($errors->has('observacion')) has-error @endif">
    <label for="observacion-field">Observacion</label>
    {!! Form::textArea('observacion', null, ['class' => 'form-control', 'id' => 'observacion-field', 'rows' => 3]) !!}
@@ -54,6 +44,7 @@
          <span class="help-block">{{ $errors->first('observacion') }}</span>
    @endif
 </div>
+@endpermission
 @push('scripts')
    <script>
          $(document).ready(function() {

@@ -35,7 +35,8 @@ class LectivosController extends Controller
      */
     public function create()
     {
-        return view('lectivos.create')
+        $lectivos = Lectivo::pluck('name', 'id');
+        return view('lectivos.create', compact('lectivos'))
             ->with('list', Lectivo::getListFromAllRelationApps());
     }
 
@@ -102,7 +103,8 @@ class LectivosController extends Controller
     {
         $lectivo = $lectivo->find($id);
         //dd($lectivo);
-        return view('lectivos.edit', compact('lectivo'))
+        $lectivos = Lectivo::pluck('name', 'id');
+        return view('lectivos.edit', compact('lectivo', 'lectivos'))
             ->with('list', Lectivo::getListFromAllRelationApps());
     }
 
@@ -323,10 +325,10 @@ class LectivosController extends Controller
             $final = array();
             $r = DB::table('lectivos as l')
                 ->join('inscripcions as i', 'i.lectivo_id', '=', 'l.id')
-                ->where('i.plantel_id',$plantel)
-				->where('i.especialidad_id',$especialidad)
-				->where('i.nivel_id',$nivel)
-				->where('i.grado_id', '=', $grado)
+                ->where('i.plantel_id', $plantel)
+                ->where('i.especialidad_id', $especialidad)
+                ->where('i.nivel_id', $nivel)
+                ->where('i.grado_id', '=', $grado)
                 ->select('l.id', 'l.name')
                 ->where('l.activo', 1)
                 ->where('l.id', '>', '0')
@@ -416,7 +418,7 @@ class LectivosController extends Controller
                 ->get();
 
             //dd($r);
-            $r->prepend(array(0=>"Seleccionar opción"));
+            $r->prepend(array(0 => "Seleccionar opción"));
             if (isset($lectivo) and $lectivo != 0) {
                 foreach ($r as $r1) {
                     if ($r1->id == $lectivo) {

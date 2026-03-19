@@ -127,6 +127,7 @@
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'name', 'title' => 'Duracion Periodo'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'bloqueo_cantidad_reprobadas', 'title' => 'Bloqueo por Materias Reprobadas'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'bloqueo_cantidad_extras', 'title' => 'Bloqueo por Extras'])</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
@@ -137,6 +138,7 @@
                                 <td><a href="{{ route('duracionPeriodos.show', $duracionPeriodo->id) }}">{{$duracionPeriodo->id}}</a></td>
                                 <td>{{$duracionPeriodo->name}}</td>
                                 <td>{{$duracionPeriodo->bloqueo_cantidad_reprobadas}}</td>
+                                <td>{{$duracionPeriodo->bloqueo_cantidad_extras}}</td>
                                 <td class="text-right">
                                     @permission('duracionPeriodos.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('duracionPeriodos.edit', $duracionPeriodo->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>

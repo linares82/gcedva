@@ -12,6 +12,13 @@
       <span class="help-block">{{ $errors->first("bloqueo_cantidad_reprobadas") }}</span>
       @endif
    </div>
+   <div class="form-group col-md-4 @if($errors->has('bloqueo_cantidad_extras')) has-error @endif">
+      <label for="bloqueo_cantidad_extras-field">Bloqueo por Materias Extras</label>
+      {!! Form::text("bloqueo_cantidad_extras", null, array("class" => "form-control", "id" => "bloqueo_cantidad_extras-field")) !!}
+      @if($errors->has("bloqueo_cantidad_extras"))
+      <span class="help-block">{{ $errors->first("bloqueo_cantidad_extras") }}</span>
+      @endif
+   </div>
    <div class="form-group col-md-4 @if($errors->has('id_tipo_periodo_certificado')) has-error @endif">
       <label for="id_tipo_periodo_certificado-field">Certificado-Tipo Periodo</label>
       {!! Form::text("id_tipo_periodo_certificado", null, array("class" => "form-control", "id" => "id_tipo_periodo_certificado-field")) !!}

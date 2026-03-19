@@ -5,6 +5,13 @@
                         <span class="help-block">{{ $errors->first("plantel_id") }}</span>
                        @endif
                     </div>
+                    <div class=" col-md-4 form-group @if($errors->has('lectivo_id')) has-error @endif">
+                       <label for="lectivo_id-field">Lectivo</label>
+                       {!! Form::select("lectivo_id", $list["Lectivo"], null, array("class" => "form-control select_seguridad", "id" => "lectivo_id-field")) !!}
+                       @if($errors->has("lectivo_id"))
+                        <span class="help-block">{{ $errors->first("lectivo_id") }}</span>
+                       @endif
+                    </div>
                     <div class="col-md-4 form-group @if($errors->has('duracion_periodo_id')) has-error @endif">
                        <label for="duracion_periodo_id-field">Duracion</label>
                        {!! Form::select("duracion_periodo_id", $list["DuracionPeriodo"], null, array("class" => "form-control select_seguridad", "id" => "duracion_periodo_id-field")) !!}

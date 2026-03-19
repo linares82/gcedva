@@ -531,7 +531,6 @@ class InscripcionsController extends Controller
                     ->where('i.nivel_id', '=', $input['nivel_id'])
                     ->where('i.grupo_id', '=', $input['grupo_id'])
                     ->where('i.lectivo_id', '=', $input['lectivo_id'])
-                    ->where('i.plantel_id', '=', $input['plantel_id'])
                     ->where('clientes.id', '=', $c->cliente)
                     ->where('h.st_materium_id', '=', 1)
                     ->whereNull('h.deleted_at')
@@ -549,9 +548,8 @@ class InscripcionsController extends Controller
                     ->where('i.nivel_id', '=', $input['nivel_id'])
                     ->where('i.grupo_id', '=', $input['grupo_id'])
                     ->where('i.lectivo_id', '=', $input['lectivo_id'])
-                    ->where('i.plantel_id', '=', $input['plantel_id'])
                     ->where('clientes.id', '=', $c->cliente)
-                    ->where('h.st_materium_id', '<>', 1)
+                    ->where('h.st_materium_id', '=', 2)
                     ->whereNull('h.deleted_at')
                     ->get();
 

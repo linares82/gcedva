@@ -104,8 +104,19 @@
                 <div class="row">
                 </div>
                 <div class="well well-sm">
+                    
+                    @if($conteo_extras_materia_actual==0 or ($conteo_extras<=$limite_extras and !is_null($limite_extras)))
                     <button type="button" class="btn btn-danger" id="btnContarExtras">Contar extras por lectivo</button>
                     <button type="submit" class="btn btn-primary " id="btnSubmitDatos" disabled=true>Procesar y Crear nuevo</button>
+                    @elseif($conteo_extras>$limite_extras and !is_null($limite_extras))
+                        <div class="alert alert-danger">
+                            *Limite de {{ $limite_extras }} extras se ha alcanzado.
+                        </div>    
+                    @elseif($conteo_extras_materia_actual>0)
+                        <div class="alert alert-danger">
+                            *Se han encontrado {{$conteo_extras_materia_actual}} extras para la materia y lectivo seleccionado.
+                        </div>    
+                    @endif
                 </div>
                 @if(isset($consulta_extras))
                 <div class="row">
@@ -121,9 +132,11 @@
                     <table class="table table-condensed table-striped">
                         <theader>
                             <tr>
+                                <td>Cliente Id</td>
                                 <td>
                                     Lectivo
                                 </td>
+                                <td>Materia</td>
                                 <td>Fecha</td><td>Tipo Evaluacion</td><td>Calificacion</td>
                                 
                             </tr>
@@ -132,7 +145,13 @@
                             @foreach($consulta_extras as $extra)
                                 <tr>
                                     <td>
+                                        {{$extra->cliente_id}}
+                                    </td>
+                                    <td>
                                         {{$extra->lectivo}}
+                                    </td>
+                                    <td>
+                                        {{$extra->materia}}
                                     </td>
                                     <td>
                                         {{$extra->fecha}}
