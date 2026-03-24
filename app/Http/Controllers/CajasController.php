@@ -322,6 +322,7 @@ class CajasController extends Controller
         $cajas = Caja::select(
             'cajas.consecutivo as caja',
             'cajas.fecha',
+            'cajas.id as caja_id',
             'ln.caja_concepto_id as concepto_id',
             'cc.name as concepto',
             'ln.total',

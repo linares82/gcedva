@@ -852,7 +852,7 @@
                             </td>
                             <td class='editable'>
                                 {{$adeudo->monto}}
-                                <input class='monto_editable form-control' value='{{$adeudo->monto}}' data-id="{{$adeudo->id}}"></input>
+                                <input class='monto_editable form-control' style='display: none' value='{{$adeudo->monto}}' data-id="{{$adeudo->id}}"></input>
                             </td>
                             
                             <td>{{optional($adeudo->descuento)->porcentaje}}</td>
@@ -930,7 +930,7 @@
                             <thead>
                                 <tr>
                                     
-                                    <th>Concepto</th><th>Fecha</th><th>Monto</th><th>Caja</th><th>Estatus</th>
+                                    <th>Concepto</th><th>Monto</th><th>Caja</th><th>Estatus</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -940,13 +940,17 @@
                                 @endphp
                                 @foreach($cajas as $ln)
                                     @php
+                                        //dd($ln);  
+                                        
                                         $pagos=App\Pago::where('caja_id', $ln->caja_id)->get();
+                                        //dd($pagos);
+                                        
                                     @endphp
                                     <tr>
                                         
                                     <td> 
                                         {{$ln->concepto}} 
-                                        @if(isset($caja->pagos))
+                                        @if(isset($pagos))
                                         @foreach($pagos as $pago)
                                         <span class="badge bg-light-blue">{{ $pago->detalle_concepto }}</span>
                                         @endforeach
@@ -954,7 +958,10 @@
                                         <span class="badge bg-gray">{{$ln->fecha}}</span>
                                     </td> 
                                     <td>{{$ln->total}}</td>
-                                    <td>{{$ln->caja}}</td>
+                                    <td>
+                                        <a href="#" onclick="abrirTicket({{$ln->caja}}, {{$cliente->id}});" data-toggle="tooltip" title="Ir">{{$ln->caja}}</a>
+                                        
+                                    </td>
                                     <td>{{$ln->estatus}}</td>
                                     </tr>
                                     
@@ -1422,7 +1429,7 @@ Agregar nuevo registro
                     data.fec_inicio+'</span> al <span class="badge">'+
                     data.fec_fin+'</span></div>'
                 );
-                if(data[0].length>={{ $limite_extras }}){
+                if(data[0].length>={{ isset($limite_extras) ? $limite_extras : 100 }}){
                     $('#calendario_extras').append(
                         '<span class="badge bg-red">El cliente tiene {{ $limite_extras }} o mas examenes extras.</span>'
                     );
