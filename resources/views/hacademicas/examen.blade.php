@@ -64,7 +64,7 @@
 
                     <div class="form-group col-md-4 @if($errors->has('lectivo_id')) has-error @endif">
                         <label for="lectivo_id-field">Lectivo</label>
-                        {!! Form::select("lectivo_id", $lectivos, isset($hacademica) ? $hacademica->lectivo_id : null, array("class" => "form-control select_seguridad", "id" => "lectivo_id-field")) !!}
+                        {!! Form::select("lectivo_id", $lectivos, isset($calendario_extras) ? $calendario_extras->lectivo_id : null, array("class" => "form-control select_seguridad", "id" => "lectivo_id-field")) !!}
                         @if($errors->has("lectivo_id"))
                          <span class="help-block">{{ $errors->first("lectivo_id") }}</span>
                         @endif
@@ -104,18 +104,18 @@
                 <div class="row">
                 </div>
                 <div class="well well-sm">
-                    
-                    @if($conteo_extras_materia_actual==0 or ($conteo_extras<=$limite_extras and !is_null($limite_extras)))
-                    <button type="button" class="btn btn-danger" id="btnContarExtras">Contar extras por lectivo</button>
-                    <button type="submit" class="btn btn-primary " id="btnSubmitDatos" disabled=true>Procesar y Crear nuevo</button>
-                    @elseif($conteo_extras>$limite_extras and !is_null($limite_extras))
-                        <div class="alert alert-danger">
-                            *Limite de {{ $limite_extras }} extras se ha alcanzado.
-                        </div>    
-                    @elseif($conteo_extras_materia_actual>0)
+                    @if($conteo_extras_materia_actual>0)
                         <div class="alert alert-danger">
                             *Se han encontrado {{$conteo_extras_materia_actual}} extras para la materia y lectivo seleccionado.
-                        </div>    
+                        </div>
+		            @elseif($conteo_extras>=$limite_extras and !is_null($limite_extras))
+                        <div class="alert alert-danger">
+                            *Limite de {{ $limite_extras }} extras se ha alcanzado.
+                        </div>   	
+                    @elseif($conteo_extras_materia_actual==0 or ($conteo_extras<=$limite_extras and !is_null($limite_extras)))
+	                    <button type="button" class="btn btn-danger" id="btnContarExtras">Contar extras por lectivo</button>
+        	            <button type="submit" class="btn btn-primary " id="btnSubmitDatos" disabled=true>Procesar y Crear nuevo</button>    
+		     
                     @endif
                 </div>
                 @if(isset($consulta_extras))
@@ -366,7 +366,7 @@
                       $('#materium_id-field').html('');
                       
                       //$('#especialidad_id-field').empty();
-                      $('#materium_id-field').append($('<option></option>').text('Seleccionar Opción').val('0'));
+                      $('#materium_id-field').append($('<option></option>').text('Seleccionar Opcion').val('0'));
                       
                       $.each(data, function(i) {
                           //alert(data[i].name);

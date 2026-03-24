@@ -10,6 +10,7 @@ use App\Caja;
 use App\CajaConcepto;
 use App\CajaLn;
 use App\CalendarioExaExtra;
+use App\Calificacion;
 use App\Cliente;
 use App\CombinacionCliente;
 use App\CuentasEfectivo;
@@ -877,7 +878,7 @@ class CajasController extends Controller
 
         //dd($concepto->toArray());
         if ($concepto->bnd_extraordinario == 1) {
-            $calendarioExtras = 0;
+            $calendarioExtras = null;
             $combinaciones = CombinacionCliente::where('cliente_id', $cliente->id)->get();
             //dd($combinaciones->toArray());
             foreach ($combinaciones as $combinacion) {
@@ -885,27 +886,78 @@ class CajasController extends Controller
                     ->whereDate('fec_inicio', '<=', date('Y-m-d'))
                     ->whereDate('fec_fin', '>=', date('Y-m-d'))
                     ->where('duracion_periodo_id', $combinacion->grado->duracion_periodo_id)
-                    ->count();
+                    ->first();
+                $limite_extras = $combinacion->grado->duracionPeriodo->bloqueo_cantidad_extras;
                 //dd($calendarioExtras);
+
             }
 
-            if ($calendarioExtras > 0) {
-                $linea = CajaLn::create($registro);
-
-                $caja->subtotal = $caja->subtotal + $linea->subtotal;
-                $caja->recargo = $caja->recargo + $linea->recargo;
-                $caja->descuento = $caja->descuento + $linea->descuento;
-                $caja->total = $caja->subtotal + $caja->recargo - $caja->descuento;
-
-                $caja->save();
-
-                echo json_encode($linea);
-            } else {
+            if (is_null($calendarioExtras)) {
                 return response()->json([
                     'error' => "400",
                     'msj' => 'No hay calendario de extraordinarios vigente para el grado del cliente'
                 ]);
             }
+
+            $consulta_extras = Calificacion::select(
+                'l.name as lectivo',
+                'm.name as materia',
+                'te.name as tipo_evaluacion',
+                'calificacions.fecha',
+                'calificacions.calificacion',
+                'h.cliente_id'
+            )
+                ->join('hacademicas as h', 'h.id', 'calificacions.hacademica_id')
+                ->join('lectivos as l', 'l.id', 'calificacions.lectivo_id')
+                ->join('materia as m', 'm.id', 'h.materium_id')
+                ->join('tpo_examens as te', 'te.id', '=', 'calificacions.tpo_examen_id')
+                //->where('h.materium_id', $hacademica->materium_id)
+                ->where('h.cliente_id', $cliente->id)
+                ->where('calificacions.lectivo_id', $calendarioExtras->lectivo_id)
+                ->whereDate('calificacions.fecha', '>=', $calendarioExtras->fec_inicio)
+                ->whereDate('calificacions.fecha', '<=', $calendarioExtras->fec_fin)
+                ->where('tpo_examen_id', 2)
+                ->get();
+
+            $conteo_extras = Calificacion::select(
+                'l.name as lectivo',
+                'm.name as materia',
+                'te.name as tipo_evaluacion',
+                'calificacions.fecha',
+                'calificacions.calificacion',
+                'h.cliente_id'
+            )
+                ->join('hacademicas as h', 'h.id', 'calificacions.hacademica_id')
+                ->join('lectivos as l', 'l.id', 'calificacions.lectivo_id')
+                ->join('materia as m', 'm.id', 'h.materium_id')
+                ->join('tpo_examens as te', 'te.id', '=', 'calificacions.tpo_examen_id')
+                //->where('h.materium_id', $hacademica->materium_id)
+                ->where('h.cliente_id', $cliente->id)
+                //->where('calificacions.lectivo_id', $hacademica->lectivo_id)
+                ->whereDate('calificacions.fecha', '>=', $calendarioExtras->fec_inicio)
+                ->whereDate('calificacions.fecha', '<=', $calendarioExtras->fec_fin)
+                ->where('tpo_examen_id', 2)
+                ->count();
+
+
+
+            if ($conteo_extras >= $limite_extras and !is_null($limite_extras)) {
+                return response()->json([
+                    'error' => "400",
+                    'msj' => 'Limite de examenes extras alcanzados.'
+                ]);
+            }
+
+            $linea = CajaLn::create($registro);
+
+            $caja->subtotal = $caja->subtotal + $linea->subtotal;
+            $caja->recargo = $caja->recargo + $linea->recargo;
+            $caja->descuento = $caja->descuento + $linea->descuento;
+            $caja->total = $caja->subtotal + $caja->recargo - $caja->descuento;
+
+            $caja->save();
+
+            echo json_encode($linea);
         } else {
             $linea = CajaLn::create($registro);
 

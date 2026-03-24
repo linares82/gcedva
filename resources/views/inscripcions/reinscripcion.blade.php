@@ -84,7 +84,11 @@
                     <thead>
                         <tr>
                             <td><input type="checkbox" id="select-all" /> Todos<br/></td>
-                            <td>Cliente-Estatus</td><td></td><td>Periodo Estudios(Duracion)</td><td>Aprobadas</td><td>No Aprobadas</td>
+                            <td>Cliente-Estatus</td><td></td><td>Periodo Estudios(Duracion)</td>
+                            <td>Aprobadas</td><td>No Aprobadas</td>
+                            <td>Tiene Materias No aprobadas en 2 o mas lectivos</td>
+                            <td>M. Seriadas No Aprobadas</td>
+                            <td>No Aprobadas Sin Extra 2 Lectivos</td>
                         </tr>
                     </thead>
                     <tbody>
@@ -93,7 +97,7 @@
                         <tr>
                             <td>
                                 @if(!is_null($c['bloqueo_cantidad_reprobadas']))
-                                    @if($c['no_aprobadas']<$c['bloqueo_cantidad_reprobadas'])
+                                    @if($c['no_aprobadas']<$c['bloqueo_cantidad_reprobadas'] and $c['no_aprobadas_diferentes_lectivos']<2)
                                         {{ Form::checkbox("id[]", $c['id']) }}
                                     @endif
                                 @elseif($c['no_aprobadas']<$bloqueo_materias_desaprobadas->valor)
@@ -101,7 +105,9 @@
                                 @endif
                             </td>
                             <td>
+                                <a href="{{ route('clientes.edit', $c['cliente']) }}" target="_blank">
                                 {{ $c['cliente'] }} - {{ $c['nombre'] }}
+                                </a>
                                 <span class="badge bg-blue">{{$c['st_cliente']}}</span>
                             </td>
                             <td></td>
@@ -119,9 +125,23 @@
                                     </tbody>
                                 </table>
                             </td>
-                            <td> {{ $c['no_aprobadas'] }} 
-                            
+                            <td> 
+                                @if($c['no_aprobadas']<$c['bloqueo_cantidad_reprobadas'])
+                                    <span class="badge bg-green">{{ $c['no_aprobadas'] }}</span>
+                                @else
+                                    <span class="badge bg-red">{{ $c['no_aprobadas'] }}</span>
+                                @endif
                             </td>
+                            <td>
+                                @if($c['no_aprobadas_diferentes_lectivos']>=2)
+                                <span class="badge bg-red">SI</span>
+                                @else
+                                <span class="badge bg-green">NO</span>
+                                @endif
+                                ({{ $c['no_aprobadas_diferentes_lectivos'] }} Lectivos)
+                            </td>
+                            <td>{{ $c['no_aprobadas_seriadas'] }}</td>
+                            <td>{{ count($c['no_aprobadas_sin_extra_varios_lectivos']) }}</td>
                         </tr>
                         @endforeach
                     </tbody>

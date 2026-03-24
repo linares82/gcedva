@@ -16470,6 +16470,7 @@ Route::prefix('/calendarioExaExtras')
         Route::get('/create', 'CalendarioExaExtrasController@create')->name('create')->middleware('permission:calendarioExaExtras.create');
         Route::get('/edit/{id}', 'CalendarioExaExtrasController@edit')->name('edit')->middleware('permission:calendarioExaExtras.edit');
         Route::get('/show/{id}', 'CalendarioExaExtrasController@show')->name('show')->middleware('permission:calendarioExaExtras.show');
+        Route::get('/getUltimoCalendarioXDuracionPlantel', 'CalendarioExaExtrasController@getUltimoCalendarioXDuracionPlantel')->name('getUltimoCalendarioXDuracionPlantel');
         Route::post('/store', 'CalendarioExaExtrasController@store')->name('store')->middleware('permission:calendarioExaExtras.store');
         Route::post('/edit/{id}', 'CalendarioExaExtrasController@update')->name('update')->middleware('permission:calendarioExaExtras.update');
         Route::delete('/delete/{id}', 'CalendarioExaExtrasController@destroy')->name('destroy')->middleware('permission:calendarioExaExtras.destroy');

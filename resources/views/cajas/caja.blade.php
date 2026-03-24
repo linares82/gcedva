@@ -110,6 +110,7 @@
             </div>
         </div>
     </div>
+    @permission('cajaCortes.index')
     <div class="col-md-6">
         <div class="box box-info">
             <div class="box-header with-border">
@@ -125,7 +126,19 @@
                 @permission('cajaCortes.index')
                     <a class='btn btn-sm btn-success' target='_blank' href="{{route('cajaCortes.index')}}">Historia</a>
                 @endpermission
-                
+            </div>
+        </div>
+    </div>
+    @endpermission
+    <div class="col-md-6">
+        <div class="box box-info">
+            <div class="box-header with-border">
+                <div class="box-title">
+                    <div id="calendario_extras"></div>
+                </div>
+            </div>
+            <div class="box-body">
+                <div id="calendario_extras_detalle"></div>
             </div>
         </div>
     </div>
@@ -694,6 +707,11 @@
                     <tbody>
 
                         @foreach($combinaciones as $combinacion)
+                        @php
+                            //se guarda para usar en el calendario de extras
+                            $duracion=$combinacion->grado->duracion_periodo_id;
+                            $limite_extras=$combinacion->grado->duracionPeriodo->bloqueo_cantidad_extras;
+                        @endphp
                         @if($combinacion->especialidad_id<>0 and $combinacion->nivel_id<>0 and $combinacion->grado_id<>0 and $combinacion->turno_id<>0)
                         <tr>
                             <td colspan='6'><strong>Grado:</strong>{{$combinacion->grado->name}}</td>
@@ -1385,6 +1403,48 @@ Agregar nuevo registro
     });
     
     $(document).ready(function(){
+        @if(isset($cliente))
+        $.ajax({
+            type: 'GET',
+            url: '{{route("calendarioExaExtras.getUltimoCalendarioXDuracionPlantel")}}',
+            data: {
+                'plantel_id': {{ $cliente->plantel_id }},
+                'duracion_id': {{ $duracion }},
+                'cliente_id': {{ $cliente->id }}
+            },
+            dataType:"json",
+            //beforeSend : function(){$("#loading3").show(); },
+            //complete : function(){$("#loading3").hide(); },
+            success: function(data) {
+                //console.log(data[0]);
+                $('#calendario_extras').html(
+                    '<div class="">Calendario examenes extras del: <span class="badge">'+
+                    data.fec_inicio+'</span> al <span class="badge">'+
+                    data.fec_fin+'</span></div>'
+                );
+                if(data[0].length>={{ $limite_extras }}){
+                    $('#calendario_extras').append(
+                        '<span class="badge bg-red">El cliente tiene {{ $limite_extras }} o mas examenes extras.</span>'
+                    );
+                }
+                
+                if (typeof data[0] !== 'undefined') {
+                    $('#calendario_extras_detalle').append(
+                        '<div class="row"><div class="col-md-12"><table class="table table-bordered">'+
+                        '<thead><tr><th>Lectivo</th><th>Materia</th><th>Fecha</th></tr></thead><tbody>'
+                    );
+                    $.each(data[0], function(i, item) {
+                        //console.log(item);
+                        $('#calendario_extras_detalle tbody').append(
+                            '<tr><td>'+item.lectivo+'</td><td>'+item.materia+'</td><td>'+item.fecha+'</td></tr>'
+                        );
+                    });
+                    $('#calendario_extras_detalle').append('</tbody></table></div></div>');
+                }
+            }
+        }); 
+        @endif
+
         $('#forma_pago_id1-field').change(function(){
                 
             @if(!Auth::user()->can('cajas.ignorarFormaPagoParaFecha'))

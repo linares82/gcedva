@@ -193,49 +193,57 @@ class InscripcionsController extends Controller
         //dd($materias_validar->count());
         if ($materias_validar->count() == 0) {
             foreach ($materias as $m) {
+                $materia_seriada_no_aprobada = 0;
+                if ($m->seriada_bnd == 1) {
+                    $materia_seriada_no_aprobada = Hacademica::where('hacademicas.cliente_id', '=', $i->cliente_id)
+                        ->where('hacademicas.materium_id', '=', $m->serie_anterior)
+                        ->where('hacademicas.st_materium_id', '=', 2)
+                        ->count();
+                }
                 //dd($materias->toArray());
+                if ($materia_seriada_no_aprobada == 0) {
+                    $h['inscripcion_id'] = $i->id;
+                    $h['cliente_id'] = $i->cliente_id;
+                    $h['plantel_id'] = $i->plantel_id;
+                    $h['especialidad_id'] = $i->especialidad_id;
+                    $h['nivel_id'] = $i->nivel_id;
+                    $h['grado_id'] = $i->grado_id;
+                    $h['grupo_id'] = $i->grupo_id;
+                    $h['materium_id'] = $m->id;
+                    $h['st_materium_id'] = 0;
+                    $h['lectivo_id'] = $i->lectivo_id;
+                    $h['fec_inscripcion'] = $i->fec_inscripcion;
+                    $h['turno_id'] = $i->turno_id;
+                    $h['periodo_estudio_id'] = $i->periodo_estudio_id;
+                    $h['usu_alta_id'] = Auth::user()->id;
+                    $h['usu_mod_id'] = Auth::user()->id;
+                    $ha = Hacademica::create($h);
+                    //$h=new Hacademica;
+                    //$h->save($h);
+                    $c['hacademica_id'] = $ha->id;
+                    $c['tpo_examen_id'] = 1;
+                    $c['calificacion'] = 0;
+                    $c['fecha'] = date('Y-m-d');
+                    $c['reporte_bnd'] = 0;
+                    $c['usu_alta_id'] = Auth::user()->id;
+                    $c['usu_mod_id'] = Auth::user()->id;
+                    $calif = Calificacion::create($c);
 
-                $h['inscripcion_id'] = $i->id;
-                $h['cliente_id'] = $i->cliente_id;
-                $h['plantel_id'] = $i->plantel_id;
-                $h['especialidad_id'] = $i->especialidad_id;
-                $h['nivel_id'] = $i->nivel_id;
-                $h['grado_id'] = $i->grado_id;
-                $h['grupo_id'] = $i->grupo_id;
-                $h['materium_id'] = $m->id;
-                $h['st_materium_id'] = 0;
-                $h['lectivo_id'] = $i->lectivo_id;
-                $h['fec_inscripcion'] = $i->fec_inscripcion;
-                $h['turno_id'] = $i->turno_id;
-                $h['periodo_estudio_id'] = $i->periodo_estudio_id;
-                $h['usu_alta_id'] = Auth::user()->id;
-                $h['usu_mod_id'] = Auth::user()->id;
-                $ha = Hacademica::create($h);
-                //$h=new Hacademica;
-                //$h->save($h);
-                $c['hacademica_id'] = $ha->id;
-                $c['tpo_examen_id'] = 1;
-                $c['calificacion'] = 0;
-                $c['fecha'] = date('Y-m-d');
-                $c['reporte_bnd'] = 0;
-                $c['usu_alta_id'] = Auth::user()->id;
-                $c['usu_mod_id'] = Auth::user()->id;
-                $calif = Calificacion::create($c);
+                    $ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $m->ponderacion_id)
+                        ->where('bnd_activo', 1)
+                        ->get();
 
-                $ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $m->ponderacion_id)
-                    ->where('bnd_activo', 1)
-                    ->get();
-
-                foreach ($ponderaciones as $p) {
-                    $ponde['calificacion_id'] = $calif->id;
-                    $ponde['carga_ponderacion_id'] = $p->id;
-                    $ponde['calificacion_parcial'] = 0;
-                    $ponde['ponderacion'] = $p->porcentaje;
-                    $ponde['usu_alta_id'] = Auth::user()->id;
-                    $ponde['usu_mod_id'] = Auth::user()->id;
-                    $ponde['tiene_detalle'] = $p->tiene_detalle;
-                    $ponde['padre_id'] = $p->padre_id;
-                    CalificacionPonderacion::create($ponde);
+                    foreach ($ponderaciones as $p) {
+                        $ponde['calificacion_id'] = $calif->id;
+                        $ponde['carga_ponderacion_id'] = $p->id;
+                        $ponde['calificacion_parcial'] = 0;
+                        $ponde['ponderacion'] = $p->porcentaje;
+                        $ponde['usu_alta_id'] = Auth::user()->id;
+                        $ponde['usu_mod_id'] = Auth::user()->id;
+                        $ponde['tiene_detalle'] = $p->tiene_detalle;
+                        $ponde['padre_id'] = $p->padre_id;
+                        CalificacionPonderacion::create($ponde);
+                    }
                 }
             }
         } else {
@@ -247,7 +255,16 @@ class InscripcionsController extends Controller
                     }
                 }
                 //dd($existe_materia);
-                if ($existe_materia == 0) {
+                $materia_seriada_no_aprobada = 0;
+                if ($m->seriada_bnd == 1) {
+                    $materia_seriada_no_aprobada = Hacademica::where('hacademicas.cliente_id', '=', $i->cliente_id)
+                        ->where('hacademicas.materium_id', '=', $m->serie_anterior)
+                        ->where('hacademicas.st_materium_id', '=', 2)
+                        ->count();
+                }
+                //dd($materias->toArray());
+
+                if ($existe_materia == 0 and $materia_seriada_no_aprobada == 0) {
                     $h['inscripcion_id'] = $i->id;
                     $h['cliente_id'] = $i->cliente_id;
                     $h['plantel_id'] = $i->plantel_id;
@@ -552,8 +569,57 @@ class InscripcionsController extends Controller
                     ->where('h.st_materium_id', '=', 2)
                     ->whereNull('h.deleted_at')
                     ->get();
+                //dd($no_aprobadas_modulo);
 
+                $no_aprobadas_diferentes_lectivos = Cliente::join('inscripcions as i', 'i.cliente_id', '=', 'clientes.id')
+                    ->join('periodo_estudios as p', 'p.id', '=', 'i.periodo_estudio_id')
+                    ->join('hacademicas as h', 'h.inscripcion_id', 'i.id')
+                    ->join('lectivos as l', 'l.id', '=', 'h.lectivo_id')
+                    ->join('materia as m', 'm.id', '=', 'h.materium_id')
+                    ->select('h.id as hacademicaa_id', 'l.id as lectivo_id', 'm.id as materia_id', 'm.name as materia')
+                    //->select(DB::raw('l.name as lectivo, count(m.name) as materias_no_aprobadas'))
+                    ->where('clientes.id', '=', $c->cliente)
+                    ->where('h.st_materium_id', '=', 2)
+                    ->whereNull('h.deleted_at')
+                    //->groupBy('lectivo')
+                    ->get();
 
+                //descartar materias recursadas y aprobadas
+                //dd($no_aprobadas_diferentes_lectivos->toArray());
+                $no_aprobadas_sin_extra_varios_lectivos = array();
+                foreach ($no_aprobadas_diferentes_lectivos as $no_aprobada_llave => $no_aprobada_valor) {
+                    //descartar materias ya recursadas y aprobadas
+                    $recursada_aprobada = $this->revisarNoAprobadaRecursadaAprobada($c->cliente, $no_aprobada_valor->materia_id);
+                    if ($recursada_aprobada > 0) {
+                        $no_aprobadas_diferentes_lectivos->forget($no_aprobada_llave);
+                    }
+                    //revisar antiguedad de materias no aprobadas sin extra >=2 lectivos
+                    $conteo_lectivos_transcurridos = 0;
+
+                    $extraordinario_existente = Calificacion::where('hacademica_id', $no_aprobada_valor->hacademica_id)
+                        ->where('tpo_examen_id', 2)
+                        ->count();
+                    if ($extraordinario_existente == 0) {
+                        $conteo_lectivos_transcurridos = $this->recursiva_revisar_lectivos_transcurridos($no_aprobada_valor->lectivo_id, 1);
+                    }
+                    //dd($no_aprobada_valor);
+                    if ($conteo_lectivos_transcurridos >= 2) {
+                        array_push($no_aprobadas_sin_extra_varios_lectivos, [
+                            'hacademica_id' => $no_aprobada_valor->hacademicaa_id,
+                            'lectivo_id' => $no_aprobada_valor->lectivo_id,
+                            'materia_id' => $no_aprobada_valor->materia_id,
+                            'materia' => $no_aprobada_valor->materia,
+                            'extraordinario_existente' => $extraordinario_existente,
+                            'contador_lectivos_transcurridos' => $conteo_lectivos_transcurridos
+                        ]);
+                    }
+
+                    //dd($contador);
+                }
+
+                //dd($no_aprobadas_diferentes_lectivos->toArray());
+
+                //dd(count($no_aprobadas_diferentes_lectivos));
                 //                        $resultado->put('id',$c->id);
                 //                        $resultado->put('nombre',$c->nombre);
                 //                        $resultado->put('periodo_estudio',$c->periodo_estudio);
@@ -561,20 +627,15 @@ class InscripcionsController extends Controller
                 //                        $resultado->put('no_aprobadas',$no_aprobadas->no_aprobadas);
                 $contar_materias_no_aprobadas = 0;
                 foreach ($no_aprobadas_modulo as $no_aprobada) {
+                    $contar_materias_no_aprobadas++;
+                }
+
+                $no_aprobadas_seriadas = "";
+                foreach ($no_aprobadas_modulo as $no_aprobada) {
                     if ($no_aprobada->seriada_bnd == 1) {
-                        $marcador = 0;
-                        foreach ($aprobadas_modulo as $aprobada) {
-                            if ($aprobada->seriada_bnd == 1 and $aprobada->modulo_id == $no_aprobada->modulo_id) {
-                                $marcador = 1;
-                            } else {
-                                //$contar_materias++;
-                            }
+                        if ($this->revisarNoAprobadaRecursadaAprobada($c->cliente, $no_aprobada->id) == 0) {
+                            $no_aprobadas_seriadas = $no_aprobadas_seriadas . " " . $no_aprobada->materia;
                         }
-                        if ($marcador == 0) {
-                            $contar_materias_no_aprobadas++;
-                        }
-                    } else {
-                        $contar_materias_no_aprobadas++;
                     }
                 }
                 //dd($aprobadas_modulo->toArray());
@@ -594,18 +655,48 @@ class InscripcionsController extends Controller
                     'no_aprobadas' => $contar_materias_no_aprobadas,
                     'aprobadas_modulo' => $aprobadas_modulo,
                     'no_aprobadas_modulo' => $no_aprobadas_modulo,
+                    'no_aprobadas_diferentes_lectivos' => count($no_aprobadas_diferentes_lectivos->unique('lectivo_id')),
+                    'no_aprobadas_seriadas' => $no_aprobadas_seriadas,
+                    'no_aprobadas_sin_extra_varios_lectivos' => $no_aprobadas_sin_extra_varios_lectivos
                 ]);
             }
         }
 
         //dd($clientes->toArray());
         //dd($resultados->toArray());
-        return view('inscripcions.reinscripcion', compact('resultados', 'input', 'planteles', 'bloqueo_materias_desaprobadas'))
+        return view('inscripcions.reinscripcion', compact(
+            'resultados',
+            'input',
+            'planteles',
+            'bloqueo_materias_desaprobadas'
+        ))
             ->with('list', Hacademica::getListFromAllRelationApps());
 
         /*return redirect('/inscripcions/reinscripcion', compact('resultados'))
     ->with('list', Hacademica::getListFromAllRelationApps())->withInput();
      */
+    }
+
+    public function revisarNoAprobadaRecursadaAprobada($cliente_id, $no_aprobada)
+    {
+        return $buscarEnHistoria = Hacademica::where('cliente_id', $cliente_id)
+            ->where('materium_id', $no_aprobada)
+            ->where('st_materium_id', 1)
+            ->count();
+    }
+
+    public function recursiva_revisar_lectivos_transcurridos($lectivo_id, $contador)
+    {
+        //dd($lectivo_id);
+        $lectivo_siguiente = Lectivo::where('lectivo_anterior_id', $lectivo_id)->first();
+        if (!is_null($lectivo_siguiente)) {
+            $hoy = Carbon::createFromFormat('Y-m-d', date('Y-m-d'));
+            $fin_lectivo_siguiente = Carbon::createFromFormat('Y-m-d', $lectivo_siguiente->fin);
+            if ($fin_lectivo_siguiente->lessThan($hoy)) {
+                $contador = $contador + $this->recursiva_revisar_lectivos_transcurridos($lectivo_siguiente->id, $contador);
+            }
+        }
+        return $contador;
     }
 
     public function lista(Request $request)

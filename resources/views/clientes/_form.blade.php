@@ -424,7 +424,7 @@
                                     <th>Nivel</th>
                                     <th>Grado</th>
                                     <th>Turno</th>
-                                    <th>InscripciÃ³n</th>
+                                    <th>Inscripcion</th>
                                     <th>Plan Pago</th>
                                     <th>beca</th>
                                     <th></th>
@@ -1804,7 +1804,7 @@ $(document).on("click", ".btn_archivo", function (e) {
         },
         //una vez finalizado correctamente
         success: function (data) {
-            if (confirm('Â¿Deseas Actualizar la PÃ¡gina?')){
+            if (confirm('Â¿Deseas Actualizar la Pagina?')){
                 location.reload();
             }
             $(this).text('OK');
@@ -1859,7 +1859,7 @@ $(document).on("click", ".btn_archivo_space", function (e) {
         },
         //una vez finalizado correctamente
         success: function (data) {
-            if (confirm('Â¿Deseas Actualizar la PÃ¡gina?')){
+            if (confirm('Â¿Deseas Actualizar la Pagina?')){
                 location.reload();
             }
             $(this).text('OK');
@@ -3150,7 +3150,7 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                                 beforeSend : function(){$("#spinner_doc_recibido").show(); },
                                 complete : function(){$("#spinner_doc_recibido").hide(); },
                                 success: function(data) {
-                                    if (confirm('Â¿Deseas Actualizar la PÃ¡gina?')){
+                                    if (confirm('Â¿Deseas Actualizar la Pagina?')){
                                         location.reload();
                                     }
                                 }

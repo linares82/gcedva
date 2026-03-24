@@ -1,15 +1,18 @@
-<?php namespace App\Http\Controllers;
+<?php
 
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
+namespace App\Http\Controllers;
 
 use App\CalendarioExaExtra;
-use Illuminate\Http\Request;
-use Auth;
-use App\Http\Requests\updateCalendarioExaExtra;
+use App\Calificacion;
+use App\Http\Controllers\Controller;
+use App\Http\Requests;
 use App\Http\Requests\createCalendarioExaExtra;
+use App\Http\Requests\updateCalendarioExaExtra;
+use Auth;
+use Illuminate\Http\Request;
 
-class CalendarioExaExtrasController extends Controller {
+class CalendarioExaExtrasController extends Controller
+{
 
 	/**
 	 * Display a listing of the resource.
@@ -31,7 +34,7 @@ class CalendarioExaExtrasController extends Controller {
 	public function create()
 	{
 		return view('calendarioExaExtras.create')
-			->with( 'list', CalendarioExaExtra::getListFromAllRelationApps() );
+			->with('list', CalendarioExaExtra::getListFromAllRelationApps());
 	}
 
 	/**
@@ -44,11 +47,11 @@ class CalendarioExaExtrasController extends Controller {
 	{
 
 		$input = $request->all();
-		$input['usu_alta_id']=Auth::user()->id;
-		$input['usu_mod_id']=Auth::user()->id;
+		$input['usu_alta_id'] = Auth::user()->id;
+		$input['usu_mod_id'] = Auth::user()->id;
 
 		//create data
-		CalendarioExaExtra::create( $input );
+		CalendarioExaExtra::create($input);
 
 		return redirect()->route('calendarioExaExtras.index')->with('message', 'Registro Creado.');
 	}
@@ -61,7 +64,7 @@ class CalendarioExaExtrasController extends Controller {
 	 */
 	public function show($id, CalendarioExaExtra $calendarioExaExtra)
 	{
-		$calendarioExaExtra=$calendarioExaExtra->find($id);
+		$calendarioExaExtra = $calendarioExaExtra->find($id);
 		return view('calendarioExaExtras.show', compact('calendarioExaExtra'));
 	}
 
@@ -73,9 +76,9 @@ class CalendarioExaExtrasController extends Controller {
 	 */
 	public function edit($id, CalendarioExaExtra $calendarioExaExtra)
 	{
-		$calendarioExaExtra=$calendarioExaExtra->find($id);
+		$calendarioExaExtra = $calendarioExaExtra->find($id);
 		return view('calendarioExaExtras.edit', compact('calendarioExaExtra'))
-			->with( 'list', CalendarioExaExtra::getListFromAllRelationApps() );
+			->with('list', CalendarioExaExtra::getListFromAllRelationApps());
 	}
 
 	/**
@@ -86,9 +89,9 @@ class CalendarioExaExtrasController extends Controller {
 	 */
 	public function duplicate($id, CalendarioExaExtra $calendarioExaExtra)
 	{
-		$calendarioExaExtra=$calendarioExaExtra->find($id);
+		$calendarioExaExtra = $calendarioExaExtra->find($id);
 		return view('calendarioExaExtras.duplicate', compact('calendarioExaExtra'))
-			->with( 'list', CalendarioExaExtra::getListFromAllRelationApps() );
+			->with('list', CalendarioExaExtra::getListFromAllRelationApps());
 	}
 
 	/**
@@ -101,10 +104,10 @@ class CalendarioExaExtrasController extends Controller {
 	public function update($id, CalendarioExaExtra $calendarioExaExtra, updateCalendarioExaExtra $request)
 	{
 		$input = $request->all();
-		$input['usu_mod_id']=Auth::user()->id;
+		$input['usu_mod_id'] = Auth::user()->id;
 		//update data
-		$calendarioExaExtra=$calendarioExaExtra->find($id);
-		$calendarioExaExtra->update( $input );
+		$calendarioExaExtra = $calendarioExaExtra->find($id);
+		$calendarioExaExtra->update($input);
 
 		return redirect()->route('calendarioExaExtras.index')->with('message', 'Registro Actualizado.');
 	}
@@ -115,12 +118,50 @@ class CalendarioExaExtrasController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id,CalendarioExaExtra $calendarioExaExtra)
+	public function destroy($id, CalendarioExaExtra $calendarioExaExtra)
 	{
-		$calendarioExaExtra=$calendarioExaExtra->find($id);
+		$calendarioExaExtra = $calendarioExaExtra->find($id);
 		$calendarioExaExtra->delete();
 
 		return redirect()->route('calendarioExaExtras.index')->with('message', 'Registro Borrado.');
 	}
 
+	public function getUltimoCalendarioXDuracionPlantel(Request $request)
+	{
+		$datos = $request->all();
+		$calendario = CalendarioExaExtra::where('plantel_id', $datos['plantel_id'])
+			->where('duracion_periodo_id', $datos['duracion_id'])
+			->orderBy('id', 'DESC')
+			->first();
+
+		if (!is_null($calendario)) {
+			$consulta_extras = Calificacion::select(
+				'l.name as lectivo',
+				'm.name as materia',
+				'te.name as tipo_evaluacion',
+				'calificacions.fecha',
+				'calificacions.calificacion',
+				'h.cliente_id'
+			)
+				->join('hacademicas as h', 'h.id', 'calificacions.hacademica_id')
+				->join('lectivos as l', 'l.id', 'calificacions.lectivo_id')
+				->join('materia as m', 'm.id', 'h.materium_id')
+				->join('tpo_examens as te', 'te.id', '=', 'calificacions.tpo_examen_id')
+				//->where('h.materium_id', $hacademica->materium_id)
+				->where('h.cliente_id', $datos['cliente_id'])
+				->where('calificacions.lectivo_id', $calendario->lectivo_id)
+				->whereDate('calificacions.fecha', '>=', $calendario->fec_inicio)
+				->whereDate('calificacions.fecha', '<=', $calendario->fec_fin)
+				->where('tpo_examen_id', 2)
+				->get();
+			//dd($consulta_extras->toArray());
+			//$calendario->push($consulta_extras);
+			$detalle = $calendario->toArray();
+			array_push($detalle, $consulta_extras->toArray());
+			//dd($detalle);
+		}
+
+		//return $calendario;
+		return json_encode($detalle);
+	}
 }

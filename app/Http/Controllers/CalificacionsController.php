@@ -47,8 +47,9 @@ class CalificacionsController extends Controller
 			'calificacions.calificacion',
 			'l.name as lectivo'
 		);
-		$calificacions_aux->orderBy('c.id', 'desc');
-		$calificacions_aux->orderBy('h.id', 'desc');
+		//$calificacions_aux->orderBy('c.id', 'desc');
+		//$calificacions_aux->orderBy('h.id', 'desc');
+		$calificacions_aux->orderBy('calificacions.id', 'desc');
 		if (isset($datos['hacademicas.cliente_id_lt'])) {
 			$calificacions_aux->where('h.cliente_id', $datos['hacademicas.cliente_id_lt']);
 		}
