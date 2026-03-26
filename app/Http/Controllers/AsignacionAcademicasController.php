@@ -2,31 +2,31 @@
 
 namespace App\Http\Controllers;
 
-use DB;
-use Auth;
-
-use App\Dium;
-use App\Grupo;
-use App\Cliente;
-use App\Horario;
-use App\Lectivo;
-use App\Plantel;
-use App\Empleado;
-use App\Materium;
-use Carbon\Carbon;
-use App\DiaNoHabil;
-use App\Hacademica;
-use App\AsistenciaR;
-use App\Inscripcion;
-use App\Http\Requests;
-use App\PeriodoEstudio;
-use App\CargaPonderacion;
 use App\AsignacionAcademica;
-use Illuminate\Http\Request;
+use App\AsistenciaR;
+use App\CalendarioAsignacionPonderacion;
+use App\CargaPonderacion;
+use App\Cliente;
+use App\DiaNoHabil;
+use App\Dium;
+use App\Empleado;
+use App\Grupo;
+use App\Hacademica;
+use App\Horario;
 use App\Http\Controllers\Controller;
-use Luecano\NumeroALetras\NumeroALetras;
+use App\Http\Requests;
 use App\Http\Requests\createAsignacionAcademica;
 use App\Http\Requests\updateAsignacionAcademica;
+use App\Inscripcion;
+use App\Lectivo;
+use App\Materium;
+use App\PeriodoEstudio;
+use App\Plantel;
+use Auth;
+use Carbon\Carbon;
+use DB;
+use Illuminate\Http\Request;
+use Luecano\NumeroALetras\NumeroALetras;
 
 class AsignacionAcademicasController extends Controller
 {
@@ -103,6 +103,7 @@ class AsignacionAcademicasController extends Controller
 		//create data
 		AsignacionAcademica::create($input);
 
+
 		return redirect()->route('asignacionAcademicas.index')->with('message', 'Registro Creado.');
 	}
 
@@ -127,9 +128,11 @@ class AsignacionAcademicasController extends Controller
 	public function edit($id, AsignacionAcademica $asignacionAcademica)
 	{
 		$asignacionAcademica = $asignacionAcademica->find($id);
+		//dd($asignacionAcademica->load('calendarioAsignacionPonderacion'));
+		$calendarioAsignacionPonderacions = CalendarioAsignacionPonderacion::where('asignacion_id', $asignacionAcademica->id)->get();
+		//dd($calendarioAsignacionPonderacions);
 
-
-		return view('asignacionAcademicas.edit', compact('asignacionAcademica'))
+		return view('asignacionAcademicas.edit', compact('asignacionAcademica', 'calendarioAsignacionPonderacions'))
 			->with('list', AsignacionAcademica::getListFromAllRelationApps())
 			->with('list1', Horario::getListFromAllRelationApps());
 	}
@@ -175,11 +178,22 @@ class AsignacionAcademicasController extends Controller
 		$asignacionAcademica = $asignacionAcademica->find($id);
 		$asignacionAcademica->update($input);
 		if ($request->input('dia_id') and $request->input('hora') and $request->input('duracion_clase')) {
-
 			Horario::create($input2);
 		}
 
-
+		if (
+			$request->input('carga_ponderacion_id') and
+			$request->input('ce_fec_inicio') and
+			$request->input('ce_fec_fin')
+		) {
+			$input3['asignacion_id'] = $asignacionAcademica->id;
+			$input3['carga_ponderacion_id'] = $request->input('carga_ponderacion_id');
+			$input3['fec_inicio'] = $request->input('ce_fec_inicio');
+			$input3['fec_fin'] = $request->input('ce_fec_fin');
+			$input3['usu_mod_id'] = Auth::user()->id;
+			$input3['usu_alta_id'] = Auth::user()->id;
+			CalendarioAsignacionPonderacion::create($input3);
+		}
 
 
 		return redirect()->route('asignacionAcademicas.edit', $id)->with('message', 'Registro Actualizado.');

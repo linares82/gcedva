@@ -55,7 +55,7 @@
                 </div>
                     <div class="form-group col-sm-4">
                      <label for="justificacion">JUSTIFICACION</label>
-                     <p class="form-control-static">{{$incidenciasCalificacion->justificacion}}</p>
+                     <p class="form-control-static">{{$incidenciasCalificacion->incidenciasJustificacion->name}}</p>
                 </div>
                 <div class="form-group col-sm-4">
                      <label for="justificacion">OBS.</label>
@@ -123,9 +123,9 @@
             
             <div class="row"></div>
             @if($incidenciasCalificacion->bnd_autorizada==0 && $incidenciasCalificacion->bnd_rechazada==0)
-            {!! Form::model($incidenciasCalificacion, array('route' => array('incidenciasCalificacions.edit', $incidenciasCalificacion->id),'id' => 'frm_ar', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('Estas seguro de tu evaluación?')) { return true } else {return false };")) !!}
+            {!! Form::model($incidenciasCalificacion, array('route' => array('incidenciasCalificacions.edit', $incidenciasCalificacion->id),'id' => 'frm_ar', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('Estas seguro de tu evaluaciÃ³n?')) { return true } else {return false };")) !!}
                 <div class="form-group col-md-12 @if ($errors->has('justificacion')) has-error @endif">
-                <label for="justificacion-field">Justificacion</label>
+                <label for="justificacion-field">Respuesta(Observaciones)</label>
                 {!! Form::hidden('id', $incidenciasCalificacion->id, [
                         'class' => 'form-control',
                         'id' => 'incidencias_calificacion_id-field',

@@ -8,6 +8,7 @@ use App\Calificacion;
 use App\CalificacionPonderacion;
 use App\CargaPonderacion;
 use App\Cliente;
+use App\Empleado;
 use App\Grado;
 use App\Hacademica;
 use App\Http\Controllers\Controller;
@@ -678,6 +679,7 @@ class HacademicasController extends Controller
         }
         //dd($dentroPeriodoExamenes);
         //dd($lectivo->calendarioEvaluacions->toArray());
+        //calendario de evaluaciones
         foreach ($lectivo->calendarioEvaluacions as $fechaCalendario) {
             $calificacion_inicio = Carbon::createFromFormat('Y-m-d', $fechaCalendario->v_inicio);
             $calificacion_fin = Carbon::createFromFormat('Y-m-d', $fechaCalendario->v_fin);
@@ -686,6 +688,26 @@ class HacademicasController extends Controller
             }
         }
 
+        //Calendario especial de la asignacion
+        //dd($request->all());
+        $empleado_firmado = Empleado::where('user_id', Auth::user()->id)->first();
+        $empleado_asignacion = $asignacionAcademica->empleado;
+        //dd($empleado_firmado->id == $empleado_asignacion->id);
+        //dd($data);
+        $dentroCalendarioAsignacion = 0;
+        if ($empleado_firmado->id == $empleado_asignacion->id) {
+            foreach ($asignacionAcademica->calendarioAsignacionPonderacion as $calendarioAsignacion) {
+                //dd($data['tpo_examen_id'] == 1 and $data['carga_ponderacion_id'] == $calendarioAsignacion->carga_ponderacion_id);
+                if ($data['tpo_examen_id'] == 1 and $data['carga_ponderacion_id'] == $calendarioAsignacion->carga_ponderacion_id) {
+                    $inicio = Carbon::createFromFormat('Y-m-d', $calendarioAsignacion->fec_inicio);
+                    $fin = Carbon::createFromFormat('Y-m-d', $calendarioAsignacion->fec_fin);
+                    if ($inicio->lessThanOrEqualTo($hoy) and $fin->greaterThanOrEqualTo($hoy)) {
+                        $dentroCalendarioAsignacion = $calendarioAsignacion->id;
+                    }
+                }
+            }
+        }
+        //dd($dentroPeriodoExamenes);
         //dd($periodos_capturados_total);
         //$periodo_examen = PeriodoExamen::find($dentroPeriodoExamenes);
 
@@ -697,6 +719,7 @@ class HacademicasController extends Controller
         $hacademicas = null;
         //dd($periodos_capturados_total);
         //if (isset($data['excepcion']) or $periodos_capturados_total == 0) {
+        //dd($dentroPeriodoExamenes);
         if (isset($data['excepcion']) /*or $dentroPeriodoExamenesAsignacion > 0*/) {
             //dd('flc');
             $hacademicas = HAcademica::select(
@@ -840,6 +863,57 @@ class HacademicasController extends Controller
                             ->whereRaw('curdate() between ce.v_inicio and ce.v_fin')
                             ->whereRaw('ce.carga_ponderacion_id = cpo.id')
                             ->whereRaw('lec.id = hacademicas.lectivo_id');
+                    })
+                    ->whereNull('hacademicas.deleted_at')
+                    ->whereNull('i.deleted_at')
+                    ->whereNull('c.deleted_at')
+                    ->whereNull('cp.deleted_at')
+                    ->get();
+            }
+        } elseif (!isset($data['excepcion']) and $dentroCalendarioAsignacion > 0) {
+            //if($calificacion_inicio<=$hoy and $calificacion_fin>=$hoy){
+            if ($dentroCalendarioAsignacion > 0) {
+                $hacademicas = HAcademica::select(
+                    'cli.id',
+                    'cli.plantel_id',
+                    'cli.nombre',
+                    'cli.nombre2',
+                    'cli.ape_paterno',
+                    'cli.ape_materno',
+                    'cli.bnd_doc_oblig_entregados',
+                    'c.calificacion',
+                    'cp.calificacion_parcial_calculada',
+                    'cp.id as calificacion_ponderacion_id',
+                    'cp.calificacion_parcial',
+                    'stc.name as estatus_cliente',
+                    'stc.id as estatus_cliente_id',
+                    'cpo.name as ponderacion',
+                    'hacademicas.st_materium_id',
+                    'hacademicas.materium_id as materia_id',
+                    'hacademicas.id as hacademica_id',
+                    'hacademicas.lectivo_id as lectivo_id'
+                )
+                    ->where('hacademicas.grupo_id', '=', $asignacionAcademica->grupo_id)
+                    ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
+                    ->join('calificacions as c', 'c.hacademica_id', '=', 'hacademicas.id')
+                    ->join('calificacion_ponderacions as cp', 'cp.calificacion_id', '=', 'c.id')
+                    ->join('carga_ponderacions as cpo', 'cpo.id', '=', 'cp.carga_ponderacion_id')
+                    ->join('clientes as cli', 'cli.id', '=', 'hacademicas.cliente_id')
+                    ->join('st_clientes as stc', 'stc.id', '=', 'cli.st_cliente_id')
+                    ->where('hacademicas.lectivo_id', '=', $asignacionAcademica->lectivo_id)
+                    ->where('hacademicas.materium_id', '=', $asignacionAcademica->materium_id)
+                    ->where('c.tpo_examen_id', '=', $data['tpo_examen_id'])
+                    ->where('cp.carga_ponderacion_id', '=', $data['carga_ponderacion_id'])
+                    ->orderBy('cli.ape_paterno')
+                    ->orderBy('cli.ape_materno')
+                    ->orderBy('cli.nombre')
+                    ->orderBy('cli.nombre2')
+                    ->whereExists(function ($query) use ($asignacionAcademica) {
+                        $query->from('calendario_asignacion_ponderacions as cap')
+                            ->join('asignacion_academicas as aa', 'aa.id', 'cap.asignacion_id')
+                            ->whereRaw('curdate() between cap.fec_inicio and cap.fec_fin')
+                            ->whereRaw('cap.carga_ponderacion_id = cpo.id')
+                            ->whereRaw('aa.id = ?', [$asignacionAcademica->id]);
                     })
                     ->whereNull('hacademicas.deleted_at')
                     ->whereNull('i.deleted_at')

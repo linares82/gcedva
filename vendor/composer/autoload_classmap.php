@@ -406,6 +406,7 @@ return array(
     'CreateCajaCortesTable' => $baseDir . '/database/migrations/2020_03_04_131743_create_caja_cortes_table.php',
     'CreateCajaLnsTable' => $baseDir . '/database/migrations/2018_04_10_134753_create_caja_lns_table.php',
     'CreateCajasTable' => $baseDir . '/database/migrations/2018_04_10_134538_create_cajas_table.php',
+    'CreateCalendarioAsignacionPonderacionsTable' => $baseDir . '/database/migrations/2026_03_25_190653_create_calendario_asignacion_ponderacions_table.php',
     'CreateCalendarioEvaluacionsTable' => $baseDir . '/database/migrations/2017_10_12_140337_create_calendario_evaluacions_table.php',
     'CreateCalendarioExaExtrasTable' => $baseDir . '/database/migrations/2026_03_13_144327_create_calendario_exa_extras_table.php',
     'CreateCalificacionPonderacionsTable' => $baseDir . '/database/migrations/2017_10_02_170635_create_calificacion_ponderacions_table.php',

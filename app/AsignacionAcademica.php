@@ -24,8 +24,20 @@ class AsignacionAcademica extends Model
 
 	//Mass Assignment
 	protected $fillable = [
-		'lectivo_id', 'empleado_id', 'materium_id', 'grupo_id', 'horas', 'usu_alta_id', 'usu_mod_id', 'plantel_id', 'asistencias_max',
-		'fec_inicio', 'fec_fin', 'docente_oficial', 'lectivo_oficial_id', 'docente_oficial_id'
+		'lectivo_id',
+		'empleado_id',
+		'materium_id',
+		'grupo_id',
+		'horas',
+		'usu_alta_id',
+		'usu_mod_id',
+		'plantel_id',
+		'asistencias_max',
+		'fec_inicio',
+		'fec_fin',
+		'docente_oficial',
+		'lectivo_oficial_id',
+		'docente_oficial_id'
 	];
 
 	public function usu_alta()
@@ -88,6 +100,11 @@ class AsignacionAcademica extends Model
 
 	public function lectivoOficial()
 	{
-		return $this->belongsTo('App\Lectivo','lectivo_oficial_id','id');
+		return $this->belongsTo('App\Lectivo', 'lectivo_oficial_id', 'id');
+	} // end
+
+	public function calendarioAsignacionPonderacion()
+	{
+		return $this->hasMany('App\CalendarioASignacionPonderacion', 'asignacion_id', 'id');
 	} // end
 }
