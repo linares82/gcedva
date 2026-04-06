@@ -105,6 +105,6 @@ class AsignacionAcademica extends Model
 
 	public function calendarioAsignacionPonderacion()
 	{
-		return $this->hasMany('App\CalendarioASignacionPonderacion', 'asignacion_id', 'id');
+		return $this->hasMany('App\CalendarioAsignacionPonderacion', 'asignacion_id', 'id');
 	} // end
 }

@@ -291,6 +291,9 @@
             <li>Cualquier pago realizado fuera de caja del plantel, no será responsabilidad de la institución y estos deben realizarse única y exclusivamente en los canales oficiales que designe la institución. </li>
             <li>Recibí y comprendí el reglamento de la institución.</li>
             <li>Los pagos no son transferibles.</li>
+            @if($combinacion->grado->id==1130 or $combinacion->grado->id==1139)
+            <li>Estoy de acuerdo con mi inscripción a la Licenciatura en Ingeniería en Mecánica Automotriz con número de RVOE a la cual asistiré en clases presenciales en los días y horarios asignados por la institución condiciones que podrán adaptarse o ajustarse acorde a las necesidades del plan de estudios.</li>
+            @endif
 
             <!--<li>La información de pago está calculada a pagos seriados mes a mes, en caso de optar por uno diferente solicitarlo.</li>
             <li>Debe cubrirse al inscribirse concepto de inscripción, trámites y la mensualidad maximo el dia 10 de cada mes. </li>

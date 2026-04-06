@@ -3,11 +3,13 @@
         <li class="active">
             <a data-toggle="tab" href="#tab1">Asignacion Academica</a>
         </li>
+        @permission('calendarioAsignacionPonderacions.update')
         @if(isset($asignacionAcademica))
         <li class="">
             <a data-toggle="tab" href="#tab2">Calendario Especial</a>
         </li>
         @endif
+        @endpermission
     </ul>
     <div class="tab-content">
         <div id="tab1" class="tab-pane active">
@@ -209,6 +211,7 @@
                 @endif
             </fieldset>
         </div>
+        @permission('calendarioAsignacionPonderacions.update')
         @if(isset($asignacionAcademica))
         <div id="tab2" class="tab-pane active">
             <div class="form-group col-md-4 @if($errors->has('carga_ponderacion_id')) has-error @endif">
@@ -255,6 +258,7 @@
             </table>
         </div>
         @endif
+        @endpermission
     </div>
 
     @push('scripts')
