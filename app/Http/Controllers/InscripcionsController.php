@@ -4458,4 +4458,50 @@ class InscripcionsController extends Controller
         }
         return array('registros' => $registros, 'registros_detalle' => $registros_detalle);
     }
+
+    public function inscripcionesVencidas()
+    {
+        return view('inscripcions.reportes.inscripcionesVencidas')
+            ->with('list', Inscripcion::getListFromAllRelationApps());
+    }
+
+    public function inscripcionesVencidasR(Request $request)
+    {
+        $data = $request->all();
+        //            dd($data);
+        $resultado = Inscripcion::select(
+            'p.razon as plantel',
+            'e.name as especialidad',
+            'n.name as nivel',
+            'gra.name as grado',
+            'l.name as lectivo',
+            'gru.name as grupo',
+            'c.id as cliente_id',
+            'c.nombre',
+            'c.nombre2',
+            'c.ape_paterno',
+            'c.ape_materno',
+            'l.fin',
+            'st.name as st_cliente'
+        )
+            ->join('plantels as p', 'p.id', 'inscripcions.plantel_id')
+            ->join('especialidads as e', 'e.id', 'inscripcions.especialidad_id')
+            ->join('nivels as n', 'n.id', 'inscripcions.nivel_id')
+            ->join('grados as gra', 'gra.id', 'inscripcions.grado_id')
+            ->join('grupos as gru', 'gru.id', 'inscripcions.grupo_id')
+            ->join('lectivos as l', 'l.id', 'inscripcions.lectivo_id')
+            ->join('clientes as c', 'c.id', 'inscripcions.cliente_id')
+            ->join('st_clientes as st', 'st.id', 'c.st_cliente_id')
+            ->where('inscripcions.plantel_id', $data['plantel_f'])
+            ->where('inscripcions.especialidad_id', $data['especialidad_f'])
+            ->where('inscripcions.nivel_id', $data['nivel_f'])
+            ->where('inscripcions.grado_id', $data['grado_f'])
+            ->where('c.st_cliente_id', 4)
+            ->whereNull('inscripcions.deleted_at')
+            ->whereDate('fin', '<', Date('Y-m-d'))
+            ->with(['cliente', 'cliente.stCliente', 'plantel', 'especialidad', 'nivel', 'grado', 'lectivo', 'grupo'])
+            ->get();
+        //dd($resultado);
+        return view('inscripcions.reportes.inscripcionesVencidasR', compact('resultado'));
+    }
 }

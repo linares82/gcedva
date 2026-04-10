@@ -3448,7 +3448,7 @@ class ClientesController extends Controller
     {
         //Log::info($cliente);
         //return true;
-        $cliente = Cliente::find($cliente);
+        $cliente = Cliente::whereNull('deleted_at')->find($cliente);
 
         $dentro3Meses = false;
 

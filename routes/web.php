@@ -5267,6 +5267,22 @@ Route::post(
     )
 )->middleware('auth');
 Route::get(
+    '/inscripcions/inscripcionesVencidas',
+    array(
+        'as' => 'inscripcions.inscripcionesVencidas',
+        'middleware' => 'permission:inscripcions.inscripcionesVencidas',
+        'uses' => 'InscripcionsController@inscripcionesVencidas'
+    )
+)->middleware('auth');
+Route::post(
+    '/inscripcions/inscripcionesVencidasR',
+    array(
+        'as' => 'inscripcions.inscripcionesVencidasR',
+        'middleware' => 'permission:inscripcions.inscripcionesVencidas',
+        'uses' => 'InscripcionsController@inscripcionesVencidasR'
+    )
+)->middleware('auth');
+Route::get(
     '/inscripcions/inspeccionVigilancia',
     array(
         'as' => 'inscripcions.inspeccionVigilancia',
