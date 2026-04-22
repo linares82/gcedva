@@ -24,7 +24,7 @@ class createIncidenciasCalificacion extends FormRequest
     public function rules()
     {
         return [
-            'imagen' => "required",
+            'imagen' => "required_if:tpo_examen_id,4",
         ];
     }
 

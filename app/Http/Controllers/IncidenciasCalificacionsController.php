@@ -46,8 +46,15 @@ class IncidenciasCalificacionsController extends Controller
 		$datos = $request->all();
 		//dd($datos);
 		$calificacion_ponderacion_id = $datos['calificacion_ponderacion_id'];
-		$justificacion = IncidenciasJustificacion::pluck('name', 'id');
-		return view('incidenciasCalificacions.create', compact('calificacion_ponderacion_id', 'justificacion'))
+		$tpo_examen_id = CalificacionPonderacion::find($calificacion_ponderacion_id)->calificacion->tpo_examen_id;
+		$justificacion = [];
+		if ($tpo_examen_id == 4) {
+			$justificacion = IncidenciasJustificacion::where('id', 4)->pluck('name', 'id');
+		} else {
+			$justificacion = IncidenciasJustificacion::where('id', "<>", 4)->pluck('name', 'id');
+		}
+
+		return view('incidenciasCalificacions.create', compact('calificacion_ponderacion_id', 'justificacion', 'tpo_examen_id'))
 			->with('list', IncidenciasCalificacion::getListFromAllRelationApps());
 	}
 

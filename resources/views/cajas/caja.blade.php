@@ -556,7 +556,14 @@
                                     @endpermission
                                     @endif
                                 </td>
-                                <td><strong>Detalle:</strong>{{ $pago->detalle_concepto }} <br>
+                                @php
+                                    /*if(!is_null($pago->materium_id)){
+                                        $materia=App\Materium::find($pago->materium_id);
+                                        dd($pago->materium_id);
+                                    }*/
+                                    
+                                @endphp
+                                <td><strong>Materia:</strong>{{ optional($pago->materium)->name }}  <br>
                                     <strong>Monto:</strong>{{ $pago->monto }} <br>
                                     <strong>Fecha:</strong> {{ $pago->fecha }} <br>
                                     @permission('ticket.fechaPago')
@@ -942,7 +949,7 @@
                                     @php
                                         //dd($ln);  
                                         
-                                        $pagos=App\Pago::where('caja_id', $ln->caja_id)->get();
+                                        $pagos=App\Pago::with('materium')->where('caja_id', $ln->caja_id)->get();
                                         //dd($pagos);
                                         
                                     @endphp
@@ -952,7 +959,7 @@
                                         {{$ln->concepto}} 
                                         @if(isset($pagos))
                                         @foreach($pagos as $pago)
-                                        <span class="badge bg-light-blue">{{ $pago->detalle_concepto }}</span>
+                                        <span class="badge bg-light-blue">{{ optional($pago->materium)->name }}</span>
                                         @endforeach
                                         @endif
                                         <span class="badge bg-gray">{{$ln->fecha}}</span>
@@ -1111,13 +1118,23 @@ Agregar nuevo registro
                         <span class="help-block">{{ $errors->first("referencia") }}</span>
                        @endif
                     </div>
-                    <div class="form-group col-md-6 @if($errors->has('detalle_concepto')) has-error @endif">
-                       <label for="detalle_concepto-field">Detalle Concepto</label>
-                       {!! Form::text("detalle_concepto", null, array("class" => "form-control", "id" => "detalle_concepto-field")) !!}
-                       @if($errors->has("detalle_concepto"))
-                        <span class="help-block">{{ $errors->first("detalle_concepto") }}</span>
+                    @php
+                        $cmb_materias_extra=App\Materium::join('hacademicas as h', 'h.materium_id','materia.id')
+                        ->where('h.cliente_id',$cliente->id)
+                        ->where('h.st_materium_id',2)
+                        ->pluck('materia.name','h.materium_id');
+                        $cmb_materias_extra->prepend('Sin Materia', '');
+                    @endphp
+                    @if(isset($caja->cajaLn) and $caja->cajaLn->cajaConcepto->bnd_extraordinario==1)
+                    
+                    <div class="form-group col-md-6 @if($errors->has('materium_id')) has-error @endif">
+                       <label for="materium_id-field">Materia</label>
+                       {!! Form::select("materium_id", $cmb_materias_extra, null, array("class" => "form-control", "id" => "materium_id-field")) !!}
+                       @if($errors->has("materium_id"))
+                        <span class="help-block">{{ $errors->first("materium_id") }}</span>
                        @endif
                     </div>
+                    @endif
                     
                     <div class="form-group col-md-6 @if($errors->has('referencia')) has-error @endif">
                         <button type="button" class="btn btn-warning validarReferencia" id="validarReferencia">
@@ -1719,7 +1736,7 @@ Agregar nuevo registro
                     'fecha': $('#fecha_ln-field').val(),
                     'forma_pago_id': $('#forma_pago_id-field option:selected').val(),
                     'referencia':$('#referencia-field').val(),
-                    'detalle_concepto':$('#detalle_concepto-field').val(),
+                    'materium_id':$('#materium_id-field option:selected').val(),
                     'cuenta_efectivo_id': $('#cuenta_efectivo_id-field').val(),
                     'bnd_referenciado':referencia_check
                 },

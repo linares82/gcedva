@@ -292,7 +292,7 @@
             <li>Recibí y comprendí el reglamento de la institución.</li>
             <li>Los pagos no son transferibles.</li>
             @if($combinacion->grado->id==1130 or $combinacion->grado->id==1139)
-            <li>Estoy de acuerdo con mi inscripción a la Licenciatura en Ingeniería en Mecánica Automotriz con número de RVOE a la cual asistiré en clases presenciales en los días y horarios asignados por la institución condiciones que podrán adaptarse o ajustarse acorde a las necesidades del plan de estudios.</li>
+            <li>Estoy de acuerdo con mi inscripción a la Licenciatura en Ingeniería en Mecánica Automotriz con número de RVOE {{$combinacion->grado->rvoe}} a la cual asistiré en clases presenciales en los días y horarios asignados por la institución condiciones que podrán adaptarse o ajustarse acorde a las necesidades del plan de estudios.</li>
             @endif
 
             <!--<li>La información de pago está calculada a pagos seriados mes a mes, en caso de optar por uno diferente solicitarlo.</li>

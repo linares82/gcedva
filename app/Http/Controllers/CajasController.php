@@ -920,6 +920,7 @@ class CajasController extends Controller
                 ->where('tpo_examen_id', 2)
                 ->get();
 
+
             $conteo_extras = Calificacion::select(
                 'l.name as lectivo',
                 'm.name as materia',
@@ -932,6 +933,9 @@ class CajasController extends Controller
                 ->join('lectivos as l', 'l.id', 'calificacions.lectivo_id')
                 ->join('materia as m', 'm.id', 'h.materium_id')
                 ->join('tpo_examens as te', 'te.id', '=', 'calificacions.tpo_examen_id')
+                ->join('pagos as pag', 'pag.materium_id', '=', 'h.materium_id')
+                ->join('cajas as c', 'c.id', '=', 'pag.caja_id')
+                ->whereColumn('c.cliente_id', 'h.cliente_id')
                 //->where('h.materium_id', $hacademica->materium_id)
                 ->where('h.cliente_id', $cliente->id)
                 //->where('calificacions.lectivo_id', $hacademica->lectivo_id)
@@ -939,8 +943,6 @@ class CajasController extends Controller
                 ->whereDate('calificacions.fecha', '<=', $calendarioExtras->fec_fin)
                 ->where('tpo_examen_id', 2)
                 ->count();
-
-
 
             if ($conteo_extras >= $limite_extras and !is_null($limite_extras)) {
                 return response()->json([

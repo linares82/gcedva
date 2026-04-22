@@ -5,6 +5,10 @@
          'class' => 'form-control',
          'id' => 'calificacion_ponderacion_id-field',
    ]) !!}
+   {!! Form::hidden('tpo_examen_id', $tpo_examen_id, [
+         'class' => 'form-control',
+         'id' => 'tpo_examen_id-field',
+   ]) !!}
    {!! Form::text('calificacion_nueva', null, ['class' => 'form-control', 'id' => 'calificacion_nueva-field']) !!}
    @if ($errors->has('calificacion_nueva'))
          <span class="help-block">{{ $errors->first('calificacion_nueva') }}</span>
@@ -21,7 +25,8 @@
 
 
    <input type="hidden" name="_token" id="_token" value="<?= csrf_token() ?>">
-   <div class="form-group col-md-4">
+   @if($tpo_examen_id == 4)
+   <div class="form-group col-md-4" >
       
          <div class="btn btn-default btn-file">
             <i class="fa fa-paperclip"></i> Adjuntar Evidencia
@@ -35,6 +40,7 @@
             @endif
          </div>
    </div>
+   @endif
 
    @permission('incidenciasCalificacions.observacion')
 <div class="form-group col-md-8 @if ($errors->has('observacion')) has-error @endif">

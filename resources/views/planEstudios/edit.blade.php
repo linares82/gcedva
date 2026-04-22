@@ -51,7 +51,11 @@
         </thead>
 
         <tbody>
-            @foreach($planEstudio->periodosEstudio as $periodo)
+            @php
+                $periodos=$planEstudio->periodosEstudio;
+                //dd($periodos->sortBy('orden'));
+            @endphp
+            @foreach($periodos->sortBy('orden') as $periodo)
                 <tr>
                     <td>{{$periodo->name}}</td>
                     <td>

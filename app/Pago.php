@@ -50,7 +50,7 @@ class Pago extends Model
 		'folio_facturados',
 		'usu_delete_id',
 		'bnd_reactivacion',
-		'detalle_concepto'
+		'materium_id',
 	];
 
 	public function usu_alta()
@@ -68,6 +68,10 @@ class Pago extends Model
 		return $this->hasOne('App\User', 'id', 'usu_delete_id');
 	} // end
 
+	public function materium()
+	{
+		return $this->hasOne('App\Materium', 'id', 'materium_id');
+	} // end
 
 	protected $dates = ['deleted_at'];
 
@@ -115,4 +119,6 @@ class Pago extends Model
 	{
 		return $this->belongsTo('App\PeticionMattilda', 'id', 'pago_id');
 	} // end
+
+
 }

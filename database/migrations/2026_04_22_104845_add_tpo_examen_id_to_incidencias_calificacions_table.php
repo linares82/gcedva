@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddDetalleConceptoToPagosTable extends Migration
+class AddTpoExamenIdToIncidenciasCalificacionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class AddDetalleConceptoToPagosTable extends Migration
      */
     public function up()
     {
-        Schema::table('pagos', function (Blueprint $table) {
-            $table->integer('materium_id')->unsigned()->nullable();
-            $table->foreign('materium_id')->references('id')->on('materia');
+        Schema::table('incidencias_calificacions', function (Blueprint $table) {
+            $table->unsignedInteger('tpo_examen_id')->nullable();
+            $table->foreign('tpo_examen_id')->references('id')->on('tpo_examens');
         });
     }
 
@@ -26,7 +26,7 @@ class AddDetalleConceptoToPagosTable extends Migration
      */
     public function down()
     {
-        Schema::table('pagos', function (Blueprint $table) {
+        Schema::table('incidencias_calificacions', function (Blueprint $table) {
             //
         });
     }

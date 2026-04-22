@@ -243,11 +243,11 @@
                             }
                             
                             if($promedio>=6){
-                                if($a->cliente->st_cliente_id==3){
+                                /*if($a->cliente->st_cliente_id==3){
                                     $promedio=5;
-                                }else{
+                                }else{*/
                                     $promedio=round($promedio,0);
-                                }
+                                //}
                             }else{
                                 $promedio=5;
                                 //$promedio=intdiv($promedio,1);
