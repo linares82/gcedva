@@ -1504,13 +1504,14 @@ Agregar nuevo registro
             //complete : function(){$("#loading3").hide(); },
             success: function(data) {
                 //console.log(data);
-                if(data.resultado==0){
+                if(data.total_materias_no_aprobadas>=data.bloqueo_cantidad_reprobadas){
                     $('#materias_no_aprobadas').html(
-                    '<div><span class="badge bg-green">Materias no aprobadas del alumno {{ $cliente->id}}:'+data.resultado+'</span></div>');
+                    '<div><span class="badge bg-red">Limite de materias no aprobadas alcanzado:'+data.total_materias_no_aprobadas+'</span></div>');
+                    $('.procesarAdeudos').hide();
+                    $('.adeudos_tomados').hide();
                 }else{
-                    
                     $('#materias_no_aprobadas').html(
-                    '<div><span class="badge bg-red">Materias no aprobadas del alumno {{ $cliente->id}}:'+data.resultado+'</span></div>');
+                    '<div><span class="badge bg-green">Materias no aprobadas del alumno:'+data.total_materias_no_aprobadas+'</span></div>');
                 }
                 
             }

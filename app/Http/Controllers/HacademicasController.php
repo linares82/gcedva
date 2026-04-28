@@ -1504,8 +1504,11 @@ class HacademicasController extends Controller
             ->join('lectivos as l', 'l.id', '=', 'hacademicas.lectivo_id')
             ->whereNull('hacademicas.deleted_at')
             ->get();
+        $inscripcion = Inscripcion::where('cliente_id', $datos['cliente_id'])->with('grado.duracionPeriodo')->first();
+        $bloqueo_cantidad_reprobadas = $inscripcion->grado->duracionPeriodo->bloqueo_cantidad_reprobadas;
+
         //dd($materias_no_aprobadas->toArray());
 
-        return response()->json(['resultado' => count($materias_no_aprobadas)]);
+        return response()->json(['total_materias_no_aprobadas' => count($materias_no_aprobadas), 'bloqueo_cantidad_reprobadas' => $bloqueo_cantidad_reprobadas]);
     }
 }

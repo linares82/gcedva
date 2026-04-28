@@ -21,6 +21,7 @@ use App\HistoriaCliente;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\createCaja;
 use App\Http\Requests\updateCaja;
+use App\Inscripcion;
 use App\Pago;
 use App\Param;
 use App\Plantel;
@@ -982,11 +983,14 @@ class CajasController extends Controller
                 ->join('lectivos as l', 'l.id', '=', 'hacademicas.lectivo_id')
                 ->whereNull('hacademicas.deleted_at')
                 ->count();
-
-            if ($materias_no_aprobadas > 0) {
+            $inscripcion = Inscripcion::where('cliente_id', $cliente->id)->with('grado.duracionPeriodo')->first();
+            //dd($inscripcion);
+            $bloqueo_cantidad_reprobadas = $inscripcion->grado->duracionPeriodo->bloqueo_cantidad_reprobadas;
+            //dd($bloqueo_cantidad_reprobadas);
+            if ($materias_no_aprobadas >= $bloqueo_cantidad_reprobadas) {
                 return response()->json([
                     'error' => "400",
-                    'msj' => 'El cliente tiene materias no aprobadas: ' . $materias_no_aprobadas
+                    'msj' => 'Cliente supera el limite permitido de materias no aprobadas: ' . $materias_no_aprobadas
                 ]);
             }
 

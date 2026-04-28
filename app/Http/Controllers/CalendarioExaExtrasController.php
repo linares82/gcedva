@@ -146,9 +146,12 @@ class CalendarioExaExtrasController extends Controller
 				'calificacions.calificacion',
 				'calificacions.id as calificacion_id',
 				'h.cliente_id',
+				'dp.bloqueo_cantidad_reprobadas',
 				DB::raw('(select count(c.id) from cajas as c inner join caja_lns as cl on cl.caja_id=c.id inner join calificacions as calif on calif.id=cl.calificacion_id inner join hacademicas as h2 on h2.id=calif.hacademica_id where c.st_caja_id=1 and date(c.fecha)>="' . $calendario->fec_inicio . '" and date(c.fecha)<="' . $calendario->fec_fin . '" and cl.caja_concepto_id=m.caja_concepto_id and h2.materium_id=h.materium_id and c.cliente_id=h.cliente_id and cl.deleted_at is null) as cajas_existentes')
 			)
 				->join('hacademicas as h', 'h.id', 'calificacions.hacademica_id')
+				->join('grados as g', 'g.id', 'h.grado_id')
+				->join('duracion_periodos as dp', 'dp.id', 'g.duracion_periodo_id')
 				->join('lectivos as l', 'l.id', 'calificacions.lectivo_id')
 				->join('materia as m', 'm.id', 'h.materium_id')
 				->join('tpo_examens as te', 'te.id', '=', 'calificacions.tpo_examen_id')
