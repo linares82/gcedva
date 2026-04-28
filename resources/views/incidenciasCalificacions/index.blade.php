@@ -43,7 +43,7 @@
                 <div class="panel-body">
                     <form class="IncidenciasCalificacion_search" id="search" action="{{ route('incidenciasCalificacions.index') }}" accept-charset="UTF-8" method="get">
                         <input type="hidden" name="q[s]" value="{{ @(Request::input('q')['s']) ?: '' }}" />
-                        <div class="form-horizontal">
+                        <div >
 
                             <!--
                             <div class="form-group">
@@ -57,13 +57,21 @@
                                 </div>
                             </div>
                             -->
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_cliente_id_cont">CLIENTE ID</label>
-                                <div class=" col-sm-9">
+                            <div class="form-group col-md-4">
+                                <label class="control-label" for="q_cliente_id_cont">CLIENTE ID</label>
+                                <div class="">
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['cliente_id_cont']) ?: '' }}" name="q[cliente_id_cont]" id="q_cliente_id_cont" />
                                 </div>
                             </div>
-                                                    
+
+                            <div class="form-group col-md-4">
+                                <label for="q_.medio_id_lt">Justificacion</label>
+                                    {!! Form::select("incidencias_justificacion_id", $justificacion, "{{ @(Request::input('q')['incidencias_justificacion_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[incidencias_justificacion_id_lt]", "id"=>"q_incidencias_justificacion_id_lt", "style"=>"width:100%;" )) !!}
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="q_.medio_id_lt">Plantel</label>
+                                    {!! Form::select("plantel_id", $plantels, "{{ @(Request::input('q')['h.plantel_id_lt']) ?: '' }}", array("class" => "form-control select_seguridad", "name"=>"q[h.plantel_id_lt]", "id"=>"q_h.plantel_id_lt", "style"=>"width:100%;" )) !!}
+                            </div>                        
                                                     
 
                             <div class="form-group">
@@ -94,7 +102,7 @@
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'materium_id', 'title' => 'MATERIA'])</th>
                             <th>CALIFICACION ANTERIOR</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'calificacion_nueva', 'title' => 'CALIFICACION NUEVA'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'justificacion', 'title' => 'JUSTIFICACION'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'incidencias_justificacion_id', 'title' => 'JUSTIFICACION'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_alta_id', 'title' => 'ALTA'])</th>
                             <th>Estatus</th>
                             <th>RESPUESTA</th>
@@ -113,14 +121,7 @@
                                 <td>{{$incidenciasCalificacion->calificacionPonderacion->calificacion_parcial}}</td>
                                 <td>{{$incidenciasCalificacion->calificacion_nueva}}</td>
                                 <td>
-                                    @if(!is_null($incidenciasCalificacion->imagen))
-                                    <a target="_blank" href="{{ asset('storage/incidencias_calificacions/' . $incidenciasCalificacion->imagen) }}">
-                                        {{$incidenciasCalificacion->justificacion}}
-                                    </a>
-                                    @else
-                                        {{$incidenciasCalificacion->justificacion}}
-                                    @endif
-                                    
+                                    {{optional($incidenciasCalificacion->incidenciasJustificacion)->name}}
                                 </td>
                                 <td>{{$incidenciasCalificacion->usu_alta->name}}</td>
                                 <td>

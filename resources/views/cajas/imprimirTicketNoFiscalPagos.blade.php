@@ -97,7 +97,7 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_
     <tr></tr>
     <tr>
         <td width="50%">
-            Concepto de Pago:@foreach($pagos as $pago) {{$pago->detalle_concepto}} @endforeach   
+            Concepto de Pago:@foreach($pagos as $pago) {{$pago->detalle_concepto}} ({{ optional(optional(optional($pago->caja->cajaLn->calificacion)->hacademica)->materia)->name }}) @endforeach  
         </td>
         
         <td>
@@ -304,7 +304,7 @@ $sucursales=App\Plantel::where('rfc',$cliente->plantel->rfc)->where('st_plantel_
     <tr></tr>
     <tr>
         <td width="50%">
-            Concepto de Pago:@foreach($pagos as $pago) {{$pago->detalle_concepto}} @endforeach  
+            Concepto de Pago:@foreach($pagos as $pago) {{$pago->detalle_concepto}} ({{ optional(optional(optional($pago->caja->cajaLn->calificacion)->hacademica)->materia)->name }}) @endforeach  
         </td>
         
         <td>

@@ -25,7 +25,7 @@
 
 
    <input type="hidden" name="_token" id="_token" value="<?= csrf_token() ?>">
-   @if($tpo_examen_id == 4)
+   @if($tpo_examen_id == 2)
    <div class="form-group col-md-4" >
       
          <div class="btn btn-default btn-file">

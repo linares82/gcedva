@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
-use App\Materium;
+use App\CajaConcepto;
 use App\Empleado;
-use Illuminate\Http\Request;
-use Auth;
-use App\Http\Requests\updateMaterium;
+use App\Http\Controllers\Controller;
+use App\Http\Requests;
 use App\Http\Requests\createMaterium;
+use App\Http\Requests\updateMaterium;
+use App\Materium;
+use Auth;
 use DB;
+use Illuminate\Http\Request;
 
 class MateriasController extends Controller
 {
@@ -37,7 +38,9 @@ class MateriasController extends Controller
     {
         $list = Materium::where('id', '>', '0')->where('seriada_bnd', '=', '1')->pluck('name', 'id')->toArray();
         $materiales_ls = array_merge(['0' => 'Seleccionar Opción'], $list);
-        return view('materias.create', compact('materiales_ls'))
+        $conceptosExtraordinarios = CajaConcepto::where('bnd_extraordinario', 1)->pluck('name', 'id');
+        $conceptosExtraordinarios->prepend('Seleccionar Opción', '');
+        return view('materias.create', compact('materiales_ls', 'conceptosExtraordinarios'))
             ->with('list', Materium::getListFromAllRelationApps());
     }
 
@@ -94,7 +97,9 @@ class MateriasController extends Controller
             ->where('bnd_ponderacion', true)
             ->pluck('name', 'id');
         //dd($materiales_ls);
-        return view('materias.edit', compact('materium', 'materiales_ls', 'ponderacionMaterias'))
+        $conceptosExtraordinarios = CajaConcepto::where('bnd_extraordinario', 1)->pluck('name', 'id');
+        $conceptosExtraordinarios->prepend('Seleccionar Opción', '');
+        return view('materias.edit', compact('materium', 'materiales_ls', 'ponderacionMaterias', 'conceptosExtraordinarios'))
             ->with('list', Materium::getListFromAllRelationApps());
     }
 

@@ -9,6 +9,7 @@ use App\Http\Requests;
 use App\Http\Requests\createCalendarioExaExtra;
 use App\Http\Requests\updateCalendarioExaExtra;
 use Auth;
+use DB;
 use Illuminate\Http\Request;
 
 class CalendarioExaExtrasController extends Controller
@@ -132,16 +133,20 @@ class CalendarioExaExtrasController extends Controller
 		$calendario = CalendarioExaExtra::where('plantel_id', $datos['plantel_id'])
 			->where('duracion_periodo_id', $datos['duracion_id'])
 			->orderBy('id', 'DESC')
+			->whereDate('fec_fin', '>=', date('Y-m-d'))
 			->first();
 
 		if (!is_null($calendario)) {
 			$consulta_extras = Calificacion::select(
 				'l.name as lectivo',
 				'm.name as materia',
+				'm.caja_concepto_id',
 				'te.name as tipo_evaluacion',
 				'calificacions.fecha',
 				'calificacions.calificacion',
-				'h.cliente_id'
+				'calificacions.id as calificacion_id',
+				'h.cliente_id',
+				DB::raw('(select count(c.id) from cajas as c inner join caja_lns as cl on cl.caja_id=c.id inner join calificacions as calif on calif.id=cl.calificacion_id inner join hacademicas as h2 on h2.id=calif.hacademica_id where c.st_caja_id=1 and date(c.fecha)>="' . $calendario->fec_inicio . '" and date(c.fecha)<="' . $calendario->fec_fin . '" and cl.caja_concepto_id=m.caja_concepto_id and h2.materium_id=h.materium_id and c.cliente_id=h.cliente_id and cl.deleted_at is null) as cajas_existentes')
 			)
 				->join('hacademicas as h', 'h.id', 'calificacions.hacademica_id')
 				->join('lectivos as l', 'l.id', 'calificacions.lectivo_id')

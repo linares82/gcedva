@@ -41,6 +41,7 @@ class CajaLn extends Model
 		'autorizacion_beca_id',
 		'desc_beca',
 		'desc_promocion',
+		'calificacion_id'
 	];
 
 	public function usu_alta()
@@ -53,6 +54,10 @@ class CajaLn extends Model
 		return $this->hasOne('App\User', 'id', 'usu_mod_id');
 	} // end
 
+	public function calificacion()
+	{
+		return $this->hasOne('App\Calificacion', 'id', 'calificacion_id');
+	} // end
 
 	protected $dates = ['deleted_at'];
 

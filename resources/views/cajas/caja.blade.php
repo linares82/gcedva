@@ -134,6 +134,18 @@
         <div class="box box-info">
             <div class="box-header with-border">
                 <div class="box-title">
+                    <div id="materias_no_aprobadas"></div>
+                </div>
+            </div>
+            <div class="box-body">
+                <div id="materias_no_aprobadas_detalle"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="box box-info">
+            <div class="box-header with-border">
+                <div class="box-title">
                     <div id="calendario_extras"></div>
                 </div>
             </div>
@@ -456,7 +468,7 @@
                                 
                                     @endphp    
                                 <td> 
-                                {{$linea->cajaConcepto->name}} </td>
+                                {{$linea->cajaConcepto->name}} ({{optional(optional(optional($linea->calificacion)->hacademica)->materia)->name}}) </td>
                                 <td>{{ $linea->subtotal }}</td>
                                 <td>{{ $linea->descuento }}</td>
                                 <td>
@@ -563,7 +575,7 @@
                                     }*/
                                     
                                 @endphp
-                                <td><strong>Materia:</strong>{{ optional($pago->materium)->name }}  <br>
+                                <td><strong>Materia:</strong>{{ optional(optional(optional($pago->caja->cajaLn->calificacion)->hacademica)->materia)->name }}  <br>
                                     <strong>Monto:</strong>{{ $pago->monto }} <br>
                                     <strong>Fecha:</strong> {{ $pago->fecha }} <br>
                                     @permission('ticket.fechaPago')
@@ -717,7 +729,12 @@
                         @php
                             //se guarda para usar en el calendario de extras
                             $duracion=$combinacion->grado->duracion_periodo_id;
-                            $limite_extras=$combinacion->grado->duracionPeriodo->bloqueo_cantidad_extras;
+                            /*$limite_extras=100;
+                            if(isset(optional($combinacion->grado->duracionPeriodo)->bloqueo_cantidad_extras)){
+                            */
+                                $limite_extras=optional($combinacion->grado->duracionPeriodo)->bloqueo_cantidad_extras;
+                            //}
+                            
                         @endphp
                         @if($combinacion->especialidad_id<>0 and $combinacion->nivel_id<>0 and $combinacion->grado_id<>0 and $combinacion->turno_id<>0)
                         <tr>
@@ -949,8 +966,8 @@
                                     @php
                                         //dd($ln);  
                                         
-                                        $pagos=App\Pago::with('materium')->where('caja_id', $ln->caja_id)->get();
-                                        //dd($pagos);
+                                        $pagos=App\Pago::with(['caja.cajaLn','caja.cajaLn.calificacion.hacademica.materia'])->where('caja_id', $ln->caja_id)->get();
+                                        
                                         
                                     @endphp
                                     <tr>
@@ -959,7 +976,11 @@
                                         {{$ln->concepto}} 
                                         @if(isset($pagos))
                                         @foreach($pagos as $pago)
-                                        <span class="badge bg-light-blue">{{ optional($pago->materium)->name }}</span>
+                                        @php
+                                        $linea=App\CajaLn::where('caja_id',$pago->caja_id)->whereNull('deleted_at')->first();
+                                        //dd($linea->calificacion);
+                                        @endphp
+                                        <span class="badge bg-light-blue">{{ optional(optional(optional($pago->caja->cajaLn->calificacion)->hacademica)->materia)->name }}</span>
                                         @endforeach
                                         @endif
                                         <span class="badge bg-gray">{{$ln->fecha}}</span>
@@ -1118,23 +1139,6 @@ Agregar nuevo registro
                         <span class="help-block">{{ $errors->first("referencia") }}</span>
                        @endif
                     </div>
-                    @php
-                        $cmb_materias_extra=App\Materium::join('hacademicas as h', 'h.materium_id','materia.id')
-                        ->where('h.cliente_id',$cliente->id)
-                        ->where('h.st_materium_id',2)
-                        ->pluck('materia.name','h.materium_id');
-                        $cmb_materias_extra->prepend('Sin Materia', '');
-                    @endphp
-                    @if(isset($caja->cajaLn) and $caja->cajaLn->cajaConcepto->bnd_extraordinario==1)
-                    
-                    <div class="form-group col-md-6 @if($errors->has('materium_id')) has-error @endif">
-                       <label for="materium_id-field">Materia</label>
-                       {!! Form::select("materium_id", $cmb_materias_extra, null, array("class" => "form-control", "id" => "materium_id-field")) !!}
-                       @if($errors->has("materium_id"))
-                        <span class="help-block">{{ $errors->first("materium_id") }}</span>
-                       @endif
-                    </div>
-                    @endif
                     
                     <div class="form-group col-md-6 @if($errors->has('referencia')) has-error @endif">
                         <button type="button" class="btn btn-warning validarReferencia" id="validarReferencia">
@@ -1455,18 +1459,62 @@ Agregar nuevo registro
                 if (typeof data[0] !== 'undefined') {
                     $('#calendario_extras_detalle').append(
                         '<div class="row"><div class="col-md-12"><table class="table table-bordered">'+
-                        '<thead><tr><th>Lectivo</th><th>Materia</th><th>Fecha</th></tr></thead><tbody>'
+                        '<thead><tr><th>Agregar Caja</th><th>Lectivo</th><th>Materia</th><th>Fecha</th></tr></thead><tbody>'
                     );
                     $.each(data[0], function(i, item) {
                         //console.log(item);
-                        $('#calendario_extras_detalle tbody').append(
-                            '<tr><td>'+item.lectivo+'</td><td>'+item.materia+'</td><td>'+item.fecha+'</td></tr>'
+                        if(item.cajas_existentes>0){
+                            $('#calendario_extras_detalle tbody').append(
+                        `<tr>
+                            <td>
+                                ${item.cajas_existentes} existente
+                            </td>
+                            <td> ${item.lectivo} </td><td> ${item.materia} </td><td> ${item.fecha} </td>
+                        </tr>`
                         );
+                        }else{
+                            $('#calendario_extras_detalle tbody').append(
+                        `<tr>
+                            <td>
+                                @if(isset($caja))
+                                <a href="{{route('cajas.guardarExaExtra', ['caja'=> $caja->id, 'cliente_id'=> $cliente->id])}}&caja_concepto_id=${item.caja_concepto_id}&calificacion_id=${item.calificacion_id}">
+                                    <span><i class="glyphicon glyphicon-plus-sign"></i></span>
+                                </a>
+                                @endif
+                            </td>
+                            <td> ${item.lectivo} </td><td> ${item.materia} </td><td> ${item.fecha} </td>
+                        </tr>`
+                        );
+                        }
+                        
                     });
                     $('#calendario_extras_detalle').append('</tbody></table></div></div>');
                 }
             }
-        }); 
+        });
+        
+        $.ajax({
+            type: 'GET',
+            url: '{{route("hacademicas.materiasNoAprobadasXCliente")}}',
+            data: {
+                'cliente_id': {{ $cliente->id }},
+            },
+            dataType:"json",
+            //beforeSend : function(){$("#loading3").show(); },
+            //complete : function(){$("#loading3").hide(); },
+            success: function(data) {
+                //console.log(data);
+                if(data.resultado==0){
+                    $('#materias_no_aprobadas').html(
+                    '<div><span class="badge bg-green">Materias no aprobadas del alumno {{ $cliente->id}}:'+data.resultado+'</span></div>');
+                }else{
+                    
+                    $('#materias_no_aprobadas').html(
+                    '<div><span class="badge bg-red">Materias no aprobadas del alumno {{ $cliente->id}}:'+data.resultado+'</span></div>');
+                }
+                
+            }
+        });
         @endif
 
         $('#forma_pago_id1-field').change(function(){

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Calificacion;
 use App\CalificacionPonderacion;
+use App\Empleado;
 use App\Hacademica;
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
@@ -32,8 +33,12 @@ class IncidenciasCalificacionsController extends Controller
 	public function index(Request $request)
 	{
 		$incidenciasCalificacions = IncidenciasCalificacion::getAllData($request);
+		$justificacion = IncidenciasJustificacion::pluck('name', 'id');
+		$justificacion->prepend('Selecciona una justificacion', '');
 
-		return view('incidenciasCalificacions.index', compact('incidenciasCalificacions'));
+		$plantels = Empleado::where('user_id', '=', Auth::user()->id)->first()->plantels->pluck('razon', 'id');
+
+		return view('incidenciasCalificacions.index', compact('incidenciasCalificacions', 'justificacion', 'plantels'));
 	}
 
 	/**
@@ -48,7 +53,7 @@ class IncidenciasCalificacionsController extends Controller
 		$calificacion_ponderacion_id = $datos['calificacion_ponderacion_id'];
 		$tpo_examen_id = CalificacionPonderacion::find($calificacion_ponderacion_id)->calificacion->tpo_examen_id;
 		$justificacion = [];
-		if ($tpo_examen_id == 4) {
+		if ($tpo_examen_id == 2) {
 			$justificacion = IncidenciasJustificacion::where('id', 4)->pluck('name', 'id');
 		} else {
 			$justificacion = IncidenciasJustificacion::where('id', "<>", 4)->pluck('name', 'id');
@@ -108,6 +113,7 @@ class IncidenciasCalificacionsController extends Controller
 	public function show($id, IncidenciasCalificacion $incidenciasCalificacion)
 	{
 		$incidenciasCalificacion = $incidenciasCalificacion->find($id);
+
 		return view('incidenciasCalificacions.show', compact('incidenciasCalificacion'));
 	}
 
@@ -121,8 +127,14 @@ class IncidenciasCalificacionsController extends Controller
 	{
 		$incidenciasCalificacion = $incidenciasCalificacion->find($id);
 		$calificacion_ponderacion_id = $incidenciasCalificacion->calificacion_ponderacion_id;
-		$justificacion = IncidenciasJustificacion::pluck('name', 'id');
-		return view('incidenciasCalificacions.edit', compact('incidenciasCalificacion', 'calificacion_ponderacion_id', 'justificacion'))
+		$tpo_examen_id = $incidenciasCalificacion->calificacion->tpo_examen_id;
+		$justificacion = [];
+		if ($tpo_examen_id == 2) {
+			$justificacion = IncidenciasJustificacion::where('id', 4)->pluck('name', 'id');
+		} else {
+			$justificacion = IncidenciasJustificacion::where('id', "<>", 4)->pluck('name', 'id');
+		}
+		return view('incidenciasCalificacions.edit', compact('incidenciasCalificacion', 'calificacion_ponderacion_id', 'justificacion', 'tpo_examen_id'))
 			->with('list', IncidenciasCalificacion::getListFromAllRelationApps());
 	}
 

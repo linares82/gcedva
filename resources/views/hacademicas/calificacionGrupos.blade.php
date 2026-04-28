@@ -86,7 +86,7 @@
                          <th>Calificacion Total</th>
                          <th>Calificacion</th>
                          <th>Calificacion Parcial</th>
-                         <th></th>
+                         <th width="100px"></th>
                          <th></th>
                          <th></th>
                      </thead>

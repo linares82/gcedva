@@ -83,7 +83,7 @@
                        <span class="help-block">{{ $errors->first("serie_anterior") }}</span>
                        @endif
                     </div>
-                    <div class="form-group col-md-4 @if($errors->has('modulo_id')) has-error @endif">
+                    <div class="form-group col-md-4 @if($errors->has('modulo_id')) has-error @endif" style="clear:left;">
                        <label for="modulo_id-field">Modulo</label>
                        {!! Form::select("modulo_id", $list["Modulo"], null, array("class" => "form-control select_seguridad", "id" => "modulo_id-field")) !!}
                        @if($errors->has("modulo_id"))
@@ -91,7 +91,15 @@
                        @endif
                     </div>
 
-                    <div class="form-group col-md-4 @if($errors->has('ponderacion_id')) has-error @endif" style="clear:left;">
+                    <div class="form-group col-md-4 @if($errors->has('caja_concepto_id')) has-error @endif">
+                       <label for="caja_concepto_id-field">Caja Concepto</label>
+                       {!! Form::select("caja_concepto_id", $conceptosExtraordinarios, null, array("class" => "form-control select_seguridad", "id" => "caja_concepto_id-field")) !!}
+                       @if($errors->has("caja_concepto_id"))
+                       <span class="help-block">{{ $errors->first("caja_concepto_id") }}</span>
+                       @endif
+                    </div>
+
+                    <div class="form-group col-md-4 @if($errors->has('ponderacion_id')) has-error @endif">
                        <label for="ponderacion_id-field">Ponderacion basada en porcentaje</label>
                        {!! Form::select("ponderacion_id", $list["Ponderacion"], null, array("class" => "form-control select_seguridad", "id" => "ponderacion_id-field")) !!}
                        @if($errors->has("ponderacion_id"))
@@ -101,12 +109,12 @@
                     
                     @permission('materias.ponderacionBasadaEnMaterias')
                     <div class="form-group col-md-4 @if($errors->has('bnd_ponderacion')) has-error @endif">
-                     <label for="bnd_ponderacion-field">Ponderacion Para Otra Materia: </label>
-                     {!! Form::checkbox("bnd_ponderacion", true, null, [ "id" => "bnd_ponderacion-field", 'class'=>'minimal']) !!}
-                     @if($errors->has("bnd_ponderacion"))
-                     <span class="help-block">{{ $errors->first("bnd_ponderacion") }}</span>
-                     @endif
-                 </div>
+                           <label for="bnd_ponderacion-field">Ponderacion Para Otra Materia: </label>
+                           {!! Form::checkbox("bnd_ponderacion", true, null, [ "id" => "bnd_ponderacion-field", 'class'=>'minimal']) !!}
+                           @if($errors->has("bnd_ponderacion"))
+                           <span class="help-block">{{ $errors->first("bnd_ponderacion") }}</span>
+                           @endif
+                     </div>
 
                   <div class="form-group col-md-4 @if($errors->has('hijos')) has-error @endif">
                      <label for="hijos-field">Ponderacion basada en Materias</label>

@@ -16,6 +16,7 @@ use App\CombinacionCliente;
 use App\CuentasEfectivo;
 use App\Empleado;
 use App\FormaPago;
+use App\Hacademica;
 use App\HistoriaCliente;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\createCaja;
@@ -855,7 +856,6 @@ class CajasController extends Controller
     public function guardaAdeudo(Request $request)
     {
         $data = $request->all();
-
         //$plantel=Plantel::find(Auth::user()->id);
 
         $cliente = Cliente::find($data['cliente']);
@@ -921,7 +921,7 @@ class CajasController extends Controller
                 ->get();
 
 
-            $conteo_extras = Calificacion::select(
+            $conteo_extras_control_escolar = Calificacion::select(
                 'l.name as lectivo',
                 'm.name as materia',
                 'te.name as tipo_evaluacion',
@@ -933,9 +933,9 @@ class CajasController extends Controller
                 ->join('lectivos as l', 'l.id', 'calificacions.lectivo_id')
                 ->join('materia as m', 'm.id', 'h.materium_id')
                 ->join('tpo_examens as te', 'te.id', '=', 'calificacions.tpo_examen_id')
-                ->join('pagos as pag', 'pag.materium_id', '=', 'h.materium_id')
-                ->join('cajas as c', 'c.id', '=', 'pag.caja_id')
-                ->whereColumn('c.cliente_id', 'h.cliente_id')
+                //->join('pagos as pag', 'pag.materium_id', '=', 'h.materium_id')
+                //->join('cajas as c', 'c.id', '=', 'pag.caja_id')
+                //->whereColumn('c.cliente_id', 'h.cliente_id')
                 //->where('h.materium_id', $hacademica->materium_id)
                 ->where('h.cliente_id', $cliente->id)
                 //->where('calificacions.lectivo_id', $hacademica->lectivo_id)
@@ -944,12 +944,25 @@ class CajasController extends Controller
                 ->where('tpo_examen_id', 2)
                 ->count();
 
-            if ($conteo_extras >= $limite_extras and !is_null($limite_extras)) {
+            $conteo_extras_caja = CajaLn::join('caja_conceptos as cc', 'cc.id', 'caja_lns.caja_concepto_id')
+                ->join('cajas as c', 'c.id', 'caja_lns.caja_id')
+                ->where('cc.bnd_extraordinario', 1)
+                ->where('c.cliente_id', $cliente->id)
+                ->whereDate('c.fecha', '>=', $calendarioExtras->fec_inicio)
+                ->whereDate('c.fecha', '<=', $calendarioExtras->fec_fin)
+                ->count();
+
+            if ($conteo_extras_caja >= $conteo_extras_control_escolar) {
                 return response()->json([
                     'error' => "400",
-                    'msj' => 'Limite de examenes extras alcanzados.'
+                    'msj' => 'Limite de examenes extras permitidos por control escolar se ha alcanzado.'
                 ]);
-            }
+            } /*else {
+                return response()->json([
+                    'error' => "400",
+                    'msj' => $conteo_extras_control_escolar . "control-caja" . $conteo_extras_caja
+                ]);
+            }*/
 
             $linea = CajaLn::create($registro);
 
@@ -962,6 +975,21 @@ class CajasController extends Controller
 
             echo json_encode($linea);
         } else {
+            $materias_no_aprobadas = Hacademica::select('m.name as materia', 'l.name as lectivo', 'hacademicas.st_materium_id')
+                ->where('hacademicas.cliente_id', $cliente->id)
+                ->where('hacademicas.st_materium_id', 2)
+                ->join('materia as m', 'm.id', '=', 'hacademicas.materium_id')
+                ->join('lectivos as l', 'l.id', '=', 'hacademicas.lectivo_id')
+                ->whereNull('hacademicas.deleted_at')
+                ->count();
+
+            if ($materias_no_aprobadas > 0) {
+                return response()->json([
+                    'error' => "400",
+                    'msj' => 'El cliente tiene materias no aprobadas: ' . $materias_no_aprobadas
+                ]);
+            }
+
             $linea = CajaLn::create($registro);
 
             $caja->subtotal = $caja->subtotal + $linea->subtotal;
@@ -2779,5 +2807,117 @@ class CajasController extends Controller
             Log::info("cliente no encontrado en Brigth Space u otro error: " . $e->getMessage());
             //return false;
         }
+    }
+
+    public function guardarExaExtra(Request $request)
+    {
+        //dd($request->get('adeudo'));
+        $data = $request->all();
+        //dd($data);
+
+        $caja = Caja::find($data['caja']);
+        $cliente = Cliente::find($data['cliente_id']);
+        $cajas = Caja::select('cajas.consecutivo as caja', 'cajas.id as caja_id', 'cajas.fecha', 'ln.caja_concepto_id as concepto_id', 'cc.name as concepto', 'ln.total', 'st.name as estatus', 'ln.adeudo_id')
+            ->join('caja_lns as ln', 'ln.caja_id', '=', 'cajas.id')
+            ->join('caja_conceptos as cc', 'cc.id', '=', 'ln.caja_concepto_id')
+            ->join('st_cajas as st', 'st.id', '=', 'cajas.st_caja_id')
+            ->where('cliente_id', $cliente->id)
+            ->where('ln.adeudo_id', '0')
+            ->whereNull('cajas.deleted_at')
+            ->whereNull('ln.deleted_at')
+            ->get();
+
+        $lns = CajaLn::where('caja_id', $caja->id)->whereNull('deleted_at')->count();
+        if ($lns == 0) {
+            //$conceptosValidos = $caja->plantel->conceptoMultipagos->toArray();
+            //dd($conceptosValidos);
+
+            //foreach ($data['adeudos_tomados'] as $adeudo_tomado) {
+            //$adeudos = Adeudo::where('id', '=', $adeudo_tomado)->get();
+
+
+            //dd($adeudos->toArray());
+
+
+
+            $subtotal = 0;
+            $recargo = 0;
+            $descuento = 0;
+            //dd($adeudos->toArray());
+
+            //foreach ($adeudos as $adeudo) {
+
+            //$existe_linea = CajaLn::where('adeudo_id', '=', $adeudo->id)->first();
+            //dd($existe_linea->toArray());
+            //if (!is_object($existe_linea)) {
+            //$adeudo->caja_id = $caja->id;
+            //$adeudo->save();
+            $caja_concepto = CajaConcepto::find($data['caja_concepto_id']);
+            $caja_ln['caja_id'] = $caja->id;
+            $caja_ln['caja_concepto_id'] = $caja_concepto->id;
+            $caja_ln['subtotal'] = $caja_concepto->monto;
+            $caja_ln['total'] = 0;
+            $caja_ln['recargo'] = 0;
+            $caja_ln['descuento'] = 0;
+
+            $caja_ln['total'] = $caja_ln['subtotal'] + $caja_ln['recargo'] - $caja_ln['descuento'];
+
+            $caja_ln['adeudo_id'] = 0;
+            $caja_ln['calificacion_id'] = $data['calificacion_id'];
+            $caja_ln['usu_alta_id'] = Auth::user()->id;
+            $caja_ln['usu_mod_id'] = Auth::user()->id;
+
+            $caja_ln['subtotal'] = round($caja_ln['subtotal'], 0);
+            $caja_ln['total'] = round($caja_ln['total'], 0);
+            $caja_ln['recargo'] = round($caja_ln['recargo'], 0);
+            $caja_ln['descuento'] = round($caja_ln['descuento'], 0);
+
+            /*if($cliente->beca_bnd==1 and $caja_ln['caja_concepto_id']==1){
+                    $caja_ln['descuento']=$caja_ln['descuento']+($caja_ln['subtotal']*$cliente->beca_porcentaje);
+                    $caja_ln['total']=$caja_ln['total']-($caja_ln['subtotal']-$caja_ln['descuento']);
+                    }*/
+            //dd($caja_ln);
+            $caja_linea = CajaLn::create($caja_ln);
+            //dd($caja_linea);
+            $subtotal = $subtotal + $caja_ln['subtotal'];
+            $recargo = $recargo + $caja_ln['recargo'];
+            $descuento = $descuento + $caja_ln['descuento'];
+            //}
+            //}
+            if ($subtotal > 0) {
+                //dd($subtotal);
+                $caja->subtotal = round($caja->subtotal + $subtotal, 0);
+                $caja->recargo = round($caja->recargo + $recargo, 2);
+                $caja->descuento = round($caja->descuento + $descuento);
+                $caja->total = round($caja->subtotal + $caja->recargo - $caja->descuento);
+                //dd($caja);
+                $caja->save();
+            }
+            //}
+
+            //Valida pagos y adeudos para establecer estatus en caja
+            $pagos = 0;
+            if (isset($caja->pagos)) {
+                foreach ($caja->pagos as $pago) {
+                    $pagos = $pago->monto + $pagos;
+                }
+                if ($caja->total > $pagos and $pagos > 0) {
+                    $caja->st_caja_id = 3;
+                } elseif ($caja->total >= $pagos and $pagos > 0) {
+                    $caja->st_caja_id = 1;
+                }
+                $caja->save();
+            }
+        }
+
+
+
+        $combinaciones = CombinacionCliente::where('cliente_id', '=', $caja->cliente_id)->get();
+        $empleados = Empleado::select(DB::raw('concat(nombre," ",ape_paterno," ",ape_materno) as name, id'))->pluck('name', 'id');
+
+        $formasPago = $this->formasPago;
+        return view('cajas.caja', compact('formasPago', 'cliente', 'caja', 'combinaciones', 'cajas', 'empleados'))
+            ->with('list', Caja::getListFromAllRelationApps())
+            ->with('list1', CajaLn::getListFromAllRelationApps());
     }
 }

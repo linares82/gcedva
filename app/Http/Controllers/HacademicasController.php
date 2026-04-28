@@ -805,7 +805,7 @@ class HacademicasController extends Controller
                 ->where('hacademicas.materium_id', '=', $asignacionAcademica->materium_id)
                 ->where('c.tpo_examen_id', '=', $data['tpo_examen_id'])
                 ->where('cp.carga_ponderacion_id', '=', $data['carga_ponderacion_id'])
-                ->WhereRaw('(hacademicas.st_materium_id = ? or cli.st_cliente_id=?)', [2, 3])
+                ->WhereRaw('((hacademicas.st_materium_id = ? and cli.st_cliente_id=?) or (hacademicas.st_materium_id = ? and cli.st_cliente_id=?))', [2, 3, 2, 4])
                 ->orderBy('cli.ape_paterno')
                 ->orderBy('cli.ape_materno')
                 ->orderBy('cli.nombre')
@@ -1492,5 +1492,20 @@ class HacademicasController extends Controller
         return view('hacademicas.calificacionIncidencias', compact('asignacion', 'examen', 'carga_ponderaciones', 'hacademicas', 'ponderacion_seleccionada'))
             ->with('list', Hacademica::getListFromAllRelationApps())
             ->with('msj', $msj);
+    }
+
+    public function materiasNoAprobadasXCliente(Request $request)
+    {
+        $datos = $request->all();
+        $materias_no_aprobadas = Hacademica::select('m.name as materia', 'l.name as lectivo', 'hacademicas.st_materium_id')
+            ->where('hacademicas.cliente_id', $datos['cliente_id'])
+            ->where('hacademicas.st_materium_id', 2)
+            ->join('materia as m', 'm.id', '=', 'hacademicas.materium_id')
+            ->join('lectivos as l', 'l.id', '=', 'hacademicas.lectivo_id')
+            ->whereNull('hacademicas.deleted_at')
+            ->get();
+        //dd($materias_no_aprobadas->toArray());
+
+        return response()->json(['resultado' => count($materias_no_aprobadas)]);
     }
 }
