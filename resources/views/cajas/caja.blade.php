@@ -915,7 +915,7 @@
                                 @if($adeudo->caja->consecutivo==0)
                                 {{$adeudo->caja->consecutivo}}
                                 @else
-                                <a href="#" onclick="abrirTicket({{$adeudo->caja->consecutivo}}, {{$adeudo->cliente_id}});" data-toggle="tooltip" title="Ir">{{$adeudo->caja->consecutivo}}</a>
+                                <a href="#" onclick="$('#consecutivo-field').val({{$adeudo->caja->consecutivo}});$('#cliente_caja-field').val({{$adeudo->cliente_id}});$('#form-buscarVenta').submit();" data-toggle="tooltip" title="Ir">{{$adeudo->caja->consecutivo}}</a>
                                 @endif
                             </td>
                             
@@ -987,7 +987,7 @@
                                     </td> 
                                     <td>{{$ln->total}}</td>
                                     <td>
-                                        <a href="#" onclick="abrirTicket({{$ln->caja}}, {{$cliente->id}});" data-toggle="tooltip" title="Ir">{{$ln->caja}}</a>
+                                        <a href="#" onclick="$('#consecutivo-field').val({{$ln->caja}});$('#cliente_caja-field').val({{$cliente->id}});$('#form-buscarVenta').submit();" data-toggle="tooltip" title="Ir">{{$ln->caja}}</a>
                                         
                                     </td>
                                     <td>{{$ln->estatus}}</td>
@@ -1935,7 +1935,6 @@ Agregar nuevo registro
         }
     }
     });
-
 
     function abrirTicket(csc, cliente){
         
