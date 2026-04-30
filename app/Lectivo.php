@@ -58,6 +58,11 @@ class Lectivo extends Model
 		return $this->hasMany('App\CalendarioEvaluacion');
 	} // end
 
+	public function calendarioIncidenciaCals()
+	{
+		return $this->hasMany('App\CalendarioIncidenciaCal');
+	} // end
+
 	public function periodoExamens()
 	{
 		return $this->hasMany('App\PeriodoExamen');

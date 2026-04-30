@@ -117,6 +117,7 @@
                             @endif
                             
                          <td>
+                            
                              @if($r->bnd_doc_oblig_entregados==1 or $validaEntregaDocs3Meses)
                              SI o dentro de plazo valido
                              @else
@@ -154,7 +155,9 @@
                              $r->estatus_cliente_id==27 or 
                              $r->estatus_cliente_id==28) and $r->tpo_examen_id==1)
                                 @if($param_bloqueoXdoc==1)
-                                    @if($r->bnd_doc_oblig_entregados==1 or $validaEntregaDocs3Meses)
+                                    @if(($r->bnd_doc_oblig_entregados==1 or 
+                                        $validaEntregaDocs3Meses) and 
+                                        $dentroPeriodoIncidencias==0)
                                         @permission('hacademicas.calificacionBaja')
                                         {!! Form::number("calificacion", null, array("class" => "form-control input-sm col-md-6 input_calificacion", 
                                         "id" => "calificacion_parcial".$r->id.$r->calificacion_ponderacion_id, 'min' => 0, 'max' =>10)) !!}
@@ -180,7 +183,7 @@
                                 
                             @else
                                 @if($param_bloqueoXdoc==1)
-                                    @if($r->bnd_doc_oblig_entregados==1 or $validaEntregaDocs3Meses)
+                                    @if(($r->bnd_doc_oblig_entregados==1 or $validaEntregaDocs3Meses) and $dentroPeriodoIncidencias==0)
                                     {!! Form::number("calificacion", null, array("class" => "form-control input-sm col-md-6", 
                                     "id" => "calificacion_parcial".$r->id.$r->calificacion_ponderacion_id, 'min' => 0, 'max' =>10)) !!}
                                     @endif
@@ -197,9 +200,9 @@
                                  $r->estatus_cliente_id==26 or
                                  $r->estatus_cliente_id==27 or 
                                  $r->estatus_cliente_id==28) and 
-                                 $r->tpo_examen_id==1)
+                                 $r->tpo_examen_id==1 )
                                 @if($param_bloqueoXdoc==1)
-                                    @if($r->bnd_doc_oblig_entregados==1 or $validaEntregaDocs3Meses)
+                                    @if(($r->bnd_doc_oblig_entregados==1 or $validaEntregaDocs3Meses) and $dentroPeriodoIncidencias==0)
                                         @permission('hacademicas.calificacionBaja')
                                             <button type="button"  
                                             class="btn btn-primary btn-xs btn-guardar_caificacion" 
@@ -221,7 +224,9 @@
                                 <a href="{{ url('hCalificacions/index') }}?q%5Bs%5D=&q%5Bclientes.nombre_cont%5D=&q%5Bcalificacions.calificacion_cont%5D=&q%5Bh_calificacions.calificacion_ponderacion_id_cont%5D={{ $r->calificacion_ponderacion_id }}&q%5Bcarga_ponderacions.name_cont%5D=&q%5Bcalificacion_parcial_anterior_cont%5D=&q%5Bcalificacion_parcial_actual_cont%5D=&q%5Busu_alta_id_cont%5D=&q%5Busu_mod_id_cont%5D=&commit=Buscar" class="btn btn-success btn-xs" target="_blank">Historia</a>
                                 @endpermission
                                 
-                             @elseif($r->estatus_cliente_id==1 or $r->estatus_cliente_id==22 or $r->tpo_examen_id==2)
+                             @elseif($r->estatus_cliente_id==1 or 
+                             $r->estatus_cliente_id==22 or 
+                             $r->tpo_examen_id==2)
                                 @if($r->tpo_examen_id==2)
                                     @permission('hacademicas.calificacionExamenExtra')
                                     <button type="button"  
@@ -244,7 +249,7 @@
                                 @endpermission
                              @else
                                 @if($param_bloqueoXdoc==1)
-                                    @if($r->bnd_doc_oblig_entregados==1 or $validaEntregaDocs3Meses)
+                                    @if(($r->bnd_doc_oblig_entregados==1 or $validaEntregaDocs3Meses) and $dentroPeriodoIncidencias==0)
                                     <button type="button"  
                                         class="btn btn-primary btn-xs btn-guardar_caificacion" 
                                         data-calificacion_ponderacion_id="{{ $r->calificacion_ponderacion_id }}"
@@ -263,7 +268,9 @@
                                  @endpermission
                              @endif
                             @permission('incidenciasCalificacions.create')
+                            @if($dentroPeriodoIncidencias>0)
                             <a target="_blank" href="{{ route('incidenciasCalificacions.create', array('calificacion_ponderacion_id'=>$r->calificacion_ponderacion_id)) }}" class="btn btn-warning btn-xs" target="_blank">Incidencia</a>     
+                            @endif
                             @endpermission
                             @if($calendarioExtras>0)
                                 @if($r->st_materium_id == 2)

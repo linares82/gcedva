@@ -1,4 +1,6 @@
-<?php namespace App\Http\Controllers;
+<?php
+
+namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -10,7 +12,8 @@ use Auth;
 use App\Http\Requests\updateCalendarioEvaluacion;
 use App\Http\Requests\createCalendarioEvaluacion;
 
-class CalendarioEvaluacionsController extends Controller {
+class CalendarioEvaluacionsController extends Controller
+{
 
 	/**
 	 * Display a listing of the resource.
@@ -32,7 +35,7 @@ class CalendarioEvaluacionsController extends Controller {
 	public function create()
 	{
 		return view('calendarioEvaluacions.create')
-			->with( 'list', CalendarioEvaluacion::getListFromAllRelationApps() );
+			->with('list', CalendarioEvaluacion::getListFromAllRelationApps());
 	}
 
 	/**
@@ -44,12 +47,12 @@ class CalendarioEvaluacionsController extends Controller {
 	public function store(createCalendarioEvaluacion $request)
 	{
 		$input = $request->all();
-		$input['usu_alta_id']=Auth::user()->id;
-		$input['usu_mod_id']=Auth::user()->id;
-                $input['plantel_id']=Empleado::where('user_id', '=', Auth::user()->id)
-                                                ->value('plantel_id');
+		$input['usu_alta_id'] = Auth::user()->id;
+		$input['usu_mod_id'] = Auth::user()->id;
+		$input['plantel_id'] = Empleado::where('user_id', '=', Auth::user()->id)
+			->value('plantel_id');
 		//create data
-		CalendarioEvaluacion::create( $input );
+		CalendarioEvaluacion::create($input);
 
 		return redirect()->route('calendarioEvaluacions.index')->with('message', 'Registro Creado.');
 	}
@@ -62,7 +65,7 @@ class CalendarioEvaluacionsController extends Controller {
 	 */
 	public function show($id, CalendarioEvaluacion $calendarioEvaluacion)
 	{
-		$calendarioEvaluacion=$calendarioEvaluacion->find($id);
+		$calendarioEvaluacion = $calendarioEvaluacion->find($id);
 		return view('calendarioEvaluacions.show', compact('calendarioEvaluacion'));
 	}
 
@@ -74,9 +77,9 @@ class CalendarioEvaluacionsController extends Controller {
 	 */
 	public function edit($id, CalendarioEvaluacion $calendarioEvaluacion)
 	{
-		$calendarioEvaluacion=$calendarioEvaluacion->find($id);
+		$calendarioEvaluacion = $calendarioEvaluacion->find($id);
 		return view('calendarioEvaluacions.edit', compact('calendarioEvaluacion'))
-			->with( 'list', CalendarioEvaluacion::getListFromAllRelationApps() );
+			->with('list', CalendarioEvaluacion::getListFromAllRelationApps());
 	}
 
 	/**
@@ -87,9 +90,9 @@ class CalendarioEvaluacionsController extends Controller {
 	 */
 	public function duplicate($id, CalendarioEvaluacion $calendarioEvaluacion)
 	{
-		$calendarioEvaluacion=$calendarioEvaluacion->find($id);
+		$calendarioEvaluacion = $calendarioEvaluacion->find($id);
 		return view('calendarioEvaluacions.duplicate', compact('calendarioEvaluacion'))
-			->with( 'list', CalendarioEvaluacion::getListFromAllRelationApps() );
+			->with('list', CalendarioEvaluacion::getListFromAllRelationApps());
 	}
 
 	/**
@@ -102,12 +105,12 @@ class CalendarioEvaluacionsController extends Controller {
 	public function update($id, CalendarioEvaluacion $calendarioEvaluacion, updateCalendarioEvaluacion $request)
 	{
 		$input = $request->all();
-		$input['usu_mod_id']=Auth::user()->id;
-                $input['plantel_id']=Empleado::where('user_id', '=', Auth::user()->id)
-                                                ->value('plantel_id');
+		$input['usu_mod_id'] = Auth::user()->id;
+		$input['plantel_id'] = Empleado::where('user_id', '=', Auth::user()->id)
+			->value('plantel_id');
 		//update data
-		$calendarioEvaluacion=$calendarioEvaluacion->find($id);
-		$calendarioEvaluacion->update( $input );
+		$calendarioEvaluacion = $calendarioEvaluacion->find($id);
+		$calendarioEvaluacion->update($input);
 
 		return redirect()->route('calendarioEvaluacions.index')->with('message', 'Registro Actualizado.');
 	}
@@ -118,12 +121,11 @@ class CalendarioEvaluacionsController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id,CalendarioEvaluacion $calendarioEvaluacion)
+	public function destroy($id, CalendarioEvaluacion $calendarioEvaluacion)
 	{
-		$calendarioEvaluacion=$calendarioEvaluacion->find($id);
+		$calendarioEvaluacion = $calendarioEvaluacion->find($id);
 		$calendarioEvaluacion->delete();
 
 		return redirect()->route('calendarioEvaluacions.index')->with('message', 'Registro Borrado.');
 	}
-
 }

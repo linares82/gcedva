@@ -1428,7 +1428,10 @@
                                             </td>
                                             <td>
                                                 @permission('calificacions.destroy')
-                                                @if($cali->tpo_examen_id<>1 )
+                                                @php
+                                                    $lineaCaja=\App\CajaLn::where('calificacion_id', $cali->id)->first();
+                                                @endphp
+                                                @if($cali->tpo_examen_id<>1 and is_null($lineaCaja))
                                                 <a href="{{ route('calificacions.destroy', $cali->id) }}" class="btn btn-xs btn-danger" ><i class="glyphicon glyphicon-trash"></i> Eliminar</a>
                                                 @endif
                                                 @endpermission

@@ -662,6 +662,7 @@ class HacademicasController extends Controller
         //$calificacion_inicio=Carbon::createFromFormat('Y-m-d',$lectivo->calificacion_inicio);
         //$calificacion_fin = Carbon::createFromFormat('Y-m-d', $lectivo->calificacion_fin);
         $dentroPeriodoExamenes = 0;
+        $dentroPeriodoIncidencias = 0;
         $dentroPeriodoExamenesAsignacion = 0;
         $hoy = Carbon::createFromFormat('Y-m-d', Date('Y-m-d'));
         $periodos_capturados_total = 0;
@@ -683,11 +684,20 @@ class HacademicasController extends Controller
         foreach ($lectivo->calendarioEvaluacions as $fechaCalendario) {
             $calificacion_inicio = Carbon::createFromFormat('Y-m-d', $fechaCalendario->v_inicio);
             $calificacion_fin = Carbon::createFromFormat('Y-m-d', $fechaCalendario->v_fin);
-            if ($calificacion_inicio->lessThanOrEqualTo($hoy)  and $calificacion_fin->greaterThanOrEqualTo($hoy)) {
+            if ($calificacion_inicio->lessThanOrEqualTo($hoy) and $calificacion_fin->greaterThanOrEqualTo($hoy)) {
                 $dentroPeriodoExamenes = $fechaCalendario->id;
             }
         }
 
+        foreach ($lectivo->calendarioIncidenciaCals as $fechaCalendario) {
+            $calificacion_inicio = Carbon::createFromFormat('Y-m-d', $fechaCalendario->v_inicio);
+            $calificacion_fin = Carbon::createFromFormat('Y-m-d', $fechaCalendario->v_fin);
+            if ($calificacion_inicio->lessThanOrEqualTo($hoy) and $calificacion_fin->greaterThanOrEqualTo($hoy)) {
+                $dentroPeriodoIncidencias = $fechaCalendario->id;
+            }
+        }
+
+        //dd($dentroPeriodoIncidencias);
         //Calendario especial de la asignacion
         //dd($request->all());
         $empleado_firmado = Empleado::where('user_id', Auth::user()->id)->first();
@@ -819,7 +829,10 @@ class HacademicasController extends Controller
                 ->orderBy('cli.nombre')
                 ->orderBy('cli.nombre2')
                 ->get();
-        } elseif (!isset($data['excepcion']) and $dentroPeriodoExamenes > 0) {
+        } elseif (
+            (!isset($data['excepcion']) and $dentroPeriodoExamenes > 0) or
+            (!isset($data['excepcion']) and $dentroPeriodoIncidencias > 0)
+        ) {
             //if($calificacion_inicio<=$hoy and $calificacion_fin>=$hoy){
             if ($dentroPeriodoExamenes > 0) {
                 $hacademicas = HAcademica::select(
@@ -859,6 +872,54 @@ class HacademicasController extends Controller
                     ->orderBy('cli.nombre2')
                     ->whereExists(function ($query) {
                         $query->from('calendario_evaluacions as ce')
+                            ->join('lectivos as lec', 'lec.id', '=', 'ce.lectivo_id')
+                            ->whereRaw('curdate() between ce.v_inicio and ce.v_fin')
+                            ->whereRaw('ce.carga_ponderacion_id = cpo.id')
+                            ->whereRaw('lec.id = hacademicas.lectivo_id');
+                    })
+                    ->whereNull('hacademicas.deleted_at')
+                    ->whereNull('i.deleted_at')
+                    ->whereNull('c.deleted_at')
+                    ->whereNull('cp.deleted_at')
+                    ->get();
+            } elseif ($dentroPeriodoIncidencias > 0) {
+                $hacademicas = HAcademica::select(
+                    'cli.id',
+                    'cli.plantel_id',
+                    'cli.nombre',
+                    'cli.nombre2',
+                    'cli.ape_paterno',
+                    'cli.ape_materno',
+                    'cli.bnd_doc_oblig_entregados',
+                    'c.calificacion',
+                    'cp.calificacion_parcial_calculada',
+                    'cp.id as calificacion_ponderacion_id',
+                    'cp.calificacion_parcial',
+                    'stc.name as estatus_cliente',
+                    'stc.id as estatus_cliente_id',
+                    'cpo.name as ponderacion',
+                    'hacademicas.st_materium_id',
+                    'hacademicas.materium_id as materia_id',
+                    'hacademicas.id as hacademica_id',
+                    'hacademicas.lectivo_id as lectivo_id'
+                )
+                    ->where('hacademicas.grupo_id', '=', $asignacionAcademica->grupo_id)
+                    ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
+                    ->join('calificacions as c', 'c.hacademica_id', '=', 'hacademicas.id')
+                    ->join('calificacion_ponderacions as cp', 'cp.calificacion_id', '=', 'c.id')
+                    ->join('carga_ponderacions as cpo', 'cpo.id', '=', 'cp.carga_ponderacion_id')
+                    ->join('clientes as cli', 'cli.id', '=', 'hacademicas.cliente_id')
+                    ->join('st_clientes as stc', 'stc.id', '=', 'cli.st_cliente_id')
+                    ->where('hacademicas.lectivo_id', '=', $asignacionAcademica->lectivo_id)
+                    ->where('hacademicas.materium_id', '=', $asignacionAcademica->materium_id)
+                    ->where('c.tpo_examen_id', '=', $data['tpo_examen_id'])
+                    ->where('cp.carga_ponderacion_id', '=', $data['carga_ponderacion_id'])
+                    ->orderBy('cli.ape_paterno')
+                    ->orderBy('cli.ape_materno')
+                    ->orderBy('cli.nombre')
+                    ->orderBy('cli.nombre2')
+                    ->whereExists(function ($query) {
+                        $query->from('calendario_incidencia_cals as ce')
                             ->join('lectivos as lec', 'lec.id', '=', 'ce.lectivo_id')
                             ->whereRaw('curdate() between ce.v_inicio and ce.v_fin')
                             ->whereRaw('ce.carga_ponderacion_id = cpo.id')
@@ -1021,7 +1082,8 @@ class HacademicasController extends Controller
             'hacademicas',
             'ponderacion_seleccionada',
             'asignacionAcademica',
-            'calendarioExtras'
+            'calendarioExtras',
+            'dentroPeriodoIncidencias'
         ))
             ->with('list', Hacademica::getListFromAllRelationApps())
             ->with('msj', $msj);

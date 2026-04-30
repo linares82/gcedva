@@ -413,6 +413,7 @@ return array(
     'CreateCalendarioAsignacionPonderacionsTable' => $baseDir . '/database/migrations/2026_03_25_190653_create_calendario_asignacion_ponderacions_table.php',
     'CreateCalendarioEvaluacionsTable' => $baseDir . '/database/migrations/2017_10_12_140337_create_calendario_evaluacions_table.php',
     'CreateCalendarioExaExtrasTable' => $baseDir . '/database/migrations/2026_03_13_144327_create_calendario_exa_extras_table.php',
+    'CreateCalendarioIncidenciaCalsTable' => $baseDir . '/database/migrations/2026_04_29_161631_create_calendario_incidencia_cals_table.php',
     'CreateCalificacionPonderacionsTable' => $baseDir . '/database/migrations/2017_10_02_170635_create_calificacion_ponderacions_table.php',
     'CreateCalificacionsTable' => $baseDir . '/database/migrations/2017_09_18_171550_create_calificacions_table.php',
     'CreateCambioStSeguimientosTable' => $baseDir . '/database/migrations/2017_07_18_215230_create_cambio_st_seguimientos_table.php',

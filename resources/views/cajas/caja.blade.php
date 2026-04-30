@@ -1446,20 +1446,20 @@ Agregar nuevo registro
             success: function(data) {
                 //console.log(data[0]);
                 $('#calendario_extras').html(
-                    '<div class="">Calendario examenes extras del: <span class="badge">'+
-                    data.fec_inicio+'</span> al <span class="badge">'+
-                    data.fec_fin+'</span></div>'
+                    `<div class="">Calendario examenes extras del: <span class="badge">
+                    ${data.fec_inicio} </span> al <span class="badge">
+                    ${data.fec_fin} </span></div>`
                 );
                 if(data[0].length>={{ isset($limite_extras) ? $limite_extras : 100 }}){
                     $('#calendario_extras').append(
-                        '<span class="badge bg-red">El cliente tiene {{ $limite_extras }} o mas examenes extras.</span>'
+                        `<span class="badge bg-red">El cliente tiene {{ $limite_extras }} o mas examenes extras.</span>`
                     );
                 }
                 
                 if (typeof data[0] !== 'undefined') {
                     $('#calendario_extras_detalle').append(
-                        '<div class="row"><div class="col-md-12"><table class="table table-bordered">'+
-                        '<thead><tr><th>Agregar Caja</th><th>Lectivo</th><th>Materia</th><th>Fecha</th></tr></thead><tbody>'
+                        `<div class="row"><div class="col-md-12"><table class="table table-bordered">
+                        <thead><tr><th>Agregar Caja</th><th>Lectivo</th><th>Materia</th><th>Fecha</th></tr></thead><tbody>`
                     );
                     $.each(data[0], function(i, item) {
                         //console.log(item);
@@ -1488,7 +1488,7 @@ Agregar nuevo registro
                         }
                         
                     });
-                    $('#calendario_extras_detalle').append('</tbody></table></div></div>');
+                    $('#calendario_extras_detalle').append(`</tbody></table></div></div>`);
                 }
             }
         });
@@ -1506,22 +1506,20 @@ Agregar nuevo registro
                 //console.log(data);
                 if(data.total_materias_no_aprobadas>=data.bloqueo_cantidad_reprobadas){
                     $('#materias_no_aprobadas').html(
-                    '<div><span class="badge bg-red">Limite de materias no aprobadas alcanzado:'+data.total_materias_no_aprobadas+'</span></div>');
+                    `<div><span class="badge bg-red">Limite de materias no aprobadas alcanzado: ${data.total_materias_no_aprobadas} </span></div>`);
                     $('.procesarAdeudos').hide();
                     $('.adeudos_tomados').hide();
                 }else{
                     $('#materias_no_aprobadas').html(
-                    '<div><span class="badge bg-green">Materias no aprobadas del alumno:'+data.total_materias_no_aprobadas+'</span></div>');
+                    `<div><span class="badge bg-green">Materias no aprobadas del alumno: ${data.total_materias_no_aprobadas}</span></div>`);
                 }
                 
             }
         });
         @endif
 
-        $('#forma_pago_id1-field').change(function(){
-                
+        $('#forma_pago_id1-field').change(function(){  
             @if(!Auth::user()->can('cajas.ignorarFormaPagoParaFecha'))
-                
                 if(($(this).val()==1 || $(this).val()==6 || $(this).val()==9)){
                     $('#fecha-field').prop('disabled',true);
                 }else{
