@@ -77,7 +77,7 @@
                     </div>
                     <div class="form-group col-md-4 @if($errors->has('serie_anterior')) has-error @endif">
                        <label for="serie_anterior-field">Serie anterior</label>
-                       {!! Form::select("serie_anterior", $materiales_ls, null, array("class" => "form-control select_seguridad", "id" => "serie_anterior-field")) !!}
+                       {!! Form::select("serie_anterior", $materiales_ls, isset($materia) ? $materia->serie_anterior : null, array("class" => "form-control select_seguridad", "id" => "serie_anterior-field")) !!}
                        <div id='loading3' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div>
                        @if($errors->has("serie_anterior"))
                        <span class="help-block">{{ $errors->first("serie_anterior") }}</span>
@@ -140,7 +140,9 @@
 
                     <script type="text/javascript">
                        $(document).ready(function() {
-                          getCmbMateria();
+                          @if(isset($materium))
+			  getCmbMateria();
+			  @endif
                           @if(!isset($ponderacionMaterias))
                           getPonderacionMaterias();
                           @endif
@@ -158,12 +160,12 @@
                              url: '{{ route("materias.getCmbMateria2") }}',
                              type: 'GET',
                              data: "plantel_id=" + $('#plantel_id-field option:selected').val() +
-                                "&materium_id=" + $('#serie_anterior-field option:selected').val(),
+                                "&materium_id=" + {{$materium->serie_anterior}},
                              dataType: 'json',
                              beforeSend: function() {
                                 $("#loading3").show();
                              },
-                             complete: function() {
+                              complete: function() {
                                 $("#loading3").hide();
                              },
                              success: function(data) {
@@ -171,7 +173,7 @@
                                 //$('#serie_anterior-field').html('');
                                 $('#serie_anterior-field').empty();
                                 //$('#especialidad_id-field').empty();
-                                $('#serie_anterior-field').append($('<option></option>').text('Seleccionar Opción').val('0'));
+                                $('#serie_anterior-field').append($('<option></option>').text('Seleccionar OpciÃ³n').val('0'));
 
                                 $.each(data, function(i) {
                                    //alert(data[i].name);
@@ -201,7 +203,7 @@
                               //$('#serie_anterior-field').html('');
                               $('#hijos-field').empty();
                               //$('#especialidad_id-field').empty();
-                              $('#hijos-field').append($('<option></option>').text('Seleccionar Opción').val('0'));
+                              $('#hijos-field').append($('<option></option>').text('Seleccionar OpciÃ³n').val('0'));
 
                               $.each(data, function(i) {
                                  //alert(data[i].name);

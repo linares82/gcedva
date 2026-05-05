@@ -91,6 +91,20 @@ input[id="bnd_genera_matricula-field"][readonly] {
                         <span class="help-block">{{ $errors->first("bnd_extraordinario") }}</span>
                        @endif
                     </div>
+                    <div class="form-group col-md-4 @if($errors->has('bnd_aplicar_beca')) has-error @endif">
+                       <label for="bnd_aplicar_beca-field">Aplicar Beca</label>
+                       {!! Form::checkbox("bnd_aplicar_beca", 1, null, [ "id" => "bnd_aplicar_beca-field",'readonly' =>true]) !!}
+                       @if($errors->has("bnd_aplicar_beca"))
+                        <span class="help-block">{{ $errors->first("bnd_aplicar_beca") }}</span>
+                       @endif
+                    </div>
+                    <div class="form-group col-md-4 @if($errors->has('bnd_reinscripcion')) has-error @endif">
+                       <label for="bnd_reinscripcion-field">¿Es Reinscripción?</label>
+                       {!! Form::checkbox("bnd_reinscripcion", 1, null, [ "id" => "bnd_reinscripcion-field",'readonly' =>true]) !!}
+                       @if($errors->has("bnd_reinscripcion"))
+                        <span class="help-block">{{ $errors->first("bnd_reinscripcion") }}</span>
+                       @endif
+                    </div>
                     <div class="form-group col-md-4 @if($errors->has('reglas')) has-error @endif">
                      <label for="reglas-field">Reglas Descuento/Recargo</label><br/>
                      {!! Form::select("reglas[]", $reglas, null, array("class" => "form-control select_seguridad", 'multiple'=>true, "id" => "reglas-field")) !!}

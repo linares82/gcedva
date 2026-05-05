@@ -91,7 +91,7 @@ class MateriasController extends Controller
     public function edit($id, Materium $materium)
     {
         $materium = $materium->with('ponderacionMaterias')->find($id);
-        $list = Materium::where('id', '>', '0')->where('seriada_bnd', '=', '1')->pluck('name', 'id')->toArray();
+        $list = Materium::select(DB::raw('concat(id, " - ", name) as name'), 'id')->where('id', '>', '0')->where('seriada_bnd', '=', '1')->pluck('name', 'id')->toArray();
         $materiales_ls = array_merge(['0' => 'Seleccionar Opción'], $list);
         $ponderacionMaterias = Materium::where('plantel_id', $materium->plantel_id)
             ->where('bnd_ponderacion', true)
@@ -223,7 +223,7 @@ class MateriasController extends Controller
             //dd("FLC:".$materia);
             $final = array();
             $r = DB::table('materia as m')
-                ->select('m.id', 'm.name')
+                ->select('m.id', DB::raw('concat(m.id, " - ", m.name) as name'))
                 ->where('m.plantel_id', '=', $plantel)
                 ->where('m.id', '>', '0')
                 ->whereNull('deleted_at')

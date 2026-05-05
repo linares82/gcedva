@@ -24,7 +24,7 @@
 
             {!! Form::model($hacademica, array('route' => array('hacademicas.update', $hacademica->id),'method' => 'post', "id"=>"frm_academica")) !!}
 
-@include('hacademicas._form')
+                @include('hacademicas._form')
 
                 <div class="row">
                 </div>

@@ -1,10 +1,10 @@
-                <div class=" col-md-4 form-group @if($errors->has('plantel_id')) has-error @endif">
+                <!--<div class=" col-md-4 form-group @if($errors->has('plantel_id')) has-error @endif">
                        <label for="plantel_id-field">Plantel</label>
                        {!! Form::select("plantel_id", $list["Plantel"], null, array("class" => "form-control select_seguridad", "id" => "plantel_id-field")) !!}
                        @if($errors->has("plantel_id"))
                         <span class="help-block">{{ $errors->first("plantel_id") }}</span>
                        @endif
-                    </div>
+                    </div>-->
                     <div class=" col-md-4 form-group @if($errors->has('lectivo_id')) has-error @endif">
                        <label for="lectivo_id-field">Lectivo</label>
                        {!! Form::select("lectivo_id", $list["Lectivo"], null, array("class" => "form-control select_seguridad", "id" => "lectivo_id-field")) !!}

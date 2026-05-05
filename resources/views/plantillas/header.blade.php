@@ -91,10 +91,12 @@
                                                 <!-- Menu Footer-->
                         <li class="user-footer">
                             <div class="pull-right">
+                                @if(Auth::check())
                                 <form method="POST">
                                     <a href=" {!! route('users.editPerfil', Auth::user()->id) !!} " class="btn btn-default btn-flat">Editar Usuario</a>
                                     <a href=" {!! url('logout') !!} " class="btn btn-default btn-flat">Salir</a>
                                 </form>
+                                @endif
                             </div>
                         </li>
                     </ul>

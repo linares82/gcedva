@@ -728,7 +728,7 @@
                         @foreach($combinaciones as $combinacion)
                         @php
                             //se guarda para usar en el calendario de extras
-                            $duracion=$combinacion->grado->duracion_periodo_id;
+                            $duracion=isset($combinacion->grado->duracion_periodo_id) ? $combinacion->grado->duracion_periodo_id : 100;
                             /*$limite_extras=100;
                             if(isset(optional($combinacion->grado->duracionPeriodo)->bloqueo_cantidad_extras)){
                             */
@@ -805,6 +805,34 @@
                                 <input class="form-control" id="caja-field" name="caja" value="{{$caja->id}}" type="hidden">
 <!--                                <button type="submit" class="btn btn-xs btn-info" data-toggle="tooltip" title="Agregar"><i class="glyphicon glyphicon-plus-sign"></i></button>-->
                                 {!! Form::close() !!}
+
+                                @php
+                                    $reinscripcion_no_pagada=\App\Adeudo::select('adeudos.*')
+                                    ->join('caja_conceptos as cc','cc.id','adeudos.caja_concepto_id')
+                                    ->where('adeudos.cliente_id', $adeudo->cliente_id)
+                                    ->where('adeudos.pagado_bnd', 0)
+                                    ->where('bnd_reinscripcion', 1)->first();
+                                    //dd($reinscripcion_no_pagada);
+
+                                    $materias_no_aprobadas = \App\Hacademica::select('m.name as materia', 'l.name as lectivo', 'hacademicas.st_materium_id')
+                                    ->where('hacademicas.cliente_id', $adeudo->cliente_id)
+                                    ->where('hacademicas.st_materium_id', 2)
+                                    ->join('materia as m', 'm.id', '=', 'hacademicas.materium_id')
+                                    ->join('lectivos as l', 'l.id', '=', 'hacademicas.lectivo_id')
+                                    ->whereNull('hacademicas.deleted_at')
+                                    ->count();
+                                    
+                                    $bloqueo_cantidad_reprobadas = isset($adeudo->combinacionCliente->grado->duracionPeriodo->bloqueo_cantidad_reprobadas) ? $adeudo->combinacionCliente->grado->duracionPeriodo->bloqueo_cantidad_reprobadas : 100;
+                                    //dd($bloqueo_cantidad_reprobadas);
+                                    $mostrar_check=1;
+                                    //dd($adeudo->id==$reinscripcion_no_pagada->id);
+                                    if($materias_no_aprobadas>=$bloqueo_cantidad_reprobadas and 
+                                    $reinscripcion_no_pagada->fecha_pago>=$adeudo->fecha_pago and 
+                                    $adeudo->id==$reinscripcion_no_pagada->id){
+                                        $mostrar_check=0;
+                                    }
+                                    //dd($mostrar_check);
+                                @endphp
                                 
                                 @permission('cajas.inscripcion')
                                 @if($adeudo->cajaConcepto->id==1 or 
@@ -818,7 +846,9 @@
                                 @endpermission
                                 @permission('cajas.no_inscripcion')
                                     @if($lns==0) <!--solo una linea en la caja    -->
+                                        @if($mostrar_check==1)
                                         <input type="checkbox" class="adeudos_tomados" value="{{$adeudo->id}}" />
+                                        @endif
                                     @endif
                                 @endpermission
                                 
@@ -1507,8 +1537,8 @@ Agregar nuevo registro
                 if(data.total_materias_no_aprobadas>=data.bloqueo_cantidad_reprobadas){
                     $('#materias_no_aprobadas').html(
                     `<div><span class="badge bg-red">Limite de materias no aprobadas alcanzado: ${data.total_materias_no_aprobadas} </span></div>`);
-                    $('.procesarAdeudos').hide();
-                    $('.adeudos_tomados').hide();
+                    //$('.procesarAdeudos').hide();
+                    //$('.adeudos_tomados').hide();
                 }else{
                     $('#materias_no_aprobadas').html(
                     `<div><span class="badge bg-green">Materias no aprobadas del alumno: ${data.total_materias_no_aprobadas}</span></div>`);

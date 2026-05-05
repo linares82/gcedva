@@ -360,8 +360,11 @@ class HacademicasController extends Controller
         $conteo_extras = null;
         if (isset($datos['hacademica_id'])) {
             $hacademica = Hacademica::find($datos['hacademica_id']);
-            $calendario_extras = CalendarioExaExtra::where('plantel_id', $hacademica->plantel_id)
-                ->where('duracion_periodo_id', $hacademica->grado->duracion_periodo_id)
+
+            $calendario_extras = CalendarioExaExtra:: //where('plantel_id', $hacademica->plantel_id)
+                where('duracion_periodo_id', $hacademica->grado->duracion_periodo_id)
+                ->whereDate('fec_inicio', '<=', date('Y-m-d'))
+                ->whereDate('fec_fin', '>=', date('Y-m-d'))
                 //->where('lectivo_id', $hacademica->lectivo_id)
                 ->orderBy('id', 'desc')
                 ->first();
@@ -651,8 +654,8 @@ class HacademicasController extends Controller
             ->where('lectivo_id', $asignacionAcademica->lectivo_id)
             ->first();
 
-        $calendarioExtras = CalendarioExaExtra::where('plantel_id', $asignacionAcademica->plantel_id)
-            ->whereDate('fec_inicio', '<=', date('Y-m-d'))
+        $calendarioExtras = CalendarioExaExtra:: //where('plantel_id', $asignacionAcademica->plantel_id)
+            whereDate('fec_inicio', '<=', date('Y-m-d'))
             ->whereDate('fec_fin', '>=', date('Y-m-d'))
             ->where('duracion_periodo_id', $hacademica->grado->duracion_periodo_id)
             ->count();

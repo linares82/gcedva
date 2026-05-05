@@ -167,7 +167,7 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'plantels.razon', 'title' => 'PLANTEL'])</th>
+                            <!--<th>@include('CrudDscaffold::getOrderlink', ['column' => 'plantels.razon', 'title' => 'PLANTEL'])</th>-->
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'lectivos.name', 'title' => 'LECTIVO'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'duracion_periodos.name', 'title' => 'DURACION'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'fec_inicio', 'title' => 'FEC. INICIO'])</th>
@@ -181,11 +181,11 @@
                         @foreach($calendarioExaExtras as $calendarioExaExtra)
                             <tr>
                                 <td><a href="{{ route('calendarioExaExtras.show', $calendarioExaExtra->id) }}">{{$calendarioExaExtra->id}}</a></td>
-                                <td>{{$calendarioExaExtra->plantel->razon}}</td>
-                    <td>{{$calendarioExaExtra->lectivo->name}}</td>
-                    <td>{{$calendarioExaExtra->duracionPeriodo->name}}</td>
-                    <td>{{$calendarioExaExtra->fec_inicio}}</td>
-                    <td>{{$calendarioExaExtra->fec_fin}}</td>
+                                <!--<td>{{$calendarioExaExtra->plantel->razon}}</td>-->
+                                <td>{{$calendarioExaExtra->lectivo->name}}</td>
+                                <td>{{$calendarioExaExtra->duracionPeriodo->name}}</td>
+                                <td>{{$calendarioExaExtra->fec_inicio}}</td>
+                                <td>{{$calendarioExaExtra->fec_fin}}</td>
                                 <td class="text-right">
                                     
                                     @permission('calendarioExaExtras.edit')

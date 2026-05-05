@@ -170,6 +170,7 @@ class InscripcionsController extends Controller
         $i = Inscripcion::find($id);
         //dd($i);
         $materias = PeriodoEstudio::find($i->periodo_estudio_id)->materias;
+        //dd($materias->toArray());
         $materias_array = array();
         foreach ($materias as $m) {
             array_push($materias_array, $m->id);
@@ -194,7 +195,7 @@ class InscripcionsController extends Controller
         if ($materias_validar->count() == 0) {
             foreach ($materias as $m) {
                 $materia_seriada_no_aprobada = 0;
-                if ($m->seriada_bnd == 1) {
+                if ($m->seriada_bnd == 1 and $m->bnd_oficial == 1) {
                     $materia_seriada_no_aprobada = Hacademica::where('hacademicas.cliente_id', '=', $i->cliente_id)
                         ->where('hacademicas.materium_id', '=', $m->serie_anterior)
                         ->where('hacademicas.st_materium_id', '=', 2)
@@ -558,7 +559,7 @@ class InscripcionsController extends Controller
                     ->join('periodo_estudios as p', 'p.id', '=', 'i.periodo_estudio_id')
                     ->join('hacademicas as h', 'h.inscripcion_id', 'i.id')
                     ->join('materia as m', 'm.id', '=', 'h.materium_id')
-                    ->select('m.id', 'm.name as materia', 'm.modulo_id', 'm.seriada_bnd')
+                    ->select('m.id', 'm.name as materia', 'm.modulo_id', 'm.seriada_bnd', 'm.bnd_oficial')
                     //->whereColumn('h.lectivo_id','i.lectivo_id')
                     ->where('i.plantel_id', '=', $input['plantel_id'])
                     ->where('i.especialidad_id', '=', $input['especialidad_id'])
@@ -630,11 +631,20 @@ class InscripcionsController extends Controller
                     $contar_materias_no_aprobadas++;
                 }
 
-                $no_aprobadas_seriadas = "";
+                $no_aprobadas_seriadas_oficiales = "";
                 foreach ($no_aprobadas_modulo as $no_aprobada) {
-                    if ($no_aprobada->seriada_bnd == 1) {
+                    if ($no_aprobada->seriada_bnd == 1 and $no_aprobada->bnd_oficial == 1) {
                         if ($this->revisarNoAprobadaRecursadaAprobada($c->cliente, $no_aprobada->id) == 0) {
-                            $no_aprobadas_seriadas = $no_aprobadas_seriadas . " " . $no_aprobada->materia;
+                            $no_aprobadas_seriadas_oficiales = $no_aprobadas_seriadas_oficiales . "-" . $no_aprobada->materia;
+                        }
+                    }
+                }
+
+                $no_aprobadas_seriadas_no_oficiales = "";
+                foreach ($no_aprobadas_modulo as $no_aprobada) {
+                    if ($no_aprobada->seriada_bnd == 1 and $no_aprobada->bnd_oficial <> 1) {
+                        if ($this->revisarNoAprobadaRecursadaAprobada($c->cliente, $no_aprobada->id) == 0) {
+                            $no_aprobadas_seriadas_no_oficiales = $no_aprobadas_seriadas_no_oficiales . "-" . $no_aprobada->materia;
                         }
                     }
                 }
@@ -656,7 +666,8 @@ class InscripcionsController extends Controller
                     'aprobadas_modulo' => $aprobadas_modulo,
                     'no_aprobadas_modulo' => $no_aprobadas_modulo,
                     'no_aprobadas_diferentes_lectivos' => count($no_aprobadas_diferentes_lectivos->unique('lectivo_id')),
-                    'no_aprobadas_seriadas' => $no_aprobadas_seriadas,
+                    'no_aprobadas_seriadas_oficiales' => $no_aprobadas_seriadas_oficiales,
+                    'no_aprobadas_seriadas_no_oficiales' => $no_aprobadas_seriadas_no_oficiales,
                     'no_aprobadas_sin_extra_varios_lectivos' => $no_aprobadas_sin_extra_varios_lectivos
                 ]);
             }

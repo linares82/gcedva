@@ -83,6 +83,7 @@ return array(
     'AddBndRedondeoToCargaPonderacions' => $baseDir . '/database/migrations/2023_02_15_101626_add_bnd_redondeo_to_carga_ponderacions.php',
     'AddBndReferenciadoToPagosTable' => $baseDir . '/database/migrations/2020_07_01_113041_add_bnd_referenciado_to_pagos_table.php',
     'AddBndReingresoClientesTable' => $baseDir . '/database/migrations/2019_07_24_115002_add_bnd_reingreso_clientes_table.php',
+    'AddBndReinscripcionToCajaConceptosTable' => $baseDir . '/database/migrations/2026_05_05_150839_add_bnd_reinscripcion_to_caja_conceptos_table.php',
     'AddBndRevisionDirectorToTitulacionsTable' => $baseDir . '/database/migrations/2022_08_24_105901_add_bnd_revision_director_to_titulacions_table.php',
     'AddBndSatisfactorioToFormatoDgcftDetalles' => $baseDir . '/database/migrations/2025_01_30_135341_add_bnd_satisfactorio_to_formato_dgcft_detalles.php',
     'AddBndSolicitudBecaToMotivoBecasTable' => $baseDir . '/database/migrations/2025_07_16_113051_add_bnd_solicitud_beca_to_motivo_becas_table.php',

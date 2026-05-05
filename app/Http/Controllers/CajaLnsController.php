@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Adeudo;
 use App\Caja;
 use App\CajaLn;
-use App\CalendarioExaExtra;
 use App\Cliente;
 use App\CombinacionCliente;
 use App\Http\Controllers\Controller;

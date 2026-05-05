@@ -87,7 +87,8 @@
                             <td>Cliente-Estatus</td><td></td><td>Periodo Estudios(Duracion)</td>
                             <td>Aprobadas</td><td>No Aprobadas</td>
                             <td>Tiene Materias No aprobadas en 2 o mas lectivos</td>
-                            <td>M. Seriadas No Aprobadas</td>
+                            <td>M. Seriadas No Aprobadas O.</td>
+                            <td>M. Seriadas No Aprobadas No O.</td>
                             <td>No Aprobadas Sin Extra 2 Lectivos</td>
                         </tr>
                     </thead>
@@ -140,7 +141,8 @@
                                 @endif
                                 ({{ $c['no_aprobadas_diferentes_lectivos'] }} Lectivos)
                             </td>
-                            <td>{{ $c['no_aprobadas_seriadas'] }}</td>
+                            <td>{{ $c['no_aprobadas_seriadas_oficiales'] }}</td>
+                            <td>{{ $c['no_aprobadas_seriadas_no_oficiales'] }}</td>
                             <td>{{ count($c['no_aprobadas_sin_extra_varios_lectivos']) }}</td>
                         </tr>
                         @endforeach

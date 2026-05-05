@@ -36,7 +36,7 @@
                     </div>
                     <div class="form-group col-md-4 col-md-4 @if($errors->has('cliente_id')) has-error @endif">
                        <label for="cliente_id-field">Alumno</label>
-                       {!! Form::select("cliente_id", $list["Cliente"], null, array("class" => "form-control select_seguridad", "id" => "cliente_id-field")) !!}
+                       {!! Form::select("cliente_id", array(), null, array("class" => "form-control select_seguridad", "id" => "cliente_id-field")) !!}
                        @if($errors->has("cliente_id"))
                         <span class="help-block">{{ $errors->first("cliente_id") }}</span>
                        @endif
@@ -65,7 +65,7 @@
 @push('scripts')
   
   <script type="text/javascript">
-    
+    /*
     $(document).ready(function() {
       getCmbEspecialidad();
       getCmbNivel();
@@ -254,6 +254,6 @@
       
 
     });
-    
+    */
 </script>
 @endpush
