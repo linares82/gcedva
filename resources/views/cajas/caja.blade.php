@@ -575,7 +575,7 @@
                                     }*/
                                     
                                 @endphp
-                                <td><strong>Materia:</strong>{{ optional(optional(optional($pago->caja->cajaLn->calificacion)->hacademica)->materia)->name }}  <br>
+                                <td><strong>Materia:</strong><?php echo e(optional(optional(optional($pago->caja->cajaLn->calificacion)->hacademica)->materia)->name); ?>  <br>
                                     <strong>Monto:</strong>{{ $pago->monto }} <br>
                                     <strong>Fecha:</strong> {{ $pago->fecha }} <br>
                                     @permission('ticket.fechaPago')
@@ -815,8 +815,10 @@
                                     //dd($reinscripcion_no_pagada);
 
                                     $materias_no_aprobadas = \App\Hacademica::select('m.name as materia', 'l.name as lectivo', 'hacademicas.st_materium_id')
+                                    ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
                                     ->where('hacademicas.cliente_id', $adeudo->cliente_id)
                                     ->where('hacademicas.st_materium_id', 2)
+                                    ->where('hacademicas.lectivo_id', '<', 'i.lectivo_id')
                                     ->join('materia as m', 'm.id', '=', 'hacademicas.materium_id')
                                     ->join('lectivos as l', 'l.id', '=', 'hacademicas.lectivo_id')
                                     ->whereNull('hacademicas.deleted_at')

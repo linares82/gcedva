@@ -1563,8 +1563,10 @@ class HacademicasController extends Controller
     {
         $datos = $request->all();
         $materias_no_aprobadas = Hacademica::select('m.name as materia', 'l.name as lectivo', 'hacademicas.st_materium_id')
+            ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
             ->where('hacademicas.cliente_id', $datos['cliente_id'])
             ->where('hacademicas.st_materium_id', 2)
+            ->where('hacademicas.lectivo_id', '<', 'i.lectivo_id')
             ->join('materia as m', 'm.id', '=', 'hacademicas.materium_id')
             ->join('lectivos as l', 'l.id', '=', 'hacademicas.lectivo_id')
             ->whereNull('hacademicas.deleted_at')
