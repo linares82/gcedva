@@ -983,7 +983,7 @@ class CajasController extends Controller
                 //->join('lectivos as l', 'l.id', '=', 'i.lectivo_id')
                 ->where('hacademicas.cliente_id', $cliente->id)
                 ->where('hacademicas.st_materium_id', 2)
-                ->where('hacademicas.lectivo_id', '<', 'i.lectivo_id')
+                ->whereColumn('hacademicas.lectivo_id', '<', 'i.lectivo_id')
                 ->join('materia as m', 'm.id', '=', 'hacademicas.materium_id')
                 ->join('lectivos as l', 'l.id', '=', 'hacademicas.lectivo_id')
                 ->whereNull('hacademicas.deleted_at')

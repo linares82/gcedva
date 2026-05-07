@@ -360,12 +360,13 @@ class HacademicasController extends Controller
         $conteo_extras = null;
         if (isset($datos['hacademica_id'])) {
             $hacademica = Hacademica::find($datos['hacademica_id']);
+            $inscripcion = Inscripcion::where('id', $hacademica->inscripcion_id)->first();
 
             $calendario_extras = CalendarioExaExtra:: //where('plantel_id', $hacademica->plantel_id)
                 where('duracion_periodo_id', $hacademica->grado->duracion_periodo_id)
                 ->whereDate('fec_inicio', '<=', date('Y-m-d'))
                 ->whereDate('fec_fin', '>=', date('Y-m-d'))
-                //->where('lectivo_id', $hacademica->lectivo_id)
+                ->where('lectivo_id', $inscripcion->lectivo_id)
                 ->orderBy('id', 'desc')
                 ->first();
             //dd($calendario_extras);
@@ -1564,13 +1565,14 @@ class HacademicasController extends Controller
         $datos = $request->all();
         $materias_no_aprobadas = Hacademica::select('m.name as materia', 'l.name as lectivo', 'hacademicas.st_materium_id')
             ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
-            ->where('hacademicas.cliente_id', $datos['cliente_id'])
-            ->where('hacademicas.st_materium_id', 2)
-            ->where('hacademicas.lectivo_id', '<', 'i.lectivo_id')
             ->join('materia as m', 'm.id', '=', 'hacademicas.materium_id')
             ->join('lectivos as l', 'l.id', '=', 'hacademicas.lectivo_id')
+            ->where('hacademicas.cliente_id', $datos['cliente_id'])
+            ->where('hacademicas.st_materium_id', 2)
+            ->whereColumn('hacademicas.lectivo_id', '<', 'i.lectivo_id')
             ->whereNull('hacademicas.deleted_at')
             ->get();
+        //dd($materias_no_aprobadas->toArray());
         $inscripcion = Inscripcion::where('cliente_id', $datos['cliente_id'])->with('grado.duracionPeriodo')->first();
         $bloqueo_cantidad_reprobadas = $inscripcion->grado->duracionPeriodo->bloqueo_cantidad_reprobadas;
 
