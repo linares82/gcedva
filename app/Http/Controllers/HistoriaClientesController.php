@@ -69,14 +69,22 @@ class HistoriaClientesController extends Controller
 		$dias_habiles_aux = Param::where('llave', 'dias_para_bajas')->value('valor');
 		$dias_habiles = explode(',', $dias_habiles_aux);
 		if (in_array($hoy, $dias_habiles) and $cliente_actual->st_cliente_id <> 3) {
-			$eventos = EventoCliente::pluck('name', 'id');
+			//Revisa permiso y si no lo tiene remueve la opcion de duplicar cliente
+			if (!Auth::user()->can('historiaClientes.duplicateCliente')) {
+				$eventos = EventoCliente::$eventos->where('bnd_duplicar_cliente', 0)->pluck('name', 'id');
+			} else {
+				$eventos = EventoCliente::$eventos->pluck('name', 'id');
+			}
 		} else {
-			$eventos = EventoCliente::where('id', '<>', 2)->pluck('name', 'id');
+			//Revisa permiso y si no lo tiene remueve la opcion de duplicar cliente
+			if (!Auth::user()->can('historiaClientes.duplicateCliente')) {
+				$eventos = EventoCliente::where('id', '<>', 2)->where('bnd_duplicar_cliente', 0)->pluck('name', 'id');
+			} else {
+				$eventos = EventoCliente::where('id', '<>', 2)->pluck('name', 'id');
+			}
 		}
-		//Revisa permiso y si no lo tiene remueve la opcion de duplicar cliente
-		if (!Auth::user()->can('historiaClientes.duplicateCliente')) {
-			$eventos = $eventos->where('bnd_duplicar_cliente', 0);
-		}
+
+
 
 		$inscripcions = Inscripcion::select(DB::raw('inscripcions.id, concat(p.razon," / ",e.name," / ",n.name," / ",g.name," / ",gru.name," / ",l.name," / ",pe.name) as inscripcion'))
 			->join('plantels as p', 'p.id', '=', 'inscripcions.plantel_id')

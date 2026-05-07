@@ -224,9 +224,11 @@
                                     @if($historiaCliente->bnd_prematuro==1)
                                         Baja Prematura
                                     @endif
+                                    @permission('historiaClientes.btnDuplicateCliente')
                                     @if($historiaCliente->cliente_duplicado_id>0)
                                         <a target="_blank" href="{{ route('clientes.edit', $historiaCliente->cliente_duplicado_id) }}">{{$historiaCliente->cliente_duplicado_id}}</a>
                                     @endif
+                                    @endpermission
                                 </td>
                                 <td>{{$historiaCliente->fecha}}</td>
                                 <td>{{$historiaCliente->fec_vigencia}}</td>
