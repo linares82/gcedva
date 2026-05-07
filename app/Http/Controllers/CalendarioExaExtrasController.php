@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests;
 use App\Http\Requests\createCalendarioExaExtra;
 use App\Http\Requests\updateCalendarioExaExtra;
+use App\Inscripcion;
 use Auth;
 use DB;
 use Illuminate\Http\Request;
@@ -130,11 +131,19 @@ class CalendarioExaExtrasController extends Controller
 	public function getUltimoCalendarioXDuracionPlantel(Request $request)
 	{
 		$datos = $request->all();
-		$calendario = CalendarioExaExtra::where('plantel_id', $datos['plantel_id'])
-			->where('duracion_periodo_id', $datos['duracion_id'])
+
+		$inscripcion = Inscripcion::where('cliente_id', $datos['cliente_id'])->first();
+		//dd($inscripcion->toArray());
+		$calendario = CalendarioExaExtra:: //where('plantel_id', $datos['plantel_id'])
+			where('duracion_periodo_id', $datos['duracion_id'])
+			->where('lectivo_id', $inscripcion->lectivo_id)
 			->orderBy('id', 'DESC')
+			->whereDate('fec_inicio', '<=', date('Y-m-d'))
 			->whereDate('fec_fin', '>=', date('Y-m-d'))
 			->first();
+		if (is_null($calendario)) {
+			return json_encode(array('msj' => 'No hay calendario de exámenes extras para este periodo'));
+		}
 
 		if (!is_null($calendario)) {
 			$consulta_extras = Calificacion::select(

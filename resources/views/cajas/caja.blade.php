@@ -1476,7 +1476,9 @@ Agregar nuevo registro
             //beforeSend : function(){$("#loading3").show(); },
             //complete : function(){$("#loading3").hide(); },
             success: function(data) {
-                //console.log(data[0]);
+                //console.log(data);
+
+                if(typeof data.msj === 'undefined'){
                 $('#calendario_extras').html(
                     `<div class="">Calendario examenes extras del: <span class="badge">
                     ${data.fec_inicio} </span> al <span class="badge">
@@ -1521,6 +1523,11 @@ Agregar nuevo registro
                         
                     });
                     $('#calendario_extras_detalle').append(`</tbody></table></div></div>`);
+                    }
+                }else{  
+                    $('#calendario_extras_detalle').html(
+                    `<div class="badge bg-red">No hay calendarios de examenes extras activos para este cliente</div>`
+                );
                 }
             }
         });

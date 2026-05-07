@@ -884,9 +884,11 @@ class CajasController extends Controller
             $combinaciones = CombinacionCliente::where('cliente_id', $cliente->id)->get();
             //dd($combinaciones->toArray());
             foreach ($combinaciones as $combinacion) {
-                $calendarioExtras = CalendarioExaExtra::where('plantel_id', $cliente->plantel_id)
-                    ->whereDate('fec_inicio', '<=', date('Y-m-d'))
+                $inscripcion = Inscripcion::where('cliente_id', $cliente->id)->first();
+                $calendarioExtras = CalendarioExaExtra:: //where('plantel_id', $cliente->plantel_id)
+                    whereDate('fec_inicio', '<=', date('Y-m-d'))
                     ->whereDate('fec_fin', '>=', date('Y-m-d'))
+                    ->where('lectivo_id', $inscripcion->lectivo_id)
                     ->where('duracion_periodo_id', $combinacion->grado->duracion_periodo_id)
                     ->first();
                 $limite_extras = $combinacion->grado->duracionPeriodo->bloqueo_cantidad_extras;
