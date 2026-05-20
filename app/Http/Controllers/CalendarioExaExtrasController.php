@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\CalendarioExaExtra;
 use App\Calificacion;
+use App\CombinacionCliente;
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
 use App\Http\Requests\createCalendarioExaExtra;
@@ -132,17 +133,18 @@ class CalendarioExaExtrasController extends Controller
 	{
 		$datos = $request->all();
 
-		$inscripcion = Inscripcion::where('cliente_id', $datos['cliente_id'])->first();
+		//$inscripcion = Inscripcion::where('cliente_id', $datos['cliente_id'])->first();
+		$combinacion = CombinacionCliente::where('cliente_id', $datos['cliente_id'])->with('grado.duracionPeriodo')->first();
 		//dd($inscripcion->toArray());
 		$calendario = CalendarioExaExtra:: //where('plantel_id', $datos['plantel_id'])
 			where('duracion_periodo_id', $datos['duracion_id'])
-			->where('lectivo_id', $inscripcion->lectivo_id)
+			->where('lectivo_id', $combinacion->grado->lectivo_id)
 			->orderBy('id', 'DESC')
 			->whereDate('fec_inicio', '<=', date('Y-m-d'))
 			->whereDate('fec_fin', '>=', date('Y-m-d'))
 			->first();
 		if (is_null($calendario)) {
-			return json_encode(array('msj' => 'No hay calendario de exámenes extras para este periodo'));
+			return json_encode(array('msj' => 'No hay calendario de exÃ¡menes extras para este periodo'));
 		}
 
 		if (!is_null($calendario)) {

@@ -2,28 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use DB;
-use Auth;
-use File;
-use Hash;
-use App\User;
-
-use App\Param;
-use App\Estado;
-use App\Lectivo;
-use App\Plantel;
-use App\Empleado;
-use App\Historial;
-use Carbon\Carbon;
+use App\Cliente;
 use App\DocEmpleado;
-use App\NivelEstudio;
-use App\TipoContrato;
-use App\Http\Requests;
-use App\PivotDocEmpleado;
-use Illuminate\Http\Request;
+use App\Empleado;
+use App\Estado;
+use App\Historial;
 use App\Http\Controllers\Controller;
+use App\Http\Requests;
 use App\Http\Requests\createEmpleado;
 use App\Http\Requests\updateEmpleado;
+use App\Lectivo;
+use App\NivelEstudio;
+use App\Param;
+use App\PivotDocEmpleado;
+use App\Plantel;
+use App\TipoContrato;
+use App\User;
+use Auth;
+use Carbon\Carbon;
+use DB;
+use File;
+use Hash;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class EmpleadosController extends Controller
 {
@@ -989,6 +990,205 @@ class EmpleadosController extends Controller
                 ->whereNotIn('st_empleado_id', array(3))
                 ->pluck('id');
             return $r;
+        }
+    }
+
+    public function puiColaboradores()
+    {
+        $reportes = array(1 => 'Snapshot Alumnos', 2 => 'Snapshot Docentes', 3 => 'Snapshot Personal Administrativo');
+        $e = Empleado::where('user_id', Auth::user()->id)->first();
+        $plantels = array();
+        foreach ($e->plantels as $p) {
+            array_push($plantels, $p->id);
+        }
+        $planteles = Plantel::whereIn('id', $plantels)->pluck('razon', 'id');
+        return view('empleados.reportes.puiColaboradores', compact('planteles', 'reportes'))
+            ->with('list', Empleado::getListFromAllRelationApps());
+    }
+
+    public function puiColaboradoresR(Request $request)
+    {
+        $datos = $request->all();
+        //dd($datos);
+        switch ($datos['reporte']) {
+            case 1:
+                $fileName = 'snapshot_alumnos_' . Date('YmdHis') . '.csv';
+                $headers = [
+                    "Content-type"        => "text/csv",
+                    "Content-Disposition" => "attachment; filename=$fileName",
+                    "Pragma"              => "no-cache",
+                    "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+                    "Expires"             => "0"
+                ];
+                //dd('antes q');
+                $alumnos = Cliente::select(
+                    'clientes.curp',
+                    DB::raw(
+                        'concat(clientes.nombre, " ", clientes.nombre2) as nombre'
+                    ),
+                    'clientes.ape_paterno',
+                    'clientes.ape_materno',
+                    'stc.name as estatus',
+                    'clientes.created_at',
+                    'pla.cve_incorporacion'
+                )
+                    ->join('st_clientes as stc', 'stc.id', 'clientes.st_cliente_id')
+                    ->join('plantels as pla', 'pla.id', 'clientes.plantel_id')
+                    ->whereNotNull('clientes.curp')
+                    ->whereIn('clientes.plantel_id', $datos['plantel_f'])
+                    ->whereIn('clientes.st_cliente_id', [4, 17, 24, 25, 26])
+                    ->get();
+                //dd($alumnos->toArray());
+
+                $callback = function () use ($alumnos) {
+                    $file = fopen('php://output', 'w');
+                    fprintf($file, chr(0xEF) . chr(0xBB) . chr(0xBF));
+                    // Encabezados
+                    fputcsv($file, [
+                        'CURP',
+                        'NOMBRE',
+                        'PRIMER APELLIDO',
+                        'SEGUNDO APELLIDO',
+                        'ESTATUS',
+                        'FECHA INGRESO',
+                        'CLAVE INSTITUCION'
+                    ]);
+
+                    foreach ($alumnos as $alumno) {
+                        fputcsv($file, [$alumno->curp, $alumno->nombre, $alumno->ape_paterno, $alumno->ape_materno, $alumno->estatus, $alumno->created_at->format('d/m/Y'), $alumno->cve_incorporacion]);
+                    }
+                    fclose($file);
+                };
+                return response()->stream($callback, 200, $headers);
+                break;
+            case 2:
+                $fileName = 'snapshot_docentes_' . Date('YmdHis') . '.csv';
+                $headers = [
+                    "Content-type"        => "text/csv",
+                    "Content-Disposition" => "attachment; filename=$fileName",
+                    "Pragma"              => "no-cache",
+                    "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+                    "Expires"             => "0"
+                ];
+                //dd('antes q');
+                $docentes = Empleado::select(
+                    'empleados.curp',
+                    'empleados.nombre',
+                    'empleados.ape_paterno',
+                    'empleados.ape_materno',
+                    'ste.name as estatus',
+                    'empleados.fec_ingreso',
+                    'pla.cve_incorporacion'
+                )
+                    ->join('st_empleados as ste', 'ste.id', 'empleados.st_empleado_id')
+                    ->join('plantels as pla', 'pla.id', 'empleados.plantel_id')
+                    ->join('users as u', 'u.id', 'empleados.user_id')
+                    ->join('role_user as ru', 'ru.user_id', 'u.id')
+                    ->join('roles as r', 'r.id', 'ru.role_id')
+                    ->where('r.id', 15)
+                    ->whereNotIn('empleados.id', [1, 3])
+                    ->whereNotNull('empleados.curp')
+                    ->whereIn('empleados.plantel_id', $datos['plantel_f'])
+                    ->where('empleados.st_empleado_id', '<>', 3)
+                    ->distinct()
+                    ->get();
+                //dd($docentes->toArray());
+
+                $callback = function () use ($docentes) {
+                    $file = fopen('php://output', 'w');
+                    // Agregar BOM para que Excel abra correctamente UTF-8 (acentos, Ñ)
+                    fprintf($file, chr(0xEF) . chr(0xBB) . chr(0xBF));
+                    // Encabezados
+                    fputcsv($file, [
+                        'CURP',
+                        'NOMBRE',
+                        'PRIMER APELLIDO',
+                        'SEGUNDO APELLIDO',
+                        'ESTATUS',
+                        'FECHA INGRESO',
+                        'CLAVE INSTITUCION'
+                    ]);
+
+                    foreach ($docentes as $docente) {
+                        //Log::info('fecha:' . $docente->fec_ingreso);
+                        fputcsv($file, [
+                            $docente->curp,
+                            $docente->nombre,
+                            $docente->ape_paterno,
+                            $docente->ape_materno,
+                            $docente->estatus,
+                            (!is_null($docente->fec_ingreso) ? Carbon::createFromFormat('Y-m-d', $docente->fec_ingreso)->format('d/m/Y') : ""),
+                            $docente->cve_incorporacion
+                        ]);
+                    }
+                    fclose($file);
+                };
+                return response()->stream($callback, 200, $headers);
+                break;
+            case 3:
+                $fileName = 'snapshot_administrativos_' . Date('YmdHis') . '.csv';
+                $headers = [
+                    "Content-type"        => "text/csv",
+                    "Content-Disposition" => "attachment; filename=$fileName",
+                    "Pragma"              => "no-cache",
+                    "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+                    "Expires"             => "0"
+                ];
+                //dd('antes q');
+                $docentes = Empleado::select(
+                    'empleados.curp',
+                    'empleados.nombre',
+                    'empleados.ape_paterno',
+                    'empleados.ape_materno',
+                    'ste.name as estatus',
+                    'empleados.fec_ingreso',
+                    'pla.cve_incorporacion'
+                )
+                    ->join('st_empleados as ste', 'ste.id', 'empleados.st_empleado_id')
+                    ->join('plantels as pla', 'pla.id', 'empleados.plantel_id')
+                    ->join('users as u', 'u.id', 'empleados.user_id')
+                    ->join('role_user as ru', 'ru.user_id', 'u.id')
+                    ->join('roles as r', 'r.id', 'ru.role_id')
+                    ->where('r.id', '<>', 15)
+                    ->whereNotIn('empleados.id', [1, 3])
+                    ->whereNotNull('empleados.curp')
+                    ->whereIn('empleados.plantel_id', $datos['plantel_f'])
+                    ->where('empleados.st_empleado_id', '<>', 3)
+                    ->distinct()
+                    ->get();
+                //dd($docentes->toArray());
+
+                $callback = function () use ($docentes) {
+                    $file = fopen('php://output', 'w');
+                    // Agregar BOM para que Excel abra correctamente UTF-8 (acentos, Ñ)
+                    fprintf($file, chr(0xEF) . chr(0xBB) . chr(0xBF));
+                    // Encabezados
+                    fputcsv($file, [
+                        'CURP',
+                        'NOMBRE',
+                        'PRIMER APELLIDO',
+                        'SEGUNDO APELLIDO',
+                        'ESTATUS',
+                        'FECHA INGRESO',
+                        'CLAVE INSTITUCION'
+                    ]);
+
+                    foreach ($docentes as $docente) {
+                        //Log::info('fecha:' . $docente->fec_ingreso);
+                        fputcsv($file, [
+                            $docente->curp,
+                            $docente->nombre,
+                            $docente->ape_paterno,
+                            $docente->ape_materno,
+                            $docente->estatus,
+                            (!is_null($docente->fec_ingreso) ? Carbon::createFromFormat('Y-m-d', $docente->fec_ingreso)->format('d/m/Y') : ""),
+                            $docente->cve_incorporacion
+                        ]);
+                    }
+                    fclose($file);
+                };
+                return response()->stream($callback, 200, $headers);
+                break;
         }
     }
 }

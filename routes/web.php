@@ -816,6 +816,22 @@ Route::get(
         'uses' => 'EmpleadosController@getEmpleadosStProspectos'
     )
 )->middleware('auth');
+Route::get(
+    '/empleados/puiColaboradores',
+    array(
+        'as' => 'empleados.puiColaboradores',
+        'middleware' => 'permission:empleados.puiColaboradores',
+        'uses' => 'EmpleadosController@puiColaboradores'
+    )
+)->middleware('auth');
+Route::post(
+    '/empleados/puiColaboradoresR',
+    array(
+        'as' => 'empleados.puiColaboradoresR',
+        'middleware' => 'permission:empleados.puiColaboradores',
+        'uses' => 'EmpleadosController@puiColaboradoresR'
+    )
+)->middleware('auth');
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /*Route::get('zip/imagenes', function () {

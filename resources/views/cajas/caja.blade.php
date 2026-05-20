@@ -575,7 +575,7 @@
                                     }*/
                                     
                                 @endphp
-                                <td><strong>Materia:</strong><?php echo e(optional(optional(optional($pago->caja->cajaLn->calificacion)->hacademica)->materia)->name); ?>  <br>
+                                <td><strong>Materia:</strong>{{ optional(optional(optional(optional($pago->caja->cajaLn)->calificacion)->hacademica)->materia)->name }}  <br>
                                     <strong>Monto:</strong>{{ $pago->monto }} <br>
                                     <strong>Fecha:</strong> {{ $pago->fecha }} <br>
                                     @permission('ticket.fechaPago')
@@ -828,7 +828,8 @@
                                     //dd($bloqueo_cantidad_reprobadas);
                                     $mostrar_check=1;
                                     //dd($adeudo->id==$reinscripcion_no_pagada->id);
-                                    if($materias_no_aprobadas>=$bloqueo_cantidad_reprobadas and 
+                                    if(!is_null($reinscripcion_no_pagada) and 
+                                    $materias_no_aprobadas>=$bloqueo_cantidad_reprobadas and 
                                     $reinscripcion_no_pagada->fecha_pago>=$adeudo->fecha_pago and 
                                     $adeudo->id==$reinscripcion_no_pagada->id){
                                         $mostrar_check=0;
@@ -995,6 +996,7 @@
                                     
                                 @endphp
                                 @foreach($cajas as $ln)
+                                    @if($ln->st_caja_id==1)
                                     @php
                                         //dd($ln);  
                                         
@@ -1024,7 +1026,7 @@
                                     </td>
                                     <td>{{$ln->estatus}}</td>
                                     </tr>
-                                    
+                                    @endif
                                 @endforeach
                                 
                                 

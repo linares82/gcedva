@@ -418,7 +418,7 @@ class LectivosController extends Controller
                 ->get();
 
             //dd($r);
-            $r->prepend(array(0 => "Seleccionar opción"));
+            $r->prepend("Seleccionar opción", "0");
             if (isset($lectivo) and $lectivo != 0) {
                 foreach ($r as $r1) {
                     if ($r1->id == $lectivo) {

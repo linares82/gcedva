@@ -40,7 +40,8 @@ class MateriasController extends Controller
         $materiales_ls = array_merge(['0' => 'Seleccionar Opción'], $list);
         $conceptosExtraordinarios = CajaConcepto::where('bnd_extraordinario', 1)->pluck('name', 'id');
         $conceptosExtraordinarios->prepend('Seleccionar Opción', '');
-        return view('materias.create', compact('materiales_ls', 'conceptosExtraordinarios'))
+        $materium = new Materium();
+        return view('materias.create', compact('materium', 'materiales_ls', 'conceptosExtraordinarios'))
             ->with('list', Materium::getListFromAllRelationApps());
     }
 

@@ -141,14 +141,14 @@
                     <script type="text/javascript">
                        $(document).ready(function() {
                           @if(isset($materium))
-			  getCmbMateria();
-			  @endif
+                           getCmbMateria();
+                           @endif
                           @if(!isset($ponderacionMaterias))
                           getPonderacionMaterias();
                           @endif
                           
                           $('#plantel_id-field').change(function() {
-                              console.log('fil');
+                              //console.log('fil');
                              getCmbMateria();
                              getPonderacionMaterias();
                           });
@@ -160,7 +160,7 @@
                              url: '{{ route("materias.getCmbMateria2") }}',
                              type: 'GET',
                              data: "plantel_id=" + $('#plantel_id-field option:selected').val() +
-                                "&materium_id=" + {{$materium->serie_anterior}},
+                                "&materium_id=" + $('#serie_anterior-field option:selected').val(),
                              dataType: 'json',
                              beforeSend: function() {
                                 $("#loading3").show();

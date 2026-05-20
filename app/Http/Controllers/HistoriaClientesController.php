@@ -71,9 +71,9 @@ class HistoriaClientesController extends Controller
 		if (in_array($hoy, $dias_habiles) and $cliente_actual->st_cliente_id <> 3) {
 			//Revisa permiso y si no lo tiene remueve la opcion de duplicar cliente
 			if (!Auth::user()->can('historiaClientes.duplicateCliente')) {
-				$eventos = EventoCliente::$eventos->where('bnd_duplicar_cliente', 0)->pluck('name', 'id');
+				$eventos = EventoCliente::where('bnd_duplicar_cliente', 0)->pluck('name', 'id');
 			} else {
-				$eventos = EventoCliente::$eventos->pluck('name', 'id');
+				$eventos = EventoCliente::pluck('name', 'id');
 			}
 		} else {
 			//Revisa permiso y si no lo tiene remueve la opcion de duplicar cliente
