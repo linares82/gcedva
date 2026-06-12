@@ -55,6 +55,10 @@ class EspecialidadsController extends Controller
         $input['usu_alta_id'] = Auth::user()->id;
         $input['usu_mod_id'] = Auth::user()->id;
 
+        if (!isset($input['bnd_activo'])) {
+            $input['bnd_activo'] = false;
+        }
+
         //create data
         Especialidad::create($input);
 
@@ -113,6 +117,9 @@ class EspecialidadsController extends Controller
         $input['usu_mod_id'] = Auth::user()->id;
         //update data
         $especialidad = $especialidad->find($id);
+        if (!isset($input['bnd_activo'])) {
+            $input['bnd_activo'] = false;
+        }
         $especialidad->update($input);
 
         return redirect()->route('especialidads.index')->with('message', 'Registro Actualizado.');
@@ -145,14 +152,15 @@ class EspecialidadsController extends Controller
 
             $final = array();
             $r2 = DB::table('especialidads as e')
-                ->select('e.id', 'e.name')
+                ->select('e.id', DB::raw('concat(e.id,"-",e.name) as name'))
                 ->where('e.plantel_id', '=', $plantel)
                 ->where('e.id', '>', '0')
+                ->where('e.bnd_activo', true)
                 ->whereNull('deleted_at');
             //->get();
 
             $r = DB::table('especialidads as e')
-                ->select('e.id', 'e.name')
+                ->select('e.id', DB::raw('concat(e.id,"-",e.name) as name'))
                 ->where('e.id', '0')
                 ->union($r2)
                 ->get();
@@ -263,10 +271,11 @@ class EspecialidadsController extends Controller
             $final = array();
             $r2 = DB::table('especialidads as e')
                 ->join('hacademicas as h', 'h.especialidad_id', '=', 'e.id')
-                ->select('e.id', 'e.name')
+                ->select('e.id', DB::raw('concat(e.id,"-",e.name) as name'))
                 ->where('e.plantel_id', '=', $plantel)
                 ->where('h.grupo_id', '=', $grupo)
                 ->where('e.id', '>', '0')
+                ->where('e.bnd_activo', true)
                 ->whereNull('e.deleted_at')
                 ->distinct()
                 ->whereNull('h.deleted_at');

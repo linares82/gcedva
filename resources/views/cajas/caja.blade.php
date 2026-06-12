@@ -1308,11 +1308,13 @@ Agregar nuevo registro
                     {!! Form::select("caja_concepto_id", $list1["CajaConcepto"], null, array("class" => "form-control select_seguridad", "id" => "caja_concepto_id-adeudo")) !!}
                     <p class="errorCajaConcepto text-center alert alert-danger hidden"></p>
                 </div>
+                @permission('cajas.editar_fecha_pago_adeudo')
                 <div class="form-group col-md-6 @if($errors->has('fecha_pago')) has-error @endif">
                     <label for="fecha_pago-field">Fecha Pago</label><br/>
                     {!! Form::text("fecha_pago", null, array("class" => "form-control fecha", "id" => "fecha_pago-adeudo")) !!}
                     <p class="errorCajaConcepto text-center alert alert-danger hidden"></p>
                 </div>
+                @endpermission
                 <div class="form-group col-md-6 @if($errors->has('monto')) has-error @endif">
                     <label for="monto-field">Monto</label><br/>
                     {!! Form::text("monto", null, array("class" => "form-control", "id" => "monto-adeudo")) !!}

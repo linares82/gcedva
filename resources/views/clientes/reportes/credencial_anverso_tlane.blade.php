@@ -3,11 +3,14 @@
       <style>
         @media print {
         th { background: #0046c3; color: #fff; max-width: 400px; padding: 0px 0px; }
-	td { font-family: arial; font-size: 5pt; color: #000; text-align:center;width: 100%;}
+	td { font-family: arial; font-size: 5px; color: #000; text-align:center;width: 100%;}
 	table { padding: 2px 2px;width: 100%;}
 	#td_frontal { font-family: arial; font-size: 10pt; color: #000; text-align:center;width: 100%;}
         #tbl_frontal { background: url({{asset('images/cred_frontal.jpg')}}) no-repeat;
-                            background-size:200px 307px;width: 100%;
+                width: 100%; 
+			    border-collapse: collapse;
+			    background-size: cover;
+			    background-position: center; 
                 height: 100%;}
 	div.saltopagina{
         display:block;
@@ -42,20 +45,22 @@
           <tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>
           <tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>
           <tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>
-          <tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>
+          <!--<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>-->
           <tr>
-              <td >	
-              <br/>	
+              <td >
+                <table width="75%"><td >{{$cliente->plantel->nombre_corto}}</td></table>	
+               <br/>	
                 @if(isset($cadena_img))
                     <img src="{{asset("imagenes/clientes/".$cliente->id."/".end($cadena_img))}}" alt="Sin foto" width="85px" height="105px"></img> 
                 @endif
             </td>
           </tr>
           <tr>
-              <td style="font-size:10px;">
-                {{$cliente->matricula}} <br/>
+              <td style="font-size:7px;">
+                {{$inscripcion->grado->nombre2}} <br/>
                 {{$cliente->nombre}} {{$cliente->nombre2}} <br/>
-                {{$cliente->ape_paterno}} {{$cliente->ape_materno}}
+                {{$cliente->ape_paterno}} {{$cliente->ape_materno}} <br/>
+                ID: {{$cliente->id}}
               </td>
           </tr>
           <tr>
@@ -66,17 +71,17 @@
 
           </tr>
 	  <tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>
-	<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>
-                    
+	  <tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>
+      <tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>                    
           </tbody>
       </table>
       <div class="saltopagina"></div>
-
+      <br/>
       <table>
           <tbody>
-          <tr><td><h4>{{$grado->denominacion}}</h4></td></tr>
+          <tr><td><h5>{{$grado->denominacion}}</h5></td></tr>
           <tr><td>Acuerdo: <strong>{{$grado->rvoe}}</strong>  CCT: <strong>{{$grado->cct}}</strong></td></tr>
-          <tr><td>{{$cliente->plantel->calle}} # {{$cliente->plantel->no_int}}, COL. {{$cliente->plantel->colonia}}, {{$cliente->plantel->municipio}},
+          <tr><td>{{$cliente->plantel->calle}} # {{$cliente->plantel->no_ext}}, COL. {{$cliente->plantel->colonia}}, {{$cliente->plantel->municipio}},
                        {{$cliente->plantel->estado}}, C.P. {{$cliente->plantel->cp}}, tel {{$cliente->plantel->tel}}  
           </td></tr>
 
@@ -95,7 +100,6 @@
                 DIRECTOR(A)
             </td>
           </tr>
-          <tr><td></td></tr><tr><td></td></tr>
           <tr>
               <td>En Caso de Emergencia llamar: </td>
           </tr>
@@ -150,5 +154,6 @@
             </tr>    
           </tbody>
       </table>
+    
   </body>
 </html>

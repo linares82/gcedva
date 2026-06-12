@@ -50,6 +50,9 @@ class NivelsController extends Controller
         $input = $request->all();
         $input['usu_alta_id'] = Auth::user()->id;
         $input['usu_mod_id'] = Auth::user()->id;
+        if (!isset($input['bnd_activo'])) {
+            $input['bnd_activo'] = false;
+        }
 
         //create data
         Nivel::create($input);
@@ -108,6 +111,9 @@ class NivelsController extends Controller
         $input['usu_mod_id'] = Auth::user()->id;
         //update data
         $nivel = $nivel->find($id);
+        if (!isset($input['bnd_activo'])) {
+            $input['bnd_activo'] = false;
+        }
         $nivel->update($input);
 
         return redirect()->route('nivels.index')->with('message', 'Registro Actualizado.');
@@ -122,11 +128,11 @@ class NivelsController extends Controller
     public function destroy($id, Nivel $nivel)
     {
         $nivel = $nivel->find($id);
-        if($nivel->combinacionClientes->count==0){
+        if ($nivel->combinacionClientes->count == 0) {
             $nivel->delete();
             return redirect()->route('nivels.index')->with('message', 'Registro Borrado.');
         }
-        
+
 
         return redirect()->route('nivels.index')->with('message', 'Registro en uso, no se pudo Borrar.');
     }
@@ -149,10 +155,11 @@ class NivelsController extends Controller
             $nivel = $request->get('nivel_id');
             $final = array();
             $r = DB::table('nivels as n')
-                ->select('n.id', 'n.name')
+                ->select('n.id', DB::raw('concat(n.id,"-",n.name) as name'))
                 ->where('n.plantel_id', '=', $plantel)
                 ->where('n.especialidad_id', '=', $especialidad)
                 ->where('n.id', '>', '0')
+                ->where('n.bnd_activo', true)
                 ->whereNull('deleted_at')
                 ->get();
             //dd($r);
@@ -190,12 +197,13 @@ class NivelsController extends Controller
 
             $final = array();
             $r = DB::table('nivels as n')
-                ->join('hacademicas as h','h.nivel_id','=','n.id')
-                ->select('n.id', 'n.name')
+                ->join('hacademicas as h', 'h.nivel_id', '=', 'n.id')
+                ->select('n.id', DB::raw('concat(n.id,"-",n.name) as name'))
                 ->where('n.plantel_id', '=', $plantel)
                 ->where('n.especialidad_id', '=', $especialidad)
                 ->where('h.grupo_id', '=', $grupo)
                 ->where('n.id', '>', '0')
+                ->where('n.bnd_activo', true)
                 ->whereNull('n.deleted_at')
                 ->whereNull('h.deleted_at')
                 ->distinct()
@@ -239,9 +247,9 @@ class NivelsController extends Controller
 
     public function listaNiveles(Request $request)
     {
-        $niveles = Nivel::whereIn('plantel_id',$request->input('plantel'))->orderBy('plantel_id')->orderBy('especialidad_id')->get();
-        $plantels=Plantel::pluck('razon','id');
-        return view('combinacionClientes.reportes.cargas', compact('niveles','plantels'));
+        $niveles = Nivel::whereIn('plantel_id', $request->input('plantel'))->orderBy('plantel_id')->orderBy('especialidad_id')->get();
+        $plantels = Plantel::pluck('razon', 'id');
+        return view('combinacionClientes.reportes.cargas', compact('niveles', 'plantels'));
     }
 
     public function apiListaXplantelYespecialidad(Request $request)

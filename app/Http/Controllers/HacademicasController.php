@@ -367,7 +367,7 @@ class HacademicasController extends Controller
                 where('duracion_periodo_id', $hacademica->grado->duracion_periodo_id)
                 ->whereDate('fec_inicio', '<=', date('Y-m-d'))
                 ->whereDate('fec_fin', '>=', date('Y-m-d'))
-                ->where('lectivo_id', $inscripcion->lectivo_id)
+                //->where('lectivo_id', $inscripcion->lectivo_id)
                 ->orderBy('id', 'desc')
                 ->first();
             //dd($calendario_extras);
@@ -385,7 +385,7 @@ class HacademicasController extends Controller
                 ->join('tpo_examens as te', 'te.id', '=', 'calificacions.tpo_examen_id')
                 //->where('h.materium_id', $hacademica->materium_id)
                 ->where('h.cliente_id', $hacademica->cliente_id)
-                ->where('calificacions.lectivo_id', $calendario_extras->lectivo_id)
+                //->where('calificacions.lectivo_id', $calendario_extras->lectivo_id)
                 ->whereDate('calificacions.fecha', '>=', $calendario_extras->fec_inicio)
                 ->whereDate('calificacions.fecha', '<=', $calendario_extras->fec_fin)
                 ->where('tpo_examen_id', 2)

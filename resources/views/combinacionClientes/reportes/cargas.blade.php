@@ -131,10 +131,11 @@
         @endif
 
         @if(isset($especialidades))
+        
         <table class="table table-condensed table-striped">
             <thead>
                 <th>Id </th><th>Plantel</th><th>Id</th><th>Especialidad</th><th>RVOE</th><th>Vencimiento RVOE</th><th>CCT</th>
-                <th>Meta</th><th>Imagen</th><th>Abreviatura</th><th>Fondo Credencial</th>
+                <th>Meta</th><th>Imagen</th><th>Abreviatura</th><th>Fondo Credencial</th><th>Activo</th>
             </thead>
             <tbody>
             
@@ -143,6 +144,7 @@
                     <td>{{ $especialidad->plantel_id }}</td><td>{{optional($especialidad->plantel)->razon}}</td><td>{{$especialidad->id}}</td><td>{{$especialidad->name}}</td><td>{{$especialidad->rvoe}}</td><td>{{$especialidad->vencimiento_rvoe}}</td>
                 <td>{{$especialidad->ccte}}</td><td>{{$especialidad->meta}}</td><td>{{$especialidad->imagen}}</td>
                 <td>{{$especialidad->abreviatura}}</td><td>{{$especialidad->fondo_credencial}}</td>
+                <td>{{$especialidad->bnd_activo ? 'Sí' : 'No'}}</td>
                 </tr>
                 @endforeach
                 
@@ -153,13 +155,16 @@
         @if(isset($niveles))
         <table class="table table-condensed table-striped">
             <thead>
-                <th>Id</th><th>Plantel</th><th>Id</th><th>Especialidad</th><th>Id</th><th>Nivel</th>
+                <th>Id</th><th>Plantel</th><th>Id</th><th>Especialidad</th><th>Id</th>
+                <th>Nivel</th><th>Activo</th>
             </thead>
             <tbody>
             
                 @foreach($niveles as $nivel)
                 <tr>
-                    <td>{{$nivel->plantel_id}}</td><td>{{$nivel->plantel->razon}}</td><td>{{ $nivel->especialidad_id }}</td><td>{{$nivel->especialidad->name}}</td><td>{{$nivel->id}}</td><td>{{$nivel->name}}</td>
+                    <td>{{$nivel->plantel_id}}</td><td>{{$nivel->plantel->razon}}</td>
+                    <td>{{ $nivel->especialidad_id }}</td><td>{{$nivel->especialidad->name}}</td>
+                    <td>{{$nivel->id}}</td><td>{{$nivel->name}}</td><td>{{$nivel->bnd_activo ? 'Sí' : 'No'}}</td>
                 
                 </tr>
                 @endforeach
@@ -173,6 +178,7 @@
             <thead>
                 <td>Id</td><th>Plantel</th><td>Id</td><th>Especialidad</th><td>Id</td><th>Nivel</th><th>Id</th><th>Grado(nombre1)</th><th>Nombre RVOE(nombre2)</th><th>RVOE</th>
                 <th>Denominación</th><th>F. RVOE</th><th>CT</th><th>Seccion</th><th>Clave Servicio (Facturacion)</th><th>Nivel Educativo Sat (Facturacion)</th>
+                <th>Activo</th>
             </thead>
             <tbody>
             
@@ -186,6 +192,7 @@
                     <td>{{ $grado->rvoe }}</td><td>{{ $grado->denomicancion }}</td><td>{{ $grado->fec_rvoe }}</td>
                     <td>{{ $grado->cct }}</td><td>{{ $grado->seccion }}</td><td>{{ $grado->clave_servicio }}</td>
                     <td>{{ optional($grado->nivelEducativoSat)->name }}</td>
+                    <td>{{$grado->bnd_activo ? 'Sí' : 'No'}}</td>
                 </tr>
                 @endforeach
                 

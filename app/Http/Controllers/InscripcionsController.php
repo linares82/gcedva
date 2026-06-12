@@ -973,7 +973,7 @@ class InscripcionsController extends Controller
             ->join('empleados as e', 'e.id', '=', 'aa.empleado_id')
             ->join('grados as gra', 'gra.id', '=', 'hacademicas.grado_id')
             ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
-            ->join('especialidads as esp', 'esp.id', '=', 'hacademicas.especialidad_id')
+            ->join('especialidads as esp', 'esp.id', '=', 'i.especialidad_id')
             ->where('aa.id', $data['asignacion'])
             ->where('hacademicas.plantel_id', $data['plantel_f'])
             ->where('hacademicas.lectivo_id', $data['lectivo_f'])

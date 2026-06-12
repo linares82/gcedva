@@ -122,7 +122,6 @@
                 <div class="row">
                     <label>
                     Calendario Correspondiente Activo: {{$calendario_extras->id}}-
-                                                    {{$calendario_extras->plantel->razon}}
                                                     {{$calendario_extras->duracionPeriodo->name}}(
                                                     {{$calendario_extras->fec_inicio}} a 
                                                     {{$calendario_extras->fec_fin}})

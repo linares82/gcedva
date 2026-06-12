@@ -441,18 +441,18 @@
                                             'data-grado'=>$c->grado_id,
                                             'data-turno'=>$c->turno_id]) !!}    
                                         </td>
-                                        <td>{{$c->especialidad->name}}</td>
+                                        <td>{{$c->especialidad_id}}-{{$c->especialidad->name}}</td>
                                         
                                         <td>
-                                            {{$c->nivel->name}}
+                                            {{$c->nivel_id}}-{{$c->nivel->name}}
                                          
                                         </td>
                                         <td>
-                                            {{optional($c->grado)->name}}
+                                            {{optional($c)->grado_id}}-{{optional($c->grado)->name}}
                                          
                                         </td>
                                         <td>
-                                            {{optional($c->turno)->name}}  
+                                            {{optional($c)->turno_id}}-{{optional($c->turno)->name}}  
                                             <a href={{ route('planPagos.show',optional($c->planPago)->id) }} target="_blank" class="btn btn-xs btn-warning">Ver Plan</a>
                                         </td>
                                         <td>
@@ -1327,12 +1327,12 @@
                 <tbody>
 
                     <tr style="color: #ffffff;background:#6495ED;">
-                        <td>{{$i->plantel->razon}}</td>
-                        <td>{{optional($i->especialidad)->name}}</td>
-                        <td>{{optional($i->nivel)->name}}</td>
-                        <td>{{optional($i->grado)->name}}</td>
-                        <td>{{optional($i->grupo)->name}}</td>
-                        <td>{{optional($i->periodo_estudio)->name}}</td>
+                        <td>{{$i->plantel_id}}-{{$i->plantel->razon}}</td>
+                        <td>{{optional($i)->especialidad_id}}-{{optional($i->especialidad)->name}}</td>
+                        <td>{{optional($i)->nivel_id}}-{{optional($i->nivel)->name}}</td>
+                        <td>{{optional($i)->grado_id}}-{{optional($i->grado)->name}}</td>
+                        <td>{{optional($i)->grupo_id}}-{{optional($i->grupo)->name}}</td>
+                        <td>{{optional($i)->periodo_estudio_id}}-{{optional($i->periodo_estudio)->name}}</td>
                         <td>{{$i->fec_inscripcion}}</td>
                         <td>{{optional($i->lectivo)->name}}</td>
                         <td>{{$i->matricula}}</td>
@@ -1371,6 +1371,9 @@
                             <a class="btn btn-xs btn-danger" href="{{ route('inscripcions.destroyCli', $i->id) }}" onclick="return confirm('Confirmar borrado de inscripcion.');"><i class="glyphicon glyphicon-trash"></i>Borrar</a>
                             @endpermission
                             <a class="btn btn-xs btn-default" href="{{ route('clientes.credencial_anverso', array('id'=>$cliente->id, 'inscripcion'=>$i)) }}" target="_blank"><i class="fa fa-newspaper-o"></i> C. Anverso</a>
+                            @permission('clientes.credencial_anverso_tlane')
+                            <a class="btn btn-xs btn-default" href="{{ route('clientes.credencial_anverso_tlane', array('id'=>$cliente->id, 'inscripcion'=>$i)) }}" target="_blank"><i class="fa fa-newspaper-o"></i> Credencial T. </a>
+                            @endpermission
                         </td>
                     </tr>
                     <tr>

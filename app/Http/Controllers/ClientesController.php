@@ -2118,6 +2118,33 @@ class ClientesController extends Controller
      */
     }
 
+    public function credencialAnversoTlane(Request $request)
+    {
+        $datos = $request->all();
+        $cliente = Cliente::find($datos['id']);
+        $combinacion = CombinacionCliente::where('cliente_id', $cliente->id)->first();
+        $grado = $combinacion->grado;
+        $plantel = Plantel::find($cliente->plantel_id);
+        $inscripcion = Inscripcion::find($datos['inscripcion']);
+        $id_foto_doc_alumnos = Param::where('llave', 'id_foto_doc_alumos')->first();
+        if (!is_null($id_foto_doc_alumnos)) {
+            $img = PivotDocCliente::where('cliente_id', $datos['id'])->where('doc_alumno_id', $id_foto_doc_alumnos->valor)->first();
+
+            $cadena_img = "";
+            if (is_null($img)) {
+                dd('sin foto cargada');
+            } else {
+                $cadena_img = explode('/', $img->archivo);
+            }
+            //dd($cadena_img);
+            //dd($cadena_img[count($cadena_img) - 1]);
+            //dd(base_path() . '/vendor/cossou/jasperphp/examples/' . $cadena_img[count($cadena_img) - 1]);
+            return view('clientes.reportes.credencial_anverso_tlane', compact('cliente', 'inscripcion', 'cadena_img', 'plantel', 'grado'));
+        } else {
+            dd("Sin id de foto identificado, informar al administrador");
+        }
+    }
+
     public function credencialReverso(Request $request)
     {
         $datos = $request->all();
@@ -2362,9 +2389,11 @@ class ClientesController extends Controller
             'd.ape_paterno as dape_paterno',
             'e.rvoe',
             'e.ccte',
-            'e.fondo_credencial'
+            'e.fondo_credencial',
+            'g.nombre2 as nombre_rvoe'
         )
             ->join('inscripcions as i', 'i.cliente_id', '=', 'clientes.id')
+            ->join('grados as g', 'g.id', 'i.grado_id')
             ->join('plantels as p', 'p.id', '=', 'i.plantel_id')
             ->join('empleados as d', 'd.id', '=', 'p.director_id')
             ->join('especialidads as e', 'e.id', '=', 'i.especialidad_id')
@@ -2380,7 +2409,12 @@ class ClientesController extends Controller
         //dd($cadena_img);
         //dd($cadena_img[count($cadena_img) - 1]);
         //dd(base_path() . '/vendor/cossou/jasperphp/examples/' . $cadena_img[count($cadena_img) - 1]);
-        return view('clientes.reportes.listaCredencialesR', compact('registros', 'especialidad', 'datos'));
+        $params = Param::where('llave', 'prefijo_matricula_instalacion')->first();
+        if ($params->valor == "TL") {
+            return view('clientes.reportes.listaCredencialesTlaneR', compact('registros', 'especialidad', 'datos'));
+        } else {
+            return view('clientes.reportes.listaCredencialesR', compact('registros', 'especialidad', 'datos'));
+        }
     }
 
     public function listaClientes()
@@ -2883,7 +2917,7 @@ class ClientesController extends Controller
                 ->join('caja_conceptos as cc', 'cc.id', '=', 'cln.caja_concepto_id')
                 //->whereDate('fecha','>=',$d['fecha_caja'])
                 ->where('cajas.st_caja_id', 1)
-                ->where('cln.caja_concepto_id', 22)
+                ->whereIn('cln.caja_concepto_id', array(22, 257))
                 ->where('cliente_id', $d['cliente_id'])
                 ->first();
 

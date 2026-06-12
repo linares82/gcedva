@@ -1199,6 +1199,14 @@ Route::get(
     )
 )->middleware('auth');
 Route::get(
+    'clientes/credencial_anverso_tlane',
+    array(
+        'as' => 'clientes.credencial_anverso_tlane',
+        //'middleware' => 'permission:clientes.index',
+        'uses' => 'ClientesController@credencialAnversoTlane'
+    )
+)->middleware('auth');
+Route::get(
     'clientes/credencial_reverso',
     array(
         'as' => 'clientes.credencial_reverso',

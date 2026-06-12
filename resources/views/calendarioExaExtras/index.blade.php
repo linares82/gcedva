@@ -181,7 +181,7 @@
                         @foreach($calendarioExaExtras as $calendarioExaExtra)
                             <tr>
                                 <td><a href="{{ route('calendarioExaExtras.show', $calendarioExaExtra->id) }}">{{$calendarioExaExtra->id}}</a></td>
-                                <!--<td>{{$calendarioExaExtra->plantel->razon}}</td>-->
+                                
                                 <td>{{$calendarioExaExtra->lectivo->name}}</td>
                                 <td>{{$calendarioExaExtra->duracionPeriodo->name}}</td>
                                 <td>{{$calendarioExaExtra->fec_inicio}}</td>

@@ -56,7 +56,8 @@ class Grado extends ModeloBase
 		'sep_autorizacion_reconocimiento_id',
 		'sep_fundamento_legal_servicio_social_id',
 		'enlace_nombre',
-		'bnd_rvoe_inactiva'
+		'bnd_rvoe_inactiva',
+		'bnd_activo'
 	];
 
 	public function usu_alta()

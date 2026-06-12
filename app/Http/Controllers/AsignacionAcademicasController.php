@@ -576,7 +576,7 @@ class AsignacionAcademicasController extends Controller
 			->join('hacademicas as h', 'h.cliente_id', '=', 'clientes.id')
 			->join('inscripcions as i', 'i.id', '=', 'h.inscripcion_id')
 			->join('plantels as p', 'p.id', '=', 'h.plantel_id')
-			->join('especialidads as e', 'e.id', '=', 'h.especialidad_id')
+			->join('especialidads as e', 'e.id', '=', 'i.especialidad_id')
 			->join('nivels as n', 'n.id', '=', 'h.nivel_id')
 			->join('grados as g', 'g.id', '=', 'h.grado_id')
 			->join('grupos as gr', 'gr.id', '=', 'h.grupo_id')
@@ -740,6 +740,7 @@ class AsignacionAcademicasController extends Controller
 			->first();
 		//dd($asignacion_academica->docenteOficial);
 		$encabezado = Hacademica::where('plantel_id', $datos['plantel_f'])
+			->join('inscripcions as i', 'i.id', 'hacademicas.inscripcion_id')
 			->where('lectivo_id', $datos['lectivo_f'])
 			->where('grupo_id', $datos['grupo_f'])
 			->where('materium_id', $datos['materia_f'])

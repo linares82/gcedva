@@ -13,9 +13,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
         #td_frontal { font-family: arial; font-size: 7px; padding: 1px 1px; color: #000; text-align:center;}
         #tbl_frontal { 
             background: url({{asset('storage/especialidads/'.$especialidad->fondo_credencial)}}) no-repeat;
-            background-size:200px 307px;
-            margin: 7px 7px 7px 7px;
-        }
+            width: 100%; 
+			    border-collapse: collapse;
+			    background-size: cover;
+			    background-position: center; 
+                height: 100%;}
         }
         
         body {
@@ -71,8 +73,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
           </tr>
           <tr>
               <td id="td_frontal">
+		{{$r->nombre_rvoe}} <br/>
                 {{$r->matricula}} <br/>
-                {{$r->nombre}} {{$r->nombre2}} {{$r->ape_paterno}} {{$r->ape_materno}}
+                {{$r->nombre}} {{$r->nombre2}} {{$r->ape_paterno}} {{$r->ape_materno}}<br/>
+                ID: {{$r->cliente}}
               </td>
           </tr>
           <tr>
@@ -82,8 +86,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
               @endphp   
               <td id="td_frontal">Vencimiento:{{$vencimiento->toDateString('d-m-Y')}}</td>
           </tr>
-          <tr><td></td></tr><tr><td></td></tr>
           
+          <tr><td></td></tr><tr><td></td></tr>          
           </tbody>
       </table>
     </div>
@@ -158,8 +162,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                                                                 '; Plantel:'.$r->razon)) !!} ">
                 </td>
             </tr>    
-          <tr><td>ESTA CREDENCIAL ES ÚNICA E INTRANSFERIBLE YA QUE ACREDITA AL PORTADOR COMO ALUMNO DE ÉSTA
-                       INSTITUCIÓN, EL TITULAR ES RESPONSABLE DEL BUEN USO DE LA MISMA.</td></tr>
+          <tr><td>ESTA CREDENCIAL ES ÃšNICA E INTRANSFERIBLE YA QUE ACREDITA AL PORTADOR COMO ALUMNO DE Ã‰STA
+                       INSTITUCIÃ“N, EL TITULAR ES RESPONSABLE DEL BUEN USO DE LA MISMA.</td></tr>
           </tbody>
       </table>
       <div class="page-break"></div>

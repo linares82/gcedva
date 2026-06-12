@@ -88,6 +88,9 @@ class GradosController extends Controller
         if (!isset($input['bnd_rvoe_inactiva'])) {
             $input['bnd_rvoe_inactiva'] = 0;
         }
+        if (!isset($input['bnd_activo'])) {
+            $input['bnd_activo'] = false;
+        }
         $input['usu_alta_id'] = Auth::user()->id;
         $input['usu_mod_id'] = Auth::user()->id;
 
@@ -185,6 +188,9 @@ class GradosController extends Controller
         if (!isset($input['bnd_rvoe_inactiva'])) {
             $input['bnd_rvoe_inactiva'] = 0;
         }
+        if (!isset($input['bnd_activo'])) {
+            $input['bnd_activo'] = false;
+        }
         //$input['seccion']=Seccion::where('id',$input['seccion_id'])->value('name');
         //update data
         $grado = $grado->find($id);
@@ -222,21 +228,23 @@ class GradosController extends Controller
 
             if (Auth::user()->can('grados.verInactivos')) {
                 $r = DB::table('grados as g')
-                    ->select('g.id', 'g.name')
+                    ->select('g.id', DB::raw('concat(g.id,"-",g.name) as name'))
                     ->where('g.plantel_id', '=', $plantel)
                     ->where('g.especialidad_id', '=', $especialidad)
                     ->where('g.nivel_id', '=', $nivel)
                     ->where('g.id', '>', '0')
                     ->whereNull('g.deleted_at')
+                    ->where('g.bnd_activo', true)
                     ->get();
             } else {
                 $r = DB::table('grados as g')
-                    ->select('g.id', 'g.name')
+                    ->select('g.id', DB::raw('concat(g.id."-".g.name)'))
                     ->where('g.plantel_id', '=', $plantel)
                     ->where('g.especialidad_id', '=', $especialidad)
                     ->where('g.nivel_id', '=', $nivel)
                     ->where('g.id', '>', '0')
                     ->whereNull('g.deleted_at')
+                    ->where('g.bnd_activo', true)
                     //->whereNull('g.bnd_rvoe_inactiva')->orWhere('g.bnd_rvoe_inactiva', 0)
                     ->whereRaw('(g.bnd_rvoe_inactiva is null or g.bnd_rvoe_inactiva=0)')
                     ->get();
@@ -279,10 +287,11 @@ class GradosController extends Controller
             $r = DB::table('grados as g')
                 ->join('inscripcions as i', 'i.grado_id', '=', 'g.id')
                 ->join('clientes as c', 'i.cliente_id', '=', 'c.id')
-                ->select('g.id', 'g.name')
+                ->select('g.id', DB::raw('concat(g.id,"-",g.name) as name'))
                 ->where('c.id', '=', $cliente)
                 ->where('g.id', '>', '0')
                 ->whereNull('i.deleted_at')
+                ->where('g.bnd_activo', true)
                 ->get();
             //dd($r);
             if (isset($grado) and $grado <> 0) {
@@ -320,11 +329,12 @@ class GradosController extends Controller
             $r = DB::table('grados as g')
                 ->join('inscripcions as i', 'i.grado_id', '=', 'g.id')
                 ->join('clientes as c', 'i.cliente_id', '=', 'c.id')
-                ->select('g.id', 'g.name')
+                ->select('g.id', DB::raw('concat(g.id,"-",g.name) as name'))
                 ->where('i.plantel_id', '=', $plantel)
                 ->where('i.lectivo_id', '=', $lectivo)
                 ->where('i.grupo_id', '=', $grupo)
                 ->where('g.id', '>', '0')
+                ->where('g.bnd_activo', true)
                 ->distinct()
                 ->get();
             //dd($r);
@@ -394,13 +404,14 @@ class GradosController extends Controller
             $final = array();
             $r = DB::table('grados as g')
                 ->join('hacademicas as h', 'h.grado_id', '=', 'g.id')
-                ->select('g.id', 'g.name')
+                ->select('g.id', DB::raw('concat(g.id,"-",g.name) as name'))
                 ->where('g.plantel_id', '=', $plantel)
                 ->where('g.especialidad_id', '=', $especialidad)
                 ->where('g.nivel_id', '=', $nivel)
                 ->where('h.grupo_id', '=', $grupo)
                 ->where('g.id', '>', '0')
                 ->whereNull('g.deleted_at')
+                ->where('g.bnd_activo', true)
                 ->whereNull('h.deleted_at')
                 ->distinct()
                 ->get();
