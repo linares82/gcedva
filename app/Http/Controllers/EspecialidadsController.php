@@ -152,15 +152,15 @@ class EspecialidadsController extends Controller
 
             $final = array();
             $r2 = DB::table('especialidads as e')
-                ->select('e.id', DB::raw('concat(e.id,"-",e.name) as name'))
+                ->select('e.id', DB::raw('concat(e.id,"-",e.name) as name'), 'e.bnd_activo')
                 ->where('e.plantel_id', '=', $plantel)
                 ->where('e.id', '>', '0')
-                ->where('e.bnd_activo', true)
+                //->where('e.bnd_activo', true)
                 ->whereNull('deleted_at');
             //->get();
 
             $r = DB::table('especialidads as e')
-                ->select('e.id', DB::raw('concat(e.id,"-",e.name) as name'))
+                ->select('e.id', DB::raw('concat(e.id,"-",e.name) as name'), 'e.bnd_activo')
                 ->where('e.id', '0')
                 ->union($r2)
                 ->get();
@@ -173,12 +173,14 @@ class EspecialidadsController extends Controller
                             'id' => $r1->id,
                             'name' => $r1->name,
                             'selectec' => 'Selected',
+                            'bnd_activo' => $r1->bnd_activo,
                         ));
                     } else {
                         array_push($final, array(
                             'id' => $r1->id,
                             'name' => $r1->name,
                             'selectec' => '',
+                            'bnd_activo' => $r1->bnd_activo,
                         ));
                     }
                 }
@@ -271,11 +273,11 @@ class EspecialidadsController extends Controller
             $final = array();
             $r2 = DB::table('especialidads as e')
                 ->join('hacademicas as h', 'h.especialidad_id', '=', 'e.id')
-                ->select('e.id', DB::raw('concat(e.id,"-",e.name) as name'))
+                ->select('e.id', DB::raw('concat(e.id,"-",e.name) as name'), 'e.bnd_activo')
                 ->where('e.plantel_id', '=', $plantel)
                 ->where('h.grupo_id', '=', $grupo)
                 ->where('e.id', '>', '0')
-                ->where('e.bnd_activo', true)
+                //->where('e.bnd_activo', true)
                 ->whereNull('e.deleted_at')
                 ->distinct()
                 ->whereNull('h.deleted_at');
@@ -292,7 +294,7 @@ class EspecialidadsController extends Controller
             //->get();
 
             $r = DB::table('especialidads as e')
-                ->select('e.id', 'e.name')
+                ->select('e.id', 'e.name', 'e.bnd_activo')
                 ->where('e.id', '0')
                 ->union($r2)
                 ->get();
@@ -305,12 +307,14 @@ class EspecialidadsController extends Controller
                             'id' => $r1->id,
                             'name' => $r1->name,
                             'selectec' => 'Selected',
+                            'bnd_activo' => $r1->bnd_activo,
                         ));
                     } else {
                         array_push($final, array(
                             'id' => $r1->id,
                             'name' => $r1->name,
                             'selectec' => '',
+                            'bnd_activo' => $r1->bnd_activo,
                         ));
                     }
                 }

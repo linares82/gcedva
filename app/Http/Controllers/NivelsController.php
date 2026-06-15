@@ -155,11 +155,11 @@ class NivelsController extends Controller
             $nivel = $request->get('nivel_id');
             $final = array();
             $r = DB::table('nivels as n')
-                ->select('n.id', DB::raw('concat(n.id,"-",n.name) as name'))
+                ->select('n.id', DB::raw('concat(n.id,"-",n.name) as name'), 'n.bnd_activo')
                 ->where('n.plantel_id', '=', $plantel)
                 ->where('n.especialidad_id', '=', $especialidad)
                 ->where('n.id', '>', '0')
-                ->where('n.bnd_activo', true)
+                //->where('n.bnd_activo', true)
                 ->whereNull('deleted_at')
                 ->get();
             //dd($r);
@@ -170,12 +170,14 @@ class NivelsController extends Controller
                             'id' => $r1->id,
                             'name' => $r1->name,
                             'selectec' => 'Selected',
+                            'bnd_activo' => $r1->bnd_activo
                         ));
                     } else {
                         array_push($final, array(
                             'id' => $r1->id,
                             'name' => $r1->name,
                             'selectec' => '',
+                            'bnd_activo' => $r1->bnd_activo
                         ));
                     }
                 }
@@ -198,12 +200,12 @@ class NivelsController extends Controller
             $final = array();
             $r = DB::table('nivels as n')
                 ->join('hacademicas as h', 'h.nivel_id', '=', 'n.id')
-                ->select('n.id', DB::raw('concat(n.id,"-",n.name) as name'))
+                ->select('n.id', DB::raw('concat(n.id,"-",n.name) as name'), 'n.bnd_activo')
                 ->where('n.plantel_id', '=', $plantel)
                 ->where('n.especialidad_id', '=', $especialidad)
                 ->where('h.grupo_id', '=', $grupo)
                 ->where('n.id', '>', '0')
-                ->where('n.bnd_activo', true)
+                //->where('n.bnd_activo', true)
                 ->whereNull('n.deleted_at')
                 ->whereNull('h.deleted_at')
                 ->distinct()
@@ -229,12 +231,14 @@ class NivelsController extends Controller
                             'id' => $r1->id,
                             'name' => $r1->name,
                             'selectec' => 'Selected',
+                            'bnd_activo' => $r1->bnd_activo
                         ));
                     } else {
                         array_push($final, array(
                             'id' => $r1->id,
                             'name' => $r1->name,
                             'selectec' => '',
+                            'bnd_activo' => $r1->bnd_activo
                         ));
                     }
                 }

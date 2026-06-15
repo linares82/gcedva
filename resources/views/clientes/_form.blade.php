@@ -351,6 +351,10 @@
                             @if($errors->has("especialidad"))
                             <span class="help-block">{{ $errors->first("especialidad") }}</span>
                             @endif
+
+
+                            
+
                         </div>
                         <div class="form-group col-md-2 @if($errors->has('nivel_id')) has-error @endif">
                             <label for="nivel_id-field">Nivel</label>
@@ -2615,8 +2619,13 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                                 $('#especialidad_id-field').append($('<option></option>').text('Seleccionar').val('0'));
                                 $.each(data, function(i) {
                                 //alert(data[i].name);
-                                $('#especialidad_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
+                                    if(data[i].bnd_activo){
+                                        $('#especialidad_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
+                                    }else{
+                                        $('#especialidad_id-field').append("<option disabled " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
+                                    }
                                 });
+                                
                                 //$example.select2();
                                 }
                         });
@@ -2782,7 +2791,11 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                                 $('#nivel_id-field').append($('<option></option>').text('Seleccionar').val('0'));
                                 $.each(data, function(i) {
                                 //alert(data[i].name);
-                                $('#nivel_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
+                                if(data[i].bnd_activo){
+                                    $('#nivel_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
+                                }else{
+                                    $('#nivel_id-field').append("<option disabled " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
+                                }
                                 });
                                 $('#nivel_id-field').trigger('change');
                                 }
@@ -2863,9 +2876,15 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                                 $('#grado_id-field').append($('<option></option>').text('Seleccionar').val('0'));
                                 $.each(data, function(i) {
                                 //alert(data[i].name);
+                                if(data[i].bnd_activo){
                                 $('#grado_id-field').append("<option " + data[i].selectec +
                                                             " value=\"" + data[i].id + "\">" + 
                                                             data[i].name + "<\/option>");
+                                }else{
+                                $('#grado_id-field').append("<option disabled " + data[i].selectec +
+                                                            " value=\"" + data[i].id + "\">" + 
+                                                            data[i].name + "<\/option>");
+                                }
                                 });
                                 $('#grado_id-field').trigger('change');
                                 }
