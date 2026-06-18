@@ -689,7 +689,7 @@
             <td>
                 @php  
                   $descuento_promocion=0;
-                  
+                  //Log::info($registro['adeudo_id']);
                   if($registro['adeudo_id']>0 and $registro['consecutivo']>0){
                     $adeudo=\App\Adeudo::find($registro['adeudo_id']);
                     $adeudo->load(['planPagoLn','planPagoLn.promoPlanLns']);
@@ -731,15 +731,11 @@
                 
                 if(count($becas)>0){
                   foreach($becas as $beca){
-                    if(is_null($beca->lectivo_id)){
-                      $inicio= new Datetime($beca->inicio_vigencia);
-                      $fin= new Datetime($beca->vigencia);
-                    }else{
-                      $inicio= new Datetime($beca->lectivo->inicio);
-                      $fin= new Datetime($beca->lectivo->fin);
-                    }
-                    
+                    if(!is_null($beca->lectivo_id)){
+            		    $inicio= new Datetime($beca->lectivo->inicio);
+                    $fin= new Datetime($beca->lectivo->fin);
 
+		    	
                     if($inicio<$fecha_caja_hoy and 
                        $fin>$fecha_caja_hoy and 
                        $registro['pagado_bnd']<>1 and 
@@ -757,6 +753,29 @@
                         $descuento_beca=$beca->monto_mensualidad*$registro['monto'];
                         echo number_format((float)$beca->monto_mensualidad,2)."(".number_format($descuento_beca,2).")";
                     }
+                    }else{
+                    $inicio= new Datetime($beca->inicio_vigencia);
+                    $fin= new Datetime($beca->vigencia);
+
+		    	
+                    if($inicio<$fecha_caja_hoy and 
+                       $fin>$fecha_caja_hoy and 
+                       $registro['pagado_bnd']<>1 and 
+                       $registro['bnd_mensualidad']==1 and 
+                       ($registro['bnd_eximir_descuento_beca']==0 or is_null($registro['bnd_eximir_descuento_beca']))){
+                        //echo $beca->monto_mensualidad*$registro['monto'];
+                        $descuento_beca=$beca->monto_mensualidad*$registro['monto'];
+                        echo number_format((float)$beca->monto_mensualidad,2)."(".number_format($descuento_beca,2).")";
+                    }elseif($inicio<$fecha_caja and 
+                       $fin>$fecha_caja and 
+                       $registro['pagado_bnd']==1 and 
+                       $registro['bnd_mensualidad']==1 and 
+                       ($registro['bnd_eximir_descuento_beca']==0 or is_null($registro['bnd_eximir_descuento_beca']))){
+                        //echo $beca->monto_mensualidad*$registro['monto'];
+                        $descuento_beca=$beca->monto_mensualidad*$registro['monto'];
+                        echo number_format((float)$beca->monto_mensualidad,2)."(".number_format($descuento_beca,2).")";
+                    }
+		    }
                   }
                 }
                 if($descuento_beca==0){

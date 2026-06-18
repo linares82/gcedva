@@ -238,7 +238,7 @@ class GradosController extends Controller
                     ->get();
             } else {
                 $r = DB::table('grados as g')
-                    ->select('g.id', DB::raw('concat(g.id."-".g.name)'), 'g.bnd_activo')
+                    ->select('g.id', DB::raw('concat(g.id,"-",g.name) as name'), 'g.bnd_activo')
                     ->where('g.plantel_id', '=', $plantel)
                     ->where('g.especialidad_id', '=', $especialidad)
                     ->where('g.nivel_id', '=', $nivel)

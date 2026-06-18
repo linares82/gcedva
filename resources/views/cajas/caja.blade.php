@@ -1303,49 +1303,51 @@ Agregar nuevo registro
             <div class="modal-body">
                 {!! Form::open(array('route' => 'adeudos.store')) !!}
                 @permission('cajas.no_inscripcion')
-                <div class="form-group col-md-6 @if($errors->has('caja_concepto_id')) has-error @endif">
-                    <label for="caja_concepto_id-field">Caja Concepto</label><br/>
-                    {!! Form::select("caja_concepto_id", $list1["CajaConcepto"], null, array("class" => "form-control select_seguridad", "id" => "caja_concepto_id-adeudo")) !!}
-                    <p class="errorCajaConcepto text-center alert alert-danger hidden"></p>
-                </div>
-                @permission('cajas.editar_fecha_pago_adeudo')
-                <div class="form-group col-md-6 @if($errors->has('fecha_pago')) has-error @endif">
-                    <label for="fecha_pago-field">Fecha Pago</label><br/>
-                    {!! Form::text("fecha_pago", null, array("class" => "form-control fecha", "id" => "fecha_pago-adeudo")) !!}
-                    <p class="errorCajaConcepto text-center alert alert-danger hidden"></p>
-                </div>
-                @endpermission
-                <div class="form-group col-md-6 @if($errors->has('monto')) has-error @endif">
-                    <label for="monto-field">Monto</label><br/>
-                    {!! Form::text("monto", null, array("class" => "form-control", "id" => "monto-adeudo")) !!}
-                    <p class="errorCajaConcepto text-center alert alert-danger hidden"></p>
-                </div>
-                <div class="form-group col-md-3 @if($errors->has('bnd_eximir_descuentos_beca')) has-error @endif">
-                    <label for="bnd_eximir_descuentos_beca-adeudo">Eximir Descuentos Beca</label>
-                    {!! Form::checkbox("bnd_eximir_descuentos_beca", 1, null, [ "id" => "bnd_eximir_descuentos_beca-adeudo", 'class'=>'minimal']) !!}
-                    @if($errors->has("bnd_eximir_descuentos_beca"))
-                    <span class="help-block">{{ $errors->first("bnd_eximir_descuentos_beca") }}</span>
-                    @endif
-                </div>
-                <div class="form-group col-md-3 @if($errors->has('bnd_eximir_descuentos')) has-error @endif">
-                    <label for="bnd_eximir_descuentos-adeudo">Eximir Descuentos Promocion</label>
-                    {!! Form::checkbox("bnd_eximir_descuentos", 1, null, [ "id" => "bnd_eximir_descuentos-adeudo", 'class'=>'minimal']) !!}
-                    @if($errors->has("bnd_eximir_descuentos"))
-                    <span class="help-block">{{ $errors->first("bnd_eximir_descuentos") }}</span>
-                    @endif
-                </div>
-                <div class="form-group col-md-3 @if($errors->has('bnd_eximir_descuentos_regla')) has-error @endif">
-                    <label for="bnd_eximir_descuentos_regla-adeudo">Eximir Descuentos Regla</label>
-                    {!! Form::checkbox("bnd_eximir_descuentos_regla", 1, null, [ "id" => "bnd_eximir_descuentos_regla-adeudo", 'class'=>'minimal']) !!}
-                    @if($errors->has("bnd_eximir_descuentos_regla"))
-                    <span class="help-block">{{ $errors->first("bnd_eximir_descuentos_regla") }}</span>
-                    @endif
-                </div>
-                <div class="form-group col-md-12 @if($errors->has('comentario')) has-error @endif">
-                    <label for="comentario-field">Comentario</label><br/>
-                    {!! Form::text("comentario", null, array("class" => "form-control", "id" => "comentario-adeudo")) !!}
-                    <p class="errorCajaConcepto text-center alert alert-danger hidden"></p>
-                </div>
+                    <div class="form-group col-md-6 @if($errors->has('caja_concepto_id')) has-error @endif">
+                        <label for="caja_concepto_id-field">Caja Concepto</label><br/>
+                        {!! Form::select("caja_concepto_id", $list1["CajaConcepto"], null, array("class" => "form-control select_seguridad", "id" => "caja_concepto_id-adeudo")) !!}
+                        <p class="errorCajaConcepto text-center alert alert-danger hidden"></p>
+                    </div>
+                    @permission('cajas.editar_fecha_pago_adeudo')
+                    <div class="form-group col-md-6 @if($errors->has('fecha_pago')) has-error @endif">
+                        <label for="fecha_pago-field">Fecha Pago</label><br/>
+                        {!! Form::text("fecha_pago", null, array("class" => "form-control fecha", "id" => "fecha_pago-adeudo")) !!}
+                        <p class="errorCajaConcepto text-center alert alert-danger hidden"></p>
+                    </div>
+                    @endpermission
+                    @permission('cajas.editar_monto_adeudo')
+                    <div class="form-group col-md-6 @if($errors->has('monto')) has-error @endif">
+                        <label for="monto-field">Monto</label><br/>
+                        {!! Form::text("monto", null, array("class" => "form-control", "id" => "monto-adeudo")) !!}
+                        <p class="errorCajaConcepto text-center alert alert-danger hidden"></p>
+                    </div>
+                    @endpermission
+                    <div class="form-group col-md-3 @if($errors->has('bnd_eximir_descuentos_beca')) has-error @endif">
+                        <label for="bnd_eximir_descuentos_beca-adeudo">Eximir Descuentos Beca</label>
+                        {!! Form::checkbox("bnd_eximir_descuentos_beca", 1, null, [ "id" => "bnd_eximir_descuentos_beca-adeudo", 'class'=>'minimal']) !!}
+                        @if($errors->has("bnd_eximir_descuentos_beca"))
+                        <span class="help-block">{{ $errors->first("bnd_eximir_descuentos_beca") }}</span>
+                        @endif
+                    </div>
+                    <div class="form-group col-md-3 @if($errors->has('bnd_eximir_descuentos')) has-error @endif">
+                        <label for="bnd_eximir_descuentos-adeudo">Eximir Descuentos Promocion</label>
+                        {!! Form::checkbox("bnd_eximir_descuentos", 1, null, [ "id" => "bnd_eximir_descuentos-adeudo", 'class'=>'minimal']) !!}
+                        @if($errors->has("bnd_eximir_descuentos"))
+                        <span class="help-block">{{ $errors->first("bnd_eximir_descuentos") }}</span>
+                        @endif
+                    </div>
+                    <div class="form-group col-md-3 @if($errors->has('bnd_eximir_descuentos_regla')) has-error @endif">
+                        <label for="bnd_eximir_descuentos_regla-adeudo">Eximir Descuentos Regla</label>
+                        {!! Form::checkbox("bnd_eximir_descuentos_regla", 1, null, [ "id" => "bnd_eximir_descuentos_regla-adeudo", 'class'=>'minimal']) !!}
+                        @if($errors->has("bnd_eximir_descuentos_regla"))
+                        <span class="help-block">{{ $errors->first("bnd_eximir_descuentos_regla") }}</span>
+                        @endif
+                    </div>
+                    <div class="form-group col-md-12 @if($errors->has('comentario')) has-error @endif">
+                        <label for="comentario-field">Comentario</label><br/>
+                        {!! Form::text("comentario", null, array("class" => "form-control", "id" => "comentario-adeudo")) !!}
+                        <p class="errorCajaConcepto text-center alert alert-danger hidden"></p>
+                    </div>
                 @endpermission
                 <div class="row"></div>
                 <hr>
