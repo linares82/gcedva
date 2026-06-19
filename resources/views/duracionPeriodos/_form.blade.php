@@ -26,6 +26,7 @@
       <span class="help-block">{{ $errors->first("bloqueo_cantidad_reprobadas") }}</span>
       @endif
    </div>
+   @permission('duracionPeriodos.clis_excepcion_reprobadas')
    <div class="form-group col-md-8 @if($errors->has('clis_excepcion_reprobadas')) has-error @endif">
       <label for="clis_excepcion_reprobadas-field">Excepción Materias Reprobadas(ids de clientes separados por coma y sin espacios)</label>
       {!! Form::textArea("clis_excepcion_reprobadas", null, array("class" => "form-control", "id" => "clis_excepcion_reprobadas-field", 'rows'=>3)) !!}
@@ -33,3 +34,4 @@
       <span class="help-block">{{ $errors->first("clis_excepcion_reprobadas") }}</span>
       @endif
    </div>
+   @endpermission
