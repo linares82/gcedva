@@ -22,7 +22,7 @@
     <div class="row">
         <div class="col-md-12">
 
-            {!! Form::model($nivel, array('route' => array('nivels.update', $nivel->id),'method' => 'post', 'id'=>'frm_nivels')) !!}
+            {!! Form::model($nivel, array('route' => array('nivels.update', $nivel->id),'method' => 'put', 'id'=>'frm_nivels')) !!}
 
 @include('nivels._form')
 

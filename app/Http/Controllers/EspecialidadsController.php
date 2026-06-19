@@ -118,7 +118,7 @@ class EspecialidadsController extends Controller
         //update data
         $especialidad = $especialidad->find($id);
         if (!isset($input['bnd_activo'])) {
-            $input['bnd_activo'] = false;
+            //$input['bnd_activo'] = false;
         }
         $especialidad->update($input);
 

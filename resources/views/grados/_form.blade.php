@@ -133,6 +133,7 @@
                 <span class="help-block">{{ $errors->first('url_reglamento') }}</span>
             @endif
         </div>
+        @permission('esp-nivel-grado_bnd_activo')
         <div class="form-group col-md-2 @if($errors->has('bnd_activo')) has-error @endif">
             <label for="bnd_activo-field">Activo</label>
             {!! Form::checkbox("bnd_activo", 1, null, [ "id" => "bnd_activo-field"]) !!}
@@ -140,6 +141,7 @@
                 <span class="help-block">{{ $errors->first("bnd_activo") }}</span>
             @endif
             </div>
+        @endpermission
         @if (isset($grado))
             <input type="hidden" name="_token" id="_token" value="<?= csrf_token() ?>">
             <div class="form-group col-md-4">

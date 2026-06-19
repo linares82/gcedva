@@ -739,12 +739,12 @@ class AsignacionAcademicasController extends Controller
 			->whereNull('deleted_at')
 			->first();
 		//dd($asignacion_academica->docenteOficial);
-		$encabezado = Hacademica::where('plantel_id', $datos['plantel_f'])
+		$encabezado = Hacademica::where('hacademicas.plantel_id', $datos['plantel_f'])
 			->join('inscripcions as i', 'i.id', 'hacademicas.inscripcion_id')
-			->where('lectivo_id', $datos['lectivo_f'])
-			->where('grupo_id', $datos['grupo_f'])
+			->where('hacademicas.lectivo_id', $datos['lectivo_f'])
+			->where('hacademicas.grupo_id', $datos['grupo_f'])
 			->where('materium_id', $datos['materia_f'])
-			->whereNull('deleted_at')
+			->whereNull('hacademicas.deleted_at')
 			->first();
 		//dd($encabezado);
 		$alumnos = Hacademica::select(

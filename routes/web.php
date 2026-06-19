@@ -2269,7 +2269,7 @@ Route::get(
         'uses' => 'NivelsController@edit'
     )
 )->middleware('auth');
-Route::post(
+Route::put(
     '/nivels/update/{id}',
     array(
         'as' => 'nivels.update',
@@ -2384,7 +2384,7 @@ Route::get(
         'uses' => 'GradosController@edit'
     )
 )->middleware('auth');
-Route::post(
+Route::put(
     '/grados/update/{id}',
     array(
         'as' => 'grados.update',
@@ -3350,7 +3350,7 @@ Route::get(
         'uses' => 'EspecialidadsController@edit'
     )
 )->middleware('auth');
-Route::post(
+Route::put(
     '/especialidads/update/{id}',
     array(
         'as' => 'especialidads.update',

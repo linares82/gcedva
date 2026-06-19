@@ -189,7 +189,7 @@ class GradosController extends Controller
             $input['bnd_rvoe_inactiva'] = 0;
         }
         if (!isset($input['bnd_activo'])) {
-            $input['bnd_activo'] = false;
+            //$input['bnd_activo'] = false;
         }
         //$input['seccion']=Seccion::where('id',$input['seccion_id'])->value('name');
         //update data

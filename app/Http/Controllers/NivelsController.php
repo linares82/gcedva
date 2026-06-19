@@ -112,7 +112,7 @@ class NivelsController extends Controller
         //update data
         $nivel = $nivel->find($id);
         if (!isset($input['bnd_activo'])) {
-            $input['bnd_activo'] = false;
+            //$input['bnd_activo'] = false;
         }
         $nivel->update($input);
 
