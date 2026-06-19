@@ -975,6 +975,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'AddEspecialidadNivelGradoTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_11_143725_add_especialidad_nivel_grado_table.php',
         'AddEspecialidadNivelTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_11_143659_add_especialidad_nivel_table.php',
         'AddEtapaToRegistroHistoriaClientesTable' => __DIR__ . '/../..' . '/database/migrations/2021_06_10_161026_add_etapa_to_registro_historia_clientes_table.php',
+        'AddExcepReprobadasToDuracionPeriodosTable' => __DIR__ . '/../..' . '/database/migrations/2026_06_18_173406_add_excep_reprobadas_to_duracion_periodos_table.php',
         'AddExcepcionesDescuentosToAdeudosTable' => __DIR__ . '/../..' . '/database/migrations/2020_07_17_133014_add_excepciones_descuentos_to_adeudos_table.php',
         'AddExpirationDateToPeticionMattildasTable' => __DIR__ . '/../..' . '/database/migrations/2025_10_24_110718_add_expiration_date_to_peticion_mattildas_table.php',
         'AddFacturaGeneralFieldsToPlantelsTable' => __DIR__ . '/../..' . '/database/migrations/2022_03_22_093622_add_factura_general_fields_to_plantels_table.php',

@@ -823,16 +823,22 @@
                                     ->join('lectivos as l', 'l.id', '=', 'hacademicas.lectivo_id')
                                     ->whereNull('hacademicas.deleted_at')
                                     ->count();
+
+                                    $clientes_excepcion = explode(',', $combinacion->grado->duracionPeriodo->clis_excepcion_reprobadas);
+                                    //dd($clientes_excepcion);
                                     
                                     $bloqueo_cantidad_reprobadas = isset($adeudo->combinacionCliente->grado->duracionPeriodo->bloqueo_cantidad_reprobadas) ? $adeudo->combinacionCliente->grado->duracionPeriodo->bloqueo_cantidad_reprobadas : 100;
                                     //dd($bloqueo_cantidad_reprobadas);
                                     $mostrar_check=1;
                                     //dd($adeudo->id==$reinscripcion_no_pagada->id);
-                                    if(!is_null($reinscripcion_no_pagada) and 
-                                    $materias_no_aprobadas>=$bloqueo_cantidad_reprobadas and 
+                                    if(
+                                    !is_null($reinscripcion_no_pagada) and 
+                                    ($materias_no_aprobadas>=$bloqueo_cantidad_reprobadas) and 
                                     $reinscripcion_no_pagada->fecha_pago>=$adeudo->fecha_pago and 
                                     $adeudo->id==$reinscripcion_no_pagada->id){
-                                        $mostrar_check=0;
+                                        if(!in_array($adeudo->cliente_id, $clientes_excepcion)){
+                                            $mostrar_check=0;
+                                        }
                                     }
                                     //dd($mostrar_check);
                                 @endphp
@@ -1548,9 +1554,13 @@ Agregar nuevo registro
             //beforeSend : function(){$("#loading3").show(); },
             //complete : function(){$("#loading3").hide(); },
             success: function(data) {
-                //console.log(data);
-                if(data.total_materias_no_aprobadas>=data.bloqueo_cantidad_reprobadas){
+                console.log(data);
+                if(data.excepcion_activa==1){
                     $('#materias_no_aprobadas').html(
+                    `<div><span class="badge bg-green">Excepcion Activa</span></div>`);
+                }
+                if(data.total_materias_no_aprobadas>=data.bloqueo_cantidad_reprobadas){
+                    $('#materias_no_aprobadas').append(
                     `<div><span class="badge bg-red">Limite de materias no aprobadas alcanzado: ${data.total_materias_no_aprobadas} </span></div>`);
                     //$('.procesarAdeudos').hide();
                     //$('.adeudos_tomados').hide();

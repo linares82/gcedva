@@ -173,6 +173,7 @@ return array(
     'AddEspecialidadNivelGradoTable' => $baseDir . '/database/migrations/2017_08_11_143725_add_especialidad_nivel_grado_table.php',
     'AddEspecialidadNivelTable' => $baseDir . '/database/migrations/2017_08_11_143659_add_especialidad_nivel_table.php',
     'AddEtapaToRegistroHistoriaClientesTable' => $baseDir . '/database/migrations/2021_06_10_161026_add_etapa_to_registro_historia_clientes_table.php',
+    'AddExcepReprobadasToDuracionPeriodosTable' => $baseDir . '/database/migrations/2026_06_18_173406_add_excep_reprobadas_to_duracion_periodos_table.php',
     'AddExcepcionesDescuentosToAdeudosTable' => $baseDir . '/database/migrations/2020_07_17_133014_add_excepciones_descuentos_to_adeudos_table.php',
     'AddExpirationDateToPeticionMattildasTable' => $baseDir . '/database/migrations/2025_10_24_110718_add_expiration_date_to_peticion_mattildas_table.php',
     'AddFacturaGeneralFieldsToPlantelsTable' => $baseDir . '/database/migrations/2022_03_22_093622_add_factura_general_fields_to_plantels_table.php',

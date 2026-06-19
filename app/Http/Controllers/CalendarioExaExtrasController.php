@@ -135,7 +135,7 @@ class CalendarioExaExtrasController extends Controller
 
 		//$inscripcion = Inscripcion::where('cliente_id', $datos['cliente_id'])->first();
 		$combinacion = CombinacionCliente::where('cliente_id', $datos['cliente_id'])->with('grado.duracionPeriodo')->first();
-		//dd($inscripcion->toArray());
+		//dd($combinacion->toArray());
 		$calendario = CalendarioExaExtra:: //where('plantel_id', $datos['plantel_id'])
 			where('duracion_periodo_id', $datos['duracion_id'])
 			///->where('lectivo_id', $combinacion->grado->lectivo_id)
@@ -143,6 +143,7 @@ class CalendarioExaExtrasController extends Controller
 			->whereDate('fec_inicio', '<=', date('Y-m-d'))
 			->whereDate('fec_fin', '>=', date('Y-m-d'))
 			->first();
+		//dd($calendario);
 		if (is_null($calendario)) {
 			return json_encode(array('msj' => 'No hay calendario de exÃ¡menes extras para este periodo'));
 		}

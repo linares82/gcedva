@@ -1011,12 +1011,15 @@ class CajasController extends Controller
                 ->count();
             $combinacion = CombinacionCliente::where('cliente_id', $cliente->id)->with('grado.duracionPeriodo')->first();
             $bloqueo_cantidad_reprobadas = $combinacion->grado->duracionPeriodo->bloqueo_cantidad_reprobadas;
+            $clientes_excepcion = explode(',', $combinacion->grado->duracionPeriodo->clis_excepcion_reprobadas);
             //dd($bloqueo_cantidad_reprobadas);
-            if ($materias_no_aprobadas >= $bloqueo_cantidad_reprobadas) {
-                return response()->json([
-                    'error' => "400",
-                    'msj' => 'Cliente supera el limite permitido de materias no aprobadas: ' . $materias_no_aprobadas
-                ]);
+            if (!in_array($cliente->id, $clientes_excepcion)) {
+                if ($materias_no_aprobadas >= $bloqueo_cantidad_reprobadas) {
+                    return response()->json([
+                        'error' => "400",
+                        'msj' => 'Cliente supera el limite permitido de materias no aprobadas: ' . $materias_no_aprobadas
+                    ]);
+                }
             }
 
             $linea = CajaLn::create($registro);

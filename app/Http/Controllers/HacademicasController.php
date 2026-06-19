@@ -1578,6 +1578,15 @@ class HacademicasController extends Controller
     public function materiasNoAprobadasXCliente(Request $request)
     {
         $datos = $request->all();
+
+        $combinacion = CombinacionCliente::where('cliente_id', $datos['cliente_id'])->with('grado.duracionPeriodo')->first();
+        $bloqueo_cantidad_reprobadas = $combinacion->grado->duracionPeriodo->bloqueo_cantidad_reprobadas;
+        $clientes_excepcion = explode(',', $combinacion->grado->duracionPeriodo->clis_excepcion_reprobadas);
+
+        $excepcion_activa = 0;
+        if (in_array($datos['cliente_id'], $clientes_excepcion)) {
+            $excepcion_activa = 1;
+        }
         $materias_no_aprobadas = Hacademica::select('m.name as materia', 'l.name as lectivo', 'hacademicas.st_materium_id')
             ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
             ->join('materia as m', 'm.id', '=', 'hacademicas.materium_id')
@@ -1587,12 +1596,18 @@ class HacademicasController extends Controller
             ->whereColumn('hacademicas.lectivo_id', '<', 'i.lectivo_id')
             ->whereNull('hacademicas.deleted_at')
             ->get();
-        //dd($materias_no_aprobadas->toArray());
-        $combinacion = CombinacionCliente::where('cliente_id', $datos['cliente_id'])->with('grado.duracionPeriodo')->first();
-        $bloqueo_cantidad_reprobadas = $combinacion->grado->duracionPeriodo->bloqueo_cantidad_reprobadas;
 
         //dd($materias_no_aprobadas->toArray());
 
-        return response()->json(['total_materias_no_aprobadas' => count($materias_no_aprobadas), 'bloqueo_cantidad_reprobadas' => $bloqueo_cantidad_reprobadas]);
+
+        //dd($materias_no_aprobadas->toArray());
+
+        return response()->json(
+            [
+                'total_materias_no_aprobadas' => count($materias_no_aprobadas),
+                'bloqueo_cantidad_reprobadas' => $bloqueo_cantidad_reprobadas,
+                'excepcion_activa' => $excepcion_activa
+            ]
+        );
     }
 }

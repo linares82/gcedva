@@ -18,7 +18,15 @@ class DuracionPeriodo extends Model
 	}
 
 	//Mass Assignment
-	protected $fillable = ['name', 'bloqueo_cantidad_reprobadas', 'bloqueo_cantidad_extras', 'usu_alta_id', 'usu_mod_id', 'id_tipo_periodo_certificado'];
+	protected $fillable = [
+		'name',
+		'bloqueo_cantidad_reprobadas',
+		'bloqueo_cantidad_extras',
+		'usu_alta_id',
+		'usu_mod_id',
+		'id_tipo_periodo_certificado',
+		'clis_excepcion_reprobadas'
+	];
 
 	public function usu_alta()
 	{
