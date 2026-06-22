@@ -5,7 +5,7 @@ return [
   "route-prefix" => "seguridad",
   "pagination" => [
     "users" => 250,
-    "roles" => 15,
+    "roles" => 50,
     "permissions" => 15,
   ],
   "middleware" => ['web', 'entrust-gui.admin'],
