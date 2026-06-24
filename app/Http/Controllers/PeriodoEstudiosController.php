@@ -94,7 +94,10 @@ class PeriodoEstudiosController extends Controller
         });
         $periodoEstudio = $periodoEstudio->find($id);
         //dd($periodoEstudio->materias->toArray());
-        $list = DB::table('materia')->where('id', '>', '0')->where('plantel_id', $periodoEstudio->plantel_id)->pluck('name', 'id');
+        $list = DB::table('materia')->select('id', DB::raw('concat(id," - ",name," - ",codigo) as name'))
+            ->where('id', '>', '0')
+            ->where('plantel_id', $periodoEstudio->plantel_id)
+            ->pluck('name', 'id');
         //dd($list);
         $materias_ls = $list->prepend('Seleccionar Opción');
         //dd($materias_ls);
@@ -132,8 +135,8 @@ class PeriodoEstudiosController extends Controller
         $materias = $request->get('materia_id-field');
 
         $input['usu_mod_id'] = Auth::user()->id;
-        if (!isset($input['bnd_activo'])) {
-            $input['bnd_activo'] = 0;
+        if (!isset($input['bnd_activo']) and Auth::user()->can('periodoEstudios.bnd_activo')) {
+            $input['bnd_activo'] = false;
         }
 
         //update data
@@ -186,7 +189,7 @@ class PeriodoEstudiosController extends Controller
 
             $final = array();
             $r = DB::table('periodo_estudios as p')
-                ->select('p.id', DB::raw('concat(p.id, "-", p.name) as name'))
+                ->select('p.id', DB::raw('concat(p.id, "-", p.name) as name'), 'p.bnd_activo')
                 ->where('p.plantel_id', '=', $plantel)
                 ->where('p.id', '>', '0')
                 ->whereNull('p.deleted_at')
@@ -198,13 +201,15 @@ class PeriodoEstudiosController extends Controller
                         array_push($final, array(
                             'id' => $r1->id,
                             'name' => $r1->name,
-                            'selectec' => 'Selected'
+                            'selectec' => 'Selected',
+                            'bnd_activo' => $r1->bnd_activo
                         ));
                     } else {
                         array_push($final, array(
                             'id' => $r1->id,
                             'name' => $r1->name,
-                            'selectec' => ''
+                            'selectec' => '',
+                            'bnd_activo' => $r1->bnd_activo
                         ));
                     }
                 }
@@ -226,7 +231,7 @@ class PeriodoEstudiosController extends Controller
             $final = array();
             $r = DB::table('periodo_estudios as p')
                 ->join('grupo_periodo_estudios as gpe', 'gpe.periodo_estudio_id', '=', 'p.id')
-                ->select('p.id', DB::raw('concat(p.id, "-",p.name) as name'))
+                ->select('p.id', DB::raw('concat(p.id, "-",p.name) as name'), 'p.bnd_activo')
                 ->where('gpe.grupo_id', '=', $grupo)
                 ->where('p.id', '>', '0')
                 ->get();
@@ -237,13 +242,15 @@ class PeriodoEstudiosController extends Controller
                         array_push($final, array(
                             'id' => $r1->id,
                             'name' => $r1->name,
-                            'selectec' => 'Selected'
+                            'selectec' => 'Selected',
+                            'bnd_activo' => $r1->bnd_activo
                         ));
                     } else {
                         array_push($final, array(
                             'id' => $r1->id,
                             'name' => $r1->name,
-                            'selectec' => ''
+                            'selectec' => '',
+                            'bnd_activo' => $r1->bnd_activo
                         ));
                     }
                 }

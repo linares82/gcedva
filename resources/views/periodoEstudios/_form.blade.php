@@ -58,6 +58,7 @@
                          <span class="help-block">{{ $errors->first("orden") }}</span>
                         @endif
                      </div>
+                     @permission('periodoEstudios.bnd_activo')
                      <div class="form-group col-md-4 @if($errors->has('bnd_activo')) has-error @endif">
                         <label for="bnd_activo-field">Activo</label>
                         {!! Form::checkbox("bnd_activo", 1, null, [ "id" => "bnd_activo-field", 'class'=>'minimal']) !!}
@@ -65,6 +66,7 @@
                         <span class="help-block">{{ $errors->first("bnd_activo") }}</span>
                         @endif
                     </div> 
+                    @endpermission
                     <!--
                     <div class="form-group col-md-4 @if($errors->has('rvoe')) has-error @endif">
                         <label for="rvoe-field">RVOE</label>
@@ -172,7 +174,12 @@
                       
                       $.each(data, function(i) {
                           //alert(data[i].name);
-                          $('#materia_id-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                          if(data[i].bnd_activo==1){
+                            $('#materia_id-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                          }else{
+                            $('#materia_id-field').append("<option disabled "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                          }
+                          
                           
                       });
                       //$example.select2();

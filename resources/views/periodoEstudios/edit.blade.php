@@ -45,7 +45,7 @@
     <div class="row">
         <div class="col-md-12">
 
-            {!! Form::model($periodoEstudio, array('route' => array('periodoEstudios.update', $periodoEstudio->id),'method' => 'post')) !!}
+            {!! Form::model($periodoEstudio, array('route' => array('periodoEstudios.update', $periodoEstudio->id),'method' => 'put')) !!}
 
 @include('periodoEstudios._form')
 

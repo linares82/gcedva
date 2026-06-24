@@ -2066,9 +2066,14 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                       //$('#especialidad_id-field').empty();
                       $('#grupo_id-crear').append($('<option></option>').text('Seleccionar').val('0'));
                       
+                    
                       $.each(data, function(i) {
                           //alert(data[i].name);
+                          if(data[i].bnd_activo){
                           $('#grupo_id-crear').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                          }else{
+                            $('#grupo_id-crear').append("<option disabled "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                          }
                       });
                       //$example.select2();
                   }
@@ -2097,7 +2102,11 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                       
                       $.each(data, function(i) {
                           //alert(data[i].name);
-                          $('#grupo_id-editar').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                          if(data[i].bnd_activo){
+                            $('#grupo_id-editar').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                          }else{
+                            $('#grupo_id-editar').append("<option disabled "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                          }
                       });
                       //$example.select2();
                   }
@@ -2123,7 +2132,11 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                       
                       $.each(data, function(i) {
                           //alert(data[i].name);
-                          $('#periodo_estudio_id-crear').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                          if(data[i].bnd_activo){
+                            $('#periodo_estudio_id-crear').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                          }else{
+                            $('#periodo_estudio_id-crear').append("<option disabled "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                          }
                       });
                       //$example.select2();
                   }
@@ -2149,7 +2162,11 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                       
                       $.each(data, function(i) {
                           //alert(data[i].name);
-                          $('#periodo_estudio_id-editar').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                          if(data[i].bnd_activo){
+                            $('#periodo_estudio_id-editar').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                          }else{
+                            $('#periodo_estudio_id-editar').append("<option disabled "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                          }
                       });
                       //$example.select2();
                   }
@@ -2645,7 +2662,12 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                                 $('#especialidad_id-crear').append($('<option></option>').text('Seleccionar').val('0'));
                                 $.each(data, function(i) {
                                 //alert(data[i].name);
-                                $('#especialidad_id-crear').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
+                                if(data[i].bnd_activo){
+                                    $('#especialidad_id-crear').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
+                                }else{
+                                    $('#especialidad_id-crear').append("<option disabled " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
+                                }
+                                
                                 });
                                 //$example.select2();
                                 }
@@ -2669,7 +2691,11 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                                 $('#especialidad_id-editar').append($('<option></option>').text('Seleccionar').val('0'));
                                 $.each(data, function(i) {
                                 //alert(data[i].name);
-                                $('#especialidad_id-editar').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
+                                if(data[i].bnd_activo){
+                                    $('#especialidad_id-editar').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
+                                }else{
+                                    $('#especialidad_id-editar').append("<option disabled " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
+                                }
                                 });
                                 //$example.select2();
                                 }

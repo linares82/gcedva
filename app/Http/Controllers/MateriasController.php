@@ -147,6 +147,10 @@ class MateriasController extends Controller
             $input['bnd_ponderacion'] = 0;
         }
 
+        if (!isset($input['bnd_activo']) and Auth::user()->can('materias.bnd_activo')) {
+            $input['bnd_activo'] = false;
+        }
+
         $materium->update($input);
         //dd($input['hijos']);
         if (isset($input['hijos'])) {
@@ -184,7 +188,7 @@ class MateriasController extends Controller
                 ->join('materium_periodos as mp', 'mp.materium_id', '=', 'm.id')
                 ->join('periodo_estudios as pe', 'pe.id', '=', 'mp.periodo_estudio_id')
                 ->join('grupo_periodo_estudios as gpe', 'gpe.periodo_estudio_id', '=', 'pe.id')
-                ->select('m.id', DB::raw('concat(m.id, "-",m.name) as name'))
+                ->select('m.id', DB::raw('concat(m.id, "-",m.name) as name'), 'm.bnd_activo')
                 ->where('gpe.grupo_id', $grupo)
                 ->where('m.plantel_id', '=', $plantel)
                 ->where('m.id', '>', '0')
@@ -197,13 +201,15 @@ class MateriasController extends Controller
                         array_push($final, array(
                             'id' => $r1->id,
                             'name' => $r1->name,
-                            'selectec' => 'Selected'
+                            'selectec' => 'Selected',
+                            'bnd_activo' => $r1->bnd_activo
                         ));
                     } else {
                         array_push($final, array(
                             'id' => $r1->id,
                             'name' => $r1->name,
-                            'selectec' => ''
+                            'selectec' => '',
+                            'bnd_activo' => $r1->bnd_activo
                         ));
                     }
                 }
@@ -224,7 +230,7 @@ class MateriasController extends Controller
             //dd("FLC:".$materia);
             $final = array();
             $r = DB::table('materia as m')
-                ->select('m.id', DB::raw('concat(m.id, " - ", m.name) as name'))
+                ->select('m.id', DB::raw('concat(m.id, " - ", m.name) as name'), 'm.bnd_activo')
                 ->where('m.plantel_id', '=', $plantel)
                 ->where('m.id', '>', '0')
                 ->whereNull('deleted_at')
@@ -237,13 +243,15 @@ class MateriasController extends Controller
                         array_push($final, array(
                             'id' => $r1->id,
                             'name' => $r1->name,
-                            'selectec' => 'Selected'
+                            'selectec' => 'Selected',
+                            'bnd_activo' => $r1->bnd_activo
                         ));
                     } else {
                         array_push($final, array(
                             'id' => $r1->id,
                             'name' => $r1->name,
-                            'selectec' => ''
+                            'selectec' => '',
+                            'bnd_activo' => $r1->bnd_activo
                         ));
                     }
                 }
@@ -268,7 +276,7 @@ class MateriasController extends Controller
                 ->join('hacademicas as h', 'h.materium_id', '=', 'm.id')
                 ->join('inscripcions as i', 'i.id', '=', 'h.inscripcion_id')
                 ->join('clientes as c', 'c.id', '=', 'i.cliente_id')
-                ->select('m.id', 'm.name')
+                ->select('m.id', 'm.name', 'm.bnd_activo')
                 ->whereColumn('m.plantel_id', 'i.plantel_id')
                 ->where('c.id', '=', $cliente_id)
                 ->where('i.grado_id', '=', $grado)
@@ -281,13 +289,15 @@ class MateriasController extends Controller
                         array_push($final, array(
                             'id' => $r1->id,
                             'name' => $r1->name,
-                            'selectec' => 'Selected'
+                            'selectec' => 'Selected',
+                            'bnd_activo' => $r1->bnd_activo
                         ));
                     } else {
                         array_push($final, array(
                             'id' => $r1->id,
                             'name' => $r1->name,
-                            'selectec' => ''
+                            'selectec' => '',
+                            'bnd_activo' => $r1->bnd_activo
                         ));
                     }
                 }
@@ -320,7 +330,7 @@ class MateriasController extends Controller
                     ->join('grupos as g', 'g.id', '=', 'i.grupo_id')
                     ->join('asignacion_academicas as aa', 'aa.grupo_id', '=', 'g.id')
                     ->join('empleados as e', 'e.id', 'aa.empleado_id')
-                    ->select(distinct('distinctrow(m.id)'), 'm.name')
+                    ->select(distinct('distinctrow(m.id)'), 'm.name', 'm.bnd_activo')
                     ->whereColumn('m.plantel_id', 'i.plantel_id')
                     ->where('c.id', '=', $alumno_id)
                     ->where('e.id', '=', $e->id)
@@ -334,7 +344,7 @@ class MateriasController extends Controller
                     ->join('grupos as g', 'g.id', '=', 'i.grupo_id')
                     ->join('asignacion_academicas as aa', 'aa.grupo_id', '=', 'g.id')
                     ->join('empleados as e', 'e.id', 'aa.empleado_id')
-                    ->select(DB::raw('distinctrow(m.id)'), 'm.name')
+                    ->select(DB::raw('distinctrow(m.id)'), 'm.name', 'm.bnd_activo')
                     ->whereColumn('m.plantel_id', 'i.plantel_id')
                     ->where('c.id', '=', $alumno_id)
                     ->where('h.deleted_at', '=', null)
@@ -348,13 +358,15 @@ class MateriasController extends Controller
                         array_push($final, array(
                             'id' => $r1->id,
                             'name' => $r1->name,
-                            'selectec' => 'Selected'
+                            'selectec' => 'Selected',
+                            'bnd_activo' => $r1->bnd_activo
                         ));
                     } else {
                         array_push($final, array(
                             'id' => $r1->id,
                             'name' => $r1->name,
-                            'selectec' => ''
+                            'selectec' => '',
+                            'bnd_activo' => $r1->bnd_activo
                         ));
                     }
                 }
@@ -387,7 +399,7 @@ class MateriasController extends Controller
                     ->join('grupos as g', 'g.id', '=', 'i.grupo_id')
                     ->join('asignacion_academicas as aa', 'aa.grupo_id', '=', 'g.id')
                     ->join('empleados as e', 'e.id', 'aa.empleado_id')
-                    ->select(distinct('distinctrow(m.id)'), 'm.name')
+                    ->select(distinct('distinctrow(m.id)'), 'm.name', 'm.bnd_activo')
                     ->whereColumn('m.plantel_id', 'i.plantel_id')
                     ->where('c.curp', '=', $curp)
                     ->where('e.id', '=', $e->id)
@@ -401,7 +413,7 @@ class MateriasController extends Controller
                     ->join('grupos as g', 'g.id', '=', 'i.grupo_id')
                     ->join('asignacion_academicas as aa', 'aa.grupo_id', '=', 'g.id')
                     ->join('empleados as e', 'e.id', 'aa.empleado_id')
-                    ->select(DB::raw('distinctrow(m.id)'), 'm.name')
+                    ->select(DB::raw('distinctrow(m.id)'), 'm.name', 'm.bnd_activo')
                     ->whereColumn('m.plantel_id', 'i.plantel_id')
                     ->where('c.curp', '=', $curp)
                     ->where('h.deleted_at', '=', null)
@@ -415,13 +427,15 @@ class MateriasController extends Controller
                         array_push($final, array(
                             'id' => $r1->id,
                             'name' => $r1->name,
-                            'selectec' => 'Selected'
+                            'selectec' => 'Selected',
+                            'bnd_activo' => $r1->bnd_activo
                         ));
                     } else {
                         array_push($final, array(
                             'id' => $r1->id,
                             'name' => $r1->name,
-                            'selectec' => ''
+                            'selectec' => '',
+                            'bnd_activo' => $r1->bnd_activo
                         ));
                     }
                 }
@@ -446,7 +460,7 @@ class MateriasController extends Controller
 
             $r = DB::table('materia as m')
                 ->join('asignacion_academicas as aa', 'aa.materium_id', '=', 'm.id')
-                ->select('m.id', 'm.name')
+                ->select('m.id', 'm.name', 'm.bnd_activo')
                 ->where('aa.plantel_id', '=', $plantel)
                 ->where('aa.lectivo_id', '=', $lectivo)
                 ->where('aa.empleado_id', '=', $instructor)
@@ -461,13 +475,15 @@ class MateriasController extends Controller
                     array_push($final, array(
                         'id' => $r1->id,
                         'name' => $r1->name,
-                        'selectec' => 'Selected'
+                        'selectec' => 'Selected',
+                        'bnd_activo' => $r1->bnd_activo
                     ));
                 } else {
                     array_push($final, array(
                         'id' => $r1->id,
                         'name' => $r1->name,
-                        'selectec' => ''
+                        'selectec' => '',
+                        'bnd_activo' => $r1->bnd_activo
                     ));
                 }
             }
@@ -491,7 +507,7 @@ class MateriasController extends Controller
                 ->whereColumn('h.grupo_id', 'aa.grupo_id')
                 ->whereColumn('h.lectivo_id', 'aa.lectivo_id')
                 ->join('inscripcions as i', 'i.id', '=', 'h.inscripcion_id')
-                ->select('m.id', 'm.name')
+                ->select('m.id', 'm.name', 'm.bnd_activo')
                 ->where('aa.plantel_id', '=', $plantel)
                 ->where('aa.lectivo_id', '=', $lectivo)
                 ->where('aa.grupo_id', '=', $grupo)
@@ -510,12 +526,14 @@ class MateriasController extends Controller
                             'id' => $r1->id,
                             'name' => $r1->name,
                             'selectec' => 'Selected',
+                            'bnd_activo' => $r1->bnd_activo
                         ));
                     } else {
                         array_push($final, array(
                             'id' => $r1->id,
                             'name' => $r1->name,
                             'selectec' => '',
+                            'bnd_activo' => $r1->bnd_activo
                         ));
                     }
                 }
@@ -535,7 +553,7 @@ class MateriasController extends Controller
 
             $final = array();
             $r = DB::table('materia as m')
-                ->select('m.id', 'm.name')
+                ->select('m.id', 'm.name', 'm.bnd_activo')
                 ->join('hacademicas as h', 'h.materium_id', 'm.id')
                 ->join('calificacions as cali', 'cali.hacademica_id', '=', 'h.id')
                 ->where('h.plantel_id', $plantel)
@@ -555,12 +573,14 @@ class MateriasController extends Controller
                             'id' => $r1->id,
                             'name' => $r1->name,
                             'selectec' => 'Selected',
+                            'bnd_activo' => $r1->bnd_activo
                         ));
                     } else {
                         array_push($final, array(
                             'id' => $r1->id,
                             'name' => $r1->name,
                             'selectec' => '',
+                            'bnd_activo' => $r1->bnd_activo
                         ));
                     }
                 }
@@ -580,7 +600,7 @@ class MateriasController extends Controller
 
             $final = array();
             $r = DB::table('materia as m')
-                ->select('m.id', 'm.name')
+                ->select('m.id', 'm.name', 'm.bnd_activo')
                 ->where('plantel_id', $plantel)
                 ->whereNull('deleted_at')
                 ->get();
@@ -594,12 +614,14 @@ class MateriasController extends Controller
                             'id' => $r1->id,
                             'name' => $r1->id . "-" . $r1->name,
                             'selectec' => 'Selected',
+                            'bnd_activo' => $r1->bnd_activo
                         ));
                     } else {
                         array_push($final, array(
                             'id' => $r1->id,
                             'name' => $r1->id . "-" . $r1->name,
                             'selectec' => '',
+                            'bnd_activo' => $r1->bnd_activo
                         ));
                     }
                 }
@@ -619,7 +641,7 @@ class MateriasController extends Controller
             //dd("FLC:".$materia);
             $final = array();
             $r = DB::table('materia as m')
-                ->select('m.id', 'm.name')
+                ->select('m.id', 'm.name', 'm.bnd_activo')
                 ->where('m.plantel_id', '=', $plantel)
                 ->where('m.id', '>', '0')
                 ->where('m.bnd_ponderacion', true)
@@ -633,13 +655,15 @@ class MateriasController extends Controller
                         array_push($final, array(
                             'id' => $r1->id,
                             'name' => $r1->name,
-                            'selectec' => 'Selected'
+                            'selectec' => 'Selected',
+                            'bnd_activo' => $r1->bnd_activo
                         ));
                     } else {
                         array_push($final, array(
                             'id' => $r1->id,
                             'name' => $r1->name,
-                            'selectec' => ''
+                            'selectec' => '',
+                            'bnd_activo' => $r1->bnd_activo
                         ));
                     }
                 }

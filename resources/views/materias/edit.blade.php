@@ -22,7 +22,7 @@
     <div class="row">
         <div class="col-md-12">
 
-            {!! Form::model($materium, array('route' => array('materias.update', $materium->id),'method' => 'post')) !!}
+            {!! Form::model($materium, array('route' => array('materias.update', $materium->id),'method' => 'put')) !!}
 
 @include('materias._form')
 

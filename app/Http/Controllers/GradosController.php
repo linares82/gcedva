@@ -188,8 +188,8 @@ class GradosController extends Controller
         if (!isset($input['bnd_rvoe_inactiva'])) {
             $input['bnd_rvoe_inactiva'] = 0;
         }
-        if (!isset($input['bnd_activo'])) {
-            //$input['bnd_activo'] = false;
+        if (!isset($input['bnd_activo']) and Auth::user()->can('esp-nivel-grado_bnd_activo')) {
+            $input['bnd_activo'] = false;
         }
         //$input['seccion']=Seccion::where('id',$input['seccion_id'])->value('name');
         //update data

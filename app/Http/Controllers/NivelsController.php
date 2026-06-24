@@ -111,8 +111,8 @@ class NivelsController extends Controller
         $input['usu_mod_id'] = Auth::user()->id;
         //update data
         $nivel = $nivel->find($id);
-        if (!isset($input['bnd_activo'])) {
-            //$input['bnd_activo'] = false;
+        if (!isset($input['bnd_activo']) and Auth::user()->can('esp-nivel-grado_bnd_activo')) {
+            $input['bnd_activo'] = false;
         }
         $nivel->update($input);
 

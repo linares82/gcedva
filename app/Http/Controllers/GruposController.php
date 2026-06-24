@@ -121,11 +121,14 @@ class GruposController extends Controller
 		$input['usu_mod_id'] = Auth::user()->id;
 		$periodo_estudio = $input['periodo_estudio_id'];
 		$input['periodo_estudio_id'] = 0;
+		if (!isset($input['bnd_activo']) and Auth::user()->can('grupos.bnd_activo')) {
+			$input['bnd_activo'] = false;
+		}
 
 		//update data
 		$grupo = $grupo->find($id);
 		$grupo->update($input);
-		//dd($periodo_estudio);
+		//dd($input);
 		if ($periodo_estudio <> 0) {
 			$grupo->periodosEstudio()->attach($periodo_estudio);
 		}
@@ -155,7 +158,7 @@ class GruposController extends Controller
 			$grupo = $request->get('grupo_id');
 			$final = array();
 			$r = DB::table('grupos as g')
-				->select('g.id', 'g.name')
+				->select('g.id', 'g.name', 'g.bnd_activo')
 				->where('g.plantel_id', '=', $plantel)
 				->whereNull('g.deleted_at')
 				->where('g.id', '>', '0')
@@ -167,13 +170,15 @@ class GruposController extends Controller
 						array_push($final, array(
 							'id' => $r1->id,
 							'name' => "-" . $r1->id . "- " . $r1->name,
-							'selectec' => 'Selected'
+							'selectec' => 'Selected',
+							'bnd_activo' => $r1->bnd_activo
 						));
 					} else {
 						array_push($final, array(
 							'id' => $r1->id,
 							'name' => "-" . $r1->id . "- " . $r1->name,
-							'selectec' => ''
+							'selectec' => '',
+							'bnd_activo' => $r1->bnd_activo
 						));
 					}
 				}
@@ -344,7 +349,7 @@ class GruposController extends Controller
 			$grupo = $request->get('grupo_id');
 			$final = array();
 			$r = DB::table('grupos as g')
-				->select('g.id', 'g.name')
+				->select('g.id', 'g.name', 'g.bnd_activo')
 				->join('inscripcions as i', 'i.grupo_id', 'g.id')
 				->where('i.plantel_id', $plantel)
 				->where('i.especialidad_id', $especialidad)
@@ -361,13 +366,15 @@ class GruposController extends Controller
 						array_push($final, array(
 							'id' => $r1->id,
 							'name' => $r1->name,
-							'selectec' => 'Selected'
+							'selectec' => 'Selected',
+							'bnd_activo' => $r1->bnd_activo
 						));
 					} else {
 						array_push($final, array(
 							'id' => $r1->id,
 							'name' => $r1->name,
-							'selectec' => ''
+							'selectec' => '',
+							'bnd_activo' => $r1->bnd_activo
 						));
 					}
 				}

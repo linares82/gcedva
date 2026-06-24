@@ -340,7 +340,7 @@ class AdeudosController extends Controller
         $combinacion->cuenta_ticket_pago = $combinacion->cuenta_ticket_pago + 1;
         $combinacion->save();
 
-        if ($combinacion->cuenta_ticket_pago == 1) {
+        if ($combinacion->cuenta_ticket_pago == 1 and is_null($cliente->st_cliente_id)) {
             $seguimiento = Seguimiento::where('cliente_id', $cliente->id)->first();
             $seguimiento->st_seguimiento_id = 5;
             $seguimiento->save();

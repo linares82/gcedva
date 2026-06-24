@@ -40,21 +40,30 @@
                        <span class="help-block">{{ $errors->first("creditos") }}</span>
                        @endif
                     </div>
-                    <div class="form-group col-md-4 @if($errors->has('seriada_bnd')) has-error @endif">
+                    <div class="form-group col-md-2 @if($errors->has('seriada_bnd')) has-error @endif">
                        <label for="seriada_bnd-field">Seriada</label>
                        {!! Form::checkbox("seriada_bnd", 1, null, [ "id" => "seriada_bnd-field"]) !!}
                        @if($errors->has("seriada_bnd"))
                        <span class="help-block">{{ $errors->first("seriada_bnd") }}</span>
                        @endif
                     </div>
-                    <div class="form-group col-md-4 @if($errors->has('bnd_oficial')) has-error @endif">
+                    @permission('materias.bnd_activo')
+                    <div class="form-group col-md-2 @if($errors->has('bnd_activo')) has-error @endif">
+                        <label for="bnd_activo-field">Activo</label>
+                        {!! Form::checkbox("bnd_activo", 1, null, [ "id" => "bnd_activo-field"]) !!}
+                        @if($errors->has("bnd_activo"))
+                            <span class="help-block">{{ $errors->first("bnd_activo") }}</span>
+                        @endif
+                        </div>
+                    @endpermission
+                    <div class="form-group col-md-2 @if($errors->has('bnd_oficial')) has-error @endif">
                        <label for="bnd_oficial-field">Oficial</label>
                        {!! Form::checkbox("bnd_oficial", 1, null, [ "id" => "bnd_oficial-field"]) !!}
                        @if($errors->has("bnd_oficial"))
                        <span class="help-block">{{ $errors->first("bnd_oficial") }}</span>
                        @endif
                     </div>
-                    <div class="form-group col-md-4 @if($errors->has('bnd_tiene_nombre_oficial')) has-error @endif">
+                    <div class="form-group col-md-2 @if($errors->has('bnd_tiene_nombre_oficial')) has-error @endif">
                        <label for="bnd_tiene_nombre_oficial-field">Tiene Nombre Operativo</label>
                        {!! Form::checkbox("bnd_tiene_nombre_oficial", 1, null, [ "id" => "bnd_tiene_nombre_oficial-field"]) !!}
                        @if($errors->has("bnd_tiene_nombre_oficial"))

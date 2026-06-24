@@ -4491,7 +4491,7 @@ Route::get(
         'uses' => 'PeriodoEstudiosController@edit'
     )
 )->middleware('auth');
-Route::post(
+Route::put(
     '/periodoEstudios/update/{id}',
     array(
         'as' => 'periodoEstudios.update',
@@ -4674,7 +4674,7 @@ Route::get(
         'uses' => 'MateriasController@edit'
     )
 )->middleware('auth');
-Route::post(
+Route::put(
     '/materias/update/{id}',
     array(
         'as' => 'materias.update',
@@ -4830,7 +4830,7 @@ Route::get(
         'uses' => 'GruposController@edit'
     )
 )->middleware('auth');
-Route::post(
+Route::put(
     '/grupos/update/{id}',
     array(
         'as' => 'grupos.update',

@@ -406,7 +406,7 @@ class AsignacionAcademicasController extends Controller
 			$nivel = $request->get('nivel_id');
 			$final = array();
 			$r = DB::table('grupos as g')
-				->select('g.id', DB::raw('concat(g.id, "-",g.name) as name'))
+				->select('g.id', DB::raw('concat(g.id, "-",g.name) as name'), 'g.bnd_activo')
 				->join('asignacion_academicas as aa', 'aa.plantel_id', '=', 'g.plantel_id')
 				->join('grupo_periodo_estudios as gpe', 'gpe.grupo_id', '=', 'g.id')
 				->join('periodo_estudios as pe', 'pe.id', '=', 'gpe.periodo_estudio_id')
@@ -425,13 +425,15 @@ class AsignacionAcademicasController extends Controller
 						array_push($final, array(
 							'id' => $r1->id,
 							'name' => $r1->name,
-							'selectec' => 'Selected'
+							'selectec' => 'Selected',
+							'bnd_activo' => $r1->bnd_activo
 						));
 					} else {
 						array_push($final, array(
 							'id' => $r1->id,
 							'name' => $r1->name,
-							'selectec' => ''
+							'selectec' => '',
+							'bnd_activo' => $r1->bnd_activo
 						));
 					}
 				}

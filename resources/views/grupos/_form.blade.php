@@ -26,6 +26,15 @@
                         <span class="help-block">{{ $errors->first("minimo_alumnos") }}</span>
                        @endif
                     </div>
+                    @permission('grupos.bnd_activo')
+                    <div class="form-group col-md-4 @if($errors->has('bnd_activo')) has-error @endif">
+                        <label for="bnd_activo-field">Activo</label>
+                        {!! Form::checkbox("bnd_activo", 1, null, [ "id" => "bnd_activo-field"]) !!}
+                        @if($errors->has("bnd_activo"))
+                            <span class="help-block">{{ $errors->first("bnd_activo") }}</span>
+                        @endif
+                    </div>
+                    @endpermission
                     <div class="form-group col-md-4 @if($errors->has('plantel_id')) has-error @endif">
                        <label for="plantel_id-field">Plantel</label>
                        {!! Form::select("plantel_id", $list["Plantel"], null, array("class" => "form-control select_seguridad", "id" => "plantel_id-field")) !!}
@@ -132,7 +141,12 @@
                       
                       $.each(data, function(i) {
                           //alert(data[i].name);
-                          $('#periodo_estudio_id-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                          if(data[i].bnd_activo==1){
+                            $('#periodo_estudio_id-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                          }else{
+                            $('#periodo_estudio_id-field').append("<option disabled "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                          }
+                          
                           
                       });
                       //$example.select2();

@@ -43,7 +43,8 @@ class Materium extends Model
         'nombre_oficial',
         'bnd_ponderacion',
         'id_asignatura_certificado',
-        'caja_concepto_id'
+        'caja_concepto_id',
+        'bnd_activo'
     ];
 
     public function usu_alta()
