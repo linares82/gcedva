@@ -367,7 +367,7 @@ class HacademicasController extends Controller
                 where('duracion_periodo_id', $hacademica->grado->duracion_periodo_id)
                 ->whereDate('fec_inicio', '<=', date('Y-m-d'))
                 ->whereDate('fec_fin', '>=', date('Y-m-d'))
-                //->where('lectivo_id', $inscripcion->lectivo_id)
+                ->where('lectivo_id', $inscripcion->lectivo_id)
                 ->orderBy('id', 'desc')
                 ->first();
             //dd($calendario_extras);
@@ -656,11 +656,17 @@ class HacademicasController extends Controller
             ->where('lectivo_id', $asignacionAcademica->lectivo_id)
             ->first();
 
-        $calendarioExtras = CalendarioExaExtra:: //where('plantel_id', $asignacionAcademica->plantel_id)
-            whereDate('fec_inicio', '<=', date('Y-m-d'))
-            ->whereDate('fec_fin', '>=', date('Y-m-d'))
-            ->where('duracion_periodo_id', $hacademica->grado->duracion_periodo_id)
-            ->count();
+        $inscripcion = $hacademica->inscripcion;
+
+        $calendarioExtras = 0;
+        //dd($hacademica);
+        if ($hacademica->lectivo_id <= $inscripcion->lectivo_id) {
+            $calendarioExtras = CalendarioExaExtra::where('lectivo_id', $inscripcion->lectivo_id)
+                ->whereDate('fec_inicio', '<=', date('Y-m-d'))
+                ->whereDate('fec_fin', '>=', date('Y-m-d'))
+                ->where('duracion_periodo_id', $hacademica->grado->duracion_periodo_id)
+                ->count();
+        }
 
 
         $lectivo = Lectivo::find($asignacionAcademica->lectivo_id);
@@ -771,7 +777,9 @@ class HacademicasController extends Controller
                 'hacademicas.st_materium_id',
                 'hacademicas.materium_id as materia_id',
                 'hacademicas.id as hacademica_id',
-                'hacademicas.lectivo_id as lectivo_id'
+                'hacademicas.lectivo_id as lectivo_id',
+                'i.lectivo_id as inscripcion_lectivo_id',
+                'hacademicas.lectivo_id as hacademicas_lectivo_id'
             )
                 ->where('hacademicas.grupo_id', '=', $asignacionAcademica->grupo_id)
                 ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
@@ -820,7 +828,9 @@ class HacademicasController extends Controller
                 'hacademicas.st_materium_id',
                 'hacademicas.materium_id as materia_id',
                 'hacademicas.id as hacademica_id',
-                'hacademicas.lectivo_id as lectivo_id'
+                'hacademicas.lectivo_id as lectivo_id',
+                'i.lectivo_id as inscripcion_lectivo_id',
+                'hacademicas.lectivo_id as hacademicas_lectivo_id'
             )
                 ->where('hacademicas.grupo_id', '=', $asignacionAcademica->grupo_id)
                 ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
@@ -834,7 +844,8 @@ class HacademicasController extends Controller
                 ->where('hacademicas.materium_id', '=', $asignacionAcademica->materium_id)
                 ->where('c.tpo_examen_id', '=', $data['tpo_examen_id'])
                 ->where('cp.carga_ponderacion_id', '=', $data['carga_ponderacion_id'])
-                ->WhereRaw('((hacademicas.st_materium_id = ? and cli.st_cliente_id=?) or (hacademicas.st_materium_id = ? and cli.st_cliente_id=?))', [2, 3, 2, 4])
+                ->WhereRaw('((hacademicas.st_materium_id = ? and cli.st_cliente_id=?) or 
+                            (hacademicas.st_materium_id = ? and cli.st_cliente_id=?))', [2, 3, 2, 4])
                 ->orderBy('cli.ape_paterno')
                 ->orderBy('cli.ape_materno')
                 ->orderBy('cli.nombre')
@@ -872,7 +883,9 @@ class HacademicasController extends Controller
                     'hacademicas.st_materium_id',
                     'hacademicas.materium_id as materia_id',
                     'hacademicas.id as hacademica_id',
-                    'hacademicas.lectivo_id as lectivo_id'
+                    'hacademicas.lectivo_id as lectivo_id',
+                    'i.lectivo_id as inscripcion_lectivo_id',
+                    'hacademicas.lectivo_id as hacademicas_lectivo_id'
                 )
                     ->where('hacademicas.grupo_id', '=', $asignacionAcademica->grupo_id)
                     ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
@@ -920,7 +933,9 @@ class HacademicasController extends Controller
                     'hacademicas.st_materium_id',
                     'hacademicas.materium_id as materia_id',
                     'hacademicas.id as hacademica_id',
-                    'hacademicas.lectivo_id as lectivo_id'
+                    'hacademicas.lectivo_id as lectivo_id',
+                    'i.lectivo_id as inscripcion_lectivo_id',
+                    'hacademicas.lectivo_id as hacademicas_lectivo_id'
                 )
                     ->where('hacademicas.grupo_id', '=', $asignacionAcademica->grupo_id)
                     ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
@@ -971,7 +986,9 @@ class HacademicasController extends Controller
                     'hacademicas.st_materium_id',
                     'hacademicas.materium_id as materia_id',
                     'hacademicas.id as hacademica_id',
-                    'hacademicas.lectivo_id as lectivo_id'
+                    'hacademicas.lectivo_id as lectivo_id',
+                    'i.lectivo_id as inscripcion_lectivo_id',
+                    'hacademicas.lectivo_id as hacademicas_lectivo_id'
                 )
                     ->where('hacademicas.grupo_id', '=', $asignacionAcademica->grupo_id)
                     ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')

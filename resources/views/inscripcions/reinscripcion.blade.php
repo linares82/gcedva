@@ -370,7 +370,10 @@
                       $('#periodo_estudios_to-field').append($('<option></option>').text('Seleccionar').val('0'));
                       $.each(data, function(i) {
                           //alert(data[i].name);
-                          $('#periodo_estudios_to-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                          if(data[i].bnd_activo==1){
+                            $('#periodo_estudios_to-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");  
+                          }
+                          
                           
                       });
                       //$example.select2();
@@ -396,8 +399,10 @@
                       
                       $.each(data, function(i) {
                           //alert(data[i].name);
-                          $('#grupo_id-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
-                      
+                          if(data[i].bnd_activo==1){
+                            $('#grupo_id-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");  
+                          }
+                          
                       });
                       //$example.select2();
                   }
@@ -422,8 +427,10 @@
                       $('#grupo_to-field').append($('<option></option>').text('Seleccionar').val('0'));
                       $.each(data, function(i) {
                           //alert(data[i].name);
-                       
-                          $('#grupo_to-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                          if(data[i].bnd_activo==1){
+                            $('#grupo_to-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");  
+                          }
+                          //$('#grupo_to-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
                       });
                       //$example.select2();
                   }
@@ -452,8 +459,10 @@
                       
                       $.each(data, function(i) {
                           //alert(data[i].name);
-                          $('#especialidad_id-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
-                          
+                          if(data[i].bnd_activo==1){
+                            $('#especialidad_id-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");  
+                          }
+                          //$('#especialidad_id-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
                       });
                       //$example.select2();
                   }
@@ -478,8 +487,10 @@
                       
                       $.each(data, function(i) {
                           //alert(data[i].name);
-                          $('#especialidad_to-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
-                          
+                          if(data[i].bnd_activo==1){
+                            $('#especialidad_to-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");  
+                          }
+                          //$('#especialidad_to-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
                       });
                       //$example.select2();
                   }
@@ -507,7 +518,10 @@
                       
                       $.each(data, function(i) {
                           //alert(data[i].name);
-                          $('#nivel_id-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                          if(data[i].bnd_activo==1){
+                            $('#nivel_id-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");  
+                          }
+                          //$('#nivel_id-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
                       });
                       //$example.select2();
                   }
@@ -535,7 +549,10 @@
                       
                       $.each(data, function(i) {
                           //alert(data[i].name);
-                          $('#nivel_to-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                          if(data[i].bnd_activo==1){
+                            $('#nivel_to-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");  
+                          }
+                          //$('#nivel_to-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
                       });
                       //$example.select2();
                   }
@@ -564,7 +581,10 @@
                       
                       $.each(data, function(i) {
                           //alert(data[i].name);
-                          $('#grado_id-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                          if(data[i].bnd_activo==1){
+                            $('#grado_id-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");  
+                          }
+                          //$('#grado_id-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
                       });
                       //$example.select2();
                   }
@@ -594,7 +614,10 @@
                       
                       $.each(data, function(i) {
                           //alert(data[i].name);
-                          $('#grado_to-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
+                          if(data[i].bnd_activo==1){
+                            $('#grado_to-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");  
+                          }
+                          //$('#grado_to-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
                       });
                       //$example.select2();
                   }

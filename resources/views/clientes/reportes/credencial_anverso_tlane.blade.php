@@ -48,7 +48,7 @@
           <!--<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>-->
           <tr>
               <td >
-                <table width="75%"><td >{{$cliente->plantel->nombre_corto}}</td></table>	
+                <table ><td bgcolor="#fff" >{{$cliente->plantel->nombre_corto}}</td></table>	
                <br/>	
                 @if(isset($cadena_img))
                     <img src="{{asset("imagenes/clientes/".$cliente->id."/".end($cadena_img))}}" alt="Sin foto" width="85px" height="105px"></img> 

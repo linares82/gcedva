@@ -62,7 +62,7 @@
                                               ->first()*/
                 ?>
         <table width="100%">
-            <td> <img src="{{ asset('storage/especialidads/'.$c->imagen) }}" alt="Sin logo" height="80px" ></img></td>
+            <td> <img src="{{ asset('storage/grados/'.$c->combinacionCliente->grado->imagen) }}" alt="Sin logo" height="80px" ></img></td>
             
         </table>
         

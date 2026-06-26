@@ -2637,7 +2637,7 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                                     if(data[i].bnd_activo){
                                         $('#especialidad_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
                                     }else{
-                                        $('#especialidad_id-field').append("<option disabled " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
+                                        //$('#especialidad_id-field').append("<option disabled " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
                                     }
                                 });
                                 
@@ -2818,7 +2818,7 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                                 if(data[i].bnd_activo){
                                     $('#nivel_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
                                 }else{
-                                    $('#nivel_id-field').append("<option disabled " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
+                                    //$('#nivel_id-field').append("<option disabled " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
                                 }
                                 });
                                 $('#nivel_id-field').trigger('change');
@@ -2905,9 +2905,9 @@ $r = DB::table('params')->where('llave', 'st_cliente_final')->first();
                                                             " value=\"" + data[i].id + "\">" + 
                                                             data[i].name + "<\/option>");
                                 }else{
-                                $('#grado_id-field').append("<option disabled " + data[i].selectec +
-                                                            " value=\"" + data[i].id + "\">" + 
-                                                            data[i].name + "<\/option>");
+                                //$('#grado_id-field').append("<option disabled " + data[i].selectec +
+                                //                            " value=\"" + data[i].id + "\">" + 
+                                //                            data[i].name + "<\/option>");
                                 }
                                 });
                                 $('#grado_id-field').trigger('change');

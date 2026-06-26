@@ -125,7 +125,7 @@
             <table style="width:100%">
                 <tr >
                     <td>
-                        <img src="{{asset('storage/especialidads/'.$encabezado->imagen)}}" alt="Logo" height="75" >
+                        <img src="{{asset('storage/grados/'.$encabezado->imagen)}}" alt="Logo" height="75" >
 
                     </td>
                     <td align="right" class="td_derecha">

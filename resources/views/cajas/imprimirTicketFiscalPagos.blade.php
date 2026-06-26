@@ -29,7 +29,7 @@ if(!is_null($cliente->plantel->matriz_id) and $cliente->plantel->matriz_id>0){
         <tr>
             <td align="center" colspan="2">
                 @if(isset($combinacion->especialidad->imagen))
-                    <img src="{{asset('storage/especialidads/'.$combinacion->especialidad->imagen)}}" 
+                    <img src="{{asset('storage/grados/'.$combinacion->grado->imagen)}}" 
                         alt='img' style='width: 100px;
                         margin: 4px;'>
                 @endif
@@ -225,7 +225,7 @@ if(!is_null($cliente->plantel->matriz_id) and $cliente->plantel->matriz_id>0){
     <tr>
         <td align="center" colspan="2">
             @if(isset($combinacion->especialidad->imagen))
-                <img src="{{asset('storage/especialidads/'.$combinacion->especialidad->imagen)}}" 
+                <img src="{{asset('storage/grados/'.$combinacion->grado->imagen)}}" 
                     alt='img' style='width: 100px;
                     margin: 4px;'>
             @endif

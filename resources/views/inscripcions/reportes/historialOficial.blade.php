@@ -86,7 +86,7 @@
                 <tr >
                     <td>
 
-                        <img src="{{asset('storage/especialidads/'.$inscripcion->especialidad->imagen)}}" alt="Sin logo" height="80px" ></img>
+                        <img src="{{asset('storage/grados/'.$inscripcion->grado->imagen)}}" alt="Sin logo" height="80px" ></img>
 
                     </td>
                     <td align="right" class="td_derecha">

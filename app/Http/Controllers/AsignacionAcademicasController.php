@@ -560,7 +560,8 @@ class AsignacionAcademicasController extends Controller
 			'clientes.id',
 			'clientes.matricula',
 			'h.inscripcion_id',
-			'e.imagen',
+			//'e.imagen',
+			'g.imagen as imagen',
 			'e.name as especialidad',
 			'h.especialidad_id',
 			'n.name as nivel',
@@ -612,7 +613,8 @@ class AsignacionAcademicasController extends Controller
 			'clientes.id',
 			'clientes.matricula',
 			'h.inscripcion_id',
-			'e.imagen',
+			//'e.imagen',
+			'g.imagen as imagen',
 			'e.name as especialidad',
 			'h.especialidad_id',
 			'n.name as nivel',
@@ -742,7 +744,7 @@ class AsignacionAcademicasController extends Controller
 			->first();
 		//dd($asignacion_academica->docenteOficial);
 		$encabezado = Hacademica::where('hacademicas.plantel_id', $datos['plantel_f'])
-			->join('inscripcions as i', 'i.id', 'hacademicas.inscripcion_id')
+			//->join('inscripcions as i', 'i.id', 'hacademicas.inscripcion_id')
 			->where('hacademicas.lectivo_id', $datos['lectivo_f'])
 			->where('hacademicas.grupo_id', $datos['grupo_f'])
 			->where('materium_id', $datos['materia_f'])
@@ -803,7 +805,8 @@ class AsignacionAcademicasController extends Controller
 			'm.codigo',
 			'l.periodo_escolar',
 			'l.ciclo_escolar',
-			'e.imagen',
+			//'e.imagen',
+			'g.imagen',
 			'g.denominacion',
 			'g.name as grado',
 			'g.fec_rvoe',
