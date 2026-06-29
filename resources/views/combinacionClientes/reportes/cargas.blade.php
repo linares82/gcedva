@@ -178,7 +178,7 @@
             <thead>
                 <td>Id</td><th>Plantel</th><td>Id</td><th>Especialidad</th><td>Id</td><th>Nivel</th><th>Id</th><th>Grado(nombre1)</th><th>Nombre RVOE(nombre2)</th><th>RVOE</th>
                 <th>Denominación</th><th>F. RVOE</th><th>CT</th><th>Seccion</th><th>Clave Servicio (Facturacion)</th><th>Nivel Educativo Sat (Facturacion)</th>
-                <th>Activo</th>
+                <th>Duracion</th><th>Activo</th>
             </thead>
             <tbody>
             
@@ -187,11 +187,13 @@
                     <td>{{optional($grado->plantel)->razon}}</td>
                     <td>{{ $grado->especialidad_id }}</td><td>{{optional($grado->especialidad)->name}}</td>
                     <td>{{ $grado->nivel_id }}</td><td>{{optional($grado->nivel)->name}}</td>
+                    <td>{{$grado->id}}</td>
+                    <td>{{$grado->name}}</td>
                     <td>{{ $grado->nombre2}}</td>
-                    <td>{{$grado->id}}</td><td>{{$grado->name}}</td>
                     <td>{{ $grado->rvoe }}</td><td>{{ $grado->denomicancion }}</td><td>{{ $grado->fec_rvoe }}</td>
                     <td>{{ $grado->cct }}</td><td>{{ $grado->seccion }}</td><td>{{ $grado->clave_servicio }}</td>
                     <td>{{ optional($grado->nivelEducativoSat)->name }}</td>
+                    <td>{{ optional($grado->duracionPeriodo)->name }}</td>
                     <td>{{$grado->bnd_activo ? 'Sí' : 'No'}}</td>
                 </tr>
                 @endforeach

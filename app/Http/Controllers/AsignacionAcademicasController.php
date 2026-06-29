@@ -1238,4 +1238,45 @@ class AsignacionAcademicasController extends Controller
 		return view('asignacionAcademicas.reportes.boletaNauc', compact('clientes'))
 			->with('');
 	}
+
+	public function asignacionCalendarioPonderacion()
+	{
+		$plantels = Plantel::pluck('razon', 'id');
+		$lectivos = Lectivo::pluck('name', 'id');
+		return view(
+			'asignacionAcademicas.reportes.asignacionCalendarioPonderacion',
+			compact('plantels', 'lectivos')
+		)
+			->with('list', AsignacionAcademica::getListFromAllRelationApps());
+	}
+
+	public function asignacionCalendarioPonderacionR(Request $request)
+	{
+		$datos = $request->all();
+		$res = AsignacionAcademica::select(
+			'asignacion_academicas.id as asignacion_academica_id',
+			'cp.name as carga_ponderacion',
+			'aap.fec_inicio',
+			'aap.fec_fin',
+			'e.nombre',
+			'e.ape_paterno',
+			'e.ape_materno',
+			'p.razon',
+			'l.name as lectivo',
+			'm.name as materia',
+			'g.name as grupo'
+		)
+			->join('calendario_asignacion_ponderacions as aap', 'aap.asignacion_id', 'asignacion_academicas.id')
+			->join('carga_ponderacions as cp', 'cp.id', 'aap.carga_ponderacion_id')
+			->join('empleados as e', 'e.id', 'asignacion_academicas.empleado_id')
+			->join('plantels as p', 'p.id', 'asignacion_academicas.plantel_id')
+			->join('lectivos as l', 'l.id', 'asignacion_academicas.lectivo_id')
+			->join('materia as m', 'm.id', 'asignacion_academicas.materium_id')
+			->join('grupos as g', 'g.id', 'asignacion_academicas.grupo_id')
+			->where('asignacion_academicas.plantel_id', $datos['plantel_f'])
+			->where('asignacion_academicas.lectivo_id', $datos['lectivo_f'])
+			->whereNull('asignacion_academicas.deleted_at')
+			->get();
+		return view('asignacionAcademicas.reportes.asignacionCalendarioPonderacionR', compact('res', 'datos'));
+	}
 }

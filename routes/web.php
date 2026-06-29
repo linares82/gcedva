@@ -5740,6 +5740,22 @@ Route::post(
     )
 )->middleware('auth');
 Route::get(
+    '/asignacionAcademica/asignacionCalendarioPonderacion',
+    array(
+        'as' => 'asignacionAcademica.asignacionCalendarioPonderacion',
+        'middleware' => 'permission:asignacionAcademica.asignacionCalendarioPonderacion',
+        'uses' => 'AsignacionAcademicasController@asignacionCalendarioPonderacion'
+    )
+)->middleware('auth');
+Route::post(
+    '/asignacionAcademica/asignacionCalendarioPonderacionR',
+    array(
+        'as' => 'asignacionAcademica.asignacionCalendarioPonderacionR',
+        'middleware' => 'permission:asignacionAcademica.asignacionCalendarioPonderacion',
+        'uses' => 'AsignacionAcademicasController@asignacionCalendarioPonderacionR'
+    )
+)->middleware('auth');
+Route::get(
     '/asignacionAcademica/boletasGrupo',
     array(
         'as' => 'asignacionAcademica.boletasGrupo',
